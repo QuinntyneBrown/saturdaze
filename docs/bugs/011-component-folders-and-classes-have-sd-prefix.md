@@ -71,4 +71,34 @@ avatar, sd-button → button, sd-list-item → list-item, etc.) and update:
 ## Status
 
 - Logged: 2026-05-16
-- Pending.
+- **Fixed: 2026-05-16.**
+  - All 27 folders under `frontend/projects/components/src/lib/` renamed
+    from `sd-foo` → `foo`. Inner `sd-foo.{ts,html,scss}` files renamed
+    to `foo.{ts,html,scss}`.
+  - Inside each component .ts:
+    - `templateUrl: './sd-foo.html'` → `'./foo.html'`
+    - `styleUrl:    './sd-foo.scss'` → `'./foo.scss'`
+    - Class `SdFoo` → `Foo`
+    - Type alias `SdFooTone` → `FooTone`, plus standalone aliases like
+      `SdVote` → `Vote`
+    - Internal sibling imports `'../sd-bar/sd-bar'` → `'../bar/bar'`
+  - `frontend/projects/components/src/public-api.ts` re-points every
+    export to the new path.
+  - All 10 consumer pages under
+    `frontend/projects/saturdaze/src/app/pages/` updated their
+    `import { ... } from 'components'` lists and the matching
+    `imports: [...]` arrays on each `@Component` decorator.
+  - **Angular `selector: 'sd-foo'` left unchanged everywhere.** Custom-
+    element naming requirements and any external HTML that uses
+    `<sd-foo>` (including the mock pages in `docs/mocks`) keep working.
+  - The e2e fixtures (`e2e/fixtures/sd-test.ts`) still use the
+    `Sd`-prefixed `SdFixtures` interface; that's not a component class
+    and stays as scoped local nomenclature.
+- Collision analysis confirmed safe: the api lib's `WeatherDay` model
+  and the components lib's `WeatherDay` class never appear in the same
+  file (consumer pages import only the class; service code imports only
+  the model). `Vote` in components vs. the unused `Vote` export in
+  `api/models/restaurant.ts` is similarly siloed.
+- Verified by: `ng build saturdaze`, `ng build components`, `ng build
+  api` all succeed. A final grep for `\bSd[A-Z]` across
+  `frontend/projects/` returns zero hits.
