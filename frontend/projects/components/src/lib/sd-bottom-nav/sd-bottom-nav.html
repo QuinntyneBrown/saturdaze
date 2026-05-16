@@ -10,7 +10,7 @@
     [attr.aria-current]="isActive(item.key) ? 'page' : null"
     (click)="onNavigate($event, item.route)"
   >
-    <sd-icon [attr.name]="item.icon" [name]="item.icon" [size]="20" />
+    <sd-icon [name]="item.icon" [size]="20" />
     <span>{{ item.label }}</span>
   </a>
 }
