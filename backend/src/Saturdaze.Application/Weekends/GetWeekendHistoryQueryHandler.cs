@@ -35,6 +35,8 @@ public sealed class GetWeekendHistoryQueryHandler
                 w.WeekendOf,
                 w.IsFavourite,
                 w.RegenerateCount,
+                w.Title,
+                w.Rating,
                 BlockCount = w.Blocks.Count,
                 Highlights = w.Blocks
                     .Where(b => b.Kind == BlockKind.Activity)
@@ -46,7 +48,8 @@ public sealed class GetWeekendHistoryQueryHandler
 
         return weekends
             .Select(w => new WeekendSummaryDto(
-                w.Id, w.WeekendOf, w.IsFavourite, w.RegenerateCount, w.BlockCount, w.Highlights))
+                w.Id, w.WeekendOf, w.IsFavourite, w.RegenerateCount, w.BlockCount, w.Highlights,
+                w.Title, w.Rating))
             .ToList();
     }
 }

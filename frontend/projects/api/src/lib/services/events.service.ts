@@ -100,11 +100,11 @@ function groupSections(
 
 /**
  * The "current Saturday" used to bucket events into Saturday / Sunday /
- * Coming soon. Hard-pinned to 2026-05-17 to match the demo dataset and the
- * mock screenshots; once the planner ships, this will move to whatever
- * `GET /api/weekends/current` returns.
+ * Coming soon. Hard-pinned to match the seed `anchorSaturday`; once the
+ * planner ships, this will move to whatever `GET /api/weekends/current`
+ * returns.
  */
-const DEMO_WEEKEND_OF = '2026-05-17';
+const DEMO_WEEKEND_OF = '2026-05-16';
 
 @Injectable({ providedIn: 'root' })
 export class EventsService {

@@ -11,6 +11,8 @@ public class WeekendConfiguration : IEntityTypeConfiguration<Weekend>
         b.ToTable("Weekends");
         b.HasKey(x => x.Id);
         b.Property(x => x.Notes).HasMaxLength(2000);
+        b.Property(x => x.Title).HasMaxLength(120);
+        b.Property(x => x.Rating);
         b.HasIndex(x => new { x.FamilyId, x.WeekendOf }).IsUnique();
         b.HasMany(x => x.Blocks).WithOne().HasForeignKey(x => x.WeekendId).OnDelete(DeleteBehavior.Cascade);
         b.HasMany(x => x.Errands).WithOne().HasForeignKey(x => x.WeekendId).OnDelete(DeleteBehavior.Cascade);

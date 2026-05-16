@@ -6,4 +6,6 @@ public sealed record WeekendSummaryDto(
     bool IsFavourite,
     int RegenerateCount,
     int BlockCount,
-    IReadOnlyList<string> ActivityHighlights);
+    IReadOnlyList<string> ActivityHighlights,
+    string? Title,
+    int? Rating);
