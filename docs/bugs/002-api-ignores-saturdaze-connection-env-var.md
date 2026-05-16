@@ -32,6 +32,11 @@ or point at the SQL Server Express form documented in the README.
 ## Status
 
 - Logged: 2026-05-16
-- Workaround applied this session: started the API with
-  `ConnectionStrings__Saturdaze` set to the SQL Express connection string.
-- Permanent fix pending.
+- **Fixed: 2026-05-16.** `Saturdaze.Infrastructure.DependencyInjection`
+  now resolves the connection string from this lookup chain:
+  1. `SATURDAZE_CONNECTION` environment variable.
+  2. `ConnectionStrings:Saturdaze` (env or appsettings).
+  3. `Saturdaze:ConnectionString` (env or appsettings).
+  4. Throw with an instructive message listing all three.
+- Verified by: `dotnet build src/Saturdaze.Api` succeeds; API can now be
+  started against SQL Express with `SATURDAZE_CONNECTION=...`.

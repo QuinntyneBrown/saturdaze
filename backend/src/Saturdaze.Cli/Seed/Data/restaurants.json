@@ -1,10 +1,10 @@
 [
-  { "name": "Snug Harbour",              "style": "Seafood",       "slot": "Dinner", "wifeApproved": true,  "driveMinutes": 4,  "notes": "Lakeside, great patio." },
-  { "name": "Spice Lounge",              "style": "Indian",        "slot": "Dinner", "wifeApproved": true,  "driveMinutes": 6,  "notes": "Kid-friendly butter chicken." },
-  { "name": "Port Credit Pizza",         "style": "Pizza",         "slot": "Lunch",  "wifeApproved": true,  "driveMinutes": 3,  "notes": "Easy walk from the park." },
-  { "name": "Joe Dog's",                 "style": "Pub",           "slot": "Lunch",  "wifeApproved": true,  "driveMinutes": 4,  "notes": "Loud but works with kids." },
-  { "name": "Brogue Inn",                "style": "Irish Pub",     "slot": "Dinner", "wifeApproved": true,  "driveMinutes": 5,  "notes": "Cozy, decent kids menu." },
-  { "name": "Sukhothai",                 "style": "Thai",          "slot": "Dinner", "wifeApproved": true,  "driveMinutes": 8,  "notes": "Mild pad thai for kids." },
-  { "name": "Cora's Port Credit",        "style": "Breakfast",     "slot": "Lunch",  "wifeApproved": true,  "driveMinutes": 5,  "notes": "Best for late-morning brunch slot." },
-  { "name": "Wild Wing",                 "style": "Wings",         "slot": "Dinner", "wifeApproved": false, "driveMinutes": 7,  "notes": "Backup only — kids like it, wife doesn't." }
+  { "name": "La Marina",                   "style": "Mediterranean · Patio", "slot": "Lunch",  "wifeApproved": true,  "driveMinutes": 6,  "notes": "Patio, kid-friendly menu, 6 min from Terre Bleu." },
+  { "name": "Symposium Café",              "style": "Brunch · Family booths","slot": "Lunch",  "wifeApproved": true,  "driveMinutes": 9,  "notes": "Family-friendly, booths, brunch." },
+  { "name": "The Sicilian Sidewalk Café",  "style": "Italian · Casual",      "slot": "Lunch",  "wifeApproved": false, "driveMinutes": 12, "notes": "Casual Italian on the route home." },
+  { "name": "Jack Astor's",                "style": "Casual · Kids' menu",   "slot": "Dinner", "wifeApproved": true,  "driveMinutes": 2,  "notes": "Right by Square One after Rec Room." },
+  { "name": "Snug Harbour",                "style": "Seafood · Lakeside",    "slot": "Dinner", "wifeApproved": true,  "driveMinutes": 4,  "notes": "Lakeside, great patio." },
+  { "name": "Spice Lounge",                "style": "Indian",                "slot": "Dinner", "wifeApproved": true,  "driveMinutes": 6,  "notes": "Kid-friendly butter chicken." },
+  { "name": "Cora's Port Credit",          "style": "Breakfast",             "slot": "Lunch",  "wifeApproved": true,  "driveMinutes": 5,  "notes": "Best for late-morning brunch slot." },
+  { "name": "Brogue Inn",                  "style": "Irish Pub",             "slot": "Dinner", "wifeApproved": true,  "driveMinutes": 5,  "notes": "Cozy, decent kids menu." }
 ]

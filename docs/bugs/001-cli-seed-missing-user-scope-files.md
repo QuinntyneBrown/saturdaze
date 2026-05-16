@@ -34,6 +34,11 @@ restaurant, find events, view family profile) hits an empty database.
 ## Status
 
 - Logged: 2026-05-16
-- Workaround applied this session: copied the test SeedData into the
-  user-scope directory by hand to keep the rest of the bring-up moving.
-- Permanent fix pending.
+- **Fixed: 2026-05-16.** Canonical seed JSON files now ship under
+  `backend/src/Saturdaze.Cli/Seed/Data/` (marked content with
+  `CopyToOutputDirectory=PreserveNewest` and `PackagePath` set for the
+  packed tool). `SeedCommandHandler.EnsureUserScopePopulatedFromBundle`
+  copies any missing files from the bundled location into the resolved
+  user-scope directory on first run — idempotent, never overwrites.
+- Verified by: `dotnet build src/Saturdaze.Cli` succeeds; bundled JSONs
+  land in `bin/Debug/net10.0/Seed/Data/`.

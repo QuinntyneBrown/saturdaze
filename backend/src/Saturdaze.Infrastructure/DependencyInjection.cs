@@ -15,8 +15,15 @@ public static class DependencyInjection
     {
         services.AddDbContext<AppDbContext>((sp, opt) =>
         {
-            var cs = sp.GetRequiredService<IConfiguration>().GetConnectionString("Saturdaze")
-                ?? throw new InvalidOperationException("Connection string 'Saturdaze' is missing.");
+            var cfg = sp.GetRequiredService<IConfiguration>();
+            // Honour the same env var the MigrationRunner and CLI use so all
+            // three binaries can be pointed at the same database with a
+            // single environment variable.
+            var cs = Environment.GetEnvironmentVariable("SATURDAZE_CONNECTION")
+                ?? cfg.GetConnectionString("Saturdaze")
+                ?? cfg["Saturdaze:ConnectionString"]
+                ?? throw new InvalidOperationException(
+                    "No connection string. Set SATURDAZE_CONNECTION, ConnectionStrings:Saturdaze, or Saturdaze:ConnectionString.");
             opt.UseSqlServer(cs, sql => sql.MigrationsAssembly(typeof(AppDbContext).Assembly.GetName().Name));
         });
 
