@@ -8,36 +8,13 @@ import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 
 import { API_BASE_URL } from '../api/api-base-url';
-import { Activity, ActivityTone, ActivityView } from '../models/activity';
-
-/**
- * Server-side shape of one row from `GET /api/activities`. Mirrors
- * `Saturdaze.Application.Contracts.ActivityDto`.
- */
-interface ActivityDto {
-  readonly id: string;
-  readonly name: string;
-  readonly category: string;
-  readonly indoor: boolean;
-  readonly minAge: number;
-  readonly maxAge: number;
-  readonly driveMinutes: number;
-  readonly weatherTags: ReadonlyArray<string>;
-  readonly typicalDurationMinutes: number;
-  readonly description: string;
-  readonly mapUrl: string;
-}
-
-/**
- * Filter chips are derived from the data on each load. Predicate-based
- * filters that yield zero rows are hidden so the chip strip stays honest.
- * "All" is always present.
- */
-type FilterDef = {
-  readonly label: string;
-  readonly tone: ActivityView['filters'][number]['tone'];
-  readonly match?: (a: ActivityDto) => boolean;
-};
+import { Activity } from '../models/activity';
+import { ActivityDto } from '../models/activity.dto';
+import { ActivityTone } from '../models/activity-tone';
+import { ActivityView } from '../models/activity-view';
+import { FilterDef } from '../models/filter-def';
+import { PresentationOverlay } from '../models/presentation-overlay';
+import { IActivityService } from './activity.service.contract';
 
 const FILTER_DEFS: ReadonlyArray<FilterDef> = [
   { label: 'All', tone: 'primary' },
@@ -78,19 +55,6 @@ function ageString(dto: ActivityDto): string | undefined {
   if (dto.minAge <= 2 && dto.maxAge >= 99) return 'all';
   if (dto.maxAge >= 99) return `${dto.minAge}+`;
   return `${dto.minAge}–${dto.maxAge}`;
-}
-
-/**
- * Per-name overlays for presentation-only fields that the catalog API
- * doesn't yet model (tag, "why this was suggested", curated subtitle).
- * These live frontend-side until the planner emits them as part of the
- * suggestion bundle for a given weekend.
- */
-interface PresentationOverlay {
-  readonly subtitle?: string;
-  readonly ages?: string;
-  readonly tag?: string;
-  readonly why?: string;
 }
 
 const ACTIVITY_OVERLAYS: Record<string, PresentationOverlay> = {
@@ -183,7 +147,7 @@ function groupSections(dtos: ReadonlyArray<ActivityDto>): ActivityView['sections
 }
 
 @Injectable({ providedIn: 'root' })
-export class ActivityService {
+export class ActivityService implements IActivityService {
   private readonly http = inject(HttpClient);
   private readonly baseUrl = inject(API_BASE_URL);
 

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 
-import { WeekendPlanService } from 'api';
+import { WEEKEND_PLAN_SERVICE } from 'api';
 import {
   BottomNav,
   Button,
@@ -34,5 +34,5 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ItineraryPage {
-  protected readonly itinerary = inject(WeekendPlanService).getDemoItinerary();
+  protected readonly itinerary = inject(WEEKEND_PLAN_SERVICE).getItinerary();
 }

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 
-import { SavedService } from 'api';
+import { SAVED_SERVICE } from 'api';
 import {
   BottomNav,
   Button,
@@ -34,5 +34,5 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SavedPage {
-  protected readonly view = inject(SavedService).list();
+  protected readonly view = inject(SAVED_SERVICE).list();
 }

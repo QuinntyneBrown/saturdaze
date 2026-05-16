@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 
-import { FamilyService } from 'api';
+import { FAMILY_SERVICE } from 'api';
 import {
   Avatar,
   BottomNav,
@@ -36,5 +36,5 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProfilePage {
-  protected readonly profile = inject(FamilyService).getProfile();
+  protected readonly profile = inject(FAMILY_SERVICE).getProfile();
 }

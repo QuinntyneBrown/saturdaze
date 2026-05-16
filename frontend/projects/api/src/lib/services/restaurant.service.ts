@@ -8,22 +8,12 @@ import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 
 import { API_BASE_URL } from '../api/api-base-url';
-import {
-  FamilyVote,
-  Restaurant,
-  RestaurantView,
-  VoterTone,
-} from '../models/restaurant';
-
-interface RestaurantDto {
-  readonly id: string;
-  readonly name: string;
-  readonly style: string;
-  readonly slot: 'Lunch' | 'Dinner';
-  readonly wifeApproved: boolean;
-  readonly driveMinutes: number;
-  readonly notes: string;
-}
+import { FamilyVote } from '../models/family-vote';
+import { Restaurant } from '../models/restaurant';
+import { RestaurantDto } from '../models/restaurant.dto';
+import { RestaurantView } from '../models/restaurant-view';
+import { VoterTone } from '../models/voter-tone';
+import { IRestaurantService } from './restaurant.service.contract';
 
 const FILTERS: RestaurantView['filters'] = [
   { label: 'Lunch', tone: 'primary' },
@@ -92,7 +82,7 @@ function toRestaurant(dto: RestaurantDto): Restaurant {
 }
 
 @Injectable({ providedIn: 'root' })
-export class RestaurantService {
+export class RestaurantService implements IRestaurantService {
   private readonly http = inject(HttpClient);
   private readonly baseUrl = inject(API_BASE_URL);
 

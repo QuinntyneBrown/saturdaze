@@ -1,4 +1,9 @@
-export type ActivityTone = 'default' | 'outdoor' | 'indoor' | 'food';
+import type { ActivityTone } from './activity-tone';
+
+export type { ActivityFilter } from './activity-filter';
+export type { ActivitySection } from './activity-section';
+export type { ActivityTone } from './activity-tone';
+export type { ActivityView } from './activity-view';
 
 export interface Activity {
   readonly title: string;
@@ -9,20 +14,4 @@ export interface Activity {
   readonly ages?: string;
   readonly tag?: string;
   readonly why?: string;
-}
-
-export interface ActivitySection {
-  readonly title: string;
-  readonly subtitle?: string;
-  readonly activities: readonly Activity[];
-}
-
-export interface ActivityFilter {
-  readonly label: string;
-  readonly tone: 'default' | 'primary' | 'leaf' | 'indoor' | 'sky' | 'sun' | 'warn' | 'accent';
-}
-
-export interface ActivityView {
-  readonly filters: readonly ActivityFilter[];
-  readonly sections: readonly ActivitySection[];
 }

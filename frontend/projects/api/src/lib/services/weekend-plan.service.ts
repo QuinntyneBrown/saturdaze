@@ -3,61 +3,19 @@ import { Injectable, Signal, inject, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 
 import { API_BASE_URL } from '../api/api-base-url';
-import {
-  Block,
-  DaySummary,
-  DayChip,
-  DayHeaderChip,
-  DayOption,
-  ItineraryView,
-  WeatherDay,
-  WeekendOverview,
-  WeekendStat,
-} from '../models/weekend';
-
-/**
- * Server-side weekend payload. Mirrors
- * `Saturdaze.Application.Contracts.WeekendDto`.
- */
-interface WeekendDto {
-  readonly id: string;
-  readonly weekendOf: string; // YYYY-MM-DD (Saturday)
-  readonly isFavourite: boolean;
-  readonly notes: string;
-  readonly regenerateCount: number;
-  readonly blocks: ReadonlyArray<ItineraryBlockDto>;
-  readonly errands: ReadonlyArray<ShoppingErrandDto>;
-  readonly weather: ReadonlyArray<WeatherForecastDto>;
-}
-
-interface ItineraryBlockDto {
-  readonly id: string;
-  readonly day: 'Saturday' | 'Sunday';
-  readonly startTime: string; // HH:mm:ss
-  readonly endTime: string;
-  readonly kind: 'Workout' | 'Activity' | 'Meal' | 'Drive' | 'Downtime' | 'Commitment' | 'Errand';
-  readonly title: string;
-  readonly refId: string | null;
-  readonly isLocked: boolean;
-  readonly reason: string;
-  readonly sortOrder: number;
-}
-
-interface ShoppingErrandDto {
-  readonly id: string;
-  readonly description: string;
-  readonly estimatedMinutes: number;
-  readonly done: boolean;
-}
-
-interface WeatherForecastDto {
-  readonly date: string; // YYYY-MM-DD
-  readonly tags: ReadonlyArray<string>;
-  readonly highCelsius: number | null;
-  readonly lowCelsius: number | null;
-  readonly precipitationMm: number | null;
-  readonly unavailable: boolean;
-}
+import { Block } from '../models/block';
+import { DayChip } from '../models/day-chip';
+import { DayHeaderChip } from '../models/day-header-chip';
+import { DayOption } from '../models/day-option';
+import { DaySummary } from '../models/day-summary';
+import { ItineraryBlockDto } from '../models/itinerary-block.dto';
+import { ItineraryView } from '../models/itinerary-view';
+import { WeatherDay } from '../models/weather-day';
+import { WeatherForecastDto } from '../models/weather-forecast.dto';
+import { WeekendDto } from '../models/weekend.dto';
+import { WeekendOverview } from '../models/weekend-overview';
+import { WeekendStat } from '../models/weekend-stat';
+import { IWeekendPlanService } from './weekend-plan.service.contract';
 
 const EMPTY_OVERVIEW: WeekendOverview = {
   greeting: 'Loading your weekend…',
@@ -86,7 +44,7 @@ const EMPTY_ITINERARY: ItineraryView = {
 };
 
 @Injectable({ providedIn: 'root' })
-export class WeekendPlanService {
+export class WeekendPlanService implements IWeekendPlanService {
   private readonly http = inject(HttpClient);
   private readonly baseUrl = inject(API_BASE_URL);
 
@@ -99,11 +57,11 @@ export class WeekendPlanService {
     void this.loadCurrent();
   }
 
-  getDemoOverview(): Signal<WeekendOverview> {
+  getOverview(): Signal<WeekendOverview> {
     return this._overview.asReadonly();
   }
 
-  getDemoItinerary(): Signal<ItineraryView> {
+  getItinerary(): Signal<ItineraryView> {
     return this._itinerary.asReadonly();
   }
 

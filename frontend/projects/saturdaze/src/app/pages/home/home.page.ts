@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 
-import { WeekendPlanService } from 'api';
+import { WEEKEND_PLAN_SERVICE } from 'api';
 import {
   Anticipate,
   BottomNav,
@@ -52,5 +52,5 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomePage {
-  protected readonly overview = inject(WeekendPlanService).getDemoOverview();
+  protected readonly overview = inject(WEEKEND_PLAN_SERVICE).getOverview();
 }

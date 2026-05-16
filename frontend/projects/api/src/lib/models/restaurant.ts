@@ -1,11 +1,11 @@
-export type VoterTone = 'leaf' | 'sky' | 'sun' | 'primary' | 'indoor';
-export type Vote = 'up' | 'down' | 'none';
+import type { FamilyVote } from './family-vote';
 
-export interface FamilyVote {
-  readonly name: string;
-  readonly tone: VoterTone;
-  readonly vote: Vote;
-}
+export type { FamilyVote } from './family-vote';
+export type { RestaurantFilter } from './restaurant-filter';
+export type { RestaurantSection } from './restaurant-section';
+export type { RestaurantView } from './restaurant-view';
+export type { Vote } from './vote';
+export type { VoterTone } from './voter-tone';
 
 export interface Restaurant {
   readonly name: string;
@@ -15,24 +15,4 @@ export interface Restaurant {
   readonly wifeapproved?: boolean;
   readonly icon?: string;
   readonly votes: readonly FamilyVote[];
-}
-
-export interface RestaurantSection {
-  readonly title: string;
-  readonly subtitle?: string;
-  readonly picks: readonly Restaurant[];
-}
-
-export interface RestaurantFilter {
-  readonly label: string;
-  readonly tone: 'default' | 'primary' | 'accent' | 'sky' | 'leaf';
-}
-
-export interface RestaurantView {
-  readonly title: string;
-  readonly lede: string;
-  readonly filters: readonly RestaurantFilter[];
-  readonly topPickSection: RestaurantSection;
-  readonly otherPicks: RestaurantSection;
-  readonly sundayDinner: RestaurantSection;
 }

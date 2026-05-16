@@ -8,22 +8,10 @@ import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 
 import { API_BASE_URL } from '../api/api-base-url';
-import { EventsView, LocalEvent } from '../models/event';
-
-/**
- * Server-side shape of one row from `GET /api/events`. Mirrors
- * `Saturdaze.Application.Contracts.LocalEventDto`.
- */
-interface LocalEventDto {
-  readonly id: string;
-  readonly name: string;
-  readonly startsOn: string; // YYYY-MM-DD
-  readonly endsOn: string;
-  readonly location: string;
-  readonly driveMinutes: number;
-  readonly url: string;
-  readonly category: string;
-}
+import { EventsView } from '../models/events-view';
+import { LocalEvent } from '../models/local-event';
+import { LocalEventDto } from '../models/local-event.dto';
+import { IEventsService } from './events.service.contract';
 
 const FILTERS: EventsView['filters'] = [
   { label: 'This weekend', tone: 'primary' },
@@ -107,7 +95,7 @@ function groupSections(
 const DEMO_WEEKEND_OF = '2026-05-16';
 
 @Injectable({ providedIn: 'root' })
-export class EventsService {
+export class EventsService implements IEventsService {
   private readonly http = inject(HttpClient);
   private readonly baseUrl = inject(API_BASE_URL);
 

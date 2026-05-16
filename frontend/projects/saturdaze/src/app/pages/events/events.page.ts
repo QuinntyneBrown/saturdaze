@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 
-import { EventsService } from 'api';
+import { EVENTS_SERVICE } from 'api';
 import {
   BottomNav,
   Chip,
@@ -26,5 +26,5 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EventsPage {
-  protected readonly view = inject(EventsService).list();
+  protected readonly view = inject(EVENTS_SERVICE).list();
 }

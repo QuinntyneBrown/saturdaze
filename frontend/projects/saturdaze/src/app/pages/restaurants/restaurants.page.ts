@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 
-import { RestaurantService } from 'api';
+import { RESTAURANT_SERVICE } from 'api';
 import {
   BottomNav,
   Button,
@@ -34,5 +34,5 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RestaurantsPage {
-  protected readonly view = inject(RestaurantService).list();
+  protected readonly view = inject(RESTAURANT_SERVICE).list();
 }

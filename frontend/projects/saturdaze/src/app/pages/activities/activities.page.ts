@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 
-import { ActivityService } from 'api';
+import { ACTIVITY_SERVICE } from 'api';
 import {
   ActivityCard,
   BottomNav,
@@ -28,5 +28,5 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ActivitiesPage {
-  protected readonly view = inject(ActivityService).list();
+  protected readonly view = inject(ACTIVITY_SERVICE).list();
 }

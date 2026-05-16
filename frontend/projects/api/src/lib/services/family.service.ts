@@ -8,36 +8,12 @@ import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 
 import { API_BASE_URL } from '../api/api-base-url';
-import {
-  FamilyMember,
-  FamilyMemberTone,
-  FamilyProfile,
-  PreferenceToggle,
-} from '../models/family';
-
-/**
- * Server-side shape of `GET /api/family`. Mirrors `Saturdaze.Application
- * .Contracts.FamilyProfileDto` plus the nested member / commitment /
- * preference dtos.
- */
-interface FamilyDto {
-  readonly id: string;
-  readonly homeLocation: string;
-  readonly budgetEnabled: boolean;
-  readonly members: ReadonlyArray<{ id: string; name: string; age: number }>;
-  readonly commitments: ReadonlyArray<{
-    id: string;
-    title: string;
-    dayOfWeek: string;
-    startTime: string;
-    endTime: string;
-  }>;
-  readonly preferences: ReadonlyArray<{
-    id: string;
-    kind: 'Like' | 'Dislike';
-    value: string;
-  }>;
-}
+import { FamilyDto } from '../models/family.dto';
+import { FamilyMember } from '../models/family-member';
+import { FamilyMemberTone } from '../models/family-member-tone';
+import { FamilyProfile } from '../models/family-profile';
+import { PreferenceToggle } from '../models/preference-toggle';
+import { IFamilyService } from './family.service.contract';
 
 /**
  * Initial profile rendered while the HTTP call is still in flight. The
@@ -130,7 +106,7 @@ function mapFamily(dto: FamilyDto): FamilyProfile {
 }
 
 @Injectable({ providedIn: 'root' })
-export class FamilyService {
+export class FamilyService implements IFamilyService {
   private readonly http = inject(HttpClient);
   private readonly baseUrl = inject(API_BASE_URL);
 

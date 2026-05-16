@@ -3,22 +3,10 @@ import { Injectable, Signal, inject, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 
 import { API_BASE_URL } from '../api/api-base-url';
-import { SavedView, SavedWeekend } from '../models/saved';
-
-/**
- * Server-side shape of one row from `GET /api/weekends/history`. Mirrors
- * `Saturdaze.Application.Contracts.WeekendSummaryDto`.
- */
-interface WeekendSummaryDto {
-  readonly id: string;
-  readonly weekendOf: string; // YYYY-MM-DD
-  readonly isFavourite: boolean;
-  readonly regenerateCount: number;
-  readonly blockCount: number;
-  readonly activityHighlights: ReadonlyArray<string>;
-  readonly title: string | null;
-  readonly rating: number | null;
-}
+import { SavedView } from '../models/saved-view';
+import { SavedWeekend } from '../models/saved-weekend';
+import { WeekendSummaryDto } from '../models/weekend-summary.dto';
+import { ISavedService } from './saved.service.contract';
 
 const FILTERS: SavedView['filters'] = [
   { label: 'All', tone: 'primary' },
@@ -41,7 +29,7 @@ const EMPTY_VIEW: SavedView = {
 const AVOID_RATING_CEIL = 2;
 
 @Injectable({ providedIn: 'root' })
-export class SavedService {
+export class SavedService implements ISavedService {
   private readonly http = inject(HttpClient);
   private readonly baseUrl = inject(API_BASE_URL);
   private readonly _view = signal<SavedView>(EMPTY_VIEW);
