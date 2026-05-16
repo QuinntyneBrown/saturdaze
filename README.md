@@ -48,14 +48,14 @@ The API default connection string points at LocalDB:
 Server=(localdb)\MSSQLLocalDB;Database=Saturdaze;Trusted_Connection=True;TrustServerCertificate=True
 ```
 
-The migration runner and seeder can also read `SATURDAZE_CONNECTION`:
+The Saturdaze CLI can also read `SATURDAZE_CONNECTION`:
 
 ```powershell
 cd backend
 $env:SATURDAZE_CONNECTION = "Server=(localdb)\MSSQLLocalDB;Database=Saturdaze;Trusted_Connection=True;TrustServerCertificate=True"
 
-dotnet run --project src\Saturdaze.MigrationRunner
-dotnet run --project src\Saturdaze.Seeder
+dotnet run --project src\Saturdaze.Cli -- migrate
+dotnet run --project src\Saturdaze.Cli -- seed
 ```
 
 Use a SQL Server Express connection string instead if LocalDB is not available.

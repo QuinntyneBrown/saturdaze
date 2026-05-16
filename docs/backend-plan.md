@@ -142,9 +142,9 @@ Auth is out of scope for v1 (single-family app, local-network). A header-based f
 - `appsettings.json`, `appsettings.Development.json`, `appsettings.Production.json` — connection string, weather base URL, CORS origins, log levels. Secrets in production via environment variables, never the appsettings file.
 - `Program.cs` wires: EF Core, MediatR (`AddMediatR` scanning `Application`), MediatR pipeline behaviors (Validation, Logging), FluentValidation validators, `HttpClient`s with Polly, `IMemoryCache`, controllers, Swagger, Serilog.
 - `Infrastructure/DependencyInjection.cs` and `Application/DependencyInjection.cs` extension methods to keep `Program.cs` short.
-- **Migrations are explicit**, never auto-applied at runtime. A small `Saturdaze.MigrationRunner` console project (one file: `Program.cs`) applies pending migrations against a target connection string. Same binary runs in dev and prod, invoked as a deploy step.
-- **Seed is explicit too.** A `Saturdaze.Seeder` console project (idempotent: keyed upserts on natural keys like activity name + location) loads the curated Activities, Restaurants, LocalEvents, and the Brown family profile from JSON files in `Infrastructure/SeedData/`. Run after migrations, also re-runnable safely when seed data changes.
-- Neither runner touches the data path of the API. The API process does nothing at startup beyond DI wiring.
+- **Migrations are explicit**, never auto-applied at runtime. The `Saturdaze.Cli` `migrate` verb applies pending migrations against a target connection string. Same binary runs in dev and prod, invoked as a deploy step. (Replaces the original `Saturdaze.MigrationRunner` console — see bug 012 for the merge rationale.)
+- **Seed is explicit too.** The `Saturdaze.Cli` `seed` verb (idempotent: keyed upserts on natural keys like activity name + location) loads the curated Activities, Restaurants, LocalEvents, and the Brown family profile from bundled JSON files. Run after migrations, also re-runnable safely when seed data changes.
+- Neither verb touches the data path of the API. The API process does nothing at startup beyond DI wiring.
 
 ## 9. Testing
 
@@ -177,7 +177,7 @@ CI runs all three projects. No category is "deferred to later" — controllers a
 
 Incremental but with no "we'll add tests later" — each step lands with its full test coverage in the same commit. Each step is reviewed and merged before the next begins. Speed is not the goal; doing each step well is.
 
-1. **Foundations.** Solution + projects + Domain entities + `IAppDbContext` + `AppDbContext` + entity configurations + first migration + `MigrationRunner` console + `Seeder` console + the curated seed JSON files. Infrastructure round-trip tests for every entity.
+1. **Foundations.** Solution + projects + Domain entities + `IAppDbContext` + `AppDbContext` + entity configurations + first migration + `Saturdaze.Cli` (`migrate` + `seed` verbs) + the curated seed JSON files. Infrastructure round-trip tests for every entity.
 2. **Cross-cutting plumbing.** MediatR + Validation + Logging behaviors, `ExceptionHandlingMiddleware`, `ProblemDetails`, Serilog, Swagger, CORS, `CurrentFamilyAccessor`. One placeholder controller + one placeholder command exercise the whole pipeline end-to-end in an Api test.
 3. **Family profile.** `GetFamilyProfileQuery`, `SaveFamilyProfileCommand` + validator, `FamilyController`. Full handler + validator + API tests.
 4. **Catalog endpoints.** `GetActivitySuggestionsQuery` with all filters, `GetRestaurantPicksQuery`, `GetLocalEventsQuery` + controllers + tests.

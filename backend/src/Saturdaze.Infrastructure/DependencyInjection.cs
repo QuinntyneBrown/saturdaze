@@ -16,8 +16,8 @@ public static class DependencyInjection
         services.AddDbContext<AppDbContext>((sp, opt) =>
         {
             var cfg = sp.GetRequiredService<IConfiguration>();
-            // Honour the same env var the MigrationRunner and CLI use so all
-            // three binaries can be pointed at the same database with a
+            // Honour the same env var the CLI uses so both the API and the
+            // CLI binaries can be pointed at the same database with a
             // single environment variable.
             var cs = Environment.GetEnvironmentVariable("SATURDAZE_CONNECTION")
                 ?? cfg.GetConnectionString("Saturdaze")

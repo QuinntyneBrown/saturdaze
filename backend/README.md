@@ -15,8 +15,9 @@ backend/
     Saturdaze.Application/       # MediatR handlers, IAppDbContext, planner, DTOs
     Saturdaze.Infrastructure/    # AppDbContext, EF migrations, Open-Meteo client, seeder
     Saturdaze.Api/               # Controllers, Program.cs, DI composition
-    Saturdaze.MigrationRunner/   # console: applies EF migrations
-    Saturdaze.Seeder/            # console: idempotent catalog + family seed
+    Saturdaze.Cli/               # `saturdaze migrate` / `saturdaze seed`
+                                 # (packaged dotnet tool — replaces the old
+                                 # MigrationRunner + Seeder consoles)
   tests/
     Saturdaze.Application.Tests/   # pure unit tests (planner, handlers, validators)
     Saturdaze.Infrastructure.Tests/# real SQL Server: persistence + weather contract
@@ -31,10 +32,10 @@ dotnet build backend/Saturdaze.sln
 
 # 2. Apply migrations (set connection string via env var or appsettings)
 $env:SATURDAZE_CONNECTION = "Server=(localdb)\MSSQLLocalDB;Database=Saturdaze;Trusted_Connection=True;TrustServerCertificate=True"
-dotnet run --project backend/src/Saturdaze.MigrationRunner
+dotnet run --project backend/src/Saturdaze.Cli -- migrate
 
 # 3. Seed catalog and the Brown family profile (idempotent)
-dotnet run --project backend/src/Saturdaze.Seeder
+dotnet run --project backend/src/Saturdaze.Cli -- seed
 
 # 4. Run the API
 dotnet run --project backend/src/Saturdaze.Api
