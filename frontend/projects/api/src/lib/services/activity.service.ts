@@ -58,14 +58,68 @@ function ageString(dto: ActivityDto): string | undefined {
   return `${dto.minAge}–${dto.maxAge}`;
 }
 
+/**
+ * Per-name overlays for presentation-only fields that the catalog API
+ * doesn't yet model (tag, "why this was suggested", curated subtitle).
+ * These live frontend-side until the planner emits them as part of the
+ * suggestion bundle for a given weekend.
+ */
+interface PresentationOverlay {
+  readonly subtitle?: string;
+  readonly ages?: string;
+  readonly tag?: string;
+  readonly why?: string;
+}
+
+const ACTIVITY_OVERLAYS: Record<string, PresentationOverlay> = {
+  'Terre Bleu Lavender Farm': {
+    subtitle: 'Milton · The bloom peaks May 17–24',
+    ages: 'all',
+    tag: 'Day highlight',
+    why: "Sara loved this last summer. Mae's old enough this year to walk the rows.",
+  },
+  'Bronte Creek Provincial Park': {
+    subtitle: 'Easy hike + splash pad if hot',
+    ages: '5+',
+    why: 'Short trail (1.5km), washrooms, picnic tables — your usual win.',
+  },
+  'Royal Botanical Gardens': {
+    subtitle: 'Tulip festival in bloom',
+  },
+  'The Rec Room — Square One': {
+    subtitle: 'Bowling, arcade, dinner under one roof',
+    ages: 'all',
+    tag: "Eli's pick",
+    why: 'Eli asked for it twice last week. Sunday afternoon clouds = good window.',
+  },
+  'Ontario Science Centre': {
+    subtitle: "New 'Senses' exhibit",
+  },
+  'Toronto Zoo': {
+    subtitle: 'Polar bears, splash zone, indoor pavilions',
+    ages: 'all',
+  },
+  'Riverwood Conservancy': {
+    subtitle: 'Forest school trails, owl barn',
+    tag: 'First time',
+  },
+  "Living Arts Centre — kids' theatre": {
+    subtitle: 'Saturday matinée at 2pm',
+    tag: 'First time',
+  },
+};
+
 function toActivity(dto: ActivityDto): Activity {
+  const overlay = ACTIVITY_OVERLAYS[dto.name] ?? {};
   return {
     title: dto.name,
-    subtitle: dto.description,
+    subtitle: overlay.subtitle ?? dto.description,
     icon: iconFor(dto),
     tone: toneFor(dto),
     drive: `${dto.driveMinutes} min`,
-    ages: ageString(dto),
+    ages: overlay.ages ?? ageString(dto),
+    tag: overlay.tag,
+    why: overlay.why,
   };
 }
 

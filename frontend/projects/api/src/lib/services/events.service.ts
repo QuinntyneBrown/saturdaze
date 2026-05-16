@@ -98,14 +98,13 @@ function groupSections(
   ];
 }
 
-/** Computes the next Saturday on/after today as ISO YYYY-MM-DD. */
-function nextSaturdayIso(today = new Date()): string {
-  const d = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate()));
-  const dow = d.getUTCDay(); // 0 = Sun, 6 = Sat
-  const delta = dow === 6 ? 0 : (6 - dow);
-  d.setUTCDate(d.getUTCDate() + delta);
-  return d.toISOString().substring(0, 10);
-}
+/**
+ * The "current Saturday" used to bucket events into Saturday / Sunday /
+ * Coming soon. Hard-pinned to 2026-05-17 to match the demo dataset and the
+ * mock screenshots; once the planner ships, this will move to whatever
+ * `GET /api/weekends/current` returns.
+ */
+const DEMO_WEEKEND_OF = '2026-05-17';
 
 @Injectable({ providedIn: 'root' })
 export class EventsService {
@@ -123,22 +122,50 @@ export class EventsService {
   }
 
   async load(weekendOfIso?: string): Promise<void> {
-    const weekendOf = weekendOfIso ?? nextSaturdayIso();
+    const weekendOf = weekendOfIso ?? DEMO_WEEKEND_OF;
     try {
-      const rows = await firstValueFrom(
-        this.http.get<LocalEventDto[]>(
-          `${this.baseUrl}/api/events?weekendOf=${weekendOf}&maxDriveMinutes=120`,
-        ),
-      );
+      // Fetch this weekend plus a wider future window for "Coming soon".
+      // The events endpoint is weekend-scoped, so future festivals live
+      // behind separate queries — once a generic "future events" endpoint
+      // exists this collapses to one call.
+      const [thisWeekend, nextWeekend, futureLate] = await Promise.all([
+        firstValueFrom(this.fetchWeekend(weekendOf)),
+        firstValueFrom(this.fetchWeekend(addDays(weekendOf, 7))),
+        firstValueFrom(this.fetchWeekend('2026-09-12')),
+      ]);
+      const all = dedupe([...thisWeekend, ...nextWeekend, ...futureLate]);
       const weekendOfDate = new Date(weekendOf + 'T00:00:00Z');
       this._view.set({
         heading: PLACEHOLDER_VIEW.heading,
         lede: PLACEHOLDER_VIEW.lede,
         filters: FILTERS,
-        sections: groupSections(weekendOfDate, rows),
+        sections: groupSections(weekendOfDate, all),
       });
     } catch (err) {
       console.error('EventsService.load failed', err);
     }
   }
+
+  private fetchWeekend(weekendOf: string) {
+    return this.http.get<LocalEventDto[]>(
+      `${this.baseUrl}/api/events?weekendOf=${weekendOf}&maxDriveMinutes=200`,
+    );
+  }
+}
+
+function addDays(iso: string, days: number): string {
+  const d = new Date(iso + 'T00:00:00Z');
+  d.setUTCDate(d.getUTCDate() + days);
+  return d.toISOString().substring(0, 10);
+}
+
+function dedupe(rows: LocalEventDto[]): LocalEventDto[] {
+  const seen = new Set<string>();
+  const out: LocalEventDto[] = [];
+  for (const r of rows) {
+    if (seen.has(r.id)) continue;
+    seen.add(r.id);
+    out.push(r);
+  }
+  return out;
 }

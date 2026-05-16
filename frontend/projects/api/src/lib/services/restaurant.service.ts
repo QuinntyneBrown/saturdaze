@@ -55,22 +55,27 @@ const PLACEHOLDER_VIEW: RestaurantView = {
   sundayDinner: { ...PLACEHOLDER_SECTION, title: 'Sunday dinner' },
 };
 
-function voteFor(restaurantName: string, voter: { name: string }): 'up' | 'down' | 'none' {
-  // Stable hash so the same restaurant + voter pair always shows the same vote.
-  const key = `${restaurantName}::${voter.name}`;
-  let h = 0;
-  for (const ch of key) h = (h * 31 + ch.charCodeAt(0)) | 0;
-  const bucket = ((h % 5) + 5) % 5;
-  if (bucket === 4) return 'down';
-  if (bucket === 3) return 'none';
-  return 'up';
-}
+/**
+ * Curated per-restaurant vote pattern that matches the mocks. Each entry
+ * maps a restaurant name to the (Quinn, Sara, Eli, Mae) vote tuple. Names
+ * not listed default to "everyone is up" — kid-friendly options the family
+ * has not voted on yet.
+ *
+ * Votes live frontend-side until the backend grows a vote model.
+ */
+const VOTE_PATTERNS: Record<string, ReadonlyArray<'up' | 'down' | 'none'>> = {
+  'La Marina':                  ['up',   'up',   'up',   'none'],
+  'Symposium Café':             ['none', 'up',   'none', 'up'],
+  'The Sicilian Sidewalk Café': ['up',   'down', 'up',   'up'],
+  "Jack Astor's":               ['up',   'up',   'up',   'up'],
+};
 
 function synthVotes(restaurantName: string): ReadonlyArray<FamilyVote> {
-  return VOTER_ROSTER.map((v) => ({
+  const pattern = VOTE_PATTERNS[restaurantName] ?? ['up', 'up', 'up', 'up'];
+  return VOTER_ROSTER.map((v, i) => ({
     name: v.name,
     tone: v.tone,
-    vote: voteFor(restaurantName, v),
+    vote: pattern[i] ?? 'none',
   }));
 }
 
@@ -116,24 +121,16 @@ export class RestaurantService {
         ),
       ]);
 
-      // Mock layout: "Top pick" = top-ranked Lunch pick (La Marina).
-      // "Other picks" = next two Lunch picks. "Sunday dinner" = top-ranked Dinner pick.
-      const lunchSorted = [...lunch].sort((a, b) => {
-        if (a.name === 'La Marina') return -1;
-        if (b.name === 'La Marina') return 1;
-        if (a.wifeApproved !== b.wifeApproved) return a.wifeApproved ? -1 : 1;
-        return a.driveMinutes - b.driveMinutes;
-      });
-      const topPick = lunchSorted[0];
-      const others = lunchSorted.slice(1, 3);
-
-      const dinnerSorted = [...dinner].sort((a, b) => {
-        if (a.name === "Jack Astor's") return -1;
-        if (b.name === "Jack Astor's") return 1;
-        if (a.wifeApproved !== b.wifeApproved) return a.wifeApproved ? -1 : 1;
-        return a.driveMinutes - b.driveMinutes;
-      });
-      const sundayDinner = dinnerSorted[0];
+      // The demo layout pins specific restaurants into each section so the
+      // mock visuals are reproducible from real seed data. Once the planner
+      // can pick "closest to today's activity" we'll let it choose.
+      const byName = (name: string) => (r: RestaurantDto) => r.name === name;
+      const topPick = lunch.find(byName('La Marina'));
+      const others = [
+        lunch.find(byName('Symposium Café')),
+        lunch.find(byName('The Sicilian Sidewalk Café')),
+      ].filter((r): r is RestaurantDto => !!r);
+      const sundayDinner = dinner.find(byName("Jack Astor's"));
 
       this._view.set({
         title: 'Saturday food',
