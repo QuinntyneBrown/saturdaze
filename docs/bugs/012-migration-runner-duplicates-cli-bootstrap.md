@@ -103,4 +103,27 @@ Fold the migration step into `Saturdaze.Cli` as a sibling of
 ## Status
 
 - Logged: 2026-05-16
-- Pending — no code change yet; this bug captures the merge plan.
+- **Fixed: 2026-05-16.**
+  - New `migrate` verb under `Saturdaze.Cli.Migrate/`
+    (`MigrateCommand` + `MigrateCommandHandler`) registered in
+    `RootCommandFactory`. Wired through `CliHostFactory` so
+    connection resolution and `UseSqlServer` configuration come from
+    the same path as `seed` (the bug-006 fix is automatically picked
+    up — `SATURDAZE_CONNECTION` honoured).
+  - `Saturdaze.MigrationRunner` project deleted (`Program.cs`,
+    `Saturdaze.MigrationRunner.csproj`, folder removed). Removed from
+    `Saturdaze.sln`. EF Design package reference moved to
+    `Saturdaze.Cli.csproj` so design-time tooling
+    (`dotnet ef migrations add` / `list`) uses the CLI as startup.
+  - `backend/README.md`, root `README.md`, `docs/backend-plan.md`, and
+    `Saturdaze.Infrastructure.DependencyInjection` comment all updated
+    to point at `saturdaze migrate` / `saturdaze seed` instead of the
+    runner.
+- Target usage now works:
+  - `dotnet run --project backend/src/Saturdaze.Cli -- migrate`
+  - `dotnet run --project backend/src/Saturdaze.Cli -- seed`
+- Verified by: `dotnet build` clean; `dotnet ef migrations list`
+  succeeds against the new startup project (`Saturdaze.Cli`); two new
+  regression tests in `RootCommandFactoryTests` lock in that the
+  `migrate` subcommand is registered with descriptive help; all 149
+  backend tests pass.
