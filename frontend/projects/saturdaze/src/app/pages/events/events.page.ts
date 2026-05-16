@@ -2,24 +2,24 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 
 import { EventsService } from 'api';
 import {
-  SdBottomNav,
-  SdChip,
-  SdEventCard,
-  SdSection,
-  SdTagGroup,
-  SdTopBar,
+  BottomNav,
+  Chip,
+  EventCard,
+  Section,
+  TagGroup,
+  TopBar,
 } from 'components';
 
 @Component({
   selector: 'app-events',
   standalone: true,
   imports: [
-    SdBottomNav,
-    SdChip,
-    SdEventCard,
-    SdSection,
-    SdTagGroup,
-    SdTopBar,
+    BottomNav,
+    Chip,
+    EventCard,
+    Section,
+    TagGroup,
+    TopBar,
   ],
   templateUrl: './events.page.html',
   styleUrl: './events.page.scss',

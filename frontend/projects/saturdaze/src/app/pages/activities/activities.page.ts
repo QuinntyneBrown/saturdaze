@@ -2,26 +2,26 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 
 import { ActivityService } from 'api';
 import {
-  SdActivityCard,
-  SdBottomNav,
-  SdChip,
-  SdIconButton,
-  SdSection,
-  SdTagGroup,
-  SdTopBar,
+  ActivityCard,
+  BottomNav,
+  Chip,
+  IconButton,
+  Section,
+  TagGroup,
+  TopBar,
 } from 'components';
 
 @Component({
   selector: 'app-activities',
   standalone: true,
   imports: [
-    SdActivityCard,
-    SdBottomNav,
-    SdChip,
-    SdIconButton,
-    SdSection,
-    SdTagGroup,
-    SdTopBar,
+    ActivityCard,
+    BottomNav,
+    Chip,
+    IconButton,
+    Section,
+    TagGroup,
+    TopBar,
   ],
   templateUrl: './activities.page.html',
   styleUrl: './activities.page.scss',
