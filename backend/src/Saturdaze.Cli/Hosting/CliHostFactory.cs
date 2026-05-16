@@ -5,6 +5,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Saturdaze.Application.Common;
 using Saturdaze.Cli.Database;
+using Saturdaze.Cli.Migrate;
 using Saturdaze.Cli.Seed;
 using Saturdaze.Infrastructure.Persistence;
 
@@ -52,6 +53,7 @@ public static class CliHostFactory
                 services.AddSingleton<IJsonSeeder, LocalEventSeeder>();
                 services.AddSingleton<IJsonSeeder, FamilySeeder>();
                 services.AddScoped<SeedCommandHandler>();
+                services.AddScoped<MigrateCommandHandler>();
             });
     }
 

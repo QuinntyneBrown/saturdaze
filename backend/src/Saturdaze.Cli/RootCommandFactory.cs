@@ -1,5 +1,6 @@
 using System.CommandLine;
 using Saturdaze.Cli.Hosting;
+using Saturdaze.Cli.Migrate;
 using Saturdaze.Cli.Seed;
 
 namespace Saturdaze.Cli;
@@ -14,6 +15,7 @@ public static class RootCommandFactory
         root.AddGlobalOption(GlobalOptions.SeedDir);
         root.AddGlobalOption(GlobalOptions.Verbose);
         root.AddCommand(SeedCommand.Build(args));
+        root.AddCommand(MigrateCommand.Build(args));
         return root;
     }
 }
