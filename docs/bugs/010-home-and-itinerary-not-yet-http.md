@@ -45,4 +45,34 @@ Three layers, in order:
 ## Status
 
 - Logged: 2026-05-16
-- Pending — biggest remaining piece of the live-integration work.
+- **Fixed: 2026-05-16.**
+  1. **HTTP wiring landed.** `WeekendPlanService` now injects `HttpClient`
+     + `API_BASE_URL`, calls `GET /api/weekends/current` on construction,
+     and exposes `getDemoOverview()` / `getDemoItinerary()` as signals
+     populated from the resulting `WeekendDto`. The 404 case is closed
+     server-side by [bug 005](005-no-current-weekend-on-fresh-db.md), so
+     the client never has to special-case "no weekend planned."
+  2. **Projection layer.** Two pure functions in the service —
+     `projectOverview(dto)` and `projectItinerary(dto, activeDay)` — map
+     the backend's `WeekendDto` / `ItineraryBlockDto` / `WeatherForecast`
+     into the rich `WeekendOverview` / `ItineraryView` shapes the pages
+     already consume. Mapping rules:
+     - Weather chips, icons, and hero subtitle inferred from
+       `WeatherForecast.tags`.
+     - Day chips: first locked block ("9:00 swim"), aggregated drive
+       minutes, outdoor/indoor inference from weather.
+     - Stats: total blocks, total drive time, locked anchors. Spend
+       estimate stays placeholder until the backend tracks it.
+     - Block icon + tone derived from `BlockKind` enum.
+     - Top activity highlight pulled from the first `Activity` block.
+  3. **Action commands wired.** `WeekendPlanService` exposes
+     `plan(weekendOfIso)`, `regenerate(id?)`, `markFavourite(fav, id?)`,
+     `lockBlock(blockId, locked)`, `swapBlock(blockId)`, and
+     `addErrand(description, minutes, id?)` — each posts/puts to the
+     corresponding endpoint and triggers a refetch so the signals
+     re-render. Pages can call them through DI without further wiring.
+  4. **Day switcher.** `setActiveDay('Saturday'|'Sunday')` re-projects
+     the cached DTO into the itinerary view without a refetch.
+  5. **Anticipations** stay empty for now — the planner doesn't emit them
+     yet. Tracked as a planner-side follow-up.
+- Verified by: `ng build saturdaze` (clean), all 148 backend tests pass.

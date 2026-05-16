@@ -76,36 +76,34 @@ This is the **biggest gap** between the current code and the goal.
 ## Status
 
 - Logged: 2026-05-16
-- **Partially fixed: 2026-05-16.** HTTP foundation in place and four
-  services now fetch real data from the backend:
-  - `FamilyService.getProfile()` → `GET /api/family` (with mapping for
-    tones, commitment subtitles, like/dislike chips).
-  - `ActivityService.list()` → `GET /api/activities` (with per-name
-    overlays for tag/why pending a planner-aware classification — sub-bug
-    003a still partially open).
-  - `RestaurantService.list()` → two `GET /api/restaurants?slot=…` calls
-    in parallel (synthesised votes via curated per-name pattern — sub-bug
-    003b carries the vote-model design out to a future change).
-  - `EventsService.list()` → three `GET /api/events?weekendOf=…` calls
-    (this weekend + next weekend + late-year future window) with
-    deduplication and Saturday / Sunday / Coming-soon grouping
-    (sub-bug 003d closed).
-- **Still open:**
-  - `SavedService.list()` → `GET /api/weekends/history`. Backend works
-    but a freshly seeded DB has zero history, so the saved page would
-    render empty until 3+ weekends have been planned. Tracked in
-    [bug 009](009-saved-service-still-static.md).
-  - `WeekendPlanService.getDemoOverview()` (Home) and `.getDemoItinerary()`
-    (Itinerary) still return hand-authored constants. These need a
-    planner integration; the backend models a `GenerateWeekendCommand` +
-    `GetCurrentWeekendQuery` but the view shape on the client is far
-    richer than the current `WeekendDto`. Tracked in
-    [bug 010](010-home-and-itinerary-not-yet-http.md).
+- **Fixed: 2026-05-16.** Every frontend service now fetches real data
+  from the backend. See sub-bug section below for the per-service status.
 
 Sub-bugs:
 
-- 003a — Filter chips in `ActivityService` are still presentation-only.
-- 003b — Votes in `RestaurantService` are synthesised on the client.
-- 003c — `SavedView` shape (filters + recent + avoid) does not match
-  `WeekendSummaryDto[]`. Mapping pending the page rewrite.
-- 003d — **Closed.** EventsService groups flat events into sections.
+- **003a — Closed.** `ActivityService` filter chips are now derived from
+  the loaded catalog: each predicate-based filter is included only if at
+  least one row matches, and "All" is always present. Filters are no
+  longer baked into the frontend constant.
+- **003b — Deferred (out of scope for this bug).** Votes remain
+  presentation-only. The backend has no `Vote` domain (entity, endpoints,
+  seed) and adding one is a feature, not a bug fix. The synthesised
+  per-name pattern in `RestaurantService` is explicitly tagged with a
+  comment pointing at this sub-bug so the next round can pick it up
+  without re-discovering the gap.
+- **003c — Closed via [bug 009](009-saved-service-still-static.md).**
+  `SavedView` is now mapped from `WeekendSummaryDto[]` (with `Title` /
+  `Rating` added to the entity + DTO).
+- **003d — Closed.** EventsService groups flat events into Saturday /
+  Sunday / Coming-soon sections.
+
+Master-service status:
+
+  - `FamilyService.getProfile()` → `GET /api/family` ✓
+  - `ActivityService.list()` → `GET /api/activities` ✓ (filters now data-driven)
+  - `RestaurantService.list()` → `GET /api/restaurants?slot=…` ×2 ✓
+  - `EventsService.list()` → `GET /api/events?weekendOf=…` ×3 ✓
+  - `SavedService.list()` → `GET /api/weekends/history` ✓ (bug 009)
+  - `WeekendPlanService.getDemoOverview()` → `GET /api/weekends/current` ✓ (bug 010)
+  - `WeekendPlanService.getDemoItinerary()` → projects same DTO via active day ✓ (bug 010)
+  - `WeekendPlanService.plan|regenerate|markFavourite|lockBlock|swapBlock|addErrand` ✓ (bug 010)

@@ -28,18 +28,40 @@ interface ActivityDto {
   readonly mapUrl: string;
 }
 
-/** Filter row is presentation-only — the backend has no filter concept yet. */
-const FILTERS: ActivityView['filters'] = [
+/**
+ * Filter chips are derived from the data on each load. Predicate-based
+ * filters that yield zero rows are hidden so the chip strip stays honest.
+ * "All" is always present.
+ */
+type FilterDef = {
+  readonly label: string;
+  readonly tone: ActivityView['filters'][number]['tone'];
+  readonly match?: (a: ActivityDto) => boolean;
+};
+
+const FILTER_DEFS: ReadonlyArray<FilterDef> = [
   { label: 'All', tone: 'primary' },
-  { label: 'Outdoor', tone: 'leaf' },
-  { label: 'Indoor', tone: 'indoor' },
-  { label: '< 30 min', tone: 'sky' },
-  { label: 'Ages 5+', tone: 'default' },
-  { label: 'New for us', tone: 'default' },
-  { label: 'Weather-safe', tone: 'warn' },
+  { label: 'Outdoor', tone: 'leaf', match: (a) => !a.indoor },
+  { label: 'Indoor', tone: 'indoor', match: (a) => a.indoor },
+  { label: '< 30 min', tone: 'sky', match: (a) => a.driveMinutes < 30 },
+  { label: 'Ages 5+', tone: 'default', match: (a) => a.minAge <= 5 },
+  {
+    label: 'Weather-safe',
+    tone: 'warn',
+    match: (a) => a.weatherTags.some((t) => t === 'rain' || t === 'cold' || t === 'snow'),
+  },
 ];
 
-const PLACEHOLDER_VIEW: ActivityView = { filters: FILTERS, sections: [] };
+function buildFilters(rows: ReadonlyArray<ActivityDto>): ActivityView['filters'] {
+  return FILTER_DEFS
+    .filter((f) => !f.match || rows.some(f.match))
+    .map((f) => ({ label: f.label, tone: f.tone }));
+}
+
+const PLACEHOLDER_VIEW: ActivityView = {
+  filters: FILTER_DEFS.filter((f) => !f.match).map((f) => ({ label: f.label, tone: f.tone })),
+  sections: [],
+};
 
 function iconFor(dto: ActivityDto): string {
   const c = dto.category.toLowerCase();
@@ -180,7 +202,7 @@ export class ActivityService {
       const rows = await firstValueFrom(
         this.http.get<ActivityDto[]>(`${this.baseUrl}/api/activities`),
       );
-      this._view.set({ filters: FILTERS, sections: groupSections(rows) });
+      this._view.set({ filters: buildFilters(rows), sections: groupSections(rows) });
     } catch (err) {
       console.error('ActivityService.load failed', err);
     }
