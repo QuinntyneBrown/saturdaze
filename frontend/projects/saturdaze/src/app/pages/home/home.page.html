@@ -1,2 +1,132 @@
-<sd-top-bar title=""></sd-top-bar>
+<sd-top-bar title="">
+  <sd-icon-button
+    slot="leading"
+    icon="calendar"
+    label="Open calendar"
+    variant="ghost"
+  />
+  <sd-icon-button
+    slot="trailing"
+    icon="share"
+    label="Share with Sara"
+  />
+</sd-top-bar>
+
+<sd-split-view sticky-detail>
+  <div slot="master">
+    <sd-hero
+      [greeting]="overview().greeting"
+      [subtitle]="overview().heroSubtitle"
+      [cta]="overview().heroCta"
+    />
+
+    <sd-section title="The forecast" [subtitle]="overview().forecastSubtitle">
+      <sd-weather-strip>
+        @for (w of overview().forecast; track w.day) {
+          <sd-weather-day
+            [day]="w.day"
+            [icon]="w.icon"
+            [hi]="w.hi"
+            [lo]="w.lo"
+            [note]="w.note"
+          />
+        }
+      </sd-weather-strip>
+    </sd-section>
+
+    <sd-section title="Your weekend" subtitle="Tap a day to see the timeline">
+      <div class="home-grid-cards">
+        @for (d of overview().days; track d.day) {
+          <sd-day-card
+            [day]="d.day"
+            [date]="d.date"
+            [weather]="d.weather"
+            [icon]="d.icon"
+            [highlight]="d.highlight"
+            href="itinerary.html"
+            route="/itinerary"
+          >
+            @for (c of d.chips; track $index) {
+              <sd-chip slot="chips" [tone]="c.tone">
+                @if (c.icon) { <sd-icon [name]="c.icon" [size]="12" /> }
+                {{ c.label }}
+              </sd-chip>
+            }
+          </sd-day-card>
+        }
+      </div>
+    </sd-section>
+
+    <sd-section title="A heads-up" subtitle="Things I noticed for you">
+      <div class="home-anticipate-stack">
+        @for (a of overview().anticipations; track a.headline) {
+          <sd-anticipate
+            [icon]="a.icon"
+            [headline]="a.headline"
+            [body]="a.body"
+            [cta]="a.cta ?? ''"
+          />
+        }
+      </div>
+    </sd-section>
+
+    <sd-section title="Quick actions" flush>
+      <div class="home-quick-actions">
+        @for (q of overview().quickActions; track q.title) {
+          <sd-list-item [title]="q.title" [subtitle]="q.subtitle" href="#">
+            <sd-icon slot="leading" [name]="q.icon" />
+            <sd-icon slot="trailing" name="chevron_right" [size]="16" />
+          </sd-list-item>
+        }
+      </div>
+    </sd-section>
+  </div>
+
+  <div slot="detail">
+    <div class="detail-pane">
+      <div class="detail-pane-head">
+        <div>
+          <div class="title">Saturday — live preview</div>
+          <div class="sub">Tap any block to swap, lock, or see why</div>
+        </div>
+        <sd-icon-button
+          icon="arrow_right"
+          label="Open full day"
+          variant="filled"
+        />
+      </div>
+      <div class="detail-pane-body">
+        @for (b of overview().preview; track b.time) {
+          <sd-timeline-block
+            [time]="b.time"
+            [duration]="b.duration ?? ''"
+            [title]="b.title"
+            [subtitle]="b.subtitle ?? ''"
+            [icon]="b.icon"
+            [tone]="b.tone ?? 'default'"
+            [locked]="b.locked ?? false"
+            [drive]="b.drive ?? ''"
+          >
+            @if (b.chips) {
+              @for (c of b.chips; track $index) {
+                <sd-chip slot="chips" [tone]="c.tone">{{ c.label }}</sd-chip>
+              }
+            }
+          </sd-timeline-block>
+        }
+      </div>
+      <div class="detail-pane-footer">
+        <sd-button variant="secondary" size="sm" full>
+          <sd-icon slot="leading" name="refresh" [size]="14" />
+          Regenerate
+        </sd-button>
+        <sd-button size="sm" full>
+          <sd-icon slot="leading" name="arrow_right" [size]="14" />
+          Open Saturday
+        </sd-button>
+      </div>
+    </div>
+  </div>
+</sd-split-view>
+
 <sd-bottom-nav active="home" />

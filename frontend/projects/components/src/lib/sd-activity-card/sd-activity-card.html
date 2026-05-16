@@ -1,0 +1,27 @@
+<div class="card">
+  <div class="image">
+    <sd-icon [name]="icon()" [size]="44" />
+    @if (tag()) {
+      <div class="corner-tag"><sd-chip tone="primary">{{ tag() }}</sd-chip></div>
+    }
+  </div>
+  <div class="body">
+    <div class="title">{{ cardTitle() }}</div>
+    @if (subtitle()) { <div class="subtitle">{{ subtitle() }}</div> }
+    <div class="meta">
+      @if (drive()) {
+        <sd-chip tone="sky"><sd-icon name="car" [size]="12" /> {{ drive() }}</sd-chip>
+      }
+      @if (ages()) {
+        <sd-chip tone="leaf">Ages {{ ages() }}</sd-chip>
+      }
+      <ng-content select="[slot=chips]" />
+    </div>
+    @if (why()) {
+      <div class="why">
+        <sd-icon name="sparkle" [size]="14" />
+        <span>{{ why() }}</span>
+      </div>
+    }
+  </div>
+</div>

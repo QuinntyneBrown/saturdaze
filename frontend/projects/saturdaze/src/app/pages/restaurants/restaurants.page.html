@@ -1,2 +1,98 @@
-<sd-top-bar title="Food" back></sd-top-bar>
+<sd-top-bar title="Food" back>
+  <sd-icon-button slot="trailing" icon="refresh" label="Refresh picks" />
+</sd-top-bar>
+
+<div class="rest-lede">
+  <h2>{{ view().title }}</h2>
+  <p>{{ view().lede }}</p>
+</div>
+
+<sd-tag-group>
+  @for (f of view().filters; track f.label) {
+    <sd-chip [tone]="f.tone">{{ f.label }}</sd-chip>
+  }
+</sd-tag-group>
+
+<sd-section
+  [title]="view().topPickSection.title"
+  [subtitle]="view().topPickSection.subtitle ?? ''"
+>
+  @for (r of view().topPickSection.picks; track r.name) {
+    <sd-restaurant-card
+      [name]="r.name"
+      [styleAttr]="r.style"
+      [near]="r.near ?? ''"
+      [drive]="r.drive ?? ''"
+      [wifeapproved]="r.wifeapproved ?? false"
+      [icon]="r.icon ?? 'fork'"
+    >
+      <sd-chip slot="chips" tone="primary">Top pick</sd-chip>
+      @for (v of r.votes; track v.name) {
+        <sd-vote-row
+          slot="votes"
+          [name]="v.name"
+          [tone]="v.tone"
+          [vote]="v.vote"
+        />
+      }
+      <div slot="votes" class="top-pick-actions">
+        <sd-button variant="secondary" size="sm" full>See menu</sd-button>
+        <sd-button size="sm" full>
+          <sd-icon slot="leading" name="lock" [size]="14" />
+          Lock it in
+        </sd-button>
+      </div>
+    </sd-restaurant-card>
+  }
+</sd-section>
+
+<sd-section [title]="view().otherPicks.title">
+  <div class="sd-card-grid">
+    @for (r of view().otherPicks.picks; track r.name) {
+      <sd-restaurant-card
+        [name]="r.name"
+        [styleAttr]="r.style"
+        [near]="r.near ?? ''"
+        [drive]="r.drive ?? ''"
+        [wifeapproved]="r.wifeapproved ?? false"
+        [icon]="r.icon ?? 'fork'"
+      >
+        @for (v of r.votes; track v.name) {
+          <sd-vote-row
+            slot="votes"
+            [name]="v.name"
+            [tone]="v.tone"
+            [vote]="v.vote"
+          />
+        }
+      </sd-restaurant-card>
+    }
+  </div>
+</sd-section>
+
+<sd-section
+  [title]="view().sundayDinner.title"
+  [subtitle]="view().sundayDinner.subtitle ?? ''"
+>
+  @for (r of view().sundayDinner.picks; track r.name) {
+    <sd-restaurant-card
+      [name]="r.name"
+      [styleAttr]="r.style"
+      [near]="r.near ?? ''"
+      [drive]="r.drive ?? ''"
+      [wifeapproved]="r.wifeapproved ?? false"
+      [icon]="r.icon ?? 'fork'"
+    >
+      @for (v of r.votes; track v.name) {
+        <sd-vote-row
+          slot="votes"
+          [name]="v.name"
+          [tone]="v.tone"
+          [vote]="v.vote"
+        />
+      }
+    </sd-restaurant-card>
+  }
+</sd-section>
+
 <sd-bottom-nav active="home" />

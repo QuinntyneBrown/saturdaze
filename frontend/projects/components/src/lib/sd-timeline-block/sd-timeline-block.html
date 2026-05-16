@@ -1,0 +1,29 @@
+<div class="row">
+  <div class="time">
+    {{ time() }}
+    @if (duration()) { <small>{{ duration() }}</small> }
+  </div>
+  <div class="body">
+    <div class="icon"><sd-icon [name]="icon()" [size]="20" /></div>
+    <div class="text">
+      <div class="title">{{ blockTitle() }}</div>
+      @if (subtitle()) { <div class="subtitle">{{ subtitle() }}</div> }
+      <div class="meta">
+        <ng-content select="[slot=chips]" />
+        @if (locked()) {
+          <sd-chip tone="accent">
+            <sd-icon name="lock" [size]="12" /> Locked
+          </sd-chip>
+        }
+        @if (drive()) {
+          <sd-chip tone="sky">
+            <sd-icon name="car" [size]="12" /> {{ drive() }}
+          </sd-chip>
+        }
+      </div>
+    </div>
+  </div>
+  <div class="right">
+    <ng-content select="[slot=actions]" />
+  </div>
+</div>

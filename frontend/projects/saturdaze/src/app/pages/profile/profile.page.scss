@@ -1,1 +1,62 @@
-// Family profile. Full slice in Phase 8.
+@use "styles/breakpoints" as *;
+
+.family-identity {
+  padding: 8px var(--sd-app-pad-x) 0;
+  text-align: center;
+
+  h2 {
+    font-size: 26px;
+    font-weight: var(--sd-fw-bold);
+    letter-spacing: -0.02em;
+    margin: 4px 0;
+  }
+
+  p {
+    color: var(--sd-ink-soft);
+    font-size: var(--sd-fs-sm);
+    margin: 0 0 16px;
+  }
+}
+
+.stack {
+  display: grid;
+  gap: 8px;
+}
+
+.pref-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+}
+
+.pref-row.with-divider {
+  border-bottom: 1px solid var(--sd-line);
+  margin-bottom: 8px;
+}
+
+.pref-row.with-divider + .pref-row {
+  padding-top: 0;
+}
+
+.pref-title {
+  font-weight: var(--sd-fw-semibold);
+}
+
+.pref-sub {
+  font-size: var(--sd-fs-sm);
+  color: var(--sd-ink-soft);
+}
+
+@include respond-to(desktop) {
+  .profile-cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    align-items: start;
+  }
+
+  .profile-cols > * {
+    margin: 0;
+  }
+}

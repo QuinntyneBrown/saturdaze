@@ -1,12 +1,32 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 
-import { SdBottomNav, SdTopBar } from 'components';
+import { ActivityService } from 'api';
+import {
+  SdActivityCard,
+  SdBottomNav,
+  SdChip,
+  SdIconButton,
+  SdSection,
+  SdTagGroup,
+  SdTopBar,
+} from 'components';
 
 @Component({
   selector: 'app-activities',
   standalone: true,
-  imports: [SdTopBar, SdBottomNav],
+  imports: [
+    SdActivityCard,
+    SdBottomNav,
+    SdChip,
+    SdIconButton,
+    SdSection,
+    SdTagGroup,
+    SdTopBar,
+  ],
   templateUrl: './activities.page.html',
+  styleUrl: './activities.page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ActivitiesPage {}
+export class ActivitiesPage {
+  protected readonly view = inject(ActivityService).list();
+}

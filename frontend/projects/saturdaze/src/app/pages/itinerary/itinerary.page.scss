@@ -1,1 +1,167 @@
-// Itinerary detail. Full slice in Phase 2.
+@use "styles/breakpoints" as *;
+
+.it-head {
+  padding: 8px var(--sd-app-pad-x) 16px;
+}
+
+.it-head-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.it-eyebrow {
+  font-size: var(--sd-fs-xs);
+  color: var(--sd-ink-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: var(--sd-fw-semibold);
+}
+
+.it-title {
+  font-size: 26px;
+  font-weight: var(--sd-fw-bold);
+  letter-spacing: -0.02em;
+  margin-top: 2px;
+}
+
+.it-sub {
+  color: var(--sd-ink-soft);
+  font-size: var(--sd-fs-sm);
+  margin-top: 2px;
+}
+
+.it-sun-icon {
+  color: var(--sd-sun);
+  flex-shrink: 0;
+}
+
+.it-head-chips {
+  margin-top: 16px;
+}
+
+.it-actions {
+  padding: 8px var(--sd-app-pad-x) 24px;
+  display: flex;
+  gap: 10px;
+}
+
+.day-switcher {
+  padding: 0 4px;
+  display: grid;
+  gap: 10px;
+}
+
+.day-switcher .opt {
+  padding: 14px 16px;
+  background: var(--sd-surface);
+  border: 1px solid var(--sd-line);
+  border-radius: var(--sd-r-lg);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+}
+
+.day-switcher .opt[data-active="true"] {
+  border-color: var(--sd-primary);
+  background: var(--sd-primary-soft);
+}
+
+.day-switcher .opt-body {
+  flex: 1;
+}
+
+.day-switcher .day {
+  font-weight: var(--sd-fw-semibold);
+  letter-spacing: -0.005em;
+}
+
+.day-switcher .meta {
+  color: var(--sd-ink-soft);
+  font-size: var(--sd-fs-sm);
+  margin-top: 2px;
+}
+
+.day-switcher .weather-icon {
+  color: var(--sd-sun);
+}
+
+.day-switcher .soft-icon {
+  color: var(--sd-ink-soft);
+}
+
+.weekend-stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  padding: 0 4px;
+}
+
+.weekend-stats .stat {
+  background: var(--sd-surface);
+  border: 1px solid var(--sd-line);
+  border-radius: var(--sd-r-lg);
+  padding: 14px;
+}
+
+.weekend-stats .stat .num {
+  font-size: 24px;
+  font-weight: var(--sd-fw-bold);
+  letter-spacing: -0.02em;
+}
+
+.weekend-stats .stat .lab {
+  color: var(--sd-ink-soft);
+  font-size: var(--sd-fs-xs);
+  margin-top: 2px;
+}
+
+.it-detail {
+  padding: 8px 4px 4px;
+}
+
+.it-detail-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 18px 14px;
+  border-bottom: 1px solid var(--sd-line);
+}
+
+.it-detail-head .title {
+  font-weight: var(--sd-fw-semibold);
+  font-size: 15px;
+}
+
+.it-detail-head .sub {
+  color: var(--sd-ink-soft);
+  font-size: var(--sd-fs-sm);
+  margin-top: 2px;
+}
+
+.it-detail-body {
+  padding: 14px;
+  display: grid;
+  gap: 10px;
+}
+
+.mobile-timeline-body {
+  display: grid;
+  gap: 10px;
+}
+
+@include respond-to(desktop) {
+  .it-head,
+  .it-actions {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  #mobile-timeline {
+    display: none;
+  }
+}

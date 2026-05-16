@@ -1,0 +1,44 @@
+:host {
+  display: block;
+  padding: 14px;
+  background: var(--sd-surface);
+  border: 1px solid var(--sd-line);
+  border-radius: var(--sd-r-lg);
+}
+
+.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.day {
+  font-weight: var(--sd-fw-semibold);
+  font-size: var(--sd-fs-base);
+  letter-spacing: -0.01em;
+}
+
+.temps {
+  font-size: var(--sd-fs-xs);
+  color: var(--sd-ink-soft);
+
+  b {
+    color: var(--sd-ink);
+    font-weight: var(--sd-fw-semibold);
+  }
+}
+
+.note {
+  font-size: var(--sd-fs-xs);
+  color: var(--sd-ink-soft);
+  margin-top: 8px;
+}
+
+sd-icon {
+  color: var(--sd-sun);
+}
+
+:host([icon="cloud"]) sd-icon,
+:host([icon="rain"]) sd-icon {
+  color: var(--sd-ink-soft);
+}

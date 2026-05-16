@@ -1,0 +1,21 @@
+<div class="card">
+  <div class="date">
+    <div class="mon">{{ dateMon() }}</div>
+    <div class="day">{{ dateDay() }}</div>
+  </div>
+  <div class="body">
+    <div class="title">{{ cardTitle() }}</div>
+    <div class="venue">
+      {{ venue() }}@if (whenLabel()) { · {{ whenLabel() }} }
+    </div>
+    <div class="meta">
+      @if (drive()) {
+        <sd-chip tone="sky"><sd-icon name="car" [size]="12" /> {{ drive() }}</sd-chip>
+      }
+      @if (tag()) {
+        <sd-chip tone="primary">{{ tag() }}</sd-chip>
+      }
+      <ng-content select="[slot=chips]" />
+    </div>
+  </div>
+</div>

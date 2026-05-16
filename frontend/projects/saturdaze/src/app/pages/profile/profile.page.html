@@ -1,2 +1,82 @@
-<sd-top-bar title="Family profile" back></sd-top-bar>
+<sd-top-bar title="Family profile" back>
+  <sd-icon-button slot="trailing" icon="more" label="More" />
+</sd-top-bar>
+
+<div class="family-identity">
+  <h2>{{ profile().familyName }}</h2>
+  <p>{{ profile().location }}</p>
+</div>
+
+<div class="profile-cols">
+  <sd-section title="Who's in" subtitle="Tap to edit a member">
+    <div class="stack">
+      @for (m of profile().members; track m.name) {
+        <sd-list-item [title]="m.name" [subtitle]="m.subtitle">
+          <sd-avatar slot="leading" [name]="m.name" [tone]="m.tone" />
+          <sd-icon slot="trailing" name="chevron_right" [size]="16" />
+        </sd-list-item>
+      }
+      <sd-list-item title="Add family member" flat compact>
+        <sd-icon slot="leading" name="plus" />
+      </sd-list-item>
+    </div>
+  </sd-section>
+
+  <sd-section
+    title="Recurring commitments"
+    subtitle="I'll work the weekend around these"
+  >
+    <div class="stack">
+      @for (c of profile().commitments; track c.title) {
+        <sd-list-item [title]="c.title" [subtitle]="c.subtitle">
+          <sd-icon slot="leading" [name]="c.icon" />
+          <sd-chip slot="trailing" tone="accent">Locked</sd-chip>
+        </sd-list-item>
+      }
+      <sd-list-item title="Add a commitment" flat compact>
+        <sd-icon slot="leading" name="plus" />
+      </sd-list-item>
+    </div>
+  </sd-section>
+
+  <sd-section title="Daily rhythm">
+    <div class="stack">
+      @for (r of profile().rhythm; track r.title) {
+        <sd-list-item [title]="r.title" [subtitle]="r.subtitle">
+          <sd-icon slot="leading" [name]="r.icon" />
+          <sd-chip slot="trailing">{{ r.chip }}</sd-chip>
+        </sd-list-item>
+      }
+    </div>
+  </sd-section>
+
+  <sd-section
+    title="Likes & dislikes"
+    subtitle="I'll lean into / avoid these"
+  >
+    <sd-tag-group>
+      @for (l of profile().likes; track l.label) {
+        <sd-chip [tone]="l.tone">
+          <sd-icon [name]="l.icon" [size]="12" />
+          {{ l.label }}
+        </sd-chip>
+      }
+    </sd-tag-group>
+  </sd-section>
+
+  <sd-section title="Preferences">
+    <sd-card>
+      @for (p of profile().preferences; track p.title; let last = $last) {
+        <div class="pref-row" [class.with-divider]="!last">
+          <div>
+            <div class="pref-title">{{ p.title }}</div>
+            <div class="pref-sub">{{ p.subtitle }}</div>
+          </div>
+          <sd-toggle [checked]="p.checked" />
+        </div>
+      }
+    </sd-card>
+  </sd-section>
+</div>
+
 <sd-bottom-nav active="profile" />

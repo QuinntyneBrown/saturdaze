@@ -1,0 +1,70 @@
+:host {
+  display: block;
+}
+
+.card {
+  background: var(--sd-surface);
+  border: 1px solid var(--sd-line);
+  border-radius: var(--sd-r-lg);
+  padding: 14px;
+}
+
+.head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.date {
+  font-size: var(--sd-fs-xs);
+  color: var(--sd-ink-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: var(--sd-fw-semibold);
+}
+
+.title {
+  font-weight: var(--sd-fw-semibold);
+  font-size: var(--sd-fs-md);
+  letter-spacing: -0.01em;
+  margin-top: 2px;
+}
+
+.stars {
+  display: flex;
+  gap: 2px;
+  margin-top: 6px;
+  color: var(--sd-ink-faint);
+}
+
+.stars sd-icon.filled {
+  color: var(--sd-sun);
+}
+
+.heart {
+  color: var(--sd-ink-faint);
+}
+
+.heart.is-fav {
+  color: var(--sd-warn);
+}
+
+.highlights {
+  margin-top: 10px;
+  padding: 10px 12px;
+  background: var(--sd-surface-2);
+  border-radius: var(--sd-r-md);
+  font-size: var(--sd-fs-sm);
+  color: var(--sd-ink);
+}
+
+.footer {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.footer ::ng-deep > * {
+  flex: 1;
+}

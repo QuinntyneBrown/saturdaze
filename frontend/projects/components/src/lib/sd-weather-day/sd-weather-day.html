@@ -1,0 +1,6 @@
+<div class="top">
+  <span class="day">{{ day() }}</span>
+  <sd-icon [name]="icon()" [size]="22" />
+</div>
+<div class="temps"><b>{{ hi() }}°</b> &nbsp; {{ lo() }}°</div>
+@if (note()) { <div class="note">{{ note() }}</div> }

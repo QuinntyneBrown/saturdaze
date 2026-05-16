@@ -1,1 +1,48 @@
-// Component gallery. Full slice in Phase 10.
+.gallery {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 32px 20px 80px;
+  display: grid;
+  gap: 32px;
+}
+
+.gallery h1 {
+  font-size: 28px;
+  font-weight: var(--sd-fw-bold);
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.gallery-lede {
+  color: var(--sd-ink-soft);
+  margin: 4px 0 0;
+}
+
+section h2 {
+  font-size: 16px;
+  font-weight: var(--sd-fw-semibold);
+  letter-spacing: -0.005em;
+  margin: 0 0 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--sd-line);
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+
+.row-spaced {
+  margin-top: 12px;
+}
+
+.stack {
+  display: grid;
+  gap: 10px;
+}
+
+.inputs-stack {
+  max-width: 360px;
+}

@@ -1,12 +1,38 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 
-import { SdBottomNav, SdTopBar } from 'components';
+import { SavedService } from 'api';
+import {
+  SdBottomNav,
+  SdButton,
+  SdChip,
+  SdIcon,
+  SdIconButton,
+  SdListItem,
+  SdSavedCard,
+  SdSection,
+  SdTagGroup,
+  SdTopBar,
+} from 'components';
 
 @Component({
   selector: 'app-saved',
   standalone: true,
-  imports: [SdTopBar, SdBottomNav],
+  imports: [
+    SdBottomNav,
+    SdButton,
+    SdChip,
+    SdIcon,
+    SdIconButton,
+    SdListItem,
+    SdSavedCard,
+    SdSection,
+    SdTagGroup,
+    SdTopBar,
+  ],
   templateUrl: './saved.page.html',
+  styleUrl: './saved.page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SavedPage {}
+export class SavedPage {
+  protected readonly view = inject(SavedService).list();
+}

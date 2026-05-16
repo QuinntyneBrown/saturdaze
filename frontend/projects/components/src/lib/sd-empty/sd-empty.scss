@@ -1,0 +1,23 @@
+:host {
+  display: block;
+  text-align: center;
+  padding: 48px 24px;
+  color: var(--sd-ink-soft);
+}
+
+sd-icon {
+  color: var(--sd-ink-faint);
+  margin-bottom: 12px;
+}
+
+h3 {
+  font-size: var(--sd-fs-md);
+  font-weight: var(--sd-fw-semibold);
+  color: var(--sd-ink);
+  margin: 0 0 4px;
+}
+
+p {
+  margin: 0 0 16px;
+  font-size: var(--sd-fs-sm);
+}

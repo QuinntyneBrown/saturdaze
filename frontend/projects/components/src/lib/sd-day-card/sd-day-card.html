@@ -1,0 +1,22 @@
+<a [attr.href]="href()" (click)="onNavigate($event)">
+  <div class="head">
+    <div>
+      <div class="day">{{ day() }}</div>
+      @if (date()) { <div class="date">{{ date() }}</div> }
+    </div>
+    <div class="weather">
+      <sd-icon [name]="icon()" [size]="18" />
+      @if (weather()) { {{ weather() }} }
+    </div>
+  </div>
+  @if (highlight()) {
+    <div class="highlight">
+      <div class="icon"><sd-icon name="star" [size]="18" /></div>
+      <div>
+        <div class="label">Day highlight</div>
+        <div class="title">{{ highlight() }}</div>
+      </div>
+    </div>
+  }
+  <div class="footer"><ng-content select="[slot=chips]" /></div>
+</a>

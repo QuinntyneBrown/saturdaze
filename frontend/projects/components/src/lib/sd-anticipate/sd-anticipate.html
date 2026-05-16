@@ -1,0 +1,12 @@
+<div class="wrap">
+  <div class="icon"><sd-icon [name]="icon()" [size]="20" /></div>
+  <div class="body-col">
+    <div class="headline">{{ headline() }}</div>
+    <div class="text">{{ body() }}</div>
+    @if (cta()) {
+      <div class="row">
+        <sd-button size="sm" variant="secondary">{{ cta() }}</sd-button>
+      </div>
+    }
+  </div>
+</div>

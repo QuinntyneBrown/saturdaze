@@ -1,2 +1,310 @@
-<sd-top-bar title="Dialogs" back></sd-top-bar>
-<sd-bottom-nav active="home" />
+<main class="gallery">
+  <div>
+    <h1>Dialogs &amp; sheets</h1>
+    <p class="lede">
+      Each one shown statically so all variants are reviewable on one page. In-app
+      these slide up over the screen.
+    </p>
+  </div>
+
+  <div>
+    <div class="demo-label">Block detail — why this was suggested</div>
+    <sd-dialog
+      open
+      static
+      title="Terre Bleu Lavender Farm"
+      subtitle="Sat 11:00 – 1:00 · 45 min drive"
+    >
+      <div class="dialog-grid">
+        <sd-card variant="sunk">
+          <div class="why-row">
+            <sd-icon name="sparkle" [size]="20" class="why-icon" />
+            <div>
+              <div class="strong">Why I picked this</div>
+              <div class="muted small">
+                Lavender peaks May 17–24. Sara loved it last year. Mae is old
+                enough to walk now. Weather's perfect Saturday but cloudy
+                Sunday — so today's the day.
+              </div>
+            </div>
+          </div>
+        </sd-card>
+
+        <div>
+          <div class="alt-label">Alternatives</div>
+          <div class="dialog-stack">
+            <sd-list-item
+              title="Bronte Creek Park"
+              subtitle="25 min · easy hike + splash pad"
+              compact
+            >
+              <sd-icon slot="leading" name="tree" />
+              <sd-icon slot="trailing" name="swap" [size]="16" />
+            </sd-list-item>
+            <sd-list-item
+              title="Royal Botanical Gardens"
+              subtitle="35 min · tulip festival"
+              compact
+            >
+              <sd-icon slot="leading" name="tree" />
+              <sd-icon slot="trailing" name="swap" [size]="16" />
+            </sd-list-item>
+          </div>
+        </div>
+
+        <sd-list-item
+          title="Open in Maps"
+          subtitle="990 Appleby Line, Milton"
+          href="#"
+          compact
+        >
+          <sd-icon slot="leading" name="map" />
+          <sd-icon slot="trailing" name="chevron_right" [size]="16" />
+        </sd-list-item>
+      </div>
+
+      <sd-button slot="actions" variant="secondary">
+        <sd-icon slot="leading" name="swap" [size]="16" />
+        Swap
+      </sd-button>
+      <sd-button slot="actions">
+        <sd-icon slot="leading" name="lock" [size]="16" />
+        Lock this block
+      </sd-button>
+    </sd-dialog>
+  </div>
+
+  <div>
+    <div class="demo-label">Regenerate confirm</div>
+    <sd-dialog
+      open
+      static
+      title="Regenerate the weekend?"
+      subtitle="3 locked blocks will stay put."
+    >
+      <sd-card variant="sunk">
+        <div class="why-row">
+          <sd-icon name="lock" [size]="18" class="lock-icon" />
+          <div class="small">
+            <div class="strong">Keeping these locked</div>
+            <div class="muted" style="margin-top: 4px;">
+              Swim 9am · Church 10:30am · Workout 5pm · Bath 8pm
+            </div>
+          </div>
+        </div>
+      </sd-card>
+      <p class="muted small dialog-postscript">
+        Everything else gets a fresh draft. You can compare before committing.
+      </p>
+      <sd-button slot="actions" variant="secondary">Cancel</sd-button>
+      <sd-button slot="actions">
+        <sd-icon slot="leading" name="refresh" [size]="16" />
+        Regenerate
+      </sd-button>
+    </sd-dialog>
+  </div>
+
+  <div>
+    <div class="demo-label">Swap an activity</div>
+    <sd-dialog
+      open
+      static
+      title="Swap out Lavender Farm?"
+      subtitle="Saturday 11:00 – 1:00"
+    >
+      <div class="dialog-stack">
+        <sd-list-item
+          title="Bronte Creek Park"
+          subtitle="25 min drive · short hike + splash pad"
+          compact
+        >
+          <sd-icon slot="leading" name="tree" />
+          <sd-chip slot="trailing" tone="leaf">Outdoor</sd-chip>
+        </sd-list-item>
+        <sd-list-item
+          title="Toronto Zoo"
+          subtitle="55 min · full-day option"
+          compact
+        >
+          <sd-icon slot="leading" name="tree" />
+          <sd-chip slot="trailing" tone="leaf">Outdoor</sd-chip>
+        </sd-list-item>
+        <sd-list-item
+          title="The Rec Room"
+          subtitle="10 min · indoor backup"
+          compact
+        >
+          <sd-icon slot="leading" name="popcorn" />
+          <sd-chip slot="trailing" tone="indoor">Indoor</sd-chip>
+        </sd-list-item>
+        <sd-list-item
+          title="Living Arts kids' theatre"
+          subtitle="5 min · 2pm matinée"
+          compact
+        >
+          <sd-icon slot="leading" name="ticket" />
+          <sd-chip slot="trailing" tone="indoor">Indoor</sd-chip>
+        </sd-list-item>
+      </div>
+      <sd-button slot="actions" variant="ghost">Surprise me</sd-button>
+      <sd-button slot="actions" variant="secondary">Close</sd-button>
+    </sd-dialog>
+  </div>
+
+  <div>
+    <div class="demo-label">Restaurant vote</div>
+    <sd-dialog
+      open
+      static
+      title="Who's in for La Marina?"
+      subtitle="Lunch, Saturday 1:00pm"
+    >
+      <div>
+        <sd-vote-row name="Quinn" tone="primary" vote="up" />
+        <sd-vote-row name="Sara"  tone="leaf"    vote="up" />
+        <sd-vote-row name="Eli"   tone="sky"     vote="up" />
+        <sd-vote-row name="Mae"   tone="sun"     vote="none" />
+      </div>
+      <sd-card variant="sunk" class="dialog-postscript-card">
+        <div class="why-row small">
+          <sd-icon name="sparkle" [size]="16" class="why-icon" />
+          <span>
+            3 of 4 in. Mae usually goes for the cheese pasta here — I'll mark a
+            soft yes.
+          </span>
+        </div>
+      </sd-card>
+      <sd-button slot="actions" variant="secondary">See menu</sd-button>
+      <sd-button slot="actions">
+        <sd-icon slot="leading" name="lock" [size]="16" />
+        Lock it in
+      </sd-button>
+    </sd-dialog>
+  </div>
+
+  <div>
+    <div class="demo-label">Add commitment (profile)</div>
+    <sd-dialog
+      open
+      static
+      title="Add a commitment"
+      subtitle="Something I should plan around every week"
+    >
+      <div class="dialog-grid">
+        <sd-text-input label="What is it" placeholder="e.g. Eli's soccer practice" />
+        <div class="dialog-two-col">
+          <sd-text-input label="Day" placeholder="Saturday" />
+          <sd-text-input label="Time" placeholder="11:00 – 12:00" />
+        </div>
+        <sd-text-input label="Where" placeholder="Address or venue" />
+        <div class="commitment-toggle">
+          <div>
+            <div class="strong">Lock by default</div>
+            <div class="muted small">
+              Block it on the weekend draft automatically.
+            </div>
+          </div>
+          <sd-toggle checked />
+        </div>
+      </div>
+      <sd-button slot="actions" variant="secondary">Cancel</sd-button>
+      <sd-button slot="actions">Save</sd-button>
+    </sd-dialog>
+  </div>
+
+  <div>
+    <div class="demo-label">Shopping errand quick-add</div>
+    <sd-dialog
+      open
+      static
+      title="Slot in an errand"
+      subtitle="I'll fit it without killing the day"
+    >
+      <div class="dialog-grid">
+        <sd-text-input
+          label="What's needed"
+          placeholder="Costco — paper towels, bread, yogurt"
+        />
+        <sd-text-input
+          label="Roughly how long"
+          placeholder="45 min"
+          hint="I'll add 10 min buffer either side."
+        />
+        <sd-card variant="sunk">
+          <div class="why-row">
+            <sd-icon name="sparkle" [size]="18" class="why-icon" />
+            <div class="small">
+              <div class="strong">Best fit: Sunday 9:15am</div>
+              <div class="muted" style="margin-top: 2px;">
+                On the way back from church, 4 min off-route. Adds 38 min total.
+              </div>
+            </div>
+          </div>
+        </sd-card>
+      </div>
+      <sd-button slot="actions" variant="secondary">Pick another slot</sd-button>
+      <sd-button slot="actions">
+        <sd-icon slot="leading" name="plus" [size]="16" />
+        Add
+      </sd-button>
+    </sd-dialog>
+  </div>
+
+  <div>
+    <div class="demo-label">Friday preview (notification sheet)</div>
+    <sd-dialog
+      open
+      static
+      title="Your weekend is ready 🌤"
+      subtitle="A peek before Saturday morning"
+    >
+      <div class="dialog-stack">
+        <sd-card variant="sunk">
+          <div class="strong">Saturday</div>
+          <div class="muted small" style="margin-top: 2px;">
+            Swim → Lavender fields → La Marina → Quiet afternoon
+          </div>
+        </sd-card>
+        <sd-card variant="sunk">
+          <div class="strong">Sunday</div>
+          <div class="muted small" style="margin-top: 2px;">
+            Church → Costco run → Rec Room → Jack Astor's
+          </div>
+        </sd-card>
+        <p class="muted small dialog-postscript">
+          All booked, all under 45 min drive. Nothing for you to do — but tap
+          below if you want to nudge anything.
+        </p>
+      </div>
+      <sd-button slot="actions" variant="secondary">Tweak</sd-button>
+      <sd-button slot="actions">
+        <sd-icon slot="leading" name="thumbs_up" [size]="16" />
+        Take it as-is
+      </sd-button>
+    </sd-dialog>
+  </div>
+
+  <div>
+    <div class="demo-label">Share for Sara's approval</div>
+    <sd-dialog
+      open
+      static
+      title="Send Sara the plan?"
+      subtitle="She gets a read-only preview. She can thumbs-up or comment."
+    >
+      <sd-list-item title="Sara · Browns family" compact>
+        <sd-avatar slot="leading" name="Sara" tone="leaf" />
+        <sd-chip slot="trailing" tone="accent">Default</sd-chip>
+      </sd-list-item>
+      <div class="share-quote">
+        "Here's the weekend — Terre Bleu Saturday, Rec Room Sunday. Tap any
+        block to swap. xx"
+      </div>
+      <sd-button slot="actions" variant="secondary">Cancel</sd-button>
+      <sd-button slot="actions">
+        <sd-icon slot="leading" name="share" [size]="16" />
+        Send
+      </sd-button>
+    </sd-dialog>
+  </div>
+</main>

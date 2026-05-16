@@ -1,2 +1,54 @@
-<sd-top-bar title="Saved weekends"></sd-top-bar>
+<sd-top-bar title="Saved weekends">
+  <sd-icon-button
+    slot="leading"
+    icon="arrow_left"
+    label="Back"
+    variant="ghost"
+  />
+  <sd-icon-button slot="trailing" icon="more" label="More" />
+</sd-top-bar>
+
+<div class="saved-lede">
+  <h2>{{ view().heading }}</h2>
+  <p>{{ view().lede }}</p>
+</div>
+
+<sd-tag-group>
+  @for (f of view().filters; track f.label) {
+    <sd-chip [tone]="f.tone">
+      @if (f.icon) { <sd-icon [name]="f.icon" [size]="12" /> }
+      {{ f.label }}
+    </sd-chip>
+  }
+</sd-tag-group>
+
+<sd-section title="Recent">
+  <div class="sd-card-grid">
+    @for (s of view().recent; track s.date) {
+      <sd-saved-card
+        [date]="s.date"
+        [title]="s.title"
+        [rating]="s.rating"
+        [highlights]="s.highlights"
+        [favourite]="s.favourite ?? false"
+      >
+        <sd-button variant="secondary" size="sm" full>Remix</sd-button>
+        <sd-button size="sm" full>Repeat</sd-button>
+      </sd-saved-card>
+    }
+  </div>
+</sd-section>
+
+<sd-section
+  title="Avoid repeating"
+  subtitle="I'll keep these out of next weekend's draft"
+>
+  @for (a of view().avoid; track a.title) {
+    <sd-list-item [title]="a.title" [subtitle]="a.subtitle" compact>
+      <sd-icon slot="leading" [name]="a.icon" />
+      <sd-chip slot="trailing" tone="warn">Skip</sd-chip>
+    </sd-list-item>
+  }
+</sd-section>
+
 <sd-bottom-nav active="saved" />

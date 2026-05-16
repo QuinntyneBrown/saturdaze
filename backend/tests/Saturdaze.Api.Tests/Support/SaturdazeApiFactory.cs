@@ -7,7 +7,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Saturdaze.Infrastructure.Persistence;
-using Saturdaze.Infrastructure.SeedData;
 using Xunit;
 
 namespace Saturdaze.Api.Tests.Support;
@@ -56,7 +55,7 @@ public sealed class SaturdazeApiFactory : WebApplicationFactory<Program>, IAsync
         await using var ctx = new AppDbContext(optionsBuilder.Options);
         await ctx.Database.MigrateAsync();
         // Seed for tests that need a family / catalog. Pipeline tests will tolerate the extra data.
-        await SeedDataLoader.SeedAsync(ctx);
+        await TestSeed.SeedAsync(ctx);
         // Force lazy WebApplicationFactory build so configuration is honored before tests.
         _ = Services;
     }

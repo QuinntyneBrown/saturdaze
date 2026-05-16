@@ -1,0 +1,8 @@
+<header>
+  <div>
+    @if (sectionTitle()) { <h2>{{ sectionTitle() }}</h2> }
+    @if (subtitle()) { <p>{{ subtitle() }}</p> }
+  </div>
+  <ng-content select="[slot=action]" />
+</header>
+<div class="body"><ng-content /></div>

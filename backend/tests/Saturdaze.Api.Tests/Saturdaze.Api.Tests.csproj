@@ -13,9 +13,13 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\Saturdaze.Api\Saturdaze.Api.csproj" />
+    <ProjectReference Include="..\..\src\Saturdaze.Cli\Saturdaze.Cli.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="xunit.runner.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="SeedData\*.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

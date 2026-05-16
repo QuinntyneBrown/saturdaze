@@ -1,2 +1,57 @@
-<sd-top-bar title="Add an errand" back></sd-top-bar>
+<sd-top-bar title="Add an errand" back />
+
+<div class="errand-lede">
+  <h2>Slot in a shopping run</h2>
+  <p>
+    I'll fit it on the way to or from something you're already doing — without
+    killing the day.
+  </p>
+</div>
+
+<div class="errand-form">
+  <sd-text-input
+    label="What's needed"
+    placeholder="Costco run — paper towels, bread, kid yogurt"
+  />
+
+  <sd-text-input
+    label="Roughly how long"
+    placeholder="45 min"
+    hint="I'll add 10 min buffer either side."
+  />
+
+  <div class="best-day">
+    <label class="best-day-label">Best day</label>
+    <sd-tag-group class="best-day-chips">
+      <sd-chip tone="primary">Sunday morning</sd-chip>
+      <sd-chip>Saturday after swim</sd-chip>
+      <sd-chip>Friday evening</sd-chip>
+      <sd-chip>Doesn't matter</sd-chip>
+    </sd-tag-group>
+  </div>
+
+  <sd-card variant="sunk">
+    <div class="suggested">
+      <div class="suggested-icon">
+        <sd-icon name="sparkle" [size]="18" />
+      </div>
+      <div>
+        <div class="suggested-title">Suggested slot</div>
+        <div class="suggested-body">
+          Sunday 9:15am — on the way back from church. Costco is 4 min off-route.
+          Adds 38 min to the day.
+        </div>
+      </div>
+    </div>
+  </sd-card>
+</div>
+
+<div class="errand-actions">
+  <sd-button variant="secondary" full>Pick a different slot</sd-button>
+  <sd-button full>
+    <sd-icon slot="leading" name="plus" [size]="16" />
+    Add to weekend
+  </sd-button>
+</div>
+
 <sd-bottom-nav active="home" />

@@ -1,2 +1,132 @@
-<sd-top-bar title="Saturday" back></sd-top-bar>
+<sd-top-bar [title]="itinerary().day" back>
+  <sd-icon-button slot="trailing" icon="refresh" label="Regenerate" />
+  <sd-icon-button slot="trailing" icon="more" label="More" />
+</sd-top-bar>
+
+<sd-split-view sticky-master>
+  <div slot="master">
+    <div class="it-head">
+      <div class="it-head-row">
+        <div>
+          <div class="it-eyebrow">{{ itinerary().eyebrow }}</div>
+          <div class="it-title">{{ itinerary().title }}</div>
+          <div class="it-sub">{{ itinerary().subtitle }}</div>
+        </div>
+        <sd-icon [name]="itinerary().icon" [size]="56" class="it-sun-icon" />
+      </div>
+      <sd-tag-group class="it-head-chips">
+        @for (c of itinerary().chips; track $index) {
+          <sd-chip [tone]="c.tone">
+            @if (c.icon) { <sd-icon [name]="c.icon" [size]="12" /> }
+            {{ c.label }}
+          </sd-chip>
+        }
+      </sd-tag-group>
+    </div>
+
+    <sd-section title="The day at a glance">
+      <div class="day-switcher">
+        @for (opt of itinerary().dayOptions; track opt.key) {
+          <a
+            class="opt"
+            [attr.data-active]="opt.active ? 'true' : null"
+            href="itinerary.html"
+          >
+            <sd-icon
+              [name]="opt.icon"
+              [size]="22"
+              [class.weather-icon]="opt.iconTone === 'sun'"
+              [class.soft-icon]="opt.iconTone === 'soft'"
+            />
+            <div class="opt-body">
+              <div class="day">{{ opt.label }}</div>
+              <div class="meta">{{ opt.meta }}</div>
+            </div>
+            <sd-icon name="chevron_right" [size]="16" />
+          </a>
+        }
+      </div>
+    </sd-section>
+
+    <sd-section title="Weekend totals">
+      <div class="weekend-stats">
+        @for (s of itinerary().stats; track s.label) {
+          <div class="stat">
+            <div class="num">{{ s.num }}</div>
+            <div class="lab">{{ s.label }}</div>
+          </div>
+        }
+      </div>
+    </sd-section>
+
+    <div class="it-actions">
+      <sd-button variant="secondary" full>
+        <sd-icon slot="leading" name="refresh" [size]="16" />
+        Regenerate
+      </sd-button>
+      <sd-button full>
+        <sd-icon slot="leading" name="lock" [size]="16" />
+        Lock day
+      </sd-button>
+    </div>
+  </div>
+
+  <div slot="detail">
+    <div class="it-detail">
+      <div class="it-detail-head">
+        <div>
+          <div class="title">{{ itinerary().previewTitle }}</div>
+          <div class="sub">{{ itinerary().previewSubtitle }}</div>
+        </div>
+        <sd-icon-button icon="map" label="See on map" variant="filled" />
+      </div>
+      <div class="it-detail-body">
+        @for (b of itinerary().blocks; track b.time) {
+          <sd-timeline-block
+            [time]="b.time"
+            [duration]="b.duration ?? ''"
+            [title]="b.title"
+            [subtitle]="b.subtitle ?? ''"
+            [icon]="b.icon"
+            [tone]="b.tone ?? 'default'"
+            [locked]="b.locked ?? false"
+            [drive]="b.drive ?? ''"
+          >
+            @if (b.chips) {
+              @for (c of b.chips; track $index) {
+                <sd-chip slot="chips" [tone]="c.tone">{{ c.label }}</sd-chip>
+              }
+            }
+          </sd-timeline-block>
+        }
+      </div>
+    </div>
+  </div>
+</sd-split-view>
+
+<div id="mobile-timeline">
+  <sd-section title="Timeline" subtitle="Tap any block for why, alternatives, map">
+    <div class="mobile-timeline-body">
+      @for (b of itinerary().blocks; track b.time) {
+        <sd-timeline-block
+          [time]="b.time"
+          [duration]="b.duration ?? ''"
+          [title]="b.title"
+          [subtitle]="b.subtitle ?? ''"
+          [icon]="b.icon"
+          [tone]="b.tone ?? 'default'"
+          [locked]="b.locked ?? false"
+          [drive]="b.drive ?? ''"
+        >
+          @if (b.chips) {
+            @for (c of b.chips; track $index) {
+              <sd-chip slot="chips" [tone]="c.tone">{{ c.label }}</sd-chip>
+            }
+          }
+        </sd-timeline-block>
+      }
+    </div>
+  </sd-section>
+</div>
+
 <sd-bottom-nav active="home" />

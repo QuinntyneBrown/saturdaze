@@ -1,12 +1,30 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 
-import { SdBottomNav, SdTopBar } from 'components';
+import { EventsService } from 'api';
+import {
+  SdBottomNav,
+  SdChip,
+  SdEventCard,
+  SdSection,
+  SdTagGroup,
+  SdTopBar,
+} from 'components';
 
 @Component({
   selector: 'app-events',
   standalone: true,
-  imports: [SdTopBar, SdBottomNav],
+  imports: [
+    SdBottomNav,
+    SdChip,
+    SdEventCard,
+    SdSection,
+    SdTagGroup,
+    SdTopBar,
+  ],
   templateUrl: './events.page.html',
+  styleUrl: './events.page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class EventsPage {}
+export class EventsPage {
+  protected readonly view = inject(EventsService).list();
+}

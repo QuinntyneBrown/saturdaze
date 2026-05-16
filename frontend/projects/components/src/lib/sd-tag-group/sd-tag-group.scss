@@ -1,0 +1,16 @@
+:host {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding: 4px var(--sd-app-pad-x, 20px);
+  margin: 0 calc(-1 * var(--sd-app-pad-x, 20px));
+}
+
+:host::-webkit-scrollbar {
+  display: none;
+}
+
+::ng-deep > * {
+  flex: 0 0 auto;
+}

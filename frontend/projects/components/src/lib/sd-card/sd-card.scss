@@ -1,0 +1,36 @@
+:host {
+  display: block;
+  background: var(--sd-surface);
+  border-radius: var(--sd-r-lg);
+  border: 1px solid var(--sd-line);
+  overflow: hidden;
+}
+
+.pad {
+  padding: 16px;
+}
+
+:host([padding="sm"]) .pad { padding: 12px; }
+:host([padding="lg"]) .pad { padding: 20px; }
+
+:host([variant="raised"]) {
+  box-shadow: var(--sd-shadow-2);
+  border-color: transparent;
+}
+
+:host([variant="sunk"]) {
+  background: var(--sd-surface-2);
+  border-color: transparent;
+}
+
+:host([interactive]) {
+  cursor: pointer;
+  transition:
+    transform var(--sd-dur-fast) var(--sd-ease),
+    box-shadow var(--sd-dur-fast) var(--sd-ease);
+}
+
+:host([interactive]:hover) {
+  transform: translateY(-1px);
+  box-shadow: var(--sd-shadow-2);
+}

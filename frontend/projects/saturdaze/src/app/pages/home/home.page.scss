@@ -1,1 +1,63 @@
-// Home page chrome. Content slices land in Phase 1.
+@use "../../../../../components/src/lib/styles/breakpoints" as *;
+
+.home-grid-cards {
+  display: grid;
+  gap: 12px;
+}
+
+.home-anticipate-stack {
+  display: grid;
+  gap: 12px;
+}
+
+.home-quick-actions {
+  display: grid;
+  gap: 8px;
+  padding: 0 var(--sd-app-pad-x, 20px);
+}
+
+@include respond-to(desktop) {
+  .home-grid-cards {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .home-quick-actions {
+    padding: 0;
+  }
+}
+
+.detail-pane {
+  padding: 8px 4px 4px;
+}
+
+.detail-pane-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 18px 14px;
+  border-bottom: 1px solid var(--sd-line);
+
+  .title {
+    font-weight: 600;
+    font-size: 15px;
+    letter-spacing: -0.005em;
+  }
+
+  .sub {
+    color: var(--sd-ink-soft);
+    font-size: 13px;
+    margin-top: 2px;
+  }
+}
+
+.detail-pane-body {
+  padding: 14px 14px 4px;
+  display: grid;
+  gap: 10px;
+}
+
+.detail-pane-footer {
+  padding: 12px 18px 4px;
+  display: flex;
+  gap: 10px;
+}

@@ -1,12 +1,38 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 
-import { SdBottomNav, SdTopBar } from 'components';
+import { RestaurantService } from 'api';
+import {
+  SdBottomNav,
+  SdButton,
+  SdChip,
+  SdIcon,
+  SdIconButton,
+  SdRestaurantCard,
+  SdSection,
+  SdTagGroup,
+  SdTopBar,
+  SdVoteRow,
+} from 'components';
 
 @Component({
   selector: 'app-restaurants',
   standalone: true,
-  imports: [SdTopBar, SdBottomNav],
+  imports: [
+    SdBottomNav,
+    SdButton,
+    SdChip,
+    SdIcon,
+    SdIconButton,
+    SdRestaurantCard,
+    SdSection,
+    SdTagGroup,
+    SdTopBar,
+    SdVoteRow,
+  ],
   templateUrl: './restaurants.page.html',
+  styleUrl: './restaurants.page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RestaurantsPage {}
+export class RestaurantsPage {
+  protected readonly view = inject(RestaurantService).list();
+}

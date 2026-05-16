@@ -1,12 +1,40 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 
-import { SdBottomNav, SdTopBar } from 'components';
+import { FamilyService } from 'api';
+import {
+  SdAvatar,
+  SdBottomNav,
+  SdCard,
+  SdChip,
+  SdIcon,
+  SdIconButton,
+  SdListItem,
+  SdSection,
+  SdTagGroup,
+  SdToggle,
+  SdTopBar,
+} from 'components';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [SdTopBar, SdBottomNav],
+  imports: [
+    SdAvatar,
+    SdBottomNav,
+    SdCard,
+    SdChip,
+    SdIcon,
+    SdIconButton,
+    SdListItem,
+    SdSection,
+    SdTagGroup,
+    SdToggle,
+    SdTopBar,
+  ],
   templateUrl: './profile.page.html',
+  styleUrl: './profile.page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ProfilePage {}
+export class ProfilePage {
+  protected readonly profile = inject(FamilyService).getProfile();
+}

@@ -1,0 +1,24 @@
+<div class="card">
+  <div class="head">
+    <div>
+      <div class="date">{{ date() }}</div>
+      <div class="title">{{ cardTitle() }}</div>
+      <div class="stars">
+        @for (filled of stars(); track $index) {
+          <sd-icon
+            name="star"
+            [size]="14"
+            [class.filled]="filled"
+          />
+        }
+      </div>
+    </div>
+    <div class="heart" [class.is-fav]="favourite()">
+      <sd-icon name="heart" [size]="20" />
+    </div>
+  </div>
+  @if (highlights()) {
+    <div class="highlights">{{ highlights() }}</div>
+  }
+  <div class="footer"><ng-content /></div>
+</div>

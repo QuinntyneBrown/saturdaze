@@ -1,0 +1,7 @@
+@if (label()) { <label>{{ label() }}</label> }
+<input
+  [attr.type]="type()"
+  [attr.value]="value()"
+  [attr.placeholder]="placeholder()"
+/>
+@if (hint()) { <div class="hint">{{ hint() }}</div> }

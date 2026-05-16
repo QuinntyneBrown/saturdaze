@@ -1,2 +1,40 @@
-<sd-top-bar title="Discover" back></sd-top-bar>
+<sd-top-bar title="Discover" back>
+  <sd-icon-button
+    slot="trailing"
+    icon="sparkle"
+    label="Try something new"
+    variant="filled"
+  />
+</sd-top-bar>
+
+<div class="activities-lede">
+  <h2>Picked for the Browns</h2>
+  <p>Curated around Eli (9) and Mae (5), under 45 min from Port Credit.</p>
+</div>
+
+<sd-tag-group>
+  @for (f of view().filters; track f.label) {
+    <sd-chip [tone]="f.tone">{{ f.label }}</sd-chip>
+  }
+</sd-tag-group>
+
+@for (s of view().sections; track s.title) {
+  <sd-section [title]="s.title" [subtitle]="s.subtitle ?? ''">
+    <div class="sd-card-grid">
+      @for (a of s.activities; track a.title) {
+        <sd-activity-card
+          [title]="a.title"
+          [subtitle]="a.subtitle ?? ''"
+          [icon]="a.icon"
+          [tone]="a.tone"
+          [drive]="a.drive ?? ''"
+          [ages]="a.ages ?? ''"
+          [tag]="a.tag ?? ''"
+          [why]="a.why ?? ''"
+        />
+      }
+    </div>
+  </sd-section>
+}
+
 <sd-bottom-nav active="activities" />

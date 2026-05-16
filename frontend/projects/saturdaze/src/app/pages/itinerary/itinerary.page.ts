@@ -1,12 +1,38 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 
-import { SdBottomNav, SdTopBar } from 'components';
+import { WeekendPlanService } from 'api';
+import {
+  SdBottomNav,
+  SdButton,
+  SdChip,
+  SdIcon,
+  SdIconButton,
+  SdSection,
+  SdSplitView,
+  SdTagGroup,
+  SdTimelineBlock,
+  SdTopBar,
+} from 'components';
 
 @Component({
   selector: 'app-itinerary',
   standalone: true,
-  imports: [SdTopBar, SdBottomNav],
+  imports: [
+    SdBottomNav,
+    SdButton,
+    SdChip,
+    SdIcon,
+    SdIconButton,
+    SdSection,
+    SdSplitView,
+    SdTagGroup,
+    SdTimelineBlock,
+    SdTopBar,
+  ],
   templateUrl: './itinerary.page.html',
+  styleUrl: './itinerary.page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ItineraryPage {}
+export class ItineraryPage {
+  protected readonly itinerary = inject(WeekendPlanService).getDemoItinerary();
+}

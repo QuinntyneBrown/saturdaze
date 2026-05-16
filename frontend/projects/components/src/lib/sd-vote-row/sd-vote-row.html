@@ -1,0 +1,22 @@
+<div class="row">
+  <sd-avatar [name]="name()" [tone]="tone()" size="sm" />
+  <span class="name">{{ name() }}</span>
+  <div class="buttons">
+    <button
+      type="button"
+      class="up"
+      [class.active]="vote() === 'up'"
+      aria-label="Yes"
+    >
+      <sd-icon name="thumbs_up" [size]="16" />
+    </button>
+    <button
+      type="button"
+      class="down"
+      [class.active]="vote() === 'down'"
+      aria-label="No"
+    >
+      <sd-icon name="thumbs_down" [size]="16" />
+    </button>
+  </div>
+</div>

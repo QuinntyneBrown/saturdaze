@@ -1,0 +1,5 @@
+<button type="button" [disabled]="disabled()">
+  <ng-content select="[slot=leading]" />
+  <ng-content />
+  <ng-content select="[slot=trailing]" />
+</button>

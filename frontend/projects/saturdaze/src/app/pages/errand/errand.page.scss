@@ -1,1 +1,86 @@
-// Shopping errand slot. Full slice in Phase 7.
+@use "styles/breakpoints" as *;
+
+.errand-lede {
+  padding: 0 var(--sd-app-pad-x);
+
+  h2 {
+    font-size: 22px;
+    font-weight: var(--sd-fw-bold);
+    letter-spacing: -0.02em;
+    margin: 8px 0 4px;
+  }
+
+  p {
+    color: var(--sd-ink-soft);
+    font-size: var(--sd-fs-sm);
+    margin: 0 0 16px;
+  }
+}
+
+.errand-form {
+  padding: 0 var(--sd-app-pad-x);
+  display: grid;
+  gap: 14px;
+}
+
+.errand-actions {
+  padding: 24px var(--sd-app-pad-x);
+  display: flex;
+  gap: 10px;
+}
+
+@include respond-to(tablet) {
+  .errand-form,
+  .errand-actions {
+    max-width: 560px;
+  }
+}
+
+@include respond-to(desktop) {
+  .errand-form,
+  .errand-actions {
+    max-width: 600px;
+  }
+}
+
+.best-day-label {
+  display: block;
+  font-size: var(--sd-fs-sm);
+  color: var(--sd-ink-soft);
+  font-weight: var(--sd-fw-medium);
+  margin-bottom: 6px;
+  padding-left: 4px;
+}
+
+.best-day-chips {
+  margin: 0;
+}
+
+.suggested {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.suggested-icon {
+  width: 36px;
+  height: 36px;
+  background: var(--sd-bg-elev);
+  color: var(--sd-primary);
+  border-radius: var(--sd-r-md);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.suggested-title {
+  font-weight: var(--sd-fw-semibold);
+  letter-spacing: -0.005em;
+}
+
+.suggested-body {
+  font-size: var(--sd-fs-sm);
+  color: var(--sd-ink-soft);
+  margin-top: 2px;
+}

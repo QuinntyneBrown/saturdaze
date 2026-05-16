@@ -1,1 +1,18 @@
-// Activity suggestions. Full slice in Phase 3.
+@use "styles/breakpoints" as *;
+
+.activities-lede {
+  padding: 0 var(--sd-app-pad-x);
+
+  h2 {
+    font-size: 22px;
+    font-weight: var(--sd-fw-bold);
+    letter-spacing: -0.02em;
+    margin: 8px 0 4px;
+  }
+
+  p {
+    color: var(--sd-ink-soft);
+    font-size: var(--sd-fs-sm);
+    margin: 0 0 16px;
+  }
+}

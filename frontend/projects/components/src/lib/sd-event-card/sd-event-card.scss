@@ -1,0 +1,60 @@
+:host {
+  display: block;
+}
+
+.card {
+  background: var(--sd-surface);
+  border: 1px solid var(--sd-line);
+  border-radius: var(--sd-r-lg);
+  padding: 14px;
+  display: flex;
+  gap: 14px;
+}
+
+.date {
+  width: 56px;
+  flex-shrink: 0;
+  background: var(--sd-primary-soft);
+  color: var(--sd-primary);
+  border-radius: var(--sd-r-md);
+  text-align: center;
+  padding: 8px 4px;
+}
+
+.date .mon {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: var(--sd-fw-semibold);
+}
+
+.date .day {
+  font-size: 22px;
+  font-weight: var(--sd-fw-bold);
+  line-height: 1;
+  margin-top: 2px;
+}
+
+.body {
+  flex: 1;
+  min-width: 0;
+}
+
+.title {
+  font-weight: var(--sd-fw-semibold);
+  font-size: var(--sd-fs-base);
+  letter-spacing: -0.005em;
+}
+
+.venue {
+  color: var(--sd-ink-soft);
+  font-size: var(--sd-fs-sm);
+  margin-top: 2px;
+}
+
+.meta {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}

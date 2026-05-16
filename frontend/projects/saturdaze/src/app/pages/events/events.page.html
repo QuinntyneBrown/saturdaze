@@ -1,2 +1,32 @@
-<sd-top-bar title="Local events" back></sd-top-bar>
+<sd-top-bar title="Local events" back />
+
+<div class="events-lede">
+  <h2>{{ view().heading }}</h2>
+  <p>{{ view().lede }}</p>
+</div>
+
+<sd-tag-group>
+  @for (f of view().filters; track f.label) {
+    <sd-chip [tone]="f.tone">{{ f.label }}</sd-chip>
+  }
+</sd-tag-group>
+
+@for (s of view().sections; track s.title) {
+  <sd-section [title]="s.title">
+    <div class="sd-card-grid">
+      @for (e of s.events; track e.title) {
+        <sd-event-card
+          [title]="e.title"
+          [venue]="e.venue"
+          [when]="e.when"
+          [drive]="e.drive ?? ''"
+          [date-day]="e.dateDay"
+          [date-mon]="e.dateMon"
+          [tag]="e.tag ?? ''"
+        />
+      }
+    </div>
+  </sd-section>
+}
+
 <sd-bottom-nav active="activities" />
