@@ -1,14 +1,13 @@
 using Microsoft.EntityFrameworkCore;
 using Saturdaze.Application.Abstractions;
-using Saturdaze.Application.Common;
 using Saturdaze.Application.Exceptions;
 
-namespace Saturdaze.Infrastructure.Common;
+namespace Saturdaze.Application.Common;
 
 /// <summary>
-/// V1 single-family implementation. Returns the lone seeded family's id.
-/// The seam stays: handlers depend on the accessor, not on this implementation,
-/// so multi-family auth can be added later without changing handler code.
+/// V1 single-family implementation. Returns the lone family's id from the database.
+/// Handlers depend on the accessor; a header-based multi-family accessor can replace this
+/// later without changing handler code.
 /// </summary>
 public sealed class SingleFamilyAccessor : ICurrentFamilyAccessor
 {
@@ -25,7 +24,7 @@ public sealed class SingleFamilyAccessor : ICurrentFamilyAccessor
             .Select(f => (Guid?)f.Id)
             .FirstOrDefaultAsync(cancellationToken);
         if (firstId is null)
-            throw new NotFoundException("No family has been seeded.");
+            throw new NotFoundException("No family has been configured yet.");
         _cached = firstId.Value;
         return _cached.Value;
     }

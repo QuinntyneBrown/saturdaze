@@ -100,7 +100,7 @@ public class SaveFamilyProfileCommandHandlerTests
     {
         var services = new ServiceCollection();
         services.AddSingleton<IAppDbContext>(app.Db);
-        services.AddSingleton<ICurrentFamilyAccessor>(app.FamilyAccessor);
+        services.AddSingleton<ICurrentFamilyAccessor>(new SingleFamilyAccessor(app.Db));
         services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<SaveFamilyProfileCommand>());
         return services.BuildServiceProvider().GetRequiredService<IMediator>();
     }

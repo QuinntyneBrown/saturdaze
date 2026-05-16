@@ -2,8 +2,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Saturdaze.Application.Abstractions;
-using Saturdaze.Application.Common;
-using Saturdaze.Infrastructure.Common;
 using Saturdaze.Infrastructure.Persistence;
 
 namespace Saturdaze.Infrastructure;
@@ -20,7 +18,6 @@ public static class DependencyInjection
             sql => sql.MigrationsAssembly(typeof(AppDbContext).Assembly.GetName().Name)));
 
         services.AddScoped<IAppDbContext>(sp => sp.GetRequiredService<AppDbContext>());
-        services.AddScoped<ICurrentFamilyAccessor, SingleFamilyAccessor>();
 
         services.AddMemoryCache();
 
