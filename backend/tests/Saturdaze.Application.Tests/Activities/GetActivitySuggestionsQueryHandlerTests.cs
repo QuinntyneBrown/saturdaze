@@ -105,10 +105,10 @@ public class GetActivitySuggestionsQueryHandlerTests
         app.Db.Families.Add(new Family { Id = familyId, HomeLocation = "X" });
 
         app.Db.Activities.AddRange(
-            new Activity { Id = Guid.NewGuid(), Name = "Local Park",  Category = "Park",  Indoor = false, MinAge = 0, MaxAge = 99, DriveMinutes = 5,  TypicalDurationMinutes = 90,  Description = "d", MapUrl = "u" },
-            new Activity { Id = Guid.NewGuid(), Name = "Rec Room",    Category = "Arcade",Indoor = true,  MinAge = 4, MaxAge = 99, DriveMinutes = 12, TypicalDurationMinutes = 120, Description = "d", MapUrl = "u" },
-            new Activity { Id = Guid.NewGuid(), Name = "Faraway Zoo", Category = "Zoo",   Indoor = false, MinAge = 3, MaxAge = 99, DriveMinutes = 50, TypicalDurationMinutes = 300, Description = "d", MapUrl = "u" },
-            new Activity { Id = Guid.NewGuid(), Name = "Teen-only Escape Room", Category = "Game", Indoor = true, MinAge = 12, MaxAge = 99, DriveMinutes = 15, TypicalDurationMinutes = 90, Description = "d", MapUrl = "u" });
+            new Activity { Id = Guid.NewGuid(), Name = "Local Park",  Category = "Park",  Indoor = false, MinAge = 0, MaxAge = 99, DriveMinutes = 5,  TypicalDurationMinutes = 90,  WeatherTags = new() { "sunny", "warm" }, Description = "d", MapUrl = "u" },
+            new Activity { Id = Guid.NewGuid(), Name = "Rec Room",    Category = "Arcade",Indoor = true,  MinAge = 4, MaxAge = 99, DriveMinutes = 12, TypicalDurationMinutes = 120, WeatherTags = new() { "rain", "cold" }, Description = "d", MapUrl = "u" },
+            new Activity { Id = Guid.NewGuid(), Name = "Faraway Zoo", Category = "Zoo",   Indoor = false, MinAge = 3, MaxAge = 99, DriveMinutes = 50, TypicalDurationMinutes = 300, WeatherTags = new() { "mild" }, Description = "d", MapUrl = "u" },
+            new Activity { Id = Guid.NewGuid(), Name = "Teen-only Escape Room", Category = "Game", Indoor = true, MinAge = 12, MaxAge = 99, DriveMinutes = 15, TypicalDurationMinutes = 90, WeatherTags = new() { "rain" }, Description = "d", MapUrl = "u" });
         await app.Db.SaveChangesAsync();
         return app;
     }
