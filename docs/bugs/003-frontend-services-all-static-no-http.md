@@ -76,5 +76,36 @@ This is the **biggest gap** between the current code and the goal.
 ## Status
 
 - Logged: 2026-05-16
-- Permanent fix in progress this session — large change, will be split into
-  one PR per service.
+- **Partially fixed: 2026-05-16.** HTTP foundation in place and four
+  services now fetch real data from the backend:
+  - `FamilyService.getProfile()` → `GET /api/family` (with mapping for
+    tones, commitment subtitles, like/dislike chips).
+  - `ActivityService.list()` → `GET /api/activities` (with per-name
+    overlays for tag/why pending a planner-aware classification — sub-bug
+    003a still partially open).
+  - `RestaurantService.list()` → two `GET /api/restaurants?slot=…` calls
+    in parallel (synthesised votes via curated per-name pattern — sub-bug
+    003b carries the vote-model design out to a future change).
+  - `EventsService.list()` → three `GET /api/events?weekendOf=…` calls
+    (this weekend + next weekend + late-year future window) with
+    deduplication and Saturday / Sunday / Coming-soon grouping
+    (sub-bug 003d closed).
+- **Still open:**
+  - `SavedService.list()` → `GET /api/weekends/history`. Backend works
+    but a freshly seeded DB has zero history, so the saved page would
+    render empty until 3+ weekends have been planned. Tracked in
+    [bug 009](009-saved-service-still-static.md).
+  - `WeekendPlanService.getDemoOverview()` (Home) and `.getDemoItinerary()`
+    (Itinerary) still return hand-authored constants. These need a
+    planner integration; the backend models a `GenerateWeekendCommand` +
+    `GetCurrentWeekendQuery` but the view shape on the client is far
+    richer than the current `WeekendDto`. Tracked in
+    [bug 010](010-home-and-itinerary-not-yet-http.md).
+
+Sub-bugs:
+
+- 003a — Filter chips in `ActivityService` are still presentation-only.
+- 003b — Votes in `RestaurantService` are synthesised on the client.
+- 003c — `SavedView` shape (filters + recent + avoid) does not match
+  `WeekendSummaryDto[]`. Mapping pending the page rewrite.
+- 003d — **Closed.** EventsService groups flat events into sections.
