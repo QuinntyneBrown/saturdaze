@@ -4,7 +4,6 @@ using Microsoft.Extensions.Options;
 using Saturdaze.Application.Abstractions;
 using Saturdaze.Application.Common;
 using Saturdaze.Application.Contracts;
-using Saturdaze.Application.Exceptions;
 using Saturdaze.Application.Weather;
 
 namespace Saturdaze.Application.Weekends;
@@ -16,19 +15,22 @@ public sealed class GetCurrentWeekendQueryHandler : IRequestHandler<GetCurrentWe
     private readonly IDateTimeProvider _clock;
     private readonly IWeatherClient _weather;
     private readonly IOptions<HomeLocationOptions> _home;
+    private readonly ISender _mediator;
 
     public GetCurrentWeekendQueryHandler(
         IAppDbContext db,
         ICurrentFamilyAccessor current,
         IDateTimeProvider clock,
         IWeatherClient weather,
-        IOptions<HomeLocationOptions> home)
+        IOptions<HomeLocationOptions> home,
+        ISender mediator)
     {
         _db = db;
         _current = current;
         _clock = clock;
         _weather = weather;
         _home = home;
+        _mediator = mediator;
     }
 
     public async Task<WeekendDto> Handle(GetCurrentWeekendQuery request, CancellationToken cancellationToken)
@@ -39,9 +41,16 @@ public sealed class GetCurrentWeekendQueryHandler : IRequestHandler<GetCurrentWe
         var weekend = await _db.Weekends
             .Include(w => w.Blocks)
             .Include(w => w.Errands)
-            .FirstOrDefaultAsync(w => w.FamilyId == familyId && w.WeekendOf == weekendOf, cancellationToken)
-            ?? throw new NotFoundException(
-                $"No weekend planned for {weekendOf:yyyy-MM-dd}. POST /api/weekends/plan to create one.");
+            .FirstOrDefaultAsync(w => w.FamilyId == familyId && w.WeekendOf == weekendOf, cancellationToken);
+
+        if (weekend is null)
+        {
+            // First-load materialisation: plan the upcoming weekend on demand so
+            // the Home page always has something to render on a fresh database.
+            // Idempotent — GenerateWeekendCommandHandler returns the existing
+            // weekend if another request raced ahead.
+            return await _mediator.Send(new GenerateWeekendCommand(weekendOf), cancellationToken);
+        }
 
         var forecast = await _weather.GetForecastAsync(
             _home.Value.Latitude, _home.Value.Longitude,

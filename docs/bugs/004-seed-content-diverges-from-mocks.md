@@ -46,4 +46,26 @@ is product-side intent to drop those examples.
 ## Status
 
 - Logged: 2026-05-16
-- Pending decision.
+- **Fixed: 2026-05-16 (Option 1).** Backend seed now mirrors `docs/mocks`:
+  - `family.json`: Quinn / Sara / Eli / Mae (Port Credit) — already aligned in
+    a prior commit (verified).
+  - `restaurants.json`: La Marina, Symposium Café, The Sicilian Sidewalk
+    Café, Jack Astor's, Snug Harbour, Spice Lounge, Cora's Port Credit,
+    Brogue Inn — already aligned (verified).
+  - `activities.json`: Terre Bleu, Bronte Creek, Royal Botanical Gardens,
+    The Rec Room, Ontario Science Centre, Toronto Zoo, Riverwood, Living
+    Arts Centre kids' theatre — already aligned (verified).
+  - `local-events.json`: now wrapped in an envelope
+    `{ "anchorSaturday", "events": [...] }`. `LocalEventSeeder` injects
+    `IDateTimeProvider`, resolves the upcoming Saturday from the clock,
+    and shifts every event date by
+    `(currentUpcomingSaturday - anchorSaturday)` days so
+    `GET /api/events?weekendOf=...` returns rows for the current weekend
+    regardless of when `seed` is run. Saturday events (Lavender / Cirque /
+    Tulip) land on `weekendOf`; Sunday events (Symphony / Farmer's Market)
+    on `weekendOf + 1`; later events (Strawberry +1 week, Pumpkin +119
+    days) stay at their relative offset.
+- Verified by: `dotnet test tests/Saturdaze.Cli.Tests` (52/52 pass) and
+  `dotnet test tests/Saturdaze.Api.Tests` (25/25 pass). New
+  `LocalEventSeederTests` cover envelope shifting and the legacy flat-array
+  fallback.
