@@ -1,0 +1,11 @@
+- .NET
+- Clean Architecture
+- MediatR (free version)
+- 1 C# type per file
+- EF Core
+- Sql Server Express Database
+- interface for DbContext, and interface injected. No repositories, no unit of work
+- radically simple implementation, no over engineering.
+- Controllers over Endpoints
+- .sln not .slnx
+- code in backend folder (backend/Saturdaze.sln)

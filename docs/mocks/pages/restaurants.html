@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Food — Saturdaze</title>
+  <link rel="stylesheet" href="../styles/global.css" />
+  <script type="module" src="../app.js"></script>
+</head>
+<body>
+  <div class="sd-frame">
+
+    <sd-top-bar title="Food" back>
+      <sd-icon-button slot="trailing" icon="refresh" label="Refresh picks"></sd-icon-button>
+    </sd-top-bar>
+
+    <div style="padding: 0 var(--sd-app-pad-x);">
+      <h2 style="font-size: 22px; font-weight: 700; letter-spacing: -0.02em; margin: 8px 0 4px;">Saturday food</h2>
+      <p style="color: var(--sd-ink-soft); font-size: 14px; margin: 0 0 16px;">Pre-filtered to wife-approved styles, near today's activity. Lock a pick to settle the debate.</p>
+    </div>
+
+    <sd-tag-group>
+      <sd-chip tone="primary">Lunch</sd-chip>
+      <sd-chip>Dinner</sd-chip>
+      <sd-chip tone="accent">Wife-approved only</sd-chip>
+      <sd-chip tone="sky">&lt; 15 min</sd-chip>
+      <sd-chip tone="leaf">Patio</sd-chip>
+    </sd-tag-group>
+
+    <sd-section title="Top pick for lunch" subtitle="Closest to Terre Bleu, kid-friendly menu">
+      <sd-restaurant-card
+        name="La Marina"
+        style="Mediterranean · Patio"
+        near="Milton, 6 min from Terre Bleu"
+        drive="6 min"
+        wifeapproved
+        icon="fork"
+      >
+        <sd-chip slot="chips" tone="primary">Top pick</sd-chip>
+        <sd-vote-row slot="votes" name="Quinn" tone="primary" vote="up"></sd-vote-row>
+        <sd-vote-row slot="votes" name="Sara"  tone="leaf"    vote="up"></sd-vote-row>
+        <sd-vote-row slot="votes" name="Eli"   tone="sky"     vote="up"></sd-vote-row>
+        <sd-vote-row slot="votes" name="Mae"   tone="sun"     vote="none"></sd-vote-row>
+        <div slot="votes" style="display:flex; gap:8px; margin-top:14px;">
+          <sd-button variant="secondary" size="sm" full>See menu</sd-button>
+          <sd-button size="sm" full>
+            <sd-icon slot="leading" name="lock" size="14"></sd-icon>
+            Lock it in
+          </sd-button>
+        </div>
+      </sd-restaurant-card>
+    </sd-section>
+
+    <sd-section title="Other strong picks">
+      <div class="sd-card-grid">
+        <sd-restaurant-card
+          name="Symposium Café"
+          style="Brunch · Family booths"
+          near="Milton, 9 min from Terre Bleu"
+          drive="9 min"
+          wifeapproved
+          icon="fork"
+        >
+          <sd-vote-row slot="votes" name="Quinn" tone="primary" vote="none"></sd-vote-row>
+          <sd-vote-row slot="votes" name="Sara"  tone="leaf"    vote="up"></sd-vote-row>
+          <sd-vote-row slot="votes" name="Eli"   tone="sky"     vote="none"></sd-vote-row>
+          <sd-vote-row slot="votes" name="Mae"   tone="sun"     vote="up"></sd-vote-row>
+        </sd-restaurant-card>
+
+        <sd-restaurant-card
+          name="The Sicilian Sidewalk Café"
+          style="Italian · Casual"
+          near="Hwy back to Port Credit"
+          drive="12 min"
+          icon="fork"
+        >
+          <sd-vote-row slot="votes" name="Quinn" tone="primary" vote="up"></sd-vote-row>
+          <sd-vote-row slot="votes" name="Sara"  tone="leaf"    vote="down"></sd-vote-row>
+          <sd-vote-row slot="votes" name="Eli"   tone="sky"     vote="up"></sd-vote-row>
+          <sd-vote-row slot="votes" name="Mae"   tone="sun"     vote="up"></sd-vote-row>
+        </sd-restaurant-card>
+      </div>
+    </sd-section>
+
+    <sd-section title="Sunday dinner" subtitle="After Rec Room — Square One area">
+      <sd-restaurant-card
+        name="Jack Astor's"
+        style="Casual · Kids' menu"
+        near="Square One"
+        drive="2 min"
+        wifeapproved
+        icon="fork"
+      >
+        <sd-vote-row slot="votes" name="Quinn" tone="primary" vote="up"></sd-vote-row>
+        <sd-vote-row slot="votes" name="Sara"  tone="leaf"    vote="up"></sd-vote-row>
+        <sd-vote-row slot="votes" name="Eli"   tone="sky"     vote="up"></sd-vote-row>
+        <sd-vote-row slot="votes" name="Mae"   tone="sun"     vote="up"></sd-vote-row>
+      </sd-restaurant-card>
+    </sd-section>
+
+    <sd-bottom-nav active="home"></sd-bottom-nav>
+  </div>
+</body>
+</html>

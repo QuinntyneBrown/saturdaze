@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Family — Saturdaze</title>
+  <link rel="stylesheet" href="../styles/global.css" />
+  <script type="module" src="../app.js"></script>
+  <style>
+    /* Two-column layout on desktop for the family profile: bio / members on
+       the left, recurring commitments + preferences on the right. */
+    @media (min-width: 1024px) {
+      .profile-cols {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 32px;
+        align-items: start;
+      }
+      .profile-cols > * { margin: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="sd-frame">
+
+    <sd-top-bar title="Family profile" back>
+      <sd-icon-button slot="trailing" icon="more" label="More"></sd-icon-button>
+    </sd-top-bar>
+
+    <div style="padding: 0 var(--sd-app-pad-x); text-align:center; padding-top: 8px;">
+      <h2 style="font-size: 26px; font-weight: 700; letter-spacing: -0.02em; margin: 4px 0;">The Browns</h2>
+      <p style="color: var(--sd-ink-soft); font-size: 14px; margin: 0 0 16px;">Port Credit, Mississauga</p>
+    </div>
+
+    <div class="profile-cols">
+    <sd-section title="Who's in" subtitle="Tap to edit a member">
+      <div style="display:grid; gap:8px;">
+        <sd-list-item title="Quinn" subtitle="Parent · 38">
+          <sd-avatar slot="leading" name="Quinn" tone="primary"></sd-avatar>
+          <sd-icon slot="trailing" name="chevron_right" size="16"></sd-icon>
+        </sd-list-item>
+        <sd-list-item title="Sara" subtitle="Parent · 36">
+          <sd-avatar slot="leading" name="Sara" tone="leaf"></sd-avatar>
+          <sd-icon slot="trailing" name="chevron_right" size="16"></sd-icon>
+        </sd-list-item>
+        <sd-list-item title="Eli" subtitle="Kid · 9 · picky eater">
+          <sd-avatar slot="leading" name="Eli" tone="sky"></sd-avatar>
+          <sd-icon slot="trailing" name="chevron_right" size="16"></sd-icon>
+        </sd-list-item>
+        <sd-list-item title="Mae" subtitle="Kid · 5 · loves animals">
+          <sd-avatar slot="leading" name="Mae" tone="sun"></sd-avatar>
+          <sd-icon slot="trailing" name="chevron_right" size="16"></sd-icon>
+        </sd-list-item>
+        <sd-list-item title="Add family member" flat compact>
+          <sd-icon slot="leading" name="plus"></sd-icon>
+        </sd-list-item>
+      </div>
+    </sd-section>
+
+    <sd-section title="Recurring commitments" subtitle="I'll work the weekend around these">
+      <div style="display:grid; gap:8px;">
+        <sd-list-item title="Swim lessons" subtitle="Saturdays 9:00 – 10:00 · Port Credit Pool">
+          <sd-icon slot="leading" name="bike"></sd-icon>
+          <sd-chip slot="trailing" tone="accent">Locked</sd-chip>
+        </sd-list-item>
+        <sd-list-item title="Church" subtitle="Sundays 10:30 – 11:45 · St. Mary's">
+          <sd-icon slot="leading" name="bed"></sd-icon>
+          <sd-chip slot="trailing" tone="accent">Locked</sd-chip>
+        </sd-list-item>
+        <sd-list-item title="Workout window" subtitle="Sat &amp; Sun 5:00 – 6:00pm · Garage gym">
+          <sd-icon slot="leading" name="bike"></sd-icon>
+          <sd-chip slot="trailing" tone="accent">Locked</sd-chip>
+        </sd-list-item>
+        <sd-list-item title="Add a commitment" flat compact>
+          <sd-icon slot="leading" name="plus"></sd-icon>
+        </sd-list-item>
+      </div>
+    </sd-section>
+
+    <sd-section title="Daily rhythm">
+      <div style="display:grid; gap:8px;">
+        <sd-list-item title="Out the door by" subtitle="9:00am">
+          <sd-icon slot="leading" name="home"></sd-icon>
+          <sd-chip slot="trailing">9:00am</sd-chip>
+        </sd-list-item>
+        <sd-list-item title="Kids in bed by" subtitle="9:00pm sharp">
+          <sd-icon slot="leading" name="bed"></sd-icon>
+          <sd-chip slot="trailing">9:00pm</sd-chip>
+        </sd-list-item>
+      </div>
+    </sd-section>
+
+    <sd-section title="Likes &amp; dislikes" subtitle="I'll lean into / avoid these">
+      <sd-tag-group>
+        <sd-chip tone="leaf"><sd-icon name="heart" size="12"></sd-icon> Parks</sd-chip>
+        <sd-chip tone="leaf"><sd-icon name="heart" size="12"></sd-icon> Short hikes</sd-chip>
+        <sd-chip tone="leaf"><sd-icon name="heart" size="12"></sd-icon> Zoo</sd-chip>
+        <sd-chip tone="leaf"><sd-icon name="heart" size="12"></sd-icon> Rec Room</sd-chip>
+        <sd-chip tone="leaf"><sd-icon name="heart" size="12"></sd-icon> Lavender</sd-chip>
+        <sd-chip tone="leaf"><sd-icon name="heart" size="12"></sd-icon> Live theatre</sd-chip>
+        <sd-chip tone="warn"><sd-icon name="close" size="12"></sd-icon> Camping</sd-chip>
+        <sd-chip tone="warn"><sd-icon name="close" size="12"></sd-icon> Drives &gt; 60 min</sd-chip>
+      </sd-tag-group>
+    </sd-section>
+
+    <sd-section title="Preferences">
+      <sd-card>
+        <div style="display:flex; justify-content:space-between; align-items:center; padding-bottom:8px; border-bottom:1px solid var(--sd-line); margin-bottom:8px;">
+          <div>
+            <div style="font-weight:600;">Budget is a factor</div>
+            <div style="font-size:13px; color:var(--sd-ink-soft);">Off — I won't filter by price</div>
+          </div>
+          <sd-toggle></sd-toggle>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center; padding: 8px 0; border-bottom:1px solid var(--sd-line); margin-bottom:8px;">
+          <div>
+            <div style="font-weight:600;">Try something new each weekend</div>
+            <div style="font-size:13px; color:var(--sd-ink-soft);">One new activity per week</div>
+          </div>
+          <sd-toggle checked></sd-toggle>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center; padding: 8px 0;">
+          <div>
+            <div style="font-weight:600;">Friday preview notifications</div>
+            <div style="font-size:13px; color:var(--sd-ink-soft);">A heads-up at 6pm Friday</div>
+          </div>
+          <sd-toggle checked></sd-toggle>
+        </div>
+      </sd-card>
+    </sd-section>
+
+    </div>
+    <sd-bottom-nav active="profile"></sd-bottom-nav>
+  </div>
+</body>
+</html>

@@ -1,0 +1,21 @@
+{
+  "homeLocation": "Port Credit, Mississauga, ON",
+  "budgetEnabled": false,
+  "members": [
+    { "name": "Quinn", "age": 41 },
+    { "name": "Jennifer", "age": 39 },
+    { "name": "Theo", "age": 9 },
+    { "name": "Avery", "age": 5 }
+  ],
+  "commitments": [
+    { "title": "Kids swim lesson",     "dayOfWeek": "Saturday", "startTime": "09:30", "endTime": "10:30" },
+    { "title": "Husband workout",      "dayOfWeek": "Saturday", "startTime": "07:00", "endTime": "08:15" },
+    { "title": "Church",               "dayOfWeek": "Sunday",   "startTime": "10:30", "endTime": "12:00" }
+  ],
+  "preferences": [
+    { "kind": "Like",    "value": "outdoors" },
+    { "kind": "Like",    "value": "water" },
+    { "kind": "Like",    "value": "animals" },
+    { "kind": "Dislike", "value": "long-drive" }
+  ]
+}

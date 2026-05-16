@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Dialogs — Saturdaze</title>
+  <link rel="stylesheet" href="../styles/global.css" />
+  <script type="module" src="../app.js"></script>
+  <style>
+    .gallery {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 32px 20px 80px;
+      display: grid;
+      gap: 28px;
+    }
+    .gallery h1 {
+      font-size: 28px; font-weight: 700; letter-spacing: -0.02em; margin: 0;
+    }
+    .gallery p.lede {
+      color: var(--sd-ink-soft); margin: 4px 0 16px;
+    }
+    .demo-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--sd-ink-soft);
+      font-weight: 600;
+      margin: 8px 0 6px;
+    }
+  </style>
+</head>
+<body>
+  <main class="gallery">
+    <div>
+      <h1>Dialogs &amp; sheets</h1>
+      <p class="lede">Each one shown statically so all variants are reviewable on one page. In-app these slide up over the screen.</p>
+    </div>
+
+    <div>
+      <div class="demo-label">Block detail — why this was suggested</div>
+      <sd-dialog open static
+        title="Terre Bleu Lavender Farm"
+        subtitle="Sat 11:00 – 1:00 · 45 min drive"
+      >
+        <div style="display:grid; gap:14px;">
+          <sd-card variant="sunk">
+            <div style="display:flex; gap:10px; align-items:flex-start;">
+              <sd-icon name="sparkle" size="20" style="color:var(--sd-primary); margin-top:2px;"></sd-icon>
+              <div>
+                <div style="font-weight:600;">Why I picked this</div>
+                <div style="font-size:14px; color:var(--sd-ink-soft); margin-top:4px;">Lavender peaks May 17–24. Sara loved it last year. Mae is old enough to walk now. Weather's perfect Saturday but cloudy Sunday — so today's the day.</div>
+              </div>
+            </div>
+          </sd-card>
+
+          <div>
+            <div style="font-size:13px; color:var(--sd-ink-soft); font-weight:500; margin-bottom:8px;">Alternatives</div>
+            <div style="display:grid; gap:8px;">
+              <sd-list-item title="Bronte Creek Park" subtitle="25 min · easy hike + splash pad" compact>
+                <sd-icon slot="leading" name="tree"></sd-icon>
+                <sd-icon slot="trailing" name="swap" size="16"></sd-icon>
+              </sd-list-item>
+              <sd-list-item title="Royal Botanical Gardens" subtitle="35 min · tulip festival" compact>
+                <sd-icon slot="leading" name="tree"></sd-icon>
+                <sd-icon slot="trailing" name="swap" size="16"></sd-icon>
+              </sd-list-item>
+            </div>
+          </div>
+
+          <sd-list-item title="Open in Maps" subtitle="990 Appleby Line, Milton" href="#" compact>
+            <sd-icon slot="leading" name="map"></sd-icon>
+            <sd-icon slot="trailing" name="chevron_right" size="16"></sd-icon>
+          </sd-list-item>
+        </div>
+
+        <sd-button slot="actions" variant="secondary">
+          <sd-icon slot="leading" name="swap" size="16"></sd-icon>
+          Swap
+        </sd-button>
+        <sd-button slot="actions">
+          <sd-icon slot="leading" name="lock" size="16"></sd-icon>
+          Lock this block
+        </sd-button>
+      </sd-dialog>
+    </div>
+
+    <div>
+      <div class="demo-label">Regenerate confirm</div>
+      <sd-dialog open static
+        title="Regenerate the weekend?"
+        subtitle="3 locked blocks will stay put."
+      >
+        <sd-card variant="sunk">
+          <div style="display:flex; gap:10px; align-items:flex-start;">
+            <sd-icon name="lock" size="18" style="color:var(--sd-accent); margin-top:2px;"></sd-icon>
+            <div style="font-size:14px;">
+              <div style="font-weight:600;">Keeping these locked</div>
+              <div style="color:var(--sd-ink-soft); margin-top:4px;">Swim 9am · Church 10:30am · Workout 5pm · Bath 8pm</div>
+            </div>
+          </div>
+        </sd-card>
+        <p style="font-size:14px; color:var(--sd-ink-soft); margin: 12px 0 0;">Everything else gets a fresh draft. You can compare before committing.</p>
+        <sd-button slot="actions" variant="secondary">Cancel</sd-button>
+        <sd-button slot="actions">
+          <sd-icon slot="leading" name="refresh" size="16"></sd-icon>
+          Regenerate
+        </sd-button>
+      </sd-dialog>
+    </div>
+
+    <div>
+      <div class="demo-label">Swap an activity</div>
+      <sd-dialog open static
+        title="Swap out Lavender Farm?"
+        subtitle="Saturday 11:00 – 1:00"
+      >
+        <div style="display:grid; gap:8px;">
+          <sd-list-item title="Bronte Creek Park" subtitle="25 min drive · short hike + splash pad" compact>
+            <sd-icon slot="leading" name="tree"></sd-icon>
+            <sd-chip slot="trailing" tone="leaf">Outdoor</sd-chip>
+          </sd-list-item>
+          <sd-list-item title="Toronto Zoo" subtitle="55 min · full-day option" compact>
+            <sd-icon slot="leading" name="tree"></sd-icon>
+            <sd-chip slot="trailing" tone="leaf">Outdoor</sd-chip>
+          </sd-list-item>
+          <sd-list-item title="The Rec Room" subtitle="10 min · indoor backup" compact>
+            <sd-icon slot="leading" name="popcorn"></sd-icon>
+            <sd-chip slot="trailing" tone="indoor">Indoor</sd-chip>
+          </sd-list-item>
+          <sd-list-item title="Living Arts kids' theatre" subtitle="5 min · 2pm matinée" compact>
+            <sd-icon slot="leading" name="ticket"></sd-icon>
+            <sd-chip slot="trailing" tone="indoor">Indoor</sd-chip>
+          </sd-list-item>
+        </div>
+        <sd-button slot="actions" variant="ghost">Surprise me</sd-button>
+        <sd-button slot="actions" variant="secondary">Close</sd-button>
+      </sd-dialog>
+    </div>
+
+    <div>
+      <div class="demo-label">Restaurant vote</div>
+      <sd-dialog open static
+        title="Who's in for La Marina?"
+        subtitle="Lunch, Saturday 1:00pm"
+      >
+        <div>
+          <sd-vote-row name="Quinn" tone="primary" vote="up"></sd-vote-row>
+          <sd-vote-row name="Sara"  tone="leaf"    vote="up"></sd-vote-row>
+          <sd-vote-row name="Eli"   tone="sky"     vote="up"></sd-vote-row>
+          <sd-vote-row name="Mae"   tone="sun"     vote="none"></sd-vote-row>
+        </div>
+        <sd-card variant="sunk" style="margin-top:12px;">
+          <div style="display:flex; gap:10px; align-items:flex-start; font-size:14px;">
+            <sd-icon name="sparkle" size="16" style="color:var(--sd-primary); margin-top:2px;"></sd-icon>
+            <span>3 of 4 in. Mae usually goes for the cheese pasta here — I'll mark a soft yes.</span>
+          </div>
+        </sd-card>
+        <sd-button slot="actions" variant="secondary">See menu</sd-button>
+        <sd-button slot="actions">
+          <sd-icon slot="leading" name="lock" size="16"></sd-icon>
+          Lock it in
+        </sd-button>
+      </sd-dialog>
+    </div>
+
+    <div>
+      <div class="demo-label">Add commitment (profile)</div>
+      <sd-dialog open static
+        title="Add a commitment"
+        subtitle="Something I should plan around every week"
+      >
+        <div style="display:grid; gap:12px;">
+          <sd-text-input label="What is it" placeholder="e.g. Eli's soccer practice"></sd-text-input>
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+            <sd-text-input label="Day" placeholder="Saturday"></sd-text-input>
+            <sd-text-input label="Time" placeholder="11:00 – 12:00"></sd-text-input>
+          </div>
+          <sd-text-input label="Where" placeholder="Address or venue"></sd-text-input>
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div>
+              <div style="font-weight:600;">Lock by default</div>
+              <div style="font-size:13px; color:var(--sd-ink-soft);">Block it on the weekend draft automatically.</div>
+            </div>
+            <sd-toggle checked></sd-toggle>
+          </div>
+        </div>
+        <sd-button slot="actions" variant="secondary">Cancel</sd-button>
+        <sd-button slot="actions">Save</sd-button>
+      </sd-dialog>
+    </div>
+
+    <div>
+      <div class="demo-label">Shopping errand quick-add</div>
+      <sd-dialog open static
+        title="Slot in an errand"
+        subtitle="I'll fit it without killing the day"
+      >
+        <div style="display:grid; gap:12px;">
+          <sd-text-input label="What's needed" placeholder="Costco — paper towels, bread, yogurt"></sd-text-input>
+          <sd-text-input label="Roughly how long" placeholder="45 min" hint="I'll add 10 min buffer either side."></sd-text-input>
+          <sd-card variant="sunk">
+            <div style="display:flex; gap:10px; align-items:flex-start;">
+              <sd-icon name="sparkle" size="18" style="color:var(--sd-primary); margin-top:2px;"></sd-icon>
+              <div style="font-size:14px;">
+                <div style="font-weight:600;">Best fit: Sunday 9:15am</div>
+                <div style="color:var(--sd-ink-soft); margin-top:2px;">On the way back from church, 4 min off-route. Adds 38 min total.</div>
+              </div>
+            </div>
+          </sd-card>
+        </div>
+        <sd-button slot="actions" variant="secondary">Pick another slot</sd-button>
+        <sd-button slot="actions">
+          <sd-icon slot="leading" name="plus" size="16"></sd-icon>
+          Add
+        </sd-button>
+      </sd-dialog>
+    </div>
+
+    <div>
+      <div class="demo-label">Friday preview (notification sheet)</div>
+      <sd-dialog open static
+        title="Your weekend is ready 🌤"
+        subtitle="A peek before Saturday morning"
+      >
+        <div style="display:grid; gap:10px;">
+          <sd-card variant="sunk">
+            <div style="font-weight:600;">Saturday</div>
+            <div style="font-size:14px; color:var(--sd-ink-soft); margin-top:2px;">Swim → Lavender fields → La Marina → Quiet afternoon</div>
+          </sd-card>
+          <sd-card variant="sunk">
+            <div style="font-weight:600;">Sunday</div>
+            <div style="font-size:14px; color:var(--sd-ink-soft); margin-top:2px;">Church → Costco run → Rec Room → Jack Astor's</div>
+          </sd-card>
+          <p style="font-size:14px; color:var(--sd-ink-soft); margin: 4px 0 0;">All booked, all under 45 min drive. Nothing for you to do — but tap below if you want to nudge anything.</p>
+        </div>
+        <sd-button slot="actions" variant="secondary">Tweak</sd-button>
+        <sd-button slot="actions">
+          <sd-icon slot="leading" name="thumbs_up" size="16"></sd-icon>
+          Take it as-is
+        </sd-button>
+      </sd-dialog>
+    </div>
+
+    <div>
+      <div class="demo-label">Share for Sara's approval</div>
+      <sd-dialog open static
+        title="Send Sara the plan?"
+        subtitle="She gets a read-only preview. She can thumbs-up or comment."
+      >
+        <sd-list-item title="Sara · Browns family" compact>
+          <sd-avatar slot="leading" name="Sara" tone="leaf"></sd-avatar>
+          <sd-chip slot="trailing" tone="accent">Default</sd-chip>
+        </sd-list-item>
+        <div style="margin-top:12px; padding:12px; background:var(--sd-surface-2); border-radius:12px; font-size:14px; color:var(--sd-ink-soft);">
+          "Here's the weekend — Terre Bleu Saturday, Rec Room Sunday. Tap any block to swap. xx"
+        </div>
+        <sd-button slot="actions" variant="secondary">Cancel</sd-button>
+        <sd-button slot="actions">
+          <sd-icon slot="leading" name="share" size="16"></sd-icon>
+          Send
+        </sd-button>
+      </sd-dialog>
+    </div>
+
+    <p style="text-align:center; margin-top:24px;"><a href="../index.html" style="color:var(--sd-primary); text-decoration:none; font-weight:600;">← Back to mocks</a></p>
+  </main>
+</body>
+</html>

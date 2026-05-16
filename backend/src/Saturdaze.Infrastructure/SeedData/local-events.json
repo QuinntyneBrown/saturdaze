@@ -1,0 +1,29 @@
+[
+  {
+    "name": "Port Credit Buskerfest",
+    "startsOn": "2026-08-15",
+    "endsOn":   "2026-08-16",
+    "location": "Port Credit",
+    "driveMinutes": 3,
+    "url": "https://portcreditbia.com/buskerfest",
+    "category": "Festival"
+  },
+  {
+    "name": "Mississauga Waterfront Festival",
+    "startsOn": "2026-06-13",
+    "endsOn":   "2026-06-14",
+    "location": "Port Credit Memorial Park",
+    "driveMinutes": 5,
+    "url": "https://mississaugawaterfrontfestival.com",
+    "category": "Festival"
+  },
+  {
+    "name": "Terre Bleu Lavender Bloom Weekends",
+    "startsOn": "2026-06-27",
+    "endsOn":   "2026-07-19",
+    "location": "Milton",
+    "driveMinutes": 60,
+    "url": "https://terrebleu.ca",
+    "category": "Seasonal"
+  }
+]

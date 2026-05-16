@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Local events — Saturdaze</title>
+  <link rel="stylesheet" href="../styles/global.css" />
+  <script type="module" src="../app.js"></script>
+</head>
+<body>
+  <div class="sd-frame">
+
+    <sd-top-bar title="Local events" back></sd-top-bar>
+
+    <div style="padding: 0 var(--sd-app-pad-x);">
+      <h2 style="font-size: 22px; font-weight: 700; letter-spacing: -0.02em; margin: 8px 0 4px;">What's on this weekend</h2>
+      <p style="color: var(--sd-ink-soft); font-size: 14px; margin: 0 0 16px;">Within 45 minutes of Port Credit. Tap "Add" to slot it into your weekend.</p>
+    </div>
+
+    <sd-tag-group>
+      <sd-chip tone="primary">This weekend</sd-chip>
+      <sd-chip>Next weekend</sd-chip>
+      <sd-chip tone="leaf">Outdoor</sd-chip>
+      <sd-chip tone="indoor">Indoor</sd-chip>
+      <sd-chip tone="sun">Seasonal</sd-chip>
+      <sd-chip>Theatre</sd-chip>
+      <sd-chip>Festivals</sd-chip>
+    </sd-tag-group>
+
+    <sd-section title="Saturday">
+      <div class="sd-card-grid">
+        <sd-event-card
+          title="Terre Bleu — Lavender Bloom Opening"
+          venue="Milton"
+          when="10am – 5pm"
+          drive="45 min"
+          date-day="17" date-mon="MAY"
+          tag="Seasonal"
+        >
+          <sd-chip slot="chips" tone="leaf">Outdoor</sd-chip>
+        </sd-event-card>
+
+        <sd-event-card
+          title="Cirque Mechanics — Pedal Punk"
+          venue="Living Arts Centre"
+          when="2pm matinée"
+          drive="5 min"
+          date-day="17" date-mon="MAY"
+          tag="Circus"
+        ></sd-event-card>
+
+        <sd-event-card
+          title="Spring Tulip Festival"
+          venue="Royal Botanical Gardens"
+          when="all weekend"
+          drive="35 min"
+          date-day="17" date-mon="MAY"
+          tag="Festival"
+        ></sd-event-card>
+      </div>
+    </sd-section>
+
+    <sd-section title="Sunday">
+      <div class="sd-card-grid">
+        <sd-event-card
+          title="Mississauga Symphony — Kids Concert"
+          venue="Living Arts Centre"
+          when="11am"
+          drive="5 min"
+          date-day="18" date-mon="MAY"
+          tag="Theatre"
+        ></sd-event-card>
+
+        <sd-event-card
+          title="Port Credit Farmer's Market"
+          venue="Lakeshore Rd"
+          when="9am – 1pm"
+          drive="2 min"
+          date-day="18" date-mon="MAY"
+          tag="Local"
+        ></sd-event-card>
+      </div>
+    </sd-section>
+
+    <sd-section title="Coming soon">
+      <div class="sd-card-grid">
+        <sd-event-card
+          title="Strawberry-picking opens"
+          venue="Whittamore's Farm"
+          when="Sat May 24"
+          drive="40 min"
+          date-day="24" date-mon="MAY"
+          tag="Seasonal"
+        ></sd-event-card>
+        <sd-event-card
+          title="Pumpkin patch — early access"
+          venue="Downey's Farm"
+          when="Sept 13"
+          drive="35 min"
+          date-day="13" date-mon="SEP"
+          tag="Save for later"
+        ></sd-event-card>
+      </div>
+    </sd-section>
+
+    <sd-bottom-nav active="activities"></sd-bottom-nav>
+  </div>
+</body>
+</html>

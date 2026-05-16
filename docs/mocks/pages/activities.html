@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Discover — Saturdaze</title>
+  <link rel="stylesheet" href="../styles/global.css" />
+  <script type="module" src="../app.js"></script>
+</head>
+<body>
+  <div class="sd-frame">
+
+    <sd-top-bar title="Discover" back>
+      <sd-icon-button slot="trailing" icon="sparkle" label="Try something new" variant="filled"></sd-icon-button>
+    </sd-top-bar>
+
+    <div style="padding: 0 var(--sd-app-pad-x);">
+      <h2 style="font-size: 22px; font-weight: 700; letter-spacing: -0.02em; margin: 8px 0 4px;">Picked for the Browns</h2>
+      <p style="color: var(--sd-ink-soft); font-size: 14px; margin: 0 0 16px;">Curated around Eli (9) and Mae (5), under 45 min from Port Credit.</p>
+    </div>
+
+    <sd-tag-group>
+      <sd-chip tone="primary">All</sd-chip>
+      <sd-chip tone="leaf">Outdoor</sd-chip>
+      <sd-chip tone="indoor">Indoor</sd-chip>
+      <sd-chip tone="sky">&lt; 30 min</sd-chip>
+      <sd-chip>Ages 5+</sd-chip>
+      <sd-chip>New for us</sd-chip>
+      <sd-chip tone="warn">Weather-safe</sd-chip>
+    </sd-tag-group>
+
+    <sd-section title="This weekend's weather-fit">
+      <div class="sd-card-grid">
+        <sd-activity-card
+          title="Terre Bleu Lavender Farm"
+          subtitle="Milton · The bloom peaks May 17–24"
+          icon="tree"
+          tone="outdoor"
+          drive="45 min"
+          ages="all"
+          tag="Day highlight"
+          why="Sara loved this last summer. Mae's old enough this year to walk the rows."
+        ></sd-activity-card>
+
+        <sd-activity-card
+          title="Bronte Creek Provincial Park"
+          subtitle="Easy hike + splash pad if hot"
+          icon="tree"
+          tone="outdoor"
+          drive="25 min"
+          ages="5+"
+          why="Short trail (1.5km), washrooms, picnic tables — your usual win."
+        ></sd-activity-card>
+
+        <sd-activity-card
+          title="Royal Botanical Gardens"
+          subtitle="Tulip festival in bloom"
+          icon="tree"
+          tone="outdoor"
+          drive="35 min"
+        ></sd-activity-card>
+      </div>
+    </sd-section>
+
+    <sd-section title="If weather turns">
+      <div class="sd-card-grid">
+        <sd-activity-card
+          title="The Rec Room — Square One"
+          subtitle="Bowling, arcade, dinner under one roof"
+          icon="popcorn"
+          tone="indoor"
+          drive="10 min"
+          ages="all"
+          tag="Eli's pick"
+          why="Eli asked for it twice last week. Sunday afternoon clouds = good window."
+        ></sd-activity-card>
+
+        <sd-activity-card
+          title="Ontario Science Centre"
+          subtitle="New 'Senses' exhibit"
+          icon="popcorn"
+          tone="indoor"
+          drive="40 min"
+        ></sd-activity-card>
+
+        <sd-activity-card
+          title="Toronto Zoo"
+          subtitle="Polar bears, splash zone, indoor pavilions"
+          icon="tree"
+          tone="outdoor"
+          drive="55 min"
+          ages="all"
+        ></sd-activity-card>
+      </div>
+    </sd-section>
+
+    <sd-section title="Try something new" subtitle="You haven't done these recently">
+      <div class="sd-card-grid">
+        <sd-activity-card
+          title="Riverwood Conservancy"
+          subtitle="Forest school trails, owl barn"
+          icon="tree"
+          tone="outdoor"
+          drive="8 min"
+          tag="First time"
+        ></sd-activity-card>
+        <sd-activity-card
+          title="Living Arts Centre — kids' theatre"
+          subtitle="Saturday matinée at 2pm"
+          icon="ticket"
+          tone="indoor"
+          drive="5 min"
+          tag="First time"
+        ></sd-activity-card>
+      </div>
+    </sd-section>
+
+    <sd-bottom-nav active="activities"></sd-bottom-nav>
+  </div>
+</body>
+</html>

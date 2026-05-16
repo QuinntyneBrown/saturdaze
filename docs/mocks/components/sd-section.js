@@ -1,0 +1,53 @@
+// <sd-section title="..." subtitle="..." action="...">
+// A labelled content region. Optional trailing action slot.
+
+import { SdElement } from "./sd-base.js";
+
+class SdSection extends SdElement {
+  static get observedAttributes() { return ["title", "subtitle"]; }
+  attributeChangedCallback() { if (this._rendered) this.render(); }
+
+  styles() {
+    return `
+      :host { display: block; margin: 28px 0; }
+      header {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 0 var(--sd-app-pad-x, 20px);
+        margin-bottom: 12px;
+      }
+      h2 {
+        font-size: var(--sd-fs-md);
+        font-weight: var(--sd-fw-semibold);
+        margin: 0;
+        letter-spacing: -0.01em;
+      }
+      p {
+        margin: 2px 0 0;
+        font-size: var(--sd-fs-sm);
+        color: var(--sd-ink-soft);
+      }
+      .body { padding: 0 var(--sd-app-pad-x, 20px); }
+      :host([flush]) .body { padding: 0; }
+    `;
+  }
+
+  template() {
+    const t = this.attr("title", "");
+    const s = this.attr("subtitle", "");
+    return `
+      <header>
+        <div>
+          ${t ? `<h2>${t}</h2>` : ""}
+          ${s ? `<p>${s}</p>` : ""}
+        </div>
+        <slot name="action"></slot>
+      </header>
+      <div class="body"><slot></slot></div>
+    `;
+  }
+}
+
+customElements.define("sd-section", SdSection);

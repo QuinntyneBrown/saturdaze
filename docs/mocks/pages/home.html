@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>This Weekend — Saturdaze</title>
+  <link rel="stylesheet" href="../styles/global.css" />
+  <script type="module" src="../app.js"></script>
+  <style>
+    .home-grid-cards { display: grid; gap: 12px; }
+    .home-quick-actions { display: grid; gap: 8px; padding: 0 var(--sd-app-pad-x, 20px); }
+
+    /* On desktop, day cards sit side-by-side in the master pane. */
+    @media (min-width: 1024px) {
+      .home-grid-cards { grid-template-columns: 1fr 1fr; }
+      .home-quick-actions { padding: 0; }
+    }
+
+    /* Detail-pane styling (only seen on desktop). */
+    .detail-pane { padding: 8px 4px 4px; }
+    .detail-pane-head {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 8px 18px 14px; border-bottom: 1px solid var(--sd-line);
+    }
+    .detail-pane-head .title { font-weight: 600; font-size: 15px; letter-spacing: -0.005em; }
+    .detail-pane-head .sub { color: var(--sd-ink-soft); font-size: 13px; margin-top: 2px; }
+    .detail-pane-body { padding: 14px 14px 4px; display: grid; gap: 10px; }
+    .detail-pane-footer { padding: 12px 18px 4px; display: flex; gap: 10px; }
+  </style>
+</head>
+<body>
+  <div class="sd-frame">
+
+    <sd-top-bar title="">
+      <sd-icon-button slot="leading" icon="calendar" label="Open calendar" variant="ghost"></sd-icon-button>
+      <sd-icon-button slot="trailing" icon="share" label="Share with Sara"></sd-icon-button>
+    </sd-top-bar>
+
+    <sd-split-view sticky-detail>
+
+      <!-- =========================== MASTER (visible on all sizes) =========================== -->
+      <div slot="master">
+
+        <sd-hero
+          greeting="Morning, Browns 👋"
+          subtitle="Sat &amp; Sun are looking warm. I've sketched a weekend you can take as-is."
+          cta="Plan This Weekend"
+        ></sd-hero>
+
+        <sd-section title="The forecast" subtitle="Sat 17 May – Sun 18 May">
+          <sd-weather-strip>
+            <sd-weather-day day="Saturday" icon="sun"   hi="22" lo="14" note="Light breeze, perfect for outdoors"></sd-weather-day>
+            <sd-weather-day day="Sunday"   icon="cloud" hi="18" lo="12" note="Cloudy by 2pm — plan indoors after"></sd-weather-day>
+          </sd-weather-strip>
+        </sd-section>
+
+        <sd-section title="Your weekend" subtitle="Tap a day to see the timeline">
+          <div class="home-grid-cards">
+            <sd-day-card
+              day="Saturday"
+              date="Sat 17 May"
+              weather="22°  sunny"
+              icon="sun"
+              highlight="Lavender fields at Terre Bleu"
+              href="itinerary.html"
+            >
+              <sd-chip slot="chips" tone="accent"><sd-icon name="lock" size="12"></sd-icon> 9:00 swim</sd-chip>
+              <sd-chip slot="chips" tone="sky"><sd-icon name="car" size="12"></sd-icon> 45 min drive</sd-chip>
+              <sd-chip slot="chips" tone="leaf">Outdoor day</sd-chip>
+            </sd-day-card>
+
+            <sd-day-card
+              day="Sunday"
+              date="Sun 18 May"
+              weather="18°  cloudy"
+              icon="cloud"
+              highlight="Rec Room → Eli's pick"
+              href="itinerary.html"
+            >
+              <sd-chip slot="chips" tone="accent"><sd-icon name="lock" size="12"></sd-icon> 10:30 church</sd-chip>
+              <sd-chip slot="chips" tone="indoor">Indoor afternoon</sd-chip>
+              <sd-chip slot="chips" tone="primary">New for us</sd-chip>
+            </sd-day-card>
+          </div>
+        </sd-section>
+
+        <sd-section title="A heads-up" subtitle="Things I noticed for you">
+          <div style="display: grid; gap: 12px;">
+            <sd-anticipate
+              icon="sparkle"
+              headline="Lavender bloom peaks this weekend"
+              body="It's a 45-min drive — and rain moves in Monday. I tucked it into Saturday afternoon."
+              cta="See on the map"
+            ></sd-anticipate>
+            <sd-anticipate
+              icon="bag"
+              headline="Sara mentioned a Costco run"
+              body="Want me to slot it Sunday morning before church so it doesn't kill the day?"
+              cta="Add to Sunday"
+            ></sd-anticipate>
+          </div>
+        </sd-section>
+
+        <sd-section title="Quick actions" flush>
+          <div class="home-quick-actions">
+            <sd-list-item title="Regenerate the weekend" subtitle="Same commitments, fresh ideas" href="#">
+              <sd-icon slot="leading" name="refresh"></sd-icon>
+              <sd-icon slot="trailing" name="chevron_right" size="16"></sd-icon>
+            </sd-list-item>
+            <sd-list-item title="Lock what's already perfect" subtitle="3 blocks locked" href="#">
+              <sd-icon slot="leading" name="lock"></sd-icon>
+              <sd-icon slot="trailing" name="chevron_right" size="16"></sd-icon>
+            </sd-list-item>
+            <sd-list-item title="Share with Sara for approval" subtitle="A read-only preview link" href="#">
+              <sd-icon slot="leading" name="share"></sd-icon>
+              <sd-icon slot="trailing" name="chevron_right" size="16"></sd-icon>
+            </sd-list-item>
+          </div>
+        </sd-section>
+      </div>
+
+      <!-- =========================== DETAIL (desktop only — live preview) =========================== -->
+      <div slot="detail">
+        <div class="detail-pane">
+          <div class="detail-pane-head">
+            <div>
+              <div class="title">Saturday — live preview</div>
+              <div class="sub">Tap any block to swap, lock, or see why</div>
+            </div>
+            <sd-icon-button icon="arrow_right" label="Open full day" variant="filled"></sd-icon-button>
+          </div>
+          <div class="detail-pane-body">
+            <sd-timeline-block
+              time="9:00" duration="60m"
+              title="Swim lessons" subtitle="Port Credit Pool"
+              icon="bike" tone="fixed" locked
+            ></sd-timeline-block>
+            <sd-timeline-block
+              time="11:00" duration="2h"
+              title="Lavender fields" subtitle="Terre Bleu, Milton"
+              icon="tree" drive="45 min"
+            >
+              <sd-chip slot="chips" tone="primary">Day highlight</sd-chip>
+            </sd-timeline-block>
+            <sd-timeline-block
+              time="13:00" duration="75m"
+              title="Lunch — La Marina" subtitle="Wife-approved · patio"
+              icon="fork" tone="meal"
+            ></sd-timeline-block>
+            <sd-timeline-block
+              time="15:30" duration="90m"
+              title="Quiet time at home" subtitle="Recharge before evening"
+              icon="bed" tone="downtime"
+            ></sd-timeline-block>
+            <sd-timeline-block
+              time="17:00" duration="60m"
+              title="Workout" subtitle="Garage gym · Sara watches kids"
+              icon="bike" tone="workout" locked
+            ></sd-timeline-block>
+          </div>
+          <div class="detail-pane-footer">
+            <sd-button variant="secondary" size="sm" full>
+              <sd-icon slot="leading" name="refresh" size="14"></sd-icon>
+              Regenerate
+            </sd-button>
+            <sd-button size="sm" full>
+              <sd-icon slot="leading" name="arrow_right" size="14"></sd-icon>
+              Open Saturday
+            </sd-button>
+          </div>
+        </div>
+      </div>
+
+    </sd-split-view>
+
+    <sd-bottom-nav active="home"></sd-bottom-nav>
+  </div>
+</body>
+</html>

@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Saturday — Saturdaze</title>
+  <link rel="stylesheet" href="../styles/global.css" />
+  <script type="module" src="../app.js"></script>
+  <style>
+    .it-head {
+      padding: 8px var(--sd-app-pad-x) 16px;
+    }
+    .it-head-row {
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    }
+    .it-eyebrow {
+      font-size: 11px; color: var(--sd-ink-soft);
+      text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600;
+    }
+    .it-title { font-size: 26px; font-weight: 700; letter-spacing: -0.02em; margin-top: 2px; }
+    .it-sub { color: var(--sd-ink-soft); font-size: 14px; margin-top: 2px; }
+    .it-sun-icon { color: var(--sd-sun); flex-shrink: 0; }
+    .it-actions { padding: 8px var(--sd-app-pad-x) 24px; display: flex; gap: 10px; }
+
+    /* Desktop split-view master pane — day switcher + weekend stats. */
+    .day-switcher { padding: 0 4px; display: grid; gap: 10px; }
+    .day-switcher .opt {
+      padding: 14px 16px;
+      background: var(--sd-surface);
+      border: 1px solid var(--sd-line);
+      border-radius: var(--sd-r-lg);
+      display: flex; align-items: center; gap: 12px;
+      cursor: pointer;
+      text-decoration: none;
+      color: inherit;
+    }
+    .day-switcher .opt[data-active="true"] {
+      border-color: var(--sd-primary);
+      background: var(--sd-primary-soft);
+    }
+    .day-switcher .opt .day { font-weight: 600; letter-spacing: -0.005em; }
+    .day-switcher .opt .meta { color: var(--sd-ink-soft); font-size: 13px; margin-top: 2px; }
+    .day-switcher .opt .weather-icon { color: var(--sd-sun); }
+
+    .weekend-stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 0 4px; }
+    .weekend-stats .stat {
+      background: var(--sd-surface);
+      border: 1px solid var(--sd-line);
+      border-radius: var(--sd-r-lg);
+      padding: 14px;
+    }
+    .weekend-stats .stat .num { font-size: 24px; font-weight: 700; letter-spacing: -0.02em; }
+    .weekend-stats .stat .lab { color: var(--sd-ink-soft); font-size: 12px; margin-top: 2px; }
+
+    /* On mobile/tablet, the master/details containers above are layout-only and
+       inherit the original page chrome via the slotted content. */
+
+    /* Desktop: stick the master pane to the top so it stays put while the
+       timeline scrolls; this is the 11-star move. */
+    @media (min-width: 1024px) {
+      .it-head { padding-left: 0; padding-right: 0; }
+      .it-actions { padding-left: 0; padding-right: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="sd-frame">
+
+    <sd-top-bar title="Saturday" back>
+      <sd-icon-button slot="trailing" icon="refresh" label="Regenerate"></sd-icon-button>
+      <sd-icon-button slot="trailing" icon="more" label="More"></sd-icon-button>
+    </sd-top-bar>
+
+    <sd-split-view sticky-master>
+
+      <!-- ============== MASTER: day switcher + stats ============== -->
+      <div slot="master">
+        <div class="it-head">
+          <div class="it-head-row">
+            <div>
+              <div class="it-eyebrow">17 May 2026</div>
+              <div class="it-title">Sunny &amp; 22°</div>
+              <div class="it-sub">In bed by 9pm — out the door by 9am</div>
+            </div>
+            <sd-icon name="sun" size="56" class="it-sun-icon"></sd-icon>
+          </div>
+          <sd-tag-group style="margin-top: 16px;">
+            <sd-chip tone="accent"><sd-icon name="lock" size="12"></sd-icon> 3 locked</sd-chip>
+            <sd-chip tone="sky"><sd-icon name="car" size="12"></sd-icon> 1h 10m driving</sd-chip>
+            <sd-chip tone="leaf">Outdoor</sd-chip>
+            <sd-chip tone="sun">22° hi</sd-chip>
+          </sd-tag-group>
+        </div>
+
+        <!-- This section is visible everywhere; on desktop the timeline lives
+             in the detail pane, on mobile/tablet it follows below. -->
+        <sd-section title="The day at a glance">
+          <div class="day-switcher">
+            <a class="opt" data-active="true" href="itinerary.html">
+              <sd-icon name="sun" size="22" class="weather-icon"></sd-icon>
+              <div style="flex:1;">
+                <div class="day">Saturday</div>
+                <div class="meta">5 blocks · 22° sunny · Lavender highlight</div>
+              </div>
+              <sd-icon name="chevron_right" size="16"></sd-icon>
+            </a>
+            <a class="opt" href="itinerary.html">
+              <sd-icon name="cloud" size="22" style="color: var(--sd-ink-soft);"></sd-icon>
+              <div style="flex:1;">
+                <div class="day">Sunday</div>
+                <div class="meta">5 blocks · 18° cloudy · Rec Room highlight</div>
+              </div>
+              <sd-icon name="chevron_right" size="16"></sd-icon>
+            </a>
+          </div>
+        </sd-section>
+
+        <sd-section title="Weekend totals">
+          <div class="weekend-stats">
+            <div class="stat"><div class="num">10</div><div class="lab">blocks planned</div></div>
+            <div class="stat"><div class="num">2h 5m</div><div class="lab">total driving</div></div>
+            <div class="stat"><div class="num">4</div><div class="lab">locked anchors</div></div>
+            <div class="stat"><div class="num">$~120</div><div class="lab">est. spend</div></div>
+          </div>
+        </sd-section>
+
+        <div class="it-actions">
+          <sd-button variant="secondary" full>
+            <sd-icon slot="leading" name="refresh" size="16"></sd-icon>
+            Regenerate
+          </sd-button>
+          <sd-button full>
+            <sd-icon slot="leading" name="lock" size="16"></sd-icon>
+            Lock day
+          </sd-button>
+        </div>
+      </div>
+
+      <!-- ============== DETAIL: full Saturday timeline ==============
+           On mobile/tablet this renders below the master content (the
+           split-view hides the detail slot on small screens, so we
+           duplicate the timeline content below using a single section). -->
+      <div slot="detail">
+        <div style="padding: 8px 4px 4px;">
+          <div style="display:flex; align-items:center; justify-content:space-between; padding: 8px 18px 14px; border-bottom: 1px solid var(--sd-line);">
+            <div>
+              <div style="font-weight:600; font-size:15px;">Saturday — timeline</div>
+              <div style="color:var(--sd-ink-soft); font-size:13px; margin-top:2px;">Tap any block for why, alternatives, map</div>
+            </div>
+            <sd-icon-button icon="map" label="See on map" variant="filled"></sd-icon-button>
+          </div>
+          <div style="padding: 14px 14px; display:grid; gap: 10px;">
+            <sd-timeline-block time="8:30" duration="30m" title="Breakfast at home" subtitle="Cereal day — Eli's choice" icon="home" tone="meal"></sd-timeline-block>
+            <sd-timeline-block time="9:00" duration="60m" title="Swim lessons" subtitle="Port Credit Pool · Both kids" icon="bike" tone="fixed" locked>
+              <sd-chip slot="chips" tone="accent">Recurring</sd-chip>
+            </sd-timeline-block>
+            <sd-timeline-block time="10:30" duration="20m" title="Drive to Terre Bleu" subtitle="Hwy 401 W → Milton" icon="car" tone="drive" drive="20 min"></sd-timeline-block>
+            <sd-timeline-block time="11:00" duration="2h" title="Lavender fields" subtitle="Walk the rows, snap photos, kid-friendly" icon="tree">
+              <sd-chip slot="chips" tone="primary">Day highlight</sd-chip>
+              <sd-chip slot="chips" tone="leaf">Outdoor</sd-chip>
+            </sd-timeline-block>
+            <sd-timeline-block time="13:00" duration="75m" title="Lunch — La Marina" subtitle="Wife-approved · Patio · 4 votes in" icon="fork" tone="meal">
+              <sd-chip slot="chips" tone="accent">Booked 1pm</sd-chip>
+            </sd-timeline-block>
+            <sd-timeline-block time="14:30" duration="45m" title="Drive back to Port Credit" subtitle="Kids tend to nap on this stretch" icon="car" tone="drive" drive="45 min"></sd-timeline-block>
+            <sd-timeline-block time="15:30" duration="90m" title="Quiet time at home" subtitle="Reading, blocks — recharge before evening" icon="bed" tone="downtime"></sd-timeline-block>
+            <sd-timeline-block time="17:00" duration="60m" title="Husband's workout" subtitle="Garage gym — Sara watches the kids" icon="bike" tone="workout" locked>
+              <sd-chip slot="chips" tone="accent">Recurring</sd-chip>
+            </sd-timeline-block>
+            <sd-timeline-block time="18:15" duration="75m" title="Dinner at home" subtitle="Pasta + veg — picky-approved" icon="fork" tone="meal"></sd-timeline-block>
+            <sd-timeline-block time="20:00" duration="60m" title="Bath &amp; books" subtitle="9pm lights out" icon="bed" tone="downtime" locked></sd-timeline-block>
+          </div>
+        </div>
+      </div>
+    </sd-split-view>
+
+    <!-- On mobile/tablet the detail slot is hidden by sd-split-view, so the
+         timeline is duplicated here as the primary content. On desktop this
+         section is hidden because the detail pane already renders it. -->
+    <div id="mobile-timeline">
+      <sd-section title="Timeline" subtitle="Tap any block for why, alternatives, map">
+        <div style="display: grid; gap: 10px;">
+          <sd-timeline-block time="8:30" duration="30m" title="Breakfast at home" subtitle="Cereal day — Eli's choice" icon="home" tone="meal"></sd-timeline-block>
+          <sd-timeline-block time="9:00" duration="60m" title="Swim lessons" subtitle="Port Credit Pool · Both kids" icon="bike" tone="fixed" locked>
+            <sd-chip slot="chips" tone="accent">Recurring</sd-chip>
+          </sd-timeline-block>
+          <sd-timeline-block time="10:30" duration="20m" title="Drive to Terre Bleu" subtitle="Hwy 401 W → Milton" icon="car" tone="drive" drive="20 min"></sd-timeline-block>
+          <sd-timeline-block time="11:00" duration="2h" title="Lavender fields" subtitle="Walk the rows, snap photos, kid-friendly" icon="tree">
+            <sd-chip slot="chips" tone="primary">Day highlight</sd-chip>
+            <sd-chip slot="chips" tone="leaf">Outdoor</sd-chip>
+          </sd-timeline-block>
+          <sd-timeline-block time="13:00" duration="75m" title="Lunch — La Marina" subtitle="Wife-approved · Patio · 4 votes in" icon="fork" tone="meal">
+            <sd-chip slot="chips" tone="accent">Booked 1pm</sd-chip>
+          </sd-timeline-block>
+          <sd-timeline-block time="14:30" duration="45m" title="Drive back to Port Credit" subtitle="Kids tend to nap on this stretch" icon="car" tone="drive" drive="45 min"></sd-timeline-block>
+          <sd-timeline-block time="15:30" duration="90m" title="Quiet time at home" subtitle="Reading, blocks — recharge before evening" icon="bed" tone="downtime"></sd-timeline-block>
+          <sd-timeline-block time="17:00" duration="60m" title="Husband's workout" subtitle="Garage gym — Sara watches the kids" icon="bike" tone="workout" locked>
+            <sd-chip slot="chips" tone="accent">Recurring</sd-chip>
+          </sd-timeline-block>
+          <sd-timeline-block time="18:15" duration="75m" title="Dinner at home" subtitle="Pasta + veg — picky-approved" icon="fork" tone="meal"></sd-timeline-block>
+          <sd-timeline-block time="20:00" duration="60m" title="Bath &amp; books" subtitle="9pm lights out" icon="bed" tone="downtime" locked></sd-timeline-block>
+        </div>
+      </sd-section>
+    </div>
+    <style>
+      @media (min-width: 1024px) { #mobile-timeline { display: none; } }
+    </style>
+
+    <sd-bottom-nav active="home"></sd-bottom-nav>
+  </div>
+</body>
+</html>

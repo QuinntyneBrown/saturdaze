@@ -1,0 +1,19 @@
+{
+  "name": "saturdaze-e2e",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Playwright e2e suite. POMs under pages/, specs under tests/, fixtures under fixtures/. Visual specs under tests/visual/ compare the Angular implementation to the mock skeleton pixel-by-pixel.",
+  "scripts": {
+    "test": "playwright test --config=playwright.config.ts",
+    "test:visual": "playwright test --config=playwright.config.ts tests/visual",
+    "test:behavior": "playwright test --config=playwright.config.ts --ignore-snapshots tests --grep-invert visual",
+    "baseline": "cross-env SD_BASELINE=1 playwright test --config=playwright.config.ts --update-snapshots tests/visual",
+    "report": "playwright show-report"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.50.0",
+    "cross-env": "^7.0.3",
+    "http-server": "^14.1.1",
+    "typescript": "^5.5.0"
+  }
+}

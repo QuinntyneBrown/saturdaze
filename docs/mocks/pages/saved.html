@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Saved — Saturdaze</title>
+  <link rel="stylesheet" href="../styles/global.css" />
+  <script type="module" src="../app.js"></script>
+</head>
+<body>
+  <div class="sd-frame">
+
+    <sd-top-bar title="Saved weekends">
+      <sd-icon-button slot="leading" icon="arrow_left" label="Back" variant="ghost"></sd-icon-button>
+      <sd-icon-button slot="trailing" icon="more" label="More"></sd-icon-button>
+    </sd-top-bar>
+
+    <div style="padding: 0 var(--sd-app-pad-x);">
+      <h2 style="font-size: 22px; font-weight: 700; letter-spacing: -0.02em; margin: 8px 0 4px;">Your weekends</h2>
+      <p style="color: var(--sd-ink-soft); font-size: 14px; margin: 0 0 16px;">12 weekends planned. Repeat what worked, remix what didn't.</p>
+    </div>
+
+    <sd-tag-group>
+      <sd-chip tone="primary">All</sd-chip>
+      <sd-chip tone="accent"><sd-icon name="heart" size="12"></sd-icon> Favourites</sd-chip>
+      <sd-chip>This year</sd-chip>
+      <sd-chip>5★ only</sd-chip>
+    </sd-tag-group>
+
+    <sd-section title="Recent">
+      <div class="sd-card-grid">
+        <sd-saved-card
+          date="May 10–11, 2026"
+          title="Bronte Creek + Rec Room"
+          rating="5"
+          favourite
+          highlights="Mae found a frog. Eli won the basketball arcade. Pasta night was a hit."
+        >
+          <sd-button variant="secondary" size="sm" full>Remix</sd-button>
+          <sd-button size="sm" full>Repeat</sd-button>
+        </sd-saved-card>
+
+        <sd-saved-card
+          date="May 3–4, 2026"
+          title="Stay-home reset"
+          rating="3"
+          highlights="Rained Saturday. Indoor crafts saved it; Sunday hike at Riverwood."
+        >
+          <sd-button variant="secondary" size="sm" full>Remix</sd-button>
+          <sd-button size="sm" full>Repeat</sd-button>
+        </sd-saved-card>
+
+        <sd-saved-card
+          date="Apr 26–27, 2026"
+          title="Zoo + lavender preview"
+          rating="4"
+          highlights="First lavender sprouts. Kids tired by 3pm — adjust pacing next time."
+        >
+          <sd-button variant="secondary" size="sm" full>Remix</sd-button>
+          <sd-button size="sm" full>Repeat</sd-button>
+        </sd-saved-card>
+      </div>
+    </sd-section>
+
+    <sd-section title="Avoid repeating" subtitle="I'll keep these out of next weekend's draft">
+      <sd-list-item title="Rec Room — Square One" subtitle="Last visit: May 10" compact>
+        <sd-icon slot="leading" name="popcorn"></sd-icon>
+        <sd-chip slot="trailing" tone="warn">Skip</sd-chip>
+      </sd-list-item>
+    </sd-section>
+
+    <sd-bottom-nav active="saved"></sd-bottom-nav>
+  </div>
+</body>
+</html>

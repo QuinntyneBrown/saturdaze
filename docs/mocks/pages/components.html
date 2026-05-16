@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Components — Saturdaze</title>
+  <link rel="stylesheet" href="../styles/global.css" />
+  <script type="module" src="../app.js"></script>
+  <style>
+    .gallery {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 32px 20px 80px;
+      display: grid;
+      gap: 32px;
+    }
+    .gallery h1 { font-size: 28px; font-weight: 700; letter-spacing: -0.02em; margin: 0; }
+    .gallery h2 {
+      font-size: 16px; font-weight: 600; letter-spacing: -0.005em;
+      margin: 0 0 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--sd-line);
+    }
+    .row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+    .stack { display: grid; gap: 10px; }
+  </style>
+</head>
+<body>
+  <main class="gallery">
+    <div>
+      <h1>Component gallery</h1>
+      <p style="color: var(--sd-ink-soft); margin: 4px 0 0;">The presentation atoms used across every screen.</p>
+    </div>
+
+    <section>
+      <h2>Buttons</h2>
+      <div class="row">
+        <sd-button>Primary</sd-button>
+        <sd-button variant="secondary">Secondary</sd-button>
+        <sd-button variant="ghost">Ghost</sd-button>
+        <sd-button variant="danger">Danger</sd-button>
+        <sd-button disabled>Disabled</sd-button>
+      </div>
+      <div class="row" style="margin-top: 12px;">
+        <sd-button size="sm">Small</sd-button>
+        <sd-button>Default</sd-button>
+        <sd-button size="lg">Large</sd-button>
+        <sd-button><sd-icon slot="leading" name="sparkle" size="16"></sd-icon>With icon</sd-button>
+      </div>
+    </section>
+
+    <section>
+      <h2>Icon buttons</h2>
+      <div class="row">
+        <sd-icon-button icon="more" label="More"></sd-icon-button>
+        <sd-icon-button icon="share" label="Share" variant="filled"></sd-icon-button>
+        <sd-icon-button icon="refresh" label="Refresh" variant="ghost"></sd-icon-button>
+        <sd-icon-button icon="heart" label="Favourite"></sd-icon-button>
+      </div>
+    </section>
+
+    <section>
+      <h2>Chips</h2>
+      <div class="row">
+        <sd-chip>Default</sd-chip>
+        <sd-chip tone="primary">Primary</sd-chip>
+        <sd-chip tone="accent">Accent</sd-chip>
+        <sd-chip tone="sun">Sun</sd-chip>
+        <sd-chip tone="sky">Sky</sd-chip>
+        <sd-chip tone="leaf">Outdoor</sd-chip>
+        <sd-chip tone="indoor">Indoor</sd-chip>
+        <sd-chip tone="warn">Avoid</sd-chip>
+      </div>
+    </section>
+
+    <section>
+      <h2>Avatars</h2>
+      <div class="row">
+        <sd-avatar name="Quinn" tone="primary"></sd-avatar>
+        <sd-avatar name="Sara" tone="leaf"></sd-avatar>
+        <sd-avatar name="Eli" tone="sky"></sd-avatar>
+        <sd-avatar name="Mae" tone="sun"></sd-avatar>
+        <sd-avatar name="Eli" tone="sky" size="sm"></sd-avatar>
+        <sd-avatar name="Sara" tone="leaf" size="lg"></sd-avatar>
+        <sd-avatar name="Quinn" tone="primary" size="xl"></sd-avatar>
+      </div>
+    </section>
+
+    <section>
+      <h2>Inputs</h2>
+      <div class="stack" style="max-width: 360px;">
+        <sd-text-input label="Family name" placeholder="The Browns"></sd-text-input>
+        <sd-text-input label="Home location" value="Port Credit, Mississauga" hint="Used for drive-time estimates."></sd-text-input>
+        <sd-toggle label="Budget is a factor"></sd-toggle>
+        <sd-toggle label="Friday preview notifications" checked></sd-toggle>
+      </div>
+    </section>
+
+    <section>
+      <h2>Cards</h2>
+      <div class="stack">
+        <sd-card>Default surface — the workhorse.</sd-card>
+        <sd-card variant="raised">Raised — slight shadow, used sparingly.</sd-card>
+        <sd-card variant="sunk">Sunk — for callouts inside other cards.</sd-card>
+      </div>
+    </section>
+
+    <section>
+      <h2>List items</h2>
+      <div class="stack">
+        <sd-list-item title="Swim lessons" subtitle="Saturdays 9:00 – 10:00 · Port Credit Pool">
+          <sd-icon slot="leading" name="bike"></sd-icon>
+          <sd-chip slot="trailing" tone="accent">Locked</sd-chip>
+        </sd-list-item>
+        <sd-list-item title="Add a member" flat compact>
+          <sd-icon slot="leading" name="plus"></sd-icon>
+        </sd-list-item>
+      </div>
+    </section>
+
+    <section>
+      <h2>Weather strip</h2>
+      <sd-weather-strip>
+        <sd-weather-day day="Saturday" icon="sun" hi="22" lo="14" note="Light breeze"></sd-weather-day>
+        <sd-weather-day day="Sunday" icon="cloud" hi="18" lo="12" note="Cloudy by 2pm"></sd-weather-day>
+      </sd-weather-strip>
+    </section>
+
+    <section>
+      <h2>Timeline block</h2>
+      <div class="stack">
+        <sd-timeline-block time="9:00" duration="60m" title="Swim lessons" subtitle="Port Credit Pool" icon="bike" tone="fixed" locked></sd-timeline-block>
+        <sd-timeline-block time="11:00" duration="2h" title="Lavender fields" subtitle="Terre Bleu, Milton" icon="tree" drive="45 min"></sd-timeline-block>
+        <sd-timeline-block time="13:00" title="Lunch — La Marina" subtitle="Wife-approved · patio" icon="fork" tone="meal"></sd-timeline-block>
+      </div>
+    </section>
+
+    <section>
+      <h2>Anticipate callout</h2>
+      <sd-anticipate
+        icon="sparkle"
+        headline="Lavender bloom peaks this weekend"
+        body="45-min drive — and rain moves in Monday."
+        cta="See on the map"
+      ></sd-anticipate>
+    </section>
+
+    <section>
+      <h2>Empty state</h2>
+      <sd-empty
+        icon="heart"
+        title="No favourites yet"
+        subtitle="Tap the heart on any saved weekend to keep it close."
+      >
+        <sd-button>Plan This Weekend</sd-button>
+      </sd-empty>
+    </section>
+
+    <p style="text-align:center;"><a href="../index.html" style="color:var(--sd-primary); text-decoration:none; font-weight:600;">← Back to mocks</a></p>
+  </main>
+</body>
+</html>
