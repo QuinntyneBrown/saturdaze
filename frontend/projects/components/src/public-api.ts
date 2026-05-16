@@ -7,4 +7,5 @@
  */
 
 export * from './lib/sd-icon/sd-icon';
+export * from './lib/sd-top-bar/sd-top-bar';
 export * from './lib/sd-bottom-nav/sd-bottom-nav';

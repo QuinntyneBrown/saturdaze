@@ -31,6 +31,5 @@ internal sealed class TestAppDbContext : DbContext, IAppDbContext
         modelBuilder.Entity<Weekend>().HasMany(w => w.Blocks).WithOne().HasForeignKey(b => b.WeekendId);
         modelBuilder.Entity<Weekend>().HasMany(w => w.Errands).WithOne().HasForeignKey(e => e.WeekendId);
 
-        modelBuilder.Entity<Activity>().Ignore(a => a.WeatherTags);
     }
 }

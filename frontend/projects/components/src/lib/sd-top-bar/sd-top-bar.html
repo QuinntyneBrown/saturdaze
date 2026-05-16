@@ -1,0 +1,18 @@
+<div class="left">
+  @if (back()) {
+    <a
+      class="back"
+      href="#"
+      aria-label="Back"
+      (click)="onBack($event)"
+    >
+      <sd-icon name="arrow_left" [size]="18" />
+    </a>
+  } @else {
+    <ng-content select="[slot=leading]" />
+  }
+</div>
+<h1>{{ titleAttr() }}</h1>
+<div class="right">
+  <ng-content select="[slot=trailing]" />
+</div>
