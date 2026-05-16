@@ -2,20 +2,24 @@
   "homeLocation": "Port Credit, Mississauga, ON",
   "budgetEnabled": false,
   "members": [
-    { "name": "Quinn", "age": 41 },
-    { "name": "Jennifer", "age": 39 },
-    { "name": "Theo", "age": 9 },
-    { "name": "Avery", "age": 5 }
+    { "name": "Quinn", "age": 38 },
+    { "name": "Sara",  "age": 36 },
+    { "name": "Eli",   "age": 9 },
+    { "name": "Mae",   "age": 5 }
   ],
   "commitments": [
-    { "title": "Kids swim lesson",     "dayOfWeek": "Saturday", "startTime": "09:30", "endTime": "10:30" },
-    { "title": "Husband workout",      "dayOfWeek": "Saturday", "startTime": "07:00", "endTime": "08:15" },
-    { "title": "Church",               "dayOfWeek": "Sunday",   "startTime": "10:30", "endTime": "12:00" }
+    { "title": "Swim lessons",      "dayOfWeek": "Saturday", "startTime": "09:00", "endTime": "10:00" },
+    { "title": "Husband's workout", "dayOfWeek": "Saturday", "startTime": "17:00", "endTime": "18:00" },
+    { "title": "Church",            "dayOfWeek": "Sunday",   "startTime": "10:30", "endTime": "11:45" }
   ],
   "preferences": [
-    { "kind": "Like",    "value": "outdoors" },
-    { "kind": "Like",    "value": "water" },
-    { "kind": "Like",    "value": "animals" },
-    { "kind": "Dislike", "value": "long-drive" }
+    { "kind": "Like",    "value": "Parks" },
+    { "kind": "Like",    "value": "Short hikes" },
+    { "kind": "Like",    "value": "Zoo" },
+    { "kind": "Like",    "value": "Rec Room" },
+    { "kind": "Like",    "value": "Lavender" },
+    { "kind": "Like",    "value": "Live theatre" },
+    { "kind": "Dislike", "value": "Camping" },
+    { "kind": "Dislike", "value": "Drives > 60 min" }
   ]
 }

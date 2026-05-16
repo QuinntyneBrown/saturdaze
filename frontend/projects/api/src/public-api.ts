@@ -5,6 +5,7 @@
  * overview shape; subsequent phases extend per-slice.
  */
 
+export * from './lib/api/api-base-url';
 export * from './lib/models/weekend';
 export * from './lib/models/activity';
 export * from './lib/models/restaurant';

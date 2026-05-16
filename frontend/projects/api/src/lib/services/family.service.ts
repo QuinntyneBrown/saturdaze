@@ -1,81 +1,157 @@
-import { Injectable, Signal, signal } from '@angular/core';
+import {
+  Injectable,
+  Signal,
+  inject,
+  signal,
+} from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { firstValueFrom } from 'rxjs';
 
-import { FamilyProfile } from '../models/family';
+import { API_BASE_URL } from '../api/api-base-url';
+import {
+  FamilyMember,
+  FamilyMemberTone,
+  FamilyProfile,
+  PreferenceToggle,
+} from '../models/family';
 
-const DEMO_PROFILE: FamilyProfile = {
+/**
+ * Server-side shape of `GET /api/family`. Mirrors `Saturdaze.Application
+ * .Contracts.FamilyProfileDto` plus the nested member / commitment /
+ * preference dtos.
+ */
+interface FamilyDto {
+  readonly id: string;
+  readonly homeLocation: string;
+  readonly budgetEnabled: boolean;
+  readonly members: ReadonlyArray<{ id: string; name: string; age: number }>;
+  readonly commitments: ReadonlyArray<{
+    id: string;
+    title: string;
+    dayOfWeek: string;
+    startTime: string;
+    endTime: string;
+  }>;
+  readonly preferences: ReadonlyArray<{
+    id: string;
+    kind: 'Like' | 'Dislike';
+    value: string;
+  }>;
+}
+
+/**
+ * Initial profile rendered while the HTTP call is still in flight. The
+ * commitments and members render empty so there's no flash of mock content
+ * before the real data lands. Rhythm and preferences are local-only
+ * concepts the API doesn't yet model — they stay constant.
+ */
+const PLACEHOLDER_PROFILE: FamilyProfile = {
   familyName: 'The Browns',
   location: 'Port Credit, Mississauga',
-  members: [
-    { name: 'Quinn', tone: 'primary', subtitle: 'Parent · 38' },
-    { name: 'Sara', tone: 'leaf', subtitle: 'Parent · 36' },
-    { name: 'Eli', tone: 'sky', subtitle: 'Kid · 9 · picky eater' },
-    { name: 'Mae', tone: 'sun', subtitle: 'Kid · 5 · loves animals' },
-  ],
-  commitments: [
-    {
-      title: 'Swim lessons',
-      subtitle: 'Saturdays 9:00 – 10:00 · Port Credit Pool',
-      icon: 'bike',
-    },
-    {
-      title: 'Church',
-      subtitle: "Sundays 10:30 – 11:45 · St. Mary's",
-      icon: 'bed',
-    },
-    {
-      title: 'Workout window',
-      subtitle: 'Sat & Sun 5:00 – 6:00pm · Garage gym',
-      icon: 'bike',
-    },
-  ],
+  members: [],
+  commitments: [],
   rhythm: [
-    {
-      title: 'Out the door by',
-      subtitle: '9:00am',
-      icon: 'home',
-      chip: '9:00am',
-    },
-    {
-      title: 'Kids in bed by',
-      subtitle: '9:00pm sharp',
-      icon: 'bed',
-      chip: '9:00pm',
-    },
+    { title: 'Out the door by', subtitle: '9:00am', icon: 'home', chip: '9:00am' },
+    { title: 'Kids in bed by', subtitle: '9:00pm sharp', icon: 'bed', chip: '9:00pm' },
   ],
-  likes: [
-    { label: 'Parks', tone: 'leaf', icon: 'heart' },
-    { label: 'Short hikes', tone: 'leaf', icon: 'heart' },
-    { label: 'Zoo', tone: 'leaf', icon: 'heart' },
-    { label: 'Rec Room', tone: 'leaf', icon: 'heart' },
-    { label: 'Lavender', tone: 'leaf', icon: 'heart' },
-    { label: 'Live theatre', tone: 'leaf', icon: 'heart' },
-    { label: 'Camping', tone: 'warn', icon: 'close' },
-    { label: 'Drives > 60 min', tone: 'warn', icon: 'close' },
-  ],
+  likes: [],
   preferences: [
-    {
-      title: 'Budget is a factor',
-      subtitle: "Off — I won't filter by price",
-      checked: false,
-    },
-    {
-      title: 'Try something new each weekend',
-      subtitle: 'One new activity per week',
-      checked: true,
-    },
-    {
-      title: 'Friday preview notifications',
-      subtitle: 'A heads-up at 6pm Friday',
-      checked: true,
-    },
+    { title: 'Budget is a factor', subtitle: "Off — I won't filter by price", checked: false },
+    { title: 'Try something new each weekend', subtitle: 'One new activity per week', checked: true },
+    { title: 'Friday preview notifications', subtitle: 'A heads-up at 6pm Friday', checked: true },
   ],
 };
 
+/** Stable tone rotation for member avatars, oldest first. */
+const MEMBER_TONES: readonly FamilyMemberTone[] = ['primary', 'leaf', 'sky', 'sun', 'indoor'];
+
+/** Stable icon assignment for commitments by title heuristic. */
+function commitmentIcon(title: string): string {
+  const t = title.toLowerCase();
+  if (t.includes('swim') || t.includes('workout') || t.includes('bike')) return 'bike';
+  if (t.includes('church') || t.includes('bed')) return 'bed';
+  if (t.includes('lunch') || t.includes('dinner')) return 'fork';
+  return 'calendar';
+}
+
+function commitmentSubtitle(c: FamilyDto['commitments'][number]): string {
+  const day =
+    c.dayOfWeek === 'Saturday' ? 'Saturdays' :
+    c.dayOfWeek === 'Sunday' ? 'Sundays' :
+    c.dayOfWeek + 's';
+  const start = c.startTime.substring(0, 5);
+  const end = c.endTime.substring(0, 5);
+  return `${day} ${start} – ${end}`;
+}
+
+function memberSubtitle(m: FamilyDto['members'][number]): string {
+  const role = m.age >= 18 ? 'Parent' : 'Kid';
+  return `${role} · ${m.age}`;
+}
+
+function mapFamily(dto: FamilyDto): FamilyProfile {
+  const members: FamilyMember[] = dto.members
+    .slice()
+    .sort((a, b) => b.age - a.age)
+    .map((m, i) => ({
+      name: m.name,
+      tone: MEMBER_TONES[i % MEMBER_TONES.length]!,
+      subtitle: memberSubtitle(m),
+    }));
+
+  const preferences: PreferenceToggle[] = [
+    {
+      title: 'Budget is a factor',
+      subtitle: dto.budgetEnabled
+        ? 'On — picks will filter by price'
+        : "Off — I won't filter by price",
+      checked: dto.budgetEnabled,
+    },
+    ...PLACEHOLDER_PROFILE.preferences.slice(1),
+  ];
+
+  return {
+    familyName: 'The Browns',
+    location: dto.homeLocation,
+    members,
+    commitments: dto.commitments.map((c) => ({
+      title: c.title,
+      subtitle: commitmentSubtitle(c),
+      icon: commitmentIcon(c.title),
+    })),
+    rhythm: PLACEHOLDER_PROFILE.rhythm,
+    likes: dto.preferences.map((p) => ({
+      label: p.value,
+      tone: p.kind === 'Like' ? 'leaf' : 'warn',
+      icon: p.kind === 'Like' ? 'heart' : 'close',
+    })),
+    preferences,
+  };
+}
+
 @Injectable({ providedIn: 'root' })
 export class FamilyService {
-  private readonly profile = signal<FamilyProfile>(DEMO_PROFILE);
+  private readonly http = inject(HttpClient);
+  private readonly baseUrl = inject(API_BASE_URL);
+
+  private readonly _profile = signal<FamilyProfile>(PLACEHOLDER_PROFILE);
+
+  constructor() {
+    void this.load();
+  }
 
   getProfile(): Signal<FamilyProfile> {
-    return this.profile.asReadonly();
+    return this._profile.asReadonly();
+  }
+
+  async load(): Promise<void> {
+    try {
+      const dto = await firstValueFrom(
+        this.http.get<FamilyDto>(`${this.baseUrl}/api/family`),
+      );
+      this._profile.set(mapFamily(dto));
+    } catch (err) {
+      console.error('FamilyService.load failed', err);
+    }
   }
 }

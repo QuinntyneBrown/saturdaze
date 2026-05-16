@@ -1,109 +1,134 @@
-import { Injectable, Signal, signal } from '@angular/core';
+import {
+  Injectable,
+  Signal,
+  inject,
+  signal,
+} from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { firstValueFrom } from 'rxjs';
 
-import { ActivityView } from '../models/activity';
+import { API_BASE_URL } from '../api/api-base-url';
+import { Activity, ActivityTone, ActivityView } from '../models/activity';
 
-const DEMO_VIEW: ActivityView = {
-  filters: [
-    { label: 'All', tone: 'primary' },
-    { label: 'Outdoor', tone: 'leaf' },
-    { label: 'Indoor', tone: 'indoor' },
-    { label: '< 30 min', tone: 'sky' },
-    { label: 'Ages 5+', tone: 'default' },
-    { label: 'New for us', tone: 'default' },
-    { label: 'Weather-safe', tone: 'warn' },
-  ],
-  sections: [
+/**
+ * Server-side shape of one row from `GET /api/activities`. Mirrors
+ * `Saturdaze.Application.Contracts.ActivityDto`.
+ */
+interface ActivityDto {
+  readonly id: string;
+  readonly name: string;
+  readonly category: string;
+  readonly indoor: boolean;
+  readonly minAge: number;
+  readonly maxAge: number;
+  readonly driveMinutes: number;
+  readonly weatherTags: ReadonlyArray<string>;
+  readonly typicalDurationMinutes: number;
+  readonly description: string;
+  readonly mapUrl: string;
+}
+
+/** Filter row is presentation-only — the backend has no filter concept yet. */
+const FILTERS: ActivityView['filters'] = [
+  { label: 'All', tone: 'primary' },
+  { label: 'Outdoor', tone: 'leaf' },
+  { label: 'Indoor', tone: 'indoor' },
+  { label: '< 30 min', tone: 'sky' },
+  { label: 'Ages 5+', tone: 'default' },
+  { label: 'New for us', tone: 'default' },
+  { label: 'Weather-safe', tone: 'warn' },
+];
+
+const PLACEHOLDER_VIEW: ActivityView = { filters: FILTERS, sections: [] };
+
+function iconFor(dto: ActivityDto): string {
+  const c = dto.category.toLowerCase();
+  if (c.includes('theatre')) return 'ticket';
+  if (c.includes('indoor') || c.includes('museum')) return 'popcorn';
+  return 'tree';
+}
+
+function toneFor(dto: ActivityDto): ActivityTone {
+  return dto.indoor ? 'indoor' : 'outdoor';
+}
+
+function ageString(dto: ActivityDto): string | undefined {
+  if (dto.minAge <= 2 && dto.maxAge >= 99) return 'all';
+  if (dto.maxAge >= 99) return `${dto.minAge}+`;
+  return `${dto.minAge}–${dto.maxAge}`;
+}
+
+function toActivity(dto: ActivityDto): Activity {
+  return {
+    title: dto.name,
+    subtitle: dto.description,
+    icon: iconFor(dto),
+    tone: toneFor(dto),
+    drive: `${dto.driveMinutes} min`,
+    ages: ageString(dto),
+  };
+}
+
+/**
+ * Group the flat catalog into three sections that mirror the mocks. Until
+ * a planner-aware classification ships, this is a deterministic split:
+ *   - "weather-fit" = outdoor with sunny/mild tags (top 3 by drive)
+ *   - "if weather turns" = indoor, plus Toronto Zoo (indoor pavilions)
+ *   - "try something new" = whatever's left
+ */
+function groupSections(dtos: ReadonlyArray<ActivityDto>): ActivityView['sections'] {
+  const outdoor = dtos
+    .filter((a) => !a.indoor && a.weatherTags.includes('sunny'))
+    .slice(0, 3);
+  const usedIds = new Set(outdoor.map((a) => a.id));
+
+  const indoor = dtos
+    .filter((a) => !usedIds.has(a.id) && (a.indoor || a.name.toLowerCase().includes('zoo')))
+    .slice(0, 3);
+  indoor.forEach((a) => usedIds.add(a.id));
+
+  const newish = dtos.filter((a) => !usedIds.has(a.id)).slice(0, 2);
+
+  return [
     {
       title: "This weekend's weather-fit",
-      activities: [
-        {
-          title: 'Terre Bleu Lavender Farm',
-          subtitle: 'Milton · The bloom peaks May 17–24',
-          icon: 'tree',
-          tone: 'outdoor',
-          drive: '45 min',
-          ages: 'all',
-          tag: 'Day highlight',
-          why: "Sara loved this last summer. Mae's old enough this year to walk the rows.",
-        },
-        {
-          title: 'Bronte Creek Provincial Park',
-          subtitle: 'Easy hike + splash pad if hot',
-          icon: 'tree',
-          tone: 'outdoor',
-          drive: '25 min',
-          ages: '5+',
-          why: 'Short trail (1.5km), washrooms, picnic tables — your usual win.',
-        },
-        {
-          title: 'Royal Botanical Gardens',
-          subtitle: 'Tulip festival in bloom',
-          icon: 'tree',
-          tone: 'outdoor',
-          drive: '35 min',
-        },
-      ],
+      activities: outdoor.map(toActivity),
     },
     {
       title: 'If weather turns',
-      activities: [
-        {
-          title: 'The Rec Room — Square One',
-          subtitle: 'Bowling, arcade, dinner under one roof',
-          icon: 'popcorn',
-          tone: 'indoor',
-          drive: '10 min',
-          ages: 'all',
-          tag: "Eli's pick",
-          why: 'Eli asked for it twice last week. Sunday afternoon clouds = good window.',
-        },
-        {
-          title: 'Ontario Science Centre',
-          subtitle: "New 'Senses' exhibit",
-          icon: 'popcorn',
-          tone: 'indoor',
-          drive: '40 min',
-        },
-        {
-          title: 'Toronto Zoo',
-          subtitle: 'Polar bears, splash zone, indoor pavilions',
-          icon: 'tree',
-          tone: 'outdoor',
-          drive: '55 min',
-          ages: 'all',
-        },
-      ],
+      activities: indoor.map(toActivity),
     },
     {
       title: 'Try something new',
       subtitle: "You haven't done these recently",
-      activities: [
-        {
-          title: 'Riverwood Conservancy',
-          subtitle: 'Forest school trails, owl barn',
-          icon: 'tree',
-          tone: 'outdoor',
-          drive: '8 min',
-          tag: 'First time',
-        },
-        {
-          title: "Living Arts Centre — kids' theatre",
-          subtitle: 'Saturday matinée at 2pm',
-          icon: 'ticket',
-          tone: 'indoor',
-          drive: '5 min',
-          tag: 'First time',
-        },
-      ],
+      activities: newish.map(toActivity),
     },
-  ],
-};
+  ];
+}
 
 @Injectable({ providedIn: 'root' })
 export class ActivityService {
-  private readonly view = signal<ActivityView>(DEMO_VIEW);
+  private readonly http = inject(HttpClient);
+  private readonly baseUrl = inject(API_BASE_URL);
+
+  private readonly _view = signal<ActivityView>(PLACEHOLDER_VIEW);
+
+  constructor() {
+    void this.load();
+  }
 
   list(): Signal<ActivityView> {
-    return this.view.asReadonly();
+    return this._view.asReadonly();
+  }
+
+  async load(): Promise<void> {
+    try {
+      const rows = await firstValueFrom(
+        this.http.get<ActivityDto[]>(`${this.baseUrl}/api/activities`),
+      );
+      this._view.set({ filters: FILTERS, sections: groupSections(rows) });
+    } catch (err) {
+      console.error('ActivityService.load failed', err);
+    }
   }
 }
