@@ -61,6 +61,58 @@ public class CliHostFactoryTests
     }
 
     [Fact]
+    public void ResolveConnection_reads_saturdaze_connection_env_var()
+    {
+        var opts = new DatabaseOptions { Provider = DatabaseProvider.SqlServer };
+        var prior = Environment.GetEnvironmentVariable("SATURDAZE_CONNECTION");
+        Environment.SetEnvironmentVariable("SATURDAZE_CONNECTION", "from-env");
+        try
+        {
+            CliHostFactory.ResolveConnection(opts, Build());
+            opts.ConnectionString.Should().Be("from-env");
+        }
+        finally
+        {
+            Environment.SetEnvironmentVariable("SATURDAZE_CONNECTION", prior);
+        }
+    }
+
+    [Fact]
+    public void ResolveConnection_env_var_loses_to_explicit_connection()
+    {
+        var opts = new DatabaseOptions { ConnectionString = "explicit", Provider = DatabaseProvider.SqlServer };
+        var prior = Environment.GetEnvironmentVariable("SATURDAZE_CONNECTION");
+        Environment.SetEnvironmentVariable("SATURDAZE_CONNECTION", "from-env");
+        try
+        {
+            CliHostFactory.ResolveConnection(opts, Build());
+            opts.ConnectionString.Should().Be("explicit");
+        }
+        finally
+        {
+            Environment.SetEnvironmentVariable("SATURDAZE_CONNECTION", prior);
+        }
+    }
+
+    [Fact]
+    public void ResolveConnection_env_var_loses_to_configuration()
+    {
+        var opts = new DatabaseOptions { Provider = DatabaseProvider.SqlServer };
+        var cfg = Build(("ConnectionStrings:Saturdaze", "from-config"));
+        var prior = Environment.GetEnvironmentVariable("SATURDAZE_CONNECTION");
+        Environment.SetEnvironmentVariable("SATURDAZE_CONNECTION", "from-env");
+        try
+        {
+            CliHostFactory.ResolveConnection(opts, cfg);
+            opts.ConnectionString.Should().Be("from-config");
+        }
+        finally
+        {
+            Environment.SetEnvironmentVariable("SATURDAZE_CONNECTION", prior);
+        }
+    }
+
+    [Fact]
     public void Create_returns_builder()
     {
         var opts = new DatabaseOptions { Provider = DatabaseProvider.InMemory };

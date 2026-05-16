@@ -39,6 +39,13 @@ reads `SATURDAZE_CONNECTION` and maps it to `ConnectionStrings:Saturdaze`.
 ## Status
 
 - Logged: 2026-05-16
-- Workaround applied this session: passed `--connection` explicitly on the
-  seed command.
-- Permanent fix pending.
+- **Fixed: 2026-05-16.** `CliHostFactory.ResolveConnection` now reads
+  `SATURDAZE_CONNECTION` (via `Environment.GetEnvironmentVariable`) as the
+  third fallback after explicit `--connection`, `ConnectionStrings:Saturdaze`,
+  and `Saturdaze:ConnectionString`. The error message in
+  `DbContextRegistrar.RequireConnection` is now truthful.
+- Verified by: `dotnet test tests/Saturdaze.Cli.Tests` — three new
+  regression tests cover the env var path
+  (`ResolveConnection_reads_saturdaze_connection_env_var`,
+  `ResolveConnection_env_var_loses_to_explicit_connection`,
+  `ResolveConnection_env_var_loses_to_configuration`).
