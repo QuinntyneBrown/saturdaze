@@ -1,9 +1,11 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.TestHost;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Saturdaze.Infrastructure.Persistence;
 using Saturdaze.Infrastructure.SeedData;
 using Xunit;
@@ -24,6 +26,8 @@ public sealed class SaturdazeApiFactory : WebApplicationFactory<Program>, IAsync
         ConnectionString = LocalDbConnection.For(DatabaseName);
     }
 
+    public FakeWeatherClient Weather { get; } = new();
+
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder.UseEnvironment("Testing");
@@ -31,8 +35,16 @@ public sealed class SaturdazeApiFactory : WebApplicationFactory<Program>, IAsync
         {
             cfg.AddInMemoryCollection(new Dictionary<string, string?>
             {
-                ["ConnectionStrings:Saturdaze"] = ConnectionString
+                ["ConnectionStrings:Saturdaze"] = ConnectionString,
+                ["Saturdaze:HomeLocation:Name"] = "Port Credit",
+                ["Saturdaze:HomeLocation:Latitude"] = "43.5547",
+                ["Saturdaze:HomeLocation:Longitude"] = "-79.5816"
             });
+        });
+        builder.ConfigureTestServices(services =>
+        {
+            services.RemoveAll<Saturdaze.Application.Weather.IWeatherClient>();
+            services.AddSingleton<Saturdaze.Application.Weather.IWeatherClient>(Weather);
         });
     }
 

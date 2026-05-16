@@ -17,6 +17,8 @@ public static class DependencyInjection
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
         services.AddScoped<ICurrentFamilyAccessor, SingleFamilyAccessor>();
+        services.AddSingleton<IDateTimeProvider, SystemDateTimeProvider>();
+        services.AddSingleton<Planning.IWeekendPlanner, Planning.WeekendPlanner>();
         return services;
     }
 }
