@@ -27,6 +27,8 @@ public sealed class SeedCommandHandler
         var dir = _paths.Resolve(overrideDir);
         _logger.LogInformation("Seeding from {Directory}", dir);
 
+        EnsureUserScopePopulatedFromBundle(dir);
+
         if (!Directory.Exists(dir))
         {
             _logger.LogError("Seed directory '{Directory}' does not exist.", dir);
@@ -61,5 +63,29 @@ public sealed class SeedCommandHandler
         await _db.SaveChangesAsync(ct);
         _logger.LogInformation("Seed complete. {Total} record(s) processed.", total);
         return 0;
+    }
+
+    /// <summary>
+    /// Populates the user-scope seed directory from the JSONs bundled with
+    /// the CLI assembly. Idempotent: only copies files that don't already
+    /// exist in the target.
+    /// </summary>
+    private void EnsureUserScopePopulatedFromBundle(string userScopeDir)
+    {
+        var bundleDir = Path.Combine(AppContext.BaseDirectory, "Seed", "Data");
+        if (!Directory.Exists(bundleDir))
+            return;
+
+        Directory.CreateDirectory(userScopeDir);
+
+        foreach (var src in Directory.EnumerateFiles(bundleDir, "*.json"))
+        {
+            var dest = Path.Combine(userScopeDir, Path.GetFileName(src));
+            if (File.Exists(dest))
+                continue;
+
+            File.Copy(src, dest);
+            _logger.LogInformation("Seeded user-scope directory with bundled {File}.", Path.GetFileName(src));
+        }
     }
 }

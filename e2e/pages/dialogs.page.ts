@@ -14,7 +14,7 @@ export class DialogsPage extends BasePage {
   }
 
   allDialogs(): Locator {
-    return this.page.locator("sd-dialog[open][static]");
+    return this.page.locator("sd-dialog[static]");
   }
 
   dialog(title: string): Locator {

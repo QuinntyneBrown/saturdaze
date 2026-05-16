@@ -33,5 +33,10 @@
     <None Update="appsettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Seed\Data\*.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Pack>true</Pack>
+      <PackagePath>tools\net10.0\any\Seed\Data\</PackagePath>
+    </None>
   </ItemGroup>
 </Project>

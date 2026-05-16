@@ -6,13 +6,24 @@ import {
 } from '@angular/core';
 
 /**
- * Bottom-sheet at `<720px`, centered modal at `≥720px`. When `static` is
- * present the dialog renders inline (used by the gallery page so every
- * variant can be reviewed at once).
+ * Presentational sheet shell used inside a CDK dialog.
  *
- * Mirrors `docs/mocks/components/sd-dialog.js`.
+ * Real modals are opened through `@angular/cdk/dialog`:
+ *
+ * ```ts
+ * private readonly dialog = inject(Dialog);
+ * this.dialog.open(SomeDialogContentComponent, { ... });
+ * ```
+ *
+ * The component itself renders the bottom-sheet / centered-modal visuals
+ * (`role="dialog"`, header, content, action slots) and is portalled into
+ * CDK's overlay, which owns the backdrop, focus trap, ESC handling, and
+ * scroll lock. Bottom-sheet at `<720px`, centered modal at `≥720px`.
+ *
+ * The `static` input renders the sheet inline (no overlay) for the design
+ * gallery so every variant can be reviewed on one page — production code
+ * should not set it.
  */
-
 @Component({
   selector: 'sd-dialog',
   standalone: true,
@@ -20,14 +31,12 @@ import {
   styleUrl: './sd-dialog.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    '[attr.open]': 'open() ? "" : null',
     '[attr.static]': 'staticMode() ? "" : null',
     '[attr.title]': 'dialogTitle() || null',
     '[attr.subtitle]': 'subtitle() || null',
   },
 })
 export class SdDialog {
-  readonly open = input(false, { transform: booleanAttribute });
   readonly staticMode = input(false, {
     alias: 'static',
     transform: booleanAttribute,

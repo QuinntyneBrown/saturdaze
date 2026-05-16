@@ -1,8 +1,4 @@
 :host {
-  display: none;
-}
-
-:host([open]) {
   display: block;
 }
 
@@ -46,11 +42,6 @@
 }
 
 @media (min-width: 720px) {
-  :host(:not([static])) .scrim {
-    align-items: center;
-    padding: 24px;
-  }
-
   :host(:not([static])) .sheet {
     max-width: 520px;
     border-radius: var(--sd-r-xl);

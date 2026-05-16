@@ -10,7 +10,7 @@ test.describe("Dialogs & sheets gallery", () => {
     await expect(pages.dialogs.galleryHeading()).toBeVisible();
   });
 
-  test("every documented dialog is open and static", async ({ pages }) => {
+  test("every documented dialog renders in the static gallery", async ({ pages }) => {
     const expected = [
       "Terre Bleu Lavender Farm",
       "Regenerate the weekend?",
@@ -24,7 +24,6 @@ test.describe("Dialogs & sheets gallery", () => {
     await expect(pages.dialogs.allDialogs()).toHaveCount(expected.length);
     for (const title of expected) {
       await expect(pages.dialogs.dialog(title)).toBeVisible();
-      await expect(pages.dialogs.dialog(title)).toHaveAttribute("open", "");
       await expect(pages.dialogs.dialog(title)).toHaveAttribute("static", "");
     }
   });
