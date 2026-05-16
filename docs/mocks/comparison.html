@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Saturdaze — Mocks vs Screenshots</title>
+  <link rel="stylesheet" href="./styles/global.css" />
+  <style>
+    body { padding: 24px; background: #f5f3ee; }
+    h1 { margin: 0 0 8px; font: 700 28px/1.2 system-ui, sans-serif; color: #1a1a1a; }
+    .lede { font: 400 15px/1.4 system-ui, sans-serif; color: #555; margin: 0 0 24px; max-width: 720px; }
+    .controls { display: flex; gap: 8px; margin: 0 0 24px; flex-wrap: wrap; }
+    .controls button {
+      appearance: none; border: 1px solid #d0cabb; background: #fff;
+      padding: 8px 14px; border-radius: 999px; font: 500 13px system-ui, sans-serif;
+      cursor: pointer; color: #1a1a1a;
+    }
+    .controls button[aria-pressed="true"] { background: #1a1a1a; color: #fff; border-color: #1a1a1a; }
+    .page-section { margin: 0 0 48px; }
+    .page-section h2 {
+      font: 600 20px/1.3 system-ui, sans-serif; margin: 0 0 4px;
+      color: #1a1a1a; text-transform: capitalize;
+    }
+    .page-section .path {
+      font: 400 12px/1.3 ui-monospace, Menlo, monospace; color: #888; margin: 0 0 12px;
+    }
+    .pair {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      align-items: start;
+      background: #fff;
+      border: 1px solid #e6e0d2;
+      border-radius: 12px;
+      padding: 16px;
+    }
+    .pair > figure { margin: 0; }
+    .pair figcaption {
+      font: 600 12px/1 system-ui, sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #6a6a6a;
+      padding: 0 0 8px;
+    }
+    .frame {
+      border: 1px solid #e6e0d2;
+      border-radius: 8px;
+      overflow: hidden;
+      background: #fafafa;
+      width: 100%;
+      height: 720px;
+    }
+    .frame iframe { display: block; width: 100%; height: 100%; border: 0; background: #fff; }
+    .shot {
+      border: 1px solid #e6e0d2;
+      border-radius: 8px;
+      overflow: hidden;
+      background: #fafafa;
+    }
+    .shot img { display: block; width: 100%; height: auto; }
+    @media (max-width: 900px) {
+      .pair { grid-template-columns: 1fr; }
+      .frame { height: 540px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Mocks vs. screenshots</h1>
+    <p class="lede">Each mock page rendered live (left) next to its captured screenshot (right). Switch viewports to compare the mobile, tablet and desktop captures.</p>
+    <div class="controls" role="group" aria-label="viewport">
+      <button type="button" data-viewport="mobile">Mobile · 390</button>
+      <button type="button" data-viewport="tablet">Tablet · 820</button>
+      <button type="button" data-viewport="desktop" aria-pressed="true">Desktop · 1440</button>
+    </div>
+    <p class="lede"><a href="./index.html">← Back to mock launcher</a></p>
+  </header>
+
+  <section id="sections"></section>
+
+  <script>
+    const pages = [
+      "home", "itinerary", "activities", "restaurants", "saved",
+      "events", "errand", "profile", "dialogs", "components"
+    ];
+
+    const root = document.getElementById("sections");
+
+    for (const slug of pages) {
+      const sec = document.createElement("section");
+      sec.className = "page-section";
+      sec.innerHTML = `
+        <h2>${slug}</h2>
+        <p class="path">pages/${slug}.html · screenshots/${slug}.&lt;viewport&gt;.png</p>
+        <div class="pair">
+          <figure>
+            <figcaption>Live mock</figcaption>
+            <div class="frame"><iframe src="./pages/${slug}.html" title="${slug} mock"></iframe></div>
+          </figure>
+          <figure>
+            <figcaption>Screenshot</figcaption>
+            <div class="shot">
+              <img data-slug="${slug}" src="./screenshots/${slug}.desktop.png" alt="${slug} screenshot" loading="lazy" />
+            </div>
+          </figure>
+        </div>
+      `;
+      root.appendChild(sec);
+    }
+
+    const buttons = document.querySelectorAll(".controls button");
+    buttons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const vp = btn.dataset.viewport;
+        buttons.forEach((b) => b.setAttribute("aria-pressed", b === btn ? "true" : "false"));
+        document.querySelectorAll("img[data-slug]").forEach((img) => {
+          img.src = `./screenshots/${img.dataset.slug}.${vp}.png`;
+        });
+      });
+    });
+  </script>
+</body>
+</html>
