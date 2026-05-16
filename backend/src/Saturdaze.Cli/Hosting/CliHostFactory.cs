@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Saturdaze.Application.Common;
 using Saturdaze.Cli.Database;
 using Saturdaze.Cli.Seed;
 using Saturdaze.Infrastructure.Persistence;
@@ -44,6 +45,7 @@ public static class CliHostFactory
                     registrar.Configure(opt, opts);
                 });
 
+                services.AddSingleton<IDateTimeProvider, SystemDateTimeProvider>();
                 services.AddSingleton<ISeedPathResolver, SeedPathResolver>();
                 services.AddSingleton<IJsonSeeder, ActivitySeeder>();
                 services.AddSingleton<IJsonSeeder, RestaurantSeeder>();

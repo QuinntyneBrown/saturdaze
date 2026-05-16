@@ -1,6 +1,7 @@
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging.Abstractions;
+using Saturdaze.Application.Common;
 using Saturdaze.Cli.Seed;
 using Xunit;
 
@@ -28,7 +29,7 @@ public class SeedCommandHandlerTests : IDisposable
         {
             new ActivitySeeder(),
             new RestaurantSeeder(),
-            new LocalEventSeeder(),
+            new LocalEventSeeder(new SystemDateTimeProvider()),
             new FamilySeeder()
         };
         return new SeedCommandHandler(paths, seeders, db, NullLogger<SeedCommandHandler>.Instance);

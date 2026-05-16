@@ -1,65 +1,68 @@
-[
-  {
-    "name": "Terre Bleu — Lavender Bloom Opening",
-    "startsOn": "2026-05-17",
-    "endsOn":   "2026-05-17",
-    "location": "Milton",
-    "driveMinutes": 45,
-    "url": "https://terrebleu.ca",
-    "category": "Seasonal"
-  },
-  {
-    "name": "Cirque Mechanics — Pedal Punk",
-    "startsOn": "2026-05-17",
-    "endsOn":   "2026-05-17",
-    "location": "Living Arts Centre",
-    "driveMinutes": 5,
-    "url": "https://livingartscentre.ca",
-    "category": "Circus"
-  },
-  {
-    "name": "Spring Tulip Festival",
-    "startsOn": "2026-05-17",
-    "endsOn":   "2026-05-18",
-    "location": "Royal Botanical Gardens",
-    "driveMinutes": 35,
-    "url": "https://rbg.ca",
-    "category": "Festival"
-  },
-  {
-    "name": "Mississauga Symphony — Kids Concert",
-    "startsOn": "2026-05-18",
-    "endsOn":   "2026-05-18",
-    "location": "Living Arts Centre",
-    "driveMinutes": 5,
-    "url": "https://mississaugasymphony.ca",
-    "category": "Theatre"
-  },
-  {
-    "name": "Port Credit Farmer's Market",
-    "startsOn": "2026-05-18",
-    "endsOn":   "2026-05-18",
-    "location": "Lakeshore Rd",
-    "driveMinutes": 2,
-    "url": "https://portcreditbia.com/market",
-    "category": "Local"
-  },
-  {
-    "name": "Strawberry-picking opens",
-    "startsOn": "2026-05-24",
-    "endsOn":   "2026-05-24",
-    "location": "Whittamore's Farm",
-    "driveMinutes": 40,
-    "url": "https://whittamoresfarm.com",
-    "category": "Seasonal"
-  },
-  {
-    "name": "Pumpkin patch — early access",
-    "startsOn": "2026-09-13",
-    "endsOn":   "2026-09-13",
-    "location": "Downey's Farm",
-    "driveMinutes": 35,
-    "url": "https://downeysfarm.com",
-    "category": "Save for later"
-  }
-]
+{
+  "anchorSaturday": "2026-05-16",
+  "events": [
+    {
+      "name": "Terre Bleu — Lavender Bloom Opening",
+      "startsOn": "2026-05-16",
+      "endsOn":   "2026-05-16",
+      "location": "Milton",
+      "driveMinutes": 45,
+      "url": "https://terrebleu.ca",
+      "category": "Seasonal"
+    },
+    {
+      "name": "Cirque Mechanics — Pedal Punk",
+      "startsOn": "2026-05-16",
+      "endsOn":   "2026-05-16",
+      "location": "Living Arts Centre",
+      "driveMinutes": 5,
+      "url": "https://livingartscentre.ca",
+      "category": "Circus"
+    },
+    {
+      "name": "Spring Tulip Festival",
+      "startsOn": "2026-05-16",
+      "endsOn":   "2026-05-17",
+      "location": "Royal Botanical Gardens",
+      "driveMinutes": 35,
+      "url": "https://rbg.ca",
+      "category": "Festival"
+    },
+    {
+      "name": "Mississauga Symphony — Kids Concert",
+      "startsOn": "2026-05-17",
+      "endsOn":   "2026-05-17",
+      "location": "Living Arts Centre",
+      "driveMinutes": 5,
+      "url": "https://mississaugasymphony.ca",
+      "category": "Theatre"
+    },
+    {
+      "name": "Port Credit Farmer's Market",
+      "startsOn": "2026-05-17",
+      "endsOn":   "2026-05-17",
+      "location": "Lakeshore Rd",
+      "driveMinutes": 2,
+      "url": "https://portcreditbia.com/market",
+      "category": "Local"
+    },
+    {
+      "name": "Strawberry-picking opens",
+      "startsOn": "2026-05-23",
+      "endsOn":   "2026-05-23",
+      "location": "Whittamore's Farm",
+      "driveMinutes": 40,
+      "url": "https://whittamoresfarm.com",
+      "category": "Seasonal"
+    },
+    {
+      "name": "Pumpkin patch — early access",
+      "startsOn": "2026-09-12",
+      "endsOn":   "2026-09-12",
+      "location": "Downey's Farm",
+      "driveMinutes": 35,
+      "url": "https://downeysfarm.com",
+      "category": "Save for later"
+    }
+  ]
+}
