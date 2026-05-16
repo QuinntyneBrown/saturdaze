@@ -46,5 +46,24 @@ which point it should fall through to the `sd-empty` state.
 ## Status
 
 - Logged: 2026-05-16
-- Pending. The page renders correctly against the mocks today only
-  because `DEMO_VIEW` was hand-authored to match the visual reference.
+- **Fixed: 2026-05-16.**
+  1. **Domain model gap closed.** `Weekend` entity gained nullable `Title`
+     (≤120 chars) and `Rating` (1–5, nullable). Configured in
+     `WeekendConfiguration`; new migration
+     `20260516195515_AddWeekendTitleAndRating` adds the two nullable
+     columns. `WeekendSummaryDto` surfaces both. `GetWeekendHistoryQueryHandler`
+     projects them.
+  2. **HTTP wiring landed.** `SavedService.list()` now calls
+     `GET /api/weekends/history?take=20` on construction and exposes a
+     read-only signal of the resulting `SavedView`. Mapping:
+     - `recent` = rows with `rating == null` or `rating > 2`. Title falls
+       back to top-two activity highlights when `title` is null.
+     - `avoid` = rows with `rating ≤ 2`. Subtitle shows the weekend range.
+     - `lede` summarises the planned count and favourite count.
+     - Empty history falls through to a friendly "No weekends planned
+       yet" lede with empty `recent` / `avoid` — drives `sd-empty` on the
+       page.
+  3. **The "avoid" list is presentation-only**, per the bug doc — derived
+     from rating threshold rather than a domain concept.
+- Verified by: `dotnet build` (clean), all 148 backend tests pass,
+  `ng build saturdaze` (clean).

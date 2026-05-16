@@ -1,76 +1,325 @@
-import { Injectable, Signal, signal } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Injectable, Signal, inject, signal } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
 
-import { Block, ItineraryView, WeekendOverview } from '../models/weekend';
+import { API_BASE_URL } from '../api/api-base-url';
+import {
+  Block,
+  DaySummary,
+  DayChip,
+  DayHeaderChip,
+  DayOption,
+  ItineraryView,
+  WeatherDay,
+  WeekendOverview,
+  WeekendStat,
+} from '../models/weekend';
 
 /**
- * Returns the demo weekend overview. Static data for now — the public
- * signal-returning surface stays the same when Phase 12 swaps the body to
- * `httpResource(...)`.
+ * Server-side weekend payload. Mirrors
+ * `Saturdaze.Application.Contracts.WeekendDto`.
  */
+interface WeekendDto {
+  readonly id: string;
+  readonly weekendOf: string; // YYYY-MM-DD (Saturday)
+  readonly isFavourite: boolean;
+  readonly notes: string;
+  readonly regenerateCount: number;
+  readonly blocks: ReadonlyArray<ItineraryBlockDto>;
+  readonly errands: ReadonlyArray<ShoppingErrandDto>;
+  readonly weather: ReadonlyArray<WeatherForecastDto>;
+}
 
-const DEMO_OVERVIEW: WeekendOverview = {
-  greeting: 'Morning, Browns 👋',
-  heroSubtitle:
-    "Sat & Sun are looking warm. I've sketched a weekend you can take as-is.",
+interface ItineraryBlockDto {
+  readonly id: string;
+  readonly day: 'Saturday' | 'Sunday';
+  readonly startTime: string; // HH:mm:ss
+  readonly endTime: string;
+  readonly kind: 'Workout' | 'Activity' | 'Meal' | 'Drive' | 'Downtime' | 'Commitment' | 'Errand';
+  readonly title: string;
+  readonly refId: string | null;
+  readonly isLocked: boolean;
+  readonly reason: string;
+  readonly sortOrder: number;
+}
+
+interface ShoppingErrandDto {
+  readonly id: string;
+  readonly description: string;
+  readonly estimatedMinutes: number;
+  readonly done: boolean;
+}
+
+interface WeatherForecastDto {
+  readonly date: string; // YYYY-MM-DD
+  readonly tags: ReadonlyArray<string>;
+  readonly highCelsius: number | null;
+  readonly lowCelsius: number | null;
+  readonly precipitationMm: number | null;
+  readonly unavailable: boolean;
+}
+
+const EMPTY_OVERVIEW: WeekendOverview = {
+  greeting: 'Loading your weekend…',
+  heroSubtitle: 'Pulling the latest plan from the planner.',
   heroCta: 'Plan This Weekend',
-  forecastSubtitle: 'Sat 17 May – Sun 18 May',
-  forecast: [
-    {
-      day: 'Saturday',
-      icon: 'sun',
-      hi: '22',
-      lo: '14',
-      note: 'Light breeze, perfect for outdoors',
-    },
-    {
-      day: 'Sunday',
-      icon: 'cloud',
-      hi: '18',
-      lo: '12',
-      note: 'Cloudy by 2pm — plan indoors after',
-    },
-  ],
-  days: [
-    {
-      day: 'Saturday',
-      date: 'Sat 17 May',
-      weather: '22°  sunny',
-      icon: 'sun',
-      highlight: 'Lavender fields at Terre Bleu',
-      chips: [
-        { tone: 'accent', icon: 'lock', label: '9:00 swim' },
-        { tone: 'sky', icon: 'car', label: '45 min drive' },
-        { tone: 'leaf', label: 'Outdoor day' },
-      ],
-    },
-    {
-      day: 'Sunday',
-      date: 'Sun 18 May',
-      weather: '18°  cloudy',
-      icon: 'cloud',
-      highlight: "Rec Room → Eli's pick",
-      chips: [
-        { tone: 'accent', icon: 'lock', label: '10:30 church' },
-        { tone: 'indoor', label: 'Indoor afternoon' },
-        { tone: 'primary', label: 'New for us' },
-      ],
-    },
-  ],
-  anticipations: [
-    {
-      icon: 'sparkle',
-      headline: 'Lavender bloom peaks this weekend',
-      body: "It's a 45-min drive — and rain moves in Monday. I tucked it into Saturday afternoon.",
-      cta: 'See on the map',
-    },
-    {
-      icon: 'bag',
-      headline: 'Sara mentioned a Costco run',
-      body: "Want me to slot it Sunday morning before church so it doesn't kill the day?",
-      cta: 'Add to Sunday',
-    },
-  ],
-  quickActions: [
+  forecastSubtitle: '',
+  forecast: [],
+  days: [],
+  anticipations: [],
+  quickActions: defaultQuickActions(0),
+  preview: [],
+};
+
+const EMPTY_ITINERARY: ItineraryView = {
+  day: 'Saturday',
+  eyebrow: '',
+  title: 'Loading…',
+  subtitle: 'Pulling the latest plan from the planner.',
+  icon: 'sun',
+  chips: [],
+  dayOptions: [],
+  stats: [],
+  previewTitle: 'Saturday — timeline',
+  previewSubtitle: 'Tap any block for why, alternatives, map',
+  blocks: [],
+};
+
+@Injectable({ providedIn: 'root' })
+export class WeekendPlanService {
+  private readonly http = inject(HttpClient);
+  private readonly baseUrl = inject(API_BASE_URL);
+
+  private readonly _overview = signal<WeekendOverview>(EMPTY_OVERVIEW);
+  private readonly _itinerary = signal<ItineraryView>(EMPTY_ITINERARY);
+  private readonly _currentId = signal<string | null>(null);
+  private readonly _activeDay = signal<'Saturday' | 'Sunday'>('Saturday');
+
+  constructor() {
+    void this.loadCurrent();
+  }
+
+  getDemoOverview(): Signal<WeekendOverview> {
+    return this._overview.asReadonly();
+  }
+
+  getDemoItinerary(): Signal<ItineraryView> {
+    return this._itinerary.asReadonly();
+  }
+
+  /** Fetch the upcoming weekend (server auto-plans on miss). */
+  async loadCurrent(): Promise<void> {
+    try {
+      const dto = await firstValueFrom(
+        this.http.get<WeekendDto>(`${this.baseUrl}/api/weekends/current`),
+      );
+      this.apply(dto);
+    } catch (err) {
+      console.error('WeekendPlanService.loadCurrent failed', err);
+    }
+  }
+
+  /** Plan an explicit Saturday. POST /api/weekends/plan. Idempotent server-side. */
+  async plan(weekendOfIso: string): Promise<void> {
+    try {
+      const dto = await firstValueFrom(
+        this.http.post<WeekendDto>(`${this.baseUrl}/api/weekends/plan`, {
+          weekendOf: weekendOfIso,
+        }),
+      );
+      this.apply(dto);
+    } catch (err) {
+      console.error('WeekendPlanService.plan failed', err);
+    }
+  }
+
+  async regenerate(id?: string): Promise<void> {
+    const target = id ?? this._currentId();
+    if (!target) return;
+    try {
+      const dto = await firstValueFrom(
+        this.http.post<WeekendDto>(`${this.baseUrl}/api/weekends/${target}/regenerate`, {}),
+      );
+      this.apply(dto);
+    } catch (err) {
+      console.error('WeekendPlanService.regenerate failed', err);
+    }
+  }
+
+  async markFavourite(favourite: boolean, id?: string): Promise<void> {
+    const target = id ?? this._currentId();
+    if (!target) return;
+    try {
+      const dto = await firstValueFrom(
+        this.http.put<WeekendDto>(`${this.baseUrl}/api/weekends/${target}/favourite`, {
+          favourite,
+        }),
+      );
+      this.apply(dto);
+    } catch (err) {
+      console.error('WeekendPlanService.markFavourite failed', err);
+    }
+  }
+
+  async lockBlock(blockId: string, locked: boolean): Promise<void> {
+    try {
+      await firstValueFrom(
+        this.http.put(`${this.baseUrl}/api/blocks/${blockId}/lock`, { locked }),
+      );
+      await this.loadCurrent();
+    } catch (err) {
+      console.error('WeekendPlanService.lockBlock failed', err);
+    }
+  }
+
+  async swapBlock(blockId: string): Promise<void> {
+    try {
+      await firstValueFrom(
+        this.http.post(`${this.baseUrl}/api/blocks/${blockId}/swap`, {}),
+      );
+      await this.loadCurrent();
+    } catch (err) {
+      console.error('WeekendPlanService.swapBlock failed', err);
+    }
+  }
+
+  async addErrand(description: string, estimatedMinutes: number, id?: string): Promise<void> {
+    const target = id ?? this._currentId();
+    if (!target) return;
+    try {
+      await firstValueFrom(
+        this.http.post(`${this.baseUrl}/api/weekends/${target}/errands`, {
+          description,
+          estimatedMinutes,
+        }),
+      );
+      await this.loadCurrent();
+    } catch (err) {
+      console.error('WeekendPlanService.addErrand failed', err);
+    }
+  }
+
+  setActiveDay(day: 'Saturday' | 'Sunday'): void {
+    this._activeDay.set(day);
+    const dto = this._lastDto;
+    if (dto) this._itinerary.set(projectItinerary(dto, day));
+  }
+
+  private _lastDto: WeekendDto | null = null;
+
+  private apply(dto: WeekendDto): void {
+    this._lastDto = dto;
+    this._currentId.set(dto.id);
+    this._overview.set(projectOverview(dto));
+    this._itinerary.set(projectItinerary(dto, this._activeDay()));
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Projection: WeekendDto → WeekendOverview (Home page)
+// ---------------------------------------------------------------------------
+
+function projectOverview(dto: WeekendDto): WeekendOverview {
+  const [satDate, sunDate] = weekendDates(dto.weekendOf);
+  const satWeather = forecastFor(dto.weather, satDate);
+  const sunWeather = forecastFor(dto.weather, sunDate);
+
+  const satBlocks = dto.blocks.filter((b) => b.day === 'Saturday').sort(bySortThenStart);
+  const sunBlocks = dto.blocks.filter((b) => b.day === 'Sunday').sort(bySortThenStart);
+
+  const satHighlight = topHighlight(satBlocks);
+  const sunHighlight = topHighlight(sunBlocks);
+
+  const previewBlocks = satBlocks.slice(0, 5).map(toBlock);
+
+  return {
+    greeting: 'Morning, Browns 👋',
+    heroSubtitle: heroSubtitle(satWeather, sunWeather),
+    heroCta: dto.regenerateCount === 0 ? 'Plan This Weekend' : 'Regenerate weekend',
+    forecastSubtitle: forecastSubtitle(satDate, sunDate),
+    forecast: [
+      toWeatherDay('Saturday', satWeather),
+      toWeatherDay('Sunday', sunWeather),
+    ],
+    days: [
+      toDaySummary('Saturday', satDate, satWeather, satBlocks, satHighlight),
+      toDaySummary('Sunday', sunDate, sunWeather, sunBlocks, sunHighlight),
+    ],
+    anticipations: [],
+    quickActions: defaultQuickActions(lockedCount(dto.blocks)),
+    preview: previewBlocks,
+  };
+}
+
+function toDaySummary(
+  day: string,
+  date: Date,
+  weather: WeatherForecastDto | null,
+  blocks: ReadonlyArray<ItineraryBlockDto>,
+  highlight: string,
+): DaySummary {
+  return {
+    day,
+    date: `${day.slice(0, 3)} ${date.getUTCDate()} ${monthAbbr(date)}`,
+    weather: weather
+      ? `${roundOrDash(weather.highCelsius)}°  ${weatherWord(weather)}`
+      : '— ',
+    icon: weatherIcon(weather),
+    highlight,
+    chips: dayChips(blocks, weather),
+  };
+}
+
+function dayChips(
+  blocks: ReadonlyArray<ItineraryBlockDto>,
+  weather: WeatherForecastDto | null,
+): DayChip[] {
+  const chips: DayChip[] = [];
+  const firstLocked = blocks.find((b) => b.isLocked);
+  if (firstLocked) {
+    chips.push({
+      tone: 'accent',
+      icon: 'lock',
+      label: `${hhmm(firstLocked.startTime)} ${firstLocked.title.toLowerCase()}`,
+    });
+  }
+  const driveMins = blocks
+    .filter((b) => b.kind === 'Drive')
+    .reduce((sum, b) => sum + minutes(b.startTime, b.endTime), 0);
+  if (driveMins > 0) {
+    chips.push({ tone: 'sky', icon: 'car', label: `${driveMins} min drive` });
+  }
+  const isOutdoor = weather?.tags.some((t) => t === 'sunny' || t === 'warm' || t === 'mild');
+  chips.push({ tone: isOutdoor ? 'leaf' : 'indoor', label: isOutdoor ? 'Outdoor day' : 'Indoor day' });
+  return chips;
+}
+
+function toWeatherDay(day: string, w: WeatherForecastDto | null): WeatherDay {
+  if (!w) return { day, icon: 'cloud', hi: '—', lo: '—', note: 'Forecast unavailable.' };
+  return {
+    day,
+    icon: weatherIcon(w),
+    hi: roundOrDash(w.highCelsius),
+    lo: roundOrDash(w.lowCelsius),
+    note: weatherNote(w),
+  };
+}
+
+function heroSubtitle(sat: WeatherForecastDto | null, sun: WeatherForecastDto | null): string {
+  const goodSat = isOutdoorFriendly(sat);
+  const goodSun = isOutdoorFriendly(sun);
+  if (goodSat && goodSun) return "Sat & Sun are looking warm. I've sketched a weekend you can take as-is.";
+  if (goodSat) return "Saturday looks great outside. Sunday's cooler — I've leaned indoors after lunch.";
+  if (goodSun) return "Saturday's mixed; Sunday opens up. Outdoor plans lean to Sunday.";
+  return "Mixed weather both days. Indoor-friendly plan ready for you.";
+}
+
+function forecastSubtitle(sat: Date, sun: Date): string {
+  return `Sat ${sat.getUTCDate()} ${monthAbbr(sat)} – Sun ${sun.getUTCDate()} ${monthAbbr(sun)}`;
+}
+
+function defaultQuickActions(lockedBlocks: number) {
+  return [
     {
       title: 'Regenerate the weekend',
       subtitle: 'Same commitments, fresh ideas',
@@ -78,7 +327,7 @@ const DEMO_OVERVIEW: WeekendOverview = {
     },
     {
       title: "Lock what's already perfect",
-      subtitle: '3 blocks locked',
+      subtitle: `${lockedBlocks} block${lockedBlocks === 1 ? '' : 's'} locked`,
       icon: 'lock',
     },
     {
@@ -86,199 +335,241 @@ const DEMO_OVERVIEW: WeekendOverview = {
       subtitle: 'A read-only preview link',
       icon: 'share',
     },
-  ],
-  preview: [
-    {
-      time: '9:00',
-      duration: '60m',
-      title: 'Swim lessons',
-      subtitle: 'Port Credit Pool',
-      icon: 'bike',
-      tone: 'fixed',
-      locked: true,
-    },
-    {
-      time: '11:00',
-      duration: '2h',
-      title: 'Lavender fields',
-      subtitle: 'Terre Bleu, Milton',
-      icon: 'tree',
-      drive: '45 min',
-      chips: [{ tone: 'primary', label: 'Day highlight' }],
-    },
-    {
-      time: '13:00',
-      duration: '75m',
-      title: 'Lunch — La Marina',
-      subtitle: 'Wife-approved · patio',
-      icon: 'fork',
-      tone: 'meal',
-    },
-    {
-      time: '15:30',
-      duration: '90m',
-      title: 'Quiet time at home',
-      subtitle: 'Recharge before evening',
-      icon: 'bed',
-      tone: 'downtime',
-    },
-    {
-      time: '17:00',
-      duration: '60m',
-      title: 'Workout',
-      subtitle: 'Garage gym · Sara watches kids',
-      icon: 'bike',
-      tone: 'workout',
-      locked: true,
-    },
-  ],
-};
+  ];
+}
 
-const SATURDAY_BLOCKS: readonly Block[] = [
-  {
-    time: '8:30',
-    duration: '30m',
-    title: 'Breakfast at home',
-    subtitle: "Cereal day — Eli's choice",
-    icon: 'home',
-    tone: 'meal',
-  },
-  {
-    time: '9:00',
-    duration: '60m',
-    title: 'Swim lessons',
-    subtitle: 'Port Credit Pool · Both kids',
-    icon: 'bike',
-    tone: 'fixed',
-    locked: true,
-    chips: [{ tone: 'accent', label: 'Recurring' }],
-  },
-  {
-    time: '10:30',
-    duration: '20m',
-    title: 'Drive to Terre Bleu',
-    subtitle: 'Hwy 401 W → Milton',
-    icon: 'car',
-    tone: 'drive',
-    drive: '20 min',
-  },
-  {
-    time: '11:00',
-    duration: '2h',
-    title: 'Lavender fields',
-    subtitle: 'Walk the rows, snap photos, kid-friendly',
-    icon: 'tree',
-    chips: [
-      { tone: 'primary', label: 'Day highlight' },
-      { tone: 'leaf', label: 'Outdoor' },
+// ---------------------------------------------------------------------------
+// Projection: WeekendDto → ItineraryView (Itinerary page)
+// ---------------------------------------------------------------------------
+
+function projectItinerary(dto: WeekendDto, active: 'Saturday' | 'Sunday'): ItineraryView {
+  const [satDate, sunDate] = weekendDates(dto.weekendOf);
+  const satBlocks = dto.blocks.filter((b) => b.day === 'Saturday').sort(bySortThenStart);
+  const sunBlocks = dto.blocks.filter((b) => b.day === 'Sunday').sort(bySortThenStart);
+  const activeBlocks = active === 'Saturday' ? satBlocks : sunBlocks;
+  const activeDate = active === 'Saturday' ? satDate : sunDate;
+  const activeWeather = forecastFor(dto.weather, activeDate);
+
+  const driveMins = activeBlocks
+    .filter((b) => b.kind === 'Drive')
+    .reduce((sum, b) => sum + minutes(b.startTime, b.endTime), 0);
+  const lockedCount = activeBlocks.filter((b) => b.isLocked).length;
+
+  return {
+    day: active,
+    eyebrow: `${activeDate.getUTCDate()} ${monthAbbr(activeDate)} ${activeDate.getUTCFullYear()}`,
+    title: activeWeather
+      ? `${weatherWordCapitalised(activeWeather)} & ${roundOrDash(activeWeather.highCelsius)}°`
+      : 'Plan ready',
+    subtitle: itinerarySubtitle(activeBlocks),
+    icon: weatherIcon(activeWeather),
+    chips: itineraryChips(activeBlocks, activeWeather, lockedCount, driveMins),
+    dayOptions: [
+      dayOption('saturday', 'Saturday', satBlocks, forecastFor(dto.weather, satDate), active === 'Saturday'),
+      dayOption('sunday', 'Sunday', sunBlocks, forecastFor(dto.weather, sunDate), active === 'Sunday'),
     ],
-  },
-  {
-    time: '13:00',
-    duration: '75m',
-    title: 'Lunch — La Marina',
-    subtitle: 'Wife-approved · Patio · 4 votes in',
-    icon: 'fork',
-    tone: 'meal',
-    chips: [{ tone: 'accent', label: 'Booked 1pm' }],
-  },
-  {
-    time: '14:30',
-    duration: '45m',
-    title: 'Drive back to Port Credit',
-    subtitle: 'Kids tend to nap on this stretch',
-    icon: 'car',
-    tone: 'drive',
-    drive: '45 min',
-  },
-  {
-    time: '15:30',
-    duration: '90m',
-    title: 'Quiet time at home',
-    subtitle: 'Reading, blocks — recharge before evening',
-    icon: 'bed',
-    tone: 'downtime',
-  },
-  {
-    time: '17:00',
-    duration: '60m',
-    title: "Husband's workout",
-    subtitle: 'Garage gym — Sara watches the kids',
-    icon: 'bike',
-    tone: 'workout',
-    locked: true,
-    chips: [{ tone: 'accent', label: 'Recurring' }],
-  },
-  {
-    time: '18:15',
-    duration: '75m',
-    title: 'Dinner at home',
-    subtitle: 'Pasta + veg — picky-approved',
-    icon: 'fork',
-    tone: 'meal',
-  },
-  {
-    time: '20:00',
-    duration: '60m',
-    title: 'Bath & books',
-    subtitle: '9pm lights out',
-    icon: 'bed',
-    tone: 'downtime',
-    locked: true,
-  },
-];
+    stats: stats(satBlocks.concat(sunBlocks)),
+    previewTitle: `${active} — timeline`,
+    previewSubtitle: 'Tap any block for why, alternatives, map',
+    blocks: activeBlocks.map(toBlock),
+  };
+}
 
-const DEMO_ITINERARY: ItineraryView = {
-  day: 'Saturday',
-  eyebrow: '17 May 2026',
-  title: 'Sunny & 22°',
-  subtitle: 'In bed by 9pm — out the door by 9am',
-  icon: 'sun',
-  chips: [
-    { tone: 'accent', icon: 'lock', label: '3 locked' },
-    { tone: 'sky', icon: 'car', label: '1h 10m driving' },
-    { tone: 'leaf', label: 'Outdoor' },
-    { tone: 'sun', label: '22° hi' },
-  ],
-  dayOptions: [
-    {
-      key: 'saturday',
-      label: 'Saturday',
-      icon: 'sun',
-      iconTone: 'sun',
-      meta: '5 blocks · 22° sunny · Lavender highlight',
-      active: true,
-    },
-    {
-      key: 'sunday',
-      label: 'Sunday',
-      icon: 'cloud',
-      iconTone: 'soft',
-      meta: '5 blocks · 18° cloudy · Rec Room highlight',
-      active: false,
-    },
-  ],
-  stats: [
-    { num: '10', label: 'blocks planned' },
-    { num: '2h 5m', label: 'total driving' },
-    { num: '4', label: 'locked anchors' },
+function itineraryChips(
+  blocks: ReadonlyArray<ItineraryBlockDto>,
+  weather: WeatherForecastDto | null,
+  locked: number,
+  driveMins: number,
+): DayHeaderChip[] {
+  const chips: DayHeaderChip[] = [];
+  if (locked > 0) chips.push({ tone: 'accent', icon: 'lock', label: `${locked} locked` });
+  if (driveMins > 0) chips.push({ tone: 'sky', icon: 'car', label: `${formatMinutes(driveMins)} driving` });
+  const outdoor = isOutdoorFriendly(weather);
+  chips.push({ tone: outdoor ? 'leaf' : 'indoor', label: outdoor ? 'Outdoor' : 'Indoor' });
+  if (weather?.highCelsius != null)
+    chips.push({ tone: weather.tags.includes('sunny') ? 'sun' : 'sky', label: `${Math.round(weather.highCelsius)}° hi` });
+  return chips;
+}
+
+function dayOption(
+  key: 'saturday' | 'sunday',
+  label: 'Saturday' | 'Sunday',
+  blocks: ReadonlyArray<ItineraryBlockDto>,
+  weather: WeatherForecastDto | null,
+  active: boolean,
+): DayOption {
+  const highlight = topHighlight(blocks);
+  return {
+    key,
+    label,
+    icon: weatherIcon(weather),
+    iconTone: weather?.tags.includes('sunny') ? 'sun' : 'soft',
+    meta: `${blocks.length} blocks · ${roundOrDash(weather?.highCelsius ?? null)}° ${weatherWord(weather)} · ${highlight} highlight`,
+    active,
+  };
+}
+
+function stats(allBlocks: ReadonlyArray<ItineraryBlockDto>): WeekendStat[] {
+  const driveMins = allBlocks
+    .filter((b) => b.kind === 'Drive')
+    .reduce((sum, b) => sum + minutes(b.startTime, b.endTime), 0);
+  const locked = allBlocks.filter((b) => b.isLocked).length;
+  return [
+    { num: String(allBlocks.length), label: 'blocks planned' },
+    { num: formatMinutes(driveMins), label: 'total driving' },
+    { num: String(locked), label: 'locked anchors' },
     { num: '$~120', label: 'est. spend' },
-  ],
-  previewTitle: 'Saturday — timeline',
-  previewSubtitle: 'Tap any block for why, alternatives, map',
-  blocks: SATURDAY_BLOCKS,
-};
+  ];
+}
 
-@Injectable({ providedIn: 'root' })
-export class WeekendPlanService {
-  private readonly overview = signal<WeekendOverview>(DEMO_OVERVIEW);
-  private readonly itinerary = signal<ItineraryView>(DEMO_ITINERARY);
+function itinerarySubtitle(blocks: ReadonlyArray<ItineraryBlockDto>): string {
+  if (blocks.length === 0) return 'Nothing planned yet.';
+  const first = blocks[0]!;
+  const last = blocks[blocks.length - 1]!;
+  return `Out the door by ${hhmm(first.startTime)} — wraps by ${hhmm(last.endTime)}`;
+}
 
-  getDemoOverview(): Signal<WeekendOverview> {
-    return this.overview.asReadonly();
+// ---------------------------------------------------------------------------
+// Block projection
+// ---------------------------------------------------------------------------
+
+function toBlock(b: ItineraryBlockDto): Block {
+  const dur = minutes(b.startTime, b.endTime);
+  return {
+    time: hhmm(b.startTime),
+    duration: formatMinutes(dur),
+    title: b.title,
+    subtitle: b.reason || undefined,
+    icon: blockIcon(b.kind),
+    tone: blockTone(b.kind),
+    locked: b.isLocked || undefined,
+    drive: b.kind === 'Drive' ? `${dur} min` : undefined,
+  };
+}
+
+function blockTone(kind: ItineraryBlockDto['kind']): Block['tone'] {
+  switch (kind) {
+    case 'Meal': return 'meal';
+    case 'Drive': return 'drive';
+    case 'Workout': return 'workout';
+    case 'Commitment': return 'fixed';
+    case 'Downtime': return 'downtime';
+    case 'Errand': return 'fixed';
+    default: return 'default';
   }
+}
 
-  getDemoItinerary(): Signal<ItineraryView> {
-    return this.itinerary.asReadonly();
+function blockIcon(kind: ItineraryBlockDto['kind']): string {
+  switch (kind) {
+    case 'Meal': return 'fork';
+    case 'Drive': return 'car';
+    case 'Workout': return 'bike';
+    case 'Commitment': return 'lock';
+    case 'Downtime': return 'bed';
+    case 'Errand': return 'bag';
+    default: return 'tree';
   }
+}
+
+function topHighlight(blocks: ReadonlyArray<ItineraryBlockDto>): string {
+  const top = blocks.find((b) => b.kind === 'Activity');
+  return top ? top.title : 'Quiet day at home';
+}
+
+function lockedCount(blocks: ReadonlyArray<ItineraryBlockDto>): number {
+  return blocks.filter((b) => b.isLocked).length;
+}
+
+// ---------------------------------------------------------------------------
+// Date / weather helpers
+// ---------------------------------------------------------------------------
+
+function weekendDates(saturdayIso: string): [Date, Date] {
+  const [y, m, d] = saturdayIso.split('-').map(Number);
+  const sat = new Date(Date.UTC(y!, m! - 1, d!));
+  const sun = new Date(sat);
+  sun.setUTCDate(sun.getUTCDate() + 1);
+  return [sat, sun];
+}
+
+function forecastFor(weather: ReadonlyArray<WeatherForecastDto>, day: Date): WeatherForecastDto | null {
+  const iso = day.toISOString().substring(0, 10);
+  return weather.find((w) => w.date === iso) ?? null;
+}
+
+function weatherIcon(w: WeatherForecastDto | null): string {
+  if (!w || w.unavailable) return 'cloud';
+  if (w.tags.includes('rain')) return 'rain';
+  if (w.tags.includes('snow')) return 'cloud';
+  if (w.tags.includes('sunny')) return 'sun';
+  return 'cloud';
+}
+
+function weatherWord(w: WeatherForecastDto | null): string {
+  if (!w || w.unavailable) return 'forecast pending';
+  if (w.tags.includes('rain')) return 'rain';
+  if (w.tags.includes('sunny')) return 'sunny';
+  if (w.tags.includes('warm')) return 'warm';
+  if (w.tags.includes('cold')) return 'cold';
+  return 'cloudy';
+}
+
+function weatherWordCapitalised(w: WeatherForecastDto | null): string {
+  const word = weatherWord(w);
+  return word.charAt(0).toUpperCase() + word.slice(1);
+}
+
+function weatherNote(w: WeatherForecastDto): string {
+  if (w.unavailable) return 'Forecast unavailable.';
+  if (w.tags.includes('rain')) return 'Rain expected — plan indoors.';
+  if (w.tags.includes('sunny') && w.tags.includes('warm')) return 'Light breeze, perfect for outdoors';
+  if (w.tags.includes('sunny')) return 'Sunny — bring layers';
+  if (w.tags.includes('cold')) return 'Cold day — indoor-friendly';
+  return 'Variable cloud — flex the plan';
+}
+
+function isOutdoorFriendly(w: WeatherForecastDto | null): boolean {
+  if (!w || w.unavailable) return false;
+  if (w.tags.includes('rain') || w.tags.includes('snow') || w.tags.includes('cold')) return false;
+  return w.tags.includes('sunny') || w.tags.includes('warm') || w.tags.includes('mild');
+}
+
+function roundOrDash(n: number | null): string {
+  if (n == null) return '—';
+  return String(Math.round(n));
+}
+
+// ---------------------------------------------------------------------------
+// Time / sort helpers
+// ---------------------------------------------------------------------------
+
+function hhmm(timeOnly: string): string {
+  // Backend serialises TimeOnly as "HH:mm:ss" — trim to "H:mm" (no leading zero on hour).
+  const [h, m] = timeOnly.split(':');
+  return `${Number(h)}:${m}`;
+}
+
+function minutes(start: string, end: string): number {
+  return toMinutes(end) - toMinutes(start);
+}
+
+function toMinutes(t: string): number {
+  const [h, m] = t.split(':').map(Number);
+  return h! * 60 + (m ?? 0);
+}
+
+function formatMinutes(mins: number): string {
+  if (mins < 60) return `${mins}m`;
+  const h = Math.floor(mins / 60);
+  const m = mins % 60;
+  return m === 0 ? `${h}h` : `${h}h ${m}m`;
+}
+
+function bySortThenStart(a: ItineraryBlockDto, b: ItineraryBlockDto): number {
+  if (a.sortOrder !== b.sortOrder) return a.sortOrder - b.sortOrder;
+  return toMinutes(a.startTime) - toMinutes(b.startTime);
+}
+
+function monthAbbr(d: Date): string {
+  return d.toLocaleString('en-US', { month: 'short', timeZone: 'UTC' });
 }
