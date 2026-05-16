@@ -70,17 +70,18 @@ export class BasePage {
 
   /* ---------- Convenience ---------- */
 
-  /** Wait for custom-element upgrade so visual checks aren't racy. */
+  /**
+   * Wait for the page chrome to attach to the DOM. The mock world registers
+   * custom elements; the Angular world stamps the same tag names via
+   * standalone components. Either way the DOM-presence check is enough —
+   * we used to gate on `customElements.get(...)` which hangs forever
+   * against Angular (it doesn't register tags with the customElements
+   * registry). See `docs/bugs/007-e2e-waitForComponentsReady-incompatible-with-angular.md`.
+   */
   async waitForComponentsReady(): Promise<void> {
-    await this.page.waitForFunction(() => {
-      const tags = [
-        "sd-top-bar",
-        "sd-bottom-nav",
-        "sd-button",
-        "sd-icon",
-        "sd-section",
-      ];
-      return tags.every((t) => !!customElements.get(t));
+    await this.page.waitForSelector("sd-top-bar, sd-bottom-nav, sd-section", {
+      state: "attached",
+      timeout: 8_000,
     });
   }
 }
