@@ -47,4 +47,19 @@ exclusive.
 ## Status
 
 - Logged: 2026-05-16
-- Pending.
+- **Fixed: 2026-05-16 (server-side auto-plan).**
+  `GetCurrentWeekendQueryHandler` now materialises the upcoming weekend on
+  demand: if no `Weekend` row exists for `(familyId, upcomingSaturday)`, the
+  handler dispatches `GenerateWeekendCommand(upcomingSaturday)` through
+  MediatR and returns the result. `GenerateWeekendCommandHandler` is
+  already idempotent (returns the existing weekend if a parallel request
+  races in), so the auto-plan is safe.
+- The handler no longer throws `NotFoundException` for missing weekends,
+  so `GET /api/weekends/current` never returns 404 on a fresh database.
+- Verified by:
+  - `Current_auto_plans_when_no_weekend_exists_for_upcoming_saturday` —
+    new integration test in `WeekendsControllerTests` (pinned clock).
+  - `Current_returns_existing_weekend_when_already_planned` —
+    new integration test confirming idempotency.
+  - Full suite: 27/27 Api tests, 44/44 Application tests, 52/52 CLI
+    tests, 24/25 Infrastructure tests (1 live-network smoke skipped).

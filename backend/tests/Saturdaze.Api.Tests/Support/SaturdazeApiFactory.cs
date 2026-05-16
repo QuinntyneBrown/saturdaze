@@ -26,6 +26,7 @@ public sealed class SaturdazeApiFactory : WebApplicationFactory<Program>, IAsync
     }
 
     public FakeWeatherClient Weather { get; } = new();
+    public FakeDateTimeProvider Clock { get; } = new(new DateOnly(2026, 5, 16));
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
@@ -44,6 +45,8 @@ public sealed class SaturdazeApiFactory : WebApplicationFactory<Program>, IAsync
         {
             services.RemoveAll<Saturdaze.Application.Weather.IWeatherClient>();
             services.AddSingleton<Saturdaze.Application.Weather.IWeatherClient>(Weather);
+            services.RemoveAll<Saturdaze.Application.Common.IDateTimeProvider>();
+            services.AddSingleton<Saturdaze.Application.Common.IDateTimeProvider>(Clock);
         });
     }
 

@@ -82,4 +82,37 @@ public class WeekendsControllerTests : IClassFixture<SaturdazeApiFactory>
         var body = await response.Content.ReadAsStringAsync();
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest, body);
     }
+
+    [Fact]
+    public async Task Current_auto_plans_when_no_weekend_exists_for_upcoming_saturday()
+    {
+        // The factory pins the clock to TestSaturday (2026-05-16). With no
+        // weekend pre-planned for the family, GET /current must materialise
+        // one on demand and return 200 — never 404.
+        _factory.Clock.Today = TestSaturday;
+
+        var response = await _client.GetAsync("/api/weekends/current");
+        var body = await response.Content.ReadAsStringAsync();
+        response.StatusCode.Should().Be(HttpStatusCode.OK, body);
+
+        var weekend = JsonDocument.Parse(body).RootElement;
+        weekend.GetProperty("weekendOf").GetString().Should().Be("2026-05-16");
+        weekend.GetProperty("blocks").EnumerateArray().Should().NotBeEmpty();
+    }
+
+    [Fact]
+    public async Task Current_returns_existing_weekend_when_already_planned()
+    {
+        _factory.Clock.Today = TestSaturday;
+
+        var plan = await _client.PostAsJsonAsync("/api/weekends/plan", new { WeekendOf = TestSaturday.ToString("yyyy-MM-dd") });
+        plan.EnsureSuccessStatusCode();
+        var plannedId = JsonDocument.Parse(await plan.Content.ReadAsStringAsync()).RootElement.GetProperty("id").GetString();
+
+        var current = await _client.GetAsync("/api/weekends/current");
+        current.EnsureSuccessStatusCode();
+        var currentId = JsonDocument.Parse(await current.Content.ReadAsStringAsync()).RootElement.GetProperty("id").GetString();
+
+        currentId.Should().Be(plannedId);
+    }
 }
