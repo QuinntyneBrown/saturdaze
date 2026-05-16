@@ -1,0 +1,25 @@
+:host {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
+}
+
+svg {
+  width: var(--_size, 20px);
+  height: var(--_size, 20px);
+  display: block;
+
+  :where(path, circle, rect) {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.7;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+}
+
+:host([filled]) svg :where(path, circle, rect) {
+  fill: currentColor;
+  stroke: none;
+}

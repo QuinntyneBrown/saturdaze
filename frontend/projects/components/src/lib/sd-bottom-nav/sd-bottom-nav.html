@@ -1,0 +1,16 @@
+<div class="brand">
+  <sd-icon name="sparkle" [size]="20" />
+  <span>Saturdaze</span>
+</div>
+@for (item of items; track item.key) {
+  <a
+    [attr.href]="item.href"
+    [attr.data-active]="isActive(item.key)"
+    [attr.data-nav-key]="item.key"
+    [attr.aria-current]="isActive(item.key) ? 'page' : null"
+    (click)="onNavigate($event, item.route)"
+  >
+    <sd-icon [attr.name]="item.icon" [name]="item.icon" [size]="20" />
+    <span>{{ item.label }}</span>
+  </a>
+}

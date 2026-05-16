@@ -81,7 +81,10 @@
                 "input": "projects/saturdaze/public"
               }
             ],
-            "styles": ["projects/saturdaze/src/styles.scss"]
+            "styles": ["projects/saturdaze/src/styles.scss"],
+            "stylePreprocessorOptions": {
+              "includePaths": ["projects/components/src/lib"]
+            }
           },
           "configurations": {
             "production": {

@@ -8,14 +8,14 @@ namespace Saturdaze.Infrastructure;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration _)
     {
-        var connectionString = configuration.GetConnectionString("Saturdaze")
-            ?? throw new InvalidOperationException("Connection string 'Saturdaze' is missing.");
-
-        services.AddDbContext<AppDbContext>(opt => opt.UseSqlServer(
-            connectionString,
-            sql => sql.MigrationsAssembly(typeof(AppDbContext).Assembly.GetName().Name)));
+        services.AddDbContext<AppDbContext>((sp, opt) =>
+        {
+            var cs = sp.GetRequiredService<IConfiguration>().GetConnectionString("Saturdaze")
+                ?? throw new InvalidOperationException("Connection string 'Saturdaze' is missing.");
+            opt.UseSqlServer(cs, sql => sql.MigrationsAssembly(typeof(AppDbContext).Assembly.GetName().Name));
+        });
 
         services.AddScoped<IAppDbContext>(sp => sp.GetRequiredService<AppDbContext>());
 

@@ -1,0 +1,20 @@
+// SCSS breakpoint helpers — values mirror the custom properties in
+// `_tokens.scss`. Components use the `respond-to()` mixin so the breakpoint
+// constants live in one place.
+
+$bp-tablet: 720px;
+$bp-desktop: 1024px;
+
+@mixin respond-to($size) {
+  @if $size == tablet {
+    @media (min-width: #{$bp-tablet}) {
+      @content;
+    }
+  } @else if $size == desktop {
+    @media (min-width: #{$bp-desktop}) {
+      @content;
+    }
+  } @else {
+    @error "respond-to(): unknown size `#{$size}` (expected tablet or desktop)";
+  }
+}

@@ -14,7 +14,7 @@ export class ComponentsGalleryPage extends BasePage {
 
   section(name: string): Locator {
     return this.page.locator("section").filter({
-      has: this.page.locator(`h2:has-text("${name}")`),
+      has: this.page.getByRole("heading", { name, exact: true, level: 2 }),
     });
   }
 

@@ -1,0 +1,7 @@
+// Single entry point for the Saturdaze design system styles.
+// The application bootstrap `@use`s this once; individual components only
+// need to `@use "breakpoints" as *;` when they want the responsive mixin.
+
+@forward "tokens";
+@forward "breakpoints";
+@forward "global";
