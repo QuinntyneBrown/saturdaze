@@ -1,21 +1,19 @@
+<ng-template #body>
+  <ng-content select="[slot=leading]" />
+  <div class="body">
+    @if (rowTitle()) { <div class="title">{{ rowTitle() }}</div> }
+    @if (subtitle()) { <div class="subtitle">{{ subtitle() }}</div> }
+    <ng-content />
+  </div>
+  <div class="trailing"><ng-content select="[slot=trailing]" /></div>
+</ng-template>
+
 @if (href()) {
   <a class="row" [attr.href]="href()">
-    <ng-content select="[slot=leading]" />
-    <div class="body">
-      @if (rowTitle()) { <div class="title">{{ rowTitle() }}</div> }
-      @if (subtitle()) { <div class="subtitle">{{ subtitle() }}</div> }
-      <ng-content />
-    </div>
-    <div class="trailing"><ng-content select="[slot=trailing]" /></div>
+    <ng-container [ngTemplateOutlet]="body" />
   </a>
 } @else {
   <div class="row">
-    <ng-content select="[slot=leading]" />
-    <div class="body">
-      @if (rowTitle()) { <div class="title">{{ rowTitle() }}</div> }
-      @if (subtitle()) { <div class="subtitle">{{ subtitle() }}</div> }
-      <ng-content />
-    </div>
-    <div class="trailing"><ng-content select="[slot=trailing]" /></div>
+    <ng-container [ngTemplateOutlet]="body" />
   </div>
 }
