@@ -13,6 +13,7 @@ public class RootCommandFactoryTests
 
         root.Subcommands.Should().Contain(c => c.Name == "seed");
         root.Subcommands.Should().Contain(c => c.Name == "migrate");
+        root.Subcommands.Should().Contain(c => c.Name == "reset");
         root.Options.Select(o => o.Name).Should().Contain(new[]
         {
             "provider", "connection", "seed-dir", "verbose"
@@ -41,5 +42,13 @@ public class RootCommandFactoryTests
         var root = RootCommandFactory.Create(Array.Empty<string>());
         var seed = root.Subcommands.Single(c => c.Name == "seed");
         seed.Description.Should().Contain("JSON");
+    }
+
+    [Fact]
+    public void Reset_command_requires_confirmation_option()
+    {
+        var root = RootCommandFactory.Create(Array.Empty<string>());
+        var reset = root.Subcommands.Single(c => c.Name == "reset");
+        reset.Options.Select(o => o.Name).Should().Contain("yes");
     }
 }

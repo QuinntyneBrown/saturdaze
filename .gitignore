@@ -8,6 +8,7 @@ dist/
 out/
 coverage/
 artifacts/
+.run/
 
 # Claude Code session state
 .claude/
