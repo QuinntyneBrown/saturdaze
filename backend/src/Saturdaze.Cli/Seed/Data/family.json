@@ -8,9 +8,9 @@
     { "name": "Mae",   "age": 5 }
   ],
   "commitments": [
-    { "title": "Swim lessons",      "dayOfWeek": "Saturday", "startTime": "09:00", "endTime": "10:00" },
-    { "title": "Husband's workout", "dayOfWeek": "Saturday", "startTime": "17:00", "endTime": "18:00" },
-    { "title": "Church",            "dayOfWeek": "Sunday",   "startTime": "10:30", "endTime": "11:45" }
+    { "title": "Swim lessons",   "dayOfWeek": "Saturday", "startTime": "09:00", "endTime": "10:00" },
+    { "title": "Workout window", "dayOfWeek": "Saturday", "startTime": "17:00", "endTime": "18:00" },
+    { "title": "Church",         "dayOfWeek": "Sunday",   "startTime": "10:30", "endTime": "11:45" }
   ],
   "preferences": [
     { "kind": "Like",    "value": "Parks" },
