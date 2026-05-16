@@ -34,4 +34,6 @@ public sealed class SeedPathResolver : ISeedPathResolver
 
         return Path.Combine(appData, FolderName, SeedSubfolder);
     }
+
+    public string BundleDirectory => Path.Combine(AppContext.BaseDirectory, "Seed", "Data");
 }

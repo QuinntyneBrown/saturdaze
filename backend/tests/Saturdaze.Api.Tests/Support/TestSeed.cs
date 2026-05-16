@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Logging.Abstractions;
+using Saturdaze.Application.Common;
 using Saturdaze.Cli.Seed;
 using Saturdaze.Infrastructure.Persistence;
 
@@ -13,7 +14,7 @@ internal static class TestSeed
     {
         new ActivitySeeder(),
         new RestaurantSeeder(),
-        new LocalEventSeeder(),
+        new LocalEventSeeder(new SystemDateTimeProvider()),
         new FamilySeeder()
     };
 
@@ -22,6 +23,7 @@ internal static class TestSeed
         private readonly string _path;
         public FixedPath(string path) => _path = path;
         public string Resolve(string? overridePath) => overridePath ?? _path;
+        public string BundleDirectory => Path.Combine(_path, ".__no_bundle__");
     }
 
     public static async Task SeedAsync(AppDbContext db, CancellationToken ct = default)

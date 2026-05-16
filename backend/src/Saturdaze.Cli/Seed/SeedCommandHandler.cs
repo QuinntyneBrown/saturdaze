@@ -72,7 +72,7 @@ public sealed class SeedCommandHandler
     /// </summary>
     private void EnsureUserScopePopulatedFromBundle(string userScopeDir)
     {
-        var bundleDir = Path.Combine(AppContext.BaseDirectory, "Seed", "Data");
+        var bundleDir = _paths.BundleDirectory;
         if (!Directory.Exists(bundleDir))
             return;
 

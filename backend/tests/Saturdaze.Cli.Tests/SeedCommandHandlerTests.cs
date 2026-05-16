@@ -102,5 +102,6 @@ public class SeedCommandHandlerTests : IDisposable
         private readonly string _path;
         public StubPathResolver(string path) => _path = path;
         public string Resolve(string? overridePath) => overridePath ?? _path;
+        public string BundleDirectory => Path.Combine(_path, ".__no_bundle__");
     }
 }
