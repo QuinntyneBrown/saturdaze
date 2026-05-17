@@ -19,25 +19,25 @@ The original BUG-047 fix correctly added `env(safe-area-inset-bottom)` and `view
 
 ## Decision
 
-The `sd-bottom-nav` component's `:host` rule must position the nav with a `bottom` calc that compensates for **all three** sources of bottom-edge obstruction:
+The `sd-bottom-nav` component's `:host` rule must position the nav with a `bottom` calc that takes the **larger** of the two bottom-edge obstructions (they are NOT additive — when Safari's chrome is visible it already overlays the home-indicator zone) and adds a fixed visual floor:
 
 ```scss
 bottom: calc(
-  12px                                  /* visual breathing-room floor */
-  + env(safe-area-inset-bottom, 0px)    /* home indicator */
-  + max(0px, 100lvh - 100svh)           /* dynamic Safari chrome */
+  12px                                                          /* visual breathing-room floor */
+  + max(env(safe-area-inset-bottom, 0px), 100lvh - 100svh)      /* whichever obstruction is currently present */
 );
 ```
 
-`100lvh - 100svh` evaluates to the chrome height in CSS pixels:
+`100lvh - 100svh` evaluates to the dynamic chrome height in CSS pixels:
 
-| State                                          | `100lvh` | `100svh` | difference            |
-| ---------------------------------------------- | -------- | -------- | --------------------- |
-| Chrome collapsed (scroll-down)                 | viewport | viewport | `0px`                 |
-| Chrome expanded (scroll-top)                   | layout   | visible  | chrome height (`~80px`) |
-| Non-Safari browser, or no dynamic chrome       | viewport | viewport | `0px`                 |
+| State                                          | `100lvh` | `100svh` | difference            | `env(safe-area-inset-bottom)` | `max(...)` |
+| ---------------------------------------------- | -------- | -------- | --------------------- | ----------------------------- | ---------- |
+| Safari chrome collapsed (scroll-down)          | viewport | viewport | `0px`                 | `~34px` (Face-ID)             | `34px`     |
+| Safari chrome expanded (scroll-top)            | layout   | visible  | chrome height (`~80–150px`) | `~34px`                  | chrome height |
+| Non-Safari browser, no inset (desktop)         | viewport | viewport | `0px`                 | `0px`                         | `0px`      |
+| iOS PWA standalone (no Safari chrome)          | viewport | viewport | `0px`                 | `~34px`                       | `34px`     |
 
-The `max(0px, …)` clamp ensures the calc never goes negative on any browser that happens to report `svh > lvh` (none currently, but cheap insurance).
+The resulting bottom offset is small (`12px`) on desktop, `~46px` on Face-ID iPhones in PWA mode (12 + home indicator), and `~92–162px` on iOS Safari at scroll-top (12 + chrome height). The previous **additive** formulation (`+` instead of `max`) over-corrected at scroll-top by stacking both — the nav appeared "way too high." Replaced May 2026 same day, see BUG-049 update.
 
 Additional rules:
 
