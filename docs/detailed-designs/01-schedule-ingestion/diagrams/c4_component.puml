@@ -2,7 +2,7 @@
 !theme plain
 !include <C4/C4_Component>
 
-title Schedule Ingestion — Components inside Saturdaze.Cli `ingest` command
+title Schedule Ingestion - Components inside Saturdaze.Cli `ingest` command
 
 Container_Boundary(cli, "Saturdaze.Cli (`ingest` subcommand)") {
     Component(handler, "IngestCommandHandler", ".NET, System.CommandLine", "Top-level handler for `saturdaze ingest`. Resolves dependencies and invokes the runner.")

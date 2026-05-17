@@ -2,7 +2,7 @@
 !theme plain
 skinparam sequenceMessageAlign center
 
-title Ingestion — Failure Modes
+title Ingestion - Failure Modes
 
 actor "Owner / WebJob" as trigger
 participant "IngestionRunner" as runner

@@ -2,7 +2,7 @@
 !theme plain
 !include <C4/C4_Context>
 
-title Schedule Ingestion — System Context
+title Schedule Ingestion - System Context
 
 Person(family, "Family user", "Reads the curated weekend plan. Never sees ingestion.")
 Person(owner, "Owner / curator", "Triggers ingestion on-demand via CLI; reviews IngestionRun audit rows.")

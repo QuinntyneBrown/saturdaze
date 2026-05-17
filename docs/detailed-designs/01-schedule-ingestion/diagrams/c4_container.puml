@@ -2,7 +2,7 @@
 !theme plain
 !include <C4/C4_Container>
 
-title Schedule Ingestion — Container Diagram
+title Schedule Ingestion - Container Diagram
 
 Person(owner, "Owner / curator", "Runs `saturdaze ingest` or relies on the daily schedule.")
 

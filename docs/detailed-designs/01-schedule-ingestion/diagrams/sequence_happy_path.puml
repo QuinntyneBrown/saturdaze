@@ -2,7 +2,7 @@
 !theme plain
 skinparam sequenceMessageAlign center
 
-title Ingestion — Happy Path (single type, e.g. events)
+title Ingestion - Happy Path (single type, e.g. events)
 
 actor "Owner / WebJob" as trigger
 participant "IngestCommandHandler" as handler
