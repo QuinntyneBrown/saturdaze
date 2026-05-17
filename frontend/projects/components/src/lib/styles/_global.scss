@@ -34,7 +34,12 @@ body.sd-body--bare {
 }
 
 // Auth screens center the auth-card on a padded viewport — same body
-// override the mocks use.
+// override the mocks use. `svh` (small viewport height) prevents the
+// iOS-Safari phantom scroll: `vh` resolves to the URL-bar-collapsed
+// height, so a card that fits the *visible* viewport still triggered a
+// scroll because the body was set to the taller `100vh`. `svh` anchors
+// to the smaller-chrome height — card always fits, never jumps when
+// the URL bar collapses on scroll-up.
 body.sd-body--auth {
   display: flex;
   flex-direction: column;
@@ -42,6 +47,7 @@ body.sd-body--auth {
   justify-content: center;
   padding: 24px;
   min-height: 100vh;
+  min-height: 100svh;
 }
 
 // `<app-root>` is the SPA's single root. Default is inline; `display: contents`
