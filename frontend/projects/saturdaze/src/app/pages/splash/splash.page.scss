@@ -16,16 +16,60 @@
   padding: 0 16px 80px;
 }
 
+// Invisible 1px sentinel — observed by IntersectionObserver in
+// SplashPage. When it scrolls out of the rootMargin-shrunk viewport,
+// .nav gains the .is-scrolled class and fades in its glass background.
+.nav-sentinel {
+  height: 1px;
+  width: 1px;
+  pointer-events: none;
+}
+
 /* ------- Top nav: just brand + sign-in. Public visitors don't get
    app chrome, so the rail/bottom nav are deliberately absent.
    Phones get tighter padding and gap; "How it works" is hidden
-   below 560px so the primary auth actions don't crowd the brand. ------- */
+   below 560px so the primary auth actions don't crowd the brand.
+
+   Sticky on every viewport so the primary conversion stays in reach
+   as visitors scroll the (long) marketing page. Background fades in
+   only once the user has scrolled past the hero's top edge — at
+   scrollY=0 the nav reads as part of the warm hero gradient, not as
+   a separate bar. ------- */
 .nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
   padding: 16px 0;
+  // Glass-on-scroll: bg + border + shadow live behind a pseudo-element
+  // so we can cross-fade them without disturbing the nav's layout. The
+  // pseudo extends edge-to-edge of the viewport via 100vw centering so
+  // the glass bar feels like a real chrome surface, not a contained
+  // card — even though .nav itself is constrained inside .marketing.
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 100vw;
+    transform: translateX(-50%);
+    background: color-mix(in srgb, var(--sd-bg) 86%, transparent);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--sd-line);
+    box-shadow: 0 2px 12px rgba(31, 41, 55, 0.04);
+    opacity: 0;
+    transition: opacity 160ms var(--sd-ease, cubic-bezier(.2, .7, .2, 1));
+    pointer-events: none;
+    z-index: -1;
+  }
+  &.is-scrolled::before {
+    opacity: 1;
+  }
 }
 .brand {
   display: inline-flex;

@@ -18,15 +18,46 @@
       .marketing { padding: 0 24px 80px; }
     }
 
+    /* Invisible 1px sentinel — observed below to flip the nav into
+       its scrolled state. */
+    .nav-sentinel { height: 1px; width: 1px; pointer-events: none; }
+
     /* ------- Top nav: just brand + sign-in. Public visitors don't get
-       app chrome, so the rail/bottom nav are deliberately absent. ------- */
+       app chrome, so the rail/bottom nav are deliberately absent.
+
+       Sticky on every viewport so the primary conversion stays in reach
+       as visitors scroll the (long) marketing page. Background fades in
+       only once the user has scrolled past the hero's top edge — at
+       scrollY=0 the nav reads as part of the warm hero gradient, not
+       as a separate bar. ------- */
     .nav {
+      position: sticky;
+      top: 0;
+      z-index: 50;
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 12px;
       padding: 16px 0;
     }
+    .nav::before {
+      content: '';
+      position: absolute;
+      top: 0; bottom: 0;
+      left: 50%;
+      width: 100vw;
+      transform: translateX(-50%);
+      background: color-mix(in srgb, var(--sd-bg) 86%, transparent);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--sd-line);
+      box-shadow: 0 2px 12px rgba(31, 41, 55, 0.04);
+      opacity: 0;
+      transition: opacity 160ms cubic-bezier(.2, .7, .2, 1);
+      pointer-events: none;
+      z-index: -1;
+    }
+    .nav.is-scrolled::before { opacity: 1; }
     @media (min-width: 720px) {
       .nav { padding: 20px 0; }
     }
@@ -289,7 +320,8 @@
 <body>
   <div class="marketing">
 
-    <nav class="nav">
+    <div id="nav-sentinel" class="nav-sentinel" aria-hidden="true"></div>
+    <nav class="nav" id="splash-nav">
       <a class="brand" href="splash.html">
         <span class="mark"></span>
         Saturdaze
@@ -427,5 +459,19 @@
     </p>
 
   </div>
+  <script>
+    // Mirror the Angular SplashPage's IntersectionObserver so this mock
+    // and the live app behave identically at every scroll position. The
+    // sentinel sits at scrollY=0; once it scrolls past the rootMargin
+    // band, the nav fades in its glass background.
+    (function () {
+      var nav = document.getElementById('splash-nav');
+      var sentinel = document.getElementById('nav-sentinel');
+      if (!nav || !sentinel || typeof IntersectionObserver === 'undefined') return;
+      new IntersectionObserver(function (entries) {
+        nav.classList.toggle('is-scrolled', !entries[0].isIntersecting);
+      }, { rootMargin: '-32px 0px 0px 0px', threshold: 0 }).observe(sentinel);
+    })();
+  </script>
 </body>
 </html>
