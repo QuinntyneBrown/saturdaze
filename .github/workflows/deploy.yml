@@ -5,7 +5,12 @@ on:
     branches: [main]
   workflow_dispatch:
 
+permissions:
+  contents: read
+  id-token: write
+
 env:
+  AZURE_RESOURCE_GROUP: saturdaze-rg
   AZURE_WEBAPP_NAME: sd-api-uofnt2
   DOTNET_VERSION: '10.0.101'
   NODE_VERSION: '20'
@@ -42,13 +47,22 @@ jobs:
           cd publish
           zip -r ../api.zip .
 
+      - name: Azure login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
       - name: Deploy to Azure Web App
         id: deploy
-        uses: azure/webapps-deploy@v3
-        with:
-          app-name: ${{ env.AZURE_WEBAPP_NAME }}
-          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          package: api.zip
+        run: |
+          az webapp deploy \
+            --resource-group "${{ env.AZURE_RESOURCE_GROUP }}" \
+            --name "${{ env.AZURE_WEBAPP_NAME }}" \
+            --src-path api.zip \
+            --type zip \
+            --async false
 
   migrate:
     name: Apply EF migrations
