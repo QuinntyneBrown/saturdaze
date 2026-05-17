@@ -6,9 +6,12 @@ import { join } from "node:path";
  * ADR-005 regression guard. The bottom-nav must clear three sources
  * of bottom-edge obstruction on iOS Safari:
  *
- *   1. iOS Safari's dynamic URL/tab bar  → `100lvh - 100svh`
- *   2. The home indicator on Face-ID    → `env(safe-area-inset-bottom)`
- *   3. A visual breathing-room floor    → `12px`
+ *   1. iOS Safari's *current* URL/tab bar height  → `100lvh - 100dvh`
+ *      (NOT `100lvh - 100svh` — svh is the worst-case, fully-
+ *      expanded chrome; dvh is the current state. Using svh
+ *      over-reserves and the nav appears "way too high".)
+ *   2. The home indicator on Face-ID               → `env(safe-area-inset-bottom)`
+ *   3. A visual breathing-room floor              → `12px`
  *
  * History: BUG-047 fixed (2) only. The user then observed (1)
  * overlapping the nav at scroll-top, filed as BUG-049. The combined
@@ -76,12 +79,24 @@ test.describe("ADR-005 — bottom-nav device chrome clearance", () => {
     ).toMatch(/env\(safe-area-inset-bottom/);
   });
 
-  test("bottom-nav.scss includes the (100lvh - 100svh) Safari-chrome compensation", () => {
+  test("bottom-nav.scss includes the (100lvh - 100dvh) current-chrome compensation", () => {
     const css = readFileSync(BOTTOM_NAV_SCSS, "utf8");
     expect(
       css,
       "sd-bottom-nav lost its dynamic-chrome compensation — see ADR-005 and BUG-049",
-    ).toMatch(/100lvh\s*-\s*100svh/);
+    ).toMatch(/100lvh\s*-\s*100dvh/);
+  });
+
+  test("bottom-nav.scss uses dvh (current) NOT svh (worst-case) for chrome compensation", () => {
+    // svh evaluates to the worst-case (fully-expanded) chrome height,
+    // which makes the nav appear too high when chrome is partially
+    // collapsed. dvh tracks the current state. See BUG-049 pass 3.
+    const css = readFileSync(BOTTOM_NAV_SCSS, "utf8");
+    // Must not subtract svh from lvh.
+    expect(
+      css,
+      "sd-bottom-nav must use `100lvh - 100dvh`, not `100lvh - 100svh` — see ADR-005 and BUG-049",
+    ).not.toMatch(/100lvh\s*-\s*100svh/);
   });
 
   test("index.html viewport meta still opts into viewport-fit=cover", () => {

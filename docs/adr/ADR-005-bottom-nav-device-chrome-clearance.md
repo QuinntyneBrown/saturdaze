@@ -24,20 +24,29 @@ The `sd-bottom-nav` component's `:host` rule must position the nav with a `botto
 ```scss
 bottom: calc(
   12px                                                          /* visual breathing-room floor */
-  + max(env(safe-area-inset-bottom, 0px), 100lvh - 100svh)      /* whichever obstruction is currently present */
+  + max(env(safe-area-inset-bottom, 0px), 100lvh - 100dvh)      /* whichever obstruction is currently present */
 );
 ```
 
-`100lvh - 100svh` evaluates to the dynamic chrome height in CSS pixels:
+`100lvh - 100dvh` evaluates to the **current** Safari chrome height in CSS pixels, dynamically as the user scrolls:
 
-| State                                          | `100lvh` | `100svh` | difference            | `env(safe-area-inset-bottom)` | `max(...)` |
+| Viewport unit | Definition                                                                                                  |
+| ------------- | ----------------------------------------------------------------------------------------------------------- |
+| `lvh`         | "large viewport" — viewport height when browser UI is fully retracted (e.g., Safari chrome fully collapsed) |
+| `svh`         | "small viewport" — viewport height when browser UI is fully expanded (worst case)                           |
+| `dvh`         | "dynamic viewport" — *current* viewport height, recomputed as UI state changes                              |
+
+| State                                          | `100lvh` | `100dvh` | difference            | `env(safe-area-inset-bottom)` | `max(...)` |
 | ---------------------------------------------- | -------- | -------- | --------------------- | ----------------------------- | ---------- |
-| Safari chrome collapsed (scroll-down)          | viewport | viewport | `0px`                 | `~34px` (Face-ID)             | `34px`     |
-| Safari chrome expanded (scroll-top)            | layout   | visible  | chrome height (`~80–150px`) | `~34px`                  | chrome height |
+| Safari chrome fully collapsed (scroll-down)    | viewport | viewport | `0px`                 | `~34px` (Face-ID)             | `34px`     |
+| Safari chrome partially shown (mid-scroll)     | larger   | current  | `~30–80px`            | `~34px`                       | ~current chrome |
+| Safari chrome fully expanded (scroll-top)      | larger   | smallest | chrome max (`~150px`) | `~34px`                       | chrome max |
 | Non-Safari browser, no inset (desktop)         | viewport | viewport | `0px`                 | `0px`                         | `0px`      |
 | iOS PWA standalone (no Safari chrome)          | viewport | viewport | `0px`                 | `~34px`                       | `34px`     |
 
-The resulting bottom offset is small (`12px`) on desktop, `~46px` on Face-ID iPhones in PWA mode (12 + home indicator), and `~92–162px` on iOS Safari at scroll-top (12 + chrome height). The previous **additive** formulation (`+` instead of `max`) over-corrected at scroll-top by stacking both — the nav appeared "way too high." Replaced May 2026 same day, see BUG-049 update.
+The resulting bottom offset tracks the chrome's actual current state, so the nav sits just 12 px above whatever bottom obstruction is currently visible.
+
+**Important: the second component must be `100lvh - 100dvh`, not `100lvh - 100svh`.** `svh` is the *worst-case* (fully-expanded chrome) viewport, not the current one — using it makes the nav always reserve space for max chrome even when chrome is partially collapsed, producing a "way too high" gap. `dvh` recomputes with the chrome state, so the nav follows correctly. (First-pass mistake corrected the same day; see BUG-049.)
 
 Additional rules:
 
