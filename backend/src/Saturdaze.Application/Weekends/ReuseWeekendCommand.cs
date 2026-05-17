@@ -1,0 +1,8 @@
+using MediatR;
+using Saturdaze.Application.Contracts;
+
+namespace Saturdaze.Application.Weekends;
+
+public sealed record ReuseWeekendCommand(
+    Guid SourceWeekendId,
+    bool Remix) : IRequest<WeekendDto>;

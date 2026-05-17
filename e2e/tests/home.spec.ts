@@ -76,7 +76,7 @@ test.describe("Home / This Weekend", () => {
   test("bottom nav marks 'home' as active and exposes 4 destinations", async ({ pages }) => {
     await expect(pages.home.bottomNav).toBeVisible();
     await expect(pages.home.activeNavKey()).toHaveCount(1);
-    await expect(pages.home.activeNavKey()).toHaveAttribute("href", /home\.html$/);
+    await expect(pages.home.activeNavKey()).toHaveAttribute("href", /\/weekend$/);
   });
 });
 

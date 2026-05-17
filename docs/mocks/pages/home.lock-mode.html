@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Lock what's perfect — Saturdaze</title>
+  <link rel="stylesheet" href="../styles/global.css" />
+  <script type="module" src="../app.js"></script>
+  <style>
+    /* === Variant of home.html (BUG-024 / M-S11) ===========================
+       Block-level lock-selection mode — activated by tapping the
+       "Lock what's already perfect" quick action on home.html.
+
+       In this mode every block on Saturday and Sunday shows a leading
+       lock toggle instead of its usual content icon. Locked blocks
+       light up with the accent green; unlocked ones stay neutral.
+       A persistent footer holds Done / Cancel.
+
+       The hero is replaced with a focused "guidance" strip explaining
+       what the user is doing right now — the page mode is non-obvious
+       so the mode chrome has to do the talking.
+       ===================================================================== */
+
+    .lock-mode-strip {
+      margin: 8px var(--sd-app-pad-x) 16px;
+      padding: 14px 16px;
+      border-radius: var(--sd-r-lg);
+      background: var(--sd-accent-soft);
+      border: 1px solid color-mix(in srgb, var(--sd-accent) 30%, transparent);
+      display: flex; gap: 12px; align-items: flex-start;
+    }
+    .lock-mode-strip .badge {
+      width: 36px; height: 36px;
+      background: var(--sd-accent);
+      color: #fff;
+      border-radius: var(--sd-r-md);
+      display: inline-flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .lock-mode-strip .title { font-weight: 600; letter-spacing: -0.005em; color: var(--sd-ink); }
+    .lock-mode-strip .body { font-size: 13px; color: color-mix(in srgb, var(--sd-accent) 70%, var(--sd-ink) 30%); margin-top: 2px; line-height: 1.5; }
+
+    /* Lockable block — same shape as a timeline row but with a tappable
+       leading toggle. Locked state gets the warm accent treatment;
+       unlocked state stays neutral. The toggle is the only interactive
+       element — tapping anywhere else does nothing in this mode. */
+    .day-section {
+      padding: 0 var(--sd-app-pad-x);
+      display: grid;
+      gap: 14px;
+    }
+    .day-section h3 {
+      font-size: 13px; color: var(--sd-ink-soft);
+      text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700;
+      margin: 6px 0 0;
+    }
+    .lock-block {
+      display: flex; gap: 12px; align-items: center;
+      padding: 14px 16px;
+      background: var(--sd-surface);
+      border: 1px solid var(--sd-line);
+      border-radius: var(--sd-r-lg);
+    }
+    .lock-block[data-locked="true"] {
+      background: var(--sd-accent-soft);
+      border-color: color-mix(in srgb, var(--sd-accent) 30%, transparent);
+    }
+    .lock-block .toggle {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      border: 1.5px solid var(--sd-line-strong);
+      background: var(--sd-surface);
+      color: var(--sd-ink-soft);
+      display: inline-flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      cursor: pointer;
+    }
+    .lock-block[data-locked="true"] .toggle {
+      background: var(--sd-accent);
+      color: #fff;
+      border-color: transparent;
+    }
+    .lock-block .time {
+      font-variant-numeric: tabular-nums;
+      font-size: 13px;
+      color: var(--sd-ink-soft);
+      font-weight: 600;
+      width: 64px;
+      flex-shrink: 0;
+    }
+    .lock-block .title { font-weight: 600; letter-spacing: -0.005em; }
+    .lock-block .sub { font-size: 13px; color: var(--sd-ink-soft); margin-top: 2px; }
+    .lock-block .badge-icon {
+      width: 36px; height: 36px;
+      background: var(--sd-bg-elev);
+      border-radius: var(--sd-r-md);
+      color: var(--sd-ink-soft);
+      display: inline-flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .lock-block[data-locked="true"] .badge-icon {
+      color: var(--sd-accent);
+      background: var(--sd-surface);
+    }
+
+    /* Sticky bottom toolbar — replaces the bottom-nav while in lock
+       mode so the primary affordances are always under the user's
+       thumb. Done counts the current locks so the user always knows
+       what they've committed to. */
+    .lock-footer {
+      position: sticky;
+      bottom: 0;
+      padding: 12px var(--sd-app-pad-x);
+      background: color-mix(in srgb, var(--sd-bg-elev) 96%, transparent);
+      backdrop-filter: blur(8px);
+      border-top: 1px solid var(--sd-line);
+      display: flex; gap: 10px;
+    }
+
+    @media (min-width: 1024px) {
+      .lock-mode-strip { margin-left: 0; margin-right: 0; }
+      .day-section { padding: 0; }
+      .lock-footer { padding-left: 0; padding-right: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="sd-frame">
+
+    <sd-top-bar title="Lock what's perfect">
+      <sd-icon-button slot="leading" icon="close" label="Cancel"></sd-icon-button>
+    </sd-top-bar>
+
+    <div class="lock-mode-strip">
+      <div class="badge"><sd-icon name="lock" size="18"></sd-icon></div>
+      <div>
+        <div class="title">Tap to lock what should never move</div>
+        <div class="body">When I regenerate the weekend, locked blocks stay put. Try locking your anchors — swim, church, workout — so the rest can shuffle.</div>
+      </div>
+    </div>
+
+    <div class="day-section">
+      <h3>Saturday · May 17</h3>
+
+      <div class="lock-block" data-locked="true">
+        <button class="toggle" aria-label="Locked — tap to unlock"><sd-icon name="lock" size="18"></sd-icon></button>
+        <div class="time">9:00am</div>
+        <div class="badge-icon"><sd-icon name="bike" size="18"></sd-icon></div>
+        <div style="flex:1; min-width:0;">
+          <div class="title">Swim lessons</div>
+          <div class="sub">Port Credit Pool · Both kids</div>
+        </div>
+      </div>
+
+      <div class="lock-block">
+        <button class="toggle" aria-label="Unlocked — tap to lock"><sd-icon name="plus" size="18"></sd-icon></button>
+        <div class="time">11:00am</div>
+        <div class="badge-icon"><sd-icon name="tree" size="18"></sd-icon></div>
+        <div style="flex:1; min-width:0;">
+          <div class="title">Lavender fields</div>
+          <div class="sub">Terre Bleu, Milton · 45 min drive</div>
+        </div>
+      </div>
+
+      <div class="lock-block">
+        <button class="toggle" aria-label="Unlocked — tap to lock"><sd-icon name="plus" size="18"></sd-icon></button>
+        <div class="time">1:00pm</div>
+        <div class="badge-icon"><sd-icon name="fork" size="18"></sd-icon></div>
+        <div style="flex:1; min-width:0;">
+          <div class="title">Lunch — La Marina</div>
+          <div class="sub">Wife-approved · patio</div>
+        </div>
+      </div>
+
+      <div class="lock-block" data-locked="true">
+        <button class="toggle" aria-label="Locked — tap to unlock"><sd-icon name="lock" size="18"></sd-icon></button>
+        <div class="time">5:00pm</div>
+        <div class="badge-icon"><sd-icon name="bike" size="18"></sd-icon></div>
+        <div style="flex:1; min-width:0;">
+          <div class="title">Workout</div>
+          <div class="sub">Garage gym · Sara watches kids</div>
+        </div>
+      </div>
+
+      <div class="lock-block" data-locked="true">
+        <button class="toggle" aria-label="Locked — tap to unlock"><sd-icon name="lock" size="18"></sd-icon></button>
+        <div class="time">8:00pm</div>
+        <div class="badge-icon"><sd-icon name="bed" size="18"></sd-icon></div>
+        <div style="flex:1; min-width:0;">
+          <div class="title">Bath &amp; books</div>
+          <div class="sub">9pm lights out</div>
+        </div>
+      </div>
+
+      <h3>Sunday · May 18</h3>
+
+      <div class="lock-block" data-locked="true">
+        <button class="toggle" aria-label="Locked — tap to unlock"><sd-icon name="lock" size="18"></sd-icon></button>
+        <div class="time">10:30am</div>
+        <div class="badge-icon"><sd-icon name="bed" size="18"></sd-icon></div>
+        <div style="flex:1; min-width:0;">
+          <div class="title">Church</div>
+          <div class="sub">St. Mary's</div>
+        </div>
+      </div>
+
+      <div class="lock-block">
+        <button class="toggle" aria-label="Unlocked — tap to lock"><sd-icon name="plus" size="18"></sd-icon></button>
+        <div class="time">2:00pm</div>
+        <div class="badge-icon"><sd-icon name="popcorn" size="18"></sd-icon></div>
+        <div style="flex:1; min-width:0;">
+          <div class="title">Rec Room — Eli's pick</div>
+          <div class="sub">Square One · 10 min</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="lock-footer">
+      <sd-button variant="secondary" full>Cancel</sd-button>
+      <sd-button full>
+        <sd-icon slot="leading" name="check" size="16"></sd-icon>
+        Done · 4 locked
+      </sd-button>
+    </div>
+
+  </div>
+</body>
+</html>

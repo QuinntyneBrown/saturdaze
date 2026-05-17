@@ -38,7 +38,9 @@ public sealed class RegenerateWeekendCommandHandler : IRequestHandler<Regenerate
             .SingleOrDefaultAsync(w => w.Id == request.WeekendId, cancellationToken)
             ?? throw new NotFoundException(nameof(Weekend), request.WeekendId);
 
-        var lockedBlocks = weekend.Blocks.Where(b => b.IsLocked).ToList();
+        var lockedBlocks = weekend.Blocks
+            .Where(b => b.IsLocked && b.Kind != BlockKind.Commitment)
+            .ToList();
 
         var family = await _db.Families
             .Include(f => f.Members).Include(f => f.Commitments).Include(f => f.Preferences)
@@ -101,7 +103,6 @@ public sealed class RegenerateWeekendCommandHandler : IRequestHandler<Regenerate
                 SortOrder = b.SortOrder
             };
             _db.ItineraryBlocks.Add(entity);
-            weekend.Blocks.Add(entity);
         }
 
         await _db.SaveChangesAsync(cancellationToken);

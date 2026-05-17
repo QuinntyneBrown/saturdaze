@@ -24,3 +24,25 @@
 .top-pick-actions sd-button {
   flex: 1;
 }
+
+.menu-link {
+  flex: 1;
+  min-height: 32px;
+  border-radius: var(--sd-r-pill);
+  border: 1px solid var(--sd-line);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  color: var(--sd-ink);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.menu-link:hover {
+  background: var(--sd-surface-2);
+}
+
+.locked {
+  opacity: 1;
+}

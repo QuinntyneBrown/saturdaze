@@ -115,4 +115,89 @@ public class WeekendsControllerTests : IClassFixture<SaturdazeApiFactory>
 
         currentId.Should().Be(plannedId);
     }
+
+    [Fact]
+    public async Task Day_lock_and_regenerate_preserves_other_day()
+    {
+        var saturday = new DateOnly(2026, 6, 13);
+        var plan = await _client.PostAsJsonAsync("/api/weekends/plan", new { WeekendOf = saturday.ToString("yyyy-MM-dd") });
+        plan.EnsureSuccessStatusCode();
+        var planned = JsonDocument.Parse(await plan.Content.ReadAsStringAsync()).RootElement;
+        var weekendId = planned.GetProperty("id").GetGuid();
+        var sundayIds = planned.GetProperty("blocks").EnumerateArray()
+            .Where(b => b.GetProperty("day").GetString() == "Sunday")
+            .Select(b => b.GetProperty("id").GetGuid())
+            .ToArray();
+
+        var locked = await _client.PutAsJsonAsync(
+            $"/api/weekends/{weekendId}/days/saturday/lock",
+            new { Locked = true });
+        locked.EnsureSuccessStatusCode();
+        var lockedBody = JsonDocument.Parse(await locked.Content.ReadAsStringAsync()).RootElement;
+        lockedBody.GetProperty("blocks").EnumerateArray()
+            .Where(b => b.GetProperty("day").GetString() == "Saturday")
+            .Should().OnlyContain(b => b.GetProperty("isLocked").GetBoolean());
+
+        var regenerated = await _client.PostAsync(
+            $"/api/weekends/{weekendId}/days/saturday/regenerate",
+            content: null);
+        regenerated.EnsureSuccessStatusCode();
+        var regeneratedBody = JsonDocument.Parse(await regenerated.Content.ReadAsStringAsync()).RootElement;
+        regeneratedBody.GetProperty("blocks").EnumerateArray()
+            .Where(b => b.GetProperty("day").GetString() == "Sunday")
+            .Select(b => b.GetProperty("id").GetGuid())
+            .Should().BeEquivalentTo(sundayIds);
+    }
+
+    [Fact]
+    public async Task Share_and_calendar_endpoints_return_public_artifacts()
+    {
+        var saturday = new DateOnly(2026, 6, 20);
+        var plan = await _client.PostAsJsonAsync("/api/weekends/plan", new { WeekendOf = saturday.ToString("yyyy-MM-dd") });
+        plan.EnsureSuccessStatusCode();
+        var weekendId = JsonDocument.Parse(await plan.Content.ReadAsStringAsync()).RootElement.GetProperty("id").GetGuid();
+
+        var share = await _client.PostAsync($"/api/weekends/{weekendId}/share", content: null);
+        share.EnsureSuccessStatusCode();
+        var shareBody = JsonDocument.Parse(await share.Content.ReadAsStringAsync()).RootElement;
+        shareBody.GetProperty("shareUrl").GetString().Should().Contain("/sample-weekend?share=");
+
+        var shared = await _client.GetAsync($"/api/weekends/shared/{shareBody.GetProperty("token").GetString()}");
+        shared.EnsureSuccessStatusCode();
+        JsonDocument.Parse(await shared.Content.ReadAsStringAsync()).RootElement
+            .GetProperty("id").GetGuid().Should().Be(weekendId);
+
+        var calendar = await _client.GetAsync($"/api/weekends/{weekendId}/calendar.ics");
+        calendar.EnsureSuccessStatusCode();
+        var ics = await calendar.Content.ReadAsStringAsync();
+        ics.Should().Contain("BEGIN:VCALENDAR").And.Contain("BEGIN:VEVENT");
+    }
+
+    [Fact]
+    public async Task Repeat_saved_weekend_replaces_current_plan_without_mutating_source()
+    {
+        var sourceDate = new DateOnly(2026, 6, 27);
+        var sourceResp = await _client.PostAsJsonAsync("/api/weekends/plan", new { WeekendOf = sourceDate.ToString("yyyy-MM-dd") });
+        sourceResp.EnsureSuccessStatusCode();
+        var source = JsonDocument.Parse(await sourceResp.Content.ReadAsStringAsync()).RootElement;
+        var sourceId = source.GetProperty("id").GetGuid();
+        var sourceTitles = source.GetProperty("blocks").EnumerateArray()
+            .Select(b => b.GetProperty("title").GetString())
+            .ToArray();
+
+        _factory.Clock.Today = new DateOnly(2026, 7, 4);
+        var repeat = await _client.PostAsync($"/api/weekends/{sourceId}/repeat", content: null);
+        repeat.EnsureSuccessStatusCode();
+        var repeated = JsonDocument.Parse(await repeat.Content.ReadAsStringAsync()).RootElement;
+
+        repeated.GetProperty("weekendOf").GetString().Should().Be("2026-07-04");
+        repeated.GetProperty("blocks").EnumerateArray()
+            .Select(b => b.GetProperty("title").GetString())
+            .Should().BeEquivalentTo(sourceTitles);
+
+        var sourceReload = await _client.GetAsync($"/api/weekends/{sourceId}");
+        sourceReload.EnsureSuccessStatusCode();
+        JsonDocument.Parse(await sourceReload.Content.ReadAsStringAsync()).RootElement
+            .GetProperty("weekendOf").GetString().Should().Be("2026-06-27");
+    }
 }

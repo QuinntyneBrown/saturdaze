@@ -12,9 +12,8 @@ import { Icon } from '../icon/icon';
  * Compact preview for one day on the home screen. Mirrors
  * `docs/mocks/components/sd-day-card.js`.
  *
- * The card behaves as a link. The `href` keeps the static-mock target
- * (`itinerary.html`) so selectors and visual baselines line up; the click
- * handler intercepts the navigation and routes through Angular instead.
+ * The card behaves as a link. The href is a real Angular route so new-tab,
+ * copy-link, and direct opens work exactly like the SPA click.
  */
 
 @Component({
@@ -39,7 +38,7 @@ export class DayCard {
   readonly weather = input<string>('');
   readonly icon = input<string>('sun');
   readonly highlight = input<string>('');
-  readonly href = input<string>('itinerary.html');
+  readonly href = input<string>('/itinerary');
   readonly route = input<string>('/itinerary');
 
   private readonly router = inject(Router);

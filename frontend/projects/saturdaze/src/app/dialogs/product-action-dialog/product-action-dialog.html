@@ -1,0 +1,150 @@
+@switch (data.kind) {
+  @case ('calendar') {
+    <sd-dialog title="Add this weekend to your calendar" subtitle="Subscribe to keep it in sync — or download just this one.">
+      <div class="list">
+        <a class="dialog-link" [href]="data.calendarLinks?.webcalUrl ?? '#'" target="_blank" rel="noopener noreferrer">
+          <sd-list-item title="Subscribe (webcal)" subtitle="Updates automatically each Friday at 6pm" compact>
+            <sd-icon slot="leading" name="calendar" />
+            <sd-chip slot="trailing" tone="accent">Recommended</sd-chip>
+          </sd-list-item>
+        </a>
+        <a class="dialog-link" [href]="data.calendarLinks?.googleCalendarUrl ?? '#'" target="_blank" rel="noopener noreferrer">
+          <sd-list-item title="Open in Google Calendar" subtitle="Adds Saturday and Sunday in one shot" compact>
+            <sd-icon slot="leading" name="calendar" />
+            <sd-icon slot="trailing" name="chevron_right" [size]="16" />
+          </sd-list-item>
+        </a>
+        <a class="dialog-link" [href]="data.calendarLinks?.icsUrl ?? '#'" target="_blank" rel="noopener noreferrer">
+          <sd-list-item title="Download .ics" subtitle="This weekend only — for one-time import" compact>
+            <sd-icon slot="leading" name="arrow_right" />
+            <sd-icon slot="trailing" name="chevron_right" [size]="16" />
+          </sd-list-item>
+        </a>
+      </div>
+      <sd-card variant="sunk" class="note"><sd-icon name="sparkle" [size]="16" /> Subscribed calendars stay in sync when I regenerate.</sd-card>
+      <sd-button slot="actions" variant="secondary" (click)="close()">Close</sd-button>
+    </sd-dialog>
+  }
+  @case ('share') {
+    <sd-dialog title="Share this weekend" subtitle="Sara gets a read-only preview. She can thumbs-up or comment.">
+      <sd-list-item title="Sara · Browns family" compact>
+        <sd-avatar slot="leading" name="Sara" tone="leaf" />
+        <sd-chip slot="trailing" tone="accent">Default</sd-chip>
+      </sd-list-item>
+      <div class="copy-row">
+        <code>{{ data.shareUrl }}</code>
+        <button type="button" aria-label="Copy link" (click)="copyShareLink()">
+          <sd-icon name="copy" [size]="16" />
+        </button>
+      </div>
+      <div class="message">"Here's the weekend — Terre Bleu Saturday, Rec Room Sunday. Tap any block to swap. xx"</div>
+      <sd-button slot="actions" variant="secondary" (click)="close()">Cancel</sd-button>
+      <sd-button slot="actions" variant="ghost" (click)="copyShareLink()">
+        <sd-icon slot="leading" name="copy" [size]="16" />
+        Copy link
+      </sd-button>
+      <sd-button slot="actions" (click)="shareNative()">
+        <sd-icon slot="leading" name="share" [size]="16" />
+        Send to Sara
+      </sd-button>
+    </sd-dialog>
+  }
+  @case ('regenerate-weekend') {
+    <sd-dialog title="Regenerate the weekend?" subtitle="Locked blocks stay put. Everything else gets a fresh draft.">
+      <sd-card variant="sunk" class="note"><sd-icon name="lock" [size]="18" /> Swim, church, workouts, and bedtime anchors stay locked.</sd-card>
+      <sd-button slot="actions" variant="secondary" (click)="close()">Cancel</sd-button>
+      <sd-button slot="actions" (click)="confirm()">
+        <sd-icon slot="leading" name="refresh" [size]="16" />
+        Regenerate
+      </sd-button>
+    </sd-dialog>
+  }
+  @case ('regenerate-day') {
+    <sd-dialog [title]="'Regenerate ' + (data.day ?? 'Saturday') + '?'" subtitle="Sunday and your locks stay put.">
+      <sd-card variant="sunk" class="note"><sd-icon name="lock" [size]="18" /> Locked blocks on this day stay exactly where they are.</sd-card>
+      <sd-button slot="actions" variant="secondary" (click)="close()">Cancel</sd-button>
+      <sd-button slot="actions" (click)="confirm()">
+        <sd-icon slot="leading" name="refresh" [size]="16" />
+        Regenerate {{ data.day ?? 'Saturday' }}
+      </sd-button>
+    </sd-dialog>
+  }
+  @case ('map') {
+    <sd-dialog [title]="(data.day ?? 'Saturday') + ' on a map'" subtitle="1h 10m driving · 3 stops · Port Credit → Milton → home">
+      <div class="map-stub">
+        <span class="pin home"><sd-icon name="home" [size]="14" /></span>
+        <span class="pin tree"><sd-icon name="tree" [size]="16" /></span>
+        <span class="pin fork"><sd-icon name="fork" [size]="14" /></span>
+      </div>
+      <div class="list">
+        <sd-list-item title="Home — Port Credit" subtitle="9:00am · start of day" compact><sd-icon slot="leading" name="home" /></sd-list-item>
+        <sd-list-item title="Terre Bleu Lavender Farm" subtitle="11:00am · 990 Appleby Line, Milton · 45 min drive" compact><sd-icon slot="leading" name="tree" /></sd-list-item>
+        <sd-list-item title="La Marina — lunch" subtitle="1:00pm · 6 min from Terre Bleu" compact><sd-icon slot="leading" name="fork" /></sd-list-item>
+      </div>
+      <sd-button slot="actions" variant="secondary" (click)="close()">Close</sd-button>
+      <sd-button slot="actions" (click)="confirm()">
+        <sd-icon slot="leading" name="share" [size]="16" />
+        Open in Google Maps
+      </sd-button>
+    </sd-dialog>
+  }
+  @case ('surprise') {
+    <sd-dialog title="Try something new this weekend" subtitle="Picks you haven't done with the kids before.">
+      <div class="list">
+        <sd-list-item title="Riverwood Conservancy" subtitle="8 min · forest school trails, owl barn" compact><sd-icon slot="leading" name="tree" /></sd-list-item>
+        <sd-list-item title="Living Arts — kids' theatre" subtitle="5 min · Saturday matinée at 2pm" compact><sd-icon slot="leading" name="ticket" /></sd-list-item>
+        <sd-list-item title="Crawford Lake longhouse" subtitle="35 min · indigenous heritage village" compact><sd-icon slot="leading" name="tree" /></sd-list-item>
+      </div>
+      <sd-card variant="sunk" class="note"><sd-icon name="sparkle" [size]="16" /> Filtered by your likes, weather, and drive cap.</sd-card>
+      <sd-button slot="actions" variant="secondary" (click)="close()">Cancel</sd-button>
+      <sd-button slot="actions" variant="ghost" (click)="confirm()">Reshuffle</sd-button>
+      <sd-button slot="actions" (click)="confirm()">Add to weekend</sd-button>
+    </sd-dialog>
+  }
+  @case ('remix') {
+    <sd-dialog title="Remix this weekend?" subtitle="Same family vibe — fresh activities and food.">
+      <sd-card variant="sunk" class="note"><sd-icon name="sparkle" [size]="18" /> {{ data.title ?? 'Saved weekend' }} gets a fresh take.</sd-card>
+      <sd-button slot="actions" variant="secondary" (click)="close()">Cancel</sd-button>
+      <sd-button slot="actions" (click)="confirm()">Remix it</sd-button>
+    </sd-dialog>
+  }
+  @case ('repeat') {
+    <sd-dialog title="Use this weekend as the current plan?" subtitle="Your current draft will be replaced — saved weekends stay intact.">
+      <sd-card variant="sunk" class="note"><sd-icon name="refresh" [size]="18" /> This replaces Saturday and Sunday's current draft.</sd-card>
+      <sd-button slot="actions" variant="secondary" (click)="close()">Cancel</sd-button>
+      <sd-button slot="actions" variant="danger" (click)="confirm()">Replace current</sd-button>
+    </sd-dialog>
+  }
+  @case ('itinerary-more') {
+    <sd-dialog title="Saturday options">
+      <div class="list">
+        <sd-list-item title="Share this day" subtitle="Read-only link for Sara" compact><sd-icon slot="leading" name="share" /></sd-list-item>
+        <sd-list-item title="Add to calendar" subtitle="Subscribe or download .ics" compact><sd-icon slot="leading" name="calendar" /></sd-list-item>
+        <sd-list-item title="Export as text" subtitle="Plain-text plan for SMS or notes" compact><sd-icon slot="leading" name="copy" /></sd-list-item>
+        <sd-list-item title="See on map" subtitle="All stops in one view" compact><sd-icon slot="leading" name="map" /></sd-list-item>
+      </div>
+      <sd-button slot="actions" variant="secondary" (click)="close()">Close</sd-button>
+    </sd-dialog>
+  }
+  @case ('saved-more') {
+    <sd-dialog title="Saved weekends — options">
+      <div class="list">
+        <sd-list-item title="Sort by date" subtitle="Newest first" compact><sd-icon slot="leading" name="calendar" /><sd-chip slot="trailing" tone="accent">Active</sd-chip></sd-list-item>
+        <sd-list-item title="Sort by family rating" subtitle="5★ first" compact><sd-icon slot="leading" name="star" /></sd-list-item>
+        <sd-list-item title="Filter" subtitle="By tone, weather, who was there" compact><sd-icon slot="leading" name="more" /></sd-list-item>
+        <sd-list-item title="Export all" subtitle="One file — annual family scrapbook" compact><sd-icon slot="leading" name="arrow_right" /></sd-list-item>
+      </div>
+      <sd-button slot="actions" variant="secondary" (click)="close()">Close</sd-button>
+    </sd-dialog>
+  }
+  @case ('restaurant-lock') {
+    <sd-dialog [title]="'Lock ' + (data.restaurant ?? 'this restaurant') + ' for Saturday lunch?'" subtitle="I'll stop offering alternatives for this slot.">
+      <sd-card variant="sunk" class="note"><sd-icon name="fork" [size]="18" /> Votes are preserved and this pick appears in the weekend plan.</sd-card>
+      <sd-button slot="actions" variant="secondary" (click)="close()">Not yet</sd-button>
+      <sd-button slot="actions" (click)="confirm()">
+        <sd-icon slot="leading" name="lock" [size]="16" />
+        Lock it in
+      </sd-button>
+    </sd-dialog>
+  }
+}

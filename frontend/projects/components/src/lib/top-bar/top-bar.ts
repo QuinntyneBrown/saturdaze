@@ -5,7 +5,8 @@ import {
   inject,
   input,
 } from '@angular/core';
-import { Location } from '@angular/common';
+import { DOCUMENT, Location } from '@angular/common';
+import { Router } from '@angular/router';
 
 import { Icon } from '../icon/icon';
 
@@ -41,11 +42,18 @@ export class TopBar {
   readonly back = input(false, { transform: (v: '' | boolean) => v === '' || v === true });
 
   private readonly location = inject(Location);
+  private readonly router = inject(Router, { optional: true });
+  private readonly document = inject(DOCUMENT);
 
   protected onBack(event: MouseEvent): void {
     if (event.button !== 0) return;
     if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
     event.preventDefault();
+    const historyLength = this.document.defaultView?.history.length ?? 0;
+    if (historyLength <= 1) {
+      void this.router?.navigateByUrl('/weekend');
+      return;
+    }
     this.location.back();
   }
 }

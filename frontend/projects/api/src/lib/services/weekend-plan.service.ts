@@ -15,7 +15,12 @@ import { WeatherForecastDto } from '../models/weather-forecast.dto';
 import { WeekendDto } from '../models/weekend.dto';
 import { WeekendOverview } from '../models/weekend-overview';
 import { WeekendStat } from '../models/weekend-stat';
-import { IWeekendPlanService } from './weekend-plan.service.contract';
+import { CalendarLinks, IWeekendPlanService } from './weekend-plan.service.contract';
+
+interface WeekendShareDto {
+  readonly shareUrl: string;
+  readonly token: string;
+}
 
 const EMPTY_OVERVIEW: WeekendOverview = {
   greeting: 'Loading your weekend…',
@@ -92,8 +97,7 @@ export class WeekendPlanService implements IWeekendPlanService {
   }
 
   async regenerate(id?: string): Promise<void> {
-    const target = id ?? this._currentId();
-    if (!target) return;
+    const target = this.targetId(id);
     try {
       const dto = await firstValueFrom(
         this.http.post<WeekendDto>(`${this.baseUrl}/api/weekends/${target}/regenerate`, {}),
@@ -104,9 +108,24 @@ export class WeekendPlanService implements IWeekendPlanService {
     }
   }
 
+  async regenerateDay(day: 'Saturday' | 'Sunday', id?: string): Promise<void> {
+    const target = this.targetId(id);
+    try {
+      const dto = await firstValueFrom(
+        this.http.post<WeekendDto>(
+          `${this.baseUrl}/api/weekends/${target}/days/${day.toLowerCase()}/regenerate`,
+          {},
+        ),
+      );
+      this.apply(dto);
+    } catch (err) {
+      console.error('WeekendPlanService.regenerateDay failed', err);
+      throw err;
+    }
+  }
+
   async markFavourite(favourite: boolean, id?: string): Promise<void> {
-    const target = id ?? this._currentId();
-    if (!target) return;
+    const target = this.targetId(id);
     try {
       const dto = await firstValueFrom(
         this.http.put<WeekendDto>(`${this.baseUrl}/api/weekends/${target}/favourite`, {
@@ -119,14 +138,55 @@ export class WeekendPlanService implements IWeekendPlanService {
     }
   }
 
+  async createShareLink(id?: string): Promise<string> {
+    const target = this.targetId(id);
+    try {
+      const dto = await firstValueFrom(
+        this.http.post<WeekendShareDto>(`${this.baseUrl}/api/weekends/${target}/share`, {}),
+      );
+      return dto.shareUrl;
+    } catch (err) {
+      console.error('WeekendPlanService.createShareLink failed', err);
+      throw err;
+    }
+  }
+
+  calendarLinks(id?: string): CalendarLinks {
+    const target = this.targetId(id);
+    const icsUrl = `${this.baseUrl}/api/weekends/${target}/calendar.ics`;
+    const webcalUrl = icsUrl.replace(/^https?:/i, 'webcal:');
+    return {
+      icsUrl,
+      webcalUrl,
+      googleCalendarUrl: `https://calendar.google.com/calendar/r?cid=${encodeURIComponent(webcalUrl)}`,
+    };
+  }
+
   async lockBlock(blockId: string, locked: boolean): Promise<void> {
     try {
-      await firstValueFrom(
-        this.http.put(`${this.baseUrl}/api/blocks/${blockId}/lock`, { locked }),
+      const dto = await firstValueFrom(
+        this.http.put<WeekendDto>(`${this.baseUrl}/api/blocks/${blockId}/lock`, { locked }),
       );
-      await this.loadCurrent();
+      this.apply(dto);
     } catch (err) {
       console.error('WeekendPlanService.lockBlock failed', err);
+      throw err;
+    }
+  }
+
+  async lockDay(day: 'Saturday' | 'Sunday', locked: boolean, id?: string): Promise<void> {
+    const target = this.targetId(id);
+    try {
+      const dto = await firstValueFrom(
+        this.http.put<WeekendDto>(
+          `${this.baseUrl}/api/weekends/${target}/days/${day.toLowerCase()}/lock`,
+          { locked },
+        ),
+      );
+      this.apply(dto);
+    } catch (err) {
+      console.error('WeekendPlanService.lockDay failed', err);
+      throw err;
     }
   }
 
@@ -142,18 +202,42 @@ export class WeekendPlanService implements IWeekendPlanService {
   }
 
   async addErrand(description: string, estimatedMinutes: number, id?: string): Promise<void> {
-    const target = id ?? this._currentId();
-    if (!target) return;
+    const target = this.targetId(id);
     try {
-      await firstValueFrom(
-        this.http.post(`${this.baseUrl}/api/weekends/${target}/errands`, {
+      const dto = await firstValueFrom(
+        this.http.post<WeekendDto>(`${this.baseUrl}/api/weekends/${target}/errands`, {
           description,
           estimatedMinutes,
         }),
       );
-      await this.loadCurrent();
+      this.apply(dto);
     } catch (err) {
       console.error('WeekendPlanService.addErrand failed', err);
+      throw err;
+    }
+  }
+
+  async remixSaved(id: string): Promise<void> {
+    try {
+      const dto = await firstValueFrom(
+        this.http.post<WeekendDto>(`${this.baseUrl}/api/weekends/${id}/remix`, {}),
+      );
+      this.apply(dto);
+    } catch (err) {
+      console.error('WeekendPlanService.remixSaved failed', err);
+      throw err;
+    }
+  }
+
+  async repeatSaved(id: string): Promise<void> {
+    try {
+      const dto = await firstValueFrom(
+        this.http.post<WeekendDto>(`${this.baseUrl}/api/weekends/${id}/repeat`, {}),
+      );
+      this.apply(dto);
+    } catch (err) {
+      console.error('WeekendPlanService.repeatSaved failed', err);
+      throw err;
     }
   }
 
@@ -170,6 +254,12 @@ export class WeekendPlanService implements IWeekendPlanService {
     this._currentId.set(dto.id);
     this._overview.set(projectOverview(dto));
     this._itinerary.set(projectItinerary(dto, this._activeDay()));
+  }
+
+  private targetId(id?: string): string {
+    const target = id ?? this._currentId();
+    if (!target) throw new Error('No current weekend is loaded yet.');
+    return target;
   }
 }
 
@@ -394,6 +484,8 @@ function itinerarySubtitle(blocks: ReadonlyArray<ItineraryBlockDto>): string {
 function toBlock(b: ItineraryBlockDto): Block {
   const dur = minutes(b.startTime, b.endTime);
   return {
+    id: b.id,
+    day: b.day,
     time: hhmm(b.startTime),
     duration: formatMinutes(dur),
     title: b.title,

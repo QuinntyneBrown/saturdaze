@@ -1,11 +1,5 @@
-<sd-top-bar title="Saved weekends">
-  <sd-icon-button
-    slot="leading"
-    icon="arrow_left"
-    label="Back"
-    variant="ghost"
-  />
-  <sd-icon-button slot="trailing" icon="more" label="More" />
+<sd-top-bar title="Saved weekends" back>
+  <sd-icon-button slot="trailing" icon="more" label="More" (click)="openMore()" />
 </sd-top-bar>
 
 <div class="saved-lede">
@@ -32,8 +26,8 @@
         [highlights]="s.highlights"
         [favourite]="s.favourite ?? false"
       >
-        <sd-button variant="secondary" size="sm" full>Remix</sd-button>
-        <sd-button size="sm" full>Repeat</sd-button>
+        <sd-button variant="secondary" size="sm" full (click)="remix(s.id, s.title)">Remix</sd-button>
+        <sd-button size="sm" full (click)="repeat(s.id, s.title)">Repeat</sd-button>
       </sd-saved-card>
     }
   </div>

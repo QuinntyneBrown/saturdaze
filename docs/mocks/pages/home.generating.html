@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Drafting your weekend — Saturdaze</title>
+  <link rel="stylesheet" href="../styles/global.css" />
+  <script type="module" src="../app.js"></script>
+  <style>
+    /* === Variant of home.html (BUG-022 / M-S10) ===========================
+       Loading state while POST /api/weekends/current/generate is in
+       flight. Generation typically takes a few seconds — long enough
+       that a blank screen feels broken, short enough that a
+       full-screen modal would be heavy.
+
+       Skeleton cards retain the page's visual rhythm so the moment the
+       real plan arrives, the transition is a content fade, not a
+       layout shift. The hero is replaced with a focused "I'm thinking"
+       block that names *what* I'm doing right now, in three honest
+       sentences.
+       ===================================================================== */
+    .gen-hero {
+      margin: 8px var(--sd-app-pad-x) 16px;
+      padding: 28px 24px;
+      border-radius: var(--sd-r-xl);
+      background:
+        radial-gradient(80% 60% at 0% 0%, var(--sd-primary-soft) 0%, transparent 60%),
+        radial-gradient(80% 60% at 100% 0%, var(--sd-sky) 0%, transparent 60%),
+        var(--sd-surface);
+      border: 1px solid var(--sd-line);
+      box-shadow: var(--sd-shadow-1);
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+    .gen-spinner {
+      width: 56px; height: 56px;
+      border-radius: 50%;
+      display: grid; place-items: center;
+      position: relative;
+      flex-shrink: 0;
+    }
+    .gen-spinner::before {
+      content: ""; position: absolute; inset: 0;
+      border-radius: 50%;
+      border: 3px solid transparent;
+      border-top-color: var(--sd-primary);
+      border-right-color: color-mix(in srgb, var(--sd-primary) 40%, transparent);
+      animation: sd-spin 1.4s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+    }
+    .gen-spinner > .core {
+      position: absolute; inset: 10px;
+      background: var(--sd-bg-elev);
+      color: var(--sd-primary);
+      border-radius: 50%;
+      display: grid; place-items: center;
+    }
+    @keyframes sd-spin { to { transform: rotate(360deg); } }
+    @media (prefers-reduced-motion: reduce) { .gen-spinner::before { animation-duration: 0s; } }
+
+    .gen-hero h2 {
+      font-size: 18px; font-weight: 700; letter-spacing: -0.01em; margin: 0;
+    }
+    .gen-hero p {
+      color: var(--sd-ink-soft); font-size: 13px; line-height: 1.5;
+      margin: 4px 0 0;
+    }
+
+    /* Skeleton cards — same outer shape as sd-day-card so when the real
+       cards land they slide in without a jump. The shimmer is a slow
+       1.4s cycle (matches the spinner) so the page reads as "one
+       thing is happening", not five. */
+    .skel-cards { display: grid; gap: 12px; padding: 0 var(--sd-app-pad-x); }
+    .skel-card {
+      background: var(--sd-surface);
+      border: 1px solid var(--sd-line);
+      border-radius: var(--sd-r-xl);
+      padding: 18px;
+      overflow: hidden;
+    }
+    .skel-card .row { display: flex; gap: 10px; align-items: center; margin-bottom: 12px; }
+    .skel-card .icon-stub {
+      width: 36px; height: 36px;
+      background: var(--sd-surface-2);
+      border-radius: var(--sd-r-md);
+    }
+    .skel-bar {
+      height: 12px;
+      background: linear-gradient(90deg,
+        var(--sd-surface-2) 0%,
+        color-mix(in srgb, var(--sd-surface-2) 60%, transparent) 50%,
+        var(--sd-surface-2) 100%);
+      background-size: 200% 100%;
+      border-radius: var(--sd-r-pill);
+      animation: sd-shimmer 1.4s ease-in-out infinite;
+    }
+    .skel-bar.short { width: 40%; }
+    .skel-bar.med   { width: 70%; }
+    .skel-bar.tall  { height: 16px; }
+    .skel-card .lines { display: grid; gap: 8px; margin-bottom: 12px; }
+    .skel-card .chips { display: flex; gap: 6px; flex-wrap: wrap; }
+    .skel-chip {
+      height: 22px; width: 70px;
+      border-radius: var(--sd-r-pill);
+      background: var(--sd-surface-2);
+      animation: sd-shimmer 1.4s ease-in-out infinite;
+    }
+    @keyframes sd-shimmer {
+      0% { background-position: 200% 50%; }
+      100% { background-position: -200% 50%; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .skel-bar, .skel-chip { animation-duration: 0s; }
+    }
+
+    @media (min-width: 1024px) {
+      .gen-hero { margin-left: 0; margin-right: 0; padding: 32px 32px; }
+      .skel-cards { padding: 0; grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="sd-frame">
+
+    <sd-top-bar title="">
+      <sd-icon-button slot="leading" icon="calendar" label="Open calendar" variant="ghost"></sd-icon-button>
+      <sd-icon-button slot="trailing" icon="share" label="Share with Sara"></sd-icon-button>
+    </sd-top-bar>
+
+    <div class="gen-hero" role="status" aria-live="polite" aria-label="Drafting your weekend">
+      <div class="gen-spinner">
+        <div class="core">
+          <sd-icon name="sparkle" size="20"></sd-icon>
+        </div>
+      </div>
+      <div>
+        <h2>Sketching Saturday and Sunday…</h2>
+        <p>Working through your locks, the forecast, and 12 weekends of what's worked before. Usually 4–6 seconds.</p>
+      </div>
+    </div>
+
+    <sd-section title="Your weekend" subtitle="Drafting Sat 17 May – Sun 18 May">
+      <div class="skel-cards">
+        <div class="skel-card">
+          <div class="row">
+            <div class="icon-stub"></div>
+            <div style="flex:1; display:grid; gap:6px;">
+              <div class="skel-bar short tall"></div>
+              <div class="skel-bar med"></div>
+            </div>
+          </div>
+          <div class="lines">
+            <div class="skel-bar"></div>
+            <div class="skel-bar med"></div>
+          </div>
+          <div class="chips">
+            <div class="skel-chip"></div>
+            <div class="skel-chip" style="width:90px;"></div>
+            <div class="skel-chip" style="width:60px;"></div>
+          </div>
+        </div>
+
+        <div class="skel-card">
+          <div class="row">
+            <div class="icon-stub"></div>
+            <div style="flex:1; display:grid; gap:6px;">
+              <div class="skel-bar short tall"></div>
+              <div class="skel-bar med"></div>
+            </div>
+          </div>
+          <div class="lines">
+            <div class="skel-bar"></div>
+            <div class="skel-bar med"></div>
+          </div>
+          <div class="chips">
+            <div class="skel-chip"></div>
+            <div class="skel-chip" style="width:90px;"></div>
+          </div>
+        </div>
+      </div>
+    </sd-section>
+
+    <sd-section title="A heads-up" subtitle="I'll surface anything I notice for you">
+      <div style="padding: 24px var(--sd-app-pad-x); color: var(--sd-ink-soft); font-size: 14px; line-height: 1.5; text-align: center;">
+        Coming up after I finish drafting…
+      </div>
+    </sd-section>
+
+    <sd-bottom-nav active="home"></sd-bottom-nav>
+  </div>
+</body>
+</html>

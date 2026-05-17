@@ -14,7 +14,7 @@ import {
   ValidationErrors,
   Validators,
 } from '@angular/forms';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 
 import { AuthError, SESSION_STORE } from 'api';
 import { AuthCard, AuthShell, Button, Icon, TextInput } from 'components';
@@ -52,7 +52,6 @@ function matchPassword(c: AbstractControl): ValidationErrors | null {
 })
 export class ResetPasswordPage {
   private readonly session = inject(SESSION_STORE);
-  private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
 
   private readonly queryParams = toSignal(this.route.queryParamMap, {
@@ -63,6 +62,7 @@ export class ResetPasswordPage {
   protected readonly tokenMissing = computed(() => this.token().length === 0);
   protected readonly submitting = signal(false);
   protected readonly tokenError = signal<AuthError | null>(null);
+  protected readonly success = signal(false);
 
   protected readonly form = new FormGroup(
     {
@@ -87,7 +87,7 @@ export class ResetPasswordPage {
         token: this.token(),
         password: this.form.controls.password.value,
       });
-      await this.router.navigateByUrl('/login?reset=1');
+      this.success.set(true);
     } catch (e) {
       this.tokenError.set(e as AuthError);
     } finally {

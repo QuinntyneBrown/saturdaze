@@ -334,6 +334,393 @@
       </sd-dialog>
     </div>
 
+    <!-- ====================================================================
+         New dialogs added 2026-05-17 per docs/mocks-plan.md.
+         Each block fixes a specific bug in docs/bugs/ — the audit trail is
+         in the eyebrow under each demo-label.
+         ==================================================================== -->
+
+    <div>
+      <div class="demo-label">Open mail app · M-D1 (BUG-019)</div>
+      <sd-dialog open static
+        title="Open your mail app"
+        subtitle="Pick where to look. I'll bring you back when you're done."
+      >
+        <div style="display:grid; gap:6px;">
+          <sd-list-item title="Gmail" subtitle="gmail.com — opens in a new tab" href="#" compact>
+            <sd-icon slot="leading" name="mail"></sd-icon>
+            <sd-icon slot="trailing" name="chevron_right" size="16"></sd-icon>
+          </sd-list-item>
+          <sd-list-item title="Outlook" subtitle="outlook.live.com — opens in a new tab" href="#" compact>
+            <sd-icon slot="leading" name="mail"></sd-icon>
+            <sd-icon slot="trailing" name="chevron_right" size="16"></sd-icon>
+          </sd-list-item>
+          <sd-list-item title="Apple Mail" subtitle="The mail app on this device" href="#" compact>
+            <sd-icon slot="leading" name="mail"></sd-icon>
+            <sd-icon slot="trailing" name="chevron_right" size="16"></sd-icon>
+          </sd-list-item>
+          <sd-list-item title="Default mail app" subtitle="Whatever this device opens for mailto:" href="#" compact>
+            <sd-icon slot="leading" name="arrow_right"></sd-icon>
+            <sd-icon slot="trailing" name="chevron_right" size="16"></sd-icon>
+          </sd-list-item>
+        </div>
+        <p style="font-size:13px; color:var(--sd-ink-soft); margin: 12px 0 0;">Can't find it? The reset link expires in 30 minutes — I can resend if you need.</p>
+        <sd-button slot="actions" variant="secondary">Cancel</sd-button>
+      </sd-dialog>
+    </div>
+
+    <div>
+      <div class="demo-label">Open calendar · M-D2 (BUG-020)</div>
+      <sd-dialog open static
+        title="Add this weekend to your calendar"
+        subtitle="Subscribe to keep it in sync — or download just this one."
+      >
+        <div style="display:grid; gap:6px;">
+          <sd-list-item title="Subscribe (webcal)" subtitle="Updates automatically each Friday at 6pm" href="#">
+            <sd-icon slot="leading" name="calendar"></sd-icon>
+            <sd-chip slot="trailing" tone="accent">Recommended</sd-chip>
+          </sd-list-item>
+          <sd-list-item title="Open in Google Calendar" subtitle="Adds Saturday and Sunday in one shot" href="#" compact>
+            <sd-icon slot="leading" name="calendar"></sd-icon>
+            <sd-icon slot="trailing" name="chevron_right" size="16"></sd-icon>
+          </sd-list-item>
+          <sd-list-item title="Download .ics" subtitle="This weekend only — for one-time import" href="#" compact>
+            <sd-icon slot="leading" name="arrow_right"></sd-icon>
+            <sd-icon slot="trailing" name="chevron_right" size="16"></sd-icon>
+          </sd-list-item>
+        </div>
+        <sd-card variant="sunk" style="margin-top:12px;">
+          <div style="display:flex; gap:10px; align-items:flex-start; font-size:14px;">
+            <sd-icon name="sparkle" size="16" style="color:var(--sd-primary); margin-top:2px;"></sd-icon>
+            <span>Subscribed calendars stay in sync when I regenerate — so if Sunday shifts, your phone updates without you having to think about it.</span>
+          </div>
+        </sd-card>
+        <sd-button slot="actions" variant="secondary">Close</sd-button>
+      </sd-dialog>
+    </div>
+
+    <div>
+      <div class="demo-label">Regenerate this day · M-D3 (BUG-027, BUG-029, BUG-031)</div>
+      <sd-dialog open static
+        title="Regenerate Saturday?"
+        subtitle="Sunday and your locks stay put."
+      >
+        <sd-card variant="sunk">
+          <div style="display:flex; gap:10px; align-items:flex-start;">
+            <sd-icon name="lock" size="18" style="color:var(--sd-accent); margin-top:2px;"></sd-icon>
+            <div style="font-size:14px;">
+              <div style="font-weight:600;">Keeping these on Saturday</div>
+              <div style="color:var(--sd-ink-soft); margin-top:4px;">9:00 swim · 5:00 workout · 8:00 bath</div>
+            </div>
+          </div>
+        </sd-card>
+        <p style="font-size:14px; color:var(--sd-ink-soft); margin: 12px 0 0;">Everything else on Saturday gets a fresh draft. Sunday won't move — regenerate it separately if you'd like.</p>
+        <sd-button slot="actions" variant="secondary">Cancel</sd-button>
+        <sd-button slot="actions">
+          <sd-icon slot="leading" name="refresh" size="16"></sd-icon>
+          Regenerate Saturday
+        </sd-button>
+      </sd-dialog>
+    </div>
+
+    <div>
+      <div class="demo-label">See on map · M-D4 (BUG-033)</div>
+      <sd-dialog open static
+        title="Saturday on a map"
+        subtitle="1h 10m driving · 3 stops · Port Credit → Milton → home"
+      >
+        <!-- Static map placeholder. In implementation this is a Mapbox /
+             Google Maps embed; here it reads as a soft, neutral surface
+             with three coloured pins so the visual rhythm is right. -->
+        <div style="position:relative; aspect-ratio: 16 / 10; border-radius: var(--sd-r-lg); overflow:hidden; border: 1px solid var(--sd-line);
+                    background:
+                      radial-gradient(80% 60% at 20% 30%, var(--sd-leaf) 0%, transparent 55%),
+                      radial-gradient(60% 40% at 75% 40%, var(--sd-sky) 0%, transparent 60%),
+                      radial-gradient(50% 50% at 60% 80%, var(--sd-primary-soft) 0%, transparent 70%),
+                      var(--sd-surface-2);">
+          <!-- Faint road lines to read as a map, not a watercolor. -->
+          <svg viewBox="0 0 320 200" preserveAspectRatio="none" style="position:absolute; inset:0; width:100%; height:100%;">
+            <path d="M-10 130 C 60 110, 110 90, 180 95 S 280 80, 330 70" stroke="rgba(31,41,55,0.12)" stroke-width="2" fill="none"/>
+            <path d="M40 -10 C 50 60, 80 100, 130 130 S 200 200, 230 220" stroke="rgba(31,41,55,0.08)" stroke-width="1.5" fill="none"/>
+          </svg>
+          <!-- Pin 1: home / Port Credit -->
+          <div style="position:absolute; left:18%; top:62%; transform: translate(-50%, -100%);">
+            <div style="background: var(--sd-primary); color:#fff; width:28px; height:28px; border-radius:50%; display:grid; place-items:center; box-shadow: var(--sd-shadow-2);">
+              <sd-icon name="home" size="14"></sd-icon>
+            </div>
+          </div>
+          <!-- Pin 2: lavender / Milton -->
+          <div style="position:absolute; left:64%; top:32%; transform: translate(-50%, -100%);">
+            <div style="background: var(--sd-accent); color:#fff; width:30px; height:30px; border-radius:50%; display:grid; place-items:center; box-shadow: var(--sd-shadow-2);">
+              <sd-icon name="tree" size="16"></sd-icon>
+            </div>
+          </div>
+          <!-- Pin 3: lunch / La Marina -->
+          <div style="position:absolute; left:48%; top:55%; transform: translate(-50%, -100%);">
+            <div style="background: var(--sd-sun); color: var(--sd-ink); width:28px; height:28px; border-radius:50%; display:grid; place-items:center; box-shadow: var(--sd-shadow-2);">
+              <sd-icon name="fork" size="14"></sd-icon>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:grid; gap:6px; margin-top:14px;">
+          <sd-list-item title="Home — Port Credit" subtitle="9:00am · start of day" compact>
+            <sd-icon slot="leading" name="home" style="color: var(--sd-primary);"></sd-icon>
+            <sd-chip slot="trailing">Start</sd-chip>
+          </sd-list-item>
+          <sd-list-item title="Terre Bleu Lavender Farm" subtitle="11:00am · 990 Appleby Line, Milton · 45 min drive" compact>
+            <sd-icon slot="leading" name="tree" style="color: var(--sd-accent);"></sd-icon>
+            <sd-icon slot="trailing" name="chevron_right" size="16"></sd-icon>
+          </sd-list-item>
+          <sd-list-item title="La Marina — lunch" subtitle="1:00pm · 6 min from Terre Bleu" compact>
+            <sd-icon slot="leading" name="fork" style="color: var(--sd-sun);"></sd-icon>
+            <sd-icon slot="trailing" name="chevron_right" size="16"></sd-icon>
+          </sd-list-item>
+        </div>
+
+        <sd-button slot="actions" variant="secondary">Close</sd-button>
+        <sd-button slot="actions">
+          <sd-icon slot="leading" name="share" size="16"></sd-icon>
+          Open in Google Maps
+        </sd-button>
+      </sd-dialog>
+    </div>
+
+    <div>
+      <div class="demo-label">Try something new — surprise me · M-D5 (BUG-034)</div>
+      <sd-dialog open static
+        title="Try something new this weekend"
+        subtitle="Picks you haven't done with the kids before."
+      >
+        <div style="display:grid; gap:8px;">
+          <sd-list-item title="Riverwood Conservancy" subtitle="8 min · forest school trails, owl barn" compact>
+            <sd-icon slot="leading" name="tree" style="color: var(--sd-accent);"></sd-icon>
+            <sd-chip slot="trailing" tone="leaf">Outdoor</sd-chip>
+          </sd-list-item>
+          <sd-list-item title="Living Arts — kids' theatre" subtitle="5 min · Saturday matinée at 2pm" compact>
+            <sd-icon slot="leading" name="ticket" style="color: var(--sd-indoor);"></sd-icon>
+            <sd-chip slot="trailing" tone="indoor">Indoor</sd-chip>
+          </sd-list-item>
+          <sd-list-item title="Crawford Lake longhouse" subtitle="35 min · indigenous heritage village, easy trails" compact>
+            <sd-icon slot="leading" name="tree" style="color: var(--sd-accent);"></sd-icon>
+            <sd-chip slot="trailing" tone="leaf">Outdoor</sd-chip>
+          </sd-list-item>
+          <sd-list-item title="Wonders of Winter — off-season trails" subtitle="20 min · Bronte Creek's quiet side" compact>
+            <sd-icon slot="leading" name="bike" style="color: var(--sd-leaf);"></sd-icon>
+            <sd-chip slot="trailing" tone="leaf">Active</sd-chip>
+          </sd-list-item>
+        </div>
+        <sd-card variant="sunk" style="margin-top:12px;">
+          <div style="display:flex; gap:10px; align-items:flex-start; font-size:14px;">
+            <sd-icon name="sparkle" size="16" style="color:var(--sd-primary); margin-top:2px;"></sd-icon>
+            <span>Filtered by your "try something new each weekend" preference, weather for Saturday, and 45-min drive cap.</span>
+          </div>
+        </sd-card>
+        <sd-button slot="actions" variant="secondary">Cancel</sd-button>
+        <sd-button slot="actions" variant="ghost">
+          <sd-icon slot="leading" name="refresh" size="16"></sd-icon>
+          Reshuffle
+        </sd-button>
+        <sd-button slot="actions">
+          <sd-icon slot="leading" name="plus" size="16"></sd-icon>
+          Add to weekend
+        </sd-button>
+      </sd-dialog>
+    </div>
+
+    <div>
+      <div class="demo-label">Remix a saved weekend · M-D6 (BUG-041)</div>
+      <sd-dialog open static
+        title="Remix this weekend?"
+        subtitle="Same family vibe — fresh activities and food."
+      >
+        <sd-card variant="sunk">
+          <div style="display:flex; gap:10px; align-items:flex-start;">
+            <sd-icon name="sparkle" size="18" style="color:var(--sd-primary); margin-top:2px;"></sd-icon>
+            <div style="font-size:14px;">
+              <div style="font-weight:600;">Bronte Creek + Rec Room → a fresh take</div>
+              <div style="color:var(--sd-ink-soft); margin-top:4px;">Same pace (active morning + indoor afternoon), same wife-approved style — different spots.</div>
+            </div>
+          </div>
+        </sd-card>
+        <div style="display:grid; gap:6px; margin-top:12px;">
+          <sd-list-item title="Saturday morning" subtitle="Hike → Royal Botanical Gardens · 35 min" compact>
+            <sd-icon slot="leading" name="swap"></sd-icon>
+            <sd-chip slot="trailing" tone="primary">New</sd-chip>
+          </sd-list-item>
+          <sd-list-item title="Saturday lunch" subtitle="La Marina (your favourite — kept)" compact>
+            <sd-icon slot="leading" name="fork"></sd-icon>
+            <sd-chip slot="trailing" tone="accent">Keep</sd-chip>
+          </sd-list-item>
+          <sd-list-item title="Sunday afternoon" subtitle="Ontario Science Centre — 'Senses' exhibit" compact>
+            <sd-icon slot="leading" name="swap"></sd-icon>
+            <sd-chip slot="trailing" tone="primary">New</sd-chip>
+          </sd-list-item>
+        </div>
+        <sd-button slot="actions" variant="secondary">Cancel</sd-button>
+        <sd-button slot="actions">
+          <sd-icon slot="leading" name="sparkle" size="16"></sd-icon>
+          Remix it
+        </sd-button>
+      </sd-dialog>
+    </div>
+
+    <div>
+      <div class="demo-label">Repeat a saved weekend (overwrite) · M-D7 (BUG-042)</div>
+      <sd-dialog open static
+        title="Use this weekend as the current plan?"
+        subtitle="Your current draft will be replaced — saved weekends stay intact."
+      >
+        <sd-card variant="sunk">
+          <div style="display:flex; gap:10px; align-items:flex-start;">
+            <sd-icon name="refresh" size="18" style="color:var(--sd-warn); margin-top:2px;"></sd-icon>
+            <div style="font-size:14px;">
+              <div style="font-weight:600;">Replacing this Saturday &amp; Sunday's draft</div>
+              <div style="color:var(--sd-ink-soft); margin-top:4px;">The lavender weekend goes away. Locks, family settings, and your saved list all stay.</div>
+            </div>
+          </div>
+        </sd-card>
+        <p style="font-size:14px; color:var(--sd-ink-soft); margin: 12px 0 0;">If a stop is closed this weekend, I'll quietly substitute — and tell you what changed.</p>
+        <sd-button slot="actions" variant="secondary">Cancel</sd-button>
+        <sd-button slot="actions" variant="danger">
+          <sd-icon slot="leading" name="refresh" size="16"></sd-icon>
+          Replace current
+        </sd-button>
+      </sd-dialog>
+    </div>
+
+    <div>
+      <div class="demo-label">Itinerary "More" action sheet · M-D8 (BUG-030)</div>
+      <sd-dialog open static
+        title="Saturday options"
+      >
+        <div style="display:grid; gap:4px; margin-top: -4px;">
+          <sd-list-item title="Share this day" subtitle="Read-only link for Sara — one-tap copy" href="#" compact>
+            <sd-icon slot="leading" name="share"></sd-icon>
+            <sd-icon slot="trailing" name="chevron_right" size="16"></sd-icon>
+          </sd-list-item>
+          <sd-list-item title="Add to calendar" subtitle="Subscribe or download .ics" href="#" compact>
+            <sd-icon slot="leading" name="calendar"></sd-icon>
+            <sd-icon slot="trailing" name="chevron_right" size="16"></sd-icon>
+          </sd-list-item>
+          <sd-list-item title="Export as text" subtitle="Plain-text plan for SMS or notes" href="#" compact>
+            <sd-icon slot="leading" name="copy"></sd-icon>
+            <sd-icon slot="trailing" name="chevron_right" size="16"></sd-icon>
+          </sd-list-item>
+          <sd-list-item title="See on map" subtitle="All Saturday stops in one view" href="#" compact>
+            <sd-icon slot="leading" name="map"></sd-icon>
+            <sd-icon slot="trailing" name="chevron_right" size="16"></sd-icon>
+          </sd-list-item>
+          <sd-list-item title="Reset Saturday" subtitle="Throw out this day and start over" href="#" compact>
+            <sd-icon slot="leading" name="refresh" style="color: var(--sd-warn);"></sd-icon>
+            <sd-icon slot="trailing" name="chevron_right" size="16"></sd-icon>
+          </sd-list-item>
+        </div>
+        <sd-button slot="actions" variant="secondary">Close</sd-button>
+      </sd-dialog>
+    </div>
+
+    <div>
+      <div class="demo-label">Saved "More" action sheet · M-D9 (BUG-040)</div>
+      <sd-dialog open static
+        title="Saved weekends — options"
+      >
+        <div style="display:grid; gap:4px; margin-top: -4px;">
+          <sd-list-item title="Sort by date" subtitle="Newest first (current)" href="#" compact>
+            <sd-icon slot="leading" name="calendar"></sd-icon>
+            <sd-chip slot="trailing" tone="accent">Active</sd-chip>
+          </sd-list-item>
+          <sd-list-item title="Sort by family rating" subtitle="5★ first" href="#" compact>
+            <sd-icon slot="leading" name="star"></sd-icon>
+            <sd-icon slot="trailing" name="chevron_right" size="16"></sd-icon>
+          </sd-list-item>
+          <sd-list-item title="Filter…" subtitle="By tone, weather, who was there" href="#" compact>
+            <sd-icon slot="leading" name="more"></sd-icon>
+            <sd-icon slot="trailing" name="chevron_right" size="16"></sd-icon>
+          </sd-list-item>
+          <sd-list-item title="Export all" subtitle="One file — annual family scrapbook" href="#" compact>
+            <sd-icon slot="leading" name="arrow_right"></sd-icon>
+            <sd-icon slot="trailing" name="chevron_right" size="16"></sd-icon>
+          </sd-list-item>
+        </div>
+        <sd-button slot="actions" variant="secondary">Close</sd-button>
+      </sd-dialog>
+    </div>
+
+    <!-- M-D10 (Profile "More" action sheet, BUG-045) is intentionally
+         omitted. The sign-out plan defers a second top-bar action; until
+         product confirms the button stays, the cheapest fix is to remove
+         it. Add this dialog only after that decision. -->
+
+    <div>
+      <div class="demo-label">Share with Sara — copy-link variant · M-D11 (BUG-021, BUG-025)</div>
+      <sd-dialog open static
+        title="Share this weekend"
+        subtitle="Sara gets a read-only preview. She can thumbs-up or comment."
+      >
+        <sd-list-item title="Sara · Browns family" compact>
+          <sd-avatar slot="leading" name="Sara" tone="leaf"></sd-avatar>
+          <sd-chip slot="trailing" tone="accent">Default</sd-chip>
+        </sd-list-item>
+
+        <!-- The shareable URL row — primary affordance for one-tap copy.
+             Reads as a chip-shaped pill so it's visually distinct from the
+             "send to Sara" path that follows. -->
+        <div style="margin-top: 14px;">
+          <div style="font-size:11px; color:var(--sd-ink-soft); text-transform:uppercase; letter-spacing:0.08em; font-weight:600; margin-bottom:6px;">Or copy a link anyone can open</div>
+          <div style="display:flex; gap:8px; align-items:center; padding: 10px 12px; background: var(--sd-surface-2); border: 1px solid var(--sd-line); border-radius: var(--sd-r-md);">
+            <code style="flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px; color: var(--sd-ink);">https://saturdaze.app/s/may17-browns</code>
+            <sd-icon-button icon="copy" label="Copy link" variant="ghost"></sd-icon-button>
+          </div>
+          <div style="font-size:12px; color:var(--sd-ink-soft); margin-top:6px;">Read-only · expires in 7 days · only people with the link can open it</div>
+        </div>
+
+        <div style="margin-top:14px; padding:12px; background:var(--sd-surface-2); border-radius:12px; font-size:14px; color:var(--sd-ink-soft);">
+          "Here's the weekend — Terre Bleu Saturday, Rec Room Sunday. Tap any block to swap. xx"
+        </div>
+
+        <sd-button slot="actions" variant="secondary">Cancel</sd-button>
+        <sd-button slot="actions" variant="ghost">
+          <sd-icon slot="leading" name="copy" size="16"></sd-icon>
+          Copy link
+        </sd-button>
+        <sd-button slot="actions">
+          <sd-icon slot="leading" name="share" size="16"></sd-icon>
+          Send to Sara
+        </sd-button>
+      </sd-dialog>
+    </div>
+
+    <div>
+      <div class="demo-label">Restaurants "Lock it in" confirm · M-D12 (BUG-038)</div>
+      <sd-dialog open static
+        title="Lock La Marina for Saturday lunch?"
+        subtitle="I'll stop offering alternatives for this slot."
+      >
+        <sd-card variant="sunk">
+          <div style="display:flex; gap:12px; align-items:center;">
+            <div style="width:44px; height:44px; background:var(--sd-primary-soft); color:var(--sd-primary); border-radius:var(--sd-r-md); display:inline-flex; align-items:center; justify-content:center;">
+              <sd-icon name="fork" size="22"></sd-icon>
+            </div>
+            <div style="flex:1; min-width:0;">
+              <div style="font-weight:600; letter-spacing:-0.005em;">La Marina</div>
+              <div style="font-size:13px; color:var(--sd-ink-soft);">Mediterranean · Patio · 6 min from Terre Bleu</div>
+              <div style="margin-top:6px;">
+                <sd-chip tone="accent"><sd-icon name="heart" size="12"></sd-icon> Wife-approved</sd-chip>
+                <sd-chip tone="leaf">3 of 4 yes</sd-chip>
+              </div>
+            </div>
+          </div>
+        </sd-card>
+        <p style="font-size:14px; color:var(--sd-ink-soft); margin: 12px 0 0;">Mae's still on the fence — that's OK. I'll mark her a soft yes and we can swap last-minute if she's not feeling it.</p>
+        <sd-button slot="actions" variant="secondary">Not yet</sd-button>
+        <sd-button slot="actions">
+          <sd-icon slot="leading" name="lock" size="16"></sd-icon>
+          Lock it in
+        </sd-button>
+      </sd-dialog>
+    </div>
+
     <p style="text-align:center; margin-top:24px;"><a href="../index.html" style="color:var(--sd-primary); text-decoration:none; font-weight:600;">← Back to mocks</a></p>
   </main>
 </body>

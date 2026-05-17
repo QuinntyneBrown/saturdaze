@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Errand added — Saturdaze</title>
+  <link rel="stylesheet" href="../styles/global.css" />
+  <script type="module" src="../app.js"></script>
+  <style>
+    /* === Variant of errand.html (BUG-044 / M-S19) =========================
+       Success state after the errand is committed. The form is gone;
+       the page becomes a confirmation card showing what landed where,
+       plus a "what's next" affordance.
+
+       Visual rhythm matches verify-email.html and reset-password.success
+       — green check badge, calm hero copy, single primary CTA back to
+       the weekend.
+       ===================================================================== */
+    .added-shell {
+      padding: 16px var(--sd-app-pad-x) 40px;
+      display: grid; gap: 16px;
+      max-width: 560px;
+    }
+    @media (min-width: 1024px) { .added-shell { max-width: 600px; margin: 0 auto; } }
+
+    .added-card {
+      background:
+        radial-gradient(80% 60% at 0% 0%, var(--sd-accent-soft) 0%, transparent 60%),
+        var(--sd-surface);
+      border: 1px solid var(--sd-line);
+      border-radius: var(--sd-r-xl);
+      padding: 32px 24px;
+      box-shadow: var(--sd-shadow-1);
+      text-align: center;
+      display: grid;
+      gap: 16px;
+      justify-items: center;
+    }
+    .added-card .check {
+      width: 72px; height: 72px;
+      border-radius: 50%;
+      display: grid; place-items: center;
+      background: var(--sd-accent);
+      color: #fff;
+      box-shadow:
+        0 0 0 8px color-mix(in srgb, var(--sd-accent) 18%, transparent),
+        var(--sd-shadow-1);
+    }
+    .added-card h1 {
+      font-size: 22px; font-weight: 700; letter-spacing: -0.02em; margin: 0;
+    }
+    .added-card .sub {
+      color: var(--sd-ink-soft);
+      font-size: 14px;
+      line-height: 1.55;
+      margin: 0;
+      max-width: 360px;
+    }
+
+    /* Slot detail strip — answers "what exactly did you commit me to?"
+       at a glance, with the same time + duration layout that
+       sd-timeline-block uses elsewhere. */
+    .slot-detail {
+      width: 100%;
+      display: grid;
+      gap: 8px;
+      padding: 14px 16px;
+      background: var(--sd-bg-elev);
+      border: 1px solid var(--sd-line);
+      border-radius: var(--sd-r-md);
+      text-align: left;
+    }
+    .slot-detail .row { display: flex; gap: 12px; align-items: center; font-size: 14px; }
+    .slot-detail .row sd-icon { color: var(--sd-primary); flex-shrink: 0; }
+    .slot-detail .label { color: var(--sd-ink-soft); flex: 1; }
+    .slot-detail .val { font-weight: 600; color: var(--sd-ink); }
+
+    .actions { display: grid; gap: 8px; width: 100%; }
+  </style>
+</head>
+<body>
+  <div class="sd-frame">
+
+    <sd-top-bar title="Errand added" back></sd-top-bar>
+
+    <div class="added-shell">
+      <div class="added-card">
+        <div class="check">
+          <sd-icon name="check" size="32"></sd-icon>
+        </div>
+
+        <h1>Added to Sunday at 9:15am.</h1>
+        <p class="sub">Slotted on the way back from church — only 4 minutes off-route. Mae's car-nap should be just long enough to make it work.</p>
+
+        <div class="slot-detail">
+          <div class="row">
+            <sd-icon name="bag" size="16"></sd-icon>
+            <span class="label">What</span>
+            <span class="val">Costco run · paper towels, bread, yogurt</span>
+          </div>
+          <div class="row">
+            <sd-icon name="calendar" size="16"></sd-icon>
+            <span class="label">When</span>
+            <span class="val">Sunday · 9:15am – 10:00am</span>
+          </div>
+          <div class="row">
+            <sd-icon name="car" size="16"></sd-icon>
+            <span class="label">Detour</span>
+            <span class="val">4 min off-route</span>
+          </div>
+          <div class="row">
+            <sd-icon name="refresh" size="16"></sd-icon>
+            <span class="label">Day impact</span>
+            <span class="val">+38m total</span>
+          </div>
+        </div>
+
+        <div class="actions">
+          <sd-button size="lg" full>
+            <sd-icon slot="leading" name="arrow_right" size="16"></sd-icon>
+            Back to weekend
+          </sd-button>
+          <sd-button variant="ghost" size="sm" full>
+            <sd-icon slot="leading" name="plus" size="14"></sd-icon>
+            Add another errand
+          </sd-button>
+        </div>
+      </div>
+
+      <!-- Tiny follow-up tip — anticipatory note about timing, kept
+           quiet so it doesn't compete with the success moment. -->
+      <sd-anticipate
+        icon="sparkle"
+        headline="Heads-up: Costco opens at 9:00am"
+        body="You'll be among the first in. The fewer carts in the aisle, the more cheerfully you'll get the picky-eater yogurt right."
+      ></sd-anticipate>
+    </div>
+
+    <sd-bottom-nav active="home"></sd-bottom-nav>
+  </div>
+</body>
+</html>

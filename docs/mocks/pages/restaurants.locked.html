@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Food — Saturdaze</title>
+  <link rel="stylesheet" href="../styles/global.css" />
+  <script type="module" src="../app.js"></script>
+  <style>
+    /* === Variant of restaurants.html (BUG-038 / M-S17) ====================
+       Locked-pick state. La Marina has been locked in for Saturday
+       lunch. The locked card gets a leaf-tone accent badge, a thick
+       accent border, and a "you're booked" subtitle. The other lunch
+       cards underneath fade to 0.55 opacity and disable their vote /
+       lock affordances — they're still visible (so the user can swap
+       later if they change their mind), just visually de-prioritised.
+       ===================================================================== */
+
+    /* Locked wrapper — the most prominent card on the page. Soft
+       accent fill, tight accent border, and a small ribbon-style
+       affordance carrying the lock icon. */
+    .locked-card {
+      position: relative;
+      border: 2px solid var(--sd-accent);
+      background:
+        radial-gradient(80% 60% at 100% 0%, var(--sd-accent-soft) 0%, transparent 60%),
+        var(--sd-surface);
+      border-radius: var(--sd-r-lg);
+      padding: 16px;
+      overflow: hidden;
+    }
+    .locked-card::before {
+      content: "";
+      position: absolute;
+      top: 0; right: 0;
+      width: 0; height: 0;
+      border-style: solid;
+      border-width: 0 56px 56px 0;
+      border-color: transparent var(--sd-accent) transparent transparent;
+    }
+    .locked-card::after {
+      content: "";
+      position: absolute;
+      top: 6px; right: 6px;
+      width: 16px; height: 16px;
+      background: #fff;
+      mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'><rect x='5' y='11' width='14' height='10' rx='2'/><path d='M8 11V8a4 4 0 0 1 8 0v3'/></svg>") center / contain no-repeat;
+    }
+    .locked-card .lock-banner {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 12px; font-weight: 700; letter-spacing: 0.06em;
+      color: var(--sd-accent);
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .locked-card .head { display: flex; gap: 12px; align-items: flex-start; }
+    .locked-card .icon {
+      width: 44px; height: 44px;
+      background: var(--sd-primary-soft);
+      color: var(--sd-primary);
+      border-radius: var(--sd-r-md);
+      display: inline-flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .locked-card .name { font-weight: 700; font-size: var(--sd-fs-md); letter-spacing: -0.01em; }
+    .locked-card .style { color: var(--sd-ink-soft); font-size: var(--sd-fs-sm); margin-top: 2px; }
+    .locked-card .meta { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+    .locked-card .booking {
+      margin-top: 14px;
+      padding: 12px 14px;
+      background: var(--sd-bg-elev);
+      border: 1px solid var(--sd-line);
+      border-radius: var(--sd-r-md);
+      display: flex; gap: 10px; align-items: flex-start;
+      font-size: 13px;
+      color: var(--sd-ink-soft);
+    }
+    .locked-card .booking sd-icon { color: var(--sd-accent); flex-shrink: 0; margin-top: 2px; }
+    .locked-card .booking strong { color: var(--sd-ink); font-weight: 600; display: block; margin-bottom: 2px; }
+    .locked-card .actions { display: flex; gap: 8px; margin-top: 14px; }
+
+    /* Demoted siblings — visible but visually quiet. The vote buttons
+       and Lock CTA inside are still tap-targets; the de-priority
+       carries the "you've already decided this slot" message without
+       hiding the alternatives. */
+    .demoted {
+      opacity: 0.55;
+      filter: saturate(0.7);
+    }
+    .demoted-note {
+      font-size: 12px;
+      color: var(--sd-ink-soft);
+      margin: 6px 0 12px;
+      padding: 0 var(--sd-app-pad-x);
+    }
+  </style>
+</head>
+<body>
+  <div class="sd-frame">
+
+    <sd-top-bar title="Food" back>
+      <sd-icon-button slot="trailing" icon="refresh" label="Refresh picks"></sd-icon-button>
+    </sd-top-bar>
+
+    <div style="padding: 0 var(--sd-app-pad-x);">
+      <h2 style="font-size: 22px; font-weight: 700; letter-spacing: -0.02em; margin: 8px 0 4px;">Saturday food</h2>
+      <p style="color: var(--sd-ink-soft); font-size: 14px; margin: 0 0 16px;">Lunch is locked. Sunday dinner still needs a call.</p>
+    </div>
+
+    <sd-tag-group>
+      <sd-chip tone="primary">Lunch</sd-chip>
+      <sd-chip>Dinner</sd-chip>
+      <sd-chip tone="accent">Wife-approved only</sd-chip>
+      <sd-chip tone="sky">&lt; 15 min</sd-chip>
+      <sd-chip tone="leaf">Patio</sd-chip>
+    </sd-tag-group>
+
+    <sd-section title="Saturday lunch — booked" subtitle="I've held the patio at 1:00pm">
+      <div class="locked-card">
+        <div class="lock-banner">
+          <sd-icon name="lock" size="14"></sd-icon>
+          Locked in
+        </div>
+        <div class="head">
+          <div class="icon"><sd-icon name="fork" size="22"></sd-icon></div>
+          <div style="flex:1; min-width:0;">
+            <div class="name">La Marina</div>
+            <div class="style">Mediterranean · Patio · Milton, 6 min from Terre Bleu</div>
+            <div class="meta">
+              <sd-chip tone="accent"><sd-icon name="heart" size="12"></sd-icon> Wife-approved</sd-chip>
+              <sd-chip tone="sky"><sd-icon name="car" size="12"></sd-icon> 6 min</sd-chip>
+              <sd-chip>4 of 4 yes</sd-chip>
+            </div>
+          </div>
+        </div>
+        <div class="booking">
+          <sd-icon name="calendar" size="16"></sd-icon>
+          <div>
+            <strong>Saturday 1:00pm · party of 4</strong>
+            I'll add it to the itinerary and hold the slot. Want it on the calendar? Tap below.
+          </div>
+        </div>
+        <div class="actions">
+          <sd-button variant="secondary" size="sm" full>
+            <sd-icon slot="leading" name="calendar" size="14"></sd-icon>
+            Add to calendar
+          </sd-button>
+          <sd-button variant="ghost" size="sm" full>
+            <sd-icon slot="leading" name="unlock" size="14"></sd-icon>
+            Unlock to swap
+          </sd-button>
+        </div>
+      </div>
+    </sd-section>
+
+    <p class="demoted-note">Other Saturday lunch picks below — kept visible in case you want to swap. They're not "in play" right now.</p>
+
+    <sd-section title="Other lunch options">
+      <div class="sd-card-grid demoted">
+        <sd-restaurant-card
+          name="Symposium Café"
+          style="Brunch · Family booths"
+          near="Milton, 9 min from Terre Bleu"
+          drive="9 min"
+          wifeapproved
+          icon="fork"
+        >
+          <sd-vote-row slot="votes" name="Quinn" tone="primary" vote="none"></sd-vote-row>
+          <sd-vote-row slot="votes" name="Sara"  tone="leaf"    vote="up"></sd-vote-row>
+          <sd-vote-row slot="votes" name="Eli"   tone="sky"     vote="none"></sd-vote-row>
+          <sd-vote-row slot="votes" name="Mae"   tone="sun"     vote="up"></sd-vote-row>
+        </sd-restaurant-card>
+
+        <sd-restaurant-card
+          name="The Sicilian Sidewalk Café"
+          style="Italian · Casual"
+          near="Hwy back to Port Credit"
+          drive="12 min"
+          icon="fork"
+        >
+          <sd-vote-row slot="votes" name="Quinn" tone="primary" vote="up"></sd-vote-row>
+          <sd-vote-row slot="votes" name="Sara"  tone="leaf"    vote="down"></sd-vote-row>
+          <sd-vote-row slot="votes" name="Eli"   tone="sky"     vote="up"></sd-vote-row>
+          <sd-vote-row slot="votes" name="Mae"   tone="sun"     vote="up"></sd-vote-row>
+        </sd-restaurant-card>
+      </div>
+    </sd-section>
+
+    <sd-section title="Sunday dinner" subtitle="After Rec Room — still open for a vote">
+      <sd-restaurant-card
+        name="Jack Astor's"
+        style="Casual · Kids' menu"
+        near="Square One"
+        drive="2 min"
+        wifeapproved
+        icon="fork"
+      >
+        <sd-vote-row slot="votes" name="Quinn" tone="primary" vote="up"></sd-vote-row>
+        <sd-vote-row slot="votes" name="Sara"  tone="leaf"    vote="up"></sd-vote-row>
+        <sd-vote-row slot="votes" name="Eli"   tone="sky"     vote="up"></sd-vote-row>
+        <sd-vote-row slot="votes" name="Mae"   tone="sun"     vote="up"></sd-vote-row>
+        <div slot="votes" style="display:flex; gap:8px; margin-top:14px;">
+          <sd-button variant="secondary" size="sm" full>See menu</sd-button>
+          <sd-button size="sm" full>
+            <sd-icon slot="leading" name="lock" size="14"></sd-icon>
+            Lock it in
+          </sd-button>
+        </div>
+      </sd-restaurant-card>
+    </sd-section>
+
+    <sd-bottom-nav active="home"></sd-bottom-nav>
+  </div>
+</body>
+</html>

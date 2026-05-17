@@ -6,6 +6,8 @@ import { DayChip } from './day-chip';
  * fields stay optional.
  */
 export interface Block {
+  readonly id?: string;
+  readonly day?: 'Saturday' | 'Sunday';
   readonly time: string;
   readonly duration?: string;
   readonly title: string;

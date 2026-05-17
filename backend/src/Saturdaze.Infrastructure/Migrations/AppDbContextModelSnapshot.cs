@@ -105,6 +105,39 @@ namespace Saturdaze.Infrastructure.Migrations
                     b.ToTable("Commitments", (string)null);
                 });
 
+            modelBuilder.Entity("Saturdaze.Domain.Entities.EmailVerificationToken", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset?>("ConsumedAtUtc")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset>("CreatedAtUtc")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset>("ExpiresAtUtc")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("TokenHash")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TokenHash")
+                        .IsUnique();
+
+                    b.HasIndex("UserId", "ConsumedAtUtc");
+
+                    b.ToTable("EmailVerificationTokens", (string)null);
+                });
+
             modelBuilder.Entity("Saturdaze.Domain.Entities.Family", b =>
                 {
                     b.Property<Guid>("Id")
@@ -241,6 +274,39 @@ namespace Saturdaze.Infrastructure.Migrations
                     b.ToTable("LocalEvents", (string)null);
                 });
 
+            modelBuilder.Entity("Saturdaze.Domain.Entities.PasswordResetToken", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset?>("ConsumedAtUtc")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset>("CreatedAtUtc")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset>("ExpiresAtUtc")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("TokenHash")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TokenHash")
+                        .IsUnique();
+
+                    b.HasIndex("UserId", "ConsumedAtUtc");
+
+                    b.ToTable("PasswordResetTokens", (string)null);
+                });
+
             modelBuilder.Entity("Saturdaze.Domain.Entities.Preference", b =>
                 {
                     b.Property<Guid>("Id")
@@ -344,6 +410,72 @@ namespace Saturdaze.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("Restaurants", (string)null);
+                });
+
+            modelBuilder.Entity("Saturdaze.Domain.Entities.RestaurantLock", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset>("CreatedAtUtc")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int>("Day")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("FamilyId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("RestaurantId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Slot")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RestaurantId");
+
+                    b.HasIndex("FamilyId", "Day", "Slot")
+                        .IsUnique();
+
+                    b.ToTable("RestaurantLocks", (string)null);
+                });
+
+            modelBuilder.Entity("Saturdaze.Domain.Entities.RestaurantVote", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("FamilyId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("RestaurantId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset>("UpdatedAtUtc")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Vote")
+                        .IsRequired()
+                        .HasMaxLength(12)
+                        .HasColumnType("nvarchar(12)");
+
+                    b.Property<string>("VoterName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RestaurantId");
+
+                    b.HasIndex("FamilyId", "RestaurantId", "VoterName")
+                        .IsUnique();
+
+                    b.ToTable("RestaurantVotes", (string)null);
                 });
 
             modelBuilder.Entity("Saturdaze.Domain.Entities.ShoppingErrand", b =>
@@ -473,6 +605,15 @@ namespace Saturdaze.Infrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Saturdaze.Domain.Entities.EmailVerificationToken", b =>
+                {
+                    b.HasOne("Saturdaze.Domain.Entities.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Saturdaze.Domain.Entities.ItineraryBlock", b =>
                 {
                     b.HasOne("Saturdaze.Domain.Entities.Weekend", null)
@@ -491,11 +632,38 @@ namespace Saturdaze.Infrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Saturdaze.Domain.Entities.PasswordResetToken", b =>
+                {
+                    b.HasOne("Saturdaze.Domain.Entities.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Saturdaze.Domain.Entities.RefreshToken", b =>
                 {
                     b.HasOne("Saturdaze.Domain.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Saturdaze.Domain.Entities.RestaurantLock", b =>
+                {
+                    b.HasOne("Saturdaze.Domain.Entities.Restaurant", null)
+                        .WithMany()
+                        .HasForeignKey("RestaurantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Saturdaze.Domain.Entities.RestaurantVote", b =>
+                {
+                    b.HasOne("Saturdaze.Domain.Entities.Restaurant", null)
+                        .WithMany()
+                        .HasForeignKey("RestaurantId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

@@ -8,11 +8,14 @@ export type { Vote } from './vote';
 export type { VoterTone } from './voter-tone';
 
 export interface Restaurant {
+  readonly id?: string;
   readonly name: string;
   readonly style: string;
   readonly near?: string;
   readonly drive?: string;
   readonly wifeapproved?: boolean;
   readonly icon?: string;
+  readonly menuUrl?: string | null;
+  readonly locked?: boolean;
   readonly votes: readonly FamilyVote[];
 }

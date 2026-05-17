@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 
 import { requireAnonymous } from './auth/require-anonymous.guard';
 import { requireAuth } from './auth/require-auth.guard';
+import { environment } from '../environments/environment';
 
 /**
  * Saturdaze application routes.
@@ -77,6 +78,26 @@ export const routes: Routes = [
       import('./pages/verify-email/verify-email.page').then((m) => m.VerifyEmailPage),
   },
   {
+    path: 'terms',
+    loadComponent: () =>
+      import('./pages/legal/legal.page').then((m) => m.LegalPage),
+    data: { legal: 'terms' },
+  },
+  {
+    path: 'privacy',
+    loadComponent: () =>
+      import('./pages/legal/legal.page').then((m) => m.LegalPage),
+    data: { legal: 'privacy' },
+  },
+  {
+    path: 'sample-weekend',
+    data: { shell: 'splash' },
+    loadComponent: () =>
+      import('./pages/sample-weekend/sample-weekend.page').then(
+        (m) => m.SampleWeekendPage,
+      ),
+  },
+  {
     path: 'itinerary',
     canActivate: [requireAuth],
     loadComponent: () =>
@@ -122,16 +143,18 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./pages/profile/profile.page').then((m) => m.ProfilePage),
   },
-  {
-    path: 'dialogs',
-    loadComponent: () =>
-      import('./pages/dialogs/dialogs.page').then((m) => m.DialogsPage),
-  },
-  {
-    path: 'components',
-    loadComponent: () =>
-      import('./pages/components-gallery/components-gallery.page').then(
-        (m) => m.ComponentsGalleryPage,
-      ),
-  },
+  ...(environment.galleryRoutes ? [
+    {
+      path: 'dialogs',
+      loadComponent: () =>
+        import('./pages/dialogs/dialogs.page').then((m) => m.DialogsPage),
+    },
+    {
+      path: 'components',
+      loadComponent: () =>
+        import('./pages/components-gallery/components-gallery.page').then(
+          (m) => m.ComponentsGalleryPage,
+        ),
+    },
+  ] : []),
 ];

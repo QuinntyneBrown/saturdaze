@@ -9,6 +9,7 @@ import { AuthToken } from '../models/auth-token';
 import { ForgotPasswordRequest } from '../models/forgot-password-request';
 import { LoginRequest } from '../models/login-request';
 import { ResetPasswordRequest } from '../models/reset-password-request';
+import { ResendVerificationRequest } from '../models/resend-verification-request';
 import { SignupRequest } from '../models/signup-request';
 import { User } from '../models/user';
 import { VerifyEmailRequest } from '../models/verify-email-request';
@@ -84,6 +85,16 @@ export class AuthService implements IAuthService {
     try {
       await firstValueFrom(
         this.http.post<void>(`${this.baseUrl}/api/auth/forgot-password`, req),
+      );
+    } catch (e) {
+      rethrowAsAuthError(e);
+    }
+  }
+
+  async resendVerification(req: ResendVerificationRequest): Promise<void> {
+    try {
+      await firstValueFrom(
+        this.http.post<void>(`${this.baseUrl}/api/auth/resend-verification`, req),
       );
     } catch (e) {
       rethrowAsAuthError(e);

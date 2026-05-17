@@ -1,5 +1,5 @@
 <sd-top-bar title="Food" back>
-  <sd-icon-button slot="trailing" icon="refresh" label="Refresh picks" />
+  <sd-icon-button slot="trailing" icon="refresh" label="Refresh picks" (click)="refreshPicks()" />
 </sd-top-bar>
 
 <div class="rest-lede">
@@ -25,21 +25,28 @@
       [drive]="r.drive ?? ''"
       [wifeapproved]="r.wifeapproved ?? false"
       [icon]="r.icon ?? 'fork'"
+      [class.locked]="r.locked"
     >
       <sd-chip slot="chips" tone="primary">Top pick</sd-chip>
+      @if (r.locked) {
+        <sd-chip slot="chips" tone="accent"><sd-icon name="lock" [size]="12" /> Locked</sd-chip>
+      }
       @for (v of r.votes; track v.name) {
         <sd-vote-row
           slot="votes"
           [name]="v.name"
           [tone]="v.tone"
           [vote]="v.vote"
+          (voteChange)="vote(r.id, v.name, $event)"
         />
       }
       <div slot="votes" class="top-pick-actions">
-        <sd-button variant="secondary" size="sm" full>See menu</sd-button>
-        <sd-button size="sm" full>
+        @if (r.menuUrl) {
+          <a class="menu-link" [href]="r.menuUrl" target="_blank" rel="noopener noreferrer">See menu</a>
+        }
+        <sd-button size="sm" full [disabled]="r.locked ?? false" (click)="lockRestaurant(r.id, r.name)">
           <sd-icon slot="leading" name="lock" [size]="14" />
-          Lock it in
+          {{ r.locked ? 'Locked' : 'Lock it in' }}
         </sd-button>
       </div>
     </sd-restaurant-card>
@@ -63,6 +70,7 @@
             [name]="v.name"
             [tone]="v.tone"
             [vote]="v.vote"
+            (voteChange)="vote(r.id, v.name, $event)"
           />
         }
       </sd-restaurant-card>
@@ -89,6 +97,7 @@
           [name]="v.name"
           [tone]="v.tone"
           [vote]="v.vote"
+          (voteChange)="vote(r.id, v.name, $event)"
         />
       }
     </sd-restaurant-card>

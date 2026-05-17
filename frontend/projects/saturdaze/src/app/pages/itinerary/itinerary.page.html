@@ -1,6 +1,6 @@
 <sd-top-bar [title]="itinerary().day" back>
-  <sd-icon-button slot="trailing" icon="refresh" label="Regenerate" />
-  <sd-icon-button slot="trailing" icon="more" label="More" />
+  <sd-icon-button slot="trailing" icon="refresh" label="Regenerate" (click)="regenerateDay()" />
+  <sd-icon-button slot="trailing" icon="more" label="More" (click)="openMore()" />
 </sd-top-bar>
 
 <sd-split-view sticky-master>
@@ -30,7 +30,8 @@
           <a
             class="opt"
             [attr.data-active]="opt.active ? 'true' : null"
-            href="itinerary.html"
+            [attr.href]="'/itinerary?day=' + opt.key"
+            (click)="selectDay($event, opt.key)"
           >
             <sd-icon
               [name]="opt.icon"
@@ -60,13 +61,13 @@
     </sd-section>
 
     <div class="it-actions">
-      <sd-button variant="secondary" full>
+      <sd-button variant="secondary" full (click)="regenerateDay()">
         <sd-icon slot="leading" name="refresh" [size]="16" />
         Regenerate
       </sd-button>
-      <sd-button full>
+      <sd-button full (click)="lockDay()">
         <sd-icon slot="leading" name="lock" [size]="16" />
-        Lock day
+        {{ dayLocked() ? 'Unlock day' : 'Lock day' }}
       </sd-button>
     </div>
   </div>
@@ -78,7 +79,7 @@
           <div class="title">{{ itinerary().previewTitle }}</div>
           <div class="sub">{{ itinerary().previewSubtitle }}</div>
         </div>
-        <sd-icon-button icon="map" label="See on map" variant="filled" />
+        <sd-icon-button icon="map" label="See on map" variant="filled" (click)="seeMap()" />
       </div>
       <div class="it-detail-body">
         @for (b of itinerary().blocks; track b.time) {

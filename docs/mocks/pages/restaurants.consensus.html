@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Food — Saturdaze</title>
+  <link rel="stylesheet" href="../styles/global.css" />
+  <script type="module" src="../app.js"></script>
+  <style>
+    /* === Variant of restaurants.html (BUG-036 / M-S16) ====================
+       Consensus state — every family member has cast a vote. Each card
+       carries a top-of-card consensus row: a tight avatar stack plus
+       a numeric "X of 4 yes" reading. This is the moment the family
+       picker pays off; the card you're about to lock has its consensus
+       front and center.
+
+       The consensus row is rendered inline as part of the chips slot so
+       no new component is required. In implementation this could
+       become a shared sd-consensus-row primitive — note that for the
+       backlog, but the inline version is enough to baseline against.
+       ===================================================================== */
+
+    /* Consensus pill — sits in the card's chip area, oversized so it's
+       the first thing the eye lands on. Tone follows the consensus:
+       - 4/4: accent (green) — "go"
+       - 3/4: primary — "mostly there"
+       - 2/4: sun — "split"
+       - 1/4 or fewer: warn — "tough room"
+       */
+    .consensus {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 6px 12px 6px 6px;
+      border-radius: var(--sd-r-pill);
+      font-size: 13px; font-weight: 700;
+      letter-spacing: -0.005em;
+    }
+    .consensus[data-tone="accent"]  { background: var(--sd-accent-soft); color: var(--sd-accent); }
+    .consensus[data-tone="primary"] { background: var(--sd-primary-soft); color: var(--sd-primary); }
+    .consensus[data-tone="sun"]     { background: color-mix(in srgb, var(--sd-sun) 30%, transparent); color: color-mix(in srgb, var(--sd-sun) 50%, var(--sd-ink)); }
+    .consensus[data-tone="warn"]    { background: var(--sd-warn-soft); color: var(--sd-warn); }
+
+    .consensus .stack {
+      display: flex;
+      align-items: center;
+    }
+    .consensus .stack sd-avatar {
+      margin-left: -8px;
+      border: 2px solid var(--sd-surface);
+      border-radius: 50%;
+    }
+    .consensus .stack sd-avatar:first-child { margin-left: 0; }
+    .consensus .label { letter-spacing: 0.02em; }
+    .consensus .tip { font-weight: 500; color: inherit; opacity: 0.85; margin-left: 2px; font-size: 12px; }
+  </style>
+</head>
+<body>
+  <div class="sd-frame">
+
+    <sd-top-bar title="Food" back>
+      <sd-icon-button slot="trailing" icon="refresh" label="Refresh picks"></sd-icon-button>
+    </sd-top-bar>
+
+    <div style="padding: 0 var(--sd-app-pad-x);">
+      <h2 style="font-size: 22px; font-weight: 700; letter-spacing: -0.02em; margin: 8px 0 4px;">Saturday food</h2>
+      <p style="color: var(--sd-ink-soft); font-size: 14px; margin: 0 0 16px;">All 4 of you have voted. La Marina has the room — Sicilian needs a swap.</p>
+    </div>
+
+    <sd-tag-group>
+      <sd-chip tone="primary">Lunch</sd-chip>
+      <sd-chip>Dinner</sd-chip>
+      <sd-chip tone="accent">Wife-approved only</sd-chip>
+      <sd-chip tone="sky">&lt; 15 min</sd-chip>
+      <sd-chip tone="leaf">Patio</sd-chip>
+    </sd-tag-group>
+
+    <sd-section title="Top pick for lunch" subtitle="Consensus says go">
+      <sd-restaurant-card
+        name="La Marina"
+        style="Mediterranean · Patio"
+        near="Milton, 6 min from Terre Bleu"
+        drive="6 min"
+        wifeapproved
+        icon="fork"
+      >
+        <div slot="chips" class="consensus" data-tone="accent">
+          <div class="stack">
+            <sd-avatar name="Quinn" tone="primary" size="sm"></sd-avatar>
+            <sd-avatar name="Sara" tone="leaf" size="sm"></sd-avatar>
+            <sd-avatar name="Eli" tone="sky" size="sm"></sd-avatar>
+            <sd-avatar name="Mae" tone="sun" size="sm"></sd-avatar>
+          </div>
+          <span class="label">4 of 4 yes</span>
+        </div>
+        <sd-vote-row slot="votes" name="Quinn" tone="primary" vote="up"></sd-vote-row>
+        <sd-vote-row slot="votes" name="Sara"  tone="leaf"    vote="up"></sd-vote-row>
+        <sd-vote-row slot="votes" name="Eli"   tone="sky"     vote="up"></sd-vote-row>
+        <sd-vote-row slot="votes" name="Mae"   tone="sun"     vote="up"></sd-vote-row>
+        <div slot="votes" style="display:flex; gap:8px; margin-top:14px;">
+          <sd-button variant="secondary" size="sm" full>See menu</sd-button>
+          <sd-button size="sm" full>
+            <sd-icon slot="leading" name="lock" size="14"></sd-icon>
+            Lock it in
+          </sd-button>
+        </div>
+      </sd-restaurant-card>
+    </sd-section>
+
+    <sd-section title="Other strong picks">
+      <div class="sd-card-grid">
+        <sd-restaurant-card
+          name="Symposium Café"
+          style="Brunch · Family booths"
+          near="Milton, 9 min from Terre Bleu"
+          drive="9 min"
+          wifeapproved
+          icon="fork"
+        >
+          <div slot="chips" class="consensus" data-tone="sun">
+            <div class="stack">
+              <sd-avatar name="Quinn" tone="primary" size="sm"></sd-avatar>
+              <sd-avatar name="Sara" tone="leaf" size="sm"></sd-avatar>
+              <sd-avatar name="Eli" tone="sky" size="sm"></sd-avatar>
+              <sd-avatar name="Mae" tone="sun" size="sm"></sd-avatar>
+            </div>
+            <span class="label">2 of 4 yes</span>
+            <span class="tip">· Eli's a no</span>
+          </div>
+          <sd-vote-row slot="votes" name="Quinn" tone="primary" vote="up"></sd-vote-row>
+          <sd-vote-row slot="votes" name="Sara"  tone="leaf"    vote="up"></sd-vote-row>
+          <sd-vote-row slot="votes" name="Eli"   tone="sky"     vote="down"></sd-vote-row>
+          <sd-vote-row slot="votes" name="Mae"   tone="sun"     vote="none"></sd-vote-row>
+        </sd-restaurant-card>
+
+        <sd-restaurant-card
+          name="The Sicilian Sidewalk Café"
+          style="Italian · Casual"
+          near="Hwy back to Port Credit"
+          drive="12 min"
+          icon="fork"
+        >
+          <div slot="chips" class="consensus" data-tone="warn">
+            <div class="stack">
+              <sd-avatar name="Quinn" tone="primary" size="sm"></sd-avatar>
+              <sd-avatar name="Sara" tone="leaf" size="sm"></sd-avatar>
+              <sd-avatar name="Eli" tone="sky" size="sm"></sd-avatar>
+              <sd-avatar name="Mae" tone="sun" size="sm"></sd-avatar>
+            </div>
+            <span class="label">1 of 4 yes</span>
+            <span class="tip">· Sara's a no</span>
+          </div>
+          <sd-vote-row slot="votes" name="Quinn" tone="primary" vote="down"></sd-vote-row>
+          <sd-vote-row slot="votes" name="Sara"  tone="leaf"    vote="down"></sd-vote-row>
+          <sd-vote-row slot="votes" name="Eli"   tone="sky"     vote="down"></sd-vote-row>
+          <sd-vote-row slot="votes" name="Mae"   tone="sun"     vote="up"></sd-vote-row>
+        </sd-restaurant-card>
+      </div>
+    </sd-section>
+
+    <sd-section title="Sunday dinner" subtitle="After Rec Room — Square One area">
+      <sd-restaurant-card
+        name="Jack Astor's"
+        style="Casual · Kids' menu"
+        near="Square One"
+        drive="2 min"
+        wifeapproved
+        icon="fork"
+      >
+        <div slot="chips" class="consensus" data-tone="accent">
+          <div class="stack">
+            <sd-avatar name="Quinn" tone="primary" size="sm"></sd-avatar>
+            <sd-avatar name="Sara" tone="leaf" size="sm"></sd-avatar>
+            <sd-avatar name="Eli" tone="sky" size="sm"></sd-avatar>
+            <sd-avatar name="Mae" tone="sun" size="sm"></sd-avatar>
+          </div>
+          <span class="label">4 of 4 yes</span>
+        </div>
+        <sd-vote-row slot="votes" name="Quinn" tone="primary" vote="up"></sd-vote-row>
+        <sd-vote-row slot="votes" name="Sara"  tone="leaf"    vote="up"></sd-vote-row>
+        <sd-vote-row slot="votes" name="Eli"   tone="sky"     vote="up"></sd-vote-row>
+        <sd-vote-row slot="votes" name="Mae"   tone="sun"     vote="up"></sd-vote-row>
+      </sd-restaurant-card>
+    </sd-section>
+
+    <sd-bottom-nav active="home"></sd-bottom-nav>
+  </div>
+</body>
+</html>

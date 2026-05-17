@@ -13,4 +13,13 @@ public sealed class ValidationException : Exception
             .GroupBy(f => f.PropertyName)
             .ToDictionary(g => g.Key, g => g.Select(f => f.ErrorMessage).ToArray());
     }
+
+    public ValidationException(string propertyName, string errorMessage)
+        : base("One or more validation failures have occurred.")
+    {
+        Errors = new Dictionary<string, string[]>
+        {
+            [propertyName] = new[] { errorMessage }
+        };
+    }
 }

@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Verifying — Saturdaze</title>
+  <link rel="stylesheet" href="../styles/global.css" />
+  <script type="module" src="../app.js"></script>
+  <style>
+    /* === Variant of verify-email.html (BUG-008 / M-S4) ====================
+       Renders while POST /api/auth/verify-email is in flight. The page is
+       reached via /verify-email?token=…, so the user lands here after
+       clicking a link — making them stare at "Verification didn't work"
+       (which is what the deployed app currently does) is a hard fail.
+       Instead, show that work is happening, in their voice.
+       ===================================================================== */
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      min-height: 100vh;
+    }
+    .auth-shell { width: 100%; max-width: 460px; display: grid; gap: 24px; }
+
+    .brand {
+      display: flex; align-items: center; justify-content: center;
+      gap: 10px;
+      color: var(--sd-ink-soft);
+      font-size: var(--sd-fs-xs);
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      font-weight: var(--sd-fw-semibold);
+    }
+    .brand .mark {
+      width: 28px; height: 28px; border-radius: 8px;
+      background:
+        radial-gradient(120% 120% at 20% 0%, var(--sd-primary-soft) 0%, transparent 60%),
+        radial-gradient(120% 120% at 100% 100%, #FBEBC4 0%, transparent 60%),
+        var(--sd-primary);
+      box-shadow: var(--sd-shadow-1);
+    }
+
+    .auth-card {
+      background: var(--sd-surface);
+      border: 1px solid var(--sd-line);
+      border-radius: var(--sd-r-xl);
+      padding: 48px 28px 40px;
+      box-shadow: var(--sd-shadow-2);
+      text-align: center;
+      display: grid;
+      gap: 14px;
+      justify-items: center;
+    }
+
+    /* Halo-spinner — the same shape as the success badge so the page
+       morphs cleanly between states. Three concentric rings rotate at
+       different speeds; the inner one carries the brand colour. */
+    .spinner {
+      width: 84px; height: 84px;
+      border-radius: 50%;
+      display: grid; place-items: center;
+      position: relative;
+    }
+    .spinner::before,
+    .spinner::after,
+    .spinner > .core {
+      content: "";
+      position: absolute; inset: 0;
+      border-radius: 50%;
+      border: 3px solid transparent;
+    }
+    .spinner::before {
+      border-top-color: var(--sd-primary);
+      border-right-color: color-mix(in srgb, var(--sd-primary) 40%, transparent);
+      animation: sd-spin 1.4s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+    }
+    .spinner::after {
+      inset: 10px;
+      border-top-color: var(--sd-sun);
+      border-left-color: color-mix(in srgb, var(--sd-sun) 40%, transparent);
+      animation: sd-spin 2.1s cubic-bezier(0.45, 0, 0.55, 1) infinite reverse;
+    }
+    .spinner .core {
+      inset: 24px;
+      background: var(--sd-primary-soft);
+      border-color: transparent;
+      display: grid; place-items: center;
+      color: var(--sd-primary);
+    }
+    @keyframes sd-spin { to { transform: rotate(360deg); } }
+    @media (prefers-reduced-motion: reduce) {
+      .spinner::before, .spinner::after { animation-duration: 0s; }
+    }
+
+    .auth-card h1 {
+      font-size: 24px; font-weight: 700; letter-spacing: -0.02em; margin: 4px 0 0;
+    }
+    .auth-card .sub {
+      color: var(--sd-ink-soft);
+      font-size: 14px;
+      line-height: 1.55;
+      margin: 0;
+      max-width: 340px;
+    }
+
+    /* Tiny reassurance — gives the user something to read while the
+       backend round-trips. Mentions Friday because that's when the
+       weekend draft lands; the wait isn't wasted. */
+    .reassure {
+      display: flex; gap: 10px; align-items: center;
+      padding: 10px 12px;
+      background: var(--sd-bg-elev);
+      border: 1px solid var(--sd-line);
+      border-radius: var(--sd-r-md);
+      font-size: 13px;
+      color: var(--sd-ink-soft);
+      text-align: left;
+      max-width: 340px;
+    }
+    .reassure sd-icon { color: var(--sd-primary); flex-shrink: 0; }
+  </style>
+</head>
+<body>
+  <div class="auth-shell">
+
+    <div class="brand">
+      <span class="mark"></span>
+      Saturdaze
+    </div>
+
+    <div class="auth-card">
+      <div class="spinner" role="status" aria-live="polite" aria-label="Verifying your email">
+        <div class="core">
+          <sd-icon name="check" size="22"></sd-icon>
+        </div>
+      </div>
+
+      <h1>Confirming your email…</h1>
+      <p class="sub">
+        One quick check with our records. Usually takes a second or two — sometimes a bit longer on flaky Wi-Fi.
+      </p>
+
+      <div class="reassure">
+        <sd-icon name="sparkle" size="16"></sd-icon>
+        <span>Your first weekend draft lands Friday at 6pm — plenty of time.</span>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

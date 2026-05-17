@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   input,
+  output,
 } from '@angular/core';
 
 import { Button } from '../button/button';
@@ -32,4 +33,5 @@ export class Hero {
     "Your weekend's looking good. Want me to map it out?",
   );
   readonly cta = input<string>('Plan This Weekend');
+  readonly ctaClick = output<void>();
 }

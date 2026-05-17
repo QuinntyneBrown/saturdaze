@@ -5,28 +5,45 @@
     </div>
 
     <h1>Check your email</h1>
-    <p class="sub">
-      We sent a link to <strong>your inbox</strong>. Click it to finish setting up your account — it expires in 30 minutes.
-    </p>
+    @if (knownEmail()) {
+      <p class="sub">
+        We sent a link to <strong>{{ maskedEmail() }}</strong>. Click it to finish
+        @if (flow() === 'verify') { setting up your account } @else { resetting your password }
+        — it expires in 30 minutes.
+      </p>
+    } @else {
+      <p class="sub">
+        Enter your email and I can send the link again. I won't show whether the
+        address is on file.
+      </p>
+      <sd-text-input
+        class="email-entry"
+        label="Email"
+        type="email"
+        placeholder="you@example.com"
+        [formControl]="emailControl"
+      />
+    }
 
     <div class="button-row">
       <sd-button
         variant="secondary"
         size="sm"
-        [disabled]="resending()"
+        [disabled]="resending() || !hasEmail()"
         (click)="resend()"
         data-action="resend"
       >
         <sd-icon slot="leading" name="refresh" [size]="14" />
         Resend
       </sd-button>
-      <sd-button variant="ghost" size="sm">
-        Open mail app
-      </sd-button>
+      <a class="mail-app-link" href="mailto:">Open mail app</a>
     </div>
 
     @if (resentAt(); as t) {
       <div class="helper" role="status">Resent — check your inbox again.</div>
+    }
+    @if (resendError()) {
+      <div class="helper error" role="alert">{{ resendError() }}</div>
     }
 
     <div class="helper">

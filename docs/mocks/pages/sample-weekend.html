@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>A sample weekend — Saturdaze</title>
+  <link rel="stylesheet" href="../styles/global.css" />
+  <script type="module" src="../app.js"></script>
+  <style>
+    /* === New page (BUG-014 / M-P4) ========================================
+       Public sample-weekend page. The "See a sample weekend" CTA on the
+       splash routes here without auth. The page reuses home.html's
+       weekend chrome but:
+         - replaces the bottom-nav with a single "Create your account"
+           sticky CTA
+         - adds a top banner explaining "this is a sample for the Browns;
+           sign up to make one for your family"
+         - softens interactivity — buttons that would normally edit
+           weekend state are visible but lead to /signup
+
+       The day-cards and timeline mirror Saturday's plan from home.html
+       so a visitor sees exactly the kind of output they'd get for
+       themselves on Friday at 6pm.
+       ===================================================================== */
+    body { background: var(--sd-bg); padding-bottom: 80px; }
+
+    /* Public banner — sets the frame: this isn't yours yet. */
+    .public-banner {
+      margin: 16px var(--sd-app-pad-x);
+      padding: 12px 16px;
+      background: var(--sd-primary-soft);
+      border: 1px solid color-mix(in srgb, var(--sd-primary) 25%, transparent);
+      border-radius: var(--sd-r-lg);
+      display: flex; gap: 12px; align-items: center;
+    }
+    .public-banner sd-icon { color: var(--sd-primary); flex-shrink: 0; }
+    .public-banner .body { font-size: 13px; line-height: 1.5; color: color-mix(in srgb, var(--sd-primary) 30%, var(--sd-ink) 70%); flex: 1; }
+    .public-banner .body strong { color: var(--sd-ink); }
+
+    .home-grid-cards { display: grid; gap: 12px; padding: 0 var(--sd-app-pad-x); }
+    @media (min-width: 1024px) {
+      .home-grid-cards { grid-template-columns: 1fr 1fr; padding: 0; }
+      .public-banner { margin-left: 0; margin-right: 0; }
+    }
+
+    /* Sticky bottom CTA — replaces sd-bottom-nav for the public route.
+       Public visitors don't have a session to navigate, so the only
+       affordance is "make this real for your family". */
+    .sample-cta {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      padding: 14px var(--sd-app-pad-x);
+      background: color-mix(in srgb, var(--sd-bg-elev) 96%, transparent);
+      backdrop-filter: blur(8px);
+      border-top: 1px solid var(--sd-line);
+      box-shadow: 0 -4px 14px rgba(31, 41, 55, 0.04);
+      display: flex; gap: 10px;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+    }
+    .sample-cta .line {
+      font-size: 13px;
+      color: var(--sd-ink-soft);
+    }
+    .sample-cta .line strong { color: var(--sd-ink); font-weight: 600; }
+    @media (max-width: 600px) {
+      .sample-cta { flex-direction: column; align-items: stretch; }
+      .sample-cta sd-button { width: 100%; }
+    }
+
+    /* Header — public visitors don't get the app top-bar. A simpler
+       branded header anchors the page. */
+    .public-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px var(--sd-app-pad-x);
+      background: var(--sd-bg-elev);
+      border-bottom: 1px solid var(--sd-line);
+    }
+    .public-header .brand {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-weight: 700; letter-spacing: -0.01em; color: var(--sd-ink);
+      text-decoration: none; font-size: 17px;
+    }
+    .public-header .brand .mark {
+      width: 26px; height: 26px; border-radius: 8px;
+      background:
+        radial-gradient(120% 120% at 20% 0%, var(--sd-primary-soft) 0%, transparent 60%),
+        radial-gradient(120% 120% at 100% 100%, #FBEBC4 0%, transparent 60%),
+        var(--sd-primary);
+    }
+    .public-header .signin {
+      font-size: 14px; font-weight: 600;
+      color: var(--sd-ink-soft);
+      text-decoration: none;
+    }
+    .public-header .signin:hover { color: var(--sd-ink); }
+  </style>
+</head>
+<body>
+
+  <header class="public-header">
+    <a class="brand" href="splash.html">
+      <span class="mark"></span>
+      Saturdaze
+    </a>
+    <a class="signin" href="login.html">Sign in</a>
+  </header>
+
+  <div class="public-banner">
+    <sd-icon name="sparkle" size="20"></sd-icon>
+    <div class="body">
+      <strong>This is a sample weekend for "the Browns" — a fictional family of four in Port Credit.</strong>
+      It's exactly what I'd send your family on Friday at 6pm, once I know who you are.
+    </div>
+  </div>
+
+  <main>
+
+    <sd-hero
+      greeting="Morning, sample family 👋"
+      subtitle="Sat &amp; Sun looking warm. This is a draft I'd send the Browns — yours would be tuned to your kids, locks, and the weather where you live."
+      cta="Make one for my family"
+    ></sd-hero>
+
+    <sd-section title="The forecast" subtitle="Sat 17 May – Sun 18 May">
+      <sd-weather-strip>
+        <sd-weather-day day="Saturday" icon="sun"   hi="22" lo="14" note="Light breeze, perfect for outdoors"></sd-weather-day>
+        <sd-weather-day day="Sunday"   icon="cloud" hi="18" lo="12" note="Cloudy by 2pm — plan indoors after"></sd-weather-day>
+      </sd-weather-strip>
+    </sd-section>
+
+    <sd-section title="The Browns' weekend" subtitle="Two parents · Eli (9) · Mae (5)">
+      <div class="home-grid-cards">
+        <sd-day-card
+          day="Saturday"
+          date="Sat 17 May"
+          weather="22°  sunny"
+          icon="sun"
+          highlight="Lavender fields at Terre Bleu"
+        >
+          <sd-chip slot="chips" tone="accent"><sd-icon name="lock" size="12"></sd-icon> 9:00 swim</sd-chip>
+          <sd-chip slot="chips" tone="sky"><sd-icon name="car" size="12"></sd-icon> 45 min drive</sd-chip>
+          <sd-chip slot="chips" tone="leaf">Outdoor day</sd-chip>
+        </sd-day-card>
+
+        <sd-day-card
+          day="Sunday"
+          date="Sun 18 May"
+          weather="18°  cloudy"
+          icon="cloud"
+          highlight="Rec Room — Eli's pick"
+        >
+          <sd-chip slot="chips" tone="accent"><sd-icon name="lock" size="12"></sd-icon> 10:30 church</sd-chip>
+          <sd-chip slot="chips" tone="indoor">Indoor afternoon</sd-chip>
+          <sd-chip slot="chips" tone="primary">New for us</sd-chip>
+        </sd-day-card>
+      </div>
+    </sd-section>
+
+    <sd-section title="Why I picked this" subtitle="The thinking the Browns get with every draft">
+      <div style="display: grid; gap: 12px;">
+        <sd-anticipate
+          icon="sparkle"
+          headline="Lavender bloom peaks this weekend"
+          body="Terre Bleu's bloom window is May 17–24. Rain moves in Monday, so today's the day — tucked into Saturday after swim so the drive is one way only."
+        ></sd-anticipate>
+        <sd-anticipate
+          icon="cloud"
+          headline="Sunday is indoor weather"
+          body="Cloudy by 2pm with a 30% chance of rain. The Rec Room sits 10 minutes from home and gives the family a non-screen indoor afternoon — exactly the Browns' rhythm."
+        ></sd-anticipate>
+        <sd-anticipate
+          icon="bag"
+          headline="The Costco run, slotted invisibly"
+          body="Sara mentioned a grocery run mid-week. I slotted it Sunday 9:15am on the way back from church — 4 minutes off-route, no separate trip needed."
+        ></sd-anticipate>
+      </div>
+    </sd-section>
+
+    <sd-section title="What yours would look like" subtitle="Different family, same care">
+      <sd-card>
+        <div style="display:grid; gap:10px; font-size: 14px;">
+          <div style="display:flex; gap:10px; align-items:flex-start;">
+            <sd-icon name="check" size="16" style="color: var(--sd-accent); margin-top:2px; flex-shrink:0;"></sd-icon>
+            <span>Tuned to <strong>your kids' ages</strong> — activities Mae can do at 5 are different from what's right for Eli at 9.</span>
+          </div>
+          <div style="display:flex; gap:10px; align-items:flex-start;">
+            <sd-icon name="check" size="16" style="color: var(--sd-accent); margin-top:2px; flex-shrink:0;"></sd-icon>
+            <span>Built around <strong>your home base</strong> — drives stay under your tolerance (45 min for the Browns).</span>
+          </div>
+          <div style="display:flex; gap:10px; align-items:flex-start;">
+            <sd-icon name="check" size="16" style="color: var(--sd-accent); margin-top:2px; flex-shrink:0;"></sd-icon>
+            <span>Locked around <strong>your commitments</strong> — swim, church, workout windows stay put.</span>
+          </div>
+          <div style="display:flex; gap:10px; align-items:flex-start;">
+            <sd-icon name="check" size="16" style="color: var(--sd-accent); margin-top:2px; flex-shrink:0;"></sd-icon>
+            <span>Friday at 6pm — your weekend is ready before you've even thought about it.</span>
+          </div>
+        </div>
+      </sd-card>
+    </sd-section>
+
+  </main>
+
+  <div class="sample-cta">
+    <div class="line">Like what you see? <strong>It only gets sharper</strong> once I know your kids.</div>
+    <sd-button size="lg">
+      <sd-icon slot="leading" name="sparkle" size="16"></sd-icon>
+      Create your account
+    </sd-button>
+  </div>
+
+</body>
+</html>

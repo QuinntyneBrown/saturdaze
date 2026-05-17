@@ -9,4 +9,9 @@ public sealed record RestaurantDto(
     MealSlot Slot,
     bool WifeApproved,
     int DriveMinutes,
-    string Notes);
+    string Notes,
+    string MenuUrl,
+    IReadOnlyList<RestaurantVoteDto> Votes,
+    bool Locked);
+
+public sealed record RestaurantVoteDto(string VoterName, string Vote);

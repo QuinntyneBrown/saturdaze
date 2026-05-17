@@ -3,9 +3,8 @@ import { ROUTES, RouteKey } from "../fixtures/routes.js";
 
 /**
  * Cross-page navigation: bottom-nav links and back arrows must route to the
- * right URLs. The Angular implementation should map the mock hrefs
- * (home.html etc.) to its own clean routes; this test asserts the
- * destination, not the literal href.
+ * right URLs. Bottom-nav hrefs are real routes so direct open, copy-link,
+ * and modifier-click behave the same as plain SPA clicks.
  */
 
 test.describe("Navigation chrome", () => {

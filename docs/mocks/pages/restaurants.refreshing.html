@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Refreshing picks — Saturdaze</title>
+  <link rel="stylesheet" href="../styles/global.css" />
+  <script type="module" src="../app.js"></script>
+  <style>
+    /* === Variant of restaurants.html (BUG-035 / M-S14) ====================
+       Loading state while POST /api/restaurants/suggestions is in flight.
+       Same skeleton vocabulary as home.generating.html so the user
+       recognises "I'm thinking" across surfaces.
+
+       The Refresh picks button in the top bar shows a spinner; the
+       cards underneath are replaced with three skeletons. Anything
+       already locked (a previous pick the user committed to) is
+       preserved as a solid card so the refresh doesn't visually undo
+       a decision.
+       ===================================================================== */
+    .skel-card {
+      background: var(--sd-surface);
+      border: 1px solid var(--sd-line);
+      border-radius: var(--sd-r-lg);
+      padding: 16px;
+      overflow: hidden;
+    }
+    .skel-card .head { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 12px; }
+    .skel-card .icon-stub { width: 44px; height: 44px; background: var(--sd-surface-2); border-radius: var(--sd-r-md); flex-shrink: 0; }
+    .skel-bar {
+      height: 12px;
+      background: linear-gradient(90deg,
+        var(--sd-surface-2) 0%,
+        color-mix(in srgb, var(--sd-surface-2) 60%, transparent) 50%,
+        var(--sd-surface-2) 100%);
+      background-size: 200% 100%;
+      border-radius: var(--sd-r-pill);
+      animation: sd-shimmer 1.4s ease-in-out infinite;
+    }
+    .skel-bar.tall { height: 16px; }
+    .skel-bar.short { width: 50%; }
+    .skel-bar.med { width: 75%; }
+    .skel-card .lines { display: grid; gap: 8px; }
+    .skel-card .meta { display: flex; gap: 6px; margin-top: 10px; }
+    .skel-chip {
+      height: 22px; width: 70px;
+      border-radius: var(--sd-r-pill);
+      background: var(--sd-surface-2);
+      animation: sd-shimmer 1.4s ease-in-out infinite;
+    }
+    .skel-card .votes {
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid var(--sd-line);
+      display: grid; gap: 8px;
+    }
+    .skel-vote { display: flex; gap: 12px; align-items: center; }
+    .skel-avatar { width: 28px; height: 28px; border-radius: 50%; background: var(--sd-surface-2); animation: sd-shimmer 1.4s ease-in-out infinite; flex-shrink: 0; }
+    @keyframes sd-shimmer {
+      0% { background-position: 200% 50%; }
+      100% { background-position: -200% 50%; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .skel-bar, .skel-chip, .skel-avatar { animation-duration: 0s; }
+    }
+
+    /* Top-bar status — replaces the refresh icon with a spinner while
+       picks are loading. Visual rhythm matches verify-email.verifying. */
+    .refresh-status {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 6px 12px;
+      background: var(--sd-primary-soft);
+      color: var(--sd-primary);
+      border-radius: var(--sd-r-pill);
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .refresh-status .spinner {
+      width: 14px; height: 14px;
+      border: 2px solid transparent;
+      border-top-color: var(--sd-primary);
+      border-right-color: color-mix(in srgb, var(--sd-primary) 40%, transparent);
+      border-radius: 50%;
+      animation: sd-spin 1.0s linear infinite;
+    }
+    @keyframes sd-spin { to { transform: rotate(360deg); } }
+    @media (prefers-reduced-motion: reduce) { .refresh-status .spinner { animation-duration: 0s; } }
+  </style>
+</head>
+<body>
+  <div class="sd-frame">
+
+    <sd-top-bar title="Food" back>
+      <div slot="trailing" class="refresh-status" role="status" aria-live="polite">
+        <div class="spinner"></div>
+        Refreshing
+      </div>
+    </sd-top-bar>
+
+    <div style="padding: 0 var(--sd-app-pad-x);">
+      <h2 style="font-size: 22px; font-weight: 700; letter-spacing: -0.02em; margin: 8px 0 4px;">Saturday food</h2>
+      <p style="color: var(--sd-ink-soft); font-size: 14px; margin: 0 0 16px;">Reshuffling picks around your locks and Saturday's plan. A few seconds.</p>
+    </div>
+
+    <sd-tag-group>
+      <sd-chip tone="primary">Lunch</sd-chip>
+      <sd-chip>Dinner</sd-chip>
+      <sd-chip tone="accent">Wife-approved only</sd-chip>
+      <sd-chip tone="sky">&lt; 15 min</sd-chip>
+      <sd-chip tone="leaf">Patio</sd-chip>
+    </sd-tag-group>
+
+    <!-- Locked pick is preserved through the refresh — it's the user's
+         committed choice, not something to re-roll. -->
+    <sd-section title="Locked for Saturday lunch" subtitle="Surviving the refresh — your pick stands">
+      <sd-restaurant-card
+        name="La Marina"
+        style="Mediterranean · Patio"
+        near="Milton, 6 min from Terre Bleu"
+        drive="6 min"
+        wifeapproved
+        icon="fork"
+      >
+        <sd-chip slot="chips" tone="accent"><sd-icon name="lock" size="12"></sd-icon> Locked</sd-chip>
+      </sd-restaurant-card>
+    </sd-section>
+
+    <sd-section title="Reshuffling…" subtitle="Three fresh picks coming up">
+      <div class="sd-card-grid">
+        <div class="skel-card">
+          <div class="head">
+            <div class="icon-stub"></div>
+            <div style="flex:1; min-width:0; display:grid; gap:6px;">
+              <div class="skel-bar tall short"></div>
+              <div class="skel-bar med"></div>
+              <div class="meta">
+                <div class="skel-chip" style="width: 70px;"></div>
+                <div class="skel-chip" style="width: 110px;"></div>
+              </div>
+            </div>
+          </div>
+          <div class="votes">
+            <div class="skel-vote"><div class="skel-avatar"></div><div class="skel-bar" style="flex:1; width:40%;"></div></div>
+            <div class="skel-vote"><div class="skel-avatar"></div><div class="skel-bar" style="flex:1; width:45%;"></div></div>
+            <div class="skel-vote"><div class="skel-avatar"></div><div class="skel-bar" style="flex:1; width:38%;"></div></div>
+            <div class="skel-vote"><div class="skel-avatar"></div><div class="skel-bar" style="flex:1; width:42%;"></div></div>
+          </div>
+        </div>
+
+        <div class="skel-card">
+          <div class="head">
+            <div class="icon-stub"></div>
+            <div style="flex:1; min-width:0; display:grid; gap:6px;">
+              <div class="skel-bar tall short"></div>
+              <div class="skel-bar med"></div>
+              <div class="meta">
+                <div class="skel-chip" style="width: 80px;"></div>
+              </div>
+            </div>
+          </div>
+          <div class="votes">
+            <div class="skel-vote"><div class="skel-avatar"></div><div class="skel-bar" style="flex:1; width:40%;"></div></div>
+            <div class="skel-vote"><div class="skel-avatar"></div><div class="skel-bar" style="flex:1; width:48%;"></div></div>
+            <div class="skel-vote"><div class="skel-avatar"></div><div class="skel-bar" style="flex:1; width:36%;"></div></div>
+            <div class="skel-vote"><div class="skel-avatar"></div><div class="skel-bar" style="flex:1; width:50%;"></div></div>
+          </div>
+        </div>
+
+        <div class="skel-card">
+          <div class="head">
+            <div class="icon-stub"></div>
+            <div style="flex:1; min-width:0; display:grid; gap:6px;">
+              <div class="skel-bar tall short"></div>
+              <div class="skel-bar med"></div>
+              <div class="meta">
+                <div class="skel-chip" style="width: 90px;"></div>
+                <div class="skel-chip" style="width: 110px;"></div>
+              </div>
+            </div>
+          </div>
+          <div class="votes">
+            <div class="skel-vote"><div class="skel-avatar"></div><div class="skel-bar" style="flex:1; width:40%;"></div></div>
+            <div class="skel-vote"><div class="skel-avatar"></div><div class="skel-bar" style="flex:1; width:42%;"></div></div>
+          </div>
+        </div>
+      </div>
+    </sd-section>
+
+    <sd-bottom-nav active="home"></sd-bottom-nav>
+  </div>
+</body>
+</html>

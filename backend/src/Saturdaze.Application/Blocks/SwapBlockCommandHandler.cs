@@ -110,7 +110,6 @@ public sealed class SwapBlockCommandHandler : IRequestHandler<SwapBlockCommand, 
                 SortOrder = ++nextSort
             };
             _db.ItineraryBlocks.Add(entity);
-            weekend.Blocks.Add(entity);
         }
         await _db.SaveChangesAsync(cancellationToken);
 

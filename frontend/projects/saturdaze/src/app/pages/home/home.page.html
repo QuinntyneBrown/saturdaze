@@ -1,14 +1,52 @@
+@if (lockMode()) {
+  <sd-top-bar title="Lock what's perfect">
+    <sd-icon-button slot="leading" icon="close" label="Cancel" variant="ghost" (click)="finishLockMode()" />
+  </sd-top-bar>
+
+  <div class="lock-mode-strip">
+    <div class="badge"><sd-icon name="lock" [size]="18" /></div>
+    <div>
+      <div class="title">Tap to lock what should never move</div>
+      <div class="body">When I regenerate the weekend, locked blocks stay put. Try locking swim, church, workouts, and bedtime.</div>
+    </div>
+  </div>
+
+  <div class="lock-blocks">
+    <h3>Saturday</h3>
+    @for (b of overview().preview; track b.id ?? b.time) {
+      <button type="button" class="lock-block" [attr.data-locked]="b.locked ? 'true' : null" (click)="toggleLock(b)">
+        <span class="toggle"><sd-icon [name]="b.locked ? 'lock' : 'plus'" [size]="18" /></span>
+        <span class="time">{{ b.time }}</span>
+        <span class="badge-icon"><sd-icon [name]="b.icon" [size]="18" /></span>
+        <span class="copy">
+          <span class="block-title">{{ b.title }}</span>
+          <span class="block-sub">{{ b.subtitle }}</span>
+        </span>
+      </button>
+    }
+  </div>
+
+  <div class="lock-footer">
+    <sd-button variant="secondary" full (click)="finishLockMode()">Cancel</sd-button>
+    <sd-button full (click)="finishLockMode()">
+      <sd-icon slot="leading" name="check" [size]="16" />
+      Done
+    </sd-button>
+  </div>
+} @else {
 <sd-top-bar title="">
   <sd-icon-button
     slot="leading"
     icon="calendar"
     label="Open calendar"
     variant="ghost"
+    (click)="openCalendar()"
   />
   <sd-icon-button
     slot="trailing"
     icon="share"
     label="Share with Sara"
+    (click)="openShare()"
   />
 </sd-top-bar>
 
@@ -17,7 +55,8 @@
     <sd-hero
       [greeting]="overview().greeting"
       [subtitle]="overview().heroSubtitle"
-      [cta]="overview().heroCta"
+      [cta]="generating() ? 'Planning…' : overview().heroCta"
+      (ctaClick)="planWeekend()"
     />
 
     <sd-section title="The forecast" [subtitle]="overview().forecastSubtitle">
@@ -43,8 +82,8 @@
             [weather]="d.weather"
             [icon]="d.icon"
             [highlight]="d.highlight"
-            href="itinerary.html"
-            route="/itinerary"
+            [href]="'/itinerary?day=' + d.day.toLowerCase()"
+            [route]="'/itinerary?day=' + d.day.toLowerCase()"
           >
             @for (c of d.chips; track $index) {
               <sd-chip slot="chips" [tone]="c.tone">
@@ -73,7 +112,16 @@
     <sd-section title="Quick actions" flush>
       <div class="home-quick-actions">
         @for (q of overview().quickActions; track q.title) {
-          <sd-list-item [title]="q.title" [subtitle]="q.subtitle" href="#">
+          <sd-list-item
+            class="action-row"
+            [title]="q.title"
+            [subtitle]="q.subtitle"
+            role="button"
+            tabindex="0"
+            (click)="handleQuickAction(q.title)"
+            (keydown.enter)="handleQuickAction(q.title)"
+            (keydown.space)="handleQuickAction(q.title); $event.preventDefault()"
+          >
             <sd-icon slot="leading" [name]="q.icon" />
             <sd-icon slot="trailing" name="chevron_right" [size]="16" />
           </sd-list-item>
@@ -93,6 +141,7 @@
           icon="arrow_right"
           label="Open full day"
           variant="filled"
+          (click)="openItineraryDay('Saturday')"
         />
       </div>
       <div class="detail-pane-body">
@@ -116,11 +165,11 @@
         }
       </div>
       <div class="detail-pane-footer">
-        <sd-button variant="secondary" size="sm" full>
+        <sd-button variant="secondary" size="sm" full (click)="regenerateDay()">
           <sd-icon slot="leading" name="refresh" [size]="14" />
           Regenerate
         </sd-button>
-        <sd-button size="sm" full>
+        <sd-button size="sm" full (click)="openItineraryDay('Saturday')">
           <sd-icon slot="leading" name="arrow_right" [size]="14" />
           Open Saturday
         </sd-button>
@@ -130,3 +179,4 @@
 </sd-split-view>
 
 <sd-bottom-nav active="home" />
+}

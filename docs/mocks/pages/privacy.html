@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Privacy — Saturdaze</title>
+  <link rel="stylesheet" href="../styles/global.css" />
+  <script type="module" src="../app.js"></script>
+  <style>
+    /* === New page (BUG-018 / M-P2) ========================================
+       Privacy policy companion to terms.html. Same visual chrome so the
+       two pages read as a pair.
+
+       The content is honest about the actual surface area: what's
+       stored, where it lives, who can see it. Family-app data
+       sensitivity (kids' names and ages) gets explicit treatment.
+       ===================================================================== */
+    .legal { max-width: 720px; margin: 0 auto; padding: 16px var(--sd-app-pad-x) 80px; }
+    .legal-header { padding-bottom: 16px; border-bottom: 1px solid var(--sd-line); margin-bottom: 24px; }
+    .legal-eyebrow { font-size: 11px; color: var(--sd-ink-soft); text-transform: uppercase; letter-spacing: 0.1em; font-weight: 700; }
+    .legal h1 { font-size: 30px; font-weight: 800; letter-spacing: -0.02em; margin: 4px 0 4px; line-height: 1.15; }
+    .legal .updated { font-size: 13px; color: var(--sd-ink-soft); }
+
+    .legal-summary {
+      padding: 14px 16px;
+      background: var(--sd-accent-soft);
+      border: 1px solid color-mix(in srgb, var(--sd-accent) 25%, transparent);
+      border-radius: var(--sd-r-lg);
+      display: flex; gap: 12px; align-items: flex-start;
+      margin-bottom: 32px;
+    }
+    .legal-summary sd-icon { color: var(--sd-accent); flex-shrink: 0; margin-top: 2px; }
+    .legal-summary .body { font-size: 14px; line-height: 1.6; color: color-mix(in srgb, var(--sd-accent) 30%, var(--sd-ink) 70%); }
+    .legal-summary .body strong { color: var(--sd-ink); }
+
+    .legal h2 { font-size: 19px; font-weight: 700; letter-spacing: -0.01em; margin: 32px 0 8px; }
+    .legal p { font-size: 15px; line-height: 1.65; color: var(--sd-ink); margin: 0 0 12px; }
+    .legal ul { margin: 0 0 16px; padding-left: 22px; font-size: 15px; line-height: 1.65; }
+    .legal ul li { margin-bottom: 6px; }
+    .legal a { color: var(--sd-primary); }
+
+    .legal-toc {
+      margin: 0 0 24px; padding: 14px 16px;
+      background: var(--sd-bg-elev);
+      border: 1px solid var(--sd-line);
+      border-radius: var(--sd-r-md);
+      font-size: 14px;
+    }
+    .legal-toc .toc-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; color: var(--sd-ink-soft); margin-bottom: 6px; }
+    .legal-toc ol { margin: 0; padding-left: 18px; color: var(--sd-ink-soft); }
+    .legal-toc ol li { margin-bottom: 2px; }
+    .legal-toc a { color: var(--sd-ink-soft); text-decoration: none; }
+    .legal-toc a:hover { color: var(--sd-ink); text-decoration: underline; }
+
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 8px 0 18px;
+      font-size: 14px;
+    }
+    .data-table th, .data-table td {
+      padding: 10px 12px;
+      text-align: left;
+      vertical-align: top;
+      border-bottom: 1px solid var(--sd-line);
+    }
+    .data-table th {
+      font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em;
+      font-weight: 700; color: var(--sd-ink-soft);
+      background: var(--sd-bg-elev);
+    }
+    .data-table tr:last-child td { border-bottom: none; }
+    .data-table code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 12px;
+      background: var(--sd-surface-2);
+      padding: 1px 6px;
+      border-radius: var(--sd-r-sm);
+    }
+  </style>
+</head>
+<body>
+  <div class="sd-frame">
+
+    <sd-top-bar title="Privacy" back></sd-top-bar>
+
+    <div class="legal">
+      <div class="legal-header">
+        <div class="legal-eyebrow">Privacy Policy</div>
+        <h1>Privacy Policy</h1>
+        <div class="updated">Last updated 17 May 2026 · effective on the same date</div>
+      </div>
+
+      <div class="legal-summary">
+        <sd-icon name="lock" size="20"></sd-icon>
+        <div class="body">
+          <strong>The short version.</strong> Your family's data stays in Canada, encrypted at rest. We don't sell it, don't share it with advertisers, and don't train AI on it. You can export or delete everything from your profile in two taps.
+        </div>
+      </div>
+
+      <div class="legal-toc">
+        <div class="toc-label">Contents</div>
+        <ol>
+          <li><a href="#what">What I collect</a></li>
+          <li><a href="#why">Why I collect it</a></li>
+          <li><a href="#kids">A note on kids' data</a></li>
+          <li><a href="#sharing">When I share it</a></li>
+          <li><a href="#where">Where it lives</a></li>
+          <li><a href="#your-rights">Your rights</a></li>
+          <li><a href="#cookies">Cookies and analytics</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ol>
+      </div>
+
+      <h2 id="what">1. What I collect</h2>
+      <p>Two kinds of things — what you give me, and what your browser sends just by being there.</p>
+
+      <table class="data-table">
+        <thead>
+          <tr><th>What</th><th>Example</th><th>Why I need it</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Account</strong></td>
+            <td><code>email</code>, hashed password</td>
+            <td>Sign you in, send password resets</td>
+          </tr>
+          <tr>
+            <td><strong>Family</strong></td>
+            <td>Names, ages, home location</td>
+            <td>Plan age-appropriate weekends near you</td>
+          </tr>
+          <tr>
+            <td><strong>Commitments</strong></td>
+            <td>Swim Saturdays 9am, etc.</td>
+            <td>Plan the weekend around your locks</td>
+          </tr>
+          <tr>
+            <td><strong>Preferences</strong></td>
+            <td>Likes parks, no camping</td>
+            <td>Improve picks over time</td>
+          </tr>
+          <tr>
+            <td><strong>Saved weekends</strong></td>
+            <td>"Bronte Creek + Rec Room, 5★"</td>
+            <td>Learn what's worked; let you repeat / remix</td>
+          </tr>
+          <tr>
+            <td><strong>Operational</strong></td>
+            <td>IP address, browser, error logs</td>
+            <td>Keep the service running; fix bugs</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2 id="why">2. Why I collect it</h2>
+      <p>To plan weekends, send the Friday 6pm preview, and improve recommendations for you. That's it. No advertising, no third-party data sale, no model training.</p>
+
+      <h2 id="kids">3. A note on kids' data</h2>
+      <p>Kids show up here only as first names and ages — the bare minimum needed to plan age-appropriate activities. Nothing more is collected from or about them.</p>
+      <p>Children don't have their own logins. The parent account is the only entry point. If your child is on your family list and they grow out of needing to be planned for, remove them from <a href="profile.html">your family profile</a> any time.</p>
+
+      <h2 id="sharing">4. When I share it</h2>
+      <p>Three narrow cases:</p>
+      <ul>
+        <li><strong>When you share.</strong> The "Share with Sara" link is a read-only preview you create; recipients only see what's on it.</li>
+        <li><strong>Service providers.</strong> Hosting (Azure, Canada Central region), email delivery (Postmark), and analytics (Plausible — no cookies, no personal IDs).</li>
+        <li><strong>Legal.</strong> If compelled by a Canadian court order. I publish a transparency report annually.</li>
+      </ul>
+
+      <h2 id="where">5. Where it lives</h2>
+      <p>All family data is stored in Azure's <code>canadacentral</code> region. The database is encrypted at rest; connections are TLS only. Operational backups roll off after 90 days.</p>
+
+      <h2 id="your-rights">6. Your rights</h2>
+      <p>From your profile you can:</p>
+      <ul>
+        <li><strong>Export</strong> — download everything as JSON.</li>
+        <li><strong>Delete</strong> — close the account; all data is removed within 30 days, backups within 90.</li>
+        <li><strong>Correct</strong> — edit any family detail any time.</li>
+      </ul>
+      <p>Under PIPEDA (Canada) and GDPR (EU), you also have the right to access, rectification, erasure, and to object to processing. Email us — we don't make you fill out forms for this.</p>
+
+      <h2 id="cookies">7. Cookies and analytics</h2>
+      <p>We use one functional cookie — your sign-in token. No tracking cookies, no third-party cookies, no advertising IDs.</p>
+      <p>For analytics we use Plausible, which is cookieless and counts only aggregate page views. No individual user can be identified from it.</p>
+
+      <h2 id="contact">8. Contact</h2>
+      <p>Privacy questions go to <a href="mailto:privacy@saturdaze.app">privacy@saturdaze.app</a>. Real human reply within a day or two.</p>
+    </div>
+
+    <sd-bottom-nav active=""></sd-bottom-nav>
+  </div>
+</body>
+</html>

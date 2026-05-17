@@ -67,6 +67,33 @@ h1 {
   margin-top: 4px;
 }
 
+.email-entry {
+  width: min(100%, 320px);
+  text-align: left;
+}
+
+.mail-app-link {
+  min-height: 32px;
+  padding: 0 14px;
+  border-radius: var(--sd-r-pill);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--sd-ink);
+  background: transparent;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.mail-app-link:hover {
+  background: var(--sd-surface-2);
+}
+
+.helper.error {
+  color: var(--sd-warn);
+}
+
 .foot {
   text-align: center;
   font-size: 12px;

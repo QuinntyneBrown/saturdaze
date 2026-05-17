@@ -13,6 +13,11 @@ public class AuthControllerTests : IClassFixture<SaturdazeApiFactory>
 
     private record RegisterRequest(string Email, string Password, string? FamilyName, string? HomeLocation);
     private record LoginRequest(string Email, string Password);
+    private record ForgotPasswordRequest(string Email);
+    private record ResetPasswordRequest(string Token, string Password);
+    private record VerifyEmailRequest(string Token);
+    private record ResendVerificationRequest(string Email);
+    private record DeliveryDto(string? Email, string? Token, DateTimeOffset? ExpiresAtUtc);
     private record TokenDto(string AccessToken, string RefreshToken, DateTimeOffset AccessTokenExpiresAtUtc, string TokenType);
     private record UserDto(Guid Id, string Email, string Role, DateTimeOffset? EmailVerifiedUtc);
     private record AuthSuccessDto(TokenDto Token, UserDto User);
@@ -119,5 +124,96 @@ public class AuthControllerTests : IClassFixture<SaturdazeApiFactory>
         me.StatusCode.Should().Be(HttpStatusCode.OK);
         var user = await me.Content.ReadFromJsonAsync<UserDto>();
         user!.Email.Should().Be(email);
+    }
+
+    [Fact]
+    public async Task Forgot_password_returns_202_for_known_and_unknown_email()
+    {
+        var client = _factory.CreateClient();
+        var email = $"forgot-{Guid.NewGuid():N}@example.com";
+
+        await client.PostAsJsonAsync("/api/auth/register",
+            new RegisterRequest(email, "password123", null, null));
+
+        var known = await client.PostAsJsonAsync("/api/auth/forgot-password",
+            new ForgotPasswordRequest(email));
+        var unknown = await client.PostAsJsonAsync("/api/auth/forgot-password",
+            new ForgotPasswordRequest($"missing-{Guid.NewGuid():N}@example.com"));
+
+        known.StatusCode.Should().Be(HttpStatusCode.Accepted);
+        unknown.StatusCode.Should().Be(HttpStatusCode.Accepted);
+
+        var body = await known.Content.ReadFromJsonAsync<DeliveryDto>();
+        body!.Token.Should().NotBeNullOrWhiteSpace();
+        body.ExpiresAtUtc.Should().NotBeNull();
+    }
+
+    [Fact]
+    public async Task Reset_password_with_valid_token_consumes_token_and_changes_password()
+    {
+        var client = _factory.CreateClient();
+        var email = $"reset-{Guid.NewGuid():N}@example.com";
+
+        await client.PostAsJsonAsync("/api/auth/register",
+            new RegisterRequest(email, "password123", null, null));
+        var forgot = await client.PostAsJsonAsync("/api/auth/forgot-password",
+            new ForgotPasswordRequest(email));
+        var delivery = await forgot.Content.ReadFromJsonAsync<DeliveryDto>();
+
+        var reset = await client.PostAsJsonAsync("/api/auth/reset-password",
+            new ResetPasswordRequest(delivery!.Token!, "newpass123"));
+        reset.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var oldLogin = await client.PostAsJsonAsync("/api/auth/login",
+            new LoginRequest(email, "password123"));
+        oldLogin.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+
+        var newLogin = await client.PostAsJsonAsync("/api/auth/login",
+            new LoginRequest(email, "newpass123"));
+        newLogin.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var reuse = await client.PostAsJsonAsync("/api/auth/reset-password",
+            new ResetPasswordRequest(delivery.Token!, "anotherpass123"));
+        reuse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        var err = await reuse.Content.ReadFromJsonAsync<AuthError>();
+        err!.Code.Should().Be("token_invalid");
+    }
+
+    [Fact]
+    public async Task Verify_email_sets_email_verified_timestamp()
+    {
+        var client = _factory.CreateClient();
+        var email = $"verify-{Guid.NewGuid():N}@example.com";
+
+        var reg = await client.PostAsJsonAsync("/api/auth/register",
+            new RegisterRequest(email, "password123", null, null));
+        var auth = await reg.Content.ReadFromJsonAsync<AuthSuccessDto>();
+
+        var resend = await client.PostAsJsonAsync("/api/auth/resend-verification",
+            new ResendVerificationRequest(email));
+        resend.StatusCode.Should().Be(HttpStatusCode.Accepted);
+        var delivery = await resend.Content.ReadFromJsonAsync<DeliveryDto>();
+        delivery!.Token.Should().NotBeNullOrWhiteSpace();
+
+        var verify = await client.PostAsJsonAsync("/api/auth/verify-email",
+            new VerifyEmailRequest(delivery.Token!));
+        verify.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        client.DefaultRequestHeaders.Authorization =
+            new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", auth!.Token.AccessToken);
+        var me = await client.GetFromJsonAsync<UserDto>("/api/auth/me");
+        me!.EmailVerifiedUtc.Should().NotBeNull();
+    }
+
+    [Fact]
+    public async Task Verify_email_with_bad_token_returns_400_token_invalid()
+    {
+        var client = _factory.CreateClient();
+        var verify = await client.PostAsJsonAsync("/api/auth/verify-email",
+            new VerifyEmailRequest("not-a-real-token"));
+        verify.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+
+        var err = await verify.Content.ReadFromJsonAsync<AuthError>();
+        err!.Code.Should().Be("token_invalid");
     }
 }

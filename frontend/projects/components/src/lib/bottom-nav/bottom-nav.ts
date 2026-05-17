@@ -12,10 +12,9 @@ import { Icon } from '../icon/icon';
  * Fixed-bottom primary navigation. Becomes an icon rail at tablet width and
  * a labelled sidebar at desktop width.
  *
- * Mirrors `docs/mocks/components/sd-bottom-nav.js` 1:1 so the same e2e POM
- * (which selects via `a[href$="home.html"]` for parity with the static mock)
- * works against both worlds. Click is intercepted so navigation actually
- * resolves through Angular's router rather than triggering a page reload.
+ * Uses real Angular route hrefs so copy-link, modifier-click, and direct
+ * opens all resolve to production routes. Plain clicks are still intercepted
+ * so navigation stays inside the SPA.
  */
 
 export type BottomNavKey = 'home' | 'activities' | 'saved' | 'profile';
@@ -24,15 +23,15 @@ interface NavItem {
   key: BottomNavKey;
   label: string;
   icon: string;
-  href: string;   // mirrors the mock's static href so visual + selectors line up
-  route: string;  // Angular route the click should resolve to
+  href: string;
+  route: string;
 }
 
 const ITEMS: readonly NavItem[] = [
-  { key: 'home',       label: 'Weekend',  icon: 'home',    href: 'home.html',       route: '/weekend' },
-  { key: 'activities', label: 'Discover', icon: 'sparkle', href: 'activities.html', route: '/activities' },
-  { key: 'saved',      label: 'Saved',    icon: 'heart',   href: 'saved.html',      route: '/saved' },
-  { key: 'profile',    label: 'Family',   icon: 'user',    href: 'profile.html',    route: '/profile' },
+  { key: 'home',       label: 'Weekend',  icon: 'home',    href: '/weekend',    route: '/weekend' },
+  { key: 'activities', label: 'Discover', icon: 'sparkle', href: '/activities', route: '/activities' },
+  { key: 'saved',      label: 'Saved',    icon: 'heart',   href: '/saved',      route: '/saved' },
+  { key: 'profile',    label: 'Family',   icon: 'user',    href: '/profile',    route: '/profile' },
 ];
 
 @Component({

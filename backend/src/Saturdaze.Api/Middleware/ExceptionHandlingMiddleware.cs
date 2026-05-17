@@ -28,6 +28,10 @@ public sealed class ExceptionHandlingMiddleware
         {
             await WriteAuthError(context, StatusCodes.Status401Unauthorized, ex.Code, ex.Message);
         }
+        catch (AuthFlowException ex)
+        {
+            await WriteAuthError(context, ex.StatusCode, ex.Code, ex.Message);
+        }
         catch (NotFoundException ex)
         {
             await WriteAsync(context, StatusCodes.Status404NotFound, "Not found", ex.Message);

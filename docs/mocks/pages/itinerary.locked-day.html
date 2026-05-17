@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Saturday (locked) — Saturdaze</title>
+  <link rel="stylesheet" href="../styles/global.css" />
+  <script type="module" src="../app.js"></script>
+  <style>
+    /* === Variant of itinerary.html (BUG-032 / M-S13) ======================
+       Day-level lock state. The Saturday day-switcher pill carries a
+       small lock chip; an in-page banner explains what's locked and
+       what to expect on the next regenerate. The footer Lock day
+       button becomes "Unlock day".
+
+       Block-level locks (the existing `locked` attribute on
+       sd-timeline-block) stay visible inside the timeline as a second,
+       finer-grained signal — locking the whole day doesn't change
+       individual block locks, just adds a wrapper.
+       ===================================================================== */
+    .it-head { padding: 8px var(--sd-app-pad-x) 16px; }
+    .it-head-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .it-eyebrow { font-size: 11px; color: var(--sd-ink-soft); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600; }
+    .it-title { font-size: 26px; font-weight: 700; letter-spacing: -0.02em; margin-top: 2px; }
+    .it-sub { color: var(--sd-ink-soft); font-size: 14px; margin-top: 2px; }
+    .it-sun-icon { color: var(--sd-sun); flex-shrink: 0; }
+    .it-actions { padding: 8px var(--sd-app-pad-x) 24px; display: flex; gap: 10px; }
+
+    /* Locked-day banner — accent-green soft surface, clear lock icon.
+       The body line says what it does in plain language: "won't change". */
+    .locked-banner {
+      margin: 0 var(--sd-app-pad-x) 16px;
+      padding: 12px 14px;
+      background: var(--sd-accent-soft);
+      border: 1px solid color-mix(in srgb, var(--sd-accent) 30%, transparent);
+      border-radius: var(--sd-r-lg);
+      display: flex; gap: 12px; align-items: center;
+    }
+    .locked-banner sd-icon { color: var(--sd-accent); flex-shrink: 0; }
+    .locked-banner .title { font-size: 13px; font-weight: 700; color: var(--sd-accent); letter-spacing: 0.02em; text-transform: uppercase; }
+    .locked-banner .body { font-size: 13px; color: color-mix(in srgb, var(--sd-accent) 70%, var(--sd-ink) 30%); margin-top: 2px; line-height: 1.5; }
+    .locked-banner button {
+      background: transparent;
+      border: 1px solid color-mix(in srgb, var(--sd-accent) 30%, transparent);
+      color: var(--sd-accent);
+      border-radius: var(--sd-r-pill);
+      padding: 6px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .day-switcher { padding: 0 4px; display: grid; gap: 10px; }
+    .day-switcher .opt {
+      padding: 14px 16px;
+      background: var(--sd-surface);
+      border: 1px solid var(--sd-line);
+      border-radius: var(--sd-r-lg);
+      display: flex; align-items: center; gap: 12px;
+      cursor: pointer;
+      text-decoration: none;
+      color: inherit;
+      position: relative;
+    }
+    .day-switcher .opt[data-active="true"] {
+      border-color: var(--sd-primary);
+      background: var(--sd-primary-soft);
+    }
+    .day-switcher .opt[data-locked="true"] {
+      border-color: var(--sd-accent);
+      background: var(--sd-accent-soft);
+    }
+    .day-switcher .opt[data-locked="true"][data-active="true"] {
+      border-color: var(--sd-accent);
+      box-shadow: 0 0 0 2px color-mix(in srgb, var(--sd-accent) 20%, transparent);
+    }
+    .day-switcher .opt .day { font-weight: 600; letter-spacing: -0.005em; display: inline-flex; gap: 6px; align-items: center; }
+    .day-switcher .opt .day .day-lock {
+      color: var(--sd-accent);
+      display: inline-flex;
+    }
+    .day-switcher .opt .meta { color: var(--sd-ink-soft); font-size: 13px; margin-top: 2px; }
+    .day-switcher .opt .weather-icon { color: var(--sd-sun); }
+
+    .weekend-stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 0 4px; }
+    .weekend-stats .stat {
+      background: var(--sd-surface);
+      border: 1px solid var(--sd-line);
+      border-radius: var(--sd-r-lg);
+      padding: 14px;
+    }
+    .weekend-stats .stat .num { font-size: 24px; font-weight: 700; letter-spacing: -0.02em; }
+    .weekend-stats .stat .lab { color: var(--sd-ink-soft); font-size: 12px; margin-top: 2px; }
+
+    @media (min-width: 1024px) {
+      .it-head { padding-left: 0; padding-right: 0; }
+      .it-actions { padding-left: 0; padding-right: 0; }
+      .locked-banner { margin-left: 0; margin-right: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="sd-frame">
+
+    <sd-top-bar title="Saturday" back>
+      <sd-icon-button slot="trailing" icon="refresh" label="Regenerate"></sd-icon-button>
+      <sd-icon-button slot="trailing" icon="more" label="More"></sd-icon-button>
+    </sd-top-bar>
+
+    <div class="locked-banner">
+      <sd-icon name="lock" size="20"></sd-icon>
+      <div style="flex:1; min-width:0;">
+        <div class="title">Saturday is locked</div>
+        <div class="body">Regenerate won't touch this day. Unlock it any time if you want a fresh draft.</div>
+      </div>
+      <button type="button">Unlock</button>
+    </div>
+
+    <sd-split-view sticky-master>
+
+      <div slot="master">
+        <div class="it-head">
+          <div class="it-head-row">
+            <div>
+              <div class="it-eyebrow">17 May 2026</div>
+              <div class="it-title">Sunny &amp; 22°</div>
+              <div class="it-sub">In bed by 9pm — out the door by 9am</div>
+            </div>
+            <sd-icon name="sun" size="56" class="it-sun-icon"></sd-icon>
+          </div>
+          <sd-tag-group style="margin-top: 16px;">
+            <sd-chip tone="accent"><sd-icon name="lock" size="12"></sd-icon> Day locked</sd-chip>
+            <sd-chip tone="sky"><sd-icon name="car" size="12"></sd-icon> 1h 10m driving</sd-chip>
+            <sd-chip tone="leaf">Outdoor</sd-chip>
+            <sd-chip tone="sun">22° hi</sd-chip>
+          </sd-tag-group>
+        </div>
+
+        <sd-section title="The day at a glance">
+          <div class="day-switcher">
+            <a class="opt" data-active="true" data-locked="true" href="itinerary.locked-day.html">
+              <sd-icon name="sun" size="22" class="weather-icon"></sd-icon>
+              <div style="flex:1;">
+                <div class="day">
+                  Saturday
+                  <span class="day-lock" aria-label="Day is locked"><sd-icon name="lock" size="14"></sd-icon></span>
+                </div>
+                <div class="meta">5 blocks · 22° sunny · Locked</div>
+              </div>
+              <sd-icon name="chevron_right" size="16"></sd-icon>
+            </a>
+            <a class="opt" href="itinerary.sunday.html">
+              <sd-icon name="cloud" size="22" style="color: var(--sd-ink-soft);"></sd-icon>
+              <div style="flex:1;">
+                <div class="day">Sunday</div>
+                <div class="meta">5 blocks · 18° cloudy · Rec Room highlight</div>
+              </div>
+              <sd-icon name="chevron_right" size="16"></sd-icon>
+            </a>
+          </div>
+        </sd-section>
+
+        <sd-section title="Weekend totals">
+          <div class="weekend-stats">
+            <div class="stat"><div class="num">10</div><div class="lab">blocks planned</div></div>
+            <div class="stat"><div class="num">2h 5m</div><div class="lab">total driving</div></div>
+            <div class="stat"><div class="num">1 day</div><div class="lab">locked</div></div>
+            <div class="stat"><div class="num">$~120</div><div class="lab">est. spend</div></div>
+          </div>
+        </sd-section>
+
+        <div class="it-actions">
+          <sd-button variant="secondary" full disabled>
+            <sd-icon slot="leading" name="refresh" size="16"></sd-icon>
+            Regenerate (Sunday only)
+          </sd-button>
+          <sd-button full variant="secondary">
+            <sd-icon slot="leading" name="unlock" size="16"></sd-icon>
+            Unlock day
+          </sd-button>
+        </div>
+      </div>
+
+      <div slot="detail">
+        <div style="padding: 8px 4px 4px;">
+          <div style="display:flex; align-items:center; justify-content:space-between; padding: 8px 18px 14px; border-bottom: 1px solid var(--sd-line);">
+            <div>
+              <div style="font-weight:600; font-size:15px;">Saturday — timeline</div>
+              <div style="color:var(--sd-ink-soft); font-size:13px; margin-top:2px;">Locked — these blocks won't change on the next regenerate</div>
+            </div>
+            <sd-icon-button icon="map" label="See on map" variant="filled"></sd-icon-button>
+          </div>
+          <div style="padding: 14px 14px; display:grid; gap: 10px;">
+            <sd-timeline-block time="9:00" duration="60m" title="Swim lessons" subtitle="Port Credit Pool" icon="bike" tone="fixed" locked></sd-timeline-block>
+            <sd-timeline-block time="11:00" duration="2h" title="Lavender fields" subtitle="Terre Bleu · 45 min drive" icon="tree">
+              <sd-chip slot="chips" tone="accent"><sd-icon name="lock" size="12"></sd-icon> In locked day</sd-chip>
+            </sd-timeline-block>
+            <sd-timeline-block time="13:00" duration="75m" title="Lunch — La Marina" subtitle="Wife-approved · patio" icon="fork" tone="meal">
+              <sd-chip slot="chips" tone="accent"><sd-icon name="lock" size="12"></sd-icon> In locked day</sd-chip>
+            </sd-timeline-block>
+            <sd-timeline-block time="15:30" duration="90m" title="Quiet time at home" subtitle="Recharge before evening" icon="bed" tone="downtime"></sd-timeline-block>
+            <sd-timeline-block time="17:00" duration="60m" title="Workout" subtitle="Garage gym" icon="bike" tone="workout" locked></sd-timeline-block>
+          </div>
+        </div>
+      </div>
+    </sd-split-view>
+
+    <sd-bottom-nav active="home"></sd-bottom-nav>
+  </div>
+</body>
+</html>

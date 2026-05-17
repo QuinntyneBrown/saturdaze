@@ -44,7 +44,6 @@ public sealed class AddShoppingErrandCommandHandler : IRequestHandler<AddShoppin
             EstimatedMinutes = request.EstimatedMinutes,
             Done = false
         };
-        weekend.Errands.Add(errand);
         _db.ShoppingErrands.Add(errand);
 
         await _db.SaveChangesAsync(cancellationToken);

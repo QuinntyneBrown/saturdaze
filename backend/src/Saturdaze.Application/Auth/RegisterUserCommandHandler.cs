@@ -74,6 +74,16 @@ public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, A
         };
         _db.RefreshTokens.Add(refresh);
 
+        var verifyRaw = _jwt.CreateRawRefreshToken();
+        _db.EmailVerificationTokens.Add(new EmailVerificationToken
+        {
+            Id = Guid.NewGuid(),
+            UserId = user.Id,
+            TokenHash = _jwt.HashRefreshToken(verifyRaw),
+            ExpiresAtUtc = now.AddHours(24),
+            CreatedAtUtc = now,
+        });
+
         await _db.SaveChangesAsync(ct);
 
         return new AuthSuccessDto(

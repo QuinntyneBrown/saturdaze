@@ -8,7 +8,7 @@
     <div class="nav-links">
       <a class="nav-link" href="#how">How it works</a>
       <a class="nav-link" routerLink="/login">Sign in</a>
-      <sd-button size="sm">
+      <sd-button size="sm" routerLink="/signup">
         <sd-icon slot="leading" name="sparkle" [size]="14" />
         Get started
       </sd-button>
@@ -25,11 +25,11 @@
         in the rest with ideas your family will actually say yes to.
       </p>
       <div class="cta-row">
-        <sd-button size="lg">
+        <sd-button size="lg" routerLink="/signup">
           <sd-icon slot="leading" name="sparkle" [size]="16" />
           Create your account
         </sd-button>
-        <sd-button variant="ghost" size="lg">
+        <sd-button variant="ghost" size="lg" routerLink="/sample-weekend">
           <sd-icon slot="leading" name="arrow_right" [size]="16" />
           See a sample weekend
         </sd-button>
@@ -127,11 +127,11 @@
     <h2>Get your first weekend.</h2>
     <p>It takes a minute to set up, and Friday at 6pm you'll have a draft Saturday and Sunday waiting.</p>
     <div class="cta-row">
-      <sd-button size="lg">
+      <sd-button size="lg" routerLink="/signup">
         <sd-icon slot="leading" name="sparkle" [size]="16" />
         Create your account
       </sd-button>
-      <sd-button variant="ghost" size="lg">
+      <sd-button variant="ghost" size="lg" routerLink="/login">
         Already have one? Sign in
       </sd-button>
     </div>

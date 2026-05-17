@@ -2,7 +2,7 @@
 <h1>{{ greeting() }}</h1>
 <p>{{ subtitle() }}</p>
 <div class="cta-row">
-  <sd-button size="lg" full>
+  <sd-button size="lg" full (click)="ctaClick.emit()">
     <sd-icon slot="leading" name="sparkle" [size]="18" />
     {{ cta() }}
   </sd-button>

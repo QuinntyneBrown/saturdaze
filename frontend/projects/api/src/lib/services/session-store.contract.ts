@@ -5,6 +5,7 @@ import { AuthToken } from '../models/auth-token';
 import { ForgotPasswordRequest } from '../models/forgot-password-request';
 import { LoginRequest } from '../models/login-request';
 import { ResetPasswordRequest } from '../models/reset-password-request';
+import { ResendVerificationRequest } from '../models/resend-verification-request';
 import { SignupRequest } from '../models/signup-request';
 import { User } from '../models/user';
 import { VerifyEmailRequest } from '../models/verify-email-request';
@@ -27,6 +28,7 @@ export interface ISessionStore {
   login(req: LoginRequest, remember: boolean): Promise<void>;
   logout(): void;
   forgotPassword(req: ForgotPasswordRequest): Promise<void>;
+  resendVerification(req: ResendVerificationRequest): Promise<void>;
   resetPassword(req: ResetPasswordRequest): Promise<void>;
   verifyEmail(req: VerifyEmailRequest): Promise<void>;
   rehydrate(): Promise<void>;

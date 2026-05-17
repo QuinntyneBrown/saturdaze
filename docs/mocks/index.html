@@ -14,18 +14,32 @@
     <h2>Public</h2>
     <ul>
       <li><a class="tile" href="./pages/splash.html">Splash / Marketing<small>For signed-out visitors — pitch + sign-up CTA</small></a></li>
+      <li><a class="tile" href="./pages/sample-weekend.html">Sample weekend<small>Anonymous-safe preview — what the Browns get on Friday at 6pm</small></a></li>
       <li><a class="tile" href="./pages/login.html">Sign in<small>Email, password, remember-me</small></a></li>
       <li><a class="tile" href="./pages/signup.html">Create account<small>Family name, location, terms</small></a></li>
       <li><a class="tile" href="./pages/forgot-password.html">Forgot password<small>Request a reset link</small></a></li>
       <li><a class="tile" href="./pages/check-email.html">Check your email<small>Sent state — for reset &amp; verification</small></a></li>
       <li><a class="tile" href="./pages/reset-password.html">Reset password<small>Set new password (from link)</small></a></li>
       <li><a class="tile" href="./pages/verify-email.html">Verify email<small>Success landing after verification</small></a></li>
+      <li><a class="tile" href="./pages/terms.html">Terms of Service<small>Internal legal page · plain-language summary up top</small></a></li>
+      <li><a class="tile" href="./pages/privacy.html">Privacy Policy<small>What I collect, where it lives, how to delete</small></a></li>
+    </ul>
+
+    <h2>Auth flow states</h2>
+    <ul>
+      <li><a class="tile" href="./pages/forgot-password.error.html">Forgot password — transport error<small>Inline failure banner, retry in place (BUG-010)</small></a></li>
+      <li><a class="tile" href="./pages/check-email.with-email.html">Check email — with context<small>The address is known and shown plainly (BUG-009)</small></a></li>
+      <li><a class="tile" href="./pages/check-email.empty.html">Check email — no context<small>Asks for email when router state was lost (BUG-009)</small></a></li>
+      <li><a class="tile" href="./pages/verify-email.verifying.html">Verify email — in flight<small>Spinner + reassurance while the token is being checked (BUG-008)</small></a></li>
+      <li><a class="tile" href="./pages/verify-email.expired.html">Verify email — expired<small>Friendly resolution path, not a hard fail (BUG-008)</small></a></li>
+      <li><a class="tile" href="./pages/reset-password.success.html">Reset password — success<small>Password updated; other devices signed out (BUG-007)</small></a></li>
+      <li><a class="tile" href="./pages/reset-password.expired.html">Reset password — expired<small>Token outlived its 60-minute window (BUG-007)</small></a></li>
     </ul>
 
     <h2>Screens</h2>
     <ul>
       <li><a class="tile" href="./pages/home.html">Home / This Weekend<small>Greeting, weather, day cards, anticipated tips</small></a></li>
-      <li><a class="tile" href="./pages/itinerary.html">Itinerary Detail<small>Timeline view of a single day</small></a></li>
+      <li><a class="tile" href="./pages/itinerary.html">Itinerary — Saturday<small>Timeline view of a single day</small></a></li>
       <li><a class="tile" href="./pages/activities.html">Activity Suggestions<small>Discover, filter, "try something new"</small></a></li>
       <li><a class="tile" href="./pages/restaurants.html">Restaurant Picker<small>Wife-approved style + family vote</small></a></li>
       <li><a class="tile" href="./pages/saved.html">Saved Weekends<small>History, favourites, remix</small></a></li>
@@ -34,9 +48,24 @@
       <li><a class="tile" href="./pages/profile.html">Family Profile<small>Members, commitments, preferences</small></a></li>
     </ul>
 
+    <h2>App states</h2>
+    <ul>
+      <li><a class="tile" href="./pages/home.empty.html">Home — first run<small>No weekend drafted yet; warm welcome (BUG-022)</small></a></li>
+      <li><a class="tile" href="./pages/home.generating.html">Home — drafting<small>Skeleton cards while the plan is generated (BUG-022)</small></a></li>
+      <li><a class="tile" href="./pages/home.lock-mode.html">Home — lock selection<small>Tap-to-lock individual blocks (BUG-024)</small></a></li>
+      <li><a class="tile" href="./pages/itinerary.sunday.html">Itinerary — Sunday<small>Sunday-active day-switcher state (BUG-005)</small></a></li>
+      <li><a class="tile" href="./pages/itinerary.locked-day.html">Itinerary — day locked<small>Banner + locked-day chip; regenerate scoped to other days (BUG-032)</small></a></li>
+      <li><a class="tile" href="./pages/restaurants.refreshing.html">Restaurants — refreshing<small>Skeleton picks while suggestions reshuffle (BUG-035)</small></a></li>
+      <li><a class="tile" href="./pages/restaurants.voted.html">Restaurants — voted<small>Active vote states on the family vote rows (BUG-036)</small></a></li>
+      <li><a class="tile" href="./pages/restaurants.consensus.html">Restaurants — consensus<small>"4 of 4 yes" affordance per card (BUG-036)</small></a></li>
+      <li><a class="tile" href="./pages/restaurants.locked.html">Restaurants — locked pick<small>One card locked + booking, siblings dimmed (BUG-038)</small></a></li>
+      <li><a class="tile" href="./pages/errand.alt-slots.html">Errand — alternate slots<small>Four candidate slots with trade-off badges (BUG-043)</small></a></li>
+      <li><a class="tile" href="./pages/errand.added.html">Errand — added<small>Confirmation card + "what next" tip (BUG-044)</small></a></li>
+    </ul>
+
     <h2>Dialogs &amp; sheets</h2>
     <ul>
-      <li><a class="tile" href="./pages/dialogs.html">All dialogs<small>Block detail, swap, vote, share, errand, Friday preview</small></a></li>
+      <li><a class="tile" href="./pages/dialogs.html">All dialogs<small>Block detail, regenerate, swap, vote, share (incl. copy-link), errand, Friday preview, mail picker, calendar export, see-on-map, surprise-me, remix, repeat, lock-it-in, action sheets, sign-out</small></a></li>
     </ul>
 
     <h2>Components</h2>

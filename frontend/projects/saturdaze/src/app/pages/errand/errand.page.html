@@ -1,57 +1,109 @@
 <sd-top-bar title="Add an errand" back />
 
-<div class="errand-lede">
-  <h2>Slot in a shopping run</h2>
-  <p>
-    I'll fit it on the way to or from something you're already doing — without
-    killing the day.
-  </p>
-</div>
-
-<div class="errand-form">
-  <sd-text-input
-    label="What's needed"
-    placeholder="Costco run — paper towels, bread, kid yogurt"
-  />
-
-  <sd-text-input
-    label="Roughly how long"
-    placeholder="45 min"
-    hint="I'll add 10 min buffer either side."
-  />
-
-  <div class="best-day">
-    <label class="best-day-label">Best day</label>
-    <sd-tag-group class="best-day-chips">
-      <sd-chip tone="primary">Sunday morning</sd-chip>
-      <sd-chip>Saturday after swim</sd-chip>
-      <sd-chip>Friday evening</sd-chip>
-      <sd-chip>Doesn't matter</sd-chip>
-    </sd-tag-group>
+@if (added()) {
+  <div class="errand-lede">
+    <h2>Added to Saturday</h2>
+    <p>{{ form.controls.description.value }} is now part of the weekend plan.</p>
   </div>
 
-  <sd-card variant="sunk">
-    <div class="suggested">
-      <div class="suggested-icon">
-        <sd-icon name="sparkle" [size]="18" />
-      </div>
-      <div>
-        <div class="suggested-title">Suggested slot</div>
-        <div class="suggested-body">
-          Sunday 9:15am — on the way back from church. Costco is 4 min off-route.
-          Adds 38 min to the day.
+  <div class="errand-form">
+    <sd-card variant="sunk">
+      <div class="suggested">
+        <div class="suggested-icon">
+          <sd-icon name="check" [size]="18" />
+        </div>
+        <div>
+          <div class="suggested-title">Added to {{ selectedSlot().when }}</div>
+          <div class="suggested-body">I'll preserve this errand during the next regenerate unless you remove it.</div>
         </div>
       </div>
-    </div>
-  </sd-card>
-</div>
+    </sd-card>
+  </div>
 
-<div class="errand-actions">
-  <sd-button variant="secondary" full>Pick a different slot</sd-button>
-  <sd-button full>
-    <sd-icon slot="leading" name="plus" [size]="16" />
-    Add to weekend
-  </sd-button>
-</div>
+  <div class="errand-actions">
+    <sd-button full (click)="backToWeekend()">
+      <sd-icon slot="leading" name="arrow_right" [size]="16" />
+      Back to weekend
+    </sd-button>
+  </div>
+} @else {
+  <div class="errand-lede">
+    <h2>Slot in a shopping run</h2>
+    <p>
+      I'll fit it on the way to or from something you're already doing — without
+      killing the day.
+    </p>
+  </div>
+
+  <form class="errand-form" [formGroup]="form">
+    <sd-text-input
+      label="What's needed"
+      placeholder="Costco run — paper towels, bread, kid yogurt"
+      formControlName="description"
+    />
+
+    <sd-text-input
+      label="Roughly how long"
+      placeholder="45"
+      hint="Minutes. I'll add 10 min buffer either side."
+      formControlName="duration"
+    />
+
+    <div class="best-day">
+      <label class="best-day-label">Best day</label>
+      <sd-tag-group class="best-day-chips">
+        <sd-chip tone="primary">{{ selectedSlot().when }}</sd-chip>
+        <sd-chip>Saturday after swim</sd-chip>
+        <sd-chip>Friday evening</sd-chip>
+        <sd-chip>Doesn't matter</sd-chip>
+      </sd-tag-group>
+    </div>
+
+    @if (showSlots()) {
+      <div class="slot-list">
+        @for (slot of slots; track slot.when) {
+          <button
+            type="button"
+            class="slot"
+            [attr.data-fit]="slot.fit"
+            [attr.data-selected]="slot.when === selectedSlot().when ? 'true' : null"
+            (click)="selectSlot(slot)"
+          >
+            <span class="radio"></span>
+            <span class="slot-copy">
+              <span class="when">{{ slot.when }}</span>
+              <span class="sub">{{ slot.subtitle }}</span>
+            </span>
+            <span class="badge">{{ slot.fit === 'best' ? 'Best fit' : slot.fit }}</span>
+          </button>
+        }
+      </div>
+    } @else {
+      <sd-card variant="sunk">
+        <div class="suggested">
+          <div class="suggested-icon">
+            <sd-icon name="sparkle" [size]="18" />
+          </div>
+          <div>
+            <div class="suggested-title">Suggested slot</div>
+            <div class="suggested-body">{{ selectedSlot().subtitle }}</div>
+          </div>
+        </div>
+      </sd-card>
+    }
+
+    @if (error()) {
+      <p class="form-error" role="alert">{{ error() }}</p>
+    }
+  </form>
+
+  <div class="errand-actions">
+    <sd-button variant="secondary" full (click)="pickDifferentSlot()">Pick a different slot</sd-button>
+    <sd-button full [disabled]="form.invalid || submitting()" (click)="addToWeekend()">
+      <sd-icon slot="leading" name="plus" [size]="16" />
+      Add to weekend
+    </sd-button>
+  </div>
+}
 
 <sd-bottom-nav active="home" />

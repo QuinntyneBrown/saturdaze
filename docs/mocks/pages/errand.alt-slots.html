@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Pick a slot — Saturdaze</title>
+  <link rel="stylesheet" href="../styles/global.css" />
+  <script type="module" src="../app.js"></script>
+  <style>
+    /* === Variant of errand.html (BUG-043 / M-S18) =========================
+       Renders after the user taps "Pick a different slot" on errand.html.
+       The suggested-slot card is replaced with a list of alternates,
+       each showing when it would happen and the cost (added time on
+       the day, off-route distance).
+
+       The currently selected slot keeps the primary chip; others use
+       the soft default. The card body explains the trade-off plainly.
+       ===================================================================== */
+    @media (min-width: 720px) { .errand-form { max-width: 560px; } }
+    @media (min-width: 1024px) { .errand-form { max-width: 600px; } }
+
+    .slot {
+      padding: 14px 16px;
+      background: var(--sd-surface);
+      border: 1px solid var(--sd-line);
+      border-radius: var(--sd-r-lg);
+      cursor: pointer;
+      display: flex; gap: 12px; align-items: center;
+    }
+    .slot[data-selected="true"] {
+      border-color: var(--sd-primary);
+      background: var(--sd-primary-soft);
+    }
+    .slot[data-fit="best"] { border-color: var(--sd-accent); }
+    .slot .radio {
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      border: 1.5px solid var(--sd-line-strong);
+      background: var(--sd-surface);
+      display: inline-flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .slot[data-selected="true"] .radio {
+      background: var(--sd-primary);
+      border-color: transparent;
+      box-shadow: inset 0 0 0 4px var(--sd-surface);
+    }
+    .slot .when {
+      font-weight: 600;
+      letter-spacing: -0.005em;
+    }
+    .slot .sub {
+      font-size: 13px;
+      color: var(--sd-ink-soft);
+      margin-top: 2px;
+    }
+    .slot .badge {
+      font-size: 11px; font-weight: 700;
+      padding: 2px 8px;
+      border-radius: var(--sd-r-pill);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      flex-shrink: 0;
+    }
+    .slot[data-fit="best"] .badge { background: var(--sd-accent-soft); color: var(--sd-accent); }
+    .slot[data-fit="ok"]   .badge { background: var(--sd-bg-elev);    color: var(--sd-ink-soft); }
+    .slot[data-fit="tight"] .badge { background: var(--sd-warn-soft);  color: var(--sd-warn); }
+  </style>
+</head>
+<body>
+  <div class="sd-frame">
+
+    <sd-top-bar title="Pick a slot" back></sd-top-bar>
+
+    <div style="padding: 0 var(--sd-app-pad-x);">
+      <h2 style="font-size: 22px; font-weight: 700; letter-spacing: -0.02em; margin: 8px 0 4px;">When should I slot the Costco run?</h2>
+      <p style="color: var(--sd-ink-soft); font-size: 14px; margin: 0 0 16px;">Four slots fit this weekend. The first one's the kindest to the day.</p>
+    </div>
+
+    <div class="errand-form" style="padding: 0 var(--sd-app-pad-x); display:grid; gap:8px;">
+      <div class="slot" data-selected="true" data-fit="best">
+        <div class="radio"></div>
+        <div style="flex:1; min-width:0;">
+          <div class="when">Sunday 9:15am</div>
+          <div class="sub">On the way back from church · 4 min off-route · adds 38m to the day</div>
+        </div>
+        <span class="badge">Best fit</span>
+      </div>
+
+      <div class="slot" data-fit="ok">
+        <div class="radio"></div>
+        <div style="flex:1; min-width:0;">
+          <div class="when">Saturday 10:15am</div>
+          <div class="sub">After swim · 12 min detour to Costco · adds 55m to Saturday</div>
+        </div>
+        <span class="badge">OK</span>
+      </div>
+
+      <div class="slot" data-fit="ok">
+        <div class="radio"></div>
+        <div style="flex:1; min-width:0;">
+          <div class="when">Friday 5:30pm</div>
+          <div class="sub">After work · doesn't touch the weekend · busier store</div>
+        </div>
+        <span class="badge">OK</span>
+      </div>
+
+      <div class="slot" data-fit="tight">
+        <div class="radio"></div>
+        <div style="flex:1; min-width:0;">
+          <div class="when">Saturday 4:00pm</div>
+          <div class="sub">Between quiet time and workout · adds 70m · runs into dinner prep</div>
+        </div>
+        <span class="badge">Tight</span>
+      </div>
+
+      <sd-card variant="sunk">
+        <div style="display:flex; gap:10px; align-items:flex-start;">
+          <sd-icon name="sparkle" size="18" style="color: var(--sd-primary); margin-top: 2px;"></sd-icon>
+          <div style="font-size:14px;">
+            <div style="font-weight:600;">Why Sunday 9:15am?</div>
+            <div style="color:var(--sd-ink-soft); margin-top:2px;">It's the only slot where the errand piggybacks on a drive you're already making. Saturday options would mean a dedicated trip.</div>
+          </div>
+        </div>
+      </sd-card>
+    </div>
+
+    <div class="errand-form" style="padding: 24px var(--sd-app-pad-x); display:flex; gap:10px;">
+      <sd-button variant="secondary" full>Back</sd-button>
+      <sd-button full>
+        <sd-icon slot="leading" name="check" size="16"></sd-icon>
+        Use Sunday 9:15am
+      </sd-button>
+    </div>
+
+    <sd-bottom-nav active="home"></sd-bottom-nav>
+  </div>
+</body>
+</html>

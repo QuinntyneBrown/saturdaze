@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Terms — Saturdaze</title>
+  <link rel="stylesheet" href="../styles/global.css" />
+  <script type="module" src="../app.js"></script>
+  <style>
+    /* === New page (BUG-017 / M-P1) ========================================
+       Internal Terms of Service page. The visual approach: an honest,
+       readable document — no legalese theatre. Body copy is set in the
+       same typographic system as the rest of the app so reading this
+       still feels like Saturdaze, not a different product.
+
+       Last-updated line is real (matches today's mock-plan date) so
+       reviewers can see how the timestamp should render.
+       ===================================================================== */
+    .legal {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 16px var(--sd-app-pad-x) 80px;
+    }
+    .legal-header {
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--sd-line);
+      margin-bottom: 24px;
+    }
+    .legal-eyebrow {
+      font-size: 11px; color: var(--sd-ink-soft);
+      text-transform: uppercase; letter-spacing: 0.1em; font-weight: 700;
+    }
+    .legal h1 {
+      font-size: 30px; font-weight: 800; letter-spacing: -0.02em;
+      margin: 4px 0 4px;
+      line-height: 1.15;
+    }
+    .legal .updated {
+      font-size: 13px; color: var(--sd-ink-soft);
+    }
+
+    /* Plain-language summary up top — the "what this actually means"
+       for non-lawyers. Cuts the doc by 80% for the 80% of readers
+       who only need that. */
+    .legal-summary {
+      padding: 14px 16px;
+      background: var(--sd-primary-soft);
+      border: 1px solid color-mix(in srgb, var(--sd-primary) 25%, transparent);
+      border-radius: var(--sd-r-lg);
+      display: flex; gap: 12px; align-items: flex-start;
+      margin-bottom: 32px;
+    }
+    .legal-summary sd-icon { color: var(--sd-primary); flex-shrink: 0; margin-top: 2px; }
+    .legal-summary .body { font-size: 14px; line-height: 1.6; color: color-mix(in srgb, var(--sd-primary) 30%, var(--sd-ink) 70%); }
+    .legal-summary .body strong { color: var(--sd-ink); }
+
+    .legal h2 {
+      font-size: 19px; font-weight: 700; letter-spacing: -0.01em;
+      margin: 32px 0 8px;
+    }
+    .legal p {
+      font-size: 15px; line-height: 1.65;
+      color: var(--sd-ink);
+      margin: 0 0 12px;
+    }
+    .legal ul {
+      margin: 0 0 16px;
+      padding-left: 22px;
+      font-size: 15px; line-height: 1.65;
+    }
+    .legal ul li { margin-bottom: 6px; }
+    .legal a { color: var(--sd-primary); }
+
+    .legal-toc {
+      margin: 0 0 24px;
+      padding: 14px 16px;
+      background: var(--sd-bg-elev);
+      border: 1px solid var(--sd-line);
+      border-radius: var(--sd-r-md);
+      font-size: 14px;
+    }
+    .legal-toc .toc-label {
+      font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em;
+      font-weight: 700; color: var(--sd-ink-soft); margin-bottom: 6px;
+    }
+    .legal-toc ol { margin: 0; padding-left: 18px; color: var(--sd-ink-soft); }
+    .legal-toc ol li { margin-bottom: 2px; }
+    .legal-toc a { color: var(--sd-ink-soft); text-decoration: none; }
+    .legal-toc a:hover { color: var(--sd-ink); text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <div class="sd-frame">
+
+    <sd-top-bar title="Terms" back></sd-top-bar>
+
+    <div class="legal">
+      <div class="legal-header">
+        <div class="legal-eyebrow">Terms of Service</div>
+        <h1>Terms of Service</h1>
+        <div class="updated">Last updated 17 May 2026 · effective on the same date</div>
+      </div>
+
+      <div class="legal-summary">
+        <sd-icon name="sparkle" size="20"></sd-icon>
+        <div class="body">
+          <strong>The short version.</strong> Saturdaze plans weekends for your family. You own your data and can delete it any time. We won't sell it or train models on it. If you do something illegal, we close the account. That's most of what's below — the rest is the formal version of the same.
+        </div>
+      </div>
+
+      <div class="legal-toc">
+        <div class="toc-label">Contents</div>
+        <ol>
+          <li><a href="#acceptance">Acceptance</a></li>
+          <li><a href="#account">Your account</a></li>
+          <li><a href="#content">What you put in</a></li>
+          <li><a href="#our-service">What I do</a></li>
+          <li><a href="#termination">Closing your account</a></li>
+          <li><a href="#disclaimers">Disclaimers</a></li>
+          <li><a href="#changes">Changes to these terms</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ol>
+      </div>
+
+      <h2 id="acceptance">1. Acceptance</h2>
+      <p>By creating an account you agree to these terms. If you don't agree, that's fine — don't create an account.</p>
+
+      <h2 id="account">2. Your account</h2>
+      <p>You're responsible for the account you create — both keeping it secure and the activity on it. Don't share your password. If you suspect someone else got in, sign out everywhere from your profile or email us and we'll help.</p>
+      <ul>
+        <li>One account per person. Family members can be added inside the app — they don't need their own logins to be planned for.</li>
+        <li>You must be 18 or older to create the account. Children can be added as family members.</li>
+        <li>Email address on the account must be one you control.</li>
+      </ul>
+
+      <h2 id="content">3. What you put in</h2>
+      <p>Your family, your commitments, your saved weekends — all of it belongs to you. We use it only to plan your weekends and improve the recommendations you see. Specifically:</p>
+      <ul>
+        <li>We don't sell your data.</li>
+        <li>We don't train AI models on individual family data.</li>
+        <li>You can export everything or delete the account from <a href="profile.html">your family profile</a> at any time.</li>
+      </ul>
+
+      <h2 id="our-service">4. What I do</h2>
+      <p>Saturdaze drafts weekend plans for your family based on what you've told me about the kids, your home base, your locked commitments, and what's worked before. The drafts are suggestions — you decide what actually happens.</p>
+      <p>Some recommendations point you toward businesses (restaurants, parks, ticketed venues). I don't get paid for those; the algorithm picks based on fit, not partnerships.</p>
+
+      <h2 id="termination">5. Closing your account</h2>
+      <p>You can close your account from your profile any time. Closure deletes your data within 30 days; backups roll off within 90.</p>
+      <p>I can close an account for misuse — fraud, scraping, harassment, that sort of thing. If it's a mistake, reply to the closure email and we'll talk.</p>
+
+      <h2 id="disclaimers">6. Disclaimers</h2>
+      <p>Saturdaze plans weekends. It doesn't make reservations binding on third parties, doesn't guarantee venues will be open, and isn't responsible for what happens at recommended spots. Use common sense — if a hike requires gear you don't have, don't go.</p>
+      <p>The service is provided "as is". I'll do my best to keep it running but can't promise zero downtime.</p>
+
+      <h2 id="changes">7. Changes to these terms</h2>
+      <p>If I change these terms in a way that materially affects you, you'll get an email at least 30 days before they take effect. Continued use after that counts as acceptance.</p>
+
+      <h2 id="contact">8. Contact</h2>
+      <p>Questions about these terms? Email <a href="mailto:support@saturdaze.app">support@saturdaze.app</a>. Real human reply within a day or two.</p>
+    </div>
+
+    <sd-bottom-nav active=""></sd-bottom-nav>
+  </div>
+</body>
+</html>

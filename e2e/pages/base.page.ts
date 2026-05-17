@@ -48,12 +48,12 @@ export class BasePage {
   }
 
   private navHref(key: NavKey): string {
-    // Mirrors sd-bottom-nav.js ITEMS — these are the hrefs the rail renders.
+    // Production hrefs are real Angular routes so direct open and copy-link work.
     const map: Record<NavKey, string> = {
-      home: "home.html",
-      activities: "activities.html",
-      saved: "saved.html",
-      profile: "profile.html",
+      home: "/weekend",
+      activities: "/activities",
+      saved: "/saved",
+      profile: "/profile",
     };
     return map[key];
   }

@@ -28,4 +28,21 @@ public sealed class RestaurantsController : ControllerBase
             ct);
         return Ok(result);
     }
+
+    [HttpPost("{id:guid}/vote")]
+    public async Task<ActionResult<RestaurantDto>> Vote(
+        Guid id,
+        [FromBody] VoteRestaurantRequest body,
+        CancellationToken ct)
+        => Ok(await _sender.Send(new VoteRestaurantCommand(id, body.VoterName, body.Vote), ct));
+
+    [HttpPost("{id:guid}/lock")]
+    public async Task<ActionResult<RestaurantDto>> Lock(
+        Guid id,
+        [FromBody] LockRestaurantRequest body,
+        CancellationToken ct)
+        => Ok(await _sender.Send(new LockRestaurantCommand(id, body.Day, body.Slot), ct));
 }
+
+public sealed record VoteRestaurantRequest(string VoterName, string Vote);
+public sealed record LockRestaurantRequest(DayOfWeekend Day, MealSlot Slot);

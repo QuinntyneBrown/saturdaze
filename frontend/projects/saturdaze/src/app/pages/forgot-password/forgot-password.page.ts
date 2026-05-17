@@ -33,6 +33,7 @@ export class ForgotPasswordPage {
   private readonly router = inject(Router);
 
   protected readonly submitting = signal(false);
+  protected readonly error = signal('');
 
   protected readonly form = new FormGroup({
     email: new FormControl('', {
@@ -44,14 +45,17 @@ export class ForgotPasswordPage {
   protected async submit(): Promise<void> {
     if (this.form.invalid || this.submitting()) return;
     this.submitting.set(true);
+    this.error.set('');
+    const email = this.form.controls.email.value;
     try {
-      await this.session.forgotPassword({ email: this.form.controls.email.value });
+      await this.session.forgotPassword({ email });
+      await this.router.navigate(['/check-email'], {
+        queryParams: { flow: 'reset', email },
+      });
     } catch {
-      // Per spec the store never throws here; defensive `catch` just in
-      // case the underlying service surfaces a network error.
+      this.error.set("Couldn't send the reset link. Try again in a minute.");
     } finally {
       this.submitting.set(false);
-      await this.router.navigateByUrl('/check-email');
     }
   }
 }

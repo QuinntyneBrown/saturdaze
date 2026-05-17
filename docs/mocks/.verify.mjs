@@ -9,6 +9,8 @@ const BASE = "http://localhost:8765";
 
 const PAGES = [
   { url: "/",                       expects: { selector: ".mock-launcher h1", text: "Saturdaze mocks" } },
+
+  // Base screens
   { url: "/pages/home.html",        expects: { tag: "sd-hero", shadowText: "Plan This Weekend" } },
   { url: "/pages/itinerary.html",   expects: { tag: "sd-timeline-block", shadowText: "Swim lessons" } },
   { url: "/pages/activities.html",  expects: { tag: "sd-activity-card", shadowText: "Terre Bleu" } },
@@ -19,6 +21,33 @@ const PAGES = [
   { url: "/pages/profile.html",     expects: { tag: "sd-list-item", shadowText: "Quinn" } },
   { url: "/pages/dialogs.html",     expects: { tag: "sd-dialog", shadowText: "Terre Bleu Lavender Farm" } },
   { url: "/pages/components.html",  expects: { tag: "sd-button", shadowText: "Primary" } },
+
+  // New public + legal pages (docs/mocks-plan.md M-P1 / M-P2 / M-P4)
+  { url: "/pages/terms.html",            expects: { selector: ".legal h1", text: "Terms of Service" } },
+  { url: "/pages/privacy.html",          expects: { selector: ".legal h1", text: "Privacy Policy" } },
+  { url: "/pages/sample-weekend.html",   expects: { tag: "sd-hero", shadowText: "Morning, sample family" } },
+
+  // Auth flow state variants (M-S1, M-S2, M-S3, M-S4, M-S6, M-S7, M-S8)
+  { url: "/pages/forgot-password.error.html",   expects: { selector: ".form-error strong", text: "Couldn't send" } },
+  { url: "/pages/check-email.with-email.html",  expects: { selector: ".email-chip", text: "quinntynebrown@gmail.com" } },
+  { url: "/pages/check-email.empty.html",       expects: { selector: ".auth-card h1", text: "Where should I send" } },
+  { url: "/pages/verify-email.verifying.html",  expects: { selector: ".auth-card h1", text: "Confirming your email" } },
+  { url: "/pages/verify-email.expired.html",    expects: { selector: ".auth-card h1", text: "This link has expired" } },
+  { url: "/pages/reset-password.success.html",  expects: { selector: ".auth-card h1", text: "Password updated" } },
+  { url: "/pages/reset-password.expired.html",  expects: { selector: ".auth-card h1", text: "Reset link expired" } },
+
+  // App state variants (M-S9 .. M-S19)
+  { url: "/pages/home.empty.html",             expects: { selector: ".first-run-hero h2", text: "first weekend" } },
+  { url: "/pages/home.generating.html",        expects: { selector: ".gen-hero h2", text: "Sketching" } },
+  { url: "/pages/home.lock-mode.html",         expects: { selector: ".lock-mode-strip .title", text: "Tap to lock" } },
+  { url: "/pages/itinerary.sunday.html",       expects: { tag: "sd-timeline-block", shadowText: "Rec Room" } },
+  { url: "/pages/itinerary.locked-day.html",   expects: { selector: ".locked-banner .title", text: "Saturday is locked" } },
+  { url: "/pages/restaurants.refreshing.html", expects: { selector: ".refresh-status", text: "Refreshing" } },
+  { url: "/pages/restaurants.voted.html",      expects: { tag: "sd-vote-row", shadowText: "Quinn" } },
+  { url: "/pages/restaurants.consensus.html",  expects: { selector: ".consensus .label", text: "4 of 4 yes" } },
+  { url: "/pages/restaurants.locked.html",     expects: { selector: ".locked-card .name", text: "La Marina" } },
+  { url: "/pages/errand.alt-slots.html",       expects: { selector: ".slot .when", text: "Sunday 9:15am" } },
+  { url: "/pages/errand.added.html",           expects: { selector: ".added-card h1", text: "Added to Sunday" } },
 ];
 
 const VIEWPORTS = [

@@ -6,6 +6,7 @@ import { AuthToken } from '../models/auth-token';
 import { ForgotPasswordRequest } from '../models/forgot-password-request';
 import { LoginRequest } from '../models/login-request';
 import { ResetPasswordRequest } from '../models/reset-password-request';
+import { ResendVerificationRequest } from '../models/resend-verification-request';
 import { SignupRequest } from '../models/signup-request';
 import { User } from '../models/user';
 import { VerifyEmailRequest } from '../models/verify-email-request';
@@ -57,6 +58,9 @@ export class SessionStore implements ISessionStore {
   readonly error: Signal<AuthError | null> = this._error.asReadonly();
   readonly isAuthenticated = computed(() => this._user() !== null);
 
+  private rehydratePromise: Promise<void> | null = null;
+  private rehydrated = false;
+
   async signUp(req: SignupRequest): Promise<void> {
     this._error.set(null);
     try {
@@ -103,6 +107,17 @@ export class SessionStore implements ISessionStore {
     }
   }
 
+  async resendVerification(req: ResendVerificationRequest): Promise<void> {
+    this._error.set(null);
+    try {
+      await this.auth.resendVerification(req);
+    } catch (e) {
+      const err = asAuthError(e);
+      this._error.set(err);
+      throw err;
+    }
+  }
+
   async resetPassword(req: ResetPasswordRequest): Promise<void> {
     this._error.set(null);
     try {
@@ -130,6 +145,13 @@ export class SessionStore implements ISessionStore {
   }
 
   async rehydrate(): Promise<void> {
+    if (this.rehydrated) return;
+    if (this.rehydratePromise) return this.rehydratePromise;
+    this.rehydratePromise = this.performRehydrate();
+    await this.rehydratePromise;
+  }
+
+  private async performRehydrate(): Promise<void> {
     // One-time cleanup: drop keys written by the now-removed MockAuthService.
     // Safe to remove once enough time has passed for users to refresh.
     for (const key of LEGACY_MOCK_KEYS) {
@@ -139,11 +161,13 @@ export class SessionStore implements ISessionStore {
     const stored = this.readPersisted();
     if (!stored) {
       this._loading.set(false);
+      this.rehydrated = true;
       return;
     }
     if (new Date(stored.expiresUtc).getTime() <= Date.now()) {
       this.clearPersisted();
       this._loading.set(false);
+      this.rehydrated = true;
       return;
     }
     this._token.set({ value: stored.value, expiresUtc: stored.expiresUtc });
@@ -155,6 +179,7 @@ export class SessionStore implements ISessionStore {
       this._token.set(null);
     } finally {
       this._loading.set(false);
+      this.rehydrated = true;
     }
   }
 

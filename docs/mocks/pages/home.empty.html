@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>This Weekend — Saturdaze</title>
+  <link rel="stylesheet" href="../styles/global.css" />
+  <script type="module" src="../app.js"></script>
+  <style>
+    /* === Variant of home.html (BUG-022 / M-S9) ============================
+       First-run state — the family has signed up but I haven't drafted
+       a weekend yet (the Friday 6pm preview hasn't fired). The page
+       can't show weather, day cards, or anticipated tips because
+       there's nothing to anticipate yet.
+
+       What it CAN do: explain the deal warmly, show what I already
+       know about the family (so they feel seen), and put one big
+       button under the user's thumb.
+       ===================================================================== */
+
+    /* Onboarding hero — same warm gradient as splash + verify-email
+       success so the moment "I just signed up and landed here" reads
+       as one continuous welcome. */
+    .first-run-hero {
+      margin: 8px var(--sd-app-pad-x) 16px;
+      padding: 32px 24px 28px;
+      border-radius: var(--sd-r-xl);
+      background:
+        radial-gradient(80% 60% at 0% 0%, var(--sd-primary-soft) 0%, transparent 60%),
+        radial-gradient(80% 60% at 100% 0%, #FBEBC4 0%, transparent 60%),
+        var(--sd-surface);
+      border: 1px solid var(--sd-line);
+      box-shadow: var(--sd-shadow-1);
+      text-align: center;
+    }
+    .first-run-eyebrow {
+      font-size: 11px; color: var(--sd-ink-soft);
+      text-transform: uppercase; letter-spacing: 0.1em; font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .first-run-hero h2 {
+      font-size: 26px; font-weight: 800; letter-spacing: -0.02em;
+      margin: 0;
+      line-height: 1.2;
+    }
+    .first-run-hero p {
+      color: var(--sd-ink-soft); font-size: 14px; line-height: 1.55;
+      margin: 8px auto 0;
+      max-width: 320px;
+    }
+    .first-run-cta {
+      margin-top: 18px;
+      display: grid;
+      gap: 8px;
+      justify-items: center;
+    }
+    .first-run-cta sd-button { min-width: 220px; }
+    .first-run-cta .friday {
+      font-size: 12px;
+      color: var(--sd-ink-soft);
+    }
+    .first-run-cta .friday strong { color: var(--sd-ink); font-weight: 600; }
+
+    /* "What I'll plan around" pre-pack — shows the family settings I
+       already have so the user sees their context being respected
+       before they tap anything. */
+    .pre-pack { display: grid; gap: 10px; }
+
+    @media (min-width: 1024px) {
+      .first-run-hero { margin-left: 0; margin-right: 0; padding: 40px 32px 36px; }
+      .first-run-hero h2 { font-size: 32px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="sd-frame">
+
+    <sd-top-bar title="">
+      <sd-icon-button slot="leading" icon="calendar" label="Open calendar" variant="ghost"></sd-icon-button>
+      <sd-icon-button slot="trailing" icon="share" label="Share with Sara"></sd-icon-button>
+    </sd-top-bar>
+
+    <div class="first-run-hero">
+      <div class="first-run-eyebrow">Welcome, Browns</div>
+      <h2>Your first weekend<br />hasn't been drafted yet.</h2>
+      <p>I'll have one ready by Friday at 6pm. Or — if you can't wait — start one now and I'll work with what I know about the family so far.</p>
+
+      <div class="first-run-cta">
+        <sd-button size="lg">
+          <sd-icon slot="leading" name="sparkle" size="16"></sd-icon>
+          Plan this weekend
+        </sd-button>
+        <div class="friday">…or wait until <strong>Friday, 6:00pm</strong> and I'll surprise you.</div>
+      </div>
+    </div>
+
+    <sd-section title="What I'll plan around" subtitle="Update any of this on the family page">
+      <div class="pre-pack">
+        <sd-list-item title="The Browns of Port Credit" subtitle="2 parents, 2 kids — Eli (9) and Mae (5)">
+          <sd-icon slot="leading" name="user"></sd-icon>
+          <sd-icon slot="trailing" name="chevron_right" size="16"></sd-icon>
+        </sd-list-item>
+        <sd-list-item title="3 locked commitments" subtitle="Swim Sat 9am · Church Sun 10:30am · Workout 5pm">
+          <sd-icon slot="leading" name="lock"></sd-icon>
+          <sd-icon slot="trailing" name="chevron_right" size="16"></sd-icon>
+        </sd-list-item>
+        <sd-list-item title="Likes parks &amp; live theatre" subtitle="No camping · drives under 60 min">
+          <sd-icon slot="leading" name="heart"></sd-icon>
+          <sd-icon slot="trailing" name="chevron_right" size="16"></sd-icon>
+        </sd-list-item>
+      </div>
+    </sd-section>
+
+    <sd-section title="One small ask" subtitle="The more I know, the better Friday's draft will be">
+      <sd-anticipate
+        icon="sparkle"
+        headline="Add one favourite spot you'd repeat any weekend"
+        body="It gives me a baseline for the kind of place that hits — Sara's "wife-approved" filter starts here."
+        cta="Add a favourite"
+      ></sd-anticipate>
+    </sd-section>
+
+    <sd-bottom-nav active="home"></sd-bottom-nav>
+  </div>
+</body>
+</html>

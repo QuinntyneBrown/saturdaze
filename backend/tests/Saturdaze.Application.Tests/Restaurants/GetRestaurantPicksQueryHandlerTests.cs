@@ -13,7 +13,7 @@ public class GetRestaurantPicksQueryHandlerTests
     public async Task Filters_by_slot_and_orders_by_drive_minutes_ascending()
     {
         await using var app = await SeedAsync();
-        var handler = new GetRestaurantPicksQueryHandler(app.Db);
+        var handler = new GetRestaurantPicksQueryHandler(app.Db, app.FamilyAccessor);
 
         var picks = await handler.Handle(
             new GetRestaurantPicksQuery(new DateOnly(2026, 5, 16), MealSlot.Dinner), default);
@@ -26,7 +26,7 @@ public class GetRestaurantPicksQueryHandlerTests
     public async Task WifeApprovedOnly_excludes_unapproved()
     {
         await using var app = await SeedAsync();
-        var handler = new GetRestaurantPicksQueryHandler(app.Db);
+        var handler = new GetRestaurantPicksQueryHandler(app.Db, app.FamilyAccessor);
         var picks = await handler.Handle(
             new GetRestaurantPicksQuery(new DateOnly(2026, 5, 16), MealSlot.Dinner, WifeApprovedOnly: true),
             default);
@@ -39,7 +39,7 @@ public class GetRestaurantPicksQueryHandlerTests
         await using var app = await SeedAsync();
         // Activity at drive=12. Restaurants at 4, 10, 25.
         var faraway = app.Db.Activities.Single(a => a.Name == "Faraway").Id;
-        var handler = new GetRestaurantPicksQueryHandler(app.Db);
+        var handler = new GetRestaurantPicksQueryHandler(app.Db, app.FamilyAccessor);
 
         // Faraway has drive=40 → restaurant closest in drive to 40 should be first.
         var picks = await handler.Handle(
@@ -53,6 +53,9 @@ public class GetRestaurantPicksQueryHandlerTests
     private static async Task<TestApp> SeedAsync()
     {
         var app = TestApp.Create();
+        var familyId = Guid.NewGuid();
+        app.FamilyAccessor.FamilyId = familyId;
+        app.Db.Families.Add(new Family { Id = familyId, HomeLocation = "Port Credit" });
 
         app.Db.Activities.AddRange(
             new Activity { Id = Guid.NewGuid(), Name = "Nearby",  Category = "X", DriveMinutes = 12, MinAge = 0, MaxAge = 99, Description = "d", MapUrl = "u" },

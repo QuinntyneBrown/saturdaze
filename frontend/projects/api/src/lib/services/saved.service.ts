@@ -79,6 +79,7 @@ export class SavedService implements ISavedService {
 
 function toSavedWeekend(dto: WeekendSummaryDto): SavedWeekend {
   return {
+    id: dto.id,
     date: formatRange(dto.weekendOf),
     title: titleFor(dto),
     rating: dto.rating ?? 0,

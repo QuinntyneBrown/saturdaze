@@ -34,6 +34,7 @@ export * from './lib/models/auth-token';
 export * from './lib/models/forgot-password-request';
 export * from './lib/models/login-request';
 export * from './lib/models/reset-password-request';
+export * from './lib/models/resend-verification-request';
 export * from './lib/models/signup-request';
 export * from './lib/models/user';
 export * from './lib/models/verify-email-request';

@@ -71,7 +71,6 @@ export class App {
       this.document.body.classList.toggle('sd-body--bare', s === 'splash');
       this.document.body.classList.toggle('sd-body--auth', s === 'auth');
     });
-    void this.session.rehydrate();
   }
 
   private deepestRoute(): ActivatedRoute {

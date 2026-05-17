@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   input,
+  output,
 } from '@angular/core';
 
 import { Avatar, AvatarTone } from '../avatar/avatar';
@@ -32,4 +33,5 @@ export class VoteRow {
   readonly name = input<string>('');
   readonly tone = input<AvatarTone>('leaf');
   readonly vote = input<Vote>('none');
+  readonly voteChange = output<Vote>();
 }

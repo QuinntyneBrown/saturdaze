@@ -1,0 +1,71 @@
+<header class="public-header">
+  <a class="brand" routerLink="/">
+    <span class="mark"></span>
+    Saturdaze
+  </a>
+  <a class="signin" routerLink="/login">Sign in</a>
+</header>
+
+<div class="sample-shell">
+  <div class="public-banner">
+    <sd-icon name="sparkle" [size]="20" />
+    <div class="body">
+      <strong>{{ bannerTitle() }}</strong>
+      {{ bannerBody() }}
+    </div>
+  </div>
+
+  <sd-hero
+    [greeting]="heroGreeting()"
+    [subtitle]="heroSubtitle()"
+    cta="Make one for my family"
+  />
+
+  <sd-section title="The forecast" [subtitle]="forecastSubtitle()">
+    <sd-weather-strip>
+      <sd-weather-day day="Saturday" icon="sun" hi="22" lo="14" note="Light breeze, perfect for outdoors" />
+      <sd-weather-day day="Sunday" icon="cloud" hi="18" lo="12" note="Cloudy by 2pm — plan indoors after" />
+    </sd-weather-strip>
+  </sd-section>
+
+  <sd-section title="The Browns' weekend" subtitle="Two parents · Eli (9) · Mae (5)">
+    <div class="home-grid-cards">
+      <sd-day-card day="Saturday" date="Saturday" weather="22° sunny" icon="sun" [highlight]="saturdayHighlight()" href="/signup" route="/signup">
+        <sd-chip slot="chips" tone="accent"><sd-icon name="lock" [size]="12" /> {{ saturdayLock() }}</sd-chip>
+        <sd-chip slot="chips" tone="sky"><sd-icon name="car" [size]="12" /> 45 min drive</sd-chip>
+        <sd-chip slot="chips" tone="leaf">Outdoor day</sd-chip>
+      </sd-day-card>
+      <sd-day-card day="Sunday" date="Sunday" weather="18° cloudy" icon="cloud" [highlight]="sundayHighlight()" href="/signup" route="/signup">
+        <sd-chip slot="chips" tone="accent"><sd-icon name="lock" [size]="12" /> {{ sundayLock() }}</sd-chip>
+        <sd-chip slot="chips" tone="indoor">Indoor afternoon</sd-chip>
+        <sd-chip slot="chips" tone="primary">New for us</sd-chip>
+      </sd-day-card>
+    </div>
+  </sd-section>
+
+  <sd-section title="Why I picked this">
+    <div class="why-stack">
+      <sd-anticipate icon="sparkle" headline="Lavender bloom peaks this weekend" body="Rain moves in Monday, so Saturday after swim is the cleanest window." />
+      <sd-anticipate icon="cloud" headline="Sunday is indoor weather" body="The Rec Room gives the family a soft landing once clouds roll in." />
+      <sd-anticipate icon="bag" headline="The Costco run is tucked in" body="Sunday 9:15am adds only four minutes off the church route." />
+    </div>
+  </sd-section>
+
+  <sd-section title="What yours would include">
+    <sd-card>
+      <div class="included">
+        <div><sd-icon name="check" [size]="16" /> Activities tuned to your kids' ages.</div>
+        <div><sd-icon name="check" [size]="16" /> Drives kept under your family limit.</div>
+        <div><sd-icon name="check" [size]="16" /> Locked commitments left exactly where they belong.</div>
+      </div>
+    </sd-card>
+  </sd-section>
+</div>
+
+<div class="sample-cta">
+  <div class="line">Like what you see? <strong>Make one for your family.</strong></div>
+  <sd-button size="lg" routerLink="/signup">
+    <sd-icon slot="leading" name="sparkle" [size]="16" />
+    Create your account
+  </sd-button>
+</div>

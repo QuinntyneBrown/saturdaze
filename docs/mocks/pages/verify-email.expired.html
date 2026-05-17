@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Link expired — Saturdaze</title>
+  <link rel="stylesheet" href="../styles/global.css" />
+  <script type="module" src="../app.js"></script>
+  <style>
+    /* === Variant of verify-email.html (BUG-008 / M-S6) ====================
+       Renders when /api/auth/verify-email rejects the token (expired,
+       already used, or invalid). The page absorbs all three reasons
+       under the same copy because the user can't act on the distinction —
+       what they need is a way to get a working link.
+       ===================================================================== */
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      min-height: 100vh;
+    }
+    .auth-shell { width: 100%; max-width: 460px; display: grid; gap: 24px; }
+
+    .brand {
+      display: flex; align-items: center; justify-content: center;
+      gap: 10px;
+      color: var(--sd-ink-soft);
+      font-size: var(--sd-fs-xs);
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      font-weight: var(--sd-fw-semibold);
+    }
+    .brand .mark {
+      width: 28px; height: 28px; border-radius: 8px;
+      background:
+        radial-gradient(120% 120% at 20% 0%, var(--sd-primary-soft) 0%, transparent 60%),
+        radial-gradient(120% 120% at 100% 100%, #FBEBC4 0%, transparent 60%),
+        var(--sd-primary);
+      box-shadow: var(--sd-shadow-1);
+    }
+
+    .auth-card {
+      background: var(--sd-surface);
+      border: 1px solid var(--sd-line);
+      border-radius: var(--sd-r-xl);
+      padding: 40px 28px 32px;
+      box-shadow: var(--sd-shadow-2);
+      text-align: center;
+      display: grid;
+      gap: 18px;
+      justify-items: center;
+    }
+
+    /* Warn badge — uses the gentle coral warn colour, not red. The icon
+       is a refresh because the resolution is to get a new link, not a
+       hard "danger" stop. */
+    .warn-badge {
+      width: 84px; height: 84px;
+      border-radius: 50%;
+      display: grid; place-items: center;
+      background: var(--sd-warn-soft);
+      color: var(--sd-warn);
+      border: 1px solid color-mix(in srgb, var(--sd-warn) 25%, transparent);
+    }
+
+    .auth-card h1 {
+      font-size: 26px; font-weight: 700; letter-spacing: -0.02em; margin: 0;
+      line-height: 1.2;
+    }
+    .auth-card .sub {
+      color: var(--sd-ink-soft);
+      font-size: 15px;
+      line-height: 1.55;
+      margin: 0;
+      max-width: 360px;
+    }
+
+    /* Reasons row — three small chips explain "why might this have
+       happened" so the user doesn't think the app is broken. */
+    .reasons {
+      display: flex; gap: 6px; flex-wrap: wrap; justify-content: center;
+      margin-top: -4px;
+    }
+
+    .button-row {
+      width: 100%;
+      max-width: 320px;
+      display: grid;
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .foot {
+      text-align: center; font-size: 12px; color: var(--sd-ink-faint);
+    }
+    .foot a { color: var(--sd-ink-soft); text-decoration: none; }
+    .foot a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <div class="auth-shell">
+
+    <div class="brand">
+      <span class="mark"></span>
+      Saturdaze
+    </div>
+
+    <div class="auth-card">
+      <div class="warn-badge">
+        <sd-icon name="refresh" size="36"></sd-icon>
+      </div>
+
+      <h1>This link has expired</h1>
+      <p class="sub">
+        No big deal — I can send you a fresh one. Verification links time out after 24 hours to keep the door locked.
+      </p>
+
+      <div class="reasons">
+        <sd-chip>Already used</sd-chip>
+        <sd-chip>Older than 24 hours</sd-chip>
+        <sd-chip>Different account</sd-chip>
+      </div>
+
+      <div class="button-row">
+        <sd-button size="lg" full>
+          <sd-icon slot="leading" name="mail" size="16"></sd-icon>
+          Send me a new link
+        </sd-button>
+        <sd-button variant="ghost" size="sm" full>
+          Try a different account
+        </sd-button>
+      </div>
+    </div>
+
+    <div class="foot">
+      Need a hand? <a href="#">Email support</a>
+    </div>
+
+  </div>
+</body>
+</html>

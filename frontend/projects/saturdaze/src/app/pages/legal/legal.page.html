@@ -1,0 +1,34 @@
+<sd-top-bar [title]="content().topBarTitle" back />
+
+<main class="legal">
+  <div class="legal-header">
+    <div class="legal-eyebrow">{{ content().eyebrow }}</div>
+    <h1>{{ content().title }}</h1>
+    <div class="updated">Last updated 17 May 2026 · effective on the same date</div>
+  </div>
+
+  <div class="legal-summary" [attr.data-tone]="content().summaryTone">
+    <sd-icon [name]="content().summaryIcon" [size]="20" />
+    <div class="body">{{ content().summary }}</div>
+  </div>
+
+  <nav class="legal-toc" aria-label="Contents">
+    <div class="toc-label">Contents</div>
+    <ol>
+      @for (section of content().sections; track section.id) {
+        <li><a [attr.href]="'#' + section.id">{{ section.title }}</a></li>
+      }
+    </ol>
+  </nav>
+
+  @for (section of content().sections; track section.id) {
+    <h2 [id]="section.id">{{ section.title }}</h2>
+    @for (paragraph of section.paragraphs; track paragraph) {
+      <p>{{ paragraph }}</p>
+    }
+  }
+
+  <p class="legal-contact">
+    Need help? <a href="mailto:support@saturdaze.app">support@saturdaze.app</a>
+  </p>
+</main>

@@ -116,7 +116,9 @@ export class SignupPage {
         password: v.password,
         fridayPreview: v.fridayPreview,
       });
-      await this.router.navigateByUrl('/check-email');
+      await this.router.navigate(['/check-email'], {
+        queryParams: { flow: 'verify', email: v.email },
+      });
     } catch {
       // Error surfaced via session.error signal.
     } finally {

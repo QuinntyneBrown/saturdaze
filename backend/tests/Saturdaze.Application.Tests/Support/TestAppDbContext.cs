@@ -18,12 +18,16 @@ internal sealed class TestAppDbContext : DbContext, IAppDbContext
     public DbSet<Preference> Preferences => Set<Preference>();
     public DbSet<Activity> Activities => Set<Activity>();
     public DbSet<Restaurant> Restaurants => Set<Restaurant>();
+    public DbSet<RestaurantVote> RestaurantVotes => Set<RestaurantVote>();
+    public DbSet<RestaurantLock> RestaurantLocks => Set<RestaurantLock>();
     public DbSet<LocalEvent> LocalEvents => Set<LocalEvent>();
     public DbSet<Weekend> Weekends => Set<Weekend>();
     public DbSet<ItineraryBlock> ItineraryBlocks => Set<ItineraryBlock>();
     public DbSet<ShoppingErrand> ShoppingErrands => Set<ShoppingErrand>();
     public DbSet<User> Users => Set<User>();
     public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
+    public DbSet<PasswordResetToken> PasswordResetTokens => Set<PasswordResetToken>();
+    public DbSet<EmailVerificationToken> EmailVerificationTokens => Set<EmailVerificationToken>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
