@@ -16,6 +16,9 @@ html, body {
   line-height: var(--sd-lh-base);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  // Prevent stray horizontal scroll on phones. Internal horizontal scrollers
+  // (sd-tag-group, etc.) keep working because they set their own overflow.
+  overflow-x: clip;
 }
 
 body {
@@ -57,13 +60,15 @@ app-root {
 }
 
 // Phone-frame canvas so the app reads as a product, not a web page.
+// Bottom padding clears the floating `sd-bottom-nav` *and* the iOS
+// safe-area inset so scrolled-to-end content never disappears behind it.
 .sd-frame {
   width: 100%;
   max-width: var(--sd-app-max-w);
   min-height: 100vh;
   background: var(--sd-bg);
   position: relative;
-  padding-bottom: calc(var(--sd-nav-h) + 16px);
+  padding-bottom: calc(var(--sd-nav-h) + 16px + env(safe-area-inset-bottom, 0px));
 }
 
 // Tablet: drop the phone cap, rail nav takes the left edge.

@@ -1,5 +1,9 @@
 :host {
   display: block;
+  // Allow the host to shrink below its content's intrinsic width when placed
+  // inside a grid/flex container — otherwise long placeholders blow out the
+  // track and trigger horizontal scroll on phones.
+  min-width: 0;
 }
 
 label {
@@ -13,6 +17,7 @@ label {
 
 input {
   width: 100%;
+  min-width: 0;
   padding: 12px 14px;
   border-radius: var(--sd-r-md);
   border: 1px solid var(--sd-line-strong);

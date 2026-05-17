@@ -24,7 +24,7 @@ bugs share the same template:
 ## Indexes by area
 
 - **Auth / session** — [BUG-001](BUG-001.md), [BUG-002](BUG-002.md), [BUG-006](BUG-006.md), [BUG-007](BUG-007.md), [BUG-008](BUG-008.md), [BUG-009](BUG-009.md), [BUG-010](BUG-010.md)
-- **Navigation / hrefs** — [BUG-003](BUG-003.md), [BUG-004](BUG-004.md), [BUG-005](BUG-005.md), [BUG-017](BUG-017.md), [BUG-018](BUG-018.md)
+- **Navigation / hrefs** — [BUG-003](BUG-003.md), [BUG-004](BUG-004.md), [BUG-005](BUG-005.md), [BUG-017](BUG-017.md), [BUG-018](BUG-018.md), [BUG-047](BUG-047.md)
 - **Dialogs** — [BUG-011](BUG-011.md)
 - **Splash CTAs** — [BUG-012](BUG-012.md), [BUG-013](BUG-013.md), [BUG-014](BUG-014.md), [BUG-015](BUG-015.md), [BUG-016](BUG-016.md)
 - **Check email** — [BUG-019](BUG-019.md)
@@ -37,5 +37,6 @@ bugs share the same template:
 - **Profile** — [BUG-045](BUG-045.md)
 - **Gallery hygiene** — [BUG-046](BUG-046.md)
 
-All 46 bugs were sourced from
-[docs/button-link-audit-2026-05-17.md](../button-link-audit-2026-05-17.md).
+Bugs 1–46 were sourced from
+[docs/button-link-audit-2026-05-17.md](../button-link-audit-2026-05-17.md);
+BUG-047 was reported during iPhone testing.

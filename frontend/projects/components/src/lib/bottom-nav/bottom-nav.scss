@@ -4,7 +4,11 @@
   position: fixed;
   left: 50%;
   transform: translateX(-50%);
-  bottom: 12px;
+  // Sit above iOS Safari's bottom chrome at scroll-top and above the
+  // home indicator on Face-ID iPhones. `env(safe-area-inset-bottom)`
+  // resolves to 0 on browsers without insets, so the 12px floor is the
+  // baseline visual offset elsewhere.
+  bottom: calc(12px + env(safe-area-inset-bottom, 0px));
   width: calc(100% - 24px);
   max-width: calc(var(--sd-app-max-w) - 24px);
   background: var(--sd-surface);

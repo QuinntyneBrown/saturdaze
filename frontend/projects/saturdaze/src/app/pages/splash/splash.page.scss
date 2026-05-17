@@ -13,54 +13,79 @@
 .marketing {
   max-width: 1120px;
   margin: 0 auto;
-  padding: 0 24px 80px;
+  padding: 0 16px 80px;
 }
 
 /* ------- Top nav: just brand + sign-in. Public visitors don't get
-   app chrome, so the rail/bottom nav are deliberately absent. ------- */
+   app chrome, so the rail/bottom nav are deliberately absent.
+   Phones get tighter padding and gap; "How it works" is hidden
+   below 560px so the primary auth actions don't crowd the brand. ------- */
 .nav {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 20px 0;
+  gap: 12px;
+  padding: 16px 0;
 }
 .brand {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   font-weight: 700;
   letter-spacing: -0.01em;
   color: var(--sd-ink);
   text-decoration: none;
-  font-size: 18px;
+  font-size: 17px;
+  white-space: nowrap;
 }
 .brand .mark {
-  width: 28px;
-  height: 28px;
+  width: 26px;
+  height: 26px;
   border-radius: 8px;
   background:
     radial-gradient(120% 120% at 20% 0%, var(--sd-primary-soft) 0%, transparent 60%),
     radial-gradient(120% 120% at 100% 100%, #FBEBC4 0%, transparent 60%),
     var(--sd-primary);
   box-shadow: var(--sd-shadow-1);
+  flex-shrink: 0;
 }
 .nav-links {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 4px;
 }
 .nav-link {
   color: var(--sd-ink-soft);
   text-decoration: none;
   font-weight: 600;
   font-size: 14px;
-  padding: 8px 12px;
+  padding: 8px 10px;
   border-radius: var(--sd-r-md);
 
   &:hover {
     background: var(--sd-surface);
     color: var(--sd-ink);
   }
+
+  &[href="#how"] {
+    display: none;
+  }
+}
+@media (min-width: 560px) {
+  .nav-link {
+    padding: 8px 12px;
+
+    &[href="#how"] {
+      display: inline-flex;
+    }
+  }
+}
+@media (min-width: 720px) {
+  .marketing { padding: 0 24px 80px; }
+  .nav { padding: 20px 0; }
+  .brand { gap: 10px; font-size: 18px; }
+  .brand .mark { width: 28px; height: 28px; }
+  .nav-links { gap: 8px; }
 }
 
 /* ------- Hero: warm gradient, the same family used inside the app
