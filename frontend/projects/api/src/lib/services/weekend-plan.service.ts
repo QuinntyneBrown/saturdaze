@@ -379,7 +379,7 @@ function defaultQuickActions(lockedBlocks: number) {
       icon: 'lock',
     },
     {
-      title: 'Share with Sara for approval',
+      title: 'Share this weekend',
       subtitle: 'A read-only preview link',
       icon: 'share',
     },

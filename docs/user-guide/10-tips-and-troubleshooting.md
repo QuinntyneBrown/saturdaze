@@ -23,9 +23,9 @@ best fit, locks it, and ends the debate.
 
 ### Share before you commit
 
-From the home screen, tap **Share with Sara for approval**. This
-generates a read-only link your partner can open without an account.
-Faster than re-explaining the plan over text.
+From the home screen, tap **Share this weekend**. This generates a
+read-only link your partner can open without an account. Faster than
+re-explaining the plan over text.
 
 ### Drag to reorder
 

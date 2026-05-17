@@ -72,8 +72,8 @@ shortcuts for the most common moves:
   when "it's fine" but not exciting.
 - **Lock what's already perfect** — pin the blocks you love before
   regenerating, so they survive the shuffle.
-- **Share with Sara for approval** — generates a read-only preview
-  link you can text to your partner.
+- **Share this weekend** — generates a read-only preview link you can
+  send to your partner via Messages, Mail, or any share target.
 
 ## What if you don't like the plan?
 
@@ -98,7 +98,7 @@ Here's what most families do the first time:
 3. Read both day cards. Like Saturday, unsure about Sunday.
 4. Tap Sunday → **Regenerate**.
 5. Get a better Sunday. Lock Saturday.
-6. Tap **Share with Sara for approval**.
+6. Tap **Share this weekend**.
 7. Done.
 
 Total time: under two minutes.
