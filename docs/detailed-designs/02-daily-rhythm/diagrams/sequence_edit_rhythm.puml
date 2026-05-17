@@ -1,0 +1,43 @@
+@startuml sequence_edit_rhythm
+!theme plain
+skinparam sequenceMessageAlign center
+
+title Edit Daily Rhythm - User Flow
+
+actor "Parent" as parent
+participant "ProfilePage" as profile
+participant "EditRhythmDialog (CDK)" as dialog
+participant "FamilyService" as svc
+participant "FamilyController" as api
+participant "UpdateFamilyHandler" as handler
+participant "RhythmValidator" as val
+database "Azure SQL" as sql
+
+parent -> profile: Tap "Daily rhythm"
+profile -> dialog: open(currentProfile)
+dialog -> parent: Renders fields:\n - Out the door by [time]\n - Back home by [time]\n - Per-member nap rows
+parent -> dialog: Edit times,\nenable Mae's nap (12:30-2:30),\ntoggle "Must be home"
+parent -> dialog: Tap Save
+dialog -> svc: update(edits)
+svc -> api: PUT /api/family { rhythm fields }
+api -> handler: UpdateFamilyCommand
+handler -> val: Validate(cmd)
+note over val
+  Rules:
+  - OutTheDoorBy < BackHomeBy
+  - NapStart < NapEnd if either set
+  - Nap window 30..240 minutes
+  - Nap fields only on members aged <= 6
+  - At most one nap window per member
+end note
+val --> handler: ok
+handler -> sql: UPDATE Families,\n UPDATE FamilyMembers
+sql --> handler: rows affected
+handler --> api: 200 OK + updated FamilyDto
+api --> svc: response
+svc --> dialog: success
+dialog --> profile: close()
+profile -> profile: rhythm signal refreshes
+profile --> parent: Sees new values
+
+@enduml

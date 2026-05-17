@@ -1,0 +1,59 @@
+@startuml sequence_planner_with_rhythm
+!theme plain
+skinparam sequenceMessageAlign center
+
+title Weekend Generation - Planner Applies Daily Rhythm
+
+actor "User / WebJob" as trigger
+participant "GenerateWeekendHandler" as gen
+participant "WeekendPlanner" as planner
+participant "RhythmGate" as gate
+participant "NapBlockSeeder" as napseed
+participant "CommitmentSeeder" as commitseed
+participant "ActivityScheduler" as sched
+database "Azure SQL" as sql
+
+trigger -> gen: POST /api/weekends/generate
+gen -> sql: Load Family + Members + Commitments\n+ Activities + Restaurants + Events
+sql --> gen: rows
+gen -> planner: Plan(inputs)\n  OutTheDoorBy=09:00\n  BackHomeBy=20:00\n  Mae: nap 12:30-14:30, home-only
+planner -> gate: DayWindow(Saturday)
+gate --> planner: (09:00, 20:00)
+
+== Step 1: seed the nap blocks (BEFORE anything else) ==
+planner -> napseed: Seed(inputs)
+note over napseed
+  For each member with NapStart+NapEnd:
+   - Emit a locked Downtime block
+     on Saturday AND Sunday
+   - Title: "{Name}'s nap"
+   - Reason: "Daily rhythm: respect nap"
+   - 15-min "drive home" buffer added if
+     NapNeedsHome AND last block isn't home.
+end note
+napseed --> planner: [Mae's nap Sat 12:30-14:30 (locked),\n Mae's nap Sun 12:30-14:30 (locked)]
+
+== Step 2: seed locked commitments ==
+planner -> commitseed: Seed(inputs)
+commitseed --> planner: [Swim Sat 09:00-10:00,\n Church Sun 10:30-11:45]
+
+== Step 3: schedule activities around locks ==
+planner -> sched: Schedule(inputs, lockedBlocks)
+note over sched
+  Constraints applied:
+   - StartTime >= OutTheDoorBy
+   - EndTime <= BackHomeBy
+   - No overlap with any locked block
+   - If a nap requires home, avoid
+     scheduling drives that end after nap start
+end note
+sched --> planner: [activities, meals, drives, downtime]
+
+planner -> planner: Merge + sort blocks\nby (Day, StartTime, SortOrder)
+planner --> gen: PlannerOutput
+
+gen -> sql: INSERT ItineraryBlocks
+sql --> gen: ok
+gen --> trigger: 200 OK + WeekendDto
+
+@enduml

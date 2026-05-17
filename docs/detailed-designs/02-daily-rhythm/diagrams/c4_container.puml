@@ -1,0 +1,25 @@
+@startuml c4_container
+!theme plain
+!include <C4/C4_Container>
+
+title Daily Rhythm - Container Diagram
+
+Person(parent, "Parent / curator", "Edits rhythm on /profile.")
+
+System_Boundary(sd, "Saturdaze") {
+    Container(spa, "Angular SPA", "Angular 20", "ProfilePage renders the Daily Rhythm section; the EditRhythmDialog (CDK) is the single edit surface.")
+    Container(api, "Saturdaze.Api", ".NET 10 ASP.NET Core", "FamilyController.Put now accepts rhythm fields. UpdateFamilyHandler validates and persists.")
+    Container(planner, "WeekendPlanner", ".NET, in-process inside the API", "Reads Family.OutTheDoorBy/BackHomeBy + FamilyMember.Nap fields via PlannerInputs. Seeds nap blocks before scheduling.")
+    ContainerDb(sql, "Azure SQL", "Existing", "Families and FamilyMembers tables gain rhythm columns. No new tables.")
+}
+
+Rel(parent, spa, "Opens dialog, edits times", "HTTPS")
+Rel(spa, api, "PUT /api/family", "JSON")
+Rel(api, sql, "UPDATE Families, FamilyMembers", "EF Core")
+Rel(api, planner, "Calls plan(weekendOf)", "in-process")
+Rel(planner, sql, "Loads family + members + locks", "EF Core")
+Rel(planner, sql, "Writes ItineraryBlocks (incl. nap blocks)", "EF Core")
+Rel(spa, api, "GET /api/weekends/current", "JSON")
+Rel(spa, parent, "Renders itinerary incl. naps", "")
+
+@enduml

@@ -1,0 +1,123 @@
+@startuml class_diagram
+!theme plain
+skinparam classAttributeIconSize 0
+skinparam classFontSize 11
+skinparam packageStyle rectangle
+
+title Daily Rhythm - Domain and Service Classes
+
+package "Domain (changed)" {
+  class Family {
+    +Id : Guid
+    +HomeLocation : string
+    +BudgetEnabled : bool
+    +OutTheDoorBy : TimeOnly
+    +BackHomeBy : TimeOnly
+    +Members : List<FamilyMember>
+    +Commitments : List<Commitment>
+  }
+  class FamilyMember {
+    +Id : Guid
+    +FamilyId : Guid
+    +Name : string
+    +Age : int
+    +NapStart : TimeOnly?
+    +NapEnd : TimeOnly?
+    +NapNeedsHome : bool
+    +NapsRequired() : bool
+  }
+}
+
+package "Domain (existing)" {
+  class ItineraryBlock {
+    +Id : Guid
+    +Day : DayOfWeekend
+    +StartTime : TimeOnly
+    +EndTime : TimeOnly
+    +Kind : BlockKind
+    +Title : string
+    +IsLocked : bool
+    +Reason : string
+  }
+  enum BlockKind {
+    Workout
+    Activity
+    Meal
+    Drive
+    Downtime
+    Commitment
+    Errand
+  }
+}
+
+package "Application (planning)" {
+  class PlannerInputs {
+    +OutTheDoorBy : TimeOnly
+    +BackHomeBy : TimeOnly
+    +Members : IReadOnlyList<FamilyMember>
+    +Commitments : IReadOnlyList<Commitment>
+    +LockedBlocks : IReadOnlyList<ItineraryBlock>
+  }
+  class RhythmGate {
+    +DayWindow(day) : (TimeOnly start, TimeOnly end)
+    +OverlapsAnyNap(window, members) : bool
+    +HomeRequiredAt(time, members) : bool
+  }
+  class NapBlockSeeder {
+    +Seed(inputs) : IReadOnlyList<ItineraryBlock>
+  }
+  class WeekendPlanner {
+    +Plan(inputs) : PlannerOutput
+  }
+  class PlannerOutput {
+    +Blocks : IReadOnlyList<ItineraryBlock>
+  }
+}
+
+package "Application (family)" {
+  class UpdateFamilyCommand {
+    +OutTheDoorBy : TimeOnly
+    +BackHomeBy : TimeOnly
+    +Members : IReadOnlyList<MemberDto>
+  }
+  class MemberDto {
+    +Name : string
+    +Age : int
+    +NapStart : TimeOnly?
+    +NapEnd : TimeOnly?
+    +NapNeedsHome : bool
+  }
+  class UpdateFamilyHandler {
+    +Handle(cmd, ct)
+  }
+  class RhythmValidator {
+    +Validate(cmd) : ValidationResult
+  }
+}
+
+package "Frontend (Angular)" {
+  class EditRhythmDialog {
+    +open(profile) : RhythmEdits
+  }
+  class FamilyService {
+    +update(edits) : Promise
+  }
+}
+
+WeekendPlanner --> PlannerInputs
+WeekendPlanner --> RhythmGate
+WeekendPlanner --> NapBlockSeeder
+NapBlockSeeder --> ItineraryBlock
+WeekendPlanner --> PlannerOutput
+PlannerInputs --> FamilyMember
+UpdateFamilyHandler --> UpdateFamilyCommand
+UpdateFamilyHandler --> RhythmValidator
+UpdateFamilyHandler --> Family
+UpdateFamilyHandler --> FamilyMember
+UpdateFamilyCommand --> MemberDto
+EditRhythmDialog --> FamilyService
+FamilyService --> UpdateFamilyCommand
+Family --> FamilyMember
+ItineraryBlock --> BlockKind
+
+@enduml

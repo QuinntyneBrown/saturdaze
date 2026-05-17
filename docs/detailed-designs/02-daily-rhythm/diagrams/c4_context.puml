@@ -1,0 +1,21 @@
+@startuml c4_context
+!theme plain
+!include <C4/C4_Context>
+
+title Daily Rhythm - System Context
+
+Person(parent, "Parent / curator", "Edits the family's daily rhythm: out-the-door time, back-home time, and per-kid nap windows.")
+Person(family, "Family user", "Sees the weekend itinerary with nap windows reserved and activities constrained by the rhythm.")
+
+System(saturdaze, "Saturdaze", "Weekend planner. Reads Family.Rhythm + FamilyMember.Nap settings; the planner produces blocks that respect those anchors.")
+
+Rel(parent, saturdaze, "Configures rhythm via /profile dialog", "HTTPS")
+Rel(family, saturdaze, "Views weekend plan", "HTTPS")
+
+note right of saturdaze
+  Rhythm is a family-scoped policy.
+  The planner consumes it as inputs;
+  no external systems are involved.
+end note
+
+@enduml

@@ -1,0 +1,26 @@
+@startuml c4_component
+!theme plain
+!include <C4/C4_Component>
+
+title Daily Rhythm - Components inside WeekendPlanner
+
+Container_Boundary(planner, "WeekendPlanner") {
+    Component(inputs, "PlannerInputs", ".NET record", "Now carries OutTheDoorBy, BackHomeBy, and Members (each with optional Nap fields).")
+    Component(rhythmGate, "RhythmGate", ".NET service", "Computes the working day window per day from rhythm + commitments. Pure function.")
+    Component(napSeeder, "NapBlockSeeder", ".NET service", "For each napping member, emits a locked Downtime block at the nap window on Sat and Sun before any other scheduling.")
+    Component(commitSeeder, "CommitmentSeeder", ".NET existing", "Seeds locked Commitment blocks (swim, church, etc.). Runs after NapBlockSeeder.")
+    Component(scheduler, "ActivityScheduler", ".NET existing", "Places activities, meals, drives, downtime in the remaining slots. Already respects locked blocks.")
+    Component(output, "PlannerOutput", ".NET record", "Final list of ItineraryBlocks.")
+}
+
+Container_Ext(db, "Azure SQL", "EF Core target")
+
+Rel(inputs, rhythmGate, "Provides bounds + members")
+Rel(rhythmGate, napSeeder, "Calls with nap fields per member")
+Rel(napSeeder, output, "Emits locked nap blocks")
+Rel(commitSeeder, output, "Emits commitment blocks")
+Rel(scheduler, output, "Emits scheduled blocks around locks")
+Rel(rhythmGate, scheduler, "Provides day-start / day-end clamps")
+Rel(output, db, "INSERT ItineraryBlocks")
+
+@enduml
