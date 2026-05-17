@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging.Abstractions;
 using Saturdaze.Application.Common;
 using Saturdaze.Cli.Seed;
+using Saturdaze.Infrastructure.Authentication;
 using Xunit;
 
 namespace Saturdaze.Cli.Tests;
@@ -25,12 +26,14 @@ public class SeedCommandHandlerTests : IDisposable
     private SeedCommandHandler CreateHandler(Saturdaze.Infrastructure.Persistence.AppDbContext db)
     {
         var paths = new StubPathResolver(_dir);
+        var clock = new SystemDateTimeProvider();
         var seeders = new IJsonSeeder[]
         {
             new ActivitySeeder(),
             new RestaurantSeeder(),
-            new LocalEventSeeder(new SystemDateTimeProvider()),
-            new FamilySeeder()
+            new LocalEventSeeder(clock),
+            new FamilySeeder(),
+            new UserSeeder(new Pbkdf2PasswordHasher(), clock)
         };
         return new SeedCommandHandler(paths, seeders, db, NullLogger<SeedCommandHandler>.Instance);
     }
@@ -69,6 +72,9 @@ public class SeedCommandHandlerTests : IDisposable
         await File.WriteAllTextAsync(
             Path.Combine(_dir, "family.json"),
             """{ "homeLocation": "Port Credit", "members": [ { "name": "Quinn", "age": 41 } ] }""");
+        await File.WriteAllTextAsync(
+            Path.Combine(_dir, "users.json"),
+            """[ { "email": "quinntynebrown@gmail.com", "password": "password123", "familyHomeLocation": "Port Credit" } ]""");
 
         using var db = TestDb.Create();
         var handler = CreateHandler(db);
@@ -80,6 +86,10 @@ public class SeedCommandHandlerTests : IDisposable
         (await db.LocalEvents.CountAsync()).Should().Be(1);
         (await db.Families.CountAsync()).Should().Be(1);
         (await db.FamilyMembers.CountAsync()).Should().Be(1);
+        (await db.Users.CountAsync()).Should().Be(1);
+        var seededUser = await db.Users.SingleAsync();
+        seededUser.NormalizedEmail.Should().Be("quinntynebrown@gmail.com");
+        seededUser.FamilyId.Should().NotBeNull();
     }
 
     [Fact]

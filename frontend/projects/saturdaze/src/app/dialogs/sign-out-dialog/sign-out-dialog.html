@@ -1,0 +1,24 @@
+<sd-dialog
+  title="Sign out?"
+  subtitle="I'll forget you on this device until you sign back in."
+>
+  <sd-card variant="sunk">
+    <div class="reassurance">
+      <sd-icon name="key" [size]="18" class="reassurance-icon" />
+      <div class="reassurance-body">
+        <div class="reassurance-title">You'll need to sign back in</div>
+        <div class="reassurance-detail">
+          {{ data.email }} + your password. Saved weekends and family settings stay put.
+        </div>
+      </div>
+    </div>
+  </sd-card>
+
+  <sd-button slot="actions" variant="secondary" type="button" (click)="cancel()">
+    Stay signed in
+  </sd-button>
+  <sd-button slot="actions" variant="danger" type="button" (click)="confirm()">
+    <sd-icon slot="leading" name="sign_out" [size]="16" />
+    Sign out
+  </sd-button>
+</sd-dialog>

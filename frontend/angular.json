@@ -100,7 +100,13 @@
                   "maximumError": "8kB"
                 }
               ],
-              "outputHashing": "all"
+              "outputHashing": "all",
+              "fileReplacements": [
+                {
+                  "replace": "projects/saturdaze/src/environments/environment.ts",
+                  "with": "projects/saturdaze/src/environments/environment.prod.ts"
+                }
+              ]
             },
             "development": {
               "optimization": false,

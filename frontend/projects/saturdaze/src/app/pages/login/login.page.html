@@ -1,0 +1,49 @@
+<sd-auth-shell>
+  <sd-auth-card>
+    <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+      <div>
+        <h1>Welcome back</h1>
+        <p class="sub">Your weekend's already taking shape.</p>
+      </div>
+
+      <sd-text-input
+        label="Email"
+        type="email"
+        placeholder="you@example.com"
+        formControlName="email"
+      />
+
+      <sd-text-input
+        label="Password"
+        type="password"
+        placeholder="••••••••"
+        formControlName="password"
+      />
+
+      <div class="auth-row">
+        <sd-toggle label="Remember me" formControlName="remember" />
+        <a class="link" routerLink="/forgot-password">Forgot password?</a>
+      </div>
+
+      @if (error(); as err) {
+        <div class="auth-error" role="alert">{{ err.message }}</div>
+      }
+
+      <sd-button type="submit" size="lg" full [disabled]="submitting()">
+        <sd-icon slot="leading" name="arrow_right" [size]="16" />
+        Sign in
+      </sd-button>
+
+      <div class="divider">or</div>
+
+      <div class="alt-cta">
+        New to Saturdaze?
+        <a class="link" routerLink="/signup">Create an account</a>
+      </div>
+    </form>
+  </sd-auth-card>
+
+  <div slot="foot" class="foot">
+    <a routerLink="/">← Back to home</a>
+  </div>
+</sd-auth-shell>

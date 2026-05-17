@@ -130,6 +130,25 @@
     </sd-section>
 
     </div>
+
+    <sd-section title="Account" subtitle="This device's session">
+      <div style="display:grid; gap:12px;">
+        <sd-card variant="sunk">
+          <div style="display:flex; align-items:center; gap:12px;">
+            <sd-avatar name="Quinn" tone="primary"></sd-avatar>
+            <div style="min-width:0; flex:1;">
+              <div style="font-weight:600; letter-spacing:-0.005em; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">quinntynebrown@gmail.com</div>
+              <div style="font-size:13px; color:var(--sd-ink-soft); margin-top:2px;">Signed in · since May 2026</div>
+            </div>
+          </div>
+        </sd-card>
+        <sd-button variant="danger" full>
+          <sd-icon slot="leading" name="sign_out" size="16"></sd-icon>
+          Sign out
+        </sd-button>
+      </div>
+    </sd-section>
+
     <sd-bottom-nav active="profile"></sd-bottom-nav>
   </div>
 </body>

@@ -24,6 +24,38 @@ body {
   justify-content: center;
 }
 
+// Splash escapes the phone-frame chrome and mirrors the mock's body
+// override (`body { display: block }`).
+body.sd-body--bare {
+  display: block;
+}
+
+// Auth screens center the auth-card on a padded viewport — same body
+// override the mocks use.
+body.sd-body--auth {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  min-height: 100vh;
+}
+
+// `<app-root>` is the SPA's single root. Default is inline; `display: contents`
+// makes it invisible for layout so the routed page's outermost element behaves
+// like a direct child of <body> — that's how the mock baselines are framed.
+app-root {
+  display: contents;
+}
+
+// Bootstrap curtain shown while SessionStore.rehydrate() resolves. Reserved
+// space so guards see an authoritative auth state on first paint.
+.sd-app-loading {
+  width: 100%;
+  min-height: 100vh;
+  background: var(--sd-bg);
+}
+
 // Phone-frame canvas so the app reads as a product, not a web page.
 .sd-frame {
   width: 100%;

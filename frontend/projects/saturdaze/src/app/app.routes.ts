@@ -1,26 +1,90 @@
 import { Routes } from '@angular/router';
 
+import { requireAnonymous } from './auth/require-anonymous.guard';
+import { requireAuth } from './auth/require-auth.guard';
+
 /**
  * Saturdaze application routes.
  *
- * Clean URLs that mirror the mock filenames (`home`, `itinerary`, ...).
- * Pages are lazy so the home payload stays small. Each route is one
- * vertical slice in `docs/frontend-implementation-plan.md`.
+ * - `/` serves the marketing splash for signed-out visitors and bounces
+ *   authenticated visitors to `/weekend`.
+ * - The weekend overview lives at `/weekend`. The remaining app surfaces
+ *   are all guarded by `requireAuth`.
+ * - `/verify-email` deliberately has no guard — signed-in *and* signed-out
+ *   users need to reach it from an email link.
+ * - Component galleries (`/dialogs`, `/components`) stay public so design
+ *   review can pull them up without an account.
  */
 export const routes: Routes = [
   {
     path: '',
     pathMatch: 'full',
+    data: { shell: 'splash' },
+    canActivate: [requireAnonymous],
+    loadComponent: () =>
+      import('./pages/splash/splash.page').then((m) => m.SplashPage),
+  },
+  {
+    path: 'weekend',
+    canActivate: [requireAuth],
     loadComponent: () =>
       import('./pages/home/home.page').then((m) => m.HomePage),
   },
   {
+    path: 'login',
+    data: { shell: 'auth' },
+    canActivate: [requireAnonymous],
+    loadComponent: () =>
+      import('./pages/login/login.page').then((m) => m.LoginPage),
+  },
+  {
+    path: 'signup',
+    data: { shell: 'auth' },
+    canActivate: [requireAnonymous],
+    loadComponent: () =>
+      import('./pages/signup/signup.page').then((m) => m.SignupPage),
+  },
+  {
+    path: 'forgot-password',
+    data: { shell: 'auth' },
+    canActivate: [requireAnonymous],
+    loadComponent: () =>
+      import('./pages/forgot-password/forgot-password.page').then(
+        (m) => m.ForgotPasswordPage,
+      ),
+  },
+  {
+    path: 'check-email',
+    // No guard: reached BOTH from signup (now authed, awaiting verification)
+    // and from forgot-password (still anonymous). /verify-email mirrors this.
+    data: { shell: 'auth' },
+    loadComponent: () =>
+      import('./pages/check-email/check-email.page').then((m) => m.CheckEmailPage),
+  },
+  {
+    path: 'reset-password',
+    data: { shell: 'auth' },
+    canActivate: [requireAnonymous],
+    loadComponent: () =>
+      import('./pages/reset-password/reset-password.page').then(
+        (m) => m.ResetPasswordPage,
+      ),
+  },
+  {
+    path: 'verify-email',
+    data: { shell: 'auth' },
+    loadComponent: () =>
+      import('./pages/verify-email/verify-email.page').then((m) => m.VerifyEmailPage),
+  },
+  {
     path: 'itinerary',
+    canActivate: [requireAuth],
     loadComponent: () =>
       import('./pages/itinerary/itinerary.page').then((m) => m.ItineraryPage),
   },
   {
     path: 'activities',
+    canActivate: [requireAuth],
     loadComponent: () =>
       import('./pages/activities/activities.page').then(
         (m) => m.ActivitiesPage,
@@ -28,6 +92,7 @@ export const routes: Routes = [
   },
   {
     path: 'restaurants',
+    canActivate: [requireAuth],
     loadComponent: () =>
       import('./pages/restaurants/restaurants.page').then(
         (m) => m.RestaurantsPage,
@@ -35,21 +100,25 @@ export const routes: Routes = [
   },
   {
     path: 'saved',
+    canActivate: [requireAuth],
     loadComponent: () =>
       import('./pages/saved/saved.page').then((m) => m.SavedPage),
   },
   {
     path: 'events',
+    canActivate: [requireAuth],
     loadComponent: () =>
       import('./pages/events/events.page').then((m) => m.EventsPage),
   },
   {
     path: 'errand',
+    canActivate: [requireAuth],
     loadComponent: () =>
       import('./pages/errand/errand.page').then((m) => m.ErrandPage),
   },
   {
     path: 'profile',
+    canActivate: [requireAuth],
     loadComponent: () =>
       import('./pages/profile/profile.page').then((m) => m.ProfilePage),
   },

@@ -140,4 +140,24 @@
   </sd-section>
 </div>
 
+@if (user(); as currentUser) {
+  <sd-section title="Account" subtitle="This device's session">
+    <div class="account-block">
+      <sd-card variant="sunk">
+        <div class="account-identity">
+          <sd-avatar [name]="currentUser.email" tone="primary" />
+          <div class="account-meta">
+            <div class="account-email">{{ currentUser.email }}</div>
+            <div class="account-sub">Signed in</div>
+          </div>
+        </div>
+      </sd-card>
+      <sd-button variant="danger" full type="button" (click)="signOut()">
+        <sd-icon slot="leading" name="sign_out" [size]="16" />
+        Sign out
+      </sd-button>
+    </div>
+  </sd-section>
+}
+
 <sd-bottom-nav active="profile" />

@@ -27,18 +27,33 @@ export * from './lib/models/restaurant';
 export * from './lib/models/saved';
 export * from './lib/models/weekend';
 
+// Auth models
+export * from './lib/models/auth-error';
+export * from './lib/models/auth-error-code';
+export * from './lib/models/auth-token';
+export * from './lib/models/forgot-password-request';
+export * from './lib/models/login-request';
+export * from './lib/models/reset-password-request';
+export * from './lib/models/signup-request';
+export * from './lib/models/user';
+export * from './lib/models/verify-email-request';
+
 // Service contracts (interface + InjectionToken)
 export * from './lib/services/activity.service.contract';
+export * from './lib/services/auth.service.contract';
 export * from './lib/services/events.service.contract';
 export * from './lib/services/family.service.contract';
 export * from './lib/services/restaurant.service.contract';
 export * from './lib/services/saved.service.contract';
+export * from './lib/services/session-store.contract';
 export * from './lib/services/weekend-plan.service.contract';
 
 // Concrete implementations (imported only by composition roots)
 export * from './lib/services/activity.service';
+export * from './lib/services/auth.service';
 export * from './lib/services/events.service';
 export * from './lib/services/family.service';
 export * from './lib/services/restaurant.service';
 export * from './lib/services/saved.service';
+export * from './lib/services/session-store';
 export * from './lib/services/weekend-plan.service';

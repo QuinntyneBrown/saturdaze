@@ -5,6 +5,7 @@
     <PackageReference Include="Serilog.Sinks.File" />
     <PackageReference Include="Swashbuckle.AspNetCore" />
     <PackageReference Include="MediatR" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Saturdaze.Application\Saturdaze.Application.csproj" />

@@ -13,6 +13,9 @@ artifacts/
 # Claude Code session state
 .claude/
 
+# Azure deployment state (contains secrets)
+.deploy/
+
 # Angular
 .angular/
 

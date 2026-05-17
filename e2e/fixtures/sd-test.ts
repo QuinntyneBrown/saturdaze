@@ -23,6 +23,13 @@ import { ErrandPage } from "../pages/errand.page.js";
 import { ProfilePage } from "../pages/profile.page.js";
 import { DialogsPage } from "../pages/dialogs.page.js";
 import { ComponentsGalleryPage } from "../pages/components.page.js";
+import { SplashPage } from "../pages/splash.page.js";
+import { LoginPage } from "../pages/login.page.js";
+import { SignupPage } from "../pages/signup.page.js";
+import { ForgotPasswordPage } from "../pages/forgot-password.page.js";
+import { CheckEmailPage } from "../pages/check-email.page.js";
+import { ResetPasswordPage } from "../pages/reset-password.page.js";
+import { VerifyEmailPage } from "../pages/verify-email.page.js";
 
 interface Pages {
   home: HomePage;
@@ -35,6 +42,13 @@ interface Pages {
   profile: ProfilePage;
   dialogs: DialogsPage;
   components: ComponentsGalleryPage;
+  splash: SplashPage;
+  login: LoginPage;
+  signup: SignupPage;
+  forgotPassword: ForgotPasswordPage;
+  checkEmail: CheckEmailPage;
+  resetPassword: ResetPasswordPage;
+  verifyEmail: VerifyEmailPage;
 }
 
 interface SdFixtures {
@@ -62,6 +76,13 @@ export const test = base.extend<SdFixtures>({
       profile: new ProfilePage(page),
       dialogs: new DialogsPage(page),
       components: new ComponentsGalleryPage(page),
+      splash: new SplashPage(page),
+      login: new LoginPage(page),
+      signup: new SignupPage(page),
+      forgotPassword: new ForgotPasswordPage(page),
+      checkEmail: new CheckEmailPage(page),
+      resetPassword: new ResetPasswordPage(page),
+      verifyEmail: new VerifyEmailPage(page),
     });
   },
   settle: async ({ page }, use) => {

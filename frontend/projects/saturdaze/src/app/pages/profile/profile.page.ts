@@ -1,5 +1,6 @@
 import { Dialog } from '@angular/cdk/dialog';
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 
 import {
@@ -7,10 +8,12 @@ import {
   EditableFamilyMember,
   EditableFamilyProfile,
   FAMILY_SERVICE,
+  SESSION_STORE,
 } from 'api';
 import {
   Avatar,
   BottomNav,
+  Button,
   Card,
   Chip,
   Icon,
@@ -32,6 +35,11 @@ import {
   FamilyMemberDialogData,
   FamilyMemberDialogResult,
 } from '../../dialogs/family-member-dialog/family-member-dialog';
+import {
+  SignOutDialog,
+  SignOutDialogData,
+  SignOutDialogResult,
+} from '../../dialogs/sign-out-dialog/sign-out-dialog';
 
 const MEMBER_TONES = ['primary', 'leaf', 'sky', 'sun', 'indoor'] as const;
 
@@ -41,6 +49,7 @@ const MEMBER_TONES = ['primary', 'leaf', 'sky', 'sun', 'indoor'] as const;
   imports: [
     Avatar,
     BottomNav,
+    Button,
     Card,
     Chip,
     Icon,
@@ -58,9 +67,12 @@ const MEMBER_TONES = ['primary', 'leaf', 'sky', 'sun', 'indoor'] as const;
 export class ProfilePage {
   private readonly family = inject(FAMILY_SERVICE);
   private readonly dialog = inject(Dialog);
+  private readonly session = inject(SESSION_STORE);
+  private readonly router = inject(Router);
 
   protected readonly profile = this.family.getProfile();
   protected readonly editable = this.family.getEditableProfile();
+  protected readonly user = this.session.user;
   protected readonly memberError = signal('');
   protected readonly commitmentError = signal('');
   protected readonly saving = signal(false);
@@ -223,5 +235,18 @@ export class ProfilePage {
     } finally {
       this.saving.set(false);
     }
+  }
+
+  protected async signOut(): Promise<void> {
+    const email = this.user()?.email ?? '';
+    const ref = this.dialog.open<SignOutDialogResult, SignOutDialogData>(
+      SignOutDialog,
+      { data: { email }, autoFocus: 'first-tabbable', restoreFocus: true },
+    );
+    const result = await firstValueFrom(ref.closed);
+    if (result !== 'confirm') return;
+
+    this.session.logout();
+    await this.router.navigateByUrl('/login');
   }
 }

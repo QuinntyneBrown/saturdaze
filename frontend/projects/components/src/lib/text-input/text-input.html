@@ -1,7 +1,10 @@
 @if (label()) { <label>{{ label() }}</label> }
 <input
   [attr.type]="type()"
-  [attr.value]="value()"
+  [value]="internalValue()"
   [attr.placeholder]="placeholder()"
+  [disabled]="disabled()"
+  (input)="handleInput($event)"
+  (blur)="handleBlur()"
 />
 @if (hint()) { <div class="hint">{{ hint() }}</div> }

@@ -1,0 +1,11 @@
+// Mirrors docs/mocks/pages/login.html `.auth-card`.
+
+:host {
+  display: grid;
+  gap: 18px;
+  background: var(--sd-surface);
+  border: 1px solid var(--sd-line);
+  border-radius: var(--sd-r-xl);
+  padding: 28px 24px;
+  box-shadow: var(--sd-shadow-2);
+}

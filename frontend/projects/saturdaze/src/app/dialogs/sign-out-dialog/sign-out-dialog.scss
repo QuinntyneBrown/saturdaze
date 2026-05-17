@@ -1,0 +1,28 @@
+:host {
+  display: block;
+}
+
+.reassurance {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.reassurance-icon {
+  color: var(--sd-ink-soft);
+  margin-top: 2px;
+}
+
+.reassurance-body {
+  font-size: var(--sd-fs-sm);
+}
+
+.reassurance-title {
+  font-weight: var(--sd-fw-semibold);
+}
+
+.reassurance-detail {
+  color: var(--sd-ink-soft);
+  margin-top: 4px;
+  word-break: break-word;
+}

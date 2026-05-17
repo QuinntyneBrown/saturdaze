@@ -1,0 +1,307 @@
+// Mirrors docs/mocks/pages/splash.html. Tokens come from the global stylesheet
+// (`projects/components/src/lib/styles/_tokens.scss`); only the marketing-only
+// chrome is owned here.
+
+// `display: contents` makes the host invisible for layout — .marketing
+// behaves as a direct child of <app-root> (and, in chromeless mode, body).
+// The mock has no wrapper between <body> and <div class="marketing">, so this
+// keeps the visual baseline byte-identical.
+:host {
+  display: contents;
+}
+
+.marketing {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 24px 80px;
+}
+
+/* ------- Top nav: just brand + sign-in. Public visitors don't get
+   app chrome, so the rail/bottom nav are deliberately absent. ------- */
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 0;
+}
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--sd-ink);
+  text-decoration: none;
+  font-size: 18px;
+}
+.brand .mark {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background:
+    radial-gradient(120% 120% at 20% 0%, var(--sd-primary-soft) 0%, transparent 60%),
+    radial-gradient(120% 120% at 100% 100%, #FBEBC4 0%, transparent 60%),
+    var(--sd-primary);
+  box-shadow: var(--sd-shadow-1);
+}
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.nav-link {
+  color: var(--sd-ink-soft);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 14px;
+  padding: 8px 12px;
+  border-radius: var(--sd-r-md);
+
+  &:hover {
+    background: var(--sd-surface);
+    color: var(--sd-ink);
+  }
+}
+
+/* ------- Hero: warm gradient, the same family used inside the app
+   so signed-out and signed-in moments feel like one product. ------- */
+.hero {
+  margin-top: 8px;
+  padding: 56px 40px 64px;
+  border-radius: var(--sd-r-xl);
+  background:
+    radial-gradient(80% 70% at 0% 0%, var(--sd-primary-soft) 0%, transparent 60%),
+    radial-gradient(80% 70% at 100% 0%, #FBEBC4 0%, transparent 60%),
+    var(--sd-surface);
+  border: 1px solid var(--sd-line);
+  display: grid;
+  gap: 36px;
+  align-items: center;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 880px) {
+  .hero {
+    grid-template-columns: 1.05fr 1fr;
+    padding: 72px 56px;
+    gap: 56px;
+  }
+}
+
+.eyebrow {
+  font-size: 12px;
+  color: var(--sd-ink-soft);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+.hero h1 {
+  font-size: 44px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  margin: 12px 0 14px;
+  line-height: 1.05;
+}
+@media (min-width: 880px) {
+  .hero h1 {
+    font-size: 56px;
+  }
+}
+.hero p.lede {
+  font-size: 18px;
+  color: var(--sd-ink-soft);
+  max-width: 540px;
+  margin: 0 0 28px;
+  line-height: 1.5;
+}
+.cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+.cta-meta {
+  color: var(--sd-ink-faint);
+  font-size: 13px;
+  margin-left: 6px;
+}
+
+/* ------- Hero illustration: a tiny stand-in for the planned weekend
+   to show the artifact you're going to get. Hand-arranged blocks
+   beat a stock photo every time. ------- */
+.hero-preview {
+  background: var(--sd-bg-elev);
+  border: 1px solid var(--sd-line);
+  border-radius: var(--sd-r-lg);
+  padding: 18px;
+  box-shadow: var(--sd-shadow-2);
+  display: grid;
+  gap: 10px;
+}
+.preview-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--sd-line);
+
+  .title {
+    font-weight: 700;
+    font-size: 15px;
+  }
+  .sub {
+    color: var(--sd-ink-soft);
+    font-size: 12px;
+  }
+}
+.preview-pill {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--sd-primary);
+  background: var(--sd-primary-soft);
+  padding: 4px 8px;
+  border-radius: var(--sd-r-pill);
+}
+
+/* ------- Value props strip ------- */
+.values {
+  margin-top: 64px;
+  display: grid;
+  gap: 16px;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 720px) {
+  .values {
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 20px;
+  }
+}
+.value {
+  background: var(--sd-surface);
+  border: 1px solid var(--sd-line);
+  border-radius: var(--sd-r-lg);
+  padding: 22px;
+
+  .ico {
+    width: 40px;
+    height: 40px;
+    display: grid;
+    place-items: center;
+    border-radius: 12px;
+    background: var(--sd-primary-soft);
+    color: var(--sd-primary);
+    margin-bottom: 14px;
+  }
+  h3 {
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin: 0 0 6px;
+  }
+  p {
+    margin: 0;
+    color: var(--sd-ink-soft);
+    font-size: 14px;
+    line-height: 1.5;
+  }
+}
+
+/* ------- "Here's how it feels" tour ------- */
+.tour {
+  margin-top: 72px;
+  display: grid;
+  gap: 24px;
+
+  h2 {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin: 0 0 4px;
+  }
+  .lede {
+    color: var(--sd-ink-soft);
+    margin: 0 0 12px;
+    font-size: 15px;
+  }
+}
+.tour-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 880px) {
+  .tour-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+.tour-card {
+  background: var(--sd-surface);
+  border: 1px solid var(--sd-line);
+  border-radius: var(--sd-r-lg);
+  padding: 22px;
+  display: grid;
+  gap: 12px;
+
+  h3 {
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin: 0;
+  }
+  p {
+    margin: 0;
+    color: var(--sd-ink-soft);
+    font-size: 14px;
+    line-height: 1.5;
+  }
+}
+.tour-step {
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--sd-primary);
+  font-weight: 700;
+}
+
+/* ------- Closing CTA panel ------- */
+.closing {
+  margin-top: 80px;
+  padding: 48px 32px;
+  border-radius: var(--sd-r-xl);
+  background:
+    radial-gradient(100% 80% at 100% 0%, #FBEBC4 0%, transparent 60%),
+    radial-gradient(100% 80% at 0% 100%, var(--sd-primary-soft) 0%, transparent 60%),
+    var(--sd-surface);
+  border: 1px solid var(--sd-line);
+  text-align: center;
+
+  h2 {
+    font-size: 32px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin: 0 0 8px;
+  }
+  p {
+    color: var(--sd-ink-soft);
+    font-size: 15px;
+    margin: 0 0 24px;
+  }
+  .cta-row {
+    justify-content: center;
+  }
+}
+
+.footnote {
+  text-align: center;
+  color: var(--sd-ink-faint);
+  font-size: 12px;
+  margin-top: 40px;
+
+  a {
+    color: var(--sd-ink-soft);
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}

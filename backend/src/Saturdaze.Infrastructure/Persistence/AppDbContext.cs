@@ -18,6 +18,8 @@ public class AppDbContext : DbContext, IAppDbContext
     public DbSet<Weekend> Weekends => Set<Weekend>();
     public DbSet<ItineraryBlock> ItineraryBlocks => Set<ItineraryBlock>();
     public DbSet<ShoppingErrand> ShoppingErrands => Set<ShoppingErrand>();
+    public DbSet<User> Users => Set<User>();
+    public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

@@ -1,0 +1,40 @@
+<sd-auth-shell>
+  <sd-auth-card>
+    <div class="badge">
+      <sd-icon name="mail" [size]="32" />
+    </div>
+
+    <h1>Check your email</h1>
+    <p class="sub">
+      We sent a link to <strong>your inbox</strong>. Click it to finish setting up your account — it expires in 30 minutes.
+    </p>
+
+    <div class="button-row">
+      <sd-button
+        variant="secondary"
+        size="sm"
+        [disabled]="resending()"
+        (click)="resend()"
+        data-action="resend"
+      >
+        <sd-icon slot="leading" name="refresh" [size]="14" />
+        Resend
+      </sd-button>
+      <sd-button variant="ghost" size="sm">
+        Open mail app
+      </sd-button>
+    </div>
+
+    @if (resentAt(); as t) {
+      <div class="helper" role="status">Resent — check your inbox again.</div>
+    }
+
+    <div class="helper">
+      Wrong address? <a routerLink="/signup">Use a different one</a>
+    </div>
+  </sd-auth-card>
+
+  <div slot="foot" class="foot">
+    <a routerLink="/login">← Back to sign in</a>
+  </div>
+</sd-auth-shell>

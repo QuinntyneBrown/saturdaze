@@ -33,3 +33,5 @@ export * from './lib/text-input/text-input';
 export * from './lib/card/card';
 export * from './lib/toggle/toggle';
 export * from './lib/dialog/dialog';
+export * from './lib/auth-shell/auth-shell';
+export * from './lib/auth-card/auth-card';

@@ -266,6 +266,48 @@ namespace Saturdaze.Infrastructure.Migrations
                     b.ToTable("Preferences", (string)null);
                 });
 
+            modelBuilder.Entity("Saturdaze.Domain.Entities.RefreshToken", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset>("CreatedAtUtc")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("CreatedByIp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("ExpiresAtUtc")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<Guid?>("ReplacedByTokenId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset?>("RevokedAtUtc")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("RevokedByIp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TokenHash")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TokenHash")
+                        .IsUnique();
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("RefreshTokens", (string)null);
+                });
+
             modelBuilder.Entity("Saturdaze.Domain.Entities.Restaurant", b =>
                 {
                     b.Property<Guid>("Id")
@@ -329,6 +371,50 @@ namespace Saturdaze.Infrastructure.Migrations
                     b.HasIndex("WeekendId");
 
                     b.ToTable("ShoppingErrands", (string)null);
+                });
+
+            modelBuilder.Entity("Saturdaze.Domain.Entities.User", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset>("CreatedAtUtc")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<DateTimeOffset?>("EmailVerifiedUtc")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<Guid?>("FamilyId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("NormalizedEmail")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("PasswordHash")
+                        .IsRequired()
+                        .HasMaxLength(512)
+                        .HasColumnType("nvarchar(512)");
+
+                    b.Property<int>("Role")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset>("UpdatedAtUtc")
+                        .HasColumnType("datetimeoffset");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedEmail")
+                        .IsUnique();
+
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("Saturdaze.Domain.Entities.Weekend", b =>
@@ -401,6 +487,15 @@ namespace Saturdaze.Infrastructure.Migrations
                     b.HasOne("Saturdaze.Domain.Entities.Family", null)
                         .WithMany("Preferences")
                         .HasForeignKey("FamilyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Saturdaze.Domain.Entities.RefreshToken", b =>
+                {
+                    b.HasOne("Saturdaze.Domain.Entities.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

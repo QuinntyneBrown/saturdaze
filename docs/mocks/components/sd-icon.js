@@ -40,6 +40,7 @@ const ICONS = {
   mail:     `<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>`,
   check:    `<path d="M5 12l5 5 9-11"/>`,
   key:      `<circle cx="8" cy="14" r="4"/><path d="M11 13l10-10M17 7l2 2"/>`,
+  sign_out: `<path d="M10 4H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h5"/><path d="M14 8l4 4-4 4"/><path d="M18 12H9"/>`,
 };
 
 class SdIcon extends SdElement {

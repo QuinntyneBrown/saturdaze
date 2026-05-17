@@ -15,6 +15,8 @@ public interface IAppDbContext
     DbSet<Weekend> Weekends { get; }
     DbSet<ItineraryBlock> ItineraryBlocks { get; }
     DbSet<ShoppingErrand> ShoppingErrands { get; }
+    DbSet<User> Users { get; }
+    DbSet<RefreshToken> RefreshTokens { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

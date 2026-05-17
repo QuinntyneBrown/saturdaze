@@ -311,6 +311,29 @@
       </sd-dialog>
     </div>
 
+    <div>
+      <div class="demo-label">Sign out confirm</div>
+      <sd-dialog open static
+        title="Sign out?"
+        subtitle="I'll forget you on this device until you sign back in."
+      >
+        <sd-card variant="sunk">
+          <div style="display:flex; gap:10px; align-items:flex-start;">
+            <sd-icon name="key" size="18" style="color:var(--sd-ink-soft); margin-top:2px;"></sd-icon>
+            <div style="font-size:14px;">
+              <div style="font-weight:600;">You'll need to sign back in</div>
+              <div style="color:var(--sd-ink-soft); margin-top:4px;">quinntynebrown@gmail.com + your password. Saved weekends and family settings stay put.</div>
+            </div>
+          </div>
+        </sd-card>
+        <sd-button slot="actions" variant="secondary">Stay signed in</sd-button>
+        <sd-button slot="actions" variant="danger">
+          <sd-icon slot="leading" name="sign_out" size="16"></sd-icon>
+          Sign out
+        </sd-button>
+      </sd-dialog>
+    </div>
+
     <p style="text-align:center; margin-top:24px;"><a href="../index.html" style="color:var(--sd-primary); text-decoration:none; font-weight:600;">← Back to mocks</a></p>
   </main>
 </body>

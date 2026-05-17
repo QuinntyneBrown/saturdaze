@@ -3,7 +3,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Http.Resilience;
 using Saturdaze.Application.Abstractions;
+using Saturdaze.Application.Authentication;
 using Saturdaze.Application.Weather;
+using Saturdaze.Infrastructure.Authentication;
 using Saturdaze.Infrastructure.Persistence;
 using Saturdaze.Infrastructure.Weather;
 
@@ -32,6 +34,19 @@ public static class DependencyInjection
         services.AddMemoryCache();
 
         services.Configure<HomeLocationOptions>(configuration.GetSection(HomeLocationOptions.SectionName));
+
+        // Auth. Signing key resolution: env var first (production), config
+        // section as fallback for dev. A startup warning fires outside
+        // Development if the placeholder is still in play.
+        services.Configure<JwtOptions>(o =>
+        {
+            configuration.GetSection(JwtOptions.SectionName).Bind(o);
+            var envKey = Environment.GetEnvironmentVariable("SATURDAZE_JWT_SIGNING_KEY");
+            if (!string.IsNullOrWhiteSpace(envKey)) o.SigningKey = envKey;
+        });
+
+        services.AddSingleton<IPasswordHasher, Pbkdf2PasswordHasher>();
+        services.AddSingleton<IJwtTokenService, JwtTokenService>();
 
         var weatherBaseUrl = configuration["Saturdaze:Weather:BaseUrl"]
             ?? "https://api.open-meteo.com/v1/";

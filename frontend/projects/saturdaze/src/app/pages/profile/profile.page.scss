@@ -92,6 +92,36 @@
   color: var(--sd-ink-soft);
 }
 
+.account-block {
+  display: grid;
+  gap: 12px;
+}
+
+.account-identity {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.account-meta {
+  min-width: 0;
+  flex: 1;
+}
+
+.account-email {
+  font-weight: var(--sd-fw-semibold);
+  letter-spacing: -0.005em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.account-sub {
+  font-size: var(--sd-fs-sm);
+  color: var(--sd-ink-soft);
+  margin-top: 2px;
+}
+
 @include respond-to(desktop) {
   .profile-cols {
     display: grid;

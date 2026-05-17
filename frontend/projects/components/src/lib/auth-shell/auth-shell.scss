@@ -1,0 +1,31 @@
+// Mirrors docs/mocks/pages/login.html `.auth-shell` + `.brand` blocks.
+
+:host {
+  display: grid;
+  width: 100%;
+  max-width: 420px;
+  gap: 24px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: var(--sd-ink-soft);
+  font-size: var(--sd-fs-xs);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-weight: var(--sd-fw-semibold);
+
+  .mark {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    background:
+      radial-gradient(120% 120% at 20% 0%, var(--sd-primary-soft) 0%, transparent 60%),
+      radial-gradient(120% 120% at 100% 100%, #FBEBC4 0%, transparent 60%),
+      var(--sd-primary);
+    box-shadow: var(--sd-shadow-1);
+  }
+}

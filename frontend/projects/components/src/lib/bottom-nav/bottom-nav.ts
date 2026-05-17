@@ -29,7 +29,7 @@ interface NavItem {
 }
 
 const ITEMS: readonly NavItem[] = [
-  { key: 'home',       label: 'Weekend',  icon: 'home',    href: 'home.html',       route: '/' },
+  { key: 'home',       label: 'Weekend',  icon: 'home',    href: 'home.html',       route: '/weekend' },
   { key: 'activities', label: 'Discover', icon: 'sparkle', href: 'activities.html', route: '/activities' },
   { key: 'saved',      label: 'Saved',    icon: 'heart',   href: 'saved.html',      route: '/saved' },
   { key: 'profile',    label: 'Family',   icon: 'user',    href: 'profile.html',    route: '/profile' },

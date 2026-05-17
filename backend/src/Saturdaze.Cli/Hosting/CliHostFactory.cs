@@ -3,11 +3,13 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Saturdaze.Application.Authentication;
 using Saturdaze.Application.Common;
 using Saturdaze.Cli.Database;
 using Saturdaze.Cli.Migrate;
 using Saturdaze.Cli.Reset;
 using Saturdaze.Cli.Seed;
+using Saturdaze.Infrastructure.Authentication;
 using Saturdaze.Infrastructure.Persistence;
 
 namespace Saturdaze.Cli.Hosting;
@@ -48,11 +50,13 @@ public static class CliHostFactory
                 });
 
                 services.AddSingleton<IDateTimeProvider, SystemDateTimeProvider>();
+                services.AddSingleton<IPasswordHasher, Pbkdf2PasswordHasher>();
                 services.AddSingleton<ISeedPathResolver, SeedPathResolver>();
                 services.AddSingleton<IJsonSeeder, ActivitySeeder>();
                 services.AddSingleton<IJsonSeeder, RestaurantSeeder>();
                 services.AddSingleton<IJsonSeeder, LocalEventSeeder>();
                 services.AddSingleton<IJsonSeeder, FamilySeeder>();
+                services.AddSingleton<IJsonSeeder, UserSeeder>();
                 services.AddScoped<SeedCommandHandler>();
                 services.AddScoped<MigrateCommandHandler>();
                 services.AddScoped<ResetCommandHandler>();

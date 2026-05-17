@@ -1,0 +1,122 @@
+// Mirrors docs/mocks/pages/signup.html — only the per-page bits live here;
+// shared chrome comes from sd-auth-shell / sd-auth-card.
+
+:host {
+  display: contents;
+}
+
+form {
+  display: grid;
+  gap: 18px;
+}
+
+h1 {
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.sub {
+  margin: -10px 0 0;
+  color: var(--sd-ink-soft);
+  font-size: 14px;
+}
+
+.check {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--sd-ink-soft);
+  user-select: none;
+  line-height: 1.45;
+
+  input {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    min-width: 20px;
+    border-radius: 6px;
+    border: 1.5px solid var(--sd-line-strong);
+    background: var(--sd-bg-elev);
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    margin-top: 1px;
+    transition:
+      background var(--sd-dur-fast) var(--sd-ease),
+      border-color var(--sd-dur-fast) var(--sd-ease);
+
+    &:checked {
+      background: var(--sd-primary);
+      border-color: var(--sd-primary);
+
+      &::after {
+        content: "";
+        width: 6px;
+        height: 10px;
+        border: solid #fff;
+        border-width: 0 2px 2px 0;
+        transform: rotate(45deg) translate(-1px, -1px);
+      }
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--sd-primary-soft);
+      outline-offset: 2px;
+    }
+  }
+
+  .link {
+    color: var(--sd-primary);
+    text-decoration: none;
+    font-weight: 600;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.alt-cta {
+  text-align: center;
+  font-size: 14px;
+  color: var(--sd-ink-soft);
+
+  a {
+    color: var(--sd-primary);
+    text-decoration: none;
+    font-weight: 600;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.foot {
+  text-align: center;
+  font-size: 12px;
+  color: var(--sd-ink-faint);
+
+  a {
+    color: var(--sd-ink-soft);
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.field-error,
+.auth-error {
+  color: var(--sd-warn);
+  background: var(--sd-warn-soft);
+  border-radius: var(--sd-r-md);
+  padding: 10px 14px;
+  font-size: 13px;
+  font-weight: var(--sd-fw-medium);
+}

@@ -1,0 +1,145 @@
+<div class="marketing">
+
+  <nav class="nav">
+    <a class="brand" routerLink="/">
+      <span class="mark"></span>
+      Saturdaze
+    </a>
+    <div class="nav-links">
+      <a class="nav-link" href="#how">How it works</a>
+      <a class="nav-link" routerLink="/login">Sign in</a>
+      <sd-button size="sm">
+        <sd-icon slot="leading" name="sparkle" [size]="14" />
+        Get started
+      </sd-button>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <div>
+      <div class="eyebrow">For families who like the weekend to actually feel like one</div>
+      <h1>Two days.<br />Already planned.</h1>
+      <p class="lede">
+        Saturdaze drafts your Saturday and Sunday around the things that
+        don't move — swim lessons, naptime, the weather — and then fills
+        in the rest with ideas your family will actually say yes to.
+      </p>
+      <div class="cta-row">
+        <sd-button size="lg">
+          <sd-icon slot="leading" name="sparkle" [size]="16" />
+          Create your account
+        </sd-button>
+        <sd-button variant="ghost" size="lg">
+          <sd-icon slot="leading" name="arrow_right" [size]="16" />
+          See a sample weekend
+        </sd-button>
+        <span class="cta-meta">Free during the beta.</span>
+      </div>
+    </div>
+
+    <div class="hero-preview">
+      <div class="preview-head">
+        <div>
+          <div class="title">Saturday — your weekend</div>
+          <div class="sub">Sat 17 May · sunny, 22°</div>
+        </div>
+        <div class="preview-pill">Draft ready</div>
+      </div>
+      <sd-timeline-block
+        time="9:00"
+        duration="60m"
+        title="Swim lessons"
+        subtitle="Port Credit Pool"
+        icon="bike"
+        tone="fixed"
+        locked
+      />
+      <sd-timeline-block
+        time="11:00"
+        duration="2h"
+        title="Lavender fields"
+        subtitle="Terre Bleu, Milton"
+        icon="tree"
+        drive="45 min"
+      >
+        <sd-chip slot="chips" tone="primary">Day highlight</sd-chip>
+      </sd-timeline-block>
+      <sd-timeline-block
+        time="13:00"
+        duration="75m"
+        title="Lunch — La Marina"
+        subtitle="Wife-approved · patio"
+        icon="fork"
+        tone="meal"
+      />
+    </div>
+  </section>
+
+  <section class="values">
+    <div class="value">
+      <div class="ico"><sd-icon name="lock" [size]="18" /></div>
+      <h3>Knows your anchors</h3>
+      <p>Swim lessons, church, naptime, the in-laws on the third Sunday — Saturdaze plans around the things you can't move.</p>
+    </div>
+    <div class="value">
+      <div class="ico"><sd-icon name="sparkle" [size]="18" /></div>
+      <h3>Anticipates the weekend</h3>
+      <p>Lavender peaks Saturday, rain rolls in Monday — Saturdaze nudges you about the moments you'd otherwise miss.</p>
+    </div>
+    <div class="value">
+      <div class="ico"><sd-icon name="heart" [size]="18" /></div>
+      <h3>Built for your family</h3>
+      <p>Picky eaters, short attention spans, 45-minute drive limits — tell us once, and every weekend after fits.</p>
+    </div>
+  </section>
+
+  <section class="tour" id="how">
+    <div>
+      <h2>How a Saturdaze weekend comes together</h2>
+      <p class="lede">Three small moments, and the logistics disappear.</p>
+    </div>
+
+    <div class="tour-grid">
+      <div class="tour-card">
+        <div class="tour-step">Step 01</div>
+        <h3>Tell us who's in the family</h3>
+        <p>Names, ages, what each kid is into, the things you've all agreed to avoid. A minute of setup, paid back every weekend.</p>
+      </div>
+      <div class="tour-card">
+        <div class="tour-step">Step 02</div>
+        <h3>Lock the things that don't move</h3>
+        <p>Saturday swim, Sunday church, the weekly Costco run — Saturdaze treats them as anchors and plans around them, not over them.</p>
+      </div>
+      <div class="tour-card">
+        <div class="tour-step">Step 03</div>
+        <h3>Get a weekend, every Friday</h3>
+        <p>Friday at 6pm, a draft of both days lands — weather-checked, drive-time-checked, kid-tested. Tap to swap anything you don't love.</p>
+      </div>
+      <div class="tour-card">
+        <div class="tour-step">Step 04</div>
+        <h3>Send it to your partner</h3>
+        <p>A read-only preview link your partner can open without an account. Approve, suggest a swap, or just say "yep, perfect."</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="closing">
+    <h2>Get your first weekend.</h2>
+    <p>It takes a minute to set up, and Friday at 6pm you'll have a draft Saturday and Sunday waiting.</p>
+    <div class="cta-row">
+      <sd-button size="lg">
+        <sd-icon slot="leading" name="sparkle" [size]="16" />
+        Create your account
+      </sd-button>
+      <sd-button variant="ghost" size="lg">
+        Already have one? Sign in
+      </sd-button>
+    </div>
+  </section>
+
+  <p class="footnote">
+    Saturdaze is in private beta. <a routerLink="/login">Sign in</a> ·
+    <a routerLink="/">Back to home</a>
+  </p>
+
+</div>

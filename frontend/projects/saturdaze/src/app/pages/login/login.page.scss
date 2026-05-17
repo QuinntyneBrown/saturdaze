@@ -1,0 +1,92 @@
+// Mirrors docs/mocks/pages/login.html — the per-page styles that don't
+// belong inside the reusable `sd-auth-shell` / `sd-auth-card` components.
+
+:host {
+  display: contents;
+}
+
+form {
+  display: grid;
+  gap: 18px;
+}
+
+.auth-error {
+  color: var(--sd-warn);
+  background: var(--sd-warn-soft);
+  border-radius: var(--sd-r-md);
+  padding: 10px 14px;
+  font-size: 13px;
+  font-weight: var(--sd-fw-medium);
+}
+
+h1 {
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.sub {
+  margin: -10px 0 0;
+  color: var(--sd-ink-soft);
+  font-size: 14px;
+}
+
+// Row that holds the remember-me toggle on the left and the
+// forgot-password link on the right — tight, single line on phone.
+.auth-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.link {
+  color: var(--sd-primary);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 14px;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--sd-ink-faint);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+
+  &::before,
+  &::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--sd-line);
+  }
+}
+
+.alt-cta {
+  text-align: center;
+  font-size: 14px;
+  color: var(--sd-ink-soft);
+}
+
+.foot {
+  text-align: center;
+  font-size: 12px;
+  color: var(--sd-ink-faint);
+
+  a {
+    color: var(--sd-ink-soft);
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}

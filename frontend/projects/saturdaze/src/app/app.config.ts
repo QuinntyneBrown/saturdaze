@@ -1,11 +1,15 @@
 import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
-import { provideHttpClient, withFetch } from '@angular/common/http';
+import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
 import { provideRouter } from '@angular/router';
+
+import { authInterceptor } from './auth/auth.interceptor';
 
 import {
   ACTIVITY_SERVICE,
   API_BASE_URL,
   ActivityService,
+  AUTH_SERVICE,
+  AuthService,
   EVENTS_SERVICE,
   EventsService,
   FAMILY_SERVICE,
@@ -13,7 +17,9 @@ import {
   RESTAURANT_SERVICE,
   RestaurantService,
   SAVED_SERVICE,
+  SESSION_STORE,
   SavedService,
+  SessionStore,
   WEEKEND_PLAN_SERVICE,
   WeekendPlanService,
 } from 'api';
@@ -25,7 +31,7 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
-    provideHttpClient(withFetch()),
+    provideHttpClient(withFetch(), withInterceptors([authInterceptor])),
     { provide: API_BASE_URL, useValue: environment.apiBaseUrl },
 
     // Composition root: pages depend on tokens; the production host binds
@@ -37,5 +43,10 @@ export const appConfig: ApplicationConfig = {
     { provide: RESTAURANT_SERVICE, useExisting: RestaurantService },
     { provide: SAVED_SERVICE, useExisting: SavedService },
     { provide: WEEKEND_PLAN_SERVICE, useExisting: WeekendPlanService },
+
+    // Auth — bound to the real HTTP `AuthService`. `SessionStore` owns the
+    // persistence + error-mapping; pages depend only on `SESSION_STORE`.
+    { provide: AUTH_SERVICE, useExisting: AuthService },
+    { provide: SESSION_STORE, useExisting: SessionStore },
   ],
 };

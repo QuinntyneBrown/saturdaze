@@ -1,0 +1,52 @@
+<sd-auth-shell>
+  <sd-auth-card>
+    @switch (state()) {
+      @case ('pending') {
+        <div class="state pending">
+          <div class="spinner" aria-hidden="true"></div>
+          <h1>Confirming your email…</h1>
+          <p class="sub">Hang tight — this only takes a moment.</p>
+        </div>
+      }
+      @case ('success') {
+        <div class="state success">
+          <div class="check-badge">
+            <sd-icon name="check" [size]="40" />
+          </div>
+          <h1>You're verified.<br />Welcome to Saturdaze.</h1>
+          <p class="sub">
+            Your account is ready. Take a minute to tell us about your family — we'll have your first weekend drafted by Friday at 6pm.
+          </p>
+
+          <div class="next-tip">
+            <sd-icon name="sparkle" [size]="16" />
+            <span>Next: add the kids, your home base, and what's locked in each weekend.</span>
+          </div>
+
+          <div class="button-row">
+            <sd-button size="lg" full routerLink="/profile">
+              <sd-icon slot="leading" name="arrow_right" [size]="16" />
+              Set up your family
+            </sd-button>
+            <sd-button variant="ghost" size="sm" full routerLink="/weekend">
+              Skip — take me to the app
+            </sd-button>
+          </div>
+        </div>
+      }
+      @case ('error') {
+        <div class="state error">
+          <h1>Verification didn't work</h1>
+          <p class="sub" role="alert">
+            {{ error()?.message ?? 'The verification link is invalid or expired.' }}
+          </p>
+          <a class="link" routerLink="/login">Back to sign in</a>
+        </div>
+      }
+    }
+  </sd-auth-card>
+
+  <div slot="foot" class="foot">
+    Need a hand? <a href="mailto:support@saturdaze.app">Email support</a>
+  </div>
+</sd-auth-shell>

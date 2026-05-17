@@ -1,0 +1,83 @@
+// Mirrors docs/mocks/pages/check-email.html. Per-page styles only.
+
+:host {
+  display: contents;
+}
+
+sd-auth-card {
+  text-align: center;
+  justify-items: center;
+  padding: 36px 28px;
+}
+
+.badge {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(120% 120% at 30% 20%, var(--sd-primary-soft) 0%, transparent 70%),
+    var(--sd-bg-elev);
+  color: var(--sd-primary);
+  border: 1px solid var(--sd-primary-soft);
+}
+
+h1 {
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.sub {
+  color: var(--sd-ink-soft);
+  font-size: 14px;
+  line-height: 1.55;
+  margin: 0;
+  max-width: 320px;
+
+  strong {
+    color: var(--sd-ink);
+    font-weight: 600;
+  }
+}
+
+.helper {
+  margin-top: 6px;
+  font-size: 13px;
+  color: var(--sd-ink-soft);
+
+  a {
+    color: var(--sd-primary);
+    text-decoration: none;
+    font-weight: 600;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.button-row {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+
+.foot {
+  text-align: center;
+  font-size: 12px;
+  color: var(--sd-ink-faint);
+
+  a {
+    color: var(--sd-ink-soft);
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}

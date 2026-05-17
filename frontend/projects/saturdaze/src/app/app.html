@@ -1,3 +1,9 @@
-<div class="sd-frame">
+@if (loading()) {
+  <div class="sd-app-loading" aria-hidden="true"></div>
+} @else if (chrome()) {
+  <div class="sd-frame">
+    <router-outlet />
+  </div>
+} @else {
   <router-outlet />
-</div>
+}

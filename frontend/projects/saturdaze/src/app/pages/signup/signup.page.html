@@ -1,0 +1,85 @@
+<sd-auth-shell>
+  <sd-auth-card>
+    <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+      <div>
+        <h1>Start planning weekends</h1>
+        <p class="sub">It takes a minute. Your first Saturday is on us.</p>
+      </div>
+
+      <sd-text-input
+        label="Family name"
+        placeholder="The Browns"
+        hint="What we'll greet you with on Saturday morning."
+        formControlName="familyName"
+      />
+
+      <sd-text-input
+        label="Home location"
+        placeholder="Port Credit, Mississauga"
+        hint="Used for weather and drive-time."
+        formControlName="homeLocation"
+      />
+
+      <sd-text-input
+        label="Email"
+        type="email"
+        placeholder="you@example.com"
+        formControlName="email"
+      />
+
+      <sd-text-input
+        label="Password"
+        type="password"
+        placeholder="At least 8 characters"
+        hint="Mix letters, numbers, and a symbol for a stronger one."
+        formControlName="password"
+        (input)="onPasswordChange(form.controls.password.value)"
+      />
+
+      @if (passwordWeak()) {
+        <div class="field-error" role="alert">
+          Password must be at least 8 characters.
+        </div>
+      }
+
+      <label class="check">
+        <input
+          type="checkbox"
+          [checked]="termsAccepted()"
+          (change)="onTermsChange($event)"
+        />
+        <span>
+          I agree to the <a class="link" href="#">Terms</a> and
+          <a class="link" href="#">Privacy Policy</a>.
+        </span>
+      </label>
+
+      <label class="check">
+        <input
+          type="checkbox"
+          [checked]="fridayPreviewOn()"
+          (change)="onFridayChange($event)"
+        />
+        <span>Send me the Friday preview — a heads-up the day before each weekend.</span>
+      </label>
+
+      @if (error(); as err) {
+        <div class="auth-error" role="alert">{{ err.message }}</div>
+      }
+
+      <sd-button type="submit" size="lg" full [disabled]="!canSubmit()">
+        <sd-icon slot="leading" name="sparkle" [size]="16" />
+        Create account
+      </sd-button>
+
+      <div class="alt-cta">
+        Already have an account?
+        <a routerLink="/login">Sign in</a>
+      </div>
+    </form>
+  </sd-auth-card>
+
+  <div slot="foot" class="foot">
+    <a routerLink="/">← Back to home</a>
+  </div>
+</sd-auth-shell>

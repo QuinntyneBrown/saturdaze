@@ -96,6 +96,25 @@ export class ProfilePage extends BasePage {
       .locator("sd-toggle");
   }
 
+  /* ---------- Account / sign-out ---------- */
+
+  accountSection(): Locator {
+    return this.sectionByTitle("Account");
+  }
+
+  accountEmail(): Locator {
+    return this.accountSection().locator(".account-email");
+  }
+
+  signOutButton(): Locator {
+    return this.accountSection().locator('sd-button[variant="danger"]');
+  }
+
+  async clickSignOut(): Promise<void> {
+    await this.signOutButton().scrollIntoViewIfNeeded();
+    await this.signOutButton().locator("button").click();
+  }
+
   private sectionByTitle(title: string): Locator {
     return this.page.locator(`sd-section[title="${title}"]`);
   }
