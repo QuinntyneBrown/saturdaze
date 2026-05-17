@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Create your account — Saturdaze</title>
+  <link rel="stylesheet" href="../styles/global.css" />
+  <script type="module" src="../app.js"></script>
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      min-height: 100vh;
+    }
+    .auth-shell {
+      width: 100%;
+      max-width: 440px;
+      display: grid;
+      gap: 24px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      color: var(--sd-ink-soft);
+      font-size: var(--sd-fs-xs);
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      font-weight: var(--sd-fw-semibold);
+    }
+    .brand .mark {
+      width: 28px; height: 28px; border-radius: 8px;
+      background:
+        radial-gradient(120% 120% at 20% 0%, var(--sd-primary-soft) 0%, transparent 60%),
+        radial-gradient(120% 120% at 100% 100%, #FBEBC4 0%, transparent 60%),
+        var(--sd-primary);
+      box-shadow: var(--sd-shadow-1);
+    }
+
+    .auth-card {
+      background: var(--sd-surface);
+      border: 1px solid var(--sd-line);
+      border-radius: var(--sd-r-xl);
+      padding: 28px 24px;
+      display: grid;
+      gap: 18px;
+      box-shadow: var(--sd-shadow-2);
+    }
+
+    .auth-card h1 {
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin: 0;
+    }
+    .auth-card .sub {
+      margin: -10px 0 0;
+      color: var(--sd-ink-soft);
+      font-size: 14px;
+    }
+
+    /* Two-up grid for first + last name on wider phones — collapses to
+       stacked on the smallest screens so labels never crowd. */
+    .row-2 {
+      display: grid;
+      gap: 14px;
+      grid-template-columns: 1fr;
+    }
+    @media (min-width: 380px) {
+      .row-2 { grid-template-columns: 1fr 1fr; }
+    }
+
+    .check {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      cursor: pointer;
+      font-size: 13px;
+      color: var(--sd-ink-soft);
+      user-select: none;
+      line-height: 1.45;
+    }
+    .check input {
+      appearance: none;
+      width: 20px; height: 20px;
+      min-width: 20px;
+      border-radius: 6px;
+      border: 1.5px solid var(--sd-line-strong);
+      background: var(--sd-bg-elev);
+      display: grid; place-items: center;
+      cursor: pointer;
+      margin-top: 1px;
+      transition: background var(--sd-dur-fast) var(--sd-ease),
+                  border-color var(--sd-dur-fast) var(--sd-ease);
+    }
+    .check input:checked {
+      background: var(--sd-primary);
+      border-color: var(--sd-primary);
+    }
+    .check input:checked::after {
+      content: "";
+      width: 6px; height: 10px;
+      border: solid #fff;
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg) translate(-1px, -1px);
+    }
+    .check input:focus-visible {
+      outline: 2px solid var(--sd-primary-soft);
+      outline-offset: 2px;
+    }
+    .check .link {
+      color: var(--sd-primary);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .check .link:hover { text-decoration: underline; }
+
+    .alt-cta {
+      text-align: center;
+      font-size: 14px;
+      color: var(--sd-ink-soft);
+    }
+    .alt-cta a {
+      color: var(--sd-primary);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .alt-cta a:hover { text-decoration: underline; }
+
+    .foot {
+      text-align: center;
+      font-size: 12px;
+      color: var(--sd-ink-faint);
+    }
+    .foot a { color: var(--sd-ink-soft); text-decoration: none; }
+    .foot a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <div class="auth-shell">
+
+    <div class="brand">
+      <span class="mark"></span>
+      Saturdaze
+    </div>
+
+    <div class="auth-card">
+      <div>
+        <h1>Start planning weekends</h1>
+        <p class="sub">It takes a minute. Your first Saturday is on us.</p>
+      </div>
+
+      <sd-text-input
+        label="Family name"
+        placeholder="The Browns"
+        hint="What we'll greet you with on Saturday morning."
+      ></sd-text-input>
+
+      <sd-text-input
+        label="Home location"
+        placeholder="Port Credit, Mississauga"
+        hint="Used for weather and drive-time."
+      ></sd-text-input>
+
+      <sd-text-input
+        label="Email"
+        type="email"
+        placeholder="you@example.com"
+      ></sd-text-input>
+
+      <sd-text-input
+        label="Password"
+        type="password"
+        placeholder="At least 8 characters"
+        hint="Mix letters, numbers, and a symbol for a stronger one."
+      ></sd-text-input>
+
+      <label class="check">
+        <input type="checkbox" />
+        <span>
+          I agree to the <a class="link" href="#">Terms</a> and
+          <a class="link" href="#">Privacy Policy</a>.
+        </span>
+      </label>
+
+      <label class="check">
+        <input type="checkbox" checked />
+        <span>Send me the Friday preview — a heads-up the day before each weekend.</span>
+      </label>
+
+      <sd-button size="lg" full>
+        <sd-icon slot="leading" name="sparkle" size="16"></sd-icon>
+        Create account
+      </sd-button>
+
+      <div class="alt-cta">
+        Already have an account?
+        <a href="login.html">Sign in</a>
+      </div>
+    </div>
+
+    <div class="foot">
+      <a href="splash.html">← Back to home</a>
+    </div>
+
+  </div>
+</body>
+</html>

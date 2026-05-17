@@ -23,6 +23,50 @@
   gap: 8px;
 }
 
+.clickable-row {
+  cursor: pointer;
+  border-radius: var(--sd-r-md);
+}
+
+.clickable-row:focus-visible {
+  outline: 2px solid var(--sd-primary);
+  outline-offset: 2px;
+}
+
+.row-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.icon-action {
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--sd-line);
+  border-radius: 50%;
+  background: var(--sd-surface);
+  color: var(--sd-ink);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+}
+
+.icon-action:hover {
+  background: var(--sd-surface-2);
+}
+
+.icon-action.danger {
+  color: var(--sd-warn);
+}
+
+.form-error {
+  margin: 0;
+  color: var(--sd-warn);
+  font-size: var(--sd-fs-sm);
+}
+
 .pref-row {
   display: flex;
   justify-content: space-between;

@@ -37,6 +37,9 @@ const ICONS = {
   thumbs_down: `<path d="M7 13V4H4v9zM7 13l4 8a2 2 0 0 0 3-2v-4h5a2 2 0 0 0 2-2.3l-1-6A2 2 0 0 0 18 5H7"/>`,
   share:    `<circle cx="6" cy="12" r="2"/><circle cx="18" cy="6" r="2"/><circle cx="18" cy="18" r="2"/><path d="M8 11l8-4M8 13l8 4"/>`,
   sparkle:  `<path d="M12 3l1.7 5.3L19 10l-5.3 1.7L12 17l-1.7-5.3L5 10l5.3-1.7L12 3z"/>`,
+  mail:     `<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>`,
+  check:    `<path d="M5 12l5 5 9-11"/>`,
+  key:      `<circle cx="8" cy="14" r="4"/><path d="M11 13l10-10M17 7l2 2"/>`,
 };
 
 class SdIcon extends SdElement {

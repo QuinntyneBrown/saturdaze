@@ -1,0 +1,57 @@
+<sd-dialog [title]="title" [subtitle]="subtitle">
+  <form class="form" (submit)="submit($event)">
+    <label class="field">
+      <span>Title</span>
+      <input
+        name="commitmentTitle"
+        type="text"
+        autocomplete="off"
+        [ngModel]="commitmentTitle()"
+        (ngModelChange)="commitmentTitle.set($event); error.set('')"
+        placeholder="e.g. Eli's soccer practice"
+      />
+    </label>
+    <label class="field">
+      <span>Day</span>
+      <select
+        name="commitmentDay"
+        [ngModel]="dayOfWeek()"
+        (ngModelChange)="dayOfWeek.set($event); error.set('')"
+      >
+        @for (day of days; track day) {
+          <option [value]="day">{{ day }}</option>
+        }
+      </select>
+    </label>
+    <div class="time-grid">
+      <label class="field">
+        <span>Start</span>
+        <input
+          name="commitmentStart"
+          type="time"
+          [ngModel]="startTime()"
+          (ngModelChange)="startTime.set($event); error.set('')"
+        />
+      </label>
+      <label class="field">
+        <span>End</span>
+        <input
+          name="commitmentEnd"
+          type="time"
+          [ngModel]="endTime()"
+          (ngModelChange)="endTime.set($event); error.set('')"
+        />
+      </label>
+    </div>
+    @if (error()) { <p class="form-error" role="alert">{{ error() }}</p> }
+    <button type="submit" hidden></button>
+  </form>
+
+  <sd-button slot="actions" variant="secondary" type="button" (click)="cancel()">
+    Cancel
+  </sd-button>
+  <sd-button slot="actions" type="button" [disabled]="!canSubmit()" (click)="submit($event)">
+    @if (data.mode === 'add') { <sd-icon slot="leading" name="plus" [size]="16" /> }
+    {{ submitLabel }}
+  </sd-button>
+</sd-dialog>

@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Sign in — Saturdaze</title>
+  <link rel="stylesheet" href="../styles/global.css" />
+  <script type="module" src="../app.js"></script>
+  <style>
+    /* Auth screens skip the rail/bottom nav and live on a centered shell
+       so signed-out visitors see only the task in front of them. */
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      min-height: 100vh;
+    }
+    .auth-shell {
+      width: 100%;
+      max-width: 420px;
+      display: grid;
+      gap: 24px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      color: var(--sd-ink-soft);
+      font-size: var(--sd-fs-xs);
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      font-weight: var(--sd-fw-semibold);
+    }
+    .brand .mark {
+      width: 28px; height: 28px; border-radius: 8px;
+      background:
+        radial-gradient(120% 120% at 20% 0%, var(--sd-primary-soft) 0%, transparent 60%),
+        radial-gradient(120% 120% at 100% 100%, #FBEBC4 0%, transparent 60%),
+        var(--sd-primary);
+      box-shadow: var(--sd-shadow-1);
+    }
+
+    .auth-card {
+      background: var(--sd-surface);
+      border: 1px solid var(--sd-line);
+      border-radius: var(--sd-r-xl);
+      padding: 28px 24px;
+      display: grid;
+      gap: 18px;
+      box-shadow: var(--sd-shadow-2);
+    }
+
+    .auth-card h1 {
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin: 0;
+    }
+    .auth-card .sub {
+      margin: -10px 0 0;
+      color: var(--sd-ink-soft);
+      font-size: 14px;
+    }
+
+    /* Row that holds the remember-me checkbox on the left and the
+       forgot-password link on the right — tight, single line on phone. */
+    .auth-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .link {
+      color: var(--sd-primary);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 14px;
+    }
+    .link:hover { text-decoration: underline; }
+
+    .divider {
+      display: flex; align-items: center; gap: 12px;
+      color: var(--sd-ink-faint);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .divider::before, .divider::after {
+      content: ""; flex: 1; height: 1px; background: var(--sd-line);
+    }
+
+    .alt-cta {
+      text-align: center;
+      font-size: 14px;
+      color: var(--sd-ink-soft);
+    }
+
+    .foot {
+      text-align: center;
+      font-size: 12px;
+      color: var(--sd-ink-faint);
+    }
+    .foot a { color: var(--sd-ink-soft); text-decoration: none; }
+    .foot a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <div class="auth-shell">
+
+    <div class="brand">
+      <span class="mark"></span>
+      Saturdaze
+    </div>
+
+    <div class="auth-card">
+      <div>
+        <h1>Welcome back</h1>
+        <p class="sub">Your weekend's already taking shape.</p>
+      </div>
+
+      <sd-text-input
+        label="Email"
+        type="email"
+        placeholder="you@example.com"
+      ></sd-text-input>
+
+      <sd-text-input
+        label="Password"
+        type="password"
+        placeholder="••••••••"
+      ></sd-text-input>
+
+      <div class="auth-row">
+        <sd-toggle label="Remember me" checked></sd-toggle>
+        <a class="link" href="#">Forgot password?</a>
+      </div>
+
+      <sd-button size="lg" full>
+        <sd-icon slot="leading" name="arrow_right" size="16"></sd-icon>
+        Sign in
+      </sd-button>
+
+      <div class="divider">or</div>
+
+      <div class="alt-cta">
+        New to Saturdaze?
+        <a class="link" href="signup.html">Create an account</a>
+      </div>
+    </div>
+
+    <div class="foot">
+      <a href="splash.html">← Back to home</a>
+    </div>
+
+  </div>
+</body>
+</html>

@@ -165,24 +165,72 @@
     </div>
 
     <div>
+      <div class="demo-label">Add family member (profile)</div>
+      <sd-dialog open static
+        title="Add a family member"
+        subtitle="I'll plan around their age and likes"
+      >
+        <div style="display:grid; gap:12px;">
+          <sd-text-input label="Name" placeholder="e.g. Mae"></sd-text-input>
+          <sd-text-input label="Age" type="number" placeholder="5" hint="0–120 — I'll use this to pick age-appropriate activities."></sd-text-input>
+        </div>
+        <sd-button slot="actions" variant="secondary">Cancel</sd-button>
+        <sd-button slot="actions">
+          <sd-icon slot="leading" name="plus" size="16"></sd-icon>
+          Add member
+        </sd-button>
+      </sd-dialog>
+    </div>
+
+    <div>
+      <div class="demo-label">Edit family member (profile)</div>
+      <sd-dialog open static
+        title="Edit Mae"
+        subtitle="Update name or age"
+      >
+        <div style="display:grid; gap:12px;">
+          <sd-text-input label="Name" value="Mae"></sd-text-input>
+          <sd-text-input label="Age" type="number" value="5" hint="0–120 — I'll use this to pick age-appropriate activities."></sd-text-input>
+        </div>
+        <sd-button slot="actions" variant="secondary">Cancel</sd-button>
+        <sd-button slot="actions">Save</sd-button>
+      </sd-dialog>
+    </div>
+
+    <div>
       <div class="demo-label">Add commitment (profile)</div>
       <sd-dialog open static
         title="Add a commitment"
         subtitle="Something I should plan around every week"
       >
         <div style="display:grid; gap:12px;">
-          <sd-text-input label="What is it" placeholder="e.g. Eli's soccer practice"></sd-text-input>
+          <sd-text-input label="Title" placeholder="e.g. Eli's soccer practice"></sd-text-input>
+          <sd-text-input label="Day" placeholder="Saturday" hint="One of: Saturday, Sunday, Monday … Friday"></sd-text-input>
           <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-            <sd-text-input label="Day" placeholder="Saturday"></sd-text-input>
-            <sd-text-input label="Time" placeholder="11:00 – 12:00"></sd-text-input>
+            <sd-text-input label="Start" type="time" placeholder="09:00"></sd-text-input>
+            <sd-text-input label="End" type="time" placeholder="10:00"></sd-text-input>
           </div>
-          <sd-text-input label="Where" placeholder="Address or venue"></sd-text-input>
-          <div style="display:flex; justify-content:space-between; align-items:center;">
-            <div>
-              <div style="font-weight:600;">Lock by default</div>
-              <div style="font-size:13px; color:var(--sd-ink-soft);">Block it on the weekend draft automatically.</div>
-            </div>
-            <sd-toggle checked></sd-toggle>
+        </div>
+        <sd-button slot="actions" variant="secondary">Cancel</sd-button>
+        <sd-button slot="actions">
+          <sd-icon slot="leading" name="plus" size="16"></sd-icon>
+          Add commitment
+        </sd-button>
+      </sd-dialog>
+    </div>
+
+    <div>
+      <div class="demo-label">Edit commitment (profile)</div>
+      <sd-dialog open static
+        title="Edit Swim lessons"
+        subtitle="Update title, day, or time"
+      >
+        <div style="display:grid; gap:12px;">
+          <sd-text-input label="Title" value="Swim lessons"></sd-text-input>
+          <sd-text-input label="Day" value="Saturday" hint="One of: Saturday, Sunday, Monday … Friday"></sd-text-input>
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+            <sd-text-input label="Start" type="time" value="09:00"></sd-text-input>
+            <sd-text-input label="End" type="time" value="10:00"></sd-text-input>
           </div>
         </div>
         <sd-button slot="actions" variant="secondary">Cancel</sd-button>

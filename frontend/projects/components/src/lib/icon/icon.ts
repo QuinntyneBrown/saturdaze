@@ -2,8 +2,13 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  inject,
   input,
 } from '@angular/core';
+import {
+  DomSanitizer,
+  SafeHtml,
+} from '@angular/platform-browser';
 
 /**
  * Single source of truth for iconography.
@@ -32,6 +37,8 @@ const ICONS: Record<string, string> = {
   user:     `<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>`,
   plus:     `<path d="M12 5v14M5 12h14"/>`,
   close:    `<path d="M6 6l12 12M18 6L6 18"/>`,
+  edit:     `<path d="M4 20h4L18.5 9.5a2.1 2.1 0 0 0-3-3L5 17v3z"/><path d="M14 8l2 2"/>`,
+  trash:    `<path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M6 6l1 15h10l1-15"/><path d="M10 11v6M14 11v6"/>`,
   arrow_left:    `<path d="M15 6l-6 6 6 6"/>`,
   arrow_right:   `<path d="M9 6l6 6-6 6"/>`,
   chevron_right: `<path d="M9 6l6 6-6 6"/>`,
@@ -61,10 +68,12 @@ const ICONS: Record<string, string> = {
   },
 })
 export class Icon {
+  private readonly sanitizer = inject(DomSanitizer);
+
   readonly name = input<string>('sparkle');
   readonly size = input<number>(20);
 
-  protected readonly path = computed<string>(
-    () => ICONS[this.name()] ?? ICONS['sparkle']!,
+  protected readonly path = computed<SafeHtml>(
+    () => this.sanitizer.bypassSecurityTrustHtml(ICONS[this.name()] ?? ICONS['sparkle']!),
   );
 }

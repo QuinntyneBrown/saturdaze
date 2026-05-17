@@ -1,4 +1,4 @@
-<button type="button" [disabled]="disabled()">
+<button [attr.type]="type()" [disabled]="disabled()">
   <ng-content select="[slot=leading]" />
   <ng-content />
   <ng-content select="[slot=trailing]" />

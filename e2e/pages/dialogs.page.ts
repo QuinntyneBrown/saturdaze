@@ -38,8 +38,20 @@ export class DialogsPage extends BasePage {
     return this.dialog("Who's in for La Marina?");
   }
 
+  addFamilyMemberDialog(): Locator {
+    return this.dialog("Add a family member");
+  }
+
+  editFamilyMemberDialog(): Locator {
+    return this.dialog("Edit Mae");
+  }
+
   addCommitmentDialog(): Locator {
     return this.dialog("Add a commitment");
+  }
+
+  editCommitmentDialog(): Locator {
+    return this.dialog("Edit Swim lessons");
   }
 
   errandDialog(): Locator {

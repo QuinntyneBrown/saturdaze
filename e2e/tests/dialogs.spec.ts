@@ -16,7 +16,10 @@ test.describe("Dialogs & sheets gallery", () => {
       "Regenerate the weekend?",
       "Swap out Lavender Farm?",
       "Who's in for La Marina?",
+      "Add a family member",
+      "Edit Mae",
       "Add a commitment",
+      "Edit Swim lessons",
       "Slot in an errand",
       "Your weekend is ready 🌤",
       "Send Sara the plan?",
@@ -62,10 +65,61 @@ test.describe("Dialogs & sheets gallery", () => {
     );
   });
 
-  test("add-commitment dialog has form fields and a 'Lock by default' toggle (checked)", async ({ pages }) => {
+  test("add-family-member dialog has name and age fields", async ({ pages }) => {
+    const dialog = pages.dialogs.addFamilyMemberDialog();
+    await expect(dialog.locator("sd-text-input")).toHaveCount(2);
+    await expect(dialog.locator('sd-text-input[label="Name"]')).toBeVisible();
+    await expect(dialog.locator('sd-text-input[label="Age"]')).toHaveAttribute(
+      "type",
+      "number"
+    );
+  });
+
+  test("edit-family-member dialog prefills the existing member", async ({ pages }) => {
+    const dialog = pages.dialogs.editFamilyMemberDialog();
+    await expect(dialog.locator('sd-text-input[label="Name"]')).toHaveAttribute(
+      "value",
+      "Mae"
+    );
+    await expect(dialog.locator('sd-text-input[label="Age"]')).toHaveAttribute(
+      "value",
+      "5"
+    );
+  });
+
+  test("add-commitment dialog has title / day / start / end fields", async ({ pages }) => {
     const dialog = pages.dialogs.addCommitmentDialog();
     await expect(dialog.locator("sd-text-input")).toHaveCount(4);
-    await expect(dialog.locator("sd-toggle")).toHaveAttribute("checked", "");
+    await expect(dialog.locator('sd-text-input[label="Title"]')).toBeVisible();
+    await expect(dialog.locator('sd-text-input[label="Day"]')).toBeVisible();
+    await expect(dialog.locator('sd-text-input[label="Start"]')).toHaveAttribute(
+      "type",
+      "time"
+    );
+    await expect(dialog.locator('sd-text-input[label="End"]')).toHaveAttribute(
+      "type",
+      "time"
+    );
+  });
+
+  test("edit-commitment dialog prefills the existing commitment", async ({ pages }) => {
+    const dialog = pages.dialogs.editCommitmentDialog();
+    await expect(dialog.locator('sd-text-input[label="Title"]')).toHaveAttribute(
+      "value",
+      "Swim lessons"
+    );
+    await expect(dialog.locator('sd-text-input[label="Day"]')).toHaveAttribute(
+      "value",
+      "Saturday"
+    );
+    await expect(dialog.locator('sd-text-input[label="Start"]')).toHaveAttribute(
+      "value",
+      "09:00"
+    );
+    await expect(dialog.locator('sd-text-input[label="End"]')).toHaveAttribute(
+      "value",
+      "10:00"
+    );
   });
 
   test("errand dialog shows the 'Best fit: Sunday 9:15am' callout", async ({ pages }) => {

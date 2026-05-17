@@ -15,6 +15,7 @@ import {
 
 export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger';
 export type ButtonSize = 'sm' | 'md' | 'lg';
+export type ButtonType = 'button' | 'submit' | 'reset';
 
 @Component({
   selector: 'sd-button',
@@ -32,6 +33,7 @@ export type ButtonSize = 'sm' | 'md' | 'lg';
 export class Button {
   readonly variant = input<ButtonVariant>('primary');
   readonly size = input<ButtonSize>('md');
+  readonly type = input<ButtonType>('button');
   readonly full = input(false, { transform: booleanAttribute });
   readonly disabled = input(false, { transform: booleanAttribute });
 }

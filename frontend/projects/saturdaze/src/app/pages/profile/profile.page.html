@@ -10,15 +10,45 @@
 <div class="profile-cols">
   <sd-section title="Who's in" subtitle="Tap to edit a member">
     <div class="stack">
-      @for (m of profile().members; track m.name) {
-        <sd-list-item [title]="m.name" [subtitle]="m.subtitle">
-          <sd-avatar slot="leading" [name]="m.name" [tone]="m.tone" />
-          <sd-icon slot="trailing" name="chevron_right" [size]="16" />
+      @if (editable(); as editableProfile) {
+      @for (m of editableProfile.members; track m.name; let i = $index) {
+        <sd-list-item [title]="m.name" [subtitle]="memberSubtitle(m)">
+          <sd-avatar slot="leading" [name]="m.name" [tone]="memberTone(i)" />
+          <div slot="trailing" class="row-actions">
+            <button
+              type="button"
+              class="icon-action"
+              aria-label="Edit family member"
+              (click)="openEditMember(i, m)"
+            >
+              <sd-icon name="edit" [size]="16" />
+            </button>
+            <button
+              type="button"
+              class="icon-action danger"
+              aria-label="Delete family member"
+              (click)="deleteMember(i, m)"
+            >
+              <sd-icon name="trash" [size]="16" />
+            </button>
+          </div>
         </sd-list-item>
       }
-      <sd-list-item title="Add family member" flat compact>
+      }
+      <sd-list-item
+        title="Add family member"
+        flat
+        compact
+        class="clickable-row"
+        role="button"
+        tabindex="0"
+        (click)="openAddMember()"
+        (keydown.enter)="openAddMember()"
+        (keydown.space)="openAddMember(); $event.preventDefault()"
+      >
         <sd-icon slot="leading" name="plus" />
       </sd-list-item>
+      @if (memberError()) { <p class="form-error" role="alert">{{ memberError() }}</p> }
     </div>
   </sd-section>
 
@@ -27,15 +57,46 @@
     subtitle="I'll work the weekend around these"
   >
     <div class="stack">
-      @for (c of profile().commitments; track c.title) {
-        <sd-list-item [title]="c.title" [subtitle]="c.subtitle">
-          <sd-icon slot="leading" [name]="c.icon" />
-          <sd-chip slot="trailing" tone="accent">Locked</sd-chip>
+      @if (editable(); as editableProfile) {
+      @for (c of editableProfile.commitments; track c.title + c.dayOfWeek; let i = $index) {
+        <sd-list-item [title]="c.title" [subtitle]="commitmentSubtitle(c)">
+          <sd-icon slot="leading" [name]="commitmentIcon(c)" />
+          <div slot="trailing" class="row-actions">
+            <sd-chip tone="accent">Locked</sd-chip>
+            <button
+              type="button"
+              class="icon-action"
+              aria-label="Edit commitment"
+              (click)="openEditCommitment(i, c)"
+            >
+              <sd-icon name="edit" [size]="16" />
+            </button>
+            <button
+              type="button"
+              class="icon-action danger"
+              aria-label="Delete commitment"
+              (click)="deleteCommitment(i, c)"
+            >
+              <sd-icon name="trash" [size]="16" />
+            </button>
+          </div>
         </sd-list-item>
       }
-      <sd-list-item title="Add a commitment" flat compact>
+      }
+      <sd-list-item
+        title="Add a commitment"
+        flat
+        compact
+        class="clickable-row"
+        role="button"
+        tabindex="0"
+        (click)="openAddCommitment()"
+        (keydown.enter)="openAddCommitment()"
+        (keydown.space)="openAddCommitment(); $event.preventDefault()"
+      >
         <sd-icon slot="leading" name="plus" />
       </sd-list-item>
+      @if (commitmentError()) { <p class="form-error" role="alert">{{ commitmentError() }}</p> }
     </div>
   </sd-section>
 

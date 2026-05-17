@@ -50,6 +50,12 @@ function Invoke-Step {
 function Test-PortAvailable {
     param([int]$Port)
 
+    $getNetTcpConnection = Get-Command Get-NetTCPConnection -ErrorAction SilentlyContinue
+    if ($null -ne $getNetTcpConnection) {
+        $listeners = @(Get-NetTCPConnection -LocalPort $Port -State Listen -ErrorAction SilentlyContinue)
+        return $listeners.Count -eq 0
+    }
+
     $listener = [System.Net.Sockets.TcpListener]::new([System.Net.IPAddress]::Loopback, $Port)
     try {
         $listener.Start()
@@ -63,6 +69,18 @@ function Test-PortAvailable {
     }
 }
 
+function Find-AvailablePort {
+    param([Parameter(Mandatory)] [int]$StartingAt)
+
+    for ($port = $StartingAt; $port -le ($StartingAt + 99); $port++) {
+        if (Test-PortAvailable -Port $port) {
+            return $port
+        }
+    }
+
+    throw "Could not find an available port between $StartingAt and $($StartingAt + 99)."
+}
+
 function Resolve-NativeCommand {
     param([string[]]$Candidates)
 
@@ -74,6 +92,96 @@ function Resolve-NativeCommand {
     }
 
     throw "Could not find command. Checked: $($Candidates -join ', ')"
+}
+
+function Resolve-LocalDbConnectionString {
+    param([Parameter(Mandatory)] [string]$ConnectionString)
+
+    $parts = $ConnectionString -split ';'
+    $usesLocalDbShortcut = $false
+
+    for ($i = 0; $i -lt $parts.Count; $i++) {
+        $part = $parts[$i]
+        $eq = $part.IndexOf('=')
+        if ($eq -lt 0) {
+            continue
+        }
+
+        $key = $part.Substring(0, $eq).Trim()
+        $value = $part.Substring($eq + 1).Trim()
+        if (($key -ieq "Server" -or $key -ieq "Data Source") -and $value -ieq "(localdb)\MSSQLLocalDB") {
+            $usesLocalDbShortcut = $true
+            break
+        }
+    }
+
+    if (-not $usesLocalDbShortcut) {
+        return $ConnectionString
+    }
+
+    $sqllocaldb = Resolve-NativeCommand -Candidates @("sqllocaldb.exe", "sqllocaldb")
+    $instance = "MSSQLLocalDB"
+
+    function Get-LocalDbPipe {
+        param([Parameter(Mandatory)] [string]$CommandPath, [Parameter(Mandatory)] [string]$InstanceName)
+
+        $output = & $CommandPath info $InstanceName
+        if ($LASTEXITCODE -ne 0) {
+            throw "sqllocaldb info $InstanceName failed with exit code $LASTEXITCODE."
+        }
+
+        foreach ($line in $output) {
+            if ($line -match '^Instance pipe name:\s*(.+)$') {
+                $pipe = $Matches[1].Trim()
+                if (-not [string]::IsNullOrWhiteSpace($pipe)) {
+                    return $pipe
+                }
+            }
+        }
+
+        return $null
+    }
+
+    $pipe = Get-LocalDbPipe -CommandPath $sqllocaldb -InstanceName $instance
+    if ([string]::IsNullOrWhiteSpace($pipe)) {
+        & $sqllocaldb start $instance | Out-Host
+        if ($LASTEXITCODE -ne 0) {
+            throw "sqllocaldb start $instance failed with exit code $LASTEXITCODE."
+        }
+
+        $pipe = Get-LocalDbPipe -CommandPath $sqllocaldb -InstanceName $instance
+    }
+
+    if ([string]::IsNullOrWhiteSpace($pipe)) {
+        throw "Could not resolve LocalDB named pipe for $instance."
+    }
+
+    Write-Host "Resolved LocalDB shortcut to named pipe: $pipe"
+
+    $hasMinPoolSize = $false
+
+    for ($i = 0; $i -lt $parts.Count; $i++) {
+        $part = $parts[$i]
+        $eq = $part.IndexOf('=')
+        if ($eq -lt 0) {
+            continue
+        }
+
+        $key = $part.Substring(0, $eq).Trim()
+        $value = $part.Substring($eq + 1).Trim()
+        if ($key -ieq "Min Pool Size") {
+            $hasMinPoolSize = $true
+        }
+        if (($key -ieq "Server" -or $key -ieq "Data Source") -and $value -ieq "(localdb)\MSSQLLocalDB") {
+            $parts[$i] = "$key=$pipe"
+        }
+    }
+
+    if (-not $hasMinPoolSize) {
+        $parts += "Min Pool Size=1"
+    }
+
+    return ($parts -join ';')
 }
 
 function Reset-RunDirectory {
@@ -201,13 +309,20 @@ if ($FrontendPort -eq $BackendPort) {
 $dotnet = Resolve-NativeCommand -Candidates @("dotnet.exe", "dotnet")
 $npm = Resolve-NativeCommand -Candidates @("npm.cmd", "npm")
 $node = Resolve-NativeCommand -Candidates @("node.exe", "node")
+$ConnectionString = Resolve-LocalDbConnectionString -ConnectionString $ConnectionString
 
 if (-not (Test-PortAvailable -Port $BackendPort)) {
     throw "Backend port $BackendPort is already in use."
 }
 
 if (-not (Test-PortAvailable -Port $FrontendPort)) {
-    throw "Frontend port $FrontendPort is already in use."
+    if ($PSBoundParameters.ContainsKey("FrontendPort")) {
+        throw "Frontend port $FrontendPort is already in use."
+    }
+
+    $requestedFrontendPort = $FrontendPort
+    $FrontendPort = Find-AvailablePort -StartingAt ($FrontendPort + 1)
+    Write-Host "Frontend port $requestedFrontendPort is already in use; using $FrontendPort."
 }
 
 New-Item -ItemType Directory -Path $runRoot -Force | Out-Null
@@ -252,15 +367,17 @@ Invoke-Step `
     -Arguments @("tool", "install", "Saturdaze.Cli", "--tool-path", $toolPath, "--add-source", $packageSource, "--version", $toolVersion) `
     -WorkingDirectory $repoRoot
 
-$toolCommand = Join-Path $toolPath "saturdaze.exe"
-if (-not (Test-Path -LiteralPath $toolCommand)) {
-    $toolCommand = Join-Path $toolPath "saturdaze"
+$toolAssembly = Get-ChildItem -LiteralPath (Join-Path $toolPath ".store") -Recurse -Filter "saturdaze.dll" |
+    Where-Object { $_.FullName -like "*$toolVersion*" } |
+    Select-Object -First 1
+if ($null -eq $toolAssembly) {
+    throw "Could not find installed Saturdaze CLI assembly under $toolPath."
 }
 
 Invoke-Step `
     -Title "Resetting database through freshly installed Saturdaze CLI" `
-    -FilePath $toolCommand `
-    -Arguments @("--connection", $ConnectionString, "--seed-dir", $SeedDir, "reset", "--yes") `
+    -FilePath $dotnet `
+    -Arguments @($toolAssembly.FullName, "--connection", $ConnectionString, "--seed-dir", $SeedDir, "reset", "--yes") `
     -WorkingDirectory $repoRoot
 
 Invoke-Step `
@@ -288,7 +405,7 @@ $httpServer = Resolve-FirstExistingPath `
     )
 
 $backendUrl = "http://localhost:$BackendPort"
-$frontendUrl = "http://localhost:$FrontendPort/"
+$frontendUrl = "http://127.0.0.1:$FrontendPort/"
 $apiProcess = $null
 $frontendProcess = $null
 
@@ -309,12 +426,12 @@ try {
     $frontendProcess = Start-LoggedProcess `
         -Name "built frontend" `
         -FilePath $node `
-        -Arguments @($httpServer, $frontendDist, "-p", "$FrontendPort", "-c-1", "--silent") `
+        -Arguments @($httpServer, $frontendDist, "-a", "127.0.0.1", "-p", "$FrontendPort", "-c-1", "--silent", "-P", "${frontendUrl}?") `
         -WorkingDirectory $frontendRoot `
         -StdOutPath (Join-Path $logsRoot "frontend.out.log") `
         -StdErrPath (Join-Path $logsRoot "frontend.err.log")
 
-    Wait-ForHttp -Name "Backend API" -Uri "$backendUrl/swagger/index.html" -Process $apiProcess
+    Wait-ForHttp -Name "Backend API" -Uri "$backendUrl/api/family" -Process $apiProcess
     Wait-ForHttp -Name "Built frontend" -Uri $frontendUrl -Process $frontendProcess
 
     Write-Host ""

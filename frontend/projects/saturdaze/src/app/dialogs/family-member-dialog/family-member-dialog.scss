@@ -1,0 +1,43 @@
+:host {
+  display: block;
+}
+
+.form {
+  display: grid;
+  gap: 12px;
+}
+
+.field {
+  display: grid;
+  gap: 6px;
+  font-size: var(--sd-fs-sm);
+  font-weight: var(--sd-fw-medium);
+  color: var(--sd-ink);
+}
+
+.field input {
+  font: inherit;
+  padding: 10px 12px;
+  border-radius: var(--sd-r-md);
+  border: 1px solid var(--sd-line);
+  background: var(--sd-bg);
+  color: var(--sd-ink);
+}
+
+.field input:focus {
+  outline: none;
+  border-color: var(--sd-primary);
+  box-shadow: 0 0 0 3px var(--sd-primary-soft);
+}
+
+.field .hint {
+  font-size: var(--sd-fs-xs);
+  color: var(--sd-ink-soft);
+  font-weight: var(--sd-fw-regular);
+}
+
+.form-error {
+  margin: 0;
+  font-size: var(--sd-fs-sm);
+  color: var(--sd-danger, #b91c1c);
+}

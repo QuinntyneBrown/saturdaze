@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>You're in — Saturdaze</title>
+  <link rel="stylesheet" href="../styles/global.css" />
+  <script type="module" src="../app.js"></script>
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      min-height: 100vh;
+    }
+    .auth-shell { width: 100%; max-width: 460px; display: grid; gap: 24px; }
+
+    .brand {
+      display: flex; align-items: center; justify-content: center;
+      gap: 10px;
+      color: var(--sd-ink-soft);
+      font-size: var(--sd-fs-xs);
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      font-weight: var(--sd-fw-semibold);
+    }
+    .brand .mark {
+      width: 28px; height: 28px; border-radius: 8px;
+      background:
+        radial-gradient(120% 120% at 20% 0%, var(--sd-primary-soft) 0%, transparent 60%),
+        radial-gradient(120% 120% at 100% 100%, #FBEBC4 0%, transparent 60%),
+        var(--sd-primary);
+      box-shadow: var(--sd-shadow-1);
+    }
+
+    /* Success landing — the warm gradient from the splash hero shows up
+       again so the first signed-in moment feels continuous with the
+       marketing page they came from. */
+    .auth-card {
+      background:
+        radial-gradient(80% 60% at 0% 0%, var(--sd-primary-soft) 0%, transparent 60%),
+        radial-gradient(80% 60% at 100% 0%, #FBEBC4 0%, transparent 60%),
+        var(--sd-surface);
+      border: 1px solid var(--sd-line);
+      border-radius: var(--sd-r-xl);
+      padding: 40px 28px 32px;
+      box-shadow: var(--sd-shadow-2);
+      text-align: center;
+      display: grid;
+      gap: 18px;
+      justify-items: center;
+    }
+
+    /* Big accent-filled badge that reads as a positive confirmation
+       without needing the word 'success'. */
+    .check-badge {
+      width: 84px; height: 84px;
+      border-radius: 50%;
+      display: grid; place-items: center;
+      background: var(--sd-accent);
+      color: #fff;
+      box-shadow:
+        0 0 0 8px color-mix(in srgb, var(--sd-accent) 18%, transparent),
+        var(--sd-shadow-2);
+    }
+
+    .auth-card h1 {
+      font-size: 28px; font-weight: 800; letter-spacing: -0.02em; margin: 0;
+      line-height: 1.15;
+    }
+    .auth-card .sub {
+      color: var(--sd-ink-soft);
+      font-size: 15px;
+      line-height: 1.55;
+      margin: 0;
+      max-width: 360px;
+    }
+
+    .button-row {
+      width: 100%;
+      max-width: 320px;
+      display: grid;
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    /* Tiny "next steps" callout — the user just verified, so the next
+       thing they should do is set up the family so Friday's weekend
+       has somebody to plan for. */
+    .next-tip {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 14px;
+      background: var(--sd-bg-elev);
+      border: 1px solid var(--sd-line);
+      border-radius: var(--sd-r-md);
+      font-size: 13px;
+      color: var(--sd-ink-soft);
+      text-align: left;
+      width: 100%;
+      max-width: 360px;
+    }
+    .next-tip sd-icon { color: var(--sd-primary); flex-shrink: 0; }
+
+    .foot {
+      text-align: center; font-size: 12px; color: var(--sd-ink-faint);
+    }
+    .foot a { color: var(--sd-ink-soft); text-decoration: none; }
+    .foot a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <div class="auth-shell">
+
+    <div class="brand">
+      <span class="mark"></span>
+      Saturdaze
+    </div>
+
+    <div class="auth-card">
+      <div class="check-badge">
+        <sd-icon name="check" size="40"></sd-icon>
+      </div>
+
+      <h1>You're verified.<br />Welcome to Saturdaze.</h1>
+      <p class="sub">
+        Your account is ready. Take a minute to tell us about your family — we'll have your first weekend drafted by Friday at 6pm.
+      </p>
+
+      <div class="next-tip">
+        <sd-icon name="sparkle" size="16"></sd-icon>
+        <span>Next: add the kids, your home base, and what's locked in each weekend.</span>
+      </div>
+
+      <div class="button-row">
+        <sd-button size="lg" full>
+          <sd-icon slot="leading" name="arrow_right" size="16"></sd-icon>
+          Set up your family
+        </sd-button>
+        <sd-button variant="ghost" size="sm" full>
+          Skip — take me to the app
+        </sd-button>
+      </div>
+    </div>
+
+    <div class="foot">
+      Need a hand? <a href="#">Email support</a>
+    </div>
+
+  </div>
+</body>
+</html>

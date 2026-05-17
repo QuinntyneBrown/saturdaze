@@ -13,7 +13,10 @@ import { FamilyMember } from '../models/family-member';
 import { FamilyMemberTone } from '../models/family-member-tone';
 import { FamilyProfile } from '../models/family-profile';
 import { PreferenceToggle } from '../models/preference-toggle';
-import { IFamilyService } from './family.service.contract';
+import {
+  EditableFamilyProfile,
+  IFamilyService,
+} from './family.service.contract';
 
 /**
  * Initial profile rendered while the HTTP call is still in flight. The
@@ -105,12 +108,41 @@ function mapFamily(dto: FamilyDto): FamilyProfile {
   };
 }
 
+function mapEditable(dto: FamilyDto): EditableFamilyProfile {
+  return {
+    homeLocation: dto.homeLocation,
+    budgetEnabled: dto.budgetEnabled,
+    members: dto.members
+      .slice()
+      .sort((a, b) => b.age - a.age)
+      .map((m) => ({
+        name: m.name,
+        age: m.age,
+      })),
+    commitments: dto.commitments.map((c) => ({
+      title: c.title,
+      dayOfWeek: c.dayOfWeek as EditableFamilyProfile['commitments'][number]['dayOfWeek'],
+      startTime: c.startTime.substring(0, 5),
+      endTime: c.endTime.substring(0, 5),
+    })),
+    preferences: dto.preferences.map((p) => ({
+      kind: p.kind,
+      value: p.value,
+    })),
+  };
+}
+
+function normalizeTime(time: string): string {
+  return time.length === 5 ? `${time}:00` : time;
+}
+
 @Injectable({ providedIn: 'root' })
 export class FamilyService implements IFamilyService {
   private readonly http = inject(HttpClient);
   private readonly baseUrl = inject(API_BASE_URL);
 
   private readonly _profile = signal<FamilyProfile>(PLACEHOLDER_PROFILE);
+  private readonly _editableProfile = signal<EditableFamilyProfile | null>(null);
 
   constructor() {
     void this.load();
@@ -120,14 +152,47 @@ export class FamilyService implements IFamilyService {
     return this._profile.asReadonly();
   }
 
+  getEditableProfile(): Signal<EditableFamilyProfile | null> {
+    return this._editableProfile.asReadonly();
+  }
+
   async load(): Promise<void> {
     try {
       const dto = await firstValueFrom(
         this.http.get<FamilyDto>(`${this.baseUrl}/api/family`),
       );
-      this._profile.set(mapFamily(dto));
+      this.apply(dto);
     } catch (err) {
       console.error('FamilyService.load failed', err);
     }
+  }
+
+  async saveProfile(profile: EditableFamilyProfile): Promise<void> {
+    const dto = await firstValueFrom(
+      this.http.put<FamilyDto>(`${this.baseUrl}/api/family`, {
+        homeLocation: profile.homeLocation,
+        budgetEnabled: profile.budgetEnabled,
+        members: profile.members.map((m) => ({
+          name: m.name.trim(),
+          age: m.age,
+        })),
+        commitments: profile.commitments.map((c) => ({
+          title: c.title.trim(),
+          dayOfWeek: c.dayOfWeek,
+          startTime: normalizeTime(c.startTime),
+          endTime: normalizeTime(c.endTime),
+        })),
+        preferences: profile.preferences.map((p) => ({
+          kind: p.kind,
+          value: p.value,
+        })),
+      }),
+    );
+    this.apply(dto);
+  }
+
+  private apply(dto: FamilyDto): void {
+    this._profile.set(mapFamily(dto));
+    this._editableProfile.set(mapEditable(dto));
   }
 }

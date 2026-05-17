@@ -2,3 +2,7 @@
 // breakpoints, and global page chrome.
 
 @use "../../components/src/lib/styles";
+
+// @angular/cdk overlay prebuilt — backdrop + positioning for CDK Dialog.
+// Plain CSS, imported so the cdk-overlay-* classes have layout/z-index rules.
+@import "@angular/cdk/overlay-prebuilt.css";

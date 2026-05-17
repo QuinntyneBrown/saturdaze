@@ -1,0 +1,37 @@
+<sd-dialog [title]="title" [subtitle]="subtitle">
+  <form class="form" (submit)="submit($event)">
+    <label class="field">
+      <span>Name</span>
+      <input
+        name="memberName"
+        type="text"
+        autocomplete="off"
+        [ngModel]="name()"
+        (ngModelChange)="name.set($event); error.set('')"
+        placeholder="e.g. Mae"
+      />
+    </label>
+    <label class="field">
+      <span>Age</span>
+      <input
+        name="memberAge"
+        type="number"
+        min="0"
+        max="120"
+        [ngModel]="age()"
+        (ngModelChange)="age.set($event); error.set('')"
+      />
+      <div class="hint">0–120 — I'll use this to pick age-appropriate activities.</div>
+    </label>
+    @if (error()) { <p class="form-error" role="alert">{{ error() }}</p> }
+    <button type="submit" hidden></button>
+  </form>
+
+  <sd-button slot="actions" variant="secondary" type="button" (click)="cancel()">
+    Cancel
+  </sd-button>
+  <sd-button slot="actions" type="button" [disabled]="!canSubmit()" (click)="submit($event)">
+    @if (data.mode === 'add') { <sd-icon slot="leading" name="plus" [size]="16" /> }
+    {{ submitLabel }}
+  </sd-button>
+</sd-dialog>

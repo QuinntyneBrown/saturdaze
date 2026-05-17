@@ -56,13 +56,13 @@ public sealed class SaveFamilyProfileCommandHandler : IRequestHandler<SaveFamily
         return await _mediator.Send(new GetFamilyProfileQuery(), cancellationToken);
     }
 
-    private static void SyncMembers(Family family, IReadOnlyList<SaveMemberInput> inputs)
+    private void SyncMembers(Family family, IReadOnlyList<SaveMemberInput> inputs)
     {
         var byName = family.Members.ToDictionary(m => m.Name, StringComparer.OrdinalIgnoreCase);
         var keepNames = new HashSet<string>(inputs.Select(i => i.Name), StringComparer.OrdinalIgnoreCase);
 
         foreach (var member in family.Members.Where(m => !keepNames.Contains(m.Name)).ToList())
-            family.Members.Remove(member);
+            _db.FamilyMembers.Remove(member);
 
         foreach (var input in inputs)
         {
@@ -72,7 +72,7 @@ public sealed class SaveFamilyProfileCommandHandler : IRequestHandler<SaveFamily
             }
             else
             {
-                family.Members.Add(new FamilyMember
+                _db.FamilyMembers.Add(new FamilyMember
                 {
                     Id = Guid.NewGuid(),
                     FamilyId = family.Id,
@@ -83,13 +83,13 @@ public sealed class SaveFamilyProfileCommandHandler : IRequestHandler<SaveFamily
         }
     }
 
-    private static void SyncCommitments(Family family, IReadOnlyList<SaveCommitmentInput> inputs)
+    private void SyncCommitments(Family family, IReadOnlyList<SaveCommitmentInput> inputs)
     {
         var byKey = family.Commitments.ToDictionary(c => (c.Title.ToLowerInvariant(), c.DayOfWeek));
         var keepKeys = new HashSet<(string, DayOfWeek)>(inputs.Select(i => (i.Title.ToLowerInvariant(), i.DayOfWeek)));
 
         foreach (var commitment in family.Commitments.Where(c => !keepKeys.Contains((c.Title.ToLowerInvariant(), c.DayOfWeek))).ToList())
-            family.Commitments.Remove(commitment);
+            _db.Commitments.Remove(commitment);
 
         foreach (var input in inputs)
         {
@@ -101,7 +101,7 @@ public sealed class SaveFamilyProfileCommandHandler : IRequestHandler<SaveFamily
             }
             else
             {
-                family.Commitments.Add(new Commitment
+                _db.Commitments.Add(new Commitment
                 {
                     Id = Guid.NewGuid(),
                     FamilyId = family.Id,
@@ -114,20 +114,20 @@ public sealed class SaveFamilyProfileCommandHandler : IRequestHandler<SaveFamily
         }
     }
 
-    private static void SyncPreferences(Family family, IReadOnlyList<SavePreferenceInput> inputs)
+    private void SyncPreferences(Family family, IReadOnlyList<SavePreferenceInput> inputs)
     {
         var byKey = family.Preferences.ToDictionary(p => (p.Kind, p.Value.ToLowerInvariant()));
         var keepKeys = new HashSet<(Domain.Enums.PreferenceKind, string)>(
             inputs.Select(i => (i.Kind, i.Value.ToLowerInvariant())));
 
         foreach (var pref in family.Preferences.Where(p => !keepKeys.Contains((p.Kind, p.Value.ToLowerInvariant()))).ToList())
-            family.Preferences.Remove(pref);
+            _db.Preferences.Remove(pref);
 
         foreach (var input in inputs)
         {
             if (!byKey.ContainsKey((input.Kind, input.Value.ToLowerInvariant())))
             {
-                family.Preferences.Add(new Saturdaze.Domain.Entities.Preference
+                _db.Preferences.Add(new Saturdaze.Domain.Entities.Preference
                 {
                     Id = Guid.NewGuid(),
                     FamilyId = family.Id,

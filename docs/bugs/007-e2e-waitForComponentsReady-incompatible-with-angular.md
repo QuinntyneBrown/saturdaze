@@ -54,4 +54,5 @@ tag name the moment the route loads.
 ## Status
 
 - Logged: 2026-05-16
-- **Fix applied this session.**
+- Status: Fixed
+- Fixed: 2026-05-16
