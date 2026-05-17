@@ -4,17 +4,26 @@ import { test, expect } from "../fixtures/sd-test.js";
  * Behaviour specs for sign-out.
  *
  * Each test logs in as the seeded `quinntynebrown@gmail.com` / `password123`
- * row (populated by `Saturdaze.Cli.Seed.UserSeeder`), navigates to /profile,
- * and exercises the Account-section Sign out flow.
+ * row (populated by `Saturdaze.Cli.Seed.UserSeeder`), then navigates to
+ * /profile in-app via the bottom-nav. In-app navigation keeps the session
+ * signal populated, avoiding the rehydrate race that affects fresh page
+ * loads on guarded routes.
  */
 
 const SEEDED_EMAIL = "quinntynebrown@gmail.com";
 const SEEDED_PASSWORD = "password123";
 
-async function signIn(
+async function signInAndOpenProfile(
   page: import("@playwright/test").Page,
   goto: (key: "login") => Promise<void>,
-  pages: { login: { waitForReady: () => Promise<void>; fillCredentials: (e: string, p: string) => Promise<void>; submit: () => Promise<void> } },
+  pages: {
+    login: {
+      waitForReady: () => Promise<void>;
+      fillCredentials: (e: string, p: string) => Promise<void>;
+      submit: () => Promise<void>;
+    };
+    profile: { accountSection: () => import("@playwright/test").Locator };
+  },
   settle: () => Promise<void>,
 ): Promise<void> {
   await goto("login");
@@ -23,6 +32,13 @@ async function signIn(
   await pages.login.fillCredentials(SEEDED_EMAIL, SEEDED_PASSWORD);
   await pages.login.submit();
   await page.waitForURL("**/weekend", { timeout: 8_000 });
+
+  // In-app navigation via the bottom-nav (router.navigateByUrl). A
+  // `page.goto('/profile')` would re-bootstrap the app and race the route
+  // guard against `SessionStore.rehydrate()`.
+  await page.locator('sd-bottom-nav a[data-nav-key="profile"]').click();
+  await page.waitForURL("**/profile", { timeout: 8_000 });
+  await pages.profile.accountSection().waitFor();
 }
 
 test.describe("Sign out: happy path", () => {
@@ -32,10 +48,7 @@ test.describe("Sign out: happy path", () => {
     pages,
     settle,
   }) => {
-    await signIn(page, goto, pages, settle);
-
-    await goto("profile");
-    await pages.profile.accountSection().waitFor();
+    await signInAndOpenProfile(page, goto, pages, settle);
     await expect(pages.profile.accountEmail()).toHaveText(SEEDED_EMAIL);
 
     await pages.profile.clickSignOut();
@@ -71,10 +84,7 @@ test.describe("Sign out: cancel", () => {
     pages,
     settle,
   }) => {
-    await signIn(page, goto, pages, settle);
-
-    await goto("profile");
-    await pages.profile.accountSection().waitFor();
+    await signInAndOpenProfile(page, goto, pages, settle);
     await pages.profile.clickSignOut();
 
     const dialog = page.locator('sd-dialog[title="Sign out?"]');

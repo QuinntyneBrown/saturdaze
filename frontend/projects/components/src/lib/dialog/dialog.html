@@ -1,23 +1,21 @@
-@if (staticMode()) {
-  <div class="scrim">
-    <div class="sheet" role="dialog" aria-modal="true">
-      <div class="grip"></div>
-      <header>
-        <h2>{{ dialogTitle() }}</h2>
-        @if (subtitle()) { <p class="sub">{{ subtitle() }}</p> }
-      </header>
-      <div class="content"><ng-content /></div>
-      <div class="actions"><ng-content select="[slot=actions]" /></div>
-    </div>
-  </div>
-} @else {
-  <div class="sheet" role="dialog" aria-modal="true">
-    <div class="grip"></div>
-    <header>
-      <h2>{{ dialogTitle() }}</h2>
-      @if (subtitle()) { <p class="sub">{{ subtitle() }}</p> }
-    </header>
-    <div class="content"><ng-content /></div>
-    <div class="actions"><ng-content select="[slot=actions]" /></div>
-  </div>
-}
+<!--
+  Angular projection slots placed inside `@if`/`@else` control flow blocks
+  are dropped at template compile time — children that should project end
+  up missing from the rendered DOM. The slot markup therefore lives once
+  at the top of the template; the optional scrim wrap for the static
+  design gallery is layered on via the `[static]` host attribute + CSS.
+
+  The selected slot precedes the catch-all `<ng-content />` so children
+  marked `slot="actions"` claim it before the default swallows them.
+  Rendered DIV order is reversed from visual order — CSS `order` restores
+  the natural sequence (grip → header → content → actions).
+-->
+<div class="sheet" role="dialog" aria-modal="true">
+  <div class="actions"><ng-content select="[slot=actions]" /></div>
+  <div class="grip"></div>
+  <header>
+    <h2>{{ dialogTitle() }}</h2>
+    @if (subtitle()) { <p class="sub">{{ subtitle() }}</p> }
+  </header>
+  <div class="content"><ng-content /></div>
+</div>

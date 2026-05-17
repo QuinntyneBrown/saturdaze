@@ -2,25 +2,10 @@
   display: block;
 }
 
-.scrim {
-  position: fixed;
-  inset: 0;
-  background: rgba(31, 41, 55, 0.35);
-  backdrop-filter: blur(2px);
-  z-index: 50;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-}
-
-:host([static]) .scrim {
-  position: relative;
-  inset: auto;
-  background: transparent;
-  backdrop-filter: none;
-  padding: 0;
-  z-index: 0;
-}
+// The CDK overlay (production) supplies its own scrim + focus trap, so the
+// shell only renders the `.sheet`. The static design gallery uses the same
+// shell inline (`[static]` host attribute) — overrides below neutralise the
+// bottom-sheet affordances so each dialog reviews as a card on the page.
 
 .sheet {
   width: 100%;
@@ -32,6 +17,18 @@
   max-height: 88vh;
   overflow-y: auto;
   animation: sd-rise var(--sd-dur-base) var(--sd-ease);
+
+  // Selected `<ng-content>` must come first in template order (see
+  // dialog.html) so action buttons project correctly. Flex + order keeps
+  // the rendered DIVs in their natural visual sequence: grip → header →
+  // content → actions.
+  display: flex;
+  flex-direction: column;
+
+  .grip    { order: 1; }
+  header   { order: 2; }
+  .content { order: 3; }
+  .actions { order: 4; }
 }
 
 :host([static]) .sheet {

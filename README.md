@@ -1,86 +1,119 @@
 # Saturdaze
 
-Saturdaze is a family weekend planner for turning Saturday and Sunday into a ready-to-use plan. It is designed around a Port Credit family of four, fixed weekend commitments, kid-friendly activities, weather, restaurants, errands, and a predictable evening wind-down.
+Saturdaze is a full-stack family weekend planner. It turns household
+preferences, recurring commitments, kid-friendly activities, restaurant picks,
+local events, errands, and weather into a weekend plan that is ready to use.
 
-The repo is a full-stack workspace:
+[Overview](#overview) · [Features](#features) · [Quick-start](#quick-start) ·
+[Architecture](#architecture) · [Development](#development) ·
+[Testing](#testing) · [Documentation](#documentation) ·
+[Contributing](CONTRIBUTING.md) · [Security](SECURITY.md) ·
+[Support](SUPPORT.md) · [Code of Conduct](CODE_OF_CONDUCT.md) ·
+[License](LICENSE)
 
-- `backend/` - .NET Clean Architecture backend, EF Core persistence, SQL Server, MediatR, API, migration runner, seeder, and backend tests.
-- `frontend/` - Angular workspace with the `saturdaze` app plus `api` and `components` libraries.
-- `e2e/` - Playwright tests, including visual comparison against the mock skeleton.
-- `docs/` - product notes, backend/frontend implementation plans, and the canonical mock screens under `docs/mocks/`.
+---
 
-## Current State
+## Overview
 
-The mock screens in `docs/mocks/` are the visual and interaction reference for the Angular implementation. The frontend workspace is scaffolded and the e2e suite is wired to run against either the mocks or the Angular app. The backend has the initial solution structure, persistence foundation, seed data, and a `_ping` pipeline endpoint.
+Saturdaze is built around a realistic family weekend workflow:
 
-## Prerequisites
+- keep the family profile and recurring commitments current;
+- plan Saturday and Sunday around weather, fixed obligations, and kid ages;
+- discover nearby activities, local events, and family-friendly restaurants;
+- manage errands and saved weekends without losing the plan context.
 
-- .NET SDK compatible with `backend/global.json` (`10.0.101` pinned there)
+The project is intentionally full-stack. The backend owns planning, persistence,
+authentication, seeding, and API contracts. The Angular frontend owns the user
+experience and consumes the backend through the shared `api` library. The
+Playwright suite checks both behavior and visual alignment with the mock design
+reference.
+
+## Features
+
+- Weekend itinerary generation with locked blocks, regeneration, favourites,
+  errands, restaurant picks, and saved weekend history.
+- Family profile management for household members, recurring commitments,
+  budget preferences, likes, and dislikes.
+- Authentication flows for sign-up, login, verification, password reset, and
+  sign-out.
+- Weather-aware planning through the Open-Meteo integration, with test fakes
+  and neutral fallback behavior.
+- Static mock application under `docs/mocks/` used as the visual reference for
+  Angular implementation and visual regression tests.
+- Local CLI for database migration, seeding, and reset workflows.
+- One-command fresh stack script for local verification.
+
+## Quick Start
+
+The fastest way to run the current application from a clean database is the
+fresh-stack script:
+
+```powershell
+powershell .\scripts\Start-FreshStack.ps1
+```
+
+The script:
+
+1. packs and installs the local `Saturdaze.Cli` .NET tool;
+2. resets and seeds the database through that freshly installed tool;
+3. publishes the backend API;
+4. builds the Angular frontend;
+5. starts both processes and prints the frontend URL.
+
+By default the API runs on `http://localhost:5100`. The frontend prefers
+`http://127.0.0.1:4200/`, and automatically moves to the next available port
+when that port is already in use.
+
+### Prerequisites
+
+- .NET SDK `10.0.101` or a compatible feature-band SDK, as pinned by
+  `backend/global.json`
 - SQL Server LocalDB or SQL Server Express
-- Node.js and npm (`frontend/package.json` uses `npm@10.9.4`)
+- Node.js and npm; the frontend workspace declares `npm@10.9.4`
+- PowerShell for the fresh-stack script
 
-## Install
+## Manual Setup
 
-Command snippets assume you start from the repo root.
-
-Install frontend and e2e dependencies:
+Install dependencies:
 
 ```powershell
 cd frontend
-npm install
+npm ci
 
 cd ..\e2e
-npm install
+npm ci
+
+cd ..\backend
+dotnet restore .\Saturdaze.sln
 ```
 
-Then restore the backend:
-
-```powershell
-cd backend
-dotnet restore Saturdaze.sln
-```
-
-## Database
-
-The API default connection string points at LocalDB:
-
-```text
-Server=(localdb)\MSSQLLocalDB;Database=Saturdaze;Trusted_Connection=True;TrustServerCertificate=True
-```
-
-The Saturdaze CLI can also read `SATURDAZE_CONNECTION`:
+Prepare the database:
 
 ```powershell
 cd backend
 $env:SATURDAZE_CONNECTION = "Server=(localdb)\MSSQLLocalDB;Database=Saturdaze;Trusted_Connection=True;TrustServerCertificate=True"
 
-dotnet run --project src\Saturdaze.Cli -- migrate
-dotnet run --project src\Saturdaze.Cli -- seed
+dotnet run --project .\src\Saturdaze.Cli -- migrate
+dotnet run --project .\src\Saturdaze.Cli -- seed
 ```
 
-Use a SQL Server Express connection string instead if LocalDB is not available.
-
-## Run Locally
-
-Start the backend API:
+Run the API:
 
 ```powershell
 cd backend
-dotnet run --project src\Saturdaze.Api --urls http://localhost:5100
+dotnet run --project .\src\Saturdaze.Api --urls http://localhost:5100
 ```
 
 Swagger is available at `http://localhost:5100/swagger`.
 
-Start the Angular app:
+Run the Angular app:
 
 ```powershell
 cd frontend
 npm start
 ```
 
-The app runs at `http://localhost:4200/`.
-
-Serve the static mock app when working from the design reference:
+Run the mock reference app:
 
 ```powershell
 cd e2e
@@ -89,58 +122,114 @@ npx http-server ..\docs\mocks -p 5173 -c-1
 
 Then open `http://localhost:5173/`.
 
-## Test
+## Architecture
 
-Backend:
+| Area | Path | Notes |
+| --- | --- | --- |
+| Backend API | `backend/src/Saturdaze.Api` | ASP.NET Core controllers, middleware, auth wiring, Swagger |
+| Application layer | `backend/src/Saturdaze.Application` | MediatR handlers, validators, planning logic, DTO contracts |
+| Domain layer | `backend/src/Saturdaze.Domain` | Entities and enums with no infrastructure dependency |
+| Infrastructure | `backend/src/Saturdaze.Infrastructure` | EF Core, SQL Server persistence, migrations, weather client, auth services |
+| CLI | `backend/src/Saturdaze.Cli` | Database migration, seed, and reset commands |
+| Angular app | `frontend/projects/saturdaze` | Routed user-facing application |
+| API library | `frontend/projects/api` | Client-side models and services for backend integration |
+| Component library | `frontend/projects/components` | Standalone Angular UI components aligned with the mock system |
+| E2E suite | `e2e` | Playwright behavior and visual tests |
+| Design reference | `docs/mocks` | Static mock app and screenshots used as implementation reference |
+
+## Development
+
+Common commands from the repository root:
 
 ```powershell
-cd backend
-dotnet build Saturdaze.sln
-dotnet test Saturdaze.sln
-```
+# Backend
+dotnet build .\backend\Saturdaze.sln
+dotnet test .\backend\Saturdaze.sln
 
-Frontend:
-
-```powershell
+# Frontend
 cd frontend
-npx ng build saturdaze
-npx ng build components
-npx ng build api
+npm run build -- saturdaze --configuration development
+npm run build -- components
+npm run build -- api
+npm test
+
+# E2E
+cd ..\e2e
 npm test
 ```
 
-Playwright e2e:
+Development conventions:
 
-```powershell
-cd e2e
-npm test
-```
+- Keep backend business rules in application handlers and domain services, not
+  controllers.
+- Keep EF migrations explicit; the API does not apply migrations on startup.
+- Keep seed data idempotent and suitable for repeatable local resets.
+- Keep Angular selectors aligned with the mock custom-element tag names.
+- Prefer the fresh-stack script for end-to-end verification when a change spans
+  the database, backend, and frontend.
 
-Capture or update visual baselines from the mocks:
+## Testing
 
-```powershell
-cd e2e
-npm run baseline
-```
+| Suite | Command | Purpose |
+| --- | --- | --- |
+| Backend build | `dotnet build .\backend\Saturdaze.sln` | Compile API, application, infrastructure, CLI, and tests |
+| Backend tests | `dotnet test .\backend\Saturdaze.sln` | Unit, integration, API, and CLI tests |
+| Angular app build | `npm run build -- saturdaze --configuration development` | Build the runnable frontend |
+| Angular libraries | `npm run build -- components` and `npm run build -- api` | Build shared frontend packages |
+| Frontend unit tests | `npm test` from `frontend/` | Angular/Vitest tests |
+| Playwright behavior | `npm run test:behavior` from `e2e/` | End-to-end behavior tests |
+| Playwright visual | `npm run test:visual` from `e2e/` | Visual comparisons against baselines |
+| Baseline update | `npm run baseline` from `e2e/` | Refresh visual snapshots from the mock app |
 
-Run visual comparisons against the Angular app:
+## Documentation
 
-```powershell
-cd e2e
-npm run test:visual
-```
+- [Backend guide](backend/README.md)
+- [User guide](docs/user-guide/README.md)
+- [Level 1 specification](docs/specs/L1.md)
+- [Level 2 specification](docs/specs/L2.md)
+- [Architecture decision records](docs/adr/)
+- [Mock application](docs/mocks/index.html)
+- [Button/link audit](docs/button-link-audit-2026-05-17.md)
+- [Sign-out plan](docs/sign-out-plan.md)
 
-## Key Docs
+## Deployment
 
-- Product and screen list: `docs/features.md`
-- Backend plan: `docs/backend-plan.md`
-- Backend technology constraints: `docs/backend-tech.md`
-- Frontend implementation plan: `docs/frontend-implementation-plan.md`
-- Mock app: `docs/mocks/index.html`
+The repository includes a GitHub Actions workflow at
+`.github/workflows/deploy.yml`.
 
-## Development Notes
+The workflow:
 
-- Keep the mock custom element tag names and Angular component selectors aligned.
-- Backend code follows the existing Clean Architecture layout and keeps business logic out of controllers.
-- EF migrations are explicit; the API does not apply migrations on startup.
-- Seed data is intended to be idempotent and re-runnable.
+- publishes and deploys the ASP.NET Core API to Azure App Service;
+- applies EF migrations through `Saturdaze.Cli`;
+- builds the Angular app and deploys it to Azure Static Web Apps.
+
+Deployment requires the relevant Azure publish profile, Static Web Apps token,
+and database connection string secrets to be configured in GitHub Actions.
+
+## Contributing
+
+Contributions are welcome when they keep the app useful, testable, and aligned
+with the existing architecture. See [CONTRIBUTING.md](CONTRIBUTING.md) for the
+development workflow, coding guidelines, test expectations, and pull request
+checklist.
+
+## Security
+
+Do not report suspected security vulnerabilities in public issues. See
+[SECURITY.md](SECURITY.md) for supported versions, private reporting guidance,
+and security-sensitive areas that require extra review.
+
+## Support
+
+Use GitHub Issues for reproducible bugs, feature requests, and documentation
+problems. See [SUPPORT.md](SUPPORT.md) for the information to include in a good
+report.
+
+## Code of Conduct
+
+Participation in this project is governed by
+[CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md).
+
+## License
+
+Saturdaze is licensed under the [MIT License](LICENSE).
