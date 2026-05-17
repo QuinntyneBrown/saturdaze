@@ -50,6 +50,32 @@ body.sd-body--auth {
   min-height: 100svh;
 }
 
+// Short-viewport tightening for the auth pages. iPhone SE / 12 mini /
+// 13 mini (and any device whose visible viewport drops below ~720px
+// once Safari's URL bar is showing) couldn't fit the standard auth
+// card without a scrollbar. This block compresses the chrome —
+// outer padding, shell gap, card padding, form gap, hero text — so
+// every supported phone shows the form without scroll. Descendant
+// selectors win over the component :host rules (specificity 1,3 > 1,0).
+@media (max-height: 720px) {
+  body.sd-body--auth {
+    padding: 16px;
+  }
+  body.sd-body--auth sd-auth-shell {
+    gap: 16px;
+  }
+  body.sd-body--auth sd-auth-card {
+    padding: 20px 22px;
+    gap: 14px;
+  }
+  body.sd-body--auth form {
+    gap: 14px;
+  }
+  body.sd-body--auth h1 {
+    font-size: 22px;
+  }
+}
+
 // `<app-root>` is the SPA's single root. Default is inline; `display: contents`
 // makes it invisible for layout so the routed page's outermost element behaves
 // like a direct child of <body> — that's how the mock baselines are framed.
