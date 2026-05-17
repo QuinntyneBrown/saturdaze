@@ -45,6 +45,11 @@ export class TextInput implements ControlValueAccessor {
   readonly placeholder = input<string>('');
   readonly type = input<string>('text');
   readonly hint = input<string>('');
+  // Forwarded to the inner <input> so browser password managers and
+  // autofill (Safari Keychain, Chrome, 1Password, etc.) can recognise
+  // sign-in/sign-up fields and offer to save/fill credentials.
+  readonly autocomplete = input<string>('');
+  readonly name = input<string>('');
 
   protected readonly internalValue = signal<string>('');
   protected readonly disabled = signal<boolean>(false);

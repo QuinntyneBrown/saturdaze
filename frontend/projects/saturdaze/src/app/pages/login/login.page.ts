@@ -46,7 +46,7 @@ export class LoginPage {
   protected readonly error = this.session.error;
 
   protected readonly form = new FormGroup({
-    email: new FormControl('', {
+    email: new FormControl(this.session.rememberedEmail() ?? '', {
       nonNullable: true,
       validators: [Validators.required, Validators.email],
     }),

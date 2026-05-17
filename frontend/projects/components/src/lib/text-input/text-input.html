@@ -3,6 +3,8 @@
   [attr.type]="type()"
   [value]="internalValue()"
   [attr.placeholder]="placeholder()"
+  [attr.autocomplete]="autocomplete() || null"
+  [attr.name]="name() || null"
   [disabled]="disabled()"
   (input)="handleInput($event)"
   (blur)="handleBlur()"

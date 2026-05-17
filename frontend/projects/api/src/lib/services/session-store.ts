@@ -15,6 +15,7 @@ import { ISessionStore } from './session-store.contract';
 
 const TOKEN_KEY = 'sd.auth.token';
 const STORAGE_FLAG_KEY = 'sd.auth.storage';
+const REMEMBERED_EMAIL_KEY = 'sd.auth.remember.email';
 const LEGACY_MOCK_KEYS = ['sd.mock.auth.user-id', 'sd.mock.auth.users'] as const;
 
 function isAuthError(value: unknown): value is AuthError {
@@ -51,11 +52,13 @@ export class SessionStore implements ISessionStore {
   private readonly _token = signal<AuthToken | null>(null);
   private readonly _loading = signal<boolean>(true);
   private readonly _error = signal<AuthError | null>(null);
+  private readonly _rememberedEmail = signal<string | null>(readRememberedEmail());
 
   readonly user: Signal<User | null> = this._user.asReadonly();
   readonly token: Signal<AuthToken | null> = this._token.asReadonly();
   readonly loading: Signal<boolean> = this._loading.asReadonly();
   readonly error: Signal<AuthError | null> = this._error.asReadonly();
+  readonly rememberedEmail: Signal<string | null> = this._rememberedEmail.asReadonly();
   readonly isAuthenticated = computed(() => this._user() !== null);
 
   private rehydratePromise: Promise<void> | null = null;
@@ -80,6 +83,7 @@ export class SessionStore implements ISessionStore {
     try {
       const { token, user } = await this.auth.login(req);
       this.persist(token, remember);
+      this.persistRememberedEmail(remember ? req.email : null);
       this._token.set(token);
       this._user.set(user);
     } catch (e) {
@@ -217,4 +221,25 @@ export class SessionStore implements ISessionStore {
     sessionStorage.removeItem(TOKEN_KEY);
     sessionStorage.removeItem(STORAGE_FLAG_KEY);
   }
+
+  /**
+   * Writes (or clears) the remembered email used to pre-fill the
+   * sign-in form on return. Sign-out deliberately leaves this in place
+   * so the next sign-in is one tap less.
+   */
+  private persistRememberedEmail(email: string | null): void {
+    if (email && email.trim()) {
+      localStorage.setItem(REMEMBERED_EMAIL_KEY, email.trim());
+      this._rememberedEmail.set(email.trim());
+    } else {
+      localStorage.removeItem(REMEMBERED_EMAIL_KEY);
+      this._rememberedEmail.set(null);
+    }
+  }
+}
+
+function readRememberedEmail(): string | null {
+  if (typeof localStorage === 'undefined') return null;
+  const value = localStorage.getItem(REMEMBERED_EMAIL_KEY);
+  return value && value.trim() ? value.trim() : null;
 }

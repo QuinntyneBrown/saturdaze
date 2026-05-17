@@ -24,6 +24,15 @@ export interface ISessionStore {
   readonly loading: Signal<boolean>;
   readonly error: Signal<AuthError | null>;
 
+  /**
+   * The email last submitted with `remember=true`, used to pre-fill the
+   * sign-in form on return. `null` when the user has not opted in or has
+   * since signed in with `remember=false`. Persisted in `localStorage`
+   * alongside the JWT; sign-out does **not** clear it (sign-out forgets
+   * the session, not the device).
+   */
+  readonly rememberedEmail: Signal<string | null>;
+
   signUp(req: SignupRequest): Promise<void>;
   login(req: LoginRequest, remember: boolean): Promise<void>;
   logout(): void;
