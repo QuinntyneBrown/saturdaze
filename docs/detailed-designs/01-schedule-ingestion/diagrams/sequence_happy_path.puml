@@ -21,7 +21,7 @@ runner -> prompts: SystemPromptFor(Events)
 prompts --> runner: prompt + JSON schema
 runner -> client: SearchAsync(systemPrompt, userPrompt, ct)
 client -> claude: POST /v1/messages\n  model=claude-sonnet-4-6\n  tools=[{type:"web_search_20250305"}]
-note over claude: Claude issues 4–10 internal\nweb_search calls; returns one JSON block.
+note over claude: Claude issues 4 to 10 internal\nweb_search calls; returns one JSON block.
 claude --> client: { content, usage, web_search_count }
 client --> runner: ClaudeWebSearchResult
 runner -> parser: Parse(rawJson, Events)

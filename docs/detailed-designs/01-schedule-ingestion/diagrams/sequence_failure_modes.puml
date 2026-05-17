@@ -40,7 +40,7 @@ trigger -> runner: RunAsync
 runner -> upserter: UpsertAsync(items)
 upserter -> sql: INSERT (one item)
 sql --> upserter: UNIQUE INDEX violation
-note over upserter: per-row try/catch — skip\nthe offender, count as rejected,\ncontinue with the rest.
+note over upserter: per-row try/catch: skip\nthe offender, count as rejected,\ncontinue with the rest.
 upserter -> sql: INSERT next item
 sql --> upserter: ok
 upserter --> runner: { inserted: 4, rejected: 1 }
