@@ -4,11 +4,22 @@
   position: fixed;
   left: 50%;
   transform: translateX(-50%);
-  // Sit above iOS Safari's bottom chrome at scroll-top and above the
-  // home indicator on Face-ID iPhones. `env(safe-area-inset-bottom)`
-  // resolves to 0 on browsers without insets, so the 12px floor is the
-  // baseline visual offset elsewhere.
-  bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+  // BUG-047 + BUG-049 — see ADR-005. The bottom-nav MUST clear:
+  //   1. iOS Safari's *dynamic* URL/tab bar at scroll-top, which is
+  //      taller than safe-area-inset-bottom alone. `100lvh - 100svh`
+  //      gives the chrome height (0 when chrome is collapsed, ~80px
+  //      when expanded) — added to `bottom` so the nav lifts above it.
+  //   2. The home indicator on Face-ID iPhones in PWA / standalone
+  //      mode, via `env(safe-area-inset-bottom)`.
+  //   3. A 12px floor for visual breathing room elsewhere.
+  // Do not simplify this calc without re-reading ADR-005. The e2e
+  // regression test (`bottom-nav-clearance.spec.ts`) asserts these
+  // three components are present in the source.
+  bottom: calc(
+    12px
+    + env(safe-area-inset-bottom, 0px)
+    + max(0px, 100lvh - 100svh)
+  );
   width: calc(100% - 24px);
   max-width: calc(var(--sd-app-max-w) - 24px);
   background: var(--sd-surface);
