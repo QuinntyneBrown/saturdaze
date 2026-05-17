@@ -3,7 +3,6 @@ import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/cor
 import type { CalendarLinks } from 'api';
 
 import {
-  Avatar,
   Button,
   Card,
   Chip,
@@ -32,6 +31,8 @@ export interface ProductActionDialogData {
   readonly subtitle?: string;
   readonly restaurant?: string;
   readonly shareUrl?: string;
+  readonly saturdayHighlight?: string;
+  readonly sundayHighlight?: string;
   readonly calendarLinks?: CalendarLinks;
 }
 
@@ -41,7 +42,6 @@ export type ProductActionDialogResult = 'confirm' | 'copy';
   selector: 'app-product-action-dialog',
   standalone: true,
   imports: [
-    Avatar,
     Button,
     Card,
     Chip,
@@ -77,10 +77,24 @@ export class ProductActionDialog {
     if (url && 'share' in navigator) {
       await navigator.share({
         title: 'Saturdaze weekend',
-        text: "Here's the weekend plan.",
+        text: this.shareMessage(),
         url,
       });
     }
     this.dialogRef.close('confirm');
+  }
+
+  /**
+   * One-line preview built from the current weekend's Saturday + Sunday
+   * highlights. Mirrors the message that lands in the recipient's share
+   * sheet so the dialog preview and the actual send say the same thing.
+   */
+  protected shareMessage(): string {
+    const sat = this.data.saturdayHighlight?.trim();
+    const sun = this.data.sundayHighlight?.trim();
+    if (sat && sun) return `Here's the weekend — ${sat} Saturday, ${sun} Sunday.`;
+    if (sat) return `Here's the weekend — ${sat} Saturday.`;
+    if (sun) return `Here's the weekend — ${sun} Sunday.`;
+    return "Here's the weekend.";
   }
 }

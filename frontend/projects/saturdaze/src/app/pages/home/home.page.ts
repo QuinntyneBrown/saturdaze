@@ -87,7 +87,15 @@ export class HomePage {
 
   protected async openShare(): Promise<void> {
     const shareUrl = await this.weekend.createShareLink();
-    await this.openDialog({ kind: 'share', shareUrl });
+    const days = this.overview().days;
+    const saturdayHighlight = days.find((d) => d.day === 'Saturday')?.highlight;
+    const sundayHighlight = days.find((d) => d.day === 'Sunday')?.highlight;
+    await this.openDialog({
+      kind: 'share',
+      shareUrl,
+      saturdayHighlight,
+      sundayHighlight,
+    });
   }
 
   protected async regenerateWeekend(): Promise<void> {

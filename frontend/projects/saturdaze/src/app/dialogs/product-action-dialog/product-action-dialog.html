@@ -26,18 +26,14 @@
     </sd-dialog>
   }
   @case ('share') {
-    <sd-dialog title="Share this weekend" subtitle="Sara gets a read-only preview. She can thumbs-up or comment.">
-      <sd-list-item title="Sara · Browns family" compact>
-        <sd-avatar slot="leading" name="Sara" tone="leaf" />
-        <sd-chip slot="trailing" tone="accent">Default</sd-chip>
-      </sd-list-item>
+    <sd-dialog title="Share this weekend" subtitle="A read-only preview — the recipient can open it without an account.">
       <div class="copy-row">
         <code>{{ data.shareUrl }}</code>
         <button type="button" aria-label="Copy link" (click)="copyShareLink()">
           <sd-icon name="copy" [size]="16" />
         </button>
       </div>
-      <div class="message">"Here's the weekend — Terre Bleu Saturday, Rec Room Sunday. Tap any block to swap. xx"</div>
+      <div class="message">{{ shareMessage() }}</div>
       <sd-button slot="actions" variant="secondary" (click)="close()">Cancel</sd-button>
       <sd-button slot="actions" variant="ghost" (click)="copyShareLink()">
         <sd-icon slot="leading" name="copy" [size]="16" />
@@ -45,7 +41,7 @@
       </sd-button>
       <sd-button slot="actions" (click)="shareNative()">
         <sd-icon slot="leading" name="share" [size]="16" />
-        Send to Sara
+        Send
       </sd-button>
     </sd-dialog>
   }
