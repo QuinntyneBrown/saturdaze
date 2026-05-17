@@ -1,0 +1,117 @@
+@startuml class_diagram
+!theme plain
+skinparam classAttributeIconSize 0
+skinparam classFontSize 11
+skinparam packageStyle rectangle
+
+title Schedule Ingestion - Domain and Service Classes
+
+package "Domain (existing)" {
+  class LocalEvent {
+    +Id : Guid
+    +Name : string
+    +StartsOn : DateOnly
+    +EndsOn : DateOnly
+    +Location : string
+    +DriveMinutes : int
+    +Category : string
+  }
+  class Activity {
+    +Id : Guid
+    +Name : string
+    +Indoor : bool
+    +MinAge : int
+    +MaxAge : int
+    +DriveMinutes : int
+    +Description : string
+  }
+  class Restaurant {
+    +Id : Guid
+    +Name : string
+    +Style : string
+    +Slot : MealSlot
+    +WifeApproved : bool
+    +DriveMinutes : int
+  }
+}
+
+package "Domain (new)" {
+  class IngestionRun {
+    +Id : Guid
+    +StartedUtc : DateTime
+    +FinishedUtc : DateTime?
+    +Type : IngestionType
+    +Status : IngestionStatus
+    +ItemsUpserted : int
+    +ItemsRejected : int
+    +InputTokens : int
+    +OutputTokens : int
+    +WebSearchCount : int
+    +ErrorMessage : string?
+  }
+  enum IngestionType {
+    Events
+    Activities
+    Restaurants
+  }
+  enum IngestionStatus {
+    Succeeded
+    PartialSuccess
+    Failed
+  }
+}
+
+package "Application" {
+  class IngestionRunner {
+    -client : ClaudeWebSearchClient
+    -parser : IngestionResultParser
+    -upserter : CatalogUpserter
+    +RunAsync(types, ct)
+  }
+  class IngestionResultParser {
+    +Parse(rawJson, type)
+  }
+  class CatalogUpserter {
+    +UpsertAsync(items, type, ct)
+  }
+  class IngestionPrompts {
+    +SystemPromptFor(type)
+  }
+}
+
+package "Infrastructure" {
+  class ClaudeWebSearchClient {
+    +SearchAsync(systemPrompt, userPrompt, ct)
+  }
+  class IngestionOptions {
+    +ApiKey : string
+    +Model : string
+    +HomeLocation : string
+    +MaxDriveMinutes : int
+  }
+}
+
+package "CLI" {
+  class IngestCommand {
+    +Type : IngestionType?
+    +DryRun : bool
+  }
+  class IngestCommandHandler {
+    +HandleAsync(cmd, ct)
+  }
+}
+
+IngestCommandHandler --> IngestionRunner
+IngestionRunner --> ClaudeWebSearchClient
+IngestionRunner --> IngestionResultParser
+IngestionRunner --> CatalogUpserter
+IngestionRunner --> IngestionPrompts
+IngestionRunner --> IngestionRun
+ClaudeWebSearchClient --> IngestionOptions
+CatalogUpserter --> LocalEvent
+CatalogUpserter --> Activity
+CatalogUpserter --> Restaurant
+IngestionRun --> IngestionType
+IngestionRun --> IngestionStatus
+
+@enduml

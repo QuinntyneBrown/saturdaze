@@ -1,0 +1,26 @@
+@startuml c4_container
+!theme plain
+!include <C4/C4_Container>
+
+title Schedule Ingestion — Container Diagram
+
+Person(owner, "Owner / curator", "Runs `saturdaze ingest` or relies on the daily schedule.")
+
+System_Boundary(sd, "Saturdaze") {
+    Container(spa, "Angular SPA", "Angular 20 + standalone components", "Renders /events, /activities, /restaurants from the API. Read-only against the catalog.")
+    Container(api, "Saturdaze.Api", ".NET 10 ASP.NET Core, App Service B1", "Serves GET /api/events, /api/activities, /api/restaurants from the same DB the ingestion writes to.")
+    Container(cli, "Saturdaze.Cli", ".NET 10 console, dotnet tool", "Adds `saturdaze ingest` subcommand. Same composition root as the API.")
+    Container(webjob, "Ingestion WebJob", "Triggered WebJob on App Service B1, daily 04:00 ET", "Invokes `saturdaze ingest --type all`. Zero marginal compute cost.")
+    ContainerDb(sql, "Azure SQL (Serverless)", "1 vCore, 1h auto-pause", "LocalEvents, Activities, Restaurants tables. Plus new IngestionRun audit table.")
+}
+
+System_Ext(claude, "Anthropic Claude API", "claude-sonnet-4-6 with web_search tool. Single dependency for deep research.")
+
+Rel(owner, cli, "Triggers ad-hoc", "shell")
+Rel(webjob, cli, "Invokes daily", "process exec")
+Rel(cli, claude, "Calls Messages API with web_search tool", "HTTPS")
+Rel(cli, sql, "Upserts catalog + writes IngestionRun row", "EF Core / TDS")
+Rel(spa, api, "Reads catalogs", "JSON / HTTPS")
+Rel(api, sql, "Reads catalogs", "EF Core / TDS")
+
+@enduml

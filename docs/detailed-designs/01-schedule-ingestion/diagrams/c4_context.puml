@@ -1,0 +1,22 @@
+@startuml c4_context
+!theme plain
+!include <C4/C4_Context>
+
+title Schedule Ingestion — System Context
+
+Person(family, "Family user", "Reads the curated weekend plan. Never sees ingestion.")
+Person(owner, "Owner / curator", "Triggers ingestion on-demand via CLI; reviews IngestionRun audit rows.")
+
+System(saturdaze, "Saturdaze", "Weekly family weekend planner. Reads the LocalEvents, Activities, and Restaurants catalogs to build itineraries.")
+
+System_Ext(claude, "Anthropic Claude API", "LLM with built-in web_search tool. Performs deep research over the open web; returns structured JSON.")
+System_Ext(openweb, "Open web (event sources)", "Venue sites, tourism boards, festival pages, City of Mississauga calendar. Read indirectly via Claude's web_search tool.")
+System_Ext(openmeteo, "Open-Meteo", "Existing weather provider, included for context. Not part of ingestion.")
+
+Rel(family, saturdaze, "Views weekend plans", "HTTPS")
+Rel(owner, saturdaze, "Triggers `saturdaze ingest`", "CLI / scheduled WebJob")
+Rel(saturdaze, claude, "Sends prompt + tools, receives JSON catalog items", "HTTPS / Anthropic SDK")
+Rel(claude, openweb, "Performs web_search calls", "HTTPS")
+Rel(saturdaze, openmeteo, "Fetches forecast (existing)", "HTTPS")
+
+@enduml

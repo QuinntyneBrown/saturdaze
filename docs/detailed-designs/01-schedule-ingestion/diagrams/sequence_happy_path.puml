@@ -1,0 +1,39 @@
+@startuml sequence_happy_path
+!theme plain
+skinparam sequenceMessageAlign center
+
+title Ingestion — Happy Path (single type, e.g. events)
+
+actor "Owner / WebJob" as trigger
+participant "IngestCommandHandler" as handler
+participant "IngestionRunner" as runner
+participant "IngestionPrompts" as prompts
+participant "ClaudeWebSearchClient" as client
+participant "Anthropic Claude API" as claude
+participant "IngestionResultParser" as parser
+participant "CatalogUpserter" as upserter
+database "Azure SQL" as sql
+
+trigger -> handler: saturdaze ingest --type events
+handler -> runner: RunAsync([Events], ct)
+runner -> sql: INSERT IngestionRun (Status=Running)
+runner -> prompts: SystemPromptFor(Events)
+prompts --> runner: prompt + JSON schema
+runner -> client: SearchAsync(systemPrompt, userPrompt, ct)
+client -> claude: POST /v1/messages\n  model=claude-sonnet-4-6\n  tools=[{type:"web_search_20250305"}]
+note over claude: Claude issues 4–10 internal\nweb_search calls; returns one JSON block.
+claude --> client: { content, usage, web_search_count }
+client --> runner: ClaudeWebSearchResult
+runner -> parser: Parse(rawJson, Events)
+parser --> runner: List<IngestionItem> (validated)
+runner -> upserter: UpsertAsync(items, Events, ct)
+upserter -> sql: SELECT existing by NaturalKey
+sql --> upserter: matching rows
+upserter -> sql: INSERT/UPDATE LocalEvents
+sql --> upserter: rows affected
+upserter --> runner: UpsertResult { inserted, updated, rejected }
+runner -> sql: UPDATE IngestionRun (Status=Succeeded, counts, tokens)
+runner --> handler: IReadOnlyList<IngestionRun>
+handler --> trigger: exit 0 + summary line
+
+@enduml

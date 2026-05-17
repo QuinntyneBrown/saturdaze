@@ -1,0 +1,28 @@
+@startuml c4_component
+!theme plain
+!include <C4/C4_Component>
+
+title Schedule Ingestion — Components inside Saturdaze.Cli `ingest` command
+
+Container_Boundary(cli, "Saturdaze.Cli (`ingest` subcommand)") {
+    Component(handler, "IngestCommandHandler", ".NET, System.CommandLine", "Top-level handler for `saturdaze ingest`. Resolves dependencies and invokes the runner.")
+    Component(runner, "IngestionRunner", ".NET service", "Loops the requested types (events/activities/restaurants), invokes the Claude client, parses, upserts, and records the IngestionRun row.")
+    Component(prompts, "IngestionPrompts", ".NET, static resources", "Per-type system prompts that tell Claude what to find, the geo-fence (Port Credit + 200km), and the JSON schema to return.")
+    Component(client, "ClaudeWebSearchClient", ".NET, Anthropic.SDK", "Thin wrapper over Anthropic's Messages API with the `web_search` tool enabled. Surfaces typed responses + token/search counts.")
+    Component(parser, "IngestionResultParser", ".NET, System.Text.Json", "Parses Claude's JSON block, validates required fields, skips malformed rows. Returns a list of IngestionItem.")
+    Component(upserter, "CatalogUpserter", ".NET, EF Core", "Upserts into LocalEvents / Activities / Restaurants by (name + location + date) natural key. Idempotent.")
+}
+
+ContainerDb_Ext(sql, "Azure SQL", "EF Core target")
+System_Ext(claude, "Anthropic Claude API", "Messages API + web_search tool")
+
+Rel(handler, runner, "Calls RunAsync(types)")
+Rel(runner, prompts, "Reads prompt for type")
+Rel(runner, client, "SearchAsync(prompt)")
+Rel(client, claude, "POST /v1/messages", "HTTPS")
+Rel(runner, parser, "Parse(rawJson)")
+Rel(runner, upserter, "UpsertAsync(items)")
+Rel(upserter, sql, "INSERT / UPDATE", "EF Core")
+Rel(runner, sql, "Inserts IngestionRun audit row", "EF Core")
+
+@enduml
