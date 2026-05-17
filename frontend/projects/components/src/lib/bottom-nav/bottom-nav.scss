@@ -8,20 +8,20 @@
   // whichever bottom-edge obstruction is currently present:
   //   - `env(safe-area-inset-bottom)` for the home indicator (~34px
   //     on Face-ID iPhones in PWA / standalone mode).
-  //   - `100lvh - 100dvh` for iOS Safari's *current* dynamic URL/tab
-  //     bar height. Uses `dvh` (dynamic) not `svh` (small) so the nav
-  //     follows the chrome's actual current state, not its worst-case
-  //     fully-expanded state — otherwise the nav looks "way too high"
-  //     when chrome is partially collapsed.
+  //   - `var(--sd-chrome-bottom)` for iOS Safari's *current* bottom
+  //     URL/tab bar height — set by `trackBottomChrome()` in main.ts
+  //     using the VisualViewport API. Pure CSS viewport-unit math
+  //     measures combined top+bottom chrome and can't isolate just
+  //     the bottom, which is why JS measurement is required here.
+  //     See ADR-005 for the four rejected pure-CSS attempts.
   // These are NOT additive — when Safari's chrome is visible it
-  // already covers the home indicator zone, so we take the larger
-  // of the two and add a 12px visual floor. The e2e regression test
-  // (`bottom-nav-clearance.spec.ts`) asserts both components are
-  // referenced in the source. Do not simplify without re-reading
-  // ADR-005.
+  // already covers the home indicator zone, so we take the larger of
+  // the two and add a 12px visual floor. The e2e regression test
+  // (`bottom-nav-clearance.spec.ts`) asserts the JS hook is in place.
+  // Do not simplify without re-reading ADR-005.
   bottom: calc(
     12px
-    + max(env(safe-area-inset-bottom, 0px), 100lvh - 100dvh)
+    + max(env(safe-area-inset-bottom, 0px), var(--sd-chrome-bottom, 0px))
   );
   width: calc(100% - 24px);
   max-width: calc(var(--sd-app-max-w) - 24px);

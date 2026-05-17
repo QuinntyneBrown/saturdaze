@@ -3,100 +3,90 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
 /**
- * ADR-005 regression guard. The bottom-nav must clear three sources
- * of bottom-edge obstruction on iOS Safari:
+ * ADR-005 regression guard. The bottom-nav must clear two sources of
+ * bottom-edge obstruction:
  *
- *   1. iOS Safari's *current* URL/tab bar height  → `100lvh - 100dvh`
- *      (NOT `100lvh - 100svh` — svh is the worst-case, fully-
- *      expanded chrome; dvh is the current state. Using svh
- *      over-reserves and the nav appears "way too high".)
- *   2. The home indicator on Face-ID               → `env(safe-area-inset-bottom)`
- *   3. A visual breathing-room floor              → `12px`
+ *   1. The home indicator on Face-ID iPhones in PWA standalone mode
+ *      → `env(safe-area-inset-bottom)`
+ *   2. iOS Safari's *bottom* URL/tab bar
+ *      → `--sd-chrome-bottom`, set by `trackBottomChrome()` in
+ *        `frontend/projects/saturdaze/src/main.ts` using the
+ *        `VisualViewport` DOM API.
  *
- * History: BUG-047 fixed (2) only. The user then observed (1)
- * overlapping the nav at scroll-top, filed as BUG-049. The combined
- * three-component clearance is the canonical implementation; this
- * test reads the SCSS source and fails fast if any component goes
- * missing in a future refactor.
+ * History: BUG-047 fixed (1). BUG-049 documents four wrong attempts at
+ * fixing (2) in CSS (additive, max() with svh, max() with dvh) — every
+ * CSS-only formula either over- or under-corrected because no CSS unit
+ * isolates the *bottom* chrome from the *top* chrome on iOS Safari
+ * with `viewport-fit=cover`. The JS hook is the only correct approach.
  *
- * Why static source assertion rather than a runtime check:
- *   - Playwright does not simulate iOS Safari's dynamic URL bar
- *     (`window.innerHeight === 100lvh === 100svh` in headless
- *     Chrome), so a computed-style assertion would always read
- *     `bottom: 12px` regardless of whether the chrome compensation
- *     was present.
- *   - The static check catches the specific regression mode that
- *     actually happens in practice: someone simplifies the calc
- *     because it looks ugly and they don't know why it's there.
+ * These static-source assertions catch the specific regression mode
+ * that actually happens in practice: someone removes the JS hook
+ * because it looks weird in `main.ts`, or simplifies the SCSS calc
+ * back to one of the broken pure-CSS forms.
  */
 
+const REPO_ROOT = join(__dirname, "..", "..", "..");
 const BOTTOM_NAV_SCSS = join(
-  __dirname,
-  "..",
-  "..",
-  "..",
-  "frontend",
-  "projects",
-  "components",
-  "src",
-  "lib",
-  "bottom-nav",
-  "bottom-nav.scss",
+  REPO_ROOT,
+  "frontend/projects/components/src/lib/bottom-nav/bottom-nav.scss",
 );
-
-const INDEX_HTML = join(
-  __dirname,
-  "..",
-  "..",
-  "..",
-  "frontend",
-  "projects",
-  "saturdaze",
-  "src",
-  "index.html",
-);
-
+const MAIN_TS = join(REPO_ROOT, "frontend/projects/saturdaze/src/main.ts");
+const INDEX_HTML = join(REPO_ROOT, "frontend/projects/saturdaze/src/index.html");
 const GLOBAL_SCSS = join(
-  __dirname,
-  "..",
-  "..",
-  "..",
-  "frontend",
-  "projects",
-  "components",
-  "src",
-  "lib",
-  "styles",
-  "_global.scss",
+  REPO_ROOT,
+  "frontend/projects/components/src/lib/styles/_global.scss",
 );
 
 test.describe("ADR-005 — bottom-nav device chrome clearance", () => {
-  test("bottom-nav.scss includes env(safe-area-inset-bottom) for the home indicator", () => {
+  test("bottom-nav.scss reads safe-area-inset-bottom for the home indicator", () => {
     const css = readFileSync(BOTTOM_NAV_SCSS, "utf8");
     expect(
       css,
-      "sd-bottom-nav lost its safe-area-inset-bottom clearance — see ADR-005",
+      "sd-bottom-nav lost its safe-area-inset-bottom reference — see ADR-005",
     ).toMatch(/env\(safe-area-inset-bottom/);
   });
 
-  test("bottom-nav.scss includes the (100lvh - 100dvh) current-chrome compensation", () => {
+  test("bottom-nav.scss reads var(--sd-chrome-bottom) for the dynamic chrome", () => {
     const css = readFileSync(BOTTOM_NAV_SCSS, "utf8");
     expect(
       css,
-      "sd-bottom-nav lost its dynamic-chrome compensation — see ADR-005 and BUG-049",
-    ).toMatch(/100lvh\s*-\s*100dvh/);
+      "sd-bottom-nav lost its --sd-chrome-bottom reference — see ADR-005 and BUG-049",
+    ).toMatch(/var\(--sd-chrome-bottom/);
   });
 
-  test("bottom-nav.scss uses dvh (current) NOT svh (worst-case) for chrome compensation", () => {
-    // svh evaluates to the worst-case (fully-expanded) chrome height,
-    // which makes the nav appear too high when chrome is partially
-    // collapsed. dvh tracks the current state. See BUG-049 pass 3.
+  test("bottom-nav.scss does NOT use the broken CSS-only chrome formulas", () => {
+    // Four wrong CSS-only formulations have been tried and rejected.
+    // Each was independently broken on real iOS Safari. The JS hook
+    // is the only correct approach. See BUG-049 history.
     const css = readFileSync(BOTTOM_NAV_SCSS, "utf8");
-    // Must not subtract svh from lvh.
     expect(
       css,
-      "sd-bottom-nav must use `100lvh - 100dvh`, not `100lvh - 100svh` — see ADR-005 and BUG-049",
+      "sd-bottom-nav uses `100lvh - 100svh` — that's the worst-case viewport, not the current one (BUG-049 pass 2)",
     ).not.toMatch(/100lvh\s*-\s*100svh/);
+    expect(
+      css,
+      "sd-bottom-nav uses `100lvh - 100dvh` — that's combined top+bottom chrome on iOS Safari (BUG-049 pass 3)",
+    ).not.toMatch(/100lvh\s*-\s*100dvh/);
+  });
+
+  test("main.ts wires `trackBottomChrome()` before bootstrapApplication", () => {
+    const ts = readFileSync(MAIN_TS, "utf8");
+    expect(
+      ts,
+      "main.ts is missing the trackBottomChrome() function — see ADR-005",
+    ).toMatch(/function\s+trackBottomChrome/);
+    expect(
+      ts,
+      "main.ts is not calling trackBottomChrome() — see ADR-005",
+    ).toMatch(/trackBottomChrome\(\s*\)/);
+    expect(
+      ts,
+      "main.ts must write --sd-chrome-bottom — see ADR-005",
+    ).toMatch(/--sd-chrome-bottom/);
+    expect(
+      ts,
+      "main.ts must use visualViewport — that's the whole point — see ADR-005",
+    ).toMatch(/visualViewport/);
   });
 
   test("index.html viewport meta still opts into viewport-fit=cover", () => {
@@ -109,7 +99,6 @@ test.describe("ADR-005 — bottom-nav device chrome clearance", () => {
 
   test(".sd-frame reserves bottom space that includes the safe-area inset", () => {
     const css = readFileSync(GLOBAL_SCSS, "utf8");
-    // Find the .sd-frame block and assert its padding-bottom references the inset.
     const frameBlock = css.match(/\.sd-frame\s*{[^}]*}/);
     expect(
       frameBlock,

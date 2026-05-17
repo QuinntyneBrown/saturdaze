@@ -23,30 +23,61 @@ The `sd-bottom-nav` component's `:host` rule must position the nav with a `botto
 
 ```scss
 bottom: calc(
-  12px                                                          /* visual breathing-room floor */
-  + max(env(safe-area-inset-bottom, 0px), 100lvh - 100dvh)      /* whichever obstruction is currently present */
+  12px                                                                         /* visual breathing-room floor */
+  + max(env(safe-area-inset-bottom, 0px), var(--sd-chrome-bottom, 0px))        /* whichever bottom obstruction is currently present */
 );
 ```
 
-`100lvh - 100dvh` evaluates to the **current** Safari chrome height in CSS pixels, dynamically as the user scrolls:
+`--sd-chrome-bottom` is set by a JavaScript `VisualViewport` listener registered in `frontend/projects/saturdaze/src/main.ts` *before* Angular bootstraps. It measures the gap between the visible viewport's bottom edge and the layout viewport's bottom edge — i.e. the **current bottom chrome height in CSS pixels**.
 
-| Viewport unit | Definition                                                                                                  |
-| ------------- | ----------------------------------------------------------------------------------------------------------- |
-| `lvh`         | "large viewport" — viewport height when browser UI is fully retracted (e.g., Safari chrome fully collapsed) |
-| `svh`         | "small viewport" — viewport height when browser UI is fully expanded (worst case)                           |
-| `dvh`         | "dynamic viewport" — *current* viewport height, recomputed as UI state changes                              |
+### Why JavaScript, not pure CSS
 
-| State                                          | `100lvh` | `100dvh` | difference            | `env(safe-area-inset-bottom)` | `max(...)` |
-| ---------------------------------------------- | -------- | -------- | --------------------- | ----------------------------- | ---------- |
-| Safari chrome fully collapsed (scroll-down)    | viewport | viewport | `0px`                 | `~34px` (Face-ID)             | `34px`     |
-| Safari chrome partially shown (mid-scroll)     | larger   | current  | `~30–80px`            | `~34px`                       | ~current chrome |
-| Safari chrome fully expanded (scroll-top)      | larger   | smallest | chrome max (`~150px`) | `~34px`                       | chrome max |
-| Non-Safari browser, no inset (desktop)         | viewport | viewport | `0px`                 | `0px`                         | `0px`      |
-| iOS PWA standalone (no Safari chrome)          | viewport | viewport | `0px`                 | `~34px`                       | `34px`     |
+The previous iterations of this design (see BUG-049) tried four CSS-only formulations:
 
-The resulting bottom offset tracks the chrome's actual current state, so the nav sits just 12 px above whatever bottom obstruction is currently visible.
+| Attempt                                          | What broke                                                                                                                  |
+| ------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------- |
+| `+ env(safe-area-inset-bottom)`                  | Only covered the home indicator, not Safari's dynamic URL bar.                                                              |
+| `+ env(...) + max(0, 100lvh - 100svh)`           | Both terms added; nav floated ~46 px above visible bottom even with chrome collapsed.                                       |
+| `+ max(env(...), 100lvh - 100svh)`               | `svh` is the worst-case (fully expanded) viewport — nav always reserved max chrome space, looked "way too high" everywhere. |
+| `+ max(env(...), 100lvh - 100dvh)`               | On iOS Safari 17+ with `viewport-fit=cover`, `dvh` is the *visible* viewport, which excludes *both* top URL bar *and* bottom toolbar. So `lvh - dvh` is the **combined** top+bottom chrome height (~170–300 px). We only want to clear the bottom; CSS can't distinguish. |
 
-**Important: the second component must be `100lvh - 100dvh`, not `100lvh - 100svh`.** `svh` is the *worst-case* (fully-expanded chrome) viewport, not the current one — using it makes the nav always reserve space for max chrome even when chrome is partially collapsed, producing a "way too high" gap. `dvh` recomputes with the chrome state, so the nav follows correctly. (First-pass mistake corrected the same day; see BUG-049.)
+CSS gives us no way to isolate "bottom chrome height" — `dvh` is bidirectional. The DOM `VisualViewport` API does: `visualViewport.offsetTop` is the visible viewport's top in layout coordinates, so `layoutHeight - (offsetTop + height)` is the bottom chrome alone. That's what `trackBottomChrome()` writes into the CSS variable.
+
+### The JS hook (must remain in `main.ts`)
+
+```ts
+function trackBottomChrome(): void {
+  const vv = window.visualViewport;
+  const root = document.documentElement;
+  if (!vv) {
+    root.style.setProperty('--sd-chrome-bottom', '0px');
+    return;
+  }
+  const update = (): void => {
+    const layoutHeight = root.clientHeight;
+    const visibleBottom = vv.offsetTop + vv.height;
+    const bottomChrome = Math.max(0, layoutHeight - visibleBottom);
+    root.style.setProperty('--sd-chrome-bottom', `${bottomChrome}px`);
+  };
+  vv.addEventListener('resize', update);
+  vv.addEventListener('scroll', update);
+  window.addEventListener('resize', update);
+  update();
+}
+trackBottomChrome();
+```
+
+Runs before `bootstrapApplication` so the variable is set at the first paint. No Angular dependencies — pure DOM. Performance is negligible (one read + one CSS-variable write per resize/scroll event).
+
+### Resulting offsets
+
+| State                                            | `env(safe-area-inset-bottom)` | `--sd-chrome-bottom` | `max(...)` | `bottom` |
+| ------------------------------------------------ | ----------------------------- | -------------------- | ---------- | -------- |
+| Desktop Chrome / Firefox / Edge                   | `0`                           | `0`                  | `0`        | `12px`   |
+| Face-ID iPhone, PWA standalone (no chrome)        | `~34px`                       | `0`                  | `34px`     | `~46px`  |
+| iOS Safari, bottom toolbar collapsed              | `~34px`                       | `0` or small         | `~34px`    | `~46px`  |
+| iOS Safari, bottom toolbar partially shown        | `~34px`                       | `~50px`              | `~50px`    | `~62px`  |
+| iOS Safari, bottom toolbar fully expanded         | `~34px`                       | `~80px`              | `~80px`    | `~92px`  |
 
 Additional rules:
 
@@ -66,13 +97,16 @@ Additional rules:
 
 | Alternative                                                                | Why rejected                                                                                                |
 | -------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
-| **Use the `VisualViewport` JS API to track `visualViewport.height` and update a CSS variable on scroll** | Adds a scroll listener + RAF batching + lifecycle cleanup. CSS-only is simpler and renders without JS. |
-| **Anchor via `top: calc(100svh - nav-height - …)` and set `bottom: auto`** | Requires a hardcoded `nav-height` constant or a measured wrapper. The `bottom-with-compensation` formulation doesn't.  |
-| **Anchor via `100dvh`** (dynamic viewport — re-resolves on chrome state change) | Recomputes during scroll. On some iOS versions this causes the nav to visibly jitter as the chrome animates. `lvh - svh` is a stable static computation. |
+| **Pure CSS via `100lvh - 100dvh`** (the earlier accepted decision)         | Tried; fails. `dvh` is the visible viewport excluding BOTH top URL bar and bottom toolbar, so the diff is the combined chrome height. There is no CSS unit that isolates the bottom chrome. (See "Why JavaScript, not pure CSS" above and BUG-049.) |
+| **Anchor via `top: calc(100dvh - nav-height - …)` and set `bottom: auto`** | Requires a hardcoded `nav-height` constant or a measured wrapper. Doesn't solve the top-vs-bottom distinction either — same diff problem. |
 | **Move the nav into the scrolled content with `position: sticky; bottom: 0`** | Doesn't actually pin to the visible viewport — sticky elements stop at their containing block's edge, not the screen's. The floating pill effect is lost.   |
 | **Just add more `bottom` padding** (e.g. `bottom: 90px`)                    | Wastes vertical space when chrome is collapsed. Looks broken on non-iOS browsers.                          |
 
 ## Verification
 
-- **Static**: `e2e/tests/regression/bottom-nav-clearance.spec.ts` parses the SCSS source and asserts the calc contains all three components.
-- **Manual**: open `/weekend` on iPhone Safari, scroll to top — the nav must be fully visible above the URL bar. Scroll down — the URL bar collapses and the nav settles into its baseline 12px position (with ~34px home-indicator inset below).
+- **Static**: `e2e/tests/regression/bottom-nav-clearance.spec.ts` parses both the SCSS and the `main.ts` source and asserts:
+  - `bottom-nav.scss` references `env(safe-area-inset-bottom)` and `var(--sd-chrome-bottom)`.
+  - `main.ts` calls `trackBottomChrome()` and writes `--sd-chrome-bottom`.
+  - `index.html` keeps `viewport-fit=cover`.
+  - `.sd-frame` reserves bottom-padding that includes the safe-area inset.
+- **Manual**: open `/weekend` on iPhone Safari, scroll to top — the nav must be fully visible just above Safari's bottom toolbar. Scroll down — the toolbar collapses, the nav settles a bit lower, still ~12 px above the home indicator. There must be **no large empty gap** between the nav and the bottom toolbar in any state.
