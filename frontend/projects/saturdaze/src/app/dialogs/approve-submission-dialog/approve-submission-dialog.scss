@@ -1,0 +1,19 @@
+:host { display: block; }
+
+.card-row {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+
+  sd-icon { color: var(--sd-primary); margin-top: 2px; }
+}
+
+.card-body { font-size: var(--sd-fs-sm); }
+.strong { font-weight: var(--sd-fw-semibold); }
+.muted { color: var(--sd-ink-soft); margin-top: 4px; }
+
+.footer-hint {
+  font-size: var(--sd-fs-sm);
+  color: var(--sd-ink-soft);
+  margin: 12px 0 0;
+}

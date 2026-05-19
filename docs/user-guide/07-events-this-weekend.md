@@ -83,6 +83,19 @@ The home screen's **A heads-up** panel sometimes pulls events forward:
 
 Tap these to jump straight to the event detail and decide.
 
+## Submitting an event Saturdaze missed
+
+If you know about something the feed doesn't (a school fair, a one-off concert, a local festival), you can add it yourself:
+
+- Tap the **+** floating button in the bottom-right corner of the Events feed for a quick add (title + when), or
+- Open the **+** action in the top bar for the full form (location, description, cost, age range, link).
+
+Submissions go into a moderation queue and aren't visible to other families until they're approved. Yours will show up in your own feed with a **Pending review** chip so you can tell it's not public yet.
+
+Approval typically happens within a day. Once approved, the event joins the regular feed for everyone in driving distance — no further action needed on your end.
+
+If a submission is rejected, you'll see the moderator's reason on your card. Most rejections are duplicates of curated events; re-submitting is fine when something has genuinely changed.
+
 ## Past events / archive
 
 Events drop off the feed automatically after their date passes. If

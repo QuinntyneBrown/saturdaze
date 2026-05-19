@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Submit an event — Saturdaze</title>
+  <link rel="stylesheet" href="../styles/global.css" />
+  <script type="module" src="../app.js"></script>
+  <style>
+    @media (min-width: 720px) {
+      .submit-form { max-width: 600px; }
+    }
+    .field-label {
+      display:block;
+      font-size:13px;
+      color:var(--sd-ink-soft);
+      font-weight:500;
+      margin: 0 0 6px 4px;
+    }
+    .optional-tag {
+      font-size:11px;
+      color:var(--sd-ink-soft);
+      font-weight:500;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin-left: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="sd-frame">
+
+    <sd-top-bar title="Submit an event" back></sd-top-bar>
+
+    <div style="padding: 0 var(--sd-app-pad-x);">
+      <h2 style="font-size: 22px; font-weight: 700; letter-spacing: -0.02em; margin: 8px 0 4px;">Tell me about something I missed</h2>
+      <p style="color: var(--sd-ink-soft); font-size: 14px; margin: 0 0 16px;">A festival, a fair, a one-off concert — anything happening near home. I'll review it within a day; once approved, every family on Saturdaze sees it.</p>
+    </div>
+
+    <div class="submit-form" style="padding: 0 var(--sd-app-pad-x); display:grid; gap:16px;">
+
+      <sd-text-input label="Event title" placeholder="e.g. Port Credit Buskerfest" required></sd-text-input>
+
+      <div>
+        <label class="field-label" for="event-date">When it starts</label>
+        <input id="event-date" type="datetime-local" value="2026-05-18T13:00"
+          style="width:100%; padding:12px 14px; border-radius:var(--sd-r-md); border:1px solid var(--sd-line); background:var(--sd-surface); color:var(--sd-ink); font-size:15px; font-family:inherit;"/>
+        <div style="font-size:12px; color:var(--sd-ink-soft); margin: 6px 0 0 4px;">Default is one hour from now. Change it to match the event.</div>
+      </div>
+
+      <sd-text-input label="Location" placeholder="Memorial Park, Lakeshore Rd, Port Credit" hint="Address or place name. Helps families know if it's worth the drive."></sd-text-input>
+
+      <div>
+        <label class="field-label" for="event-desc">Description <span class="optional-tag">Optional</span></label>
+        <textarea id="event-desc" rows="4" placeholder="Buskers, food trucks, kid-friendly performers all weekend. Free admission."
+          style="width:100%; padding:12px 14px; border-radius:var(--sd-r-md); border:1px solid var(--sd-line); background:var(--sd-surface); color:var(--sd-ink); font-size:15px; font-family:inherit; resize:vertical;"></textarea>
+      </div>
+
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
+        <sd-text-input label="Cost" placeholder="Free · $5 · $10/child" hint="Anything that helps families budget."></sd-text-input>
+        <sd-text-input label="Ages" placeholder="All ages · 5+ · teens"></sd-text-input>
+      </div>
+
+      <sd-text-input label="Link" placeholder="https://portcredit.com/buskerfest" hint="Official site, event page, or social post — so I can verify before approving."></sd-text-input>
+
+      <sd-card variant="sunk">
+        <div style="display:flex; gap:10px; align-items:flex-start;">
+          <sd-icon name="sparkle" size="18" style="color:var(--sd-primary); margin-top:2px;"></sd-icon>
+          <div style="font-size:14px;">
+            <div style="font-weight:600;">What happens next</div>
+            <div style="color:var(--sd-ink-soft); margin-top:4px;">It goes into a moderation queue. I usually review within a day. You'll see it in your feed marked "Pending review" until then.</div>
+          </div>
+        </div>
+      </sd-card>
+    </div>
+
+    <div class="submit-form" style="padding: 24px var(--sd-app-pad-x) 96px; display:flex; gap:10px;">
+      <sd-button variant="secondary" full>Cancel</sd-button>
+      <sd-button full>
+        <sd-icon slot="leading" name="plus" size="16"></sd-icon>
+        Submit event
+      </sd-button>
+    </div>
+
+    <sd-bottom-nav active="activities"></sd-bottom-nav>
+  </div>
+</body>
+</html>

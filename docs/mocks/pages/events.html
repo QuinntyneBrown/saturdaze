@@ -6,16 +6,74 @@
   <title>Local events — Saturdaze</title>
   <link rel="stylesheet" href="../styles/global.css" />
   <script type="module" src="../app.js"></script>
+  <style>
+    /* Floating "Submit an event" FAB.
+       Sits above the mobile bottom nav (which lives 12px from bottom and
+       is ~60px tall), and clears the left rail on tablet/desktop. */
+    .sd-events-fab {
+      position: fixed;
+      right: 16px;
+      bottom: 84px;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      border: none;
+      background: var(--sd-primary);
+      color: #fff;
+      box-shadow: var(--sd-shadow-3, 0 8px 24px rgba(0,0,0,0.18));
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9;
+      transition: transform var(--sd-dur-fast) var(--sd-ease);
+    }
+    .sd-events-fab:hover { transform: translateY(-2px); }
+    .sd-events-fab:focus-visible {
+      outline: 2px solid var(--sd-primary);
+      outline-offset: 3px;
+    }
+    @media (min-width: 720px) {
+      .sd-events-fab {
+        bottom: 28px;
+        right: 28px;
+      }
+    }
+    .sd-events-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 0 var(--sd-app-pad-x);
+    }
+    .sd-events-header > div { min-width: 0; }
+  </style>
 </head>
 <body>
   <div class="sd-frame">
 
-    <sd-top-bar title="Local events" back></sd-top-bar>
+    <sd-top-bar title="Local events" back>
+      <a slot="trailing" href="events.submit.html" aria-label="Submit a new event" title="Submit a new event"
+         style="width:40px; height:40px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; background:var(--sd-surface); border:1px solid var(--sd-line); color:var(--sd-ink); text-decoration:none;">
+        <sd-icon name="plus" size="18"></sd-icon>
+      </a>
+    </sd-top-bar>
 
-    <div style="padding: 0 var(--sd-app-pad-x);">
-      <h2 style="font-size: 22px; font-weight: 700; letter-spacing: -0.02em; margin: 8px 0 4px;">What's on this weekend</h2>
-      <p style="color: var(--sd-ink-soft); font-size: 14px; margin: 0 0 16px;">Within 45 minutes of Port Credit. Tap "Add" to slot it into your weekend.</p>
+    <div class="sd-events-header">
+      <div>
+        <h2 style="font-size: 22px; font-weight: 700; letter-spacing: -0.02em; margin: 8px 0 4px;">What's on this weekend</h2>
+        <p style="color: var(--sd-ink-soft); font-size: 14px; margin: 0 0 16px;">Within 45 minutes of Port Credit. Tap "Add" to slot it into your weekend.</p>
+      </div>
+      <a href="events.submit.html" style="flex-shrink:0; display:none; align-items:center; gap:6px; padding:8px 12px; border-radius:var(--sd-r-md); border:1px solid var(--sd-line); background:var(--sd-surface); color:var(--sd-ink); font-size:13px; font-weight:600; text-decoration:none; margin-bottom: 16px;" class="sd-events-submit-link">
+        <sd-icon name="plus" size="14"></sd-icon>
+        Submit an event
+      </a>
     </div>
+    <style>
+      @media (min-width: 720px) {
+        .sd-events-submit-link { display: inline-flex !important; }
+      }
+    </style>
 
     <sd-tag-group>
       <sd-chip tone="primary">This weekend</sd-chip>
@@ -26,6 +84,20 @@
       <sd-chip>Theatre</sd-chip>
       <sd-chip>Festivals</sd-chip>
     </sd-tag-group>
+
+    <sd-section title="Your submissions">
+      <div class="sd-card-grid">
+        <sd-event-card
+          title="Port Credit Buskerfest"
+          venue="Lakeshore Rd · submitted by you"
+          when="Sat 2pm – 9pm"
+          drive="2 min"
+          date-day="20" date-mon="JUN"
+        >
+          <sd-chip slot="chips" tone="sun">Pending review</sd-chip>
+        </sd-event-card>
+      </div>
+    </sd-section>
 
     <sd-section title="Saturday">
       <div class="sd-card-grid">
@@ -102,6 +174,10 @@
         ></sd-event-card>
       </div>
     </sd-section>
+
+    <a href="events.submit.html" class="sd-events-fab" aria-label="Submit a new event" title="Submit a new event">
+      <sd-icon name="plus" size="24"></sd-icon>
+    </a>
 
     <sd-bottom-nav active="activities"></sd-bottom-nav>
   </div>

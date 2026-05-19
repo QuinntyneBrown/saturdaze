@@ -1,0 +1,61 @@
+<sd-top-bar title="Submitted" back />
+
+<div class="submitted">
+  <div class="check">
+    <sd-icon name="check" [size]="32" />
+  </div>
+
+  <div class="heading">
+    <h2>Thanks — it's in the queue</h2>
+    @if (latest()) {
+      <p>I'll review "{{ latest()!.title }}" within a day. You'll get an in-app note when it's approved.</p>
+    } @else {
+      <p>I'll review your submission within a day.</p>
+    }
+  </div>
+
+  @if (latest()) {
+    <sd-card variant="sunk">
+      <div class="card-row">
+        <div class="date-tile">
+          <div class="mon">{{ dateParts()?.mon }}</div>
+          <div class="day">{{ dateParts()?.day }}</div>
+        </div>
+        <div class="card-body">
+          <div class="title">{{ latest()!.title }}</div>
+          <div class="meta">
+            @if (latest()!.location) { {{ latest()!.location }} · }
+            {{ whenLabel() }}
+          </div>
+          <div class="chip-row">
+            <sd-chip tone="sun">Pending review</sd-chip>
+          </div>
+        </div>
+      </div>
+    </sd-card>
+  }
+
+  <sd-card variant="sunk">
+    <div class="reassure">
+      <sd-icon name="sparkle" [size]="18" />
+      <div>
+        <div class="reassure-title">Only you can see it for now</div>
+        <div class="reassure-body">
+          It'll show up in your events feed marked "Pending review". Once approved, every Saturdaze family within driving distance sees it.
+        </div>
+      </div>
+    </div>
+  </sd-card>
+
+  <div class="actions">
+    <sd-button variant="secondary" full="true" [routerLink]="['/events/submit']">
+      Submit another
+    </sd-button>
+    <sd-button full="true" [routerLink]="['/events']">
+      <sd-icon slot="leading" name="arrow_right" [size]="16" />
+      Back to events
+    </sd-button>
+  </div>
+</div>
+
+<sd-bottom-nav active="activities" />

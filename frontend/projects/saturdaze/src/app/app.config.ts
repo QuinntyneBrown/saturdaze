@@ -15,7 +15,9 @@ import {
   ActivityService,
   AUTH_SERVICE,
   AuthService,
+  EVENT_SUBMISSIONS_SERVICE,
   EVENTS_SERVICE,
+  EventSubmissionsService,
   EventsService,
   FAMILY_SERVICE,
   FamilyService,
@@ -45,6 +47,7 @@ export const appConfig: ApplicationConfig = {
     // test time without touching page code.
     { provide: ACTIVITY_SERVICE, useExisting: ActivityService },
     { provide: EVENTS_SERVICE, useExisting: EventsService },
+    { provide: EVENT_SUBMISSIONS_SERVICE, useExisting: EventSubmissionsService },
     { provide: FAMILY_SERVICE, useExisting: FamilyService },
     { provide: RESTAURANT_SERVICE, useExisting: RestaurantService },
     { provide: SAVED_SERVICE, useExisting: SavedService },

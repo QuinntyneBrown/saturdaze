@@ -139,6 +139,19 @@
 </div>
 
 @if (user(); as currentUser) {
+  @if (currentUser.role === 'Admin') {
+    <sd-section title="Admin tools" subtitle="Only visible to admins">
+      <sd-list-item
+        title="Event moderation"
+        subtitle="Approve or reject user-submitted events"
+        [routerLink]="['/admin/events']"
+      >
+        <sd-icon slot="leading" name="check" />
+        <sd-icon slot="trailing" name="chevron_right" [size]="16" />
+      </sd-list-item>
+    </sd-section>
+  }
+
   <sd-section title="Account" subtitle="This device's session">
     <div class="account-block">
       <sd-card variant="sunk">

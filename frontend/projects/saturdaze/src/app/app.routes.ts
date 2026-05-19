@@ -132,6 +132,22 @@ export const routes: Routes = [
       import('./pages/events/events.page').then((m) => m.EventsPage),
   },
   {
+    path: 'events/submit',
+    canActivate: [requireAuth],
+    loadComponent: () =>
+      import('./pages/events-submit/events-submit.page').then(
+        (m) => m.EventsSubmitPage,
+      ),
+  },
+  {
+    path: 'events/submitted',
+    canActivate: [requireAuth],
+    loadComponent: () =>
+      import('./pages/events-submitted/events-submitted.page').then(
+        (m) => m.EventsSubmittedPage,
+      ),
+  },
+  {
     path: 'errand',
     canActivate: [requireAuth],
     loadComponent: () =>

@@ -1,0 +1,129 @@
+<sd-top-bar title="Submit an event" back />
+
+<div class="submit-lede">
+  <h2>Tell me about something I missed</h2>
+  <p>
+    A festival, a fair, a one-off concert — anything happening near home. I'll review it within a day; once approved, every family on Saturdaze sees it.
+  </p>
+</div>
+
+<form class="submit-form" (submit)="submit($event)">
+  <label class="field">
+    <span>Event title</span>
+    <input
+      type="text"
+      name="title"
+      autocomplete="off"
+      [ngModel]="title()"
+      (ngModelChange)="title.set($event); error.set('')"
+      placeholder="e.g. Port Credit Buskerfest"
+      required
+    />
+  </label>
+
+  <label class="field">
+    <span>When it starts</span>
+    <input
+      type="datetime-local"
+      name="startsAtLocal"
+      [ngModel]="startsAtLocal()"
+      (ngModelChange)="startsAtLocal.set($event); error.set('')"
+      required
+    />
+    <div class="hint">Default is one hour from now. Change it to match the event.</div>
+  </label>
+
+  <label class="field">
+    <span>Location <span class="optional">Optional</span></span>
+    <input
+      type="text"
+      name="location"
+      autocomplete="off"
+      [ngModel]="location()"
+      (ngModelChange)="location.set($event)"
+      placeholder="Memorial Park, Lakeshore Rd, Port Credit"
+    />
+    <div class="hint">Address or place name. Helps families know if it's worth the drive.</div>
+  </label>
+
+  <label class="field">
+    <span>Description <span class="optional">Optional</span></span>
+    <textarea
+      rows="4"
+      name="description"
+      [ngModel]="description()"
+      (ngModelChange)="description.set($event)"
+      placeholder="Buskers, food trucks, kid-friendly performers all weekend. Free admission."
+    ></textarea>
+  </label>
+
+  <div class="cost-and-ages">
+    <label class="field">
+      <span>Cost <span class="optional">Optional</span></span>
+      <input
+        type="text"
+        name="costNote"
+        autocomplete="off"
+        [ngModel]="costNote()"
+        (ngModelChange)="costNote.set($event)"
+        placeholder="Free · $5 · $10/child"
+      />
+    </label>
+
+    <label class="field">
+      <span>Ages <span class="optional">Optional</span></span>
+      <input
+        type="text"
+        name="ageRange"
+        autocomplete="off"
+        [ngModel]="ageRange()"
+        (ngModelChange)="ageRange.set($event)"
+        placeholder="All ages · 5+ · teens"
+      />
+    </label>
+  </div>
+
+  <label class="field">
+    <span>Link <span class="optional">Optional</span></span>
+    <input
+      type="url"
+      name="sourceUrl"
+      autocomplete="off"
+      [ngModel]="sourceUrl()"
+      (ngModelChange)="sourceUrl.set($event); error.set('')"
+      placeholder="https://portcredit.com/buskerfest"
+    />
+    <div class="hint">Official site, event page, or social post — so I can verify before approving.</div>
+  </label>
+
+  <sd-card variant="sunk">
+    <div class="reassure">
+      <sd-icon name="sparkle" [size]="18" />
+      <div>
+        <div class="reassure-title">What happens next</div>
+        <div class="reassure-body">
+          It goes into a moderation queue. I usually review within a day. You'll see it in your feed marked "Pending review" until then.
+        </div>
+      </div>
+    </div>
+  </sd-card>
+
+  @if (error()) { <p class="form-error" role="alert">{{ error() }}</p> }
+
+  <div class="actions">
+    <sd-button variant="secondary" type="button" full="true" (click)="cancel()">
+      Cancel
+    </sd-button>
+    <sd-button
+      type="submit"
+      full="true"
+      [disabled]="!canSubmit()"
+      [attr.aria-disabled]="!canSubmit()"
+    >
+      <sd-icon slot="leading" name="plus" [size]="16" />
+      Submit event
+    </sd-button>
+  </div>
+</form>
+
+<sd-bottom-nav active="activities" />

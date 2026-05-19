@@ -1,0 +1,35 @@
+<sd-dialog
+  title="Reject this submission?"
+  subtitle="The submitter sees your reason — keep it kind."
+>
+  <sd-card variant="sunk">
+    <div class="card-row">
+      <sd-icon name="close" [size]="18" />
+      <div class="card-body">
+        <div class="strong">"{{ data.submission.title }}"</div>
+        <div class="muted">
+          Submitted by {{ data.submission.submittedByEmail ?? 'a Saturdaze user' }}.
+          Removed from the queue. Submitter is notified with your reason.
+        </div>
+      </div>
+    </div>
+  </sd-card>
+
+  <label class="field">
+    <span>Reason <span class="optional">Optional</span></span>
+    <textarea
+      rows="3"
+      [ngModel]="reason()"
+      (ngModelChange)="reason.set($event)"
+      placeholder="Already covered by the curated Lavender Festival listing for that weekend."
+    ></textarea>
+  </label>
+
+  <sd-button slot="actions" variant="secondary" type="button" (click)="cancel()">
+    Cancel
+  </sd-button>
+  <sd-button slot="actions" variant="danger" type="button" (click)="reject()">
+    <sd-icon slot="leading" name="close" [size]="16" />
+    Reject
+  </sd-button>
+</sd-dialog>

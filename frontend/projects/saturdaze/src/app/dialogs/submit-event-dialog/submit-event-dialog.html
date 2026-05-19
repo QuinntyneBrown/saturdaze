@@ -1,0 +1,67 @@
+<sd-dialog title="Tell me about an event" subtitle="Quick version. Title, when, and you're done — the rest is optional.">
+  <form class="form" (submit)="submit($event)">
+    <label class="field">
+      <span>Event title</span>
+      <input
+        name="title"
+        type="text"
+        autocomplete="off"
+        [ngModel]="title()"
+        (ngModelChange)="title.set($event); error.set('')"
+        placeholder="e.g. Port Credit Buskerfest"
+        required
+      />
+    </label>
+
+    <label class="field">
+      <span>When it starts</span>
+      <input
+        name="startsAtLocal"
+        type="datetime-local"
+        [ngModel]="startsAtLocal()"
+        (ngModelChange)="startsAtLocal.set($event); error.set('')"
+        required
+      />
+      <div class="hint">Defaulted to one hour from now.</div>
+    </label>
+
+    <label class="field">
+      <span>Location <span class="optional">Optional</span></span>
+      <input
+        name="location"
+        type="text"
+        autocomplete="off"
+        [ngModel]="location()"
+        (ngModelChange)="location.set($event)"
+        placeholder="Memorial Park, Lakeshore Rd"
+      />
+    </label>
+
+    <sd-card variant="sunk">
+      <div class="reassure">
+        <sd-icon name="sparkle" [size]="16" />
+        <span>Goes into moderation. Approved within a day, then everyone in driving distance sees it.</span>
+      </div>
+    </sd-card>
+
+    @if (error()) { <p class="form-error" role="alert">{{ error() }}</p> }
+    <button type="submit" hidden></button>
+  </form>
+
+  <sd-button slot="actions" variant="ghost" type="button" (click)="openFullForm()">
+    Open full form
+  </sd-button>
+  <sd-button slot="actions" variant="secondary" type="button" (click)="cancel()">
+    Cancel
+  </sd-button>
+  <sd-button
+    slot="actions"
+    type="button"
+    [disabled]="!canSubmit() || submitting()"
+    [attr.aria-disabled]="!canSubmit() || submitting()"
+    (click)="submit($event)"
+  >
+    <sd-icon slot="leading" name="plus" [size]="16" />
+    Submit
+  </sd-button>
+</sd-dialog>

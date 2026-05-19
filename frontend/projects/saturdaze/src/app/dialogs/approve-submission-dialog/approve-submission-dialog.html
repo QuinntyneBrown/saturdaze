@@ -1,0 +1,26 @@
+<sd-dialog
+  [title]="title"
+  subtitle="It'll be published to every family within driving distance."
+>
+  <sd-card variant="sunk">
+    <div class="card-row">
+      <sd-icon name="check" [size]="18" />
+      <div class="card-body">
+        <div class="strong">{{ whenLabel }}</div>
+        <div class="muted">
+          @if (data.submission.location) { {{ data.submission.location }} · }
+          Submitted by {{ data.submission.submittedByEmail ?? 'a Saturdaze user' }}.
+        </div>
+      </div>
+    </div>
+  </sd-card>
+  <p class="footer-hint">The submitter will see "Approved" next time they open the events page.</p>
+
+  <sd-button slot="actions" variant="secondary" type="button" (click)="cancel()">
+    Cancel
+  </sd-button>
+  <sd-button slot="actions" type="button" (click)="approve()">
+    <sd-icon slot="leading" name="check" [size]="16" />
+    Approve &amp; publish
+  </sd-button>
+</sd-dialog>

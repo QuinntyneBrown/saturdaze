@@ -1,6 +1,6 @@
 import { Dialog } from '@angular/cdk/dialog';
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 
 import {
@@ -53,6 +53,7 @@ const MEMBER_TONES = ['primary', 'leaf', 'sky', 'sun', 'indoor'] as const;
     Chip,
     Icon,
     ListItem,
+    RouterLink,
     Section,
     TagGroup,
     Toggle,

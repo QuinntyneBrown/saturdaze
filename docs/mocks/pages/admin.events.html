@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Event moderation — Saturdaze admin</title>
+  <link rel="stylesheet" href="../styles/global.css" />
+  <script type="module" src="../app.js"></script>
+  <style>
+    .queue {
+      display: grid;
+      gap: 14px;
+      padding: 0 var(--sd-app-pad-x) 96px;
+    }
+    @media (min-width: 720px) {
+      .queue { max-width: 720px; }
+    }
+    .submission {
+      background: var(--sd-surface);
+      border: 1px solid var(--sd-line);
+      border-radius: var(--sd-r-lg);
+      padding: 16px;
+      display: grid;
+      gap: 12px;
+    }
+    .submission header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .submission h3 {
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: -0.005em;
+      margin: 0 0 2px;
+    }
+    .submission .meta {
+      color: var(--sd-ink-soft);
+      font-size: 13px;
+    }
+    .submission dl {
+      display: grid;
+      grid-template-columns: 100px 1fr;
+      gap: 4px 12px;
+      margin: 0;
+      font-size: 14px;
+    }
+    .submission dt {
+      color: var(--sd-ink-soft);
+      font-weight: 500;
+    }
+    .submission dd { margin: 0; }
+    .submission .actions {
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+    }
+    .submitter {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--sd-ink-soft);
+    }
+  </style>
+</head>
+<body>
+  <div class="sd-frame">
+
+    <sd-top-bar title="Event moderation" back></sd-top-bar>
+
+    <div style="padding: 0 var(--sd-app-pad-x);">
+      <h2 style="font-size: 22px; font-weight: 700; letter-spacing: -0.02em; margin: 8px 0 4px;">Pending submissions</h2>
+      <p style="color: var(--sd-ink-soft); font-size: 14px; margin: 0 0 16px;">
+        3 in queue · oldest first. Approving publishes to every family within driving distance.
+      </p>
+    </div>
+
+    <sd-tag-group>
+      <sd-chip tone="primary">Pending (3)</sd-chip>
+      <sd-chip>Approved (47)</sd-chip>
+      <sd-chip>Rejected (4)</sd-chip>
+    </sd-tag-group>
+
+    <div class="queue">
+
+      <article class="submission">
+        <header>
+          <div>
+            <h3>Port Credit Buskerfest</h3>
+            <div class="meta">Sat Jun 20, 2026 · 2:00 pm – 9:00 pm</div>
+          </div>
+          <sd-chip tone="sun">Pending</sd-chip>
+        </header>
+
+        <dl>
+          <dt>Location</dt><dd>Memorial Park, Lakeshore Rd, Port Credit</dd>
+          <dt>Cost</dt><dd>Free</dd>
+          <dt>Ages</dt><dd>All ages</dd>
+          <dt>Link</dt><dd><a href="#" style="color:var(--sd-primary); text-decoration:none;">portcredit.com/buskerfest</a></dd>
+          <dt>Notes</dt><dd>Buskers, food trucks, kid-friendly performers all weekend. Free admission.</dd>
+        </dl>
+
+        <div class="submitter">
+          <sd-avatar name="Quinn" tone="primary" size="sm"></sd-avatar>
+          <span>quinntynebrown@gmail.com · submitted 2 hours ago</span>
+        </div>
+
+        <div class="actions">
+          <sd-button variant="ghost">
+            <sd-icon slot="leading" name="map" size="14"></sd-icon>
+            Open link
+          </sd-button>
+          <sd-button variant="secondary">
+            <sd-icon slot="leading" name="close" size="14"></sd-icon>
+            Reject
+          </sd-button>
+          <sd-button>
+            <sd-icon slot="leading" name="check" size="14"></sd-icon>
+            Approve
+          </sd-button>
+        </div>
+      </article>
+
+      <article class="submission">
+        <header>
+          <div>
+            <h3>Bronte Creek Maple Magic</h3>
+            <div class="meta">Sat Mar 7, 2026 · 10:00 am – 4:00 pm</div>
+          </div>
+          <sd-chip tone="sun">Pending</sd-chip>
+        </header>
+
+        <dl>
+          <dt>Location</dt><dd>Bronte Creek Provincial Park, Oakville</dd>
+          <dt>Cost</dt><dd>$18/car</dd>
+          <dt>Ages</dt><dd>Best for 3+</dd>
+          <dt>Link</dt><dd><span style="color:var(--sd-ink-soft);">(none provided)</span></dd>
+          <dt>Notes</dt><dd>Sugar-shack demos, pancake breakfast tent, sap-to-syrup walk. Park entry not included.</dd>
+        </dl>
+
+        <div class="submitter">
+          <sd-avatar name="Pat" tone="leaf" size="sm"></sd-avatar>
+          <span>pat.tremblay@example.com · submitted yesterday</span>
+        </div>
+
+        <div class="actions">
+          <sd-button variant="secondary">
+            <sd-icon slot="leading" name="close" size="14"></sd-icon>
+            Reject
+          </sd-button>
+          <sd-button>
+            <sd-icon slot="leading" name="check" size="14"></sd-icon>
+            Approve
+          </sd-button>
+        </div>
+      </article>
+
+      <article class="submission">
+        <header>
+          <div>
+            <h3>St. Christopher's spring fair</h3>
+            <div class="meta">Sun May 24, 2026 · 11:00 am – 3:00 pm</div>
+          </div>
+          <sd-chip tone="sun">Pending</sd-chip>
+        </header>
+
+        <dl>
+          <dt>Location</dt><dd>St. Christopher's school yard, Mississauga</dd>
+          <dt>Cost</dt><dd>Free · games $2 each</dd>
+          <dt>Ages</dt><dd>Under 10</dd>
+          <dt>Link</dt><dd><a href="#" style="color:var(--sd-primary); text-decoration:none;">facebook.com/stchristoppta</a></dd>
+          <dt>Notes</dt><dd>Bouncy castle, BBQ, silent auction. Raises funds for the playground refresh.</dd>
+        </dl>
+
+        <div class="submitter">
+          <sd-avatar name="Alex" tone="sky" size="sm"></sd-avatar>
+          <span>alex.morgan@example.com · submitted 3 days ago</span>
+        </div>
+
+        <div class="actions">
+          <sd-button variant="secondary">
+            <sd-icon slot="leading" name="close" size="14"></sd-icon>
+            Reject
+          </sd-button>
+          <sd-button>
+            <sd-icon slot="leading" name="check" size="14"></sd-icon>
+            Approve
+          </sd-button>
+        </div>
+      </article>
+    </div>
+
+    <sd-bottom-nav active="profile"></sd-bottom-nav>
+  </div>
+</body>
+</html>
