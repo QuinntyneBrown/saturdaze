@@ -13,25 +13,58 @@ namespace Saturdaze.Application.Ingestion;
 /// </summary>
 public sealed class IngestionResultParser
 {
+    private static readonly IngestionParseResult Empty = new(Array.Empty<IngestionItem>(), 0, 0);
+
     public IngestionParseResult Parse(string rawText, IngestionType type)
     {
-        var arrayText = ExtractJsonArray(rawText);
-        if (arrayText is null)
-            return new IngestionParseResult(Array.Empty<IngestionItem>(), 0, 0);
+        if (string.IsNullOrWhiteSpace(rawText))
+            return Empty;
 
-        JsonArray? array;
-        try
+        // The model is told to return only the array, but it sometimes wraps it
+        // in prose. Scan each '[' in turn so a bracketed phrase in that prose
+        // can't shadow the real array: a non-JSON phrase like "[Port Credit]"
+        // throws and we move on, and a valid-but-useless array like "[2026]"
+        // (no objects) is kept only as a fallback while we keep looking for an
+        // array that actually yields rows.
+        IngestionParseResult? fallback = null;
+        var searchFrom = 0;
+
+        while (searchFrom < rawText.Length)
         {
-            array = JsonNode.Parse(arrayText) as JsonArray;
-        }
-        catch (JsonException)
-        {
-            return new IngestionParseResult(Array.Empty<IngestionItem>(), 0, 0);
+            var open = rawText.IndexOf('[', searchFrom);
+            if (open < 0)
+                break;
+
+            var arrayText = ExtractJsonArray(rawText, open);
+            if (arrayText is null)
+                break; // no balanced array from here to the end
+
+            JsonArray? array = null;
+            try
+            {
+                array = JsonNode.Parse(arrayText) as JsonArray;
+            }
+            catch (JsonException)
+            {
+                // Not JSON (e.g. "[Port Credit]") — try the next bracket.
+            }
+
+            if (array is not null)
+            {
+                var result = BuildItems(array, type);
+                if (result.Items.Count > 0)
+                    return result;       // found the real data
+                fallback ??= result;     // valid array but no usable rows; keep looking
+            }
+
+            searchFrom = open + 1;
         }
 
-        if (array is null)
-            return new IngestionParseResult(Array.Empty<IngestionItem>(), 0, 0);
+        return fallback ?? Empty;
+    }
 
+    private static IngestionParseResult BuildItems(JsonArray array, IngestionType type)
+    {
         var items = new List<IngestionItem>();
         var rejected = 0;
         var considered = 0;
@@ -103,15 +136,16 @@ public sealed class IngestionResultParser
     }
 
     /// <summary>
-    /// Returns the substring spanning the first complete top-level JSON array in
-    /// <paramref name="text"/>, ignoring brackets that appear inside strings.
-    /// Lets prose or ```json fences wrap the array without breaking parsing.
+    /// Returns the substring spanning the first complete top-level JSON array at
+    /// or after <paramref name="startIndex"/>, ignoring brackets that appear
+    /// inside strings. Lets prose or ```json fences wrap the array, and lets the
+    /// caller resume scanning past a bracket that did not yield usable data.
     /// </summary>
-    internal static string? ExtractJsonArray(string text)
+    internal static string? ExtractJsonArray(string text, int startIndex = 0)
     {
-        if (string.IsNullOrWhiteSpace(text)) return null;
+        if (string.IsNullOrWhiteSpace(text) || startIndex < 0 || startIndex >= text.Length) return null;
 
-        var start = text.IndexOf('[');
+        var start = text.IndexOf('[', startIndex);
         if (start < 0) return null;
 
         var depth = 0;

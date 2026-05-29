@@ -38,7 +38,10 @@ public sealed class CatalogUpserter
 
     private async Task<UpsertResult> UpsertEventsAsync(IReadOnlyList<IngestionItem> items, CancellationToken ct)
     {
-        var existing = (await _db.LocalEvents.ToListAsync(ct))
+        var names = IncomingNames(items, maxLength: 200);
+        var existing = (await _db.LocalEvents
+                .Where(e => names.Contains(e.Name))
+                .ToListAsync(ct))
             .ToDictionary(EventKey, StringComparer.Ordinal);
 
         int inserted = 0, updated = 0, rejected = 0;
@@ -80,7 +83,10 @@ public sealed class CatalogUpserter
 
     private async Task<UpsertResult> UpsertActivitiesAsync(IReadOnlyList<IngestionItem> items, CancellationToken ct)
     {
-        var existing = (await _db.Activities.ToListAsync(ct))
+        var names = IncomingNames(items, maxLength: 160);
+        var existing = (await _db.Activities
+                .Where(a => names.Contains(a.Name))
+                .ToListAsync(ct))
             .GroupBy(a => a.Name.ToLowerInvariant(), StringComparer.Ordinal)
             .ToDictionary(g => g.Key, g => g.First(), StringComparer.Ordinal);
 
@@ -124,7 +130,10 @@ public sealed class CatalogUpserter
 
     private async Task<UpsertResult> UpsertRestaurantsAsync(IReadOnlyList<IngestionItem> items, CancellationToken ct)
     {
-        var existing = (await _db.Restaurants.ToListAsync(ct))
+        var names = IncomingNames(items, maxLength: 160);
+        var existing = (await _db.Restaurants
+                .Where(r => names.Contains(r.Name))
+                .ToListAsync(ct))
             .ToDictionary(r => $"{r.Name}|{r.Slot}".ToLowerInvariant(), StringComparer.Ordinal);
 
         int inserted = 0, updated = 0, rejected = 0;
@@ -161,6 +170,21 @@ public sealed class CatalogUpserter
 
         return new UpsertResult(inserted, updated, rejected);
     }
+
+    /// <summary>
+    /// The distinct, in-range names from the incoming batch. Scopes the
+    /// "load existing rows for dedupe" query to just the candidates (a SQL
+    /// <c>WHERE Name IN (...)</c>) instead of the whole table, keeping the
+    /// upsert O(batch) rather than O(catalog) as the catalog grows. Names
+    /// outside the column length are dropped here — they are rejected per-row
+    /// during the upsert anyway, so there is nothing to dedupe them against.
+    /// </summary>
+    private static List<string> IncomingNames(IReadOnlyList<IngestionItem> items, int maxLength)
+        => items
+            .Select(i => PayloadReader.GetStringOrEmpty(i.Payload, "name"))
+            .Where(n => n.Length > 0 && n.Length <= maxLength)
+            .Distinct(StringComparer.Ordinal)
+            .ToList();
 
     private static string EventKey(LocalEvent e)
         => $"{e.Name}|{e.StartsOn:yyyy-MM-dd}|{e.Location}".ToLowerInvariant();
