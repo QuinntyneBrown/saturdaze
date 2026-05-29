@@ -6,10 +6,12 @@ using Microsoft.Extensions.Logging;
 using Saturdaze.Application.Authentication;
 using Saturdaze.Application.Common;
 using Saturdaze.Cli.Database;
+using Saturdaze.Cli.Ingest;
 using Saturdaze.Cli.Migrate;
 using Saturdaze.Cli.Reset;
 using Saturdaze.Cli.Seed;
 using Saturdaze.Infrastructure.Authentication;
+using Saturdaze.Infrastructure.Ingestion;
 using Saturdaze.Infrastructure.Persistence;
 
 namespace Saturdaze.Cli.Hosting;
@@ -60,6 +62,9 @@ public static class CliHostFactory
                 services.AddScoped<SeedCommandHandler>();
                 services.AddScoped<MigrateCommandHandler>();
                 services.AddScoped<ResetCommandHandler>();
+
+                services.AddIngestion(ctx.Configuration);
+                services.AddScoped<IngestCommandHandler>();
             });
     }
 

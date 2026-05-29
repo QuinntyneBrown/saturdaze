@@ -14,6 +14,7 @@ public interface IAppDbContext
     DbSet<RestaurantVote> RestaurantVotes { get; }
     DbSet<RestaurantLock> RestaurantLocks { get; }
     DbSet<LocalEvent> LocalEvents { get; }
+    DbSet<IngestionRun> IngestionRuns { get; }
     DbSet<Weekend> Weekends { get; }
     DbSet<ItineraryBlock> ItineraryBlocks { get; }
     DbSet<ShoppingErrand> ShoppingErrands { get; }
