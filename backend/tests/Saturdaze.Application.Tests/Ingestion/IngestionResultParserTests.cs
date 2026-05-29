@@ -133,4 +133,28 @@ public class IngestionResultParserTests
         var item = _sut.Parse(text, IngestionType.Events).Items.Single();
         item.DisplayName.Should().Be("Art [installation]");
     }
+
+    [Fact]
+    public void Skips_leading_bracketed_prose_to_find_the_real_array()
+    {
+        // "[Port Credit]" is not valid JSON; "[2026]" is a valid array but has no
+        // objects. Neither must shadow the real array that follows.
+        const string text = """
+            Events near [Port Credit] for [2026]:
+            [ {"name":"Tulip Festival","startsOn":"2026-05-16","endsOn":"2026-05-17","location":"RBG"} ]
+            Hope this helps!
+            """;
+
+        var result = _sut.Parse(text, IngestionType.Events);
+
+        result.Items.Should().ContainSingle();
+        result.Items[0].DisplayName.Should().Be("Tulip Festival");
+    }
+
+    [Fact]
+    public void Valid_but_objectless_array_in_prose_yields_no_items()
+    {
+        var result = _sut.Parse("The year is [2026].", IngestionType.Events);
+        result.Items.Should().BeEmpty();
+    }
 }
