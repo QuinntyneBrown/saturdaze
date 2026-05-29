@@ -1,8 +1,11 @@
 # Schedule Ingestion — Detailed Design
 
-> Status: **Draft** — first version, awaiting review.
+> Status: **Implemented (v1)** — shipped as the `Saturdaze.Application/Ingestion`
+> pipeline, the Anthropic-backed `ClaudeWebSearchClient`, the `saturdaze ingest`
+> CLI command, and a new `Saturdaze.Worker` service. See
+> [§13 As-built notes](#13-as-built-notes).
 > Owner: Quinn (sole maintainer).
-> Last updated: 2026-05-17.
+> Last updated: 2026-05-29.
 
 ## 1. Overview
 
@@ -483,3 +486,68 @@ For the implementer (likely future-me), the order to land this:
 8. **Cut over** — drop `DEMO_WEEKEND_OF` from `frontend/projects/api/src/lib/services/events.service.ts` and read the active weekend from `WeekendPlanService.getOverview()` instead. The events table is now real.
 
 Each step is independently shippable; the catalog stays stale-but-working throughout.
+
+---
+
+## 13. As-built notes
+
+The v1 implementation follows this design closely. Where it differs, the reason
+is recorded here so the doc stays honest.
+
+### What shipped
+
+| Layer          | Types                                                                                                                                                  |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Domain         | `IngestionRun` entity, `IngestionType` / `IngestionStatus` enums.                                                                                       |
+| Application    | `IngestionRunner`, `IngestionResultParser`, `CatalogUpserter`, `IngestionPrompts`, `IngestionTypes`, `IngestionOptions`, the `IWebSearchClient` port, and a dependency-free `CronSchedule`. |
+| Infrastructure | `ClaudeWebSearchClient` (real Anthropic Messages API + `web_search` tool), `ClaudeWebSearchOptions`, `ClaudeApiException`, `IngestionRunConfiguration`, `AddIngestion(...)` DI. |
+| CLI            | `saturdaze ingest [--type …] [--dry-run]`.                                                                                                              |
+| Worker         | **`Saturdaze.Worker`** — a .NET Worker Service that owns the cron schedule and runs the same `IngestionRunner`. New project.                            |
+| Migration      | `AddIngestionRuns` — creates `IngestionRuns`; swaps the `LocalEvents` unique index to `(Name, StartsOn, Location)`.                                     |
+
+### Deviations from the draft (and why)
+
+1. **`IWebSearchClient` interface exists.** §7.5 argued against an interface.
+   But Application cannot reference Infrastructure in this solution's layering
+   (Domain ← Application ← Infrastructure), and `IngestionRunner` lives in
+   Application while the Anthropic client lives in Infrastructure. So a port is
+   required — modelled exactly like the existing `IWeatherClient` /
+   `OpenMeteoWeatherClient` pair. One implementation, no over-abstraction.
+
+2. **A `Saturdaze.Worker` service is the primary trigger**, not (only) an Azure
+   WebJob. It hosts a `BackgroundService` + the dependency-free `CronSchedule`,
+   so the cadence is portable across containers, systemd, K8s `CronJob`
+   (`RunOnceThenExit`), and Azure Container Apps — no Azure-only assumptions.
+   The WebJob remains available as a co-located alternative under
+   `backend/deploy/webjobs/ingest/`.
+
+3. **Activity dedupe key is `Name`**, not `(Name, Location)`/`(Name, Description)`
+   (open question 11.3). `Activity` has no `Location`, and the table already has
+   a unique index on `Name`; matching the real constraint is simpler and avoids
+   a fragile description-based key.
+
+4. **The Anthropic call uses a hand-rolled `HttpClient` wrapper**, not the
+   Anthropic SDK NuGet — same approach as `OpenMeteoWeatherClient`, no new
+   third-party dependency, and the exact request/response contract is pinned by
+   unit tests.
+
+5. **Cost circuit-breaker implemented** (open question 11.6) as
+   `IngestionOptions.MaxRunsPerDayPerType` (default 48): the runner refuses a
+   new pass for a type once the day's budget is hit, recording a `Failed` audit
+   row without calling the API.
+
+6. **Parser payloads are `JsonObject`**, not `JsonElement` — an owned node that
+   safely outlives the parse buffer.
+
+### Verified
+
+`dotnet build` clean; ingestion + cron unit tests pass (Application 95, the
+Anthropic client 7); `saturdaze ingest` and the Worker (run-once and
+cron-scheduled) smoke-run end to end, failing fast and audibly when
+`ANTHROPIC_API_KEY` is absent.
+
+### Not done in v1 (still open)
+
+- Step 8 (frontend `DEMO_WEEKEND_OF` cutover) is deliberately left out of this
+  backend-focused change.
+- A live billed run requires `ANTHROPIC_API_KEY` in the environment.

@@ -1,5 +1,6 @@
 using System.CommandLine;
 using Saturdaze.Cli.Hosting;
+using Saturdaze.Cli.Ingest;
 using Saturdaze.Cli.Migrate;
 using Saturdaze.Cli.Reset;
 using Saturdaze.Cli.Seed;
@@ -18,6 +19,7 @@ public static class RootCommandFactory
         root.AddCommand(SeedCommand.Build(args));
         root.AddCommand(MigrateCommand.Build(args));
         root.AddCommand(ResetCommand.Build(args));
+        root.AddCommand(IngestCommand.Build(args));
         return root;
     }
 }
