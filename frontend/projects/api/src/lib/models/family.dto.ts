@@ -4,10 +4,25 @@
  * preference dtos.
  */
 export interface FamilyDto {
+  /**
+   * Id.
+   */
   readonly id: string;
+  /**
+   * Home Location.
+   */
   readonly homeLocation: string;
+  /**
+   * Budget Enabled.
+   */
   readonly budgetEnabled: boolean;
+  /**
+   * Members.
+   */
   readonly members: ReadonlyArray<{ id: string; name: string; age: number }>;
+  /**
+   * Commitments.
+   */
   readonly commitments: ReadonlyArray<{
     id: string;
     title: string;
@@ -15,6 +30,9 @@ export interface FamilyDto {
     startTime: string;
     endTime: string;
   }>;
+  /**
+   * Preferences.
+   */
   readonly preferences: ReadonlyArray<{
     id: string;
     kind: 'Like' | 'Dislike';

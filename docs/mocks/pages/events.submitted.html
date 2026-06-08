@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Event submitted — Saturdaze</title>
+  <link rel="stylesheet" href="../styles/global.css" />
+  <script type="module" src="../app.js"></script>
+  <style>
+    @media (min-width: 720px) {
+      .submitted { max-width: 560px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="sd-frame">
+
+    <sd-top-bar title="Submitted" back></sd-top-bar>
+
+    <div class="submitted" style="padding: 24px var(--sd-app-pad-x); display:grid; gap:18px;">
+
+      <div style="display:grid; place-items:center; margin: 12px 0 0;">
+        <div style="width:72px; height:72px; border-radius:50%; background:var(--sd-primary-soft); color:var(--sd-primary); display:grid; place-items:center;">
+          <sd-icon name="check" size="32"></sd-icon>
+        </div>
+      </div>
+
+      <div style="text-align:center;">
+        <h2 style="font-size: 24px; font-weight: 700; letter-spacing: -0.02em; margin: 0 0 6px;">Thanks — it's in the queue</h2>
+        <p style="color: var(--sd-ink-soft); font-size: 15px; margin: 0;">I'll review "Port Credit Buskerfest" within a day. You'll get an in-app note when it's approved.</p>
+      </div>
+
+      <sd-card variant="sunk">
+        <div style="display:flex; gap:14px; align-items:flex-start;">
+          <div style="width:56px; flex-shrink:0; background:var(--sd-primary-soft); color:var(--sd-primary); border-radius:var(--sd-r-md); text-align:center; padding:8px 4px;">
+            <div style="font-size:10px; text-transform:uppercase; letter-spacing:0.1em; font-weight:600;">JUN</div>
+            <div style="font-size:22px; font-weight:700; line-height:1; margin-top:2px;">20</div>
+          </div>
+          <div style="flex:1; min-width:0;">
+            <div style="font-weight:600; letter-spacing:-0.005em;">Port Credit Buskerfest</div>
+            <div style="color:var(--sd-ink-soft); font-size:14px; margin-top:2px;">Lakeshore Rd · Sat 2pm – 9pm</div>
+            <div style="margin-top:8px;">
+              <sd-chip tone="sun">Pending review</sd-chip>
+            </div>
+          </div>
+        </div>
+      </sd-card>
+
+      <sd-card variant="sunk">
+        <div style="display:flex; gap:10px; align-items:flex-start;">
+          <sd-icon name="sparkle" size="18" style="color:var(--sd-primary); margin-top:2px;"></sd-icon>
+          <div style="font-size:14px;">
+            <div style="font-weight:600;">Only you can see it for now</div>
+            <div style="color:var(--sd-ink-soft); margin-top:4px;">It'll show up in your events feed marked "Pending review". Once approved, every Saturdaze family within driving distance sees it.</div>
+          </div>
+        </div>
+      </sd-card>
+
+      <div style="display:flex; gap:10px; padding-top:8px;">
+        <sd-button variant="secondary" full>Submit another</sd-button>
+        <sd-button full>
+          <sd-icon slot="leading" name="arrow_right" size="16"></sd-icon>
+          Back to events
+        </sd-button>
+      </div>
+    </div>
+
+    <sd-bottom-nav active="activities"></sd-bottom-nav>
+  </div>
+</body>
+</html>

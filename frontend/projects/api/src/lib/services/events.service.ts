@@ -36,6 +36,11 @@ const MONTH_ABBR = [
   'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC',
 ];
 
+/**
+ * Date Parts.
+ *
+ * @param {string} iso - The iso
+ */
 function dateParts(iso: string): { day: string; mon: string; date: Date } {
   // ISO date string `YYYY-MM-DD` — parse as UTC to avoid TZ drift.
   const [y, m, d] = iso.split('-').map(Number);
@@ -47,6 +52,13 @@ function dateParts(iso: string): { day: string; mon: string; date: Date } {
   };
 }
 
+/**
+ * To Local Event.
+ *
+ * @param {LocalEventDto} dto - The dto
+ *
+ * @returns {LocalEvent} The result of the operation
+ */
 function toLocalEvent(dto: LocalEventDto): LocalEvent {
   const parts = dateParts(dto.startsOn);
   return {
@@ -101,14 +113,27 @@ export class EventsService implements IEventsService {
 
   private readonly _view = signal<EventsView>(PLACEHOLDER_VIEW);
 
+  /**
+   * Constructor.
+   */
   constructor() {
     void this.load();
   }
 
+  /**
+   * List.
+   *
+   * @returns {Signal<EventsView>} The result of the operation
+   */
   list(): Signal<EventsView> {
     return this._view.asReadonly();
   }
 
+  /**
+   * Load.
+   *
+   * @returns {Promise<void>} The result of the operation
+   */
   async load(weekendOfIso?: string): Promise<void> {
     const weekendOf = weekendOfIso ?? DEMO_WEEKEND_OF;
     try {
@@ -134,6 +159,11 @@ export class EventsService implements IEventsService {
     }
   }
 
+  /**
+   * Fetch Weekend.
+   *
+   * @param {string} weekendOf - The weekend of
+   */
   private fetchWeekend(weekendOf: string) {
     return this.http.get<LocalEventDto[]>(
       `${this.baseUrl}/api/events?weekendOf=${weekendOf}&maxDriveMinutes=200`,
@@ -141,12 +171,27 @@ export class EventsService implements IEventsService {
   }
 }
 
+/**
+ * Add Days.
+ *
+ * @param {string} iso - The iso
+ * @param {number} days - The days
+ *
+ * @returns {string} The result of the operation
+ */
 function addDays(iso: string, days: number): string {
   const d = new Date(iso + 'T00:00:00Z');
   d.setUTCDate(d.getUTCDate() + days);
   return d.toISOString().substring(0, 10);
 }
 
+/**
+ * Dedupe.
+ *
+ * @param {LocalEventDto[]} rows - The rows
+ *
+ * @returns {LocalEventDto[]} The result of the operation
+ */
 function dedupe(rows: LocalEventDto[]): LocalEventDto[] {
   const seen = new Set<string>();
   const out: LocalEventDto[] = [];

@@ -1,4 +1,14 @@
-<sd-top-bar title="Local events" back />
+<sd-top-bar title="Local events" back>
+  <a
+    slot="trailing"
+    routerLink="/events/submit"
+    aria-label="Submit a new event"
+    title="Submit a new event"
+    class="events-header-action"
+  >
+    <sd-icon name="plus" [size]="18" />
+  </a>
+</sd-top-bar>
 
 <div class="events-lede">
   <h2>{{ view().heading }}</h2>
@@ -10,6 +20,24 @@
     <sd-chip [tone]="f.tone">{{ f.label }}</sd-chip>
   }
 </sd-tag-group>
+
+@if (myPending().length > 0) {
+  <sd-section title="Your submissions">
+    <div class="sd-card-grid">
+      @for (e of myPending(); track e.id) {
+        <sd-event-card
+          [title]="e.title"
+          [venue]="e.venue"
+          [when]="e.when"
+          [date-day]="e.dateDay"
+          [date-mon]="e.dateMon"
+        >
+          <sd-chip slot="chips" tone="sun">Pending review</sd-chip>
+        </sd-event-card>
+      }
+    </div>
+  </sd-section>
+}
 
 @for (s of view().sections; track s.title) {
   <sd-section [title]="s.title">
@@ -28,5 +56,15 @@
     </div>
   </sd-section>
 }
+
+<button
+  type="button"
+  class="events-fab"
+  aria-label="Submit a new event"
+  title="Submit a new event"
+  (click)="openQuickAdd()"
+>
+  <sd-icon name="plus" [size]="24" />
+</button>
 
 <sd-bottom-nav active="activities" />

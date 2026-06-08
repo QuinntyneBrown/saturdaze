@@ -54,6 +54,9 @@ const VOTE_PATTERNS: Record<string, ReadonlyArray<'up' | 'down' | 'none'>> = {
   "Jack Astor's":               ['up',   'up',   'up',   'up'],
 };
 
+/**
+ * Synth Votes.
+ */
 function synthVotes(
   dto: RestaurantDto,
 ): ReadonlyArray<FamilyVote> {
@@ -66,6 +69,13 @@ function synthVotes(
   }));
 }
 
+/**
+ * To Restaurant.
+ *
+ * @param {RestaurantDto} dto - The dto
+ *
+ * @returns {Restaurant} The result of the operation
+ */
 function toRestaurant(dto: RestaurantDto): Restaurant {
   return {
     id: dto.id,
@@ -90,14 +100,27 @@ export class RestaurantService implements IRestaurantService {
   private _lastLunch: RestaurantDto[] = [];
   private _lastDinner: RestaurantDto[] = [];
 
+  /**
+   * Constructor.
+   */
   constructor() {
     void this.load();
   }
 
+  /**
+   * List.
+   *
+   * @returns {Signal<RestaurantView>} The result of the operation
+   */
   list(): Signal<RestaurantView> {
     return this._view.asReadonly();
   }
 
+  /**
+   * Load.
+   *
+   * @returns {Promise<void>} The result of the operation
+   */
   async load(): Promise<void> {
     try {
       const [lunch, dinner] = await Promise.all([
@@ -121,6 +144,11 @@ export class RestaurantService implements IRestaurantService {
     }
   }
 
+  /**
+   * Refresh.
+   *
+   * @returns {Promise<void>} The result of the operation
+   */
   async refresh(): Promise<void> {
     if (this._lastLunch.length === 0) {
       await this.load();
@@ -130,6 +158,15 @@ export class RestaurantService implements IRestaurantService {
     this.project('Refreshing picks around the votes you already cast.');
   }
 
+  /**
+   * Vote.
+   *
+   * @param {string} restaurantId - The restaurant id
+   * @param {string} voterName - The voter name
+   * @param {Vote} vote - The vote
+   *
+   * @returns {Promise<void>} The result of the operation
+   */
   async vote(restaurantId: string, voterName: string, vote: Vote): Promise<void> {
     try {
       const dto = await firstValueFrom(
@@ -146,6 +183,13 @@ export class RestaurantService implements IRestaurantService {
     }
   }
 
+  /**
+   * Lock.
+   *
+   * @param {string} restaurantId - The restaurant id
+   *
+   * @returns {Promise<void>} The result of the operation
+   */
   async lock(restaurantId: string): Promise<void> {
     try {
       const dto = await firstValueFrom(
@@ -165,7 +209,21 @@ export class RestaurantService implements IRestaurantService {
     }
   }
 
+  /**
+   * Project.
+   *
+   * @param {any} lede - The lede
+   *
+   * @returns {void} No return value
+   */
   private project(lede = PLACEHOLDER_VIEW.lede): void {
+    /**
+     * By Name.
+     *
+     * @param {string} name - The name
+     *
+     * @returns {inferred} The result of the operation
+     */
     const byName = (name: string) => (r: RestaurantDto) => r.name === name;
     const lockedPick = this._lastLunch.find((r) => r.locked);
     const topPick = lockedPick ?? this._lastLunch.find(byName('La Marina')) ?? this._lastLunch[0];
@@ -195,18 +253,44 @@ export class RestaurantService implements IRestaurantService {
     });
   }
 
+  /**
+   * Replace Restaurant.
+   *
+   * @param {RestaurantDto} dto - The dto
+   *
+   * @returns {void} No return value
+   */
   private replaceRestaurant(dto: RestaurantDto): void {
+    /**
+     * Replace.
+     *
+     * @param {RestaurantDto[]} rows - The rows
+     *
+     * @returns {inferred} The result of the operation
+     */
     const replace = (rows: RestaurantDto[]) => rows.map((r) => (r.id === dto.id ? dto : r));
     this._lastLunch = replace(this._lastLunch);
     this._lastDinner = replace(this._lastDinner);
   }
 }
 
+/**
+ * Menu Url For.
+ *
+ * @param {string} name - The name
+ *
+ * @returns {string} The result of the operation
+ */
 function menuUrlFor(name: string): string {
   const slug = encodeURIComponent(`${name} menu`);
   return `https://www.google.com/search?q=${slug}`;
 }
 
+/**
+ * Today Iso.
+ *
+ * @returns {string} The result of the operation
+ */
 function todayIso(): string {
   const d = new Date();
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;

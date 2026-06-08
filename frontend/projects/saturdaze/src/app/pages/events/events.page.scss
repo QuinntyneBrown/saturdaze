@@ -14,3 +14,54 @@
     margin: 0 0 16px;
   }
 }
+
+.events-header-action {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--sd-surface);
+  border: 1px solid var(--sd-line);
+  color: var(--sd-ink);
+  text-decoration: none;
+}
+
+/* Floating "Submit an event" FAB.
+   Sits above the mobile bottom nav (~60px tall + 12px gap), and clears the
+   left rail on tablet/desktop. Traces to L2-048. */
+.events-fab {
+  position: fixed;
+  right: 16px;
+  bottom: 84px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: none;
+  background: var(--sd-primary);
+  color: #fff;
+  box-shadow: var(--sd-shadow-3, 0 8px 24px rgba(0, 0, 0, 0.18));
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9;
+  transition: transform var(--sd-dur-fast) var(--sd-ease);
+}
+
+.events-fab:hover {
+  transform: translateY(-2px);
+}
+
+.events-fab:focus-visible {
+  outline: 2px solid var(--sd-primary);
+  outline-offset: 3px;
+}
+
+@media (min-width: 720px) {
+  .events-fab {
+    bottom: 28px;
+    right: 28px;
+  }
+}

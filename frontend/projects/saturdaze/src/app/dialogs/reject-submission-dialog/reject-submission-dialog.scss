@@ -1,0 +1,47 @@
+:host { display: block; }
+
+.card-row {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+
+  sd-icon { color: var(--sd-warn, #ce8a17); margin-top: 2px; }
+}
+
+.card-body { font-size: var(--sd-fs-sm); }
+.strong { font-weight: var(--sd-fw-semibold); }
+.muted { color: var(--sd-ink-soft); margin-top: 4px; }
+
+.field {
+  display: grid;
+  gap: 6px;
+  margin-top: 12px;
+  font-size: var(--sd-fs-sm);
+  font-weight: var(--sd-fw-medium);
+}
+
+.field textarea {
+  font: inherit;
+  padding: 10px 12px;
+  border-radius: var(--sd-r-md);
+  border: 1px solid var(--sd-line);
+  background: var(--sd-surface);
+  color: var(--sd-ink);
+  resize: vertical;
+  font-weight: var(--sd-fw-regular);
+}
+
+.field textarea:focus {
+  outline: none;
+  border-color: var(--sd-primary);
+  box-shadow: 0 0 0 3px var(--sd-primary-soft);
+}
+
+.field .optional {
+  font-size: var(--sd-fs-xs);
+  font-weight: var(--sd-fw-regular);
+  color: var(--sd-ink-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-left: 8px;
+}

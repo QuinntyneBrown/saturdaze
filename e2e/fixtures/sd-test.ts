@@ -19,6 +19,9 @@ import { ActivitiesPage } from "../pages/activities.page.js";
 import { RestaurantsPage } from "../pages/restaurants.page.js";
 import { SavedPage } from "../pages/saved.page.js";
 import { EventsPage } from "../pages/events.page.js";
+import { EventsSubmitPage } from "../pages/events-submit.page.js";
+import { EventsSubmittedPage } from "../pages/events-submitted.page.js";
+import { AdminEventsPage } from "../pages/admin-events.page.js";
 import { ErrandPage } from "../pages/errand.page.js";
 import { ProfilePage } from "../pages/profile.page.js";
 import { DialogsPage } from "../pages/dialogs.page.js";
@@ -38,6 +41,9 @@ interface Pages {
   restaurants: RestaurantsPage;
   saved: SavedPage;
   events: EventsPage;
+  eventsSubmit: EventsSubmitPage;
+  eventsSubmitted: EventsSubmittedPage;
+  adminEvents: AdminEventsPage;
   errand: ErrandPage;
   profile: ProfilePage;
   dialogs: DialogsPage;
@@ -72,6 +78,9 @@ export const test = base.extend<SdFixtures>({
       restaurants: new RestaurantsPage(page),
       saved: new SavedPage(page),
       events: new EventsPage(page),
+      eventsSubmit: new EventsSubmitPage(page),
+      eventsSubmitted: new EventsSubmittedPage(page),
+      adminEvents: new AdminEventsPage(page),
       errand: new ErrandPage(page),
       profile: new ProfilePage(page),
       dialogs: new DialogsPage(page),

@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>User-Contributed Local Events - Implementation Plan</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">User-Contributed Local Events - Implementation
+Plan</h1>
+</header>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#user-contributed-local-events-implementation-plan"
+id="toc-user-contributed-local-events-implementation-plan">User-Contributed
+Local Events — Implementation Plan</a>
+<ul>
+<li><a href="#context" id="toc-context">Context</a></li>
+<li><a href="#step-0-generate-html-version-of-this-plan"
+id="toc-step-0-generate-html-version-of-this-plan">Step 0 — Generate
+HTML version of this plan</a></li>
+<li><a href="#step-1-backend-domain-migration"
+id="toc-step-1-backend-domain-migration">Step 1 — Backend domain &amp;
+migration</a></li>
+<li><a href="#step-2-application-layer-cqrs-handlers-dtos"
+id="toc-step-2-application-layer-cqrs-handlers-dtos">Step 2 —
+Application layer (CQRS handlers + DTOs)</a></li>
+<li><a href="#step-3-api-controller" id="toc-step-3-api-controller">Step
+3 — API controller</a></li>
+<li><a href="#step-4-backend-tests" id="toc-step-4-backend-tests">Step 4
+— Backend tests</a></li>
+<li><a href="#step-5-frontend-api-service-contract"
+id="toc-step-5-frontend-api-service-contract">Step 5 — Frontend: API
+service contract</a></li>
+<li><a href="#step-6-frontend-submit-event-screen-dialog"
+id="toc-step-6-frontend-submit-event-screen-dialog">Step 6 — Frontend:
+Submit-event screen + dialog</a></li>
+<li><a href="#step-7-frontend-admin-moderation-surface"
+id="toc-step-7-frontend-admin-moderation-surface">Step 7 — Frontend:
+Admin moderation surface</a></li>
+<li><a href="#step-8-e2e-playwright-poms-specs-visual-baselines"
+id="toc-step-8-e2e-playwright-poms-specs-visual-baselines">Step 8 — E2E:
+Playwright POMs, specs, visual baselines</a></li>
+<li><a href="#step-9-seed-data-cli" id="toc-step-9-seed-data-cli">Step 9
+— Seed data + CLI</a></li>
+<li><a href="#step-10-documentation-tie-up"
+id="toc-step-10-documentation-tie-up">Step 10 — Documentation
+tie-up</a></li>
+<li><a href="#critical-files-reference"
+id="toc-critical-files-reference">Critical files reference</a></li>
+<li><a href="#verification-end-to-end"
+id="toc-verification-end-to-end">Verification — end-to-end</a></li>
+<li><a href="#out-of-scope-deliberate"
+id="toc-out-of-scope-deliberate">Out of scope (deliberate)</a></li>
+</ul></li>
+</ul>
+</nav>
+<h1
+id="user-contributed-local-events-implementation-plan">User-Contributed
+Local Events — Implementation Plan</h1>
+<blockquote>
+<p>Traces to <strong>L1-018</strong> and <strong>L2-046 →
+L2-050</strong> in <code>docs/specs/</code>. Mocks:
+<code>docs/mocks/pages/events.html</code> (FAB added),
+<code>events.submit.html</code> (new),
+<code>events.submitted.html</code> (new), <code>admin.events.html</code>
+(new), <code>dialogs.html</code> (M-D13/14/15).</p>
+</blockquote>
+<hr />
+<h2 id="context">Context</h2>
+<p>Saturdaze currently has a curated <code>LocalEvent</code> catalogue
+seeded from <code>local-events.json</code> and served read-only at
+<code>GET /api/events</code>. There is no way for a family to tell
+Saturdaze about something the system doesn’t already know — a school
+fair, a Buskerfest, a one-off concert — even though those are exactly
+the kind of events the Browns would want in their weekend.</p>
+<p>L1-018 closes that gap: any authenticated user can submit an event;
+admin approval gates publication so the curated feed stays clean; the
+submitter sees status in their own feed without any new notification
+plumbing.</p>
+<p><strong>Why now:</strong> the events page is otherwise
+feature-complete, but its value is bounded by what the seed list happens
+to cover. User contribution is the cheapest way to grow coverage without
+paid editorial work.</p>
+<p><strong>Confirmed design choices (from clarification):</strong></p>
+<ol type="1">
+<li><strong>Notify approach</strong> — status visible in the submitter’s
+own feed only (no email / no notifications table).</li>
+<li><strong>Admin entry point</strong> — admin-only link inside the
+Profile page when <code>role === 'Admin'</code>; bottom-nav stays four
+items.</li>
+<li><strong>Data model</strong> — separate <code>EventSubmissions</code>
+table; on approve, copy fields into the existing
+<code>LocalEvents</code> table (public read path unchanged).</li>
+</ol>
+<hr />
+<h2 id="step-0-generate-html-version-of-this-plan">Step 0 — Generate
+HTML version of this plan</h2>
+<p>Plan mode permits only editing this markdown file. Once
+implementation starts, the first action is:</p>
+<pre><code>pandoc &lt;this-file&gt; -s -o docs/user-contributed-events-plan.html \
+  --metadata title=&quot;User-Contributed Local Events — Implementation Plan&quot;</code></pre>
+<p>If pandoc isn’t installed, render via a tiny inline Node script
+(<code>marked</code> is already in the workspace) into
+<code>docs/user-contributed-events-plan.html</code>. The HTML is for
+sharing/reviewability — the markdown stays the source of truth.</p>
+<hr />
+<h2 id="step-1-backend-domain-migration">Step 1 — Backend domain &amp;
+migration</h2>
+<p><strong>Files to add:</strong></p>
+<ul>
+<li><code>backend/src/Saturdaze.Domain/Entities/EventSubmission.cs</code></li>
+<li><code>backend/src/Saturdaze.Domain/Enums/EventSubmissionStatus.cs</code>
+— <code>Pending = 0, Approved = 1, Rejected = 2</code></li>
+<li><code>backend/src/Saturdaze.Infrastructure/Persistence/Configurations/EventSubmissionConfiguration.cs</code></li>
+<li><code>backend/src/Saturdaze.Infrastructure/Migrations/&lt;timestamp&gt;_AddEventSubmissions.cs</code>
+(+ <code>.Designer.cs</code>)</li>
+</ul>
+<p><strong>Files to edit:</strong></p>
+<ul>
+<li><code>backend/src/Saturdaze.Infrastructure/Persistence/AppDbContext.cs</code>
+— add <code>DbSet&lt;EventSubmission&gt; EventSubmissions</code>.</li>
+<li><code>backend/src/Saturdaze.Application/Abstractions/IAppDbContext.cs</code>
+— expose the new DbSet.</li>
+</ul>
+<p><code>EventSubmission</code> fields (mirror <code>LocalEvent</code>
+plus moderation metadata):</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Id</code></td>
+<td><code>Guid</code></td>
+<td>PK</td>
+</tr>
+<tr>
+<td><code>Title</code></td>
+<td><code>string(200)</code></td>
+<td>required</td>
+</tr>
+<tr>
+<td><code>StartsAtLocal</code></td>
+<td><code>DateTime</code></td>
+<td>required (local wall-time; tz handled later)</td>
+</tr>
+<tr>
+<td><code>EndsAtLocal</code></td>
+<td><code>DateTime?</code></td>
+<td>optional</td>
+</tr>
+<tr>
+<td><code>Location</code></td>
+<td><code>string(200)?</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>Description</code></td>
+<td><code>string(2000)?</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>CostNote</code></td>
+<td><code>string(80)?</code></td>
+<td>free text per L2-046</td>
+</tr>
+<tr>
+<td><code>AgeRange</code></td>
+<td><code>string(80)?</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>SourceUrl</code></td>
+<td><code>string(500)?</code></td>
+<td>http(s) only</td>
+</tr>
+<tr>
+<td><code>Category</code></td>
+<td><code>string(80)?</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>DriveMinutes</code></td>
+<td><code>int?</code></td>
+<td>filled at approval</td>
+</tr>
+<tr>
+<td><code>Status</code></td>
+<td><code>EventSubmissionStatus</code></td>
+<td>indexed</td>
+</tr>
+<tr>
+<td><code>SubmittedByUserId</code></td>
+<td><code>Guid</code></td>
+<td>FK → <code>Users</code>, indexed</td>
+</tr>
+<tr>
+<td><code>SubmittedAtUtc</code></td>
+<td><code>DateTime</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>ReviewedByUserId</code></td>
+<td><code>Guid?</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>ReviewedAtUtc</code></td>
+<td><code>DateTime?</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>RejectionReason</code></td>
+<td><code>string(500)?</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>PublishedEventId</code></td>
+<td><code>Guid?</code></td>
+<td>FK → <code>LocalEvents</code> once approved</td>
+</tr>
+</tbody>
+</table>
+<p>Indexes: <code>(Status, SubmittedAtUtc)</code> for the oldest-first
+queue (per <strong>L2-050 #4</strong>), <code>(SubmittedByUserId)</code>
+for the <code>/mine</code> endpoint.</p>
+<p>Migration class naming follows the existing pattern
+(<code>yyyyMMddHHmmss_AddEventSubmissions</code>, see
+<code>20260517123000_AddRestaurantActionState.cs</code>).</p>
+<hr />
+<h2 id="step-2-application-layer-cqrs-handlers-dtos">Step 2 —
+Application layer (CQRS handlers + DTOs)</h2>
+<p><strong>Files to add</strong> under
+<code>backend/src/Saturdaze.Application/EventSubmissions/</code>:</p>
+<ul>
+<li><code>EventSubmissionDto.cs</code> — flat record returned from all
+endpoints.</li>
+<li><code>SubmitEventCommand.cs</code> +
+<code>SubmitEventCommandHandler.cs</code> — covers
+<strong>L2-046</strong>.
+<ul>
+<li>Validates <code>Title</code> non-empty, <code>StartsAtLocal</code>
+parses, <code>SourceUrl</code> is http(s).</li>
+<li>Sets <code>Status = Pending</code>, <code>SubmittedByUserId</code>
+from <code>ICurrentUserAccessor</code>.</li>
+</ul></li>
+<li><code>ListMySubmissionsQuery.cs</code> + handler — covers
+<strong>L2-049</strong>
+(<code>GET /api/events/submissions/mine</code>).</li>
+<li><code>ListPendingSubmissionsQuery.cs</code> + handler — admin queue,
+oldest-first.</li>
+<li><code>ApproveSubmissionCommand.cs</code> + handler — sets status,
+creates a <code>LocalEvent</code> row, sets
+<code>PublishedEventId</code>. Idempotent: re-approving an
+already-approved row is a no-op.</li>
+<li><code>RejectSubmissionCommand.cs</code> + handler — sets status +
+reason; cannot reject an already-approved row (returns 409).</li>
+</ul>
+<p><strong>Reuse:</strong></p>
+<ul>
+<li><code>ICurrentUserAccessor</code> from
+<code>backend/src/Saturdaze.Api/Authentication/HttpContextCurrentUserAccessor.cs</code>
+(already injected via
+<code>Saturdaze.Application.Abstractions.ICurrentUser</code>).</li>
+<li>The existing <code>LocalEvent</code> entity for the
+publish-on-approve copy.</li>
+</ul>
+<p><strong>Skip:</strong> no MediatR pipeline behaviours beyond what’s
+already wired; no validator library — the handlers throw the existing
+<code>ValidationException</code> like other commands do.</p>
+<hr />
+<h2 id="step-3-api-controller">Step 3 — API controller</h2>
+<p><strong>File to add:</strong>
+<code>backend/src/Saturdaze.Api/Controllers/EventSubmissionsController.cs</code>.</p>
+<p>Routes:</p>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr>
+<th>Verb</th>
+<th>Route</th>
+<th>Authorize</th>
+<th>Handler</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>POST</code></td>
+<td><code>/api/events/submissions</code></td>
+<td><code>[Authorize]</code></td>
+<td><code>SubmitEventCommand</code></td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/api/events/submissions/mine</code></td>
+<td><code>[Authorize]</code></td>
+<td><code>ListMySubmissionsQuery</code></td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/api/events/submissions/pending</code></td>
+<td><code>[Authorize(Policy = "Admin")]</code></td>
+<td><code>ListPendingSubmissionsQuery</code></td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><code>/api/events/submissions/{id}/approve</code></td>
+<td><code>[Authorize(Policy = "Admin")]</code></td>
+<td><code>ApproveSubmissionCommand</code></td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><code>/api/events/submissions/{id}/reject</code></td>
+<td><code>[Authorize(Policy = "Admin")]</code></td>
+<td><code>RejectSubmissionCommand</code></td>
+</tr>
+</tbody>
+</table>
+<p>The <code>"Admin"</code> policy already exists in
+<code>Program.cs</code> (lines 75–78) but is currently unused — this is
+its first consumer.</p>
+<p><strong>No change</strong> to the existing
+<code>EventsController.GetEvents</code> — the public feed continues to
+read from <code>LocalEvents</code>, so approved-and-copied submissions
+surface automatically.</p>
+<hr />
+<h2 id="step-4-backend-tests">Step 4 — Backend tests</h2>
+<p><strong>Files to add:</strong></p>
+<ul>
+<li><code>backend/tests/Saturdaze.Application.Tests/EventSubmissions/SubmitEventCommandHandlerTests.cs</code>
+— unit tests for validation rules (L2-046 #3, #4) and default
+behaviour.</li>
+<li><code>backend/tests/Saturdaze.Application.Tests/EventSubmissions/ApproveSubmissionCommandHandlerTests.cs</code>
+— verifies a new <code>LocalEvents</code> row appears, idempotency.</li>
+<li><code>backend/tests/Saturdaze.Api.Tests/EventSubmissions/EventSubmissionsControllerTests.cs</code>
+— integration tests covering:
+<ul>
+<li>L2-046 #1 (201, status=pending, hidden from
+<code>GET /api/events</code>)</li>
+<li>L2-046 #2 (401 unauthenticated)</li>
+<li>L2-049 #1, #2 (user sees own / not others’)</li>
+<li>L2-050 #1, #2, #3 (admin approve flow, reject with reason, non-admin
+403)</li>
+</ul></li>
+</ul>
+<p>Test fixture: extend <code>SaturdazeApiFactory</code> (no changes
+needed — it already migrates + seeds per fixture).</p>
+<p>Pattern: mirror
+<code>backend/tests/Saturdaze.Api.Tests/Catalog/CatalogControllerTests.cs</code>.
+Every test header carries <code>// Traces to: L2-NNN</code>.</p>
+<hr />
+<h2 id="step-5-frontend-api-service-contract">Step 5 — Frontend: API
+service contract</h2>
+<p><strong>Files to add</strong> under
+<code>frontend/projects/api/src/lib/services/</code>:</p>
+<ul>
+<li><code>event-submissions.service.contract.ts</code> —
+<code>IEventSubmissionsService</code> interface +
+<code>EVENT_SUBMISSIONS_SERVICE</code> <code>InjectionToken</code>
+(matches the project-wide pattern, see
+<code>events.service.contract.ts</code>).</li>
+<li><code>event-submissions.service.ts</code> — concrete class binding
+to the controller above.</li>
+</ul>
+<p><strong>Files to edit:</strong></p>
+<ul>
+<li><code>frontend/projects/api/src/lib/models/</code> — new
+<code>event-submission.ts</code> model +
+<code>event-submission-status.ts</code> union.</li>
+<li><code>frontend/projects/api/src/public-api.ts</code> —
+re-export.</li>
+<li><code>frontend/projects/saturdaze/src/app/app.config.ts</code> —
+provider binding for <code>EVENT_SUBMISSIONS_SERVICE</code> (line ~46,
+mirror the <code>EVENTS_SERVICE</code> binding).</li>
+</ul>
+<p>Methods on the service:</p>
+<ul>
+<li><code>submit(payload): Promise&lt;EventSubmission&gt;</code></li>
+<li><code>listMine(): Signal&lt;EventSubmission[]&gt;</code> +
+<code>loadMine(): Promise&lt;void&gt;</code> (signal-based like
+<code>EventsService</code>)</li>
+<li><code>listPending(): Signal&lt;EventSubmission[]&gt;</code> +
+<code>loadPending(): Promise&lt;void&gt;</code></li>
+<li><code>approve(id): Promise&lt;void&gt;</code></li>
+<li><code>reject(id, reason?): Promise&lt;void&gt;</code></li>
+</ul>
+<hr />
+<h2 id="step-6-frontend-submit-event-screen-dialog">Step 6 — Frontend:
+Submit-event screen + dialog</h2>
+<p><strong>Files to add:</strong></p>
+<ul>
+<li><code>frontend/projects/saturdaze/src/app/pages/events-submit/events-submit.page.ts</code>
+(+ <code>.html</code>, <code>.css</code>).
+<ul>
+<li>Route: <code>/events/submit</code>, lazy-loaded,
+<code>requireAuth</code> guard.</li>
+<li>Reactive form: <code>title</code> (required),
+<code>startsAtLocal</code> (required, defaults via the helper below),
+<code>location?</code>, <code>description?</code>,
+<code>costNote?</code>, <code>ageRange?</code>,
+<code>sourceUrl?</code>.</li>
+<li>Submit button disabled while <code>title</code> empty / form invalid
+(<strong>L2-047 #3</strong>).</li>
+<li>On success → navigate to <code>/events/submitted</code> with the new
+submission ID in router state.</li>
+</ul></li>
+<li><code>frontend/projects/saturdaze/src/app/pages/events-submitted/events-submitted.page.ts</code>
+(+ <code>.html</code>).</li>
+<li><code>frontend/projects/saturdaze/src/app/dialogs/submit-event-dialog/submit-event-dialog.ts</code>
+(+ <code>.html</code>) — CDK <code>Dialog</code> per
+<strong>[feedback_dialogs_cdk]</strong>; identical reactive form, plus
+an “Open full form” action that closes and routes to
+<code>/events/submit</code>.</li>
+<li><code>frontend/projects/saturdaze/src/app/shared/next-hour-default.ts</code>
+— pure helper <code>nextHourFromNow(now: Date): Date</code> covering
+<strong>L2-047 #1 &amp; #2</strong>. Unit-test in
+<code>frontend/projects/saturdaze/src/app/shared/next-hour-default.spec.ts</code>.</li>
+</ul>
+<p><strong>Files to edit:</strong></p>
+<ul>
+<li><code>frontend/projects/saturdaze/src/app/pages/events/events.page.ts</code>
++ <code>.html</code>:
+<ul>
+<li>Add the FAB button (per <strong>L2-048</strong>) — anchor
+<code>[routerLink]="'/events/submit'"</code>,
+<code>aria-label="Submit a new event"</code>.</li>
+<li>Add the top-bar header action (mobile collapses, ≥720px shows). Same
+routerLink.</li>
+<li>Add a “Your submissions” section bound to
+<code>eventSubmissions.listMine()</code>, rendering
+<code>sd-event-card</code> with a <code>tone="sun"</code> chip “Pending
+review” (covers <strong>L2-049 #3</strong>).</li>
+<li>Call <code>eventSubmissions.loadMine()</code> from the existing
+<code>ngOnInit</code> alongside <code>events.load()</code>.</li>
+</ul></li>
+</ul>
+<p><strong>Reuse:</strong> <code>sd-event-card</code>,
+<code>sd-chip</code>, <code>sd-button</code>, <code>sd-text-input</code>
+from <code>frontend/projects/components/src/lib/</code> — all already
+present.</p>
+<hr />
+<h2 id="step-7-frontend-admin-moderation-surface">Step 7 — Frontend:
+Admin moderation surface</h2>
+<p><strong>Files to add:</strong></p>
+<ul>
+<li><code>frontend/projects/saturdaze/src/app/pages/admin-events/admin-events.page.ts</code>
+(+ <code>.html</code>, <code>.css</code>).
+<ul>
+<li>Route: <code>/admin/events</code>, lazy-loaded, with a new
+<code>requireAdmin</code> guard (see below).</li>
+<li>Three tabs (Pending / Approved / Rejected); only the Pending list is
+interactive — per <strong>L2-050</strong>.</li>
+<li>Each row: approve → opens M-D14 confirm dialog; reject → opens M-D15
+confirm + reason dialog.</li>
+<li>On success, remove the row from the local signal (<strong>L2-050
+#5</strong>).</li>
+</ul></li>
+<li><code>frontend/projects/saturdaze/src/app/dialogs/approve-submission-dialog/approve-submission-dialog.ts</code></li>
+<li><code>frontend/projects/saturdaze/src/app/dialogs/reject-submission-dialog/reject-submission-dialog.ts</code></li>
+<li><code>frontend/projects/saturdaze/src/app/guards/require-admin.guard.ts</code>
+— uses <code>SESSION_STORE.user()?.role === 'Admin'</code>; redirects to
+<code>/weekend</code> otherwise.</li>
+</ul>
+<p><strong>Files to edit:</strong></p>
+<ul>
+<li><code>frontend/projects/saturdaze/src/app/app.routes.ts</code> —
+register <code>/events/submit</code>, <code>/events/submitted</code>,
+<code>/admin/events</code> routes.</li>
+<li><code>frontend/projects/saturdaze/src/app/pages/profile/profile.page.html</code>
+— add an “Admin tools” section that’s rendered only when
+<code>session.user()?.role === 'Admin'</code>, linking to
+<code>/admin/events</code>. Cheapest entry point that preserves the
+four-item bottom-nav.</li>
+</ul>
+<p><strong>Reuse:</strong> existing <code>Dialog</code> injection
+pattern from <code>profile.page.ts</code> line 67 /
+<code>family-member-dialog.ts</code>.</p>
+<hr />
+<h2 id="step-8-e2e-playwright-poms-specs-visual-baselines">Step 8 — E2E:
+Playwright POMs, specs, visual baselines</h2>
+<p><strong>Files to add</strong> under <code>e2e/</code>:</p>
+<ul>
+<li><code>pages/events-submit.page.ts</code> — POM extending
+<code>BasePage</code>; locators for title input, datetime input, submit
+button.</li>
+<li><code>pages/admin-events.page.ts</code> — POM with locators for each
+pending row + approve/reject buttons.</li>
+<li><code>tests/events-submit.spec.ts</code> — behaviour: open FAB,
+enter title only, submit, land on <code>/events/submitted</code>. Traces
+to <strong>L2-047</strong> &amp; <strong>L2-048</strong>.</li>
+<li><code>tests/admin-events.spec.ts</code> — admin approves a row; row
+disappears; the row’s event then appears in
+<code>GET /api/events</code>. Traces to <strong>L2-050</strong>.</li>
+<li><code>tests/visual/events-submit.visual.spec.ts</code></li>
+<li><code>tests/visual/events-submitted.visual.spec.ts</code></li>
+<li><code>tests/visual/admin-events.visual.spec.ts</code></li>
+</ul>
+<p><strong>Files to edit:</strong></p>
+<ul>
+<li><code>e2e/fixtures/routes.ts</code> — add three new entries:
+<ul>
+<li><code>eventsSubmit: { app: '/events/submit', mock: '/pages/events.submit.html' }</code></li>
+<li><code>eventsSubmitted: { app: '/events/submitted', mock: '/pages/events.submitted.html' }</code></li>
+<li><code>adminEvents: { app: '/admin/events', mock: '/pages/admin.events.html' }</code></li>
+</ul></li>
+<li><code>tests/visual/events.visual.spec.ts</code> — re-baseline (FAB
+now visible, “Your submissions” section added).</li>
+</ul>
+<p><strong>Capture baselines:</strong>
+<code>cd e2e &amp;&amp; npm run baseline</code> (sets
+<code>SD_BASELINE=1</code> and updates snapshots from the mock HTML —
+per <strong>[project_e2e_suite]</strong>).</p>
+<hr />
+<h2 id="step-9-seed-data-cli">Step 9 — Seed data + CLI</h2>
+<p><strong>Files to edit:</strong></p>
+<ul>
+<li><code>backend/src/Saturdaze.Cli/Seed/SeedData/users.json</code> —
+add one admin user (<code>role: "Admin"</code>) for local dev so the
+moderation queue is reachable.</li>
+<li><code>backend/src/Saturdaze.Cli/Seed/SeedData/event-submissions.json</code>
+(<strong>new</strong>) — three pending sample rows mirroring the admin
+mock so screenshot fidelity holds end-to-end.</li>
+<li><code>backend/src/Saturdaze.Cli/Seed/EventSubmissionSeeder.cs</code>
+(<strong>new</strong>) — implements <code>IJsonSeeder</code>, registered
+in <code>SeedCommandHandler</code> alongside
+<code>LocalEventSeeder</code>.</li>
+</ul>
+<p>Idempotency rule (per <strong>[project_cli_workflow]</strong> +
+<strong>L2-044</strong>): seeder must upsert by
+<code>Title + SubmittedByUserId + StartsAtLocal</code>.</p>
+<hr />
+<h2 id="step-10-documentation-tie-up">Step 10 — Documentation
+tie-up</h2>
+<p><strong>Files to edit:</strong></p>
+<ul>
+<li><code>docs/user-guide/07-events-this-weekend.md</code> — add a
+“Submit a new event” subsection.</li>
+<li><code>docs/user-guide/README.md</code> — mention the new admin guide
+stub if any.</li>
+<li><code>docs/adr/ADR-006-event-submission-flow.md</code>
+(<strong>new</strong>) — record the three design choices made here
+(separate table; status-only notification; profile-page admin link). One
+page.</li>
+</ul>
+<hr />
+<h2 id="critical-files-reference">Critical files reference</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Concern</th>
+<th>Path</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Existing event entity</td>
+<td><code>backend/src/Saturdaze.Domain/Entities/LocalEvent.cs</code></td>
+</tr>
+<tr>
+<td>Existing events controller</td>
+<td><code>backend/src/Saturdaze.Api/Controllers/EventsController.cs</code></td>
+</tr>
+<tr>
+<td>DbContext</td>
+<td><code>backend/src/Saturdaze.Infrastructure/Persistence/AppDbContext.cs</code></td>
+</tr>
+<tr>
+<td>Admin policy declaration</td>
+<td><code>backend/src/Saturdaze.Api/Program.cs</code> (lines 75–78)</td>
+</tr>
+<tr>
+<td>Current-user accessor</td>
+<td><code>backend/src/Saturdaze.Api/Authentication/HttpContextCurrentUserAccessor.cs</code></td>
+</tr>
+<tr>
+<td>API test factory</td>
+<td><code>backend/tests/Saturdaze.Api.Tests/Support/SaturdazeApiFactory.cs</code></td>
+</tr>
+<tr>
+<td>Frontend events service contract</td>
+<td><code>frontend/projects/api/src/lib/services/events.service.contract.ts</code></td>
+</tr>
+<tr>
+<td>Frontend session/role</td>
+<td><code>frontend/projects/api/src/lib/services/session-store.contract.ts</code></td>
+</tr>
+<tr>
+<td>CDK dialog example</td>
+<td><code>frontend/projects/saturdaze/src/app/dialogs/family-member-dialog/family-member-dialog.ts</code></td>
+</tr>
+<tr>
+<td>Components library exports</td>
+<td><code>frontend/projects/components/src/public-api.ts</code></td>
+</tr>
+<tr>
+<td>App routes</td>
+<td><code>frontend/projects/saturdaze/src/app/app.routes.ts</code></td>
+</tr>
+<tr>
+<td>E2E base POM</td>
+<td><code>e2e/pages/base.page.ts</code></td>
+</tr>
+<tr>
+<td>E2E route map</td>
+<td><code>e2e/fixtures/routes.ts</code></td>
+</tr>
+<tr>
+<td>Mocks (already done)</td>
+<td><code>docs/mocks/pages/events.{html,submit.html,submitted.html}</code>,
+<code>admin.events.html</code>, <code>dialogs.html</code></td>
+</tr>
+<tr>
+<td>Requirements</td>
+<td><code>docs/specs/L1.md</code> (L1-018),
+<code>docs/specs/L2.md</code> (L2-046 → L2-050)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="verification-end-to-end">Verification — end-to-end</h2>
+<p>Run these after Step 9 in order:</p>
+<ol type="1">
+<li><strong>Backend unit + integration tests</strong> —
+<code>cd backend &amp;&amp; dotnet test</code>. Expect green; new tests
+traced to L2-046/049/050.</li>
+<li><strong>Migration applies cleanly</strong> —
+<code>saturdaze migrate --connection &lt;localdb&gt;</code>; inspect
+<code>EventSubmissions</code> table exists with the indexes from Step
+1.</li>
+<li><strong>Seed</strong> — <code>saturdaze seed</code>; verify the
+admin user and 3 pending rows.</li>
+<li><strong>Frontend lint + build</strong> —
+<code>cd frontend &amp;&amp; npm run lint &amp;&amp; npm run build</code>.</li>
+<li><strong>Frontend unit tests</strong> —
+<code>npm test --workspace=saturdaze</code> —
+<code>nextHourFromNow</code> cases pass for L2-047 #1 and #2.</li>
+<li><strong>Run the app</strong> — start API + Angular; sign in as the
+admin seed user.
+<ul>
+<li>Navigate <code>/events</code>. Tap the FAB → quick-add dialog opens
+(M-D13). Submit with only a title → lands on
+<code>/events/submitted</code>. Back to <code>/events</code> → see
+“Pending review” chip on own card.</li>
+<li>Sign in as the non-admin Brown user — confirm that submission is
+<strong>not</strong> visible.</li>
+<li>As admin → Profile → “Event moderation”. Approve the row → confirm
+dialog (M-D14) → row disappears.</li>
+<li>Sign back in as the Brown user → that event now appears in the
+regular Saturday section.</li>
+</ul></li>
+<li><strong>Playwright behaviour suite</strong> —
+<code>cd e2e &amp;&amp; npm test</code>. Specs traced to L2-046 through
+L2-050 all pass.</li>
+<li><strong>Visual baselines</strong> —
+<code>cd e2e &amp;&amp; npm run baseline</code>; commit only the
+snapshot deltas for the new screens + the events page update.</li>
+<li><strong>Manual a11y pass</strong> — keyboard-only flow through
+submit dialog and admin reject dialog: focus is trapped, ESC closes,
+submit button announces <code>aria-disabled="true"</code> when title is
+blank (per L2-047 #3 + <strong>L1-014</strong>).</li>
+</ol>
+<p>If all nine pass, the feature is shippable.</p>
+<hr />
+<h2 id="out-of-scope-deliberate">Out of scope (deliberate)</h2>
+<ul>
+<li>Notification table, email delivery, push.</li>
+<li>A separate admin shell or fifth nav item.</li>
+<li>Drive-time auto-calculation on submission (the admin can set
+<code>DriveMinutes</code> when approving — or leave it null for the
+public feed to omit the drive chip).</li>
+<li>Editing or deleting one’s own submission. If the submitter realises
+a typo, they re-submit and the admin rejects the duplicate.</li>
+<li>Image / photo upload for the event. Defer.</li>
+</ul>
+</body>
+</html>

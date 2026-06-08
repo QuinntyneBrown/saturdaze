@@ -1,0 +1,45 @@
+{
+  "submissions": [
+    {
+      "title": "Port Credit Buskerfest",
+      "submitterEmail": "quinntynebrown@gmail.com",
+      "startsAtLocal": "2026-06-20T14:00:00",
+      "endsAtLocal": "2026-06-20T21:00:00",
+      "location": "Memorial Park, Lakeshore Rd, Port Credit",
+      "description": "Buskers, food trucks, kid-friendly performers all weekend. Free admission.",
+      "costNote": "Free",
+      "ageRange": "All ages",
+      "sourceUrl": "https://example.com/portcredit-buskerfest",
+      "category": "Festival",
+      "driveMinutes": 2,
+      "submittedHoursAgo": 2
+    },
+    {
+      "title": "Bronte Creek Maple Magic",
+      "submitterEmail": "quinntynebrown@gmail.com",
+      "startsAtLocal": "2026-07-04T10:00:00",
+      "endsAtLocal": "2026-07-04T16:00:00",
+      "location": "Bronte Creek Provincial Park, Oakville",
+      "description": "Sugar-shack demos, pancake breakfast tent, sap-to-syrup walk. Park entry not included.",
+      "costNote": "$18/car",
+      "ageRange": "Best for 3+",
+      "category": "Seasonal",
+      "driveMinutes": 25,
+      "submittedHoursAgo": 26
+    },
+    {
+      "title": "St. Christopher's spring fair",
+      "submitterEmail": "quinntynebrown@gmail.com",
+      "startsAtLocal": "2026-07-12T11:00:00",
+      "endsAtLocal": "2026-07-12T15:00:00",
+      "location": "St. Christopher's school yard, Mississauga",
+      "description": "Bouncy castle, BBQ, silent auction. Raises funds for the playground refresh.",
+      "costNote": "Free · games $2 each",
+      "ageRange": "Under 10",
+      "sourceUrl": "https://example.com/stchristoppta",
+      "category": "Community",
+      "driveMinutes": 8,
+      "submittedHoursAgo": 72
+    }
+  ]
+}

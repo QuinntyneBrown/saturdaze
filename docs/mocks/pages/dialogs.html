@@ -721,6 +721,95 @@
       </sd-dialog>
     </div>
 
+    <div>
+      <div class="demo-label">Quick-add event — from FAB on /events · M-D13 (L1-018)</div>
+      <sd-dialog open static
+        title="Tell me about an event"
+        subtitle="Quick version. Title, when, and you're done — the rest is optional."
+      >
+        <div style="display:grid; gap:12px;">
+          <sd-text-input label="Event title" placeholder="e.g. Port Credit Buskerfest" required></sd-text-input>
+
+          <div>
+            <label style="display:block; font-size:13px; color:var(--sd-ink-soft); font-weight:500; margin: 0 0 6px 4px;">When it starts</label>
+            <input type="datetime-local" value="2026-05-18T13:00"
+              style="width:100%; padding:11px 12px; border-radius:var(--sd-r-md); border:1px solid var(--sd-line); background:var(--sd-surface); color:var(--sd-ink); font-size:15px; font-family:inherit;"/>
+            <div style="font-size:12px; color:var(--sd-ink-soft); margin: 6px 0 0 4px;">Defaulted to one hour from now.</div>
+          </div>
+
+          <sd-text-input label="Location (optional)" placeholder="Memorial Park, Lakeshore Rd"></sd-text-input>
+
+          <sd-card variant="sunk">
+            <div style="display:flex; gap:10px; align-items:flex-start; font-size:14px;">
+              <sd-icon name="sparkle" size="16" style="color:var(--sd-primary); margin-top:2px;"></sd-icon>
+              <span>Goes into moderation. Approved within a day, then everyone in driving distance sees it.</span>
+            </div>
+          </sd-card>
+        </div>
+        <sd-button slot="actions" variant="ghost">Open full form</sd-button>
+        <sd-button slot="actions" variant="secondary">Cancel</sd-button>
+        <sd-button slot="actions">
+          <sd-icon slot="leading" name="plus" size="16"></sd-icon>
+          Submit
+        </sd-button>
+      </sd-dialog>
+    </div>
+
+    <div>
+      <div class="demo-label">Approve submission · M-D14 (L1-018 admin)</div>
+      <sd-dialog open static
+        title="Approve &ldquo;Port Credit Buskerfest&rdquo;?"
+        subtitle="It'll be published to every family within driving distance."
+      >
+        <sd-card variant="sunk">
+          <div style="display:flex; gap:12px; align-items:flex-start;">
+            <div style="width:48px; flex-shrink:0; background:var(--sd-primary-soft); color:var(--sd-primary); border-radius:var(--sd-r-md); text-align:center; padding:6px 4px;">
+              <div style="font-size:10px; text-transform:uppercase; letter-spacing:0.1em; font-weight:600;">JUN</div>
+              <div style="font-size:20px; font-weight:700; line-height:1; margin-top:2px;">20</div>
+            </div>
+            <div style="font-size:14px;">
+              <div style="font-weight:600;">Sat Jun 20 · 2:00pm – 9:00pm</div>
+              <div style="color:var(--sd-ink-soft); margin-top:4px;">Memorial Park · Free · All ages. Submitted by quinntynebrown@gmail.com.</div>
+            </div>
+          </div>
+        </sd-card>
+        <p style="font-size:14px; color:var(--sd-ink-soft); margin: 12px 0 0;">The submitter will be notified. You can still pull it later from the approved tab.</p>
+        <sd-button slot="actions" variant="secondary">Cancel</sd-button>
+        <sd-button slot="actions">
+          <sd-icon slot="leading" name="check" size="16"></sd-icon>
+          Approve &amp; publish
+        </sd-button>
+      </sd-dialog>
+    </div>
+
+    <div>
+      <div class="demo-label">Reject submission · M-D15 (L1-018 admin)</div>
+      <sd-dialog open static
+        title="Reject this submission?"
+        subtitle="The submitter sees your reason — keep it kind."
+      >
+        <sd-card variant="sunk">
+          <div style="display:flex; gap:10px; align-items:flex-start;">
+            <sd-icon name="close" size="18" style="color:var(--sd-warn); margin-top:2px;"></sd-icon>
+            <div style="font-size:14px;">
+              <div style="font-weight:600;">&ldquo;Port Credit Buskerfest&rdquo; · submitted by Quinn</div>
+              <div style="color:var(--sd-ink-soft); margin-top:4px;">Removed from the queue. Submitter is notified with your reason.</div>
+            </div>
+          </div>
+        </sd-card>
+        <div style="margin-top:12px;">
+          <label style="display:block; font-size:13px; color:var(--sd-ink-soft); font-weight:500; margin: 0 0 6px 4px;">Reason (optional)</label>
+          <textarea rows="3" placeholder="Already covered by the curated Lavender Festival listing for that weekend."
+            style="width:100%; padding:11px 12px; border-radius:var(--sd-r-md); border:1px solid var(--sd-line); background:var(--sd-surface); color:var(--sd-ink); font-size:14px; font-family:inherit; resize:vertical;"></textarea>
+        </div>
+        <sd-button slot="actions" variant="secondary">Cancel</sd-button>
+        <sd-button slot="actions" variant="danger">
+          <sd-icon slot="leading" name="close" size="16"></sd-icon>
+          Reject
+        </sd-button>
+      </sd-dialog>
+    </div>
+
     <p style="text-align:center; margin-top:24px;"><a href="../index.html" style="color:var(--sd-primary); text-decoration:none; font-weight:600;">← Back to mocks</a></p>
   </main>
 </body>

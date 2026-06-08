@@ -29,6 +29,11 @@ const FILTER_DEFS: ReadonlyArray<FilterDef> = [
   },
 ];
 
+/**
+ * Build Filters.
+ *
+ * @param {ReadonlyArray<ActivityDto>} rows - The rows
+ */
 function buildFilters(rows: ReadonlyArray<ActivityDto>): ActivityView['filters'] {
   return FILTER_DEFS
     .filter((f) => !f.match || rows.some(f.match))
@@ -40,6 +45,13 @@ const PLACEHOLDER_VIEW: ActivityView = {
   sections: [],
 };
 
+/**
+ * Icon For.
+ *
+ * @param {ActivityDto} dto - The dto
+ *
+ * @returns {string} The result of the operation
+ */
 function iconFor(dto: ActivityDto): string {
   const c = dto.category.toLowerCase();
   if (c.includes('theatre')) return 'ticket';
@@ -47,10 +59,22 @@ function iconFor(dto: ActivityDto): string {
   return 'tree';
 }
 
+/**
+ * Tone For.
+ *
+ * @param {ActivityDto} dto - The dto
+ *
+ * @returns {ActivityTone} The result of the operation
+ */
 function toneFor(dto: ActivityDto): ActivityTone {
   return dto.indoor ? 'indoor' : 'outdoor';
 }
 
+/**
+ * Age String.
+ *
+ * @param {ActivityDto} dto - The dto
+ */
 function ageString(dto: ActivityDto): string | undefined {
   if (dto.minAge <= 2 && dto.maxAge >= 99) return 'all';
   if (dto.maxAge >= 99) return `${dto.minAge}+`;
@@ -95,6 +119,13 @@ const ACTIVITY_OVERLAYS: Record<string, PresentationOverlay> = {
   },
 };
 
+/**
+ * To Activity.
+ *
+ * @param {ActivityDto} dto - The dto
+ *
+ * @returns {Activity} The result of the operation
+ */
 function toActivity(dto: ActivityDto): Activity {
   const overlay = ACTIVITY_OVERLAYS[dto.name] ?? {};
   return {
@@ -153,14 +184,27 @@ export class ActivityService implements IActivityService {
 
   private readonly _view = signal<ActivityView>(PLACEHOLDER_VIEW);
 
+  /**
+   * Constructor.
+   */
   constructor() {
     void this.load();
   }
 
+  /**
+   * List.
+   *
+   * @returns {Signal<ActivityView>} The result of the operation
+   */
   list(): Signal<ActivityView> {
     return this._view.asReadonly();
   }
 
+  /**
+   * Load.
+   *
+   * @returns {Promise<void>} The result of the operation
+   */
   async load(): Promise<void> {
     try {
       const rows = await firstValueFrom(

@@ -138,6 +138,81 @@ namespace Saturdaze.Infrastructure.Migrations
                     b.ToTable("EmailVerificationTokens", (string)null);
                 });
 
+            modelBuilder.Entity("Saturdaze.Domain.Entities.EventSubmission", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("AgeRange")
+                        .HasMaxLength(80)
+                        .HasColumnType("nvarchar(80)");
+
+                    b.Property<string>("Category")
+                        .HasMaxLength(80)
+                        .HasColumnType("nvarchar(80)");
+
+                    b.Property<string>("CostNote")
+                        .HasMaxLength(80)
+                        .HasColumnType("nvarchar(80)");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<int?>("DriveMinutes")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("EndsAtLocal")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Location")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<Guid?>("PublishedEventId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("RejectionReason")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<DateTimeOffset?>("ReviewedAtUtc")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<Guid?>("ReviewedByUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("SourceUrl")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<DateTime>("StartsAtLocal")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset>("SubmittedAtUtc")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<Guid>("SubmittedByUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SubmittedByUserId");
+
+                    b.HasIndex("Status", "SubmittedAtUtc");
+
+                    b.ToTable("EventSubmissions", (string)null);
+                });
+
             modelBuilder.Entity("Saturdaze.Domain.Entities.Family", b =>
                 {
                     b.Property<Guid>("Id")
@@ -596,20 +671,20 @@ namespace Saturdaze.Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Saturdaze.Domain.Entities.FamilyMember", b =>
-                {
-                    b.HasOne("Saturdaze.Domain.Entities.Family", null)
-                        .WithMany("Members")
-                        .HasForeignKey("FamilyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Saturdaze.Domain.Entities.EmailVerificationToken", b =>
                 {
                     b.HasOne("Saturdaze.Domain.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Saturdaze.Domain.Entities.FamilyMember", b =>
+                {
+                    b.HasOne("Saturdaze.Domain.Entities.Family", null)
+                        .WithMany("Members")
+                        .HasForeignKey("FamilyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -623,20 +698,20 @@ namespace Saturdaze.Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Saturdaze.Domain.Entities.Preference", b =>
-                {
-                    b.HasOne("Saturdaze.Domain.Entities.Family", null)
-                        .WithMany("Preferences")
-                        .HasForeignKey("FamilyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Saturdaze.Domain.Entities.PasswordResetToken", b =>
                 {
                     b.HasOne("Saturdaze.Domain.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Saturdaze.Domain.Entities.Preference", b =>
+                {
+                    b.HasOne("Saturdaze.Domain.Entities.Family", null)
+                        .WithMany("Preferences")
+                        .HasForeignKey("FamilyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

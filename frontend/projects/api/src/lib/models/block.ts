@@ -6,13 +6,37 @@ import { DayChip } from './day-chip';
  * fields stay optional.
  */
 export interface Block {
+  /**
+   * Id.
+   */
   readonly id?: string;
+  /**
+   * Day.
+   */
   readonly day?: 'Saturday' | 'Sunday';
+  /**
+   * Time.
+   */
   readonly time: string;
+  /**
+   * Duration.
+   */
   readonly duration?: string;
+  /**
+   * Title.
+   */
   readonly title: string;
+  /**
+   * Subtitle.
+   */
   readonly subtitle?: string;
+  /**
+   * Icon.
+   */
   readonly icon: string;
+  /**
+   * Tone.
+   */
   readonly tone?:
     | 'default'
     | 'meal'
@@ -21,7 +45,16 @@ export interface Block {
     | 'fixed'
     | 'downtime'
     | 'indoor';
+  /**
+   * Locked.
+   */
   readonly locked?: boolean;
+  /**
+   * Drive.
+   */
   readonly drive?: string;
+  /**
+   * Chips.
+   */
   readonly chips?: readonly DayChip[];
 }

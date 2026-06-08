@@ -1,3 +1,6 @@
+/**
+ * Weather Day.
+ */
 export interface WeatherDay {
   /** Day label as the user sees it (e.g. "Saturday"). */
   readonly day: string;

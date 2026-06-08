@@ -1,0 +1,67 @@
+<sd-top-bar title="Event moderation" back />
+
+<div class="admin-lede">
+  <h2>Pending submissions</h2>
+  <p>
+    {{ pendingCount() }} in queue · oldest first. Approving publishes to every family within driving distance.
+  </p>
+</div>
+
+<sd-tag-group>
+  <sd-chip tone="primary">Pending ({{ pendingCount() }})</sd-chip>
+</sd-tag-group>
+
+<div class="queue">
+  @if (pending().length === 0) {
+    <div class="empty">Nothing to review right now.</div>
+  }
+
+  @for (s of pending(); track s.id) {
+    <article class="submission">
+      <header>
+        <div>
+          <h3>{{ s.title }}</h3>
+          <div class="meta">{{ formatWhen(s.startsAtLocal) }}</div>
+        </div>
+        <sd-chip tone="sun">Pending</sd-chip>
+      </header>
+
+      <dl>
+        @if (s.location) { <dt>Location</dt><dd>{{ s.location }}</dd> }
+        @if (s.costNote) { <dt>Cost</dt><dd>{{ s.costNote }}</dd> }
+        @if (s.ageRange) { <dt>Ages</dt><dd>{{ s.ageRange }}</dd> }
+        @if (s.sourceUrl) {
+          <dt>Link</dt>
+          <dd><a [href]="s.sourceUrl" target="_blank" rel="noopener noreferrer">{{ s.sourceUrl }}</a></dd>
+        }
+        @if (s.description) { <dt>Notes</dt><dd>{{ s.description }}</dd> }
+      </dl>
+
+      <div class="submitter">
+        <sd-avatar [name]="s.submittedByEmail ?? '?'" tone="primary" size="sm" />
+        <span>{{ s.submittedByEmail ?? 'unknown' }} · submitted {{ submittedAgo(s.submittedAtUtc) }}</span>
+      </div>
+
+      <div class="actions">
+        @if (s.sourceUrl) {
+          <sd-button variant="ghost" type="button">
+            <a [href]="s.sourceUrl" target="_blank" rel="noopener noreferrer" class="link-button">
+              <sd-icon slot="leading" name="map" [size]="14" />
+              Open link
+            </a>
+          </sd-button>
+        }
+        <sd-button variant="secondary" type="button" (click)="openReject(s)">
+          <sd-icon slot="leading" name="close" [size]="14" />
+          Reject
+        </sd-button>
+        <sd-button type="button" (click)="openApprove(s)">
+          <sd-icon slot="leading" name="check" [size]="14" />
+          Approve
+        </sd-button>
+      </div>
+    </article>
+  }
+</div>
+
+<sd-bottom-nav active="profile" />
