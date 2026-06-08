@@ -17,8 +17,17 @@ import { WeekendOverview } from '../models/weekend-overview';
 import { WeekendStat } from '../models/weekend-stat';
 import { CalendarLinks, IWeekendPlanService } from './weekend-plan.service.contract';
 
+/**
+ * Weekend Share Dto.
+ */
 interface WeekendShareDto {
+  /**
+   * Share Url.
+   */
   readonly shareUrl: string;
+  /**
+   * Token.
+   */
   readonly token: string;
 }
 
@@ -58,14 +67,27 @@ export class WeekendPlanService implements IWeekendPlanService {
   private readonly _currentId = signal<string | null>(null);
   private readonly _activeDay = signal<'Saturday' | 'Sunday'>('Saturday');
 
+  /**
+   * Constructor.
+   */
   constructor() {
     void this.loadCurrent();
   }
 
+  /**
+   * Get Overview.
+   *
+   * @returns {Signal<WeekendOverview>} The result of the operation
+   */
   getOverview(): Signal<WeekendOverview> {
     return this._overview.asReadonly();
   }
 
+  /**
+   * Get Itinerary.
+   *
+   * @returns {Signal<ItineraryView>} The result of the operation
+   */
   getItinerary(): Signal<ItineraryView> {
     return this._itinerary.asReadonly();
   }
@@ -96,6 +118,11 @@ export class WeekendPlanService implements IWeekendPlanService {
     }
   }
 
+  /**
+   * Regenerate.
+   *
+   * @returns {Promise<void>} The result of the operation
+   */
   async regenerate(id?: string): Promise<void> {
     const target = this.targetId(id);
     try {
@@ -108,6 +135,13 @@ export class WeekendPlanService implements IWeekendPlanService {
     }
   }
 
+  /**
+   * Regenerate Day.
+   *
+   * @param {'Saturday' | 'Sunday'} day - The day
+   *
+   * @returns {Promise<void>} The result of the operation
+   */
   async regenerateDay(day: 'Saturday' | 'Sunday', id?: string): Promise<void> {
     const target = this.targetId(id);
     try {
@@ -124,6 +158,13 @@ export class WeekendPlanService implements IWeekendPlanService {
     }
   }
 
+  /**
+   * Mark Favourite.
+   *
+   * @param {boolean} favourite - The favourite
+   *
+   * @returns {Promise<void>} The result of the operation
+   */
   async markFavourite(favourite: boolean, id?: string): Promise<void> {
     const target = this.targetId(id);
     try {
@@ -138,6 +179,11 @@ export class WeekendPlanService implements IWeekendPlanService {
     }
   }
 
+  /**
+   * Create Share Link.
+   *
+   * @returns {Promise<string>} The result of the operation
+   */
   async createShareLink(id?: string): Promise<string> {
     const target = this.targetId(id);
     try {
@@ -151,6 +197,11 @@ export class WeekendPlanService implements IWeekendPlanService {
     }
   }
 
+  /**
+   * Calendar Links.
+   *
+   * @returns {CalendarLinks} The result of the operation
+   */
   calendarLinks(id?: string): CalendarLinks {
     const target = this.targetId(id);
     const icsUrl = `${this.baseUrl}/api/weekends/${target}/calendar.ics`;
@@ -162,6 +213,14 @@ export class WeekendPlanService implements IWeekendPlanService {
     };
   }
 
+  /**
+   * Lock Block.
+   *
+   * @param {string} blockId - The block id
+   * @param {boolean} locked - The locked
+   *
+   * @returns {Promise<void>} The result of the operation
+   */
   async lockBlock(blockId: string, locked: boolean): Promise<void> {
     try {
       const dto = await firstValueFrom(
@@ -174,6 +233,14 @@ export class WeekendPlanService implements IWeekendPlanService {
     }
   }
 
+  /**
+   * Lock Day.
+   *
+   * @param {'Saturday' | 'Sunday'} day - The day
+   * @param {boolean} locked - The locked
+   *
+   * @returns {Promise<void>} The result of the operation
+   */
   async lockDay(day: 'Saturday' | 'Sunday', locked: boolean, id?: string): Promise<void> {
     const target = this.targetId(id);
     try {
@@ -190,6 +257,13 @@ export class WeekendPlanService implements IWeekendPlanService {
     }
   }
 
+  /**
+   * Swap Block.
+   *
+   * @param {string} blockId - The block id
+   *
+   * @returns {Promise<void>} The result of the operation
+   */
   async swapBlock(blockId: string): Promise<void> {
     try {
       await firstValueFrom(
@@ -201,6 +275,14 @@ export class WeekendPlanService implements IWeekendPlanService {
     }
   }
 
+  /**
+   * Add Errand.
+   *
+   * @param {string} description - The description
+   * @param {number} estimatedMinutes - The estimated minutes
+   *
+   * @returns {Promise<void>} The result of the operation
+   */
   async addErrand(description: string, estimatedMinutes: number, id?: string): Promise<void> {
     const target = this.targetId(id);
     try {
@@ -217,6 +299,13 @@ export class WeekendPlanService implements IWeekendPlanService {
     }
   }
 
+  /**
+   * Remix Saved.
+   *
+   * @param {string} id - The id
+   *
+   * @returns {Promise<void>} The result of the operation
+   */
   async remixSaved(id: string): Promise<void> {
     try {
       const dto = await firstValueFrom(
@@ -229,6 +318,13 @@ export class WeekendPlanService implements IWeekendPlanService {
     }
   }
 
+  /**
+   * Repeat Saved.
+   *
+   * @param {string} id - The id
+   *
+   * @returns {Promise<void>} The result of the operation
+   */
   async repeatSaved(id: string): Promise<void> {
     try {
       const dto = await firstValueFrom(
@@ -241,6 +337,13 @@ export class WeekendPlanService implements IWeekendPlanService {
     }
   }
 
+  /**
+   * Set Active Day.
+   *
+   * @param {'Saturday' | 'Sunday'} day - The day
+   *
+   * @returns {void} No return value
+   */
   setActiveDay(day: 'Saturday' | 'Sunday'): void {
     this._activeDay.set(day);
     const dto = this._lastDto;
@@ -249,6 +352,13 @@ export class WeekendPlanService implements IWeekendPlanService {
 
   private _lastDto: WeekendDto | null = null;
 
+  /**
+   * Apply.
+   *
+   * @param {WeekendDto} dto - The dto
+   *
+   * @returns {void} No return value
+   */
   private apply(dto: WeekendDto): void {
     this._lastDto = dto;
     this._currentId.set(dto.id);
@@ -256,6 +366,11 @@ export class WeekendPlanService implements IWeekendPlanService {
     this._itinerary.set(projectItinerary(dto, this._activeDay()));
   }
 
+  /**
+   * Target Id.
+   *
+   * @returns {string} The result of the operation
+   */
   private targetId(id?: string): string {
     const target = id ?? this._currentId();
     if (!target) throw new Error('No current weekend is loaded yet.');
@@ -299,6 +414,9 @@ function projectOverview(dto: WeekendDto): WeekendOverview {
   };
 }
 
+/**
+ * To Day Summary.
+ */
 function toDaySummary(
   day: string,
   date: Date,
@@ -318,6 +436,9 @@ function toDaySummary(
   };
 }
 
+/**
+ * Day Chips.
+ */
 function dayChips(
   blocks: ReadonlyArray<ItineraryBlockDto>,
   weather: WeatherForecastDto | null,
@@ -342,6 +463,14 @@ function dayChips(
   return chips;
 }
 
+/**
+ * To Weather Day.
+ *
+ * @param {string} day - The day
+ * @param {WeatherForecastDto | null} w - The w
+ *
+ * @returns {WeatherDay} The result of the operation
+ */
 function toWeatherDay(day: string, w: WeatherForecastDto | null): WeatherDay {
   if (!w) return { day, icon: 'cloud', hi: '—', lo: '—', note: 'Forecast unavailable.' };
   return {
@@ -353,6 +482,14 @@ function toWeatherDay(day: string, w: WeatherForecastDto | null): WeatherDay {
   };
 }
 
+/**
+ * Hero Subtitle.
+ *
+ * @param {WeatherForecastDto | null} sat - The sat
+ * @param {WeatherForecastDto | null} sun - The sun
+ *
+ * @returns {string} The result of the operation
+ */
 function heroSubtitle(sat: WeatherForecastDto | null, sun: WeatherForecastDto | null): string {
   const goodSat = isOutdoorFriendly(sat);
   const goodSun = isOutdoorFriendly(sun);
@@ -362,10 +499,23 @@ function heroSubtitle(sat: WeatherForecastDto | null, sun: WeatherForecastDto | 
   return "Mixed weather both days. Indoor-friendly plan ready for you.";
 }
 
+/**
+ * Forecast Subtitle.
+ *
+ * @param {Date} sat - The sat
+ * @param {Date} sun - The sun
+ *
+ * @returns {string} The result of the operation
+ */
 function forecastSubtitle(sat: Date, sun: Date): string {
   return `Sat ${sat.getUTCDate()} ${monthAbbr(sat)} – Sun ${sun.getUTCDate()} ${monthAbbr(sun)}`;
 }
 
+/**
+ * Default Quick Actions.
+ *
+ * @param {number} lockedBlocks - The locked blocks
+ */
 function defaultQuickActions(lockedBlocks: number) {
   return [
     {
@@ -423,6 +573,9 @@ function projectItinerary(dto: WeekendDto, active: 'Saturday' | 'Sunday'): Itine
   };
 }
 
+/**
+ * Itinerary Chips.
+ */
 function itineraryChips(
   blocks: ReadonlyArray<ItineraryBlockDto>,
   weather: WeatherForecastDto | null,
@@ -439,6 +592,9 @@ function itineraryChips(
   return chips;
 }
 
+/**
+ * Day Option.
+ */
 function dayOption(
   key: 'saturday' | 'sunday',
   label: 'Saturday' | 'Sunday',
@@ -457,6 +613,13 @@ function dayOption(
   };
 }
 
+/**
+ * Stats.
+ *
+ * @param {ReadonlyArray<ItineraryBlockDto>} allBlocks - The all blocks
+ *
+ * @returns {WeekendStat[]} The result of the operation
+ */
 function stats(allBlocks: ReadonlyArray<ItineraryBlockDto>): WeekendStat[] {
   const driveMins = allBlocks
     .filter((b) => b.kind === 'Drive')
@@ -470,6 +633,13 @@ function stats(allBlocks: ReadonlyArray<ItineraryBlockDto>): WeekendStat[] {
   ];
 }
 
+/**
+ * Itinerary Subtitle.
+ *
+ * @param {ReadonlyArray<ItineraryBlockDto>} blocks - The blocks
+ *
+ * @returns {string} The result of the operation
+ */
 function itinerarySubtitle(blocks: ReadonlyArray<ItineraryBlockDto>): string {
   if (blocks.length === 0) return 'Nothing planned yet.';
   const first = blocks[0]!;
@@ -497,6 +667,11 @@ function toBlock(b: ItineraryBlockDto): Block {
   };
 }
 
+/**
+ * Block Tone.
+ *
+ * @param {ItineraryBlockDto['kind']} kind - The kind
+ */
 function blockTone(kind: ItineraryBlockDto['kind']): Block['tone'] {
   switch (kind) {
     case 'Meal': return 'meal';
@@ -509,6 +684,13 @@ function blockTone(kind: ItineraryBlockDto['kind']): Block['tone'] {
   }
 }
 
+/**
+ * Block Icon.
+ *
+ * @param {ItineraryBlockDto['kind']} kind - The kind
+ *
+ * @returns {string} The result of the operation
+ */
 function blockIcon(kind: ItineraryBlockDto['kind']): string {
   switch (kind) {
     case 'Meal': return 'fork';
@@ -521,11 +703,25 @@ function blockIcon(kind: ItineraryBlockDto['kind']): string {
   }
 }
 
+/**
+ * Top Highlight.
+ *
+ * @param {ReadonlyArray<ItineraryBlockDto>} blocks - The blocks
+ *
+ * @returns {string} The result of the operation
+ */
 function topHighlight(blocks: ReadonlyArray<ItineraryBlockDto>): string {
   const top = blocks.find((b) => b.kind === 'Activity');
   return top ? top.title : 'Quiet day at home';
 }
 
+/**
+ * Locked Count.
+ *
+ * @param {ReadonlyArray<ItineraryBlockDto>} blocks - The blocks
+ *
+ * @returns {number} The result of the operation
+ */
 function lockedCount(blocks: ReadonlyArray<ItineraryBlockDto>): number {
   return blocks.filter((b) => b.isLocked).length;
 }
@@ -542,11 +738,24 @@ function weekendDates(saturdayIso: string): [Date, Date] {
   return [sat, sun];
 }
 
+/**
+ * Forecast For.
+ *
+ * @param {ReadonlyArray<WeatherForecastDto>} weather - The weather
+ * @param {Date} day - The day
+ */
 function forecastFor(weather: ReadonlyArray<WeatherForecastDto>, day: Date): WeatherForecastDto | null {
   const iso = day.toISOString().substring(0, 10);
   return weather.find((w) => w.date === iso) ?? null;
 }
 
+/**
+ * Weather Icon.
+ *
+ * @param {WeatherForecastDto | null} w - The w
+ *
+ * @returns {string} The result of the operation
+ */
 function weatherIcon(w: WeatherForecastDto | null): string {
   if (!w || w.unavailable) return 'cloud';
   if (w.tags.includes('rain')) return 'rain';
@@ -555,6 +764,13 @@ function weatherIcon(w: WeatherForecastDto | null): string {
   return 'cloud';
 }
 
+/**
+ * Weather Word.
+ *
+ * @param {WeatherForecastDto | null} w - The w
+ *
+ * @returns {string} The result of the operation
+ */
 function weatherWord(w: WeatherForecastDto | null): string {
   if (!w || w.unavailable) return 'forecast pending';
   if (w.tags.includes('rain')) return 'rain';
@@ -564,11 +780,25 @@ function weatherWord(w: WeatherForecastDto | null): string {
   return 'cloudy';
 }
 
+/**
+ * Weather Word Capitalised.
+ *
+ * @param {WeatherForecastDto | null} w - The w
+ *
+ * @returns {string} The result of the operation
+ */
 function weatherWordCapitalised(w: WeatherForecastDto | null): string {
   const word = weatherWord(w);
   return word.charAt(0).toUpperCase() + word.slice(1);
 }
 
+/**
+ * Weather Note.
+ *
+ * @param {WeatherForecastDto} w - The w
+ *
+ * @returns {string} The result of the operation
+ */
 function weatherNote(w: WeatherForecastDto): string {
   if (w.unavailable) return 'Forecast unavailable.';
   if (w.tags.includes('rain')) return 'Rain expected — plan indoors.';
@@ -578,12 +808,26 @@ function weatherNote(w: WeatherForecastDto): string {
   return 'Variable cloud — flex the plan';
 }
 
+/**
+ * Is Outdoor Friendly.
+ *
+ * @param {WeatherForecastDto | null} w - The w
+ *
+ * @returns {boolean} True if successful, false otherwise
+ */
 function isOutdoorFriendly(w: WeatherForecastDto | null): boolean {
   if (!w || w.unavailable) return false;
   if (w.tags.includes('rain') || w.tags.includes('snow') || w.tags.includes('cold')) return false;
   return w.tags.includes('sunny') || w.tags.includes('warm') || w.tags.includes('mild');
 }
 
+/**
+ * Round Or Dash.
+ *
+ * @param {number | null} n - The n
+ *
+ * @returns {string} The result of the operation
+ */
 function roundOrDash(n: number | null): string {
   if (n == null) return '—';
   return String(Math.round(n));
@@ -599,15 +843,37 @@ function hhmm(timeOnly: string): string {
   return `${Number(h)}:${m}`;
 }
 
+/**
+ * Minutes.
+ *
+ * @param {string} start - The start
+ * @param {string} end - The end
+ *
+ * @returns {number} The result of the operation
+ */
 function minutes(start: string, end: string): number {
   return toMinutes(end) - toMinutes(start);
 }
 
+/**
+ * To Minutes.
+ *
+ * @param {string} t - The t
+ *
+ * @returns {number} The result of the operation
+ */
 function toMinutes(t: string): number {
   const [h, m] = t.split(':').map(Number);
   return h! * 60 + (m ?? 0);
 }
 
+/**
+ * Format Minutes.
+ *
+ * @param {number} mins - The mins
+ *
+ * @returns {string} The result of the operation
+ */
 function formatMinutes(mins: number): string {
   if (mins < 60) return `${mins}m`;
   const h = Math.floor(mins / 60);
@@ -615,11 +881,26 @@ function formatMinutes(mins: number): string {
   return m === 0 ? `${h}h` : `${h}h ${m}m`;
 }
 
+/**
+ * By Sort Then Start.
+ *
+ * @param {ItineraryBlockDto} a - The a
+ * @param {ItineraryBlockDto} b - The b
+ *
+ * @returns {number} The result of the operation
+ */
 function bySortThenStart(a: ItineraryBlockDto, b: ItineraryBlockDto): number {
   if (a.sortOrder !== b.sortOrder) return a.sortOrder - b.sortOrder;
   return toMinutes(a.startTime) - toMinutes(b.startTime);
 }
 
+/**
+ * Month Abbr.
+ *
+ * @param {Date} d - The d
+ *
+ * @returns {string} The result of the operation
+ */
 function monthAbbr(d: Date): string {
   return d.toLocaleString('en-US', { month: 'short', timeZone: 'UTC' });
 }

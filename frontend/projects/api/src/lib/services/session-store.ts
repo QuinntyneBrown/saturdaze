@@ -18,6 +18,13 @@ const STORAGE_FLAG_KEY = 'sd.auth.storage';
 const REMEMBERED_EMAIL_KEY = 'sd.auth.remember.email';
 const LEGACY_MOCK_KEYS = ['sd.mock.auth.user-id', 'sd.mock.auth.users'] as const;
 
+/**
+ * Is Auth Error.
+ *
+ * @param {unknown} value - The value
+ *
+ * @returns {value is AuthError} The result of the operation
+ */
 function isAuthError(value: unknown): value is AuthError {
   return (
     typeof value === 'object' &&
@@ -27,13 +34,30 @@ function isAuthError(value: unknown): value is AuthError {
   );
 }
 
+/**
+ * As Auth Error.
+ *
+ * @param {unknown} value - The value
+ * @param {AuthErrorCode} fallback - The fallback
+ *
+ * @returns {AuthError} The result of the operation
+ */
 function asAuthError(value: unknown, fallback: AuthErrorCode = 'invalid_credentials'): AuthError {
   if (isAuthError(value)) return value;
   return { code: fallback, message: 'Something went wrong. Try again in a moment.' };
 }
 
+/**
+ * Stored Token.
+ */
 interface StoredToken {
+  /**
+   * Value.
+   */
   value: string;
+  /**
+   * Expires Utc.
+   */
   expiresUtc: string;
 }
 
@@ -64,6 +88,13 @@ export class SessionStore implements ISessionStore {
   private rehydratePromise: Promise<void> | null = null;
   private rehydrated = false;
 
+  /**
+   * Sign Up.
+   *
+   * @param {SignupRequest} req - The req
+   *
+   * @returns {Promise<void>} The result of the operation
+   */
   async signUp(req: SignupRequest): Promise<void> {
     this._error.set(null);
     try {
@@ -78,6 +109,14 @@ export class SessionStore implements ISessionStore {
     }
   }
 
+  /**
+   * Login.
+   *
+   * @param {LoginRequest} req - The req
+   * @param {boolean} remember - The remember
+   *
+   * @returns {Promise<void>} The result of the operation
+   */
   async login(req: LoginRequest, remember: boolean): Promise<void> {
     this._error.set(null);
     try {
@@ -93,6 +132,11 @@ export class SessionStore implements ISessionStore {
     }
   }
 
+  /**
+   * Logout.
+   *
+   * @returns {void} No return value
+   */
   logout(): void {
     this.clearPersisted();
     this._token.set(null);
@@ -100,6 +144,13 @@ export class SessionStore implements ISessionStore {
     this._error.set(null);
   }
 
+  /**
+   * Forgot Password.
+   *
+   * @param {ForgotPasswordRequest} req - The req
+   *
+   * @returns {Promise<void>} The result of the operation
+   */
   async forgotPassword(req: ForgotPasswordRequest): Promise<void> {
     this._error.set(null);
     try {
@@ -111,6 +162,13 @@ export class SessionStore implements ISessionStore {
     }
   }
 
+  /**
+   * Resend Verification.
+   *
+   * @param {ResendVerificationRequest} req - The req
+   *
+   * @returns {Promise<void>} The result of the operation
+   */
   async resendVerification(req: ResendVerificationRequest): Promise<void> {
     this._error.set(null);
     try {
@@ -122,6 +180,13 @@ export class SessionStore implements ISessionStore {
     }
   }
 
+  /**
+   * Reset Password.
+   *
+   * @param {ResetPasswordRequest} req - The req
+   *
+   * @returns {Promise<void>} The result of the operation
+   */
   async resetPassword(req: ResetPasswordRequest): Promise<void> {
     this._error.set(null);
     try {
@@ -133,6 +198,13 @@ export class SessionStore implements ISessionStore {
     }
   }
 
+  /**
+   * Verify Email.
+   *
+   * @param {VerifyEmailRequest} req - The req
+   *
+   * @returns {Promise<void>} The result of the operation
+   */
   async verifyEmail(req: VerifyEmailRequest): Promise<void> {
     this._error.set(null);
     try {
@@ -148,6 +220,11 @@ export class SessionStore implements ISessionStore {
     }
   }
 
+  /**
+   * Rehydrate.
+   *
+   * @returns {Promise<void>} The result of the operation
+   */
   async rehydrate(): Promise<void> {
     if (this.rehydrated) return;
     if (this.rehydratePromise) return this.rehydratePromise;
@@ -155,6 +232,11 @@ export class SessionStore implements ISessionStore {
     await this.rehydratePromise;
   }
 
+  /**
+   * Perform Rehydrate.
+   *
+   * @returns {Promise<void>} The result of the operation
+   */
   private async performRehydrate(): Promise<void> {
     // One-time cleanup: drop keys written by the now-removed MockAuthService.
     // Safe to remove once enough time has passed for users to refresh.
@@ -187,10 +269,23 @@ export class SessionStore implements ISessionStore {
     }
   }
 
+  /**
+   * Clear Error.
+   *
+   * @returns {void} No return value
+   */
   clearError(): void {
     this._error.set(null);
   }
 
+  /**
+   * Persist.
+   *
+   * @param {AuthToken} token - The token
+   * @param {boolean} remember - The remember
+   *
+   * @returns {void} No return value
+   */
   private persist(token: AuthToken, remember: boolean): void {
     const target = remember ? localStorage : sessionStorage;
     const other = remember ? sessionStorage : localStorage;
@@ -215,6 +310,11 @@ export class SessionStore implements ISessionStore {
     return null;
   }
 
+  /**
+   * Clear Persisted.
+   *
+   * @returns {void} No return value
+   */
   private clearPersisted(): void {
     localStorage.removeItem(TOKEN_KEY);
     localStorage.removeItem(STORAGE_FLAG_KEY);
@@ -238,6 +338,9 @@ export class SessionStore implements ISessionStore {
   }
 }
 
+/**
+ * Read Remembered Email.
+ */
 function readRememberedEmail(): string | null {
   if (typeof localStorage === 'undefined') return null;
   const value = localStorage.getItem(REMEMBERED_EMAIL_KEY);

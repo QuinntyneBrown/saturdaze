@@ -8,7 +8,17 @@ import { ActivityView } from '../models/activity-view';
  * concrete `ActivityService` class.
  */
 export interface IActivityService {
+  /**
+   * List.
+   *
+   * @returns {Signal<ActivityView>} The result of the operation
+   */
   list(): Signal<ActivityView>;
+  /**
+   * Load.
+   *
+   * @returns {Promise<void>} The result of the operation
+   */
   load(): Promise<void>;
 }
 

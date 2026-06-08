@@ -17,12 +17,59 @@ import { VerifyEmailRequest } from '../models/verify-email-request';
  * them onto its `error` signal and the originating call's rejected promise.
  */
 export interface IAuthService {
+  /**
+   * Sign Up.
+   *
+   * @param {SignupRequest} req - The req
+   *
+   * @returns {Promise<{ token: AuthToken; user: User }>} The result of the operation
+   */
   signUp(req: SignupRequest): Promise<{ token: AuthToken; user: User }>;
+  /**
+   * Login.
+   *
+   * @param {LoginRequest} req - The req
+   *
+   * @returns {Promise<{ token: AuthToken; user: User }>} The result of the operation
+   */
   login(req: LoginRequest): Promise<{ token: AuthToken; user: User }>;
+  /**
+   * Forgot Password.
+   *
+   * @param {ForgotPasswordRequest} req - The req
+   *
+   * @returns {Promise<void>} The result of the operation
+   */
   forgotPassword(req: ForgotPasswordRequest): Promise<void>;
+  /**
+   * Resend Verification.
+   *
+   * @param {ResendVerificationRequest} req - The req
+   *
+   * @returns {Promise<void>} The result of the operation
+   */
   resendVerification(req: ResendVerificationRequest): Promise<void>;
+  /**
+   * Reset Password.
+   *
+   * @param {ResetPasswordRequest} req - The req
+   *
+   * @returns {Promise<void>} The result of the operation
+   */
   resetPassword(req: ResetPasswordRequest): Promise<void>;
+  /**
+   * Verify Email.
+   *
+   * @param {VerifyEmailRequest} req - The req
+   *
+   * @returns {Promise<void>} The result of the operation
+   */
   verifyEmail(req: VerifyEmailRequest): Promise<void>;
+  /**
+   * Me.
+   *
+   * @returns {Promise<User>} The result of the operation
+   */
   me(): Promise<User>;
 }
 

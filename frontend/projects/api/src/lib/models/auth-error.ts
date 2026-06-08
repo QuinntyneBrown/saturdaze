@@ -5,6 +5,12 @@ import { AuthErrorCode } from './auth-error-code';
  * render an inline message above the submit button.
  */
 export interface AuthError {
+  /**
+   * Code.
+   */
   readonly code: AuthErrorCode;
+  /**
+   * Message.
+   */
   readonly message: string;
 }

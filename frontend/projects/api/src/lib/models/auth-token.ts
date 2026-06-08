@@ -4,6 +4,12 @@
  * off — see `SessionStore`).
  */
 export interface AuthToken {
+  /**
+   * Value.
+   */
   readonly value: string;
+  /**
+   * Expires Utc.
+   */
   readonly expiresUtc: string;
 }

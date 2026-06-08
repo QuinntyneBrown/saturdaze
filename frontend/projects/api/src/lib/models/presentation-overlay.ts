@@ -5,8 +5,20 @@
  * suggestion bundle for a given weekend.
  */
 export interface PresentationOverlay {
+  /**
+   * Subtitle.
+   */
   readonly subtitle?: string;
+  /**
+   * Ages.
+   */
   readonly ages?: string;
+  /**
+   * Tag.
+   */
   readonly tag?: string;
+  /**
+   * Why.
+   */
   readonly why?: string;
 }

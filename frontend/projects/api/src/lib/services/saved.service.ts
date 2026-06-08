@@ -34,14 +34,27 @@ export class SavedService implements ISavedService {
   private readonly baseUrl = inject(API_BASE_URL);
   private readonly _view = signal<SavedView>(EMPTY_VIEW);
 
+  /**
+   * Constructor.
+   */
   constructor() {
     void this.load();
   }
 
+  /**
+   * List.
+   *
+   * @returns {Signal<SavedView>} The result of the operation
+   */
   list(): Signal<SavedView> {
     return this._view.asReadonly();
   }
 
+  /**
+   * Load.
+   *
+   * @returns {Promise<void>} The result of the operation
+   */
   async load(): Promise<void> {
     try {
       const rows = await firstValueFrom(
@@ -77,6 +90,13 @@ export class SavedService implements ISavedService {
   }
 }
 
+/**
+ * To Saved Weekend.
+ *
+ * @param {WeekendSummaryDto} dto - The dto
+ *
+ * @returns {SavedWeekend} The result of the operation
+ */
 function toSavedWeekend(dto: WeekendSummaryDto): SavedWeekend {
   return {
     id: dto.id,
@@ -88,6 +108,13 @@ function toSavedWeekend(dto: WeekendSummaryDto): SavedWeekend {
   };
 }
 
+/**
+ * Title For.
+ *
+ * @param {WeekendSummaryDto} dto - The dto
+ *
+ * @returns {string} The result of the operation
+ */
 function titleFor(dto: WeekendSummaryDto): string {
   if (dto.title && dto.title.trim().length > 0) return dto.title;
   const first = dto.activityHighlights[0];
@@ -97,6 +124,13 @@ function titleFor(dto: WeekendSummaryDto): string {
   return 'Weekend plan';
 }
 
+/**
+ * Highlight Line.
+ *
+ * @param {WeekendSummaryDto} dto - The dto
+ *
+ * @returns {string} The result of the operation
+ */
 function highlightLine(dto: WeekendSummaryDto): string {
   const items = dto.activityHighlights;
   if (items.length === 0) return 'No activities slotted yet.';
@@ -115,6 +149,14 @@ function formatRange(saturdayIso: string): string {
   return `${month} ${sat.getUTCDate()}–${sun.getUTCDate()}, ${sat.getUTCFullYear()}`;
 }
 
+/**
+ * Lede.
+ *
+ * @param {number} planned - The planned
+ * @param {number} favourites - The favourites
+ *
+ * @returns {string} The result of the operation
+ */
 function lede(planned: number, favourites: number): string {
   if (planned === 0) return 'No weekends planned yet. Plan one to start building history.';
   const weekendWord = planned === 1 ? 'weekend' : 'weekends';

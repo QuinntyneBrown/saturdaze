@@ -15,25 +15,66 @@ import { User } from '../models/user';
 import { VerifyEmailRequest } from '../models/verify-email-request';
 import { IAuthService } from './auth.service.contract';
 
+/**
+ * Auth Tokens Dto.
+ */
 interface AuthTokensDto {
+  /**
+   * Access Token.
+   */
   readonly accessToken: string;
+  /**
+   * Access Token Expires At Utc.
+   */
   readonly accessTokenExpiresAtUtc: string;
 }
 
+/**
+ * Auth Success Dto.
+ */
 interface AuthSuccessDto {
+  /**
+   * Token.
+   */
   readonly token: AuthTokensDto;
+  /**
+   * User.
+   */
   readonly user: User;
 }
 
+/**
+ * Auth Error Dto.
+ */
 interface AuthErrorDto {
+  /**
+   * Code.
+   */
   readonly code: AuthErrorCode;
+  /**
+   * Message.
+   */
   readonly message: string;
 }
 
+/**
+ * Map Token.
+ *
+ * @param {AuthTokensDto} dto - The dto
+ *
+ * @returns {AuthToken} The result of the operation
+ */
 function mapToken(dto: AuthTokensDto): AuthToken {
   return { value: dto.accessToken, expiresUtc: dto.accessTokenExpiresAtUtc };
 }
 
+/**
+ * Rethrow As Auth Error.
+ *
+ * @param {unknown} err - The err
+ *
+ * @returns {never} The result of the operation
+ */
 function rethrowAsAuthError(err: unknown): never {
   if (err instanceof HttpErrorResponse && err.error && typeof err.error === 'object') {
     const body = err.error as Partial<AuthErrorDto>;
@@ -59,6 +100,13 @@ export class AuthService implements IAuthService {
   private readonly http = inject(HttpClient);
   private readonly baseUrl = inject(API_BASE_URL);
 
+  /**
+   * Sign Up.
+   *
+   * @param {SignupRequest} req - The req
+   *
+   * @returns {Promise<} The result of the operation
+   */
   async signUp(req: SignupRequest): Promise<{ token: AuthToken; user: User }> {
     try {
       const dto = await firstValueFrom(
@@ -70,6 +118,13 @@ export class AuthService implements IAuthService {
     }
   }
 
+  /**
+   * Login.
+   *
+   * @param {LoginRequest} req - The req
+   *
+   * @returns {Promise<} The result of the operation
+   */
   async login(req: LoginRequest): Promise<{ token: AuthToken; user: User }> {
     try {
       const dto = await firstValueFrom(
@@ -81,6 +136,13 @@ export class AuthService implements IAuthService {
     }
   }
 
+  /**
+   * Forgot Password.
+   *
+   * @param {ForgotPasswordRequest} req - The req
+   *
+   * @returns {Promise<void>} The result of the operation
+   */
   async forgotPassword(req: ForgotPasswordRequest): Promise<void> {
     try {
       await firstValueFrom(
@@ -91,6 +153,13 @@ export class AuthService implements IAuthService {
     }
   }
 
+  /**
+   * Resend Verification.
+   *
+   * @param {ResendVerificationRequest} req - The req
+   *
+   * @returns {Promise<void>} The result of the operation
+   */
   async resendVerification(req: ResendVerificationRequest): Promise<void> {
     try {
       await firstValueFrom(
@@ -101,6 +170,13 @@ export class AuthService implements IAuthService {
     }
   }
 
+  /**
+   * Reset Password.
+   *
+   * @param {ResetPasswordRequest} req - The req
+   *
+   * @returns {Promise<void>} The result of the operation
+   */
   async resetPassword(req: ResetPasswordRequest): Promise<void> {
     try {
       await firstValueFrom(
@@ -111,6 +187,13 @@ export class AuthService implements IAuthService {
     }
   }
 
+  /**
+   * Verify Email.
+   *
+   * @param {VerifyEmailRequest} req - The req
+   *
+   * @returns {Promise<void>} The result of the operation
+   */
   async verifyEmail(req: VerifyEmailRequest): Promise<void> {
     try {
       await firstValueFrom(
@@ -121,6 +204,11 @@ export class AuthService implements IAuthService {
     }
   }
 
+  /**
+   * Me.
+   *
+   * @returns {Promise<User>} The result of the operation
+   */
   async me(): Promise<User> {
     try {
       return await firstValueFrom(

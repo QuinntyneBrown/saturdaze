@@ -53,6 +53,13 @@ function commitmentIcon(title: string): string {
   return 'calendar';
 }
 
+/**
+ * Commitment Subtitle.
+ *
+ * @param {FamilyDto['commitments'][number]} c - The c
+ *
+ * @returns {string} The result of the operation
+ */
 function commitmentSubtitle(c: FamilyDto['commitments'][number]): string {
   const day =
     c.dayOfWeek === 'Saturday' ? 'Saturdays' :
@@ -63,11 +70,25 @@ function commitmentSubtitle(c: FamilyDto['commitments'][number]): string {
   return `${day} ${start} – ${end}`;
 }
 
+/**
+ * Member Subtitle.
+ *
+ * @param {FamilyDto['members'][number]} m - The m
+ *
+ * @returns {string} The result of the operation
+ */
 function memberSubtitle(m: FamilyDto['members'][number]): string {
   const role = m.age >= 18 ? 'Parent' : 'Kid';
   return `${role} · ${m.age}`;
 }
 
+/**
+ * Map Family.
+ *
+ * @param {FamilyDto} dto - The dto
+ *
+ * @returns {FamilyProfile} The result of the operation
+ */
 function mapFamily(dto: FamilyDto): FamilyProfile {
   const members: FamilyMember[] = dto.members
     .slice()
@@ -108,6 +129,13 @@ function mapFamily(dto: FamilyDto): FamilyProfile {
   };
 }
 
+/**
+ * Map Editable.
+ *
+ * @param {FamilyDto} dto - The dto
+ *
+ * @returns {EditableFamilyProfile} The result of the operation
+ */
 function mapEditable(dto: FamilyDto): EditableFamilyProfile {
   return {
     homeLocation: dto.homeLocation,
@@ -132,6 +160,13 @@ function mapEditable(dto: FamilyDto): EditableFamilyProfile {
   };
 }
 
+/**
+ * Normalize Time.
+ *
+ * @param {string} time - The time
+ *
+ * @returns {string} The result of the operation
+ */
 function normalizeTime(time: string): string {
   return time.length === 5 ? `${time}:00` : time;
 }
@@ -144,10 +179,18 @@ export class FamilyService implements IFamilyService {
   private readonly _profile = signal<FamilyProfile>(PLACEHOLDER_PROFILE);
   private readonly _editableProfile = signal<EditableFamilyProfile | null>(null);
 
+  /**
+   * Constructor.
+   */
   constructor() {
     void this.load();
   }
 
+  /**
+   * Get Profile.
+   *
+   * @returns {Signal<FamilyProfile>} The result of the operation
+   */
   getProfile(): Signal<FamilyProfile> {
     return this._profile.asReadonly();
   }
@@ -156,6 +199,11 @@ export class FamilyService implements IFamilyService {
     return this._editableProfile.asReadonly();
   }
 
+  /**
+   * Load.
+   *
+   * @returns {Promise<void>} The result of the operation
+   */
   async load(): Promise<void> {
     try {
       const dto = await firstValueFrom(
@@ -167,6 +215,13 @@ export class FamilyService implements IFamilyService {
     }
   }
 
+  /**
+   * Save Profile.
+   *
+   * @param {EditableFamilyProfile} profile - The profile
+   *
+   * @returns {Promise<void>} The result of the operation
+   */
   async saveProfile(profile: EditableFamilyProfile): Promise<void> {
     const dto = await firstValueFrom(
       this.http.put<FamilyDto>(`${this.baseUrl}/api/family`, {
@@ -191,6 +246,13 @@ export class FamilyService implements IFamilyService {
     this.apply(dto);
   }
 
+  /**
+   * Apply.
+   *
+   * @param {FamilyDto} dto - The dto
+   *
+   * @returns {void} No return value
+   */
   private apply(dto: FamilyDto): void {
     this._profile.set(mapFamily(dto));
     this._editableProfile.set(mapEditable(dto));
