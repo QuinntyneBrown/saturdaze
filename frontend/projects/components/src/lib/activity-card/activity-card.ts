@@ -16,6 +16,10 @@ import { Icon } from '../icon/icon';
 
 export type ActivityCardTone = 'default' | 'outdoor' | 'indoor' | 'food';
 
+/**
+ * Activity Card.
+ * 
+ */
 @Component({
   selector: 'sd-activity-card',
   standalone: true,

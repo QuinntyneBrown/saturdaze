@@ -67,14 +67,6 @@ export interface IWeekendPlanService {
    */
   regenerateDay(day: 'Saturday' | 'Sunday', id?: string): Promise<void>;
   /**
-   * Mark Favourite.
-   *
-   * @param {boolean} favourite - The favourite
-   *
-   * @returns {Promise<void>} The result of the operation
-   */
-  markFavourite(favourite: boolean, id?: string): Promise<void>;
-  /**
    * Create Share Link.
    *
    * @returns {Promise<string>} The result of the operation
@@ -105,14 +97,6 @@ export interface IWeekendPlanService {
    * @returns {Promise<void>} The result of the operation
    */
   lockDay(day: 'Saturday' | 'Sunday', locked: boolean, id?: string): Promise<void>;
-  /**
-   * Swap Block.
-   *
-   * @param {string} blockId - The block id
-   *
-   * @returns {Promise<void>} The result of the operation
-   */
-  swapBlock(blockId: string): Promise<void>;
   /**
    * Add Errand.
    *

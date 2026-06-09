@@ -159,27 +159,6 @@ export class WeekendPlanService implements IWeekendPlanService {
   }
 
   /**
-   * Mark Favourite.
-   *
-   * @param {boolean} favourite - The favourite
-   *
-   * @returns {Promise<void>} The result of the operation
-   */
-  async markFavourite(favourite: boolean, id?: string): Promise<void> {
-    const target = this.targetId(id);
-    try {
-      const dto = await firstValueFrom(
-        this.http.put<WeekendDto>(`${this.baseUrl}/api/weekends/${target}/favourite`, {
-          favourite,
-        }),
-      );
-      this.apply(dto);
-    } catch (err) {
-      console.error('WeekendPlanService.markFavourite failed', err);
-    }
-  }
-
-  /**
    * Create Share Link.
    *
    * @returns {Promise<string>} The result of the operation
@@ -254,24 +233,6 @@ export class WeekendPlanService implements IWeekendPlanService {
     } catch (err) {
       console.error('WeekendPlanService.lockDay failed', err);
       throw err;
-    }
-  }
-
-  /**
-   * Swap Block.
-   *
-   * @param {string} blockId - The block id
-   *
-   * @returns {Promise<void>} The result of the operation
-   */
-  async swapBlock(blockId: string): Promise<void> {
-    try {
-      await firstValueFrom(
-        this.http.post(`${this.baseUrl}/api/blocks/${blockId}/swap`, {}),
-      );
-      await this.loadCurrent();
-    } catch (err) {
-      console.error('WeekendPlanService.swapBlock failed', err);
     }
   }
 
