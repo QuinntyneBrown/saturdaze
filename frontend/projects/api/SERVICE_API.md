@@ -141,12 +141,10 @@ _Implements: `IWeekendPlanService`_
 | `plan` | `weekendOfIso: string` | `Promise<void>` | no | Plan an explicit Saturday. POST /api/weekends/plan. Idempotent server-side. |
 | `regenerate` | `id?: string` | `Promise<void>` | no | Regenerate. |
 | `regenerateDay` | `day: 'Saturday' \| 'Sunday', id?: string` | `Promise<void>` | no | Regenerate Day. |
-| `markFavourite` | `favourite: boolean, id?: string` | `Promise<void>` | no | Mark Favourite. |
 | `createShareLink` | `id?: string` | `Promise<string>` | no | Create Share Link. |
 | `calendarLinks` | `id?: string` | `CalendarLinks` | no | Calendar Links. |
 | `lockBlock` | `blockId: string, locked: boolean` | `Promise<void>` | no | Lock Block. |
 | `lockDay` | `day: 'Saturday' \| 'Sunday', locked: boolean, id?: string` | `Promise<void>` | no | Lock Day. |
-| `swapBlock` | `blockId: string` | `Promise<void>` | no | Swap Block. |
 | `addErrand` | `description: string, estimatedMinutes: number, id?: string` | `Promise<void>` | no | Add Errand. |
 | `remixSaved` | `id: string` | `Promise<void>` | no | Remix Saved. |
 | `repeatSaved` | `id: string` | `Promise<void>` | no | Repeat Saved. |

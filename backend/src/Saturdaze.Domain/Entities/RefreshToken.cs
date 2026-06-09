@@ -8,7 +8,5 @@ public class RefreshToken
     public DateTimeOffset ExpiresAtUtc { get; set; }
     public DateTimeOffset CreatedAtUtc { get; set; }
     public DateTimeOffset? RevokedAtUtc { get; set; }
-    public Guid? ReplacedByTokenId { get; set; }
     public string? CreatedByIp { get; set; }
-    public string? RevokedByIp { get; set; }
 }

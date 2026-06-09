@@ -29,7 +29,6 @@
   --sd-sun:          #F4C969;   // sunny chip / weather
   --sd-sky:          #BFD9E8;   // cool weather chip
   --sd-leaf:         #A9C9A4;   // outdoor chip
-  --sd-indoor:       #C9B6E0;   // indoor chip
 
   // Typography — sans-serif system stack.
   --sd-font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
@@ -43,8 +42,6 @@
   --sd-fs-xl:   26px;
   --sd-fs-xxl:  34px;
 
-  --sd-lh-tight: 1.2;
-  --sd-lh-snug:  1.35;
   --sd-lh-base:  1.5;
 
   --sd-fw-regular:  400;
@@ -52,20 +49,7 @@
   --sd-fw-semibold: 600;
   --sd-fw-bold:     700;
 
-  // Spacing — 4px base scale.
-  --sd-s-0: 0;
-  --sd-s-1: 4px;
-  --sd-s-2: 8px;
-  --sd-s-3: 12px;
-  --sd-s-4: 16px;
-  --sd-s-5: 20px;
-  --sd-s-6: 24px;
-  --sd-s-7: 32px;
-  --sd-s-8: 40px;
-  --sd-s-9: 56px;
-
   // Radius.
-  --sd-r-sm:   8px;
   --sd-r-md:   12px;
   --sd-r-lg:   16px;
   --sd-r-xl:   22px;
@@ -89,13 +73,11 @@
   --sd-nav-h:     64px;
   --sd-top-h:     56px;
 
-  // Breakpoints — kept as custom properties for runtime use; the SCSS-side
-  // values mirror these and live in `_breakpoints.scss`.
+  // Breakpoints live SCSS-side in `_breakpoints.scss` (`$bp-tablet`/`$bp-desktop`
+  // + the `respond-to()` mixin):
   //   mobile:  < 720px (default)
   //   tablet:  720-1023px  (nav becomes icon rail)
   //   desktop: >= 1024px   (nav becomes labelled sidebar; split-view active)
-  --sd-bp-tablet:  720px;
-  --sd-bp-desktop: 1024px;
 
   // Rail widths.
   --sd-rail-w-tablet:  72px;

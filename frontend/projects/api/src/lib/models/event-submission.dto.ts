@@ -42,14 +42,6 @@ export interface EventSubmissionDto {
    */
   readonly sourceUrl: string | null;
   /**
-   * Category.
-   */
-  readonly category: string | null;
-  /**
-   * Drive Minutes.
-   */
-  readonly driveMinutes: number | null;
-  /**
    * Status.
    */
   readonly status: EventSubmissionStatus;
