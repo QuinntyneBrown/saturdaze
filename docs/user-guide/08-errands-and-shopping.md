@@ -1,95 +1,62 @@
 # 8. Errands and Shopping
 
-Weekends aren't only for fun. Sometimes there's a Costco run, an
-IKEA trip, a quick stop at the hardware store. Saturdaze has a
-dedicated **Errand slot** that fits those in without ruining the day.
+Weekends aren't only for fun. Sometimes there's a Costco run, an IKEA trip,
+a quick stop at the hardware store. Saturdaze has a dedicated **Errand**
+screen that fits one of those into the weekend without wrecking the day.
 
-## When to use this
+The Errand screen ("Add an errand") is a standalone screen you open in
+context — it isn't one of the four bottom-nav tabs.
+
+## When to use it
 
 Use the errand slot when:
 
-- Someone in the family flagged a needed shopping run
-- You have one or two short stops to make
-- You'd rather not cancel a planned activity to do it
+- There's a shopping run that needs to happen this weekend
+- It's one short stop, not a whole shopping day
+- You'd rather the app fit it in than cancel a planned outing
 
-For full shopping days (e.g. a long IKEA visit), it's usually better
-to make that the day's **activity** instead.
+For a full shopping day (a long IKEA visit), it's usually better to let that
+*be* the day's main activity instead.
 
 ## Adding an errand
 
-There are two easy ways.
+On the **Add an errand** screen:
 
-### From the home screen
+1. Fill in **What's needed** — a short description (e.g. "Costco run").
+2. Set **Roughly how long** — an estimated duration in minutes.
+3. Glance at the **Best day** options. Saturdaze shows a few candidate slots,
+   each labelled with how well it fits — **Best fit**, **ok**, or **tight**.
+   You can expand the list with **Pick a different slot** to see the options.
+4. Tap **Add to weekend**.
 
-When the app notices an errand is queued (e.g. a partner texted you
-"we need diapers"), it appears in the **A heads-up** panel:
+You'll get a short **"Added to Saturday"** confirmation, and a **Back to
+weekend** button returns you to the plan.
 
-> "Sara mentioned a Costco run. Want me to slot it Sunday morning
-> before church so it doesn't kill the day?"
+## How the errand actually lands
 
-Tap **Add to Sunday** and the errand is dropped into the timeline at
-the best gap.
+A couple of details worth knowing, because they explain what you see:
 
-### From the Errands screen
+- The planner fits **one errand per weekend**.
+- It looks for a **Saturday-morning** gap first (before noon) and slots the
+  errand into the smallest gap that fits, leaving a little buffer around it.
+- Errands are placed on **Saturday**, not Sunday.
 
-Tap **Activities → Errands** (or scroll to the **Errand slot** card
-on the home screen).
+So while the screen shows day/time options to help you think it through, the
+actual placement is the planner finding the best Saturday-morning gap. The
+errand shows up in the timeline as a block with a shopping-bag icon (see
+[The Itinerary](04-the-itinerary.md)).
 
-1. Tap **+ Add an errand**.
-2. Type a **name** (e.g. "Costco run").
-3. Pick a **store or place** (or skip if you don't know yet).
-4. Estimate a **duration** (30 min, 60 min, 90 min).
-5. Choose **Either day** or pin it to **Saturday** / **Sunday**.
-6. Choose **Morning**, **Afternoon**, or **Evening** — or **No
-   preference**.
-7. Tap **Save**.
+## Marking an errand done
 
-The errand goes into a small list and quietly waits for the next plan
-or regenerate.
+Once you've run the errand, it can be marked **done** so it's no longer
+hanging over the weekend.
 
-## How errands fit into the day
+## Tips for a smooth fit
 
-When you next plan or regenerate, the app does this:
-
-- Looks for **gaps** between fixed commitments and main activities.
-- Prefers **before-the-main-event** windows (so the day doesn't end
-  with an errand).
-- Avoids errands during **prime activity time** (late morning to mid
-  afternoon).
-- Bunches **multiple short errands** together if they're nearby.
-
-You'll see the errand appear as a small block in the timeline, marked
-with a 🛍️ shopping-bag icon.
-
-## Adjusting an errand block
-
-Tap it in the timeline. You'll get the standard block options:
-
-- **Lock** — pin it (useful if the store has limited hours).
-- **Move** — shift earlier or later.
-- **Swap location** — change which store you're going to.
-- **Remove** — pull it back out.
-
-## Keeping an errand list across weekends
-
-If you add an errand but the weekend fills up, the errand isn't lost.
-It carries over to the next weekend automatically and shows up in the
-**A heads-up** panel:
-
-> "Costco run is still on your list — slot it into Saturday?"
-
-To clear an errand without doing it, open it from **Activities →
-Errands** and tap **Remove**.
-
-## Tips for a smooth errand fit
-
-- **One long errand beats three short ones.** If you can combine a
-  hardware store + grocery + pharmacy into a single stop, the day
-  feels better.
-- **Pin time-sensitive errands.** If the store closes at 5 pm, lock
-  it to the morning so a swap can't push it.
-- **Use "No preference" liberally.** The app does a better job placing
-  errands when it has flexibility.
+- **Keep the estimate honest.** The planner reserves your estimate plus a
+  small buffer, so a realistic number means a realistic gap.
+- **One focused errand beats a vague one.** "Costco run, 60 min" places
+  cleanly; a sprawling list of stops doesn't.
 
 ## Up next
 

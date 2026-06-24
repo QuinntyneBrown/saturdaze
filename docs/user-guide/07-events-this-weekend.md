@@ -1,108 +1,70 @@
 # 7. Events This Weekend
 
-The **Events** screen shows you what's actually happening nearby this
-weekend — the circus is in town, a children's theatre matinée, a
-lavender festival, an outdoor movie night.
+The **Local events** screen shows what's happening nearby — a lavender
+festival, a kids' symphony concert, a community market, a circus in town.
+It's the section that helps you avoid the "I had no idea that was on" feeling.
 
-This is the section that helps you avoid the "I had no idea that was
-on" feeling.
-
-You can reach it from **Activities → Events**, or from the home
-screen when the app notices a relevant event for your family.
+Like the Food screen, **Local events** is a dedicated screen rather than a
+bottom-nav tab; you open it in context. From it you can browse the feed and
+submit an event of your own.
 
 ## What's in the feed
 
-The Events feed is filtered to:
+Events are filtered to ones near you. Each **event card** shows:
 
-- **This weekend only** (Saturday + Sunday)
-- **Within your drive-time limit** from home
-- **Roughly age-appropriate** for your kids
+- An **icon** and a category **tag** (Festival, Seasonal, Theatre, etc.)
+- The **name** of the event
+- The **venue** and the **drive time**
+- A short **when** label, plus the **day** and **month**
 
-You'll see a stack of **event cards**, each with:
+At the top of the screen are **filter chips** for categories and for which
+day you're interested in.
 
-- An **image** or icon
-- The **name** (e.g. "Cirque du Soleil — Echo")
-- The **date** and **time**
-- The **venue** and **drive time**
-- A short **why-it-might-fit** line
-- A **chip** showing the category (Theatre, Festival, Seasonal, etc.)
+> **Good to know:** browsing events is separate from planning. The planner
+> does **not** automatically drop events into your Saturday/Sunday timeline —
+> the feed is for discovering what's on, and you build the rest of the day
+> around anything you decide to attend.
 
-## Filtering events
+## Your submissions
 
-At the top of the Events screen, you'll see filter chips:
-
-- **All**, **Theatre**, **Festival**, **Seasonal**, **Sports**, **Free**
-- A second row for **Saturday**, **Sunday**, or both
-
-Tap to toggle. The list updates immediately.
-
-## Categories you'll see often
-
-- **Seasonal** — lavender bloom, pumpkin patches, sugar bush, fall
-  fairs, holiday lights
-- **Theatre** — Mississauga's Living Arts Centre, children's matinées,
-  family-friendly touring shows
-- **Festival** — community festivals, multicultural events, food fests
-- **Sports** — local sporting events that are easy to attend
-- **Circus** — when a touring circus is in the area
-
-## Tapping an event card
-
-Tap a card to see full details:
-
-- A larger image
-- Full description in plain language
-- **Address** and **drive time**
-- **Start and end times**
-- **Ticket info** — a link to the venue's booking page (Saturdaze does
-  not handle bookings itself)
-- Buttons:
-  - **Add to Saturday** / **Add to Sunday**
-  - **Save for later**
-  - **Open in maps**
-
-## Adding an event to a day
-
-Same flow as activities:
-
-1. Tap **Add to Saturday** (or **Sunday**).
-2. The app finds the best window.
-3. You see a preview of the timeline with the event slotted in,
-   including what got bumped.
-4. Tap **Use this plan** or **Cancel**.
-
-Because events have **fixed start times**, the app will lock the event
-in place and rearrange other blocks around it.
-
-## Heads-up notices
-
-The home screen's **A heads-up** panel sometimes pulls events forward:
-
-> "Cirque du Soleil is at the Rogers Centre Saturday — we still have
-> two evening seats around your bedtime window."
-
-Tap these to jump straight to the event detail and decide.
+If you've submitted events, they appear in a **Your submissions** section.
+A submission you've made but that hasn't been approved yet carries a
+**Pending review** chip, so you can tell it isn't public yet — it shows in
+your own list while it waits.
 
 ## Submitting an event Saturdaze missed
 
-If you know about something the feed doesn't (a school fair, a one-off concert, a local festival), you can add it yourself:
+Know about something the feed doesn't (a school fair, a one-off concert)?
+You can add it:
 
-- Tap the **+** floating button in the bottom-right corner of the Events feed for a quick add (title + when), or
-- Open the **+** action in the top bar for the full form (location, description, cost, age range, link).
+- Tap the **+** button to open a **quick-add** form — just the essentials:
+  **title**, **when** (start time, pre-filled to the next hour), and an
+  optional **location**. Submit and you're done.
+- For more detail (description, cost note, age range, and a link), open the
+  **full submission form** via **+ → submit**. After you submit, a short
+  **submitted** confirmation screen lets you add another or head back to the
+  feed.
 
-Submissions go into a moderation queue and aren't visible to other families until they're approved. Yours will show up in your own feed with a **Pending review** chip so you can tell it's not public yet.
+Submissions go into a **moderation queue** and aren't shown to other families
+until an admin approves them. Once approved, an approved event joins the
+regular feed; if it's rejected, that's recorded with a reason.
 
-Approval typically happens within a day. Once approved, the event joins the regular feed for everyone in driving distance — no further action needed on your end.
+> **For admins:** approving and rejecting submissions is an admin-only
+> capability. An **Event moderation** link does appear on the **Family**
+> (profile) screen for admin accounts — but the moderation screen's route
+> isn't wired up yet, so that link doesn't resolve today and moderation
+> happens out-of-band for now. See
+> [Admin and Command-Line Tools](11-admin-and-cli.md) for the admin account.
 
-If a submission is rejected, you'll see the moderator's reason on your card. Most rejections are duplicates of curated events; re-submitting is fine when something has genuinely changed.
+## What's in the starter feed
 
-## Past events / archive
-
-Events drop off the feed automatically after their date passes. If
-you remember going to something specific, you can still find it under
-**Saved → Past Weekends**, which we cover next.
+The seeded events are seasonal and local — things like a Terre Bleu lavender
+weekend, a touring circus, a spring tulip festival, a kids' symphony concert,
+a farmers' market, strawberry-picking, and an early pumpkin-patch day. Their
+dates shift automatically so the sample data stays relevant to the current
+upcoming weekend.
 
 ## Up next
 
-Need to slot in a Costco run or a Home Depot trip? See
+Need to slot in a Costco run or a hardware-store trip? See
 [Errands and Shopping](08-errands-and-shopping.md).

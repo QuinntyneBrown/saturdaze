@@ -1,123 +1,76 @@
 # 9. Saved Weekends and History
 
-Saturdaze quietly keeps a record of every weekend you've planned. The
-**Saved** screen is where that history lives — and where you can pull
-favourites forward, avoid repeats, or just look back on a great
-weekend.
+Saturdaze keeps a record of the weekends you've planned. The **Saved** screen
+is where that history lives — and where you pull a good weekend forward or
+remix it into a fresh one.
 
 Tap **Saved** in the bottom bar to open it.
 
 ## What's on this screen
 
-You'll see two main sections:
+- A **Recent** section listing past weekends as **saved cards**.
+- An **Avoid repeating** list — a reminder of things you've done lately, so
+  you don't accidentally repeat them.
+- A **More** button for additional actions.
 
-- **Favourites** — weekends you specifically marked with a heart
-- **Past weekends** — a chronological list of every plan you've used
-
-Each entry is a **saved card** showing:
+Each saved card shows:
 
 - The **date range** (e.g. "Sat 17 – Sun 18 May")
-- A one-line **summary** (e.g. "Lavender + Rec Room weekend")
-- The **weather** that weekend
-- Small **chips** noting standouts (e.g. **Rainy**, **New activity**,
-  **Birthday party**)
-- A **heart icon** to favourite or unfavourite
+- A **title** for the weekend
+- A **star rating** (out of five)
+- A one-line **highlights** summary
+- A **favourite heart**
 
-## Tapping a saved weekend
+## Repeat vs. Remix
 
-Tap any card to open the full timeline for both days, just like the
-live itinerary view. From there you can:
+Every saved card has two buttons:
 
-- **Re-use as-is** — drops the same plan into the upcoming weekend
-  (drive times and weather get re-checked automatically).
-- **Remix this weekend** — uses it as a starting point, then shuffles
-  the non-fixed blocks.
-- **Add a memory note** — type a short reflection (e.g. "Mae loved
-  the petting zoo, Eli was over it"). These notes feed back into
-  future suggestions.
-- **Share** — copy a read-only link.
+- **Repeat** — use that weekend **as-is** as your current plan. Saturdaze
+  confirms ("Use this weekend as the current plan?") and then drops the same
+  plan into the upcoming weekend.
+- **Remix** — same family vibe, **fresh activities and food**. It starts from
+  the saved weekend and reshuffles the non-fixed blocks, so you keep the shape
+  but get new ideas.
 
-## Marking favourites
+Both ask for a quick confirmation before they change your current plan.
 
-There are two ways to mark a weekend as a favourite:
+## Favourites
 
-- Tap the **heart** on the saved card.
-- After a great weekend, the app sometimes asks: "Save this one as
-  a favourite?" Tap **Yes**.
+Saved cards show a **favourite heart** to flag the weekends you loved.
 
-Favourites:
-
-- Appear at the top of the **Saved** screen.
-- Get a small priority boost when the app suggests activities for
-  future weekends.
-- Can be tagged (e.g. "Rainy day", "Hosting friends") to make them
-  easier to find.
+> **What's editable today:** the heart is shown on each card, but a button to
+> **toggle** favourite on/off **from this screen** is still being wired up.
+> The underlying support exists; the on-screen control will follow.
 
 ## Avoiding "we just did that"
 
-Saturdaze remembers what you did last weekend and the weekend before
-that. When planning a new weekend, it will:
+The planner already works to keep weekends from feeling repetitive:
 
-- **Not** re-suggest the same activity two weekends in a row, unless
-  it's a fixed commitment.
-- **Not** suggest the same restaurant within a 2-3 week window.
-- **Soft-skip** anything you've done 3+ times in a month, unless you
-  favourite it.
+- An activity you did in the **last week** is strongly demoted next time.
+- One from **two to four weeks** ago is mildly demoted.
+- Older than that, no penalty.
 
-If you *want* to repeat — say, the kids loved a park — just lock the
-activity or mark it as a favourite.
+The **Avoid repeating** list on this screen reflects that recent history. If
+you *want* to repeat something — the kids loved a park — use **Repeat** on the
+saved weekend, or lock that activity before regenerating.
 
-## Filtering past weekends
+## Getting a weekend out of the app
 
-At the top of **Past weekends**, you'll find filter chips:
+To keep or share a plan, use the plan's **share** and **calendar** options
+(from the home screen's quick actions and the day's **More** menu):
 
-- **All**, **Favourites**, **Outdoor**, **Indoor**, **Rainy**, **Out
-  of town**, **Birthdays**
+- **Share** builds a read-only link and a tidy text summary you can send on.
+- **Calendar** gives you `.ics` download, `webcal` subscribe, and Google
+  Calendar links.
 
-Combine filters to find a specific kind of weekend. Useful when you
-want to repeat "that great rainy-day plan."
+(A day's **More** menu also lists an "Export as text" option, but that one is
+still being wired up — use Share or Calendar for now.)
 
-## Memory notes
-
-Memory notes are little reflections you add after a weekend. They're
-optional but powerful — over time they help Saturdaze get better at
-reading your family.
-
-Examples:
-
-- "Lavender field was magical, do it again next year."
-- "Rec Room was loud — go earlier next time."
-- "Eli refused to eat anywhere but pizza this whole weekend."
-
-To add a note, open a past weekend → **Add a memory note**.
-
-To see all your notes in one place, tap **Memory log** at the bottom
-of the **Saved** screen.
-
-## Repeating a weekend
-
-The fastest way to plan a copycat weekend:
-
-1. Open **Saved**.
-2. Find the weekend you want to repeat.
-3. Tap it → **Re-use as-is**.
-4. Confirm the dates (the app fills in this coming weekend by
-   default).
-5. The plan drops into **This Weekend**.
-
-Drive times and weather are recalculated, so a Lavender-in-May plan
-won't try to repeat itself in February.
-
-## Exporting a weekend
-
-If you want to keep a weekend plan outside the app:
-
-1. Open a saved weekend.
-2. Tap the **share** icon → **Export as PDF** or **Copy to clipboard**.
-
-Great for emailing a recap to grandparents.
+> **Not available:** there is **no PDF export** and **no "memory notes"**
+> feature today, despite what older versions of this guide described. Use the
+> text/calendar/share options above instead.
 
 ## Up next
 
-Final chapter — the small but useful stuff:
+Final chapter for everyday use — the small but useful stuff:
 [Tips, Shortcuts, and Troubleshooting](10-tips-and-troubleshooting.md).

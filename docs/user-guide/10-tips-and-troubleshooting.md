@@ -1,169 +1,140 @@
 # 10. Tips, Shortcuts, and Troubleshooting
 
-A grab-bag chapter for the things that don't fit elsewhere — little
-shortcuts, common questions, and what to do when something feels off.
+A grab-bag chapter: faster moves, common questions, and what to do when
+something feels off.
 
-## Power-user shortcuts
-
-These won't break anything. They're just faster than the long way.
+## Shortcuts
 
 ### Lock-and-regenerate
 
-If you have a plan that's "mostly right":
+The main way to shape a weekend:
 
-1. Open each day, tap the blocks you love → **Lock** them.
-2. Go back to home → **Regenerate the weekend**.
+1. On the home screen, open **Quick actions → Lock what's already perfect**
+   to enter lock mode.
+2. Tap the blocks you love to pin them.
+3. **Regenerate the weekend** (or a single day from its Itinerary).
 
-Everything you locked stays. The rest gets fresh ideas.
+Everything you locked stays; the rest gets fresh ideas.
 
-### "Just pick one" for restaurants
+### Regenerate one day, not both
 
-Tap **Activities → Restaurants → Just pick one**. The app picks the
-best fit, locks it, and ends the debate.
+If only Sunday is off, open Sunday's Itinerary and tap **Regenerate**. The
+other day is untouched.
 
-### Share before you commit
+### Share or hand off to a calendar
 
-From the home screen, tap **Share this weekend**. This generates a
-read-only link your partner can open without an account. Faster than
-re-explaining the plan over text.
+- **Share this weekend** (Quick actions) makes a read-only link plus a tidy
+  text summary — faster than re-explaining the plan over text.
+- The **calendar** option gives you `.ics`, `webcal`, and Google Calendar
+  links so the plan lands in the calendar you already use.
 
-### Drag to reorder
+(A day's **More** menu lists an "Export as text" option too, but it isn't
+functional yet — Share and Calendar are the working hand-offs today.)
 
-In the itinerary, you can press and hold any non-locked block and drag
-it up or down. Other blocks flex around it. Useful for "actually,
-lunch should be earlier."
+### Try something new
 
-### Friday preview notifications
-
-Turn these on (**Profile → Preferences → Friday preview
-notifications**) and you'll get a heads-up at 6 pm Friday with the
-plan already drafted. Great for couples who like to chat through the
-weekend over Friday dinner.
-
-### Mark a weekend as a one-off
-
-If you have a weird weekend — visiting in-laws, a birthday party
-across town — open the weekend and tap **One-off weekend**. Saturdaze
-won't use that weekend to shape future suggestions.
+On **Discover**, tap **Try something new** for a panel of fresh suggestions
+that lean toward places you haven't done recently.
 
 ## Common questions
 
 ### Why is the app suggesting things we don't like?
 
-Most often: your **Profile** isn't quite right. Open **Profile** and
-check:
+Most often your **profile** needs a touch-up. Open **Family** and check:
 
-- Are the kids' **ages** up to date?
-- Are your **likes & dislikes** current?
-- Are picky-eater notes attached to the right family member?
+- Are everyone's **ages** right? (Age fit can drop or keep an activity.)
+- Do your **likes & dislikes** reflect reality? A disliked tag removes
+  matching activities entirely.
 
-The app gets noticeably better within one or two weekends after a
-profile cleanup.
+Note that members and commitments are editable in-app today; the likes &
+dislikes shown on the profile come from your initial setup and aren't yet
+editable from that screen.
 
-### Why is everything outdoors?
+### Why is everything outdoors (or indoors)?
 
-Probably because your **Weather-appropriate** filter is leaning that
-way given the forecast. You can override it:
-
-- On the **Activities** screen, toggle **Indoor**.
-- In a day's itinerary, swap a block manually for an indoor option.
-
-If the weather is genuinely great, that's the app doing its job.
+The planner weights activities to the **weather**: indoor on wet days,
+outdoor when it's sunny and warm. If the forecast is great, that's the app
+doing its job. Regenerate to see other options in the same conditions.
 
 ### Why is the same activity showing up again?
 
 Two possibilities:
 
-- It's a **fixed commitment** (e.g. swim, church). Those repeat by
-  design.
-- It's a **favourite** with a strong fit. You can turn this off by
-  unfavouriting it, or by turning **Try something new each weekend**
-  to **on** in your profile.
+- It's a **commitment** (swim, church, workout). Those repeat by design.
+- It scored highest again. To force variety, lock the keepers and regenerate,
+  or use **Try something new** on Discover.
 
-### Why won't the app schedule something past 7 pm?
+### Why won't the app schedule anything late on Sunday?
 
-Because your **Kids in bed by** time is set (probably 9 pm), and the
-app pads in dinner, the drive home, and the bedtime routine. Want a
-late evening? Change the bedtime setting just for that weekend in
-**Profile**, or add the block manually with **Add a block**.
+By design. **Sunday winds down from 7:30 pm** and **Sunday dinner is left
+off** so the evening stays open for the week ahead. Saturday runs later, to
+9 pm.
 
 ### Can I plan more than one weekend ahead?
 
-Right now Saturdaze focuses on **this weekend**. You can pre-load
-errands and events for future weekends (they sit in your queue), but
-the full plan generates one weekend at a time. This keeps the
-suggestions accurate to the actual weather forecast.
+Saturdaze focuses on the **upcoming weekend** — "Plan This Weekend" always
+targets the next Saturday/Sunday. This keeps suggestions accurate to the real
+forecast.
 
 ### What if my partner uses the app too?
 
-Both partners can have the app installed, signed in to the same
-family. Changes from one show up on the other. The **Share** button
-is for sharing with people outside the family (grandparents, sitters).
+Sign in to the **same family** account on each device and you're working from
+the same plan. The **Share** link is for people *outside* the family
+(grandparents, sitters) who don't sign in.
 
-### Can the kids see the plan?
+### Is there a kid-facing view?
 
-Not directly — there isn't a child-facing view yet. A "Kid view" with
-pictures of the day's activities is on the roadmap.
+Not today. There's no separate child view.
 
 ## Troubleshooting
 
 ### The plan won't generate
 
-Most common causes:
+The most common cause is an incomplete profile:
 
-- You haven't added any **family members** yet — go to **Profile →
-  Who's in**.
-- Your home location isn't set — **Profile → Home location**.
-- Your fixed commitments don't have **times** — open each one and
-  make sure start and end times are filled in.
+- Add at least one **family member** (the planner needs ages).
+- Add your **commitments** with valid **start and end times**.
+
+If two **commitments overlap** on the same day, the planner refuses to build
+that day and reports the clash — open the offending commitments and fix the
+times.
 
 ### I can't find a place I expected
 
-Search for it in the **Activities** library. If it isn't there:
+The activity and restaurant catalogs are **curated, seeded data**. There's no
+in-app "suggest a place" today, so if something's missing it has to be added
+to the catalog behind the scenes (see
+[Admin and Command-Line Tools](11-admin-and-cli.md) for how data is loaded).
 
-- Tap **+ Suggest a place** at the bottom of the Activities screen.
-- Add a name, address, and (optionally) a note about why it's a fit.
+### The weather looks wrong
 
-Suggestions are reviewed and added to the library if they look good.
+Forecasts are pulled in the background. Regenerate the weekend to pick up the
+latest forecast.
 
-### The weather strip looks wrong
+### I got signed out
 
-Weather updates in the background. If the forecast on screen looks
-stale (e.g. it says sunny but it's pouring), pull down on the home
-screen to refresh.
+If **Remember me** was off at sign-in, your session ends when the app closes.
+Turn it on (on your own device) to stay signed in. If a request comes back
+unauthorized, the app returns you to the **Sign in** screen with your place
+remembered — just sign back in.
 
-### A block won't unlock
+### A shared link doesn't open for my partner
 
-Check whether it's a **recurring commitment**. Recurring commitments
-are locked because the **Profile** says they always happen on that
-day. To remove just for one weekend, tap the block → **Skip just
-this weekend**.
-
-### The shared link doesn't open for my partner
-
-The read-only link expires after the weekend ends. Regenerate the link
-from the day's share icon. If your partner is also signed in to the
-family, they don't need the link at all — the plan is already on
-their app.
+Share links are read-only previews of a specific weekend. Generate a fresh
+one from **Share this weekend** if an old link no longer resolves. If your
+partner signs in to the same family, they don't need the link at all.
 
 ## Getting help
 
-Inside the app:
-
-- Tap **Profile → Help & support** for FAQ articles and a contact
-  form.
-
-Outside the app:
-
-- The **Key Docs** section of the project README points to the
-  product notes and implementation plans, which contain more
-  technical detail.
+The app's sign-in and email screens point to **support@saturdaze.app** for a
+hand. For anything about running the app itself (database setup, seeding), see
+[Admin and Command-Line Tools](11-admin-and-cli.md).
 
 ## Final note
 
-Saturdaze is meant to make weekends easier, not stricter. Take the
-plan, ignore the plan, lock half of it, throw the rest out — the app
-will adjust. The point isn't a perfect schedule. The point is more
-"Saturday" and less "what should we do today?"
+Saturdaze is meant to make weekends easier, not stricter. Take the plan,
+regenerate it, lock half and redo the rest — the app will adjust. The point
+isn't a perfect schedule. It's more "Saturday" and less "what should we do
+today?"
 
 Have a great weekend.

@@ -1,110 +1,75 @@
 # 5. Finding Activities
 
-The **Activities** screen is your browsable library of things to do.
-Use it when you want to look around without committing to a plan, or
-when you want to swap something into a specific day.
-
-Tap **Activities** in the bottom bar to open it.
+The **Discover** screen is your browsable library of things to do. Use it
+when you want to look around and see what's near you. Tap **Discover** in the
+bottom bar to open it.
 
 ## What you'll see
 
-A grid (or list, on small phones) of **activity cards**. Each card
-shows:
+- A heading like **Picked for the Browns**, with a line of context about your
+  family's ages and home area.
+- A few **filter chips** near the top to narrow the tone of the list.
+- A grid of **activity cards**. Each card shows:
+  - An **icon** and a **tone** (outdoor, indoor, food)
+  - The **name** of the place
+  - A short **why-it-fits** line
+  - The **drive time** and the **age range** it suits
+  - Sometimes a **tag** or a small **why** chip
 
-- A **photo** or icon for the place
-- The **name** (e.g. "Terre Bleu Lavender Farm")
-- A short **why-it-fits line** (e.g. "Outdoor, 45 min drive, peak
-  bloom this weekend")
-- One or two **chips** like **Outdoor**, **Indoor**, **Free**,
-  **New for us**, or **Recently visited**
+The cards are a **read-only browse view** — they show you what's out there
+and why it fits. They are not, today, a tap-through to a detail page, and
+there are no "Add to Saturday/Sunday", search box, or heart/favourite buttons
+on them. Activities make it into your weekend through the **planner** (see
+[Planning Your Weekend](03-planning-your-weekend.md)), not by being added
+one at a time from this screen.
 
-At the top of the screen are **filters** that let you narrow the list.
+## Try something new
 
-## Filtering the list
+At the top of Discover there's a **Try something new** button (a little
+sparkle). Tap it and Saturdaze opens a panel of **fresh suggestions** —
+activities that fit your likes, the weather, and your drive tolerance, with a
+lean toward places you haven't done recently. It's the quickest way to break
+out of a rut.
 
-Tap a filter to toggle it on or off. Common ones:
+This connects to the planner's **"try something new"** behaviour: when that
+mode is in play, an activity your family hasn't done before gets an extra
+boost when a weekend is generated.
 
-- **Indoor / Outdoor** — pick one or leave both off to see everything.
-- **Drive time** — choose a maximum (15 min, 30 min, 45 min, 60 min).
-- **Kid age range** — defaults to your kids' ages, but you can widen
-  it if you have guests over.
-- **Weather-appropriate** — only shows activities that fit *this*
-  weekend's forecast.
-- **Try something new** — hides anything you've done in the last
-  few weekends.
+## How activities get chosen for a plan
 
-Filters stack. So "Outdoor + 30 min + Weather-appropriate" might leave
-you with five great options instead of fifty mediocre ones.
+When you plan or regenerate a weekend, each candidate activity is scored on:
 
-## Searching
+- **Weather fit** — indoor places get a boost on rainy/snowy days; outdoor
+  places get a boost when it's sunny and warm.
+- **Age fit** — if two or more family members fall outside an activity's age
+  range, it's dropped; one that fits everyone gets a bonus.
+- **Drive** — a long round-trip relative to the available time slot is
+  penalized.
+- **Recency** — something you did in the last week is strongly demoted; a
+  couple of weeks back, mildly; older than that, no penalty.
+- **Your likes and dislikes** — liked tags add points; a disliked tag drops
+  the activity entirely.
 
-Use the **search box** at the top to type a name (e.g. "Rec Room") or
-a keyword (e.g. "splash pad"). Results update as you type.
+Ties are broken alphabetically, and the final pick among the top candidates
+is made with a fixed random seed — so the same inputs always produce the same
+plan.
 
-## Tapping an activity card
+## What's in the library
 
-Tap any card to open its full detail:
+Saturdaze ships with a small, curated set focused on the Port Credit /
+Mississauga / Halton area. The starter catalog includes:
 
-- A bigger photo
-- The **address**, **hours**, and **phone number**
-- A short description in plain language
-- **Estimated drive time** from your home
-- **Past visits** — when you last went, if ever
-- A few buttons:
-  - **Add to Saturday**
-  - **Add to Sunday**
-  - **Open in maps**
-  - **Save for later** (bookmark it for a future weekend)
+- **Terre Bleu Lavender Farm**
+- **Bronte Creek Provincial Park**
+- **Royal Botanical Gardens**
+- **The Rec Room**
+- **Ontario Science Centre**
+- **Toronto Zoo**
+- **Riverwood Conservancy**
+- **Living Arts Centre**
 
-## Adding an activity to a day
-
-This is the most useful shortcut. From an activity's detail page:
-
-1. Tap **Add to Saturday** (or **Sunday**).
-2. The app finds the best slot in that day's timeline.
-3. A preview shows you what the day looks like with the new activity
-   slotted in — including what got bumped out.
-4. Tap **Use this plan** to confirm, or **Cancel** to back out.
-
-If there isn't a clean fit (e.g. it would push past bedtime), the app
-will tell you and suggest an alternative time.
-
-## "Try something new" toggle
-
-Up at the top of the Activities screen, there's a small toggle called
-**Try something new**. When it's on:
-
-- Activities you've done in the last 3 weekends are dimmed and pushed
-  to the bottom.
-- A small **New for us** chip appears on places you haven't tried.
-
-Great for breaking out of a rut.
-
-## Marking favourites
-
-Tap the **heart icon** on any card to add it to your favourites.
-Favourites get a small boost in weekend planning — they're more
-likely to be suggested, but they're not forced.
-
-To see all your favourites, scroll to the very top of Activities and
-tap **Favourites only**.
-
-## What's in the library?
-
-The app ships with a curated set focused on the Port Credit /
-Mississauga / Halton area, including:
-
-- **Parks** — Jack Darling, Lakeside Park, Rattlesnake Point
-- **Indoor entertainment** — Rec Room, indoor pools, climbing gyms
-- **Nature & day trips** — Terre Bleu Lavender, Bronte Creek, Crawford
-  Lake
-- **Big-ticket days** — Toronto Zoo, Ripley's Aquarium, Ontario Science
-  Centre
-- **Live experiences** — Mississauga theatre, Hamilton Children's
-  Museum, seasonal circuses
-
-The library updates over time, so check back. New stuff is tagged with
-a small **New** chip.
+The catalog is seeded data — it grows as more places are added behind the
+scenes rather than by users suggesting them in-app today.
 
 ## Up next
 

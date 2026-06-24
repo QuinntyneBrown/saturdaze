@@ -1,116 +1,99 @@
 # 2. Setting Up Your Family
 
-The **Family Profile** is the app's mental model of your household.
-Saturdaze leans on it for almost every suggestion — kid-friendly age
-ranges, drive time you'll tolerate, the food you actually eat. Spend
-five minutes here and the rest of the app gets dramatically smarter.
+The **Family profile** is the app's mental model of your household. The
+planner leans on it for almost every suggestion — kid-friendly age ranges,
+the commitments it has to schedule around, and the likes and dislikes that
+shape activity picks. Spend a few minutes here and the rest of the app gets
+noticeably smarter.
 
-You can find this screen any time by tapping **Profile** in the bottom
-navigation.
+Open it any time by tapping **Family** in the bottom bar.
 
-## Step 1: Open the Family Profile
+## What you'll see
 
-1. Tap **Profile** in the bottom bar.
-2. You'll see your family name at the top (e.g. "The Browns") and your
-   home location below it.
+The Family profile screen, top to bottom:
 
-If this is your first time, the screen will be mostly empty — that's
-fine. We'll fill it in.
+- Your **family name** and **home location**
+- **Who's in** — your family members
+- **Recurring commitments** — the fixed weekend things
+- **Daily rhythm** — your out-the-door and wind-down times
+- **Likes & dislikes** — the preference tags the planner uses
+- **Preferences** — a few on/off settings
+- **Account** — your email, sign-in status, and the **Sign out** button
 
-## Step 2: Add each family member
+When you first sign up, your family name and home location come from the
+sign-up form, and the rest of the screen is mostly empty. Let's fill in the
+two parts that drive planning the most.
 
-Under **Who's in**, you'll see a list of family members and a row at
-the bottom that says **Add family member**.
+## Add each family member
+
+Under **Who's in** you'll see your members and an **Add member** row.
 
 For each person:
 
-1. Tap **Add family member**.
+1. Tap **Add member**.
 2. Type their **name**.
-3. Choose **Parent** or **Kid**.
-4. Enter their **age**.
-5. (Optional) Add a short note — for example "picky eater" or "loves
-   animals." The app uses these as small hints when picking activities
-   and restaurants.
-6. Tap **Save**.
+3. Enter their **age**.
+4. Tap **Save**.
 
-> **Tip:** Ages matter more than you'd think. A weekend with a 5-year-old
-> looks different from a weekend with a 12-year-old. Be honest — the
-> app will not judge.
+Names have to be unique, and age is validated to a sensible range. To change
+someone later, tap the **edit** icon on their row; to remove them, tap the
+**delete** icon.
 
-To edit someone later, tap their name in the list.
+> **Tip:** Ages matter more than you'd think. The planner checks every
+> activity's age range against your members — if two or more people fall
+> outside an activity's window, it's dropped from consideration, and an
+> activity that fits everyone gets a small boost. Be honest; the app won't
+> judge.
 
-## Step 3: Confirm your home location
-
-Just under your family name at the top of the screen, you'll see your
-home neighbourhood (default: **Port Credit, Mississauga**). Tap it to
-change it.
-
-This address is used to estimate **drive time** for every suggestion.
-You don't need a full street address — a neighbourhood is enough.
-
-## Step 4: Add your recurring commitments
+## Add your recurring commitments
 
 Under **Recurring commitments**, list anything that always happens on a
-weekend. These get **locked** into every weekend plan, so the app builds
-around them instead of stepping on them.
-
-Common examples:
-
-- Swim lessons (Saturdays 9:00 – 10:00)
-- Church (Sundays 10:30 – 11:45)
-- Workout window (Sat & Sun 5:00 – 6:00 pm)
-- Piano lesson, hockey practice, in-laws' visit, etc.
+weekend. These become **immovable blocks** in every plan, so the planner
+builds around them instead of stepping on them.
 
 To add one:
 
-1. Tap **Add a commitment**.
-2. Give it a **name** (e.g. "Swim lessons").
-3. Pick the **day(s) of the week** it falls on.
-4. Set the **start and end time**.
-5. (Optional) Add a **location**.
-6. Tap **Save**.
+1. Tap **Add commitment** (or the add row).
+2. Give it a **title** (e.g. "Swim lessons").
+3. Pick the **day of the week**.
+4. Set the **start** and **end** time.
+5. Tap **Save**.
 
-Each commitment will appear with a small **Locked** chip — that's the
-app's way of saying "I will never schedule over this."
+Each commitment shows with a small **Locked** chip — the app's way of saying
+"I will never schedule over this." Edit or delete one with the icons on its
+row.
 
-## Step 5: Set your daily rhythm
+> **Heads-up:** Commitments must not overlap. If two land on the same day at
+> the same time, the planner will refuse to build that day and tell you about
+> the clash — fix the times and try again.
 
-Under **Daily rhythm**, you'll see two settings:
+The sample family ships with three: **Swim lessons** (Sat 9:00–10:00),
+**Workout window** (Sat 17:00–18:00), and **Church** (Sun 10:30–11:45).
 
-- **Out the door by** — the earliest the family is realistically ready
-  to leave. For most families with young kids, 9:00 am is a safe answer.
-- **Kids in bed by** — bedtime. The app will not propose evening
-  activities that push past this.
+## Daily rhythm, likes & dislikes, preferences
 
-Tap either one to change the time.
+The lower part of the screen shows three more sections:
 
-## Step 6: Pick your likes and dislikes
+- **Daily rhythm** — your **out the door by** and **wind-down** times.
+- **Likes & dislikes** — colourful tags. Likes nudge matching activities
+  *up*; dislikes drop matching activities out of the running entirely. The
+  sample family likes Parks, Short hikes, Zoo, Rec Room, Lavender, and Live
+  theatre, and dislikes Camping and "Drives > 60 min".
+- **Preferences** — on/off settings such as **Budget is a factor**,
+  **Try something new**, and **Friday preview**.
 
-Under **Likes & dislikes**, you'll see a row of colourful tags. Green
-tags are things you *want* more of. Red tags are things to *avoid*.
-
-Tap any tag to toggle it. Common picks:
-
-- ❤️ Parks, Short hikes, Zoo, Rec Room, Lavender, Live theatre
-- ✖️ Camping, Drives > 60 min
-
-Don't overthink it — you can always come back and adjust.
-
-## Step 7: Set your preferences
-
-The last section is **Preferences**, with three toggles:
-
-- **Budget is a factor** — leave this **off** if money isn't a weekend
-  constraint. Flip it **on** to keep suggestions cheaper.
-- **Try something new each weekend** — when **on**, the app makes sure
-  at least one block is something you haven't done recently. Keeps
-  weekends from feeling repetitive.
-- **Friday preview notifications** — when **on**, you get a nudge around
-  6 pm Friday with the proposed weekend.
+> **What's editable today:** Adding and editing **members** and
+> **commitments** works from this screen right now. The **daily rhythm**,
+> **likes & dislikes**, and **preferences** sections are shown for reference
+> but are **not yet editable in the app** — they come from your initial
+> setup/seed data. (Under the hood the profile *can* store all of these; the
+> on-screen controls to change them are still being wired up.) Also note that
+> the **Budget** preference does not currently change what the planner
+> suggests — there are no prices in the catalog yet.
 
 ## You're done
 
-That's the whole setup. From here, every weekend plan will quietly
-respect everything you just entered.
+Members in, commitments in — that's the setup that matters most. From here,
+every weekend plan will respect your people and your fixed commitments.
 
 Next up: [Planning Your Weekend](03-planning-your-weekend.md).

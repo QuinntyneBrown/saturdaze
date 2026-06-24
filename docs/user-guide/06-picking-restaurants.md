@@ -1,106 +1,86 @@
 # 6. Picking a Restaurant
 
-The food debate ends here. The **Restaurant Picker** suggests places to
-eat that fit your family — including the picky eaters — and near
-wherever you already are in the day.
+The food debate ends here. The **Food** screen suggests places to eat that
+fit your family — including the picky eaters — and lets everyone weigh in
+before you commit.
 
-You can reach it two ways:
+The Food screen is a **dedicated screen** rather than a bottom-nav tab; you
+open it in context when you're sorting out a weekend's meals. What you decide
+here — voting and locking a pick — is about settling the meal for your
+weekend.
 
-- From a meal block in the **Itinerary**: tap the block, then **Swap**.
-- From the bottom nav: tap **Activities → Restaurants** (or the
-  shortcut on the home screen, when there's a meal slot needing help).
+## What's on the screen
 
-## How suggestions are picked
+- A **Top pick** restaurant card, front and centre.
+- A **refresh** button to pull a fresh set of suggestions.
+- A grid of **other picks** below the top one.
+- A separate **Sunday dinner** section (more on Sunday below).
 
-Saturdaze filters restaurants by, in order:
+A restaurant card shows the **name**, the **cuisine/style**, the **drive
+time**, a **fork icon**, and — when it applies — a **wife-approved** chip.
 
-1. **Family taste profile** — pulled from your **Family Profile**
-   (likes, dislikes, picky-eater notes).
-2. **Where you are in the day** — it prefers places near the activity
-   right before the meal.
-3. **Drive time** — short drives only, unless you've widened that
-   setting.
-4. **Time of day** — lunch options for midday, dinner options for
-   evening, kid-friendly hours always.
-5. **What you've eaten recently** — won't suggest the same spot two
-   weekends in a row.
+## How suggestions are chosen
 
-## Reading a restaurant card
+When the planner places a meal, it:
 
-Each suggestion shows:
+1. Filters restaurants to the right **slot** — lunch options for the lunch
+   window, dinner options for the dinner window.
+2. Keeps only **partner-approved** spots (the "wife-approved" flag), so the
+   list already respects the household's hard "no".
+3. Prefers the place with the **shortest drive** from the activity right
+   before the meal (or, if there's no nearby activity, the closest one to
+   home).
 
-- **Name** and **cuisine** (e.g. "La Marina · Mediterranean")
-- A short **why-this-one** line (e.g. "Wife-approved · patio ·
-  5 min from Terre Bleu")
-- **Drive time** from the previous activity
-- **Vote chips** for each family member (more on those below)
-- A button: **Use this spot**
+Lunch lands in the **12:00–1:30 pm** window and dinner in the **5:30–7:00 pm**
+window. **Sunday dinner is intentionally skipped** so the evening stays open —
+that's why the Sunday dinner section is there to acknowledge it rather than
+push a 7 pm drive on you.
 
 ## The family vote
 
-Saturdaze makes it easy to get a quick read from everyone before you
-commit. On a restaurant card you'll see a small **vote row**:
+Each restaurant card carries a **vote row** — one avatar per family member,
+each with three states:
 
-```
-  Quinn  👍   Sara  ?   Eli  👍   Mae  ?
-```
+- **👍 Yes**
+- **👎 No**
+- **? Undecided** (the default)
 
-Each family member has three states:
+Tap a member's avatar to set their vote. The row gives you a fast read of
+where everyone stands before you commit.
 
-- **👍 Yes** — happy with this pick
-- **👎 No** — veto it
-- **? Undecided** — default
+This is meant as a quick family-room moment — a show of hands, not a strict
+algorithm. Nothing locks on its own; when you're ready, you commit a pick
+yourself (next).
 
-To register a vote, just tap the avatar. Tap again to cycle through
-states.
+## Locking in a pick
 
-Behaviour:
+When you've settled on a spot, tap **Lock it in** on the top pick. That pins
+the restaurant to its meal slot for the weekend. (Locking opens a short
+confirmation so you don't do it by accident.)
 
-- If **anyone vetoes** (👎), the card gets dimmed and the app
-  suggests the next-best option.
-- If **everyone is 👍**, a green **Locked** badge appears.
-- A short hold on the **Use this spot** button lets you commit even
-  if there's a holdout.
+## What's in the starter list
 
-This is mostly meant as a quick family-room moment, not a strict
-algorithm.
+The seeded restaurant set is Port-Credit-area focused:
 
-## Lunch versus dinner slots
+- **La Marina**
+- **Symposium Café**
+- **The Sicilian Sidewalk Café**
+- **Jack Astor's**
+- **Snug Harbour**
+- **Spice Lounge**
+- **Cora's Port Credit**
+- **Brogue Inn**
 
-The picker treats lunch and dinner separately:
+Each is tagged as a lunch or dinner spot, with a drive time and a
+partner-approved flag.
 
-- **Lunch** — usually near your daytime activity. Patios in summer,
-  quick-serve in winter.
-- **Dinner** — usually closer to home so you can get the kids to bed
-  on time. Avoids 45-minute drives back at 7 pm.
+## A note on what's not here
 
-You can swap either independently without affecting the other.
-
-## "Wife-approved" (or partner-approved) tagging
-
-If you added a note like "picky eater" or "won't eat seafood" in your
-**Family Profile**, the picker quietly filters out anything that
-violates it. You'll see a small **Sara-approved** (or partner's name)
-chip on cards that pass.
-
-If you keep getting too narrow a list, head back to **Profile** and
-loosen the dislike tags.
-
-## Veto history
-
-If someone vetoes a restaurant, Saturdaze remembers. That spot drops
-in priority for future weekends. You can clear veto history from
-**Profile → Family → [Name] → Reset food preferences** if tastes
-change.
-
-## "Just pick one" mode
-
-For weeks when nobody can decide, there's a **Just pick one** button
-at the top of the restaurant list. The app picks the highest-fit
-option and locks it. You get no choices, no debates, no scrolling.
-Sometimes that's exactly what you need.
+There's **no "Just pick one" button** and **no veto-history reset** screen
+today — the guide for earlier versions mentioned both, but they aren't in the
+app. The way to settle things is: vote, then **Lock it in**.
 
 ## Up next
 
-Want to see what's happening locally this weekend — beyond restaurants
-and your usual spots? Read [Events This Weekend](07-events-this-weekend.md).
+Want to see what's happening locally this weekend? Read
+[Events This Weekend](07-events-this-weekend.md).

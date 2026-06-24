@@ -1,117 +1,96 @@
 # 4. The Itinerary
 
-The **Itinerary** screen is where a single day lives, broken into a
-timeline you can adjust block by block. Open it by tapping the
-**Saturday** or **Sunday** card from the home screen.
+The **Itinerary** screen is where a single day lives, laid out as a timeline.
+Open it by tapping the **Saturday** or **Sunday** card on the home screen.
 
 ## Reading the timeline
 
-The timeline runs top-to-bottom, from morning through evening. Each
-**block** has:
+The timeline runs top-to-bottom, from morning through evening. Each **block**
+shows:
 
 - A **start time** and a **duration** (e.g. "9:00 · 60m")
-- A **title** (e.g. "Lavender fields") and a **subtitle** (e.g.
-  "Terre Bleu, Milton")
+- A **title** and a short **subtitle**
 - An **icon** showing the kind of block it is
-- Sometimes a **chip** with a hint like **Day highlight** or **45 min
-  drive**
+- Sometimes a **chip** — a drive time, a duration, or a **Locked** marker
 
-You'll see a few different types of blocks:
+You'll see these kinds of blocks:
 
-| Type         | Looks like      | What it means                                  |
-| ------------ | --------------- | ---------------------------------------------- |
-| **Fixed**    | Lock icon       | Swim, church, anything you marked recurring    |
-| **Activity** | Tree, building  | The main thing you're doing in that window     |
-| **Meal**     | Fork icon       | Lunch or dinner                                |
-| **Workout**  | Bike icon       | Your protected workout hour                    |
-| **Downtime** | Bed icon        | Quiet time at home, on purpose                 |
-| **Drive**    | Car icon        | Travel time between two places                 |
+| Type           | Looks like   | What it means                                  |
+| -------------- | ------------ | ---------------------------------------------- |
+| **Commitment** | Lock icon    | Swim, church, your workout — the fixed stuff   |
+| **Activity**   | Tree/building | The main outing in that window                |
+| **Meal**       | Fork icon    | Lunch or dinner                                |
+| **Drive**      | Car icon     | Travel time to and from an outing              |
+| **Downtime**   | Bed icon     | Quiet time at home, on purpose                 |
+| **Errand**     | Bag icon     | A shopping run (see chapter 8)                 |
 
-## Tap a block to do something with it
+When an activity has a drive, the planner inserts a **drive block before**
+("Drive to …") and a **drive block after** ("Drive home from …"), so the real
+time cost is visible rather than hidden.
 
-Tap any block in the timeline. A small panel opens with everything you
-can do:
+## How a day is shaped
 
-- **Why this?** — A short, plain-language reason the app put this here
-  (e.g. "Outdoor, kid-friendly, fits the 45-min drive limit, lavender
-  is peaking").
-- **Swap** — Pick a different activity, meal, or downtime block in the
-  same slot.
-- **Lock** — Pin this block so regenerating the day won't replace it.
-- **Move** — Drag the block earlier or later in the day. Other blocks
-  flex around it.
-- **Remove** — Delete the block and let the app fill the gap with
-  downtime (or pull the day shorter).
-- **Open in maps** — Get directions from your home to this location.
+Knowing the rhythm the planner follows helps the timeline make sense:
 
-## Swapping a block
+- **Saturday** runs from **9:00 am to 9:00 pm**. **Sunday** is shorter — it
+  winds down from **7:30 pm**, so the planner keeps Sunday evening clear.
+- **Lunch** is placed in the **12:00–1:30 pm** window, **dinner** in the
+  **5:30–7:00 pm** window. **Sunday dinner is intentionally left off** so the
+  evening stays open for the week ahead.
+- Gaps of **30 minutes or more** get filled with **downtime** rather than
+  being crammed.
+- The longest acceptable outing has to fit the gap; the planner won't wedge a
+  big-drive activity into a short slot.
 
-This is the most common edit. To swap a block:
+## What you can do here
 
-1. Tap the block (say, **Lunch — La Marina**).
-2. Tap **Swap**.
-3. A list of alternatives appears, sorted by best fit. Each shows a
-   name, a one-line reason, and the drive time.
-4. Tap one to preview it in the timeline.
-5. Tap **Use this one** to confirm, or **Keep original** to back out.
+The Itinerary has a few controls in the day's header and "More" menu:
 
-The app only suggests swaps that still fit your day — it won't show
-you a lunch spot 90 minutes away during a busy outdoor afternoon.
+- **Regenerate** — reshuffle *this day*. Locked blocks stay; everything else
+  may change. (Confirm in the dialog.)
+- **Lock day** — pin the whole day so a weekend-wide regenerate leaves it
+  alone.
+- **See on map** — open the day's stops in Google Maps.
+- The **day switcher** flips between Saturday and Sunday, and a small
+  **totals** summary shows the day's stats at a glance.
+- **More** — a menu of extra options (including "Export as text"). The items
+  in this menu are still being wired up; for a working hand-off, use the home
+  screen's **Share** and **calendar** options instead.
 
 ## Locking blocks
 
-Locking is your way of telling the app "this one stays."
+Locking is how you tell the app "this one stays" before a reshuffle.
 
-- Tap the block → **Lock**. A small lock icon appears on the block.
-- Locked blocks survive **Regenerate**.
-- To unlock, tap the block → **Unlock**.
+- Turn on **lock mode** from the home screen's **Quick actions**
+  ("Lock what's already perfect"), then tap blocks to pin them. A **lock
+  icon** appears on a locked block.
+- Locked blocks **survive Regenerate**.
+- **Commitments** (swim, church, workout) are effectively locked already —
+  they're fixed by your profile, so you don't need to pin them.
 
-Recurring commitments (swim, church, workout) are locked
-automatically — you don't need to touch those.
+## What the Itinerary doesn't do (yet)
 
-## Adding a block
+The timeline is a **view** of the day, not a block-by-block editor. Today
+there is **no** tap-a-block menu to **swap**, **move**, **remove**, or
+**add** an individual block, and **no drag-to-reorder**. To change a day, you:
 
-If you want to insert something — say, a coffee stop or a stop at the
-library — scroll to a gap in the timeline and tap **+ Add a block**.
+1. **Lock** the blocks you want to keep, and
+2. **Regenerate** the day (or the whole weekend) to get fresh ideas for the
+   rest.
 
-1. Pick a **type**: Activity, Meal, Errand, or Downtime.
-2. Choose the **time** and **duration**.
-3. Pick a place (or type a custom one).
-4. Tap **Add**.
+To add a shopping stop, use the dedicated **Errand** screen — see
+[Errands and Shopping](08-errands-and-shopping.md).
 
-The app will quietly adjust drive times and downtime around your new
-block.
+## Sanity checks the planner does for you
 
-## Regenerating just one day
+You don't have to verify these — they happen automatically:
 
-If only one day is off, you don't have to redo both:
-
-1. Open that day's itinerary.
-2. Tap the **Regenerate** button at the top (or bottom, depending on
-   your screen size).
-3. The day reshuffles. Locked blocks stay. Anything else may change.
-
-## Sharing a single day
-
-If you want to text your partner just one day's plan:
-
-1. Open the day.
-2. Tap the **share icon** in the top bar.
-3. Choose **Copy link** or your messaging app.
-
-The link opens a read-only preview — no login needed on their side.
-
-## Sanity checks the app does for you
-
-You don't need to verify these, but it's good to know they're happening
-in the background:
-
-- No drives longer than your **likes & dislikes** setting allows.
-- No evening activities that push past your **kids in bed by** time.
-- At least one meal slot has been considered (lunch usually, dinner
-  when relevant).
-- Your **workout window** is protected.
-- Indoor/outdoor activities respect the weather for that day.
+- Indoor/outdoor activities are weighted toward the day's **weather**.
+- Activities that don't fit your kids' **ages** are dropped.
+- Activities you've done **very recently** are demoted, so weekends don't
+  feel repetitive.
+- Your **disliked** tags are filtered out; **liked** tags get a boost.
+- Your **commitments** are placed first and never scheduled over.
 
 ## Up next
 
