@@ -1,0 +1,37 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — Discover local events
+
+class EventsPage {
+  +selectFilter(filter: EventFilter): void
+}
+class EventsService {
+  +load(weekendOfIso: string): Promise<void>
+  +list(): Signal<EventsView>
+}
+class GetLocalEventsQuery {
+  +DateOnly WeekendOf
+  +int MaxDriveMinutes
+}
+class GetLocalEventsQueryHandler {
+  +Handle(query: GetLocalEventsQuery): Task<IReadOnlyList<LocalEventDto>>
+}
+class LocalEvent {
+  +DateOnly StartsOn
+  +DateOnly EndsOn
+  +int DriveMinutes
+  +string Category
+}
+EventsPage --> EventsService : calls
+EventsService ..> GetLocalEventsQuery : maps to
+GetLocalEventsQueryHandler --> LocalEvent : filters
+@enduml

@@ -1,0 +1,21 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — Sign out
+
+Container_Boundary(web, "Saturdaze web application") {
+  Component(page, "ProfilePage and SignOutDialog", "Angular component", "Confirms the sign-out action")
+  Component(client, "SessionStore", "Angular service", "Requests revocation and clears browser state")
+}
+Container_Boundary(api, "Saturdaze API") {
+  Component(controller, "AuthController", "ASP.NET Core", "Will expose the revocation operation")
+  Component(handler, "RevokeRefreshTokenCommandHandler", "Application handler", "Will revoke the presented refresh token")
+  Component(entity, "RefreshToken", "Domain state", "Records RevokedAtUtc")
+  ComponentDb(db, "AppDbContext", "EF Core", "Stores refresh-token revocation state")
+}
+Rel(page, client, "Calls")
+Rel(client, controller, "Revocation endpoint TO SUPPLY", "JSON/HTTPS")
+Rel(controller, handler, "Dispatches request")
+Rel(handler, entity, "Revokes")
+Rel(handler, db, "Updates refresh token", "EF Core")
+@enduml

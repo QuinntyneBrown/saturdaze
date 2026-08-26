@@ -1,0 +1,41 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — Manage a family profile
+
+class ProfilePage {
+  +saveProfile(): Promise<void>
+}
+class FamilyService {
+  +load(): Promise<void>
+  +saveProfile(profile: EditableFamilyProfile): Promise<void>
+}
+class SaveFamilyProfileCommandHandler {
+  +Handle(command: SaveFamilyProfileCommand): Task<FamilyProfileDto>
+}
+class Family {
+  +Guid Id
+  +string HomeLocation
+}
+class FamilyMember {
+  +string Name
+  +int Age
+}
+class Commitment {
+  +DayOfWeek DayOfWeek
+  +TimeOnly StartTime
+  +TimeOnly EndTime
+}
+FamilyService ..> SaveFamilyProfileCommandHandler : invokes through API
+SaveFamilyProfileCommandHandler --> Family : loads
+Family "1" *-- "*" FamilyMember
+Family "1" *-- "*" Commitment
+@enduml

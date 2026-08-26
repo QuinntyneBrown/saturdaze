@@ -1,0 +1,9 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context — Submit community events
+
+Person(actor, "Authenticated contributor", "Adds a community event for review")
+System(saturdaze, "Saturdaze", "Family weekend planning platform")
+Rel(actor, saturdaze, "Submits a local event using", "HTTPS")
+@enduml

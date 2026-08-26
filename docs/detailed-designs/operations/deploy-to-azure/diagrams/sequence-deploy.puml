@@ -1,0 +1,42 @@
+@startuml
+title UML sequence behaviour — Deploy to Azure
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Repository maintainer" as maintainer
+box "Frontend — GitHub repository" #E0F2FE
+  participant "main branch" as main
+end box
+box "Backend — GitHub Actions delivery application" #D1FADF
+  participant "api job" as api
+  participant "migrate job" as migrate
+  participant "web job" as web
+end box
+box "Backend — Microsoft Azure platform" #FFF4E5
+  participant "Azure App Service" as appservice
+  database "Azure SQL" as sql
+  participant "Azure Static Web Apps" as swa
+end box
+maintainer -> main : Push reviewed commit
+main -> api : Trigger deploy.yml
+api -> appservice : Publish and deploy API
+appservice --> api : Deployment success
+api -> migrate : Satisfy needs dependency
+migrate -> sql : Run saturdaze migrate
+sql --> migrate : Schema current
+migrate -> web : Satisfy L2-041 order
+web -> swa : Upload Angular browser bundle
+swa --> web : Deployment success
+web --> maintainer : Delivery result
+@enduml

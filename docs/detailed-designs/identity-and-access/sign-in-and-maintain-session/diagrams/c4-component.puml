@@ -1,0 +1,21 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — Sign in and maintain a session
+
+Container_Boundary(web, "Saturdaze web application") {
+  Component(page, "LoginPage", "Angular component", "Collects credentials and remember-me choice")
+  Component(client, "SessionStore and AuthService", "Angular service", "Calls login and selects browser storage")
+}
+Container_Boundary(api, "Saturdaze API") {
+  Component(controller, "AuthController", "ASP.NET Core", "Exposes login and current-user endpoints")
+  Component(handler, "LoginCommandHandler", "Application handler", "Verifies credentials and issues tokens")
+  Component(entity, "User and RefreshToken", "Domain state", "Store identity and session state")
+  ComponentDb(db, "AppDbContext", "EF Core", "Stores users and refresh tokens")
+}
+Rel(page, client, "Calls")
+Rel(client, controller, "POST /api/auth/login", "JSON/HTTPS")
+Rel(controller, handler, "Dispatches request")
+Rel(handler, entity, "Verifies and creates")
+Rel(handler, db, "Reads users and writes refresh tokens", "EF Core")
+@enduml

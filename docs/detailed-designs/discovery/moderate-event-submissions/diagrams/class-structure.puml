@@ -1,0 +1,41 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — Moderate event submissions
+
+class AdminEventsPage {
+  +approve(id: string): Promise<void>
+  +reject(id: string, reason: string): Promise<void>
+}
+class EventSubmissionsService {
+  +listPending(): Promise<IReadOnlyList<EventSubmissionDto>>
+  +approve(id: string): Promise<EventSubmissionDto>
+  +reject(id: string, reason: string): Promise<EventSubmissionDto>
+}
+class ApproveSubmissionCommandHandler {
+  +Handle(command: ApproveSubmissionCommand): Task<EventSubmissionDto>
+}
+class RejectSubmissionCommandHandler {
+  +Handle(command: RejectSubmissionCommand): Task<EventSubmissionDto>
+}
+class EventSubmission {
+  +EventSubmissionStatus Status
+  +string? RejectionReason
+  +Guid? PublishedEventId
+}
+class LocalEvent {
+  +Guid Id
+}
+AdminEventsPage --> EventSubmissionsService : calls
+ApproveSubmissionCommandHandler --> EventSubmission : approves
+ApproveSubmissionCommandHandler --> LocalEvent : creates
+RejectSubmissionCommandHandler --> EventSubmission : rejects
+@enduml

@@ -1,0 +1,21 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — Discover activities
+
+Container_Boundary(web, "Saturdaze web application") {
+  Component(page, "ActivitiesPage", "Angular component", "Controls filters and grouped sections")
+  Component(client, "ActivityService", "Angular service", "Loads and maps activity DTOs")
+}
+Container_Boundary(api, "Saturdaze API") {
+  Component(controller, "ActivitiesController", "ASP.NET Core", "Exposes activity filters")
+  Component(handler, "GetActivitySuggestionsQueryHandler", "Application handler", "Applies filter predicates")
+  Component(entity, "Activity", "Domain state", "Holds activity fit attributes")
+  ComponentDb(db, "AppDbContext", "EF Core", "Stores curated activities")
+}
+Rel(page, client, "Calls")
+Rel(client, controller, "GET /api/activities", "JSON/HTTPS")
+Rel(controller, handler, "Dispatches request")
+Rel(handler, entity, "Filters")
+Rel(handler, db, "Queries activity data", "EF Core")
+@enduml

@@ -1,0 +1,39 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — Manage shopping errands
+
+class ErrandPage {
+  +submit(): Promise<void>
+}
+class WeekendPlanService {
+  +addErrand(description: string, estimatedMinutes: int, id: string): Promise<void>
+}
+class AddShoppingErrandCommandHandler {
+  +Handle(command: AddShoppingErrandCommand): Task<WeekendDto>
+}
+class MarkErrandDoneCommandHandler {
+  +Handle(command: MarkErrandDoneCommand): Task<WeekendDto>
+}
+class Weekend {
+  +Guid Id
+}
+class ShoppingErrand {
+  +string Description
+  +int EstimatedMinutes
+  +bool Done
+}
+ErrandPage --> WeekendPlanService : calls
+WeekendPlanService ..> AddShoppingErrandCommandHandler : invokes through API
+AddShoppingErrandCommandHandler --> Weekend : loads
+Weekend "1" *-- "*" ShoppingErrand
+MarkErrandDoneCommandHandler --> ShoppingErrand : updates
+@enduml

@@ -1,0 +1,15 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers — Discover activities
+
+Person(actor, "Family member", "Looks for weekend activities")
+System_Boundary(saturdaze, "Saturdaze") {
+  Container(web, "Saturdaze web application", "Angular", "Shows grouped activity suggestions")
+  Container(api, "Saturdaze API", "ASP.NET Core", "Filters the activity catalogue")
+  ContainerDb(db, "Saturdaze database", "SQL Server", "Stores curated activities")
+}
+Rel(actor, web, "Uses", "HTTPS")
+Rel(web, api, "Requests filtered activities", "JSON/HTTPS")
+Rel(api, db, "Queries activity data", "EF Core")
+@enduml

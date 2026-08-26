@@ -1,0 +1,44 @@
+@startuml
+title UML sequence behaviour — Observe API performance
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "API client" as client
+box "Frontend — Calling application" #E0F2FE
+  participant "HTTP client" as http
+end box
+box "Backend — Saturdaze API application" #D1FADF
+  participant "Serilog request logging" as requestlog
+  participant "ExceptionHandlingMiddleware" as errors
+end box
+box "Backend — Saturdaze Application layer" #ECFDF3
+  participant "LoggingBehavior" as logging
+  participant "Application handler" as handler
+end box
+box "Backend — Observability infrastructure" #FFF4E5
+  database "Structured log sinks" as logs
+end box
+client -> http : Start feature request
+http -> requestlog : HTTPS request
+requestlog -> errors : Start request timer
+errors -> logging : Dispatch command or query
+logging -> handler : Start handler timer
+handler --> logging : Typed result
+logging -> logs : Write handler elapsed time
+logging --> errors : Return result
+errors --> requestlog : HTTP status
+requestlog -> logs : Apply L2-039 structured completion event
+requestlog --> http : HTTP response
+http --> client : Feature result
+@enduml

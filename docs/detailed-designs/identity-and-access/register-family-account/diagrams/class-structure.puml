@@ -1,0 +1,44 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — Register a family account
+
+class SignupPage {
+  +submit(): Promise<void>
+}
+class SessionStore {
+  +signUp(req: SignupRequest): Promise<void>
+}
+class RegisterUserCommand {
+  +string Email
+  +string Password
+  +string? FamilyName
+  +string? HomeLocation
+}
+class RegisterUserCommandHandler {
+  +Handle(command: RegisterUserCommand): Task<AuthSuccessDto>
+}
+class User {
+  +Guid Id
+  +string Email
+  +string PasswordHash
+  +Guid? FamilyId
+}
+class Family {
+  +Guid Id
+  +string HomeLocation
+}
+SignupPage --> SessionStore : calls
+SessionStore ..> RegisterUserCommand : maps to
+RegisterUserCommandHandler ..> RegisterUserCommand : handles
+RegisterUserCommandHandler --> User : creates
+RegisterUserCommandHandler --> Family : creates
+@enduml

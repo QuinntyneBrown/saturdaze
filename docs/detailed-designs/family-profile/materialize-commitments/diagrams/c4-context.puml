@@ -1,0 +1,9 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context — Materialize recurring commitments
+
+Person(actor, "Family organizer", "Plans a weekend around fixed commitments")
+System(saturdaze, "Saturdaze", "Family weekend planning platform")
+Rel(actor, saturdaze, "Generates plans with fixed commitments using", "HTTPS")
+@enduml

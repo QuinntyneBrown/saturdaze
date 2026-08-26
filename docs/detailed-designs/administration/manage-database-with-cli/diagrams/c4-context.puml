@@ -1,0 +1,11 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context — Manage the database with the CLI
+
+Person(operator, "System operator", "Migrates, seeds, or resets a Saturdaze database")
+System(cli, "Saturdaze CLI", "Administrative command-line application")
+SystemDb(database, "Saturdaze database", "Configured SQL Server or development database")
+Rel(operator, cli, "Runs", "Terminal")
+Rel(cli, database, "Migrates, seeds, or resets", "EF Core")
+@enduml

@@ -1,0 +1,15 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers — Track own event submissions
+
+Person(actor, "Authenticated contributor", "Checks the review state of submitted events")
+System_Boundary(saturdaze, "Saturdaze") {
+  Container(web, "Saturdaze web application", "Angular", "Shows owned pending review state")
+  Container(api, "Saturdaze API", "ASP.NET Core", "Returns caller-owned submissions")
+  ContainerDb(db, "Saturdaze database", "SQL Server", "Stores submission ownership and status")
+}
+Rel(actor, web, "Uses", "HTTPS")
+Rel(web, api, "Requests own submissions", "JSON/HTTPS")
+Rel(api, db, "Queries by submitter ID", "EF Core")
+@enduml

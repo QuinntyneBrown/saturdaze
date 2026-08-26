@@ -1,0 +1,10 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context — Register a family account
+
+Person(actor, "Family organizer", "Creates the household account")
+System(saturdaze, "Saturdaze", "Family weekend planning platform")
+
+Rel(actor, saturdaze, "Registers a family account using", "HTTPS")
+@enduml

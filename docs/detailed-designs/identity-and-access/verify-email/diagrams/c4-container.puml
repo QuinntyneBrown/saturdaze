@@ -1,0 +1,15 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers — Verify an email address
+
+Person(actor, "Account holder", "Opens the verification link")
+System_Boundary(saturdaze, "Saturdaze") {
+  Container(web, "Saturdaze web application", "Angular", "Hosts verification states")
+  Container(api, "Saturdaze API", "ASP.NET Core", "Consumes verification tokens")
+  ContainerDb(db, "Saturdaze database", "SQL Server", "Stores verification tokens and users")
+}
+Rel(actor, web, "Uses", "HTTPS")
+Rel(web, api, "Submits verification token", "JSON/HTTPS")
+Rel(api, db, "Updates verification state", "EF Core")
+@enduml

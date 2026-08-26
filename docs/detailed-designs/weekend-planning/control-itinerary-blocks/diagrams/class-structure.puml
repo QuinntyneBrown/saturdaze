@@ -1,0 +1,39 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — Control itinerary blocks
+
+class WeekendPlanService {
+  +lockBlock(blockId: string, locked: bool): Promise<void>
+  +regenerate(id: string): Promise<void>
+}
+class LockBlockCommandHandler {
+  +Handle(command: LockBlockCommand): Task<WeekendDto>
+}
+class SwapBlockCommandHandler {
+  +Handle(command: SwapBlockCommand): Task<WeekendDto>
+}
+class RegenerateWeekendCommandHandler {
+  +Handle(command: RegenerateWeekendCommand): Task<WeekendDto>
+}
+class Weekend {
+  +int RegenerateCount
+}
+class ItineraryBlock {
+  +Guid? RefId
+  +bool IsLocked
+}
+WeekendPlanService ..> LockBlockCommandHandler : invokes through API
+LockBlockCommandHandler --> ItineraryBlock : sets lock
+SwapBlockCommandHandler --> ItineraryBlock : replaces reference
+RegenerateWeekendCommandHandler --> Weekend : increments
+Weekend "1" *-- "*" ItineraryBlock
+@enduml

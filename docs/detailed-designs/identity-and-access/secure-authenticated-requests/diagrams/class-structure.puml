@@ -1,0 +1,37 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — Secure authenticated requests
+
+class AuthInterceptor {
+  +intercept(request: HttpRequest): Observable<HttpEvent>
+}
+class JwtBearerPostConfigure {
+  +PostConfigure(name: string, options: JwtBearerOptions): void
+}
+class Pbkdf2PasswordHasher {
+  +Hash(password: string): string
+  +Verify(password: string, hash: string): bool
+}
+class JwtTokenService {
+  +CreateTokens(user: User): AuthTokensDto
+}
+class RefreshToken {
+  +DateTimeOffset CreatedAtUtc
+  +DateTimeOffset ExpiresAtUtc
+  +string? CreatedByIp
+  +Guid? ReplacedByTokenId
+}
+AuthInterceptor ..> JwtBearerPostConfigure : supplies bearer token
+JwtBearerPostConfigure ..> JwtTokenService : shares JwtOptions
+JwtTokenService --> RefreshToken : creates
+JwtTokenService ..> Pbkdf2PasswordHasher : follows credential boundary
+@enduml

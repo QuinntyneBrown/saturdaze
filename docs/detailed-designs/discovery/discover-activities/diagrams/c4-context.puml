@@ -1,0 +1,9 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context — Discover activities
+
+Person(actor, "Family member", "Looks for weekend activities")
+System(saturdaze, "Saturdaze", "Family weekend planning platform")
+Rel(actor, saturdaze, "Browses personalized activities using", "HTTPS")
+@enduml

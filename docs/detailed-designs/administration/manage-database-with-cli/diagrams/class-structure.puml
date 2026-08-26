@@ -1,0 +1,39 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — Manage the database with the CLI
+
+class RootCommandFactory {
+  +Create(args: string[]): RootCommand
+}
+class MigrateCommandHandler {
+  +ExecuteAsync(ct: CancellationToken): Task<int>
+}
+class SeedCommandHandler {
+  +ExecuteAsync(overrideDir: string, ct: CancellationToken): Task<int>
+}
+class ResetCommandHandler {
+  +ExecuteAsync(seedDir: string, ct: CancellationToken): Task<int>
+}
+interface IJsonSeeder {
+  +string FileName
+  +SeedAsync(db: AppDbContext, json: Stream, ct: CancellationToken): Task<int>
+}
+class AppDbContext
+RootCommandFactory --> MigrateCommandHandler : dispatches
+RootCommandFactory --> SeedCommandHandler : dispatches
+RootCommandFactory --> ResetCommandHandler : dispatches
+SeedCommandHandler --> IJsonSeeder : runs
+MigrateCommandHandler --> AppDbContext : migrates
+IJsonSeeder --> AppDbContext : upserts
+ResetCommandHandler --> AppDbContext : resets
+ResetCommandHandler --> SeedCommandHandler : reseeds
+@enduml

@@ -1,0 +1,11 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context — Deploy to Azure
+
+Person(maintainer, "Repository maintainer", "Pushes reviewed changes to main")
+System(github, "Saturdaze delivery pipeline", "GitHub Actions workflow")
+System_Ext(azure, "Microsoft Azure", "Hosts API, database, and web application")
+Rel(maintainer, github, "Triggers by pushing to main", "Git")
+Rel(github, azure, "Deploys applications and schema to", "OIDC and HTTPS")
+@enduml

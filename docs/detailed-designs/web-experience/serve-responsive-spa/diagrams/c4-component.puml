@@ -1,0 +1,19 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — Serve a responsive single-page application
+
+Container_Boundary(web, "Saturdaze web application") {
+  Component(routes, "routes", "Angular Routes", "Declares lazy loadComponent entries")
+  Component(shell, "App", "Angular component", "Selects the application shell")
+  Component(pages, "Routed pages", "Standalone Angular components", "Render feature layouts")
+  Component(styles, "_breakpoints.scss and page styles", "SCSS", "Apply responsive layouts")
+}
+Container_Boundary(swa, "Azure Static Web Apps") {
+  Component(fallback, "staticwebapp.config.json", "Host configuration", "Rewrites non-asset paths to index.html")
+}
+Rel(fallback, shell, "Serves")
+Rel(shell, routes, "Hosts router outlet for")
+Rel(routes, pages, "Lazy-loads")
+Rel(pages, styles, "Uses")
+@enduml

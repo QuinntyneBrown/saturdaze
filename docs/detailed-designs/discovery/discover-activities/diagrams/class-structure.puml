@@ -1,0 +1,40 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — Discover activities
+
+class ActivitiesPage {
+  +toggleFilter(filter: ActivityFilter): void
+}
+class ActivityService {
+  +load(): Promise<void>
+  +list(): Signal<ActivityView>
+}
+class GetActivitySuggestionsQuery {
+  +bool? Indoor
+  +int? MaxDriveMinutes
+  +int? MinAge
+  +int? MaxAge
+  +int Take
+}
+class GetActivitySuggestionsQueryHandler {
+  +Handle(query: GetActivitySuggestionsQuery): Task<IReadOnlyList<ActivityDto>>
+}
+class Activity {
+  +bool Indoor
+  +int MinAge
+  +int MaxAge
+  +int DriveMinutes
+}
+ActivitiesPage --> ActivityService : calls
+ActivityService ..> GetActivitySuggestionsQuery : maps to
+GetActivitySuggestionsQueryHandler --> Activity : filters
+@enduml

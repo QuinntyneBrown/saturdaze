@@ -1,0 +1,9 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context — Generate the current weekend
+
+Person(actor, "Family member", "Opens or creates the upcoming plan")
+System(saturdaze, "Saturdaze", "Family weekend planning platform")
+Rel(actor, saturdaze, "Requests an upcoming plan from", "HTTPS")
+@enduml

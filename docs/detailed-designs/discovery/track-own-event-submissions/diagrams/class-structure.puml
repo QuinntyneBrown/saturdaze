@@ -1,0 +1,32 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — Track own event submissions
+
+class EventsPage {
+  +load(): Promise<void>
+}
+class EventSubmissionsService {
+  +listMine(): Promise<IReadOnlyList<EventSubmissionDto>>
+}
+class ListMySubmissionsQuery {
+}
+class ListMySubmissionsQueryHandler {
+  +Handle(query: ListMySubmissionsQuery): Task<IReadOnlyList<EventSubmissionDto>>
+}
+class EventSubmission {
+  +Guid SubmittedByUserId
+  +EventSubmissionStatus Status
+}
+EventsPage --> EventSubmissionsService : calls
+EventSubmissionsService ..> ListMySubmissionsQuery : maps to
+ListMySubmissionsQueryHandler --> EventSubmission : filters
+@enduml

@@ -1,0 +1,43 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — Deploy to Azure
+
+class DeployWorkflow <<YAML workflow>> {
+  +string trigger = push:main
+}
+class ApiJob {
+  +publish(): Artifact
+  +deploy(): void
+}
+class MigrateJob {
+  +needs: ApiJob
+  +migrate(): void
+}
+class WebJob {
+  +needs: MigrateJob
+  +build(): BrowserBundle
+  +deploy(): void
+}
+class AzureTargets {
+  +AppService api
+  +AzureSql database
+  +StaticWebApps web
+}
+DeployWorkflow *-- ApiJob
+DeployWorkflow *-- MigrateJob
+DeployWorkflow *-- WebJob
+ApiJob --> MigrateJob : precedes
+MigrateJob --> WebJob : precedes
+ApiJob --> AzureTargets : deploys API
+MigrateJob --> AzureTargets : migrates SQL
+WebJob --> AzureTargets : deploys web
+@enduml

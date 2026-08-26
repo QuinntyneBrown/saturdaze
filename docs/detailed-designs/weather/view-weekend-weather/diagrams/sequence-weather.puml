@@ -1,0 +1,55 @@
+@startuml
+title UML sequence behaviour — View weekend weather
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Family member" as actor
+box "Frontend — Saturdaze web application" #E0F2FE
+  participant "HomePage" as page
+  participant "WeekendPlanService" as client
+end box
+box "Backend — Saturdaze API application" #D1FADF
+  participant "WeatherController" as controller
+end box
+box "Backend — Saturdaze Application and Domain" #ECFDF3
+  participant "GetWeekendWeatherQueryHandler" as handler
+  participant "WeatherForecast" as entity
+end box
+box "Backend — Saturdaze Infrastructure" #FFF4E5
+  participant "OpenMeteoWeatherClient" as infra
+  participant "Open-Meteo" as provider
+end box
+actor -> page : Open a weather-aware weekend
+page -> client : Load weekend weather
+client -> controller : GET /api/weather?weekendOf=date
+controller -> controller : Authenticate and validate request
+controller -> handler : Send GetWeekendWeatherQuery
+handler -> infra : Read cache or request provider
+infra -> provider : GET configured forecast URL
+provider --> infra : Provider response
+infra --> handler : Current data
+alt provider data is available
+  handler -> entity : Apply L2-023 two-day mapping
+  entity --> handler : Typed result
+  handler --> controller : Typed result
+  controller --> client : Successful HTTP response
+  client --> page : Present feature result
+  page --> actor : See Saturday and Sunday forecast
+else HTTP, JSON, or timeout failure
+  handler --> controller : Controlled alternate result
+  controller --> client : Safe HTTP response
+  client --> page : Present alternate state
+  page --> actor : See L2-040 neutral fallback
+end
+@enduml

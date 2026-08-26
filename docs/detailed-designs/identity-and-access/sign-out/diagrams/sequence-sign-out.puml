@@ -1,0 +1,54 @@
+@startuml
+title UML sequence behaviour — Sign out
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Account holder" as actor
+box "Frontend — Saturdaze web application" #E0F2FE
+  participant "ProfilePage and SignOutDialog" as page
+  participant "SessionStore" as client
+end box
+box "Backend — Saturdaze API application" #D1FADF
+  participant "AuthController" as controller
+end box
+box "Backend — Saturdaze Application and Domain" #ECFDF3
+  participant "RevokeRefreshTokenCommandHandler" as handler
+  participant "RefreshToken" as entity
+end box
+box "Backend — Saturdaze Infrastructure" #FFF4E5
+  database "Saturdaze database" as db
+end box
+actor -> page : Choose Sign out
+page -> client : Confirm and request revocation
+client -> controller : Revocation endpoint TO SUPPLY
+controller -> controller : Authenticate and validate request
+controller -> handler : Dispatch revocation command
+handler -> db : Load active refresh token
+db --> handler : Current state
+alt token is active
+  handler -> entity : Apply L2-003 revocation
+  entity --> handler : Updated state
+  handler -> db : Save changes
+  db --> handler : Commit result
+  handler --> controller : Typed result
+  controller --> client : Successful HTTP response
+  client --> page : Present feature result
+  page --> actor : Return to signed-out shell
+else dialog is cancelled or token is absent
+  handler --> controller : Controlled error
+  controller --> client : ProblemDetails response
+  client --> page : Present safe error state
+  page --> actor : Remain signed in or clear local state safely
+end
+@enduml

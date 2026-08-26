@@ -1,0 +1,15 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers — Pick restaurants
+
+Person(actor, "Family member", "Chooses a meal option for a weekend slot")
+System_Boundary(saturdaze, "Saturdaze") {
+  Container(web, "Saturdaze web application", "Angular", "Shows restaurant picks")
+  Container(api, "Saturdaze API", "ASP.NET Core", "Scopes and orders restaurants")
+  ContainerDb(db, "Saturdaze database", "SQL Server", "Stores restaurants, votes, and locks")
+}
+Rel(actor, web, "Uses", "HTTPS")
+Rel(web, api, "Requests meal-slot picks", "JSON/HTTPS")
+Rel(api, db, "Queries restaurant data", "EF Core")
+@enduml

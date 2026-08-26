@@ -1,0 +1,21 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — Browse saved weekends
+
+Container_Boundary(web, "Saturdaze web application") {
+  Component(page, "SavedPage", "Angular component", "Presents filters and avoid-repeating items")
+  Component(client, "SavedService", "Angular service", "Loads and maps weekend summaries")
+}
+Container_Boundary(api, "Saturdaze API") {
+  Component(controller, "WeekendsController", "ASP.NET Core", "Exposes history and favourite endpoints")
+  Component(handler, "History and favourite handlers", "Application handler", "Project history and persist curation")
+  Component(entity, "Weekend", "Domain state", "Stores title, rating, and favourite state")
+  ComponentDb(db, "AppDbContext", "EF Core", "Stores rated and favourited weekends")
+}
+Rel(page, client, "Calls")
+Rel(client, controller, "GET /api/weekends/history", "JSON/HTTPS")
+Rel(controller, handler, "Dispatches request")
+Rel(handler, entity, "Reads or updates")
+Rel(handler, db, "Queries and updates weekends", "EF Core")
+@enduml

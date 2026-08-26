@@ -1,0 +1,11 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context — Support accessible interaction
+
+Person(user, "Keyboard or assistive-technology user", "Operates Saturdaze without relying on pointer input")
+System(saturdaze, "Saturdaze", "Family weekend planning application")
+System_Ext(browser, "Browser accessibility platform", "Exposes the accessibility tree and keyboard events")
+Rel(user, browser, "Uses")
+Rel(browser, saturdaze, "Operates and announces", "DOM accessibility APIs")
+@enduml

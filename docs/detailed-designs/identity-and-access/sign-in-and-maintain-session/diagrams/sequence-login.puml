@@ -1,0 +1,54 @@
+@startuml
+title UML sequence behaviour — Sign in and maintain a session
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Account holder" as actor
+box "Frontend — Saturdaze web application" #E0F2FE
+  participant "LoginPage" as page
+  participant "SessionStore and AuthService" as client
+end box
+box "Backend — Saturdaze API application" #D1FADF
+  participant "AuthController" as controller
+end box
+box "Backend — Saturdaze Application and Domain" #ECFDF3
+  participant "LoginCommandHandler" as handler
+  participant "User and RefreshToken" as entity
+end box
+box "Backend — Saturdaze Infrastructure" #FFF4E5
+  database "Saturdaze database" as db
+end box
+actor -> page : Submit login form
+page -> client : login(LoginRequest, remember)
+client -> controller : POST /api/auth/login
+controller -> controller : Authenticate and validate request
+controller -> handler : Send LoginCommand
+handler -> db : Load user by normalized email
+db --> handler : Current state
+alt credentials are valid
+  handler -> entity : Apply L2-002 token issue and L2-007 persistence choice
+  entity --> handler : Updated state
+  handler -> db : Save changes
+  db --> handler : Commit result
+  handler --> controller : Typed result
+  controller --> client : Successful HTTP response
+  client --> page : Present feature result
+  page --> actor : Enter authenticated application
+else credentials are invalid
+  handler --> controller : Controlled error
+  controller --> client : ProblemDetails response
+  client --> page : Present safe error state
+  page --> actor : See generic credential error
+end
+@enduml

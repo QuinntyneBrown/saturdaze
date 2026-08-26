@@ -1,0 +1,52 @@
+@startuml
+title UML sequence behaviour — Pick restaurants
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Family member" as actor
+box "Frontend — Saturdaze web application" #E0F2FE
+  participant "RestaurantsPage" as page
+  participant "RestaurantService" as client
+end box
+box "Backend — Saturdaze API application" #D1FADF
+  participant "RestaurantsController" as controller
+end box
+box "Backend — Saturdaze Application and Domain" #ECFDF3
+  participant "GetRestaurantPicksQueryHandler" as handler
+  participant "Restaurant" as entity
+end box
+box "Backend — Saturdaze Infrastructure" #FFF4E5
+  database "Saturdaze database" as infra
+  end box
+actor -> page : Select a day and meal slot
+page -> client : load restaurant picks
+client -> controller : GET /api/restaurants
+controller -> controller : Authenticate and validate request
+controller -> handler : Send GetRestaurantPicksQuery
+handler -> infra : Query restaurants by slot and filters
+infra --> handler : Current data
+alt day and slot are valid
+  handler -> entity : Apply L2-019 scope and defaults
+  entity --> handler : Typed result
+  handler --> controller : Typed result
+  controller --> client : Successful HTTP response
+  client --> page : Present feature result
+  page --> actor : See ordered restaurant picks
+else required scope is absent
+  handler --> controller : Controlled alternate result
+  controller --> client : Safe HTTP response
+  client --> page : Present alternate state
+  page --> actor : See field validation error
+end
+@enduml

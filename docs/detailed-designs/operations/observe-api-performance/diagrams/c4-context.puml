@@ -1,0 +1,13 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context — Observe API performance
+
+Person(client, "API client", "Invokes Saturdaze features")
+Person(operator, "System operator", "Reviews request outcomes and latency")
+System(saturdaze, "Saturdaze", "Family weekend planning platform")
+System_Ext(logs, "Log storage", "Console and rolling structured log files")
+Rel(client, saturdaze, "Calls", "HTTPS")
+Rel(saturdaze, logs, "Emits request events to", "Serilog")
+Rel(operator, logs, "Reviews")
+@enduml

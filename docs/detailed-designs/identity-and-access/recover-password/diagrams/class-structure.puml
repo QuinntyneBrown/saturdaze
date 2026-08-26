@@ -1,0 +1,39 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — Recover a password
+
+class ForgotPasswordPage {
+  +submit(): Promise<void>
+}
+class ResetPasswordPage {
+  +submit(): Promise<void>
+}
+class ForgotPasswordCommandHandler {
+  +Handle(command: ForgotPasswordCommand): Task<AuthTokenDeliveryDto>
+}
+class ResetPasswordCommandHandler {
+  +Handle(command: ResetPasswordCommand): Task<AuthSuccessDto>
+}
+class PasswordResetToken {
+  +Guid UserId
+  +DateTimeOffset ExpiresAtUtc
+  +DateTimeOffset? UsedAtUtc
+}
+class User {
+  +string PasswordHash
+}
+ForgotPasswordPage ..> ForgotPasswordCommandHandler : invokes through API
+ResetPasswordPage ..> ResetPasswordCommandHandler : invokes through API
+ForgotPasswordCommandHandler --> PasswordResetToken : creates
+ResetPasswordCommandHandler --> PasswordResetToken : consumes
+ResetPasswordCommandHandler --> User : updates
+@enduml

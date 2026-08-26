@@ -1,0 +1,15 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers — Moderate event submissions
+
+Person(actor, "Event administrator", "Approves or rejects contributed events")
+System_Boundary(saturdaze, "Saturdaze") {
+  Container(web, "Saturdaze web application", "Angular", "Hosts the moderation queue")
+  Container(api, "Saturdaze API", "ASP.NET Core", "Authorizes and applies moderation decisions")
+  ContainerDb(db, "Saturdaze database", "SQL Server", "Stores submissions and approved local events")
+}
+Rel(actor, web, "Uses", "HTTPS")
+Rel(web, api, "Lists or decides submissions", "JSON/HTTPS")
+Rel(api, db, "Updates submissions and creates public events", "EF Core")
+@enduml

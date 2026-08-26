@@ -1,0 +1,36 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — Generate the current weekend
+
+class WeekendPlanService {
+  +loadCurrent(): Promise<void>
+  +plan(weekendOfIso: string): Promise<void>
+}
+class GetCurrentWeekendQueryHandler {
+  +Handle(query: GetCurrentWeekendQuery): Task<WeekendDto>
+}
+class GenerateWeekendCommandHandler {
+  +Handle(command: GenerateWeekendCommand): Task<WeekendDto>
+}
+class WeekendPlanner {
+  +Plan(inputs: PlannerInputs): IReadOnlyList<ItineraryBlock>
+}
+class Weekend {
+  +Guid FamilyId
+  +DateOnly WeekendOf
+  +int RegenerateCount
+}
+WeekendPlanService ..> GetCurrentWeekendQueryHandler : invokes through API
+GetCurrentWeekendQueryHandler ..> GenerateWeekendCommandHandler : creates when absent
+GenerateWeekendCommandHandler --> WeekendPlanner : calls
+GenerateWeekendCommandHandler --> Weekend : persists
+@enduml

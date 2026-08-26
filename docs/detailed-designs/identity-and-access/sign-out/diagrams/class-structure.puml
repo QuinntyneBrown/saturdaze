@@ -1,0 +1,34 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — Sign out
+
+class ProfilePage {
+  +openSignOut(): void
+}
+class SignOutDialog {
+  +confirm(): void
+  +cancel(): void
+}
+class SessionStore {
+  +logout(): void
+}
+class RevokeRefreshTokenCommandHandler <<introduced>> {
+  +Handle(token: string): Task
+}
+class RefreshToken {
+  +Guid Id
+  +DateTimeOffset? RevokedAtUtc
+}
+ProfilePage --> SignOutDialog : opens
+ProfilePage --> SessionStore : calls after confirmation
+RevokeRefreshTokenCommandHandler --> RefreshToken : revokes
+@enduml

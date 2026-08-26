@@ -1,0 +1,15 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers — Secure authenticated requests
+
+Person(actor, "Authenticated account holder", "Calls protected family features")
+System_Boundary(saturdaze, "Saturdaze") {
+  Container(web, "Saturdaze web application", "Angular", "Guards routes and attaches bearer tokens")
+  Container(api, "Saturdaze API", "ASP.NET Core", "Authenticates and authorizes requests")
+  ContainerDb(db, "Saturdaze database", "SQL Server", "Stores parameterized application state and token hashes")
+}
+Rel(actor, web, "Uses", "HTTPS")
+Rel(web, api, "Calls protected endpoint", "JSON/HTTPS")
+Rel(api, db, "Executes parameterized access", "EF Core")
+@enduml

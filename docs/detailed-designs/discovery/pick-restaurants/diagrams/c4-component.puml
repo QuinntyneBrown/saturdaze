@@ -1,0 +1,21 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — Pick restaurants
+
+Container_Boundary(web, "Saturdaze web application") {
+  Component(page, "RestaurantsPage", "Angular component", "Selects day, slot, and filters")
+  Component(client, "RestaurantService", "Angular service", "Loads and maps restaurant DTOs")
+}
+Container_Boundary(api, "Saturdaze API") {
+  Component(controller, "RestaurantsController", "ASP.NET Core", "Exposes restaurant picks")
+  Component(handler, "GetRestaurantPicksQueryHandler", "Application handler", "Validates scope and filters results")
+  Component(entity, "Restaurant", "Domain state", "Holds meal and distance attributes")
+  ComponentDb(db, "AppDbContext", "EF Core", "Stores restaurants, votes, and locks")
+}
+Rel(page, client, "Calls")
+Rel(client, controller, "GET /api/restaurants", "JSON/HTTPS")
+Rel(controller, handler, "Dispatches request")
+Rel(handler, entity, "Filters and orders")
+Rel(handler, db, "Queries restaurant data", "EF Core")
+@enduml

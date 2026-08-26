@@ -1,0 +1,37 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — Browse saved weekends
+
+class SavedPage {
+  +selectFilter(filter: SavedFilter): void
+}
+class SavedService {
+  +load(): Promise<void>
+  +list(): Signal<SavedView>
+}
+class GetWeekendHistoryQueryHandler {
+  +Handle(query: GetWeekendHistoryQuery): Task<IReadOnlyList<WeekendSummaryDto>>
+}
+class MarkFavouriteCommandHandler {
+  +Handle(command: MarkFavouriteCommand): Task<WeekendDto>
+}
+class Weekend {
+  +DateOnly WeekendOf
+  +string? Title
+  +int? Rating
+  +bool IsFavourite
+}
+SavedPage --> SavedService : reads
+SavedService ..> GetWeekendHistoryQueryHandler : invokes through API
+GetWeekendHistoryQueryHandler --> Weekend : projects
+MarkFavouriteCommandHandler --> Weekend : updates
+@enduml

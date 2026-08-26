@@ -1,0 +1,21 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — Control itinerary blocks
+
+Container_Boundary(web, "Saturdaze web application") {
+  Component(page, "ItineraryPage and HomePage", "Angular component", "Offer block and regeneration actions")
+  Component(client, "WeekendPlanService", "Angular service", "Calls lock and regeneration endpoints")
+}
+Container_Boundary(api, "Saturdaze API") {
+  Component(controller, "BlocksController and WeekendsController", "ASP.NET Core", "Expose control endpoints")
+  Component(handler, "Block and regeneration handlers", "Application handler", "Apply ownership and lock rules")
+  Component(entity, "Weekend and ItineraryBlock", "Domain state", "Own locked state and regenerate count")
+  ComponentDb(db, "AppDbContext", "EF Core", "Stores weekends and itinerary blocks")
+}
+Rel(page, client, "Calls")
+Rel(client, controller, "PUT /api/blocks/{id}/lock or regeneration", "JSON/HTTPS")
+Rel(controller, handler, "Dispatches request")
+Rel(handler, entity, "Mutates")
+Rel(handler, db, "Reads and updates the weekend aggregate", "EF Core")
+@enduml

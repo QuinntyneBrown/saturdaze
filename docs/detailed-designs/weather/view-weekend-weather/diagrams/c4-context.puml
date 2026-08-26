@@ -1,0 +1,11 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context — View weekend weather
+
+Person(actor, "Family member", "Uses a Saturday and Sunday forecast")
+System(saturdaze, "Saturdaze", "Family weekend planning platform")
+System_Ext(provider, "Open-Meteo", "External weather forecast provider")
+Rel(actor, saturdaze, "Views a weekend forecast using", "HTTPS")
+Rel(saturdaze, provider, "Requests forecast data from", "HTTPS")
+@enduml

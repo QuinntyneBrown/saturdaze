@@ -1,0 +1,10 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context — Recover a password
+
+Person(actor, "Signed-out account holder", "Requests and completes password recovery")
+System(saturdaze, "Saturdaze", "Family weekend planning platform")
+
+Rel(actor, saturdaze, "Recovers credentials using", "HTTPS")
+@enduml

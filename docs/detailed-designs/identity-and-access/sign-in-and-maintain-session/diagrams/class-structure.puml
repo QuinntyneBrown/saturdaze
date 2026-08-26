@@ -1,0 +1,42 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — Sign in and maintain a session
+
+class LoginPage {
+  +submit(): Promise<void>
+}
+class SessionStore {
+  +login(req: LoginRequest, remember: bool): Promise<void>
+  +rehydrate(): Promise<void>
+}
+class LoginCommand {
+  +string Email
+  +string Password
+}
+class LoginCommandHandler {
+  +Handle(command: LoginCommand): Task<AuthSuccessDto>
+}
+class User {
+  +string Email
+  +string PasswordHash
+}
+class RefreshToken {
+  +Guid UserId
+  +DateTimeOffset ExpiresAtUtc
+  +string? CreatedByIp
+}
+LoginPage --> SessionStore : calls
+SessionStore ..> LoginCommand : maps to
+LoginCommandHandler ..> LoginCommand : handles
+LoginCommandHandler --> User : verifies
+LoginCommandHandler --> RefreshToken : creates
+@enduml

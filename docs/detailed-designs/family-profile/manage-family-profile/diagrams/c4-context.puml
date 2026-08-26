@@ -1,0 +1,9 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context — Manage a family profile
+
+Person(actor, "Family organizer", "Maintains household members and preferences")
+System(saturdaze, "Saturdaze", "Family weekend planning platform")
+Rel(actor, saturdaze, "Maintains household details using", "HTTPS")
+@enduml

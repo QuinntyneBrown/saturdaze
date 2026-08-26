@@ -1,0 +1,9 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context — Track own event submissions
+
+Person(actor, "Authenticated contributor", "Checks the review state of submitted events")
+System(saturdaze, "Saturdaze", "Family weekend planning platform")
+Rel(actor, saturdaze, "Tracks submitted events using", "HTTPS")
+@enduml

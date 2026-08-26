@@ -1,0 +1,15 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers — Manage shopping errands
+
+Person(actor, "Family member", "Adds and completes a weekend errand")
+System_Boundary(saturdaze, "Saturdaze") {
+  Container(web, "Saturdaze web application", "Angular", "Hosts the errand form")
+  Container(api, "Saturdaze API", "ASP.NET Core", "Adds and completes errands")
+  ContainerDb(db, "Saturdaze database", "SQL Server", "Stores weekends and shopping errands")
+}
+Rel(actor, web, "Uses", "HTTPS")
+Rel(web, api, "Submits errand changes", "JSON/HTTPS")
+Rel(api, db, "Updates errand state", "EF Core")
+@enduml

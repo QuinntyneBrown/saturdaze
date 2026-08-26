@@ -1,0 +1,38 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — Verify an email address
+
+class VerifyEmailPage {
+  +verify(token: string): Promise<void>
+}
+class SessionStore {
+  +verifyEmail(req: VerifyEmailRequest): Promise<void>
+}
+class VerifyEmailCommand {
+  +string Token
+}
+class VerifyEmailCommandHandler {
+  +Handle(command: VerifyEmailCommand): Task<UserDto>
+}
+class EmailVerificationToken {
+  +Guid UserId
+  +DateTimeOffset ExpiresAtUtc
+  +DateTimeOffset? UsedAtUtc
+}
+class User {
+  +DateTimeOffset? EmailVerifiedUtc
+}
+VerifyEmailPage --> SessionStore : calls
+SessionStore ..> VerifyEmailCommand : maps to
+VerifyEmailCommandHandler --> EmailVerificationToken : consumes
+VerifyEmailCommandHandler --> User : marks verified
+@enduml

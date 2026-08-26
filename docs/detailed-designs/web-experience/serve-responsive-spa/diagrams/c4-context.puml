@@ -1,0 +1,11 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context — Serve a responsive single-page application
+
+Person(visitor, "Browser user", "Uses Saturdaze across supported viewport widths")
+System(saturdaze, "Saturdaze", "Responsive family weekend planning application")
+System_Ext(swa, "Azure Static Web Apps", "Hosts the Angular production bundle")
+Rel(visitor, swa, "Requests application routes from", "HTTPS")
+Rel(swa, saturdaze, "Serves the application shell for")
+@enduml

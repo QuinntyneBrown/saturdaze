@@ -1,0 +1,15 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers — Register a family account
+
+Person(actor, "Family organizer", "Creates the household account")
+System_Boundary(saturdaze, "Saturdaze") {
+  Container(web, "Saturdaze web application", "Angular", "Hosts the signup form")
+  Container(api, "Saturdaze API", "ASP.NET Core", "Creates accounts and tokens")
+  ContainerDb(db, "Saturdaze database", "SQL Server", "Stores users, families, and refresh tokens")
+}
+Rel(actor, web, "Uses", "HTTPS")
+Rel(web, api, "Submits registration", "JSON/HTTPS")
+Rel(api, db, "Creates account state", "EF Core")
+@enduml

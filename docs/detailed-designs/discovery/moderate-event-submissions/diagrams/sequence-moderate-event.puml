@@ -1,0 +1,52 @@
+@startuml
+title UML sequence behaviour — Moderate event submissions
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Event administrator" as actor
+box "Frontend — Saturdaze web application" #E0F2FE
+  participant "AdminEventsPage" as page
+  participant "EventSubmissionsService" as client
+end box
+box "Backend — Saturdaze API application" #D1FADF
+  participant "EventSubmissionsController" as controller
+end box
+box "Backend — Saturdaze Application and Domain" #ECFDF3
+  participant "Moderation command handlers" as handler
+  participant "EventSubmission and LocalEvent" as entity
+end box
+box "Backend — Saturdaze Infrastructure" #FFF4E5
+  database "Saturdaze database" as infra
+  end box
+actor -> page : Choose approve or reject
+page -> client : Send moderation decision
+client -> controller : POST /api/events/submissions/{id}/approve or reject
+controller -> controller : Authenticate and validate request
+controller -> handler : Dispatch approve or reject command
+handler -> infra : Load pending submission under Admin policy
+infra --> handler : Current data
+alt caller is admin and submission is pending
+  handler -> entity : Apply L2-050 state transition
+  entity --> handler : Typed result
+  handler --> controller : Typed result
+  controller --> client : Successful HTTP response
+  client --> page : Present feature result
+  page --> actor : See updated moderation queue
+else caller is not admin or state changed
+  handler --> controller : Controlled alternate result
+  controller --> client : Safe HTTP response
+  client --> page : Present alternate state
+  page --> actor : See 403 or conflict response
+end
+@enduml

@@ -1,0 +1,10 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context — Sign in and maintain a session
+
+Person(actor, "Account holder", "Authenticates to use family features")
+System(saturdaze, "Saturdaze", "Family weekend planning platform")
+
+Rel(actor, saturdaze, "Signs in using", "HTTPS")
+@enduml

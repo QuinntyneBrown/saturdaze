@@ -1,0 +1,52 @@
+@startuml
+title UML sequence behaviour — Discover activities
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Family member" as actor
+box "Frontend — Saturdaze web application" #E0F2FE
+  participant "ActivitiesPage" as page
+  participant "ActivityService" as client
+end box
+box "Backend — Saturdaze API application" #D1FADF
+  participant "ActivitiesController" as controller
+end box
+box "Backend — Saturdaze Application and Domain" #ECFDF3
+  participant "GetActivitySuggestionsQueryHandler" as handler
+  participant "Activity" as entity
+end box
+box "Backend — Saturdaze Infrastructure" #FFF4E5
+  database "Saturdaze database" as infra
+  end box
+actor -> page : Choose activity filters
+page -> client : load filtered catalogue
+client -> controller : GET /api/activities
+controller -> controller : Authenticate and validate request
+controller -> handler : Send GetActivitySuggestionsQuery
+handler -> infra : Query activities with supplied predicates
+infra --> handler : Current data
+alt matching activities exist
+  handler -> entity : Apply L2-017 filters and L2-018 grouping
+  entity --> handler : Typed result
+  handler --> controller : Typed result
+  controller --> client : Successful HTTP response
+  client --> page : Present feature result
+  page --> actor : See three ordered sections
+else no activities match
+  handler --> controller : Controlled alternate result
+  controller --> client : Safe HTTP response
+  client --> page : Present alternate state
+  page --> actor : See empty section states
+end
+@enduml

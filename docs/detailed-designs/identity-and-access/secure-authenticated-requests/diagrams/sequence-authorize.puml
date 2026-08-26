@@ -1,0 +1,54 @@
+@startuml
+title UML sequence behaviour — Secure authenticated requests
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Authenticated account holder" as actor
+box "Frontend — Saturdaze web application" #E0F2FE
+  participant "Protected Angular page" as page
+  participant "authInterceptor and route guards" as client
+end box
+box "Backend — Saturdaze API application" #D1FADF
+  participant "JWT middleware and controller policy" as controller
+end box
+box "Backend — Saturdaze Application and Domain" #ECFDF3
+  participant "Application request handler" as handler
+  participant "User and RefreshToken" as entity
+end box
+box "Backend — Saturdaze Infrastructure" #FFF4E5
+  database "Saturdaze database" as db
+end box
+actor -> page : Open protected capability
+page -> client : Attach Authorization bearer token
+client -> controller : Protected JSON/HTTPS request
+controller -> controller : Authenticate and validate request
+controller -> handler : Dispatch authorized request
+handler -> db : Run parameterized authorized query
+db --> handler : Current state
+alt token, origin, role, and input are accepted
+  handler -> entity : Apply L2-008 authorization and credential controls
+  entity --> handler : Updated state
+  handler -> db : Save changes
+  db --> handler : Commit result
+  handler --> controller : Typed result
+  controller --> client : Successful HTTP response
+  client --> page : Present feature result
+  page --> actor : Receive protected feature result
+else authentication, authorization, or validation fails
+  handler --> controller : Controlled error
+  controller --> client : ProblemDetails response
+  client --> page : Present safe error state
+  page --> actor : See 401, 403, or safe validation error
+end
+@enduml

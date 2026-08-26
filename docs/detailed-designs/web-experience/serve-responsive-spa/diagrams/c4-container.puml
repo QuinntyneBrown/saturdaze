@@ -1,0 +1,15 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers — Serve a responsive single-page application
+
+Person(visitor, "Browser user", "Uses responsive routed pages")
+System_Boundary(saturdaze, "Saturdaze") {
+  Container(swa, "Static web host", "Azure Static Web Apps", "Rewrites navigation routes and serves assets")
+  Container(web, "Saturdaze web application", "Angular", "Lazy-loads pages and adapts layouts")
+  Container(api, "Saturdaze API", "ASP.NET Core", "Supplies feature data")
+}
+Rel(visitor, swa, "Requests route", "HTTPS")
+Rel(swa, web, "Serves shell and route chunks")
+Rel(web, api, "Calls", "JSON/HTTPS")
+@enduml

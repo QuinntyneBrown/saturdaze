@@ -1,0 +1,15 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers — Manage the database with the CLI
+
+Person(operator, "System operator", "Runs administrative commands")
+System_Boundary(saturdaze, "Saturdaze administration") {
+  Container(cli, "Saturdaze CLI", ".NET and System.CommandLine", "Parses commands and runs handlers")
+  Container(seed, "Bundled seed data", "JSON files", "Supplies curated catalogue and account data")
+  ContainerDb(db, "Saturdaze database", "SQL Server or development provider", "Stores application schema and state")
+}
+Rel(operator, cli, "Runs", "Terminal")
+Rel(cli, seed, "Reads for seed and reset")
+Rel(cli, db, "Migrates, seeds, or resets", "EF Core")
+@enduml

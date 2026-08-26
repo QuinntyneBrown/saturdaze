@@ -1,0 +1,32 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — View weekend weather
+
+interface IWeatherClient {
+  +GetForecastAsync(latitude: double, longitude: double, from: DateOnly, to: DateOnly): Task<IReadOnlyList<WeatherForecast>>
+}
+class GetWeekendWeatherQueryHandler {
+  +Handle(query: GetWeekendWeatherQuery): Task<IReadOnlyList<WeatherForecast>>
+}
+class OpenMeteoWeatherClient {
+  +GetForecastAsync(latitude: double, longitude: double, from: DateOnly, to: DateOnly): Task<IReadOnlyList<WeatherForecast>>
+}
+class WeatherForecast {
+  +DateOnly Date
+  +double? HighC
+  +double? LowC
+  +bool Unavailable
+}
+GetWeekendWeatherQueryHandler --> IWeatherClient : calls
+OpenMeteoWeatherClient ..|> IWeatherClient
+OpenMeteoWeatherClient --> WeatherForecast : maps or falls back
+@enduml

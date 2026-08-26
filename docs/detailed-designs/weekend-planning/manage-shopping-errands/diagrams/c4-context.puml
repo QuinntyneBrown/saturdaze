@@ -1,0 +1,9 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context — Manage shopping errands
+
+Person(actor, "Family member", "Adds and completes a weekend errand")
+System(saturdaze, "Saturdaze", "Family weekend planning platform")
+Rel(actor, saturdaze, "Schedules shopping work using", "HTTPS")
+@enduml

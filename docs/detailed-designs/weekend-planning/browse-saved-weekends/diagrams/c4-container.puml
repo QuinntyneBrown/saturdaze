@@ -1,0 +1,15 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers — Browse saved weekends
+
+Person(actor, "Family member", "Reviews and curates past weekends")
+System_Boundary(saturdaze, "Saturdaze") {
+  Container(web, "Saturdaze web application", "Angular", "Shows saved weekend history")
+  Container(api, "Saturdaze API", "ASP.NET Core", "Queries history and updates favourites")
+  ContainerDb(db, "Saturdaze database", "SQL Server", "Stores rated and favourited weekends")
+}
+Rel(actor, web, "Uses", "HTTPS")
+Rel(web, api, "Loads history or changes favourite state", "JSON/HTTPS")
+Rel(api, db, "Queries and updates weekends", "EF Core")
+@enduml

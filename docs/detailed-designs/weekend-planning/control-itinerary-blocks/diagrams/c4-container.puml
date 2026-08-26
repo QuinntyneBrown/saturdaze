@@ -1,0 +1,15 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers — Control itinerary blocks
+
+Person(actor, "Family member", "Locks, swaps, or regenerates plan content")
+System_Boundary(saturdaze, "Saturdaze") {
+  Container(web, "Saturdaze web application", "Angular", "Offers itinerary controls")
+  Container(api, "Saturdaze API", "ASP.NET Core", "Locks, swaps, and regenerates content")
+  ContainerDb(db, "Saturdaze database", "SQL Server", "Stores weekends and itinerary blocks")
+}
+Rel(actor, web, "Uses", "HTTPS")
+Rel(web, api, "Sends a control command", "JSON/HTTPS")
+Rel(api, db, "Reads and updates the weekend aggregate", "EF Core")
+@enduml

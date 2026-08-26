@@ -1,0 +1,10 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context — Sign out
+
+Person(actor, "Account holder", "Ends the active authenticated session")
+System(saturdaze, "Saturdaze", "Family weekend planning platform")
+
+Rel(actor, saturdaze, "Ends a session using", "HTTPS")
+@enduml

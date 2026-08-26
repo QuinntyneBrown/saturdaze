@@ -1,0 +1,22 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — Manage the database with the CLI
+
+Container_Boundary(cli, "Saturdaze CLI") {
+  Component(root, "RootCommandFactory", "System.CommandLine", "Registers options and subcommands")
+  Component(migrate, "MigrateCommandHandler", ".NET handler", "Applies pending migrations")
+  Component(seed, "SeedCommandHandler", ".NET handler", "Coordinates JSON seeders")
+  Component(reset, "ResetCommandHandler", ".NET handler", "Drops, migrates, and reseeds")
+  Component(seeders, "IJsonSeeder implementations", ".NET services", "Upsert scoped seed records")
+  ComponentDb(db, "AppDbContext", "EF Core", "Accesses the configured database")
+}
+Rel(root, migrate, "Dispatches migrate")
+Rel(root, seed, "Dispatches seed")
+Rel(root, reset, "Dispatches confirmed reset")
+Rel(seed, seeders, "Runs")
+Rel(migrate, db, "Migrates")
+Rel(seeders, db, "Seeds")
+Rel(reset, db, "Drops and migrates")
+Rel(reset, seed, "Invokes")
+@enduml

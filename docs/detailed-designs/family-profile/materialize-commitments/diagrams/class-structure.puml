@@ -1,0 +1,36 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — Materialize recurring commitments
+
+class GenerateWeekendCommandHandler {
+  +Handle(command: GenerateWeekendCommand): Task<WeekendDto>
+}
+class WeekendPlanner {
+  +Plan(inputs: PlannerInputs): IReadOnlyList<ItineraryBlock>
+  -BuildFixedBlocks(inputs: PlannerInputs, day: DayOfWeekend): List<ItineraryBlock>
+}
+class Commitment {
+  +string Title
+  +DayOfWeek DayOfWeek
+  +TimeOnly StartTime
+  +TimeOnly EndTime
+}
+class ItineraryBlock {
+  +BlockKind Kind
+  +bool IsLocked
+  +TimeOnly StartTime
+  +TimeOnly EndTime
+}
+GenerateWeekendCommandHandler --> WeekendPlanner : calls
+WeekendPlanner ..> Commitment : reads
+WeekendPlanner --> ItineraryBlock : creates
+@enduml

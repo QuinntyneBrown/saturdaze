@@ -1,0 +1,15 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers — Recover a password
+
+Person(actor, "Signed-out account holder", "Requests and completes password recovery")
+System_Boundary(saturdaze, "Saturdaze") {
+  Container(web, "Saturdaze web application", "Angular", "Hosts recovery forms")
+  Container(api, "Saturdaze API", "ASP.NET Core", "Processes recovery tokens")
+  ContainerDb(db, "Saturdaze database", "SQL Server", "Stores users, reset tokens, and refresh tokens")
+}
+Rel(actor, web, "Uses", "HTTPS")
+Rel(web, api, "Submits recovery requests", "JSON/HTTPS")
+Rel(api, db, "Reads and updates credential state", "EF Core")
+@enduml

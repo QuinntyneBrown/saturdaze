@@ -1,0 +1,21 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — Moderate event submissions
+
+Container_Boundary(web, "Saturdaze web application") {
+  Component(page, "AdminEventsPage", "Angular component", "Presents the admin queue and dialogs")
+  Component(client, "EventSubmissionsService", "Angular service", "Calls moderation endpoints")
+}
+Container_Boundary(api, "Saturdaze API") {
+  Component(controller, "EventSubmissionsController", "ASP.NET Core", "Applies the Admin policy")
+  Component(handler, "Moderation command handlers", "Application handler", "Approve or reject pending state")
+  Component(entity, "EventSubmission and LocalEvent", "Domain state", "Hold review and published event state")
+  ComponentDb(db, "AppDbContext", "EF Core", "Stores submissions and approved local events")
+}
+Rel(page, client, "Calls")
+Rel(client, controller, "POST /api/events/submissions/{id}/approve or reject", "JSON/HTTPS")
+Rel(controller, handler, "Dispatches request")
+Rel(handler, entity, "Transitions and publishes")
+Rel(handler, db, "Updates submissions and creates public events", "EF Core")
+@enduml

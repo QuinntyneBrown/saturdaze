@@ -1,0 +1,23 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — View weekend weather
+
+Container_Boundary(web, "Saturdaze web application") {
+  Component(page, "HomePage", "Angular component", "Presents the weather strip")
+  Component(client, "WeekendPlanService", "Angular service", "Maps forecast data for presentation")
+}
+Container_Boundary(api, "Saturdaze API") {
+  Component(controller, "WeatherController", "ASP.NET Core", "Exposes weekend weather")
+  Component(handler, "GetWeekendWeatherQueryHandler", "Application handler", "Requests exactly two days")
+  Component(entity, "WeatherForecast", "Domain state", "Represents provider or fallback data")
+  ComponentDb(db, "OpenMeteoWeatherClient", "HttpClient and memory cache", "Represents cached provider access")
+}
+System_Ext(provider, "Open-Meteo", "External weather forecast provider")
+Rel(page, client, "Calls")
+Rel(client, controller, "GET /api/weather?weekendOf=date", "JSON/HTTPS")
+Rel(controller, handler, "Dispatches request")
+Rel(handler, entity, "Builds")
+Rel(handler, db, "Uses configured weather client", "HttpClient and memory cache")
+Rel(db, provider, "Requests forecast data from", "HTTPS")
+@enduml

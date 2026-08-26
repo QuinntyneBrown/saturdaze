@@ -1,0 +1,15 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers — Manage a family profile
+
+Person(actor, "Family organizer", "Maintains household members and preferences")
+System_Boundary(saturdaze, "Saturdaze") {
+  Container(web, "Saturdaze web application", "Angular", "Hosts the profile editor")
+  Container(api, "Saturdaze API", "ASP.NET Core", "Reads and saves family profiles")
+  ContainerDb(db, "Saturdaze database", "SQL Server", "Stores families, members, commitments, and preferences")
+}
+Rel(actor, web, "Uses", "HTTPS")
+Rel(web, api, "Reads or saves a profile", "JSON/HTTPS")
+Rel(api, db, "Reads and replaces profile state", "EF Core")
+@enduml

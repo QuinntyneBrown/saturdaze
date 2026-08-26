@@ -1,0 +1,50 @@
+@startuml
+title UML sequence behaviour — Manage the database with the CLI
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "System operator" as operator
+box "Frontend — Saturdaze CLI application" #E0F2FE
+  participant "RootCommandFactory" as root
+  participant "System.CommandLine command" as command
+end box
+box "Backend — Saturdaze CLI handlers" #ECFDF3
+  participant "MigrateCommandHandler" as migrate
+  participant "SeedCommandHandler" as seed
+  participant "ResetCommandHandler" as reset
+end box
+box "Backend — EF Core infrastructure" #FFF4E5
+  participant "IJsonSeeder implementations" as seeders
+  database "Configured database" as db
+end box
+operator -> root : Run saturdaze subcommand
+root -> command : Parse global and command options
+alt migrate
+  command -> migrate : ExecuteAsync
+  migrate -> db : Apply L2-043 pending migrations
+  db --> migrate : Schema current
+else seed
+  command -> seed : ExecuteAsync(seedDir)
+  seed -> seeders : Read bundled or overridden JSON
+  seeders -> db : Apply L2-044 idempotent upserts
+  db --> seed : Seed result
+else reset with --yes
+  command -> reset : ExecuteAsync(seedDir)
+  reset -> db : Apply L2-045 delete and migrate
+  reset -> seed : Reseed
+  seed --> reset : Seed result
+else reset without --yes
+  command --> operator : Refuse with exit code 4
+end
+@enduml

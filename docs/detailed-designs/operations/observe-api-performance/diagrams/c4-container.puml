@@ -1,0 +1,20 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers — Observe API performance
+
+Person(client, "API client", "Invokes endpoints")
+Person(operator, "System operator", "Reviews request metrics")
+System_Boundary(saturdaze, "Saturdaze") {
+  Container(api, "Saturdaze API", "ASP.NET Core", "Handles and times requests")
+  Container(app, "Application layer", ".NET and MediatR", "Times commands and queries")
+  ContainerDb(db, "Saturdaze database", "SQL Server", "Provides application state")
+  ContainerDb(logs, "Structured logs", "Serilog sinks", "Retains request and handler events")
+}
+Rel(client, api, "Calls", "HTTPS")
+Rel(api, app, "Dispatches")
+Rel(app, db, "Reads and writes", "EF Core")
+Rel(api, logs, "Writes request completion")
+Rel(app, logs, "Writes handler timing")
+Rel(operator, logs, "Reviews")
+@enduml

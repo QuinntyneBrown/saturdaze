@@ -1,0 +1,21 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — Secure authenticated requests
+
+Container_Boundary(web, "Saturdaze web application") {
+  Component(page, "Protected Angular page", "Angular component", "Starts an authenticated feature request")
+  Component(client, "authInterceptor and route guards", "Angular service", "Attach token and protect navigation")
+}
+Container_Boundary(api, "Saturdaze API") {
+  Component(controller, "JWT middleware and controller policy", "ASP.NET Core", "Validate token and authorize caller")
+  Component(handler, "Application request handler", "Application handler", "Processes authorized input through validation")
+  Component(entity, "User and RefreshToken", "Domain state", "Hold credential and session state")
+  ComponentDb(db, "AppDbContext", "EF Core", "Stores parameterized application state and token hashes")
+}
+Rel(page, client, "Calls")
+Rel(client, controller, "Protected JSON/HTTPS request", "JSON/HTTPS")
+Rel(controller, handler, "Dispatches request")
+Rel(handler, entity, "Reads authorized state")
+Rel(handler, db, "Executes parameterized access", "EF Core")
+@enduml

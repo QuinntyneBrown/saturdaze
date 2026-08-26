@@ -1,0 +1,40 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — Support accessible interaction
+
+class IconButton {
+  +string ariaLabel
+  +activate(): void
+}
+class TextInput {
+  +string label
+  +string? error
+  +string value
+}
+class Dialog {
+  +string title
+  +close(result: unknown): void
+}
+class FocusStyles <<SCSS module>> {
+  +string outlineColor
+  +string outlineWidth
+}
+class RoutedPageTemplate <<Angular template>> {
+  +string[] altText
+}
+RoutedPageTemplate --> IconButton : labels
+RoutedPageTemplate --> TextInput : associates
+RoutedPageTemplate --> Dialog : opens
+IconButton ..> FocusStyles : uses
+TextInput ..> FocusStyles : uses
+Dialog ..> FocusStyles : uses
+@enduml

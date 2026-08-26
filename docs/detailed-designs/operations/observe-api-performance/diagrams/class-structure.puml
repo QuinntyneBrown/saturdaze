@@ -1,0 +1,33 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — Observe API performance
+
+class ExceptionHandlingMiddleware {
+  +InvokeAsync(context: HttpContext): Task
+}
+class LoggingBehavior<TRequest,TResponse> {
+  +Handle(request: TRequest, next: RequestHandlerDelegate<TResponse>): Task<TResponse>
+}
+class HttpContextCurrentUserAccessor {
+  +Guid? UserId
+}
+class RequestLogEvent {
+  +string Method
+  +string Path
+  +int StatusCode
+  +long ElapsedMs
+  +Guid? UserId
+}
+ExceptionHandlingMiddleware ..> LoggingBehavior : encloses request
+LoggingBehavior ..> RequestLogEvent : emits timing
+HttpContextCurrentUserAccessor ..> RequestLogEvent : enriches
+@enduml

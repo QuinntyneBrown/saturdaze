@@ -1,0 +1,54 @@
+@startuml
+title UML sequence behaviour — Browse saved weekends
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Family member" as actor
+box "Frontend — Saturdaze web application" #E0F2FE
+  participant "SavedPage" as page
+  participant "SavedService" as client
+end box
+box "Backend — Saturdaze API application" #D1FADF
+  participant "WeekendsController" as controller
+end box
+box "Backend — Saturdaze Application and Domain" #ECFDF3
+  participant "History and favourite handlers" as handler
+  participant "Weekend" as entity
+end box
+box "Backend — Saturdaze Infrastructure" #FFF4E5
+  database "Saturdaze database" as db
+end box
+actor -> page : Open saved weekends or toggle favourite
+page -> client : load() or favourite request
+client -> controller : GET /api/weekends/history
+controller -> controller : Authenticate and validate request
+controller -> handler : Dispatch history query or favourite command
+handler -> db : Load authorized past weekends
+db --> handler : Current state
+alt history or target exists
+  handler -> entity : Apply L2-025 ordering and L2-026 curation
+  entity --> handler : Updated state
+  handler -> db : Save changes
+  db --> handler : Commit result
+  handler --> controller : Typed result
+  controller --> client : Successful HTTP response
+  client --> page : Present feature result
+  page --> actor : See curated history and avoid list
+else history is empty or target is absent
+  handler --> controller : Controlled error
+  controller --> client : ProblemDetails response
+  client --> page : Present safe error state
+  page --> actor : See empty or not-found state
+end
+@enduml

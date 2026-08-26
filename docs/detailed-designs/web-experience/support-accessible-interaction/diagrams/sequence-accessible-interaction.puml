@@ -1,0 +1,42 @@
+@startuml
+title UML sequence behaviour — Support accessible interaction
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Keyboard or assistive-technology user" as user
+box "Frontend — Saturdaze Angular application" #E0F2FE
+  participant "Routed page" as page
+  participant "Shared control" as control
+  participant "Dialog" as dialog
+end box
+box "Backend — Browser accessibility platform" #D1FADF
+  participant "Focus manager" as focus
+  participant "Accessibility tree" as tree
+end box
+box "Backend — Browser rendering platform" #FFF4E5
+  participant "CSS engine" as css
+end box
+user -> focus : Press Tab
+focus -> control : Move focus in DOM order
+control -> css : Apply L2-036 visible focus
+css --> control : AA-contrast focus style
+control -> tree : Expose L2-037 accessible name
+tree --> user : Announce control
+user -> control : Press Enter or Space
+control -> dialog : Open action dialog
+dialog -> focus : Trap focus and announce title
+focus --> user : Present operable dialog
+dialog -> css : Apply L2-038 color tokens
+css --> dialog : AA-contrast presentation
+@enduml

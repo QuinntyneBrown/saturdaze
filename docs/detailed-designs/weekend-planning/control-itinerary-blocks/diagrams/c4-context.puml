@@ -1,0 +1,9 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context — Control itinerary blocks
+
+Person(actor, "Family member", "Locks, swaps, or regenerates plan content")
+System(saturdaze, "Saturdaze", "Family weekend planning platform")
+Rel(actor, saturdaze, "Adjusts an itinerary using", "HTTPS")
+@enduml

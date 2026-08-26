@@ -1,0 +1,9 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context — Browse saved weekends
+
+Person(actor, "Family member", "Reviews and curates past weekends")
+System(saturdaze, "Saturdaze", "Family weekend planning platform")
+Rel(actor, saturdaze, "Reviews weekend history using", "HTTPS")
+@enduml

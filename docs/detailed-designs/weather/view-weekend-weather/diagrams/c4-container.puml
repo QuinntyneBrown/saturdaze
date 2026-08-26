@@ -1,0 +1,17 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers — View weekend weather
+
+Person(actor, "Family member", "Uses a Saturday and Sunday forecast")
+System_Boundary(saturdaze, "Saturdaze") {
+  Container(web, "Saturdaze web application", "Angular", "Shows Saturday and Sunday weather")
+  Container(api, "Saturdaze API", "ASP.NET Core", "Returns weekend forecasts")
+  ContainerDb(db, "Saturdaze database", "SQL Server", "Represents cached provider access")
+}
+System_Ext(provider, "Open-Meteo", "External weather forecast provider")
+Rel(actor, web, "Uses", "HTTPS")
+Rel(web, api, "Requests weekend weather", "JSON/HTTPS")
+Rel(api, db, "Uses configured weather client", "EF Core")
+Rel(api, provider, "Requests forecast data from", "HTTPS")
+@enduml

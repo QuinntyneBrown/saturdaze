@@ -1,0 +1,21 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — Verify an email address
+
+Container_Boundary(web, "Saturdaze web application") {
+  Component(page, "VerifyEmailPage", "Angular component", "Reads the link token and presents state")
+  Component(client, "SessionStore and AuthService", "Angular service", "Call the verification endpoint")
+}
+Container_Boundary(api, "Saturdaze API") {
+  Component(controller, "AuthController", "ASP.NET Core", "Exposes email verification")
+  Component(handler, "VerifyEmailCommandHandler", "Application handler", "Validates token and marks the user")
+  Component(entity, "EmailVerificationToken and User", "Domain state", "Hold expiry and verified timestamp")
+  ComponentDb(db, "AppDbContext", "EF Core", "Stores verification tokens and users")
+}
+Rel(page, client, "Calls")
+Rel(client, controller, "POST /api/auth/verify-email", "JSON/HTTPS")
+Rel(controller, handler, "Dispatches request")
+Rel(handler, entity, "Consumes and updates")
+Rel(handler, db, "Updates verification state", "EF Core")
+@enduml

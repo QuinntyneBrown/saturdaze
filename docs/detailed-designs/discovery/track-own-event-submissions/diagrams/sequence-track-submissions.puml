@@ -1,0 +1,52 @@
+@startuml
+title UML sequence behaviour — Track own event submissions
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Authenticated contributor" as actor
+box "Frontend — Saturdaze web application" #E0F2FE
+  participant "EventsPage" as page
+  participant "EventSubmissionsService" as client
+end box
+box "Backend — Saturdaze API application" #D1FADF
+  participant "EventSubmissionsController" as controller
+end box
+box "Backend — Saturdaze Application and Domain" #ECFDF3
+  participant "ListMySubmissionsQueryHandler" as handler
+  participant "EventSubmission" as entity
+end box
+box "Backend — Saturdaze Infrastructure" #FFF4E5
+  database "Saturdaze database" as infra
+  end box
+actor -> page : Open the events feed
+page -> client : Load own submissions
+client -> controller : GET /api/events/submissions/mine
+controller -> controller : Authenticate and validate request
+controller -> handler : Send ListMySubmissionsQuery
+handler -> infra : Query submissions by caller ID
+infra --> handler : Current data
+alt owned submissions exist
+  handler -> entity : Apply L2-049 ownership filter and pending badge data
+  entity --> handler : Typed result
+  handler --> controller : Typed result
+  controller --> client : Successful HTTP response
+  client --> page : Present feature result
+  page --> actor : See own review states
+else no owned submissions exist
+  handler --> controller : Controlled alternate result
+  controller --> client : Safe HTTP response
+  client --> page : Present alternate state
+  page --> actor : See public feed without pending cards
+end
+@enduml

@@ -1,0 +1,10 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context — Verify an email address
+
+Person(actor, "Account holder", "Opens the verification link")
+System(saturdaze, "Saturdaze", "Family weekend planning platform")
+
+Rel(actor, saturdaze, "Verifies email ownership using", "HTTPS")
+@enduml

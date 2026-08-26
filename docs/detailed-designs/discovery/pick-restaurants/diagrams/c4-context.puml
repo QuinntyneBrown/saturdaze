@@ -1,0 +1,9 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context — Pick restaurants
+
+Person(actor, "Family member", "Chooses a meal option for a weekend slot")
+System(saturdaze, "Saturdaze", "Family weekend planning platform")
+Rel(actor, saturdaze, "Browses restaurant picks using", "HTTPS")
+@enduml

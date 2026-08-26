@@ -1,0 +1,15 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers — Support accessible interaction
+
+Person(user, "Keyboard or assistive-technology user", "Navigates and operates controls")
+System_Boundary(saturdaze, "Saturdaze") {
+  Container(web, "Saturdaze web application", "Angular", "Composes accessible pages and dialogs")
+  Container(components, "Saturdaze components", "Angular library and SCSS", "Provides shared interaction semantics and visual tokens")
+}
+System_Ext(browser, "Browser accessibility platform", "Processes DOM semantics, focus, and keyboard input")
+Rel(user, browser, "Uses")
+Rel(browser, web, "Operates")
+Rel(web, components, "Composes")
+@enduml

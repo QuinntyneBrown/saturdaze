@@ -1,0 +1,40 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — Submit community events
+
+class EventsPage {
+  +openSubmitDialog(): void
+  +openSubmitPage(): void
+}
+class SubmitEventDialog {
+  +submit(): Promise<void>
+}
+class EventsSubmitPage {
+  +submit(): Promise<void>
+}
+class EventSubmissionsService {
+  +submit(request: SubmitEventRequest): Promise<EventSubmissionDto>
+}
+class SubmitEventCommandHandler {
+  +Handle(command: SubmitEventCommand): Task<EventSubmissionDto>
+}
+class EventSubmission {
+  +EventSubmissionStatus Status
+  +Guid SubmittedByUserId
+  +DateTime StartsAtLocal
+}
+EventsPage --> SubmitEventDialog : opens
+EventsPage --> EventsSubmitPage : navigates
+SubmitEventDialog --> EventSubmissionsService : calls
+EventsSubmitPage --> EventSubmissionsService : calls
+SubmitEventCommandHandler --> EventSubmission : creates
+@enduml

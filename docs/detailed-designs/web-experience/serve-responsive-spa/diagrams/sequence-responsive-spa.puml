@@ -1,0 +1,41 @@
+@startuml
+title UML sequence behaviour — Serve a responsive single-page application
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Browser user" as user
+box "Frontend — Saturdaze Angular application" #E0F2FE
+  participant "Angular Router" as router
+  participant "Lazy routed page" as page
+end box
+box "Backend — Azure Static Web Apps hosting" #D1FADF
+  participant "Navigation fallback" as fallback
+  participant "Static asset store" as assets
+end box
+box "Backend — Browser rendering platform" #FFF4E5
+  participant "Layout and CSS engine" as layout
+end box
+user -> fallback : Refresh /weekend
+fallback -> fallback : Apply L2-042 navigation fallback
+fallback -> assets : Read index.html
+assets --> fallback : SPA shell
+fallback --> user : HTML response
+user -> router : Bootstrap Angular shell
+router -> assets : Request lazy route chunk
+assets --> router : Page JavaScript
+router -> page : Instantiate routed component
+page -> layout : Apply L2-028 viewport rules
+layout --> page : Responsive layout
+page --> user : Render usable route
+@enduml

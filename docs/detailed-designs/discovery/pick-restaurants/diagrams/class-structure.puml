@@ -1,0 +1,38 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — Pick restaurants
+
+class RestaurantsPage {
+  +selectFilter(filter: RestaurantFilter): void
+}
+class RestaurantService {
+  +load(): Promise<void>
+  +refresh(): Promise<void>
+}
+class GetRestaurantPicksQuery {
+  +DateOnly Day
+  +MealSlot Slot
+  +Guid? NearActivityId
+  +bool WifeApprovedOnly
+}
+class GetRestaurantPicksQueryHandler {
+  +Handle(query: GetRestaurantPicksQuery): Task<IReadOnlyList<RestaurantDto>>
+}
+class Restaurant {
+  +MealSlot Slot
+  +bool WifeApproved
+  +int DriveMinutes
+}
+RestaurantsPage --> RestaurantService : calls
+RestaurantService ..> GetRestaurantPicksQuery : maps to
+GetRestaurantPicksQueryHandler --> Restaurant : filters
+@enduml

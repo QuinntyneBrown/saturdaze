@@ -1,0 +1,54 @@
+@startuml
+title UML sequence behaviour — Control itinerary blocks
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Family member" as actor
+box "Frontend — Saturdaze web application" #E0F2FE
+  participant "ItineraryPage and HomePage" as page
+  participant "WeekendPlanService" as client
+end box
+box "Backend — Saturdaze API application" #D1FADF
+  participant "BlocksController and WeekendsController" as controller
+end box
+box "Backend — Saturdaze Application and Domain" #ECFDF3
+  participant "Block and regeneration handlers" as handler
+  participant "Weekend and ItineraryBlock" as entity
+end box
+box "Backend — Saturdaze Infrastructure" #FFF4E5
+  database "Saturdaze database" as db
+end box
+actor -> page : Choose lock, swap, or regenerate
+page -> client : Send selected control request
+client -> controller : PUT /api/blocks/{id}/lock or regeneration
+controller -> controller : Authenticate and validate request
+controller -> handler : Dispatch matching command
+handler -> db : Load authorized weekend and blocks
+db --> handler : Current state
+alt target is mutable and candidates exist
+  handler -> entity : Apply L2-014, L2-015, or L2-016 rule
+  entity --> handler : Updated state
+  handler -> db : Save changes
+  db --> handler : Commit result
+  handler --> controller : Typed result
+  controller --> client : Successful HTTP response
+  client --> page : Present feature result
+  page --> actor : See updated itinerary
+else block is locked, absent, or has no candidate
+  handler --> controller : Controlled error
+  controller --> client : ProblemDetails response
+  client --> page : Present safe error state
+  page --> actor : See conflict, not-found, or no-op result
+end
+@enduml

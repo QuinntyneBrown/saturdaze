@@ -1,0 +1,21 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — Register a family account
+
+Container_Boundary(web, "Saturdaze web application") {
+  Component(page, "SignupPage", "Angular component", "Collects signup details")
+  Component(client, "SessionStore", "Angular service", "Coordinates signup and session storage")
+}
+Container_Boundary(api, "Saturdaze API") {
+  Component(controller, "AuthController", "ASP.NET Core", "Exposes the registration endpoint")
+  Component(handler, "RegisterUserCommandHandler", "Application handler", "Creates the user and family atomically")
+  Component(entity, "User and Family", "Domain state", "Own account and household state")
+  ComponentDb(db, "AppDbContext", "EF Core", "Stores users, families, and refresh tokens")
+}
+Rel(page, client, "Calls")
+Rel(client, controller, "POST /api/auth/register", "JSON/HTTPS")
+Rel(controller, handler, "Dispatches request")
+Rel(handler, entity, "Creates")
+Rel(handler, db, "Creates account state", "EF Core")
+@enduml

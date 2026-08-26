@@ -1,0 +1,21 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — Support accessible interaction
+
+Container_Boundary(web, "Saturdaze web application") {
+  Component(pages, "Routed page templates", "Angular templates", "Supply content-specific labels and alternatives")
+}
+Container_Boundary(components, "Saturdaze components") {
+  Component(buttons, "Button and IconButton", "Angular components", "Expose native activation and accessible names")
+  Component(inputs, "TextInput, Chip, and Toggle", "Angular components", "Expose labels, state, and keyboard behavior")
+  Component(dialog, "Dialog", "Angular CDK composition", "Owns dialog semantics and focus")
+  Component(styles, "_tokens.scss and _global.scss", "SCSS", "Define contrast and focus presentation")
+}
+Rel(pages, buttons, "Uses")
+Rel(pages, inputs, "Uses")
+Rel(pages, dialog, "Opens")
+Rel(buttons, styles, "Uses")
+Rel(inputs, styles, "Uses")
+Rel(dialog, styles, "Uses")
+@enduml

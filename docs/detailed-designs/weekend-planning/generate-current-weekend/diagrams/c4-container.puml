@@ -1,0 +1,15 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers — Generate the current weekend
+
+Person(actor, "Family member", "Opens or creates the upcoming plan")
+System_Boundary(saturdaze, "Saturdaze") {
+  Container(web, "Saturdaze web application", "Angular", "Shows the current weekend")
+  Container(api, "Saturdaze API", "ASP.NET Core", "Finds or generates plans")
+  ContainerDb(db, "Saturdaze database", "SQL Server", "Stores weekend aggregates and catalogue inputs")
+}
+Rel(actor, web, "Uses", "HTTPS")
+Rel(web, api, "Requests current or planned weekend", "JSON/HTTPS")
+Rel(api, db, "Reads inputs and writes one weekend", "EF Core")
+@enduml

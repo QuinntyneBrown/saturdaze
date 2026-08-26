@@ -1,0 +1,39 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — Serve a responsive single-page application
+
+class RoutesConfiguration <<TypeScript const>> {
+  +Routes routes
+  +loadComponent(): Promise<Component>
+}
+class App {
+  +AppShell shell
+}
+class RoutedPage <<Angular component>> {
+  +render(): Template
+}
+class Breakpoints <<SCSS module>> {
+  +xs: 360px
+  +sm: 576px
+  +md: 768px
+  +lg: 992px
+  +xl: 1440px
+}
+class StaticWebAppConfig <<JSON configuration>> {
+  +string navigationFallbackRewrite
+  +string[] exclude
+}
+App --> RoutesConfiguration : hosts
+RoutesConfiguration --> RoutedPage : lazy-loads
+RoutedPage ..> Breakpoints : styles with
+StaticWebAppConfig ..> App : serves index shell
+@enduml

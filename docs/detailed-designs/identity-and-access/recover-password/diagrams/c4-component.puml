@@ -1,0 +1,21 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — Recover a password
+
+Container_Boundary(web, "Saturdaze web application") {
+  Component(page, "ForgotPasswordPage and ResetPasswordPage", "Angular component", "Collect recovery input")
+  Component(client, "SessionStore and AuthService", "Angular service", "Call recovery endpoints")
+}
+Container_Boundary(api, "Saturdaze API") {
+  Component(controller, "AuthController", "ASP.NET Core", "Exposes forgot-password and reset-password")
+  Component(handler, "ForgotPasswordCommandHandler and ResetPasswordCommandHandler", "Application handler", "Issue and consume recovery tokens")
+  Component(entity, "PasswordResetToken and User", "Domain state", "Hold reset authorization and password hash")
+  ComponentDb(db, "AppDbContext", "EF Core", "Stores users, reset tokens, and refresh tokens")
+}
+Rel(page, client, "Calls")
+Rel(client, controller, "POST /api/auth/forgot-password or reset-password", "JSON/HTTPS")
+Rel(controller, handler, "Dispatches request")
+Rel(handler, entity, "Creates or consumes")
+Rel(handler, db, "Reads and updates credential state", "EF Core")
+@enduml

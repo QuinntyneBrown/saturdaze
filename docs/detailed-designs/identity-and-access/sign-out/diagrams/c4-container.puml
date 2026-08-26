@@ -1,0 +1,15 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers — Sign out
+
+Person(actor, "Account holder", "Ends the active authenticated session")
+System_Boundary(saturdaze, "Saturdaze") {
+  Container(web, "Saturdaze web application", "Angular", "Hosts profile and confirmation dialog")
+  Container(api, "Saturdaze API", "ASP.NET Core", "Will revoke the active refresh token")
+  ContainerDb(db, "Saturdaze database", "SQL Server", "Stores refresh-token revocation state")
+}
+Rel(actor, web, "Uses", "HTTPS")
+Rel(web, api, "Requests token revocation", "JSON/HTTPS")
+Rel(api, db, "Updates refresh token", "EF Core")
+@enduml

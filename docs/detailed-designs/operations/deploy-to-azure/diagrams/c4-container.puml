@@ -1,0 +1,21 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers — Deploy to Azure
+
+Person(maintainer, "Repository maintainer", "Pushes to main")
+System_Boundary(delivery, "Saturdaze delivery pipeline") {
+  Container(apiJob, "api job", "GitHub Actions", "Builds and deploys the API")
+  Container(migrateJob, "migrate job", "GitHub Actions and Saturdaze CLI", "Applies EF Core migrations")
+  Container(webJob, "web job", "GitHub Actions and Angular CLI", "Builds and deploys the web bundle")
+}
+System_Ext(appservice, "Azure App Service", "Hosts Saturdaze API")
+SystemDb_Ext(sql, "Azure SQL", "Stores production state")
+System_Ext(swa, "Azure Static Web Apps", "Hosts Angular application")
+Rel(maintainer, apiJob, "Triggers", "Push to main")
+Rel(apiJob, appservice, "Deploys", "Azure CLI")
+Rel(apiJob, migrateJob, "Precedes")
+Rel(migrateJob, sql, "Applies migrations", "EF Core")
+Rel(migrateJob, webJob, "Precedes")
+Rel(webJob, swa, "Uploads bundle")
+@enduml

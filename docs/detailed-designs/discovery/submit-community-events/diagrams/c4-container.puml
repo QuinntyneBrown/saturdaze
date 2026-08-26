@@ -1,0 +1,15 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers — Submit community events
+
+Person(actor, "Authenticated contributor", "Adds a community event for review")
+System_Boundary(saturdaze, "Saturdaze") {
+  Container(web, "Saturdaze web application", "Angular", "Hosts event entry points and forms")
+  Container(api, "Saturdaze API", "ASP.NET Core", "Accepts authenticated submissions")
+  ContainerDb(db, "Saturdaze database", "SQL Server", "Stores pending event submissions")
+}
+Rel(actor, web, "Uses", "HTTPS")
+Rel(web, api, "Submits event details", "JSON/HTTPS")
+Rel(api, db, "Creates submission state", "EF Core")
+@enduml
