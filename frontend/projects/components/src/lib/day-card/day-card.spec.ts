@@ -68,4 +68,8 @@ describe('DayCard', () => {
     fixture.detectChanges();
     expect(component.route()).toBe('test-value');
   });
+
+  it('should call onNavigate without throwing', () => {
+    expect(() => component['onNavigate']({ preventDefault: () => {}, stopPropagation: () => {}, target: { value: '', checked: false }, currentTarget: { value: '', checked: false } } as any)).not.toThrow();
+  });
 });

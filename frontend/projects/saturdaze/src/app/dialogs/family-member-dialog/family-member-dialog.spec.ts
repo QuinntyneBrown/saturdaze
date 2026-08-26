@@ -4,11 +4,11 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { Dialog as DialogShell } from 'components';
 import { DialogRef } from '@angular/cdk/dialog';
 import { DIALOG_DATA } from '@angular/cdk/dialog';
-import { SignOutDialog } from './sign-out-dialog';
+import { FamilyMemberDialog } from './family-member-dialog';
 
-describe('SignOutDialog', () => {
-  let component: SignOutDialog;
-  let fixture: ComponentFixture<SignOutDialog>;
+describe('FamilyMemberDialog', () => {
+  let component: FamilyMemberDialog;
+  let fixture: ComponentFixture<FamilyMemberDialog>;
   let mockDialogRef: any;
   let mockDIALOG_DATA: any;
 
@@ -20,14 +20,14 @@ describe('SignOutDialog', () => {
     mockDIALOG_DATA = {};
 
     await TestBed.configureTestingModule({
-      imports: [SignOutDialog],
+      imports: [FamilyMemberDialog],
       providers: [
         { provide: DialogRef, useValue: mockDialogRef },
         { provide: DIALOG_DATA, useValue: mockDIALOG_DATA },
       ],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(SignOutDialog);
+    fixture = TestBed.createComponent(FamilyMemberDialog);
     component = fixture.componentInstance;
   });
 
@@ -42,18 +42,18 @@ describe('SignOutDialog', () => {
   it('should render with stubbed children', async () => {
     TestBed.resetTestingModule();
     TestBed.configureTestingModule({
-      imports: [SignOutDialog],
+      imports: [FamilyMemberDialog],
       providers: [
         { provide: DialogRef, useValue: mockDialogRef },
         { provide: DIALOG_DATA, useValue: mockDIALOG_DATA },
       ],
     });
-    TestBed.overrideComponent(SignOutDialog, {
+    TestBed.overrideComponent(FamilyMemberDialog, {
       remove: { imports: [DialogShell] },
       add: { schemas: [NO_ERRORS_SCHEMA] },
     });
     await TestBed.compileComponents();
-    const stubbedFixture = TestBed.createComponent(SignOutDialog);
+    const stubbedFixture = TestBed.createComponent(FamilyMemberDialog);
     stubbedFixture.detectChanges();
     expect(stubbedFixture.nativeElement).toBeTruthy();
   });
@@ -62,7 +62,12 @@ describe('SignOutDialog', () => {
     expect(() => component['cancel']()).not.toThrow();
   });
 
-  it('should call confirm without throwing', () => {
-    expect(() => component['confirm']()).not.toThrow();
+  it('should call submit without throwing', () => {
+    expect(() => component['submit']({ preventDefault: () => {}, stopPropagation: () => {}, target: { value: '', checked: false }, currentTarget: { value: '', checked: false } } as any)).not.toThrow();
+  });
+
+  it('should recompute canSubmit under seeded state', () => {
+    component['name'].set('x' as any);
+    expect(() => component['canSubmit']()).not.toThrow();
   });
 });

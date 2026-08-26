@@ -32,4 +32,12 @@ describe('BottomNav', () => {
     fixture.detectChanges();
     expect(() => component.active()).not.toThrow();
   });
+
+  it('should call onNavigate without throwing', () => {
+    expect(() => component['onNavigate']({ preventDefault: () => {}, stopPropagation: () => {}, target: { value: '', checked: false }, currentTarget: { value: '', checked: false } } as any, 'test-value')).not.toThrow();
+  });
+
+  it('should call isActive without throwing', () => {
+    expect(() => component['isActive']("home")).not.toThrow();
+  });
 });

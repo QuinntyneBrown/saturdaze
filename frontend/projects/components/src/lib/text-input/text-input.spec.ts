@@ -65,6 +65,14 @@ describe('TextInput', () => {
     expect(component.name()).toBe('test-value');
   });
 
+  it('should call handleInput without throwing', () => {
+    expect(() => component['handleInput']({ preventDefault: () => {}, stopPropagation: () => {}, target: { value: '', checked: false }, currentTarget: { value: '', checked: false } } as any)).not.toThrow();
+  });
+
+  it('should call handleBlur without throwing', () => {
+    expect(() => component['handleBlur']()).not.toThrow();
+  });
+
   it('should call writeValue without throwing', () => {
     expect(() => component.writeValue({} as any)).not.toThrow();
   });
@@ -79,5 +87,11 @@ describe('TextInput', () => {
 
   it('should call setDisabledState without throwing', () => {
     expect(() => component.setDisabledState(true)).not.toThrow();
+  });
+
+  it('should reflect setDisabledState through its signals', () => {
+    const isDisabledArg = true;
+    component.setDisabledState(isDisabledArg);
+    expect(component['disabled']()).toBe(isDisabledArg);
   });
 });

@@ -38,6 +38,28 @@ describe('Toggle', () => {
     expect(component.checked()).toBe(false);
   });
 
+
+  it('should return early from onClick when disabled is truthy', () => {
+    component['disabled'].set(true as any);
+    expect(() => component['onClick']()).not.toThrow();
+  });
+
+  it('should run onClick when all guards pass', () => {
+    component['disabled'].set(false as any);
+    expect(() => component['onClick']()).not.toThrow();
+  });
+
+
+  it('should return early from onKey when disabled is truthy', () => {
+    component['disabled'].set(true as any);
+    expect(() => component['onKey']({ preventDefault: () => {}, stopPropagation: () => {}, target: { value: '', checked: false }, currentTarget: { value: '', checked: false } } as any)).not.toThrow();
+  });
+
+  it('should run onKey when all guards pass', () => {
+    component['disabled'].set(false as any);
+    expect(() => component['onKey']({ preventDefault: () => {}, stopPropagation: () => {}, target: { value: '', checked: false }, currentTarget: { value: '', checked: false } } as any)).not.toThrow();
+  });
+
   it('should call writeValue without throwing', () => {
     expect(() => component.writeValue({} as any)).not.toThrow();
   });
@@ -52,5 +74,11 @@ describe('Toggle', () => {
 
   it('should call setDisabledState without throwing', () => {
     expect(() => component.setDisabledState(true)).not.toThrow();
+  });
+
+  it('should reflect setDisabledState through its signals', () => {
+    const isDisabledArg = true;
+    component.setDisabledState(isDisabledArg);
+    expect(component['disabled']()).toBe(isDisabledArg);
   });
 });

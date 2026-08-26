@@ -38,4 +38,8 @@ describe('TopBar', () => {
     fixture.detectChanges();
     expect(() => component.back()).not.toThrow();
   });
+
+  it('should call onBack without throwing', () => {
+    expect(() => component['onBack']({ preventDefault: () => {}, stopPropagation: () => {}, target: { value: '', checked: false }, currentTarget: { value: '', checked: false } } as any)).not.toThrow();
+  });
 });
