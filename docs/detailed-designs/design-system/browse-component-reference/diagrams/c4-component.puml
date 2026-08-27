@@ -1,0 +1,20 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components - Browse the component reference
+Container_Boundary(web, "Documentation SPA") {
+  Component(index, "renderComponentsIndex", "Page renderer", "Groups live component cards by category")
+  Component(detail, "renderComponentDetail", "Page renderer", "Renders overview, API, and examples tabs")
+  Component(api, "renderApiTable", "Contract renderer", "Builds API tables and empty states")
+  Component(playground, "renderPlayground and bindPlaygrounds", "Interaction controller", "Mutates a live canonical specimen")
+  Component(code, "renderCodePanel", "Source renderer", "Synchronizes and copies example source")
+  Component(variants, "renderVariantMatrix", "Specimen renderer", "Expands enum and boolean variants")
+  Component(manifest, "ComponentContract", "Manifest record", "Supplies API and example metadata")
+}
+Rel(index, manifest, "Groups")
+Rel(detail, manifest, "Renders")
+Rel(detail, api, "Uses")
+Rel(detail, playground, "Uses")
+Rel(playground, code, "Synchronizes")
+Rel(detail, variants, "Uses")
+@enduml

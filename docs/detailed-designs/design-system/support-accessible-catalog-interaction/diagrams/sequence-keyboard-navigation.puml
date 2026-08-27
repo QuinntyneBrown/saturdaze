@@ -1,0 +1,47 @@
+@startuml
+title UML sequence behaviour - Navigate the catalog by keyboard
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Keyboard user" as actor
+box "Frontend - Documentation shell" #E0F2FE
+  participant "Skip link and controls" as controls
+  participant "Main content" as main
+  participant "Semantic navigation" as nav
+end box
+box "Backend - Catalog interaction layer" #D1FADF
+  participant "Keyboard handlers" as keys
+  participant "renderRoute" as route
+  participant "updateActiveNavigation" as active
+end box
+box "Backend - Accessibility layer" #ECFDF3
+  participant "ARIA state renderers" as aria
+end box
+box "Backend - Browser platform" #FFF4E5
+  participant "Focus and accessibility APIs" as browser
+end box
+actor -> controls : Press Tab on page load
+controls -> browser : Expose Skip to content focus target
+browser --> actor : Draw L2-069 focus-visible indicator
+actor -> controls : Activate skip link or route control
+controls -> keys : Dispatch keyboard activation
+keys -> route : Navigate selected catalog route
+route -> browser : Scroll instantly to top
+route -> main : Focus with preventScroll
+route -> active : Synchronize current location
+active -> nav : Apply exact aria-current and section class
+aria -> controls : Apply L2-071 expanded, selected, owned, and named state
+controls --> browser : Publish accessible state
+browser --> actor : Present focused destination and programmatic state
+@enduml

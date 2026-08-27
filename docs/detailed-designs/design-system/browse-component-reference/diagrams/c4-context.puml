@@ -1,0 +1,10 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context - Browse the component reference
+Person(reader, "Catalog reader", "Inspects APIs and edits live component examples")
+System(ds, "Saturdaze documentation catalog", "Documents 29 native custom elements")
+System_Ext(browser, "Web browser", "Upgrades elements and provides clipboard access")
+Rel(reader, ds, "Browses component pages", "HTTPS")
+Rel(ds, browser, "Renders custom elements and copies source through")
+@enduml

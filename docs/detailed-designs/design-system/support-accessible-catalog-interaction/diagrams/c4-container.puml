@@ -1,0 +1,17 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers - Support accessible catalog interaction
+Person(user, "Keyboard and assistive technology user", "Operates the catalog")
+System_Boundary(ds, "Saturdaze design system") {
+  Container(web, "Documentation SPA", "HTML, CSS, JavaScript", "Manages focus, semantics, and announcements")
+  Container(library, "Native component library", "ES modules", "Provides component-level semantics")
+  Container(content, "Specimen content", "JavaScript module", "Composes interactive fixtures")
+}
+System_Ext(a11y, "Browser accessibility tree", "Exposes landmarks, state, focus, and live regions")
+Rel(user, web, "Operates")
+Rel(web, library, "Renders")
+Rel(web, content, "Renders fixtures from")
+Rel(web, a11y, "Publishes semantic state to")
+Rel(library, a11y, "Publishes component semantics to")
+@enduml

@@ -1,0 +1,15 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers - Operate a modal dialog
+Person(user, "Application user", "Operates a modal")
+System_Boundary(app, "Consuming web application") {
+  Container(page, "Application page", "HTML and JavaScript", "Owns dialog content and close handlers")
+  Container(library, "Native component library", "ES modules", "Provides sd-dialog")
+}
+System_Ext(browser, "Browser platform", "DOM, focus, events, and media queries")
+Rel(user, page, "Uses")
+Rel(page, library, "Instantiates sd-dialog from")
+Rel(library, browser, "Uses")
+Rel(library, page, "Dispatches sd-close to", "CustomEvent")
+@enduml

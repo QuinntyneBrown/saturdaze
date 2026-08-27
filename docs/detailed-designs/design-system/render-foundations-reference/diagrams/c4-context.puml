@@ -1,0 +1,10 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context - Render the foundations reference
+Person(reader, "Catalog reader", "Inspects visual foundations")
+System(ds, "Saturdaze documentation catalog", "Renders live token and icon specimens")
+System_Ext(browser, "Web browser", "Resolves CSS custom properties and custom elements")
+Rel(reader, ds, "Views /foundations", "HTTPS")
+Rel(ds, browser, "Reads computed styles and renders icons through")
+@enduml

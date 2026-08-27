@@ -1,0 +1,46 @@
+@startuml
+title UML sequence behaviour - Run contract validation
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Maintainer or CI" as actor
+box "Frontend - npm command shell" #E0F2FE
+  participant "npm test" as test
+end box
+box "Backend - Validation application" #D1FADF
+  participant "npm run validate" as command
+  participant "validate.mjs" as validator
+end box
+box "Backend - Contract analysis" #ECFDF3
+  participant "Invariant checks" as checks
+end box
+box "Backend - Design-system source" #FFF4E5
+  database "Manifest, source, tokens, scripts" as files
+end box
+actor -> test : Start quality gate
+test -> command : Run L2-073 validation first
+command -> validator : Execute
+validator -> files : Load validated inputs
+files --> validator : Source contracts
+validator -> checks : Run all deterministic invariants
+checks --> validator : Failure list
+alt failures exist
+  validator --> command : Exit 1 with bulleted errors
+  command --> test : Stop command chain
+  test --> actor : Quality gate failed before browser suite
+else no failures
+  validator --> command : Exit 0 with exact success summary
+  command --> test : Permit browser command
+end
+@enduml

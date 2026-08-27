@@ -1,0 +1,48 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure - Navigate the documentation catalog
+class CatalogRouter <<module>> {
+  +normalizedRoute(): string
+  +renderRoute(focus: boolean): void
+  +navigate(href: string): void
+}
+class NavigationRenderer <<module>> {
+  +renderNavigation(): void
+  +updateActiveNavigation(): void
+}
+class DrawerController <<module>> {
+  +openNavigation(): void
+  +closeNavigation(): void
+}
+class PageRenderer <<module>> {
+  +renderHome(): void
+  +renderFoundations(): void
+  +renderComponentDetail(): void
+  +renderDialogDetail(): void
+  +renderPatternDetail(): void
+  +renderNotFound(): void
+}
+class History <<browser API>> {
+  +pushState(state: object, title: string, url: string): void
+}
+class Manifest {
+  +components: ComponentContract[]
+  +dialogs: DialogFamily[]
+  +patterns: PatternFamily[]
+}
+CatalogRouter ..> History : updates
+CatalogRouter ..> PageRenderer : selects
+CatalogRouter ..> NavigationRenderer : refreshes
+CatalogRouter ..> DrawerController : closes
+PageRenderer ..> Manifest : renders
+NavigationRenderer ..> Manifest : renders
+@enduml

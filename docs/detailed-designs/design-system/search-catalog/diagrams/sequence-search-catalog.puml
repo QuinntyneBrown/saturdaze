@@ -1,0 +1,55 @@
+@startuml
+title UML sequence behaviour - Search the catalog
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Catalog reader" as actor
+box "Frontend - Documentation shell" #E0F2FE
+  participant "Search input" as input
+  participant "Results listbox" as results
+end box
+box "Backend - Catalog search layer" #D1FADF
+  participant "Global key handler" as keys
+  participant "renderSearchResults" as search
+  participant "navigate" as route
+end box
+box "Backend - Catalog model" #ECFDF3
+  participant "searchIndex" as index
+end box
+box "Backend - Static catalog data" #FFF4E5
+  database "Manifest-derived 45 entries" as manifest
+end box
+manifest --> index : Initialize foundations, components, dialogs, and patterns
+actor -> keys : Press slash outside a form control
+keys -> input : Focus without inserting slash
+actor -> input : Type query
+input -> search : Dispatch input
+search -> index : Apply L2-068 case-insensitive filter and take 12
+index --> search : Bounded matching entries
+alt matches found
+  search -> results : Render role option links and expand
+else no matches
+  search -> results : Render exact empty state and expand
+end
+alt press Enter
+  actor -> input : Press Enter
+  input -> results : Activate first option
+  results -> route : Navigate client-side
+  route -> input : Clear query
+else press Escape or click outside
+  actor -> keys : Request dismissal
+  keys -> input : Clear and blur when applicable
+  keys -> results : Hide and collapse
+end
+@enduml

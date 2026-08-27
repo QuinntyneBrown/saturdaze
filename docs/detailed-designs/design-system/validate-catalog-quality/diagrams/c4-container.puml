@@ -1,0 +1,18 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers - Validate catalog quality
+Person(maintainer, "Design-system maintainer", "Runs npm test")
+System_Boundary(ds, "Saturdaze design system") {
+  Container(validation, "Contract validator", "Node.js", "Checks deterministic source invariants")
+  Container(build, "Vite build and preview", "Node.js", "Produces and serves dist")
+  Container(tests, "Playwright suite", "JavaScript", "Exercises catalog behavior and health")
+  Container(web, "Built catalog", "Static HTML, CSS, JavaScript", "Production artifact under test")
+}
+System_Ext(browser, "Chromium", "Runs three viewport projects")
+Rel(maintainer, validation, "Starts through npm test")
+Rel(validation, build, "Permits after success")
+Rel(build, web, "Produces and serves")
+Rel(tests, browser, "Controls")
+Rel(browser, web, "Loads", "HTTP")
+@enduml

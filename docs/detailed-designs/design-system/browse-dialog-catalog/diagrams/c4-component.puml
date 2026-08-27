@@ -1,0 +1,18 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components - Browse the dialog catalog
+Container_Boundary(web, "Documentation SPA") {
+  Component(index, "renderDialogsIndex", "Page renderer", "Builds one card per family")
+  Component(detail, "renderDialogDetail", "Page renderer", "Renders family tabs")
+  Component(examples, "renderDialogExamples", "Scenario renderer", "Builds all inline examples and launch controls")
+  Component(fixtures, "dialogMarkup", "Fixture builder", "Composes local sd-dialog markup")
+  Component(host, "dialogHost", "DOM host", "Owns one live dialog")
+  Component(lifecycle, "closeLiveDialog and event delegation", "Interaction controller", "Restores focus and announces outcomes")
+}
+Rel(index, fixtures, "Requests first scenario from")
+Rel(detail, examples, "Uses")
+Rel(examples, fixtures, "Requests scenario markup from")
+Rel(fixtures, host, "Populates for live launch")
+Rel(host, lifecycle, "Dispatches close actions to")
+@enduml

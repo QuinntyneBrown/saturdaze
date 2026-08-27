@@ -1,0 +1,58 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure - Browse the component reference
+class ComponentContract {
+  +selector: string
+  +name: string
+  +category: string
+  +source: string
+  +attributes: AttributeContract[]
+  +slots: NamedContract[]
+  +events: NamedContract[]
+  +examples: ExampleContract[]
+}
+class AttributeContract {
+  +name: string
+  +type: string
+  +default: unknown
+  +values: string[]
+}
+class ExampleContract {
+  +id: string
+  +title: string
+  +description: string
+  +markup: string
+}
+class ComponentRenderer <<module>> {
+  +renderComponentsIndex(): void
+  +renderComponentDetail(component: ComponentContract, tab: string): void
+  +renderApiTable(): string
+  +renderVariantMatrix(component: ComponentContract): string
+}
+class PlaygroundController <<module>> {
+  +renderPlayground(component: ComponentContract): string
+  +bindPlaygrounds(): void
+  +markupWithAttribute(markup: string, attribute: AttributeContract, value: unknown): string
+}
+class CodePanel {
+  +html: string
+  +css: string
+  +js: string
+  +activeTab: string
+  +copy(): Promise<void>
+}
+ComponentContract *-- AttributeContract
+ComponentContract *-- ExampleContract
+ComponentRenderer ..> ComponentContract : renders
+PlaygroundController ..> ComponentContract : configures from
+PlaygroundController *-- CodePanel
+@enduml

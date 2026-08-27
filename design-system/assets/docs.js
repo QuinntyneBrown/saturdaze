@@ -385,6 +385,7 @@ function navigate(href) {
 }
 
 function openNavigation() {
+  document.body.classList.add('nav-armed');
   navigation.classList.add('open');
   navScrim.hidden = false;
   menu.setAttribute('aria-expanded', 'true');
@@ -554,6 +555,10 @@ document.addEventListener('keydown', event => {
   }
 });
 addEventListener('popstate', () => renderRoute({ focus: true }));
+matchMedia('(max-width: 860px)').addEventListener('change', () => {
+  document.body.classList.remove('nav-armed');
+  closeNavigation();
+});
 
 renderNavigation();
 renderRoute();

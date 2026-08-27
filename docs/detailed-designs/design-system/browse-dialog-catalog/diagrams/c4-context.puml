@@ -1,0 +1,10 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context - Browse the dialog catalog
+Person(reader, "Catalog reader", "Inspects and launches dialog scenarios")
+System(ds, "Saturdaze documentation catalog", "Documents seven dialog families and 18 scenarios")
+System_Ext(browser, "Web browser", "Hosts static and modal dialog instances")
+Rel(reader, ds, "Browses dialogs", "HTTPS")
+Rel(ds, browser, "Renders and focuses dialogs through")
+@enduml

@@ -1,0 +1,17 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers - Register native components
+Person(consumer, "Component consumer", "Uses sd-* elements")
+System_Boundary(ds, "Saturdaze design system") {
+  Container(web, "Catalog application", "Browser JavaScript", "Loads and demonstrates components")
+  Container(registry, "Native component library", "ES modules", "Registers the public selector set")
+  ContainerDb(manifest, "Component manifest", "JSON schema v3", "Inventories selectors, categories, and sources")
+  Container(validation, "Contract validator", "Node.js", "Checks registry and manifest parity")
+}
+Rel(consumer, web, "Uses", "HTTPS")
+Rel(web, registry, "Imports")
+Rel(web, manifest, "Reads")
+Rel(validation, registry, "Inspects imports in")
+Rel(validation, manifest, "Validates")
+@enduml

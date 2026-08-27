@@ -1,0 +1,14 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers - Enforce folder self-containment
+Person(maintainer, "Design-system maintainer", "Runs validation")
+System_Boundary(ds, "Standalone design-system folder") {
+  Container(source, "Product source", "HTML, CSS, JavaScript, JSON", "Contains local runtime and fixture assets")
+  Container(config, "Package and build configuration", "JSON and JavaScript", "Defines local commands and build inputs")
+  Container(validation, "Contract validator", "Node.js", "Checks folder boundary invariants")
+}
+Rel(maintainer, validation, "Runs", "npm")
+Rel(validation, source, "Walks and scans")
+Rel(validation, config, "Validates")
+@enduml

@@ -1,0 +1,40 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure - Render the foundations reference
+class FoundationsRenderer <<module>> {
+  +renderFoundations(): void
+}
+class TokenVocabulary <<stylesheet>> {
+  +colors: CssCustomProperty[18]
+  +typeSizes: CssCustomProperty[7]
+  +spaces: CssCustomProperty[10]
+  +radii: CssCustomProperty[5]
+  +shadows: CssCustomProperty[3]
+  +durations: CssCustomProperty[2]
+  +breakpoints: CssCustomProperty[2]
+}
+class ComputedStyle <<browser API>> {
+  +getPropertyValue(name: string): string
+}
+class IconCatalog <<module>> {
+  +iconNames: string[39]
+}
+class SdIcon <<custom element>> {
+  +name: string
+  +size: number
+  +render(): void
+}
+FoundationsRenderer ..> TokenVocabulary : renders
+FoundationsRenderer ..> ComputedStyle : reads spacing through
+FoundationsRenderer ..> IconCatalog : iterates
+FoundationsRenderer *-- "39" SdIcon : renders
+@enduml

@@ -1,0 +1,47 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure - Browse the dialog catalog
+class DialogFamily {
+  +id: string
+  +name: string
+  +description: string
+  +scenarios: DialogScenario[]
+}
+class DialogScenario {
+  +id: string
+  +name: string
+}
+class DialogRenderer <<module>> {
+  +renderDialogsIndex(): void
+  +renderDialogDetail(dialog: DialogFamily, tab: string): void
+  +renderDialogExamples(dialog: DialogFamily): string
+}
+class DialogFixtureBuilder <<module>> {
+  +dialogMarkup(family: string, scenario: string, staticPreview: boolean): string
+}
+class LiveDialogController <<module>> {
+  -lastDialogOpener: HTMLElement
+  +launch(family: string, scenario: string): void
+  +closeLiveDialog(message: string): void
+}
+class SdDialog {
+  +open: boolean
+  +static: boolean
+  +title: string
+  +close(reason: string): void
+}
+DialogFamily *-- DialogScenario
+DialogRenderer ..> DialogFamily : renders
+DialogRenderer ..> DialogFixtureBuilder : requests markup
+LiveDialogController ..> DialogFixtureBuilder : requests markup
+LiveDialogController *-- "0..1" SdDialog
+@enduml

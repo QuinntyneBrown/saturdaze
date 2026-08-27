@@ -147,6 +147,25 @@ test('has no console, request, route, or horizontal-layout failures', async ({ p
   expect(failedRequests).toEqual([]);
 });
 
+// Traces to: L2-058
+test('resizing across the drawer breakpoint never flashes or strands the drawer', async ({ page, viewport }) => {
+  test.skip(viewport?.width !== 1440);
+  const nav = page.locator('#docs-nav');
+  const menu = page.locator('#menu');
+
+  await page.setViewportSize({ width: 820, height: 1180 });
+  expect(await nav.evaluate(element => getComputedStyle(element).transitionDuration)).toBe('0s');
+  const box = await nav.boundingBox();
+  expect(box.x + box.width).toBeLessThanOrEqual(0);
+
+  await menu.click();
+  await expect(nav).toHaveClass(/open/);
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await expect(page.locator('#nav-scrim')).toBeHidden();
+  await expect(menu).toHaveAttribute('aria-expanded', 'false');
+  await expect(page.locator('body')).not.toHaveClass(/nav-open/);
+});
+
 test('mobile documentation navigation is keyboard operable', async ({ page, viewport }) => {
   test.skip(viewport?.width !== 390);
   const menu = page.locator('#menu');

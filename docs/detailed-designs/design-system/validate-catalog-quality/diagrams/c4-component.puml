@@ -1,0 +1,19 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components - Validate catalog quality
+Container_Boundary(quality, "Design-system quality pipeline") {
+  Component(script, "npm test", "npm script", "Sequences validation before browser tests")
+  Component(validator, "validate.mjs", "Contract validator", "Checks source and manifest invariants")
+  Component(server, "serve:test", "Vite build and preview", "Builds and serves dist on port 4174")
+  Component(config, "playwright.config.js", "Test configuration", "Defines web server and three viewport projects")
+  Component(suite, "catalog.spec.js", "Playwright suite", "Runs behavior and health checks")
+  ComponentDb(artifact, "dist", "Static build output", "Contains the production catalog under test")
+}
+Rel(script, validator, "Runs first")
+Rel(script, suite, "Runs after validation")
+Rel(config, server, "Starts")
+Rel(server, artifact, "Builds and serves")
+Rel(config, suite, "Configures")
+Rel(suite, artifact, "Exercises")
+@enduml

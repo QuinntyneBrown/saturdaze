@@ -1,0 +1,49 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure - Support accessible catalog interaction
+class AccessibilityController <<module>> {
+  +focusMain(): void
+  +handleGlobalKey(event: KeyboardEvent): void
+  +updateActiveNavigation(): void
+  +announce(message: string): void
+}
+class StatusRegion {
+  +role: status
+  +ariaLive: polite
+  +textContent: string
+  +visible: boolean
+  +timer: number
+  +show(message: string, duration: number = 1800): void
+}
+class NavigationState {
+  +currentPath: string
+  +ariaCurrent: string
+  +ariaExpanded: boolean
+  +accessibleLabel: string
+}
+class TabState {
+  +activeTab: string
+  +ariaSelected: boolean
+}
+class DialogState {
+  +role: dialog
+  +accessibleName: string
+}
+class PreviewFrameState {
+  +title: string
+}
+AccessibilityController *-- StatusRegion
+AccessibilityController ..> NavigationState : synchronizes
+AccessibilityController ..> TabState : synchronizes
+AccessibilityController ..> DialogState : observes
+AccessibilityController ..> PreviewFrameState : observes
+@enduml

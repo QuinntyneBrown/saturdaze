@@ -1,0 +1,19 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components - Render the foundations reference
+Container_Boundary(web, "Documentation SPA") {
+  Component(route, "renderRoute", "Client router", "Selects /foundations")
+  Component(renderer, "renderFoundations", "Page renderer", "Builds six specimen sections")
+  Component(tokens, "tokens.css", "CSS custom properties", "Supplies live visual values")
+  Component(computed, "getComputedStyle", "Browser API", "Returns current spacing values")
+  Component(icons, "iconNames", "Catalog content export", "Lists 39 icon names")
+  Component(element, "sd-icon", "Native custom element", "Renders each icon specimen")
+}
+Rel(route, renderer, "Invokes")
+Rel(renderer, tokens, "Consumes")
+Rel(renderer, computed, "Reads spacing with")
+Rel(computed, tokens, "Resolves")
+Rel(renderer, icons, "Iterates")
+Rel(renderer, element, "Instantiates")
+@enduml

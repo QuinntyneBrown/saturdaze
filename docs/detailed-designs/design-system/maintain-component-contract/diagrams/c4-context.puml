@@ -1,0 +1,12 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context - Maintain the component contract
+Person(author, "Component author", "Maintains source and public metadata")
+Person(reader, "Catalog reader", "Reads rendered API documentation")
+System(ds, "Saturdaze design system", "Publishes a schema-versioned component contract")
+System_Ext(ci, "Continuous integration", "Rejects contract drift")
+Rel(author, ds, "Updates")
+Rel(reader, ds, "Browses", "HTTPS")
+Rel(ci, ds, "Validates", "npm")
+@enduml

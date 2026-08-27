@@ -1,0 +1,12 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context - Define design token foundations
+Person(reader, "Catalog reader", "Views components and documentation")
+Person(maintainer, "Design-system maintainer", "Changes and validates the visual vocabulary")
+System(ds, "Saturdaze design system", "Publishes tokens, native components, and catalog pages")
+System_Ext(ci, "Continuous integration", "Runs validation before delivery")
+Rel(reader, ds, "Uses", "HTTPS")
+Rel(maintainer, ds, "Maintains token source")
+Rel(ci, ds, "Validates token ownership", "npm")
+@enduml

@@ -1,0 +1,16 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers - Render the foundations reference
+Person(reader, "Catalog reader", "Inspects live foundations")
+System_Boundary(ds, "Saturdaze design system") {
+  Container(web, "Documentation SPA", "Browser JavaScript", "Renders /foundations")
+  Container(tokens, "Token stylesheet", "CSS", "Publishes the --sd-* vocabulary")
+  Container(components, "Native component library", "ES modules", "Provides sd-icon")
+  Container(content, "Catalog content", "JavaScript module", "Publishes iconNames")
+}
+Rel(reader, web, "Uses", "HTTPS")
+Rel(web, tokens, "Reads computed values from")
+Rel(web, content, "Imports icon inventory from")
+Rel(web, components, "Renders sd-icon from")
+@enduml

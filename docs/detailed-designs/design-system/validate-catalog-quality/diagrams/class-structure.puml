@@ -1,0 +1,48 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure - Validate catalog quality
+class QualityRunner <<npm scripts>> {
+  +validate(): ExitCode
+  +serveTest(): Process
+  +testBrowser(): ExitCode
+  +test(): ExitCode
+}
+class ContractValidator {
+  +failures: string[]
+  +run(): ValidationResult
+}
+class PlaywrightConfig {
+  +baseURL: URL
+  +webServer: WebServerConfig
+  +projects: BrowserProject[3]
+}
+class BrowserProject {
+  +name: string
+  +width: number
+  +height: number
+}
+class CatalogSuite {
+  +testCount: 11
+  +run(project: BrowserProject): TestResult
+}
+class HealthObservation {
+  +consoleErrors: number
+  +pageErrors: number
+  +failedRequests: number
+  +horizontalOverflow: boolean
+}
+QualityRunner *-- ContractValidator
+QualityRunner *-- PlaywrightConfig
+PlaywrightConfig *-- BrowserProject
+CatalogSuite ..> BrowserProject : executes under
+CatalogSuite ..> HealthObservation : asserts
+@enduml

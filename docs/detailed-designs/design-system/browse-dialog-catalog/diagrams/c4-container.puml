@@ -1,0 +1,16 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers - Browse the dialog catalog
+Person(reader, "Catalog reader", "Inspects and launches dialogs")
+System_Boundary(ds, "Saturdaze design system") {
+  Container(web, "Documentation SPA", "Browser JavaScript", "Renders dialog pages and owns the live host")
+  ContainerDb(manifest, "Component manifest", "JSON schema v3", "Stores dialog family metadata")
+  Container(fixtures, "Catalog content", "JavaScript module", "Builds local dialog compositions")
+  Container(library, "Native component library", "ES modules", "Provides sd-dialog and action elements")
+}
+Rel(reader, web, "Uses", "HTTPS")
+Rel(web, manifest, "Reads")
+Rel(web, fixtures, "Requests scenario markup from")
+Rel(web, library, "Renders")
+@enduml

@@ -1,0 +1,51 @@
+@startuml
+title UML sequence behaviour - Browse component documentation
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Catalog reader" as actor
+box "Frontend - Documentation shell" #E0F2FE
+  participant "Component route" as route
+  participant "Main content" as main
+end box
+box "Backend - Catalog application" #D1FADF
+  participant "renderComponentsIndex" as index
+  participant "renderComponentDetail" as detail
+  participant "renderApiTable" as table
+end box
+box "Backend - Native component runtime" #ECFDF3
+  participant "Component card specimen" as specimen
+end box
+box "Backend - Static catalog data" #FFF4E5
+  database "component-manifest.json" as manifest
+end box
+actor -> route : Open /components or component detail
+route -> manifest : Resolve categories and component contract
+manifest --> route : Ordered contract data
+alt component index
+  route -> index : Apply L2-060 render grouped cards
+  index -> specimen : Instantiate each live preview
+  specimen --> index : Upgraded elements
+  index --> main : Seven category sections and 29 cards
+else overview tab
+  route -> detail : Apply L2-061 render overview
+  detail --> main : Breadcrumb, guidance, contract summary, canonical specimen
+else API tab
+  route -> detail : Render contract tables
+  detail -> table : Build attributes, slots, and events
+  table --> detail : Tables or exact empty states
+  detail --> main : API content and local source link
+end
+main --> actor : Present component documentation
+@enduml

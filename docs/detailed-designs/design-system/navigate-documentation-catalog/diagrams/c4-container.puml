@@ -1,0 +1,16 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers - Navigate the documentation catalog
+Person(reader, "Catalog reader", "Navigates documentation")
+System_Boundary(ds, "Saturdaze design system") {
+  Container(web, "Documentation SPA", "HTML, CSS, JavaScript", "Renders catalog routes and shell navigation")
+  ContainerDb(manifest, "Component manifest", "JSON schema v3", "Supplies catalog inventory and coverage")
+  Container(preview, "Specimen document", "HTML and JavaScript", "Renders chrome-free examples")
+}
+System_Ext(host, "Azure Static Web Apps", "Static hosting and SPA fallback")
+Rel(reader, host, "Requests route", "HTTPS")
+Rel(host, web, "Serves SPA shell")
+Rel(web, manifest, "Reads")
+Rel(web, preview, "Links and embeds")
+@enduml

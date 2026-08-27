@@ -1,0 +1,15 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers - Search the catalog
+Person(reader, "Catalog reader", "Finds documentation")
+System_Boundary(ds, "Saturdaze design system") {
+  Container(web, "Documentation SPA", "Browser JavaScript", "Builds and queries the local catalog index")
+  ContainerDb(manifest, "Component manifest", "JSON schema v3", "Supplies component, dialog, and pattern records")
+  Container(shell, "Documentation shell", "HTML", "Hosts the search input and result listbox")
+}
+Rel(reader, shell, "Types queries in")
+Rel(shell, web, "Dispatches input and keyboard events to")
+Rel(web, manifest, "Builds index from")
+Rel(web, shell, "Renders results into")
+@enduml

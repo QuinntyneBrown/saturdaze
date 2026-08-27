@@ -1,0 +1,20 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components - Browse product patterns
+Container_Boundary(ds, "Catalog and preview applications") {
+  Component(index, "renderPatternsIndex", "Page renderer", "Builds family cards")
+  Component(detail, "renderPatternDetail", "Page renderer", "Renders overview and examples tabs")
+  Component(card, "renderedPatternScenario", "Specimen renderer", "Creates one iframe-backed pattern card")
+  Component(viewport, "viewportControls", "Interaction controller", "Resizes an individual preview frame")
+  Component(url, "previewUrl", "URL builder", "Encodes specimen selection")
+  Component(preview, "preview.js", "Preview router", "Selects one chrome-free fixture")
+  Component(fixtures, "patternMarkup", "Fixture builder", "Composes local product screens")
+}
+Rel(index, card, "Uses")
+Rel(detail, card, "Uses")
+Rel(card, viewport, "Contains")
+Rel(card, url, "Builds iframe source with")
+Rel(url, preview, "Addresses")
+Rel(preview, fixtures, "Requests markup from")
+@enduml

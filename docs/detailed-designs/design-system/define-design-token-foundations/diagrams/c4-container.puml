@@ -1,0 +1,16 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers - Define design token foundations
+Person(reader, "Catalog reader", "Views the catalog")
+System_Boundary(ds, "Saturdaze design system") {
+  Container(source, "Design-system source", "CSS and JavaScript", "Owns tokens and components")
+  Container(build, "Vite build", "Node.js", "Copies public static contracts")
+  Container(web, "Static catalog", "HTML, CSS, JavaScript", "Serves documentation and components")
+  Container(validation, "Contract validator", "Node.js", "Checks token declaration ownership")
+}
+Rel(reader, web, "Uses", "HTTPS")
+Rel(build, source, "Reads tokens.css from")
+Rel(build, web, "Writes dist assets to")
+Rel(validation, source, "Scans")
+@enduml

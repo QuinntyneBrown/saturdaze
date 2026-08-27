@@ -1,0 +1,78 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure - Maintain the component contract
+class DesignSystemManifest {
+  +schemaVersion: 3
+  +product: ProductContract
+  +categories: CategoryContract[7]
+  +components: ComponentContract[29]
+  +dialogs: DialogFamily[7]
+  +patterns: PatternFamily[8]
+}
+class ProductContract {
+  +name: string
+  +version: string
+}
+class CategoryContract {
+  +id: string
+  +label: string
+  +description: string
+}
+class ComponentContract {
+  +selector: string
+  +name: string
+  +category: string
+  +source: string
+  +attributes: AttributeContract[]
+  +slots: NamedContract[]
+  +events: NamedContract[]
+  +examples: ExampleContract[]
+}
+class AttributeContract {
+  +name: string
+  +type: string
+  +default: unknown
+  +values: string[]
+  +description: string
+}
+class ExampleContract {
+  +id: string
+  +title: string
+  +description: string
+  +markup: string
+}
+class DialogFamily {
+  +id: string
+  +name: string
+  +description: string
+  +scenarios: ScenarioContract[]
+}
+class PatternFamily {
+  +id: string
+  +name: string
+  +description: string
+  +scenarios: ScenarioContract[]
+}
+class ScenarioContract {
+  +id: string
+  +name: string
+}
+DesignSystemManifest *-- ProductContract
+DesignSystemManifest *-- CategoryContract
+DesignSystemManifest *-- ComponentContract
+DesignSystemManifest *-- DialogFamily
+DesignSystemManifest *-- PatternFamily
+ComponentContract *-- AttributeContract
+ComponentContract *-- ExampleContract
+DialogFamily *-- ScenarioContract
+PatternFamily *-- ScenarioContract
+@enduml

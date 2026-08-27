@@ -1,0 +1,12 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context - Support accessible catalog interaction
+Person(user, "Keyboard user", "Operates the complete catalog without a pointer")
+Person_Ext(at, "Assistive technology user", "Receives semantic state and announcements")
+System(ds, "Saturdaze documentation catalog", "Provides accessible navigation and interaction")
+System_Ext(browser, "Browser accessibility platform", "Exposes focus, semantics, and live regions")
+Rel(user, ds, "Operates")
+Rel(at, ds, "Reads and operates")
+Rel(ds, browser, "Publishes accessibility state through")
+@enduml

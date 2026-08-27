@@ -1,0 +1,48 @@
+@startuml
+title UML sequence behaviour - Validate the token vocabulary
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Design-system maintainer" as actor
+box "Frontend - npm command shell" #E0F2FE
+  participant "npm run validate" as npm
+end box
+box "Backend - Validation application" #D1FADF
+  participant "validate.mjs" as validator
+end box
+box "Backend - Design-system source" #ECFDF3
+  participant "File walker" as walker
+  participant "Token declaration check" as check
+end box
+box "Backend - Build filesystem" #FFF4E5
+  database "tokens.css and validated files" as files
+end box
+actor -> npm : Start validation
+npm -> validator : Execute validator
+validator -> walker : Enumerate eligible files
+walker -> files : Read CSS and source text
+files --> walker : File contents
+walker --> validator : Validated file set
+validator -> check : Enforce L2-051 token ownership and values
+check -> files : Inspect tokens.css and --sd-bg declarations
+files --> check : Token source contents
+alt exactly one declaration source and valid vocabulary
+  check --> validator : No failures
+  validator --> npm : Exit 0 with schema success
+else duplicate or invalid token contract
+  check --> validator : Validation failures
+  validator --> npm : Exit 1 with bulleted failures
+end
+npm --> actor : Present result
+@enduml

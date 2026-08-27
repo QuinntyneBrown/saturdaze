@@ -1,0 +1,51 @@
+@startuml
+title UML sequence behaviour - Deploy the design-system catalog
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Design-system maintainer" as actor
+box "Frontend - GitHub repository" #E0F2FE
+  participant "main branch or workflow dispatch" as trigger
+end box
+box "Backend - GitHub Actions" #D1FADF
+  participant "validate-and-deploy job" as job
+  participant "npm test" as quality
+  participant "Azure deploy action" as deploy
+end box
+box "Backend - Build application" #ECFDF3
+  participant "Vite build" as vite
+  participant "dist artifact" as dist
+end box
+box "Backend - Azure infrastructure" #FFF4E5
+  participant "Azure Static Web Apps" as azure
+end box
+actor -> trigger : Push qualifying path or dispatch manually
+trigger -> job : Start L2-075 restricted workflow
+job -> job : Checkout and set up Node 22
+job -> job : npm ci and install Chromium
+job -> quality : Run complete quality gate
+quality -> vite : Build fresh production catalog
+vite -> dist : Write application and static contracts
+dist --> quality : Artifact under browser test
+alt quality gate fails
+  quality --> job : Non-zero result
+  job --> actor : Stop before deployment
+else quality gate succeeds
+  quality --> job : Exit 0
+  job -> deploy : Upload design-system/dist with deployment secret
+  deploy -> azure : Publish prebuilt artifact
+  azure --> deploy : Deployment result
+  deploy --> actor : Report completion
+end
+@enduml

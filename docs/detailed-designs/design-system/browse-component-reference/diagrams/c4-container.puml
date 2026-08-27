@@ -1,0 +1,16 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers - Browse the component reference
+Person(reader, "Catalog reader", "Inspects and edits examples")
+System_Boundary(ds, "Saturdaze design system") {
+  Container(web, "Documentation SPA", "Browser JavaScript", "Renders component index, detail, and playground pages")
+  ContainerDb(manifest, "Component manifest", "JSON schema v3", "Stores component API contracts")
+  Container(library, "Native component library", "ES modules", "Provides live sd-* elements")
+  Container(source, "Public source assets", "JavaScript files", "Exposes local component source links")
+}
+Rel(reader, web, "Uses", "HTTPS")
+Rel(web, manifest, "Renders from")
+Rel(web, library, "Instantiates")
+Rel(reader, source, "Opens", "HTTPS")
+@enduml

@@ -1,0 +1,55 @@
+@startuml
+title UML sequence behaviour - Browse dialog scenarios
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Catalog reader" as actor
+box "Frontend - Documentation shell" #E0F2FE
+  participant "Dialog route" as route
+  participant "Main content" as main
+end box
+box "Backend - Catalog application" #D1FADF
+  participant "renderDialogsIndex" as index
+  participant "renderDialogDetail" as detail
+  participant "renderDialogExamples" as examples
+end box
+box "Backend - Local fixture layer" #ECFDF3
+  participant "dialogMarkup" as fixtures
+  participant "sd-dialog" as dialog
+end box
+box "Backend - Static catalog data" #FFF4E5
+  database "Dialog families and scenarios" as manifest
+end box
+actor -> route : Open dialog index or family route
+route -> manifest : Resolve family metadata
+manifest --> route : Seven families and 18 scenarios
+alt index route
+  route -> index : Apply L2-063 render family cards
+  index -> fixtures : Request each first scenario as static markup
+  fixtures --> index : sd-dialog static open compositions
+  index --> main : Seven live preview cards
+else overview or API tab
+  route -> detail : Render selected family tab
+  detail --> main : First specimen or scenario contract tables
+else examples tab
+  route -> examples : Render every family scenario
+  loop each scenario
+    examples -> fixtures : Build static composition
+    fixtures -> dialog : Instantiate sd-dialog static open
+    dialog --> examples : Rendered composition
+  end
+  examples --> main : All scenarios with launch buttons
+end
+main --> actor : Present dialog catalog
+@enduml

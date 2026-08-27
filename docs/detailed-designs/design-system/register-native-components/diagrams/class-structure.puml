@@ -1,0 +1,44 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure - Register native components
+class SdElement {
+  +shadowRoot: ShadowRoot
+  +connectedCallback(): void
+  +render(): void
+  +attr(name: string, fallback: string): string
+  +battr(name: string): boolean
+}
+class ConcreteElement <<custom element>> {
+  +observedAttributes: string[]
+  +template(): string
+  +styles(): string
+  +afterRender(): void
+}
+class ComponentContract {
+  +selector: string
+  +category: CategoryId
+  +source: string
+  +attributes: AttributeContract[]
+}
+class ComponentRegistry <<module>> {
+  +imports: string[]
+  +register(): void
+}
+class CustomElementRegistry <<browser API>> {
+  +define(selector: string, constructor: CustomElementConstructor): void
+  +get(selector: string): CustomElementConstructor
+}
+SdElement <|-- ConcreteElement
+ComponentRegistry ..> ConcreteElement : imports
+ConcreteElement ..> CustomElementRegistry : defines selector in
+ComponentContract --> ConcreteElement : names source for
+@enduml

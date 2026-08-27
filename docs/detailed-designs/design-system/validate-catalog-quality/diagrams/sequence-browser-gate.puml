@@ -1,0 +1,46 @@
+@startuml
+title UML sequence behaviour - Run the browser quality gate
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Maintainer or CI" as actor
+box "Frontend - Playwright test runner" #E0F2FE
+  participant "catalog.spec.js" as suite
+  participant "mobile, tablet, desktop projects" as projects
+end box
+box "Backend - Test orchestration" #D1FADF
+  participant "playwright.config.js" as config
+  participant "serve:test" as server
+end box
+box "Backend - Built catalog application" #ECFDF3
+  participant "Vite preview" as preview
+  participant "Catalog routes" as routes
+end box
+box "Backend - Browser infrastructure" #FFF4E5
+  participant "Chromium" as browser
+end box
+actor -> config : Start test:browser after validation
+config -> server : Run npm run serve:test
+server -> preview : Build and serve fresh dist at port 4174
+preview --> config : Ready
+config -> projects : Create L2-074 viewport projects
+loop mobile, tablet, desktop
+  projects -> browser : Start project viewport
+  browser -> routes : Load health and behavior routes
+  routes --> browser : Rendered catalog
+  browser -> suite : Console, page, request, layout, and behavior observations
+  suite -> suite : Assert zero errors, failures, and overflow
+end
+suite --> actor : Combined test result
+@enduml

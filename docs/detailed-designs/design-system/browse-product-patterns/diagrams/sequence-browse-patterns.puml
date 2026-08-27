@@ -1,0 +1,52 @@
+@startuml
+title UML sequence behaviour - Browse product pattern states
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Catalog reader" as actor
+box "Frontend - Documentation shell" #E0F2FE
+  participant "Pattern route" as route
+  participant "Pattern cards" as cards
+end box
+box "Backend - Catalog application" #D1FADF
+  participant "renderPatternsIndex" as index
+  participant "renderPatternDetail" as detail
+  participant "renderedPatternScenario" as renderer
+end box
+box "Backend - Preview application" #ECFDF3
+  participant "preview.html" as preview
+end box
+box "Backend - Static catalog data" #FFF4E5
+  database "Pattern families and scenarios" as manifest
+end box
+actor -> route : Open pattern index or family route
+route -> manifest : Resolve L2-065 family and state metadata
+manifest --> route : Eight families and 40 states
+alt index
+  route -> index : Render first state for each family
+  index -> renderer : Create eight cards
+else overview
+  route -> detail : Render state list and first representative
+  detail -> renderer : Create first-state card
+else examples
+  route -> detail : Render all family states
+  loop each declared state
+    detail -> renderer : Create iframe-backed card
+  end
+end
+renderer --> cards : Pattern cards with preview URLs
+cards -> preview : Load isolated frames
+preview --> cards : Rendered product screens
+cards --> actor : Present responsive pattern catalog
+@enduml

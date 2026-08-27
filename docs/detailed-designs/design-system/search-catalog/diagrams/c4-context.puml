@@ -1,0 +1,10 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context - Search the catalog
+Person(reader, "Catalog reader", "Finds design-system documentation")
+System(ds, "Saturdaze documentation catalog", "Searches foundations, components, dialogs, and patterns")
+System_Ext(browser, "Web browser", "Provides keyboard events and client navigation")
+Rel(reader, ds, "Searches", "HTTPS")
+Rel(ds, browser, "Uses input and history APIs from")
+@enduml

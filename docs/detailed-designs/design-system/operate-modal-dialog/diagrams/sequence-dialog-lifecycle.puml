@@ -1,0 +1,57 @@
+@startuml
+title UML sequence behaviour - Open and dismiss a modal dialog
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Application user" as actor
+box "Frontend - Consuming web application" #E0F2FE
+  participant "Dialog opener" as opener
+  participant "Page close handler" as page
+end box
+box "Backend - Native component module" #D1FADF
+  participant "SdDialog" as dialog
+end box
+box "Backend - Shadow DOM interaction" #ECFDF3
+  participant "Focus resolver" as focus
+  participant "Dialog sheet" as sheet
+end box
+box "Backend - Browser platform" #FFF4E5
+  participant "DOM and focus APIs" as browser
+end box
+actor -> opener : Activate dialog action
+opener -> dialog : Set open attribute
+dialog -> browser : Capture active element
+browser --> dialog : Opener reference
+dialog -> sheet : Render L2-053 modal semantics and responsive style
+dialog -> focus : Resolve focusables through child shadow roots
+focus --> dialog : Ordered focus targets
+dialog -> browser : Focus first target or sheet
+browser --> actor : Present focused modal
+alt Tab reaches a boundary
+  actor -> dialog : Press Tab or Shift+Tab
+  dialog -> focus : Wrap to opposite focus target
+  focus -> browser : Move focus
+else Escape or backdrop dismissal
+  actor -> dialog : Press Escape or select backdrop
+  dialog -> page : Dispatch cancelable sd-close(reason)
+  alt event accepted
+    page --> dialog : Continue closure
+    dialog -> dialog : Remove open
+    dialog -> browser : Restore opener focus
+  else event canceled
+    page --> dialog : preventDefault()
+    dialog --> actor : Keep dialog open
+  end
+end
+@enduml

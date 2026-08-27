@@ -1,0 +1,47 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure - Enforce folder self-containment
+class SelfContainmentValidator <<module>> {
+  +root: Path
+  +failures: ValidationFailure[]
+  +validate(): Promise<ValidationResult>
+}
+class FileWalker {
+  +walk(directory: Path, relative: string): Promise<Path[]>
+}
+class ReferenceCheck {
+  +scanText(path: Path): ValidationFailure[]
+  +resolveImports(path: Path): ValidationFailure[]
+  +validateHtml(path: Path): ValidationFailure[]
+}
+class ScriptCheck {
+  +requiredScripts: string[7]
+  +validate(packageJson: object): ValidationFailure[]
+}
+class FixtureCheck {
+  +requiredBuilders: string[3]
+  +validate(source: string): ValidationFailure[]
+}
+class ValidationFailure {
+  +message: string
+}
+class ValidationResult {
+  +success: boolean
+  +failures: ValidationFailure[]
+}
+SelfContainmentValidator *-- FileWalker
+SelfContainmentValidator *-- ReferenceCheck
+SelfContainmentValidator *-- ScriptCheck
+SelfContainmentValidator *-- FixtureCheck
+SelfContainmentValidator *-- ValidationFailure
+SelfContainmentValidator ..> ValidationResult : returns
+@enduml

@@ -1,0 +1,53 @@
+@startuml
+title UML sequence behaviour - Render an isolated specimen
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Catalog reader or iframe" as actor
+box "Frontend - preview.html application" #E0F2FE
+  participant "Preview root" as root
+end box
+box "Backend - Preview routing layer" #D1FADF
+  participant "preview.js" as router
+  participant "URLSearchParams" as params
+end box
+box "Backend - Local fixture layer" #ECFDF3
+  participant "componentMarkup" as component
+  participant "dialogMarkup" as dialog
+  participant "patternMarkup" as pattern
+end box
+box "Backend - Static catalog data" #FFF4E5
+  database "component-manifest.json" as manifest
+end box
+actor -> router : Load /preview.html?type&item&scenario
+router -> params : Parse L2-067 specimen selection
+params --> router : type, item, scenario
+router -> manifest : Resolve optional item metadata
+manifest --> router : Contract record
+alt component type
+  router -> component : Build component specimen
+  component --> router : Markup
+else dialog type
+  router -> dialog : Build static dialog scenario
+  dialog --> router : Markup
+else pattern or default type
+  router -> pattern : Build product screen state
+  pattern --> router : Markup
+end
+router -> root : Set data-type and replace contents
+root --> actor : Present chrome-free specimen
+actor -> root : Select specimen anchor
+root -> router : Composed click
+router --> actor : Suppress navigation
+@enduml

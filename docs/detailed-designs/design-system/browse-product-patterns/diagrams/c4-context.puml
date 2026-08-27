@@ -1,0 +1,10 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context - Browse product patterns
+Person(reader, "Catalog reader", "Inspects complete responsive product screens")
+System(ds, "Saturdaze documentation catalog", "Documents eight pattern families and 40 responsive states")
+System_Ext(browser, "Web browser", "Isolates specimens and applies media queries")
+Rel(reader, ds, "Browses patterns", "HTTPS")
+Rel(ds, browser, "Embeds responsive specimens through")
+@enduml

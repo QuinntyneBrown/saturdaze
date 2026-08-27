@@ -1,0 +1,12 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context - Register native components
+Person(consumer, "Component consumer", "Uses sd-* elements in web pages")
+Person(maintainer, "Component maintainer", "Publishes component contracts and sources")
+System(ds, "Saturdaze design system", "Registers 29 native custom elements")
+System_Ext(browser, "Web browser", "Provides the Custom Elements and Shadow DOM APIs")
+Rel(maintainer, ds, "Maintains")
+Rel(consumer, ds, "Loads components from")
+Rel(ds, browser, "Registers selectors through")
+@enduml

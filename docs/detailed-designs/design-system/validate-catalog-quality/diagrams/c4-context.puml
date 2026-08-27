@@ -1,0 +1,12 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context - Validate catalog quality
+Person(maintainer, "Design-system maintainer", "Runs the catalog quality gate")
+System(ds, "Saturdaze design system", "Builds and validates the standalone catalog")
+System_Ext(browser, "Chromium", "Executes browser behavior at three viewports")
+System_Ext(ci, "Continuous integration", "Blocks deployment on quality failures")
+Rel(maintainer, ds, "Runs npm test on")
+Rel(ds, browser, "Exercises built catalog with")
+Rel(ci, ds, "Validates")
+@enduml

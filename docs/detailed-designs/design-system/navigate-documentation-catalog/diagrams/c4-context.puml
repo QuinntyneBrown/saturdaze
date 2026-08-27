@@ -1,0 +1,12 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context - Navigate the documentation catalog
+Person(reader, "Catalog reader", "Navigates design-system documentation")
+System(ds, "Saturdaze documentation catalog", "Provides deep-linked component, dialog, pattern, and foundation pages")
+System_Ext(browser, "Web browser", "Provides history, focus, and responsive viewport APIs")
+System_Ext(host, "Azure Static Web Apps", "Serves the SPA shell for client routes")
+Rel(reader, ds, "Navigates", "HTTPS")
+Rel(ds, browser, "Uses history and focus APIs from")
+Rel(host, ds, "Serves")
+@enduml

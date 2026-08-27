@@ -1,0 +1,52 @@
+@startuml
+title UML sequence behaviour - Route the documentation catalog
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Catalog reader" as actor
+box "Frontend - Documentation shell" #E0F2FE
+  participant "Route link" as link
+  participant "Main content" as main
+  participant "Navigation" as nav
+end box
+box "Backend - Catalog application" #D1FADF
+  participant "navigate" as navigate
+  participant "renderRoute" as router
+  participant "Page renderer" as renderer
+end box
+box "Backend - Browser platform" #ECFDF3
+  participant "History and focus APIs" as browser
+end box
+box "Backend - Static catalog data" #FFF4E5
+  database "component-manifest.json" as manifest
+end box
+actor -> link : Activate same-origin catalog link
+link -> navigate : Intercept data-route click
+navigate -> browser : Apply L2-056 pushState(path)
+browser --> navigate : History updated
+navigate -> router : renderRoute(focus = true)
+router -> manifest : Resolve requested catalog record
+manifest --> router : Matching record or none
+alt root route
+  router -> renderer : Apply L2-057 renderHome(manifest metrics)
+else known catalog route
+  router -> renderer : Render selected page and tab fallback
+else unknown route
+  router -> renderer : Render in-app not-found page
+end
+renderer --> main : Replace route content and title
+router -> nav : Update exact and section state
+router -> browser : Scroll top and focus main
+browser --> actor : Present routed page
+@enduml

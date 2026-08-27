@@ -1,0 +1,56 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure - Browse product patterns
+class PatternFamily {
+  +id: string
+  +name: string
+  +description: string
+  +scenarios: PatternScenario[]
+}
+class PatternScenario {
+  +id: string
+  +name: string
+}
+class PatternRenderer <<module>> {
+  +renderPatternsIndex(): void
+  +renderPatternDetail(pattern: PatternFamily, tab: string): void
+  +renderedPatternScenario(): string
+  +previewUrl(type: string, item: string, scenario: string): string
+}
+class PatternCard {
+  +heading: string
+  +viewport: ViewportMode
+  +selectViewport(mode: ViewportMode): void
+}
+class PreviewFrame {
+  +src: URL
+  +title: string
+  +dataViewport: ViewportMode
+}
+class PreviewRouter <<module>> {
+  +type: string
+  +item: string
+  +scenario: string
+  +render(): void
+}
+enum ViewportMode {
+  mobile
+  tablet
+  desktop
+}
+PatternFamily *-- PatternScenario
+PatternRenderer ..> PatternFamily : renders
+PatternRenderer *-- PatternCard
+PatternCard *-- PreviewFrame
+PatternCard --> ViewportMode
+PreviewFrame ..> PreviewRouter : loads
+@enduml

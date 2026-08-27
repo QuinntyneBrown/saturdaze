@@ -1,0 +1,18 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers - Browse product patterns
+Person(reader, "Catalog reader", "Inspects responsive screens")
+System_Boundary(ds, "Saturdaze design system") {
+  Container(web, "Documentation SPA", "Browser JavaScript", "Renders pattern families and viewport controls")
+  Container(preview, "Specimen document", "HTML and JavaScript", "Renders one isolated scenario")
+  ContainerDb(manifest, "Component manifest", "JSON schema v3", "Stores pattern and scenario metadata")
+  Container(fixtures, "Catalog content", "JavaScript module", "Builds local product screens")
+  Container(library, "Native component library", "ES modules", "Renders live product elements")
+}
+Rel(reader, web, "Uses", "HTTPS")
+Rel(web, manifest, "Reads")
+Rel(web, preview, "Embeds", "iframe")
+Rel(preview, fixtures, "Requests pattern markup from")
+Rel(preview, library, "Renders")
+@enduml

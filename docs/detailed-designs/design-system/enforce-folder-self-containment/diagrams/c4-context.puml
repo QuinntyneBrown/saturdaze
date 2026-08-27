@@ -1,0 +1,12 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context - Enforce folder self-containment
+Person(maintainer, "Design-system maintainer", "Copies, validates, and delivers the standalone product")
+System(ds, "Standalone design-system folder", "Contains all runtime, validation, test, and build dependencies")
+System_Ext(node, "Node.js runtime", "Executes the local validator")
+System_Ext(ci, "Continuous integration", "Invokes the self-containment gate")
+Rel(maintainer, ds, "Maintains")
+Rel(node, ds, "Scans local files in")
+Rel(ci, node, "Runs")
+@enduml

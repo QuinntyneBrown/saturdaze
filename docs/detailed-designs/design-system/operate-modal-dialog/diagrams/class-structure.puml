@@ -1,0 +1,42 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure - Operate a modal dialog
+class SdElement {
+  +shadowRoot: ShadowRoot
+  +connectedCallback(): void
+  +render(): void
+}
+class SdDialog {
+  +observedAttributes: string[4]
+  -_returnFocus: Element
+  -_onKeydown: EventListener
+  +afterRender(): void
+  +focusables(): FocusItem[]
+  +focusItem(item: FocusItem): void
+  +close(reason: string): void
+  +restoreFocus(): void
+}
+class FocusItem {
+  +host: Element
+  +node: HTMLElement
+}
+class SdCloseEventDetail {
+  +reason: string
+}
+class ConsumingPage {
+  +handleClose(event: CustomEvent<SdCloseEventDetail>): void
+}
+SdElement <|-- SdDialog
+SdDialog *-- "0..*" FocusItem
+SdDialog ..> SdCloseEventDetail : dispatches
+ConsumingPage ..> SdCloseEventDetail : handles
+@enduml

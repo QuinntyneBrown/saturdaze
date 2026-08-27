@@ -236,7 +236,11 @@ code { font-size: .9em; }
   .brand small { display: none; }
   .header-link { display: none; }
   .site-layout { display: block; }
-  .docs-nav { position: fixed; z-index: 90; top: 68px; bottom: 0; left: 0; width: min(320px, calc(100vw - 40px)); height: auto; transform: translateX(-105%); transition: transform var(--sd-dur-base) var(--sd-ease); box-shadow: var(--sd-shadow-3); }
+  .docs-nav { position: fixed; z-index: 90; top: 68px; bottom: 0; left: 0; width: min(320px, calc(100vw - 40px)); height: auto; transform: translateX(-105%); box-shadow: var(--sd-shadow-3); }
+  /* The transition only exists once the user has opened the drawer (body.nav-armed, set in docs.js).
+     A transition on the closed drawer would animate the breakpoint crossing itself: shrinking past
+     860px flips transform none → translateX(-105%), sliding the opaque panel across the page. */
+  body.nav-armed .docs-nav { transition: transform var(--sd-dur-base) var(--sd-ease); }
   .docs-nav.open { transform: none; }
   #main { padding: 32px 22px 80px; }
   .metrics { grid-template-columns: repeat(2, 1fr); }

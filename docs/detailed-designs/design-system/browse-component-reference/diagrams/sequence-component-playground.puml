@@ -1,0 +1,53 @@
+@startuml
+title UML sequence behaviour - Use the component playground
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Catalog reader" as actor
+box "Frontend - Component examples page" #E0F2FE
+  participant "Attribute control" as control
+  participant "Live specimen" as specimen
+  participant "Code panel" as code
+  participant "Reset and Copy actions" as actions
+end box
+box "Backend - Catalog interaction layer" #D1FADF
+  participant "bindPlaygrounds" as binder
+  participant "renderVariantMatrix" as variants
+end box
+box "Backend - Native component runtime" #ECFDF3
+  participant "sd-* custom element" as element
+end box
+box "Backend - Browser platform" #FFF4E5
+  participant "Clipboard and status region" as browser
+end box
+actor -> binder : Open examples tab
+binder -> control : Initialize L2-062 control per attribute
+binder -> specimen : Insert canonical markup
+specimen -> element : Upgrade live element
+binder -> variants : Generate enum, boolean, or icon specimens
+variants --> actor : Present rendered options
+actor -> control : Change attribute value
+control -> element : Set, remove, or toggle host attribute
+element --> specimen : Re-render current state
+control -> code : Synchronize visible HTML source
+alt reset
+  actor -> actions : Select Reset
+  actions -> binder : Restore original markup and controls
+  binder -> browser : Announce Playground reset
+else copy active source
+  actor -> actions : Select Copy
+  actions -> browser : writeText(active source)
+  browser --> actor : Announce active tab copied
+end
+@enduml

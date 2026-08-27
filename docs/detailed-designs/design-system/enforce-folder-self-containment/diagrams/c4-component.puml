@@ -1,0 +1,22 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components - Enforce folder self-containment
+Container_Boundary(validation, "Contract validator") {
+  Component(walk, "walk", "File enumerator", "Collects eligible local source files")
+  Component(text, "Forbidden-reference scan", "Text validator", "Rejects cross-folder strings")
+  Component(imports, "Import resolver", "Path validator", "Keeps relative imports inside the root")
+  Component(html, "HTML reference check", "Asset validator", "Verifies local href and src targets")
+  Component(scripts, "Package-script check", "Command validator", "Verifies commands and rejects parent traversal")
+  Component(fixtures, "Fixture ownership check", "Source validator", "Confirms local fixture builders")
+  Component(result, "Failure accumulator", "Validation result", "Prints all errors or one success message")
+}
+Rel(walk, text, "Supplies files to")
+Rel(walk, imports, "Supplies modules to")
+Rel(walk, html, "Supplies documents to")
+Rel(scripts, result, "Adds failures to")
+Rel(fixtures, result, "Adds failures to")
+Rel(text, result, "Adds failures to")
+Rel(imports, result, "Adds failures to")
+Rel(html, result, "Adds failures to")
+@enduml

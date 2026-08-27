@@ -1,0 +1,47 @@
+@startuml
+title UML sequence behaviour - Validate the component contract
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Component author" as actor
+box "Frontend - npm command shell" #E0F2FE
+  participant "npm run validate" as npm
+end box
+box "Backend - Validation application" #D1FADF
+  participant "validate.mjs" as validator
+  participant "Failure accumulator" as failures
+end box
+box "Backend - Contract analysis" #ECFDF3
+  participant "Schema and count checks" as schema
+  participant "Source parity checks" as parity
+end box
+box "Backend - Design-system source" #FFF4E5
+  database "Manifest, package, registry, component files" as files
+end box
+actor -> npm : Start validation
+npm -> validator : Execute
+validator -> files : Load contract sources
+files --> validator : Parsed and textual inputs
+validator -> schema : Enforce L2-054 schema, versions, counts, and uniqueness
+schema -> failures : Add each violation
+validator -> parity : Enforce L2-055 files, observed attributes, and API completeness
+parity -> failures : Add each violation
+failures --> validator : Complete failure list
+alt no failures
+  validator --> npm : Exit 0 with schema-v3 summary
+else one or more failures
+  validator --> npm : Print each bullet and exit 1
+end
+npm --> actor : Present validation result
+@enduml

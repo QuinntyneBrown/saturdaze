@@ -1,0 +1,41 @@
+@startuml
+title UML sequence behaviour - Switch a pattern preview viewport
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Catalog reader" as actor
+box "Frontend - Pattern card" #E0F2FE
+  participant "Viewport controls" as controls
+  participant "Pattern iframe" as frame
+  participant "status region" as status
+end box
+box "Backend - Catalog interaction layer" #D1FADF
+  participant "Delegated click handler" as handler
+end box
+box "Backend - Preview application" #ECFDF3
+  participant "Product screen" as screen
+end box
+box "Backend - Browser layout engine" #FFF4E5
+  participant "Media query evaluator" as media
+end box
+actor -> controls : Select Mobile, Tablet, or Desktop
+controls -> handler : Dispatch viewport action
+handler -> controls : Mark only selected button active
+handler -> frame : Apply L2-066 data-viewport to containing iframe
+frame -> media : Recompute embedded viewport width
+media -> screen : Apply native 720 px and 1024 px media queries
+screen --> frame : Responsive layout
+handler -> status : Announce selected preview mode
+status --> actor : Present polite outcome
+@enduml

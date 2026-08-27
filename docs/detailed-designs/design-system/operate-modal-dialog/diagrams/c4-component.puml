@@ -1,0 +1,17 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components - Operate a modal dialog
+Container_Boundary(dialog, "sd-dialog component") {
+  Component(host, "Host attributes", "Custom element API", "Carries open, static, title, and subtitle state")
+  Component(render, "SdDialog render lifecycle", "JavaScript", "Creates the semantic sheet and responsive scrim")
+  Component(focus, "Focus resolver", "JavaScript", "Finds and cycles focus across shadow roots")
+  Component(close, "Close controller", "JavaScript", "Dispatches sd-close and restores prior focus")
+  Component(css, "Responsive dialog styles", "Shadow DOM CSS", "Switches bottom sheet to centered modal")
+}
+Rel(host, render, "Triggers")
+Rel(render, focus, "Activates")
+Rel(render, css, "Applies")
+Rel(focus, close, "Supports dismissal through")
+Rel(close, host, "Removes open from")
+@enduml

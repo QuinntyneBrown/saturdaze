@@ -1,0 +1,20 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers - Deploy and host the catalog
+Person(maintainer, "Design-system maintainer", "Pushes qualifying changes")
+Person(reader, "Catalog reader", "Uses the deployed catalog")
+System_Boundary(github, "GitHub") {
+  Container(repo, "Saturdaze repository", "Git", "Stores source and workflow")
+  Container(actions, "Deployment workflow", "GitHub Actions", "Builds, tests, and uploads")
+}
+System_Boundary(azure, "Azure Static Web Apps") {
+  Container(web, "Hosted catalog", "Static files", "Serves documentation and public contracts")
+  Container(config, "Hosting rules", "staticwebapp.config.json", "Controls fallbacks, errors, and headers")
+}
+Rel(maintainer, repo, "Pushes to")
+Rel(actions, repo, "Checks out and builds")
+Rel(actions, web, "Uploads dist", "Azure deployment API")
+Rel(web, config, "Applies")
+Rel(reader, web, "Requests routes", "HTTPS")
+@enduml

@@ -1,0 +1,49 @@
+@startuml
+title UML sequence behaviour - Validate folder self-containment
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Design-system maintainer" as actor
+box "Frontend - npm command shell" #E0F2FE
+  participant "npm run validate" as npm
+end box
+box "Backend - Validation application" #D1FADF
+  participant "Self-containment checks" as validator
+  participant "Failure accumulator" as failures
+end box
+box "Backend - Path and source analysis" #ECFDF3
+  participant "walk" as walker
+  participant "Reference resolvers" as refs
+end box
+box "Backend - Design-system filesystem" #FFF4E5
+  database "Local source and configuration" as files
+end box
+actor -> npm : Start validation
+npm -> validator : Execute checks
+validator -> walker : Enumerate eligible local files
+walker -> files : Read tree excluding generated output
+files --> walker : File paths and contents
+walker --> validator : Validated file set
+validator -> refs : Apply L2-072 text, import, HTML, script, and fixture checks
+refs -> files : Resolve every local target against folder root
+files --> refs : Resolved paths and source text
+refs -> failures : Add each boundary violation
+failures --> validator : Complete result
+alt no failures
+  validator --> npm : Exit 0
+else boundary violation
+  validator --> npm : Print bullets and exit 1
+end
+npm --> actor : Present result
+@enduml

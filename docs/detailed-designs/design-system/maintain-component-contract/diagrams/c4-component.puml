@@ -1,0 +1,18 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components - Maintain the component contract
+Container_Boundary(ds, "Contract and validation") {
+  Component(manifest, "component-manifest.json", "Schema v3 JSON", "Stores product, category, component, dialog, and pattern records")
+  Component(package, "package.json", "npm metadata", "Supplies product version and scripts")
+  Component(source, "Component sources", "ES modules", "Declare observed attributes and selectors")
+  Component(registry, "components.js", "ES module registry", "Imports the public source set")
+  Component(validator, "validate.mjs", "Node.js validator", "Checks schema, counts, uniqueness, and parity")
+  Component(renderers, "Catalog renderers", "docs.js", "Render API and examples from contracts")
+}
+Rel(validator, manifest, "Validates")
+Rel(validator, package, "Compares version and scripts with")
+Rel(validator, source, "Extracts observed attributes from")
+Rel(validator, registry, "Compares import set with")
+Rel(renderers, manifest, "Read")
+@enduml

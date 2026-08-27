@@ -1,0 +1,18 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components - Register native components
+Container_Boundary(ds, "Native component library") {
+  Component(manifest, "Component contracts", "component-manifest.json", "Names selectors, categories, and sources")
+  Component(registry, "components.js", "ES module registry", "Imports every public source module")
+  Component(base, "SdElement", "Base custom element", "Attaches open shadow roots and renders templates")
+  Component(modules, "sd-* source modules", "ES modules", "Define and register concrete elements")
+  Component(browser, "CustomElementRegistry", "Browser API", "Maps selectors to constructors and upgrades markup")
+  Component(validator, "Registry parity checks", "validate.mjs", "Compares manifest and import sets")
+}
+Rel(registry, modules, "Imports")
+Rel(modules, base, "Extend")
+Rel(modules, browser, "Register constructors with")
+Rel(validator, manifest, "Reads")
+Rel(validator, registry, "Inspects")
+@enduml

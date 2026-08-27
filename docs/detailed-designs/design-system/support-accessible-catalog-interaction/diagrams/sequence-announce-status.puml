@@ -1,0 +1,46 @@
+@startuml
+title UML sequence behaviour - Announce a catalog action
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Assistive technology user" as actor
+box "Frontend - Interactive catalog feature" #E0F2FE
+  participant "Action control" as control
+  participant "status region" as status
+end box
+box "Backend - Catalog event layer" #D1FADF
+  participant "Delegated event handler" as handler
+  participant "announce" as announce
+end box
+box "Backend - Component interaction layer" #ECFDF3
+  participant "Composed event path" as path
+end box
+box "Backend - Browser platform" #FFF4E5
+  participant "Timer and accessibility APIs" as browser
+end box
+actor -> control : Activate copy, reset, dialog, toggle, vote, or viewport action
+control -> path : Dispatch native or composed event
+path -> handler : Resolve action across shadow boundaries
+handler -> announce : Apply L2-070 exact outcome message
+announce -> status : Set text and add show class
+announce -> browser : Clear prior timer and start 1800 ms timer
+status --> actor : Announce polite status
+alt another action before expiry
+  actor -> control : Activate next action
+  control -> announce : Publish replacement message
+  announce -> browser : Reset timer
+else timer expires
+  browser -> status : Remove show class
+end
+@enduml

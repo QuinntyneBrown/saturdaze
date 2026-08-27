@@ -1,0 +1,50 @@
+@startuml
+title UML sequence behaviour - Register and upgrade a native component
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Catalog reader" as actor
+box "Frontend - Catalog document" #E0F2FE
+  participant "index.html" as page
+  participant "Component markup" as markup
+end box
+box "Backend - Browser module runtime" #D1FADF
+  participant "components.js" as registry
+  participant "sd-* source module" as module
+  participant "CustomElementRegistry" as custom
+end box
+box "Backend - Component implementation" #ECFDF3
+  participant "SdElement" as base
+  participant "ConcreteElement" as element
+end box
+box "Backend - Static assets" #FFF4E5
+  database "component-manifest.json" as manifest
+end box
+actor -> page : Load catalog page
+page -> manifest : Fetch selector and source inventory
+manifest --> page : 29 component contracts
+page -> registry : Import central registry
+registry -> module : Import each manifest source
+module -> custom : Apply L2-052 customElements.define(selector, constructor)
+custom --> module : Registration complete
+module --> registry : Module evaluated
+registry --> page : Registry evaluated
+page -> markup : Insert sd-* specimen
+markup -> custom : Request selector upgrade
+custom -> element : Construct concrete element
+element -> base : Attach open shadow root and render
+base --> element : Rendered shadow tree
+element --> markup : Upgraded element
+markup --> actor : Present live component
+@enduml

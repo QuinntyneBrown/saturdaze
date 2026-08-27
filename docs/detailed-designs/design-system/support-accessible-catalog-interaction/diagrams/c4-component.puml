@@ -1,0 +1,18 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components - Support accessible catalog interaction
+Container_Boundary(web, "Documentation SPA") {
+  Component(focus, "Route focus management", "JavaScript", "Moves focus to main after navigation")
+  Component(semantics, "Semantic renderers", "HTML and ARIA", "Expose landmarks, current state, tabs, and names")
+  Component(keys, "Keyboard handlers", "JavaScript", "Operate search, drawer, and dialogs")
+  Component(status, "announce and status region", "ARIA live region", "Publishes transient action messages")
+  Component(events, "Composed event delegation", "JavaScript", "Handles component actions across shadow roots")
+  Component(styles, "focus-visible styles", "CSS", "Draws token-based focus indication")
+}
+Rel(keys, focus, "Moves focus through")
+Rel(semantics, focus, "Identifies targets for")
+Rel(events, status, "Publishes outcomes through")
+Rel(keys, status, "Publishes outcomes through")
+Rel(styles, focus, "Makes visible")
+@enduml

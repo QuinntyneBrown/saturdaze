@@ -1,0 +1,42 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure - Define design token foundations
+class TokenVocabulary <<stylesheet>> {
+  +colorTokens: CssCustomProperty[]
+  +typeTokens: CssCustomProperty[7]
+  +spacingTokens: CssCustomProperty[10]
+  +radiusTokens: CssCustomProperty[5]
+  +shadowTokens: CssCustomProperty[3]
+  +motionTokens: CssCustomProperty[]
+  +layoutTokens: CssCustomProperty[]
+}
+class DesktopOverride <<media query>> {
+  +minWidth: 1024px
+  +apply(): void
+}
+class SdElement {
+  +shadowRoot: ShadowRoot
+  +render(): void
+  +attr(name: string, fallback: string): string
+  +battr(name: string): boolean
+}
+class TokenValidator <<module>> {
+  +validateDeclarationCount(files: Path[]): ValidationFailure[]
+}
+class StaticContractPlugin <<Vite plugin>> {
+  +writeBundle(): Promise<void>
+}
+TokenVocabulary *-- DesktopOverride
+SdElement ..> TokenVocabulary : consumes
+TokenValidator ..> TokenVocabulary : validates
+StaticContractPlugin ..> TokenVocabulary : copies
+@enduml

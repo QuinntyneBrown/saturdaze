@@ -1,0 +1,14 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context - Deploy and host the catalog
+Person(maintainer, "Design-system maintainer", "Publishes catalog changes")
+Person(reader, "Catalog reader", "Uses the deployed documentation")
+System(ci, "GitHub Actions", "Builds, tests, and deploys qualifying changes")
+System(ds, "Saturdaze design-system source", "Contains the standalone catalog product")
+System_Ext(azure, "Azure Static Web Apps", "Hosts the built catalog")
+Rel(maintainer, ds, "Pushes changes to")
+Rel(ci, ds, "Builds and tests")
+Rel(ci, azure, "Uploads dist to")
+Rel(reader, azure, "Browses", "HTTPS")
+@enduml

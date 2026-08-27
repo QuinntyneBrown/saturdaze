@@ -1,0 +1,12 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context - Operate a modal dialog
+Person(user, "Web application user", "Operates a modal with keyboard or pointer")
+System(app, "Consuming web application", "Hosts product content and dialog actions")
+System(ds, "Saturdaze design system", "Supplies sd-dialog behavior")
+System_Ext(browser, "Web browser", "Provides focus, events, and responsive layout")
+Rel(user, app, "Uses", "HTTPS")
+Rel(app, ds, "Renders sd-dialog from")
+Rel(ds, browser, "Uses platform APIs from")
+@enduml

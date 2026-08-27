@@ -1,0 +1,51 @@
+@startuml
+title UML sequence behaviour - Serve a hosted catalog route
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Catalog reader" as actor
+box "Frontend - Web browser" #E0F2FE
+  participant "Catalog request" as request
+  participant "Documentation SPA" as spa
+end box
+box "Backend - Azure Static Web Apps" #D1FADF
+  participant "Route evaluator" as routes
+  participant "Response header policy" as headers
+end box
+box "Backend - Hosting configuration" #ECFDF3
+  participant "navigationFallback" as fallback
+  participant "responseOverrides" as errors
+end box
+box "Backend - Static artifact" #FFF4E5
+  database "dist files" as dist
+end box
+actor -> request : Request catalog path
+request -> routes : HTTPS GET
+routes -> fallback : Apply L2-076 route and exclusion rules
+alt client-side catalog route
+  fallback -> dist : Read index.html
+  dist --> routes : SPA shell
+  routes -> spa : Return shell
+else excluded asset, manifest, or preview
+  fallback -> dist : Read exact static path
+  dist --> routes : Native file and content type
+else missing static resource
+  fallback -> errors : Resolve 404 override
+  errors -> dist : Read 404.html
+  dist --> routes : Error body with status 404
+end
+routes -> headers : Apply nosniff, referrer, and permissions policies
+headers --> request : Final response
+request --> actor : Present route or error
+@enduml

@@ -1,0 +1,53 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure - Deploy and host the catalog
+class DeploymentWorkflow {
+  +name: string
+  +triggers: Trigger[]
+  +permissions: Permissions
+  +steps: WorkflowStep[]
+  +run(): DeploymentResult
+}
+class Trigger {
+  +event: string
+  +branch: string
+  +paths: string[]
+}
+class WorkflowStep {
+  +name: string
+  +workingDirectory: string
+  +command: string
+}
+class BuildArtifact {
+  +path: design-system/dist
+  +fresh: boolean
+}
+class HostingConfiguration {
+  +navigationFallback: FallbackRule
+  +responseOverrides: ErrorRule[]
+  +globalHeaders: HeaderRule[]
+}
+class FallbackRule {
+  +rewrite: /index.html
+  +exclude: string[]
+}
+class ErrorRule {
+  +statusCode: number
+  +rewrite: string
+}
+DeploymentWorkflow *-- Trigger
+DeploymentWorkflow *-- WorkflowStep
+DeploymentWorkflow ..> BuildArtifact : produces and uploads
+BuildArtifact *-- HostingConfiguration
+HostingConfiguration *-- FallbackRule
+HostingConfiguration *-- ErrorRule
+@enduml

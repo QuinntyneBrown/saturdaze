@@ -1,0 +1,18 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components - Navigate the documentation catalog
+Container_Boundary(web, "Documentation SPA") {
+  Component(route, "renderRoute and navigate", "Client router", "Resolve paths, update history, and manage focus")
+  Component(home, "renderHome", "Page renderer", "Builds manifest-derived catalog coverage")
+  Component(pages, "Catalog page renderers", "JavaScript", "Render foundations, components, dialogs, and patterns")
+  Component(nav, "renderNavigation and updateActiveNavigation", "Navigation renderer", "Build and mark shell links")
+  Component(drawer, "openNavigation and closeNavigation", "Drawer controller", "Manage mobile navigation state")
+  Component(notfound, "renderNotFound", "Page renderer", "Renders unknown paths")
+}
+Rel(route, home, "Selects for root")
+Rel(route, pages, "Selects for catalog routes")
+Rel(route, notfound, "Selects for unknown routes")
+Rel(route, nav, "Refreshes active state through")
+Rel(route, drawer, "Closes before rendering through")
+@enduml

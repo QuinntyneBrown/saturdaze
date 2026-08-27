@@ -1,0 +1,18 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers - Maintain the component contract
+Person(author, "Component author", "Updates contracts and sources")
+System_Boundary(ds, "Saturdaze design system") {
+  ContainerDb(manifest, "Component manifest", "JSON schema v3", "Stores public catalog contracts")
+  Container(source, "Native component library", "ES modules", "Implements public selectors and attributes")
+  Container(web, "Documentation catalog", "Browser JavaScript", "Renders contract pages")
+  Container(validation, "Contract validator", "Node.js", "Enforces schema and source parity")
+}
+Rel(author, manifest, "Maintains")
+Rel(author, source, "Maintains")
+Rel(web, manifest, "Renders from")
+Rel(web, source, "Loads live elements from")
+Rel(validation, manifest, "Validates")
+Rel(validation, source, "Compares")
+@enduml

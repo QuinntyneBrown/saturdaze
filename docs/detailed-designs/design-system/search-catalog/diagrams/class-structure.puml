@@ -1,0 +1,47 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure - Search the catalog
+class SearchEntry {
+  +label: string
+  +description: string
+  +type: SearchType
+  +href: string
+  +icon: string
+}
+enum SearchType {
+  System
+  Component
+  Dialog
+  Pattern
+}
+class SearchIndex {
+  +entries: SearchEntry[45]
+  +filter(query: string, take: number = 12): SearchEntry[]
+}
+class SearchController <<module>> {
+  +renderSearchResults(): void
+  +handleInput(): void
+  +handleKeydown(event: KeyboardEvent): void
+  +close(): void
+}
+class SearchListbox {
+  +hidden: boolean
+  +options: SearchEntry[]
+  +emptyMessage: string
+  +ariaExpanded: boolean
+}
+SearchEntry --> SearchType
+SearchIndex *-- SearchEntry
+SearchController ..> SearchIndex : queries
+SearchController *-- SearchListbox
+SearchListbox o-- SearchEntry
+@enduml

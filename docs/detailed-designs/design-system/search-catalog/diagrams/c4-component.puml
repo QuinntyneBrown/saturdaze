@@ -1,0 +1,19 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components - Search the catalog
+Container_Boundary(web, "Documentation SPA") {
+  Component(index, "searchIndex", "In-memory records", "Stores 45 searchable destinations")
+  Component(input, "search input", "HTML control", "Captures query and keyboard commands")
+  Component(filter, "renderSearchResults", "Search renderer", "Filters, caps, and renders results")
+  Component(listbox, "search-results", "ARIA listbox", "Shows options or empty state")
+  Component(keys, "Global key handlers", "Interaction controller", "Handles slash, Escape, Enter, and outside clicks")
+  Component(route, "navigate", "Client router", "Activates selected result")
+}
+Rel(input, filter, "Provides query to")
+Rel(filter, index, "Filters")
+Rel(filter, listbox, "Renders")
+Rel(keys, input, "Focuses or clears")
+Rel(keys, listbox, "Activates first option in")
+Rel(listbox, route, "Navigates through")
+@enduml

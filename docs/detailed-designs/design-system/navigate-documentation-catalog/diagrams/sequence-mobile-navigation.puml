@@ -1,0 +1,57 @@
+@startuml
+title UML sequence behaviour - Control mobile navigation
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Mobile catalog reader" as actor
+box "Frontend - Documentation shell" #E0F2FE
+  participant "Menu button" as menu
+  participant "Navigation drawer" as drawer
+  participant "Navigation scrim" as scrim
+end box
+box "Backend - Catalog interaction layer" #D1FADF
+  participant "openNavigation" as open
+  participant "closeNavigation" as close
+  participant "navigate" as route
+end box
+box "Backend - Browser document" #ECFDF3
+  participant "Body and focus state" as browser
+end box
+box "Backend - Responsive styles" #FFF4E5
+  database "docs.css" as styles
+end box
+actor -> menu : Press Enter at 390 px
+menu -> open : Toggle closed drawer
+open -> drawer : Apply L2-058 open class
+open -> scrim : Show
+open -> menu : Set expanded state and close label
+open -> browser : Lock body scroll
+styles --> drawer : Display off-canvas navigation
+drawer --> actor : Present navigation links
+alt activate route link
+  actor -> drawer : Select link
+  drawer -> route : Navigate
+  route -> close : Close before route render
+else press Escape
+  actor -> close : Global Escape handler
+  close -> menu : Restore focus
+else select scrim
+  actor -> scrim : Click
+  scrim -> close : Close drawer
+end
+close -> drawer : Remove open class
+close -> scrim : Hide
+close -> menu : Set collapsed state and open label
+close -> browser : Unlock body scroll
+@enduml

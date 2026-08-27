@@ -1,0 +1,16 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components - Define design token foundations
+Container_Boundary(ds, "Design-system source and tooling") {
+  Component(tokens, "tokens.css", "CSS custom properties", "Declares the authoritative --sd-* vocabulary")
+  Component(base, "SdElement", "JavaScript base class", "Consumes token fallbacks in open shadow roots")
+  Component(styles, "Catalog styles", "CSS", "Consumes tokens for documentation layout")
+  Component(validator, "Token declaration check", "validate.mjs", "Enforces one declaration source")
+  Component(build, "copy-static-contracts", "Vite plugin", "Copies tokens.css into dist")
+}
+Rel(base, tokens, "Consumes")
+Rel(styles, tokens, "Consumes")
+Rel(validator, tokens, "Scans")
+Rel(build, tokens, "Copies")
+@enduml

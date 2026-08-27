@@ -1,0 +1,19 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components - Deploy and host the catalog
+Container_Boundary(delivery, "Design-system delivery") {
+  Component(trigger, "Workflow triggers", "GitHub Actions", "Select qualifying pushes and manual dispatches")
+  Component(quality, "npm test step", "Node.js and Playwright", "Validates and builds fresh output")
+  Component(build, "copy-static-contracts", "Vite plugin", "Copies public contracts into dist")
+  Component(upload, "Azure deploy action", "Azure/static-web-apps-deploy@v1", "Uploads prebuilt dist")
+  Component(hosting, "staticwebapp.config.json", "Hosting configuration", "Defines fallback, exclusions, 404, and headers")
+  ComponentDb(dist, "dist", "Static artifact", "Contains the deployed catalog")
+}
+Rel(trigger, quality, "Starts")
+Rel(quality, build, "Invokes through Vite")
+Rel(build, dist, "Writes")
+Rel(quality, upload, "Permits after success")
+Rel(upload, dist, "Uploads")
+Rel(dist, hosting, "Includes")
+@enduml

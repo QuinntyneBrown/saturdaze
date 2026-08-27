@@ -1,0 +1,44 @@
+@startuml
+title UML sequence behaviour - Render live foundations
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Catalog reader" as actor
+box "Frontend - Documentation shell" #E0F2FE
+  participant "Main content" as main
+end box
+box "Backend - Catalog application" #D1FADF
+  participant "renderRoute" as router
+  participant "renderFoundations" as renderer
+end box
+box "Backend - Browser rendering layer" #ECFDF3
+  participant "getComputedStyle" as computed
+  participant "sd-icon elements" as icons
+end box
+box "Backend - Design-system assets" #FFF4E5
+  database "tokens.css and iconNames" as assets
+end box
+actor -> router : Navigate to /foundations
+router -> renderer : Select foundations page
+renderer -> assets : Read token names and 39 icon names
+assets --> renderer : Foundation inventories
+renderer -> computed : Apply L2-059 read current spacing properties
+computed -> assets : Resolve :root custom properties
+assets --> computed : Computed values
+computed --> renderer : Ten spacing values
+renderer -> main : Render six live specimen sections
+main -> icons : Upgrade 39 sd-icon specimens
+icons --> main : Rendered symbols
+main --> actor : Present foundations reference
+@enduml
