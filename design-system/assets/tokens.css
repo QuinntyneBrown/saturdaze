@@ -1,0 +1,108 @@
+/* Saturdaze — design tokens
+   Skeleton-grade values. Tune in implementation phase, but the shape stays. */
+
+:root {
+  /* Colour — warm, family, sun-dappled. Calm not corporate. */
+  --sd-bg:           #FAF7F2;   /* warm cream, like a kitchen mid-morning */
+  --sd-bg-elev:     #FFFFFF;
+  --sd-surface:     #FFFFFF;
+  --sd-surface-2:   #F3EFE8;   /* recessed wells, locked blocks */
+  --sd-ink:         #1F2937;
+  --sd-ink-soft:    #6B7280;
+  --sd-ink-faint:   #9CA3AF;
+  --sd-line:        rgba(31, 41, 55, 0.08);
+  --sd-line-strong: rgba(31, 41, 55, 0.16);
+
+  --sd-primary:      #E07856;   /* warm coral — the "Plan This Weekend" CTA */
+  --sd-primary-ink:  #FFFFFF;
+  --sd-primary-soft: #FBE7DE;
+
+  --sd-accent:       #2D7D5F;   /* forest green — "locked", confirmed */
+  --sd-accent-soft:  #DEEDE5;
+
+  --sd-warn:         #C45A3F;   /* gentle warning, not alarming */
+  --sd-warn-soft:    #FADFD6;
+
+  --sd-sun:          #F4C969;   /* sunny chip / weather */
+  --sd-sky:          #BFD9E8;   /* cool weather chip */
+  --sd-leaf:         #A9C9A4;   /* outdoor chip */
+  --sd-indoor:       #C9B6E0;   /* indoor chip */
+
+  /* Typography — sans-serif system stack */
+  --sd-font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+                  Roboto, "Helvetica Neue", Arial, sans-serif;
+
+  --sd-fs-xs:   12px;
+  --sd-fs-sm:   13px;
+  --sd-fs-base: 15px;
+  --sd-fs-md:   17px;
+  --sd-fs-lg:   20px;
+  --sd-fs-xl:   26px;
+  --sd-fs-xxl:  34px;
+
+  --sd-lh-tight: 1.2;
+  --sd-lh-snug:  1.35;
+  --sd-lh-base:  1.5;
+
+  --sd-fw-regular: 400;
+  --sd-fw-medium:  500;
+  --sd-fw-semibold: 600;
+  --sd-fw-bold:    700;
+
+  /* Spacing — 4px base */
+  --sd-s-0: 0;
+  --sd-s-1: 4px;
+  --sd-s-2: 8px;
+  --sd-s-3: 12px;
+  --sd-s-4: 16px;
+  --sd-s-5: 20px;
+  --sd-s-6: 24px;
+  --sd-s-7: 32px;
+  --sd-s-8: 40px;
+  --sd-s-9: 56px;
+
+  /* Radius */
+  --sd-r-sm: 8px;
+  --sd-r-md: 12px;
+  --sd-r-lg: 16px;
+  --sd-r-xl: 22px;
+  --sd-r-pill: 999px;
+
+  /* Elevation — soft, paper-like */
+  --sd-shadow-1: 0 1px 2px rgba(31, 41, 55, 0.04),
+                 0 2px 6px rgba(31, 41, 55, 0.04);
+  --sd-shadow-2: 0 4px 10px rgba(31, 41, 55, 0.06),
+                 0 10px 24px rgba(31, 41, 55, 0.06);
+  --sd-shadow-3: 0 20px 40px rgba(31, 41, 55, 0.12);
+
+  /* Motion */
+  --sd-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --sd-dur-fast: 120ms;
+  --sd-dur-base: 220ms;
+
+  /* Layout */
+  --sd-app-max-w: 440px;        /* mobile-first canvas */
+  --sd-app-pad-x: 20px;
+  --sd-nav-h: 64px;
+  --sd-top-h: 56px;
+
+  /* Breakpoints — referenced inline as media queries.
+     - mobile: < 720px (default / current design)
+     - tablet: 720-1023px  (nav becomes icon rail)
+     - desktop: >= 1024px  (nav becomes labelled sidebar; split-view activates) */
+  --sd-bp-tablet: 720px;
+  --sd-bp-desktop: 1024px;
+
+  /* Rail widths */
+  --sd-rail-w-tablet: 72px;
+  --sd-rail-w-desktop: 220px;
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --sd-app-pad-x: 32px;
+    --sd-fs-xxl: 40px;
+    --sd-fs-xl: 30px;
+    --sd-fs-lg: 22px;
+  }
+}

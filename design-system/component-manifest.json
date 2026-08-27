@@ -1,0 +1,258 @@
+{
+  "schemaVersion": 3,
+  "product": {
+    "name": "Saturdaze Design System",
+    "version": "2.0.0",
+    "description": "The standalone visual language, component API, and product-pattern reference for Saturdaze."
+  },
+  "categories": [
+    { "id": "actions", "label": "Actions", "description": "Buttons, icon actions, and compact labels." },
+    { "id": "forms", "label": "Forms", "description": "Inputs and preference controls." },
+    { "id": "surfaces", "label": "Surfaces", "description": "Content containers, identity, lists, and empty states." },
+    { "id": "navigation", "label": "Navigation", "description": "Responsive application and authentication structure." },
+    { "id": "planning", "label": "Planning", "description": "Weekend, weather, and itinerary building blocks." },
+    { "id": "discovery", "label": "Discovery", "description": "Activities, restaurants, events, saved ideas, and voting." },
+    { "id": "overlays", "label": "Overlays", "description": "Focused modal tasks and decisions." }
+  ],
+  "components": [
+    {
+      "selector": "sd-button", "name": "Button", "category": "actions", "source": "sd-button.js",
+      "description": "Primary, secondary, ghost, and destructive actions with optional leading and trailing content.",
+      "attributes": [
+        { "name": "variant", "type": "enum", "default": "primary", "values": ["primary", "secondary", "ghost", "danger"], "description": "Visual priority of the action." },
+        { "name": "size", "type": "enum", "default": "md", "values": ["sm", "md", "lg"], "description": "Control density." },
+        { "name": "full", "type": "boolean", "default": false, "description": "Expands to the available width." },
+        { "name": "disabled", "type": "boolean", "default": false, "description": "Prevents activation and exposes the native disabled state." }
+      ],
+      "slots": [{ "name": "default", "description": "Visible label." }, { "name": "leading", "description": "Leading icon or content." }, { "name": "trailing", "description": "Trailing icon or content." }],
+      "events": [{ "name": "click", "description": "Native click from the internal button." }],
+      "examples": [
+        { "id": "primary", "title": "Primary action", "description": "One clear next step.", "markup": "<sd-button><sd-icon slot=\"leading\" name=\"sparkle\" size=\"16\"></sd-icon>Plan this weekend</sd-button>" },
+        { "id": "danger", "title": "Destructive action", "description": "Reserved for consequences that need explicit emphasis.", "markup": "<sd-button variant=\"danger\">Delete plan</sd-button>" }
+      ]
+    },
+    {
+      "selector": "sd-icon-button", "name": "Icon button", "category": "actions", "source": "sd-icon-button.js",
+      "description": "Compact icon-only action with a required accessible label.",
+      "attributes": [
+        { "name": "icon", "type": "icon", "default": "more", "description": "Icon name." },
+        { "name": "label", "type": "string", "default": "Action", "description": "Accessible action name." },
+        { "name": "variant", "type": "enum", "default": "default", "values": ["default", "ghost", "filled"], "description": "Container treatment." }
+      ],
+      "slots": [], "events": [{ "name": "click", "description": "Native click from the internal button." }],
+      "examples": [{ "id": "save", "title": "Save action", "description": "Use a filled state after selection.", "markup": "<sd-icon-button icon=\"heart\" label=\"Save idea\"></sd-icon-button>" }]
+    },
+    {
+      "selector": "sd-chip", "name": "Chip", "category": "actions", "source": "sd-chip.js",
+      "description": "Compact metadata and status label.",
+      "attributes": [{ "name": "tone", "type": "enum", "default": "neutral", "values": ["neutral", "sun", "sky", "leaf", "indoor", "warn", "accent", "primary"], "description": "Semantic color treatment." }],
+      "slots": [{ "name": "default", "description": "Chip text and optional icon." }], "events": [],
+      "examples": [{ "id": "outdoor", "title": "Category", "description": "Short, scannable metadata.", "markup": "<sd-chip tone=\"leaf\"><sd-icon name=\"tree\" size=\"12\"></sd-icon> Outdoors</sd-chip>" }]
+    },
+    {
+      "selector": "sd-text-input", "name": "Text input", "category": "forms", "source": "sd-text-input.js",
+      "description": "Labelled single-value input with hint support.",
+      "attributes": [
+        { "name": "label", "type": "string", "default": "", "description": "Visible field label." },
+        { "name": "value", "type": "string", "default": "", "description": "Initial input value." },
+        { "name": "placeholder", "type": "string", "default": "", "description": "Example value or expected format." },
+        { "name": "type", "type": "enum", "default": "text", "values": ["text", "email", "password", "number", "date", "time", "datetime-local"], "description": "Native input type." },
+        { "name": "hint", "type": "string", "default": "", "description": "Supporting guidance below the input." }
+      ],
+      "slots": [], "events": [{ "name": "input", "description": "Native input event inside the open shadow root." }],
+      "examples": [{ "id": "family", "title": "Profile field", "description": "Labels remain visible when content is entered.", "markup": "<sd-text-input label=\"Family name\" placeholder=\"The Browns\" hint=\"Shown only to your family.\"></sd-text-input>" }]
+    },
+    {
+      "selector": "sd-toggle", "name": "Toggle", "category": "forms", "source": "sd-toggle.js",
+      "description": "Binary preference control.",
+      "attributes": [{ "name": "label", "type": "string", "default": "", "description": "Visible preference name." }, { "name": "checked", "type": "boolean", "default": false, "description": "Selected state." }],
+      "slots": [], "events": [{ "name": "change", "description": "Bubbles with detail.checked after keyboard or pointer activation." }],
+      "examples": [{ "id": "weather", "title": "Preference", "description": "State and label are shown together.", "markup": "<sd-toggle label=\"Weather-aware suggestions\" checked></sd-toggle>" }]
+    },
+    {
+      "selector": "sd-icon", "name": "Icon", "category": "surfaces", "source": "sd-icon.js",
+      "description": "Dependency-free line icon from the Saturdaze symbol set.",
+      "attributes": [{ "name": "name", "type": "icon", "default": "sparkle", "description": "Symbol name." }, { "name": "size", "type": "number", "default": 20, "description": "Rendered square size in pixels." }, { "name": "filled", "type": "boolean", "default": false, "description": "Uses solid SVG shapes where available." }],
+      "slots": [], "events": [],
+      "examples": [{ "id": "weather", "title": "Weather symbol", "description": "Icons inherit the current text color.", "markup": "<sd-icon name=\"sun\" size=\"32\"></sd-icon>" }]
+    },
+    {
+      "selector": "sd-avatar", "name": "Avatar", "category": "surfaces", "source": "sd-avatar.js",
+      "description": "Initials-based family identity marker.",
+      "attributes": [{ "name": "name", "type": "string", "default": "?", "description": "Name used to derive initials." }, { "name": "tone", "type": "enum", "default": "neutral", "values": ["neutral", "leaf", "sky", "sun", "primary", "indoor"], "description": "Identity color." }, { "name": "size", "type": "enum", "default": "md", "values": ["sm", "md", "lg", "xl"], "description": "Avatar size." }],
+      "slots": [], "events": [],
+      "examples": [{ "id": "family", "title": "Family member", "description": "Initials are derived from the name.", "markup": "<sd-avatar name=\"Quinn Brown\" tone=\"primary\" size=\"lg\"></sd-avatar>" }]
+    },
+    {
+      "selector": "sd-card", "name": "Card", "category": "surfaces", "source": "sd-card.js",
+      "description": "General-purpose content surface.",
+      "attributes": [{ "name": "variant", "type": "enum", "default": "outlined", "values": ["outlined", "raised", "sunk"], "description": "Elevation and background treatment." }, { "name": "padding", "type": "enum", "default": "md", "values": ["sm", "md", "lg"], "description": "Internal spacing." }, { "name": "interactive", "type": "boolean", "default": false, "description": "Adds hover affordance and pointer cursor." }],
+      "slots": [{ "name": "default", "description": "Card content." }], "events": [],
+      "examples": [{ "id": "surface", "title": "Information surface", "description": "Group related information without over-emphasis.", "markup": "<sd-card variant=\"raised\"><strong>Saturday looks sunny</strong><p class=\"demo-copy\">Two outdoor ideas are ready.</p></sd-card>" }]
+    },
+    {
+      "selector": "sd-section", "name": "Section", "category": "surfaces", "source": "sd-section.js",
+      "description": "Titled content region with an optional action.",
+      "attributes": [{ "name": "title", "type": "string", "default": "", "description": "Section heading." }, { "name": "subtitle", "type": "string", "default": "", "description": "Supporting copy." }, { "name": "flush", "type": "boolean", "default": false, "description": "Removes body padding." }],
+      "slots": [{ "name": "default", "description": "Section body." }, { "name": "action", "description": "Heading-row action." }], "events": [],
+      "examples": [{ "id": "day", "title": "Day section", "description": "A heading, context, and local action.", "markup": "<sd-section title=\"Saturday\" subtitle=\"Three stops · 52 minutes driving\"><sd-button slot=\"action\" size=\"sm\" variant=\"ghost\">View map</sd-button><sd-card variant=\"sunk\">Your morning plan</sd-card></sd-section>" }]
+    },
+    {
+      "selector": "sd-tag-group", "name": "Tag group", "category": "surfaces", "source": "sd-tag-group.js",
+      "description": "Wrapping row for related chips.",
+      "attributes": [], "slots": [{ "name": "default", "description": "Chip collection." }], "events": [],
+      "examples": [{ "id": "filters", "title": "Active filters", "description": "Related tags wrap as a unit.", "markup": "<sd-tag-group><sd-chip tone=\"leaf\">Family</sd-chip><sd-chip tone=\"sky\">Under 20 min</sd-chip><sd-chip tone=\"sun\">Saturday</sd-chip></sd-tag-group>" }]
+    },
+    {
+      "selector": "sd-list-item", "name": "List item", "category": "surfaces", "source": "sd-list-item.js",
+      "description": "Structured row with optional leading, body, and trailing content.",
+      "attributes": [{ "name": "title", "type": "string", "default": "", "description": "Primary row label." }, { "name": "subtitle", "type": "string", "default": "", "description": "Secondary detail." }, { "name": "href", "type": "string", "default": "", "description": "Makes the row a link." }, { "name": "compact", "type": "boolean", "default": false, "description": "Reduces vertical padding." }, { "name": "flat", "type": "boolean", "default": false, "description": "Removes surface border and fill." }],
+      "slots": [{ "name": "default", "description": "Additional body content." }, { "name": "leading", "description": "Leading icon or avatar." }, { "name": "trailing", "description": "Status or navigation affordance." }], "events": [],
+      "examples": [{ "id": "errand", "title": "Errand row", "description": "Pairs identity with concise supporting detail.", "markup": "<sd-list-item title=\"Groceries\" subtitle=\"3 items · Saturday morning\"><sd-icon slot=\"leading\" name=\"bag\"></sd-icon><sd-icon slot=\"trailing\" name=\"chevron_right\" size=\"16\"></sd-icon></sd-list-item>" }]
+    },
+    {
+      "selector": "sd-empty", "name": "Empty state", "category": "surfaces", "source": "sd-empty.js",
+      "description": "Helpful no-content message with a next step slot.",
+      "attributes": [{ "name": "title", "type": "string", "default": "Nothing here yet", "description": "Outcome-oriented heading." }, { "name": "subtitle", "type": "string", "default": "", "description": "Explanation or guidance." }, { "name": "icon", "type": "icon", "default": "sparkle", "description": "Supporting symbol." }],
+      "slots": [{ "name": "default", "description": "Optional action." }], "events": [],
+      "examples": [{ "id": "saved", "title": "No saved ideas", "description": "Explain how the collection becomes useful.", "markup": "<sd-empty title=\"Nothing saved yet\" subtitle=\"Tap the heart on an idea to keep it here.\" icon=\"heart\"><sd-button size=\"sm\">Discover ideas</sd-button></sd-empty>" }]
+    },
+    {
+      "selector": "sd-top-bar", "name": "Top bar", "category": "navigation", "source": "sd-top-bar.js",
+      "description": "Compact page heading with leading and trailing actions.",
+      "attributes": [{ "name": "title", "type": "string", "default": "", "description": "Current page title." }, { "name": "back", "type": "boolean", "default": false, "description": "Shows a back affordance." }],
+      "slots": [{ "name": "leading", "description": "Leading action when back is absent." }, { "name": "trailing", "description": "Trailing page actions." }], "events": [],
+      "examples": [{ "id": "itinerary", "title": "Detail page", "description": "Use back navigation for nested destinations.", "markup": "<sd-top-bar title=\"Saturday itinerary\" back><sd-icon-button slot=\"trailing\" icon=\"more\" label=\"More options\" variant=\"ghost\"></sd-icon-button></sd-top-bar>" }]
+    },
+    {
+      "selector": "sd-bottom-nav", "name": "App navigation", "category": "navigation", "source": "sd-bottom-nav.js",
+      "description": "Primary mobile bottom navigation that becomes a desktop rail.",
+      "attributes": [{ "name": "active", "type": "enum", "default": "home", "values": ["home", "activities", "saved", "profile"], "description": "Active destination." }, { "name": "static", "type": "boolean", "default": false, "description": "Embeds the navigation in documentation and compositions." }],
+      "slots": [], "events": [],
+      "examples": [{ "id": "primary", "title": "Primary destinations", "description": "Keep destination order stable.", "markup": "<sd-bottom-nav static active=\"activities\"></sd-bottom-nav>" }]
+    },
+    {
+      "selector": "sd-split-view", "name": "Split view", "category": "navigation", "source": "sd-split-view.js",
+      "description": "Responsive master-detail composition.",
+      "attributes": [{ "name": "sticky-detail", "type": "boolean", "default": false, "description": "Keeps detail content visible on wide screens." }, { "name": "sticky-master", "type": "boolean", "default": false, "description": "Keeps master content visible on wide screens." }],
+      "slots": [{ "name": "master", "description": "Primary list or controls." }, { "name": "detail", "description": "Selected detail." }], "events": [],
+      "examples": [{ "id": "planner", "title": "Planner split", "description": "Stacks at narrow widths and separates at desktop widths.", "markup": "<sd-split-view sticky-detail><sd-card slot=\"master\">Weekend options</sd-card><sd-card slot=\"detail\" variant=\"sunk\">Selected itinerary</sd-card></sd-split-view>" }]
+    },
+    {
+      "selector": "sd-auth-shell", "name": "Authentication shell", "category": "navigation", "source": "sd-auth-shell.js",
+      "description": "Centered brand frame for account journeys.",
+      "attributes": [], "slots": [{ "name": "default", "description": "Authentication card." }, { "name": "foot", "description": "Secondary account link or legal copy." }], "events": [],
+      "examples": [{ "id": "login", "title": "Sign in frame", "description": "Keeps identity and account task focused.", "markup": "<sd-auth-shell><sd-auth-card><h3>Welcome back</h3><p class=\"demo-copy\">Sign in to plan your weekend.</p><sd-button full>Continue</sd-button></sd-auth-card><span slot=\"foot\">New here? Create an account</span></sd-auth-shell>" }]
+    },
+    {
+      "selector": "sd-auth-card", "name": "Authentication card", "category": "navigation", "source": "sd-auth-card.js",
+      "description": "Focused surface for one account task.",
+      "attributes": [], "slots": [{ "name": "default", "description": "Form and supporting content." }], "events": [],
+      "examples": [{ "id": "account", "title": "Account task", "description": "Use one primary action per card.", "markup": "<sd-auth-card><h3>Check your email</h3><p class=\"demo-copy\">We sent a secure link to quinn@example.com.</p><sd-button full>Open email app</sd-button></sd-auth-card>" }]
+    },
+    {
+      "selector": "sd-hero", "name": "Weekend hero", "category": "planning", "source": "sd-hero.js",
+      "description": "Personalized weekend entry point with primary planning action.",
+      "attributes": [{ "name": "greeting", "type": "string", "default": "Morning, the Browns", "description": "Personal greeting." }, { "name": "subtitle", "type": "string", "default": "Your weekend's looking good. Want me to map it out?", "description": "Contextual prompt." }, { "name": "cta", "type": "string", "default": "Plan This Weekend", "description": "Primary action label." }],
+      "slots": [{ "name": "default", "description": "Supporting content below the action." }], "events": [],
+      "examples": [{ "id": "morning", "title": "Weekend prompt", "description": "Lead with a personal, useful next step.", "markup": "<sd-hero greeting=\"Morning, the Browns\" subtitle=\"Sunny on Saturday. Want me to map it out?\" cta=\"Plan this weekend\"></sd-hero>" }]
+    },
+    {
+      "selector": "sd-weather-strip", "name": "Weather strip", "category": "planning", "source": "sd-weather-strip.js",
+      "description": "Two-day container for weekend weather.",
+      "attributes": [], "slots": [{ "name": "default", "description": "Weather day items." }], "events": [],
+      "examples": [{ "id": "weekend", "title": "Weekend forecast", "description": "Show only decision-relevant weather.", "markup": "<sd-weather-strip><sd-weather-day day=\"Sat\" icon=\"sun\" hi=\"22\" lo=\"14\" note=\"Light breeze\"></sd-weather-day><sd-weather-day day=\"Sun\" icon=\"cloud\" hi=\"18\" lo=\"12\" note=\"Cloudy\"></sd-weather-day></sd-weather-strip>" }]
+    },
+    {
+      "selector": "sd-weather-day", "name": "Weather day", "category": "planning", "source": "sd-weather-strip.js",
+      "description": "Compact forecast for one weekend day.",
+      "attributes": [{ "name": "day", "type": "string", "default": "Sat", "description": "Short day label." }, { "name": "icon", "type": "enum", "default": "sun", "values": ["sun", "cloud", "rain", "snow"], "description": "Forecast symbol." }, { "name": "hi", "type": "number", "default": 22, "description": "High temperature." }, { "name": "lo", "type": "number", "default": 14, "description": "Low temperature." }, { "name": "note", "type": "string", "default": "", "description": "Decision-relevant condition." }],
+      "slots": [], "events": [],
+      "examples": [{ "id": "rain", "title": "Rainy day", "description": "Pair data with a plain-language condition.", "markup": "<sd-weather-day day=\"Sun\" icon=\"rain\" hi=\"17\" lo=\"11\" note=\"Rain after 3pm\"></sd-weather-day>" }]
+    },
+    {
+      "selector": "sd-day-card", "name": "Day card", "category": "planning", "source": "sd-day-card.js",
+      "description": "Weekend-day summary linking into an itinerary.",
+      "attributes": [{ "name": "day", "type": "string", "default": "Saturday", "description": "Day heading." }, { "name": "date", "type": "string", "default": "", "description": "Display date." }, { "name": "weather", "type": "string", "default": "", "description": "Forecast summary." }, { "name": "highlight", "type": "string", "default": "", "description": "Primary plan highlight." }, { "name": "icon", "type": "icon", "default": "sun", "description": "Forecast or activity symbol." }, { "name": "href", "type": "string", "default": "itinerary.html", "description": "Itinerary destination." }],
+      "slots": [{ "name": "chips", "description": "Day metadata." }], "events": [],
+      "examples": [{ "id": "saturday", "title": "Planned day", "description": "Summarize weather and the memorable anchor.", "markup": "<sd-day-card day=\"Saturday\" date=\"May 17\" weather=\"22° · sunny\" highlight=\"Lavender farm and lunch\" icon=\"sun\" href=\"#\"><sd-chip slot=\"chips\" tone=\"leaf\">3 stops</sd-chip></sd-day-card>" }]
+    },
+    {
+      "selector": "sd-timeline-block", "name": "Timeline block", "category": "planning", "source": "sd-timeline-block.js",
+      "description": "Timed itinerary item with tone, lock, travel, and action states.",
+      "attributes": [{ "name": "time", "type": "string", "default": "", "description": "Start time." }, { "name": "title", "type": "string", "default": "", "description": "Activity name." }, { "name": "subtitle", "type": "string", "default": "", "description": "Location or context." }, { "name": "icon", "type": "icon", "default": "sparkle", "description": "Activity symbol." }, { "name": "tone", "type": "enum", "default": "activity", "values": ["activity", "meal", "drive", "workout", "fixed", "downtime", "indoor"], "description": "Semantic activity treatment." }, { "name": "locked", "type": "boolean", "default": false, "description": "Marks a fixed commitment." }, { "name": "drive", "type": "string", "default": "", "description": "Travel duration." }, { "name": "duration", "type": "string", "default": "", "description": "Activity duration." }],
+      "slots": [{ "name": "chips", "description": "Additional metadata." }, { "name": "actions", "description": "Item actions." }], "events": [],
+      "examples": [{ "id": "activity", "title": "Itinerary activity", "description": "Time, place, travel, and lock state remain scannable.", "markup": "<sd-timeline-block time=\"10:00\" duration=\"90 min\" title=\"Terre Bleu Lavender Farm\" subtitle=\"Milton\" icon=\"tree\" tone=\"activity\" drive=\"35 min\"><sd-chip slot=\"chips\" tone=\"leaf\">Outdoors</sd-chip></sd-timeline-block>" }]
+    },
+    {
+      "selector": "sd-anticipate", "name": "Anticipatory callout", "category": "planning", "source": "sd-anticipate.js",
+      "description": "Proactive, contextual help that catches a likely need.",
+      "attributes": [{ "name": "icon", "type": "icon", "default": "sparkle", "description": "Supporting symbol." }, { "name": "headline", "type": "string", "default": "", "description": "Useful observation." }, { "name": "body", "type": "string", "default": "", "description": "Why it matters." }, { "name": "cta", "type": "string", "default": "", "description": "Optional next step." }],
+      "slots": [], "events": [],
+      "examples": [{ "id": "weather", "title": "Weather anticipation", "description": "Offer help before weather changes the plan.", "markup": "<sd-anticipate icon=\"rain\" headline=\"Rain starts around 3pm\" body=\"I can move the trail walk before lunch.\" cta=\"Adjust Saturday\"></sd-anticipate>" }]
+    },
+    {
+      "selector": "sd-activity-card", "name": "Activity card", "category": "discovery", "source": "sd-activity-card.js",
+      "description": "Context-rich activity recommendation.",
+      "attributes": [{ "name": "title", "type": "string", "default": "", "description": "Activity name." }, { "name": "subtitle", "type": "string", "default": "", "description": "Category or location." }, { "name": "drive", "type": "string", "default": "", "description": "Travel time." }, { "name": "why", "type": "string", "default": "", "description": "Personalized rationale." }, { "name": "icon", "type": "icon", "default": "tree", "description": "Activity symbol." }, { "name": "tone", "type": "enum", "default": "default", "values": ["default", "outdoor", "indoor", "food"], "description": "Image treatment." }, { "name": "ages", "type": "string", "default": "", "description": "Age suitability." }, { "name": "tag", "type": "string", "default": "", "description": "Corner status." }],
+      "slots": [{ "name": "chips", "description": "Additional metadata." }], "events": [],
+      "examples": [{ "id": "trail", "title": "Personal recommendation", "description": "Explain why the idea fits this family now.", "markup": "<sd-activity-card title=\"Riverwood Conservancy\" subtitle=\"Forest trails and owl barn\" drive=\"8 min\" why=\"Dry trails, close to home, and new for Eli.\" icon=\"tree\" tone=\"outdoor\" ages=\"4–12\" tag=\"Great today\"></sd-activity-card>" }]
+    },
+    {
+      "selector": "sd-restaurant-card", "name": "Restaurant card", "category": "discovery", "source": "sd-restaurant-card.js",
+      "description": "Restaurant option with travel context and family votes.",
+      "attributes": [{ "name": "name", "type": "string", "default": "", "description": "Restaurant name." }, { "name": "style", "type": "string", "default": "", "description": "Cuisine or service style." }, { "name": "near", "type": "string", "default": "", "description": "Nearby itinerary anchor." }, { "name": "drive", "type": "string", "default": "", "description": "Travel duration." }, { "name": "wifeapproved", "type": "boolean", "default": false, "description": "Shows the family approval marker." }, { "name": "icon", "type": "icon", "default": "fork", "description": "Cuisine symbol." }],
+      "slots": [{ "name": "chips", "description": "Additional metadata." }, { "name": "votes", "description": "Family vote rows." }], "events": [],
+      "examples": [{ "id": "lunch", "title": "Lunch option", "description": "Pair the restaurant with its itinerary context.", "markup": "<sd-restaurant-card name=\"La Marina\" style=\"Mediterranean · $$\" near=\"Near Terre Bleu\" drive=\"6 min\" wifeapproved><sd-vote-row slot=\"votes\" name=\"Quinn\" tone=\"primary\" vote=\"up\"></sd-vote-row></sd-restaurant-card>" }]
+    },
+    {
+      "selector": "sd-event-card", "name": "Event card", "category": "discovery", "source": "sd-event-card.js",
+      "description": "Local event summary with date, venue, and travel context.",
+      "attributes": [{ "name": "title", "type": "string", "default": "", "description": "Event title." }, { "name": "venue", "type": "string", "default": "", "description": "Venue or location." }, { "name": "when", "type": "string", "default": "", "description": "Human-readable time." }, { "name": "drive", "type": "string", "default": "", "description": "Travel duration." }, { "name": "date-day", "type": "string", "default": "17", "description": "Day of month." }, { "name": "date-mon", "type": "string", "default": "MAY", "description": "Short month label." }, { "name": "tag", "type": "string", "default": "", "description": "Status or category." }, { "name": "icon", "type": "icon", "default": "ticket", "description": "Event symbol." }],
+      "slots": [{ "name": "chips", "description": "Additional metadata." }], "events": [],
+      "examples": [{ "id": "market", "title": "Local event", "description": "Date and venue lead; distance supports the decision.", "markup": "<sd-event-card title=\"Port Credit Buskerfest\" venue=\"Memorial Park\" when=\"11am–5pm\" drive=\"9 min\" date-day=\"17\" date-mon=\"MAY\" tag=\"Free\" icon=\"ticket\"></sd-event-card>" }]
+    },
+    {
+      "selector": "sd-saved-card", "name": "Saved weekend card", "category": "discovery", "source": "sd-saved-card.js",
+      "description": "Stored weekend memory with rating and highlights.",
+      "attributes": [{ "name": "date", "type": "string", "default": "", "description": "Weekend date." }, { "name": "title", "type": "string", "default": "", "description": "Weekend title." }, { "name": "rating", "type": "number", "default": 0, "description": "Family rating from zero to five." }, { "name": "highlights", "type": "string", "default": "", "description": "Short memory summary." }, { "name": "favourite", "type": "boolean", "default": false, "description": "Marks a favorite weekend." }],
+      "slots": [{ "name": "default", "description": "Follow-up actions." }], "events": [],
+      "examples": [{ "id": "memory", "title": "Weekend memory", "description": "Keep the date, emotional label, and memorable stops together.", "markup": "<sd-saved-card date=\"May 17–18\" title=\"Lavender and lake weekend\" rating=\"5\" highlights=\"Terre Bleu · Port Credit · family brunch\" favourite><sd-button size=\"sm\" variant=\"secondary\">Remix it</sd-button></sd-saved-card>" }]
+    },
+    {
+      "selector": "sd-vote-row", "name": "Vote row", "category": "discovery", "source": "sd-vote-row.js",
+      "description": "One family member's preference control.",
+      "attributes": [{ "name": "name", "type": "string", "default": "", "description": "Family member name." }, { "name": "tone", "type": "enum", "default": "leaf", "values": ["leaf", "sky", "sun", "primary", "indoor"], "description": "Avatar identity color." }, { "name": "vote", "type": "enum", "default": "none", "values": ["none", "up", "down"], "description": "Current preference." }],
+      "slots": [], "events": [{ "name": "click", "description": "Vote buttons are handled by the consuming application." }],
+      "examples": [{ "id": "yes", "title": "Positive vote", "description": "The selected response remains visible.", "markup": "<sd-vote-row name=\"Eli\" tone=\"sky\" vote=\"up\"></sd-vote-row>" }]
+    },
+    {
+      "selector": "sd-dialog", "name": "Dialog", "category": "overlays", "source": "sd-dialog.js",
+      "description": "Modal or inline-static surface for focused decisions and forms.",
+      "attributes": [{ "name": "open", "type": "boolean", "default": false, "description": "Displays the dialog." }, { "name": "title", "type": "string", "default": "Dialog", "description": "Accessible dialog name." }, { "name": "subtitle", "type": "string", "default": "", "description": "Supporting context." }, { "name": "static", "type": "boolean", "default": false, "description": "Renders the sheet in normal flow for documentation." }],
+      "slots": [{ "name": "default", "description": "Dialog content." }, { "name": "actions", "description": "Footer actions." }], "events": [{ "name": "sd-close", "description": "Cancelable close request with an escape, backdrop, or programmatic reason." }],
+      "examples": [{ "id": "confirm", "title": "Confirmation", "description": "State the consequence and offer a safe way out.", "markup": "<sd-dialog open static title=\"Regenerate the weekend?\" subtitle=\"Locked blocks stay put. Everything else gets a fresh draft.\"><sd-card variant=\"sunk\"><sd-icon name=\"lock\" size=\"16\"></sd-icon> Commitments stay exactly where they are.</sd-card><sd-button slot=\"actions\" variant=\"secondary\">Cancel</sd-button><sd-button slot=\"actions\">Regenerate</sd-button></sd-dialog>" }]
+    }
+  ],
+  "dialogs": [
+    { "id": "sign-out", "name": "Sign out", "description": "Account-session confirmation.", "scenarios": [{ "id": "default", "name": "Sign out confirmation" }] },
+    { "id": "product-action", "name": "Product actions", "description": "Contextual actions launched from weekend and discovery experiences.", "scenarios": [
+      { "id": "calendar", "name": "Calendar export" }, { "id": "share", "name": "Share weekend" }, { "id": "regenerate-weekend", "name": "Regenerate weekend" }, { "id": "regenerate-day", "name": "Regenerate day" }, { "id": "map", "name": "Map itinerary" }, { "id": "surprise", "name": "Try something new" }, { "id": "remix", "name": "Remix saved weekend" }, { "id": "repeat", "name": "Repeat saved weekend" }, { "id": "itinerary-more", "name": "Itinerary options" }, { "id": "saved-more", "name": "Saved options" }, { "id": "restaurant-lock", "name": "Lock restaurant" }, { "id": "share-native-unavailable", "name": "Share fallback" }
+    ] },
+    { "id": "family-member", "name": "Family member", "description": "Add and edit family details.", "scenarios": [{ "id": "add", "name": "Add family member" }] },
+    { "id": "commitment", "name": "Commitment", "description": "Add a fixed family commitment.", "scenarios": [{ "id": "add", "name": "Add commitment" }] },
+    { "id": "submit-event", "name": "Submit event", "description": "Quick local-event submission.", "scenarios": [{ "id": "default", "name": "Quick submit" }] },
+    { "id": "approve-submission", "name": "Approve submission", "description": "Publish a moderated event.", "scenarios": [{ "id": "default", "name": "Approval confirmation" }] },
+    { "id": "reject-submission", "name": "Reject submission", "description": "Reject an event with an optional reason.", "scenarios": [{ "id": "default", "name": "Rejection confirmation" }] }
+  ],
+  "patterns": [
+    { "id": "shell-navigation", "name": "Shell & navigation", "description": "Responsive primary application structure.", "scenarios": [{ "id": "mobile", "name": "Mobile bottom navigation" }, { "id": "desktop", "name": "Desktop navigation rail" }] },
+    { "id": "authentication", "name": "Authentication", "description": "Complete account and recovery journey.", "scenarios": [{ "id": "splash", "name": "Splash" }, { "id": "login", "name": "Sign in" }, { "id": "signup", "name": "Create account" }, { "id": "forgot-password", "name": "Forgot password" }, { "id": "forgot-password-error", "name": "Recovery error" }, { "id": "check-email", "name": "Check email" }, { "id": "check-email-empty", "name": "Check email fallback" }, { "id": "verify-email", "name": "Verified email" }, { "id": "verify-email-verifying", "name": "Verifying email" }, { "id": "verify-email-expired", "name": "Expired verification" }, { "id": "reset-password", "name": "Reset password" }, { "id": "reset-password-success", "name": "Reset successful" }, { "id": "reset-password-expired", "name": "Expired reset" }, { "id": "terms", "name": "Terms" }, { "id": "privacy", "name": "Privacy" }] },
+    { "id": "weekend-overview", "name": "Weekend overview", "description": "Planning entry point and generated-weekend states.", "scenarios": [{ "id": "default", "name": "Ready to plan" }, { "id": "empty", "name": "No plan yet" }, { "id": "generating", "name": "Generating a plan" }, { "id": "lock-mode", "name": "Managing locks" }, { "id": "sample", "name": "Sample weekend" }] },
+    { "id": "itinerary", "name": "Itinerary", "description": "Timed Saturday and Sunday plans.", "scenarios": [{ "id": "saturday", "name": "Saturday" }, { "id": "sunday", "name": "Sunday" }, { "id": "locked-day", "name": "Locked day" }] },
+    { "id": "discovery", "name": "Discovery", "description": "Activity, restaurant, and local-event exploration.", "scenarios": [{ "id": "activities", "name": "Activities" }, { "id": "restaurants", "name": "Restaurant voting" }, { "id": "restaurants-voted", "name": "Votes recorded" }, { "id": "restaurants-refreshing", "name": "Refreshing options" }, { "id": "restaurants-locked", "name": "Restaurant locked" }, { "id": "restaurants-consensus", "name": "Family consensus" }, { "id": "events", "name": "Local events" }] },
+    { "id": "profile-errands", "name": "Profile & errands", "description": "Family preferences, commitments, and practical stops.", "scenarios": [{ "id": "profile", "name": "Family profile" }, { "id": "errand", "name": "Add errand" }, { "id": "errand-alt-slots", "name": "Alternative slots" }, { "id": "errand-added", "name": "Errand added" }] },
+    { "id": "saved-ideas", "name": "Saved ideas", "description": "Saved weekend memories and reusable plans.", "scenarios": [{ "id": "saved", "name": "Saved weekends" }] },
+    { "id": "event-moderation", "name": "Event moderation", "description": "Community submission and moderation workflow.", "scenarios": [{ "id": "submit", "name": "Submit event" }, { "id": "submitted", "name": "Submission received" }, { "id": "admin", "name": "Moderation queue" }] }
+  ]
+}

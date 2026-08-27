@@ -1,0 +1,20 @@
+{
+  "name": "@saturdaze/design-system",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Standalone Saturdaze design-system product, component API, and responsive pattern catalog.",
+  "scripts": {
+    "start": "vite --host 127.0.0.1 --port 5174",
+    "build": "vite build",
+    "preview": "vite preview --host 127.0.0.1 --port 5174",
+    "serve:test": "npm run build && vite preview --host 127.0.0.1 --port 4174",
+    "validate": "node scripts/validate.mjs",
+    "test:browser": "playwright test",
+    "test": "npm run validate && npm run test:browser"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.60.0",
+    "vite": "^7.1.3"
+  }
+}

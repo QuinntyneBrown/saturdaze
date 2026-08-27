@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Saturdaze components, design foundations, dialogs, and product patterns.">
+  <title>Saturdaze Design System</title>
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/tokens.css">
+  <link rel="stylesheet" href="/assets/docs.css">
+  <link rel="stylesheet" href="/assets/interaction.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <button class="menu-button" id="menu" type="button" aria-expanded="false" aria-controls="docs-nav" aria-label="Open documentation navigation"><span></span><span></span><span></span></button>
+    <a class="brand" href="/" data-route aria-label="Saturdaze Design System home"><span class="brand-mark" aria-hidden="true"></span><span>Saturdaze</span><small>Design System</small></a>
+    <div class="site-search">
+      <sd-icon name="search" size="17"></sd-icon>
+      <input id="search" type="search" autocomplete="off" placeholder="Search components, dialogs, patterns…" aria-label="Search documentation" aria-controls="search-results" aria-expanded="false">
+      <kbd>/</kbd>
+      <div id="search-results" class="search-results" role="listbox" hidden></div>
+    </div>
+    <a class="header-link" href="/component-manifest.json" target="_blank" rel="noreferrer">Manifest <span aria-hidden="true">↗</span></a>
+  </header>
+  <div class="site-layout">
+    <aside id="docs-nav" class="docs-nav" aria-label="Documentation navigation"></aside>
+    <button id="nav-scrim" class="nav-scrim" type="button" aria-label="Close navigation" hidden></button>
+    <main id="main" tabindex="-1"><div class="loading-state"><span></span><span></span><span></span><p>Loading the catalog…</p></div></main>
+  </div>
+  <div id="dialog-host"></div>
+  <div id="status" class="status" role="status" aria-live="polite"></div>
+  <script type="module" src="/assets/components.js"></script>
+  <script type="module" src="/assets/docs.js"></script>
+</body>
+</html>

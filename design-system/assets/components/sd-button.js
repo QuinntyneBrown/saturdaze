@@ -1,0 +1,77 @@
+// <sd-button variant="primary|secondary|ghost|danger" size="sm|md|lg" full>
+// The button — one component used everywhere. Iconography via <sd-icon slot="leading">.
+
+import { SdElement } from "./sd-base.js";
+
+class SdButton extends SdElement {
+  static get observedAttributes() { return ["variant", "size", "full", "disabled"]; }
+  attributeChangedCallback() { if (this._rendered) this.render(); }
+
+  styles() {
+    return `
+      :host { display: inline-block; }
+      :host([full]) { display: block; }
+      button {
+        appearance: none;
+        border: 1px solid transparent;
+        background: var(--sd-primary);
+        color: var(--sd-primary-ink);
+        font-weight: var(--sd-fw-semibold);
+        font-size: var(--sd-fs-base);
+        padding: 12px 18px;
+        border-radius: var(--sd-r-pill);
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        transition: transform var(--sd-dur-fast) var(--sd-ease),
+                    box-shadow var(--sd-dur-fast) var(--sd-ease),
+                    background var(--sd-dur-fast) var(--sd-ease);
+        box-shadow: var(--sd-shadow-1);
+        width: 100%;
+        letter-spacing: -0.005em;
+      }
+      :host(:not([full])) button { width: auto; }
+      button:hover { transform: translateY(-1px); box-shadow: var(--sd-shadow-2); }
+      button:active { transform: translateY(0); }
+
+      :host([variant="secondary"]) button {
+        background: var(--sd-surface);
+        color: var(--sd-ink);
+        border-color: var(--sd-line-strong);
+        box-shadow: none;
+      }
+      :host([variant="ghost"]) button {
+        background: transparent;
+        color: var(--sd-ink);
+        box-shadow: none;
+      }
+      :host([variant="ghost"]) button:hover { background: var(--sd-surface-2); }
+
+      :host([variant="danger"]) button {
+        background: var(--sd-warn-soft);
+        color: var(--sd-warn);
+      }
+
+      :host([size="sm"]) button { padding: 8px 14px; font-size: var(--sd-fs-sm); }
+      :host([size="lg"]) button { padding: 16px 22px; font-size: var(--sd-fs-md); }
+
+      :host([disabled]) button { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
+
+      ::slotted(sd-icon) { margin-right: -2px; }
+    `;
+  }
+
+  template() {
+    return `
+      <button type="button" ${this.battr("disabled") ? "disabled" : ""}>
+        <slot name="leading"></slot>
+        <slot></slot>
+        <slot name="trailing"></slot>
+      </button>
+    `;
+  }
+}
+
+customElements.define("sd-button", SdButton);

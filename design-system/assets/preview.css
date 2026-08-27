@@ -1,0 +1,50 @@
+* { box-sizing: border-box; }
+html, body { min-height: 100%; }
+body { margin: 0; background: var(--sd-bg); color: var(--sd-ink); font: var(--sd-fs-base)/var(--sd-lh-base) var(--sd-font-sans); }
+button, input, select, textarea { font: inherit; }
+#preview { min-height: 100vh; }
+#preview[data-type="component"] { display: grid; min-height: 100vh; padding: 28px; place-items: center; }
+#preview[data-type="dialog"] { display: grid; min-height: 100vh; padding: 24px; place-items: center; background: linear-gradient(135deg, var(--sd-bg), var(--sd-surface-2)); }
+#preview[data-type="dialog"] sd-dialog { width: min(100%, 650px); }
+.product-screen { position: relative; width: 100%; max-width: 1120px; min-height: 100vh; margin: auto; padding-bottom: 90px; background: var(--sd-bg); }
+.screen-body { display: grid; gap: 18px; max-width: 880px; margin: auto; padding: 18px clamp(16px, 5vw, 44px) 48px; }
+.pattern-heading span { display: block; color: var(--sd-primary); font-size: 10px; font-weight: var(--sd-fw-bold); letter-spacing: .12em; }
+.pattern-heading h2 { margin: 4px 0 0; font-size: clamp(25px, 5vw, 38px); line-height: 1.08; letter-spacing: -.04em; }
+.pattern-heading p, .muted-copy { margin: 7px 0 0; color: var(--sd-ink-soft); }
+.day-grid, .card-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.toggle-list { display: grid; gap: 18px; }
+.choice-list, .dialog-list { display: grid; gap: 8px; }
+.row-actions { display: flex; justify-content: flex-end; gap: 8px; }
+.inline-note { display: flex; align-items: flex-start; gap: 9px; }
+.inline-note sd-icon { flex: 0 0 auto; color: var(--sd-primary); }
+.demo-form { display: grid; gap: 14px; margin: 4px 0; }
+.demo-form label { display: grid; gap: 6px; font-size: 12px; font-weight: var(--sd-fw-semibold); }
+.demo-form input, .demo-form select, .demo-form textarea { width: 100%; min-height: 42px; padding: 8px 11px; border: 1px solid var(--sd-line-strong); border-radius: var(--sd-r-sm); background: var(--sd-surface); color: var(--sd-ink); }
+.demo-form small { color: var(--sd-ink-soft); font-weight: var(--sd-fw-regular); }
+.optional { color: var(--sd-ink-faint); font-weight: var(--sd-fw-regular); }
+.field-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.auth-fields { display: grid; gap: 14px; margin: 18px 0; }
+.legal-copy { margin: 18px 0; color: var(--sd-ink-soft); }
+.generation { padding: 40px 20px; border: 1px solid var(--sd-line); border-radius: var(--sd-r-lg); background: var(--sd-surface); text-align: center; }
+.generation span { display: inline-block; width: 9px; height: 9px; margin: 3px; border-radius: 50%; background: var(--sd-primary); animation: pulse 1.1s infinite alternate; }
+.generation span:nth-child(2) { animation-delay: .2s; }
+.generation span:nth-child(3) { animation-delay: .4s; }
+@keyframes pulse { to { opacity: .25; transform: translateY(-4px); } }
+.copy-row { display: flex; align-items: center; gap: 8px; padding: 10px; border: 1px solid var(--sd-line); border-radius: var(--sd-r-md); background: var(--sd-surface-2); }
+.copy-row code { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; font-family: monospace; }
+.copy-row button { display: grid; width: 34px; height: 34px; place-items: center; border: 1px solid var(--sd-line); border-radius: 9px; background: var(--sd-surface); }
+.map-stub { position: relative; display: flex; align-items: center; justify-content: space-around; height: 130px; margin-bottom: 12px; overflow: hidden; border-radius: var(--sd-r-lg); background: linear-gradient(145deg, #dce9f1, #ddeeda); }
+.map-stub::before, .map-stub::after { content: ""; position: absolute; width: 120%; height: 3px; background: rgba(255,255,255,.8); transform: rotate(-14deg); }
+.map-stub::after { transform: rotate(24deg); }
+.map-stub span { position: relative; z-index: 1; display: grid; width: 38px; height: 38px; place-items: center; border-radius: 50% 50% 50% 4px; background: var(--sd-primary); color: white; transform: rotate(-45deg); box-shadow: var(--sd-shadow-2); }
+.map-stub sd-icon { transform: rotate(45deg); }
+sd-auth-shell { min-height: 100vh; }
+sd-bottom-nav { width: 100%; }
+
+@media (min-width: 720px) {
+  .product-screen { padding-bottom: 28px; }
+}
+@media (max-width: 560px) {
+  .day-grid, .card-grid, .field-pair { grid-template-columns: 1fr; }
+  .screen-body { padding-top: 10px; }
+}
