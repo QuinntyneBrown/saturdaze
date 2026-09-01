@@ -22,7 +22,10 @@
        so a visitor sees exactly the kind of output they'd get for
        themselves on Friday at 6pm.
        ===================================================================== */
-    body { background: var(--sd-bg); padding-bottom: 80px; }
+    /* Public page — escape the phone-frame flex centering (same body
+       override splash.html uses); without it the header and main lay out
+       side-by-side below 720px. */
+    body { display: block; background: var(--sd-bg); padding-bottom: 80px; }
 
     /* Public banner — sets the frame: this isn't yours yet. */
     .public-banner {

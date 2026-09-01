@@ -7,6 +7,10 @@
   <link rel="stylesheet" href="../styles/global.css" />
   <script type="module" src="../app.js"></script>
   <style>
+    /* minmax(0,1fr), not the implicit 1fr (= minmax(auto,1fr)): the
+       tag-group's unwrapped chip row (~500px min-content) must not force
+       the column wider than the frame on phones — it scrolls instead. */
+    .errand-form { grid-template-columns: minmax(0, 1fr); }
     @media (min-width: 720px) {
       .errand-form { max-width: 560px; }
     }

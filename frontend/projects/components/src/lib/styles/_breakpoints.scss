@@ -2,11 +2,19 @@
 // `_tokens.scss`. Components use the `respond-to()` mixin so the breakpoint
 // constants live in one place.
 
+// xsmall is a max-width tier (320-379px phones); 379 aligns with the
+// mocks' bespoke 380px signup breakpoint so 390px-wide visual baselines
+// are never affected by rules gated behind it.
+$bp-xsmall-max: 379px;
 $bp-tablet: 720px;
 $bp-desktop: 1024px;
 
 @mixin respond-to($size) {
-  @if $size == tablet {
+  @if $size == xsmall {
+    @media (max-width: #{$bp-xsmall-max}) {
+      @content;
+    }
+  } @else if $size == tablet {
     @media (min-width: #{$bp-tablet}) {
       @content;
     }
@@ -15,6 +23,6 @@ $bp-desktop: 1024px;
       @content;
     }
   } @else {
-    @error "respond-to(): unknown size `#{$size}` (expected tablet or desktop)";
+    @error "respond-to(): unknown size `#{$size}` (expected xsmall, tablet or desktop)";
   }
 }

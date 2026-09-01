@@ -27,6 +27,10 @@ export const ROUTES = {
   // Auth flow (per docs/auth-implementation-plan.md). Each app route is
   // implemented in a later slice; the mock skeletons are authoritative for
   // visual baselines today.
+  terms:          { app: "/terms",            mock: "/pages/terms.html" },
+  privacy:        { app: "/privacy",          mock: "/pages/privacy.html" },
+  sampleWeekend:  { app: "/sample-weekend",   mock: "/pages/sample-weekend.html" },
+
   splash:         { app: "/",                 mock: "/pages/splash.html" },
   login:          { app: "/login",            mock: "/pages/login.html" },
   signup:         { app: "/signup",           mock: "/pages/signup.html" },

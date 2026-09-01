@@ -18,6 +18,10 @@
 .submit-form {
   padding: 0 var(--sd-app-pad-x) 96px;
   display: grid;
+  // minmax(0,1fr): native inputs' ~180px intrinsic min-content (unlike the
+  // mock's sd-text-input shadow hosts) must not force the column wider
+  // than the frame on the narrowest phones.
+  grid-template-columns: minmax(0, 1fr);
   gap: 16px;
 
   @media (min-width: 720px) {
@@ -27,6 +31,9 @@
 
 .field {
   display: grid;
+  // minmax(0,1fr): the native input's ~180px intrinsic width must not set
+  // the field's floor — the input fills whatever the field gets.
+  grid-template-columns: minmax(0, 1fr);
   gap: 6px;
   font-size: var(--sd-fs-sm);
   font-weight: var(--sd-fw-medium);
@@ -40,6 +47,7 @@
 .field input,
 .field textarea {
   font: inherit;
+  width: 100%;
   padding: 12px 14px;
   border-radius: var(--sd-r-md);
   border: 1px solid var(--sd-line);
@@ -77,7 +85,10 @@
 
 .cost-and-ages {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  // minmax(0,1fr) pair: two native inputs side by side must split the row
+  // evenly and shrink on phones instead of overflowing at their ~180px
+  // intrinsic widths.
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 12px;
 }
 

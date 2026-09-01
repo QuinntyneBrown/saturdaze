@@ -7,7 +7,9 @@
     "test": "playwright test --config=playwright.config.ts",
     "test:visual": "playwright test --config=playwright.config.ts tests/visual",
     "test:behavior": "playwright test --config=playwright.config.ts --ignore-snapshots tests --grep-invert visual",
-    "baseline": "cross-env SD_BASELINE=1 playwright test --config=playwright.config.ts --update-snapshots tests/visual",
+    "baseline": "cross-env SD_BASELINE=1 playwright test --config=playwright.config.ts --update-snapshots all tests/visual",
+    "audit": "playwright test --config=playwright.audit.config.ts",
+    "audit:mocks": "cross-env SD_BASELINE=1 playwright test --config=playwright.audit.config.ts",
     "report": "playwright show-report"
   },
   "devDependencies": {

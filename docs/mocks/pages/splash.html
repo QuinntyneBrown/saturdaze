@@ -96,6 +96,7 @@
       text-decoration: none;
       font-weight: 600;
       font-size: 14px;
+      white-space: nowrap; /* "Sign in" must not break onto two lines at 320 */
       padding: 8px 10px;
       border-radius: var(--sd-r-md);
     }
@@ -122,10 +123,13 @@
       display: grid;
       gap: 36px;
       align-items: center;
-      grid-template-columns: 1fr;
+      /* minmax(0,1fr), not bare 1fr (= minmax(auto,1fr)): the hero
+         preview's min-content must not push the column past the viewport
+         on the narrowest phones. */
+      grid-template-columns: minmax(0, 1fr);
     }
     @media (min-width: 880px) {
-      .hero { grid-template-columns: 1.05fr 1fr; padding: 72px 56px; gap: 56px; }
+      .hero { grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); padding: 72px 56px; gap: 56px; }
     }
 
     .eyebrow {
@@ -141,6 +145,10 @@
       letter-spacing: -0.03em;
       margin: 12px 0 14px;
       line-height: 1.05;
+    }
+    @media (max-width: 379px) {
+      .hero { padding: 40px 24px 48px; }
+      .hero h1 { font-size: 34px; }
     }
     @media (min-width: 880px) {
       .hero h1 { font-size: 56px; }

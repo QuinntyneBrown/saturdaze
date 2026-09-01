@@ -73,7 +73,9 @@ class SdDialog extends SdElement {
       header { margin-bottom: 16px; }
       h2 { font-size: var(--sd-fs-lg); font-weight: var(--sd-fw-semibold); margin: 0; letter-spacing: -0.015em; }
       p.sub { color: var(--sd-ink-soft); margin: 4px 0 0; font-size: var(--sd-fs-sm); }
-      .actions { display: flex; gap: 10px; margin-top: 20px; }
+      /* wrap: on the narrowest phones a long button pair stacks into
+         full-width rows instead of pushing past the sheet edge. */
+      .actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
       .actions ::slotted(*) { flex: 1; }
     `;
   }

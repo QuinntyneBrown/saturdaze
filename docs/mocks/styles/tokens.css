@@ -87,6 +87,7 @@
   --sd-top-h: 56px;
 
   /* Breakpoints — referenced inline as media queries.
+     - xsmall: <= 379px  (tokens retune below; aligns with signup's 380)
      - mobile: < 720px (default / current design)
      - tablet: 720-1023px  (nav becomes icon rail)
      - desktop: >= 1024px  (nav becomes labelled sidebar; split-view activates) */
@@ -104,5 +105,16 @@
     --sd-fs-xxl: 40px;
     --sd-fs-xl: 30px;
     --sd-fs-lg: 22px;
+  }
+}
+
+/* xsmall retune — same token-swap idiom as the desktop block above.
+   320-379px phones (iPhone SE class) get tighter gutters and display
+   type one step down so headings breathe instead of cramping. */
+@media (max-width: 379px) {
+  :root {
+    --sd-app-pad-x: 16px;
+    --sd-fs-xxl: 30px;
+    --sd-fs-xl: 24px;
   }
 }

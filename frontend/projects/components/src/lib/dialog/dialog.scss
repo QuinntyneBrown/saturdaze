@@ -83,6 +83,9 @@ p.sub {
 
 .actions {
   display: flex;
+  // wrap: on the narrowest phones a long button pair stacks into
+  // full-width rows instead of pushing past the sheet edge.
+  flex-wrap: wrap;
   gap: 10px;
   margin-top: 20px;
 }

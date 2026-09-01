@@ -41,7 +41,9 @@
     }
     .submission dl {
       display: grid;
-      grid-template-columns: 100px 1fr;
+      /* minmax(0,1fr): long unwrappable values (URLs, emails) must not
+         force the card past the viewport on phones — they wrap instead. */
+      grid-template-columns: 100px minmax(0, 1fr);
       gap: 4px 12px;
       margin: 0;
       font-size: 14px;
@@ -50,7 +52,7 @@
       color: var(--sd-ink-soft);
       font-weight: 500;
     }
-    .submission dd { margin: 0; }
+    .submission dd { margin: 0; overflow-wrap: anywhere; }
     .submission .actions {
       display: flex;
       gap: 8px;

@@ -60,7 +60,9 @@
 
   dl {
     display: grid;
-    grid-template-columns: 100px 1fr;
+    // minmax(0,1fr): long unwrappable values (URLs, emails) must not
+    // force the card past the viewport on phones — they wrap instead.
+    grid-template-columns: 100px minmax(0, 1fr);
     gap: 4px 12px;
     margin: 0;
     font-size: var(--sd-fs-sm);
@@ -70,7 +72,7 @@
     color: var(--sd-ink-soft);
     font-weight: var(--sd-fw-medium);
   }
-  dd { margin: 0; }
+  dd { margin: 0; overflow-wrap: anywhere; }
   dd a { color: var(--sd-primary); text-decoration: none; }
 
   .submitter {

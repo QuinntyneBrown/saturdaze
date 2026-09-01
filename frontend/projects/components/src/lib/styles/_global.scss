@@ -103,6 +103,15 @@ app-root {
   padding-bottom: calc(var(--sd-nav-h) + 16px + env(safe-area-inset-bottom, 0px));
 }
 
+// The router inserts each page's host element (`<app-home>` etc.) between
+// `.sd-frame` and the page content. Hosts default to `display: inline`,
+// which is meaningless around block content — make them blocks so the
+// frame's children lay out exactly like the mocks' (where sections are
+// direct children of the frame). Also covers `<router-outlet>` (empty).
+.sd-frame > * {
+  display: block;
+}
+
 // Tablet: drop the phone cap, rail nav takes the left edge.
 @include respond-to(tablet) {
   body { display: block; justify-content: flex-start; }
@@ -121,10 +130,17 @@ app-root {
     padding-right: 40px;
     padding-top: 8px;
   }
-  .sd-frame > sd-section,
-  .sd-frame > sd-hero,
-  .sd-frame > sd-top-bar,
-  .sd-frame > sd-split-view {
+  // Descendant, not child (`>`), combinators: in the app the router's page
+  // host (`<app-home>` etc.) sits between `.sd-frame` and these elements,
+  // so the mock's child selector never matched and content stretched
+  // unbounded past ~1580px viewports. Nested occurrences (e.g. sd-section
+  // inside a split-view pane) already sit inside narrower parents, so the
+  // descendant match is a no-op for them. Mirrored in the mocks'
+  // global.css for spec parity (descendant ⊇ child there).
+  .sd-frame sd-section,
+  .sd-frame sd-hero,
+  .sd-frame sd-top-bar,
+  .sd-frame sd-split-view {
     max-width: 1280px;
   }
 }

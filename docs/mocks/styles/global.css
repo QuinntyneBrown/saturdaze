@@ -15,6 +15,11 @@ html, body {
   line-height: var(--sd-lh-base);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* Prevent stray horizontal scroll on phones (full-bleed scrollers like
+     sd-tag-group hang 20px past each edge by design). Internal horizontal
+     scrollers keep working because they set their own overflow. Mirrors
+     the app's _global.scss. */
+  overflow-x: clip;
 }
 
 body {
@@ -51,11 +56,13 @@ body {
     padding-right: 40px;
     padding-top: 8px;
   }
-  /* Cap content where it would otherwise stretch too wide. */
-  .sd-frame > sd-section,
-  .sd-frame > sd-hero,
-  .sd-frame > sd-top-bar,
-  .sd-frame > sd-split-view {
+  /* Cap content where it would otherwise stretch too wide. Descendant
+     (not child) combinators to match the app, where the router's page
+     host sits between the frame and these elements. */
+  .sd-frame sd-section,
+  .sd-frame sd-hero,
+  .sd-frame sd-top-bar,
+  .sd-frame sd-split-view {
     max-width: 1280px;
   }
 }
