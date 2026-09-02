@@ -130,12 +130,16 @@
 @include respond-to(desktop) {
   .profile-cols {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    // minmax(0, …) lets a column shrink below its content's intrinsic width;
+    // plain `1fr` (min-width: auto) let a long list row widen the left column
+    // and push the right-hand sections past the viewport at 1440px.
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     gap: 32px;
     align-items: start;
   }
 
   .profile-cols > * {
     margin: 0;
+    min-width: 0;
   }
 }

@@ -66,17 +66,22 @@ test.describe("Saved weekends", () => {
   test("Rate opens the rating dialog and persists five stars; '5★ only' then shows the card", async ({ page, pages }) => {
     const card = pages.saved.recentSection().locator("sd-saved-card").first();
     const title = await card.getAttribute("title");
-    await pages.saved.rateButton(card).locator("button").click();
 
-    const dialog = page.locator('sd-dialog[title^="How was"]');
-    await expect(dialog).toBeVisible();
-    await dialog.locator('button.star[aria-label="5 stars"]').click();
-
-    const rated = page.waitForResponse((r) => r.url().includes("/rating") && r.request().method() === "PUT");
-    await dialog.locator("sd-button").filter({ hasText: /^Save$/ }).locator("button").click();
-    expect((await rated).status()).toBe(200);
-    await expect(dialog).not.toBeVisible();
-    await expect(card).toHaveAttribute("rating", "5");
+    // Re-clicking the selected star clears the rating, so when an earlier run
+    // already left five stars, go through four first.
+    const rate = async (stars: number) => {
+      await pages.saved.rateButton(card).locator("button").click();
+      const dialog = page.locator('sd-dialog[title^="How was"]');
+      await expect(dialog).toBeVisible();
+      await dialog.locator(`button.star[aria-label="${stars} stars"]`).click();
+      const rated = page.waitForResponse((r) => r.url().includes("/rating") && r.request().method() === "PUT");
+      await dialog.locator("sd-button").filter({ hasText: "Save" }).locator("button").click();
+      expect((await rated).status()).toBe(200);
+      await expect(dialog).not.toBeVisible();
+      await expect(card).toHaveAttribute("rating", String(stars));
+    };
+    if ((await card.getAttribute("rating")) === "5") await rate(4);
+    await rate(5);
 
     await pages.saved.filterChips().nth(3).click();
     await expect(pages.saved.savedCard(title ?? "")).toBeVisible();

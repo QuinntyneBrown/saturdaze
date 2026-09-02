@@ -72,7 +72,9 @@ Rules that aren't obvious from the code:
 - `POST /api/weekends/plan` is idempotent: re-posting returns the existing weekend rather than throwing or re-planning (ADR-003). The explicit reseat is `POST /api/weekends/{id}/regenerate`.
 - Auth is **local JWT only** (ASP.NET Identity `PasswordHasher` PBKDF2 + SQL) — no social/OAuth providers. Access tokens last 15 minutes; `POST /api/auth/refresh` rotates the 14-day refresh token and `POST /api/auth/logout` revokes it (ADR-007).
 - **Every endpoint requires a bearer** via a global fallback policy; only the auth endpoints, `GET /api/weather`, `GET /api/weekends/shared/{token}` and `GET /api/weekends/{id}/calendar.ics` are `[AllowAnonymous]`. Swagger is registered above `UseAuthentication` for that reason — keep it there (ADR-008).
+- `Program.cs` registers `UseSerilogRequestLogging` *before* `ExceptionHandlingMiddleware` so the completion event logs the status the client received; the other way round every handled 401/404/409 is logged as an ERR 500 with a stack trace.
 - **Family scoping is per user**: `CurrentUserFamilyAccessor` (claim, then `Users.FamilyId`) and every weekend/block/errand handler filters by `FamilyId`; another family's id is a 404. API tests sign in through `tests/Saturdaze.Api.Tests/Support/SignedInClient.cs`.
+- `saturdaze seed` (and the seed step inside `reset`) reads the JSON bundled next to the tool by default; `--seed-dir` or `SATURDAZE_SEED_DIR` override it. The old per-user copy under `%APPDATA%\saturdaze\seed` is only a fallback when no bundle ships — a stale copy there once pinned the dev DB to May-dated events.
 - `saturdaze reset` refuses when `DOTNET_ENVIRONMENT`/`ASPNETCORE_ENVIRONMENT` is `Production` unless `--allow-production` is passed. Connection resolution order for the CLI is `--connection`, `SATURDAZE_CONNECTION`, then configuration (blank values are skipped).
 
 ### Tests

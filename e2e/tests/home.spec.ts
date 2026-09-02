@@ -114,7 +114,7 @@ test.describe("Home — desktop split view", () => {
 
     const dialog = page.locator("sd-dialog").filter({ has: page.locator("h2", { hasText: title ?? "" }) });
     await expect(dialog).toBeVisible();
-    await dialog.locator("sd-button").filter({ hasText: /^Close$/ }).locator("button").click();
+    await dialog.locator("sd-button").filter({ hasText: "Close" }).locator("button").click();
     await expect(dialog).not.toBeVisible();
   });
 });

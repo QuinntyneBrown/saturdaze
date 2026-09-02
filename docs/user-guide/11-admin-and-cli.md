@@ -77,7 +77,7 @@ These work on every command:
 | ---------------- | ----------- | ------------------------------------------------------------- |
 | `--provider`     | `SqlServer` | Target provider: `SqlServer`, `Sqlite`, or `InMemory`.        |
 | `--connection`   | (from config) | Override the connection string.                             |
-| `--seed-dir`     | (user-scope) | Override the directory the seed files are read from.          |
+| `--seed-dir`     | (bundled)   | Override the directory the seed files are read from.           |
 | `--verbose`      | off         | Emit `Debug`-level logging.                                    |
 
 `SqlServer` and `Sqlite` need a connection string; `InMemory` doesn't (it
@@ -91,17 +91,19 @@ migrations are applied. Exit code **0** on success.
 
 ## `saturdaze seed`
 
-Loads data from a set of JSON files in a **user-scope seed directory**:
+Loads data from a set of JSON files:
 
-- Default location: `%APPDATA%\saturdaze\seed` on Windows
-  (`~/.config/saturdaze/seed` on Unix-like systems).
+- Default: the files **bundled with the tool** (`Seed/Data` next to the
+  assembly), so the data always matches the installed version.
 - Override with **`--seed-dir <path>`** or the **`SATURDAZE_SEED_DIR`**
-  environment variable.
+  environment variable. A custom directory is filled in with any bundled
+  files it lacks on first run (existing files are never overwritten), so you
+  only need to supply the files you want to change.
+- The per-user directory (`%APPDATA%\saturdaze\seed` on Windows,
+  `~/.config/saturdaze/seed` elsewhere) is only used when the install ships
+  no bundle.
 
-On first run, the tool **copies the seed files bundled with it** into that
-directory (it never overwrites files already there), so you can then edit
-them to customise your data. It processes these files, in order, and logs how
-many records each produced:
+It processes these files, in order, and logs how many records each produced:
 
 `activities.json` → `restaurants.json` → `local-events.json` →
 `family.json` → `users.json` → `event-submissions.json`

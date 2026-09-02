@@ -91,7 +91,9 @@ try
 
     WarnOnMissingProductionConfig(app, corsOrigins);
 
-    app.UseMiddleware<ExceptionHandlingMiddleware>();
+    // Request logging sits outside the exception handler so the completion
+    // event records the status the client actually received (401/404/409),
+    // not a phantom 500 for every handled auth or validation failure.
     app.UseSerilogRequestLogging(o =>
     {
         // L2-039: every completion event carries the caller's user id when
@@ -103,6 +105,7 @@ try
             if (userId is not null) diagnostic.Set("UserId", userId);
         };
     });
+    app.UseMiddleware<ExceptionHandlingMiddleware>();
     // Swagger is plain middleware (no endpoint), and the authorization
     // middleware applies the fallback policy even when there is no endpoint,
     // so it has to sit above UseAuthentication to stay reachable.

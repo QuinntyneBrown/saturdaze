@@ -62,12 +62,14 @@ test.describe("Shopping errand", () => {
     await pages.errand.addToWeekendButton().locator("button").click();
     expect((await placed).status()).toBe(200);
 
-    await expect(page.locator(".errand-lede h2")).toHaveText(/Added to (Saturday|Sunday|the weekend)/);
+    const lede = page.locator(".errand-lede h2");
+    await expect(lede).toHaveText(/Added to (Saturday|Sunday|the weekend)/);
+    const day = /Added to (Saturday|Sunday)/.exec((await lede.textContent()) ?? "")?.[1] ?? "Saturday";
     await expect(page.locator(".suggested-title")).toHaveText(/Slotted for (Saturday|Sunday) at \d{2}:\d{2}|Added to the weekend/);
     await page.waitForURL(/\/weekend$/, { timeout: 8_000 });
 
-    // The errand is now a real block on the itinerary.
-    await goto("itinerary");
+    // The errand is now a real block on that day's itinerary.
+    await page.goto(`/itinerary?day=${day.toLowerCase()}`);
     await pages.itinerary.waitForComponentsReady();
     await expect(pages.itinerary.allTimelineBlocks().filter({ hasText: description }).first()).toBeAttached();
   });

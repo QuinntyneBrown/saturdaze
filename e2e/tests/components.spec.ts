@@ -17,7 +17,7 @@ test.describe("Component gallery", () => {
     await expect(pages.components.buttonByVariant("secondary")).toBeVisible();
     await expect(pages.components.buttonByVariant("ghost")).toBeVisible();
     await expect(pages.components.buttonByVariant("danger")).toBeVisible();
-    await expect(pages.components.buttonByVariant("disabled")).toBeDisabled();
+    await expect(pages.components.buttonByVariant("disabled").locator("button")).toBeDisabled();
   });
 
   test("buttons section exposes small / default / large sizes", async ({ pages }) => {

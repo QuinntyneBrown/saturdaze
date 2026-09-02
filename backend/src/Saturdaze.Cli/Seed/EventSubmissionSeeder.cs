@@ -32,8 +32,11 @@ public sealed class EventSubmissionSeeder : IJsonSeeder
                 string.IsNullOrWhiteSpace(record.SubmitterEmail))
                 continue;
 
-            var submitter = await db.Users
-                .FirstOrDefaultAsync(u => u.NormalizedEmail == record.SubmitterEmail.ToLowerInvariant(), ct);
+            // Users seeded earlier in the same run are still unsaved, so look
+            // in the change tracker before hitting the database.
+            var normalizedEmail = record.SubmitterEmail.Trim().ToLowerInvariant();
+            var submitter = db.Users.Local.FirstOrDefault(u => u.NormalizedEmail == normalizedEmail)
+                ?? await db.Users.FirstOrDefaultAsync(u => u.NormalizedEmail == normalizedEmail, ct);
             if (submitter is null) continue;
 
             var key = new Key(record.Title, submitter.Id, record.StartsAtLocal);

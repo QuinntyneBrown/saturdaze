@@ -62,9 +62,9 @@ The script:
 
 By default the API runs on `http://localhost:5100` (the Angular environment
 compiles that URL in, so the script rejects any other `-BackendPort`). The
-frontend serves on `http://127.0.0.1:4200/`; pass `-FrontendPort` to move it,
-and expect the script to stop rather than pick a random port when the one you
-asked for is busy.
+frontend prefers `http://127.0.0.1:4200/` and moves to the next free port when
+4200 is busy; if you pass `-FrontendPort` explicitly and that port is taken,
+the script stops instead of guessing.
 
 ### Prerequisites
 

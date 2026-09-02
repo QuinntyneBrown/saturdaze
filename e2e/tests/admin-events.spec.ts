@@ -31,7 +31,7 @@ test.describe("Admin event moderation queue", () => {
   });
 
   test("reject opens a dialog that can be cancelled", async ({ pages, page }) => {
-    await pages.adminEvents.rejectButton("Port Credit Buskerfest").locator("button").click();
+    await pages.adminEvents.rejectButton("Port Credit Buskerfest").click();
     const dialog = page.locator('sd-dialog[title="Reject this submission?"]');
     await expect(dialog).toBeVisible();
     await dialog.locator('sd-button[variant="secondary"] button').click();
@@ -40,7 +40,7 @@ test.describe("Admin event moderation queue", () => {
   });
 
   test("approve opens a dialog that can be cancelled", async ({ pages, page }) => {
-    await pages.adminEvents.approveButton("Port Credit Buskerfest").locator("button").click();
+    await pages.adminEvents.approveButton("Port Credit Buskerfest").click();
     const dialog = page.locator("sd-dialog");
     await expect(dialog).toBeVisible();
     await dialog.locator('sd-button[variant="secondary"] button').click();

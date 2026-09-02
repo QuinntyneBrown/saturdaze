@@ -108,8 +108,9 @@ export const test = base.extend<SdFixtures>({
     await use(async (key, opts = {}) => {
       if (!opts.anonymous && !isBaseline()) {
         const guard = guardFor(key);
-        if (opts.as === "admin" || guard === "admin") await signInAsAdmin();
-        else if (opts.as === "user" || guard === "auth") await signIn();
+        const who = opts.as ?? (guard === "admin" ? "admin" : guard === "auth" ? "user" : undefined);
+        if (who === "admin") await signInAsAdmin();
+        else if (who === "user") await signIn();
       }
       await page.goto(pathFor(key));
     });

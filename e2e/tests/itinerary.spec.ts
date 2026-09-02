@@ -34,7 +34,7 @@ test.describe("Itinerary detail", () => {
     const chips = pages.itinerary.headerChips();
     expect(await chips.count()).toBeGreaterThanOrEqual(2);
     await expect(chips.filter({ hasText: /\d+ locked/ })).toHaveCount(1);
-    await expect(chips.filter({ hasText: /^(Outdoor|Indoor)$/ })).toHaveCount(1);
+    await expect(chips.filter({ hasText: /^\s*(Outdoor|Indoor)\s*$/ })).toHaveCount(1);
   });
 
   test("day switcher marks Saturday active and switches to Sunday", async ({ pages, page }) => {
@@ -83,9 +83,10 @@ test.describe("Itinerary — mobile timeline", () => {
     await swim.locator('[role="button"]').click();
     const dialog = page.locator('sd-dialog[title="Swim lessons"]');
     await expect(dialog).toBeVisible();
-    await expect(dialog.locator("sd-chip").filter({ hasText: "Locked" })).toBeVisible();
-    await expect(dialog.locator("sd-button").filter({ hasText: "Swap for another" }).locator("button")).toBeDisabled();
-    await dialog.locator("sd-button").filter({ hasText: /^Close$/ }).locator("button").click();
+    await expect(dialog.locator("sd-chip").filter({ hasText: "always locked" })).toBeVisible();
+    await expect(dialog.locator("sd-button").filter({ hasText: "Swap for another" })).toHaveCount(0);
+    await expect(dialog.locator("sd-button").filter({ hasText: /Unlock|Lock this block/ })).toHaveCount(0);
+    await dialog.locator("sd-button").filter({ hasText: "Close" }).locator("button").click();
     await expect(dialog).not.toBeVisible();
   });
 
@@ -101,16 +102,16 @@ test.describe("Itinerary — mobile timeline", () => {
     await dialog.locator("sd-button").filter({ hasText: "Lock this block" }).locator("button").click();
     expect((await saved).status()).toBe(200);
     await expect(dialog).not.toBeVisible();
-    const locked = pages.itinerary.mobileTimelineBlocks().filter({ hasText: title }).first();
+    const locked = pages.itinerary.mobileTimelineBlocks().locator(`:scope[title="${title}"]`).first();
     await expect(locked).toHaveAttribute("locked", "");
 
     await locked.locator('[role="button"]').click();
     dialog = page.locator(`sd-dialog[title="${title}"]`);
     await expect(dialog).toBeVisible();
     saved = page.waitForResponse((r) => r.url().includes("/lock") && r.request().method() === "PUT");
-    await dialog.locator("sd-button").filter({ hasText: /^Unlock$/ }).locator("button").click();
+    await dialog.locator("sd-button").filter({ hasText: "Unlock" }).locator("button").click();
     expect((await saved).status()).toBe(200);
-    await expect(pages.itinerary.mobileTimelineBlocks().filter({ hasText: title }).first()).not.toHaveAttribute("locked", "");
+    await expect(pages.itinerary.mobileTimelineBlocks().locator(`:scope[title="${title}"]`).first()).not.toHaveAttribute("locked", "");
   });
 
   test("'Swap for another' asks the planner for an alternative", async ({ pages, page }) => {

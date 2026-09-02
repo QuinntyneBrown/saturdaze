@@ -52,11 +52,12 @@ test.describe("Local events feed", () => {
     await expect(pages.events.eventCard("Pumpkin patch — early access")).toHaveCount(0);
   });
 
-  test("a category chip narrows every card to that category", async ({ pages }) => {
+  test("a category chip narrows every card to that category", async ({ pages, page }) => {
     const seasonal = pages.events.filterChips().filter({ hasText: "Seasonal" });
     await seasonal.click();
     await expect(seasonal).toHaveAttribute("tone", "primary");
-    const cards = pages.events.allEventCards();
+    // "Your submissions" (pending, untagged) sits above the filtered feed.
+    const cards = page.locator('sd-section:not([title="Your submissions"]) sd-event-card');
     const n = await cards.count();
     expect(n).toBeGreaterThan(0);
     for (let i = 0; i < n; i++) await expect(cards.nth(i)).toHaveAttribute("tag", "Seasonal");

@@ -1,9 +1,14 @@
 @if (loading()) {
   <div class="sd-app-loading" aria-hidden="true"></div>
-} @else if (chrome()) {
-  <div class="sd-frame">
+} @else {
+  <!--
+    One outlet, always mounted. Toggling the frame as a class (rather than
+    switching between two outlet branches) keeps the routed component alive
+    when `shell` data changes on NavigationEnd — otherwise every chromeless
+    page was constructed twice on first load (verify-email consumed its own
+    token that way).
+  -->
+  <div [class.sd-frame]="chrome()" [class.sd-shell-chromeless]="!chrome()">
     <router-outlet />
   </div>
-} @else {
-  <router-outlet />
 }

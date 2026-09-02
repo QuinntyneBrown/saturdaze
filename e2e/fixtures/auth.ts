@@ -77,9 +77,10 @@ export async function apiLogin(request: APIRequestContext, creds: Credentials): 
 
 /**
  * Registers an init script that writes the SessionStore's persisted shape
- * before the first navigation. Seeds once per tab (sentinel in
- * sessionStorage) so a spec that signs out and reloads does not get
- * re-authenticated behind its back.
+ * before the first navigation. The sentinel in sessionStorage remembers
+ * which access token was seeded: reloading with the same session does not
+ * re-authenticate a tab that signed out or rotated its tokens, while a
+ * different session (e.g. switching to the admin) replaces the old one.
  */
 export async function seedSession(page: Page, session: TestSession, opts: SeedOptions = {}): Promise<void> {
   const payload = {
@@ -90,11 +91,13 @@ export async function seedSession(page: Page, session: TestSession, opts: SeedOp
   const tier = opts.remember === false ? "session" : "local";
   await page.addInitScript(
     ({ payload, tier }) => {
-      if (sessionStorage.getItem("sd.e2e.seeded")) return;
+      if (sessionStorage.getItem("sd.e2e.seeded") === payload.value) return;
+      localStorage.removeItem("sd.auth.token");
+      sessionStorage.removeItem("sd.auth.token");
       const store = tier === "local" ? localStorage : sessionStorage;
       store.setItem("sd.auth.token", JSON.stringify(payload));
       store.setItem("sd.auth.storage", tier);
-      sessionStorage.setItem("sd.e2e.seeded", "1");
+      sessionStorage.setItem("sd.e2e.seeded", payload.value);
     },
     { payload, tier },
   );

@@ -19,7 +19,7 @@ The feature crosses the application and platform boundaries needed to deliver it
 - **`Console and rolling file sinks`** — Configured Serilog destinations for structured events.
 - **`Performance verification`** — Load-test and percentile evaluation mechanism whose concrete tool is `<TO SUPPLY>`.
 
-The request-completion event is enriched with `UserId` from the bearer's `sub` claim (`UseSerilogRequestLogging` in `Program.cs`). Automated p95 budget evaluation for `L2-034` is still `<TO SUPPLY>`.
+The request-completion event is enriched with `UserId` from the bearer's `sub` claim (`UseSerilogRequestLogging` in `Program.cs`). Request logging is registered outside `ExceptionHandlingMiddleware`, so a handled 401/404/409 is logged with that status rather than as an error-level 500 with a stack trace. Automated p95 budget evaluation for `L2-034` is still `<TO SUPPLY>`.
 ## Requirements
 
 The feature realizes the following level-2 (L2) requirements. Each row cites the level-1 (L1) capability refined by the requirement.

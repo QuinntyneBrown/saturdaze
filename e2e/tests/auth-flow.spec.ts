@@ -17,7 +17,7 @@ test.describe("Forgot password (E1)", () => {
     await settle();
 
     await pages.forgotPassword.submit("nobody@example.com");
-    await page.waitForURL("**/check-email", { timeout: 8_000 });
+    await page.waitForURL(/\/check-email/, { timeout: 8_000 });
     expect(new URL(page.url()).pathname).toBe("/check-email");
   });
 });

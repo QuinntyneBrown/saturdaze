@@ -9,7 +9,6 @@ import {
   Icon,
   ListItem,
   TextInput,
-  Toggle,
   VoteRow,
 } from 'components';
 
@@ -25,7 +24,6 @@ import {
     Icon,
     ListItem,
     TextInput,
-    Toggle,
     VoteRow,
   ],
   templateUrl: './dialogs.page.html',

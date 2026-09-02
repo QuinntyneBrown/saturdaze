@@ -69,7 +69,7 @@ test.describe("Restaurant picker (Food)", () => {
   test("'Dinner' switches the page to Sunday dinner", async ({ pages, page }) => {
     await pages.restaurants.filterChips().nth(1).click();
     await expect(page.locator(".rest-lede h2")).toHaveText("Sunday food");
-    await expect(pages.restaurants.topPickSection()).toHaveAttribute("title", "Top pick for dinner");
+    await expect(page.locator('sd-section[title="Top pick for dinner"]')).toBeVisible();
   });
 
   test("a family vote is saved and reflected on the row", async ({ pages, page }) => {
@@ -88,9 +88,12 @@ test.describe("Restaurant picker (Food)", () => {
       await expect(pages.restaurants.topPickSection().locator("sd-chip").filter({ hasText: "Locked" })).toBeVisible();
       return;
     }
-    const locked = page.waitForResponse((r) => r.url().includes("/lock") && r.status() < 300);
     await button.locator("button").click();
-    await locked;
+    const confirm = page.locator("sd-dialog").filter({ hasText: "I'll stop offering alternatives" });
+    await expect(confirm).toBeVisible();
+    const locked = page.waitForResponse((r) => r.url().includes("/lock") && r.request().method() === "POST");
+    await confirm.locator("sd-button").filter({ hasText: "Lock it in" }).locator("button").click();
+    expect((await locked).status()).toBeLessThan(300);
     await expect(pages.restaurants.topPickSection().locator("sd-chip").filter({ hasText: "Locked" })).toBeVisible();
     await expect(pages.restaurants.topPickSection()).toHaveAttribute("subtitle", /Locked for Saturday lunch/);
   });

@@ -6,6 +6,8 @@ namespace Saturdaze.Cli.Tests;
 
 public class SeedPathResolverTests
 {
+    private static readonly string NoBundle = Path.Combine(Path.GetTempPath(), "sd-no-bundle-" + Guid.NewGuid());
+
     [Fact]
     public void Resolve_returns_override_when_provided()
     {
@@ -26,11 +28,33 @@ public class SeedPathResolverTests
     }
 
     [Fact]
-    public void Resolve_falls_back_to_app_data_folder()
+    public void Resolve_prefers_the_bundled_data_over_the_user_scope_directory()
+    {
+        var bundle = Path.Combine(Path.GetTempPath(), "sd-bundle-" + Guid.NewGuid());
+        Directory.CreateDirectory(bundle);
+        try
+        {
+            var sut = new SeedPathResolver(
+                sf => sf == Environment.SpecialFolder.ApplicationData ? @"C:\Users\test\AppData\Roaming" : "/home/test",
+                _ => null,
+                bundle);
+
+            sut.Resolve(null).Should().Be(Path.GetFullPath(bundle));
+            sut.BundleDirectory.Should().Be(bundle);
+        }
+        finally
+        {
+            Directory.Delete(bundle);
+        }
+    }
+
+    [Fact]
+    public void Resolve_falls_back_to_app_data_folder_when_no_bundle_ships()
     {
         var sut = new SeedPathResolver(
             sf => sf == Environment.SpecialFolder.ApplicationData ? @"C:\Users\test\AppData\Roaming" : "/home/test",
-            _ => null);
+            _ => null,
+            NoBundle);
 
         var resolved = sut.Resolve(null);
         resolved.Should().EndWith(Path.Combine(SeedPathResolver.FolderName, SeedPathResolver.SeedSubfolder));
@@ -42,7 +66,8 @@ public class SeedPathResolverTests
     {
         var sut = new SeedPathResolver(
             sf => sf == Environment.SpecialFolder.UserProfile ? "/home/test" : string.Empty,
-            _ => null);
+            _ => null,
+            NoBundle);
 
         var resolved = sut.Resolve(null);
         resolved.Should().Contain(".config");
@@ -54,7 +79,8 @@ public class SeedPathResolverTests
     {
         var sut = new SeedPathResolver(
             _ => @"C:\AppData",
-            _ => null);
+            _ => null,
+            NoBundle);
 
         sut.Resolve("   ").Should().NotBe("   ");
     }

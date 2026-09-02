@@ -22,7 +22,7 @@ test.describe("Signup: happy path (D2)", () => {
     await pages.signup.termsCheckbox().check();
     await pages.signup.submit();
 
-    await page.waitForURL("**/check-email", { timeout: 8_000 });
+    await page.waitForURL(/\/check-email/, { timeout: 8_000 });
     expect(new URL(page.url()).pathname).toBe("/check-email");
   });
 
@@ -37,7 +37,7 @@ test.describe("Signup: happy path (D2)", () => {
     });
     await pages.signup.termsCheckbox().check();
     await pages.signup.submit();
-    await page.waitForURL("**/check-email", { timeout: 8_000 });
+    await page.waitForURL(/\/check-email/, { timeout: 8_000 });
 
     // Registration returns a token pair; the guard must let the new account in.
     await page.goto("/weekend");

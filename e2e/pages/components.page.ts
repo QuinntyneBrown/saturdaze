@@ -8,6 +8,11 @@ import { BasePage } from "./base.page.js";
  * what catch off-spec colour/spacing/typography for the design system.
  */
 export class ComponentsGalleryPage extends BasePage {
+  /** The gallery has no app chrome; wait for the heading instead. */
+  override async waitForComponentsReady(): Promise<void> {
+    await this.page.waitForSelector("main.gallery h1, h1", { state: "attached", timeout: 8_000 });
+  }
+
   galleryHeading(): Locator {
     return this.page.locator("h1").filter({ hasText: "Component gallery" });
   }

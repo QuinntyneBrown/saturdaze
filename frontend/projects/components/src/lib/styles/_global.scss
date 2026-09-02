@@ -83,6 +83,13 @@ app-root {
   display: contents;
 }
 
+// Chromeless routes (splash, auth) keep the same outlet wrapper as framed
+// routes; `display: contents` makes the wrapper vanish for layout so the
+// page host is still effectively a direct child of <body>.
+.sd-shell-chromeless {
+  display: contents;
+}
+
 // Bootstrap curtain shown while SessionStore.rehydrate() resolves. Reserved
 // space so guards see an authoritative auth state on first paint.
 .sd-app-loading {
