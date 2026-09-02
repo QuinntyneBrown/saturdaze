@@ -1,5 +1,6 @@
 # ADR-006 — User-contributed events use a moderated separate-table flow
 
+**Revised:** 2026-09-02 — the dedicated `/events/submit` screen and the floating "+" button were retired with the v2 design; the single entry point is the "Suggest an event" dialog on Ideas · Events ([ADR-009](ADR-009-v2-responsive-shell.md)). The backend flow below is unchanged.
 **Status:** Accepted
 **Date:** 2026-05-18
 **Implements:** [L1-018](../specs/L1.md#l1-018-user-contributed-local-events) and [L2-046 → L2-050](../specs/L2.md).
