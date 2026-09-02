@@ -14,13 +14,27 @@
   <div class="auth__col">
     <a class="auth__brand" href="./landing.html"><span class="brand-mark" aria-hidden="true"></span>Saturdaze</a>
 
+    <!-- 0 · Sent (right after creating an account) -->
+    <section class="specimen" id="state-sent" aria-labelledby="ve-title-0">
+      <span class="specimen__label">0 · Check your email</span>
+      <div class="auth-card">
+        <div class="auth-card__head auth-card__head--center">
+          <span class="disc disc--xl disc--primary auth-card__disc" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-mail"/></svg></span>
+          <h1 class="auth-card__title" id="ve-title-0">Check your email</h1>
+          <p class="auth-card__sub">We sent a verification link to q••••••••n@gmail.com. It works for 24 hours.</p>
+        </div>
+        <button class="btn btn--quiet btn--lg btn--block" type="button"><svg class="icon" aria-hidden="true"><use href="#i-refresh"/></svg>Resend</button>
+        <a class="btn btn--ghost btn--lg btn--block" href="./weekend.empty.html">Skip to this weekend</a>
+      </div>
+    </section>
+
     <!-- 1 · Verifying -->
     <section class="specimen" id="state-verifying" aria-labelledby="ve-title-1">
       <span class="specimen__label">1 · Verifying</span>
       <div class="auth-card" role="status" aria-live="polite">
         <div class="auth-card__head auth-card__head--center">
           <span class="spinner-disc auth-card__disc" aria-hidden="true"><span class="spinner"></span><svg class="icon" aria-hidden="true"><use href="#i-mail"/></svg></span>
-          <h1 class="auth-card__title" id="ve-title-1">Verifying your email</h1>
+          <h2 class="auth-card__title" id="ve-title-1">Verifying your email</h2>
           <p class="auth-card__sub">One moment.</p>
         </div>
       </div>

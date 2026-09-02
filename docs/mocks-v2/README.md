@@ -113,7 +113,8 @@ focus ring, tone pairs) live at the top of `app.css` in `@layer base`.
 | `restaurants.html`, `.voted`, `.consensus`, `.locked`, `.refreshing` | `ideas.food.html` (voted, locked and top-pick states on one page; refreshing dropped) |
 | `events.html` | `ideas.events.html` |
 | `events.submit.html`, `events.submitted.html` | dialogs D10 / D11 (spec revision L1-018: dedicated screen → dialog) |
-| `errand.html`, `errand.alt-slots.html`, `errand.added.html` | dialogs D7 / D8 / D9 |
+| `errand.html`, `errand.alt-slots.html`, `errand.added.html` | dialogs D7 / D9 (D8 slot picker retired: the API places the errand itself) |
+| swap alternatives (v1 block dialog) | D1 "Swap for something else" (D2 retired: the API chooses the replacement) |
 | `saved.html` | `past.html`, `past.empty.html` |
 | `profile.html` | `family.html` |
 | `admin.events.html` | `review-submissions.html`, `review-submissions.empty.html` |
@@ -131,13 +132,23 @@ Dropped on purpose (no requirement behind them): open-mail-app picker, webcal / 
 Calendar rows, Friday-preview sheet, send-to-Sara, see-on-map, surprise-me, Saved "More"
 sheet, export-as-text, day options sheet, day totals, heads-up cards, quick-actions list.
 
+Adapted to the API as it is (no backend changes): no "Add to Saturday / Sunday" on Ideas
+cards (activity cards link to a map, event cards to their details); swap is server-chosen
+(D2 retired); the errand dialog asks What / How long / Which day and the planner picks
+the slot (D8 retired, no detour figure); no Unlock, Refresh picks or Patio on Food;
+members are name + age (role derived from age, no notes); commitments are one day each
+with no place; the verify-email page gains a "Check your email" state for the moment
+right after creating an account.
+
+The `?state=` query override the Angular app honours in development mirrors the mock
+state files and `#state-*` ids one to one (`weekend?state=empty`, `sign-in?state=error`,
+`reset-password?state=sent`, …).
+
 ## Follow-ups (not part of this folder)
 
-1. Point the e2e baseline server at v2: `e2e/playwright.config.ts:61` and
-   `e2e/playwright.audit.config.ts:66` change `../docs/mocks` → `../docs/mocks-v2`.
-2. Remap `e2e/fixtures/routes.ts` `mock:` paths to the v2 filenames and prune
-   `e2e/fixtures/audit-routes.ts`.
-3. Re-capture visual baselines only after the Angular app is ported.
+1. ~~Point the e2e baseline server at v2~~ — done with the Angular implementation.
+2. ~~Remap `e2e/fixtures/routes.ts`~~ — done with the Angular implementation.
+3. ~~Re-capture visual baselines~~ — done with the Angular implementation.
 4. Revise L1-018 (dedicated submit-event screen → dialog).
-5. Port v2 to Angular; write ADRs for the shell change and the plain-CSS `@layer` choice.
-6. Retire `docs/mocks` once 1–3 land.
+5. ADRs for the shell change and the visual parity policy.
+6. ~~Retire `docs/mocks`~~ — done with the Angular implementation.
