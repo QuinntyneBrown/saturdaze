@@ -7,6 +7,7 @@ public sealed class SaveFamilyProfileCommandValidator : AbstractValidator<SaveFa
     public SaveFamilyProfileCommandValidator()
     {
         RuleFor(x => x.HomeLocation).NotEmpty().MaximumLength(200);
+        RuleFor(x => x.Name).MaximumLength(100);
 
         RuleFor(x => x.Members).NotNull();
         RuleForEach(x => x.Members).ChildRules(m =>
@@ -16,8 +17,10 @@ public sealed class SaveFamilyProfileCommandValidator : AbstractValidator<SaveFa
         });
         RuleFor(x => x.Members)
             .Must(ms => ms.Select(m => m.Name).Distinct(StringComparer.OrdinalIgnoreCase).Count() == ms.Count)
+            .When(x => x.Members is not null)
             .WithMessage("Member names must be unique.");
 
+        RuleFor(x => x.Commitments).NotNull();
         RuleForEach(x => x.Commitments).ChildRules(c =>
         {
             c.RuleFor(x => x.Title).NotEmpty().MaximumLength(120);
@@ -26,8 +29,10 @@ public sealed class SaveFamilyProfileCommandValidator : AbstractValidator<SaveFa
         });
         RuleFor(x => x.Commitments)
             .Must(NoOverlapWithinSameDay)
+            .When(x => x.Commitments is not null)
             .WithMessage("Commitments on the same day must not overlap.");
 
+        RuleFor(x => x.Preferences).NotNull();
         RuleForEach(x => x.Preferences).ChildRules(p =>
         {
             p.RuleFor(x => x.Value).NotEmpty().MaximumLength(120);
@@ -37,6 +42,7 @@ public sealed class SaveFamilyProfileCommandValidator : AbstractValidator<SaveFa
                 .Select(p => (p.Kind, p.Value.ToLowerInvariant()))
                 .Distinct()
                 .Count() == ps.Count)
+            .When(x => x.Preferences is not null)
             .WithMessage("Preferences must be unique by (Kind, Value).");
     }
 

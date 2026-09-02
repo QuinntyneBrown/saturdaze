@@ -1,7 +1,7 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using Saturdaze.Application.Abstractions;
+using Saturdaze.Application.Common;
 using Saturdaze.Application.Contracts;
 using Saturdaze.Application.Exceptions;
 using Saturdaze.Application.Weather;
@@ -13,30 +13,33 @@ namespace Saturdaze.Application.Errands;
 public sealed class MarkErrandDoneCommandHandler : IRequestHandler<MarkErrandDoneCommand, WeekendDto>
 {
     private readonly IAppDbContext _db;
-    private readonly IWeatherClient _weather;
-    private readonly IOptions<HomeLocationOptions> _home;
+    private readonly ICurrentFamilyAccessor _current;
+    private readonly WeekendForecastService _forecast;
 
-    public MarkErrandDoneCommandHandler(IAppDbContext db, IWeatherClient weather, IOptions<HomeLocationOptions> home)
+    public MarkErrandDoneCommandHandler(IAppDbContext db, ICurrentFamilyAccessor current, WeekendForecastService forecast)
     {
         _db = db;
-        _weather = weather;
-        _home = home;
+        _current = current;
+        _forecast = forecast;
     }
 
     public async Task<WeekendDto> Handle(MarkErrandDoneCommand request, CancellationToken cancellationToken)
     {
-        var errand = await _db.ShoppingErrands.SingleOrDefaultAsync(e => e.Id == request.ErrandId, cancellationToken)
-            ?? throw new NotFoundException(nameof(ShoppingErrand), request.ErrandId);
-        errand.Done = request.Done;
-        await _db.SaveChangesAsync(cancellationToken);
+        var familyId = await _current.GetCurrentFamilyIdAsync(cancellationToken);
 
         var weekend = await _db.Weekends
             .Include(w => w.Blocks)
             .Include(w => w.Errands)
-            .SingleAsync(w => w.Id == errand.WeekendId, cancellationToken);
-        var forecast = await _weather.GetForecastAsync(
-            _home.Value.Latitude, _home.Value.Longitude,
-            weekend.WeekendOf, weekend.WeekendOf.AddDays(1), cancellationToken);
+            .SingleOrDefaultAsync(
+                w => w.FamilyId == familyId && w.Errands.Any(e => e.Id == request.ErrandId),
+                cancellationToken)
+            ?? throw new NotFoundException(nameof(ShoppingErrand), request.ErrandId);
+
+        var errand = weekend.Errands.Single(e => e.Id == request.ErrandId);
+        errand.Done = request.Done;
+        await _db.SaveChangesAsync(cancellationToken);
+
+        var forecast = await _forecast.GetAsync(weekend.WeekendOf, cancellationToken);
         return WeekendMapper.ToDto(weekend, forecast);
     }
 }

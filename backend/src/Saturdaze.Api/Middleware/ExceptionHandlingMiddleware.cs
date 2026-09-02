@@ -22,7 +22,7 @@ public sealed class ExceptionHandlingMiddleware
         }
         catch (ValidationException ex)
         {
-            await WriteAsync(context, StatusCodes.Status400BadRequest, "Validation failed", ex.Message, ex.Errors);
+            await WriteAsync(context, StatusCodes.Status400BadRequest, "Validation failed", ex.Message, errors: ex.Errors);
         }
         catch (InvalidCredentialsException ex)
         {
@@ -39,14 +39,15 @@ public sealed class ExceptionHandlingMiddleware
         catch (ConflictException ex)
         {
             // Auth-relevant conflicts (`email_in_use`, …) ship in the AuthError
-            // shape; generic conflicts fall back to ProblemDetails.
+            // shape; generic conflicts are ProblemDetails carrying the code so
+            // clients can branch on e.g. `block_locked` (L2-015 AC2).
             if (IsAuthRoute(context))
             {
                 await WriteAuthError(context, StatusCodes.Status409Conflict, ex.Code, ex.Message);
             }
             else
             {
-                await WriteAsync(context, StatusCodes.Status409Conflict, "Conflict", ex.Message);
+                await WriteAsync(context, StatusCodes.Status409Conflict, "Conflict", ex.Message, code: ex.Code);
             }
         }
         catch (Exception ex)
@@ -71,35 +72,24 @@ public sealed class ExceptionHandlingMiddleware
         int statusCode,
         string title,
         string detail,
-        IReadOnlyDictionary<string, string[]>? errors = null)
+        IReadOnlyDictionary<string, string[]>? errors = null,
+        string? code = null)
     {
         if (context.Response.HasStarted) return;
 
         context.Response.StatusCode = statusCode;
 
-        if (errors is not null)
-        {
-            var vpd = new ValidationProblemDetails(errors.ToDictionary(kv => kv.Key, kv => kv.Value))
-            {
-                Status = statusCode,
-                Title = title,
-                Detail = detail,
-                Type = $"https://httpstatuses.io/{statusCode}",
-                Instance = context.Request.Path
-            };
-            await context.Response.WriteAsJsonAsync(vpd, options: null, contentType: "application/problem+json");
-        }
-        else
-        {
-            var pd = new ProblemDetails
-            {
-                Status = statusCode,
-                Title = title,
-                Detail = detail,
-                Type = $"https://httpstatuses.io/{statusCode}",
-                Instance = context.Request.Path
-            };
-            await context.Response.WriteAsJsonAsync(pd, options: null, contentType: "application/problem+json");
-        }
+        ProblemDetails pd = errors is not null
+            ? new ValidationProblemDetails(errors.ToDictionary(kv => kv.Key, kv => kv.Value))
+            : new ProblemDetails();
+
+        pd.Status = statusCode;
+        pd.Title = title;
+        pd.Detail = detail;
+        pd.Type = $"https://httpstatuses.io/{statusCode}";
+        pd.Instance = context.Request.Path;
+        if (code is not null) pd.Extensions["code"] = code;
+
+        await context.Response.WriteAsJsonAsync(pd, pd.GetType(), options: null, contentType: "application/problem+json");
     }
 }

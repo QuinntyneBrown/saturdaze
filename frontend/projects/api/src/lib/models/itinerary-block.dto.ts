@@ -1,3 +1,6 @@
+import { BlockKind } from './block-kind';
+import { WeekendDay } from './weekend-day';
+
 /**
  * Itinerary Block Dto.
  */
@@ -9,7 +12,7 @@ export interface ItineraryBlockDto {
   /**
    * Day.
    */
-  readonly day: 'Saturday' | 'Sunday';
+  readonly day: WeekendDay;
   /**
    * Start Time.
    */
@@ -21,7 +24,7 @@ export interface ItineraryBlockDto {
   /**
    * Kind.
    */
-  readonly kind: 'Workout' | 'Activity' | 'Meal' | 'Drive' | 'Downtime' | 'Commitment' | 'Errand';
+  readonly kind: BlockKind;
   /**
    * Title.
    */

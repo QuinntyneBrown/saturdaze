@@ -10,12 +10,16 @@
     "baseline": "cross-env SD_BASELINE=1 playwright test --config=playwright.config.ts --update-snapshots all tests/visual",
     "audit": "playwright test --config=playwright.audit.config.ts",
     "audit:mocks": "cross-env SD_BASELINE=1 playwright test --config=playwright.audit.config.ts",
-    "report": "playwright show-report"
+    "report": "playwright show-report",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "screenshots:mocks": "node scripts/screenshot-mocks.mjs",
+    "screenshots:auth-mocks": "node scripts/screenshot-auth-mocks.mjs"
   },
   "devDependencies": {
-    "@playwright/test": "^1.50.0",
+    "@playwright/test": "^1.60.0",
     "cross-env": "^7.0.3",
     "http-server": "^14.1.1",
-    "typescript": "^5.5.0"
+    "typescript": "^5.5.0",
+    "@types/node": "^22.0.0"
   }
 }

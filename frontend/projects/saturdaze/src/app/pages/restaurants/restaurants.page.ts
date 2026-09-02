@@ -2,7 +2,12 @@ import { Dialog } from '@angular/cdk/dialog';
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 
-import { RESTAURANT_SERVICE, type Vote } from 'api';
+import {
+  RESTAURANT_SERVICE,
+  type Restaurant,
+  type RestaurantSection,
+  type Vote,
+} from 'api';
 import {
   BottomNav,
   Button,
@@ -44,7 +49,12 @@ export class RestaurantsPage {
   private readonly dialog = inject(Dialog);
 
   protected readonly view = this.restaurants.list();
+  protected readonly activeFilter = this.restaurants.activeFilter();
   protected readonly refreshing = signal(false);
+
+  protected selectFilter(label: string): void {
+    this.restaurants.setFilter(label);
+  }
 
   protected async refreshPicks(): Promise<void> {
     if (this.refreshing()) return;
@@ -61,14 +71,21 @@ export class RestaurantsPage {
     void this.restaurants.vote(restaurantId, voterName, vote);
   }
 
-  protected async lockRestaurant(restaurantId: string | undefined, restaurantName: string): Promise<void> {
-    if (!restaurantId) return;
+  protected async lockRestaurant(restaurant: Restaurant, section: RestaurantSection): Promise<void> {
+    if (!restaurant.id) return;
     const ref = this.dialog.open<ProductActionDialogResult>(ProductActionDialog, {
-      data: { kind: 'restaurant-lock', restaurant: restaurantName },
+      data: {
+        kind: 'restaurant-lock',
+        restaurant: restaurant.name,
+        day: section.day,
+        slot: section.slot,
+      },
       autoFocus: 'first-tabbable',
       restoreFocus: true,
     });
     const result = await firstValueFrom(ref.closed);
-    if (result === 'confirm') await this.restaurants.lock(restaurantId);
+    if (result === 'confirm') {
+      await this.restaurants.lock(restaurant.id, section.day, section.slot);
+    }
   }
 }

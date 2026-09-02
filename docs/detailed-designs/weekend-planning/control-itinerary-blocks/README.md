@@ -12,11 +12,11 @@ The slice combines block-level lock and swap endpoints with weekend regeneration
 
 The feature forms a vertical slice across the Angular application, the ASP.NET Core API, application handlers, domain state, and SQL Server persistence.
 
-- **`ItineraryPage and HomePage`** — Angular pages that expose lock, swap, and regenerate actions.
+- **`ItineraryPage and HomePage`** — Angular pages that expose lock, swap (through the timeline `BlockActionDialog`), and regenerate actions.
 - **`WeekendPlanService`** — Typed client service that locks blocks and regenerates plans.
 - **`BlocksController`** — API controller exposing block lock and swap endpoints.
 - **`WeekendsController`** — API controller exposing weekend regeneration.
-- **`LockBlockCommandHandler and SwapBlockCommandHandler`** — Application handlers for block-level changes.
+- **`LockBlockCommandHandler and SwapBlockCommandHandler`** — Family-scoped application handlers for block-level changes; a swap with no alternative is a 200 no-op that annotates the block's reason, a locked block is 409 `block_locked`.
 - **`RegenerateWeekendCommandHandler`** — Application handler that retains locked blocks and increments the aggregate counter.
 
 ## Requirements

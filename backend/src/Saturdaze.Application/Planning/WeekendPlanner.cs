@@ -88,12 +88,12 @@ public sealed class WeekendPlanner : IWeekendPlanner
 
         if (day == DayOfWeekend.Saturday && inputs.Errand is not null)
         {
-            var errandBlock = PlaceErrand(inputs.Errand, result, day);
+            var errandBlock = PlaceErrandCore(inputs.Errand, result, day);
             if (errandBlock is not null) result.Add(errandBlock);
         }
 
         result = result.OrderBy(b => b.StartTime).ToList();
-        result.AddRange(FillDowntime(day, result));
+        result.AddRange(Downtime(day, result));
         result = result.OrderBy(b => b.StartTime).ToList();
 
         // Apply sort order index.
@@ -127,6 +127,7 @@ public sealed class WeekendPlanner : IWeekendPlanner
                 EndTime = c.EndTime,
                 Kind = BlockKind.Commitment,
                 Title = c.Title,
+                IsLocked = true, // L2-011: commitments never move
                 Reason = "fixed commitment"
             });
         }
@@ -198,6 +199,10 @@ public sealed class WeekendPlanner : IWeekendPlanner
         {
             if (alreadyPicked.Contains(act.Id)) continue;
             if (act.TypicalDurationMinutes > minutes) continue;
+            // Both drives plus a minimum stay must fit, otherwise the drive-clamp
+            // in BuildActivityWithDrives would produce an activity that ends
+            // before it starts.
+            if (act.DriveMinutes * 2 + PlannerTimes.ActivityMinMinutes > minutes) continue;
 
             // Disqualifying conditions first.
             if (dislikedTags.Any(d => MatchesTag(act, d))) continue;
@@ -446,16 +451,23 @@ public sealed class WeekendPlanner : IWeekendPlanner
 
     // ─── Errand placement ─────────────────────────────────────────────────────
 
-    private static ItineraryBlock? PlaceErrand(ShoppingErrand errand, IReadOnlyList<ItineraryBlock> placed, DayOfWeekend day)
+    public ItineraryBlock? PlaceErrand(ShoppingErrand errand, IReadOnlyList<ItineraryBlock> dayBlocks, DayOfWeekend day)
+        => PlaceErrandCore(errand, dayBlocks, day);
+
+    private static ItineraryBlock? PlaceErrandCore(ShoppingErrand errand, IReadOnlyList<ItineraryBlock> dayBlocks, DayOfWeekend day)
     {
         var neededMinutes = errand.EstimatedMinutes + PlannerTimes.ErrandBufferMinutes;
-        var sorted = placed.Where(b => b.Day == day).OrderBy(b => b.StartTime).ToList();
+        // Downtime is exactly the space an errand should take over.
+        var sorted = dayBlocks
+            .Where(b => b.Day == day && b.Kind != BlockKind.Downtime)
+            .OrderBy(b => b.StartTime)
+            .ToList();
 
         var dayBoundEnd = day == DayOfWeekend.Sunday ? PlannerTimes.SundayWindDownStart : PlannerTimes.DayEnd;
         var ranges = FindFreeRanges(sorted, PlannerTimes.DayStart, dayBoundEnd, neededMinutes);
         if (ranges.Count == 0) return null;
 
-        // Prefer Saturday morning (before noon), choosing smallest-fit gap to leave room.
+        // Prefer the morning (before noon), choosing smallest-fit gap to leave room.
         var morningFirst = ranges
             .Select(r => (r.start, r.end, mins: Minutes(r.start, r.end)))
             .OrderBy(r => r.start < new TimeOnly(12, 0) ? 0 : 1)
@@ -472,14 +484,17 @@ public sealed class WeekendPlanner : IWeekendPlanner
             Title = errand.Description,
             RefId = errand.Id,
             Reason = morningFirst.start < new TimeOnly(12, 0)
-                ? "errand placed Saturday morning"
+                ? $"errand placed {day} morning"
                 : "errand placed in next-best slot"
         };
     }
 
     // ─── Downtime ─────────────────────────────────────────────────────────────
 
-    private static IEnumerable<ItineraryBlock> FillDowntime(DayOfWeekend day, IReadOnlyList<ItineraryBlock> placed)
+    public IReadOnlyList<ItineraryBlock> FillDowntime(DayOfWeekend day, IReadOnlyList<ItineraryBlock> dayBlocks)
+        => Downtime(day, dayBlocks).ToList();
+
+    private static IEnumerable<ItineraryBlock> Downtime(DayOfWeekend day, IReadOnlyList<ItineraryBlock> placed)
     {
         var sorted = placed.Where(b => b.Day == day).OrderBy(b => b.StartTime).ToList();
         var dayBoundEnd = day == DayOfWeekend.Sunday ? PlannerTimes.SundayWindDownStart : PlannerTimes.DayEnd;

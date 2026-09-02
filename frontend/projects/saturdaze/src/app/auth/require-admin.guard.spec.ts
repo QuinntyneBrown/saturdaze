@@ -1,39 +1,50 @@
-import { vi } from 'vitest';
 import { TestBed } from '@angular/core/testing';
-import { provideRouter, Router, convertToParamMap, UrlTree } from '@angular/router';
+import { signal } from '@angular/core';
+import { provideRouter, Router, UrlTree, convertToParamMap } from '@angular/router';
 import { SESSION_STORE } from 'api';
 import { requireAdmin } from './require-admin.guard';
 
 describe('requireAdmin', () => {
-  let mockSESSION_STORE: any;
+  const isAuthenticated = signal(false);
+  const user = signal<any>(null);
   let router: Router;
 
-  beforeEach(() => {
-    mockSESSION_STORE = {
-      isAuthenticated: vi.fn(),
-      user: vi.fn(),
-    };
+  const run = () => {
+    const route = { paramMap: convertToParamMap({}), queryParamMap: convertToParamMap({}), params: {}, queryParams: {}, data: {}, url: [] } as any;
+    return TestBed.runInInjectionContext(() =>
+      (requireAdmin as unknown as (...args: any[]) => unknown)(route, { url: '/admin/events' } as any),
+    );
+  };
 
+  beforeEach(() => {
+    isAuthenticated.set(false);
+    user.set(null);
     TestBed.configureTestingModule({
       providers: [
         provideRouter([{ path: '**', children: [] }]),
-        { provide: SESSION_STORE, useValue: mockSESSION_STORE },
+        { provide: SESSION_STORE, useValue: { isAuthenticated, user } },
       ],
     });
-
     router = TestBed.inject(Router);
   });
 
-  it('should be defined', () => {
-    expect(requireAdmin).toBeDefined();
+  it('bounces anonymous visitors to /login', () => {
+    const result = run();
+    expect(result instanceof UrlTree).toBe(true);
+    expect(router.serializeUrl(result as UrlTree)).toBe('/login');
   });
 
-  it('should execute without throwing', () => {
-    const route = { paramMap: convertToParamMap({}), queryParamMap: convertToParamMap({}), params: {}, queryParams: {}, data: {}, url: [] } as any;
-    expect(() => {
-      TestBed.runInInjectionContext(() =>
-        (requireAdmin as unknown as (...args: any[]) => unknown)(route, { url: '/test' } as any)
-      );
-    }).not.toThrow();
+  it('bounces signed-in non-admins to /weekend', () => {
+    isAuthenticated.set(true);
+    user.set({ id: 'u1', email: 'a@b.c', role: 'User', emailVerifiedUtc: null });
+    const result = run();
+    expect(result instanceof UrlTree).toBe(true);
+    expect(router.serializeUrl(result as UrlTree)).toBe('/weekend');
+  });
+
+  it('lets admins through', () => {
+    isAuthenticated.set(true);
+    user.set({ id: 'u1', email: 'admin@b.c', role: 'Admin', emailVerifiedUtc: null });
+    expect(run()).toBe(true);
   });
 });

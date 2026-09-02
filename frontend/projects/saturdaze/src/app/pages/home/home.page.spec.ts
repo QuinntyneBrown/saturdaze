@@ -1,135 +1,158 @@
 import { vi } from 'vitest';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { provideRouter } from '@angular/router';
-import { WEEKEND_PLAN_SERVICE } from 'api';
+import { signal } from '@angular/core';
+import { Router, provideRouter } from '@angular/router';
 import { Dialog } from '@angular/cdk/dialog';
+import { of } from 'rxjs';
+import { WEEKEND_PLAN_SERVICE, upcomingSaturdayIso, type WeekendOverview } from 'api';
 import { HomePage } from './home.page';
+
+function overview(overrides: Partial<WeekendOverview> = {}): WeekendOverview {
+  return {
+    greeting: 'Morning, Browns 👋',
+    heroSubtitle: 'Sat & Sun are looking warm.',
+    heroCta: 'Plan This Weekend',
+    forecastSubtitle: 'Sat 16 May – Sun 17 May',
+    forecast: [{ day: 'Saturday', icon: 'sun', hi: '22', lo: '14', note: 'Nice' }],
+    days: [
+      { day: 'Saturday', date: 'Sat 16 May', weather: '22° sunny', icon: 'sun', highlight: 'Terre Bleu', chips: [] },
+      { day: 'Sunday', date: 'Sun 17 May', weather: '18° rain', icon: 'rain', highlight: 'Rec Room', chips: [] },
+    ],
+    anticipations: [
+      { icon: 'bag', headline: 'Anything to pick up?', body: 'Add a run.', cta: 'Add an errand', href: '/errand' },
+    ],
+    quickActions: [
+      { kind: 'regenerate', title: 'Regenerate the weekend', subtitle: '', icon: 'refresh' },
+      { kind: 'lock', title: "Lock what's already perfect", subtitle: '0 blocks locked', icon: 'lock' },
+      { kind: 'share', title: 'Share this weekend', subtitle: '', icon: 'share' },
+    ],
+    preview: [
+      { id: 'c1', kind: 'Commitment', time: '9:00', title: 'Swim', icon: 'lock', locked: true },
+      { id: 'b1', kind: 'Activity', time: '11:00', title: 'Terre Bleu', icon: 'tree' },
+    ],
+    ...overrides,
+  };
+}
 
 describe('HomePage', () => {
   let component: HomePage;
   let fixture: ComponentFixture<HomePage>;
-  let mockDialog: any;
-  let mockWEEKEND_PLAN_SERVICE: any;
+  let mockDialog: { open: ReturnType<typeof vi.fn> };
+  let weekend: any;
+  let router: Router;
+  const view = signal(overview());
 
   beforeEach(async () => {
-    mockDialog = {
-      open: vi.fn(),
-    };
-
-    mockWEEKEND_PLAN_SERVICE = {
-      getOverview: vi.fn(),
-      plan: vi.fn(() => Promise.resolve(undefined)),
-      calendarLinks: vi.fn(),
-      createShareLink: vi.fn(() => Promise.resolve(undefined)),
-      regenerate: vi.fn(() => Promise.resolve(undefined)),
-      regenerateDay: vi.fn(() => Promise.resolve(undefined)),
-      lockBlock: vi.fn(() => Promise.resolve(undefined)),
+    view.set(overview());
+    mockDialog = { open: vi.fn(() => ({ closed: of('confirm') })) };
+    weekend = {
+      getOverview: () => view,
+      plan: vi.fn(() => Promise.resolve()),
+      calendarLinks: vi.fn(() => ({ icsUrl: 'i', webcalUrl: 'w', googleCalendarUrl: 'g' })),
+      createShareLink: vi.fn(() => Promise.resolve('https://x/share/1')),
+      regenerate: vi.fn(() => Promise.resolve()),
+      regenerateDay: vi.fn(() => Promise.resolve()),
+      lockBlock: vi.fn(() => Promise.resolve()),
+      swapBlock: vi.fn(() => Promise.resolve()),
+      setErrandDone: vi.fn(() => Promise.resolve()),
     };
 
     await TestBed.configureTestingModule({
       imports: [HomePage],
       providers: [
         provideRouter([{ path: '**', children: [] }]),
-        { provide: WEEKEND_PLAN_SERVICE, useValue: mockWEEKEND_PLAN_SERVICE },
+        { provide: WEEKEND_PLAN_SERVICE, useValue: weekend },
         { provide: Dialog, useValue: mockDialog },
       ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(HomePage);
     component = fixture.componentInstance;
+    router = TestBed.inject(Router);
+    fixture.detectChanges();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  it('renders the greeting, days and heads-up section', () => {
+    const el = fixture.nativeElement as HTMLElement;
+    expect(el.textContent).toContain('Morning, Browns 👋');
+    expect(el.querySelectorAll('sd-day-card')).toHaveLength(2);
+    expect(el.querySelector('sd-anticipate')).not.toBeNull();
+    expect(el.textContent).toContain('A heads-up');
   });
 
-  it('should render component', () => {
-    expect(fixture.nativeElement).toBeTruthy();
+  it('hides the heads-up section when there is nothing to say', () => {
+    view.set(overview({ anticipations: [] }));
+    fixture.detectChanges();
+    expect((fixture.nativeElement as HTMLElement).textContent).not.toContain('A heads-up');
   });
 
-  it('should render with stubbed children', async () => {
-    TestBed.resetTestingModule();
-    TestBed.configureTestingModule({
-      imports: [HomePage],
-      providers: [
-        provideRouter([{ path: '**', children: [] }]),
-        { provide: WEEKEND_PLAN_SERVICE, useValue: mockWEEKEND_PLAN_SERVICE },
-        { provide: Dialog, useValue: mockDialog },
-      ],
-    });
-    TestBed.overrideComponent(HomePage, {
-      add: { schemas: [NO_ERRORS_SCHEMA] },
-    });
-    await TestBed.compileComponents();
-    const stubbedFixture = TestBed.createComponent(HomePage);
-    stubbedFixture.detectChanges();
-    expect(stubbedFixture.nativeElement).toBeTruthy();
+  it('plans the upcoming Saturday using the backend rule', async () => {
+    await component['planWeekend']();
+    expect(weekend.plan).toHaveBeenCalledWith(upcomingSaturdayIso());
   });
 
-
-  it('should return early from planWeekend when generating is truthy', async () => {
-    component['generating'].set(true as any);
-    await expect(Promise.resolve(component['planWeekend']()).then(() => true, () => true)).resolves.toBe(true);
+  it('ignores a second plan while one is in flight', async () => {
+    component['generating'].set(true);
+    await component['planWeekend']();
+    expect(weekend.plan).not.toHaveBeenCalled();
   });
 
-  it('should run planWeekend when all guards pass', async () => {
-    component['generating'].set(false as any);
-    await expect(Promise.resolve(component['planWeekend']()).then(() => true, () => true)).resolves.toBe(true);
-  });
-
-  it('should handle a failed plan in planWeekend', async () => {
-    component['generating'].set(false as any);
-    mockWEEKEND_PLAN_SERVICE.plan = vi.fn(() => Promise.reject(new Error('test')));
-    await expect(Promise.resolve(component['planWeekend']()).then(() => true, () => true)).resolves.toBe(true);
-  });
-
-  it('should call openCalendar without throwing', () => {
-    expect(() => component['openCalendar']()).not.toThrow();
-  });
-
-  it('should call openShare without throwing', async () => {
-    await expect(Promise.resolve(component['openShare']()).then(() => true, () => true)).resolves.toBe(true);
-  });
-
-  it('should call regenerateWeekend without throwing', async () => {
-    await expect(Promise.resolve(component['regenerateWeekend']()).then(() => true, () => true)).resolves.toBe(true);
-  });
-
-  it('should call regenerateDay without throwing', async () => {
-    await expect(Promise.resolve(component['regenerateDay']()).then(() => true, () => true)).resolves.toBe(true);
-  });
-
-  it('should call startLockMode without throwing', () => {
-    expect(() => component['startLockMode']()).not.toThrow();
-  });
-
-  it('should reflect startLockMode through its signals', () => {
-    component['startLockMode']();
+  it('dispatches quick actions by kind', async () => {
+    component['handleQuickAction']('lock');
     expect(component['lockMode']()).toBe(true);
-  });
-
-  it('should call finishLockMode without throwing', () => {
-    expect(() => component['finishLockMode']()).not.toThrow();
-  });
-
-  it('should reflect finishLockMode through its signals', () => {
     component['finishLockMode']();
-    expect(component['lockMode']()).toBe(false);
+    component['handleQuickAction']('regenerate');
+    await fixture.whenStable();
+    expect(weekend.regenerate).toHaveBeenCalled();
+    component['handleQuickAction']('share');
+    await fixture.whenStable();
+    expect(weekend.createShareLink).toHaveBeenCalled();
   });
 
-  it('should call toggleLock without throwing', async () => {
-    await expect(Promise.resolve(component['toggleLock']({ id: 'test-value', locked: 'test-value' } as any)).then(() => true, () => true)).resolves.toBe(true);
+  it('follows an anticipation CTA to its route', () => {
+    const navigate = vi.spyOn(router, 'navigateByUrl').mockResolvedValue(true);
+    component['followTip']({ icon: 'bag', headline: '', body: '', href: '/errand' });
+    expect(navigate).toHaveBeenCalledWith('/errand');
   });
 
-  it('should call openItineraryDay without throwing', () => {
-    expect(() => component['openItineraryDay']()).not.toThrow();
-  });
-  it('should call openItineraryDay with optional arguments provided', () => {
-    expect(() => component['openItineraryDay']("Saturday")).not.toThrow();
+  it('never toggles a commitment in lock mode', async () => {
+    await component['toggleLock']({ id: 'c1', kind: 'Commitment', locked: true, time: '', title: '', icon: '' });
+    expect(weekend.lockBlock).not.toHaveBeenCalled();
+    await component['toggleLock']({ id: 'b1', kind: 'Activity', time: '', title: '', icon: '' });
+    expect(weekend.lockBlock).toHaveBeenCalledWith('b1', true);
   });
 
-  it('should call handleQuickAction without throwing', () => {
-    expect(() => component['handleQuickAction']('test-value')).not.toThrow();
+  it('renders disabled lock rows for commitments in lock mode', () => {
+    component['startLockMode']();
+    fixture.detectChanges();
+    const rows = Array.from((fixture.nativeElement as HTMLElement).querySelectorAll('button.lock-block')) as HTMLButtonElement[];
+    expect(rows).toHaveLength(2);
+    expect(rows[0]!.disabled).toBe(true);
+    expect(rows[1]!.disabled).toBe(false);
+  });
+
+  it('applies the block sheet result to the weekend', async () => {
+    mockDialog.open = vi.fn(() => ({ closed: of({ kind: 'swap' }) }));
+    await component['openBlock']({ id: 'b1', kind: 'Activity', time: '', title: '', icon: '' });
+    expect(weekend.swapBlock).toHaveBeenCalledWith('b1');
+  });
+
+  it('opens the calendar and share dialogs with data', async () => {
+    component['openCalendar']();
+    expect(mockDialog.open.mock.calls[0][1].data.kind).toBe('calendar');
+    await component['openShare']();
+    const share = mockDialog.open.mock.calls[1][1].data;
+    expect(share).toMatchObject({ kind: 'share', shareUrl: 'https://x/share/1', saturdayHighlight: 'Terre Bleu', sundayHighlight: 'Rec Room' });
+  });
+
+  it('regenerates a day after confirmation', async () => {
+    await component['regenerateDay']();
+    expect(weekend.regenerateDay).toHaveBeenCalledWith('Saturday');
+  });
+
+  it('navigates to the itinerary for a day', () => {
+    const navigate = vi.spyOn(router, 'navigate').mockResolvedValue(true);
+    component['openItineraryDay']('Sunday');
+    expect(navigate).toHaveBeenCalledWith(['/itinerary'], { queryParams: { day: 'sunday' } });
   });
 });

@@ -2,8 +2,8 @@
 
 **Status:** Accepted
 **Date:** 2026-05-17
-**Supersedes:** the partial fix in [BUG-047](../bugs/BUG-047.md)
-**Reinforces:** [BUG-049](../bugs/BUG-049.md)
+**Supersedes:** the partial fix in BUG-047 (the `docs/bugs/` write-ups were removed in commit `f5fca1d`)
+**Reinforces:** BUG-049 (same)
 
 ## Context
 

@@ -18,4 +18,8 @@ export interface AnticipationTip {
    * Cta.
    */
   readonly cta?: string;
+  /**
+   * Href — where the CTA navigates.
+   */
+  readonly href?: string;
 }

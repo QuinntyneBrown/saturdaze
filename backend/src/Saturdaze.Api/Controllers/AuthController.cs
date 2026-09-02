@@ -19,19 +19,21 @@ public class AuthController : ControllerBase
         _env = env;
     }
 
-    public record RegisterRequest(string Email, string Password, string? FamilyName, string? HomeLocation);
+    public record RegisterRequest(string Email, string Password, string? FamilyName, string? HomeLocation, bool? FridayPreview = null);
     public record LoginRequest(string Email, string Password);
     public record ForgotPasswordRequest(string Email);
     public record ResetPasswordRequest(string Token, string? NewPassword, string? Password);
     public record VerifyEmailRequest(string Token);
     public record ResendVerificationRequest(string Email);
+    public record RefreshRequest(string RefreshToken);
+    public record LogoutRequest(string RefreshToken);
 
     [HttpPost("register")]
     [AllowAnonymous]
     public async Task<ActionResult<AuthSuccessDto>> Register([FromBody] RegisterRequest req, CancellationToken ct)
     {
         var dto = await _mediator.Send(
-            new RegisterUserCommand(req.Email, req.Password, req.FamilyName, req.HomeLocation), ct);
+            new RegisterUserCommand(req.Email, req.Password, req.FamilyName, req.HomeLocation, req.FridayPreview ?? true), ct);
         return CreatedAtAction(nameof(Me), null, dto);
     }
 
@@ -41,6 +43,30 @@ public class AuthController : ControllerBase
     {
         var dto = await _mediator.Send(new LoginCommand(req.Email, req.Password), ct);
         return Ok(dto);
+    }
+
+    /// <summary>
+    /// Rotates a refresh token. Anonymous: the refresh token is the credential
+    /// and the access token is normally already expired when this is called.
+    /// </summary>
+    [HttpPost("refresh")]
+    [AllowAnonymous]
+    public async Task<ActionResult<AuthSuccessDto>> Refresh([FromBody] RefreshRequest req, CancellationToken ct)
+    {
+        var dto = await _mediator.Send(new RefreshTokenCommand(req.RefreshToken), ct);
+        return Ok(dto);
+    }
+
+    /// <summary>
+    /// Revokes the refresh token (sign-out). Anonymous and idempotent for the
+    /// same reason as refresh; always 204 so it never leaks token existence.
+    /// </summary>
+    [HttpPost("logout")]
+    [AllowAnonymous]
+    public async Task<IActionResult> Logout([FromBody] LogoutRequest req, CancellationToken ct)
+    {
+        await _mediator.Send(new RevokeRefreshTokenCommand(req.RefreshToken), ct);
+        return NoContent();
     }
 
     [HttpPost("forgot-password")]
@@ -81,9 +107,15 @@ public class AuthController : ControllerBase
         return Ok(await _mediator.Send(new GetCurrentUserQuery(), ct));
     }
 
+    /// <summary>
+    /// There is no email provider yet, so Development and the test host hand the
+    /// reset / verification token back in the response. Any other environment
+    /// (Staging, Production) returns an empty body.
+    /// </summary>
     private object DevDelivery(AuthTokenDeliveryDto dto)
     {
-        if (_env.IsProduction()) return new { };
+        var exposeTokens = _env.IsDevelopment() || _env.IsEnvironment("Testing");
+        if (!exposeTokens) return new { };
         return new { dto.Email, dto.Token, dto.ExpiresAtUtc };
     }
 }

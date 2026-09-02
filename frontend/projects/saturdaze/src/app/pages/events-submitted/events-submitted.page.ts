@@ -1,13 +1,8 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, computed, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
-import { EVENT_SUBMISSIONS_SERVICE } from 'api';
+import { EVENT_SUBMISSIONS_SERVICE, dateTileParts, formatWhen } from 'api';
 import { BottomNav, Button, Card, Chip, Icon, TopBar } from 'components';
-
-const MONTH_ABBR = [
-  'JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN',
-  'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC',
-];
 
 @Component({
   selector: 'app-events-submitted',
@@ -17,7 +12,7 @@ const MONTH_ABBR = [
   styleUrl: './events-submitted.page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class EventsSubmittedPage {
+export class EventsSubmittedPage implements OnInit {
   private readonly submissions = inject(EVENT_SUBMISSIONS_SERVICE);
 
   protected readonly latest = computed(() => {
@@ -31,19 +26,19 @@ export class EventsSubmittedPage {
 
   protected readonly dateParts = computed(() => {
     const latest = this.latest();
-    if (!latest) return null;
-    const d = new Date(latest.startsAtLocal);
-    return { day: String(d.getDate()), mon: MONTH_ABBR[d.getMonth()]! };
+    return latest ? dateTileParts(latest.startsAtLocal) : null;
   });
 
   protected readonly whenLabel = computed(() => {
     const latest = this.latest();
-    if (!latest) return '';
-    const d = new Date(latest.startsAtLocal);
-    return d.toLocaleString(undefined, {
-      weekday: 'short',
-      hour: 'numeric',
-      minute: d.getMinutes() === 0 ? undefined : '2-digit',
-    });
+    return latest ? formatWhen(latest.startsAtLocal) : '';
   });
+
+  ngOnInit(): void {
+    // A direct visit (or a refresh) arrives with an empty cache; fetch so
+    // the confirmation shows the real submission instead of fallback copy.
+    if (this.submissions.mine()().length === 0) {
+      void this.submissions.loadMine();
+    }
+  }
 }

@@ -12,6 +12,8 @@ describe('SignupPage', () => {
 
   beforeEach(async () => {
     mockSESSION_STORE = {
+      error: vi.fn(() => null),
+      clearError: vi.fn(),
       signUp: vi.fn(() => Promise.resolve(undefined)),
     };
 

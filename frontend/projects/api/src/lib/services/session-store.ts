@@ -2,7 +2,7 @@ import { Injectable, Signal, computed, inject, signal } from '@angular/core';
 
 import { AuthError } from '../models/auth-error';
 import { AuthErrorCode } from '../models/auth-error-code';
-import { AuthToken } from '../models/auth-token';
+import { AuthToken, isTokenExpiring } from '../models/auth-token';
 import { ForgotPasswordRequest } from '../models/forgot-password-request';
 import { LoginRequest } from '../models/login-request';
 import { ResetPasswordRequest } from '../models/reset-password-request';
@@ -16,7 +16,11 @@ import { ISessionStore } from './session-store.contract';
 const TOKEN_KEY = 'sd.auth.token';
 const STORAGE_FLAG_KEY = 'sd.auth.storage';
 const REMEMBERED_EMAIL_KEY = 'sd.auth.remember.email';
-const LEGACY_MOCK_KEYS = ['sd.mock.auth.user-id', 'sd.mock.auth.users'] as const;
+
+/** Access tokens inside this window are refreshed rather than used. */
+const REFRESH_SKEW_MS = 60_000;
+
+type StorageTier = 'local' | 'session';
 
 /**
  * Is Auth Error.
@@ -48,7 +52,8 @@ function asAuthError(value: unknown, fallback: AuthErrorCode = 'invalid_credenti
 }
 
 /**
- * Stored Token.
+ * Stored Token: the JSON shape under `sd.auth.token`. `refreshToken` is
+ * optional on read so a pair persisted before refresh support still loads.
  */
 interface StoredToken {
   /**
@@ -59,14 +64,34 @@ interface StoredToken {
    * Expires Utc.
    */
   expiresUtc: string;
+  /**
+   * Refresh Token.
+   */
+  refreshToken?: string;
+}
+
+/**
+ * A persisted token plus the storage tier it was read from.
+ */
+interface PersistedToken {
+  /**
+   * Token.
+   */
+  readonly token: AuthToken;
+  /**
+   * Tier.
+   */
+  readonly tier: StorageTier;
 }
 
 /**
  * Signal-based session state.
  *
- * Persists the token in `localStorage` when `remember=true` and in
- * `sessionStorage` otherwise. `rehydrate()` runs once at bootstrap to
- * resolve the persisted token back into a `user` via `IAuthService.me()`.
+ * Persists the token pair in `localStorage` when `remember=true` and in
+ * `sessionStorage` otherwise. `rehydrate()` runs once at bootstrap: an
+ * access token inside the refresh window is exchanged via
+ * `refreshSession()`, otherwise the persisted token is resolved back into a
+ * `user` via `IAuthService.me()`.
  */
 @Injectable({ providedIn: 'root' })
 export class SessionStore implements ISessionStore {
@@ -87,6 +112,9 @@ export class SessionStore implements ISessionStore {
 
   private rehydratePromise: Promise<void> | null = null;
   private rehydrated = false;
+  private refreshPromise: Promise<boolean> | null = null;
+  /** Which storage holds the current pair; a refresh re-persists to the same tier. */
+  private tier: StorageTier = 'local';
 
   /**
    * Sign Up.
@@ -133,15 +161,76 @@ export class SessionStore implements ISessionStore {
   }
 
   /**
-   * Logout.
+   * Logout. The revocation call runs *before* the local clear so the
+   * interceptor can still attach the bearer; it is best-effort, so an
+   * offline device signs out locally regardless.
    *
-   * @returns {void} No return value
+   * @returns {Promise<void>} The result of the operation
    */
-  logout(): void {
-    this.clearPersisted();
-    this._token.set(null);
-    this._user.set(null);
-    this._error.set(null);
+  async logout(): Promise<void> {
+    const token = this._token();
+    if (token?.refreshToken) {
+      try {
+        await this.auth.logout({ refreshToken: token.refreshToken });
+      } catch {
+        // Best effort: the refresh token expires on its own within 14 days.
+      }
+    }
+    this.clearSession();
+  }
+
+  /**
+   * Refresh Session. Single-flight: concurrent 401s share one exchange.
+   *
+   * @returns {Promise<boolean>} The result of the operation
+   */
+  refreshSession(): Promise<boolean> {
+    if (this.refreshPromise) return this.refreshPromise;
+    this.refreshPromise = this.performRefresh().finally(() => {
+      this.refreshPromise = null;
+    });
+    return this.refreshPromise;
+  }
+
+  /**
+   * Perform Refresh.
+   *
+   * @returns {Promise<boolean>} The result of the operation
+   */
+  private async performRefresh(): Promise<boolean> {
+    // Another tab may already have rotated the pair; adopt it rather than
+    // presenting a refresh token the server has just revoked.
+    const persisted = this.readPersisted();
+    const current = this._token();
+    if (
+      persisted &&
+      current &&
+      persisted.token.value !== current.value &&
+      !isTokenExpiring(persisted.token, REFRESH_SKEW_MS)
+    ) {
+      this._token.set(persisted.token);
+      this.tier = persisted.tier;
+      return true;
+    }
+
+    const refreshToken = current?.refreshToken || persisted?.token.refreshToken;
+    if (!refreshToken) {
+      this.clearSession();
+      return false;
+    }
+
+    try {
+      const { token, user } = await this.auth.refresh({ refreshToken });
+      this.persist(token, this.tier === 'local');
+      this._token.set(token);
+      this._user.set(user);
+      return true;
+    } catch {
+      // v1: any refresh failure ends the session. A transient network
+      // error therefore costs a sign-in; distinguishing it is future work.
+      this.clearSession();
+      return false;
+    }
   }
 
   /**
@@ -238,35 +327,36 @@ export class SessionStore implements ISessionStore {
    * @returns {Promise<void>} The result of the operation
    */
   private async performRehydrate(): Promise<void> {
-    // One-time cleanup: drop keys written by the now-removed MockAuthService.
-    // Safe to remove once enough time has passed for users to refresh.
-    for (const key of LEGACY_MOCK_KEYS) {
-      localStorage.removeItem(key);
-      sessionStorage.removeItem(key);
-    }
     const stored = this.readPersisted();
     if (!stored) {
-      this._loading.set(false);
-      this.rehydrated = true;
+      this.finishRehydrate();
       return;
     }
-    if (new Date(stored.expiresUtc).getTime() <= Date.now()) {
-      this.clearPersisted();
-      this._loading.set(false);
-      this.rehydrated = true;
-      return;
-    }
-    this._token.set({ value: stored.value, expiresUtc: stored.expiresUtc });
+    this.tier = stored.tier;
+    this._token.set(stored.token);
     try {
-      const user = await this.auth.me();
-      this._user.set(user);
+      if (isTokenExpiring(stored.token, REFRESH_SKEW_MS)) {
+        // Sets `user` on success; clears the session on failure.
+        await this.refreshSession();
+      } else {
+        // A 401 here is retried once by the interceptor after a refresh.
+        this._user.set(await this.auth.me());
+      }
     } catch {
-      this.clearPersisted();
-      this._token.set(null);
+      this.clearSession();
     } finally {
-      this._loading.set(false);
-      this.rehydrated = true;
+      this.finishRehydrate();
     }
+  }
+
+  /**
+   * Finish Rehydrate.
+   *
+   * @returns {void} No return value
+   */
+  private finishRehydrate(): void {
+    this._loading.set(false);
+    this.rehydrated = true;
   }
 
   /**
@@ -279,6 +369,19 @@ export class SessionStore implements ISessionStore {
   }
 
   /**
+   * Clear Session: forget every credential and signal, keep the
+   * remembered email (sign-out forgets the session, not the device).
+   *
+   * @returns {void} No return value
+   */
+  private clearSession(): void {
+    this.clearPersisted();
+    this._token.set(null);
+    this._user.set(null);
+    this._error.set(null);
+  }
+
+  /**
    * Persist.
    *
    * @param {AuthToken} token - The token
@@ -287,22 +390,45 @@ export class SessionStore implements ISessionStore {
    * @returns {void} No return value
    */
   private persist(token: AuthToken, remember: boolean): void {
+    this.tier = remember ? 'local' : 'session';
     const target = remember ? localStorage : sessionStorage;
     const other = remember ? sessionStorage : localStorage;
-    const payload: StoredToken = { value: token.value, expiresUtc: token.expiresUtc };
+    const payload: StoredToken = {
+      value: token.value,
+      expiresUtc: token.expiresUtc,
+      refreshToken: token.refreshToken,
+    };
     target.setItem(TOKEN_KEY, JSON.stringify(payload));
-    target.setItem(STORAGE_FLAG_KEY, remember ? 'local' : 'session');
+    target.setItem(STORAGE_FLAG_KEY, this.tier);
     other.removeItem(TOKEN_KEY);
     other.removeItem(STORAGE_FLAG_KEY);
   }
 
-  private readPersisted(): StoredToken | null {
-    for (const store of [localStorage, sessionStorage]) {
+  /**
+   * Read Persisted.
+   *
+   * @returns {PersistedToken | null} The result of the operation
+   */
+  private readPersisted(): PersistedToken | null {
+    const tiers: ReadonlyArray<[StorageTier, Storage]> = [
+      ['local', localStorage],
+      ['session', sessionStorage],
+    ];
+    for (const [tier, store] of tiers) {
       const raw = store.getItem(TOKEN_KEY);
       if (!raw) continue;
       try {
         const parsed = JSON.parse(raw) as StoredToken;
-        if (parsed.value && parsed.expiresUtc) return parsed;
+        if (parsed.value && parsed.expiresUtc) {
+          return {
+            tier,
+            token: {
+              value: parsed.value,
+              expiresUtc: parsed.expiresUtc,
+              refreshToken: parsed.refreshToken ?? '',
+            },
+          };
+        }
       } catch {
         store.removeItem(TOKEN_KEY);
       }

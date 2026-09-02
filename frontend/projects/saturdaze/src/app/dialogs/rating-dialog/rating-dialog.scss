@@ -1,0 +1,74 @@
+:host {
+  display: block;
+}
+
+.stars {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  margin-top: 4px;
+}
+
+.star {
+  border: 0;
+  background: transparent;
+  padding: 6px;
+  margin: 0;
+  cursor: pointer;
+  color: var(--sd-ink-faint);
+  border-radius: 50%;
+  display: inline-flex;
+  transition: transform var(--sd-dur-fast) var(--sd-ease);
+}
+
+.star:hover {
+  transform: scale(1.1);
+}
+
+.star.filled {
+  color: var(--sd-sun);
+}
+
+.star:focus-visible {
+  outline: 2px solid var(--sd-primary);
+  outline-offset: 2px;
+}
+
+.rating-label {
+  text-align: center;
+  font-size: var(--sd-fs-sm);
+  color: var(--sd-ink-soft);
+  margin: 6px 0 16px;
+}
+
+.field {
+  display: grid;
+  gap: 6px;
+  font-size: var(--sd-fs-sm);
+  font-weight: var(--sd-fw-medium);
+  color: var(--sd-ink);
+}
+
+.field input {
+  font: inherit;
+  padding: 10px 12px;
+  border-radius: var(--sd-r-md);
+  border: 1px solid var(--sd-line);
+  background: var(--sd-bg);
+  color: var(--sd-ink);
+}
+
+.field input:focus {
+  outline: none;
+  border-color: var(--sd-primary);
+  box-shadow: 0 0 0 3px var(--sd-primary-soft);
+}
+
+.field .optional {
+  font-size: var(--sd-fs-xs);
+  font-weight: var(--sd-fw-regular);
+  color: var(--sd-ink-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-left: 4px;
+}

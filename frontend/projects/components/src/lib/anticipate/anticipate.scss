@@ -5,7 +5,7 @@
 .wrap {
   display: flex;
   gap: 12px;
-  background: linear-gradient(135deg, var(--sd-primary-soft), #FBEBC4);
+  background: linear-gradient(135deg, var(--sd-primary-soft), var(--sd-sun-soft));
   padding: 14px 16px;
   border-radius: var(--sd-r-lg);
   align-items: flex-start;

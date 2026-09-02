@@ -68,8 +68,20 @@ describe('EventsSubmitPage', () => {
 
   it('should recompute canSubmit under seeded state', () => {
     component['title'].set('x' as any);
-    component['startsAtLocal'].set({ length: 'x' } as any);
+    component['startsAtLocal'].set('2026-05-16T10:00');
     component['submitting'].set(true as any);
     expect(() => component['canSubmit']()).not.toThrow();
+  });
+
+  it('flags a cleared date-time inline and blocks submission', () => {
+    component['title'].set('Buskerfest');
+    component['startsAtLocal'].set('2026-05-16T10:00');
+    expect(component['dateError']()).toBe('');
+    expect(component['canSubmit']()).toBe(true);
+    component['startsAtLocal'].set('');
+    expect(component['dateError']()).toBe('Pick a start date and time.');
+    expect(component['canSubmit']()).toBe(false);
+    fixture.detectChanges();
+    expect((fixture.nativeElement as HTMLElement).querySelector('.field-error')?.textContent).toContain('Pick a start date and time.');
   });
 });

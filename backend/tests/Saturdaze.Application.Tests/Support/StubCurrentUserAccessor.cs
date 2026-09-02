@@ -10,4 +10,5 @@ internal sealed class StubCurrentUserAccessor : ICurrentUserAccessor
     public UserRole? Role { get; set; }
     public Guid? FamilyId { get; set; }
     public bool IsAuthenticated => UserId.HasValue;
+    public string? IpAddress { get; set; }
 }

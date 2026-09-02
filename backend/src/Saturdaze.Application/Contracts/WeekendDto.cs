@@ -9,6 +9,8 @@ public sealed record WeekendDto(
     bool IsFavourite,
     string Notes,
     int RegenerateCount,
+    string? Title,
+    int? Rating,
     IReadOnlyList<ItineraryBlockDto> Blocks,
     IReadOnlyList<ShoppingErrandDto> Errands,
     IReadOnlyList<WeatherForecast> Weather);

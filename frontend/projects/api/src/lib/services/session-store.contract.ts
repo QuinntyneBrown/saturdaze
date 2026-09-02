@@ -14,8 +14,9 @@ import { VerifyEmailRequest } from '../models/verify-email-request';
  * Page-facing session state. Signal-based so OnPush components re-render
  * naturally on auth transitions.
  *
- * Owns persistence (local vs session storage based on remember-me) and the
- * single mapping of `IAuthService` rejections onto the `error` signal.
+ * Owns persistence (local vs session storage based on remember-me), the
+ * silent refresh of the access token, and the single mapping of
+ * `IAuthService` rejections onto the `error` signal.
  */
 export interface ISessionStore {
   /**
@@ -66,11 +67,20 @@ export interface ISessionStore {
    */
   login(req: LoginRequest, remember: boolean): Promise<void>;
   /**
-   * Logout.
+   * Sign out: best-effort server-side revocation of the refresh token,
+   * then clears every persisted credential. Always resolves.
    *
-   * @returns {void} No return value
+   * @returns {Promise<void>} The result of the operation
    */
-  logout(): void;
+  logout(): Promise<void>;
+  /**
+   * Exchange the stored refresh token for a new pair. Single-flight:
+   * concurrent callers share one request. Resolves `true` on success; on
+   * any failure the session is cleared and it resolves `false`.
+   *
+   * @returns {Promise<boolean>} The result of the operation
+   */
+  refreshSession(): Promise<boolean>;
   /**
    * Forgot Password.
    *

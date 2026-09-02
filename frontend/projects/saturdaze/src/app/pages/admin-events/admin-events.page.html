@@ -3,7 +3,7 @@
 <div class="admin-lede">
   <h2>Pending submissions</h2>
   <p>
-    {{ pendingCount() }} in queue · oldest first. Approving publishes to every family within driving distance.
+    {{ pendingCount() }} in queue. Approving publishes to every family within driving distance.
   </p>
 </div>
 
@@ -44,12 +44,10 @@
 
       <div class="actions">
         @if (s.sourceUrl) {
-          <sd-button variant="ghost" type="button">
-            <a [href]="s.sourceUrl" target="_blank" rel="noopener noreferrer" class="link-button">
-              <sd-icon slot="leading" name="map" [size]="14" />
-              Open link
-            </a>
-          </sd-button>
+          <a [href]="s.sourceUrl" target="_blank" rel="noopener noreferrer" class="link-button">
+            <sd-icon name="map" [size]="14" />
+            Open link
+          </a>
         }
         <sd-button variant="secondary" type="button" (click)="openReject(s)">
           <sd-icon slot="leading" name="close" [size]="14" />

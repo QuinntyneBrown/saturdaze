@@ -1,9 +1,14 @@
 import { test, expect } from "../fixtures/sd-test.js";
 
+/**
+ * Activity suggestions (Discover) against the seeded catalogue.
+ */
+
 test.describe("Activity suggestions (Discover)", () => {
   test.beforeEach(async ({ goto, pages }) => {
     await goto("activities");
     await pages.activities.waitForComponentsReady();
+    await expect(pages.activities.allActivityCards().first()).toBeVisible();
   });
 
   test("top bar reads Discover, has back link and 'Try something new' action", async ({ pages }) => {
@@ -12,59 +17,61 @@ test.describe("Activity suggestions (Discover)", () => {
     await expect(pages.activities.trySomethingNewButton()).toBeVisible();
   });
 
-  test("renders the 'Picked for the Browns' lede", async ({ pages }) => {
+  test("renders a lede built from the family profile", async ({ pages, page }) => {
     await expect(pages.activities.headingTitle()).toBeVisible();
+    await expect(page.locator(".activities-lede p")).toHaveText(/close to Port Credit/);
   });
 
   test("filter chips render in the documented order", async ({ pages }) => {
-    await expect(pages.activities.filterChips()).toHaveCount(7);
-    const labels = [
-      "All",
-      "Outdoor",
-      "Indoor",
-      "< 30 min",
-      "Ages 5+",
-      "New for us",
-      "Weather-safe",
-    ];
+    const labels = ["All", "Outdoor", "Indoor", "< 30 min", "Ages 5+", "Weather-safe"];
+    await expect(pages.activities.filterChips()).toHaveCount(labels.length);
     for (let i = 0; i < labels.length; i++) {
-      await expect(pages.activities.filterChips().nth(i)).toContainText(labels[i]);
+      await expect(pages.activities.filterChips().nth(i)).toContainText(labels[i]!);
     }
+    await expect(pages.activities.filterChips().nth(0)).toHaveAttribute("tone", "primary");
   });
 
-  test("three suggestion sections appear with the right counts", async ({ pages }) => {
-    await expect(
-      pages.activities.weatherFitSection().locator("sd-activity-card")
-    ).toHaveCount(3);
-    await expect(
-      pages.activities.ifWeatherTurnsSection().locator("sd-activity-card")
-    ).toHaveCount(3);
-    await expect(
-      pages.activities.trySomethingNewSection().locator("sd-activity-card")
-    ).toHaveCount(2);
+  test("three suggestion sections appear, each capped at three cards", async ({ pages }) => {
+    for (const section of [
+      pages.activities.weatherFitSection(),
+      pages.activities.ifWeatherTurnsSection(),
+      pages.activities.trySomethingNewSection(),
+    ]) {
+      await expect(section).toBeVisible();
+      expect(await section.locator("sd-activity-card").count()).toBeLessThanOrEqual(3);
+    }
+    await expect(pages.activities.weatherFitSection().locator("sd-activity-card").first()).toBeVisible();
   });
 
-  test("Terre Bleu card carries the day-highlight tag and rationale", async ({ pages }) => {
-    const card = pages.activities.activityCard("Terre Bleu Lavender Farm");
-    await expect(card).toBeVisible();
-    await expect(card).toHaveAttribute("tag", "Day highlight");
-    await expect(card).toHaveAttribute("drive", "45 min");
-    await expect(card).toHaveAttribute(
-      "why",
-      /Sara loved this last summer/
-    );
+  test("'Try something new' cards are tagged First time", async ({ pages }) => {
+    const cards = pages.activities.trySomethingNewSection().locator("sd-activity-card");
+    const n = await cards.count();
+    for (let i = 0; i < n; i++) await expect(cards.nth(i)).toHaveAttribute("tag", "First time");
   });
 
-  test("Rec Room card flags it as Eli's pick", async ({ pages }) => {
-    const card = pages.activities.activityCard("The Rec Room — Square One");
-    await expect(card).toHaveAttribute("tag", "Eli's pick");
-    await expect(card).toHaveAttribute("tone", "indoor");
+  test("cards carry drive time and an age range from the catalogue", async ({ pages }) => {
+    const card = pages.activities.allActivityCards().first();
+    await expect(card).toHaveAttribute("drive", /^\d+ min$/);
+    await expect(card).toHaveAttribute("ages", /.+/);
+  });
+
+  test("'Indoor' hides outdoor activities and highlights the chip", async ({ pages }) => {
+    await pages.activities.filterChip("Indoor").click();
+    await expect(pages.activities.filterChip("Indoor")).toHaveAttribute("tone", "primary");
+    await expect(pages.activities.filterChip("Indoor")).toHaveAttribute("aria-pressed", "true");
+    await expect(pages.activities.activityCard("Terre Bleu Lavender Farm")).toHaveCount(0);
+    await expect(pages.activities.activityCard("Ontario Science Centre")).toBeVisible();
+  });
+
+  test("the sparkle action opens the surprise dialog", async ({ pages, page }) => {
+    await pages.activities.trySomethingNewButton().click();
+    const dialog = page.locator("sd-dialog");
+    await expect(dialog).toBeVisible();
+    await page.keyboard.press("Escape");
+    await expect(dialog).not.toBeVisible();
   });
 
   test("bottom nav highlights the activities tab", async ({ pages }) => {
-    await expect(pages.activities.activeNavKey()).toHaveAttribute(
-      "href",
-      /activities\.html$/
-    );
+    await expect(pages.activities.activeNavKey()).toHaveAttribute("href", /\/activities$/);
   });
 });

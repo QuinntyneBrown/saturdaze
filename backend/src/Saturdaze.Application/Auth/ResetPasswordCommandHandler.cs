@@ -5,7 +5,6 @@ using Saturdaze.Application.Authentication;
 using Saturdaze.Application.Common;
 using Saturdaze.Application.Contracts;
 using Saturdaze.Application.Exceptions;
-using Saturdaze.Domain.Entities;
 
 namespace Saturdaze.Application.Auth;
 
@@ -15,17 +14,20 @@ public class ResetPasswordCommandHandler : IRequestHandler<ResetPasswordCommand,
     private readonly IPasswordHasher _hasher;
     private readonly IJwtTokenService _jwt;
     private readonly IDateTimeProvider _clock;
+    private readonly RefreshTokenIssuer _issuer;
 
     public ResetPasswordCommandHandler(
         IAppDbContext db,
         IPasswordHasher hasher,
         IJwtTokenService jwt,
-        IDateTimeProvider clock)
+        IDateTimeProvider clock,
+        RefreshTokenIssuer issuer)
     {
         _db = db;
         _hasher = hasher;
         _jwt = jwt;
         _clock = clock;
+        _issuer = issuer;
     }
 
     public async Task<AuthSuccessDto> Handle(ResetPasswordCommand request, CancellationToken ct)
@@ -50,28 +52,12 @@ public class ResetPasswordCommandHandler : IRequestHandler<ResetPasswordCommand,
         user.PasswordHash = _hasher.Hash(request.Password);
         user.UpdatedAtUtc = now;
 
-        foreach (var refresh in await _db.RefreshTokens
-            .Where(t => t.UserId == user.Id && t.RevokedAtUtc == null)
-            .ToListAsync(ct))
-        {
-            refresh.RevokedAtUtc = now;
-        }
-
-        var refreshRaw = _jwt.CreateRawRefreshToken();
-        _db.RefreshTokens.Add(new RefreshToken
-        {
-            Id = Guid.NewGuid(),
-            UserId = user.Id,
-            TokenHash = _jwt.HashRefreshToken(refreshRaw),
-            ExpiresAtUtc = now.AddDays(14),
-            CreatedAtUtc = now,
-        });
+        // A password reset ends every other session (L2-005).
+        await _issuer.RevokeAllActiveAsync(user.Id, now, ct);
+        var issued = _issuer.Issue(user);
 
         await _db.SaveChangesAsync(ct);
 
-        return new AuthSuccessDto(
-            new AuthTokensDto(_jwt.CreateAccessToken(user), refreshRaw, _jwt.AccessTokenExpiresAt),
-            new UserDto(user.Id, user.Email, user.Role, user.EmailVerifiedUtc)
-        );
+        return _issuer.ToSuccess(user, issued.Raw);
     }
 }

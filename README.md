@@ -60,9 +60,11 @@ The script:
 4. builds the Angular frontend;
 5. starts both processes and prints the frontend URL.
 
-By default the API runs on `http://localhost:5100`. The frontend prefers
-`http://127.0.0.1:4200/`, and automatically moves to the next available port
-when that port is already in use.
+By default the API runs on `http://localhost:5100` (the Angular environment
+compiles that URL in, so the script rejects any other `-BackendPort`). The
+frontend serves on `http://127.0.0.1:4200/`; pass `-FrontendPort` to move it,
+and expect the script to stop rather than pick a random port when the one you
+asked for is busy.
 
 ### Prerequisites
 
@@ -136,6 +138,7 @@ Then open `http://localhost:5173/`.
 | Component library | `frontend/projects/components` | Standalone Angular UI components aligned with the mock system |
 | E2E suite | `e2e` | Playwright behavior and visual tests |
 | Design reference | `docs/mocks` | Static mock app and screenshots used as implementation reference |
+| Design system | `design-system` | Standalone token/component catalog with its own Playwright suite and Azure Static Web App (`deploy-design-system.yml`) |
 
 ## Development
 
@@ -187,9 +190,14 @@ Development conventions:
 - [User guide](docs/user-guide/README.md)
 - [Level 1 specification](docs/specs/L1.md)
 - [Level 2 specification](docs/specs/L2.md)
+- [Requirements (L1/L2)](docs/specs/)
+- [Detailed feature designs](docs/detailed-designs/)
 - [Architecture decision records](docs/adr/)
-- [Mock application](docs/mocks/index.html)
-- [Button/link audit](docs/button-link-audit-2026-05-17.md)
+- [User guide](docs/user-guide/)
+- [Mock application](docs/mocks/index.html) and [mocks plan](docs/mocks-plan.md)
+- [Responsive audit (2026-08-27)](docs/responsive-audit-2026-08-27.md)
+- [Dead-code findings and removal plan](docs/dead-code-removal-plan.md)
+- [Button/link audit (2026-05-17, resolved)](docs/button-link-audit-2026-05-17.md)
 - [Sign-out plan](docs/sign-out-plan.md)
 
 ## Deployment

@@ -10,7 +10,9 @@ public class FamilyConfiguration : IEntityTypeConfiguration<Family>
     {
         b.ToTable("Families");
         b.HasKey(x => x.Id);
+        b.Property(x => x.Name).HasMaxLength(100);
         b.Property(x => x.HomeLocation).HasMaxLength(200).IsRequired();
+        b.Property(x => x.FridayPreviewEnabled).HasDefaultValue(true);
         b.HasMany(x => x.Members).WithOne().HasForeignKey(x => x.FamilyId).OnDelete(DeleteBehavior.Cascade);
         b.HasMany(x => x.Commitments).WithOne().HasForeignKey(x => x.FamilyId).OnDelete(DeleteBehavior.Cascade);
         b.HasMany(x => x.Preferences).WithOne().HasForeignKey(x => x.FamilyId).OnDelete(DeleteBehavior.Cascade);

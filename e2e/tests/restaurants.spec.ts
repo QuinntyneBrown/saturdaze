@@ -1,9 +1,18 @@
 import { test, expect } from "../fixtures/sd-test.js";
 
+/**
+ * Restaurant picker. Picks, votes and locks are real API state for the
+ * seeded family: votes and locks persist between runs, so assertions are
+ * data-driven rather than pinned to a particular restaurant.
+ */
+
+const SEEDED_MEMBERS = ["Quinn", "Sara", "Eli", "Mae"];
+
 test.describe("Restaurant picker (Food)", () => {
   test.beforeEach(async ({ goto, pages }) => {
     await goto("restaurants");
     await pages.restaurants.waitForComponentsReady();
+    await expect(pages.restaurants.topPickSection().locator("sd-restaurant-card").first()).toBeVisible();
   });
 
   test("top bar reads Food and has back link + refresh button", async ({ pages }) => {
@@ -12,68 +21,77 @@ test.describe("Restaurant picker (Food)", () => {
     await expect(pages.restaurants.refreshButton()).toBeVisible();
   });
 
-  test("renders heading and filter row", async ({ pages }) => {
+  test("renders heading and the four filter chips", async ({ pages }) => {
     await expect(pages.restaurants.headingTitle()).toBeVisible();
-    await expect(pages.restaurants.filterChips()).toHaveCount(5);
-    await expect(pages.restaurants.filterChips().nth(0)).toContainText("Lunch");
-    await expect(pages.restaurants.filterChips().nth(2)).toContainText(
-      "Wife-approved only"
-    );
+    await expect(pages.restaurants.filterChips()).toHaveCount(4);
+    const labels = ["Lunch", "Dinner", "Wife-approved only", "< 15 min"];
+    for (let i = 0; i < labels.length; i++) {
+      await expect(pages.restaurants.filterChips().nth(i)).toContainText(labels[i]!);
+    }
+    await expect(pages.restaurants.filterChips().nth(0)).toHaveAttribute("tone", "primary");
   });
 
-  test("top pick is La Marina with wife-approved flag and four vote rows", async ({ pages }) => {
-    const card = pages.restaurants.restaurantCard("La Marina");
-    await expect(card).toBeVisible();
-    await expect(card).toHaveAttribute("wifeapproved", "");
-    await expect(card).toHaveAttribute("drive", "6 min");
+  test("top pick is a single card with the seeded family as voters", async ({ pages }) => {
+    const cards = pages.restaurants.topPickSection().locator("sd-restaurant-card");
+    await expect(cards).toHaveCount(1);
+    const card = cards.first();
+    await expect(card).toHaveAttribute("drive", /^\d+ min$/);
+    await expect(card.locator("sd-chip").filter({ hasText: "Top pick" })).toBeVisible();
 
-    await expect(pages.restaurants.voteRow(card, "Quinn")).toHaveAttribute(
-      "vote",
-      "up"
-    );
-    await expect(pages.restaurants.voteRow(card, "Sara")).toHaveAttribute(
-      "vote",
-      "up"
-    );
-    await expect(pages.restaurants.voteRow(card, "Eli")).toHaveAttribute(
-      "vote",
-      "up"
-    );
-    await expect(pages.restaurants.voteRow(card, "Mae")).toHaveAttribute(
-      "vote",
-      "none"
-    );
+    await expect(card.locator("sd-vote-row")).toHaveCount(SEEDED_MEMBERS.length);
+    for (const name of SEEDED_MEMBERS) {
+      await expect(pages.restaurants.voteRow(card, name)).toHaveAttribute("vote", /^(up|down|none)$/);
+    }
   });
 
-  test("top pick exposes See menu (secondary) + Lock it in (primary)", async ({ pages }) => {
-    await expect(
-      pages.restaurants
-        .topPickSection()
-        .locator("sd-button")
-        .filter({ hasText: "See menu" })
-    ).toBeVisible();
-    await expect(pages.restaurants.lockItInButton()).toBeVisible();
+  test("top pick exposes See menu + Lock it in", async ({ pages }) => {
+    const section = pages.restaurants.topPickSection();
+    await expect(section.locator("a.menu-link", { hasText: "See menu" })).toBeVisible();
+    await expect(section.locator("sd-button").filter({ hasText: /Lock it in|Locked/ })).toBeVisible();
   });
 
-  test("other-picks section lists two more restaurants", async ({ pages }) => {
-    await expect(
-      pages.restaurants.otherPicksSection().locator("sd-restaurant-card")
-    ).toHaveCount(2);
-    await expect(pages.restaurants.restaurantCard("Symposium Café")).toBeVisible();
-    await expect(
-      pages.restaurants.restaurantCard("The Sicilian Sidewalk Café")
-    ).toBeVisible();
+  test("other-picks lists up to three more restaurants and Sunday dinner has a pick", async ({ pages }) => {
+    const others = pages.restaurants.otherPicksSection().locator("sd-restaurant-card");
+    await expect(others.first()).toBeVisible();
+    expect(await others.count()).toBeLessThanOrEqual(3);
+    await expect(pages.restaurants.sundayDinnerSection().locator("sd-restaurant-card").first()).toBeVisible();
   });
 
-  test("Sunday dinner section shows Jack Astor's", async ({ pages }) => {
-    await expect(pages.restaurants.restaurantCard("Jack Astor's")).toBeVisible();
+  test("'Wife-approved only' narrows every card to approved restaurants", async ({ pages }) => {
+    await pages.restaurants.filterChips().nth(2).click();
+    await expect(pages.restaurants.filterChips().nth(2)).toHaveAttribute("tone", "primary");
+    const cards = pages.restaurants.allRestaurantCards();
+    const n = await cards.count();
+    expect(n).toBeGreaterThan(0);
+    for (let i = 0; i < n; i++) await expect(cards.nth(i)).toHaveAttribute("wifeapproved", "");
   });
 
-  test("Sara votes down on The Sicilian", async ({ pages }) => {
-    const card = pages.restaurants.restaurantCard("The Sicilian Sidewalk Café");
-    await expect(pages.restaurants.voteRow(card, "Sara")).toHaveAttribute(
-      "vote",
-      "down"
-    );
+  test("'Dinner' switches the page to Sunday dinner", async ({ pages, page }) => {
+    await pages.restaurants.filterChips().nth(1).click();
+    await expect(page.locator(".rest-lede h2")).toHaveText("Sunday food");
+    await expect(pages.restaurants.topPickSection()).toHaveAttribute("title", "Top pick for dinner");
+  });
+
+  test("a family vote is saved and reflected on the row", async ({ pages, page }) => {
+    const card = pages.restaurants.topPickSection().locator("sd-restaurant-card").first();
+    const saved = page.waitForResponse((r) => r.url().includes("/vote") && r.status() < 300);
+    await pages.restaurants.voteButton(card, "Quinn", "up").click();
+    await saved;
+    await expect(pages.restaurants.voteRow(card, "Quinn")).toHaveAttribute("vote", "up");
+    await expect(page.locator(".rest-lede p")).toHaveText(/Quinn voted on/);
+  });
+
+  test("'Lock it in' locks the Saturday lunch pick", async ({ pages, page }) => {
+    const button = pages.restaurants.lockItInButton();
+    if ((await button.count()) === 0) {
+      // Already locked by an earlier run — the state is what we want.
+      await expect(pages.restaurants.topPickSection().locator("sd-chip").filter({ hasText: "Locked" })).toBeVisible();
+      return;
+    }
+    const locked = page.waitForResponse((r) => r.url().includes("/lock") && r.status() < 300);
+    await button.locator("button").click();
+    await locked;
+    await expect(pages.restaurants.topPickSection().locator("sd-chip").filter({ hasText: "Locked" })).toBeVisible();
+    await expect(pages.restaurants.topPickSection()).toHaveAttribute("subtitle", /Locked for Saturday lunch/);
   });
 });

@@ -36,4 +36,16 @@ describe('Icon', () => {
     fixture.detectChanges();
     expect(component.size()).toBe(3);
   });
+
+  it('renders the check and mail glyphs instead of the sparkle fallback', () => {
+    const sparkle = (fixture.nativeElement as HTMLElement).innerHTML;
+    fixture.componentRef.setInput('name', 'check');
+    fixture.detectChanges();
+    const check = (fixture.nativeElement as HTMLElement).innerHTML;
+    expect(check).not.toBe(sparkle);
+    expect(check).toContain('M5 12l5 5 9-11');
+    fixture.componentRef.setInput('name', 'mail');
+    fixture.detectChanges();
+    expect((fixture.nativeElement as HTMLElement).innerHTML).toContain('M3 7l9 6 9-6');
+  });
 });

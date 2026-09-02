@@ -3,7 +3,7 @@
     <div>
       <div class="date">{{ date() }}</div>
       <div class="title">{{ cardTitle() }}</div>
-      <div class="stars">
+      <div class="stars" [attr.aria-label]="rating() ? rating() + ' of 5 stars' : 'Not rated yet'">
         @for (filled of stars(); track $index) {
           <sd-icon
             name="star"
@@ -13,9 +13,16 @@
         }
       </div>
     </div>
-    <div class="heart" [class.is-fav]="favourite()">
+    <button
+      type="button"
+      class="heart"
+      [class.is-fav]="favourite()"
+      [attr.aria-pressed]="favourite()"
+      [attr.aria-label]="favourite() ? 'Remove from favourites' : 'Add to favourites'"
+      (click)="toggleFavourite()"
+    >
       <sd-icon name="heart" [size]="20" />
-    </div>
+    </button>
   </div>
   @if (highlights()) {
     <div class="highlights">{{ highlights() }}</div>

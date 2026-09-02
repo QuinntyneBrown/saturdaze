@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   input,
+  output,
 } from '@angular/core';
 
 import { Button } from '../button/button';
@@ -10,7 +11,8 @@ import { Icon } from '../icon/icon';
 /**
  * The "11-star" pre-emptive callout. Mirrors
  * `docs/mocks/components/sd-anticipate.js`. Surfaces something the user
- * didn't ask for but will be glad you noticed.
+ * didn't ask for but will be glad you noticed. `ctaClick` fires when the
+ * optional CTA button is pressed.
  */
 
 @Component({
@@ -32,4 +34,5 @@ export class Anticipate {
   readonly headline = input<string>('');
   readonly body = input<string>('');
   readonly cta = input<string>('');
+  readonly ctaClick = output<void>();
 }

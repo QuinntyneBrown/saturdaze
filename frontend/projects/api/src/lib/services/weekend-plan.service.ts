@@ -1,20 +1,38 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, Signal, inject, signal } from '@angular/core';
+import { Injectable, Signal, computed, inject, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 
 import { API_BASE_URL } from '../api/api-base-url';
+import { formatMinutes, hhmm, minutesBetween, toMinutes } from '../api/format';
+import {
+  forecastFor,
+  isOutdoorFriendly,
+  isWetDay,
+  roundOrDash,
+  weatherIcon,
+  weatherNote,
+  weatherWord,
+  weatherWordCapitalised,
+} from '../api/weather';
+import { addDaysIso, formatWeekendSpan, monthAbbr, weekendDates } from '../api/weekend-dates';
+import { AnticipationTip } from '../models/anticipation-tip';
 import { Block } from '../models/block';
 import { DayChip } from '../models/day-chip';
 import { DayHeaderChip } from '../models/day-header-chip';
 import { DayOption } from '../models/day-option';
 import { DaySummary } from '../models/day-summary';
+import { ErrandPlacement } from '../models/errand-placement';
 import { ItineraryBlockDto } from '../models/itinerary-block.dto';
 import { ItineraryView } from '../models/itinerary-view';
+import { QuickAction } from '../models/quick-action';
+import { ShoppingErrandDto } from '../models/shopping-errand.dto';
 import { WeatherDay } from '../models/weather-day';
 import { WeatherForecastDto } from '../models/weather-forecast.dto';
+import { WeekendDay } from '../models/weekend-day';
 import { WeekendDto } from '../models/weekend.dto';
 import { WeekendOverview } from '../models/weekend-overview';
 import { WeekendStat } from '../models/weekend-stat';
+import { FAMILY_SERVICE } from './family.service.contract';
 import { CalendarLinks, IWeekendPlanService } from './weekend-plan.service.contract';
 
 /**
@@ -31,18 +49,6 @@ interface WeekendShareDto {
   readonly token: string;
 }
 
-const EMPTY_OVERVIEW: WeekendOverview = {
-  greeting: 'Loading your weekend…',
-  heroSubtitle: 'Pulling the latest plan from the planner.',
-  heroCta: 'Plan This Weekend',
-  forecastSubtitle: '',
-  forecast: [],
-  days: [],
-  anticipations: [],
-  quickActions: defaultQuickActions(0),
-  preview: [],
-};
-
 const EMPTY_ITINERARY: ItineraryView = {
   day: 'Saturday',
   eyebrow: '',
@@ -57,15 +63,43 @@ const EMPTY_ITINERARY: ItineraryView = {
   blocks: [],
 };
 
+/**
+ * Loading Overview — rendered until the first weekend arrives.
+ */
+function loadingOverview(familyName: string | null): WeekendOverview {
+  return {
+    greeting: greetingFor(familyName),
+    heroSubtitle: 'Pulling the latest plan from the planner.',
+    heroCta: 'Plan This Weekend',
+    forecastSubtitle: '',
+    forecast: [],
+    days: [],
+    anticipations: [],
+    quickActions: defaultQuickActions(0),
+    preview: [],
+  };
+}
+
 @Injectable({ providedIn: 'root' })
 export class WeekendPlanService implements IWeekendPlanService {
   private readonly http = inject(HttpClient);
   private readonly baseUrl = inject(API_BASE_URL);
+  private readonly family = inject(FAMILY_SERVICE);
 
-  private readonly _overview = signal<WeekendOverview>(EMPTY_OVERVIEW);
-  private readonly _itinerary = signal<ItineraryView>(EMPTY_ITINERARY);
-  private readonly _currentId = signal<string | null>(null);
-  private readonly _activeDay = signal<'Saturday' | 'Sunday'>('Saturday');
+  private readonly _dto = signal<WeekendDto | null>(null);
+  private readonly _activeDay = signal<WeekendDay>('Saturday');
+  private readonly _lastErrandPlacement = signal<ErrandPlacement | null>(null);
+
+  private readonly _overview = computed<WeekendOverview>(() => {
+    const dto = this._dto();
+    const familyName = this.family.getProfile()().familyName;
+    return dto ? projectOverview(dto, familyName) : loadingOverview(familyName);
+  });
+
+  private readonly _itinerary = computed<ItineraryView>(() => {
+    const dto = this._dto();
+    return dto ? projectItinerary(dto, this._activeDay()) : EMPTY_ITINERARY;
+  });
 
   /**
    * Constructor.
@@ -80,7 +114,7 @@ export class WeekendPlanService implements IWeekendPlanService {
    * @returns {Signal<WeekendOverview>} The result of the operation
    */
   getOverview(): Signal<WeekendOverview> {
-    return this._overview.asReadonly();
+    return this._overview;
   }
 
   /**
@@ -89,7 +123,16 @@ export class WeekendPlanService implements IWeekendPlanService {
    * @returns {Signal<ItineraryView>} The result of the operation
    */
   getItinerary(): Signal<ItineraryView> {
-    return this._itinerary.asReadonly();
+    return this._itinerary;
+  }
+
+  /**
+   * Last Errand Placement.
+   *
+   * @returns {Signal<ErrandPlacement | null>} The result of the operation
+   */
+  lastErrandPlacement(): Signal<ErrandPlacement | null> {
+    return this._lastErrandPlacement.asReadonly();
   }
 
   /** Fetch the upcoming weekend (server auto-plans on miss). */
@@ -138,11 +181,11 @@ export class WeekendPlanService implements IWeekendPlanService {
   /**
    * Regenerate Day.
    *
-   * @param {'Saturday' | 'Sunday'} day - The day
+   * @param {WeekendDay} day - The day
    *
    * @returns {Promise<void>} The result of the operation
    */
-  async regenerateDay(day: 'Saturday' | 'Sunday', id?: string): Promise<void> {
+  async regenerateDay(day: WeekendDay, id?: string): Promise<void> {
     const target = this.targetId(id);
     try {
       const dto = await firstValueFrom(
@@ -213,14 +256,36 @@ export class WeekendPlanService implements IWeekendPlanService {
   }
 
   /**
+   * Swap Block.
+   *
+   * @param {string} blockId - The block id
+   * @param {readonly string[]} rejectedActivityIds - Activities to exclude
+   *
+   * @returns {Promise<void>} The result of the operation
+   */
+  async swapBlock(blockId: string, rejectedActivityIds: readonly string[] = []): Promise<void> {
+    try {
+      const dto = await firstValueFrom(
+        this.http.post<WeekendDto>(`${this.baseUrl}/api/blocks/${blockId}/swap`, {
+          rejectedActivityIds: [...rejectedActivityIds],
+        }),
+      );
+      this.apply(dto);
+    } catch (err) {
+      console.error('WeekendPlanService.swapBlock failed', err);
+      throw err;
+    }
+  }
+
+  /**
    * Lock Day.
    *
-   * @param {'Saturday' | 'Sunday'} day - The day
+   * @param {WeekendDay} day - The day
    * @param {boolean} locked - The locked
    *
    * @returns {Promise<void>} The result of the operation
    */
-  async lockDay(day: 'Saturday' | 'Sunday', locked: boolean, id?: string): Promise<void> {
+  async lockDay(day: WeekendDay, locked: boolean, id?: string): Promise<void> {
     const target = this.targetId(id);
     try {
       const dto = await firstValueFrom(
@@ -241,21 +306,49 @@ export class WeekendPlanService implements IWeekendPlanService {
    *
    * @param {string} description - The description
    * @param {number} estimatedMinutes - The estimated minutes
+   * @param {WeekendDay | null} preferredDay - The preferred day
    *
    * @returns {Promise<void>} The result of the operation
    */
-  async addErrand(description: string, estimatedMinutes: number, id?: string): Promise<void> {
+  async addErrand(
+    description: string,
+    estimatedMinutes: number,
+    preferredDay: WeekendDay | null = null,
+    id?: string,
+  ): Promise<void> {
     const target = this.targetId(id);
     try {
       const dto = await firstValueFrom(
         this.http.post<WeekendDto>(`${this.baseUrl}/api/weekends/${target}/errands`, {
           description,
           estimatedMinutes,
+          preferredDay,
         }),
       );
       this.apply(dto);
+      if (dto) this._lastErrandPlacement.set(placementFor(dto, description));
     } catch (err) {
       console.error('WeekendPlanService.addErrand failed', err);
+      throw err;
+    }
+  }
+
+  /**
+   * Set Errand Done.
+   *
+   * @param {string} errandId - The errand id
+   * @param {boolean} done - The done flag
+   *
+   * @returns {Promise<void>} The result of the operation
+   */
+  async setErrandDone(errandId: string, done: boolean): Promise<void> {
+    try {
+      const dto = await firstValueFrom(
+        this.http.put<WeekendDto>(`${this.baseUrl}/api/errands/${errandId}/done`, { done }),
+      );
+      this.apply(dto);
+    } catch (err) {
+      console.error('WeekendPlanService.setErrandDone failed', err);
       throw err;
     }
   }
@@ -301,39 +394,26 @@ export class WeekendPlanService implements IWeekendPlanService {
   /**
    * Set Active Day.
    *
-   * @param {'Saturday' | 'Sunday'} day - The day
+   * @param {WeekendDay} day - The day
    *
    * @returns {void} No return value
    */
-  setActiveDay(day: 'Saturday' | 'Sunday'): void {
+  setActiveDay(day: WeekendDay): void {
     this._activeDay.set(day);
-    const dto = this._lastDto;
-    if (dto) this._itinerary.set(projectItinerary(dto, day));
   }
-
-  private _lastDto: WeekendDto | null = null;
 
   /**
    * Apply.
-   *
-   * @param {WeekendDto} dto - The dto
-   *
-   * @returns {void} No return value
    */
-  private apply(dto: WeekendDto): void {
-    this._lastDto = dto;
-    this._currentId.set(dto.id);
-    this._overview.set(projectOverview(dto));
-    this._itinerary.set(projectItinerary(dto, this._activeDay()));
+  private apply(dto: WeekendDto | null): void {
+    this._dto.set(dto ?? null);
   }
 
   /**
    * Target Id.
-   *
-   * @returns {string} The result of the operation
    */
   private targetId(id?: string): string {
-    const target = id ?? this._currentId();
+    const target = id ?? this._dto()?.id;
     if (!target) throw new Error('No current weekend is loaded yet.');
     return target;
   }
@@ -343,35 +423,39 @@ export class WeekendPlanService implements IWeekendPlanService {
 // Projection: WeekendDto → WeekendOverview (Home page)
 // ---------------------------------------------------------------------------
 
-function projectOverview(dto: WeekendDto): WeekendOverview {
+/**
+ * "Morning, Browns 👋" — the family name without its leading "The".
+ */
+export function greetingFor(familyName: string | null): string {
+  const short = (familyName ?? '').replace(/^the\s+/i, '').trim();
+  return short ? `Morning, ${short} 👋` : 'Morning 👋';
+}
+
+function projectOverview(dto: WeekendDto, familyName: string | null): WeekendOverview {
   const [satDate, sunDate] = weekendDates(dto.weekendOf);
-  const satWeather = forecastFor(dto.weather, satDate);
-  const sunWeather = forecastFor(dto.weather, sunDate);
+  const sunIso = addDaysIso(dto.weekendOf, 1);
+  const satWeather = forecastFor(dto.weather, dto.weekendOf);
+  const sunWeather = forecastFor(dto.weather, sunIso);
 
   const satBlocks = dto.blocks.filter((b) => b.day === 'Saturday').sort(bySortThenStart);
   const sunBlocks = dto.blocks.filter((b) => b.day === 'Sunday').sort(bySortThenStart);
 
-  const satHighlight = topHighlight(satBlocks);
-  const sunHighlight = topHighlight(sunBlocks);
-
-  const previewBlocks = satBlocks.slice(0, 5).map(toBlock);
-
   return {
-    greeting: 'Morning, Browns 👋',
+    greeting: greetingFor(familyName),
     heroSubtitle: heroSubtitle(satWeather, sunWeather),
     heroCta: dto.regenerateCount === 0 ? 'Plan This Weekend' : 'Regenerate weekend',
-    forecastSubtitle: forecastSubtitle(satDate, sunDate),
+    forecastSubtitle: formatWeekendSpan(dto.weekendOf),
     forecast: [
       toWeatherDay('Saturday', satWeather),
       toWeatherDay('Sunday', sunWeather),
     ],
     days: [
-      toDaySummary('Saturday', satDate, satWeather, satBlocks, satHighlight),
-      toDaySummary('Sunday', sunDate, sunWeather, sunBlocks, sunHighlight),
+      toDaySummary('Saturday', satDate, satWeather, satBlocks),
+      toDaySummary('Sunday', sunDate, sunWeather, sunBlocks),
     ],
-    anticipations: [],
+    anticipations: anticipations(dto, satWeather, sunWeather),
     quickActions: defaultQuickActions(lockedCount(dto.blocks)),
-    preview: previewBlocks,
+    preview: satBlocks.slice(0, 5).map((b) => toBlock(b, dto.errands)),
   };
 }
 
@@ -379,11 +463,10 @@ function projectOverview(dto: WeekendDto): WeekendOverview {
  * To Day Summary.
  */
 function toDaySummary(
-  day: string,
+  day: WeekendDay,
   date: Date,
   weather: WeatherForecastDto | null,
   blocks: ReadonlyArray<ItineraryBlockDto>,
-  highlight: string,
 ): DaySummary {
   return {
     day,
@@ -392,7 +475,7 @@ function toDaySummary(
       ? `${roundOrDash(weather.highCelsius)}°  ${weatherWord(weather)}`
       : '— ',
     icon: weatherIcon(weather),
-    highlight,
+    highlight: topHighlight(blocks),
     chips: dayChips(blocks, weather),
   };
 }
@@ -413,24 +496,17 @@ function dayChips(
       label: `${hhmm(firstLocked.startTime)} ${firstLocked.title.toLowerCase()}`,
     });
   }
-  const driveMins = blocks
-    .filter((b) => b.kind === 'Drive')
-    .reduce((sum, b) => sum + minutes(b.startTime, b.endTime), 0);
+  const driveMins = driveMinutes(blocks);
   if (driveMins > 0) {
     chips.push({ tone: 'sky', icon: 'car', label: `${driveMins} min drive` });
   }
-  const isOutdoor = weather?.tags.some((t) => t === 'sunny' || t === 'warm' || t === 'mild');
+  const isOutdoor = isOutdoorFriendly(weather);
   chips.push({ tone: isOutdoor ? 'leaf' : 'indoor', label: isOutdoor ? 'Outdoor day' : 'Indoor day' });
   return chips;
 }
 
 /**
  * To Weather Day.
- *
- * @param {string} day - The day
- * @param {WeatherForecastDto | null} w - The w
- *
- * @returns {WeatherDay} The result of the operation
  */
 function toWeatherDay(day: string, w: WeatherForecastDto | null): WeatherDay {
   if (!w) return { day, icon: 'cloud', hi: '—', lo: '—', note: 'Forecast unavailable.' };
@@ -445,11 +521,6 @@ function toWeatherDay(day: string, w: WeatherForecastDto | null): WeatherDay {
 
 /**
  * Hero Subtitle.
- *
- * @param {WeatherForecastDto | null} sat - The sat
- * @param {WeatherForecastDto | null} sun - The sun
- *
- * @returns {string} The result of the operation
  */
 function heroSubtitle(sat: WeatherForecastDto | null, sun: WeatherForecastDto | null): string {
   const goodSat = isOutdoorFriendly(sat);
@@ -457,39 +528,96 @@ function heroSubtitle(sat: WeatherForecastDto | null, sun: WeatherForecastDto | 
   if (goodSat && goodSun) return "Sat & Sun are looking warm. I've sketched a weekend you can take as-is.";
   if (goodSat) return "Saturday looks great outside. Sunday's cooler — I've leaned indoors after lunch.";
   if (goodSun) return "Saturday's mixed; Sunday opens up. Outdoor plans lean to Sunday.";
-  return "Mixed weather both days. Indoor-friendly plan ready for you.";
+  return 'Mixed weather both days. Indoor-friendly plan ready for you.';
 }
 
 /**
- * Forecast Subtitle.
- *
- * @param {Date} sat - The sat
- * @param {Date} sun - The sun
- *
- * @returns {string} The result of the operation
+ * Anticipations — the "11-star" heads-up strip, derived only from data the
+ * planner actually has: a wet day, the state of the shopping list, and the
+ * first fixed commitment.
  */
-function forecastSubtitle(sat: Date, sun: Date): string {
-  return `Sat ${sat.getUTCDate()} ${monthAbbr(sat)} – Sun ${sun.getUTCDate()} ${monthAbbr(sun)}`;
+function anticipations(
+  dto: WeekendDto,
+  satWeather: WeatherForecastDto | null,
+  sunWeather: WeatherForecastDto | null,
+): AnticipationTip[] {
+  const tips: AnticipationTip[] = [];
+
+  const wet: Array<[WeekendDay, WeatherForecastDto | null]> = [
+    ['Saturday', satWeather],
+    ['Sunday', sunWeather],
+  ];
+  const wetDay = wet.find(([, w]) => isWetDay(w));
+  if (wetDay) {
+    const [day, w] = wetDay;
+    tips.push({
+      icon: weatherIcon(w),
+      headline: `${day} looks ${weatherWord(w) === 'snow' ? 'snowy' : 'wet'}`,
+      body: `I've leaned indoors for ${day}. The indoor picks are lined up if you want more options.`,
+      cta: 'See indoor picks',
+      href: '/activities',
+    });
+  }
+
+  const pending = dto.errands.find((e) => !e.done);
+  if (pending) {
+    const block = dto.blocks.find((b) => b.kind === 'Errand' && b.refId === pending.id);
+    tips.push({
+      icon: 'bag',
+      headline: `${pending.description} is on the list`,
+      body: block
+        ? `Slotted for ${block.day} at ${hhmm(block.startTime)} — tap the block to mark it done.`
+        : 'Not placed yet — regenerate to slot it in.',
+      cta: 'Open the day',
+      href: `/itinerary?day=${(block?.day ?? 'Saturday').toLowerCase()}`,
+    });
+  } else {
+    tips.push({
+      icon: 'bag',
+      headline: 'Anything to pick up?',
+      body: "Add a shopping run and I'll tuck it next to something you're already doing.",
+      cta: 'Add an errand',
+      href: '/errand',
+    });
+  }
+
+  const commitment = [...dto.blocks]
+    .sort((a, b) => dayRank(a.day) - dayRank(b.day) || bySortThenStart(a, b))
+    .find((b) => b.kind === 'Commitment');
+  if (commitment) {
+    tips.push({
+      icon: 'lock',
+      headline: `${commitment.title} · ${commitment.day} ${hhmm(commitment.startTime)}`,
+      body: 'Locked in — the rest of the day is built around it.',
+    });
+  }
+
+  return tips;
+}
+
+function dayRank(day: WeekendDay): number {
+  return day === 'Saturday' ? 0 : 1;
 }
 
 /**
  * Default Quick Actions.
- *
- * @param {number} lockedBlocks - The locked blocks
  */
-function defaultQuickActions(lockedBlocks: number) {
+function defaultQuickActions(lockedBlocks: number): QuickAction[] {
   return [
     {
+      kind: 'regenerate',
       title: 'Regenerate the weekend',
       subtitle: 'Same commitments, fresh ideas',
       icon: 'refresh',
     },
     {
+      kind: 'lock',
       title: "Lock what's already perfect",
       subtitle: `${lockedBlocks} block${lockedBlocks === 1 ? '' : 's'} locked`,
       icon: 'lock',
     },
     {
+      kind: 'share',
       title: 'Share this weekend',
       subtitle: 'A read-only preview link',
       icon: 'share',
@@ -501,18 +629,17 @@ function defaultQuickActions(lockedBlocks: number) {
 // Projection: WeekendDto → ItineraryView (Itinerary page)
 // ---------------------------------------------------------------------------
 
-function projectItinerary(dto: WeekendDto, active: 'Saturday' | 'Sunday'): ItineraryView {
+function projectItinerary(dto: WeekendDto, active: WeekendDay): ItineraryView {
   const [satDate, sunDate] = weekendDates(dto.weekendOf);
+  const sunIso = addDaysIso(dto.weekendOf, 1);
   const satBlocks = dto.blocks.filter((b) => b.day === 'Saturday').sort(bySortThenStart);
   const sunBlocks = dto.blocks.filter((b) => b.day === 'Sunday').sort(bySortThenStart);
   const activeBlocks = active === 'Saturday' ? satBlocks : sunBlocks;
   const activeDate = active === 'Saturday' ? satDate : sunDate;
-  const activeWeather = forecastFor(dto.weather, activeDate);
+  const activeWeather = forecastFor(dto.weather, active === 'Saturday' ? dto.weekendOf : sunIso);
 
-  const driveMins = activeBlocks
-    .filter((b) => b.kind === 'Drive')
-    .reduce((sum, b) => sum + minutes(b.startTime, b.endTime), 0);
-  const lockedCount = activeBlocks.filter((b) => b.isLocked).length;
+  const driveMins = driveMinutes(activeBlocks);
+  const locked = activeBlocks.filter((b) => b.isLocked).length;
 
   return {
     day: active,
@@ -522,15 +649,15 @@ function projectItinerary(dto: WeekendDto, active: 'Saturday' | 'Sunday'): Itine
       : 'Plan ready',
     subtitle: itinerarySubtitle(activeBlocks),
     icon: weatherIcon(activeWeather),
-    chips: itineraryChips(activeBlocks, activeWeather, lockedCount, driveMins),
+    chips: itineraryChips(activeWeather, locked, driveMins),
     dayOptions: [
-      dayOption('saturday', 'Saturday', satBlocks, forecastFor(dto.weather, satDate), active === 'Saturday'),
-      dayOption('sunday', 'Sunday', sunBlocks, forecastFor(dto.weather, sunDate), active === 'Sunday'),
+      dayOption('saturday', 'Saturday', satBlocks, forecastFor(dto.weather, dto.weekendOf), active === 'Saturday'),
+      dayOption('sunday', 'Sunday', sunBlocks, forecastFor(dto.weather, sunIso), active === 'Sunday'),
     ],
-    stats: stats(satBlocks.concat(sunBlocks)),
+    stats: stats(satBlocks.concat(sunBlocks), dto.errands),
     previewTitle: `${active} — timeline`,
     previewSubtitle: 'Tap any block for why, alternatives, map',
-    blocks: activeBlocks.map(toBlock),
+    blocks: activeBlocks.map((b) => toBlock(b, dto.errands)),
   };
 }
 
@@ -538,7 +665,6 @@ function projectItinerary(dto: WeekendDto, active: 'Saturday' | 'Sunday'): Itine
  * Itinerary Chips.
  */
 function itineraryChips(
-  blocks: ReadonlyArray<ItineraryBlockDto>,
   weather: WeatherForecastDto | null,
   locked: number,
   driveMins: number,
@@ -558,48 +684,40 @@ function itineraryChips(
  */
 function dayOption(
   key: 'saturday' | 'sunday',
-  label: 'Saturday' | 'Sunday',
+  label: WeekendDay,
   blocks: ReadonlyArray<ItineraryBlockDto>,
   weather: WeatherForecastDto | null,
   active: boolean,
 ): DayOption {
-  const highlight = topHighlight(blocks);
   return {
     key,
     label,
     icon: weatherIcon(weather),
     iconTone: weather?.tags.includes('sunny') ? 'sun' : 'soft',
-    meta: `${blocks.length} blocks · ${roundOrDash(weather?.highCelsius ?? null)}° ${weatherWord(weather)} · ${highlight} highlight`,
+    meta: `${blocks.length} blocks · ${roundOrDash(weather?.highCelsius)}° ${weatherWord(weather)} · ${topHighlight(blocks)} highlight`,
     active,
   };
 }
 
 /**
  * Stats.
- *
- * @param {ReadonlyArray<ItineraryBlockDto>} allBlocks - The all blocks
- *
- * @returns {WeekendStat[]} The result of the operation
  */
-function stats(allBlocks: ReadonlyArray<ItineraryBlockDto>): WeekendStat[] {
-  const driveMins = allBlocks
-    .filter((b) => b.kind === 'Drive')
-    .reduce((sum, b) => sum + minutes(b.startTime, b.endTime), 0);
+function stats(
+  allBlocks: ReadonlyArray<ItineraryBlockDto>,
+  errands: ReadonlyArray<ShoppingErrandDto>,
+): WeekendStat[] {
   const locked = allBlocks.filter((b) => b.isLocked).length;
+  const openErrands = errands.filter((e) => !e.done).length;
   return [
     { num: String(allBlocks.length), label: 'blocks planned' },
-    { num: formatMinutes(driveMins), label: 'total driving' },
+    { num: formatMinutes(driveMinutes(allBlocks)), label: 'total driving' },
     { num: String(locked), label: 'locked anchors' },
-    { num: '$~120', label: 'est. spend' },
+    { num: String(openErrands), label: openErrands === 1 ? 'errand to run' : 'errands to run' },
   ];
 }
 
 /**
  * Itinerary Subtitle.
- *
- * @param {ReadonlyArray<ItineraryBlockDto>} blocks - The blocks
- *
- * @returns {string} The result of the operation
  */
 function itinerarySubtitle(blocks: ReadonlyArray<ItineraryBlockDto>): string {
   if (blocks.length === 0) return 'Nothing planned yet.';
@@ -612,32 +730,34 @@ function itinerarySubtitle(blocks: ReadonlyArray<ItineraryBlockDto>): string {
 // Block projection
 // ---------------------------------------------------------------------------
 
-function toBlock(b: ItineraryBlockDto): Block {
-  const dur = minutes(b.startTime, b.endTime);
+function toBlock(b: ItineraryBlockDto, errands: ReadonlyArray<ShoppingErrandDto>): Block {
+  const dur = minutesBetween(b.startTime, b.endTime);
+  const errand = b.kind === 'Errand' ? errands.find((e) => e.id === b.refId) : undefined;
   return {
     id: b.id,
     day: b.day,
+    kind: b.kind,
+    refId: b.refId,
     time: hhmm(b.startTime),
     duration: formatMinutes(dur),
     title: b.title,
     subtitle: b.reason || undefined,
+    reason: b.reason || undefined,
     icon: blockIcon(b.kind),
     tone: blockTone(b.kind),
     locked: b.isLocked || undefined,
+    done: errand?.done,
     drive: b.kind === 'Drive' ? `${dur} min` : undefined,
   };
 }
 
 /**
  * Block Tone.
- *
- * @param {ItineraryBlockDto['kind']} kind - The kind
  */
 function blockTone(kind: ItineraryBlockDto['kind']): Block['tone'] {
   switch (kind) {
     case 'Meal': return 'meal';
     case 'Drive': return 'drive';
-    case 'Workout': return 'workout';
     case 'Commitment': return 'fixed';
     case 'Downtime': return 'downtime';
     case 'Errand': return 'fixed';
@@ -647,16 +767,11 @@ function blockTone(kind: ItineraryBlockDto['kind']): Block['tone'] {
 
 /**
  * Block Icon.
- *
- * @param {ItineraryBlockDto['kind']} kind - The kind
- *
- * @returns {string} The result of the operation
  */
 function blockIcon(kind: ItineraryBlockDto['kind']): string {
   switch (kind) {
     case 'Meal': return 'fork';
     case 'Drive': return 'car';
-    case 'Workout': return 'bike';
     case 'Commitment': return 'lock';
     case 'Downtime': return 'bed';
     case 'Errand': return 'bag';
@@ -666,10 +781,6 @@ function blockIcon(kind: ItineraryBlockDto['kind']): string {
 
 /**
  * Top Highlight.
- *
- * @param {ReadonlyArray<ItineraryBlockDto>} blocks - The blocks
- *
- * @returns {string} The result of the operation
  */
 function topHighlight(blocks: ReadonlyArray<ItineraryBlockDto>): string {
   const top = blocks.find((b) => b.kind === 'Activity');
@@ -678,190 +789,37 @@ function topHighlight(blocks: ReadonlyArray<ItineraryBlockDto>): string {
 
 /**
  * Locked Count.
- *
- * @param {ReadonlyArray<ItineraryBlockDto>} blocks - The blocks
- *
- * @returns {number} The result of the operation
  */
 function lockedCount(blocks: ReadonlyArray<ItineraryBlockDto>): number {
   return blocks.filter((b) => b.isLocked).length;
 }
 
-// ---------------------------------------------------------------------------
-// Date / weather helpers
-// ---------------------------------------------------------------------------
-
-function weekendDates(saturdayIso: string): [Date, Date] {
-  const [y, m, d] = saturdayIso.split('-').map(Number);
-  const sat = new Date(Date.UTC(y!, m! - 1, d!));
-  const sun = new Date(sat);
-  sun.setUTCDate(sun.getUTCDate() + 1);
-  return [sat, sun];
+/**
+ * Drive Minutes — the sum of every Drive block on the list.
+ */
+function driveMinutes(blocks: ReadonlyArray<ItineraryBlockDto>): number {
+  return blocks
+    .filter((b) => b.kind === 'Drive')
+    .reduce((sum, b) => sum + minutesBetween(b.startTime, b.endTime), 0);
 }
 
 /**
- * Forecast For.
- *
- * @param {ReadonlyArray<WeatherForecastDto>} weather - The weather
- * @param {Date} day - The day
+ * Placement For — where the errand just added landed.
  */
-function forecastFor(weather: ReadonlyArray<WeatherForecastDto>, day: Date): WeatherForecastDto | null {
-  const iso = day.toISOString().substring(0, 10);
-  return weather.find((w) => w.date === iso) ?? null;
-}
-
-/**
- * Weather Icon.
- *
- * @param {WeatherForecastDto | null} w - The w
- *
- * @returns {string} The result of the operation
- */
-function weatherIcon(w: WeatherForecastDto | null): string {
-  if (!w || w.unavailable) return 'cloud';
-  if (w.tags.includes('rain')) return 'rain';
-  if (w.tags.includes('snow')) return 'cloud';
-  if (w.tags.includes('sunny')) return 'sun';
-  return 'cloud';
-}
-
-/**
- * Weather Word.
- *
- * @param {WeatherForecastDto | null} w - The w
- *
- * @returns {string} The result of the operation
- */
-function weatherWord(w: WeatherForecastDto | null): string {
-  if (!w || w.unavailable) return 'forecast pending';
-  if (w.tags.includes('rain')) return 'rain';
-  if (w.tags.includes('sunny')) return 'sunny';
-  if (w.tags.includes('warm')) return 'warm';
-  if (w.tags.includes('cold')) return 'cold';
-  return 'cloudy';
-}
-
-/**
- * Weather Word Capitalised.
- *
- * @param {WeatherForecastDto | null} w - The w
- *
- * @returns {string} The result of the operation
- */
-function weatherWordCapitalised(w: WeatherForecastDto | null): string {
-  const word = weatherWord(w);
-  return word.charAt(0).toUpperCase() + word.slice(1);
-}
-
-/**
- * Weather Note.
- *
- * @param {WeatherForecastDto} w - The w
- *
- * @returns {string} The result of the operation
- */
-function weatherNote(w: WeatherForecastDto): string {
-  if (w.unavailable) return 'Forecast unavailable.';
-  if (w.tags.includes('rain')) return 'Rain expected — plan indoors.';
-  if (w.tags.includes('sunny') && w.tags.includes('warm')) return 'Light breeze, perfect for outdoors';
-  if (w.tags.includes('sunny')) return 'Sunny — bring layers';
-  if (w.tags.includes('cold')) return 'Cold day — indoor-friendly';
-  return 'Variable cloud — flex the plan';
-}
-
-/**
- * Is Outdoor Friendly.
- *
- * @param {WeatherForecastDto | null} w - The w
- *
- * @returns {boolean} True if successful, false otherwise
- */
-function isOutdoorFriendly(w: WeatherForecastDto | null): boolean {
-  if (!w || w.unavailable) return false;
-  if (w.tags.includes('rain') || w.tags.includes('snow') || w.tags.includes('cold')) return false;
-  return w.tags.includes('sunny') || w.tags.includes('warm') || w.tags.includes('mild');
-}
-
-/**
- * Round Or Dash.
- *
- * @param {number | null} n - The n
- *
- * @returns {string} The result of the operation
- */
-function roundOrDash(n: number | null): string {
-  if (n == null) return '—';
-  return String(Math.round(n));
-}
-
-// ---------------------------------------------------------------------------
-// Time / sort helpers
-// ---------------------------------------------------------------------------
-
-function hhmm(timeOnly: string): string {
-  // Backend serialises TimeOnly as "HH:mm:ss" — trim to "H:mm" (no leading zero on hour).
-  const [h, m] = timeOnly.split(':');
-  return `${Number(h)}:${m}`;
-}
-
-/**
- * Minutes.
- *
- * @param {string} start - The start
- * @param {string} end - The end
- *
- * @returns {number} The result of the operation
- */
-function minutes(start: string, end: string): number {
-  return toMinutes(end) - toMinutes(start);
-}
-
-/**
- * To Minutes.
- *
- * @param {string} t - The t
- *
- * @returns {number} The result of the operation
- */
-function toMinutes(t: string): number {
-  const [h, m] = t.split(':').map(Number);
-  return h! * 60 + (m ?? 0);
-}
-
-/**
- * Format Minutes.
- *
- * @param {number} mins - The mins
- *
- * @returns {string} The result of the operation
- */
-function formatMinutes(mins: number): string {
-  if (mins < 60) return `${mins}m`;
-  const h = Math.floor(mins / 60);
-  const m = mins % 60;
-  return m === 0 ? `${h}h` : `${h}h ${m}m`;
+function placementFor(dto: WeekendDto, description: string): ErrandPlacement | null {
+  const errand = [...dto.errands].reverse().find((e) => e.description === description)
+    ?? dto.errands[dto.errands.length - 1];
+  const block = errand
+    ? dto.blocks.find((b) => b.kind === 'Errand' && b.refId === errand.id)
+    : undefined;
+  if (!block) return null;
+  return { description, day: block.day, time: hhmm(block.startTime) };
 }
 
 /**
  * By Sort Then Start.
- *
- * @param {ItineraryBlockDto} a - The a
- * @param {ItineraryBlockDto} b - The b
- *
- * @returns {number} The result of the operation
  */
 function bySortThenStart(a: ItineraryBlockDto, b: ItineraryBlockDto): number {
   if (a.sortOrder !== b.sortOrder) return a.sortOrder - b.sortOrder;
   return toMinutes(a.startTime) - toMinutes(b.startTime);
-}
-
-/**
- * Month Abbr.
- *
- * @param {Date} d - The d
- *
- * @returns {string} The result of the operation
- */
-function monthAbbr(d: Date): string {
-  return d.toLocaleString('en-US', { month: 'short', timeZone: 'UTC' });
 }

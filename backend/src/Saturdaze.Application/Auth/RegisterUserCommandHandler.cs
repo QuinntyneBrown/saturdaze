@@ -16,17 +16,20 @@ public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, A
     private readonly IPasswordHasher _hasher;
     private readonly IJwtTokenService _jwt;
     private readonly IDateTimeProvider _clock;
+    private readonly RefreshTokenIssuer _issuer;
 
     public RegisterUserCommandHandler(
         IAppDbContext db,
         IPasswordHasher hasher,
         IJwtTokenService jwt,
-        IDateTimeProvider clock)
+        IDateTimeProvider clock,
+        RefreshTokenIssuer issuer)
     {
         _db = db;
         _hasher = hasher;
         _jwt = jwt;
         _clock = clock;
+        _issuer = issuer;
     }
 
     public async Task<AuthSuccessDto> Handle(RegisterUserCommand request, CancellationToken ct)
@@ -39,13 +42,15 @@ public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, A
 
         var now = _clock.UtcNow;
 
-        // Per D9: create a Family for every new user. The first sign-in flow
-        // routes them to /profile to populate it with members + commitments.
+        // Every account owns exactly one family (L2-001). The first sign-in
+        // routes to /profile to populate members + commitments.
         var family = new Family
         {
             Id = Guid.NewGuid(),
-            HomeLocation = request.HomeLocation ?? string.Empty,
+            Name = string.IsNullOrWhiteSpace(request.FamilyName) ? null : request.FamilyName.Trim(),
+            HomeLocation = request.HomeLocation?.Trim() ?? string.Empty,
             BudgetEnabled = false,
+            FridayPreviewEnabled = request.FridayPreview,
         };
         _db.Families.Add(family);
 
@@ -63,16 +68,7 @@ public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, A
         };
         _db.Users.Add(user);
 
-        var refreshRaw = _jwt.CreateRawRefreshToken();
-        var refresh = new RefreshToken
-        {
-            Id = Guid.NewGuid(),
-            UserId = user.Id,
-            TokenHash = _jwt.HashRefreshToken(refreshRaw),
-            ExpiresAtUtc = now.AddDays(14),
-            CreatedAtUtc = now,
-        };
-        _db.RefreshTokens.Add(refresh);
+        var issued = _issuer.Issue(user);
 
         var verifyRaw = _jwt.CreateRawRefreshToken();
         _db.EmailVerificationTokens.Add(new EmailVerificationToken
@@ -86,9 +82,6 @@ public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, A
 
         await _db.SaveChangesAsync(ct);
 
-        return new AuthSuccessDto(
-            new AuthTokensDto(_jwt.CreateAccessToken(user), refreshRaw, _jwt.AccessTokenExpiresAt),
-            new UserDto(user.Id, user.Email, user.Role, user.EmailVerifiedUtc)
-        );
+        return _issuer.ToSuccess(user, issued.Raw);
     }
 }

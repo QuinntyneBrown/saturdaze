@@ -14,6 +14,10 @@ export class ResetPasswordPage extends AuthShellPage {
     return this.authCard.locator('sd-button:has-text("Update password")');
   }
 
+  successState(): Locator {
+    return this.page.locator(".success-state");
+  }
+
   errorState(): Locator {
     return this.authCard.locator('.error-state');
   }

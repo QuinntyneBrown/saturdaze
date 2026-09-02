@@ -14,7 +14,8 @@ import { Button, Chip, Icon, TimelineBlock } from 'components';
  * Marketing splash — pages/splash.html.
  *
  * Public surface for signed-out visitors. Deliberately escapes the
- * `.sd-frame` phone canvas (the route declares `data: { chrome: false }`)
+ * `.sd-frame` phone canvas (the route declares `data: { shell: 'splash' }`,
+ * which `App` reads to drop the signed-in chrome)
  * so the marketing layout can run edge-to-edge up to 1120px.
  *
  * The top nav is `position: sticky` so the primary conversion stays

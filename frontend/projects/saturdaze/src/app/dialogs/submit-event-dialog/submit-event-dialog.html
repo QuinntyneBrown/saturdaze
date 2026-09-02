@@ -21,8 +21,13 @@
         [ngModel]="startsAtLocal()"
         (ngModelChange)="startsAtLocal.set($event); error.set('')"
         required
+        [attr.aria-invalid]="dateError() ? 'true' : null"
       />
-      <div class="hint">Defaulted to one hour from now.</div>
+      @if (dateError()) {
+        <div class="field-error" role="alert">{{ dateError() }}</div>
+      } @else {
+        <div class="hint">Defaulted to one hour from now.</div>
+      }
     </label>
 
     <label class="field">

@@ -1,0 +1,88 @@
+name: CI
+
+# Runs the same gates as the deploy workflow, on every pull request and on
+# pushes to non-main branches, so a merge to main never meets a red suite.
+on:
+  pull_request:
+  push:
+    branches-ignore: [main]
+
+permissions:
+  contents: read
+
+env:
+  DOTNET_VERSION: '10.0.101'
+  NODE_VERSION: '22'
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test-backend:
+    name: Backend tests (LocalDB)
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Ensure LocalDB is available
+        shell: pwsh
+        run: |
+          if (-not (Get-Command sqllocaldb -ErrorAction SilentlyContinue)) {
+            choco install sqllocaldb -y --no-progress
+          }
+          sqllocaldb start MSSQLLocalDB
+          sqllocaldb info MSSQLLocalDB
+
+      - name: Build and test
+        run: dotnet test backend/Saturdaze.sln --nologo --configuration Release
+
+  test-frontend:
+    name: Frontend build and unit tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install Angular workspace deps
+        working-directory: frontend
+        run: npm ci
+
+      - name: Build libraries
+        working-directory: frontend
+        run: |
+          npx ng build api
+          npx ng build components
+
+      - name: Unit tests (Vitest)
+        working-directory: frontend
+        run: npm test -- --watch=false
+
+      - name: ng build (production)
+        working-directory: frontend
+        run: npx ng build saturdaze --configuration production
+
+  design-system:
+    name: Design-system contract + browser tests
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - run: npm ci
+        working-directory: design-system
+      - run: npx playwright install --with-deps chromium
+        working-directory: design-system
+      - run: npm test
+        working-directory: design-system

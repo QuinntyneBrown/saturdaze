@@ -1,0 +1,38 @@
+:host {
+  display: block;
+}
+
+.why-row {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.why-icon {
+  color: var(--sd-primary);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.strong {
+  font-weight: var(--sd-fw-semibold);
+}
+
+.muted {
+  color: var(--sd-ink-soft);
+  font-size: var(--sd-fs-sm);
+  margin-top: 4px;
+}
+
+.status {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+.hint {
+  margin: 12px 0 0;
+  font-size: var(--sd-fs-sm);
+  color: var(--sd-ink-soft);
+}

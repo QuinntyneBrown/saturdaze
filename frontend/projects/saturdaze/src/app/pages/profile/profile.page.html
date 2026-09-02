@@ -1,15 +1,15 @@
 <sd-top-bar title="Family profile" back />
 
 <div class="family-identity">
-  <h2>{{ profile().familyName }}</h2>
-  <p>{{ profile().location }}</p>
+  <h2>{{ profile().familyName ?? 'Your family' }}</h2>
+  <p>{{ profile().location || 'Add your home location so I can plan drives' }}</p>
 </div>
 
 <div class="profile-cols">
   <sd-section title="Who's in" subtitle="Tap to edit a member">
     <div class="stack">
       @if (editable(); as editableProfile) {
-      @for (m of editableProfile.members; track m.name; let i = $index) {
+      @for (m of editableProfile.members; track m.id ?? m.name; let i = $index) {
         <sd-list-item [title]="m.name" [subtitle]="memberSubtitle(m)">
           <sd-avatar slot="leading" [name]="m.name" [tone]="memberTone(i)" />
           <div slot="trailing" class="row-actions">
@@ -17,6 +17,7 @@
               type="button"
               class="icon-action"
               aria-label="Edit family member"
+              [disabled]="saving()"
               (click)="openEditMember(i, m)"
             >
               <sd-icon name="edit" [size]="16" />
@@ -25,6 +26,7 @@
               type="button"
               class="icon-action danger"
               aria-label="Delete family member"
+              [disabled]="saving()"
               (click)="deleteMember(i, m)"
             >
               <sd-icon name="trash" [size]="16" />
@@ -56,7 +58,7 @@
   >
     <div class="stack">
       @if (editable(); as editableProfile) {
-      @for (c of editableProfile.commitments; track c.title + c.dayOfWeek; let i = $index) {
+      @for (c of editableProfile.commitments; track c.id ?? (c.title + c.dayOfWeek); let i = $index) {
         <sd-list-item [title]="c.title" [subtitle]="commitmentSubtitle(c)">
           <sd-icon slot="leading" [name]="commitmentIcon(c)" />
           <div slot="trailing" class="row-actions">
@@ -65,6 +67,7 @@
               type="button"
               class="icon-action"
               aria-label="Edit commitment"
+              [disabled]="saving()"
               (click)="openEditCommitment(i, c)"
             >
               <sd-icon name="edit" [size]="16" />
@@ -73,6 +76,7 @@
               type="button"
               class="icon-action danger"
               aria-label="Delete commitment"
+              [disabled]="saving()"
               (click)="deleteCommitment(i, c)"
             >
               <sd-icon name="trash" [size]="16" />
@@ -98,17 +102,6 @@
     </div>
   </sd-section>
 
-  <sd-section title="Daily rhythm">
-    <div class="stack">
-      @for (r of profile().rhythm; track r.title) {
-        <sd-list-item [title]="r.title" [subtitle]="r.subtitle">
-          <sd-icon slot="leading" [name]="r.icon" />
-          <sd-chip slot="trailing">{{ r.chip }}</sd-chip>
-        </sd-list-item>
-      }
-    </div>
-  </sd-section>
-
   <sd-section
     title="Likes & dislikes"
     subtitle="I'll lean into / avoid these"
@@ -120,20 +113,29 @@
           {{ l.label }}
         </sd-chip>
       }
+      @if (profile().likes.length === 0) {
+        <sd-chip>Nothing recorded yet</sd-chip>
+      }
     </sd-tag-group>
   </sd-section>
 
   <sd-section title="Preferences">
     <sd-card>
-      @for (p of profile().preferences; track p.title; let last = $last) {
+      @for (p of profile().preferences; track p.key; let last = $last) {
         <div class="pref-row" [class.with-divider]="!last">
           <div>
             <div class="pref-title">{{ p.title }}</div>
             <div class="pref-sub">{{ p.subtitle }}</div>
           </div>
-          <sd-toggle [checked]="p.checked" />
+          <sd-toggle
+            [attr.aria-label]="p.title"
+            [ngModel]="p.checked"
+            [disabled]="saving() || !editable()"
+            (ngModelChange)="setPreference(p.key, $event)"
+          />
         </div>
       }
+      @if (preferenceError()) { <p class="form-error" role="alert">{{ preferenceError() }}</p> }
     </sd-card>
   </sd-section>
 </div>

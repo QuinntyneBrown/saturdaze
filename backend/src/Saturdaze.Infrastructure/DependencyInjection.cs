@@ -34,6 +34,7 @@ public static class DependencyInjection
         services.AddMemoryCache();
 
         services.Configure<HomeLocationOptions>(configuration.GetSection(HomeLocationOptions.SectionName));
+        services.Configure<Application.Common.TimeOptions>(configuration.GetSection(Application.Common.TimeOptions.SectionName));
 
         // Auth. Signing key resolution: env var first (production), config
         // section as fallback for dev. A startup warning fires outside

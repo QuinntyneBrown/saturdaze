@@ -55,4 +55,19 @@ describe('SavedCard', () => {
     fixture.detectChanges();
     expect(component.favourite()).toBe(false);
   });
+
+  it('renders the heart as a pressable button that requests the opposite state', () => {
+    const el = fixture.nativeElement as HTMLElement;
+    const heart = el.querySelector('button.heart') as HTMLButtonElement;
+    expect(heart.getAttribute('aria-pressed')).toBe('false');
+    const emitted: boolean[] = [];
+    component.favouriteToggle.subscribe((v) => emitted.push(v));
+    heart.click();
+    expect(emitted).toEqual([true]);
+    fixture.componentRef.setInput('favourite', true);
+    fixture.detectChanges();
+    expect(heart.getAttribute('aria-pressed')).toBe('true');
+    heart.click();
+    expect(emitted).toEqual([true, false]);
+  });
 });

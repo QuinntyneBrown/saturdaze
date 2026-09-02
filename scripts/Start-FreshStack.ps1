@@ -284,10 +284,7 @@ $runRoot = [System.IO.Path]::GetFullPath((Join-Path $repoRoot ".run"))
 
 $cliProject = Resolve-FirstExistingPath `
     -Description "Saturdaze CLI project" `
-    -Candidates @(
-        (Join-Path $repoRoot "src\Saturdaze.Cli\Saturdaze.Cli.csproj"),
-        (Join-Path $backendRoot "src\Saturdaze.Cli\Saturdaze.Cli.csproj")
-    )
+    -Candidates @((Join-Path $backendRoot "src\Saturdaze.Cli\Saturdaze.Cli.csproj"))
 
 $apiProject = Resolve-FirstExistingPath `
     -Description "Saturdaze API project" `

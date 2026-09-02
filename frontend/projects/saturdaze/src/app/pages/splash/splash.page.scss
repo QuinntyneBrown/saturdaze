@@ -88,7 +88,7 @@
   border-radius: 8px;
   background:
     radial-gradient(120% 120% at 20% 0%, var(--sd-primary-soft) 0%, transparent 60%),
-    radial-gradient(120% 120% at 100% 100%, #FBEBC4 0%, transparent 60%),
+    radial-gradient(120% 120% at 100% 100%, var(--sd-sun-soft) 0%, transparent 60%),
     var(--sd-primary);
   box-shadow: var(--sd-shadow-1);
   flex-shrink: 0;
@@ -141,7 +141,7 @@
   border-radius: var(--sd-r-xl);
   background:
     radial-gradient(80% 70% at 0% 0%, var(--sd-primary-soft) 0%, transparent 60%),
-    radial-gradient(80% 70% at 100% 0%, #FBEBC4 0%, transparent 60%),
+    radial-gradient(80% 70% at 100% 0%, var(--sd-sun-soft) 0%, transparent 60%),
     var(--sd-surface);
   border: 1px solid var(--sd-line);
   display: grid;
@@ -349,7 +349,7 @@
   padding: 48px 32px;
   border-radius: var(--sd-r-xl);
   background:
-    radial-gradient(100% 80% at 100% 0%, #FBEBC4 0%, transparent 60%),
+    radial-gradient(100% 80% at 100% 0%, var(--sd-sun-soft) 0%, transparent 60%),
     radial-gradient(100% 80% at 0% 100%, var(--sd-primary-soft) 0%, transparent 60%),
     var(--sd-surface);
   border: 1px solid var(--sd-line);

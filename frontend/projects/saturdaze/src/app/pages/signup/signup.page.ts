@@ -59,6 +59,11 @@ export class SignupPage {
   protected readonly submitting = signal(false);
   protected readonly error = this.session.error;
 
+  constructor() {
+    // Same store as /login — drop any error left behind by a failed sign-in.
+    this.session.clearError();
+  }
+
   protected readonly form = new FormGroup({
     familyName: new FormControl('', {
       nonNullable: true,

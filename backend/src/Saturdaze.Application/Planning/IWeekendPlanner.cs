@@ -31,4 +31,13 @@ public interface IWeekendPlanner
         TimeOnly gapEnd,
         WeatherForecast forecast,
         bool tryNew);
+
+    /// <summary>
+    /// Finds the best free slot on <paramref name="day"/> for an errand (plus buffer),
+    /// treating existing downtime as free. Returns null when nothing fits.
+    /// </summary>
+    ItineraryBlock? PlaceErrand(ShoppingErrand errand, IReadOnlyList<ItineraryBlock> dayBlocks, DayOfWeekend day);
+
+    /// <summary>Downtime blocks for every remaining gap of at least the minimum length.</summary>
+    IReadOnlyList<ItineraryBlock> FillDowntime(DayOfWeekend day, IReadOnlyList<ItineraryBlock> dayBlocks);
 }

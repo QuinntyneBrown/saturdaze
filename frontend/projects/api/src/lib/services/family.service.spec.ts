@@ -102,4 +102,71 @@ describe('FamilyService', () => {
       await expect(promise).rejects.toBeTruthy();
     });
   });
+
+  describe('mapping', () => {
+    const dto = {
+      id: 'f1',
+      name: 'The Browns',
+      homeLocation: 'Port Credit',
+      budgetEnabled: false,
+      tryNewEnabled: true,
+      fridayPreviewEnabled: false,
+      members: [
+        { id: 'm1', name: 'Mae', age: 5 },
+        { id: 'm2', name: 'Quinn', age: 41 },
+      ],
+      commitments: [{ id: 'c1', title: 'Swim', dayOfWeek: 'Saturday', startTime: '09:00:00', endTime: '10:00:00' }],
+      preferences: [{ id: 'p1', kind: 'Like', value: 'Hiking' }, { id: 'p2', kind: 'Dislike', value: 'Malls' }],
+    };
+
+    it('projects the profile: name, likes and the three keyed toggles', async () => {
+      const promise = service.load();
+      httpMock.expectOne('http://localhost:3000/api/family').flush(dto);
+      await promise;
+      const profile = service.getProfile()();
+      expect(profile.familyName).toBe('The Browns');
+      expect(profile.likes.map((l) => l.tone)).toEqual(['leaf', 'warn']);
+      expect(profile.preferences.map((p) => [p.key, p.checked])).toEqual([
+        ['budget', false],
+        ['tryNew', true],
+        ['fridayPreview', false],
+      ]);
+      const editable = service.getEditableProfile()()!;
+      expect(editable.members.map((m) => m.id)).toEqual(['m2', 'm1']);
+      expect(editable.commitments[0]).toMatchObject({ id: 'c1', startTime: '09:00', endTime: '10:00' });
+      expect(editable).toMatchObject({ name: 'The Browns', tryNewEnabled: true, fridayPreviewEnabled: false });
+    });
+
+    it('leaves the family name null when the backend has none', async () => {
+      const promise = service.load();
+      httpMock.expectOne('http://localhost:3000/api/family').flush({ ...dto, name: '  ' });
+      await promise;
+      expect(service.getProfile()().familyName).toBeNull();
+    });
+
+    it('sends ids and the toggles on save', async () => {
+      const promise = service.saveProfile({
+        name: ' The Browns ',
+        homeLocation: 'Port Credit',
+        budgetEnabled: true,
+        tryNewEnabled: false,
+        fridayPreviewEnabled: true,
+        members: [{ id: 'm1', name: ' Mae ', age: 6 }, { name: 'New', age: 1 }],
+        commitments: [{ id: 'c1', title: 'Swim', dayOfWeek: 'Saturday', startTime: '09:00', endTime: '10:00' }],
+        preferences: [{ kind: 'Like', value: 'Hiking' }],
+      });
+      const req = httpMock.expectOne('http://localhost:3000/api/family');
+      expect(req.request.method).toBe('PUT');
+      expect(req.request.body).toMatchObject({
+        name: 'The Browns',
+        budgetEnabled: true,
+        tryNewEnabled: false,
+        fridayPreviewEnabled: true,
+        members: [{ id: 'm1', name: 'Mae', age: 6 }, { id: null, name: 'New', age: 1 }],
+        commitments: [{ id: 'c1', startTime: '09:00:00', endTime: '10:00:00' }],
+      });
+      req.flush(dto);
+      await promise;
+    });
+  });
 });

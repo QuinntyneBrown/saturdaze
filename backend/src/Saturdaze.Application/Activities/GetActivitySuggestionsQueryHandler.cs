@@ -26,14 +26,16 @@ public sealed class GetActivitySuggestionsQueryHandler
         GetActivitySuggestionsQuery request,
         CancellationToken cancellationToken)
     {
-        var familyId = await _current.GetCurrentFamilyIdAsync(cancellationToken);
-
         var query = _db.Activities.AsNoTracking().AsQueryable();
 
         if (request.Indoor is { } indoor) query = query.Where(a => a.Indoor == indoor);
         if (request.MaxDriveMinutes is { } maxDrive) query = query.Where(a => a.DriveMinutes <= maxDrive);
-        if (request.MinAge is { } minAge) query = query.Where(a => a.MinAge <= minAge);
-        if (request.MaxAge is { } maxAge) query = query.Where(a => a.MaxAge >= maxAge);
+
+        // Age window semantics: the activity must welcome everyone in
+        // [minAge, maxAge]. With only one bound supplied it still must not top
+        // out below (or start above) that bound (L2-017 AC2).
+        if (request.MinAge is { } minAge) query = query.Where(a => a.MinAge <= minAge && a.MaxAge >= minAge);
+        if (request.MaxAge is { } maxAge) query = query.Where(a => a.MaxAge >= maxAge && a.MinAge <= maxAge);
 
         var activities = await query.ToListAsync(cancellationToken);
 
@@ -46,6 +48,8 @@ public sealed class GetActivitySuggestionsQueryHandler
 
         if (request.TryNew)
         {
+            // The family is only needed for the novelty filter.
+            var familyId = await _current.GetCurrentFamilyIdAsync(cancellationToken);
             var recentIds = await _db.Weekends
                 .Where(w => w.FamilyId == familyId)
                 .OrderByDescending(w => w.WeekendOf)

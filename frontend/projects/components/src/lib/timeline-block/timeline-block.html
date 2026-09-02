@@ -3,7 +3,15 @@
     {{ time() }}
     @if (duration()) { <small>{{ duration() }}</small> }
   </div>
-  <div class="body">
+  <div
+    class="body"
+    role="button"
+    tabindex="0"
+    [attr.aria-label]="blockTitle() + ' — options'"
+    (click)="blockClick.emit()"
+    (keydown.enter)="onKey($event)"
+    (keydown.space)="onKey($event)"
+  >
     <div class="icon"><sd-icon [name]="icon()" [size]="20" /></div>
     <div class="text">
       <div class="title">{{ blockTitle() }}</div>

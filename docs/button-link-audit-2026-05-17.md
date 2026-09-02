@@ -1,5 +1,7 @@
 # Button and Link Audit - 2026-05-17
 
+> **Status (2026-09-01): resolved.** Every high-priority finding below has since landed (auth endpoints, `returnUrl`, awaited rehydrate, no `href="#"` / `.html` links in app templates). Kept as the historical discovery record; do not treat the list as open work.
+
 Target audited: https://gentle-rock-070070c0f.7.azurestaticapps.net/
 
 Audit account used for guarded pages: `quinntynebrown@gmail.com` / seeded password.

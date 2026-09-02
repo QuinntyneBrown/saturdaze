@@ -49,6 +49,7 @@ public static class CliHostFactory
                     registrar.Configure(opt, opts);
                 });
 
+                services.AddOptions<TimeOptions>().Bind(ctx.Configuration.GetSection(TimeOptions.SectionName));
                 services.AddSingleton<IDateTimeProvider, SystemDateTimeProvider>();
                 services.AddSingleton<IPasswordHasher, Pbkdf2PasswordHasher>();
                 services.AddSingleton<ISeedPathResolver, SeedPathResolver>();
@@ -64,18 +65,27 @@ public static class CliHostFactory
             });
     }
 
+    /// <summary>
+    /// Precedence mirrors the API host: explicit flag, then SATURDAZE_CONNECTION,
+    /// then configuration. Blank values never win — an empty
+    /// <c>ConnectionStrings:Saturdaze</c> in appsettings must not hide the env var.
+    /// </summary>
     internal static void ResolveConnection(DatabaseOptions database, IConfiguration configuration)
     {
         if (!string.IsNullOrWhiteSpace(database.ConnectionString))
             return;
 
-        var fromConfig = configuration.GetConnectionString("Saturdaze")
-            ?? configuration["Saturdaze:ConnectionString"]
-            ?? Environment.GetEnvironmentVariable("SATURDAZE_CONNECTION");
-
-        if (!string.IsNullOrWhiteSpace(fromConfig))
+        var candidates = new[]
         {
-            database.ConnectionString = fromConfig;
+            Environment.GetEnvironmentVariable("SATURDAZE_CONNECTION"),
+            configuration.GetConnectionString("Saturdaze"),
+            configuration["Saturdaze:ConnectionString"],
+        };
+        var resolved = candidates.FirstOrDefault(v => !string.IsNullOrWhiteSpace(v));
+
+        if (resolved is not null)
+        {
+            database.ConnectionString = resolved;
             return;
         }
 

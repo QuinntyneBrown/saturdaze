@@ -6,7 +6,7 @@ Saturdaze is a web application that plans personalized family weekends. Errand m
 
 *shopping errand* — weekend task with a description, estimated duration, and completion flag
 
-`ErrandPage` collects the task and duration. The API appends `ShoppingErrand` to the authorized weekend and returns the refreshed aggregate.
+`ErrandPage` collects the task, duration and preferred day. The API appends `ShoppingErrand` to the caller's weekend, places an `Errand` block in the best free slot via `IWeekendPlanner.PlaceErrand` (preferred day first, existing downtime reclaimed, remaining gaps re-filled), and returns the refreshed aggregate.
 
 ## Description
 
@@ -15,7 +15,7 @@ The feature forms a vertical slice across the Angular application, the ASP.NET C
 - **`ErrandPage`** — Angular page that captures description, duration, and preferred day presentation.
 - **`WeekendPlanService`** — Typed client service whose `addErrand()` method calls the weekend endpoint.
 - **`ErrandsController`** — API controller exposing add and done operations.
-- **`AddShoppingErrandCommandHandler`** — Application handler that appends a validated errand.
+- **`AddShoppingErrandCommandHandler`** — Application handler that appends a validated errand and slots it into the itinerary immediately.
 - **`MarkErrandDoneCommandHandler`** — Application handler that changes the completion flag.
 - **`Weekend and ShoppingErrand`** — Domain aggregate and owned task state.
 
@@ -25,7 +25,7 @@ The feature realizes the following level-2 (L2) requirements. Each row cites the
 
 | L2 ID | Refines (L1) | Requirement |
 |-------|--------------|-------------|
-| `L2-021` | `L1-008` | `POST /api/weekends/{weekendId}/errands` must append a `ShoppingErrand` to the weekend and return the updated `WeekendDto`. |
+| `L2-021` | `L1-008` | `POST /api/weekends/{weekendId}/errands` must append a `ShoppingErrand` to the weekend, place an `Errand` block in the best free slot (optional `preferredDay` first), and return the updated `WeekendDto`. |
 | `L2-022` | `L1-008` | `PUT /api/errands/{id}/done` must set the errand's `Done` field to the request value. |
 
 ## Diagrams

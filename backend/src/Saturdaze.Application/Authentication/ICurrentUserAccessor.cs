@@ -9,4 +9,7 @@ public interface ICurrentUserAccessor
     UserRole? Role { get; }
     Guid? FamilyId { get; }
     bool IsAuthenticated { get; }
+
+    /// <summary>Remote address of the current request when one is available.</summary>
+    string? IpAddress { get; }
 }

@@ -11,6 +11,8 @@ import {
 import {
   EVENT_SUBMISSIONS_SERVICE,
   EventSubmissionDto,
+  formatWhen,
+  timeAgo,
 } from 'api';
 import {
   Avatar,
@@ -52,26 +54,11 @@ export class AdminEventsPage implements OnInit {
   }
 
   protected formatWhen(iso: string): string {
-    const d = new Date(iso);
-    return d.toLocaleString(undefined, {
-      weekday: 'short',
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
-      hour: 'numeric',
-      minute: d.getMinutes() === 0 ? undefined : '2-digit',
-    });
+    return formatWhen(iso, 'full');
   }
 
   protected submittedAgo(iso: string): string {
-    const submitted = new Date(iso);
-    const now = Date.now();
-    const diff = Math.max(0, now - submitted.getTime());
-    const hours = Math.floor(diff / (1000 * 60 * 60));
-    if (hours < 1) return 'just now';
-    if (hours < 24) return `${hours} hour${hours === 1 ? '' : 's'} ago`;
-    const days = Math.floor(hours / 24);
-    return `${days} day${days === 1 ? '' : 's'} ago`;
+    return timeAgo(iso);
   }
 
   protected async openApprove(submission: EventSubmissionDto): Promise<void> {

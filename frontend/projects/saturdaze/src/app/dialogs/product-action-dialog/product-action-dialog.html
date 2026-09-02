@@ -66,20 +66,22 @@
     </sd-dialog>
   }
   @case ('map') {
-    <sd-dialog [title]="(data.day ?? 'Saturday') + ' on a map'" subtitle="1h 10m driving · 3 stops · Port Credit → Milton → home">
+    <sd-dialog [title]="(data.day ?? 'Saturday') + ' on a map'" [subtitle]="mapSubtitle">
       <div class="map-stub">
         <span class="pin home"><sd-icon name="home" [size]="14" /></span>
         <span class="pin tree"><sd-icon name="tree" [size]="16" /></span>
         <span class="pin fork"><sd-icon name="fork" [size]="14" /></span>
       </div>
       <div class="list">
-        <sd-list-item title="Home — Port Credit" subtitle="9:00am · start of day" compact><sd-icon slot="leading" name="home" /></sd-list-item>
-        <sd-list-item title="Terre Bleu Lavender Farm" subtitle="11:00am · 990 Appleby Line, Milton · 45 min drive" compact><sd-icon slot="leading" name="tree" /></sd-list-item>
-        <sd-list-item title="La Marina — lunch" subtitle="1:00pm · 6 min from Terre Bleu" compact><sd-icon slot="leading" name="fork" /></sd-list-item>
+        @for (b of stops; track b.id ?? b.time) {
+          <sd-list-item [title]="b.title" [subtitle]="b.time + (b.subtitle ? ' · ' + b.subtitle : '')" compact>
+            <sd-icon slot="leading" [name]="b.icon" />
+          </sd-list-item>
+        }
       </div>
       <sd-button slot="actions" variant="secondary" (click)="close()">Close</sd-button>
-      <sd-button slot="actions" (click)="confirm()">
-        <sd-icon slot="leading" name="share" [size]="16" />
+      <sd-button slot="actions" [disabled]="!mapsUrl" (click)="confirm()">
+        <sd-icon slot="leading" name="map" [size]="16" />
         Open in Google Maps
       </sd-button>
     </sd-dialog>
@@ -87,14 +89,20 @@
   @case ('surprise') {
     <sd-dialog title="Try something new this weekend" subtitle="Picks you haven't done with the kids before.">
       <div class="list">
-        <sd-list-item title="Riverwood Conservancy" subtitle="8 min · forest school trails, owl barn" compact><sd-icon slot="leading" name="tree" /></sd-list-item>
-        <sd-list-item title="Living Arts — kids' theatre" subtitle="5 min · Saturday matinée at 2pm" compact><sd-icon slot="leading" name="ticket" /></sd-list-item>
-        <sd-list-item title="Crawford Lake longhouse" subtitle="35 min · indigenous heritage village" compact><sd-icon slot="leading" name="tree" /></sd-list-item>
+        @for (a of data.activities ?? []; track a.title) {
+          <sd-list-item [title]="a.title" [subtitle]="(a.drive ? a.drive + ' · ' : '') + (a.subtitle ?? '')" compact>
+            <sd-icon slot="leading" [name]="a.icon" />
+            @if (a.tag) { <sd-chip slot="trailing" tone="primary">{{ a.tag }}</sd-chip> }
+          </sd-list-item>
+        }
+        @if ((data.activities ?? []).length === 0) {
+          <sd-list-item title="Nothing new to suggest yet" subtitle="You have tried everything within your drive cap — nice." compact>
+            <sd-icon slot="leading" name="sparkle" />
+          </sd-list-item>
+        }
       </div>
       <sd-card variant="sunk" class="note"><sd-icon name="sparkle" [size]="16" /> Filtered by your likes, weather, and drive cap.</sd-card>
-      <sd-button slot="actions" variant="secondary" (click)="close()">Cancel</sd-button>
-      <sd-button slot="actions" variant="ghost" (click)="confirm()">Reshuffle</sd-button>
-      <sd-button slot="actions" (click)="confirm()">Add to weekend</sd-button>
+      <sd-button slot="actions" variant="secondary" (click)="close()">Close</sd-button>
     </sd-dialog>
   }
   @case ('remix') {
@@ -112,7 +120,7 @@
     </sd-dialog>
   }
   @case ('itinerary-more') {
-    <sd-dialog title="Saturday options">
+    <sd-dialog [title]="(data.day ?? 'Saturday') + ' options'">
       <div class="list">
         <sd-list-item title="Share this day" subtitle="Read-only preview link" compact><sd-icon slot="leading" name="share" /></sd-list-item>
         <sd-list-item title="Add to calendar" subtitle="Subscribe or download .ics" compact><sd-icon slot="leading" name="calendar" /></sd-list-item>
@@ -134,7 +142,7 @@
     </sd-dialog>
   }
   @case ('restaurant-lock') {
-    <sd-dialog [title]="'Lock ' + (data.restaurant ?? 'this restaurant') + ' for Saturday lunch?'" subtitle="I'll stop offering alternatives for this slot.">
+    <sd-dialog [title]="lockTitle" subtitle="I'll stop offering alternatives for this slot.">
       <sd-card variant="sunk" class="note"><sd-icon name="fork" [size]="18" /> Votes are preserved and this pick appears in the weekend plan.</sd-card>
       <sd-button slot="actions" variant="secondary" (click)="close()">Not yet</sd-button>
       <sd-button slot="actions" (click)="confirm()">

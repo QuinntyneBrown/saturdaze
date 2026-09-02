@@ -1,52 +1,43 @@
 import { vi } from 'vitest';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { DialogRef } from '@angular/cdk/dialog';
-import { DIALOG_DATA } from '@angular/cdk/dialog';
+import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { ApproveSubmissionDialog } from './approve-submission-dialog';
 
 describe('ApproveSubmissionDialog', () => {
   let component: ApproveSubmissionDialog;
   let fixture: ComponentFixture<ApproveSubmissionDialog>;
-  let mockDialogRef: any;
-  let mockDIALOG_DATA: any;
+  let mockDialogRef: { close: ReturnType<typeof vi.fn> };
 
   beforeEach(async () => {
-    mockDialogRef = {
-      close: vi.fn(),
-    };
-
-    mockDIALOG_DATA = {};
-
+    mockDialogRef = { close: vi.fn() };
     await TestBed.configureTestingModule({
       imports: [ApproveSubmissionDialog],
       providers: [
         { provide: DialogRef, useValue: mockDialogRef },
-        { provide: DIALOG_DATA, useValue: mockDIALOG_DATA },
+        { provide: DIALOG_DATA, useValue: { submission: {
+          id: 's1', title: 'Buskerfest', startsAtLocal: '2026-05-16T14:00', endsAtLocal: null, location: 'Port Credit',
+          description: null, costNote: null, ageRange: null, sourceUrl: null, status: 'Pending',
+          submittedByUserId: 'u1', submittedByEmail: 'a@b.c', submittedAtUtc: '2026-05-10T10:00:00Z', reviewedAtUtc: null, rejectionReason: null,
+        } } },
       ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ApproveSubmissionDialog);
     component = fixture.componentInstance;
-  });
-
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-
-  it('should render component', () => {
-    expect(fixture.nativeElement).toBeTruthy();
-  });
-
-  it('should render with mocked dependencies', () => {
     fixture.detectChanges();
-    expect(fixture.nativeElement).toBeTruthy();
   });
 
-  it('should call cancel without throwing', () => {
-    expect(() => component['cancel']()).not.toThrow();
+  it('renders the submission title, date and submitter', () => {
+    const el = fixture.nativeElement as HTMLElement;
+    expect(el.textContent).toContain('Approve "Buskerfest"?');
+    expect(el.textContent).toContain('a@b.c');
+    expect(component['whenLabel']).toMatch(/May/);
   });
 
-  it('should call approve without throwing', () => {
-    expect(() => component['approve']()).not.toThrow();
+  it('closes with approve or nothing', () => {
+    component['approve']();
+    expect(mockDialogRef.close).toHaveBeenCalledWith('approve');
+    component['cancel']();
+    expect(mockDialogRef.close).toHaveBeenLastCalledWith();
   });
 });

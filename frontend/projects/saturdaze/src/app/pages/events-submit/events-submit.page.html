@@ -29,8 +29,13 @@
       [ngModel]="startsAtLocal()"
       (ngModelChange)="startsAtLocal.set($event); error.set('')"
       required
+      [attr.aria-invalid]="dateError() ? 'true' : null"
     />
-    <div class="hint">Default is one hour from now. Change it to match the event.</div>
+    @if (dateError()) {
+      <div class="field-error" role="alert">{{ dateError() }}</div>
+    } @else {
+      <div class="hint">Default is one hour from now. Change it to match the event.</div>
+    }
   </label>
 
   <label class="field">
@@ -111,12 +116,12 @@
   @if (error()) { <p class="form-error" role="alert">{{ error() }}</p> }
 
   <div class="actions">
-    <sd-button variant="secondary" type="button" full="true" (click)="cancel()">
+    <sd-button variant="secondary" type="button" full (click)="cancel()">
       Cancel
     </sd-button>
     <sd-button
       type="submit"
-      full="true"
+      full
       [disabled]="!canSubmit()"
       [attr.aria-disabled]="!canSubmit()"
     >

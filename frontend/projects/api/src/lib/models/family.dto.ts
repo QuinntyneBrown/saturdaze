@@ -9,6 +9,10 @@ export interface FamilyDto {
    */
   readonly id: string;
   /**
+   * Name — "The Browns"; `null` when the family has not been named.
+   */
+  readonly name: string | null;
+  /**
    * Home Location.
    */
   readonly homeLocation: string;
@@ -16,6 +20,14 @@ export interface FamilyDto {
    * Budget Enabled.
    */
   readonly budgetEnabled: boolean;
+  /**
+   * Try New Enabled.
+   */
+  readonly tryNewEnabled: boolean;
+  /**
+   * Friday Preview Enabled.
+   */
+  readonly fridayPreviewEnabled: boolean;
   /**
    * Members.
    */

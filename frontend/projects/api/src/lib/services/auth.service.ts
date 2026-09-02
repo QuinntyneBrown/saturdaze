@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, timeout } from 'rxjs';
 
 import { API_BASE_URL } from '../api/api-base-url';
 import { AuthError } from '../models/auth-error';
@@ -8,6 +8,8 @@ import { AuthErrorCode } from '../models/auth-error-code';
 import { AuthToken } from '../models/auth-token';
 import { ForgotPasswordRequest } from '../models/forgot-password-request';
 import { LoginRequest } from '../models/login-request';
+import { LogoutRequest } from '../models/logout-request';
+import { RefreshRequest } from '../models/refresh-request';
 import { ResetPasswordRequest } from '../models/reset-password-request';
 import { ResendVerificationRequest } from '../models/resend-verification-request';
 import { SignupRequest } from '../models/signup-request';
@@ -15,8 +17,11 @@ import { User } from '../models/user';
 import { VerifyEmailRequest } from '../models/verify-email-request';
 import { IAuthService } from './auth.service.contract';
 
+/** Upper bound on a sign-out revocation call so an offline tap cannot hang the dialog. */
+const LOGOUT_TIMEOUT_MS = 4_000;
+
 /**
- * Auth Tokens Dto.
+ * Auth Tokens Dto. Mirrors `Saturdaze.Application.Contracts.AuthTokensDto`.
  */
 interface AuthTokensDto {
   /**
@@ -24,9 +29,17 @@ interface AuthTokensDto {
    */
   readonly accessToken: string;
   /**
+   * Refresh Token.
+   */
+  readonly refreshToken: string;
+  /**
    * Access Token Expires At Utc.
    */
   readonly accessTokenExpiresAtUtc: string;
+  /**
+   * Token Type (always "Bearer").
+   */
+  readonly tokenType?: string;
 }
 
 /**
@@ -65,7 +78,11 @@ interface AuthErrorDto {
  * @returns {AuthToken} The result of the operation
  */
 function mapToken(dto: AuthTokensDto): AuthToken {
-  return { value: dto.accessToken, expiresUtc: dto.accessTokenExpiresAtUtc };
+  return {
+    value: dto.accessToken,
+    expiresUtc: dto.accessTokenExpiresAtUtc,
+    refreshToken: dto.refreshToken ?? '',
+  };
 }
 
 /**
@@ -87,6 +104,25 @@ function rethrowAsAuthError(err: unknown): never {
     code: 'invalid_credentials',
     message: 'Something went wrong. Try again in a moment.',
   } satisfies AuthError;
+}
+
+/**
+ * Refresh failures collapse onto a single `token_expired` code: the backend
+ * distinguishes invalid, revoked and expired refresh tokens, but the client
+ * response is the same for all three: the session is over, sign in again.
+ *
+ * @param {unknown} err - The err
+ *
+ * @returns {never} The result of the operation
+ */
+function rethrowRefreshError(err: unknown): never {
+  if (err instanceof HttpErrorResponse && err.status === 401) {
+    throw {
+      code: 'token_expired',
+      message: 'Your session has expired. Sign in again.',
+    } satisfies AuthError;
+  }
+  rethrowAsAuthError(err);
 }
 
 /**
@@ -131,6 +167,43 @@ export class AuthService implements IAuthService {
         this.http.post<AuthSuccessDto>(`${this.baseUrl}/api/auth/login`, req),
       );
       return { token: mapToken(dto.token), user: dto.user };
+    } catch (e) {
+      rethrowAsAuthError(e);
+    }
+  }
+
+  /**
+   * Refresh.
+   *
+   * @param {RefreshRequest} req - The req
+   *
+   * @returns {Promise<} The result of the operation
+   */
+  async refresh(req: RefreshRequest): Promise<{ token: AuthToken; user: User }> {
+    try {
+      const dto = await firstValueFrom(
+        this.http.post<AuthSuccessDto>(`${this.baseUrl}/api/auth/refresh`, req),
+      );
+      return { token: mapToken(dto.token), user: dto.user };
+    } catch (e) {
+      rethrowRefreshError(e);
+    }
+  }
+
+  /**
+   * Logout.
+   *
+   * @param {LogoutRequest} req - The req
+   *
+   * @returns {Promise<void>} The result of the operation
+   */
+  async logout(req: LogoutRequest): Promise<void> {
+    try {
+      await firstValueFrom(
+        this.http
+          .post<void>(`${this.baseUrl}/api/auth/logout`, req)
+          .pipe(timeout(LOGOUT_TIMEOUT_MS)),
+      );
     } catch (e) {
       rethrowAsAuthError(e);
     }

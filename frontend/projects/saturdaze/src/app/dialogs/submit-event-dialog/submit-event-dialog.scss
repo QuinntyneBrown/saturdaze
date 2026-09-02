@@ -54,8 +54,14 @@
   sd-icon { color: var(--sd-primary); margin-top: 2px; }
 }
 
-.form-error {
+.form-error,
+.field-error {
   margin: 0;
   font-size: var(--sd-fs-sm);
-  color: var(--sd-danger, #b91c1c);
+  color: var(--sd-danger);
+}
+
+.field-error {
+  font-size: var(--sd-fs-xs);
+  font-weight: var(--sd-fw-regular);
 }

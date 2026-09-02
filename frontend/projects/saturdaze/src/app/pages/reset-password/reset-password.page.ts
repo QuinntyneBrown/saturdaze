@@ -22,8 +22,8 @@ import { AuthCard, AuthShell, Button, Icon, TextInput } from 'components';
 /**
  * Reset-password page — `pages/reset-password.html`.
  *
- * Reads `?token=` from the URL. Valid → render the form, submit → /login
- * with a one-shot success banner. Missing or invalid token → render the
+ * Reads `?token=` from the URL. Valid → render the form, submit → success
+ * state with a "Sign in" button. Missing or invalid token → render the
  * error state with a link back to /forgot-password.
  */
 

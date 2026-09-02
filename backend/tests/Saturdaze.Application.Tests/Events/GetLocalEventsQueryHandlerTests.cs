@@ -1,3 +1,4 @@
+// Traces to: L2-020
 using FluentAssertions;
 using Saturdaze.Application.Events;
 using Saturdaze.Application.Tests.Support;
@@ -9,19 +10,32 @@ namespace Saturdaze.Application.Tests.Events;
 public class GetLocalEventsQueryHandlerTests
 {
     [Fact]
-    public async Task Includes_only_events_overlapping_the_weekend()
+    public async Task Includes_friday_to_sunday_overlap_plus_the_coming_soon_window()
     {
         await using var app = await SeedAsync();
         var handler = new GetLocalEventsQueryHandler(app.Db);
 
-        var weekendOf = new DateOnly(2026, 6, 13); // Sat. Sunday is 6/14.
+        var weekendOf = new DateOnly(2026, 6, 13); // Sat. Fri is 6/12, Sun is 6/14.
         var events = await handler.Handle(new GetLocalEventsQuery(weekendOf), default);
 
         events.Select(e => e.Name).Should().BeEquivalentTo(new[]
         {
+            "Friday night market (Friday only)",
             "Waterfront Festival (this weekend)",
-            "Lavender Bloom (multi-week range covering weekend)"
+            "Lavender Bloom (multi-week range covering weekend)",
+            "Later event (week after, coming soon)"
         });
+    }
+
+    [Fact]
+    public async Task Results_are_ordered_by_start_date()
+    {
+        await using var app = await SeedAsync();
+        var handler = new GetLocalEventsQueryHandler(app.Db);
+
+        var events = await handler.Handle(new GetLocalEventsQuery(new DateOnly(2026, 6, 13)), default);
+
+        events.Select(e => e.StartsOn).Should().BeInAscendingOrder();
     }
 
     [Fact]
@@ -40,6 +54,9 @@ public class GetLocalEventsQueryHandlerTests
     {
         var app = TestApp.Create();
         app.Db.LocalEvents.AddRange(
+            new LocalEvent { Id = Guid.NewGuid(), Name = "Friday night market (Friday only)",
+                             StartsOn = new DateOnly(2026, 6, 12), EndsOn = new DateOnly(2026, 6, 12),
+                             Location = "Port Credit", DriveMinutes = 3, Category = "Market" },
             new LocalEvent { Id = Guid.NewGuid(), Name = "Waterfront Festival (this weekend)",
                              StartsOn = new DateOnly(2026, 6, 13), EndsOn = new DateOnly(2026, 6, 14),
                              Location = "Port Credit", DriveMinutes = 5, Category = "Festival" },
@@ -49,9 +66,12 @@ public class GetLocalEventsQueryHandlerTests
             new LocalEvent { Id = Guid.NewGuid(), Name = "Earlier event (week prior)",
                              StartsOn = new DateOnly(2026, 6, 6), EndsOn = new DateOnly(2026, 6, 7),
                              Location = "Toronto", DriveMinutes = 35, Category = "Music" },
-            new LocalEvent { Id = Guid.NewGuid(), Name = "Later event (week after)",
+            new LocalEvent { Id = Guid.NewGuid(), Name = "Later event (week after, coming soon)",
                              StartsOn = new DateOnly(2026, 6, 20), EndsOn = new DateOnly(2026, 6, 21),
-                             Location = "Hamilton", DriveMinutes = 45, Category = "Sport" });
+                             Location = "Hamilton", DriveMinutes = 45, Category = "Sport" },
+            new LocalEvent { Id = Guid.NewGuid(), Name = "Far later event (beyond the 14-day window)",
+                             StartsOn = new DateOnly(2026, 7, 4), EndsOn = new DateOnly(2026, 7, 5),
+                             Location = "Guelph", DriveMinutes = 50, Category = "Fair" });
         await app.Db.SaveChangesAsync();
         return app;
     }

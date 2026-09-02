@@ -1,83 +1,73 @@
+import { vi } from 'vitest';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideHttpClient } from '@angular/common/http';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { provideRouter } from '@angular/router';
-import { ActivatedRoute, convertToParamMap } from '@angular/router';
+import { ActivatedRoute, convertToParamMap, provideRouter } from '@angular/router';
 import { of } from 'rxjs';
-import { API_BASE_URL } from 'api';
+import { SHARED_WEEKEND_SERVICE, type SharedWeekend } from 'api';
 import { SampleWeekendPage } from './sample-weekend.page';
+
+const shared: SharedWeekend = {
+  weekendOf: '2026-05-16',
+  blocks: [
+    { day: 'Saturday', kind: 'Commitment', title: 'Swim', isLocked: true, startTime: '09:00:00' },
+    { day: 'Saturday', kind: 'Activity', title: 'Terre Bleu', isLocked: false, startTime: '11:00:00' },
+    { day: 'Sunday', kind: 'Meal', title: 'Brunch', isLocked: false, startTime: '10:00:00' },
+  ],
+};
 
 describe('SampleWeekendPage', () => {
   let component: SampleWeekendPage;
   let fixture: ComponentFixture<SampleWeekendPage>;
+  let service: any;
 
-  beforeEach(async () => {
+  async function build(query: Record<string, string>, load = () => Promise.resolve(shared)) {
+    service = { load: vi.fn(load) };
+    const params = convertToParamMap(query);
+    TestBed.resetTestingModule();
     await TestBed.configureTestingModule({
       imports: [SampleWeekendPage],
       providers: [
-        provideHttpClient(),
-        provideHttpClientTesting(),
         provideRouter([{ path: '**', children: [] }]),
         { provide: ActivatedRoute, useValue: {
-          snapshot: { paramMap: convertToParamMap({}), queryParamMap: convertToParamMap({}), params: {}, queryParams: {}, data: {} },
-          paramMap: of(convertToParamMap({})), queryParamMap: of(convertToParamMap({})),
-          params: of({}), queryParams: of({}), data: of({}),
+          snapshot: { paramMap: convertToParamMap({}), queryParamMap: params, params: {}, queryParams: query, data: {} },
+          paramMap: of(convertToParamMap({})), queryParamMap: of(params),
+          params: of({}), queryParams: of(query), data: of({}),
         } },
-        { provide: API_BASE_URL, useValue: 'http://localhost:3000' },
+        { provide: SHARED_WEEKEND_SERVICE, useValue: service },
       ],
     }).compileComponents();
-
     fixture = TestBed.createComponent(SampleWeekendPage);
     component = fixture.componentInstance;
     fixture.detectChanges();
+    await fixture.whenStable();
+    fixture.detectChanges();
+  }
+
+  it('renders the static sample without a share token', async () => {
+    await build({});
+    expect(service.load).not.toHaveBeenCalled();
+    expect(component['isShared']()).toBe(false);
+    expect(component['bannerTitle']()).toBe('This is a sample weekend for the Browns.');
+    expect(component['forecastSubtitle']()).toBe('Sat 17 May – Sun 18 May');
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  it('loads the shared weekend through the service token and projects it', async () => {
+    await build({ share: 'tok' });
+    expect(service.load).toHaveBeenCalledWith('tok');
+    expect(component['isShared']()).toBe(true);
+    expect(component['bannerTitle']()).toBe('Someone shared this Saturdaze weekend with you.');
+    expect(component['heroGreeting']()).toBe('Weekend preview');
+    expect(component['forecastSubtitle']()).toBe('Sat 16 May – Sun 17 May');
+    expect(component['saturdayHighlight']()).toBe('Terre Bleu');
+    expect(component['sundayHighlight']()).toBe('Brunch');
+    expect(component['saturdayLock']()).toBe('9:00 swim');
+    expect(component['sundayLock']()).toBe('10:30 church');
   });
 
-  it('should render component', () => {
-    expect(fixture.nativeElement).toBeTruthy();
-  });
-
-  it('should recompute isShared under seeded state', () => {
-    component['shared'].set('x' as any);
-    expect(() => component['isShared']()).not.toThrow();
-  });
-
-  it('should recompute heroSubtitle under seeded state', () => {
-    component['shared'].set('x' as any);
-    expect(() => component['heroSubtitle']()).not.toThrow();
-  });
-
-  it('should recompute forecastSubtitle under seeded state', () => {
-    component['shared'].set({ weekendOf: 'x' } as any);
-    expect(() => component['forecastSubtitle']()).not.toThrow();
-  });
-
-  describe('with route params', () => {
-    beforeEach(async () => {
-      TestBed.resetTestingModule();
-      await TestBed.configureTestingModule({
-        imports: [SampleWeekendPage],
-        providers: [
-          provideHttpClient(),
-          provideHttpClientTesting(),
-          provideRouter([{ path: '**', children: [] }]),
-          { provide: ActivatedRoute, useValue: {
-            snapshot: { paramMap: convertToParamMap({ share: 'test-id' }), queryParamMap: convertToParamMap({}), params: { share: 'test-id' }, queryParams: {}, data: {} },
-            paramMap: of(convertToParamMap({ share: 'test-id' })), queryParamMap: of(convertToParamMap({})),
-            params: of({ share: 'test-id' }), queryParams: of({}), data: of({}),
-          } },
-          { provide: API_BASE_URL, useValue: 'http://localhost:3000' },
-        ],
-      }).compileComponents();
-      fixture = TestBed.createComponent(SampleWeekendPage);
-      component = fixture.componentInstance;
-    });
-
-    it('should create with a populated route', () => {
-      expect(component).toBeTruthy();
-    });
+  it('logs and keeps the sample when the link is invalid', async () => {
+    const error = vi.spyOn(console, 'error').mockImplementation(() => {});
+    await build({ share: 'bad' }, () => Promise.reject(new Error('404')));
+    expect(component['isShared']()).toBe(false);
+    expect(error).toHaveBeenCalled();
+    error.mockRestore();
   });
 });

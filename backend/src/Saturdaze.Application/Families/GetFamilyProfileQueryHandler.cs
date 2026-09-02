@@ -30,22 +30,6 @@ public sealed class GetFamilyProfileQueryHandler : IRequestHandler<GetFamilyProf
             .SingleOrDefaultAsync(f => f.Id == familyId, cancellationToken)
             ?? throw new NotFoundException(nameof(Domain.Entities.Family), familyId);
 
-        return new FamilyProfileDto(
-            family.Id,
-            family.HomeLocation,
-            family.BudgetEnabled,
-            family.Members
-                .OrderBy(m => m.Age)
-                .Select(m => new FamilyMemberDto(m.Id, m.Name, m.Age))
-                .ToList(),
-            family.Commitments
-                .OrderBy(c => ((int)c.DayOfWeek + 1) % 7) // Sat=0, Sun=1, Mon=2, ...
-                .ThenBy(c => c.StartTime)
-                .Select(c => new CommitmentDto(c.Id, c.Title, c.DayOfWeek, c.StartTime, c.EndTime))
-                .ToList(),
-            family.Preferences
-                .OrderBy(p => p.Kind).ThenBy(p => p.Value)
-                .Select(p => new PreferenceDto(p.Id, p.Kind, p.Value))
-                .ToList());
+        return FamilyProfileMapper.ToDto(family);
     }
 }

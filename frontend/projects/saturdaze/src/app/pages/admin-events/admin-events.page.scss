@@ -91,10 +91,28 @@
   }
 }
 
+// Styled like `sd-button[variant="ghost"]` so it sits in the action row
+// without nesting an anchor inside a button (invalid HTML, double focus).
 .link-button {
-  color: inherit;
+  color: var(--sd-ink);
   text-decoration: none;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  justify-content: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 10px 16px;
+  border-radius: var(--sd-r-pill);
+  font-size: var(--sd-fs-sm);
+  font-weight: var(--sd-fw-semibold);
+  background: transparent;
+}
+
+.link-button:hover {
+  background: var(--sd-surface-2);
+}
+
+.link-button:focus-visible {
+  outline: 2px solid var(--sd-primary);
+  outline-offset: 2px;
 }

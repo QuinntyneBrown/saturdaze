@@ -1,6 +1,7 @@
 import {
   Injectable,
   Signal,
+  computed,
   inject,
   signal,
 } from '@angular/core';
@@ -8,48 +9,52 @@ import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 
 import { API_BASE_URL } from '../api/api-base-url';
+import { MONTH_ABBR } from '../api/format';
+import { addDaysIso, parseIsoDate, upcomingSaturdayIso } from '../api/weekend-dates';
+import { EventFilter } from '../models/event-filter';
+import { EventSection } from '../models/event-section';
 import { EventsView } from '../models/events-view';
 import { LocalEvent } from '../models/local-event';
 import { LocalEventDto } from '../models/local-event.dto';
 import { IEventsService } from './events.service.contract';
 
-const FILTERS: EventsView['filters'] = [
-  { label: 'This weekend', tone: 'primary' },
-  { label: 'Next weekend', tone: 'default' },
+const THIS_WEEKEND = 'This weekend';
+const NEXT_WEEKEND = 'Next weekend';
+
+/** Category chips in display order; anything else sorts after, A→Z. */
+const CATEGORY_TONES: ReadonlyArray<{ label: string; tone: EventFilter['tone'] }> = [
   { label: 'Outdoor', tone: 'leaf' },
   { label: 'Indoor', tone: 'indoor' },
   { label: 'Seasonal', tone: 'sun' },
   { label: 'Theatre', tone: 'default' },
-  { label: 'Festivals', tone: 'default' },
+  { label: 'Festival', tone: 'default' },
 ];
 
-const PLACEHOLDER_VIEW: EventsView = {
-  heading: "What's on this weekend",
-  lede:
-    'Within 45 minutes of Port Credit. Tap "Add" to slot it into your weekend.',
-  filters: FILTERS,
-  sections: [],
-};
+const HEADING = "What's on this weekend";
+const LEDE = 'Close to home this weekend and the two after. Tap "+" to submit one I missed.';
 
-const MONTH_ABBR = [
-  'JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN',
-  'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC',
-];
+const WEEKDAY_SHORT = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
 /**
- * Date Parts.
- *
- * @param {string} iso - The iso
+ * "17" / "MAY" — the date-tile parts for an ISO date, parsed as UTC.
  */
-function dateParts(iso: string): { day: string; mon: string; date: Date } {
-  // ISO date string `YYYY-MM-DD` — parse as UTC to avoid TZ drift.
-  const [y, m, d] = iso.split('-').map(Number);
-  const date = new Date(Date.UTC(y!, m! - 1, d!));
-  return {
-    day: String(d).padStart(0, ' '),
-    mon: MONTH_ABBR[m! - 1]!,
-    date,
-  };
+function tileParts(iso: string): { day: string; mon: string } {
+  const d = parseIsoDate(iso);
+  return { day: String(d.getUTCDate()), mon: MONTH_ABBR[d.getUTCMonth()]! };
+}
+
+/**
+ * "Sat · all day" for a one-day event, "May 16 – May 17" for a span.
+ */
+function whenLabel(dto: LocalEventDto): string {
+  if (dto.endsOn === dto.startsOn || !dto.endsOn) {
+    const d = parseIsoDate(dto.startsOn);
+    return `${WEEKDAY_SHORT[d.getUTCDay()]} · all day`;
+  }
+  const start = parseIsoDate(dto.startsOn);
+  const end = parseIsoDate(dto.endsOn);
+  const mon = (d: Date) => d.toLocaleString('en-US', { month: 'short', timeZone: 'UTC' });
+  return `${mon(start)} ${start.getUTCDate()} – ${mon(end)} ${end.getUTCDate()}`;
 }
 
 /**
@@ -60,36 +65,38 @@ function dateParts(iso: string): { day: string; mon: string; date: Date } {
  * @returns {LocalEvent} The result of the operation
  */
 function toLocalEvent(dto: LocalEventDto): LocalEvent {
-  const parts = dateParts(dto.startsOn);
+  const parts = tileParts(dto.startsOn);
   return {
     title: dto.name,
     venue: dto.location,
-    when: '',
+    when: whenLabel(dto),
     drive: `${dto.driveMinutes} min`,
-    dateDay: String(Number(parts.day)),
+    dateDay: parts.day,
     dateMon: parts.mon,
-    tag: dto.category,
+    tag: dto.category || undefined,
   };
 }
 
-/**
- * Group events into Saturday / Sunday / Coming-soon. Saturday is the
- * weekendOf date; Sunday is the next day; everything else (future) lands
- * in Coming soon.
- */
-function groupSections(
-  weekendOf: Date,
-  dtos: ReadonlyArray<LocalEventDto>,
-): EventsView['sections'] {
-  const sat = weekendOf.toISOString().substring(0, 10);
-  const sunDate = new Date(weekendOf);
-  sunDate.setUTCDate(sunDate.getUTCDate() + 1);
-  const sun = sunDate.toISOString().substring(0, 10);
+/** True when the event runs on `iso` (multi-day events overlap). */
+function overlaps(e: LocalEventDto, iso: string): boolean {
+  const end = e.endsOn || e.startsOn;
+  return e.startsOn <= iso && end >= iso;
+}
 
-  const saturday = dtos.filter((e) => e.startsOn === sat || (e.startsOn < sat && e.endsOn >= sat));
-  const sunday = dtos.filter((e) => e.startsOn === sun);
-  const used = new Set([...saturday, ...sunday].map((e) => e.id));
-  const comingSoon = dtos.filter((e) => !used.has(e.id));
+/**
+ * Group events into Saturday / Sunday / Coming soon. Saturday is the
+ * weekendOf date; Sunday is the next day. A multi-day event shows on the
+ * first weekend day it touches; everything later lands in Coming soon.
+ */
+function groupSections(weekendOf: string, dtos: ReadonlyArray<LocalEventDto>): EventSection[] {
+  const sat = weekendOf;
+  const sun = addDaysIso(weekendOf, 1);
+
+  const saturday = dtos.filter((e) => overlaps(e, sat));
+  const seen = new Set(saturday.map((e) => e.id));
+  const sunday = dtos.filter((e) => !seen.has(e.id) && overlaps(e, sun));
+  sunday.forEach((e) => seen.add(e.id));
+  const comingSoon = dtos.filter((e) => !seen.has(e.id) && e.startsOn > sun);
 
   return [
     { title: 'Saturday', events: saturday.map(toLocalEvent) },
@@ -98,20 +105,67 @@ function groupSections(
   ];
 }
 
+/** Everything touching the following Saturday or Sunday. */
+function nextWeekendSection(weekendOf: string, dtos: ReadonlyArray<LocalEventDto>): EventSection[] {
+  const sat = addDaysIso(weekendOf, 7);
+  const sun = addDaysIso(weekendOf, 8);
+  const events = dtos.filter((e) => overlaps(e, sat) || overlaps(e, sun));
+  return [{ title: NEXT_WEEKEND, events: events.map(toLocalEvent) }];
+}
+
 /**
- * The "current Saturday" used to bucket events into Saturday / Sunday /
- * Coming soon. Hard-pinned to match the seed `anchorSaturday`; once the
- * planner ships, this will move to whatever `GET /api/weekends/current`
- * returns.
+ * Build Filters — the two window chips plus one chip per category present.
  */
-const DEMO_WEEKEND_OF = '2026-05-16';
+function buildFilters(dtos: ReadonlyArray<LocalEventDto>, active: string): EventFilter[] {
+  const categories = Array.from(new Set(dtos.map((e) => e.category).filter((c) => !!c)));
+  const rank = (c: string) => {
+    const i = CATEGORY_TONES.findIndex((t) => t.label === c);
+    return i === -1 ? CATEGORY_TONES.length : i;
+  };
+  categories.sort((a, b) => rank(a) - rank(b) || a.localeCompare(b));
+
+  const base: EventFilter[] = [
+    { label: THIS_WEEKEND, tone: 'default' },
+    { label: NEXT_WEEKEND, tone: 'default' },
+    ...categories.map((c) => ({
+      label: c,
+      tone: CATEGORY_TONES.find((t) => t.label === c)?.tone ?? 'default',
+    })),
+  ];
+  return base.map((f) => (f.label === active ? { ...f, tone: 'primary' } : f));
+}
 
 @Injectable({ providedIn: 'root' })
 export class EventsService implements IEventsService {
   private readonly http = inject(HttpClient);
   private readonly baseUrl = inject(API_BASE_URL);
 
-  private readonly _view = signal<EventsView>(PLACEHOLDER_VIEW);
+  private readonly _rows = signal<ReadonlyArray<LocalEventDto>>([]);
+  private readonly _weekendOf = signal<string>(upcomingSaturdayIso());
+  private readonly _filter = signal<string>(THIS_WEEKEND);
+
+  private readonly _view = computed<EventsView>(() => {
+    const rows = this._rows();
+    const weekendOf = this._weekendOf();
+    const filter = this._filter();
+
+    let sections: EventSection[];
+    if (filter === NEXT_WEEKEND) {
+      sections = nextWeekendSection(weekendOf, rows);
+    } else if (filter === THIS_WEEKEND) {
+      sections = groupSections(weekendOf, rows);
+    } else {
+      sections = groupSections(weekendOf, rows.filter((e) => e.category === filter))
+        .filter((s) => s.events.length > 0);
+    }
+
+    return {
+      heading: HEADING,
+      lede: LEDE,
+      filters: buildFilters(rows, filter),
+      sections,
+    };
+  });
 
   /**
    * Constructor.
@@ -126,79 +180,43 @@ export class EventsService implements IEventsService {
    * @returns {Signal<EventsView>} The result of the operation
    */
   list(): Signal<EventsView> {
-    return this._view.asReadonly();
+    return this._view;
   }
 
   /**
-   * Load.
+   * Active Filter.
+   *
+   * @returns {Signal<string>} The result of the operation
+   */
+  activeFilter(): Signal<string> {
+    return this._filter.asReadonly();
+  }
+
+  /**
+   * Set Filter.
+   *
+   * @param {string} label - The chip label
+   */
+  setFilter(label: string): void {
+    this._filter.set(label);
+  }
+
+  /**
+   * Load — one call; the backend returns the Fri..Sun window plus the
+   * 14-day "coming soon" tail.
    *
    * @returns {Promise<void>} The result of the operation
    */
   async load(weekendOfIso?: string): Promise<void> {
-    const weekendOf = weekendOfIso ?? DEMO_WEEKEND_OF;
+    const weekendOf = weekendOfIso ?? upcomingSaturdayIso();
     try {
-      // Fetch this weekend plus a wider future window for "Coming soon".
-      // The events endpoint is weekend-scoped, so future festivals live
-      // behind separate queries — once a generic "future events" endpoint
-      // exists this collapses to one call.
-      const [thisWeekend, nextWeekend, futureLate] = await Promise.all([
-        firstValueFrom(this.fetchWeekend(weekendOf)),
-        firstValueFrom(this.fetchWeekend(addDays(weekendOf, 7))),
-        firstValueFrom(this.fetchWeekend('2026-09-12')),
-      ]);
-      const all = dedupe([...thisWeekend, ...nextWeekend, ...futureLate]);
-      const weekendOfDate = new Date(weekendOf + 'T00:00:00Z');
-      this._view.set({
-        heading: PLACEHOLDER_VIEW.heading,
-        lede: PLACEHOLDER_VIEW.lede,
-        filters: FILTERS,
-        sections: groupSections(weekendOfDate, all),
-      });
+      const rows = await firstValueFrom(
+        this.http.get<LocalEventDto[]>(`${this.baseUrl}/api/events?weekendOf=${weekendOf}`),
+      );
+      this._weekendOf.set(weekendOf);
+      this._rows.set(rows ?? []);
     } catch (err) {
       console.error('EventsService.load failed', err);
     }
   }
-
-  /**
-   * Fetch Weekend.
-   *
-   * @param {string} weekendOf - The weekend of
-   */
-  private fetchWeekend(weekendOf: string) {
-    return this.http.get<LocalEventDto[]>(
-      `${this.baseUrl}/api/events?weekendOf=${weekendOf}&maxDriveMinutes=200`,
-    );
-  }
-}
-
-/**
- * Add Days.
- *
- * @param {string} iso - The iso
- * @param {number} days - The days
- *
- * @returns {string} The result of the operation
- */
-function addDays(iso: string, days: number): string {
-  const d = new Date(iso + 'T00:00:00Z');
-  d.setUTCDate(d.getUTCDate() + days);
-  return d.toISOString().substring(0, 10);
-}
-
-/**
- * Dedupe.
- *
- * @param {LocalEventDto[]} rows - The rows
- *
- * @returns {LocalEventDto[]} The result of the operation
- */
-function dedupe(rows: LocalEventDto[]): LocalEventDto[] {
-  const seen = new Set<string>();
-  const out: LocalEventDto[] = [];
-  for (const r of rows) {
-    if (seen.has(r.id)) continue;
-    seen.add(r.id);
-    out.push(r);
-  }
-  return out;
 }

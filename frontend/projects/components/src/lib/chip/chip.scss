@@ -12,10 +12,21 @@
   white-space: nowrap;
 }
 
-:host([tone="sun"])     { background: #FBEBC4;              color: #8A6212; }
-:host([tone="sky"])     { background: #DCE9F1;              color: #2C5F7A; }
+:host([tone="sun"])     { background: var(--sd-sun-soft);              color: var(--sd-sun-ink); }
+:host([tone="sky"])     { background: var(--sd-sky-soft);              color: var(--sd-sky-ink); }
 :host([tone="leaf"])    { background: var(--sd-accent-soft); color: var(--sd-accent); }
-:host([tone="indoor"])  { background: #EADFF4;              color: #5A3B82; }
+:host([tone="indoor"])  { background: var(--sd-indoor-soft);              color: var(--sd-indoor-ink); }
 :host([tone="warn"])    { background: var(--sd-warn-soft);   color: var(--sd-warn); }
 :host([tone="accent"])  { background: var(--sd-accent-soft); color: var(--sd-accent); }
 :host([tone="primary"]) { background: var(--sd-primary-soft); color: var(--sd-primary); }
+
+// Filter chips: pages promote a chip to a button with `role="button"`.
+:host([role="button"]) {
+  cursor: pointer;
+  user-select: none;
+}
+
+:host([role="button"]:focus-visible) {
+  outline: 2px solid var(--sd-primary);
+  outline-offset: 2px;
+}

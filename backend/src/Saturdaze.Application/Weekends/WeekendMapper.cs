@@ -14,6 +14,8 @@ internal static class WeekendMapper
             weekend.IsFavourite,
             weekend.Notes,
             weekend.RegenerateCount,
+            weekend.Title,
+            weekend.Rating,
             weekend.Blocks
                 .OrderBy(b => b.Day).ThenBy(b => b.SortOrder).ThenBy(b => b.StartTime)
                 .Select(b => new ItineraryBlockDto(

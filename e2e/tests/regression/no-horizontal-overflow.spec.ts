@@ -28,8 +28,6 @@ const WIDTHS = [
   { name: "xlarge", width: 1920, height: 1080 },
 ] as const;
 
-const SEEDED_EMAIL = "quinntynebrown@gmail.com";
-const SEEDED_PASSWORD = "password123";
 
 test.describe("Responsive guard", () => {
   test("no horizontal overflow on any route at any width", async ({
@@ -64,12 +62,9 @@ test.describe("Responsive guard", () => {
       await sweep(key);
     }
 
+    // Guarded routes: the fixture signs in through the API before the first
+    // guarded navigation (see fixtures/auth.ts).
     await page.setViewportSize({ width: 390, height: 844 });
-    await goto("login");
-    await pages.login.waitForReady();
-    await pages.login.fillCredentials(SEEDED_EMAIL, SEEDED_PASSWORD);
-    await pages.login.submit();
-    await page.waitForURL("**/weekend", { timeout: 8_000 });
 
     for (const key of AUTHED_ROUTES) {
       await goto(key);

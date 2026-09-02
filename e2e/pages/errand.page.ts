@@ -42,10 +42,10 @@ export class ErrandPage extends BasePage {
     return this.page.locator('sd-card[variant="sunk"]');
   }
 
-  pickDifferentSlotButton(): Locator {
+  cancelButton(): Locator {
     return this.page
       .locator("sd-button")
-      .filter({ hasText: "Pick a different slot" });
+      .filter({ hasText: "Cancel" });
   }
 
   addToWeekendButton(): Locator {

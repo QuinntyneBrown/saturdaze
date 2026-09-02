@@ -6,7 +6,7 @@ Saturdaze is a web application that plans personalized family weekends. Sign-out
 
 *token revocation* — server-side invalidation of token material before its natural expiry
 
-The profile page opens `SignOutDialog` before `SessionStore.logout()` clears client state. Server-side token revocation remains an explicit design gap.
+The profile page opens `SignOutDialog`; on confirm, `SessionStore.logout()` posts the refresh token to `POST /api/auth/logout` (best effort) and then clears client state.
 
 ## Description
 
@@ -15,11 +15,11 @@ The feature forms a vertical slice across the Angular application, the ASP.NET C
 - **`ProfilePage`** — Angular profile page that opens the confirmation dialog.
 - **`SignOutDialog`** — Angular CDK dialog that returns `confirm` only after deliberate approval.
 - **`SessionStore`** — Client state service whose existing `logout()` method clears stored session data.
-- **`AuthController`** — Existing authentication controller that will host the revocation operation.
-- **`RevokeRefreshTokenCommandHandler`** — Application handler introduced by this design to revoke the active `RefreshToken`.
+- **`AuthController`** — Authentication controller hosting `POST /api/auth/logout` (and `POST /api/auth/refresh`, see ADR-007).
+- **`RevokeRefreshTokenCommandHandler`** — Application handler that revokes the presented `RefreshToken`; idempotent, and it ignores a token owned by a different user when a bearer is present.
 - **`RefreshToken`** — Domain entity whose `RevokedAtUtc` field records invalidation.
 
-The server endpoint and request contract for revocation are `<TO SUPPLY>`. The current `SessionStore.logout()` performs client-only clearing.
+`POST /api/auth/logout { refreshToken }` always returns 204, so sign-out never reveals whether a token existed. The endpoint is anonymous because the refresh token is the credential and the access token is usually expired by then (ADR-007).
 
 ## Requirements
 

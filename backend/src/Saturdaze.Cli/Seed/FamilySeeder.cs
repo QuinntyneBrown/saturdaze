@@ -30,6 +30,7 @@ public sealed class FamilySeeder : IJsonSeeder
         }
 
         family.BudgetEnabled = seed.BudgetEnabled;
+        if (!string.IsNullOrWhiteSpace(seed.Name)) family.Name = seed.Name.Trim();
 
         var written = 1;
         written += UpsertMembers(family, seed.Members);
@@ -130,7 +131,8 @@ public sealed class FamilySeeder : IJsonSeeder
         bool BudgetEnabled,
         List<MemberRecord>? Members,
         List<CommitmentRecord>? Commitments,
-        List<PreferenceRecord>? Preferences);
+        List<PreferenceRecord>? Preferences,
+        string? Name = null);
 
     private sealed record MemberRecord(string Name, int Age);
 

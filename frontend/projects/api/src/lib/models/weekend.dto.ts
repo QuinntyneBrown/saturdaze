@@ -28,6 +28,14 @@ export interface WeekendDto {
    */
   readonly regenerateCount: number;
   /**
+   * Title — user-supplied name, `null` when unnamed.
+   */
+  readonly title: string | null;
+  /**
+   * Rating — 1..5, `null` when unrated.
+   */
+  readonly rating: number | null;
+  /**
    * Blocks.
    */
   readonly blocks: ReadonlyArray<ItineraryBlockDto>;

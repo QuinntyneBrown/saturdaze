@@ -8,7 +8,7 @@ import { defineConfig, devices } from "@playwright/test";
  *
  *   - The mock skeleton (docs/mocks) is served on http://localhost:5173 by
  *     `http-server`. Visual baselines are captured from it once with
- *     `npm run e2e:baseline` and then committed. Subsequent runs compare
+ *     `npm run baseline` and then committed. Subsequent runs compare
  *     the Angular implementation against those baselines pixel-by-pixel.
  *
  * Snapshot path convention: tests under `tests/visual/` use

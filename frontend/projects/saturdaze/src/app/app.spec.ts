@@ -19,7 +19,7 @@ describe('App', () => {
           paramMap: of(convertToParamMap({})), queryParamMap: of(convertToParamMap({})),
           params: of({}), queryParams: of({}), data: of({}),
         } },
-        { provide: SESSION_STORE, useValue: {} },
+        { provide: SESSION_STORE, useValue: { loading: () => false } },
       ],
     }).compileComponents();
 

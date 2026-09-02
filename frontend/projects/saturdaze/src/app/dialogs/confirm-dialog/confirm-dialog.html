@@ -1,0 +1,14 @@
+<sd-dialog [title]="data.title" [subtitle]="data.body ?? ''">
+  <sd-button slot="actions" variant="secondary" type="button" (click)="cancel()">
+    {{ data.cancelLabel ?? 'Cancel' }}
+  </sd-button>
+  <sd-button
+    slot="actions"
+    [variant]="data.danger ? 'danger' : 'primary'"
+    type="button"
+    (click)="confirm()"
+  >
+    @if (data.icon) { <sd-icon slot="leading" [name]="data.icon" [size]="16" /> }
+    {{ data.confirmLabel ?? 'Confirm' }}
+  </sd-button>
+</sd-dialog>

@@ -3,6 +3,8 @@ import { InjectionToken } from '@angular/core';
 import { AuthToken } from '../models/auth-token';
 import { ForgotPasswordRequest } from '../models/forgot-password-request';
 import { LoginRequest } from '../models/login-request';
+import { LogoutRequest } from '../models/logout-request';
+import { RefreshRequest } from '../models/refresh-request';
 import { ResetPasswordRequest } from '../models/reset-password-request';
 import { ResendVerificationRequest } from '../models/resend-verification-request';
 import { SignupRequest } from '../models/signup-request';
@@ -33,6 +35,25 @@ export interface IAuthService {
    * @returns {Promise<{ token: AuthToken; user: User }>} The result of the operation
    */
   login(req: LoginRequest): Promise<{ token: AuthToken; user: User }>;
+  /**
+   * Exchange a refresh token for a new access + refresh pair. Rejects with
+   * `AuthError { code: 'token_expired' }` when the server answers 401
+   * (invalid, revoked or expired refresh token).
+   *
+   * @param {RefreshRequest} req - The req
+   *
+   * @returns {Promise<{ token: AuthToken; user: User }>} The result of the operation
+   */
+  refresh(req: RefreshRequest): Promise<{ token: AuthToken; user: User }>;
+  /**
+   * Best-effort server-side revocation of the refresh token. Rejects with
+   * an `AuthError` on transport failure; callers treat it as advisory.
+   *
+   * @param {LogoutRequest} req - The req
+   *
+   * @returns {Promise<void>} The result of the operation
+   */
+  logout(req: LogoutRequest): Promise<void>;
   /**
    * Forgot Password.
    *

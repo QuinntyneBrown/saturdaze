@@ -87,6 +87,11 @@
   border-color: color-mix(in srgb, var(--sd-accent) 30%, transparent);
 }
 
+.lock-block:disabled {
+  cursor: default;
+  opacity: 0.85;
+}
+
 .lock-block .toggle {
   width: 40px;
   height: 40px;

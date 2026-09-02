@@ -4,7 +4,7 @@
 
 ## Implementation status (2026-06-09)
 
-**Implemented and verified green** (no commit yet — changes are in the working tree on branch `development`):
+**Implemented and verified green** (committed on `main`):
 
 - ✅ **Batch 1** — removed `RefreshToken.RevokedByIp`/`ReplacedByTokenId` (+ EF migration `20260609012844_RemoveUnusedRefreshTokenColumns` dropping both columns), `JwtOptions.RefreshTokenDays` (+ `appsettings.json` key + test override), `CalendarLinksDto`. **Gate:** `dotnet build` clean; `dotnet test` = 188 passed / 1 skipped / **0 failed** (Application 52, Cli 62, Infrastructure 24, Api 50).
 - ✅ **Batch 2** — removed the unread frontend DTO mirror fields `category`/`driveMinutes` from `event-submission.dto.ts`. **Gate:** `npm run build -- api` + app build clean.
@@ -16,7 +16,13 @@
 - ⏭️ **Batch 4 — SKIPPED (re-evaluated: NOT dead).** `ActivityFilter`, `FilterDef`, and `PresentationOverlay` are each *imported and used* — `ActivityFilter` by `activity-view.ts:11`, `FilterDef`/`PresentationOverlay` by `activity.service.ts:15-16,19,84`. They are named types used once each, so "removal" is only *inlining churn* that touches the public API surface, with no dead-code benefit. The plan's `FilterDef` step (`const FILTER_DEFS = [` with inferred type) would also **break the strict-mode build** — `match: (a) => …` becomes implicit `any`. Recommend dropping Batch 4 from the plan, or treating it as an optional style refactor, not dead-code removal.
 - ⏸️ **Batch 6 — HELD (coupled to the Batch 7 decision).** Verification showed `RejectSubmissionDialog` is used **only** by `AdminEventsPage` (`openReject` + template button) — perfectly symmetric to `ApproveSubmissionDialog`, which the plan itself couples to the page in Batch 7. And `requireAdmin`, while referenced nowhere today, is the guard you'd need to **complete** the feature (per the caution note). So the entire orphaned-admin cluster (page + both dialogs + guard + profile link + e2e + mocks) is **one product decision** — finish the feature (add the `/admin/events` route) or scrap it — and deleting fragments now would leave a worse half-state. Held in full pending that decision.
 
-**Held for human decision** (the plan's own caution items — not auto-implemented):
+**Resolved 2026-09-01** (the full-repo audit closed the held items):
+
+- ✅ **Batch 6/7 — completed as a feature, not deleted.** `/admin/events` is now registered in `app.routes.ts` behind `requireAuth` + `requireAdmin`; `RejectSubmissionDialog` and `requireAdmin` are live. Spec L2-050 and ADR-006 stand.
+- ✅ **`Commitment` model — removed**, together with the write-only `FamilyProfile.members`/`commitments` fields, `FamilyMember`, `WeekendPlan` and `Day` (the profile page reads `EditableFamilyProfile`).
+- ↩️ **`RefreshToken.ReplacedByTokenId` — reinstated by design** (migration `AddRefreshTokenRotation`): `POST /api/auth/refresh` now rotates tokens and links the replacement, per L2-033 and ADR-007.
+
+**Originally held for human decision** (kept for the record):
 
 - ⏸️ **Batch 7** — `AdminEventsPage` directory (+ the coupled Batch 6 pieces above). Spec L2-050 / ADR-006 mandate this feature; the likely correct fix is to *finish* it, not delete it.
 - ⏸️ **`Commitment`** — write-only public-`FamilyProfile`-contract field; removable only as a deliberate contract change (see Caution items).

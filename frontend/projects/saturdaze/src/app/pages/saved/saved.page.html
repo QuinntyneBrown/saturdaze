@@ -7,42 +7,76 @@
   <p>{{ view().lede }}</p>
 </div>
 
-<sd-tag-group>
+<sd-tag-group role="group" aria-label="Filter saved weekends">
   @for (f of view().filters; track f.label) {
-    <sd-chip [tone]="f.tone">
+    <sd-chip
+      [tone]="f.tone"
+      role="button"
+      tabindex="0"
+      [attr.aria-pressed]="f.label === activeFilter()"
+      (click)="selectFilter(f.label)"
+      (keydown.enter)="selectFilter(f.label)"
+      (keydown.space)="selectFilter(f.label); $event.preventDefault()"
+    >
       @if (f.icon) { <sd-icon [name]="f.icon" [size]="12" /> }
       {{ f.label }}
     </sd-chip>
   }
 </sd-tag-group>
 
-<sd-section title="Recent">
-  <div class="sd-card-grid">
-    @for (s of view().recent; track s.date) {
-      <sd-saved-card
-        [date]="s.date"
-        [title]="s.title"
-        [rating]="s.rating"
-        [highlights]="s.highlights"
-        [favourite]="s.favourite ?? false"
-      >
-        <sd-button variant="secondary" size="sm" full (click)="remix(s.id, s.title)">Remix</sd-button>
-        <sd-button size="sm" full (click)="repeat(s.id, s.title)">Repeat</sd-button>
-      </sd-saved-card>
-    }
-  </div>
-</sd-section>
+@if (error()) { <p class="form-error" role="alert">{{ error() }}</p> }
 
-<sd-section
-  title="Avoid repeating"
-  subtitle="I'll keep these out of next weekend's draft"
->
-  @for (a of view().avoid; track a.title) {
-    <sd-list-item [title]="a.title" [subtitle]="a.subtitle" compact>
-      <sd-icon slot="leading" [name]="a.icon" />
-      <sd-chip slot="trailing" tone="warn">Skip</sd-chip>
-    </sd-list-item>
+<sd-section title="Recent">
+  @if (view().recent.length > 0) {
+    <div class="sd-card-grid">
+      @for (s of view().recent; track s.id) {
+        <sd-saved-card
+          [date]="s.date"
+          [title]="s.title"
+          [rating]="s.rating"
+          [highlights]="s.highlights"
+          [favourite]="s.favourite ?? false"
+          (favouriteToggle)="toggleFavourite(s, $event)"
+        >
+          <sd-button variant="secondary" size="sm" full (click)="remix(s.id, s.title)">Remix</sd-button>
+          <sd-button size="sm" full (click)="repeat(s.id, s.title)">Repeat</sd-button>
+          <sd-button variant="ghost" size="sm" full (click)="openRating(s)">
+            <sd-icon slot="leading" name="star" [size]="14" />
+            Rate
+          </sd-button>
+        </sd-saved-card>
+      }
+    </div>
+  } @else {
+    <sd-empty
+      icon="calendar"
+      [title]="activeFilter() === 'All' ? 'No weekends yet' : 'Nothing matches this filter'"
+      [subtitle]="activeFilter() === 'All'
+        ? 'Plan this weekend and it will show up here, ready to repeat or remix.'
+        : 'Try another chip — every planned weekend is under All.'"
+    >
+      @if (activeFilter() === 'All') {
+        <sd-button size="sm" routerLink="/weekend">
+          <sd-icon slot="leading" name="sparkle" [size]="14" />
+          Plan this weekend
+        </sd-button>
+      }
+    </sd-empty>
   }
 </sd-section>
+
+@if (view().avoid.length > 0) {
+  <sd-section
+    title="Avoid repeating"
+    subtitle="I'll keep these out of next weekend's draft"
+  >
+    @for (a of view().avoid; track a.title) {
+      <sd-list-item [title]="a.title" [subtitle]="a.subtitle" compact>
+        <sd-icon slot="leading" [name]="a.icon" />
+        <sd-chip slot="trailing" tone="warn">Skip</sd-chip>
+      </sd-list-item>
+    }
+  </sd-section>
+}
 
 <sd-bottom-nav active="saved" />

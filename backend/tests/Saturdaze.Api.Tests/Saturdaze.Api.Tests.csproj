@@ -16,6 +16,10 @@
     <ProjectReference Include="..\..\src\Saturdaze.Cli\Saturdaze.Cli.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <!-- One LocalDB pipe resolver (ADR-001) shared with the Infrastructure tests. -->
+    <Compile Include="..\Saturdaze.Infrastructure.Tests\Support\LocalDbConnection.cs" Link="Support\LocalDbConnection.cs" />
+  </ItemGroup>
+  <ItemGroup>
     <None Update="xunit.runner.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

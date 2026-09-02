@@ -7,16 +7,15 @@ using Xunit;
 
 namespace Saturdaze.Api.Tests.Pipeline;
 
-public class PingPipelineTests : IClassFixture<SaturdazeApiFactory>
+public class PingPipelineTests : IClassFixture<SaturdazeApiFactory>, IAsyncLifetime
 {
     private readonly SaturdazeApiFactory _factory;
-    private readonly HttpClient _client;
+    private HttpClient _client = null!;
 
-    public PingPipelineTests(SaturdazeApiFactory factory)
-    {
-        _factory = factory;
-        _client = factory.CreateClient();
-    }
+    public PingPipelineTests(SaturdazeApiFactory factory) => _factory = factory;
+
+    public async Task InitializeAsync() => _client = (await SignedInClient.CreateAsync(_factory)).Client;
+    public Task DisposeAsync() => Task.CompletedTask;
 
     [Fact]
     public async Task Ok_mode_returns_200_pong()

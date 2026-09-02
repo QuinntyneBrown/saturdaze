@@ -9,4 +9,10 @@ public class RefreshToken
     public DateTimeOffset CreatedAtUtc { get; set; }
     public DateTimeOffset? RevokedAtUtc { get; set; }
     public string? CreatedByIp { get; set; }
+
+    /// <summary>
+    /// Set when this token is rotated by <c>POST /api/auth/refresh</c>: the id
+    /// of the token that replaced it (L2-033).
+    /// </summary>
+    public Guid? ReplacedByTokenId { get; set; }
 }

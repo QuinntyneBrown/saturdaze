@@ -7,15 +7,23 @@ export interface SavedWeekend {
    */
   readonly id: string;
   /**
-   * Date.
+   * Weekend Of — `YYYY-MM-DD`, for year filtering.
+   */
+  readonly weekendOf: string;
+  /**
+   * Date — "May 10–11, 2026".
    */
   readonly date: string;
   /**
-   * Title.
+   * Title — the user's name for the weekend, or a highlight-derived one.
    */
   readonly title: string;
   /**
-   * Rating.
+   * Custom Title — the user-supplied name, `null` when derived.
+   */
+  readonly customTitle: string | null;
+  /**
+   * Rating — 0 when unrated.
    */
   readonly rating: number;
   /**

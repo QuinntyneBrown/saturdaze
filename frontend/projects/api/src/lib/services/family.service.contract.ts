@@ -16,6 +16,10 @@ export type EditableFamilyDayOfWeek =
  */
 export interface EditableFamilyMember {
   /**
+   * Id — present for persisted members so a rename keeps its identity.
+   */
+  readonly id?: string;
+  /**
    * Name.
    */
   readonly name: string;
@@ -29,6 +33,10 @@ export interface EditableFamilyMember {
  * Editable Commitment.
  */
 export interface EditableCommitment {
+  /**
+   * Id — present for persisted commitments so an edit keeps its identity.
+   */
+  readonly id?: string;
   /**
    * Title.
    */
@@ -66,6 +74,10 @@ export interface EditablePreference {
  */
 export interface EditableFamilyProfile {
   /**
+   * Name — "The Browns"; `null` when unnamed.
+   */
+  readonly name: string | null;
+  /**
    * Home Location.
    */
   readonly homeLocation: string;
@@ -73,6 +85,14 @@ export interface EditableFamilyProfile {
    * Budget Enabled.
    */
   readonly budgetEnabled: boolean;
+  /**
+   * Try New Enabled.
+   */
+  readonly tryNewEnabled: boolean;
+  /**
+   * Friday Preview Enabled.
+   */
+  readonly fridayPreviewEnabled: boolean;
   /**
    * Members.
    */

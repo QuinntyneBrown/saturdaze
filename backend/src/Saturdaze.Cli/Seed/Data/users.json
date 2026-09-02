@@ -10,6 +10,7 @@
     "email": "admin@saturdaze.app",
     "password": "password123",
     "role": "Admin",
-    "emailVerified": true
+    "emailVerified": true,
+    "familyHomeLocation": "Port Credit, Mississauga, ON"
   }
 ]

@@ -165,7 +165,7 @@
 
 <header class="doc">
   <h1>Host-Attribute Tech-Debt Migration Plan</h1>
-  <p class="meta"><strong>Scope:</strong> <code>frontend/projects/components</code> (the 29 <code>sd-*</code> library components) &middot; <strong>Date:</strong> 2026-06-23 &middot; <strong>Status:</strong> Proposed</p>
+  <p class="meta"><strong>Scope:</strong> <code>frontend/projects/components</code> (the 29 <code>sd-*</code> library components) &middot; <strong>Date:</strong> 2026-06-23 &middot; <strong>Status:</strong> Deferred (2026-09-01) &mdash; the Playwright page objects select on the reflected host attributes (<code>sd-hero[greeting]</code>, <code>sd-day-card[day]</code>&hellip;), so the bindings stay until the POMs move to roles/text; the binding count has since grown to ~100.</p>
   <p class="lede">Remove the native&#8209;custom&#8209;element carryover where every component reflects its <code>input()</code> values back onto the host element as HTML attributes (<code>host: { '[attr.x]': '…' }</code>), and replace it with idiomatic Angular data&#8209;passing: inputs + template bindings for data, host <em>classes</em> for styling, and intentional test hooks for e2e.</p>
 </header>
 

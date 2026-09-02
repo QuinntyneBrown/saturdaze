@@ -9,13 +9,21 @@
 </sd-top-bar>
 
 <div class="activities-lede">
-  <h2>Picked for the Browns</h2>
-  <p>Curated around Eli (9) and Mae (5), under 45 min from Port Credit.</p>
+  <h2>{{ heading() }}</h2>
+  <p>{{ lede() }}</p>
 </div>
 
-<sd-tag-group>
+<sd-tag-group role="group" aria-label="Filter activities">
   @for (f of view().filters; track f.label) {
-    <sd-chip [tone]="f.tone">{{ f.label }}</sd-chip>
+    <sd-chip
+      [tone]="f.tone"
+      role="button"
+      tabindex="0"
+      [attr.aria-pressed]="f.label === activeFilter()"
+      (click)="selectFilter(f.label)"
+      (keydown.enter)="selectFilter(f.label)"
+      (keydown.space)="selectFilter(f.label); $event.preventDefault()"
+    >{{ f.label }}</sd-chip>
   }
 </sd-tag-group>
 
@@ -33,6 +41,9 @@
           [tag]="a.tag ?? ''"
           [why]="a.why ?? ''"
         />
+      }
+      @if (s.activities.length === 0) {
+        <p class="activities-empty">Nothing here for this filter.</p>
       }
     </div>
   </sd-section>

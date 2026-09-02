@@ -28,19 +28,27 @@
   text-decoration: none;
 }
 
+.events-empty {
+  margin: 0;
+  color: var(--sd-ink-soft);
+  font-size: var(--sd-fs-sm);
+}
+
 /* Floating "Submit an event" FAB.
-   Sits above the mobile bottom nav (~60px tall + 12px gap), and clears the
-   left rail on tablet/desktop. Traces to L2-048. */
+   Sits above the mobile bottom nav (~60px tall + 12px gap) and, like the
+   nav itself (ADR-005), clears the iOS URL bar / home indicator via the
+   safe-area inset or the `--sd-chrome-bottom` variable written in main.ts.
+   Clears the left rail on tablet/desktop. Traces to L2-048 AC1. */
 .events-fab {
   position: fixed;
   right: 16px;
-  bottom: 84px;
+  bottom: calc(84px + max(env(safe-area-inset-bottom, 0px), var(--sd-chrome-bottom, 0px)));
   width: 56px;
   height: 56px;
   border-radius: 50%;
   border: none;
   background: var(--sd-primary);
-  color: #fff;
+  color: var(--sd-primary-ink);
   box-shadow: var(--sd-shadow-3, 0 8px 24px rgba(0, 0, 0, 0.18));
   cursor: pointer;
   display: inline-flex;

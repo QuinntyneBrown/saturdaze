@@ -24,7 +24,7 @@
     border-radius: 8px;
     background:
       radial-gradient(120% 120% at 20% 0%, var(--sd-primary-soft) 0%, transparent 60%),
-      radial-gradient(120% 120% at 100% 100%, #FBEBC4 0%, transparent 60%),
+      radial-gradient(120% 120% at 100% 100%, var(--sd-sun-soft) 0%, transparent 60%),
       var(--sd-primary);
     box-shadow: var(--sd-shadow-1);
   }

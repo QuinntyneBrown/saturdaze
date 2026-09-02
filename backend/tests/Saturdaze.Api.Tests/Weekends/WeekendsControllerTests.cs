@@ -8,16 +8,15 @@ using Xunit;
 
 namespace Saturdaze.Api.Tests.Weekends;
 
-public class WeekendsControllerTests : IClassFixture<SaturdazeApiFactory>
+public class WeekendsControllerTests : IClassFixture<SaturdazeApiFactory>, IAsyncLifetime
 {
     private readonly SaturdazeApiFactory _factory;
-    private readonly HttpClient _client;
+    private HttpClient _client = null!;
     private static readonly DateOnly TestSaturday = new(2026, 5, 16);
 
     public WeekendsControllerTests(SaturdazeApiFactory factory)
     {
         _factory = factory;
-        _client = factory.CreateClient();
         _factory.Weather.Producer = (_, _, from, to) =>
         {
             var days = new List<WeatherForecast>();
@@ -26,6 +25,9 @@ public class WeekendsControllerTests : IClassFixture<SaturdazeApiFactory>
             return days;
         };
     }
+
+    public async Task InitializeAsync() => _client = (await SignedInClient.CreateAsync(_factory)).Client;
+    public Task DisposeAsync() => Task.CompletedTask;
 
     [Fact]
     public async Task Plan_creates_weekend_with_blocks_for_sat_and_sun()
@@ -81,6 +83,18 @@ public class WeekendsControllerTests : IClassFixture<SaturdazeApiFactory>
         var response = await _client.PostAsJsonAsync("/api/weekends/plan", new { WeekendOf = "2026-05-15" });
         var body = await response.Content.ReadAsStringAsync();
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest, body);
+    }
+
+    [Fact]
+    public async Task Regenerate_day_with_unknown_day_returns_400()
+    {
+        var created = await _client.PostAsJsonAsync("/api/weekends/plan", new { WeekendOf = TestSaturday.ToString("yyyy-MM-dd") });
+        created.EnsureSuccessStatusCode();
+        var id = JsonDocument.Parse(await created.Content.ReadAsStringAsync()).RootElement.GetProperty("id").GetGuid();
+
+        var response = await _client.PostAsync($"/api/weekends/{id}/days/monday/regenerate", content: null);
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        response.Content.Headers.ContentType!.MediaType.Should().Be("application/problem+json");
     }
 
     [Fact]
@@ -162,15 +176,25 @@ public class WeekendsControllerTests : IClassFixture<SaturdazeApiFactory>
         var shareBody = JsonDocument.Parse(await share.Content.ReadAsStringAsync()).RootElement;
         shareBody.GetProperty("shareUrl").GetString().Should().Contain("/sample-weekend?share=");
 
-        var shared = await _client.GetAsync($"/api/weekends/shared/{shareBody.GetProperty("token").GetString()}");
+        // The share link and the calendar feed are consumed without a bearer.
+        var anonymous = _factory.CreateClient();
+
+        var shared = await anonymous.GetAsync($"/api/weekends/shared/{shareBody.GetProperty("token").GetString()}");
         shared.EnsureSuccessStatusCode();
         JsonDocument.Parse(await shared.Content.ReadAsStringAsync()).RootElement
             .GetProperty("id").GetGuid().Should().Be(weekendId);
 
-        var calendar = await _client.GetAsync($"/api/weekends/{weekendId}/calendar.ics");
+        var calendar = await anonymous.GetAsync($"/api/weekends/{weekendId}/calendar.ics");
         calendar.EnsureSuccessStatusCode();
         var ics = await calendar.Content.ReadAsStringAsync();
         ics.Should().Contain("BEGIN:VCALENDAR").And.Contain("BEGIN:VEVENT");
+    }
+
+    [Fact]
+    public async Task Malformed_share_token_returns_404()
+    {
+        var response = await _factory.CreateClient().GetAsync("/api/weekends/shared/not-a-token!");
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
 
     [Fact]

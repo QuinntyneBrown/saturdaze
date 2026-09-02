@@ -1,6 +1,7 @@
 import type { FamilyVote } from './family-vote';
 
 export type { FamilyVote } from './family-vote';
+export type { MealSlot } from './meal-slot';
 export type { RestaurantFilter } from './restaurant-filter';
 export type { RestaurantSection } from './restaurant-section';
 export type { RestaurantView } from './restaurant-view';

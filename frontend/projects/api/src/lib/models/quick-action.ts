@@ -1,7 +1,14 @@
+/** What tapping a quick action does. */
+export type QuickActionKind = 'regenerate' | 'lock' | 'share';
+
 /**
  * Quick Action.
  */
 export interface QuickAction {
+  /**
+   * Kind.
+   */
+  readonly kind: QuickActionKind;
   /**
    * Title.
    */
@@ -14,8 +21,4 @@ export interface QuickAction {
    * Icon.
    */
   readonly icon: string;
-  /**
-   * Href.
-   */
-  readonly href?: string;
 }

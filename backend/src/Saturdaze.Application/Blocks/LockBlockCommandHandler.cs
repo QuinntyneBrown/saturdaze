@@ -1,49 +1,50 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using Saturdaze.Application.Abstractions;
+using Saturdaze.Application.Common;
 using Saturdaze.Application.Contracts;
 using Saturdaze.Application.Exceptions;
 using Saturdaze.Application.Weather;
 using Saturdaze.Application.Weekends;
+using Saturdaze.Domain.Entities;
+using Saturdaze.Domain.Enums;
 
 namespace Saturdaze.Application.Blocks;
 
 public sealed class LockBlockCommandHandler : IRequestHandler<LockBlockCommand, WeekendDto>
 {
     private readonly IAppDbContext _db;
-    private readonly IWeatherClient _weather;
-    private readonly IOptions<HomeLocationOptions> _home;
+    private readonly ICurrentFamilyAccessor _current;
+    private readonly WeekendForecastService _forecast;
 
-    public LockBlockCommandHandler(IAppDbContext db, IWeatherClient weather, IOptions<HomeLocationOptions> home)
+    public LockBlockCommandHandler(IAppDbContext db, ICurrentFamilyAccessor current, WeekendForecastService forecast)
     {
         _db = db;
-        _weather = weather;
-        _home = home;
+        _current = current;
+        _forecast = forecast;
     }
 
     public async Task<WeekendDto> Handle(LockBlockCommand request, CancellationToken cancellationToken)
     {
-        var block = await _db.ItineraryBlocks.SingleOrDefaultAsync(b => b.Id == request.BlockId, cancellationToken)
-            ?? throw new NotFoundException(nameof(Domain.Entities.ItineraryBlock), request.BlockId);
-        block.IsLocked = request.Locked;
-        await _db.SaveChangesAsync(cancellationToken);
+        var familyId = await _current.GetCurrentFamilyIdAsync(cancellationToken);
 
+        // One query proves ownership and loads the aggregate we return.
         var weekend = await _db.Weekends
             .Include(w => w.Blocks)
             .Include(w => w.Errands)
-            .SingleAsync(w => w.Id == block.WeekendId, cancellationToken);
-        var forecast = await _weather.GetForecastAsync(
-            _home.Value.Latitude, _home.Value.Longitude,
-            weekend.WeekendOf, weekend.WeekendOf.AddDays(1), cancellationToken);
+            .SingleOrDefaultAsync(
+                w => w.FamilyId == familyId && w.Blocks.Any(b => b.Id == request.BlockId),
+                cancellationToken)
+            ?? throw new NotFoundException(nameof(ItineraryBlock), request.BlockId);
 
-        return InternalWeekendMapper.ToDto(weekend, forecast);
+        var block = weekend.Blocks.Single(b => b.Id == request.BlockId);
+        if (block.Kind == BlockKind.Commitment && !request.Locked)
+            throw new ConflictException("commitment_locked", "Recurring commitments are always locked; edit them on the profile.");
+
+        block.IsLocked = request.Locked;
+        await _db.SaveChangesAsync(cancellationToken);
+
+        var forecast = await _forecast.GetAsync(weekend.WeekendOf, cancellationToken);
+        return WeekendMapper.ToDto(weekend, forecast);
     }
-}
-
-// Local re-export of WeekendMapper (which is internal) so the block handlers can share it.
-internal static class InternalWeekendMapper
-{
-    public static WeekendDto ToDto(Domain.Entities.Weekend w, IReadOnlyList<WeatherForecast> f)
-        => WeekendMapper.ToDto(w, f);
 }

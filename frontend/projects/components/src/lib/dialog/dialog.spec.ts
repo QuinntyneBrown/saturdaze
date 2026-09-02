@@ -43,4 +43,28 @@ describe('Dialog', () => {
     fixture.detectChanges();
     expect(component.subtitle()).toBe('test-value');
   });
+
+  it('gives the heading an id and no longer nests a dialog role', () => {
+    const el = fixture.nativeElement as HTMLElement;
+    const h2 = el.querySelector('h2') as HTMLElement;
+    expect(h2.id).toMatch(/^sd-dialog-title-\d+$/);
+    expect(el.querySelector('[role="dialog"]')).toBeNull();
+  });
+
+  it('labels the surrounding CDK container with the heading', async () => {
+    const container = document.createElement('div');
+    container.setAttribute('role', 'dialog');
+    document.body.appendChild(container);
+    container.appendChild(fixture.nativeElement);
+    try {
+      const again = TestBed.createComponent(Dialog);
+      container.appendChild(again.nativeElement);
+      again.detectChanges();
+      await again.whenStable();
+      const h2 = (again.nativeElement as HTMLElement).querySelector('h2') as HTMLElement;
+      expect(container.getAttribute('aria-labelledby')).toBe(h2.id);
+    } finally {
+      container.remove();
+    }
+  });
 });

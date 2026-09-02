@@ -5,7 +5,7 @@
 import { chromium } from "playwright";
 import { mkdir } from "node:fs/promises";
 
-const BASE = "http://localhost:8765";
+const BASE = process.env.SD_MOCKS_URL ?? "http://localhost:5173"; // `npx http-server docs/mocks -p 5173`
 
 const PAGES = [
   { url: "/",                       expects: { selector: ".mock-launcher h1", text: "Saturdaze mocks" } },

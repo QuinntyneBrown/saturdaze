@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 
+import { requireAdmin } from './auth/require-admin.guard';
 import { requireAnonymous } from './auth/require-anonymous.guard';
 import { requireAuth } from './auth/require-auth.guard';
 import { environment } from '../environments/environment';
@@ -13,6 +14,8 @@ import { environment } from '../environments/environment';
  *   are all guarded by `requireAuth`.
  * - `/verify-email` deliberately has no guard — signed-in *and* signed-out
  *   users need to reach it from an email link.
+ * - `/admin/events` chains `requireAuth` then `requireAdmin`: anonymous
+ *   visitors bounce to `/login`, signed-in non-admins to `/weekend`.
  * - Component galleries (`/dialogs`, `/components`) stay public so design
  *   review can pull them up without an account.
  */
@@ -158,6 +161,14 @@ export const routes: Routes = [
     canActivate: [requireAuth],
     loadComponent: () =>
       import('./pages/profile/profile.page').then((m) => m.ProfilePage),
+  },
+  {
+    path: 'admin/events',
+    canActivate: [requireAuth, requireAdmin],
+    loadComponent: () =>
+      import('./pages/admin-events/admin-events.page').then(
+        (m) => m.AdminEventsPage,
+      ),
   },
   ...(environment.galleryRoutes ? [
     {

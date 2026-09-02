@@ -1,6 +1,8 @@
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Saturdaze.Application.Contracts;
+using Saturdaze.Application.Exceptions;
 using Saturdaze.Application.Weekends;
 using Saturdaze.Domain.Enums;
 using System.Text;
@@ -51,6 +53,7 @@ public sealed class WeekendsController : ControllerBase
     public async Task<ActionResult<WeekendDto>> Repeat(Guid id, CancellationToken ct)
         => Ok(await _sender.Send(new ReuseWeekendCommand(id, Remix: false), ct));
 
+    /// <summary>Only the owning family can mint a share link (scoped query).</summary>
     [HttpPost("{id:guid}/share")]
     public async Task<ActionResult<WeekendShareDto>> Share(Guid id, CancellationToken ct)
     {
@@ -63,14 +66,21 @@ public sealed class WeekendsController : ControllerBase
         return Ok(new WeekendShareDto($"{origin}/sample-weekend?share={token}", token));
     }
 
+    /// <summary>Public read-only view behind a share link.</summary>
     [HttpGet("shared/{token}")]
+    [AllowAnonymous]
     public async Task<ActionResult<WeekendDto>> Shared(string token, CancellationToken ct)
-        => Ok(await _sender.Send(new GetWeekendByIdQuery(WeekendControllerHelpers.DecodeToken(token)), ct));
+        => Ok(await _sender.Send(new GetSharedWeekendQuery(WeekendControllerHelpers.DecodeToken(token)), ct));
 
+    /// <summary>
+    /// Calendar subscription feed. Anonymous by necessity: the browser, webcal:
+    /// and Google Calendar fetch this as a bare URL and cannot attach a bearer.
+    /// </summary>
     [HttpGet("{id:guid}/calendar.ics")]
+    [AllowAnonymous]
     public async Task<IActionResult> Calendar(Guid id, CancellationToken ct)
     {
-        var weekend = await _sender.Send(new GetWeekendByIdQuery(id), ct);
+        var weekend = await _sender.Send(new GetSharedWeekendQuery(id), ct);
         var bytes = Encoding.UTF8.GetBytes(WeekendControllerHelpers.ToIcs(weekend));
         return File(bytes, "text/calendar; charset=utf-8", $"saturdaze-{weekend.WeekendOf:yyyy-MM-dd}.ics");
     }
@@ -84,26 +94,47 @@ public sealed class WeekendsController : ControllerBase
     public async Task<ActionResult<WeekendDto>> Favourite(
         Guid id, [FromBody] FavouriteRequest body, CancellationToken ct)
         => Ok(await _sender.Send(new MarkFavouriteCommand(id, body.Favourite), ct));
+
+    /// <summary>1–5 stars, or null to clear (L2-026).</summary>
+    [HttpPut("{id:guid}/rating")]
+    public async Task<ActionResult<WeekendDto>> Rate(
+        Guid id, [FromBody] RatingRequest body, CancellationToken ct)
+        => Ok(await _sender.Send(new RateWeekendCommand(id, body.Rating), ct));
+
+    /// <summary>User-supplied title shown on the saved-weekends page (L1-010).</summary>
+    [HttpPut("{id:guid}/title")]
+    public async Task<ActionResult<WeekendDto>> Rename(
+        Guid id, [FromBody] TitleRequest body, CancellationToken ct)
+        => Ok(await _sender.Send(new RenameWeekendCommand(id, body.Title), ct));
 }
 
 public sealed record FavouriteRequest(bool Favourite);
 public sealed record LockDayRequest(bool Locked);
+public sealed record RatingRequest(int? Rating);
+public sealed record TitleRequest(string? Title);
 
 file static class WeekendControllerHelpers
 {
     public static DayOfWeekend ParseDay(string value)
         => Enum.TryParse<DayOfWeekend>(value, ignoreCase: true, out var day)
             ? day
-            : throw new ArgumentException("Day must be Saturday or Sunday.", nameof(value));
+            : throw new ValidationException("day", "Day must be Saturday or Sunday.");
 
     public static string EncodeToken(Guid id)
         => Convert.ToBase64String(id.ToByteArray()).TrimEnd('=').Replace('+', '-').Replace('/', '_');
 
     public static Guid DecodeToken(string token)
     {
-        var padded = token.Replace('-', '+').Replace('_', '/');
-        padded = padded.PadRight(padded.Length + (4 - padded.Length % 4) % 4, '=');
-        return new Guid(Convert.FromBase64String(padded));
+        try
+        {
+            var padded = token.Replace('-', '+').Replace('_', '/');
+            padded = padded.PadRight(padded.Length + (4 - padded.Length % 4) % 4, '=');
+            return new Guid(Convert.FromBase64String(padded));
+        }
+        catch (Exception ex) when (ex is FormatException or ArgumentException)
+        {
+            throw new NotFoundException("Share link is not valid.");
+        }
     }
 
     public static string ToIcs(WeekendDto weekend)

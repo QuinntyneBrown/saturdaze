@@ -45,6 +45,12 @@ export class LoginPage {
   protected readonly submitting = signal(false);
   protected readonly error = this.session.error;
 
+  constructor() {
+    // A failed sign-up (or an earlier failed sign-in) must not greet the
+    // user with a stale error banner; the store is shared across auth pages.
+    this.session.clearError();
+  }
+
   protected readonly form = new FormGroup({
     email: new FormControl(this.session.rememberedEmail() ?? '', {
       nonNullable: true,

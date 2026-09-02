@@ -23,3 +23,7 @@ These are the only direct deviations from the framework's default transitive ver
 - Build is clean (`0 Warning(s)`).
 - Future framework updates may make these pins redundant; they should be re-evaluated when bumping the .NET version.
 - A vulnerability scan from this date onward will see the patched versions.
+
+## Update 2026-09-01
+
+New advisories against `System.Security.Cryptography.Xml` 10.0.6 and the transitive `SQLitePCLRaw.lib.e_sqlite3` 2.1.11 turned `NU1903` into build errors again. The whole `10.0.0` Microsoft line was moved to `10.0.11` (EF Core, Extensions, ASP.NET packages), `System.Security.Cryptography.Xml` to `10.0.11`, `Microsoft.Extensions.Http.Resilience` to `10.9.0` (it does not follow the runtime's patch numbers), and the IdentityModel pair to `8.22.0` (the JwtBearer package now requires ≥ 8.19.2). EF Core 10.0.11 pulls a patched SQLitePCLRaw, so no explicit SQLite pin was needed. The two original pins remain as documented.

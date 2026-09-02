@@ -1,13 +1,15 @@
 export type { AnticipationTip } from './anticipation-tip';
 export type { Block } from './block';
-export type { Day } from './day';
+export type { BlockKind } from './block-kind';
 export type { DayChip } from './day-chip';
 export type { DayHeaderChip } from './day-header-chip';
 export type { DayOption } from './day-option';
 export type { DaySummary } from './day-summary';
+export type { ErrandPlacement } from './errand-placement';
 export type { ItineraryView } from './itinerary-view';
-export type { QuickAction } from './quick-action';
+export type { QuickAction, QuickActionKind } from './quick-action';
+export type { SharedWeekend, SharedWeekendBlock } from './shared-weekend';
 export type { WeatherDay } from './weather-day';
+export type { WeekendDay } from './weekend-day';
 export type { WeekendOverview } from './weekend-overview';
-export type { WeekendPlan } from './weekend-plan';
 export type { WeekendStat } from './weekend-stat';

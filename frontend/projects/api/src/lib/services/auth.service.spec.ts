@@ -2,7 +2,20 @@ import { TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { API_BASE_URL } from '../api/api-base-url';
+import { AuthError } from '../models/auth-error';
 import { AuthService } from './auth.service';
+
+const BASE = 'http://localhost:3000';
+
+const SUCCESS = {
+  token: {
+    accessToken: 'access-1',
+    refreshToken: 'refresh-1',
+    accessTokenExpiresAtUtc: '2026-09-02T12:00:00Z',
+    tokenType: 'Bearer',
+  },
+  user: { id: 'u1', email: 'quinn@example.com', role: 'User', emailVerifiedUtc: null },
+};
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -14,17 +27,15 @@ describe('AuthService', () => {
         AuthService,
         provideHttpClient(),
         provideHttpClientTesting(),
-        { provide: API_BASE_URL, useValue: 'http://localhost:3000' },
+        { provide: API_BASE_URL, useValue: BASE },
       ],
     });
 
     service = TestBed.inject(AuthService);
     httpMock = TestBed.inject(HttpTestingController);
-    httpMock.match(() => true).forEach((req) => req.flush(null));
   });
 
   afterEach(() => {
-    httpMock.match(() => true).forEach((req) => req.flush(null));
     httpMock.verify();
   });
 
@@ -33,226 +44,126 @@ describe('AuthService', () => {
   });
 
   describe('signUp', () => {
-    it('should make POST request and map the response', async () => {
-      const mockResponse = { token: { accessToken: 'test', accessTokenExpiresAtUtc: 'test' }, user: 'test' } as any;
-      const promise = service.signUp({ familyName: 'test-value', homeLocation: 'test-value', email: 'test-value', password: 'test-value' } as any);
-      (promise as Promise<unknown>).catch(() => {});
+    it('POSTs /api/auth/register and maps the token pair', async () => {
+      const promise = service.signUp({ familyName: 'Browns', homeLocation: 'Port Credit', email: 'quinn@example.com', password: 'pw', fridayPreview: true });
+      const req = httpMock.expectOne(`${BASE}/api/auth/register`);
+      expect(req.request.method).toBe('POST');
+      req.flush(SUCCESS);
 
-      const matched = httpMock.match((request) => request.method === 'POST');
-      if (matched.length === 0) {
-        // The method did not issue a request on this path; nothing to assert.
-        return;
-      }
-      expect(matched[0].request.method).toBe('POST');
-      matched.forEach((req) => req.flush(mockResponse));
-      const result: any = await promise;
-      expect(result.token.value).toEqual(mockResponse.token.accessToken);
-      expect(result.token.expiresUtc).toEqual(mockResponse.token.accessTokenExpiresAtUtc);
-      expect(result.user).toEqual(mockResponse.user);
+      const result = await promise;
+      expect(result.token).toEqual({ value: 'access-1', expiresUtc: '2026-09-02T12:00:00Z', refreshToken: 'refresh-1' });
+      expect(result.user).toEqual(SUCCESS.user);
     });
 
-    it('should reject signUp on an error response', async () => {
-      const promise = service.signUp({ familyName: 'test-value', homeLocation: 'test-value', email: 'test-value', password: 'test-value' } as any);
-      (promise as Promise<unknown>).catch(() => {});
-
-      const matched = httpMock.match((request) => request.method === 'POST');
-      if (matched.length === 0) {
-        return;
-      }
-      matched.forEach((req) =>
-        req.flush({ message: 'error' }, { status: 500, statusText: 'Server Error' })
+    it('rethrows the backend AuthError body', async () => {
+      const promise = service.signUp({ familyName: 'Browns', homeLocation: 'Port Credit', email: 'quinn@example.com', password: 'pw', fridayPreview: true });
+      httpMock.expectOne(`${BASE}/api/auth/register`).flush(
+        { code: 'email_in_use', message: 'taken' },
+        { status: 409, statusText: 'Conflict' },
       );
-      await expect(promise).rejects.toBeTruthy();
+      await expect(promise).rejects.toEqual({ code: 'email_in_use', message: 'taken' });
     });
   });
 
   describe('login', () => {
-    it('should make POST request and map the response', async () => {
-      const mockResponse = { token: { accessToken: 'test', accessTokenExpiresAtUtc: 'test' }, user: 'test' } as any;
-      const promise = service.login({ email: 'test-value', password: 'test-value' } as any);
-      (promise as Promise<unknown>).catch(() => {});
+    it('POSTs /api/auth/login and maps the token pair', async () => {
+      const promise = service.login({ email: 'quinn@example.com', password: 'pw' });
+      const req = httpMock.expectOne(`${BASE}/api/auth/login`);
+      expect(req.request.method).toBe('POST');
+      req.flush(SUCCESS);
 
-      const matched = httpMock.match((request) => request.method === 'POST');
-      if (matched.length === 0) {
-        // The method did not issue a request on this path; nothing to assert.
-        return;
-      }
-      expect(matched[0].request.method).toBe('POST');
-      matched.forEach((req) => req.flush(mockResponse));
-      const result: any = await promise;
-      expect(result.token.value).toEqual(mockResponse.token.accessToken);
-      expect(result.token.expiresUtc).toEqual(mockResponse.token.accessTokenExpiresAtUtc);
-      expect(result.user).toEqual(mockResponse.user);
+      const result = await promise;
+      expect(result.token.refreshToken).toBe('refresh-1');
+      expect(result.user).toEqual(SUCCESS.user);
     });
 
-    it('should reject login on an error response', async () => {
-      const promise = service.login({ email: 'test-value', password: 'test-value' } as any);
-      (promise as Promise<unknown>).catch(() => {});
-
-      const matched = httpMock.match((request) => request.method === 'POST');
-      if (matched.length === 0) {
-        return;
-      }
-      matched.forEach((req) =>
-        req.flush({ message: 'error' }, { status: 500, statusText: 'Server Error' })
-      );
-      await expect(promise).rejects.toBeTruthy();
+    it('falls back to invalid_credentials when the body carries no code', async () => {
+      const promise = service.login({ email: 'quinn@example.com', password: 'pw' });
+      httpMock.expectOne(`${BASE}/api/auth/login`).flush(null, { status: 500, statusText: 'Server Error' });
+      await expect(promise).rejects.toMatchObject({ code: 'invalid_credentials' } satisfies Partial<AuthError>);
     });
   });
 
-  describe('forgotPassword', () => {
-    it('should make POST request', async () => {
-      const mockResponse = {} as any;
-      const promise = service.forgotPassword({ email: 'test-value' } as any);
-      (promise as Promise<unknown>).catch(() => {});
+  describe('refresh', () => {
+    it('POSTs /api/auth/refresh with the refresh token and maps the new pair', async () => {
+      const promise = service.refresh({ refreshToken: 'refresh-1' });
+      const req = httpMock.expectOne(`${BASE}/api/auth/refresh`);
+      expect(req.request.method).toBe('POST');
+      expect(req.request.body).toEqual({ refreshToken: 'refresh-1' });
+      req.flush({ ...SUCCESS, token: { ...SUCCESS.token, accessToken: 'access-2', refreshToken: 'refresh-2' } });
 
-      const matched = httpMock.match((request) => request.method === 'POST');
-      if (matched.length === 0) {
-        // The method did not issue a request on this path; nothing to assert.
-        return;
-      }
-      expect(matched[0].request.method).toBe('POST');
-      matched.forEach((req) => req.flush(mockResponse));
-      await (promise as Promise<unknown>).catch(() => {});
+      const result = await promise;
+      expect(result.token).toEqual({ value: 'access-2', expiresUtc: '2026-09-02T12:00:00Z', refreshToken: 'refresh-2' });
+      expect(result.user).toEqual(SUCCESS.user);
     });
 
-    it('should reject forgotPassword on an error response', async () => {
-      const promise = service.forgotPassword({ email: 'test-value' } as any);
-      (promise as Promise<unknown>).catch(() => {});
-
-      const matched = httpMock.match((request) => request.method === 'POST');
-      if (matched.length === 0) {
-        return;
-      }
-      matched.forEach((req) =>
-        req.flush({ message: 'error' }, { status: 500, statusText: 'Server Error' })
+    it('maps any 401 onto token_expired', async () => {
+      const promise = service.refresh({ refreshToken: 'stale' });
+      httpMock.expectOne(`${BASE}/api/auth/refresh`).flush(
+        { code: 'refresh_token_revoked', message: 'Refresh token has been revoked.' },
+        { status: 401, statusText: 'Unauthorized' },
       );
-      await expect(promise).rejects.toBeTruthy();
+      await expect(promise).rejects.toMatchObject({ code: 'token_expired' });
+    });
+
+    it('keeps other failures on the generic path', async () => {
+      const promise = service.refresh({ refreshToken: 'stale' });
+      httpMock.expectOne(`${BASE}/api/auth/refresh`).flush(null, { status: 503, statusText: 'Unavailable' });
+      await expect(promise).rejects.toMatchObject({ code: 'invalid_credentials' });
     });
   });
 
-  describe('resendVerification', () => {
-    it('should make POST request', async () => {
-      const mockResponse = {} as any;
-      const promise = service.resendVerification({ email: 'test-value' } as any);
-      (promise as Promise<unknown>).catch(() => {});
-
-      const matched = httpMock.match((request) => request.method === 'POST');
-      if (matched.length === 0) {
-        // The method did not issue a request on this path; nothing to assert.
-        return;
-      }
-      expect(matched[0].request.method).toBe('POST');
-      matched.forEach((req) => req.flush(mockResponse));
-      await (promise as Promise<unknown>).catch(() => {});
+  describe('logout', () => {
+    it('POSTs /api/auth/logout with the refresh token', async () => {
+      const promise = service.logout({ refreshToken: 'refresh-1' });
+      const req = httpMock.expectOne(`${BASE}/api/auth/logout`);
+      expect(req.request.method).toBe('POST');
+      expect(req.request.body).toEqual({ refreshToken: 'refresh-1' });
+      req.flush(null, { status: 204, statusText: 'No Content' });
+      await expect(promise).resolves.toBeUndefined();
     });
 
-    it('should reject resendVerification on an error response', async () => {
-      const promise = service.resendVerification({ email: 'test-value' } as any);
-      (promise as Promise<unknown>).catch(() => {});
-
-      const matched = httpMock.match((request) => request.method === 'POST');
-      if (matched.length === 0) {
-        return;
-      }
-      matched.forEach((req) =>
-        req.flush({ message: 'error' }, { status: 500, statusText: 'Server Error' })
-      );
-      await expect(promise).rejects.toBeTruthy();
+    it('rejects with an AuthError on transport failure', async () => {
+      const promise = service.logout({ refreshToken: 'refresh-1' });
+      httpMock.expectOne(`${BASE}/api/auth/logout`).flush(null, { status: 500, statusText: 'Server Error' });
+      await expect(promise).rejects.toMatchObject({ code: 'invalid_credentials' });
     });
   });
 
-  describe('resetPassword', () => {
-    it('should make POST request', async () => {
-      const mockResponse = {} as any;
-      const promise = service.resetPassword({ token: 'test-value', password: 'test-value' } as any);
-      (promise as Promise<unknown>).catch(() => {});
-
-      const matched = httpMock.match((request) => request.method === 'POST');
-      if (matched.length === 0) {
-        // The method did not issue a request on this path; nothing to assert.
-        return;
-      }
-      expect(matched[0].request.method).toBe('POST');
-      matched.forEach((req) => req.flush(mockResponse));
-      await (promise as Promise<unknown>).catch(() => {});
+  describe.each([
+    ['forgotPassword', '/api/auth/forgot-password', () => service.forgotPassword({ email: 'quinn@example.com' })],
+    ['resendVerification', '/api/auth/resend-verification', () => service.resendVerification({ email: 'quinn@example.com' })],
+    ['resetPassword', '/api/auth/reset-password', () => service.resetPassword({ token: 't', password: 'p' })],
+    ['verifyEmail', '/api/auth/verify-email', () => service.verifyEmail({ token: 't' })],
+  ] as const)('%s', (_name, path, call) => {
+    it(`POSTs ${path}`, async () => {
+      const promise = call();
+      const req = httpMock.expectOne(`${BASE}${path}`);
+      expect(req.request.method).toBe('POST');
+      req.flush(null, { status: 202, statusText: 'Accepted' });
+      await expect(promise).resolves.toBeUndefined();
     });
 
-    it('should reject resetPassword on an error response', async () => {
-      const promise = service.resetPassword({ token: 'test-value', password: 'test-value' } as any);
-      (promise as Promise<unknown>).catch(() => {});
-
-      const matched = httpMock.match((request) => request.method === 'POST');
-      if (matched.length === 0) {
-        return;
-      }
-      matched.forEach((req) =>
-        req.flush({ message: 'error' }, { status: 500, statusText: 'Server Error' })
-      );
-      await expect(promise).rejects.toBeTruthy();
-    });
-  });
-
-  describe('verifyEmail', () => {
-    it('should make POST request', async () => {
-      const mockResponse = {} as any;
-      const promise = service.verifyEmail({ token: 'test-value' } as any);
-      (promise as Promise<unknown>).catch(() => {});
-
-      const matched = httpMock.match((request) => request.method === 'POST');
-      if (matched.length === 0) {
-        // The method did not issue a request on this path; nothing to assert.
-        return;
-      }
-      expect(matched[0].request.method).toBe('POST');
-      matched.forEach((req) => req.flush(mockResponse));
-      await (promise as Promise<unknown>).catch(() => {});
-    });
-
-    it('should reject verifyEmail on an error response', async () => {
-      const promise = service.verifyEmail({ token: 'test-value' } as any);
-      (promise as Promise<unknown>).catch(() => {});
-
-      const matched = httpMock.match((request) => request.method === 'POST');
-      if (matched.length === 0) {
-        return;
-      }
-      matched.forEach((req) =>
-        req.flush({ message: 'error' }, { status: 500, statusText: 'Server Error' })
-      );
-      await expect(promise).rejects.toBeTruthy();
+    it('rejects on an error response', async () => {
+      const promise = call();
+      httpMock.expectOne(`${BASE}${path}`).flush({ code: 'token_invalid', message: 'bad' }, { status: 400, statusText: 'Bad Request' });
+      await expect(promise).rejects.toEqual({ code: 'token_invalid', message: 'bad' });
     });
   });
 
   describe('me', () => {
-    it('should make GET request and map the response', async () => {
-      const mockResponse = {} as any;
+    it('GETs /api/auth/me', async () => {
       const promise = service.me();
-      (promise as Promise<unknown>).catch(() => {});
-
-      const matched = httpMock.match((request) => request.method === 'GET');
-      if (matched.length === 0) {
-        // The method did not issue a request on this path; nothing to assert.
-        return;
-      }
-      expect(matched[0].request.method).toBe('GET');
-      matched.forEach((req) => req.flush(mockResponse));
-      const result: any = await promise;
-      expect(result).toEqual(mockResponse);
+      const req = httpMock.expectOne(`${BASE}/api/auth/me`);
+      expect(req.request.method).toBe('GET');
+      req.flush(SUCCESS.user);
+      await expect(promise).resolves.toEqual(SUCCESS.user);
     });
 
-    it('should reject me on an error response', async () => {
+    it('rejects on an error response', async () => {
       const promise = service.me();
-      (promise as Promise<unknown>).catch(() => {});
-
-      const matched = httpMock.match((request) => request.method === 'GET');
-      if (matched.length === 0) {
-        return;
-      }
-      matched.forEach((req) =>
-        req.flush({ message: 'error' }, { status: 500, statusText: 'Server Error' })
-      );
-      await expect(promise).rejects.toBeTruthy();
+      httpMock.expectOne(`${BASE}/api/auth/me`).flush(null, { status: 401, statusText: 'Unauthorized' });
+      await expect(promise).rejects.toMatchObject({ code: 'invalid_credentials' });
     });
   });
 });

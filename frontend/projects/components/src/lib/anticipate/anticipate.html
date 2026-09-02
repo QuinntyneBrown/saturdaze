@@ -5,7 +5,7 @@
     <div class="text">{{ body() }}</div>
     @if (cta()) {
       <div class="row">
-        <sd-button size="sm" variant="secondary">{{ cta() }}</sd-button>
+        <sd-button size="sm" variant="secondary" (click)="ctaClick.emit()">{{ cta() }}</sd-button>
       </div>
     }
   </div>

@@ -1,8 +1,8 @@
 namespace Saturdaze.Domain.Enums;
 
+/// <summary>Explicit values: these are persisted as integers.</summary>
 public enum BlockKind
 {
-    Workout = 1,
     Activity = 2,
     Meal = 3,
     Drive = 4,

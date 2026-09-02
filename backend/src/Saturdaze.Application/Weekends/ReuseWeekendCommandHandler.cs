@@ -1,6 +1,5 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using Saturdaze.Application.Abstractions;
 using Saturdaze.Application.Common;
 using Saturdaze.Application.Contracts;
@@ -15,23 +14,20 @@ public sealed class ReuseWeekendCommandHandler : IRequestHandler<ReuseWeekendCom
     private readonly IAppDbContext _db;
     private readonly ICurrentFamilyAccessor _current;
     private readonly IDateTimeProvider _clock;
-    private readonly IWeatherClient _weather;
-    private readonly IOptions<HomeLocationOptions> _home;
+    private readonly WeekendForecastService _forecast;
     private readonly ISender _sender;
 
     public ReuseWeekendCommandHandler(
         IAppDbContext db,
         ICurrentFamilyAccessor current,
         IDateTimeProvider clock,
-        IWeatherClient weather,
-        IOptions<HomeLocationOptions> home,
+        WeekendForecastService forecast,
         ISender sender)
     {
         _db = db;
         _current = current;
         _clock = clock;
-        _weather = weather;
-        _home = home;
+        _forecast = forecast;
         _sender = sender;
     }
 
@@ -89,7 +85,7 @@ public sealed class ReuseWeekendCommandHandler : IRequestHandler<ReuseWeekendCom
 
         foreach (var block in sourceBlocks)
         {
-            var clone = new ItineraryBlock
+            _db.ItineraryBlocks.Add(new ItineraryBlock
             {
                 Id = Guid.NewGuid(),
                 WeekendId = target.Id,
@@ -104,21 +100,19 @@ public sealed class ReuseWeekendCommandHandler : IRequestHandler<ReuseWeekendCom
                     ? "seeded from saved weekend; ready to remix"
                     : block.Reason,
                 SortOrder = block.SortOrder
-            };
-            _db.ItineraryBlocks.Add(clone);
+            });
         }
 
         foreach (var errand in sourceErrands)
         {
-            var clone = new ShoppingErrand
+            _db.ShoppingErrands.Add(new ShoppingErrand
             {
                 Id = Guid.NewGuid(),
                 WeekendId = target.Id,
                 Description = errand.Description,
                 EstimatedMinutes = errand.EstimatedMinutes,
                 Done = errand.Done
-            };
-            _db.ShoppingErrands.Add(clone);
+            });
         }
 
         await _db.SaveChangesAsync(cancellationToken);
@@ -126,12 +120,7 @@ public sealed class ReuseWeekendCommandHandler : IRequestHandler<ReuseWeekendCom
         if (request.Remix)
             return await _sender.Send(new RegenerateWeekendCommand(target.Id), cancellationToken);
 
-        var forecast = await _weather.GetForecastAsync(
-            _home.Value.Latitude,
-            _home.Value.Longitude,
-            target.WeekendOf,
-            target.WeekendOf.AddDays(1),
-            cancellationToken);
+        var forecast = await _forecast.GetAsync(target.WeekendOf, cancellationToken);
         return WeekendMapper.ToDto(target, forecast);
     }
 }

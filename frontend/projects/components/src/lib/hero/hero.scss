@@ -5,7 +5,7 @@
   padding: 24px var(--sd-app-pad-x, 20px) 8px;
   background:
     radial-gradient(120% 80% at 0% 0%, var(--sd-primary-soft) 0%, transparent 60%),
-    radial-gradient(120% 80% at 100% 0%, #FBEBC4 0%, transparent 60%);
+    radial-gradient(120% 80% at 100% 0%, var(--sd-sun-soft) 0%, transparent 60%);
 }
 
 .small {

@@ -76,7 +76,8 @@ export class BasePage {
    * standalone components. Either way the DOM-presence check is enough —
    * we used to gate on `customElements.get(...)` which hangs forever
    * against Angular (it doesn't register tags with the customElements
-   * registry). See `docs/bugs/007-e2e-waitForComponentsReady-incompatible-with-angular.md`.
+   * registry). The original write-up lived in `docs/bugs/007-…` (removed in
+   * commit `f5fca1d`).
    */
   async waitForComponentsReady(): Promise<void> {
     await this.page.waitForSelector("sd-top-bar, sd-bottom-nav, sd-section", {

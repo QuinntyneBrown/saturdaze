@@ -1,4 +1,5 @@
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Saturdaze.Application.Weather;
 
@@ -12,7 +13,9 @@ public sealed class WeatherController : ControllerBase
 
     public WeatherController(ISender sender) => _sender = sender;
 
+    /// <summary>Public: the forecast carries no PII (L2-008).</summary>
     [HttpGet]
+    [AllowAnonymous]
     public async Task<ActionResult<IReadOnlyList<WeatherForecast>>> Get(
         [FromQuery] DateOnly weekendOf,
         CancellationToken ct)

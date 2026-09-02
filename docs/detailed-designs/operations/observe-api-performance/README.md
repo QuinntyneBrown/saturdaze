@@ -19,7 +19,7 @@ The feature crosses the application and platform boundaries needed to deliver it
 - **`Console and rolling file sinks`** — Configured Serilog destinations for structured events.
 - **`Performance verification`** — Load-test and percentile evaluation mechanism whose concrete tool is `<TO SUPPLY>`.
 
-Authenticated user-ID enrichment on the request completion event is `<TO SUPPLY>`. Automated p95 budget evaluation for `L2-034` is also `<TO SUPPLY>`.
+The request-completion event is enriched with `UserId` from the bearer's `sub` claim (`UseSerilogRequestLogging` in `Program.cs`). Automated p95 budget evaluation for `L2-034` is still `<TO SUPPLY>`.
 ## Requirements
 
 The feature realizes the following level-2 (L2) requirements. Each row cites the level-1 (L1) capability refined by the requirement.

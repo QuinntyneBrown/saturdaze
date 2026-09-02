@@ -24,7 +24,9 @@ describe('LoginPage', () => {
 
   beforeEach(async () => {
     mockSESSION_STORE = {
-      rememberedEmail: vi.fn(),
+      rememberedEmail: vi.fn(() => null),
+      error: vi.fn(() => null),
+      clearError: vi.fn(),
       login: vi.fn(() => Promise.resolve(undefined)),
     };
 

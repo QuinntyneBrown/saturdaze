@@ -13,7 +13,10 @@ public static class ResetCommand
     {
         var cmd = new Command("reset", "Drop, migrate, and seed the configured database.");
         var yes = new Option<bool>("--yes", "Confirm the destructive database reset.");
+        var allowProduction = new Option<bool>("--allow-production",
+            "Permit the reset when DOTNET_ENVIRONMENT / ASPNETCORE_ENVIRONMENT is Production.");
         cmd.AddOption(yes);
+        cmd.AddOption(allowProduction);
 
         cmd.SetHandler(async (InvocationContext ctx) =>
         {
@@ -21,6 +24,15 @@ public static class ResetCommand
             {
                 Console.Error.WriteLine("Refusing to reset without --yes.");
                 ctx.ExitCode = 4;
+                return;
+            }
+
+            if (ResetGuard.IsProductionBlocked(
+                    ResetGuard.CurrentEnvironmentName(),
+                    ctx.ParseResult.GetValueForOption(allowProduction)))
+            {
+                Console.Error.WriteLine("Refusing to reset a Production database. Pass --allow-production to override.");
+                ctx.ExitCode = ResetGuard.BlockedExitCode;
                 return;
             }
 

@@ -26,9 +26,21 @@
   --sd-warn:         #C45A3F;   // gentle warning, not alarming
   --sd-warn-soft:    #FADFD6;
 
+  --sd-danger:       #B91C1C;   // destructive / form errors
+
   --sd-sun:          #F4C969;   // sunny chip / weather
   --sd-sky:          #BFD9E8;   // cool weather chip
   --sd-leaf:         #A9C9A4;   // outdoor chip
+
+  // Tone pairs — the soft fill + ink used by chips, avatars, block icons
+  // and card gradients. Same values the mock stylesheets hard-code.
+  --sd-sun-soft:     #FBEBC4;
+  --sd-sun-ink:      #8A6212;
+  --sd-sky-soft:     #DCE9F1;
+  --sd-sky-ink:      #2C5F7A;
+  --sd-indoor-soft:  #EADFF4;
+  --sd-indoor-ink:   #5A3B82;
+  --sd-leaf-soft:    #DDEEDA;
 
   // Typography — sans-serif system stack.
   --sd-font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
@@ -39,7 +51,6 @@
   --sd-fs-base: 15px;
   --sd-fs-md:   17px;
   --sd-fs-lg:   20px;
-  --sd-fs-xl:   26px;
   --sd-fs-xxl:  34px;
 
   --sd-lh-base:  1.5;
@@ -88,7 +99,6 @@
   :root {
     --sd-app-pad-x: 32px;
     --sd-fs-xxl: 40px;
-    --sd-fs-xl: 30px;
     --sd-fs-lg: 22px;
   }
 }
@@ -101,6 +111,5 @@
   :root {
     --sd-app-pad-x: 16px;
     --sd-fs-xxl: 30px;
-    --sd-fs-xl: 24px;
   }
 }

@@ -58,12 +58,17 @@
 }
 
 .icon-action.danger {
-  color: var(--sd-warn);
+  color: var(--sd-danger);
+}
+
+.icon-action:disabled {
+  opacity: 0.5;
+  cursor: default;
 }
 
 .form-error {
   margin: 0;
-  color: var(--sd-warn);
+  color: var(--sd-danger);
   font-size: var(--sd-fs-sm);
 }
 

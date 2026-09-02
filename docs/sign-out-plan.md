@@ -16,7 +16,7 @@ The mock for this work lives in `docs/mocks/pages/profile.html` (Account section
 - **`authInterceptor`** (`auth/auth.interceptor.ts:26`) already redirects to `/login?returnUrl=<current>` on any 401 and calls `session.logout()` along the way, so a forced sign-out path exists. The deliberate path will share the same `SessionStore.logout()` call.
 - **`requireAuth` guard** reads `SessionStore.isAuthenticated()` synchronously, so clearing the session signal makes the next guarded navigation bounce immediately.
 - **`User` model** (`projects/api/src/lib/models/user.ts`) exposes `id, email, role, emailVerifiedUtc`. Critically, **no `createdAtUtc`** — the mock's "since May 2026" line needs either a backend addition or softer copy. See D2.
-- **Icon library drift** — the `sign_out` glyph was added to `docs/mocks/components/sd-icon.js` when the mock landed. The production library at `frontend/projects/components/src/lib/icon/icon.ts` does not have it yet. Pulling it across is mechanical (one line in the `ICONS` map).
+- **Icon library drift** — the `sign_out` glyph was added to `docs/mocks/components/sd-icon.js` when the mock landed. The production library at `frontend/projects/components/src/lib/icon/icon.ts` has it now (done).
 - **Seeded dev user** — `quinntynebrown@gmail.com` / `password123` is reset-stable via `UserSeeder`, so the e2e suite has a deterministic identity to sign in and out as.
 
 ---

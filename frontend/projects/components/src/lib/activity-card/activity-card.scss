@@ -20,7 +20,7 @@
 .image {
   height: 110px;
   position: relative;
-  background: linear-gradient(135deg, var(--sd-primary-soft), #FBEBC4);
+  background: linear-gradient(135deg, var(--sd-primary-soft), var(--sd-sun-soft));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -28,18 +28,18 @@
 }
 
 :host([tone="outdoor"]) .image {
-  background: linear-gradient(135deg, #DDEEDA, #DCE9F1);
+  background: linear-gradient(135deg, var(--sd-leaf-soft), var(--sd-sky-soft));
   color: var(--sd-accent);
 }
 
 :host([tone="indoor"]) .image {
-  background: linear-gradient(135deg, #EADFF4, #FBEBC4);
-  color: #5A3B82;
+  background: linear-gradient(135deg, var(--sd-indoor-soft), var(--sd-sun-soft));
+  color: var(--sd-indoor-ink);
 }
 
 :host([tone="food"]) .image {
-  background: linear-gradient(135deg, #FBEBC4, var(--sd-primary-soft));
-  color: #8A6212;
+  background: linear-gradient(135deg, var(--sd-sun-soft), var(--sd-primary-soft));
+  color: var(--sd-sun-ink);
 }
 
 .corner-tag {

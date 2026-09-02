@@ -3,6 +3,34 @@
   <sd-icon-button slot="trailing" icon="more" label="More" (click)="openMore()" />
 </sd-top-bar>
 
+<!--
+  The block list is authored once and stamped into two containers: the
+  desktop detail pane and the mobile timeline section. CSS decides which
+  container is visible at a given width (split-view hides `detail` below
+  the desktop breakpoint; `#mobile-timeline` hides at desktop).
+-->
+<ng-template #timeline>
+  @for (b of itinerary().blocks; track b.id ?? b.time) {
+    <sd-timeline-block
+      [time]="b.time"
+      [duration]="b.duration ?? ''"
+      [title]="b.title"
+      [subtitle]="b.subtitle ?? ''"
+      [icon]="b.icon"
+      [tone]="b.tone ?? 'default'"
+      [locked]="b.locked ?? false"
+      [drive]="b.drive ?? ''"
+      (blockClick)="openBlock(b)"
+    >
+      @if (b.chips) {
+        @for (c of b.chips; track $index) {
+          <sd-chip slot="chips" [tone]="c.tone">{{ c.label }}</sd-chip>
+        }
+      }
+    </sd-timeline-block>
+  }
+</ng-template>
+
 <sd-split-view sticky-master>
   <div slot="master">
     <div class="it-head">
@@ -82,24 +110,7 @@
         <sd-icon-button icon="map" label="See on map" variant="filled" (click)="seeMap()" />
       </div>
       <div class="it-detail-body">
-        @for (b of itinerary().blocks; track b.time) {
-          <sd-timeline-block
-            [time]="b.time"
-            [duration]="b.duration ?? ''"
-            [title]="b.title"
-            [subtitle]="b.subtitle ?? ''"
-            [icon]="b.icon"
-            [tone]="b.tone ?? 'default'"
-            [locked]="b.locked ?? false"
-            [drive]="b.drive ?? ''"
-          >
-            @if (b.chips) {
-              @for (c of b.chips; track $index) {
-                <sd-chip slot="chips" [tone]="c.tone">{{ c.label }}</sd-chip>
-              }
-            }
-          </sd-timeline-block>
-        }
+        <ng-container *ngTemplateOutlet="timeline" />
       </div>
     </div>
   </div>
@@ -108,24 +119,7 @@
 <div id="mobile-timeline">
   <sd-section title="Timeline" subtitle="Tap any block for why, alternatives, map">
     <div class="mobile-timeline-body">
-      @for (b of itinerary().blocks; track b.time) {
-        <sd-timeline-block
-          [time]="b.time"
-          [duration]="b.duration ?? ''"
-          [title]="b.title"
-          [subtitle]="b.subtitle ?? ''"
-          [icon]="b.icon"
-          [tone]="b.tone ?? 'default'"
-          [locked]="b.locked ?? false"
-          [drive]="b.drive ?? ''"
-        >
-          @if (b.chips) {
-            @for (c of b.chips; track $index) {
-              <sd-chip slot="chips" [tone]="c.tone">{{ c.label }}</sd-chip>
-            }
-          }
-        </sd-timeline-block>
-      }
+      <ng-container *ngTemplateOutlet="timeline" />
     </div>
   </sd-section>
 </div>

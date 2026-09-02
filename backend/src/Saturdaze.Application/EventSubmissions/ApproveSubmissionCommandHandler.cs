@@ -47,13 +47,24 @@ public sealed class ApproveSubmissionCommandHandler
 
         if (submission.Status == EventSubmissionStatus.Rejected)
         {
-            throw new ConflictException("submission_already_rejected");
+            throw new ConflictException("submission_already_rejected", "This submission was already rejected.");
         }
 
         var startsOn = DateOnly.FromDateTime(submission.StartsAtLocal);
         var endsOn = submission.EndsAtLocal.HasValue
             ? DateOnly.FromDateTime(submission.EndsAtLocal.Value)
             : startsOn;
+
+        // LocalEvents is unique on (Name, StartsOn); surface that as a 409, not a 500.
+        var title = submission.Title;
+        if (await _db.LocalEvents.AnyAsync(e => e.Name == title && e.StartsOn == startsOn, ct))
+        {
+            throw new ConflictException("event_already_published",
+                "An event with the same title already exists on that date.");
+        }
+
+        if (request.DriveMinutes is { } driveMinutes)
+            submission.DriveMinutes = driveMinutes;
 
         var published = new LocalEvent
         {

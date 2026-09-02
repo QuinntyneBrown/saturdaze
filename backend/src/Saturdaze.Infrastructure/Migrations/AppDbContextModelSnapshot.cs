@@ -17,7 +17,7 @@ namespace Saturdaze.Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.0")
+                .HasAnnotation("ProductVersion", "10.0.11")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -222,10 +222,22 @@ namespace Saturdaze.Infrastructure.Migrations
                     b.Property<bool>("BudgetEnabled")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("FridayPreviewEnabled")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
+
                     b.Property<string>("HomeLocation")
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<bool>("TryNewEnabled")
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
@@ -298,6 +310,8 @@ namespace Saturdaze.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Kind", "RefId");
 
                     b.HasIndex("WeekendId", "Day", "SortOrder");
 
@@ -421,6 +435,9 @@ namespace Saturdaze.Infrastructure.Migrations
 
                     b.Property<DateTimeOffset>("ExpiresAtUtc")
                         .HasColumnType("datetimeoffset");
+
+                    b.Property<Guid?>("ReplacedByTokenId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTimeOffset?>("RevokedAtUtc")
                         .HasColumnType("datetimeoffset");

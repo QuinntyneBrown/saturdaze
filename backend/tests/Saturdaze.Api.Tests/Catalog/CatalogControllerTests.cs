@@ -8,15 +8,14 @@ using Xunit;
 
 namespace Saturdaze.Api.Tests.Catalog;
 
-public class CatalogControllerTests : IClassFixture<SaturdazeApiFactory>
+public class CatalogControllerTests : IClassFixture<SaturdazeApiFactory>, IAsyncLifetime
 {
     private readonly SaturdazeApiFactory _factory;
-    private readonly HttpClient _client;
+    private HttpClient _client = null!;
 
     public CatalogControllerTests(SaturdazeApiFactory factory)
     {
         _factory = factory;
-        _client = factory.CreateClient();
         _factory.Weather.Producer = (_, _, from, to) =>
         {
             var days = new List<WeatherForecast>();
@@ -25,6 +24,9 @@ public class CatalogControllerTests : IClassFixture<SaturdazeApiFactory>
             return days;
         };
     }
+
+    public async Task InitializeAsync() => _client = (await SignedInClient.CreateAsync(_factory)).Client;
+    public Task DisposeAsync() => Task.CompletedTask;
 
     [Fact]
     public async Task Activities_returns_seeded_activities()
@@ -114,6 +116,34 @@ public class CatalogControllerTests : IClassFixture<SaturdazeApiFactory>
                 b.GetProperty("kind").GetString() == "Meal" &&
                 b.GetProperty("isLocked").GetBoolean() &&
                 b.GetProperty("title").GetString()!.Contains(restaurantName!));
+    }
+
+    [Fact]
+    public async Task Restaurant_lock_is_scoped_to_the_requested_day()
+    {
+        // Traces to: L2-019
+        _factory.Clock.Today = new DateOnly(2026, 6, 13);
+        var picks = await _client.GetAsync("/api/restaurants?day=2026-06-13&slot=Lunch&wifeApprovedOnly=false");
+        picks.EnsureSuccessStatusCode();
+        var restaurantId = JsonDocument.Parse(await picks.Content.ReadAsStringAsync()).RootElement
+            .EnumerateArray().Last().GetProperty("id").GetGuid();
+
+        (await _client.PostAsJsonAsync($"/api/restaurants/{restaurantId}/lock", new { Day = "Saturday", Slot = "Lunch" }))
+            .EnsureSuccessStatusCode();
+
+        var saturday = JsonDocument.Parse(await (await _client.GetAsync("/api/restaurants?day=2026-06-13&slot=Lunch&wifeApprovedOnly=false")).Content.ReadAsStringAsync())
+            .RootElement.EnumerateArray().Single(r => r.GetProperty("id").GetGuid() == restaurantId);
+        var sunday = JsonDocument.Parse(await (await _client.GetAsync("/api/restaurants?day=2026-06-14&slot=Lunch&wifeApprovedOnly=false")).Content.ReadAsStringAsync())
+            .RootElement.EnumerateArray().Single(r => r.GetProperty("id").GetGuid() == restaurantId);
+
+        saturday.GetProperty("locked").GetBoolean().Should().BeTrue();
+        sunday.GetProperty("locked").GetBoolean().Should().BeFalse();
+
+        // Re-locking the same slot with another pick replaces the row instead of tripping the unique index.
+        var other = JsonDocument.Parse(await picks.Content.ReadAsStringAsync()).RootElement
+            .EnumerateArray().First().GetProperty("id").GetGuid();
+        (await _client.PostAsJsonAsync($"/api/restaurants/{other}/lock", new { Day = "Saturday", Slot = "Lunch" }))
+            .EnsureSuccessStatusCode();
     }
 
     [Fact]

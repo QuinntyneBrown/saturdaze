@@ -29,10 +29,15 @@ export class EventsSubmitPage {
   protected readonly error = signal('');
   protected readonly submitting = signal(false);
 
+  /** Inline error once the date-time has been cleared (L2-047 AC5). */
+  protected readonly dateError = computed(() =>
+    this.startsAtLocal().trim().length === 0 ? 'Pick a start date and time.' : '',
+  );
+
   protected readonly canSubmit = computed(
     () =>
       this.title().trim().length > 0 &&
-      this.startsAtLocal().length > 0 &&
+      this.startsAtLocal().trim().length > 0 &&
       !this.submitting(),
   );
 

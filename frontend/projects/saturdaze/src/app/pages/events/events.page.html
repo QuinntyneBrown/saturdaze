@@ -15,9 +15,17 @@
   <p>{{ view().lede }}</p>
 </div>
 
-<sd-tag-group>
+<sd-tag-group role="group" aria-label="Filter events">
   @for (f of view().filters; track f.label) {
-    <sd-chip [tone]="f.tone">{{ f.label }}</sd-chip>
+    <sd-chip
+      [tone]="f.tone"
+      role="button"
+      tabindex="0"
+      [attr.aria-pressed]="f.label === activeFilter()"
+      (click)="selectFilter(f.label)"
+      (keydown.enter)="selectFilter(f.label)"
+      (keydown.space)="selectFilter(f.label); $event.preventDefault()"
+    >{{ f.label }}</sd-chip>
   }
 </sd-tag-group>
 
@@ -42,7 +50,7 @@
 @for (s of view().sections; track s.title) {
   <sd-section [title]="s.title">
     <div class="sd-card-grid">
-      @for (e of s.events; track e.title) {
+      @for (e of s.events; track e.title + e.dateDay + e.dateMon) {
         <sd-event-card
           [title]="e.title"
           [venue]="e.venue"
@@ -52,6 +60,9 @@
           [date-mon]="e.dateMon"
           [tag]="e.tag ?? ''"
         />
+      }
+      @if (s.events.length === 0) {
+        <p class="events-empty">Nothing listed yet.</p>
       }
     </div>
   </sd-section>

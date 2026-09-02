@@ -13,7 +13,7 @@ env:
   AZURE_RESOURCE_GROUP: saturdaze-rg
   AZURE_WEBAPP_NAME: sd-api-uofnt2
   DOTNET_VERSION: '10.0.101'
-  NODE_VERSION: '20'
+  NODE_VERSION: '22'
   API_PROJECT: backend/src/Saturdaze.Api/Saturdaze.Api.csproj
   CLI_PROJECT: backend/src/Saturdaze.Cli/Saturdaze.Cli.csproj
   ANGULAR_DIST: frontend/dist/saturdaze/browser
@@ -23,11 +23,73 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  # L2-041: nothing reaches Azure unless the backend and frontend suites are green.
+  test-backend:
+    name: Backend tests (LocalDB)
+    # windows-latest ships SQL Server LocalDB, which the Api/Infrastructure
+    # tests need (ADR-001 resolves the instance pipe).
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Ensure LocalDB is available
+        shell: pwsh
+        run: |
+          if (-not (Get-Command sqllocaldb -ErrorAction SilentlyContinue)) {
+            choco install sqllocaldb -y --no-progress
+          }
+          sqllocaldb start MSSQLLocalDB
+          sqllocaldb info MSSQLLocalDB
+
+      - name: Build and test
+        run: dotnet test backend/Saturdaze.sln --nologo --configuration Release
+
+  test-frontend:
+    name: Frontend build and unit tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install Angular workspace deps
+        working-directory: frontend
+        run: npm ci
+
+      - name: Build libraries
+        working-directory: frontend
+        run: |
+          npx ng build api
+          npx ng build components
+
+      - name: Unit tests (Vitest)
+        working-directory: frontend
+        run: npm test -- --watch=false
+
+      - name: ng build (production)
+        working-directory: frontend
+        run: npx ng build saturdaze --configuration production
+
+      - name: Upload Angular bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: angular-dist
+          path: ${{ env.ANGULAR_DIST }}
+          if-no-files-found: error
+          retention-days: 1
+
   api:
     name: Build & deploy API
     runs-on: ubuntu-latest
-    outputs:
-      api-deployed: ${{ steps.deploy.outcome }}
+    needs: [test-backend, test-frontend]
     steps:
       - uses: actions/checkout@v4
 
@@ -55,7 +117,6 @@ jobs:
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
       - name: Deploy to Azure Web App
-        id: deploy
         run: |
           az webapp deploy \
             --resource-group "${{ env.AZURE_RESOURCE_GROUP }}" \
@@ -82,24 +143,16 @@ jobs:
           dotnet run --project "${{ env.CLI_PROJECT }}" -- migrate --connection "$CONN"
 
   web:
-    name: Build & deploy frontend (SWA)
+    name: Deploy frontend (SWA)
     runs-on: ubuntu-latest
+    # Spec order (L2-041): API, then migrations, then the SPA that talks to them.
+    needs: [test-frontend, migrate]
     steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
+      - name: Download Angular bundle
+        uses: actions/download-artifact@v4
         with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: npm
-          cache-dependency-path: frontend/package-lock.json
-
-      - name: Install Angular workspace deps
-        working-directory: frontend
-        run: npm ci
-
-      - name: ng build (production)
-        working-directory: frontend
-        run: npx ng build saturdaze --configuration production
+          name: angular-dist
+          path: ${{ env.ANGULAR_DIST }}
 
       - name: Deploy to Azure Static Web Apps
         uses: Azure/static-web-apps-deploy@v1

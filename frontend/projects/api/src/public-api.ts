@@ -14,10 +14,14 @@
  *
  * Domain models live in `lib/models/` (one type per file, grouped behind
  * per-slice barrels). DTO files (`*.dto.ts`) are service-internal and not
- * re-exported.
+ * re-exported. Pure helpers (dates, formatting, weather words) live in
+ * `lib/api/` so pages share one implementation.
  */
 
 export * from './lib/api/api-base-url';
+export * from './lib/api/format';
+export * from './lib/api/weather';
+export * from './lib/api/weekend-dates';
 
 // Domain models
 export * from './lib/models/activity';
@@ -34,6 +38,8 @@ export * from './lib/models/auth-error-code';
 export * from './lib/models/auth-token';
 export * from './lib/models/forgot-password-request';
 export * from './lib/models/login-request';
+export * from './lib/models/logout-request';
+export * from './lib/models/refresh-request';
 export * from './lib/models/reset-password-request';
 export * from './lib/models/resend-verification-request';
 export * from './lib/models/signup-request';
@@ -49,6 +55,7 @@ export * from './lib/services/family.service.contract';
 export * from './lib/services/restaurant.service.contract';
 export * from './lib/services/saved.service.contract';
 export * from './lib/services/session-store.contract';
+export * from './lib/services/shared-weekend.service.contract';
 export * from './lib/services/weekend-plan.service.contract';
 
 // Concrete implementations (imported only by composition roots)
@@ -60,4 +67,5 @@ export * from './lib/services/family.service';
 export * from './lib/services/restaurant.service';
 export * from './lib/services/saved.service';
 export * from './lib/services/session-store';
+export * from './lib/services/shared-weekend.service';
 export * from './lib/services/weekend-plan.service';

@@ -1,9 +1,9 @@
+import { BlockKind } from './block-kind';
 import { DayChip } from './day-chip';
+import { WeekendDay } from './weekend-day';
 
 /**
- * One block in a day's timeline. The full feature set is used from Phase 2
- * onward; Phase 1 only needs the preview-friendly subset, so optional
- * fields stay optional.
+ * One block in a day's timeline, as the pages render it.
  */
 export interface Block {
   /**
@@ -13,7 +13,15 @@ export interface Block {
   /**
    * Day.
    */
-  readonly day?: 'Saturday' | 'Sunday';
+  readonly day?: WeekendDay;
+  /**
+   * Kind — drives which actions a block offers (lock, swap, mark done).
+   */
+  readonly kind?: BlockKind;
+  /**
+   * Ref Id — the activity / errand / restaurant the block points at.
+   */
+  readonly refId?: string | null;
   /**
    * Time.
    */
@@ -31,6 +39,10 @@ export interface Block {
    */
   readonly subtitle?: string;
   /**
+   * Reason — the planner's one-line justification.
+   */
+  readonly reason?: string;
+  /**
    * Icon.
    */
   readonly icon: string;
@@ -41,7 +53,6 @@ export interface Block {
     | 'default'
     | 'meal'
     | 'drive'
-    | 'workout'
     | 'fixed'
     | 'downtime'
     | 'indoor';
@@ -49,6 +60,10 @@ export interface Block {
    * Locked.
    */
   readonly locked?: boolean;
+  /**
+   * Done — errand blocks only.
+   */
+  readonly done?: boolean;
   /**
    * Drive.
    */

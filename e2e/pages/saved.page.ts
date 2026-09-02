@@ -41,6 +41,14 @@ export class SavedPage extends BasePage {
     return this.page.locator("sd-saved-card[favourite]");
   }
 
+  heartButton(card: Locator): Locator {
+    return card.locator("button.heart");
+  }
+
+  rateButton(card: Locator): Locator {
+    return card.locator("sd-button").filter({ hasText: "Rate" });
+  }
+
   remixButton(card: Locator): Locator {
     return card.locator("sd-button").filter({ hasText: "Remix" });
   }

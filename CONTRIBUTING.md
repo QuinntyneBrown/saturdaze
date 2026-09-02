@@ -44,6 +44,7 @@ dotnet restore .\Saturdaze.sln
 | `backend/` | .NET solution, Clean Architecture layers, EF Core, API, CLI, tests |
 | `frontend/` | Angular app plus `api` and `components` libraries |
 | `e2e/` | Playwright behavior and visual tests |
+| `design-system/` | Standalone design-system catalog (own `npm test`, own SWA deployment) |
 | `docs/mocks/` | Static reference implementation and screenshots |
 | `docs/adr/` | Architecture decision records |
 | `scripts/` | Local automation scripts |

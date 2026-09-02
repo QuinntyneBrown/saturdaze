@@ -3,7 +3,7 @@
 **Date:** 2026-05-17
 **Driving documents:**
 - [docs/button-link-audit-2026-05-17.md](button-link-audit-2026-05-17.md) — discovery doc
-- [docs/bugs/](bugs/) — `BUG-001` … `BUG-046`, one file per fix
+- `docs/bugs/` — `BUG-001` … `BUG-046`, one file per fix (the directory was removed in commit `f5fca1d`; the fixes live in git history)
 
 ## Why this plan exists
 

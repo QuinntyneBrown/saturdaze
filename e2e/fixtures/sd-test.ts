@@ -2,16 +2,29 @@
  * The Saturdaze test fixture.
  *
  * Wraps `@playwright/test`'s `test` with:
- *   - `goto(routeKey)` — navigates to the right URL for whichever target
- *     we're hitting (mock vs Angular).
+ *   - `goto(routeKey, opts?)` — navigates to the right URL for whichever
+ *     target we're hitting (mock vs Angular) and, in app mode, signs in
+ *     first when the route is guarded (pass `{ anonymous: true }` to skip).
+ *   - `signIn(creds?, seed?)` / `signInAsAdmin()` — API login + storage seed,
+ *     memoised per test so several `goto`s share one session.
  *   - `pages` — namespaced POMs (e.g. `pages.home`, `pages.itinerary`).
+ *   - `settle()` — wait for fonts + network idle so visual diffs are stable.
  *
  * Specs should import `test` and `expect` from this file, not from
  * `@playwright/test` directly, so the routing/pom wiring is consistent.
  */
 
-import { test as base, expect, Page } from "@playwright/test";
-import { pathFor, RouteKey } from "./routes.js";
+import { test as base, expect } from "@playwright/test";
+import { guardFor, pathFor, RouteKey } from "./routes.js";
+import {
+  apiLogin,
+  Credentials,
+  SEEDED_ADMIN,
+  SEEDED_USER,
+  seedSession,
+  SeedOptions,
+  TestSession,
+} from "./auth.js";
 
 import { HomePage } from "../pages/home.page.js";
 import { ItineraryPage } from "../pages/itinerary.page.js";
@@ -57,19 +70,51 @@ interface Pages {
   verifyEmail: VerifyEmailPage;
 }
 
+export interface GotoOptions {
+  /** Skip the automatic sign-in even for a guarded route. */
+  readonly anonymous?: boolean;
+  /** Force a particular session for an unguarded route (e.g. `/login` as a signed-in user). */
+  readonly as?: "user" | "admin";
+}
+
 interface SdFixtures {
-  goto: (key: RouteKey) => Promise<void>;
+  goto: (key: RouteKey, opts?: GotoOptions) => Promise<void>;
+  signIn: (creds?: Credentials, seed?: SeedOptions) => Promise<TestSession | null>;
+  signInAsAdmin: () => Promise<TestSession | null>;
   pages: Pages;
   /** Pause until web fonts have loaded so visual diffs are font-stable. */
   settle: () => Promise<void>;
 }
 
+const isBaseline = (): boolean => process.env.SD_BASELINE === "1";
+
 export const test = base.extend<SdFixtures>({
-  goto: async ({ page }, use) => {
-    await use(async (key: RouteKey) => {
+  signIn: async ({ page, request }, use) => {
+    let active: TestSession | null = null;
+    await use(async (creds = SEEDED_USER, seed) => {
+      if (isBaseline()) return null; // the mock skeleton has no auth
+      if (active && active.user.email === creds.email && !seed) return active;
+      active = await apiLogin(request, creds);
+      await seedSession(page, active, seed);
+      return active;
+    });
+  },
+
+  signInAsAdmin: async ({ signIn }, use) => {
+    await use(() => signIn(SEEDED_ADMIN));
+  },
+
+  goto: async ({ page, signIn, signInAsAdmin }, use) => {
+    await use(async (key, opts = {}) => {
+      if (!opts.anonymous && !isBaseline()) {
+        const guard = guardFor(key);
+        if (opts.as === "admin" || guard === "admin") await signInAsAdmin();
+        else if (opts.as === "user" || guard === "auth") await signIn();
+      }
       await page.goto(pathFor(key));
     });
   },
+
   pages: async ({ page }, use) => {
     await use({
       home: new HomePage(page),
@@ -94,12 +139,12 @@ export const test = base.extend<SdFixtures>({
       verifyEmail: new VerifyEmailPage(page),
     });
   },
+
   settle: async ({ page }, use) => {
     await use(async () => {
       await page.evaluate(async () => {
-        if ((document as any).fonts && (document as any).fonts.ready) {
-          await (document as any).fonts.ready;
-        }
+        const fonts = (document as Document & { fonts?: { ready: Promise<unknown> } }).fonts;
+        if (fonts?.ready) await fonts.ready;
       });
       await page.waitForLoadState("networkidle");
     });
@@ -107,8 +152,3 @@ export const test = base.extend<SdFixtures>({
 });
 
 export { expect };
-
-/** Helper to take a viewport-scoped screenshot name based on the project. */
-export function screenshotName(page: Page, key: string): string {
-  return `${key}.png`;
-}

@@ -56,6 +56,10 @@ export class RestaurantsPage extends BasePage {
     return card.locator(`sd-vote-row[name="${name}"]`);
   }
 
+  voteButton(card: Locator, name: string, vote: "up" | "down"): Locator {
+    return this.voteRow(card, name).locator(`button.${vote}`);
+  }
+
   lockItInButton(): Locator {
     return this.topPickSection()
       .locator("sd-button")

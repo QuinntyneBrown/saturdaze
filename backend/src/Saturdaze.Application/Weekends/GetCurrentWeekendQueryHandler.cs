@@ -1,6 +1,5 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using Saturdaze.Application.Abstractions;
 using Saturdaze.Application.Common;
 using Saturdaze.Application.Contracts;
@@ -13,23 +12,20 @@ public sealed class GetCurrentWeekendQueryHandler : IRequestHandler<GetCurrentWe
     private readonly IAppDbContext _db;
     private readonly ICurrentFamilyAccessor _current;
     private readonly IDateTimeProvider _clock;
-    private readonly IWeatherClient _weather;
-    private readonly IOptions<HomeLocationOptions> _home;
+    private readonly WeekendForecastService _forecast;
     private readonly ISender _mediator;
 
     public GetCurrentWeekendQueryHandler(
         IAppDbContext db,
         ICurrentFamilyAccessor current,
         IDateTimeProvider clock,
-        IWeatherClient weather,
-        IOptions<HomeLocationOptions> home,
+        WeekendForecastService forecast,
         ISender mediator)
     {
         _db = db;
         _current = current;
         _clock = clock;
-        _weather = weather;
-        _home = home;
+        _forecast = forecast;
         _mediator = mediator;
     }
 
@@ -52,13 +48,11 @@ public sealed class GetCurrentWeekendQueryHandler : IRequestHandler<GetCurrentWe
             return await _mediator.Send(new GenerateWeekendCommand(weekendOf), cancellationToken);
         }
 
-        var forecast = await _weather.GetForecastAsync(
-            _home.Value.Latitude, _home.Value.Longitude,
-            weekend.WeekendOf, weekend.WeekendOf.AddDays(1), cancellationToken);
-
+        var forecast = await _forecast.GetAsync(weekend.WeekendOf, cancellationToken);
         return WeekendMapper.ToDto(weekend, forecast);
     }
 
+    /// <summary>Saturday itself, the Saturday of a Sunday, or the next Saturday on a weekday.</summary>
     public static DateOnly ResolveUpcomingSaturday(DateOnly today)
     {
         return today.DayOfWeek switch

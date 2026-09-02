@@ -63,6 +63,45 @@ public class ApproveSubmissionCommandHandlerTests
         await act.Should().ThrowAsync<Saturdaze.Application.Exceptions.ConflictException>();
     }
 
+    [Fact]
+    public async Task Approve_uses_the_admins_drive_minutes_when_supplied()
+    {
+        await using var app = TestApp.Create();
+        var submission = SeedPending(app);
+        var admin = new StubCurrentUserAccessor { UserId = Guid.NewGuid(), Role = UserRole.Admin };
+        var handler = new ApproveSubmissionCommandHandler(app.Db, admin, new StubDateTimeProvider());
+
+        await handler.Handle(new ApproveSubmissionCommand(submission.Id, DriveMinutes: 25), default);
+
+        app.Db.LocalEvents.Single().DriveMinutes.Should().Be(25);
+        app.Db.EventSubmissions.Single().DriveMinutes.Should().Be(25);
+    }
+
+    [Fact]
+    public async Task Approve_conflicts_when_an_event_with_the_same_title_and_date_already_exists()
+    {
+        await using var app = TestApp.Create();
+        var submission = SeedPending(app);
+        app.Db.LocalEvents.Add(new LocalEvent
+        {
+            Id = Guid.NewGuid(),
+            Name = submission.Title,
+            StartsOn = DateOnly.FromDateTime(submission.StartsAtLocal),
+            EndsOn = DateOnly.FromDateTime(submission.StartsAtLocal),
+            Location = "Memorial Park",
+            Category = "Festival",
+        });
+        await app.Db.SaveChangesAsync();
+        var admin = new StubCurrentUserAccessor { UserId = Guid.NewGuid(), Role = UserRole.Admin };
+        var handler = new ApproveSubmissionCommandHandler(app.Db, admin, new StubDateTimeProvider());
+
+        var act = async () => await handler.Handle(new ApproveSubmissionCommand(submission.Id), default);
+
+        (await act.Should().ThrowAsync<Saturdaze.Application.Exceptions.ConflictException>())
+            .Which.Code.Should().Be("event_already_published");
+        app.Db.EventSubmissions.Single().Status.Should().Be(EventSubmissionStatus.Pending);
+    }
+
     private static EventSubmission SeedPending(TestApp app)
     {
         var userId = Guid.NewGuid();

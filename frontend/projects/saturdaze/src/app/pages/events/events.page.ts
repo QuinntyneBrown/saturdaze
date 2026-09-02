@@ -6,6 +6,8 @@ import {
   EVENT_SUBMISSIONS_SERVICE,
   EVENTS_SERVICE,
   EventSubmissionDto,
+  dateTileParts,
+  formatWhen,
 } from 'api';
 import {
   BottomNav,
@@ -18,11 +20,6 @@ import {
 } from 'components';
 
 import { SubmitEventDialog } from '../../dialogs/submit-event-dialog/submit-event-dialog';
-
-const MONTH_ABBR = [
-  'JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN',
-  'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC',
-];
 
 interface PendingCardVm {
   readonly id: string;
@@ -51,10 +48,12 @@ interface PendingCardVm {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EventsPage implements OnInit {
+  private readonly events = inject(EVENTS_SERVICE);
   private readonly submissions = inject(EVENT_SUBMISSIONS_SERVICE);
   private readonly dialog = inject(Dialog);
 
-  protected readonly view = inject(EVENTS_SERVICE).list();
+  protected readonly view = this.events.list();
+  protected readonly activeFilter = this.events.activeFilter();
 
   protected readonly myPending = computed<readonly PendingCardVm[]>(() => {
     return this.submissions
@@ -64,7 +63,14 @@ export class EventsPage implements OnInit {
   });
 
   ngOnInit(): void {
+    // Re-fetch on every visit: the window is date-relative and an event
+    // submitted a moment ago may have been approved since.
+    void this.events.load();
     void this.submissions.loadMine();
+  }
+
+  protected selectFilter(label: string): void {
+    this.events.setFilter(label);
   }
 
   protected openQuickAdd(): void {
@@ -76,17 +82,13 @@ export class EventsPage implements OnInit {
 }
 
 function toPendingVm(s: EventSubmissionDto): PendingCardVm {
-  const d = new Date(s.startsAtLocal);
+  const tile = dateTileParts(s.startsAtLocal);
   return {
     id: s.id,
     title: s.title,
     venue: s.location ? `${s.location} · submitted by you` : 'submitted by you',
-    when: d.toLocaleString(undefined, {
-      weekday: 'short',
-      hour: 'numeric',
-      minute: d.getMinutes() === 0 ? undefined : '2-digit',
-    }),
-    dateDay: String(d.getDate()),
-    dateMon: MONTH_ABBR[d.getMonth()]!,
+    when: formatWhen(s.startsAtLocal),
+    dateDay: tile.day,
+    dateMon: tile.mon,
   };
 }

@@ -19,7 +19,7 @@ The feature crosses the application and platform boundaries needed to deliver it
 - **`Saturdaze CLI`** — Administrative executable used to apply EF Core migrations.
 - **`Azure platform targets`** — App Service, Azure SQL, and Static Web Apps resources receiving artifacts or schema updates.
 
-The current `web` job has no `needs: migrate` dependency and may run before API deployment or migration. The dependency needed to enforce the order in `L2-041` is `<TO SUPPLY>`.
+Both test suites gate the pipeline: `test-backend` (Windows runner with LocalDB) and `test-frontend` run first, `api` needs both, `migrate` needs `api`, and `web` needs `migrate`, so the SPA is never published ahead of the schema it expects. Pull requests and non-main pushes run the same gates through `.github/workflows/ci.yml`.
 ## Requirements
 
 The feature realizes the following level-2 (L2) requirements. Each row cites the level-1 (L1) capability refined by the requirement.

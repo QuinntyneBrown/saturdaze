@@ -31,9 +31,10 @@ public class WeekendPlannerTests
 
         var blocks = new WeekendPlanner().Plan(inputs);
 
-        blocks.Should().Contain(b => b.Title == "Swim" && b.Kind == BlockKind.Commitment
+        // L2-011: commitments are locked from the moment they materialise.
+        blocks.Should().Contain(b => b.Title == "Swim" && b.Kind == BlockKind.Commitment && b.IsLocked
             && b.Day == DayOfWeekend.Saturday && b.StartTime == new TimeOnly(9, 30));
-        blocks.Should().Contain(b => b.Title == "Church" && b.Kind == BlockKind.Commitment
+        blocks.Should().Contain(b => b.Title == "Church" && b.Kind == BlockKind.Commitment && b.IsLocked
             && b.Day == DayOfWeekend.Sunday && b.StartTime == new TimeOnly(10, 30));
     }
 

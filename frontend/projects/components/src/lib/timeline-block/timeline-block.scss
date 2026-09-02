@@ -45,6 +45,11 @@
   box-shadow: var(--sd-shadow-1);
 }
 
+.body:focus-visible {
+  outline: 2px solid var(--sd-primary);
+  outline-offset: 2px;
+}
+
 :host([locked]) .body {
   background: var(--sd-accent-soft);
   border-color: transparent;
@@ -67,12 +72,12 @@
   flex-shrink: 0;
 }
 
-:host([tone="meal"]) .icon     { background: #FBEBC4;              color: #8A6212; }
-:host([tone="drive"]) .icon    { background: #DCE9F1;              color: #2C5F7A; }
+:host([tone="meal"]) .icon     { background: var(--sd-sun-soft);              color: var(--sd-sun-ink); }
+:host([tone="drive"]) .icon    { background: var(--sd-sky-soft);              color: var(--sd-sky-ink); }
 :host([tone="workout"]) .icon  { background: var(--sd-accent-soft); color: var(--sd-accent); }
 :host([tone="fixed"]) .icon    { background: var(--sd-accent-soft); color: var(--sd-accent); }
 :host([tone="downtime"]) .icon { background: rgba(31, 41, 55, 0.08); color: var(--sd-ink-soft); }
-:host([tone="indoor"]) .icon   { background: #EADFF4;              color: #5A3B82; }
+:host([tone="indoor"]) .icon   { background: var(--sd-indoor-soft);              color: var(--sd-indoor-ink); }
 
 .text {
   flex: 1;

@@ -9,6 +9,7 @@ Three sibling top-level directories make up the application; `e2e` is NOT inside
 - `backend/` — .NET 10 Clean Architecture solution (`Saturdaze.sln`)
 - `frontend/` — Angular 21 workspace with three projects: `saturdaze` (app), `api` (lib), `components` (lib)
 - `e2e/` — Playwright suite (POMs in `pages/`, specs in `tests/`, fixtures in `fixtures/`)
+- `design-system/` — Standalone token/component catalog (own `npm test`, own SWA deploy workflow); no runtime dependency on the other folders
 - `docs/mocks/` — Static HTML/CSS reference app; serves as the visual baseline source
 - `docs/adr/` — Architecture decision records; read before changing the area they describe
 - `scripts/Start-FreshStack.ps1` — One-command fresh stack (pack CLI → reset DB → build → run both processes)
@@ -41,7 +42,7 @@ npm run build -- api
 npm run build -- components
 npm test                                        # Vitest via @angular/build:unit-test
 
-# E2E (from e2e/, requires Angular dev server on :4200 OR baseline mode)
+# E2E (from e2e/; behaviour specs need the API on :5100 with a seeded DB — run Start-FreshStack.ps1 — plus the Angular dev server on :4200; baseline mode needs neither)
 npm run test:behavior                           # functional specs only
 npm run test:visual                             # pixel-diff against committed baselines
 npm run baseline                                # SD_BASELINE=1 → captures from docs/mocks on :5173
@@ -69,7 +70,10 @@ Rules that aren't obvious from the code:
 - The API does **not** apply EF migrations on startup. Run `saturdaze migrate` explicitly.
 - Seed data is idempotent and safe to re-run.
 - `POST /api/weekends/plan` is idempotent: re-posting returns the existing weekend rather than throwing or re-planning (ADR-003). The explicit reseat is `POST /api/weekends/{id}/regenerate`.
-- Auth is **local JWT only** (bcrypt + SQL) — no social/OAuth providers.
+- Auth is **local JWT only** (ASP.NET Identity `PasswordHasher` PBKDF2 + SQL) — no social/OAuth providers. Access tokens last 15 minutes; `POST /api/auth/refresh` rotates the 14-day refresh token and `POST /api/auth/logout` revokes it (ADR-007).
+- **Every endpoint requires a bearer** via a global fallback policy; only the auth endpoints, `GET /api/weather`, `GET /api/weekends/shared/{token}` and `GET /api/weekends/{id}/calendar.ics` are `[AllowAnonymous]`. Swagger is registered above `UseAuthentication` for that reason — keep it there (ADR-008).
+- **Family scoping is per user**: `CurrentUserFamilyAccessor` (claim, then `Users.FamilyId`) and every weekend/block/errand handler filters by `FamilyId`; another family's id is a 404. API tests sign in through `tests/Saturdaze.Api.Tests/Support/SignedInClient.cs`.
+- `saturdaze reset` refuses when `DOTNET_ENVIRONMENT`/`ASPNETCORE_ENVIRONMENT` is `Production` unless `--allow-production` is passed. Connection resolution order for the CLI is `--connection`, `SATURDAZE_CONNECTION`, then configuration (blank values are skipped).
 
 ### Tests
 
@@ -98,7 +102,7 @@ Workspace has three projects under `frontend/projects/`:
 - **Interface-driven services**: every `api` service pairs a `*.service.contract.ts` (interface + `InjectionToken`) with the concrete class. Pages inject the token (e.g. `AUTH_SERVICE`), never the class. Add a contract when you add a service.
 - **No inline forms in pages**. Button-triggered editing always opens a CDK Dialog (`frontend/projects/saturdaze/src/app/dialogs/`) or navigates to a screen.
 - **All modals use `@angular/cdk` Dialog/Overlay** — never hand-roll a modal.
-- **Auth token persists across refresh**; the session store + interceptor in `app/auth/` own this.
+- **Auth token persists across refresh**; the session store + interceptor in `app/auth/` own this, including the silent refresh (`SessionStore.refreshSession()` single-flight, one retry after a 401 in `auth.interceptor.ts`).
 
 ### Bottom-nav iOS chrome handling (DON'T simplify without reading ADR-005)
 
@@ -110,8 +114,9 @@ Workspace has three projects under `frontend/projects/`:
 - Three viewport projects: mobile (390×844), tablet (820×1180), desktop (1440×900). Tests are **not** parallel (`fullyParallel: false`, `workers: 1`).
 - The same `playwright.config.ts` starts the Angular dev server on `:4200` for normal runs OR `http-server` against `docs/mocks/` on `:5173` when `SD_BASELINE=1`. The `baseline-capture` and verify projects share project names so they read/write the same snapshot files.
 - Baselines live next to each spec under `*.spec.ts-snapshots/<name>-<project>.png`. Re-capture only when an intentional design change has landed: `npm run baseline`.
+- Behaviour specs sign in through the API: `fixtures/auth.ts` logs in as the seeded user (`SD_E2E_EMAIL`/`SD_E2E_PASSWORD`, default `quinntynebrown@gmail.com`/`password123`) and seeds `sd.auth.token` before navigation; `goto(key)` does this automatically for guarded route keys (`guard` in `fixtures/routes.ts`), pass `{ anonymous: true }` to skip. `SD_API_URL` overrides the API origin.
 - Visual tolerance: `maxDiffPixelRatio: 0.005`, `threshold: 0.05`, animations disabled.
 
 ## Deployment
 
-GitHub Actions (`.github/workflows/deploy.yml`): publish API to Azure App Service, run `saturdaze migrate`, build Angular and deploy to Azure Static Web Apps. Azure resources live in resource group `saturdaze-rg` (canadacentral). Secrets are managed locally in `.deploy/azure.env` and as GitHub Actions secrets.
+GitHub Actions (`.github/workflows/deploy.yml`): backend tests (Windows runner, LocalDB) and frontend build+unit tests gate the pipeline, then publish API to Azure App Service, run `saturdaze migrate`, and deploy the Angular bundle to Azure Static Web Apps. `ci.yml` runs the same gates on pull requests; `deploy-design-system.yml` ships `design-system/` to its own SWA. Azure resources live in resource group `saturdaze-rg` (canadacentral). Secrets are managed locally in `.deploy/azure.env` and as GitHub Actions secrets.

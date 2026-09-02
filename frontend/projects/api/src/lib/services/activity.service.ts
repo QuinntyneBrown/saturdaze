@@ -1,6 +1,7 @@
 import {
   Injectable,
   Signal,
+  computed,
   inject,
   signal,
 } from '@angular/core';
@@ -8,16 +9,21 @@ import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 
 import { API_BASE_URL } from '../api/api-base-url';
+import { forecastFor, isOutdoorFriendly, weatherWord } from '../api/weather';
+import { upcomingSaturdayIso } from '../api/weekend-dates';
 import { Activity } from '../models/activity';
 import { ActivityDto } from '../models/activity.dto';
+import { ActivitySection } from '../models/activity-section';
 import { ActivityTone } from '../models/activity-tone';
 import { ActivityView } from '../models/activity-view';
 import { FilterDef } from '../models/filter-def';
-import { PresentationOverlay } from '../models/presentation-overlay';
+import { WeatherForecastDto } from '../models/weather-forecast.dto';
 import { IActivityService } from './activity.service.contract';
 
+const ALL = 'All';
+
 const FILTER_DEFS: ReadonlyArray<FilterDef> = [
-  { label: 'All', tone: 'primary' },
+  { label: ALL, tone: 'default' },
   { label: 'Outdoor', tone: 'leaf', match: (a) => !a.indoor },
   { label: 'Indoor', tone: 'indoor', match: (a) => a.indoor },
   { label: '< 30 min', tone: 'sky', match: (a) => a.driveMinutes < 30 },
@@ -29,28 +35,10 @@ const FILTER_DEFS: ReadonlyArray<FilterDef> = [
   },
 ];
 
-/**
- * Build Filters.
- *
- * @param {ReadonlyArray<ActivityDto>} rows - The rows
- */
-function buildFilters(rows: ReadonlyArray<ActivityDto>): ActivityView['filters'] {
-  return FILTER_DEFS
-    .filter((f) => !f.match || rows.some(f.match))
-    .map((f) => ({ label: f.label, tone: f.tone }));
-}
-
-const PLACEHOLDER_VIEW: ActivityView = {
-  filters: FILTER_DEFS.filter((f) => !f.match).map((f) => ({ label: f.label, tone: f.tone })),
-  sections: [],
-};
+const SECTION_LIMIT = 3;
 
 /**
  * Icon For.
- *
- * @param {ActivityDto} dto - The dto
- *
- * @returns {string} The result of the operation
  */
 function iconFor(dto: ActivityDto): string {
   const c = dto.category.toLowerCase();
@@ -61,10 +49,6 @@ function iconFor(dto: ActivityDto): string {
 
 /**
  * Tone For.
- *
- * @param {ActivityDto} dto - The dto
- *
- * @returns {ActivityTone} The result of the operation
  */
 function toneFor(dto: ActivityDto): ActivityTone {
   return dto.indoor ? 'indoor' : 'outdoor';
@@ -72,8 +56,6 @@ function toneFor(dto: ActivityDto): ActivityTone {
 
 /**
  * Age String.
- *
- * @param {ActivityDto} dto - The dto
  */
 function ageString(dto: ActivityDto): string | undefined {
   if (dto.minAge <= 2 && dto.maxAge >= 99) return 'all';
@@ -81,98 +63,69 @@ function ageString(dto: ActivityDto): string | undefined {
   return `${dto.minAge}–${dto.maxAge}`;
 }
 
-const ACTIVITY_OVERLAYS: Record<string, PresentationOverlay> = {
-  'Terre Bleu Lavender Farm': {
-    subtitle: 'Milton · The bloom peaks May 17–24',
-    ages: 'all',
-    tag: 'Day highlight',
-    why: "Sara loved this last summer. Mae's old enough this year to walk the rows.",
-  },
-  'Bronte Creek Provincial Park': {
-    subtitle: 'Easy hike + splash pad if hot',
-    ages: '5+',
-    why: 'Short trail (1.5km), washrooms, picnic tables — your usual win.',
-  },
-  'Royal Botanical Gardens': {
-    subtitle: 'Tulip festival in bloom',
-  },
-  'The Rec Room — Square One': {
-    subtitle: 'Bowling, arcade, dinner under one roof',
-    ages: 'all',
-    tag: "Eli's pick",
-    why: 'Eli asked for it twice last week. Sunday afternoon clouds = good window.',
-  },
-  'Ontario Science Centre': {
-    subtitle: "New 'Senses' exhibit",
-  },
-  'Toronto Zoo': {
-    subtitle: 'Polar bears, splash zone, indoor pavilions',
-    ages: 'all',
-  },
-  'Riverwood Conservancy': {
-    subtitle: 'Forest school trails, owl barn',
-    tag: 'First time',
-  },
-  "Living Arts Centre — kids' theatre": {
-    subtitle: 'Saturday matinée at 2pm',
-    tag: 'First time',
-  },
-};
-
 /**
  * To Activity.
- *
- * @param {ActivityDto} dto - The dto
- *
- * @returns {Activity} The result of the operation
  */
-function toActivity(dto: ActivityDto): Activity {
-  const overlay = ACTIVITY_OVERLAYS[dto.name] ?? {};
+function toActivity(dto: ActivityDto, tag?: string): Activity {
   return {
     title: dto.name,
-    subtitle: overlay.subtitle ?? dto.description,
+    subtitle: dto.description || undefined,
     icon: iconFor(dto),
     tone: toneFor(dto),
     drive: `${dto.driveMinutes} min`,
-    ages: overlay.ages ?? ageString(dto),
-    tag: overlay.tag,
-    why: overlay.why,
+    ages: ageString(dto),
+    tag,
   };
 }
 
+/** True when the activity's own weather tags fit the forecast. */
+function fitsForecast(a: ActivityDto, forecast: WeatherForecastDto | null): boolean {
+  if (!forecast || forecast.unavailable || a.weatherTags.length === 0) return true;
+  return a.weatherTags.some((t) => forecast.tags.includes(t));
+}
+
 /**
- * Group the flat catalog into three sections that mirror the mocks. Until
- * a planner-aware classification ships, this is a deterministic split:
- *   - "weather-fit" = outdoor with sunny/mild tags (top 3 by drive)
- *   - "if weather turns" = indoor, plus Toronto Zoo (indoor pavilions)
- *   - "try something new" = whatever's left
+ * Group the catalogue into the three spec'd sections (L2-018):
+ *   - weather-fit: outdoor picks when the forecast allows, indoor otherwise
+ *   - "If weather turns": the opposite set
+ *   - "Try something new": the server's `tryNew` picks the family hasn't done
  */
-function groupSections(dtos: ReadonlyArray<ActivityDto>): ActivityView['sections'] {
-  const outdoor = dtos
-    .filter((a) => !a.indoor && a.weatherTags.includes('sunny'))
-    .slice(0, 3);
-  const usedIds = new Set(outdoor.map((a) => a.id));
+function buildSections(
+  rows: ReadonlyArray<ActivityDto>,
+  tryNew: ReadonlyArray<ActivityDto>,
+  forecast: WeatherForecastDto | null,
+): ActivitySection[] {
+  const outdoorDay = isOutdoorFriendly(forecast);
+  const used = new Set<string>();
+  const take = (pool: ReadonlyArray<ActivityDto>): ActivityDto[] => {
+    const picked = pool.filter((a) => !used.has(a.id)).slice(0, SECTION_LIMIT);
+    picked.forEach((a) => used.add(a.id));
+    return picked;
+  };
 
-  const indoor = dtos
-    .filter((a) => !usedIds.has(a.id) && (a.indoor || a.name.toLowerCase().includes('zoo')))
-    .slice(0, 3);
-  indoor.forEach((a) => usedIds.add(a.id));
+  const outdoor = rows.filter((a) => !a.indoor && fitsForecast(a, forecast));
+  const indoor = rows.filter((a) => a.indoor);
+  const weatherFit = take(outdoorDay ? outdoor : indoor);
+  const ifTurns = take(outdoorDay ? indoor : rows.filter((a) => !a.indoor));
+  const fresh = take(tryNew);
 
-  const newish = dtos.filter((a) => !usedIds.has(a.id)).slice(0, 2);
-
+  const word = weatherWord(forecast);
   return [
     {
       title: "This weekend's weather-fit",
-      activities: outdoor.map(toActivity),
+      subtitle: forecast && !forecast.unavailable
+        ? `Saturday looks ${word} — ${outdoorDay ? 'outdoor first' : 'indoor first'}`
+        : undefined,
+      activities: weatherFit.map((a) => toActivity(a)),
     },
     {
       title: 'If weather turns',
-      activities: indoor.map(toActivity),
+      activities: ifTurns.map((a) => toActivity(a)),
     },
     {
       title: 'Try something new',
       subtitle: "You haven't done these recently",
-      activities: newish.map(toActivity),
+      activities: fresh.map((a) => toActivity(a, 'First time')),
     },
   ];
 }
@@ -182,7 +135,29 @@ export class ActivityService implements IActivityService {
   private readonly http = inject(HttpClient);
   private readonly baseUrl = inject(API_BASE_URL);
 
-  private readonly _view = signal<ActivityView>(PLACEHOLDER_VIEW);
+  private readonly _rows = signal<ReadonlyArray<ActivityDto>>([]);
+  private readonly _tryNew = signal<ReadonlyArray<ActivityDto>>([]);
+  private readonly _forecast = signal<WeatherForecastDto | null>(null);
+  private readonly _filter = signal<string>(ALL);
+
+  private readonly _view = computed<ActivityView>(() => {
+    const rows = this._rows();
+    const filter = this._filter();
+    const def = FILTER_DEFS.find((f) => f.label === filter);
+    const match = def?.match;
+
+    const sections = buildSections(
+      match ? rows.filter(match) : rows,
+      match ? this._tryNew().filter(match) : this._tryNew(),
+      this._forecast(),
+    ).filter((s) => !match || s.activities.length > 0);
+
+    const filters = FILTER_DEFS
+      .filter((f) => !f.match || rows.some(f.match))
+      .map((f) => ({ label: f.label, tone: f.label === filter ? 'primary' as const : f.tone }));
+
+    return { filters, sections };
+  });
 
   /**
    * Constructor.
@@ -197,20 +172,46 @@ export class ActivityService implements IActivityService {
    * @returns {Signal<ActivityView>} The result of the operation
    */
   list(): Signal<ActivityView> {
-    return this._view.asReadonly();
+    return this._view;
   }
 
   /**
-   * Load.
+   * Active Filter.
+   *
+   * @returns {Signal<string>} The result of the operation
+   */
+  activeFilter(): Signal<string> {
+    return this._filter.asReadonly();
+  }
+
+  /**
+   * Set Filter.
+   *
+   * @param {string} label - The chip label
+   */
+  setFilter(label: string): void {
+    this._filter.set(label);
+  }
+
+  /**
+   * Load — the catalogue, the "try new" picks, and the Saturday forecast.
+   * A missing forecast degrades to an indoor-first grouping.
    *
    * @returns {Promise<void>} The result of the operation
    */
   async load(): Promise<void> {
+    const weekendOf = upcomingSaturdayIso();
     try {
-      const rows = await firstValueFrom(
-        this.http.get<ActivityDto[]>(`${this.baseUrl}/api/activities`),
-      );
-      this._view.set({ filters: buildFilters(rows), sections: groupSections(rows) });
+      const [rows, tryNew, weather] = await Promise.all([
+        firstValueFrom(this.http.get<ActivityDto[]>(`${this.baseUrl}/api/activities`)),
+        firstValueFrom(this.http.get<ActivityDto[]>(`${this.baseUrl}/api/activities?tryNew=true`))
+          .catch(() => [] as ActivityDto[]),
+        firstValueFrom(this.http.get<WeatherForecastDto[]>(`${this.baseUrl}/api/weather?weekendOf=${weekendOf}`))
+          .catch(() => [] as WeatherForecastDto[]),
+      ]);
+      this._rows.set(rows ?? []);
+      this._tryNew.set(tryNew ?? []);
+      this._forecast.set(forecastFor(weather ?? [], weekendOf));
     } catch (err) {
       console.error('ActivityService.load failed', err);
     }

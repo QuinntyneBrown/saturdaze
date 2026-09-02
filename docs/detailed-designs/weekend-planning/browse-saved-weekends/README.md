@@ -19,7 +19,7 @@ The feature forms a vertical slice across the Angular application, the ASP.NET C
 - **`MarkFavouriteCommandHandler`** — Application handler that persists favourite state.
 - **`Weekend`** — Domain aggregate storing title, rating, favourite state, blocks, and errands.
 
-`Weekend.Rating` exists in the domain model. The API contract and handler that persist a 1–5 rating are `<TO SUPPLY>`.
+`RateWeekendCommandHandler` (`PUT /api/weekends/{id}/rating`, `{ rating: 1..5 | null }`) persists or clears the rating and `RenameWeekendCommandHandler` (`PUT /api/weekends/{id}/title`) persists the user-supplied title; both are family-scoped and surface through `WeekendDto` and the history summary. The saved page exposes them through a CDK `RatingDialog` and the favourite heart.
 ## Requirements
 
 The feature realizes the following level-2 (L2) requirements. Each row cites the level-1 (L1) capability refined by the requirement.

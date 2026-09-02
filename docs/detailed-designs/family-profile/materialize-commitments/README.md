@@ -19,7 +19,7 @@ The feature forms a vertical slice across the Angular application, the ASP.NET C
 - **`WeekendPlanner`** — Application service that creates fixed commitment blocks before filling gaps.
 - **`Commitment and ItineraryBlock`** — Domain types linked through the generated title, day, and time window.
 
-`WeekendPlanner.BuildFixedBlocks()` currently omits `IsLocked=true` for newly materialized commitments. The assignment needed by `L2-011` is `<TO SUPPLY>`.
+`WeekendPlanner.BuildFixedBlocks()` materializes commitments with `IsLocked=true`. `LockBlockCommandHandler` refuses to unlock a `Commitment` block (409 `commitment_locked`) and the day-level lock toggle leaves them locked.
 ## Requirements
 
 The feature realizes the following level-2 (L2) requirements. Each row cites the level-1 (L1) capability refined by the requirement.

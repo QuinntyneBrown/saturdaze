@@ -27,7 +27,7 @@ public sealed class ResetCommandHandler
 
     public async Task<int> ExecuteAsync(string? seedDir, CancellationToken ct)
     {
-        var target = SanitizeConnection(_options.ConnectionString ?? "(provider default)");
+        var target = ConnectionStringSanitizer.Sanitize(_options.ConnectionString);
         _logger.LogWarning("Resetting database: {Target}", target);
 
         await _db.Database.EnsureDeletedAsync(ct);
@@ -43,12 +43,5 @@ public sealed class ResetCommandHandler
 
         _logger.LogInformation("Database schema is current.");
         return await _seed.ExecuteAsync(seedDir, ct);
-    }
-
-    private static string SanitizeConnection(string cs)
-    {
-        var parts = cs.Split(';', StringSplitOptions.RemoveEmptyEntries);
-        return string.Join(';', parts.Where(p =>
-            !p.TrimStart().StartsWith("Password", StringComparison.OrdinalIgnoreCase)));
     }
 }

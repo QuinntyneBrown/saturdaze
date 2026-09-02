@@ -1,6 +1,6 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import type { CalendarLinks } from 'api';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import type { Activity, Block, CalendarLinks, MealSlot, WeekendDay } from 'api';
 
 import {
   Button,
@@ -10,6 +10,8 @@ import {
   Icon,
   ListItem,
 } from 'components';
+
+import { mapsSearchUrl } from '../../shared/block-actions';
 
 export type ProductActionKind =
   | 'calendar'
@@ -26,7 +28,8 @@ export type ProductActionKind =
 
 export interface ProductActionDialogData {
   readonly kind: ProductActionKind;
-  readonly day?: 'Saturday' | 'Sunday';
+  readonly day?: WeekendDay;
+  readonly slot?: MealSlot;
   readonly title?: string;
   readonly subtitle?: string;
   readonly restaurant?: string;
@@ -34,9 +37,13 @@ export interface ProductActionDialogData {
   readonly saturdayHighlight?: string;
   readonly sundayHighlight?: string;
   readonly calendarLinks?: CalendarLinks;
+  /** `map`: the active day's blocks, in order. */
+  readonly blocks?: readonly Block[];
+  /** `surprise`: the "Try something new" picks. */
+  readonly activities?: readonly Activity[];
 }
 
-export type ProductActionDialogResult = 'confirm' | 'copy';
+export type ProductActionDialogResult = 'confirm';
 
 @Component({
   selector: 'app-product-action-dialog',
@@ -56,7 +63,25 @@ export type ProductActionDialogResult = 'confirm' | 'copy';
 export class ProductActionDialog {
   private readonly dialogRef = inject<DialogRef<ProductActionDialogResult>>(DialogRef);
   protected readonly data = inject<ProductActionDialogData>(DIALOG_DATA);
-  protected readonly copied = signal(false);
+
+  /** Blocks worth a map pin: everything except downtime and the drives between. */
+  protected readonly stops: readonly Block[] = (this.data.blocks ?? []).filter(
+    (b) => b.kind !== 'Downtime' && b.kind !== 'Drive',
+  );
+
+  protected readonly mapSubtitle = this.stops.length > 0
+    ? `${this.stops.length} stop${this.stops.length === 1 ? '' : 's'} · opens the first activity in Google Maps`
+    : 'Nothing planned for this day yet.';
+
+  /** The place the "Open in Google Maps" button searches for. */
+  protected readonly mapQuery: string | null =
+    this.stops.find((b) => b.kind === 'Activity')?.title
+    ?? this.stops.find((b) => b.kind === 'Meal')?.title
+    ?? null;
+
+  protected readonly mapsUrl: string | null = this.mapQuery ? mapsSearchUrl(this.mapQuery) : null;
+
+  protected readonly lockTitle = `Lock ${this.data.restaurant ?? 'this restaurant'} for ${this.data.day ?? 'Saturday'} ${(this.data.slot ?? 'Lunch').toLowerCase()}?`;
 
   protected close(): void {
     this.dialogRef.close();
@@ -68,8 +93,7 @@ export class ProductActionDialog {
 
   protected async copyShareLink(): Promise<void> {
     await navigator.clipboard?.writeText(this.data.shareUrl ?? '');
-    this.copied.set(true);
-    this.dialogRef.close('copy');
+    this.dialogRef.close();
   }
 
   protected async shareNative(): Promise<void> {

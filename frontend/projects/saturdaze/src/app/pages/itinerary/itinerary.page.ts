@@ -1,10 +1,11 @@
 import { Dialog } from '@angular/cdk/dialog';
+import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, effect, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 
-import { WEEKEND_PLAN_SERVICE } from 'api';
+import { WEEKEND_PLAN_SERVICE, type Block, type WeekendDay } from 'api';
 import {
   BottomNav,
   Button,
@@ -22,6 +23,7 @@ import {
   ProductActionDialogData,
   ProductActionDialogResult,
 } from '../../dialogs/product-action-dialog/product-action-dialog';
+import { applyBlockAction, mapsSearchUrl, openBlockActions } from '../../shared/block-actions';
 
 @Component({
   selector: 'app-itinerary',
@@ -32,6 +34,7 @@ import {
     Chip,
     Icon,
     IconButton,
+    NgTemplateOutlet,
     Section,
     SplitView,
     TagGroup,
@@ -52,7 +55,7 @@ export class ItineraryPage {
   });
 
   protected readonly itinerary = this.weekend.getItinerary();
-  protected readonly activeDay = computed(() => this.itinerary().day as 'Saturday' | 'Sunday');
+  protected readonly activeDay = computed(() => this.itinerary().day as WeekendDay);
   protected readonly dayLocked = computed(() => {
     const blocks = this.itinerary().blocks;
     return blocks.length > 0 && blocks.every((b) => b.locked);
@@ -93,11 +96,19 @@ export class ItineraryPage {
     await this.weekend.lockDay(this.activeDay(), nextLocked);
   }
 
+  protected async openBlock(block: Block): Promise<void> {
+    const result = await openBlockActions(this.dialog, block);
+    await applyBlockAction(this.weekend, block, result);
+  }
+
+  /** The day's stops on a map; confirm opens the first activity in Google Maps. */
   protected async seeMap(): Promise<void> {
-    const result = await this.openDialog({ kind: 'map', day: this.activeDay() });
-    if (result === 'confirm') {
-      window.open('https://www.google.com/maps/dir/?api=1', '_blank', 'noopener');
-    }
+    const blocks = this.itinerary().blocks;
+    const result = await this.openDialog({ kind: 'map', day: this.activeDay(), blocks });
+    if (result !== 'confirm') return;
+    const target = blocks.find((b) => b.kind === 'Activity') ?? blocks.find((b) => b.kind === 'Meal');
+    if (!target) return;
+    window.open(mapsSearchUrl(target.title), '_blank', 'noopener');
   }
 
   private async openDialog(
@@ -110,7 +121,7 @@ export class ItineraryPage {
     return await firstValueFrom(ref.closed);
   }
 
-  private dayFromQuery(value: string | null): 'Saturday' | 'Sunday' {
+  private dayFromQuery(value: string | null): WeekendDay {
     return value?.toLowerCase() === 'sunday' ? 'Sunday' : 'Saturday';
   }
 }

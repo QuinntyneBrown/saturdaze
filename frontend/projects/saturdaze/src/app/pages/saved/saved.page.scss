@@ -14,3 +14,9 @@
     margin: 0 0 16px;
   }
 }
+
+.form-error {
+  margin: 0 var(--sd-app-pad-x) 12px;
+  color: var(--sd-danger);
+  font-size: var(--sd-fs-sm);
+}

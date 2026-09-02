@@ -2,7 +2,7 @@
 
 @if (added()) {
   <div class="errand-lede">
-    <h2>Added to Saturday</h2>
+    <h2>Added to {{ placement()?.day ?? 'the weekend' }}</h2>
     <p>{{ form.controls.description.value }} is now part of the weekend plan.</p>
   </div>
 
@@ -13,8 +13,14 @@
           <sd-icon name="check" [size]="18" />
         </div>
         <div>
-          <div class="suggested-title">Added to {{ selectedSlot().when }}</div>
-          <div class="suggested-body">I'll preserve this errand during the next regenerate unless you remove it.</div>
+          <div class="suggested-title">
+            @if (placement(); as slot) {
+              Slotted for {{ slot.day }} at {{ slot.time }}
+            } @else {
+              Added to the weekend
+            }
+          </div>
+          <div class="suggested-body">I'll keep this errand in place during the next regenerate unless you remove it. Taking you back to the weekend…</div>
         </div>
       </div>
     </sd-card>
@@ -35,7 +41,7 @@
     </p>
   </div>
 
-  <form class="errand-form" [formGroup]="form">
+  <form class="errand-form" [formGroup]="form" (ngSubmit)="addToWeekend()">
     <sd-text-input
       label="What's needed"
       placeholder="Costco run — paper towels, bread, kid yogurt"
@@ -51,46 +57,38 @@
 
     <div class="best-day">
       <label class="best-day-label">Best day</label>
-      <sd-tag-group class="best-day-chips">
-        <sd-chip tone="primary">{{ selectedSlot().when }}</sd-chip>
-        <sd-chip>Saturday after swim</sd-chip>
-        <sd-chip>Friday evening</sd-chip>
-        <sd-chip>Doesn't matter</sd-chip>
+      <sd-tag-group class="best-day-chips" role="radiogroup" aria-label="Best day">
+        @for (choice of dayChoices; track choice.label) {
+          <sd-chip
+            role="radio"
+            tabindex="0"
+            [tone]="preferredDay() === choice.value ? 'primary' : 'default'"
+            [attr.aria-checked]="preferredDay() === choice.value"
+            (click)="choosePreferredDay(choice.value)"
+            (keydown.enter)="choosePreferredDay(choice.value)"
+            (keydown.space)="choosePreferredDay(choice.value); $event.preventDefault()"
+          >{{ choice.label }}</sd-chip>
+        }
       </sd-tag-group>
     </div>
 
-    @if (showSlots()) {
-      <div class="slot-list">
-        @for (slot of slots; track slot.when) {
-          <button
-            type="button"
-            class="slot"
-            [attr.data-fit]="slot.fit"
-            [attr.data-selected]="slot.when === selectedSlot().when ? 'true' : null"
-            (click)="selectSlot(slot)"
-          >
-            <span class="radio"></span>
-            <span class="slot-copy">
-              <span class="when">{{ slot.when }}</span>
-              <span class="sub">{{ slot.subtitle }}</span>
-            </span>
-            <span class="badge">{{ slot.fit === 'best' ? 'Best fit' : slot.fit }}</span>
-          </button>
-        }
-      </div>
-    } @else {
-      <sd-card variant="sunk">
-        <div class="suggested">
-          <div class="suggested-icon">
-            <sd-icon name="sparkle" [size]="18" />
-          </div>
-          <div>
-            <div class="suggested-title">Suggested slot</div>
-            <div class="suggested-body">{{ selectedSlot().subtitle }}</div>
+    <sd-card variant="sunk">
+      <div class="suggested">
+        <div class="suggested-icon">
+          <sd-icon name="sparkle" [size]="18" />
+        </div>
+        <div>
+          <div class="suggested-title">I'll pick the slot</div>
+          <div class="suggested-body">
+            @if (preferredDay(); as day) {
+              The errand lands on {{ day }}, tucked next to something already on the plan. You'll see exactly where before heading back.
+            } @else {
+              Whichever day has the easiest gap wins. You'll see exactly where it landed before heading back.
+            }
           </div>
         </div>
-      </sd-card>
-    }
+      </div>
+    </sd-card>
 
     @if (error()) {
       <p class="form-error" role="alert">{{ error() }}</p>
@@ -98,10 +96,10 @@
   </form>
 
   <div class="errand-actions">
-    <sd-button variant="secondary" full (click)="pickDifferentSlot()">Pick a different slot</sd-button>
+    <sd-button variant="secondary" full (click)="backToWeekend()">Cancel</sd-button>
     <sd-button full [disabled]="form.invalid || submitting()" (click)="addToWeekend()">
       <sd-icon slot="leading" name="plus" [size]="16" />
-      Add to weekend
+      {{ submitting() ? 'Adding…' : 'Add to weekend' }}
     </sd-button>
   </div>
 }

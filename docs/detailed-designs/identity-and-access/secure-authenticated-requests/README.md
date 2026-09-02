@@ -19,7 +19,7 @@ The feature forms a vertical slice across the Angular application, the ASP.NET C
 - **`JwtTokenService`** — Infrastructure service that signs access tokens and hashes refresh-token material.
 - **`AppDbContext`** — EF Core persistence boundary used through LINQ and parameterized commands.
 
-`RefreshToken` records creation, expiry, revocation, and creator IP. The `ReplacedByTokenId` link required by `L2-033` is `<TO SUPPLY>` in the current domain model.
+`RefreshToken` records creation, expiry, revocation, creator IP and, once rotated by `POST /api/auth/refresh`, the `ReplacedByTokenId` link required by `L2-033` (ADR-007). A global fallback authorization policy in `Program.cs` requires a bearer on every endpoint unless it opts out with `[AllowAnonymous]`, and every family-scoped handler resolves the caller's family through `CurrentUserFamilyAccessor`, treating another family's ids as 404 (ADR-008).
 
 ## Requirements
 
@@ -27,12 +27,12 @@ The feature realizes the following level-2 (L2) requirements. Each row cites the
 
 | L2 ID | Refines (L1) | Requirement |
 |-------|--------------|-------------|
-| `L2-008` | `L1-001`, `L1-012` | Every endpoint except `POST /api/auth/register`, `POST /api/auth/login`, `POST /api/auth/forgot-password`, `POST /api/auth/reset-password`, `POST /api/auth/verify-email`, `GET /api/weather` (no PII), and `GET /api/activities\|/api/restaurants\|/api/events` (read-only public data) must reject requests that lack a valid `Authorization: Bearer <jwt>` header. |
+| `L2-008` | `L1-001`, `L1-012` | Every endpoint except the auth endpoints, `GET /api/weather`, `GET /api/weekends/shared/{token}` and `GET /api/weekends/{id}/calendar.ics` must reject requests that lack a valid `Authorization: Bearer <jwt>` header; the catalog endpoints are family-personalized and require a bearer too. |
 | `L2-029` | `L1-012` | Plaintext passwords must never be written to the database, and the password hash format must use PBKDF2 with at least 100,000 iterations and a per-user random salt. |
 | `L2-030` | `L1-012` | The JWT signing key must be read from the `SATURDAZE_JWT_SIGNING_KEY` environment variable in production and never embedded as a real value in source control. |
 | `L2-031` | `L1-012` | In production, the API must accept cross-origin requests only from the explicit list configured in `Cors:AllowedOrigins`. Wildcard origins must be rejected. |
 | `L2-032` | `L1-012` | The system must use EF Core LINQ or parameterized SQL for every database call; no string-interpolated SQL is permitted. |
-| `L2-033` | `L1-012` | Every issued refresh token must record `CreatedAtUtc`, `ExpiresAtUtc` (14 days), `CreatedByIp` (when available), and on use must be replaced by a new token with `ReplacedByTokenId` linking back. |
+| `L2-033` | `L1-012` | Every issued refresh token must record `CreatedAtUtc`, `ExpiresAtUtc` (14 days), `CreatedByIp` (when available), and on use (`POST /api/auth/refresh`) must be replaced by a new token with `ReplacedByTokenId` linking back. |
 
 ## Diagrams
 

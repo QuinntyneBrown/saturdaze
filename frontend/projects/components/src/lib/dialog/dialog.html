@@ -9,12 +9,16 @@
   marked `slot="actions"` claim it before the default swallows them.
   Rendered DIV order is reversed from visual order — CSS `order` restores
   the natural sequence (grip → header → content → actions).
+
+  No `role="dialog"` here: the CDK container already carries it, and a
+  nested dialog role would announce twice. The shell labels that container
+  with the `<h2>` id instead (see dialog.ts).
 -->
-<div class="sheet" role="dialog" aria-modal="true">
+<div class="sheet">
   <div class="actions"><ng-content select="[slot=actions]" /></div>
   <div class="grip"></div>
   <header>
-    <h2>{{ dialogTitle() }}</h2>
+    <h2 [id]="titleId">{{ dialogTitle() }}</h2>
     @if (subtitle()) { <p class="sub">{{ subtitle() }}</p> }
   </header>
   <div class="content"><ng-content /></div>

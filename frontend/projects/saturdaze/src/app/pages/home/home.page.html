@@ -7,20 +7,28 @@
     <div class="badge"><sd-icon name="lock" [size]="18" /></div>
     <div>
       <div class="title">Tap to lock what should never move</div>
-      <div class="body">When I regenerate the weekend, locked blocks stay put. Try locking swim, church, workouts, and bedtime.</div>
+      <div class="body">When I regenerate the weekend, locked blocks stay put. Commitments are always locked.</div>
     </div>
   </div>
 
   <div class="lock-blocks">
     <h3>Saturday</h3>
     @for (b of overview().preview; track b.id ?? b.time) {
-      <button type="button" class="lock-block" [attr.data-locked]="b.locked ? 'true' : null" (click)="toggleLock(b)">
+      <button
+        type="button"
+        class="lock-block"
+        [attr.data-locked]="b.locked ? 'true' : null"
+        [disabled]="b.kind === 'Commitment'"
+        [attr.aria-disabled]="b.kind === 'Commitment'"
+        [attr.aria-pressed]="b.locked ? 'true' : 'false'"
+        (click)="toggleLock(b)"
+      >
         <span class="toggle"><sd-icon [name]="b.locked ? 'lock' : 'plus'" [size]="18" /></span>
         <span class="time">{{ b.time }}</span>
         <span class="badge-icon"><sd-icon [name]="b.icon" [size]="18" /></span>
         <span class="copy">
           <span class="block-title">{{ b.title }}</span>
-          <span class="block-sub">{{ b.subtitle }}</span>
+          <span class="block-sub">{{ b.kind === 'Commitment' ? 'Commitment — always locked' : b.subtitle }}</span>
         </span>
       </button>
     }
@@ -96,31 +104,34 @@
       </div>
     </sd-section>
 
-    <sd-section title="A heads-up" subtitle="Things I noticed for you">
-      <div class="home-anticipate-stack">
-        @for (a of overview().anticipations; track a.headline) {
-          <sd-anticipate
-            [icon]="a.icon"
-            [headline]="a.headline"
-            [body]="a.body"
-            [cta]="a.cta ?? ''"
-          />
-        }
-      </div>
-    </sd-section>
+    @if (overview().anticipations.length > 0) {
+      <sd-section title="A heads-up" subtitle="Things I noticed for you">
+        <div class="home-anticipate-stack">
+          @for (a of overview().anticipations; track a.headline) {
+            <sd-anticipate
+              [icon]="a.icon"
+              [headline]="a.headline"
+              [body]="a.body"
+              [cta]="a.cta ?? ''"
+              (ctaClick)="followTip(a)"
+            />
+          }
+        </div>
+      </sd-section>
+    }
 
     <sd-section title="Quick actions" flush>
       <div class="home-quick-actions">
-        @for (q of overview().quickActions; track q.title) {
+        @for (q of overview().quickActions; track q.kind) {
           <sd-list-item
             class="action-row"
             [title]="q.title"
             [subtitle]="q.subtitle"
             role="button"
             tabindex="0"
-            (click)="handleQuickAction(q.title)"
-            (keydown.enter)="handleQuickAction(q.title)"
-            (keydown.space)="handleQuickAction(q.title); $event.preventDefault()"
+            (click)="handleQuickAction(q.kind)"
+            (keydown.enter)="handleQuickAction(q.kind)"
+            (keydown.space)="handleQuickAction(q.kind); $event.preventDefault()"
           >
             <sd-icon slot="leading" [name]="q.icon" />
             <sd-icon slot="trailing" name="chevron_right" [size]="16" />
@@ -145,7 +156,7 @@
         />
       </div>
       <div class="detail-pane-body">
-        @for (b of overview().preview; track b.time) {
+        @for (b of overview().preview; track b.id ?? b.time) {
           <sd-timeline-block
             [time]="b.time"
             [duration]="b.duration ?? ''"
@@ -155,6 +166,7 @@
             [tone]="b.tone ?? 'default'"
             [locked]="b.locked ?? false"
             [drive]="b.drive ?? ''"
+            (blockClick)="openBlock(b)"
           >
             @if (b.chips) {
               @for (c of b.chips; track $index) {

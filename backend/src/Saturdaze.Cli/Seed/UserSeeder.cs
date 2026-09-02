@@ -46,6 +46,8 @@ public sealed class UserSeeder : IJsonSeeder
 
             if (existing is null)
             {
+                // Every account owns a family (same invariant as registration).
+                family ??= NewFamily(db, record.FamilyHomeLocation);
                 db.Users.Add(new User
                 {
                     Id = Guid.NewGuid(),
@@ -53,7 +55,7 @@ public sealed class UserSeeder : IJsonSeeder
                     NormalizedEmail = normalized,
                     PasswordHash = _hasher.Hash(record.Password),
                     Role = record.Role ?? UserRole.User,
-                    FamilyId = family?.Id,
+                    FamilyId = family.Id,
                     EmailVerifiedUtc = record.EmailVerified ? now : null,
                     CreatedAtUtc = now,
                     UpdatedAtUtc = now,
@@ -64,7 +66,7 @@ public sealed class UserSeeder : IJsonSeeder
                 existing.Email = email;
                 existing.PasswordHash = _hasher.Hash(record.Password);
                 existing.Role = record.Role ?? existing.Role;
-                existing.FamilyId = family?.Id ?? existing.FamilyId;
+                existing.FamilyId = family?.Id ?? existing.FamilyId ?? NewFamily(db, null).Id;
                 existing.EmailVerifiedUtc = record.EmailVerified
                     ? existing.EmailVerifiedUtc ?? now
                     : existing.EmailVerifiedUtc;
@@ -75,6 +77,13 @@ public sealed class UserSeeder : IJsonSeeder
         }
 
         return written;
+    }
+
+    private static Family NewFamily(AppDbContext db, string? homeLocation)
+    {
+        var family = new Family { Id = Guid.NewGuid(), HomeLocation = homeLocation?.Trim() ?? string.Empty };
+        db.Families.Add(family);
+        return family;
     }
 
     private static async Task<Family?> ResolveFamily(

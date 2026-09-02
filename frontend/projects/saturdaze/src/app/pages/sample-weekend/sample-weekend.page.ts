@@ -1,8 +1,20 @@
-import { HttpClient } from '@angular/common/http';
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  computed,
+  inject,
+  signal,
+} from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 
-import { API_BASE_URL } from 'api';
+import {
+  SHARED_WEEKEND_SERVICE,
+  formatWeekendSpan,
+  hhmm,
+  type SharedWeekend,
+  type WeekendDay,
+} from 'api';
 import {
   Anticipate,
   Button,
@@ -15,16 +27,6 @@ import {
   WeatherStrip,
   Section,
 } from 'components';
-
-interface SharedWeekendDto {
-  readonly weekendOf: string;
-  readonly blocks: ReadonlyArray<{
-    readonly day: 'Saturday' | 'Sunday';
-    readonly kind: string;
-    readonly title: string;
-    readonly isLocked: boolean;
-  }>;
-}
 
 @Component({
   selector: 'app-sample-weekend',
@@ -47,15 +49,16 @@ interface SharedWeekendDto {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SampleWeekendPage {
-  private readonly http = inject(HttpClient);
-  private readonly baseUrl = inject(API_BASE_URL);
+  private readonly sharedWeekends = inject(SHARED_WEEKEND_SERVICE);
   private readonly route = inject(ActivatedRoute);
+  private readonly destroyRef = inject(DestroyRef);
 
-  protected readonly shared = signal<SharedWeekendDto | null>(null);
+  /** The weekend behind `?share=<token>`; `null` renders the static sample. */
+  protected readonly shared = signal<SharedWeekend | null>(null);
   protected readonly isShared = computed(() => this.shared() !== null);
   protected readonly bannerTitle = computed(() =>
     this.isShared()
-      ? 'Sara shared this Saturdaze weekend with you.'
+      ? 'Someone shared this Saturdaze weekend with you.'
       : 'This is a sample weekend for the Browns.',
   );
   protected readonly bannerBody = computed(() =>
@@ -76,7 +79,7 @@ export class SampleWeekendPage {
   });
   protected readonly forecastSubtitle = computed(() => {
     const shared = this.shared();
-    return shared ? formatRange(shared.weekendOf) : 'Sat 17 May – Sun 18 May';
+    return shared ? formatWeekendSpan(shared.weekendOf) : 'Sat 17 May – Sun 18 May';
   });
   protected readonly saturdayHighlight = computed(() => this.highlight('Saturday'));
   protected readonly sundayHighlight = computed(() => this.highlight('Sunday'));
@@ -85,16 +88,17 @@ export class SampleWeekendPage {
 
   constructor() {
     const token = this.route.snapshot.queryParamMap.get('share');
-    if (token) {
-      this.http.get<SharedWeekendDto>(`${this.baseUrl}/api/weekends/shared/${encodeURIComponent(token)}`)
-        .subscribe({
-          next: (dto) => this.shared.set(dto),
-          error: (err) => console.error('SampleWeekendPage shared load failed', err),
-        });
-    }
+    if (!token) return;
+
+    let destroyed = false;
+    this.destroyRef.onDestroy(() => { destroyed = true; });
+    this.sharedWeekends.load(token).then(
+      (weekend) => { if (!destroyed) this.shared.set(weekend); },
+      (err: unknown) => console.error('SampleWeekendPage shared load failed', err),
+    );
   }
 
-  private highlight(day: 'Saturday' | 'Sunday'): string {
+  private highlight(day: WeekendDay): string {
     const shared = this.shared();
     if (!shared) return day === 'Saturday' ? 'Lavender fields at Terre Bleu' : "Rec Room — Eli's pick";
     return shared.blocks.find((b) => b.day === day && b.kind === 'Activity')?.title
@@ -102,17 +106,8 @@ export class SampleWeekendPage {
       ?? 'Quiet day at home';
   }
 
-  private lockLabel(day: 'Saturday' | 'Sunday'): string | null {
+  private lockLabel(day: WeekendDay): string | null {
     const locked = this.shared()?.blocks.find((b) => b.day === day && b.isLocked);
-    return locked?.title ?? null;
+    return locked ? `${hhmm(locked.startTime)} ${locked.title.toLowerCase()}` : null;
   }
-}
-
-function formatRange(saturdayIso: string): string {
-  const [y, m, d] = saturdayIso.split('-').map(Number);
-  const sat = new Date(Date.UTC(y!, m! - 1, d!));
-  const sun = new Date(sat);
-  sun.setUTCDate(sun.getUTCDate() + 1);
-  const month = sat.toLocaleString('en-US', { month: 'short', timeZone: 'UTC' });
-  return `Sat ${sat.getUTCDate()} ${month} – Sun ${sun.getUTCDate()} ${month}`;
 }

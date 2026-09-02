@@ -1,0 +1,41 @@
+<sd-dialog
+  [title]="'How was ' + data.weekendTitle + '?'"
+  subtitle="Rate it so I remember what worked — and give it a name if you like."
+>
+  <div class="stars" role="group" aria-label="Rating">
+    @for (star of stars; track star) {
+      <button
+        type="button"
+        class="star"
+        [class.filled]="rating() !== null && star <= rating()!"
+        [attr.aria-pressed]="rating() !== null && star <= rating()!"
+        [attr.aria-label]="star + (star === 1 ? ' star' : ' stars')"
+        (click)="pick(star)"
+      >
+        <sd-icon name="star" [size]="28" />
+      </button>
+    }
+  </div>
+  <div class="rating-label" aria-live="polite">{{ ratingLabel() }}</div>
+
+  <label class="field">
+    <span>Name this weekend <span class="optional">Optional</span></span>
+    <input
+      name="weekendTitle"
+      type="text"
+      autocomplete="off"
+      maxlength="120"
+      [ngModel]="title()"
+      (ngModelChange)="title.set($event)"
+      placeholder="e.g. Lavender + Rec Room"
+    />
+  </label>
+
+  <sd-button slot="actions" variant="secondary" type="button" (click)="cancel()">
+    Cancel
+  </sd-button>
+  <sd-button slot="actions" type="button" (click)="save()">
+    <sd-icon slot="leading" name="check" [size]="16" />
+    Save
+  </sd-button>
+</sd-dialog>

@@ -9,8 +9,6 @@ import { firstValueFrom } from 'rxjs';
 
 import { API_BASE_URL } from '../api/api-base-url';
 import { FamilyDto } from '../models/family.dto';
-import { FamilyMember } from '../models/family-member';
-import { FamilyMemberTone } from '../models/family-member-tone';
 import { FamilyProfile } from '../models/family-profile';
 import { PreferenceToggle } from '../models/preference-toggle';
 import {
@@ -19,135 +17,94 @@ import {
 } from './family.service.contract';
 
 /**
- * Initial profile rendered while the HTTP call is still in flight. The
- * commitments and members render empty so there's no flash of mock content
- * before the real data lands. Rhythm and preferences are local-only
- * concepts the API doesn't yet model — they stay constant.
+ * Initial profile rendered while the HTTP call is still in flight. Likes
+ * render empty so there's no flash of mock content before the real data
+ * lands; the toggles show their defaults.
  */
 const PLACEHOLDER_PROFILE: FamilyProfile = {
-  familyName: 'The Browns',
-  location: 'Port Credit, Mississauga',
-  members: [],
-  commitments: [],
-  rhythm: [
-    { title: 'Out the door by', subtitle: '9:00am', icon: 'home', chip: '9:00am' },
-    { title: 'Kids in bed by', subtitle: '9:00pm sharp', icon: 'bed', chip: '9:00pm' },
-  ],
+  familyName: null,
+  location: '',
   likes: [],
-  preferences: [
-    { title: 'Budget is a factor', subtitle: "Off — I won't filter by price", checked: false },
-    { title: 'Try something new each weekend', subtitle: 'One new activity per week', checked: true },
-    { title: 'Friday preview notifications', subtitle: 'A heads-up at 6pm Friday', checked: true },
-  ],
+  preferences: preferenceToggles({
+    budgetEnabled: false,
+    tryNewEnabled: false,
+    fridayPreviewEnabled: true,
+  }),
 };
 
-/** Stable tone rotation for member avatars, oldest first. */
-const MEMBER_TONES: readonly FamilyMemberTone[] = ['primary', 'leaf', 'sky', 'sun', 'indoor'];
-
-/** Stable icon assignment for commitments by title heuristic. */
-function commitmentIcon(title: string): string {
-  const t = title.toLowerCase();
-  if (t.includes('swim') || t.includes('workout') || t.includes('bike')) return 'bike';
-  if (t.includes('church') || t.includes('bed')) return 'bed';
-  if (t.includes('lunch') || t.includes('dinner')) return 'fork';
-  return 'calendar';
-}
-
 /**
- * Commitment Subtitle.
- *
- * @param {FamilyDto['commitments'][number]} c - The c
- *
- * @returns {string} The result of the operation
+ * The three family-level switches, phrased for the profile page.
  */
-function commitmentSubtitle(c: FamilyDto['commitments'][number]): string {
-  const day =
-    c.dayOfWeek === 'Saturday' ? 'Saturdays' :
-    c.dayOfWeek === 'Sunday' ? 'Sundays' :
-    c.dayOfWeek + 's';
-  const start = c.startTime.substring(0, 5);
-  const end = c.endTime.substring(0, 5);
-  return `${day} ${start} – ${end}`;
-}
-
-/**
- * Member Subtitle.
- *
- * @param {FamilyDto['members'][number]} m - The m
- *
- * @returns {string} The result of the operation
- */
-function memberSubtitle(m: FamilyDto['members'][number]): string {
-  const role = m.age >= 18 ? 'Parent' : 'Kid';
-  return `${role} · ${m.age}`;
+function preferenceToggles(flags: {
+  budgetEnabled: boolean;
+  tryNewEnabled: boolean;
+  fridayPreviewEnabled: boolean;
+}): PreferenceToggle[] {
+  return [
+    {
+      key: 'budget',
+      title: 'Budget is a factor',
+      subtitle: flags.budgetEnabled
+        ? 'On — picks will filter by price'
+        : "Off — I won't filter by price",
+      checked: flags.budgetEnabled,
+    },
+    {
+      key: 'tryNew',
+      title: 'Try something new each weekend',
+      subtitle: flags.tryNewEnabled
+        ? 'On — one new activity per weekend'
+        : 'Off — stick with the family favourites',
+      checked: flags.tryNewEnabled,
+    },
+    {
+      key: 'fridayPreview',
+      title: 'Friday preview notifications',
+      subtitle: flags.fridayPreviewEnabled
+        ? 'On — a heads-up at 6pm Friday'
+        : 'Off — no Friday heads-up',
+      checked: flags.fridayPreviewEnabled,
+    },
+  ];
 }
 
 /**
  * Map Family.
- *
- * @param {FamilyDto} dto - The dto
- *
- * @returns {FamilyProfile} The result of the operation
  */
 function mapFamily(dto: FamilyDto): FamilyProfile {
-  const members: FamilyMember[] = dto.members
-    .slice()
-    .sort((a, b) => b.age - a.age)
-    .map((m, i) => ({
-      name: m.name,
-      tone: MEMBER_TONES[i % MEMBER_TONES.length]!,
-      subtitle: memberSubtitle(m),
-    }));
-
-  const preferences: PreferenceToggle[] = [
-    {
-      title: 'Budget is a factor',
-      subtitle: dto.budgetEnabled
-        ? 'On — picks will filter by price'
-        : "Off — I won't filter by price",
-      checked: dto.budgetEnabled,
-    },
-    ...PLACEHOLDER_PROFILE.preferences.slice(1),
-  ];
-
+  const name = dto.name?.trim();
   return {
-    familyName: 'The Browns',
+    familyName: name ? name : null,
     location: dto.homeLocation,
-    members,
-    commitments: dto.commitments.map((c) => ({
-      title: c.title,
-      subtitle: commitmentSubtitle(c),
-      icon: commitmentIcon(c.title),
-    })),
-    rhythm: PLACEHOLDER_PROFILE.rhythm,
     likes: dto.preferences.map((p) => ({
       label: p.value,
       tone: p.kind === 'Like' ? 'leaf' : 'warn',
       icon: p.kind === 'Like' ? 'heart' : 'close',
     })),
-    preferences,
+    preferences: preferenceToggles(dto),
   };
 }
 
 /**
  * Map Editable.
- *
- * @param {FamilyDto} dto - The dto
- *
- * @returns {EditableFamilyProfile} The result of the operation
  */
 function mapEditable(dto: FamilyDto): EditableFamilyProfile {
   return {
+    name: dto.name,
     homeLocation: dto.homeLocation,
     budgetEnabled: dto.budgetEnabled,
+    tryNewEnabled: dto.tryNewEnabled,
+    fridayPreviewEnabled: dto.fridayPreviewEnabled,
     members: dto.members
       .slice()
       .sort((a, b) => b.age - a.age)
       .map((m) => ({
+        id: m.id,
         name: m.name,
         age: m.age,
       })),
     commitments: dto.commitments.map((c) => ({
+      id: c.id,
       title: c.title,
       dayOfWeek: c.dayOfWeek as EditableFamilyProfile['commitments'][number]['dayOfWeek'],
       startTime: c.startTime.substring(0, 5),
@@ -162,10 +119,6 @@ function mapEditable(dto: FamilyDto): EditableFamilyProfile {
 
 /**
  * Normalize Time.
- *
- * @param {string} time - The time
- *
- * @returns {string} The result of the operation
  */
 function normalizeTime(time: string): string {
   return time.length === 5 ? `${time}:00` : time;
@@ -225,13 +178,18 @@ export class FamilyService implements IFamilyService {
   async saveProfile(profile: EditableFamilyProfile): Promise<void> {
     const dto = await firstValueFrom(
       this.http.put<FamilyDto>(`${this.baseUrl}/api/family`, {
+        name: profile.name?.trim() || null,
         homeLocation: profile.homeLocation,
         budgetEnabled: profile.budgetEnabled,
+        tryNewEnabled: profile.tryNewEnabled,
+        fridayPreviewEnabled: profile.fridayPreviewEnabled,
         members: profile.members.map((m) => ({
+          id: m.id ?? null,
           name: m.name.trim(),
           age: m.age,
         })),
         commitments: profile.commitments.map((c) => ({
+          id: c.id ?? null,
           title: c.title.trim(),
           dayOfWeek: c.dayOfWeek,
           startTime: normalizeTime(c.startTime),
@@ -248,12 +206,9 @@ export class FamilyService implements IFamilyService {
 
   /**
    * Apply.
-   *
-   * @param {FamilyDto} dto - The dto
-   *
-   * @returns {void} No return value
    */
-  private apply(dto: FamilyDto): void {
+  private apply(dto: FamilyDto | null): void {
+    if (!dto) return;
     this._profile.set(mapFamily(dto));
     this._editableProfile.set(mapEditable(dto));
   }

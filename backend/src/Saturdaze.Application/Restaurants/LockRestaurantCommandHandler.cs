@@ -1,12 +1,10 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using Saturdaze.Application.Abstractions;
 using Saturdaze.Application.Common;
 using Saturdaze.Application.Contracts;
 using Saturdaze.Application.Exceptions;
 using Saturdaze.Application.Planning;
-using Saturdaze.Application.Weather;
 using Saturdaze.Application.Weekends;
 using Saturdaze.Domain.Entities;
 using Saturdaze.Domain.Enums;
@@ -18,21 +16,12 @@ public sealed class LockRestaurantCommandHandler : IRequestHandler<LockRestauran
     private readonly IAppDbContext _db;
     private readonly ICurrentFamilyAccessor _current;
     private readonly IDateTimeProvider _clock;
-    private readonly IWeatherClient _weather;
-    private readonly IOptions<HomeLocationOptions> _home;
 
-    public LockRestaurantCommandHandler(
-        IAppDbContext db,
-        ICurrentFamilyAccessor current,
-        IDateTimeProvider clock,
-        IWeatherClient weather,
-        IOptions<HomeLocationOptions> home)
+    public LockRestaurantCommandHandler(IAppDbContext db, ICurrentFamilyAccessor current, IDateTimeProvider clock)
     {
         _db = db;
         _current = current;
         _clock = clock;
-        _weather = weather;
-        _home = home;
     }
 
     public async Task<RestaurantDto> Handle(LockRestaurantCommand request, CancellationToken cancellationToken)
@@ -42,21 +31,30 @@ public sealed class LockRestaurantCommandHandler : IRequestHandler<LockRestauran
             ?? throw new NotFoundException(nameof(Restaurant), request.RestaurantId);
 
         var familyId = await _current.GetCurrentFamilyIdAsync(cancellationToken);
-        var existingLocks = await _db.RestaurantLocks
-            .Where(l => l.FamilyId == familyId && l.Day == request.Day && l.Slot == request.Slot)
-            .ToListAsync(cancellationToken);
-        foreach (var existing in existingLocks)
-            _db.RestaurantLocks.Remove(existing);
 
-        _db.RestaurantLocks.Add(new RestaurantLock
+        // One row per (family, day, slot): update in place rather than
+        // delete + insert, which races the unique index inside one SaveChanges.
+        var existing = await _db.RestaurantLocks
+            .SingleOrDefaultAsync(
+                l => l.FamilyId == familyId && l.Day == request.Day && l.Slot == request.Slot,
+                cancellationToken);
+        if (existing is null)
         {
-            Id = Guid.NewGuid(),
-            FamilyId = familyId,
-            RestaurantId = restaurant.Id,
-            Day = request.Day,
-            Slot = request.Slot,
-            CreatedAtUtc = _clock.UtcNow
-        });
+            _db.RestaurantLocks.Add(new RestaurantLock
+            {
+                Id = Guid.NewGuid(),
+                FamilyId = familyId,
+                RestaurantId = restaurant.Id,
+                Day = request.Day,
+                Slot = request.Slot,
+                CreatedAtUtc = _clock.UtcNow
+            });
+        }
+        else
+        {
+            existing.RestaurantId = restaurant.Id;
+            existing.CreatedAtUtc = _clock.UtcNow;
+        }
 
         await ApplyToCurrentWeekend(familyId, restaurant, request.Day, request.Slot, cancellationToken);
         await _db.SaveChangesAsync(cancellationToken);

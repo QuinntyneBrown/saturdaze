@@ -45,4 +45,8 @@ public class HttpContextCurrentUserAccessor : ICurrentUserAccessor
             return Guid.TryParse(raw, out var id) ? id : null;
         }
     }
+
+    // Behind Azure App Service this is the front-end proxy unless forwarded
+    // headers are enabled; recorded "when available" per L2-033.
+    public string? IpAddress => _ctx.HttpContext?.Connection.RemoteIpAddress?.ToString();
 }

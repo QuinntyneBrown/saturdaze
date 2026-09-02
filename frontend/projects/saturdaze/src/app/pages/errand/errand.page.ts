@@ -1,8 +1,8 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
-import { WEEKEND_PLAN_SERVICE } from 'api';
+import { WEEKEND_PLAN_SERVICE, type WeekendDay } from 'api';
 import {
   BottomNav,
   Button,
@@ -14,18 +14,20 @@ import {
   TopBar,
 } from 'components';
 
-interface SlotOption {
-  readonly when: string;
-  readonly subtitle: string;
-  readonly fit: 'best' | 'ok' | 'tight';
+/** A "Best day" chip: a preferred day, or let the planner decide. */
+interface DayChoice {
+  readonly label: string;
+  readonly value: WeekendDay | null;
 }
 
-const SLOT_OPTIONS: readonly SlotOption[] = [
-  { when: 'Sunday 9:15am', subtitle: 'On the way back from church · 4 min off-route · adds 38m to the day', fit: 'best' },
-  { when: 'Saturday 10:15am', subtitle: 'After swim · 12 min detour to Costco · adds 55m to Saturday', fit: 'ok' },
-  { when: 'Friday 5:30pm', subtitle: "After work · doesn't touch the weekend · busier store", fit: 'ok' },
-  { when: 'Saturday 4:00pm', subtitle: 'Between quiet time and workout · adds 70m · runs into dinner prep', fit: 'tight' },
+const DAY_CHOICES: readonly DayChoice[] = [
+  { label: 'Saturday', value: 'Saturday' },
+  { label: 'Sunday', value: 'Sunday' },
+  { label: "Doesn't matter", value: null },
 ];
+
+/** How long the confirmation card shows before returning to the weekend. */
+export const ERRAND_REDIRECT_MS = 1600;
 
 @Component({
   selector: 'app-errand',
@@ -48,16 +50,18 @@ const SLOT_OPTIONS: readonly SlotOption[] = [
 export class ErrandPage {
   private readonly weekend = inject(WEEKEND_PLAN_SERVICE);
   private readonly router = inject(Router);
+  private readonly destroyRef = inject(DestroyRef);
+  private redirectTimer: ReturnType<typeof setTimeout> | null = null;
 
-  protected readonly slots = SLOT_OPTIONS;
-  protected readonly showSlots = signal(false);
-  protected readonly selectedSlot = signal(SLOT_OPTIONS[0]!);
+  protected readonly dayChoices = DAY_CHOICES;
+  protected readonly preferredDay = signal<WeekendDay | null>(null);
+  protected readonly placement = this.weekend.lastErrandPlacement();
   protected readonly submitting = signal(false);
   protected readonly added = signal(false);
   protected readonly error = signal('');
 
   protected readonly form = new FormGroup({
-    description: new FormControl('Costco run — paper towels, bread, kid yogurt', {
+    description: new FormControl('', {
       nonNullable: true,
       validators: [Validators.required, Validators.minLength(3)],
     }),
@@ -67,22 +71,24 @@ export class ErrandPage {
     }),
   });
 
-  protected pickDifferentSlot(): void {
-    this.showSlots.set(true);
+  constructor() {
+    this.destroyRef.onDestroy(() => this.clearRedirect());
   }
 
-  protected selectSlot(slot: SlotOption): void {
-    this.selectedSlot.set(slot);
+  protected choosePreferredDay(value: WeekendDay | null): void {
+    this.preferredDay.set(value);
   }
 
+  /** The planner picks the slot; the confirmation shows where it landed (L2-021 AC2). */
   protected async addToWeekend(): Promise<void> {
     if (this.form.invalid || this.submitting()) return;
     this.submitting.set(true);
     this.error.set('');
     try {
       const raw = this.form.getRawValue();
-      await this.weekend.addErrand(raw.description, Number(raw.duration));
+      await this.weekend.addErrand(raw.description.trim(), Number(raw.duration), this.preferredDay());
       this.added.set(true);
+      this.redirectTimer = setTimeout(() => this.backToWeekend(), ERRAND_REDIRECT_MS);
     } catch {
       this.error.set("Couldn't add the errand. Try again in a minute.");
     } finally {
@@ -91,6 +97,14 @@ export class ErrandPage {
   }
 
   protected backToWeekend(): void {
+    this.clearRedirect();
     void this.router.navigateByUrl('/weekend');
+  }
+
+  private clearRedirect(): void {
+    if (this.redirectTimer !== null) {
+      clearTimeout(this.redirectTimer);
+      this.redirectTimer = null;
+    }
   }
 }

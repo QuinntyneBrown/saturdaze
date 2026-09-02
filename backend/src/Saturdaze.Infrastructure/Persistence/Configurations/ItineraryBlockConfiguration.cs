@@ -13,5 +13,7 @@ public class ItineraryBlockConfiguration : IEntityTypeConfiguration<ItineraryBlo
         b.Property(x => x.Title).HasMaxLength(160).IsRequired();
         b.Property(x => x.Reason).HasMaxLength(500).IsRequired();
         b.HasIndex(x => new { x.WeekendId, x.Day, x.SortOrder });
+        // The planner's recency/novelty history joins on (Kind, RefId) across every weekend.
+        b.HasIndex(x => new { x.Kind, x.RefId });
     }
 }

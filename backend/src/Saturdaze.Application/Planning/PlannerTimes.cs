@@ -14,6 +14,13 @@ public static class PlannerTimes
 
     public const int MealMinutes = 60;
     public const int ActivityMinGapMinutes = 90;
+
+    /// <summary>
+    /// The least time an activity itself must get once both drives are
+    /// subtracted from the gap; anything shorter is not worth the trip.
+    /// </summary>
+    public const int ActivityMinMinutes = 30;
+
     public const int DowntimeMinMinutes = 30;
     public const int ErrandBufferMinutes = 20;
 }

@@ -1,7 +1,7 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 
-import { EventSubmissionDto } from 'api';
+import { EventSubmissionDto, formatWhen } from 'api';
 import { Button, Card, Dialog as DialogShell, Icon } from 'components';
 
 export interface ApproveSubmissionDialogData {
@@ -24,19 +24,8 @@ export class ApproveSubmissionDialog {
   protected readonly data = inject<ApproveSubmissionDialogData>(DIALOG_DATA);
 
   protected readonly title = `Approve "${this.data.submission.title}"?`;
-  protected readonly whenLabel = formatWhen(this.data.submission.startsAtLocal);
+  protected readonly whenLabel = formatWhen(this.data.submission.startsAtLocal, 'date');
 
   protected cancel(): void { this.dialogRef.close(); }
   protected approve(): void { this.dialogRef.close('approve'); }
-}
-
-function formatWhen(iso: string): string {
-  const d = new Date(iso);
-  return d.toLocaleString(undefined, {
-    weekday: 'short',
-    month: 'short',
-    day: 'numeric',
-    hour: 'numeric',
-    minute: d.getMinutes() === 0 ? undefined : '2-digit',
-  });
 }

@@ -73,4 +73,15 @@ describe('TimelineBlock', () => {
     fixture.detectChanges();
     expect(component.duration()).toBe('test-value');
   });
+
+  it('emits blockClick from click and keyboard on the body', () => {
+    const el = fixture.nativeElement as HTMLElement;
+    const body = el.querySelector('.body') as HTMLElement;
+    expect(body.getAttribute('role')).toBe('button');
+    const emitted: number[] = [];
+    component.blockClick.subscribe(() => emitted.push(1));
+    body.click();
+    body.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+    expect(emitted).toHaveLength(2);
+  });
 });

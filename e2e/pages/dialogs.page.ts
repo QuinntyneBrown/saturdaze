@@ -9,6 +9,14 @@ import { BasePage } from "./base.page.js";
  * for each one.
  */
 export class DialogsPage extends BasePage {
+  /**
+   * The dialogs gallery has no page chrome (no top bar / bottom nav /
+   * sections) in either world, so wait for the static dialogs themselves.
+   */
+  override async waitForComponentsReady(): Promise<void> {
+    await this.page.waitForSelector("sd-dialog[static]", { state: "attached", timeout: 8_000 });
+  }
+
   galleryHeading(): Locator {
     return this.page.locator("h1").filter({ hasText: "Dialogs & sheets" });
   }

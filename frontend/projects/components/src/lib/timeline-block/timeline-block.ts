@@ -3,6 +3,7 @@ import {
   Component,
   booleanAttribute,
   input,
+  output,
 } from '@angular/core';
 
 import { Chip } from '../chip/chip';
@@ -15,6 +16,8 @@ import { Icon } from '../icon/icon';
  * Tone variants drive icon colour / background. `locked` switches the rail
  * dot to forest green and the body to the accent-soft fill; a "Locked"
  * chip auto-appears. `drive="45 min"` adds a sky-toned travel chip.
+ * Tapping the body emits `blockClick` so a page can open the block's
+ * actions (why, lock, swap, mark done).
  */
 
 export type TimelineBlockTone =
@@ -53,4 +56,10 @@ export class TimelineBlock {
   readonly locked = input(false, { transform: booleanAttribute });
   readonly drive = input<string>('');
   readonly duration = input<string>('');
+  readonly blockClick = output<void>();
+
+  protected onKey(event: Event): void {
+    event.preventDefault();
+    this.blockClick.emit();
+  }
 }

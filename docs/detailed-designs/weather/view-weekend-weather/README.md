@@ -19,7 +19,7 @@ The feature forms a vertical slice across the Angular application, the ASP.NET C
 - **`OpenMeteoWeatherClient`** — Infrastructure client using configured base URL, memory cache, resilience handling, and warning logs.
 - **`WeatherForecast`** — Application record containing date, tags, temperatures, precipitation, and unavailable state.
 
-The current handler reads configured `HomeLocationOptions` instead of the authenticated family's `HomeLocation`. Coordinate resolution from the family profile is `<TO SUPPLY>`. The production placeholder-warning check described by `L2-024` is also `<TO SUPPLY>`.
+`WeekendForecastService` reads the configured `HomeLocationOptions`; the family profile stores a free-text `HomeLocation` and geocoding it into coordinates is still an open gap. The production placeholder warning required by `L2-024` runs at startup (`WarnOnMissingProductionConfig` in `Program.cs`).
 ## Requirements
 
 The feature realizes the following level-2 (L2) requirements. Each row cites the level-1 (L1) capability refined by the requirement.

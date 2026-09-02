@@ -7,5 +7,6 @@ public record RegisterUserCommand(
     string Email,
     string Password,
     string? FamilyName,
-    string? HomeLocation
+    string? HomeLocation,
+    bool FridayPreview = true
 ) : IRequest<AuthSuccessDto>;

@@ -1,3 +1,5 @@
+import { MealSlot } from './meal-slot';
+
 /**
  * Restaurant Dto.
  */
@@ -17,7 +19,7 @@ export interface RestaurantDto {
   /**
    * Slot.
    */
-  readonly slot: 'Lunch' | 'Dinner';
+  readonly slot: MealSlot;
   /**
    * Wife Approved.
    */

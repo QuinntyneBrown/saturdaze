@@ -4,7 +4,7 @@ import { test, expect } from "../../fixtures/sd-test.js";
  * Pixel-perfect parity with pages/home.html.
  *
  * The baselines are generated once from the mock skeleton (run
- * `npm run e2e:baseline`). Subsequent runs hit the Angular implementation
+ * `npm run baseline`). Subsequent runs hit the Angular implementation
  * at the same path and compare. The baselines are per-viewport, written
  * into `home.visual.spec.ts-snapshots/`.
  */

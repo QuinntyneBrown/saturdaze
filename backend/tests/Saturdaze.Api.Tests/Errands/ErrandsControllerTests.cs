@@ -8,15 +8,14 @@ using Xunit;
 
 namespace Saturdaze.Api.Tests.Errands;
 
-public class ErrandsControllerTests : IClassFixture<SaturdazeApiFactory>
+public class ErrandsControllerTests : IClassFixture<SaturdazeApiFactory>, IAsyncLifetime
 {
     private readonly SaturdazeApiFactory _factory;
-    private readonly HttpClient _client;
+    private HttpClient _client = null!;
 
     public ErrandsControllerTests(SaturdazeApiFactory factory)
     {
         _factory = factory;
-        _client = factory.CreateClient();
         _factory.Weather.Producer = (_, _, from, to) =>
         {
             var days = new List<WeatherForecast>();
@@ -26,9 +25,13 @@ public class ErrandsControllerTests : IClassFixture<SaturdazeApiFactory>
         };
     }
 
+    public async Task InitializeAsync() => _client = (await SignedInClient.CreateAsync(_factory)).Client;
+    public Task DisposeAsync() => Task.CompletedTask;
+
     [Fact]
-    public async Task Add_errand_persists_on_weekend_and_regenerate_places_block()
+    public async Task Add_errand_persists_on_weekend_and_places_a_block_immediately()
     {
+        // Traces to: L2-021 #1, L1-008
         var d = new DateOnly(2026, 7, 11);
         var created = await _client.PostAsJsonAsync("/api/weekends/plan", new { WeekendOf = d.ToString("yyyy-MM-dd") });
         created.EnsureSuccessStatusCode();
@@ -37,18 +40,54 @@ public class ErrandsControllerTests : IClassFixture<SaturdazeApiFactory>
         var add = await _client.PostAsJsonAsync(
             $"/api/weekends/{weekendId}/errands",
             new { Description = "Costco run", EstimatedMinutes = 60 });
-        add.EnsureSuccessStatusCode();
-        var afterAdd = JsonDocument.Parse(await add.Content.ReadAsStringAsync()).RootElement;
+        var addBody = await add.Content.ReadAsStringAsync();
+        add.StatusCode.Should().Be(HttpStatusCode.OK, addBody);
+        var afterAdd = JsonDocument.Parse(addBody).RootElement;
         var errand = afterAdd.GetProperty("errands").EnumerateArray().Single();
         errand.GetProperty("description").GetString().Should().Be("Costco run");
         errand.GetProperty("estimatedMinutes").GetInt32().Should().Be(60);
+        errand.GetProperty("done").GetBoolean().Should().BeFalse();
+
+        var placed = afterAdd.GetProperty("blocks").EnumerateArray()
+            .Single(b => b.GetProperty("kind").GetString() == "Errand");
+        placed.GetProperty("title").GetString().Should().Be("Costco run");
+        placed.GetProperty("refId").GetGuid().Should().Be(errand.GetProperty("id").GetGuid());
+        placed.GetProperty("day").GetString().Should().Be("Saturday", "Saturday is tried first by default");
+
+        // No block on that day may overlap the errand.
+        var day = placed.GetProperty("day").GetString();
+        var start = TimeOnly.Parse(placed.GetProperty("startTime").GetString()!);
+        var end = TimeOnly.Parse(placed.GetProperty("endTime").GetString()!);
+        afterAdd.GetProperty("blocks").EnumerateArray()
+            .Where(b => b.GetProperty("day").GetString() == day && b.GetProperty("id").GetGuid() != placed.GetProperty("id").GetGuid())
+            .Should().OnlyContain(b =>
+                TimeOnly.Parse(b.GetProperty("endTime").GetString()!) <= start ||
+                TimeOnly.Parse(b.GetProperty("startTime").GetString()!) >= end);
 
         var regen = await _client.PostAsync($"/api/weekends/{weekendId}/regenerate", content: null);
         regen.EnsureSuccessStatusCode();
         var regenerated = JsonDocument.Parse(await regen.Content.ReadAsStringAsync()).RootElement;
         regenerated.GetProperty("blocks").EnumerateArray()
             .Should().Contain(b => b.GetProperty("kind").GetString() == "Errand",
-                              "regenerate should place the errand into the itinerary");
+                              "regenerate keeps the pending errand in the itinerary");
+    }
+
+    [Fact]
+    public async Task Add_errand_honours_the_preferred_day()
+    {
+        var d = new DateOnly(2026, 8, 8);
+        var created = await _client.PostAsJsonAsync("/api/weekends/plan", new { WeekendOf = d.ToString("yyyy-MM-dd") });
+        created.EnsureSuccessStatusCode();
+        var weekendId = JsonDocument.Parse(await created.Content.ReadAsStringAsync()).RootElement.GetProperty("id").GetGuid();
+
+        var add = await _client.PostAsJsonAsync(
+            $"/api/weekends/{weekendId}/errands",
+            new { Description = "Garden centre", EstimatedMinutes = 40, PreferredDay = "Sunday" });
+        add.EnsureSuccessStatusCode();
+        var placed = JsonDocument.Parse(await add.Content.ReadAsStringAsync()).RootElement
+            .GetProperty("blocks").EnumerateArray()
+            .Single(b => b.GetProperty("kind").GetString() == "Errand");
+        placed.GetProperty("day").GetString().Should().Be("Sunday");
     }
 
     [Fact]
@@ -70,6 +109,13 @@ public class ErrandsControllerTests : IClassFixture<SaturdazeApiFactory>
         var dto = JsonDocument.Parse(await put.Content.ReadAsStringAsync()).RootElement;
         dto.GetProperty("errands").EnumerateArray().Single()
             .GetProperty("done").GetBoolean().Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task Mark_done_on_unknown_errand_returns_404()
+    {
+        var put = await _client.PutAsJsonAsync($"/api/errands/{Guid.NewGuid()}/done", new { Done = true });
+        put.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
 
     [Fact]

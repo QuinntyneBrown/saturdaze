@@ -27,6 +27,7 @@ public sealed class EventSubmissionsController : ControllerBase
         string? Category);
 
     public record RejectRequest(string? Reason);
+    public record ApproveRequest(int? DriveMinutes);
 
     [HttpPost]
     public async Task<ActionResult<EventSubmissionDto>> Submit(
@@ -62,9 +63,12 @@ public sealed class EventSubmissionsController : ControllerBase
 
     [HttpPost("{id:guid}/approve")]
     [Authorize(Policy = "Admin")]
-    public async Task<ActionResult<EventSubmissionDto>> Approve(Guid id, CancellationToken ct)
+    public async Task<ActionResult<EventSubmissionDto>> Approve(
+        Guid id,
+        [FromBody(EmptyBodyBehavior = Microsoft.AspNetCore.Mvc.ModelBinding.EmptyBodyBehavior.Allow)] ApproveRequest? req,
+        CancellationToken ct)
     {
-        return Ok(await _sender.Send(new ApproveSubmissionCommand(id), ct));
+        return Ok(await _sender.Send(new ApproveSubmissionCommand(id, req?.DriveMinutes), ct));
     }
 
     [HttpPost("{id:guid}/reject")]

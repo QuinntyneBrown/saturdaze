@@ -5,6 +5,7 @@ import {
   computed,
   input,
   numberAttribute,
+  output,
 } from '@angular/core';
 
 import { Icon } from '../icon/icon';
@@ -12,7 +13,8 @@ import { Icon } from '../icon/icon';
 /**
  * One row in saved weekends. Mirrors `docs/mocks/components/sd-saved-card.js`.
  * Renders date eyebrow + title, a 5-star strip filled per `rating`, an
- * optional highlights callout, and a footer for projected buttons.
+ * optional highlights callout, and a footer for projected buttons. The
+ * heart is a real button: `favouriteToggle` emits the requested state.
  */
 
 @Component({
@@ -36,9 +38,14 @@ export class SavedCard {
   readonly rating = input(0, { transform: numberAttribute });
   readonly highlights = input<string>('');
   readonly favourite = input(false, { transform: booleanAttribute });
+  readonly favouriteToggle = output<boolean>();
 
   protected readonly stars = computed(() => {
     const filled = this.rating();
     return [0, 1, 2, 3, 4].map((i) => i < filled);
   });
+
+  protected toggleFavourite(): void {
+    this.favouriteToggle.emit(!this.favourite());
+  }
 }

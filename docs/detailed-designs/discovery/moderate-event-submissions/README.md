@@ -19,7 +19,7 @@ The feature forms a vertical slice across the Angular application, the ASP.NET C
 - **`ApproveSubmissionCommandHandler`** — Application handler that creates `LocalEvent` and records the published event ID.
 - **`RejectSubmissionCommandHandler`** — Application handler that stores rejected status and optional reason.
 
-`AdminEventsPage` and `requireAdmin` exist, but the `/admin/events` route registration is `<TO SUPPLY>` in `app.routes.ts`.
+`/admin/events` is registered in `app.routes.ts` behind `requireAuth` + `requireAdmin`. Approval accepts an optional `driveMinutes` (ADR-006, decision 3) and returns 409 `event_already_published` when an event with the same title and date already exists.
 ## Requirements
 
 The feature realizes the following level-2 (L2) requirements. Each row cites the level-1 (L1) capability refined by the requirement.

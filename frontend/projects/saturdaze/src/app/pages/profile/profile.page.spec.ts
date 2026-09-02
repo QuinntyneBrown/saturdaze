@@ -1,118 +1,139 @@
 import { vi } from 'vitest';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
-import { FAMILY_SERVICE } from 'api';
-import { SESSION_STORE } from 'api';
+import { signal } from '@angular/core';
+import { Router, provideRouter } from '@angular/router';
 import { Dialog } from '@angular/cdk/dialog';
+import { of } from 'rxjs';
+import { FAMILY_SERVICE, SESSION_STORE, type EditableFamilyProfile, type FamilyProfile } from 'api';
 import { ProfilePage } from './profile.page';
+
+function editable(): EditableFamilyProfile {
+  return {
+    name: 'The Browns',
+    homeLocation: 'Port Credit',
+    budgetEnabled: false,
+    tryNewEnabled: false,
+    fridayPreviewEnabled: true,
+    members: [
+      { id: 'm1', name: 'Quinn', age: 41 },
+      { id: 'm2', name: 'Mae', age: 5 },
+    ],
+    commitments: [{ id: 'c1', title: 'Swim', dayOfWeek: 'Saturday', startTime: '09:00', endTime: '10:00' }],
+    preferences: [{ kind: 'Like', value: 'Hiking' }],
+  };
+}
+
+const profile: FamilyProfile = {
+  familyName: 'The Browns',
+  location: 'Port Credit',
+  likes: [{ label: 'Hiking', tone: 'leaf', icon: 'heart' }],
+  preferences: [
+    { key: 'budget', title: 'Budget is a factor', subtitle: 'Off', checked: false },
+    { key: 'tryNew', title: 'Try something new each weekend', subtitle: 'Off', checked: false },
+    { key: 'fridayPreview', title: 'Friday preview notifications', subtitle: 'On', checked: true },
+  ],
+};
 
 describe('ProfilePage', () => {
   let component: ProfilePage;
   let fixture: ComponentFixture<ProfilePage>;
-  let mockDialog: any;
-  let mockFAMILY_SERVICE: any;
-  let mockSESSION_STORE: any;
-  let confirmSpy: any;
+  let mockDialog: { open: ReturnType<typeof vi.fn> };
+  let family: any;
+  let session: any;
+  const profileSignal = signal<FamilyProfile>(profile);
+  const editableSignal = signal<EditableFamilyProfile | null>(editable());
 
   beforeEach(async () => {
-    confirmSpy = vi.spyOn(window as any, 'confirm').mockReturnValue(true as any);
-
-    mockDialog = {
-      open: vi.fn(),
+    editableSignal.set(editable());
+    mockDialog = { open: vi.fn(() => ({ closed: of('confirm') })) };
+    family = {
+      getProfile: () => profileSignal,
+      getEditableProfile: () => editableSignal,
+      saveProfile: vi.fn(() => Promise.resolve()),
     };
-
-    mockFAMILY_SERVICE = {
-      getProfile: vi.fn(),
-      getEditableProfile: vi.fn(),
-      saveProfile: vi.fn(() => Promise.resolve(undefined)),
-    };
-
-    mockSESSION_STORE = {
-      logout: vi.fn(),
+    session = {
+      user: signal({ id: 'u1', email: 'q@b.c', role: 'Admin', emailVerifiedUtc: null }),
+      logout: vi.fn(() => Promise.resolve()),
     };
 
     await TestBed.configureTestingModule({
       imports: [ProfilePage],
       providers: [
         provideRouter([{ path: '**', children: [] }]),
-        { provide: FAMILY_SERVICE, useValue: mockFAMILY_SERVICE },
-        { provide: SESSION_STORE, useValue: mockSESSION_STORE },
+        { provide: FAMILY_SERVICE, useValue: family },
+        { provide: SESSION_STORE, useValue: session },
         { provide: Dialog, useValue: mockDialog },
       ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ProfilePage);
     component = fixture.componentInstance;
-  });
-
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-
-  it('should render component', () => {
-    expect(fixture.nativeElement).toBeTruthy();
-  });
-
-  it('should render with mocked dependencies', () => {
-    fixture.detectChanges();
-    expect(fixture.nativeElement).toBeTruthy();
-    component['memberError'].set('x' as any);
-    fixture.detectChanges();
-    component['commitmentError'].set('x' as any);
     fixture.detectChanges();
   });
 
-  it('should call memberSubtitle without throwing', () => {
-    expect(() => component['memberSubtitle']({ age: 'test-value' } as any)).not.toThrow();
+  it('renders the family, members, commitments, toggles and admin tools', () => {
+    const el = fixture.nativeElement as HTMLElement;
+    expect(el.textContent).toContain('The Browns');
+    expect(el.querySelectorAll('sd-avatar')).toHaveLength(3);
+    expect(el.textContent).toContain('Saturdays 09:00 – 10:00');
+    expect(el.querySelectorAll('sd-toggle')).toHaveLength(3);
+    expect(el.textContent).toContain('Event moderation');
+    expect(el.textContent).not.toContain('Daily rhythm');
   });
 
-  it('should call memberTone without throwing', () => {
-    expect(() => component['memberTone'](1)).not.toThrow();
+  it('deletes a member only after the CDK confirm sheet', async () => {
+    await component['deleteMember'](1, editable().members[1]!);
+    expect(mockDialog.open).toHaveBeenCalled();
+    expect(mockDialog.open.mock.calls[0][1].data).toMatchObject({ title: 'Delete Mae?', danger: true });
+    expect(family.saveProfile).toHaveBeenCalledTimes(1);
+    expect(family.saveProfile.mock.calls[0][0].members.map((m: any) => m.name)).toEqual(['Quinn']);
+
+    family.saveProfile.mockClear();
+    mockDialog.open = vi.fn(() => ({ closed: of(undefined) }));
+    await component['deleteMember'](1, editable().members[1]!);
+    expect(family.saveProfile).not.toHaveBeenCalled();
   });
 
-  it('should call commitmentSubtitle without throwing', () => {
-    expect(() => component['commitmentSubtitle']({ dayOfWeek: 'test-value', startTime: 'test-value', endTime: 'test-value' } as any)).not.toThrow();
+  it('deletes a commitment after confirmation and reports failures', async () => {
+    await component['deleteCommitment'](0, editable().commitments[0]!);
+    expect(family.saveProfile.mock.calls[0][0].commitments).toEqual([]);
+    family.saveProfile = vi.fn(() => Promise.reject(new Error('boom')));
+    await component['deleteCommitment'](0, editable().commitments[0]!);
+    expect(component['commitmentError']()).toBe('Could not delete the commitment.');
   });
 
-  it('should call commitmentIcon without throwing', () => {
-    expect(() => component['commitmentIcon']({ title: 'test-value' } as any)).not.toThrow();
+  it('keeps the member id when editing', async () => {
+    mockDialog.open = vi.fn(() => ({ closed: of({ name: 'Maeve', age: 6 }) }));
+    component['openEditMember'](1, editable().members[1]!);
+    await fixture.whenStable();
+    expect(family.saveProfile.mock.calls[0][0].members[1]).toEqual({ id: 'm2', name: 'Maeve', age: 6 });
   });
 
-  it('should call openAddMember without throwing', () => {
-    expect(() => component['openAddMember']()).not.toThrow();
+  it('adds a commitment from the dialog result', async () => {
+    mockDialog.open = vi.fn(() => ({ closed: of({ title: 'Church', dayOfWeek: 'Sunday', startTime: '10:30', endTime: '11:30' }) }));
+    component['openAddCommitment']();
+    await fixture.whenStable();
+    expect(family.saveProfile.mock.calls[0][0].commitments).toHaveLength(2);
   });
 
-  it('should call openEditMember without throwing', () => {
-    expect(() => component['openEditMember'](1, { name: 'test-value', age: 'test-value' } as any)).not.toThrow();
+  it('persists a preference toggle through saveProfile', async () => {
+    await component['setPreference']('tryNew', true);
+    expect(family.saveProfile).toHaveBeenCalledWith(expect.objectContaining({ tryNewEnabled: true, budgetEnabled: false, fridayPreviewEnabled: true }));
+    family.saveProfile = vi.fn(() => Promise.reject(new Error('boom')));
+    await component['setPreference']('budget', true);
+    expect(component['preferenceError']()).toBe('Could not save that preference.');
   });
 
-  it('should call deleteMember without throwing', async () => {
-    await expect(Promise.resolve(component['deleteMember'](1, { name: 'test-value' } as any)).then(() => true, () => true)).resolves.toBe(true);
+  it('signs out after confirmation and returns to login', async () => {
+    const navigate = vi.spyOn(TestBed.inject(Router), 'navigateByUrl').mockResolvedValue(true);
+    await component['signOut']();
+    expect(session.logout).toHaveBeenCalled();
+    expect(navigate).toHaveBeenCalledWith('/login');
   });
 
-  it('should run deleteMember when the confirmation is declined', () => {
-    confirmSpy.mockReturnValue(false as any);
-    expect(() => component['deleteMember'](1, { name: 'test-value' } as any)).not.toThrow();
-  });
-
-  it('should call openAddCommitment without throwing', () => {
-    expect(() => component['openAddCommitment']()).not.toThrow();
-  });
-
-  it('should call openEditCommitment without throwing', () => {
-    expect(() => component['openEditCommitment'](1, {} as any)).not.toThrow();
-  });
-
-  it('should call deleteCommitment without throwing', async () => {
-    await expect(Promise.resolve(component['deleteCommitment'](1, { title: 'test-value' } as any)).then(() => true, () => true)).resolves.toBe(true);
-  });
-
-  it('should run deleteCommitment when the confirmation is declined', () => {
-    confirmSpy.mockReturnValue(false as any);
-    expect(() => component['deleteCommitment'](1, { title: 'test-value' } as any)).not.toThrow();
-  });
-
-  it('should call signOut without throwing', async () => {
-    await expect(Promise.resolve(component['signOut']()).then(() => true, () => true)).resolves.toBe(true);
+  it('stays signed in when the sheet is dismissed', async () => {
+    mockDialog.open = vi.fn(() => ({ closed: of(undefined) }));
+    await component['signOut']();
+    expect(session.logout).not.toHaveBeenCalled();
   });
 });

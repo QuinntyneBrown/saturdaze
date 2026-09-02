@@ -1,82 +1,83 @@
 import { vi } from 'vitest';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { signal } from '@angular/core';
 import { provideRouter } from '@angular/router';
-import { EVENT_SUBMISSIONS_SERVICE } from 'api';
 import { Dialog } from '@angular/cdk/dialog';
+import { of } from 'rxjs';
+import { EVENT_SUBMISSIONS_SERVICE, type EventSubmissionDto } from 'api';
 import { AdminEventsPage } from './admin-events.page';
+
+const submission: EventSubmissionDto = {
+  id: 's1', title: 'Buskerfest', startsAtLocal: '2026-05-16T14:00', endsAtLocal: null, location: 'Port Credit',
+  description: 'Fun', costNote: 'Free', ageRange: 'All ages', sourceUrl: 'https://example.com', status: 'Pending',
+  submittedByUserId: 'u1', submittedByEmail: 'a@b.c', submittedAtUtc: new Date(Date.now() - 3 * 3600 * 1000).toISOString(),
+  reviewedAtUtc: null, rejectionReason: null,
+};
 
 describe('AdminEventsPage', () => {
   let component: AdminEventsPage;
   let fixture: ComponentFixture<AdminEventsPage>;
-  let mockDialog: any;
-  let mockEVENT_SUBMISSIONS_SERVICE: any;
+  let mockDialog: { open: ReturnType<typeof vi.fn> };
+  let submissions: any;
+  const pending = signal<EventSubmissionDto[]>([submission]);
 
   beforeEach(async () => {
-    mockDialog = {
-      open: vi.fn(),
-    };
-
-    mockEVENT_SUBMISSIONS_SERVICE = {
-      pending: vi.fn(),
-      loadPending: vi.fn(),
-      approve: vi.fn(() => Promise.resolve(undefined)),
-      reject: vi.fn(() => Promise.resolve(undefined)),
+    pending.set([submission]);
+    mockDialog = { open: vi.fn(() => ({ closed: of('approve') })) };
+    submissions = {
+      pending: () => pending,
+      loadPending: vi.fn(() => Promise.resolve()),
+      approve: vi.fn(() => Promise.resolve()),
+      reject: vi.fn(() => Promise.resolve()),
     };
 
     await TestBed.configureTestingModule({
       imports: [AdminEventsPage],
       providers: [
         provideRouter([{ path: '**', children: [] }]),
-        { provide: EVENT_SUBMISSIONS_SERVICE, useValue: mockEVENT_SUBMISSIONS_SERVICE },
+        { provide: EVENT_SUBMISSIONS_SERVICE, useValue: submissions },
         { provide: Dialog, useValue: mockDialog },
       ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(AdminEventsPage);
     component = fixture.componentInstance;
+    fixture.detectChanges();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  it('loads the queue on init and renders one submission with a styled link', () => {
+    expect(submissions.loadPending).toHaveBeenCalled();
+    const el = fixture.nativeElement as HTMLElement;
+    expect(el.querySelectorAll('article.submission')).toHaveLength(1);
+    expect(el.textContent).toContain('1 in queue');
+    expect(el.textContent).not.toContain('oldest first');
+    const link = el.querySelector('.actions a.link-button') as HTMLAnchorElement;
+    expect(link.href).toBe('https://example.com/');
+    expect(link.closest('sd-button')).toBeNull();
   });
 
-  it('should render component', () => {
-    expect(fixture.nativeElement).toBeTruthy();
+  it('formats dates with the shared helpers', () => {
+    expect(component['formatWhen']('2026-05-16T14:00')).toMatch(/2026/);
+    expect(component['submittedAgo'](submission.submittedAtUtc)).toBe('3 hours ago');
   });
 
-  it('should render with stubbed children', async () => {
-    TestBed.resetTestingModule();
-    TestBed.configureTestingModule({
-      imports: [AdminEventsPage],
-      providers: [
-        provideRouter([{ path: '**', children: [] }]),
-        { provide: EVENT_SUBMISSIONS_SERVICE, useValue: mockEVENT_SUBMISSIONS_SERVICE },
-        { provide: Dialog, useValue: mockDialog },
-      ],
-    });
-    TestBed.overrideComponent(AdminEventsPage, {
-      add: { schemas: [NO_ERRORS_SCHEMA] },
-    });
-    await TestBed.compileComponents();
-    const stubbedFixture = TestBed.createComponent(AdminEventsPage);
-    stubbedFixture.detectChanges();
-    expect(stubbedFixture.nativeElement).toBeTruthy();
+  it('approves after the dialog confirms', async () => {
+    await component['openApprove'](submission);
+    expect(submissions.approve).toHaveBeenCalledWith('s1');
   });
 
-  it('should call formatWhen without throwing', () => {
-    expect(() => component['formatWhen']('test-value')).not.toThrow();
+  it('rejects with the dialog reason and does nothing on dismiss', async () => {
+    mockDialog.open = vi.fn(() => ({ closed: of({ reason: 'Duplicate' }) }));
+    await component['openReject'](submission);
+    expect(submissions.reject).toHaveBeenCalledWith('s1', 'Duplicate');
+    mockDialog.open = vi.fn(() => ({ closed: of(undefined) }));
+    await component['openReject'](submission);
+    expect(submissions.reject).toHaveBeenCalledTimes(1);
   });
 
-  it('should call submittedAgo without throwing', () => {
-    expect(() => component['submittedAgo']('test-value')).not.toThrow();
-  });
-
-  it('should call openApprove without throwing', async () => {
-    await expect(Promise.resolve(component['openApprove']({ id: 'test-value' } as any)).then(() => true, () => true)).resolves.toBe(true);
-  });
-
-  it('should call openReject without throwing', async () => {
-    await expect(Promise.resolve(component['openReject']({ id: 'test-value' } as any)).then(() => true, () => true)).resolves.toBe(true);
+  it('shows the empty message when the queue is clear', () => {
+    pending.set([]);
+    fixture.detectChanges();
+    expect((fixture.nativeElement as HTMLElement).textContent).toContain('Nothing to review right now.');
   });
 });

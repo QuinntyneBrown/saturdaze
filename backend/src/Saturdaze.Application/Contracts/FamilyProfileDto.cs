@@ -4,8 +4,11 @@ namespace Saturdaze.Application.Contracts;
 
 public sealed record FamilyProfileDto(
     Guid Id,
+    string? Name,
     string HomeLocation,
     bool BudgetEnabled,
+    bool TryNewEnabled,
+    bool FridayPreviewEnabled,
     IReadOnlyList<FamilyMemberDto> Members,
     IReadOnlyList<CommitmentDto> Commitments,
     IReadOnlyList<PreferenceDto> Preferences);

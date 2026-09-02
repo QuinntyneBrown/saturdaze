@@ -46,4 +46,15 @@ describe('Anticipate', () => {
     fixture.detectChanges();
     expect(component.cta()).toBe('test-value');
   });
+
+  it('emits ctaClick when the CTA is pressed and renders none without a cta', () => {
+    const el = fixture.nativeElement as HTMLElement;
+    expect(el.querySelector('sd-button')).toBeNull();
+    fixture.componentRef.setInput('cta', 'See indoor picks');
+    fixture.detectChanges();
+    const clicks: number[] = [];
+    component.ctaClick.subscribe(() => clicks.push(1));
+    (el.querySelector('sd-button') as HTMLElement).click();
+    expect(clicks).toHaveLength(1);
+  });
 });

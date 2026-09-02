@@ -3,7 +3,13 @@ import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/cor
 import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 
-import { WEEKEND_PLAN_SERVICE, type Block } from 'api';
+import {
+  WEEKEND_PLAN_SERVICE,
+  upcomingSaturdayIso,
+  type AnticipationTip,
+  type Block,
+  type QuickActionKind,
+} from 'api';
 import {
   Anticipate,
   BottomNav,
@@ -26,6 +32,7 @@ import {
   ProductActionDialogData,
   ProductActionDialogResult,
 } from '../../dialogs/product-action-dialog/product-action-dialog';
+import { applyBlockAction, openBlockActions } from '../../shared/block-actions';
 
 /**
  * Home — "This Weekend".
@@ -72,7 +79,7 @@ export class HomePage {
     if (this.generating()) return;
     this.generating.set(true);
     try {
-      await this.weekend.plan(nextSaturdayIso());
+      await this.weekend.plan(upcomingSaturdayIso());
     } finally {
       this.generating.set(false);
     }
@@ -116,9 +123,15 @@ export class HomePage {
     this.lockMode.set(false);
   }
 
+  /** Commitments are always locked (L2-011); the toggle is a no-op for them. */
   protected async toggleLock(block: Block): Promise<void> {
-    if (!block.id) return;
+    if (!block.id || block.kind === 'Commitment') return;
     await this.weekend.lockBlock(block.id, !(block.locked ?? false));
+  }
+
+  protected async openBlock(block: Block): Promise<void> {
+    const result = await openBlockActions(this.dialog, block);
+    await applyBlockAction(this.weekend, block, result);
   }
 
   protected openItineraryDay(day: 'Saturday' | 'Sunday' = 'Saturday'): void {
@@ -127,17 +140,21 @@ export class HomePage {
     });
   }
 
-  protected handleQuickAction(title: string): void {
-    if (title.startsWith('Regenerate')) {
-      void this.regenerateWeekend();
-      return;
-    }
-    if (title.startsWith('Lock')) {
-      this.startLockMode();
-      return;
-    }
-    if (title.startsWith('Share')) {
-      void this.openShare();
+  protected followTip(tip: AnticipationTip): void {
+    if (tip.href) void this.router.navigateByUrl(tip.href);
+  }
+
+  protected handleQuickAction(kind: QuickActionKind): void {
+    switch (kind) {
+      case 'regenerate':
+        void this.regenerateWeekend();
+        return;
+      case 'lock':
+        this.startLockMode();
+        return;
+      case 'share':
+        void this.openShare();
+        return;
     }
   }
 
@@ -150,14 +167,4 @@ export class HomePage {
     );
     return await firstValueFrom(ref.closed);
   }
-}
-
-function nextSaturdayIso(): string {
-  const d = new Date();
-  const daysUntilSaturday = (6 - d.getDay() + 7) % 7 || 7;
-  d.setDate(d.getDate() + daysUntilSaturday);
-  const y = d.getFullYear();
-  const m = String(d.getMonth() + 1).padStart(2, '0');
-  const day = String(d.getDate()).padStart(2, '0');
-  return `${y}-${m}-${day}`;
 }
