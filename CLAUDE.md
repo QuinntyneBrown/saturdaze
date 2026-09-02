@@ -20,6 +20,10 @@ Three sibling top-level directories make up the application; `e2e` is NOT inside
 # Full local stack from a clean DB (pwsh)
 powershell .\scripts\Start-FreshStack.ps1
 
+# API only, re-pointed at LocalDB's current pipe (LocalDB auto-stops when idle and
+# returns with a new pipe name; an API started earlier then 500s on every SQL call)
+powershell .\scripts\Restart-Api.ps1
+
 # Backend
 dotnet build  .\backend\Saturdaze.sln
 dotnet test   .\backend\Saturdaze.sln
