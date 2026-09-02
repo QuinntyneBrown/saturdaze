@@ -1,0 +1,57 @@
+// `select.field__input` from docs/mocks-v2/styles/app.css.
+
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.field__label {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  font-size: var(--sd-fs-sm);
+  font-weight: var(--sd-fw-medium);
+  color: var(--sd-ink-soft);
+}
+
+.field__req {
+  font-size: var(--sd-fs-xs);
+  color: var(--sd-ink-faint);
+  font-weight: var(--sd-fw-regular);
+}
+
+.field__input {
+  width: 100%;
+  min-width: 0;
+  height: 44px;
+  padding: 0 36px 0 12px;
+  background-color: var(--sd-surface);
+  border: 1px solid var(--sd-line-strong);
+  border-radius: var(--sd-r-md);
+  font-size: var(--sd-fs-base);
+  color: var(--sd-ink);
+  appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M6 9l6 6 6-6'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 16px;
+  cursor: pointer;
+}
+
+.field__input:focus-visible {
+  outline: none;
+  border-color: var(--sd-primary);
+  box-shadow: 0 0 0 3px var(--sd-primary-soft);
+}
+
+.field__input:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.field__hint {
+  font-size: var(--sd-fs-xs);
+  color: var(--sd-ink-soft);
+}

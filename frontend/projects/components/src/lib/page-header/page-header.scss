@@ -1,0 +1,122 @@
+@use "../styles/breakpoints" as *;
+
+// `.page-header` from docs/mocks-v2/styles/app.css — the host is the header.
+// Projected sd-buttons are `display: contents`, so their inner `.btn`
+// elements are the grid / flex items here; `::ng-deep` reaches them and
+// `--sd-btn-h` sizes them.
+
+:host {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: 12px;
+  row-gap: 16px;
+  align-items: start;
+  margin-bottom: 24px;
+}
+
+.page-header__text {
+  min-width: 0;
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.page-header__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  font-weight: var(--sd-fw-semibold);
+  color: var(--sd-ink-soft);
+  margin-bottom: 8px;
+  border-radius: var(--sd-r-sm);
+}
+
+.titlerow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.page-header__title {
+  font-size: var(--sd-fs-xl);
+  font-weight: var(--sd-fw-bold);
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+
+.page-header__subtitle {
+  margin-top: 6px;
+  font-size: var(--sd-fs-base);
+  color: var(--sd-ink-soft);
+  max-width: 60ch;
+}
+
+.page-header__more {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.page-header__actions {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  --sd-btn-h: 44px;
+}
+
+.page-header__more:not(:has(*)),
+.page-header__actions:not(:has(*)) {
+  display: none;
+}
+
+.page-header__actions ::ng-deep .btn--primary {
+  grid-column: 1 / -1;
+  order: -1;
+}
+
+.page-header__actions ::ng-deep .btn:only-child {
+  grid-column: 1 / -1;
+}
+
+// Phone-only / tablet-up switches for the back affordances.
+.sd-hide-lt-720 {
+  display: none;
+}
+
+@include respond-to(tablet) {
+  :host {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 16px;
+  }
+
+  .page-header__text {
+    flex: 1 1 320px;
+  }
+
+  .page-header__actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    order: 1;
+    --sd-btn-h: 40px;
+  }
+
+  .page-header__actions ::ng-deep .btn--primary {
+    order: 0;
+  }
+
+  .page-header__more {
+    order: 2;
+  }
+
+  .sd-hide-lt-720 {
+    display: inline-flex;
+  }
+
+  ::ng-deep .sd-hide-gte-720 {
+    display: none;
+  }
+}

@@ -1,5 +1,28 @@
-<button [attr.type]="type()" [disabled]="disabled()">
-  <ng-content select="[slot=leading]" />
-  <ng-content />
-  <ng-content select="[slot=trailing]" />
-</button>
+@if (href()) {
+  <a
+    [class]="classes()"
+    [attr.href]="href()"
+    [attr.target]="target() || null"
+    [attr.rel]="rel()"
+    [attr.aria-label]="label() || null"
+    [attr.aria-pressed]="pressed() === null ? null : pressed()"
+    [attr.aria-disabled]="disabled() ? 'true' : null"
+    (click)="onAnchorClick($event)"
+  >
+    <ng-content select="[slot=leading]" />
+    <ng-content />
+    <ng-content select="[slot=trailing]" />
+  </a>
+} @else {
+  <button
+    [class]="classes()"
+    [attr.type]="type()"
+    [disabled]="disabled()"
+    [attr.aria-label]="label() || null"
+    [attr.aria-pressed]="pressed() === null ? null : pressed()"
+  >
+    <ng-content select="[slot=leading]" />
+    <ng-content />
+    <ng-content select="[slot=trailing]" />
+  </button>
+}

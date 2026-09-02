@@ -1,0 +1,28 @@
+// `.date-tile` from docs/mocks-v2/styles/app.css — the host is the tile.
+
+:host {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--sd-r-md);
+  background: var(--sd-primary-soft);
+  color: var(--sd-primary-deep);
+  line-height: 1;
+}
+
+.date-tile__m {
+  font-size: 10px;
+  font-weight: var(--sd-fw-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.date-tile__d {
+  font-size: 18px;
+  font-weight: var(--sd-fw-bold);
+  margin-top: 2px;
+}

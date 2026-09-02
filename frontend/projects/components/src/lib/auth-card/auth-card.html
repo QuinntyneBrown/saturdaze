@@ -1,1 +1,10 @@
+<div class="auth-card__head" [class.auth-card__head--center]="center()">
+  <ng-content select="[slot=disc]" />
+  <h1 class="auth-card__title">{{ cardTitle() }}</h1>
+  @if (subtitle()) {
+    <p class="auth-card__sub">{{ subtitle() }}</p>
+  }
+  <ng-content select="[slot=head]" />
+</div>
 <ng-content />
+<p class="auth-card__alt"><ng-content select="[slot=alt]" /></p>

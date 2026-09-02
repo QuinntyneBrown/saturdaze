@@ -1,12 +1,53 @@
-@if (label()) { <label>{{ label() }}</label> }
-<input
-  [attr.type]="type()"
-  [value]="internalValue()"
-  [attr.placeholder]="placeholder()"
-  [attr.autocomplete]="autocomplete() || null"
-  [attr.name]="name() || null"
-  [disabled]="disabled()"
-  (input)="handleInput($event)"
-  (blur)="handleBlur()"
-/>
-@if (hint()) { <div class="hint">{{ hint() }}</div> }
+@if (label()) {
+  <label class="field__label" [attr.for]="id">
+    {{ label() }}
+    @if (required()) {
+      <span class="field__req">Required</span>
+    }
+  </label>
+}
+@if (multiline()) {
+  <textarea
+    class="field__input"
+    [id]="id"
+    [rows]="rows()"
+    [value]="internalValue()"
+    [attr.placeholder]="placeholder() || null"
+    [attr.name]="name() || null"
+    [attr.aria-invalid]="error() || invalid() ? 'true' : null"
+    [attr.aria-describedby]="describedBy()"
+    [attr.aria-required]="required() ? 'true' : null"
+    [readOnly]="readonly()"
+    [disabled]="disabled()"
+    (input)="handleInput($event)"
+    (blur)="handleBlur()"
+  ></textarea>
+} @else {
+  <input
+    class="field__input"
+    [id]="id"
+    [attr.type]="type()"
+    [value]="internalValue()"
+    [attr.placeholder]="placeholder() || null"
+    [attr.autocomplete]="autocomplete() || null"
+    [attr.name]="name() || null"
+    [attr.min]="min()"
+    [attr.max]="max()"
+    [attr.step]="step()"
+    [attr.aria-invalid]="error() || invalid() ? 'true' : null"
+    [attr.aria-describedby]="describedBy()"
+    [attr.aria-required]="required() ? 'true' : null"
+    [readOnly]="readonly()"
+    [disabled]="disabled()"
+    (input)="handleInput($event)"
+    (blur)="handleBlur()"
+  />
+}
+@if (error()) {
+  <p class="field__error" [id]="errorId">
+    <sd-icon name="close" [size]="12" [stroke]="2" />
+    {{ error() }}
+  </p>
+} @else if (hint()) {
+  <p class="field__hint" [id]="hintId">{{ hint() }}</p>
+}

@@ -1,0 +1,50 @@
+// `.skeleton*` from docs/mocks-v2/styles/app.css — the host is the row.
+
+:host {
+  display: grid;
+  grid-template-columns: 56px 32px minmax(0, 1fr);
+  column-gap: 12px;
+  align-items: start;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--sd-line);
+}
+
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background: var(--sd-surface-2);
+  border-radius: var(--sd-r-sm);
+}
+
+.skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+  animation: sd-shimmer 1.4s var(--sd-ease) infinite;
+}
+
+.skeleton--time { height: 12px; width: 36px; margin-left: auto; }
+.skeleton--disc { width: 32px; height: 32px; border-radius: 50%; }
+.skeleton--text { height: 12px; width: 60%; }
+.skeleton--text-sm { height: 10px; width: 40%; }
+
+.skeleton-row__body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 4px;
+}
+
+@keyframes sd-shimmer {
+  to {
+    transform: translateX(100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton::after {
+    animation: none;
+  }
+}

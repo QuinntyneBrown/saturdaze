@@ -1,43 +1,72 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
+
 import { BottomNav } from './bottom-nav';
 
 describe('BottomNav', () => {
-  let component: BottomNav;
   let fixture: ComponentFixture<BottomNav>;
+  let host: HTMLElement;
+
+  const items = (): HTMLAnchorElement[] => Array.from(host.querySelectorAll('a.bottom-nav__item'));
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [BottomNav],
-      providers: [
-        provideRouter([{ path: '**', children: [] }]),
-      ],
+      providers: [provideRouter([])],
     }).compileComponents();
-
     fixture = TestBed.createComponent(BottomNav);
-    component = fixture.componentInstance;
     fixture.detectChanges();
+    host = fixture.nativeElement as HTMLElement;
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  it('creates the primary navigation landmark', () => {
+    expect(fixture.componentInstance).toBeTruthy();
+    expect(host.classList.contains('bottom-nav')).toBe(true);
+    expect(host.getAttribute('role')).toBe('navigation');
+    expect(host.getAttribute('aria-label')).toBe('Primary');
+    expect(host.getAttribute('active')).toBeNull();
   });
 
-  it('should render component', () => {
-    expect(fixture.nativeElement).toBeTruthy();
+  it('renders exactly four items in the fixed order', () => {
+    expect(items().length).toBe(4);
+    expect(items().map((a) => a.getAttribute('data-nav'))).toEqual([
+      'weekend',
+      'ideas',
+      'past',
+      'family',
+    ]);
+    expect(items().map((a) => a.textContent?.trim())).toEqual([
+      'Weekend',
+      'Ideas',
+      'Past',
+      'Family',
+    ]);
+    expect(items().map((a) => a.getAttribute('href'))).toEqual([
+      '/weekend',
+      '/ideas',
+      '/past',
+      '/family',
+    ]);
   });
 
-  it('should reflect the active input', () => {
-    fixture.componentRef.setInput('active', {} as any);
+  it('draws each item glyph at 22px', () => {
+    const icons = items().map((a) => a.querySelector('.bottom-nav__icon sd-icon') as HTMLElement);
+    expect(icons.map((i) => i.getAttribute('name'))).toEqual(['home', 'sparkle', 'star', 'user']);
+    expect(icons.every((i) => i.getAttribute('size') === '22')).toBe(true);
+  });
+
+  it('marks the active destination with aria-current', () => {
+    expect(host.querySelector('[aria-current]')).toBeNull();
+
+    fixture.componentRef.setInput('active', 'ideas');
     fixture.detectChanges();
-    expect(() => component.active()).not.toThrow();
-  });
+    expect(host.querySelector('[aria-current="page"]')?.textContent?.trim()).toBe('Ideas');
+    expect(host.querySelectorAll('[aria-current="page"]').length).toBe(1);
+    expect(host.getAttribute('active')).toBe('ideas');
 
-  it('should call onNavigate without throwing', () => {
-    expect(() => component['onNavigate']({ preventDefault: () => {}, stopPropagation: () => {}, target: { value: '', checked: false }, currentTarget: { value: '', checked: false } } as any, 'test-value')).not.toThrow();
-  });
-
-  it('should call isActive without throwing', () => {
-    expect(() => component['isActive']("home")).not.toThrow();
+    fixture.componentRef.setInput('active', null);
+    fixture.detectChanges();
+    expect(host.querySelector('[aria-current]')).toBeNull();
+    expect(host.getAttribute('active')).toBeNull();
   });
 });

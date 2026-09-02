@@ -1,50 +1,36 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  input,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
-import { Chip } from '../chip/chip';
+import { Button } from '../button/button';
+import { Disc } from '../disc/disc';
 import { Icon } from '../icon/icon';
 
 /**
- * Activity suggestion card. Mirrors `docs/mocks/components/sd-activity-card.js`.
- * Tinted-swatch image at the top reflects the `tone`. Optional `tag` becomes
- * a corner-tag chip; `drive` + `ages` render as chips below the title; `why`
- * is a soft callout explaining the suggestion.
+ * An activity suggestion on Ideas. Mirrors the activity `.card` in
+ * docs/mocks-v2/pages/ideas.html: tinted disc, title, place, a two-line
+ * "why", chips, and a Map link when the catalogue has one. Cards are
+ * informational — the API has no "add to day" (see the plan).
  */
 
-export type ActivityCardTone = 'default' | 'outdoor' | 'indoor' | 'food';
+export type ActivityCardTone = 'leaf' | 'indoor';
 
-/**
- * Activity Card.
- * 
- */
 @Component({
   selector: 'sd-activity-card',
   standalone: true,
-  imports: [Chip, Icon],
+  imports: [Button, Disc, Icon],
   templateUrl: './activity-card.html',
   styleUrl: './activity-card.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
+    class: 'card',
     '[attr.title]': 'cardTitle() || null',
-    '[attr.subtitle]': 'subtitle() || null',
-    '[attr.drive]': 'drive() || null',
-    '[attr.why]': 'why() || null',
-    '[attr.icon]': 'icon()',
-    '[attr.tone]': 'tone() === "default" ? null : tone()',
-    '[attr.ages]': 'ages() || null',
-    '[attr.tag]': 'tag() || null',
+    '[attr.tone]': 'tone()',
   },
 })
 export class ActivityCard {
   readonly cardTitle = input<string>('', { alias: 'title' });
-  readonly subtitle = input<string>('');
-  readonly drive = input<string>('');
+  readonly meta = input<string>('');
   readonly why = input<string>('');
   readonly icon = input<string>('tree');
-  readonly tone = input<ActivityCardTone>('default');
-  readonly ages = input<string>('');
-  readonly tag = input<string>('');
+  readonly tone = input<ActivityCardTone>('leaf');
+  readonly mapUrl = input<string>('');
 }

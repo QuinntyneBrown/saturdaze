@@ -1,0 +1,59 @@
+<div class="sd-narrow">
+  <sd-page-header title="Review submissions" [subtitle]="subtitle()" backHref="/family" backLabel="Family" />
+
+  @if (error()) {
+    <sd-banner class="error" tone="warn" role="alert" icon="close">{{ error() }}</sd-banner>
+  }
+
+  @switch (status()) {
+    @case ('loading') {
+      <sd-status-row icon="ticket">Fetching the queue.</sd-status-row>
+    }
+    @case ('empty') {
+      <sd-empty icon="check" tone="accent" title="Queue is clear" body="Approved events are already live on Ideas. Rejected ones are gone.">
+        <sd-button slot="cta" variant="quiet" href="/family">
+          <sd-icon name="arrow_left" />
+          Back to Family
+        </sd-button>
+      </sd-empty>
+    }
+    @case ('ready') {
+      <div class="queue">
+        @for (card of view().cards; track card.id) {
+          @if (card.state === 'approved') {
+            <div class="approved-row" role="status">
+              <sd-icon name="check" />
+              <span>Approved · {{ card.title }}</span>
+            </div>
+          } @else {
+            <sd-card padding="lg" class="submission" [attr.aria-label]="card.title">
+              <div class="head">
+                <sd-date-tile [mon]="card.tile.mon" [day]="card.tile.day" />
+                <div class="head__text">
+                  <h2 class="head__title">{{ card.title }}</h2>
+                  <p class="head__meta">{{ card.when }}</p>
+                </div>
+                <sd-chip tone="sun">Pending</sd-chip>
+              </div>
+              <sd-details [items]="details(card)" />
+              <p class="submitter">
+                <sd-avatar size="sm" [name]="card.submitter.email" />
+                {{ card.submitter.email }} · {{ card.submitter.ago }}
+              </p>
+              <div class="review-actions">
+                <sd-button variant="quiet" (click)="reject(card)">
+                  <sd-icon name="close" />
+                  Reject
+                </sd-button>
+                <sd-button variant="primary" (click)="approve(card)">
+                  <sd-icon name="check" />
+                  Approve
+                </sd-button>
+              </div>
+            </sd-card>
+          }
+        }
+      </div>
+    }
+  }
+</div>

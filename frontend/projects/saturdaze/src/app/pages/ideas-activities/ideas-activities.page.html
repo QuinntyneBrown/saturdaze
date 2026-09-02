@@ -1,0 +1,40 @@
+<sd-filters class="filters" label="Filters">
+  @for (chip of view().filters; track chip.label) {
+    <sd-filter-chip [tone]="filterTone(chip.tone)" [pressed]="chip.active" (pressedChange)="setFilter(chip.label)">
+      @if (chip.icon) {
+        <sd-icon [name]="chip.icon" [size]="14" [stroke]="2" />
+      }
+      {{ chip.label }}
+    </sd-filter-chip>
+  }
+</sd-filters>
+
+@if (!view().sections.length) {
+  <sd-status-row icon="sparkle">Looking for ideas near you.</sd-status-row>
+}
+
+@for (section of view().sections; track section.title) {
+  <sd-section class="section" [title]="section.title" [subtitle]="section.subtitle ?? ''">
+    <div class="sd-grid-cards">
+      @for (activity of section.activities; track activity.id) {
+        <sd-activity-card
+          [title]="activity.title"
+          [meta]="activity.meta"
+          [why]="activity.why"
+          [icon]="activity.icon"
+          [tone]="activity.tone === 'outdoor' ? 'leaf' : 'indoor'"
+          [mapUrl]="activity.mapUrl ?? ''"
+        >
+          @for (chip of activity.chips; track chip.label) {
+            <sd-chip slot="chips" [tone]="chipTone(chip.tone)">
+              @if (chip.icon) {
+                <sd-icon [name]="chip.icon" [size]="13" [stroke]="2" />
+              }
+              {{ chip.label }}
+            </sd-chip>
+          }
+        </sd-activity-card>
+      }
+    </div>
+  </sd-section>
+}

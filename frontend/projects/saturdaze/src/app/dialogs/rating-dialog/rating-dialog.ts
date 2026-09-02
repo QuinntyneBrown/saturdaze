@@ -1,47 +1,34 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  inject,
-  signal,
-} from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 
-import { Button, Dialog as DialogShell, Icon } from 'components';
+import { Button, Dialog as DialogShell, Stars } from 'components';
 
-/**
- * Rating Dialog Data.
- */
 export interface RatingDialogData {
-  /** The weekend as it is currently titled (custom or derived). */
-  readonly weekendTitle: string;
-  /** Current 1..5 rating, `null` when unrated. */
+  /** "10 – 11 May · Bronte Creek + Rec Room". */
+  readonly eyebrow: string;
   readonly rating: number | null;
-  /** Current custom title, `null` when the card shows a derived one. */
-  readonly title: string | null;
 }
 
-/**
- * Rating Dialog Result.
- */
 export interface RatingDialogResult {
-  /** 1..5, or `null` to clear the rating. */
   readonly rating: number | null;
-  /** Trimmed custom title, or `null` to fall back to the derived one. */
-  readonly title: string | null;
 }
 
-const STARS = [1, 2, 3, 4, 5] as const;
+const CAPTIONS: Record<number, string> = {
+  1: '1 of 5, skip it',
+  2: '2 of 5, not again',
+  3: '3 of 5, fine',
+  4: '4 of 5, a good one',
+  5: '5 of 5, a keeper',
+};
 
 /**
- * Rate a saved weekend (L2-026) and optionally name it. Five toggle
- * buttons carry `aria-pressed`; pressing the active star clears it.
+ * D13 — "How was it?": five star toggles. Pressing the active star clears
+ * the rating.
  */
 @Component({
   selector: 'app-rating-dialog',
   standalone: true,
-  imports: [Button, DialogShell, FormsModule, Icon],
+  imports: [Button, DialogShell, Stars],
   templateUrl: './rating-dialog.html',
   styleUrl: './rating-dialog.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -50,29 +37,14 @@ export class RatingDialog {
   private readonly dialogRef = inject<DialogRef<RatingDialogResult>>(DialogRef);
   protected readonly data = inject<RatingDialogData>(DIALOG_DATA);
 
-  protected readonly stars = STARS;
-  protected readonly rating = signal<number | null>(this.data.rating ?? null);
-  protected readonly title = signal<string>(this.data.title ?? '');
-
-  protected readonly ratingLabel = computed(() => {
-    const r = this.rating();
-    if (r === null) return 'Not rated yet';
-    return `${r} of 5 stars`;
-  });
-
-  protected pick(star: number): void {
-    this.rating.set(this.rating() === star ? null : star);
-  }
+  protected readonly rating = signal<number>(this.data.rating ?? 0);
+  protected readonly caption = computed(() => CAPTIONS[this.rating()] ?? 'Tap a star to rate it.');
 
   protected cancel(): void {
     this.dialogRef.close();
   }
 
   protected save(): void {
-    const title = this.title().trim();
-    this.dialogRef.close({
-      rating: this.rating(),
-      title: title.length > 0 ? title : null,
-    });
+    this.dialogRef.close({ rating: this.rating() || null });
   }
 }

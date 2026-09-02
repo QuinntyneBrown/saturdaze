@@ -1,0 +1,26 @@
+// `.disc` from docs/mocks-v2/styles/app.css — the host is the disc.
+
+:host {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--sd-surface-2);
+  color: var(--sd-ink-soft);
+}
+
+:host(.disc--sm) { width: 32px; height: 32px; }
+:host(.disc--lg) { width: 40px; height: 40px; }
+:host(.disc--xl) { width: 56px; height: 56px; }
+
+:host(.disc--accent) { background: var(--sd-accent-soft); color: var(--sd-accent); }
+:host(.disc--primary) { background: var(--sd-primary-soft); color: var(--sd-primary-deep); }
+:host(.disc--warn) { background: var(--sd-warn-soft); color: var(--sd-warn-deep); }
+:host(.disc--sun) { background: var(--sd-sun-soft); color: var(--sd-sun-ink); }
+:host(.disc--sky) { background: var(--sd-sky-soft); color: var(--sd-sky-ink); }
+:host(.disc--leaf) { background: var(--sd-leaf-soft); color: var(--sd-leaf-ink); }
+:host(.disc--indoor) { background: var(--sd-indoor-soft); color: var(--sd-indoor-ink); }
+:host(.disc--surface) { background: var(--sd-surface); color: var(--sd-ink-soft); box-shadow: inset 0 0 0 1px var(--sd-line); }

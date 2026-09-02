@@ -1,0 +1,8 @@
+<sd-dialog title="Rename this weekend" [subtitle]="data.eyebrow">
+  <form class="form" (submit)="save($event)">
+    <sd-text-input label="Title" name="title" [ngModel]="title()" (ngModelChange)="title.set($event)" />
+    <button type="submit" hidden></button>
+  </form>
+  <sd-button slot="actions" variant="quiet" type="button" (click)="cancel()">Cancel</sd-button>
+  <sd-button slot="actions" variant="primary" type="button" (click)="save()">Save</sd-button>
+</sd-dialog>

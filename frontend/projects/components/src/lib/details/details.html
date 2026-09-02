@@ -1,0 +1,15 @@
+@for (item of items(); track item.label) {
+  <dt class="details__label">{{ item.label }}</dt>
+  @if (item.href && item.value) {
+    <dd class="details__value">
+      <a class="details__link" [attr.href]="item.href" target="_blank" rel="noopener">
+        {{ item.value }}
+        <sd-icon name="arrow_right" [size]="12" [stroke]="2" />
+      </a>
+    </dd>
+  } @else if (item.value) {
+    <dd class="details__value">{{ item.value }}</dd>
+  } @else {
+    <dd class="details__value details__value--faint">{{ missing() }}</dd>
+  }
+}

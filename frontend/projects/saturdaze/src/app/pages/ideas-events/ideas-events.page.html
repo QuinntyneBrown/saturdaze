@@ -1,0 +1,39 @@
+<sd-filters class="filters" label="Filters">
+  @for (chip of view().windowChips; track chip.label) {
+    <sd-filter-chip [tone]="filterTone(chip.tone)" [pressed]="chip.active" (pressedChange)="setWindow(chip)">{{ chip.label }}</sd-filter-chip>
+  }
+  <span class="sd-vdivider" aria-hidden="true"></span>
+  @for (chip of view().categoryChips; track chip.label) {
+    <sd-filter-chip [tone]="filterTone(chip.tone)" [pressed]="chip.active" (pressedChange)="setCategory(chip)">{{ chip.label }}</sd-filter-chip>
+  }
+</sd-filters>
+
+@if (!view().sections.length) {
+  <sd-status-row icon="ticket">Checking what is on nearby.</sd-status-row>
+}
+
+@for (section of view().sections; track section.title) {
+  <sd-section class="section" [title]="section.title" [subtitle]="section.subtitle ?? ''">
+    <div class="sd-grid-cards">
+      @for (event of section.events; track event.id) {
+        <sd-event-card
+          [title]="event.title"
+          [meta]="event.meta"
+          [mon]="event.tile.mon"
+          [day]="event.tile.day"
+          [muted]="event.pending"
+          [url]="event.url ?? ''"
+        >
+          @for (chip of event.chips; track chip.label) {
+            <sd-chip slot="chips" [tone]="chipTone(chip.tone)">
+              @if (chip.icon) {
+                <sd-icon [name]="chip.icon" [size]="13" [stroke]="2" />
+              }
+              {{ chip.label }}
+            </sd-chip>
+          }
+        </sd-event-card>
+      }
+    </div>
+  </sd-section>
+}

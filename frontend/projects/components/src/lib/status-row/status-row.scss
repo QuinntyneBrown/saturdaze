@@ -1,0 +1,18 @@
+// `.status-row` from docs/mocks-v2/styles/app.css — the host is the row.
+
+:host {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  background: var(--sd-surface);
+  border: 1px solid var(--sd-line);
+  border-radius: var(--sd-r-lg);
+  font-size: 14px;
+  color: var(--sd-ink-soft);
+  margin-bottom: 24px;
+}
+
+.status-row__text {
+  min-width: 0;
+}

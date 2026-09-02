@@ -1,0 +1,10 @@
+<span class="copy-field__value">{{ value() }}</span>
+<sd-button variant="quiet" label="Copy link" [pressed]="justCopied()" (click)="copy()">
+  @if (justCopied()) {
+    <sd-icon name="check" [size]="18" />
+    <span aria-live="polite">Copied</span>
+  } @else {
+    <sd-icon name="copy" [size]="18" />
+    <span>Copy</span>
+  }
+</sd-button>

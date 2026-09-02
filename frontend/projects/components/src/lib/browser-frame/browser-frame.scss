@@ -1,0 +1,60 @@
+// `.browser-frame` from docs/mocks-v2/styles/app.css — the host is the frame.
+
+:host {
+  display: block;
+  background: var(--sd-surface);
+  border: 1px solid var(--sd-line);
+  border-radius: var(--sd-r-lg);
+  box-shadow: var(--sd-shadow-2);
+  overflow: hidden;
+}
+
+.browser-frame__bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 36px;
+  padding: 0 12px;
+  background: var(--sd-surface-2);
+  border-bottom: 1px solid var(--sd-line);
+}
+
+.browser-frame__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--sd-ink-faint);
+  opacity: 0.5;
+}
+
+.browser-frame__url {
+  margin-left: 8px;
+  flex: 1;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  border-radius: var(--sd-r-pill);
+  background: var(--sd-surface);
+  font-size: 11px;
+  color: var(--sd-ink-soft);
+}
+
+.browser-frame__view {
+  position: relative;
+  overflow: hidden;
+  height: calc(var(--_h, 300px) * var(--_s, 1));
+  background: var(--sd-bg);
+}
+
+.browser-frame__scale {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: var(--_w, 720px);
+  height: var(--_h, 300px);
+  overflow: hidden;
+  padding: 12px 20px 0;
+  transform: scale(var(--_s, 1));
+  transform-origin: top left;
+}

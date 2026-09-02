@@ -6,6 +6,8 @@ import { WeekendDay } from '../models/weekend-day';
  * in the browser's local zone.
  */
 
+const WEEKDAY_ABBR: readonly string[] = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
 /** Parse `YYYY-MM-DD` as a UTC-midnight `Date`. */
 export function parseIsoDate(iso: string): Date {
   const [y, m, d] = iso.split('-').map(Number);
@@ -67,9 +69,7 @@ export function formatWeekendRange(saturdayIso: string): string {
   const [sat, sun] = weekendDates(saturdayIso);
   const satMon = monthAbbr(sat);
   const sunMon = monthAbbr(sun);
-  const tail = satMon === sunMon
-    ? `${sun.getUTCDate()}`
-    : `${sunMon} ${sun.getUTCDate()}`;
+  const tail = satMon === sunMon ? `${sun.getUTCDate()}` : `${sunMon} ${sun.getUTCDate()}`;
   return `${satMon} ${sat.getUTCDate()}–${tail}, ${sat.getUTCFullYear()}`;
 }
 
@@ -77,4 +77,40 @@ export function formatWeekendRange(saturdayIso: string): string {
 export function formatWeekendSpan(saturdayIso: string): string {
   const [sat, sun] = weekendDates(saturdayIso);
   return `Sat ${sat.getUTCDate()} ${monthAbbr(sat)} – Sun ${sun.getUTCDate()} ${monthAbbr(sun)}`;
+}
+
+/** "17 May" — the day header date. */
+export function formatDayDate(iso: string): string {
+  const d = parseIsoDate(iso);
+  return `${d.getUTCDate()} ${monthAbbr(d)}`;
+}
+
+/** "Sat 17 May" — an event date. */
+export function formatEventDate(iso: string): string {
+  const d = parseIsoDate(iso);
+  return `${WEEKDAY_ABBR[d.getUTCDay()]} ${d.getUTCDate()} ${monthAbbr(d)}`;
+}
+
+/**
+ * "10 – 11 May 2026" — the eyebrow on a past-weekend card. Across a month
+ * boundary both months are written ("30 May – 1 Jun 2026"); across a year
+ * boundary both years are ("31 Dec 2026 – 1 Jan 2027").
+ */
+export function formatWeekendEyebrow(saturdayIso: string): string {
+  const [sat, sun] = weekendDates(saturdayIso);
+  const satYear = sat.getUTCFullYear();
+  const sunYear = sun.getUTCFullYear();
+  if (satYear !== sunYear) {
+    return `${formatDayDate(saturdayIso)} ${satYear} – ${formatDayDate(toIsoDate(sun))} ${sunYear}`;
+  }
+  const satMon = monthAbbr(sat);
+  const sunMon = monthAbbr(sun);
+  const head = satMon === sunMon ? `${sat.getUTCDate()}` : `${sat.getUTCDate()} ${satMon}`;
+  return `${head} – ${sun.getUTCDate()} ${sunMon} ${satYear}`;
+}
+
+/** "weekend-17-may.ics" — the cosmetic download name for a weekend's ICS. */
+export function calendarFileName(saturdayIso: string): string {
+  const d = parseIsoDate(saturdayIso);
+  return `weekend-${d.getUTCDate()}-${monthAbbr(d).toLowerCase()}.ics`;
 }

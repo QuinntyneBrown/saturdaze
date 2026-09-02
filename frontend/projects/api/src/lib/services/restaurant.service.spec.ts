@@ -1,45 +1,116 @@
-import { TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { signal } from '@angular/core';
-import { API_BASE_URL } from '../api/api-base-url';
-import { upcomingSaturdayIso, addDaysIso } from '../api/weekend-dates';
-import { FAMILY_SERVICE } from './family.service.contract';
-import { RestaurantService } from './restaurant.service';
+import { TestBed } from '@angular/core/testing';
 
-const editable = signal<any>({
+import { API_BASE_URL } from '../api/api-base-url';
+import { addDaysIso, upcomingSaturdayIso } from '../api/weekend-dates';
+import { projectWeekend } from '../api/weekend-projection';
+import { RestaurantDto } from '../models/restaurant.dto';
+import { settle, weekendDto } from '../testing/weekend-fixture';
+import { EditableFamilyProfile, FAMILY_SERVICE } from './family.service.contract';
+import { DEFAULT_FOOD_FILTERS, RestaurantService } from './restaurant.service';
+import { WEEKEND_PLAN_SERVICE } from './weekend-plan.service.contract';
+
+const BASE = 'http://localhost:3000';
+
+const profile = signal<EditableFamilyProfile | null>({
   name: 'The Browns',
   homeLocation: 'Port Credit',
   budgetEnabled: false,
   tryNewEnabled: false,
   fridayPreviewEnabled: true,
   members: [
-    { id: 'm1', name: 'Quinn', age: 41 },
-    { id: 'm2', name: 'Mae', age: 5 },
+    { id: 'm1', name: 'Quinn', age: 38 },
+    { id: 'm2', name: 'Sara', age: 36 },
+    { id: 'm3', name: 'Eli', age: 9 },
+    { id: 'm4', name: 'Mae', age: 5 },
   ],
   commitments: [],
   preferences: [],
 });
 
-function dto(overrides: Partial<any> = {}): any {
+const weekend = signal(projectWeekend(weekendDto()));
+
+function restaurant(overrides: Partial<RestaurantDto> = {}): RestaurantDto {
   return {
     id: 'r1',
     name: 'La Marina',
-    style: 'Italian',
+    style: 'Mediterranean',
     slot: 'Lunch',
     wifeApproved: true,
     driveMinutes: 6,
-    notes: 'Near the lake',
-    menuUrl: null,
-    votes: [{ voterName: 'Quinn', vote: 'up' }],
-    locked: false,
+    notes: 'Patio',
+    menuUrl: 'https://example.com/la-marina/menu',
+    votes: [
+      { voterName: 'Quinn', vote: 'up' },
+      { voterName: 'Sara', vote: 'up' },
+    ],
     ...overrides,
   };
 }
 
+const SAT_LUNCH: RestaurantDto[] = [
+  restaurant({
+    id: 'r3',
+    name: 'Sicilian',
+    style: 'Italian',
+    wifeApproved: false,
+    driveMinutes: 12,
+    notes: '',
+    votes: [],
+  }),
+  restaurant({
+    id: 'r2',
+    name: 'Symposium',
+    style: 'Brunch',
+    driveMinutes: 9,
+    notes: '',
+    votes: [],
+    menuUrl: null,
+  }),
+  restaurant(),
+];
+const SAT_DINNER: RestaurantDto[] = [
+  restaurant({
+    id: 'r4',
+    name: "Jack Astor's",
+    style: 'Casual',
+    slot: 'Dinner',
+    driveMinutes: 2,
+    notes: '',
+  }),
+  restaurant({
+    id: 'r5',
+    name: 'Pho Corner',
+    style: 'Vietnamese',
+    slot: 'Dinner',
+    wifeApproved: false,
+    driveMinutes: 20,
+    notes: '',
+    votes: [],
+  }),
+];
+const SUN_LUNCH: RestaurantDto[] = [
+  restaurant({
+    id: 'r6',
+    name: 'Sunday Diner',
+    style: 'Diner',
+    driveMinutes: 4,
+    notes: '',
+    votes: [],
+  }),
+];
+const SUN_DINNER: RestaurantDto[] = [];
+
 describe('RestaurantService', () => {
   let service: RestaurantService;
   let httpMock: HttpTestingController;
+  const saturday = upcomingSaturdayIso();
+  const sunday = addDaysIso(saturday, 1);
+
+  const url = (day: string, slot: string) =>
+    `${BASE}/api/restaurants?day=${day}&slot=${slot}&wifeApprovedOnly=false&take=10`;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -47,194 +118,202 @@ describe('RestaurantService', () => {
         RestaurantService,
         provideHttpClient(),
         provideHttpClientTesting(),
-        { provide: API_BASE_URL, useValue: 'http://localhost:3000' },
-        { provide: FAMILY_SERVICE, useValue: { getEditableProfile: () => editable, getProfile: () => signal(null) } },
+        { provide: API_BASE_URL, useValue: BASE },
+        { provide: FAMILY_SERVICE, useValue: { getEditableProfile: () => profile } },
+        { provide: WEEKEND_PLAN_SERVICE, useValue: { getWeekend: () => weekend } },
       ],
     });
-
     service = TestBed.inject(RestaurantService);
     httpMock = TestBed.inject(HttpTestingController);
-    httpMock.match(() => true).forEach((req) => req.flush(null));
   });
 
-  afterEach(() => {
-    httpMock.match(() => true).forEach((req) => req.flush(null));
-    httpMock.verify();
-  });
+  afterEach(() => httpMock.verify());
 
-  it('should be created', () => {
-    expect(service).toBeTruthy();
-  });
+  async function flushLoad(): Promise<void> {
+    httpMock.expectOne(url(saturday, 'Lunch')).flush(SAT_LUNCH);
+    httpMock.expectOne(url(saturday, 'Dinner')).flush(SAT_DINNER);
+    httpMock.expectOne(url(sunday, 'Lunch')).flush(SUN_LUNCH);
+    httpMock.expectOne(url(sunday, 'Dinner')).flush(SUN_DINNER);
+    await settle();
+  }
 
-  it('should call list without throwing', () => {
-    expect(() => service.list()).not.toThrow();
-  });
-
-  describe('load', () => {
-    it('should make GET request', async () => {
-      const mockResponse = {} as any;
-      const promise = service.load();
-      (promise as Promise<unknown>).catch(() => {});
-
-      const matched = httpMock.match((request) => request.method === 'GET');
-      if (matched.length === 0) {
-        // The method did not issue a request on this path; nothing to assert.
-        return;
-      }
-      expect(matched[0].request.method).toBe('GET');
-      matched.forEach((req) => req.flush(mockResponse));
-    });
-  });
-
-  describe('refresh', () => {
-    it('should make GET request', async () => {
-      const mockResponse = {} as any;
-      const promise = service.refresh();
-      (promise as Promise<unknown>).catch(() => {});
-
-      const matched = httpMock.match((request) => request.method === 'GET');
-      if (matched.length === 0) {
-        // The method did not issue a request on this path; nothing to assert.
-        return;
-      }
-      expect(matched[0].request.method).toBe('GET');
-      matched.forEach((req) => req.flush(mockResponse));
-    });
-  });
-
-  describe('vote', () => {
-    it('should make POST request', async () => {
-      const mockResponse = {} as any;
-      const promise = service.vote('test-id', 'test-value', {} as any);
-      (promise as Promise<unknown>).catch(() => {});
-
-      const matched = httpMock.match((request) => request.method === 'POST');
-      if (matched.length === 0) {
-        // The method did not issue a request on this path; nothing to assert.
-        return;
-      }
-      expect(matched[0].request.method).toBe('POST');
-      matched.forEach((req) => req.flush(mockResponse));
-      await (promise as Promise<unknown>).catch(() => {});
-    });
-
-    it('should reject vote on an error response', async () => {
-      const promise = service.vote('test-id', 'test-value', {} as any);
-      (promise as Promise<unknown>).catch(() => {});
-
-      const matched = httpMock.match((request) => request.method === 'POST');
-      if (matched.length === 0) {
-        return;
-      }
-      matched.forEach((req) =>
-        req.flush({ message: 'error' }, { status: 500, statusText: 'Server Error' })
-      );
-      await expect(promise).rejects.toBeTruthy();
-    });
-  });
-
-  describe('lock', () => {
-    it('should make POST request', async () => {
-      const mockResponse = {} as any;
-      const promise = service.lock('test-id', 'Saturday', 'Lunch');
-      (promise as Promise<unknown>).catch(() => {});
-
-      const matched = httpMock.match((request) => request.method === 'POST');
-      if (matched.length === 0) {
-        // The method did not issue a request on this path; nothing to assert.
-        return;
-      }
-      expect(matched[0].request.method).toBe('POST');
-      matched.forEach((req) => req.flush(mockResponse));
-      await (promise as Promise<unknown>).catch(() => {});
-    });
-
-    it('should reject lock on an error response', async () => {
-      const promise = service.lock('test-id', 'Saturday', 'Lunch');
-      (promise as Promise<unknown>).catch(() => {});
-
-      const matched = httpMock.match((request) => request.method === 'POST');
-      if (matched.length === 0) {
-        return;
-      }
-      matched.forEach((req) =>
-        req.flush({ message: 'error' }, { status: 500, statusText: 'Server Error' })
-      );
-      await expect(promise).rejects.toBeTruthy();
-    });
-  });
-
-  describe('load + view', () => {
-    it('fetches Saturday lunch and Sunday dinner for the upcoming weekend', async () => {
-      const sat = upcomingSaturdayIso();
-      const sun = addDaysIso(sat, 1);
-      const promise = service.load();
-      const lunch = httpMock.expectOne((r) => r.url.includes(`day=${sat}&slot=Lunch`));
-      const dinner = httpMock.expectOne((r) => r.url.includes(`day=${sun}&slot=Dinner`));
-      lunch.flush([dto(), dto({ id: 'r2', name: 'Symposium', driveMinutes: 9, wifeApproved: false, votes: [] })]);
-      dinner.flush([dto({ id: 'r3', name: "Jack Astor's", slot: 'Dinner', driveMinutes: 12 })]);
-      await promise;
-
-      const view = service.list()();
-      expect(view.title).toBe('Saturday food');
-      expect(view.topPickSection.picks[0]!.name).toBe('La Marina');
-      expect(view.topPickSection.day).toBe('Saturday');
-      expect(view.topPickSection.slot).toBe('Lunch');
-      expect(view.otherPicks.picks.map((r) => r.name)).toEqual(['Symposium']);
-      expect(view.sundayDinner.picks[0]!.name).toBe("Jack Astor's");
-    });
-
-    it('builds the vote roster from the family, defaulting to undecided', async () => {
-      const promise = service.load();
-      httpMock.match(() => true).forEach((r) => r.flush([dto()]));
-      await promise;
-      const votes = service.list()().topPickSection.picks[0]!.votes;
-      expect(votes).toEqual([
-        { name: 'Quinn', tone: 'primary', vote: 'up' },
-        { name: 'Mae', tone: 'leaf', vote: 'none' },
-      ]);
-    });
-
-    it('switches to Sunday dinner and applies the quick filter', async () => {
-      const promise = service.load();
-      const lunch = httpMock.expectOne((r) => r.url.includes('slot=Lunch'));
-      const dinner = httpMock.expectOne((r) => r.url.includes('slot=Dinner'));
-      lunch.flush([dto({ driveMinutes: 20 }), dto({ id: 'r2', name: 'Cora', driveMinutes: 5 })]);
-      dinner.flush([dto({ id: 'r3', name: 'Jack', slot: 'Dinner' })]);
-      await promise;
-
-      service.setFilter('Dinner');
-      expect(service.activeFilter()()).toBe('Dinner');
-      let view = service.list()();
-      expect(view.title).toBe('Sunday food');
-      expect(view.topPickSection.slot).toBe('Dinner');
-      expect(view.topPickSection.picks[0]!.name).toBe('Jack');
-      expect(view.sundayDinner.picks).toEqual([]);
-      expect(view.filters.find((f) => f.label === 'Dinner')!.tone).toBe('primary');
-
-      service.setFilter('< 15 min');
-      view = service.list()();
-      expect(view.topPickSection.picks.map((r) => r.name)).toEqual(['Cora']);
-      expect(view.otherPicks.picks).toEqual([]);
-    });
-  });
-
-  it('locks for the requested day + slot and unlocks the rest of that slot', async () => {
-    const load = service.load();
-    httpMock.expectOne((r) => r.url.includes('slot=Lunch')).flush([dto(), dto({ id: 'r2', name: 'Cora', locked: true })]);
-    httpMock.expectOne((r) => r.url.includes('slot=Dinner')).flush([]);
-    await load;
-
-    const promise = service.lock('r1', 'Saturday', 'Lunch');
-    const req = httpMock.expectOne('http://localhost:3000/api/restaurants/r1/lock');
-    expect(req.request.body).toEqual({ day: 'Saturday', slot: 'Lunch' });
-    req.flush(dto({ locked: true }));
-    await promise;
-
+  it('fetches both days and both meals on load', async () => {
+    await flushLoad();
     const view = service.list()();
-    expect(view.topPickSection.picks[0]!.name).toBe('La Marina');
-    expect(view.topPickSection.picks[0]!.locked).toBe(true);
-    expect(view.otherPicks.picks[0]!.locked).toBe(false);
-    expect(view.lede).toMatch(/locked for Saturday lunch/);
+    expect(view.subtitle).toBe('Places to eat near what you are already doing.');
+    expect(view.sections.map((s) => s.title)).toEqual(['Lunch', 'Dinner']);
+    expect(view.sections[0]!.picks).toHaveLength(3);
+    expect(view.sections[1]!.picks).toHaveLength(2);
+  });
+
+  it('starts on Saturday with no slot narrowed and both toggles off', async () => {
+    await flushLoad();
+    const view = service.list()();
+    expect(DEFAULT_FOOD_FILTERS).toEqual({
+      day: 'Saturday',
+      slot: null,
+      wifeApproved: false,
+      quick: false,
+    });
+    expect(view.dayChips.map((c) => [c.label, c.active])).toEqual([
+      ['Saturday', true],
+      ['Sunday', false],
+    ]);
+    expect(view.slotChips.map((c) => c.active)).toEqual([false, false]);
+    expect(view.extraChips.map((c) => c.label)).toEqual(['Wife-approved', 'Under 15 min']);
+    expect(view.extraChips[0]).toMatchObject({ tone: 'accent', icon: 'heart', active: false });
+  });
+
+  it('ranks approved places first, then closest, and marks the top pick', async () => {
+    await flushLoad();
+    const lunch = service.list()().sections[0]!;
+    expect(lunch.picks.map((p) => p.id)).toEqual(['r1', 'r2', 'r3']);
+    expect(lunch.picks.map((p) => p.topPick)).toEqual([true, false, false]);
+    expect(lunch.lockedId).toBeNull();
+  });
+
+  it('builds a card with meta, chips, the roster votes and the menu link', async () => {
+    await flushLoad();
+    const card = service.list()().sections[0]!.picks[0]!;
+    expect(card).toMatchObject({
+      id: 'r1',
+      name: 'La Marina',
+      meta: 'Mediterranean · Patio · 2 of 4 votes',
+      menuUrl: 'https://example.com/la-marina/menu',
+      locked: false,
+      lockedLabel: null,
+      dimmed: false,
+      votesDisabled: false,
+      chips: [
+        { tone: 'accent', icon: 'heart', label: 'Wife-approved' },
+        { tone: 'sky', icon: 'car', label: '6 min' },
+      ],
+    });
+    expect(card.votes).toEqual([
+      { name: 'Quinn', initial: 'Q', tone: 'primary', vote: 'up' },
+      { name: 'Sara', initial: 'S', tone: 'leaf', vote: 'up' },
+      { name: 'Eli', initial: 'E', tone: 'sky', vote: 'none' },
+      { name: 'Mae', initial: 'M', tone: 'sun', vote: 'none' },
+    ]);
+    const unvoted = service.list()().sections[0]!.picks[2]!;
+    expect(unvoted.meta).toBe('Italian');
+    expect(unvoted.chips).toEqual([{ tone: 'sky', icon: 'car', label: '12 min' }]);
+    expect(service.list()().sections[0]!.picks[1]!.menuUrl).toBeNull();
+  });
+
+  it('describes each section from the weekend meal block, else close to home', async () => {
+    await flushLoad();
+    const [lunch, dinner] = service.list()().sections;
+    expect(lunch!.subtitle).toBe('Near Lavender fields · 1:00 to 2:15pm');
+    expect(dinner!.subtitle).toBe('Close to home');
+    service.setFilters({ day: 'Sunday' });
+    expect(service.list()().sections[0]!.subtitle).toBe('Close to home');
+  });
+
+  it('narrows to one slot, switches day, and applies the toggles', async () => {
+    await flushLoad();
+    service.setFilters({ slot: 'Dinner' });
+    let view = service.list()();
+    expect(view.sections.map((s) => s.title)).toEqual(['Dinner']);
+    expect(view.slotChips.map((c) => c.active)).toEqual([false, true]);
+    expect(view.sections[0]!.picks.map((p) => p.id)).toEqual(['r4', 'r5']);
+
+    service.setFilters({ slot: null, day: 'Sunday' });
+    view = service.list()();
+    expect(view.dayChips[1]!.active).toBe(true);
+    expect(view.sections.map((s) => s.picks.length)).toEqual([1, 0]);
+
+    service.setFilters({ day: 'Saturday', wifeApproved: true });
+    expect(
+      service
+        .list()()
+        .sections[0]!.picks.map((p) => p.id),
+    ).toEqual(['r1', 'r2']);
+    service.setFilters({ wifeApproved: false, quick: true });
+    expect(
+      service
+        .list()()
+        .sections[0]!.picks.map((p) => p.id),
+    ).toEqual(['r1', 'r2', 'r3']);
+    expect(
+      service
+        .list()()
+        .sections[1]!.picks.map((p) => p.id),
+    ).toEqual(['r4']);
+  });
+
+  it('locks a pick for the day and slot and dims its siblings', async () => {
+    await flushLoad();
+    const promise = service.lock('r2', 'Saturday', 'Lunch');
+    const req = httpMock.expectOne(`${BASE}/api/restaurants/r2/lock`);
+    expect(req.request.method).toBe('POST');
+    expect(req.request.body).toEqual({ day: 'Saturday', slot: 'Lunch' });
+    req.flush(SAT_LUNCH[1]);
+    await promise;
+    const lunch = service.list()().sections[0]!;
+    expect(lunch.lockedId).toBe('r2');
+    expect(lunch.picks.map((p) => p.id)).toEqual(['r2', 'r1', 'r3']);
+    expect(lunch.picks[0]).toMatchObject({
+      locked: true,
+      lockedLabel: 'Locked for lunch',
+      topPick: false,
+      dimmed: false,
+      votesDisabled: false,
+    });
+    expect(lunch.picks[1]).toMatchObject({
+      locked: false,
+      topPick: false,
+      dimmed: true,
+      votesDisabled: true,
+    });
+    expect(service.list()().sections[1]!.lockedId).toBeNull();
+  });
+
+  it('records a vote and reflects the server reply', async () => {
+    await flushLoad();
+    const promise = service.vote('r1', 'Mae', 'down');
+    const req = httpMock.expectOne(`${BASE}/api/restaurants/r1/vote`);
+    expect(req.request.method).toBe('POST');
+    expect(req.request.body).toEqual({ voterName: 'Mae', vote: 'down' });
+    req.flush(
+      restaurant({
+        votes: [
+          { voterName: 'Quinn', vote: 'up' },
+          { voterName: 'Sara', vote: 'up' },
+          { voterName: 'Mae', vote: 'down' },
+        ],
+      }),
+    );
+    await promise;
+    const card = service.list()().sections[0]!.picks[0]!;
+    expect(card.votes.find((v) => v.name === 'Mae')?.vote).toBe('down');
+    expect(card.meta).toBe('Mediterranean · Patio · 2 of 4 votes');
+  });
+
+  it('rejects a failed vote', async () => {
+    await flushLoad();
+    vi.spyOn(console, 'error').mockImplementation(() => undefined);
+    const promise = service.vote('r1', 'Mae', 'up');
+    promise.catch(() => undefined);
+    httpMock
+      .expectOne(`${BASE}/api/restaurants/r1/vote`)
+      .flush({ message: 'nope' }, { status: 500, statusText: 'Server Error' });
+    await expect(promise).rejects.toBeTruthy();
+    vi.restoreAllMocks();
+  });
+
+  it('treats a failed list as empty without losing the others', async () => {
+    vi.spyOn(console, 'error').mockImplementation(() => undefined);
+    httpMock.expectOne(url(saturday, 'Lunch')).flush(null, { status: 500, statusText: 'Boom' });
+    httpMock.expectOne(url(saturday, 'Dinner')).flush(SAT_DINNER);
+    httpMock.expectOne(url(sunday, 'Lunch')).flush(SUN_LUNCH);
+    httpMock.expectOne(url(sunday, 'Dinner')).flush(SUN_DINNER);
+    await settle();
+    expect(
+      service
+        .list()()
+        .sections.map((s) => s.picks.length),
+    ).toEqual([0, 2]);
+    vi.restoreAllMocks();
   });
 });

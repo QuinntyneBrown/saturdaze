@@ -1,0 +1,64 @@
+@use "styles/breakpoints" as *;
+
+// `.family-grid`, `.account-card` from docs/mocks-v2/styles/app.css —
+// single-use, page-owned.
+
+:host {
+  display: block;
+}
+
+.error {
+  display: block;
+  margin-bottom: 16px;
+}
+
+.family-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 32px;
+}
+
+.family-grid__col {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  min-width: 0;
+}
+
+.cluster {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.account-card {
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+}
+
+.account-card__text {
+  flex: 1;
+  min-width: 0;
+}
+
+.account-card__title {
+  font-size: var(--sd-fs-base);
+  font-weight: var(--sd-fw-semibold);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.account-card__sub {
+  font-size: var(--sd-fs-sm);
+  color: var(--sd-ink-soft);
+  margin-top: 2px;
+}
+
+@include respond-to(desktop) {
+  .family-grid {
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    gap: 40px;
+  }
+}

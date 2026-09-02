@@ -1,0 +1,34 @@
+// `.ghost-row` from docs/mocks-v2/styles/app.css.
+
+:host {
+  display: contents;
+}
+
+.ghost-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 44px;
+  margin-top: 12px;
+  padding: 0 12px;
+  border: 1px dashed var(--sd-line-strong);
+  border-radius: var(--sd-r-md);
+  font-size: var(--sd-fs-sm);
+  font-weight: var(--sd-fw-semibold);
+  color: var(--sd-ink-soft);
+  background: transparent;
+  cursor: pointer;
+  text-decoration: none;
+  transition:
+    background var(--sd-dur-fast) var(--sd-ease),
+    color var(--sd-dur-fast) var(--sd-ease);
+}
+
+@media (hover: hover) {
+  .ghost-row:hover {
+    background: var(--sd-surface-2);
+    color: var(--sd-ink);
+  }
+}

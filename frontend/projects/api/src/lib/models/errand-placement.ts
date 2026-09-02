@@ -11,7 +11,15 @@ export interface ErrandPlacement {
    */
   readonly day: WeekendDay;
   /**
-   * Time — "H:mm".
+   * Time — "9:15".
    */
   readonly time: string;
+  /**
+   * End Time — "10:00".
+   */
+  readonly endTime: string;
+  /**
+   * Block Id — the new errand block.
+   */
+  readonly blockId: string;
 }

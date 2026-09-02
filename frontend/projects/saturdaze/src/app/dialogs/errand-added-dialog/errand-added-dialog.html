@@ -1,0 +1,11 @@
+<sd-dialog [title]="title" subtitle="It sits around what was already planned.">
+  <sd-list card>
+    <sd-list-item [title]="placement.description" subtitle="What" subtitleFirst>
+      <sd-disc slot="leading" icon="bag" tone="indoor" />
+    </sd-list-item>
+    <sd-list-item [title]="when" subtitle="When" subtitleFirst>
+      <sd-disc slot="leading" icon="calendar" />
+    </sd-list-item>
+  </sd-list>
+  <sd-button slot="actions" variant="primary" type="button" (click)="done()">Done</sd-button>
+</sd-dialog>

@@ -1,0 +1,56 @@
+// `.filter-chip` from docs/mocks-v2/styles/app.css.
+
+:host {
+  display: contents;
+}
+
+.filter-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex: none;
+  height: 32px;
+  padding: 0 12px;
+  border-radius: var(--sd-r-pill);
+  font-size: 13px;
+  font-weight: var(--sd-fw-semibold);
+  line-height: 1;
+  white-space: nowrap;
+  border: 1px solid var(--sd-line-strong);
+  color: var(--sd-ink-soft);
+  background: transparent;
+  cursor: pointer;
+  transition:
+    background var(--sd-dur-fast) var(--sd-ease),
+    color var(--sd-dur-fast) var(--sd-ease),
+    border-color var(--sd-dur-fast) var(--sd-ease);
+}
+
+.filter-chip ::ng-deep sd-icon {
+  --_size: 14px;
+}
+
+.filter-chip[aria-pressed="true"] {
+  background: var(--sd-ink);
+  border-color: var(--sd-ink);
+  color: #fff;
+}
+
+.filter-chip--leaf[aria-pressed="true"] { background: var(--sd-leaf-soft); border-color: var(--sd-leaf-soft); color: var(--sd-leaf-ink); }
+.filter-chip--indoor[aria-pressed="true"] { background: var(--sd-indoor-soft); border-color: var(--sd-indoor-soft); color: var(--sd-indoor-ink); }
+.filter-chip--sky[aria-pressed="true"] { background: var(--sd-sky-soft); border-color: var(--sd-sky-soft); color: var(--sd-sky-ink); }
+.filter-chip--sun[aria-pressed="true"] { background: var(--sd-sun-soft); border-color: var(--sd-sun-soft); color: var(--sd-sun-ink); }
+.filter-chip--accent[aria-pressed="true"] { background: var(--sd-accent-soft); border-color: var(--sd-accent-soft); color: var(--sd-accent); }
+.filter-chip--primary[aria-pressed="true"] { background: var(--sd-primary-soft); border-color: var(--sd-primary-soft); color: var(--sd-primary-deep); }
+
+.filter-chip[disabled] {
+  opacity: 0.5;
+  cursor: default;
+}
+
+@media (hover: hover) {
+  .filter-chip:not([aria-pressed="true"]):hover {
+    border-color: var(--sd-ink-faint);
+    color: var(--sd-ink);
+  }
+}

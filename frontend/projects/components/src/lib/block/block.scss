@@ -1,0 +1,207 @@
+@use "../styles/breakpoints" as *;
+
+// `.block` from docs/mocks-v2/styles/app.css — the host is the row.
+
+:host {
+  position: relative;
+  display: grid;
+  grid-template-columns: 56px 24px minmax(0, 1fr) auto;
+  column-gap: 12px;
+  align-items: start;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--sd-line);
+  transition: background var(--sd-dur-fast) var(--sd-ease);
+}
+
+:host(:last-child) {
+  border-bottom: 0;
+}
+
+.block__time {
+  text-align: right;
+  padding-top: 6px;
+}
+
+.block__clock {
+  display: block;
+  font-size: var(--sd-fs-sm);
+  font-weight: var(--sd-fw-semibold);
+  color: var(--sd-ink);
+  line-height: 1.2;
+}
+
+.block__dur {
+  display: block;
+  font-size: var(--sd-fs-xs);
+  color: var(--sd-ink-faint);
+  margin-top: 2px;
+}
+
+.block__rail {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-self: stretch;
+}
+
+.block__rail::before {
+  content: "";
+  position: absolute;
+  top: -12px;
+  bottom: -13px;
+  left: 50%;
+  width: 1px;
+  background: var(--sd-line-strong);
+  transform: translateX(-50%);
+}
+
+:host(:first-child) .block__rail::before {
+  top: 6px;
+}
+
+:host(:last-child) .block__rail::before {
+  bottom: auto;
+  height: 22px;
+}
+
+.block__disc {
+  position: relative;
+  z-index: 1;
+  width: 32px;
+  height: 32px;
+  margin-top: 2px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--sd-surface-2);
+  color: var(--sd-ink-soft);
+  box-shadow: 0 0 0 4px var(--sd-bg);
+}
+
+.block__body {
+  min-width: 0;
+  padding-top: 4px;
+}
+
+.block__title {
+  font-size: var(--sd-fs-base);
+  font-weight: var(--sd-fw-semibold);
+  line-height: 1.35;
+}
+
+.block__sub {
+  font-size: var(--sd-fs-sm);
+  color: var(--sd-ink-soft);
+  margin-top: 2px;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.block__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.block__chips:not(:has(*)) {
+  display: none;
+}
+
+.block__actions {
+  display: none;
+  align-items: center;
+  gap: 2px;
+  padding-top: 2px;
+}
+
+.block__chev {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  color: var(--sd-ink-faint);
+  border-radius: 50%;
+  margin-top: 2px;
+}
+
+:host(.block--commitment) .block__disc,
+:host(.block--locked) .block__disc {
+  background: var(--sd-accent-soft);
+  color: var(--sd-accent);
+}
+
+:host(.block--errand) .block__disc {
+  background: var(--sd-indoor-soft);
+  color: var(--sd-indoor-ink);
+}
+
+:host(.block--done) {
+  opacity: 0.6;
+}
+
+:host(.block--drive) {
+  padding: 6px 0;
+  align-items: center;
+}
+
+:host(.block--drive) .block__time,
+:host(.block--drive) .block__body {
+  padding-top: 0;
+}
+
+:host(.block--drive) .block__title {
+  font-size: 14px;
+  font-weight: var(--sd-fw-medium);
+  color: var(--sd-ink-soft);
+}
+
+:host(.block--drive) .block__disc {
+  width: 24px;
+  height: 24px;
+  margin: 0;
+}
+
+:host(.block--drive) .block__actions {
+  display: none;
+}
+
+@include respond-to(tablet) {
+  .block__chev {
+    display: none;
+  }
+
+  .block__actions {
+    display: inline-flex;
+    opacity: 0;
+    transition: opacity var(--sd-dur-fast) var(--sd-ease);
+  }
+
+  :host(:focus-within) .block__actions {
+    opacity: 1;
+  }
+
+  :host(.block--drive) .block__actions {
+    display: none;
+  }
+}
+
+@media (hover: hover) and (min-width: 720px) {
+  :host(:hover) {
+    background: var(--sd-surface-2);
+    box-shadow: 0 0 0 8px var(--sd-surface-2);
+    border-radius: var(--sd-r-sm);
+  }
+
+  :host(:hover) .block__actions {
+    opacity: 1;
+  }
+
+  :host(:hover) .block__disc {
+    box-shadow: 0 0 0 4px var(--sd-surface-2);
+  }
+}

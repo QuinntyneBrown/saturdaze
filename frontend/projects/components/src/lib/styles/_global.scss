@@ -1,14 +1,23 @@
-// Global page chrome — mirrors docs/mocks/styles/global.css.
-// Tokens are forwarded from `_tokens.scss`; this file is the outer-frame
-// resets and layout utilities the app applies to its host page.
+// Global page chrome — mirrors docs/mocks-v2/styles/app.css (@layer reset,
+// base, layout, utilities). Component visuals live in each component's own
+// encapsulated stylesheet; this file only owns the document defaults, the
+// shell's <main> frame and a handful of `sd-` prefixed layout utilities.
 
 @use "breakpoints" as *;
 
+// ---------------------------------------------------------------- reset
 *, *::before, *::after { box-sizing: border-box; }
+html, body, h1, h2, h3, h4, p, ul, ol, li, dl, dt, dd, figure { margin: 0; padding: 0; }
+ul, ol { list-style: none; }
+img, svg, video { display: block; max-width: 100%; }
+button, input, select, textarea { font: inherit; color: inherit; margin: 0; }
+button { background: none; border: 0; padding: 0; cursor: pointer; text-align: inherit; }
+a { color: inherit; text-decoration: none; }
+fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
+legend { padding: 0; }
 
-html, body {
-  margin: 0;
-  padding: 0;
+// ---------------------------------------------------------------- base
+html {
   background: var(--sd-bg);
   color: var(--sd-ink);
   font-family: var(--sd-font-sans);
@@ -16,156 +25,182 @@ html, body {
   line-height: var(--sd-lh-base);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  // Prevent stray horizontal scroll on phones. Internal horizontal scrollers
-  // (sd-tag-group, etc.) keep working because they set their own overflow.
-  overflow-x: clip;
+  text-size-adjust: 100%;
+  // In-page anchors (legal.html) land below the sticky top bar.
+  scroll-padding-top: calc(var(--sd-topbar-h) + 16px);
 }
 
-body {
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-}
+// clip, never hidden: hidden creates a scroll container and breaks sticky.
+// Full-bleed scrollers (.sd-scroller-x) hang past the gutter by design.
+html, body { overflow-x: clip; }
+body { min-height: 100vh; min-height: 100svh; background: var(--sd-bg); }
 
-// Splash escapes the phone-frame chrome and mirrors the mock's body
-// override (`body { display: block }`).
-body.sd-body--bare {
-  display: block;
-}
+h1, h2, h3, h4 { line-height: var(--sd-lh-tight); font-weight: var(--sd-fw-bold); overflow-wrap: anywhere; }
+p { overflow-wrap: anywhere; }
+strong { font-weight: var(--sd-fw-semibold); }
+small { font-size: var(--sd-fs-xs); }
 
-// Auth screens center the auth-card on a padded viewport — same body
-// override the mocks use. `svh` (small viewport height) prevents the
-// iOS-Safari phantom scroll: `vh` resolves to the URL-bar-collapsed
-// height, so a card that fits the *visible* viewport still triggered a
-// scroll because the body was set to the taller `100vh`. `svh` anchors
-// to the smaller-chrome height — card always fits, never jumps when
-// the URL bar collapses on scroll-up.
-body.sd-body--auth {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
-  min-height: 100vh;
-  min-height: 100svh;
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: var(--sd-focus-ring);
+  outline-offset: 2px;
 }
+::selection { background: var(--sd-primary-soft); }
 
-// Short-viewport tightening for the auth pages. iPhone SE / 12 mini /
-// 13 mini (and any device whose visible viewport drops below ~720px
-// once Safari's URL bar is showing) couldn't fit the standard auth
-// card without a scrollbar. This block compresses the chrome —
-// outer padding, shell gap, card padding, form gap, hero text — so
-// every supported phone shows the form without scroll. Descendant
-// selectors win over the component :host rules (specificity 1,3 > 1,0).
-@media (max-height: 720px) {
-  body.sd-body--auth {
-    padding: 16px;
-  }
-  body.sd-body--auth sd-auth-shell {
-    gap: 16px;
-  }
-  body.sd-body--auth sd-auth-card {
-    padding: 20px 22px;
-    gap: 14px;
-  }
-  body.sd-body--auth form {
-    gap: 14px;
-  }
-  body.sd-body--auth h1 {
-    font-size: 22px;
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
   }
 }
 
-// `<app-root>` is the SPA's single root. Default is inline; `display: contents`
-// makes it invisible for layout so the routed page's outermost element behaves
-// like a direct child of <body> — that's how the mock baselines are framed.
+// `<app-root>` is the SPA's single root. `display: contents` makes it
+// invisible for layout so the shell's header / main / nav are effectively
+// direct children of <body> — sticky and fixed positioning keep working.
 app-root {
   display: contents;
 }
 
-// Chromeless routes (splash, auth) keep the same outlet wrapper as framed
-// routes; `display: contents` makes the wrapper vanish for layout so the
-// page host is still effectively a direct child of <body>.
-.sd-shell-chromeless {
-  display: contents;
-}
-
-// Bootstrap curtain shown while SessionStore.rehydrate() resolves. Reserved
-// space so guards see an authoritative auth state on first paint.
+// Bootstrap curtain shown while SessionStore.rehydrate() resolves.
 .sd-app-loading {
   width: 100%;
   min-height: 100vh;
   background: var(--sd-bg);
 }
 
-// Phone-frame canvas so the app reads as a product, not a web page.
-// Bottom padding clears the floating `sd-bottom-nav` *and* the iOS
-// safe-area inset so scrolled-to-end content never disappears behind it.
+// ---------------------------------------------------------------- frame
+// The shell's <main>. Below 720px the floating bottom nav needs clearing
+// *and* the iOS safe-area inset so scrolled-to-end content never hides
+// behind it (ADR-005 — `bottom-nav-clearance.spec.ts` asserts the inset is
+// in this block). Mirrors `.app-main` + `.container` in the mocks.
 .sd-frame {
+  display: block;
   width: 100%;
-  max-width: var(--sd-app-max-w);
-  min-height: 100vh;
-  background: var(--sd-bg);
-  position: relative;
-  padding-bottom: calc(var(--sd-nav-h) + 16px + env(safe-area-inset-bottom, 0px));
+  max-width: var(--sd-content-max-w);
+  margin-inline: auto;
+  padding-inline: var(--sd-gutter);
+  padding-top: calc(16px + env(safe-area-inset-top, 0px));
+  padding-bottom: calc(var(--sd-bottom-nav-h) + 36px + env(safe-area-inset-bottom, 0px));
 }
 
-// The router inserts each page's host element (`<app-home>` etc.) between
-// `.sd-frame` and the page content. Hosts default to `display: inline`,
-// which is meaningless around block content — make them blocks so the
-// frame's children lay out exactly like the mocks' (where sections are
-// direct children of the frame). Also covers `<router-outlet>` (empty).
+// The router inserts each page's host element between `.sd-frame` and the
+// page content. Hosts default to `display: inline`; make them blocks.
 .sd-frame > * {
   display: block;
 }
 
-// Tablet: drop the phone cap, rail nav takes the left edge.
+// Bare pages (auth) own their whole viewport; site pages (landing, legal,
+// shared) keep the reading width without the app's nav clearance.
+.sd-frame--bare {
+  max-width: none;
+  padding: 0;
+}
+.sd-frame--site {
+  padding-top: 16px;
+  padding-bottom: 40px;
+}
+
 @include respond-to(tablet) {
-  body { display: block; justify-content: flex-start; }
   .sd-frame {
-    max-width: none;
-    padding-left: calc(var(--sd-rail-w-tablet) + 24px);
-    padding-right: 24px;
-    padding-bottom: 32px;
+    padding-top: 24px;
+    padding-bottom: 64px;
+  }
+  .sd-frame--bare {
+    padding: 0;
   }
 }
 
-// Desktop: wider sidebar with labels, capped reading width on content.
 @include respond-to(desktop) {
-  .sd-frame {
-    padding-left: calc(var(--sd-rail-w-desktop) + 40px);
-    padding-right: 40px;
-    padding-top: 8px;
-  }
-  // Descendant, not child (`>`), combinators: in the app the router's page
-  // host (`<app-home>` etc.) sits between `.sd-frame` and these elements,
-  // so the mock's child selector never matched and content stretched
-  // unbounded past ~1580px viewports. Nested occurrences (e.g. sd-section
-  // inside a split-view pane) already sit inside narrower parents, so the
-  // descendant match is a no-op for them. Mirrored in the mocks'
-  // global.css for spec parity (descendant ⊇ child there).
-  .sd-frame sd-section,
-  .sd-frame sd-hero,
-  .sd-frame sd-top-bar,
-  .sd-frame sd-split-view {
-    max-width: 1280px;
+  .sd-frame--site {
+    padding-top: 24px;
   }
 }
 
-// Utility: card grid that fluidly fills wider screens.
-.sd-card-grid {
-  display: grid;
-  gap: 12px;
+// ---------------------------------------------------------------- layout utilities
+.sd-narrow {
+  max-width: var(--sd-stack-max-w);
+  margin-inline: auto;
 }
+
+.sd-stack { display: flex; flex-direction: column; gap: var(--gap, 16px); }
+.sd-stack--sm { --gap: 8px; }
+.sd-stack--lg { --gap: 24px; }
+.sd-stack--xl { --gap: 32px; }
+
+.sd-cluster { display: flex; flex-wrap: wrap; align-items: center; gap: var(--gap, 8px); }
+.sd-cluster--between { justify-content: space-between; }
+.sd-cluster--end { justify-content: flex-end; }
+.sd-cluster--nowrap { flex-wrap: nowrap; }
+
+// Every grid track is minmax(0, 1fr): the implicit 1fr min-content defect
+// is what pushed v1 forms past the viewport on 320px phones.
+.sd-grid-2 { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; }
+.sd-grid-3 { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; }
+.sd-grid-days { display: grid; grid-template-columns: minmax(0, 1fr); gap: 32px; align-items: start; }
+.sd-grid-cards { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; }
+
 @include respond-to(tablet) {
-  .sd-card-grid {
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 16px;
-  }
+  .sd-grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .sd-grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+  .sd-grid-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
 }
 @include respond-to(desktop) {
-  .sd-card-grid {
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 20px;
+  .sd-grid-days { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .sd-grid-cards { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+  .sd-grid-cards--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); max-width: 880px; }
+}
+
+// The only place negative margins are allowed: a full-bleed horizontal
+// scroller on phones that wraps normally from 720px.
+.sd-scroller-x {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 8px;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+  margin-inline: calc(-1 * var(--sd-gutter));
+  padding-inline: var(--sd-gutter);
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 16px, #000 calc(100% - 16px), transparent);
+  mask-image: linear-gradient(to right, transparent, #000 16px, #000 calc(100% - 16px), transparent);
+}
+.sd-scroller-x::-webkit-scrollbar { display: none; }
+.sd-scroller-x > * { flex: none; }
+@include respond-to(tablet) {
+  .sd-scroller-x {
+    flex-wrap: wrap;
+    overflow: visible;
+    margin-inline: 0;
+    padding-inline: 0;
+    -webkit-mask-image: none;
+    mask-image: none;
   }
 }
+
+.sd-vdivider { width: 1px; height: 20px; background: var(--sd-line-strong); flex: none; margin: 0 2px; }
+
+.sd-clamp-1 { display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
+.sd-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+// ---------------------------------------------------------------- utilities
+.sd-visually-hidden {
+  position: absolute !important;
+  width: 1px; height: 1px; margin: -1px; padding: 0;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+.sd-truncate { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sd-text-soft { color: var(--sd-ink-soft); }
+.sd-text-faint { color: var(--sd-ink-faint); }
+.sd-text-warn { color: var(--sd-warn-deep); }
+.sd-text-accent { color: var(--sd-accent); }
+.sd-text-sm { font-size: var(--sd-fs-sm); }
+.sd-text-xs { font-size: var(--sd-fs-xs); }
+.sd-text-center { text-align: center; }
+.sd-link { color: var(--sd-primary-deep); font-weight: var(--sd-fw-semibold); border-radius: var(--sd-r-sm); }
+.sd-link--soft { color: inherit; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: var(--sd-line-strong); font-weight: var(--sd-fw-regular); }
+.sd-mt-2 { margin-top: 8px; } .sd-mt-4 { margin-top: 16px; } .sd-mt-6 { margin-top: 24px; }
+.sd-mb-2 { margin-bottom: 8px; } .sd-mb-4 { margin-bottom: 16px; } .sd-mb-6 { margin-bottom: 24px; }
+
+@media (max-width: 719px) { .sd-hide-lt-720 { display: none !important; } }
+@include respond-to(tablet) { .sd-hide-gte-720 { display: none !important; } }
+@include respond-to(desktop) { .sd-hide-gte-1024 { display: none !important; } }

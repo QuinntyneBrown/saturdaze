@@ -1,0 +1,22 @@
+<div class="block__time">
+  <span class="block__clock">{{ time() }}</span>
+  @if (duration()) {
+    <span class="block__dur">{{ duration() }}</span>
+  }
+</div>
+<div class="block__rail">
+  <span class="block__disc"><sd-icon [name]="icon()" [size]="drive() ? 13 : 16" /></span>
+</div>
+<div class="block__body">
+  <h3 class="block__title">{{ blockTitle() }}</h3>
+  @if (subtitle()) {
+    <p class="block__sub">{{ subtitle() }}</p>
+  }
+  <div class="block__chips"><ng-content select="[slot=chips]" /></div>
+</div>
+<div class="block__actions"><ng-content select="[slot=actions]" /></div>
+@if (!drive() && !readonly()) {
+  <button class="block__chev" type="button" [attr.aria-label]="'Details for ' + blockTitle()" (click)="details.emit()">
+    <sd-icon name="chevron_right" [size]="16" />
+  </button>
+}

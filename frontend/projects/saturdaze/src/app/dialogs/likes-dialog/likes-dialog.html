@@ -1,0 +1,8 @@
+<sd-dialog title="Likes and dislikes" subtitle="Liked tags get a boost. Disliked ones are left out." wide>
+  <div class="form">
+    <sd-chip-input label="Likes" tone="leaf" [ngModel]="likes()" (ngModelChange)="likes.set($event)" />
+    <sd-chip-input label="Dislikes" tone="warn" [ngModel]="dislikes()" (ngModelChange)="dislikes.set($event)" />
+  </div>
+  <sd-button slot="actions" variant="quiet" type="button" (click)="cancel()">Cancel</sd-button>
+  <sd-button slot="actions" variant="primary" type="button" (click)="save()">Save</sd-button>
+</sd-dialog>

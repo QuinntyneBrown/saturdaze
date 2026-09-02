@@ -1,0 +1,109 @@
+<sd-page-header [title]="view().headline" [subtitle]="view().subtitle" />
+
+@if (error()) {
+  <sd-banner class="error" tone="warn" role="alert" icon="close">{{ error() }}</sd-banner>
+}
+
+@if (view().status === 'loading') {
+  <sd-status-row icon="user">Loading your family.</sd-status-row>
+} @else {
+  <div class="family-grid">
+    <div class="family-grid__col">
+      <sd-section title="Who's in" subtitle="Ages shape the picks. Tap a person to edit.">
+        <sd-list card>
+          @for (member of view().members; track member.id) {
+            <sd-list-item action chevron [title]="member.name" [subtitle]="member.subtitle" (pressed)="editMember(member)">
+              <sd-avatar slot="leading" [name]="member.name" [tone]="member.tone" size="lg" />
+            </sd-list-item>
+          }
+        </sd-list>
+        <sd-ghost-row icon="plus" (pressed)="addMember()">Add a family member</sd-ghost-row>
+      </sd-section>
+
+      <sd-section title="Locked in every weekend" subtitle="Anchors. The plan goes around them.">
+        <sd-list card>
+          @for (commitment of view().commitments; track commitment.id) {
+            <sd-list-item action chevron [title]="commitment.title" [subtitle]="commitment.subtitle" (pressed)="editCommitment(commitment)">
+              <sd-disc slot="leading" [icon]="commitment.icon" tone="accent" />
+            </sd-list-item>
+          }
+        </sd-list>
+        <sd-ghost-row icon="plus" (pressed)="addCommitment()">Add a commitment</sd-ghost-row>
+      </sd-section>
+    </div>
+
+    <div class="family-grid__col">
+      <sd-section title="Home">
+        <sd-button slot="action" variant="quiet" size="sm" (click)="editHome()">
+          <sd-icon name="edit" />
+          Edit
+        </sd-button>
+        <sd-list card>
+          <sd-list-item [title]="view().home.location" [subtitle]="view().home.hint">
+            <sd-disc slot="leading" icon="pin" />
+          </sd-list-item>
+        </sd-list>
+      </sd-section>
+
+      <sd-section title="Likes and dislikes" subtitle="Liked tags get a boost. Disliked ones are left out.">
+        <sd-button slot="action" variant="quiet" size="sm" (click)="editLikes()">
+          <sd-icon name="edit" />
+          Edit
+        </sd-button>
+        <div class="cluster">
+          @for (chip of view().likes; track chip.label) {
+            <sd-chip tone="leaf"><sd-icon name="heart" [size]="13" [stroke]="2" />{{ chip.label }}</sd-chip>
+          }
+          @for (chip of view().dislikes; track chip.label) {
+            <sd-chip tone="warn"><sd-icon name="close" [size]="13" [stroke]="2" />{{ chip.label }}</sd-chip>
+          }
+          @if (!view().likes.length && !view().dislikes.length) {
+            <span class="sd-text-sm sd-text-soft">Nothing yet. Add a few to shape the picks.</span>
+          }
+        </div>
+      </sd-section>
+
+      <sd-section title="Preferences">
+        <sd-list card>
+          @for (pref of view().preferences; track pref.key) {
+            <sd-list-item [title]="pref.title" [subtitle]="pref.subtitle">
+              <sd-toggle
+                slot="trailing"
+                [srLabel]="pref.title"
+                [ngModel]="pref.checked"
+                (ngModelChange)="setPreference(pref.key, $event)"
+              />
+            </sd-list-item>
+          }
+        </sd-list>
+      </sd-section>
+
+      @if (isAdmin()) {
+        <sd-section class="admin-only" title="Admin">
+          <sd-list card>
+            <sd-list-item href="/review-submissions" chevron title="Review submissions" [subtitle]="pendingSubtitle()">
+              <sd-disc slot="leading" icon="ticket" tone="sun" />
+              @if (pendingCount()) {
+                <sd-chip slot="trailing" tone="sun" count>{{ pendingCount() }}</sd-chip>
+              }
+            </sd-list-item>
+          </sd-list>
+        </sd-section>
+      }
+
+      <sd-section title="Account">
+        <sd-card variant="sunk" class="account-card">
+          <sd-avatar [name]="user()?.email ?? '?'" tone="primary" size="lg" />
+          <div class="account-card__text">
+            <p class="account-card__title">{{ user()?.email }}</p>
+            <p class="account-card__sub">{{ accountSubtitle() }}</p>
+          </div>
+          <sd-button variant="quiet" warnText (click)="signOut()">
+            <sd-icon name="sign_out" />
+            Sign out
+          </sd-button>
+        </sd-card>
+      </sd-section>
+    </div>
+  </div>
+}

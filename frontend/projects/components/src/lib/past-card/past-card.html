@@ -1,0 +1,35 @@
+<div class="card__row">
+  <span class="card__eyebrow">{{ dateRange() }}</span>
+  <sd-button
+    variant="ghost"
+    size="sm"
+    icon
+    btnClass="fav-btn"
+    label="Favourite this weekend"
+    [pressed]="favourite()"
+    (click)="favouriteToggle.emit(!favourite())"
+  >
+    <sd-icon name="heart" [filled]="favourite()" />
+  </sd-button>
+</div>
+<h3 class="card__title">
+  <button class="card__title-btn" type="button" [attr.aria-label]="'Rename: ' + cardTitle()" (click)="rename.emit()">
+    {{ cardTitle() }}
+  </button>
+</h3>
+<button class="card__rate" type="button" [attr.aria-label]="rateLabel()" (click)="rate.emit()">
+  <sd-stars [rating]="rating() ?? 0" [label]="ratingLabel()" />
+</button>
+@if (highlights()) {
+  <p class="card__highlights">{{ highlights() }}</p>
+}
+<div class="card__footer card__footer--2up">
+  <sd-button variant="quiet" size="sm" (click)="remix.emit()">
+    <sd-icon name="sparkle" />
+    Remix
+  </sd-button>
+  <sd-button variant="primary" size="sm" (click)="repeat.emit()">
+    <sd-icon name="refresh" />
+    Repeat
+  </sd-button>
+</div>

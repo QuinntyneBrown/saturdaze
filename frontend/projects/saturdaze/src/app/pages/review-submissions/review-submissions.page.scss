@@ -1,0 +1,69 @@
+// `.queue`, `.submitter`, `.review-actions`, `.approved-row` from
+// docs/mocks-v2/styles/app.css — single-use, page-owned.
+
+:host {
+  display: block;
+}
+
+.error {
+  display: block;
+  margin-bottom: 16px;
+}
+
+.queue {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.head {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.head__text {
+  min-width: 0;
+  flex: 1;
+}
+
+.head__title {
+  font-size: var(--sd-fs-lg);
+  font-weight: var(--sd-fw-bold);
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+
+.head__meta {
+  font-size: var(--sd-fs-sm);
+  color: var(--sd-ink-soft);
+  margin-top: 2px;
+}
+
+.submitter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--sd-fs-sm);
+  color: var(--sd-ink-soft);
+  overflow-wrap: anywhere;
+}
+
+.review-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding-top: 4px;
+}
+
+.approved-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  border-radius: var(--sd-r-md);
+  background: var(--sd-accent-soft);
+  color: var(--sd-accent-deep, var(--sd-ink));
+  font-size: var(--sd-fs-sm);
+  font-weight: var(--sd-fw-medium);
+}

@@ -1,0 +1,188 @@
+@use "styles/breakpoints" as *;
+
+// `.hero`, `.steps`, `.site-footer` from docs/mocks-v2/styles/app.css —
+// single-use, so they live with the page.
+
+:host {
+  display: block;
+}
+
+.hero {
+  position: relative;
+  overflow: hidden;
+  padding: 40px 24px;
+  background: var(--sd-warm-gradient), var(--sd-surface);
+  border: 1px solid var(--sd-line);
+  border-radius: var(--sd-r-xl);
+}
+
+.hero__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 40px;
+  align-items: center;
+}
+
+.hero__copy {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.hero__eyebrow {
+  font-size: var(--sd-fs-xs);
+  font-weight: var(--sd-fw-semibold);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--sd-ink-soft);
+}
+
+.hero__title {
+  font-size: 44px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+}
+
+.hero__lede {
+  font-size: 18px;
+  color: var(--sd-ink-soft);
+  max-width: 540px;
+  line-height: 1.5;
+}
+
+.hero__cta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.hero__note {
+  font-size: var(--sd-fs-sm);
+  color: var(--sd-ink-faint);
+}
+
+.hero__alt {
+  font-size: 14px;
+  color: var(--sd-ink-soft);
+}
+
+.hero__preview {
+  min-width: 0;
+}
+
+.mini {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+}
+
+// The miniature's day headers are not sticky and carry no actions.
+.mini ::ng-deep .day__header {
+  position: static;
+  padding-top: 4px;
+}
+
+.how {
+  margin-top: 64px;
+}
+
+.how__title {
+  font-size: 28px;
+  letter-spacing: -0.02em;
+}
+
+.how__sub {
+  font-size: var(--sd-fs-base);
+  color: var(--sd-ink-soft);
+  margin-top: 6px;
+  margin-bottom: 24px;
+}
+
+.steps {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 20px;
+  background: var(--sd-surface);
+  border: 1px solid var(--sd-line);
+  border-radius: var(--sd-r-lg);
+}
+
+.step__num {
+  font-size: var(--sd-fs-xs);
+  font-weight: var(--sd-fw-bold);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--sd-primary-deep);
+}
+
+.step__title {
+  font-size: 18px;
+  font-weight: var(--sd-fw-bold);
+}
+
+.step__body {
+  font-size: 14px;
+  color: var(--sd-ink-soft);
+}
+
+.site-footer {
+  margin-top: 80px;
+  padding-bottom: 40px;
+  text-align: center;
+  font-size: var(--sd-fs-xs);
+  color: var(--sd-ink-faint);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px 14px;
+}
+
+.sd-link--soft {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: var(--sd-line-strong);
+}
+
+@include respond-to(xsmall) {
+  .hero__title {
+    font-size: 34px;
+  }
+}
+
+@include respond-to(tablet) {
+  .hero {
+    padding: 56px 40px;
+  }
+
+  .steps {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+  }
+}
+
+@include respond-to(desktop) {
+  .hero {
+    padding: 72px 56px;
+  }
+
+  .hero__grid {
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+    gap: 56px;
+  }
+
+  .hero__title {
+    font-size: 56px;
+  }
+}

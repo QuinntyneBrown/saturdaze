@@ -1,34 +1,50 @@
+@use "../styles/breakpoints" as *;
+
+// `.section` + `.section-header` from docs/mocks-v2/styles/app.css.
+
 :host {
   display: block;
-  margin: 28px 0;
+  margin-bottom: 32px;
 }
 
-header {
+:host(:last-child) {
+  margin-bottom: 0;
+}
+
+.section-header {
   display: flex;
   align-items: flex-end;
-  justify-content: space-between;
   gap: 12px;
-  padding: 0 var(--sd-app-pad-x, 20px);
   margin-bottom: 12px;
 }
 
-h2 {
-  font-size: var(--sd-fs-md);
-  font-weight: var(--sd-fw-semibold);
-  margin: 0;
-  letter-spacing: -0.01em;
+.section-header__text {
+  min-width: 0;
+  flex: 1;
 }
 
-p {
-  margin: 2px 0 0;
+.section-header__title {
+  font-size: var(--sd-fs-lg);
+  font-weight: var(--sd-fw-bold);
+}
+
+.section-header__sub {
+  margin-top: 2px;
   font-size: var(--sd-fs-sm);
   color: var(--sd-ink-soft);
 }
 
-.body {
-  padding: 0 var(--sd-app-pad-x, 20px);
+.section-header__action {
+  margin-left: auto;
+  flex: none;
 }
 
-:host([flush]) .body {
-  padding: 0;
+.section-header__action:not(:has(*)) {
+  display: none;
+}
+
+@include respond-to(tablet) {
+  :host {
+    margin-bottom: 40px;
+  }
 }

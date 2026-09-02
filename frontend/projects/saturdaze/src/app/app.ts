@@ -7,41 +7,50 @@ import {
   inject,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import {
-  ActivatedRoute,
-  NavigationEnd,
-  Router,
-  RouterOutlet,
-} from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { filter, map, startWith } from 'rxjs';
 
 import { SESSION_STORE } from 'api';
+import { BottomNav, NavKey, Sitebar, TopBar } from 'components';
+
+import { MenuOpener } from './shell/menu-opener';
+import { signOutWith } from './shared/sign-out';
 
 /**
- * Application shell.
+ * Application shell (docs/mocks-v2 · Shell spec).
  *
- * Three body modes, picked up from the deepest active route's `data.shell`:
+ * Renders the chrome ONCE, driven by route data merged along the active
+ * route's ancestry (so `/ideas/food` inherits `nav: 'ideas'` from `/ideas`):
  *
- * - `undefined` (default) — wraps `<router-outlet>` in `.sd-frame`, the
- *   phone-canvas with rail/bottom-nav offsets. Body stays the default
- *   `flex; justify-content: center`.
- * - `'splash'` — bare body (`display: block`) so the marketing splash can
- *   run edge-to-edge up to 1120px. No `.sd-frame` wrapper.
- * - `'auth'` — body centers the auth card (`flex; column; align-items;
- *   justify-content: center; padding: 24px`). No `.sd-frame` wrapper. The
- *   six auth pages use this.
+ * - `shell: 'app'` (default) — `sd-top-bar` from 720px, `sd-bottom-nav`
+ *   below, `<main class="sd-frame">` between them.
+ * - `shell: 'site'` — public pages: `sd-sitebar` on top (with the sign-up
+ *   CTA when `cta: true`), no bottom nav.
+ * - `shell: 'bare'` — auth pages own the whole viewport.
  *
- * On bootstrap the SessionStore rehydrates from local/session storage; the
- * router outlet stays gated on `loading()` so guards see authoritative
- * state on the first paint.
+ * `nav` names the current primary destination; `page` is the slug stamped
+ * on `<body data-page>` (the e2e anchor). The one outlet stays mounted while
+ * the chrome toggles so routed components are never constructed twice.
+ *
+ * On bootstrap the SessionStore rehydrates from storage; the outlet stays
+ * gated on `loading()` so guards see authoritative state on first paint.
  */
 
-export type AppShell = 'splash' | 'auth';
+export type AppShell = 'app' | 'bare' | 'site';
+
+interface ShellData {
+  readonly shell: AppShell;
+  readonly nav: NavKey | null;
+  readonly page: string;
+  readonly cta: boolean;
+}
+
+const DEFAULT_SHELL: ShellData = { shell: 'app', nav: null, page: '', cta: false };
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, TopBar, BottomNav, Sitebar],
   templateUrl: './app.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -50,32 +59,62 @@ export class App {
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly document = inject(DOCUMENT);
   private readonly session = inject(SESSION_STORE);
+  private readonly menus = inject(MenuOpener);
 
-  private readonly shell = toSignal(
+  private readonly shellData = toSignal(
     this.router.events.pipe(
       filter((e): e is NavigationEnd => e instanceof NavigationEnd),
-      map((): AppShell | undefined =>
-        this.deepestRoute().snapshot.data['shell'] as AppShell | undefined,
-      ),
-      startWith<AppShell | undefined>(undefined),
+      map(() => this.readShellData()),
+      startWith(DEFAULT_SHELL),
     ),
-    { initialValue: undefined as AppShell | undefined },
+    { initialValue: DEFAULT_SHELL },
   );
 
-  protected readonly chrome = computed(() => !this.shell());
+  protected readonly shell = computed(() => this.shellData().shell);
+  protected readonly nav = computed(() => this.shellData().nav);
+  protected readonly siteCta = computed(() => this.shellData().cta);
+  protected readonly email = computed(() => this.session.user()?.email ?? '');
   protected readonly loading = this.session.loading;
 
   constructor() {
     effect(() => {
-      const s = this.shell();
-      this.document.body.classList.toggle('sd-body--bare', s === 'splash');
-      this.document.body.classList.toggle('sd-body--auth', s === 'auth');
+      const data = this.shellData();
+      const body = this.document.body;
+      body.dataset['shell'] = data.shell;
+      if (data.page) body.dataset['page'] = data.page;
+      else delete body.dataset['page'];
     });
   }
 
-  private deepestRoute(): ActivatedRoute {
-    let r = this.activatedRoute;
-    while (r.firstChild) r = r.firstChild;
-    return r;
+  protected async openAccountMenu(anchor: HTMLElement): Promise<void> {
+    const picked = await this.menus.open(anchor, {
+      title: 'Account',
+      header: this.email(),
+      items: [
+        { id: 'family', label: 'Family settings', icon: 'user', href: '/family' },
+        { id: 'sign-out', label: 'Sign out', icon: 'sign_out', tone: 'warn' },
+      ],
+    });
+    if (picked?.id === 'sign-out') {
+      await signOutWith(this.menus.dialog, this.session, this.router);
+    }
+  }
+
+  private readShellData(): ShellData {
+    let route = this.activatedRoute;
+    while (route.firstChild) route = route.firstChild;
+    const merged = Object.assign({}, ...route.pathFromRoot.map((r) => r.snapshot.data)) as Record<
+      string,
+      unknown
+    >;
+    const shell = merged['shell'];
+    const nav = merged['nav'];
+    const page = merged['page'];
+    return {
+      shell: shell === 'bare' || shell === 'site' ? shell : 'app',
+      nav: typeof nav === 'string' ? (nav as NavKey) : null,
+      page: typeof page === 'string' ? page : '',
+      cta: merged['cta'] === true,
+    };
   }
 }

@@ -1,0 +1,30 @@
+<div class="page-header__text">
+  @if (backHref()) {
+    <a class="page-header__eyebrow sd-hide-lt-720" [attr.href]="backHref()" (click)="onBack($event)">
+      <sd-icon name="arrow_left" [size]="16" />
+      {{ backLabel() }}
+    </a>
+  }
+  <div class="titlerow">
+    @if (backHref()) {
+      <sd-button
+        class="sd-hide-gte-720"
+        variant="ghost"
+        icon
+        [label]="'Back to ' + backLabel()"
+        [href]="backHref()"
+      >
+        <sd-icon name="arrow_left" />
+      </sd-button>
+    }
+    <h1 class="page-header__title">{{ pageTitle() }}</h1>
+  </div>
+  @if (subtitle()) {
+    <p class="page-header__subtitle">{{ subtitle() }}</p>
+  }
+</div>
+<div class="page-header__more"><ng-content select="[slot=more]" /></div>
+<div class="page-header__actions">
+  <ng-content select="[slot=primary]" />
+  <ng-content select="[slot=actions]" />
+</div>

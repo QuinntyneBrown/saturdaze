@@ -1,0 +1,160 @@
+<sd-page-header [title]="headline()" [subtitle]="subtitle()">
+  @if (status() !== 'empty') {
+    <sd-button slot="more" variant="quiet" icon label="More options" [disabled]="!actionsEnabled()" (click)="more($event)">
+      <sd-icon name="more" />
+    </sd-button>
+  }
+  @if (status() !== 'empty') {
+    <sd-button slot="actions" variant="quiet" [disabled]="!actionsEnabled()" (click)="calendar()">
+      <sd-icon name="calendar" />
+      Add to calendar
+    </sd-button>
+  }
+  @if (status() !== 'empty') {
+    <sd-button slot="primary" variant="primary" [disabled]="!actionsEnabled()" (click)="share()">
+      <sd-icon name="share" />
+      Share
+    </sd-button>
+  }
+</sd-page-header>
+
+@if (error()) {
+  <sd-banner class="error" tone="warn" role="alert" icon="close">{{ error() }}</sd-banner>
+}
+
+@switch (status()) {
+  @case ('loading') {
+    <div class="sd-grid-days" aria-busy="true">
+      @for (day of days; track day) {
+        <sd-day [title]="day" [actions]="false">
+          @for (i of skeleton; track i) {
+            <sd-skeleton-row />
+          }
+        </sd-day>
+      }
+    </div>
+  }
+  @case ('generating') {
+    <sd-status-row class="status" icon="sparkle">Working through your locks, the forecast and past weekends.</sd-status-row>
+    <div class="sd-grid-days" aria-busy="true">
+      @for (day of days; track day) {
+        <sd-day [title]="day" [actions]="false">
+          @for (i of skeleton; track i) {
+            <sd-skeleton-row />
+          }
+        </sd-day>
+      }
+    </div>
+  }
+  @case ('empty') {
+    <div class="sd-narrow">
+      <sd-empty
+        warm
+        icon="sparkle"
+        tone="primary"
+        [title]="emptyTitle()"
+        body="Your commitments stay put. Everything else gets planned around the weather and what the kids like."
+        note="Or wait for Friday at 6pm."
+      >
+        <sd-button slot="cta" variant="primary" size="lg" (click)="plan()">
+          <sd-icon name="sparkle" />
+          Plan this weekend
+        </sd-button>
+      </sd-empty>
+      @if (family().plannedAround.length) {
+        <sd-section class="planned" title="Planned around" subtitle="Change any of this on Family.">
+          <sd-list card>
+            @for (row of family().plannedAround; track row.title) {
+              <sd-list-item [title]="row.title" [subtitle]="row.subtitle" [href]="row.href" chevron>
+                <sd-disc slot="leading" [icon]="row.icon" />
+              </sd-list-item>
+            }
+          </sd-list>
+        </sd-section>
+      }
+    </div>
+  }
+  @case ('ready') {
+    <div class="sd-grid-days">
+      @for (day of weekend().days; track day.day) {
+        <sd-day
+          [title]="day.day"
+          [meta]="day.meta"
+          [weather]="dayWeather(day)"
+          [locked]="day.locked"
+          [busy]="busy() === day.day"
+          (regenerate)="regenerateDay(day)"
+          (lockToggle)="lockDay(day, $event)"
+        >
+          @if (busy() === day.day) {
+            @for (i of skeleton; track i) {
+              <sd-skeleton-row />
+            }
+          } @else {
+            @for (block of day.blocks; track block.id) {
+              <sd-block
+                [time]="block.time"
+                [duration]="block.duration"
+                [icon]="block.icon"
+                [title]="block.title"
+                [subtitle]="block.subtitle ?? ''"
+                [commitment]="block.commitment"
+                [locked]="block.locked"
+                [drive]="block.drive"
+                [errand]="block.errand"
+                [done]="block.done"
+                (details)="blockDetails(block)"
+              >
+                @for (chip of block.chips; track chip.label) {
+                  <sd-chip slot="chips" [tone]="chipTone(chip.tone)">
+                    @if (chip.icon) {
+                      <sd-icon [name]="chip.icon" [size]="13" [stroke]="2" />
+                    }
+                    {{ chip.label }}
+                  </sd-chip>
+                }
+                @if (!block.drive) {
+                  <sd-button slot="actions" variant="ghost" size="sm" icon [label]="whyLabel(block)" (click)="blockDetails(block)">
+                    <sd-icon name="sparkle" />
+                  </sd-button>
+                }
+                @if (block.swappable) {
+                  <sd-button slot="actions" variant="ghost" size="sm" icon [label]="'Swap ' + block.title" (click)="swapBlock(block)">
+                    <sd-icon name="swap" />
+                  </sd-button>
+                }
+                @if (block.errand) {
+                  <sd-button
+                    slot="actions"
+                    variant="ghost"
+                    size="sm"
+                    icon
+                    [label]="'Mark ' + block.title + (block.done ? ' not done' : ' done')"
+                    [pressed]="block.done"
+                    (click)="toggleDone(block)"
+                  >
+                    <sd-icon name="check" />
+                  </sd-button>
+                }
+                @if (block.lockable) {
+                  <sd-button
+                    slot="actions"
+                    variant="ghost"
+                    size="sm"
+                    icon
+                    [label]="(block.locked ? 'Unlock ' : 'Lock ') + block.title"
+                    [pressed]="block.locked"
+                    (click)="lockBlock(block)"
+                  >
+                    <sd-icon [name]="block.locked ? 'unlock' : 'lock'" />
+                  </sd-button>
+                }
+              </sd-block>
+            }
+          }
+          <sd-ghost-row slot="footer" icon="bag" (pressed)="addErrand()">Add an errand</sd-ghost-row>
+        </sd-day>
+      }
+    </div>
+  }
+}

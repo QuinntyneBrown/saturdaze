@@ -12,24 +12,32 @@
  *      in its composition root; consumers never import the classes
  *      directly.
  *
- * Domain models live in `lib/models/` (one type per file, grouped behind
- * per-slice barrels). DTO files (`*.dto.ts`) are service-internal and not
- * re-exported. Pure helpers (dates, formatting, weather words) live in
+ * View models live in `lib/models/` (one type per file, grouped behind
+ * per-screen barrels). DTO files (`*.dto.ts`) are service-internal and not
+ * re-exported, except the event submission the review dialogs pass through.
+ * Pure helpers (dates, formatting, weather words, projections) live in
  * `lib/api/` so pages share one implementation.
  */
 
 export * from './lib/api/api-base-url';
+export * from './lib/api/errand-placement';
+export * from './lib/api/family-presentation';
 export * from './lib/api/format';
+export * from './lib/api/history-filters';
 export * from './lib/api/weather';
 export * from './lib/api/weekend-dates';
+export * from './lib/api/weekend-projection';
 
-// Domain models
-export * from './lib/models/activity';
-export * from './lib/models/event';
+// Shared presentational models
+export * from './lib/models/chip-view';
+export * from './lib/models/filter-chip';
+
+// Screen models
 export * from './lib/models/event-submission';
 export * from './lib/models/family';
-export * from './lib/models/restaurant';
-export * from './lib/models/saved';
+export * from './lib/models/ideas';
+export * from './lib/models/past';
+export * from './lib/models/review';
 export * from './lib/models/weekend';
 
 // Auth models

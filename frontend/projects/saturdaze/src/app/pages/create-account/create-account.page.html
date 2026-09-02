@@ -1,0 +1,48 @@
+<sd-auth-shell>
+  <sd-auth-card title="Start planning weekends" subtitle="It takes a minute.">
+    @if (bannerError()) {
+      <sd-banner tone="warn" role="alert" icon="close">{{ bannerError() }}</sd-banner>
+    }
+    <form class="form" [formGroup]="form" (ngSubmit)="submit()">
+      <sd-text-input
+        label="Family name"
+        name="familyName"
+        autocomplete="off"
+        hint="How we greet you."
+        placeholder="The Browns"
+        formControlName="familyName"
+      />
+      <sd-text-input
+        label="Email"
+        type="email"
+        name="email"
+        autocomplete="email"
+        formControlName="email"
+        [error]="emailError()"
+      />
+      <div class="password">
+        <sd-text-input
+          label="Password"
+          type="password"
+          name="password"
+          autocomplete="new-password"
+          hint="Eight characters or more."
+          formControlName="password"
+          [error]="passwordError()"
+        />
+        @if (strength().level) {
+          <sd-strength [level]="strength().level" [label]="strength().label" />
+        }
+      </div>
+      <sd-checkbox name="terms" required formControlName="terms">
+        I agree to the <a class="sd-link" routerLink="/legal">Terms</a> and
+        <a class="sd-link" routerLink="/legal" fragment="privacy">Privacy Policy</a>.
+      </sd-checkbox>
+      <sd-checkbox name="fridayPreview" formControlName="fridayPreview">
+        Send me the Friday preview. A draft of the weekend in my inbox at 6pm.
+      </sd-checkbox>
+      <sd-button variant="primary" size="lg" full type="submit" [disabled]="!canSubmit()">Create account</sd-button>
+    </form>
+    <span slot="alt">Already have one? <a class="sd-link" routerLink="/sign-in">Sign in</a></span>
+  </sd-auth-card>
+</sd-auth-shell>

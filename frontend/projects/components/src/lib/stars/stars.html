@@ -1,0 +1,21 @@
+@if (editable()) {
+  @for (step of steps; track step) {
+    <button
+      class="stars__btn"
+      type="button"
+      role="radio"
+      [attr.aria-checked]="step === rating()"
+      [attr.aria-label]="starLabel(step)"
+      (click)="pick(step)"
+    >
+      <sd-icon name="star" [size]="iconSize()" [filled]="step <= rating()" />
+    </button>
+  }
+} @else {
+  @for (step of steps; track step) {
+    <sd-icon name="star" [size]="iconSize()" [filled]="step <= rating()" />
+  }
+  @if (label()) {
+    <span class="stars__label">{{ label() }}</span>
+  }
+}

@@ -1,0 +1,28 @@
+// `.strength` from docs/mocks-v2/styles/app.css — the host is the meter.
+
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.strength__bar {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 4px;
+  height: 4px;
+}
+
+.strength__seg {
+  border-radius: var(--sd-r-pill);
+  background: var(--sd-line);
+}
+
+:host(.strength--weak) .strength__seg:nth-child(1) { background: var(--sd-warn); }
+:host(.strength--ok) .strength__seg:nth-child(-n + 2) { background: var(--sd-sun); }
+:host(.strength--strong) .strength__seg { background: var(--sd-accent); }
+
+.strength__label {
+  font-size: var(--sd-fs-xs);
+  color: var(--sd-ink-soft);
+}

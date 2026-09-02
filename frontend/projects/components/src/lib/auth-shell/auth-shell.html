@@ -1,8 +1,11 @@
-<div class="brand">
-  <span class="mark"></span>
-  Saturdaze
+<div class="auth__col">
+  <a class="auth__brand" routerLink="/"><span class="brand-mark" aria-hidden="true"></span>Saturdaze</a>
+  <ng-content />
+  <p class="auth__foot">
+    <a class="sd-link--soft" routerLink="/legal">Terms</a>
+    <span aria-hidden="true">·</span>
+    <a class="sd-link--soft" routerLink="/legal" fragment="privacy">Privacy</a>
+    <span aria-hidden="true">·</span>
+    <a class="sd-link--soft" routerLink="/">Back to Saturdaze</a>
+  </p>
 </div>
-
-<ng-content />
-
-<ng-content select="[slot=foot]" />

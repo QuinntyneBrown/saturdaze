@@ -1,17 +1,26 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, booleanAttribute, input } from '@angular/core';
+import { RouterLink } from '@angular/router';
 
 /**
- * Centered shell for the signed-out auth screens. Renders the brand on top,
- * the projected auth card below, and an optional foot link slot.
- *
- * Mirrors the `.auth-shell` + `.brand` blocks in `docs/mocks/pages/login.html`
- * (and the other auth mocks — they share this chrome 1:1).
+ * Centred shell for the signed-out screens: brand lockup on top, the
+ * projected auth card, the Terms · Privacy · Back footer. Mirrors `.auth` /
+ * `.auth__col` / `.auth__brand` / `.auth__foot` in
+ * docs/mocks-v2/styles/app.css.
  */
 @Component({
   selector: 'sd-auth-shell',
   standalone: true,
+  imports: [RouterLink],
   templateUrl: './auth-shell.html',
   styleUrl: './auth-shell.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: 'auth',
+    '[class.auth--stack]': 'stack()',
+    '[attr.stack]': 'stack() ? "" : null',
+  },
 })
-export class AuthShell {}
+export class AuthShell {
+  /** Top-aligned (several stacked cards) instead of vertically centred. */
+  readonly stack = input(false, { transform: booleanAttribute });
+}

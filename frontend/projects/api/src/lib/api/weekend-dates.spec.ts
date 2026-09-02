@@ -1,5 +1,9 @@
 import {
   addDaysIso,
+  calendarFileName,
+  formatDayDate,
+  formatEventDate,
+  formatWeekendEyebrow,
   formatWeekendRange,
   formatWeekendSpan,
   localIsoDate,
@@ -52,12 +56,32 @@ describe('weekend-dates', () => {
     expect(weekendDayIso('2026-05-16', 'Sunday')).toBe('2026-05-17');
   });
 
-  it('formats a weekend range for the saved page', () => {
+  it('formats a weekend range', () => {
     expect(formatWeekendRange('2026-05-10')).toBe('May 10–11, 2026');
     expect(formatWeekendRange('2026-05-31')).toBe('May 31–Jun 1, 2026');
   });
 
-  it('formats a weekend span for the hero', () => {
+  it('formats a weekend span', () => {
     expect(formatWeekendSpan('2026-05-16')).toBe('Sat 16 May – Sun 17 May');
+  });
+
+  it('formats the day-header date and an event date', () => {
+    expect(formatDayDate('2026-05-17')).toBe('17 May');
+    expect(formatDayDate('2026-01-03')).toBe('3 Jan');
+    expect(formatEventDate('2026-05-17')).toBe('Sun 17 May');
+    expect(formatEventDate('2026-06-20')).toBe('Sat 20 Jun');
+  });
+
+  it('formats the past-card eyebrow across month and year boundaries', () => {
+    expect(formatWeekendEyebrow('2026-05-10')).toBe('10 – 11 May 2026');
+    expect(formatWeekendEyebrow('2026-05-30')).toBe('30 – 31 May 2026');
+    expect(formatWeekendEyebrow('2026-05-31')).toBe('31 May – 1 Jun 2026');
+    expect(formatWeekendEyebrow('2027-01-02')).toBe('2 – 3 Jan 2027');
+    expect(formatWeekendEyebrow('2026-12-31')).toBe('31 Dec 2026 – 1 Jan 2027');
+  });
+
+  it('names the calendar download after the Saturday', () => {
+    expect(calendarFileName('2026-05-16')).toBe('weekend-16-may.ics');
+    expect(calendarFileName('2026-01-03')).toBe('weekend-3-jan.ics');
   });
 });

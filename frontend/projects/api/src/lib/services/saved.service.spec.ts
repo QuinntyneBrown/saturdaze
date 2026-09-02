@@ -1,8 +1,49 @@
-import { TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { TestBed } from '@angular/core/testing';
+
 import { API_BASE_URL } from '../api/api-base-url';
-import { SavedService } from './saved.service';
+import { WeekendSummaryDto } from '../models/weekend-summary.dto';
+import { settle, weekendDto } from '../testing/weekend-fixture';
+import { SavedService, pastSubtitle, toPastCard } from './saved.service';
+
+const BASE = 'http://localhost:3000';
+const HISTORY = `${BASE}/api/weekends/history?take=50`;
+const YEAR = new Date().getFullYear();
+
+function row(overrides: Partial<WeekendSummaryDto> = {}): WeekendSummaryDto {
+  return {
+    id: 'w1',
+    weekendOf: `${YEAR}-05-09`,
+    isFavourite: true,
+    regenerateCount: 0,
+    blockCount: 8,
+    activityHighlights: ['Bronte Creek', 'Rec Room', 'Splash pad', 'Ice cream'],
+    title: null,
+    rating: 5,
+    ...overrides,
+  };
+}
+
+const ROWS: WeekendSummaryDto[] = [
+  row({
+    id: 'w2',
+    weekendOf: `${YEAR}-04-04`,
+    isFavourite: false,
+    rating: 2,
+    activityHighlights: ['The Rec Room'],
+    title: 'Rainy Rec Room',
+  }),
+  row(),
+  row({
+    id: 'w3',
+    weekendOf: `${YEAR - 1}-12-27`,
+    isFavourite: false,
+    rating: null,
+    activityHighlights: [],
+    title: null,
+  }),
+];
 
 describe('SavedService', () => {
   let service: SavedService;
@@ -14,132 +55,195 @@ describe('SavedService', () => {
         SavedService,
         provideHttpClient(),
         provideHttpClientTesting(),
-        { provide: API_BASE_URL, useValue: 'http://localhost:3000' },
+        { provide: API_BASE_URL, useValue: BASE },
       ],
     });
-
     service = TestBed.inject(SavedService);
     httpMock = TestBed.inject(HttpTestingController);
-    httpMock.match(() => true).forEach((req) => req.flush(null));
   });
 
-  afterEach(() => {
-    httpMock.match(() => true).forEach((req) => req.flush(null));
-    httpMock.verify();
+  afterEach(() => httpMock.verify());
+
+  async function flushLoad(rows: WeekendSummaryDto[] = ROWS): Promise<void> {
+    httpMock.expectOne(HISTORY).flush(rows);
+    await settle();
+  }
+
+  it('asks for fifty weekends and is loading until they arrive', async () => {
+    expect(service.list()().status).toBe('loading');
+    expect(
+      service
+        .list()()
+        .filters.map((f) => f.label),
+    ).toEqual(['All', 'Favourites', 'This year', '5★']);
+    await flushLoad();
+    expect(service.list()().status).toBe('ready');
   });
 
-  it('should be created', () => {
-    expect(service).toBeTruthy();
-  });
-
-  it('should call list without throwing', () => {
-    expect(() => service.list()).not.toThrow();
-  });
-
-  describe('load', () => {
-    it('should make GET request', async () => {
-      const mockResponse = {} as any;
-      const promise = service.load();
-      (promise as Promise<unknown>).catch(() => {});
-
-      const matched = httpMock.match((request) => request.method === 'GET');
-      if (matched.length === 0) {
-        // The method did not issue a request on this path; nothing to assert.
-        return;
-      }
-      expect(matched[0].request.method).toBe('GET');
-      matched.forEach((req) => req.flush(mockResponse));
-      await (promise as Promise<unknown>).catch(() => {});
-    });
-
-    it('should recover load from an error response', async () => {
-      const promise = service.load();
-      (promise as Promise<unknown>).catch(() => {});
-
-      const matched = httpMock.match((request) => request.method === 'GET');
-      if (matched.length === 0) {
-        return;
-      }
-      matched.forEach((req) =>
-        req.flush({ message: 'error' }, { status: 500, statusText: 'Server Error' })
-      );
-      // The catch swallows the failure — resolving IS the contract.
-      await expect(promise).resolves.toBeUndefined();
+  it('is empty with the first-weekend copy when there is no history', async () => {
+    await flushLoad([]);
+    expect(service.list()()).toMatchObject({
+      status: 'empty',
+      subtitle: 'Your first weekend lands here once Sunday is over.',
+      weekends: [],
+      skipping: [],
+      filterEmpty: null,
     });
   });
 
-  describe('rows, filters and persistence', () => {
-    function row(overrides: Partial<any>): any {
-      return {
-        id: 'w',
-        weekendOf: '2026-05-16',
-        isFavourite: false,
-        regenerateCount: 0,
-        blockCount: 8,
-        activityHighlights: ['Bronte Creek', 'Rec Room'],
-        title: null,
-        rating: null,
-        ...overrides,
-      };
-    }
+  it('counts the weekends in words and lists them newest first', async () => {
+    await flushLoad();
+    const view = service.list()();
+    expect(view.subtitle).toBe('Three weekends so far. Repeat what worked, remix the rest.');
+    expect(view.weekends.map((w) => w.id)).toEqual(['w1', 'w2', 'w3']);
+    expect(pastSubtitle(1)).toBe('One weekend so far. Repeat what worked, remix the rest.');
+  });
 
-    beforeEach(async () => {
-      const promise = service.load();
-      httpMock.expectOne('http://localhost:3000/api/weekends/history?take=20').flush([
-        row({ id: 'w1', isFavourite: true, rating: 5 }),
-        row({ id: 'w2', weekendOf: '2025-12-06', rating: 4, title: 'Snow day' }),
-        row({ id: 'w3', weekendOf: '2026-04-25', rating: 2, activityHighlights: ['Science Centre'] }),
-      ]);
-      await promise;
+  it('maps a row to a card', () => {
+    expect(toPastCard(row({ weekendOf: '2026-05-09' }))).toEqual({
+      id: 'w1',
+      weekendOf: '2026-05-09',
+      eyebrow: '9 – 10 May 2026',
+      title: 'Bronte Creek + Rec Room',
+      customTitle: null,
+      rating: 5,
+      ratingLabel: '5 of 5',
+      highlights: 'Bronte Creek · Rec Room · Splash pad',
+      favourite: true,
+    });
+    expect(
+      toPastCard(row({ title: ' Zoo day ', rating: null, activityHighlights: [] })),
+    ).toMatchObject({
+      title: ' Zoo day ',
+      customTitle: ' Zoo day ',
+      rating: 0,
+      ratingLabel: 'Rate it',
+      highlights: 'No activities slotted yet.',
+    });
+    expect(toPastCard(row({ activityHighlights: ['Only one'] })).title).toBe('Only one');
+    expect(toPastCard(row({ activityHighlights: [] })).title).toBe('Weekend plan');
+    httpMock.expectOne(HISTORY).flush([]);
+  });
+
+  it('filters client-side and explains an empty filter', async () => {
+    await flushLoad();
+    service.setFilter('Favourites');
+    let view = service.list()();
+    expect(view.filters.find((f) => f.active)?.label).toBe('Favourites');
+    expect(view.weekends.map((w) => w.id)).toEqual(['w1']);
+    expect(view.filterEmpty).toBeNull();
+
+    service.setFilter('This year');
+    expect(
+      service
+        .list()()
+        .weekends.map((w) => w.id),
+    ).toEqual(['w1', 'w2']);
+
+    service.setFilter('5★');
+    expect(
+      service
+        .list()()
+        .weekends.map((w) => w.id),
+    ).toEqual(['w1']);
+
+    await flushAfter(() => service.load(), [row({ rating: 3, isFavourite: false })]);
+    service.setFilter('Favourites');
+    view = service.list()();
+    expect(view.weekends).toEqual([]);
+    expect(view.filterEmpty).toBe('No favourites yet. Tap the heart on a weekend you loved.');
+    service.setFilter('5★');
+    expect(service.list()().filterEmpty).toBe('Nothing rated 5 stars yet.');
+    service.setFilter('All');
+    expect(service.list()().filterEmpty).toBeNull();
+  });
+
+  it('lists what to skip from poorly rated weekends', async () => {
+    await flushLoad();
+    expect(service.list()().skipping).toEqual([
+      { tone: 'warn', icon: 'close', label: 'The Rec Room · rated 2★ on 5 Apr' },
+    ]);
+  });
+
+  it('PUTs the favourite flag and patches the row', async () => {
+    await flushLoad();
+    const promise = service.setFavourite('w2', true);
+    const req = httpMock.expectOne(`${BASE}/api/weekends/w2/favourite`);
+    expect(req.request.method).toBe('PUT');
+    expect(req.request.body).toEqual({ favourite: true });
+    req.flush(weekendDto({ id: 'w2', isFavourite: true }));
+    await promise;
+    expect(
+      service
+        .list()()
+        .weekends.find((w) => w.id === 'w2')?.favourite,
+    ).toBe(true);
+  });
+
+  it('PUTs the rating, clearing with null', async () => {
+    await flushLoad();
+    const rate = service.rate('w2', 4);
+    const req = httpMock.expectOne(`${BASE}/api/weekends/w2/rating`);
+    expect(req.request.body).toEqual({ rating: 4 });
+    req.flush(weekendDto({ id: 'w2', rating: 4 }));
+    await rate;
+    expect(
+      service
+        .list()()
+        .weekends.find((w) => w.id === 'w2'),
+    ).toMatchObject({
+      rating: 4,
+      ratingLabel: '4 of 5',
+    });
+    expect(service.list()().skipping).toEqual([]);
+
+    const clear = service.rate('w2', null);
+    httpMock
+      .expectOne(`${BASE}/api/weekends/w2/rating`)
+      .flush(weekendDto({ id: 'w2', rating: null }));
+    await clear;
+    expect(
+      service
+        .list()()
+        .weekends.find((w) => w.id === 'w2')?.ratingLabel,
+    ).toBe('Rate it');
+  });
+
+  it('PUTs a trimmed title, or null to clear it', async () => {
+    await flushLoad();
+    const rename = service.rename('w1', '  Lavender day  ');
+    const req = httpMock.expectOne(`${BASE}/api/weekends/w1/title`);
+    expect(req.request.method).toBe('PUT');
+    expect(req.request.body).toEqual({ title: 'Lavender day' });
+    req.flush(weekendDto({ id: 'w1', title: 'Lavender day' }));
+    await rename;
+    expect(service.list()().weekends[0]).toMatchObject({
+      title: 'Lavender day',
+      customTitle: 'Lavender day',
     });
 
-    it('splits recent from avoid and derives titles', () => {
-      const view = service.list()();
-      expect(view.lede).toBe('3 weekends planned · 1 favourited.');
-      expect(view.recent.map((r) => r.title)).toEqual(['Bronte Creek + Rec Room', 'Snow day']);
-      expect(view.recent[0]).toMatchObject({ date: 'May 16–17, 2026', rating: 5, favourite: true, customTitle: null });
-      expect(view.recent[1]!.customTitle).toBe('Snow day');
-      expect(view.avoid).toEqual([
-        { title: 'Science Centre', subtitle: 'Last visit: Apr 25–26, 2026 · rated 2★', icon: 'refresh' },
-      ]);
-    });
-
-    it('filters by favourites, year and five stars', () => {
-      service.setFilter('Favourites');
-      expect(service.list()().recent.map((r) => r.id)).toEqual(['w1']);
-      service.setFilter('This year');
-      expect(service.list()().recent.map((r) => r.id)).toEqual(
-        new Date().getFullYear() === 2026 ? ['w1'] : [],
-      );
-      service.setFilter('5★ only');
-      expect(service.list()().recent.map((r) => r.id)).toEqual(['w1']);
-      expect(service.list()().filters.find((f) => f.label === '5★ only')!.tone).toBe('primary');
-      service.setFilter('All');
-      expect(service.list()().recent).toHaveLength(2);
-    });
-
-    it('persists favourite, rating and title through PUT and patches the row', async () => {
-      const fav = service.setFavourite('w2', true);
-      let req = httpMock.expectOne('http://localhost:3000/api/weekends/w2/favourite');
-      expect(req.request.method).toBe('PUT');
-      expect(req.request.body).toEqual({ favourite: true });
-      req.flush({ id: 'w2', isFavourite: true });
-      await fav;
-      expect(service.list()().recent.find((r) => r.id === 'w2')!.favourite).toBe(true);
-
-      const rate = service.rate('w2', 5);
-      req = httpMock.expectOne('http://localhost:3000/api/weekends/w2/rating');
-      expect(req.request.body).toEqual({ rating: 5 });
-      req.flush({ id: 'w2', rating: 5 });
-      await rate;
-      expect(service.list()().recent.find((r) => r.id === 'w2')!.rating).toBe(5);
-
-      const rename = service.rename('w2', '  Lavender day ');
-      req = httpMock.expectOne('http://localhost:3000/api/weekends/w2/title');
-      expect(req.request.body).toEqual({ title: 'Lavender day' });
-      req.flush({ id: 'w2', title: 'Lavender day' });
-      await rename;
-      expect(service.list()().recent.find((r) => r.id === 'w2')!.title).toBe('Lavender day');
+    const clear = service.rename('w1', '   ');
+    const clearReq = httpMock.expectOne(`${BASE}/api/weekends/w1/title`);
+    expect(clearReq.request.body).toEqual({ title: null });
+    clearReq.flush(weekendDto({ id: 'w1', title: null }));
+    await clear;
+    expect(service.list()().weekends[0]).toMatchObject({
+      title: 'Bronte Creek + Rec Room',
+      customTitle: null,
     });
   });
+
+  it('shows the empty state when the history call fails', async () => {
+    vi.spyOn(console, 'error').mockImplementation(() => undefined);
+    httpMock.expectOne(HISTORY).flush(null, { status: 500, statusText: 'Boom' });
+    await settle();
+    expect(service.list()().status).toBe('empty');
+    vi.restoreAllMocks();
+  });
+
+  async function flushAfter(action: () => Promise<void>, rows: WeekendSummaryDto[]): Promise<void> {
+    const promise = action();
+    httpMock.expectOne(HISTORY).flush(rows);
+    await promise;
+  }
 });

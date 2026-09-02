@@ -1,11 +1,56 @@
-// Mirrors docs/mocks/pages/login.html `.auth-card`.
+@use "../styles/breakpoints" as *;
+
+// `.auth-card*` from docs/mocks-v2/styles/app.css — the host is the card.
 
 :host {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: 18px;
+  padding: 28px 24px;
   background: var(--sd-surface);
   border: 1px solid var(--sd-line);
   border-radius: var(--sd-r-xl);
-  padding: 28px 24px;
   box-shadow: var(--sd-shadow-2);
+}
+
+.auth-card__head {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.auth-card__head--center {
+  align-items: center;
+  text-align: center;
+}
+
+.auth-card__head ::ng-deep [slot="disc"] {
+  margin-bottom: 4px;
+}
+
+.auth-card__title {
+  font-size: var(--sd-fs-xl);
+  font-weight: var(--sd-fw-bold);
+  letter-spacing: -0.02em;
+}
+
+.auth-card__sub {
+  font-size: 14px;
+  color: var(--sd-ink-soft);
+}
+
+.auth-card__alt {
+  text-align: center;
+  font-size: 14px;
+  color: var(--sd-ink-soft);
+}
+
+.auth-card__alt:not(:has(*)) {
+  display: none;
+}
+
+@include respond-to(tablet) {
+  :host {
+    padding: 32px;
+  }
 }

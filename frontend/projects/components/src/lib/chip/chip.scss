@@ -1,32 +1,49 @@
+// `.chip` from docs/mocks-v2/styles/app.css — the host is the chip.
+
 :host {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 4px 10px;
-  font-size: var(--sd-fs-xs);
-  font-weight: var(--sd-fw-medium);
-  background: var(--sd-surface-2);
-  color: var(--sd-ink);
+  gap: 4px;
+  flex: none;
+  height: 24px;
+  padding: 0 10px;
   border-radius: var(--sd-r-pill);
-  line-height: 1.4;
+  font-size: 12px;
+  font-weight: var(--sd-fw-semibold);
+  line-height: 1;
   white-space: nowrap;
+  background: var(--sd-surface-2);
+  color: var(--sd-ink-soft);
 }
 
-:host([tone="sun"])     { background: var(--sd-sun-soft);              color: var(--sd-sun-ink); }
-:host([tone="sky"])     { background: var(--sd-sky-soft);              color: var(--sd-sky-ink); }
-:host([tone="leaf"])    { background: var(--sd-accent-soft); color: var(--sd-accent); }
-:host([tone="indoor"])  { background: var(--sd-indoor-soft);              color: var(--sd-indoor-ink); }
-:host([tone="warn"])    { background: var(--sd-warn-soft);   color: var(--sd-warn); }
-:host([tone="accent"])  { background: var(--sd-accent-soft); color: var(--sd-accent); }
-:host([tone="primary"]) { background: var(--sd-primary-soft); color: var(--sd-primary); }
-
-// Filter chips: pages promote a chip to a button with `role="button"`.
-:host([role="button"]) {
-  cursor: pointer;
-  user-select: none;
+:host ::ng-deep > sd-icon {
+  --_size: 13px;
 }
 
-:host([role="button"]:focus-visible) {
-  outline: 2px solid var(--sd-primary);
-  outline-offset: 2px;
+:host(.chip--sm) {
+  height: 20px;
+  padding: 0 8px;
+  font-size: 11px;
+}
+
+:host(.chip--sun) { background: var(--sd-sun-soft); color: var(--sd-sun-ink); }
+:host(.chip--sky) { background: var(--sd-sky-soft); color: var(--sd-sky-ink); }
+:host(.chip--leaf) { background: var(--sd-leaf-soft); color: var(--sd-leaf-ink); }
+:host(.chip--indoor) { background: var(--sd-indoor-soft); color: var(--sd-indoor-ink); }
+:host(.chip--accent) { background: var(--sd-accent-soft); color: var(--sd-accent); }
+:host(.chip--primary) { background: var(--sd-primary-soft); color: var(--sd-primary-deep); }
+:host(.chip--warn) { background: var(--sd-warn-soft); color: var(--sd-warn-deep); }
+:host(.chip--ink) { background: var(--sd-ink); color: #fff; }
+:host(.chip--count) { min-width: 24px; justify-content: center; padding: 0 8px; }
+
+.chip__x {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  margin: 0 -4px 0 2px;
+  border-radius: 50%;
+  color: inherit;
+  opacity: 0.7;
 }

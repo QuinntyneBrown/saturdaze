@@ -1,0 +1,62 @@
+// `.seg-radio` from docs/mocks-v2/styles/app.css — the host is the field.
+
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.field__label {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  font-size: var(--sd-fs-sm);
+  font-weight: var(--sd-fw-medium);
+  color: var(--sd-ink-soft);
+}
+
+.seg-radio {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  padding: 4px;
+  gap: 4px;
+  background: var(--sd-surface-2);
+  border-radius: var(--sd-r-pill);
+}
+
+.seg-radio--3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.seg-radio__opt {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 36px;
+  border-radius: var(--sd-r-pill);
+  font-size: 14px;
+  font-weight: var(--sd-fw-semibold);
+  color: var(--sd-ink-soft);
+  cursor: pointer;
+}
+
+.seg-radio__opt input {
+  position: absolute;
+  opacity: 0;
+  inset: 0;
+  margin: 0;
+  cursor: pointer;
+}
+
+.seg-radio__opt:has(input:checked) {
+  background: var(--sd-surface);
+  color: var(--sd-ink);
+  box-shadow: var(--sd-shadow-1);
+}
+
+.seg-radio__opt:has(input:focus-visible) {
+  outline: var(--sd-focus-ring);
+  outline-offset: 2px;
+}

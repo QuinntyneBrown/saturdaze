@@ -1,0 +1,42 @@
+@use "../styles/breakpoints" as *;
+
+// `.filters` / `.scroller-x` from docs/mocks-v2/styles/app.css.
+
+:host(.filters) {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+:host(.scroller-x) {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 8px;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+  margin-inline: calc(-1 * var(--sd-gutter));
+  padding-inline: var(--sd-gutter);
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 16px, #000 calc(100% - 16px), transparent);
+  mask-image: linear-gradient(to right, transparent, #000 16px, #000 calc(100% - 16px), transparent);
+}
+
+:host(.scroller-x)::-webkit-scrollbar {
+  display: none;
+}
+
+:host ::ng-deep > * {
+  flex: none;
+}
+
+@include respond-to(tablet) {
+  :host(.scroller-x) {
+    flex-wrap: wrap;
+    overflow: visible;
+    margin-inline: 0;
+    padding-inline: 0;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+}

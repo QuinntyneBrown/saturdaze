@@ -1,14 +1,26 @@
 @if (loading()) {
   <div class="sd-app-loading" aria-hidden="true"></div>
 } @else {
+  @if (shell() === 'app') {
+    <sd-top-bar [active]="nav()" [email]="email()" (accountClick)="openAccountMenu($event)" />
+  } @else if (shell() === 'site') {
+    <sd-sitebar [cta]="siteCta()" />
+  }
   <!--
-    One outlet, always mounted. Toggling the frame as a class (rather than
-    switching between two outlet branches) keeps the routed component alive
-    when `shell` data changes on NavigationEnd — otherwise every chromeless
-    page was constructed twice on first load (verify-email consumed its own
-    token that way).
+    One outlet, always mounted. Toggling classes (rather than switching
+    between outlet branches) keeps the routed component alive when the shell
+    data changes on NavigationEnd — otherwise chromeless pages were
+    constructed twice on first load (verify-email consumed its own token).
   -->
-  <div [class.sd-frame]="chrome()" [class.sd-shell-chromeless]="!chrome()">
+  <main
+    id="main"
+    class="sd-frame"
+    [class.sd-frame--bare]="shell() === 'bare'"
+    [class.sd-frame--site]="shell() === 'site'"
+  >
     <router-outlet />
-  </div>
+  </main>
+  @if (shell() === 'app') {
+    <sd-bottom-nav [active]="nav()" />
+  }
 }

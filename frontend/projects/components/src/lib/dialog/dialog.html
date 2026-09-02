@@ -1,25 +1,18 @@
-<!--
-  Angular projection slots placed inside `@if`/`@else` control flow blocks
-  are dropped at template compile time — children that should project end
-  up missing from the rendered DOM. The slot markup therefore lives once
-  at the top of the template; the optional scrim wrap for the static
-  design gallery is layered on via the `[static]` host attribute + CSS.
-
-  The selected slot precedes the catch-all `<ng-content />` so children
-  marked `slot="actions"` claim it before the default swallows them.
-  Rendered DIV order is reversed from visual order — CSS `order` restores
-  the natural sequence (grip → header → content → actions).
-
-  No `role="dialog"` here: the CDK container already carries it, and a
-  nested dialog role would announce twice. The shell labels that container
-  with the `<h2>` id instead (see dialog.ts).
--->
-<div class="sheet">
-  <div class="actions"><ng-content select="[slot=actions]" /></div>
-  <div class="grip"></div>
-  <header>
-    <h2 [id]="titleId">{{ dialogTitle() }}</h2>
-    @if (subtitle()) { <p class="sub">{{ subtitle() }}</p> }
-  </header>
-  <div class="content"><ng-content /></div>
+<div class="dialog__panel">
+  <div class="dialog__header">
+    <div class="dialog__heading">
+      <h2 class="dialog__title" [id]="titleId">{{ dialogTitle() }}</h2>
+      @if (subtitle()) {
+        <p class="dialog__sub">{{ subtitle() }}</p>
+      }
+    </div>
+    <sd-button class="dialog__close" variant="ghost" size="sm" icon [label]="closeLabel()" (click)="close()">
+      <sd-icon name="close" />
+    </sd-button>
+  </div>
+  <div class="dialog__body"><ng-content /></div>
+  <div class="dialog__actions">
+    <div class="dialog__actions-left"><ng-content select="[slot=actions-left]" /></div>
+    <ng-content select="[slot=actions]" />
+  </div>
 </div>

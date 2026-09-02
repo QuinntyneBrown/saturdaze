@@ -1,13 +1,12 @@
 import { ActivityDto } from './activity.dto';
-import { ActivityView } from './activity-view';
+import { ChipTone } from './chip-view';
 
 /**
- * Filter chips are derived from the data on each load. Predicate-based
- * filters that yield zero rows are hidden so the chip strip stays honest.
- * "All" is always present.
+ * Filter Def — an activity filter chip and its predicate. "All" has no
+ * predicate. Internal to `ActivityService`.
  */
 export type FilterDef = {
   readonly label: string;
-  readonly tone: ActivityView['filters'][number]['tone'];
+  readonly tone: ChipTone;
   readonly match?: (a: ActivityDto) => boolean;
 };

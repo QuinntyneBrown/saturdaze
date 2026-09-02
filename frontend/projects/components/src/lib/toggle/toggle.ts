@@ -1,7 +1,6 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  HostListener,
   booleanAttribute,
   effect,
   forwardRef,
@@ -11,13 +10,14 @@ import {
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 /**
- * Switch with optional label. Mirrors `docs/mocks/components/sd-toggle.js`.
+ * Switch. Mirrors `.toggle` in docs/mocks-v2/styles/app.css: a real
+ * `<input type="checkbox" role="switch">` (visually hidden) inside a label,
+ * so keyboard, focus and assistive tech come for free. `label` renders the
+ * visible text; `srLabel` gives a name when there is none.
  *
- * The `checked` attribute (host) reflects the current ON/OFF state. The
- * static `checked` input seeds the state; once a `FormControl` is bound,
- * `writeValue` becomes authoritative. Click and Space toggle the value.
+ * The static `checked` input seeds the state; once a `FormControl` binds,
+ * `writeValue` is authoritative. `changed` emits on every user toggle.
  */
-
 @Component({
   selector: 'sd-toggle',
   standalone: true,
@@ -28,9 +28,6 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
     '[attr.label]': 'label() || null',
     '[attr.checked]': 'internalChecked() ? "" : null',
     '[attr.disabled]': 'disabled() ? "" : null',
-    '[attr.role]': '"switch"',
-    '[attr.aria-checked]': 'internalChecked()',
-    '[attr.tabindex]': 'disabled() ? -1 : 0',
   },
   providers: [
     {
@@ -42,6 +39,8 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 })
 export class Toggle implements ControlValueAccessor {
   readonly label = input<string>('');
+  /** Accessible name when no visible label is rendered. */
+  readonly srLabel = input<string>('');
   readonly checked = input(false, { transform: booleanAttribute });
 
   protected readonly internalChecked = signal<boolean>(false);
@@ -53,32 +52,13 @@ export class Toggle implements ControlValueAccessor {
 
   constructor() {
     effect(() => {
-      // Static [checked] input seeds the state when used outside a form.
-      // Once a FormControl binds, writeValue is authoritative — we stop
-      // letting the static input clobber the form value.
       const c = this.checked();
-      if (!this.formBound) {
-        this.internalChecked.set(c);
-      }
+      if (!this.formBound) this.internalChecked.set(c);
     });
   }
 
-  @HostListener('click')
-  protected onClick(): void {
-    if (this.disabled()) return;
-    this.toggle();
-  }
-
-  @HostListener('keydown.space', ['$event'])
-  @HostListener('keydown.enter', ['$event'])
-  protected onKey(event: Event): void {
-    if (this.disabled()) return;
-    event.preventDefault();
-    this.toggle();
-  }
-
-  private toggle(): void {
-    const next = !this.internalChecked();
+  protected handleChange(event: Event): void {
+    const next = (event.target as HTMLInputElement).checked;
     this.internalChecked.set(next);
     this.onChange(next);
     this.onTouched();

@@ -1,0 +1,22 @@
+// `.copy-field` from docs/mocks-v2/styles/app.css — the host is the grid.
+
+:host {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+  align-items: center;
+}
+
+.copy-field__value {
+  height: 44px;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  border-radius: var(--sd-r-md);
+  background: var(--sd-surface-2);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: var(--sd-fs-sm);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

@@ -1,0 +1,48 @@
+// `.chip-input` from docs/mocks-v2/styles/app.css — the host is the field.
+
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.field__label {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  font-size: var(--sd-fs-sm);
+  font-weight: var(--sd-fw-medium);
+  color: var(--sd-ink-soft);
+}
+
+.chip-input {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 7px 8px;
+  background: var(--sd-surface);
+  border: 1px solid var(--sd-line-strong);
+  border-radius: var(--sd-r-md);
+}
+
+.chip-input:focus-within {
+  border-color: var(--sd-primary);
+  box-shadow: 0 0 0 3px var(--sd-primary-soft);
+}
+
+.chip-input__field {
+  flex: 1 1 120px;
+  min-width: 0;
+  height: 28px;
+  border: 0;
+  background: transparent;
+  font-size: 14px;
+  outline: none;
+}
+
+.chip-input__field::placeholder {
+  color: var(--sd-ink-faint);
+}

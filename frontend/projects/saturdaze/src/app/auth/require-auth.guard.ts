@@ -4,9 +4,9 @@ import { CanActivateFn, Router } from '@angular/router';
 import { SESSION_STORE } from 'api';
 
 /**
- * Gate every signed-in surface (`/weekend`, `/itinerary`, `/profile`, …).
+ * Gate every signed-in surface (`/weekend`, `/ideas`, `/past`, `/family`, …).
  *
- * Anonymous visitors are bounced to `/login` with `?returnUrl=<original>`
+ * Anonymous visitors are bounced to `/sign-in` with `?returnUrl=<original>`
  * so the login handler can drop them back where they started.
  *
  * The guard runs *after* `SessionStore.rehydrate()` completes — the App
@@ -17,7 +17,7 @@ export const requireAuth: CanActivateFn = (_route, state) => {
   const session = inject(SESSION_STORE);
   const router = inject(Router);
   if (session.isAuthenticated()) return true;
-  return router.createUrlTree(['/login'], {
+  return router.createUrlTree(['/sign-in'], {
     queryParams: { returnUrl: state.url },
   });
 };

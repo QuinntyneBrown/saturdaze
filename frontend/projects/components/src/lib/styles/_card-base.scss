@@ -1,0 +1,91 @@
+// Shared card anatomy for the typed cards (activity / food / event / past).
+// Mirrors `.card`, `.card__head`, `.card__title`, `.card__meta`,
+// `.card__body`, `.card__chips`, `.card__footer` from
+// docs/mocks-v2/styles/app.css. Each typed card `@include`s `card-host` in
+// its `:host` and the element rules come with it.
+
+@mixin card-host {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+  padding: 16px;
+  background: var(--sd-surface);
+  border: 1px solid var(--sd-line);
+  border-radius: var(--sd-r-lg);
+  transition:
+    border-color var(--sd-dur-fast) var(--sd-ease),
+    box-shadow var(--sd-dur-fast) var(--sd-ease),
+    transform var(--sd-dur-fast) var(--sd-ease);
+}
+
+.card__head {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.card__head-text {
+  min-width: 0;
+  flex: 1;
+}
+
+.card__head > sd-chip {
+  margin-left: auto;
+  margin-top: 2px;
+}
+
+.card__title {
+  font-size: var(--sd-fs-md);
+  font-weight: var(--sd-fw-semibold);
+  line-height: 1.3;
+}
+
+.card__meta {
+  font-size: var(--sd-fs-sm);
+  color: var(--sd-ink-soft);
+  margin-top: 2px;
+}
+
+.card__body {
+  font-size: var(--sd-fs-sm);
+  color: var(--sd-ink-soft);
+}
+
+.card__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.card__chips:not(:has(*)) {
+  display: none;
+}
+
+.card__footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 4px;
+}
+
+.card__footer--between {
+  justify-content: space-between;
+}
+
+.card__eyebrow {
+  font-size: 12px;
+  font-weight: var(--sd-fw-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--sd-ink-soft);
+}
+
+.card__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}

@@ -1,0 +1,10 @@
+<sd-page-header title="Ideas" [subtitle]="subtitle()">
+  @if (tab() === 'events') {
+    <sd-button slot="primary" variant="primary" (click)="suggest()">
+      <sd-icon name="plus" />
+      Suggest an event
+    </sd-button>
+  }
+</sd-page-header>
+<sd-segments class="segments-row" label="Idea type" [tabs]="segments" />
+<router-outlet />

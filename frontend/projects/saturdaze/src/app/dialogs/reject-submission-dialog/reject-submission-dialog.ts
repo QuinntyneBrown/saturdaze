@@ -1,40 +1,41 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  signal,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
-import { EventSubmissionDto } from 'api';
-import { Button, Card, Dialog as DialogShell, Icon } from 'components';
+import { SubmissionCard } from 'api';
+import { Button, Dialog as DialogShell, Icon, TextInput } from 'components';
 
 export interface RejectSubmissionDialogData {
-  readonly submission: EventSubmissionDto;
+  readonly card: SubmissionCard;
 }
 
-export type RejectSubmissionDialogResult = { readonly reason: string | null } | undefined;
+export interface RejectSubmissionDialogResult {
+  readonly reason: string;
+}
 
+/**
+ * D24 — "Reject this suggestion?" with an optional reason.
+ */
 @Component({
   selector: 'app-reject-submission-dialog',
   standalone: true,
-  imports: [Button, Card, DialogShell, FormsModule, Icon],
+  imports: [Button, DialogShell, FormsModule, Icon, TextInput],
   templateUrl: './reject-submission-dialog.html',
   styleUrl: './reject-submission-dialog.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RejectSubmissionDialog {
-  private readonly dialogRef =
-    inject<DialogRef<RejectSubmissionDialogResult>>(DialogRef);
-  protected readonly data = inject<RejectSubmissionDialogData>(DIALOG_DATA);
+  private readonly dialogRef = inject<DialogRef<RejectSubmissionDialogResult>>(DialogRef);
+  protected readonly card = inject<RejectSubmissionDialogData>(DIALOG_DATA).card;
 
   protected readonly reason = signal('');
 
-  protected cancel(): void { this.dialogRef.close(); }
+  protected cancel(): void {
+    this.dialogRef.close();
+  }
 
-  protected reject(): void {
-    const reason = this.reason().trim();
-    this.dialogRef.close({ reason: reason.length > 0 ? reason : null });
+  protected reject(event?: Event): void {
+    event?.preventDefault();
+    this.dialogRef.close({ reason: this.reason().trim() });
   }
 }

@@ -1,2 +1,15 @@
-@if (label()) { <span class="label">{{ label() }}</span> }
-<span class="track"><span class="knob"></span></span>
+<label class="toggle">
+  <input
+    class="toggle__input"
+    type="checkbox"
+    role="switch"
+    [checked]="internalChecked()"
+    [disabled]="disabled()"
+    [attr.aria-label]="label() ? null : srLabel() || null"
+    (change)="handleChange($event)"
+  />
+  <span class="toggle__track"></span>
+  @if (label()) {
+    <span class="toggle__label">{{ label() }}</span>
+  }
+</label>

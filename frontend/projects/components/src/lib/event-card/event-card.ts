@@ -1,43 +1,38 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  input,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, booleanAttribute, input } from '@angular/core';
 
-import { Chip } from '../chip/chip';
+import { Button } from '../button/button';
+import { DateTile } from '../date-tile/date-tile';
 import { Icon } from '../icon/icon';
 
 /**
- * Local events feed card. Mirrors `docs/mocks/components/sd-event-card.js`.
- * Left side is a tinted date tile (MON / DD); right side is the title +
- * venue + meta chips (drive, optional `tag`).
+ * A local event on Ideas · Events. Mirrors the event `.card` in
+ * docs/mocks-v2/pages/ideas.events.html: date tile, title, place and date,
+ * chips, and a Details link when the event has a URL. `muted` is the
+ * user's own pending suggestion.
  */
-
 @Component({
   selector: 'sd-event-card',
   standalone: true,
-  imports: [Chip, Icon],
+  imports: [Button, DateTile, Icon],
   templateUrl: './event-card.html',
   styleUrl: './event-card.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
+    class: 'card',
+    '[class.card--muted]': 'muted()',
     '[attr.title]': 'cardTitle() || null',
-    '[attr.venue]': 'venue() || null',
-    '[attr.when]': 'whenLabel() || null',
-    '[attr.drive]': 'drive() || null',
-    '[attr.date-day]': 'dateDay()',
-    '[attr.date-mon]': 'dateMon()',
-    '[attr.tag]': 'tag() || null',
-    '[attr.icon]': 'icon() || null',
+    '[attr.date]': 'date() || null',
+    '[attr.muted]': 'muted() ? "" : null',
   },
 })
 export class EventCard {
   readonly cardTitle = input<string>('', { alias: 'title' });
-  readonly venue = input<string>('');
-  readonly whenLabel = input<string>('', { alias: 'when' });
-  readonly drive = input<string>('');
-  readonly dateDay = input<string>('17', { alias: 'date-day' });
-  readonly dateMon = input<string>('MAY', { alias: 'date-mon' });
-  readonly tag = input<string>('');
-  readonly icon = input<string>('');
+  readonly meta = input<string>('');
+  /** ISO date for the tile. */
+  readonly date = input<string>('');
+  /** Pre-split tile parts; when given they win over `date`. */
+  readonly mon = input<string>('');
+  readonly day = input<string>('');
+  readonly muted = input(false, { transform: booleanAttribute });
+  readonly url = input<string>('');
 }
