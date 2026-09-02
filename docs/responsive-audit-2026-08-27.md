@@ -1,5 +1,7 @@
 # Responsive audit — 2026-08-27
 
+> **Superseded (2026-09-02).** This audit covered the v1 design (`docs/mocks`, deleted) and its 21 routed screens. The v2 implementation ([ADR-009](adr/ADR-009-v2-responsive-shell.md)) replaced the phone canvas with a responsive shell, and the audit harness (`e2e/audit`) now runs over the v2 route keys. The findings below are historical; the commands still work but target the new screens.
+
 Every routed screen, five viewports: **xsmall 320×568 · small 390×844 · medium 820×1180 · large 1440×900 · xlarge 1920×1080**. The three legacy e2e widths (390/820/1440) are the middle three; 320 and 1920 had never been exercised.
 
 ## How to run
