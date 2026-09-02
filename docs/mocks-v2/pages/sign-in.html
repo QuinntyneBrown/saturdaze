@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<!-- @shell:head -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sign in — Saturdaze</title>
+<link rel="stylesheet" href="../styles/tokens.css">
+<link rel="stylesheet" href="../styles/app.css">
+<!-- @/shell:head -->
+</head>
+<body data-page="sign-in" data-shell="bare">
+<main class="auth auth--stack" id="main">
+  <div class="auth__col">
+    <a class="auth__brand" href="./landing.html"><span class="brand-mark" aria-hidden="true"></span>Saturdaze</a>
+
+    <section class="specimen" id="state-default" aria-labelledby="si-title">
+      <span class="specimen__label">Default</span>
+      <div class="auth-card">
+        <div class="auth-card__head">
+          <h1 class="auth-card__title" id="si-title">Welcome back</h1>
+          <p class="auth-card__sub">Sign in to see this weekend.</p>
+        </div>
+        <form class="auth-card__form" action="./weekend.html">
+          <div class="field">
+            <label class="field__label" for="si-email">Email</label>
+            <input class="field__input" id="si-email" type="email" autocomplete="email" value="quinntynebrown@gmail.com">
+          </div>
+          <div class="field">
+            <label class="field__label" for="si-pass">Password</label>
+            <input class="field__input" id="si-pass" type="password" autocomplete="current-password" value="password123">
+          </div>
+          <div class="auth-card__row">
+            <label class="toggle"><input class="toggle__input" type="checkbox" role="switch" checked><span class="toggle__track"></span><span class="toggle__label">Remember me</span></label>
+            <a class="link" href="./reset-password.html">Forgot password?</a>
+          </div>
+          <button class="btn btn--primary btn--lg btn--block" type="submit">Sign in</button>
+        </form>
+        <p class="auth-card__alt">New here? <a class="link" href="./create-account.html">Create an account</a></p>
+      </div>
+    </section>
+
+    <section class="specimen" id="state-error" aria-labelledby="si-title-2">
+      <span class="specimen__label">Wrong email or password</span>
+      <div class="auth-card">
+        <div class="auth-card__head">
+          <h2 class="auth-card__title" id="si-title-2">Welcome back</h2>
+          <p class="auth-card__sub">Sign in to see this weekend.</p>
+        </div>
+        <div class="banner banner--warn" role="alert" aria-live="assertive">
+          <svg class="icon" aria-hidden="true"><use href="#i-close"/></svg>
+          <span>That email and password did not match.</span>
+        </div>
+        <form class="auth-card__form" action="./weekend.html">
+          <div class="field">
+            <label class="field__label" for="si2-email">Email</label>
+            <input class="field__input" id="si2-email" type="email" autocomplete="email" value="quinntynebrown@gmail.com" aria-invalid="true">
+          </div>
+          <div class="field">
+            <label class="field__label" for="si2-pass">Password</label>
+            <input class="field__input" id="si2-pass" type="password" autocomplete="current-password" value="" aria-invalid="true">
+          </div>
+          <div class="auth-card__row">
+            <label class="toggle"><input class="toggle__input" type="checkbox" role="switch" checked><span class="toggle__track"></span><span class="toggle__label">Remember me</span></label>
+            <a class="link" href="./reset-password.html">Forgot password?</a>
+          </div>
+          <button class="btn btn--primary btn--lg btn--block" type="submit">Sign in</button>
+        </form>
+        <p class="auth-card__alt">New here? <a class="link" href="./create-account.html">Create an account</a></p>
+      </div>
+    </section>
+
+    <p class="auth__foot"><a class="link--soft" href="./legal.html">Terms</a><span aria-hidden="true">·</span><a class="link--soft" href="./legal.html#privacy">Privacy</a><span aria-hidden="true">·</span><a class="link--soft" href="./landing.html">Back to Saturdaze</a></p>
+  </div>
+</main>
+<script src="../app.js"></script>
+</body>
+</html>

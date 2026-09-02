@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Saturdaze mocks v2</title>
+<link rel="stylesheet" href="./styles/tokens.css">
+<link rel="stylesheet" href="./styles/app.css">
+</head>
+<body data-page="index" data-shell="bare">
+<main class="launcher container" id="main">
+  <h1>Saturdaze mocks v2</h1>
+  <p class="launcher__lede">Responsive web app first. Five screens, one primary action each. Resize the window: 720px swaps the bottom nav for a top bar, 1024px puts Saturday and Sunday side by side.</p>
+
+  <h2>Core</h2>
+  <ul class="tiles">
+    <li><a class="tile" href="./pages/weekend.html">Weekend<small>Saturday and Sunday, side by side at 1024px</small></a></li>
+    <li><a class="tile" href="./pages/ideas.html">Ideas · Activities<small>Three groups, one filter row, add to a day</small></a></li>
+    <li><a class="tile" href="./pages/ideas.food.html">Ideas · Food<small>Top pick, family vote, lock it in</small></a></li>
+    <li><a class="tile" href="./pages/ideas.events.html">Ideas · Events<small>Saturday, Sunday, coming soon, your suggestion</small></a></li>
+    <li><a class="tile" href="./pages/past.html">Past weekends<small>Rate, favourite, rename, repeat, remix</small></a></li>
+    <li><a class="tile" href="./pages/family.html">Family<small>Members, commitments, likes, preferences, sign out</small></a></li>
+    <li><a class="tile" href="./pages/review-submissions.html">Review submissions<small>Admin queue: approve or reject</small></a></li>
+  </ul>
+
+  <h2>States</h2>
+  <ul class="tiles">
+    <li><a class="tile" href="./pages/weekend.empty.html">Weekend · empty<small>First run, nothing drafted yet</small></a></li>
+    <li><a class="tile" href="./pages/weekend.generating.html">Weekend · generating<small>Skeleton rows while the planner works</small></a></li>
+    <li><a class="tile" href="./pages/past.empty.html">Past · empty<small>No finished weekends yet</small></a></li>
+    <li><a class="tile" href="./pages/review-submissions.empty.html">Review · empty<small>Queue is clear</small></a></li>
+  </ul>
+
+  <h2>Auth</h2>
+  <ul class="tiles">
+    <li><a class="tile" href="./pages/sign-in.html">Sign in<small>Default and wrong-password states</small></a></li>
+    <li><a class="tile" href="./pages/create-account.html">Create account<small>Family name, email, password strength, consent</small></a></li>
+    <li><a class="tile" href="./pages/reset-password.html">Reset password<small>Request, check email, new password, done, expired</small></a></li>
+    <li><a class="tile" href="./pages/verify-email.html">Verify email<small>Verifying, verified, expired</small></a></li>
+  </ul>
+
+  <h2>Public</h2>
+  <ul class="tiles">
+    <li><a class="tile" href="./pages/landing.html">Landing<small>Hero with a live miniature of the Weekend screen</small></a></li>
+    <li><a class="tile" href="./pages/legal.html">Legal<small>Terms and Privacy on one template</small></a></li>
+  </ul>
+
+  <h2>Dialogs</h2>
+  <ul class="tiles">
+    <li><a class="tile" href="./pages/dialogs.html">Dialogs<small>Every modal and sheet, rendered inline</small></a></li>
+  </ul>
+
+  <h2>Reference</h2>
+  <ul class="tiles">
+    <li><a class="tile" href="./pages/_shell.html">Shell<small>The skeleton every page copies</small></a></li>
+  </ul>
+</main>
+<script src="./app.js"></script>
+</body>
+</html>

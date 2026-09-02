@@ -1,0 +1,902 @@
+<!doctype html>
+<html lang="en">
+<head>
+<!-- @shell:head -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Dialogs — Saturdaze</title>
+<link rel="stylesheet" href="../styles/tokens.css">
+<link rel="stylesheet" href="../styles/app.css">
+<!-- @/shell:head -->
+</head>
+<body data-page="dialogs" data-shell="app">
+<!-- @shell:topbar -->
+<header class="topbar">
+  <div class="container topbar__inner">
+    <a class="topbar__brand" href="./weekend.html"><span class="brand-mark" aria-hidden="true"></span>Saturdaze</a>
+    <nav class="topbar__nav" aria-label="Primary">
+      <a class="topbar__link" data-nav="weekend" href="./weekend.html">Weekend</a>
+      <a class="topbar__link" data-nav="ideas" href="./ideas.html">Ideas</a>
+      <a class="topbar__link" data-nav="past" href="./past.html">Past</a>
+      <a class="topbar__link" data-nav="family" href="./family.html">Family</a>
+    </nav>
+    <div class="topbar__actions">
+      <a class="avatar avatar--q avatar--btn" href="./dialogs.html#dialog-account" aria-label="Account menu">Q</a>
+    </div>
+  </div>
+</header>
+<!-- @/shell:topbar -->
+<main class="app-main container container--stack" id="main">
+  <header class="page-header">
+    <div class="page-header__text">
+      <h1 class="page-header__title">Dialogs</h1>
+      <p class="page-header__subtitle">Every sheet and modal in v2, rendered inline. Under 720px each one is a bottom sheet.</p>
+    </div>
+  </header>
+  <p class="specimen__hint">Danger fill is reserved for Replace draft, Remove, Sign out and Reject. Form dialogs disable the primary until required fields are valid and focus the first field on open.</p>
+
+  <div class="gallery">
+
+    <!-- ============================== WEEKEND ============================== -->
+
+    <section class="specimen" id="dialog-block">
+      <span class="specimen__label">D1 · Block details</span>
+      <div class="dialog dialog--specimen" role="dialog" aria-modal="true" aria-labelledby="d1-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="d1-title">Terre Bleu Lavender Farm</h2><p class="dialog__sub">Saturday 11:00 to 1:00 · 45 min drive</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="dialog__body">
+            <div class="well">
+              <svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg>
+              <div><p class="well__title">Why this</p><p class="well__body">Lavender peaks 17 to 24 May, Saturday is the sunny day, and Mae can walk the rows this year.</p></div>
+            </div>
+            <div>
+              <p class="text-sm text-soft mb-2">Alternatives</p>
+              <ul class="list list--card">
+                <li><button class="list__item list__item--action" type="button">
+                  <span class="disc disc--leaf"><svg class="icon" aria-hidden="true"><use href="#i-tree"/></svg></span>
+                  <span class="list__text"><span class="list__title">Bronte Creek Park</span><span class="list__sub">25 min · easy hike and splash pad</span></span>
+                  <span class="list__trail"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-swap"/></svg></span>
+                </button></li>
+                <li><button class="list__item list__item--action" type="button">
+                  <span class="disc disc--leaf"><svg class="icon" aria-hidden="true"><use href="#i-tree"/></svg></span>
+                  <span class="list__text"><span class="list__title">Royal Botanical Gardens</span><span class="list__sub">35 min · tulip festival</span></span>
+                  <span class="list__trail"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-swap"/></svg></span>
+                </button></li>
+                <li><button class="list__item list__item--action" type="button">
+                  <span class="disc disc--indoor"><svg class="icon" aria-hidden="true"><use href="#i-popcorn"/></svg></span>
+                  <span class="list__text"><span class="list__title">The Rec Room</span><span class="list__sub">10 min · indoor backup</span></span>
+                  <span class="list__trail"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-swap"/></svg></span>
+                </button></li>
+              </ul>
+            </div>
+          </div>
+          <div class="dialog__actions">
+            <button class="btn btn--quiet" type="button"><svg class="icon" aria-hidden="true"><use href="#i-swap"/></svg>Swap</button>
+            <button class="btn btn--primary" type="button"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg>Lock this block</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="specimen" id="dialog-block-locked">
+      <span class="specimen__label">D1 · Block details · locked variant</span>
+      <div class="dialog dialog--specimen" role="dialog" aria-modal="true" aria-labelledby="d1b-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="d1b-title">Bath and books</h2><p class="dialog__sub">Saturday 8:00 to 9:00pm</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="dialog__body">
+            <div class="well well--accent">
+              <svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg>
+              <div><p class="well__title">Locked</p><p class="well__body">Regenerating the weekend or the day leaves this block exactly where it is.</p></div>
+            </div>
+            <div class="well">
+              <svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg>
+              <div><p class="well__title">Why this</p><p class="well__body">Lights out at 9 keeps Sunday morning easy. It has been in every weekend since April.</p></div>
+            </div>
+          </div>
+          <div class="dialog__actions">
+            <button class="btn btn--quiet" type="button"><svg class="icon" aria-hidden="true"><use href="#i-swap"/></svg>Swap</button>
+            <button class="btn btn--primary" type="button"><svg class="icon" aria-hidden="true"><use href="#i-unlock"/></svg>Unlock</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="specimen" id="dialog-block-commitment">
+      <span class="specimen__label">D1 · Block details · commitment variant</span>
+      <div class="dialog dialog--specimen" role="dialog" aria-modal="true" aria-labelledby="d1c-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="d1c-title">Swim lessons</h2><p class="dialog__sub">Saturday 9:00 to 10:00 · Port Credit Pool</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="dialog__body">
+            <div class="well well--accent">
+              <svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg>
+              <div><p class="well__title">A recurring commitment</p><p class="well__body">It is in every weekend and cannot be swapped here. Edit it on Family.</p></div>
+            </div>
+          </div>
+          <div class="dialog__actions">
+            <a class="btn btn--quiet" href="./family.html">Edit on Family</a>
+            <button class="btn btn--primary" type="button">Close</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="specimen" id="dialog-swap">
+      <span class="specimen__label">D2 · Swap</span>
+      <div class="dialog dialog--specimen" role="dialog" aria-modal="true" aria-labelledby="d2-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="d2-title">Swap out Lavender fields</h2><p class="dialog__sub">Saturday 11:00 to 1:00</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="dialog__body">
+            <div class="option-list" role="radiogroup" aria-label="Alternatives">
+              <label class="option"><input class="option__input" type="radio" name="swap" checked><span class="option__text"><span class="option__title">Bronte Creek Park</span><span class="option__sub">25 min · easy hike and splash pad</span></span><span class="chip chip--leaf option__badge">Outdoor</span></label>
+              <label class="option"><input class="option__input" type="radio" name="swap"><span class="option__text"><span class="option__title">Toronto Zoo</span><span class="option__sub">55 min · wants the whole day</span></span><span class="chip chip--leaf option__badge">Outdoor</span></label>
+              <label class="option"><input class="option__input" type="radio" name="swap"><span class="option__text"><span class="option__title">The Rec Room</span><span class="option__sub">10 min · bowling and arcade</span></span><span class="chip chip--indoor option__badge">Indoor</span></label>
+              <label class="option"><input class="option__input" type="radio" name="swap"><span class="option__text"><span class="option__title">Living Arts kids' theatre</span><span class="option__sub">5 min · matinée at 2pm</span></span><span class="chip chip--indoor option__badge">Indoor</span></label>
+            </div>
+          </div>
+          <div class="dialog__actions">
+            <button class="btn btn--quiet" type="button">Cancel</button>
+            <button class="btn btn--primary" type="button"><svg class="icon" aria-hidden="true"><use href="#i-swap"/></svg>Swap</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="specimen" id="dialog-regenerate">
+      <span class="specimen__label">D3 · Regenerate the weekend</span>
+      <div class="dialog dialog--specimen" role="dialog" aria-modal="true" aria-labelledby="d3-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="d3-title">Regenerate the weekend?</h2><p class="dialog__sub">Locked blocks stay where they are.</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="dialog__body">
+            <div class="well well--accent">
+              <svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg>
+              <div><p class="well__title">Keeping</p><p class="well__body">Swim 9:00 · Church 10:30 · Workout 5:00 · Bath and books 8:00</p></div>
+            </div>
+          </div>
+          <div class="dialog__actions">
+            <button class="btn btn--quiet" type="button">Cancel</button>
+            <button class="btn btn--primary" type="button"><svg class="icon" aria-hidden="true"><use href="#i-refresh"/></svg>Regenerate</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="specimen" id="dialog-regenerate-day">
+      <span class="specimen__label">D4 · Regenerate one day</span>
+      <div class="dialog dialog--specimen" role="dialog" aria-modal="true" aria-labelledby="d4-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="d4-title">Regenerate Saturday?</h2><p class="dialog__sub">Sunday will not change.</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="dialog__body">
+            <div class="well well--accent">
+              <svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg>
+              <div><p class="well__title">Keeping on Saturday</p><p class="well__body">Swim 9:00 · Workout 5:00 · Bath and books 8:00</p></div>
+            </div>
+          </div>
+          <div class="dialog__actions">
+            <button class="btn btn--quiet" type="button">Cancel</button>
+            <button class="btn btn--primary" type="button"><svg class="icon" aria-hidden="true"><use href="#i-refresh"/></svg>Regenerate Saturday</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="specimen" id="dialog-share">
+      <span class="specimen__label">D5 · Share</span>
+      <div class="dialog dialog--specimen" role="dialog" aria-modal="true" aria-labelledby="d5-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="d5-title">Share this weekend</h2><p class="dialog__sub">Anyone with the link can view it. Nobody can edit.</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="dialog__body">
+            <div class="copy-field">
+              <span class="copy-field__value">saturdaze.app/s/may17-browns</span>
+              <button class="btn btn--quiet" type="button" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg>Copy</button>
+            </div>
+            <p class="text-xs text-soft">Read-only · expires in 7 days</p>
+          </div>
+          <div class="dialog__actions">
+            <button class="btn btn--primary" type="button">Done</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="specimen" id="dialog-calendar">
+      <span class="specimen__label">D6 · Add to calendar</span>
+      <div class="dialog dialog--specimen" role="dialog" aria-modal="true" aria-labelledby="d6-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="d6-title">Add to your calendar</h2><p class="dialog__sub">One file with both days.</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="dialog__body">
+            <ul class="list list--card">
+              <li class="list__item">
+                <span class="disc disc--primary"><svg class="icon" aria-hidden="true"><use href="#i-calendar"/></svg></span>
+                <span class="list__text"><span class="list__title">weekend-17-may.ics</span><span class="list__sub">10 events · Saturday and Sunday</span></span>
+              </li>
+            </ul>
+          </div>
+          <div class="dialog__actions">
+            <button class="btn btn--quiet" type="button">Cancel</button>
+            <button class="btn btn--primary" type="button"><svg class="icon" aria-hidden="true"><use href="#i-calendar"/></svg>Download .ics</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="specimen" id="dialog-errand">
+      <span class="specimen__label">D7 · Add an errand</span>
+      <div class="dialog dialog--specimen dialog--wide" role="dialog" aria-modal="true" aria-labelledby="d7-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="d7-title">Add an errand</h2><p class="dialog__sub">It gets fitted around what is already planned.</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="dialog__body">
+            <div class="field">
+              <label class="field__label" for="d7-what">What is it <span class="field__req">Required</span></label>
+              <input class="field__input" id="d7-what" type="text" placeholder="Costco run" value="Costco run">
+            </div>
+            <div class="field">
+              <label class="field__label" for="d7-mins">Roughly how long</label>
+              <select class="field__input" id="d7-mins">
+                <option>15 min</option><option>30 min</option><option selected>45 min</option><option>60 min</option><option>90 min</option>
+              </select>
+            </div>
+            <div class="well well--accent">
+              <svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>
+              <div>
+                <p class="well__title">Best fit: Sunday 9:15</p>
+                <p class="well__body">On the way back from church, 4 minutes off-route, adds 38 minutes.</p>
+                <a class="btn btn--text mt-2" href="#dialog-slot">Pick another slot</a>
+              </div>
+            </div>
+          </div>
+          <div class="dialog__actions">
+            <button class="btn btn--quiet" type="button">Cancel</button>
+            <button class="btn btn--primary" type="button"><svg class="icon" aria-hidden="true"><use href="#i-bag"/></svg>Add to weekend</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="specimen" id="dialog-slot">
+      <span class="specimen__label">D8 · Pick a slot</span>
+      <div class="dialog dialog--specimen" role="dialog" aria-modal="true" aria-labelledby="d8-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="d8-title">When should it go?</h2><p class="dialog__sub">Four slots fit. The first is kindest to the day.</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="dialog__body">
+            <div class="option-list" role="radiogroup" aria-label="Slots">
+              <label class="option"><input class="option__input" type="radio" name="slot" checked><span class="option__text"><span class="option__title">Sunday 9:15am</span><span class="option__sub">After pancakes, before church · 4 min detour</span></span><span class="chip chip--accent option__badge">Best fit</span></label>
+              <label class="option"><input class="option__input" type="radio" name="slot"><span class="option__text"><span class="option__title">Saturday 3:30pm</span><span class="option__sub">Replaces quiet time at home</span></span><span class="chip option__badge">OK</span></label>
+              <label class="option"><input class="option__input" type="radio" name="slot"><span class="option__text"><span class="option__title">Sunday 4:45pm</span><span class="option__sub">Between the Rec Room and the workout</span></span><span class="chip option__badge">OK</span></label>
+              <label class="option"><input class="option__input" type="radio" name="slot"><span class="option__text"><span class="option__title">Saturday 8:00am</span><span class="option__sub">Before swim, store opens at 8</span></span><span class="chip chip--warn option__badge">Tight</span></label>
+            </div>
+          </div>
+          <div class="dialog__actions">
+            <a class="btn btn--quiet" href="#dialog-errand"><svg class="icon" aria-hidden="true"><use href="#i-arrow_left"/></svg>Back</a>
+            <button class="btn btn--primary" type="button">Use Sunday 9:15</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="specimen" id="dialog-errand-added">
+      <span class="specimen__label">D9 · Errand added</span>
+      <div class="dialog dialog--specimen" role="dialog" aria-modal="true" aria-labelledby="d9-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="d9-title">Added to Sunday at 9:15</h2><p class="dialog__sub">On the way back from church, 4 minutes off-route.</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="dialog__body">
+            <ul class="list list--card">
+              <li class="list__item"><span class="disc disc--indoor"><svg class="icon" aria-hidden="true"><use href="#i-bag"/></svg></span><span class="list__text"><span class="list__sub">What</span><span class="list__title">Costco run</span></span></li>
+              <li class="list__item"><span class="disc"><svg class="icon" aria-hidden="true"><use href="#i-calendar"/></svg></span><span class="list__text"><span class="list__sub">When</span><span class="list__title">Sunday · 9:15 to 10:00</span></span></li>
+              <li class="list__item"><span class="disc disc--sky"><svg class="icon" aria-hidden="true"><use href="#i-car"/></svg></span><span class="list__text"><span class="list__sub">Detour</span><span class="list__title">4 min</span></span></li>
+            </ul>
+          </div>
+          <div class="dialog__actions">
+            <button class="btn btn--primary" type="button">Done</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================== IDEAS ============================== -->
+
+    <section class="specimen" id="dialog-suggest">
+      <span class="specimen__label">D10 · Suggest an event</span>
+      <div class="dialog dialog--specimen dialog--wide" role="dialog" aria-modal="true" aria-labelledby="d10-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="d10-title">Suggest an event</h2><p class="dialog__sub">Title and time are all we need. The rest helps families decide.</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="dialog__body">
+            <div class="field">
+              <label class="field__label" for="d10-title-f">Title <span class="field__req">Required</span></label>
+              <input class="field__input" id="d10-title-f" type="text" placeholder="Port Credit Buskerfest">
+            </div>
+            <div class="field">
+              <label class="field__label" for="d10-starts">Starts <span class="field__req">Required</span></label>
+              <input class="field__input" id="d10-starts" type="datetime-local" value="2026-05-18T13:00">
+              <p class="field__hint">Set to the next hour.</p>
+            </div>
+            <div class="field">
+              <label class="field__label" for="d10-where">Location</label>
+              <input class="field__input" id="d10-where" type="text" placeholder="Memorial Park, Lakeshore Rd">
+            </div>
+            <div class="field">
+              <label class="field__label" for="d10-desc">Description</label>
+              <textarea class="field__input" id="d10-desc" rows="3" placeholder="What is it, and who is it good for?"></textarea>
+            </div>
+            <div class="field--row">
+              <div class="field">
+                <label class="field__label" for="d10-cost">Cost</label>
+                <input class="field__input" id="d10-cost" type="text" placeholder="Free">
+              </div>
+              <div class="field">
+                <label class="field__label" for="d10-ages">Ages</label>
+                <input class="field__input" id="d10-ages" type="text" placeholder="All ages">
+              </div>
+            </div>
+            <div class="field">
+              <label class="field__label" for="d10-link">Link</label>
+              <input class="field__input" id="d10-link" type="url" placeholder="https://">
+            </div>
+          </div>
+          <div class="dialog__actions">
+            <button class="btn btn--quiet" type="button">Cancel</button>
+            <button class="btn btn--primary" type="button" disabled>Submit</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="specimen" id="dialog-submitted">
+      <span class="specimen__label">D11 · Submitted</span>
+      <div class="dialog dialog--specimen" role="dialog" aria-modal="true" aria-labelledby="d11-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="d11-title">Thanks, it is in the queue</h2><p class="dialog__sub">Only you can see it until it is approved.</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="dialog__body">
+            <div class="card card--sunk">
+              <div class="card__head">
+                <span class="date-tile" aria-hidden="true"><span class="date-tile__m">Jun</span><span class="date-tile__d">20</span></span>
+                <div class="card__head-text"><p class="card__title">Port Credit Buskerfest</p><p class="card__meta">Lakeshore Rd · Sat 2pm to 9pm</p></div>
+                <span class="chip chip--sun">Pending review</span>
+              </div>
+            </div>
+          </div>
+          <div class="dialog__actions">
+            <button class="btn btn--primary" type="button">Done</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="specimen" id="dialog-lock-in">
+      <span class="specimen__label">D12 · Lock it in</span>
+      <div class="dialog dialog--specimen" role="dialog" aria-modal="true" aria-labelledby="d12-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="d12-title">Lock La Marina for Saturday lunch?</h2><p class="dialog__sub">It goes on the timeline and other picks step back.</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="dialog__body">
+            <div class="card card--sunk">
+              <div class="card__head">
+                <span class="disc disc--lg disc--sun" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-fork"/></svg></span>
+                <div class="card__head-text"><p class="card__title">La Marina</p><p class="card__meta">Mediterranean · Patio · 6 min from Terre Bleu</p></div>
+              </div>
+              <div class="card__chips">
+                <span class="chip chip--accent"><svg class="icon" aria-hidden="true"><use href="#i-heart"/></svg>Wife-approved</span>
+                <span class="chip chip--leaf">3 of 4 yes</span>
+              </div>
+            </div>
+          </div>
+          <div class="dialog__actions">
+            <button class="btn btn--quiet" type="button">Not yet</button>
+            <button class="btn btn--primary" type="button"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg>Lock it in</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================== PAST ============================== -->
+
+    <section class="specimen" id="dialog-rate">
+      <span class="specimen__label">D13 · Rate a weekend</span>
+      <div class="dialog dialog--specimen" role="dialog" aria-modal="true" aria-labelledby="d13-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="d13-title">How was it?</h2><p class="dialog__sub">10 – 11 May · Bronte Creek + Rec Room</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="dialog__body">
+            <div class="stars stars--lg" role="radiogroup" aria-label="Rating">
+              <button class="btn btn--ghost btn--icon btn--lg" type="button" role="radio" aria-checked="false" aria-label="1 star"><svg class="icon icon--lg icon--filled" aria-hidden="true"><use href="#i-star"/></svg></button>
+              <button class="btn btn--ghost btn--icon btn--lg" type="button" role="radio" aria-checked="false" aria-label="2 stars"><svg class="icon icon--lg icon--filled" aria-hidden="true"><use href="#i-star"/></svg></button>
+              <button class="btn btn--ghost btn--icon btn--lg" type="button" role="radio" aria-checked="false" aria-label="3 stars"><svg class="icon icon--lg icon--filled" aria-hidden="true"><use href="#i-star"/></svg></button>
+              <button class="btn btn--ghost btn--icon btn--lg" type="button" role="radio" aria-checked="false" aria-label="4 stars"><svg class="icon icon--lg icon--filled" aria-hidden="true"><use href="#i-star"/></svg></button>
+              <button class="btn btn--ghost btn--icon btn--lg" type="button" role="radio" aria-checked="true" aria-label="5 stars"><svg class="icon icon--lg icon--filled" aria-hidden="true"><use href="#i-star"/></svg></button>
+            </div>
+            <p class="text-sm text-soft">5 of 5, a keeper.</p>
+          </div>
+          <div class="dialog__actions">
+            <button class="btn btn--quiet" type="button">Cancel</button>
+            <button class="btn btn--primary" type="button">Save</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="specimen" id="dialog-rename">
+      <span class="specimen__label">D14 · Rename a weekend</span>
+      <div class="dialog dialog--specimen" role="dialog" aria-modal="true" aria-labelledby="d14-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="d14-title">Rename this weekend</h2><p class="dialog__sub">10 – 11 May 2026</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="dialog__body">
+            <div class="field">
+              <label class="field__label" for="d14-name">Title</label>
+              <input class="field__input" id="d14-name" type="text" value="Bronte Creek + Rec Room">
+            </div>
+          </div>
+          <div class="dialog__actions">
+            <button class="btn btn--quiet" type="button">Cancel</button>
+            <button class="btn btn--primary" type="button">Save</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="specimen" id="dialog-repeat">
+      <span class="specimen__label">D15 · Repeat</span>
+      <div class="dialog dialog--specimen" role="dialog" aria-modal="true" aria-labelledby="d15-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="d15-title">Use this weekend again?</h2><p class="dialog__sub">It replaces the current draft. Saved weekends stay.</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="dialog__body">
+            <div class="well well--warn">
+              <svg class="icon" aria-hidden="true"><use href="#i-refresh"/></svg>
+              <div><p class="well__title">The lavender weekend draft goes away</p><p class="well__body">Locks and family settings stay.</p></div>
+            </div>
+          </div>
+          <div class="dialog__actions">
+            <button class="btn btn--quiet" type="button">Cancel</button>
+            <button class="btn btn--danger" type="button">Replace draft</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="specimen" id="dialog-remix">
+      <span class="specimen__label">D16 · Remix</span>
+      <div class="dialog dialog--specimen" role="dialog" aria-modal="true" aria-labelledby="d16-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="d16-title">Remix this weekend?</h2><p class="dialog__sub">Same shape, new places.</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="dialog__body">
+            <ul class="list list--card">
+              <li class="list__item"><span class="list__text"><span class="list__sub">Saturday morning</span><span class="list__title">Royal Botanical Gardens · 35 min</span></span><span class="chip chip--primary">New</span></li>
+              <li class="list__item"><span class="list__text"><span class="list__sub">Saturday lunch</span><span class="list__title">La Marina, kept</span></span><span class="chip chip--accent">Keep</span></li>
+              <li class="list__item"><span class="list__text"><span class="list__sub">Sunday afternoon</span><span class="list__title">Ontario Science Centre · 40 min</span></span><span class="chip chip--primary">New</span></li>
+            </ul>
+          </div>
+          <div class="dialog__actions">
+            <button class="btn btn--quiet" type="button">Cancel</button>
+            <button class="btn btn--primary" type="button"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg>Remix</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================== FAMILY ============================== -->
+
+    <section class="specimen" id="dialog-member">
+      <span class="specimen__label">D17 · Edit a family member</span>
+      <div class="dialog dialog--specimen dialog--wide" role="dialog" aria-modal="true" aria-labelledby="d17-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="d17-title">Edit Mae</h2><p class="dialog__sub">Ages shape the picks.</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="dialog__body">
+            <div class="field">
+              <label class="field__label" for="d17-name">Name <span class="field__req">Required</span></label>
+              <input class="field__input" id="d17-name" type="text" value="Mae">
+            </div>
+            <div class="field">
+              <span class="field__label" id="d17-role-label">Role</span>
+              <div class="seg-radio" role="radiogroup" aria-labelledby="d17-role-label">
+                <label class="seg-radio__opt"><input type="radio" name="d17-role">Parent</label>
+                <label class="seg-radio__opt"><input type="radio" name="d17-role" checked>Kid</label>
+              </div>
+            </div>
+            <div class="field--row">
+              <div class="field">
+                <label class="field__label" for="d17-age">Age</label>
+                <input class="field__input" id="d17-age" type="number" value="5" min="0" max="120">
+              </div>
+              <div class="field">
+                <label class="field__label" for="d17-note">Note</label>
+                <input class="field__input" id="d17-note" type="text" placeholder="Loves animals" value="Loves animals">
+              </div>
+            </div>
+          </div>
+          <div class="dialog__actions">
+            <div class="dialog__actions-left"><a class="btn btn--quiet btn--warn-text" href="#dialog-remove"><svg class="icon" aria-hidden="true"><use href="#i-trash"/></svg>Remove</a></div>
+            <button class="btn btn--quiet" type="button">Cancel</button>
+            <button class="btn btn--primary" type="button">Save</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="specimen" id="dialog-member-add">
+      <span class="specimen__label">D17 · Add a family member</span>
+      <div class="dialog dialog--specimen dialog--wide" role="dialog" aria-modal="true" aria-labelledby="d17b-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="d17b-title">Add a family member</h2><p class="dialog__sub">Ages shape the picks.</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="dialog__body">
+            <div class="field">
+              <label class="field__label" for="d17b-name">Name <span class="field__req">Required</span></label>
+              <input class="field__input" id="d17b-name" type="text" placeholder="First name">
+            </div>
+            <div class="field">
+              <span class="field__label" id="d17b-role-label">Role</span>
+              <div class="seg-radio" role="radiogroup" aria-labelledby="d17b-role-label">
+                <label class="seg-radio__opt"><input type="radio" name="d17b-role">Parent</label>
+                <label class="seg-radio__opt"><input type="radio" name="d17b-role" checked>Kid</label>
+              </div>
+            </div>
+            <div class="field--row">
+              <div class="field">
+                <label class="field__label" for="d17b-age">Age</label>
+                <input class="field__input" id="d17b-age" type="number" placeholder="7" min="0" max="120">
+              </div>
+              <div class="field">
+                <label class="field__label" for="d17b-note">Note</label>
+                <input class="field__input" id="d17b-note" type="text" placeholder="Loves animals">
+              </div>
+            </div>
+          </div>
+          <div class="dialog__actions">
+            <button class="btn btn--quiet" type="button">Cancel</button>
+            <button class="btn btn--primary" type="button" disabled>Add member</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="specimen" id="dialog-commitment">
+      <span class="specimen__label">D18 · Edit a commitment</span>
+      <div class="dialog dialog--specimen dialog--wide" role="dialog" aria-modal="true" aria-labelledby="d18-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="d18-title">Edit Swim lessons</h2><p class="dialog__sub">Locked into every weekend.</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="dialog__body">
+            <div class="field">
+              <label class="field__label" for="d18-name">Name <span class="field__req">Required</span></label>
+              <input class="field__input" id="d18-name" type="text" value="Swim lessons">
+            </div>
+            <div class="field">
+              <span class="field__label" id="d18-days-label">Days</span>
+              <div class="filters" role="group" aria-labelledby="d18-days-label">
+                <button class="filter-chip filter-chip--accent" type="button" aria-pressed="true">Saturday</button>
+                <button class="filter-chip filter-chip--accent" type="button" aria-pressed="false">Sunday</button>
+              </div>
+            </div>
+            <div class="field--row">
+              <div class="field">
+                <label class="field__label" for="d18-start">Start</label>
+                <input class="field__input" id="d18-start" type="time" value="09:00">
+              </div>
+              <div class="field">
+                <label class="field__label" for="d18-end">End</label>
+                <input class="field__input" id="d18-end" type="time" value="10:00">
+              </div>
+            </div>
+            <div class="field">
+              <label class="field__label" for="d18-place">Place</label>
+              <input class="field__input" id="d18-place" type="text" value="Port Credit Pool">
+            </div>
+          </div>
+          <div class="dialog__actions">
+            <div class="dialog__actions-left"><a class="btn btn--quiet btn--warn-text" href="#dialog-remove-commitment"><svg class="icon" aria-hidden="true"><use href="#i-trash"/></svg>Remove</a></div>
+            <button class="btn btn--quiet" type="button">Cancel</button>
+            <button class="btn btn--primary" type="button">Save</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="specimen" id="dialog-commitment-add">
+      <span class="specimen__label">D18 · Add a commitment</span>
+      <div class="dialog dialog--specimen dialog--wide" role="dialog" aria-modal="true" aria-labelledby="d18b-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="d18b-title">Add a commitment</h2><p class="dialog__sub">Locked into every weekend.</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="dialog__body">
+            <div class="field">
+              <label class="field__label" for="d18b-name">Name <span class="field__req">Required</span></label>
+              <input class="field__input" id="d18b-name" type="text" placeholder="Piano lesson">
+            </div>
+            <div class="field">
+              <span class="field__label" id="d18b-days-label">Days</span>
+              <div class="filters" role="group" aria-labelledby="d18b-days-label">
+                <button class="filter-chip filter-chip--accent" type="button" aria-pressed="false">Saturday</button>
+                <button class="filter-chip filter-chip--accent" type="button" aria-pressed="false">Sunday</button>
+              </div>
+            </div>
+            <div class="field--row">
+              <div class="field">
+                <label class="field__label" for="d18b-start">Start</label>
+                <input class="field__input" id="d18b-start" type="time">
+              </div>
+              <div class="field">
+                <label class="field__label" for="d18b-end">End</label>
+                <input class="field__input" id="d18b-end" type="time">
+              </div>
+            </div>
+            <div class="field">
+              <label class="field__label" for="d18b-place">Place</label>
+              <input class="field__input" id="d18b-place" type="text" placeholder="Where it happens">
+            </div>
+          </div>
+          <div class="dialog__actions">
+            <button class="btn btn--quiet" type="button">Cancel</button>
+            <button class="btn btn--primary" type="button" disabled>Add commitment</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="specimen" id="dialog-home">
+      <span class="specimen__label">D19 · Home location</span>
+      <div class="dialog dialog--specimen" role="dialog" aria-modal="true" aria-labelledby="d19-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="d19-title">Home location</h2><p class="dialog__sub">Weather and drive times start here.</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="dialog__body">
+            <div class="field">
+              <label class="field__label" for="d19-home">Neighbourhood or address</label>
+              <input class="field__input" id="d19-home" type="text" value="Port Credit, Mississauga">
+            </div>
+          </div>
+          <div class="dialog__actions">
+            <button class="btn btn--quiet" type="button">Cancel</button>
+            <button class="btn btn--primary" type="button">Save</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="specimen" id="dialog-likes">
+      <span class="specimen__label">D20 · Likes and dislikes</span>
+      <div class="dialog dialog--specimen dialog--wide" role="dialog" aria-modal="true" aria-labelledby="d20-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="d20-title">Likes and dislikes</h2><p class="dialog__sub">Liked tags get a boost. Disliked ones are left out.</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="dialog__body">
+            <div class="field">
+              <label class="field__label" for="d20-likes">Likes</label>
+              <div class="chip-input">
+                <span class="chip chip--leaf">Parks<button class="chip__x" type="button" aria-label="Remove Parks"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></span>
+                <span class="chip chip--leaf">Short hikes<button class="chip__x" type="button" aria-label="Remove Short hikes"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></span>
+                <span class="chip chip--leaf">Zoo<button class="chip__x" type="button" aria-label="Remove Zoo"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></span>
+                <span class="chip chip--leaf">Rec Room<button class="chip__x" type="button" aria-label="Remove Rec Room"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></span>
+                <span class="chip chip--leaf">Lavender<button class="chip__x" type="button" aria-label="Remove Lavender"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></span>
+                <span class="chip chip--leaf">Live theatre<button class="chip__x" type="button" aria-label="Remove Live theatre"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></span>
+                <input class="chip-input__field" id="d20-likes" type="text" placeholder="Add one, press Enter">
+              </div>
+            </div>
+            <div class="field">
+              <label class="field__label" for="d20-dislikes">Dislikes</label>
+              <div class="chip-input">
+                <span class="chip chip--warn">Camping<button class="chip__x" type="button" aria-label="Remove Camping"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></span>
+                <span class="chip chip--warn">Drives over 60 min<button class="chip__x" type="button" aria-label="Remove Drives over 60 min"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></span>
+                <input class="chip-input__field" id="d20-dislikes" type="text" placeholder="Add one, press Enter">
+              </div>
+            </div>
+          </div>
+          <div class="dialog__actions">
+            <button class="btn btn--quiet" type="button">Cancel</button>
+            <button class="btn btn--primary" type="button">Save</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="specimen" id="dialog-remove">
+      <span class="specimen__label">D21 · Remove confirm · member</span>
+      <div class="dialog dialog--specimen" role="alertdialog" aria-modal="true" aria-labelledby="d21-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="d21-title">Remove Mae from the family?</h2><p class="dialog__sub">Future weekends will not plan for her.</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="dialog__actions">
+            <button class="btn btn--quiet" type="button">Cancel</button>
+            <button class="btn btn--danger" type="button"><svg class="icon" aria-hidden="true"><use href="#i-trash"/></svg>Remove</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="specimen" id="dialog-remove-commitment">
+      <span class="specimen__label">D21 · Remove confirm · commitment</span>
+      <div class="dialog dialog--specimen" role="alertdialog" aria-modal="true" aria-labelledby="d21b-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="d21b-title">Remove Swim lessons?</h2><p class="dialog__sub">Weekends stop planning around it.</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="dialog__actions">
+            <button class="btn btn--quiet" type="button">Cancel</button>
+            <button class="btn btn--danger" type="button"><svg class="icon" aria-hidden="true"><use href="#i-trash"/></svg>Remove</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="specimen" id="dialog-signout">
+      <span class="specimen__label">D22 · Sign out</span>
+      <div class="dialog dialog--specimen" role="alertdialog" aria-modal="true" aria-labelledby="d22-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="d22-title">Sign out?</h2><p class="dialog__sub">Your family and weekends stay saved.</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="dialog__actions">
+            <button class="btn btn--quiet" type="button">Stay signed in</button>
+            <a class="btn btn--danger" href="./sign-in.html"><svg class="icon" aria-hidden="true"><use href="#i-sign_out"/></svg>Sign out</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================== ADMIN ============================== -->
+
+    <section class="specimen" id="dialog-approve">
+      <span class="specimen__label">D23 · Approve a submission</span>
+      <div class="dialog dialog--specimen" role="dialog" aria-modal="true" aria-labelledby="d23-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="d23-title">Approve Port Credit Buskerfest?</h2><p class="dialog__sub">It becomes visible to every family nearby.</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="dialog__body">
+            <div class="card card--sunk">
+              <div class="card__head">
+                <span class="date-tile" aria-hidden="true"><span class="date-tile__m">Jun</span><span class="date-tile__d">20</span></span>
+                <div class="card__head-text"><p class="card__title">Sat 20 Jun · 2:00 to 9:00pm</p><p class="card__meta">Memorial Park · Free · All ages · sent by quinntynebrown@gmail.com</p></div>
+              </div>
+            </div>
+          </div>
+          <div class="dialog__actions">
+            <button class="btn btn--quiet" type="button">Cancel</button>
+            <button class="btn btn--primary" type="button"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Approve</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="specimen" id="dialog-reject">
+      <span class="specimen__label">D24 · Reject a submission</span>
+      <div class="dialog dialog--specimen" role="dialog" aria-modal="true" aria-labelledby="d24-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="d24-title">Reject this suggestion?</h2><p class="dialog__sub">The reason is shown to the person who sent it.</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="dialog__body">
+            <div class="field">
+              <label class="field__label" for="d24-reason">Reason <span class="field__req">Optional</span></label>
+              <textarea class="field__input" id="d24-reason" rows="3" placeholder="Already listed as the Lavender Festival weekend."></textarea>
+            </div>
+          </div>
+          <div class="dialog__actions">
+            <button class="btn btn--quiet" type="button">Cancel</button>
+            <button class="btn btn--danger" type="button"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg>Reject</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================== MENUS ============================== -->
+
+    <section class="specimen" id="dialog-more">
+      <span class="specimen__label">D25 · Weekend "More" · sheet under 720px, anchored menu above</span>
+      <div class="dialog dialog--specimen" role="dialog" aria-modal="true" aria-labelledby="d25-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="d25-title">Weekend options</h2></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="dialog__body">
+            <ul class="list">
+              <li><a class="list__item list__item--action" href="#dialog-regenerate"><span class="disc"><svg class="icon" aria-hidden="true"><use href="#i-refresh"/></svg></span><span class="list__text"><span class="list__title">Regenerate the weekend</span><span class="list__sub">Locked blocks stay where they are</span></span></a></li>
+              <li><a class="list__item list__item--action" href="#dialog-calendar"><span class="disc"><svg class="icon" aria-hidden="true"><use href="#i-calendar"/></svg></span><span class="list__text"><span class="list__title">Add to calendar</span><span class="list__sub">One .ics with both days</span></span></a></li>
+            </ul>
+          </div>
+          <div class="dialog__actions">
+            <button class="btn btn--quiet" type="button">Close</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="specimen specimen--menu" id="dialog-more-menu">
+      <span class="specimen__label">D25 · The same options as an anchored menu (720px and up)</span>
+      <div class="menu" role="menu" aria-label="Weekend options">
+        <a class="menu__item" role="menuitem" href="#dialog-regenerate"><svg class="icon" aria-hidden="true"><use href="#i-refresh"/></svg>Regenerate the weekend</a>
+        <a class="menu__item" role="menuitem" href="#dialog-calendar"><svg class="icon" aria-hidden="true"><use href="#i-calendar"/></svg>Add to calendar</a>
+      </div>
+    </section>
+
+    <section class="specimen specimen--menu" id="dialog-account">
+      <span class="specimen__label">D26 · Account menu (720px and up; on phones the Family tab covers this)</span>
+      <div class="menu" role="menu" aria-label="Account">
+        <p class="menu__header">quinntynebrown@gmail.com</p>
+        <a class="menu__item" role="menuitem" href="./family.html"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg>Family settings</a>
+        <a class="menu__item menu__item--warn" role="menuitem" href="#dialog-signout"><svg class="icon" aria-hidden="true"><use href="#i-sign_out"/></svg>Sign out</a>
+      </div>
+    </section>
+
+  </div>
+</main>
+<!-- @shell:bottomnav -->
+<nav class="bottom-nav" aria-label="Primary">
+  <a class="bottom-nav__item" data-nav="weekend" href="./weekend.html"><span class="bottom-nav__icon"><svg class="icon" aria-hidden="true"><use href="#i-home"/></svg></span>Weekend</a>
+  <a class="bottom-nav__item" data-nav="ideas" href="./ideas.html"><span class="bottom-nav__icon"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg></span>Ideas</a>
+  <a class="bottom-nav__item" data-nav="past" href="./past.html"><span class="bottom-nav__icon"><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg></span>Past</a>
+  <a class="bottom-nav__item" data-nav="family" href="./family.html"><span class="bottom-nav__icon"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg></span>Family</a>
+</nav>
+<!-- @/shell:bottomnav -->
+<script src="../app.js"></script>
+</body>
+</html>

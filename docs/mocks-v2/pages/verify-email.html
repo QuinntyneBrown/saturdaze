@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+<!-- @shell:head -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Verify your email — Saturdaze</title>
+<link rel="stylesheet" href="../styles/tokens.css">
+<link rel="stylesheet" href="../styles/app.css">
+<!-- @/shell:head -->
+</head>
+<body data-page="verify-email" data-shell="bare">
+<main class="auth auth--stack" id="main">
+  <div class="auth__col">
+    <a class="auth__brand" href="./landing.html"><span class="brand-mark" aria-hidden="true"></span>Saturdaze</a>
+
+    <!-- 1 · Verifying -->
+    <section class="specimen" id="state-verifying" aria-labelledby="ve-title-1">
+      <span class="specimen__label">1 · Verifying</span>
+      <div class="auth-card" role="status" aria-live="polite">
+        <div class="auth-card__head auth-card__head--center">
+          <span class="spinner-disc auth-card__disc" aria-hidden="true"><span class="spinner"></span><svg class="icon" aria-hidden="true"><use href="#i-mail"/></svg></span>
+          <h1 class="auth-card__title" id="ve-title-1">Verifying your email</h1>
+          <p class="auth-card__sub">One moment.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2 · Verified -->
+    <section class="specimen" id="state-verified" aria-labelledby="ve-title-2">
+      <span class="specimen__label">2 · Verified</span>
+      <div class="auth-card">
+        <div class="auth-card__head auth-card__head--center">
+          <span class="disc disc--xl disc--accent auth-card__disc" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg></span>
+          <h2 class="auth-card__title" id="ve-title-2">You are verified</h2>
+          <p class="auth-card__sub">Tell us about your family and the first weekend follows.</p>
+        </div>
+        <a class="btn btn--primary btn--lg btn--block" href="./family.html"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg>Set up your family</a>
+        <a class="btn btn--quiet btn--lg btn--block" href="./weekend.empty.html">Skip to this weekend</a>
+      </div>
+    </section>
+
+    <!-- 3 · Expired -->
+    <section class="specimen" id="state-expired" aria-labelledby="ve-title-3">
+      <span class="specimen__label">Link expired</span>
+      <div class="auth-card">
+        <div class="auth-card__head auth-card__head--center">
+          <span class="disc disc--xl disc--warn auth-card__disc" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-key"/></svg></span>
+          <h2 class="auth-card__title" id="ve-title-3">This link has expired</h2>
+          <p class="auth-card__sub">Verification links last 24 hours.</p>
+        </div>
+        <button class="btn btn--primary btn--lg btn--block" type="button"><svg class="icon" aria-hidden="true"><use href="#i-mail"/></svg>Resend verification email</button>
+        <a class="btn btn--quiet btn--lg btn--block" href="./sign-in.html">Back to sign in</a>
+      </div>
+    </section>
+
+    <p class="auth__foot"><a class="link--soft" href="./legal.html">Terms</a><span aria-hidden="true">·</span><a class="link--soft" href="./legal.html#privacy">Privacy</a><span aria-hidden="true">·</span><a class="link--soft" href="./landing.html">Back to Saturdaze</a></p>
+  </div>
+</main>
+<script src="../app.js"></script>
+</body>
+</html>

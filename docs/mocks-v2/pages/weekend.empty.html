@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+<!-- @shell:head -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Your first weekend — Saturdaze</title>
+<link rel="stylesheet" href="../styles/tokens.css">
+<link rel="stylesheet" href="../styles/app.css">
+<!-- @/shell:head -->
+</head>
+<body data-page="weekend" data-shell="app">
+<!-- @shell:topbar -->
+<header class="topbar">
+  <div class="container topbar__inner">
+    <a class="topbar__brand" href="./weekend.html"><span class="brand-mark" aria-hidden="true"></span>Saturdaze</a>
+    <nav class="topbar__nav" aria-label="Primary">
+      <a class="topbar__link" data-nav="weekend" href="./weekend.html" aria-current="page">Weekend</a>
+      <a class="topbar__link" data-nav="ideas" href="./ideas.html">Ideas</a>
+      <a class="topbar__link" data-nav="past" href="./past.html">Past</a>
+      <a class="topbar__link" data-nav="family" href="./family.html">Family</a>
+    </nav>
+    <div class="topbar__actions">
+      <a class="avatar avatar--q avatar--btn" href="./dialogs.html#dialog-account" aria-label="Account menu">Q</a>
+    </div>
+  </div>
+</header>
+<!-- @/shell:topbar -->
+<main class="app-main container container--stack" id="main">
+  <header class="page-header">
+    <div class="page-header__text">
+      <h1 class="page-header__title">Your first weekend</h1>
+      <p class="page-header__subtitle">Nothing is drafted yet. Planning takes a few seconds.</p>
+    </div>
+  </header>
+
+  <section class="empty empty--warm" aria-labelledby="empty-title">
+    <span class="disc disc--xl disc--primary" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg></span>
+    <h2 class="empty__title" id="empty-title">Saturday and Sunday, drafted around the Browns</h2>
+    <p class="empty__body">Swim, church and the workout stay put. Everything else gets planned around the weather and what the kids like.</p>
+    <div class="empty__cta">
+      <a class="btn btn--primary btn--lg" href="./weekend.generating.html"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg>Plan this weekend</a>
+      <span class="empty__note">Or wait for Friday at 6pm.</span>
+    </div>
+  </section>
+
+  <section class="section mt-6" aria-labelledby="planned-title">
+    <div class="section-header">
+      <div class="section-header__text">
+        <h2 class="section-header__title" id="planned-title">Planned around</h2>
+        <p class="section-header__sub">Change any of this on Family.</p>
+      </div>
+    </div>
+    <ul class="list list--card">
+      <li>
+        <a class="list__item list__item--action" href="./family.html">
+          <span class="disc"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg></span>
+          <span class="list__text"><span class="list__title">The Browns, Port Credit</span><span class="list__sub">2 parents · Eli 9 · Mae 5</span></span>
+          <span class="list__trail"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron_right"/></svg></span>
+        </a>
+      </li>
+      <li>
+        <a class="list__item list__item--action" href="./family.html">
+          <span class="disc disc--accent"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg></span>
+          <span class="list__text"><span class="list__title">3 commitments</span><span class="list__sub">Swim Sat 9:00 · Church Sun 10:30 · Workout 5:00</span></span>
+          <span class="list__trail"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron_right"/></svg></span>
+        </a>
+      </li>
+      <li>
+        <a class="list__item list__item--action" href="./family.html">
+          <span class="disc disc--leaf"><svg class="icon" aria-hidden="true"><use href="#i-heart"/></svg></span>
+          <span class="list__text"><span class="list__title">Likes parks and theatre</span><span class="list__sub">No camping · drives under 60 min</span></span>
+          <span class="list__trail"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron_right"/></svg></span>
+        </a>
+      </li>
+    </ul>
+  </section>
+</main>
+<!-- @shell:bottomnav -->
+<nav class="bottom-nav" aria-label="Primary">
+  <a class="bottom-nav__item" data-nav="weekend" href="./weekend.html" aria-current="page"><span class="bottom-nav__icon"><svg class="icon" aria-hidden="true"><use href="#i-home"/></svg></span>Weekend</a>
+  <a class="bottom-nav__item" data-nav="ideas" href="./ideas.html"><span class="bottom-nav__icon"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg></span>Ideas</a>
+  <a class="bottom-nav__item" data-nav="past" href="./past.html"><span class="bottom-nav__icon"><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg></span>Past</a>
+  <a class="bottom-nav__item" data-nav="family" href="./family.html"><span class="bottom-nav__icon"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg></span>Family</a>
+</nav>
+<!-- @/shell:bottomnav -->
+<script src="../app.js"></script>
+</body>
+</html>

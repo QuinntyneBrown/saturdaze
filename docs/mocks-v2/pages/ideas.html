@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="en">
+<head>
+<!-- @shell:head -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ideas · Activities — Saturdaze</title>
+<link rel="stylesheet" href="../styles/tokens.css">
+<link rel="stylesheet" href="../styles/app.css">
+<!-- @/shell:head -->
+</head>
+<body data-page="ideas" data-shell="app">
+<!-- @shell:topbar -->
+<header class="topbar">
+  <div class="container topbar__inner">
+    <a class="topbar__brand" href="./weekend.html"><span class="brand-mark" aria-hidden="true"></span>Saturdaze</a>
+    <nav class="topbar__nav" aria-label="Primary">
+      <a class="topbar__link" data-nav="weekend" href="./weekend.html">Weekend</a>
+      <a class="topbar__link" data-nav="ideas" href="./ideas.html" aria-current="page">Ideas</a>
+      <a class="topbar__link" data-nav="past" href="./past.html">Past</a>
+      <a class="topbar__link" data-nav="family" href="./family.html">Family</a>
+    </nav>
+    <div class="topbar__actions">
+      <a class="avatar avatar--q avatar--btn" href="./dialogs.html#dialog-account" aria-label="Account menu">Q</a>
+    </div>
+  </div>
+</header>
+<!-- @/shell:topbar -->
+<main class="app-main container" id="main">
+  <header class="page-header">
+    <div class="page-header__text">
+      <h1 class="page-header__title">Ideas</h1>
+      <p class="page-header__subtitle">Picked for Eli and Mae, under 45 minutes from Port Credit.</p>
+    </div>
+  </header>
+
+  <nav class="segments mb-4" aria-label="Idea type">
+    <a class="segments__tab" href="./ideas.html" aria-current="page">Activities</a>
+    <a class="segments__tab" href="./ideas.food.html">Food</a>
+    <a class="segments__tab" href="./ideas.events.html">Events</a>
+  </nav>
+
+  <div class="scroller-x mb-6" role="group" aria-label="Filters">
+    <button class="filter-chip" type="button" aria-pressed="true">All</button>
+    <button class="filter-chip filter-chip--leaf" type="button" aria-pressed="false">Outdoor</button>
+    <button class="filter-chip filter-chip--indoor" type="button" aria-pressed="false">Indoor</button>
+    <button class="filter-chip" type="button" aria-pressed="false">Under 30 min</button>
+    <button class="filter-chip" type="button" aria-pressed="false">Ages 5+</button>
+    <button class="filter-chip filter-chip--sky" type="button" aria-pressed="false">Weather-safe</button>
+  </div>
+
+  <!-- ============ Right for this weekend's weather ============ -->
+  <section class="section" aria-labelledby="g-weather">
+    <div class="section-header">
+      <div class="section-header__text">
+        <h2 class="section-header__title" id="g-weather">Right for this weekend's weather</h2>
+        <p class="section-header__sub">Sunny Saturday, 22°</p>
+      </div>
+    </div>
+    <ul class="grid-cards">
+      <li class="card">
+        <div class="card__head">
+          <span class="disc disc--lg disc--leaf" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-tree"/></svg></span>
+          <div class="card__head-text">
+            <h3 class="card__title">Terre Bleu Lavender Farm</h3>
+            <p class="card__meta">Milton</p>
+          </div>
+        </div>
+        <p class="card__body clamp-2">Lavender peaks 17 to 24 May, and Mae is old enough to walk the rows this year.</p>
+        <div class="card__chips">
+          <span class="chip chip--sky"><svg class="icon" aria-hidden="true"><use href="#i-car"/></svg>45 min</span>
+          <span class="chip">All ages</span>
+        </div>
+        <div class="card__footer">
+          <span class="card__footer-label">Add to</span>
+          <button class="btn btn--sm btn--added" type="button" aria-pressed="true"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>On Saturday</button>
+          <button class="btn btn--quiet btn--sm" type="button">Sunday</button>
+        </div>
+      </li>
+      <li class="card">
+        <div class="card__head">
+          <span class="disc disc--lg disc--leaf" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-tree"/></svg></span>
+          <div class="card__head-text">
+            <h3 class="card__title">Bronte Creek Provincial Park</h3>
+            <p class="card__meta">Oakville</p>
+          </div>
+        </div>
+        <p class="card__body clamp-2">Short trail, washrooms, picnic tables. Your usual win, with a splash pad if it gets hot.</p>
+        <div class="card__chips">
+          <span class="chip chip--sky"><svg class="icon" aria-hidden="true"><use href="#i-car"/></svg>25 min</span>
+          <span class="chip">Ages 5+</span>
+        </div>
+        <div class="card__footer">
+          <span class="card__footer-label">Add to</span>
+          <button class="btn btn--quiet btn--sm" type="button">Saturday</button>
+          <button class="btn btn--quiet btn--sm" type="button">Sunday</button>
+        </div>
+      </li>
+      <li class="card">
+        <div class="card__head">
+          <span class="disc disc--lg disc--leaf" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-tree"/></svg></span>
+          <div class="card__head-text">
+            <h3 class="card__title">Royal Botanical Gardens</h3>
+            <p class="card__meta">Burlington</p>
+          </div>
+        </div>
+        <p class="card__body clamp-2">Tulip festival in bloom. Paved paths, so the wagon works.</p>
+        <div class="card__chips">
+          <span class="chip chip--sky"><svg class="icon" aria-hidden="true"><use href="#i-car"/></svg>35 min</span>
+        </div>
+        <div class="card__footer">
+          <span class="card__footer-label">Add to</span>
+          <button class="btn btn--quiet btn--sm" type="button">Saturday</button>
+          <button class="btn btn--quiet btn--sm" type="button">Sunday</button>
+        </div>
+      </li>
+    </ul>
+  </section>
+
+  <!-- ============ If the weather turns ============ -->
+  <section class="section" aria-labelledby="g-turns">
+    <div class="section-header">
+      <div class="section-header__text">
+        <h2 class="section-header__title" id="g-turns">If the weather turns</h2>
+        <p class="section-header__sub">Cloudy Sunday afternoon</p>
+      </div>
+    </div>
+    <ul class="grid-cards">
+      <li class="card">
+        <div class="card__head">
+          <span class="disc disc--lg disc--indoor" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-popcorn"/></svg></span>
+          <div class="card__head-text">
+            <h3 class="card__title">The Rec Room</h3>
+            <p class="card__meta">Square One</p>
+          </div>
+        </div>
+        <p class="card__body clamp-2">Bowling, arcade and dinner under one roof. Eli asked for it twice last week.</p>
+        <div class="card__chips">
+          <span class="chip chip--sky"><svg class="icon" aria-hidden="true"><use href="#i-car"/></svg>10 min</span>
+          <span class="chip">All ages</span>
+        </div>
+        <div class="card__footer">
+          <span class="card__footer-label">Add to</span>
+          <button class="btn btn--quiet btn--sm" type="button">Saturday</button>
+          <button class="btn btn--sm btn--added" type="button" aria-pressed="true"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>On Sunday</button>
+        </div>
+      </li>
+      <li class="card">
+        <div class="card__head">
+          <span class="disc disc--lg disc--indoor" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-ticket"/></svg></span>
+          <div class="card__head-text">
+            <h3 class="card__title">Ontario Science Centre</h3>
+            <p class="card__meta">Toronto</p>
+          </div>
+        </div>
+        <p class="card__body clamp-2">The new Senses exhibit. Quiet room on level two when Mae has had enough.</p>
+        <div class="card__chips">
+          <span class="chip chip--sky"><svg class="icon" aria-hidden="true"><use href="#i-car"/></svg>40 min</span>
+        </div>
+        <div class="card__footer">
+          <span class="card__footer-label">Add to</span>
+          <button class="btn btn--quiet btn--sm" type="button">Saturday</button>
+          <button class="btn btn--quiet btn--sm" type="button">Sunday</button>
+        </div>
+      </li>
+      <li class="card">
+        <div class="card__head">
+          <span class="disc disc--lg disc--leaf" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-tree"/></svg></span>
+          <div class="card__head-text">
+            <h3 class="card__title">Toronto Zoo</h3>
+            <p class="card__meta">Scarborough</p>
+          </div>
+        </div>
+        <p class="card__body clamp-2">Polar bears, splash zone and indoor pavilions. A long drive, so it wants the whole day.</p>
+        <div class="card__chips">
+          <span class="chip chip--sky"><svg class="icon" aria-hidden="true"><use href="#i-car"/></svg>55 min</span>
+          <span class="chip">All ages</span>
+        </div>
+        <div class="card__footer">
+          <span class="card__footer-label">Add to</span>
+          <button class="btn btn--quiet btn--sm" type="button">Saturday</button>
+          <button class="btn btn--quiet btn--sm" type="button">Sunday</button>
+        </div>
+      </li>
+    </ul>
+  </section>
+
+  <!-- ============ Try something new ============ -->
+  <section class="section" aria-labelledby="g-new">
+    <div class="section-header">
+      <div class="section-header__text">
+        <h2 class="section-header__title" id="g-new">Try something new</h2>
+        <p class="section-header__sub">You have not done these recently</p>
+      </div>
+    </div>
+    <ul class="grid-cards">
+      <li class="card">
+        <div class="card__head">
+          <span class="disc disc--lg disc--leaf" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-tree"/></svg></span>
+          <div class="card__head-text">
+            <h3 class="card__title">Riverwood Conservancy</h3>
+            <p class="card__meta">Mississauga</p>
+          </div>
+        </div>
+        <p class="card__body clamp-2">Forest school trails and an owl barn. Close enough for a spare hour.</p>
+        <div class="card__chips">
+          <span class="chip chip--sky"><svg class="icon" aria-hidden="true"><use href="#i-car"/></svg>8 min</span>
+          <span class="chip chip--primary">First time</span>
+        </div>
+        <div class="card__footer">
+          <span class="card__footer-label">Add to</span>
+          <button class="btn btn--quiet btn--sm" type="button">Saturday</button>
+          <button class="btn btn--quiet btn--sm" type="button">Sunday</button>
+        </div>
+      </li>
+      <li class="card">
+        <div class="card__head">
+          <span class="disc disc--lg disc--indoor" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-ticket"/></svg></span>
+          <div class="card__head-text">
+            <h3 class="card__title">Living Arts Centre kids' theatre</h3>
+            <p class="card__meta">Mississauga</p>
+          </div>
+        </div>
+        <p class="card__body clamp-2">Saturday matinée at 2pm, fifty minutes long. Booster seats at the door.</p>
+        <div class="card__chips">
+          <span class="chip chip--sky"><svg class="icon" aria-hidden="true"><use href="#i-car"/></svg>5 min</span>
+          <span class="chip chip--primary">First time</span>
+        </div>
+        <div class="card__footer">
+          <span class="card__footer-label">Add to</span>
+          <button class="btn btn--quiet btn--sm" type="button">Saturday</button>
+          <button class="btn btn--quiet btn--sm" type="button">Sunday</button>
+        </div>
+      </li>
+    </ul>
+  </section>
+</main>
+<!-- @shell:bottomnav -->
+<nav class="bottom-nav" aria-label="Primary">
+  <a class="bottom-nav__item" data-nav="weekend" href="./weekend.html"><span class="bottom-nav__icon"><svg class="icon" aria-hidden="true"><use href="#i-home"/></svg></span>Weekend</a>
+  <a class="bottom-nav__item" data-nav="ideas" href="./ideas.html" aria-current="page"><span class="bottom-nav__icon"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg></span>Ideas</a>
+  <a class="bottom-nav__item" data-nav="past" href="./past.html"><span class="bottom-nav__icon"><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg></span>Past</a>
+  <a class="bottom-nav__item" data-nav="family" href="./family.html"><span class="bottom-nav__icon"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg></span>Family</a>
+</nav>
+<!-- @/shell:bottomnav -->
+<script src="../app.js"></script>
+</body>
+</html>
