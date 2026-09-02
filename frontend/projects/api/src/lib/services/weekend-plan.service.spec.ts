@@ -120,7 +120,6 @@ describe('WeekendPlanService', () => {
 
     it('rejects before any weekend is loaded', async () => {
       await expect(service.regenerate()).rejects.toThrow('No current weekend is loaded yet.');
-      httpMock.expectOne(CURRENT).flush(weekendDto());
     });
   });
 
