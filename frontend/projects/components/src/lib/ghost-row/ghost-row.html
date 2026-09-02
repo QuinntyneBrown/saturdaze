@@ -1,11 +1,15 @@
+<!-- One content template for both elements; see button.html for why. -->
+<ng-template #content>
+  <sd-icon [name]="icon()" [size]="16" />
+  <ng-content />
+</ng-template>
+
 @if (href()) {
   <a class="ghost-row" [attr.href]="href()" (click)="onAnchorClick($event)">
-    <sd-icon [name]="icon()" [size]="16" />
-    <ng-content />
+    <ng-container *ngTemplateOutlet="content" />
   </a>
 } @else {
   <button class="ghost-row" type="button" (click)="pressed.emit()">
-    <sd-icon [name]="icon()" [size]="16" />
-    <ng-content />
+    <ng-container *ngTemplateOutlet="content" />
   </button>
 }

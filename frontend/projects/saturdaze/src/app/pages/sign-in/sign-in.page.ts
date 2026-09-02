@@ -6,6 +6,7 @@ import { AuthError, SESSION_STORE } from 'api';
 import { AuthCard, AuthShell, Banner, Button, TextInput, Toggle } from 'components';
 
 import { devState } from '../../shared/dev-state';
+import { trimmedEmail } from '../../shared/trimmed-email.validator';
 
 /**
  * Sign in — `docs/mocks-v2/pages/sign-in.html`.
@@ -33,7 +34,7 @@ export class SignInPage {
   protected readonly form = new FormGroup({
     email: new FormControl(this.session.rememberedEmail() ?? '', {
       nonNullable: true,
-      validators: [Validators.required, Validators.email],
+      validators: [Validators.required, trimmedEmail],
     }),
     password: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
     remember: new FormControl(true, { nonNullable: true }),

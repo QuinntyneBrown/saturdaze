@@ -25,7 +25,8 @@ export class EventSubmittedDialog {
 
   protected readonly meta = computed(() => {
     const s = this.data.submission;
-    const when = formatEventDate(s.startsAtLocal);
+    // startsAtLocal is a local date-time; the formatter wants the date part.
+    const when = formatEventDate(s.startsAtLocal.slice(0, 10));
     return s.location ? `${s.location} · ${when}` : when;
   });
 

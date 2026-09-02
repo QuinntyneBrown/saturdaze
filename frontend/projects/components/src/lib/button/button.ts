@@ -6,6 +6,7 @@ import {
   inject,
   input,
 } from '@angular/core';
+import { NgTemplateOutlet } from '@angular/common';
 import { Router } from '@angular/router';
 
 import { navigateInApp } from '../shared/in-app-link';
@@ -27,6 +28,7 @@ export type ButtonType = 'button' | 'submit' | 'reset';
 @Component({
   selector: 'sd-button',
   standalone: true,
+  imports: [NgTemplateOutlet],
   templateUrl: './button.html',
   styleUrl: './button.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

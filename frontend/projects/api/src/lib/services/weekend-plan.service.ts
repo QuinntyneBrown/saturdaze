@@ -42,13 +42,6 @@ export class WeekendPlanService implements IWeekendPlanService {
   });
 
   /**
-   * Constructor — kicks off the first load; the page reads the signal.
-   */
-  constructor() {
-    void this.loadCurrent().catch(() => undefined);
-  }
-
-  /**
    * Get Weekend.
    *
    * @returns {Signal<WeekendView>} The result of the operation

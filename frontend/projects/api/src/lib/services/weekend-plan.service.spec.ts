@@ -32,9 +32,11 @@ describe('WeekendPlanService', () => {
     vi.restoreAllMocks();
   });
 
-  /** Answer the constructor's GET with a weekend and wait for it to apply. */
+  /** Load the current weekend, answer the GET and wait for it to apply. */
   async function loadCurrent(dto = weekendDto()): Promise<void> {
+    const pending = service.loadCurrent();
     httpMock.expectOne(CURRENT).flush(dto);
+    await pending;
     await settle();
   }
 
@@ -51,7 +53,9 @@ describe('WeekendPlanService', () => {
     });
 
     it('maps a 404 to the empty state', async () => {
+      const pending = service.loadCurrent();
       httpMock.expectOne(CURRENT).flush(null, { status: 404, statusText: 'Not Found' });
+      await pending;
       await settle();
       const view = service.getWeekend()();
       expect(view.status).toBe('empty');
@@ -66,8 +70,9 @@ describe('WeekendPlanService', () => {
     });
 
     it('rejects on any other failure and stays loading', async () => {
+      const first = service.loadCurrent();
       httpMock.expectOne(CURRENT).flush(null, { status: 500, statusText: 'Server Error' });
-      await settle();
+      await expect(first).rejects.toBeTruthy();
       expect(service.getWeekend()().status).toBe('loading');
 
       const retry = service.loadCurrent();

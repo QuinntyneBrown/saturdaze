@@ -17,7 +17,7 @@
       [ngModel]="minutes()"
       (ngModelChange)="minutes.set($event)"
     />
-    <sd-seg-radio label="Which day" [options]="days" [ngModel]="day()" (ngModelChange)="day.set($event)" />
+    <sd-seg-radio label="Which day" name="day" [options]="days" [ngModel]="day()" (ngModelChange)="day.set($event)" />
     <button type="submit" hidden></button>
   </form>
   <sd-button slot="actions" variant="quiet" type="button" (click)="cancel()">Cancel</sd-button>

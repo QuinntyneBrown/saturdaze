@@ -9,7 +9,7 @@
       [ngModel]="name()"
       (ngModelChange)="name.set($event); error.set('')"
     />
-    <sd-seg-radio label="Day" [options]="days" [ngModel]="day()" (ngModelChange)="day.set($event); error.set('')" />
+    <sd-seg-radio label="Day" name="day" [options]="days" [ngModel]="day()" (ngModelChange)="day.set($event); error.set('')" />
     <div class="row-2">
       <sd-text-input
         label="Start"

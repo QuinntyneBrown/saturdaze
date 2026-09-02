@@ -203,16 +203,7 @@ describe('Button', () => {
     expect(a.lastElementChild?.classList.contains('trail')).toBe(true);
   });
 
-  // TODO(sd-button): the template repeats the three <ng-content> slots in
-  // both the <a> and <button> branches. Angular resolves projection slots
-  // once per component: content for a selector goes to the FIRST matching
-  // slot ([slot=leading] / [slot=trailing] → the <a> branch) and default
-  // content to the LAST wildcard slot (→ the <button> branch). So an anchor
-  // button loses its default text ("Map", "See menu", "Details", "Create your
-  // account") and a plain button loses its leading / trailing slots. Fix as
-  // in list-item.html: one <ng-template #body> holding the slots, rendered in
-  // each branch with NgTemplateOutlet. Un-skip these two once that lands.
-  it.skip('projects leading, default and trailing content in order into the button', () => {
+  it('projects leading, default and trailing content in order into the button', () => {
     const wrapper = TestBed.createComponent(HostCmp);
     wrapper.detectChanges();
     const btn = (wrapper.nativeElement as HTMLElement).querySelector('#plain .btn') as HTMLElement;
@@ -221,7 +212,7 @@ describe('Button', () => {
     expect(btn.lastElementChild?.classList.contains('trail')).toBe(true);
   });
 
-  it.skip('projects leading, default and trailing content in order into the anchor', () => {
+  it('projects leading, default and trailing content in order into the anchor', () => {
     const wrapper = TestBed.createComponent(HostCmp);
     wrapper.detectChanges();
     const a = (wrapper.nativeElement as HTMLElement).querySelector('#link .btn') as HTMLElement;

@@ -15,6 +15,7 @@ import {
 } from 'components';
 
 import { passwordStrength } from '../../shared/password-strength';
+import { trimmedEmail } from '../../shared/trimmed-email.validator';
 
 /**
  * Create account — `docs/mocks-v2/pages/create-account.html`.
@@ -43,7 +44,7 @@ export class CreateAccountPage {
     familyName: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
     email: new FormControl('', {
       nonNullable: true,
-      validators: [Validators.required, Validators.email],
+      validators: [Validators.required, trimmedEmail],
     }),
     password: new FormControl('', {
       nonNullable: true,

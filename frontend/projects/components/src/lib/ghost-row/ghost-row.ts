@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, input, output } from '@angular/core';
+import { NgTemplateOutlet } from '@angular/common';
 import { Router } from '@angular/router';
 
 import { Icon } from '../icon/icon';
@@ -12,7 +13,7 @@ import { navigateInApp } from '../shared/in-app-link';
 @Component({
   selector: 'sd-ghost-row',
   standalone: true,
-  imports: [Icon],
+  imports: [Icon, NgTemplateOutlet],
   templateUrl: './ghost-row.html',
   styleUrl: './ghost-row.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

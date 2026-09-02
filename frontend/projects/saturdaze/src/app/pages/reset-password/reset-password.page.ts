@@ -25,6 +25,7 @@ import {
 import { devState } from '../../shared/dev-state';
 import { maskEmail } from '../../shared/mask-email';
 import { passwordStrength } from '../../shared/password-strength';
+import { trimmedEmail } from '../../shared/trimmed-email.validator';
 
 /**
  * Reset password — `docs/mocks-v2/pages/reset-password.html`, one page with
@@ -67,7 +68,7 @@ export class ResetPasswordPage {
   protected readonly requestForm = new FormGroup({
     email: new FormControl(this.email(), {
       nonNullable: true,
-      validators: [Validators.required, Validators.email],
+      validators: [Validators.required, trimmedEmail],
     }),
   });
 

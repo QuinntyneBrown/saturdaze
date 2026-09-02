@@ -105,7 +105,7 @@ describe('authInterceptor', () => {
     expect(navigateSpy).not.toHaveBeenCalled();
   });
 
-  it('does not retry and bounces to /login when the refresh fails', async () => {
+  it('does not retry and bounces to /sign-in when the refresh fails', async () => {
     session.refreshSession = vi.fn(() => Promise.resolve(false));
     let error: unknown;
     httpClient.get('/api/data').subscribe({ error: (e) => (error = e) });
@@ -116,7 +116,7 @@ describe('authInterceptor', () => {
     httpMock.expectNone('/api/data');
     expect(error).toBeTruthy();
     expect(navigateSpy).toHaveBeenCalledTimes(1);
-    expect(String(navigateSpy.mock.calls[0]?.[0])).toMatch(/^\/login\?returnUrl=/);
+    expect(String(navigateSpy.mock.calls[0]?.[0])).toMatch(/^\/sign-in\?returnUrl=/);
   });
 
   it('does not navigate while the session is still rehydrating', async () => {

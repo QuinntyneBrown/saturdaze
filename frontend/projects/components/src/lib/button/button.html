@@ -1,3 +1,15 @@
+<!--
+  One content template rendered inside either element. Declaring the
+  ng-content slots once (instead of once per @if branch) is what keeps the
+  projection working for the anchor variant — Angular projects each slot
+  into a single ng-content.
+-->
+<ng-template #content>
+  <ng-content select="[slot=leading]" />
+  <ng-content />
+  <ng-content select="[slot=trailing]" />
+</ng-template>
+
 @if (href()) {
   <a
     [class]="classes()"
@@ -9,9 +21,7 @@
     [attr.aria-disabled]="disabled() ? 'true' : null"
     (click)="onAnchorClick($event)"
   >
-    <ng-content select="[slot=leading]" />
-    <ng-content />
-    <ng-content select="[slot=trailing]" />
+    <ng-container *ngTemplateOutlet="content" />
   </a>
 } @else {
   <button
@@ -21,8 +31,6 @@
     [attr.aria-label]="label() || null"
     [attr.aria-pressed]="pressed() === null ? null : pressed()"
   >
-    <ng-content select="[slot=leading]" />
-    <ng-content />
-    <ng-content select="[slot=trailing]" />
+    <ng-container *ngTemplateOutlet="content" />
   </button>
 }

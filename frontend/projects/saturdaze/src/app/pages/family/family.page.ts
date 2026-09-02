@@ -94,7 +94,7 @@ export class FamilyPage {
 
   protected readonly user = this.session.user;
   protected readonly isAdmin = computed(() => this.user()?.role === 'Admin');
-  protected readonly pendingCount = computed(() => this.submissions.pending().length);
+  protected readonly pendingCount = computed(() => this.submissions.pending()().length);
   protected readonly pendingSubtitle = computed(() => {
     const n = this.pendingCount();
     return n === 0 ? 'Nothing waiting' : n === 1 ? '1 waiting' : `${n} waiting`;

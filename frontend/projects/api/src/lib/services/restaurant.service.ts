@@ -266,6 +266,11 @@ export class RestaurantService implements IRestaurantService {
    * @returns {Promise<void>} The result of the operation
    */
   async load(): Promise<void> {
+    // The section subtitles read the current weekend's meal blocks; make sure
+    // it is loaded once when Food is the first page opened.
+    if (this.weekend.getWeekend()().status === 'loading') {
+      await this.weekend.loadCurrent().catch(() => undefined);
+    }
     const saturday = upcomingSaturdayIso();
     const sunday = addDaysIso(saturday, 1);
     const fetch = (dayIso: string, slot: MealSlot): Promise<ReadonlyArray<RestaurantDto>> =>
