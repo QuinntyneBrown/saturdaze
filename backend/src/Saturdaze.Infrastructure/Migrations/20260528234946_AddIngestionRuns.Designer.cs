@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Saturdaze.Infrastructure.Persistence;
 
@@ -11,13 +12,15 @@ using Saturdaze.Infrastructure.Persistence;
 namespace Saturdaze.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260528234946_AddIngestionRuns")]
+    partial class AddIngestionRuns
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.11")
+                .HasAnnotation("ProductVersion", "10.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -138,81 +141,6 @@ namespace Saturdaze.Infrastructure.Migrations
                     b.ToTable("EmailVerificationTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Saturdaze.Domain.Entities.EventSubmission", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("AgeRange")
-                        .HasMaxLength(80)
-                        .HasColumnType("nvarchar(80)");
-
-                    b.Property<string>("Category")
-                        .HasMaxLength(80)
-                        .HasColumnType("nvarchar(80)");
-
-                    b.Property<string>("CostNote")
-                        .HasMaxLength(80)
-                        .HasColumnType("nvarchar(80)");
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(2000)
-                        .HasColumnType("nvarchar(2000)");
-
-                    b.Property<int?>("DriveMinutes")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("EndsAtLocal")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Location")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<Guid?>("PublishedEventId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("RejectionReason")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<DateTimeOffset?>("ReviewedAtUtc")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<Guid?>("ReviewedByUserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("SourceUrl")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<DateTime>("StartsAtLocal")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.Property<DateTimeOffset>("SubmittedAtUtc")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<Guid>("SubmittedByUserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SubmittedByUserId");
-
-                    b.HasIndex("Status", "SubmittedAtUtc");
-
-                    b.ToTable("EventSubmissions", (string)null);
-                });
-
             modelBuilder.Entity("Saturdaze.Domain.Entities.Family", b =>
                 {
                     b.Property<Guid>("Id")
@@ -222,22 +150,10 @@ namespace Saturdaze.Infrastructure.Migrations
                     b.Property<bool>("BudgetEnabled")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("FridayPreviewEnabled")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(true);
-
                     b.Property<string>("HomeLocation")
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("Name")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<bool>("TryNewEnabled")
-                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
@@ -357,8 +273,6 @@ namespace Saturdaze.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Kind", "RefId");
 
                     b.HasIndex("WeekendId", "Day", "SortOrder");
 
@@ -488,6 +402,9 @@ namespace Saturdaze.Infrastructure.Migrations
 
                     b.Property<DateTimeOffset?>("RevokedAtUtc")
                         .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("RevokedByIp")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TokenHash")
                         .IsRequired()

@@ -18,6 +18,7 @@ public class AppDbContext : DbContext, IAppDbContext
     public DbSet<RestaurantLock> RestaurantLocks => Set<RestaurantLock>();
     public DbSet<LocalEvent> LocalEvents => Set<LocalEvent>();
     public DbSet<EventSubmission> EventSubmissions => Set<EventSubmission>();
+    public DbSet<IngestionRun> IngestionRuns => Set<IngestionRun>();
     public DbSet<Weekend> Weekends => Set<Weekend>();
     public DbSet<ItineraryBlock> ItineraryBlocks => Set<ItineraryBlock>();
     public DbSet<ShoppingErrand> ShoppingErrands => Set<ShoppingErrand>();
