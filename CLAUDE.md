@@ -12,17 +12,17 @@ Three sibling top-level directories make up the application; `e2e` is NOT inside
 - `design-system/` — Standalone token/component catalog (own `npm test`, own SWA deploy workflow); no runtime dependency on the other folders
 - `docs/mocks-v2/` — Static HTML/CSS design (the source of truth, ADR-009): `pages/*.html` + `styles/app.css`; `node docs/mocks-v2/.check.mjs` lints it, `node docs/mocks-v2/.verify.mjs --capture` screenshots it (port 5180). The e2e visual baselines are captured from here.
 - `docs/adr/` — Architecture decision records; read before changing the area they describe
-- `scripts/Start-FreshStack.ps1` — One-command fresh stack (pack CLI → reset DB → build → run both processes)
+- `eng/Start-FreshStack.ps1` — One-command fresh stack (pack CLI → reset DB → build → run both processes)
 
 ## Common commands
 
 ```powershell
 # Full local stack from a clean DB (pwsh)
-powershell .\scripts\Start-FreshStack.ps1
+powershell .\eng\Start-FreshStack.ps1
 
 # API only, re-pointed at LocalDB's current pipe (LocalDB auto-stops when idle and
 # returns with a new pipe name; an API started earlier then 500s on every SQL call)
-powershell .\scripts\Restart-Api.ps1
+powershell .\eng\Restart-Api.ps1
 
 # Backend
 dotnet build  .\backend\Saturdaze.sln

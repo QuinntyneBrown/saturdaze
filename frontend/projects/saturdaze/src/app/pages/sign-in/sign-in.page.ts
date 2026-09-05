@@ -72,7 +72,11 @@ export class SignInPage {
       await this.session.login({ email: email.trim(), password }, remember);
       await this.router.navigateByUrl(this.returnUrl());
     } catch (e) {
-      this.localError.set(e as AuthError);
+      const error = e as AuthError;
+      this.localError.set(error);
+      if (error.code === 'invalid_credentials') {
+        this.form.controls.password.reset();
+      }
     } finally {
       this.submitting.set(false);
     }

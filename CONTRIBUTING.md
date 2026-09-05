@@ -17,7 +17,7 @@ Playwright test suite, and static mock reference application.
 From the repository root, the fastest way to verify the full stack is:
 
 ```powershell
-powershell .\scripts\Start-FreshStack.ps1
+powershell .\eng\Start-FreshStack.ps1
 ```
 
 The script packs and installs the local `Saturdaze.Cli` tool, resets and seeds
@@ -47,7 +47,7 @@ dotnet restore .\Saturdaze.sln
 | `design-system/` | Standalone design-system catalog (own `npm test`, own SWA deployment) |
 | `docs/mocks-v2/` | Static HTML/CSS design — the source of truth for the app and the visual baselines |
 | `docs/adr/` | Architecture decision records |
-| `scripts/` | Local automation scripts |
+| `eng/` | Local engineering automation scripts |
 
 ## Coding Guidelines
 

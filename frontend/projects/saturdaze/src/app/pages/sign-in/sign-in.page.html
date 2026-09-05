@@ -10,7 +10,7 @@
         name="email"
         autocomplete="email"
         formControlName="email"
-        [invalid]="!!errorMessage()"
+        [invalid]="!!errorMessage() || (form.controls.email.invalid && form.controls.email.touched)"
       />
       <sd-text-input
         label="Password"
@@ -18,7 +18,7 @@
         name="password"
         autocomplete="current-password"
         formControlName="password"
-        [invalid]="!!errorMessage()"
+        [invalid]="!!errorMessage() || (form.controls.password.invalid && form.controls.password.touched)"
       />
       <div class="row">
         <sd-toggle label="Remember me" formControlName="remember" />

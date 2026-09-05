@@ -6,7 +6,7 @@ import { defineConfig, devices } from "@playwright/test";
  *   - The Angular dev server (the implementation under test) runs on
  *     http://localhost:4200. Behaviour specs and visual verification target
  *     it; guarded routes need the API on :5100 with a seeded database
- *     (`scripts/Start-FreshStack.ps1`).
+ *      (`eng/Start-FreshStack.ps1`).
  *
  *   - The v2 mocks (docs/mocks-v2) are served on http://localhost:5173 by
  *     `http-server` when SD_BASELINE=1. Visual baselines are captured from

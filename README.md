@@ -49,7 +49,7 @@ The fastest way to run the current application from a clean database is the
 fresh-stack script:
 
 ```powershell
-powershell .\scripts\Start-FreshStack.ps1
+powershell .\eng\Start-FreshStack.ps1
 ```
 
 The script:

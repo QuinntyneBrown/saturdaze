@@ -12,7 +12,7 @@ import { defineConfig, devices } from "@playwright/test";
  *
  * Same two-server switch as the main config:
  *   - default: the Angular dev server on :4200 (app under audit). Guarded
- *     routes need the API on :5100 — run `scripts/Start-FreshStack.ps1`.
+ *     routes need the API on :5100 — run `eng/Start-FreshStack.ps1`.
  *   - SD_BASELINE=1: `http-server` serves docs/mocks-v2 on :5173, auditing
  *     the mocks themselves at the same five widths (no auth, no backend).
  *

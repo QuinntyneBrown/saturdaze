@@ -175,12 +175,12 @@ exit code.
 
 ## The one-command local stack
 
-For a full local environment from a clean database, `scripts/Start-FreshStack.ps1`
+For a full local environment from a clean database, `eng/Start-FreshStack.ps1`
 wraps all of this — it packs the CLI, resolves the LocalDB pipe, resets the
 database, builds, and runs both the API and the Angular dev server:
 
 ```powershell
-powershell .\scripts\Start-FreshStack.ps1
+powershell .\eng\Start-FreshStack.ps1
 ```
 
 The API serves on `http://localhost:5100` (Swagger at `/swagger`); the
