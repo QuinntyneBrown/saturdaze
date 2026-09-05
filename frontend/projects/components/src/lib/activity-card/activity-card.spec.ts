@@ -72,12 +72,7 @@ describe('ActivityCard', () => {
     expect(link.getAttribute('rel')).toBe('noopener');
     expect(link.classList.contains('btn--quiet')).toBe(true);
   });
-
-  // TODO(sd-button): an sd-button rendered as an anchor (href) drops its
-  // default content — see the projection TODO in button.spec.ts. The Map link
-  // currently renders empty. Un-skip once sd-button projects through a single
-  // <ng-template #body> + NgTemplateOutlet like sd-list-item.
-  it.skip('labels the Map link with its glyph and text', () => {
+  it('labels the Map link with its glyph and text', () => {
     fixture.componentRef.setInput('mapUrl', 'https://maps.example/jdp');
     fixture.detectChanges();
     const link = host.querySelector('.card__footer a.btn') as HTMLAnchorElement;

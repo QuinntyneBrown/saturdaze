@@ -72,12 +72,7 @@ describe('PageHeader', () => {
     expect(backLink.getAttribute('aria-label')).toBe('Back to Family');
     expect(backLink.classList.contains('btn--icon')).toBe(true);
   });
-
-  // TODO(sd-button): an sd-button rendered as an anchor (href) drops its
-  // default content — see the projection TODO in button.spec.ts. The phone
-  // back button currently renders without its arrow glyph. Un-skip once
-  // sd-button projects through a single <ng-template #body> + NgTemplateOutlet.
-  it.skip('draws the arrow glyph inside the phone back button', () => {
+  it('draws the arrow glyph inside the phone back button', () => {
     fixture.componentRef.setInput('backHref', '/family');
     fixture.detectChanges();
     const backLink = host.querySelector('.titlerow sd-button a.btn') as HTMLAnchorElement;

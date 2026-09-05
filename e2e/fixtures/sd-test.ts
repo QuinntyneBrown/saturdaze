@@ -3,77 +3,68 @@
  *
  * Wraps `@playwright/test`'s `test` with:
  *   - `goto(routeKey, opts?)` — navigates to the right URL for whichever
- *     target we're hitting (mock vs Angular) and, in app mode, signs in
+ *     target we're hitting (mocks vs Angular) and, in app mode, signs in
  *     first when the route is guarded (pass `{ anonymous: true }` to skip).
+ *     `sharedWeekend` is app-only: the fixture signs in through the API,
+ *     makes sure a weekend exists, mints a share link and opens it without
+ *     seeding a browser session.
  *   - `signIn(creds?, seed?)` / `signInAsAdmin()` — API login + storage seed,
  *     memoised per test so several `goto`s share one session.
- *   - `pages` — namespaced POMs (e.g. `pages.home`, `pages.itinerary`).
+ *   - `pages` — namespaced POMs (e.g. `pages.weekend`, `pages.ideas`).
  *   - `settle()` — wait for fonts + network idle so visual diffs are stable.
  *
  * Specs should import `test` and `expect` from this file, not from
  * `@playwright/test` directly, so the routing/pom wiring is consistent.
  */
 
-import { test as base, expect } from "@playwright/test";
-import { guardFor, pathFor, RouteKey } from "./routes.js";
+import { test as base, expect, TestInfo } from "@playwright/test";
+import { guardFor, isBaseline, pathFor, RouteKey } from "./routes.js";
 import {
   apiLogin,
   Credentials,
+  ensureCurrentWeekend,
   SEEDED_ADMIN,
   SEEDED_USER,
   seedSession,
   SeedOptions,
+  shareWeekend,
   TestSession,
 } from "./auth.js";
 
-import { HomePage } from "../pages/home.page.js";
-import { ItineraryPage } from "../pages/itinerary.page.js";
-import { ActivitiesPage } from "../pages/activities.page.js";
-import { RestaurantsPage } from "../pages/restaurants.page.js";
-import { SavedPage } from "../pages/saved.page.js";
-import { EventsPage } from "../pages/events.page.js";
-import { EventsSubmitPage } from "../pages/events-submit.page.js";
-import { EventsSubmittedPage } from "../pages/events-submitted.page.js";
-import { AdminEventsPage } from "../pages/admin-events.page.js";
-import { ErrandPage } from "../pages/errand.page.js";
-import { ProfilePage } from "../pages/profile.page.js";
-import { DialogsPage } from "../pages/dialogs.page.js";
-import { ComponentsGalleryPage } from "../pages/components.page.js";
-import { SplashPage } from "../pages/splash.page.js";
-import { LoginPage } from "../pages/login.page.js";
-import { SignupPage } from "../pages/signup.page.js";
-import { ForgotPasswordPage } from "../pages/forgot-password.page.js";
-import { CheckEmailPage } from "../pages/check-email.page.js";
+import { WeekendPage } from "../pages/weekend.page.js";
+import { IdeasPage } from "../pages/ideas.page.js";
+import { PastPage } from "../pages/past.page.js";
+import { FamilyPage } from "../pages/family.page.js";
+import { ReviewSubmissionsPage } from "../pages/review-submissions.page.js";
+import { SignInPage } from "../pages/sign-in.page.js";
+import { CreateAccountPage } from "../pages/create-account.page.js";
 import { ResetPasswordPage } from "../pages/reset-password.page.js";
 import { VerifyEmailPage } from "../pages/verify-email.page.js";
+import { LandingPage } from "../pages/landing.page.js";
+import { LegalPage } from "../pages/legal.page.js";
+import { DialogsPage } from "../pages/dialogs.page.js";
+import { SharedWeekendPage } from "../pages/shared-weekend.page.js";
 
 interface Pages {
-  home: HomePage;
-  itinerary: ItineraryPage;
-  activities: ActivitiesPage;
-  restaurants: RestaurantsPage;
-  saved: SavedPage;
-  events: EventsPage;
-  eventsSubmit: EventsSubmitPage;
-  eventsSubmitted: EventsSubmittedPage;
-  adminEvents: AdminEventsPage;
-  errand: ErrandPage;
-  profile: ProfilePage;
-  dialogs: DialogsPage;
-  components: ComponentsGalleryPage;
-  splash: SplashPage;
-  login: LoginPage;
-  signup: SignupPage;
-  forgotPassword: ForgotPasswordPage;
-  checkEmail: CheckEmailPage;
+  weekend: WeekendPage;
+  ideas: IdeasPage;
+  past: PastPage;
+  family: FamilyPage;
+  reviewSubmissions: ReviewSubmissionsPage;
+  signIn: SignInPage;
+  createAccount: CreateAccountPage;
   resetPassword: ResetPasswordPage;
   verifyEmail: VerifyEmailPage;
+  landing: LandingPage;
+  legal: LegalPage;
+  dialogs: DialogsPage;
+  sharedWeekend: SharedWeekendPage;
 }
 
 export interface GotoOptions {
   /** Skip the automatic sign-in even for a guarded route. */
   readonly anonymous?: boolean;
-  /** Force a particular session for an unguarded route (e.g. `/login` as a signed-in user). */
+  /** Force a particular session for an unguarded route (e.g. `/sign-in` as a signed-in user). */
   readonly as?: "user" | "admin";
 }
 
@@ -82,17 +73,20 @@ interface SdFixtures {
   signIn: (creds?: Credentials, seed?: SeedOptions) => Promise<TestSession | null>;
   signInAsAdmin: () => Promise<TestSession | null>;
   pages: Pages;
-  /** Pause until web fonts have loaded so visual diffs are font-stable. */
+  /** Pause until web fonts have loaded and the network is idle so visual diffs are stable. */
   settle: () => Promise<void>;
 }
 
-const isBaseline = (): boolean => process.env.SD_BASELINE === "1";
+/** Bottom nav / sheets below 720px; top bar / anchored menus at and above. */
+export function isPhone(testInfo: TestInfo): boolean {
+  return (testInfo.project.use.viewport?.width ?? 1440) < 720;
+}
 
 export const test = base.extend<SdFixtures>({
   signIn: async ({ page, request }, use) => {
     let active: TestSession | null = null;
     await use(async (creds = SEEDED_USER, seed) => {
-      if (isBaseline()) return null; // the mock skeleton has no auth
+      if (isBaseline()) return null; // the mocks have no auth
       if (active && active.user.email === creds.email && !seed) return active;
       active = await apiLogin(request, creds);
       await seedSession(page, active, seed);
@@ -104,8 +98,20 @@ export const test = base.extend<SdFixtures>({
     await use(() => signIn(SEEDED_ADMIN));
   },
 
-  goto: async ({ page, signIn, signInAsAdmin }, use) => {
+  goto: async ({ page, request, signIn, signInAsAdmin }, use) => {
     await use(async (key, opts = {}) => {
+      if (key === "sharedWeekend" && !isBaseline()) {
+        // The share URL is minted per test: API login (no browser seed
+        // unless asked), make sure a weekend exists, POST share.
+        const owner = await apiLogin(request, SEEDED_USER);
+        const weekend = await ensureCurrentWeekend(request, owner);
+        const link = await shareWeekend(request, owner, weekend.id);
+        if (opts.as === "admin") await signInAsAdmin();
+        else if (opts.as === "user") await signIn();
+        await page.goto(pathFor(key).replace("{token}", encodeURIComponent(link.token)));
+        return;
+      }
+
       if (!opts.anonymous && !isBaseline()) {
         const guard = guardFor(key);
         const who = opts.as ?? (guard === "admin" ? "admin" : guard === "auth" ? "user" : undefined);
@@ -118,26 +124,19 @@ export const test = base.extend<SdFixtures>({
 
   pages: async ({ page }, use) => {
     await use({
-      home: new HomePage(page),
-      itinerary: new ItineraryPage(page),
-      activities: new ActivitiesPage(page),
-      restaurants: new RestaurantsPage(page),
-      saved: new SavedPage(page),
-      events: new EventsPage(page),
-      eventsSubmit: new EventsSubmitPage(page),
-      eventsSubmitted: new EventsSubmittedPage(page),
-      adminEvents: new AdminEventsPage(page),
-      errand: new ErrandPage(page),
-      profile: new ProfilePage(page),
-      dialogs: new DialogsPage(page),
-      components: new ComponentsGalleryPage(page),
-      splash: new SplashPage(page),
-      login: new LoginPage(page),
-      signup: new SignupPage(page),
-      forgotPassword: new ForgotPasswordPage(page),
-      checkEmail: new CheckEmailPage(page),
+      weekend: new WeekendPage(page),
+      ideas: new IdeasPage(page),
+      past: new PastPage(page),
+      family: new FamilyPage(page),
+      reviewSubmissions: new ReviewSubmissionsPage(page),
+      signIn: new SignInPage(page),
+      createAccount: new CreateAccountPage(page),
       resetPassword: new ResetPasswordPage(page),
       verifyEmail: new VerifyEmailPage(page),
+      landing: new LandingPage(page),
+      legal: new LegalPage(page),
+      dialogs: new DialogsPage(page),
+      sharedWeekend: new SharedWeekendPage(page),
     });
   },
 

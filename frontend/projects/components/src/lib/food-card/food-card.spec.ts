@@ -63,12 +63,7 @@ describe('FoodCard', () => {
     expect(link.getAttribute('target')).toBe('_blank');
     expect(link.getAttribute('rel')).toBe('noopener');
   });
-
-  // TODO(sd-button): an sd-button rendered as an anchor (href) drops its
-  // default content — see the projection TODO in button.spec.ts. The See menu
-  // link currently renders empty. Un-skip once sd-button projects through a
-  // single <ng-template #body> + NgTemplateOutlet like sd-list-item.
-  it.skip('labels the See menu link with its text', () => {
+  it('labels the See menu link with its text', () => {
     fixture.componentRef.setInput('menuUrl', 'https://pizzanova.example/menu');
     fixture.detectChanges();
     const link = host.querySelector('.card__footer a.btn--quiet') as HTMLAnchorElement;

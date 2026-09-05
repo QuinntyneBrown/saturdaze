@@ -8,7 +8,7 @@ import { SEEDED_USER } from "../fixtures/auth.js";
  *
  *   - expired access token on rehydrate → refresh before the first call
  *   - bogus access token with a future expiry → 401 → refresh → retried once
- *   - bad refresh token → sign-out → guard bounces to /login
+ *   - bad refresh token → sign-out → guard bounces to /sign-in
  *   - remember-me off → session tier survives the refresh
  */
 
@@ -39,10 +39,10 @@ test.describe("Session refresh", () => {
     expect(session).not.toBeNull();
 
     const refreshed = page.waitForResponse((r) => r.url().endsWith("/api/auth/refresh"));
-    await goto("home");
+    await goto("weekend");
     expect((await refreshed).status()).toBe(200);
 
-    await pages.home.waitForComponentsReady();
+    await pages.weekend.waitForReady();
     expect(new URL(page.url()).pathname).toBe("/weekend");
 
     const stored = await persisted(page);
@@ -60,9 +60,9 @@ test.describe("Session refresh", () => {
     });
     const refreshed = page.waitForResponse((r) => r.url().endsWith("/api/auth/refresh"));
 
-    await goto("home");
+    await goto("weekend");
     expect((await refreshed).status()).toBe(200);
-    await pages.home.waitForComponentsReady();
+    await pages.weekend.waitForReady();
     expect(new URL(page.url()).pathname).toBe("/weekend");
 
     // /me is either retried after the 401 or skipped because refresh already
@@ -79,10 +79,10 @@ test.describe("Session refresh", () => {
     });
 
     const refreshed = page.waitForResponse((r) => r.url().endsWith("/api/auth/refresh"));
-    await goto("home");
+    await goto("weekend");
     expect((await refreshed).status()).toBe(401);
 
-    await page.waitForURL(/\/login/, { timeout: 8_000 });
+    await page.waitForURL(/\/sign-in/, { timeout: 8_000 });
     expect(await persisted(page)).toBeNull();
     expect(await persisted(page, "session")).toBeNull();
   });
@@ -91,9 +91,9 @@ test.describe("Session refresh", () => {
     await signIn(SEEDED_USER, { remember: false, accessToken: "expired.access.token", expiresUtc: PAST });
 
     const refreshed = page.waitForResponse((r) => r.url().endsWith("/api/auth/refresh"));
-    await goto("home");
+    await goto("weekend");
     expect((await refreshed).status()).toBe(200);
-    await pages.home.waitForComponentsReady();
+    await pages.weekend.waitForReady();
 
     expect(await persisted(page, "local")).toBeNull();
     const stored = await persisted(page, "session");

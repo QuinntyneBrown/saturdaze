@@ -1,4 +1,5 @@
 import { APIRequestContext, Page } from "@playwright/test";
+import { addDaysIso, upcomingSaturdayIso } from "./dates.js";
 
 /**
  * Session plumbing for behaviour specs.
@@ -122,6 +123,84 @@ export async function ensureCurrentWeekend(request: APIRequestContext, session: 
   });
   if (!res.ok()) throw new Error(`GET /api/weekends/current failed: ${res.status()} ${await res.text()}`);
   return (await res.json()) as CurrentWeekend;
+}
+
+export interface ShareLink {
+  /** Absolute URL the API builds from the request Origin: `…/sample-weekend?share=<token>`. */
+  readonly shareUrl: string;
+  readonly token: string;
+}
+
+/**
+ * Mints a read-only share link for a weekend the session's family owns
+ * (`POST /api/weekends/{id}/share`). The token is what
+ * `GET /api/weekends/shared/{token}` (anonymous) resolves.
+ */
+export async function shareWeekend(
+  request: APIRequestContext,
+  session: TestSession,
+  weekendId: string,
+): Promise<ShareLink> {
+  const res = await request.post(`${API_URL}/api/weekends/${weekendId}/share`, {
+    headers: { Authorization: `Bearer ${session.accessToken}` },
+  });
+  if (!res.ok()) throw new Error(`POST /api/weekends/${weekendId}/share failed: ${res.status()} ${await res.text()}`);
+  return (await res.json()) as ShareLink;
+}
+
+/**
+ * Suggests an event as `session`'s user (`POST /api/events/submissions`,
+ * body = SubmitEventCommand). Review specs and the review visual spec use
+ * it so the seeded queue is never drained; the admin then approves or
+ * rejects this one.
+ */
+export async function submitEventSubmission(
+  request: APIRequestContext,
+  session: TestSession,
+  title: string,
+): Promise<{ id: string }> {
+  const startsAt = new Date(Date.now() + 7 * 24 * 3_600_000);
+  startsAt.setMinutes(0, 0, 0);
+  const res = await request.post(`${API_URL}/api/events/submissions`, {
+    headers: { Authorization: `Bearer ${session.accessToken}` },
+    data: {
+      title,
+      startsAtLocal: startsAt.toISOString().slice(0, 19),
+      location: "Memorial Park, Lakeshore Rd",
+      description: "e2e submission",
+      costNote: "Free",
+      ageRange: "All ages",
+    },
+  });
+  if (!res.ok()) throw new Error(`POST /api/events/submissions failed: ${res.status()} ${await res.text()}`);
+  return (await res.json()) as { id: string };
+}
+
+/**
+ * Locks the first dinner pick for `day` into the weekend
+ * (`GET /api/restaurants?day=&slot=Dinner` then `POST /api/restaurants/{id}/lock`),
+ * so the Food screen renders a `.card--locked` with `.card--dimmed` siblings.
+ * v2 has no unlock, so the lock lasts until the DB is reset.
+ */
+export async function lockDinnerPick(
+  request: APIRequestContext,
+  session: TestSession,
+  day: "Saturday" | "Sunday" = "Saturday",
+): Promise<void> {
+  const headers = { Authorization: `Bearer ${session.accessToken}` };
+  const date = day === "Saturday" ? upcomingSaturdayIso() : addDaysIso(upcomingSaturdayIso(), 1);
+  const list = await request.get(
+    `${API_URL}/api/restaurants?day=${date}&slot=Dinner&wifeApprovedOnly=false&take=10`,
+    { headers },
+  );
+  if (!list.ok()) throw new Error(`GET /api/restaurants failed: ${list.status()} ${await list.text()}`);
+  const picks = (await list.json()) as Array<{ id: string }>;
+  if (picks.length === 0) throw new Error(`no dinner picks for ${date}`);
+  const res = await request.post(`${API_URL}/api/restaurants/${picks[0]!.id}/lock`, {
+    headers,
+    data: { day, slot: "Dinner" },
+  });
+  if (!res.ok()) throw new Error(`POST /api/restaurants/{id}/lock failed: ${res.status()} ${await res.text()}`);
 }
 
 /**

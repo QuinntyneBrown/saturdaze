@@ -1,8 +1,8 @@
 import * as path from "node:path";
 import { test, expect } from "../fixtures/sd-test.js";
-import { RouteKey } from "../fixtures/routes.js";
+import { isBaseline, RouteKey } from "../fixtures/routes.js";
 import { measureHorizontalOverflow } from "../fixtures/overflow.js";
-import { AUTHED_ROUTES, ANON_ROUTES } from "../fixtures/audit-routes.js";
+import { ANON_ROUTES, AUTHED_ROUTES, auditable } from "../fixtures/audit-routes.js";
 import { AUTH_STATE, AUDIT_OUTPUT_DIR } from "./constants.js";
 
 /**
@@ -19,14 +19,22 @@ import { AUTH_STATE, AUDIT_OUTPUT_DIR } from "./constants.js";
  * instead of stopping at the first.
  */
 
-const isBaseline = process.env.SD_BASELINE === "1";
-const outDir = path.join(AUDIT_OUTPUT_DIR, isBaseline ? "mocks" : "app");
+const outDir = path.join(AUDIT_OUTPUT_DIR, isBaseline() ? "mocks" : "app");
+
+/** Screens whose *rendered* state is a skeleton / spinner by design. */
+const STATIC_LOADING_STATES: readonly RouteKey[] = ["weekendGenerating", "verifyVerifying"];
 
 function auditTest(key: RouteKey): void {
   test(`${key} fits the viewport`, async ({ page, goto, settle }, testInfo) => {
     await goto(key);
+    await page.waitForSelector("body[data-page]", { state: "attached" });
     await settle();
-    // Web-component upgrade cushion (same as scripts/screenshot-auth-mocks.mjs).
+    // App only: give data-driven screens time to leave their loading state so
+    // a skeleton is not what gets audited. The mocks are static (and the
+    // verify-email mock stacks a spinner state), so no wait there.
+    if (!isBaseline() && !STATIC_LOADING_STATES.includes(key)) {
+      await expect(page.locator(".skeleton-row, .spinner")).toHaveCount(0, { timeout: 20_000 }).catch(() => {});
+    }
     await page.waitForTimeout(250);
 
     const viewport = testInfo.project.name;
@@ -53,10 +61,10 @@ function auditTest(key: RouteKey): void {
   });
 }
 
-if (isBaseline) {
-  // Mocks: static pages, no guards, no backend. adminEvents exists only here.
+if (isBaseline()) {
+  // Mocks: static pages, no guards, no backend; the share link has no mock.
   test.describe("Responsive audit — mocks", () => {
-    for (const key of [...AUTHED_ROUTES, ...ANON_ROUTES, "adminEvents" as RouteKey]) {
+    for (const key of auditable([...AUTHED_ROUTES, ...ANON_ROUTES])) {
       auditTest(key);
     }
   });
@@ -73,16 +81,5 @@ if (isBaseline) {
     for (const key of ANON_ROUTES) {
       auditTest(key);
     }
-  });
-
-  test.describe("Responsive audit — app (unroutable)", () => {
-    test("adminEvents", ({}, testInfo) => {
-      testInfo.annotations.push({
-        type: "skip-reason",
-        description:
-          "admin-events has a page component and mock but no entry in app.routes.ts — mock-mode only",
-      });
-      test.skip(true, "no /admin/events route in the Angular app");
-    });
   });
 }

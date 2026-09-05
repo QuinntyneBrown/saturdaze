@@ -45,12 +45,7 @@ describe('Sitebar', () => {
     expect(cta.classList.contains('btn--primary')).toBe(true);
     expect(cta.classList.contains('btn--sm')).toBe(true);
   });
-
-  // TODO(sd-button): an sd-button rendered as an anchor (href) drops its
-  // default content — see the projection TODO in button.spec.ts. The CTA
-  // currently renders as an empty coral pill. Un-skip once sd-button projects
-  // through a single <ng-template #body> + NgTemplateOutlet like sd-list-item.
-  it.skip('labels the CTA with its text', () => {
+  it('labels the CTA with its text', () => {
     fixture.componentRef.setInput('cta', true);
     fixture.detectChanges();
     const cta = host.querySelector('.sitebar__actions a.btn') as HTMLAnchorElement;

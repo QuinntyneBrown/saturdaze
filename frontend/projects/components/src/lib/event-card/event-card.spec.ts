@@ -65,12 +65,7 @@ describe('EventCard', () => {
     expect(link.lastElementChild?.tagName.toLowerCase()).toBe('sd-icon');
     expect(link.lastElementChild?.getAttribute('name')).toBe('arrow_right');
   });
-
-  // TODO(sd-button): an sd-button rendered as an anchor (href) drops its
-  // default content — see the projection TODO in button.spec.ts. Only the
-  // trailing arrow survives today. Un-skip once sd-button projects through a
-  // single <ng-template #body> + NgTemplateOutlet like sd-list-item.
-  it.skip('labels the Details link with its text', () => {
+  it('labels the Details link with its text', () => {
     fixture.componentRef.setInput('url', 'https://buskerfest.example');
     fixture.detectChanges();
     expect(footerLink()?.textContent?.trim()).toBe('Details');

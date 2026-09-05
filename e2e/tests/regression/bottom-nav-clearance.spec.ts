@@ -36,6 +36,14 @@ const GLOBAL_SCSS = join(
   REPO_ROOT,
   "frontend/projects/components/src/lib/styles/_global.scss",
 );
+const MOCKS_V2_CSS = join(REPO_ROOT, "docs/mocks-v2/styles/app.css");
+
+/**
+ * The one correct clearance formula, verbatim. Both the app and the v2 mocks
+ * (the design source of truth) must carry it so the two never drift apart:
+ * `max()` picks whichever bottom obstruction is present — it is NOT additive.
+ */
+const ADR005_CLEARANCE = "max(env(safe-area-inset-bottom, 0px), var(--sd-chrome-bottom, 0px))";
 
 test.describe("ADR-005 — bottom-nav device chrome clearance", () => {
   test("bottom-nav.scss reads safe-area-inset-bottom for the home indicator", () => {
@@ -108,5 +116,24 @@ test.describe("ADR-005 — bottom-nav device chrome clearance", () => {
       frameBlock![0],
       ".sd-frame padding-bottom must include env(safe-area-inset-bottom) so scrolled-to-end content cannot hide behind the nav — see ADR-005",
     ).toMatch(/env\(safe-area-inset-bottom/);
+  });
+
+  test("bottom-nav.scss uses the exact max() clearance formula", () => {
+    const css = readFileSync(BOTTOM_NAV_SCSS, "utf8");
+    expect(
+      css,
+      `sd-bottom-nav must clear the bottom chrome with the literal \`${ADR005_CLEARANCE}\` — the two obstructions are alternatives, never a sum — see ADR-005`,
+    ).toContain(ADR005_CLEARANCE);
+  });
+
+  test("docs/mocks-v2/styles/app.css carries the same clearance formula", () => {
+    // The mocks are the design source of truth and the e2e baseline source;
+    // if their bottom-nav rule drifts, the app's regression guard is guarding
+    // a rule the design no longer shows.
+    const css = readFileSync(MOCKS_V2_CSS, "utf8");
+    expect(
+      css,
+      `docs/mocks-v2/styles/app.css lost the ADR-005 clearance rule \`${ADR005_CLEARANCE}\``,
+    ).toContain(ADR005_CLEARANCE);
   });
 });
