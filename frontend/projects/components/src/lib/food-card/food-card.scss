@@ -1,0 +1,20 @@
+@use "../styles/card-base" as *;
+
+// The food `.card` from docs/mocks-v2/pages/ideas.food.html.
+
+:host {
+  @include card-host;
+}
+
+:host(.card--span) {
+  grid-column: 1 / -1;
+}
+
+:host(.card--locked) {
+  border: 2px solid var(--sd-accent);
+  padding: 15px;
+}
+
+:host(.card--dimmed) {
+  opacity: 0.6;
+}

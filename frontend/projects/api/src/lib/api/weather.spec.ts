@@ -4,6 +4,7 @@ import {
   isOutdoorFriendly,
   isWetDay,
   roundOrDash,
+  weatherAdjective,
   weatherIcon,
   weatherNote,
   weatherWord,
@@ -41,10 +42,26 @@ describe('weather helpers', () => {
     expect(weatherWordCapitalised(forecast(['rain']))).toBe('Rain');
   });
 
-  it('writes a note per forecast', () => {
-    expect(weatherNote(forecast(['rain']))).toMatch(/indoors/);
-    expect(weatherNote(forecast(['sunny', 'warm']))).toMatch(/outdoors/);
-    expect(weatherNote(forecast([], { unavailable: true }))).toMatch(/unavailable/);
+  it('turns tags into the adjective that fronts a day', () => {
+    expect(weatherAdjective(forecast(['sunny', 'warm']))).toBe('sunny');
+    expect(weatherAdjective(forecast(['rain']))).toBe('rainy');
+    expect(weatherAdjective(forecast(['snow']))).toBe('snowy');
+    expect(weatherAdjective(forecast(['warm']))).toBe('warm');
+    expect(weatherAdjective(forecast(['cold']))).toBe('cold');
+    expect(weatherAdjective(forecast(['mild']))).toBe('cloudy');
+    expect(weatherAdjective(forecast([], { unavailable: true }))).toBe('');
+    expect(weatherAdjective(null)).toBe('');
+  });
+
+  it('writes the day-header note per forecast', () => {
+    expect(weatherNote(forecast(['rain']))).toBe('Rain expected, plan indoors');
+    expect(weatherNote(forecast(['snow']))).toBe('Snow on the way, stay in');
+    expect(weatherNote(forecast(['sunny', 'warm']))).toBe('Light breeze, good for outdoors');
+    expect(weatherNote(forecast(['sunny']))).toBe('Sunny, bring layers');
+    expect(weatherNote(forecast(['cold']))).toBe('Cold day, indoor-friendly');
+    expect(weatherNote(forecast(['mild']))).toBe('Variable cloud, flex the plan');
+    expect(weatherNote(forecast([], { unavailable: true }))).toBe('Forecast pending');
+    expect(weatherNote(null)).toBe('Forecast pending');
   });
 
   it('decides whether a day is outdoor-friendly or wet', () => {

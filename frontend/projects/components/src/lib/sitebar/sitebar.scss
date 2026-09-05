@@ -1,0 +1,89 @@
+// `.sitebar` from docs/mocks-v2/styles/app.css — the host is the bar.
+
+:host {
+  display: block;
+  position: sticky;
+  top: 0;
+  z-index: var(--sd-z-topbar);
+  height: var(--sd-topbar-h);
+  transition:
+    background var(--sd-dur-base) var(--sd-ease),
+    box-shadow var(--sd-dur-base) var(--sd-ease);
+}
+
+:host([data-scrolled]) {
+  background: color-mix(in srgb, var(--sd-bg) 86%, transparent);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 1px 0 var(--sd-line);
+}
+
+.sitebar__inner {
+  width: 100%;
+  max-width: var(--sd-content-max-w);
+  margin-inline: auto;
+  padding-inline: var(--sd-gutter);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  height: var(--sd-topbar-h);
+}
+
+.sitebar__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--sd-fs-md);
+  font-weight: var(--sd-fw-bold);
+  color: var(--sd-ink);
+  white-space: nowrap;
+  border-radius: var(--sd-r-sm);
+  text-decoration: none;
+}
+
+.brand-mark {
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  flex: none;
+  background:
+    radial-gradient(120% 120% at 20% 0%, var(--sd-primary-soft) 0%, transparent 60%),
+    radial-gradient(120% 120% at 100% 100%, var(--sd-sun-soft) 0%, transparent 60%),
+    var(--sd-primary);
+  box-shadow: inset 0 0 0 1px rgba(31, 41, 55, 0.06);
+}
+
+.sitebar__actions {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sitebar__link {
+  font-size: 14px;
+  font-weight: var(--sd-fw-semibold);
+  color: var(--sd-ink-soft);
+  padding: 8px 12px;
+  border-radius: var(--sd-r-md);
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+@media (hover: hover) {
+  .sitebar__link:hover {
+    background: var(--sd-surface-2);
+    color: var(--sd-ink);
+  }
+}
+
+@media (max-width: 379px) {
+  .sitebar__inner {
+    gap: 8px;
+  }
+
+  // The hero repeats Sign in.
+  :host([cta]) .sitebar__link {
+    display: none;
+  }
+}

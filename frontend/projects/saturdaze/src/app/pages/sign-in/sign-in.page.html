@@ -1,0 +1,31 @@
+<sd-auth-shell>
+  <sd-auth-card title="Welcome back" subtitle="Sign in to see this weekend.">
+    @if (errorMessage()) {
+      <sd-banner tone="warn" role="alert" icon="close">{{ errorMessage() }}</sd-banner>
+    }
+    <form class="form" [formGroup]="form" (ngSubmit)="submit()">
+      <sd-text-input
+        label="Email"
+        type="email"
+        name="email"
+        autocomplete="email"
+        formControlName="email"
+        [invalid]="!!errorMessage() || (form.controls.email.invalid && form.controls.email.touched)"
+      />
+      <sd-text-input
+        label="Password"
+        type="password"
+        name="password"
+        autocomplete="current-password"
+        formControlName="password"
+        [invalid]="!!errorMessage() || (form.controls.password.invalid && form.controls.password.touched)"
+      />
+      <div class="row">
+        <sd-toggle label="Remember me" formControlName="remember" />
+        <a class="sd-link" routerLink="/reset-password">Forgot password?</a>
+      </div>
+      <sd-button variant="primary" size="lg" full type="submit" [disabled]="submitting()">Sign in</sd-button>
+    </form>
+    <span slot="alt">New here? <a class="sd-link" routerLink="/create-account">Create an account</a></span>
+  </sd-auth-card>
+</sd-auth-shell>

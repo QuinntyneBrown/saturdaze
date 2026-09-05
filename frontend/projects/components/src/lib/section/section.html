@@ -1,8 +1,12 @@
-<header>
-  <div>
-    @if (sectionTitle()) { <h2>{{ sectionTitle() }}</h2> }
-    @if (subtitle()) { <p>{{ subtitle() }}</p> }
+@if (sectionTitle()) {
+  <div class="section-header">
+    <div class="section-header__text">
+      <h2 class="section-header__title" [id]="headingId">{{ sectionTitle() }}</h2>
+      @if (subtitle()) {
+        <p class="section-header__sub">{{ subtitle() }}</p>
+      }
+    </div>
+    <div class="section-header__action"><ng-content select="[slot=action]" /></div>
   </div>
-  <ng-content select="[slot=action]" />
-</header>
-<div class="body"><ng-content /></div>
+}
+<ng-content />

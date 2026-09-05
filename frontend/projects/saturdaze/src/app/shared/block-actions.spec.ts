@@ -1,46 +1,58 @@
 import { vi } from 'vitest';
 import { of } from 'rxjs';
 
-import { applyBlockAction, mapsSearchUrl, openBlockActions } from './block-actions';
+import { BLOCK, BLOCK_LOCKED } from '../pages/dialogs/dialog-fixtures';
+import { BlockDialog } from '../dialogs/block-dialog/block-dialog';
+import { DIALOG_OPTIONS } from '../dialogs/confirm-dialog/confirm-dialog';
+import { applyBlockAction, openBlockDialog } from './block-actions';
 
-describe('block-actions', () => {
-  const weekend = () => ({
-    lockBlock: vi.fn(() => Promise.resolve()),
-    swapBlock: vi.fn(() => Promise.resolve()),
-    setErrandDone: vi.fn(() => Promise.resolve()),
-  }) as any;
-
-  it('dispatches lock, swap and done to the weekend service', async () => {
-    const svc = weekend();
-    const block = { id: 'b1', refId: 'err1', kind: 'Errand', time: '9:00', title: 'Costco', icon: 'bag' } as any;
-    await applyBlockAction(svc, block, { kind: 'lock', locked: true });
-    expect(svc.lockBlock).toHaveBeenCalledWith('b1', true);
-    await applyBlockAction(svc, block, { kind: 'swap' });
-    expect(svc.swapBlock).toHaveBeenCalledWith('b1');
-    await applyBlockAction(svc, block, { kind: 'done', done: true });
-    expect(svc.setErrandDone).toHaveBeenCalledWith('err1', true);
-  });
-
-  it('ignores dismissals, blocks without ids and errands without a refId', async () => {
-    const svc = weekend();
-    await applyBlockAction(svc, { id: 'b1', time: '', title: '', icon: '' } as any, undefined);
-    await applyBlockAction(svc, { time: '', title: '', icon: '' } as any, { kind: 'lock', locked: true });
-    await applyBlockAction(svc, { id: 'b1', kind: 'Errand', time: '', title: '', icon: '' } as any, { kind: 'done', done: true });
-    expect(svc.lockBlock).not.toHaveBeenCalled();
-    expect(svc.setErrandDone).not.toHaveBeenCalled();
-  });
-
-  it('opens the block sheet and resolves with the chosen action', async () => {
+describe('openBlockDialog', () => {
+  it('opens D1 with the block and resolves with what the user chose', async () => {
     const dialog = { open: vi.fn(() => ({ closed: of({ kind: 'swap' }) })) } as any;
-    const block = { id: 'b1', time: '', title: 'X', icon: '' } as any;
-    const result = await openBlockActions(dialog, block);
-    expect(result).toEqual({ kind: 'swap' });
-    expect(dialog.open.mock.calls[0][1].data).toEqual({ block });
+    await expect(openBlockDialog(dialog, BLOCK)).resolves.toEqual({ kind: 'swap' });
+    expect(dialog.open).toHaveBeenCalledWith(BlockDialog, { ...DIALOG_OPTIONS, data: { block: BLOCK } });
   });
 
-  it('builds a Google Maps search URL', () => {
-    expect(mapsSearchUrl('Terre Bleu Lavender Farm')).toBe(
-      'https://www.google.com/maps/search/?api=1&query=Terre%20Bleu%20Lavender%20Farm',
-    );
+  it('resolves undefined when the dialog is dismissed', async () => {
+    const dialog = { open: vi.fn(() => ({ closed: of(undefined) })) } as any;
+    await expect(openBlockDialog(dialog, BLOCK)).resolves.toBeUndefined();
+  });
+});
+
+describe('applyBlockAction', () => {
+  const weekend = () => ({
+    lockBlock: vi.fn(async () => undefined),
+    swapBlock: vi.fn(async () => undefined),
+    setErrandDone: vi.fn(async () => undefined),
+  });
+
+  it('does nothing without a result', async () => {
+    const service = weekend();
+    await applyBlockAction(service as any, BLOCK, undefined);
+    expect(service.lockBlock).not.toHaveBeenCalled();
+    expect(service.swapBlock).not.toHaveBeenCalled();
+    expect(service.setErrandDone).not.toHaveBeenCalled();
+  });
+
+  it('locks and unlocks the block', async () => {
+    const service = weekend();
+    await applyBlockAction(service as any, BLOCK, { kind: 'lock', locked: true });
+    expect(service.lockBlock).toHaveBeenCalledWith('b-lavender', true);
+    await applyBlockAction(service as any, BLOCK_LOCKED, { kind: 'lock', locked: false });
+    expect(service.lockBlock).toHaveBeenLastCalledWith('b-bath', false);
+  });
+
+  it('swaps by block id', async () => {
+    const service = weekend();
+    await applyBlockAction(service as any, BLOCK, { kind: 'swap' });
+    expect(service.swapBlock).toHaveBeenCalledWith('b-lavender');
+  });
+
+  it('marks an errand done through its errand id, and skips rows without one', async () => {
+    const service = weekend();
+    await applyBlockAction(service as any, { ...BLOCK, errand: true, refId: 'e-costco' }, { kind: 'done', done: true });
+    expect(service.setErrandDone).toHaveBeenCalledWith('e-costco', true);
+    await applyBlockAction(service as any, { ...BLOCK, errand: true, refId: null }, { kind: 'done', done: false });
+    expect(service.setErrandDone).toHaveBeenCalledTimes(1);
   });
 });

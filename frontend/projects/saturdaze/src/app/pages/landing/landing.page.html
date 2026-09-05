@@ -1,0 +1,81 @@
+<section class="hero" aria-labelledby="hero-title">
+  <div class="hero__grid">
+    <div class="hero__copy">
+      <p class="hero__eyebrow">Weekends, drafted for your family</p>
+      <h1 class="hero__title" id="hero-title">Two days.<br />Already planned.</h1>
+      <p class="hero__lede">
+        Saturdaze drafts Saturday and Sunday around swim lessons, church and the weather, then fills
+        the rest with things your family will say yes to.
+      </p>
+      <div class="hero__cta">
+        <sd-button variant="primary" size="lg" href="/create-account">
+          <sd-icon name="sparkle" />
+          Create your account
+        </sd-button>
+        <span class="hero__note">Free during the beta.</span>
+      </div>
+      <p class="hero__alt">Already have an account? <a class="sd-link" routerLink="/sign-in">Sign in</a></p>
+    </div>
+    <div class="hero__preview">
+      <sd-browser-frame url="saturdaze.app/weekend">
+        <div class="mini">
+          @for (day of sample; track day.title) {
+            <sd-day [title]="day.title" [meta]="day.meta" [weather]="day.weather" [actions]="false">
+              @for (block of day.blocks; track block.title) {
+                <sd-block
+                  [time]="block.time"
+                  [duration]="block.duration"
+                  [icon]="block.icon"
+                  [title]="block.title"
+                  [subtitle]="block.subtitle ?? ''"
+                  [commitment]="!!block.commitment"
+                  [drive]="!!block.drive"
+                  [errand]="!!block.errand"
+                  readonly
+                >
+                  @for (chip of block.chips ?? []; track chip.label) {
+                    <sd-chip slot="chips" [tone]="chip.tone">
+                      @if (chip.icon) {
+                        <sd-icon [name]="chip.icon" [size]="13" [stroke]="2" />
+                      }
+                      {{ chip.label }}
+                    </sd-chip>
+                  }
+                </sd-block>
+              }
+            </sd-day>
+          }
+        </div>
+      </sd-browser-frame>
+    </div>
+  </div>
+</section>
+
+<section class="how" id="how" aria-labelledby="how-title">
+  <h2 class="how__title" id="how-title">How a weekend comes together</h2>
+  <p class="how__sub">Three small moments and the logistics disappear.</p>
+  <ol class="steps">
+    <li class="step">
+      <span class="step__num">01</span>
+      <h3 class="step__title">Tell us who is in the family</h3>
+      <p class="step__body">Names, ages and what each kid is into. A minute of setup, paid back every weekend.</p>
+    </li>
+    <li class="step">
+      <span class="step__num">02</span>
+      <h3 class="step__title">Lock what does not move</h3>
+      <p class="step__body">Saturday swim, Sunday church, the weekly workout. They are anchors, and the plan goes around them.</p>
+    </li>
+    <li class="step">
+      <span class="step__num">03</span>
+      <h3 class="step__title">Get a weekend every Friday</h3>
+      <p class="step__body">A draft of both days at 6pm, weather-checked and drive-time-checked. Swap anything you do not love.</p>
+    </li>
+  </ol>
+</section>
+
+<footer class="site-footer">
+  <span>Saturdaze</span>
+  <a class="sd-link--soft" routerLink="/legal">Terms</a>
+  <a class="sd-link--soft" routerLink="/legal" fragment="privacy">Privacy</a>
+  <a class="sd-link--soft" routerLink="/sign-in">Sign in</a>
+</footer>

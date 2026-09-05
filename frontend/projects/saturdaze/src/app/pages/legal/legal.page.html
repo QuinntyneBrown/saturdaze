@@ -1,34 +1,30 @@
-<sd-top-bar [title]="content().topBarTitle" back />
+<div class="legal sd-narrow">
+  <sd-segments class="doc-switch" narrow label="Document" [tabs]="tabs" [active]="activeTab()" />
 
-<main class="legal">
-  <div class="legal-header">
-    <div class="legal-eyebrow">{{ content().eyebrow }}</div>
-    <h1>{{ content().title }}</h1>
-    <div class="updated">Last updated 17 May 2026 · effective on the same date</div>
-  </div>
-
-  <div class="legal-summary" [attr.data-tone]="content().summaryTone">
-    <sd-icon [name]="content().summaryIcon" [size]="20" />
-    <div class="body">{{ content().summary }}</div>
-  </div>
-
-  <nav class="legal-toc" aria-label="Contents">
-    <div class="toc-label">Contents</div>
-    <ol>
-      @for (section of content().sections; track section.id) {
-        <li><a [attr.href]="'#' + section.id">{{ section.title }}</a></li>
+  @for (item of docs; track item.kind) {
+    <article class="prose" [attr.data-doc]="item.kind" [hidden]="doc() !== item.kind" [attr.aria-labelledby]="item.kind + '-title'">
+      <p class="prose__eyebrow">Saturdaze</p>
+      <h1 class="prose__title" [id]="item.kind + '-title'">{{ item.title }}</h1>
+      <p class="prose__updated">{{ item.updated }}</p>
+      <sd-well icon="sparkle" title="The short version">{{ item.summary }}</sd-well>
+      <ol class="prose__toc">
+        @for (section of item.sections; track section.id) {
+          <li><a routerLink="/legal" [fragment]="item.kind + '-' + section.id">{{ section.title }}</a></li>
+        }
+      </ol>
+      @for (section of item.sections; track section.id) {
+        <h2 [id]="item.kind + '-' + section.id">{{ section.title }}</h2>
+        @for (paragraph of section.paragraphs; track paragraph) {
+          <p>{{ paragraph }}</p>
+        }
       }
-    </ol>
-  </nav>
-
-  @for (section of content().sections; track section.id) {
-    <h2 [id]="section.id">{{ section.title }}</h2>
-    @for (paragraph of section.paragraphs; track paragraph) {
-      <p>{{ paragraph }}</p>
-    }
+    </article>
   }
 
-  <p class="legal-contact">
-    Need help? <a href="mailto:support@saturdaze.app">support@saturdaze.app</a>
-  </p>
-</main>
+  <footer class="site-footer">
+    <span>Saturdaze</span>
+    <a class="sd-link--soft" routerLink="/legal">Terms</a>
+    <a class="sd-link--soft" routerLink="/legal" fragment="privacy">Privacy</a>
+    <a class="sd-link--soft" routerLink="/sign-in">Sign in</a>
+  </footer>
+</div>

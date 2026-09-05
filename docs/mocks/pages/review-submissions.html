@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+<!-- @shell:head -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Review submissions — Saturdaze</title>
+<link rel="stylesheet" href="../styles/tokens.css">
+<link rel="stylesheet" href="../styles/app.css">
+<!-- @/shell:head -->
+</head>
+<body data-page="review-submissions" data-shell="app">
+<!-- @shell:topbar -->
+<header class="topbar">
+  <div class="container topbar__inner">
+    <a class="topbar__brand" href="./weekend.html"><span class="brand-mark" aria-hidden="true"></span>Saturdaze</a>
+    <nav class="topbar__nav" aria-label="Primary">
+      <a class="topbar__link" data-nav="weekend" href="./weekend.html">Weekend</a>
+      <a class="topbar__link" data-nav="ideas" href="./ideas.html">Ideas</a>
+      <a class="topbar__link" data-nav="past" href="./past.html">Past</a>
+      <a class="topbar__link" data-nav="family" href="./family.html" aria-current="page">Family</a>
+    </nav>
+    <div class="topbar__actions">
+      <a class="avatar avatar--q avatar--btn" href="./dialogs.html#dialog-account" aria-label="Account menu">Q</a>
+    </div>
+  </div>
+</header>
+<!-- @/shell:topbar -->
+<main class="app-main container container--stack" id="main">
+  <header class="page-header">
+    <div class="page-header__text">
+      <a class="page-header__eyebrow hide-lt-720" href="./family.html"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-arrow_left"/></svg>Family</a>
+      <div class="titlerow">
+        <a class="btn btn--ghost btn--icon hide-gte-720" href="./family.html" aria-label="Back to Family"><svg class="icon" aria-hidden="true"><use href="#i-arrow_left"/></svg></a>
+        <h1 class="page-header__title">Review submissions</h1>
+      </div>
+      <p class="page-header__subtitle">Three waiting, oldest first. Approving publishes to every family nearby.</p>
+    </div>
+  </header>
+
+  <div class="queue">
+
+    <article class="card card--pad-lg" aria-labelledby="sub-1">
+      <div class="card__head">
+        <span class="date-tile" aria-hidden="true"><span class="date-tile__m">Jun</span><span class="date-tile__d">20</span></span>
+        <div class="card__head-text">
+          <h2 class="card__title" id="sub-1">Port Credit Buskerfest</h2>
+          <p class="card__meta">Sat 20 Jun · 2:00 to 9:00pm</p>
+        </div>
+        <span class="chip chip--sun">Pending</span>
+      </div>
+      <dl class="details">
+        <dt class="details__label">Location</dt><dd class="details__value">Memorial Park, Lakeshore Rd</dd>
+        <dt class="details__label">Cost</dt><dd class="details__value">Free</dd>
+        <dt class="details__label">Ages</dt><dd class="details__value">All ages</dd>
+        <dt class="details__label">Link</dt><dd class="details__value"><a class="details__link" href="https://example.com/port-credit-buskerfest-2026" target="_blank" rel="noopener">example.com/port-credit-buskerfest-2026<svg class="icon icon--xs" aria-hidden="true"><use href="#i-arrow_right"/></svg></a></dd>
+        <dt class="details__label">Notes</dt><dd class="details__value">Street performers along Lakeshore. The kids' zone runs 2 to 5, then it gets loud.</dd>
+      </dl>
+      <p class="submitter"><span class="avatar avatar--sm avatar--q" aria-hidden="true">Q</span>quinntynebrown@gmail.com · 2 hours ago</p>
+      <div class="review-actions">
+        <a class="btn btn--quiet" href="./dialogs.html#dialog-reject"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg>Reject</a>
+        <a class="btn btn--primary" href="./dialogs.html#dialog-approve"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Approve</a>
+      </div>
+    </article>
+
+    <div class="approved-row" role="status">
+      <svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>
+      <span>Approved · Bronte Creek Maple Magic</span>
+    </div>
+
+    <article class="card card--pad-lg" aria-labelledby="sub-3">
+      <div class="card__head">
+        <span class="date-tile" aria-hidden="true"><span class="date-tile__m">Jun</span><span class="date-tile__d">6</span></span>
+        <div class="card__head-text">
+          <h2 class="card__title" id="sub-3">St. Christopher's spring fair</h2>
+          <p class="card__meta">Sat 6 Jun · 10:00am to 2:00pm</p>
+        </div>
+        <span class="chip chip--sun">Pending</span>
+      </div>
+      <dl class="details">
+        <dt class="details__label">Location</dt><dd class="details__value">St. Christopher's school, Port Credit</dd>
+        <dt class="details__label">Cost</dt><dd class="details__value details__value--faint">Not given</dd>
+        <dt class="details__label">Ages</dt><dd class="details__value">All ages</dd>
+        <dt class="details__label">Link</dt><dd class="details__value details__value--faint">Not given</dd>
+        <dt class="details__label">Notes</dt><dd class="details__value">Bake sale, bouncy castle and a silent auction in the gym.</dd>
+      </dl>
+      <p class="submitter"><span class="avatar avatar--sm" aria-hidden="true">A</span>alex.morgan@example.com · 3 days ago</p>
+      <div class="review-actions">
+        <a class="btn btn--quiet" href="./dialogs.html#dialog-reject"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg>Reject</a>
+        <a class="btn btn--primary" href="./dialogs.html#dialog-approve"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Approve</a>
+      </div>
+    </article>
+
+  </div>
+</main>
+<!-- @shell:bottomnav -->
+<nav class="bottom-nav" aria-label="Primary">
+  <a class="bottom-nav__item" data-nav="weekend" href="./weekend.html"><span class="bottom-nav__icon"><svg class="icon" aria-hidden="true"><use href="#i-home"/></svg></span>Weekend</a>
+  <a class="bottom-nav__item" data-nav="ideas" href="./ideas.html"><span class="bottom-nav__icon"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg></span>Ideas</a>
+  <a class="bottom-nav__item" data-nav="past" href="./past.html"><span class="bottom-nav__icon"><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg></span>Past</a>
+  <a class="bottom-nav__item" data-nav="family" href="./family.html" aria-current="page"><span class="bottom-nav__icon"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg></span>Family</a>
+</nav>
+<!-- @/shell:bottomnav -->
+<script src="../app.js"></script>
+</body>
+</html>

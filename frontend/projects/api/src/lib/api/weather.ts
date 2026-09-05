@@ -37,14 +37,31 @@ export function weatherWordCapitalised(w: WeatherForecastDto | null): string {
   return word.charAt(0).toUpperCase() + word.slice(1);
 }
 
-export function weatherNote(w: WeatherForecastDto): string {
-  if (w.unavailable) return 'Forecast unavailable.';
-  if (w.tags.includes('rain')) return 'Rain expected — plan indoors.';
-  if (w.tags.includes('snow')) return 'Snow on the way — bundle up or stay in.';
-  if (w.tags.includes('sunny') && w.tags.includes('warm')) return 'Light breeze, perfect for outdoors';
-  if (w.tags.includes('sunny')) return 'Sunny — bring layers';
-  if (w.tags.includes('cold')) return 'Cold day — indoor-friendly';
-  return 'Variable cloud — flex the plan';
+/**
+ * The adjective that fronts a day in copy: "sunny Saturday", "rainy Sunday".
+ * Empty when there is no forecast, so callers can drop it cleanly.
+ */
+export function weatherAdjective(w: WeatherForecastDto | null): string {
+  if (!w || w.unavailable) return '';
+  if (w.tags.includes('rain')) return 'rainy';
+  if (w.tags.includes('snow')) return 'snowy';
+  if (w.tags.includes('sunny')) return 'sunny';
+  if (w.tags.includes('warm')) return 'warm';
+  if (w.tags.includes('cold')) return 'cold';
+  return 'cloudy';
+}
+
+/** The one-line note beside the temperatures in a day header. */
+export function weatherNote(w: WeatherForecastDto | null): string {
+  if (!w || w.unavailable) return 'Forecast pending';
+  if (w.tags.includes('rain')) return 'Rain expected, plan indoors';
+  if (w.tags.includes('snow')) return 'Snow on the way, stay in';
+  if (w.tags.includes('sunny') && w.tags.includes('warm')) {
+    return 'Light breeze, good for outdoors';
+  }
+  if (w.tags.includes('sunny')) return 'Sunny, bring layers';
+  if (w.tags.includes('cold')) return 'Cold day, indoor-friendly';
+  return 'Variable cloud, flex the plan';
 }
 
 /** True when the day is good for outdoor plans; unknown forecasts are not. */

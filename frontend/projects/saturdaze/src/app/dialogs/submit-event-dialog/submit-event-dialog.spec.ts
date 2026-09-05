@@ -1,100 +1,90 @@
 import { vi } from 'vitest';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { Dialog as DialogShell } from 'components';
-import { provideRouter } from '@angular/router';
-import { EVENT_SUBMISSIONS_SERVICE } from 'api';
 import { DialogRef } from '@angular/cdk/dialog';
+
+import { EVENT_SUBMISSIONS_SERVICE } from 'api';
+
+import { SUBMISSION } from '../../pages/dialogs/dialog-fixtures';
 import { SubmitEventDialog } from './submit-event-dialog';
 
 describe('SubmitEventDialog', () => {
-  let component: SubmitEventDialog;
   let fixture: ComponentFixture<SubmitEventDialog>;
-  let mockDialogRef: any;
-  let mockEVENT_SUBMISSIONS_SERVICE: any;
+  let component: SubmitEventDialog;
+  let host: HTMLElement;
+  let dialogRef: { close: ReturnType<typeof vi.fn> };
+  let submissions: { submit: ReturnType<typeof vi.fn> };
 
   beforeEach(async () => {
-    mockDialogRef = {
-      close: vi.fn(),
-    };
-
-    mockEVENT_SUBMISSIONS_SERVICE = {
-      submit: vi.fn(() => Promise.resolve(undefined)),
-    };
-
+    dialogRef = { close: vi.fn() };
+    submissions = { submit: vi.fn(async () => SUBMISSION) };
     await TestBed.configureTestingModule({
       imports: [SubmitEventDialog],
       providers: [
-        provideRouter([{ path: '**', children: [] }]),
-        { provide: EVENT_SUBMISSIONS_SERVICE, useValue: mockEVENT_SUBMISSIONS_SERVICE },
-        { provide: DialogRef, useValue: mockDialogRef },
+        { provide: DialogRef, useValue: dialogRef },
+        { provide: EVENT_SUBMISSIONS_SERVICE, useValue: submissions },
       ],
     }).compileComponents();
-
     fixture = TestBed.createComponent(SubmitEventDialog);
     component = fixture.componentInstance;
-  });
-
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-
-  it('should render component', () => {
-    expect(fixture.nativeElement).toBeTruthy();
-  });
-
-  it('should render with stubbed children', async () => {
-    TestBed.resetTestingModule();
-    TestBed.configureTestingModule({
-      imports: [SubmitEventDialog],
-      providers: [
-        provideRouter([{ path: '**', children: [] }]),
-        { provide: EVENT_SUBMISSIONS_SERVICE, useValue: mockEVENT_SUBMISSIONS_SERVICE },
-        { provide: DialogRef, useValue: mockDialogRef },
-      ],
-    });
-    TestBed.overrideComponent(SubmitEventDialog, {
-      remove: { imports: [DialogShell] },
-      add: { schemas: [NO_ERRORS_SCHEMA] },
-    });
-    await TestBed.compileComponents();
-    const stubbedFixture = TestBed.createComponent(SubmitEventDialog);
-    stubbedFixture.detectChanges();
-    expect(stubbedFixture.nativeElement).toBeTruthy();
-  });
-
-  it('should call cancel without throwing', () => {
-    expect(() => component['cancel']()).not.toThrow();
-  });
-
-  it('should call openFullForm without throwing', () => {
-    expect(() => component['openFullForm']()).not.toThrow();
-  });
-
-  it('should call submit without throwing', async () => {
-    await expect(Promise.resolve(component['submit']({ preventDefault: () => {}, stopPropagation: () => {}, target: { value: '', checked: false }, currentTarget: { value: '', checked: false } } as any)).then(() => true, () => true)).resolves.toBe(true);
-  });
-
-  it('should handle a failed submit in submit', async () => {
-    mockEVENT_SUBMISSIONS_SERVICE.submit = vi.fn(() => Promise.reject(new Error('test')));
-    await expect(Promise.resolve(component['submit']({ preventDefault: () => {}, stopPropagation: () => {}, target: { value: '', checked: false }, currentTarget: { value: '', checked: false } } as any)).then(() => true, () => true)).resolves.toBe(true);
-  });
-
-  it('should recompute canSubmit under seeded state', () => {
-    component['title'].set('x' as any);
-    component['startsAtLocal'].set('2026-05-16T10:00');
-    expect(() => component['canSubmit']()).not.toThrow();
-  });
-
-  it('flags a cleared date-time inline and blocks submission', () => {
-    component['title'].set('Buskerfest');
-    component['startsAtLocal'].set('2026-05-16T10:00');
-    expect(component['dateError']()).toBe('');
-    expect(component['canSubmit']()).toBe(true);
-    component['startsAtLocal'].set('');
-    expect(component['dateError']()).toBe('Pick a start date and time.');
-    expect(component['canSubmit']()).toBe(false);
     fixture.detectChanges();
-    expect((fixture.nativeElement as HTMLElement).querySelector('.field-error')?.textContent).toContain('Pick a start date and time.');
+    host = fixture.nativeElement as HTMLElement;
+  });
+
+  const primary = (): HTMLElement =>
+    host.querySelector('sd-button[slot="actions"][variant="primary"]') as HTMLElement;
+
+  it('renders the form with the start time defaulted to the next hour', () => {
+    expect(host.querySelector('.dialog__title')?.textContent?.trim()).toBe('Suggest an event');
+    const labels = Array.from(host.querySelectorAll('sd-text-input')).map((f) => f.getAttribute('label'));
+    expect(labels).toEqual(['Title', 'Starts', 'Ends', 'Location', 'Description', 'Cost', 'Ages', 'Link']);
+    expect(component['startsAtLocal']()).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:00$/);
+    expect(primary().hasAttribute('disabled')).toBe(true);
+  });
+
+  it('enables submit once there is a title, and flags a missing start time', () => {
+    component['title'].set('Port Credit Buskerfest');
+    fixture.detectChanges();
+    expect(primary().hasAttribute('disabled')).toBe(false);
+
+    component['startsAtLocal'].set('');
+    fixture.detectChanges();
+    expect(component['dateError']()).toBe('Pick a start date and time.');
+    expect(primary().hasAttribute('disabled')).toBe(true);
+  });
+
+  it('submits trimmed values with blanks as null and closes with the created submission', async () => {
+    component['title'].set('  Port Credit Buskerfest ');
+    component['startsAtLocal'].set('2026-06-20T14:00');
+    component['location'].set(' Memorial Park ');
+    await component['submit']();
+    expect(submissions.submit).toHaveBeenCalledWith({
+      title: 'Port Credit Buskerfest',
+      startsAtLocal: '2026-06-20T14:00',
+      endsAtLocal: null,
+      location: 'Memorial Park',
+      description: null,
+      costNote: null,
+      ageRange: null,
+      sourceUrl: null,
+    });
+    expect(dialogRef.close).toHaveBeenCalledWith(SUBMISSION);
+  });
+
+  it('keeps the dialog open with an inline error when the API rejects', async () => {
+    const consoleError = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+    submissions.submit.mockRejectedValueOnce(new Error('500'));
+    component['title'].set('Buskerfest');
+    await component['submit']();
+    expect(component['error']()).toBe('Could not send that. Try again in a moment.');
+    expect(dialogRef.close).not.toHaveBeenCalled();
+    expect(component['submitting']()).toBe(false);
+    consoleError.mockRestore();
+  });
+
+  it('does nothing on submit while invalid, and closes with nothing on cancel', async () => {
+    await component['submit']();
+    expect(submissions.submit).not.toHaveBeenCalled();
+    component['cancel']();
+    expect(dialogRef.close).toHaveBeenCalledWith();
   });
 });

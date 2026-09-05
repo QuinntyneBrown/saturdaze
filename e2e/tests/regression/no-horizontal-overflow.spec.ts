@@ -1,6 +1,8 @@
 import { test, expect } from "../../fixtures/sd-test.js";
 import { measureHorizontalOverflow } from "../../fixtures/overflow.js";
-import { AUTHED_ROUTES, ANON_ROUTES } from "../../fixtures/audit-routes.js";
+import { isBaseline } from "../../fixtures/routes.js";
+import { ANON_ROUTES, AUTHED_ROUTES, auditable } from "../../fixtures/audit-routes.js";
+
 
 /**
  * Regression guard: every routed screen fits every supported width.
@@ -13,11 +15,12 @@ import { AUTHED_ROUTES, ANON_ROUTES } from "../../fixtures/audit-routes.js";
  * 5-viewport audit's guarantees alive. No screenshots → no baselines.
  *
  * Runs once, under the desktop project only (viewport is driven manually).
- * A single looping test keeps it to one UI sign-in at `workers: 1`;
+ * A single looping test keeps it to one API sign-in at `workers: 1`;
  * `expect.soft` reports every broken route × width combo in one run.
  *
- * Anonymous routes are swept first, then one seeded login (same account
- * as sign-out.spec.ts) unlocks the guarded routes.
+ * Anonymous routes are swept first, then the seeded session (same account
+ * as sign-out.spec.ts) unlocks the guarded routes; the share link is built
+ * last because `goto("sharedWeekend")` mints it through the API.
  */
 
 const WIDTHS = [
@@ -28,12 +31,10 @@ const WIDTHS = [
   { name: "xlarge", width: 1920, height: 1080 },
 ] as const;
 
-
 test.describe("Responsive guard", () => {
   test("no horizontal overflow on any route at any width", async ({
     page,
     goto,
-    pages,
     settle,
   }, testInfo) => {
     test.skip(
@@ -43,6 +44,12 @@ test.describe("Responsive guard", () => {
     test.setTimeout(300_000);
 
     const sweep = async (route: string) => {
+      await page.waitForSelector("body[data-page]", { state: "attached" });
+      await settle();
+      // App only: let data-driven screens leave their skeleton state first.
+      if (!isBaseline() && route !== "weekendGenerating") {
+        await expect(page.locator(".skeleton-row")).toHaveCount(0, { timeout: 20_000 }).catch(() => {});
+      }
       for (const vp of WIDTHS) {
         await page.setViewportSize({ width: vp.width, height: vp.height });
         await settle();
@@ -56,9 +63,10 @@ test.describe("Responsive guard", () => {
       }
     };
 
-    for (const key of ANON_ROUTES) {
+    // Anonymous first (the share link, app mode only, is minted through the
+    // API by the fixture without seeding a browser session).
+    for (const key of auditable(ANON_ROUTES)) {
       await goto(key);
-      await settle();
       await sweep(key);
     }
 
@@ -66,9 +74,8 @@ test.describe("Responsive guard", () => {
     // guarded navigation (see fixtures/auth.ts).
     await page.setViewportSize({ width: 390, height: 844 });
 
-    for (const key of AUTHED_ROUTES) {
+    for (const key of auditable(AUTHED_ROUTES)) {
       await goto(key);
-      await settle();
       await sweep(key);
     }
   });

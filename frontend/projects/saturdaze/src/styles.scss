@@ -1,8 +1,49 @@
 // Application-level styles. The components-library entry forwards tokens,
-// breakpoints, and global page chrome.
+// breakpoints, and global page chrome (docs/mocks-v2/styles/app.css).
 
 @use "../../components/src/lib/styles";
 
-// @angular/cdk overlay prebuilt — backdrop + positioning for CDK Dialog.
-// Plain CSS, imported so the cdk-overlay-* classes have layout/z-index rules.
+// @angular/cdk overlay prebuilt — backdrop + positioning for CDK Dialog and
+// the anchored menus. Plain CSS, imported so the cdk-overlay-* classes have
+// layout/z-index rules.
 @import "@angular/cdk/overlay-prebuilt.css";
+
+// Dialogs open through `Dialog.open(..., { panelClass: 'sd-dialog-panel',
+// backdropClass: 'sd-dialog-backdrop' })`. Below 720px the pane hugs the
+// bottom edge (a sheet); from 720px it is centred (a modal). `sd-dialog`
+// draws the panel itself.
+.sd-dialog-backdrop {
+  background: rgba(31, 41, 55, 0.4);
+}
+
+.sd-dialog-panel {
+  width: 100%;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.cdk-global-overlay-wrapper:has(> .sd-dialog-panel) {
+  align-items: flex-end !important;
+  justify-content: center !important;
+}
+
+@media (min-width: 720px) {
+  .sd-dialog-panel {
+    max-width: 568px;
+    padding: 24px;
+  }
+
+  .cdk-global-overlay-wrapper:has(> .sd-dialog-panel) {
+    align-items: center !important;
+  }
+}
+
+// Anchored menus (account, Weekend "More" from 720px) close on a click
+// outside; the backdrop is there for the click, not for dimming.
+.sd-menu-backdrop {
+  background: transparent;
+}
+
+.sd-menu-pane {
+  margin-top: 8px;
+}

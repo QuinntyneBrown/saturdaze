@@ -1,0 +1,18 @@
+@if (label()) {
+  <span class="field__label" [id]="labelId">{{ label() }}</span>
+}
+<div class="seg-radio" [class.seg-radio--3]="three()" role="radiogroup" [attr.aria-labelledby]="label() ? labelId : null">
+  @for (option of options(); track option.value) {
+    <label class="seg-radio__opt">
+      <input
+        type="radio"
+        [name]="id"
+        [value]="option.value"
+        [checked]="option.value === value()"
+        [disabled]="disabled()"
+        (change)="pick(option.value)"
+      />
+      {{ option.label }}
+    </label>
+  }
+</div>

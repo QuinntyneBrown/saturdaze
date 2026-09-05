@@ -1,18 +1,18 @@
-<div class="left">
-  @if (back()) {
-    <a
-      class="back"
-      href="/weekend"
-      aria-label="Back"
-      (click)="onBack($event)"
-    >
-      <sd-icon name="arrow_left" [size]="18" />
-    </a>
-  } @else {
-    <ng-content select="[slot=leading]" />
-  }
-</div>
-<h1>{{ titleAttr() }}</h1>
-<div class="right">
-  <ng-content select="[slot=trailing]" />
+<div class="topbar__inner">
+  <a class="topbar__brand" routerLink="/weekend"><span class="brand-mark" aria-hidden="true"></span>Saturdaze</a>
+  <nav class="topbar__nav" aria-label="Primary">
+    @for (item of items; track item.key) {
+      <a
+        class="topbar__link"
+        [attr.data-nav]="item.key"
+        [routerLink]="item.route"
+        [attr.aria-current]="active() === item.key ? 'page' : null"
+      >{{ item.label }}</a>
+    }
+  </nav>
+  <div class="topbar__actions">
+    <button class="avatar-btn" type="button" aria-label="Account menu" (click)="onAccount($event)">
+      <sd-avatar [name]="initial()" tone="primary" />
+    </button>
+  </div>
 </div>

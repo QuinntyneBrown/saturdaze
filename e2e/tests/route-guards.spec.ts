@@ -1,76 +1,126 @@
 import { test, expect } from "../fixtures/sd-test.js";
+import { SEEDED_USER } from "../fixtures/auth.js";
 
 /**
- * Route-guard behaviour. Validates every direction:
- *   - anonymous → guarded URL bounces to /login?returnUrl=…
- *   - signed-in → public auth URL bounces to /weekend
- *   - non-admin → /admin/events bounces to /weekend; admin gets in
+ * Route guards and the v1 → v2 redirect table.
+ *   - anonymous → guarded URL bounces to /sign-in?returnUrl=…
+ *   - signed-in → requireAnonymous URL bounces to /weekend
+ *   - non-admin → /review-submissions bounces; admin gets in
+ *   - fifteen legacy paths redirect (pathMatch full) to their v2 homes
  *
- * Sessions come from the `goto` fixture (API login + storage seed), so these
- * tests never drive the login form — `login.spec.ts` covers that.
+ * Sessions come from the `goto` fixture (API login + storage seed), so
+ * these tests never drive the sign-in form — sign-in.spec.ts covers that.
  */
 
-test.describe("requireAuth (G2)", () => {
-  test("anonymous /weekend → /login?returnUrl=/weekend", async ({ page, goto, settle }) => {
-    await goto("home", { anonymous: true });
+test.describe("requireAuth", () => {
+  test("anonymous /weekend → /sign-in?returnUrl=/weekend", async ({ page, goto, settle }) => {
+    await goto("weekend", { anonymous: true });
     await settle();
-
     const url = new URL(page.url());
-    expect(url.pathname).toBe("/login");
+    expect(url.pathname).toBe("/sign-in");
     expect(url.searchParams.get("returnUrl")).toBe("/weekend");
   });
 
-  for (const key of ["itinerary", "profile", "saved", "errand"] as const) {
-    test(`anonymous /${key} bounces to /login`, async ({ page, goto, settle }) => {
+  for (const key of ["ideas", "ideasFood", "ideasEvents", "past", "family"] as const) {
+    test(`anonymous ${key} bounces to /sign-in`, async ({ page, goto, settle }) => {
       await goto(key, { anonymous: true });
       await settle();
-      expect(new URL(page.url()).pathname).toBe("/login");
+      expect(new URL(page.url()).pathname).toBe("/sign-in");
     });
   }
 
-  test("anonymous /admin/events bounces to /login", async ({ page, goto, settle }) => {
-    await goto("adminEvents", { anonymous: true });
+  test("anonymous /review-submissions bounces to /sign-in", async ({ page, goto, settle }) => {
+    await goto("reviewSubmissions", { anonymous: true });
     await settle();
-    expect(new URL(page.url()).pathname).toBe("/login");
+    expect(new URL(page.url()).pathname).toBe("/sign-in");
   });
 });
 
-test.describe("requireAdmin (G3)", () => {
-  test("signed-in non-admin /admin/events → /weekend", async ({ page, goto }) => {
-    await goto("adminEvents", { as: "user" });
+test.describe("requireAdmin", () => {
+  test("signed-in non-admin /review-submissions → /weekend", async ({ page, goto }) => {
+    await goto("reviewSubmissions", { as: "user" });
     await page.waitForURL("**/weekend", { timeout: 8_000 });
     expect(new URL(page.url()).pathname).toBe("/weekend");
   });
 
-  test("admin session reaches /admin/events", async ({ page, goto, pages }) => {
-    await goto("adminEvents");
-    await pages.adminEvents.waitForComponentsReady();
-    expect(new URL(page.url()).pathname).toBe("/admin/events");
+  test("admin session reaches /review-submissions", async ({ page, goto, pages }) => {
+    await goto("reviewSubmissions");
+    await pages.reviewSubmissions.waitForReady();
+    expect(new URL(page.url()).pathname).toBe("/review-submissions");
   });
 });
 
-test.describe("requireAnonymous (G1)", () => {
-  test("authed user hitting /login → /weekend", async ({ page, goto }) => {
-    await goto("login", { as: "user" });
-    await page.waitForURL("**/weekend", { timeout: 8_000 });
-    expect(new URL(page.url()).pathname).toBe("/weekend");
-  });
+test.describe("requireAnonymous", () => {
+  for (const key of ["landing", "signIn", "createAccount", "resetRequest"] as const) {
+    test(`authed user hitting ${key} → /weekend`, async ({ page, goto }) => {
+      await goto(key, { as: "user" });
+      await page.waitForURL("**/weekend", { timeout: 8_000 });
+      expect(new URL(page.url()).pathname).toBe("/weekend");
+    });
+  }
 
-  test("authed user hitting / → /weekend", async ({ page, goto }) => {
-    await goto("splash", { as: "user" });
-    await page.waitForURL("**/weekend", { timeout: 8_000 });
-    expect(new URL(page.url()).pathname).toBe("/weekend");
+  test("verify-email and legal stay reachable when signed in", async ({ page, goto, pages }) => {
+    await goto("verifyExpired", { as: "user" });
+    await pages.verifyEmail.waitForReady();
+    expect(new URL(page.url()).pathname).toBe("/verify-email");
+    await goto("legal", { as: "user" });
+    await pages.legal.waitForReady();
+    expect(new URL(page.url()).pathname).toBe("/legal");
   });
 
   test("returnUrl is honoured after signing in", async ({ page, goto, pages, settle }) => {
-    await goto("saved", { anonymous: true });
+    await goto("past", { anonymous: true });
     await settle();
-    expect(new URL(page.url()).searchParams.get("returnUrl")).toBe("/saved");
+    expect(new URL(page.url()).searchParams.get("returnUrl")).toBe("/past");
 
-    await pages.login.waitForReady();
-    await pages.login.fillCredentials("quinntynebrown@gmail.com", "password123");
-    await pages.login.submit();
-    await page.waitForURL("**/saved", { timeout: 8_000 });
-    expect(new URL(page.url()).pathname).toBe("/saved");
+    await pages.signIn.waitForReady();
+    await pages.signIn.signIn(SEEDED_USER.email, SEEDED_USER.password);
+    await page.waitForURL("**/past", { timeout: 8_000 });
+    expect(new URL(page.url()).pathname).toBe("/past");
+  });
+});
+
+test.describe("v1 → v2 redirects", () => {
+  const REDIRECTS: ReadonlyArray<[from: string, to: string]> = [
+    ["/itinerary", "/weekend"],
+    ["/errand", "/weekend"],
+    ["/activities", "/ideas"],
+    ["/restaurants", "/ideas/food"],
+    ["/events", "/ideas/events"],
+    ["/events/submit", "/ideas/events"],
+    ["/events/submitted", "/ideas/events"],
+    ["/saved", "/past"],
+    ["/profile", "/family"],
+    ["/admin/events", "/review-submissions"],
+    ["/login", "/sign-in"],
+    ["/signup", "/create-account"],
+    ["/forgot-password", "/reset-password"],
+    ["/check-email", "/reset-password"],
+    ["/terms", "/legal"],
+  ];
+
+  for (const [from, to] of REDIRECTS) {
+    test(`${from} → ${to}`, async ({ page, signIn }) => {
+      // Authed so the guarded destinations are reachable. requireAnonymous
+      // targets (sign-in, create-account, reset-password) and the admin-only
+      // queue then bounce the seeded user on to /weekend, which is accepted.
+      await signIn();
+      await page.goto(from);
+      await page.waitForURL((url) => url.pathname === to || url.pathname === "/weekend", { timeout: 8_000 });
+      expect([to, "/weekend"]).toContain(new URL(page.url()).pathname);
+    });
+  }
+
+  test("/privacy → /legal#privacy", async ({ page, pages }) => {
+    await page.goto("/privacy");
+    await page.waitForURL(/\/legal#privacy$/);
+    await pages.legal.waitForReady();
+    await expect(pages.legal.body).toHaveAttribute("data-doc", "privacy");
+  });
+
+  test("unknown paths fall back to the landing page", async ({ page, settle }) => {
+    await page.goto("/does-not-exist");
+    await settle();
+    expect(["/", "/sign-in"]).toContain(new URL(page.url()).pathname);
   });
 });

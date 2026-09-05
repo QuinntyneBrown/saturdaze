@@ -1,85 +1,60 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Saturdaze — Mock Skeleton</title>
-  <link rel="stylesheet" href="./styles/global.css" />
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Saturdaze mocks v2</title>
+<link rel="stylesheet" href="./styles/tokens.css">
+<link rel="stylesheet" href="./styles/app.css">
 </head>
-<body>
-  <main class="mock-launcher">
-    <h1>Saturdaze mocks</h1>
-    <p class="lede">Skeleton screens for the family weekend planner. Built with native custom elements — a small palette of presentation atoms composed into screens.</p>
+<body data-page="index" data-shell="bare">
+<main class="launcher container" id="main">
+  <h1>Saturdaze mocks v2</h1>
+  <p class="launcher__lede">Responsive web app first. Five screens, one primary action each. Resize the window: 720px swaps the bottom nav for a top bar, 1024px puts Saturday and Sunday side by side.</p>
 
-    <h2>Public</h2>
-    <ul>
-      <li><a class="tile" href="./pages/splash.html">Splash / Marketing<small>For signed-out visitors — pitch + sign-up CTA</small></a></li>
-      <li><a class="tile" href="./pages/sample-weekend.html">Sample weekend<small>Anonymous-safe preview — what the Browns get on Friday at 6pm</small></a></li>
-      <li><a class="tile" href="./pages/login.html">Sign in<small>Email, password, remember-me</small></a></li>
-      <li><a class="tile" href="./pages/signup.html">Create account<small>Family name, location, terms</small></a></li>
-      <li><a class="tile" href="./pages/forgot-password.html">Forgot password<small>Request a reset link</small></a></li>
-      <li><a class="tile" href="./pages/check-email.html">Check your email<small>Sent state — for reset &amp; verification</small></a></li>
-      <li><a class="tile" href="./pages/reset-password.html">Reset password<small>Set new password (from link)</small></a></li>
-      <li><a class="tile" href="./pages/verify-email.html">Verify email<small>Success landing after verification</small></a></li>
-      <li><a class="tile" href="./pages/terms.html">Terms of Service<small>Internal legal page · plain-language summary up top</small></a></li>
-      <li><a class="tile" href="./pages/privacy.html">Privacy Policy<small>What I collect, where it lives, how to delete</small></a></li>
-    </ul>
+  <h2>Core</h2>
+  <ul class="tiles">
+    <li><a class="tile" href="./pages/weekend.html">Weekend<small>Saturday and Sunday, side by side at 1024px</small></a></li>
+    <li><a class="tile" href="./pages/ideas.html">Ideas · Activities<small>Three groups, one filter row, map links</small></a></li>
+    <li><a class="tile" href="./pages/ideas.food.html">Ideas · Food<small>Top pick, family vote, lock it in</small></a></li>
+    <li><a class="tile" href="./pages/ideas.events.html">Ideas · Events<small>Saturday, Sunday, coming soon, your suggestion</small></a></li>
+    <li><a class="tile" href="./pages/past.html">Past weekends<small>Rate, favourite, rename, repeat, remix</small></a></li>
+    <li><a class="tile" href="./pages/family.html">Family<small>Members, commitments, likes, preferences, sign out</small></a></li>
+    <li><a class="tile" href="./pages/review-submissions.html">Review submissions<small>Admin queue: approve or reject</small></a></li>
+  </ul>
 
-    <h2>Auth flow states</h2>
-    <ul>
-      <li><a class="tile" href="./pages/forgot-password.error.html">Forgot password — transport error<small>Inline failure banner, retry in place (BUG-010)</small></a></li>
-      <li><a class="tile" href="./pages/check-email.with-email.html">Check email — with context<small>The address is known and shown plainly (BUG-009)</small></a></li>
-      <li><a class="tile" href="./pages/check-email.empty.html">Check email — no context<small>Asks for email when router state was lost (BUG-009)</small></a></li>
-      <li><a class="tile" href="./pages/verify-email.verifying.html">Verify email — in flight<small>Spinner + reassurance while the token is being checked (BUG-008)</small></a></li>
-      <li><a class="tile" href="./pages/verify-email.expired.html">Verify email — expired<small>Friendly resolution path, not a hard fail (BUG-008)</small></a></li>
-      <li><a class="tile" href="./pages/reset-password.success.html">Reset password — success<small>Password updated; other devices signed out (BUG-007)</small></a></li>
-      <li><a class="tile" href="./pages/reset-password.expired.html">Reset password — expired<small>Token outlived its 60-minute window (BUG-007)</small></a></li>
-    </ul>
+  <h2>States</h2>
+  <ul class="tiles">
+    <li><a class="tile" href="./pages/weekend.empty.html">Weekend · empty<small>First run, nothing drafted yet</small></a></li>
+    <li><a class="tile" href="./pages/weekend.generating.html">Weekend · generating<small>Skeleton rows while the planner works</small></a></li>
+    <li><a class="tile" href="./pages/past.empty.html">Past · empty<small>No finished weekends yet</small></a></li>
+    <li><a class="tile" href="./pages/review-submissions.empty.html">Review · empty<small>Queue is clear</small></a></li>
+  </ul>
 
-    <h2>Screens</h2>
-    <ul>
-      <li><a class="tile" href="./pages/home.html">Home / This Weekend<small>Greeting, weather, day cards, anticipated tips</small></a></li>
-      <li><a class="tile" href="./pages/itinerary.html">Itinerary — Saturday<small>Timeline view of a single day</small></a></li>
-      <li><a class="tile" href="./pages/activities.html">Activity Suggestions<small>Discover, filter, "try something new"</small></a></li>
-      <li><a class="tile" href="./pages/restaurants.html">Restaurant Picker<small>Wife-approved style + family vote</small></a></li>
-      <li><a class="tile" href="./pages/saved.html">Saved Weekends<small>History, favourites, remix</small></a></li>
-      <li><a class="tile" href="./pages/events.html">Local Events Feed<small>Circus, theatre, seasonal · FAB to submit user events (L1-018)</small></a></li>
-      <li><a class="tile" href="./pages/events.submit.html">Submit an event<small>User-contributed events form — title/date/time required; rest optional (L1-018)</small></a></li>
-      <li><a class="tile" href="./pages/events.submitted.html">Event submitted<small>Pending-review confirmation after a successful submission (L1-018)</small></a></li>
-      <li><a class="tile" href="./pages/admin.events.html">Admin · event moderation<small>Pending submissions queue · approve or reject (L1-018)</small></a></li>
-      <li><a class="tile" href="./pages/errand.html">Shopping Errand<small>Optional slot, fits without killing the day</small></a></li>
-      <li><a class="tile" href="./pages/profile.html">Family Profile<small>Members, commitments, preferences</small></a></li>
-    </ul>
+  <h2>Auth</h2>
+  <ul class="tiles">
+    <li><a class="tile" href="./pages/sign-in.html">Sign in<small>Default and wrong-password states</small></a></li>
+    <li><a class="tile" href="./pages/create-account.html">Create account<small>Family name, email, password strength, consent</small></a></li>
+    <li><a class="tile" href="./pages/reset-password.html">Reset password<small>Request, check email, new password, done, expired</small></a></li>
+    <li><a class="tile" href="./pages/verify-email.html">Verify email<small>Check your email, verifying, verified, expired</small></a></li>
+  </ul>
 
-    <h2>App states</h2>
-    <ul>
-      <li><a class="tile" href="./pages/home.empty.html">Home — first run<small>No weekend drafted yet; warm welcome (BUG-022)</small></a></li>
-      <li><a class="tile" href="./pages/home.generating.html">Home — drafting<small>Skeleton cards while the plan is generated (BUG-022)</small></a></li>
-      <li><a class="tile" href="./pages/home.lock-mode.html">Home — lock selection<small>Tap-to-lock individual blocks (BUG-024)</small></a></li>
-      <li><a class="tile" href="./pages/itinerary.sunday.html">Itinerary — Sunday<small>Sunday-active day-switcher state (BUG-005)</small></a></li>
-      <li><a class="tile" href="./pages/itinerary.locked-day.html">Itinerary — day locked<small>Banner + locked-day chip; regenerate scoped to other days (BUG-032)</small></a></li>
-      <li><a class="tile" href="./pages/restaurants.refreshing.html">Restaurants — refreshing<small>Skeleton picks while suggestions reshuffle (BUG-035)</small></a></li>
-      <li><a class="tile" href="./pages/restaurants.voted.html">Restaurants — voted<small>Active vote states on the family vote rows (BUG-036)</small></a></li>
-      <li><a class="tile" href="./pages/restaurants.consensus.html">Restaurants — consensus<small>"4 of 4 yes" affordance per card (BUG-036)</small></a></li>
-      <li><a class="tile" href="./pages/restaurants.locked.html">Restaurants — locked pick<small>One card locked + booking, siblings dimmed (BUG-038)</small></a></li>
-      <li><a class="tile" href="./pages/errand.alt-slots.html">Errand — alternate slots<small>Four candidate slots with trade-off badges (BUG-043)</small></a></li>
-      <li><a class="tile" href="./pages/errand.added.html">Errand — added<small>Confirmation card + "what next" tip (BUG-044)</small></a></li>
-    </ul>
+  <h2>Public</h2>
+  <ul class="tiles">
+    <li><a class="tile" href="./pages/landing.html">Landing<small>Hero with a live miniature of the Weekend screen</small></a></li>
+    <li><a class="tile" href="./pages/legal.html">Legal<small>Terms and Privacy on one template</small></a></li>
+  </ul>
 
-    <h2>Dialogs &amp; sheets</h2>
-    <ul>
-      <li><a class="tile" href="./pages/dialogs.html">All dialogs<small>Block detail, regenerate, swap, vote, share (incl. copy-link), errand, Friday preview, mail picker, calendar export, see-on-map, surprise-me, remix, repeat, lock-it-in, action sheets, sign-out, submit-event, admin approve/reject</small></a></li>
-    </ul>
+  <h2>Dialogs</h2>
+  <ul class="tiles">
+    <li><a class="tile" href="./pages/dialogs.html">Dialogs<small>Every modal and sheet, rendered inline</small></a></li>
+  </ul>
 
-    <h2>Components</h2>
-    <ul>
-      <li><a class="tile" href="./pages/components.html">Component gallery<small>Buttons, chips, cards, list items, inputs</small></a></li>
-    </ul>
-
-    <h2>Reference</h2>
-    <ul>
-      <li><a class="tile" href="./comparison.html">Mocks vs. screenshots<small>Each mock rendered live next to its captured screenshot (mobile, tablet, desktop)</small></a></li>
-    </ul>
-  </main>
+  <h2>Reference</h2>
+  <ul class="tiles">
+    <li><a class="tile" href="./pages/_shell.html">Shell<small>The skeleton every page copies</small></a></li>
+  </ul>
+</main>
+<script src="./app.js"></script>
 </body>
 </html>

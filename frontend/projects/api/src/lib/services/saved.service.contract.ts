@@ -1,29 +1,26 @@
 import { InjectionToken, Signal } from '@angular/core';
 
-import { SavedView } from '../models/saved-view';
+import { PastView } from '../models/past-view';
 
 /**
- * I Saved Service.
+ * I Saved Service — the Past page. The backend vocabulary is "saved"
+ * (remix / repeat), so the token keeps its name.
  */
 export interface ISavedService {
   /**
-   * List — the saved view for the active filter.
+   * List — the Past page for the active filter.
    *
-   * @returns {Signal<SavedView>} The result of the operation
+   * @returns {Signal<PastView>} The result of the operation
    */
-  list(): Signal<SavedView>;
+  list(): Signal<PastView>;
   /**
-   * Load.
+   * Load — `GET /api/weekends/history?take=50`.
    *
    * @returns {Promise<void>} The result of the operation
    */
   load(): Promise<void>;
   /**
-   * Active Filter — the label of the selected chip.
-   */
-  activeFilter(): Signal<string>;
-  /**
-   * Set Filter.
+   * Set Filter — by chip label: All · Favourites · This year · 5★.
    *
    * @param {string} label - The chip label
    */

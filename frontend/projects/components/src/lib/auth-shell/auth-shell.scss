@@ -1,31 +1,64 @@
-// Mirrors docs/mocks/pages/login.html `.auth-shell` + `.brand` blocks.
+// `.auth*` from docs/mocks-v2/styles/app.css — the host is the page.
 
 :host {
   display: grid;
+  place-items: center;
+  min-height: 100svh;
+  padding: 24px var(--sd-gutter) 40px;
+}
+
+:host(.auth--stack) {
+  place-items: start center;
+  padding-top: 40px;
+}
+
+.auth__col {
   width: 100%;
-  max-width: 420px;
+  max-width: 440px;
+  display: flex;
+  flex-direction: column;
   gap: 24px;
 }
 
-.brand {
+.auth__brand {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 10px;
-  color: var(--sd-ink-soft);
+  gap: 8px;
   font-size: var(--sd-fs-xs);
+  font-weight: var(--sd-fw-semibold);
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  font-weight: var(--sd-fw-semibold);
+  color: var(--sd-ink-soft);
+  text-decoration: none;
+  border-radius: var(--sd-r-sm);
+}
 
-  .mark {
-    width: 28px;
-    height: 28px;
-    border-radius: 8px;
-    background:
-      radial-gradient(120% 120% at 20% 0%, var(--sd-primary-soft) 0%, transparent 60%),
-      radial-gradient(120% 120% at 100% 100%, var(--sd-sun-soft) 0%, transparent 60%),
-      var(--sd-primary);
-    box-shadow: var(--sd-shadow-1);
-  }
+.brand-mark {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  flex: none;
+  background:
+    radial-gradient(120% 120% at 20% 0%, var(--sd-primary-soft) 0%, transparent 60%),
+    radial-gradient(120% 120% at 100% 100%, var(--sd-sun-soft) 0%, transparent 60%),
+    var(--sd-primary);
+  box-shadow: inset 0 0 0 1px rgba(31, 41, 55, 0.06);
+}
+
+.auth__foot {
+  text-align: center;
+  font-size: var(--sd-fs-xs);
+  color: var(--sd-ink-faint);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px 12px;
+}
+
+.sd-link--soft {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: var(--sd-line-strong);
 }

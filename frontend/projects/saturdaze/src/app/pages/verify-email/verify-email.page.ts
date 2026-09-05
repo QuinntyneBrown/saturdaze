@@ -1,29 +1,27 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  inject,
-  signal,
-} from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 import { AuthError, SESSION_STORE } from 'api';
-import { AuthCard, AuthShell, Button, Icon } from 'components';
+import { AuthCard, AuthShell, Button, Disc, Icon, Spinner } from 'components';
 
-type VerifyState = 'pending' | 'success' | 'error';
+import { devState } from '../../shared/dev-state';
+import { maskEmail } from '../../shared/mask-email';
 
 /**
- * Email verification — `pages/verify-email.html`.
- *
- * On mount, reads `?token=` and calls `SessionStore.verifyEmail()`. Renders
- * three states: pending (spinner), success (verified card), error (invalid
- * or already-verified token).
+ * Verify email — `docs/mocks-v2/pages/verify-email.html`, one page with
+ * four states: "check your email" (right after creating an account, no
+ * token), verifying (`?token=` being consumed), verified, and expired.
+ * No guard: the link works signed in or out.
  */
+
+type VerifyState = 'sent' | 'verifying' | 'verified' | 'expired';
+
+const STATES: readonly VerifyState[] = ['sent', 'verifying', 'verified', 'expired'];
+
 @Component({
   selector: 'app-verify-email',
   standalone: true,
-  imports: [RouterLink, AuthShell, AuthCard, Button, Icon],
+  imports: [AuthShell, AuthCard, Button, Disc, Icon, Spinner],
   templateUrl: './verify-email.page.html',
   styleUrl: './verify-email.page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -32,31 +30,60 @@ export class VerifyEmailPage {
   private readonly session = inject(SESSION_STORE);
   private readonly route = inject(ActivatedRoute);
 
-  private readonly queryParams = toSignal(this.route.queryParamMap, {
-    initialValue: this.route.snapshot.queryParamMap,
-  });
+  private readonly token = this.route.snapshot.queryParamMap.get('token') ?? '';
 
-  protected readonly token = computed(() => this.queryParams().get('token') ?? '');
-  protected readonly state = signal<VerifyState>('pending');
+  protected readonly state = signal<VerifyState>('verifying');
   protected readonly error = signal<AuthError | null>(null);
+  protected readonly resent = signal(false);
+  protected readonly busy = signal(false);
+
+  protected readonly email = computed(
+    () => this.route.snapshot.queryParamMap.get('email') ?? this.session.user()?.email ?? '',
+  );
+  protected readonly maskedEmail = computed(() => maskEmail(this.email() || 'your inbox'));
+  protected readonly sentSubtitle = computed(
+    () => `We sent a verification link to ${this.maskedEmail()}. It works for 24 hours.`,
+  );
 
   constructor() {
+    const dev = devState(this.route);
+    if (dev && (STATES as readonly string[]).includes(dev)) {
+      this.state.set(dev as VerifyState);
+      return;
+    }
+    if (!this.token) {
+      this.state.set('sent');
+      return;
+    }
     void this.verify();
   }
 
   private async verify(): Promise<void> {
-    const token = this.token();
-    if (!token) {
-      this.error.set({ code: 'token_invalid', message: 'Verification link is missing a token.' });
-      this.state.set('error');
-      return;
-    }
     try {
-      await this.session.verifyEmail({ token });
-      this.state.set('success');
+      await this.session.verifyEmail({ token: this.token });
+      this.state.set('verified');
+    } catch (e) {
+      const error = e as AuthError;
+      if (error.code === 'email_already_verified') {
+        this.state.set('verified');
+        return;
+      }
+      this.error.set(error);
+      this.state.set('expired');
+    }
+  }
+
+  protected async resend(): Promise<void> {
+    if (this.busy() || this.resent() || !this.email()) return;
+    this.busy.set(true);
+    try {
+      await this.session.resendVerification({ email: this.email() });
+      this.resent.set(true);
+      setTimeout(() => this.resent.set(false), 60_000);
     } catch (e) {
       this.error.set(e as AuthError);
-      this.state.set('error');
+    } finally {
+      this.busy.set(false);
     }
   }
 }

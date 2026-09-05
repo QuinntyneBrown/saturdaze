@@ -1,0 +1,15 @@
+:host {
+  display: block;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.password {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}

@@ -28,10 +28,10 @@ describe('requireAdmin', () => {
     router = TestBed.inject(Router);
   });
 
-  it('bounces anonymous visitors to /login', () => {
+  it('bounces anonymous visitors to /sign-in', () => {
     const result = run();
     expect(result instanceof UrlTree).toBe(true);
-    expect(router.serializeUrl(result as UrlTree)).toBe('/login');
+    expect(router.serializeUrl(result as UrlTree)).toBe('/sign-in');
   });
 
   it('bounces signed-in non-admins to /weekend', () => {

@@ -1,95 +1,148 @@
+@use "../styles/breakpoints" as *;
+
+// `.dialog__*` from docs/mocks-v2/styles/app.css. The CDK overlay owns the
+// scrim and positioning (`.sd-dialog-panel` in the app's styles.scss); this
+// component draws the panel. Projected sd-buttons are `display: contents`,
+// so their inner `.btn`s are the flex items of the action row.
+
 :host {
   display: block;
+  width: 100%;
 }
 
-// The CDK overlay (production) supplies its own scrim + focus trap, so the
-// shell only renders the `.sheet`. The static design gallery uses the same
-// shell inline (`[static]` host attribute) — overrides below neutralise the
-// bottom-sheet affordances so each dialog reviews as a card on the page.
-
-.sheet {
+.dialog__panel {
+  position: relative;
   width: 100%;
-  max-width: var(--sd-app-max-w);
-  background: var(--sd-bg-elev);
-  border-radius: var(--sd-r-xl) var(--sd-r-xl) 0 0;
-  box-shadow: var(--sd-shadow-3);
-  padding: 8px 20px 24px;
-  max-height: 88vh;
-  overflow-y: auto;
-  animation: sd-rise var(--sd-dur-base) var(--sd-ease);
-
-  // Selected `<ng-content>` must come first in template order (see
-  // dialog.html) so action buttons project correctly. Flex + order keeps
-  // the rendered DIVs in their natural visual sequence: grip → header →
-  // content → actions.
+  max-width: 480px;
+  margin-inline: auto;
+  max-height: 88svh;
+  overflow: auto;
   display: flex;
   flex-direction: column;
-
-  .grip    { order: 1; }
-  header   { order: 2; }
-  .content { order: 3; }
-  .actions { order: 4; }
+  gap: 14px;
+  padding: 20px;
+  padding-bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+  background: var(--sd-surface);
+  border-radius: var(--sd-r-xl) var(--sd-r-xl) 0 0;
+  box-shadow: var(--sd-shadow-3);
+  animation: sd-rise var(--sd-dur-base) var(--sd-ease);
 }
 
-:host([static]) .sheet {
-  border-radius: var(--sd-r-xl);
-  box-shadow: var(--sd-shadow-2);
-  max-height: none;
-  animation: none;
+.dialog__panel::before {
+  content: "";
+  width: 36px;
+  height: 4px;
+  border-radius: var(--sd-r-pill);
+  background: var(--sd-ink-faint);
+  margin: -6px auto 2px;
+  opacity: 0.5;
 }
 
-@media (min-width: 720px) {
-  :host(:not([static])) .sheet {
-    max-width: 520px;
-    border-radius: var(--sd-r-xl);
-    max-height: min(80vh, 720px);
-    padding: 24px 28px 28px;
-  }
+:host(.dialog--wide) .dialog__panel {
+  max-width: 520px;
+}
 
-  :host(:not([static])) .grip {
-    display: none;
-  }
+.dialog__header {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.dialog__heading {
+  min-width: 0;
+  flex: 1;
+}
+
+.dialog__title {
+  font-size: var(--sd-fs-lg);
+  font-weight: var(--sd-fw-bold);
+  line-height: 1.25;
+}
+
+.dialog__sub {
+  font-size: var(--sd-fs-sm);
+  color: var(--sd-ink-soft);
+  margin-top: 4px;
+}
+
+.dialog__close {
+  flex: none;
+  margin: -4px -4px 0 0;
+}
+
+.dialog__body {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.dialog__body:not(:has(*)) {
+  display: none;
+}
+
+.dialog__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 4px;
+  --sd-btn-h: 44px;
+  --sd-btn-w: 100%;
+}
+
+.dialog__actions ::ng-deep .btn--primary,
+.dialog__actions ::ng-deep .btn--danger {
+  order: -1;
+}
+
+.dialog__actions-left {
+  display: contents;
 }
 
 @keyframes sd-rise {
-  from { transform: translateY(20px); opacity: 0; }
-  to   { transform: translateY(0);    opacity: 1; }
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
 }
 
-.grip {
-  width: 36px;
-  height: 4px;
-  background: var(--sd-line-strong);
-  border-radius: var(--sd-r-pill);
-  margin: 8px auto 16px;
+// Specimen: same panel, in the flow, no sheet affordances.
+:host(.dialog--specimen) .dialog__panel {
+  max-height: none;
+  overflow: visible;
+  animation: none;
+  border: 1px solid var(--sd-line);
+  box-shadow: var(--sd-shadow-2);
 }
 
-header {
-  margin-bottom: 16px;
-}
+@include respond-to(tablet) {
+  .dialog__panel {
+    border-radius: var(--sd-r-xl);
+    padding: 24px;
+  }
 
-h2 {
-  font-size: var(--sd-fs-lg);
-  font-weight: var(--sd-fw-semibold);
-  margin: 0;
-  letter-spacing: -0.015em;
-}
+  .dialog__panel::before {
+    display: none;
+  }
 
-p.sub {
-  color: var(--sd-ink-soft);
-  margin: 4px 0 0;
-  font-size: var(--sd-fs-sm);
-}
+  .dialog__actions {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    --sd-btn-h: 40px;
+    --sd-btn-w: auto;
+  }
 
-.actions {
-  display: flex;
-  // wrap: on the narrowest phones a long button pair stacks into
-  // full-width rows instead of pushing past the sheet edge.
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 20px;
-}
+  .dialog__actions ::ng-deep .btn--primary,
+  .dialog__actions ::ng-deep .btn--danger {
+    order: 0;
+  }
 
-.actions ::ng-deep > * {
-  flex: 1;
+  .dialog__actions-left {
+    display: flex;
+    margin-right: auto;
+  }
+
+  .dialog__actions-left:not(:has(*)) {
+    display: none;
+  }
 }

@@ -1,21 +1,20 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  booleanAttribute,
   computed,
   inject,
   input,
 } from '@angular/core';
-import {
-  DomSanitizer,
-  SafeHtml,
-} from '@angular/platform-browser';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 /**
  * Single source of truth for iconography.
  *
- * Mirrors `docs/mocks/components/sd-icon.js`. Inline-SVG paths from a small
- * built-in set keep the runtime free of network calls. Stroke-based glyphs
- * pair with `stroke: currentColor` so `<sd-icon>` recolours with its parent.
+ * Mirrors the sprite injected by `docs/mocks-v2/app.js`: the same 40 stroke
+ * glyphs, inline, no network calls. `stroke: currentColor` means an
+ * `<sd-icon>` recolours with its parent; `filled` swaps to a solid glyph
+ * (stars, favourite hearts).
  */
 
 const ICONS: Record<string, string> = {
@@ -61,6 +60,9 @@ const ICONS: Record<string, string> = {
   check:    `<path d="M5 12l5 5 9-11"/>`,
 };
 
+/** Every glyph name the sprite knows; useful for tests and galleries. */
+export const ICON_NAMES: readonly string[] = Object.keys(ICONS);
+
 @Component({
   selector: 'sd-icon',
   standalone: true,
@@ -70,6 +72,7 @@ const ICONS: Record<string, string> = {
   host: {
     '[attr.name]': 'name()',
     '[attr.size]': 'size()',
+    '[attr.filled]': 'filled() ? "" : null',
     '[style.--_size.px]': 'size()',
   },
 })
@@ -78,8 +81,12 @@ export class Icon {
 
   readonly name = input<string>('sparkle');
   readonly size = input<number>(20);
+  /** Solid glyph (stars, favourite heart). */
+  readonly filled = input(false, { transform: booleanAttribute });
+  /** Stroke weight; chips use 2 at 13px, the default 1.7 elsewhere. */
+  readonly stroke = input<number>(1.7);
 
-  protected readonly path = computed<SafeHtml>(
-    () => this.sanitizer.bypassSecurityTrustHtml(ICONS[this.name()] ?? ICONS['sparkle']!),
+  protected readonly path = computed<SafeHtml>(() =>
+    this.sanitizer.bypassSecurityTrustHtml(ICONS[this.name()] ?? ICONS['sparkle']!),
   );
 }

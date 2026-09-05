@@ -1,111 +1,39 @@
+// `.gallery`, `.specimen` from docs/mocks-v2 — single-use, page-owned.
+
+:host {
+  display: block;
+}
+
+.specimen__hint {
+  font-size: var(--sd-fs-sm);
+  color: var(--sd-ink-soft);
+  margin-bottom: 24px;
+  max-width: 560px;
+}
+
 .gallery {
-  max-width: 720px;
-  margin: 0 auto;
-  padding: 32px 20px 80px;
-  display: grid;
-  // minmax(0,1fr) so a wide dialog action row can't force the column
-  // past the viewport on phones — sheets shrink and wrap instead.
-  grid-template-columns: minmax(0, 1fr);
-  gap: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  align-items: stretch;
 }
 
-.gallery h1 {
-  font-size: 28px;
-  font-weight: var(--sd-fw-bold);
-  letter-spacing: -0.02em;
-  margin: 0;
+.specimen {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  scroll-margin-top: calc(var(--sd-topbar-h) + 16px);
 }
 
-.gallery p.lede {
-  color: var(--sd-ink-soft);
-  margin: 4px 0 16px;
-}
-
-.demo-label {
-  font-size: 11px;
+.specimen__label {
+  font-size: var(--sd-fs-xs);
+  font-weight: var(--sd-fw-semibold);
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--sd-ink-soft);
-  font-weight: var(--sd-fw-semibold);
-  margin: 8px 0 6px;
+  color: var(--sd-ink-faint);
 }
 
-.dialog-grid {
-  display: grid;
-  gap: 14px;
-}
-
-.dialog-stack {
-  display: grid;
-  gap: 8px;
-}
-
-.dialog-two-col {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-}
-
-.why-row {
-  display: flex;
-  gap: 10px;
-  align-items: flex-start;
-}
-
-.why-row.small {
-  font-size: var(--sd-fs-sm);
-}
-
-.why-icon {
-  color: var(--sd-primary);
-  flex-shrink: 0;
-  margin-top: 2px;
-}
-
-.lock-icon {
-  color: var(--sd-accent);
-  flex-shrink: 0;
-  margin-top: 2px;
-}
-
-.strong {
-  font-weight: var(--sd-fw-semibold);
-}
-
-.muted {
-  color: var(--sd-ink-soft);
-}
-
-.small {
-  font-size: var(--sd-fs-sm);
-}
-
-.alt-label {
-  font-size: var(--sd-fs-sm);
-  color: var(--sd-ink-soft);
-  font-weight: var(--sd-fw-medium);
-  margin-bottom: 8px;
-}
-
-.dialog-postscript {
-  margin: 12px 0 0;
-}
-
-.dialog-postscript-card {
-  margin-top: 12px;
-}
-
-.commitment-toggle {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.share-quote {
-  margin-top: 12px;
-  padding: 12px;
-  background: var(--sd-surface-2);
-  border-radius: var(--sd-r-md);
-  font-size: var(--sd-fs-sm);
-  color: var(--sd-ink-soft);
+.specimen--menu sd-menu {
+  align-self: flex-start;
+  min-width: 240px;
 }

@@ -1,31 +1,38 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  input,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, booleanAttribute, input } from '@angular/core';
 
-import { Icon } from '../icon/icon';
+import { Disc, DiscTone } from '../disc/disc';
 
 /**
- * Empty-state callout. Mirrors `docs/mocks/components/sd-empty.js`. Default
- * slot carries any follow-up CTAs.
+ * Centred empty / first-run card. Mirrors `.empty` in
+ * docs/mocks-v2/styles/app.css. `warm` is the first-run variant with the
+ * brand gradient. `[slot=cta]` carries the button(s); `note` is the faint
+ * line under them.
  */
+
+let nextEmptyId = 0;
 
 @Component({
   selector: 'sd-empty',
   standalone: true,
-  imports: [Icon],
+  imports: [Disc],
   templateUrl: './empty.html',
   styleUrl: './empty.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
+    class: 'empty',
+    '[class.empty--warm]': 'warm()',
     '[attr.title]': 'emptyTitle() || null',
-    '[attr.subtitle]': 'subtitle() || null',
-    '[attr.icon]': 'icon()',
+    '[attr.warm]': 'warm() ? "" : null',
+    '[attr.aria-labelledby]': 'headingId',
   },
 })
 export class Empty {
   readonly emptyTitle = input<string>('Nothing here yet', { alias: 'title' });
-  readonly subtitle = input<string>('');
+  readonly body = input<string>('');
   readonly icon = input<string>('sparkle');
+  readonly tone = input<DiscTone>('default');
+  readonly warm = input(false, { transform: booleanAttribute });
+  readonly note = input<string>('');
+
+  protected readonly headingId = `sd-empty-${nextEmptyId++}`;
 }

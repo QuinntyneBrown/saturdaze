@@ -1,23 +1,49 @@
+// `.empty` from docs/mocks-v2/styles/app.css — the host is the card.
+
 :host {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   text-align: center;
-  padding: 48px 24px;
+  gap: 12px;
+  max-width: 480px;
+  margin-inline: auto;
+  padding: 32px 24px;
+  background: var(--sd-surface);
+  border: 1px solid var(--sd-line);
+  border-radius: var(--sd-r-xl);
+}
+
+:host(.empty--warm) {
+  max-width: 560px;
+  background: var(--sd-warm-gradient), var(--sd-surface);
+  padding: 40px 24px;
+}
+
+.empty__title {
+  font-size: var(--sd-fs-lg);
+  font-weight: var(--sd-fw-bold);
+}
+
+.empty__body {
+  font-size: 14px;
   color: var(--sd-ink-soft);
+  max-width: 40ch;
 }
 
-sd-icon {
+.empty__cta {
+  margin-top: 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.empty__cta:not(:has(*)) {
+  display: none;
+}
+
+.empty__note {
+  font-size: var(--sd-fs-xs);
   color: var(--sd-ink-faint);
-  margin-bottom: 12px;
-}
-
-h3 {
-  font-size: var(--sd-fs-md);
-  font-weight: var(--sd-fw-semibold);
-  color: var(--sd-ink);
-  margin: 0 0 4px;
-}
-
-p {
-  margin: 0 0 16px;
-  font-size: var(--sd-fs-sm);
 }

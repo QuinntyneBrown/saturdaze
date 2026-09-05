@@ -1,0 +1,328 @@
+<!doctype html>
+<html lang="en">
+<head>
+<!-- @shell:head -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>This weekend — Saturdaze</title>
+<link rel="stylesheet" href="../styles/tokens.css">
+<link rel="stylesheet" href="../styles/app.css">
+<!-- @/shell:head -->
+</head>
+<body data-page="weekend" data-shell="app">
+<!-- @shell:topbar -->
+<header class="topbar">
+  <div class="container topbar__inner">
+    <a class="topbar__brand" href="./weekend.html"><span class="brand-mark" aria-hidden="true"></span>Saturdaze</a>
+    <nav class="topbar__nav" aria-label="Primary">
+      <a class="topbar__link" data-nav="weekend" href="./weekend.html" aria-current="page">Weekend</a>
+      <a class="topbar__link" data-nav="ideas" href="./ideas.html">Ideas</a>
+      <a class="topbar__link" data-nav="past" href="./past.html">Past</a>
+      <a class="topbar__link" data-nav="family" href="./family.html">Family</a>
+    </nav>
+    <div class="topbar__actions">
+      <a class="avatar avatar--q avatar--btn" href="./dialogs.html#dialog-account" aria-label="Account menu">Q</a>
+    </div>
+  </div>
+</header>
+<!-- @/shell:topbar -->
+<main class="app-main container" id="main">
+  <header class="page-header">
+    <div class="page-header__text">
+      <h1 class="page-header__title">This weekend</h1>
+      <p class="page-header__subtitle">Sunny Saturday for the lavender, a cloudy Sunday for the Rec Room.</p>
+    </div>
+    <a class="btn btn--quiet btn--icon page-header__more" href="./dialogs.html#dialog-more" aria-label="More options"><svg class="icon" aria-hidden="true"><use href="#i-more"/></svg></a>
+    <div class="page-header__actions">
+      <a class="btn btn--quiet" href="./dialogs.html#dialog-calendar"><svg class="icon" aria-hidden="true"><use href="#i-calendar"/></svg>Add to calendar</a>
+      <a class="btn btn--primary" href="./dialogs.html#dialog-share"><svg class="icon" aria-hidden="true"><use href="#i-share"/></svg>Share</a>
+    </div>
+  </header>
+
+  <div class="grid-days">
+
+    <!-- ============================== SATURDAY ============================== -->
+    <section class="day" aria-labelledby="sat-title">
+      <header class="day__header">
+        <span class="weather-disc weather-disc--sun" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-sun"/></svg></span>
+        <div class="day__text">
+          <h2 class="day__title" id="sat-title">Saturday</h2>
+          <p class="day__meta">17 May · 22° / 14° · Light breeze, good for outdoors</p>
+        </div>
+        <div class="day__actions">
+          <a class="btn btn--ghost btn--sm day__btn" href="./dialogs.html#dialog-regenerate-day" aria-label="Regenerate Saturday"><svg class="icon" aria-hidden="true"><use href="#i-refresh"/></svg><span class="day__btn-label">Regenerate</span></a>
+          <button class="btn btn--ghost btn--sm day__btn" type="button" aria-label="Lock Saturday" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg><span class="day__btn-label">Lock day</span></button>
+        </div>
+      </header>
+      <ol class="day__list">
+        <li class="block">
+          <div class="block__time"><span class="block__clock">8:30</span><span class="block__dur">30m</span></div>
+          <div class="block__rail"><span class="block__disc"><svg class="icon" aria-hidden="true"><use href="#i-home"/></svg></span></div>
+          <div class="block__body">
+            <h3 class="block__title">Breakfast at home</h3>
+            <p class="block__sub clamp-1">Cereal day, Eli's choice</p>
+          </div>
+          <div class="block__actions">
+            <a class="btn btn--ghost btn--sm btn--icon" href="./dialogs.html#dialog-block" aria-label="Why this: Breakfast at home"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg></a>
+            <a class="btn btn--ghost btn--sm btn--icon" href="./dialogs.html#dialog-block" aria-label="Swap Breakfast at home"><svg class="icon" aria-hidden="true"><use href="#i-swap"/></svg></a>
+            <button class="btn btn--ghost btn--sm btn--icon" type="button" aria-label="Lock Breakfast at home" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg></button>
+          </div>
+          <a class="block__chev" href="./dialogs.html#dialog-block" aria-label="Details for Breakfast at home"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron_right"/></svg></a>
+        </li>
+
+        <li class="block block--commitment">
+          <div class="block__time"><span class="block__clock">9:00</span><span class="block__dur">60m</span></div>
+          <div class="block__rail"><span class="block__disc"><svg class="icon" aria-hidden="true"><use href="#i-bike"/></svg></span></div>
+          <div class="block__body">
+            <h3 class="block__title">Swim lessons</h3>
+            <p class="block__sub clamp-1">Every Saturday · locked in</p>
+            <div class="block__chips"><span class="chip chip--accent"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg>Commitment</span></div>
+          </div>
+          <div class="block__actions">
+            <a class="btn btn--ghost btn--sm btn--icon" href="./dialogs.html#dialog-block-commitment" aria-label="About Swim lessons"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg></a>
+          </div>
+          <a class="block__chev" href="./dialogs.html#dialog-block-commitment" aria-label="Details for Swim lessons"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron_right"/></svg></a>
+        </li>
+
+        <li class="block block--drive">
+          <div class="block__time"><span class="block__clock">10:30</span><span class="block__dur">45m</span></div>
+          <div class="block__rail"><span class="block__disc"><svg class="icon" aria-hidden="true"><use href="#i-car"/></svg></span></div>
+          <div class="block__body"><h3 class="block__title">Drive to Terre Bleu</h3></div>
+        </li>
+
+        <li class="block">
+          <div class="block__time"><span class="block__clock">11:00</span><span class="block__dur">2h</span></div>
+          <div class="block__rail"><span class="block__disc"><svg class="icon" aria-hidden="true"><use href="#i-tree"/></svg></span></div>
+          <div class="block__body">
+            <h3 class="block__title">Lavender fields</h3>
+            <p class="block__sub clamp-1">Terre Bleu, Milton · walk the rows</p>
+            <div class="block__chips">
+              <span class="chip chip--primary">Day highlight</span>
+              <span class="chip chip--sky"><svg class="icon" aria-hidden="true"><use href="#i-car"/></svg>45 min drive</span>
+            </div>
+          </div>
+          <div class="block__actions">
+            <a class="btn btn--ghost btn--sm btn--icon" href="./dialogs.html#dialog-block" aria-label="Why this: Lavender fields"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg></a>
+            <a class="btn btn--ghost btn--sm btn--icon" href="./dialogs.html#dialog-block" aria-label="Swap Lavender fields"><svg class="icon" aria-hidden="true"><use href="#i-swap"/></svg></a>
+            <button class="btn btn--ghost btn--sm btn--icon" type="button" aria-label="Lock Lavender fields" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg></button>
+          </div>
+          <a class="block__chev" href="./dialogs.html#dialog-block" aria-label="Details for Lavender fields"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron_right"/></svg></a>
+        </li>
+
+        <li class="block">
+          <div class="block__time"><span class="block__clock">13:00</span><span class="block__dur">75m</span></div>
+          <div class="block__rail"><span class="block__disc"><svg class="icon" aria-hidden="true"><use href="#i-fork"/></svg></span></div>
+          <div class="block__body">
+            <h3 class="block__title">Lunch at La Marina</h3>
+            <p class="block__sub clamp-1">Wife-approved · patio · 3 of 4 votes</p>
+          </div>
+          <div class="block__actions">
+            <a class="btn btn--ghost btn--sm btn--icon" href="./dialogs.html#dialog-block" aria-label="Why this: Lunch at La Marina"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg></a>
+            <a class="btn btn--ghost btn--sm btn--icon" href="./dialogs.html#dialog-block" aria-label="Swap Lunch at La Marina"><svg class="icon" aria-hidden="true"><use href="#i-swap"/></svg></a>
+            <button class="btn btn--ghost btn--sm btn--icon" type="button" aria-label="Lock Lunch at La Marina" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg></button>
+          </div>
+          <a class="block__chev" href="./dialogs.html#dialog-block" aria-label="Details for Lunch at La Marina"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron_right"/></svg></a>
+        </li>
+
+        <li class="block block--drive">
+          <div class="block__time"><span class="block__clock">14:30</span><span class="block__dur">45m</span></div>
+          <div class="block__rail"><span class="block__disc"><svg class="icon" aria-hidden="true"><use href="#i-car"/></svg></span></div>
+          <div class="block__body"><h3 class="block__title">Drive home</h3></div>
+        </li>
+
+        <li class="block">
+          <div class="block__time"><span class="block__clock">15:30</span><span class="block__dur">90m</span></div>
+          <div class="block__rail"><span class="block__disc"><svg class="icon" aria-hidden="true"><use href="#i-bed"/></svg></span></div>
+          <div class="block__body">
+            <h3 class="block__title">Quiet time at home</h3>
+            <p class="block__sub clamp-1">Recharge before evening</p>
+          </div>
+          <div class="block__actions">
+            <a class="btn btn--ghost btn--sm btn--icon" href="./dialogs.html#dialog-block" aria-label="Why this: Quiet time at home"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg></a>
+            <a class="btn btn--ghost btn--sm btn--icon" href="./dialogs.html#dialog-block" aria-label="Swap Quiet time at home"><svg class="icon" aria-hidden="true"><use href="#i-swap"/></svg></a>
+            <button class="btn btn--ghost btn--sm btn--icon" type="button" aria-label="Lock Quiet time at home" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg></button>
+          </div>
+          <a class="block__chev" href="./dialogs.html#dialog-block" aria-label="Details for Quiet time at home"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron_right"/></svg></a>
+        </li>
+
+        <li class="block block--commitment">
+          <div class="block__time"><span class="block__clock">17:00</span><span class="block__dur">60m</span></div>
+          <div class="block__rail"><span class="block__disc"><svg class="icon" aria-hidden="true"><use href="#i-bike"/></svg></span></div>
+          <div class="block__body">
+            <h3 class="block__title">Workout window</h3>
+            <p class="block__sub clamp-1">Every Saturday · locked in</p>
+            <div class="block__chips"><span class="chip chip--accent"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg>Commitment</span></div>
+          </div>
+          <div class="block__actions">
+            <a class="btn btn--ghost btn--sm btn--icon" href="./dialogs.html#dialog-block-commitment" aria-label="About Workout window"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg></a>
+          </div>
+          <a class="block__chev" href="./dialogs.html#dialog-block-commitment" aria-label="Details for Workout window"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron_right"/></svg></a>
+        </li>
+
+        <li class="block">
+          <div class="block__time"><span class="block__clock">18:15</span><span class="block__dur">75m</span></div>
+          <div class="block__rail"><span class="block__disc"><svg class="icon" aria-hidden="true"><use href="#i-fork"/></svg></span></div>
+          <div class="block__body">
+            <h3 class="block__title">Dinner at home</h3>
+            <p class="block__sub clamp-1">Pasta and veg, picky-approved</p>
+          </div>
+          <div class="block__actions">
+            <a class="btn btn--ghost btn--sm btn--icon" href="./dialogs.html#dialog-block" aria-label="Why this: Dinner at home"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg></a>
+            <a class="btn btn--ghost btn--sm btn--icon" href="./dialogs.html#dialog-block" aria-label="Swap Dinner at home"><svg class="icon" aria-hidden="true"><use href="#i-swap"/></svg></a>
+            <button class="btn btn--ghost btn--sm btn--icon" type="button" aria-label="Lock Dinner at home" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg></button>
+          </div>
+          <a class="block__chev" href="./dialogs.html#dialog-block" aria-label="Details for Dinner at home"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron_right"/></svg></a>
+        </li>
+
+        <li class="block block--locked">
+          <div class="block__time"><span class="block__clock">20:00</span><span class="block__dur">60m</span></div>
+          <div class="block__rail"><span class="block__disc"><svg class="icon" aria-hidden="true"><use href="#i-bed"/></svg></span></div>
+          <div class="block__body">
+            <h3 class="block__title">Bath and books</h3>
+            <p class="block__sub clamp-1">Lights out at 9</p>
+            <div class="block__chips"><span class="chip chip--accent"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg>Locked</span></div>
+          </div>
+          <div class="block__actions">
+            <a class="btn btn--ghost btn--sm btn--icon" href="./dialogs.html#dialog-block-locked" aria-label="Why this: Bath and books"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg></a>
+            <a class="btn btn--ghost btn--sm btn--icon" href="./dialogs.html#dialog-block" aria-label="Swap Bath and books"><svg class="icon" aria-hidden="true"><use href="#i-swap"/></svg></a>
+            <button class="btn btn--ghost btn--sm btn--icon" type="button" aria-label="Unlock Bath and books" aria-pressed="true"><svg class="icon" aria-hidden="true"><use href="#i-unlock"/></svg></button>
+          </div>
+          <a class="block__chev" href="./dialogs.html#dialog-block-locked" aria-label="Details for Bath and books"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron_right"/></svg></a>
+        </li>
+      </ol>
+      <a class="ghost-row" href="./dialogs.html#dialog-errand"><svg class="icon" aria-hidden="true"><use href="#i-bag"/></svg>Add an errand</a>
+    </section>
+
+    <!-- ============================== SUNDAY ============================== -->
+    <section class="day" aria-labelledby="sun-title">
+      <header class="day__header">
+        <span class="weather-disc weather-disc--cloud" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-cloud"/></svg></span>
+        <div class="day__text">
+          <h2 class="day__title" id="sun-title">Sunday</h2>
+          <p class="day__meta">18 May · 18° / 12° · Cloudy by 2pm, indoor afternoon</p>
+        </div>
+        <div class="day__actions">
+          <a class="btn btn--ghost btn--sm day__btn" href="./dialogs.html#dialog-regenerate-day" aria-label="Regenerate Sunday"><svg class="icon" aria-hidden="true"><use href="#i-refresh"/></svg><span class="day__btn-label">Regenerate</span></a>
+          <button class="btn btn--ghost btn--sm day__btn" type="button" aria-label="Lock Sunday" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg><span class="day__btn-label">Lock day</span></button>
+        </div>
+      </header>
+      <ol class="day__list">
+        <li class="block">
+          <div class="block__time"><span class="block__clock">8:30</span><span class="block__dur">45m</span></div>
+          <div class="block__rail"><span class="block__disc"><svg class="icon" aria-hidden="true"><use href="#i-home"/></svg></span></div>
+          <div class="block__body">
+            <h3 class="block__title">Pancakes at home</h3>
+            <p class="block__sub clamp-1">Mae flips, Eli pours</p>
+          </div>
+          <div class="block__actions">
+            <a class="btn btn--ghost btn--sm btn--icon" href="./dialogs.html#dialog-block" aria-label="Why this: Pancakes at home"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg></a>
+            <a class="btn btn--ghost btn--sm btn--icon" href="./dialogs.html#dialog-block" aria-label="Swap Pancakes at home"><svg class="icon" aria-hidden="true"><use href="#i-swap"/></svg></a>
+            <button class="btn btn--ghost btn--sm btn--icon" type="button" aria-label="Lock Pancakes at home" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg></button>
+          </div>
+          <a class="block__chev" href="./dialogs.html#dialog-block" aria-label="Details for Pancakes at home"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron_right"/></svg></a>
+        </li>
+
+        <li class="block block--errand">
+          <div class="block__time"><span class="block__clock">9:15</span><span class="block__dur">45m</span></div>
+          <div class="block__rail"><span class="block__disc"><svg class="icon" aria-hidden="true"><use href="#i-bag"/></svg></span></div>
+          <div class="block__body">
+            <h3 class="block__title">Costco run</h3>
+            <p class="block__sub clamp-1">Paper towels, bread, yogurt</p>
+            <div class="block__chips"><span class="chip chip--indoor">Errand</span></div>
+          </div>
+          <div class="block__actions">
+            <a class="btn btn--ghost btn--sm btn--icon" href="./dialogs.html#dialog-block" aria-label="Why this: Costco run"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg></a>
+            <button class="btn btn--ghost btn--sm btn--icon" type="button" aria-label="Mark Costco run done"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg></button>
+            <button class="btn btn--ghost btn--sm btn--icon" type="button" aria-label="Lock Costco run" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg></button>
+          </div>
+          <a class="block__chev" href="./dialogs.html#dialog-block" aria-label="Details for Costco run"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron_right"/></svg></a>
+        </li>
+
+        <li class="block block--commitment">
+          <div class="block__time"><span class="block__clock">10:30</span><span class="block__dur">75m</span></div>
+          <div class="block__rail"><span class="block__disc"><svg class="icon" aria-hidden="true"><use href="#i-pin"/></svg></span></div>
+          <div class="block__body">
+            <h3 class="block__title">Church</h3>
+            <p class="block__sub clamp-1">Every Sunday · locked in</p>
+            <div class="block__chips"><span class="chip chip--accent"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg>Commitment</span></div>
+          </div>
+          <div class="block__actions">
+            <a class="btn btn--ghost btn--sm btn--icon" href="./dialogs.html#dialog-block-commitment" aria-label="About Church"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg></a>
+          </div>
+          <a class="block__chev" href="./dialogs.html#dialog-block-commitment" aria-label="Details for Church"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron_right"/></svg></a>
+        </li>
+
+        <li class="block">
+          <div class="block__time"><span class="block__clock">12:15</span><span class="block__dur">60m</span></div>
+          <div class="block__rail"><span class="block__disc"><svg class="icon" aria-hidden="true"><use href="#i-fork"/></svg></span></div>
+          <div class="block__body">
+            <h3 class="block__title">Lunch at Symposium Café</h3>
+            <p class="block__sub clamp-1">Brunch · family booths</p>
+          </div>
+          <div class="block__actions">
+            <a class="btn btn--ghost btn--sm btn--icon" href="./dialogs.html#dialog-block" aria-label="Why this: Lunch at Symposium Café"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg></a>
+            <a class="btn btn--ghost btn--sm btn--icon" href="./dialogs.html#dialog-block" aria-label="Swap Lunch at Symposium Café"><svg class="icon" aria-hidden="true"><use href="#i-swap"/></svg></a>
+            <button class="btn btn--ghost btn--sm btn--icon" type="button" aria-label="Lock Lunch at Symposium Café" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg></button>
+          </div>
+          <a class="block__chev" href="./dialogs.html#dialog-block" aria-label="Details for Lunch at Symposium Café"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron_right"/></svg></a>
+        </li>
+
+        <li class="block block--drive">
+          <div class="block__time"><span class="block__clock">13:30</span><span class="block__dur">10m</span></div>
+          <div class="block__rail"><span class="block__disc"><svg class="icon" aria-hidden="true"><use href="#i-car"/></svg></span></div>
+          <div class="block__body"><h3 class="block__title">Drive to Square One</h3></div>
+        </li>
+
+        <li class="block">
+          <div class="block__time"><span class="block__clock">14:00</span><span class="block__dur">2h</span></div>
+          <div class="block__rail"><span class="block__disc"><svg class="icon" aria-hidden="true"><use href="#i-popcorn"/></svg></span></div>
+          <div class="block__body">
+            <h3 class="block__title">The Rec Room</h3>
+            <p class="block__sub clamp-1">Bowling and arcade · Eli's pick</p>
+            <div class="block__chips"><span class="chip chip--primary">Day highlight</span></div>
+          </div>
+          <div class="block__actions">
+            <a class="btn btn--ghost btn--sm btn--icon" href="./dialogs.html#dialog-block" aria-label="Why this: The Rec Room"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg></a>
+            <a class="btn btn--ghost btn--sm btn--icon" href="./dialogs.html#dialog-block" aria-label="Swap The Rec Room"><svg class="icon" aria-hidden="true"><use href="#i-swap"/></svg></a>
+            <button class="btn btn--ghost btn--sm btn--icon" type="button" aria-label="Lock The Rec Room" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg></button>
+          </div>
+          <a class="block__chev" href="./dialogs.html#dialog-block" aria-label="Details for The Rec Room"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron_right"/></svg></a>
+        </li>
+
+        <li class="block block--drive">
+          <div class="block__time"><span class="block__clock">16:30</span><span class="block__dur">10m</span></div>
+          <div class="block__rail"><span class="block__disc"><svg class="icon" aria-hidden="true"><use href="#i-car"/></svg></span></div>
+          <div class="block__body"><h3 class="block__title">Drive home</h3></div>
+        </li>
+
+        <li class="block">
+          <div class="block__time"><span class="block__clock">18:30</span><span class="block__dur">open</span></div>
+          <div class="block__rail"><span class="block__disc"><svg class="icon" aria-hidden="true"><use href="#i-bed"/></svg></span></div>
+          <div class="block__body">
+            <h3 class="block__title">Quiet evening</h3>
+            <p class="block__sub clamp-1">Sunday dinner stays open on purpose</p>
+          </div>
+          <div class="block__actions">
+            <a class="btn btn--ghost btn--sm btn--icon" href="./dialogs.html#dialog-block" aria-label="Why this: Quiet evening"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg></a>
+            <a class="btn btn--ghost btn--sm btn--icon" href="./dialogs.html#dialog-block" aria-label="Swap Quiet evening"><svg class="icon" aria-hidden="true"><use href="#i-swap"/></svg></a>
+            <button class="btn btn--ghost btn--sm btn--icon" type="button" aria-label="Lock Quiet evening" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg></button>
+          </div>
+          <a class="block__chev" href="./dialogs.html#dialog-block" aria-label="Details for Quiet evening"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron_right"/></svg></a>
+        </li>
+      </ol>
+      <a class="ghost-row" href="./dialogs.html#dialog-errand"><svg class="icon" aria-hidden="true"><use href="#i-bag"/></svg>Add an errand</a>
+    </section>
+
+  </div>
+</main>
+<!-- @shell:bottomnav -->
+<nav class="bottom-nav" aria-label="Primary">
+  <a class="bottom-nav__item" data-nav="weekend" href="./weekend.html" aria-current="page"><span class="bottom-nav__icon"><svg class="icon" aria-hidden="true"><use href="#i-home"/></svg></span>Weekend</a>
+  <a class="bottom-nav__item" data-nav="ideas" href="./ideas.html"><span class="bottom-nav__icon"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg></span>Ideas</a>
+  <a class="bottom-nav__item" data-nav="past" href="./past.html"><span class="bottom-nav__icon"><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg></span>Past</a>
+  <a class="bottom-nav__item" data-nav="family" href="./family.html"><span class="bottom-nav__icon"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg></span>Family</a>
+</nav>
+<!-- @/shell:bottomnav -->
+<script src="../app.js"></script>
+</body>
+</html>

@@ -4,18 +4,27 @@ import { defineConfig, devices } from "@playwright/test";
  * Two-server configuration:
  *
  *   - The Angular dev server (the implementation under test) runs on
- *     http://localhost:4200. Tests target it via `app` fixture.
+ *     http://localhost:4200. Behaviour specs and visual verification target
+ *     it; guarded routes need the API on :5100 with a seeded database
+ *      (`eng/Start-FreshStack.ps1`).
  *
- *   - The mock skeleton (docs/mocks) is served on http://localhost:5173 by
- *     `http-server`. Visual baselines are captured from it once with
- *     `npm run baseline` and then committed. Subsequent runs compare
- *     the Angular implementation against those baselines pixel-by-pixel.
+ *   - The v2 mocks (docs/mocks-v2) are served on http://localhost:5173 by
+ *     `http-server` when SD_BASELINE=1. Visual baselines are captured from
+ *     them once with `npm run baseline` and committed. Subsequent runs
+ *     compare the Angular implementation against those baselines
+ *     pixel-by-pixel. (`docs/mocks-v2/.verify.mjs` self-serves on :5180, so
+ *     the two never collide.)
  *
  * Snapshot path convention: tests under `tests/visual/` use
  * `toHaveScreenshot()` whose baselines live in
- * `tests/visual/<spec>.spec.ts-snapshots/<name>-<project>.png`. The baseline
- * project (`baseline-capture`) shares the same project name as the verify
- * project for that viewport so they read/write the same file.
+ * `tests/visual/<spec>.spec.ts-snapshots/<name>-<project>-win32.png`. The
+ * baseline capture shares the same project names as the verify run so they
+ * read/write the same files.
+ *
+ * Parity policy (ADR-010): baselines are only taken of regions whose copy is
+ * fixed or seed-derived; dated / weather / planner-driven regions are
+ * masked; planner screens never get full-page baselines. Failures are fixed
+ * in the components, never by loosening the ratio below.
  */
 
 const VIEWPORTS = {
@@ -58,7 +67,7 @@ export default defineConfig({
   webServer: isBaselineCapture
     ? {
         command:
-          "npx http-server ../docs/mocks -p 5173 -c-1 --cors --silent",
+          "npx http-server ../docs/mocks-v2 -p 5173 -c-1 --cors --silent",
         url: "http://localhost:5173/index.html",
         reuseExistingServer: !process.env.CI,
         timeout: 30_000,

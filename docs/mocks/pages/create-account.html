@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<!-- @shell:head -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Create your account — Saturdaze</title>
+<link rel="stylesheet" href="../styles/tokens.css">
+<link rel="stylesheet" href="../styles/app.css">
+<!-- @/shell:head -->
+</head>
+<body data-page="create-account" data-shell="bare">
+<main class="auth" id="main">
+  <div class="auth__col">
+    <a class="auth__brand" href="./landing.html"><span class="brand-mark" aria-hidden="true"></span>Saturdaze</a>
+
+    <section class="auth-card" aria-labelledby="ca-title">
+      <div class="auth-card__head">
+        <h1 class="auth-card__title" id="ca-title">Start planning weekends</h1>
+        <p class="auth-card__sub">It takes a minute.</p>
+      </div>
+      <form class="auth-card__form" action="./verify-email.html">
+        <div class="field">
+          <label class="field__label" for="ca-family">Family name</label>
+          <input class="field__input" id="ca-family" type="text" autocomplete="off" value="The Browns">
+          <p class="field__hint">How we greet you.</p>
+        </div>
+        <div class="field">
+          <label class="field__label" for="ca-email">Email</label>
+          <input class="field__input" id="ca-email" type="email" autocomplete="email" value="quinntynebrown@gmail.com">
+        </div>
+        <div class="field">
+          <label class="field__label" for="ca-pass">Password</label>
+          <input class="field__input" id="ca-pass" type="password" autocomplete="new-password" value="lavender-17" aria-describedby="ca-strength">
+          <div class="strength strength--ok" id="ca-strength" aria-live="polite">
+            <div class="strength__bar" aria-hidden="true"><span class="strength__seg"></span><span class="strength__seg"></span><span class="strength__seg"></span></div>
+            <span class="strength__label">OK · eight characters or more. Add a capital letter to make it strong.</span>
+          </div>
+        </div>
+        <label class="check"><input class="check__input" type="checkbox" required checked><span>I agree to the <a class="link" href="./legal.html">Terms</a> and <a class="link" href="./legal.html#privacy">Privacy Policy</a>.</span></label>
+        <label class="check"><input class="check__input" type="checkbox" checked><span>Send me the Friday preview. A draft of the weekend in my inbox at 6pm.</span></label>
+        <button class="btn btn--primary btn--lg btn--block" type="submit">Create account</button>
+      </form>
+      <p class="auth-card__alt">Already have one? <a class="link" href="./sign-in.html">Sign in</a></p>
+    </section>
+
+    <p class="auth__foot"><a class="link--soft" href="./legal.html">Terms</a><span aria-hidden="true">·</span><a class="link--soft" href="./legal.html#privacy">Privacy</a><span aria-hidden="true">·</span><a class="link--soft" href="./landing.html">Back to Saturdaze</a></p>
+  </div>
+</main>
+<script src="../app.js"></script>
+</body>
+</html>

@@ -38,8 +38,8 @@ reference.
   sign-out.
 - Weather-aware planning through the Open-Meteo integration, with test fakes
   and neutral fallback behavior.
-- Static mock application under `docs/mocks/` used as the visual reference for
-  Angular implementation and visual regression tests.
+- Static HTML design under `docs/mocks-v2/` — the source of truth for the
+  Angular implementation and the visual regression baselines (ADR-009, ADR-010).
 - Local CLI for database migration, seeding, and reset workflows.
 - One-command fresh stack script for local verification.
 
@@ -49,7 +49,7 @@ The fastest way to run the current application from a clean database is the
 fresh-stack script:
 
 ```powershell
-powershell .\scripts\Start-FreshStack.ps1
+powershell .\eng\Start-FreshStack.ps1
 ```
 
 The script:
@@ -137,7 +137,7 @@ Then open `http://localhost:5173/`.
 | API library | `frontend/projects/api` | Client-side models and services for backend integration |
 | Component library | `frontend/projects/components` | Standalone Angular UI components aligned with the mock system |
 | E2E suite | `e2e` | Playwright behavior and visual tests |
-| Design reference | `docs/mocks` | Static mock app and screenshots used as implementation reference |
+| Design reference | `docs/mocks-v2` | Static HTML/CSS design, screenshots, and its own lint/verify scripts (`.check.mjs`, `.verify.mjs`) |
 | Design system | `design-system` | Standalone token/component catalog with its own Playwright suite and Azure Static Web App (`deploy-design-system.yml`) |
 
 ## Development
@@ -194,7 +194,7 @@ Development conventions:
 - [Detailed feature designs](docs/detailed-designs/)
 - [Architecture decision records](docs/adr/)
 - [User guide](docs/user-guide/)
-- [Mock application](docs/mocks/index.html) and [mocks plan](docs/mocks-plan.md)
+- [Design (mocks-v2)](docs/mocks-v2/index.html) and its [README](docs/mocks-v2/README.md)
 - [Responsive audit (2026-08-27)](docs/responsive-audit-2026-08-27.md)
 - [Dead-code findings and removal plan](docs/dead-code-removal-plan.md)
 - [Button/link audit (2026-05-17, resolved)](docs/button-link-audit-2026-05-17.md)

@@ -1,19 +1,35 @@
 <ng-template #body>
   <ng-content select="[slot=leading]" />
-  <div class="body">
-    @if (rowTitle()) { <div class="title">{{ rowTitle() }}</div> }
-    @if (subtitle()) { <div class="subtitle">{{ subtitle() }}</div> }
+  <span class="list__text">
+    @if (subtitle() && subtitleFirst()) {
+      <span class="list__sub">{{ subtitle() }}</span>
+    }
+    @if (rowTitle()) {
+      <span class="list__title">{{ rowTitle() }}</span>
+    }
+    @if (subtitle() && !subtitleFirst()) {
+      <span class="list__sub">{{ subtitle() }}</span>
+    }
     <ng-content />
-  </div>
-  <div class="trailing"><ng-content select="[slot=trailing]" /></div>
+  </span>
+  <span class="list__trail">
+    <ng-content select="[slot=trailing]" />
+    @if (chevron()) {
+      <sd-icon name="chevron_right" [size]="16" />
+    }
+  </span>
 </ng-template>
 
 @if (href()) {
-  <a class="row" [attr.href]="href()">
-    <ng-container [ngTemplateOutlet]="body" />
+  <a class="list__item list__item--action" [attr.href]="href()" [attr.aria-label]="label() || null" (click)="onAnchorClick($event)">
+    <ng-container *ngTemplateOutlet="body" />
   </a>
+} @else if (action()) {
+  <button class="list__item list__item--action" type="button" [attr.aria-label]="label() || null" (click)="pressed.emit()">
+    <ng-container *ngTemplateOutlet="body" />
+  </button>
 } @else {
-  <div class="row">
-    <ng-container [ngTemplateOutlet]="body" />
+  <div class="list__item">
+    <ng-container *ngTemplateOutlet="body" />
   </div>
 }

@@ -1,0 +1,4 @@
+<sd-dialog [title]="data.title">
+  <sd-menu sheet [items]="data.items" [label]="data.title" (select)="pick($event)" />
+  <sd-button slot="actions" variant="quiet" type="button" (click)="close()">Close</sd-button>
+</sd-dialog>

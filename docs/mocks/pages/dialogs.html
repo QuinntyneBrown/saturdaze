@@ -1,819 +1,801 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Dialogs — Saturdaze</title>
-  <link rel="stylesheet" href="../styles/global.css" />
-  <script type="module" src="../app.js"></script>
-  <style>
-    .gallery {
-      max-width: 720px;
-      margin: 0 auto;
-      padding: 32px 20px 80px;
-      display: grid;
-      /* minmax(0,1fr) so a wide dialog action row can't force the column
-         past the viewport on phones — sheets shrink and wrap instead. */
-      grid-template-columns: minmax(0, 1fr);
-      gap: 28px;
-    }
-    .gallery h1 {
-      font-size: 28px; font-weight: 700; letter-spacing: -0.02em; margin: 0;
-    }
-    .gallery p.lede {
-      color: var(--sd-ink-soft); margin: 4px 0 16px;
-    }
-    .demo-label {
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--sd-ink-soft);
-      font-weight: 600;
-      margin: 8px 0 6px;
-    }
-  </style>
+<!-- @shell:head -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Dialogs — Saturdaze</title>
+<link rel="stylesheet" href="../styles/tokens.css">
+<link rel="stylesheet" href="../styles/app.css">
+<!-- @/shell:head -->
 </head>
-<body>
-  <main class="gallery">
-    <div>
-      <h1>Dialogs &amp; sheets</h1>
-      <p class="lede">Each one shown statically so all variants are reviewable on one page. In-app these slide up over the screen.</p>
+<body data-page="dialogs" data-shell="app">
+<!-- @shell:topbar -->
+<header class="topbar">
+  <div class="container topbar__inner">
+    <a class="topbar__brand" href="./weekend.html"><span class="brand-mark" aria-hidden="true"></span>Saturdaze</a>
+    <nav class="topbar__nav" aria-label="Primary">
+      <a class="topbar__link" data-nav="weekend" href="./weekend.html">Weekend</a>
+      <a class="topbar__link" data-nav="ideas" href="./ideas.html">Ideas</a>
+      <a class="topbar__link" data-nav="past" href="./past.html">Past</a>
+      <a class="topbar__link" data-nav="family" href="./family.html">Family</a>
+    </nav>
+    <div class="topbar__actions">
+      <a class="avatar avatar--q avatar--btn" href="./dialogs.html#dialog-account" aria-label="Account menu">Q</a>
     </div>
+  </div>
+</header>
+<!-- @/shell:topbar -->
+<main class="app-main container container--stack" id="main">
+  <header class="page-header">
+    <div class="page-header__text">
+      <h1 class="page-header__title">Dialogs</h1>
+      <p class="page-header__subtitle">Every sheet and modal in v2, rendered inline. Under 720px each one is a bottom sheet.</p>
+    </div>
+  </header>
+  <p class="specimen__hint">Danger fill is reserved for Replace draft, Remove, Sign out and Reject. Form dialogs disable the primary until required fields are valid and focus the first field on open.</p>
 
-    <div>
-      <div class="demo-label">Block detail — why this was suggested</div>
-      <sd-dialog open static
-        title="Terre Bleu Lavender Farm"
-        subtitle="Sat 11:00 – 1:00 · 45 min drive"
-      >
-        <div style="display:grid; gap:14px;">
-          <sd-card variant="sunk">
-            <div style="display:flex; gap:10px; align-items:flex-start;">
-              <sd-icon name="sparkle" size="20" style="color:var(--sd-primary); margin-top:2px;"></sd-icon>
-              <div>
-                <div style="font-weight:600;">Why I picked this</div>
-                <div style="font-size:14px; color:var(--sd-ink-soft); margin-top:4px;">Lavender peaks May 17–24. Sara loved it last year. Mae is old enough to walk now. Weather's perfect Saturday but cloudy Sunday — so today's the day.</div>
-              </div>
-            </div>
-          </sd-card>
+  <div class="gallery">
 
-          <div>
-            <div style="font-size:13px; color:var(--sd-ink-soft); font-weight:500; margin-bottom:8px;">Alternatives</div>
-            <div style="display:grid; gap:8px;">
-              <sd-list-item title="Bronte Creek Park" subtitle="25 min · easy hike + splash pad" compact>
-                <sd-icon slot="leading" name="tree"></sd-icon>
-                <sd-icon slot="trailing" name="swap" size="16"></sd-icon>
-              </sd-list-item>
-              <sd-list-item title="Royal Botanical Gardens" subtitle="35 min · tulip festival" compact>
-                <sd-icon slot="leading" name="tree"></sd-icon>
-                <sd-icon slot="trailing" name="swap" size="16"></sd-icon>
-              </sd-list-item>
-            </div>
+    <!-- ============================== WEEKEND ============================== -->
+
+    <section class="specimen" id="dialog-block">
+      <span class="specimen__label">D1 · Block details</span>
+      <div class="dialog dialog--specimen" role="dialog" aria-modal="true" aria-labelledby="d1-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="d1-title">Terre Bleu Lavender Farm</h2><p class="dialog__sub">Saturday 11:00 to 1:00 · 45 min drive</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
           </div>
-
-          <sd-list-item title="Open in Maps" subtitle="990 Appleby Line, Milton" href="#" compact>
-            <sd-icon slot="leading" name="map"></sd-icon>
-            <sd-icon slot="trailing" name="chevron_right" size="16"></sd-icon>
-          </sd-list-item>
-        </div>
-
-        <sd-button slot="actions" variant="secondary">
-          <sd-icon slot="leading" name="swap" size="16"></sd-icon>
-          Swap
-        </sd-button>
-        <sd-button slot="actions">
-          <sd-icon slot="leading" name="lock" size="16"></sd-icon>
-          Lock this block
-        </sd-button>
-      </sd-dialog>
-    </div>
-
-    <div>
-      <div class="demo-label">Regenerate confirm</div>
-      <sd-dialog open static
-        title="Regenerate the weekend?"
-        subtitle="3 locked blocks will stay put."
-      >
-        <sd-card variant="sunk">
-          <div style="display:flex; gap:10px; align-items:flex-start;">
-            <sd-icon name="lock" size="18" style="color:var(--sd-accent); margin-top:2px;"></sd-icon>
-            <div style="font-size:14px;">
-              <div style="font-weight:600;">Keeping these locked</div>
-              <div style="color:var(--sd-ink-soft); margin-top:4px;">Swim 9am · Church 10:30am · Workout 5pm · Bath 8pm</div>
+          <div class="dialog__body">
+            <div class="well">
+              <svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg>
+              <div><p class="well__title">Why this</p><p class="well__body">Lavender peaks 17 to 24 May, Saturday is the sunny day, and Mae can walk the rows this year.</p></div>
             </div>
           </div>
-        </sd-card>
-        <p style="font-size:14px; color:var(--sd-ink-soft); margin: 12px 0 0;">Everything else gets a fresh draft. You can compare before committing.</p>
-        <sd-button slot="actions" variant="secondary">Cancel</sd-button>
-        <sd-button slot="actions">
-          <sd-icon slot="leading" name="refresh" size="16"></sd-icon>
-          Regenerate
-        </sd-button>
-      </sd-dialog>
-    </div>
-
-    <div>
-      <div class="demo-label">Swap an activity</div>
-      <sd-dialog open static
-        title="Swap out Lavender Farm?"
-        subtitle="Saturday 11:00 – 1:00"
-      >
-        <div style="display:grid; gap:8px;">
-          <sd-list-item title="Bronte Creek Park" subtitle="25 min drive · short hike + splash pad" compact>
-            <sd-icon slot="leading" name="tree"></sd-icon>
-            <sd-chip slot="trailing" tone="leaf">Outdoor</sd-chip>
-          </sd-list-item>
-          <sd-list-item title="Toronto Zoo" subtitle="55 min · full-day option" compact>
-            <sd-icon slot="leading" name="tree"></sd-icon>
-            <sd-chip slot="trailing" tone="leaf">Outdoor</sd-chip>
-          </sd-list-item>
-          <sd-list-item title="The Rec Room" subtitle="10 min · indoor backup" compact>
-            <sd-icon slot="leading" name="popcorn"></sd-icon>
-            <sd-chip slot="trailing" tone="indoor">Indoor</sd-chip>
-          </sd-list-item>
-          <sd-list-item title="Living Arts kids' theatre" subtitle="5 min · 2pm matinée" compact>
-            <sd-icon slot="leading" name="ticket"></sd-icon>
-            <sd-chip slot="trailing" tone="indoor">Indoor</sd-chip>
-          </sd-list-item>
-        </div>
-        <sd-button slot="actions" variant="ghost">Surprise me</sd-button>
-        <sd-button slot="actions" variant="secondary">Close</sd-button>
-      </sd-dialog>
-    </div>
-
-    <div>
-      <div class="demo-label">Restaurant vote</div>
-      <sd-dialog open static
-        title="Who's in for La Marina?"
-        subtitle="Lunch, Saturday 1:00pm"
-      >
-        <div>
-          <sd-vote-row name="Quinn" tone="primary" vote="up"></sd-vote-row>
-          <sd-vote-row name="Sara"  tone="leaf"    vote="up"></sd-vote-row>
-          <sd-vote-row name="Eli"   tone="sky"     vote="up"></sd-vote-row>
-          <sd-vote-row name="Mae"   tone="sun"     vote="none"></sd-vote-row>
-        </div>
-        <sd-card variant="sunk" style="margin-top:12px;">
-          <div style="display:flex; gap:10px; align-items:flex-start; font-size:14px;">
-            <sd-icon name="sparkle" size="16" style="color:var(--sd-primary); margin-top:2px;"></sd-icon>
-            <span>3 of 4 in. Mae usually goes for the cheese pasta here — I'll mark a soft yes.</span>
-          </div>
-        </sd-card>
-        <sd-button slot="actions" variant="secondary">See menu</sd-button>
-        <sd-button slot="actions">
-          <sd-icon slot="leading" name="lock" size="16"></sd-icon>
-          Lock it in
-        </sd-button>
-      </sd-dialog>
-    </div>
-
-    <div>
-      <div class="demo-label">Add family member (profile)</div>
-      <sd-dialog open static
-        title="Add a family member"
-        subtitle="I'll plan around their age and likes"
-      >
-        <div style="display:grid; gap:12px;">
-          <sd-text-input label="Name" placeholder="e.g. Mae"></sd-text-input>
-          <sd-text-input label="Age" type="number" placeholder="5" hint="0–120 — I'll use this to pick age-appropriate activities."></sd-text-input>
-        </div>
-        <sd-button slot="actions" variant="secondary">Cancel</sd-button>
-        <sd-button slot="actions">
-          <sd-icon slot="leading" name="plus" size="16"></sd-icon>
-          Add member
-        </sd-button>
-      </sd-dialog>
-    </div>
-
-    <div>
-      <div class="demo-label">Edit family member (profile)</div>
-      <sd-dialog open static
-        title="Edit Mae"
-        subtitle="Update name or age"
-      >
-        <div style="display:grid; gap:12px;">
-          <sd-text-input label="Name" value="Mae"></sd-text-input>
-          <sd-text-input label="Age" type="number" value="5" hint="0–120 — I'll use this to pick age-appropriate activities."></sd-text-input>
-        </div>
-        <sd-button slot="actions" variant="secondary">Cancel</sd-button>
-        <sd-button slot="actions">Save</sd-button>
-      </sd-dialog>
-    </div>
-
-    <div>
-      <div class="demo-label">Add commitment (profile)</div>
-      <sd-dialog open static
-        title="Add a commitment"
-        subtitle="Something I should plan around every week"
-      >
-        <div style="display:grid; gap:12px;">
-          <sd-text-input label="Title" placeholder="e.g. Eli's soccer practice"></sd-text-input>
-          <sd-text-input label="Day" placeholder="Saturday" hint="One of: Saturday, Sunday, Monday … Friday"></sd-text-input>
-          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-            <sd-text-input label="Start" type="time" placeholder="09:00"></sd-text-input>
-            <sd-text-input label="End" type="time" placeholder="10:00"></sd-text-input>
+          <div class="dialog__actions">
+            <button class="btn btn--quiet" type="button"><svg class="icon" aria-hidden="true"><use href="#i-swap"/></svg>Swap for something else</button>
+            <button class="btn btn--primary" type="button"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg>Lock this block</button>
           </div>
         </div>
-        <sd-button slot="actions" variant="secondary">Cancel</sd-button>
-        <sd-button slot="actions">
-          <sd-icon slot="leading" name="plus" size="16"></sd-icon>
-          Add commitment
-        </sd-button>
-      </sd-dialog>
-    </div>
+      </div>
+    </section>
 
-    <div>
-      <div class="demo-label">Edit commitment (profile)</div>
-      <sd-dialog open static
-        title="Edit Swim lessons"
-        subtitle="Update title, day, or time"
-      >
-        <div style="display:grid; gap:12px;">
-          <sd-text-input label="Title" value="Swim lessons"></sd-text-input>
-          <sd-text-input label="Day" value="Saturday" hint="One of: Saturday, Sunday, Monday … Friday"></sd-text-input>
-          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-            <sd-text-input label="Start" type="time" value="09:00"></sd-text-input>
-            <sd-text-input label="End" type="time" value="10:00"></sd-text-input>
+    <section class="specimen" id="dialog-block-locked">
+      <span class="specimen__label">D1 · Block details · locked variant</span>
+      <div class="dialog dialog--specimen" role="dialog" aria-modal="true" aria-labelledby="d1b-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="d1b-title">Bath and books</h2><p class="dialog__sub">Saturday 8:00 to 9:00pm</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
           </div>
-        </div>
-        <sd-button slot="actions" variant="secondary">Cancel</sd-button>
-        <sd-button slot="actions">Save</sd-button>
-      </sd-dialog>
-    </div>
-
-    <div>
-      <div class="demo-label">Shopping errand quick-add</div>
-      <sd-dialog open static
-        title="Slot in an errand"
-        subtitle="I'll fit it without killing the day"
-      >
-        <div style="display:grid; gap:12px;">
-          <sd-text-input label="What's needed" placeholder="Costco — paper towels, bread, yogurt"></sd-text-input>
-          <sd-text-input label="Roughly how long" placeholder="45 min" hint="I'll add 10 min buffer either side."></sd-text-input>
-          <sd-card variant="sunk">
-            <div style="display:flex; gap:10px; align-items:flex-start;">
-              <sd-icon name="sparkle" size="18" style="color:var(--sd-primary); margin-top:2px;"></sd-icon>
-              <div style="font-size:14px;">
-                <div style="font-weight:600;">Best fit: Sunday 9:15am</div>
-                <div style="color:var(--sd-ink-soft); margin-top:2px;">On the way back from church, 4 min off-route. Adds 38 min total.</div>
-              </div>
+          <div class="dialog__body">
+            <div class="well well--accent">
+              <svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg>
+              <div><p class="well__title">Locked</p><p class="well__body">Regenerating the weekend or the day leaves this block exactly where it is.</p></div>
             </div>
-          </sd-card>
-        </div>
-        <sd-button slot="actions" variant="secondary">Pick another slot</sd-button>
-        <sd-button slot="actions">
-          <sd-icon slot="leading" name="plus" size="16"></sd-icon>
-          Add
-        </sd-button>
-      </sd-dialog>
-    </div>
-
-    <div>
-      <div class="demo-label">Friday preview (notification sheet)</div>
-      <sd-dialog open static
-        title="Your weekend is ready 🌤"
-        subtitle="A peek before Saturday morning"
-      >
-        <div style="display:grid; gap:10px;">
-          <sd-card variant="sunk">
-            <div style="font-weight:600;">Saturday</div>
-            <div style="font-size:14px; color:var(--sd-ink-soft); margin-top:2px;">Swim → Lavender fields → La Marina → Quiet afternoon</div>
-          </sd-card>
-          <sd-card variant="sunk">
-            <div style="font-weight:600;">Sunday</div>
-            <div style="font-size:14px; color:var(--sd-ink-soft); margin-top:2px;">Church → Costco run → Rec Room → Jack Astor's</div>
-          </sd-card>
-          <p style="font-size:14px; color:var(--sd-ink-soft); margin: 4px 0 0;">All booked, all under 45 min drive. Nothing for you to do — but tap below if you want to nudge anything.</p>
-        </div>
-        <sd-button slot="actions" variant="secondary">Tweak</sd-button>
-        <sd-button slot="actions">
-          <sd-icon slot="leading" name="thumbs_up" size="16"></sd-icon>
-          Take it as-is
-        </sd-button>
-      </sd-dialog>
-    </div>
-
-    <div>
-      <div class="demo-label">Share for Sara's approval</div>
-      <sd-dialog open static
-        title="Send Sara the plan?"
-        subtitle="She gets a read-only preview. She can thumbs-up or comment."
-      >
-        <sd-list-item title="Sara · Browns family" compact>
-          <sd-avatar slot="leading" name="Sara" tone="leaf"></sd-avatar>
-          <sd-chip slot="trailing" tone="accent">Default</sd-chip>
-        </sd-list-item>
-        <div style="margin-top:12px; padding:12px; background:var(--sd-surface-2); border-radius:12px; font-size:14px; color:var(--sd-ink-soft);">
-          "Here's the weekend — Terre Bleu Saturday, Rec Room Sunday. Tap any block to swap. xx"
-        </div>
-        <sd-button slot="actions" variant="secondary">Cancel</sd-button>
-        <sd-button slot="actions">
-          <sd-icon slot="leading" name="share" size="16"></sd-icon>
-          Send
-        </sd-button>
-      </sd-dialog>
-    </div>
-
-    <div>
-      <div class="demo-label">Sign out confirm</div>
-      <sd-dialog open static
-        title="Sign out?"
-        subtitle="I'll forget you on this device until you sign back in."
-      >
-        <sd-card variant="sunk">
-          <div style="display:flex; gap:10px; align-items:flex-start;">
-            <sd-icon name="key" size="18" style="color:var(--sd-ink-soft); margin-top:2px;"></sd-icon>
-            <div style="font-size:14px;">
-              <div style="font-weight:600;">You'll need to sign back in</div>
-              <div style="color:var(--sd-ink-soft); margin-top:4px;">quinntynebrown@gmail.com + your password. Saved weekends and family settings stay put.</div>
+            <div class="well">
+              <svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg>
+              <div><p class="well__title">Why this</p><p class="well__body">Lights out at 9 keeps Sunday morning easy. It has been in every weekend since April.</p></div>
             </div>
           </div>
-        </sd-card>
-        <sd-button slot="actions" variant="secondary">Stay signed in</sd-button>
-        <sd-button slot="actions" variant="danger">
-          <sd-icon slot="leading" name="sign_out" size="16"></sd-icon>
-          Sign out
-        </sd-button>
-      </sd-dialog>
-    </div>
-
-    <!-- ====================================================================
-         New dialogs added 2026-05-17 per docs/mocks-plan.md.
-         Each block fixes a specific bug in docs/bugs/ — the audit trail is
-         in the eyebrow under each demo-label.
-         ==================================================================== -->
-
-    <div>
-      <div class="demo-label">Open mail app · M-D1 (BUG-019)</div>
-      <sd-dialog open static
-        title="Open your mail app"
-        subtitle="Pick where to look. I'll bring you back when you're done."
-      >
-        <div style="display:grid; gap:6px;">
-          <sd-list-item title="Gmail" subtitle="gmail.com — opens in a new tab" href="#" compact>
-            <sd-icon slot="leading" name="mail"></sd-icon>
-            <sd-icon slot="trailing" name="chevron_right" size="16"></sd-icon>
-          </sd-list-item>
-          <sd-list-item title="Outlook" subtitle="outlook.live.com — opens in a new tab" href="#" compact>
-            <sd-icon slot="leading" name="mail"></sd-icon>
-            <sd-icon slot="trailing" name="chevron_right" size="16"></sd-icon>
-          </sd-list-item>
-          <sd-list-item title="Apple Mail" subtitle="The mail app on this device" href="#" compact>
-            <sd-icon slot="leading" name="mail"></sd-icon>
-            <sd-icon slot="trailing" name="chevron_right" size="16"></sd-icon>
-          </sd-list-item>
-          <sd-list-item title="Default mail app" subtitle="Whatever this device opens for mailto:" href="#" compact>
-            <sd-icon slot="leading" name="arrow_right"></sd-icon>
-            <sd-icon slot="trailing" name="chevron_right" size="16"></sd-icon>
-          </sd-list-item>
-        </div>
-        <p style="font-size:13px; color:var(--sd-ink-soft); margin: 12px 0 0;">Can't find it? The reset link expires in 30 minutes — I can resend if you need.</p>
-        <sd-button slot="actions" variant="secondary">Cancel</sd-button>
-      </sd-dialog>
-    </div>
-
-    <div>
-      <div class="demo-label">Open calendar · M-D2 (BUG-020)</div>
-      <sd-dialog open static
-        title="Add this weekend to your calendar"
-        subtitle="Subscribe to keep it in sync — or download just this one."
-      >
-        <div style="display:grid; gap:6px;">
-          <sd-list-item title="Subscribe (webcal)" subtitle="Updates automatically each Friday at 6pm" href="#">
-            <sd-icon slot="leading" name="calendar"></sd-icon>
-            <sd-chip slot="trailing" tone="accent">Recommended</sd-chip>
-          </sd-list-item>
-          <sd-list-item title="Open in Google Calendar" subtitle="Adds Saturday and Sunday in one shot" href="#" compact>
-            <sd-icon slot="leading" name="calendar"></sd-icon>
-            <sd-icon slot="trailing" name="chevron_right" size="16"></sd-icon>
-          </sd-list-item>
-          <sd-list-item title="Download .ics" subtitle="This weekend only — for one-time import" href="#" compact>
-            <sd-icon slot="leading" name="arrow_right"></sd-icon>
-            <sd-icon slot="trailing" name="chevron_right" size="16"></sd-icon>
-          </sd-list-item>
-        </div>
-        <sd-card variant="sunk" style="margin-top:12px;">
-          <div style="display:flex; gap:10px; align-items:flex-start; font-size:14px;">
-            <sd-icon name="sparkle" size="16" style="color:var(--sd-primary); margin-top:2px;"></sd-icon>
-            <span>Subscribed calendars stay in sync when I regenerate — so if Sunday shifts, your phone updates without you having to think about it.</span>
+          <div class="dialog__actions">
+            <button class="btn btn--quiet" type="button"><svg class="icon" aria-hidden="true"><use href="#i-swap"/></svg>Swap for something else</button>
+            <button class="btn btn--primary" type="button"><svg class="icon" aria-hidden="true"><use href="#i-unlock"/></svg>Unlock</button>
           </div>
-        </sd-card>
-        <sd-button slot="actions" variant="secondary">Close</sd-button>
-      </sd-dialog>
-    </div>
+        </div>
+      </div>
+    </section>
 
-    <div>
-      <div class="demo-label">Regenerate this day · M-D3 (BUG-027, BUG-029, BUG-031)</div>
-      <sd-dialog open static
-        title="Regenerate Saturday?"
-        subtitle="Sunday and your locks stay put."
-      >
-        <sd-card variant="sunk">
-          <div style="display:flex; gap:10px; align-items:flex-start;">
-            <sd-icon name="lock" size="18" style="color:var(--sd-accent); margin-top:2px;"></sd-icon>
-            <div style="font-size:14px;">
-              <div style="font-weight:600;">Keeping these on Saturday</div>
-              <div style="color:var(--sd-ink-soft); margin-top:4px;">9:00 swim · 5:00 workout · 8:00 bath</div>
+    <section class="specimen" id="dialog-block-commitment">
+      <span class="specimen__label">D1 · Block details · commitment variant</span>
+      <div class="dialog dialog--specimen" role="dialog" aria-modal="true" aria-labelledby="d1c-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="d1c-title">Swim lessons</h2><p class="dialog__sub">Saturday 9:00 to 10:00 · Port Credit Pool</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="dialog__body">
+            <div class="well well--accent">
+              <svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg>
+              <div><p class="well__title">A recurring commitment</p><p class="well__body">It is in every weekend and cannot be swapped here. Edit it on Family.</p></div>
             </div>
           </div>
-        </sd-card>
-        <p style="font-size:14px; color:var(--sd-ink-soft); margin: 12px 0 0;">Everything else on Saturday gets a fresh draft. Sunday won't move — regenerate it separately if you'd like.</p>
-        <sd-button slot="actions" variant="secondary">Cancel</sd-button>
-        <sd-button slot="actions">
-          <sd-icon slot="leading" name="refresh" size="16"></sd-icon>
-          Regenerate Saturday
-        </sd-button>
-      </sd-dialog>
-    </div>
+          <div class="dialog__actions">
+            <a class="btn btn--quiet" href="./family.html">Edit on Family</a>
+            <button class="btn btn--primary" type="button">Close</button>
+          </div>
+        </div>
+      </div>
+    </section>
 
-    <div>
-      <div class="demo-label">See on map · M-D4 (BUG-033)</div>
-      <sd-dialog open static
-        title="Saturday on a map"
-        subtitle="1h 10m driving · 3 stops · Port Credit → Milton → home"
-      >
-        <!-- Static map placeholder. In implementation this is a Mapbox /
-             Google Maps embed; here it reads as a soft, neutral surface
-             with three coloured pins so the visual rhythm is right. -->
-        <div style="position:relative; aspect-ratio: 16 / 10; border-radius: var(--sd-r-lg); overflow:hidden; border: 1px solid var(--sd-line);
-                    background:
-                      radial-gradient(80% 60% at 20% 30%, var(--sd-leaf) 0%, transparent 55%),
-                      radial-gradient(60% 40% at 75% 40%, var(--sd-sky) 0%, transparent 60%),
-                      radial-gradient(50% 50% at 60% 80%, var(--sd-primary-soft) 0%, transparent 70%),
-                      var(--sd-surface-2);">
-          <!-- Faint road lines to read as a map, not a watercolor. -->
-          <svg viewBox="0 0 320 200" preserveAspectRatio="none" style="position:absolute; inset:0; width:100%; height:100%;">
-            <path d="M-10 130 C 60 110, 110 90, 180 95 S 280 80, 330 70" stroke="rgba(31,41,55,0.12)" stroke-width="2" fill="none"/>
-            <path d="M40 -10 C 50 60, 80 100, 130 130 S 200 200, 230 220" stroke="rgba(31,41,55,0.08)" stroke-width="1.5" fill="none"/>
-          </svg>
-          <!-- Pin 1: home / Port Credit -->
-          <div style="position:absolute; left:18%; top:62%; transform: translate(-50%, -100%);">
-            <div style="background: var(--sd-primary); color:#fff; width:28px; height:28px; border-radius:50%; display:grid; place-items:center; box-shadow: var(--sd-shadow-2);">
-              <sd-icon name="home" size="14"></sd-icon>
+    <section class="specimen" id="dialog-regenerate">
+      <span class="specimen__label">D3 · Regenerate the weekend</span>
+      <div class="dialog dialog--specimen" role="dialog" aria-modal="true" aria-labelledby="d3-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="d3-title">Regenerate the weekend?</h2><p class="dialog__sub">Locked blocks stay where they are.</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="dialog__body">
+            <div class="well well--accent">
+              <svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg>
+              <div><p class="well__title">Keeping</p><p class="well__body">Swim 9:00 · Church 10:30 · Workout 5:00 · Bath and books 8:00</p></div>
             </div>
           </div>
-          <!-- Pin 2: lavender / Milton -->
-          <div style="position:absolute; left:64%; top:32%; transform: translate(-50%, -100%);">
-            <div style="background: var(--sd-accent); color:#fff; width:30px; height:30px; border-radius:50%; display:grid; place-items:center; box-shadow: var(--sd-shadow-2);">
-              <sd-icon name="tree" size="16"></sd-icon>
+          <div class="dialog__actions">
+            <button class="btn btn--quiet" type="button">Cancel</button>
+            <button class="btn btn--primary" type="button"><svg class="icon" aria-hidden="true"><use href="#i-refresh"/></svg>Regenerate</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="specimen" id="dialog-regenerate-day">
+      <span class="specimen__label">D4 · Regenerate one day</span>
+      <div class="dialog dialog--specimen" role="dialog" aria-modal="true" aria-labelledby="d4-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="d4-title">Regenerate Saturday?</h2><p class="dialog__sub">Sunday will not change.</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="dialog__body">
+            <div class="well well--accent">
+              <svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg>
+              <div><p class="well__title">Keeping on Saturday</p><p class="well__body">Swim 9:00 · Workout 5:00 · Bath and books 8:00</p></div>
             </div>
           </div>
-          <!-- Pin 3: lunch / La Marina -->
-          <div style="position:absolute; left:48%; top:55%; transform: translate(-50%, -100%);">
-            <div style="background: var(--sd-sun); color: var(--sd-ink); width:28px; height:28px; border-radius:50%; display:grid; place-items:center; box-shadow: var(--sd-shadow-2);">
-              <sd-icon name="fork" size="14"></sd-icon>
+          <div class="dialog__actions">
+            <button class="btn btn--quiet" type="button">Cancel</button>
+            <button class="btn btn--primary" type="button"><svg class="icon" aria-hidden="true"><use href="#i-refresh"/></svg>Regenerate Saturday</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="specimen" id="dialog-share">
+      <span class="specimen__label">D5 · Share</span>
+      <div class="dialog dialog--specimen" role="dialog" aria-modal="true" aria-labelledby="d5-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="d5-title">Share this weekend</h2><p class="dialog__sub">Anyone with the link can view it. Nobody can edit.</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="dialog__body">
+            <div class="copy-field">
+              <span class="copy-field__value">saturdaze.app/s/may17-browns</span>
+              <button class="btn btn--quiet" type="button" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg>Copy</button>
             </div>
+            <p class="text-xs text-soft">Read-only · expires in 7 days</p>
+          </div>
+          <div class="dialog__actions">
+            <button class="btn btn--primary" type="button">Done</button>
           </div>
         </div>
+      </div>
+    </section>
 
-        <div style="display:grid; gap:6px; margin-top:14px;">
-          <sd-list-item title="Home — Port Credit" subtitle="9:00am · start of day" compact>
-            <sd-icon slot="leading" name="home" style="color: var(--sd-primary);"></sd-icon>
-            <sd-chip slot="trailing">Start</sd-chip>
-          </sd-list-item>
-          <sd-list-item title="Terre Bleu Lavender Farm" subtitle="11:00am · 990 Appleby Line, Milton · 45 min drive" compact>
-            <sd-icon slot="leading" name="tree" style="color: var(--sd-accent);"></sd-icon>
-            <sd-icon slot="trailing" name="chevron_right" size="16"></sd-icon>
-          </sd-list-item>
-          <sd-list-item title="La Marina — lunch" subtitle="1:00pm · 6 min from Terre Bleu" compact>
-            <sd-icon slot="leading" name="fork" style="color: var(--sd-sun);"></sd-icon>
-            <sd-icon slot="trailing" name="chevron_right" size="16"></sd-icon>
-          </sd-list-item>
-        </div>
-
-        <sd-button slot="actions" variant="secondary">Close</sd-button>
-        <sd-button slot="actions">
-          <sd-icon slot="leading" name="share" size="16"></sd-icon>
-          Open in Google Maps
-        </sd-button>
-      </sd-dialog>
-    </div>
-
-    <div>
-      <div class="demo-label">Try something new — surprise me · M-D5 (BUG-034)</div>
-      <sd-dialog open static
-        title="Try something new this weekend"
-        subtitle="Picks you haven't done with the kids before."
-      >
-        <div style="display:grid; gap:8px;">
-          <sd-list-item title="Riverwood Conservancy" subtitle="8 min · forest school trails, owl barn" compact>
-            <sd-icon slot="leading" name="tree" style="color: var(--sd-accent);"></sd-icon>
-            <sd-chip slot="trailing" tone="leaf">Outdoor</sd-chip>
-          </sd-list-item>
-          <sd-list-item title="Living Arts — kids' theatre" subtitle="5 min · Saturday matinée at 2pm" compact>
-            <sd-icon slot="leading" name="ticket" style="color: var(--sd-indoor);"></sd-icon>
-            <sd-chip slot="trailing" tone="indoor">Indoor</sd-chip>
-          </sd-list-item>
-          <sd-list-item title="Crawford Lake longhouse" subtitle="35 min · indigenous heritage village, easy trails" compact>
-            <sd-icon slot="leading" name="tree" style="color: var(--sd-accent);"></sd-icon>
-            <sd-chip slot="trailing" tone="leaf">Outdoor</sd-chip>
-          </sd-list-item>
-          <sd-list-item title="Wonders of Winter — off-season trails" subtitle="20 min · Bronte Creek's quiet side" compact>
-            <sd-icon slot="leading" name="bike" style="color: var(--sd-leaf);"></sd-icon>
-            <sd-chip slot="trailing" tone="leaf">Active</sd-chip>
-          </sd-list-item>
-        </div>
-        <sd-card variant="sunk" style="margin-top:12px;">
-          <div style="display:flex; gap:10px; align-items:flex-start; font-size:14px;">
-            <sd-icon name="sparkle" size="16" style="color:var(--sd-primary); margin-top:2px;"></sd-icon>
-            <span>Filtered by your "try something new each weekend" preference, weather for Saturday, and 45-min drive cap.</span>
+    <section class="specimen" id="dialog-calendar">
+      <span class="specimen__label">D6 · Add to calendar</span>
+      <div class="dialog dialog--specimen" role="dialog" aria-modal="true" aria-labelledby="d6-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="d6-title">Add to your calendar</h2><p class="dialog__sub">One file with both days.</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
           </div>
-        </sd-card>
-        <sd-button slot="actions" variant="secondary">Cancel</sd-button>
-        <sd-button slot="actions" variant="ghost">
-          <sd-icon slot="leading" name="refresh" size="16"></sd-icon>
-          Reshuffle
-        </sd-button>
-        <sd-button slot="actions">
-          <sd-icon slot="leading" name="plus" size="16"></sd-icon>
-          Add to weekend
-        </sd-button>
-      </sd-dialog>
-    </div>
+          <div class="dialog__body">
+            <ul class="list list--card">
+              <li class="list__item">
+                <span class="disc disc--primary"><svg class="icon" aria-hidden="true"><use href="#i-calendar"/></svg></span>
+                <span class="list__text"><span class="list__title">weekend-17-may.ics</span><span class="list__sub">10 events · Saturday and Sunday</span></span>
+              </li>
+            </ul>
+          </div>
+          <div class="dialog__actions">
+            <button class="btn btn--quiet" type="button">Cancel</button>
+            <button class="btn btn--primary" type="button"><svg class="icon" aria-hidden="true"><use href="#i-calendar"/></svg>Download .ics</button>
+          </div>
+        </div>
+      </div>
+    </section>
 
-    <div>
-      <div class="demo-label">Remix a saved weekend · M-D6 (BUG-041)</div>
-      <sd-dialog open static
-        title="Remix this weekend?"
-        subtitle="Same family vibe — fresh activities and food."
-      >
-        <sd-card variant="sunk">
-          <div style="display:flex; gap:10px; align-items:flex-start;">
-            <sd-icon name="sparkle" size="18" style="color:var(--sd-primary); margin-top:2px;"></sd-icon>
-            <div style="font-size:14px;">
-              <div style="font-weight:600;">Bronte Creek + Rec Room → a fresh take</div>
-              <div style="color:var(--sd-ink-soft); margin-top:4px;">Same pace (active morning + indoor afternoon), same wife-approved style — different spots.</div>
+    <section class="specimen" id="dialog-errand">
+      <span class="specimen__label">D7 · Add an errand</span>
+      <div class="dialog dialog--specimen dialog--wide" role="dialog" aria-modal="true" aria-labelledby="d7-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="d7-title">Add an errand</h2><p class="dialog__sub">It gets fitted around what is already planned on that day.</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="dialog__body">
+            <div class="field">
+              <label class="field__label" for="d7-what">What is it <span class="field__req">Required</span></label>
+              <input class="field__input" id="d7-what" type="text" placeholder="Costco run" value="Costco run">
             </div>
-          </div>
-        </sd-card>
-        <div style="display:grid; gap:6px; margin-top:12px;">
-          <sd-list-item title="Saturday morning" subtitle="Hike → Royal Botanical Gardens · 35 min" compact>
-            <sd-icon slot="leading" name="swap"></sd-icon>
-            <sd-chip slot="trailing" tone="primary">New</sd-chip>
-          </sd-list-item>
-          <sd-list-item title="Saturday lunch" subtitle="La Marina (your favourite — kept)" compact>
-            <sd-icon slot="leading" name="fork"></sd-icon>
-            <sd-chip slot="trailing" tone="accent">Keep</sd-chip>
-          </sd-list-item>
-          <sd-list-item title="Sunday afternoon" subtitle="Ontario Science Centre — 'Senses' exhibit" compact>
-            <sd-icon slot="leading" name="swap"></sd-icon>
-            <sd-chip slot="trailing" tone="primary">New</sd-chip>
-          </sd-list-item>
-        </div>
-        <sd-button slot="actions" variant="secondary">Cancel</sd-button>
-        <sd-button slot="actions">
-          <sd-icon slot="leading" name="sparkle" size="16"></sd-icon>
-          Remix it
-        </sd-button>
-      </sd-dialog>
-    </div>
-
-    <div>
-      <div class="demo-label">Repeat a saved weekend (overwrite) · M-D7 (BUG-042)</div>
-      <sd-dialog open static
-        title="Use this weekend as the current plan?"
-        subtitle="Your current draft will be replaced — saved weekends stay intact."
-      >
-        <sd-card variant="sunk">
-          <div style="display:flex; gap:10px; align-items:flex-start;">
-            <sd-icon name="refresh" size="18" style="color:var(--sd-warn); margin-top:2px;"></sd-icon>
-            <div style="font-size:14px;">
-              <div style="font-weight:600;">Replacing this Saturday &amp; Sunday's draft</div>
-              <div style="color:var(--sd-ink-soft); margin-top:4px;">The lavender weekend goes away. Locks, family settings, and your saved list all stay.</div>
+            <div class="field">
+              <label class="field__label" for="d7-mins">Roughly how long</label>
+              <select class="field__input" id="d7-mins">
+                <option>15 min</option><option>30 min</option><option selected>45 min</option><option>60 min</option><option>90 min</option>
+              </select>
             </div>
-          </div>
-        </sd-card>
-        <p style="font-size:14px; color:var(--sd-ink-soft); margin: 12px 0 0;">If a stop is closed this weekend, I'll quietly substitute — and tell you what changed.</p>
-        <sd-button slot="actions" variant="secondary">Cancel</sd-button>
-        <sd-button slot="actions" variant="danger">
-          <sd-icon slot="leading" name="refresh" size="16"></sd-icon>
-          Replace current
-        </sd-button>
-      </sd-dialog>
-    </div>
-
-    <div>
-      <div class="demo-label">Itinerary "More" action sheet · M-D8 (BUG-030)</div>
-      <sd-dialog open static
-        title="Saturday options"
-      >
-        <div style="display:grid; gap:4px; margin-top: -4px;">
-          <sd-list-item title="Share this day" subtitle="Read-only link for Sara — one-tap copy" href="#" compact>
-            <sd-icon slot="leading" name="share"></sd-icon>
-            <sd-icon slot="trailing" name="chevron_right" size="16"></sd-icon>
-          </sd-list-item>
-          <sd-list-item title="Add to calendar" subtitle="Subscribe or download .ics" href="#" compact>
-            <sd-icon slot="leading" name="calendar"></sd-icon>
-            <sd-icon slot="trailing" name="chevron_right" size="16"></sd-icon>
-          </sd-list-item>
-          <sd-list-item title="Export as text" subtitle="Plain-text plan for SMS or notes" href="#" compact>
-            <sd-icon slot="leading" name="copy"></sd-icon>
-            <sd-icon slot="trailing" name="chevron_right" size="16"></sd-icon>
-          </sd-list-item>
-          <sd-list-item title="See on map" subtitle="All Saturday stops in one view" href="#" compact>
-            <sd-icon slot="leading" name="map"></sd-icon>
-            <sd-icon slot="trailing" name="chevron_right" size="16"></sd-icon>
-          </sd-list-item>
-          <sd-list-item title="Reset Saturday" subtitle="Throw out this day and start over" href="#" compact>
-            <sd-icon slot="leading" name="refresh" style="color: var(--sd-warn);"></sd-icon>
-            <sd-icon slot="trailing" name="chevron_right" size="16"></sd-icon>
-          </sd-list-item>
-        </div>
-        <sd-button slot="actions" variant="secondary">Close</sd-button>
-      </sd-dialog>
-    </div>
-
-    <div>
-      <div class="demo-label">Saved "More" action sheet · M-D9 (BUG-040)</div>
-      <sd-dialog open static
-        title="Saved weekends — options"
-      >
-        <div style="display:grid; gap:4px; margin-top: -4px;">
-          <sd-list-item title="Sort by date" subtitle="Newest first (current)" href="#" compact>
-            <sd-icon slot="leading" name="calendar"></sd-icon>
-            <sd-chip slot="trailing" tone="accent">Active</sd-chip>
-          </sd-list-item>
-          <sd-list-item title="Sort by family rating" subtitle="5★ first" href="#" compact>
-            <sd-icon slot="leading" name="star"></sd-icon>
-            <sd-icon slot="trailing" name="chevron_right" size="16"></sd-icon>
-          </sd-list-item>
-          <sd-list-item title="Filter…" subtitle="By tone, weather, who was there" href="#" compact>
-            <sd-icon slot="leading" name="more"></sd-icon>
-            <sd-icon slot="trailing" name="chevron_right" size="16"></sd-icon>
-          </sd-list-item>
-          <sd-list-item title="Export all" subtitle="One file — annual family scrapbook" href="#" compact>
-            <sd-icon slot="leading" name="arrow_right"></sd-icon>
-            <sd-icon slot="trailing" name="chevron_right" size="16"></sd-icon>
-          </sd-list-item>
-        </div>
-        <sd-button slot="actions" variant="secondary">Close</sd-button>
-      </sd-dialog>
-    </div>
-
-    <!-- M-D10 (Profile "More" action sheet, BUG-045) is intentionally
-         omitted. The sign-out plan defers a second top-bar action; until
-         product confirms the button stays, the cheapest fix is to remove
-         it. Add this dialog only after that decision. -->
-
-    <div>
-      <div class="demo-label">Share with Sara — copy-link variant · M-D11 (BUG-021, BUG-025)</div>
-      <sd-dialog open static
-        title="Share this weekend"
-        subtitle="Sara gets a read-only preview. She can thumbs-up or comment."
-      >
-        <sd-list-item title="Sara · Browns family" compact>
-          <sd-avatar slot="leading" name="Sara" tone="leaf"></sd-avatar>
-          <sd-chip slot="trailing" tone="accent">Default</sd-chip>
-        </sd-list-item>
-
-        <!-- The shareable URL row — primary affordance for one-tap copy.
-             Reads as a chip-shaped pill so it's visually distinct from the
-             "send to Sara" path that follows. -->
-        <div style="margin-top: 14px;">
-          <div style="font-size:11px; color:var(--sd-ink-soft); text-transform:uppercase; letter-spacing:0.08em; font-weight:600; margin-bottom:6px;">Or copy a link anyone can open</div>
-          <div style="display:flex; gap:8px; align-items:center; padding: 10px 12px; background: var(--sd-surface-2); border: 1px solid var(--sd-line); border-radius: var(--sd-r-md);">
-            <code style="flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px; color: var(--sd-ink);">https://saturdaze.app/s/may17-browns</code>
-            <sd-icon-button icon="copy" label="Copy link" variant="ghost"></sd-icon-button>
-          </div>
-          <div style="font-size:12px; color:var(--sd-ink-soft); margin-top:6px;">Read-only · expires in 7 days · only people with the link can open it</div>
-        </div>
-
-        <div style="margin-top:14px; padding:12px; background:var(--sd-surface-2); border-radius:12px; font-size:14px; color:var(--sd-ink-soft);">
-          "Here's the weekend — Terre Bleu Saturday, Rec Room Sunday. Tap any block to swap. xx"
-        </div>
-
-        <sd-button slot="actions" variant="secondary">Cancel</sd-button>
-        <sd-button slot="actions" variant="ghost">
-          <sd-icon slot="leading" name="copy" size="16"></sd-icon>
-          Copy link
-        </sd-button>
-        <sd-button slot="actions">
-          <sd-icon slot="leading" name="share" size="16"></sd-icon>
-          Send to Sara
-        </sd-button>
-      </sd-dialog>
-    </div>
-
-    <div>
-      <div class="demo-label">Restaurants "Lock it in" confirm · M-D12 (BUG-038)</div>
-      <sd-dialog open static
-        title="Lock La Marina for Saturday lunch?"
-        subtitle="I'll stop offering alternatives for this slot."
-      >
-        <sd-card variant="sunk">
-          <div style="display:flex; gap:12px; align-items:center;">
-            <div style="width:44px; height:44px; background:var(--sd-primary-soft); color:var(--sd-primary); border-radius:var(--sd-r-md); display:inline-flex; align-items:center; justify-content:center;">
-              <sd-icon name="fork" size="22"></sd-icon>
-            </div>
-            <div style="flex:1; min-width:0;">
-              <div style="font-weight:600; letter-spacing:-0.005em;">La Marina</div>
-              <div style="font-size:13px; color:var(--sd-ink-soft);">Mediterranean · Patio · 6 min from Terre Bleu</div>
-              <div style="margin-top:6px;">
-                <sd-chip tone="accent"><sd-icon name="heart" size="12"></sd-icon> Wife-approved</sd-chip>
-                <sd-chip tone="leaf">3 of 4 yes</sd-chip>
+            <div class="field">
+              <span class="field__label" id="d7-day-label">Which day</span>
+              <div class="seg-radio seg-radio--3" role="radiogroup" aria-labelledby="d7-day-label">
+                <label class="seg-radio__opt"><input type="radio" name="d7-day">Saturday</label>
+                <label class="seg-radio__opt"><input type="radio" name="d7-day">Sunday</label>
+                <label class="seg-radio__opt"><input type="radio" name="d7-day" checked>Either</label>
               </div>
             </div>
           </div>
-        </sd-card>
-        <p style="font-size:14px; color:var(--sd-ink-soft); margin: 12px 0 0;">Mae's still on the fence — that's OK. I'll mark her a soft yes and we can swap last-minute if she's not feeling it.</p>
-        <sd-button slot="actions" variant="secondary">Not yet</sd-button>
-        <sd-button slot="actions">
-          <sd-icon slot="leading" name="lock" size="16"></sd-icon>
-          Lock it in
-        </sd-button>
-      </sd-dialog>
-    </div>
-
-    <div>
-      <div class="demo-label">Quick-add event — from FAB on /events · M-D13 (L1-018)</div>
-      <sd-dialog open static
-        title="Tell me about an event"
-        subtitle="Quick version. Title, when, and you're done — the rest is optional."
-      >
-        <div style="display:grid; gap:12px;">
-          <sd-text-input label="Event title" placeholder="e.g. Port Credit Buskerfest" required></sd-text-input>
-
-          <div>
-            <label style="display:block; font-size:13px; color:var(--sd-ink-soft); font-weight:500; margin: 0 0 6px 4px;">When it starts</label>
-            <input type="datetime-local" value="2026-05-18T13:00"
-              style="width:100%; padding:11px 12px; border-radius:var(--sd-r-md); border:1px solid var(--sd-line); background:var(--sd-surface); color:var(--sd-ink); font-size:15px; font-family:inherit;"/>
-            <div style="font-size:12px; color:var(--sd-ink-soft); margin: 6px 0 0 4px;">Defaulted to one hour from now.</div>
+          <div class="dialog__actions">
+            <button class="btn btn--quiet" type="button">Cancel</button>
+            <button class="btn btn--primary" type="button"><svg class="icon" aria-hidden="true"><use href="#i-bag"/></svg>Add to weekend</button>
           </div>
-
-          <sd-text-input label="Location (optional)" placeholder="Memorial Park, Lakeshore Rd"></sd-text-input>
-
-          <sd-card variant="sunk">
-            <div style="display:flex; gap:10px; align-items:flex-start; font-size:14px;">
-              <sd-icon name="sparkle" size="16" style="color:var(--sd-primary); margin-top:2px;"></sd-icon>
-              <span>Goes into moderation. Approved within a day, then everyone in driving distance sees it.</span>
-            </div>
-          </sd-card>
         </div>
-        <sd-button slot="actions" variant="ghost">Open full form</sd-button>
-        <sd-button slot="actions" variant="secondary">Cancel</sd-button>
-        <sd-button slot="actions">
-          <sd-icon slot="leading" name="plus" size="16"></sd-icon>
-          Submit
-        </sd-button>
-      </sd-dialog>
-    </div>
+      </div>
+    </section>
 
-    <div>
-      <div class="demo-label">Approve submission · M-D14 (L1-018 admin)</div>
-      <sd-dialog open static
-        title="Approve &ldquo;Port Credit Buskerfest&rdquo;?"
-        subtitle="It'll be published to every family within driving distance."
-      >
-        <sd-card variant="sunk">
-          <div style="display:flex; gap:12px; align-items:flex-start;">
-            <div style="width:48px; flex-shrink:0; background:var(--sd-primary-soft); color:var(--sd-primary); border-radius:var(--sd-r-md); text-align:center; padding:6px 4px;">
-              <div style="font-size:10px; text-transform:uppercase; letter-spacing:0.1em; font-weight:600;">JUN</div>
-              <div style="font-size:20px; font-weight:700; line-height:1; margin-top:2px;">20</div>
-            </div>
-            <div style="font-size:14px;">
-              <div style="font-weight:600;">Sat Jun 20 · 2:00pm – 9:00pm</div>
-              <div style="color:var(--sd-ink-soft); margin-top:4px;">Memorial Park · Free · All ages. Submitted by quinntynebrown@gmail.com.</div>
-            </div>
+    <section class="specimen" id="dialog-errand-added">
+      <span class="specimen__label">D9 · Errand added</span>
+      <div class="dialog dialog--specimen" role="dialog" aria-modal="true" aria-labelledby="d9-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="d9-title">Added to Sunday at 9:15</h2><p class="dialog__sub">It sits around what was already planned.</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
           </div>
-        </sd-card>
-        <p style="font-size:14px; color:var(--sd-ink-soft); margin: 12px 0 0;">The submitter will be notified. You can still pull it later from the approved tab.</p>
-        <sd-button slot="actions" variant="secondary">Cancel</sd-button>
-        <sd-button slot="actions">
-          <sd-icon slot="leading" name="check" size="16"></sd-icon>
-          Approve &amp; publish
-        </sd-button>
-      </sd-dialog>
-    </div>
-
-    <div>
-      <div class="demo-label">Reject submission · M-D15 (L1-018 admin)</div>
-      <sd-dialog open static
-        title="Reject this submission?"
-        subtitle="The submitter sees your reason — keep it kind."
-      >
-        <sd-card variant="sunk">
-          <div style="display:flex; gap:10px; align-items:flex-start;">
-            <sd-icon name="close" size="18" style="color:var(--sd-warn); margin-top:2px;"></sd-icon>
-            <div style="font-size:14px;">
-              <div style="font-weight:600;">&ldquo;Port Credit Buskerfest&rdquo; · submitted by Quinn</div>
-              <div style="color:var(--sd-ink-soft); margin-top:4px;">Removed from the queue. Submitter is notified with your reason.</div>
-            </div>
+          <div class="dialog__body">
+            <ul class="list list--card">
+              <li class="list__item"><span class="disc disc--indoor"><svg class="icon" aria-hidden="true"><use href="#i-bag"/></svg></span><span class="list__text"><span class="list__sub">What</span><span class="list__title">Costco run</span></span></li>
+              <li class="list__item"><span class="disc"><svg class="icon" aria-hidden="true"><use href="#i-calendar"/></svg></span><span class="list__text"><span class="list__sub">When</span><span class="list__title">Sunday · 9:15 to 10:00</span></span></li>
+            </ul>
           </div>
-        </sd-card>
-        <div style="margin-top:12px;">
-          <label style="display:block; font-size:13px; color:var(--sd-ink-soft); font-weight:500; margin: 0 0 6px 4px;">Reason (optional)</label>
-          <textarea rows="3" placeholder="Already covered by the curated Lavender Festival listing for that weekend."
-            style="width:100%; padding:11px 12px; border-radius:var(--sd-r-md); border:1px solid var(--sd-line); background:var(--sd-surface); color:var(--sd-ink); font-size:14px; font-family:inherit; resize:vertical;"></textarea>
+          <div class="dialog__actions">
+            <button class="btn btn--primary" type="button">Done</button>
+          </div>
         </div>
-        <sd-button slot="actions" variant="secondary">Cancel</sd-button>
-        <sd-button slot="actions" variant="danger">
-          <sd-icon slot="leading" name="close" size="16"></sd-icon>
-          Reject
-        </sd-button>
-      </sd-dialog>
-    </div>
+      </div>
+    </section>
 
-    <p style="text-align:center; margin-top:24px;"><a href="../index.html" style="color:var(--sd-primary); text-decoration:none; font-weight:600;">← Back to mocks</a></p>
-  </main>
+    <!-- ============================== IDEAS ============================== -->
+
+    <section class="specimen" id="dialog-suggest">
+      <span class="specimen__label">D10 · Suggest an event</span>
+      <div class="dialog dialog--specimen dialog--wide" role="dialog" aria-modal="true" aria-labelledby="d10-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="d10-title">Suggest an event</h2><p class="dialog__sub">Title and time are all we need. The rest helps families decide.</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="dialog__body">
+            <div class="field">
+              <label class="field__label" for="d10-title-f">Title <span class="field__req">Required</span></label>
+              <input class="field__input" id="d10-title-f" type="text" placeholder="Port Credit Buskerfest">
+            </div>
+            <div class="field">
+              <label class="field__label" for="d10-starts">Starts <span class="field__req">Required</span></label>
+              <input class="field__input" id="d10-starts" type="datetime-local" value="2026-05-18T13:00">
+              <p class="field__hint">Set to the next hour.</p>
+            </div>
+            <div class="field">
+              <label class="field__label" for="d10-where">Location</label>
+              <input class="field__input" id="d10-where" type="text" placeholder="Memorial Park, Lakeshore Rd">
+            </div>
+            <div class="field">
+              <label class="field__label" for="d10-desc">Description</label>
+              <textarea class="field__input" id="d10-desc" rows="3" placeholder="What is it, and who is it good for?"></textarea>
+            </div>
+            <div class="field--row">
+              <div class="field">
+                <label class="field__label" for="d10-cost">Cost</label>
+                <input class="field__input" id="d10-cost" type="text" placeholder="Free">
+              </div>
+              <div class="field">
+                <label class="field__label" for="d10-ages">Ages</label>
+                <input class="field__input" id="d10-ages" type="text" placeholder="All ages">
+              </div>
+            </div>
+            <div class="field">
+              <label class="field__label" for="d10-link">Link</label>
+              <input class="field__input" id="d10-link" type="url" placeholder="https://">
+            </div>
+          </div>
+          <div class="dialog__actions">
+            <button class="btn btn--quiet" type="button">Cancel</button>
+            <button class="btn btn--primary" type="button" disabled>Submit</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="specimen" id="dialog-submitted">
+      <span class="specimen__label">D11 · Submitted</span>
+      <div class="dialog dialog--specimen" role="dialog" aria-modal="true" aria-labelledby="d11-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="d11-title">Thanks, it is in the queue</h2><p class="dialog__sub">Only you can see it until it is approved.</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="dialog__body">
+            <div class="card card--sunk">
+              <div class="card__head">
+                <span class="date-tile" aria-hidden="true"><span class="date-tile__m">Jun</span><span class="date-tile__d">20</span></span>
+                <div class="card__head-text"><p class="card__title">Port Credit Buskerfest</p><p class="card__meta">Lakeshore Rd · Sat 2pm to 9pm</p></div>
+                <span class="chip chip--sun">Pending review</span>
+              </div>
+            </div>
+          </div>
+          <div class="dialog__actions">
+            <button class="btn btn--primary" type="button">Done</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="specimen" id="dialog-lock-in">
+      <span class="specimen__label">D12 · Lock it in</span>
+      <div class="dialog dialog--specimen" role="dialog" aria-modal="true" aria-labelledby="d12-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="d12-title">Lock La Marina for Saturday lunch?</h2><p class="dialog__sub">It goes on the timeline and other picks step back.</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="dialog__body">
+            <div class="card card--sunk">
+              <div class="card__head">
+                <span class="disc disc--lg disc--sun" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-fork"/></svg></span>
+                <div class="card__head-text"><p class="card__title">La Marina</p><p class="card__meta">Mediterranean · Patio · 6 min from Terre Bleu</p></div>
+              </div>
+              <div class="card__chips">
+                <span class="chip chip--accent"><svg class="icon" aria-hidden="true"><use href="#i-heart"/></svg>Wife-approved</span>
+                <span class="chip chip--leaf">3 of 4 yes</span>
+              </div>
+            </div>
+          </div>
+          <div class="dialog__actions">
+            <button class="btn btn--quiet" type="button">Not yet</button>
+            <button class="btn btn--primary" type="button"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg>Lock it in</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================== PAST ============================== -->
+
+    <section class="specimen" id="dialog-rate">
+      <span class="specimen__label">D13 · Rate a weekend</span>
+      <div class="dialog dialog--specimen" role="dialog" aria-modal="true" aria-labelledby="d13-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="d13-title">How was it?</h2><p class="dialog__sub">10 – 11 May · Bronte Creek + Rec Room</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="dialog__body">
+            <div class="stars stars--lg" role="radiogroup" aria-label="Rating">
+              <button class="btn btn--ghost btn--icon btn--lg" type="button" role="radio" aria-checked="false" aria-label="1 star"><svg class="icon icon--lg icon--filled" aria-hidden="true"><use href="#i-star"/></svg></button>
+              <button class="btn btn--ghost btn--icon btn--lg" type="button" role="radio" aria-checked="false" aria-label="2 stars"><svg class="icon icon--lg icon--filled" aria-hidden="true"><use href="#i-star"/></svg></button>
+              <button class="btn btn--ghost btn--icon btn--lg" type="button" role="radio" aria-checked="false" aria-label="3 stars"><svg class="icon icon--lg icon--filled" aria-hidden="true"><use href="#i-star"/></svg></button>
+              <button class="btn btn--ghost btn--icon btn--lg" type="button" role="radio" aria-checked="false" aria-label="4 stars"><svg class="icon icon--lg icon--filled" aria-hidden="true"><use href="#i-star"/></svg></button>
+              <button class="btn btn--ghost btn--icon btn--lg" type="button" role="radio" aria-checked="true" aria-label="5 stars"><svg class="icon icon--lg icon--filled" aria-hidden="true"><use href="#i-star"/></svg></button>
+            </div>
+            <p class="text-sm text-soft">5 of 5, a keeper.</p>
+          </div>
+          <div class="dialog__actions">
+            <button class="btn btn--quiet" type="button">Cancel</button>
+            <button class="btn btn--primary" type="button">Save</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="specimen" id="dialog-rename">
+      <span class="specimen__label">D14 · Rename a weekend</span>
+      <div class="dialog dialog--specimen" role="dialog" aria-modal="true" aria-labelledby="d14-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="d14-title">Rename this weekend</h2><p class="dialog__sub">10 – 11 May 2026</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="dialog__body">
+            <div class="field">
+              <label class="field__label" for="d14-name">Title</label>
+              <input class="field__input" id="d14-name" type="text" value="Bronte Creek + Rec Room">
+            </div>
+          </div>
+          <div class="dialog__actions">
+            <button class="btn btn--quiet" type="button">Cancel</button>
+            <button class="btn btn--primary" type="button">Save</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="specimen" id="dialog-repeat">
+      <span class="specimen__label">D15 · Repeat</span>
+      <div class="dialog dialog--specimen" role="dialog" aria-modal="true" aria-labelledby="d15-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="d15-title">Use this weekend again?</h2><p class="dialog__sub">It replaces the current draft. Saved weekends stay.</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="dialog__body">
+            <div class="well well--warn">
+              <svg class="icon" aria-hidden="true"><use href="#i-refresh"/></svg>
+              <div><p class="well__title">The lavender weekend draft goes away</p><p class="well__body">Locks and family settings stay.</p></div>
+            </div>
+          </div>
+          <div class="dialog__actions">
+            <button class="btn btn--quiet" type="button">Cancel</button>
+            <button class="btn btn--danger" type="button">Replace draft</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="specimen" id="dialog-remix">
+      <span class="specimen__label">D16 · Remix</span>
+      <div class="dialog dialog--specimen" role="dialog" aria-modal="true" aria-labelledby="d16-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="d16-title">Remix this weekend?</h2><p class="dialog__sub">Same shape, new places.</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="dialog__body">
+            <ul class="list list--card">
+              <li class="list__item"><span class="list__text"><span class="list__sub">Saturday morning</span><span class="list__title">Royal Botanical Gardens · 35 min</span></span><span class="chip chip--primary">New</span></li>
+              <li class="list__item"><span class="list__text"><span class="list__sub">Saturday lunch</span><span class="list__title">La Marina, kept</span></span><span class="chip chip--accent">Keep</span></li>
+              <li class="list__item"><span class="list__text"><span class="list__sub">Sunday afternoon</span><span class="list__title">Ontario Science Centre · 40 min</span></span><span class="chip chip--primary">New</span></li>
+            </ul>
+          </div>
+          <div class="dialog__actions">
+            <button class="btn btn--quiet" type="button">Cancel</button>
+            <button class="btn btn--primary" type="button"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg>Remix</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================== FAMILY ============================== -->
+
+    <section class="specimen" id="dialog-member">
+      <span class="specimen__label">D17 · Edit a family member</span>
+      <div class="dialog dialog--specimen dialog--wide" role="dialog" aria-modal="true" aria-labelledby="d17-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="d17-title">Edit Mae</h2><p class="dialog__sub">Ages shape the picks.</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="dialog__body">
+            <div class="field">
+              <label class="field__label" for="d17-name">Name <span class="field__req">Required</span></label>
+              <input class="field__input" id="d17-name" type="text" value="Mae">
+            </div>
+            <div class="field">
+              <label class="field__label" for="d17-age">Age</label>
+              <input class="field__input" id="d17-age" type="number" value="5" min="0" max="120">
+              <p class="field__hint">Kid · under 18 counts as a kid.</p>
+            </div>
+          </div>
+          <div class="dialog__actions">
+            <div class="dialog__actions-left"><a class="btn btn--quiet btn--warn-text" href="#dialog-remove"><svg class="icon" aria-hidden="true"><use href="#i-trash"/></svg>Remove</a></div>
+            <button class="btn btn--quiet" type="button">Cancel</button>
+            <button class="btn btn--primary" type="button">Save</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="specimen" id="dialog-member-add">
+      <span class="specimen__label">D17 · Add a family member</span>
+      <div class="dialog dialog--specimen dialog--wide" role="dialog" aria-modal="true" aria-labelledby="d17b-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="d17b-title">Add a family member</h2><p class="dialog__sub">Ages shape the picks.</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="dialog__body">
+            <div class="field">
+              <label class="field__label" for="d17b-name">Name <span class="field__req">Required</span></label>
+              <input class="field__input" id="d17b-name" type="text" placeholder="First name">
+            </div>
+            <div class="field">
+              <label class="field__label" for="d17b-age">Age</label>
+              <input class="field__input" id="d17b-age" type="number" placeholder="7" min="0" max="120">
+              <p class="field__hint">Under 18 counts as a kid.</p>
+            </div>
+          </div>
+          <div class="dialog__actions">
+            <button class="btn btn--quiet" type="button">Cancel</button>
+            <button class="btn btn--primary" type="button" disabled>Add member</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="specimen" id="dialog-commitment">
+      <span class="specimen__label">D18 · Edit a commitment</span>
+      <div class="dialog dialog--specimen dialog--wide" role="dialog" aria-modal="true" aria-labelledby="d18-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="d18-title">Edit Swim lessons</h2><p class="dialog__sub">Locked into every weekend.</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="dialog__body">
+            <div class="field">
+              <label class="field__label" for="d18-name">Name <span class="field__req">Required</span></label>
+              <input class="field__input" id="d18-name" type="text" value="Swim lessons">
+            </div>
+            <div class="field">
+              <span class="field__label" id="d18-days-label">Day</span>
+              <div class="seg-radio" role="radiogroup" aria-labelledby="d18-days-label">
+                <label class="seg-radio__opt"><input type="radio" name="d18-day" checked>Saturday</label>
+                <label class="seg-radio__opt"><input type="radio" name="d18-day">Sunday</label>
+              </div>
+            </div>
+            <div class="field--row">
+              <div class="field">
+                <label class="field__label" for="d18-start">Start</label>
+                <input class="field__input" id="d18-start" type="time" value="09:00">
+              </div>
+              <div class="field">
+                <label class="field__label" for="d18-end">End</label>
+                <input class="field__input" id="d18-end" type="time" value="10:00">
+              </div>
+            </div>
+          </div>
+          <div class="dialog__actions">
+            <div class="dialog__actions-left"><a class="btn btn--quiet btn--warn-text" href="#dialog-remove-commitment"><svg class="icon" aria-hidden="true"><use href="#i-trash"/></svg>Remove</a></div>
+            <button class="btn btn--quiet" type="button">Cancel</button>
+            <button class="btn btn--primary" type="button">Save</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="specimen" id="dialog-commitment-add">
+      <span class="specimen__label">D18 · Add a commitment</span>
+      <div class="dialog dialog--specimen dialog--wide" role="dialog" aria-modal="true" aria-labelledby="d18b-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="d18b-title">Add a commitment</h2><p class="dialog__sub">Locked into every weekend.</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="dialog__body">
+            <div class="field">
+              <label class="field__label" for="d18b-name">Name <span class="field__req">Required</span></label>
+              <input class="field__input" id="d18b-name" type="text" placeholder="Piano lesson">
+            </div>
+            <div class="field">
+              <span class="field__label" id="d18b-days-label">Day</span>
+              <div class="seg-radio" role="radiogroup" aria-labelledby="d18b-days-label">
+                <label class="seg-radio__opt"><input type="radio" name="d18b-day">Saturday</label>
+                <label class="seg-radio__opt"><input type="radio" name="d18b-day">Sunday</label>
+              </div>
+            </div>
+            <div class="field--row">
+              <div class="field">
+                <label class="field__label" for="d18b-start">Start</label>
+                <input class="field__input" id="d18b-start" type="time">
+              </div>
+              <div class="field">
+                <label class="field__label" for="d18b-end">End</label>
+                <input class="field__input" id="d18b-end" type="time">
+              </div>
+            </div>
+          </div>
+          <div class="dialog__actions">
+            <button class="btn btn--quiet" type="button">Cancel</button>
+            <button class="btn btn--primary" type="button" disabled>Add commitment</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="specimen" id="dialog-home">
+      <span class="specimen__label">D19 · Home location</span>
+      <div class="dialog dialog--specimen" role="dialog" aria-modal="true" aria-labelledby="d19-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="d19-title">Home location</h2><p class="dialog__sub">Weather and drive times start here.</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="dialog__body">
+            <div class="field">
+              <label class="field__label" for="d19-home">Neighbourhood or address</label>
+              <input class="field__input" id="d19-home" type="text" value="Port Credit, Mississauga">
+            </div>
+          </div>
+          <div class="dialog__actions">
+            <button class="btn btn--quiet" type="button">Cancel</button>
+            <button class="btn btn--primary" type="button">Save</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="specimen" id="dialog-likes">
+      <span class="specimen__label">D20 · Likes and dislikes</span>
+      <div class="dialog dialog--specimen dialog--wide" role="dialog" aria-modal="true" aria-labelledby="d20-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="d20-title">Likes and dislikes</h2><p class="dialog__sub">Liked tags get a boost. Disliked ones are left out.</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="dialog__body">
+            <div class="field">
+              <label class="field__label" for="d20-likes">Likes</label>
+              <div class="chip-input">
+                <span class="chip chip--leaf">Parks<button class="chip__x" type="button" aria-label="Remove Parks"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></span>
+                <span class="chip chip--leaf">Short hikes<button class="chip__x" type="button" aria-label="Remove Short hikes"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></span>
+                <span class="chip chip--leaf">Zoo<button class="chip__x" type="button" aria-label="Remove Zoo"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></span>
+                <span class="chip chip--leaf">Rec Room<button class="chip__x" type="button" aria-label="Remove Rec Room"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></span>
+                <span class="chip chip--leaf">Lavender<button class="chip__x" type="button" aria-label="Remove Lavender"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></span>
+                <span class="chip chip--leaf">Live theatre<button class="chip__x" type="button" aria-label="Remove Live theatre"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></span>
+                <input class="chip-input__field" id="d20-likes" type="text" placeholder="Add one, press Enter">
+              </div>
+            </div>
+            <div class="field">
+              <label class="field__label" for="d20-dislikes">Dislikes</label>
+              <div class="chip-input">
+                <span class="chip chip--warn">Camping<button class="chip__x" type="button" aria-label="Remove Camping"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></span>
+                <span class="chip chip--warn">Drives over 60 min<button class="chip__x" type="button" aria-label="Remove Drives over 60 min"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></span>
+                <input class="chip-input__field" id="d20-dislikes" type="text" placeholder="Add one, press Enter">
+              </div>
+            </div>
+          </div>
+          <div class="dialog__actions">
+            <button class="btn btn--quiet" type="button">Cancel</button>
+            <button class="btn btn--primary" type="button">Save</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="specimen" id="dialog-remove">
+      <span class="specimen__label">D21 · Remove confirm · member</span>
+      <div class="dialog dialog--specimen" role="alertdialog" aria-modal="true" aria-labelledby="d21-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="d21-title">Remove Mae from the family?</h2><p class="dialog__sub">Future weekends will not plan for her.</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="dialog__actions">
+            <button class="btn btn--quiet" type="button">Cancel</button>
+            <button class="btn btn--danger" type="button"><svg class="icon" aria-hidden="true"><use href="#i-trash"/></svg>Remove</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="specimen" id="dialog-remove-commitment">
+      <span class="specimen__label">D21 · Remove confirm · commitment</span>
+      <div class="dialog dialog--specimen" role="alertdialog" aria-modal="true" aria-labelledby="d21b-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="d21b-title">Remove Swim lessons?</h2><p class="dialog__sub">Weekends stop planning around it.</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="dialog__actions">
+            <button class="btn btn--quiet" type="button">Cancel</button>
+            <button class="btn btn--danger" type="button"><svg class="icon" aria-hidden="true"><use href="#i-trash"/></svg>Remove</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="specimen" id="dialog-signout">
+      <span class="specimen__label">D22 · Sign out</span>
+      <div class="dialog dialog--specimen" role="alertdialog" aria-modal="true" aria-labelledby="d22-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="d22-title">Sign out?</h2><p class="dialog__sub">Your family and weekends stay saved.</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="dialog__actions">
+            <button class="btn btn--quiet" type="button">Stay signed in</button>
+            <a class="btn btn--danger" href="./sign-in.html"><svg class="icon" aria-hidden="true"><use href="#i-sign_out"/></svg>Sign out</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================== ADMIN ============================== -->
+
+    <section class="specimen" id="dialog-approve">
+      <span class="specimen__label">D23 · Approve a submission</span>
+      <div class="dialog dialog--specimen" role="dialog" aria-modal="true" aria-labelledby="d23-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="d23-title">Approve Port Credit Buskerfest?</h2><p class="dialog__sub">It becomes visible to every family nearby.</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="dialog__body">
+            <div class="card card--sunk">
+              <div class="card__head">
+                <span class="date-tile" aria-hidden="true"><span class="date-tile__m">Jun</span><span class="date-tile__d">20</span></span>
+                <div class="card__head-text"><p class="card__title">Sat 20 Jun · 2:00 to 9:00pm</p><p class="card__meta">Memorial Park · Free · All ages · sent by quinntynebrown@gmail.com</p></div>
+              </div>
+            </div>
+          </div>
+          <div class="dialog__actions">
+            <button class="btn btn--quiet" type="button">Cancel</button>
+            <button class="btn btn--primary" type="button"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Approve</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="specimen" id="dialog-reject">
+      <span class="specimen__label">D24 · Reject a submission</span>
+      <div class="dialog dialog--specimen" role="dialog" aria-modal="true" aria-labelledby="d24-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="d24-title">Reject this suggestion?</h2><p class="dialog__sub">The reason is shown to the person who sent it.</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="dialog__body">
+            <div class="field">
+              <label class="field__label" for="d24-reason">Reason <span class="field__req">Optional</span></label>
+              <textarea class="field__input" id="d24-reason" rows="3" placeholder="Already listed as the Lavender Festival weekend."></textarea>
+            </div>
+          </div>
+          <div class="dialog__actions">
+            <button class="btn btn--quiet" type="button">Cancel</button>
+            <button class="btn btn--danger" type="button"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg>Reject</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================== MENUS ============================== -->
+
+    <section class="specimen" id="dialog-more">
+      <span class="specimen__label">D25 · Weekend "More" · sheet under 720px, anchored menu above</span>
+      <div class="dialog dialog--specimen" role="dialog" aria-modal="true" aria-labelledby="d25-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="d25-title">Weekend options</h2></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="dialog__body">
+            <ul class="list">
+              <li><a class="list__item list__item--action" href="#dialog-regenerate"><span class="disc"><svg class="icon" aria-hidden="true"><use href="#i-refresh"/></svg></span><span class="list__text"><span class="list__title">Regenerate the weekend</span><span class="list__sub">Locked blocks stay where they are</span></span></a></li>
+              <li><a class="list__item list__item--action" href="#dialog-calendar"><span class="disc"><svg class="icon" aria-hidden="true"><use href="#i-calendar"/></svg></span><span class="list__text"><span class="list__title">Add to calendar</span><span class="list__sub">One .ics with both days</span></span></a></li>
+            </ul>
+          </div>
+          <div class="dialog__actions">
+            <button class="btn btn--quiet" type="button">Close</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="specimen specimen--menu" id="dialog-more-menu">
+      <span class="specimen__label">D25 · The same options as an anchored menu (720px and up)</span>
+      <div class="menu" role="menu" aria-label="Weekend options">
+        <a class="menu__item" role="menuitem" href="#dialog-regenerate"><svg class="icon" aria-hidden="true"><use href="#i-refresh"/></svg>Regenerate the weekend</a>
+        <a class="menu__item" role="menuitem" href="#dialog-calendar"><svg class="icon" aria-hidden="true"><use href="#i-calendar"/></svg>Add to calendar</a>
+      </div>
+    </section>
+
+    <section class="specimen specimen--menu" id="dialog-account">
+      <span class="specimen__label">D26 · Account menu (720px and up; on phones the Family tab covers this)</span>
+      <div class="menu" role="menu" aria-label="Account">
+        <p class="menu__header">quinntynebrown@gmail.com</p>
+        <a class="menu__item" role="menuitem" href="./family.html"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg>Family settings</a>
+        <a class="menu__item menu__item--warn" role="menuitem" href="#dialog-signout"><svg class="icon" aria-hidden="true"><use href="#i-sign_out"/></svg>Sign out</a>
+      </div>
+    </section>
+
+  </div>
+</main>
+<!-- @shell:bottomnav -->
+<nav class="bottom-nav" aria-label="Primary">
+  <a class="bottom-nav__item" data-nav="weekend" href="./weekend.html"><span class="bottom-nav__icon"><svg class="icon" aria-hidden="true"><use href="#i-home"/></svg></span>Weekend</a>
+  <a class="bottom-nav__item" data-nav="ideas" href="./ideas.html"><span class="bottom-nav__icon"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg></span>Ideas</a>
+  <a class="bottom-nav__item" data-nav="past" href="./past.html"><span class="bottom-nav__icon"><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg></span>Past</a>
+  <a class="bottom-nav__item" data-nav="family" href="./family.html"><span class="bottom-nav__icon"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg></span>Family</a>
+</nav>
+<!-- @/shell:bottomnav -->
+<script src="../app.js"></script>
 </body>
 </html>

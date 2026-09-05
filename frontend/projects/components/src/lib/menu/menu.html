@@ -1,0 +1,46 @@
+@if (header()) {
+  <p class="menu__header">{{ header() }}</p>
+}
+@for (item of items(); track item.id) {
+  @if (item.href) {
+    <a
+      class="menu__item"
+      [class.menu__item--warn]="item.tone === 'warn'"
+      role="menuitem"
+      [attr.href]="item.href"
+      (click)="choose(item, $event)"
+    >
+      @if (sheet()) {
+        <sd-disc [icon]="item.icon" />
+      } @else {
+        <sd-icon [name]="item.icon" [size]="18" />
+      }
+      <span class="menu__text">
+        <span class="menu__label">{{ item.label }}</span>
+        @if (sheet() && item.sub) {
+          <span class="menu__sub">{{ item.sub }}</span>
+        }
+      </span>
+    </a>
+  } @else {
+    <button
+      class="menu__item"
+      [class.menu__item--warn]="item.tone === 'warn'"
+      type="button"
+      role="menuitem"
+      (click)="choose(item, $event)"
+    >
+      @if (sheet()) {
+        <sd-disc [icon]="item.icon" />
+      } @else {
+        <sd-icon [name]="item.icon" [size]="18" />
+      }
+      <span class="menu__text">
+        <span class="menu__label">{{ item.label }}</span>
+        @if (sheet() && item.sub) {
+          <span class="menu__sub">{{ item.sub }}</span>
+        }
+      </span>
+    </button>
+  }
+}

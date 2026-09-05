@@ -1,0 +1,39 @@
+<sd-dialog [title]="block.title" [subtitle]="subtitle()">
+  @if (block.commitment) {
+    <sd-well icon="lock" tone="accent" title="A recurring commitment">
+      It is in every weekend and cannot be swapped here. Edit it on Family.
+    </sd-well>
+  } @else {
+    @if (block.locked) {
+      <sd-well icon="lock" tone="accent" title="Locked">
+        Regenerating the weekend or the day leaves this block exactly where it is.
+      </sd-well>
+    }
+    <sd-well icon="sparkle" title="Why this">{{ why() }}</sd-well>
+  }
+
+  @if (block.commitment) {
+    <sd-button slot="actions" variant="quiet" href="/family">Edit on Family</sd-button>
+  }
+  @if (block.errand && !block.commitment) {
+    <sd-button slot="actions-left" variant="quiet" type="button" (click)="toggleDone()">
+      <sd-icon name="check" />
+      {{ block.done ? 'Mark not done' : 'Mark done' }}
+    </sd-button>
+  }
+  @if (block.swappable && !block.commitment) {
+    <sd-button slot="actions" variant="quiet" type="button" (click)="swap()">
+      <sd-icon name="swap" />
+      Swap for something else
+    </sd-button>
+  }
+  @if (block.lockable && !block.commitment) {
+    <sd-button slot="actions" variant="primary" type="button" (click)="toggleLock()">
+      <sd-icon [name]="block.locked ? 'unlock' : 'lock'" />
+      {{ block.locked ? 'Unlock' : 'Lock this block' }}
+    </sd-button>
+  }
+  @if (block.commitment || !block.lockable) {
+    <sd-button slot="actions" variant="primary" type="button" (click)="close()">Close</sd-button>
+  }
+</sd-dialog>

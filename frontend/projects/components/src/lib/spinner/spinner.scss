@@ -1,0 +1,36 @@
+// `.spinner` / `.spinner-disc` from docs/mocks-v2/styles/app.css.
+
+:host {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 40px;
+  height: 40px;
+  color: var(--sd-primary-deep);
+}
+
+:host(.spinner--sm) {
+  width: 20px;
+  height: 20px;
+}
+
+.spinner {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 3px solid var(--sd-line-strong);
+  border-top-color: var(--sd-primary);
+  animation: sd-spin 0.9s linear infinite;
+}
+
+:host(.spinner--sm) .spinner {
+  border-width: 2px;
+}
+
+@keyframes sd-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

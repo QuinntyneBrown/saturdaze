@@ -1,0 +1,31 @@
+<div class="card__head">
+  <sd-disc icon="fork" [tone]="locked() ? 'accent' : tone()" size="lg" />
+  <div class="card__head-text">
+    <h3 class="card__title">{{ cardTitle() }}</h3>
+    @if (meta()) {
+      <p class="card__meta">{{ meta() }}</p>
+    }
+  </div>
+  @if (locked()) {
+    <sd-chip tone="accent"><sd-icon name="lock" [size]="13" [stroke]="2" />{{ lockedLabel() }}</sd-chip>
+  } @else if (topPick()) {
+    <sd-chip tone="primary">Top pick</sd-chip>
+  }
+</div>
+<div class="card__chips"><ng-content select="[slot=chips]" /></div>
+@if (votes().length) {
+  <sd-vote-row [votes]="votes()" [disabled]="votesDisabled()" [label]="'Family vote for ' + cardTitle()" (voteChange)="voteChange.emit($event)" />
+}
+<div class="card__footer card__footer--between">
+  @if (menuUrl()) {
+    <sd-button variant="quiet" size="sm" [href]="menuUrl()" target="_blank">See menu</sd-button>
+  } @else {
+    <span></span>
+  }
+  @if (!locked()) {
+    <sd-button variant="primary" size="sm" [disabled]="dimmed()" (click)="lockIn.emit()">
+      <sd-icon name="lock" />
+      Lock it in
+    </sd-button>
+  }
+</div>

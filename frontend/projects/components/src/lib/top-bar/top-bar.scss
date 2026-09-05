@@ -1,43 +1,125 @@
+@use "../styles/breakpoints" as *;
+
+// `.topbar` + `.brand-mark` from docs/mocks-v2/styles/app.css — the host is
+// the bar. Hidden below 720px (the bottom nav takes over).
+
 :host {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: var(--sd-top-h, 56px);
-  padding: 0 16px;
-  background: color-mix(in srgb, var(--sd-bg) 88%, transparent);
+  display: none;
   position: sticky;
   top: 0;
-  z-index: 5;
-  backdrop-filter: blur(8px);
-  box-sizing: border-box;
+  z-index: var(--sd-z-topbar);
+  height: var(--sd-topbar-h);
+  background: transparent;
+  transition:
+    background var(--sd-dur-base) var(--sd-ease),
+    box-shadow var(--sd-dur-base) var(--sd-ease);
 }
 
-.left,
-.right {
+:host([data-scrolled]) {
+  background: color-mix(in srgb, var(--sd-bg) 86%, transparent);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 1px 0 var(--sd-line);
+}
+
+.topbar__inner {
+  width: 100%;
+  max-width: var(--sd-content-max-w);
+  margin-inline: auto;
+  padding-inline: var(--sd-gutter);
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  height: var(--sd-topbar-h);
+}
+
+.topbar__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--sd-fs-md);
+  font-weight: var(--sd-fw-bold);
+  color: var(--sd-ink);
+  white-space: nowrap;
+  border-radius: var(--sd-r-sm);
+  text-decoration: none;
+}
+
+.brand-mark {
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  flex: none;
+  background:
+    radial-gradient(120% 120% at 20% 0%, var(--sd-primary-soft) 0%, transparent 60%),
+    radial-gradient(120% 120% at 100% 100%, var(--sd-sun-soft) 0%, transparent 60%),
+    var(--sd-primary);
+  box-shadow: inset 0 0 0 1px rgba(31, 41, 55, 0.06);
+}
+
+.topbar__nav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.topbar__link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 12px;
+  border-radius: var(--sd-r-md);
+  font-size: 14px;
+  font-weight: var(--sd-fw-semibold);
+  color: var(--sd-ink-soft);
+  white-space: nowrap;
+  text-decoration: none;
+  transition:
+    background var(--sd-dur-fast) var(--sd-ease),
+    color var(--sd-dur-fast) var(--sd-ease);
+}
+
+.topbar__link[aria-current="page"] {
+  color: var(--sd-ink);
+}
+
+.topbar__link[aria-current="page"]::after {
+  content: "";
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 0;
+  height: 2px;
+  border-radius: var(--sd-r-pill);
+  background: var(--sd-primary);
+}
+
+.topbar__actions {
+  margin-left: auto;
   display: flex;
   align-items: center;
   gap: 8px;
-  min-width: 44px;
 }
 
-h1 {
-  font-size: var(--sd-fs-md);
-  font-weight: var(--sd-fw-semibold);
-  margin: 0;
-  letter-spacing: -0.01em;
-  text-align: center;
-  flex: 1;
-}
-
-a.back {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
+.avatar-btn {
   display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--sd-surface);
-  border: 1px solid var(--sd-line);
-  color: var(--sd-ink);
-  text-decoration: none;
+  border-radius: 50%;
+  transition: box-shadow var(--sd-dur-fast) var(--sd-ease);
+}
+
+@media (hover: hover) {
+  .topbar__link:hover {
+    background: var(--sd-surface-2);
+    color: var(--sd-ink);
+  }
+
+  .avatar-btn:hover {
+    box-shadow: 0 0 0 3px var(--sd-primary-soft);
+  }
+}
+
+@include respond-to(tablet) {
+  :host {
+    display: block;
+  }
 }

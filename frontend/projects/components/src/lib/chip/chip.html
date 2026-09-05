@@ -1,1 +1,6 @@
 <ng-content />
+@if (removable()) {
+  <button class="chip__x" type="button" [attr.aria-label]="removeLabel()" (click)="remove.emit()">
+    <sd-icon name="close" [size]="10" [stroke]="2.5" />
+  </button>
+}

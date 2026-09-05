@@ -1,15 +1,10 @@
 import { InjectionToken, Signal } from '@angular/core';
 
-import { FamilyProfile } from '../models/family-profile';
+import { DayOfWeek } from '../models/day-of-week';
+import { FamilyView } from '../models/family-view';
 
-export type EditableFamilyDayOfWeek =
-  | 'Sunday'
-  | 'Monday'
-  | 'Tuesday'
-  | 'Wednesday'
-  | 'Thursday'
-  | 'Friday'
-  | 'Saturday';
+/** Kept for callers that used the older name. */
+export type EditableFamilyDayOfWeek = DayOfWeek;
 
 /**
  * Editable Family Member.
@@ -44,13 +39,13 @@ export interface EditableCommitment {
   /**
    * Day Of Week.
    */
-  readonly dayOfWeek: EditableFamilyDayOfWeek;
+  readonly dayOfWeek: DayOfWeek;
   /**
-   * Start Time.
+   * Start Time — "HH:mm".
    */
   readonly startTime: string;
   /**
-   * End Time.
+   * End Time — "HH:mm".
    */
   readonly endTime: string;
 }
@@ -70,7 +65,7 @@ export interface EditablePreference {
 }
 
 /**
- * Editable Family Profile.
+ * Editable Family Profile — the full-replace payload for `PUT /api/family`.
  */
 export interface EditableFamilyProfile {
   /**
@@ -112,25 +107,25 @@ export interface EditableFamilyProfile {
  */
 export interface IFamilyService {
   /**
-   * Get Profile.
+   * Get Family — the read-only projection for the Family page.
    *
-   * @returns {Signal<FamilyProfile>} The result of the operation
+   * @returns {Signal<FamilyView>} The result of the operation
    */
-  getProfile(): Signal<FamilyProfile>;
+  getFamily(): Signal<FamilyView>;
   /**
-   * Get Editable Profile.
+   * Get Editable Profile — `null` until the first load lands.
    *
    * @returns {Signal<EditableFamilyProfile | null>} The result of the operation
    */
   getEditableProfile(): Signal<EditableFamilyProfile | null>;
   /**
-   * Load.
+   * Load — `GET /api/family`.
    *
    * @returns {Promise<void>} The result of the operation
    */
   load(): Promise<void>;
   /**
-   * Save Profile.
+   * Save Profile — `PUT /api/family` (full replace).
    *
    * @param {EditableFamilyProfile} profile - The profile
    *
@@ -139,6 +134,4 @@ export interface IFamilyService {
   saveProfile(profile: EditableFamilyProfile): Promise<void>;
 }
 
-export const FAMILY_SERVICE = new InjectionToken<IFamilyService>(
-  'FAMILY_SERVICE',
-);
+export const FAMILY_SERVICE = new InjectionToken<IFamilyService>('FAMILY_SERVICE');

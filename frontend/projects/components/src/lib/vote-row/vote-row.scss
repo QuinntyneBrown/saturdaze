@@ -1,46 +1,70 @@
+// `.vote-row` from docs/mocks-v2/styles/app.css — the host is the row.
+
 :host {
-  display: block;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  padding-top: 12px;
+  border-top: 1px solid var(--sd-line);
 }
 
-.row {
+.vote-row__cell {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 12px;
-  padding: 8px 0;
-}
-
-.name {
-  flex: 1;
-  font-size: var(--sd-fs-base);
-  font-weight: var(--sd-fw-medium);
-}
-
-.buttons {
-  display: flex;
   gap: 6px;
+  min-width: 0;
 }
 
-button {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  border: 1px solid var(--sd-line);
-  background: var(--sd-surface);
-  cursor: pointer;
+.vote-row__name {
+  font-size: var(--sd-fs-xs);
+  color: var(--sd-ink-soft);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.vote-row__choice {
+  display: flex;
+  gap: 4px;
+}
+
+.vote-row__btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: var(--sd-ink-soft);
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  color: var(--sd-ink-faint);
+  border: 1px solid var(--sd-line);
+  background: var(--sd-surface);
+  transition:
+    background var(--sd-dur-fast) var(--sd-ease),
+    color var(--sd-dur-fast) var(--sd-ease);
 }
 
-button.up.active {
+.vote-row__btn--up[aria-pressed="true"] {
   background: var(--sd-accent-soft);
-  color: var(--sd-accent);
   border-color: transparent;
+  color: var(--sd-accent);
 }
 
-button.down.active {
+.vote-row__btn--down[aria-pressed="true"] {
   background: var(--sd-warn-soft);
-  color: var(--sd-warn);
   border-color: transparent;
+  color: var(--sd-warn-deep);
+}
+
+.vote-row__btn[disabled] {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+@media (hover: hover) {
+  .vote-row__btn:not([aria-pressed="true"]):hover {
+    color: var(--sd-ink);
+    border-color: var(--sd-line-strong);
+  }
 }

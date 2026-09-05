@@ -1,4 +1,6 @@
-// Saturdaze design tokens — sourced from docs/mocks/styles/tokens.css.
+// Saturdaze design tokens — mirrors design-system/assets/tokens.css (the
+// authoritative copy) plus the v2-only layout tokens from
+// docs/mocks-v2/styles/app.css (@layer base).
 //
 // Components consume these as CSS custom properties (`var(--sd-bg)` etc.).
 // Never hard-code a hex value in a component stylesheet — if a colour is
@@ -16,33 +18,39 @@
   --sd-line:         rgba(31, 41, 55, 0.08);
   --sd-line-strong:  rgba(31, 41, 55, 0.16);
 
-  --sd-primary:      #E07856;   // warm coral — the "Plan This Weekend" CTA
+  --sd-primary:      #E07856;   // warm coral — the one coral button per screen
   --sd-primary-ink:  #FFFFFF;
   --sd-primary-soft: #FBE7DE;
+  --sd-primary-deep: #A04B2C;   // coral text that passes AA on primary-soft
 
   --sd-accent:       #2D7D5F;   // forest green — "locked", confirmed
   --sd-accent-soft:  #DEEDE5;
 
   --sd-warn:         #C45A3F;   // gentle warning, not alarming
   --sd-warn-soft:    #FADFD6;
-
-  --sd-danger:       #B91C1C;   // destructive / form errors
+  --sd-warn-deep:    #8F3D27;
 
   --sd-sun:          #F4C969;   // sunny chip / weather
   --sd-sky:          #BFD9E8;   // cool weather chip
   --sd-leaf:         #A9C9A4;   // outdoor chip
+  --sd-indoor:       #C9B6E0;   // indoor chip
 
-  // Tone pairs — the soft fill + ink used by chips, avatars, block icons
-  // and card gradients. Same values the mock stylesheets hard-code.
+  // Tone pairs — the soft fill + ink used by chips, discs and avatars.
   --sd-sun-soft:     #FBEBC4;
   --sd-sun-ink:      #8A6212;
   --sd-sky-soft:     #DCE9F1;
   --sd-sky-ink:      #2C5F7A;
+  --sd-leaf-soft:    #DDEEDA;
+  --sd-leaf-ink:     #2D7D5F;
   --sd-indoor-soft:  #EADFF4;
   --sd-indoor-ink:   #5A3B82;
-  --sd-leaf-soft:    #DDEEDA;
 
-  // Typography — sans-serif system stack.
+  // Brand art — the warm gradient behind the landing hero and first-run card.
+  --sd-warm-gradient:
+    radial-gradient(80% 60% at 0% 0%, var(--sd-primary-soft) 0%, transparent 60%),
+    radial-gradient(80% 60% at 100% 0%, var(--sd-sun-soft) 0%, transparent 60%);
+
+  // Typography — sans-serif system stack. Nothing web-loads Inter on purpose.
   --sd-font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
                   Roboto, "Helvetica Neue", Arial, sans-serif;
 
@@ -51,8 +59,11 @@
   --sd-fs-base: 15px;
   --sd-fs-md:   17px;
   --sd-fs-lg:   20px;
+  --sd-fs-xl:   26px;
   --sd-fs-xxl:  34px;
 
+  --sd-lh-tight: 1.2;
+  --sd-lh-snug:  1.35;
   --sd-lh-base:  1.5;
 
   --sd-fw-regular:  400;
@@ -60,7 +71,20 @@
   --sd-fw-semibold: 600;
   --sd-fw-bold:     700;
 
+  // Spacing — 4px base.
+  --sd-s-0: 0;
+  --sd-s-1: 4px;
+  --sd-s-2: 8px;
+  --sd-s-3: 12px;
+  --sd-s-4: 16px;
+  --sd-s-5: 20px;
+  --sd-s-6: 24px;
+  --sd-s-7: 32px;
+  --sd-s-8: 40px;
+  --sd-s-9: 56px;
+
   // Radius.
+  --sd-r-sm:   8px;
   --sd-r-md:   12px;
   --sd-r-lg:   16px;
   --sd-r-xl:   22px;
@@ -78,38 +102,49 @@
   --sd-dur-fast:  120ms;
   --sd-dur-base:  220ms;
 
-  // Layout.
-  --sd-app-max-w: 440px;        // mobile-first canvas
-  --sd-app-pad-x: 20px;
-  --sd-nav-h:     64px;
-  --sd-top-h:     56px;
+  // Layout (v2): a full-width web app, 1120px reading width, no phone canvas.
+  --sd-content-max-w: 1120px;
+  --sd-stack-max-w:   720px;
+  --sd-gutter:        16px;
+  --sd-topbar-h:      64px;   // ≥720px sticky top bar
+  --sd-bottom-nav-h:  60px;   // <720px floating bottom nav
 
-  // Breakpoints live SCSS-side in `_breakpoints.scss` (`$bp-tablet`/`$bp-desktop`
-  // + the `respond-to()` mixin):
-  //   mobile:  < 720px (default)
-  //   tablet:  720-1023px  (nav becomes icon rail)
-  //   desktop: >= 1024px   (nav becomes labelled sidebar; split-view active)
+  // z ladder (the CDK overlay keeps its own 1000).
+  --sd-z-sticky: 5;
+  --sd-z-topbar: 20;
+  --sd-z-nav:    30;
 
-  // Rail widths.
-  --sd-rail-w-tablet:  72px;
-  --sd-rail-w-desktop: 220px;
+  // Focus.
+  --sd-focus-ring: 2px solid var(--sd-primary);
+
+  // Breakpoints live SCSS-side in `_breakpoints.scss` (`$bp-tablet` /
+  // `$bp-desktop` + the `respond-to()` mixin):
+  //   phone:   < 720px  (bottom nav)
+  //   tablet:  720-1023px (top bar, single column)
+  //   desktop: >= 1024px  (top bar, Saturday | Sunday side by side)
+}
+
+@media (min-width: 720px) {
+  :root {
+    --sd-gutter: 24px;
+  }
 }
 
 @media (min-width: 1024px) {
   :root {
-    --sd-app-pad-x: 32px;
+    --sd-gutter: 32px;
     --sd-fs-xxl: 40px;
+    --sd-fs-xl: 30px;
     --sd-fs-lg: 22px;
   }
 }
 
 // xsmall retune — same token-swap idiom as the desktop block above.
-// 320-379px phones (iPhone SE class) get tighter gutters and display
-// type one step down so headings breathe instead of cramping. Mirrors
-// docs/mocks/styles/tokens.css.
+// 320-379px phones (iPhone SE class) get display type one step down so
+// headings breathe instead of cramping.
 @media (max-width: 379px) {
   :root {
-    --sd-app-pad-x: 16px;
     --sd-fs-xxl: 30px;
+    --sd-fs-xl: 24px;
   }
 }

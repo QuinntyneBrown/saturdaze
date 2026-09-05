@@ -1,0 +1,7 @@
+<sd-icon [name]="icon()" [size]="16" />
+<div class="well__text">
+  @if (wellTitle()) {
+    <p class="well__title">{{ wellTitle() }}</p>
+  }
+  <div class="well__body"><ng-content /></div>
+</div>

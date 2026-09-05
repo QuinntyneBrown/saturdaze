@@ -17,7 +17,7 @@ Playwright test suite, and static mock reference application.
 From the repository root, the fastest way to verify the full stack is:
 
 ```powershell
-powershell .\scripts\Start-FreshStack.ps1
+powershell .\eng\Start-FreshStack.ps1
 ```
 
 The script packs and installs the local `Saturdaze.Cli` tool, resets and seeds
@@ -45,9 +45,9 @@ dotnet restore .\Saturdaze.sln
 | `frontend/` | Angular app plus `api` and `components` libraries |
 | `e2e/` | Playwright behavior and visual tests |
 | `design-system/` | Standalone design-system catalog (own `npm test`, own SWA deployment) |
-| `docs/mocks/` | Static reference implementation and screenshots |
+| `docs/mocks-v2/` | Static HTML/CSS design — the source of truth for the app and the visual baselines |
 | `docs/adr/` | Architecture decision records |
-| `scripts/` | Local automation scripts |
+| `eng/` | Local engineering automation scripts |
 
 ## Coding Guidelines
 
@@ -56,10 +56,12 @@ dotnet restore .\Saturdaze.sln
   controllers.
 - Keep EF migrations explicit. The API must not apply migrations on startup.
 - Keep seed data idempotent and safe to rerun.
-- Keep Angular component selectors aligned with the mock custom-element tag
-  names.
-- Keep visual changes consistent with `docs/mocks/` unless the pull request is
-  intentionally updating the design.
+- Keep Angular component hosts and inner elements on the mocks' BEM class
+  names (ADR-009); the e2e page objects locate by them.
+- Keep visual changes consistent with `docs/mocks-v2/` unless the pull request
+  is intentionally updating the design — then change the mock first, run
+  `node docs/mocks-v2/.check.mjs`, and re-capture baselines (`npm run baseline`
+  in `e2e/`).
 - Avoid unrelated formatting churn and broad refactors in feature or bug-fix
   pull requests.
 

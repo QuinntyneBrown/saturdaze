@@ -1,76 +1,87 @@
 import { test, expect } from "../fixtures/sd-test.js";
 
 /**
- * Shopping errand — real placement through `POST /api/weekends/{id}/errands`
- * (L2-021). Each happy-path run appends one errand to the seeded family's
- * weekend; `saturdaze reset --yes` clears them.
+ * Errands — the "Add an errand" ghost row → D7 (What / How long / Which day)
+ * → the API places it → D9 confirms where it landed → a `.block--errand`
+ * row with a "Mark … done" action.
  */
 
-test.describe("Shopping errand", () => {
+const errandName = () => `Costco run ${Date.now().toString(36)}`;
+
+test.describe("Add an errand", () => {
   test.beforeEach(async ({ goto, pages }) => {
-    await goto("errand");
-    await pages.errand.waitForComponentsReady();
+    await goto("weekend");
+    await pages.weekend.waitForPlan();
   });
 
-  test("top bar reads 'Add an errand'", async ({ pages }) => {
-    await expect(pages.errand.topBarTitle()).toHaveText("Add an errand");
-    await expect(pages.errand.topBarBackLink()).toBeVisible();
+  test("ghost row opens D7 with the three fields and 'Either' preselected", async ({ pages }) => {
+    const w = pages.weekend;
+    await w.addErrandRow("Saturday").click();
+    await expect(w.dialogTitle()).toHaveText("Add an errand");
+    await expect(w.dialogField("What is it")).toBeFocused();
+    await expect(w.dialogField("Roughly how long")).toBeVisible();
+    await expect(w.dialog().getByRole("radiogroup", { name: "Which day" })).toBeVisible();
+    await expect(w.dialog().getByRole("radio", { name: "Either" })).toBeChecked();
+    await expect(w.dialogAction("Add to weekend")).toBeDisabled();
+    await w.dialogAction("Cancel").click();
+    await expect(w.dialog()).toHaveCount(0);
   });
 
-  test("heading + lede render", async ({ pages, page }) => {
-    await expect(pages.errand.headingTitle()).toBeVisible();
-    await expect(page.getByText(/I'll fit it on the way to or from/)).toBeVisible();
+  test("submitting places the errand, confirms in D9, and adds an errand block", async ({ page, pages }) => {
+    const w = pages.weekend;
+    const name = errandName();
+    const before = await w.errandBlocks().count();
+
+    await w.addErrandRow("Sunday").click();
+    await w.dialogField("What is it").fill(name);
+    await w.dialogField("Roughly how long").selectOption({ label: "30 min" });
+    await w.dialog().getByRole("radio", { name: "Sunday" }).check();
+
+    const placed = page.waitForResponse((r) => /\/api\/weekends\/[^/]+\/errands/.test(r.url()) && r.request().method() === "POST");
+    await w.dialogAction("Add to weekend").click();
+    expect((await placed).ok()).toBeTruthy();
+
+    await expect(w.dialogTitle()).toHaveText(/^Added to Sunday at \d/);
+    await expect(w.dialogBody().locator(".list__title").first()).toHaveText(name);
+    await w.dialogAction("Done").click();
+    await expect(w.dialog()).toHaveCount(0);
+
+    await expect(w.errandBlocks()).toHaveCount(before + 1);
+    const block = w.block(name, "Sunday");
+    await expect(block).toHaveClass(/block--errand/);
+    await expect(w.blockChips(block).first()).toHaveText("Errand");
+    await expect(w.doneButton(name, "Sunday")).toBeVisible();
+    await expect(w.swapButton(name, "Sunday")).toHaveCount(0);
   });
 
-  test("text inputs are present with hints", async ({ pages }) => {
-    await expect(pages.errand.whatsNeededInput()).toBeVisible();
-    await expect(pages.errand.howLongInput()).toBeVisible();
-    await expect(pages.errand.howLongInput()).toHaveAttribute("hint", /10 min buffer/);
+  test("'Either' lets the planner pick the day", async ({ page, pages }) => {
+    const w = pages.weekend;
+    const name = errandName();
+
+    await w.addErrandRow("Saturday").click();
+    await w.dialogField("What is it").fill(name);
+    const placed = page.waitForResponse((r) => /\/api\/weekends\/[^/]+\/errands/.test(r.url()) && r.request().method() === "POST");
+    await w.dialogAction("Add to weekend").click();
+    expect((await placed).ok()).toBeTruthy();
+
+    await expect(w.dialogTitle()).toHaveText(/^Added to (Saturday|Sunday) at \d/);
+    await w.dialogAction("Done").click();
+    await expect(w.block(name)).toHaveClass(/block--errand/);
   });
 
-  test("best-day chips offer Saturday / Sunday / Doesn't matter, defaulting to Doesn't matter", async ({ pages, page }) => {
-    const chips = pages.errand.bestDayChips();
-    await expect(chips).toHaveCount(3);
-    await expect(chips.nth(0)).toContainText("Saturday");
-    await expect(chips.nth(1)).toContainText("Sunday");
-    await expect(chips.nth(2)).toContainText("Doesn't matter");
-    await expect(chips.nth(2)).toHaveAttribute("tone", "primary");
-    await expect(chips.nth(2)).toHaveAttribute("aria-checked", "true");
+  test("marking an errand done sets the done modifier", async ({ page, pages }) => {
+    const w = pages.weekend;
+    const name = errandName();
+    await w.addErrandRow("Saturday").click();
+    await w.dialogField("What is it").fill(name);
+    await w.dialog().getByRole("radio", { name: "Saturday" }).check();
+    await w.dialogAction("Add to weekend").click();
+    await expect(w.dialogTitle()).toHaveText(/^Added to Saturday/);
+    await w.dialogAction("Done").click();
 
-    await chips.nth(0).click();
-    await expect(chips.nth(0)).toHaveAttribute("tone", "primary");
-    await expect(chips.nth(2)).not.toHaveAttribute("tone", "primary");
-    await expect(page.locator(".suggested-body")).toContainText(/lands on Saturday/);
-  });
-
-  test("footer offers Cancel + a disabled 'Add to weekend' until the form is valid", async ({ pages }) => {
-    await expect(pages.errand.cancelButton()).toHaveAttribute("variant", "secondary");
-    await expect(pages.errand.addToWeekendButton().locator("button")).toBeDisabled();
-
-    await pages.errand.whatsNeededInput().locator("input").fill("Milk run");
-    await pages.errand.howLongInput().locator("input").fill("20");
-    await expect(pages.errand.addToWeekendButton().locator("button")).toBeEnabled();
-  });
-
-  test("adding an errand places it on the weekend and returns home", async ({ page, pages, goto }) => {
-    const description = `Costco run e2e ${Date.now()}`;
-    await pages.errand.whatsNeededInput().locator("input").fill(description);
-    await pages.errand.howLongInput().locator("input").fill("45");
-    await pages.errand.bestDayChips().nth(0).click(); // Saturday
-
-    const placed = page.waitForResponse((r) => r.url().includes("/errands") && r.request().method() === "POST");
-    await pages.errand.addToWeekendButton().locator("button").click();
-    expect((await placed).status()).toBe(200);
-
-    const lede = page.locator(".errand-lede h2");
-    await expect(lede).toHaveText(/Added to (Saturday|Sunday|the weekend)/);
-    const day = /Added to (Saturday|Sunday)/.exec((await lede.textContent()) ?? "")?.[1] ?? "Saturday";
-    await expect(page.locator(".suggested-title")).toHaveText(/Slotted for (Saturday|Sunday) at \d{2}:\d{2}|Added to the weekend/);
-    await page.waitForURL(/\/weekend$/, { timeout: 8_000 });
-
-    // The errand is now a real block on that day's itinerary.
-    await page.goto(`/itinerary?day=${day.toLowerCase()}`);
-    await pages.itinerary.waitForComponentsReady();
-    await expect(pages.itinerary.allTimelineBlocks().filter({ hasText: description }).first()).toBeAttached();
+    const done = page.waitForResponse((r) => /\/api\/(errands|blocks)\/[^/]+/.test(r.url()) && r.request().method() !== "GET");
+    await w.doneButton(name, "Saturday").click();
+    expect((await done).ok()).toBeTruthy();
+    await expect(w.block(name, "Saturday")).toHaveClass(/block--done/);
   });
 });

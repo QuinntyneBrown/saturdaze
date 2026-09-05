@@ -1,6 +1,8 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  booleanAttribute,
+  computed,
   effect,
   forwardRef,
   input,
@@ -8,28 +10,35 @@ import {
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
+import { Icon } from '../icon/icon';
+
 /**
- * Single-line text input. Mirrors `docs/mocks/components/sd-text-input.js`.
- * Carries an optional label above the field and an optional hint below.
+ * Labelled text field. Mirrors `.field` in docs/mocks-v2/styles/app.css:
+ * label (with an optional "Required" marker), the input or a textarea
+ * (`multiline`), a hint, and an error line that also sets `aria-invalid`.
  *
- * Reactive Forms / ngModel: `sd-text-input` implements `ControlValueAccessor`.
- * Existing static usage `<sd-text-input value="hello" />` continues to work —
- * the static `value` input seeds the internal state, and a later
- * `writeValue` (from a `FormControl`) overrides it.
+ * Reactive Forms / ngModel: implements `ControlValueAccessor`. The static
+ * `value` input seeds the state; a later `writeValue` overrides it.
  */
+
+let nextFieldId = 0;
 
 @Component({
   selector: 'sd-text-input',
   standalone: true,
+  imports: [Icon],
   templateUrl: './text-input.html',
   styleUrl: './text-input.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
+    class: 'field',
     '[attr.label]': 'label() || null',
-    '[attr.value]': 'internalValue() || null',
-    '[attr.placeholder]': 'placeholder() || null',
     '[attr.type]': 'type()',
     '[attr.hint]': 'hint() || null',
+    '[attr.error]': 'error() || null',
+    '[attr.required]': 'required() ? "" : null',
+    '[attr.invalid]': 'invalid() ? "" : null',
+    '[attr.multiline]': 'multiline() ? "" : null',
   },
   providers: [
     {
@@ -45,21 +54,39 @@ export class TextInput implements ControlValueAccessor {
   readonly placeholder = input<string>('');
   readonly type = input<string>('text');
   readonly hint = input<string>('');
-  // Forwarded to the inner <input> so browser password managers and
-  // autofill (Safari Keychain, Chrome, 1Password, etc.) can recognise
-  // sign-in/sign-up fields and offer to save/fill credentials.
+  /** Inline error; non-empty also sets `aria-invalid`. */
+  readonly error = input<string>('');
+  readonly required = input(false, { transform: booleanAttribute });
+  /** Mark invalid without an inline message (a form-level error banner). */
+  readonly invalid = input(false, { transform: booleanAttribute });
+  readonly multiline = input(false, { transform: booleanAttribute });
+  readonly rows = input<number>(3);
+  readonly readonly = input(false, { transform: booleanAttribute });
+  // Forwarded to the inner control so password managers and autofill
+  // recognise sign-in / sign-up fields.
   readonly autocomplete = input<string>('');
   readonly name = input<string>('');
+  readonly min = input<string | number | null>(null);
+  readonly max = input<string | number | null>(null);
+  readonly step = input<string | number | null>(null);
 
+  protected readonly id = `sd-field-${nextFieldId++}`;
+  protected readonly hintId = `${this.id}-hint`;
+  protected readonly errorId = `${this.id}-error`;
   protected readonly internalValue = signal<string>('');
   protected readonly disabled = signal<boolean>(false);
+
+  protected readonly describedBy = computed(() => {
+    const ids: string[] = [];
+    if (this.error()) ids.push(this.errorId);
+    if (this.hint()) ids.push(this.hintId);
+    return ids.length ? ids.join(' ') : null;
+  });
 
   private onChange: (value: string) => void = () => {};
   private onTouched: () => void = () => {};
 
   constructor() {
-    // Mirror the static [value] input into internal state. writeValue (from a
-    // FormControl) is called *after* construction so it cleanly overrides.
     effect(() => {
       const v = this.value();
       if (v) this.internalValue.set(v);
@@ -67,7 +94,7 @@ export class TextInput implements ControlValueAccessor {
   }
 
   protected handleInput(event: Event): void {
-    const v = (event.target as HTMLInputElement).value;
+    const v = (event.target as HTMLInputElement | HTMLTextAreaElement).value;
     this.internalValue.set(v);
     this.onChange(v);
   }

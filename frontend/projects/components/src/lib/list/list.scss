@@ -1,0 +1,14 @@
+// `.list` / `.list--card` from docs/mocks-v2/styles/app.css.
+
+:host {
+  display: flex;
+  flex-direction: column;
+  --sd-list-pad-x: 0px;
+}
+
+:host(.list--card) {
+  background: var(--sd-surface);
+  border: 1px solid var(--sd-line);
+  border-radius: var(--sd-r-lg);
+  --sd-list-pad-x: 16px;
+}

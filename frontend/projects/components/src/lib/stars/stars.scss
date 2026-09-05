@@ -1,0 +1,42 @@
+// `.stars` from docs/mocks-v2/styles/app.css — the host is the row.
+
+:host {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  border-radius: var(--sd-r-sm);
+}
+
+sd-icon {
+  color: var(--sd-ink-faint);
+}
+
+sd-icon[filled] {
+  color: var(--sd-sun);
+}
+
+.stars__label {
+  margin-left: 6px;
+  font-size: var(--sd-fs-xs);
+  color: var(--sd-ink-soft);
+}
+
+.stars__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  color: var(--sd-ink-faint);
+}
+
+.stars__btn sd-icon[filled] {
+  color: var(--sd-sun);
+}
+
+@media (hover: hover) {
+  .stars__btn:hover {
+    background: var(--sd-surface-2);
+  }
+}

@@ -1,0 +1,42 @@
+// `.details` from docs/mocks-v2/styles/app.css — the host is the dl.
+
+:host {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  row-gap: 8px;
+}
+
+.details__label {
+  font-size: var(--sd-fs-sm);
+  color: var(--sd-ink-soft);
+}
+
+.details__value {
+  font-size: var(--sd-fs-base);
+  overflow-wrap: anywhere;
+}
+
+.details__value--faint {
+  color: var(--sd-ink-faint);
+}
+
+.details__link {
+  color: var(--sd-primary-deep);
+  font-weight: var(--sd-fw-medium);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border-radius: var(--sd-r-sm);
+  overflow-wrap: anywhere;
+}
+
+@media (min-width: 576px) {
+  :host {
+    grid-template-columns: 96px minmax(0, 1fr);
+    column-gap: 12px;
+  }
+
+  .details__label {
+    padding-top: 2px;
+  }
+}

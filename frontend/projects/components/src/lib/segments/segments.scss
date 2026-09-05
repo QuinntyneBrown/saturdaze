@@ -1,0 +1,52 @@
+@use "../styles/breakpoints" as *;
+
+// `.segments` from docs/mocks-v2/styles/app.css — the host is the track.
+
+:host {
+  display: flex;
+  padding: 4px;
+  border-radius: var(--sd-r-pill);
+  background: var(--sd-surface-2);
+  width: 100%;
+}
+
+.segments__tab {
+  flex: 1 1 0;
+  min-width: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 36px;
+  padding: 0 12px;
+  border-radius: var(--sd-r-pill);
+  font-size: 15px;
+  font-weight: var(--sd-fw-semibold);
+  color: var(--sd-ink-soft);
+  white-space: nowrap;
+  text-decoration: none;
+  transition:
+    background var(--sd-dur-fast) var(--sd-ease),
+    color var(--sd-dur-fast) var(--sd-ease);
+}
+
+.segments__tab[aria-current="page"] {
+  background: var(--sd-surface);
+  color: var(--sd-ink);
+  box-shadow: var(--sd-shadow-1);
+}
+
+@media (hover: hover) {
+  .segments__tab:not([aria-current="page"]):hover {
+    color: var(--sd-ink);
+  }
+}
+
+@include respond-to(tablet) {
+  :host {
+    max-width: 420px;
+  }
+
+  :host(.segments--narrow) {
+    max-width: 280px;
+  }
+}

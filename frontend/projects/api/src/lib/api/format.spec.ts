@@ -1,11 +1,18 @@
 import {
   MONTH_ABBR,
+  capitalise,
+  clock12,
   dateTileParts,
+  formatDuration,
   formatMinutes,
   formatWhen,
   hhmm,
+  hhmm12,
+  initialOf,
   minutesBetween,
+  numberWord,
   timeAgo,
+  timeRange,
   toMinutes,
 } from './format';
 
@@ -46,16 +53,60 @@ describe('format', () => {
     expect(timeAgo('nope', now)).toBe('');
   });
 
-  it('formats backend TimeOnly values', () => {
+  it('formats backend TimeOnly values on the 24-hour clock', () => {
     expect(hhmm('09:05:00')).toBe('9:05');
     expect(hhmm('13:30:00')).toBe('13:30');
     expect(toMinutes('01:30:00')).toBe(90);
     expect(minutesBetween('09:00:00', '10:15:00')).toBe(75);
   });
 
+  it('formats TimeOnly values on the 12-hour clock', () => {
+    expect(hhmm12('09:05:00')).toBe('9:05');
+    expect(hhmm12('12:00:00')).toBe('12:00');
+    expect(hhmm12('13:30:00')).toBe('1:30');
+    expect(hhmm12('00:15')).toBe('12:15');
+    expect(clock12('09:15:00')).toBe('9:15am');
+    expect(clock12('14:00')).toBe('2:00pm');
+    expect(clock12('12:00')).toBe('12:00pm');
+  });
+
+  it('writes a 12-hour range with the suffix only where it is needed', () => {
+    expect(timeRange('09:00:00', '10:00:00')).toBe('9:00 to 10:00');
+    expect(timeRange('17:00', '18:00')).toBe('5:00 to 6:00pm');
+    expect(timeRange('14:00', '21:00')).toBe('2:00 to 9:00pm');
+    expect(timeRange('12:00', '13:30')).toBe('12:00 to 1:30pm');
+    expect(timeRange('10:00', '14:00')).toBe('10:00am to 2:00pm');
+    expect(timeRange('11:00', '13:00')).toBe('11:00am to 1:00pm');
+  });
+
   it('formats minutes as h/m', () => {
     expect(formatMinutes(45)).toBe('45m');
     expect(formatMinutes(60)).toBe('1h');
     expect(formatMinutes(90)).toBe('1h 30m');
+  });
+
+  it('formats block durations the way the rail shows them', () => {
+    expect(formatDuration(30)).toBe('30m');
+    expect(formatDuration(60)).toBe('60m');
+    expect(formatDuration(75)).toBe('75m');
+    expect(formatDuration(90)).toBe('90m');
+    expect(formatDuration(120)).toBe('2h');
+    expect(formatDuration(150)).toBe('2h 30m');
+  });
+
+  it('spells small numbers and leaves large ones as digits', () => {
+    expect(numberWord(0)).toBe('zero');
+    expect(numberWord(1)).toBe('one');
+    expect(numberWord(12)).toBe('twelve');
+    expect(numberWord(13)).toBe('13');
+    expect(capitalise(numberWord(3))).toBe('Three');
+    expect(capitalise('')).toBe('');
+  });
+
+  it('takes an upper-case initial', () => {
+    expect(initialOf('quinn')).toBe('Q');
+    expect(initialOf('  Sara ')).toBe('S');
+    expect(initialOf('')).toBe('');
+    expect(initialOf(null)).toBe('');
   });
 });

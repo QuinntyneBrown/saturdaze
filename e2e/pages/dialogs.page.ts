@@ -1,76 +1,110 @@
-import { Locator } from "@playwright/test";
-import { BasePage } from "./base.page.js";
+import { Locator, Page } from "@playwright/test";
+import { BasePage, control } from "./base.page.js";
+import { PageSlug } from "../fixtures/routes.js";
 
 /**
- * Dialog & sheet gallery — pages/dialogs.html.
+ * Dialogs gallery — pages/dialogs.html (`/dialogs` in the app, dev only).
  *
- * The dialogs page renders every sd-dialog statically (open + static) so
- * all variants can be reviewed on one page. The POM exposes named handles
- * for each one.
+ * Thirty specimens rendered statically inline (no clicking), each wrapped in
+ * `section.specimen#dialog-<slug>` holding either a `.dialog.dialog--specimen`
+ * panel (role dialog / alertdialog) or a `.menu[role=menu]`.
  */
+export const DIALOG_SLUGS = [
+  // weekend
+  "block",
+  "block-locked",
+  "block-commitment",
+  "regenerate",
+  "regenerate-day",
+  "share",
+  "calendar",
+  "errand",
+  "errand-added",
+  // ideas
+  "suggest",
+  "submitted",
+  "lock-in",
+  // past
+  "rate",
+  "rename",
+  "repeat",
+  "remix",
+  // family
+  "member",
+  "member-add",
+  "commitment",
+  "commitment-add",
+  "home",
+  "likes",
+  "remove",
+  "remove-commitment",
+  "signout",
+  // admin
+  "approve",
+  "reject",
+  // menus
+  "more",
+  "more-menu",
+  "account",
+] as const;
+
+export type DialogSlug = (typeof DIALOG_SLUGS)[number];
+
+/** Specimens that render a `.menu` rather than a `.dialog`. */
+export const MENU_SLUGS: readonly DialogSlug[] = ["more-menu", "account"];
+
+/** Specimens whose panel is `role="alertdialog"` (destructive confirms). */
+export const ALERT_SLUGS: readonly DialogSlug[] = ["remove", "remove-commitment", "signout"];
+
 export class DialogsPage extends BasePage {
-  /**
-   * The dialogs gallery has no page chrome (no top bar / bottom nav /
-   * sections) in either world, so wait for the static dialogs themselves.
-   */
-  override async waitForComponentsReady(): Promise<void> {
-    await this.page.waitForSelector("sd-dialog[static]", { state: "attached", timeout: 8_000 });
+  readonly slug: PageSlug = "dialogs";
+
+  constructor(page: Page) {
+    super(page);
   }
 
-  galleryHeading(): Locator {
-    return this.page.locator("h1").filter({ hasText: "Dialogs & sheets" });
+  protected readyAnchor(): Locator {
+    return this.page.locator("#dialog-block .dialog");
   }
 
-  allDialogs(): Locator {
-    return this.page.locator("sd-dialog[static]");
+  get gallery(): Locator {
+    return this.main.locator(".gallery");
   }
 
-  dialog(title: string): Locator {
-    return this.page.locator(`sd-dialog[title="${title}"]`);
+  specimens(): Locator {
+    return this.gallery.locator("section.specimen");
   }
 
-  /** Named handles matching demo-labels on the gallery page. */
-  blockDetailDialog(): Locator {
-    return this.dialog("Terre Bleu Lavender Farm");
+  specimen(slug: DialogSlug): Locator {
+    return this.page.locator(`#dialog-${slug}`);
   }
 
-  regenerateDialog(): Locator {
-    return this.dialog("Regenerate the weekend?");
+  specimenLabel(slug: DialogSlug): Locator {
+    return this.specimen(slug).locator(".specimen__label");
   }
 
-  swapDialog(): Locator {
-    return this.dialog("Swap out Lavender Farm?");
+  /** The rendered panel: `.dialog` or `.menu`. */
+  panel(slug: DialogSlug): Locator {
+    return this.specimen(slug).locator(".dialog, .menu");
   }
 
-  voteDialog(): Locator {
-    return this.dialog("Who's in for La Marina?");
+  title(slug: DialogSlug): Locator {
+    return this.panel(slug).locator(".dialog__title");
   }
 
-  addFamilyMemberDialog(): Locator {
-    return this.dialog("Add a family member");
+  subtitle(slug: DialogSlug): Locator {
+    return this.panel(slug).locator(".dialog__sub");
   }
 
-  editFamilyMemberDialog(): Locator {
-    return this.dialog("Edit Mae");
+  closeButton(slug: DialogSlug): Locator {
+    return this.panel(slug).locator('button[aria-label="Close"]');
   }
 
-  addCommitmentDialog(): Locator {
-    return this.dialog("Add a commitment");
+  action(slug: DialogSlug, name: string): Locator {
+    return control(this.panel(slug).locator(".dialog__actions"), name);
   }
 
-  editCommitmentDialog(): Locator {
-    return this.dialog("Edit Swim lessons");
-  }
-
-  errandDialog(): Locator {
-    return this.dialog("Slot in an errand");
-  }
-
-  fridayPreviewDialog(): Locator {
-    return this.dialog("Your weekend is ready 🌤");
-  }
-
-  shareDialog(): Locator {
-    return this.dialog("Send Sara the plan?");
+  menuItems(slug: DialogSlug): Locator {
+    return this.panel(slug).getByRole("menuitem");
   }
 }

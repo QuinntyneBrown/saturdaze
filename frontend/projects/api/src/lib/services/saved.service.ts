@@ -3,31 +3,71 @@ import { Injectable, Signal, computed, inject, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 
 import { API_BASE_URL } from '../api/api-base-url';
-import { formatWeekendRange } from '../api/weekend-dates';
-import { AvoidItem } from '../models/avoid-item';
-import { SavedFilter } from '../models/saved-filter';
-import { SavedView } from '../models/saved-view';
-import { SavedWeekend } from '../models/saved-weekend';
+import { capitalise, numberWord } from '../api/format';
+import {
+  PAST_FILTER_ALL,
+  filterEmptyCopy,
+  matchesPastFilter,
+  pastFilterChips,
+  skippingChips,
+} from '../api/history-filters';
+import { formatWeekendEyebrow } from '../api/weekend-dates';
+import { PastView } from '../models/past-view';
+import { PastWeekendCard } from '../models/past-weekend-card';
 import { WeekendDto } from '../models/weekend.dto';
 import { WeekendSummaryDto } from '../models/weekend-summary.dto';
 import { ISavedService } from './saved.service.contract';
 
-const ALL = 'All';
-const FAVOURITES = 'Favourites';
-const THIS_YEAR = 'This year';
-const FIVE_STAR = '5★ only';
+const HISTORY_TAKE = 50;
+const SUBTITLE_EMPTY = 'Your first weekend lands here once Sunday is over.';
+const SUBTITLE_LOADING = 'Pulling your weekends.';
+const RATE_IT = 'Rate it';
 
-const FILTER_BASE: ReadonlyArray<SavedFilter> = [
-  { label: ALL, tone: 'default' },
-  { label: FAVOURITES, icon: 'heart', tone: 'accent' },
-  { label: THIS_YEAR, tone: 'default' },
-  { label: FIVE_STAR, tone: 'default' },
-];
+/** "Twelve weekends so far. Repeat what worked, remix the rest." */
+export function pastSubtitle(count: number): string {
+  if (count === 0) return SUBTITLE_EMPTY;
+  const word = count === 1 ? 'weekend' : 'weekends';
+  return `${capitalise(numberWord(count))} ${word} so far. Repeat what worked, remix the rest.`;
+}
 
-// Recent vs avoid threshold: ratings ≤ this go in "avoid"; everything
-// else (including unrated) goes in "recent". A 3-star weekend is "fine",
-// a 1- or 2-star weekend is something to skip next time.
-const AVOID_RATING_CEIL = 2;
+/**
+ * To Card.
+ */
+export function toPastCard(dto: WeekendSummaryDto): PastWeekendCard {
+  const rating = dto.rating ?? 0;
+  return {
+    id: dto.id,
+    weekendOf: dto.weekendOf,
+    eyebrow: formatWeekendEyebrow(dto.weekendOf),
+    title: titleFor(dto),
+    customTitle: dto.title && dto.title.trim().length > 0 ? dto.title : null,
+    rating,
+    ratingLabel: rating > 0 ? `${rating} of 5` : RATE_IT,
+    highlights: highlightLine(dto),
+    favourite: dto.isFavourite,
+  };
+}
+
+/**
+ * Title For — the custom name, else "First + Second", else "Weekend plan".
+ */
+function titleFor(dto: WeekendSummaryDto): string {
+  if (dto.title && dto.title.trim().length > 0) return dto.title;
+  const first = dto.activityHighlights[0];
+  const second = dto.activityHighlights[1];
+  if (first && second) return `${first} + ${second}`;
+  if (first) return first;
+  return 'Weekend plan';
+}
+
+/**
+ * Highlight Line — up to three activities, dot-separated.
+ */
+function highlightLine(dto: WeekendSummaryDto): string {
+  const items = dto.activityHighlights;
+  if (items.length === 0) return 'No activities slotted yet.';
+  return items.slice(0, 3).join(' · ');
+}
 
 @Injectable({ providedIn: 'root' })
 export class SavedService implements ISavedService {
@@ -35,33 +75,48 @@ export class SavedService implements ISavedService {
   private readonly baseUrl = inject(API_BASE_URL);
 
   private readonly _rows = signal<ReadonlyArray<WeekendSummaryDto>>([]);
-  private readonly _filter = signal<string>(ALL);
+  private readonly _loaded = signal(false);
+  private readonly _filter = signal<string>(PAST_FILTER_ALL);
 
-  private readonly _view = computed<SavedView>(() => {
+  private readonly _view = computed<PastView>(() => {
     const rows = this._rows();
     const filter = this._filter();
-    const year = String(new Date().getFullYear());
+    const filters = pastFilterChips(filter);
 
-    const matches = (r: WeekendSummaryDto): boolean => {
-      switch (filter) {
-        case FAVOURITES: return r.isFavourite;
-        case THIS_YEAR: return r.weekendOf.startsWith(year);
-        case FIVE_STAR: return r.rating === 5;
-        default: return true;
-      }
-    };
+    if (!this._loaded()) {
+      return {
+        status: 'loading',
+        subtitle: SUBTITLE_LOADING,
+        filters,
+        weekends: [],
+        skipping: [],
+        filterEmpty: null,
+      };
+    }
+    if (rows.length === 0) {
+      return {
+        status: 'empty',
+        subtitle: SUBTITLE_EMPTY,
+        filters,
+        weekends: [],
+        skipping: [],
+        filterEmpty: null,
+      };
+    }
 
-    const recent = rows
-      .filter((r) => (r.rating ?? 5) > AVOID_RATING_CEIL)
-      .filter(matches)
-      .map(toSavedWeekend);
+    const year = new Date().getFullYear();
+    const weekends = rows
+      .filter((r) => matchesPastFilter(r, filter, year))
+      .sort((a, b) => b.weekendOf.localeCompare(a.weekendOf))
+      .map(toPastCard);
 
     return {
-      heading: 'Your weekends',
-      lede: lede(rows.length, rows.filter((r) => r.isFavourite).length),
-      filters: FILTER_BASE.map((f) => (f.label === filter ? { ...f, tone: 'primary' } : f)),
-      recent,
-      avoid: avoidItems(rows),
+      status: 'ready',
+      subtitle: pastSubtitle(rows.length),
+      filters,
+      weekends,
+      skipping: skippingChips(rows),
+      filterEmpty: weekends.length === 0 ? filterEmptyCopy(filter) : null,
     };
   });
 
@@ -75,19 +130,10 @@ export class SavedService implements ISavedService {
   /**
    * List.
    *
-   * @returns {Signal<SavedView>} The result of the operation
+   * @returns {Signal<PastView>} The result of the operation
    */
-  list(): Signal<SavedView> {
+  list(): Signal<PastView> {
     return this._view;
-  }
-
-  /**
-   * Active Filter.
-   *
-   * @returns {Signal<string>} The result of the operation
-   */
-  activeFilter(): Signal<string> {
-    return this._filter.asReadonly();
   }
 
   /**
@@ -108,13 +154,15 @@ export class SavedService implements ISavedService {
     try {
       const rows = await firstValueFrom(
         this.http.get<WeekendSummaryDto[]>(
-          `${this.baseUrl}/api/weekends/history?take=20`,
+          `${this.baseUrl}/api/weekends/history?take=${HISTORY_TAKE}`,
         ),
       );
       this._rows.set(rows ?? []);
     } catch (err) {
       console.error('SavedService.load failed', err);
       this._rows.set([]);
+    } finally {
+      this._loaded.set(true);
     }
   }
 
@@ -139,7 +187,7 @@ export class SavedService implements ISavedService {
     const dto = await firstValueFrom(
       this.http.put<WeekendDto>(`${this.baseUrl}/api/weekends/${id}/rating`, { rating }),
     );
-    this.patch(id, { rating: dto?.rating ?? rating });
+    this.patch(id, { rating: dto ? dto.rating : rating });
   }
 
   /**
@@ -152,82 +200,10 @@ export class SavedService implements ISavedService {
     const dto = await firstValueFrom(
       this.http.put<WeekendDto>(`${this.baseUrl}/api/weekends/${id}/title`, { title: clean }),
     );
-    this.patch(id, { title: dto?.title ?? clean });
+    this.patch(id, { title: dto ? dto.title : clean });
   }
 
   private patch(id: string, changes: Partial<WeekendSummaryDto>): void {
     this._rows.update((rows) => rows.map((r) => (r.id === id ? { ...r, ...changes } : r)));
   }
-}
-
-/**
- * To Saved Weekend.
- */
-function toSavedWeekend(dto: WeekendSummaryDto): SavedWeekend {
-  return {
-    id: dto.id,
-    weekendOf: dto.weekendOf,
-    date: formatWeekendRange(dto.weekendOf),
-    title: titleFor(dto),
-    customTitle: dto.title && dto.title.trim().length > 0 ? dto.title : null,
-    rating: dto.rating ?? 0,
-    favourite: dto.isFavourite,
-    highlights: highlightLine(dto),
-  };
-}
-
-/**
- * Title For.
- */
-function titleFor(dto: WeekendSummaryDto): string {
-  if (dto.title && dto.title.trim().length > 0) return dto.title;
-  const first = dto.activityHighlights[0];
-  const second = dto.activityHighlights[1];
-  if (first && second) return `${first} + ${second}`;
-  if (first) return first;
-  return 'Weekend plan';
-}
-
-/**
- * Highlight Line.
- */
-function highlightLine(dto: WeekendSummaryDto): string {
-  const items = dto.activityHighlights;
-  if (items.length === 0) return 'No activities slotted yet.';
-  return items.slice(0, 3).join(' · ');
-}
-
-/**
- * Avoid Items — every activity from a weekend rated ≤ 2 stars, newest
- * visit first, deduplicated by activity (L2-027).
- */
-function avoidItems(rows: ReadonlyArray<WeekendSummaryDto>): AvoidItem[] {
-  const seen = new Set<string>();
-  const items: AvoidItem[] = [];
-  const low = rows
-    .filter((r) => r.rating !== null && r.rating <= AVOID_RATING_CEIL)
-    .sort((a, b) => b.weekendOf.localeCompare(a.weekendOf));
-  for (const r of low) {
-    const names = r.activityHighlights.length > 0 ? r.activityHighlights : [titleFor(r)];
-    for (const name of names) {
-      if (seen.has(name)) continue;
-      seen.add(name);
-      items.push({
-        title: name,
-        subtitle: `Last visit: ${formatWeekendRange(r.weekendOf)} · rated ${r.rating}★`,
-        icon: 'refresh',
-      });
-    }
-  }
-  return items;
-}
-
-/**
- * Lede.
- */
-function lede(planned: number, favourites: number): string {
-  if (planned === 0) return 'No weekends planned yet. Plan one to start building history.';
-  const weekendWord = planned === 1 ? 'weekend' : 'weekends';
-  if (favourites === 0) return `${planned} ${weekendWord} planned. Rate them to remember what worked.`;
-  return `${planned} ${weekendWord} planned · ${favourites} favourited.`;
 }

@@ -1,54 +1,73 @@
+// `.list__item` from docs/mocks-v2/styles/app.css. The host is the
+// list item; `--sd-list-pad-x` comes from `sd-list` (16px inside a card).
+
 :host {
   display: block;
 }
 
-.row {
-  display: flex;
+.list__item {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  column-gap: 12px;
   align-items: center;
-  gap: 14px;
-  padding: 14px 16px;
-  background: var(--sd-surface);
-  border: 1px solid var(--sd-line);
-  border-radius: var(--sd-r-lg);
-  color: var(--sd-ink);
+  width: 100%;
+  min-height: 56px;
+  padding: 10px var(--sd-list-pad-x, 0px);
+  border-bottom: 1px solid var(--sd-line);
+  text-align: left;
   text-decoration: none;
+  color: inherit;
   transition: background var(--sd-dur-fast) var(--sd-ease);
 }
 
-a.row:hover {
-  background: var(--sd-surface-2);
+// No leading slot content → collapse the first column.
+.list__item:not(:has(> :first-child:not(.list__text))) {
+  grid-template-columns: minmax(0, 1fr) auto;
 }
 
-.body {
-  flex: 1;
+:host(:last-child) .list__item {
+  border-bottom: 0;
+}
+
+.list__item--action {
+  cursor: pointer;
+  border-radius: var(--sd-r-sm);
+}
+
+.list__text {
   min-width: 0;
 }
 
-.title {
-  font-weight: var(--sd-fw-semibold);
+.list__title {
+  display: block;
   font-size: var(--sd-fs-base);
-  letter-spacing: -0.005em;
+  font-weight: var(--sd-fw-semibold);
+  line-height: 1.3;
+  overflow-wrap: anywhere;
 }
 
-.subtitle {
-  color: var(--sd-ink-soft);
+.list__sub {
+  display: block;
   font-size: var(--sd-fs-sm);
+  color: var(--sd-ink-soft);
   margin-top: 2px;
+  overflow-wrap: anywhere;
 }
 
-.trailing {
-  display: flex;
+.list__trail {
+  display: inline-flex;
   align-items: center;
   gap: 8px;
-  color: var(--sd-ink-soft);
+  color: var(--sd-ink-faint);
 }
 
-:host([compact]) .row {
-  padding: 10px 12px;
-  border-radius: var(--sd-r-md);
+.list__trail:not(:has(*)) {
+  display: none;
 }
 
-:host([flat]) .row {
-  border-color: transparent;
-  background: transparent;
+@media (hover: hover) {
+  .list__item--action:hover {
+    background: var(--sd-surface-2);
+    box-shadow: 0 0 0 8px var(--sd-surface-2);
+  }
 }

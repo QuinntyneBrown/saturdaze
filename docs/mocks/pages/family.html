@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+<head>
+<!-- @shell:head -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The Browns — Saturdaze</title>
+<link rel="stylesheet" href="../styles/tokens.css">
+<link rel="stylesheet" href="../styles/app.css">
+<!-- @/shell:head -->
+</head>
+<body data-page="family" data-shell="app" data-role="admin">
+<!-- @shell:topbar -->
+<header class="topbar">
+  <div class="container topbar__inner">
+    <a class="topbar__brand" href="./weekend.html"><span class="brand-mark" aria-hidden="true"></span>Saturdaze</a>
+    <nav class="topbar__nav" aria-label="Primary">
+      <a class="topbar__link" data-nav="weekend" href="./weekend.html">Weekend</a>
+      <a class="topbar__link" data-nav="ideas" href="./ideas.html">Ideas</a>
+      <a class="topbar__link" data-nav="past" href="./past.html">Past</a>
+      <a class="topbar__link" data-nav="family" href="./family.html" aria-current="page">Family</a>
+    </nav>
+    <div class="topbar__actions">
+      <a class="avatar avatar--q avatar--btn" href="./dialogs.html#dialog-account" aria-label="Account menu">Q</a>
+    </div>
+  </div>
+</header>
+<!-- @/shell:topbar -->
+<main class="app-main container" id="main">
+  <header class="page-header">
+    <div class="page-header__text">
+      <h1 class="page-header__title">The Browns</h1>
+      <p class="page-header__subtitle">Port Credit, Mississauga. Every weekend is planned around this.</p>
+    </div>
+  </header>
+
+  <div class="family-grid">
+    <div class="family-grid__col">
+
+      <!-- Who's in -->
+      <section class="section" aria-labelledby="s-members">
+        <div class="section-header">
+          <div class="section-header__text">
+            <h2 class="section-header__title" id="s-members">Who's in</h2>
+            <p class="section-header__sub">Ages shape the picks. Tap a person to edit.</p>
+          </div>
+        </div>
+        <ul class="list list--card">
+          <li><a class="list__item list__item--action" href="./dialogs.html#dialog-member">
+            <span class="avatar avatar--lg avatar--q" aria-hidden="true">Q</span>
+            <span class="list__text"><span class="list__title">Quinn</span><span class="list__sub">Parent · 38</span></span>
+            <span class="list__trail"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron_right"/></svg></span>
+          </a></li>
+          <li><a class="list__item list__item--action" href="./dialogs.html#dialog-member">
+            <span class="avatar avatar--lg avatar--s" aria-hidden="true">S</span>
+            <span class="list__text"><span class="list__title">Sara</span><span class="list__sub">Parent · 36</span></span>
+            <span class="list__trail"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron_right"/></svg></span>
+          </a></li>
+          <li><a class="list__item list__item--action" href="./dialogs.html#dialog-member">
+            <span class="avatar avatar--lg avatar--e" aria-hidden="true">E</span>
+            <span class="list__text"><span class="list__title">Eli</span><span class="list__sub">Kid · 9</span></span>
+            <span class="list__trail"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron_right"/></svg></span>
+          </a></li>
+          <li><a class="list__item list__item--action" href="./dialogs.html#dialog-member">
+            <span class="avatar avatar--lg avatar--m" aria-hidden="true">M</span>
+            <span class="list__text"><span class="list__title">Mae</span><span class="list__sub">Kid · 5</span></span>
+            <span class="list__trail"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron_right"/></svg></span>
+          </a></li>
+        </ul>
+        <a class="ghost-row" href="./dialogs.html#dialog-member-add"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg>Add a family member</a>
+      </section>
+
+      <!-- Commitments -->
+      <section class="section" aria-labelledby="s-commitments">
+        <div class="section-header">
+          <div class="section-header__text">
+            <h2 class="section-header__title" id="s-commitments">Locked in every weekend</h2>
+            <p class="section-header__sub">Anchors. The plan goes around them.</p>
+          </div>
+        </div>
+        <ul class="list list--card">
+          <li><a class="list__item list__item--action" href="./dialogs.html#dialog-commitment">
+            <span class="disc disc--accent"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg></span>
+            <span class="list__text"><span class="list__title">Swim lessons</span><span class="list__sub">Saturdays · 9:00 to 10:00</span></span>
+            <span class="list__trail"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron_right"/></svg></span>
+          </a></li>
+          <li><a class="list__item list__item--action" href="./dialogs.html#dialog-commitment">
+            <span class="disc disc--accent"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg></span>
+            <span class="list__text"><span class="list__title">Church</span><span class="list__sub">Sundays · 10:30 to 11:45</span></span>
+            <span class="list__trail"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron_right"/></svg></span>
+          </a></li>
+          <li><a class="list__item list__item--action" href="./dialogs.html#dialog-commitment">
+            <span class="disc disc--accent"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg></span>
+            <span class="list__text"><span class="list__title">Workout window</span><span class="list__sub">Saturdays · 5:00 to 6:00pm</span></span>
+            <span class="list__trail"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron_right"/></svg></span>
+          </a></li>
+        </ul>
+        <a class="ghost-row" href="./dialogs.html#dialog-commitment-add"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg>Add a commitment</a>
+      </section>
+
+    </div>
+    <div class="family-grid__col">
+
+      <!-- Home -->
+      <section class="section" aria-labelledby="s-home">
+        <div class="section-header">
+          <div class="section-header__text">
+            <h2 class="section-header__title" id="s-home">Home</h2>
+          </div>
+          <a class="btn btn--quiet btn--sm section-header__action" href="./dialogs.html#dialog-home"><svg class="icon" aria-hidden="true"><use href="#i-edit"/></svg>Edit</a>
+        </div>
+        <ul class="list list--card">
+          <li class="list__item">
+            <span class="disc"><svg class="icon" aria-hidden="true"><use href="#i-pin"/></svg></span>
+            <span class="list__text"><span class="list__title">Port Credit, Mississauga</span><span class="list__sub">Weather and drive times start here</span></span>
+          </li>
+        </ul>
+      </section>
+
+      <!-- Likes and dislikes -->
+      <section class="section" aria-labelledby="s-likes">
+        <div class="section-header">
+          <div class="section-header__text">
+            <h2 class="section-header__title" id="s-likes">Likes and dislikes</h2>
+            <p class="section-header__sub">Liked tags get a boost. Disliked ones are left out.</p>
+          </div>
+          <a class="btn btn--quiet btn--sm section-header__action" href="./dialogs.html#dialog-likes"><svg class="icon" aria-hidden="true"><use href="#i-edit"/></svg>Edit</a>
+        </div>
+        <div class="cluster">
+          <span class="chip chip--leaf"><svg class="icon" aria-hidden="true"><use href="#i-heart"/></svg>Parks</span>
+          <span class="chip chip--leaf"><svg class="icon" aria-hidden="true"><use href="#i-heart"/></svg>Short hikes</span>
+          <span class="chip chip--leaf"><svg class="icon" aria-hidden="true"><use href="#i-heart"/></svg>Zoo</span>
+          <span class="chip chip--leaf"><svg class="icon" aria-hidden="true"><use href="#i-heart"/></svg>Rec Room</span>
+          <span class="chip chip--leaf"><svg class="icon" aria-hidden="true"><use href="#i-heart"/></svg>Lavender</span>
+          <span class="chip chip--leaf"><svg class="icon" aria-hidden="true"><use href="#i-heart"/></svg>Live theatre</span>
+          <span class="chip chip--warn"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg>Camping</span>
+          <span class="chip chip--warn"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg>Drives over 60 min</span>
+        </div>
+      </section>
+
+      <!-- Preferences -->
+      <section class="section" aria-labelledby="s-prefs">
+        <div class="section-header">
+          <div class="section-header__text">
+            <h2 class="section-header__title" id="s-prefs">Preferences</h2>
+          </div>
+        </div>
+        <ul class="list list--card">
+          <li class="list__item">
+            <span class="list__text"><span class="list__title">Budget matters</span><span class="list__sub">Prefer free and low-cost picks</span></span>
+            <label class="toggle"><input class="toggle__input" type="checkbox" role="switch"><span class="toggle__track"></span><span class="visually-hidden">Budget matters</span></label>
+          </li>
+          <li class="list__item">
+            <span class="list__text"><span class="list__title">Try something new each weekend</span><span class="list__sub">One first-time activity per weekend</span></span>
+            <label class="toggle"><input class="toggle__input" type="checkbox" role="switch"><span class="toggle__track"></span><span class="visually-hidden">Try something new each weekend</span></label>
+          </li>
+          <li class="list__item">
+            <span class="list__text"><span class="list__title">Friday preview email</span><span class="list__sub">A draft in your inbox at 6pm Friday</span></span>
+            <label class="toggle"><input class="toggle__input" type="checkbox" role="switch" checked><span class="toggle__track"></span><span class="visually-hidden">Friday preview email</span></label>
+          </li>
+        </ul>
+      </section>
+
+      <!-- Admin (role-gated) -->
+      <section class="section admin-only" aria-labelledby="s-admin">
+        <div class="section-header">
+          <div class="section-header__text">
+            <h2 class="section-header__title" id="s-admin">Admin</h2>
+          </div>
+        </div>
+        <ul class="list list--card">
+          <li><a class="list__item list__item--action" href="./review-submissions.html">
+            <span class="disc disc--sun"><svg class="icon" aria-hidden="true"><use href="#i-ticket"/></svg></span>
+            <span class="list__text"><span class="list__title">Review submissions</span><span class="list__sub">3 waiting</span></span>
+            <span class="list__trail"><span class="chip chip--sun chip--count">3</span><svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron_right"/></svg></span>
+          </a></li>
+        </ul>
+      </section>
+
+      <!-- Account -->
+      <section class="section" aria-labelledby="s-account">
+        <div class="section-header">
+          <div class="section-header__text">
+            <h2 class="section-header__title" id="s-account">Account</h2>
+          </div>
+        </div>
+        <div class="card card--sunk account-card">
+          <span class="avatar avatar--lg avatar--q" aria-hidden="true">Q</span>
+          <div class="account-card__text">
+            <p class="list__title truncate">quinntynebrown@gmail.com</p>
+            <p class="list__sub">Signed in since May 2026</p>
+          </div>
+          <a class="btn btn--quiet btn--warn-text" href="./dialogs.html#dialog-signout"><svg class="icon" aria-hidden="true"><use href="#i-sign_out"/></svg>Sign out</a>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</main>
+<!-- @shell:bottomnav -->
+<nav class="bottom-nav" aria-label="Primary">
+  <a class="bottom-nav__item" data-nav="weekend" href="./weekend.html"><span class="bottom-nav__icon"><svg class="icon" aria-hidden="true"><use href="#i-home"/></svg></span>Weekend</a>
+  <a class="bottom-nav__item" data-nav="ideas" href="./ideas.html"><span class="bottom-nav__icon"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg></span>Ideas</a>
+  <a class="bottom-nav__item" data-nav="past" href="./past.html"><span class="bottom-nav__icon"><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg></span>Past</a>
+  <a class="bottom-nav__item" data-nav="family" href="./family.html" aria-current="page"><span class="bottom-nav__icon"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg></span>Family</a>
+</nav>
+<!-- @/shell:bottomnav -->
+<script src="../app.js"></script>
+</body>
+</html>

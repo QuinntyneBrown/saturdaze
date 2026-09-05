@@ -1,24 +1,27 @@
+// `.avatar` from docs/mocks-v2/styles/app.css — the host is the avatar.
+// Sizes: sm 24 · md 28 · lg 32 (default) · xl 36.
+
 :host {
-  --_size: 36px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: var(--_size);
-  height: var(--_size);
+  flex: none;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
+  font-size: 13px;
+  font-weight: var(--sd-fw-bold);
+  line-height: 1;
   background: var(--sd-surface-2);
-  color: var(--sd-ink);
-  font-weight: var(--sd-fw-semibold);
-  font-size: calc(var(--_size) * 0.4);
-  letter-spacing: -0.02em;
+  color: var(--sd-ink-soft);
 }
 
-:host([size="sm"]) { --_size: 28px; }
-:host([size="lg"]) { --_size: 48px; }
-:host([size="xl"]) { --_size: 72px; font-size: 28px; }
+:host(.avatar--sm) { width: 24px; height: 24px; font-size: 11px; }
+:host(.avatar--md) { width: 28px; height: 28px; font-size: 12px; }
+:host(.avatar--xl) { width: 36px; height: 36px; font-size: 14px; }
 
-:host([tone="leaf"])    { background: var(--sd-accent-soft);  color: var(--sd-accent); }
-:host([tone="sky"])     { background: var(--sd-sky-soft); color: var(--sd-sky-ink); }
-:host([tone="sun"])     { background: var(--sd-sun-soft); color: var(--sd-sun-ink); }
-:host([tone="primary"]) { background: var(--sd-primary-soft); color: var(--sd-primary); }
-:host([tone="indoor"])  { background: var(--sd-indoor-soft); color: var(--sd-indoor-ink); }
+:host(.avatar--q) { background: var(--sd-primary-soft); color: var(--sd-primary-deep); }
+:host(.avatar--s) { background: var(--sd-leaf-soft); color: var(--sd-leaf-ink); }
+:host(.avatar--e) { background: var(--sd-sky-soft); color: var(--sd-sky-ink); }
+:host(.avatar--m) { background: var(--sd-sun-soft); color: var(--sd-sun-ink); }
+:host(.avatar--indoor) { background: var(--sd-indoor-soft); color: var(--sd-indoor-ink); }

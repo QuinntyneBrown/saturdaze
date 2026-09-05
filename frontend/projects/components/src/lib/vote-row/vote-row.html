@@ -1,24 +1,28 @@
-<div class="row">
-  <sd-avatar [name]="name()" [tone]="tone()" size="sm" />
-  <span class="name">{{ name() }}</span>
-  <div class="buttons">
-    <button
-      type="button"
-      class="up"
-      [class.active]="vote() === 'up'"
-      aria-label="Yes"
-      (click)="voteChange.emit('up')"
-    >
-      <sd-icon name="thumbs_up" [size]="16" />
-    </button>
-    <button
-      type="button"
-      class="down"
-      [class.active]="vote() === 'down'"
-      aria-label="No"
-      (click)="voteChange.emit('down')"
-    >
-      <sd-icon name="thumbs_down" [size]="16" />
-    </button>
+@for (cell of votes(); track cell.name; let i = $index) {
+  <div class="vote-row__cell">
+    <sd-avatar [name]="cell.name" [tone]="cell.tone" size="md" />
+    <span class="vote-row__name">{{ cell.name }}</span>
+    <div class="vote-row__choice">
+      <button
+        class="vote-row__btn vote-row__btn--up"
+        type="button"
+        [attr.aria-pressed]="cell.vote === 'up'"
+        [attr.aria-label]="cell.name + ' votes yes'"
+        [disabled]="disabled()"
+        (click)="cast(i, 'up')"
+      >
+        <sd-icon name="thumbs_up" [size]="14" />
+      </button>
+      <button
+        class="vote-row__btn vote-row__btn--down"
+        type="button"
+        [attr.aria-pressed]="cell.vote === 'down'"
+        [attr.aria-label]="cell.name + ' votes no'"
+        [disabled]="disabled()"
+        (click)="cast(i, 'down')"
+      >
+        <sd-icon name="thumbs_down" [size]="14" />
+      </button>
+    </div>
   </div>
-</div>
+}

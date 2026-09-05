@@ -1,0 +1,12 @@
+<label class="check">
+  <input
+    class="check__input"
+    type="checkbox"
+    [attr.name]="name() || null"
+    [checked]="checked()"
+    [disabled]="disabled()"
+    [attr.aria-required]="required() ? 'true' : null"
+    (change)="handleChange($event)"
+  />
+  <span class="check__label"><ng-content /></span>
+</label>

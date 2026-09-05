@@ -1,206 +1,168 @@
 import { vi } from 'vitest';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { provideRouter } from '@angular/router';
-import { ActivatedRoute, convertToParamMap } from '@angular/router';
+import { ActivatedRoute, convertToParamMap, provideRouter } from '@angular/router';
 import { of } from 'rxjs';
+
 import { SESSION_STORE } from 'api';
+
 import { ResetPasswordPage } from './reset-password.page';
 
 describe('ResetPasswordPage', () => {
-  let component: ResetPasswordPage;
   let fixture: ComponentFixture<ResetPasswordPage>;
-  let mockSESSION_STORE: any;
+  let component: ResetPasswordPage;
+  let host: HTMLElement;
+  let session: { forgotPassword: ReturnType<typeof vi.fn>; resetPassword: ReturnType<typeof vi.fn> };
 
-  beforeEach(async () => {
-    mockSESSION_STORE = {
-      resetPassword: vi.fn(() => Promise.resolve(undefined)),
-    };
-
+  async function mount(query: Record<string, string> = {}): Promise<void> {
+    const queryParamMap = convertToParamMap(query);
     await TestBed.configureTestingModule({
       imports: [ResetPasswordPage],
       providers: [
-        provideRouter([{ path: '**', children: [] }]),
-        { provide: ActivatedRoute, useValue: {
-          snapshot: { paramMap: convertToParamMap({}), queryParamMap: convertToParamMap({}), params: {}, queryParams: {}, data: {} },
-          paramMap: of(convertToParamMap({})), queryParamMap: of(convertToParamMap({})),
-          params: of({}), queryParams: of({}), data: of({}),
-        } },
-        { provide: SESSION_STORE, useValue: mockSESSION_STORE },
+        provideRouter([]),
+        { provide: SESSION_STORE, useValue: session },
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            snapshot: { paramMap: convertToParamMap({}), queryParamMap, params: {}, queryParams: query, data: {}, fragment: null },
+            paramMap: of(convertToParamMap({})),
+            queryParamMap: of(queryParamMap),
+            params: of({}),
+            queryParams: of(query),
+            data: of({}),
+            fragment: of(null),
+          },
+        },
       ],
     }).compileComponents();
-
     fixture = TestBed.createComponent(ResetPasswordPage);
     component = fixture.componentInstance;
+    fixture.detectChanges();
+    host = fixture.nativeElement as HTMLElement;
+  }
+
+  beforeEach(() => {
+    session = { forgotPassword: vi.fn(async () => undefined), resetPassword: vi.fn(async () => undefined) };
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+  const title = (): string | null => host.querySelector('sd-auth-card')?.getAttribute('title') ?? null;
 
-  it('should render component', () => {
-    expect(fixture.nativeElement).toBeTruthy();
-  });
+  it('starts by asking for the email, or for a new password when a token is present', async () => {
+    await mount();
+    expect(title()).toBe('Reset your password');
+    expect(host.querySelector('a[href="/sign-in"]')?.textContent?.trim()).toBe('Back to sign in');
 
-  it('should render with stubbed children', async () => {
     TestBed.resetTestingModule();
-    TestBed.configureTestingModule({
-      imports: [ResetPasswordPage],
-      providers: [
-        provideRouter([{ path: '**', children: [] }]),
-        { provide: ActivatedRoute, useValue: {
-          snapshot: { paramMap: convertToParamMap({}), queryParamMap: convertToParamMap({}), params: {}, queryParams: {}, data: {} },
-          paramMap: of(convertToParamMap({})), queryParamMap: of(convertToParamMap({})),
-          params: of({}), queryParams: of({}), data: of({}),
-        } },
-        { provide: SESSION_STORE, useValue: mockSESSION_STORE },
-      ],
-    });
-    TestBed.overrideComponent(ResetPasswordPage, {
-      add: { schemas: [NO_ERRORS_SCHEMA] },
-    });
-    await TestBed.compileComponents();
-    const stubbedFixture = TestBed.createComponent(ResetPasswordPage);
-    stubbedFixture.detectChanges();
-    expect(stubbedFixture.nativeElement).toBeTruthy();
+    await mount({ token: 'abc' });
+    expect(title()).toBe('Choose a new password');
   });
 
-  it('should call submit without throwing', async () => {
-    await expect(Promise.resolve(component['submit']()).then(() => true, () => true)).resolves.toBe(true);
+  it('renders each of the five states for the design harness', async () => {
+    const titles: Record<string, string> = {
+      request: 'Reset your password',
+      sent: 'Check your email',
+      new: 'Choose a new password',
+      done: 'Password updated',
+      expired: 'This link has expired',
+    };
+    for (const [state, expected] of Object.entries(titles)) {
+      TestBed.resetTestingModule();
+      await mount({ state });
+      expect(title(), state).toBe(expected);
+    }
+    expect(host.querySelector('sd-disc[slot="disc"]')?.getAttribute('icon')).toBe('key');
   });
 
-  describe('with query params', () => {
-    it('should create under seeded query params', async () => {
-      TestBed.resetTestingModule();
-      await TestBed.configureTestingModule({
-        imports: [ResetPasswordPage],
-      providers: [
-        provideRouter([{ path: '**', children: [] }]),
-        { provide: ActivatedRoute, useValue: {
-          snapshot: { paramMap: convertToParamMap({}), queryParamMap: convertToParamMap({ token: 'test-value' }), params: {}, queryParams: { token: 'test-value' }, data: {} },
-          paramMap: of(convertToParamMap({})), queryParamMap: of(convertToParamMap({ token: 'test-value' })),
-          params: of({}), queryParams: of({ token: 'test-value' }), data: of({}),
-        } },
-        { provide: SESSION_STORE, useValue: mockSESSION_STORE },
-      ],
-      }).compileComponents();
-      fixture = TestBed.createComponent(ResetPasswordPage);
-      component = fixture.componentInstance;
-      expect(component).toBeTruthy();
-    });
+  it('prefills ?email= and masks it on the sent card', async () => {
+    await mount({ email: 'quinntynebrown@gmail.com' });
+    expect(component['requestForm'].controls.email.value).toBe('quinntynebrown@gmail.com');
+    expect(component['maskedEmail']()).toBe('q••••••••••••n@gmail.com');
+  });
 
-    it('should compute  from token under seeded query params', async () => {
-      TestBed.resetTestingModule();
-      await TestBed.configureTestingModule({
-        imports: [ResetPasswordPage],
-      providers: [
-        provideRouter([{ path: '**', children: [] }]),
-        { provide: ActivatedRoute, useValue: {
-          snapshot: { paramMap: convertToParamMap({}), queryParamMap: convertToParamMap({ token: '' }), params: {}, queryParams: { token: '' }, data: {} },
-          paramMap: of(convertToParamMap({})), queryParamMap: of(convertToParamMap({ token: '' })),
-          params: of({}), queryParams: of({ token: '' }), data: of({}),
-        } },
-        { provide: SESSION_STORE, useValue: mockSESSION_STORE },
-      ],
-      }).compileComponents();
-      fixture = TestBed.createComponent(ResetPasswordPage);
-      component = fixture.componentInstance;
-      expect(component['token']()).toBe('');
-    });
+  it('sends the link and shows the sent card whatever the API says', async () => {
+    await mount();
+    await component['sendLink']();
+    expect(session.forgotPassword).not.toHaveBeenCalled();
 
-    it('should compute  from token under seeded query params (case 2)', async () => {
-      TestBed.resetTestingModule();
-      await TestBed.configureTestingModule({
-        imports: [ResetPasswordPage],
-      providers: [
-        provideRouter([{ path: '**', children: [] }]),
-        { provide: ActivatedRoute, useValue: {
-          snapshot: { paramMap: convertToParamMap({}), queryParamMap: convertToParamMap({}), params: {}, queryParams: {}, data: {} },
-          paramMap: of(convertToParamMap({})), queryParamMap: of(convertToParamMap({})),
-          params: of({}), queryParams: of({}), data: of({}),
-        } },
-        { provide: SESSION_STORE, useValue: mockSESSION_STORE },
-      ],
-      }).compileComponents();
-      fixture = TestBed.createComponent(ResetPasswordPage);
-      component = fixture.componentInstance;
-      expect(component['token']()).toBe('');
-    });
+    component['requestForm'].setValue({ email: 'quinn@example.com' });
+    await component['sendLink']();
+    fixture.detectChanges();
+    expect(session.forgotPassword).toHaveBeenCalledWith({ email: 'quinn@example.com' });
+    expect(component['state']()).toBe('sent');
+    expect(host.querySelector('.email-chip')?.textContent?.trim()).toBe('q•••n@example.com');
 
-    it('should compute test from token under seeded query params', async () => {
-      TestBed.resetTestingModule();
-      await TestBed.configureTestingModule({
-        imports: [ResetPasswordPage],
-      providers: [
-        provideRouter([{ path: '**', children: [] }]),
-        { provide: ActivatedRoute, useValue: {
-          snapshot: { paramMap: convertToParamMap({}), queryParamMap: convertToParamMap({ token: 'test' }), params: {}, queryParams: { token: 'test' }, data: {} },
-          paramMap: of(convertToParamMap({})), queryParamMap: of(convertToParamMap({ token: 'test' })),
-          params: of({}), queryParams: of({ token: 'test' }), data: of({}),
-        } },
-        { provide: SESSION_STORE, useValue: mockSESSION_STORE },
-      ],
-      }).compileComponents();
-      fixture = TestBed.createComponent(ResetPasswordPage);
-      component = fixture.componentInstance;
-      expect(component['token']()).toBe('test');
-    });
+    TestBed.resetTestingModule();
+    await mount();
+    session.forgotPassword.mockRejectedValueOnce(new Error('404'));
+    component['requestForm'].setValue({ email: 'nobody@example.com' });
+    await component['sendLink']();
+    expect(component['state']()).toBe('sent');
+  });
 
-    it('should compute true from tokenMissing under seeded query params', async () => {
-      TestBed.resetTestingModule();
-      await TestBed.configureTestingModule({
-        imports: [ResetPasswordPage],
-      providers: [
-        provideRouter([{ path: '**', children: [] }]),
-        { provide: ActivatedRoute, useValue: {
-          snapshot: { paramMap: convertToParamMap({}), queryParamMap: convertToParamMap({ token: '' }), params: {}, queryParams: { token: '' }, data: {} },
-          paramMap: of(convertToParamMap({})), queryParamMap: of(convertToParamMap({ token: '' })),
-          params: of({}), queryParams: of({ token: '' }), data: of({}),
-        } },
-        { provide: SESSION_STORE, useValue: mockSESSION_STORE },
-      ],
-      }).compileComponents();
-      fixture = TestBed.createComponent(ResetPasswordPage);
-      component = fixture.componentInstance;
-      expect(component['tokenMissing']()).toBe(true);
-    });
+  it('resends once and then rests for a minute', async () => {
+    vi.useFakeTimers();
+    try {
+      await mount({ state: 'sent', email: 'quinn@example.com' });
+      await component['resend']();
+      fixture.detectChanges();
+      expect(session.forgotPassword).toHaveBeenCalledWith({ email: 'quinn@example.com' });
+      expect(component['resent']()).toBe(true);
+      expect(host.querySelector('sd-button[variant="quiet"]')?.textContent).toContain('Sent');
+      expect(host.querySelector('sd-button[variant="quiet"]')?.hasAttribute('disabled')).toBe(true);
 
-    it('should compute true from tokenMissing under seeded query params (case 2)', async () => {
-      TestBed.resetTestingModule();
-      await TestBed.configureTestingModule({
-        imports: [ResetPasswordPage],
-      providers: [
-        provideRouter([{ path: '**', children: [] }]),
-        { provide: ActivatedRoute, useValue: {
-          snapshot: { paramMap: convertToParamMap({}), queryParamMap: convertToParamMap({}), params: {}, queryParams: {}, data: {} },
-          paramMap: of(convertToParamMap({})), queryParamMap: of(convertToParamMap({})),
-          params: of({}), queryParams: of({}), data: of({}),
-        } },
-        { provide: SESSION_STORE, useValue: mockSESSION_STORE },
-      ],
-      }).compileComponents();
-      fixture = TestBed.createComponent(ResetPasswordPage);
-      component = fixture.componentInstance;
-      expect(component['tokenMissing']()).toBe(true);
-    });
+      await component['resend']();
+      expect(session.forgotPassword).toHaveBeenCalledTimes(1);
 
-    it('should compute false from tokenMissing under seeded query params', async () => {
-      TestBed.resetTestingModule();
-      await TestBed.configureTestingModule({
-        imports: [ResetPasswordPage],
-      providers: [
-        provideRouter([{ path: '**', children: [] }]),
-        { provide: ActivatedRoute, useValue: {
-          snapshot: { paramMap: convertToParamMap({}), queryParamMap: convertToParamMap({ token: 'x' }), params: {}, queryParams: { token: 'x' }, data: {} },
-          paramMap: of(convertToParamMap({})), queryParamMap: of(convertToParamMap({ token: 'x' })),
-          params: of({}), queryParams: of({ token: 'x' }), data: of({}),
-        } },
-        { provide: SESSION_STORE, useValue: mockSESSION_STORE },
-      ],
-      }).compileComponents();
-      fixture = TestBed.createComponent(ResetPasswordPage);
-      component = fixture.componentInstance;
-      expect(component['tokenMissing']()).toBe(false);
-    });
+      vi.advanceTimersByTime(60_000);
+      fixture.detectChanges();
+      expect(component['resent']()).toBe(false);
+      expect(host.querySelector('sd-button[variant="quiet"]')?.textContent).toContain('Resend');
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('refuses mismatched passwords with an inline banner', async () => {
+    await mount({ token: 'abc' });
+    component['newForm'].setValue({ password: 'Lavender2026!', confirm: 'Lavender2025!' });
+    await component['savePassword']();
+    fixture.detectChanges();
+    expect(session.resetPassword).not.toHaveBeenCalled();
+    expect(host.querySelector('sd-banner')?.textContent?.trim()).toBe('Those passwords do not match.');
+    expect(host.querySelectorAll('sd-text-input')[1]?.hasAttribute('invalid')).toBe(true);
+  });
+
+  it('saves the new password with the token and shows the done card', async () => {
+    await mount({ token: 'abc' });
+    component['newForm'].setValue({ password: 'Lavender2026!', confirm: 'Lavender2026!' });
+    fixture.detectChanges();
+    expect(host.querySelector('sd-strength')?.getAttribute('level')).toBe('strong');
+    await component['savePassword']();
+    fixture.detectChanges();
+    expect(session.resetPassword).toHaveBeenCalledWith({ token: 'abc', password: 'Lavender2026!' });
+    expect(title()).toBe('Password updated');
+    expect(host.querySelector('sd-button a')?.getAttribute('href')).toBe('/sign-in');
+  });
+
+  it('moves to the expired card on a dead token, and can start over', async () => {
+    await mount({ token: 'old' });
+    session.resetPassword.mockRejectedValueOnce({ code: 'token_expired', message: '' });
+    component['newForm'].setValue({ password: 'Lavender2026!', confirm: 'Lavender2026!' });
+    await component['savePassword']();
+    fixture.detectChanges();
+    expect(title()).toBe('This link has expired');
+
+    (host.querySelector('sd-button[variant="primary"] button') as HTMLButtonElement).click();
+    fixture.detectChanges();
+    expect(title()).toBe('Reset your password');
+  });
+
+  it('keeps other failures inline on the new-password card', async () => {
+    await mount({ token: 'abc' });
+    session.resetPassword.mockRejectedValueOnce({ code: 'weak_password', message: 'Pick a stronger one.' });
+    component['newForm'].setValue({ password: 'password1', confirm: 'password1' });
+    await component['savePassword']();
+    fixture.detectChanges();
+    expect(component['state']()).toBe('new');
+    expect(host.querySelector('sd-banner')?.textContent?.trim()).toBe('Pick a stronger one.');
   });
 });

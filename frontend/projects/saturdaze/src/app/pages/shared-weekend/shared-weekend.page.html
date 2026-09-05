@@ -1,0 +1,63 @@
+@switch (state()) {
+  @case ('loading') {
+    <sd-page-header title="A shared weekend" subtitle="Opening the plan." />
+    <div class="sd-grid-days" aria-busy="true">
+      @for (day of days; track day) {
+        <sd-day [title]="day" [actions]="false">
+          @for (i of skeleton; track i) {
+            <sd-skeleton-row />
+          }
+        </sd-day>
+      }
+    </div>
+  }
+  @case ('missing') {
+    <sd-page-header title="This link has expired" subtitle="Shared weekends stay open for seven days." />
+    <div class="sd-narrow">
+      <sd-empty warm icon="share" tone="primary" title="Plan one of your own" body="Saturdaze drafts Saturday and Sunday around your family, the weather and the drive.">
+        <sd-button slot="cta" variant="primary" size="lg" href="/create-account">
+          <sd-icon name="sparkle" />
+          Create your account
+        </sd-button>
+      </sd-empty>
+    </div>
+  }
+  @case ('ready') {
+    @if (weekend(); as plan) {
+      <sd-page-header title="A shared weekend" [subtitle]="plan.subtitle" />
+      <sd-banner class="note" tone="info" icon="share">
+        Shared with you, read-only. Create an account to plan your own.
+      </sd-banner>
+      <div class="sd-grid-days">
+        @for (day of plan.days; track day.day) {
+          <sd-day [title]="day.day" [meta]="day.meta" [weather]="dayWeather(day)" [locked]="day.locked" [actions]="false">
+            @for (block of day.blocks; track block.id) {
+              <sd-block
+                [time]="block.time"
+                [duration]="block.duration"
+                [icon]="block.icon"
+                [title]="block.title"
+                [subtitle]="block.subtitle ?? ''"
+                [commitment]="block.commitment"
+                [locked]="block.locked"
+                [drive]="block.drive"
+                [errand]="block.errand"
+                [done]="block.done"
+                readonly
+              >
+                @for (chip of block.chips; track chip.label) {
+                  <sd-chip slot="chips" [tone]="chipTone(chip.tone)">
+                    @if (chip.icon) {
+                      <sd-icon [name]="chip.icon" [size]="13" [stroke]="2" />
+                    }
+                    {{ chip.label }}
+                  </sd-chip>
+                }
+              </sd-block>
+            }
+          </sd-day>
+        }
+      </div>
+    }
+  }
+}

@@ -1,0 +1,59 @@
+<sd-filters class="filters" label="Filters">
+  @for (chip of view().dayChips; track chip.label) {
+    <sd-filter-chip [tone]="filterTone(chip.tone)" [pressed]="chip.active" (pressedChange)="setDay(chip)">{{ chip.label }}</sd-filter-chip>
+  }
+  <span class="sd-vdivider" aria-hidden="true"></span>
+  @for (chip of view().slotChips; track chip.label) {
+    <sd-filter-chip [tone]="filterTone(chip.tone)" [pressed]="chip.active" (pressedChange)="setSlot(chip)">{{ chip.label }}</sd-filter-chip>
+  }
+  <span class="sd-vdivider" aria-hidden="true"></span>
+  @for (chip of view().extraChips; track chip.label) {
+    <sd-filter-chip [tone]="filterTone(chip.tone)" [pressed]="chip.active" (pressedChange)="setExtra(chip)">
+      @if (chip.icon) {
+        <sd-icon [name]="chip.icon" [size]="14" [stroke]="2" />
+      }
+      {{ chip.label }}
+    </sd-filter-chip>
+  }
+</sd-filters>
+
+@if (error()) {
+  <sd-banner class="error" tone="warn" role="alert" icon="close">{{ error() }}</sd-banner>
+}
+
+@if (!view().sections.length) {
+  <sd-status-row icon="fork">Finding places to eat near your weekend.</sd-status-row>
+}
+
+@for (section of view().sections; track section.title) {
+  <sd-section class="section" [title]="section.title" [subtitle]="section.subtitle">
+    <div class="sd-grid-cards sd-grid-cards--2">
+      @for (card of section.picks; track card.id) {
+        <sd-food-card
+          [class.card--span]="card.topPick && !section.lockedId"
+          [title]="card.name"
+          [meta]="card.meta"
+          [tone]="card.topPick ? 'sun' : 'default'"
+          [topPick]="card.topPick"
+          [locked]="card.locked"
+          [lockedLabel]="card.lockedLabel ?? 'Locked'"
+          [dimmed]="card.dimmed"
+          [menuUrl]="card.menuUrl ?? ''"
+          [votes]="cells(card)"
+          [votesDisabled]="card.votesDisabled"
+          (voteChange)="vote(card, $event)"
+          (lockIn)="lockIn(section, card)"
+        >
+          @for (chip of card.chips; track chip.label) {
+            <sd-chip slot="chips" [tone]="chipTone(chip.tone)">
+              @if (chip.icon) {
+                <sd-icon [name]="chip.icon" [size]="13" [stroke]="2" />
+              }
+              {{ chip.label }}
+            </sd-chip>
+          }
+        </sd-food-card>
+      }
+    </div>
+  </sd-section>
+}

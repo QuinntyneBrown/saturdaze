@@ -1,36 +1,32 @@
+// `.card` from docs/mocks-v2/styles/app.css — the host is the card.
+
 :host {
-  display: block;
-  background: var(--sd-surface);
-  border-radius: var(--sd-r-lg);
-  border: 1px solid var(--sd-line);
-  overflow: hidden;
-}
-
-.pad {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
   padding: 16px;
-}
-
-:host([padding="sm"]) .pad { padding: 12px; }
-:host([padding="lg"]) .pad { padding: 20px; }
-
-:host([variant="raised"]) {
-  box-shadow: var(--sd-shadow-2);
-  border-color: transparent;
-}
-
-:host([variant="sunk"]) {
-  background: var(--sd-surface-2);
-  border-color: transparent;
-}
-
-:host([interactive]) {
-  cursor: pointer;
+  background: var(--sd-surface);
+  border: 1px solid var(--sd-line);
+  border-radius: var(--sd-r-lg);
   transition:
-    transform var(--sd-dur-fast) var(--sd-ease),
-    box-shadow var(--sd-dur-fast) var(--sd-ease);
+    border-color var(--sd-dur-fast) var(--sd-ease),
+    box-shadow var(--sd-dur-fast) var(--sd-ease),
+    transform var(--sd-dur-fast) var(--sd-ease);
 }
 
-:host([interactive]:hover) {
-  transform: translateY(-1px);
-  box-shadow: var(--sd-shadow-2);
+:host(.card--pad-lg) { padding: 20px; }
+:host(.card--sunk) { background: var(--sd-surface-2); border-color: transparent; }
+:host(.card--locked) { border: 2px solid var(--sd-accent); padding: 15px; }
+:host(.card--locked.card--pad-lg) { padding: 19px; }
+:host(.card--dimmed) { opacity: 0.6; }
+:host(.card--muted) { opacity: 0.85; }
+:host(.card--span) { grid-column: 1 / -1; }
+
+@media (hover: hover) {
+  :host(.card--interactive:hover) {
+    border-color: var(--sd-line-strong);
+    box-shadow: var(--sd-shadow-2);
+    transform: translateY(-2px);
+  }
 }

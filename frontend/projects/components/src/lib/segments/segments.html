@@ -1,0 +1,19 @@
+@for (tab of tabs(); track tab.label) {
+  @if (active() !== null) {
+    <a
+      class="segments__tab"
+      [routerLink]="linkOf(tab)"
+      [fragment]="tab.fragment"
+      [attr.aria-current]="active() === tab.label ? 'page' : null"
+    >{{ tab.label }}</a>
+  } @else {
+    <a
+      class="segments__tab"
+      [routerLink]="linkOf(tab)"
+      [fragment]="tab.fragment"
+      routerLinkActive
+      ariaCurrentWhenActive="page"
+      [routerLinkActiveOptions]="{ exact: !!tab.exact }"
+    >{{ tab.label }}</a>
+  }
+}

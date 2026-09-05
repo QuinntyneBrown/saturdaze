@@ -1,0 +1,28 @@
+<sd-dialog [title]="title" subtitle="It goes on the timeline and other picks step back.">
+  <sd-card variant="sunk">
+    <div class="head">
+      <sd-disc icon="fork" tone="sun" size="lg" />
+      <div class="head__text">
+        <p class="head__title">{{ data.card.name }}</p>
+        <p class="head__meta">{{ data.card.meta }}</p>
+      </div>
+    </div>
+    @if (data.card.chips.length) {
+      <div class="chips">
+        @for (chip of data.card.chips; track chip.label) {
+          <sd-chip [tone]="chipTone(chip.tone)">
+            @if (chip.icon) {
+              <sd-icon [name]="chip.icon" [size]="13" [stroke]="2" />
+            }
+            {{ chip.label }}
+          </sd-chip>
+        }
+      </div>
+    }
+  </sd-card>
+  <sd-button slot="actions" variant="quiet" type="button" (click)="cancel()">Not yet</sd-button>
+  <sd-button slot="actions" variant="primary" type="button" (click)="confirm()">
+    <sd-icon name="lock" />
+    Lock it in
+  </sd-button>
+</sd-dialog>

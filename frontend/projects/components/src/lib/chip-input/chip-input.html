@@ -1,0 +1,19 @@
+@if (label()) {
+  <label class="field__label" [attr.for]="id">{{ label() }}</label>
+}
+<div class="chip-input">
+  @for (value of values(); track value; let i = $index) {
+    <sd-chip [tone]="tone()" removable [removeLabel]="'Remove ' + value" (remove)="removeAt(i)">{{ value }}</sd-chip>
+  }
+  <input
+    class="chip-input__field"
+    [id]="id"
+    type="text"
+    [value]="draft()"
+    [attr.placeholder]="placeholder()"
+    [disabled]="disabled()"
+    (input)="onDraft($event)"
+    (keydown)="onKey($event)"
+    (blur)="commit()"
+  />
+</div>

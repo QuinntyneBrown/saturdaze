@@ -1,0 +1,86 @@
+@use "../styles/breakpoints" as *;
+
+// `.day` from docs/mocks-v2/styles/app.css — the host is the day column.
+
+:host {
+  display: block;
+  min-width: 0;
+}
+
+.day__header {
+  position: sticky;
+  top: 0;
+  z-index: var(--sd-z-sticky);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  margin-bottom: 4px;
+  background: var(--sd-bg);
+  border-bottom: 1px solid var(--sd-line);
+}
+
+.day__text {
+  min-width: 0;
+  flex: 1;
+}
+
+.day__title {
+  font-size: var(--sd-fs-lg);
+  font-weight: var(--sd-fw-bold);
+  line-height: 1.2;
+}
+
+.day__meta {
+  font-size: var(--sd-fs-sm);
+  color: var(--sd-ink-soft);
+  margin-top: 2px;
+}
+
+.day__chip {
+  margin-top: 6px;
+}
+
+.day__actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex: none;
+}
+
+// Icon-only on phones: the label is hidden and the button squares up.
+.day__actions ::ng-deep .day__btn {
+  width: 36px;
+  padding: 0;
+}
+
+.day__btn-label {
+  display: none;
+}
+
+.day__list {
+  display: flex;
+  flex-direction: column;
+}
+
+:host(.day--locked) .day__header {
+  background: var(--sd-accent-soft);
+  border-radius: var(--sd-r-md);
+  padding-inline: 12px;
+  border-bottom-color: transparent;
+}
+
+@include respond-to(tablet) {
+  .day__header {
+    top: var(--sd-topbar-h);
+  }
+
+  .day__actions ::ng-deep .day__btn {
+    width: auto;
+    padding: 0 12px;
+  }
+
+  .day__btn-label {
+    display: inline;
+  }
+}

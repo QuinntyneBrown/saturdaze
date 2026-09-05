@@ -1,0 +1,92 @@
+// `.menu` from docs/mocks-v2/styles/app.css — the host is the menu.
+
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 240px;
+  max-width: 280px;
+  padding: 6px;
+  background: var(--sd-surface);
+  border: 1px solid var(--sd-line);
+  border-radius: var(--sd-r-lg);
+  box-shadow: var(--sd-shadow-3);
+}
+
+.menu__header {
+  padding: 8px 12px 6px;
+  font-size: var(--sd-fs-sm);
+  color: var(--sd-ink-soft);
+  overflow-wrap: anywhere;
+  border-bottom: 1px solid var(--sd-line);
+  margin-bottom: 4px;
+}
+
+.menu__item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: var(--sd-r-md);
+  font-size: 14px;
+  font-weight: var(--sd-fw-medium);
+  color: var(--sd-ink);
+  text-decoration: none;
+  text-align: left;
+  transition: background var(--sd-dur-fast) var(--sd-ease);
+}
+
+.menu__item sd-icon {
+  color: var(--sd-ink-soft);
+}
+
+.menu__item--warn,
+.menu__item--warn sd-icon {
+  color: var(--sd-warn-deep);
+}
+
+.menu__text {
+  min-width: 0;
+}
+
+.menu__label {
+  display: block;
+}
+
+.menu__sub {
+  display: block;
+  font-size: var(--sd-fs-sm);
+  color: var(--sd-ink-soft);
+  font-weight: var(--sd-fw-regular);
+  margin-top: 2px;
+}
+
+// Sheet: plain rows inside a bottom-sheet dialog (the phone "More").
+:host(.menu--sheet) {
+  min-width: 0;
+  max-width: none;
+  padding: 0;
+  border: 0;
+  box-shadow: none;
+  background: transparent;
+  gap: 0;
+}
+
+:host(.menu--sheet) .menu__item {
+  padding: 10px 0;
+  border-radius: var(--sd-r-sm);
+  border-bottom: 1px solid var(--sd-line);
+  font-size: var(--sd-fs-base);
+  font-weight: var(--sd-fw-semibold);
+}
+
+:host(.menu--sheet) .menu__item:last-child {
+  border-bottom: 0;
+}
+
+@media (hover: hover) {
+  .menu__item:hover {
+    background: var(--sd-surface-2);
+  }
+}

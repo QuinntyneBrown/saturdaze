@@ -1,0 +1,5 @@
+<sd-dialog title="Share this weekend" subtitle="Anyone with the link can view it. Nobody can edit.">
+  <sd-copy-field [value]="data.shareUrl" />
+  <p class="sd-text-xs sd-text-soft">Read-only · expires in 7 days</p>
+  <sd-button slot="actions" variant="primary" type="button" (click)="done()">Done</sd-button>
+</sd-dialog>

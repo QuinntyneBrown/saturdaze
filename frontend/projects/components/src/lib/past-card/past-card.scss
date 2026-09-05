@@ -1,0 +1,52 @@
+@use "../styles/card-base" as *;
+
+// The past-weekend `.card` from docs/mocks-v2/pages/past.html.
+
+:host {
+  @include card-host;
+}
+
+.card__title-btn {
+  text-align: left;
+  border-radius: var(--sd-r-sm);
+  font: inherit;
+  color: inherit;
+}
+
+.card__rate {
+  display: inline-flex;
+  align-self: flex-start;
+  border-radius: var(--sd-r-sm);
+}
+
+.card__highlights {
+  font-size: var(--sd-fs-sm);
+  color: var(--sd-ink-soft);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.card__footer--2up {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  --sd-btn-w: 100%;
+}
+
+::ng-deep .fav-btn[aria-pressed="true"] {
+  color: var(--sd-primary);
+}
+
+@media (hover: hover) {
+  .card__title-btn:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  ::ng-deep .fav-btn:hover {
+    background: var(--sd-primary-soft);
+    color: var(--sd-primary);
+  }
+}

@@ -10,15 +10,19 @@ Three sibling top-level directories make up the application; `e2e` is NOT inside
 - `frontend/` — Angular 21 workspace with three projects: `saturdaze` (app), `api` (lib), `components` (lib)
 - `e2e/` — Playwright suite (POMs in `pages/`, specs in `tests/`, fixtures in `fixtures/`)
 - `design-system/` — Standalone token/component catalog (own `npm test`, own SWA deploy workflow); no runtime dependency on the other folders
-- `docs/mocks/` — Static HTML/CSS reference app; serves as the visual baseline source
+- `docs/mocks-v2/` — Static HTML/CSS design (the source of truth, ADR-009): `pages/*.html` + `styles/app.css`; `node docs/mocks-v2/.check.mjs` lints it, `node docs/mocks-v2/.verify.mjs --capture` screenshots it (port 5180). The e2e visual baselines are captured from here.
 - `docs/adr/` — Architecture decision records; read before changing the area they describe
-- `scripts/Start-FreshStack.ps1` — One-command fresh stack (pack CLI → reset DB → build → run both processes)
+- `eng/Start-FreshStack.ps1` — One-command fresh stack (pack CLI → reset DB → build → run both processes)
 
 ## Common commands
 
 ```powershell
 # Full local stack from a clean DB (pwsh)
-powershell .\scripts\Start-FreshStack.ps1
+powershell .\eng\Start-FreshStack.ps1
+
+# API only, re-pointed at LocalDB's current pipe (LocalDB auto-stops when idle and
+# returns with a new pipe name; an API started earlier then 500s on every SQL call)
+powershell .\eng\Restart-Api.ps1
 
 # Backend
 dotnet build  .\backend\Saturdaze.sln
@@ -43,11 +47,14 @@ npm run build -- components
 npm test                                        # Vitest via @angular/build:unit-test
 
 # E2E (from e2e/; behaviour specs need the API on :5100 with a seeded DB — run Start-FreshStack.ps1 — plus the Angular dev server on :4200; baseline mode needs neither)
+npm run typecheck                               # tsc over POMs, fixtures and specs
 npm run test:behavior                           # functional specs only
-npm run test:visual                             # pixel-diff against committed baselines
-npm run baseline                                # SD_BASELINE=1 → captures from docs/mocks on :5173
-npx playwright test tests/home.spec.ts          # single spec
-npx playwright test -g "shows hero"             # by title
+npm run test:visual                             # pixel-diff against committed baselines (ADR-010)
+npm run baseline                                # SD_BASELINE=1 → captures from docs/mocks-v2 on :5173
+npm run audit / npm run audit:mocks             # 5-viewport overflow audit (app / mocks)
+npx playwright test tests/visual/shell.visual.spec.ts   # the shell gate — run this first against the app
+npx playwright test tests/weekend.spec.ts       # single spec
+npx playwright test -g "locks a day"            # by title
 ```
 
 API runs on `http://localhost:5100` (Swagger at `/swagger`); the Angular environment compiles this URL in, so `Start-FreshStack.ps1` rejects any other `BackendPort`.
@@ -100,7 +107,12 @@ Workspace has three projects under `frontend/projects/`:
 
 ### Conventions enforced across the codebase
 
-- **Selectors stay `sd-foo`**, but TypeScript class names, folders, and files **drop the `Sd` prefix** — e.g. `frontend/projects/components/src/lib/chip/chip.ts` exports `class Chip` with `selector: 'sd-chip'`. Renaming a selector breaks the visual-diff harness because baselines were captured against `sd-*` tag names in `docs/mocks/`.
+- **Selectors stay `sd-foo`**, but TypeScript class names, folders, and files **drop the `Sd` prefix** — e.g. `frontend/projects/components/src/lib/chip/chip.ts` exports `class Chip` with `selector: 'sd-chip'`.
+- **Components carry the mocks' BEM classes** (ADR-009): the host gets the block class and modifiers (`<sd-block class="block block--locked">`), inner elements get the element classes verbatim from `docs/mocks-v2/styles/app.css`, and state is ARIA (`aria-current`, `aria-pressed`, `aria-invalid`, `role=switch`). Interactive atoms use a `display: contents` host so the real `<button>`/`<a>`/`<input>` carries the class. The e2e page objects locate by these classes against both the mocks and the app — renaming one breaks the harness.
+- **Per-component encapsulated SCSS**, each the matching `app.css` block with `:host` substitutions; global SCSS holds only reset, tokens and `sd-`-prefixed utilities. Prod budget: 6kB warn / 10kB error per component style.
+- **Declare each `ng-content` slot once.** A component that renders `<a>` or `<button>` by condition puts its slots in one `<ng-template>` and renders it with `ngTemplateOutlet` in both branches (`sd-button`, `sd-ghost-row`, `sd-list-item`); slots repeated per `@if` branch project into one branch only. On the consumer side, a `@if` wrapping several `[slot=…]` nodes loses the slot (NG8011) — one `@if` per node.
+- **Routes are named for the v2 screens** (`/weekend`, `/ideas`, `/ideas/food`, `/ideas/events`, `/past`, `/family`, `/review-submissions`, `/sign-in`, `/create-account`, `/reset-password`, `/verify-email`, `/legal`, `/sample-weekend?share=`); every v1 path redirects. Route `data.shell` (`app` | `site` | `bare`) picks the chrome and `data.page` lands on `body[data-page]`.
+- **Dev-only surfaces**: the `/dialogs` gallery and the `?state=` page overrides (`weekend?state=empty|generating`, `past?state=empty`, `review-submissions?state=empty`, `sign-in?state=error`, `reset-password?state=…`, `verify-email?state=…`) exist only while `environment.galleryRoutes` is true; the prod environment file compiles them out.
 - **Interface-driven services**: every `api` service pairs a `*.service.contract.ts` (interface + `InjectionToken`) with the concrete class. Pages inject the token (e.g. `AUTH_SERVICE`), never the class. Add a contract when you add a service.
 - **No inline forms in pages**. Button-triggered editing always opens a CDK Dialog (`frontend/projects/saturdaze/src/app/dialogs/`) or navigates to a screen.
 - **All modals use `@angular/cdk` Dialog/Overlay** — never hand-roll a modal.
@@ -108,16 +120,17 @@ Workspace has three projects under `frontend/projects/`:
 
 ### Bottom-nav iOS chrome handling (DON'T simplify without reading ADR-005)
 
-`sd-bottom-nav` clears the iOS Safari URL bar via a CSS variable `--sd-chrome-bottom` written by a `VisualViewport` listener registered in `frontend/projects/saturdaze/src/main.ts` *before* `bootstrapApplication`. The `bottom: calc(12px + max(env(safe-area-inset-bottom, 0px), var(--sd-chrome-bottom, 0px)))` rule is load-bearing. Four pure-CSS attempts failed before this; details in `docs/adr/ADR-005`. The regression test `e2e/tests/regression/bottom-nav-clearance.spec.ts` parses the SCSS and `main.ts` to guard the invariant — if you touch nav layout, run it.
+`sd-bottom-nav` clears the iOS Safari URL bar via a CSS variable `--sd-chrome-bottom` written by a `VisualViewport` listener registered in `frontend/projects/saturdaze/src/main.ts` *before* `bootstrapApplication`. The `bottom: calc(12px + max(env(safe-area-inset-bottom, 0px), var(--sd-chrome-bottom, 0px)))` rule is load-bearing. Four pure-CSS attempts failed before this; details in `docs/adr/ADR-005`. The regression test `e2e/tests/regression/bottom-nav-clearance.spec.ts` parses `bottom-nav.scss`, `main.ts`, `index.html`, the `.sd-frame {…}` block in `_global.scss` (the app's `<main>`, which must keep `env(safe-area-inset-bottom`) and `docs/mocks-v2/styles/app.css` to guard the invariant — if you touch nav layout, run it.
 
 ## E2E architecture (Playwright)
 
-- POMs under `e2e/pages/`, specs under `e2e/tests/`. Visual specs in `tests/visual/` compare the Angular implementation pixel-by-pixel to the mocks.
-- Three viewport projects: mobile (390×844), tablet (820×1180), desktop (1440×900). Tests are **not** parallel (`fullyParallel: false`, `workers: 1`).
-- The same `playwright.config.ts` starts the Angular dev server on `:4200` for normal runs OR `http-server` against `docs/mocks/` on `:5173` when `SD_BASELINE=1`. The `baseline-capture` and verify projects share project names so they read/write the same snapshot files.
-- Baselines live next to each spec under `*.spec.ts-snapshots/<name>-<project>.png`. Re-capture only when an intentional design change has landed: `npm run baseline`.
-- Behaviour specs sign in through the API: `fixtures/auth.ts` logs in as the seeded user (`SD_E2E_EMAIL`/`SD_E2E_PASSWORD`, default `quinntynebrown@gmail.com`/`password123`) and seeds `sd.auth.token` before navigation; `goto(key)` does this automatically for guarded route keys (`guard` in `fixtures/routes.ts`), pass `{ anonymous: true }` to skip. `SD_API_URL` overrides the API origin.
-- Visual tolerance: `maxDiffPixelRatio: 0.005`, `threshold: 0.05`, animations disabled.
+- POMs under `e2e/pages/` (one per v2 screen plus `base.page.ts` / `auth-card.page.ts`), behaviour specs under `e2e/tests/`, visual specs in `tests/visual/`, regression specs in `tests/regression/`, the 5-viewport audit in `audit/`. Locators are the mocks' BEM classes, `data-nav`, `aria-current`/`aria-pressed`, `#dialog-<slug>` and roles + accessible names — the same set works against the mocks and the app.
+- Three viewport projects: mobile (390×844), tablet (820×1180), desktop (1440×900). Tests are **not** parallel (`fullyParallel: false`, `workers: 1`). E2E does not run in CI.
+- The same `playwright.config.ts` starts the Angular dev server on `:4200` for normal runs OR `http-server` against `docs/mocks-v2/` on `:5173` when `SD_BASELINE=1`. The `baseline-capture` and verify projects share project names so they read/write the same snapshot files.
+- Route keys live in `fixtures/routes.ts` (`app`, optional `mock`, `guard: 'auth' | 'admin'`, `page`); app states use `?state=`, mock states use `#state-*` or a `<page>.<state>.html` file; `sharedWeekend` is app-only (`goto` plans a weekend and mints the share link). `waitForReady(slug)` waits for `body[data-page]` plus a per-page anchor.
+- Visual policy is ADR-010: full-page baselines only where copy is fixed or seed-derived (auth, landing, legal, dialogs gallery, empty states); element shots with `mask` for dated/weather regions (`.day__meta`, `.date-tile`, `.card__meta`, `.card__eyebrow`, `.submitter`, `.prose__updated`, `.page-header__subtitle`, …); no full-page shots of planner-driven screens. `tests/visual/shell.visual.spec.ts` (top bar, bottom nav) is the gate to run first. Baselines live next to each spec under `*.spec.ts-snapshots/<name>-<project>.png`; re-capture only when an intentional design change has landed in the mocks: `npm run baseline`.
+- Behaviour specs sign in through the API: `fixtures/auth.ts` logs in as the seeded user (`SD_E2E_EMAIL`/`SD_E2E_PASSWORD`, default `quinntynebrown@gmail.com`/`password123`; admin `admin@saturdaze.app`) and seeds `sd.auth.token` before navigation; `goto(key)` does this automatically for guarded route keys, pass `{ anonymous: true }` to skip. `SD_API_URL` overrides the API origin.
+- Visual tolerance: `maxDiffPixelRatio: 0.005`, `threshold: 0.05`, animations disabled — never loosened; parity failures are fixed in components.
 
 ## Deployment
 

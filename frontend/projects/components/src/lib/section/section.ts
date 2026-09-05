@@ -1,15 +1,12 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  booleanAttribute,
-  input,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
 /**
- * Labelled content region. Mirrors `docs/mocks/components/sd-section.js`.
- * `flush` removes horizontal padding from the body when the children
- * already supply their own.
+ * Titled region of a page. Mirrors `.section` + `.section-header` in
+ * docs/mocks-v2/styles/app.css. `[slot=action]` sits at the right of the
+ * header (the quiet "Edit" buttons on Family); the default slot is the body.
  */
+
+let nextSectionId = 0;
 
 @Component({
   selector: 'sd-section',
@@ -18,13 +15,15 @@ import {
   styleUrl: './section.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
+    class: 'section',
     '[attr.title]': 'sectionTitle() || null',
     '[attr.subtitle]': 'subtitle() || null',
-    '[attr.flush]': 'flush() ? "" : null',
+    '[attr.aria-labelledby]': 'sectionTitle() ? headingId : null',
   },
 })
 export class Section {
   readonly sectionTitle = input<string>('', { alias: 'title' });
   readonly subtitle = input<string>('');
-  readonly flush = input(false, { transform: booleanAttribute });
+
+  protected readonly headingId = `sd-section-${nextSectionId++}`;
 }

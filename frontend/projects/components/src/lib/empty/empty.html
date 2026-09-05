@@ -1,4 +1,12 @@
-<sd-icon [name]="icon()" [size]="32" />
-<h3>{{ emptyTitle() }}</h3>
-@if (subtitle()) { <p>{{ subtitle() }}</p> }
+<sd-disc [icon]="icon()" [tone]="tone()" size="xl" />
+<h2 class="empty__title" [id]="headingId">{{ emptyTitle() }}</h2>
+@if (body()) {
+  <p class="empty__body">{{ body() }}</p>
+}
+<div class="empty__cta">
+  <ng-content select="[slot=cta]" />
+  @if (note()) {
+    <span class="empty__note">{{ note() }}</span>
+  }
+</div>
 <ng-content />

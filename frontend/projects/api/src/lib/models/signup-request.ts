@@ -7,9 +7,9 @@ export interface SignupRequest {
    */
   readonly familyName: string;
   /**
-   * Home Location.
+   * Home Location — optional at sign-up; set later on the Family page.
    */
-  readonly homeLocation: string;
+  readonly homeLocation?: string | null;
   /**
    * Email.
    */

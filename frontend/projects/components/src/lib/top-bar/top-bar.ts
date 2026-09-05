@@ -1,59 +1,40 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  HostListener,
-  inject,
-  input,
-} from '@angular/core';
-import { DOCUMENT, Location } from '@angular/common';
-import { Router } from '@angular/router';
+import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
+import { RouterLink } from '@angular/router';
 
-import { Icon } from '../icon/icon';
+import { Avatar } from '../avatar/avatar';
+import { Scrolled } from '../scrolled/scrolled';
+import { NAV_ITEMS, NavKey } from '../shared/nav-key';
 
 /**
- * Page header. Mirrors `docs/mocks/components/sd-top-bar.js`.
- *
- * - `title` attribute is mirrored so e2e + visual diff anchors keep working.
- * - `back` (presence attribute) renders the circular back affordance.
- * - Leading / trailing slots are projected so pages can add calendar /
- *   share buttons (Home) or other controls.
- *
- * The back link uses `[Location]` so the browser history rewinds rather
- * than navigating to a static href the mock relied on.
+ * The sticky top bar shown from 720px: wordmark, the four primary links and
+ * the account avatar. Mirrors `.topbar` in docs/mocks-v2/styles/app.css.
+ * Below 720px it is hidden and `sd-bottom-nav` takes over. Rendered once by
+ * the app shell; `active` comes from route data.
  */
-
 @Component({
   selector: 'sd-top-bar',
   standalone: true,
-  imports: [Icon],
+  imports: [Avatar, RouterLink],
+  hostDirectives: [Scrolled],
   templateUrl: './top-bar.html',
   styleUrl: './top-bar.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    '[attr.title]': 'titleAttr() || null',
-    '[attr.back]': 'back() ? "" : null',
+    class: 'topbar',
+    '[attr.active]': 'active()',
   },
 })
 export class TopBar {
-  // Avoid clashing with the DOM `title` attribute name on the host. The
-  // signal-input is named `titleAttr` internally but bound from templates as
-  // `title="..."` — Angular's selector-binding resolves on the public alias.
-  readonly titleAttr = input<string>('', { alias: 'title' });
-  readonly back = input(false, { transform: (v: '' | boolean) => v === '' || v === true });
+  readonly active = input<NavKey | null>(null);
+  /** Signed-in email; the avatar shows its initial. */
+  readonly email = input<string>('');
+  /** The avatar button was pressed; the element anchors the account menu. */
+  readonly accountClick = output<HTMLElement>();
 
-  private readonly location = inject(Location);
-  private readonly router = inject(Router, { optional: true });
-  private readonly document = inject(DOCUMENT);
+  protected readonly items = NAV_ITEMS;
+  protected readonly initial = computed(() => this.email() || '?');
 
-  protected onBack(event: MouseEvent): void {
-    if (event.button !== 0) return;
-    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-    event.preventDefault();
-    const historyLength = this.document.defaultView?.history.length ?? 0;
-    if (historyLength <= 1) {
-      void this.router?.navigateByUrl('/weekend');
-      return;
-    }
-    this.location.back();
+  protected onAccount(event: MouseEvent): void {
+    this.accountClick.emit(event.currentTarget as HTMLElement);
   }
 }

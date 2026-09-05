@@ -2,7 +2,7 @@
   "name": "saturdaze-e2e",
   "version": "0.0.0",
   "private": true,
-  "description": "Playwright e2e suite. POMs under pages/, specs under tests/, fixtures under fixtures/. Visual specs under tests/visual/ compare the Angular implementation to the mock skeleton pixel-by-pixel.",
+  "description": "Playwright e2e suite. POMs under pages/, specs under tests/, fixtures under fixtures/. Visual specs under tests/visual/ compare the Angular implementation to docs/mocks-v2 region-by-region.",
   "scripts": {
     "test": "playwright test --config=playwright.config.ts",
     "test:visual": "playwright test --config=playwright.config.ts tests/visual",
@@ -12,8 +12,7 @@
     "audit:mocks": "cross-env SD_BASELINE=1 playwright test --config=playwright.audit.config.ts",
     "report": "playwright show-report",
     "typecheck": "tsc --noEmit -p tsconfig.json",
-    "screenshots:mocks": "node scripts/screenshot-mocks.mjs",
-    "screenshots:auth-mocks": "node scripts/screenshot-auth-mocks.mjs"
+    "mocks:check": "node ../docs/mocks-v2/.check.mjs"
   },
   "devDependencies": {
     "@playwright/test": "^1.60.0",

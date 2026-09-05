@@ -12,13 +12,14 @@ import { defineConfig, devices } from "@playwright/test";
  *
  * Same two-server switch as the main config:
  *   - default: the Angular dev server on :4200 (app under audit). Guarded
- *     routes need the API on :5100 — run `scripts/Start-FreshStack.ps1`.
- *   - SD_BASELINE=1: `http-server` serves docs/mocks on :5173, auditing the
- *     mocks themselves at the same five widths (no auth, no backend).
+ *     routes need the API on :5100 — run `eng/Start-FreshStack.ps1`.
+ *   - SD_BASELINE=1: `http-server` serves docs/mocks-v2 on :5173, auditing
+ *     the mocks themselves at the same five widths (no auth, no backend).
  *
- * The five widths straddle every layout regime: 320 (below all
- * breakpoints), 390 (phone baseline), 820 (720px rail tier), 1440 (1024px
- * sidebar tier, 1280 cap dormant), 1920 (1280 content cap active).
+ * The five widths straddle every layout regime of the v2 design: 320
+ * (below all breakpoints, sitebar "Sign in" link collapses), 390 (phone
+ * baseline, bottom nav), 820 (720px top bar + two-column card grids), 1440
+ * (1024px two-day grid + three-column cards), 1920 (1120px content cap).
  */
 
 const AUDIT_VIEWPORTS = {
@@ -63,7 +64,7 @@ export default defineConfig({
   webServer: isBaselineCapture
     ? {
         command:
-          "npx http-server ../docs/mocks -p 5173 -c-1 --cors --silent",
+          "npx http-server ../docs/mocks-v2 -p 5173 -c-1 --cors --silent",
         url: "http://localhost:5173/index.html",
         reuseExistingServer: !process.env.CI,
         timeout: 30_000,

@@ -1,0 +1,43 @@
+<header class="day__header">
+  @if (weather()) {
+    <sd-disc class="weather-disc" [icon]="weatherIcon()" [tone]="weatherTone()" size="lg" />
+  }
+  <div class="day__text">
+    <h2 class="day__title" [id]="headingId">{{ dayTitle() }}</h2>
+    @if (meta()) {
+      <p class="day__meta">{{ meta() }}</p>
+    }
+    @if (locked()) {
+      <sd-chip class="day__chip" tone="accent"><sd-icon name="lock" [size]="13" [stroke]="2" />Day locked</sd-chip>
+    }
+  </div>
+  @if (actions()) {
+    <div class="day__actions">
+      <sd-button
+        variant="ghost"
+        size="sm"
+        btnClass="day__btn"
+        [label]="'Regenerate ' + dayTitle()"
+        [disabled]="busy()"
+        (click)="regenerate.emit()"
+      >
+        <sd-icon name="refresh" />
+        <span class="day__btn-label">Regenerate</span>
+      </sd-button>
+      <sd-button
+        variant="ghost"
+        size="sm"
+        btnClass="day__btn"
+        [label]="(locked() ? 'Unlock ' : 'Lock ') + dayTitle()"
+        [pressed]="locked()"
+        [disabled]="busy()"
+        (click)="lockToggle.emit(!locked())"
+      >
+        <sd-icon [name]="locked() ? 'unlock' : 'lock'" />
+        <span class="day__btn-label">{{ locked() ? 'Unlock day' : 'Lock day' }}</span>
+      </sd-button>
+    </div>
+  }
+</header>
+<div class="day__list" role="list"><ng-content /></div>
+<ng-content select="[slot=footer]" />

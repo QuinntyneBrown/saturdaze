@@ -1,105 +1,95 @@
+// `.prose` from docs/mocks-v2/styles/app.css — single-use, page-owned.
+
+:host {
+  display: block;
+}
+
 .legal {
-  max-width: 720px;
-  margin: 0 auto;
-  padding: 16px var(--sd-app-pad-x) 80px;
+  padding-top: 32px;
+  padding-bottom: 80px;
 }
 
-.legal-header {
-  padding-bottom: 16px;
-  border-bottom: 1px solid var(--sd-line);
-  margin-bottom: 24px;
+.doc-switch {
+  margin-bottom: 28px;
 }
 
-.legal-eyebrow,
-.toc-label {
-  font-size: 11px;
-  color: var(--sd-ink-soft);
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  font-weight: 700;
+.prose {
+  max-width: 680px;
 }
 
-h1 {
-  font-size: 30px;
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  margin: 4px 0;
-  line-height: 1.15;
+.prose h2 {
+  font-size: var(--sd-fs-lg);
+  margin-top: 32px;
+  margin-bottom: 8px;
 }
 
-.updated {
-  font-size: 13px;
-  color: var(--sd-ink-soft);
-}
-
-.legal-summary {
-  padding: 14px 16px;
-  border-radius: var(--sd-r-lg);
-  display: flex;
-  gap: 12px;
-  align-items: flex-start;
-  margin-bottom: 32px;
-  border: 1px solid color-mix(in srgb, var(--sd-primary) 25%, transparent);
-  background: var(--sd-primary-soft);
-}
-
-.legal-summary[data-tone="accent"] {
-  border-color: color-mix(in srgb, var(--sd-accent) 25%, transparent);
-  background: var(--sd-accent-soft);
-}
-
-.legal-summary sd-icon {
-  color: var(--sd-primary);
-  flex-shrink: 0;
-  margin-top: 2px;
-}
-
-.legal-summary[data-tone="accent"] sd-icon {
-  color: var(--sd-accent);
-}
-
-.legal-summary .body {
-  font-size: 14px;
-  line-height: 1.6;
-  color: var(--sd-ink);
-}
-
-.legal-toc {
-  margin: 0 0 24px;
-  padding: 14px 16px;
-  background: var(--sd-bg-elev);
-  border: 1px solid var(--sd-line);
-  border-radius: var(--sd-r-md);
-  font-size: 14px;
-}
-
-.legal-toc ol {
-  margin: 6px 0 0;
-  padding-left: 18px;
-}
-
-.legal-toc a,
-.legal-contact a {
-  color: var(--sd-primary);
-  text-decoration: none;
-  font-weight: 600;
-}
-
-h2 {
-  font-size: 19px;
-  font-weight: 700;
-  letter-spacing: -0.01em;
-  margin: 32px 0 8px;
-}
-
-p {
-  font-size: 15px;
+.prose p {
+  font-size: var(--sd-fs-base);
   line-height: 1.65;
   color: var(--sd-ink);
-  margin: 0 0 12px;
+  margin-bottom: 12px;
 }
 
-.legal-contact {
-  margin-top: 32px;
+.prose__eyebrow {
+  font-size: var(--sd-fs-xs);
+  font-weight: var(--sd-fw-semibold);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
   color: var(--sd-ink-soft);
+  margin-bottom: 8px;
+}
+
+.prose__title {
+  font-size: var(--sd-fs-xl);
+  letter-spacing: -0.02em;
+}
+
+.prose__updated {
+  font-size: var(--sd-fs-sm);
+  color: var(--sd-ink-soft);
+  margin-top: 6px;
+  margin-bottom: 20px;
+}
+
+.prose__toc {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 20px 0 8px;
+}
+
+.prose__toc li {
+  font-size: 14px;
+}
+
+.prose__toc a {
+  color: var(--sd-ink-soft);
+}
+
+.site-footer {
+  margin-top: 80px;
+  text-align: center;
+  font-size: var(--sd-fs-xs);
+  color: var(--sd-ink-faint);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px 14px;
+}
+
+.sd-link--soft {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: var(--sd-line-strong);
+}
+
+@media (hover: hover) {
+  .prose__toc a:hover {
+    color: var(--sd-ink);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
 }

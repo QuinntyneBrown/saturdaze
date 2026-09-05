@@ -1,0 +1,43 @@
+// `.well` from docs/mocks-v2/styles/app.css — the host is the well.
+
+:host {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 12px 14px;
+  border-radius: var(--sd-r-md);
+  background: var(--sd-surface-2);
+  font-size: 14px;
+  color: var(--sd-ink);
+}
+
+sd-icon {
+  flex: none;
+  margin-top: 3px;
+  color: var(--sd-ink-soft);
+}
+
+:host(.well--accent) { background: var(--sd-accent-soft); }
+:host(.well--accent) sd-icon { color: var(--sd-accent); }
+:host(.well--warn) { background: var(--sd-warn-soft); }
+:host(.well--warn) sd-icon { color: var(--sd-warn-deep); }
+:host(.well--primary) { background: var(--sd-primary-soft); }
+:host(.well--primary) sd-icon { color: var(--sd-primary-deep); }
+
+.well__text {
+  min-width: 0;
+}
+
+.well__title {
+  font-weight: var(--sd-fw-semibold);
+  font-size: var(--sd-fs-base);
+}
+
+.well__body {
+  color: var(--sd-ink-soft);
+  font-size: var(--sd-fs-sm);
+}
+
+.well__title + .well__body {
+  margin-top: 2px;
+}

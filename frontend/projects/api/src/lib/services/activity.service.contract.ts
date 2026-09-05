@@ -1,6 +1,6 @@
 import { InjectionToken, Signal } from '@angular/core';
 
-import { ActivityView } from '../models/activity-view';
+import { IdeasActivitiesView } from '../models/ideas-activities-view';
 
 /**
  * Contract for the activity service consumed by pages. Pages inject
@@ -9,11 +9,11 @@ import { ActivityView } from '../models/activity-view';
  */
 export interface IActivityService {
   /**
-   * List — the activity view for the active filter.
+   * List — the Activities segment for the active filter.
    *
-   * @returns {Signal<ActivityView>} The result of the operation
+   * @returns {Signal<IdeasActivitiesView>} The result of the operation
    */
-  list(): Signal<ActivityView>;
+  list(): Signal<IdeasActivitiesView>;
   /**
    * Load — catalogue, "try new" picks and the weekend forecast.
    *
@@ -21,17 +21,11 @@ export interface IActivityService {
    */
   load(): Promise<void>;
   /**
-   * Active Filter — the label of the selected chip.
-   */
-  activeFilter(): Signal<string>;
-  /**
-   * Set Filter.
+   * Set Filter — by chip label; "All" clears.
    *
    * @param {string} label - The chip label
    */
   setFilter(label: string): void;
 }
 
-export const ACTIVITY_SERVICE = new InjectionToken<IActivityService>(
-  'ACTIVITY_SERVICE',
-);
+export const ACTIVITY_SERVICE = new InjectionToken<IActivityService>('ACTIVITY_SERVICE');

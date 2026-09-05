@@ -1,51 +1,79 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Icon } from './icon';
+
+import { ICON_NAMES, Icon } from './icon';
 
 describe('Icon', () => {
-  let component: Icon;
   let fixture: ComponentFixture<Icon>;
+  let host: HTMLElement;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [Icon],
-      providers: [
-      ],
-    }).compileComponents();
-
+    await TestBed.configureTestingModule({ imports: [Icon] }).compileComponents();
     fixture = TestBed.createComponent(Icon);
-    component = fixture.componentInstance;
     fixture.detectChanges();
+    host = fixture.nativeElement as HTMLElement;
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  it('creates and renders a decorative inline svg', () => {
+    expect(fixture.componentInstance).toBeTruthy();
+    const svg = host.querySelector('svg.icon') as SVGElement;
+    expect(svg).not.toBeNull();
+    expect(svg.getAttribute('aria-hidden')).toBe('true');
+    expect(svg.getAttribute('focusable')).toBe('false');
+    expect(svg.getAttribute('stroke')).toBe('currentColor');
+    expect(svg.getAttribute('viewBox')).toBe('0 0 24 24');
   });
 
-  it('should render component', () => {
-    expect(fixture.nativeElement).toBeTruthy();
+  it('exposes the sprite names', () => {
+    expect(ICON_NAMES.length).toBe(40);
+    for (const name of ['sparkle', 'home', 'star', 'user', 'lock', 'check']) {
+      expect(ICON_NAMES).toContain(name);
+    }
   });
 
-  it('should reflect the name input', () => {
-    fixture.componentRef.setInput('name', 'test-value');
+  it('mirrors name, size and filled to the host', () => {
+    expect(host.getAttribute('name')).toBe('sparkle');
+    expect(host.getAttribute('size')).toBe('20');
+    expect(host.getAttribute('filled')).toBeNull();
+    expect(host.style.getPropertyValue('--_size')).toBe('20px');
+
+    fixture.componentRef.setInput('name', 'check');
+    fixture.componentRef.setInput('size', 14);
+    fixture.componentRef.setInput('filled', true);
     fixture.detectChanges();
-    expect(component.name()).toBe('test-value');
+
+    expect(host.getAttribute('name')).toBe('check');
+    expect(host.getAttribute('size')).toBe('14');
+    expect(host.getAttribute('filled')).toBe('');
+    expect(host.style.getPropertyValue('--_size')).toBe('14px');
   });
 
-  it('should reflect the size input', () => {
-    fixture.componentRef.setInput('size', 3);
+  it('accepts the attribute form of filled', () => {
+    fixture.componentRef.setInput('filled', '');
     fixture.detectChanges();
-    expect(component.size()).toBe(3);
+    expect(host.getAttribute('filled')).toBe('');
   });
 
-  it('renders the check and mail glyphs instead of the sparkle fallback', () => {
-    const sparkle = (fixture.nativeElement as HTMLElement).innerHTML;
+  it('draws the named glyph', () => {
     fixture.componentRef.setInput('name', 'check');
     fixture.detectChanges();
-    const check = (fixture.nativeElement as HTMLElement).innerHTML;
-    expect(check).not.toBe(sparkle);
-    expect(check).toContain('M5 12l5 5 9-11');
-    fixture.componentRef.setInput('name', 'mail');
+    expect(host.querySelector('svg')?.innerHTML).toContain('M5 12l5 5 9-11');
+  });
+
+  it('falls back to the sparkle glyph for an unknown name', () => {
+    fixture.componentRef.setInput('name', 'sparkle');
     fixture.detectChanges();
-    expect((fixture.nativeElement as HTMLElement).innerHTML).toContain('M3 7l9 6 9-6');
+    const sparkle = host.querySelector('svg')?.innerHTML;
+
+    fixture.componentRef.setInput('name', 'does-not-exist');
+    fixture.detectChanges();
+    expect(host.querySelector('svg')?.innerHTML).toBe(sparkle);
+    expect(host.getAttribute('name')).toBe('does-not-exist');
+  });
+
+  it('forwards the stroke weight to the svg', () => {
+    expect(host.querySelector('svg')?.getAttribute('stroke-width')).toBe('1.7');
+    fixture.componentRef.setInput('stroke', 2);
+    fixture.detectChanges();
+    expect(host.querySelector('svg')?.getAttribute('stroke-width')).toBe('2');
   });
 });

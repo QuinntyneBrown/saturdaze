@@ -1,79 +1,102 @@
-import {
-  Injectable,
-  Signal,
-  computed,
-  inject,
-  signal,
-} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Injectable, Signal, computed, inject, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 
 import { API_BASE_URL } from '../api/api-base-url';
-import { MONTH_ABBR } from '../api/format';
-import { addDaysIso, parseIsoDate, upcomingSaturdayIso } from '../api/weekend-dates';
-import { EventFilter } from '../models/event-filter';
+import {
+  addDaysIso,
+  formatDayDate,
+  formatEventDate,
+  formatWeekendEyebrow,
+  monthAbbr,
+  parseIsoDate,
+  upcomingSaturdayIso,
+} from '../api/weekend-dates';
+import { ChipTone, ChipView } from '../models/chip-view';
+import { DateTile } from '../models/date-tile';
+import { EventCard } from '../models/event-card';
 import { EventSection } from '../models/event-section';
-import { EventsView } from '../models/events-view';
-import { LocalEvent } from '../models/local-event';
+import { EventSubmissionDto } from '../models/event-submission.dto';
+import { FilterChip } from '../models/filter-chip';
+import { IdeasEventsView } from '../models/ideas-events-view';
 import { LocalEventDto } from '../models/local-event.dto';
-import { IEventsService } from './events.service.contract';
+import { EVENT_SUBMISSIONS_SERVICE } from './event-submissions.service.contract';
+import { EventsWindow, IEventsService } from './events.service.contract';
 
-const THIS_WEEKEND = 'This weekend';
-const NEXT_WEEKEND = 'Next weekend';
+const THIS_WEEKEND: EventsWindow = 'This weekend';
+const NEXT_WEEKEND: EventsWindow = 'Next weekend';
+const WINDOWS: readonly EventsWindow[] = [THIS_WEEKEND, NEXT_WEEKEND];
+
+/** How far from home the segment looks; also the copy in the subtitle. */
+export const EVENTS_DRIVE_WINDOW = 45;
+
+const SUBTITLE = `What is on within ${EVENTS_DRIVE_WINDOW} minutes of home.`;
+const SUBTITLE_MINE = 'Only you can see it until it is approved';
+const SUBTITLE_SOON = 'Worth a note in the calendar';
+const PENDING_REVIEW = 'Pending review';
 
 /** Category chips in display order; anything else sorts after, A→Z. */
-const CATEGORY_TONES: ReadonlyArray<{ label: string; tone: EventFilter['tone'] }> = [
+const CATEGORY_TONES: ReadonlyArray<{ label: string; tone: ChipTone }> = [
   { label: 'Outdoor', tone: 'leaf' },
   { label: 'Indoor', tone: 'indoor' },
   { label: 'Seasonal', tone: 'sun' },
-  { label: 'Theatre', tone: 'default' },
-  { label: 'Festival', tone: 'default' },
+  { label: 'Theatre', tone: 'indoor' },
+  { label: 'Festival', tone: 'leaf' },
 ];
 
-const HEADING = "What's on this weekend";
-const LEDE = 'Close to home this weekend and the two after. Tap "+" to submit one I missed.';
+/** The tone for a category chip; unknown categories are neutral. */
+export function categoryTone(category: string): ChipTone {
+  return CATEGORY_TONES.find((t) => t.label === category)?.tone ?? 'neutral';
+}
 
-const WEEKDAY_SHORT = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-
-/**
- * "17" / "MAY" — the date-tile parts for an ISO date, parsed as UTC.
- */
-function tileParts(iso: string): { day: string; mon: string } {
+/** "17" / "May" — the date-tile parts for an ISO date, parsed as UTC. */
+function tileFor(iso: string): DateTile {
   const d = parseIsoDate(iso);
-  return { day: String(d.getUTCDate()), mon: MONTH_ABBR[d.getUTCMonth()]! };
+  return { day: String(d.getUTCDate()), mon: monthAbbr(d) };
+}
+
+/** "Milton · Sat 17 May" (or "… · Sat 17 May to Sun 18 May" for a span). */
+function metaFor(dto: LocalEventDto): string {
+  const start = formatEventDate(dto.startsOn);
+  const when =
+    dto.endsOn && dto.endsOn !== dto.startsOn
+      ? `${start} to ${formatEventDate(dto.endsOn)}`
+      : start;
+  return dto.location ? `${dto.location} · ${when}` : when;
 }
 
 /**
- * "Sat · all day" for a one-day event, "May 16 – May 17" for a span.
+ * To Card.
  */
-function whenLabel(dto: LocalEventDto): string {
-  if (dto.endsOn === dto.startsOn || !dto.endsOn) {
-    const d = parseIsoDate(dto.startsOn);
-    return `${WEEKDAY_SHORT[d.getUTCDay()]} · all day`;
-  }
-  const start = parseIsoDate(dto.startsOn);
-  const end = parseIsoDate(dto.endsOn);
-  const mon = (d: Date) => d.toLocaleString('en-US', { month: 'short', timeZone: 'UTC' });
-  return `${mon(start)} ${start.getUTCDate()} – ${mon(end)} ${end.getUTCDate()}`;
-}
-
-/**
- * To Local Event.
- *
- * @param {LocalEventDto} dto - The dto
- *
- * @returns {LocalEvent} The result of the operation
- */
-function toLocalEvent(dto: LocalEventDto): LocalEvent {
-  const parts = tileParts(dto.startsOn);
+function toCard(dto: LocalEventDto): EventCard {
+  const chips: ChipView[] = [];
+  if (dto.category) chips.push({ tone: categoryTone(dto.category), label: dto.category });
+  chips.push({ tone: 'sky', icon: 'car', label: `${dto.driveMinutes} min` });
   return {
+    id: dto.id,
     title: dto.name,
-    venue: dto.location,
-    when: whenLabel(dto),
-    drive: `${dto.driveMinutes} min`,
-    dateDay: parts.day,
-    dateMon: parts.mon,
-    tag: dto.category || undefined,
+    meta: metaFor(dto),
+    tile: tileFor(dto.startsOn),
+    chips,
+    url: dto.url || null,
+    pending: false,
+  };
+}
+
+/**
+ * To Pending Card — the family's own suggestion, visible only to them.
+ */
+function toPendingCard(dto: EventSubmissionDto): EventCard {
+  const dateIso = dto.startsAtLocal.substring(0, 10);
+  const when = formatEventDate(dateIso);
+  return {
+    id: dto.id,
+    title: dto.title,
+    meta: dto.location ? `${dto.location} · ${when}` : when,
+    tile: tileFor(dateIso),
+    chips: [{ tone: 'sun', label: PENDING_REVIEW }],
+    url: dto.sourceUrl || null,
+    pending: true,
   };
 }
 
@@ -84,11 +107,14 @@ function overlaps(e: LocalEventDto, iso: string): boolean {
 }
 
 /**
- * Group events into Saturday / Sunday / Coming soon. Saturday is the
- * weekendOf date; Sunday is the next day. A multi-day event shows on the
- * first weekend day it touches; everything later lands in Coming soon.
+ * Group events into Saturday / Sunday / Coming soon. A multi-day event
+ * shows on the first weekend day it touches; everything later lands in
+ * Coming soon.
  */
-function groupSections(weekendOf: string, dtos: ReadonlyArray<LocalEventDto>): EventSection[] {
+function thisWeekendSections(
+  weekendOf: string,
+  dtos: ReadonlyArray<LocalEventDto>,
+): EventSection[] {
   const sat = weekendOf;
   const sun = addDaysIso(weekendOf, 1);
 
@@ -99,71 +125,81 @@ function groupSections(weekendOf: string, dtos: ReadonlyArray<LocalEventDto>): E
   const comingSoon = dtos.filter((e) => !seen.has(e.id) && e.startsOn > sun);
 
   return [
-    { title: 'Saturday', events: saturday.map(toLocalEvent) },
-    { title: 'Sunday', events: sunday.map(toLocalEvent) },
-    { title: 'Coming soon', events: comingSoon.map(toLocalEvent) },
+    { title: 'Saturday', subtitle: formatDayDate(sat), events: saturday.map(toCard) },
+    { title: 'Sunday', subtitle: formatDayDate(sun), events: sunday.map(toCard) },
+    { title: 'Coming soon', subtitle: SUBTITLE_SOON, events: comingSoon.map(toCard) },
   ];
 }
 
 /** Everything touching the following Saturday or Sunday. */
-function nextWeekendSection(weekendOf: string, dtos: ReadonlyArray<LocalEventDto>): EventSection[] {
+function nextWeekendSections(
+  weekendOf: string,
+  dtos: ReadonlyArray<LocalEventDto>,
+): EventSection[] {
   const sat = addDaysIso(weekendOf, 7);
   const sun = addDaysIso(weekendOf, 8);
   const events = dtos.filter((e) => overlaps(e, sat) || overlaps(e, sun));
-  return [{ title: NEXT_WEEKEND, events: events.map(toLocalEvent) }];
+  return [
+    { title: 'Next weekend', subtitle: formatWeekendEyebrow(sat), events: events.map(toCard) },
+  ];
 }
 
 /**
- * Build Filters — the two window chips plus one chip per category present.
+ * Category Chips — one per category present, ranked by the known order
+ * then A→Z; none active means "all".
  */
-function buildFilters(dtos: ReadonlyArray<LocalEventDto>, active: string): EventFilter[] {
+function categoryChips(dtos: ReadonlyArray<LocalEventDto>, active: string | null): FilterChip[] {
   const categories = Array.from(new Set(dtos.map((e) => e.category).filter((c) => !!c)));
   const rank = (c: string) => {
     const i = CATEGORY_TONES.findIndex((t) => t.label === c);
     return i === -1 ? CATEGORY_TONES.length : i;
   };
   categories.sort((a, b) => rank(a) - rank(b) || a.localeCompare(b));
-
-  const base: EventFilter[] = [
-    { label: THIS_WEEKEND, tone: 'default' },
-    { label: NEXT_WEEKEND, tone: 'default' },
-    ...categories.map((c) => ({
-      label: c,
-      tone: CATEGORY_TONES.find((t) => t.label === c)?.tone ?? 'default',
-    })),
-  ];
-  return base.map((f) => (f.label === active ? { ...f, tone: 'primary' } : f));
+  return categories.map((c) => ({ label: c, tone: categoryTone(c), active: c === active }));
 }
 
 @Injectable({ providedIn: 'root' })
 export class EventsService implements IEventsService {
   private readonly http = inject(HttpClient);
   private readonly baseUrl = inject(API_BASE_URL);
+  private readonly submissions = inject(EVENT_SUBMISSIONS_SERVICE);
 
   private readonly _rows = signal<ReadonlyArray<LocalEventDto>>([]);
   private readonly _weekendOf = signal<string>(upcomingSaturdayIso());
-  private readonly _filter = signal<string>(THIS_WEEKEND);
+  private readonly _window = signal<EventsWindow>(THIS_WEEKEND);
+  private readonly _category = signal<string | null>(null);
 
-  private readonly _view = computed<EventsView>(() => {
+  private readonly _view = computed<IdeasEventsView>(() => {
     const rows = this._rows();
     const weekendOf = this._weekendOf();
-    const filter = this._filter();
+    const window = this._window();
+    const category = this._category();
+    const narrowed = category ? rows.filter((e) => e.category === category) : rows;
 
-    let sections: EventSection[];
-    if (filter === NEXT_WEEKEND) {
-      sections = nextWeekendSection(weekendOf, rows);
-    } else if (filter === THIS_WEEKEND) {
-      sections = groupSections(weekendOf, rows);
-    } else {
-      sections = groupSections(weekendOf, rows.filter((e) => e.category === filter))
-        .filter((s) => s.events.length > 0);
-    }
+    const pending = this.submissions
+      .mine()()
+      .filter((s) => s.status === 'Pending');
+    const mine: EventSection[] =
+      pending.length > 0
+        ? [
+            {
+              title: 'Your suggestion',
+              subtitle: SUBTITLE_MINE,
+              events: pending.map(toPendingCard),
+            },
+          ]
+        : [];
+
+    const grouped =
+      window === NEXT_WEEKEND
+        ? nextWeekendSections(weekendOf, narrowed)
+        : thisWeekendSections(weekendOf, narrowed);
 
     return {
-      heading: HEADING,
-      lede: LEDE,
-      filters: buildFilters(rows, filter),
-      sections,
+      subtitle: SUBTITLE,
+      windowChips: WINDOWS.map((w) => ({ label: w, tone: 'default', active: w === window })),
+      categoryChips: categoryChips(rows, category),
+      sections: [...mine, ...grouped.filter((s) => s.events.length > 0)],
     };
   });
 
@@ -177,46 +213,54 @@ export class EventsService implements IEventsService {
   /**
    * List.
    *
-   * @returns {Signal<EventsView>} The result of the operation
+   * @returns {Signal<IdeasEventsView>} The result of the operation
    */
-  list(): Signal<EventsView> {
+  list(): Signal<IdeasEventsView> {
     return this._view;
   }
 
   /**
-   * Active Filter.
+   * Set Window.
    *
-   * @returns {Signal<string>} The result of the operation
+   * @param {EventsWindow} window - The window
    */
-  activeFilter(): Signal<string> {
-    return this._filter.asReadonly();
+  setWindow(window: EventsWindow): void {
+    this._window.set(window);
   }
 
   /**
-   * Set Filter.
+   * Set Category.
    *
-   * @param {string} label - The chip label
+   * @param {string | null} label - The category, or `null` for all
    */
-  setFilter(label: string): void {
-    this._filter.set(label);
+  setCategory(label: string | null): void {
+    this._category.set(label);
   }
 
   /**
-   * Load — one call; the backend returns the Fri..Sun window plus the
-   * 14-day "coming soon" tail.
+   * Load — the events within the drive window, and the family's own
+   * submissions so a pending suggestion shows at the top.
+   *
+   * @param {string} weekendOfIso - The Saturday, `YYYY-MM-DD`
    *
    * @returns {Promise<void>} The result of the operation
    */
   async load(weekendOfIso?: string): Promise<void> {
     const weekendOf = weekendOfIso ?? upcomingSaturdayIso();
+    const mine = this.submissions.loadMine().catch((err: unknown) => {
+      console.error('EventsService.load could not load submissions', err);
+    });
     try {
       const rows = await firstValueFrom(
-        this.http.get<LocalEventDto[]>(`${this.baseUrl}/api/events?weekendOf=${weekendOf}`),
+        this.http.get<LocalEventDto[]>(
+          `${this.baseUrl}/api/events?weekendOf=${weekendOf}&maxDriveMinutes=${EVENTS_DRIVE_WINDOW}`,
+        ),
       );
       this._weekendOf.set(weekendOf);
       this._rows.set(rows ?? []);
     } catch (err) {
       console.error('EventsService.load failed', err);
     }
+    await mine;
   }
 }

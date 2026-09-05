@@ -32,7 +32,7 @@ const REFRESH_SKEW_MS = 60_000;
 
 /**
  * Attaches `Authorization: Bearer <token>` to outgoing API requests, keeps
- * the session alive, and bounces to `/login?returnUrl=<current>` only when
+ * the session alive, and bounces to `/sign-in?returnUrl=<current>` only when
  * the session is really over.
  *
  * - A token inside the 60 s skew window is refreshed *before* the call.
@@ -69,7 +69,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const bounceToLogin = (): void => {
     if (session.loading()) return;
     const router = injector.get(Router);
-    void router.navigateByUrl(`/login?returnUrl=${encodeURIComponent(router.url)}`);
+    void router.navigateByUrl(`/sign-in?returnUrl=${encodeURIComponent(router.url)}`);
   };
 
   const send = () =>

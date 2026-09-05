@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+<head>
+<!-- @shell:head -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ideas · Events — Saturdaze</title>
+<link rel="stylesheet" href="../styles/tokens.css">
+<link rel="stylesheet" href="../styles/app.css">
+<!-- @/shell:head -->
+</head>
+<body data-page="ideas" data-shell="app">
+<!-- @shell:topbar -->
+<header class="topbar">
+  <div class="container topbar__inner">
+    <a class="topbar__brand" href="./weekend.html"><span class="brand-mark" aria-hidden="true"></span>Saturdaze</a>
+    <nav class="topbar__nav" aria-label="Primary">
+      <a class="topbar__link" data-nav="weekend" href="./weekend.html">Weekend</a>
+      <a class="topbar__link" data-nav="ideas" href="./ideas.html" aria-current="page">Ideas</a>
+      <a class="topbar__link" data-nav="past" href="./past.html">Past</a>
+      <a class="topbar__link" data-nav="family" href="./family.html">Family</a>
+    </nav>
+    <div class="topbar__actions">
+      <a class="avatar avatar--q avatar--btn" href="./dialogs.html#dialog-account" aria-label="Account menu">Q</a>
+    </div>
+  </div>
+</header>
+<!-- @/shell:topbar -->
+<main class="app-main container" id="main">
+  <header class="page-header">
+    <div class="page-header__text">
+      <h1 class="page-header__title">Ideas</h1>
+      <p class="page-header__subtitle">What is on within 45 minutes of home.</p>
+    </div>
+    <div class="page-header__actions">
+      <a class="btn btn--primary" href="./dialogs.html#dialog-suggest"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg>Suggest an event</a>
+    </div>
+  </header>
+
+  <nav class="segments mb-4" aria-label="Idea type">
+    <a class="segments__tab" href="./ideas.html">Activities</a>
+    <a class="segments__tab" href="./ideas.food.html">Food</a>
+    <a class="segments__tab" href="./ideas.events.html" aria-current="page">Events</a>
+  </nav>
+
+  <div class="scroller-x mb-6" role="group" aria-label="Filters">
+    <button class="filter-chip" type="button" aria-pressed="true">This weekend</button>
+    <button class="filter-chip" type="button" aria-pressed="false">Next weekend</button>
+    <span class="filters__divider" aria-hidden="true"></span>
+    <button class="filter-chip filter-chip--leaf" type="button" aria-pressed="false">Outdoor</button>
+    <button class="filter-chip filter-chip--indoor" type="button" aria-pressed="false">Indoor</button>
+    <button class="filter-chip filter-chip--sun" type="button" aria-pressed="false">Seasonal</button>
+    <button class="filter-chip filter-chip--indoor" type="button" aria-pressed="false">Theatre</button>
+    <button class="filter-chip filter-chip--leaf" type="button" aria-pressed="false">Festivals</button>
+  </div>
+
+  <!-- ============ Your suggestion ============ -->
+  <section class="section" aria-labelledby="g-mine">
+    <div class="section-header">
+      <div class="section-header__text">
+        <h2 class="section-header__title" id="g-mine">Your suggestion</h2>
+        <p class="section-header__sub">Only you can see it until it is approved</p>
+      </div>
+    </div>
+    <ul class="grid-cards">
+      <li class="card card--muted">
+        <div class="card__head">
+          <span class="date-tile" aria-hidden="true"><span class="date-tile__m">Jun</span><span class="date-tile__d">20</span></span>
+          <div class="card__head-text">
+            <h3 class="card__title">Port Credit Buskerfest</h3>
+            <p class="card__meta">Lakeshore Rd · Sat 2pm to 9pm</p>
+          </div>
+        </div>
+        <div class="card__chips">
+          <span class="chip chip--sun">Pending review</span>
+          <span class="chip chip--sky"><svg class="icon" aria-hidden="true"><use href="#i-car"/></svg>2 min</span>
+        </div>
+      </li>
+    </ul>
+  </section>
+
+  <!-- ============ Saturday ============ -->
+  <section class="section" aria-labelledby="g-sat">
+    <div class="section-header">
+      <div class="section-header__text">
+        <h2 class="section-header__title" id="g-sat">Saturday</h2>
+        <p class="section-header__sub">17 May</p>
+      </div>
+    </div>
+    <ul class="grid-cards">
+      <li class="card">
+        <div class="card__head">
+          <span class="date-tile" aria-hidden="true"><span class="date-tile__m">May</span><span class="date-tile__d">17</span></span>
+          <div class="card__head-text">
+            <h3 class="card__title">Terre Bleu Lavender Bloom Opening</h3>
+            <p class="card__meta">Milton · 10am to 5pm</p>
+          </div>
+        </div>
+        <div class="card__chips">
+          <span class="chip chip--sun">Seasonal</span>
+          <span class="chip chip--leaf">Outdoor</span>
+          <span class="chip chip--sky"><svg class="icon" aria-hidden="true"><use href="#i-car"/></svg>45 min</span>
+        </div>
+        <div class="card__footer">
+          <a class="btn btn--quiet btn--sm" href="https://example.com/terre-bleu-lavender-bloom-opening" target="_blank" rel="noopener">Details<svg class="icon icon--sm" aria-hidden="true"><use href="#i-arrow_right"/></svg></a>
+        </div>
+      </li>
+      <li class="card">
+        <div class="card__head">
+          <span class="date-tile" aria-hidden="true"><span class="date-tile__m">May</span><span class="date-tile__d">17</span></span>
+          <div class="card__head-text">
+            <h3 class="card__title">Cirque Mechanics: Pedal Punk</h3>
+            <p class="card__meta">Living Arts Centre · 2pm matinée</p>
+          </div>
+        </div>
+        <div class="card__chips">
+          <span class="chip chip--indoor">Theatre</span>
+          <span class="chip chip--sky"><svg class="icon" aria-hidden="true"><use href="#i-car"/></svg>5 min</span>
+        </div>
+        <div class="card__footer">
+          <a class="btn btn--quiet btn--sm" href="https://example.com/cirque-mechanics-pedal-punk" target="_blank" rel="noopener">Details<svg class="icon icon--sm" aria-hidden="true"><use href="#i-arrow_right"/></svg></a>
+        </div>
+      </li>
+      <li class="card">
+        <div class="card__head">
+          <span class="date-tile" aria-hidden="true"><span class="date-tile__m">May</span><span class="date-tile__d">17</span></span>
+          <div class="card__head-text">
+            <h3 class="card__title">Spring Tulip Festival</h3>
+            <p class="card__meta">Royal Botanical Gardens · all weekend</p>
+          </div>
+        </div>
+        <div class="card__chips">
+          <span class="chip chip--leaf">Festival</span>
+          <span class="chip chip--sky"><svg class="icon" aria-hidden="true"><use href="#i-car"/></svg>35 min</span>
+        </div>
+      </li>
+    </ul>
+  </section>
+
+  <!-- ============ Sunday ============ -->
+  <section class="section" aria-labelledby="g-sun">
+    <div class="section-header">
+      <div class="section-header__text">
+        <h2 class="section-header__title" id="g-sun">Sunday</h2>
+        <p class="section-header__sub">18 May</p>
+      </div>
+    </div>
+    <ul class="grid-cards">
+      <li class="card">
+        <div class="card__head">
+          <span class="date-tile" aria-hidden="true"><span class="date-tile__m">May</span><span class="date-tile__d">18</span></span>
+          <div class="card__head-text">
+            <h3 class="card__title">Mississauga Symphony: Kids' Concert</h3>
+            <p class="card__meta">Living Arts Centre · 11am</p>
+          </div>
+        </div>
+        <div class="card__chips">
+          <span class="chip chip--indoor">Theatre</span>
+          <span class="chip chip--sky"><svg class="icon" aria-hidden="true"><use href="#i-car"/></svg>5 min</span>
+        </div>
+        <div class="card__footer">
+          <a class="btn btn--quiet btn--sm" href="https://example.com/mississauga-symphony-kids-concert" target="_blank" rel="noopener">Details<svg class="icon icon--sm" aria-hidden="true"><use href="#i-arrow_right"/></svg></a>
+        </div>
+      </li>
+      <li class="card">
+        <div class="card__head">
+          <span class="date-tile" aria-hidden="true"><span class="date-tile__m">May</span><span class="date-tile__d">18</span></span>
+          <div class="card__head-text">
+            <h3 class="card__title">Port Credit Farmers' Market</h3>
+            <p class="card__meta">Lakeshore Rd · 9am to 1pm</p>
+          </div>
+        </div>
+        <div class="card__chips">
+          <span class="chip">Local</span>
+          <span class="chip chip--sky"><svg class="icon" aria-hidden="true"><use href="#i-car"/></svg>2 min</span>
+        </div>
+      </li>
+    </ul>
+  </section>
+
+  <!-- ============ Coming soon ============ -->
+  <section class="section" aria-labelledby="g-soon">
+    <div class="section-header">
+      <div class="section-header__text">
+        <h2 class="section-header__title" id="g-soon">Coming soon</h2>
+        <p class="section-header__sub">Worth a note in the calendar</p>
+      </div>
+    </div>
+    <ul class="grid-cards">
+      <li class="card">
+        <div class="card__head">
+          <span class="date-tile" aria-hidden="true"><span class="date-tile__m">May</span><span class="date-tile__d">24</span></span>
+          <div class="card__head-text">
+            <h3 class="card__title">Strawberry picking opens</h3>
+            <p class="card__meta">Whittamore's Farm · Sat 24 May</p>
+          </div>
+        </div>
+        <div class="card__chips">
+          <span class="chip chip--sun">Seasonal</span>
+          <span class="chip chip--sky"><svg class="icon" aria-hidden="true"><use href="#i-car"/></svg>40 min</span>
+        </div>
+      </li>
+      <li class="card">
+        <div class="card__head">
+          <span class="date-tile" aria-hidden="true"><span class="date-tile__m">Sep</span><span class="date-tile__d">13</span></span>
+          <div class="card__head-text">
+            <h3 class="card__title">Pumpkin patch early access</h3>
+            <p class="card__meta">Downey's Farm · Sat 13 Sep</p>
+          </div>
+        </div>
+        <div class="card__chips">
+          <span class="chip chip--sun">Seasonal</span>
+          <span class="chip chip--sky"><svg class="icon" aria-hidden="true"><use href="#i-car"/></svg>35 min</span>
+        </div>
+      </li>
+    </ul>
+  </section>
+</main>
+<!-- @shell:bottomnav -->
+<nav class="bottom-nav" aria-label="Primary">
+  <a class="bottom-nav__item" data-nav="weekend" href="./weekend.html"><span class="bottom-nav__icon"><svg class="icon" aria-hidden="true"><use href="#i-home"/></svg></span>Weekend</a>
+  <a class="bottom-nav__item" data-nav="ideas" href="./ideas.html" aria-current="page"><span class="bottom-nav__icon"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg></span>Ideas</a>
+  <a class="bottom-nav__item" data-nav="past" href="./past.html"><span class="bottom-nav__icon"><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg></span>Past</a>
+  <a class="bottom-nav__item" data-nav="family" href="./family.html"><span class="bottom-nav__icon"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg></span>Family</a>
+</nav>
+<!-- @/shell:bottomnav -->
+<script src="../app.js"></script>
+</body>
+</html>

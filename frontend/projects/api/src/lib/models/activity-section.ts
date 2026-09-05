@@ -1,19 +1,19 @@
-import { Activity } from './activity';
+import { ActivityCard } from './activity-card';
 
 /**
- * Activity Section.
+ * Activity Section — one titled group of activity cards.
  */
 export interface ActivitySection {
   /**
-   * Title.
+   * Title — "Right for this weekend's weather" etc.
    */
   readonly title: string;
   /**
-   * Subtitle.
+   * Subtitle — `null` when there is nothing useful to say.
    */
-  readonly subtitle?: string;
+  readonly subtitle: string | null;
   /**
    * Activities.
    */
-  readonly activities: readonly Activity[];
+  readonly activities: readonly ActivityCard[];
 }

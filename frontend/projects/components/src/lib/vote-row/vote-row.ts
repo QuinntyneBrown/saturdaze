@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  booleanAttribute,
   input,
   output,
 } from '@angular/core';
@@ -9,12 +10,18 @@ import { Avatar, AvatarTone } from '../avatar/avatar';
 import { Icon } from '../icon/icon';
 
 /**
- * One row in the family vote UI. Mirrors `docs/mocks/components/sd-vote-row.js`.
- * Carries a tonal avatar, the member's name, and up/down buttons. The
- * currently-selected vote drives the active state on the up/down disks.
+ * The family's thumbs on a restaurant: one cell per member. Mirrors
+ * `.vote-row` in docs/mocks-v2/styles/app.css. Pressing the current vote
+ * clears it; `voteChange` carries the member index and the next vote.
  */
 
 export type Vote = 'up' | 'down' | 'none';
+
+export interface VoteCell {
+  readonly name: string;
+  readonly tone: AvatarTone;
+  readonly vote: Vote;
+}
 
 @Component({
   selector: 'sd-vote-row',
@@ -24,14 +31,21 @@ export type Vote = 'up' | 'down' | 'none';
   styleUrl: './vote-row.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    '[attr.name]': 'name()',
-    '[attr.tone]': 'tone()',
-    '[attr.vote]': 'vote()',
+    class: 'vote-row',
+    role: 'group',
+    '[attr.aria-label]': 'label()',
+    '[attr.disabled]': 'disabled() ? "" : null',
   },
 })
 export class VoteRow {
-  readonly name = input<string>('');
-  readonly tone = input<AvatarTone>('leaf');
-  readonly vote = input<Vote>('none');
-  readonly voteChange = output<Vote>();
+  readonly votes = input<readonly VoteCell[]>([]);
+  readonly label = input<string>('Family vote');
+  readonly disabled = input(false, { transform: booleanAttribute });
+  readonly voteChange = output<{ index: number; vote: Vote }>();
+
+  protected cast(index: number, direction: 'up' | 'down'): void {
+    if (this.disabled()) return;
+    const current = this.votes()[index]?.vote ?? 'none';
+    this.voteChange.emit({ index, vote: current === direction ? 'none' : direction });
+  }
 }

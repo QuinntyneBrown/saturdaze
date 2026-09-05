@@ -1,27 +1,21 @@
-<div class="card">
-  <div class="image">
-    <sd-icon [name]="icon()" [size]="44" />
-    @if (tag()) {
-      <div class="corner-tag"><sd-chip tone="primary">{{ tag() }}</sd-chip></div>
-    }
-  </div>
-  <div class="body">
-    <div class="title">{{ cardTitle() }}</div>
-    @if (subtitle()) { <div class="subtitle">{{ subtitle() }}</div> }
-    <div class="meta">
-      @if (drive()) {
-        <sd-chip tone="sky"><sd-icon name="car" [size]="12" /> {{ drive() }}</sd-chip>
-      }
-      @if (ages()) {
-        <sd-chip tone="leaf">Ages {{ ages() }}</sd-chip>
-      }
-      <ng-content select="[slot=chips]" />
-    </div>
-    @if (why()) {
-      <div class="why">
-        <sd-icon name="sparkle" [size]="14" />
-        <span>{{ why() }}</span>
-      </div>
+<div class="card__head">
+  <sd-disc [icon]="icon()" [tone]="tone()" size="lg" />
+  <div class="card__head-text">
+    <h3 class="card__title">{{ cardTitle() }}</h3>
+    @if (meta()) {
+      <p class="card__meta">{{ meta() }}</p>
     }
   </div>
 </div>
+@if (why()) {
+  <p class="card__body">{{ why() }}</p>
+}
+<div class="card__chips"><ng-content select="[slot=chips]" /></div>
+@if (mapUrl()) {
+  <div class="card__footer">
+    <sd-button variant="quiet" size="sm" [href]="mapUrl()" target="_blank">
+      <sd-icon name="map" />
+      Map
+    </sd-button>
+  </div>
+}

@@ -1,0 +1,66 @@
+<sd-page-header title="Past weekends" [subtitle]="subtitle()" />
+
+@if (error()) {
+  <sd-banner class="error" tone="warn" role="alert" icon="close">{{ error() }}</sd-banner>
+}
+
+@switch (status()) {
+  @case ('loading') {
+    <sd-status-row icon="star">Gathering your weekends.</sd-status-row>
+  }
+  @case ('empty') {
+    <div class="sd-narrow">
+      <sd-empty icon="star" title="Nothing here yet" body="Plan this weekend and it shows up here on Monday, ready to rate.">
+        <sd-button slot="cta" variant="quiet" href="/weekend">
+          Go to this weekend
+          <sd-icon name="arrow_right" />
+        </sd-button>
+      </sd-empty>
+    </div>
+  }
+  @case ('ready') {
+    <sd-filters class="filters" label="Filters">
+      @for (chip of view().filters; track chip.label) {
+        <sd-filter-chip [tone]="filterTone(chip.tone)" [pressed]="chip.active" (pressedChange)="setFilter(chip.label)">
+          @if (chip.icon) {
+            <sd-icon [name]="chip.icon" [size]="14" [stroke]="2" />
+          }
+          {{ chip.label }}
+        </sd-filter-chip>
+      }
+    </sd-filters>
+
+    @if (view().skipping.length) {
+      <p class="strip">
+        <span>Skipping next time:</span>
+        @for (chip of view().skipping; track chip.label) {
+          <sd-chip tone="warn">
+            <sd-icon name="close" [size]="13" [stroke]="2" />
+            {{ chip.label }}
+          </sd-chip>
+        }
+      </p>
+    }
+
+    @if (view().filterEmpty; as message) {
+      <sd-empty icon="star" title="Nothing matches" [body]="message" />
+    } @else {
+      <div class="sd-grid-cards">
+        @for (card of view().weekends; track card.id) {
+          <sd-past-card
+            [title]="card.title"
+            [dateRange]="card.eyebrow"
+            [rating]="card.rating || null"
+            [favourite]="card.favourite"
+            [highlights]="card.highlights"
+            (favouriteToggle)="favourite(card, $event)"
+            (rename)="rename(card)"
+            (rate)="rate(card)"
+            (remix)="remix(card)"
+            (repeat)="repeat(card)"
+          />
+        }
+      </div>
+    }
+  }
+}
