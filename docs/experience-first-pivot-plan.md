@@ -37,7 +37,7 @@ maximizes:
 | **The feedback loop is dead-ended.** `Weekend.Rating` is stored and displayed on Saved but never read by the planner. L1-010 promises "low-rated → avoid repeating," yet `RecencyScore` is the only history signal and treats a 5★ Zoo trip and a 1★ Zoo trip identically. | `Saturdaze.Domain/Entities/Weekend.cs:23`; planner has zero references to `Rating` |
 | **Errands are first-class; memories aren't.** There is a `ShoppingErrand` entity and a dedicated placement algorithm. There is no entity for "what we'll remember." The user guide says it plainly: "no memory notes feature today." | `WeekendPlanner.cs` — `PlaceErrand`; `docs/user-guide/09-saved-weekends.md` |
 | **Meals are logistics.** Restaurant choice is `WifeApproved` + closest drive to the anchor activity. A meal is fuel between blocks, not part of the experience. | `WeekendPlanner.cs` — `PlaceMeals` |
-| **Budget is inert.** `Family.BudgetEnabled` exists but the planner ignores it. | `Saturdaze.Domain/Entities/Family.cs:7` |
+| **Budget is inert.** `Family.BudgetEnabled` exists but the planner ignores it. | `Saturdaze.Domain/Entities/Family.cs:11` |
 | **The only nod to Pink is `TryNew`.** The +3 novelty bonus is the one place the planner values something other than fit. It is a toggle, not a philosophy. | `WeekendPlanner.cs` — `ScoreActivities`, try-new branch |
 
 The seed data reinforces this. The Brown family's preferences are *categories*
