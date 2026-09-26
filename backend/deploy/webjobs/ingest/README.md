@@ -1,7 +1,7 @@
 # Ingestion triggers
 
 Catalog ingestion (`LocalEvents` / `Activities` / `Restaurants`, refreshed from a
-grounded Claude web search) can be triggered three ways. All three run the same
+grounded Claude web search on Microsoft Foundry, ADR-011) can be triggered three ways. All three run the same
 `IngestionRunner`, so the behaviour is identical — only the *cadence owner*
 differs. Pick one.
 
@@ -13,7 +13,7 @@ systemd unit, an Azure Container App, or a Kubernetes Deployment.
 
 ```bash
 SATURDAZE_CONNECTION="Server=...;Database=Saturdaze;..." \
-ANTHROPIC_API_KEY="sk-ant-..." \
+ANTHROPIC_FOUNDRY_API_KEY="<foundry-key>" \
 dotnet Saturdaze.Worker.dll
 ```
 
@@ -42,5 +42,9 @@ saturdaze ingest --type all --dry-run     # tune the prompt, write nothing
 
 ## Secrets
 
-`ANTHROPIC_API_KEY` is read from the environment and is never logged, echoed by
-`--dry-run`, or committed to the repo.
+`ANTHROPIC_FOUNDRY_API_KEY` (the key of the `sd-ai-uofnt2` Foundry account, written to
+`.deploy/azure.env` by `eng/Deploy-Foundry.ps1`) is read from the environment and is
+never logged, echoed by `--dry-run`, or committed to the repo.
+
+To call Anthropic directly instead, set `Saturdaze__Ingestion__Claude__Provider=Anthropic`
+and `ANTHROPIC_API_KEY`; only the selected provider's variable is read.

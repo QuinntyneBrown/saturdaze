@@ -11,7 +11,7 @@ Container_Boundary(host, "CLI or Worker process") {
  Component(client, "ClaudeWebSearchClient", "IWebSearchClient adapter", "Calls provider and retries transient failures")
  ComponentDb(db, "AppDbContext", "EF Core", "Exposes catalogs and IngestionRuns")
 }
-System_Ext(provider, "Anthropic Messages API", "Web-search-enabled model")
+System_Ext(provider, "Claude Messages API", "Microsoft Foundry by default, Anthropic when configured; web-search-enabled model")
 Rel(entry, runner, "RunAsync")
 Rel(runner, prompts, "Builds context")
 Rel(runner, db, "Checks daily count; saves audit")

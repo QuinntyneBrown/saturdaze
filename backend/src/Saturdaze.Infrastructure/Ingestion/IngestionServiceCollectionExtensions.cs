@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Options;
 using Saturdaze.Application.Abstractions;
 using Saturdaze.Application.Common;
 using Saturdaze.Application.Ingestion;
@@ -11,7 +12,7 @@ namespace Saturdaze.Infrastructure.Ingestion;
 
 /// <summary>
 /// Registers the whole ingestion pipeline (Application orchestration + the
-/// Anthropic-backed web-search client) in one call. Self-contained so it can be
+/// Claude web-search client, served by Microsoft Foundry or Anthropic) in one call. Self-contained so it can be
 /// added by any host — the CLI, the Worker, or the API — without assuming the
 /// other composition roots ran first. Reuses <c>TryAdd*</c> for the shared
 /// services (<see cref="IDateTimeProvider"/>, <see cref="IAppDbContext"/>) so it
@@ -29,13 +30,8 @@ public static class IngestionServiceCollectionExtensions
 
         services.AddOptions<ClaudeWebSearchOptions>()
             .Bind(configuration.GetSection(ClaudeWebSearchOptions.SectionName))
-            .PostConfigure(o =>
-            {
-                // Secret comes from the environment in production (never the repo).
-                var key = Environment.GetEnvironmentVariable("ANTHROPIC_API_KEY");
-                if (!string.IsNullOrWhiteSpace(key))
-                    o.ApiKey = key;
-            });
+            // Secret comes from the environment in production (never the repo).
+            .PostConfigure(o => o.ApiKey = ClaudeWebSearchOptions.ResolveApiKey(o, Environment.GetEnvironmentVariable));
 
         services.TryAddSingleton<IDateTimeProvider, SystemDateTimeProvider>();
         services.TryAddScoped<IAppDbContext>(sp => sp.GetRequiredService<AppDbContext>());
@@ -44,13 +40,13 @@ public static class IngestionServiceCollectionExtensions
         services.AddScoped<CatalogUpserter>();
         services.AddScoped<IngestionRunner>();
 
-        var baseUrl = configuration[$"{ClaudeWebSearchOptions.SectionName}:BaseUrl"]
-            ?? "https://api.anthropic.com/";
-
         services
-            .AddHttpClient<IWebSearchClient, ClaudeWebSearchClient>(ClaudeWebSearchClient.HttpClientName, http =>
+            .AddHttpClient<IWebSearchClient, ClaudeWebSearchClient>(ClaudeWebSearchClient.HttpClientName, (sp, http) =>
             {
-                http.BaseAddress = new Uri(baseUrl, UriKind.Absolute);
+                // Null when Foundry is unconfigured; the client reports that on
+                // first use instead of failing every host at startup.
+                http.BaseAddress = ClaudeWebSearchOptions.ResolveBaseUri(
+                    sp.GetRequiredService<IOptions<ClaudeWebSearchOptions>>().Value);
                 // The model runs several web searches inside one call, so this is
                 // far longer than the weather client's 10s budget.
                 http.Timeout = TimeSpan.FromMinutes(5);

@@ -12,6 +12,18 @@ interface IWebSearchClient {
  +SearchAsync(...): Task<WebSearchResult>
 }
 class ClaudeWebSearchClient
+class ClaudeWebSearchOptions {
+ +ClaudeProvider Provider
+ +string FoundryResource
+ +string Model
+ +string BaseUrl
+ +ResolveBaseUri(options): Uri?
+ +ResolveApiKey(options, environment): string
+}
+enum ClaudeProvider {
+ Foundry
+ Anthropic
+}
 class IngestionResultParser {
  +Parse(rawText: string, type: IngestionType): IngestionParseResult
 }
@@ -40,6 +52,8 @@ class IngestionItem <<record>> {
 interface IAppDbContext
 IngestionRunner --> IWebSearchClient
 ClaudeWebSearchClient ..|> IWebSearchClient
+ClaudeWebSearchClient --> ClaudeWebSearchOptions
+ClaudeWebSearchOptions --> ClaudeProvider
 IngestionRunner --> IngestionResultParser
 IngestionRunner --> CatalogUpserter
 IngestionRunner --> IngestionRun : audits one per selected type
