@@ -14,14 +14,14 @@ box "Backend — Infrastructure" #FFF4E5
  participant HttpClient as http
 end box
 box "External — Research provider" #F2F4F7
- participant "Anthropic Messages API" as provider
+ participant "Claude Messages API\n(Microsoft Foundry or Anthropic)" as provider
 end box
 runner -> client : SearchAsync(system, user, ct)
-client -> client : Use API key after environment override
-alt API key absent
+client -> client : Use provider endpoint and key\n(provider variable overrides configured key)
+alt endpoint unresolved or API key absent
  client --> runner : Configuration failure
-else key available
- client -> http : POST /v1/messages with web-search tool
+else endpoint and key available
+ client -> http : POST v1/messages with web-search tool
  http -> provider : Authenticated request
  provider --> http : Response or transport failure
  http --> client : Result

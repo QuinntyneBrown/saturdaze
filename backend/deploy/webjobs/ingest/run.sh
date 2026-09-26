@@ -8,7 +8,9 @@
 # long-lived service / container.
 #
 # Required App Service application settings (never commit these):
-#   ANTHROPIC_API_KEY     - Anthropic API key (secret)
+#   ANTHROPIC_FOUNDRY_API_KEY - Microsoft Foundry key for the Claude deployment (secret)
+#                           (for Anthropic direct instead: ANTHROPIC_API_KEY plus
+#                            Saturdaze__Ingestion__Claude__Provider=Anthropic)
 #   SATURDAZE_CONNECTION  - SQL connection string
 set -euo pipefail
 

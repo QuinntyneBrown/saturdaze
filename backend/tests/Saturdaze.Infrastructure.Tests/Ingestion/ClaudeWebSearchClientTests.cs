@@ -28,10 +28,18 @@ public class ClaudeWebSearchClientTests
         }
         """;
 
-    private static ClaudeWebSearchClient CreateClient(FakeHandler handler, ClaudeWebSearchOptions? options = null)
+    private const string FoundryBase = "https://sd-ai-test.services.ai.azure.com/anthropic/";
+
+    private static ClaudeWebSearchClient CreateClient(
+        FakeHandler handler, ClaudeWebSearchOptions? options = null, string? baseAddress = "https://api.anthropic.com/")
     {
-        var http = new HttpClient(handler) { BaseAddress = new Uri("https://api.anthropic.com/") };
-        options ??= new ClaudeWebSearchOptions { ApiKey = "sk-test", Model = "claude-sonnet-4-6", MaxSearches = 5 };
+        var http = new HttpClient(handler);
+        if (baseAddress is not null)
+            http.BaseAddress = new Uri(baseAddress);
+        options ??= new ClaudeWebSearchOptions
+        {
+            Provider = ClaudeProvider.Anthropic, ApiKey = "sk-test", Model = "claude-sonnet-4-6", MaxSearches = 5
+        };
         return new ClaudeWebSearchClient(http, options, NullLogger<ClaudeWebSearchClient>.Instance, TimeSpan.Zero);
     }
 
@@ -53,6 +61,27 @@ public class ClaudeWebSearchClientTests
         handler.LastBody.Should().Contain("\"max_uses\":5");
         handler.LastBody.Should().Contain("SYSTEM PROMPT");
         handler.LastBody.Should().Contain("USER PROMPT");
+    }
+
+    [Fact]
+    public async Task Sends_the_same_request_to_the_Foundry_anthropic_endpoint()
+    {
+        var handler = new FakeHandler(SampleResponse);
+        var options = new ClaudeWebSearchOptions
+        {
+            Provider = ClaudeProvider.Foundry, ApiKey = "foundry-key", Model = "claude-sonnet-5", MaxSearches = 5
+        };
+        var client = CreateClient(handler, options, FoundryBase);
+
+        var result = await client.SearchAsync("SYSTEM PROMPT", "USER PROMPT");
+
+        handler.LastRequest!.RequestUri!.AbsoluteUri
+            .Should().Be("https://sd-ai-test.services.ai.azure.com/anthropic/v1/messages");
+        handler.LastRequest.Headers.GetValues("x-api-key").Should().ContainSingle().Which.Should().Be("foundry-key");
+        handler.LastRequest.Headers.GetValues("anthropic-version").Should().ContainSingle().Which.Should().Be("2023-06-01");
+        handler.LastBody.Should().Contain("\"model\":\"claude-sonnet-5\"");
+        handler.LastBody.Should().Contain("web_search_20250305");
+        result.WebSearchCount.Should().Be(3);
     }
 
     [Fact]
@@ -87,15 +116,30 @@ public class ClaudeWebSearchClientTests
         result.WebSearchCount.Should().Be(2);
     }
 
-    [Fact]
-    public async Task Throws_without_calling_http_when_api_key_is_missing()
+    [Theory]
+    [InlineData(ClaudeProvider.Foundry, "ANTHROPIC_FOUNDRY_API_KEY")]
+    [InlineData(ClaudeProvider.Anthropic, "ANTHROPIC_API_KEY")]
+    public async Task Throws_without_calling_http_when_api_key_is_missing(ClaudeProvider provider, string variable)
     {
         var handler = new FakeHandler(SampleResponse);
-        var client = CreateClient(handler, new ClaudeWebSearchOptions { ApiKey = "" });
+        var client = CreateClient(handler, new ClaudeWebSearchOptions { Provider = provider, ApiKey = "" });
 
         var act = () => client.SearchAsync("s", "u");
 
-        await act.Should().ThrowAsync<ClaudeApiException>().WithMessage("*ANTHROPIC_API_KEY*");
+        await act.Should().ThrowAsync<ClaudeApiException>().WithMessage($"{variable} is not configured*");
+        handler.Calls.Should().Be(0);
+    }
+
+    [Fact]
+    public async Task Throws_without_calling_http_when_the_Foundry_endpoint_is_not_configured()
+    {
+        var handler = new FakeHandler(SampleResponse);
+        var options = new ClaudeWebSearchOptions { Provider = ClaudeProvider.Foundry, ApiKey = "foundry-key" };
+        var client = CreateClient(handler, options, baseAddress: null);
+
+        var act = () => client.SearchAsync("s", "u");
+
+        await act.Should().ThrowAsync<ClaudeApiException>().WithMessage("*FoundryResource*");
         handler.Calls.Should().Be(0);
     }
 

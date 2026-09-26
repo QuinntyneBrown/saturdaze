@@ -2,8 +2,9 @@ namespace Saturdaze.Application.Ingestion;
 
 /// <summary>
 /// Abstraction over an LLM-with-web-search provider. One implementation today
-/// (<c>ClaudeWebSearchClient</c> in Infrastructure, calling Anthropic's Messages
-/// API with the <c>web_search</c> tool). The interface lives in Application so
+/// (<c>ClaudeWebSearchClient</c> in Infrastructure, calling the Claude Messages
+/// API with the <c>web_search</c> tool via Microsoft Foundry, or Anthropic
+/// directly). The interface lives in Application so
 /// <see cref="IngestionRunner"/> can be unit-tested with a fake and so the
 /// dependency direction stays Domain &lt;- Application &lt;- Infrastructure, the
 /// same shape as <c>IWeatherClient</c>/<c>OpenMeteoWeatherClient</c>.

@@ -10,14 +10,14 @@
 #
 #   docker run --rm \
 #     -e SATURDAZE_CONNECTION="Server=...;Database=Saturdaze;..." \
-#     -e ANTHROPIC_API_KEY="sk-ant-..." \
+#     -e ANTHROPIC_FOUNDRY_API_KEY="<foundry-key>" \
 #     saturdaze-worker
 #
 # Or as a one-shot job (e.g. a Kubernetes CronJob / Azure Container Apps Job
 # where an external scheduler owns the cadence):
 #
 #   docker run --rm \
-#     -e SATURDAZE_CONNECTION="..." -e ANTHROPIC_API_KEY="..." \
+#     -e SATURDAZE_CONNECTION="..." -e ANTHROPIC_FOUNDRY_API_KEY="..." \
 #     -e Saturdaze__Ingestion__Schedule__RunOnceThenExit=true \
 #     saturdaze-worker
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build

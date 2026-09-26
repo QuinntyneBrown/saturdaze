@@ -9,15 +9,17 @@ namespace Saturdaze.Infrastructure.Ingestion;
 
 /// <summary>
 /// The one concrete <see cref="IWebSearchClient"/>: a thin wrapper over the
-/// Anthropic Messages API with the server-side <c>web_search</c> tool enabled.
-/// The model runs the multi-step "search a few venue pages, then summarise"
-/// loop internally; from here it is a single <c>POST /v1/messages</c> out and a
-/// parsed result in. Centralises the API key, model id, and search budget so
-/// nothing else in the codebase touches Anthropic directly.
+/// Claude Messages API with the server-side <c>web_search</c> tool enabled,
+/// served by Microsoft Foundry by default or by Anthropic directly (same request
+/// and response shape; only the base URL and key differ). The model runs the
+/// multi-step "search a few venue pages, then summarise" loop internally; from
+/// here it is a single <c>POST v1/messages</c> out and a parsed result in.
+/// Centralises the API key, model id, and search budget so nothing else in the
+/// codebase touches the provider directly.
 /// </summary>
 public sealed class ClaudeWebSearchClient : IWebSearchClient
 {
-    public const string HttpClientName = "AnthropicClaude";
+    public const string HttpClientName = "ClaudeMessages";
 
     private readonly HttpClient _http;
     private readonly ClaudeWebSearchOptions _options;
@@ -40,9 +42,13 @@ public sealed class ClaudeWebSearchClient : IWebSearchClient
     public async Task<WebSearchResult> SearchAsync(
         string systemPrompt, string userPrompt, CancellationToken cancellationToken = default)
     {
+        if (_http.BaseAddress is null)
+            throw new ClaudeApiException(
+                $"The {_options.Provider} endpoint is not configured. Set {ClaudeWebSearchOptions.SectionName}:FoundryResource (or BaseUrl) before running ingestion.");
+
         if (string.IsNullOrWhiteSpace(_options.ApiKey))
             throw new ClaudeApiException(
-                "ANTHROPIC_API_KEY is not configured. Set it as an environment variable (or Saturdaze:Ingestion:Claude:ApiKey) before running ingestion.");
+                $"{ClaudeWebSearchOptions.ApiKeyVariable(_options.Provider)} is not configured. Set it as an environment variable (or {ClaudeWebSearchOptions.SectionName}:ApiKey) before running ingestion.");
 
         var body = BuildRequestBody(systemPrompt, userPrompt);
 
@@ -51,7 +57,7 @@ public sealed class ClaudeWebSearchClient : IWebSearchClient
 
         if (!response.IsSuccessStatusCode)
             throw new ClaudeApiException(
-                $"Anthropic API returned {(int)response.StatusCode} ({response.StatusCode}): {Snippet(payload)}");
+                $"Claude API ({_options.Provider}) returned {(int)response.StatusCode} ({response.StatusCode}): {Snippet(payload)}");
 
         try
         {
@@ -59,7 +65,7 @@ public sealed class ClaudeWebSearchClient : IWebSearchClient
         }
         catch (JsonException ex)
         {
-            throw new ClaudeApiException("Anthropic API returned a response that could not be parsed.", ex);
+            throw new ClaudeApiException($"Claude API ({_options.Provider}) returned a response that could not be parsed.", ex);
         }
     }
 
@@ -110,13 +116,14 @@ public sealed class ClaudeWebSearchClient : IWebSearchClient
                 return response;
 
             _logger.LogWarning(
-                "Anthropic API returned {Status}; retrying once in {Delay}s.",
-                (int)response.StatusCode, _retryDelay.TotalSeconds);
+                "Claude API ({Provider}) returned {Status}; retrying once in {Delay}s.",
+                _options.Provider, (int)response.StatusCode, _retryDelay.TotalSeconds);
             response.Dispose();
         }
         catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException && !ct.IsCancellationRequested)
         {
-            _logger.LogWarning(ex, "Anthropic API request errored; retrying once in {Delay}s.", _retryDelay.TotalSeconds);
+            _logger.LogWarning(ex, "Claude API ({Provider}) request errored; retrying once in {Delay}s.",
+                _options.Provider, _retryDelay.TotalSeconds);
         }
 
         await Task.Delay(_retryDelay, ct);
@@ -127,7 +134,7 @@ public sealed class ClaudeWebSearchClient : IWebSearchClient
         }
         catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException && !ct.IsCancellationRequested)
         {
-            throw new ClaudeApiException("Anthropic API request failed after one retry.", ex);
+            throw new ClaudeApiException($"Claude API ({_options.Provider}) request failed after one retry.", ex);
         }
     }
 

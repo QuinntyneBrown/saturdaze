@@ -7,7 +7,7 @@ using Saturdaze.Worker;
 var builder = Host.CreateApplicationBuilder(args);
 
 // Same composition as the API for persistence/config, plus the ingestion
-// pipeline (runner + parser + upserter + Anthropic web-search client).
+// pipeline (runner + parser + upserter + Claude web-search client via Foundry).
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddIngestion(builder.Configuration);
 
