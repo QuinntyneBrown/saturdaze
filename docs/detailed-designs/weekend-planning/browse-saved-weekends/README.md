@@ -6,29 +6,30 @@ Saturdaze is a web application that plans personalized family weekends. Saved-we
 
 *avoid-repeating item* — activity from a weekend rated two stars or lower
 
-`SavedPage` presents filtered history from `SavedService`. The API orders `Weekend` summaries by date and persists favourite state.
+`PastPage` presents filtered history from `SavedService`. The API orders `Weekend` summaries by date and persists favourite state.
 
 ## Description
 
-The feature forms a vertical slice across the Angular application, the ASP.NET Core API, application handlers, domain state, and SQL Server persistence.
+`PastPage` at `/past` reads `SavedService.list(): Signal<PastView>`. The service requests up to 50 summaries and filters favourites, year, and five-star ratings locally.
 
-- **`SavedPage`** — Angular page that presents history filters, highlights, and avoid-repeating items.
-- **`SavedService`** — Typed client service that loads and maps weekend summaries.
-- **`WeekendsController`** — API controller exposing history and favourite endpoints.
-- **`GetWeekendHistoryQueryHandler`** — Application handler that orders and projects past weekends.
-- **`MarkFavouriteCommandHandler`** — Application handler that persists favourite state.
-- **`Weekend`** — Domain aggregate storing title, rating, favourite state, blocks, and errands.
+`GetWeekendHistoryQueryHandler` filters by family, orders by WeekendOf descending, and projects title, rating, favourite state, and activity highlights. It has a take limit but no cursor or offset; it currently includes the current and future weekends.
 
-`RateWeekendCommandHandler` (`PUT /api/weekends/{id}/rating`, `{ rating: 1..5 | null }`) persists or clears the rating and `RenameWeekendCommandHandler` (`PUT /api/weekends/{id}/title`) persists the user-supplied title; both are family-scoped and surface through `WeekendDto` and the history summary. The saved page exposes them through a CDK `RatingDialog` and the favourite heart.
+`RatingDialog` and `RenameWeekendDialog` collect edits; favourite actions send the selected boolean. `RateWeekendCommandHandler`, `RenameWeekendCommandHandler`, and `MarkFavouriteCommandHandler` persist them after ownership checks.
+
+`PastPage` confirms Repeat and Remix before calling `WeekendPlanService`. `ReuseWeekendCommandHandler` replaces the current draft with copied source blocks and errands using new IDs. Repeat copies source locks; Remix subsequently regenerates unlocked content.
+
+`skippingChips()` derives the Skipping next time strip from low-rated highlights. Planner history does not carry ratings, so that display does not enforce future exclusion. Repeat also replaces existing target locks, despite stronger confirmation-copy claims.
+
 ## Requirements
 
-The feature realizes the following level-2 (L2) requirements. Each row cites the level-1 (L1) capability refined by the requirement.
+The following L2 requirements refine the cited L1 capabilities. Implementation gaps stated in Description do not waive these obligations.
 
 | L2 ID | Refines (L1) | Requirement |
 |-------|--------------|-------------|
-| `L2-025` | `L1-010` | `GET /api/weekends/history?take=N` must return up to N past weekends ordered by `WeekendOf` descending and include each weekend's title, rating, favourite flag, and a short highlights summary. |
-| `L2-026` | `L1-010` | `PUT /api/weekends/{id}/favourite` must set `IsFavourite` to the request value, and the system must persist a 1–5 star rating on every weekend. |
-| `L2-027` | `L1-010` | The `/saved` page must list activities that appeared in a past weekend rated ≤2 stars under an "Avoid repeating" section, with a "Skip" chip. |
+| `L2-025` | `L1-010` | `GET /api/weekends/history?take=N` shall return up to N past weekends ordered by `WeekendOf` descending and include each weekend's title, rating, favourite flag, and a short highlights summary. |
+| `L2-026` | `L1-010` | `PUT /api/weekends/{id}/favourite` shall set `IsFavourite` to the request value; `PUT /api/weekends/{id}/rating` (`{ rating: 1..5 \| null }`) shall persist or clear a 1–5 star rating; `PUT /api/weekends/{id}/title` shall persist the user-supplied title. |
+| `L2-027` | `L1-010` | The `/past` page shall list activities that appeared in a past weekend rated ≤2 stars under an "Skipping next time" section, with a "Skip" chip. |
+| `L2-084` | `L1-010` | The family-scoped repeat and remix endpoints shall copy a source weekend into the current weekend, replacing its draft blocks and errands. Repeat shall retain the copied plan; remix shall regenerate its unlocked portion. |
 
 ## Diagrams
 
@@ -61,3 +62,9 @@ The class view shows the request path and the state relationships used by the fe
 The sequence view traces the primary behaviour to `L2-025`, `L2-026`, and `L2-027`. Its alternate path preserves valid existing state when the request cannot proceed.
 
 ![Sequence diagram for browsing saved weekends](diagrams/sequence-saved-weekends.png)
+
+### Behaviour — reuse a saved weekend
+
+This sequence records the current implementation, including its failure boundary.
+
+![Sequence — reuse a saved weekend](diagrams/sequence-reuse.png)

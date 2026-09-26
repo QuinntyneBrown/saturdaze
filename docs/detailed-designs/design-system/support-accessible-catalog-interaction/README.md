@@ -18,11 +18,13 @@ This feature combines keyboard reachability, route focus management, visible foc
 
 ## Requirements
 
+The following L2 requirements refine the cited L1 capabilities. Implementation gaps stated in Description do not waive these obligations.
+
 | L2 ID | Refines (L1) | Requirement |
 |-------|--------------|-------------|
-| `L2-069` | `L1-028` | Every catalog interaction must be operable by keyboard alone, with a skip link, programmatic focus management on navigation, and a visible focus indicator drawn from the token palette. |
-| `L2-070` | `L1-028` | Every non-navigational action must be announced through the single `#status` live region, rendered as a transient toast, so assistive technology hears state changes that are otherwise only visual. |
-| `L2-071` | `L1-028` | Navigation, breadcrumbs, tabs, search, dialogs, and the menu button must expose their state through ARIA so the current location and each control's condition are programmatically determinable. |
+| `L2-069` | `L1-028` | Every catalog interaction shall be operable by keyboard alone, with a skip link, programmatic focus management on navigation, and a visible focus indicator drawn from the token palette. |
+| `L2-070` | `L1-028` | Every non-navigational action shall be announced through the single `#status` live region, rendered as a transient toast, so assistive technology hears state changes that are otherwise only visual. |
+| `L2-071` | `L1-028` | Navigation, breadcrumbs, tabs, search, dialogs, and the menu button shall expose their state through ARIA so the current location and each control's condition are programmatically determinable. |
 
 ## Diagrams
 
@@ -45,6 +47,8 @@ Focus management, semantic renderers, keyboard handlers, live-region announcemen
 ![C4 component view for accessible catalog interaction](diagrams/c4-component.png)
 
 ### Class structure
+
+Class notation groups JavaScript functions, manifest records, and configuration concepts; it does not imply that every named grouping is an exported JavaScript class.
 
 The accessibility controller coordinates route focus, semantic element state, and a single `StatusRegion` with a resettable timer.
 

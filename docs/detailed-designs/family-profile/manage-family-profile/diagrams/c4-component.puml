@@ -4,7 +4,7 @@ LAYOUT_WITH_LEGEND()
 title Components — Manage a family profile
 
 Container_Boundary(web, "Saturdaze web application") {
-  Component(page, "ProfilePage", "Angular component", "Presents and edits the family profile")
+  Component(page, "FamilyPage", "Angular component", "Presents and edits the family profile")
   Component(client, "FamilyService", "Angular service", "Maps editable state to API contracts")
 }
 Container_Boundary(api, "Saturdaze API") {

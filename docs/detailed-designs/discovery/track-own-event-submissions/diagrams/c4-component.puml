@@ -4,8 +4,8 @@ LAYOUT_WITH_LEGEND()
 title Components — Track own event submissions
 
 Container_Boundary(web, "Saturdaze web application") {
-  Component(page, "EventsPage", "Angular component", "Merges public and owned pending cards")
-  Component(client, "EventSubmissionsService", "Angular service", "Loads caller-owned submissions")
+  Component(page, "IdeasEventsPage", "Angular component", "Merges public and owned pending cards")
+  Component(client, "EventsService and EventSubmissionsService", "Angular services", "Loads caller-owned submissions")
 }
 Container_Boundary(api, "Saturdaze API") {
   Component(controller, "EventSubmissionsController", "ASP.NET Core", "Exposes the mine endpoint")

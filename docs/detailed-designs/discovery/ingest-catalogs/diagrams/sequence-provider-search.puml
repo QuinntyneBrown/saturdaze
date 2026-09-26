@@ -1,0 +1,46 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+
+title Behaviour — Provider search (L2-078)
+box "Backend — Application" #ECFDF3
+ participant IngestionRunner as runner
+end box
+box "Backend — Infrastructure" #FFF4E5
+ participant ClaudeWebSearchClient as client
+ participant HttpClient as http
+end box
+box "External — Research provider" #F2F4F7
+ participant "Anthropic Messages API" as provider
+end box
+runner -> client : SearchAsync(system, user, ct)
+client -> client : Use API key after environment override
+alt API key absent
+ client --> runner : Configuration failure
+else key available
+ client -> http : POST /v1/messages with web-search tool
+ http -> provider : Authenticated request
+ provider --> http : Response or transport failure
+ http --> client : Result
+ opt first attempt: transport failure, 429, or 5xx
+ client -> client : Wait 30 seconds with cancellation
+ client -> http : One retry
+ http -> provider : Same request
+ provider --> http : Final response
+ http --> client : Result
+ end
+ alt successful response
+ client -> client : Extract text blocks and usage
+ client --> runner : WebSearchResult
+ else terminal HTTP / parse / transport error
+ client --> runner : Exception
+ end
+end
+note over client
+Cancellation propagates without retry.
+No catalog or audit writes occur in this adapter.
+end note
+@enduml

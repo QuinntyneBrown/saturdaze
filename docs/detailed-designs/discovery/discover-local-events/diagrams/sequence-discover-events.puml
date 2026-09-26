@@ -5,48 +5,31 @@ skinparam shadowing false
 skinparam roundcorner 12
 skinparam defaultFontName Arial
 skinparam ArrowColor #344054
-skinparam rectangle {
-  BorderColor #344054
-  FontColor #101828
-}
-skinparam package {
-  BorderColor #667085
-  FontColor #101828
-  BackgroundColor #F9FAFB
-}
-actor "Family member" as actor
-box "Frontend — Saturdaze web application" #E0F2FE
-  participant "EventsPage" as page
-  participant "EventsService" as client
+actor "User" as actor
+box "Frontend — Saturdaze Angular application" #E0F2FE
+ participant "IdeasEventsPage" as page
+ participant "EventsService" as client
 end box
-box "Backend — Saturdaze API application" #D1FADF
-  participant "EventsController" as controller
+box "Backend — Saturdaze API" #D1FADF
+ participant "EventsController" as controller
 end box
 box "Backend — Saturdaze Application and Domain" #ECFDF3
-  participant "GetLocalEventsQueryHandler" as handler
-  participant "LocalEvent" as entity
+ participant "GetLocalEventsQueryHandler" as handler
 end box
 box "Backend — Saturdaze Infrastructure" #FFF4E5
-  database "Saturdaze database" as infra
-  end box
-actor -> page : Open the events feed
-page -> client : load(weekendOf)
-client -> controller : GET /api/events
-controller -> controller : Authenticate and validate request
-controller -> handler : Send GetLocalEventsQuery
-handler -> infra : Query dates and drive radius
-infra --> handler : Current data
-alt events fall within selected bounds
-  handler -> entity : Apply L2-020 weekend and radius filters
-  entity --> handler : Typed result
-  handler --> controller : Typed result
-  controller --> client : Successful HTTP response
-  client --> page : Present feature result
-  page --> actor : See grouped event feed
-else no events match
-  handler --> controller : Controlled alternate result
-  controller --> client : Safe HTTP response
-  client --> page : Present alternate state
-  page --> actor : See empty feed state
-end
+ database "AppDbContext\nSQL Server" as db
+end box
+actor -> page : Open /ideas/events
+page -> client : load()
+client -> controller : GET /api/events?weekendOf=...&maxDriveMinutes=45
+controller -> handler : GetLocalEventsQuery
+handler -> db : L2-020 overlap Friday-Sunday or start within 14 days after
+db --> handler : Events ordered by start, drive, name
+handler --> controller : LocalEventDto array
+controller --> client : 200, including an empty array
+client -> client : Group Saturday / Sunday / Coming soon
+client --> page : IdeasEventsView
+actor -> page : Change window or category
+page -> client : setWindow() or setCategory()
+client --> page : Locally filtered sections
 @enduml

@@ -1,0 +1,22 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — Schedule ingestion
+Container_Boundary(host, "Saturdaze Worker") {
+ Component(program, "Program", "Composition root", "Registers infrastructure, ingestion, and hosted service")
+ Component(options, "IngestionScheduleOptions", "Bound configuration", "Enabled, cron, types, startup, and once flags")
+ Component(worker, "IngestionWorker", "BackgroundService", "Waits, scopes, runs, and logs")
+ Component(cron, "CronSchedule", "Application utility", "Computes next UTC occurrence")
+ Component(scopes, "IServiceScopeFactory", "Dependency injection", "Creates a fresh scope per pass")
+ Component(runner, "IngestionRunner", "Scoped application service", "Runs non-dry ingestion")
+ Component(lifetime, "IHostApplicationLifetime", ".NET hosting", "Stops on once or invalid schedule")
+}
+Rel(program, worker, "Registers")
+Rel(worker, options, "Reads")
+Rel(worker, cron, "Parses and computes next time")
+Rel(worker, scopes, "Creates scope")
+Rel(scopes, runner, "Resolves")
+Rel(worker, runner, "RunAsync")
+Rel(worker, lifetime, "StopApplication when required")
+@enduml
+

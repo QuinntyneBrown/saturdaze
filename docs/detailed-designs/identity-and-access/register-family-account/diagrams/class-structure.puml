@@ -11,7 +11,7 @@ skinparam class {
 }
 title Class structure — Register a family account
 
-class SignupPage {
+class CreateAccountPage {
   +submit(): Promise<void>
 }
 class SessionStore {
@@ -36,7 +36,7 @@ class Family {
   +Guid Id
   +string HomeLocation
 }
-SignupPage --> SessionStore : calls
+CreateAccountPage --> SessionStore : calls
 SessionStore ..> RegisterUserCommand : maps to
 RegisterUserCommandHandler ..> RegisterUserCommand : handles
 RegisterUserCommandHandler --> User : creates

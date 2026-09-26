@@ -11,33 +11,25 @@ skinparam class {
 }
 title Class structure — Deploy to Azure
 
-class DeployWorkflow <<YAML workflow>> {
-  +string trigger = push:main
+class deploy_yml <<workflow>> {
+  +trigger: push main / workflow_dispatch
 }
-class ApiJob {
-  +publish(): Artifact
-  +deploy(): void
+class test_backend <<job>>
+class test_frontend <<job>>
+class preflight <<job>> {
+  +api_exists: boolean output
 }
-class MigrateJob {
-  +needs: ApiJob
-  +migrate(): void
+class api <<job>> {
+  +if: api_exists == true
 }
-class WebJob {
-  +needs: MigrateJob
-  +build(): BrowserBundle
-  +deploy(): void
-}
-class AzureTargets {
-  +AppService api
-  +AzureSql database
-  +StaticWebApps web
-}
-DeployWorkflow *-- ApiJob
-DeployWorkflow *-- MigrateJob
-DeployWorkflow *-- WebJob
-ApiJob --> MigrateJob : precedes
-MigrateJob --> WebJob : precedes
-ApiJob --> AzureTargets : deploys API
-MigrateJob --> AzureTargets : migrates SQL
-WebJob --> AzureTargets : deploys web
+class migrate <<job>>
+class web <<job>>
+deploy_yml *-- test_backend
+deploy_yml *-- test_frontend
+test_backend --> preflight : needs success
+test_frontend --> preflight : needs success
+preflight --> api : needs / condition
+api --> migrate : needs
+migrate --> web : needs
+test_frontend --> web : artifact and gate
 @enduml

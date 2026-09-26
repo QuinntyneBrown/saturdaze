@@ -10,24 +10,24 @@ The request path always presents the same response for registered and unregister
 
 ## Description
 
-The feature forms a vertical slice across the Angular application, the ASP.NET Core API, application handlers, domain state, and SQL Server persistence.
+`ResetPasswordPage` at `/reset-password` presents request, sent, new-password, done, and expired states. Presence of `?token=` selects the new-password form; old recovery routes redirect here.
 
-- **`ForgotPasswordPage`** — Angular page that validates the email request and navigates to the check-email state.
-- **`ResetPasswordPage`** — Angular page that reads the reset token and validates matching passwords.
-- **`SessionStore and AuthService`** — Client services that call the forgot-password and reset-password endpoints.
-- **`AuthController`** — API controller exposing both recovery endpoints.
-- **`ForgotPasswordCommandHandler`** — Application handler that creates delivery metadata without disclosing account existence.
-- **`ResetPasswordCommandHandler`** — Application handler that consumes `PasswordResetToken`, hashes the new password, and returns a fresh session.
+`SessionStore` and `AuthService` call the request and reset endpoints. The page presents sent state even when the request fails, preventing account-existence feedback in that UI.
 
+`ForgotPasswordCommandHandler` invalidates earlier reset credentials and stores a hashed token expiring after 60 minutes. `AuthController.DevDelivery()` exposes delivery data only in Development and Testing; other environments return an empty accepted response.
+
+`ResetPasswordCommandHandler` consumes a valid token, updates the password hash, revokes active refresh tokens, and returns a newly issued session. The current browser reset method ignores that session and displays done.
+
+Email dispatch is absent. Only eight-character minimum length is enforced; the stronger composition checklist in L2-005 remains a gap. Confirmation is checked in the browser, not a separate API field.
 
 ## Requirements
 
-The feature realizes the following level-2 (L2) requirements. Each row cites the level-1 (L1) capability refined by the requirement.
+The following L2 requirements refine the cited L1 capabilities. Implementation gaps stated in Description do not waive these obligations.
 
 | L2 ID | Refines (L1) | Requirement |
 |-------|--------------|-------------|
-| `L2-004` | `L1-001` | A signed-out user must be able to request a password-reset link by entering their email. The system must not reveal whether the email is registered. |
-| `L2-005` | `L1-001` | The system must accept a reset token plus a new password and confirmation, validate the token, enforce password complexity, and rotate any existing refresh tokens for that user on success. |
+| `L2-004` | `L1-001` | A signed-out user shall be able to request a password-reset link by entering their email. The system shall not reveal whether the email is registered. |
+| `L2-005` | `L1-001` | The system shall accept a reset token plus a new password and confirmation, validate the token, enforce password complexity, and rotate any existing refresh tokens for that user on success. |
 
 ## Diagrams
 

@@ -5,50 +5,37 @@ skinparam shadowing false
 skinparam roundcorner 12
 skinparam defaultFontName Arial
 skinparam ArrowColor #344054
-skinparam rectangle {
-  BorderColor #344054
-  FontColor #101828
-}
-skinparam package {
-  BorderColor #667085
-  FontColor #101828
-  BackgroundColor #F9FAFB
-}
-actor "Family member" as actor
-box "Frontend — Saturdaze web application" #E0F2FE
-  participant "SavedPage" as page
-  participant "SavedService" as client
+actor "User" as actor
+box "Frontend — Saturdaze Angular application" #E0F2FE
+ participant "PastPage" as page
+ participant "SavedService" as client
 end box
-box "Backend — Saturdaze API application" #D1FADF
-  participant "WeekendsController" as controller
+box "Backend — Saturdaze API" #D1FADF
+ participant "WeekendsController" as controller
 end box
 box "Backend — Saturdaze Application and Domain" #ECFDF3
-  participant "History and favourite handlers" as handler
-  participant "Weekend" as entity
+ participant "GetWeekendHistoryQueryHandler\ncuration handlers" as handler
 end box
 box "Backend — Saturdaze Infrastructure" #FFF4E5
-  database "Saturdaze database" as db
+ database "AppDbContext\nSQL Server" as db
 end box
-actor -> page : Open saved weekends or toggle favourite
-page -> client : load() or favourite request
-client -> controller : GET /api/weekends/history
-controller -> controller : Authenticate and validate request
-controller -> handler : Dispatch history query or favourite command
-handler -> db : Load authorized past weekends
-db --> handler : Current state
-alt history or target exists
-  handler -> entity : Apply L2-025 ordering and L2-026 curation
-  entity --> handler : Updated state
-  handler -> db : Save changes
-  db --> handler : Commit result
-  handler --> controller : Typed result
-  controller --> client : Successful HTTP response
-  client --> page : Present feature result
-  page --> actor : See curated history and avoid list
-else history is empty or target is absent
-  handler --> controller : Controlled error
-  controller --> client : ProblemDetails response
-  client --> page : Present safe error state
-  page --> actor : See empty or not-found state
-end
+actor -> page : Open /past
+page -> client : load()
+client -> controller : GET /api/weekends/history?take=50
+controller -> handler : GetWeekendHistoryQuery
+handler -> db : Family filter, descending date, Take (L2-025)
+db --> handler : Summaries including current/future rows
+handler --> controller : Array, possibly empty
+controller --> client : 200
+client -> client : Local filters and Skipping next time (L2-027)
+client --> page : PastView or empty state
+actor -> page : Confirm rating/title edit or toggle favourite
+page -> client : rate / rename / setFavourite
+client -> controller : PUT /api/weekends/{id}/rating, /title or /favourite
+controller -> handler : L2-026 family-scoped command
+handler -> db : Save target change
+db --> handler : Saved
+handler --> controller : WeekendDto
+controller --> client : 200
+client --> page : Patch summary
 @enduml

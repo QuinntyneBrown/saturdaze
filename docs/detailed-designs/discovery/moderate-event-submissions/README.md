@@ -6,27 +6,27 @@ Saturdaze is a web application that plans personalized family weekends. Moderati
 
 *moderation queue* — administrator-only list of event submissions whose status is pending
 
-`AdminEventsPage` opens approval or rejection dialogs and calls `EventSubmissionsService`. API policies require the `Admin` role before listing or deciding submissions.
+`ReviewSubmissionsPage` opens approval or rejection dialogs and calls `EventSubmissionsService`. API policies require the `Admin` role before listing or deciding submissions.
 
 ## Description
 
-The feature forms a vertical slice across the Angular application, the ASP.NET Core API, application handlers, domain state, and SQL Server persistence.
+`ReviewSubmissionsPage` at `/review-submissions` is guarded by `requireAuth` and `requireAdmin`. It loads the pending queue through `EventSubmissionsService` and opens approval or rejection dialogs.
 
-- **`AdminEventsPage`** — Angular page that displays pending submissions and decision actions.
-- **`ApproveSubmissionDialog and RejectSubmissionDialog`** — Angular CDK dialogs that confirm the decision and optional reason.
-- **`requireAdmin`** — Angular route guard for administrative navigation.
-- **`EventSubmissionsController`** — API controller whose pending, approve, and reject endpoints use the `Admin` policy.
-- **`ApproveSubmissionCommandHandler`** — Application handler that creates `LocalEvent` and records the published event ID.
-- **`RejectSubmissionCommandHandler`** — Application handler that stores rejected status and optional reason.
+`EventSubmissionsController` requires the Admin policy for pending, approve, and reject endpoints. The UI guard aids navigation; the API policy enforces authorization.
 
-`/admin/events` is registered in `app.routes.ts` behind `requireAuth` + `requireAdmin`. Approval accepts an optional `driveMinutes` (ADR-006, decision 3) and returns 409 `event_already_published` when an event with the same title and date already exists.
+`ApproveSubmissionCommandHandler` creates `LocalEvent`, stamps reviewer and publication identifiers, and accepts optional drive minutes. Repeated approval returns the existing result; a previously rejected submission returns 409.
+
+`RejectSubmissionCommandHandler` records Rejected status and the optional trimmed reason. Repeated rejection is idempotent; rejecting an approved submission returns 409.
+
+Approval rejects any existing event with the same name and date, even though ingestion's database key also includes location. This stricter moderation rule remains explicit pending reconciliation.
+
 ## Requirements
 
-The feature realizes the following level-2 (L2) requirements. Each row cites the level-1 (L1) capability refined by the requirement.
+The following L2 requirements refine the cited L1 capabilities. Implementation gaps stated in Description do not waive these obligations.
 
 | L2 ID | Refines (L1) | Requirement |
 |-------|--------------|-------------|
-| `L2-050` | `L1-018` | Users with the `admin` role must have access to `/admin/events` listing all pending submissions. Approving a submission must move its `status` to `approved` and copy it into the public events catalogue; rejecting must move its `status` to `rejected` and record an optional `rejectionReason`. Non-admins must receive 403 when calling the moderation endpoints. |
+| `L2-050` | `L1-018` | Users with the `admin` role shall have access to `/review-submissions` listing all pending submissions. Approving a submission shall move its `status` to `Approved` and copy it into the public events catalogue; rejecting shall move its `status` to `Rejected` and record an optional `rejectionReason`. Non-admins shall receive 403 when calling the moderation endpoints. |
 
 ## Diagrams
 

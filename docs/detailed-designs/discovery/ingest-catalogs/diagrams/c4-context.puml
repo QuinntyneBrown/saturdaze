@@ -1,0 +1,11 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System context — Ingest catalogs
+Person(operator, "Operator", "Requests catalog refreshes")
+System(saturdaze, "Saturdaze", "Plans family weekends from shared catalogs")
+System_Ext(provider, "Anthropic web search", "Returns researched catalog candidates and usage")
+Rel(operator, saturdaze, "Invokes CLI or configures schedule")
+Rel(saturdaze, provider, "Researches catalog records", "HTTPS")
+@enduml
+
