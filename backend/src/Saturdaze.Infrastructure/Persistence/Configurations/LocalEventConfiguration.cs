@@ -14,7 +14,7 @@ public class LocalEventConfiguration : IEntityTypeConfiguration<LocalEvent>
         b.Property(x => x.Location).HasMaxLength(200).IsRequired();
         b.Property(x => x.Url).HasMaxLength(500);
         b.Property(x => x.Category).HasMaxLength(80).IsRequired();
-        b.HasIndex(x => new { x.Name, x.StartsOn }).IsUnique();
+        b.HasIndex(x => new { x.Name, x.StartsOn, x.Location }).IsUnique();
         b.HasIndex(x => x.StartsOn);
     }
 }

@@ -55,12 +55,14 @@ public sealed class ApproveSubmissionCommandHandler
             ? DateOnly.FromDateTime(submission.EndsAtLocal.Value)
             : startsOn;
 
-        // LocalEvents is unique on (Name, StartsOn); surface that as a 409, not a 500.
+        // LocalEvents is unique on (Name, StartsOn, Location); surface that as a 409, not a 500.
         var title = submission.Title;
-        if (await _db.LocalEvents.AnyAsync(e => e.Name == title && e.StartsOn == startsOn, ct))
+        var location = submission.Location ?? string.Empty;
+        if (await _db.LocalEvents.AnyAsync(
+                e => e.Name == title && e.StartsOn == startsOn && e.Location == location, ct))
         {
             throw new ConflictException("event_already_published",
-                "An event with the same title already exists on that date.");
+                "An event with the same title already exists on that date at that location.");
         }
 
         if (request.DriveMinutes is { } driveMinutes)
@@ -72,7 +74,7 @@ public sealed class ApproveSubmissionCommandHandler
             Name = submission.Title,
             StartsOn = startsOn,
             EndsOn = endsOn,
-            Location = submission.Location ?? string.Empty,
+            Location = location,
             DriveMinutes = submission.DriveMinutes ?? 0,
             Url = submission.SourceUrl ?? string.Empty,
             Category = submission.Category ?? string.Empty,
