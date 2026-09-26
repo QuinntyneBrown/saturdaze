@@ -4,13 +4,13 @@ LAYOUT_WITH_LEGEND()
 title Components — Materialize recurring commitments
 
 Container_Boundary(web, "Saturdaze web application") {
-  Component(page, "HomePage", "Angular component", "Starts weekend planning")
+  Component(page, "WeekendPage", "Angular component", "Starts weekend planning")
   Component(client, "WeekendPlanService", "Angular service", "Calls weekend endpoints")
 }
 Container_Boundary(api, "Saturdaze API") {
   Component(controller, "WeekendsController", "ASP.NET Core", "Exposes planning endpoints")
-  Component(handler, "GenerateWeekendCommandHandler", "Application handler", "Builds planner inputs")
-  Component(entity, "WeekendPlanner", "Domain state", "Materializes commitments as blocks")
+  Component(handler, "GenerateWeekendCommandHandler and PlannerInputLoader", "Application services", "Builds planner inputs")
+  Component(entity, "WeekendPlanner", "Application service", "Materializes commitments as blocks")
   ComponentDb(db, "AppDbContext", "EF Core", "Stores commitments and itinerary blocks")
 }
 Rel(page, client, "Calls")

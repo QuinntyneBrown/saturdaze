@@ -11,27 +11,36 @@ skinparam class {
 }
 title Class structure — Secure authenticated requests
 
-class AuthInterceptor {
-  +intercept(request: HttpRequest): Observable<HttpEvent>
+class authInterceptor <<HttpInterceptorFn>>
+class SessionStore {
+  +refreshSession(): Promise<boolean>
 }
-class JwtBearerPostConfigure {
-  +PostConfigure(name: string, options: JwtBearerOptions): void
+class CurrentUserFamilyAccessor {
+  +GetCurrentFamilyIdAsync(ct: CancellationToken): Task<Guid>
 }
+class JwtBearerPostConfigure
 class Pbkdf2PasswordHasher {
   +Hash(password: string): string
   +Verify(password: string, hash: string): bool
 }
 class JwtTokenService {
-  +CreateTokens(user: User): AuthTokensDto
+  +CreateAccessToken(user: User): string
+  +CreateRawRefreshToken(): string
+  +HashRefreshToken(raw: string): string
 }
+class RefreshTokenIssuer
 class RefreshToken {
   +DateTimeOffset CreatedAtUtc
   +DateTimeOffset ExpiresAtUtc
   +string? CreatedByIp
   +Guid? ReplacedByTokenId
 }
-AuthInterceptor ..> JwtBearerPostConfigure : supplies bearer token
-JwtBearerPostConfigure ..> JwtTokenService : shares JwtOptions
-JwtTokenService --> RefreshToken : creates
-JwtTokenService ..> Pbkdf2PasswordHasher : follows credential boundary
+authInterceptor --> SessionStore : credentials and refresh
+authInterceptor ..> JwtBearerPostConfigure : bearer over HTTP
+RefreshTokenIssuer --> JwtTokenService : creates token material
+RefreshTokenIssuer --> RefreshToken : creates audit state
+note bottom of Pbkdf2PasswordHasher
+Called by account handlers;
+independent of JWT signing.
+end note
 @enduml

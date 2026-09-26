@@ -5,48 +5,34 @@ skinparam shadowing false
 skinparam roundcorner 12
 skinparam defaultFontName Arial
 skinparam ArrowColor #344054
-skinparam rectangle {
-  BorderColor #344054
-  FontColor #101828
-}
-skinparam package {
-  BorderColor #667085
-  FontColor #101828
-  BackgroundColor #F9FAFB
-}
-actor "Authenticated contributor" as actor
-box "Frontend — Saturdaze web application" #E0F2FE
-  participant "EventsPage" as page
-  participant "EventSubmissionsService" as client
+actor "User" as actor
+box "Frontend — Saturdaze Angular application" #E0F2FE
+ participant "IdeasEventsPage" as page
+ participant "EventsService\nEventSubmissionsService" as client
 end box
-box "Backend — Saturdaze API application" #D1FADF
-  participant "EventSubmissionsController" as controller
+box "Backend — Saturdaze API" #D1FADF
+ participant "EventSubmissionsController" as controller
 end box
 box "Backend — Saturdaze Application and Domain" #ECFDF3
-  participant "ListMySubmissionsQueryHandler" as handler
-  participant "EventSubmission" as entity
+ participant "ListMySubmissionsQueryHandler" as handler
 end box
 box "Backend — Saturdaze Infrastructure" #FFF4E5
-  database "Saturdaze database" as infra
-  end box
-actor -> page : Open the events feed
-page -> client : Load own submissions
+ database "AppDbContext\nSQL Server" as db
+end box
+actor -> page : Open events feed
+page -> client : load()
 client -> controller : GET /api/events/submissions/mine
-controller -> controller : Authenticate and validate request
-controller -> handler : Send ListMySubmissionsQuery
-handler -> infra : Query submissions by caller ID
-infra --> handler : Current data
-alt owned submissions exist
-  handler -> entity : Apply L2-049 ownership filter and pending badge data
-  entity --> handler : Typed result
-  handler --> controller : Typed result
-  controller --> client : Successful HTTP response
-  client --> page : Present feature result
-  page --> actor : See own review states
-else no owned submissions exist
-  handler --> controller : Controlled alternate result
-  controller --> client : Safe HTTP response
-  client --> page : Present alternate state
-  page --> actor : See public feed without pending cards
-end
+controller -> handler : ListMySubmissionsQuery after authorization
+handler -> db : L2-049 filter SubmittedByUserId by caller
+db --> handler : All owned statuses
+handler --> controller : EventSubmissionDto array
+controller --> client : 200 array, possibly empty
+client -> client : Select Pending records; merge with public sections
+client --> page : Your suggestion section if nonempty
+page --> actor : Owned pending cards
+note over client
+Reviewed entries remain in mine() API data,
+but are absent from the pending feed section.
+No rejection notification is sent.
+end note
 @enduml

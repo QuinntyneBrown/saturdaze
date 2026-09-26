@@ -4,7 +4,7 @@ LAYOUT_WITH_LEGEND()
 title Components — Sign in and maintain a session
 
 Container_Boundary(web, "Saturdaze web application") {
-  Component(page, "LoginPage", "Angular component", "Collects credentials and remember-me choice")
+  Component(page, "SignInPage", "Angular component", "Collects credentials and remember-me choice")
   Component(client, "SessionStore and AuthService", "Angular service", "Calls login and selects browser storage")
 }
 Container_Boundary(api, "Saturdaze API") {

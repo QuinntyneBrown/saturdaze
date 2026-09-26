@@ -14,7 +14,9 @@ public class LocalEventConfiguration : IEntityTypeConfiguration<LocalEvent>
         b.Property(x => x.Location).HasMaxLength(200).IsRequired();
         b.Property(x => x.Url).HasMaxLength(500);
         b.Property(x => x.Category).HasMaxLength(80).IsRequired();
-        b.HasIndex(x => new { x.Name, x.StartsOn }).IsUnique();
+        // Natural key the ingestion upserter dedupes on: a venue can run two
+        // differently-located events with the same name on the same date.
+        b.HasIndex(x => new { x.Name, x.StartsOn, x.Location }).IsUnique();
         b.HasIndex(x => x.StartsOn);
     }
 }

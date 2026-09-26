@@ -4,7 +4,7 @@ LAYOUT_WITH_LEGEND()
 title Components — Moderate event submissions
 
 Container_Boundary(web, "Saturdaze web application") {
-  Component(page, "AdminEventsPage", "Angular component", "Presents the admin queue and dialogs")
+  Component(page, "ReviewSubmissionsPage", "Angular component", "Presents the admin queue and dialogs")
   Component(client, "EventSubmissionsService", "Angular service", "Calls moderation endpoints")
 }
 Container_Boundary(api, "Saturdaze API") {

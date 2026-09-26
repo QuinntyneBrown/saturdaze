@@ -1,0 +1,61 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+
+title Behaviour — Refresh a session (L2-033)
+box "Frontend — Angular application" #E0F2FE
+ participant "authInterceptor or rehydrate" as caller
+ participant SessionStore as store
+ participant AuthService as client
+end box
+box "Backend — API" #D1FADF
+ participant AuthController as controller
+end box
+box "Backend — Application" #ECFDF3
+ participant RefreshTokenCommandHandler as handler
+ participant RefreshTokenIssuer as issuer
+end box
+box "Backend — Infrastructure" #FFF4E5
+ database AppDbContext as db
+end box
+caller -> store : refreshSession()
+alt exchange already in flight in this tab
+ store --> caller : Same Promise<boolean>
+else new refresh attempt
+ store -> store : Check for newer persisted unexpired pair
+ alt reusable persisted pair exists
+ store -> store : Adopt token and storage tier
+ store --> caller : true
+ else exchange required
+ store -> client : refresh({refreshToken})
+ client -> controller : POST /api/auth/refresh
+ controller -> handler : RefreshTokenCommand
+ handler -> db : Find hashed token and user
+ db --> handler : State
+ alt missing, revoked, or expired token
+ handler --> controller : 401 refresh_token_invalid / revoked / expired
+ controller --> client : Error
+ client --> store : Reject
+ store -> store : Clear session
+ store --> caller : false
+ else valid token
+ handler -> issuer : Issue replacement pair
+ issuer --> handler : Pair and new RefreshToken state
+ handler -> db : Revoke old token; link replacement; save
+ db --> handler : Saved
+ handler --> controller : AuthSuccessDto
+ controller --> client : 200
+ client --> store : Pair and user
+ store -> store : Persist to same storage tier
+ store --> caller : true
+ end
+ end
+end
+note over store
+Any exchange failure clears the session, including network failure.
+Cross-tab storage adoption is not a distributed refresh lock.
+end note
+@enduml

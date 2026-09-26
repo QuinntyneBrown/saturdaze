@@ -10,23 +10,24 @@ The profile page loads one aggregate for the authenticated family. Dialogs edit 
 
 ## Description
 
-The feature forms a vertical slice across the Angular application, the ASP.NET Core API, application handlers, domain state, and SQL Server persistence.
+`FamilyPage` at `/family` loads `FamilyService.getEditableProfile()`. `HomeLocationDialog`, `FamilyMemberDialog`, `CommitmentDialog`, and `LikesDialog` return edits; the page persists the complete editable profile through `saveProfile()`.
 
-- **`ProfilePage`** — Angular page that loads profile state and coordinates edits.
-- **`FamilyMemberDialog and CommitmentDialog`** — Angular CDK dialogs that return validated member or commitment values.
-- **`FamilyService`** — Typed client service exposing `load()` and `saveProfile()`.
-- **`FamilyController`** — API controller exposing `GET /api/family` and `PUT /api/family`.
-- **`GetFamilyProfileQueryHandler`** — Application handler that projects the full family aggregate.
-- **`SaveFamilyProfileCommandHandler`** — Application handler that replaces members, commitments, and preferences after validation.
+`SaveFamilyProfileCommandHandler` resolves ownership through `CurrentUserFamilyAccessor`. It can attach a new family to an authenticated account lacking one, then synchronizes member, commitment, and preference collections.
+
+Members match by supplied ID or name; commitments match by ID or title/day. Missing collection entries are removed. Optional scalar settings retain their existing value when omitted where supported; collection synchronization is replacement, not a general PATCH contract.
+
+The response is reread from persistence through `FamilyProfileMapper`. Name, home text, budget, novelty, and Friday-preview preferences are stored. The current planner consumes novelty; budget and Friday-preview delivery are not implemented downstream.
+
+Daily rhythm anchors in L1-002 are not editable profile fields. Home text is not geocoded into forecast or catalog coordinates.
 
 ## Requirements
 
-The feature realizes the following level-2 (L2) requirements. Each row cites the level-1 (L1) capability refined by the requirement.
+The following L2 requirements refine the cited L1 capabilities. Implementation gaps stated in Description do not waive these obligations.
 
 | L2 ID | Refines (L1) | Requirement |
 |-------|--------------|-------------|
-| `L2-009` | `L1-002` | `GET /api/family` must return the authenticated caller's family with all members, commitments, and preferences in one response. |
-| `L2-010` | `L1-002` | `PUT /api/family` must accept a full or partial family profile and persist additions, edits, and removals to members, commitments, and preferences. |
+| `L2-009` | `L1-002` | `GET /api/family` shall return the authenticated caller's family with all members, commitments, and preferences in one response. |
+| `L2-010` | `L1-002` | `PUT /api/family` shall accept a full or partial family profile and persist additions, edits, and removals to members, commitments, and preferences. |
 
 ## Diagrams
 

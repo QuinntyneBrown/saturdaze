@@ -6,28 +6,27 @@ Saturdaze is a web application that plans personalized family weekends. Sign-out
 
 *token revocation* — server-side invalidation of token material before its natural expiry
 
-The profile page opens `SignOutDialog`; on confirm, `SessionStore.logout()` posts the refresh token to `POST /api/auth/logout` (best effort) and then clears client state.
+The Family page or account menu opens `ConfirmDialog`; on confirmation, `SessionStore.logout()` posts the refresh token to `POST /api/auth/logout` (best effort) and then clears client state.
 
 ## Description
 
-The feature forms a vertical slice across the Angular application, the ASP.NET Core API, application handlers, domain state, and SQL Server persistence.
+`FamilyPage` and the account menu invoke the shared `signOutWith()` helper. It opens `ConfirmDialog` through `confirmWith()`, calls `SessionStore.logout()` after confirmation, and navigates to `/sign-in`.
 
-- **`ProfilePage`** — Angular profile page that opens the confirmation dialog.
-- **`SignOutDialog`** — Angular CDK dialog that returns `confirm` only after deliberate approval.
-- **`SessionStore`** — Client state service whose existing `logout()` method clears stored session data.
-- **`AuthController`** — Authentication controller hosting `POST /api/auth/logout` (and `POST /api/auth/refresh`, see ADR-007).
-- **`RevokeRefreshTokenCommandHandler`** — Application handler that revokes the presented `RefreshToken`; idempotent, and it ignores a token owned by a different user when a bearer is present.
-- **`RefreshToken`** — Domain entity whose `RevokedAtUtc` field records invalidation.
+`SessionStore.logout()` sends the current refresh token to `POST /api/auth/logout` before clearing both storage tiers and current-user state. Revocation is best effort; local sign-out still completes if the network call fails.
 
-`POST /api/auth/logout { refreshToken }` always returns 204, so sign-out never reveals whether a token existed. The endpoint is anonymous because the refresh token is the credential and the access token is usually expired by then (ADR-007).
+`AuthController.Logout()` dispatches `RevokeRefreshTokenCommand`. The handler revokes a matching active token and tolerates missing or already-revoked values; a supplied bearer restricts revocation to its owner.
+
+The anonymous endpoint returns 204 for well-formed requests regardless of token existence. Input validation can still reject malformed requests. Cancel or dismissal leaves the session intact.
+
+Remembered email is retained. An already-issued access JWT remains valid until expiry; sign-out revokes refresh capability rather than immediately blacklisting access JWTs.
 
 ## Requirements
 
-The feature realizes the following level-2 (L2) requirements. Each row cites the level-1 (L1) capability refined by the requirement.
+The following L2 requirements refine the cited L1 capabilities. Implementation gaps stated in Description do not waive these obligations.
 
 | L2 ID | Refines (L1) | Requirement |
 |-------|--------------|-------------|
-| `L2-003` | `L1-001` | A signed-in user must be able to sign out via a dialog from the profile page, after which their refresh token is revoked and stored token material is cleared from the client. |
+| `L2-003` | `L1-001` | A signed-in user shall be able to sign out via a confirmation dialog from the Family page or account menu, after which their refresh token is revoked and stored token material is cleared from the client. |
 
 ## Diagrams
 
