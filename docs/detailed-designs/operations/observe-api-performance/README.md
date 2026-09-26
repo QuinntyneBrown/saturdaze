@@ -2,7 +2,7 @@
 
 ## Overview
 
-Saturdaze combines an Angular web application, an ASP.NET Core API, SQL Server persistence, and administrative delivery tooling. Request observability records timing and outcome data for every API request and exposes whether interactive latency budgets are being met.
+Saturdaze combines an Angular web application, an ASP.NET Core API, SQL Server persistence, and administrative delivery tooling. Request observability records timing and outcome data for every API request and supplies timing evidence for interactive latency budgets; automated percentile evaluation is not implemented.
 
 *p95 latency* — response duration below which 95 percent of measured requests complete
 
@@ -22,12 +22,12 @@ The feature crosses the application and platform boundaries needed to deliver it
 The request-completion event is enriched with `UserId` from the bearer's `sub` claim (`UseSerilogRequestLogging` in `Program.cs`). Request logging is registered outside `ExceptionHandlingMiddleware`, so a handled 401/404/409 is logged with that status rather than as an error-level 500 with a stack trace. Automated p95 budget evaluation for `L2-034` is still `<TO SUPPLY>`.
 ## Requirements
 
-The feature realizes the following level-2 (L2) requirements. Each row cites the level-1 (L1) capability refined by the requirement.
+The following L2 requirements refine the cited L1 capabilities. Implementation gaps stated in Description do not waive these obligations.
 
 | L2 ID | Refines (L1) | Requirement |
 |-------|--------------|-------------|
-| `L2-034` | `L1-013` | Read endpoints must respond within 500 ms p95 on warm cache; write endpoints within 1000 ms p95; weekend generation within 2000 ms p95. |
-| `L2-039` | `L1-015` | Every API request must produce a Serilog log entry with method, path, status code, elapsed milliseconds, and (when authenticated) the user ID — but never the bearer token, password, or password hash. |
+| `L2-034` | `L1-013` | Read endpoints shall respond within 500 ms p95 on warm cache; write endpoints within 1000 ms p95; weekend generation within 2000 ms p95. |
+| `L2-039` | `L1-015` | Every API request shall produce a Serilog log entry with method, path, status code, elapsed milliseconds, and (when authenticated) the user ID — but never the bearer token, password, or password hash. |
 
 ## Diagrams
 
@@ -51,7 +51,7 @@ The component view names the runtime or delivery components that implement the s
 
 ### Class structure
 
-The class view shows the code and configuration relationships that control the feature.
+The class view shows selected code and configuration relationships. Cancellation parameters and unrelated members are omitted.
 
 ![Class diagram for observing API performance](diagrams/class-structure.png)
 

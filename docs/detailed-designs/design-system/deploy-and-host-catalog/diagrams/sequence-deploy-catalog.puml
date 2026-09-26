@@ -43,6 +43,9 @@ alt quality gate fails
   job --> actor : Stop before deployment
 else quality gate succeeds
   quality --> job : Exit 0
+  job -> vite : npm run build (explicit deployment build)
+  vite -> dist : Replace deployment output
+  vite --> job : Build succeeds; failure stops upload
   job -> deploy : Upload design-system/dist with deployment secret
   deploy -> azure : Publish prebuilt artifact
   azure --> deploy : Deployment result

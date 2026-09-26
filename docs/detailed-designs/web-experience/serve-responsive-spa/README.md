@@ -6,28 +6,29 @@ Saturdaze combines an Angular web application, an ASP.NET Core API, SQL Server p
 
 *navigation fallback* — Static Web Apps rewrite that returns `index.html` for a non-asset route
 
-`app.routes.ts` uses `loadComponent` for every route. Component-library breakpoints and page styles adapt layouts, while `staticwebapp.config.json` rewrites deep links to the Angular shell.
+`app.routes.ts` uses `loadComponent` for rendered routes and redirect entries for retired paths. Component-library breakpoints and page styles adapt layouts, while `staticwebapp.config.json` rewrites deep links to the Angular shell.
 
 ## Description
 
-The feature crosses the application and platform boundaries needed to deliver its observable outcome.
+`app.routes.ts` lazily loads rendered pages and defines legacy redirects. `App` merges route data along the active path and selects app, site, or bare chrome.
 
-- **`routes`** — Angular route table whose entries load standalone page components dynamically.
-- **`App`** — Angular application shell that selects splash, authentication, or product chrome.
-- **`_breakpoints.scss`** — Shared component-library breakpoint definitions.
-- **`Page SCSS files`** — Route-level responsive layouts for mobile, tablet, and desktop widths.
-- **`staticwebapp.config.json`** — Static Web Apps configuration containing the navigation fallback and asset exclusions.
-- **`Angular production build`** — Route-chunk output deployed by the web delivery job.
+The app shell serves Weekend, Ideas, Past, Family, and Review submissions. Site chrome serves landing, legal, and shared-weekend pages; authentication uses bare chrome. `requireAnonymous`, `requireAuth`, and `requireAdmin` enforce route access.
+
+Below 720 px, app routes use bottom navigation and stacked days; wider layouts use the top bar and two day columns. `_global.scss` and component/page SCSS preserve the BEM class contract with `docs/mocks-v2`.
+
+Legacy paths such as `/login`, `/profile`, `/saved`, and `/itinerary` redirect to `/sign-in`, `/family`, `/past`, and `/weekend`. The dialogs gallery and state overrides exist only when environment.galleryRoutes is enabled.
+
+`staticwebapp.config.json` provides deep-route fallback. ADR-010 defines visual tiers, masks, and mock-derived baselines; rendering bounds remain 320 through 1920 px.
 
 ## Requirements
 
-The feature realizes the following level-2 (L2) requirements. Each row cites the level-1 (L1) capability refined by the requirement.
+The following L2 requirements refine the cited L1 capabilities. Implementation gaps stated in Description do not waive these obligations.
 
 | L2 ID | Refines (L1) | Requirement |
 |-------|--------------|-------------|
-| `L2-028` | `L1-011` | Every routed page (`/`, `/weekend`, `/itinerary`, `/activities`, `/restaurants`, `/events`, `/errand`, `/saved`, `/profile`, all auth pages) must render usably at viewport widths 360 px, 576 px, 768 px, 992 px, and 1440 px. |
-| `L2-035` | `L1-013` | Every routed page (other than the splash) must be lazy-loaded via `loadComponent`, so the initial bundle excludes those pages' code. |
-| `L2-042` | `L1-011`, `L1-016` | Refreshing any client-side route (e.g., `/login`, `/weekend`, `/itinerary`) on the Static Web App must return the SPA shell, not a 404. |
+| `L2-028` | `L1-011` | Every routed page (`/`, `/weekend`, `/ideas`, `/ideas/food`, `/ideas/events`, `/past`, `/family`, `/review-submissions`, `/legal`, `/sample-weekend`, all auth pages) shall render usably at viewport widths 320 px, 390 px, 820 px, 1440 px, and 1920 px. (Revised 2026-09-02 with the v2 design, [ADR-009](/docs/adr/ADR-009-v2-responsive-shell.md): the v1 split view is gone; the shell is a top bar from 720 px and a bottom nav below it.) |
+| `L2-035` | `L1-013` | Every rendered route component, including the landing page, shall be lazy-loaded via `loadComponent`, so the initial bundle excludes those pages' code. |
+| `L2-042` | `L1-011`, `L1-016` | Refreshing any client-side route (e.g., `/sign-in`, `/weekend`, `/ideas/events`) on the Static Web App shall return the SPA shell, not a 404. |
 
 ## Diagrams
 
@@ -51,7 +52,7 @@ The component view names the runtime or delivery components that implement the s
 
 ### Class structure
 
-The class view shows the code and configuration relationships that control the feature.
+The class view shows selected code and configuration relationships. Cancellation parameters and unrelated members are omitted.
 
 ![Class diagram for serving the responsive SPA](diagrams/class-structure.png)
 

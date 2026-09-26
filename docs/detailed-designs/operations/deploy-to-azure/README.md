@@ -2,7 +2,7 @@
 
 ## Overview
 
-Saturdaze combines an Angular web application, an ASP.NET Core API, SQL Server persistence, and administrative delivery tooling. The delivery pipeline publishes the API, advances the Azure SQL schema, and publishes the Angular application after a push to the main branch.
+Saturdaze combines an Angular web application, an ASP.NET Core API, SQL Server persistence, and administrative delivery tooling. The delivery pipeline publishes the API, advances the Azure SQL schema, and publishes the Angular application after a push to the main branch, passing tests, and a successful resource preflight.
 
 *idempotent migration* — schema update that produces the same current state when rerun
 
@@ -10,23 +10,23 @@ Saturdaze combines an Angular web application, an ASP.NET Core API, SQL Server p
 
 ## Description
 
-The feature crosses the application and platform boundaries needed to deliver its observable outcome.
+`.github/workflows/deploy.yml` runs backend tests on Windows with LocalDB and frontend build/tests before `preflight`. The preflight signs into Azure through OIDC and probes the configured API Web App.
 
-- **`api job`** — GitHub Actions job that publishes and deploys `Saturdaze.Api` to Azure App Service.
-- **`migrate job`** — GitHub Actions job that runs `saturdaze migrate` against Azure SQL after the API job.
-- **`web job`** — GitHub Actions job that builds Angular and uploads the browser bundle.
-- **`Azure login`** — OIDC authentication step for Azure App Service deployment.
-- **`Saturdaze CLI`** — Administrative executable used to apply EF Core migrations.
-- **`Azure platform targets`** — App Service, Azure SQL, and Static Web Apps resources receiving artifacts or schema updates.
+When `api_exists=true`, `api` publishes and deploys the API. `migrate` depends on successful API deployment, and `web` depends on migration plus frontend gates before uploading the existing Angular artifact.
 
-Both test suites gate the pipeline: `test-backend` (Windows runner with LocalDB) and `test-frontend` run first, `api` needs both, `migrate` needs `api`, and `web` needs `migrate`, so the SPA is never published ahead of the schema it expects. Pull requests and non-main pushes run the same gates through `.github/workflows/ci.yml`.
+When the API Web App is absent, preflight emits a warning and summary, and the API/migration/web chain is skipped. Azure login failures fail preflight. The current probe treats every non-zero `az webapp show` result as an absent resource; authorization and transient probe errors can therefore also skip delivery. This classification is an implementation gap.
+
+`.github/workflows/ci.yml` runs validation on pull requests and non-main pushes. `eng/Start-FreshStack.ps1` is local tooling, not part of this hosted deployment.
+
+The ingestion worker and WebJob source artifacts are available, but this workflow does not package or deploy them.
+
 ## Requirements
 
-The feature realizes the following level-2 (L2) requirements. Each row cites the level-1 (L1) capability refined by the requirement.
+The following L2 requirements refine the cited L1 capabilities. Implementation gaps stated in Description do not waive these obligations.
 
 | L2 ID | Refines (L1) | Requirement |
 |-------|--------------|-------------|
-| `L2-041` | `L1-016` | The `.github/workflows/deploy.yml` workflow must fire on every push to `main` and must produce, in order: a successfully deployed API on Azure App Service, applied EF migrations against Azure SQL, and a successfully deployed Angular bundle on Azure Static Web Apps. |
+| `L2-041` | `L1-016` | The `.github/workflows/deploy.yml` workflow shall run test gates and a resource preflight on every push to `main`. When the configured API Web App exists, it shall deploy the API, apply EF migrations, and deploy the Angular bundle in order. When the resource is absent, it shall skip those three jobs with a visible summary and warning. |
 
 ## Diagrams
 
@@ -50,7 +50,7 @@ The component view names the runtime or delivery components that implement the s
 
 ### Class structure
 
-The class view shows the code and configuration relationships that control the feature.
+The class view shows selected code and configuration relationships. Cancellation parameters and unrelated members are omitted.
 
 ![Class diagram for deploying to Azure](diagrams/class-structure.png)
 

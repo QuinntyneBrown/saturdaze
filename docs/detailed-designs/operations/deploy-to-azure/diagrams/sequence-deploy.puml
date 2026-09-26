@@ -1,42 +1,45 @@
 @startuml
-title UML sequence behaviour — Deploy to Azure
+title Delivery gates and absent-resource branch
 skinparam backgroundColor #FFFFFF
 skinparam shadowing false
 skinparam roundcorner 12
 skinparam defaultFontName Arial
 skinparam ArrowColor #344054
-skinparam rectangle {
-  BorderColor #344054
-  FontColor #101828
-}
-skinparam package {
-  BorderColor #667085
-  FontColor #101828
-  BackgroundColor #F9FAFB
-}
-actor "Repository maintainer" as maintainer
-box "Frontend — GitHub repository" #E0F2FE
-  participant "main branch" as main
+
+actor "Maintainer" as actor
+box "Backend — GitHub Actions" #D1FADF
+ participant "test-backend\ntest-frontend" as tests
+ participant "preflight" as probe
+ participant "api" as api
+ participant "migrate" as migrate
+ participant "web" as web
 end box
-box "Backend — GitHub Actions delivery application" #D1FADF
-  participant "api job" as api
-  participant "migrate job" as migrate
-  participant "web job" as web
+box "Backend — Azure platform" #FFF4E5
+ participant "Azure CLI\nApp Service" as azure
+ database "Azure SQL" as sql
+ participant "Static Web Apps" as swa
 end box
-box "Backend — Microsoft Azure platform" #FFF4E5
-  participant "Azure App Service" as appservice
-  database "Azure SQL" as sql
-  participant "Azure Static Web Apps" as swa
-end box
-maintainer -> main : Push reviewed commit
-main -> api : Trigger deploy.yml
-api -> appservice : Publish and deploy API
-appservice --> api : Deployment success
-api -> migrate : Satisfy needs dependency
-migrate -> sql : Run saturdaze migrate
-sql --> migrate : Schema current
-migrate -> web : Satisfy L2-041 order
-web -> swa : Upload Angular browser bundle
-swa --> web : Deployment success
-web --> maintainer : Delivery result
+actor -> tests : push main / workflow_dispatch
+alt test failure
+tests --> actor : Failed workflow; no deployment
+else tests pass
+tests -> probe : Satisfy dependencies
+probe -> azure : OIDC sign-in and API Web App probe
+alt Web App absent
+azure --> probe : api_exists=false
+probe --> actor : L2-041 warning and summary; deployment chain skipped
+else Web App exists
+azure --> probe : api_exists=true
+probe -> api : Enable job
+api -> azure : Publish and deploy API
+azure --> api : Success
+api -> migrate : Satisfy dependency
+migrate -> sql : saturdaze migrate
+sql --> migrate : Success
+migrate -> web : Enable frontend upload
+web -> swa : Upload tested Angular artifact
+swa --> web : Success
+web --> actor : Deployment completed
+end
+end
 @enduml

@@ -10,23 +10,21 @@ Saturdaze is a web application that plans personalized family weekends. Email ve
 
 ## Description
 
-The feature forms a vertical slice across the Angular application, the ASP.NET Core API, application handlers, domain state, and SQL Server persistence.
+`VerifyEmailPage` has no authentication guard. Without a token it shows sent state; with a token it calls `SessionStore.verifyEmail()` and displays verifying, verified, or expired state.
 
-- **`VerifyEmailPage`** — Angular page that presents loading, success, and invalid-token states.
-- **`SessionStore and AuthService`** — Client services that submit the verification token.
-- **`AuthController`** — API controller exposing `POST /api/auth/verify-email`.
-- **`VerifyEmailCommand`** — Request record carrying the verification token.
-- **`VerifyEmailCommandHandler`** — Application handler that validates and consumes the token.
-- **`EmailVerificationToken and User`** — Domain entities holding token expiry and verified time.
+`AuthController` dispatches `VerifyEmailCommand`; `VerifyEmailCommandHandler` validates `EmailVerificationToken`, consumes it, and sets `User.EmailVerifiedUtc`. The client defensively treats `email_already_verified` as success, but the current verify handler does not emit it: reused tokens return `token_invalid`, and valid unconsumed tokens preserve an existing verification timestamp.
 
+The verified state links to `/family` and `/weekend`. `resend()` calls the resend-verification endpoint and applies a 60-second browser cooldown.
+
+Verification delivery remains unimplemented. Development and Testing expose delivery metadata through `AuthController`; production does not send mail.
 
 ## Requirements
 
-The feature realizes the following level-2 (L2) requirements. Each row cites the level-1 (L1) capability refined by the requirement.
+The following L2 requirements refine the cited L1 capabilities. Implementation gaps stated in Description do not waive these obligations.
 
 | L2 ID | Refines (L1) | Requirement |
 |-------|--------------|-------------|
-| `L2-006` | `L1-001` | The system must accept a verification token, mark the corresponding user as verified, and surface either a success or error state on `/verify-email`. |
+| `L2-006` | `L1-001` | The system shall accept a verification token, mark the corresponding user as verified, and surface either a success or error state on `/verify-email`. |
 
 ## Diagrams
 

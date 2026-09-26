@@ -17,10 +17,12 @@ This feature makes validation the first stage of `npm test`. A successful contra
 
 ## Requirements
 
+The following L2 requirements refine the cited L1 capabilities. Implementation gaps stated in Description do not waive these obligations.
+
 | L2 ID | Refines (L1) | Requirement |
 |-------|--------------|-------------|
-| `L2-073` | `L1-030` | `npm run validate` must execute `scripts/validate.mjs`, which enforces the manifest, parity, token, and self-containment invariants plus the presence of the key documentation renderers, failing loudly and blocking the browser suite when anything drifts. |
-| `L2-074` | `L1-030` | The Playwright suite must exercise the built catalog (not the dev server) across mobile, tablet, and desktop viewports, including a health sweep asserting zero console errors, zero failed requests, and no horizontal overflow. |
+| `L2-073` | `L1-030` | `npm run validate` shall execute `scripts/validate.mjs`, which enforces the manifest, parity, token, and self-containment invariants plus the presence of the key documentation renderers, failing loudly and blocking the browser suite when anything drifts. |
+| `L2-074` | `L1-030` | The Playwright suite shall exercise the built catalog (not the dev server) across mobile, tablet, and desktop viewports, including a health sweep asserting zero console errors, zero failed requests, and no horizontal overflow. |
 
 ## Diagrams
 
@@ -44,13 +46,15 @@ Contract checks gate browser startup; Playwright projects then share health and 
 
 ### Class structure
 
+Class notation groups JavaScript functions, manifest records, and configuration concepts; it does not imply that every named grouping is an exported JavaScript class.
+
 The validation runner aggregates invariant checks, while the Playwright configuration owns three viewport projects that execute the catalog suite.
 
 ![Class diagram for validating catalog quality](diagrams/class-structure.png)
 
 ### Behaviour — run contract validation
 
-`npm test` invokes the deterministic validator first and stops before browser installation or serving when any invariant fails.
+`npm test` invokes the deterministic validator first and stops before browser execution or serving when any invariant fails.
 
 ![Sequence diagram for running contract validation](diagrams/sequence-contract-validation.png)
 

@@ -11,12 +11,12 @@ skinparam class {
 }
 title Class structure — Discover activities
 
-class ActivitiesPage {
-  +toggleFilter(filter: ActivityFilter): void
+class IdeasActivitiesPage {
+  #setFilter(label: string): void
 }
 class ActivityService {
   +load(): Promise<void>
-  +list(): Signal<ActivityView>
+  +list(): Signal<IdeasActivitiesView>
 }
 class GetActivitySuggestionsQuery {
   +bool? Indoor
@@ -34,7 +34,7 @@ class Activity {
   +int MaxAge
   +int DriveMinutes
 }
-ActivitiesPage --> ActivityService : calls
+IdeasActivitiesPage --> ActivityService : calls
 ActivityService ..> GetActivitySuggestionsQuery : maps to
 GetActivitySuggestionsQueryHandler --> Activity : filters
 @enduml

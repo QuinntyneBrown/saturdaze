@@ -18,11 +18,13 @@ This feature renders eight families and 40 states through iframes. Each specimen
 
 ## Requirements
 
+The following L2 requirements refine the cited L1 capabilities. Implementation gaps stated in Description do not waive these obligations.
+
 | L2 ID | Refines (L1) | Requirement |
 |-------|--------------|-------------|
-| `L2-065` | `L1-026` | `/patterns` must render one card per family with an iframe preview, and each family's examples tab must render one framed specimen per declared responsive state, so all 40 states are reachable. |
-| `L2-066` | `L1-026` | Every pattern specimen must carry viewport controls that resize the iframe itself, so the document inside responds through its real 720/1024 px media queries rather than simulated styles. |
-| `L2-067` | `L1-026` | `preview.html` must render a single chrome-free specimen selected by query string — a pattern state, dialog scenario, or component example — for use inside catalog iframes and by direct navigation. |
+| `L2-065` | `L1-026` | `/patterns` shall render one card per family with an iframe preview, and each family's examples tab shall render one framed specimen per declared responsive state, so all 40 states are reachable. |
+| `L2-066` | `L1-026` | Every pattern specimen shall carry viewport controls that resize the iframe itself, so the document inside responds through its real 720/1024 px media queries rather than simulated styles. |
+| `L2-067` | `L1-026` | `preview.html` shall render a single chrome-free specimen selected by query string — a pattern state, dialog scenario, or component example — for use inside catalog iframes and by direct navigation. |
 
 ## Diagrams
 
@@ -45,6 +47,8 @@ Pattern renderers, URL construction, viewport controls, preview routing, and fix
 ![C4 component view for browsing product patterns](diagrams/c4-component.png)
 
 ### Class structure
+
+Class notation groups JavaScript functions, manifest records, and configuration concepts; it does not imply that every named grouping is an exported JavaScript class.
 
 Each `PatternFamily` contains responsive scenarios; a `PatternCard` owns one `PreviewFrame` and its independent viewport state.
 

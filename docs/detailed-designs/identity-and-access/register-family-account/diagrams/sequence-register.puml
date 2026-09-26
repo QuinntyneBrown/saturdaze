@@ -5,50 +5,38 @@ skinparam shadowing false
 skinparam roundcorner 12
 skinparam defaultFontName Arial
 skinparam ArrowColor #344054
-skinparam rectangle {
-  BorderColor #344054
-  FontColor #101828
-}
-skinparam package {
-  BorderColor #667085
-  FontColor #101828
-  BackgroundColor #F9FAFB
-}
-actor "Family organizer" as actor
-box "Frontend — Saturdaze web application" #E0F2FE
-  participant "SignupPage" as page
-  participant "SessionStore" as client
+actor "User" as actor
+box "Frontend — Saturdaze Angular application" #E0F2FE
+ participant "CreateAccountPage" as page
+ participant "SessionStore\nAuthService" as client
 end box
-box "Backend — Saturdaze API application" #D1FADF
-  participant "AuthController" as controller
+box "Backend — Saturdaze API" #D1FADF
+ participant "AuthController" as controller
 end box
 box "Backend — Saturdaze Application and Domain" #ECFDF3
-  participant "RegisterUserCommandHandler" as handler
-  participant "User and Family" as entity
+ participant "RegisterUserCommandHandler\nRefreshTokenIssuer" as handler
 end box
 box "Backend — Saturdaze Infrastructure" #FFF4E5
-  database "Saturdaze database" as db
+ database "AppDbContext\nSQL Server" as db
 end box
-actor -> page : Submit signup form
+actor -> page : Submit accepted terms and credentials
 page -> client : signUp(SignupRequest)
-client -> controller : POST /api/auth/register
-controller -> controller : Authenticate and validate request
-controller -> handler : Send RegisterUserCommand
+client -> controller : POST /api/auth/register (anonymous)
+controller -> handler : Validate and dispatch RegisterUserCommand
 handler -> db : Check normalized email
-db --> handler : Current state
-alt email is available and input is valid
-  handler -> entity : Apply L2-001 account creation
-  entity --> handler : Updated state
-  handler -> db : Save changes
-  db --> handler : Commit result
-  handler --> controller : Typed result
-  controller --> client : Successful HTTP response
-  client --> page : Present feature result
-  page --> actor : Receive authenticated account
-else email exists or input is invalid
-  handler --> controller : Controlled error
-  controller --> client : ProblemDetails response
-  client --> page : Present safe error state
-  page --> actor : See field or conflict error
+db --> handler : Existing or absent account
+alt duplicate email
+handler --> controller : 409 email_in_use
+controller --> client : Conflict
+client --> page : Field error
+else valid new account
+handler -> handler : L2-001 hash password; create User, Family and refresh state
+handler -> db : Save account records
+db --> handler : Saved
+handler --> controller : AuthSuccessDto
+controller --> client : 201 Created
+client -> client : Persist pair in localStorage
+client --> page : Current user
+page --> actor : /verify-email
 end
 @enduml

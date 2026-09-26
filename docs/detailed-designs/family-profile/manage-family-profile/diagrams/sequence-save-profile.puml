@@ -5,50 +5,33 @@ skinparam shadowing false
 skinparam roundcorner 12
 skinparam defaultFontName Arial
 skinparam ArrowColor #344054
-skinparam rectangle {
-  BorderColor #344054
-  FontColor #101828
-}
-skinparam package {
-  BorderColor #667085
-  FontColor #101828
-  BackgroundColor #F9FAFB
-}
-actor "Family organizer" as actor
-box "Frontend — Saturdaze web application" #E0F2FE
-  participant "ProfilePage" as page
-  participant "FamilyService" as client
+actor "User" as actor
+box "Frontend — Saturdaze Angular application" #E0F2FE
+ participant "FamilyPage" as page
+ participant "FamilyService" as client
 end box
-box "Backend — Saturdaze API application" #D1FADF
-  participant "FamilyController" as controller
+box "Backend — Saturdaze API" #D1FADF
+ participant "FamilyController" as controller
 end box
 box "Backend — Saturdaze Application and Domain" #ECFDF3
-  participant "SaveFamilyProfileCommandHandler" as handler
-  participant "Family aggregate" as entity
+ participant "SaveFamilyProfileCommandHandler" as handler
 end box
 box "Backend — Saturdaze Infrastructure" #FFF4E5
-  database "Saturdaze database" as db
+ database "AppDbContext\nSQL Server" as db
 end box
-actor -> page : Edit profile and save
-page -> client : saveProfile(EditableFamilyProfile)
+actor -> page : Edit member, commitment, home, likes, or preference
+page -> client : saveProfile(complete editable profile)
 client -> controller : PUT /api/family
-controller -> controller : Authenticate and validate request
-controller -> handler : Send SaveFamilyProfileCommand
-handler -> db : Load authorized family aggregate
-db --> handler : Current state
-alt profile input is valid
-  handler -> entity : Apply L2-010 collection changes
-  entity --> handler : Updated state
-  handler -> db : Save changes
-  db --> handler : Commit result
-  handler --> controller : Typed result
-  controller --> client : Successful HTTP response
-  client --> page : Present feature result
-  page --> actor : See persisted family profile
-else input is invalid
-  handler --> controller : Controlled error
-  controller --> client : ProblemDetails response
-  client --> page : Present safe error state
-  page --> actor : See field validation errors
-end
+controller -> controller : Authenticate and validate inputs
+controller -> handler : SaveFamilyProfileCommand
+handler -> db : Resolve owned family or attach first-time family
+db --> handler : Current aggregate
+handler -> handler : L2-010 synchronize collections; retain matched IDs
+handler -> db : Save additions, edits, and removals
+db --> handler : Saved
+handler -> db : Reread full profile
+db --> handler : Persisted aggregate
+handler --> controller : FamilyProfileDto
+controller --> client : 200 profile
+client --> page : Editable and presentation state
 @enduml

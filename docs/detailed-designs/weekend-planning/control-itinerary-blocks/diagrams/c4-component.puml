@@ -4,7 +4,7 @@ LAYOUT_WITH_LEGEND()
 title Components — Control itinerary blocks
 
 Container_Boundary(web, "Saturdaze web application") {
-  Component(page, "ItineraryPage and HomePage", "Angular component", "Offer block and regeneration actions")
+  Component(page, "WeekendPage", "Angular component", "Offer block and regeneration actions")
   Component(client, "WeekendPlanService", "Angular service", "Calls lock and regeneration endpoints")
 }
 Container_Boundary(api, "Saturdaze API") {

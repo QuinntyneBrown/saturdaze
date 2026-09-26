@@ -18,11 +18,13 @@ This feature renders the product overview, translates supported paths into catal
 
 ## Requirements
 
+The following L2 requirements refine the cited L1 capabilities. Implementation gaps stated in Description do not waive these obligations.
+
 | L2 ID | Refines (L1) | Requirement |
 |-------|--------------|-------------|
-| `L2-056` | `L1-022` | The documentation app must intercept same-origin `a[data-route]` clicks, push history entries, and re-render on `popstate`, so `/`, `/foundations`, `/components[/:selector/:tab]`, `/dialogs[/:id/:tab]`, and `/patterns[/:id/:tab]` are all directly addressable, survive a browser refresh, and fall back to an in-app not-found page for unknown paths. |
-| `L2-057` | `L1-022` | The home route `/` must present the product hero, four coverage metrics computed from the manifest at render time (never hard-coded), and three curated sample sections linking into components, patterns, and dialogs. |
-| `L2-058` | `L1-022` | Below the documentation-shell breakpoint the sidebar must become an off-canvas drawer opened by a hamburger button, with scrim, body scroll lock, keyboard dismissal, and focus return; at and above the breakpoint the sidebar must be persistent. |
+| `L2-056` | `L1-022` | The documentation app shall intercept same-origin `a[data-route]` clicks, push history entries, and re-render on `popstate`, so `/`, `/foundations`, `/components[/:selector/:tab]`, `/dialogs[/:id/:tab]`, and `/patterns[/:id/:tab]` are all directly addressable, survive a browser refresh, and fall back to an in-app not-found page for unknown paths. |
+| `L2-057` | `L1-022` | The home route `/` shall present the product hero, four coverage metrics computed from the manifest at render time (never hard-coded), and three curated sample sections linking into components, patterns, and dialogs. |
+| `L2-058` | `L1-022` | Below the documentation-shell breakpoint the sidebar shall become an off-canvas drawer opened by a hamburger button, with scrim, body scroll lock, keyboard dismissal, and focus return; at and above the breakpoint the sidebar shall be persistent. Crossing the breakpoint shall never animate the closed drawer across the page or strand open-drawer state. |
 
 ## Diagrams
 
@@ -45,6 +47,8 @@ The route dispatcher selects page renderers, navigation state logic marks the cu
 ![C4 component view for navigating the documentation catalog](diagrams/c4-component.png)
 
 ### Class structure
+
+Class notation groups JavaScript functions, manifest records, and configuration concepts; it does not imply that every named grouping is an exported JavaScript class.
 
 The documentation module depends on manifest family records and coordinates the route, navigation, and drawer state held by browser elements.
 

@@ -4,13 +4,13 @@ LAYOUT_WITH_LEGEND()
 title Components — Generate the current weekend
 
 Container_Boundary(web, "Saturdaze web application") {
-  Component(page, "HomePage", "Angular component", "Loads the weekend overview")
+  Component(page, "WeekendPage", "Angular component", "Loads the weekend overview")
   Component(client, "WeekendPlanService", "Angular service", "Calls current and plan endpoints")
 }
 Container_Boundary(api, "Saturdaze API") {
   Component(controller, "WeekendsController", "ASP.NET Core", "Exposes weekend generation")
   Component(handler, "GetCurrentWeekendQueryHandler and GenerateWeekendCommandHandler", "Application handler", "Find or create the plan")
-  Component(entity, "Weekend and WeekendPlanner", "Domain state", "Own the plan and planning rules")
+  Component(entity, "PlannerInputLoader and WeekendPlanner", "Application services", "Load inputs and construct Weekend domain state")
   ComponentDb(db, "AppDbContext", "EF Core", "Stores weekend aggregates and catalogue inputs")
 }
 Rel(page, client, "Calls")
