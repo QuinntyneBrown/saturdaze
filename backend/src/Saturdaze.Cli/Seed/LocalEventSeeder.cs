@@ -23,7 +23,7 @@ public sealed class LocalEventSeeder : IJsonSeeder
         var shiftDays = ResolveShiftDays(anchor);
 
         var existing = await db.LocalEvents.ToDictionaryAsync(
-            e => new Key(e.Name, e.StartsOn), ct);
+            e => CreateKey(e.Name, e.StartsOn, e.Location), ct);
 
         var written = 0;
         foreach (var seed in items)
@@ -33,7 +33,7 @@ public sealed class LocalEventSeeder : IJsonSeeder
             var startsOn = seed.StartsOn.AddDays(shiftDays);
             var endsOn = seed.EndsOn.AddDays(shiftDays);
 
-            var key = new Key(seed.Name, startsOn);
+            var key = CreateKey(seed.Name, startsOn, seed.Location);
             if (!existing.TryGetValue(key, out var entity))
             {
                 entity = new LocalEvent
@@ -80,7 +80,10 @@ public sealed class LocalEventSeeder : IJsonSeeder
         return (envelope.AnchorSaturday, envelope.Events ?? new());
     }
 
-    private sealed record Key(string Name, DateOnly StartsOn);
+    private static Key CreateKey(string name, DateOnly startsOn, string? location) =>
+        new(name, startsOn, location ?? string.Empty);
+
+    private sealed record Key(string Name, DateOnly StartsOn, string Location);
 
     private sealed record EventEnvelope(DateOnly? AnchorSaturday, List<LocalEventRecord>? Events);
 
