@@ -1,0 +1,41 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+
+title Behaviour — Run once (L2-083)
+actor "External scheduler or operator" as actor
+box "Frontend — Process invocation" #E0F2FE
+ participant "Worker process" as process
+end box
+box "Backend — Worker host" #D1FADF
+ participant IngestionWorker as worker
+ participant IHostApplicationLifetime as lifetime
+end box
+box "Backend — Application" #ECFDF3
+ participant IngestionRunner as runner
+end box
+actor -> process : Start with Enabled and RunOnceThenExit true
+process -> worker : ExecuteAsync(ct)
+worker -> worker : Create fresh scope and parse Types
+worker -> runner : RunAsync(types, false, ct)
+alt returned results
+ runner --> worker : Succeeded / PartialSuccess / Failed types
+ worker -> worker : Log summaries; warn on Failed
+else pass throws
+ runner --> worker : Exception
+ worker -> worker : Catch and log error
+end
+worker -> worker : Dispose scope
+worker -> lifetime : StopApplication()
+lifetime --> process : Shutdown
+process --> actor : Process completion
+note over process, worker
+No cron parsing in once mode.
+Failed types do not set a non-zero process exit code.
+The separate WebJob CLI wrapper preserves CLI exits.
+end note
+@enduml
+

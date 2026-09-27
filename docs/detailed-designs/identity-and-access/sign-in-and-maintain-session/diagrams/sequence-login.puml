@@ -5,50 +5,37 @@ skinparam shadowing false
 skinparam roundcorner 12
 skinparam defaultFontName Arial
 skinparam ArrowColor #344054
-skinparam rectangle {
-  BorderColor #344054
-  FontColor #101828
-}
-skinparam package {
-  BorderColor #667085
-  FontColor #101828
-  BackgroundColor #F9FAFB
-}
-actor "Account holder" as actor
-box "Frontend — Saturdaze web application" #E0F2FE
-  participant "LoginPage" as page
-  participant "SessionStore and AuthService" as client
+actor "User" as actor
+box "Frontend — Saturdaze Angular application" #E0F2FE
+ participant "SignInPage" as page
+ participant "SessionStore\nAuthService" as client
 end box
-box "Backend — Saturdaze API application" #D1FADF
-  participant "AuthController" as controller
+box "Backend — Saturdaze API" #D1FADF
+ participant "AuthController" as controller
 end box
 box "Backend — Saturdaze Application and Domain" #ECFDF3
-  participant "LoginCommandHandler" as handler
-  participant "User and RefreshToken" as entity
+ participant "LoginCommandHandler\nRefreshTokenIssuer" as handler
 end box
 box "Backend — Saturdaze Infrastructure" #FFF4E5
-  database "Saturdaze database" as db
+ database "AppDbContext\nSQL Server" as db
 end box
-actor -> page : Submit login form
-page -> client : login(LoginRequest, remember)
-client -> controller : POST /api/auth/login
-controller -> controller : Authenticate and validate request
-controller -> handler : Send LoginCommand
-handler -> db : Load user by normalized email
-db --> handler : Current state
-alt credentials are valid
-  handler -> entity : Apply L2-002 token issue and L2-007 persistence choice
-  entity --> handler : Updated state
-  handler -> db : Save changes
-  db --> handler : Commit result
-  handler --> controller : Typed result
-  controller --> client : Successful HTTP response
-  client --> page : Present feature result
-  page --> actor : Enter authenticated application
-else credentials are invalid
-  handler --> controller : Controlled error
-  controller --> client : ProblemDetails response
-  client --> page : Present safe error state
-  page --> actor : See generic credential error
+actor -> page : Submit email, password, remember choice
+page -> client : login(request, remember)
+client -> controller : POST /api/auth/login (anonymous)
+controller -> handler : Validate and dispatch LoginCommand
+handler -> db : Load normalized email
+db --> handler : User or absent
+alt valid password
+handler -> handler : L2-002 issue access and refresh credentials
+handler -> db : Save RefreshToken
+db --> handler : Saved
+handler --> controller : AuthSuccessDto
+controller --> client : 200
+client -> client : L2-007 persist to selected browser storage tier
+client --> page : Authenticated user
+else invalid credentials
+handler --> controller : 401 invalid_credentials
+controller --> client : Generic credential error
+client --> page : Error state
 end
 @enduml

@@ -11,29 +11,25 @@ skinparam class {
 }
 title Class structure — Serve a responsive single-page application
 
-class RoutesConfiguration <<TypeScript const>> {
-  +Routes routes
-  +loadComponent(): Promise<Component>
+class routes <<Routes constant>> {
+  +loadComponent: dynamic import
+  +redirectTo: legacy destination
+  +data: shell / nav / page
 }
 class App {
-  +AppShell shell
+  +shell: app / site / bare
 }
-class RoutedPage <<Angular component>> {
-  +render(): Template
+class GlobalStyles <<SCSS>> {
+  +navigationBreakpoint: 720 px
 }
-class Breakpoints <<SCSS module>> {
-  +xs: 360px
-  +sm: 576px
-  +md: 768px
-  +lg: 992px
-  +xl: 1440px
+class staticwebapp_config <<JSON>> {
+  +navigationFallback: /index.html
 }
-class StaticWebAppConfig <<JSON configuration>> {
-  +string navigationFallbackRewrite
-  +string[] exclude
-}
-App --> RoutesConfiguration : hosts
-RoutesConfiguration --> RoutedPage : lazy-loads
-RoutedPage ..> Breakpoints : styles with
-StaticWebAppConfig ..> App : serves index shell
+App ..> routes : reads merged route data
+App ..> GlobalStyles : responsive chrome
+staticwebapp_config ..> App : serves shell for deep links
+note bottom of routes
+Rendered pages are lazy.
+Redirect entries have no page component.
+end note
 @enduml

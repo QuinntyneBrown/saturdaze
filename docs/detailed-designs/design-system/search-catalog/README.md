@@ -18,9 +18,11 @@ This feature builds its index from the manifest plus the foundations page. Queri
 
 ## Requirements
 
+The following L2 requirements refine the cited L1 capabilities. Implementation gaps stated in Description do not waive these obligations.
+
 | L2 ID | Refines (L1) | Requirement |
 |-------|--------------|-------------|
-| `L2-068` | `L1-027` | The header search must index the whole catalog (foundations, 29 components, 7 dialog families, 8 pattern families — 45 entries), match case-insensitively on label, description, and type, cap results at 12, and support full keyboard operation. |
+| `L2-068` | `L1-027` | The header search shall index the whole catalog (foundations, 29 components, 7 dialog families, 8 pattern families — 45 entries), match case-insensitively on label, description, and type, cap results at 12, and support full keyboard operation. |
 
 ## Diagrams
 
@@ -43,6 +45,8 @@ Index construction, query filtering, keyboard handling, the results listbox, and
 ![C4 component view for searching the catalog](diagrams/c4-component.png)
 
 ### Class structure
+
+Class notation groups JavaScript functions, manifest records, and configuration concepts; it does not imply that every named grouping is an exported JavaScript class.
 
 `SearchIndex` owns `SearchEntry` records and produces a bounded result set consumed by the search controller and listbox.
 

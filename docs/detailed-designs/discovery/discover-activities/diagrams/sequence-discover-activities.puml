@@ -5,48 +5,32 @@ skinparam shadowing false
 skinparam roundcorner 12
 skinparam defaultFontName Arial
 skinparam ArrowColor #344054
-skinparam rectangle {
-  BorderColor #344054
-  FontColor #101828
-}
-skinparam package {
-  BorderColor #667085
-  FontColor #101828
-  BackgroundColor #F9FAFB
-}
-actor "Family member" as actor
-box "Frontend — Saturdaze web application" #E0F2FE
-  participant "ActivitiesPage" as page
-  participant "ActivityService" as client
+actor "User" as actor
+box "Frontend — Saturdaze Angular application" #E0F2FE
+ participant "IdeasActivitiesPage" as page
+ participant "ActivityService" as client
 end box
-box "Backend — Saturdaze API application" #D1FADF
-  participant "ActivitiesController" as controller
+box "Backend — Saturdaze API" #D1FADF
+ participant "ActivitiesController" as controller
 end box
 box "Backend — Saturdaze Application and Domain" #ECFDF3
-  participant "GetActivitySuggestionsQueryHandler" as handler
-  participant "Activity" as entity
+ participant "GetActivitySuggestionsQueryHandler" as handler
 end box
 box "Backend — Saturdaze Infrastructure" #FFF4E5
-  database "Saturdaze database" as infra
-  end box
-actor -> page : Choose activity filters
-page -> client : load filtered catalogue
-client -> controller : GET /api/activities
-controller -> controller : Authenticate and validate request
-controller -> handler : Send GetActivitySuggestionsQuery
-handler -> infra : Query activities with supplied predicates
-infra --> handler : Current data
-alt matching activities exist
-  handler -> entity : Apply L2-017 filters and L2-018 grouping
-  entity --> handler : Typed result
-  handler --> controller : Typed result
-  controller --> client : Successful HTTP response
-  client --> page : Present feature result
-  page --> actor : See three ordered sections
-else no activities match
-  handler --> controller : Controlled alternate result
-  controller --> client : Safe HTTP response
-  client --> page : Present alternate state
-  page --> actor : See empty section states
-end
+ database "AppDbContext\nSQL Server" as db
+end box
+actor -> page : Open /ideas
+page -> client : load()
+client -> controller : GET catalog and tryNew catalog
+controller -> handler : Dispatch queries after authentication
+handler -> db : L2-017 predicates; exclude recent family activities for tryNew
+db --> handler : Activity records
+handler --> controller : ActivityDto arrays
+controller --> client : 200 arrays
+client -> client : Load public forecast; apply L2-018 browser grouping
+client --> page : IdeasActivitiesView
+actor -> page : Select filter chip
+page -> client : setFilter(label)
+client -> client : Filter cached rows; omit empty filtered sections
+client --> page : Updated sections
 @enduml

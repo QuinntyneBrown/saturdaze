@@ -10,29 +10,28 @@ Angular guards and `authInterceptor` protect navigation and attach access tokens
 
 ## Description
 
-The feature forms a vertical slice across the Angular application, the ASP.NET Core API, application handlers, domain state, and SQL Server persistence.
+`authInterceptor` attaches the current bearer except on credential-issuance endpoints. It refreshes near-expiry tokens, retries an eligible 401 once, and redirects to `/sign-in` when recovery fails.
 
-- **`authInterceptor`** — Angular interceptor that attaches the current bearer token to API requests.
-- **`requireAuth and requireAdmin`** — Angular guards that protect authenticated and administrative routes.
-- **`JwtBearer middleware`** — ASP.NET Core middleware configured by `JwtBearerPostConfigure`.
-- **`Pbkdf2PasswordHasher`** — Infrastructure service that stores passwords as salted PBKDF2 hashes.
-- **`JwtTokenService`** — Infrastructure service that signs access tokens and hashes refresh-token material.
-- **`AppDbContext`** — EF Core persistence boundary used through LINQ and parameterized commands.
+`requireAuth` and `requireAdmin` control browser navigation. `Program.cs` applies fallback API authorization; explicit AllowAnonymous attributes identify public auth, weather, shared-weekend, calendar, and development endpoints.
 
-`RefreshToken` records creation, expiry, revocation, creator IP and, once rotated by `POST /api/auth/refresh`, the `ReplacedByTokenId` link required by `L2-033` (ADR-007). A global fallback authorization policy in `Program.cs` requires a bearer on every endpoint unless it opts out with `[AllowAnonymous]`, and every family-scoped handler resolves the caller's family through `CurrentUserFamilyAccessor`, treating another family's ids as 404 (ADR-008).
+`CurrentUserFamilyAccessor` resolves the authenticated account's family. Family-owned handlers filter by that ID and return 404 for another family's resource.
+
+`JwtBearerPostConfigure` configures signature validation, `Pbkdf2PasswordHasher` creates salted hashes, and `JwtTokenService` signs access tokens and hashes refresh material. `RefreshTokenCommandHandler` rotates refresh credentials with creator IP and replacement linkage.
+
+`IAppDbContext` exposes EF Core sets; application queries use LINQ or parameter binding. Public share tokens encode a weekend GUID without expiry or revocation. `GetSharedWeekendQueryHandler` returns the full WeekendDto, including family ID and errands; public-data minimization remains a security gap.
 
 ## Requirements
 
-The feature realizes the following level-2 (L2) requirements. Each row cites the level-1 (L1) capability refined by the requirement.
+The following L2 requirements refine the cited L1 capabilities. Implementation gaps stated in Description do not waive these obligations.
 
 | L2 ID | Refines (L1) | Requirement |
 |-------|--------------|-------------|
-| `L2-008` | `L1-001`, `L1-012` | Every endpoint except the auth endpoints, `GET /api/weather`, `GET /api/weekends/shared/{token}` and `GET /api/weekends/{id}/calendar.ics` must reject requests that lack a valid `Authorization: Bearer <jwt>` header; the catalog endpoints are family-personalized and require a bearer too. |
-| `L2-029` | `L1-012` | Plaintext passwords must never be written to the database, and the password hash format must use PBKDF2 with at least 100,000 iterations and a per-user random salt. |
-| `L2-030` | `L1-012` | The JWT signing key must be read from the `SATURDAZE_JWT_SIGNING_KEY` environment variable in production and never embedded as a real value in source control. |
-| `L2-031` | `L1-012` | In production, the API must accept cross-origin requests only from the explicit list configured in `Cors:AllowedOrigins`. Wildcard origins must be rejected. |
-| `L2-032` | `L1-012` | The system must use EF Core LINQ or parameterized SQL for every database call; no string-interpolated SQL is permitted. |
-| `L2-033` | `L1-012` | Every issued refresh token must record `CreatedAtUtc`, `ExpiresAtUtc` (14 days), `CreatedByIp` (when available), and on use (`POST /api/auth/refresh`) must be replaced by a new token with `ReplacedByTokenId` linking back. |
+| `L2-008` | `L1-001`, `L1-012` | Every endpoint except `POST /api/auth/register\|login\|refresh\|logout\|forgot-password\|reset-password\|verify-email\|resend-verification`, `GET /api/weather` (no PII), `GET /api/weekends/shared/{token}` and `GET /api/weekends/{id}/calendar.ics` (capability URLs that browsers and calendar clients fetch without a bearer) shall reject requests that lack a valid `Authorization: Bearer <jwt>` header. `GET /api/activities\|/api/restaurants\|/api/events` are personalized per family (votes, locks, novelty history) and therefore require a bearer too (ADR-008). Enforcement is a global fallback authorization policy; anonymous routes opt out explicitly. |
+| `L2-029` | `L1-012` | Plaintext passwords shall never be written to the database, and the password hash format shall use PBKDF2 with at least 100,000 iterations and a per-user random salt. |
+| `L2-030` | `L1-012` | The JWT signing key shall be read from the `SATURDAZE_JWT_SIGNING_KEY` environment variable in production and never embedded as a real value in source control. |
+| `L2-031` | `L1-012` | In production, the API shall accept cross-origin requests only from the explicit list configured in `Cors:AllowedOrigins`. Wildcard origins shall be rejected. |
+| `L2-032` | `L1-012` | The system shall use EF Core LINQ or parameterized SQL for every database call; no string-interpolated SQL is permitted. |
+| `L2-033` | `L1-012` | Every issued refresh token shall record `CreatedAtUtc`, `ExpiresAtUtc` (14 days), `CreatedByIp` (when available), and on use at `POST /api/auth/refresh` shall be revoked and replaced by a new token, with the presented row\'s `ReplacedByTokenId` pointing to the replacement. |
 
 ## Diagrams
 

@@ -11,12 +11,12 @@ skinparam class {
 }
 title Class structure — Discover local events
 
-class EventsPage {
-  +selectFilter(filter: EventFilter): void
+class IdeasEventsPage {
+  #setCategory(chip: FilterChip): void
 }
 class EventsService {
   +load(weekendOfIso: string): Promise<void>
-  +list(): Signal<EventsView>
+  +list(): Signal<IdeasEventsView>
 }
 class GetLocalEventsQuery {
   +DateOnly WeekendOf
@@ -31,7 +31,7 @@ class LocalEvent {
   +int DriveMinutes
   +string Category
 }
-EventsPage --> EventsService : calls
+IdeasEventsPage --> EventsService : calls
 EventsService ..> GetLocalEventsQuery : maps to
 GetLocalEventsQueryHandler --> LocalEvent : filters
 @enduml

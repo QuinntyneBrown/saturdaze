@@ -1,0 +1,64 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+
+title Behaviour — Ingest catalogs (L2-077 to L2-081)
+actor Operator as actor
+box "Frontend — Administrative entry" #E0F2FE
+ participant "CLI command" as cli
+end box
+box "Backend — Application" #ECFDF3
+ participant IngestionRunner as runner
+ participant IngestionResultParser as parser
+ participant CatalogUpserter as upsert
+end box
+box "Backend — Infrastructure" #FFF4E5
+ participant IWebSearchClient as search
+ database AppDbContext as db
+end box
+actor -> cli : ingest --type selection [--dry-run]
+cli -> cli : Parse type selection; invalid returns 2
+cli -> runner : RunAsync(selected types, dryRun, ct)
+loop each type in canonical order
+ alt non-dry and daily budget exhausted
+ runner -> db : Count today's runs; save Failed budget result
+ db --> runner : Saved
+ else budget allowed or dry-run
+ opt non-dry
+ runner -> db : Save Running audit before research
+ db --> runner : Saved
+ end
+ runner -> search : SearchAsync(prompts, ct)
+ search --> runner : Raw text and usage, or exception
+ alt provider and parser complete
+ runner -> parser : Parse(rawText, type)
+ parser --> runner : Items and rejected count
+ opt non-dry
+ runner -> upsert : UpsertAsync(items, type, ct)
+ upsert -> db : Query incoming names; insert / update; save
+ db --> upsert : Persisted
+ upsert --> runner : Counts
+ end
+ runner -> runner : Succeeded or PartialSuccess
+ else caught non-cancellation pipeline exception
+ runner -> runner : Failed with truncated error
+ end
+ opt non-dry
+ runner -> db : Save final audit status and usage
+ db --> runner : Saved
+ end
+ end
+end
+runner --> cli : Per-type results
+cli --> actor : Exit 1 if any Failed; otherwise 0
+note over runner, db
+Cancellation propagates; a Running row can remain.
+Audit-save failures can abort later types.
+Catalog and final audit saves are separate.
+Dry-run has no database writes but incurs research usage.
+end note
+@enduml
+

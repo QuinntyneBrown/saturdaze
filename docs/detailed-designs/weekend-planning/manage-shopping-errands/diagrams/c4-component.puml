@@ -4,7 +4,7 @@ LAYOUT_WITH_LEGEND()
 title Components — Manage shopping errands
 
 Container_Boundary(web, "Saturdaze web application") {
-  Component(page, "ErrandPage", "Angular component", "Collects shopping task details")
+  Component(page, "AddErrandDialog", "Angular component", "Collects shopping task details")
   Component(client, "WeekendPlanService", "Angular service", "Calls the errand endpoint")
 }
 Container_Boundary(api, "Saturdaze API") {

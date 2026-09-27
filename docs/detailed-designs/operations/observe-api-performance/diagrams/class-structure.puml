@@ -14,20 +14,23 @@ title Class structure — Observe API performance
 class ExceptionHandlingMiddleware {
   +InvokeAsync(context: HttpContext): Task
 }
-class LoggingBehavior<TRequest,TResponse> {
-  +Handle(request: TRequest, next: RequestHandlerDelegate<TResponse>): Task<TResponse>
+class LoggingBehavior<TRequest,TResponse>
+class SerilogRequestLogging <<middleware>>
+class Program <<composition root>>
+class RequestCompletion <<log event>> {
+  +RequestMethod: string
+  +RequestPath: string
+  +StatusCode: int
+  +Elapsed: double
+  +UserId: string
 }
-class HttpContextCurrentUserAccessor {
-  +Guid? UserId
-}
-class RequestLogEvent {
-  +string Method
-  +string Path
-  +int StatusCode
-  +long ElapsedMs
-  +Guid? UserId
-}
-ExceptionHandlingMiddleware ..> LoggingBehavior : encloses request
-LoggingBehavior ..> RequestLogEvent : emits timing
-HttpContextCurrentUserAccessor ..> RequestLogEvent : enriches
+Program ..> SerilogRequestLogging : registers before exception handler
+SerilogRequestLogging ..> ExceptionHandlingMiddleware : wraps
+SerilogRequestLogging ..> RequestCompletion : emits and enriches
+class HandlerTiming <<log event>>
+LoggingBehavior ..> HandlerTiming : emits separate application timing
+note bottom of RequestCompletion
+Conceptual event, not a repository class.
+No automated p95 evaluator is implemented.
+end note
 @enduml

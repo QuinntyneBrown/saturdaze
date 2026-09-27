@@ -6,7 +6,7 @@ title Components — Observe API performance
 Container_Boundary(api, "Saturdaze API") {
   Component(requestlog, "Serilog request logging", "ASP.NET Core middleware", "Records method, path, status, and elapsed time")
   Component(errors, "ExceptionHandlingMiddleware", "ASP.NET Core middleware", "Maps controlled failures")
-  Component(user, "HttpContextCurrentUserAccessor", "API adapter", "Reads authenticated user ID")
+  Component(user, "Program request enrichment", "HttpContext.User claims", "Reads authenticated identity at request completion")
   Component(logging, "LoggingBehavior", "MediatR behavior", "Times application requests")
   Component(handler, "Application handler", "MediatR", "Processes the feature request")
   ComponentDb(logs, "Serilog sinks", "Console and rolling files", "Store structured events")
