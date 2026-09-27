@@ -8,7 +8,7 @@ Container_Boundary(host, "CLI or Worker process") {
  Component(prompts, "IngestionPrompts", "Application utility", "Builds catalog-specific instructions")
  Component(parser, "IngestionResultParser", "Application service", "Extracts arrays and natural keys")
  Component(upserter, "CatalogUpserter", "Application service", "Maps and persists catalog records")
- Component(client, "ClaudeWebSearchClient", "IWebSearchClient adapter", "Calls provider and retries transient failures")
+ Component(client, "ClaudeWebSearchClient", "IWebSearchClient adapter", "Calls provider, resumes pause_turn continuations, and retries transient failures")
  ComponentDb(db, "AppDbContext", "EF Core", "Exposes catalogs and IngestionRuns")
 }
 System_Ext(provider, "Claude Messages API", "Microsoft Foundry by default, Anthropic when configured; web-search-enabled model")
@@ -21,4 +21,3 @@ Rel(runner, parser, "Parse")
 Rel(runner, upserter, "UpsertAsync unless dry-run")
 Rel(upserter, db, "Queries incoming keys; saves catalog data")
 @enduml
-
