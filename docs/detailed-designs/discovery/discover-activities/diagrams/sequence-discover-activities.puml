@@ -21,7 +21,7 @@ box "Backend — Saturdaze Infrastructure" #FFF4E5
 end box
 actor -> page : Open /ideas
 page -> client : load()
-client -> controller : GET catalog and tryNew catalog
+client -> controller : GET /api/activities\nGET /api/activities?tryNew=true
 controller -> handler : Dispatch queries after authentication
 handler -> db : L2-017 predicates; exclude recent family activities for tryNew
 db --> handler : Activity records
