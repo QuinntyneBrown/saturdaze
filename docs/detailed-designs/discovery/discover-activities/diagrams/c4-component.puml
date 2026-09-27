@@ -4,7 +4,7 @@ LAYOUT_WITH_LEGEND()
 title Components — Discover activities
 
 Container_Boundary(web, "Saturdaze web application") {
-  Component(page, "ActivitiesPage", "Angular component", "Controls filters and grouped sections")
+  Component(page, "IdeasActivitiesPage", "Angular component", "Controls filters and grouped sections")
   Component(client, "ActivityService", "Angular service", "Loads and maps activity DTOs")
 }
 Container_Boundary(api, "Saturdaze API") {

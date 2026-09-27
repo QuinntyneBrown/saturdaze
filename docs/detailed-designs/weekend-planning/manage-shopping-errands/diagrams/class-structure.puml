@@ -11,11 +11,11 @@ skinparam class {
 }
 title Class structure — Manage shopping errands
 
-class ErrandPage {
+class AddErrandDialog {
   +submit(): Promise<void>
 }
 class WeekendPlanService {
-  +addErrand(description: string, estimatedMinutes: int, id: string): Promise<void>
+  +addErrand(description: string, estimatedMinutes: number, preferredDay: WeekendDay): Promise<ErrandPlacement | null>
 }
 class AddShoppingErrandCommandHandler {
   +Handle(command: AddShoppingErrandCommand): Task<WeekendDto>
@@ -31,7 +31,7 @@ class ShoppingErrand {
   +int EstimatedMinutes
   +bool Done
 }
-ErrandPage --> WeekendPlanService : calls
+AddErrandDialog --> WeekendPlanService : calls
 WeekendPlanService ..> AddShoppingErrandCommandHandler : invokes through API
 AddShoppingErrandCommandHandler --> Weekend : loads
 Weekend "1" *-- "*" ShoppingErrand

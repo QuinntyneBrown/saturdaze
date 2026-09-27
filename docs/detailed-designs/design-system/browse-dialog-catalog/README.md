@@ -18,10 +18,12 @@ This feature renders all seven families and 18 scenarios from the manifest and l
 
 ## Requirements
 
+The following L2 requirements refine the cited L1 capabilities. Implementation gaps stated in Description do not waive these obligations.
+
 | L2 ID | Refines (L1) | Requirement |
 |-------|--------------|-------------|
-| `L2-063` | `L1-025` | `/dialogs` must render one card per family, each containing a real inline static dialog specimen, and every family detail page must render all of its scenarios inline with no text-only placeholders. |
-| `L2-064` | `L1-025` | `Launch live` must inject a working modal for the chosen scenario into `#dialog-host`, move focus into it, and support every dismissal path with focus restoration and a status announcement. |
+| `L2-063` | `L1-025` | `/dialogs` shall render one card per family, each containing a real inline static dialog specimen, and every family detail page shall render all of its scenarios inline with no text-only placeholders. |
+| `L2-064` | `L1-025` | `Launch live` shall inject a working modal for the chosen scenario into `#dialog-host`, move focus into it, and support every dismissal path with focus restoration and a status announcement. |
 
 ## Diagrams
 
@@ -44,6 +46,8 @@ Dialog renderers use `dialogMarkup()` for both static specimens and the live hos
 ![C4 component view for browsing the dialog catalog](diagrams/c4-component.png)
 
 ### Class structure
+
+Class notation groups JavaScript functions, manifest records, and configuration concepts; it does not imply that every named grouping is an exported JavaScript class.
 
 Each `DialogFamily` contains scenarios consumed by the fixture builder; `SdDialog` publishes close events to the live-dialog controller.
 

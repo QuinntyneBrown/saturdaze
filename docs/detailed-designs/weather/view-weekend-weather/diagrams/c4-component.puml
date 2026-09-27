@@ -2,22 +2,27 @@
 !include <C4/C4_Component>
 LAYOUT_WITH_LEGEND()
 title Components — View weekend weather
-
 Container_Boundary(web, "Saturdaze web application") {
-  Component(page, "HomePage", "Angular component", "Presents the weather strip")
-  Component(client, "WeekendPlanService", "Angular service", "Maps forecast data for presentation")
+  Component(activities, "ActivityService", "Angular service", "Loads activity weather")
+  Component(weekend, "WeekendPlanService", "Angular service", "Maps embedded weekend forecasts")
 }
 Container_Boundary(api, "Saturdaze API") {
-  Component(controller, "WeatherController", "ASP.NET Core", "Exposes weekend weather")
-  Component(handler, "GetWeekendWeatherQueryHandler", "Application handler", "Requests exactly two days")
-  Component(entity, "WeatherForecast", "Domain state", "Represents provider or fallback data")
-  ComponentDb(db, "OpenMeteoWeatherClient", "HttpClient and memory cache", "Represents cached provider access")
+  Component(weather, "WeatherController", "ASP.NET Core", "Anonymous weather endpoint")
+  Component(weekends, "WeekendsController", "ASP.NET Core", "Weekend endpoints")
+  Component(query, "GetWeekendWeatherQueryHandler", "Application handler", "Requests two weekend days")
+  Component(handlers, "Weekend handlers and PlannerInputLoader", "Application services", "Load forecasts for plans")
+  Component(forecast, "WeekendForecastService", "Application service", "Uses configured deployment coordinates")
+  Component(client, "OpenMeteoWeatherClient", "IWeatherClient and HttpClient", "Maps provider data or unavailable placeholders")
+  ComponentDb(cache, "IMemoryCache", "In-process cache", "Caches forecasts for 60 minutes")
 }
-System_Ext(provider, "Open-Meteo", "External weather forecast provider")
-Rel(page, client, "Calls")
-Rel(client, controller, "GET /api/weather?weekendOf=date", "JSON/HTTPS")
-Rel(controller, handler, "Dispatches request")
-Rel(handler, entity, "Builds")
-Rel(handler, db, "Uses configured weather client", "HttpClient and memory cache")
-Rel(db, provider, "Requests forecast data from", "HTTPS")
+System_Ext(provider, "Open-Meteo", "External weather provider")
+Rel(activities, weather, "GET /api/weather", "JSON/HTTPS")
+Rel(weekend, weekends, "Weekend requests", "JSON/HTTPS")
+Rel(weather, query, "Dispatches")
+Rel(weekends, handlers, "Dispatches")
+Rel(query, forecast, "Calls")
+Rel(handlers, forecast, "Calls")
+Rel(forecast, client, "GetForecastAsync")
+Rel(client, cache, "Reads and writes")
+Rel(client, provider, "Requests forecasts", "HTTPS")
 @enduml

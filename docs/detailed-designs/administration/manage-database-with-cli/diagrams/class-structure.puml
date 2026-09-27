@@ -36,4 +36,10 @@ MigrateCommandHandler --> AppDbContext : migrates
 IJsonSeeder --> AppDbContext : upserts
 ResetCommandHandler --> AppDbContext : resets
 ResetCommandHandler --> SeedCommandHandler : reseeds
+class IngestCommandHandler {
+  +ExecuteAsync(typeArg: string, dryRun: bool, ct: CancellationToken): Task<int>
+}
+class IngestionRunner
+RootCommandFactory --> IngestCommandHandler : dispatches
+IngestCommandHandler --> IngestionRunner : runs
 @enduml

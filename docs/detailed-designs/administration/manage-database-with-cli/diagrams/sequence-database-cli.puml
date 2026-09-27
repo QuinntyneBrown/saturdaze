@@ -23,6 +23,7 @@ box "Backend — Saturdaze CLI handlers" #ECFDF3
   participant "MigrateCommandHandler" as migrate
   participant "SeedCommandHandler" as seed
   participant "ResetCommandHandler" as reset
+  participant "IngestCommandHandler\nIngestionRunner" as ingest
 end box
 box "Backend — EF Core infrastructure" #FFF4E5
   participant "IJsonSeeder implementations" as seeders
@@ -39,12 +40,15 @@ else seed
   seed -> seeders : Read bundled or overridden JSON
   seeders -> db : Apply L2-044 idempotent upserts
   db --> seed : Seed result
-else reset with --yes
+else ingest
+  command -> ingest : L2-077 ExecuteAsync(type, dryRun)
+  ingest --> command : Results and exit code
+else reset with --yes and permitted environment
   command -> reset : ExecuteAsync(seedDir)
   reset -> db : Apply L2-045 delete and migrate
   reset -> seed : Reseed
   seed --> reset : Seed result
-else reset without --yes
-  command --> operator : Refuse with exit code 4
+else reset without --yes or disallowed Production
+  command --> operator : Refuse without mutation (4 for no --yes; 5 for Production)
 end
 @enduml

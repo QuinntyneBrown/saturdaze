@@ -4,7 +4,7 @@ LAYOUT_WITH_LEGEND()
 title Components — Register a family account
 
 Container_Boundary(web, "Saturdaze web application") {
-  Component(page, "SignupPage", "Angular component", "Collects signup details")
+  Component(page, "CreateAccountPage", "Angular component", "Collects signup details")
   Component(client, "SessionStore", "Angular service", "Coordinates signup and session storage")
 }
 Container_Boundary(api, "Saturdaze API") {

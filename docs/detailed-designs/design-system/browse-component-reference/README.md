@@ -18,11 +18,13 @@ This feature covers the category index, component overview and API tabs, and int
 
 ## Requirements
 
+The following L2 requirements refine the cited L1 capabilities. Implementation gaps stated in Description do not waive these obligations.
+
 | L2 ID | Refines (L1) | Requirement |
 |-------|--------------|-------------|
-| `L2-060` | `L1-024` | `/components` must render one live card for every manifested component, grouped under the seven category headings in manifest order, each card previewing the real upgraded element and linking to its detail page. |
-| `L2-061` | `L1-024` | Every component detail page must carry breadcrumbs, a header with category eyebrow and selector badge, and a three-tab `Page sections` navigation. The overview tab must give usage guidance plus a contract summary and canonical specimen; the API tab must tabulate the manifest contract with explicit empty states and link to the raw source. |
-| `L2-062` | `L1-024` | The examples tab must render a playground that mutates a live element instance through per-attribute controls, a code panel whose HTML tab tracks playground state and supports copy-to-clipboard, a reset action, and an auto-generated variant matrix covering every enumerated and boolean option. |
+| `L2-060` | `L1-024` | `/components` shall render one live card for every manifested component, grouped under the seven category headings in manifest order, each card previewing the real upgraded element and linking to its detail page. |
+| `L2-061` | `L1-024` | Every component detail page shall carry breadcrumbs, a header with category eyebrow and selector badge, and a three-tab `Page sections` navigation. The overview tab shall give usage guidance plus a contract summary and canonical specimen; the API tab shall tabulate the manifest contract with explicit empty states and link to the raw source. |
+| `L2-062` | `L1-024` | The examples tab shall render a playground that mutates a live element instance through per-attribute controls, a code panel whose HTML tab tracks playground state and supports copy-to-clipboard, a reset action, and an auto-generated variant matrix covering every enumerated and boolean option. |
 
 ## Diagrams
 
@@ -45,6 +47,8 @@ Index, detail, API-table, playground, code-panel, and variant renderers cooperat
 ![C4 component view for browsing the component reference](diagrams/c4-component.png)
 
 ### Class structure
+
+Class notation groups JavaScript functions, manifest records, and configuration concepts; it does not imply that every named grouping is an exported JavaScript class.
 
 `ComponentContract` owns its attributes, slots, events, and examples; the renderer and playground state depend on those records.
 

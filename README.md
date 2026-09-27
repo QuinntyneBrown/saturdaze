@@ -38,9 +38,14 @@ reference.
   sign-out.
 - Weather-aware planning through the Open-Meteo integration, with test fakes
   and neutral fallback behavior.
+- AI-driven catalog ingestion: fresh local events, activities, and restaurants
+  are discovered by a grounded Claude web search and upserted into the catalogs,
+  with every pass recorded in an `IngestionRun` audit row. Triggered on-demand
+  via `saturdaze ingest` or on a cron schedule by the `Saturdaze.Worker` service.
+  See [Ingestion triggers](backend/deploy/webjobs/ingest/README.md) for scheduling options.
 - Static HTML design under `docs/mocks-v2/` — the source of truth for the
   Angular implementation and the visual regression baselines (ADR-009, ADR-010).
-- Local CLI for database migration, seeding, and reset workflows.
+- Local CLI for database migration, seeding, reset, and catalog ingestion.
 - One-command fresh stack script for local verification.
 
 ## Quick Start
@@ -131,8 +136,9 @@ Then open `http://localhost:5173/`.
 | Backend API | `backend/src/Saturdaze.Api` | ASP.NET Core controllers, middleware, auth wiring, Swagger |
 | Application layer | `backend/src/Saturdaze.Application` | MediatR handlers, validators, planning logic, DTO contracts |
 | Domain layer | `backend/src/Saturdaze.Domain` | Entities and enums with no infrastructure dependency |
-| Infrastructure | `backend/src/Saturdaze.Infrastructure` | EF Core, SQL Server persistence, migrations, weather client, auth services |
-| CLI | `backend/src/Saturdaze.Cli` | Database migration, seed, and reset commands |
+| Infrastructure | `backend/src/Saturdaze.Infrastructure` | EF Core, SQL Server persistence, migrations, weather client, Claude web-search ingestion client, auth services |
+| CLI | `backend/src/Saturdaze.Cli` | Database migration, seed, reset, and `ingest` commands |
+| Worker | `backend/src/Saturdaze.Worker` | Cron-scheduled .NET Worker Service that runs catalog ingestion |
 | Angular app | `frontend/projects/saturdaze` | Routed user-facing application |
 | API library | `frontend/projects/api` | Client-side models and services for backend integration |
 | Component library | `frontend/projects/components` | Standalone Angular UI components aligned with the mock system |

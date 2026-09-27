@@ -6,27 +6,28 @@ Saturdaze is a web application that plans personalized family weekends. Errand m
 
 *shopping errand* — weekend task with a description, estimated duration, and completion flag
 
-`ErrandPage` collects the task, duration and preferred day. The API appends `ShoppingErrand` to the caller's weekend, places an `Errand` block in the best free slot via `IWeekendPlanner.PlaceErrand` (preferred day first, existing downtime reclaimed, remaining gaps re-filled), and returns the refreshed aggregate.
+`AddErrandDialog` collects the task, duration and preferred day. The API appends `ShoppingErrand` to the caller's weekend, places an `Errand` block in the best free slot via `IWeekendPlanner.PlaceErrand` (preferred day first, existing downtime reclaimed, remaining gaps re-filled), and returns the refreshed aggregate.
 
 ## Description
 
-The feature forms a vertical slice across the Angular application, the ASP.NET Core API, application handlers, domain state, and SQL Server persistence.
+`WeekendPage` opens `AddErrandDialog` to collect description, duration, and optional preferred day. `WeekendPlanService.addErrand()` posts those values and compares returned blocks with prior state to derive an ErrandPlacement.
 
-- **`ErrandPage`** — Angular page that captures description, duration, and preferred day presentation.
-- **`WeekendPlanService`** — Typed client service whose `addErrand()` method calls the weekend endpoint.
-- **`ErrandsController`** — API controller exposing add and done operations.
-- **`AddShoppingErrandCommandHandler`** — Application handler that appends a validated errand and slots it into the itinerary immediately.
-- **`MarkErrandDoneCommandHandler`** — Application handler that changes the completion flag.
-- **`Weekend and ShoppingErrand`** — Domain aggregate and owned task state.
+`ErrandsController` dispatches `AddShoppingErrandCommand`. The handler verifies family ownership, creates ShoppingErrand, and calls `IWeekendPlanner.PlaceErrand()` on the preferred day followed by the other day.
+
+Successful placement replaces overlapping downtime and fills remaining gaps. If neither day has space, the errand still persists without an itinerary block; the client can receive null placement.
+
+`ErrandAddedDialog` acknowledges the result on the existing weekend screen. `setErrandDone()` calls the done endpoint and `MarkErrandDoneCommandHandler` updates the owned errand.
+
+Placement identifies the new block by comparing IDs and description; the API returns WeekendDto rather than a separate placement contract.
 
 ## Requirements
 
-The feature realizes the following level-2 (L2) requirements. Each row cites the level-1 (L1) capability refined by the requirement.
+The following L2 requirements refine the cited L1 capabilities. Implementation gaps stated in Description do not waive these obligations.
 
 | L2 ID | Refines (L1) | Requirement |
 |-------|--------------|-------------|
-| `L2-021` | `L1-008` | `POST /api/weekends/{weekendId}/errands` must append a `ShoppingErrand` to the weekend, place an `Errand` block in the best free slot (optional `preferredDay` first), and return the updated `WeekendDto`. |
-| `L2-022` | `L1-008` | `PUT /api/errands/{id}/done` must set the errand's `Done` field to the request value. |
+| `L2-021` | `L1-008` | `POST /api/weekends/{weekendId}/errands` shall append a `ShoppingErrand` to the weekend, place an `Errand` block in the best free slot (the optional `preferredDay` first, then the other day; existing downtime is reclaimed), and return the updated `WeekendDto`. |
+| `L2-022` | `L1-008` | `PUT /api/errands/{id}/done` shall set the errand's `Done` field to the request value. |
 
 ## Diagrams
 

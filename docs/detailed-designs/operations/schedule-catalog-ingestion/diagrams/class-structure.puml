@@ -1,0 +1,37 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam classBackgroundColor #F9FAFB
+skinparam classBorderColor #344054
+title Class structure — Schedule ingestion
+abstract class BackgroundService
+class IngestionWorker {
+ #ExecuteAsync(stoppingToken: CancellationToken): Task
+ -RunIngestionAsync(ct: CancellationToken): Task
+}
+class IngestionScheduleOptions {
+ +bool Enabled = true
+ +string Cron = "0 0 8 * * 5"
+ +string Types = "all"
+ +bool RunOnStartup = false
+ +bool RunOnceThenExit = false
+}
+class CronSchedule {
+ +string Expression
+ +{static} TryParse(expression: string, out schedule: CronSchedule): bool
+ +GetNextOccurrence(after: DateTimeOffset): DateTimeOffset
+}
+interface IServiceScopeFactory
+interface IHostApplicationLifetime {
+ +StopApplication(): void
+}
+class IngestionRunner
+IngestionWorker --|> BackgroundService
+IngestionWorker --> IngestionScheduleOptions
+IngestionWorker --> CronSchedule
+IngestionWorker --> IServiceScopeFactory : creates scope for each pass
+IngestionWorker --> IngestionRunner : resolves within scope
+IngestionWorker --> IHostApplicationLifetime
+@enduml
+

@@ -12,22 +12,24 @@ Shared components centralize keyboard behavior, labels, focus styles, and color 
 
 The feature crosses the application and platform boundaries needed to deliver its observable outcome.
 
-- **`Button and IconButton`** — Shared Angular controls with native button semantics and icon-only labelling.
+- **`Button`** — Shared Angular controls with native button semantics and icon-only labelling.
 - **`TextInput`** — Shared Angular form control that associates visible labels and validation text.
-- **`Dialog`** — Shared dialog frame used with Angular CDK focus management.
-- **`Chip and Toggle`** — Shared interactive controls with keyboard and state semantics.
+- **`Dialog`** — Presentational panel inside the Angular CDK dialog container; CDK owns focus trapping and restoration.
+- **`FilterChip and Toggle`** — Shared interactive controls with keyboard and state semantics.
 - **`_tokens.scss and _global.scss`** — Shared color and focus styles used by component SCSS.
 - **`Routed page templates`** — Feature templates that provide descriptive labels and image alternatives.
 
+Automated structural checks do not establish complete keyboard or WCAG contrast conformance. The obligations below remain subject to dedicated accessibility verification.
+
 ## Requirements
 
-The feature realizes the following level-2 (L2) requirements. Each row cites the level-1 (L1) capability refined by the requirement.
+The following L2 requirements refine the cited L1 capabilities. Implementation gaps stated in Description do not waive these obligations.
 
 | L2 ID | Refines (L1) | Requirement |
 |-------|--------------|-------------|
-| `L2-036` | `L1-014` | Every button, link, form control, and dialog action must be reachable via Tab order and operable with Enter/Space, and the visible focus indicator must meet WCAG 2.1 AA contrast. |
-| `L2-037` | `L1-014` | Icon-only buttons must carry `aria-label`, form fields must have associated labels, and images carrying meaning must have descriptive `alt` text. |
-| `L2-038` | `L1-014` | All text, including chip labels and disabled controls used to convey state, must meet a 4.5:1 contrast ratio against its background (3:1 for large text ≥18 pt or 14 pt bold). |
+| `L2-036` | `L1-014` | Every button, link, form control, and dialog action shall be reachable via Tab order and operable with Enter/Space, and the visible focus indicator shall meet WCAG 2.1 AA contrast. |
+| `L2-037` | `L1-014` | Icon-only buttons shall carry `aria-label`, form fields shall have associated labels, and images carrying meaning shall have descriptive `alt` text. |
+| `L2-038` | `L1-014` | All text, including chip labels and disabled controls used to convey state, shall meet a 4.5:1 contrast ratio against its background (3:1 for large text ≥18 pt or 14 pt bold). |
 
 ## Diagrams
 
@@ -51,7 +53,7 @@ The component view names the runtime or delivery components that implement the s
 
 ### Class structure
 
-The class view shows the code and configuration relationships that control the feature.
+The class view shows selected code and configuration relationships. Cancellation parameters and unrelated members are omitted.
 
 ![Class diagram for supporting accessible interaction](diagrams/class-structure.png)
 

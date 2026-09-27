@@ -11,11 +11,9 @@ skinparam class {
 }
 title Class structure — Track own event submissions
 
-class EventsPage {
-  +load(): Promise<void>
-}
+class IdeasEventsPage
 class EventSubmissionsService {
-  +listMine(): Promise<IReadOnlyList<EventSubmissionDto>>
+  +loadMine(): Promise<void>
 }
 class ListMySubmissionsQuery {
 }
@@ -26,7 +24,7 @@ class EventSubmission {
   +Guid SubmittedByUserId
   +EventSubmissionStatus Status
 }
-EventsPage --> EventSubmissionsService : calls
+IdeasEventsPage --> EventSubmissionsService : calls
 EventSubmissionsService ..> ListMySubmissionsQuery : maps to
 ListMySubmissionsQueryHandler --> EventSubmission : filters
 @enduml

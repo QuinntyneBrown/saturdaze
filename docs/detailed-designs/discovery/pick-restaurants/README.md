@@ -10,22 +10,23 @@ Saturdaze is a web application that plans personalized family weekends. Restaura
 
 ## Description
 
-The feature forms a vertical slice across the Angular application, the ASP.NET Core API, application handlers, domain state, and SQL Server persistence.
+`IdeasFoodPage` at `/ideas/food` uses `RestaurantService.list(): Signal<IdeasFoodView>`. The service loads four day/meal lists with `wifeApprovedOnly=false&take=10`; the API's default remains true when omitted.
 
-- **`RestaurantsPage`** — Angular page that presents restaurant sections and filter controls.
-- **`RestaurantService`** — Typed client service that loads, votes on, and locks restaurant choices.
-- **`RestaurantsController`** — API controller exposing list, vote, and lock endpoints.
-- **`GetRestaurantPicksQuery`** — Typed request containing day, slot, proximity, and approval filters.
-- **`GetRestaurantPicksQueryHandler`** — Application handler that validates scope and orders projections.
-- **`Restaurant`** — Domain entity containing slot, approval, style, notes, and drive time.
+`GetRestaurantPicksQueryHandler` filters meal slot, joins family-owned votes and day/slot locks, and optionally ranks by the difference between stored restaurant and activity drive estimates. This is not a geographic route calculation.
+
+`RestaurantService.setFilters()` selects day, meal, wife-approved, and under-15-minute filters locally. The service ranks locked choices first, then approved and nearby choices. `vote(restaurantId, voterName, vote)` sends a family-scoped vote and replaces the returned record.
+
+`LockRestaurantDialog` confirms a day/slot choice. `LockRestaurantCommandHandler` upserts one `RestaurantLock` per family/day/slot and updates or creates the current weekend's locked meal block when a current plan exists. The UI has no restaurant-unlock action.
+
+Patio filtering required by L1-006 has no corresponding DTO field or filter. Voting currently accepts a supplied voter name without checking membership; the design does not imply stronger per-member authorization.
 
 ## Requirements
 
-The feature realizes the following level-2 (L2) requirements. Each row cites the level-1 (L1) capability refined by the requirement.
+The following L2 requirements refine the cited L1 capabilities. Implementation gaps stated in Description do not waive these obligations.
 
 | L2 ID | Refines (L1) | Requirement |
 |-------|--------------|-------------|
-| `L2-019` | `L1-006` | `GET /api/restaurants` must require a `day` and `slot` parameter, optionally narrow by `nearActivityId`, and default `wifeApprovedOnly=true`. |
+| `L2-019` | `L1-006` | `GET /api/restaurants` shall require a `day` and `slot` parameter, optionally narrow by `nearActivityId`, and default `wifeApprovedOnly=true`. |
 
 ## Diagrams
 

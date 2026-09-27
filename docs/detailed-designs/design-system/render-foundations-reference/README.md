@@ -16,9 +16,11 @@ This feature presents color, typography, spacing, shape and elevation, motion an
 
 ## Requirements
 
+The following L2 requirements refine the cited L1 capabilities. Implementation gaps stated in Description do not waive these obligations.
+
 | L2 ID | Refines (L1) | Requirement |
 |-------|--------------|-------------|
-| `L2-059` | `L1-023` | `/foundations` must document the token vocabulary with specimens rendered from the running stylesheet, in six sections, so the page cannot disagree with `tokens.css`. |
+| `L2-059` | `L1-023` | `/foundations` shall document the token vocabulary with specimens rendered from the running stylesheet, in six sections, so the page cannot disagree with `tokens.css`. |
 
 ## Diagrams
 
@@ -41,6 +43,8 @@ The documentation SPA reads static token CSS and component modules in the browse
 ![C4 component view for rendering the foundations reference](diagrams/c4-component.png)
 
 ### Class structure
+
+Class notation groups JavaScript functions, manifest records, and configuration concepts; it does not imply that every named grouping is an exported JavaScript class.
 
 The foundations renderer depends on the token vocabulary and icon inventory, while each icon specimen contains one `SdIcon` instance.
 

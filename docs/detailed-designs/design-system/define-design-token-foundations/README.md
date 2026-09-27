@@ -16,9 +16,11 @@ This feature establishes `design-system/assets/tokens.css` as the authoritative 
 
 ## Requirements
 
+The following L2 requirements refine the cited L1 capabilities. Implementation gaps stated in Description do not waive these obligations.
+
 | L2 ID | Refines (L1) | Requirement |
 |-------|--------------|-------------|
-| `L2-051` | `L1-019` | `design-system/assets/tokens.css` must declare the complete `--sd-*` token vocabulary on `:root`: the warm-neutral color palette, the Inter-first font stack, a seven-step type scale, a ten-step four-pixel spacing scale, five radii, three elevation shadows, motion easing and durations, layout dimensions, and the two application breakpoints. It must be the only file in the folder that declares the token vocabulary, and the only responsive override must be a single desktop media query adjusting padding and the three largest type sizes. |
+| `L2-051` | `L1-019` | `design-system/assets/tokens.css` shall declare the complete `--sd-*` token vocabulary on `:root`: the warm-neutral color palette, the Inter-first font stack, a seven-step type scale, a ten-step four-pixel spacing scale, five radii, three elevation shadows, motion easing and durations, layout dimensions, and the two application breakpoints. It shall be the only file in the folder that declares the token vocabulary, and the only responsive override shall be a single desktop media query adjusting padding and the three largest type sizes. |
 
 ## Diagrams
 
@@ -41,6 +43,8 @@ The token source, shared element base, catalog styles, validator, and static-cop
 ![C4 component view for defining design token foundations](diagrams/c4-component.png)
 
 ### Class structure
+
+Class notation groups JavaScript functions, manifest records, and configuration concepts; it does not imply that every named grouping is an exported JavaScript class.
 
 `SdElement` consumes the token vocabulary, while the validator and build plugin depend on the authoritative stylesheet as a file contract.
 

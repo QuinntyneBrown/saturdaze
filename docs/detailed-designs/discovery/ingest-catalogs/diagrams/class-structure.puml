@@ -1,0 +1,69 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam classBackgroundColor #F9FAFB
+skinparam classBorderColor #344054
+title Class structure — Ingest catalogs
+class IngestionRunner {
+ +RunAsync(...): Task<IReadOnlyList<IngestionRun>>
+}
+interface IWebSearchClient {
+ +SearchAsync(...): Task<WebSearchResult>
+}
+class ClaudeWebSearchClient
+class ClaudeWebSearchOptions {
+ +ClaudeProvider Provider
+ +string FoundryResource
+ +string Model
+ +string BaseUrl
+ +ResolveBaseUri(options): Uri?
+ +ResolveApiKey(options, environment): string
+}
+enum ClaudeProvider {
+ Foundry
+ Anthropic
+}
+class IngestionResultParser {
+ +Parse(rawText: string, type: IngestionType): IngestionParseResult
+}
+class CatalogUpserter {
+ +UpsertAsync(...): Task<UpsertResult>
+}
+class IngestionRun {
+ +Guid Id
+ +IngestionType Type
+ +IngestionStatus Status
+ +DateTimeOffset StartedUtc
+ +DateTimeOffset? FinishedUtc
+ +int ItemsConsidered
+ +int ItemsUpserted
+ +int ItemsRejected
+ +int InputTokens
+ +int OutputTokens
+ +int WebSearchCount
+ +string? ErrorMessage
+}
+class IngestionItem <<record>> {
+ +string NaturalKey
+ +string DisplayName
+ +JsonObject Payload
+}
+interface IAppDbContext
+IngestionRunner --> IWebSearchClient
+ClaudeWebSearchClient ..|> IWebSearchClient
+ClaudeWebSearchClient --> ClaudeWebSearchOptions
+ClaudeWebSearchOptions --> ClaudeProvider
+IngestionRunner --> IngestionResultParser
+IngestionRunner --> CatalogUpserter
+IngestionRunner --> IngestionRun : audits one per selected type
+IngestionResultParser --> IngestionItem : produces
+CatalogUpserter --> IngestionItem : consumes
+CatalogUpserter --> IAppDbContext : upserts catalog
+IngestionRunner --> IAppDbContext : persists audit
+note bottom of IngestionRunner
+Long parameter lists are elided.
+RunAsync takes selected types,
+dryRun, and cancellation token.
+end note
+@enduml

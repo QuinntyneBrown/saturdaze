@@ -22,11 +22,15 @@ class OpenMeteoWeatherClient {
 }
 class WeatherForecast {
   +DateOnly Date
-  +double? HighC
-  +double? LowC
+  +double? HighCelsius
+  +double? LowCelsius
   +bool Unavailable
 }
-GetWeekendWeatherQueryHandler --> IWeatherClient : calls
+class WeekendForecastService {
+  +GetAsync(weekendOf: DateOnly, ct: CancellationToken): Task<IReadOnlyList<WeatherForecast>>
+}
+GetWeekendWeatherQueryHandler --> WeekendForecastService : calls
+WeekendForecastService --> IWeatherClient : configured coordinates
 OpenMeteoWeatherClient ..|> IWeatherClient
 OpenMeteoWeatherClient --> WeatherForecast : maps or falls back
 @enduml
