@@ -32,9 +32,18 @@ else endpoint and key available
  provider --> http : Final response
  http --> client : Result
  end
+ loop while stop_reason is pause_turn and continuation limit remains
+ client -> client : Extract text blocks and usage\nappend assistant content to conversation
+ client -> http : POST v1/messages with same tool definition
+ http -> provider : Continued conversation
+ provider --> http : Continuation response
+ http --> client : Result
+ end
  alt successful response
- client -> client : Extract text blocks and usage
+ client -> client : Extract final text blocks and usage
  client --> runner : WebSearchResult
+ else continuation limit exhausted
+ client --> runner : Exception
  else terminal HTTP / parse / transport error
  client --> runner : Exception
  end
