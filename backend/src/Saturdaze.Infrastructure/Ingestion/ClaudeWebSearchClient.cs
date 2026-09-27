@@ -50,33 +50,71 @@ public sealed class ClaudeWebSearchClient : IWebSearchClient
             throw new ClaudeApiException(
                 $"{ClaudeWebSearchOptions.ApiKeyVariable(_options.Provider)} is not configured. Set it as an environment variable (or {ClaudeWebSearchOptions.SectionName}:ApiKey) before running ingestion.");
 
-        var body = BuildRequestBody(systemPrompt, userPrompt);
-
-        using var response = await SendWithRetryAsync(() => BuildRequest(body), cancellationToken);
-        var payload = await response.Content.ReadAsStringAsync(cancellationToken);
-
-        if (!response.IsSuccessStatusCode)
-            throw new ClaudeApiException(
-                $"Claude API ({_options.Provider}) returned {(int)response.StatusCode} ({response.StatusCode}): {Snippet(payload)}");
-
-        try
+        var messages = new List<object>
         {
-            return ParseResponse(payload);
-        }
-        catch (JsonException ex)
+            new Dictionary<string, object?> { ["role"] = "user", ["content"] = userPrompt }
+        };
+
+        var totalInputTokens = 0;
+        var totalOutputTokens = 0;
+        var totalSearchRequests = 0;
+        var totalText = new StringBuilder();
+
+        for (var continuation = 0; continuation <= _options.MaxContinuationTurns; continuation++)
         {
-            throw new ClaudeApiException($"Claude API ({_options.Provider}) returned a response that could not be parsed.", ex);
+            var body = BuildRequestBody(systemPrompt, messages);
+
+            using var response = await SendWithRetryAsync(() => BuildRequest(body), cancellationToken);
+            var payload = await response.Content.ReadAsStringAsync(cancellationToken);
+
+            if (!response.IsSuccessStatusCode)
+                throw new ClaudeApiException(
+                    $"Claude API ({_options.Provider}) returned {(int)response.StatusCode} ({response.StatusCode}): {Snippet(payload)}");
+
+            ClaudeResponse parsed;
+            try
+            {
+                parsed = ParseResponse(payload);
+            }
+            catch (JsonException ex)
+            {
+                throw new ClaudeApiException($"Claude API ({_options.Provider}) returned a response that could not be parsed.", ex);
+            }
+
+            totalInputTokens += parsed.InputTokens;
+            totalOutputTokens += parsed.OutputTokens;
+            totalSearchRequests += parsed.WebSearchCount;
+            totalText.Append(parsed.RawText);
+
+            if (!string.Equals(parsed.StopReason, "pause_turn", StringComparison.Ordinal))
+                return new WebSearchResult(totalText.ToString(), totalInputTokens, totalOutputTokens, totalSearchRequests);
+
+            if (continuation == _options.MaxContinuationTurns)
+                throw new ClaudeApiException(
+                    $"Claude API ({_options.Provider}) returned pause_turn {_options.MaxContinuationTurns + 1} times without completing the search.");
+
+            if (parsed.Content.ValueKind != JsonValueKind.Array)
+                throw new ClaudeApiException(
+                    $"Claude API ({_options.Provider}) returned pause_turn without assistant content to resume.");
+
+            messages.Add(new Dictionary<string, object?>
+            {
+                ["role"] = "assistant",
+                ["content"] = parsed.Content
+            });
         }
+
+        throw new ClaudeApiException($"Claude API ({_options.Provider}) exhausted continuation attempts without completing the search.");
     }
 
-    private string BuildRequestBody(string systemPrompt, string userPrompt)
+    private string BuildRequestBody(string systemPrompt, IReadOnlyList<object> messages)
     {
         var request = new
         {
             model = _options.Model,
             max_tokens = _options.MaxTokens,
             system = systemPrompt,
-            messages = new[] { new { role = "user", content = userPrompt } },
+            messages,
             tools = new object[]
             {
                 new Dictionary<string, object?>
@@ -146,16 +184,21 @@ public sealed class ClaudeWebSearchClient : IWebSearchClient
     /// tool-use / tool-result blocks the web_search loop emits) and reads token
     /// usage and the web-search count from the <c>usage</c> block.
     /// </summary>
-    private static WebSearchResult ParseResponse(string payload)
+    private static ClaudeResponse ParseResponse(string payload)
     {
         using var doc = JsonDocument.Parse(payload);
         var root = doc.RootElement;
 
         var text = new StringBuilder();
         var searchBlocks = 0;
+        var stopReason = root.TryGetProperty("stop_reason", out var stopReasonProp)
+            ? stopReasonProp.GetString()
+            : null;
+        var contentClone = default(JsonElement);
 
         if (root.TryGetProperty("content", out var content) && content.ValueKind == JsonValueKind.Array)
         {
+            contentClone = content.Clone();
             foreach (var block in content.EnumerateArray())
             {
                 if (!block.TryGetProperty("type", out var typeProp))
@@ -185,7 +228,7 @@ public sealed class ClaudeWebSearchClient : IWebSearchClient
                 searchRequests = wsr.GetInt32();
         }
 
-        return new WebSearchResult(text.ToString(), inputTokens, outputTokens, searchRequests);
+        return new ClaudeResponse(stopReason, contentClone, text.ToString(), inputTokens, outputTokens, searchRequests);
     }
 
     private static string Snippet(string payload)
@@ -193,4 +236,12 @@ public sealed class ClaudeWebSearchClient : IWebSearchClient
         var cleaned = payload.ReplaceLineEndings(" ").Trim();
         return cleaned.Length <= 500 ? cleaned : cleaned[..500];
     }
+
+    private sealed record ClaudeResponse(
+        string? StopReason,
+        JsonElement Content,
+        string RawText,
+        int InputTokens,
+        int OutputTokens,
+        int WebSearchCount);
 }
