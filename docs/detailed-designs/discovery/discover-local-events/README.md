@@ -10,21 +10,22 @@ Saturdaze is a web application that plans personalized family weekends. Local-ev
 
 ## Description
 
-`IdeasEventsPage` at `/ideas/events` reads `EventsService.list(): Signal<IdeasEventsView>`. `setWindow()` and `setCategory()` filter the loaded records in the browser.
+The feature forms a vertical slice across the Angular application, the ASP.NET Core API, application handlers, domain state, and SQL Server persistence.
 
-`EventsService.load()` sends the upcoming Saturday and `maxDriveMinutes=45` to `GET /api/events`, and loads the caller's submissions. The API default remains 120 minutes for callers omitting that parameter.
-
-`GetLocalEventsQueryHandler` returns events overlapping Friday through Sunday and events starting within 14 days after Sunday. It filters the stored drive estimate and orders by start date, drive minutes, and name.
-
-`EventsService` places a multi-day event on the first weekend day it touches, adds coming-soon entries, and prepends owned pending submissions. Next-weekend filtering uses the following Saturday and Sunday. `LocalEvent` has a category, not a separate indoor flag; the distinct indoor/outdoor filtering obligation in L1-007 remains an implementation gap.
+- **`EventsPage`** — Angular page that presents event sections and filter controls.
+- **`EventsService`** — Typed client service that loads and maps the public event feed.
+- **`EventsController`** — API controller exposing `GET /api/events`.
+- **`GetLocalEventsQuery`** — Typed query containing weekend date and maximum drive time.
+- **`GetLocalEventsQueryHandler`** — Application handler that applies date overlap and distance predicates.
+- **`LocalEvent`** — Domain entity containing event dates, location, category, URL, and drive time.
 
 ## Requirements
 
-The following L2 requirements refine the cited L1 capabilities. Implementation gaps stated in Description do not waive these obligations.
+The feature realizes the following level-2 (L2) requirements. Each row cites the level-1 (L1) capability refined by the requirement.
 
 | L2 ID | Refines (L1) | Requirement |
 |-------|--------------|-------------|
-| `L2-020` | `L1-007` | `GET /api/events` shall accept `weekendOf` and `maxDriveMinutes` (default 120). It shall return events overlapping Friday through Sunday, plus events starting within 14 days after Sunday, within the requested drive bound. |
+| `L2-020` | `L1-007` | `GET /api/events` must accept `weekendOf` and `maxDriveMinutes` (default 120) and return events whose start date falls between Friday of that weekend and the following Sunday inclusive. |
 
 ## Diagrams
 

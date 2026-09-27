@@ -22,6 +22,8 @@ Dry-run execution calls the provider and parser but bypasses both the daily audi
 
 Catalog writes and audit finalization are separate saves, not an atomic transaction. Initial or final audit-save failures can abort remaining types; cancellation can leave Running rows. The budget check is not a distributed lock. Empty or unparseable output can produce a successful zero-item result. Schema completeness, source trustworthiness, concurrency coordination, and hard geographic enforcement remain operational limitations.
 
+The checked-in App Service WebJob trigger (`backend/deploy/webjobs/ingest/settings.job`) uses NCRONTAB in UTC. Its default `0 0 8 * * 5` schedule runs Fridays at 08:00 UTC so shared catalogs refresh ahead of the weekend-planning window.
+
 Source anchors are [application ingestion](/backend/src/Saturdaze.Application/Ingestion), [provider adapter](/backend/src/Saturdaze.Infrastructure/Ingestion), [Foundry provisioning](/eng/foundry/claude.bicep), [CLI command](/backend/src/Saturdaze.Cli/Ingest), and [audit entity](/backend/src/Saturdaze.Domain/Entities/IngestionRun.cs).
 
 ## Requirements
