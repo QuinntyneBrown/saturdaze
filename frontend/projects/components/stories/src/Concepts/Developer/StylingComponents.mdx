@@ -1,0 +1,58 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Concepts/Developer/Styling Components" />
+
+# Styling components
+
+## BEM classes from the mocks
+
+Every component carries the BEM classes from `docs/mocks-v2/styles/app.css` (ADR-009):
+
+- the **host** gets the block class and its modifiers — `<sd-block class="block block--locked">`;
+- **inner elements** get the element classes verbatim — `.day__meta`, `.card__eyebrow`;
+- **state is ARIA** — `aria-current`, `aria-pressed`, `aria-invalid`, `role="switch"`.
+
+Interactive atoms (`sd-button`, `sd-ghost-row`, `sd-list-item`, form controls) use a `display: contents` host so the
+real `<button>`, `<a>` or `<input>` carries the class and the native semantics.
+
+The e2e page objects locate by these classes against both the mocks and the app — **renaming a class breaks the
+harness**.
+
+## Encapsulated SCSS
+
+Each component's stylesheet is the matching `app.css` block with `:host` substitutions. Global SCSS holds only the
+reset, the tokens and `sd-`-prefixed utilities.
+
+```scss
+// chip.scss — `.chip` from docs/mocks-v2/styles/app.css; the host is the chip.
+:host {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 24px;
+  padding: 0 10px;
+  border-radius: var(--sd-r-pill);
+  font-weight: var(--sd-fw-semibold);
+  background: var(--sd-surface-2);
+  color: var(--sd-ink-soft);
+}
+
+:host(.chip--sun) { background: var(--sd-sun-soft); color: var(--sd-sun-ink); }
+```
+
+Rules of thumb:
+
+- Use tokens, never hex values. Missing a colour? Add it to `_tokens.scss` first.
+- Use `@include respond-to(tablet | desktop | xsmall)` for responsive rules.
+- Production budget per component style: **6kB warn / 10kB error**.
+
+## Content projection
+
+Declare each `ng-content` slot **once**. A component that renders `<a>` or `<button>` by condition puts its slots in one
+`<ng-template>` and renders it with `ngTemplateOutlet` in both branches (`sd-button`, `sd-ghost-row`, `sd-list-item`).
+On the consumer side, a `@if` wrapping several `[slot=…]` nodes loses the slot (NG8011) — use one `@if` per node.
+
+## Visual parity
+
+Visual tolerance is `maxDiffPixelRatio: 0.005`, `threshold: 0.05` and never loosened (ADR-010). A parity failure is
+fixed in the component, not in the baseline.

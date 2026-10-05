@@ -144,7 +144,7 @@ Then open `http://localhost:5173/`.
 | Component library | `frontend/projects/components` | Standalone Angular UI components aligned with the mock system |
 | E2E suite | `e2e` | Playwright behavior and visual tests |
 | Design reference | `docs/mocks-v2` | Static HTML/CSS design, screenshots, and its own lint/verify scripts (`.check.mjs`, `.verify.mjs`) |
-| Design system | `design-system` | Standalone token/component catalog with its own Playwright suite and Azure Static Web App (`deploy-design-system.yml`) |
+| Design system | `frontend/projects/components/stories` | Storybook docsite for the component library — concepts, theme tokens, component docs and patterns (`npm run storybook`; deployed by `deploy-storybook.yml`, ADR-012) |
 
 ## Development
 

@@ -71,18 +71,24 @@ jobs:
         working-directory: frontend
         run: npx ng build saturdaze --configuration production
 
-  design-system:
-    name: Design-system contract + browser tests
+  storybook:
+    name: Storybook build
     runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request'
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-      - run: npm ci
-        working-directory: design-system
-      - run: npx playwright install --with-deps chromium
-        working-directory: design-system
-      - run: npm test
-        working-directory: design-system
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install Angular workspace deps
+        working-directory: frontend
+        run: npm ci
+
+      # Compiles every story and MDX page against the real components
+      # library; a broken story or a removed input fails here.
+      - name: Build Storybook
+        working-directory: frontend
+        run: npm run build-storybook

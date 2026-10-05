@@ -1,0 +1,18 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+import { TokenRows, previews } from './components/TokenBlocks';
+import { byPrefix } from './components/tokens';
+
+<Meta title="Theme/Motion" />
+
+# Motion
+
+Motion is brief and useful: `--sd-dur-fast` for hover and press feedback, `--sd-dur-base` for state changes such as a
+day locking or a dialog opening. Everything eases with `--sd-ease`. Under `prefers-reduced-motion: reduce` the global
+stylesheet collapses every animation and transition to near zero.
+
+Hover a row to see the duration.
+
+<TokenRows tokens={byPrefix('--sd-dur-')} preview={previews.motion} />
+
+<TokenRows tokens={byPrefix('--sd-ease')} preview={previews.none} />

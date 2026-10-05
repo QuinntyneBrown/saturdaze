@@ -1,0 +1,23 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Concepts/Developer/Accessibility" />
+
+# Accessibility
+
+Saturdaze targets WCAG 2.2 AA. The **Accessibility** addon panel (open the addons panel with `A`) runs axe against
+every story; violations are reported as errors.
+
+## Rules the components follow
+
+- **Native elements first.** Buttons are `<button>`, links are `<a href>`, inputs are `<input>` — wrapped by a
+  `display: contents` host so the semantics are not hidden behind a custom element.
+- **State is ARIA.** Toggle buttons expose `aria-pressed`, the current nav item `aria-current="page"`, invalid fields
+  `aria-invalid="true"` with the error linked through `aria-describedby`, switches `role="switch"` + `aria-checked`.
+- **Every icon-only control has a name.** `sd-button icon` requires `label`; icons are decorative (`aria-hidden`) unless
+  they are the only content.
+- **Visible focus.** `:focus-visible` draws `--sd-focus-ring` (2px coral) with a 2px offset on every interactive element.
+- **Colour pairs pass AA.** Tone fills always pair with their `-ink` colour; `--sd-primary-deep` is the coral that passes
+  on `--sd-primary-soft`.
+- **Targets.** Touch targets are at least 44×44px on phone layouts.
+- **Reduced motion.** `prefers-reduced-motion: reduce` collapses animations and transitions globally.
+- **Dialogs** come from `@angular/cdk/dialog`, which traps focus, restores it on close and closes on `Escape`.
