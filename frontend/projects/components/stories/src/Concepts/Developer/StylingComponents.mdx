@@ -6,7 +6,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 ## BEM classes from the mocks
 
-Every component carries the BEM classes from `docs/mocks-v2/styles/app.css` (ADR-009):
+Every component carries the BEM classes from `docs/mocks/styles/app.css` (ADR-009):
 
 - the **host** gets the block class and its modifiers — `<sd-block class="block block--locked">`;
 - **inner elements** get the element classes verbatim — `.day__meta`, `.card__eyebrow`;
@@ -24,7 +24,7 @@ Each component's stylesheet is the matching `app.css` block with `:host` substit
 reset, the tokens and `sd-`-prefixed utilities.
 
 ```scss
-// chip.scss — `.chip` from docs/mocks-v2/styles/app.css; the host is the chip.
+// chip.scss — `.chip` from docs/mocks/styles/app.css; the host is the chip.
 :host {
   display: inline-flex;
   align-items: center;

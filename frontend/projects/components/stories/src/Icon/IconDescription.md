@@ -1,3 +1,3 @@
-The single source of iconography. `sd-icon` draws one of 40 inline stroke glyphs — the same sprite `docs/mocks-v2/app.js` injects into the mocks — as a decorative `<svg class="icon">` (`aria-hidden`, not focusable). No network calls, no icon font.
+The single source of iconography. `sd-icon` draws one of 40 inline stroke glyphs — the same sprite `docs/mocks/app.js` injects into the mocks — as a decorative `<svg class="icon">` (`aria-hidden`, not focusable). No network calls, no icon font.
 
 The glyph strokes with `currentColor`, so an icon recolours with its parent: drop it into an `sd-button`, `sd-chip` or `sd-disc` and it picks up their tone. `size` sets the box in pixels (default 20), `stroke` the line weight (1.7 by default; chips use 2) and `filled` swaps to a solid glyph for stars and the favourite heart. An unknown `name` falls back to `sparkle`.

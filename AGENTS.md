@@ -8,7 +8,7 @@ Saturdaze is a full-stack family weekend planner that combines household prefere
 - `frontend/` — Angular workspace (`saturdaze`, `api`, and `components`)
 - `e2e/` — Playwright suite
 - `frontend/projects/components/.storybook` + `stories/` — the design system: a Storybook docsite for the `components` library, laid out like the Fluent UI v9 docsite (ADR-012)
-- `docs/mocks-v2/` — static design reference
+- `docs/mocks/` — static design reference
 - `docs/adr/` — architecture decisions; read relevant ADRs before changing the areas they cover
 
 See `README.md` for setup and development commands.

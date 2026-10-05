@@ -2,9 +2,9 @@ import type { StoryObj } from '@storybook/angular';
 
 import type { Empty } from 'components';
 
-export const Default: StoryObj<Empty> = {
+export const Default: StoryObj<Empty & { title: string }> = {
   args: {
-    emptyTitle: 'Nothing here yet',
+    title: 'Nothing here yet',
     body: 'Plan this weekend and it shows up here on Monday, ready to rate.',
     icon: 'star',
     tone: 'default',
@@ -15,7 +15,7 @@ export const Default: StoryObj<Empty> = {
     props: args,
     template: `
       <div class="sd-narrow">
-        <sd-empty [title]="emptyTitle" [body]="body" [icon]="icon" [tone]="tone" [warm]="warm" [note]="note">
+        <sd-empty [title]="title" [body]="body" [icon]="icon" [tone]="tone" [warm]="warm" [note]="note">
           <sd-button slot="cta" variant="quiet" href="/weekend">
             Go to this weekend
             <sd-icon slot="trailing" name="arrow_right" />

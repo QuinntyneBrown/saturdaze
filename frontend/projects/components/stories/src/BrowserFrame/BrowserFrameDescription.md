@@ -1,3 +1,3 @@
 A small, decorative browser window — three dots, a URL pill and a viewport — that lays a composition out at a fixed `frameWidth` × `frameHeight` and scales it down to fit its container. The landing hero uses it for a live miniature of the Weekend screen built from the real `sd-day` and `sd-block`.
 
-The host carries `.browser-frame` from `docs/mocks-v2/styles/app.css` and is `aria-hidden="true"`: it is an illustration, so nothing inside is announced or focusable by intent. A `ResizeObserver` tracks the host width and sets `--_s = min(1, hostWidth / frameWidth)`; the composition is never scaled up.
+The host carries `.browser-frame` from `docs/mocks/styles/app.css` and is `aria-hidden="true"`: it is an illustration, so nothing inside is announced or focusable by intent. A `ResizeObserver` tracks the host width and sets `--_s = min(1, hostWidth / frameWidth)`; the composition is never scaled up.

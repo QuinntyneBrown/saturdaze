@@ -29,4 +29,4 @@ Document the real library with Storybook, laid out like the Fluent UI v9 docsite
 - One implementation: a component change is documented by the stories next to it; drift shows up as a failed Storybook build or an obviously wrong story.
 - The catalog's "copy the folder anywhere" property is gone — the docsite depends on the Angular workspace by design.
 - The bespoke catalog features map onto Storybook built-ins: playground → Controls, variant matrix → per-variant stories, viewport switcher → the viewport toolbar (xsmall/mobile/tablet/desktop, matching the Playwright projects), search → the sidebar search, accessibility checks → `@storybook/addon-a11y`.
-- Visual parity is still judged against `docs/mocks-v2` by the e2e suite (ADR-010); Storybook is documentation, not the baseline.
+- Visual parity is still judged against `docs/mocks` by the e2e suite (ADR-010); Storybook is documentation, not the baseline.

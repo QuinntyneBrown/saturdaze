@@ -2,9 +2,9 @@ import type { StoryObj } from '@storybook/angular';
 
 import type { PastCard } from 'components';
 
-export const Default: StoryObj<PastCard> = {
+export const Default: StoryObj<PastCard & { title: string }> = {
   args: {
-    cardTitle: 'Bronte Creek + Rec Room',
+    title: 'Bronte Creek + Rec Room',
     dateRange: '10 – 11 May 2026',
     rating: 5,
     favourite: true,
@@ -15,7 +15,7 @@ export const Default: StoryObj<PastCard> = {
     template: `
       <sd-past-card
         style="max-width: 360px"
-        [title]="cardTitle"
+        [title]="title"
         [dateRange]="dateRange"
         [rating]="rating"
         [favourite]="favourite"

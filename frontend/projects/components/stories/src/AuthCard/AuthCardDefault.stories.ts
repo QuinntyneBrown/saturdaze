@@ -2,9 +2,9 @@ import type { StoryObj } from '@storybook/angular';
 
 import type { AuthCard } from 'components';
 
-export const Default: StoryObj<AuthCard> = {
+export const Default: StoryObj<AuthCard & { title: string }> = {
   args: {
-    cardTitle: 'Welcome back',
+    title: 'Welcome back',
     subtitle: 'Sign in to see this weekend.',
     center: false,
   },
@@ -12,7 +12,7 @@ export const Default: StoryObj<AuthCard> = {
     props: args,
     template: `
       <div style="max-width: 440px">
-        <sd-auth-card [title]="cardTitle" [subtitle]="subtitle" [center]="center">
+        <sd-auth-card [title]="title" [subtitle]="subtitle" [center]="center">
           <form class="sd-stack" style="--gap: 14px" (submit)="$event.preventDefault()">
             <sd-text-input label="Email" type="email" name="email" autocomplete="email" value="quinn@saturdaze.app" />
             <sd-text-input label="Password" type="password" name="password" autocomplete="current-password" />

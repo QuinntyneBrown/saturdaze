@@ -2,9 +2,9 @@ import type { StoryObj } from '@storybook/angular';
 
 import type { FoodCard } from 'components';
 
-export const Default: StoryObj<FoodCard> = {
+export const Default: StoryObj<FoodCard & { title: string }> = {
   args: {
-    cardTitle: 'Symposium Café',
+    title: 'Symposium Café',
     meta: 'Brunch · Family booths · 9 min from Terre Bleu',
     tone: 'default',
     topPick: false,
@@ -25,7 +25,7 @@ export const Default: StoryObj<FoodCard> = {
     template: `
       <sd-food-card
         style="max-width: 420px"
-        [title]="cardTitle"
+        [title]="title"
         [meta]="meta"
         [tone]="tone"
         [topPick]="topPick"

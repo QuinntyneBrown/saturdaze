@@ -2,12 +2,12 @@ import type { StoryObj } from '@storybook/angular';
 
 import type { Block } from 'components';
 
-export const Default: StoryObj<Block> = {
+export const Default: StoryObj<Block & { title: string }> = {
   args: {
     time: '11:00',
     duration: '2h',
     icon: 'tree',
-    blockTitle: 'Lavender fields',
+    title: 'Lavender fields',
     subtitle: 'Terre Bleu, Milton · walk the rows',
     commitment: false,
     locked: false,
@@ -24,7 +24,7 @@ export const Default: StoryObj<Block> = {
           [time]="time"
           [duration]="duration"
           [icon]="icon"
-          [title]="blockTitle"
+          [title]="title"
           [subtitle]="subtitle"
           [commitment]="commitment"
           [locked]="locked"

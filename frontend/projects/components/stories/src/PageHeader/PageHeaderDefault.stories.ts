@@ -2,15 +2,15 @@ import type { StoryObj } from '@storybook/angular';
 
 import type { PageHeader } from 'components';
 
-export const Default: StoryObj<PageHeader> = {
+export const Default: StoryObj<PageHeader & { title: string }> = {
   args: {
-    pageTitle: 'This weekend',
+    title: 'This weekend',
     subtitle: 'Sunny Saturday for the lavender, a cloudy Sunday for the Rec Room.',
     backHref: '',
     backLabel: 'Back',
   },
   render: (args) => ({
     props: args,
-    template: `<sd-page-header [title]="pageTitle" [subtitle]="subtitle" [backHref]="backHref" [backLabel]="backLabel" />`,
+    template: `<sd-page-header [title]="title" [subtitle]="subtitle" [backHref]="backHref" [backLabel]="backLabel" />`,
   }),
 };

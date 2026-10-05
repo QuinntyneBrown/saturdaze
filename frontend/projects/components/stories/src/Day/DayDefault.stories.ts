@@ -2,9 +2,9 @@ import type { StoryObj } from '@storybook/angular';
 
 import type { Day } from 'components';
 
-export const Default: StoryObj<Day> = {
+export const Default: StoryObj<Day & { title: string }> = {
   args: {
-    dayTitle: 'Saturday',
+    title: 'Saturday',
     meta: '17 May · 22° / 14° · Light breeze, good for outdoors',
     weather: 'sun',
     locked: false,
@@ -16,7 +16,7 @@ export const Default: StoryObj<Day> = {
     template: `
       <sd-day
         style="max-width: 560px"
-        [title]="dayTitle"
+        [title]="title"
         [meta]="meta"
         [weather]="weather"
         [locked]="locked"

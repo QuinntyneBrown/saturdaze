@@ -2,9 +2,9 @@ import type { StoryObj } from '@storybook/angular';
 
 import type { Dialog } from 'components';
 
-export const Default: StoryObj<Dialog> = {
+export const Default: StoryObj<Dialog & { title: string }> = {
   args: {
-    dialogTitle: 'Regenerate the weekend?',
+    title: 'Regenerate the weekend?',
     subtitle: 'Locked blocks stay where they are.',
     wide: false,
     closeLabel: 'Close',
@@ -12,7 +12,7 @@ export const Default: StoryObj<Dialog> = {
   render: (args) => ({
     props: args,
     template: `
-      <sd-dialog static [title]="dialogTitle" [subtitle]="subtitle" [wide]="wide" [closeLabel]="closeLabel">
+      <sd-dialog static [title]="title" [subtitle]="subtitle" [wide]="wide" [closeLabel]="closeLabel">
         <sd-well icon="lock" tone="accent" title="Keeping on Saturday">Swim 9:00 · Workout 5:00 · Bath and books 8:00</sd-well>
         <sd-button slot="actions" variant="quiet" type="button">Cancel</sd-button>
         <sd-button slot="actions" variant="primary" type="button"><sd-icon name="refresh" />Regenerate</sd-button>
@@ -22,7 +22,7 @@ export const Default: StoryObj<Dialog> = {
   parameters: {
     docs: {
       description: {
-        story: 'Rendered inline with `static`. The `title` input is `dialogTitle` in the class (aliased to `title` in templates).',
+        story: 'Rendered inline with `static`, the way the dialogs gallery shows every scenario.',
       },
     },
   },

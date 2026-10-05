@@ -15,10 +15,6 @@ export default {
   component: BrowserFrame,
   decorators: [moduleMetadata({ imports: [BrowserFrame, Day, Block, Chip, Icon, ActivityCard] })],
   parameters: {
-    a11y: {
-      // The frame is aria-hidden by design; its miniature content is decorative.
-      test: 'todo',
-    },
     docs: {
       description: {
         component: [descriptionMd, bestPracticesMd].join('\n'),

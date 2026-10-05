@@ -2,9 +2,9 @@ import type { StoryObj } from '@storybook/angular';
 
 import type { ListItem } from 'components';
 
-export const Default: StoryObj<ListItem> = {
+export const Default: StoryObj<ListItem & { title: string }> = {
   args: {
-    rowTitle: 'Swim lessons',
+    title: 'Swim lessons',
     subtitle: 'Saturdays · 9:00 to 10:00',
     subtitleFirst: false,
     chevron: true,
@@ -16,7 +16,7 @@ export const Default: StoryObj<ListItem> = {
     template: `
       <sd-list card style="max-width: 420px">
         <sd-list-item
-          [title]="rowTitle"
+          [title]="title"
           [subtitle]="subtitle"
           [subtitleFirst]="subtitleFirst"
           [chevron]="chevron"

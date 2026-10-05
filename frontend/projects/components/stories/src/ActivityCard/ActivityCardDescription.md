@@ -1,3 +1,3 @@
-An activity suggestion on Ideas. `sd-activity-card` is a `.card` host (the activity card in `docs/mocks-v2/pages/ideas.html`): a `.card__head` with a large tinted `sd-disc` (`icon`, `tone`), the `h3.card__title` and a `.card__meta` place line, then a two-line `.card__body` for the `why`.
+An activity suggestion on Ideas. `sd-activity-card` is a `.card` host (the activity card in `docs/mocks/pages/ideas.html`): a `.card__head` with a large tinted `sd-disc` (`icon`, `tone`), the `h3.card__title` and a `.card__meta` place line, then a two-line `.card__body` for the `why`.
 
 Project `sd-chip`s (drive time, ages) into `[slot=chips]`. When `mapUrl` is set a `.card__footer` adds a quiet "Map" button that opens it in a new tab. Cards are informational — there is no "add to day"; the planner places activities.
