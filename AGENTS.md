@@ -1,0 +1,61 @@
+## Project overview
+
+Saturdaze is a full-stack family weekend planner that combines household preferences, recurring commitments, local activities and events, errands, and weather into practical weekend itineraries. The .NET backend owns planning, persistence, and authentication; the Angular frontend provides the app, and Playwright covers behavior and visual parity with the design reference.
+
+## Repository layout
+
+- `backend/` — .NET solution
+- `frontend/` — Angular workspace (`saturdaze`, `api`, and `components`)
+- `e2e/` — Playwright suite
+- `design-system/` — standalone design-system catalog
+- `docs/mocks-v2/` — static design reference
+- `docs/adr/` — architecture decisions; read relevant ADRs before changing the areas they cover
+
+See `README.md` for setup and development commands.
+
+## Backend architecture
+
+Layer dependency direction (strict):
+
+- `Saturdaze.Domain` — entities + enums, zero deps
+- `Saturdaze.Application` — MediatR handlers, validators, planner, DTO contracts, `IAppDbContext`
+- `Saturdaze.Infrastructure` — `AppDbContext`, EF migrations, SQL Server, Open-Meteo client, auth services, seeder
+- `Saturdaze.Api` — controllers, `Program.cs`, DI composition, Swagger, middleware
+- `Saturdaze.Cli` — database migration, seeding, and reset commands
+
+Non-obvious rules:
+
+- Business rules live in handlers/domain services, not controllers.
+- The API does **not** apply EF migrations on startup. Run `saturdaze migrate` explicitly.
+- Seed data is idempotent and safe to re-run.
+- `POST /api/weekends/plan` is idempotent: re-posting returns the existing weekend rather than throwing or re-planning (ADR-003). The explicit reseat is `POST /api/weekends/{id}/regenerate`.
+- Authentication uses local JWTs; see ADR-007 before changing the auth flow.
+- Endpoints require authentication by default. Preserve intentional anonymous access and Swagger middleware ordering when changing API auth (ADR-008).
+- Keep request logging outside the exception-handling middleware so handled response statuses are logged correctly.
+- Family-owned data must remain scoped to the current user's family; cross-family resources should not be exposed.
+
+### Tests
+
+API tests run sequentially because of shared logger state (ADR-002). Follow the existing test-project patterns when adding coverage.
+
+## Frontend architecture
+
+Workspace has three projects under `frontend/projects/`:
+
+### Conventions enforced across the codebase
+
+- Component selectors use `sd-*`; TypeScript class, file, and folder names omit the `Sd` prefix.
+- Components should preserve the mock design's BEM classes and accessible state semantics (ADR-009); e2e locators depend on that parity.
+- Keep component styles encapsulated and global styles limited to shared foundations and utilities.
+- **Declare each `ng-content` slot once.** A component that renders `<a>` or `<button>` by condition puts its slots in one `<ng-template>` and renders it with `ngTemplateOutlet` in both branches (`sd-button`, `sd-ghost-row`, `sd-list-item`); slots repeated per `@if` branch project into one branch only. On the consumer side, a `@if` wrapping several `[slot=…]` nodes loses the slot (NG8011) — one `@if` per node.
+- API services have a contract and injection token; app pages depend on the token, not the concrete implementation.
+- **No inline forms in pages**. Button-triggered editing always opens a CDK Dialog (`frontend/projects/saturdaze/src/app/dialogs/`) or navigates to a screen.
+- Use Angular CDK Dialog/Overlay for modal behavior; don't hand-roll modals.
+
+### Bottom-nav iOS chrome handling
+
+Read ADR-005 before changing bottom navigation or its safe-area/chrome behavior, and run the corresponding regression test.
+
+## E2E architecture (Playwright)
+
+- Read ADR-010 before changing visual regression coverage or snapshot policy. Run the relevant Playwright tests for UI changes; update baselines only for intentional design changes.
