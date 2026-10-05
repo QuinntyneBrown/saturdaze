@@ -1,0 +1,3 @@
+The first thing on every core screen: the `h1`, one subtitle and the screen's actions. `sd-page-header` carries `.page-header` from `docs/mocks-v2/styles/app.css` and renders `.page-header__title` / `.page-header__subtitle` from its `title` and `subtitle` inputs.
+
+Three slots hold the actions: `[slot=primary]` (the one coral button), `[slot=actions]` (up to two quiet buttons) and `[slot=more]` (the overflow icon button). Below 720px the primary spans the row, quiet buttons sit two-up beneath it and More sits beside the `h1`; from 720px everything lines up at the end. `backHref` adds a `.page-header__eyebrow` back link above the title from 720px and a ghost back icon button beside it on phones.

@@ -1,0 +1,3 @@
+One day of the weekend. `sd-day` carries `.day` (and `.day--locked`) from `docs/mocks-v2/styles/app.css` and renders the sticky `.day__header` — an optional weather disc, the `h2.day__title`, a `.day__meta` line and, when `locked`, a "Day locked" chip — over a `role="list"` `.day__list` of the `sd-block` rows you project into the default slot.
+
+With `actions` on (the default) the header shows the two ghost day buttons, Regenerate and Lock day; they emit `regenerate` and `lockToggle` (with the next locked state) and are disabled while `busy`. `weather` (`sun`, `cloud`, `rain`, `snow`) picks the disc's icon and tone. Project the "Add an errand" `sd-ghost-row` into `[slot=footer]`, below the list.

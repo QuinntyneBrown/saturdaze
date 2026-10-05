@@ -1,0 +1,3 @@
+The family's thumbs on a restaurant. `sd-vote-row` is a `role="group"` host carrying `.vote-row` from `docs/mocks-v2/styles/app.css`, labelled by `label`. Each entry in `votes` renders a `.vote-row__cell`: the member's `sd-avatar`, their name and a thumbs-up / thumbs-down pair (`.vote-row__btn--up`, `.vote-row__btn--down`) whose `aria-pressed` reflects the current vote.
+
+The row is controlled. Pressing a thumb emits `voteChange` with the member `index` and the next `vote` — pressing the vote already cast clears it to `'none'` — and the page writes it back into `votes`. `disabled` turns every button off (the siblings of a locked restaurant). `sd-food-card` embeds one.
