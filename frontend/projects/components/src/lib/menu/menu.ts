@@ -54,6 +54,8 @@ export class Menu {
   readonly header = input<string>('');
   readonly label = input<string>('Menu');
   readonly sheet = input(false, { transform: booleanAttribute });
+  // The public `(select)` binding predates the lint rule; renaming it breaks consumers.
+  // eslint-disable-next-line @angular-eslint/no-output-native
   readonly select = output<MenuItem>();
 
   protected choose(item: MenuItem, event: MouseEvent): void {
@@ -63,7 +65,9 @@ export class Menu {
 
   protected onKey(event: KeyboardEvent): void {
     if (event.key !== 'ArrowDown' && event.key !== 'ArrowUp') return;
-    const buttons = Array.from(this.host.nativeElement.querySelectorAll<HTMLElement>('[role="menuitem"]'));
+    const buttons = Array.from(
+      this.host.nativeElement.querySelectorAll<HTMLElement>('[role="menuitem"]'),
+    );
     if (!buttons.length) return;
     const current = buttons.indexOf(document.activeElement as HTMLElement);
     const delta = event.key === 'ArrowDown' ? 1 : -1;

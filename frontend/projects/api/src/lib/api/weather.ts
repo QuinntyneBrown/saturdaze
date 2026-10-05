@@ -8,7 +8,7 @@ import { WeatherForecastDto } from '../models/weather-forecast.dto';
  */
 
 export function forecastFor(
-  weather: ReadonlyArray<WeatherForecastDto>,
+  weather: readonly WeatherForecastDto[],
   iso: string,
 ): WeatherForecastDto | null {
   return weather.find((w) => w.date === iso) ?? null;

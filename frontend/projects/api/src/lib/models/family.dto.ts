@@ -31,23 +31,23 @@ export interface FamilyDto {
   /**
    * Members.
    */
-  readonly members: ReadonlyArray<{ id: string; name: string; age: number }>;
+  readonly members: readonly { id: string; name: string; age: number }[];
   /**
    * Commitments.
    */
-  readonly commitments: ReadonlyArray<{
+  readonly commitments: readonly {
     id: string;
     title: string;
     dayOfWeek: string;
     startTime: string;
     endTime: string;
-  }>;
+  }[];
   /**
    * Preferences.
    */
-  readonly preferences: ReadonlyArray<{
+  readonly preferences: readonly {
     id: string;
     kind: 'Like' | 'Dislike';
     value: string;
-  }>;
+  }[];
 }

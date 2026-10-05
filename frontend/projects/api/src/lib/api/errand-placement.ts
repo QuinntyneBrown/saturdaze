@@ -28,7 +28,7 @@ export function placementFor(
 
 function freshBlock(
   before: WeekendDto | null,
-  errandBlocks: ReadonlyArray<ItineraryBlockDto>,
+  errandBlocks: readonly ItineraryBlockDto[],
 ): ItineraryBlockDto | null {
   if (!before) return null;
   const known = new Set(before.blocks.map((b) => b.id));
@@ -37,7 +37,7 @@ function freshBlock(
 
 function byDescription(
   after: WeekendDto,
-  errandBlocks: ReadonlyArray<ItineraryBlockDto>,
+  errandBlocks: readonly ItineraryBlockDto[],
   description: string,
 ): ItineraryBlockDto | null {
   const wanted = description.trim().toLowerCase();

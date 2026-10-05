@@ -1,7 +1,5 @@
 import { vi } from 'vitest';
-import { Directive, inject } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { NgModel } from '@angular/forms';
 import { provideRouter } from '@angular/router';
 
 import { EVENT_SUBMISSIONS_SERVICE, WEEKEND_PLAN_SERVICE } from 'api';
@@ -20,14 +18,14 @@ describe('DialogsPage', () => {
         { provide: WEEKEND_PLAN_SERVICE, useValue: { addErrand: vi.fn() } },
         { provide: EVENT_SUBMISSIONS_SERVICE, useValue: { submit: vi.fn() } },
       ],
-    })
-      .compileComponents();
+    }).compileComponents();
     fixture = TestBed.createComponent(DialogsPage);
     fixture.detectChanges();
     host = fixture.nativeElement as HTMLElement;
   });
 
-  const specimens = (): HTMLElement[] => Array.from(host.querySelectorAll('section.specimen[id^="dialog-"]'));
+  const specimens = (): HTMLElement[] =>
+    Array.from(host.querySelectorAll('section.specimen[id^="dialog-"]'));
 
   it('renders the page header and every specimen in the mock order', () => {
     expect(host.querySelector('sd-page-header')?.getAttribute('title')).toBe('Dialogs');
@@ -73,10 +71,16 @@ describe('DialogsPage', () => {
       const shell = section.querySelector('sd-dialog');
       expect(shell, section.id).not.toBeNull();
       expect(shell?.hasAttribute('static'), section.id).toBe(true);
-      expect(section.querySelector('.specimen__label')?.textContent?.trim(), section.id).toMatch(/^D\d+ · /);
+      expect(section.querySelector('.specimen__label')?.textContent?.trim(), section.id).toMatch(
+        /^D\d+ · /,
+      );
     }
-    expect(host.querySelector('#dialog-block .dialog__title')?.textContent?.trim()).toBe('Terre Bleu Lavender Farm');
-    expect(host.querySelector('#dialog-signout .dialog__title')?.textContent?.trim()).toBe('Sign out?');
+    expect(host.querySelector('#dialog-block .dialog__title')?.textContent?.trim()).toBe(
+      'Terre Bleu Lavender Farm',
+    );
+    expect(host.querySelector('#dialog-signout .dialog__title')?.textContent?.trim()).toBe(
+      'Sign out?',
+    );
   });
 
   it('renders the two anchored menus as plain sd-menu specimens', () => {
@@ -93,7 +97,9 @@ describe('DialogsPage', () => {
   });
 
   it('keeps specimens on the page when their close buttons are pressed', () => {
-    (host.querySelector('#dialog-regenerate sd-button[slot="actions"] button') as HTMLButtonElement).click();
+    (
+      host.querySelector('#dialog-regenerate sd-button[slot="actions"] button') as HTMLButtonElement
+    ).click();
     (host.querySelector('#dialog-share .dialog__close button') as HTMLButtonElement).click();
     fixture.detectChanges();
     expect(specimens().length).toBe(30);

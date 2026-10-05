@@ -2,7 +2,10 @@
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
   "cli": {
-    "packageManager": "npm"
+    "packageManager": "npm",
+    "schematicCollections": [
+      "angular-eslint"
+    ]
   },
   "newProjectRoot": "projects",
   "projects": {
@@ -81,6 +84,15 @@
             "experimentalZoneless": true,
             "outputDir": "dist/storybook"
           }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "projects/components/**/*.ts",
+              "projects/components/**/*.html"
+            ]
+          }
         }
       }
     },
@@ -106,6 +118,15 @@
           "builder": "@angular/build:unit-test",
           "options": {
             "tsConfig": "projects/api/tsconfig.spec.json"
+          }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "projects/api/**/*.ts",
+              "projects/api/**/*.html"
+            ]
           }
         }
       }
@@ -188,6 +209,15 @@
           "builder": "@angular/build:unit-test",
           "options": {
             "tsConfig": "projects/saturdaze/tsconfig.spec.json"
+          }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "projects/saturdaze/**/*.ts",
+              "projects/saturdaze/**/*.html"
+            ]
           }
         }
       }

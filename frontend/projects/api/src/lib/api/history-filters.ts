@@ -51,7 +51,7 @@ export function matchesPastFilter(row: PastFilterRow, label: string, year: numbe
  * two stars or fewer, newest weekend first, one chip per activity. The date
  * is the weekend's Sunday, when the rating was given.
  */
-export function skippingChips(rows: ReadonlyArray<WeekendSummaryDto>): ChipView[] {
+export function skippingChips(rows: readonly WeekendSummaryDto[]): ChipView[] {
   const seen = new Set<string>();
   const chips: ChipView[] = [];
   const low = rows

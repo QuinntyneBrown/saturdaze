@@ -44,7 +44,7 @@ export const DEFAULT_FOOD_FILTERS: FoodFilters = {
 };
 
 type ListKey = `${WeekendDay}:${MealSlot}`;
-type Lists = Readonly<Record<ListKey, ReadonlyArray<RestaurantDto>>>;
+type Lists = Readonly<Record<ListKey, readonly RestaurantDto[]>>;
 
 const EMPTY_LISTS: Lists = {
   'Saturday:Lunch': [],
@@ -124,7 +124,7 @@ function toCard(
 }
 
 /** Locked first, then approved, then closest. */
-function rankPicks(rows: ReadonlyArray<RestaurantDto>): RestaurantDto[] {
+function rankPicks(rows: readonly RestaurantDto[]): RestaurantDto[] {
   return [...rows].sort(
     (a, b) =>
       Number(b.locked ?? false) - Number(a.locked ?? false) ||
@@ -166,7 +166,7 @@ function sectionSubtitle(weekend: WeekendView, day: WeekendDay, slot: MealSlot):
 function buildSection(
   day: WeekendDay,
   slot: MealSlot,
-  rows: ReadonlyArray<RestaurantDto>,
+  rows: readonly RestaurantDto[],
   filters: FoodFilters,
   roster: readonly Voter[],
   weekend: WeekendView,
@@ -273,7 +273,7 @@ export class RestaurantService implements IRestaurantService {
     }
     const saturday = upcomingSaturdayIso();
     const sunday = addDaysIso(saturday, 1);
-    const fetch = (dayIso: string, slot: MealSlot): Promise<ReadonlyArray<RestaurantDto>> =>
+    const fetch = (dayIso: string, slot: MealSlot): Promise<readonly RestaurantDto[]> =>
       firstValueFrom(this.http.get<RestaurantDto[]>(this.picksUrl(dayIso, slot)))
         .then((rows) => rows ?? [])
         .catch((err: unknown) => {
@@ -354,7 +354,7 @@ export class RestaurantService implements IRestaurantService {
 
   private replaceRestaurant(dto: RestaurantDto): void {
     this._lists.update((lists) => {
-      const next: Record<ListKey, ReadonlyArray<RestaurantDto>> = { ...lists };
+      const next: Record<ListKey, readonly RestaurantDto[]> = { ...lists };
       for (const day of DAYS) {
         for (const slot of SLOTS) {
           const key = keyOf(day, slot);

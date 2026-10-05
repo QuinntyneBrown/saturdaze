@@ -86,13 +86,13 @@ export class EventSubmissionsService implements IEventSubmissionsService {
   private readonly http = inject(HttpClient);
   private readonly baseUrl = inject(API_BASE_URL);
 
-  private readonly _mine = signal<ReadonlyArray<EventSubmissionDto>>([]);
+  private readonly _mine = signal<readonly EventSubmissionDto[]>([]);
   /** Everything loaded for review, oldest first; rejected rows are removed. */
-  private readonly _queue = signal<ReadonlyArray<EventSubmissionDto>>([]);
+  private readonly _queue = signal<readonly EventSubmissionDto[]>([]);
   private readonly _approvedIds = signal<ReadonlySet<string>>(new Set());
   private readonly _queueLoaded = signal(false);
 
-  private readonly _pending = computed<ReadonlyArray<EventSubmissionDto>>(() => {
+  private readonly _pending = computed<readonly EventSubmissionDto[]>(() => {
     const approved = this._approvedIds();
     return this._queue().filter((r) => !approved.has(r.id));
   });
@@ -116,7 +116,7 @@ export class EventSubmissionsService implements IEventSubmissionsService {
    *
    * @returns {Signal<ReadonlyArray<EventSubmissionDto>>} The result of the operation
    */
-  mine(): Signal<ReadonlyArray<EventSubmissionDto>> {
+  mine(): Signal<readonly EventSubmissionDto[]> {
     return this._mine.asReadonly();
   }
 
@@ -125,7 +125,7 @@ export class EventSubmissionsService implements IEventSubmissionsService {
    *
    * @returns {Signal<ReadonlyArray<EventSubmissionDto>>} The result of the operation
    */
-  pending(): Signal<ReadonlyArray<EventSubmissionDto>> {
+  pending(): Signal<readonly EventSubmissionDto[]> {
     return this._pending;
   }
 

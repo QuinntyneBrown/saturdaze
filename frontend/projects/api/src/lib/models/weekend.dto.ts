@@ -38,13 +38,13 @@ export interface WeekendDto {
   /**
    * Blocks.
    */
-  readonly blocks: ReadonlyArray<ItineraryBlockDto>;
+  readonly blocks: readonly ItineraryBlockDto[];
   /**
    * Errands.
    */
-  readonly errands: ReadonlyArray<ShoppingErrandDto>;
+  readonly errands: readonly ShoppingErrandDto[];
   /**
    * Weather.
    */
-  readonly weather: ReadonlyArray<WeatherForecastDto>;
+  readonly weather: readonly WeatherForecastDto[];
 }

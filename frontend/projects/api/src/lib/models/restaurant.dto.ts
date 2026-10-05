@@ -39,10 +39,12 @@ export interface RestaurantDto {
   /**
    * Votes.
    */
-  readonly votes?: ReadonlyArray<{
-    readonly voterName: string;
-    readonly vote: 'up' | 'down' | 'none';
-  }> | null;
+  readonly votes?:
+    | readonly {
+        readonly voterName: string;
+        readonly vote: 'up' | 'down' | 'none';
+      }[]
+    | null;
   /**
    * Locked.
    */

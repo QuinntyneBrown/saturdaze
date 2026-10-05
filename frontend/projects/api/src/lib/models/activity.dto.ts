@@ -34,7 +34,7 @@ export interface ActivityDto {
   /**
    * Weather Tags.
    */
-  readonly weatherTags: ReadonlyArray<string>;
+  readonly weatherTags: readonly string[];
   /**
    * Typical Duration Minutes.
    */

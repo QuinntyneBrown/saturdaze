@@ -1,8 +1,6 @@
 import { vi } from 'vitest';
-import { Directive, inject } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
-import { NgModel } from '@angular/forms';
 
 import { CommitmentDialog, CommitmentDialogData } from './commitment-dialog';
 
@@ -20,8 +18,7 @@ describe('CommitmentDialog', () => {
         { provide: DialogRef, useValue: dialogRef },
         { provide: DIALOG_DATA, useValue: data },
       ],
-    })
-      .compileComponents();
+    }).compileComponents();
     fixture = TestBed.createComponent(CommitmentDialog);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -34,7 +31,9 @@ describe('CommitmentDialog', () => {
   it('adds a commitment with Saturday 9 to 10 as the starting point', async () => {
     await mount({ mode: 'add', siblings: [] });
     expect(host.querySelector('.dialog__title')?.textContent?.trim()).toBe('Add a commitment');
-    expect(host.querySelector('.dialog__sub')?.textContent?.trim()).toBe('Locked into every weekend.');
+    expect(host.querySelector('.dialog__sub')?.textContent?.trim()).toBe(
+      'Locked into every weekend.',
+    );
     expect(primary().textContent?.trim()).toBe('Add commitment');
     expect(host.querySelector('sd-button[slot="actions-left"]')).toBeNull();
     expect(host.querySelectorAll('sd-seg-radio input[type="radio"]').length).toBe(2);
