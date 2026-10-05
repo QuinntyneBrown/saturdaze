@@ -54,6 +54,12 @@ public sealed class ClaudeWebSearchOptions
     /// <summary>Back-off before the single automatic retry on 429/5xx.</summary>
     public int RetryDelaySeconds { get; set; } = 30;
 
+    /// <summary>
+    /// Maximum number of <c>pause_turn</c> continuations before the client fails
+    /// the search rather than returning incomplete preliminary text.
+    /// </summary>
+    public int MaxContinuationTurns { get; set; } = 3;
+
     /// <summary>The environment variable that holds the key for <paramref name="provider"/>.</summary>
     public static string ApiKeyVariable(ClaudeProvider provider)
         => provider == ClaudeProvider.Foundry ? FoundryApiKeyVariable : AnthropicApiKeyVariable;

@@ -33,6 +33,10 @@ co-located with the API, defined by `settings.job` (the cron) and `run.sh`
 (which invokes `saturdaze ingest --type all`). Ship the contents of this folder
 under `App_Data/jobs/triggered/ingest/` in the API deployment package.
 
+`settings.job` uses NCRONTAB in **UTC**. The checked-in schedule
+`0 0 8 * * 5` means **Fridays at 08:00 UTC** so the shared catalogs refresh
+ahead of the weekend-planning window without waiting until Saturday traffic.
+
 ## On-demand (any of the above, plus the CLI)
 
 ```bash
