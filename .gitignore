@@ -11,7 +11,9 @@ artifacts/
 .run/
 
 # Claude Code session state
-.claude/
+.claude/*
+!.claude/skills/
+!.claude/skills/**
 
 # Azure deployment state (contains secrets)
 .deploy/
