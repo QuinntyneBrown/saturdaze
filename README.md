@@ -186,6 +186,7 @@ Development conventions:
 | Angular app build | `npm run build -- saturdaze --configuration development` | Build the runnable frontend |
 | Angular libraries | `npm run build -- components` and `npm run build -- api` | Build shared frontend packages |
 | Frontend unit tests | `npm test` from `frontend/` | Angular/Vitest tests |
+| Storybook | `npm run storybook` / `npm run build-storybook` from `frontend/` | Design-system docsite on :6006 / static build to `frontend/dist/storybook` |
 | Playwright behavior | `npm run test:behavior` from `e2e/` | End-to-end behavior tests |
 | Playwright visual | `npm run test:visual` from `e2e/` | Visual comparisons against baselines |
 | Baseline update | `npm run baseline` from `e2e/` | Refresh visual snapshots from the mock app |
