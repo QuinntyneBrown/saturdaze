@@ -318,7 +318,7 @@ namespace Saturdaze.Infrastructure.Migrations
 
                     b.HasIndex("StartsOn");
 
-                    b.HasIndex("Name", "StartsOn", "Location")
+                    b.HasIndex("Name", "StartsOn")
                         .IsUnique();
 
                     b.ToTable("LocalEvents", (string)null);

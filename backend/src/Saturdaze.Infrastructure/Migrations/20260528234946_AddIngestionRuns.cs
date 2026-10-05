@@ -11,10 +11,6 @@ namespace Saturdaze.Infrastructure.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropIndex(
-                name: "IX_LocalEvents_Name_StartsOn",
-                table: "LocalEvents");
-
             migrationBuilder.CreateTable(
                 name: "IngestionRuns",
                 columns: table => new
@@ -38,12 +34,6 @@ namespace Saturdaze.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_LocalEvents_Name_StartsOn_Location",
-                table: "LocalEvents",
-                columns: new[] { "Name", "StartsOn", "Location" },
-                unique: true);
-
-            migrationBuilder.CreateIndex(
                 name: "IX_IngestionRuns_Type_StartedUtc",
                 table: "IngestionRuns",
                 columns: new[] { "Type", "StartedUtc" });
@@ -54,16 +44,6 @@ namespace Saturdaze.Infrastructure.Migrations
         {
             migrationBuilder.DropTable(
                 name: "IngestionRuns");
-
-            migrationBuilder.DropIndex(
-                name: "IX_LocalEvents_Name_StartsOn_Location",
-                table: "LocalEvents");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_LocalEvents_Name_StartsOn",
-                table: "LocalEvents",
-                columns: new[] { "Name", "StartsOn" },
-                unique: true);
         }
     }
 }
