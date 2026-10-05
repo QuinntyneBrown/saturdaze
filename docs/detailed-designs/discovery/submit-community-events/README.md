@@ -6,28 +6,27 @@ Saturdaze is a web application that plans personalized family weekends. Event su
 
 *pending submission* — user-contributed event awaiting an administrator decision
 
-The events feed provides a quick dialog and a full-page form. Both use `nextHourDefault()` and `EventSubmissionsService.submit()` before the API records a pending submission owned by the caller.
+The Ideas header opens one submission dialog. `nextHourDefault()` initializes its local time, and `EventSubmissionsService.submit()` creates a pending submission owned by the caller.
 
 ## Description
 
-The feature forms a vertical slice across the Angular application, the ASP.NET Core API, application handlers, domain state, and SQL Server persistence.
+`IdeasPage` owns the single Suggest an event header action for `/ideas/events`. Its `suggest()` method opens `SubmitEventDialog`, then `EventSubmittedDialog` on success and refreshes owned submissions.
 
-- **`EventsPage`** — Angular feed containing the floating action button and header entry point.
-- **`SubmitEventDialog and EventsSubmitPage`** — Quick and full forms that share the next-hour default rule.
-- **`nextHourDefault`** — Pure client helper that rounds one hour ahead to the next whole hour.
-- **`EventSubmissionsService`** — Typed client service for submission and moderation requests.
-- **`EventSubmissionsController`** — Authorized API controller exposing `POST /api/events/submissions`.
-- **`SubmitEventCommandHandler`** — Application handler that stamps caller ownership and pending status.
+`SubmitEventDialog` uses `nextHourDefault()` for the initial local date and time. It validates title and start time, then calls `EventSubmissionsService.submit()`; optional inputs include end time, location, description, cost, age range, URL, and category.
+
+`EventSubmissionsController` dispatches `SubmitEventCommand`. `SubmitEventCommandHandler` stamps current-user ownership, submission time, and Pending status before saving through `IAppDbContext`.
+
+The API uses enum strings `Pending`, `Approved`, and `Rejected`. Unreviewed submissions remain outside `LocalEvents`. Legacy event-submission routes redirect to `/ideas/events`; no full-page form or floating entry point remains.
 
 ## Requirements
 
-The feature realizes the following level-2 (L2) requirements. Each row cites the level-1 (L1) capability refined by the requirement.
+The following L2 requirements refine the cited L1 capabilities. Implementation gaps stated in Description do not waive these obligations.
 
 | L2 ID | Refines (L1) | Requirement |
 |-------|--------------|-------------|
-| `L2-046` | `L1-018` | `POST /api/events/submissions` must accept a payload from an authenticated user, persist an `EventSubmission` row with `status="pending"` and `submittedByUserId` set to the caller, and return the created submission. The payload must require `title`, `startsAtLocal` (ISO 8601 local date-time), and optionally accept `location`, `description`, `costNote`, `ageRange`, and `sourceUrl`. Pending submissions must not appear in `GET /api/events` responses for any user. |
-| `L2-047` | `L1-018` | The "Submit an event" screen and its dialog twin must default the date+time field to one hour from now, rounded up to the next whole hour in the user's local time zone, and must disable the submit button until `title` is non-empty. |
-| `L2-048` | `L1-018` | `/events` must surface two affordances to submit a new event: a primary floating "+" button anchored bottom-right that opens the quick-add dialog, and a secondary text/icon action in the page header that navigates to the full `/events/submit` screen. The FAB must remain visible while scrolling and must not overlap the bottom navigation or its tablet/desktop left rail. |
+| `L2-046` | `L1-018` | `POST /api/events/submissions` shall accept a payload from an authenticated user, persist an `EventSubmission` row with `status="Pending"` and `submittedByUserId` set to the caller, and return the created submission. The payload shall require `title`, `startsAtLocal` (ISO 8601 local date-time), and optionally accept `endsAtLocal`, `location`, `description`, `costNote`, `ageRange`, `sourceUrl`, and `category`. Pending submissions shall not appear in `GET /api/events` responses for any user. |
+| `L2-047` | `L1-018` | The "Suggest an event" dialog (D10 in `docs/mocks-v2`; the only submission surface since the v2 design, see [ADR-009](/docs/adr/ADR-009-v2-responsive-shell.md)) shall default the date+time field to one hour from now, rounded up to the next whole hour in the user's local time zone, and shall disable the submit button until `title` is non-empty. |
+| `L2-048` | `L1-018` | `/ideas/events` shall surface one affordance to submit a new event: the primary "Suggest an event" button in the page header, which opens the "Suggest an event" dialog (D10) in place. On success the "Thanks, it is in the queue" dialog (D11) summarises the submission, and the feed shows it under "Your suggestion" with a "Pending review" chip. (Revised 2026-09-02 with the v2 design: the floating "+" button and the dedicated `/events/submit` screen were retired, and `/events`, `/events/submit` and `/events/submitted` redirect to `/ideas/events` — see [ADR-009](/docs/adr/ADR-009-v2-responsive-shell.md).) |
 
 ## Diagrams
 

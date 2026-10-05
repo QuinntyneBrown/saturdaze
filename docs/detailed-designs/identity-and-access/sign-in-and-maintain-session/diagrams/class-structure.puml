@@ -11,7 +11,7 @@ skinparam class {
 }
 title Class structure — Sign in and maintain a session
 
-class LoginPage {
+class SignInPage {
   +submit(): Promise<void>
 }
 class SessionStore {
@@ -34,7 +34,7 @@ class RefreshToken {
   +DateTimeOffset ExpiresAtUtc
   +string? CreatedByIp
 }
-LoginPage --> SessionStore : calls
+SignInPage --> SessionStore : calls
 SessionStore ..> LoginCommand : maps to
 LoginCommandHandler ..> LoginCommand : handles
 LoginCommandHandler --> User : verifies

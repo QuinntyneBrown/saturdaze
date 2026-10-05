@@ -17,9 +17,11 @@ This feature connects the manifest inventory to the JavaScript module registry. 
 
 ## Requirements
 
+The following L2 requirements refine the cited L1 capabilities. Implementation gaps stated in Description do not waive these obligations.
+
 | L2 ID | Refines (L1) | Requirement |
 |-------|--------------|-------------|
-| `L2-052` | `L1-020` | `design-system/assets/components.js` must import exactly the component source files named in the manifest, each of which self-registers its element(s) via `customElements.define`. All 29 public selectors must be unique, match `^sd-[a-z0-9-]+$`, attach open shadow roots, and belong to one of the seven manifest categories. `sd-base.js` is shared infrastructure and must not be a public catalog entry. |
+| `L2-052` | `L1-020` | `design-system/assets/components.js` shall import exactly the component source files named in the manifest, each of which self-registers its element(s) via `customElements.define`. All 29 public selectors shall be unique, match `^sd-[a-z0-9-]+$`, attach open shadow roots, and belong to one of the seven manifest categories. `sd-base.js` is shared infrastructure and shall not be a public catalog entry. |
 
 ## Diagrams
 
@@ -42,6 +44,8 @@ The manifest, registry, shared base class, concrete modules, and browser custom-
 ![C4 component view for registering native components](diagrams/c4-component.png)
 
 ### Class structure
+
+Class notation groups JavaScript functions, manifest records, and configuration concepts; it does not imply that every named grouping is an exported JavaScript class.
 
 Each concrete element extends `SdElement`; module side effects register those classes under the selectors declared by the manifest.
 

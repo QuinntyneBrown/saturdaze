@@ -17,6 +17,8 @@ This feature checks source text, module imports, HTML asset references, package 
 
 ## Requirements
 
+The following L2 requirements refine the cited L1 capabilities. Implementation gaps stated in Description do not waive these obligations.
+
 | L2 ID | Refines (L1) | Requirement |
 |-------|--------------|-------------|
 | `L2-072` | `L1-029` | Nothing inside `design-system/` may depend on or reference the rest of the repository: no forbidden path strings in any validated file, no relative import escaping the folder, no HTML reference to a missing or external file, and no package script that walks above the folder root. |
@@ -42,6 +44,8 @@ File walking, text scanning, import resolution, HTML reference checks, script va
 ![C4 component view for enforcing folder self-containment](diagrams/c4-component.png)
 
 ### Class structure
+
+Class notation groups JavaScript functions, manifest records, and configuration concepts; it does not imply that every named grouping is an exported JavaScript class.
 
 `SelfContainmentValidator` aggregates file, import, HTML, script, and fixture checks into one collection of validation failures.
 

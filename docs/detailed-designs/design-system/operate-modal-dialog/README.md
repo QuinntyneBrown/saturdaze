@@ -17,9 +17,11 @@ The element owns its dialog semantics, responsive presentation, keyboard behavio
 
 ## Requirements
 
+The following L2 requirements refine the cited L1 capabilities. Implementation gaps stated in Description do not waive these obligations.
+
 | L2 ID | Refines (L1) | Requirement |
 |-------|--------------|-------------|
-| `L2-053` | `L1-020` | `sd-dialog` must implement complete modal behavior in the component itself: focus capture and restoration, Tab cycling across shadow boundaries, Escape and backdrop dismissal via a cancelable `sd-close` event, an inline `static` presentation for documentation, and responsive bottom-sheet-to-centered-modal presentation at the 720 px breakpoint. |
+| `L2-053` | `L1-020` | `sd-dialog` shall implement complete modal behavior in the component itself: focus capture and restoration, Tab cycling across shadow boundaries, Escape and backdrop dismissal via a cancelable `sd-close` event, an inline `static` presentation for documentation, and responsive bottom-sheet-to-centered-modal presentation at the 720 px breakpoint. |
 
 ## Diagrams
 
@@ -42,6 +44,8 @@ The host attributes, shadow tree, focus resolver, and close-event dispatcher for
 ![C4 component view for operating a modal dialog](diagrams/c4-component.png)
 
 ### Class structure
+
+Class notation groups JavaScript functions, manifest records, and configuration concepts; it does not imply that every named grouping is an exported JavaScript class.
 
 `SdDialog` extends `SdElement`, owns its rendered sheet, and publishes `SdCloseEventDetail` to the consuming page.
 

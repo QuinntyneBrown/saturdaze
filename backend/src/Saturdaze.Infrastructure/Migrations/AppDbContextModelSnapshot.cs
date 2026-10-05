@@ -269,6 +269,53 @@ namespace Saturdaze.Infrastructure.Migrations
                     b.ToTable("FamilyMembers", (string)null);
                 });
 
+            modelBuilder.Entity("Saturdaze.Domain.Entities.IngestionRun", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ErrorMessage")
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<DateTimeOffset?>("FinishedUtc")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int>("InputTokens")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ItemsConsidered")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ItemsRejected")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ItemsUpserted")
+                        .HasColumnType("int");
+
+                    b.Property<int>("OutputTokens")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset>("StartedUtc")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
+                    b.Property<int>("WebSearchCount")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Type", "StartedUtc");
+
+                    b.ToTable("IngestionRuns", (string)null);
+                });
+
             modelBuilder.Entity("Saturdaze.Domain.Entities.ItineraryBlock", b =>
                 {
                     b.Property<Guid>("Id")

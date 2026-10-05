@@ -18,19 +18,19 @@ actor "Keyboard or assistive-technology user" as user
 box "Frontend — Saturdaze Angular application" #E0F2FE
   participant "Routed page" as page
   participant "Shared control" as control
-  participant "Dialog" as dialog
+  participant "Feature dialog\nCDK" as dialog
 end box
-box "Backend — Browser accessibility platform" #D1FADF
+box "Frontend — Browser accessibility platform" #D1FADF
   participant "Focus manager" as focus
   participant "Accessibility tree" as tree
 end box
-box "Backend — Browser rendering platform" #FFF4E5
+box "Frontend — Browser rendering platform" #FFF4E5
   participant "CSS engine" as css
 end box
 user -> focus : Press Tab
 focus -> control : Move focus in DOM order
 control -> css : Apply L2-036 visible focus
-css --> control : AA-contrast focus style
+css --> control : Configured focus style
 control -> tree : Expose L2-037 accessible name
 tree --> user : Announce control
 user -> control : Press Enter or Space
@@ -38,5 +38,5 @@ control -> dialog : Open action dialog
 dialog -> focus : Trap focus and announce title
 focus --> user : Present operable dialog
 dialog -> css : Apply L2-038 color tokens
-css --> dialog : AA-contrast presentation
+css --> dialog : Configured color tokens
 @enduml

@@ -10,23 +10,25 @@ Saturdaze is a web application that plans personalized family weekends. Weekend 
 
 ## Description
 
-The feature forms a vertical slice across the Angular application, the ASP.NET Core API, application handlers, domain state, and SQL Server persistence.
+`WeekendPage` reads `WeekendPlanService.getWeekend(): Signal<WeekendView>`. `loadCurrent()` calls `GET /api/weekends/current`; `plan(weekendOfIso)` explicitly requests a date.
 
-- **`HomePage`** — Angular weekend overview that loads the current plan.
-- **`WeekendPlanService`** — Typed client service exposing `loadCurrent()` and `plan()`.
-- **`WeekendsController`** — API controller exposing current and plan endpoints.
-- **`GetCurrentWeekendQueryHandler`** — Application handler that finds or creates the upcoming plan.
-- **`GenerateWeekendCommandHandler`** — Application handler that loads inputs and persists the new aggregate.
-- **`WeekendPlanner`** — Deterministic planning service that creates blocks for both days.
+`GetCurrentWeekendQueryHandler` resolves the upcoming Saturday using `IDateTimeProvider.Today`, defaulting to America/Toronto in the API. It returns the owned plan or dispatches generation.
+
+`GenerateWeekendCommandHandler` resolves family ownership, uses `PlannerInputLoader` for family, catalog, forecast, and historical activity inputs, and persists one Weekend for each family/date.
+
+`WeekendPlanner.Plan()` creates Saturday and Sunday blocks around commitments, meal windows, drives, downtime, and available activities. `WeekendForecastService` supplies configured-coordinate forecasts.
+
+`ShareDialog` calls the owner-scoped share endpoint. `SharedWeekendPage` reads `/api/weekends/shared/{token}` from `/sample-weekend?share=...`. `CalendarDialog` exposes the anonymous calendar URL. The shared handler returns the full WeekendDto, not a redacted DTO.
 
 ## Requirements
 
-The feature realizes the following level-2 (L2) requirements. Each row cites the level-1 (L1) capability refined by the requirement.
+The following L2 requirements refine the cited L1 capabilities. Implementation gaps stated in Description do not waive these obligations.
 
 | L2 ID | Refines (L1) | Requirement |
 |-------|--------------|-------------|
-| `L2-012` | `L1-003` | `POST /api/weekends/plan` must create a new `Weekend` row for the requested weekend date with blocks across Saturday and Sunday, including activities, meals, drives, downtime, and any commitments from the family profile. |
-| `L2-013` | `L1-003` | `GET /api/weekends/current` must return the family's plan for the current or next upcoming Saturday, generating one on demand if absent. |
+| `L2-012` | `L1-003` | `POST /api/weekends/plan` shall create a new `Weekend` row for the requested weekend date with blocks across Saturday and Sunday, including activities, meals, drives, downtime, and any commitments from the family profile. |
+| `L2-013` | `L1-003` | `GET /api/weekends/current` shall return the family's plan for the current or next upcoming Saturday, generating one on demand if absent. |
+| `L2-086` | `L1-003`, `L1-012` | An authenticated owner shall be able to create a read-only weekend share link. The shared-weekend and calendar endpoints shall accept anonymous capability URLs and return a weekend representation for read-only consumption. |
 
 ## Diagrams
 
@@ -59,3 +61,9 @@ The class view shows the request path and the state relationships used by the fe
 The sequence view traces the primary behaviour to `L2-012` and `L2-013`. Its alternate path preserves valid existing state when the request cannot proceed.
 
 ![Sequence diagram for generating the current weekend](diagrams/sequence-generate.png)
+
+### Behaviour — share a weekend and export its calendar
+
+This sequence records the current implementation, including its failure boundary.
+
+![Sequence — share a weekend and export its calendar](diagrams/sequence-share.png)

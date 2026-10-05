@@ -11,24 +11,27 @@ skinparam class {
 }
 title Class structure — Sign out
 
-class ProfilePage {
-  +openSignOut(): void
+class FamilyPage {
+  #signOut(): Promise<boolean>
 }
-class SignOutDialog {
-  +confirm(): void
-  +cancel(): void
+class signOutWith <<function>>
+class ConfirmDialog {
+  #confirm(): void
+  #cancel(): void
 }
 class SessionStore {
-  +logout(): void
+  +logout(): Promise<void>
 }
-class RevokeRefreshTokenCommandHandler <<introduced>> {
-  +Handle(token: string): Task
+class RevokeRefreshTokenCommandHandler {
+  +Handle(request: RevokeRefreshTokenCommand, ct: CancellationToken): Task
 }
 class RefreshToken {
-  +Guid Id
+  +Guid UserId
   +DateTimeOffset? RevokedAtUtc
 }
-ProfilePage --> SignOutDialog : opens
-ProfilePage --> SessionStore : calls after confirmation
+FamilyPage ..> signOutWith
+signOutWith ..> ConfirmDialog : via confirmWith
+signOutWith --> SessionStore : after confirmation
+SessionStore ..> RevokeRefreshTokenCommandHandler : through AuthService / API
 RevokeRefreshTokenCommandHandler --> RefreshToken : revokes
 @enduml

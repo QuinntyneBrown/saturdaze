@@ -11,12 +11,12 @@ skinparam class {
 }
 title Class structure — Moderate event submissions
 
-class AdminEventsPage {
-  +approve(id: string): Promise<void>
-  +reject(id: string, reason: string): Promise<void>
+class ReviewSubmissionsPage {
+  #approve(card: SubmissionCard): Promise<void>
+  #reject(card: SubmissionCard): Promise<void>
 }
 class EventSubmissionsService {
-  +listPending(): Promise<IReadOnlyList<EventSubmissionDto>>
+  +loadPending(): Promise<void>
   +approve(id: string): Promise<EventSubmissionDto>
   +reject(id: string, reason: string): Promise<EventSubmissionDto>
 }
@@ -34,7 +34,7 @@ class EventSubmission {
 class LocalEvent {
   +Guid Id
 }
-AdminEventsPage --> EventSubmissionsService : calls
+ReviewSubmissionsPage --> EventSubmissionsService : calls
 ApproveSubmissionCommandHandler --> EventSubmission : approves
 ApproveSubmissionCommandHandler --> LocalEvent : creates
 RejectSubmissionCommandHandler --> EventSubmission : rejects

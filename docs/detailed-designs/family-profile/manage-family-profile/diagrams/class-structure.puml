@@ -11,8 +11,8 @@ skinparam class {
 }
 title Class structure — Manage a family profile
 
-class ProfilePage {
-  +saveProfile(): Promise<void>
+class FamilyPage {
+  #addMember(): Promise<void>
 }
 class FamilyService {
   +load(): Promise<void>

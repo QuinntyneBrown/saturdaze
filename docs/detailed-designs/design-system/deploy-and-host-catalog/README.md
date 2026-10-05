@@ -9,7 +9,7 @@ This feature connects the path-filtered GitHub Actions workflow, Vite production
 ## Description
 
 - **`deploy-design-system.yml`** — path-filtered workflow with restricted repository permissions and ordered Node, validation, test, and deployment steps.
-- **`npm test`** — produces and verifies the fresh production build before upload.
+- **`npm test` and `npm run build`** — validate the catalog and explicitly rebuild deployment output after the test gates.
 - **`vite.config.js`** — builds `index.html` and `preview.html` and copies public contracts into `dist/`.
 - **`Azure/static-web-apps-deploy@v1`** — uploads the already-built static output using the dedicated deployment secret.
 - **`staticwebapp.config.json`** — defines SPA fallback exclusions, the 404 response, MIME behavior, and global security headers.
@@ -17,10 +17,12 @@ This feature connects the path-filtered GitHub Actions workflow, Vite production
 
 ## Requirements
 
+The following L2 requirements refine the cited L1 capabilities. Implementation gaps stated in Description do not waive these obligations.
+
 | L2 ID | Refines (L1) | Requirement |
 |-------|--------------|-------------|
-| `L2-075` | `L1-030` | `.github/workflows/deploy-design-system.yml` must deploy the catalog to its own Azure Static Web App only after the validation and browser gates pass, triggered solely by changes that can affect it. |
-| `L2-076` | `L1-030` | The deployed site's `staticwebapp.config.json` must preserve SPA deep links while serving assets, the manifest, and the preview page as raw files, must return honest 404s, and must apply security response headers globally. |
+| `L2-075` | `L1-030` | `.github/workflows/deploy-design-system.yml` shall deploy the catalog to its own Azure Static Web App only after the validation and browser gates pass, triggered solely by changes that can affect it. |
+| `L2-076` | `L1-030` | The deployed site's `staticwebapp.config.json` shall preserve SPA deep links while serving assets, the manifest, and the preview page as raw files, shall return honest 404s, and shall apply security response headers globally. |
 
 ## Diagrams
 
@@ -43,6 +45,8 @@ Workflow triggers, quality steps, Vite copying, Azure upload, and static hosting
 ![C4 component view for deploying and hosting the catalog](diagrams/c4-component.png)
 
 ### Class structure
+
+Class notation groups JavaScript functions, manifest records, and configuration concepts; it does not imply that every named grouping is an exported JavaScript class.
 
 The deployment job owns ordered steps and one artifact, while the hosting configuration owns fallback, exclusion, error, and response-header rules.
 
