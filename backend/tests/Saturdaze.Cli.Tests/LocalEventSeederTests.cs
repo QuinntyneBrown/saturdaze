@@ -68,6 +68,95 @@ public class LocalEventSeederTests
     }
 
     [Fact]
+    public async Task SeedAsync_updates_only_the_matching_location_when_same_name_and_date_exist()
+    {
+        using var db = TestDb.Create();
+        db.LocalEvents.AddRange(
+            new Saturdaze.Domain.Entities.LocalEvent
+            {
+                Id = Guid.NewGuid(),
+                Name = "Farmers Market",
+                StartsOn = new DateOnly(2026, 9, 26),
+                EndsOn = new DateOnly(2026, 9, 26),
+                Location = "Port Credit",
+                Category = "Original",
+            },
+            new Saturdaze.Domain.Entities.LocalEvent
+            {
+                Id = Guid.NewGuid(),
+                Name = "Farmers Market",
+                StartsOn = new DateOnly(2026, 9, 26),
+                EndsOn = new DateOnly(2026, 9, 26),
+                Location = "Oakville",
+                Category = "Original",
+            });
+        await db.SaveChangesAsync();
+
+        var json = """
+            [
+              { "name": "Farmers Market", "startsOn": "2026-09-26", "endsOn": "2026-09-27", "location": "Oakville", "category": "Updated" },
+              { "name": "Harvest Fair", "startsOn": "2026-09-27", "endsOn": "2026-09-27", "location": "Streetsville", "category": "Festival" }
+            ]
+            """;
+
+        var act = () => _sut.SeedAsync(db, AsStream(json), default);
+
+        await act.Should().NotThrowAsync();
+        await db.SaveChangesAsync();
+
+        db.LocalEvents.Should().HaveCount(3);
+        db.LocalEvents.Single(e => e.Name == "Farmers Market" && e.Location == "Port Credit")
+            .Category.Should().Be("Original");
+        var oakville = db.LocalEvents.Single(e => e.Name == "Farmers Market" && e.Location == "Oakville");
+        oakville.Category.Should().Be("Updated");
+        oakville.EndsOn.Should().Be(new DateOnly(2026, 9, 27));
+    }
+
+    [Fact]
+    public async Task SeedAsync_is_idempotent_across_calls_when_same_name_and_date_use_different_locations()
+    {
+        using var db = TestDb.Create();
+        db.LocalEvents.AddRange(
+            new Saturdaze.Domain.Entities.LocalEvent
+            {
+                Id = Guid.NewGuid(),
+                Name = "Farmers Market",
+                StartsOn = new DateOnly(2026, 9, 26),
+                EndsOn = new DateOnly(2026, 9, 26),
+                Location = "Port Credit",
+                Category = "Original",
+            },
+            new Saturdaze.Domain.Entities.LocalEvent
+            {
+                Id = Guid.NewGuid(),
+                Name = "Farmers Market",
+                StartsOn = new DateOnly(2026, 9, 26),
+                EndsOn = new DateOnly(2026, 9, 26),
+                Location = "Oakville",
+                Category = "Original",
+            });
+        await db.SaveChangesAsync();
+
+        var json = """
+            [
+              { "name": "Farmers Market", "startsOn": "2026-09-26", "endsOn": "2026-09-26", "location": "Port Credit", "category": "Updated" },
+              { "name": "Farmers Market", "startsOn": "2026-09-26", "endsOn": "2026-09-27", "location": "Oakville", "category": "Updated" }
+            ]
+            """;
+
+        await _sut.SeedAsync(db, AsStream(json), default);
+        await db.SaveChangesAsync();
+        await _sut.SeedAsync(db, AsStream(json), default);
+        await db.SaveChangesAsync();
+
+        db.LocalEvents.Should().HaveCount(2);
+        db.LocalEvents.Single(e => e.Name == "Farmers Market" && e.Location == "Port Credit")
+            .Category.Should().Be("Updated");
+        db.LocalEvents.Single(e => e.Name == "Farmers Market" && e.Location == "Oakville")
+            .EndsOn.Should().Be(new DateOnly(2026, 9, 27));
+    }
+
+    [Fact]
     public async Task SeedAsync_returns_zero_for_empty_array()
     {
         using var db = TestDb.Create();

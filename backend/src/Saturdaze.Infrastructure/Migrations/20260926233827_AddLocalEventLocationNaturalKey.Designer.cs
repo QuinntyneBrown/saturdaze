@@ -12,15 +12,15 @@ using Saturdaze.Infrastructure.Persistence;
 namespace Saturdaze.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260528234946_AddIngestionRuns")]
-    partial class AddIngestionRuns
+    [Migration("20260926233827_AddLocalEventLocationNaturalKey")]
+    partial class AddLocalEventLocationNaturalKey
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.0")
+                .HasAnnotation("ProductVersion", "10.0.11")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -141,6 +141,81 @@ namespace Saturdaze.Infrastructure.Migrations
                     b.ToTable("EmailVerificationTokens", (string)null);
                 });
 
+            modelBuilder.Entity("Saturdaze.Domain.Entities.EventSubmission", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("AgeRange")
+                        .HasMaxLength(80)
+                        .HasColumnType("nvarchar(80)");
+
+                    b.Property<string>("Category")
+                        .HasMaxLength(80)
+                        .HasColumnType("nvarchar(80)");
+
+                    b.Property<string>("CostNote")
+                        .HasMaxLength(80)
+                        .HasColumnType("nvarchar(80)");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<int?>("DriveMinutes")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("EndsAtLocal")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Location")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<Guid?>("PublishedEventId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("RejectionReason")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<DateTimeOffset?>("ReviewedAtUtc")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<Guid?>("ReviewedByUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("SourceUrl")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<DateTime>("StartsAtLocal")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset>("SubmittedAtUtc")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<Guid>("SubmittedByUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SubmittedByUserId");
+
+                    b.HasIndex("Status", "SubmittedAtUtc");
+
+                    b.ToTable("EventSubmissions", (string)null);
+                });
+
             modelBuilder.Entity("Saturdaze.Domain.Entities.Family", b =>
                 {
                     b.Property<Guid>("Id")
@@ -150,10 +225,22 @@ namespace Saturdaze.Infrastructure.Migrations
                     b.Property<bool>("BudgetEnabled")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("FridayPreviewEnabled")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
+
                     b.Property<string>("HomeLocation")
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<bool>("TryNewEnabled")
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
@@ -183,53 +270,6 @@ namespace Saturdaze.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("FamilyMembers", (string)null);
-                });
-
-            modelBuilder.Entity("Saturdaze.Domain.Entities.IngestionRun", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("ErrorMessage")
-                        .HasMaxLength(2000)
-                        .HasColumnType("nvarchar(2000)");
-
-                    b.Property<DateTimeOffset?>("FinishedUtc")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<int>("InputTokens")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ItemsConsidered")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ItemsRejected")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ItemsUpserted")
-                        .HasColumnType("int");
-
-                    b.Property<int>("OutputTokens")
-                        .HasColumnType("int");
-
-                    b.Property<DateTimeOffset>("StartedUtc")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Type")
-                        .HasColumnType("int");
-
-                    b.Property<int>("WebSearchCount")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Type", "StartedUtc");
-
-                    b.ToTable("IngestionRuns", (string)null);
                 });
 
             modelBuilder.Entity("Saturdaze.Domain.Entities.ItineraryBlock", b =>
@@ -273,6 +313,8 @@ namespace Saturdaze.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Kind", "RefId");
 
                     b.HasIndex("WeekendId", "Day", "SortOrder");
 
@@ -318,7 +360,7 @@ namespace Saturdaze.Infrastructure.Migrations
 
                     b.HasIndex("StartsOn");
 
-                    b.HasIndex("Name", "StartsOn")
+                    b.HasIndex("Name", "StartsOn", "Location")
                         .IsUnique();
 
                     b.ToTable("LocalEvents", (string)null);
@@ -402,9 +444,6 @@ namespace Saturdaze.Infrastructure.Migrations
 
                     b.Property<DateTimeOffset?>("RevokedAtUtc")
                         .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("RevokedByIp")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TokenHash")
                         .IsRequired()

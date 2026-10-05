@@ -102,6 +102,32 @@ public class ApproveSubmissionCommandHandlerTests
         app.Db.EventSubmissions.Single().Status.Should().Be(EventSubmissionStatus.Pending);
     }
 
+    [Fact]
+    public async Task Approve_allows_same_title_and_date_when_location_differs()
+    {
+        await using var app = TestApp.Create();
+        var submission = SeedPending(app);
+        app.Db.LocalEvents.Add(new LocalEvent
+        {
+            Id = Guid.NewGuid(),
+            Name = submission.Title,
+            StartsOn = DateOnly.FromDateTime(submission.StartsAtLocal),
+            EndsOn = DateOnly.FromDateTime(submission.StartsAtLocal),
+            Location = "Port Credit",
+            Category = "Festival",
+        });
+        await app.Db.SaveChangesAsync();
+        var admin = new StubCurrentUserAccessor { UserId = Guid.NewGuid(), Role = UserRole.Admin };
+        var handler = new ApproveSubmissionCommandHandler(app.Db, admin, new StubDateTimeProvider());
+
+        var dto = await handler.Handle(new ApproveSubmissionCommand(submission.Id), default);
+
+        dto.Status.Should().Be(EventSubmissionStatus.Approved);
+        app.Db.LocalEvents.Should().HaveCount(2);
+        app.Db.LocalEvents.Should().Contain(e => e.Location == "Port Credit");
+        app.Db.LocalEvents.Should().Contain(e => e.Location == "Memorial Park");
+    }
+
     private static EventSubmission SeedPending(TestApp app)
     {
         var userId = Guid.NewGuid();
