@@ -1,5 +1,7 @@
 using System.Net;
 using System.Text;
+using System.Text.Json;
+using System.Linq;
 using FluentAssertions;
 using Microsoft.Extensions.Logging.Abstractions;
 using Saturdaze.Infrastructure.Ingestion;
@@ -38,7 +40,11 @@ public class ClaudeWebSearchClientTests
             http.BaseAddress = new Uri(baseAddress);
         options ??= new ClaudeWebSearchOptions
         {
-            Provider = ClaudeProvider.Anthropic, ApiKey = "sk-test", Model = "claude-sonnet-4-6", MaxSearches = 5
+            Provider = ClaudeProvider.Anthropic,
+            ApiKey = "sk-test",
+            Model = "claude-sonnet-4-6",
+            MaxSearches = 5,
+            MaxContinuationTurns = 3
         };
         return new ClaudeWebSearchClient(http, options, NullLogger<ClaudeWebSearchClient>.Instance, TimeSpan.Zero);
     }
@@ -198,6 +204,129 @@ public class ClaudeWebSearchClientTests
         handler.Calls.Should().Be(2);
     }
 
+    [Fact]
+    public async Task Continues_pause_turn_responses_until_the_search_completes()
+    {
+        const string pausedResponse = """
+            {
+              "content": [
+                { "type": "server_tool_use", "id": "t1", "name": "web_search", "input": { "query": "events" } },
+                { "type": "text", "text": "Still searching..." }
+              ],
+              "stop_reason": "pause_turn",
+              "usage": { "input_tokens": 10, "output_tokens": 2, "server_tool_use": { "web_search_requests": 1 } }
+            }
+            """;
+        const string finalResponse = """
+            {
+              "content": [
+                { "type": "text", "text": "[{\"name\":\"Completed event\"}]" }
+              ],
+              "stop_reason": "end_turn",
+              "usage": { "input_tokens": 20, "output_tokens": 3, "server_tool_use": { "web_search_requests": 2 } }
+            }
+            """;
+
+        var handler = new FakeHandler(new[]
+        {
+            (HttpStatusCode.OK, pausedResponse),
+            (HttpStatusCode.OK, finalResponse)
+        });
+        var client = CreateClient(handler);
+
+        var result = await client.SearchAsync("SYSTEM PROMPT", "USER PROMPT");
+
+        result.RawText.Should().Be("Still searching...[{\"name\":\"Completed event\"}]");
+        handler.Calls.Should().Be(2);
+        handler.RequestBodies.Should().HaveCount(2);
+
+        using var continuation = JsonDocument.Parse(handler.RequestBodies[1]);
+        var root = continuation.RootElement;
+        var tools = root.GetProperty("tools").EnumerateArray().ToArray();
+        var messages = root.GetProperty("messages").EnumerateArray().ToArray();
+
+        tools.Should().HaveCount(1);
+        tools[0].GetProperty("name").GetString().Should().Be("web_search");
+        messages.Should().HaveCount(2);
+        messages[0].GetProperty("role").GetString().Should().Be("user");
+        messages[0].GetProperty("content").GetString().Should().Be("USER PROMPT");
+        messages[1].GetProperty("role").GetString().Should().Be("assistant");
+        messages[1].GetProperty("content").GetRawText()
+            .Should().Be("""[{"type":"server_tool_use","id":"t1","name":"web_search","input":{"query":"events"}},{"type":"text","text":"Still searching..."}]""");
+    }
+
+    [Fact]
+    public async Task Throws_when_pause_turn_continuations_exhaust_the_limit()
+    {
+        const string pausedResponse = """
+            {
+              "content": [
+                { "type": "server_tool_use", "id": "t1", "name": "web_search", "input": { "query": "events" } },
+                { "type": "text", "text": "Still searching..." }
+              ],
+              "stop_reason": "pause_turn",
+              "usage": { "input_tokens": 10, "output_tokens": 2, "server_tool_use": { "web_search_requests": 1 } }
+            }
+            """;
+
+        var options = new ClaudeWebSearchOptions
+        {
+            Provider = ClaudeProvider.Anthropic,
+            ApiKey = "sk-test",
+            Model = "claude-sonnet-4-6",
+            MaxSearches = 5,
+            MaxContinuationTurns = 1
+        };
+        var handler = new FakeHandler(new[]
+        {
+            (HttpStatusCode.OK, pausedResponse),
+            (HttpStatusCode.OK, pausedResponse)
+        });
+        var client = CreateClient(handler, options);
+
+        var act = () => client.SearchAsync("SYSTEM PROMPT", "USER PROMPT");
+
+        await act.Should().ThrowAsync<ClaudeApiException>()
+            .WithMessage("*pause_turn 2 times without completing the search*");
+        handler.Calls.Should().Be(2);
+    }
+
+    [Fact]
+    public async Task Accumulates_usage_across_pause_turn_continuations()
+    {
+        const string pausedResponse = """
+            {
+              "content": [
+                { "type": "server_tool_use", "id": "t1", "name": "web_search", "input": { "query": "events" } },
+                { "type": "text", "text": "Still searching..." }
+              ],
+              "stop_reason": "pause_turn",
+              "usage": { "input_tokens": 10, "output_tokens": 2, "server_tool_use": { "web_search_requests": 1 } }
+            }
+            """;
+        const string finalResponse = """
+            {
+              "content": [
+                { "type": "text", "text": "[{\"name\":\"Completed event\"}]" }
+              ],
+              "stop_reason": "end_turn",
+              "usage": { "input_tokens": 20, "output_tokens": 3, "server_tool_use": { "web_search_requests": 2 } }
+            }
+            """;
+
+        var handler = new FakeHandler(new[]
+        {
+            (HttpStatusCode.OK, pausedResponse),
+            (HttpStatusCode.OK, finalResponse)
+        });
+
+        var result = await CreateClient(handler).SearchAsync("SYSTEM PROMPT", "USER PROMPT");
+
+        result.InputTokens.Should().Be(30);
+        result.OutputTokens.Should().Be(5);
+        result.WebSearchCount.Should().Be(3);
+    }
+
     private sealed class FakeHandler : HttpMessageHandler
     {
         private readonly Queue<(HttpStatusCode Status, string? Body)> _responses = new();
@@ -212,17 +341,20 @@ public class ClaudeWebSearchClientTests
         public int Calls { get; private set; }
         public HttpRequestMessage? LastRequest { get; private set; }
         public string? LastBody { get; private set; }
+        public List<string> RequestBodies { get; } = [];
 
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             Calls++;
             LastRequest = request;
             LastBody = request.Content is null ? null : await request.Content.ReadAsStringAsync(cancellationToken);
+            if (LastBody is not null)
+                RequestBodies.Add(LastBody);
 
             var (status, body) = _responses.Count > 1 ? _responses.Dequeue() : _responses.Peek();
             return new HttpResponseMessage(status)
             {
-                Content = body is null ? null! : new StringContent(body, Encoding.UTF8, "application/json")
+                Content = body is null ? null : new StringContent(body, Encoding.UTF8, "application/json")
             };
         }
     }

@@ -14,6 +14,10 @@ title Class structure — Discover local events
 class IdeasEventsPage {
   #setCategory(chip: FilterChip): void
 }
+class FilterChip {
+  +string Label
+  +bool Active
+}
 class EventsService {
   +load(weekendOfIso: string): Promise<void>
   +list(): Signal<IdeasEventsView>
@@ -32,6 +36,7 @@ class LocalEvent {
   +string Category
 }
 IdeasEventsPage --> EventsService : calls
+IdeasEventsPage ..> FilterChip : reads
 EventsService ..> GetLocalEventsQuery : maps to
 GetLocalEventsQueryHandler --> LocalEvent : filters
 @enduml

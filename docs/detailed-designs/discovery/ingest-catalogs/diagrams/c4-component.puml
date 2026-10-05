@@ -2,13 +2,13 @@
 !include <C4/C4_Component>
 LAYOUT_WITH_LEGEND()
 title Components — Ingest catalogs
-Container_Boundary(host, "CLI or Worker process") {
+Container_Boundary(host, "CLI, Worker, or WebJob process") {
  Component(entry, "IngestCommandHandler or IngestionWorker", ".NET entry point", "Selects types and invokes runner")
  Component(runner, "IngestionRunner", "Application service", "Coordinates budget, audit, search, and upsert")
  Component(prompts, "IngestionPrompts", "Application utility", "Builds catalog-specific instructions")
  Component(parser, "IngestionResultParser", "Application service", "Extracts arrays and natural keys")
  Component(upserter, "CatalogUpserter", "Application service", "Maps and persists catalog records")
- Component(client, "ClaudeWebSearchClient", "IWebSearchClient adapter", "Calls provider and retries transient failures")
+ Component(client, "ClaudeWebSearchClient", "IWebSearchClient adapter", "Calls provider, resumes pause_turn continuations, and retries transient failures")
  ComponentDb(db, "AppDbContext", "EF Core", "Exposes catalogs and IngestionRuns")
 }
 System_Ext(provider, "Claude Messages API", "Microsoft Foundry by default, Anthropic when configured; web-search-enabled model")
@@ -21,4 +21,3 @@ Rel(runner, parser, "Parse")
 Rel(runner, upserter, "UpsertAsync unless dry-run")
 Rel(upserter, db, "Queries incoming keys; saves catalog data")
 @enduml
-
