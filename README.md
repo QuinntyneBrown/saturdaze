@@ -187,6 +187,7 @@ Development conventions:
 | Angular libraries | `npm run build -- components` and `npm run build -- api` | Build shared frontend packages |
 | Frontend unit tests | `npm test` from `frontend/` | Angular/Vitest tests |
 | Storybook | `npm run storybook` / `npm run build-storybook` from `frontend/` | Design-system docsite on :6006 / static build to `frontend/dist/storybook` |
+| Storybook contract and browser tests | Build Storybook, then `npm run test:storybook` from `e2e/` | Public component documentation coverage, every indexed example and docs page, and form interaction in Chromium |
 | Playwright behavior | `npm run test:behavior` from `e2e/` | End-to-end behavior tests |
 | Playwright visual | `npm run test:visual` from `e2e/` | Visual comparisons against baselines |
 | Baseline update | `npm run baseline` from `e2e/` | Refresh visual snapshots from the mock app |

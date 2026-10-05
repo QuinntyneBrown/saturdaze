@@ -72,7 +72,8 @@ jobs:
         run: npx ng build saturdaze --configuration production
 
   storybook:
-    name: Storybook build
+    # Keep the required branch-protection context while testing its replacement.
+    name: Design-system contract + browser tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -92,3 +93,21 @@ jobs:
       - name: Build Storybook
         working-directory: frontend
         run: npm run build-storybook
+
+      - name: Install browser test dependencies
+        working-directory: e2e
+        run: npm ci
+
+      - name: Install Chromium
+        working-directory: e2e
+        run: npx playwright install --with-deps chromium
+
+      - name: Verify Storybook contract and examples
+        working-directory: e2e
+        run: npm run test:storybook
+
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: storybook-test-results
+          path: e2e/test-results/

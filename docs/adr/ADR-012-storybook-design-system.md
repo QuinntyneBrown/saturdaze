@@ -22,7 +22,7 @@ Document the real library with Storybook, laid out like the Fluent UI v9 docsite
    - `Patterns/` — whole-screen compositions (shell, weekend plan, ideas, auth, family, dialogs) replacing the old pattern and dialog catalogs.
 3. **Stories render with the app's globals.** `.storybook/storybook.scss` `@use`s the same `styles` entry and CDK overlay CSS as `projects/saturdaze/src/styles.scss`; a router with hash location and a catch-all route is provided so in-app `href`s stay inside the preview iframe.
 4. **`_tokens.scss` is the single token source.** The catalog's `tokens.css`, manifest, validator and Playwright suite are deleted with the folder.
-5. **Gates and hosting.** `ci.yml` builds Storybook on every PR (a story that binds a removed input fails the build). `deploy-storybook.yml` builds and uploads `frontend/dist/storybook` to the same Static Web App and token (`SWA_DESIGN_SYSTEM_DEPLOYMENT_TOKEN`) the catalog used.
+5. **Gates and hosting.** `ci.yml` builds Storybook on every PR and retains the required `Design-system contract + browser tests` check. `npm run test:storybook` from `e2e/` verifies default stories and autodocs for every public Angular component, renders every indexed example in Chromium, and checks form interaction against the static build. `deploy-storybook.yml` builds and uploads `frontend/dist/storybook` to the same Static Web App and token (`SWA_DESIGN_SYSTEM_DEPLOYMENT_TOKEN`) the catalog used.
 
 ## Consequences
 
