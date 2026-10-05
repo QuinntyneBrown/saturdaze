@@ -53,7 +53,9 @@ public sealed class ClaudeWebSearchClient : IWebSearchClient
         var body = BuildRequestBody(systemPrompt, userPrompt);
 
         using var response = await SendWithRetryAsync(() => BuildRequest(body), cancellationToken);
-        var payload = await response.Content.ReadAsStringAsync(cancellationToken);
+        var payload = response.Content is null
+            ? string.Empty
+            : await response.Content.ReadAsStringAsync(cancellationToken);
 
         if (!response.IsSuccessStatusCode)
             throw new ClaudeApiException(

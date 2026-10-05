@@ -142,7 +142,7 @@ public sealed class IngestionWorker : BackgroundService
         while (true)
         {
             var remaining = when - DateTimeOffset.UtcNow;
-            if (remaining <= TimeSpan.Zero)
+            if (remaining <= TimeSpan.FromMilliseconds(50))
                 return;
 
             await Task.Delay(remaining < MaxDelayChunk ? remaining : MaxDelayChunk, ct);
