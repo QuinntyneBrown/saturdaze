@@ -29,6 +29,58 @@
           "options": {
             "tsConfig": "projects/components/tsconfig.spec.json"
           }
+        },
+        "storybook": {
+          "builder": "@storybook/angular:start-storybook",
+          "options": {
+            "configDir": "projects/components/.storybook",
+            "browserTarget": "components:build",
+            "tsConfig": "projects/components/.storybook/tsconfig.json",
+            "compodoc": true,
+            "compodocArgs": [
+              "-e",
+              "json",
+              "-d",
+              "projects/components",
+              "--disableRoutesGraph"
+            ],
+            "styles": [
+              "projects/components/.storybook/storybook.scss"
+            ],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "projects/components/src/lib"
+              ]
+            },
+            "experimentalZoneless": true,
+            "port": 6006
+          }
+        },
+        "build-storybook": {
+          "builder": "@storybook/angular:build-storybook",
+          "options": {
+            "configDir": "projects/components/.storybook",
+            "browserTarget": "components:build",
+            "tsConfig": "projects/components/.storybook/tsconfig.json",
+            "compodoc": true,
+            "compodocArgs": [
+              "-e",
+              "json",
+              "-d",
+              "projects/components",
+              "--disableRoutesGraph"
+            ],
+            "styles": [
+              "projects/components/.storybook/storybook.scss"
+            ],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "projects/components/src/lib"
+              ]
+            },
+            "experimentalZoneless": true,
+            "outputDir": "dist/storybook"
+          }
         }
       }
     },
@@ -81,9 +133,13 @@
                 "input": "projects/saturdaze/public"
               }
             ],
-            "styles": ["projects/saturdaze/src/styles.scss"],
+            "styles": [
+              "projects/saturdaze/src/styles.scss"
+            ],
             "stylePreprocessorOptions": {
-              "includePaths": ["projects/components/src/lib"]
+              "includePaths": [
+                "projects/components/src/lib"
+              ]
             }
           },
           "configurations": {
