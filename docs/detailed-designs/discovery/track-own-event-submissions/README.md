@@ -10,22 +10,21 @@ Saturdaze is a web application that plans personalized family weekends. Submissi
 
 ## Description
 
-The feature forms a vertical slice across the Angular application, the ASP.NET Core API, application handlers, domain state, and SQL Server persistence.
+`EventsService` combines the public event catalog with `EventSubmissionsService.mine()`. `IdeasEventsPage` renders only owned Pending submissions in the Your suggestion section.
 
-- **`EventsPage`** — Angular page that merges public events with owned pending cards.
-- **`EventsSubmittedPage`** — Angular confirmation page reached after a successful submission.
-- **`EventSubmissionsService`** — Typed client service exposing the caller's submission list.
-- **`EventSubmissionsController`** — Authorized API controller exposing `GET /api/events/submissions/mine`.
-- **`ListMySubmissionsQueryHandler`** — Application handler filtering submissions by current user ID.
-- **`EventSubmission`** — Domain entity storing submitter identity and review status.
+`EventSubmissionsController.Mine()` dispatches `ListMySubmissionsQuery`. `ListMySubmissionsQueryHandler` filters by the authenticated user and returns all three review statuses, while the feed selects Pending records.
+
+`EventSubmittedDialog` is an in-place acknowledgement opened by `IdeasPage`, not a routed confirmation screen. Returning from it leaves the contributor on `/ideas/events`.
+
+Approval or rejection removes a record from the pending presentation after reload. A rejection-notification delivery mechanism is absent; the notification obligation in L1-018 remains an implementation gap.
 
 ## Requirements
 
-The feature realizes the following level-2 (L2) requirements. Each row cites the level-1 (L1) capability refined by the requirement.
+The following L2 requirements refine the cited L1 capabilities. Implementation gaps stated in Description do not waive these obligations.
 
 | L2 ID | Refines (L1) | Requirement |
 |-------|--------------|-------------|
-| `L2-049` | `L1-018` | `GET /api/events/submissions/mine` must return the caller's own submissions in any status (`pending`, `approved`, `rejected`). The events feed at `/events` must render a "Pending review" badge on cards drawn from the caller's own pending submissions so they understand the event isn't yet public. |
+| `L2-049` | `L1-018` | `GET /api/events/submissions/mine` shall return the caller's own submissions in any status (`Pending`, `Approved`, `Rejected`). The events feed at `/ideas/events` shall render a "Pending review" badge on cards drawn from the caller's own pending submissions so they understand the event isn't yet public. |
 
 ## Diagrams
 

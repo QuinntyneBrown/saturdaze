@@ -11,12 +11,12 @@ skinparam class {
 }
 title Class structure — Pick restaurants
 
-class RestaurantsPage {
-  +selectFilter(filter: RestaurantFilter): void
+class IdeasFoodPage {
+  #setExtra(chip: FilterChip): void
 }
 class RestaurantService {
   +load(): Promise<void>
-  +refresh(): Promise<void>
+  +setFilters(patch: Partial<FoodFilters>): void
 }
 class GetRestaurantPicksQuery {
   +DateOnly Day
@@ -32,7 +32,7 @@ class Restaurant {
   +bool WifeApproved
   +int DriveMinutes
 }
-RestaurantsPage --> RestaurantService : calls
+IdeasFoodPage --> RestaurantService : calls
 RestaurantService ..> GetRestaurantPicksQuery : maps to
 GetRestaurantPicksQueryHandler --> Restaurant : filters
 @enduml

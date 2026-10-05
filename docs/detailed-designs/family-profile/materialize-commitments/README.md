@@ -6,27 +6,25 @@ Saturdaze is a web application that plans personalized family weekends. Recurrin
 
 *commitment block* — itinerary block derived from a recurring family commitment
 
-`WeekendPlanner.BuildFixedBlocks()` converts matching Saturday and Sunday commitments before computing free gaps. The generated block retains the commitment title and time window.
+`WeekendPlanner.BuildFixedBlocks()` converts matching Saturday and Sunday commitments before computing free gaps. The generated block uses the current profile's commitment title and time window.
 
 ## Description
 
-The feature forms a vertical slice across the Angular application, the ASP.NET Core API, application handlers, domain state, and SQL Server persistence.
+`FamilyPage` and `CommitmentDialog` maintain single-day weekly commitments. `WeekendPage` requests planning through `WeekendPlanService` and `WeekendsController`.
 
-- **`ProfilePage`** — Angular page where recurring commitments are maintained.
-- **`WeekendPlanService`** — Typed client service that requests the current or generated weekend.
-- **`WeekendsController`** — API controller exposing weekend planning endpoints.
-- **`GenerateWeekendCommandHandler`** — Application handler that loads the family aggregate and planner inputs.
-- **`WeekendPlanner`** — Application service that creates fixed commitment blocks before filling gaps.
-- **`Commitment and ItineraryBlock`** — Domain types linked through the generated title, day, and time window.
+`PlannerInputLoader` loads the family and planning inputs. `WeekendPlanner.BuildFixedBlocks()` selects commitments matching Saturday or Sunday and creates locked Commitment blocks at their configured local times.
 
-`WeekendPlanner.BuildFixedBlocks()` materializes commitments with `IsLocked=true`. `LockBlockCommandHandler` refuses to unlock a `Commitment` block (409 `commitment_locked`) and the day-level lock toggle leaves them locked.
+`LockBlockCommandHandler` returns 409 `commitment_locked` when asked to unlock a commitment. `LockWeekendDayCommandHandler` also preserves commitment locks.
+
+Regeneration reconstructs commitment blocks from the current family profile. Their database IDs can change, and edited profile times can replace prior times. The stronger identity/content-preservation wording in L2-011 and L2-016 remains an explicit implementation discrepancy.
+
 ## Requirements
 
-The feature realizes the following level-2 (L2) requirements. Each row cites the level-1 (L1) capability refined by the requirement.
+The following L2 requirements refine the cited L1 capabilities. Implementation gaps stated in Description do not waive these obligations.
 
 | L2 ID | Refines (L1) | Requirement |
 |-------|--------------|-------------|
-| `L2-011` | `L1-002`, `L1-004` | Every `Commitment` on the family profile must materialize as a locked itinerary block on every generated weekend at the commitment's day and time window. |
+| `L2-011` | `L1-002`, `L1-004` | Every `Commitment` on the family profile shall materialize as a locked itinerary block on every generated weekend at the commitment's day and time window. |
 
 ## Diagrams
 

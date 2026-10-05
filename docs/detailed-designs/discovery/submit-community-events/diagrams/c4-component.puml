@@ -4,7 +4,7 @@ LAYOUT_WITH_LEGEND()
 title Components — Submit community events
 
 Container_Boundary(web, "Saturdaze web application") {
-  Component(page, "EventsPage, SubmitEventDialog, and EventsSubmitPage", "Angular component", "Collect event input through two entry points")
+  Component(page, "IdeasPage and SubmitEventDialog", "Angular component", "Open the single Ideas header submission dialog")
   Component(client, "EventSubmissionsService", "Angular service", "Submits typed event payloads")
 }
 Container_Boundary(api, "Saturdaze API") {

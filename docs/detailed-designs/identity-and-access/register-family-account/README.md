@@ -10,23 +10,21 @@ The signup flow collects credentials and optional family details. A successful t
 
 ## Description
 
-The feature forms a vertical slice across the Angular application, the ASP.NET Core API, application handlers, domain state, and SQL Server persistence.
+`CreateAccountPage` at `/create-account` validates credentials and terms acknowledgement and calls `SessionStore.signUp()`. It also sends the Friday-preview preference and then opens `/verify-email`.
 
-- **`SignupPage`** — Angular page that validates the signup form and accepts the terms acknowledgement.
-- **`SessionStore`** — Client state service whose `signUp()` method delegates registration and stores the returned session.
-- **`AuthController`** — API controller that exposes `POST /api/auth/register`.
-- **`RegisterUserCommandHandler`** — Application handler that checks email uniqueness, hashes the password, creates the account records, and issues tokens.
-- **`Pbkdf2PasswordHasher`** — Infrastructure service that creates the stored password hash.
-- **`User` and `Family`** — Domain entities created together for the new account.
+`AuthController.Register()` dispatches `RegisterUserCommand` and returns 201 with `AuthSuccessDto`. `RegisterUserCommandHandler` checks normalized email uniqueness, creates `User` and `Family`, and issues credentials through `RefreshTokenIssuer`.
 
+`Pbkdf2PasswordHasher` stores salted password hashes. `SessionStore` persists registration credentials in local storage and sets the current user.
+
+Email delivery is not connected to a provider. Registration and verification screens describe the intended email flow; delivery remains a gap under L1-001.
 
 ## Requirements
 
-The feature realizes the following level-2 (L2) requirements. Each row cites the level-1 (L1) capability refined by the requirement.
+The following L2 requirements refine the cited L1 capabilities. Implementation gaps stated in Description do not waive these obligations.
 
 | L2 ID | Refines (L1) | Requirement |
 |-------|--------------|-------------|
-| `L2-001` | `L1-001` | The system must accept a signup payload (email, password, optional family name, optional home location), create a `User` row, create an empty `Family` row owned by that user, issue an access token + refresh token, and return both with the user record. |
+| `L2-001` | `L1-001` | The system shall accept a signup payload (email, password, optional family name, optional home location), create a `User` row, create an empty `Family` row owned by that user, issue an access token + refresh token, and return both with the user record. |
 
 ## Diagrams
 

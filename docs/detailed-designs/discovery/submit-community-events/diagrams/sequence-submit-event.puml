@@ -5,48 +5,37 @@ skinparam shadowing false
 skinparam roundcorner 12
 skinparam defaultFontName Arial
 skinparam ArrowColor #344054
-skinparam rectangle {
-  BorderColor #344054
-  FontColor #101828
-}
-skinparam package {
-  BorderColor #667085
-  FontColor #101828
-  BackgroundColor #F9FAFB
-}
-actor "Authenticated contributor" as actor
-box "Frontend — Saturdaze web application" #E0F2FE
-  participant "EventsPage, SubmitEventDialog, and EventsSubmitPage" as page
-  participant "EventSubmissionsService" as client
+actor "User" as actor
+box "Frontend — Saturdaze Angular application" #E0F2FE
+ participant "IdeasPage\nSubmitEventDialog" as page
+ participant "EventSubmissionsService" as client
 end box
-box "Backend — Saturdaze API application" #D1FADF
-  participant "EventSubmissionsController" as controller
+box "Backend — Saturdaze API" #D1FADF
+ participant "EventSubmissionsController" as controller
 end box
 box "Backend — Saturdaze Application and Domain" #ECFDF3
-  participant "SubmitEventCommandHandler" as handler
-  participant "EventSubmission" as entity
+ participant "SubmitEventCommandHandler" as handler
 end box
 box "Backend — Saturdaze Infrastructure" #FFF4E5
-  database "Saturdaze database" as infra
-  end box
-actor -> page : Open quick or full submission form
-page -> client : submit(SubmitEventRequest)
+ database "AppDbContext\nSQL Server" as db
+end box
+actor -> page : Suggest an event (L2-048)
+page -> page : Open dialog with nextHourDefault (L2-047)
+actor -> page : Submit title and local start
+alt browser form invalid
+page --> actor : Field errors; no request
+else browser form valid
+page -> client : submit(payload)
 client -> controller : POST /api/events/submissions
-controller -> controller : Authenticate and validate request
-controller -> handler : Send SubmitEventCommand
-handler -> infra : Validate caller and duplicate boundary
-infra --> handler : Current data
-alt title and start time are valid
-  handler -> entity : Apply L2-046 pending ownership
-  entity --> handler : Typed result
-  handler --> controller : Typed result
-  controller --> client : Successful HTTP response
-  client --> page : Present feature result
-  page --> actor : See submitted-event confirmation
-else input is invalid
-  handler --> controller : Controlled alternate result
-  controller --> client : Safe HTTP response
-  client --> page : Present alternate state
-  page --> actor : See field validation error
+controller -> controller : Authorize and validate
+controller -> handler : SubmitEventCommand
+handler -> db : L2-046 save Pending record with caller and timestamp
+db --> handler : Saved
+handler --> controller : EventSubmissionDto
+controller --> client : 201 Created
+client --> page : Submission
+page -> page : Open EventSubmittedDialog
+page -> client : loadMine()
+client --> page : Updated owned submissions
 end
 @enduml

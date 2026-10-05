@@ -4,11 +4,11 @@ LAYOUT_WITH_LEGEND()
 title Components — Discover local events
 
 Container_Boundary(web, "Saturdaze web application") {
-  Component(page, "EventsPage", "Angular component", "Presents event groups and filters")
+  Component(page, "IdeasEventsPage", "Angular component", "Presents event groups and filters")
   Component(client, "EventsService", "Angular service", "Loads and maps event DTOs")
 }
 Container_Boundary(api, "Saturdaze API") {
-  Component(controller, "EventsController", "ASP.NET Core", "Exposes the public event feed")
+  Component(controller, "EventsController", "ASP.NET Core", "Exposes the authenticated catalog feed")
   Component(handler, "GetLocalEventsQueryHandler", "Application handler", "Applies date and drive bounds")
   Component(entity, "LocalEvent", "Domain state", "Holds public event attributes")
   ComponentDb(db, "AppDbContext", "EF Core", "Stores approved local events")

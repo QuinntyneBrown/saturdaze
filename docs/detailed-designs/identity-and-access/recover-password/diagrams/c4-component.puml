@@ -4,7 +4,7 @@ LAYOUT_WITH_LEGEND()
 title Components — Recover a password
 
 Container_Boundary(web, "Saturdaze web application") {
-  Component(page, "ForgotPasswordPage and ResetPasswordPage", "Angular component", "Collect recovery input")
+  Component(page, "ResetPasswordPage", "Angular component", "Collect recovery input")
   Component(client, "SessionStore and AuthService", "Angular service", "Call recovery endpoints")
 }
 Container_Boundary(api, "Saturdaze API") {

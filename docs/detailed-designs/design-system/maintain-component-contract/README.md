@@ -17,10 +17,12 @@ This feature keeps `component-manifest.json`, `package.json`, the source registr
 
 ## Requirements
 
+The following L2 requirements refine the cited L1 capabilities. Implementation gaps stated in Description do not waive these obligations.
+
 | L2 ID | Refines (L1) | Requirement |
 |-------|--------------|-------------|
-| `L2-054` | `L1-021` | `design-system/component-manifest.json` must declare `schemaVersion` 3 and a `product.version` equal to the folder's `package.json` version, and must inventory exactly 29 components, 7 categories, 7 dialog families totalling 18 scenarios, and 8 pattern families totalling 40 responsive states, with complete and unique family and scenario metadata. |
-| `L2-055` | `L1-021` | Every manifest component entry must be verifiably consistent with its source: the source file must exist, every attribute a component observes in code must be documented, and every documented API shape must be complete enough to render the reference pages and playground without guesswork. |
+| `L2-054` | `L1-021` | `design-system/component-manifest.json` shall declare `schemaVersion` 3 and a `product.version` equal to the folder's `package.json` version, and shall inventory exactly 29 components, 7 categories, 7 dialog families totalling 18 scenarios, and 8 pattern families totalling 40 responsive states, with complete and unique family and scenario metadata. |
+| `L2-055` | `L1-021` | Every manifest component entry shall be verifiably consistent with its source: the source file shall exist, every attribute a component observes in code shall be documented, and every documented API shape shall be complete enough to render the reference pages and playground without guesswork. |
 
 ## Diagrams
 
@@ -43,6 +45,8 @@ Schema checks, parity checks, registry checks, and documentation renderers read 
 ![C4 component view for maintaining the component contract](diagrams/c4-component.png)
 
 ### Class structure
+
+Class notation groups JavaScript functions, manifest records, and configuration concepts; it does not imply that every named grouping is an exported JavaScript class.
 
 The manifest model owns categories and family records; each `ComponentContract` refers to one source module and contains its public API arrays.
 

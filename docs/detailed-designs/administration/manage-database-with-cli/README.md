@@ -2,32 +2,32 @@
 
 ## Overview
 
-Saturdaze combines an Angular web application, an ASP.NET Core API, SQL Server persistence, and administrative delivery tooling. The `saturdaze` command-line application is the supported entry point for migrations, deterministic seed data, and confirmed development resets.
+Saturdaze combines an Angular web application, an ASP.NET Core API, SQL Server persistence, and administrative delivery tooling. The `saturdaze` command-line application is the supported entry point for migrations, deterministic seed data, confirmed development resets, and catalog ingestion.
 
 *natural key* — stable business identifier used to detect an existing seed row
 
-`RootCommandFactory` binds global database options and the three subcommands. Each handler resolves `AppDbContext` through the same host and provider configuration.
+`RootCommandFactory` binds global database options and four subcommands. Each handler resolves `AppDbContext` through the same host and provider configuration.
 
 ## Description
 
-The feature crosses the application and platform boundaries needed to deliver its observable outcome.
+`RootCommandFactory` registers `migrate`, `seed`, `reset`, and `ingest`. `CliHostFactory` resolves an explicit connection flag before `SATURDAZE_CONNECTION`, connection-string configuration, and the SQLite user-directory default.
 
-- **`RootCommandFactory`** — System.CommandLine composition root for global options and subcommands.
-- **`MigrateCommandHandler`** — Handler that invokes `Database.MigrateAsync()` and sanitizes logged connection details.
-- **`SeedCommandHandler`** — Handler that resolves seed files and runs every registered `IJsonSeeder`.
-- **`IJsonSeeder implementations`** — Activity, restaurant, local-event, family, user, and event-submission seeders.
-- **`ResetCommand and ResetCommandHandler`** — Confirmed destructive command that drops, migrates, and reseeds.
-- **`DbContextRegistrar and AppDbContext`** — Shared provider and EF Core persistence configuration.
+`MigrateCommandHandler` applies EF migrations for relational providers. `SeedPathResolver` selects `--seed-dir`, then `SATURDAZE_SEED_DIR`, bundled JSON, and finally the legacy user directory. Seeders update existing natural keys and insert missing records.
+
+`ResetCommand` requires `--yes`; Production additionally requires `--allow-production`. `ResetCommandHandler` deletes the target database, recreates its schema, and seeds it. Connection details pass through `ConnectionStringSanitizer` before logging.
+
+`IngestCommandHandler` calls `IngestionRunner`; its pipeline and dry-run behavior are described in [Ingest catalogs](../../discovery/ingest-catalogs/README.md). `eng/Start-FreshStack.ps1` packages and invokes the CLI for local stack preparation.
 
 ## Requirements
 
-The feature realizes the following level-2 (L2) requirements. Each row cites the level-1 (L1) capability refined by the requirement.
+The following L2 requirements refine the cited L1 capabilities. Implementation gaps stated in Description do not waive these obligations.
 
 | L2 ID | Refines (L1) | Requirement |
 |-------|--------------|-------------|
-| `L2-043` | `L1-017` | The `saturdaze migrate` CLI command must apply pending EF Core migrations to the configured database and must be safe to run repeatedly. |
-| `L2-044` | `L1-017` | The `saturdaze seed` CLI command must seed activities, restaurants, local events, the Brown family, and seed users from bundled JSON, must skip rows that already exist (by natural key), and must accept a `--seed-dir` override. |
-| `L2-045` | `L1-017` | The `saturdaze reset` CLI command must drop the schema, re-apply migrations, and re-seed, gated behind a confirmation step (or `--yes`). |
+| `L2-043` | `L1-017` | The `saturdaze migrate` CLI command shall apply pending EF Core migrations to the configured database and shall be safe to run repeatedly. |
+| `L2-044` | `L1-017` | The `saturdaze seed` CLI command shall seed activities, restaurants, local events, the Brown family, and seed users from bundled JSON, shall upsert rows by natural key (an existing row is refreshed from the JSON, never duplicated), and shall accept a `--seed-dir` override. |
+| `L2-045` | `L1-017` | The `saturdaze reset` CLI command shall drop the schema, re-apply migrations, and re-seed, gated by the explicit `--yes` flag, with `--allow-production` additionally required in Production. |
+| `L2-077` | `L1-017`, `L1-031` | The `saturdaze ingest` command shall accept catalog types events, activities, restaurants, or all, defaulting to all. It shall use the shared ingestion runner and report per-type results. |
 
 ## Diagrams
 
@@ -51,7 +51,7 @@ The component view names the runtime or delivery components that implement the s
 
 ### Class structure
 
-The class view shows the code and configuration relationships that control the feature.
+The class view shows selected code and configuration relationships. Cancellation parameters and unrelated members are omitted.
 
 ![Class diagram for managing the database with the CLI](diagrams/class-structure.png)
 

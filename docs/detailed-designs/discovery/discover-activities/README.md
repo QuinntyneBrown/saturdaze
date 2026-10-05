@@ -10,23 +10,22 @@ Saturdaze is a web application that plans personalized family weekends. Activity
 
 ## Description
 
-The feature forms a vertical slice across the Angular application, the ASP.NET Core API, application handlers, domain state, and SQL Server persistence.
+`IdeasActivitiesPage` at `/ideas` reads `ActivityService.list(): Signal<IdeasActivitiesView>` and delegates chip changes to `setFilter(label)`. The browser applies the selected chip to loaded records.
 
-- **`ActivitiesPage`** — Angular page that manages filter chips and renders three `sd-section` groups.
-- **`ActivityService`** — Typed client service that loads activity suggestions and builds `ActivityView`.
-- **`ActivitiesController`** — API controller exposing `GET /api/activities`.
-- **`GetActivitySuggestionsQuery`** — Typed query carrying filter values.
-- **`GetActivitySuggestionsQueryHandler`** — Application handler that composes the EF Core predicate and result limit.
-- **`Activity`** — Domain entity containing age, weather, duration, and drive attributes.
+`ActivityService.load()` requests the catalog, `?tryNew=true` candidates, and the weekend forecast. `buildSections()` forms weather-fit, fallback, and novelty sections, with at most three unique records per section. Active filters suppress empty sections.
+
+`ActivitiesController` dispatches `GetActivitySuggestionsQuery`. The handler applies supplied age, indoor, drive, weather, and count filters. Novelty excludes activities from the caller family's last four weekends through `CurrentUserFamilyAccessor`.
+
+`Activity` stores catalog attributes; browser services own card mapping and section grouping. Cards open map links. Family-age and drive limits are not automatically supplied by the current browser load; complete family personalization remains a gap under L1-005.
 
 ## Requirements
 
-The feature realizes the following level-2 (L2) requirements. Each row cites the level-1 (L1) capability refined by the requirement.
+The following L2 requirements refine the cited L1 capabilities. Implementation gaps stated in Description do not waive these obligations.
 
 | L2 ID | Refines (L1) | Requirement |
 |-------|--------------|-------------|
-| `L2-017` | `L1-005` | `GET /api/activities` must accept query filters (`indoor`, `maxDriveMinutes`, `minAge`, `maxAge`, `weather`, `tryNew`, `take`) and return activities whose attributes satisfy every supplied filter. |
-| `L2-018` | `L1-005` | The `/activities` page must render three labelled sections in order: weather-fit picks for the current forecast, "If weather turns" fallbacks, and "Try something new" novelty picks. |
+| `L2-017` | `L1-005` | `GET /api/activities` shall accept query filters (`indoor`, `maxDriveMinutes`, `minAge`, `maxAge`, `weather`, `tryNew`, `take`) and return activities whose attributes satisfy every supplied filter. |
+| `L2-018` | `L1-005` | The `/ideas` page shall render three labelled sections in order: weather-fit picks for the current forecast, "If the weather turns" fallbacks, and "Try something new" novelty picks. |
 
 ## Diagrams
 

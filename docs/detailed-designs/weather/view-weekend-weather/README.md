@@ -10,25 +10,23 @@ Saturdaze is a web application that plans personalized family weekends. Weekend 
 
 ## Description
 
-The feature forms a vertical slice across the Angular application, the ASP.NET Core API, application handlers, domain state, and SQL Server persistence.
+`WeekendPage` displays forecast data from WeekendDto through `WeekendPlanService`. `ActivityService` separately requests the public weather endpoint for discovery grouping.
 
-- **`HomePage`** — Angular page that renders the weekend weather strip from weekend data.
-- **`WeekendPlanService`** — Typed client service that maps weather DTOs into the overview.
-- **`WeatherController`** — API controller exposing `GET /api/weather`.
-- **`GetWeekendWeatherQueryHandler`** — Application handler that derives the two-day range.
-- **`OpenMeteoWeatherClient`** — Infrastructure client using configured base URL, memory cache, resilience handling, and warning logs.
-- **`WeatherForecast`** — Application record containing date, tags, temperatures, precipitation, and unavailable state.
+`WeatherController` dispatches `GetWeekendWeatherQuery`. `GetWeekendWeatherQueryHandler` delegates to `WeekendForecastService`, which calls `IWeatherClient` with configured HomeLocationOptions coordinates and the two-day range.
 
-`WeekendForecastService` reads the configured `HomeLocationOptions`; the family profile stores a free-text `HomeLocation` and geocoding it into coordinates is still an open gap. The production placeholder warning required by `L2-024` runs at startup (`WarnOnMissingProductionConfig` in `Program.cs`).
+`OpenMeteoWeatherClient` caches successful responses for 60 minutes and returns unavailable entries on handled upstream failures. WeatherForecast supplies dates, condition tags, temperatures, precipitation, and Unavailable; the browser derives labels and icons.
+
+HomeLocation text stored on the family is not geocoded. Forecasts therefore use deployment coordinates rather than personalized coordinates. `WarnOnMissingProductionConfig` reports missing production configuration at startup.
+
 ## Requirements
 
-The feature realizes the following level-2 (L2) requirements. Each row cites the level-1 (L1) capability refined by the requirement.
+The following L2 requirements refine the cited L1 capabilities. Implementation gaps stated in Description do not waive these obligations.
 
 | L2 ID | Refines (L1) | Requirement |
 |-------|--------------|-------------|
-| `L2-023` | `L1-009` | `GET /api/weather?weekendOf=<date>` must return exactly two forecast entries (Saturday and Sunday) for the family's home location, with each entry exposing day name, high temperature, low temperature, condition code, and a note string. |
-| `L2-024` | `L1-009`, `L1-015` | The weather provider base URL must come from configuration (`Saturdaze:Weather:BaseUrl`), and on production startup the system must log a warning if any production-required configuration value is unset or still holds its placeholder. |
-| `L2-040` | `L1-009`, `L1-015` | Upstream provider exceptions (HTTP, JSON, timeout) must be caught, logged at warning level, and substituted with a neutral fallback so the user never sees a 5xx caused by the upstream. |
+| `L2-023` | `L1-009` | `GET /api/weather?weekendOf=<date>` shall return exactly two forecast entries (Saturday and Sunday) for the configured home location, with each entry exposing the date, the condition tags (`sunny`, `rain`, `snow`, `cold`, `cool`, `mild`, `warm`), high and low temperature, precipitation, and an `unavailable` flag; the client derives the day name, icon and note from those fields. |
+| `L2-024` | `L1-009`, `L1-015` | The weather provider base URL shall come from configuration (`Saturdaze:Weather:BaseUrl`), and on production startup the system shall log a warning if any production-required configuration value is unset or still holds its placeholder. |
+| `L2-040` | `L1-009`, `L1-015` | Upstream provider exceptions (HTTP, JSON, timeout) shall be caught, logged at warning level, and substituted with a neutral fallback so the user never sees a 5xx caused by the upstream. |
 
 ## Diagrams
 
