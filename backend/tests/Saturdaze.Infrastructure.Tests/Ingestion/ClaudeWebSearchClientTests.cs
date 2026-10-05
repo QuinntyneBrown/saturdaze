@@ -162,6 +162,17 @@ public class ClaudeWebSearchClientTests
     }
 
     [Fact]
+    public async Task Handles_an_error_response_without_content()
+    {
+        var client = CreateClient(new FakeHandler(HttpStatusCode.BadRequest, body: null));
+
+        var act = () => client.SearchAsync("s", "u");
+
+        (await act.Should().ThrowAsync<ClaudeApiException>())
+            .Which.Message.Should().Contain("400");
+    }
+
+    [Fact]
     public async Task Retries_once_on_429_then_succeeds()
     {
         var handler = new FakeHandler(new[]
@@ -318,10 +329,10 @@ public class ClaudeWebSearchClientTests
 
     private sealed class FakeHandler : HttpMessageHandler
     {
-        private readonly Queue<(HttpStatusCode Status, string Body)> _responses = new();
+        private readonly Queue<(HttpStatusCode Status, string? Body)> _responses = new();
 
         public FakeHandler(string body) => _responses.Enqueue((HttpStatusCode.OK, body));
-        public FakeHandler(HttpStatusCode status, string body) => _responses.Enqueue((status, body));
+        public FakeHandler(HttpStatusCode status, string? body) => _responses.Enqueue((status, body));
         public FakeHandler(IEnumerable<(HttpStatusCode, string)> responses)
         {
             foreach (var r in responses) _responses.Enqueue(r);
@@ -343,7 +354,7 @@ public class ClaudeWebSearchClientTests
             var (status, body) = _responses.Count > 1 ? _responses.Dequeue() : _responses.Peek();
             return new HttpResponseMessage(status)
             {
-                Content = new StringContent(body, Encoding.UTF8, "application/json")
+                Content = body is null ? null : new StringContent(body, Encoding.UTF8, "application/json")
             };
         }
     }

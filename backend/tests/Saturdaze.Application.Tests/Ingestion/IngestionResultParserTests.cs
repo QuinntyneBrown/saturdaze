@@ -76,6 +76,19 @@ public class IngestionResultParserTests
         item.Payload["endsOn"]!.GetValue<string>().Should().Be("2026-08-15");
     }
 
+    [Theory]
+    [InlineData("2026-05-30T00:00:00Z", "2026-05-30")]
+    [InlineData("05/30/2026", "2026-05-30")]
+    public void Parses_event_dates_with_common_model_format_variations(string date, string expectedDate)
+    {
+        var result = _sut.Parse(
+            $$"""[ {"name":"Event","startsOn":"{{date}}","location":"Here"} ]""",
+            IngestionType.Events);
+
+        result.Items.Should().ContainSingle();
+        result.Items[0].NaturalKey.Should().Be($"event|{expectedDate}|here");
+    }
+
     [Fact]
     public void Restaurant_slot_is_validated_and_normalised()
     {

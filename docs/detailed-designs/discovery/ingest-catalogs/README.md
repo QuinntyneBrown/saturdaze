@@ -2,7 +2,7 @@
 
 ## Overview
 
-Saturdaze refreshes its shared event, activity, and restaurant catalogs through an operator-invoked CLI command or the scheduled ingestion worker. A *natural key* identifies an incoming record independently of its database ID.
+Saturdaze refreshes its shared event, activity, and restaurant catalogs through an operator-invoked CLI command, the scheduled ingestion worker, or an App Service WebJob. A *natural key* identifies an incoming record independently of its database ID.
 
 The application layer owns the ingestion workflow. Infrastructure adapts the external web-search provider, and EF Core persists catalog data and per-type audit records. Ingestion has no public HTTP endpoint.
 

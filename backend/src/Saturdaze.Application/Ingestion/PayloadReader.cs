@@ -76,7 +76,16 @@ internal static class PayloadReader
     {
         value = default;
         if (o.TryGetPropertyValue(key, out var node) && node is JsonValue v && v.TryGetValue<string>(out var s))
-            return DateOnly.TryParseExact(s.Trim(), "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out value);
+        {
+            var trimmed = s.Trim();
+            if (DateOnly.TryParseExact(trimmed, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out value))
+                return true;
+            if (DateTimeOffset.TryParse(trimmed, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dateTime))
+            {
+                value = DateOnly.FromDateTime(dateTime.DateTime);
+                return true;
+            }
+        }
         return false;
     }
 

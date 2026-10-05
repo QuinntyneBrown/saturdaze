@@ -5,16 +5,20 @@ title Containers — Ingest catalogs
 Person(operator, "Operator")
 System_Boundary(system, "Saturdaze") {
  Container(cli, "Saturdaze CLI", ".NET console", "Runs on demand")
+ Container(worker, "Saturdaze Worker", ".NET Generic Host", "Runs scheduled passes")
  Container(job, "Triggered ingest job", "Azure WebJob / .NET CLI", "Runs the scheduled saturdaze ingest pass")
  Container(api, "Saturdaze API", "ASP.NET Core", "Serves catalogs to authenticated clients")
  ContainerDb(db, "Catalogs and ingestion audit", "SQL Server", "Stores shared records and per-type runs")
 }
 System_Ext(provider, "Claude on Microsoft Foundry", "External research provider (eastus2); Anthropic API as fallback")
 Rel(operator, cli, "Invokes ingest")
+Rel(operator, worker, "Configures schedule")
 Rel(operator, job, "Configures schedule")
 Rel(cli, provider, "Uses shared ingestion adapter", "HTTPS")
+Rel(worker, provider, "Uses shared ingestion adapter", "HTTPS")
 Rel(job, provider, "Uses shared ingestion adapter", "HTTPS")
 Rel(cli, db, "Upserts and audits", "EF Core")
+Rel(worker, db, "Upserts and audits", "EF Core")
 Rel(job, db, "Upserts and audits", "EF Core")
 Rel(api, db, "Reads catalogs", "EF Core")
 @enduml
