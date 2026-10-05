@@ -5,6 +5,43 @@
 @use "styles";
 @import "@angular/cdk/overlay-prebuilt.css";
 
+// Overlay panel classes — the same rules as projects/saturdaze/src/styles.scss,
+// so stories that open a CDK Dialog or anchored menu look like the app: a
+// bottom sheet below 720px, a centred modal above.
+.sd-dialog-backdrop {
+  background: rgba(31, 41, 55, 0.4);
+}
+
+.sd-dialog-panel {
+  width: 100%;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.cdk-global-overlay-wrapper:has(> .sd-dialog-panel) {
+  align-items: flex-end !important;
+  justify-content: center !important;
+}
+
+@media (min-width: 720px) {
+  .sd-dialog-panel {
+    max-width: 568px;
+    padding: 24px;
+  }
+
+  .cdk-global-overlay-wrapper:has(> .sd-dialog-panel) {
+    align-items: center !important;
+  }
+}
+
+.sd-menu-backdrop {
+  background: transparent;
+}
+
+.sd-menu-pane {
+  margin-top: 8px;
+}
+
 // Docs pages render inside the preview iframe; keep the Storybook docs
 // typography on the brand stack.
 .sbdocs-wrapper {
