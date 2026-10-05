@@ -8,7 +8,9 @@
       <p class="day__meta">{{ meta() }}</p>
     }
     @if (locked()) {
-      <sd-chip class="day__chip" tone="accent"><sd-icon name="lock" [size]="13" [stroke]="2" />Day locked</sd-chip>
+      <sd-chip class="day__chip" tone="accent"
+        ><sd-icon name="lock" [size]="13" [stroke]="2" />Day locked</sd-chip
+      >
     }
   </div>
   @if (actions()) {

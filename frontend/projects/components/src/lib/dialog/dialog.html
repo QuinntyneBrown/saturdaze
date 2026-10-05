@@ -6,7 +6,14 @@
         <p class="dialog__sub">{{ subtitle() }}</p>
       }
     </div>
-    <sd-button class="dialog__close" variant="ghost" size="sm" icon [label]="closeLabel()" (click)="close()">
+    <sd-button
+      class="dialog__close"
+      variant="ghost"
+      size="sm"
+      icon
+      [label]="closeLabel()"
+      (click)="close()"
+    >
       <sd-icon name="close" />
     </sd-button>
   </div>

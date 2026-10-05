@@ -36,16 +36,22 @@ describe('EventSubmittedDialog', () => {
 
   it('summarises what was sent with a pending chip', async () => {
     await mount(DATE_ONLY);
-    expect(host.querySelector('.dialog__title')?.textContent?.trim()).toBe('Thanks, it is in the queue');
+    expect(host.querySelector('.dialog__title')?.textContent?.trim()).toBe(
+      'Thanks, it is in the queue',
+    );
     expect(host.querySelector('.dialog__sub')?.textContent?.trim()).toBe(
       'Only you can see it until it is approved.',
     );
-    expect(host.querySelector('.summary__title')?.textContent?.trim()).toBe('Port Credit Buskerfest');
+    expect(host.querySelector('.summary__title')?.textContent?.trim()).toBe(
+      'Port Credit Buskerfest',
+    );
     expect(host.querySelector('.summary__meta')?.textContent?.trim()).toBe(
       'Memorial Park, Lakeshore Rd · Sat 20 Jun',
     );
     expect(host.querySelector('sd-date-tile')?.getAttribute('date')).toBe('2026-06-20');
-    expect(host.querySelector('sd-date-tile')?.textContent?.replace(/\s+/g, ' ').trim()).toContain('Jun');
+    expect(host.querySelector('sd-date-tile')?.textContent?.replace(/\s+/g, ' ').trim()).toContain(
+      'Jun',
+    );
     expect(host.querySelector('sd-chip')?.textContent?.trim()).toBe('Pending review');
   });
 

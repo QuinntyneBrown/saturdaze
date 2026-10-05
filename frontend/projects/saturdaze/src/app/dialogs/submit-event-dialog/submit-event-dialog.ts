@@ -43,7 +43,9 @@ export class SubmitEventDialog {
 
   protected readonly canSubmit = computed(
     () =>
-      this.title().trim().length > 0 && this.startsAtLocal().trim().length > 0 && !this.submitting(),
+      this.title().trim().length > 0 &&
+      this.startsAtLocal().trim().length > 0 &&
+      !this.submitting(),
   );
 
   protected cancel(): void {

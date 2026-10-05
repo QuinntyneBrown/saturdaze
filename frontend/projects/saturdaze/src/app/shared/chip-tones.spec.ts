@@ -6,7 +6,16 @@ describe('chipTone', () => {
   });
 
   it('passes every other tone through', () => {
-    for (const tone of ['default', 'sun', 'sky', 'leaf', 'indoor', 'warn', 'accent', 'primary'] as const) {
+    for (const tone of [
+      'default',
+      'sun',
+      'sky',
+      'leaf',
+      'indoor',
+      'warn',
+      'accent',
+      'primary',
+    ] as const) {
       expect(chipTone(tone)).toBe(tone);
     }
   });

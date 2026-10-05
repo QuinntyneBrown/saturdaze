@@ -30,10 +30,16 @@ import {
   StatusRow,
 } from 'components';
 
-import { AddErrandDialog, AddErrandDialogResult } from '../../dialogs/add-errand-dialog/add-errand-dialog';
+import {
+  AddErrandDialog,
+  AddErrandDialogResult,
+} from '../../dialogs/add-errand-dialog/add-errand-dialog';
 import { CalendarDialog, CalendarDialogData } from '../../dialogs/calendar-dialog/calendar-dialog';
 import { DIALOG_OPTIONS, confirmWith } from '../../dialogs/confirm-dialog/confirm-dialog';
-import { ErrandAddedDialog, ErrandAddedDialogData } from '../../dialogs/errand-added-dialog/errand-added-dialog';
+import {
+  ErrandAddedDialog,
+  ErrandAddedDialogData,
+} from '../../dialogs/errand-added-dialog/errand-added-dialog';
 import { ShareDialog, ShareDialogData } from '../../dialogs/share-dialog/share-dialog';
 import { MenuOpener } from '../../shell/menu-opener';
 import { applyBlockAction, openBlockDialog } from '../../shared/block-actions';
@@ -158,7 +164,10 @@ export class WeekendPage {
   protected share(): Promise<void> {
     return this.run(async () => {
       const shareUrl = await this.weekendService.createShareLink();
-      this.dialog.open<void, ShareDialogData>(ShareDialog, { ...DIALOG_OPTIONS, data: { shareUrl } });
+      this.dialog.open<void, ShareDialogData>(ShareDialog, {
+        ...DIALOG_OPTIONS,
+        data: { shareUrl },
+      });
     });
   }
 
@@ -182,7 +191,12 @@ export class WeekendPage {
           icon: 'refresh',
           sub: 'Locked blocks stay where they are',
         },
-        { id: 'calendar', label: 'Add to calendar', icon: 'calendar', sub: 'One .ics with both days' },
+        {
+          id: 'calendar',
+          label: 'Add to calendar',
+          icon: 'calendar',
+          sub: 'One .ics with both days',
+        },
       ],
     });
     if (choice?.id === 'regenerate') await this.regenerateWeekend();

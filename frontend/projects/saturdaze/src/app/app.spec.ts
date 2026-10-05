@@ -29,12 +29,20 @@ describe('App', () => {
       user: signal({ id: 'u1', email: 'quinn@example.com', role: 'User', emailVerifiedUtc: null }),
       logout: vi.fn(async () => undefined),
     };
-    menus = { open: vi.fn(async () => undefined), dialog: { open: vi.fn(() => ({ closed: of('confirm') })) } };
+    menus = {
+      open: vi.fn(async () => undefined),
+      dialog: { open: vi.fn(() => ({ closed: of('confirm') })) },
+    };
     await TestBed.configureTestingModule({
       imports: [App],
       providers: [
         provideRouter([
-          { path: '', pathMatch: 'full', children: [], data: { shell: 'site', cta: true, page: 'landing' } },
+          {
+            path: '',
+            pathMatch: 'full',
+            children: [],
+            data: { shell: 'site', cta: true, page: 'landing' },
+          },
           { path: 'sign-in', children: [], data: { shell: 'bare', page: 'sign-in' } },
           { path: 'legal', children: [], data: { shell: 'site', page: 'legal' } },
           { path: 'weekend', children: [], data: { nav: 'weekend', page: 'weekend' } },
@@ -85,7 +93,9 @@ describe('App', () => {
   });
 
   it('passes the signed-in email to the top bar', () => {
-    expect(host.querySelector('sd-top-bar sd-avatar')?.getAttribute('name')).toBe('quinn@example.com');
+    expect(host.querySelector('sd-top-bar sd-avatar')?.getAttribute('name')).toBe(
+      'quinn@example.com',
+    );
   });
 
   it('switches to the site bar (with the CTA) for public pages', async () => {
@@ -146,7 +156,12 @@ describe('App', () => {
   });
 
   it('leaves the session alone when the menu is dismissed or Family is picked', async () => {
-    menus.open.mockResolvedValueOnce({ id: 'family', label: 'Family settings', icon: 'user', href: '/family' });
+    menus.open.mockResolvedValueOnce({
+      id: 'family',
+      label: 'Family settings',
+      icon: 'user',
+      href: '/family',
+    });
     await fixture.componentInstance['openAccountMenu'](document.createElement('button'));
     menus.open.mockResolvedValueOnce(undefined);
     await fixture.componentInstance['openAccountMenu'](document.createElement('button'));

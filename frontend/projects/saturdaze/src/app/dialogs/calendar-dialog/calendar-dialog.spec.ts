@@ -33,13 +33,19 @@ describe('CalendarDialog', () => {
 
   it('describes the one file with both days', () => {
     expect(host.querySelector('.dialog__title')?.textContent?.trim()).toBe('Add to your calendar');
-    expect(host.querySelector('.dialog__sub')?.textContent?.trim()).toBe('One file with both days.');
+    expect(host.querySelector('.dialog__sub')?.textContent?.trim()).toBe(
+      'One file with both days.',
+    );
     expect(host.querySelector('sd-list-item')?.getAttribute('title')).toBe('weekend-17-may.ics');
-    expect(host.querySelector('sd-list-item')?.getAttribute('subtitle')).toBe('10 events · Saturday and Sunday');
+    expect(host.querySelector('sd-list-item')?.getAttribute('subtitle')).toBe(
+      '10 events · Saturday and Sunday',
+    );
   });
 
   it('downloads through a plain link to the API', () => {
-    const link = host.querySelector('sd-button[slot="actions"][variant="primary"] a') as HTMLAnchorElement;
+    const link = host.querySelector(
+      'sd-button[slot="actions"][variant="primary"] a',
+    ) as HTMLAnchorElement;
     expect(link.getAttribute('href')).toBe(calendar.icsUrl);
     expect(link.getAttribute('target')).toBe('_blank');
     expect(link.getAttribute('rel')).toBe('noopener');

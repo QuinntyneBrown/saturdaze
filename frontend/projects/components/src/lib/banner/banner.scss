@@ -14,9 +14,18 @@ sd-icon {
   margin-top: 2px;
 }
 
-:host(.banner--warn) { background: var(--sd-warn-soft); color: var(--sd-warn-deep); }
-:host(.banner--success) { background: var(--sd-accent-soft); color: var(--sd-accent); }
-:host(.banner--info) { background: var(--sd-surface-2); color: var(--sd-ink); }
+:host(.banner--warn) {
+  background: var(--sd-warn-soft);
+  color: var(--sd-warn-deep);
+}
+:host(.banner--success) {
+  background: var(--sd-accent-soft);
+  color: var(--sd-accent);
+}
+:host(.banner--info) {
+  background: var(--sd-surface-2);
+  color: var(--sd-ink);
+}
 
 .banner__text {
   min-width: 0;

@@ -45,13 +45,13 @@
     color var(--sd-dur-fast) var(--sd-ease);
 }
 
-.vote-row__btn--up[aria-pressed="true"] {
+.vote-row__btn--up[aria-pressed='true'] {
   background: var(--sd-accent-soft);
   border-color: transparent;
   color: var(--sd-accent);
 }
 
-.vote-row__btn--down[aria-pressed="true"] {
+.vote-row__btn--down[aria-pressed='true'] {
   background: var(--sd-warn-soft);
   border-color: transparent;
   color: var(--sd-warn-deep);
@@ -63,7 +63,7 @@
 }
 
 @media (hover: hover) {
-  .vote-row__btn:not([aria-pressed="true"]):hover {
+  .vote-row__btn:not([aria-pressed='true']):hover {
     color: var(--sd-ink);
     border-color: var(--sd-line-strong);
   }

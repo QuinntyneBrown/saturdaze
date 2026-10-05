@@ -7,14 +7,21 @@
     }
   </div>
   @if (locked()) {
-    <sd-chip tone="accent"><sd-icon name="lock" [size]="13" [stroke]="2" />{{ lockedLabel() }}</sd-chip>
+    <sd-chip tone="accent"
+      ><sd-icon name="lock" [size]="13" [stroke]="2" />{{ lockedLabel() }}</sd-chip
+    >
   } @else if (topPick()) {
     <sd-chip tone="primary">Top pick</sd-chip>
   }
 </div>
 <div class="card__chips"><ng-content select="[slot=chips]" /></div>
 @if (votes().length) {
-  <sd-vote-row [votes]="votes()" [disabled]="votesDisabled()" [label]="'Family vote for ' + cardTitle()" (voteChange)="voteChange.emit($event)" />
+  <sd-vote-row
+    [votes]="votes()"
+    [disabled]="votesDisabled()"
+    [label]="'Family vote for ' + cardTitle()"
+    (voteChange)="voteChange.emit($event)"
+  />
 }
 <div class="card__footer card__footer--between">
   @if (menuUrl()) {

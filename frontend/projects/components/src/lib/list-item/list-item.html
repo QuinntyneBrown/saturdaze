@@ -21,11 +21,21 @@
 </ng-template>
 
 @if (href()) {
-  <a class="list__item list__item--action" [attr.href]="href()" [attr.aria-label]="label() || null" (click)="onAnchorClick($event)">
+  <a
+    class="list__item list__item--action"
+    [attr.href]="href()"
+    [attr.aria-label]="label() || null"
+    (click)="onAnchorClick($event)"
+  >
     <ng-container *ngTemplateOutlet="body" />
   </a>
 } @else if (action()) {
-  <button class="list__item list__item--action" type="button" [attr.aria-label]="label() || null" (click)="pressed.emit()">
+  <button
+    class="list__item list__item--action"
+    type="button"
+    [attr.aria-label]="label() || null"
+    (click)="pressed.emit()"
+  >
     <ng-container *ngTemplateOutlet="body" />
   </button>
 } @else {

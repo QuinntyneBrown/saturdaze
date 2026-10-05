@@ -1,4 +1,8 @@
-<sd-dialog title="Add an errand" subtitle="It gets fitted around what is already planned on that day." wide>
+<sd-dialog
+  title="Add an errand"
+  subtitle="It gets fitted around what is already planned on that day."
+  wide
+>
   <form class="form" (submit)="submit($event)">
     <sd-text-input
       label="What is it"
@@ -17,11 +21,23 @@
       [ngModel]="minutes()"
       (ngModelChange)="minutes.set($event)"
     />
-    <sd-seg-radio label="Which day" name="day" [options]="days" [ngModel]="day()" (ngModelChange)="day.set($event)" />
+    <sd-seg-radio
+      label="Which day"
+      name="day"
+      [options]="days"
+      [ngModel]="day()"
+      (ngModelChange)="day.set($event)"
+    />
     <button type="submit" hidden></button>
   </form>
   <sd-button slot="actions" variant="quiet" type="button" (click)="cancel()">Cancel</sd-button>
-  <sd-button slot="actions" variant="primary" type="button" [disabled]="!canSubmit()" (click)="submit()">
+  <sd-button
+    slot="actions"
+    variant="primary"
+    type="button"
+    [disabled]="!canSubmit()"
+    (click)="submit()"
+  >
     <sd-icon name="bag" />
     Add to weekend
   </sd-button>

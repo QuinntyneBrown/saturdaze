@@ -5,7 +5,8 @@
       [routerLink]="linkOf(tab)"
       [fragment]="tab.fragment"
       [attr.aria-current]="active() === tab.label ? 'page' : null"
-    >{{ tab.label }}</a>
+      >{{ tab.label }}</a
+    >
   } @else {
     <a
       class="segments__tab"
@@ -14,6 +15,7 @@
       routerLinkActive
       ariaCurrentWhenActive="page"
       [routerLinkActiveOptions]="{ exact: !!tab.exact }"
-    >{{ tab.label }}</a>
+      >{{ tab.label }}</a
+    >
   }
 }

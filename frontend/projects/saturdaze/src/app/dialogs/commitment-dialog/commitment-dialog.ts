@@ -3,7 +3,14 @@ import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@a
 import { FormsModule } from '@angular/forms';
 
 import { WeekendDay } from 'api';
-import { Button, Dialog as DialogShell, Icon, SegRadio, SegRadioOption, TextInput } from 'components';
+import {
+  Button,
+  Dialog as DialogShell,
+  Icon,
+  SegRadio,
+  SegRadioOption,
+  TextInput,
+} from 'components';
 
 export interface CommitmentDialogInitial {
   readonly title: string;
@@ -61,7 +68,9 @@ export class CommitmentDialog {
   protected readonly submitLabel = this.isEdit ? 'Save' : 'Add commitment';
 
   protected readonly name = signal(this.data.initial?.title ?? '');
-  protected readonly day = signal<string>(this.data.initial?.day ?? (this.isEdit ? '' : 'Saturday'));
+  protected readonly day = signal<string>(
+    this.data.initial?.day ?? (this.isEdit ? '' : 'Saturday'),
+  );
   protected readonly startTime = signal(this.data.initial?.startTime ?? '09:00');
   protected readonly endTime = signal(this.data.initial?.endTime ?? '10:00');
   protected readonly error = signal('');

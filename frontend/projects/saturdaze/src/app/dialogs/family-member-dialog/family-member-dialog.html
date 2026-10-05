@@ -32,7 +32,13 @@
     </sd-button>
   }
   <sd-button slot="actions" variant="quiet" type="button" (click)="cancel()">Cancel</sd-button>
-  <sd-button slot="actions" variant="primary" type="button" [disabled]="!canSubmit()" (click)="submit()">
+  <sd-button
+    slot="actions"
+    variant="primary"
+    type="button"
+    [disabled]="!canSubmit()"
+    (click)="submit()"
+  >
     {{ submitLabel }}
   </sd-button>
 </sd-dialog>

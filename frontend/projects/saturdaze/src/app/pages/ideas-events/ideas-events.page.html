@@ -1,10 +1,20 @@
 <sd-filters class="filters" label="Filters">
   @for (chip of view().windowChips; track chip.label) {
-    <sd-filter-chip [tone]="filterTone(chip.tone)" [pressed]="chip.active" (pressedChange)="setWindow(chip)">{{ chip.label }}</sd-filter-chip>
+    <sd-filter-chip
+      [tone]="filterTone(chip.tone)"
+      [pressed]="chip.active"
+      (pressedChange)="setWindow(chip)"
+      >{{ chip.label }}</sd-filter-chip
+    >
   }
   <span class="sd-vdivider" aria-hidden="true"></span>
   @for (chip of view().categoryChips; track chip.label) {
-    <sd-filter-chip [tone]="filterTone(chip.tone)" [pressed]="chip.active" (pressedChange)="setCategory(chip)">{{ chip.label }}</sd-filter-chip>
+    <sd-filter-chip
+      [tone]="filterTone(chip.tone)"
+      [pressed]="chip.active"
+      (pressedChange)="setCategory(chip)"
+      >{{ chip.label }}</sd-filter-chip
+    >
   }
 </sd-filters>
 

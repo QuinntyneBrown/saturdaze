@@ -56,7 +56,14 @@ describe('ReviewSubmissionsPage', () => {
         {
           provide: ActivatedRoute,
           useValue: {
-            snapshot: { paramMap: convertToParamMap({}), queryParamMap, params: {}, queryParams: query, data: {}, fragment: null },
+            snapshot: {
+              paramMap: convertToParamMap({}),
+              queryParamMap,
+              params: {},
+              queryParams: query,
+              data: {},
+              fragment: null,
+            },
             paramMap: of(convertToParamMap({})),
             queryParamMap: of(queryParamMap),
             params: of({}),
@@ -100,17 +107,26 @@ describe('ReviewSubmissionsPage', () => {
     view.set(READY);
     fixture.detectChanges();
     expect(header().getAttribute('subtitle')).toBe(READY.subtitle);
-    expect(cards().map((c) => c.getAttribute('aria-label'))).toEqual(['Port Credit Buskerfest', 'Farmers Market']);
+    expect(cards().map((c) => c.getAttribute('aria-label'))).toEqual([
+      'Port Credit Buskerfest',
+      'Farmers Market',
+    ]);
     const first = cards()[0]!;
-    expect(first.querySelector('.head__meta')?.textContent?.trim()).toBe('Sat 20 Jun · 2:00 to 9:00pm');
+    expect(first.querySelector('.head__meta')?.textContent?.trim()).toBe(
+      'Sat 20 Jun · 2:00 to 9:00pm',
+    );
     expect(first.querySelector('sd-chip')?.textContent?.trim()).toBe('Pending');
-    expect(first.querySelector('.submitter sd-avatar')?.getAttribute('name')).toBe('quinntynebrown@gmail.com');
+    expect(first.querySelector('.submitter sd-avatar')?.getAttribute('name')).toBe(
+      'quinntynebrown@gmail.com',
+    );
     expect(first.querySelector('.submitter')?.textContent?.replace(/\s+/g, ' ').trim()).toContain(
       'quinntynebrown@gmail.com · 2 hours ago',
     );
     const details = Array.from(first.querySelectorAll('dt')).map((d) => d.textContent?.trim());
     expect(details).toEqual(['Location', 'Cost', 'Ages', 'Link', 'Notes']);
-    expect(first.querySelector('.details__link')?.getAttribute('href')).toBe(SUBMISSION_CARD.dto.sourceUrl);
+    expect(first.querySelector('.details__link')?.getAttribute('href')).toBe(
+      SUBMISSION_CARD.dto.sourceUrl,
+    );
     expect(cards()[1]!.querySelectorAll('.details__value--faint').length).toBe(5);
   });
 
@@ -125,7 +141,9 @@ describe('ReviewSubmissionsPage', () => {
   });
 
   it('shows the cleared queue when the API has nothing pending', async () => {
-    submissions.loadPending.mockImplementationOnce(async () => view.set({ ...READY, status: 'empty', cards: [] }));
+    submissions.loadPending.mockImplementationOnce(async () =>
+      view.set({ ...READY, status: 'empty', cards: [] }),
+    );
     await mount();
     expect(host.querySelector('sd-empty')?.getAttribute('title')).toBe('Queue is clear');
   });
@@ -143,7 +161,11 @@ describe('ReviewSubmissionsPage', () => {
   it('approves after D23 confirms, and leaves it alone when dismissed', async () => {
     await mount();
     dialog.open.mockReturnValueOnce({ closed: of('confirm') });
-    (cards()[0]!.querySelector('.review-actions sd-button[variant="primary"] button') as HTMLButtonElement).click();
+    (
+      cards()[0]!.querySelector(
+        '.review-actions sd-button[variant="primary"] button',
+      ) as HTMLButtonElement
+    ).click();
     await settle();
     expect(dialog.open).toHaveBeenCalledWith(
       ApproveSubmissionDialog,
@@ -158,7 +180,11 @@ describe('ReviewSubmissionsPage', () => {
   it('rejects with the reason from D24, sending null for a blank one', async () => {
     await mount();
     dialog.open.mockReturnValueOnce({ closed: of({ reason: 'Already listed.' }) });
-    (cards()[1]!.querySelector('.review-actions sd-button[variant="quiet"] button') as HTMLButtonElement).click();
+    (
+      cards()[1]!.querySelector(
+        '.review-actions sd-button[variant="quiet"] button',
+      ) as HTMLButtonElement
+    ).click();
     await settle();
     expect(dialog.open).toHaveBeenCalledWith(
       RejectSubmissionDialog,

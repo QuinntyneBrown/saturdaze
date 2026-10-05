@@ -35,12 +35,17 @@ describe('ErrandAddedDialog', () => {
   });
 
   it('says where the planner put the errand', () => {
-    expect(host.querySelector('.dialog__title')?.textContent?.trim()).toBe('Added to Sunday at 9:15');
+    expect(host.querySelector('.dialog__title')?.textContent?.trim()).toBe(
+      'Added to Sunday at 9:15',
+    );
     expect(host.querySelector('.dialog__sub')?.textContent?.trim()).toBe(
       'It sits around what was already planned.',
     );
     const rows = Array.from(host.querySelectorAll('sd-list-item'));
-    expect(rows.map((r) => r.getAttribute('title'))).toEqual(['Costco run', 'Sunday · 9:15 to 10:00']);
+    expect(rows.map((r) => r.getAttribute('title'))).toEqual([
+      'Costco run',
+      'Sunday · 9:15 to 10:00',
+    ]);
     expect(rows.map((r) => r.getAttribute('subtitle'))).toEqual(['What', 'When']);
   });
 

@@ -1,6 +1,10 @@
 <div class="page-header__text">
   @if (backHref()) {
-    <a class="page-header__eyebrow sd-hide-lt-720" [attr.href]="backHref()" (click)="onBack($event)">
+    <a
+      class="page-header__eyebrow sd-hide-lt-720"
+      [attr.href]="backHref()"
+      (click)="onBack($event)"
+    >
       <sd-icon name="arrow_left" [size]="16" />
       {{ backLabel() }}
     </a>

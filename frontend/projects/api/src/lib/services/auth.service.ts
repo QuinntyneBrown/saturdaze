@@ -218,9 +218,7 @@ export class AuthService implements IAuthService {
    */
   async forgotPassword(req: ForgotPasswordRequest): Promise<void> {
     try {
-      await firstValueFrom(
-        this.http.post<void>(`${this.baseUrl}/api/auth/forgot-password`, req),
-      );
+      await firstValueFrom(this.http.post<void>(`${this.baseUrl}/api/auth/forgot-password`, req));
     } catch (e) {
       rethrowAsAuthError(e);
     }
@@ -252,9 +250,7 @@ export class AuthService implements IAuthService {
    */
   async resetPassword(req: ResetPasswordRequest): Promise<void> {
     try {
-      await firstValueFrom(
-        this.http.post<void>(`${this.baseUrl}/api/auth/reset-password`, req),
-      );
+      await firstValueFrom(this.http.post<void>(`${this.baseUrl}/api/auth/reset-password`, req));
     } catch (e) {
       rethrowAsAuthError(e);
     }
@@ -269,9 +265,7 @@ export class AuthService implements IAuthService {
    */
   async verifyEmail(req: VerifyEmailRequest): Promise<void> {
     try {
-      await firstValueFrom(
-        this.http.post<void>(`${this.baseUrl}/api/auth/verify-email`, req),
-      );
+      await firstValueFrom(this.http.post<void>(`${this.baseUrl}/api/auth/verify-email`, req));
     } catch (e) {
       rethrowAsAuthError(e);
     }
@@ -284,9 +278,7 @@ export class AuthService implements IAuthService {
    */
   async me(): Promise<User> {
     try {
-      return await firstValueFrom(
-        this.http.get<User>(`${this.baseUrl}/api/auth/me`),
-      );
+      return await firstValueFrom(this.http.get<User>(`${this.baseUrl}/api/auth/me`));
     } catch (e) {
       rethrowAsAuthError(e);
     }

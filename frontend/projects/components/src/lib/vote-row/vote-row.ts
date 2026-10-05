@@ -1,10 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  booleanAttribute,
-  input,
-  output,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, booleanAttribute, input, output } from '@angular/core';
 
 import { Avatar, AvatarTone } from '../avatar/avatar';
 import { Icon } from '../icon/icon';

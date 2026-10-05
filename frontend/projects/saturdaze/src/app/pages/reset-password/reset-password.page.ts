@@ -11,16 +11,7 @@ import {
 import { ActivatedRoute, RouterLink } from '@angular/router';
 
 import { AuthError, SESSION_STORE } from 'api';
-import {
-  AuthCard,
-  AuthShell,
-  Banner,
-  Button,
-  Disc,
-  Icon,
-  Strength,
-  TextInput,
-} from 'components';
+import { AuthCard, AuthShell, Banner, Button, Disc, Icon, Strength, TextInput } from 'components';
 
 import { devState } from '../../shared/dev-state';
 import { maskEmail } from '../../shared/mask-email';
@@ -47,7 +38,18 @@ const STATES: readonly ResetState[] = ['request', 'sent', 'new', 'done', 'expire
 @Component({
   selector: 'app-reset-password',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink, AuthShell, AuthCard, Banner, Button, Disc, Icon, Strength, TextInput],
+  imports: [
+    ReactiveFormsModule,
+    RouterLink,
+    AuthShell,
+    AuthCard,
+    Banner,
+    Button,
+    Disc,
+    Icon,
+    Strength,
+    TextInput,
+  ],
   templateUrl: './reset-password.page.html',
   styleUrl: './reset-password.page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

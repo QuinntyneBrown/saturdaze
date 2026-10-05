@@ -13,7 +13,9 @@ describe('app.routes', () => {
     for (const route of routes) {
       expect(route.path).toBeDefined();
       const hasTarget =
-        route.loadComponent !== undefined || route.children !== undefined || route.redirectTo !== undefined;
+        route.loadComponent !== undefined ||
+        route.children !== undefined ||
+        route.redirectTo !== undefined;
       expect(hasTarget, route.path).toBe(true);
     }
   });
@@ -66,7 +68,11 @@ describe('app.routes', () => {
 
   it('carries the shell data the app chrome reads', () => {
     expect(find('')?.data).toEqual({ shell: 'site', cta: true, page: 'landing' });
-    expect(find('sample-weekend')?.data).toEqual({ shell: 'site', cta: true, page: 'shared-weekend' });
+    expect(find('sample-weekend')?.data).toEqual({
+      shell: 'site',
+      cta: true,
+      page: 'shared-weekend',
+    });
     expect(find('legal')?.data).toEqual({ shell: 'site', page: 'legal' });
     for (const path of ['sign-in', 'create-account', 'reset-password', 'verify-email']) {
       expect(find(path)?.data?.['shell'], path).toBe('bare');

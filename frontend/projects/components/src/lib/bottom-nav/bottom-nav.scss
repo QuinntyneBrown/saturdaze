@@ -1,4 +1,4 @@
-@use "../styles/breakpoints" as *;
+@use '../styles/breakpoints' as *;
 
 // `.bottom-nav` from docs/mocks-v2/styles/app.css — the host is the nav.
 
@@ -58,11 +58,11 @@
   border-radius: var(--sd-r-pill);
 }
 
-.bottom-nav__item[aria-current="page"] {
+.bottom-nav__item[aria-current='page'] {
   color: var(--sd-ink);
 }
 
-.bottom-nav__item[aria-current="page"] .bottom-nav__icon {
+.bottom-nav__item[aria-current='page'] .bottom-nav__icon {
   background: var(--sd-primary-soft);
   color: var(--sd-primary);
 }

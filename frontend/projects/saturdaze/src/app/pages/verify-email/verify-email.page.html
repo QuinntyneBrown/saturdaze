@@ -3,7 +3,14 @@
     @case ('sent') {
       <sd-auth-card title="Check your email" [subtitle]="sentSubtitle()" center>
         <sd-disc slot="disc" icon="mail" tone="primary" size="xl" />
-        <sd-button variant="quiet" size="lg" full type="button" [disabled]="busy() || resent()" (click)="resend()">
+        <sd-button
+          variant="quiet"
+          size="lg"
+          full
+          type="button"
+          [disabled]="busy() || resent()"
+          (click)="resend()"
+        >
           <sd-icon name="refresh" />
           {{ resent() ? 'Sent' : 'Resend' }}
         </sd-button>
@@ -13,11 +20,17 @@
     @case ('verifying') {
       <sd-auth-card title="Verifying your email" subtitle="One moment." center>
         <sd-spinner slot="disc" icon="mail" />
-        <span class="sd-visually-hidden" role="status" aria-live="polite">Verifying your email</span>
+        <span class="sd-visually-hidden" role="status" aria-live="polite"
+          >Verifying your email</span
+        >
       </sd-auth-card>
     }
     @case ('verified') {
-      <sd-auth-card title="You are verified" subtitle="Tell us about your family and the first weekend follows." center>
+      <sd-auth-card
+        title="You are verified"
+        subtitle="Tell us about your family and the first weekend follows."
+        center
+      >
         <sd-disc slot="disc" icon="check" tone="accent" size="xl" />
         <sd-button variant="primary" size="lg" full href="/family">
           <sd-icon name="user" />
@@ -27,9 +40,20 @@
       </sd-auth-card>
     }
     @case ('expired') {
-      <sd-auth-card title="This link has expired" subtitle="Verification links last 24 hours." center>
+      <sd-auth-card
+        title="This link has expired"
+        subtitle="Verification links last 24 hours."
+        center
+      >
         <sd-disc slot="disc" icon="key" tone="warn" size="xl" />
-        <sd-button variant="primary" size="lg" full type="button" [disabled]="busy() || resent() || !email()" (click)="resend()">
+        <sd-button
+          variant="primary"
+          size="lg"
+          full
+          type="button"
+          [disabled]="busy() || resent() || !email()"
+          (click)="resend()"
+        >
           <sd-icon name="mail" />
           {{ resent() ? 'Sent' : 'Resend verification email' }}
         </sd-button>

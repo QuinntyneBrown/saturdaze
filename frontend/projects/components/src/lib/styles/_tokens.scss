@@ -9,42 +9,42 @@
 
 :root {
   // Colour — warm, family, sun-dappled. Calm not corporate.
-  --sd-bg:           #FAF7F2;   // warm cream, like a kitchen mid-morning
-  --sd-bg-elev:      #FFFFFF;
-  --sd-surface:      #FFFFFF;
-  --sd-surface-2:    #F3EFE8;   // recessed wells, locked blocks
-  --sd-ink:          #1F2937;
-  --sd-ink-soft:     #6B7280;
-  --sd-ink-faint:    #9CA3AF;
-  --sd-line:         rgba(31, 41, 55, 0.08);
-  --sd-line-strong:  rgba(31, 41, 55, 0.16);
+  --sd-bg: #faf7f2; // warm cream, like a kitchen mid-morning
+  --sd-bg-elev: #ffffff;
+  --sd-surface: #ffffff;
+  --sd-surface-2: #f3efe8; // recessed wells, locked blocks
+  --sd-ink: #1f2937;
+  --sd-ink-soft: #6b7280;
+  --sd-ink-faint: #9ca3af;
+  --sd-line: rgba(31, 41, 55, 0.08);
+  --sd-line-strong: rgba(31, 41, 55, 0.16);
 
-  --sd-primary:      #E07856;   // warm coral — the one coral button per screen
-  --sd-primary-ink:  #FFFFFF;
-  --sd-primary-soft: #FBE7DE;
-  --sd-primary-deep: #A04B2C;   // coral text that passes AA on primary-soft
+  --sd-primary: #e07856; // warm coral — the one coral button per screen
+  --sd-primary-ink: #ffffff;
+  --sd-primary-soft: #fbe7de;
+  --sd-primary-deep: #a04b2c; // coral text that passes AA on primary-soft
 
-  --sd-accent:       #2D7D5F;   // forest green — "locked", confirmed
-  --sd-accent-soft:  #DEEDE5;
+  --sd-accent: #2d7d5f; // forest green — "locked", confirmed
+  --sd-accent-soft: #deede5;
 
-  --sd-warn:         #C45A3F;   // gentle warning, not alarming
-  --sd-warn-soft:    #FADFD6;
-  --sd-warn-deep:    #8F3D27;
+  --sd-warn: #c45a3f; // gentle warning, not alarming
+  --sd-warn-soft: #fadfd6;
+  --sd-warn-deep: #8f3d27;
 
-  --sd-sun:          #F4C969;   // sunny chip / weather
-  --sd-sky:          #BFD9E8;   // cool weather chip
-  --sd-leaf:         #A9C9A4;   // outdoor chip
-  --sd-indoor:       #C9B6E0;   // indoor chip
+  --sd-sun: #f4c969; // sunny chip / weather
+  --sd-sky: #bfd9e8; // cool weather chip
+  --sd-leaf: #a9c9a4; // outdoor chip
+  --sd-indoor: #c9b6e0; // indoor chip
 
   // Tone pairs — the soft fill + ink used by chips, discs and avatars.
-  --sd-sun-soft:     #FBEBC4;
-  --sd-sun-ink:      #8A6212;
-  --sd-sky-soft:     #DCE9F1;
-  --sd-sky-ink:      #2C5F7A;
-  --sd-leaf-soft:    #DDEEDA;
-  --sd-leaf-ink:     #2D7D5F;
-  --sd-indoor-soft:  #EADFF4;
-  --sd-indoor-ink:   #5A3B82;
+  --sd-sun-soft: #fbebc4;
+  --sd-sun-ink: #8a6212;
+  --sd-sky-soft: #dce9f1;
+  --sd-sky-ink: #2c5f7a;
+  --sd-leaf-soft: #ddeeda;
+  --sd-leaf-ink: #2d7d5f;
+  --sd-indoor-soft: #eadff4;
+  --sd-indoor-ink: #5a3b82;
 
   // Brand art — the warm gradient behind the landing hero and first-run card.
   --sd-warm-gradient:
@@ -52,25 +52,26 @@
     radial-gradient(80% 60% at 100% 0%, var(--sd-sun-soft) 0%, transparent 60%);
 
   // Typography — sans-serif system stack. Nothing web-loads Inter on purpose.
-  --sd-font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
-                  Roboto, "Helvetica Neue", Arial, sans-serif;
+  --sd-font-sans:
+    'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
+    sans-serif;
 
-  --sd-fs-xs:   12px;
-  --sd-fs-sm:   13px;
+  --sd-fs-xs: 12px;
+  --sd-fs-sm: 13px;
   --sd-fs-base: 15px;
-  --sd-fs-md:   17px;
-  --sd-fs-lg:   20px;
-  --sd-fs-xl:   26px;
-  --sd-fs-xxl:  34px;
+  --sd-fs-md: 17px;
+  --sd-fs-lg: 20px;
+  --sd-fs-xl: 26px;
+  --sd-fs-xxl: 34px;
 
   --sd-lh-tight: 1.2;
-  --sd-lh-snug:  1.35;
-  --sd-lh-base:  1.5;
+  --sd-lh-snug: 1.35;
+  --sd-lh-base: 1.5;
 
-  --sd-fw-regular:  400;
-  --sd-fw-medium:   500;
+  --sd-fw-regular: 400;
+  --sd-fw-medium: 500;
   --sd-fw-semibold: 600;
-  --sd-fw-bold:     700;
+  --sd-fw-bold: 700;
 
   // Spacing — 4px base.
   --sd-s-0: 0;
@@ -85,35 +86,33 @@
   --sd-s-9: 56px;
 
   // Radius.
-  --sd-r-sm:   8px;
-  --sd-r-md:   12px;
-  --sd-r-lg:   16px;
-  --sd-r-xl:   22px;
+  --sd-r-sm: 8px;
+  --sd-r-md: 12px;
+  --sd-r-lg: 16px;
+  --sd-r-xl: 22px;
   --sd-r-pill: 999px;
 
   // Elevation — soft, paper-like.
-  --sd-shadow-1: 0 1px 2px rgba(31, 41, 55, 0.04),
-                 0 2px 6px rgba(31, 41, 55, 0.04);
-  --sd-shadow-2: 0 4px 10px rgba(31, 41, 55, 0.06),
-                 0 10px 24px rgba(31, 41, 55, 0.06);
+  --sd-shadow-1: 0 1px 2px rgba(31, 41, 55, 0.04), 0 2px 6px rgba(31, 41, 55, 0.04);
+  --sd-shadow-2: 0 4px 10px rgba(31, 41, 55, 0.06), 0 10px 24px rgba(31, 41, 55, 0.06);
   --sd-shadow-3: 0 20px 40px rgba(31, 41, 55, 0.12);
 
   // Motion.
-  --sd-ease:      cubic-bezier(0.2, 0.7, 0.2, 1);
-  --sd-dur-fast:  120ms;
-  --sd-dur-base:  220ms;
+  --sd-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --sd-dur-fast: 120ms;
+  --sd-dur-base: 220ms;
 
   // Layout (v2): a full-width web app, 1120px reading width, no phone canvas.
   --sd-content-max-w: 1120px;
-  --sd-stack-max-w:   720px;
-  --sd-gutter:        16px;
-  --sd-topbar-h:      64px;   // ≥720px sticky top bar
-  --sd-bottom-nav-h:  60px;   // <720px floating bottom nav
+  --sd-stack-max-w: 720px;
+  --sd-gutter: 16px;
+  --sd-topbar-h: 64px; // ≥720px sticky top bar
+  --sd-bottom-nav-h: 60px; // <720px floating bottom nav
 
   // z ladder (the CDK overlay keeps its own 1000).
   --sd-z-sticky: 5;
   --sd-z-topbar: 20;
-  --sd-z-nav:    30;
+  --sd-z-nav: 30;
 
   // Focus.
   --sd-focus-ring: 2px solid var(--sd-primary);

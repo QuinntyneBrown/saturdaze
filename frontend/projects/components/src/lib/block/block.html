@@ -16,7 +16,12 @@
 </div>
 <div class="block__actions"><ng-content select="[slot=actions]" /></div>
 @if (!drive() && !readonly()) {
-  <button class="block__chev" type="button" [attr.aria-label]="'Details for ' + blockTitle()" (click)="details.emit()">
+  <button
+    class="block__chev"
+    type="button"
+    [attr.aria-label]="'Details for ' + blockTitle()"
+    (click)="details.emit()"
+  >
     <sd-icon name="chevron_right" [size]="16" />
   </button>
 }

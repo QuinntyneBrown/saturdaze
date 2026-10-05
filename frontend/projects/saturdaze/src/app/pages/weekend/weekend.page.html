@@ -1,6 +1,13 @@
 <sd-page-header [title]="headline()" [subtitle]="subtitle()">
   @if (status() !== 'empty') {
-    <sd-button slot="more" variant="quiet" icon label="More options" [disabled]="!actionsEnabled()" (click)="more($event)">
+    <sd-button
+      slot="more"
+      variant="quiet"
+      icon
+      label="More options"
+      [disabled]="!actionsEnabled()"
+      (click)="more($event)"
+    >
       <sd-icon name="more" />
     </sd-button>
   }
@@ -35,7 +42,9 @@
     </div>
   }
   @case ('generating') {
-    <sd-status-row class="status" icon="sparkle">Working through your locks, the forecast and past weekends.</sd-status-row>
+    <sd-status-row class="status" icon="sparkle"
+      >Working through your locks, the forecast and past weekends.</sd-status-row
+    >
     <div class="sd-grid-days" aria-busy="true">
       @for (day of days; track day) {
         <sd-day [title]="day" [actions]="false">
@@ -114,12 +123,26 @@
                   </sd-chip>
                 }
                 @if (!block.drive) {
-                  <sd-button slot="actions" variant="ghost" size="sm" icon [label]="whyLabel(block)" (click)="blockDetails(block)">
+                  <sd-button
+                    slot="actions"
+                    variant="ghost"
+                    size="sm"
+                    icon
+                    [label]="whyLabel(block)"
+                    (click)="blockDetails(block)"
+                  >
                     <sd-icon name="sparkle" />
                   </sd-button>
                 }
                 @if (block.swappable) {
-                  <sd-button slot="actions" variant="ghost" size="sm" icon [label]="'Swap ' + block.title" (click)="swapBlock(block)">
+                  <sd-button
+                    slot="actions"
+                    variant="ghost"
+                    size="sm"
+                    icon
+                    [label]="'Swap ' + block.title"
+                    (click)="swapBlock(block)"
+                  >
                     <sd-icon name="swap" />
                   </sd-button>
                 }
@@ -152,7 +175,9 @@
               </sd-block>
             }
           }
-          <sd-ghost-row slot="footer" icon="bag" (pressed)="addErrand()">Add an errand</sd-ghost-row>
+          <sd-ghost-row slot="footer" icon="bag" (pressed)="addErrand()"
+            >Add an errand</sd-ghost-row
+          >
         </sd-day>
       }
     </div>

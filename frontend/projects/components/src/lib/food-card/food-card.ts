@@ -1,10 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  booleanAttribute,
-  input,
-  output,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, booleanAttribute, input, output } from '@angular/core';
 
 import { Button } from '../button/button';
 import { Chip } from '../chip/chip';

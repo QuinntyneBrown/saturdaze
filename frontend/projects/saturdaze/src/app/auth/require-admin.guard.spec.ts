@@ -10,9 +10,18 @@ describe('requireAdmin', () => {
   let router: Router;
 
   const run = () => {
-    const route = { paramMap: convertToParamMap({}), queryParamMap: convertToParamMap({}), params: {}, queryParams: {}, data: {}, url: [] } as any;
+    const route = {
+      paramMap: convertToParamMap({}),
+      queryParamMap: convertToParamMap({}),
+      params: {},
+      queryParams: {},
+      data: {},
+      url: [],
+    } as any;
     return TestBed.runInInjectionContext(() =>
-      (requireAdmin as unknown as (...args: any[]) => unknown)(route, { url: '/admin/events' } as any),
+      (requireAdmin as unknown as (...args: any[]) => unknown)(route, {
+        url: '/admin/events',
+      } as any),
     );
   };
 

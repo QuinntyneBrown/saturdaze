@@ -10,7 +10,11 @@ export interface SampleBlock {
   readonly commitment?: boolean;
   readonly drive?: boolean;
   readonly errand?: boolean;
-  readonly chips?: readonly { readonly tone: 'accent' | 'primary' | 'sky' | 'indoor'; readonly icon?: string; readonly label: string }[];
+  readonly chips?: readonly {
+    readonly tone: 'accent' | 'primary' | 'sky' | 'indoor';
+    readonly icon?: string;
+    readonly label: string;
+  }[];
 }
 
 export interface SampleDay {
@@ -58,7 +62,13 @@ export const LANDING_SAMPLE: readonly SampleDay[] = [
     meta: '18 May · 18° / 12° · Cloudy by 2pm',
     weather: 'cloud',
     blocks: [
-      { time: '8:30', duration: '45m', icon: 'home', title: 'Pancakes at home', subtitle: 'Mae flips, Eli pours' },
+      {
+        time: '8:30',
+        duration: '45m',
+        icon: 'home',
+        title: 'Pancakes at home',
+        subtitle: 'Mae flips, Eli pours',
+      },
       {
         time: '9:15',
         duration: '45m',

@@ -96,7 +96,8 @@ describe('IdeasFoodPage', () => {
     Array.from(host.querySelectorAll('sd-filter-chip'))
       .find((c) => c.textContent?.trim() === label)!
       .querySelector('button') as HTMLButtonElement;
-  const card = (title: string): HTMLElement => host.querySelector(`sd-food-card[title="${title}"]`) as HTMLElement;
+  const card = (title: string): HTMLElement =>
+    host.querySelector(`sd-food-card[title="${title}"]`) as HTMLElement;
 
   it('loads both days on construction and renders the three chip rows', () => {
     expect(service.load).toHaveBeenCalledTimes(1);
@@ -109,7 +110,14 @@ describe('IdeasFoodPage', () => {
       'Wife-approved',
       'Under 15 min',
     ]);
-    expect(chips.map((c) => c.hasAttribute('pressed'))).toEqual([true, false, false, true, false, true]);
+    expect(chips.map((c) => c.hasAttribute('pressed'))).toEqual([
+      true,
+      false,
+      false,
+      true,
+      false,
+      true,
+    ]);
     expect(host.querySelectorAll('.sd-vdivider').length).toBe(2);
   });
 
@@ -120,14 +128,14 @@ describe('IdeasFoodPage', () => {
     expect(card('La Marina').hasAttribute('top-pick')).toBe(true);
     expect(card('La Marina').classList.contains('card--span')).toBe(true);
     expect(card('Pizza Nova').hasAttribute('top-pick')).toBe(false);
-    expect(Array.from(card('La Marina').querySelectorAll('sd-chip')).map((c) => c.textContent?.trim())).toEqual([
-      'Top pick',
-      'Wife-approved',
-      '3 of 4 yes',
-    ]);
+    expect(
+      Array.from(card('La Marina').querySelectorAll('sd-chip')).map((c) => c.textContent?.trim()),
+    ).toEqual(['Top pick', 'Wife-approved', '3 of 4 yes']);
     expect(card('La Marina').querySelectorAll('.vote-row__cell').length).toBe(2);
     expect(card('Pizza Nova').querySelector('sd-vote-row')).toBeNull();
-    expect(card('La Marina').querySelector('a[href="https://example.com/la-marina/menu"]')).not.toBeNull();
+    expect(
+      card('La Marina').querySelector('a[href="https://example.com/la-marina/menu"]'),
+    ).not.toBeNull();
   });
 
   it('changes the day, toggles the slot and the extras', () => {
@@ -144,18 +152,26 @@ describe('IdeasFoodPage', () => {
   });
 
   it('casts a family vote by name, clearing it when the same thumb is pressed again', async () => {
-    (card('La Marina').querySelector('button[aria-label="Sara votes no"]') as HTMLButtonElement).click();
+    (
+      card('La Marina').querySelector('button[aria-label="Sara votes no"]') as HTMLButtonElement
+    ).click();
     await settle();
     expect(service.vote).toHaveBeenCalledWith('r-la-marina', 'Sara', 'down');
 
-    (card('La Marina').querySelector('button[aria-label="Quinn votes yes"]') as HTMLButtonElement).click();
+    (
+      card('La Marina').querySelector('button[aria-label="Quinn votes yes"]') as HTMLButtonElement
+    ).click();
     await settle();
     expect(service.vote).toHaveBeenLastCalledWith('r-la-marina', 'Quinn', 'none');
   });
 
   it('locks a pick for the section day and meal after D12 confirms', async () => {
     dialog.open.mockReturnValueOnce({ closed: of('confirm') });
-    (card('La Marina').querySelector('.card__footer sd-button[variant="primary"] button') as HTMLButtonElement).click();
+    (
+      card('La Marina').querySelector(
+        '.card__footer sd-button[variant="primary"] button',
+      ) as HTMLButtonElement
+    ).click();
     await settle();
     expect(dialog.open).toHaveBeenCalledWith(
       LockRestaurantDialog,
@@ -163,7 +179,11 @@ describe('IdeasFoodPage', () => {
     );
     expect(service.lock).toHaveBeenCalledWith('r-la-marina', 'Saturday', 'Lunch');
 
-    (card('Pizza Nova').querySelector('.card__footer sd-button[variant="primary"] button') as HTMLButtonElement).click();
+    (
+      card('Pizza Nova').querySelector(
+        '.card__footer sd-button[variant="primary"] button',
+      ) as HTMLButtonElement
+    ).click();
     await settle();
     expect(service.lock).toHaveBeenCalledTimes(1);
   });
@@ -171,7 +191,9 @@ describe('IdeasFoodPage', () => {
   it('shows a warn banner when a vote fails', async () => {
     const consoleError = vi.spyOn(console, 'error').mockImplementation(() => undefined);
     service.vote.mockRejectedValueOnce(new Error('500'));
-    (card('La Marina').querySelector('button[aria-label="Sara votes yes"]') as HTMLButtonElement).click();
+    (
+      card('La Marina').querySelector('button[aria-label="Sara votes yes"]') as HTMLButtonElement
+    ).click();
     await settle();
     fixture.detectChanges();
     expect(host.querySelector('sd-banner.error')?.textContent?.trim()).toBe(
@@ -183,6 +205,8 @@ describe('IdeasFoodPage', () => {
   it('shows a status row while there are no sections', () => {
     view.set({ ...VIEW, sections: [] });
     fixture.detectChanges();
-    expect(host.querySelector('sd-status-row')?.textContent?.trim()).toBe('Finding places to eat near your weekend.');
+    expect(host.querySelector('sd-status-row')?.textContent?.trim()).toBe(
+      'Finding places to eat near your weekend.',
+    );
   });
 });

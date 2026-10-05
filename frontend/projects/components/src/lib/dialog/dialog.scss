@@ -1,4 +1,4 @@
-@use "../styles/breakpoints" as *;
+@use '../styles/breakpoints' as *;
 
 // `.dialog__*` from docs/mocks-v2/styles/app.css. The CDK overlay owns the
 // scrim and positioning (`.sd-dialog-panel` in the app's styles.scss); this
@@ -29,7 +29,7 @@
 }
 
 .dialog__panel::before {
-  content: "";
+  content: '';
   width: 36px;
   height: 4px;
   border-radius: var(--sd-r-pill);

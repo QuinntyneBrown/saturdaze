@@ -30,18 +30,42 @@
   --_size: 14px;
 }
 
-.filter-chip[aria-pressed="true"] {
+.filter-chip[aria-pressed='true'] {
   background: var(--sd-ink);
   border-color: var(--sd-ink);
   color: #fff;
 }
 
-.filter-chip--leaf[aria-pressed="true"] { background: var(--sd-leaf-soft); border-color: var(--sd-leaf-soft); color: var(--sd-leaf-ink); }
-.filter-chip--indoor[aria-pressed="true"] { background: var(--sd-indoor-soft); border-color: var(--sd-indoor-soft); color: var(--sd-indoor-ink); }
-.filter-chip--sky[aria-pressed="true"] { background: var(--sd-sky-soft); border-color: var(--sd-sky-soft); color: var(--sd-sky-ink); }
-.filter-chip--sun[aria-pressed="true"] { background: var(--sd-sun-soft); border-color: var(--sd-sun-soft); color: var(--sd-sun-ink); }
-.filter-chip--accent[aria-pressed="true"] { background: var(--sd-accent-soft); border-color: var(--sd-accent-soft); color: var(--sd-accent); }
-.filter-chip--primary[aria-pressed="true"] { background: var(--sd-primary-soft); border-color: var(--sd-primary-soft); color: var(--sd-primary-deep); }
+.filter-chip--leaf[aria-pressed='true'] {
+  background: var(--sd-leaf-soft);
+  border-color: var(--sd-leaf-soft);
+  color: var(--sd-leaf-ink);
+}
+.filter-chip--indoor[aria-pressed='true'] {
+  background: var(--sd-indoor-soft);
+  border-color: var(--sd-indoor-soft);
+  color: var(--sd-indoor-ink);
+}
+.filter-chip--sky[aria-pressed='true'] {
+  background: var(--sd-sky-soft);
+  border-color: var(--sd-sky-soft);
+  color: var(--sd-sky-ink);
+}
+.filter-chip--sun[aria-pressed='true'] {
+  background: var(--sd-sun-soft);
+  border-color: var(--sd-sun-soft);
+  color: var(--sd-sun-ink);
+}
+.filter-chip--accent[aria-pressed='true'] {
+  background: var(--sd-accent-soft);
+  border-color: var(--sd-accent-soft);
+  color: var(--sd-accent);
+}
+.filter-chip--primary[aria-pressed='true'] {
+  background: var(--sd-primary-soft);
+  border-color: var(--sd-primary-soft);
+  color: var(--sd-primary-deep);
+}
 
 .filter-chip[disabled] {
   opacity: 0.5;
@@ -49,7 +73,7 @@
 }
 
 @media (hover: hover) {
-  .filter-chip:not([aria-pressed="true"]):hover {
+  .filter-chip:not([aria-pressed='true']):hover {
     border-color: var(--sd-ink-faint);
     color: var(--sd-ink);
   }

@@ -58,12 +58,8 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
   const withBearer = (r: HttpRequest<unknown>, retried = false): HttpRequest<unknown> => {
     const token = session.token();
-    const cloned = token
-      ? r.clone({ setHeaders: { Authorization: `Bearer ${token.value}` } })
-      : r;
-    return retried
-      ? cloned.clone({ context: cloned.context.set(AUTH_RETRIED, true) })
-      : cloned;
+    const cloned = token ? r.clone({ setHeaders: { Authorization: `Bearer ${token.value}` } }) : r;
+    return retried ? cloned.clone({ context: cloned.context.set(AUTH_RETRIED, true) }) : cloned;
   };
 
   const bounceToLogin = (): void => {

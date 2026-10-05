@@ -52,7 +52,12 @@ describe('LikesDialog', () => {
   it('saves both lists', () => {
     component['likes'].set(['Parks']);
     component['dislikes'].set(['Camping', 'Long drives']);
-    (host.querySelector('sd-button[slot="actions"][variant="primary"] button') as HTMLButtonElement).click();
-    expect(dialogRef.close).toHaveBeenCalledWith({ likes: ['Parks'], dislikes: ['Camping', 'Long drives'] });
+    (
+      host.querySelector('sd-button[slot="actions"][variant="primary"] button') as HTMLButtonElement
+    ).click();
+    expect(dialogRef.close).toHaveBeenCalledWith({
+      likes: ['Parks'],
+      dislikes: ['Camping', 'Long drives'],
+    });
   });
 });

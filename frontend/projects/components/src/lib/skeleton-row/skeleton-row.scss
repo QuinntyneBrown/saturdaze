@@ -17,7 +17,7 @@
 }
 
 .skeleton::after {
-  content: "";
+  content: '';
   position: absolute;
   inset: 0;
   transform: translateX(-100%);
@@ -25,10 +25,24 @@
   animation: sd-shimmer 1.4s var(--sd-ease) infinite;
 }
 
-.skeleton--time { height: 12px; width: 36px; margin-left: auto; }
-.skeleton--disc { width: 32px; height: 32px; border-radius: 50%; }
-.skeleton--text { height: 12px; width: 60%; }
-.skeleton--text-sm { height: 10px; width: 40%; }
+.skeleton--time {
+  height: 12px;
+  width: 36px;
+  margin-left: auto;
+}
+.skeleton--disc {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+}
+.skeleton--text {
+  height: 12px;
+  width: 60%;
+}
+.skeleton--text-sm {
+  height: 10px;
+  width: 40%;
+}
 
 .skeleton-row__body {
   display: flex;

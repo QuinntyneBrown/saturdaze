@@ -5,7 +5,13 @@
     </sd-list-item>
   </sd-list>
   <sd-button slot="actions" variant="quiet" type="button" (click)="cancel()">Cancel</sd-button>
-  <sd-button slot="actions" variant="primary" [href]="calendar.icsUrl" target="_blank" (click)="downloaded()">
+  <sd-button
+    slot="actions"
+    variant="primary"
+    [href]="calendar.icsUrl"
+    target="_blank"
+    (click)="downloaded()"
+  >
     <sd-icon name="calendar" />
     Download .ics
   </sd-button>

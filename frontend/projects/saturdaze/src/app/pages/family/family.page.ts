@@ -42,11 +42,31 @@ import {
   FamilyMemberDialogData,
   FamilyMemberDialogResult,
 } from '../../dialogs/family-member-dialog/family-member-dialog';
-import { HomeLocationDialog, HomeLocationDialogData } from '../../dialogs/home-location-dialog/home-location-dialog';
-import { LikesDialog, LikesDialogData, LikesDialogResult } from '../../dialogs/likes-dialog/likes-dialog';
+import {
+  HomeLocationDialog,
+  HomeLocationDialogData,
+} from '../../dialogs/home-location-dialog/home-location-dialog';
+import {
+  LikesDialog,
+  LikesDialogData,
+  LikesDialogResult,
+} from '../../dialogs/likes-dialog/likes-dialog';
 import { signOutWith } from '../../shared/sign-out';
 
-const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+const MONTHS = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
+];
 
 function weekendDayOf(day: CommitmentRow['dayOfWeek']): WeekendDay | null {
   return day === 'Saturday' || day === 'Sunday' ? day : null;
@@ -116,7 +136,10 @@ export class FamilyPage {
   protected async addMember(): Promise<void> {
     const result = await this.openMember({ mode: 'add', existingNames: this.memberNames() });
     if (result?.kind !== 'save') return;
-    await this.save((p) => ({ ...p, members: [...p.members, { name: result.name, age: result.age }] }));
+    await this.save((p) => ({
+      ...p,
+      members: [...p.members, { name: result.name, age: result.age }],
+    }));
   }
 
   protected async editMember(member: MemberRow): Promise<void> {
@@ -140,14 +163,19 @@ export class FamilyPage {
     }
     await this.save((p) => ({
       ...p,
-      members: p.members.map((m) => (m.id === member.id ? { ...m, name: result.name, age: result.age } : m)),
+      members: p.members.map((m) =>
+        m.id === member.id ? { ...m, name: result.name, age: result.age } : m,
+      ),
     }));
   }
 
   // ---- commitments ----------------------------------------------------
 
   protected async addCommitment(): Promise<void> {
-    const result = await this.openCommitment({ mode: 'add', siblings: this.commitmentSiblings(null) });
+    const result = await this.openCommitment({
+      mode: 'add',
+      siblings: this.commitmentSiblings(null),
+    });
     if (result?.kind !== 'save') return;
     await this.save((p) => ({
       ...p,
@@ -184,7 +212,10 @@ export class FamilyPage {
         icon: 'trash',
       });
       if (!ok) return;
-      await this.save((p) => ({ ...p, commitments: p.commitments.filter((c) => c.id !== commitment.id) }));
+      await this.save((p) => ({
+        ...p,
+        commitments: p.commitments.filter((c) => c.id !== commitment.id),
+      }));
       return;
     }
     await this.save((p) => ({
@@ -255,21 +286,30 @@ export class FamilyPage {
     return this.view().members.map((m) => m.name);
   }
 
-  private commitmentSiblings(excludeId: string | null): { title: string; day: WeekendDay | null }[] {
+  private commitmentSiblings(
+    excludeId: string | null,
+  ): { title: string; day: WeekendDay | null }[] {
     return this.view()
       .commitments.filter((c) => c.id !== excludeId)
       .map((c) => ({ title: c.title, day: weekendDayOf(c.dayOfWeek) }));
   }
 
-  private async openMember(data: FamilyMemberDialogData): Promise<FamilyMemberDialogResult | undefined> {
-    const ref = this.dialog.open<FamilyMemberDialogResult, FamilyMemberDialogData>(FamilyMemberDialog, {
-      ...DIALOG_OPTIONS,
-      data,
-    });
+  private async openMember(
+    data: FamilyMemberDialogData,
+  ): Promise<FamilyMemberDialogResult | undefined> {
+    const ref = this.dialog.open<FamilyMemberDialogResult, FamilyMemberDialogData>(
+      FamilyMemberDialog,
+      {
+        ...DIALOG_OPTIONS,
+        data,
+      },
+    );
     return await firstValueFrom(ref.closed);
   }
 
-  private async openCommitment(data: CommitmentDialogData): Promise<CommitmentDialogResult | undefined> {
+  private async openCommitment(
+    data: CommitmentDialogData,
+  ): Promise<CommitmentDialogResult | undefined> {
     const ref = this.dialog.open<CommitmentDialogResult, CommitmentDialogData>(CommitmentDialog, {
       ...DIALOG_OPTIONS,
       data,

@@ -1,4 +1,8 @@
-<sd-dialog title="Suggest an event" subtitle="Title and time are all we need. The rest helps families decide." wide>
+<sd-dialog
+  title="Suggest an event"
+  subtitle="Title and time are all we need. The rest helps families decide."
+  wide
+>
   <form class="form" (submit)="submit($event)">
     <sd-text-input
       label="Title"
@@ -43,8 +47,20 @@
       (ngModelChange)="description.set($event)"
     />
     <div class="row-2">
-      <sd-text-input label="Cost" name="costNote" placeholder="Free" [ngModel]="costNote()" (ngModelChange)="costNote.set($event)" />
-      <sd-text-input label="Ages" name="ageRange" placeholder="All ages" [ngModel]="ageRange()" (ngModelChange)="ageRange.set($event)" />
+      <sd-text-input
+        label="Cost"
+        name="costNote"
+        placeholder="Free"
+        [ngModel]="costNote()"
+        (ngModelChange)="costNote.set($event)"
+      />
+      <sd-text-input
+        label="Ages"
+        name="ageRange"
+        placeholder="All ages"
+        [ngModel]="ageRange()"
+        (ngModelChange)="ageRange.set($event)"
+      />
     </div>
     <sd-text-input
       label="Link"
@@ -59,7 +75,13 @@
   </form>
 
   <sd-button slot="actions" variant="quiet" type="button" (click)="cancel()">Cancel</sd-button>
-  <sd-button slot="actions" variant="primary" type="button" [disabled]="!canSubmit()" (click)="submit()">
+  <sd-button
+    slot="actions"
+    variant="primary"
+    type="button"
+    [disabled]="!canSubmit()"
+    (click)="submit()"
+  >
     Submit
   </sd-button>
 </sd-dialog>

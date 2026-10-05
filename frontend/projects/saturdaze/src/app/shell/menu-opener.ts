@@ -77,7 +77,9 @@ export class MenuOpener {
       overlayRef.detachments().subscribe(() => finish());
 
       queueMicrotask(() => {
-        const first = ref.location.nativeElement.querySelector('[role="menuitem"]') as HTMLElement | null;
+        const first = ref.location.nativeElement.querySelector(
+          '[role="menuitem"]',
+        ) as HTMLElement | null;
         first?.focus();
       });
     });

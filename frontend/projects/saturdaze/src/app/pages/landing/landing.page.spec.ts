@@ -23,7 +23,9 @@ describe('LandingPage', () => {
     expect(title?.textContent).toContain('Two days.');
     expect(title?.textContent).toContain('Already planned.');
     expect(title?.querySelector('br')).not.toBeNull();
-    expect(host.querySelector('.hero__eyebrow')?.textContent?.trim()).toBe('Weekends, drafted for your family');
+    expect(host.querySelector('.hero__eyebrow')?.textContent?.trim()).toBe(
+      'Weekends, drafted for your family',
+    );
     const cta = host.querySelector('.hero__cta sd-button a');
     expect(cta?.getAttribute('href')).toBe('/create-account');
     // The CTA label is not asserted: sd-button drops the default text of its
@@ -46,9 +48,15 @@ describe('LandingPage', () => {
   });
 
   it('explains how a weekend comes together in three steps', () => {
-    expect(host.querySelector('#how-title')?.textContent?.trim()).toBe('How a weekend comes together');
+    expect(host.querySelector('#how-title')?.textContent?.trim()).toBe(
+      'How a weekend comes together',
+    );
     const steps = Array.from(host.querySelectorAll('.step'));
-    expect(steps.map((s) => s.querySelector('.step__num')?.textContent?.trim())).toEqual(['01', '02', '03']);
+    expect(steps.map((s) => s.querySelector('.step__num')?.textContent?.trim())).toEqual([
+      '01',
+      '02',
+      '03',
+    ]);
     expect(steps.map((s) => s.querySelector('.step__title')?.textContent?.trim())).toEqual([
       'Tell us who is in the family',
       'Lock what does not move',
@@ -59,6 +67,10 @@ describe('LandingPage', () => {
   it('closes with the site footer links', () => {
     const links = Array.from(host.querySelectorAll('footer.site-footer a'));
     expect(links.map((a) => a.textContent?.trim())).toEqual(['Terms', 'Privacy', 'Sign in']);
-    expect(links.map((a) => a.getAttribute('href'))).toEqual(['/legal', '/legal#privacy', '/sign-in']);
+    expect(links.map((a) => a.getAttribute('href'))).toEqual([
+      '/legal',
+      '/legal#privacy',
+      '/sign-in',
+    ]);
   });
 });

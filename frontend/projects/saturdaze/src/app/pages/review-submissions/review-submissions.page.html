@@ -1,5 +1,10 @@
 <div class="sd-narrow">
-  <sd-page-header title="Review submissions" [subtitle]="subtitle()" backHref="/family" backLabel="Family" />
+  <sd-page-header
+    title="Review submissions"
+    [subtitle]="subtitle()"
+    backHref="/family"
+    backLabel="Family"
+  />
 
   @if (error()) {
     <sd-banner class="error" tone="warn" role="alert" icon="close">{{ error() }}</sd-banner>
@@ -10,7 +15,12 @@
       <sd-status-row icon="ticket">Fetching the queue.</sd-status-row>
     }
     @case ('empty') {
-      <sd-empty icon="check" tone="accent" title="Queue is clear" body="Approved events are already live on Ideas. Rejected ones are gone.">
+      <sd-empty
+        icon="check"
+        tone="accent"
+        title="Queue is clear"
+        body="Approved events are already live on Ideas. Rejected ones are gone."
+      >
         <sd-button slot="cta" variant="quiet" href="/family">
           <sd-icon name="arrow_left" />
           Back to Family

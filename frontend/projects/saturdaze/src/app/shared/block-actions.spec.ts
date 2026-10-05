@@ -10,7 +10,10 @@ describe('openBlockDialog', () => {
   it('opens D1 with the block and resolves with what the user chose', async () => {
     const dialog = { open: vi.fn(() => ({ closed: of({ kind: 'swap' }) })) } as any;
     await expect(openBlockDialog(dialog, BLOCK)).resolves.toEqual({ kind: 'swap' });
-    expect(dialog.open).toHaveBeenCalledWith(BlockDialog, { ...DIALOG_OPTIONS, data: { block: BLOCK } });
+    expect(dialog.open).toHaveBeenCalledWith(BlockDialog, {
+      ...DIALOG_OPTIONS,
+      data: { block: BLOCK },
+    });
   });
 
   it('resolves undefined when the dialog is dismissed', async () => {
@@ -50,9 +53,17 @@ describe('applyBlockAction', () => {
 
   it('marks an errand done through its errand id, and skips rows without one', async () => {
     const service = weekend();
-    await applyBlockAction(service as any, { ...BLOCK, errand: true, refId: 'e-costco' }, { kind: 'done', done: true });
+    await applyBlockAction(
+      service as any,
+      { ...BLOCK, errand: true, refId: 'e-costco' },
+      { kind: 'done', done: true },
+    );
     expect(service.setErrandDone).toHaveBeenCalledWith('e-costco', true);
-    await applyBlockAction(service as any, { ...BLOCK, errand: true, refId: null }, { kind: 'done', done: false });
+    await applyBlockAction(
+      service as any,
+      { ...BLOCK, errand: true, refId: null },
+      { kind: 'done', done: false },
+    );
     expect(service.setErrandDone).toHaveBeenCalledTimes(1);
   });
 });

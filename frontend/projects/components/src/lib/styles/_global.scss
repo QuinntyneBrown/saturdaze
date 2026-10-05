@@ -3,18 +3,69 @@
 // encapsulated stylesheet; this file only owns the document defaults, the
 // shell's <main> frame and a handful of `sd-` prefixed layout utilities.
 
-@use "breakpoints" as *;
+@use 'breakpoints' as *;
 
 // ---------------------------------------------------------------- reset
-*, *::before, *::after { box-sizing: border-box; }
-html, body, h1, h2, h3, h4, p, ul, ol, li, dl, dt, dd, figure { margin: 0; padding: 0; }
-ul, ol { list-style: none; }
-img, svg, video { display: block; max-width: 100%; }
-button, input, select, textarea { font: inherit; color: inherit; margin: 0; }
-button { background: none; border: 0; padding: 0; cursor: pointer; text-align: inherit; }
-a { color: inherit; text-decoration: none; }
-fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
-legend { padding: 0; }
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+html,
+body,
+h1,
+h2,
+h3,
+h4,
+p,
+ul,
+ol,
+li,
+dl,
+dt,
+dd,
+figure {
+  margin: 0;
+  padding: 0;
+}
+ul,
+ol {
+  list-style: none;
+}
+img,
+svg,
+video {
+  display: block;
+  max-width: 100%;
+}
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+  margin: 0;
+}
+button {
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  text-align: inherit;
+}
+a {
+  color: inherit;
+  text-decoration: none;
+}
+fieldset {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+legend {
+  padding: 0;
+}
 
 // ---------------------------------------------------------------- base
 html {
@@ -32,22 +83,46 @@ html {
 
 // clip, never hidden: hidden creates a scroll container and breaks sticky.
 // Full-bleed scrollers (.sd-scroller-x) hang past the gutter by design.
-html, body { overflow-x: clip; }
-body { min-height: 100vh; min-height: 100svh; background: var(--sd-bg); }
+html,
+body {
+  overflow-x: clip;
+}
+body {
+  min-height: 100vh;
+  min-height: 100svh;
+  background: var(--sd-bg);
+}
 
-h1, h2, h3, h4 { line-height: var(--sd-lh-tight); font-weight: var(--sd-fw-bold); overflow-wrap: anywhere; }
-p { overflow-wrap: anywhere; }
-strong { font-weight: var(--sd-fw-semibold); }
-small { font-size: var(--sd-fs-xs); }
+h1,
+h2,
+h3,
+h4 {
+  line-height: var(--sd-lh-tight);
+  font-weight: var(--sd-fw-bold);
+  overflow-wrap: anywhere;
+}
+p {
+  overflow-wrap: anywhere;
+}
+strong {
+  font-weight: var(--sd-fw-semibold);
+}
+small {
+  font-size: var(--sd-fs-xs);
+}
 
 :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
   outline: var(--sd-focus-ring);
   outline-offset: 2px;
 }
-::selection { background: var(--sd-primary-soft); }
+::selection {
+  background: var(--sd-primary-soft);
+}
 
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
+  *,
+  *::before,
+  *::after {
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
@@ -122,32 +197,86 @@ app-root {
   margin-inline: auto;
 }
 
-.sd-stack { display: flex; flex-direction: column; gap: var(--gap, 16px); }
-.sd-stack--sm { --gap: 8px; }
-.sd-stack--lg { --gap: 24px; }
-.sd-stack--xl { --gap: 32px; }
+.sd-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap, 16px);
+}
+.sd-stack--sm {
+  --gap: 8px;
+}
+.sd-stack--lg {
+  --gap: 24px;
+}
+.sd-stack--xl {
+  --gap: 32px;
+}
 
-.sd-cluster { display: flex; flex-wrap: wrap; align-items: center; gap: var(--gap, 8px); }
-.sd-cluster--between { justify-content: space-between; }
-.sd-cluster--end { justify-content: flex-end; }
-.sd-cluster--nowrap { flex-wrap: nowrap; }
+.sd-cluster {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--gap, 8px);
+}
+.sd-cluster--between {
+  justify-content: space-between;
+}
+.sd-cluster--end {
+  justify-content: flex-end;
+}
+.sd-cluster--nowrap {
+  flex-wrap: nowrap;
+}
 
 // Every grid track is minmax(0, 1fr): the implicit 1fr min-content defect
 // is what pushed v1 forms past the viewport on 320px phones.
-.sd-grid-2 { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; }
-.sd-grid-3 { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; }
-.sd-grid-days { display: grid; grid-template-columns: minmax(0, 1fr); gap: 32px; align-items: start; }
-.sd-grid-cards { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; }
+.sd-grid-2 {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+}
+.sd-grid-3 {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+}
+.sd-grid-days {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 32px;
+  align-items: start;
+}
+.sd-grid-cards {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+}
 
 @include respond-to(tablet) {
-  .sd-grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .sd-grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
-  .sd-grid-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+  .sd-grid-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .sd-grid-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+  }
+  .sd-grid-cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
 }
 @include respond-to(desktop) {
-  .sd-grid-days { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .sd-grid-cards { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
-  .sd-grid-cards--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); max-width: 880px; }
+  .sd-grid-days {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .sd-grid-cards {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+  }
+  .sd-grid-cards--2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    max-width: 880px;
+  }
 }
 
 // The only place negative margins are allowed: a full-bleed horizontal
@@ -161,11 +290,27 @@ app-root {
   scrollbar-width: none;
   margin-inline: calc(-1 * var(--sd-gutter));
   padding-inline: var(--sd-gutter);
-  -webkit-mask-image: linear-gradient(to right, transparent, #000 16px, #000 calc(100% - 16px), transparent);
-  mask-image: linear-gradient(to right, transparent, #000 16px, #000 calc(100% - 16px), transparent);
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 16px,
+    #000 calc(100% - 16px),
+    transparent
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 16px,
+    #000 calc(100% - 16px),
+    transparent
+  );
 }
-.sd-scroller-x::-webkit-scrollbar { display: none; }
-.sd-scroller-x > * { flex: none; }
+.sd-scroller-x::-webkit-scrollbar {
+  display: none;
+}
+.sd-scroller-x > * {
+  flex: none;
+}
 @include respond-to(tablet) {
   .sd-scroller-x {
     flex-wrap: wrap;
@@ -177,30 +322,108 @@ app-root {
   }
 }
 
-.sd-vdivider { width: 1px; height: 20px; background: var(--sd-line-strong); flex: none; margin: 0 2px; }
+.sd-vdivider {
+  width: 1px;
+  height: 20px;
+  background: var(--sd-line-strong);
+  flex: none;
+  margin: 0 2px;
+}
 
-.sd-clamp-1 { display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
-.sd-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.sd-clamp-1 {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.sd-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
 
 // ---------------------------------------------------------------- utilities
 .sd-visually-hidden {
   position: absolute !important;
-  width: 1px; height: 1px; margin: -1px; padding: 0;
-  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
 }
-.sd-truncate { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.sd-text-soft { color: var(--sd-ink-soft); }
-.sd-text-faint { color: var(--sd-ink-faint); }
-.sd-text-warn { color: var(--sd-warn-deep); }
-.sd-text-accent { color: var(--sd-accent); }
-.sd-text-sm { font-size: var(--sd-fs-sm); }
-.sd-text-xs { font-size: var(--sd-fs-xs); }
-.sd-text-center { text-align: center; }
-.sd-link { color: var(--sd-primary-deep); font-weight: var(--sd-fw-semibold); border-radius: var(--sd-r-sm); }
-.sd-link--soft { color: inherit; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: var(--sd-line-strong); font-weight: var(--sd-fw-regular); }
-.sd-mt-2 { margin-top: 8px; } .sd-mt-4 { margin-top: 16px; } .sd-mt-6 { margin-top: 24px; }
-.sd-mb-2 { margin-bottom: 8px; } .sd-mb-4 { margin-bottom: 16px; } .sd-mb-6 { margin-bottom: 24px; }
+.sd-truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.sd-text-soft {
+  color: var(--sd-ink-soft);
+}
+.sd-text-faint {
+  color: var(--sd-ink-faint);
+}
+.sd-text-warn {
+  color: var(--sd-warn-deep);
+}
+.sd-text-accent {
+  color: var(--sd-accent);
+}
+.sd-text-sm {
+  font-size: var(--sd-fs-sm);
+}
+.sd-text-xs {
+  font-size: var(--sd-fs-xs);
+}
+.sd-text-center {
+  text-align: center;
+}
+.sd-link {
+  color: var(--sd-primary-deep);
+  font-weight: var(--sd-fw-semibold);
+  border-radius: var(--sd-r-sm);
+}
+.sd-link--soft {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: var(--sd-line-strong);
+  font-weight: var(--sd-fw-regular);
+}
+.sd-mt-2 {
+  margin-top: 8px;
+}
+.sd-mt-4 {
+  margin-top: 16px;
+}
+.sd-mt-6 {
+  margin-top: 24px;
+}
+.sd-mb-2 {
+  margin-bottom: 8px;
+}
+.sd-mb-4 {
+  margin-bottom: 16px;
+}
+.sd-mb-6 {
+  margin-bottom: 24px;
+}
 
-@media (max-width: 719px) { .sd-hide-lt-720 { display: none !important; } }
-@include respond-to(tablet) { .sd-hide-gte-720 { display: none !important; } }
-@include respond-to(desktop) { .sd-hide-gte-1024 { display: none !important; } }
+@media (max-width: 719px) {
+  .sd-hide-lt-720 {
+    display: none !important;
+  }
+}
+@include respond-to(tablet) {
+  .sd-hide-gte-720 {
+    display: none !important;
+  }
+}
+@include respond-to(desktop) {
+  .sd-hide-gte-1024 {
+    display: none !important;
+  }
+}

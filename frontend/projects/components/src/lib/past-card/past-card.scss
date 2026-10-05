@@ -1,4 +1,4 @@
-@use "../styles/card-base" as *;
+@use '../styles/card-base' as *;
 
 // The past-weekend `.card` from docs/mocks-v2/pages/past.html.
 
@@ -35,7 +35,7 @@
   --sd-btn-w: 100%;
 }
 
-::ng-deep .fav-btn[aria-pressed="true"] {
+::ng-deep .fav-btn[aria-pressed='true'] {
   color: var(--sd-primary);
 }
 

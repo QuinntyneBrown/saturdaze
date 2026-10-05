@@ -5,7 +5,12 @@ import { Dialog } from '@angular/cdk/dialog';
 import { Router, provideRouter } from '@angular/router';
 import { of } from 'rxjs';
 
-import { ACTIVITY_SERVICE, EVENTS_SERVICE, EVENT_SUBMISSIONS_SERVICE, RESTAURANT_SERVICE } from 'api';
+import {
+  ACTIVITY_SERVICE,
+  EVENTS_SERVICE,
+  EVENT_SUBMISSIONS_SERVICE,
+  RESTAURANT_SERVICE,
+} from 'api';
 
 import { EventSubmittedDialog } from '../../dialogs/event-submitted-dialog/event-submitted-dialog';
 import { SubmitEventDialog } from '../../dialogs/submit-event-dialog/submit-event-dialog';
@@ -19,9 +24,24 @@ describe('IdeasPage', () => {
   let router: Router;
   let dialog: { open: ReturnType<typeof vi.fn> };
   let submissions: { loadMine: ReturnType<typeof vi.fn> };
-  const activitiesView = signal({ subtitle: 'Picked for Eli and Mae, under 45 minutes from Port Credit.', filters: [], sections: [] });
-  const foodView = signal({ subtitle: '', dayChips: [], slotChips: [], extraChips: [], sections: [] });
-  const eventsView = signal({ subtitle: 'What is on within 45 minutes of Port Credit.', windowChips: [], categoryChips: [], sections: [] });
+  const activitiesView = signal({
+    subtitle: 'Picked for Eli and Mae, under 45 minutes from Port Credit.',
+    filters: [],
+    sections: [],
+  });
+  const foodView = signal({
+    subtitle: '',
+    dayChips: [],
+    slotChips: [],
+    extraChips: [],
+    sections: [],
+  });
+  const eventsView = signal({
+    subtitle: 'What is on within 45 minutes of Port Credit.',
+    windowChips: [],
+    categoryChips: [],
+    sections: [],
+  });
 
   beforeEach(async () => {
     dialog = { open: vi.fn(() => ({ closed: of(undefined) })) };
@@ -65,7 +85,11 @@ describe('IdeasPage', () => {
     expect(header().getAttribute('title')).toBe('Ideas');
     const tabs = Array.from(host.querySelectorAll('sd-segments a'));
     expect(tabs.map((t) => t.textContent?.trim())).toEqual(['Activities', 'Food', 'Events']);
-    expect(tabs.map((t) => t.getAttribute('href'))).toEqual(['/ideas', '/ideas/food', '/ideas/events']);
+    expect(tabs.map((t) => t.getAttribute('href'))).toEqual([
+      '/ideas',
+      '/ideas/food',
+      '/ideas/events',
+    ]);
     expect(host.querySelector('sd-segments')?.getAttribute('aria-label')).toBe('Idea type');
     expect(host.querySelector('router-outlet')).not.toBeNull();
   });
@@ -73,14 +97,18 @@ describe('IdeasPage', () => {
   it('starts on Activities with the live subtitle and no Suggest button', async () => {
     await go('/ideas');
     expect(component['tab']()).toBe('activities');
-    expect(header().getAttribute('subtitle')).toBe('Picked for Eli and Mae, under 45 minutes from Port Credit.');
+    expect(header().getAttribute('subtitle')).toBe(
+      'Picked for Eli and Mae, under 45 minutes from Port Credit.',
+    );
     expect(suggestButton()).toBeNull();
   });
 
   it('falls back to the mock subtitle when the segment has not loaded yet', async () => {
     await go('/ideas/food');
     expect(component['tab']()).toBe('food');
-    expect(header().getAttribute('subtitle')).toBe('Places to eat near what you are already doing.');
+    expect(header().getAttribute('subtitle')).toBe(
+      'Places to eat near what you are already doing.',
+    );
     expect(suggestButton()).toBeNull();
 
     foodView.set({ ...foodView(), subtitle: 'Near Terre Bleu and close to home.' });

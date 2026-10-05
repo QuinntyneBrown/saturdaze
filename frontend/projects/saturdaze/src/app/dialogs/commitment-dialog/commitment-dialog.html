@@ -9,7 +9,13 @@
       [ngModel]="name()"
       (ngModelChange)="name.set($event); error.set('')"
     />
-    <sd-seg-radio label="Day" name="day" [options]="days" [ngModel]="day()" (ngModelChange)="day.set($event); error.set('')" />
+    <sd-seg-radio
+      label="Day"
+      name="day"
+      [options]="days"
+      [ngModel]="day()"
+      (ngModelChange)="day.set($event); error.set('')"
+    />
     <div class="row-2">
       <sd-text-input
         label="Start"
@@ -37,7 +43,13 @@
     </sd-button>
   }
   <sd-button slot="actions" variant="quiet" type="button" (click)="cancel()">Cancel</sd-button>
-  <sd-button slot="actions" variant="primary" type="button" [disabled]="!canSubmit()" (click)="submit()">
+  <sd-button
+    slot="actions"
+    variant="primary"
+    type="button"
+    [disabled]="!canSubmit()"
+    (click)="submit()"
+  >
     {{ submitLabel }}
   </sd-button>
 </sd-dialog>

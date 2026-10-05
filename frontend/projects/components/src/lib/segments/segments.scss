@@ -1,4 +1,4 @@
-@use "../styles/breakpoints" as *;
+@use '../styles/breakpoints' as *;
 
 // `.segments` from docs/mocks-v2/styles/app.css — the host is the track.
 
@@ -29,14 +29,14 @@
     color var(--sd-dur-fast) var(--sd-ease);
 }
 
-.segments__tab[aria-current="page"] {
+.segments__tab[aria-current='page'] {
   background: var(--sd-surface);
   color: var(--sd-ink);
   box-shadow: var(--sd-shadow-1);
 }
 
 @media (hover: hover) {
-  .segments__tab:not([aria-current="page"]):hover {
+  .segments__tab:not([aria-current='page']):hover {
     color: var(--sd-ink);
   }
 }

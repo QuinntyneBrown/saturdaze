@@ -27,7 +27,10 @@ describe('CreateAccountPage', () => {
     session = { clearError: vi.fn(), signUp: vi.fn(async () => undefined) };
     await TestBed.configureTestingModule({
       imports: [CreateAccountPage],
-      providers: [provideRouter([{ path: '**', children: [] }]), { provide: SESSION_STORE, useValue: session }],
+      providers: [
+        provideRouter([{ path: '**', children: [] }]),
+        { provide: SESSION_STORE, useValue: session },
+      ],
     }).compileComponents();
     navigate = vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
     fixture = TestBed.createComponent(CreateAccountPage);
@@ -36,19 +39,28 @@ describe('CreateAccountPage', () => {
     host = fixture.nativeElement as HTMLElement;
   });
 
-  const submitButton = (): HTMLElement => host.querySelector('sd-button[type="submit"]') as HTMLElement;
+  const submitButton = (): HTMLElement =>
+    host.querySelector('sd-button[type="submit"]') as HTMLElement;
 
   it('renders the sign-up card with the fields from the mock', () => {
     expect(session.clearError).toHaveBeenCalled();
-    expect(host.querySelector('sd-auth-card')?.getAttribute('title')).toBe('Start planning weekends');
+    expect(host.querySelector('sd-auth-card')?.getAttribute('title')).toBe(
+      'Start planning weekends',
+    );
     const fields = Array.from(host.querySelectorAll('sd-text-input'));
-    expect(fields.map((f) => f.getAttribute('label'))).toEqual(['Family name', 'Email', 'Password']);
+    expect(fields.map((f) => f.getAttribute('label'))).toEqual([
+      'Family name',
+      'Email',
+      'Password',
+    ]);
     expect(fields[2]?.getAttribute('hint')).toBe('Eight characters or more.');
     const boxes = Array.from(host.querySelectorAll('sd-checkbox'));
     expect(boxes.length).toBe(2);
     expect(boxes[0]?.hasAttribute('required')).toBe(true);
     expect(boxes[0]?.querySelector('a[href="/legal"]')?.textContent?.trim()).toBe('Terms');
-    expect(boxes[0]?.querySelector('a[href="/legal#privacy"]')?.textContent?.trim()).toBe('Privacy Policy');
+    expect(boxes[0]?.querySelector('a[href="/legal#privacy"]')?.textContent?.trim()).toBe(
+      'Privacy Policy',
+    );
     expect(host.querySelector('a[href="/sign-in"]')?.textContent?.trim()).toBe('Sign in');
     expect(component['form'].controls.fridayPreview.value).toBe(true);
     expect(submitButton().hasAttribute('disabled')).toBe(true);
@@ -91,7 +103,9 @@ describe('CreateAccountPage', () => {
       fridayPreview: true,
       homeLocation: null,
     });
-    expect(navigate).toHaveBeenCalledWith(['/verify-email'], { queryParams: { email: 'quinn@example.com' } });
+    expect(navigate).toHaveBeenCalledWith(['/verify-email'], {
+      queryParams: { email: 'quinn@example.com' },
+    });
     expect(component['submitting']()).toBe(false);
   });
 
@@ -112,7 +126,9 @@ describe('CreateAccountPage', () => {
     session.signUp.mockRejectedValueOnce({ code: 'weak_password', message: '' });
     await component['submit']();
     fixture.detectChanges();
-    expect(host.querySelectorAll('sd-text-input')[2]?.getAttribute('error')).toBe('Choose a stronger password.');
+    expect(host.querySelectorAll('sd-text-input')[2]?.getAttribute('error')).toBe(
+      'Choose a stronger password.',
+    );
 
     session.signUp.mockRejectedValueOnce({ code: 'rate_limited', message: 'Slow down.' });
     await component['submit']();

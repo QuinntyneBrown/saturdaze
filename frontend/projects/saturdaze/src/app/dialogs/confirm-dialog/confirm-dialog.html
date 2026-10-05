@@ -1,6 +1,10 @@
 <sd-dialog [title]="data.title" [subtitle]="data.body ?? ''">
   @if (data.well; as well) {
-    <sd-well [icon]="well.icon ?? 'sparkle'" [tone]="well.tone ?? 'default'" [title]="well.title ?? ''">
+    <sd-well
+      [icon]="well.icon ?? 'sparkle'"
+      [tone]="well.tone ?? 'default'"
+      [title]="well.title ?? ''"
+    >
       {{ well.body }}
     </sd-well>
   }

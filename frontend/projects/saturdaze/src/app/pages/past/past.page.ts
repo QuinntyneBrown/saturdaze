@@ -4,10 +4,25 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 
 import { PastWeekendCard, SAVED_SERVICE, WEEKEND_PLAN_SERVICE } from 'api';
-import { Banner, Button, Chip, Empty, FilterChip, Filters, Icon, PageHeader, PastCard, StatusRow } from 'components';
+import {
+  Banner,
+  Button,
+  Chip,
+  Empty,
+  FilterChip,
+  Filters,
+  Icon,
+  PageHeader,
+  PastCard,
+  StatusRow,
+} from 'components';
 
 import { DIALOG_OPTIONS, confirmWith } from '../../dialogs/confirm-dialog/confirm-dialog';
-import { RatingDialog, RatingDialogData, RatingDialogResult } from '../../dialogs/rating-dialog/rating-dialog';
+import {
+  RatingDialog,
+  RatingDialogData,
+  RatingDialogResult,
+} from '../../dialogs/rating-dialog/rating-dialog';
 import {
   RenameWeekendDialog,
   RenameWeekendDialogData,
@@ -24,7 +39,18 @@ import { devState } from '../../shared/dev-state';
 @Component({
   selector: 'app-past',
   standalone: true,
-  imports: [Banner, Button, Chip, Empty, FilterChip, Filters, Icon, PageHeader, PastCard, StatusRow],
+  imports: [
+    Banner,
+    Button,
+    Chip,
+    Empty,
+    FilterChip,
+    Filters,
+    Icon,
+    PageHeader,
+    PastCard,
+    StatusRow,
+  ],
   templateUrl: './past.page.html',
   styleUrl: './past.page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -45,7 +71,9 @@ export class PastPage {
 
   protected readonly status = computed(() => (this.dev === 'empty' ? 'empty' : this.view().status));
   protected readonly subtitle = computed(() =>
-    this.status() === 'empty' ? 'Your first weekend lands here once Sunday is over.' : this.view().subtitle,
+    this.status() === 'empty'
+      ? 'Your first weekend lands here once Sunday is over.'
+      : this.view().subtitle,
   );
 
   constructor() {
@@ -61,10 +89,13 @@ export class PastPage {
   }
 
   protected async rename(card: PastWeekendCard): Promise<void> {
-    const ref = this.dialog.open<RenameWeekendDialogResult, RenameWeekendDialogData>(RenameWeekendDialog, {
-      ...DIALOG_OPTIONS,
-      data: { eyebrow: card.eyebrow, title: card.customTitle },
-    });
+    const ref = this.dialog.open<RenameWeekendDialogResult, RenameWeekendDialogData>(
+      RenameWeekendDialog,
+      {
+        ...DIALOG_OPTIONS,
+        data: { eyebrow: card.eyebrow, title: card.customTitle },
+      },
+    );
     const result = await firstValueFrom(ref.closed);
     if (!result) return;
     await this.run(() => this.saved.rename(card.id, result.title));

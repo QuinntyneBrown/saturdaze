@@ -20,7 +20,8 @@ const BASE_BLOCK: BlockRow = {
   icon: 'tree',
   title: 'Terre Bleu Lavender Farm',
   subtitle: 'Terre Bleu, Milton · walk the rows',
-  reason: 'Lavender peaks 17 to 24 May, Saturday is the sunny day, and Mae can walk the rows this year.',
+  reason:
+    'Lavender peaks 17 to 24 May, Saturday is the sunny day, and Mae can walk the rows this year.',
   chips: [
     { tone: 'primary', label: 'Day highlight' },
     { tone: 'sky', icon: 'car', label: '45 min drive' },
@@ -202,7 +203,12 @@ export const FOOD_CARD: FoodCard = {
 };
 
 export const MORE_ITEMS: readonly MenuItem[] = [
-  { id: 'regenerate', label: 'Regenerate the weekend', icon: 'refresh', sub: 'Locked blocks stay where they are' },
+  {
+    id: 'regenerate',
+    label: 'Regenerate the weekend',
+    icon: 'refresh',
+    sub: 'Locked blocks stay where they are',
+  },
   { id: 'calendar', label: 'Add to calendar', icon: 'calendar', sub: 'One .ics with both days' },
 ];
 
