@@ -44,6 +44,8 @@ Workspace has three projects under `frontend/projects/`:
 
 ### Conventions enforced across the codebase
 
+- Prettier (`frontend/.prettierrc`) owns formatting and angular-eslint (`frontend/eslint.config.js`) owns lint; CI fails on either. Run `npm run lint` and `npm run format:check` in `frontend/`. The husky pre-commit hook fixes staged frontend files.
+
 - Component selectors use `sd-*`; TypeScript class, file, and folder names omit the `Sd` prefix.
 - Components should preserve the mock design's BEM classes and accessible state semantics (ADR-009); e2e locators depend on that parity.
 - Keep component styles encapsulated and global styles limited to shared foundations and utilities.

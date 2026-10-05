@@ -161,6 +161,8 @@ npm run build -- saturdaze --configuration development
 npm run build -- components
 npm run build -- api
 npm test
+npm run lint          # angular-eslint (npm run lint:fix to autofix)
+npm run format        # Prettier (npm run format:check in CI)
 
 # E2E
 cd ..\e2e
@@ -174,6 +176,9 @@ Development conventions:
 - Keep EF migrations explicit; the API does not apply migrations on startup.
 - Keep seed data idempotent and suitable for repeatable local resets.
 - Keep Angular selectors aligned with the mock custom-element tag names.
+- `npm ci` in `frontend/` installs a husky pre-commit hook that runs
+  `eslint --fix` and `prettier --write` on staged frontend files; CI runs
+  `npm run format:check` and `npm run lint`.
 - Prefer the fresh-stack script for end-to-end verification when a change spans
   the database, backend, and frontend.
 
@@ -188,6 +193,8 @@ Development conventions:
 | Frontend unit tests | `npm test` from `frontend/` | Angular/Vitest tests |
 | Storybook | `npm run storybook` / `npm run build-storybook` from `frontend/` | Design-system docsite on :6006 / static build to `frontend/dist/storybook` |
 | Storybook contract and browser tests | Build Storybook, then `npm run test:storybook` from `e2e/` | Public component documentation coverage, every indexed example and docs page, and form interaction in Chromium |
+| Frontend lint | `npm run lint` from `frontend/` | angular-eslint over TypeScript and templates |
+| Frontend format | `npm run format:check` from `frontend/` | Prettier formatting check |
 | Playwright behavior | `npm run test:behavior` from `e2e/` | End-to-end behavior tests |
 | Playwright visual | `npm run test:visual` from `e2e/` | Visual comparisons against baselines |
 | Baseline update | `npm run baseline` from `e2e/` | Refresh visual snapshots from the mock app |
