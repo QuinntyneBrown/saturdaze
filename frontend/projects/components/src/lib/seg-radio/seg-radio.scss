@@ -11,9 +11,9 @@
   display: flex;
   align-items: baseline;
   gap: 6px;
-  font-size: var(--sd-fs-sm);
-  font-weight: var(--sd-fw-medium);
-  color: var(--sd-ink-soft);
+  font-size: var(--fontSizeBase300);
+  font-weight: var(--fontWeightMedium);
+  color: var(--colorNeutralForeground2);
 }
 
 .seg-radio {
@@ -21,8 +21,8 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
   padding: 4px;
   gap: 4px;
-  background: var(--sd-surface-2);
-  border-radius: var(--sd-r-pill);
+  background: var(--colorNeutralBackground3);
+  border-radius: var(--borderRadiusCircular);
 }
 
 .seg-radio--3 {
@@ -35,10 +35,10 @@
   align-items: center;
   justify-content: center;
   height: 36px;
-  border-radius: var(--sd-r-pill);
+  border-radius: var(--borderRadiusCircular);
   font-size: 14px;
-  font-weight: var(--sd-fw-semibold);
-  color: var(--sd-ink-soft);
+  font-weight: var(--fontWeightSemibold);
+  color: var(--colorNeutralForeground2);
   cursor: pointer;
 }
 
@@ -51,12 +51,12 @@
 }
 
 .seg-radio__opt:has(input:checked) {
-  background: var(--sd-surface);
-  color: var(--sd-ink);
-  box-shadow: var(--sd-shadow-1);
+  background: var(--colorNeutralBackground1);
+  color: var(--colorNeutralForeground1);
+  box-shadow: var(--shadow4);
 }
 
 .seg-radio__opt:has(input:focus-visible) {
-  outline: var(--sd-focus-ring);
+  outline: var(--strokeWidthThick) solid var(--colorStrokeFocus2);
   outline-offset: 2px;
 }

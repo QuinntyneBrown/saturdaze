@@ -15,9 +15,9 @@ every story; violations are reported as errors.
   `aria-invalid="true"` with the error linked through `aria-describedby`, switches `role="switch"` + `aria-checked`.
 - **Every icon-only control has a name.** `sd-button icon` requires `label`; icons are decorative (`aria-hidden`) unless
   they are the only content.
-- **Visible focus.** `:focus-visible` draws `--sd-focus-ring` (2px coral) with a 2px offset on every interactive element.
-- **Colour pairs pass AA.** Tone fills always pair with their `-ink` colour; `--sd-primary-deep` is the coral that passes
-  on `--sd-primary-soft`.
+- **Visible focus.** `:focus-visible` draws a `--strokeWidthThick` `--colorStrokeFocus2` outline (2px coral) with a 2px offset on every interactive element.
+- **Colour pairs pass AA.** Tone fills (`colorPalette*Background1`) always pair with their `Foreground1` ink; `--colorBrandForeground2` is the coral that passes
+  on `--colorBrandBackground2`.
 - **Targets.** Touch targets are at least 44×44px on phone layouts.
 - **Reduced motion.** `prefers-reduced-motion: reduce` collapses animations and transitions globally.
 - **Dialogs** come from `@angular/cdk/dialog`, which traps focus, restores it on close and closes on `Escape`.

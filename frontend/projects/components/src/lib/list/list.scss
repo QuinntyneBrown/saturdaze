@@ -7,8 +7,8 @@
 }
 
 :host(.list--card) {
-  background: var(--sd-surface);
-  border: 1px solid var(--sd-line);
-  border-radius: var(--sd-r-lg);
+  background: var(--colorNeutralBackground1);
+  border: 1px solid var(--colorNeutralStroke2);
+  border-radius: var(--borderRadiusLarge);
   --sd-list-pad-x: 16px;
 }

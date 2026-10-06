@@ -10,14 +10,14 @@
 .day__header {
   position: sticky;
   top: 0;
-  z-index: var(--sd-z-sticky);
+  z-index: var(--zIndexSticky);
   display: flex;
   align-items: center;
   gap: 12px;
   padding: 12px 0;
   margin-bottom: 4px;
-  background: var(--sd-bg);
-  border-bottom: 1px solid var(--sd-line);
+  background: var(--colorNeutralBackground2);
+  border-bottom: 1px solid var(--colorNeutralStroke2);
 }
 
 .day__text {
@@ -26,14 +26,14 @@
 }
 
 .day__title {
-  font-size: var(--sd-fs-lg);
-  font-weight: var(--sd-fw-bold);
+  font-size: var(--fontSizeBase600);
+  font-weight: var(--fontWeightBold);
   line-height: 1.2;
 }
 
 .day__meta {
-  font-size: var(--sd-fs-sm);
-  color: var(--sd-ink-soft);
+  font-size: var(--fontSizeBase300);
+  color: var(--colorNeutralForeground2);
   margin-top: 2px;
 }
 
@@ -64,15 +64,15 @@
 }
 
 :host(.day--locked) .day__header {
-  background: var(--sd-accent-soft);
-  border-radius: var(--sd-r-md);
+  background: var(--colorStatusSuccessBackground1);
+  border-radius: var(--borderRadiusMedium);
   padding-inline: 12px;
   border-bottom-color: transparent;
 }
 
 @include respond-to(tablet) {
   .day__header {
-    top: var(--sd-topbar-h);
+    top: var(--layoutTopBarHeight);
   }
 
   .day__actions ::ng-deep .day__btn {

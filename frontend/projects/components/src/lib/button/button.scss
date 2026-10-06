@@ -13,50 +13,50 @@
   gap: 8px;
   height: var(--sd-btn-h, 40px);
   padding: 0 16px;
-  border-radius: var(--sd-r-pill);
+  border-radius: var(--borderRadiusCircular);
   font-size: 14px;
-  font-weight: var(--sd-fw-semibold);
+  font-weight: var(--fontWeightSemibold);
   line-height: 1;
   white-space: nowrap;
   border: 1px solid transparent;
-  color: var(--sd-ink);
+  color: var(--colorNeutralForeground1);
   background: transparent;
   cursor: pointer;
   text-decoration: none;
   width: var(--sd-btn-w, auto);
   transition:
-    background var(--sd-dur-fast) var(--sd-ease),
-    color var(--sd-dur-fast) var(--sd-ease),
-    border-color var(--sd-dur-fast) var(--sd-ease),
-    transform var(--sd-dur-fast) var(--sd-ease),
-    box-shadow var(--sd-dur-fast) var(--sd-ease);
+    background var(--durationFast) var(--curveEasyEase),
+    color var(--durationFast) var(--curveEasyEase),
+    border-color var(--durationFast) var(--curveEasyEase),
+    transform var(--durationFast) var(--curveEasyEase),
+    box-shadow var(--durationFast) var(--curveEasyEase);
 }
 
 .btn--primary {
-  background: var(--sd-primary);
-  color: var(--sd-primary-ink);
-  box-shadow: var(--sd-shadow-1);
+  background: var(--colorBrandBackground);
+  color: var(--colorNeutralForegroundOnBrand);
+  box-shadow: var(--shadow4);
 }
 .btn--quiet {
-  background: var(--sd-surface);
-  border-color: var(--sd-line-strong);
-  color: var(--sd-ink);
+  background: var(--colorNeutralBackground1);
+  border-color: var(--colorNeutralStroke1);
+  color: var(--colorNeutralForeground1);
 }
 .btn--ghost {
-  color: var(--sd-ink-soft);
+  color: var(--colorNeutralForeground2);
 }
 .btn--danger {
-  background: var(--sd-warn);
+  background: var(--colorStatusDangerBackground3);
   color: #fff;
 }
 .btn--text {
   height: auto;
   padding: 0;
-  border-radius: var(--sd-r-sm);
-  color: var(--sd-primary-deep);
+  border-radius: var(--borderRadiusSmall);
+  color: var(--colorBrandForeground2);
 }
 .btn--warn-text {
-  color: var(--sd-warn-deep);
+  color: var(--colorStatusDangerForeground1);
 }
 
 .btn--sm {
@@ -100,20 +100,20 @@
 
 @media (hover: hover) {
   .btn--primary:hover {
-    background: color-mix(in srgb, var(--sd-primary) 94%, #000);
+    background: var(--colorBrandBackgroundHover);
     transform: translateY(-1px);
-    box-shadow: var(--sd-shadow-2);
+    box-shadow: var(--shadow16);
   }
   .btn--quiet:hover {
-    background: var(--sd-surface-2);
+    background: var(--colorNeutralBackground3);
     transform: translateY(-1px);
   }
   .btn--ghost:hover {
-    background: var(--sd-surface-2);
-    color: var(--sd-ink);
+    background: var(--colorNeutralBackground3);
+    color: var(--colorNeutralForeground1);
   }
   .btn--danger:hover {
-    background: color-mix(in srgb, var(--sd-warn) 94%, #000);
+    background: color-mix(in srgb, var(--colorStatusDangerBackground3) 94%, #000);
     transform: translateY(-1px);
   }
   .btn--text:hover {

@@ -16,7 +16,7 @@ export const UnderAList: StoryObj<GhostRow> = {
         <div style="max-width: 420px">
           <ul style="display: grid; gap: 8px; list-style: none; padding: 0; margin: 0; font-size: 14px">
             @for (errand of errands(); track $index) {
-              <li style="padding: 10px 12px; border-radius: 12px; background: var(--sd-surface-2)">{{ errand }}</li>
+              <li style="padding: 10px 12px; border-radius: 12px; background: var(--colorNeutralBackground3)">{{ errand }}</li>
             }
           </ul>
           <sd-ghost-row icon="bag" (pressed)="add()">Add an errand</sd-ghost-row>

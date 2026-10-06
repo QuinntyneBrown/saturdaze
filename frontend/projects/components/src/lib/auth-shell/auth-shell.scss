@@ -4,7 +4,7 @@
   display: grid;
   place-items: center;
   min-height: 100svh;
-  padding: 24px var(--sd-gutter) 40px;
+  padding: 24px var(--layoutGutter) 40px;
 }
 
 :host(.auth--stack) {
@@ -25,13 +25,13 @@
   flex-direction: column;
   align-items: center;
   gap: 8px;
-  font-size: var(--sd-fs-xs);
-  font-weight: var(--sd-fw-semibold);
+  font-size: var(--fontSizeBase200);
+  font-weight: var(--fontWeightSemibold);
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--sd-ink-soft);
+  color: var(--colorNeutralForeground2);
   text-decoration: none;
-  border-radius: var(--sd-r-sm);
+  border-radius: var(--borderRadiusSmall);
 }
 
 .brand-mark {
@@ -40,16 +40,16 @@
   border-radius: 8px;
   flex: none;
   background:
-    radial-gradient(120% 120% at 20% 0%, var(--sd-primary-soft) 0%, transparent 60%),
-    radial-gradient(120% 120% at 100% 100%, var(--sd-sun-soft) 0%, transparent 60%),
-    var(--sd-primary);
+    radial-gradient(120% 120% at 20% 0%, var(--colorBrandBackground2) 0%, transparent 60%),
+    radial-gradient(120% 120% at 100% 100%, var(--colorPaletteSunBackground1) 0%, transparent 60%),
+    var(--colorBrandBackground);
   box-shadow: inset 0 0 0 1px rgba(31, 41, 55, 0.06);
 }
 
 .auth__foot {
   text-align: center;
-  font-size: var(--sd-fs-xs);
-  color: var(--sd-ink-faint);
+  font-size: var(--fontSizeBase200);
+  color: var(--colorNeutralForeground3);
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -60,5 +60,5 @@
   color: inherit;
   text-decoration: underline;
   text-underline-offset: 3px;
-  text-decoration-color: var(--sd-line-strong);
+  text-decoration-color: var(--colorNeutralStroke1);
 }

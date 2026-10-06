@@ -24,14 +24,14 @@
 }
 
 .section-header__title {
-  font-size: var(--sd-fs-lg);
-  font-weight: var(--sd-fw-bold);
+  font-size: var(--fontSizeBase600);
+  font-weight: var(--fontWeightBold);
 }
 
 .section-header__sub {
   margin-top: 2px;
-  font-size: var(--sd-fs-sm);
-  color: var(--sd-ink-soft);
+  font-size: var(--fontSizeBase300);
+  color: var(--colorNeutralForeground2);
 }
 
 .section-header__action {

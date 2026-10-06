@@ -5,7 +5,7 @@
   gap: 10px;
   align-items: flex-start;
   padding: 12px 14px;
-  border-radius: var(--sd-r-md);
+  border-radius: var(--borderRadiusMedium);
   font-size: 14px;
 }
 
@@ -15,16 +15,16 @@ sd-icon {
 }
 
 :host(.banner--warn) {
-  background: var(--sd-warn-soft);
-  color: var(--sd-warn-deep);
+  background: var(--colorStatusDangerBackground1);
+  color: var(--colorStatusDangerForeground1);
 }
 :host(.banner--success) {
-  background: var(--sd-accent-soft);
-  color: var(--sd-accent);
+  background: var(--colorStatusSuccessBackground1);
+  color: var(--colorStatusSuccessForeground1);
 }
 :host(.banner--info) {
-  background: var(--sd-surface-2);
-  color: var(--sd-ink);
+  background: var(--colorNeutralBackground3);
+  color: var(--colorNeutralForeground1);
 }
 
 .banner__text {

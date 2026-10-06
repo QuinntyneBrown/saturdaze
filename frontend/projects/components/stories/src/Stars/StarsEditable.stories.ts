@@ -11,7 +11,7 @@ export const Editable: StoryObj<Stars> = {
       template: `
         <div style="display: grid; gap: 8px; justify-items: start">
           <sd-stars size="lg" editable groupLabel="Rate Saturday" [rating]="rating()" (ratingChange)="rating.set($event)" />
-          <p style="font-size: 14px; color: var(--sd-ink-soft)">
+          <p style="font-size: 14px; color: var(--colorNeutralForeground2)">
             {{ rating() ? 'You gave Saturday ' + rating() + ' of 5.' : 'Not rated yet.' }}
           </p>
         </div>

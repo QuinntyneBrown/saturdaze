@@ -26,7 +26,7 @@ place.
 
 .day-pair {
   display: grid;
-  gap: var(--sd-s-4);
+  gap: var(--spacingVerticalL);
 
   @include respond-to(desktop) {
     grid-template-columns: 1fr 1fr;
@@ -39,35 +39,28 @@ story at each tier.
 
 ## Layout dimensions
 
-<TokenRows
-  tokens={byPrefix(
-    '--sd-content-',
-    '--sd-stack-',
-    '--sd-gutter',
-    '--sd-topbar-',
-    '--sd-bottom-nav-',
-  )}
-  preview={previews.length}
-/>
+<TokenRows tokens={byPrefix('layout')} preview={previews.length} />
 
 ## Stacking
 
 The z ladder for sticky regions and shell chrome; the CDK overlay keeps its own 1000.
 
-<TokenRows tokens={byPrefix('--sd-z-')} preview={previews.none} />
+<TokenRows tokens={byPrefix('zIndex')} preview={previews.none} />
 
-## Focus
+## Strokes & focus
+
+Focus is an outline of `strokeWidthThick` in `colorStrokeFocus2`, offset 2px.
 
 <TokenRows
-  tokens={byPrefix('--sd-focus-')}
-  preview={() => (
+  tokens={byPrefix('strokeWidth')}
+  preview={(t) => (
     <button
       style={{
-        outline: 'var(--sd-focus-ring)',
+        outline: `var(--${t.name}) solid var(--colorStrokeFocus2)`,
         outlineOffset: 2,
         padding: '6px 14px',
         borderRadius: 999,
-        background: 'var(--sd-surface)',
+        background: 'var(--colorNeutralBackground1)',
       }}
     >
       Focused

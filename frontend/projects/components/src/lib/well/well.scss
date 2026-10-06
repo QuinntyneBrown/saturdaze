@@ -5,35 +5,35 @@
   gap: 10px;
   align-items: flex-start;
   padding: 12px 14px;
-  border-radius: var(--sd-r-md);
-  background: var(--sd-surface-2);
+  border-radius: var(--borderRadiusMedium);
+  background: var(--colorNeutralBackground3);
   font-size: 14px;
-  color: var(--sd-ink);
+  color: var(--colorNeutralForeground1);
 }
 
 sd-icon {
   flex: none;
   margin-top: 3px;
-  color: var(--sd-ink-soft);
+  color: var(--colorNeutralForeground2);
 }
 
 :host(.well--accent) {
-  background: var(--sd-accent-soft);
+  background: var(--colorStatusSuccessBackground1);
 }
 :host(.well--accent) sd-icon {
-  color: var(--sd-accent);
+  color: var(--colorStatusSuccessForeground1);
 }
 :host(.well--warn) {
-  background: var(--sd-warn-soft);
+  background: var(--colorStatusDangerBackground1);
 }
 :host(.well--warn) sd-icon {
-  color: var(--sd-warn-deep);
+  color: var(--colorStatusDangerForeground1);
 }
 :host(.well--primary) {
-  background: var(--sd-primary-soft);
+  background: var(--colorBrandBackground2);
 }
 :host(.well--primary) sd-icon {
-  color: var(--sd-primary-deep);
+  color: var(--colorBrandForeground2);
 }
 
 .well__text {
@@ -41,13 +41,13 @@ sd-icon {
 }
 
 .well__title {
-  font-weight: var(--sd-fw-semibold);
-  font-size: var(--sd-fs-base);
+  font-weight: var(--fontWeightSemibold);
+  font-size: var(--fontSizeBase400);
 }
 
 .well__body {
-  color: var(--sd-ink-soft);
-  font-size: var(--sd-fs-sm);
+  color: var(--colorNeutralForeground2);
+  font-size: var(--fontSizeBase300);
 }
 
 .well__title + .well__body {

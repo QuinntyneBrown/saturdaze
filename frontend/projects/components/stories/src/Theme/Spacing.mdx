@@ -7,8 +7,15 @@ import { byPrefix } from './components/tokens';
 
 # Spacing
 
-A four-pixel base creates predictable density from compact metadata (`--sd-s-1`) through full page sections
-(`--sd-s-9`). Use the scale for padding, gaps and margins; the page gutter is the one responsive spacing token and lives
+A four-pixel base creates predictable density from compact metadata (`XS`) through full page sections (`XXXXXL`). As in
+Fluent, the ramp is published twice — `spacingHorizontal*` for inline padding, margins and column gaps,
+`spacingVertical*` for block ones — with the same values. The page gutter is the one responsive spacing token and lives
 on the [Layout](?path=/docs/theme-layout--docs) page.
 
-<TokenRows tokens={byPrefix('--sd-s-')} preview={previews.space} />
+## Horizontal
+
+<TokenRows tokens={byPrefix('spacingHorizontal')} preview={previews.space} />
+
+## Vertical
+
+<TokenRows tokens={byPrefix('spacingVertical')} preview={previews.space} />

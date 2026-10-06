@@ -5,8 +5,8 @@
 :host {
   display: flex;
   padding: 4px;
-  border-radius: var(--sd-r-pill);
-  background: var(--sd-surface-2);
+  border-radius: var(--borderRadiusCircular);
+  background: var(--colorNeutralBackground3);
   width: 100%;
 }
 
@@ -18,26 +18,26 @@
   justify-content: center;
   height: 36px;
   padding: 0 12px;
-  border-radius: var(--sd-r-pill);
+  border-radius: var(--borderRadiusCircular);
   font-size: 15px;
-  font-weight: var(--sd-fw-semibold);
-  color: var(--sd-ink-soft);
+  font-weight: var(--fontWeightSemibold);
+  color: var(--colorNeutralForeground2);
   white-space: nowrap;
   text-decoration: none;
   transition:
-    background var(--sd-dur-fast) var(--sd-ease),
-    color var(--sd-dur-fast) var(--sd-ease);
+    background var(--durationFast) var(--curveEasyEase),
+    color var(--durationFast) var(--curveEasyEase);
 }
 
 .segments__tab[aria-current='page'] {
-  background: var(--sd-surface);
-  color: var(--sd-ink);
-  box-shadow: var(--sd-shadow-1);
+  background: var(--colorNeutralBackground1);
+  color: var(--colorNeutralForeground1);
+  box-shadow: var(--shadow4);
 }
 
 @media (hover: hover) {
   .segments__tab:not([aria-current='page']):hover {
-    color: var(--sd-ink);
+    color: var(--colorNeutralForeground1);
   }
 }
 

@@ -49,6 +49,7 @@ Workspace has three projects under `frontend/projects/`:
 - Component selectors use `sd-*`; TypeScript class, file, and folder names omit the `Sd` prefix.
 - Components should preserve the mock design's BEM classes and accessible state semantics (ADR-009); e2e locators depend on that parity.
 - Keep component styles encapsulated and global styles limited to shared foundations and utilities.
+- **Design tokens follow Fluent UI v9 (ADR-013).** The TypeScript theme in `frontend/projects/components/src/lib/tokens/` is the source; `styles/_tokens.scss` and `tokens/tokens.ts` are generated — run `npm run tokens` in `frontend/` after changing it (CI runs `tokens:check`). Read tokens by role (`var(--colorBrandForeground1)` for text, `--colorBrandBackground` for fills, `--colorBrandStroke1` for borders), never hex values; component-scoped knobs keep the `--sd-` prefix.
 - **Declare each `ng-content` slot once.** A component that renders `<a>` or `<button>` by condition puts its slots in one `<ng-template>` and renders it with `ngTemplateOutlet` in both branches (`sd-button`, `sd-ghost-row`, `sd-list-item`); slots repeated per `@if` branch project into one branch only. On the consumer side, a `@if` wrapping several `[slot=…]` nodes loses the slot (NG8011) — one `@if` per node.
 - API services have a contract and injection token; app pages depend on the token, not the concrete implementation.
 - **No inline forms in pages**. Button-triggered editing always opens a CDK Dialog (`frontend/projects/saturdaze/src/app/dialogs/`) or navigates to a screen.

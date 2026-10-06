@@ -13,7 +13,7 @@
 // bottom edge (a sheet); from 720px it is centred (a modal). `sd-dialog`
 // draws the panel itself.
 .sd-dialog-backdrop {
-  background: rgba(31, 41, 55, 0.4);
+  background: var(--colorBackgroundOverlay);
 }
 
 .sd-dialog-panel {

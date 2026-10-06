@@ -31,21 +31,24 @@ reset, the tokens and `sd-`-prefixed utilities.
   gap: 4px;
   height: 24px;
   padding: 0 10px;
-  border-radius: var(--sd-r-pill);
-  font-weight: var(--sd-fw-semibold);
-  background: var(--sd-surface-2);
-  color: var(--sd-ink-soft);
+  border-radius: var(--borderRadiusCircular);
+  font-weight: var(--fontWeightSemibold);
+  background: var(--colorNeutralBackground3);
+  color: var(--colorNeutralForeground2);
 }
 
 :host(.chip--sun) {
-  background: var(--sd-sun-soft);
-  color: var(--sd-sun-ink);
+  background: var(--colorPaletteSunBackground1);
+  color: var(--colorPaletteSunForeground1);
 }
 ```
 
 Rules of thumb:
 
-- Use tokens, never hex values. Missing a colour? Add it to `_tokens.scss` first.
+- Use tokens, never hex values. Missing a colour? Add an alias token to the theme in `src/lib/tokens/` and run
+  `npm run tokens` first — `_tokens.scss` is generated (see [Theme/Overview](?path=/docs/theme-overview--docs)).
+- Pick the token by **role**, not by value: `colorBrandForeground1` for coral text, `colorBrandBackground` for a coral
+  fill, `colorBrandStroke1` for a coral border — even though today they share a hex.
 - Use `@include respond-to(tablet | desktop | xsmall)` for responsive rules.
 - Production budget per component style: **6kB warn / 10kB error**.
 

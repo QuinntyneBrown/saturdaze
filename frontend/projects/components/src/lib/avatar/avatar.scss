@@ -10,10 +10,10 @@
   height: 32px;
   border-radius: 50%;
   font-size: 13px;
-  font-weight: var(--sd-fw-bold);
+  font-weight: var(--fontWeightBold);
   line-height: 1;
-  background: var(--sd-surface-2);
-  color: var(--sd-ink-soft);
+  background: var(--colorNeutralBackground3);
+  color: var(--colorNeutralForeground2);
 }
 
 :host(.avatar--sm) {
@@ -33,22 +33,22 @@
 }
 
 :host(.avatar--q) {
-  background: var(--sd-primary-soft);
-  color: var(--sd-primary-deep);
+  background: var(--colorBrandBackground2);
+  color: var(--colorBrandForeground2);
 }
 :host(.avatar--s) {
-  background: var(--sd-leaf-soft);
-  color: var(--sd-leaf-ink);
+  background: var(--colorPaletteLeafBackground1);
+  color: var(--colorPaletteLeafForeground1);
 }
 :host(.avatar--e) {
-  background: var(--sd-sky-soft);
-  color: var(--sd-sky-ink);
+  background: var(--colorPaletteSkyBackground1);
+  color: var(--colorPaletteSkyForeground1);
 }
 :host(.avatar--m) {
-  background: var(--sd-sun-soft);
-  color: var(--sd-sun-ink);
+  background: var(--colorPaletteSunBackground1);
+  color: var(--colorPaletteSunForeground1);
 }
 :host(.avatar--indoor) {
-  background: var(--sd-indoor-soft);
-  color: var(--sd-indoor-ink);
+  background: var(--colorPaletteIndoorBackground1);
+  color: var(--colorPaletteIndoorForeground1);
 }

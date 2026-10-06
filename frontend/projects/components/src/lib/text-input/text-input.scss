@@ -11,15 +11,15 @@
   display: flex;
   align-items: baseline;
   gap: 6px;
-  font-size: var(--sd-fs-sm);
-  font-weight: var(--sd-fw-medium);
-  color: var(--sd-ink-soft);
+  font-size: var(--fontSizeBase300);
+  font-weight: var(--fontWeightMedium);
+  color: var(--colorNeutralForeground2);
 }
 
 .field__req {
-  font-size: var(--sd-fs-xs);
-  color: var(--sd-ink-faint);
-  font-weight: var(--sd-fw-regular);
+  font-size: var(--fontSizeBase200);
+  color: var(--colorNeutralForeground3);
+  font-weight: var(--fontWeightRegular);
 }
 
 .field__input {
@@ -27,32 +27,32 @@
   min-width: 0;
   height: 44px;
   padding: 0 12px;
-  background: var(--sd-surface);
-  border: 1px solid var(--sd-line-strong);
-  border-radius: var(--sd-r-md);
-  font-size: var(--sd-fs-base);
-  color: var(--sd-ink);
+  background: var(--colorNeutralBackground1);
+  border: 1px solid var(--colorNeutralStroke1);
+  border-radius: var(--borderRadiusMedium);
+  font-size: var(--fontSizeBase400);
+  color: var(--colorNeutralForeground1);
   transition:
-    border-color var(--sd-dur-fast) var(--sd-ease),
-    box-shadow var(--sd-dur-fast) var(--sd-ease);
+    border-color var(--durationFast) var(--curveEasyEase),
+    box-shadow var(--durationFast) var(--curveEasyEase);
 }
 
 .field__input::placeholder {
-  color: var(--sd-ink-faint);
+  color: var(--colorNeutralForeground3);
 }
 
 .field__input:focus-visible {
   outline: none;
-  border-color: var(--sd-primary);
-  box-shadow: 0 0 0 3px var(--sd-primary-soft);
+  border-color: var(--colorBrandStroke1);
+  box-shadow: 0 0 0 3px var(--colorBrandStroke2);
 }
 
 .field__input[aria-invalid='true'] {
-  border-color: var(--sd-warn);
+  border-color: var(--colorStatusDangerBorderActive);
 }
 
 .field__input[readonly] {
-  background: var(--sd-surface-2);
+  background: var(--colorNeutralBackground3);
   border-color: transparent;
 }
 
@@ -69,14 +69,14 @@ textarea.field__input {
 }
 
 .field__hint {
-  font-size: var(--sd-fs-xs);
-  color: var(--sd-ink-soft);
+  font-size: var(--fontSizeBase200);
+  color: var(--colorNeutralForeground2);
 }
 
 .field__error {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  font-size: var(--sd-fs-xs);
-  color: var(--sd-warn-deep);
+  font-size: var(--fontSizeBase200);
+  color: var(--colorStatusDangerForeground1);
 }
