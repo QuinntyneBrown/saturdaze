@@ -1,7 +1,7 @@
 @startuml
 !include <C4/C4_Container>
 LAYOUT_WITH_LEGEND()
-title Containers — Manage shopping errands
+title Containers - Manage shopping errands
 
 Person(actor, "Family member", "Adds and completes a weekend errand")
 System_Boundary(saturdaze, "Saturdaze") {

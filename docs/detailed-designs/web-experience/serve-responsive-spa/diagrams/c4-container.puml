@@ -1,7 +1,7 @@
 @startuml
 !include <C4/C4_Container>
 LAYOUT_WITH_LEGEND()
-title Containers — Serve a responsive single-page application
+title Containers - Serve a responsive single-page application
 
 Person(visitor, "Browser user", "Uses responsive routed pages")
 System_Boundary(saturdaze, "Saturdaze") {

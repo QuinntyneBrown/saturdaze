@@ -16,7 +16,7 @@ The feature crosses the application and platform boundaries needed to deliver it
 - **`TextInput`** — Shared Angular form control that associates visible labels and validation text.
 - **`Dialog`** — Presentational panel inside the Angular CDK dialog container; CDK owns focus trapping and restoration.
 - **`FilterChip and Toggle`** — Shared interactive controls with keyboard and state semantics.
-- **`_tokens.scss and _global.scss`** — Shared color and focus styles used by component SCSS.
+- **`_tokens.scss and _global.scss`** — Shared color and focus styles used by component SCSS. `_tokens.scss` is generated from the Fluent UI v9 TypeScript theme in `components/src/lib/tokens/` (ADR-013); `_global.scss` applies the shared `:focus-visible` outline.
 - **`Routed page templates`** — Feature templates that provide descriptive labels and image alternatives.
 
 Automated structural checks do not establish complete keyboard or WCAG contrast conformance. The obligations below remain subject to dedicated accessibility verification.

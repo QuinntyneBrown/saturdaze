@@ -9,28 +9,36 @@ skinparam class {
   FontColor #101828
   BackgroundColor #F9FAFB
 }
-title Class structure — View weekend weather
+title Class structure - View weekend weather
 
 interface IWeatherClient {
-  +GetForecastAsync(latitude: double, longitude: double, from: DateOnly, to: DateOnly): Task<IReadOnlyList<WeatherForecast>>
+  +GetForecastAsync(latitude: double, longitude: double, from: DateOnly, to: DateOnly, cancellationToken: CancellationToken): Task<IReadOnlyList<WeatherForecast>>
 }
 class GetWeekendWeatherQueryHandler {
   +Handle(query: GetWeekendWeatherQuery): Task<IReadOnlyList<WeatherForecast>>
 }
 class OpenMeteoWeatherClient {
-  +GetForecastAsync(latitude: double, longitude: double, from: DateOnly, to: DateOnly): Task<IReadOnlyList<WeatherForecast>>
+  +GetForecastAsync(latitude: double, longitude: double, from: DateOnly, to: DateOnly, cancellationToken: CancellationToken): Task<IReadOnlyList<WeatherForecast>>
 }
 class WeatherForecast {
   +DateOnly Date
+  +IReadOnlyList<string> Tags
   +double? HighCelsius
   +double? LowCelsius
+  +double? PrecipitationMm
   +bool Unavailable
+}
+class HomeLocationOptions {
+  +double Latitude
+  +double Longitude
+  +string Name
 }
 class WeekendForecastService {
   +GetAsync(weekendOf: DateOnly, ct: CancellationToken): Task<IReadOnlyList<WeatherForecast>>
 }
 GetWeekendWeatherQueryHandler --> WeekendForecastService : calls
 WeekendForecastService --> IWeatherClient : configured coordinates
+WeekendForecastService --> HomeLocationOptions : reads
 OpenMeteoWeatherClient ..|> IWeatherClient
 OpenMeteoWeatherClient --> WeatherForecast : maps or falls back
 @enduml

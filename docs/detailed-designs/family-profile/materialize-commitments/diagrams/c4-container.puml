@@ -1,7 +1,7 @@
 @startuml
 !include <C4/C4_Container>
 LAYOUT_WITH_LEGEND()
-title Containers — Materialize recurring commitments
+title Containers - Materialize recurring commitments
 
 Person(actor, "Family organizer", "Plans a weekend around fixed commitments")
 System_Boundary(saturdaze, "Saturdaze") {
@@ -10,6 +10,6 @@ System_Boundary(saturdaze, "Saturdaze") {
   ContainerDb(db, "Saturdaze database", "SQL Server", "Stores commitments and itinerary blocks")
 }
 Rel(actor, web, "Uses", "HTTPS")
-Rel(web, api, "Requests current weekend", "JSON/HTTPS")
+Rel(web, api, "Requests a weekend plan", "JSON/HTTPS")
 Rel(api, db, "Reads commitments and writes blocks", "EF Core")
 @enduml

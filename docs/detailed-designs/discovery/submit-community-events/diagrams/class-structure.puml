@@ -9,7 +9,7 @@ skinparam class {
   FontColor #101828
   BackgroundColor #F9FAFB
 }
-title Class structure — Submit community events
+title Class structure - Submit community events
 
 class IdeasPage {
   #suggest(): Promise<void>

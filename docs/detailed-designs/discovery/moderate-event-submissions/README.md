@@ -10,15 +10,15 @@ Saturdaze is a web application that plans personalized family weekends. Moderati
 
 ## Description
 
-`ReviewSubmissionsPage` at `/review-submissions` is guarded by `requireAuth` and `requireAdmin`. It loads the pending queue through `EventSubmissionsService` and opens approval or rejection dialogs.
+`ReviewSubmissionsPage` at `/review-submissions` is guarded by `requireAuth` and `requireAdmin`. It loads the pending queue through `EventSubmissionsService` and opens `ApproveSubmissionDialog` or `RejectSubmissionDialog`. The page approves without a drive time; only the API accepts `driveMinutes`.
 
 `EventSubmissionsController` requires the Admin policy for pending, approve, and reject endpoints. The UI guard aids navigation; the API policy enforces authorization.
 
-`ApproveSubmissionCommandHandler` creates `LocalEvent`, stamps reviewer and publication identifiers, and accepts optional drive minutes. Repeated approval returns the existing result; a previously rejected submission returns 409.
+`ApproveSubmissionCommandHandler` creates `LocalEvent`, stamps reviewer and publication identifiers, and accepts optional drive minutes from 0 to 600. Repeated approval returns the existing result; a previously rejected submission returns 409. An unknown submission ID returns 404.
 
 `RejectSubmissionCommandHandler` records Rejected status and the optional trimmed reason. Repeated rejection is idempotent; rejecting an approved submission returns 409.
 
-Approval rejects any existing event with the same name and date, even though ingestion's database key also includes location. This stricter moderation rule remains explicit pending reconciliation.
+Approval returns 409 `event_already_published` when an event with the same name, start date, and location already exists. This check matches the `LocalEvents` unique key on name, start date, and location.
 
 ## Requirements
 

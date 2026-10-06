@@ -1,7 +1,7 @@
 @startuml
 !include <C4/C4_Component>
 LAYOUT_WITH_LEGEND()
-title Components — Verify an email address
+title Components - Verify an email address
 
 Container_Boundary(web, "Saturdaze web application") {
   Component(page, "VerifyEmailPage", "Angular component", "Reads the link token and presents state")

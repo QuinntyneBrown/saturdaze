@@ -1,7 +1,7 @@
 @startuml
 !include <C4/C4_Container>
 LAYOUT_WITH_LEGEND()
-title Containers — Pick restaurants
+title Containers - Pick restaurants
 
 Person(actor, "Family member", "Chooses a meal option for a weekend slot")
 System_Boundary(saturdaze, "Saturdaze") {

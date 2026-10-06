@@ -1,7 +1,7 @@
 @startuml
 !include <C4/C4_Container>
 LAYOUT_WITH_LEGEND()
-title Containers — Control itinerary blocks
+title Containers - Control itinerary blocks
 
 Person(actor, "Family member", "Locks, swaps, or regenerates plan content")
 System_Boundary(saturdaze, "Saturdaze") {

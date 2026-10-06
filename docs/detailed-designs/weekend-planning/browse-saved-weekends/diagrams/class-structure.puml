@@ -9,7 +9,7 @@ skinparam class {
   FontColor #101828
   BackgroundColor #F9FAFB
 }
-title Class structure — Browse saved weekends
+title Class structure - Browse saved weekends
 
 class PastPage {
   #setFilter(label: string): void
@@ -17,12 +17,24 @@ class PastPage {
 class SavedService {
   +load(): Promise<void>
   +list(): Signal<PastView>
+  +setFavourite(id: string, favourite: boolean): Promise<void>
+  +rate(id: string, rating: number | null): Promise<void>
+  +rename(id: string, title: string | null): Promise<void>
 }
 class GetWeekendHistoryQueryHandler {
   +Handle(query: GetWeekendHistoryQuery): Task<IReadOnlyList<WeekendSummaryDto>>
 }
 class MarkFavouriteCommandHandler {
   +Handle(command: MarkFavouriteCommand): Task<WeekendDto>
+}
+class RateWeekendCommandHandler {
+  +Handle(command: RateWeekendCommand): Task<WeekendDto>
+}
+class RenameWeekendCommandHandler {
+  +Handle(command: RenameWeekendCommand): Task<WeekendDto>
+}
+class ReuseWeekendCommandHandler {
+  +Handle(command: ReuseWeekendCommand): Task<WeekendDto>
 }
 class Weekend {
   +DateOnly WeekendOf
@@ -34,4 +46,7 @@ PastPage --> SavedService : reads
 SavedService ..> GetWeekendHistoryQueryHandler : invokes through API
 GetWeekendHistoryQueryHandler --> Weekend : projects
 MarkFavouriteCommandHandler --> Weekend : updates
+RateWeekendCommandHandler --> Weekend : updates
+RenameWeekendCommandHandler --> Weekend : updates
+ReuseWeekendCommandHandler --> Weekend : copies into current
 @enduml

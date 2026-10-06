@@ -9,10 +9,15 @@ skinparam class {
   FontColor #101828
   BackgroundColor #F9FAFB
 }
-title Class structure — Track own event submissions
+title Class structure - Track own event submissions
 
 class IdeasEventsPage
+class EventsService {
+  +list(): Signal<IdeasEventsView>
+  +load(weekendOfIso?: string): Promise<void>
+}
 class EventSubmissionsService {
+  +mine(): Signal<readonly EventSubmissionDto[]>
   +loadMine(): Promise<void>
 }
 class ListMySubmissionsQuery {
@@ -24,7 +29,8 @@ class EventSubmission {
   +Guid SubmittedByUserId
   +EventSubmissionStatus Status
 }
-IdeasEventsPage --> EventSubmissionsService : calls
+IdeasEventsPage --> EventsService : EVENTS_SERVICE
+EventsService --> EventSubmissionsService : EVENT_SUBMISSIONS_SERVICE
 EventSubmissionsService ..> ListMySubmissionsQuery : maps to
 ListMySubmissionsQueryHandler --> EventSubmission : filters
 @enduml

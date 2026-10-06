@@ -1,5 +1,5 @@
 @startuml
-title UML sequence behaviour — Serve a responsive single-page application
+title UML sequence behaviour - Serve a responsive single-page application
 skinparam backgroundColor #FFFFFF
 skinparam shadowing false
 skinparam roundcorner 12
@@ -15,15 +15,15 @@ skinparam package {
   BackgroundColor #F9FAFB
 }
 actor "Browser user" as user
-box "Frontend — Saturdaze Angular application" #E0F2FE
+box "Frontend - Saturdaze Angular application" #E0F2FE
   participant "Angular Router" as router
   participant "Lazy routed page" as page
 end box
-box "Backend — Azure Static Web Apps hosting" #D1FADF
+box "Backend - Azure Static Web Apps hosting" #D1FADF
   participant "Navigation fallback" as fallback
   participant "Static asset store" as assets
 end box
-box "Frontend — Browser rendering platform" #FFF4E5
+box "Frontend - Browser rendering platform" #FFF4E5
   participant "Layout and CSS engine" as layout
 end box
 user -> fallback : Refresh /weekend
@@ -32,10 +32,17 @@ fallback -> assets : Read index.html
 assets --> fallback : SPA shell
 fallback --> user : HTML response
 user -> router : Bootstrap Angular shell
-router -> assets : Request lazy route chunk
-assets --> router : Page JavaScript
-router -> page : Instantiate routed component
-page -> layout : Apply L2-028 viewport rules
-layout --> page : Responsive layout
-page --> user : Render usable route
+router -> router : Run route guards after session rehydration
+alt signed-out visitor on a requireAuth route
+  router --> user : Redirect to /sign-in?returnUrl=/weekend
+else unmatched path
+  router --> user : Wildcard ** redirects to /
+else guard passes
+  router -> assets : Request lazy route chunk (L2-035)
+  assets --> router : Page JavaScript
+  router -> page : Instantiate routed component
+  page -> layout : Apply L2-028 viewport rules
+  layout --> page : Responsive layout
+  page --> user : Render usable route
+end
 @enduml

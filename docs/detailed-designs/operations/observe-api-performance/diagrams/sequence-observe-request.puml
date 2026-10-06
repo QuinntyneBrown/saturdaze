@@ -1,5 +1,5 @@
 @startuml
-title UML sequence behaviour — Observe API performance
+title UML sequence behaviour - Observe API performance
 skinparam backgroundColor #FFFFFF
 skinparam shadowing false
 skinparam roundcorner 12
@@ -15,29 +15,40 @@ skinparam package {
   BackgroundColor #F9FAFB
 }
 actor "API client" as client
-box "Frontend — Calling application" #E0F2FE
+box "Frontend - Calling application" #E0F2FE
   participant "HTTP client" as http
 end box
-box "Backend — Saturdaze API application" #D1FADF
+box "Backend - Saturdaze API application" #D1FADF
   participant "Serilog request logging" as requestlog
   participant "ExceptionHandlingMiddleware" as errors
+  participant "Auth, controller, and MediatR" as controller
 end box
-box "Backend — Saturdaze Application layer" #ECFDF3
+box "Backend - Saturdaze Application layer" #ECFDF3
   participant "LoggingBehavior" as logging
   participant "Application handler" as handler
 end box
-box "Backend — Observability infrastructure" #FFF4E5
+box "Backend - Observability infrastructure" #FFF4E5
   database "Structured log sinks" as logs
 end box
 client -> http : Start feature request
 http -> requestlog : HTTPS request
 requestlog -> errors : Start request timer
-errors -> logging : Dispatch command or query
+errors -> controller : Invoke next middleware
+controller -> logging : Send command or query
 logging -> handler : Start handler timer
-handler --> logging : Typed result
-logging -> logs : Write handler elapsed time
-logging --> errors : Return result
-errors --> requestlog : HTTP status
+alt handler succeeds
+  handler --> logging : Typed result
+  logging -> logs : Info: Handled request name in elapsed ms
+  logging --> controller : Return result
+  controller --> errors : 2xx response
+else handler throws
+  handler --> logging : Exception
+  logging -> logs : Warning: Failed request name after elapsed ms
+  logging --> errors : Rethrow
+  errors -> errors : Map to 400/401/404/409 problem or AuthError; unknown to 500 with error log
+end
+errors --> requestlog : Response status
+requestlog -> requestlog : Enrich UserId from sub claim when authenticated
 requestlog -> logs : Apply L2-039 structured completion event
 requestlog --> http : HTTP response
 http --> client : Feature result

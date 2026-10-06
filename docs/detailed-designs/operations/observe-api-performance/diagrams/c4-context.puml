@@ -1,7 +1,7 @@
 @startuml
 !include <C4/C4_Context>
 LAYOUT_WITH_LEGEND()
-title System Context — Observe API performance
+title System Context - Observe API performance
 
 Person(client, "API client", "Invokes Saturdaze features")
 Person(operator, "System operator", "Reviews request outcomes and latency")

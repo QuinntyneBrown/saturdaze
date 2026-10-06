@@ -1,7 +1,7 @@
 @startuml
 !include <C4/C4_Component>
 LAYOUT_WITH_LEGEND()
-title Components — Sign out
+title Components - Sign out
 
 Container_Boundary(web, "Saturdaze web application") {
   Component(page, "FamilyPage / signOutWith / ConfirmDialog", "Angular component", "Confirms the sign-out action")

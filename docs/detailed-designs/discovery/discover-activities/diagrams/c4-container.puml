@@ -1,7 +1,7 @@
 @startuml
 !include <C4/C4_Container>
 LAYOUT_WITH_LEGEND()
-title Containers — Discover activities
+title Containers - Discover activities
 
 Person(actor, "Family member", "Looks for weekend activities")
 System_Boundary(saturdaze, "Saturdaze") {

@@ -6,17 +6,17 @@ Saturdaze is a web application that plans personalized family weekends. Weekend 
 
 *neutral fallback* — two-day unavailable forecast returned when the weather provider cannot supply data
 
-`GetWeekendWeatherQueryHandler` requests Saturday and Sunday from `IWeatherClient`. `OpenMeteoWeatherClient` caches successful results for 60 minutes and converts provider failures to neutral forecasts.
+`GetWeekendWeatherQueryHandler` requests Saturday and Sunday from `IWeatherClient` through `WeekendForecastService`. `OpenMeteoWeatherClient` caches successful results for 60 minutes and converts provider failures to neutral forecasts.
 
 ## Description
 
-`WeekendPage` displays forecast data from WeekendDto through `WeekendPlanService`. `ActivityService` separately requests the public weather endpoint for discovery grouping.
+`WeekendPage` displays forecast data from WeekendDto through `WeekendPlanService`. `ActivityService` separately requests the anonymous `GET /api/weather` endpoint for discovery grouping and treats a failed request as an empty forecast.
 
 `WeatherController` dispatches `GetWeekendWeatherQuery`. `GetWeekendWeatherQueryHandler` delegates to `WeekendForecastService`, which calls `IWeatherClient` with configured HomeLocationOptions coordinates and the two-day range.
 
-`OpenMeteoWeatherClient` caches successful responses for 60 minutes and returns unavailable entries on handled upstream failures. WeatherForecast supplies dates, condition tags, temperatures, precipitation, and Unavailable; the browser derives labels and icons.
+`OpenMeteoWeatherClient` reads its base URL from `Saturdaze:Weather:BaseUrl`, defaulting to `https://api.open-meteo.com/v1/`. It caches parsed responses in `IMemoryCache` for 60 minutes and returns unavailable entries on handled `HttpRequestException`, `TaskCanceledException`, and `JsonException` failures. WeatherForecast supplies dates, condition tags, temperatures, precipitation, and Unavailable; the browser derives labels and icons.
 
-HomeLocation text stored on the family is not geocoded. Forecasts therefore use deployment coordinates rather than personalized coordinates. `WarnOnMissingProductionConfig` reports missing production configuration at startup.
+HomeLocation text stored on the family is not geocoded. Forecasts therefore use deployment coordinates rather than personalized coordinates. `WarnOnMissingProductionConfig` runs outside Development and warns when the JWT signing key is unset or a placeholder, or when CORS origins are empty. It does not check weather or home-location settings.
 
 ## Requirements
 
@@ -56,6 +56,6 @@ The class view shows the request, handler, and state relationships used by the f
 
 ### Behaviour — load a two-day forecast with fallback
 
-The sequence view traces the primary behaviour to `L2-023`, `L2-024`, and `L2-040`. Its alternate path produces a controlled empty, validation, authorization, or fallback state.
+The sequence view traces the primary behaviour to `L2-023`, `L2-024`, and `L2-040`. Its alternate paths cover a cache hit and the unavailable fallback; the endpoint is anonymous, so no authorization path applies.
 
 ![Sequence diagram for viewing weekend weather](diagrams/sequence-weather.png)

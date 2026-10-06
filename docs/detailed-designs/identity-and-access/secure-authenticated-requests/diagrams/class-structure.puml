@@ -9,7 +9,7 @@ skinparam class {
   FontColor #101828
   BackgroundColor #F9FAFB
 }
-title Class structure — Secure authenticated requests
+title Class structure - Secure authenticated requests
 
 class authInterceptor <<HttpInterceptorFn>>
 class SessionStore {
@@ -21,7 +21,7 @@ class CurrentUserFamilyAccessor {
 class JwtBearerPostConfigure
 class Pbkdf2PasswordHasher {
   +Hash(password: string): string
-  +Verify(password: string, hash: string): bool
+  +Verify(hash: string, password: string): bool
 }
 class JwtTokenService {
   +CreateAccessToken(user: User): string

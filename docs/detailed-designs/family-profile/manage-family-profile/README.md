@@ -10,11 +10,13 @@ The profile page loads one aggregate for the authenticated family. Dialogs edit 
 
 ## Description
 
-`FamilyPage` at `/family` loads `FamilyService.getEditableProfile()`. `HomeLocationDialog`, `FamilyMemberDialog`, `CommitmentDialog`, and `LikesDialog` return edits; the page persists the complete editable profile through `saveProfile()`.
+`FamilyPage` at `/family` calls `FamilyService.load()`, which issues `GET /api/family`, and reads the `getFamily()` and `getEditableProfile()` signals. `HomeLocationDialog`, `FamilyMemberDialog`, `CommitmentDialog`, and `LikesDialog` return edits; the page persists the complete editable profile through `saveProfile()`.
 
 `SaveFamilyProfileCommandHandler` resolves ownership through `CurrentUserFamilyAccessor`. It can attach a new family to an authenticated account lacking one, then synchronizes member, commitment, and preference collections.
 
-Members match by supplied ID or name; commitments match by ID or title/day. Missing collection entries are removed. Optional scalar settings retain their existing value when omitted where supported; collection synchronization is replacement, not a general PATCH contract.
+Members match by supplied ID or name; commitments match by ID or title/day. Missing collection entries are removed. Preferences match by kind and case-insensitive value. Optional scalar settings retain their existing value when omitted where supported; collection synchronization is replacement, not a general PATCH contract.
+
+`SaveFamilyProfileCommandValidator` runs in the MediatR `ValidationBehavior`. It rejects an empty home location, duplicate member names, ages outside 0-120, commitments whose start is not before their end, overlapping same-day commitments, and duplicate preferences; the API returns 400 and persists nothing.
 
 The response is reread from persistence through `FamilyProfileMapper`. Name, home text, budget, novelty, and Friday-preview preferences are stored. The current planner consumes novelty; budget and Friday-preview delivery are not implemented downstream.
 
@@ -57,6 +59,6 @@ The class view shows the request path and the state relationships used by the fe
 
 ### Behaviour — save a family profile
 
-The sequence view traces the primary behaviour to `L2-009` and `L2-010`. Its alternate path preserves valid existing state when the request cannot proceed.
+The sequence view traces the profile load to `L2-009` and the save to `L2-010`. Its alternate path returns 400 and preserves the stored profile when validation fails.
 
 ![Sequence diagram for managing a family profile](diagrams/sequence-save-profile.png)

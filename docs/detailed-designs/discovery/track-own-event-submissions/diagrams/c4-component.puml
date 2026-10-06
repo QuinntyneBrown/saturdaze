@@ -1,7 +1,7 @@
 @startuml
 !include <C4/C4_Component>
 LAYOUT_WITH_LEGEND()
-title Components — Track own event submissions
+title Components - Track own event submissions
 
 Container_Boundary(web, "Saturdaze web application") {
   Component(page, "IdeasEventsPage", "Angular component", "Merges public and owned pending cards")

@@ -1,10 +1,10 @@
 @startuml
 !include <C4/C4_Context>
 LAYOUT_WITH_LEGEND()
-title System context — Schedule ingestion
+title System context - Schedule ingestion
 Person(operator, "Operator", "Configures schedule and inspects outcomes")
 System(saturdaze, "Saturdaze", "Refreshes shared discovery catalogs")
-System_Ext(provider, "Claude on Microsoft Foundry", "External catalog research; Anthropic API as fallback")
+System_Ext(provider, "Claude on Microsoft Foundry", "External catalog research; Anthropic API selectable by configuration")
 System_Ext(scheduler, "External job scheduler", "Optional one-shot trigger; not provisioned by deploy.yml")
 Rel(operator, saturdaze, "Configures cron and types")
 Rel(scheduler, saturdaze, "May start run-once process")

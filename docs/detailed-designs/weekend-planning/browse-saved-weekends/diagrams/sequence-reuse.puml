@@ -5,32 +5,33 @@ skinparam roundcorner 12
 skinparam defaultFontName Arial
 skinparam ArrowColor #344054
 
-title Behaviour — Repeat or remix (L2-084)
+title Behaviour - Repeat or remix (L2-084)
 actor User as actor
-box "Frontend — Angular application" #E0F2FE
+box "Frontend - Angular application" #E0F2FE
  participant "PastPage and confirmation dialog" as page
  participant WeekendPlanService as client
 end box
-box "Backend — API" #D1FADF
+box "Backend - API" #D1FADF
  participant WeekendsController as controller
 end box
-box "Backend — Application" #ECFDF3
+box "Backend - Application" #ECFDF3
  participant ReuseWeekendCommandHandler as handler
  participant RegenerateWeekendCommandHandler as regenerate
 end box
-box "Backend — Infrastructure" #FFF4E5
+box "Backend - Infrastructure" #FFF4E5
  database AppDbContext as db
 end box
 actor -> page : Confirm Repeat or Remix
-page -> client : repeat(sourceId) or remix(sourceId)
+page -> client : repeatSaved(sourceId) or remixSaved(sourceId)
 client -> controller : POST /api/weekends/{id}/repeat or remix
 controller -> handler : ReuseWeekendCommand
-handler -> db : Resolve owned source and current target
+handler -> db : Resolve owned source and upcoming-Saturday target
 db --> handler : Source and optional current weekend
 alt source absent or another family's
  handler --> controller : 404
 else source owned
- handler -> handler : Remove target blocks and errands; copy source with new IDs
+ handler -> handler : Create target if absent, else remove its blocks and errands
+ handler -> handler : Copy source blocks and errands with new IDs
  handler -> handler : Copy locks; clear favourite and rating
  handler -> db : Save replacement draft
  db --> handler : Saved
@@ -43,10 +44,10 @@ else source owned
  handler --> controller : WeekendDto with forecast
 end
 controller --> client : Response
-client --> page : Open current weekend or show error
+client --> page : Navigate to /weekend or show error
 note over handler, regenerate
 Existing target locks are replaced.
-Commitments are rebuilt by regeneration.
+Remix rebuilds commitments through regeneration.
 Copy and regeneration are separate saves.
 end note
 @enduml

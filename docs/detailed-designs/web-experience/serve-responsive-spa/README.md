@@ -14,9 +14,9 @@ Saturdaze combines an Angular web application, an ASP.NET Core API, SQL Server p
 
 The app shell serves Weekend, Ideas, Past, Family, and Review submissions. Site chrome serves landing, legal, and shared-weekend pages; authentication uses bare chrome. `requireAnonymous`, `requireAuth`, and `requireAdmin` enforce route access.
 
-Below 720 px, app routes use bottom navigation and stacked days; wider layouts use the top bar and two day columns. `_global.scss` and component/page SCSS preserve the BEM class contract with `docs/mocks-v2`.
+Below 720 px, app routes use bottom navigation; from 720 px they use the top bar. The weekend's `.sd-grid-days` stacks days below 1024 px and sets two day columns from 1024 px. `_breakpoints.scss`, `_global.scss`, and component/page SCSS preserve the BEM class contract with `docs/mocks`.
 
-Legacy paths such as `/login`, `/profile`, `/saved`, and `/itinerary` redirect to `/sign-in`, `/family`, `/past`, and `/weekend`. The dialogs gallery and state overrides exist only when environment.galleryRoutes is enabled.
+Legacy paths such as `/login`, `/profile`, `/saved`, and `/itinerary` redirect to `/sign-in`, `/family`, `/past`, and `/weekend`. The `**` wildcard redirects any unmatched path to `/`. The `/dialogs` gallery route and the dev state overrides exist only when `environment.galleryRoutes` is enabled; the production environment disables it.
 
 `staticwebapp.config.json` provides deep-route fallback. ADR-010 defines visual tiers, masks, and mock-derived baselines; rendering bounds remain 320 through 1920 px.
 

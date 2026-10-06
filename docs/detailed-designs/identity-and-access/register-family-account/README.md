@@ -6,13 +6,13 @@ Saturdaze is a web application that plans personalized family weekends. Account 
 
 *family account* — user identity paired with the single family profile it owns
 
-The signup flow collects credentials and optional family details. A successful transaction creates `User` and `Family` records before returning access and refresh tokens.
+The signup flow collects credentials and a family name; the API treats family name and home location as optional. A successful transaction creates `User` and `Family` records before returning access and refresh tokens.
 
 ## Description
 
 `CreateAccountPage` at `/create-account` validates credentials and terms acknowledgement and calls `SessionStore.signUp()`. It also sends the Friday-preview preference and then opens `/verify-email`.
 
-`AuthController.Register()` dispatches `RegisterUserCommand` and returns 201 with `AuthSuccessDto`. `RegisterUserCommandHandler` checks normalized email uniqueness, creates `User` and `Family`, and issues credentials through `RefreshTokenIssuer`.
+`AuthController.Register()` dispatches `RegisterUserCommand` and returns 201 with `AuthSuccessDto`. `RegisterUserCommandHandler` checks normalized email uniqueness, creates `User` and `Family`, adds a 24-hour `EmailVerificationToken`, and issues credentials through `RefreshTokenIssuer`.
 
 `Pbkdf2PasswordHasher` stores salted password hashes. `SessionStore` persists registration credentials in local storage and sets the current user.
 

@@ -1,37 +1,49 @@
 @startuml
-title UML sequence behaviour — Materialize recurring commitments
+title UML sequence behaviour - Materialize recurring commitments
 skinparam backgroundColor #FFFFFF
 skinparam shadowing false
 skinparam roundcorner 12
 skinparam defaultFontName Arial
 skinparam ArrowColor #344054
 actor "User" as actor
-box "Frontend — Saturdaze Angular application" #E0F2FE
+box "Frontend - Saturdaze Angular application" #E0F2FE
  participant "WeekendPage" as page
  participant "WeekendPlanService" as client
 end box
-box "Backend — Saturdaze API" #D1FADF
+box "Backend - Saturdaze API" #D1FADF
  participant "WeekendsController" as controller
 end box
-box "Backend — Saturdaze Application and Domain" #ECFDF3
+box "Backend - Saturdaze Application and Domain" #ECFDF3
  participant "GenerateWeekendCommandHandler\nPlannerInputLoader\nWeekendPlanner" as handler
 end box
-box "Backend — Saturdaze Infrastructure" #FFF4E5
+box "Backend - Saturdaze Infrastructure" #FFF4E5
  database "AppDbContext\nSQL Server" as db
 end box
 actor -> page : Plan weekend
 page -> client : plan(weekendOf)
 client -> controller : POST /api/weekends/plan
 controller -> handler : GenerateWeekendCommand after authorization
-handler -> db : Load owned family, commitments, catalogs, and history
-db --> handler : Planning inputs
-handler -> handler : Fetch forecast; BuildFixedBlocks for each weekend day
-handler -> handler : L2-011 create locked Commitment blocks; fill flexible gaps
-handler -> db : Save weekend and blocks
-db --> handler : Saved
-handler --> controller : WeekendDto
-controller --> client : 200 plan
-client --> page : WeekendView
+handler -> db : Find weekend for family and weekendOf
+db --> handler : Existing weekend or none
+alt Weekend already exists (ADR-003)
+ handler --> controller : Existing WeekendDto
+ controller --> client : 200 existing plan
+else No weekend for the date
+ handler -> db : Load owned family, commitments, catalogs, and history
+ db --> handler : Planning inputs
+ handler -> handler : Fetch forecast; BuildFixedBlocks for each weekend day
+ alt Fixed blocks overlap on a day
+  handler --> controller : ConflictException
+  controller --> client : 409 conflict; no weekend saved
+ else Fixed blocks fit
+  handler -> handler : L2-011 create locked Commitment blocks; fill flexible gaps
+  handler -> db : Save weekend and blocks
+  db --> handler : Saved
+  handler --> controller : WeekendDto
+  controller --> client : 200 plan
+ end
+end
+client --> page : Weekend signal updates (WeekendView)
 note over handler
 Regeneration recreates commitments from the profile.
 Their IDs and edited profile times can change.

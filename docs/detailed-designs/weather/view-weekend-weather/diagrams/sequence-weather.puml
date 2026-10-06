@@ -6,25 +6,25 @@ skinparam roundcorner 12
 skinparam defaultFontName Arial
 skinparam ArrowColor #344054
 
-box "Frontend — Saturdaze Angular application" #E0F2FE
+box "Frontend - Saturdaze Angular application" #E0F2FE
  participant "ActivityService" as client
 end box
-box "Backend — Saturdaze API" #D1FADF
+box "Backend - Saturdaze API" #D1FADF
  participant "WeatherController" as ctrl
 end box
-box "Backend — Application" #ECFDF3
+box "Backend - Application" #ECFDF3
  participant "GetWeekendWeatherQueryHandler" as handler
  participant "WeekendForecastService" as forecast
 end box
-box "Backend — Infrastructure" #FFF4E5
+box "Backend - Infrastructure" #FFF4E5
  participant "OpenMeteoWeatherClient" as weather
  database "IMemoryCache" as cache
 end box
 participant "Open-Meteo" as provider
 client -> ctrl : GET /api/weather?weekendOf=... (anonymous)
 ctrl -> handler : GetWeekendWeatherQuery
-handler -> forecast : GetAsync(date)
-forecast -> weather : L2-023 configured coordinates, Saturday-Sunday
+handler -> forecast : GetAsync(weekendOf)
+forecast -> weather : L2-023 GetForecastAsync(HomeLocationOptions coordinates, Saturday, Sunday)
 weather -> cache : Read coordinate/date key
 alt cached
 cache --> weather : Forecast
@@ -33,7 +33,7 @@ weather -> provider : Forecast HTTP request
 alt success
 provider --> weather : Weather JSON
 weather -> weather : Map WeatherForecast records
-weather -> cache : Cache success for 60 minutes
+weather -> cache : Cache parsed result for 60 minutes
 else handled HTTP, JSON or timeout failure
 provider --> weather : Failure
 weather -> weather : Warn and build L2-040 unavailable entries
@@ -42,7 +42,7 @@ end
 weather --> forecast : Two forecast records
 forecast --> handler : Forecast
 handler --> ctrl : Forecast
-ctrl --> client : 200
+ctrl --> client : 200 with two entries
 note over forecast
 WeekendDto-producing handlers use this same service.
 Family home text is not geocoded.

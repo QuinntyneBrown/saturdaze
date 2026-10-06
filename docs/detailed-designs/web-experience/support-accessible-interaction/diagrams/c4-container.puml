@@ -1,7 +1,7 @@
 @startuml
 !include <C4/C4_Container>
 LAYOUT_WITH_LEGEND()
-title Containers — Support accessible interaction
+title Containers - Support accessible interaction
 
 Person(user, "Keyboard or assistive-technology user", "Navigates and operates controls")
 System_Boundary(saturdaze, "Saturdaze") {

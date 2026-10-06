@@ -9,7 +9,7 @@ skinparam class {
   FontColor #101828
   BackgroundColor #F9FAFB
 }
-title Class structure — Sign out
+title Class structure - Sign out
 
 class FamilyPage {
   #signOut(): Promise<boolean>

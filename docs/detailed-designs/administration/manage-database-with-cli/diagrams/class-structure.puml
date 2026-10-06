@@ -9,7 +9,7 @@ skinparam class {
   FontColor #101828
   BackgroundColor #F9FAFB
 }
-title Class structure — Manage the database with the CLI
+title Class structure - Manage the database with the CLI
 
 class RootCommandFactory {
   +Create(args: string[]): RootCommand
@@ -27,7 +27,31 @@ interface IJsonSeeder {
   +string FileName
   +SeedAsync(db: AppDbContext, json: Stream, ct: CancellationToken): Task<int>
 }
+interface ISeedPathResolver {
+  +string BundleDirectory
+  +Resolve(overridePath: string): string
+}
+class SeedPathResolver
+class ResetGuard {
+  +{static} int BlockedExitCode
+  +{static} IsProductionBlocked(environmentName: string, allowProduction: bool): bool
+}
+class ActivitySeeder
+class RestaurantSeeder
+class LocalEventSeeder
+class FamilySeeder
+class UserSeeder
+class EventSubmissionSeeder
 class AppDbContext
+ISeedPathResolver <|.. SeedPathResolver
+SeedCommandHandler --> ISeedPathResolver : resolves directory
+IJsonSeeder <|.. ActivitySeeder
+IJsonSeeder <|.. RestaurantSeeder
+IJsonSeeder <|.. LocalEventSeeder
+IJsonSeeder <|.. FamilySeeder
+IJsonSeeder <|.. UserSeeder
+IJsonSeeder <|.. EventSubmissionSeeder
+RootCommandFactory ..> ResetGuard : reset command checks
 RootCommandFactory --> MigrateCommandHandler : dispatches
 RootCommandFactory --> SeedCommandHandler : dispatches
 RootCommandFactory --> ResetCommandHandler : dispatches
@@ -39,7 +63,9 @@ ResetCommandHandler --> SeedCommandHandler : reseeds
 class IngestCommandHandler {
   +ExecuteAsync(typeArg: string, dryRun: bool, ct: CancellationToken): Task<int>
 }
-class IngestionRunner
+class IngestionRunner {
+  +RunAsync(types: IReadOnlyList<IngestionType>, dryRun: bool, ct: CancellationToken): Task<IReadOnlyList<IngestionRun>>
+}
 RootCommandFactory --> IngestCommandHandler : dispatches
 IngestCommandHandler --> IngestionRunner : runs
 @enduml

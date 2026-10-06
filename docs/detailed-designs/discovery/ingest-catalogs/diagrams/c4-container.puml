@@ -1,7 +1,7 @@
 @startuml
 !include <C4/C4_Container>
 LAYOUT_WITH_LEGEND()
-title Containers — Ingest catalogs
+title Containers - Ingest catalogs
 Person(operator, "Operator")
 System_Boundary(system, "Saturdaze") {
  Container(cli, "Saturdaze CLI", ".NET console", "Runs on demand")

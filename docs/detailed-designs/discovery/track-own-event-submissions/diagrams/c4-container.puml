@@ -1,7 +1,7 @@
 @startuml
 !include <C4/C4_Container>
 LAYOUT_WITH_LEGEND()
-title Containers — Track own event submissions
+title Containers - Track own event submissions
 
 Person(actor, "Authenticated contributor", "Checks the review state of submitted events")
 System_Boundary(saturdaze, "Saturdaze") {

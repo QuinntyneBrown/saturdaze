@@ -9,7 +9,7 @@ skinparam class {
   FontColor #101828
   BackgroundColor #F9FAFB
 }
-title Class structure — Register a family account
+title Class structure - Register a family account
 
 class CreateAccountPage {
   +submit(): Promise<void>
@@ -22,6 +22,7 @@ class RegisterUserCommand {
   +string Password
   +string? FamilyName
   +string? HomeLocation
+  +bool FridayPreview
 }
 class RegisterUserCommandHandler {
   +Handle(command: RegisterUserCommand): Task<AuthSuccessDto>
@@ -34,11 +35,18 @@ class User {
 }
 class Family {
   +Guid Id
+  +string? Name
   +string HomeLocation
+  +bool FridayPreviewEnabled
+}
+class EmailVerificationToken {
+  +Guid UserId
+  +DateTimeOffset ExpiresAtUtc
 }
 CreateAccountPage --> SessionStore : calls
 SessionStore ..> RegisterUserCommand : maps to
 RegisterUserCommandHandler ..> RegisterUserCommand : handles
 RegisterUserCommandHandler --> User : creates
 RegisterUserCommandHandler --> Family : creates
+RegisterUserCommandHandler --> EmailVerificationToken : creates
 @enduml

@@ -1,7 +1,7 @@
 @startuml
 !include <C4/C4_Component>
 LAYOUT_WITH_LEGEND()
-title Components — Pick restaurants
+title Components - Pick restaurants
 
 Container_Boundary(web, "Saturdaze web application") {
   Component(page, "IdeasFoodPage", "Angular component", "Selects day, slot, and filters")

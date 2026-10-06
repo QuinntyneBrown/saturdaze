@@ -1,14 +1,14 @@
 @startuml
 !include <C4/C4_Container>
 LAYOUT_WITH_LEGEND()
-title Containers — Schedule ingestion
+title Containers - Schedule ingestion
 Person(operator, "Operator")
 System_Boundary(system, "Saturdaze") {
  Container(worker, "Saturdaze Worker", ".NET Generic Host", "Cron loop or run-once mode")
  Container(cli, "Saturdaze CLI with WebJob wrapper", ".NET console and shell", "Alternative externally scheduled entry")
  ContainerDb(db, "Catalog and audit database", "SQL Server", "Stores catalog records and ingestion runs")
 }
-System_Ext(provider, "Claude on Microsoft Foundry", "External provider; Anthropic API as fallback")
+System_Ext(provider, "Claude on Microsoft Foundry", "External provider; Anthropic API selectable by configuration")
 System_Ext(scheduler, "External scheduler", "Optional trigger; deployment not included")
 Rel(operator, worker, "Configures schedule options")
 Rel(scheduler, worker, "Starts run-once host")

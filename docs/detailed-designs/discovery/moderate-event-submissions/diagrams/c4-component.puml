@@ -1,7 +1,7 @@
 @startuml
 !include <C4/C4_Component>
 LAYOUT_WITH_LEGEND()
-title Components — Moderate event submissions
+title Components - Moderate event submissions
 
 Container_Boundary(web, "Saturdaze web application") {
   Component(page, "ReviewSubmissionsPage", "Angular component", "Presents the admin queue and dialogs")

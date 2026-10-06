@@ -9,7 +9,7 @@ skinparam class {
   FontColor #101828
   BackgroundColor #F9FAFB
 }
-title Class structure — Observe API performance
+title Class structure - Observe API performance
 
 class ExceptionHandlingMiddleware {
   +InvokeAsync(context: HttpContext): Task

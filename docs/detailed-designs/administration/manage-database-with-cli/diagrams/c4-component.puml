@@ -1,7 +1,7 @@
 @startuml
 !include <C4/C4_Component>
 LAYOUT_WITH_LEGEND()
-title Components — Manage the database with the CLI
+title Components - Manage the database with the CLI
 
 Container_Boundary(cli, "Saturdaze CLI") {
   Component(root, "RootCommandFactory", "System.CommandLine", "Registers options and subcommands")

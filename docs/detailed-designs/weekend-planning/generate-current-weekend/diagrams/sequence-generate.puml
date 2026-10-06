@@ -1,22 +1,22 @@
 @startuml
-title UML sequence behaviour — Generate the current weekend
+title UML sequence behaviour - Generate the current weekend
 skinparam backgroundColor #FFFFFF
 skinparam shadowing false
 skinparam roundcorner 12
 skinparam defaultFontName Arial
 skinparam ArrowColor #344054
 actor "User" as actor
-box "Frontend — Saturdaze Angular application" #E0F2FE
+box "Frontend - Saturdaze Angular application" #E0F2FE
  participant "WeekendPage" as page
  participant "WeekendPlanService" as client
 end box
-box "Backend — Saturdaze API" #D1FADF
+box "Backend - Saturdaze API" #D1FADF
  participant "WeekendsController" as controller
 end box
-box "Backend — Saturdaze Application and Domain" #ECFDF3
+box "Backend - Saturdaze Application and Domain" #ECFDF3
  participant "GetCurrentWeekendQueryHandler\nGenerateWeekendCommandHandler\nPlannerInputLoader" as handler
 end box
-box "Backend — Saturdaze Infrastructure" #FFF4E5
+box "Backend - Saturdaze Infrastructure" #FFF4E5
  database "AppDbContext\nSQL Server" as db
 end box
 actor -> page : Open /weekend
@@ -28,13 +28,14 @@ db --> handler : Existing weekend or absent
 alt existing
 handler -> handler : L2-013 project existing plan with forecast
 else absent
-handler -> db : Load family, catalog and history
+handler -> db : PlannerInputLoader loads family, catalog and history
 db --> handler : Inputs
-handler -> handler : L2-012 fetch forecast and invoke WeekendPlanner.Plan
+handler -> handler : PlannerInputLoader fetches forecast
+handler -> handler : L2-012 invoke WeekendPlanner.Plan
 handler -> db : Save new weekend and blocks
 db --> handler : Saved
 end
 handler --> controller : WeekendDto
 controller --> client : 200
-client --> page : WeekendView
+client --> page : getWeekend() signal updates WeekendView
 @enduml

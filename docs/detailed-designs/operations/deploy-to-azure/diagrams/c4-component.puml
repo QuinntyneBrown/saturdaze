@@ -1,7 +1,7 @@
 @startuml
 !include <C4/C4_Component>
 LAYOUT_WITH_LEGEND()
-title Components — Deploy to Azure
+title Components - Deploy to Azure
 
 Container_Boundary(workflow, "deploy.yml") {
   Component(trigger, "push main trigger", "GitHub Actions event", "Starts the delivery workflow")
@@ -9,7 +9,7 @@ Container_Boundary(workflow, "deploy.yml") {
   Component(preflight, "preflight", "Azure CLI probe", "Sets api_exists; non-zero probe skips delivery")
   Component(api, "api job", "dotnet publish and Azure CLI", "Deploys API artifact")
   Component(migrate, "migrate job", "Saturdaze CLI", "Applies database migrations")
-  Component(web, "web job", "npm and Angular CLI", "Deploys browser bundle")
+  Component(web, "web job", "Azure/static-web-apps-deploy action", "Uploads the tested angular-dist artifact")
 }
 System_Ext(appservice, "Azure App Service", "Hosts API")
 SystemDb_Ext(sql, "Azure SQL", "Stores schema and data")
@@ -21,5 +21,6 @@ Rel(api, appservice, "Deploys to")
 Rel(api, migrate, "Unlocks")
 Rel(migrate, sql, "Migrates")
 Rel(migrate, web, "Unlocks")
+Rel(tests, web, "Supplies angular-dist artifact")
 Rel(web, swa, "Deploys to")
 @enduml

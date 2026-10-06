@@ -10,13 +10,13 @@ Saturdaze is a web application that plans personalized family weekends. Saved-we
 
 ## Description
 
-`PastPage` at `/past` reads `SavedService.list(): Signal<PastView>`. The service requests up to 50 summaries and filters favourites, year, and five-star ratings locally.
+`PastPage` at `/past` reads `SavedService.list(): Signal<PastView>` through `SAVED_SERVICE`. The service requests up to 50 summaries and filters favourites, year, and five-star ratings locally.
 
-`GetWeekendHistoryQueryHandler` filters by family, orders by WeekendOf descending, and projects title, rating, favourite state, and activity highlights. It has a take limit but no cursor or offset; it currently includes the current and future weekends.
+`GetWeekendHistoryQueryHandler` filters by family, orders by WeekendOf descending, and projects title, rating, favourite state, and activity highlights. `GetWeekendHistoryQueryValidator` accepts a take from 1 to 100; other values return 400. The query has no cursor or offset, and it currently includes the current and future weekends.
 
 `RatingDialog` and `RenameWeekendDialog` collect edits; favourite actions send the selected boolean. `RateWeekendCommandHandler`, `RenameWeekendCommandHandler`, and `MarkFavouriteCommandHandler` persist them after ownership checks.
 
-`PastPage` confirms Repeat and Remix before calling `WeekendPlanService`. `ReuseWeekendCommandHandler` replaces the current draft with copied source blocks and errands using new IDs. Repeat copies source locks; Remix subsequently regenerates unlocked content.
+`PastPage` confirms Repeat and Remix before calling `WeekendPlanService.repeatSaved()` or `remixSaved()` and navigating to `/weekend`. `ReuseWeekendCommandHandler` replaces the current draft, or creates one for the upcoming Saturday, with copied source blocks and errands using new IDs. Repeat copies source locks; Remix subsequently regenerates unlocked content.
 
 `skippingChips()` derives the Skipping next time strip from low-rated highlights. Planner history does not carry ratings, so that display does not enforce future exclusion. Repeat also replaces existing target locks, despite stronger confirmation-copy claims.
 

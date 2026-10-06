@@ -1,7 +1,7 @@
 @startuml
 !include <C4/C4_Container>
 LAYOUT_WITH_LEGEND()
-title Containers — Register a family account
+title Containers - Register a family account
 
 Person(actor, "Family organizer", "Creates the household account")
 System_Boundary(saturdaze, "Saturdaze") {

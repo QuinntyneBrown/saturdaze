@@ -5,20 +5,20 @@ skinparam roundcorner 12
 skinparam defaultFontName Arial
 skinparam ArrowColor #344054
 
-title Behaviour — Refresh a session (L2-033)
-box "Frontend — Angular application" #E0F2FE
+title Behaviour - Refresh a session (L2-033)
+box "Frontend - Angular application" #E0F2FE
  participant "authInterceptor or rehydrate" as caller
  participant SessionStore as store
  participant AuthService as client
 end box
-box "Backend — API" #D1FADF
+box "Backend - API" #D1FADF
  participant AuthController as controller
 end box
-box "Backend — Application" #ECFDF3
+box "Backend - Application" #ECFDF3
  participant RefreshTokenCommandHandler as handler
  participant RefreshTokenIssuer as issuer
 end box
-box "Backend — Infrastructure" #FFF4E5
+box "Backend - Infrastructure" #FFF4E5
  database AppDbContext as db
 end box
 caller -> store : refreshSession()

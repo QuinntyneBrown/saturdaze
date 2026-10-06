@@ -9,13 +9,14 @@ skinparam class {
   FontColor #101828
   BackgroundColor #F9FAFB
 }
-title Class structure — Manage shopping errands
+title Class structure - Manage shopping errands
 
 class AddErrandDialog {
-  +submit(): Promise<void>
+  +submit(event?: Event): Promise<void>
 }
 class WeekendPlanService {
-  +addErrand(description: string, estimatedMinutes: number, preferredDay: WeekendDay): Promise<ErrandPlacement | null>
+  +addErrand(description: string, estimatedMinutes: number, preferredDay: WeekendDay | null): Promise<ErrandPlacement | null>
+  +setErrandDone(errandId: string, done: boolean): Promise<void>
 }
 class AddShoppingErrandCommandHandler {
   +Handle(command: AddShoppingErrandCommand): Task<WeekendDto>

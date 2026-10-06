@@ -1,7 +1,7 @@
 @startuml
 !include <C4/C4_Component>
 LAYOUT_WITH_LEGEND()
-title Components — Observe API performance
+title Components - Observe API performance
 
 Container_Boundary(api, "Saturdaze API") {
   Component(requestlog, "Serilog request logging", "ASP.NET Core middleware", "Records method, path, status, and elapsed time")
@@ -12,7 +12,7 @@ Container_Boundary(api, "Saturdaze API") {
   ComponentDb(logs, "Serilog sinks", "Console and rolling files", "Store structured events")
 }
 Rel(requestlog, errors, "Invokes")
-Rel(errors, logging, "Passes request to")
+Rel(errors, logging, "Passes request through auth, controller, and MediatR to")
 Rel(logging, handler, "Times")
 Rel(requestlog, user, "Reads authenticated identity from")
 Rel(requestlog, logs, "Writes completion event")

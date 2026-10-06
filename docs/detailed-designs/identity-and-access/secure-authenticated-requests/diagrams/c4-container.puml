@@ -1,7 +1,7 @@
 @startuml
 !include <C4/C4_Container>
 LAYOUT_WITH_LEGEND()
-title Containers — Secure authenticated requests
+title Containers - Secure authenticated requests
 
 Person(actor, "Authenticated account holder", "Calls protected family features")
 System_Boundary(saturdaze, "Saturdaze") {

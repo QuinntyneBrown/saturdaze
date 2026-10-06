@@ -1,7 +1,7 @@
 @startuml
 !include <C4/C4_Container>
 LAYOUT_WITH_LEGEND()
-title Containers — Recover a password
+title Containers - Recover a password
 
 Person(actor, "Signed-out account holder", "Requests and completes password recovery")
 System_Boundary(saturdaze, "Saturdaze") {

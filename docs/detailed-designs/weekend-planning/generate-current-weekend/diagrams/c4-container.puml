@@ -1,7 +1,7 @@
 @startuml
 !include <C4/C4_Container>
 LAYOUT_WITH_LEGEND()
-title Containers — Generate the current weekend
+title Containers - Generate the current weekend
 
 Person(actor, "Family member", "Opens or creates the upcoming plan")
 System_Boundary(saturdaze, "Saturdaze") {

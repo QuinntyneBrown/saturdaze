@@ -6,17 +6,17 @@ Saturdaze combines an Angular web application, an ASP.NET Core API, SQL Server p
 
 *natural key* — stable business identifier used to detect an existing seed row
 
-`RootCommandFactory` binds global database options and four subcommands. Each handler resolves `AppDbContext` through the same host and provider configuration.
+`RootCommandFactory` binds four global options (`--provider`, `--connection`, `--seed-dir`, `--verbose`) and four subcommands. Each handler resolves `AppDbContext` through the same host and provider configuration.
 
 ## Description
 
 `RootCommandFactory` registers `migrate`, `seed`, `reset`, and `ingest`. `CliHostFactory` resolves an explicit connection flag before `SATURDAZE_CONNECTION`, connection-string configuration, and the SQLite user-directory default.
 
-`MigrateCommandHandler` applies EF migrations for relational providers. `SeedPathResolver` selects `--seed-dir`, then `SATURDAZE_SEED_DIR`, bundled JSON, and finally the legacy user directory. Seeders update existing natural keys and insert missing records.
+`MigrateCommandHandler` calls EF `MigrateAsync` on the configured provider without a relational-provider check. `SeedPathResolver` selects `--seed-dir`, then `SATURDAZE_SEED_DIR`, bundled JSON, and finally the legacy user directory. `SeedCommandHandler` runs six `IJsonSeeder` implementations: activities, restaurants, local events, family, users, and event submissions. Seeders update existing natural keys and insert missing records. The command exits with code 2 when the seed directory is missing and code 3 when it holds no seed files.
 
-`ResetCommand` requires `--yes`; Production additionally requires `--allow-production`. `ResetCommandHandler` deletes the target database, recreates its schema, and seeds it. Connection details pass through `ConnectionStringSanitizer` before logging.
+`ResetCommand` requires `--yes`; Production additionally requires `--allow-production`. `ResetCommandHandler` deletes the target database, recreates its schema, and seeds it. It applies migrations for relational providers and calls `EnsureCreatedAsync` for the `InMemory` provider. A missing `--yes` exits with code 4; a blocked Production reset exits with code 5. Connection details pass through `ConnectionStringSanitizer` before logging.
 
-`IngestCommandHandler` calls `IngestionRunner`; its pipeline and dry-run behavior are described in [Ingest catalogs](../../discovery/ingest-catalogs/README.md). `eng/Start-FreshStack.ps1` packages and invokes the CLI for local stack preparation.
+`IngestCommandHandler` calls `IngestionRunner` and exits with code 2 for an unknown `--type` and code 1 when any pass fails; its pipeline and dry-run behavior are described in [Ingest catalogs](../../discovery/ingest-catalogs/README.md). `eng/Start-FreshStack.ps1` packages and invokes the CLI for local stack preparation.
 
 ## Requirements
 

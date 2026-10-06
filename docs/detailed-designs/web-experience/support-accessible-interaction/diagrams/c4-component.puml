@@ -1,7 +1,7 @@
 @startuml
 !include <C4/C4_Component>
 LAYOUT_WITH_LEGEND()
-title Components — Support accessible interaction
+title Components - Support accessible interaction
 
 Container_Boundary(web, "Saturdaze web application") {
   Component(pages, "Routed page templates", "Angular templates", "Supply content-specific labels and alternatives")

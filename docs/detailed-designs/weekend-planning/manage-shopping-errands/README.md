@@ -10,13 +10,13 @@ Saturdaze is a web application that plans personalized family weekends. Errand m
 
 ## Description
 
-`WeekendPage` opens `AddErrandDialog` to collect description, duration, and optional preferred day. `WeekendPlanService.addErrand()` posts those values and compares returned blocks with prior state to derive an ErrandPlacement.
+`WeekendPage` opens `AddErrandDialog` to collect description, duration, and optional preferred day. The dialog calls `WeekendPlanService.addErrand()` through `WEEKEND_PLAN_SERVICE`, which posts those values and compares returned blocks with prior state to derive an `ErrandPlacement`. The dialog closes with that placement or `null`.
 
-`ErrandsController` dispatches `AddShoppingErrandCommand`. The handler verifies family ownership, creates ShoppingErrand, and calls `IWeekendPlanner.PlaceErrand()` on the preferred day followed by the other day.
+`ErrandsController` dispatches `AddShoppingErrandCommand`. The handler verifies family ownership, creates ShoppingErrand, and calls `IWeekendPlanner.PlaceErrand()` on the preferred day followed by the other day. Without a preferred day, Saturday is tried first.
 
 Successful placement replaces overlapping downtime and fills remaining gaps. If neither day has space, the errand still persists without an itinerary block; the client can receive null placement.
 
-`ErrandAddedDialog` acknowledges the result on the existing weekend screen. `setErrandDone()` calls the done endpoint and `MarkErrandDoneCommandHandler` updates the owned errand.
+`ErrandAddedDialog` acknowledges a non-null placement on the existing weekend screen. A `null` placement opens no dialog, so the no-slot indication in L2-021 is not implemented. `setErrandDone()` calls the done endpoint and `MarkErrandDoneCommandHandler` updates the owned errand.
 
 Placement identifies the new block by comparing IDs and description; the API returns WeekendDto rather than a separate placement contract.
 

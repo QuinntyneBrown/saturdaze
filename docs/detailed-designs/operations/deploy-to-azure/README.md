@@ -12,7 +12,7 @@ Saturdaze combines an Angular web application, an ASP.NET Core API, SQL Server p
 
 `.github/workflows/deploy.yml` runs backend tests on Windows with LocalDB and frontend build/tests before `preflight`. The preflight signs into Azure through OIDC and probes the configured API Web App.
 
-When `api_exists=true`, `api` publishes and deploys the API. `migrate` depends on successful API deployment, and `web` depends on migration plus frontend gates before uploading the existing Angular artifact.
+When `api_exists=true`, `api` publishes and deploys the API. `migrate` depends on successful API deployment, and `web` depends on migration plus frontend gates before uploading the existing Angular artifact through `Azure/static-web-apps-deploy` with the `SWA_DEPLOYMENT_TOKEN` secret. The artifact includes `staticwebapp.config.json` from `frontend/projects/saturdaze/public`, which supplies the SPA navigation fallback.
 
 When the API Web App is absent, preflight emits a warning and summary, and the API/migration/web chain is skipped. Azure login failures fail preflight. The current probe treats every non-zero `az webapp show` result as an absent resource; authorization and transient probe errors can therefore also skip delivery. This classification is an implementation gap.
 

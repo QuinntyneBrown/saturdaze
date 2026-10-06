@@ -1,7 +1,7 @@
 @startuml
 !include <C4/C4_Context>
 LAYOUT_WITH_LEGEND()
-title System Context — Support accessible interaction
+title System Context - Support accessible interaction
 
 Person(user, "Keyboard or assistive-technology user", "Operates Saturdaze without relying on pointer input")
 System(saturdaze, "Saturdaze", "Family weekend planning application")

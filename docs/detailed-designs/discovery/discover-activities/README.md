@@ -10,11 +10,11 @@ Saturdaze is a web application that plans personalized family weekends. Activity
 
 ## Description
 
-`IdeasActivitiesPage` at `/ideas` reads `ActivityService.list(): Signal<IdeasActivitiesView>` and delegates chip changes to `setFilter(label)`. The browser applies the selected chip to loaded records.
+`IdeasActivitiesPage` at `/ideas` injects `ACTIVITY_SERVICE`, reads `ActivityService.list(): Signal<IdeasActivitiesView>`, and delegates chip changes to `setFilter(label)`. The browser applies the selected chip to loaded records.
 
 `ActivityService.load()` requests the catalog, `?tryNew=true` candidates, and the weekend forecast. `buildSections()` forms weather-fit, fallback, and novelty sections, with at most three unique records per section. Active filters suppress empty sections.
 
-`ActivitiesController` dispatches `GetActivitySuggestionsQuery`. The handler applies supplied age, indoor, drive, weather, and count filters. Novelty excludes activities from the caller family's last four weekends through `CurrentUserFamilyAccessor`.
+`ActivitiesController` dispatches `GetActivitySuggestionsQuery`. The handler applies supplied age, indoor, drive, weather, and count filters. Results are ordered by drive minutes, then name. Novelty excludes activities from the caller family's last four weekends through `ICurrentFamilyAccessor`, implemented by `CurrentUserFamilyAccessor`.
 
 `Activity` stores catalog attributes; browser services own card mapping and section grouping. Cards open map links. Family-age and drive limits are not automatically supplied by the current browser load; complete family personalization remains a gap under L1-005.
 

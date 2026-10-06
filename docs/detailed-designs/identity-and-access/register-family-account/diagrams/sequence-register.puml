@@ -1,22 +1,22 @@
 @startuml
-title UML sequence behaviour — Register a family account
+title UML sequence behaviour - Register a family account
 skinparam backgroundColor #FFFFFF
 skinparam shadowing false
 skinparam roundcorner 12
 skinparam defaultFontName Arial
 skinparam ArrowColor #344054
 actor "User" as actor
-box "Frontend — Saturdaze Angular application" #E0F2FE
+box "Frontend - Saturdaze Angular application" #E0F2FE
  participant "CreateAccountPage" as page
  participant "SessionStore\nAuthService" as client
 end box
-box "Backend — Saturdaze API" #D1FADF
+box "Backend - Saturdaze API" #D1FADF
  participant "AuthController" as controller
 end box
-box "Backend — Saturdaze Application and Domain" #ECFDF3
+box "Backend - Saturdaze Application and Domain" #ECFDF3
  participant "RegisterUserCommandHandler\nRefreshTokenIssuer" as handler
 end box
-box "Backend — Saturdaze Infrastructure" #FFF4E5
+box "Backend - Saturdaze Infrastructure" #FFF4E5
  database "AppDbContext\nSQL Server" as db
 end box
 actor -> page : Submit accepted terms and credentials
@@ -30,7 +30,7 @@ handler --> controller : 409 email_in_use
 controller --> client : Conflict
 client --> page : Field error
 else valid new account
-handler -> handler : L2-001 hash password; create User, Family and refresh state
+handler -> handler : L2-001 hash password; create User, Family, verification token and refresh state
 handler -> db : Save account records
 db --> handler : Saved
 handler --> controller : AuthSuccessDto

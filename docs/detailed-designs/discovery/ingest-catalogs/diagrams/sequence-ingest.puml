@@ -5,17 +5,17 @@ skinparam roundcorner 12
 skinparam defaultFontName Arial
 skinparam ArrowColor #344054
 
-title Behaviour — Ingest catalogs (L2-077 to L2-081)
+title Behaviour - Ingest catalogs (L2-077 to L2-081)
 actor Operator as actor
-box "Frontend — Administrative entry" #E0F2FE
+box "Frontend - Administrative entry" #E0F2FE
  participant "CLI command" as cli
 end box
-box "Backend — Application" #ECFDF3
+box "Backend - Application" #ECFDF3
  participant IngestionRunner as runner
  participant IngestionResultParser as parser
  participant CatalogUpserter as upsert
 end box
-box "Backend — Infrastructure" #FFF4E5
+box "Backend - Infrastructure" #FFF4E5
  participant IWebSearchClient as search
  database AppDbContext as db
 end box
