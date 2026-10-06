@@ -52,12 +52,12 @@
   <h2>The bubble's styles</h2>
   <pre class="code tight" data-lang="scss" data-file="components/src/lib/tooltip/tooltip-panel.scss" data-mark="5,6">:host {
   max-width: 240px;
-  padding: var(--sd-s-1) var(--sd-s-2);
-  border-radius: var(--sd-r-sm);
-  background: var(--sd-ink);
-  color: var(--sd-bg-elev);
+  padding: var(--spacingVerticalXS) var(--spacingHorizontalS);
+  border-radius: var(--borderRadiusSmall);
+  background: var(--colorNeutralBackgroundInverted);
+  color: var(--colorNeutralForegroundInverted);
   …
-  animation: tooltip-in var(--sd-dur-fast) var(--sd-ease);
+  animation: tooltip-in var(--durationFast) var(--curveEasyEase);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -65,7 +65,7 @@
     animation: none;
   }
 }</pre>
-  <p class="muted small"><code>--sd-ink</code>, <code>--sd-bg-elev</code> … are mock-era names not defined by <code>_tokens.scss</code> → migrate to Fluent roles (ADR-013).</p>
+  <p class="muted small">Fluent tokens by role (ADR-013) — no hex, no mock-era <code>--sd-*</code> names.</p>
 </section>
 
 <section id="constants" data-part="2" data-cue="Now open tooltip dot T S.">

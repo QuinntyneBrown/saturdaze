@@ -47,6 +47,7 @@ export interface ColorTokens {
   colorNeutralForeground2: string;
   colorNeutralForeground3: string;
   colorNeutralForegroundOnBrand: string;
+  colorNeutralForegroundInverted: string;
 
   colorNeutralBackground1: string;
   colorNeutralBackground2: string;

@@ -7,6 +7,7 @@ export const generateColorTokens = (brand: BrandVariants): ColorTokens => ({
   colorNeutralForeground2: slate[46], // secondary text, metadata
   colorNeutralForeground3: slate[65], // hints, placeholders, disabled
   colorNeutralForegroundOnBrand: white,
+  colorNeutralForegroundInverted: white, // text on colorNeutralBackgroundInverted
 
   colorNeutralBackground1: white, // cards, dialogs, inputs
   colorNeutralBackground2: cream, // the page

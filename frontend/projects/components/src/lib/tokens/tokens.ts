@@ -64,6 +64,7 @@ export const tokens: Record<keyof Theme, string> = {
   colorNeutralForeground2: 'var(--colorNeutralForeground2)',
   colorNeutralForeground3: 'var(--colorNeutralForeground3)',
   colorNeutralForegroundOnBrand: 'var(--colorNeutralForegroundOnBrand)',
+  colorNeutralForegroundInverted: 'var(--colorNeutralForegroundInverted)',
   colorNeutralBackground1: 'var(--colorNeutralBackground1)',
   colorNeutralBackground2: 'var(--colorNeutralBackground2)',
   colorNeutralBackground3: 'var(--colorNeutralBackground3)',

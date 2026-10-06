@@ -8,7 +8,7 @@ Start with tooltip panel dot T S, because it is the simplest. The selector is S 
 
 It has three signal inputs: text, tooltip id, and hidden, which uses the boolean attribute transform. The doc comment says it is internal to the directive.
 
-Its stylesheet makes the bubble: at most two hundred and forty pixels wide, inverse colours so it reads over any card, a short fade in, and no animation when the user prefers reduced motion. Be aware that this file still reads older dash dash S D variables from the mock era, such as S D ink, rather than Fluent roles, and those variables are not defined by the generated tokens. Migrating it to tokens by role, as A D R thirteen asks, is a worthwhile follow up.
+Its stylesheet makes the bubble: at most two hundred and forty pixels wide, inverse colours so it reads over any card, a short fade in, and no animation when the user prefers reduced motion. Every value is a Fluent token read by role, as A D R thirteen asks: the neutral inverted background for the bubble, the neutral inverted foreground for its text, a sixteen shadow, and the fast duration with the easy ease curve. No hex values and no older dash dash S D names from the mock era.
 
 ## The directive and its timing rules
 

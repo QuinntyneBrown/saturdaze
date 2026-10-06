@@ -53,6 +53,6 @@
   .planner__map {
     order: 0;
     position: sticky;
-    top: calc(var(--sd-topbar-h, 64px) + 16px);
+    top: calc(var(--layoutTopBarHeight) + 16px);
   }
 }

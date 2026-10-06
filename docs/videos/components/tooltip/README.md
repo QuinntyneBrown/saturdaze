@@ -33,7 +33,7 @@ By the end, the viewer can:
 | File | What to show |
 | --- | --- |
 | `frontend/projects/components/src/lib/tooltip/tooltip-panel.ts` | Panel decorator, host bindings, inputs. |
-| `frontend/projects/components/src/lib/tooltip/tooltip-panel.scss` | Bubble styles; mock-era `--sd-*` variables (not defined by `_tokens.scss`). |
+| `frontend/projects/components/src/lib/tooltip/tooltip-panel.scss` | Bubble styles; Fluent tokens by role (`--colorNeutralBackgroundInverted`, `--colorNeutralForegroundInverted`, `--shadow16`). |
 | `frontend/projects/components/src/lib/tooltip/tooltip.ts` | Constants, directive, inputs, effect, show/hide. |
 | `frontend/projects/components/src/lib/tooltip/tooltip.spec.ts` | Helpers, fake timers, ten tests. |
 | `frontend/projects/components/src/lib/button/button.ts` | `tooltipText` and `tooltipRelationship`. |
@@ -64,7 +64,7 @@ npm run storybook          # open Tooltip → Default, Placement, Icon buttons
 - Expecting a tooltip on a disabled trigger (`show()` refuses).
 - `description` on an icon-only button: the name is read twice.
 - Essential information only in a tooltip: touch users never see it.
-- `tooltip-panel.scss` still reads `--sd-ink`, `--sd-bg-elev`, `--sd-shadow-2` and similar names that the generated tokens don't define; migrate to Fluent roles (ADR-013).
+- Reaching for a hex value or a mock-era `--sd-*` name in `tooltip-panel.scss`; read Fluent tokens by role (ADR-013).
 
 ## References
 
