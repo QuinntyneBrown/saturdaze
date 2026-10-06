@@ -62,7 +62,7 @@ function metaFor(dto: LocalEventDto): string {
     dto.endsOn && dto.endsOn !== dto.startsOn
       ? `${start} to ${formatEventDate(dto.endsOn)}`
       : start;
-  return dto.location ? `${dto.location} · ${when}` : when;
+  return dto.venue ? `${dto.venue} · ${when}` : when;
 }
 
 /**

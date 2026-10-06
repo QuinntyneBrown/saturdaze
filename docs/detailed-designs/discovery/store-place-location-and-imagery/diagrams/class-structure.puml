@@ -19,22 +19,22 @@ class GeoLocation <<owned value>> {
 class Activity {
   +Guid Id
   +string Name
-  +GeoLocation? Location
+  +GeoLocation? Geo
 }
 class Restaurant {
   +Guid Id
   +string Name
-  +GeoLocation? Location
+  +GeoLocation? Geo
 }
 class LocalEvent {
   +Guid Id
   +string Name
-  +GeoLocation? Location
+  +GeoLocation? Geo
 }
 class EventSubmission {
   +Guid Id
   +string Title
-  +GeoLocation? Location
+  +GeoLocation? Geo
 }
 enum PlaceKind {
   Activity

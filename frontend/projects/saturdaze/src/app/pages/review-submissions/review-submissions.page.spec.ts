@@ -112,7 +112,7 @@ describe('ReviewSubmissionsPage', () => {
       'Farmers Market',
     ]);
     const first = cards()[0]!;
-    expect(first.querySelector('.head__meta')?.textContent?.trim()).toBe(
+    expect(first.querySelector('.card__meta')?.textContent?.trim()).toBe(
       'Sat 20 Jun · 2:00 to 9:00pm',
     );
     expect(first.querySelector('sd-chip')?.textContent?.trim()).toBe('Pending');
@@ -160,7 +160,8 @@ describe('ReviewSubmissionsPage', () => {
 
   it('approves after D23 confirms, and leaves it alone when dismissed', async () => {
     await mount();
-    dialog.open.mockReturnValueOnce({ closed: of('confirm') });
+    const location = { latitude: 43.553, longitude: -79.583, address: 'Memorial Park' };
+    dialog.open.mockReturnValueOnce({ closed: of({ location }) });
     (
       cards()[0]!.querySelector(
         '.review-actions sd-button[variant="primary"] button',
@@ -171,7 +172,7 @@ describe('ReviewSubmissionsPage', () => {
       ApproveSubmissionDialog,
       expect.objectContaining({ data: { card: SUBMISSION_CARD } }),
     );
-    expect(submissions.approve).toHaveBeenCalledWith('s-buskerfest');
+    expect(submissions.approve).toHaveBeenCalledWith('s-buskerfest', null, location);
 
     await component['approve'](SUBMISSION_CARD);
     expect(submissions.approve).toHaveBeenCalledTimes(1);

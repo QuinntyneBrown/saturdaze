@@ -1,5 +1,6 @@
 using System.Globalization;
 using System.Text.Json.Nodes;
+using Saturdaze.Domain.ValueObjects;
 
 namespace Saturdaze.Application.Ingestion;
 
@@ -53,6 +54,31 @@ internal static class PayloadReader
 
     public static int GetIntOrDefault(JsonObject o, string key, int fallback = 0)
         => TryGetInt(o, key, out var i) ? i : fallback;
+
+    public static decimal? GetDecimalOrNull(JsonObject o, string key)
+    {
+        if (!o.TryGetPropertyValue(key, out var node) || node is not JsonValue v)
+            return null;
+        if (v.TryGetValue<decimal>(out var m)) return m;
+        if (v.TryGetValue<double>(out var d)) return (decimal)d;
+        if (v.TryGetValue<string>(out var s)
+            && decimal.TryParse(s.Trim(), NumberStyles.Float, CultureInfo.InvariantCulture, out m))
+            return m;
+        return null;
+    }
+
+    /// <summary>
+    /// The place's location from <c>latitude</c>, <c>longitude</c> and <c>address</c> (L2-087),
+    /// or null when a coordinate is missing or out of range.
+    /// </summary>
+    public static GeoLocation? GetGeo(JsonObject o)
+    {
+        var lat = GetDecimalOrNull(o, "latitude");
+        var lng = GetDecimalOrNull(o, "longitude");
+        if (lat is not (>= -90m and <= 90m) || lng is not (>= -180m and <= 180m)) return null;
+        var address = GetStringOrEmpty(o, "address");
+        return GeoLocation.From(lat, lng, address.Length > 300 ? address[..300] : address);
+    }
 
     public static bool TryGetBool(JsonObject o, string key, out bool value)
     {

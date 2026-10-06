@@ -1,4 +1,5 @@
 import { MealSlot } from './meal-slot';
+import { LocationDto } from './location.dto';
 
 /**
  * Restaurant Dto.
@@ -49,4 +50,8 @@ export interface RestaurantDto {
    * Locked.
    */
   readonly locked?: boolean;
+  /**
+   * Location (L2-087); null until the place is backfilled.
+   */
+  readonly location?: LocationDto | null;
 }

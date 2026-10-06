@@ -34,10 +34,10 @@ describe('ApproveSubmissionDialog', () => {
     expect(host.querySelector('.dialog__sub')?.textContent?.trim()).toBe(
       'It becomes visible to every family nearby.',
     );
-    expect(host.querySelector('.head__title')?.textContent?.trim()).toBe(
+    expect(host.querySelector('.card__title')?.textContent?.trim()).toBe(
       'Sat 20 Jun · 2:00 to 9:00pm',
     );
-    expect(host.querySelector('.head__meta')?.textContent?.trim()).toBe(
+    expect(host.querySelector('.card__meta')?.textContent?.trim()).toBe(
       'Memorial Park · Free · All ages · sent by quinntynebrown@gmail.com',
     );
     expect(host.querySelector('sd-date-tile')?.textContent?.replace(/\s+/g, ' ').trim()).toContain(
@@ -47,17 +47,19 @@ describe('ApproveSubmissionDialog', () => {
 
   it('leaves out details the submitter skipped', async () => {
     await mount({ ...SUBMISSION_CARD, location: null, cost: null, ages: 'All ages' });
-    expect(host.querySelector('.head__meta')?.textContent?.trim()).toBe(
+    expect(host.querySelector('.card__meta')?.textContent?.trim()).toBe(
       'All ages · sent by quinntynebrown@gmail.com',
     );
   });
 
-  it('closes with confirm from Approve, or nothing from Cancel', async () => {
+  it('closes with the location from Approve, or nothing from Cancel', async () => {
     await mount(SUBMISSION_CARD);
     const [cancel, approve] = Array.from(host.querySelectorAll('sd-button[slot="actions"] button'));
     expect(approve!.textContent).toContain('Approve');
     (approve as HTMLButtonElement).click();
-    expect(dialogRef.close).toHaveBeenCalledWith('confirm');
+    expect(dialogRef.close).toHaveBeenCalledWith({
+      location: { latitude: null, longitude: null, address: SUBMISSION_CARD.location ?? '' },
+    });
     (cancel as HTMLButtonElement).click();
     expect(dialogRef.close).toHaveBeenLastCalledWith();
   });

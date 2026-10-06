@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Saturdaze.Application.Common;
 using Saturdaze.Application.Weekends;
 using Saturdaze.Domain.Entities;
+using Saturdaze.Domain.ValueObjects;
 using Saturdaze.Infrastructure.Persistence;
 
 namespace Saturdaze.Cli.Seed;
@@ -51,6 +52,7 @@ public sealed class LocalEventSeeder : IJsonSeeder
             entity.DriveMinutes = seed.DriveMinutes;
             entity.Url = seed.Url ?? string.Empty;
             entity.Category = seed.Category ?? string.Empty;
+            entity.Geo = GeoLocation.Merge(entity.Geo, GeoLocation.From(seed.Latitude, seed.Longitude, seed.Address));
             written++;
         }
 
@@ -94,5 +96,8 @@ public sealed class LocalEventSeeder : IJsonSeeder
         string? Location,
         int DriveMinutes,
         string? Url,
-        string? Category);
+        string? Category,
+        decimal? Latitude = null,
+        decimal? Longitude = null,
+        string? Address = null);
 }

@@ -24,6 +24,10 @@ public sealed class ExceptionHandlingMiddleware
         {
             await WriteAsync(context, StatusCodes.Status400BadRequest, "Validation failed", ex.Message, errors: ex.Errors);
         }
+        catch (BadRequestException ex)
+        {
+            await WriteAsync(context, StatusCodes.Status400BadRequest, "Bad request", ex.Message, code: ex.Code);
+        }
         catch (InvalidCredentialsException ex)
         {
             await WriteAuthError(context, StatusCodes.Status401Unauthorized, ex.Code, ex.Message);

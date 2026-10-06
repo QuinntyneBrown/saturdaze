@@ -1,6 +1,9 @@
 [
   {
     "name": "Port Credit Memorial Park",
+    "latitude": 43.553,
+    "longitude": -79.583,
+    "address": "32 Park St E, Mississauga, ON",
     "category": "Park",
     "indoor": false,
     "minAge": 2,
@@ -13,6 +16,9 @@
   },
   {
     "name": "Jack Darling Memorial Park",
+    "latitude": 43.525,
+    "longitude": -79.605,
+    "address": "1180 Lakeshore Rd W, Mississauga, ON",
     "category": "Park",
     "indoor": false,
     "minAge": 3,
@@ -25,6 +31,9 @@
   },
   {
     "name": "Rec Room Mississauga",
+    "latitude": 43.593,
+    "longitude": -79.644,
+    "address": "100 City Centre Dr, Mississauga, ON",
     "category": "Indoor Fun",
     "indoor": true,
     "minAge": 5,
@@ -37,6 +46,9 @@
   },
   {
     "name": "Toronto Zoo",
+    "latitude": 43.8177,
+    "longitude": -79.1859,
+    "address": "2000 Meadowvale Rd, Toronto, ON",
     "category": "Animals",
     "indoor": false,
     "minAge": 3,
@@ -49,6 +61,9 @@
   },
   {
     "name": "Stratford Festival (family matinee)",
+    "latitude": 43.37,
+    "longitude": -80.982,
+    "address": "55 Queen St, Stratford, ON",
     "category": "Theatre",
     "indoor": true,
     "minAge": 8,
@@ -61,6 +76,9 @@
   },
   {
     "name": "Bruce Trail at Rattlesnake Point",
+    "latitude": 43.468,
+    "longitude": -79.91,
+    "address": "7200 Appleby Line, Milton, ON",
     "category": "Hike",
     "indoor": false,
     "minAge": 5,
@@ -73,6 +91,9 @@
   },
   {
     "name": "Terre Bleu Lavender Farm",
+    "latitude": 43.5386,
+    "longitude": -79.9611,
+    "address": "2501 Dublin Line, Milton, ON",
     "category": "Outdoor",
     "indoor": false,
     "minAge": 2,
@@ -85,6 +106,9 @@
   },
   {
     "name": "Ontario Science Centre",
+    "latitude": 43.7166,
+    "longitude": -79.3389,
+    "address": "770 Don Mills Rd, Toronto, ON",
     "category": "Museum",
     "indoor": true,
     "minAge": 4,
@@ -97,6 +121,9 @@
   },
   {
     "name": "Royal Ontario Museum",
+    "latitude": 43.6677,
+    "longitude": -79.3948,
+    "address": "100 Queens Park, Toronto, ON",
     "category": "Museum",
     "indoor": true,
     "minAge": 4,
@@ -109,6 +136,9 @@
   },
   {
     "name": "Riverwood Conservancy",
+    "latitude": 43.5741,
+    "longitude": -79.688,
+    "address": "4300 Riverwood Park Ln, Mississauga, ON",
     "category": "Park",
     "indoor": false,
     "minAge": 2,
@@ -121,6 +151,9 @@
   },
   {
     "name": "Square One Skating Rink",
+    "latitude": 43.589,
+    "longitude": -79.643,
+    "address": "300 City Centre Dr, Mississauga, ON",
     "category": "Skating",
     "indoor": false,
     "minAge": 4,
@@ -133,6 +166,9 @@
   },
   {
     "name": "Mississauga Central Library Family Programs",
+    "latitude": 43.589,
+    "longitude": -79.644,
+    "address": "301 Burnhamthorpe Rd W, Mississauga, ON",
     "category": "Library",
     "indoor": true,
     "minAge": 2,

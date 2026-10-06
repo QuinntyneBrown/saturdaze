@@ -1,4 +1,5 @@
 using Saturdaze.Domain.Enums;
+using Saturdaze.Domain.ValueObjects;
 
 namespace Saturdaze.Domain.Entities;
 
@@ -11,4 +12,5 @@ public class Restaurant
     public bool WifeApproved { get; set; }
     public string Notes { get; set; } = string.Empty;
     public int DriveMinutes { get; set; }
+    public GeoLocation? Geo { get; set; }
 }

@@ -13,6 +13,11 @@ public sealed class SubmitEventCommandValidator : AbstractValidator<SubmitEventC
         RuleFor(x => x.CostNote).MaximumLength(80);
         RuleFor(x => x.AgeRange).MaximumLength(80);
         RuleFor(x => x.Category).MaximumLength(80);
+        RuleFor(x => x.Latitude).InclusiveBetween(-90m, 90m);
+        RuleFor(x => x.Longitude).InclusiveBetween(-180m, 180m);
+        RuleFor(x => x.Latitude).NotNull().When(x => x.Longitude is not null);
+        RuleFor(x => x.Longitude).NotNull().When(x => x.Latitude is not null);
+        RuleFor(x => x.Address).MaximumLength(300);
         RuleFor(x => x.SourceUrl)
             .MaximumLength(500)
             .Must(BeAValidHttpUrl)

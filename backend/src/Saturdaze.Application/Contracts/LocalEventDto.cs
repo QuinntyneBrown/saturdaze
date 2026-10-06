@@ -5,7 +5,8 @@ public sealed record LocalEventDto(
     string Name,
     DateOnly StartsOn,
     DateOnly EndsOn,
-    string Location,
+    string Venue,
     int DriveMinutes,
     string Url,
-    string Category);
+    string Category,
+    LocationDto? Location);

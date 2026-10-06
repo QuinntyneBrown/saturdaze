@@ -32,7 +32,8 @@ public sealed class GetLocalEventsQueryHandler
 
         return rows
             .Select(e => new LocalEventDto(
-                e.Id, e.Name, e.StartsOn, e.EndsOn, e.Location, e.DriveMinutes, e.Url, e.Category))
+                e.Id, e.Name, e.StartsOn, e.EndsOn, e.Location, e.DriveMinutes, e.Url, e.Category,
+                LocationDto.From(e.Geo)))
             .ToList();
     }
 }

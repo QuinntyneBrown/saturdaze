@@ -68,6 +68,8 @@ test.describe("Review submissions", () => {
     await r.approveButton(card).click();
     await expect(r.dialogTitle()).toHaveText(`Approve ${title}?`);
     await expect(r.dialogBody().locator(".card__meta")).toContainText(SEEDED_USER.email);
+    await expect(r.dialogField("Address")).toHaveValue("Memorial Park, Lakeshore Rd");
+    await r.fillApprovalLocation({ latitude: "43.5530", longitude: "-79.5830" });
 
     const approved = page.waitForResponse((r2) => /\/api\/events\/submissions\/[^/]+\/approve/.test(r2.url()));
     await r.dialogAction("Approve").click();
@@ -77,7 +79,25 @@ test.describe("Review submissions", () => {
     await expect(r.approvedRows().filter({ hasText: title })).toHaveText(`Approved · ${title}`);
   });
 
-  test("rejecting confirms in D24 with an optional reason and removes the card", async ({ page, pages, request }) => {
+  test("approving without coordinates says a location is needed and keeps the card", async ({ page, pages, request }) => {
+    // Traces to: L2-087 AC3
+    const r = pages.reviewSubmissions;
+    const title = `No place ${Date.now().toString(36)}`;
+    await submitEvent(request, title);
+    await page.reload();
+    await r.waitForReady();
+
+    await r.approveButton(r.card(title)).click();
+    const refused = page.waitForResponse((r2) => /\/api\/events\/submissions\/[^/]+\/approve/.test(r2.url()));
+    await r.dialogAction("Approve").click();
+    expect((await refused).status()).toBe(400);
+
+    await expect(r.banner()).toContainText("location");
+    await expect(r.card(title)).toBeVisible();
+    await expect(r.approvedRows().filter({ hasText: title })).toHaveCount(0);
+  });
+
+    test("rejecting confirms in D24 with an optional reason and removes the card", async ({ page, pages, request }) => {
     const r = pages.reviewSubmissions;
     const title = `Reject me ${Date.now().toString(36)}`;
     await submitEvent(request, title);

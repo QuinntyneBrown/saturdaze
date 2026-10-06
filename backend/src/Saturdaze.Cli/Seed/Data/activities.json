@@ -1,6 +1,9 @@
 [
   {
     "name": "Terre Bleu Lavender Farm",
+    "latitude": 43.5386,
+    "longitude": -79.9611,
+    "address": "2501 Dublin Line, Milton, ON",
     "category": "Outdoor",
     "indoor": false,
     "minAge": 2,
@@ -13,6 +16,9 @@
   },
   {
     "name": "Bronte Creek Provincial Park",
+    "latitude": 43.4096,
+    "longitude": -79.7646,
+    "address": "1219 Burloak Dr, Oakville, ON",
     "category": "Park",
     "indoor": false,
     "minAge": 5,
@@ -25,6 +31,9 @@
   },
   {
     "name": "Royal Botanical Gardens",
+    "latitude": 43.29,
+    "longitude": -79.8763,
+    "address": "680 Plains Rd W, Burlington, ON",
     "category": "Park",
     "indoor": false,
     "minAge": 4,
@@ -37,6 +46,9 @@
   },
   {
     "name": "The Rec Room — Square One",
+    "latitude": 43.593,
+    "longitude": -79.644,
+    "address": "100 City Centre Dr, Mississauga, ON",
     "category": "Indoor Fun",
     "indoor": true,
     "minAge": 5,
@@ -49,6 +61,9 @@
   },
   {
     "name": "Ontario Science Centre",
+    "latitude": 43.7166,
+    "longitude": -79.3389,
+    "address": "770 Don Mills Rd, Toronto, ON",
     "category": "Museum",
     "indoor": true,
     "minAge": 4,
@@ -61,6 +76,9 @@
   },
   {
     "name": "Toronto Zoo",
+    "latitude": 43.8177,
+    "longitude": -79.1859,
+    "address": "2000 Meadowvale Rd, Toronto, ON",
     "category": "Animals",
     "indoor": false,
     "minAge": 3,
@@ -73,6 +91,9 @@
   },
   {
     "name": "Riverwood Conservancy",
+    "latitude": 43.5741,
+    "longitude": -79.688,
+    "address": "4300 Riverwood Park Ln, Mississauga, ON",
     "category": "Park",
     "indoor": false,
     "minAge": 2,
@@ -85,6 +106,9 @@
   },
   {
     "name": "Living Arts Centre — kids' theatre",
+    "latitude": 43.5917,
+    "longitude": -79.642,
+    "address": "4141 Living Arts Dr, Mississauga, ON",
     "category": "Theatre",
     "indoor": true,
     "minAge": 4,

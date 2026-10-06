@@ -20,7 +20,7 @@ function event(overrides: Partial<LocalEventDto> = {}): LocalEventDto {
     name: 'Terre Bleu Lavender Bloom Opening',
     startsOn: '2026-05-16',
     endsOn: '2026-05-16',
-    location: 'Milton',
+    venue: 'Milton',
     driveMinutes: 45,
     url: 'https://example.com/terre-bleu',
     category: 'Seasonal',
@@ -33,7 +33,7 @@ const EVENTS: LocalEventDto[] = [
   event({
     id: 'ev2',
     name: 'Cirque Mechanics',
-    location: 'Living Arts Centre',
+    venue: 'Living Arts Centre',
     driveMinutes: 5,
     category: 'Theatre',
     url: '',
@@ -43,7 +43,7 @@ const EVENTS: LocalEventDto[] = [
     name: 'Spring Tulip Festival',
     startsOn: '2026-05-15',
     endsOn: '2026-05-17',
-    location: 'RBG',
+    venue: 'RBG',
     category: 'Festival',
   }),
   event({

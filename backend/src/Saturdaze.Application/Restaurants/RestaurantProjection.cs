@@ -20,6 +20,7 @@ internal static class RestaurantProjection
             restaurant.Notes,
             $"https://www.google.com/search?q={Uri.EscapeDataString($"{restaurant.Name} menu")}",
             votes,
-            locked);
+            locked,
+            LocationDto.From(restaurant.Geo));
     }
 }

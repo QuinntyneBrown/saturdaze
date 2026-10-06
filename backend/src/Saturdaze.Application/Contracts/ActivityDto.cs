@@ -11,4 +11,5 @@ public sealed record ActivityDto(
     IReadOnlyList<string> WeatherTags,
     int TypicalDurationMinutes,
     string Description,
-    string MapUrl);
+    string MapUrl,
+    LocationDto? Location);

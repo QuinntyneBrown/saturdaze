@@ -10,6 +10,7 @@ public class ActivityConfiguration : IEntityTypeConfiguration<Activity>
     {
         b.ToTable("Activities");
         b.HasKey(x => x.Id);
+        b.OwnsGeo(x => x.Geo);
         b.Property(x => x.Name).HasMaxLength(160).IsRequired();
         b.Property(x => x.Category).HasMaxLength(80).IsRequired();
         b.Property(x => x.Description).HasMaxLength(2000).IsRequired();

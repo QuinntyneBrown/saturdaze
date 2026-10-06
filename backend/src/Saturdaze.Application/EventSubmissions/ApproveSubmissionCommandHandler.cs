@@ -7,6 +7,7 @@ using Saturdaze.Application.Contracts;
 using Saturdaze.Application.Exceptions;
 using Saturdaze.Domain.Entities;
 using Saturdaze.Domain.Enums;
+using Saturdaze.Domain.ValueObjects;
 
 namespace Saturdaze.Application.EventSubmissions;
 
@@ -65,6 +66,15 @@ public sealed class ApproveSubmissionCommandHandler
                 "An event with the same title already exists on that date at that location.");
         }
 
+        submission.Geo = GeoLocation.Merge(
+            submission.Geo,
+            GeoLocation.From(request.Latitude, request.Longitude, request.Address ?? submission.Location));
+        if (submission.Geo is null)
+        {
+            throw new BadRequestException("location_required",
+                "Supply a latitude and longitude for this event before approving it.");
+        }
+
         if (request.DriveMinutes is { } driveMinutes)
             submission.DriveMinutes = driveMinutes;
 
@@ -78,6 +88,12 @@ public sealed class ApproveSubmissionCommandHandler
             DriveMinutes = submission.DriveMinutes ?? 0,
             Url = submission.SourceUrl ?? string.Empty,
             Category = submission.Category ?? string.Empty,
+            Geo = new GeoLocation
+            {
+                Latitude = submission.Geo.Latitude,
+                Longitude = submission.Geo.Longitude,
+                Address = submission.Geo.Address,
+            },
         };
         _db.LocalEvents.Add(published);
 

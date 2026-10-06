@@ -1,6 +1,9 @@
 [
   {
     "name": "Port Credit Buskerfest",
+    "latitude": 43.5512,
+    "longitude": -79.5866,
+    "address": "Lakeshore Rd E, Mississauga, ON",
     "startsOn": "2026-08-15",
     "endsOn":   "2026-08-16",
     "location": "Port Credit",
@@ -10,6 +13,9 @@
   },
   {
     "name": "Mississauga Waterfront Festival",
+    "latitude": 43.553,
+    "longitude": -79.583,
+    "address": "32 Park St E, Mississauga, ON",
     "startsOn": "2026-06-13",
     "endsOn":   "2026-06-14",
     "location": "Port Credit Memorial Park",
@@ -19,6 +25,9 @@
   },
   {
     "name": "Terre Bleu Lavender Bloom Weekends",
+    "latitude": 43.5386,
+    "longitude": -79.9611,
+    "address": "2501 Dublin Line, Milton, ON",
     "startsOn": "2026-06-27",
     "endsOn":   "2026-07-19",
     "location": "Milton",

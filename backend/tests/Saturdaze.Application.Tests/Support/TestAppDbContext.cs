@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Saturdaze.Application.Abstractions;
 using Saturdaze.Domain.Entities;
+using Saturdaze.Domain.ValueObjects;
 
 namespace Saturdaze.Application.Tests.Support;
 
@@ -33,11 +34,11 @@ internal sealed class TestAppDbContext : DbContext, IAppDbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Owned<GeoLocation>();
         modelBuilder.Entity<Family>().HasMany(f => f.Members).WithOne().HasForeignKey(m => m.FamilyId);
         modelBuilder.Entity<Family>().HasMany(f => f.Commitments).WithOne().HasForeignKey(c => c.FamilyId);
         modelBuilder.Entity<Family>().HasMany(f => f.Preferences).WithOne().HasForeignKey(p => p.FamilyId);
         modelBuilder.Entity<Weekend>().HasMany(w => w.Blocks).WithOne().HasForeignKey(b => b.WeekendId);
         modelBuilder.Entity<Weekend>().HasMany(w => w.Errands).WithOne().HasForeignKey(e => e.WeekendId);
-
     }
 }

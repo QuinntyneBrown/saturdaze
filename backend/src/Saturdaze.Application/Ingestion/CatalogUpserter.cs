@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Saturdaze.Application.Abstractions;
 using Saturdaze.Domain.Entities;
 using Saturdaze.Domain.Enums;
+using Saturdaze.Domain.ValueObjects;
 
 namespace Saturdaze.Application.Ingestion;
 
@@ -76,6 +77,7 @@ public sealed class CatalogUpserter
             entity.DriveMinutes = PayloadReader.GetIntOrDefault(p, "driveMinutes");
             entity.Url = Truncate(PayloadReader.GetStringOrEmpty(p, "url"), 500);
             entity.Category = Truncate(PayloadReader.GetStringOrEmpty(p, "category"), 80);
+            entity.Geo = GeoLocation.Merge(entity.Geo, PayloadReader.GetGeo(p));
         }
 
         return new UpsertResult(inserted, updated, rejected);
@@ -123,6 +125,7 @@ public sealed class CatalogUpserter
             entity.TypicalDurationMinutes = PayloadReader.GetIntOrDefault(p, "typicalDurationMinutes");
             entity.Description = Truncate(PayloadReader.GetStringOrEmpty(p, "description"), 2000);
             entity.MapUrl = Truncate(PayloadReader.GetStringOrEmpty(p, "mapUrl"), 500);
+            entity.Geo = GeoLocation.Merge(entity.Geo, PayloadReader.GetGeo(p));
         }
 
         return new UpsertResult(inserted, updated, rejected);
@@ -166,6 +169,7 @@ public sealed class CatalogUpserter
             entity.WifeApproved = PayloadReader.GetBoolOrDefault(p, "wifeApproved");
             entity.DriveMinutes = PayloadReader.GetIntOrDefault(p, "driveMinutes");
             entity.Notes = Truncate(PayloadReader.GetStringOrEmpty(p, "notes"), 500);
+            entity.Geo = GeoLocation.Merge(entity.Geo, PayloadReader.GetGeo(p));
         }
 
         return new UpsertResult(inserted, updated, rejected);

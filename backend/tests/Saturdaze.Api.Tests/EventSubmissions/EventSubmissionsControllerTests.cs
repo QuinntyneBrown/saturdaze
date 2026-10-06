@@ -23,7 +23,10 @@ public class EventSubmissionsControllerTests : IClassFixture<SaturdazeApiFactory
         string? CostNote = null,
         string? AgeRange = null,
         string? SourceUrl = null,
-        string? Category = null);
+        string? Category = null,
+        decimal? Latitude = null,
+        decimal? Longitude = null,
+        string? Address = null);
     private record RejectRequest(string? Reason);
 
     [Fact]
@@ -116,7 +119,9 @@ public class EventSubmissionsControllerTests : IClassFixture<SaturdazeApiFactory
                 $"Buskerfest-{Guid.NewGuid():N}",
                 new DateTime(2026, 7, 11, 14, 0, 0),
                 Location: "Memorial Park",
-                Category: "Festival"));
+                Category: "Festival",
+                Latitude: 43.5530m,
+                Longitude: -79.5830m));
         submitRes.EnsureSuccessStatusCode();
         var submission = JsonDocument.Parse(await submitRes.Content.ReadAsStringAsync()).RootElement;
         var submissionId = submission.GetProperty("id").GetGuid();
@@ -152,7 +157,7 @@ public class EventSubmissionsControllerTests : IClassFixture<SaturdazeApiFactory
         var secondId = JsonDocument.Parse(await second.Content.ReadAsStringAsync()).RootElement.GetProperty("id").GetGuid();
 
         var admin = await SignedInClient.CreateAsync(_factory, role: UserRole.Admin);
-        var approve = await admin.Client.PostAsJsonAsync($"/api/events/submissions/{firstId}/approve", new { DriveMinutes = 25 });
+        var approve = await admin.Client.PostAsJsonAsync($"/api/events/submissions/{firstId}/approve", new { DriveMinutes = 25, Latitude = 43.5512m, Longitude = -79.5866m, Address = "Lakeshore Rd E" });
         approve.StatusCode.Should().Be(HttpStatusCode.OK, await approve.Content.ReadAsStringAsync());
 
         var published = JsonDocument.Parse(await (await submitter.Client.GetAsync("/api/events?weekendOf=2026-08-01")).Content.ReadAsStringAsync())

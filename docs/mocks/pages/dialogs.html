@@ -715,6 +715,22 @@
                 <div class="card__head-text"><p class="card__title">Sat 20 Jun · 2:00 to 9:00pm</p><p class="card__meta">Memorial Park · Free · All ages · sent by quinntynebrown@gmail.com</p></div>
               </div>
             </div>
+            <!-- docs/specs L2-087 AC3: a published event needs a location. Blank coordinates keep the submission's own. -->
+            <div class="field">
+              <label class="field__label" for="d23-address">Address</label>
+              <input class="field__input" id="d23-address" type="text" value="Memorial Park, Lakeshore Rd, Port Credit" autocomplete="off">
+            </div>
+            <div class="grid-2">
+              <div class="field">
+                <label class="field__label" for="d23-lat">Latitude</label>
+                <input class="field__input" id="d23-lat" type="number" step="any" min="-90" max="90" inputmode="decimal" placeholder="43.5530">
+              </div>
+              <div class="field">
+                <label class="field__label" for="d23-lng">Longitude</label>
+                <input class="field__input" id="d23-lng" type="number" step="any" min="-180" max="180" inputmode="decimal" placeholder="-79.5830">
+              </div>
+            </div>
+            <p class="field__hint">Needed to put the event on the map. Copy the coordinates from any map app.</p>
           </div>
           <div class="dialog__actions">
             <button class="btn btn--quiet" type="button">Cancel</button>

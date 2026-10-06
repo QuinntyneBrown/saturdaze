@@ -10,6 +10,7 @@ public class LocalEventConfiguration : IEntityTypeConfiguration<LocalEvent>
     {
         b.ToTable("LocalEvents");
         b.HasKey(x => x.Id);
+        b.OwnsGeo(x => x.Geo);
         b.Property(x => x.Name).HasMaxLength(200).IsRequired();
         b.Property(x => x.Location).HasMaxLength(200).IsRequired();
         b.Property(x => x.Url).HasMaxLength(500);

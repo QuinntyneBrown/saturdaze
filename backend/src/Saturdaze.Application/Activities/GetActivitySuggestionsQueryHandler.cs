@@ -69,7 +69,8 @@ public sealed class GetActivitySuggestionsQueryHandler
             .Take(request.Take)
             .Select(a => new ActivityDto(
                 a.Id, a.Name, a.Category, a.Indoor, a.MinAge, a.MaxAge, a.DriveMinutes,
-                a.WeatherTags.ToList(), a.TypicalDurationMinutes, a.Description, a.MapUrl))
+                a.WeatherTags.ToList(), a.TypicalDurationMinutes, a.Description, a.MapUrl,
+                LocationDto.From(a.Geo)))
             .ToList();
     }
 }

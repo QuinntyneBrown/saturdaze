@@ -1,4 +1,5 @@
 using Saturdaze.Domain.Enums;
+using Saturdaze.Domain.ValueObjects;
 
 namespace Saturdaze.Domain.Entities;
 
@@ -15,6 +16,7 @@ public class EventSubmission
     public string? SourceUrl { get; set; }
     public string? Category { get; set; }
     public int? DriveMinutes { get; set; }
+    public GeoLocation? Geo { get; set; }
     public EventSubmissionStatus Status { get; set; } = EventSubmissionStatus.Pending;
     public Guid SubmittedByUserId { get; set; }
     public DateTimeOffset SubmittedAtUtc { get; set; }

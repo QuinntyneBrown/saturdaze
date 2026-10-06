@@ -1,3 +1,5 @@
+using Saturdaze.Domain.ValueObjects;
+
 namespace Saturdaze.Domain.Entities;
 
 public class Family
@@ -8,6 +10,9 @@ public class Family
     public string? Name { get; set; }
 
     public string HomeLocation { get; set; } = string.Empty;
+
+    /// <summary>Coordinates of home (L2-087); falls back to HomeLocationOptions when null.</summary>
+    public GeoLocation? HomeCoordinates { get; set; }
     public bool BudgetEnabled { get; set; }
 
     /// <summary>"Try something new each weekend" — drives the planner's novelty bonus.</summary>

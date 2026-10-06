@@ -1,10 +1,10 @@
 [
-  { "name": "Snug Harbour",              "style": "Seafood",       "slot": "Dinner", "wifeApproved": true,  "driveMinutes": 4,  "notes": "Lakeside, great patio." },
-  { "name": "Spice Lounge",              "style": "Indian",        "slot": "Dinner", "wifeApproved": true,  "driveMinutes": 6,  "notes": "Kid-friendly butter chicken." },
-  { "name": "Port Credit Pizza",         "style": "Pizza",         "slot": "Lunch",  "wifeApproved": true,  "driveMinutes": 3,  "notes": "Easy walk from the park." },
-  { "name": "Joe Dog's",                 "style": "Pub",           "slot": "Lunch",  "wifeApproved": true,  "driveMinutes": 4,  "notes": "Loud but works with kids." },
-  { "name": "Brogue Inn",                "style": "Irish Pub",     "slot": "Dinner", "wifeApproved": true,  "driveMinutes": 5,  "notes": "Cozy, decent kids menu." },
-  { "name": "Sukhothai",                 "style": "Thai",          "slot": "Dinner", "wifeApproved": true,  "driveMinutes": 8,  "notes": "Mild pad thai for kids." },
-  { "name": "Cora's Port Credit",        "style": "Breakfast",     "slot": "Lunch",  "wifeApproved": true,  "driveMinutes": 5,  "notes": "Best for late-morning brunch slot." },
-  { "name": "Wild Wing",                 "style": "Wings",         "slot": "Dinner", "wifeApproved": false, "driveMinutes": 7,  "notes": "Backup only — kids like it, wife doesn't." }
+  { "name": "Snug Harbour",              "style": "Seafood",       "slot": "Dinner", "wifeApproved": true,  "driveMinutes": 4,  "notes": "Lakeside, great patio.", "latitude": 43.5498, "longitude": -79.5853, "address": "14 Stavebank Rd S, Mississauga, ON" },
+  { "name": "Spice Lounge",              "style": "Indian",        "slot": "Dinner", "wifeApproved": true,  "driveMinutes": 6,  "notes": "Kid-friendly butter chicken.", "latitude": 43.552, "longitude": -79.59, "address": "Lakeshore Rd W, Mississauga, ON" },
+  { "name": "Port Credit Pizza",         "style": "Pizza",         "slot": "Lunch",  "wifeApproved": true,  "driveMinutes": 3,  "notes": "Easy walk from the park.", "latitude": 43.553, "longitude": -79.585, "address": "Lakeshore Rd E, Mississauga, ON" },
+  { "name": "Joe Dog's",                 "style": "Pub",           "slot": "Lunch",  "wifeApproved": true,  "driveMinutes": 4,  "notes": "Loud but works with kids.", "latitude": 43.5525, "longitude": -79.5845, "address": "Lakeshore Rd E, Mississauga, ON" },
+  { "name": "Brogue Inn",                "style": "Irish Pub",     "slot": "Dinner", "wifeApproved": true,  "driveMinutes": 5,  "notes": "Cozy, decent kids menu.", "latitude": 43.552, "longitude": -79.583, "address": "123 Lakeshore Rd W, Mississauga, ON" },
+  { "name": "Sukhothai",                 "style": "Thai",          "slot": "Dinner", "wifeApproved": true,  "driveMinutes": 8,  "notes": "Mild pad thai for kids.", "latitude": 43.554, "longitude": -79.588, "address": "Lakeshore Rd W, Mississauga, ON" },
+  { "name": "Cora's Port Credit",        "style": "Breakfast",     "slot": "Lunch",  "wifeApproved": true,  "driveMinutes": 5,  "notes": "Best for late-morning brunch slot.", "latitude": 43.5512, "longitude": -79.5866, "address": "Lakeshore Rd E, Mississauga, ON" },
+  { "name": "Wild Wing",                 "style": "Wings",         "slot": "Dinner", "wifeApproved": false, "driveMinutes": 7,  "notes": "Backup only — kids like it, wife doesn't.", "latitude": 43.56, "longitude": -79.6, "address": "Lakeshore Rd W, Mississauga, ON" }
 ]

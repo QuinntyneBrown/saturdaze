@@ -2,6 +2,7 @@ using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using Saturdaze.Domain.Entities;
 using Saturdaze.Domain.Enums;
+using Saturdaze.Domain.ValueObjects;
 using Saturdaze.Infrastructure.Persistence;
 
 namespace Saturdaze.Cli.Seed;
@@ -30,6 +31,8 @@ public sealed class FamilySeeder : IJsonSeeder
         }
 
         family.BudgetEnabled = seed.BudgetEnabled;
+        family.HomeCoordinates = GeoLocation.Merge(
+            family.HomeCoordinates, GeoLocation.From(seed.HomeLatitude, seed.HomeLongitude, seed.HomeLocation));
         if (!string.IsNullOrWhiteSpace(seed.Name)) family.Name = seed.Name.Trim();
 
         var written = 1;
@@ -132,7 +135,9 @@ public sealed class FamilySeeder : IJsonSeeder
         List<MemberRecord>? Members,
         List<CommitmentRecord>? Commitments,
         List<PreferenceRecord>? Preferences,
-        string? Name = null);
+        string? Name = null,
+        decimal? HomeLatitude = null,
+        decimal? HomeLongitude = null);
 
     private sealed record MemberRecord(string Name, int Age);
 

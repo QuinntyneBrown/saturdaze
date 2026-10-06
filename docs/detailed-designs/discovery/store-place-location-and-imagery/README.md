@@ -18,7 +18,7 @@ This feature is the data foundation for the photo and map designs: `discovery/ad
 
 ### Domain
 
-`GeoLocation` is a new owned value type with `Latitude` (decimal, −90 to 90), `Longitude` (decimal, −180 to 180), and `Address` (≤ 300 characters). `Activity`, `Restaurant`, `LocalEvent`, and `EventSubmission` each gain a nullable `Location` of this type. The columns stay nullable until every row is backfilled (L2-087 AC5). `Family` gains a nullable `HomeCoordinates`; until it is set, the planner reads `HomeLocationOptions.Latitude` and `Longitude`, which the weather slice already uses.
+`GeoLocation` is a new owned value type with `Latitude` (decimal, −90 to 90), `Longitude` (decimal, −180 to 180), and `Address` (≤ 300 characters). `Activity`, `Restaurant`, `LocalEvent`, and `EventSubmission` each gain a nullable `Geo` of this type; `Location` already names the venue text on events and submissions. `GeoLocationMapping.OwnsGeo` maps it to nullable `Latitude`, `Longitude`, and `Address` columns on the owner's table. The columns stay nullable until every row is backfilled (L2-087 AC5). `Family` gains a nullable `HomeCoordinates` (columns `HomeLatitude`, `HomeLongitude`, `HomeAddress`); until it is set, the planner reads `HomeLocationOptions.Latitude` and `Longitude`, which the weather slice already uses.
 
 `PlacePhoto` is a new entity: `Id`, `PlaceKind` (`Activity`, `Restaurant`, `LocalEvent`), `PlaceId`, `Url`, `Width`, `Height`, `AltText`, `Attribution`, `Source` (`PhotoSource`: `Curated`, `Provider`, `Submitter`), `License`, and `IsPrimary`. The pair `PlaceKind` + `PlaceId` addresses the owning row because the three catalogs live in separate tables. A filtered unique index on `(PlaceKind, PlaceId) WHERE IsPrimary = 1` enforces one primary photo per place in the database.
 
@@ -28,13 +28,13 @@ This feature is the data foundation for the photo and map designs: `discovery/ad
 
 `ActivitySeeder`, `RestaurantSeeder`, and `LocalEventSeeder` (`IJsonSeeder` implementations in `Saturdaze.Cli`) read `latitude`, `longitude`, `address`, and an optional `photos` array from the bundled seed JSON and upsert them with the existing natural keys, so a second run changes nothing (L2-087 AC1).
 
-`IngestionPrompts` asks the provider for coordinates, address, and photo candidates with attribution and licence. `IngestionResultParser` maps them into `IngestionRecords`. `CatalogUpserter.UpsertAsync` writes the location and calls `PlacePhoto.Create` for each candidate. A rejected candidate increments `IngestionRun.ItemsRejected` and appends a reason to a new `IngestionRun.SkipReasons` list (L2-088 AC2).
+`IngestionPrompts` asks the provider for `latitude`, `longitude`, `address`, and photo candidates with attribution and licence. `PayloadReader.GetGeo` reads the location, returning null for a missing or out-of-range coordinate. `CatalogUpserter.UpsertAsync` writes the location through `GeoLocation.Merge`, which keeps an unchanged value so re-runs do not churn rows, and calls `PlacePhoto.Create` for each candidate. A rejected candidate increments `IngestionRun.ItemsRejected` and appends a reason to a new `IngestionRun.SkipReasons` list (L2-088 AC2).
 
-`SubmitEventCommand` gains optional `Latitude`, `Longitude`, and `Address`. `SubmitEventCommandValidator` rejects out-of-range values with a field error named `latitude` or `longitude` (L2-087 AC2). `ApproveSubmissionCommandHandler` refuses an approval whose submission has no location with 400 `location_required`, and `ApproveSubmissionDialog` gains an address field so an administrator can supply one (L2-087 AC3). Geocoding an administrator's address into coordinates is `<TO SUPPLY>` (provider not chosen).
+`SubmitEventCommand` gains optional `Latitude`, `Longitude`, and `Address`. `SubmitEventCommandValidator` rejects out-of-range values with a field error named `latitude` or `longitude` (L2-087 AC2). `ApproveSubmissionCommand` accepts optional `Latitude`, `Longitude`, and `Address`. `ApproveSubmissionCommandHandler` refuses an approval when neither the submission nor the request carries a location, throwing `BadRequestException("location_required")`, which the exception middleware writes as a 400 ProblemDetails with that `code` (L2-087 AC3). `ApproveSubmissionDialog` should gain location fields so an administrator can supply one. Geocoding an administrator's address into coordinates is `<TO SUPPLY>` (provider not chosen).
 
 ### Projection
 
-`LocationDto(Latitude, Longitude, Address)` and `PlacePhotoDto(Url, Width, Height, Alt, Attribution)` are new contracts. `ActivityDto`, `RestaurantDto`, and `LocalEventDto` gain `Location` and `Photo` (L2-087 AC4).
+`LocationDto(Latitude, Longitude, Address)` and `PlacePhotoDto(Url, Width, Height, Alt, Attribution)` are new contracts. `ActivityDto`, `RestaurantDto`, and `LocalEventDto` gain `Location` and `Photo` (L2-087 AC4). On `LocalEventDto` the former `Location` venue string becomes `Venue`, so `location` means the same object on every list.
 
 `PlacePhotoProjector.Project(place, photos)` returns the primary photo as `PlacePhotoDto` or `null`. It returns `null` when there is no photo, or when the URL is not HTTPS or its origin is absent from `ImageOptions.AllowedOrigins` (L2-089 AC3). An empty `AltText` becomes `"Photo of {place name}"` (L2-088 AC4). `ImageOptions` binds from `Saturdaze:Images` and lists the app's own storage origin plus each configured provider.
 
@@ -48,7 +48,7 @@ This feature is the data foundation for the photo and map designs: `discovery/ad
 
 ### Persistence
 
-The EF migration `AddPlaceLocationAndPhotos` adds the nullable location columns, the `PlacePhotos` table, and its indexes. It applies through `saturdaze migrate`; the API does not migrate on startup.
+The EF migration `AddPlaceLocations` adds the nullable location columns; a later migration adds the `PlacePhotos` table and its indexes. It applies through `saturdaze migrate`; the API does not migrate on startup.
 
 ## Requirements
 

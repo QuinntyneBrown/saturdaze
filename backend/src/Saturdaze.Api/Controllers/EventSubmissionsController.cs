@@ -24,10 +24,13 @@ public sealed class EventSubmissionsController : ControllerBase
         string? CostNote,
         string? AgeRange,
         string? SourceUrl,
-        string? Category);
+        string? Category,
+        decimal? Latitude = null,
+        decimal? Longitude = null,
+        string? Address = null);
 
     public record RejectRequest(string? Reason);
-    public record ApproveRequest(int? DriveMinutes);
+    public record ApproveRequest(int? DriveMinutes, decimal? Latitude = null, decimal? Longitude = null, string? Address = null);
 
     [HttpPost]
     public async Task<ActionResult<EventSubmissionDto>> Submit(
@@ -43,7 +46,10 @@ public sealed class EventSubmissionsController : ControllerBase
             req.CostNote,
             req.AgeRange,
             req.SourceUrl,
-            req.Category), ct);
+            req.Category,
+            req.Latitude,
+            req.Longitude,
+            req.Address), ct);
 
         return CreatedAtAction(nameof(Mine), null, dto);
     }
@@ -68,7 +74,7 @@ public sealed class EventSubmissionsController : ControllerBase
         [FromBody(EmptyBodyBehavior = Microsoft.AspNetCore.Mvc.ModelBinding.EmptyBodyBehavior.Allow)] ApproveRequest? req,
         CancellationToken ct)
     {
-        return Ok(await _sender.Send(new ApproveSubmissionCommand(id, req?.DriveMinutes), ct));
+        return Ok(await _sender.Send(new ApproveSubmissionCommand(id, req?.DriveMinutes, req?.Latitude, req?.Longitude, req?.Address), ct));
     }
 
     [HttpPost("{id:guid}/reject")]

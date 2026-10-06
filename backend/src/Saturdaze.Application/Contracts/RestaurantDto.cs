@@ -12,6 +12,7 @@ public sealed record RestaurantDto(
     string Notes,
     string MenuUrl,
     IReadOnlyList<RestaurantVoteDto> Votes,
-    bool Locked);
+    bool Locked,
+    LocationDto? Location);
 
 public sealed record RestaurantVoteDto(string VoterName, string Vote);
