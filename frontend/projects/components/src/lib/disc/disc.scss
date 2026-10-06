@@ -8,8 +8,8 @@
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: var(--sd-surface-2);
-  color: var(--sd-ink-soft);
+  background: var(--colorNeutralBackground3);
+  color: var(--colorNeutralForeground2);
 }
 
 :host(.disc--sm) {
@@ -26,35 +26,35 @@
 }
 
 :host(.disc--accent) {
-  background: var(--sd-accent-soft);
-  color: var(--sd-accent);
+  background: var(--colorStatusSuccessBackground1);
+  color: var(--colorStatusSuccessForeground1);
 }
 :host(.disc--primary) {
-  background: var(--sd-primary-soft);
-  color: var(--sd-primary-deep);
+  background: var(--colorBrandBackground2);
+  color: var(--colorBrandForeground2);
 }
 :host(.disc--warn) {
-  background: var(--sd-warn-soft);
-  color: var(--sd-warn-deep);
+  background: var(--colorStatusDangerBackground1);
+  color: var(--colorStatusDangerForeground1);
 }
 :host(.disc--sun) {
-  background: var(--sd-sun-soft);
-  color: var(--sd-sun-ink);
+  background: var(--colorPaletteSunBackground1);
+  color: var(--colorPaletteSunForeground1);
 }
 :host(.disc--sky) {
-  background: var(--sd-sky-soft);
-  color: var(--sd-sky-ink);
+  background: var(--colorPaletteSkyBackground1);
+  color: var(--colorPaletteSkyForeground1);
 }
 :host(.disc--leaf) {
-  background: var(--sd-leaf-soft);
-  color: var(--sd-leaf-ink);
+  background: var(--colorPaletteLeafBackground1);
+  color: var(--colorPaletteLeafForeground1);
 }
 :host(.disc--indoor) {
-  background: var(--sd-indoor-soft);
-  color: var(--sd-indoor-ink);
+  background: var(--colorPaletteIndoorBackground1);
+  color: var(--colorPaletteIndoorForeground1);
 }
 :host(.disc--surface) {
-  background: var(--sd-surface);
-  color: var(--sd-ink-soft);
-  box-shadow: inset 0 0 0 1px var(--sd-line);
+  background: var(--colorNeutralBackground1);
+  color: var(--colorNeutralForeground2);
+  box-shadow: inset 0 0 0 1px var(--colorNeutralStroke2);
 }

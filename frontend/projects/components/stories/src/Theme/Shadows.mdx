@@ -7,7 +7,8 @@ import { byPrefix } from './components/tokens';
 
 # Shadows
 
-Elevation is soft and paper-like. `shadow-1` lifts cards off the cream page, `shadow-2` marks hover and floating chrome
-(the bottom nav), `shadow-3` is reserved for dialogs and menus.
+Elevation is soft and paper-like. As in Fluent, each shadow is named for its blur and built from
+the theme's shadow colours: `shadow4` lifts cards off the cream page, `shadow16` marks hover and floating chrome (the
+bottom nav), `shadow28` is reserved for dialogs and menus.
 
-<TokenRows tokens={byPrefix('--sd-shadow-')} preview={previews.shadow} />
+<TokenRows tokens={byPrefix('shadow')} preview={previews.shadow} />

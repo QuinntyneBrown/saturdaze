@@ -65,6 +65,10 @@ jobs:
         working-directory: frontend
         run: npm run lint
 
+      - name: Design tokens up to date
+        working-directory: frontend
+        run: npm run tokens:check
+
       - name: Build libraries
         working-directory: frontend
         run: |

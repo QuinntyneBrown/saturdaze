@@ -1,50 +1,45 @@
 /**
- * Reads the token vocabulary straight from `_tokens.scss` so the Theme pages
- * can never drift from the stylesheet the components consume. The `?raw`
- * import is resolved by the `asset/source` rule in `.storybook/main.ts`.
+ * The Theme pages render straight from the TypeScript theme that
+ * `_tokens.scss` is generated from — the way Fluent's docsite renders from
+ * `webLightTheme` — so they cannot drift from what the components consume.
  */
-import tokensScss from '../../../../src/lib/styles/_tokens.scss?raw';
+import { responsiveOverrides, saturdazeLightTheme } from '../../../../src/lib/tokens';
 
-function stripComments(source) {
-  return source.replace(/\/\*[\s\S]*?\*\//g, '').replace(/\/\/[^\n]*/g, '');
-}
+/** One-line usage notes for the tokens whose role isn't obvious from the name. */
+const notes = {
+  colorNeutralForeground1: 'Body ink',
+  colorNeutralForeground2: 'Secondary text and metadata',
+  colorNeutralForeground3: 'Hints, placeholders, disabled text',
+  colorNeutralBackground1: 'Cards, dialogs, inputs',
+  colorNeutralBackground2: 'The page — warm cream, like a kitchen mid-morning',
+  colorNeutralBackground3: 'Recessed wells, locked blocks',
+  colorNeutralBackgroundInverted: 'Selected filter chip',
+  colorBackgroundOverlay: 'CDK dialog backdrop',
+  colorNeutralStrokeAccessible: 'Grab handles and placeholder dots',
+  colorBrandBackground: 'The one coral button per screen',
+  colorBrandForeground2: 'Coral text that passes AA on colorBrandBackground2',
+  colorBrandBackgroundGradient: 'Landing hero and first-run card',
+  colorStatusSuccessBackground3: 'Locked, confirmed, saved',
+  colorStatusDangerBackground3: 'Destructive buttons — gentle, not alarming',
+  layoutTopBarHeight: '≥720px sticky top bar',
+  layoutBottomNavHeight: '<720px floating bottom nav',
+  shadow4: 'Cards off the cream page',
+  shadow16: 'Hover and floating chrome (the bottom nav)',
+  shadow28: 'Dialogs and menus',
+};
 
-/** Each `--sd-*` declaration inside one `{ … }` body, in source order. */
-function declarations(body) {
-  const out = [];
-  const re = /(--sd-[a-z0-9-]+)\s*:\s*([^;]+);/g;
-  let m;
-  while ((m = re.exec(body))) out.push({ name: m[1], value: m[2].replace(/\s+/g, ' ').trim() });
-  return out;
-}
-
-/** The comment that sits on the same line as a declaration, used as its note. */
-function notes(source) {
-  const map = {};
-  for (const line of source.split('\n')) {
-    const m = /(--sd-[a-z0-9-]+)\s*:[^;]*;\s*\/\/\s*(.+)$/.exec(line);
-    if (m) map[m[1]] = m[2].trim();
-  }
-  return map;
-}
-
-const clean = stripComments(tokensScss);
-const rootMatch = /:root\s*\{([\s\S]*?)\n\}/.exec(clean);
-const noteMap = notes(tokensScss);
-
-/** Every default token: `{ name, value, note }`. */
-export const tokens = declarations(rootMatch ? rootMatch[1] : '').map((t) => ({
-  ...t,
-  note: noteMap[t.name] ?? '',
+/** Every theme token: `{ name, value, note }`, in theme order. */
+export const tokens = Object.entries(saturdazeLightTheme).map(([name, value]) => ({
+  name,
+  value,
+  note: notes[name] ?? '',
 }));
 
 /** Responsive retunes: `[{ query, tokens: [{ name, value }] }]`. */
-export const overrides = [];
-{
-  const re = /@media\s*([^{]+)\{\s*:root\s*\{([\s\S]*?)\}\s*\}/g;
-  let m;
-  while ((m = re.exec(clean))) overrides.push({ query: m[1].trim(), tokens: declarations(m[2]) });
-}
+export const overrides = responsiveOverrides.map((o) => ({
+  query: o.media,
+  tokens: Object.entries(o.tokens).map(([name, value]) => ({ name, value })),
+}));
 
 export function byPrefix(...prefixes) {
   return tokens.filter((t) => prefixes.some((p) => t.name.startsWith(p)));

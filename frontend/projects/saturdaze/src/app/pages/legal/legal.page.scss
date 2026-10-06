@@ -18,35 +18,35 @@
 }
 
 .prose h2 {
-  font-size: var(--sd-fs-lg);
+  font-size: var(--fontSizeBase600);
   margin-top: 32px;
   margin-bottom: 8px;
 }
 
 .prose p {
-  font-size: var(--sd-fs-base);
+  font-size: var(--fontSizeBase400);
   line-height: 1.65;
-  color: var(--sd-ink);
+  color: var(--colorNeutralForeground1);
   margin-bottom: 12px;
 }
 
 .prose__eyebrow {
-  font-size: var(--sd-fs-xs);
-  font-weight: var(--sd-fw-semibold);
+  font-size: var(--fontSizeBase200);
+  font-weight: var(--fontWeightSemibold);
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--sd-ink-soft);
+  color: var(--colorNeutralForeground2);
   margin-bottom: 8px;
 }
 
 .prose__title {
-  font-size: var(--sd-fs-xl);
+  font-size: var(--fontSizeHero700);
   letter-spacing: -0.02em;
 }
 
 .prose__updated {
-  font-size: var(--sd-fs-sm);
-  color: var(--sd-ink-soft);
+  font-size: var(--fontSizeBase300);
+  color: var(--colorNeutralForeground2);
   margin-top: 6px;
   margin-bottom: 20px;
 }
@@ -65,14 +65,14 @@
 }
 
 .prose__toc a {
-  color: var(--sd-ink-soft);
+  color: var(--colorNeutralForeground2);
 }
 
 .site-footer {
   margin-top: 80px;
   text-align: center;
-  font-size: var(--sd-fs-xs);
-  color: var(--sd-ink-faint);
+  font-size: var(--fontSizeBase200);
+  color: var(--colorNeutralForeground3);
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -83,12 +83,12 @@
   color: inherit;
   text-decoration: underline;
   text-underline-offset: 3px;
-  text-decoration-color: var(--sd-line-strong);
+  text-decoration-color: var(--colorNeutralStroke1);
 }
 
 @media (hover: hover) {
   .prose__toc a:hover {
-    color: var(--sd-ink);
+    color: var(--colorNeutralForeground1);
     text-decoration: underline;
     text-underline-offset: 3px;
   }

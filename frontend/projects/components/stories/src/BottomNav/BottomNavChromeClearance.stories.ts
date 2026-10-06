@@ -13,7 +13,7 @@ export const ChromeClearance: StoryObj<BottomNav> = {
           </p>
         </main>
         <sd-bottom-nav active="ideas" />
-        <div aria-hidden="true" style="position: fixed; inset: auto 0 0 0; height: 84px; background: repeating-linear-gradient(135deg, var(--sd-surface-2) 0 8px, transparent 8px 16px); border-top: 1px dashed var(--sd-line-strong)"></div>
+        <div aria-hidden="true" style="position: fixed; inset: auto 0 0 0; height: 84px; background: repeating-linear-gradient(135deg, var(--colorNeutralBackground3) 0 8px, transparent 8px 16px); border-top: 1px dashed var(--colorNeutralStroke1)"></div>
       </div>
     `,
   }),

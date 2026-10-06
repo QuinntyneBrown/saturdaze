@@ -13,22 +13,22 @@
   min-height: 44px;
   margin-top: 12px;
   padding: 0 12px;
-  border: 1px dashed var(--sd-line-strong);
-  border-radius: var(--sd-r-md);
-  font-size: var(--sd-fs-sm);
-  font-weight: var(--sd-fw-semibold);
-  color: var(--sd-ink-soft);
+  border: 1px dashed var(--colorNeutralStroke1);
+  border-radius: var(--borderRadiusMedium);
+  font-size: var(--fontSizeBase300);
+  font-weight: var(--fontWeightSemibold);
+  color: var(--colorNeutralForeground2);
   background: transparent;
   cursor: pointer;
   text-decoration: none;
   transition:
-    background var(--sd-dur-fast) var(--sd-ease),
-    color var(--sd-dur-fast) var(--sd-ease);
+    background var(--durationFast) var(--curveEasyEase),
+    color var(--durationFast) var(--curveEasyEase);
 }
 
 @media (hover: hover) {
   .ghost-row:hover {
-    background: var(--sd-surface-2);
-    color: var(--sd-ink);
+    background: var(--colorNeutralBackground3);
+    color: var(--colorNeutralForeground1);
   }
 }

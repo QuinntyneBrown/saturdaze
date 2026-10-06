@@ -27,14 +27,10 @@ const config: StorybookConfig = {
   },
   webpackFinal: async (webpackConfig) => {
     // `<Component>Description.md` and `<Component>BestPractices.md` load as
-    // plain strings for `parameters.docs.description.component`, and
-    // `?raw` lets the theme pages read `_tokens.scss` as the single source.
+    // plain strings for `parameters.docs.description.component`.
     webpackConfig.module ??= {};
     webpackConfig.module.rules ??= [];
-    webpackConfig.module.rules.push(
-      { test: /\.md$/, type: 'asset/source' },
-      { resourceQuery: /raw/, type: 'asset/source' },
-    );
+    webpackConfig.module.rules.push({ test: /\.md$/, type: 'asset/source' });
     return webpackConfig;
   },
 };

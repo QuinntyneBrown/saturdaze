@@ -8,21 +8,21 @@
   flex: none;
   width: 44px;
   height: 44px;
-  border-radius: var(--sd-r-md);
-  background: var(--sd-primary-soft);
-  color: var(--sd-primary-deep);
+  border-radius: var(--borderRadiusMedium);
+  background: var(--colorBrandBackground2);
+  color: var(--colorBrandForeground2);
   line-height: 1;
 }
 
 .date-tile__m {
   font-size: 10px;
-  font-weight: var(--sd-fw-bold);
+  font-weight: var(--fontWeightBold);
   text-transform: uppercase;
   letter-spacing: 0.06em;
 }
 
 .date-tile__d {
   font-size: 18px;
-  font-weight: var(--sd-fw-bold);
+  font-weight: var(--fontWeightBold);
   margin-top: 2px;
 }

@@ -29,9 +29,9 @@
   width: 44px;
   height: 24px;
   pointer-events: none;
-  border-radius: var(--sd-r-pill);
-  background: var(--sd-line-strong);
-  transition: background var(--sd-dur-base) var(--sd-ease);
+  border-radius: var(--borderRadiusCircular);
+  background: var(--colorNeutralStroke1);
+  transition: background var(--durationNormal) var(--curveEasyEase);
 }
 
 .toggle__track::after {
@@ -43,12 +43,12 @@
   height: 20px;
   border-radius: 50%;
   background: #fff;
-  box-shadow: var(--sd-shadow-1);
-  transition: transform var(--sd-dur-base) var(--sd-ease);
+  box-shadow: var(--shadow4);
+  transition: transform var(--durationNormal) var(--curveEasyEase);
 }
 
 .toggle__input:checked + .toggle__track {
-  background: var(--sd-accent);
+  background: var(--colorStatusSuccessBackground3);
 }
 
 .toggle__input:checked + .toggle__track::after {
@@ -56,7 +56,7 @@
 }
 
 .toggle__input:focus-visible + .toggle__track {
-  outline: var(--sd-focus-ring);
+  outline: var(--strokeWidthThick) solid var(--colorStrokeFocus2);
   outline-offset: 2px;
 }
 
@@ -66,5 +66,5 @@
 
 .toggle__label {
   font-size: 14px;
-  font-weight: var(--sd-fw-medium);
+  font-weight: var(--fontWeightMedium);
 }

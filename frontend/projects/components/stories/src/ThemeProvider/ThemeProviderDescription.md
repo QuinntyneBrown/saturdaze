@@ -1,0 +1,3 @@
+`[sdThemeProvider]` re-themes a subtree, like Fluent UI's `FluentProvider`. It writes every key of the theme it is given to its host as a CSS custom property (`colorBrandBackground` → `--colorBrandBackground`), so every component inside reads the override through the normal cascade.
+
+The whole app already gets `saturdazeLightTheme` from the generated `_tokens.scss`, so the directive is never needed at the root. Pass a `PartialTheme` to override a few tokens, or `createLightTheme(brand)` for a full re-brand from a new 16-step ramp. Changing the bound theme updates the properties in place and removes keys the new theme no longer sets.

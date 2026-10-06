@@ -4,21 +4,21 @@
   display: inline-flex;
   align-items: center;
   gap: 2px;
-  border-radius: var(--sd-r-sm);
+  border-radius: var(--borderRadiusSmall);
 }
 
 sd-icon {
-  color: var(--sd-ink-faint);
+  color: var(--colorNeutralForeground3);
 }
 
 sd-icon[filled] {
-  color: var(--sd-sun);
+  color: var(--colorPaletteSunForeground3);
 }
 
 .stars__label {
   margin-left: 6px;
-  font-size: var(--sd-fs-xs);
-  color: var(--sd-ink-soft);
+  font-size: var(--fontSizeBase200);
+  color: var(--colorNeutralForeground2);
 }
 
 .stars__btn {
@@ -28,15 +28,15 @@ sd-icon[filled] {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  color: var(--sd-ink-faint);
+  color: var(--colorNeutralForeground3);
 }
 
 .stars__btn sd-icon[filled] {
-  color: var(--sd-sun);
+  color: var(--colorPaletteSunForeground3);
 }
 
 @media (hover: hover) {
   .stars__btn:hover {
-    background: var(--sd-surface-2);
+    background: var(--colorNeutralBackground3);
   }
 }

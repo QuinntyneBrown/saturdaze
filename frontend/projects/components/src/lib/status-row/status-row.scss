@@ -5,11 +5,11 @@
   align-items: center;
   gap: 14px;
   padding: 14px 16px;
-  background: var(--sd-surface);
-  border: 1px solid var(--sd-line);
-  border-radius: var(--sd-r-lg);
+  background: var(--colorNeutralBackground1);
+  border: 1px solid var(--colorNeutralStroke2);
+  border-radius: var(--borderRadiusLarge);
   font-size: 14px;
-  color: var(--sd-ink-soft);
+  color: var(--colorNeutralForeground2);
   margin-bottom: 24px;
 }
 

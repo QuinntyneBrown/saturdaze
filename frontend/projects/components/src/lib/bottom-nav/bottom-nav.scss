@@ -6,7 +6,7 @@
   position: fixed;
   left: 12px;
   right: 12px;
-  z-index: var(--sd-z-nav);
+  z-index: var(--zIndexBottomNav);
   // ADR-005 (BUG-047 + BUG-049). The bottom nav must clear whichever
   // bottom-edge obstruction is currently present:
   //   - `env(safe-area-inset-bottom)` for the home indicator (~34px on
@@ -25,13 +25,13 @@
   bottom: calc(12px + max(env(safe-area-inset-bottom, 0px), var(--sd-chrome-bottom, 0px)));
   margin-inline: auto;
   max-width: 440px;
-  height: var(--sd-bottom-nav-h);
+  height: var(--layoutBottomNavHeight);
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  background: var(--sd-surface);
-  border: 1px solid var(--sd-line);
-  border-radius: var(--sd-r-pill);
-  box-shadow: var(--sd-shadow-3);
+  background: var(--colorNeutralBackground1);
+  border: 1px solid var(--colorNeutralStroke2);
+  border-radius: var(--borderRadiusCircular);
+  box-shadow: var(--shadow28);
 }
 
 .bottom-nav__item {
@@ -42,10 +42,10 @@
   gap: 4px;
   min-width: 0;
   font-size: 11px;
-  font-weight: var(--sd-fw-semibold);
-  color: var(--sd-ink-soft);
+  font-weight: var(--fontWeightSemibold);
+  color: var(--colorNeutralForeground2);
   white-space: nowrap;
-  border-radius: var(--sd-r-pill);
+  border-radius: var(--borderRadiusCircular);
   text-decoration: none;
 }
 
@@ -55,16 +55,16 @@
   justify-content: center;
   width: 36px;
   height: 24px;
-  border-radius: var(--sd-r-pill);
+  border-radius: var(--borderRadiusCircular);
 }
 
 .bottom-nav__item[aria-current='page'] {
-  color: var(--sd-ink);
+  color: var(--colorNeutralForeground1);
 }
 
 .bottom-nav__item[aria-current='page'] .bottom-nav__icon {
-  background: var(--sd-primary-soft);
-  color: var(--sd-primary);
+  background: var(--colorBrandBackground2);
+  color: var(--colorBrandForeground1);
 }
 
 @include respond-to(tablet) {

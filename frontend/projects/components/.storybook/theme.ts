@@ -1,45 +1,46 @@
 import { create } from 'storybook/theming';
 
+import { saturdazeLightTheme as t } from '../src/lib/tokens';
+
 /**
- * Brands the Storybook manager with the Saturdaze palette. Values mirror
- * `src/lib/styles/_tokens.scss`; the manager runs outside the preview iframe
- * so it cannot read the custom properties. See
- * https://storybook.js.org/docs/configure/user-interface/theming
+ * Brands the Storybook manager with the Saturdaze palette. The manager runs
+ * outside the preview iframe, so it cannot read the custom properties; it
+ * reads the same TypeScript theme `_tokens.scss` is generated from instead.
+ * See https://storybook.js.org/docs/configure/user-interface/theming
  */
 const theme = create({
   base: 'light',
 
-  colorPrimary: '#E07856', // --sd-primary
-  colorSecondary: '#E07856',
+  colorPrimary: t.colorBrandBackground,
+  colorSecondary: t.colorBrandBackground,
 
   // UI
-  appBg: '#FAF7F2', // --sd-bg
-  appContentBg: '#FFFFFF', // --sd-surface
-  appPreviewBg: '#FAF7F2',
-  appBorderColor: 'rgba(31, 41, 55, 0.08)', // --sd-line
-  appBorderRadius: 12, // --sd-r-md
+  appBg: t.colorNeutralBackground2,
+  appContentBg: t.colorNeutralBackground1,
+  appPreviewBg: t.colorNeutralBackground2,
+  appBorderColor: t.colorNeutralStroke2,
+  appBorderRadius: parseInt(t.borderRadiusMedium, 10),
 
-  // Fonts — --sd-font-sans
-  fontBase:
-    '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+  // Fonts
+  fontBase: t.fontFamilyBase,
   fontCode: 'ui-monospace, SFMono-Regular, Menlo, Consolas, monospace',
 
   // Text colors
-  textColor: '#1F2937', // --sd-ink
-  textMutedColor: '#6B7280', // --sd-ink-soft
-  textInverseColor: '#FFFFFF',
+  textColor: t.colorNeutralForeground1,
+  textMutedColor: t.colorNeutralForeground2,
+  textInverseColor: t.colorNeutralForegroundOnBrand,
 
   // Toolbar default and active colors
-  barTextColor: '#6B7280',
-  barSelectedColor: '#E07856',
-  barHoverColor: '#A04B2C', // --sd-primary-deep
-  barBg: '#FFFFFF',
+  barTextColor: t.colorNeutralForeground2,
+  barSelectedColor: t.colorBrandForeground1,
+  barHoverColor: t.colorBrandForeground2,
+  barBg: t.colorNeutralBackground1,
 
   // Form colors
-  inputBg: '#FFFFFF',
-  inputBorder: 'rgba(31, 41, 55, 0.16)', // --sd-line-strong
-  inputTextColor: '#1F2937',
-  inputBorderRadius: 8, // --sd-r-sm
+  inputBg: t.colorNeutralBackground1,
+  inputBorder: t.colorNeutralStroke1,
+  inputTextColor: t.colorNeutralForeground1,
+  inputBorderRadius: parseInt(t.borderRadiusSmall, 10),
 
   brandTitle: 'Saturdaze Design System',
   brandUrl: 'https://github.com/QuinntyneBrown/saturdaze',

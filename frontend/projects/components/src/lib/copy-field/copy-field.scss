@@ -12,10 +12,10 @@
   display: flex;
   align-items: center;
   padding: 0 12px;
-  border-radius: var(--sd-r-md);
-  background: var(--sd-surface-2);
+  border-radius: var(--borderRadiusMedium);
+  background: var(--colorNeutralBackground3);
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  font-size: var(--sd-fs-sm);
+  font-size: var(--fontSizeBase300);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;

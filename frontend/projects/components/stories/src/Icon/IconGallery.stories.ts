@@ -8,7 +8,7 @@ export const Gallery: StoryObj<Icon> = {
     template: `
       <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(112px, 1fr)); gap: 12px">
         @for (name of names; track name) {
-          <div style="display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 12px 8px; border-radius: 12px; background: var(--sd-surface-2)">
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 12px 8px; border-radius: 12px; background: var(--colorNeutralBackground3)">
             <sd-icon [name]="name" [size]="24" />
             <code style="font-size: 12px">{{ name }}</code>
           </div>

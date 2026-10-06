@@ -22,18 +22,18 @@
   gap: 14px;
   padding: 20px;
   padding-bottom: calc(20px + env(safe-area-inset-bottom, 0px));
-  background: var(--sd-surface);
-  border-radius: var(--sd-r-xl) var(--sd-r-xl) 0 0;
-  box-shadow: var(--sd-shadow-3);
-  animation: sd-rise var(--sd-dur-base) var(--sd-ease);
+  background: var(--colorNeutralBackground1);
+  border-radius: var(--borderRadiusXLarge) var(--borderRadiusXLarge) 0 0;
+  box-shadow: var(--shadow28);
+  animation: sd-rise var(--durationNormal) var(--curveEasyEase);
 }
 
 .dialog__panel::before {
   content: '';
   width: 36px;
   height: 4px;
-  border-radius: var(--sd-r-pill);
-  background: var(--sd-ink-faint);
+  border-radius: var(--borderRadiusCircular);
+  background: var(--colorNeutralStrokeAccessible);
   margin: -6px auto 2px;
   opacity: 0.5;
 }
@@ -54,14 +54,14 @@
 }
 
 .dialog__title {
-  font-size: var(--sd-fs-lg);
-  font-weight: var(--sd-fw-bold);
+  font-size: var(--fontSizeBase600);
+  font-weight: var(--fontWeightBold);
   line-height: 1.25;
 }
 
 .dialog__sub {
-  font-size: var(--sd-fs-sm);
-  color: var(--sd-ink-soft);
+  font-size: var(--fontSizeBase300);
+  color: var(--colorNeutralForeground2);
   margin-top: 4px;
 }
 
@@ -110,13 +110,13 @@
   max-height: none;
   overflow: visible;
   animation: none;
-  border: 1px solid var(--sd-line);
-  box-shadow: var(--sd-shadow-2);
+  border: 1px solid var(--colorNeutralStroke2);
+  box-shadow: var(--shadow16);
 }
 
 @include respond-to(tablet) {
   .dialog__panel {
-    border-radius: var(--sd-r-xl);
+    border-radius: var(--borderRadiusXLarge);
     padding: 24px;
   }
 

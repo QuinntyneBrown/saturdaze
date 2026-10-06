@@ -3,6 +3,7 @@ import { setCompodocJson } from '@storybook/addon-docs/angular';
 import { applicationConfig, type Preview } from '@storybook/angular';
 
 import docJson from '../documentation.json';
+import { saturdazeLightTheme as theme } from '../src/lib/tokens';
 
 // Inputs, outputs and JSDoc for the autodocs ArgTypes tables come from
 // compodoc (`compodoc: true` on the angular.json storybook targets).
@@ -28,9 +29,15 @@ const preview: Preview = {
     layout: 'padded',
     backgrounds: {
       options: {
-        cream: { name: 'Cream (--sd-bg)', value: '#FAF7F2' },
-        surface: { name: 'Surface (--sd-surface)', value: '#FFFFFF' },
-        recessed: { name: 'Recessed (--sd-surface-2)', value: '#F3EFE8' },
+        cream: { name: 'Cream (--colorNeutralBackground2)', value: theme.colorNeutralBackground2 },
+        surface: {
+          name: 'Surface (--colorNeutralBackground1)',
+          value: theme.colorNeutralBackground1,
+        },
+        recessed: {
+          name: 'Recessed (--colorNeutralBackground3)',
+          value: theme.colorNeutralBackground3,
+        },
       },
     },
     viewport: {
