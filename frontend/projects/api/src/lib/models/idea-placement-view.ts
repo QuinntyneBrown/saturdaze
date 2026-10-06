@@ -1,5 +1,5 @@
 /**
- * Idea Placement View — D27's preview well (L2-095 AC2, AC4).
+ * Idea Placement View — D27's preview well (L2-107 AC2, AC4).
  */
 export interface IdeaPlacementView {
   readonly fits: boolean;

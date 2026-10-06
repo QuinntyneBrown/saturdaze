@@ -5,7 +5,7 @@ using Saturdaze.Domain.ValueObjects;
 
 namespace Saturdaze.Infrastructure.Persistence.Configurations;
 
-/// <summary>Maps an optional <see cref="GeoLocation"/> into nullable columns on the owner's table (L2-087).</summary>
+/// <summary>Maps an optional <see cref="GeoLocation"/> into nullable columns on the owner's table (L2-099).</summary>
 internal static class GeoLocationMapping
 {
     public static void OwnsGeo<T>(this EntityTypeBuilder<T> b, Expression<Func<T, GeoLocation?>> nav, string prefix = "")

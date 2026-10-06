@@ -1,11 +1,11 @@
 import { test, expect } from "../fixtures/sd-test.js";
 import { stubWeekendCover } from "../fixtures/weekend-cover.js";
 
-/** Weekend cover photo — `.cover` and D28 (L2-096). */
+/** Weekend cover photo — `.cover` and D28 (L2-108). */
 
 test.describe("Weekend — cover photo", () => {
   test("the cover leads with the photo, its credit, the dates, the title and the summary", async ({ page, goto, pages }) => {
-    // Traces to: L2-096 AC1
+    // Traces to: L2-108 AC1
     const stub = await stubWeekendCover(page);
     await goto("weekend");
     const w = pages.weekend;
@@ -19,7 +19,7 @@ test.describe("Weekend — cover photo", () => {
   });
 
   test("16:9 under 720px, 21:8 from 720px, with the actions below", async ({ page, goto, pages }, testInfo) => {
-    // Traces to: L2-096 AC5
+    // Traces to: L2-108 AC5
     await stubWeekendCover(page);
     await goto("weekend");
     const w = pages.weekend;
@@ -36,7 +36,7 @@ test.describe("Weekend — cover photo", () => {
   });
 
   test("with no stop photos the cover shows the fallback and keeps the title as the h1", async ({ page, goto, pages }) => {
-    // Traces to: L2-096 AC3
+    // Traces to: L2-108 AC3
     await stubWeekendCover(page, { cover: false });
     await goto("weekend");
     const w = pages.weekend;
@@ -47,7 +47,7 @@ test.describe("Weekend — cover photo", () => {
   });
 
   test("Change photo offers each stop's photo and switches the cover", async ({ page, goto, pages }) => {
-    // Traces to: L2-096 AC2
+    // Traces to: L2-108 AC2
     const stub = await stubWeekendCover(page);
     await goto("weekend");
     const w = pages.weekend;

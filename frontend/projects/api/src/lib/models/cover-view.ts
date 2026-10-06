@@ -1,7 +1,7 @@
 import { MediaView } from './media-view';
 
 /**
- * Cover View — the photo that leads the Weekend screen (L2-096). The media's
+ * Cover View — the photo that leads the Weekend screen (L2-108). The media's
  * credit is the cover label ("From La Marina").
  */
 export interface CoverView {

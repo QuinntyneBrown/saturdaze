@@ -6,7 +6,7 @@ using Xunit;
 
 namespace Saturdaze.Api.Tests.Catalog;
 
-/// <summary>L2-088 / L2-089 AC3: lists expose each place's primary photo, safely, or null.</summary>
+/// <summary>L2-100 / L2-101 AC3: lists expose each place's primary photo, safely, or null.</summary>
 public class PlacePhotoTests : IClassFixture<SaturdazeApiFactory>, IAsyncLifetime
 {
     private readonly SaturdazeApiFactory _factory;
@@ -29,7 +29,7 @@ public class PlacePhotoTests : IClassFixture<SaturdazeApiFactory>, IAsyncLifetim
     [Fact]
     public async Task A_place_projects_its_primary_photo_with_attribution()
     {
-        // Traces to: L2-088
+        // Traces to: L2-100
         var photo = (await Item("/api/activities", "Port Credit Memorial Park")).GetProperty("photo");
 
         photo.GetProperty("url").GetString().Should().Be("https://images.example.com/memorial-park.jpg");
@@ -42,7 +42,7 @@ public class PlacePhotoTests : IClassFixture<SaturdazeApiFactory>, IAsyncLifetim
     [Fact]
     public async Task A_place_without_photos_projects_null()
     {
-        // Traces to: L2-088 AC3
+        // Traces to: L2-100 AC3
         var item = await Item("/api/activities", "Stratford Festival (family matinee)");
         item.GetProperty("photo").ValueKind.Should().Be(JsonValueKind.Null);
     }
@@ -50,7 +50,7 @@ public class PlacePhotoTests : IClassFixture<SaturdazeApiFactory>, IAsyncLifetim
     [Fact]
     public async Task Empty_alt_text_falls_back_to_the_place_name()
     {
-        // Traces to: L2-088 AC4
+        // Traces to: L2-100 AC4
         var photo = (await Item("/api/activities", "Jack Darling Memorial Park")).GetProperty("photo");
         photo.GetProperty("alt").GetString().Should().Be("Photo of Jack Darling Memorial Park");
     }
@@ -60,7 +60,7 @@ public class PlacePhotoTests : IClassFixture<SaturdazeApiFactory>, IAsyncLifetim
     [InlineData("Toronto Zoo")]          // HTTPS, but not an allowed origin
     public async Task Photos_outside_the_https_allow_list_project_null(string name)
     {
-        // Traces to: L2-089 AC3
+        // Traces to: L2-101 AC3
         var item = await Item("/api/activities", name);
         item.GetProperty("photo").ValueKind.Should().Be(JsonValueKind.Null);
     }
@@ -68,7 +68,7 @@ public class PlacePhotoTests : IClassFixture<SaturdazeApiFactory>, IAsyncLifetim
     [Fact]
     public async Task Restaurant_and_event_lists_carry_photos_too()
     {
-        // Traces to: L2-088
+        // Traces to: L2-100
         var restaurant = await Item("/api/restaurants?day=2026-05-16&slot=Dinner&wifeApprovedOnly=false", "Snug Harbour");
         restaurant.GetProperty("photo").GetProperty("url").GetString()
             .Should().Be("https://images.example.com/snug-harbour.jpg");

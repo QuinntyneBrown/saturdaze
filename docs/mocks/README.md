@@ -41,7 +41,7 @@ screenshots/          committed <slug>.<viewport>.png captures (390 / 820 / 1440
 The Weekend, Ideas and Past screens follow a layout study of Wanderlog (a trip
 planner). They replaced the earlier two-day Weekend, icon-led Ideas and text-only
 Past mocks on 2026-10-06. Requirements: `docs/specs/L1.md` L1-032 → L1-035,
-`docs/specs/L2.md` L2-087 → L2-098. Detailed designs:
+`docs/specs/L2.md` L2-099 → L2-110. Detailed designs:
 `docs/detailed-designs/discovery/store-place-location-and-imagery`,
 `discovery/add-idea-to-day`, `weekend-planning/map-itinerary-and-travel-legs`,
 `weekend-planning/choose-weekend-cover-photo`.
@@ -62,7 +62,7 @@ The Saturday / Sunday tabs on `weekend.html` work in the mock (`app.js` §5);
 `images/*.svg` are **illustrated placeholders** that stand in for licensed photos;
 they are not real photographs and must not ship. The map in `weekend.html` is
 an inline SVG sketch, not tiles. Production sources, licensing and attribution are
-specified in L2-088.
+specified in L2-100.
 
 ## Running the checks
 

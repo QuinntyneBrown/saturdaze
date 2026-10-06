@@ -84,7 +84,7 @@ export class PastPage extends BasePage {
     return this.cards().filter({ has: this.page.locator('.fav-btn[aria-pressed="true"]') });
   }
 
-  /* ---------- Covers (L2-098) ---------- */
+  /* ---------- Covers (L2-110) ---------- */
 
   cardMedia(card: Locator): Locator {
     return card.locator(".card__media");

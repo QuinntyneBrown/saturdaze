@@ -13,7 +13,7 @@ using Saturdaze.Domain.Enums;
 
 namespace Saturdaze.Application.Covers;
 
-/// <summary>A family's own photo for the weekend's cover (L2-097). Never carries the file name.</summary>
+/// <summary>A family's own photo for the weekend's cover (L2-109). Never carries the file name.</summary>
 public sealed record UploadWeekendCoverCommand(Guid WeekendId, byte[] Content) : IRequest<WeekendDto>;
 
 public sealed class UploadWeekendCoverCommandHandler : IRequestHandler<UploadWeekendCoverCommand, WeekendDto>
@@ -64,7 +64,7 @@ public sealed class UploadWeekendCoverCommandHandler : IRequestHandler<UploadWee
         await _db.SaveChangesAsync(ct);
         if (previous is not null) await _store.DeleteAsync(previous, ct);
 
-        // L2-097 AC7: the weekend and the size only — never the file name or content.
+        // L2-109 AC7: the weekend and the size only — never the file name or content.
         _logger.LogInformation("Cover uploaded for weekend {WeekendId} ({Bytes} bytes)", weekend.Id, image.Content.Length);
 
         var forecast = await _forecast.GetAsync(weekend.WeekendOf, ct);

@@ -8,7 +8,7 @@ import {
   AddToDayDialogResult,
 } from '../dialogs/add-to-day-dialog/add-to-day-dialog';
 
-/** Open D27 for an idea (L2-095); resolves with the day it was added to, if any. */
+/** Open D27 for an idea (L2-107); resolves with the day it was added to, if any. */
 export async function openAddToDay(
   dialog: Dialog,
   data: AddToDayDialogData,

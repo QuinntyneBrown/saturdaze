@@ -96,11 +96,11 @@ export interface BlockRow {
    */
   readonly lockable: boolean;
   /**
-   * Stop Number — the numbered disc for a stop away from home (L2-091); null otherwise.
+   * Stop Number — the numbered disc for a stop away from home (L2-103); null otherwise.
    */
   readonly stopNumber: number | null;
   /**
-   * Leg — the travel row shown before this block (L2-090); null when none.
+   * Leg — the travel row shown before this block (L2-102); null when none.
    */
   readonly leg: LegView | null;
 }

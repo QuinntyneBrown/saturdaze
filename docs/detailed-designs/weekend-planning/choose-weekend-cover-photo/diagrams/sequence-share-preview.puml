@@ -23,7 +23,7 @@ end box
 actor -> controller : GET /s/{token} (anonymous, ADR-008)
 controller -> controller : Decode token
 alt invalid or revoked token
- controller --> actor : 404, no cover URL (L2-097 AC6)
+ controller --> actor : 404, no cover URL (L2-109 AC6)
 else valid
  controller -> handler : GetSharedWeekendQuery(id)
  handler -> db : Read weekend with blocks and Cover
@@ -33,7 +33,7 @@ else valid
  store --> resolver : URL
  resolver --> handler : CoverDto
  handler --> controller : WeekendDto
- controller --> actor : HTML with og:title, og:description, og:image (L2-098 AC3)
+ controller --> actor : HTML with og:title, og:description, og:image (L2-110 AC3)
  opt browser follows meta refresh
   actor -> shared : /sample-weekend?share={token}
   shared --> actor : Read-only weekend with cover

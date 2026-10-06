@@ -20,7 +20,7 @@ Saturdaze is a web application that plans personalized family weekends. Saved-we
 
 `skippingChips()` derives the Skipping next time strip from low-rated highlights. Planner history does not carry ratings, so that display does not enforce future exclusion. Repeat also replaces existing target locks, despite stronger confirmation-copy claims.
 
-Past cards lead with the weekend's cover photo since the 2026-10-06 mock (`docs/mocks/pages/past.html`). `weekend-planning/choose-weekend-cover-photo` designs `WeekendSummaryDto.Cover`, the cover label, and the "Add a photo" control (L2-098). The current `PastPage` renders text-only cards until that design is implemented.
+Past cards lead with the weekend's cover photo since the 2026-10-06 mock (`docs/mocks/pages/past.html`). `weekend-planning/choose-weekend-cover-photo` designs `WeekendSummaryDto.Cover`, the cover label, and the "Add a photo" control (L2-110). The current `PastPage` renders text-only cards until that design is implemented.
 
 ## Requirements
 

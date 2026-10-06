@@ -1,5 +1,5 @@
 /**
- * Where an approved event happens (L2-087 AC3). Null coordinates keep the
+ * Where an approved event happens (L2-099 AC3). Null coordinates keep the
  * submission's own location; the API refuses an approval with neither.
  */
 export interface ApprovalLocation {

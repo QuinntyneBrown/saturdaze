@@ -50,7 +50,7 @@ export interface IEventSubmissionsService {
    *
    * @param {string} id - The id
    * @param {number | null} driveMinutes - The drive time to publish with
-   * @param {ApprovalLocation | null} location - Where the event happens (L2-087 AC3)
+   * @param {ApprovalLocation | null} location - Where the event happens (L2-099 AC3)
    *
    * @returns {Promise<EventSubmissionDto>} The result of the operation
    */

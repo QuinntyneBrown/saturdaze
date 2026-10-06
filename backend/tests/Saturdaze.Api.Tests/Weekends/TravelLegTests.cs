@@ -10,7 +10,7 @@ using Xunit;
 namespace Saturdaze.Api.Tests.Weekends;
 
 /// <summary>
-/// L2-090 / L2-091: the weekend carries numbered stops, travel legs between consecutive
+/// L2-102 / L2-103: the weekend carries numbered stops, travel legs between consecutive
 /// blocks at different places, and per-day stop and driving totals. The planner's picks
 /// vary, so these tests assert the rules over whatever it planned.
 /// </summary>
@@ -60,7 +60,7 @@ public class TravelLegTests : IClassFixture<SaturdazeApiFactory>, IAsyncLifetime
     [Fact]
     public void Stops_away_from_home_are_numbered_in_time_order_per_day()
     {
-        // Traces to: L2-091 AC1
+        // Traces to: L2-103 AC1
         var anyStops = false;
         foreach (var day in Days())
         {
@@ -76,7 +76,7 @@ public class TravelLegTests : IClassFixture<SaturdazeApiFactory>, IAsyncLifetime
     [Fact]
     public void A_leg_precedes_each_stop_and_none_sits_between_two_home_blocks()
     {
-        // Traces to: L2-090 AC1, AC2
+        // Traces to: L2-102 AC1, AC2
         foreach (var day in Days())
         {
             var blocks = day.ToList();
@@ -98,7 +98,7 @@ public class TravelLegTests : IClassFixture<SaturdazeApiFactory>, IAsyncLifetime
     [Fact]
     public void Only_legs_over_ten_minutes_link_to_directions_carrying_nothing_but_coordinates()
     {
-        // Traces to: L2-090 AC3, AC6
+        // Traces to: L2-102 AC3, AC6
         var legs = Days().SelectMany(d => d).Select(Leg).Where(l => l is not null).Select(l => l!.Value).ToList();
         legs.Should().NotBeEmpty();
         foreach (var leg in legs)
@@ -123,7 +123,7 @@ public class TravelLegTests : IClassFixture<SaturdazeApiFactory>, IAsyncLifetime
     [Fact]
     public void Each_day_reports_its_stop_count_and_total_driving()
     {
-        // Traces to: L2-090 AC5
+        // Traces to: L2-102 AC5
         var summaries = _weekend.GetProperty("days").EnumerateArray()
             .ToDictionary(d => d.GetProperty("day").GetString()!);
         foreach (var day in Days())

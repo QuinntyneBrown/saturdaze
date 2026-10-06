@@ -4,7 +4,7 @@ using Saturdaze.Domain.ValueObjects;
 namespace Saturdaze.Application.Travel;
 
 /// <summary>
-/// External directions for a leg (L2-090 AC3, AC6): Google Maps' public URL scheme, carrying
+/// External directions for a leg (L2-102 AC3, AC6): Google Maps' public URL scheme, carrying
 /// only the two coordinate pairs and the travel mode — never a family, weekend or block id.
 /// </summary>
 public static class DirectionsLinkBuilder

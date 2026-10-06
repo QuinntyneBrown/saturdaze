@@ -38,7 +38,7 @@ export interface WeekendSummaryDto {
    */
   readonly rating: number | null;
   /**
-   * Cover — the same cover the Weekend screen shows, or `null` (L2-098).
+   * Cover — the same cover the Weekend screen shows, or `null` (L2-110).
    */
   readonly cover?: CoverDto | null;
 }

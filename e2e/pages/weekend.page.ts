@@ -7,7 +7,7 @@ import { PageSlug } from "../fixtures/routes.js";
  *
  * Structure (ready state):
  *   .page-header  "This weekend" + subtitle + [More] + [Add to calendar] [Share]
- *   .planner__toolbar  [role=tablist] Saturday | Sunday   (one day at a time, L2-093)
+ *   .planner__toolbar  [role=tablist] Saturday | Sunday   (one day at a time, L2-105)
  *   .planner#<day>-panel[role=tabpanel]
  *     .day (selected day)
  *       .day__header  weather disc · .day__title · .day__meta · .day__actions
@@ -199,7 +199,7 @@ export class WeekendPage extends BasePage {
     return this.pageHeader.locator(".page-header__more").or(control(this.coverActions(), "More options"));
   }
 
-  /* ---------- Cover (L2-096) ---------- */
+  /* ---------- Cover (L2-108) ---------- */
 
   cover(): Locator {
     return this.main.locator(".cover");
@@ -247,7 +247,7 @@ export class WeekendPage extends BasePage {
     return this.dialog().getByRole("radio");
   }
 
-  /** D28: the "Your own photo" tile's file input (L2-097). */
+  /** D28: the "Your own photo" tile's file input (L2-109). */
   ownPhotoInput(): Locator {
     return this.dialog().getByLabel("Upload your own photo", { exact: true });
   }
@@ -269,7 +269,7 @@ export class WeekendPage extends BasePage {
     );
   }
 
-    /* ---------- Day tabs (L2-092, L2-093) ---------- */
+    /* ---------- Day tabs (L2-104, L2-105) ---------- */
 
   dayTab(name: DayName): Locator {
     return this.main.getByRole("tab", { name, exact: true });
@@ -292,7 +292,7 @@ export class WeekendPage extends BasePage {
     return this.grid.filter({ visible: true }).locator(".day");
   }
 
-  /* ---------- Stops and legs (L2-090, L2-091) ---------- */
+  /* ---------- Stops and legs (L2-102, L2-103) ---------- */
 
   /** Numbered stop discs in the visible day, in order. */
   stopDiscs(): Locator {
@@ -324,7 +324,7 @@ export class WeekendPage extends BasePage {
     return texts.map((t) => Number(/(\d+) min/.exec(t)?.[1] ?? NaN));
   }
 
-  /* ---------- Day map (L2-091, L2-092) ---------- */
+  /* ---------- Day map (L2-103, L2-104) ---------- */
 
   dayMap(name: DayName): Locator {
     return this.main.getByRole("complementary", { name: `${name} map` });

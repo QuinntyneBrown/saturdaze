@@ -20,7 +20,7 @@ Saturdaze is a web application that plans personalized family weekends. Restaura
 
 Patio filtering required by L1-006 has no corresponding DTO field or filter. Voting currently accepts a supplied voter name without checking membership; the design does not imply stronger per-member authorization.
 
-Restaurant cards lead with the restaurant's photo since the 2026-10-06 mock (`docs/mocks/pages/ideas.food.html`); `discovery/store-place-location-and-imagery` designs the photo data. "Lock it in" stays the way to place a restaurant; restaurant cards carry no "Add to day" action (L2-095).
+Restaurant cards lead with the restaurant's photo since the 2026-10-06 mock (`docs/mocks/pages/ideas.food.html`); `discovery/store-place-location-and-imagery` designs the photo data. "Lock it in" stays the way to place a restaurant; restaurant cards carry no "Add to day" action (L2-107).
 
 ## Requirements
 

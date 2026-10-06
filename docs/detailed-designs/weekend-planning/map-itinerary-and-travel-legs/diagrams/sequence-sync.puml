@@ -15,15 +15,15 @@ box "Frontend - Saturdaze Angular application" #E0F2FE
 end box
 actor -> block : Pointer enters or focus moves to "Lavender fields"
 block -> sync : activeStop.set(2)
-sync --> block : block--active (L2-092 AC1)
-sync --> map : Pin 2 active style (L2-092 AC1, AC2)
+sync --> block : block--active (L2-104 AC1)
+sync --> map : Pin 2 active style (L2-104 AC1, AC2)
 actor -> map : Click or Enter on "Stop 3: Lunch at La Marina"
 map -> sync : activeStop.set(3)
 map -> page : focusStop(3)
-page -> block : scrollIntoView, focus (L2-092 AC3)
-note right of page : behavior 'auto' under prefers-reduced-motion (L2-092 AC6)
+page -> block : scrollIntoView, focus (L2-104 AC3)
+note right of page : behavior 'auto' under prefers-reduced-motion (L2-104 AC6)
 actor -> tabs : Select Sunday
 tabs -> page : selected = sunday
 page -> sync : activeStop.set(null)
-page --> actor : Sunday tab aria-selected; Sunday timeline and map (L2-092 AC4)
+page --> actor : Sunday tab aria-selected; Sunday timeline and map (L2-104 AC4)
 @enduml

@@ -58,11 +58,11 @@ export class Block {
   /** The phone chevron / row tap. */
   readonly details = output<void>();
   /**
-   * The stop's number in the day (L2-091): the disc shows it instead of the
+   * The stop's number in the day (L2-103): the disc shows it instead of the
    * icon, and the row becomes programmatically focusable for its map pin.
    */
   readonly stopNumber = input<number | null>(null);
-  /** Highlighted with its map pin (L2-092). */
+  /** Highlighted with its map pin (L2-104). */
   readonly active = input(false, { transform: booleanAttribute });
   /** Pointer or keyboard focus entered (true) or left (false) the row. */
   readonly activeChange = output<boolean>();

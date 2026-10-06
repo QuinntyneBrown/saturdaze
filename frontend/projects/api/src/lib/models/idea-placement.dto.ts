@@ -1,7 +1,7 @@
 import { WeekendDay } from './weekend-day';
 
 /**
- * Where the planner would put an idea (L2-095). Mirrors
+ * Where the planner would put an idea (L2-107). Mirrors
  * `Saturdaze.Application.Contracts.IdeaPlacementDto`.
  */
 export interface IdeaPlacementDto {

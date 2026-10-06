@@ -217,11 +217,11 @@ describe('WeekendPage', () => {
   });
 
   const header = (): Element => host.querySelector('sd-page-header')!;
-  /** Ready state: the cover leads, its actions sit below it (L2-096). */
+  /** Ready state: the cover leads, its actions sit below it (L2-108). */
   const cover = (): Element => host.querySelector('sd-cover')!;
   const coverAction = (selector: string): HTMLButtonElement =>
     host.querySelector(`.cover-actions ${selector} button`) as HTMLButtonElement;
-  /** Switch the day tab (L2-092): one day is on screen at a time. */
+  /** Switch the day tab (L2-104): one day is on screen at a time. */
   const showDay = (day: 'Saturday' | 'Sunday'): void => {
     const tab = Array.from(host.querySelectorAll<HTMLButtonElement>('[role="tab"]')).find(
       (t) => t.textContent?.trim() === day,

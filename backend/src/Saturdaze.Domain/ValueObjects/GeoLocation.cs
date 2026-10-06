@@ -1,7 +1,7 @@
 namespace Saturdaze.Domain.ValueObjects;
 
 /// <summary>
-/// Where a place is: WGS84 coordinates plus a display address (L2-087).
+/// Where a place is: WGS84 coordinates plus a display address (L2-099).
 /// Stored as an owned value; null on a place until it is captured or backfilled.
 /// </summary>
 public sealed class GeoLocation

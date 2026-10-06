@@ -43,7 +43,7 @@ public sealed class PlacePhotoReader : IPlacePhotoReader
 
     /// <summary>
     /// The photo as served to clients, or null when its URL is not HTTPS on an allowed
-    /// origin (L2-089 AC3). Empty alt text becomes "Photo of {place}" (L2-088 AC4).
+    /// origin (L2-101 AC3). Empty alt text becomes "Photo of {place}" (L2-100 AC4).
     /// </summary>
     public static PlacePhotoDto? Project(PlacePhoto photo, string placeName, ImageOptions options)
     {

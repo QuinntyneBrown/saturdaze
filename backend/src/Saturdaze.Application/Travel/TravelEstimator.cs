@@ -3,7 +3,7 @@ using Saturdaze.Domain.ValueObjects;
 namespace Saturdaze.Application.Travel;
 
 /// <summary>
-/// Road distance and drive time between two points, estimated from coordinates (L2-090):
+/// Road distance and drive time between two points, estimated from coordinates (L2-102):
 /// great-circle distance times a road factor, at an average urban/highway speed. A routing
 /// provider may replace this without changing its callers.
 /// </summary>

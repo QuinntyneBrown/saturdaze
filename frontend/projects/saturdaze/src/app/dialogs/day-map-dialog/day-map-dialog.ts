@@ -14,7 +14,7 @@ export interface DayMapDialogData {
 export type DayMapDialogResult = number;
 
 /**
- * "Open map" below 1024px (L2-093 AC2): the day map full-screen. Picking a pin
+ * "Open map" below 1024px (L2-105 AC2): the day map full-screen. Picking a pin
  * closes the dialog and the Weekend screen focuses that stop.
  */
 @Component({

@@ -68,7 +68,7 @@ internal static class PayloadReader
     }
 
     /// <summary>
-    /// The place's location from <c>latitude</c>, <c>longitude</c> and <c>address</c> (L2-087),
+    /// The place's location from <c>latitude</c>, <c>longitude</c> and <c>address</c> (L2-099),
     /// or null when a coordinate is missing or out of range.
     /// </summary>
     public static GeoLocation? GetGeo(JsonObject o)

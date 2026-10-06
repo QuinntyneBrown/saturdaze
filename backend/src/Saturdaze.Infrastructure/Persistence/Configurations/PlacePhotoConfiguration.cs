@@ -15,7 +15,7 @@ public class PlacePhotoConfiguration : IEntityTypeConfiguration<PlacePhoto>
         b.Property(x => x.Attribution).HasMaxLength(300).IsRequired();
         b.Property(x => x.License).HasMaxLength(120).IsRequired();
         b.HasIndex(x => new { x.PlaceKind, x.PlaceId }).HasDatabaseName("IX_PlacePhotos_Place");
-        // L2-088: at most one primary photo per place, enforced by the database too.
+        // L2-100: at most one primary photo per place, enforced by the database too.
         b.HasIndex(x => new { x.PlaceKind, x.PlaceId })
             .IsUnique()
             .HasFilter("[IsPrimary] = 1")

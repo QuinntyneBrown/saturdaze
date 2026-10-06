@@ -30,28 +30,28 @@ alt choose a stop photo
  dialog -> client : setCover({ source: stop, blockId })
  client -> controller : PUT /api/weekends/{id}/cover
  controller -> handler : SetWeekendCoverCommand
- handler -> db : Load caller-family weekend; set Cover.Stop; save (L2-096 AC2)
+ handler -> db : Load caller-family weekend; set Cover.Stop; save (L2-108 AC2)
 else upload a photo
  actor -> dialog : Your own photo (file)
  dialog -> dialog : Check type and 10 MB in the browser
  dialog -> client : uploadCover(file)
  client -> controller : POST /api/weekends/{id}/cover (multipart)
  alt body over 10 MB
-  controller --> client : 413, nothing stored (L2-097 AC3)
+  controller --> client : 413, nothing stored (L2-109 AC3)
  else within limit
   controller -> handler : UploadWeekendCoverCommand
   handler -> db : Load caller-family weekend
   alt not owned
-   handler --> controller : 404 (L2-097 AC1)
+   handler --> controller : 404 (L2-109 AC1)
   else owned
    handler -> sanitizer : Inspect magic bytes
    alt not JPEG, PNG, or WebP
-    handler --> controller : 400 unsupported_image (L2-097 AC2)
+    handler --> controller : 400 unsupported_image (L2-109 AC2)
    else image
-    handler -> sanitizer : Re-encode, strip all metadata (L2-097 AC4)
+    handler -> sanitizer : Re-encode, strip all metadata (L2-109 AC4)
     handler -> store : PutAsync(random key) to private container
     handler -> db : Cover.Upload; save
-    handler -> handler : Log weekend ID and size only (L2-097 AC7)
+    handler -> handler : Log weekend ID and size only (L2-109 AC7)
    end
   end
  end
@@ -62,5 +62,5 @@ resolver --> handler : CoverDto with label
 handler --> controller : WeekendDto
 controller --> client : 200
 client --> page : WeekendView.cover updated
-page --> actor : New cover; scrim keeps overlay at 4.5:1 (L2-096 AC4)
+page --> actor : New cover; scrim keeps overlay at 4.5:1 (L2-108 AC4)
 @enduml

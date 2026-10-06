@@ -18,7 +18,7 @@ public class ItineraryBlock
     public int SortOrder { get; set; }
 
     /// <summary>
-    /// Where the block happens when that is a catalog place (L2-091), copied when the block
+    /// Where the block happens when that is a catalog place (L2-103), copied when the block
     /// is planned so the record survives catalog edits. Null at home or when unknown.
     /// </summary>
     public GeoLocation? Stop { get; set; }

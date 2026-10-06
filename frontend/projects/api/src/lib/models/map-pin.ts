@@ -1,5 +1,5 @@
 /**
- * Map Pin — one numbered stop on the day map (L2-091), linked to its block.
+ * Map Pin — one numbered stop on the day map (L2-103), linked to its block.
  */
 export interface MapPin {
   readonly n: number;

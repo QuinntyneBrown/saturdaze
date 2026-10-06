@@ -45,7 +45,7 @@ export interface ISavedService {
    */
   rename(id: string, title: string | null): Promise<void>;
   /**
-   * Cover Choices — each of a past weekend's stop photos, for D28 (L2-098 AC2).
+   * Cover Choices — each of a past weekend's stop photos, for D28 (L2-110 AC2).
    *
    * @param {string} id - The weekend id
    *
@@ -63,7 +63,7 @@ export interface ISavedService {
   setCover(id: string, selection: CoverSelection): Promise<void>;
   /**
    * Upload Cover — `POST /api/weekends/{id}/cover` with the family's own
-   * photo (L2-097); the card updates in place. Rejects with the server's
+   * photo (L2-109); the card updates in place. Rejects with the server's
    * `HttpErrorResponse`.
    *
    * @param {string} id - The weekend id

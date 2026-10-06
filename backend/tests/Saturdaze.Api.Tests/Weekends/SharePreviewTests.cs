@@ -10,7 +10,7 @@ using Xunit;
 namespace Saturdaze.Api.Tests.Weekends;
 
 /// <summary>
-/// L2-098 AC3: the share link is <c>/s/{token}</c> on the API, which answers link-preview
+/// L2-110 AC3: the share link is <c>/s/{token}</c> on the API, which answers link-preview
 /// crawlers with Open Graph tags and sends browsers on to the app.
 /// </summary>
 public class SharePreviewTests : IClassFixture<SaturdazeApiFactory>
@@ -49,7 +49,7 @@ public class SharePreviewTests : IClassFixture<SaturdazeApiFactory>
     [Fact]
     public async Task A_crawler_gets_open_graph_tags_with_a_cover_that_lasts_a_week()
     {
-        // Traces to: L2-098 AC3
+        // Traces to: L2-110 AC3
         var (_, token, shareUrl) = await ShareUploadedWeekendAsync();
         shareUrl.Should().EndWith($"/s/{token}");
 
@@ -79,7 +79,7 @@ public class SharePreviewTests : IClassFixture<SaturdazeApiFactory>
     [Fact]
     public async Task A_browser_is_sent_on_to_the_shared_weekend_in_the_app()
     {
-        // Traces to: L2-098 AC3
+        // Traces to: L2-110 AC3
         var (_, token, _) = await ShareUploadedWeekendAsync();
 
         var html = await _factory.CreateClient().GetStringAsync($"/s/{token}");
@@ -91,7 +91,7 @@ public class SharePreviewTests : IClassFixture<SaturdazeApiFactory>
     [Fact]
     public async Task An_invalid_share_token_has_no_preview()
     {
-        // Traces to: L2-098 AC3, L2-097 AC6
+        // Traces to: L2-110 AC3, L2-109 AC6
         var res = await _factory.CreateClient().GetAsync("/s/not-a-token");
         res.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }

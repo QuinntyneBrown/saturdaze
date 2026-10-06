@@ -4,7 +4,7 @@ using Saturdaze.Domain.Enums;
 
 namespace Saturdaze.Application.Ideas;
 
-/// <summary>Which catalog an idea comes from (L2-095).</summary>
+/// <summary>Which catalog an idea comes from (L2-107).</summary>
 public enum IdeaKind
 {
     Activity,
@@ -19,7 +19,7 @@ public enum IdeaTiming
     Afternoon
 }
 
-/// <summary>Where the planner would put an idea, without changing anything (L2-095 AC2).</summary>
+/// <summary>Where the planner would put an idea, without changing anything (L2-107 AC2).</summary>
 public sealed record PreviewIdeaPlacementQuery(
     Guid WeekendId,
     IdeaKind IdeaKind,
@@ -27,7 +27,7 @@ public sealed record PreviewIdeaPlacementQuery(
     DayOfWeekend Day,
     IdeaTiming Timing) : IRequest<IdeaPlacementDto>;
 
-/// <summary>Adds an idea to the weekend at the previewed placement (L2-095 AC3).</summary>
+/// <summary>Adds an idea to the weekend at the previewed placement (L2-107 AC3).</summary>
 public sealed record AddIdeaToWeekendCommand(
     Guid WeekendId,
     IdeaKind IdeaKind,

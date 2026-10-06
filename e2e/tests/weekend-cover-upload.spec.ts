@@ -1,11 +1,11 @@
 import { test, expect } from "../fixtures/sd-test.js";
 import { FAMILY_PHOTO, stubWeekendCover } from "../fixtures/weekend-cover.js";
 
-/** D28 "Your own photo" — family cover uploads (L2-097). */
+/** D28 "Your own photo" — family cover uploads (L2-109). */
 
 test.describe("Weekend — upload a cover photo", () => {
   test("a family photo becomes the cover, labelled as theirs", async ({ page, goto, pages }) => {
-    // Traces to: L2-097 (D28 "Your own photo"), L2-096 AC2
+    // Traces to: L2-109 (D28 "Your own photo"), L2-108 AC2
     const stub = await stubWeekendCover(page);
     await goto("weekend");
     const w = pages.weekend;
@@ -22,7 +22,7 @@ test.describe("Weekend — upload a cover photo", () => {
   });
 
   test("a file over 10 MB is refused before it is sent", async ({ page, goto, pages }) => {
-    // Traces to: L2-097 AC3
+    // Traces to: L2-109 AC3
     const stub = await stubWeekendCover(page);
     await goto("weekend");
     const w = pages.weekend;
@@ -37,7 +37,7 @@ test.describe("Weekend — upload a cover photo", () => {
   });
 
   test("a file that is not really a photo is explained, and the dialog stays open", async ({ page, goto, pages }) => {
-    // Traces to: L2-097 AC2
+    // Traces to: L2-109 AC2
     const stub = await stubWeekendCover(page);
     await goto("weekend");
     const w = pages.weekend;

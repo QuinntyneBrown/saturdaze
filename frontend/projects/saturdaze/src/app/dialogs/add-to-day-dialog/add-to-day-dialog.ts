@@ -43,7 +43,7 @@ const TIMINGS: readonly SelectOption[] = [
 ];
 
 /**
- * D27 — "Add Royal Botanical Gardens" (L2-095). Which day and roughly when; the
+ * D27 — "Add Royal Botanical Gardens" (L2-107). Which day and roughly when; the
  * well previews the placement the planner proposes and what it replaces, and the
  * confirm stays disabled when the day has no room around locked blocks.
  */

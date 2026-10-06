@@ -3,7 +3,7 @@ import { APIRequestContext } from "@playwright/test";
 import { API_URL, TestSession } from "./auth.js";
 import { FAMILY_PHOTO } from "./weekend-cover.js";
 
-/** Upload {@link FAMILY_PHOTO} as a weekend's cover through the API (L2-097). */
+/** Upload {@link FAMILY_PHOTO} as a weekend's cover through the API (L2-109). */
 export async function uploadCover(request: APIRequestContext, session: TestSession, weekendId: string): Promise<void> {
   const res = await request.post(`${API_URL}/api/weekends/${weekendId}/cover`, {
     headers: { Authorization: `Bearer ${session.accessToken}` },

@@ -5,7 +5,7 @@ using Xunit;
 
 namespace Saturdaze.Application.Tests.Photos;
 
-/// <summary>L2-088: provenance is mandatory and a place has exactly one primary photo.</summary>
+/// <summary>L2-100: provenance is mandatory and a place has exactly one primary photo.</summary>
 public class PlacePhotoTests
 {
     private static PlacePhoto Photo(Guid placeId, bool primary) =>
@@ -15,7 +15,7 @@ public class PlacePhotoTests
     [Fact]
     public void Marking_a_third_photo_primary_leaves_exactly_one_primary()
     {
-        // Traces to: L2-088 AC1
+        // Traces to: L2-100 AC1
         var place = Guid.NewGuid();
         var photos = new List<PlacePhoto> { Photo(place, true), Photo(place, false), Photo(place, false) };
 
@@ -30,7 +30,7 @@ public class PlacePhotoTests
     [InlineData("Photo · Jo Doe", " ")]
     public void A_photo_without_attribution_or_licence_is_not_created(string attribution, string license)
     {
-        // Traces to: L2-088
+        // Traces to: L2-100
         PlacePhoto.Create(PlaceKind.Activity, Guid.NewGuid(), "https://images.example.com/x.jpg", 1200, 675,
                 "Alt", attribution, PhotoSource.Provider, license, primary: true)
             .Should().BeNull();

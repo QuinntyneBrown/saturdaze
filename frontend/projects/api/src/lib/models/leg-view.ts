@@ -1,5 +1,5 @@
 /**
- * Leg View — the travel row (`sd-leg`) before a timeline block (L2-090).
+ * Leg View — the travel row (`sd-leg`) before a timeline block (L2-102).
  */
 export interface LegView {
   readonly minutes: number;

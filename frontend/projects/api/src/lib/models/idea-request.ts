@@ -4,7 +4,7 @@ export type IdeaKind = 'activity' | 'event';
 export type IdeaTiming = 'bestFit' | 'morning' | 'afternoon';
 
 /**
- * Idea Request — which idea, which day and roughly when (L2-095).
+ * Idea Request — which idea, which day and roughly when (L2-107).
  */
 export interface IdeaRequest {
   readonly ideaKind: IdeaKind;

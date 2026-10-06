@@ -127,7 +127,7 @@ function thisWeekendSections(weekendOf: string, dtos: readonly LocalEventDto[]):
   const comingSoon = dtos.filter((e) => !seen.has(e.id) && e.startsOn > sun);
 
   return [
-    // Only this weekend's events can go onto one of its days (L2-095).
+    // Only this weekend's events can go onto one of its days (L2-107).
     {
       title: 'Saturday',
       subtitle: formatDayDate(sat),

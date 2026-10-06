@@ -1,7 +1,7 @@
 import { test, expect } from "../fixtures/sd-test.js";
 
 /**
- * Add an idea to a day — D27 (L2-095). The preview comes from the API's
+ * Add an idea to a day — D27 (L2-107). The preview comes from the API's
  * placement for the seeded family's weekend; confirming changes that weekend.
  */
 
@@ -12,7 +12,7 @@ test.describe("Ideas — Add to day", () => {
   });
 
   test("opens D27 for the idea with Saturday and Best fit chosen", async ({ pages }) => {
-    // Traces to: L2-095 AC1, AC6
+    // Traces to: L2-107 AC1, AC6
     const i = pages.ideas;
     const card = i.cards().first();
     const title = (await i.cardTitle(card).textContent())!.trim();
@@ -26,7 +26,7 @@ test.describe("Ideas — Add to day", () => {
   });
 
   test("previews where the idea lands before confirming", async ({ pages }) => {
-    // Traces to: L2-095 AC2
+    // Traces to: L2-107 AC2
     const i = pages.ideas;
     await i.addToDayButton(i.cards().first()).click();
     await expect(i.addToDayPreviewTitle()).toHaveText(/^Saturday · \d{1,2}:\d{2} to \d{1,2}:\d{2}$/);
@@ -37,7 +37,7 @@ test.describe("Ideas — Add to day", () => {
   });
 
   test("confirming puts it on the weekend at the previewed time", async ({ goto, pages }) => {
-    // Traces to: L2-095 AC3
+    // Traces to: L2-107 AC3
     const i = pages.ideas;
     const card = i.cards().first();
     const title = (await i.cardTitle(card).textContent())!.trim();
@@ -58,7 +58,7 @@ test.describe("Ideas — Add to day", () => {
   });
 
   test("a day without room says so and cannot be confirmed", async ({ page, pages }) => {
-    // Traces to: L2-095 AC4
+    // Traces to: L2-107 AC4
     await page.route(/\/ideas\/preview$/, (route) =>
       route.fulfill({
         json: {
@@ -80,7 +80,7 @@ test.describe("Ideas — Add to day", () => {
 
 test.describe("Ideas — Add to day on events", () => {
   test("this weekend's events offer Add to day; later ones and suggestions do not", async ({ goto, pages }) => {
-    // Traces to: L2-095
+    // Traces to: L2-107
     await goto("ideasEvents");
     const i = pages.ideas;
     await i.waitForReady();

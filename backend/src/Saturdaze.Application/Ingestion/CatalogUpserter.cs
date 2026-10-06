@@ -41,7 +41,7 @@ public sealed class CatalogUpserter
     }
 
     /// <summary>
-    /// Adds the row's <c>photos</c> candidates as provider photos (L2-088). A candidate without
+    /// Adds the row's <c>photos</c> candidates as provider photos (L2-100). A candidate without
     /// attribution or licence is never stored; its skip is reported for the run audit. A URL the
     /// place already has is left alone, and the first stored photo becomes primary when the
     /// place has none.

@@ -6,7 +6,7 @@ import { CardMedia, Media } from '../media/media';
 
 /**
  * An activity suggestion on Ideas. Mirrors the photo-led `.card--media` in
- * docs/mocks/pages/ideas.html (L2-094): the place's photo (or a tinted
+ * docs/mocks/pages/ideas.html (L2-106): the place's photo (or a tinted
  * fallback tile with the category icon), title, place, a two-line "why",
  * chips, and a Map link when the catalogue has one.
  */
@@ -35,7 +35,7 @@ export class ActivityCard {
   readonly mapUrl = input<string>('');
   /** The place's primary photo; null shows the fallback tile. */
   readonly media = input<CardMedia | null>(null);
-  /** Offer "Add to day" (L2-095). */
+  /** Offer "Add to day" (L2-107). */
   readonly addable = input(false, { transform: booleanAttribute });
   /** "Add to day" was pressed. */
   readonly addToDay = output<void>();

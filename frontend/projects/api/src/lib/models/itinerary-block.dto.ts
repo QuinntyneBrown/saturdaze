@@ -49,7 +49,7 @@ export interface ItineraryBlockDto {
    */
   readonly sortOrder: number;
   /**
-   * Stop Number — 1-based among the day's stops away from home (L2-091); null otherwise.
+   * Stop Number — 1-based among the day's stops away from home (L2-103); null otherwise.
    */
   readonly stopNumber?: number | null;
   /**
@@ -57,7 +57,7 @@ export interface ItineraryBlockDto {
    */
   readonly stop?: LocationDto | null;
   /**
-   * Leg Before — the drive into this block from the previous place (L2-090).
+   * Leg Before — the drive into this block from the previous place (L2-102).
    */
   readonly legBefore?: TravelLegDto | null;
   /**

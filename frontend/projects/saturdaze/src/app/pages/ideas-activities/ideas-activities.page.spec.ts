@@ -110,7 +110,7 @@ describe('IdeasActivitiesPage', () => {
     expect(cards[0]?.querySelector('.card__footer a')?.getAttribute('href')).toBe(
       'https://maps.example/terre-bleu',
     );
-    // No map link, but every activity offers "Add to day" (L2-095).
+    // No map link, but every activity offers "Add to day" (L2-107).
     expect(cards[1]?.querySelector('.card__footer a')).toBeNull();
     expect(cards[1]?.querySelector('.card__footer button')?.getAttribute('aria-label')).toMatch(
       /^Add to day: /,

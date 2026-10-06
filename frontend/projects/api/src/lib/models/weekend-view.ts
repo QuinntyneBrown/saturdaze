@@ -38,7 +38,7 @@ export interface WeekendView {
    */
   readonly blockCount: number;
   /**
-   * Cover — null shows the fallback tile (L2-096 AC3).
+   * Cover — null shows the fallback tile (L2-108 AC3).
    */
   readonly cover: CoverView | null;
   /**

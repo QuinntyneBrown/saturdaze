@@ -1,5 +1,5 @@
 /**
- * The weekend's cover photo (L2-096). Mirrors `Saturdaze.Application.Contracts.CoverDto`.
+ * The weekend's cover photo (L2-108). Mirrors `Saturdaze.Application.Contracts.CoverDto`.
  */
 export interface CoverDto {
   readonly url: string;

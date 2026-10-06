@@ -3,7 +3,7 @@ import { join } from "node:path";
 import { Page } from "@playwright/test";
 
 /**
- * Weekend covers (L2-096). The bundled seed has no photos, so these stubs give
+ * Weekend covers (L2-108). The bundled seed has no photos, so these stubs give
  * the weekend's first Saturday and Sunday activities a photo, set the cover to
  * Saturday's, and answer `PUT …/cover` from the same data.
  */
@@ -28,11 +28,11 @@ export interface CoverStub {
   readonly stops: string[];
   /** The body of the last `PUT …/cover`. */
   lastPut: unknown;
-  /** How many `POST …/cover` uploads reached the API (L2-097). */
+  /** How many `POST …/cover` uploads reached the API (L2-109). */
   uploads: number;
 }
 
-/** A small JPEG standing in for a family photo (L2-097). */
+/** A small JPEG standing in for a family photo (L2-109). */
 export const FAMILY_PHOTO = join(__dirname, "assets/family-photo.jpg");
 
 export async function stubWeekendCover(page: Page, opts: { cover?: boolean } = {}): Promise<CoverStub> {

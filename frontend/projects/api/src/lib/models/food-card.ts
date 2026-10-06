@@ -53,7 +53,7 @@ export interface FoodCard {
    */
   readonly votesDisabled: boolean;
   /**
-   * Media — the place's photo; null shows the fallback tile (L2-094).
+   * Media — the place's photo; null shows the fallback tile (L2-106).
    */
   readonly media: MediaView | null;
 }

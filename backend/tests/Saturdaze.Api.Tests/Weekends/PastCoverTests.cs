@@ -8,7 +8,7 @@ using Xunit;
 
 namespace Saturdaze.Api.Tests.Weekends;
 
-/// <summary>L2-098 AC1, AC2: each weekend in history carries the same cover the Weekend screen shows.</summary>
+/// <summary>L2-110 AC1, AC2: each weekend in history carries the same cover the Weekend screen shows.</summary>
 public class PastCoverTests : IClassFixture<SaturdazeApiFactory>
 {
     private readonly SaturdazeApiFactory _factory;
@@ -43,7 +43,7 @@ public class PastCoverTests : IClassFixture<SaturdazeApiFactory>
     [Fact]
     public async Task A_family_uploaded_cover_shows_in_history_labelled_your_photo()
     {
-        // Traces to: L2-098 AC1
+        // Traces to: L2-110 AC1
         var (client, id, _) = await PlanAsync();
         (await client.PostAsync($"/api/weekends/{id}/cover", TestPhotos.Upload(TestPhotos.Jpeg()))).EnsureSuccessStatusCode();
 
@@ -59,7 +59,7 @@ public class PastCoverTests : IClassFixture<SaturdazeApiFactory>
     [Fact]
     public async Task History_shows_the_same_cover_as_the_weekend_or_none()
     {
-        // Traces to: L2-098 AC1, AC2
+        // Traces to: L2-110 AC1, AC2
         var (client, id, weekend) = await PlanAsync();
 
         var cover = (await SummaryAsync(client, id)).GetProperty("cover");

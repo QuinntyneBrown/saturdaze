@@ -15,8 +15,8 @@ import { chipTone, filterTone } from '../../shared/chip-tones';
 /**
  * Ideas · Events — `docs/mocks-v2/pages/ideas.events.html`: window and
  * category chips, then "Your suggestion" (pending, muted), Saturday,
- * Sunday and "Coming soon". Cards lead with a photo (L2-094) and link out to
- * the event page; this weekend's events offer "Add to day" (D27, L2-095).
+ * Sunday and "Coming soon". Cards lead with a photo (L2-106) and link out to
+ * the event page; this weekend's events offer "Add to day" (D27, L2-107).
  */
 @Component({
   selector: 'app-ideas-events',

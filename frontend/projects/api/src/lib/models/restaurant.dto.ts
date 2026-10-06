@@ -52,11 +52,11 @@ export interface RestaurantDto {
    */
   readonly locked?: boolean;
   /**
-   * Location (L2-087); null until the place is backfilled.
+   * Location (L2-099); null until the place is backfilled.
    */
   readonly location?: LocationDto | null;
   /**
-   * Photo (L2-088); null when the place has none.
+   * Photo (L2-100); null when the place has none.
    */
   readonly photo?: PlacePhotoDto | null;
 }

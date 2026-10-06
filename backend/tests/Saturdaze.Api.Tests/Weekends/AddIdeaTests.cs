@@ -8,7 +8,7 @@ using Xunit;
 
 namespace Saturdaze.Api.Tests.Weekends;
 
-/// <summary>L2-095: preview where the planner would fit an idea, then add it.</summary>
+/// <summary>L2-107: preview where the planner would fit an idea, then add it.</summary>
 public class AddIdeaTests : IClassFixture<SaturdazeApiFactory>
 {
     private readonly SaturdazeApiFactory _factory;
@@ -54,7 +54,7 @@ public class AddIdeaTests : IClassFixture<SaturdazeApiFactory>
     [Fact]
     public async Task Preview_proposes_a_slot_that_moves_only_unlocked_planner_blocks()
     {
-        // Traces to: L2-095 AC2, L1-004
+        // Traces to: L2-107 AC2, L1-004
         var plan = await PlanAsync();
         var idea = await ActivityId(plan.Client, "Mississauga Central Library Family Programs");
 
@@ -88,7 +88,7 @@ public class AddIdeaTests : IClassFixture<SaturdazeApiFactory>
     [Fact]
     public async Task Confirming_adds_the_block_at_the_previewed_time_with_a_travel_leg()
     {
-        // Traces to: L2-095 AC3
+        // Traces to: L2-107 AC3
         var plan = await PlanAsync();
         var idea = await ActivityId(plan.Client, "Mississauga Central Library Family Programs");
         var preview = JsonDocument.Parse(await (await plan.Client.PostAsJsonAsync(
@@ -119,7 +119,7 @@ public class AddIdeaTests : IClassFixture<SaturdazeApiFactory>
     [Fact]
     public async Task A_day_with_no_room_around_its_locked_blocks_does_not_fit()
     {
-        // Traces to: L2-095 AC4
+        // Traces to: L2-107 AC4
         var plan = await PlanAsync();
         var lockRes = await plan.Client.PutAsJsonAsync($"/api/weekends/{plan.WeekendId}/days/sunday/lock", new { Locked = true });
         lockRes.EnsureSuccessStatusCode();
@@ -137,7 +137,7 @@ public class AddIdeaTests : IClassFixture<SaturdazeApiFactory>
     [Fact]
     public async Task Ideas_outside_the_catalog_and_other_families_pending_submissions_are_not_found()
     {
-        // Traces to: L2-095 AC5
+        // Traces to: L2-107 AC5
         var plan = await PlanAsync();
         var unknown = await plan.Client.PostAsJsonAsync(
             $"/api/weekends/{plan.WeekendId}/ideas/preview", Request(Guid.NewGuid()));
@@ -157,7 +157,7 @@ public class AddIdeaTests : IClassFixture<SaturdazeApiFactory>
     [Fact]
     public async Task Another_familys_weekend_is_not_found()
     {
-        // Traces to: L2-095, family scoping
+        // Traces to: L2-107, family scoping
         var plan = await PlanAsync();
         var idea = await ActivityId(plan.Client, "Square One Skating Rink");
         var stranger = (await SignedInClient.CreateAsync(_factory, FamilyMode.Own)).Client;

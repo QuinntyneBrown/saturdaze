@@ -5,7 +5,7 @@ using Saturdaze.Application.Photos;
 namespace Saturdaze.Api.Controllers;
 
 /// <summary>
-/// Family photos, served only through a signed, expiring URL (L2-097 AC5). Anonymous on purpose:
+/// Family photos, served only through a signed, expiring URL (L2-109 AC5). Anonymous on purpose:
 /// the signature is the credential, so a shared weekend's cover renders without a login (AC6).
 /// </summary>
 [ApiController]

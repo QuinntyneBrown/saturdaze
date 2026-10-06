@@ -41,7 +41,7 @@ export interface DayView {
    */
   readonly blocks: readonly BlockRow[];
   /**
-   * Stops — numbered stops away from home, for the day map (L2-091).
+   * Stops — numbered stops away from home, for the day map (L2-103).
    */
   readonly stops: readonly MapPin[];
   /**
@@ -49,7 +49,7 @@ export interface DayView {
    */
   readonly home: MapPoint | null;
   /**
-   * Driving Minutes — the sum of the day's legs (L2-090 AC5).
+   * Driving Minutes — the sum of the day's legs (L2-102 AC5).
    */
   readonly drivingMinutes: number;
   /**

@@ -1,5 +1,5 @@
 /**
- * Where a catalog place is (L2-087). Mirrors
+ * Where a catalog place is (L2-099). Mirrors
  * `Saturdaze.Application.Contracts.LocationDto`.
  */
 export interface LocationDto {

@@ -12,7 +12,7 @@ using Saturdaze.Domain.Enums;
 
 namespace Saturdaze.Application.Covers;
 
-/// <summary>Use the default cover rule, or one of the weekend's stops' photos (L2-096 AC2).</summary>
+/// <summary>Use the default cover rule, or one of the weekend's stops' photos (L2-108 AC2).</summary>
 public sealed record SetWeekendCoverCommand(Guid WeekendId, CoverSource Source, Guid? PlaceId) : IRequest<WeekendDto>;
 
 public sealed class SetWeekendCoverCommandHandler : IRequestHandler<SetWeekendCoverCommand, WeekendDto>

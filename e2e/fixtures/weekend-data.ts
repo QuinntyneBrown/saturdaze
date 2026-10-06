@@ -5,7 +5,7 @@ type Day = { day: string; stopCount: number; drivingMinutes: number; drivingKm: 
 
 /**
  * Rewrites the weekend responses so `day` has no stops away from home: no stop
- * snapshots, numbers or legs (L2-091 AC2's "home day").
+ * snapshots, numbers or legs (L2-103 AC2's "home day").
  */
 export async function stubHomeDay(page: Page, day: "Saturday" | "Sunday"): Promise<void> {
   await page.route(/\/api\/weekends\/(current|plan)(\?|$)/, async (route) => {

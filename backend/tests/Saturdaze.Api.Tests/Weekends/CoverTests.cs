@@ -9,7 +9,7 @@ using Xunit;
 namespace Saturdaze.Api.Tests.Weekends;
 
 /// <summary>
-/// L2-096: every weekend has a cover — the photo of Saturday's highlight, else Sunday's —
+/// L2-108: every weekend has a cover — the photo of Saturday's highlight, else Sunday's —
 /// which the family can change to another stop's photo. "Port Credit Memorial Park" has
 /// an allow-listed photo in the test seed; adding it to Sunday guarantees a stop with one.
 /// </summary>
@@ -67,7 +67,7 @@ public class CoverTests : IClassFixture<SaturdazeApiFactory>
     [Fact]
     public async Task A_new_weekend_takes_its_cover_from_saturdays_highlight_else_sundays()
     {
-        // Traces to: L2-096 AC1, AC3
+        // Traces to: L2-108 AC1, AC3
         var plan = await PlanWithPhotoStopAsync();
         var w = plan.Weekend;
 
@@ -90,7 +90,7 @@ public class CoverTests : IClassFixture<SaturdazeApiFactory>
     [Fact]
     public async Task Choosing_another_stops_photo_persists()
     {
-        // Traces to: L2-096 AC2
+        // Traces to: L2-108 AC2
         var plan = await PlanWithPhotoStopAsync();
 
         var res = await plan.Client.PutAsJsonAsync($"/api/weekends/{plan.WeekendId}/cover",
@@ -109,7 +109,7 @@ public class CoverTests : IClassFixture<SaturdazeApiFactory>
     [Fact]
     public async Task Only_a_stop_of_this_weekend_with_a_photo_can_be_the_cover()
     {
-        // Traces to: L2-096 AC2
+        // Traces to: L2-108 AC2
         var plan = await PlanWithPhotoStopAsync();
         var res = await plan.Client.PutAsJsonAsync($"/api/weekends/{plan.WeekendId}/cover",
             new { Source = "stop", PlaceId = Guid.NewGuid() });
@@ -124,7 +124,7 @@ public class CoverTests : IClassFixture<SaturdazeApiFactory>
     [Fact]
     public async Task A_chosen_cover_survives_regeneration_while_its_stop_does()
     {
-        // Traces to: L2-096 AC6
+        // Traces to: L2-108 AC6
         var plan = await PlanWithPhotoStopAsync();
         (await plan.Client.PutAsJsonAsync($"/api/weekends/{plan.WeekendId}/cover",
             new { Source = "stop", PlaceId = plan.PlaceId })).EnsureSuccessStatusCode();
@@ -141,7 +141,7 @@ public class CoverTests : IClassFixture<SaturdazeApiFactory>
     [Fact]
     public async Task A_chosen_cover_reverts_to_the_default_rule_once_its_stop_is_gone()
     {
-        // Traces to: L2-096 AC6
+        // Traces to: L2-108 AC6
         var plan = await PlanWithPhotoStopAsync();
         (await plan.Client.PutAsJsonAsync($"/api/weekends/{plan.WeekendId}/cover",
             new { Source = "stop", PlaceId = plan.PlaceId })).EnsureSuccessStatusCode();
@@ -168,7 +168,7 @@ public class CoverTests : IClassFixture<SaturdazeApiFactory>
     [Fact]
     public async Task Another_family_cannot_change_the_cover()
     {
-        // Traces to: L2-096, family scoping
+        // Traces to: L2-108, family scoping
         var plan = await PlanWithPhotoStopAsync();
         var stranger = (await SignedInClient.CreateAsync(_factory, FamilyMode.Own)).Client;
         var res = await stranger.PutAsJsonAsync($"/api/weekends/{plan.WeekendId}/cover",

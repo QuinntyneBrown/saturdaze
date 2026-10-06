@@ -68,7 +68,7 @@ export function projectWeekend(dto: WeekendDto | null, status?: WeekendStatus): 
 
 /**
  * A family upload's signed URL is relative to the API (`/api/photos/…`,
- * L2-097); the app may be served from another origin, so anchor it there.
+ * L2-109); the app may be served from another origin, so anchor it there.
  */
 export function withApiOrigin<T extends { readonly cover?: CoverDto | null }>(
   dto: T,
@@ -79,12 +79,12 @@ export function withApiOrigin<T extends { readonly cover?: CoverDto | null }>(
   return { ...dto, cover: { ...dto.cover!, url: `${baseUrl}${url}` } };
 }
 
-/** The cover with its label as the credit (L2-096). */
+/** The cover with its label as the credit (L2-108). */
 function coverView(dto: WeekendDto): CoverView | null {
   return toCoverView(dto.cover);
 }
 
-/** A cover DTO as card media; the label is the credit (L2-096, L2-098 AC1). */
+/** A cover DTO as card media; the label is the credit (L2-108, L2-110 AC1). */
 export function toCoverView(c: CoverDto | null | undefined): CoverView | null {
   if (!c) return null;
   return {
@@ -127,7 +127,7 @@ export function projectDay(dto: WeekendDto, day: WeekendDay): DayView {
   const forecast = forecastFor(dto.weather, dateIso);
   const sorted = dto.blocks.filter((b) => b.day === day).sort(bySortThenStart);
   const highlightId = sorted.find((b) => b.kind === 'Activity')?.id ?? null;
-  // Travel legs replace the standalone drive blocks in the timeline (L2-090).
+  // Travel legs replace the standalone drive blocks in the timeline (L2-102).
   const blocks = sorted
     .map((b, i) =>
       toBlockRow(b, dto.errands, {
@@ -219,7 +219,7 @@ function isAtHome(b: ItineraryBlockDto): boolean {
   return b.kind === 'Downtime' || (b.kind === 'Meal' && b.refId == null);
 }
 
-/** "45 min · 52 km" and "Travel: 45 minutes, 52 kilometres to …" (L2-090 AC1, AC4). */
+/** "45 min · 52 km" and "Travel: 45 minutes, 52 kilometres to …" (L2-102 AC1, AC4). */
 function toLegView(minutes: number, distanceKm: number, to: ItineraryBlockDto): LegView {
   const km = distanceKm < 10 ? Math.round(distanceKm * 10) / 10 : Math.round(distanceKm);
   const home = isAtHome(to);
@@ -361,7 +361,7 @@ function toWeatherDay(day: WeekendDay, w: WeatherForecastDto | null): WeatherDay
 }
 
 /**
- * "17 May · 22° / 14° · 3 stops · 1 h 36 min driving" (L2-090 AC5); a day with
+ * "17 May · 22° / 14° · 3 stops · 1 h 36 min driving" (L2-102 AC5); a day with
  * no stops keeps the weather note: "17 May · 22° / 14° · Light breeze, good for outdoors".
  */
 function dayMeta(

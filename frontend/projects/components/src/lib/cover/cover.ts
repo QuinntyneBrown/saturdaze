@@ -4,7 +4,7 @@ import { Icon } from '../icon/icon';
 import { CardMedia, MediaTone } from '../media/media';
 
 /**
- * The weekend cover — `.cover` in docs/mocks/pages/weekend.html (L2-096). The
+ * The weekend cover — `.cover` in docs/mocks/pages/weekend.html (L2-108). The
  * cover photo, eagerly loaded since it is above the fold, with its label as a
  * credit chip; the date range, the page's `h1` and the summary sit on a
  * gradient scrim that keeps white text at 4.5:1 over light and dark photos.

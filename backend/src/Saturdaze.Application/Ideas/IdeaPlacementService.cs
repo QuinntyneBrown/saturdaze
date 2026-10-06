@@ -13,7 +13,7 @@ public sealed record IdeaPlacement(
     string? Reason);
 
 /// <summary>
-/// Fits an idea into one day (L2-095). Locked blocks, commitments, meals and errands
+/// Fits an idea into one day (L2-107). Locked blocks, commitments, meals and errands
 /// stay put (L1-004). Unlocked activities (with their drives) and downtime may give way.
 /// The idea needs its drive there, its own time, and its drive back; the earliest gap
 /// between fixed blocks that holds all three, within the chosen timing, wins.

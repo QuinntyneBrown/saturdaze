@@ -42,7 +42,7 @@ export class FoodCard {
   readonly lockedLabel = input<string>('Locked');
   readonly dimmed = input(false, { transform: booleanAttribute });
   readonly menuUrl = input<string>('');
-  /** The restaurant's primary photo; null shows the fallback tile (L2-094). */
+  /** The restaurant's primary photo; null shows the fallback tile (L2-106). */
   readonly media = input<CardMedia | null>(null);
   readonly votes = input<readonly VoteCell[]>([]);
   readonly votesDisabled = input(false, { transform: booleanAttribute });

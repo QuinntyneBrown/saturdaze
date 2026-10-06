@@ -46,7 +46,7 @@ public sealed class GetWeekendHistoryQueryHandler
                     .OrderBy(b => b.Day).ThenBy(b => b.StartTime)
                     .Select(b => b.Title)
                     .ToList(),
-                // The stops a cover can come from (L2-098).
+                // The stops a cover can come from (L2-110).
                 Stops = w.Blocks
                     .Where(b => b.RefId != null && (b.Kind == BlockKind.Activity || b.Kind == BlockKind.Meal))
                     .Select(b => new ItineraryBlockDto(

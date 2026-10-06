@@ -71,9 +71,9 @@ const DAYS: readonly WeekendDay[] = ['Saturday', 'Sunday'];
 
 /**
  * Weekend — `docs/mocks/pages/weekend.html`. Saturday / Sunday tabs show one
- * day at a time beside its map (stacked under 1024px, L2-093): numbered stops,
- * travel legs between places (L2-090, L2-091), and a map kept in step with the
- * timeline (L2-092). Every block row carries Why / Swap / Lock, every day
+ * day at a time beside its map (stacked under 1024px, L2-105): numbered stops,
+ * travel legs between places (L2-102, L2-103), and a map kept in step with the
+ * timeline (L2-104). Every block row carries Why / Swap / Lock, every day
  * Regenerate / Lock day, and "Add an errand" sits under the list. The loading,
  * generating and empty states are app-only.
  */
@@ -122,9 +122,9 @@ export class WeekendPage {
   protected readonly skeleton = SKELETON;
   protected readonly chipTone = chipTone;
 
-  /** The day on screen (L2-092 AC4); Saturday when the screen opens (L2-093 AC5). */
+  /** The day on screen (L2-104 AC4); Saturday when the screen opens (L2-105 AC5). */
   protected readonly selectedDay = signal<WeekendDay>('Saturday');
-  /** The stop highlighted in both the timeline and the map (L2-092). */
+  /** The stop highlighted in both the timeline and the map (L2-104). */
   protected readonly activeStop = signal<number | null>(null);
   /** The stop a pin last brought into focus; hover falls back to it. */
   private focusedStop: number | null = null;
@@ -345,8 +345,8 @@ export class WeekendPage {
   }
 
   /**
-   * "Change photo" → D28; the chosen stop's photo becomes the cover (L2-096
-   * AC2). A family photo is uploaded by the dialog itself (L2-097).
+   * "Change photo" → D28; the chosen stop's photo becomes the cover (L2-108
+   * AC2). A family photo is uploaded by the dialog itself (L2-109).
    */
   protected async changeCover(): Promise<void> {
     const view = this.weekend();
@@ -374,7 +374,7 @@ export class WeekendPage {
     return `stop-${day.toLowerCase()}-${n}`;
   }
 
-  /** Pointer or focus on a stop row highlights its pin (L2-092 AC1, AC2). */
+  /** Pointer or focus on a stop row highlights its pin (L2-104 AC1, AC2). */
   protected hoverStop(block: BlockRow, on: boolean): void {
     const n = block.stopNumber;
     if (n === null) return;
@@ -396,7 +396,7 @@ export class WeekendPage {
   }
 
   /**
-   * A pin was activated: highlight, scroll to and focus its stop (L2-092 AC3),
+   * A pin was activated: highlight, scroll to and focus its stop (L2-104 AC3),
    * without animation when the user prefers reduced motion (AC6).
    */
   protected focusStop(day: WeekendDay, n: number): void {

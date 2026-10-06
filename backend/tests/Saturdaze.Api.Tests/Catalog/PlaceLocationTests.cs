@@ -8,7 +8,7 @@ using Xunit;
 
 namespace Saturdaze.Api.Tests.Catalog;
 
-/// <summary>L2-087: every catalog place carries a location.</summary>
+/// <summary>L2-099: every catalog place carries a location.</summary>
 public class PlaceLocationTests : IClassFixture<SaturdazeApiFactory>
 {
     private readonly SaturdazeApiFactory _factory;
@@ -34,7 +34,7 @@ public class PlaceLocationTests : IClassFixture<SaturdazeApiFactory>
     [Fact]
     public async Task Activity_restaurant_and_event_lists_include_each_place_location()
     {
-        // Traces to: L2-087 AC4
+        // Traces to: L2-099 AC4
         var client = (await SignedInClient.CreateAsync(_factory)).Client;
 
         var activities = await GetArray(client, "/api/activities");
@@ -53,7 +53,7 @@ public class PlaceLocationTests : IClassFixture<SaturdazeApiFactory>
     [Fact]
     public async Task Submission_with_out_of_range_latitude_is_rejected_naming_latitude()
     {
-        // Traces to: L2-087 AC2
+        // Traces to: L2-099 AC2
         var client = (await SignedInClient.CreateAsync(_factory)).Client;
         var res = await client.PostAsJsonAsync("/api/events/submissions", new
         {
@@ -74,7 +74,7 @@ public class PlaceLocationTests : IClassFixture<SaturdazeApiFactory>
     [Fact]
     public async Task Approval_requires_a_location_until_the_admin_supplies_one()
     {
-        // Traces to: L2-087 AC3
+        // Traces to: L2-099 AC3
         var submitter = await SignedInClient.CreateAsync(_factory);
         var title = $"Market-{Guid.NewGuid():N}";
         var submit = await submitter.Client.PostAsJsonAsync("/api/events/submissions", new

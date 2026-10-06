@@ -41,7 +41,7 @@ export interface PastWeekendCard {
    */
   readonly favourite: boolean;
   /**
-   * Cover — the photo the card leads with; `null` offers "Add a photo" (L2-098).
+   * Cover — the photo the card leads with; `null` offers "Add a photo" (L2-110).
    */
   readonly cover: CoverView | null;
 }

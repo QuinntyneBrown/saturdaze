@@ -9,7 +9,7 @@ namespace Saturdaze.Application.Covers;
 
 /// <summary>
 /// Adds what the static weekend projection cannot read itself: each stop's place photo
-/// (block thumbnails and the cover picker) and the resolved cover (L2-096).
+/// (block thumbnails and the cover picker) and the resolved cover (L2-108).
 /// </summary>
 public sealed class WeekendEnrichment
 {
@@ -27,14 +27,14 @@ public sealed class WeekendEnrichment
         _options = options.Value;
     }
 
-    /// <param name="shared">Signed URLs for a share link outlive a family's (L2-097 AC6, L2-098 AC3).</param>
+    /// <param name="shared">Signed URLs for a share link outlive a family's (L2-109 AC6, L2-110 AC3).</param>
     public async Task<WeekendDto> EnrichAsync(WeekendDto weekend, CancellationToken ct, bool shared = false)
     {
         var blocks = await WithPhotosAsync(weekend.Blocks, ct);
         return weekend with { Blocks = blocks, Cover = await ResolveAsync(weekend.Id, blocks, shared, ct) };
     }
 
-    /// <summary>The cover for a weekend summary in Past (L2-098 AC1, AC2), as the Weekend screen shows it.</summary>
+    /// <summary>The cover for a weekend summary in Past (L2-110 AC1, AC2), as the Weekend screen shows it.</summary>
     public async Task<CoverDto?> CoverAsync(Guid weekendId, IReadOnlyList<ItineraryBlockDto> blocks, CancellationToken ct)
         => await ResolveAsync(weekendId, await WithPhotosAsync(blocks, ct), shared: false, ct);
 

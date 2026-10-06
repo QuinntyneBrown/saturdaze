@@ -11,7 +11,7 @@ using Xunit;
 
 namespace Saturdaze.Application.Tests.Ingestion;
 
-/// <summary>L2-088: ingestion keeps attributed, licensed photos and audits the ones it skips.</summary>
+/// <summary>L2-100: ingestion keeps attributed, licensed photos and audits the ones it skips.</summary>
 public class CatalogUpserterPhotoTests
 {
     private const string ParkWithPhotos = """
@@ -42,7 +42,7 @@ public class CatalogUpserterPhotoTests
     [Fact]
     public async Task The_run_audit_records_why_a_photo_was_skipped()
     {
-        // Traces to: L2-088 AC2
+        // Traces to: L2-100 AC2
         await using var app = TestApp.Create();
         var runner = new IngestionRunner(
             new FakeWebSearchClient(new WebSearchResult(ParkWithPhotos, 10, 20, 1)),

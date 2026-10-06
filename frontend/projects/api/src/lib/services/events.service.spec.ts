@@ -166,7 +166,7 @@ describe('EventsService', () => {
       url: 'https://example.com/terre-bleu',
       pending: false,
       media: null,
-      // A Saturday event of this weekend can be added to a day (L2-095).
+      // A Saturday event of this weekend can be added to a day (L2-107).
       addable: true,
     });
     expect(second!.url).toBeNull();

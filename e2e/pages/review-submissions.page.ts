@@ -76,7 +76,7 @@ export class ReviewSubmissionsPage extends BasePage {
     return control(card.locator(".review-actions"), "Reject");
   }
 
-  /** D23 location fields (L2-087 AC3); blank coordinates keep the submission's own. */
+  /** D23 location fields (L2-099 AC3); blank coordinates keep the submission's own. */
   async fillApprovalLocation(loc: { latitude: string; longitude: string; address?: string }): Promise<void> {
     if (loc.address !== undefined) await this.dialogField("Address").fill(loc.address);
     await this.dialogField("Latitude").fill(loc.latitude);

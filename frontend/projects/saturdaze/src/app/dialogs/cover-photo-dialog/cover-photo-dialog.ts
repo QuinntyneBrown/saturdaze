@@ -16,14 +16,14 @@ export interface CoverPhotoDialogData {
   readonly choices: readonly CoverChoice[];
   /** The place whose photo is the cover now, if any. */
   readonly currentPlaceId: string | null;
-  /** Sends the family's photo as the cover; rejects with the server's error (L2-097). */
+  /** Sends the family's photo as the cover; rejects with the server's error (L2-109). */
   readonly upload: (file: Blob) => Promise<void>;
 }
 
 /** A stop or the default rule for the page to apply, or a family photo already uploaded. */
 export type CoverPhotoDialogResult = CoverSelection | { readonly source: 'uploaded' };
 
-/** The upload limit the API enforces (L2-097 AC3). */
+/** The upload limit the API enforces (L2-109 AC3). */
 export const MAX_UPLOAD_BYTES = 10 * 1024 * 1024;
 const ACCEPTED = ['image/jpeg', 'image/png', 'image/webp'];
 const UPLOAD = 'upload';
@@ -33,7 +33,7 @@ const NOT_A_PHOTO = 'That file is not a photo we can use. Choose a JPEG, PNG or 
 const FAILED = 'The photo did not upload. Try again in a moment.';
 
 /**
- * D28 — "Cover photo" (L2-096 AC2, L2-097, L2-098 AC2): every stop's photo
+ * D28 — "Cover photo" (L2-108 AC2, L2-109, L2-110 AC2): every stop's photo
  * as a radio tile, plus "Your own photo". Opened from the Weekend cover and
  * from a Past card. A family photo is checked here, uploaded from
  * here, and server refusals are shown in place so the family can pick again.
@@ -76,7 +76,7 @@ export class CoverPhotoDialog {
     this.selected.set(UPLOAD);
     this.error.set('');
     this.file.set(null);
-    // Checked before sending: the server enforces the same rules (L2-097 AC2, AC3).
+    // Checked before sending: the server enforces the same rules (L2-109 AC2, AC3).
     if (file.size > MAX_UPLOAD_BYTES) {
       this.error.set(TOO_LARGE);
       return;

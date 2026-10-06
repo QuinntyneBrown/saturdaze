@@ -26,12 +26,12 @@ parser --> runner : IngestionRecords with location and photos
 runner -> upserter : UpsertAsync(records, run)
 loop each record
  upserter -> db : Match by natural key
- upserter -> upserter : L2-087 write GeoLocation
+ upserter -> upserter : L2-099 write GeoLocation
  loop each photo candidate
   upserter -> photo : PlacePhoto.Create(...)
   alt attribution or licence empty
    photo --> upserter : Failure
-   upserter -> upserter : L2-088 ItemsRejected++, SkipReasons.Add(reason)
+   upserter -> upserter : L2-100 ItemsRejected++, SkipReasons.Add(reason)
   else valid
    photo --> upserter : PlacePhoto
    upserter -> photo : PlacePhotoSet.MarkPrimary when first or flagged

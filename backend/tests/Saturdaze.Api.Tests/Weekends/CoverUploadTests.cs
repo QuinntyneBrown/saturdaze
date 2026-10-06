@@ -11,7 +11,7 @@ using Xunit;
 
 namespace Saturdaze.Api.Tests.Weekends;
 
-/// <summary>L2-097: family photo uploads are checked, cleaned, stored privately and served signed.</summary>
+/// <summary>L2-109: family photo uploads are checked, cleaned, stored privately and served signed.</summary>
 public class CoverUploadTests : IClassFixture<SaturdazeApiFactory>
 {
     private readonly SaturdazeApiFactory _factory;
@@ -79,7 +79,7 @@ public class CoverUploadTests : IClassFixture<SaturdazeApiFactory>
     [Fact]
     public async Task An_uploaded_photo_becomes_the_cover_without_its_location_data()
     {
-        // Traces to: L2-097 AC4
+        // Traces to: L2-109 AC4
         var (client, id) = await PlanAsync();
         var original = JpegWithGps();
         Contains(original, "Exif"u8.ToArray()).Should().BeTrue("the fixture carries EXIF");
@@ -102,7 +102,7 @@ public class CoverUploadTests : IClassFixture<SaturdazeApiFactory>
     [Fact]
     public async Task Another_familys_weekend_is_not_found()
     {
-        // Traces to: L2-097 AC1
+        // Traces to: L2-109 AC1
         var (_, id) = await PlanAsync();
         var stranger = (await SignedInClient.CreateAsync(_factory, FamilyMode.Own)).Client;
         var res = await stranger.PostAsync($"/api/weekends/{id}/cover", Upload(JpegWithGps(), "photo.jpg"));
@@ -112,7 +112,7 @@ public class CoverUploadTests : IClassFixture<SaturdazeApiFactory>
     [Fact]
     public async Task A_file_that_is_not_an_image_is_refused_whatever_its_name()
     {
-        // Traces to: L2-097 AC2
+        // Traces to: L2-109 AC2
         var (client, id) = await PlanAsync();
         var pdf = Encoding.ASCII.GetBytes("%PDF-1.7\n1 0 obj << /Type /Catalog >> endobj\n%%EOF");
         var res = await client.PostAsync($"/api/weekends/{id}/cover", Upload(pdf, "photo.jpg"));
@@ -124,7 +124,7 @@ public class CoverUploadTests : IClassFixture<SaturdazeApiFactory>
     [Fact]
     public async Task A_file_over_ten_megabytes_is_refused_and_nothing_is_stored()
     {
-        // Traces to: L2-097 AC3
+        // Traces to: L2-109 AC3
         var (client, id) = await PlanAsync();
         var before = Directory.Exists(_factory.PhotoDirectory) ? Directory.GetFiles(_factory.PhotoDirectory).Length : 0;
         var big = JpegWithGps().Concat(new byte[11 * 1024 * 1024]).ToArray();
@@ -142,7 +142,7 @@ public class CoverUploadTests : IClassFixture<SaturdazeApiFactory>
     [Fact]
     public async Task A_signed_photo_url_stops_working_once_it_expires()
     {
-        // Traces to: L2-097 AC5
+        // Traces to: L2-109 AC5
         var (client, id) = await PlanAsync();
         var res = await client.PostAsync($"/api/weekends/{id}/cover", Upload(JpegWithGps(), "photo.jpg"));
         res.EnsureSuccessStatusCode();
@@ -169,7 +169,7 @@ public class CoverUploadTests : IClassFixture<SaturdazeApiFactory>
     [Fact]
     public async Task A_share_link_holder_can_see_the_uploaded_cover()
     {
-        // Traces to: L2-097 AC6
+        // Traces to: L2-109 AC6
         var (client, id) = await PlanAsync();
         (await client.PostAsync($"/api/weekends/{id}/cover", Upload(JpegWithGps(), "photo.jpg"))).EnsureSuccessStatusCode();
         var share = await client.PostAsync($"/api/weekends/{id}/share", content: null);
@@ -187,7 +187,7 @@ public class CoverUploadTests : IClassFixture<SaturdazeApiFactory>
     [Fact]
     public async Task Uploads_log_the_weekend_and_size_but_never_the_file_name()
     {
-        // Traces to: L2-097 AC7
+        // Traces to: L2-109 AC7
         var (client, id) = await PlanAsync();
         const string fileName = "kids-at-grandmas-house-gps.jpg";
         (await client.PostAsync($"/api/weekends/{id}/cover", Upload(JpegWithGps(), fileName))).EnsureSuccessStatusCode();

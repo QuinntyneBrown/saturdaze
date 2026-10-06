@@ -3,7 +3,7 @@ import { join } from "node:path";
 import { Page } from "@playwright/test";
 
 /**
- * Place photos for the Ideas screens (L2-088). The bundled seed carries no photos
+ * Place photos for the Ideas screens (L2-100). The bundled seed carries no photos
  * (production sources are still to be chosen), so specs that need them rewrite the
  * catalog responses in flight and serve the image bytes from the mock placeholders.
  *

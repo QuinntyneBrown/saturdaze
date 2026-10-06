@@ -80,7 +80,7 @@ test.describe("Review submissions", () => {
   });
 
   test("approving without coordinates says a location is needed and keeps the card", async ({ page, pages, request }) => {
-    // Traces to: L2-087 AC3
+    // Traces to: L2-099 AC3
     const r = pages.reviewSubmissions;
     const title = `No place ${Date.now().toString(36)}`;
     await submitEvent(request, title);

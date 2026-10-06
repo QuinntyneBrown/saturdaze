@@ -14,7 +14,7 @@ import { FRAME, mapView } from './map-view';
 
 /**
  * The day map beside the Weekend timeline — `.planner__map` in
- * docs/mocks/pages/weekend.html (L2-091, L2-092). OpenStreetMap tiles fitted to
+ * docs/mocks/pages/weekend.html (L2-103, L2-104). OpenStreetMap tiles fitted to
  * the day, a home pin, one numbered pin button per stop, and the route through
  * them. It is supplementary: every fact here is also in the timeline. A day with
  * no stops away from home says so instead.

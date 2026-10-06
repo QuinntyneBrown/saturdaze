@@ -206,7 +206,7 @@
   }
 }
 
-// A numbered stop (L2-091 AC4): the deep brand tone, not the brand fill (3:1),
+// A numbered stop (L2-103 AC4): the deep brand tone, not the brand fill (3:1),
 // so the white number and the disc against the page both clear 4.5:1.
 .block__disc--num {
   --sd-stop-disc-bg: var(--colorBrandForeground2);
@@ -217,7 +217,7 @@
   font-weight: var(--fontWeightBold);
 }
 
-// Highlighted with its map pin (L2-092).
+// Highlighted with its map pin (L2-104).
 :host(.block--active) {
   background: var(--colorNeutralBackground2);
   box-shadow: 0 0 0 8px var(--colorNeutralBackground2);

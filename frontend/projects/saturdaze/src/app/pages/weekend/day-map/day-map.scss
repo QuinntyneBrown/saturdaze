@@ -1,7 +1,7 @@
 @use 'styles/breakpoints' as *;
 
 // `.map` from docs/mocks/styles/app.css: OpenStreetMap tiles under the route
-// and pins, a legend with the required attribution (L2-091 AC3).
+// and pins, a legend with the required attribution (L2-103 AC3).
 
 :host {
   display: block;
@@ -119,7 +119,7 @@
   color: var(--colorNeutralForeground2);
 }
 
-// Beside the timeline from 1024px the map is already in view (L2-093 AC2).
+// Beside the timeline from 1024px the map is already in view (L2-105 AC2).
 @include respond-to(desktop) {
   .map__expand {
     display: none;

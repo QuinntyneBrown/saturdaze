@@ -4,11 +4,11 @@ import { planWeekend, uploadCover } from "../fixtures/covers.js";
 import { addDaysIso } from "../fixtures/dates.js";
 import { FAMILY_PHOTO } from "../fixtures/weekend-cover.js";
 
-/** Past cards lead with the weekend's cover (L2-098). */
+/** Past cards lead with the weekend's cover (L2-110). */
 
 test.describe("Past weekends — covers", () => {
   test("a weekend with the family's photo leads with it, labelled 'Your photo'", async ({ page, pages, request, signIn }) => {
-    // Traces to: L2-098 AC1
+    // Traces to: L2-110 AC1
     const session = (await signIn(await registerThrowaway(request, "cover")))!;
     const weekend = await ensureCurrentWeekend(request, session);
     await uploadCover(request, session, weekend.id);
@@ -23,7 +23,7 @@ test.describe("Past weekends — covers", () => {
   });
 
   test("a weekend without a cover offers 'Add a photo', which opens the cover dialog", async ({ page, pages, request, signIn }) => {
-    // Traces to: L2-098 AC2
+    // Traces to: L2-110 AC2
     const session = (await signIn(await registerThrowaway(request, "nocover")))!;
     await ensureCurrentWeekend(request, session);
 
@@ -44,7 +44,7 @@ test.describe("Past weekends — covers", () => {
   });
 
   test("1, 2 and 3 columns at 390, 820 and 1440 px, with 16:9 covers", async ({ page, pages, request, signIn }, testInfo) => {
-    // Traces to: L2-098 AC4
+    // Traces to: L2-110 AC4
     const session = (await signIn(await registerThrowaway(request, "columns")))!;
     const current = await ensureCurrentWeekend(request, session);
     await planWeekend(request, session, addDaysIso(current.weekendOf, -7));

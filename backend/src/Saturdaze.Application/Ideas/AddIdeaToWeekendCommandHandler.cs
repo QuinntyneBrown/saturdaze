@@ -12,7 +12,7 @@ using Saturdaze.Domain.Enums;
 namespace Saturdaze.Application.Ideas;
 
 /// <summary>
-/// Adds an idea to a day of the family's weekend (L2-095 AC3): the displaced blocks go,
+/// Adds an idea to a day of the family's weekend (L2-107 AC3): the displaced blocks go,
 /// the idea's drive, visit and drive back come in, and the day is renumbered. The new
 /// block is unlocked; locking it stays the family's choice.
 /// </summary>

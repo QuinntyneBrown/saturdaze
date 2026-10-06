@@ -24,7 +24,7 @@ box "Backend - Saturdaze Infrastructure" #FFF4E5
 end box
 actor -> page : Add to day: Royal Botanical Gardens
 page -> dialog : Open with ideaKind, ideaId, title
-dialog --> actor : "Add Royal Botanical Gardens", Saturday, Best fit (L2-095 AC1)
+dialog --> actor : "Add Royal Botanical Gardens", Saturday, Best fit (L2-107 AC1)
 dialog -> client : previewIdea(request)
 client -> controller : POST /api/weekends/{id}/ideas/preview
 controller -> handler : PreviewIdeaPlacementQuery
@@ -34,7 +34,7 @@ alt weekend not owned
 else owned
  handler -> resolver : ResolveAsync(kind, id)
  alt not in a catalog
-  resolver --> handler : NotFound (L2-095 AC5)
+  resolver --> handler : NotFound (L2-107 AC5)
   handler --> controller : 404
  else resolved
   handler -> placer : Place(day blocks, idea, timing)
@@ -46,9 +46,9 @@ end
 controller --> client : 200 or 404
 client --> dialog : IdeaPlacementView
 alt Fits = false
- dialog --> actor : No slot message; confirm disabled (L2-095 AC4)
+ dialog --> actor : No slot message; confirm disabled (L2-107 AC4)
 else Fits
- dialog --> actor : "Saturday · 15:00 to 17:00", names replaced block (L2-095 AC2)
+ dialog --> actor : "Saturday · 15:00 to 17:00", names replaced block (L2-107 AC2)
  actor -> dialog : Add to Saturday
  dialog -> client : addIdea(request)
  client -> controller : POST /api/weekends/{id}/ideas
@@ -63,7 +63,7 @@ else Fits
   db --> handler : Committed
   handler --> controller : WeekendDto
   controller --> client : 200
-  client -> client : Replace cached WeekendView (L2-095 AC3)
+  client -> client : Replace cached WeekendView (L2-107 AC3)
   client --> dialog : Done
   dialog --> actor : Close dialog
  end

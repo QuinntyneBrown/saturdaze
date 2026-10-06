@@ -285,7 +285,7 @@ export class WeekendPlanService implements IWeekendPlanService {
   }
 
   /**
-   * Preview Idea — the placement for D27 (L2-095). Loads the current weekend
+   * Preview Idea — the placement for D27 (L2-107). Loads the current weekend
    * first when the family opened Ideas before Weekend.
    *
    * @param {IdeaRequest} request - Which idea, day and timing
@@ -320,7 +320,7 @@ export class WeekendPlanService implements IWeekendPlanService {
   }
 
   /**
-   * Set Cover — the default rule or a stop's photo (L2-096 AC2).
+   * Set Cover — the default rule or a stop's photo (L2-108 AC2).
    *
    * @param {CoverSelection} selection - The default rule or a stop
    *
@@ -380,7 +380,7 @@ export class WeekendPlanService implements IWeekendPlanService {
   }
 }
 
-/** "Saturday · 15:00 to 17:00" + what it replaces, or why it does not fit (L2-095). */
+/** "Saturday · 15:00 to 17:00" + what it replaces, or why it does not fit (L2-107). */
 function placementView(dto: IdeaPlacementDto): IdeaPlacementView {
   if (!dto.fits) {
     return {

@@ -9,7 +9,7 @@ export interface ApproveSubmissionDialogData {
   readonly card: SubmissionCard;
 }
 
-/** Confirmed with the location to publish at (L2-087 AC3). */
+/** Confirmed with the location to publish at (L2-099 AC3). */
 export interface ApproveSubmissionDialogResult {
   readonly location: ApprovalLocation;
 }

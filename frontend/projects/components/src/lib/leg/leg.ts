@@ -4,7 +4,7 @@ import { Icon } from '../icon/icon';
 
 /**
  * A travel leg between two timeline blocks — `.leg` in docs/mocks/pages/weekend.html
- * (L2-090): a dotted rail, the drive ("45 min · 52 km") and, for longer legs, a
+ * (L2-102): a dotted rail, the drive ("45 min · 52 km") and, for longer legs, a
  * "Directions" link that opens the maps provider in a new tab. The host is a list
  * item named for assistive tech ("Travel: 45 minutes, 52 kilometres to …").
  */

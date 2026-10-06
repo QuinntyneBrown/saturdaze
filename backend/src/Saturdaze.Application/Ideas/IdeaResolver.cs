@@ -15,7 +15,7 @@ public sealed record ResolvedIdea(
     GeoLocation? Geo);
 
 /// <summary>
-/// Finds an idea in the shared catalogs (L2-095 AC5). Only activities and published
+/// Finds an idea in the shared catalogs (L2-107 AC5). Only activities and published
 /// local events qualify; a pending submission is never a local event, so another
 /// family's suggestion is not found.
 /// </summary>

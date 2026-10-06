@@ -43,7 +43,7 @@ public class IngestionRun
 
     /// <summary>
     /// Why individual sub-items were dropped while their row was kept, one per line
-    /// (e.g. a photo without attribution, L2-088 AC2). Null when nothing was skipped.
+    /// (e.g. a photo without attribution, L2-100 AC2). Null when nothing was skipped.
     /// </summary>
     public string? SkipReasons { get; set; }
 

@@ -4,7 +4,7 @@ using Saturdaze.Application.Photos;
 namespace Saturdaze.Infrastructure.Photos;
 
 /// <summary>
-/// Private photo storage on the API's disk (L2-097). Files are never served directly:
+/// Private photo storage on the API's disk (L2-109). Files are never served directly:
 /// only <c>GET /api/photos/{key}</c> with a valid signature reads them. Keys are random
 /// and carry no family, weekend or file name.
 /// </summary>

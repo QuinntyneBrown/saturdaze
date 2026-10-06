@@ -1,6 +1,6 @@
 namespace Saturdaze.Domain.Entities;
 
-/// <summary>Rules over the photos of one place (L2-088).</summary>
+/// <summary>Rules over the photos of one place (L2-100).</summary>
 public static class PlacePhotoSet
 {
     /// <summary>Makes <paramref name="photoId"/> the only primary photo among <paramref name="photos"/>.</summary>

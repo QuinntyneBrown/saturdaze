@@ -1,6 +1,6 @@
 namespace Saturdaze.Application.Photos;
 
-/// <summary>Image delivery settings (L2-089), bound from <c>Saturdaze:Images</c>.</summary>
+/// <summary>Image delivery settings (L2-101), bound from <c>Saturdaze:Images</c>.</summary>
 public sealed class ImageOptions
 {
     public const string SectionName = "Saturdaze:Images";

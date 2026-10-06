@@ -56,7 +56,7 @@ public sealed class WeekendsController : ControllerBase
     public async Task<ActionResult<WeekendDto>> Repeat(Guid id, CancellationToken ct)
         => Ok(await _sender.Send(new ReuseWeekendCommand(id, Remix: false), ct));
 
-    /// <summary>Use the default cover, or one of the weekend's stops' photos (L2-096).</summary>
+    /// <summary>Use the default cover, or one of the weekend's stops' photos (L2-108).</summary>
     [HttpPut("{id:guid}/cover")]
     public async Task<ActionResult<WeekendDto>> SetCover(Guid id, [FromBody] CoverRequest body, CancellationToken ct)
     {
@@ -70,7 +70,7 @@ public sealed class WeekendsController : ControllerBase
     }
 
     /// <summary>
-    /// The family's own photo as the cover (L2-097): multipart <c>file</c>, JPEG/PNG/WebP up to
+    /// The family's own photo as the cover (L2-109): multipart <c>file</c>, JPEG/PNG/WebP up to
     /// 10 MB. Oversize uploads are refused with 413 before anything is read or stored.
     /// </summary>
     [HttpPost("{id:guid}/cover")]
@@ -101,7 +101,7 @@ public sealed class WeekendsController : ControllerBase
         title: "Photo too large",
         detail: "Photos must be 10 MB or smaller.");
 
-    /// <summary>Where an idea would land on a day, without changing the plan (L2-095).</summary>
+    /// <summary>Where an idea would land on a day, without changing the plan (L2-107).</summary>
     [HttpPost("{id:guid}/ideas/preview")]
     public async Task<ActionResult<IdeaPlacementDto>> PreviewIdea(Guid id, [FromBody] IdeaRequest body, CancellationToken ct)
     {
@@ -109,7 +109,7 @@ public sealed class WeekendsController : ControllerBase
         return Ok(await _sender.Send(new PreviewIdeaPlacementQuery(id, kind, body.IdeaId, day, timing), ct));
     }
 
-    /// <summary>Adds an idea to a day of the family's weekend (L2-095); 409 when it does not fit.</summary>
+    /// <summary>Adds an idea to a day of the family's weekend (L2-107); 409 when it does not fit.</summary>
     [HttpPost("{id:guid}/ideas")]
     public async Task<ActionResult<WeekendDto>> AddIdea(Guid id, [FromBody] IdeaRequest body, CancellationToken ct)
     {
@@ -123,12 +123,12 @@ public sealed class WeekendsController : ControllerBase
     {
         _ = await _sender.Send(new GetWeekendByIdQuery(id), ct);
         var token = WeekendControllerHelpers.EncodeToken(id);
-        // The link is the API's preview page so link previews show the cover (L2-098 AC3).
+        // The link is the API's preview page so link previews show the cover (L2-110 AC3).
         return Ok(new WeekendShareDto($"{ApiOrigin}/s/{token}", token));
     }
 
     /// <summary>
-    /// The share link (L2-098 AC3). Link-preview crawlers do not run the app, so this page
+    /// The share link (L2-110 AC3). Link-preview crawlers do not run the app, so this page
     /// carries the Open Graph tags (the cover signed for a week) and sends browsers on to
     /// <c>{Saturdaze:Share:AppOrigin}/sample-weekend?share={token}</c>.
     /// </summary>

@@ -1,6 +1,6 @@
 namespace Saturdaze.Application.Photos;
 
-/// <summary>Private object storage for family-uploaded photos (L2-097).</summary>
+/// <summary>Private object storage for family-uploaded photos (L2-109).</summary>
 public interface IPhotoStore
 {
     /// <summary>Stores the bytes under a new random key and returns the key.</summary>
@@ -14,7 +14,7 @@ public interface IPhotoStore
 
 public sealed record StoredPhoto(Stream Content, string ContentType);
 
-/// <summary>Short-lived, tamper-proof URLs for private photos (L2-097 AC5).</summary>
+/// <summary>Short-lived, tamper-proof URLs for private photos (L2-109 AC5).</summary>
 public interface IPhotoUrlSigner
 {
     /// <summary>A URL valid for <paramref name="lifetime"/> from now.</summary>
@@ -24,7 +24,7 @@ public interface IPhotoUrlSigner
     bool IsValid(string key, long expiresUnixSeconds, string signature);
 }
 
-/// <summary>A cleaned image: re-encoded, metadata stripped (L2-097 AC4).</summary>
+/// <summary>A cleaned image: re-encoded, metadata stripped (L2-109 AC4).</summary>
 public sealed record SanitizedImage(byte[] Content, int Width, int Height, string ContentType);
 
 /// <summary>Checks an upload by its content and re-encodes it without metadata.</summary>
@@ -39,7 +39,7 @@ public sealed class PhotoOptions
 {
     public const string SectionName = "Saturdaze:Photos";
 
-    /// <summary>The largest upload accepted (L2-097: 10 MB).</summary>
+    /// <summary>The largest upload accepted (L2-109: 10 MB).</summary>
     public const long MaxUploadBytes = 10 * 1024 * 1024;
 
     /// <summary>Directory of the file-system store.</summary>
@@ -51,6 +51,6 @@ public sealed class PhotoOptions
     /// <summary>How long a family's photo URL stays valid.</summary>
     public int FamilyUrlMinutes { get; set; } = 15;
 
-    /// <summary>How long a share link's photo URL stays valid (link previews need days, L2-098 AC3).</summary>
+    /// <summary>How long a share link's photo URL stays valid (link previews need days, L2-110 AC3).</summary>
     public int ShareUrlDays { get; set; } = 7;
 }

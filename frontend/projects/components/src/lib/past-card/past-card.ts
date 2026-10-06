@@ -15,7 +15,7 @@ import { Stars } from '../stars/stars';
 /**
  * A past weekend on the Past screen. Mirrors the `.card.card--media` in
  * docs/mocks/pages/past.html: the cover photo with its credit, or an
- * "Add a photo" control (L2-098), then the date eyebrow with the favourite heart,
+ * "Add a photo" control (L2-110), then the date eyebrow with the favourite heart,
  * the title as a rename button, the rating as a rate button, two-line
  * highlights, and Remix / Repeat.
  */
@@ -40,7 +40,7 @@ export class PastCard {
   readonly rating = input<number | null>(null);
   readonly favourite = input(false, { transform: booleanAttribute });
   readonly highlights = input<string>('');
-  /** The weekend's cover; `null` shows "Add a photo to {title}" (L2-098 AC2). */
+  /** The weekend's cover; `null` shows "Add a photo to {title}" (L2-110 AC2). */
   readonly cover = input<CardMedia | null>(null);
   readonly addPhoto = output<void>();
   readonly favouriteToggle = output<boolean>();

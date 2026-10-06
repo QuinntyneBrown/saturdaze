@@ -9,7 +9,7 @@ using Xunit;
 
 namespace Saturdaze.Cli.Tests;
 
-/// <summary>L2-087 AC1: the bundled seed gives every place coordinates, idempotently.</summary>
+/// <summary>L2-099 AC1: the bundled seed gives every place coordinates, idempotently.</summary>
 public class BundledSeedLocationTests
 {
     private static readonly string Bundle = Path.Combine(AppContext.BaseDirectory, "Seed", "Data");

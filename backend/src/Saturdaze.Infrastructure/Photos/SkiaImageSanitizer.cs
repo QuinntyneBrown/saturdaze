@@ -4,7 +4,7 @@ using SkiaSharp;
 namespace Saturdaze.Infrastructure.Photos;
 
 /// <summary>
-/// Accepts JPEG, PNG and WebP by their magic bytes, whatever the file name says (L2-097 AC2),
+/// Accepts JPEG, PNG and WebP by their magic bytes, whatever the file name says (L2-109 AC2),
 /// then decodes, applies the camera orientation, caps the long edge and re-encodes as JPEG.
 /// Re-encoding writes pixels only, so EXIF (GPS included), XMP and ICC metadata are gone (AC4).
 /// </summary>

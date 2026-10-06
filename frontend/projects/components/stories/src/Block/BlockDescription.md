@@ -2,4 +2,4 @@ One row of a day's timeline. `sd-block` is a `role="listitem"` host carrying `.b
 
 The kind of row is a host modifier: `commitment` (`.block--commitment`), `locked` (`.block--locked`), `drive` (`.block--drive`, compact, no actions or chevron), `errand` (`.block--errand`) and `done` (`.block--done`). The page decides which chips and actions apply, so both are projected: `sd-chip`s into `[slot=chips]` and small ghost icon buttons into `[slot=actions]`, revealed on hover from 720px. `readonly` hides the chevron for the shared view.
 
-A stop away from home (L2-091) sets `stopNumber`: the disc shows the number on the deep brand tone instead of the icon, and the row becomes programmatically focusable so its map pin can bring it into view. `active` highlights the row with its pin; `activeChange` reports pointer and focus entering or leaving it.
+A stop away from home (L2-103) sets `stopNumber`: the disc shows the number on the deep brand tone instead of the icon, and the row becomes programmatically focusable so its map pin can bring it into view. `active` highlights the row with its pin; `activeChange` reports pointer and focus entering or leaving it.

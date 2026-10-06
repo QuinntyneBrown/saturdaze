@@ -30,18 +30,18 @@ db --> handler : Rows
 loop each activity
  handler -> proj : Project(name, photos)
  alt no photo, not HTTPS, or origin not allow-listed
-  proj --> handler : null (L2-089 AC3)
+  proj --> handler : null (L2-101 AC3)
  else allowed
-  proj --> handler : PlacePhotoDto, alt defaults to "Photo of {name}" (L2-088 AC4)
+  proj --> handler : PlacePhotoDto, alt defaults to "Photo of {name}" (L2-100 AC4)
  end
 end
 handler --> controller : ActivityDto list with location and photo
 controller --> client : 200
-client -> client : Map to MediaView with srcset capped per slot (L2-089 AC4)
+client -> client : Map to MediaView with srcset capped per slot (L2-101 AC4)
 client --> page : IdeasActivitiesView
-page -> media : Render with width, height, ratio 16:9, loading lazy (L2-089 AC1, AC2)
+page -> media : Render with width, height, ratio 16:9, loading lazy (L2-101 AC1, AC2)
 alt photo null or image error
- media --> actor : Fallback tile, aria-hidden (L2-089 AC5)
+ media --> actor : Fallback tile, aria-hidden (L2-101 AC5)
 else loaded
  media --> actor : Photo with credit
 end

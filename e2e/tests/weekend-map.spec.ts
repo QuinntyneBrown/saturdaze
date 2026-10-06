@@ -4,7 +4,7 @@ import { measureHorizontalOverflow } from "../fixtures/overflow.js";
 
 /**
  * Weekend — one day at a time beside its map, numbered stops and travel legs
- * (L2-090 → L2-093). The planner's picks vary, so assertions hold for whatever
+ * (L2-102 → L2-105). The planner's picks vary, so assertions hold for whatever
  * Saturday it planned for the seeded family.
  */
 
@@ -15,7 +15,7 @@ test.describe("Weekend — map and travel legs", () => {
   });
 
   test("opens on Saturday and shows one day and its map at a time", async ({ pages }) => {
-    // Traces to: L2-093 AC5, L2-092 AC4
+    // Traces to: L2-105 AC5, L2-104 AC4
     const w = pages.weekend;
     await expect(w.dayTab("Saturday")).toHaveAttribute("aria-selected", "true");
     await expect(w.days()).toHaveCount(1);
@@ -31,7 +31,7 @@ test.describe("Weekend — map and travel legs", () => {
   });
 
   test("travel legs replace drive blocks and are named for assistive tech", async ({ pages }) => {
-    // Traces to: L2-090 AC1, AC4
+    // Traces to: L2-102 AC1, AC4
     const w = pages.weekend;
     await expect(w.driveBlocks()).toHaveCount(0);
     await expect(w.legs().first()).toBeVisible();
@@ -42,7 +42,7 @@ test.describe("Weekend — map and travel legs", () => {
   });
 
   test("only legs over ten minutes offer directions, opening a new tab", async ({ pages }) => {
-    // Traces to: L2-090 AC3, AC6
+    // Traces to: L2-102 AC3, AC6
     const w = pages.weekend;
     const minutes = await w.legMinutes();
     const legs = await w.legs().all();
@@ -58,7 +58,7 @@ test.describe("Weekend — map and travel legs", () => {
   });
 
   test("the day meta counts stops and totals the driving", async ({ pages }) => {
-    // Traces to: L2-090 AC5
+    // Traces to: L2-102 AC5
     const w = pages.weekend;
     const stops = await w.stopDiscs().count();
     const total = (await w.legMinutes()).reduce((a, b) => a + b, 0);
@@ -67,7 +67,7 @@ test.describe("Weekend — map and travel legs", () => {
   });
 
   test("stops are numbered in order and pinned on the map with home and attribution", async ({ pages }) => {
-    // Traces to: L2-091 AC1, AC3
+    // Traces to: L2-103 AC1, AC3
     const w = pages.weekend;
     const discs = await w.stopDiscs().allTextContents();
     expect(discs.length).toBeGreaterThan(0);
@@ -84,7 +84,7 @@ test.describe("Weekend — map and travel legs", () => {
   });
 
   test("pointing at or focusing a stop highlights its pin", async ({ page, pages }, testInfo) => {
-    // Traces to: L2-092 AC1, AC2
+    // Traces to: L2-104 AC1, AC2
     test.skip(isPhone(testInfo), "hover is a pointer-device affordance; focus is covered on wider screens");
     const w = pages.weekend;
     await w.stopBlock(1).hover();
@@ -97,7 +97,7 @@ test.describe("Weekend — map and travel legs", () => {
   });
 
   test("activating a pin brings its stop into view and focuses it", async ({ pages }) => {
-    // Traces to: L2-092 AC3
+    // Traces to: L2-104 AC3
     const w = pages.weekend;
     const last = await w.mapPins("Saturday").count();
     await w.mapPin("Saturday", last).click();
@@ -107,7 +107,7 @@ test.describe("Weekend — map and travel legs", () => {
   });
 
   test("the map sits beside the timeline from 1024px and above it below", async ({ pages }, testInfo) => {
-    // Traces to: L2-093 AC1, AC2
+    // Traces to: L2-105 AC1, AC2
     const w = pages.weekend;
     const wide = (testInfo.project.use.viewport?.width ?? 1440) >= 1024;
     expect(await w.plannerColumnCount()).toBe(wide ? 2 : 1);
@@ -128,7 +128,7 @@ test.describe("Weekend — map and travel legs", () => {
 
 test.describe("Weekend — responsive", () => {
   test("no horizontal overflow from 320 to 1920px", async ({ page, goto, pages }, testInfo) => {
-    // Traces to: L2-093 AC3
+    // Traces to: L2-105 AC3
     test.skip(testInfo.project.name !== "desktop", "one project walks every width");
     await goto("weekend");
     await pages.weekend.waitForPlan();
@@ -143,7 +143,7 @@ test.describe("Weekend — responsive", () => {
 
 test.describe("Weekend — a home day", () => {
   test("a day with no stops away from home says so instead of a map", async ({ page, goto, pages }) => {
-    // Traces to: L2-091 AC2
+    // Traces to: L2-103 AC2
     await stubHomeDay(page, "Saturday");
     await goto("weekend");
     await pages.weekend.waitForPlan();

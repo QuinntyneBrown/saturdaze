@@ -8,7 +8,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
  * switches on a URL fragment, which the router does not match on).
  *
  * With `mode="tabs"` the track is an ARIA tablist instead (the Weekend day
- * switch, L2-092): buttons with `aria-selected` and `aria-controls` naming each
+ * switch, L2-104): buttons with `aria-selected` and `aria-controls` naming each
  * tab's `panel`, arrow keys moving between them, and `selected` two-way bound.
  */
 

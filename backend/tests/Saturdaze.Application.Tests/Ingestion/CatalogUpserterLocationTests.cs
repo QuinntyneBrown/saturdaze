@@ -7,7 +7,7 @@ using Xunit;
 
 namespace Saturdaze.Application.Tests.Ingestion;
 
-/// <summary>L2-087: ingestion populates the location of each place it upserts.</summary>
+/// <summary>L2-099: ingestion populates the location of each place it upserts.</summary>
 public class CatalogUpserterLocationTests
 {
     private static readonly IngestionResultParser Parser = new();

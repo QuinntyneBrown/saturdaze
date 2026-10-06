@@ -126,7 +126,7 @@ export interface IWeekendPlanService {
   setErrandDone(errandId: string, done: boolean): Promise<void>;
   /**
    * Preview Idea — where the planner would put an idea on the current weekend,
-   * without changing it (`POST /api/weekends/{id}/ideas/preview`, L2-095).
+   * without changing it (`POST /api/weekends/{id}/ideas/preview`, L2-107).
    *
    * @param {IdeaRequest} request - Which idea, day and timing
    *
@@ -144,7 +144,7 @@ export interface IWeekendPlanService {
   addIdea(request: IdeaRequest): Promise<void>;
   /**
    * Set Cover — `PUT /api/weekends/{id}/cover` with the default rule or a
-   * stop's photo (L2-096); the weekend view updates in place.
+   * stop's photo (L2-108); the weekend view updates in place.
    *
    * @param {CoverSelection} selection - The default rule or a stop
    *
@@ -153,7 +153,7 @@ export interface IWeekendPlanService {
   setCover(selection: CoverSelection): Promise<void>;
   /**
    * Upload Cover — `POST /api/weekends/{id}/cover` with the family's own
-   * photo (L2-097); the weekend view updates in place. Rejects with the
+   * photo (L2-109); the weekend view updates in place. Rejects with the
    * server's `HttpErrorResponse` (400 `unsupported_image`, 413).
    *
    * @param {Blob} file - A JPEG, PNG or WebP up to 10 MB

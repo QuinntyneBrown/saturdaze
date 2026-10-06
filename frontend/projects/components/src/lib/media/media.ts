@@ -9,7 +9,7 @@ import {
 
 import { Icon } from '../icon/icon';
 
-/** A photo for a media frame (L2-088): the primary photo of a place, ready to render. */
+/** A photo for a media frame (L2-100): the primary photo of a place, ready to render. */
 export interface CardMedia {
   readonly src: string;
   readonly alt: string;
@@ -23,7 +23,7 @@ export type MediaTone = 'leaf' | 'indoor' | 'sky' | 'sun';
 export type MediaRatio = '16:9' | '4:3';
 
 /**
- * A photo frame — `.media` in docs/mocks/pages/ideas.html (L2-094, L2-089).
+ * A photo frame — `.media` in docs/mocks/pages/ideas.html (L2-106, L2-101).
  * Renders the image at a fixed aspect ratio with explicit width and height
  * (no layout shift), lazy-loaded unless `eager`, with its attribution as a
  * credit chip. With no photo, or when the image fails to load, it becomes the

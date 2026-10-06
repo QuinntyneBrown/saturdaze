@@ -2,4 +2,4 @@ A local event on Ideas · Events. `sd-event-card` is a `.card` host (the event c
 
 The tile takes an ISO `date` ("2026-05-17" → May / 17) or pre-split `mon` / `day`, which win when given. `muted` (`.card--muted`) marks the family's own suggestion while it waits for review; a muted card hides its Details button.
 
-Every event card leads with an `sd-media` photo frame (L2-094): the event's photo, or a fallback tile in `mediaTone` with a ticket.
+Every event card leads with an `sd-media` photo frame (L2-106): the event's photo, or a fallback tile in `mediaTone` with a ticket.

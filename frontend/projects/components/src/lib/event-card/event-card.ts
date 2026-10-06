@@ -36,10 +36,10 @@ export class EventCard {
   readonly day = input<string>('');
   readonly muted = input(false, { transform: booleanAttribute });
   readonly url = input<string>('');
-  /** The event's primary photo; null shows the fallback tile (L2-094). */
+  /** The event's primary photo; null shows the fallback tile (L2-106). */
   readonly media = input<CardMedia | null>(null);
   readonly mediaTone = input<MediaTone>('sky');
-  /** Offer "Add to day" — this weekend's events only (L2-095). */
+  /** Offer "Add to day" — this weekend's events only (L2-107). */
   readonly addable = input(false, { transform: booleanAttribute });
   /** "Add to day" was pressed. */
   readonly addToDay = output<void>();

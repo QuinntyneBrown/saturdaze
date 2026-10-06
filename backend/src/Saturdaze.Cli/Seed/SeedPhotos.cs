@@ -4,7 +4,7 @@ using Saturdaze.Infrastructure.Persistence;
 
 namespace Saturdaze.Cli.Seed;
 
-/// <summary>One place photo in seed JSON (L2-088). Re-seeding updates by URL, never duplicates.</summary>
+/// <summary>One place photo in seed JSON (L2-100). Re-seeding updates by URL, never duplicates.</summary>
 internal sealed record PhotoRecord(
     string Url,
     int Width,

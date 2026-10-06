@@ -11,7 +11,7 @@ public class Family
 
     public string HomeLocation { get; set; } = string.Empty;
 
-    /// <summary>Coordinates of home (L2-087); falls back to HomeLocationOptions when null.</summary>
+    /// <summary>Coordinates of home (L2-099); falls back to HomeLocationOptions when null.</summary>
     public GeoLocation? HomeCoordinates { get; set; }
     public bool BudgetEnabled { get; set; }
 

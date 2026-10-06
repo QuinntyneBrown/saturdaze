@@ -1,5 +1,5 @@
 /**
- * The drive into a block from the previous place (L2-090). Mirrors
+ * The drive into a block from the previous place (L2-102). Mirrors
  * `Saturdaze.Application.Contracts.TravelLegDto`.
  */
 export interface TravelLegDto {

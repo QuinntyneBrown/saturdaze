@@ -47,5 +47,5 @@ Thumbs.db
 # Video build cache (tools/video-audio, tools/video-build)
 .cache/
 
-# Family photo uploads stored by the API in development (L2-097)
+# Family photo uploads stored by the API in development (L2-109)
 **/App_Data/

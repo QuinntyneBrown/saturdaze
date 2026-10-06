@@ -8,7 +8,7 @@ namespace Saturdaze.Infrastructure.Photos;
 
 /// <summary>
 /// <c>/api/photos/{key}?exp={unix}&amp;sig={hmac}</c>: an HMAC-SHA256 over the key and
-/// expiry, so a URL cannot be extended or pointed at another photo (L2-097 AC5).
+/// expiry, so a URL cannot be extended or pointed at another photo (L2-109 AC5).
 /// </summary>
 public sealed class HmacPhotoUrlSigner : IPhotoUrlSigner
 {

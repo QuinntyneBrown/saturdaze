@@ -3,7 +3,7 @@ using Saturdaze.Domain.Enums;
 namespace Saturdaze.Domain.Entities;
 
 /// <summary>
-/// A licensed image of a catalog place, kept with its provenance (L2-088).
+/// A licensed image of a catalog place, kept with its provenance (L2-100).
 /// <see cref="PlaceKind"/> + <see cref="PlaceId"/> address the owning row because
 /// the three catalogs live in separate tables. A place has at most one primary photo.
 /// </summary>

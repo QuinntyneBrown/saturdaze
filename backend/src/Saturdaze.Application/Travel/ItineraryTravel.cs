@@ -13,7 +13,7 @@ public sealed record TravelLeg(int Minutes, decimal DistanceKm, string? Directio
 public sealed record DayTravel(DayOfWeekend Day, int StopCount, int DrivingMinutes, decimal DrivingKm);
 
 /// <summary>
-/// Walks each day in order and derives the journey (L2-090, L2-091). A block with a
+/// Walks each day in order and derives the journey (L2-102, L2-103). A block with a
 /// <see cref="ItineraryBlock.Stop"/> is a numbered stop; downtime and home meals are at home;
 /// anything else (commitments, errands, unplaced blocks) has no known place and leaves the
 /// journey where it was. A leg is emitted where the place changes; its minutes are the drive

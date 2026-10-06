@@ -81,7 +81,7 @@ export class IdeasPage extends BasePage {
     return card.getByRole("link", { name: "Details", exact: true });
   }
 
-  /* ---------- Photos (L2-094, L2-089) ---------- */
+  /* ---------- Photos (L2-106, L2-101) ---------- */
 
   /** Cards that lead with a photo frame (photo or fallback tile). */
   mediaCards(section?: Locator): Locator {
@@ -123,7 +123,7 @@ export class IdeasPage extends BasePage {
       .evaluate((el) => getComputedStyle(el).gridTemplateColumns.split(" ").filter(Boolean).length);
   }
 
-    /* ---------- Add to day (L2-095) ---------- */
+    /* ---------- Add to day (L2-107) ---------- */
 
   /** The card's "Add to day" action (its accessible name starts with the visible label). */
   addToDayButton(card: Locator): Locator {

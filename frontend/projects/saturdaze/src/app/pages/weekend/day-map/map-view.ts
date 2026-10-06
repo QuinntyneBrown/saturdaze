@@ -2,7 +2,7 @@ import { MapPin, MapPoint } from 'api';
 
 /**
  * Fits a day's stops (and home) onto a fixed 4:3 frame of OpenStreetMap tiles
- * (L2-091). Pure Web Mercator maths; positions come back as percentages of the
+ * (L2-103). Pure Web Mercator maths; positions come back as percentages of the
  * frame so the map scales with its container.
  */
 
@@ -13,7 +13,7 @@ const PADDING = 56;
 const MAX_ZOOM = 15;
 const MIN_ZOOM = 3;
 
-/** OpenStreetMap's standard tiles; the attribution must stay visible (L2-091 AC3). */
+/** OpenStreetMap's standard tiles; the attribution must stay visible (L2-103 AC3). */
 export const TILE_URL = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
 
 export interface PositionedTile {
