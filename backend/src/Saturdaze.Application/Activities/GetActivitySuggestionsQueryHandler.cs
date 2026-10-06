@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Saturdaze.Application.Abstractions;
 using Saturdaze.Application.Common;
 using Saturdaze.Application.Contracts;
+using Saturdaze.Application.Photos;
 using Saturdaze.Domain.Enums;
 
 namespace Saturdaze.Application.Activities;
@@ -15,11 +16,14 @@ public sealed class GetActivitySuggestionsQueryHandler
 
     private readonly IAppDbContext _db;
     private readonly ICurrentFamilyAccessor _current;
+    private readonly IPlacePhotoReader? _photos;
 
-    public GetActivitySuggestionsQueryHandler(IAppDbContext db, ICurrentFamilyAccessor current)
+    public GetActivitySuggestionsQueryHandler(
+        IAppDbContext db, ICurrentFamilyAccessor current, IPlacePhotoReader? photos = null)
     {
         _db = db;
         _current = current;
+        _photos = photos;
     }
 
     public async Task<IReadOnlyList<ActivityDto>> Handle(
@@ -63,14 +67,22 @@ public sealed class GetActivitySuggestionsQueryHandler
             activities = activities.Where(a => !recentSet.Contains(a.Id)).ToList();
         }
 
-        return activities
+        var page = activities
             .OrderBy(a => a.DriveMinutes)
             .ThenBy(a => a.Name)
             .Take(request.Take)
+            .ToList();
+        var photos = _photos is null
+            ? new Dictionary<Guid, PlacePhotoDto>()
+            : await _photos.PrimaryPhotosAsync(
+                PlaceKind.Activity, page.Select(a => (a.Id, a.Name)).ToList(), cancellationToken);
+
+        return page
             .Select(a => new ActivityDto(
                 a.Id, a.Name, a.Category, a.Indoor, a.MinAge, a.MaxAge, a.DriveMinutes,
                 a.WeatherTags.ToList(), a.TypicalDurationMinutes, a.Description, a.MapUrl,
-                LocationDto.From(a.Geo)))
+                LocationDto.From(a.Geo),
+                photos.GetValueOrDefault(a.Id)))
             .ToList();
     }
 }

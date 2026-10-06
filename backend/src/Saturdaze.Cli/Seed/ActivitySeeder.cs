@@ -1,6 +1,7 @@
 using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using Saturdaze.Domain.Entities;
+using Saturdaze.Domain.Enums;
 using Saturdaze.Domain.ValueObjects;
 using Saturdaze.Infrastructure.Persistence;
 
@@ -40,6 +41,7 @@ public sealed class ActivitySeeder : IJsonSeeder
             entity.Description = seed.Description ?? string.Empty;
             entity.MapUrl = seed.MapUrl ?? string.Empty;
             entity.Geo = GeoLocation.Merge(entity.Geo, GeoLocation.From(seed.Latitude, seed.Longitude, seed.Address));
+            SeedPhotos.Apply(db, PlaceKind.Activity, entity.Id, seed.Photos);
             written++;
         }
 
@@ -59,5 +61,6 @@ public sealed class ActivitySeeder : IJsonSeeder
         string? MapUrl,
         decimal? Latitude = null,
         decimal? Longitude = null,
-        string? Address = null);
+        string? Address = null,
+        List<PhotoRecord>? Photos = null);
 }

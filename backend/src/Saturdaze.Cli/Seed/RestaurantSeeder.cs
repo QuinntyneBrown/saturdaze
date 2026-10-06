@@ -43,6 +43,7 @@ public sealed class RestaurantSeeder : IJsonSeeder
             entity.Notes = seed.Notes ?? string.Empty;
             entity.DriveMinutes = seed.DriveMinutes;
             entity.Geo = GeoLocation.Merge(entity.Geo, GeoLocation.From(seed.Latitude, seed.Longitude, seed.Address));
+            SeedPhotos.Apply(db, PlaceKind.Restaurant, entity.Id, seed.Photos);
             written++;
         }
 
@@ -60,5 +61,6 @@ public sealed class RestaurantSeeder : IJsonSeeder
         string? Notes,
         decimal? Latitude = null,
         decimal? Longitude = null,
-        string? Address = null);
+        string? Address = null,
+        List<PhotoRecord>? Photos = null);
 }

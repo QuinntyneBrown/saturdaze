@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Saturdaze.Application.Abstractions;
 using Saturdaze.Application.Common;
 using Saturdaze.Application.Contracts;
+using Saturdaze.Application.Photos;
 using Saturdaze.Domain.Enums;
 
 namespace Saturdaze.Application.Restaurants;
@@ -12,11 +13,14 @@ public sealed class GetRestaurantPicksQueryHandler
 {
     private readonly IAppDbContext _db;
     private readonly ICurrentFamilyAccessor _current;
+    private readonly IPlacePhotoReader? _photos;
 
-    public GetRestaurantPicksQueryHandler(IAppDbContext db, ICurrentFamilyAccessor current)
+    public GetRestaurantPicksQueryHandler(
+        IAppDbContext db, ICurrentFamilyAccessor current, IPlacePhotoReader? photos = null)
     {
         _db = db;
         _current = current;
+        _photos = photos;
     }
 
     public async Task<IReadOnlyList<RestaurantDto>> Handle(
@@ -54,8 +58,13 @@ public sealed class GetRestaurantPicksQueryHandler
             ? restaurants.OrderBy(r => Math.Abs(r.DriveMinutes - drive)).ThenBy(r => r.Name)
             : restaurants.OrderBy(r => r.DriveMinutes).ThenBy(r => r.Name);
 
-        return ordered
-            .Take(request.Take)
+        var page = ordered.Take(request.Take).ToList();
+        var photos = _photos is null
+            ? new Dictionary<Guid, PlacePhotoDto>()
+            : await _photos.PrimaryPhotosAsync(
+                PlaceKind.Restaurant, page.Select(r => (r.Id, r.Name)).ToList(), cancellationToken);
+
+        return page
             .Select(r => RestaurantProjection.ToDto(
                 r,
                 votes
@@ -63,7 +72,8 @@ public sealed class GetRestaurantPicksQueryHandler
                     .OrderBy(v => v.VoterName)
                     .Select(v => new RestaurantVoteDto(v.VoterName, v.Vote))
                     .ToList(),
-                lockedIds.Contains(r.Id)))
+                lockedIds.Contains(r.Id),
+                photos.GetValueOrDefault(r.Id)))
             .ToList();
     }
 }

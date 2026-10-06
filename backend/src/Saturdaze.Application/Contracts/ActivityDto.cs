@@ -12,4 +12,5 @@ public sealed record ActivityDto(
     int TypicalDurationMinutes,
     string Description,
     string MapUrl,
-    LocationDto? Location);
+    LocationDto? Location,
+    PlacePhotoDto? Photo = null);

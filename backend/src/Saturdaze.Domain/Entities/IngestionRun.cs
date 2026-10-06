@@ -41,6 +41,12 @@ public class IngestionRun
     /// <summary>How many <c>web_search</c> tool calls the model issued.</summary>
     public int WebSearchCount { get; set; }
 
+    /// <summary>
+    /// Why individual sub-items were dropped while their row was kept, one per line
+    /// (e.g. a photo without attribution, L2-088 AC2). Null when nothing was skipped.
+    /// </summary>
+    public string? SkipReasons { get; set; }
+
     /// <summary>First exception message when <see cref="Status"/> is <see cref="IngestionStatus.Failed"/>.</summary>
     public string? ErrorMessage { get; set; }
 }

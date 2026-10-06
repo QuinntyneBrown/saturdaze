@@ -8,7 +8,8 @@ internal static class RestaurantProjection
     public static RestaurantDto ToDto(
         Restaurant restaurant,
         IReadOnlyList<RestaurantVoteDto> votes,
-        bool locked)
+        bool locked,
+        PlacePhotoDto? photo = null)
     {
         return new RestaurantDto(
             restaurant.Id,
@@ -21,6 +22,7 @@ internal static class RestaurantProjection
             $"https://www.google.com/search?q={Uri.EscapeDataString($"{restaurant.Name} menu")}",
             votes,
             locked,
-            LocationDto.From(restaurant.Geo));
+            LocationDto.From(restaurant.Geo),
+            photo);
     }
 }

@@ -9,4 +9,5 @@ public sealed record LocalEventDto(
     int DriveMinutes,
     string Url,
     string Category,
-    LocationDto? Location);
+    LocationDto? Location,
+    PlacePhotoDto? Photo = null);

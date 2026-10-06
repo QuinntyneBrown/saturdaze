@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Saturdaze.Application.Auth;
 using Saturdaze.Application.Behaviors;
 using Saturdaze.Application.Common;
+using Saturdaze.Application.Photos;
 using Saturdaze.Application.Planning;
 using Saturdaze.Application.Weather;
 
@@ -23,6 +24,7 @@ public static class DependencyInjection
         services.AddScoped<RefreshTokenIssuer>();
         services.AddScoped<WeekendForecastService>();
         services.AddScoped<PlannerInputLoader>();
+        services.AddScoped<IPlacePhotoReader, PlacePhotoReader>();
         services.AddOptions<TimeOptions>();
         services.AddSingleton<IDateTimeProvider, SystemDateTimeProvider>();
         services.AddSingleton<IWeekendPlanner, WeekendPlanner>();

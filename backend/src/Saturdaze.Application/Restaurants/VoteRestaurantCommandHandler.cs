@@ -4,7 +4,9 @@ using Saturdaze.Application.Abstractions;
 using Saturdaze.Application.Common;
 using Saturdaze.Application.Contracts;
 using Saturdaze.Application.Exceptions;
+using Saturdaze.Application.Photos;
 using Saturdaze.Domain.Entities;
+using Saturdaze.Domain.Enums;
 
 namespace Saturdaze.Application.Restaurants;
 
@@ -20,12 +22,15 @@ public sealed class VoteRestaurantCommandHandler : IRequestHandler<VoteRestauran
     private readonly IAppDbContext _db;
     private readonly ICurrentFamilyAccessor _current;
     private readonly IDateTimeProvider _clock;
+    private readonly IPlacePhotoReader? _photos;
 
-    public VoteRestaurantCommandHandler(IAppDbContext db, ICurrentFamilyAccessor current, IDateTimeProvider clock)
+    public VoteRestaurantCommandHandler(
+        IAppDbContext db, ICurrentFamilyAccessor current, IDateTimeProvider clock, IPlacePhotoReader? photos = null)
     {
         _db = db;
         _current = current;
         _clock = clock;
+        _photos = photos;
     }
 
     public async Task<RestaurantDto> Handle(VoteRestaurantCommand request, CancellationToken cancellationToken)
@@ -74,6 +79,11 @@ public sealed class VoteRestaurantCommandHandler : IRequestHandler<VoteRestauran
         var locked = await _db.RestaurantLocks.AsNoTracking()
             .AnyAsync(l => l.FamilyId == familyId && l.RestaurantId == restaurant.Id, cancellationToken);
 
-        return RestaurantProjection.ToDto(restaurant, votes, locked);
+        var photo = _photos is null
+            ? null
+            : (await _photos.PrimaryPhotosAsync(
+                PlaceKind.Restaurant, new[] { (restaurant.Id, restaurant.Name) }, cancellationToken))
+                .GetValueOrDefault(restaurant.Id);
+        return RestaurantProjection.ToDto(restaurant, votes, locked, photo);
     }
 }

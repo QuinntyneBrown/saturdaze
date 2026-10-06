@@ -2,6 +2,8 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Saturdaze.Application.Abstractions;
 using Saturdaze.Application.Contracts;
+using Saturdaze.Application.Photos;
+using Saturdaze.Domain.Enums;
 
 namespace Saturdaze.Application.Events;
 
@@ -12,8 +14,13 @@ public sealed class GetLocalEventsQueryHandler
     public const int ComingSoonDays = 14;
 
     private readonly IAppDbContext _db;
+    private readonly IPlacePhotoReader? _photos;
 
-    public GetLocalEventsQueryHandler(IAppDbContext db) => _db = db;
+    public GetLocalEventsQueryHandler(IAppDbContext db, IPlacePhotoReader? photos = null)
+    {
+        _db = db;
+        _photos = photos;
+    }
 
     public async Task<IReadOnlyList<LocalEventDto>> Handle(
         GetLocalEventsQuery request,
@@ -30,10 +37,16 @@ public sealed class GetLocalEventsQueryHandler
             .OrderBy(e => e.StartsOn).ThenBy(e => e.DriveMinutes).ThenBy(e => e.Name)
             .ToListAsync(cancellationToken);
 
+        var photos = _photos is null
+            ? new Dictionary<Guid, PlacePhotoDto>()
+            : await _photos.PrimaryPhotosAsync(
+                PlaceKind.LocalEvent, rows.Select(e => (e.Id, e.Name)).ToList(), cancellationToken);
+
         return rows
             .Select(e => new LocalEventDto(
                 e.Id, e.Name, e.StartsOn, e.EndsOn, e.Location, e.DriveMinutes, e.Url, e.Category,
-                LocationDto.From(e.Geo)))
+                LocationDto.From(e.Geo),
+                photos.GetValueOrDefault(e.Id)))
             .ToList();
     }
 }

@@ -44,6 +44,7 @@ public sealed class SaturdazeApiFactory : WebApplicationFactory<Program>, IAsync
                 ["Saturdaze:Jwt:Audience"] = "saturdaze-test-clients",
                 ["Saturdaze:Jwt:SigningKey"] = "test-only-signing-key-must-be-at-least-32-bytes-long",
                 ["Saturdaze:Jwt:AccessTokenMinutes"] = "15",
+                ["Saturdaze:Images:AllowedOrigins:0"] = "https://images.example.com",
             });
         });
         builder.ConfigureTestServices(services =>

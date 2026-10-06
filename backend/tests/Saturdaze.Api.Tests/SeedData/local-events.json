@@ -13,6 +13,7 @@
   },
   {
     "name": "Mississauga Waterfront Festival",
+    "photos": [{"url": "https://images.example.com/waterfront.jpg", "width": 1200, "height": 675, "alt": "Stage by the water", "attribution": "Photo · Jo Doe", "source": "Curated", "license": "CC BY 4.0", "primary": true}],
     "latitude": 43.553,
     "longitude": -79.583,
     "address": "32 Park St E, Mississauga, ON",

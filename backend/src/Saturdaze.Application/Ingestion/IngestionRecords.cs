@@ -23,6 +23,9 @@ public sealed record UpsertResult(int Inserted, int Updated, int Rejected)
 {
     public int Upserted => Inserted + Updated;
 
+    /// <summary>Sub-items dropped from rows that were kept, e.g. an unattributed photo (L2-088 AC2).</summary>
+    public IReadOnlyList<string> SkipReasons { get; init; } = Array.Empty<string>();
+
     public static readonly UpsertResult Empty = new(0, 0, 0);
 }
 
