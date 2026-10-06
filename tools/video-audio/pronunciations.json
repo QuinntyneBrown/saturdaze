@@ -264,5 +264,12 @@
   "401": "four oh one",
   "404": "four oh four",
   "2023-06-01": "twenty twenty-three, oh six, oh one",
-  "saturdaze": "Saturdays"
+  "saturdaze": "Saturdays",
+  "Vitest": "Vee test",
+  "vi": "V I",
+  "fn": "F N",
+  "jsdom": "J S dom",
+  "tsconfig": "T S config",
+  "toHaveBeenNthCalledWith": "to have been enth called with",
+  "nth": "enth"
 }
