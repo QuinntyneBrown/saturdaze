@@ -17,7 +17,7 @@ styles/tokens.css     VERBATIM copy of design-system/assets/tokens.css + provena
 styles/app.css        everything else, in @layer order (reset → base → shell → layout →
                       components → pages → utilities)
 pages/_shell.html     the canonical skeleton every page copies (not a screen)
-pages/*.html          18 screens (list below)
+pages/*.html          25 screens (list below)
 images/*.svg          illustrated photo placeholders (see Images)
 .check.mjs            static consistency check, no dependencies
 .verify.mjs           Playwright: 5 widths, overflow walker, shell checks, screenshots
@@ -34,7 +34,8 @@ screenshots/          committed <slug>.<viewport>.png captures (390 / 820 / 1440
 | Review submissions (admin) | `review-submissions.html`, `review-submissions.empty.html` |
 | Auth | `sign-in.html` (2 states), `create-account.html`, `reset-password.html` (5 states), `verify-email.html` (3 states) |
 | Public | `landing.html`, `legal.html` (Terms + Privacy) |
-| Dialogs gallery | `dialogs.html` (D1–D29 rendered inline) |
+| Admin (Saturdaze Admin, ADR-014; bare shell with its own side navigation from 1024px) | `admin.sign-in.html` (2 states), `admin.html` (Photo health), `admin.places.html`, `admin.place.html`, `admin.reviews.html`, `admin.ingestion-skips.html`, `admin.activity.html` |
+| Dialogs gallery | `dialogs.html` (D1–D29 and admin AD1–AD6 rendered inline) |
 
 ## Photos and maps (Wanderlog layout study)
 

@@ -74,6 +74,15 @@ export const PAGES = [
   { url: "/pages/landing.html", shell: "bare", expects: { selector: ".hero__title", text: "Already planned" }, cols: { ".hero__grid": { 390: 1, 820: 1, 1440: 2 }, ".steps": { 390: 1, 820: 3, 1440: 3 } } },
   { url: "/pages/legal.html",   shell: "bare", expects: { selector: ".prose__title", text: "Terms of Service" } },
 
+  // Admin (bare shell: its own side navigation from 1024px, a bar below; ADR-014)
+  { url: "/pages/admin.sign-in.html",        shell: "bare", expects: { selector: "#state-gate .auth-card__title", text: "can't use Saturdaze Admin" } },
+  { url: "/pages/admin.html",                shell: "bare", expects: { selector: ".page-header__title", text: "Photo health" }, cols: { ".stat-grid": { 390: 1, 820: 1, 1440: 3 } } },
+  { url: "/pages/admin.places.html",         shell: "bare", expects: { selector: ".place-list .list__title", text: "Riverwood" } },
+  { url: "/pages/admin.place.html",          shell: "bare", expects: { selector: ".page-header__title", text: "Port Credit Memorial Park" }, cols: { ".photo-grid": { 390: 1, 820: 2, 1440: 3 } } },
+  { url: "/pages/admin.reviews.html",        shell: "bare", expects: { selector: ".review-item .card__title", text: "Harbour Grill" } },
+  { url: "/pages/admin.ingestion-skips.html", shell: "bare", expects: { selector: ".skip__reason", text: "previously rejected" } },
+  { url: "/pages/admin.activity.html",       shell: "bare", expects: { selector: ".audit-row__change", text: "memorial-park.jpg" } },
+
   // Dialogs gallery
   { url: "/pages/dialogs.html", nav: null, expects: { selector: "#dialog-block .dialog__title", text: "Terre Bleu Lavender Farm" } },
 ];

@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+<!-- @shell:head -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sign in — Saturdaze Admin</title>
+<link rel="stylesheet" href="../styles/tokens.css">
+<link rel="stylesheet" href="../styles/app.css">
+<!-- @/shell:head -->
+</head>
+<body data-page="admin" data-shell="bare" data-screen="sign-in">
+<main class="auth auth--stack" id="main">
+  <div class="auth__col">
+    <a class="auth__brand" href="./admin.html"><span class="brand-mark" aria-hidden="true"></span>Saturdaze Admin</a>
+
+    <section class="specimen" id="state-default" aria-labelledby="asi-title">
+      <span class="specimen__label">Default</span>
+      <div class="auth-card">
+        <div class="auth-card__head">
+          <h1 class="auth-card__title" id="asi-title">Sign in to Saturdaze Admin</h1>
+          <p class="auth-card__sub">Same account as the family app. Only administrators get past this screen.</p>
+        </div>
+        <form class="auth-card__form" action="./admin.html">
+          <div class="field">
+            <label class="field__label" for="asi-email">Email</label>
+            <input class="field__input" id="asi-email" type="email" autocomplete="email" value="admin@saturdaze.app">
+          </div>
+          <div class="field">
+            <label class="field__label" for="asi-pass">Password</label>
+            <input class="field__input" id="asi-pass" type="password" autocomplete="current-password" value="password123">
+          </div>
+          <div class="auth-card__row">
+            <label class="toggle"><input class="toggle__input" type="checkbox" role="switch" checked><span class="toggle__track"></span><span class="toggle__label">Remember me</span></label>
+            <a class="link" href="./reset-password.html">Forgot password?</a>
+          </div>
+          <button class="btn btn--primary btn--lg btn--block" type="submit">Sign in</button>
+        </form>
+      </div>
+    </section>
+
+    <section class="specimen" id="state-gate" aria-labelledby="asi-gate-title">
+      <span class="specimen__label">Signed in, not an administrator</span>
+      <div class="auth-card admin-gate">
+        <span class="disc disc--xl disc--warn auth-card__disc" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg></span>
+        <div class="auth-card__head auth-card__head--center">
+          <h2 class="auth-card__title" id="asi-gate-title">This account can't use Saturdaze Admin</h2>
+          <p class="auth-card__sub">You are signed in as <span class="email-chip">quinntynebrown@gmail.com</span>, which is not an administrator account. Nothing from the catalog was loaded.</p>
+        </div>
+        <button class="btn btn--danger btn--lg btn--block" type="button"><svg class="icon" aria-hidden="true"><use href="#i-sign_out"/></svg>Sign out</button>
+        <p class="auth-card__alt">Looking for your weekend? <a class="link" href="./weekend.html">Open Saturdaze</a></p>
+      </div>
+    </section>
+
+    <p class="auth__foot"><a class="link--soft" href="./legal.html">Terms</a><span aria-hidden="true">·</span><a class="link--soft" href="./legal.html#privacy">Privacy</a><span aria-hidden="true">·</span><a class="link--soft" href="./landing.html">Back to Saturdaze</a></p>
+  </div>
+</main>
+<script src="../app.js"></script>
+</body>
+</html>

@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+<!-- @shell:head -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Port Credit Memorial Park — Saturdaze Admin</title>
+<link rel="stylesheet" href="../styles/tokens.css">
+<link rel="stylesheet" href="../styles/app.css">
+<!-- @/shell:head -->
+</head>
+<body data-page="admin" data-shell="bare" data-screen="place">
+<div class="admin">
+  <nav class="admin-nav" aria-label="Admin">
+    <a class="admin-nav__brand" href="./admin.html"><span class="brand-mark" aria-hidden="true"></span><span class="admin-nav__brand-text">Saturdaze</span><span class="admin-nav__tag">Admin</span></a>
+    <div class="admin-nav__links">
+      <a class="admin-nav__link" data-nav="health" href="./admin.html"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg>Photo health</a>
+      <a class="admin-nav__link" data-nav="places" href="./admin.places.html" aria-current="page"><svg class="icon" aria-hidden="true"><use href="#i-map"/></svg>Places</a>
+      <a class="admin-nav__link" data-nav="reviews" href="./admin.reviews.html"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Review queue</a>
+      <a class="admin-nav__link" data-nav="skips" href="./admin.ingestion-skips.html"><svg class="icon" aria-hidden="true"><use href="#i-refresh"/></svg>Ingestion skips</a>
+      <a class="admin-nav__link" data-nav="activity" href="./admin.activity.html"><svg class="icon" aria-hidden="true"><use href="#i-calendar"/></svg>Activity log</a>
+    </div>
+    <div class="admin-nav__account">
+      <span class="avatar avatar--sm avatar--q" aria-hidden="true">A</span>
+      <span class="admin-nav__email">admin@saturdaze.app</span>
+      <a class="btn btn--ghost btn--sm" href="./admin.sign-in.html"><svg class="icon" aria-hidden="true"><use href="#i-sign_out"/></svg>Sign out</a>
+    </div>
+  </nav>
+  <main class="admin-main container" id="main">
+  <header class="page-header">
+    <div class="page-header__text">
+      <a class="page-header__eyebrow" href="./admin.places.html"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-arrow_left"/></svg>Places</a>
+      <h1 class="page-header__title">Port Credit Memorial Park</h1>
+      <p class="page-header__subtitle">Activity · 4 photos · 5 weekend covers follow this place</p>
+    </div>
+    <div class="page-header__actions">
+      <a class="btn btn--primary" href="./dialogs.html#dialog-admin-upload"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg>Upload photo</a>
+      <a class="btn btn--quiet" href="./dialogs.html#dialog-admin-url"><svg class="icon" aria-hidden="true"><use href="#i-pin"/></svg>Add from URL</a>
+    </div>
+  </header>
+  <section class="section">
+    <div class="section-header"><div class="section-header__text"><h2 class="section-header__title">How families see it</h2><p class="section-header__sub">The primary photo in every slot the family app uses.</p></div></div>
+    <div class="preview-grid">
+      <figure class="preview">
+        <figcaption class="preview__label">Idea card · 16:9 at 390 and 1440 px</figcaption>
+        <div class="card card--media preview__card">
+          <div class="media card__media"><img class="media__img" src="../images/lavender-farm.svg" alt="Lawn running down to the lake" width="800" height="500"><span class="media__credit">Photo · Jo Doe</span></div>
+          <div class="card__head"><div class="card__head-text"><h3 class="card__title">Port Credit Memorial Park</h3><p class="card__meta">Port Credit</p></div></div>
+          <div class="card__chips"><span class="chip chip--sky"><svg class="icon" aria-hidden="true"><use href="#i-car"/></svg>5 min</span><span class="chip">All ages</span></div>
+        </div>
+      </figure>
+      <figure class="preview">
+        <figcaption class="preview__label">Thumbnail · 4:3</figcaption>
+        <div class="preview__thumbs">
+          <img class="block__thumb" src="../images/lavender-farm.svg" alt="Lawn running down to the lake" width="72" height="54">
+          <div class="media media--4x3 preview__pick"><img class="media__img" src="../images/lavender-farm.svg" alt="" width="800" height="600"><span class="photo-pick__name">Port Credit Memorial Park</span></div>
+        </div>
+      </figure>
+      <figure class="preview preview--wide">
+        <figcaption class="preview__label">Weekend cover · with scrim and title</figcaption>
+        <div class="cover preview__cover">
+          <img class="cover__img" src="../images/lavender-farm.svg" alt="Lawn running down to the lake" width="1200" height="675">
+          <span class="media__credit">Photo · Jo Doe</span>
+          <div class="cover__body"><p class="cover__eyebrow">Sat 16 to Sun 17 May</p><h3 class="cover__title">This weekend</h3><p class="cover__sub">From Port Credit Memorial Park</p></div>
+        </div>
+      </figure>
+    </div>
+  </section>
+  <section class="section">
+    <div class="section-header"><div class="section-header__text"><h2 class="section-header__title">Photos</h2><p class="section-header__sub">One primary. Curated beats provider; a provider photo stays unreviewed until you keep, promote or reject it.</p></div></div>
+    <div class="photo-grid">
+      <article class="card photo-tile">
+        <div class="media media--4x3 photo-tile__media"><img class="media__img" src="../images/lavender-farm.svg" alt="Lawn running down to the lake" width="800" height="600" loading="lazy"></div>
+        <div class="photo-tile__badges"><span class="chip chip--primary"><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg>Primary</span><span class="chip chip--accent">Curated</span><span class="chip chip--accent"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Reviewed</span></div>
+        <dl class="details photo-tile__meta">
+          <dt class="details__label">Alt text</dt><dd class="details__value">Lawn running down to the lake</dd>
+          <dt class="details__label">Credit</dt><dd class="details__value">Photo · Jo Doe</dd>
+          <dt class="details__label">Licence</dt><dd class="details__value">CC BY 4.0</dd>
+          <dt class="details__label">Size</dt><dd class="details__value">1200 × 675</dd>
+        </dl>
+        <div class="photo-tile__actions"><a class="btn btn--quiet btn--sm" href="./dialogs.html#dialog-admin-edit"><svg class="icon" aria-hidden="true"><use href="#i-edit"/></svg>Edit</a><a class="btn btn--ghost btn--sm" href="./dialogs.html#dialog-admin-remove"><svg class="icon" aria-hidden="true"><use href="#i-trash"/></svg>Remove</a></div>
+      </article>
+      <article class="card photo-tile">
+        <div class="media media--4x3 photo-tile__media"><img class="media__img" src="../images/bronte-creek.svg" alt="The bandshell" width="800" height="600" loading="lazy"></div>
+        <div class="photo-tile__badges"><span class="chip chip--accent">Curated</span><span class="chip chip--accent"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Reviewed</span></div>
+        <dl class="details photo-tile__meta">
+          <dt class="details__label">Alt text</dt><dd class="details__value">The bandshell</dd>
+          <dt class="details__label">Credit</dt><dd class="details__value">Photo · Jo Doe</dd>
+          <dt class="details__label">Licence</dt><dd class="details__value">CC BY 4.0</dd>
+          <dt class="details__label">Size</dt><dd class="details__value">1200 × 675</dd>
+        </dl>
+        <div class="photo-tile__actions"><a class="btn btn--primary btn--sm" href="./dialogs.html#dialog-admin-primary"><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg>Make primary</a><a class="btn btn--quiet btn--sm" href="./dialogs.html#dialog-admin-edit"><svg class="icon" aria-hidden="true"><use href="#i-edit"/></svg>Edit</a><a class="btn btn--ghost btn--sm" href="./dialogs.html#dialog-admin-remove"><svg class="icon" aria-hidden="true"><use href="#i-trash"/></svg>Remove</a></div>
+      </article>
+      <article class="card photo-tile">
+        <div class="media media--4x3 photo-tile__media"><img class="media__img" src="../images/riverwood.svg" alt="Photo without alt text" width="800" height="600" loading="lazy"></div>
+        <div class="photo-tile__badges"><span class="chip chip--sky">Provider</span><span class="chip chip--sun">Unreviewed</span><span class="chip chip--indoor">Missing alt text</span></div>
+        <dl class="details photo-tile__meta">
+          <dt class="details__label">Alt text</dt><dd class="details__value details__value--faint">Not given</dd>
+          <dt class="details__label">Credit</dt><dd class="details__value">Photo · Port Credit BIA</dd>
+          <dt class="details__label">Licence</dt><dd class="details__value">Provider terms</dd>
+          <dt class="details__label">Size</dt><dd class="details__value">1600 × 1200</dd>
+        </dl>
+        <div class="photo-tile__actions"><a class="btn btn--quiet btn--sm" href="./dialogs.html#dialog-admin-edit"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Keep</a><a class="btn btn--primary btn--sm" href="./dialogs.html#dialog-admin-primary"><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg>Make primary</a><a class="btn btn--ghost btn--sm" href="./dialogs.html#dialog-admin-reject"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg>Reject</a></div>
+      </article>
+      <article class="card photo-tile">
+        <div class="media media--4x3 media--fallback media--indoor photo-tile__media" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg>Blocked URL</div>
+        <div class="photo-tile__badges"><span class="chip chip--warn"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg>Blocked URL</span><span class="chip chip--accent">Curated</span></div>
+        <dl class="details photo-tile__meta">
+          <dt class="details__label">Alt text</dt><dd class="details__value">Bowling lanes</dd>
+          <dt class="details__label">Credit</dt><dd class="details__value">Photo · Jo Doe</dd>
+          <dt class="details__label">Licence</dt><dd class="details__value">CC BY 4.0</dd>
+          <dt class="details__label">Size</dt><dd class="details__value">1200 × 675</dd>
+        </dl>
+        <div class="photo-tile__actions"><a class="btn btn--quiet btn--sm" href="./dialogs.html#dialog-admin-edit"><svg class="icon" aria-hidden="true"><use href="#i-edit"/></svg>Edit</a><a class="btn btn--ghost btn--sm" href="./dialogs.html#dialog-admin-remove"><svg class="icon" aria-hidden="true"><use href="#i-trash"/></svg>Remove</a></div>
+      </article>
+    </div>
+  </section>
+  </main>
+</div>
+<script src="../app.js"></script>
+</body>
+</html>

@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+<!-- @shell:head -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Photo health — Saturdaze Admin</title>
+<link rel="stylesheet" href="../styles/tokens.css">
+<link rel="stylesheet" href="../styles/app.css">
+<!-- @/shell:head -->
+</head>
+<body data-page="admin" data-shell="bare" data-screen="health">
+<div class="admin">
+  <nav class="admin-nav" aria-label="Admin">
+    <a class="admin-nav__brand" href="./admin.html"><span class="brand-mark" aria-hidden="true"></span>Saturdaze<span class="admin-nav__tag">Admin</span></a>
+    <div class="admin-nav__links">
+      <a class="admin-nav__link" data-nav="health" href="./admin.html" aria-current="page"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg>Photo health</a>
+      <a class="admin-nav__link" data-nav="places" href="./admin.places.html"><svg class="icon" aria-hidden="true"><use href="#i-map"/></svg>Places</a>
+      <a class="admin-nav__link" data-nav="reviews" href="./admin.reviews.html"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Review queue</a>
+      <a class="admin-nav__link" data-nav="skips" href="./admin.ingestion-skips.html"><svg class="icon" aria-hidden="true"><use href="#i-refresh"/></svg>Ingestion skips</a>
+      <a class="admin-nav__link" data-nav="activity" href="./admin.activity.html"><svg class="icon" aria-hidden="true"><use href="#i-calendar"/></svg>Activity log</a>
+    </div>
+    <div class="admin-nav__account">
+      <span class="avatar avatar--sm avatar--q" aria-hidden="true">A</span>
+      <span class="admin-nav__email">admin@saturdaze.app</span>
+      <a class="btn btn--ghost btn--sm" href="./admin.sign-in.html"><svg class="icon" aria-hidden="true"><use href="#i-sign_out"/></svg>Sign out</a>
+    </div>
+  </nav>
+  <main class="admin-main container" id="main">
+  <header class="page-header">
+    <div class="page-header__text">
+      <h1 class="page-header__title">Photo health</h1>
+      <p class="page-header__subtitle">How many places families can recognise at a glance. Every figure opens the Places list filtered to those places.</p>
+    </div>
+    <div class="page-header__actions">
+      <a class="btn btn--primary" href="./admin.reviews.html"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Review 7 new photos</a>
+    </div>
+  </header>
+  <div class="stat-grid">
+      <section class="card card--pad-lg stat" aria-labelledby="stat-activities">
+        <h2 class="stat__label" id="stat-activities">Activities</h2>
+        <p class="stat__figure"><strong>16</strong> of 20</p>
+        <p class="stat__sub">with a primary photo that shows</p>
+        <div class="stat__bar" role="img" aria-label="80% with a primary photo"><span class="stat__fill stat__fill--leaf stat__fill--p80"></span></div>
+        <ul class="stat__list">
+          <li><a class="stat__link" href="./admin.places.html"><span class="chip chip--count">4</span>without a photo</a></li>
+          <li><a class="stat__link" href="./admin.places.html"><span class="chip chip--count">1</span>blocked URL</a></li>
+          <li><a class="stat__link" href="./admin.places.html"><span class="chip chip--count">3</span>unreviewed provider photo</a></li>
+          <li><a class="stat__link" href="./admin.places.html"><span class="chip chip--count">2</span>missing alt text</a></li>
+        </ul>
+      </section>
+      <section class="card card--pad-lg stat" aria-labelledby="stat-restaurants">
+        <h2 class="stat__label" id="stat-restaurants">Restaurants</h2>
+        <p class="stat__figure"><strong>11</strong> of 14</p>
+        <p class="stat__sub">with a primary photo that shows</p>
+        <div class="stat__bar" role="img" aria-label="79% with a primary photo"><span class="stat__fill stat__fill--sun stat__fill--p79"></span></div>
+        <ul class="stat__list">
+          <li><a class="stat__link" href="./admin.places.html"><span class="chip chip--count">2</span>without a photo</a></li>
+          <li><a class="stat__link" href="./admin.places.html"><span class="chip chip--count">1</span>blocked URL</a></li>
+          <li><a class="stat__link" href="./admin.places.html"><span class="chip chip--count">0</span>unreviewed provider photo</a></li>
+          <li><a class="stat__link" href="./admin.places.html"><span class="chip chip--count">1</span>missing alt text</a></li>
+        </ul>
+      </section>
+      <section class="card card--pad-lg stat" aria-labelledby="stat-upcoming">
+        <h2 class="stat__label" id="stat-upcoming">Upcoming events</h2>
+        <p class="stat__figure"><strong>5</strong> of 9</p>
+        <p class="stat__sub">with a primary photo that shows</p>
+        <div class="stat__bar" role="img" aria-label="56% with a primary photo"><span class="stat__fill stat__fill--sky stat__fill--p56"></span></div>
+        <ul class="stat__list">
+          <li><a class="stat__link" href="./admin.places.html"><span class="chip chip--count">4</span>without a photo</a></li>
+          <li><a class="stat__link" href="./admin.places.html"><span class="chip chip--count">0</span>blocked URL</a></li>
+          <li><a class="stat__link" href="./admin.places.html"><span class="chip chip--count">4</span>unreviewed provider photo</a></li>
+          <li><a class="stat__link" href="./admin.places.html"><span class="chip chip--count">0</span>missing alt text</a></li>
+        </ul>
+      </section>
+  </div>
+  <section class="section">
+    <div class="section-header"><div class="section-header__text"><h2 class="section-header__title">Worst first</h2><p class="section-header__sub">The six places a family is most likely to hit without a photo this weekend.</p></div><a class="section-header__action btn btn--quiet btn--sm" href="./admin.places.html">All places<svg class="icon" aria-hidden="true"><use href="#i-arrow_right"/></svg></a></div>
+    <div class="list list--card">
+      <a class="list__item list__item--action" href="./admin.place.html"><span class="media media--4x3 media--fallback media--leaf place-thumb" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-tree"/></svg></span><span class="list__text"><span class="list__title">Riverwood Conservancy</span><span class="list__sub">Activity · 0 photos</span></span><span class="list__trail"><span class="chip chip--warn">No photo</span><svg class="icon" aria-hidden="true"><use href="#i-chevron_right"/></svg></span></a>
+      <a class="list__item list__item--action" href="./admin.place.html"><span class="media media--4x3 media--fallback media--sun place-thumb" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-fork"/></svg></span><span class="list__text"><span class="list__title">Snug Harbour</span><span class="list__sub">Restaurant · 0 photos</span></span><span class="list__trail"><span class="chip chip--warn">No photo</span><svg class="icon" aria-hidden="true"><use href="#i-chevron_right"/></svg></span></a>
+      <a class="list__item list__item--action" href="./admin.place.html"><span class="media media--4x3 media--fallback media--indoor place-thumb" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-popcorn"/></svg></span><span class="list__text"><span class="list__title">Rec Room Mississauga</span><span class="list__sub">Activity · 1 photo</span></span><span class="list__trail"><span class="chip chip--warn">Blocked URL</span><svg class="icon" aria-hidden="true"><use href="#i-chevron_right"/></svg></span></a>
+    </div>
+  </section>
+  </main>
+</div>
+<script src="../app.js"></script>
+</body>
+</html>
