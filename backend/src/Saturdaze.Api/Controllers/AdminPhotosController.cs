@@ -22,6 +22,11 @@ public sealed class AdminPhotosController : ControllerBase
 
     public AdminPhotosController(ISender sender) => _sender = sender;
 
+    /// <summary>Photo coverage per catalog for the Photo health screen (L2-112).</summary>
+    [HttpGet("photo-health")]
+    public async Task<ActionResult<PhotoHealthDto>> PhotoHealth(CancellationToken ct)
+        => Ok(await _sender.Send(new GetPhotoHealthQuery(), ct));
+
     /// <summary>The catalog places with their primary photo and health flags (L2-113).</summary>
     [HttpGet("places")]
     public async Task<ActionResult<AdminPlacePageDto>> Places(

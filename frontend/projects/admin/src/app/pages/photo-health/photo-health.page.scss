@@ -1,0 +1,38 @@
+@use '../../../../../components/src/lib/styles/breakpoints' as *;
+
+// `.stat-grid`, `.place-thumb` from docs/mocks/styles/app.css (admin).
+
+:host {
+  display: block;
+}
+
+.error {
+  margin-bottom: 16px;
+}
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.place-thumb {
+  width: 72px;
+  flex: none;
+  border-radius: var(--borderRadiusSmall);
+}
+
+.place-row__flags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 4px;
+}
+
+@include respond-to(desktop) {
+  .stat-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+  }
+}

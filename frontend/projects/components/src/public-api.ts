@@ -76,6 +76,7 @@ export * from './lib/admin-nav/admin-nav';
 export * from './lib/admin-gate/admin-gate';
 export * from './lib/photo-tile/photo-tile';
 export * from './lib/slot-preview/slot-preview';
+export * from './lib/stat-card/stat-card';
 
 // tokens & theming
 export * from './lib/tokens/index';

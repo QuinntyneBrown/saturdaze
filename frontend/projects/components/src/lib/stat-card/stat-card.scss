@@ -1,0 +1,100 @@
+@use '../styles/card-base' as *;
+
+// `.stat` from docs/mocks/styles/app.css (admin).
+
+:host {
+  @include card-host;
+
+  gap: 8px;
+  padding: 20px;
+}
+
+.stat__label {
+  margin: 0;
+  font-size: var(--fontSizeBase200);
+  font-weight: var(--fontWeightSemibold);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--colorNeutralForeground2);
+}
+
+.stat__figure {
+  margin: 0;
+  font-size: var(--fontSizeHero800);
+  font-weight: var(--fontWeightBold);
+  letter-spacing: -0.02em;
+  line-height: 1;
+  color: var(--colorNeutralForeground2);
+}
+
+.stat__figure strong {
+  font-weight: inherit;
+  color: var(--colorNeutralForeground1);
+}
+
+.stat__sub {
+  margin: 0;
+  font-size: var(--fontSizeBase200);
+  color: var(--colorNeutralForeground2);
+}
+
+.stat__bar {
+  height: 8px;
+  overflow: hidden;
+  border-radius: var(--borderRadiusCircular);
+  background: var(--colorNeutralBackground3);
+}
+
+.stat__fill {
+  display: block;
+  height: 100%;
+  border-radius: var(--borderRadiusCircular);
+  background: var(--colorBrandBackground);
+}
+
+.stat__fill--leaf {
+  background: var(--colorPaletteLeafForeground1);
+}
+
+.stat__fill--sun {
+  background: var(--colorPaletteSunForeground1);
+}
+
+.stat__fill--sky {
+  background: var(--colorPaletteSkyForeground1);
+}
+
+.stat__list {
+  display: flex;
+  flex-direction: column;
+  margin: 4px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.stat__link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 40px;
+  padding: 4px 0;
+  border-top: 1px solid var(--colorNeutralStroke2);
+  border-radius: var(--borderRadiusMedium);
+  font-size: 14px;
+  font-weight: var(--fontWeightMedium);
+  color: var(--colorNeutralForeground1);
+  text-decoration: none;
+}
+
+.stat__link:hover {
+  text-decoration: underline;
+}
+
+.stat__link:focus-visible {
+  outline: 2px solid var(--colorBrandStroke1);
+  outline-offset: 2px;
+}
+
+.stat__link sd-chip {
+  background: var(--colorNeutralBackground3);
+}

@@ -1,0 +1,81 @@
+<sd-page-header
+  title="Photo health"
+  subtitle="How many places families can recognise at a glance. Every figure opens the Places list filtered to those places."
+>
+  @if (health()?.pendingReviews) {
+    <sd-button slot="primary" variant="primary" href="/reviews">
+      <sd-icon name="check" />
+      {{ reviewText() }}
+    </sd-button>
+  }
+</sd-page-header>
+
+@if (error()) {
+  <sd-banner class="error" tone="warn" role="alert" icon="close">{{ error() }}</sd-banner>
+}
+
+@switch (status()) {
+  @case ('loading') {
+    <sd-status-row icon="sparkle">Counting the catalog.</sd-status-row>
+  }
+  @case ('ready') {
+    @let h = health();
+    @if (h) {
+      <div class="stat-grid">
+        @for (catalog of h.catalogs; track catalog.catalog) {
+          <sd-stat-card
+            [label]="catalog.label"
+            [figure]="catalog.withPrimary"
+            [total]="catalog.places"
+            [tone]="catalog.tone"
+            [links]="catalog.links"
+          />
+        }
+      </div>
+    }
+    <sd-section
+      class="worst"
+      title="Worst first"
+      subtitle="The places a family is most likely to hit without a photo this weekend."
+    >
+      <sd-button slot="action" variant="quiet" size="sm" href="/places">
+        All places
+        <sd-icon name="arrow_right" />
+      </sd-button>
+      @if (worst().length) {
+        <sd-list card>
+          @for (row of worst(); track row.id) {
+            <sd-list-item
+              class="place-row"
+              [title]="row.name"
+              [subtitle]="row.meta"
+              [href]="row.href"
+              chevron
+            >
+              <sd-media
+                slot="leading"
+                class="place-thumb"
+                ratio="4:3"
+                [photo]="row.photo"
+                [tone]="row.tone"
+                [icon]="row.icon"
+              />
+              <span class="place-row__flags">
+                @for (chip of row.flags; track chip.label) {
+                  <sd-chip [tone]="chipTone(chip.tone)" size="sm">
+                    @if (chip.icon) {
+                      <sd-icon [name]="chip.icon" />
+                    }
+                    {{ chip.label }}
+                  </sd-chip>
+                }
+              </span>
+            </sd-list-item>
+          }
+        </sd-list>
+      } @else {
+        <sd-status-row icon="check">Every place has a photo that shows.</sd-status-row>
+      }
+    </sd-section>
+  }
+}

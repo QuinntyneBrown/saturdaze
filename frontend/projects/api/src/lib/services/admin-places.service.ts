@@ -8,6 +8,8 @@ import { AdminPhotoDto, PlacePhotosDto } from '../models/admin/admin-photo.dto';
 import { AdminPlaceDto, AdminPlacePageDto } from '../models/admin/admin-place.dto';
 import { AdminPlacesQuery, toAdminPlacesParams } from '../models/admin/admin-places-query';
 import { AdminPlacesView } from '../models/admin/admin-places-view';
+import { CatalogHealthView, HealthLinkView, HealthView } from '../models/admin/health-view';
+import { CatalogPhotoHealthDto, PhotoHealthDto } from '../models/admin/photo-health.dto';
 import { PhotoTileView } from '../models/admin/photo-tile-view';
 import { PlacePhotosView } from '../models/admin/place-photos-view';
 import { PlaceRow } from '../models/admin/place-row';
@@ -132,6 +134,46 @@ export function toPlacePhotosView(dto: PlacePhotosDto): PlacePhotosView {
   };
 }
 
+const CATALOG_LABEL: Record<CatalogPhotoHealthDto['catalog'], string> = {
+  activities: 'Activities',
+  restaurants: 'Restaurants',
+  upcomingEvents: 'Upcoming events',
+};
+
+/** The flag lines of a stat card, worst first, as the mock words them. */
+const HEALTH_LINKS: readonly {
+  flag: HealthLinkView['flag'];
+  label: string;
+  field: keyof CatalogPhotoHealthDto;
+}[] = [
+  { flag: 'no-photo', label: 'without a photo', field: 'noPhoto' },
+  { flag: 'blocked-url', label: 'blocked URL', field: 'blockedUrl' },
+  { flag: 'unreviewed', label: 'unreviewed provider photo', field: 'unreviewed' },
+  { flag: 'missing-alt', label: 'missing alt text', field: 'missingAlt' },
+];
+
+export function toCatalogHealth(dto: CatalogPhotoHealthDto): CatalogHealthView {
+  const upcoming = dto.catalog === 'upcomingEvents' ? '&upcoming=true' : '';
+  return {
+    catalog: dto.catalog,
+    label: CATALOG_LABEL[dto.catalog],
+    tone: KIND_TONE[dto.kind],
+    places: dto.places,
+    withPrimary: dto.withPrimary,
+    percent: dto.places === 0 ? 0 : Math.round((dto.withPrimary / dto.places) * 100),
+    links: HEALTH_LINKS.map((l) => ({
+      flag: l.flag,
+      count: dto[l.field] as number,
+      label: l.label,
+      href: `/places?kind=${dto.kind}&flag=${l.flag}${upcoming}`,
+    })),
+  };
+}
+
+export function toHealthView(dto: PhotoHealthDto): HealthView {
+  return { catalogs: dto.catalogs.map(toCatalogHealth), pendingReviews: dto.pendingReviews };
+}
+
 const EMPTY: AdminPlacesView = { status: 'loading', rows: [], total: 0, page: 1, pageSize: 50 };
 
 /** HTTP implementation of `IAdminPlacesService`. */
@@ -160,6 +202,13 @@ export class AdminPlacesService implements IAdminPlacesService {
       page: page.page,
       pageSize: page.pageSize,
     });
+  }
+
+  async health(): Promise<HealthView> {
+    const dto = await firstValueFrom(
+      this.http.get<PhotoHealthDto>(`${this.baseUrl}/api/admin/photo-health`),
+    );
+    return toHealthView(dto);
   }
 
   async photos(kind: string, id: string): Promise<PlacePhotosView> {
