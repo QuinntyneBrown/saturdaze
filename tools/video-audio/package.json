@@ -1,0 +1,6 @@
+{
+  "name": "video-audio",
+  "private": true,
+  "type": "module",
+  "main": "index.mjs"
+}

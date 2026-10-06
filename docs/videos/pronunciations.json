@@ -1,0 +1,21 @@
+{
+  "code": {
+    "api": "A P I",
+    "saturdaze": "Saturdays",
+    "app.config.ts": "app config dot T S",
+    "weekend.page.ts": "weekend page dot T S",
+    "ISender": "I Sender",
+    "IWeekendPlanService": "I Weekend Plan Service",
+    "WEEKEND_PLAN_SERVICE": "weekend plan service",
+    "weekendOf": "weekend of",
+    "Plan_is_idempotent_per_family_and_date": "Plan is idempotent per family and date"
+  },
+  "text": {
+    "Saturdaze": "Saturdays",
+    "ADR-003": "A D R three",
+    "MediatR": "Mediator",
+    "MediatR's": "Mediator's",
+    "Open-Meteo": "Open Meteo",
+    "ISO": "I S O"
+  }
+}

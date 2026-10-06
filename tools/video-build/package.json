@@ -1,0 +1,6 @@
+{
+  "name": "video-build",
+  "private": true,
+  "type": "module",
+  "main": "index.mjs"
+}

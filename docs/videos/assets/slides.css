@@ -1,0 +1,165 @@
+/* Shared stylesheet for docs/videos/NN-topic/slides.html decks.
+   Slides are a fixed 1920x1080 stage, scaled to fit the window; one is visible at a time. */
+
+:root {
+  --brand: #e07856;
+  --brand-strong: #a04b2c;
+  --brand-tint: #fbe7de;
+  --ink: #242424;
+  --ink-2: #616161;
+  --paper: #fffaf6;
+  --card: #ffffff;
+  --line: #ead9cf;
+  --code-bg: #2b2421;
+  --code-ink: #f5ece6;
+  --code-mark: rgba(224, 120, 86, 0.28);
+  --font: 'Segoe UI', 'Helvetica Neue', 'DejaVu Sans', Arial, sans-serif;
+  --mono: 'Cascadia Code', 'Consolas', 'DejaVu Sans Mono', monospace;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  height: 100%;
+  background: #1b1b1b;
+  overflow: hidden;
+  font-family: var(--font);
+  color: var(--ink);
+}
+
+html.render, html.render body { width: 1920px; height: 1080px; }
+
+.stage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1920px;
+  height: 1080px;
+  transform-origin: 0 0;
+  background: var(--paper);
+  overflow: hidden;
+}
+
+/* ─── Chrome: header label and progress bar ─────────────────────────────── */
+
+.chrome {
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 96px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 120px;
+  font-size: 26px;
+  color: var(--ink-2);
+  z-index: 2;
+}
+.chrome .series { font-weight: 600; color: var(--brand-strong); }
+.chrome .part { text-transform: uppercase; letter-spacing: 0.12em; font-size: 22px; }
+.progress {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 10px;
+  display: flex;
+  gap: 6px;
+  padding: 0 120px 0;
+  z-index: 2;
+}
+.progress span { flex: 1; background: var(--line); border-radius: 5px 5px 0 0; }
+.progress span.done { background: var(--brand-tint); }
+.progress span.current { background: var(--brand); }
+
+/* ─── Slides ───────────────────────────────────────────────────────────── */
+
+section {
+  display: none;
+  position: absolute;
+  inset: 96px 0 10px 0;
+  padding: 40px 120px 150px; /* bottom room for burned-in captions */
+  flex-direction: column;
+  justify-content: center;
+  gap: 28px;
+}
+section.active { display: flex; }
+body.title-slide .chrome { visibility: hidden; }
+
+h1 { font-size: 104px; line-height: 1.05; margin: 0; letter-spacing: -0.02em; }
+h2 { font-size: 68px; line-height: 1.1; margin: 0; letter-spacing: -0.01em; }
+h3 { font-size: 38px; margin: 0; }
+p, li { font-size: 40px; line-height: 1.35; margin: 0; }
+ul, ol { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column; gap: 16px; }
+code { font-family: var(--mono); font-size: 0.9em; background: var(--brand-tint); color: var(--brand-strong); padding: 0.05em 0.3em; border-radius: 8px; }
+strong { color: var(--brand-strong); }
+
+.kicker { font-size: 30px; text-transform: uppercase; letter-spacing: 0.16em; color: var(--brand-strong); font-weight: 600; }
+.lead { font-size: 46px; color: var(--ink-2); max-width: 1500px; }
+.muted { color: var(--ink-2); }
+.small, .small li, .small p { font-size: 32px; }
+.quote { font-size: 50px; line-height: 1.3; border-left: 12px solid var(--brand); padding-left: 40px; max-width: 1500px; }
+
+.cols { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; }
+.cols.three { grid-template-columns: repeat(3, 1fr); }
+.card { background: var(--card); border: 2px solid var(--line); border-radius: 24px; padding: 32px 36px; display: flex; flex-direction: column; gap: 14px; }
+.card h3 { color: var(--brand-strong); }
+.card p, .card li { font-size: 32px; }
+
+.file { font-family: var(--mono); font-size: 28px; color: var(--ink-2); }
+.file::before { content: '▸ '; color: var(--brand); }
+.tag { display: inline-block; font-size: 26px; font-weight: 600; padding: 6px 16px; border-radius: 999px; background: var(--brand-tint); color: var(--brand-strong); }
+
+.steps { list-style: none; padding: 0; counter-reset: step; gap: 22px; }
+.steps li { counter-increment: step; display: grid; grid-template-columns: 72px 1fr; gap: 24px; align-items: baseline; }
+.steps li::before { content: counter(step); font-weight: 700; font-size: 34px; color: #fff; background: var(--brand); width: 64px; height: 64px; border-radius: 50%; display: grid; place-items: center; }
+
+.question { font-size: 46px; line-height: 1.3; padding: 28px 36px; background: var(--card); border-left: 10px solid var(--brand); border-radius: 0 20px 20px 0; }
+.recap li::marker { content: '✓  '; color: var(--brand); }
+
+/* A horizontal chain of boxes joined by arrows. */
+.flow { display: flex; align-items: stretch; gap: 0; }
+.flow > div { flex: 1; background: var(--card); border: 2px solid var(--line); border-radius: 20px; padding: 24px 22px; display: flex; flex-direction: column; gap: 10px; }
+.flow > div + div { margin-left: 56px; position: relative; }
+.flow > div + div::before { content: '→'; position: absolute; left: -48px; top: 50%; transform: translateY(-50%); font-size: 40px; color: var(--brand); }
+.flow b { font-size: 30px; }
+.flow span { font-size: 20px; color: var(--ink-2); font-family: var(--mono); }
+
+table { border-collapse: collapse; font-size: 32px; }
+th, td { text-align: left; padding: 12px 24px; border-bottom: 2px solid var(--line); }
+th { color: var(--ink-2); font-weight: 600; font-size: 26px; text-transform: uppercase; letter-spacing: 0.08em; }
+td.num { font-family: var(--mono); font-weight: 700; color: var(--brand-strong); text-align: right; }
+
+/* ─── Code ─────────────────────────────────────────────────────────────── */
+
+pre.code {
+  margin: 0;
+  background: var(--code-bg);
+  color: var(--code-ink);
+  font-family: var(--mono);
+  font-size: 30px;
+  line-height: 1.45;
+  padding: 28px 0;
+  border-radius: 20px;
+  position: relative;
+  white-space: pre;
+  overflow: hidden;
+}
+pre.code.tight { font-size: 24px; line-height: 1.4; padding: 22px 0; }
+pre.code .line { display: block; padding: 0 36px; }
+pre.code .line.mark { background: var(--code-mark); box-shadow: inset 8px 0 0 var(--brand); }
+pre.code[data-lang]::after {
+  content: attr(data-lang);
+  position: absolute;
+  top: 14px;
+  right: 22px;
+  font-size: 20px;
+  color: #9d8d84;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+/* ─── Progressive builds ───────────────────────────────────────────────── */
+
+.item.pending { visibility: hidden; }
+.item.dim { opacity: 0.3; }

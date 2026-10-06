@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 01 Slides</title>
+<link rel="stylesheet" href="../assets/slides.css">
+</head>
+<body data-video-number="01" data-video-title="How a Weekend Gets Planned" data-parts="Introduction|Questions|The request|Idempotency|Inputs|Day pipeline|Scoring|Regenerate|Pitfalls|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Saturdaze · Video 01</div>
+  <h1>How a Weekend<br>Gets Planned</h1>
+  <p class="lead">One tap on “Plan weekend”, followed from the Angular page to the planner</p>
+</section>
+
+<section id="journey" data-part="0" data-cue="In this video you'll follow that one tap">
+  <h2>One request, five stops</h2>
+  <div class="flow">
+    <div><b>Weekend page</b><span>weekend.page.ts</span></div>
+    <div><b>API service</b><span>WeekendPlanService</span></div>
+    <div><b>Controller</b><span>WeekendsController</span></div>
+    <div><b>Handler</b><span>GenerateWeekend­CommandHandler</span></div>
+    <div><b>Planner</b><span>WeekendPlanner</span></div>
+  </div>
+  <p class="muted small">POST /api/weekends/plan &nbsp;·&nbsp; body: <code>{ weekendOf: "YYYY-MM-DD" }</code></p>
+</section>
+
+<section id="questions" data-part="1" data-cue="What you'll be able to answer">
+  <h2>Three questions</h2>
+  <div class="question">1 · What happens when the same weekend is planned twice?</div>
+  <div class="question">2 · Which data does the planner see?</div>
+  <div class="question">3 · How does it decide what fills an empty afternoon?</div>
+</section>
+
+<section id="page" data-part="2" data-cue="Start on the frontend.">
+  <h2>The page calls the service</h2>
+  <div class="file">frontend/projects/saturdaze/src/app/pages/weekend/weekend.page.ts</div>
+<pre class="code" data-lang="ts" data-mark="5">
+protected plan(): Promise&lt;void&gt; {
+  return this.run(async () =&gt; {
+    this.busy.set('weekend');
+    try {
+      await this.weekendService.plan(upcomingSaturdayIso());
+    } finally {
+      this.busy.set(null);
+    }
+  });
+}
+</pre>
+</section>
+
+<section id="token" data-part="2" data-cue="Notice what the page injects.">
+  <h2>Pages depend on the token</h2>
+  <div class="file">frontend/projects/api/src/lib/services/weekend-plan.service.contract.ts</div>
+<pre class="code tight" data-lang="ts">
+export const WEEKEND_PLAN_SERVICE = new InjectionToken&lt;IWeekendPlanService&gt;('WEEKEND_PLAN_SERVICE');
+</pre>
+  <div class="file">frontend/projects/saturdaze/src/app/app.config.ts</div>
+<pre class="code tight" data-lang="ts">
+{ provide: WEEKEND_PLAN_SERVICE, useExisting: WeekendPlanService },
+</pre>
+  <div class="file">weekend.page.ts</div>
+<pre class="code tight" data-lang="ts">
+private readonly weekendService = inject(WEEKEND_PLAN_SERVICE);
+</pre>
+</section>
+
+<section id="controller" data-part="2" data-cue="The service posts to the plan endpoint">
+  <h2>A one-line controller action</h2>
+  <div class="file">frontend/projects/api/src/lib/services/weekend-plan.service.ts</div>
+<pre class="code tight" data-lang="ts">
+this.http.post&lt;WeekendDto&gt;(`${this.baseUrl}/api/weekends/plan`, { weekendOf: weekendOfIso }),
+</pre>
+  <div class="file">backend/src/Saturdaze.Api/Controllers/WeekendsController.cs</div>
+<pre class="code tight" data-lang="cs" data-mark="3">
+[HttpPost("plan")]
+public async Task&lt;ActionResult&lt;WeekendDto&gt;&gt; Plan([FromBody] GenerateWeekendCommand command, CancellationToken ct)
+    =&gt; Ok(await _sender.Send(command, ct));
+</pre>
+  <p class="small muted">Controllers stay thin. Business rules live in handlers.</p>
+</section>
+
+<section id="validator" data-part="2" data-cue="Before the handler runs">
+  <h2>Validation: it must be a Saturday</h2>
+  <div class="file">backend/src/Saturdaze.Application/Weekends/GenerateWeekendCommandValidator.cs</div>
+<pre class="code" data-lang="cs" data-mark="2">
+RuleFor(x =&gt; x.WeekendOf)
+    .Must(d =&gt; d.DayOfWeek == DayOfWeek.Saturday)
+    .WithMessage("WeekendOf must be a Saturday.");
+</pre>
+  <p><span class="tag">400 Bad Request</span> &nbsp;via <code>ExceptionHandlingMiddleware</code></p>
+  <p class="small muted">Test: <code>Plan_with_non_saturday_returns_400</code></p>
+</section>
+
+<section id="idempotent" data-part="3" data-cue="Planning twice returns the same weekend">
+  <h2>Planning twice returns the same weekend</h2>
+  <div class="file">backend/src/Saturdaze.Application/Weekends/GenerateWeekendCommandHandler.cs</div>
+<pre class="code tight" data-lang="cs" data-mark="1,3,7,11">
+var familyId = await _current.GetCurrentFamilyIdAsync(cancellationToken);
+
+// Idempotent (ADR-003): if a weekend already exists for this family + date, return it.
+var existing = await _db.Weekends
+    .Include(w =&gt; w.Blocks)
+    .Include(w =&gt; w.Errands)
+    .FirstOrDefaultAsync(w =&gt; w.FamilyId == familyId &amp;&amp; w.WeekendOf == request.WeekendOf, cancellationToken);
+if (existing is not null)
+{
+    var existingForecast = await _forecast.GetAsync(existing.WeekendOf, cancellationToken);
+    return WeekendMapper.ToDto(existing, existingForecast);
+}
+</pre>
+</section>
+
+<section id="adr" data-part="3" data-cue="If you want a new plan, that's a separate, explicit endpoint">
+  <div class="kicker">ADR-003 · Accepted</div>
+  <p class="quote">“Regeneration is its own explicit operation (…), so there is no risk of accidentally clobbering a customized plan via repeated POST /api/weekends/plan.”</p>
+  <div class="cols">
+    <div class="card"><h3>Plan</h3><p><code>POST /api/weekends/plan</code></p><p class="muted">Safe to call repeatedly</p></div>
+    <div class="card"><h3>Reseat</h3><p><code>POST /api/weekends/{id}/regenerate</code></p><p class="muted">The only way to re-plan</p></div>
+  </div>
+  <p class="small muted">Guarded by <code>Plan_is_idempotent_per_family_and_date</code> in <code>Saturdaze.Api.Tests</code></p>
+</section>
+
+<section id="inputs" data-part="4" data-cue="What the planner sees">
+  <h2>What the planner sees</h2>
+  <div class="file">backend/src/Saturdaze.Application/Planning/PlannerInputLoader.cs</div>
+  <div class="cols three">
+    <div class="card"><h3>Family</h3><p>Members and ages</p><p>Recurring commitments</p><p>Likes and dislikes</p></div>
+    <div class="card"><h3>Catalog</h3><p>Every activity</p><p>Approved restaurants</p><p>Events overlapping the weekend</p></div>
+    <div class="card"><h3>Context</h3><p>Forecast for both days</p><p>Activity history from earlier weekends</p></div>
+  </div>
+</section>
+
+<section id="seed" data-part="4" data-cue="That bundle becomes a">
+  <h2>…plus a seed</h2>
+  <div class="file">GenerateWeekendCommandHandler.cs</div>
+<pre class="code" data-lang="cs" data-mark="5">
+var ctx = await _loader.LoadAsync(familyId, request.WeekendOf, cancellationToken);
+var inputs = ctx.ToInputs(
+    lockedBlocks: Array.Empty&lt;ItineraryBlock&gt;(),
+    errand: null,
+    seed: request.WeekendOf.DayNumber);
+
+var blocks = _planner.Plan(inputs);
+</pre>
+  <p class="muted">Same Saturday → same seed → repeatable plan</p>
+</section>
+
+<section id="weather" data-part="4" data-cue="The weather comes through the Open-Meteo client.">
+  <h2>No forecast? Neutral day.</h2>
+  <div class="file">backend/src/Saturdaze.Application/Planning/WeekendPlanner.cs</div>
+<pre class="code tight" data-lang="cs" data-mark="3">
+private static WeatherForecast ForecastFor(IReadOnlyList&lt;WeatherForecast&gt; all, DateOnly date) =&gt;
+    all.FirstOrDefault(f =&gt; f.Date == date)
+    ?? new WeatherForecast(date, Array.Empty&lt;string&gt;(), null, null, null, Unavailable: true);
+</pre>
+  <p>A weather outage costs the weather bonus, <strong>not the plan</strong>.</p>
+</section>
+
+<section id="plan" data-part="5" data-cue="The day pipeline">
+  <h2>The same pipeline, twice</h2>
+  <div class="file">backend/src/Saturdaze.Application/Planning/WeekendPlanner.cs</div>
+<pre class="code tight" data-lang="cs" data-mark="3,9">
+public IReadOnlyList&lt;ItineraryBlock&gt; Plan(PlannerInputs inputs)
+{
+    var rng = new SeededRandomSource(inputs.Seed);
+    var blocks = new List&lt;ItineraryBlock&gt;();
+    foreach (var day in new[] { DayOfWeekend.Saturday, DayOfWeekend.Sunday })
+    {
+        var dayDate = day == DayOfWeekend.Saturday ? inputs.WeekendOf : inputs.WeekendOf.AddDays(1);
+        var forecast = ForecastFor(inputs.Forecast, dayDate);
+        blocks.AddRange(PlanDay(inputs, day, dayDate, forecast, rng));
+    }
+    return blocks;
+}
+</pre>
+</section>
+
+<template id="pipeline">
+  <ol class="steps">
+    <li class="item"><div><b>Fixed blocks</b> — commitments, always locked: “fixed commitment”. Overlap → <code>ConflictException</code></div></li>
+    <li class="item"><div><b>Gaps</b> — 09:00 to 21:00; Sunday ends 19:30 for wind-down</div></li>
+    <li class="item"><div><b>Activities</b> — every gap ≥ 90 min: score, pick, add drives</div></li>
+    <li class="item"><div><b>Meals, errand, downtime</b> — lunch 12:00–13:30, dinner 17:30–19:00; Saturday errand; free ranges ≥ 30 min</div></li>
+  </ol>
+</template>
+
+<section id="step-1" data-part="5" data-cue="One: build the fixed blocks." data-template="pipeline" data-highlight="1">
+  <h2>PlanDay, step by step</h2>
+</section>
+<section id="step-2" data-part="5" data-cue="Two: compute the gaps between fixed blocks." data-template="pipeline" data-highlight="2">
+  <h2>PlanDay, step by step</h2>
+</section>
+<section id="step-3" data-part="5" data-cue="Three: for every gap of at least ninety minutes" data-template="pipeline" data-highlight="3">
+  <h2>PlanDay, step by step</h2>
+</section>
+<section id="step-4" data-part="5" data-cue="Four: place lunch and dinner inside their windows" data-template="pipeline" data-highlight="4">
+  <h2>PlanDay, step by step</h2>
+</section>
+
+<section id="times" data-part="5" data-cue="Finally every block gets a sort order by start time.">
+  <h2>One home for the numbers</h2>
+  <div class="file">backend/src/Saturdaze.Application/Planning/PlannerTimes.cs</div>
+<pre class="code tight" data-lang="cs" data-mark="11-12">
+public static readonly TimeOnly DayStart = new(9, 0);
+public static readonly TimeOnly DayEnd = new(21, 0);
+public static readonly TimeOnly SundayWindDownStart = new(19, 30);
+
+public static readonly TimeOnly LunchWindowStart = new(12, 0);
+public static readonly TimeOnly LunchWindowEnd = new(13, 30);
+public static readonly TimeOnly DinnerWindowStart = new(17, 30);
+public static readonly TimeOnly DinnerWindowEnd = new(19, 0);
+
+public const int MealMinutes = 60;
+public const int ActivityMinGapMinutes = 90;
+public const int ActivityMinMinutes = 30;   // (doc comment omitted)
+
+public const int DowntimeMinMinutes = 30;
+public const int ErrandBufferMinutes = 20;
+</pre>
+</section>
+
+<section id="disqualify" data-part="6" data-cue="Scoring an activity">
+  <h2>First, the disqualifiers</h2>
+  <p class="file">WeekendPlanner.ScoreActivities</p>
+  <ul>
+    <li>Already picked for this day</li>
+    <li>Typical duration longer than the gap</li>
+    <li>Both drives + 30 min of activity don't fit</li>
+    <li>Matches a disliked tag</li>
+    <li>Two or more members outside its age range</li>
+  </ul>
+</section>
+
+<section id="points" data-part="6" data-cue="Then the points.">
+  <h2>Then the points</h2>
+  <table>
+    <tr><th>Condition</th><th>Score</th></tr>
+    <tr><td>Rain or snow, and the activity is indoor</td><td class="num">+3</td></tr>
+    <tr><td>Sunny or warm, and the activity is outdoor</td><td class="num">+2</td></tr>
+    <tr><td>Round-trip drive &gt; 40% of the gap</td><td class="num">−2</td></tr>
+    <tr><td>Every member inside the age range</td><td class="num">+2</td></tr>
+    <tr><td>Done last weekend / within four weekends</td><td class="num">−4 / −1</td></tr>
+    <tr><td>Try-new on, and never done before</td><td class="num">+3</td></tr>
+    <tr><td>Each liked tag</td><td class="num">+1</td></tr>
+  </table>
+</section>
+
+<section id="pick" data-part="6" data-cue="The list is sorted by score, ties broken by name">
+  <h2>Varied, but reproducible</h2>
+  <div class="file">WeekendPlanner.cs</div>
+<pre class="code tight" data-lang="cs" data-mark="2,6-7">
+// Stable sort: highest score first, tie-break by activity name for determinism before rng pick.
+return results.OrderByDescending(r =&gt; r.Item2).ThenBy(r =&gt; r.Item1.Name).ToList();
+
+// …in PlanDay, for each gap:
+var topScore = scored[0].score;
+var topCandidates = scored.TakeWhile(s =&gt; s.score == topScore).Select(s =&gt; s.activity).ToList();
+var winner = topCandidates[rng.Next(topCandidates.Count)];
+</pre>
+  <p class="small">Same inputs + same seed = same weekend. To reproduce a bug, ask for the <strong>date</strong> and the <strong>family's data</strong>.</p>
+</section>
+
+<section id="regenerate" data-part="7" data-cue="Regenerate changes the seed, not the rules">
+  <h2>Same rules, different dice</h2>
+  <div class="file">backend/src/Saturdaze.Application/Weekends/RegenerateWeekendCommandHandler.cs</div>
+<pre class="code tight" data-lang="cs" data-mark="4,9-10">
+// Commitments are re-materialised from the family profile every time,
+// so they are never carried over as "locked" here (L2-011 AC2).
+var lockedBlocks = weekend.Blocks
+    .Where(b =&gt; b.IsLocked &amp;&amp; b.Kind != BlockKind.Commitment)
+    .ToList();
+
+var ctx = await _loader.LoadAsync(familyId, weekend.WeekendOf, cancellationToken);
+
+weekend.RegenerateCount++;
+var seed = weekend.WeekendOf.DayNumber + weekend.RegenerateCount * 31;
+</pre>
+  <p class="small muted">Per-day reseat: <code>POST /api/weekends/{id}/days/{day}/regenerate</code></p>
+</section>
+
+<section id="pitfalls" data-part="8" data-cue="Pitfalls">
+  <h2>Pitfalls</h2>
+  <ul>
+    <li>Planning logic in a controller or page → move it to the handler or planner</li>
+    <li><code>System.Random</code> or the clock in the planner → use the seeded source</li>
+    <li>A new query without the family scope → filter by the current family id</li>
+    <li>Inline planner numbers → change <code>PlannerTimes</code>, run the tests in <code>Saturdaze.Application.Tests/Planning</code></li>
+  </ul>
+</section>
+
+<section id="recap" data-part="9" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <ul class="recap">
+    <li><strong>Plan is idempotent</strong>; regenerate is the explicit reseat (ADR-003)</li>
+    <li>Page → token, controller → one line, <strong>handler owns the rules</strong></li>
+    <li>Commitments first, gaps ≥ 90 min by score, then meals, errand, downtime</li>
+    <li>A <strong>seeded random source</strong> makes every plan reproducible</li>
+  </ul>
+</section>
+
+<section id="next" data-part="9" data-cue="Next time, we'll look at the other half of the weekend">
+  <div class="kicker">Next · Video 02</div>
+  <h2>Locking, swapping and per-day regeneration</h2>
+  <p class="lead">…and how the frontend keeps the screen in sync while they run</p>
+</section>
+
+<script src="../assets/slides.js"></script>
+</body>
+</html>

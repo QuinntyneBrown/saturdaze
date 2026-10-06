@@ -43,3 +43,6 @@ Thumbs.db
 .idea/
 .vscode/
 *.lscache
+
+# Video build cache (section audio, timing manifest, rendered slides)
+docs/videos/.cache/
