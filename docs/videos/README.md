@@ -17,16 +17,16 @@ A six-part course on the Saturdaze design token system (ADR-013), from the idea 
 
 ## Building a video
 
-Tooling lives in `tools/` (Node 22, no npm dependencies) and needs ffmpeg (libx264 + libass) and Chrome/Chromium.
+Tooling lives in `tools/` (Node 22, no npm dependencies) and needs ffmpeg (libx264 + libass), Chrome/Chromium, and Python with the free `edge-tts` package (`python -m pip install edge-tts`; `PYTHON` overrides the interpreter, default `python3`).
 
 ```sh
-# 1. Validate the script and estimate length/cost (offline)
+# 1. Validate the script and estimate length (offline)
 node tools/video-audio/generate-audio.mjs docs/videos/01-design-tokens-what-and-why --dry-run
 node tools/video-audio/generate-audio.mjs docs/videos/01-design-tokens-what-and-why --spoken   # what the narrator will say
 
-# 2. Synthesize the MP3 + timing manifest (.cache/<folder>/manifest.json)
-#    Azure AI Speech (preferred):  AZURE_SPEECH_KEY=… [AZURE_SPEECH_REGION=eastus2]
-#    Offline fallback (Piper):     pip install piper-tts; PIPER_MODEL=/path/to/en_US-ryan-high.onnx
+# 2. Synthesize the MP3 + timing manifest (.cache/<folder>/manifest.json) with free edge-tts
+#    (needs internet; no key). Offline alternative: --engine piper with
+#    pip install piper-tts; PIPER_MODEL=/path/to/en_US-ryan-high.onnx
 node tools/video-audio/generate-audio.mjs docs/videos/01-design-tokens-what-and-why
 
 # 3. Cue check + layout audit, render slides, encode the MP4
@@ -38,6 +38,6 @@ node tools/video-build/build-video.mjs docs/videos/01-design-tokens-what-and-why
 node tools/video-audio/generate-audio.mjs --say '`_tokens.scss`' --out /tmp/say.wav
 ```
 
-The engine is Azure when `AZURE_SPEECH_KEY` is set, Piper otherwise (`--engine azure|piper` forces one). The design tokens series was narrated with Piper's `en_US-ryan-high` voice because no Azure Speech key was available when it was produced; re-run step 2 and 3 with a key to re-voice it with `en-US-AndrewMultilingualNeural`.
+The engine is Edge by default (`--engine edge|piper` forces one); Edge voices default to `en-US-AndrewMultilingualNeural` for the narrator and `en-US-AvaMultilingualNeural` for `**Name:**` speakers (`EDGE_VOICE` / `EDGE_VOICE_2` override; `python -m edge_tts --list-voices` lists them). The design tokens series was narrated with Piper's `en_US-ryan-high` voice when it was produced; re-run steps 2 and 3 to re-voice it with Edge.
 
 Slides use the shared `assets/slides.css` and `assets/slides.js`; open any `slides.html` in a browser and use the arrow keys, or `?slide=N`.

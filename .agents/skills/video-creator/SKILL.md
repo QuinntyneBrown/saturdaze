@@ -28,7 +28,7 @@ Before writing, read any existing video in the repo (tone, length, structure) an
 4. **Write `README.md`** (outline below).
 5. **Write `slides.html`** (structure below), cueing each slide to a verbatim phrase in the script.
 6. **Validate offline** with the repo's audio tool in dry-run mode (script format, word count and estimated duration; edge-tts has no synthesis charge). If no tool exists yet, create the two small tools described under "Tooling" before continuing.
-7. **Synthesize audio** with free `edge-tts` (Microsoft Edge online read-aloud). It needs Python, the `edge-tts` package and internet access; no API key, Azure subscription or paid Speech service. Install with `python -m pip install edge-tts` using the same interpreter as the audio tool. Always select `--engine edge` on the existing generator, including dry-runs and pronunciation tests: its automatic selection can choose Azure when a key is present. Do not use the paid Azure engine or switch to it if Edge fails. Synthesis also writes a timing manifest (per-section and per-paragraph start/end, in `.cache/`) that the video is synced to. Keep acronyms and code identifiers in a pronunciation lexicon (`pronunciations.json`) as plain-text spoken replacements and check them with a pronunciation test.
+7. **Synthesize audio** with free `edge-tts` (Microsoft Edge online read-aloud). It needs Python, the `edge-tts` package and internet access; no API key, Azure subscription or paid Speech service. Install with `python -m pip install edge-tts` using the same interpreter as the audio tool (`PYTHON` tells the generator which one). Edge is the generator's default engine; the only other engine is offline Piper (`--engine piper`), and there is no Azure engine. Synthesis also writes a timing manifest (per-section and per-paragraph start/end, in `.cache/`) that the video is synced to. Keep acronyms and code identifiers in a pronunciation lexicon (`pronunciations.json`) as plain-text spoken replacements and check them with a pronunciation test.
 8. **Build the video** (needs Chrome/Edge - `EDGE_PATH` overrides - and ffmpeg with libx264 - `FFMPEG_PATH` overrides):
    - `--check`: every `data-cue` is found; prints the schedule.
    - `--slides-only`: renders PNGs to `.cache/<folder>/`. View them before encoding; overflowing code, clipped tables and unreadable text are the common failures.
@@ -118,18 +118,18 @@ Keep two small scripts under `tools/` (language of the repo's choice; a .NET sin
 - **Audio generator** (`tools/video-audio/`): parses `script.md` strictly; `--dry-run` validates and estimates length without network. Otherwise it uses the `edge-tts` Python package or `python -m edge_tts` CLI with plain text per paragraph: a neural narrator voice (e.g. `en-US-AndrewMultilingualNeural`) and a second voice for other speakers (e.g. `en-US-AvaMultilingualNeural`). Check available voices with `python -m edge_tts --list-voices`. Edge does not support custom SSML: apply `pronunciations.json` as spoken text replacements before synthesis, synthesize speaker paragraphs separately, and insert `[pause 5s]` as ffmpeg-generated silence. Normalize clips to a common audio format, measure their actual durations with ffprobe, concatenate clips and silence into the MP3, and write the timing manifest from those durations.
 - **Video builder** (`tools/video-build/`): opens `slides.html` in headless Chrome/Edge, resolves each `data-cue` to a time using the manifest (section boundaries exact, in-section by word count), screenshots each slide at 1920x1080, writes an SRT/ASS caption file from the script, and runs ffmpeg (libx264, aac) to produce the MP4 with burned-in captions. Supports `--check` and `--slides-only`.
 
-Prefer an existing equivalent if the repo already has one, with its free Edge engine explicitly selected. In this repository, run from the repo root:
+Prefer an existing equivalent if the repo already has one. In this repository, run from the repo root (Edge is the default engine, so `--engine edge` is optional):
 
 ```powershell
 # Use the same Python interpreter for installation and the generator.
 $env:PYTHON = "python"
 python -m pip install edge-tts
-node tools/video-audio/generate-audio.mjs docs/videos/NN-kebab-topic --engine edge --dry-run
-node tools/video-audio/generate-audio.mjs --engine edge --say "Saturdaze" --out .cache/pronunciation-test.wav
-node tools/video-audio/generate-audio.mjs docs/videos/NN-kebab-topic --engine edge
+node tools/video-audio/generate-audio.mjs docs/videos/NN-kebab-topic --dry-run
+node tools/video-audio/generate-audio.mjs --say "Saturdaze" --out .cache/pronunciation-test.wav
+node tools/video-audio/generate-audio.mjs docs/videos/NN-kebab-topic
 ```
 
-Replace `NN-kebab-topic` with the actual folder. The existing generator may print an Azure cost estimate even with `--engine edge`; that estimate does not apply to Edge synthesis. For package usage and supported options, see the [edge-tts documentation](https://github.com/rany2/edge-tts).
+Replace `NN-kebab-topic` with the actual folder. `EDGE_VOICE` and `EDGE_VOICE_2` override the narrator and second-speaker voices. For package usage and supported options, see the [edge-tts documentation](https://github.com/rany2/edge-tts).
 
 ## Quality checklist
 
@@ -142,5 +142,7 @@ Replace `NN-kebab-topic` with the actual folder. The existing generator may prin
 - [ ] No secrets or `.cache/` files committed; media via LFS if configured.
 
 ## When the tooling can't run
+
+Behind a TLS-intercepting proxy, `edge-tts` fails with a certificate error because it trusts only Python's `certifi` bundle, not `SSL_CERT_FILE`; append the proxy CA to the file `python -c "import certifi; print(certifi.where())"` prints and retry.
 
 If `dotnet`/Node/Python, the `edge-tts` package, internet access, a browser or ffmpeg isn't available, still deliver the three text files, run whatever validation is possible, and tell the user precisely which commands remain and what they need. Never fabricate an MP3/MP4 or claim media was built or checked when it wasn't.
