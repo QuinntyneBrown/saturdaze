@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 30 Slides</title>
+<link rel="stylesheet" href="../../assets/slides.css">
+</head>
+<body data-video-number="30" data-video-title="Coding sd-list-item" data-parts="Introduction|Usage|Decorator|Inputs|Template|Styles|Testing|Pitfalls|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Saturdaze components · Video 30 of 52</div>
+  <h1>Coding <code>sd-list-item</code></h1>
+  <p class="lead">One row, three elements, slots declared once.</p>
+</section>
+
+<section id="usage" data-part="1" data-cue="The app renders list items in nine places.">
+  <h2>Three ways the app uses a row</h2>
+  <pre class="code tight" data-lang="html" data-file="saturdaze/src/app/pages/family/family.page.html">            &lt;sd-list-item
+              action
+              chevron
+              [title]="member.name"
+              [subtitle]="member.subtitle"
+              (pressed)="editMember(member)"
+            &gt;</pre>
+  <pre class="code tight" data-lang="html" data-file="saturdaze/src/app/pages/weekend/weekend.page.html">              &lt;sd-list-item [title]="row.title" [subtitle]="row.subtitle" [href]="row.href" chevron&gt;</pre>
+  <pre class="code tight" data-lang="html" data-file="saturdaze/src/app/dialogs/errand-added-dialog/errand-added-dialog.html">    &lt;sd-list-item [title]="placement.description" subtitle="What" subtitleFirst&gt;</pre>
+</section>
+
+<section id="decorator" data-part="2" data-cue="Create the list item file.">
+  <h2>The decorator</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/list-item/list-item.ts" data-mark="8-10">@Component({
+  selector: 'sd-list-item',
+  standalone: true,
+  imports: [NgTemplateOutlet, Icon],
+  templateUrl: './list-item.html',
+  styleUrl: './list-item.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    role: 'listitem',
+  },
+})</pre>
+</section>
+
+<section id="no-mirror" data-part="2" data-cue="Notice that none of the inputs is mirrored onto the host">
+  <h2>Inputs stay inputs (ADR-009)</h2>
+  <div class="cols">
+    <div class="card bad"><h3>Not on the host</h3><p><code>'[attr.title]': 'rowTitle() || null'</code><br><span class="muted small">A native tooltip on every row; nothing reads it</span></p></div>
+    <div class="card good"><h3>On the host</h3><p><code>role: 'listitem'</code><br><span class="muted small">Only the mock's classes and ARIA state</span></p></div>
+  </div>
+</section>
+
+<section id="inputs" data-part="3" data-cue="Now the class. First, a private router">
+  <h2>inject(), inputs and an output</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/list-item/list-item.ts" data-mark="2,4,7,10,14">export class ListItem {
+  private readonly router = inject(Router, { optional: true });
+
+  readonly rowTitle = input&lt;string&gt;('', { alias: 'title' });
+  readonly subtitle = input&lt;string&gt;('');
+  /** Render the subtitle above the title (a label over a value). */
+  readonly subtitleFirst = input(false, { transform: booleanAttribute });
+  readonly href = input&lt;string&gt;('');
+  /** Render the row as a `&lt;button&gt;`; `pressed` emits on click. */
+  readonly action = input(false, { transform: booleanAttribute });
+  readonly chevron = input(false, { transform: booleanAttribute });
+  /** Accessible name override for action rows (defaults to the row text). */
+  readonly label = input&lt;string&gt;('');
+  readonly pressed = output&lt;void&gt;();
+</pre>
+</section>
+
+<section id="alias" data-part="3" data-cue="The inputs. Row title is a string input aliased to title.">
+  <h2>Why <code>rowTitle</code>?</h2>
+  <div class="cols">
+    <div class="card bad"><h3>Field named <code>title</code></h3><p>Collides with the native <code>title</code> property on elements</p></div>
+    <div class="card good"><h3><code>rowTitle</code> + <code>alias: 'title'</code></h3><p>Templates still write <code>title="Sara"</code></p></div>
+  </div>
+  <p class="muted">Flags use <code>booleanAttribute</code>, so <code>&lt;sd-list-item action chevron&gt;</code> just works.</p>
+</section>
+
+<section id="anchor" data-part="3" data-cue="And one protected method, on anchor click.">
+  <h2>Plain clicks route in-app</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/list-item/list-item.ts">  protected onAnchorClick(event: MouseEvent): void {
+    if (this.router) navigateInApp(this.router, event, this.href());
+  }</pre>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/shared/in-app-link.ts">export function navigateInApp(router: Router, event: MouseEvent, href: string): void {
+  if (!isPlainClick(event) || !isInAppHref(href)) return;
+  event.preventDefault();
+  void router.navigateByUrl(href);
+}</pre>
+</section>
+
+<section id="body" data-part="4" data-cue="This is the pattern to learn.">
+  <h2>The body, defined once</h2>
+  <pre class="code tight" data-lang="html" data-file="components/src/lib/list-item/list-item.html" data-mark="1-2,11,14">&lt;ng-template #body&gt;
+  &lt;ng-content select="[slot=leading]" /&gt;
+  &lt;span class="list__text"&gt;
+    @if (subtitle() &amp;&amp; subtitleFirst()) {
+      &lt;span class="list__sub"&gt;{{ subtitle() }}&lt;/span&gt;
+    }
+    @if (rowTitle()) {
+      &lt;span class="list__title"&gt;{{ rowTitle() }}&lt;/span&gt;
+    }
+    /* … subtitle in the normal position … */
+    &lt;ng-content /&gt;
+  &lt;/span&gt;
+  &lt;span class="list__trail"&gt;
+    &lt;ng-content select="[slot=trailing]" /&gt;
+    /* … chevron icon … */</pre>
+</section>
+
+<section id="branches" data-part="4" data-cue="Below the template, an if block chooses the element.">
+  <h2>Three branches, one outlet</h2>
+  <pre class="code tight" data-lang="html" data-file="components/src/lib/list-item/list-item.html" data-mark="6,13,17">@if (href()) {
+  &lt;a
+    /* … class, href, aria-label … */
+    (click)="onAnchorClick($event)"
+  &gt;
+    &lt;ng-container *ngTemplateOutlet="body" /&gt;
+  &lt;/a&gt;
+} @else if (action()) {
+  &lt;button
+    /* … class, type="button", aria-label … */
+    (click)="pressed.emit()"
+  &gt;
+    &lt;ng-container *ngTemplateOutlet="body" /&gt;
+  &lt;/button&gt;
+} @else {
+  &lt;div class="list__item"&gt;
+    &lt;ng-container *ngTemplateOutlet="body" /&gt;</pre>
+</section>
+
+<section id="once" data-part="4" data-cue="Why not just repeat the slots in each branch?">
+  <div class="kicker">AGENTS.md</div>
+  <p class="quote">Declare each <code>ng-content</code> slot once. Slots repeated per <code>@if</code> branch project into one branch only.</p>
+  <p class="muted">Same shape in <code>sd-button</code> and <code>sd-ghost-row</code>.</p>
+</section>
+
+<section id="styles" data-part="5" data-cue="The host is display block. The row is a three column grid">
+  <h2>The row grid</h2>
+  <pre class="code tight" data-lang="scss" data-file="components/src/lib/list-item/list-item.scss" data-mark="3,8,14-15">.list__item {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  column-gap: 12px;
+  align-items: center;
+  width: 100%;
+  min-height: 56px;
+  padding: 10px var(--sd-list-pad-x, 0px);
+  border-bottom: 1px solid var(--colorNeutralStroke2);
+  /* … */
+}
+
+// No leading slot content → collapse the first column.
+.list__item:not(:has(&gt; :first-child:not(.list__text))) {
+  grid-template-columns: minmax(0, 1fr) auto;
+}</pre>
+</section>
+
+<section id="hover" data-part="5" data-cue="The last row drops its bottom border">
+  <h2>Last row, hover, text</h2>
+  <pre class="code tight" data-lang="scss" data-file="components/src/lib/list-item/list-item.scss">:host(:last-child) .list__item {
+  border-bottom: 0;
+}
+
+@media (hover: hover) {
+  .list__item--action:hover {
+    background: var(--colorNeutralBackground3);
+    box-shadow: 0 0 0 8px var(--colorNeutralBackground3);
+  }
+}
+
+.list__sub {
+  /* … */
+  font-size: var(--fontSizeBase300);
+  color: var(--colorNeutralForeground2);
+}</pre>
+</section>
+
+<section id="spec-setup" data-part="6" data-cue="The spec file uses provide router">
+  <h2>Spec setup</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/list-item/list-item.spec.ts" data-mark="3-5,11">  template: `
+    &lt;sd-list-item title="Quinn" subtitle="Parent" chevron&gt;
+      &lt;span slot="leading" class="lead"&gt;Q&lt;/span&gt;
+      &lt;em class="extra"&gt;admin&lt;/em&gt;
+      &lt;span slot="trailing" class="trail"&gt;•&lt;/span&gt;
+    &lt;/sd-list-item&gt;
+  `,
+  /* … */
+    await TestBed.configureTestingModule({
+      imports: [ListItem, HostCmp],
+      providers: [provideRouter([])],
+    }).compileComponents();
+    fixture = TestBed.createComponent(ListItem);
+    fixture.detectChanges();</pre>
+</section>
+
+<section id="spec-list" data-part="6" data-cue="proves the defaults: role list item">
+  <h2>Six tests</h2>
+  <ol class="steps small">
+    <li>creates a static listitem row</li>
+    <li>renders title and subtitle</li>
+    <li>adds the trailing chevron glyph</li>
+    <li>becomes a button that emits pressed when action is set</li>
+    <li>becomes an in-app anchor when href is set and routes plain clicks</li>
+    <li>projects leading, default and trailing content into the row</li>
+  </ol>
+</section>
+
+<section id="spec-button" data-part="6" data-cue="&quot;Becomes a button that emits pressed when action is set&quot; checks">
+  <h2>The button emits <code>pressed</code></h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/list-item/list-item.spec.ts" data-mark="11-14">  it('becomes a button that emits pressed when action is set', () =&gt; {
+    fixture.componentRef.setInput('action', true);
+    fixture.componentRef.setInput('label', 'Edit Sara');
+    fixture.detectChanges();
+    const btn = row() as HTMLButtonElement;
+    expect(btn.tagName).toBe('BUTTON');
+    expect(btn.getAttribute('type')).toBe('button');
+    expect(btn.classList.contains('list__item--action')).toBe(true);
+    expect(btn.getAttribute('aria-label')).toBe('Edit Sara');
+
+    const spy = vi.fn();
+    fixture.componentInstance.pressed.subscribe(spy);
+    btn.click();
+    expect(spy).toHaveBeenCalledTimes(1);
+  });</pre>
+</section>
+
+<section id="spec-anchor" data-part="6" data-cue="spies on the router's navigate by U R L">
+  <h2>href wins, plain clicks route</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/list-item/list-item.spec.ts" data-mark="3-4,11,15-16">    const router = TestBed.inject(Router);
+    const navigate = vi.spyOn(router, 'navigateByUrl').mockResolvedValue(true);
+    fixture.componentRef.setInput('href', '/family/review');
+    fixture.componentRef.setInput('action', true);
+    fixture.detectChanges();
+
+    const a = row() as HTMLAnchorElement;
+    expect(a.tagName).toBe('A');
+    expect(a.getAttribute('href')).toBe('/family/review');
+    expect(a.classList.contains('list__item--action')).toBe(true);
+    expect(host.querySelector('button')).toBeNull();
+
+    const event = new MouseEvent('click', { bubbles: true, cancelable: true });
+    a.dispatchEvent(event);
+    expect(navigate).toHaveBeenCalledWith('/family/review');
+    expect(event.defaultPrevented).toBe(true);</pre>
+</section>
+
+<section id="spec-slots" data-part="6" data-cue="Finally, &quot;projects leading, default and trailing content into the row&quot;">
+  <h2>Every slot lands in place</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/list-item/list-item.spec.ts">    const item = el.querySelector('.list__item') as HTMLElement;
+    expect(item.firstElementChild?.classList.contains('lead')).toBe(true);
+    expect(item.querySelector('.list__text .extra')?.textContent).toBe('admin');
+    expect(item.querySelector('.list__text .list__title')?.textContent?.trim()).toBe('Quinn');
+    const trail = item.querySelector('.list__trail') as HTMLElement;
+    expect(trail.querySelector('.trail')).not.toBeNull();
+    expect(trail.querySelector('sd-icon svg')?.innerHTML).toContain('M9 6l6 6-6 6');</pre>
+  <p class="muted">Fails if someone duplicates the slots per branch.</p>
+</section>
+
+<section id="pitfalls" data-part="7" data-cue="Repeating ng content in each branch">
+  <h2>Pitfalls</h2>
+  <ul>
+    <li>Repeating <code>ng-content</code> per branch — content disappears</li>
+    <li>A <code>title</code> field without an alias</li>
+    <li>A click handler on a static row — use <code>action</code> or <code>href</code></li>
+    <li>A toggle in the trailing slot of an <code>action</code> row</li>
+  </ul>
+</section>
+
+<section id="recap" data-part="8" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div>One body template + <code>ngTemplateOutlet</code></div>
+    <div>div · anchor · button by input</div>
+    <div><code>booleanAttribute</code> flags, <code>alias: 'title'</code></div>
+    <div><code>output()</code> for <code>pressed</code></div>
+    <div>Optional <code>inject(Router)</code>, plain clicks in-app</div>
+    <div>Six tests, including slot projection</div>
+  </div>
+</section>
+
+<section id="next" data-part="8" data-cue="Next, in video thirty one">
+  <div class="kicker">Next · Video 31</div>
+  <h1>Coding <code>sd-media</code></h1>
+</section>
+
+<script src="../../assets/slides.js"></script>
+</body>
+</html>

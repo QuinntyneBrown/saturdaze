@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 15 Slides</title>
+<link rel="stylesheet" href="../../assets/slides.css">
+</head>
+<body data-video-number="15" data-video-title="Coding sd-cover" data-parts="Introduction|Decorator|Inputs|Template|Styles|Testing|Pitfalls|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Saturdaze components · Video 15 of 52</div>
+  <h1>Coding <code>sd-cover</code></h1>
+  <p class="lead">A photo header with a readable scrim, a tinted fallback and an aliased input.</p>
+</section>
+
+<section id="usage" data-part="0" data-cue="The weekend page is its only user.">
+  <h2>Where the app uses it</h2>
+  <pre class="code" data-lang="html" data-file="saturdaze/src/app/pages/weekend/weekend.page.html" data-mark="3,5,8">  &lt;sd-cover
+    [media]="weekend().cover?.media ?? null"
+    [eyebrow]="weekend().dateRange"
+    [title]="headline()"
+    [subtitle]="subtitle()"
+  &gt;
+    &lt;sd-button slot="edit" variant="quiet" size="sm" (click)="changeCover()"&gt;
+      &lt;sd-icon name="edit" /&gt;
+      Change photo
+    &lt;/sd-button&gt;
+  &lt;/sd-cover&gt;</pre>
+</section>
+
+<section id="decorator" data-part="1" data-cue="Open the cover component file.">
+  <h2>The decorator</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/cover/cover.ts" data-mark="4,10">@Component({
+  selector: 'sd-cover',
+  standalone: true,
+  imports: [Icon],
+  templateUrl: './cover.html',
+  styleUrl: './cover.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: 'cover',
+    '[class.cover--fallback]': '!media()',
+  },
+})</pre>
+</section>
+
+<section id="doc" data-part="1" data-cue="The doc comment above the class is worth reading.">
+  <h2>Two design promises</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/cover/cover.ts" data-mark="2-3,5">/**
+ * The weekend cover — `.cover` in docs/mocks/pages/weekend.html (L2-108). The
+ * cover photo, eagerly loaded since it is above the fold, with its label as a
+ * credit chip; the date range, the page's `h1` and the summary sit on a
+ * gradient scrim that keeps white text at 4.5:1 over light and dark photos.
+ * With no photo it is a tinted tile and the text stays readable. Project the
+ * "Change photo" control into `[slot=edit]`.
+ */</pre>
+</section>
+
+<section id="inputs" data-part="2" data-cue="There are five inputs, all with defaults, and no outputs.">
+  <h2>Five inputs, no outputs</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/cover/cover.ts" data-mark="5">export class Cover {
+  readonly media = input&lt;CardMedia | null&gt;(null);
+  /** "16 – 17 May". */
+  readonly eyebrow = input&lt;string&gt;('');
+  readonly coverTitle = input&lt;string&gt;('', { alias: 'title' });
+  readonly subtitle = input&lt;string&gt;('');
+  readonly tone = input&lt;MediaTone&gt;('sky');
+}</pre>
+  <p class="muted"><code>CardMedia</code> (media/media.ts): <code>src</code> · <code>alt</code> · <code>width</code> · <code>height</code> · <code>credit</code></p>
+</section>
+
+<section id="alias" data-part="2" data-cue="The fifth input is the interesting one.">
+  <h2>An alias for the public name</h2>
+  <div class="cols">
+    <div class="card"><h3>Page writes</h3><p><code>[title]="headline()"</code> — the mock's vocabulary</p></div>
+    <div class="card good"><h3>Class reads</h3><p><code>coverTitle()</code> — unambiguous inside the component</p></div>
+  </div>
+  <p class="muted">Use <code>alias</code> sparingly, for public naming like this.</p>
+</section>
+
+<section id="let" data-part="3" data-cue="The template starts with a let declaration">
+  <h2><code>@let</code> + <code>@if</code>: read once, narrow the type</h2>
+  <pre class="code" data-lang="html" data-file="components/src/lib/cover/cover.html" data-mark="1-2,7-10">@let m = media();
+@if (m) {
+  &lt;img
+    class="cover__img"
+    [src]="m.src"
+    [alt]="m.alt"
+    [attr.width]="m.width"
+    [attr.height]="m.height"
+    loading="eager"
+    fetchpriority="high"
+  /&gt;
+  @if (m.credit) {
+    &lt;span class="media__credit"&gt;{{ m.credit }}&lt;/span&gt;
+  }</pre>
+</section>
+
+<section id="fallback" data-part="3" data-cue="The else branch renders the fallback">
+  <h2>Fallback, body and the edit slot</h2>
+  <pre class="code tight" data-lang="html" data-file="components/src/lib/cover/cover.html" data-mark="2,10,15">} @else {
+  &lt;div class="cover__fallback" [class]="'cover__fallback--' + tone()" aria-hidden="true"&gt;
+    &lt;sd-icon name="sparkle" [size]="40" /&gt;
+  &lt;/div&gt;
+}
+&lt;div class="cover__body"&gt;
+  @if (eyebrow()) {
+    &lt;p class="cover__eyebrow"&gt;{{ eyebrow() }}&lt;/p&gt;
+  }
+  &lt;h1 class="cover__title"&gt;{{ coverTitle() }}&lt;/h1&gt;
+  @if (subtitle()) {
+    &lt;p class="cover__sub"&gt;{{ subtitle() }}&lt;/p&gt;
+  }
+&lt;/div&gt;
+&lt;div class="cover__edit"&gt;&lt;ng-content select="[slot=edit]" /&gt;&lt;/div&gt;</pre>
+</section>
+
+<section id="styles-host" data-part="4" data-cue="The stylesheet starts by using the breakpoints partial.">
+  <h2>A scrim knob on the host</h2>
+  <pre class="code" data-lang="scss" data-file="components/src/lib/cover/cover.scss" data-mark="1,4,10">@use '../styles/breakpoints' as *;
+
+:host {
+  --sd-cover-scrim: color-mix(in srgb, var(--colorNeutralForeground1) 78%, transparent);
+
+  position: relative;
+  display: block;
+  overflow: hidden;
+  margin-bottom: 12px;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--borderRadiusLarge);
+  background: var(--colorNeutralBackground3);
+}</pre>
+</section>
+
+<section id="styles-body" data-part="4" data-cue="Each fallback tone is a fill and ink pair">
+  <h2>Contrast by design</h2>
+  <pre class="code" data-lang="scss" data-file="components/src/lib/cover/cover.scss" data-mark="7-8">// The scrim's dark end sits under the text, so it reads at 4.5:1 or better
+// whatever the photo (L2-108 AC4).
+.cover__body {
+  position: absolute;
+  inset: auto 0 0 0;
+  padding: 48px 16px 16px;
+  background: linear-gradient(to top, var(--sd-cover-scrim) 55%, transparent);
+  color: var(--colorNeutralForegroundOnBrand);
+}</pre>
+</section>
+
+<section id="styles-bp" data-part="4" data-cue="Finally the respond to mixin, with tablet.">
+  <h2>Responsive without a magic number</h2>
+  <pre class="code" data-lang="scss" data-file="components/src/lib/cover/cover.scss" data-mark="1,3">@include respond-to(tablet) {
+  :host {
+    aspect-ratio: 21 / 8;
+  }
+
+  .cover__body {
+    padding: 64px 24px 20px;
+  }
+}</pre>
+  <p class="muted"><code>720px</code> lives in <code>styles/_breakpoints.scss</code>, not here.</p>
+</section>
+
+<section id="no-spec" data-part="5" data-cue="The cover folder has no spec file.">
+  <h2>No <code>cover.spec.ts</code> — what one should prove</h2>
+  <ul class="small">
+    <li>With media: <code>src</code>, <code>alt</code>, <code>width</code>, <code>height</code>, eager + high priority; credit chip only when set</li>
+    <li>Without media: <code>cover--fallback</code> on the host, tone class, <code>aria-hidden</code>, no <code>img</code></li>
+    <li>The aliased <code>title</code> fills the <code>h1</code> in both states</li>
+    <li>Empty eyebrow and summary render nothing</li>
+    <li>A host component projects a button into <code>[slot=edit]</code></li>
+  </ul>
+  <p class="muted small">Not existing tests — a checklist for writing one.</p>
+</section>
+
+<section id="e2e" data-part="5" data-cue="Today this behaviour is covered end to end instead.">
+  <h2>Covered end to end today</h2>
+  <p class="file">e2e/tests/weekend-cover.spec.ts</p>
+  <ul class="small">
+    <li>the cover leads with the photo, its credit, the dates, the title and the summary</li>
+    <li>16:9 under 720px, 21:8 from 720px, with the actions below</li>
+    <li>with no stop photos the cover shows the fallback and keeps the title as the h1</li>
+    <li>Change photo offers each stop's photo and switches the cover</li>
+  </ul>
+</section>
+
+<section id="pitfalls" data-part="6" data-cue="Pitfalls">
+  <h2>Pitfalls</h2>
+  <ul>
+    <li>Dropping <code>width</code>/<code>height</code> — layout shift</li>
+    <li>Lazy-loading the hero image</li>
+    <li>Rendering the <code>h1</code> in one branch only</li>
+    <li>Hard-coding <code>720px</code></li>
+    <li>Exposing the decorative fallback to assistive tech</li>
+  </ul>
+</section>
+
+<section id="recap" data-part="7" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div>One modifier bound to <code>!media()</code></div>
+    <div><code>alias: 'title'</code></div>
+    <div><code>@let</code> + <code>@if</code> narrow the type</div>
+    <div>Dimensions + eager + high priority</div>
+    <div><code>--sd-cover-scrim</code> knob</div>
+    <div><code>respond-to(tablet)</code></div>
+  </div>
+</section>
+
+<section id="next" data-part="7" data-cue="Next, video sixteen builds S D date tile">
+  <div class="kicker">Next · Video 16</div>
+  <h1>Coding <code>sd-date-tile</code></h1>
+</section>
+
+<script src="../../assets/slides.js"></script>
+</body>
+</html>

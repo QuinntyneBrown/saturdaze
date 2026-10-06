@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 43 Slides</title>
+<link rel="stylesheet" href="../../assets/slides.css">
+</head>
+<body data-video-number="43" data-video-title="Coding sd-stars" data-parts="Introduction|Usage|Decorator|API|Derived|Template|Styles|Tests|Pitfalls|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Saturdaze components · Video 43 of 52</div>
+  <h1>Coding <code>sd-stars</code></h1>
+  <p class="lead">Five stars that display a rating, or become a radio group to edit it.</p>
+</section>
+
+<section id="usage" data-part="1" data-cue="The past card, on the Past page">
+  <h2>Two modes in the app</h2>
+  <pre class="code tight" data-lang="html" data-file="components/src/lib/past-card/past-card.html" data-mark="2">&lt;button class="card__rate" type="button" [attr.aria-label]="rateLabel()" (click)="rate.emit()"&gt;
+  &lt;sd-stars [rating]="rating() ?? 0" [label]="ratingLabel()" /&gt;
+&lt;/button&gt;</pre>
+  <pre class="code tight" data-lang="html" data-file="saturdaze/src/app/dialogs/rating-dialog/rating-dialog.html" data-mark="1">  &lt;sd-stars size="lg" editable [rating]="rating()" (ratingChange)="rating.set($event)" /&gt;</pre>
+</section>
+
+<section id="decorator" data-part="2" data-cue="Open the file called stars dot T S.">
+  <h2>The decorator: role from a signal</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/stars/stars.ts" data-mark="11,12">@Component({
+  selector: 'sd-stars',
+  standalone: true,
+  imports: [Icon],
+  templateUrl: './stars.html',
+  styleUrl: './stars.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: 'stars',
+    '[class.stars--lg]': 'size() === "lg"',
+    '[attr.role]': 'editable() ? "radiogroup" : null',
+    '[attr.aria-label]': 'editable() ? groupLabel() : null',
+  },
+})</pre>
+</section>
+
+<section id="inputs" data-part="3" data-cue="There are five signal inputs">
+  <h2>Five inputs, one output</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/stars/stars.ts" data-mark="2,6,8">export class Stars {
+  readonly rating = input&lt;number&gt;(0);
+  /** Caption after the stars in display mode ("5 of 5", "Rate it"). */
+  readonly label = input&lt;string&gt;('');
+  readonly size = input&lt;'md' | 'lg'&gt;('md');
+  readonly editable = input(false, { transform: booleanAttribute });
+  readonly groupLabel = input&lt;string&gt;('Rating');
+  readonly ratingChange = output&lt;number&gt;();</pre>
+</section>
+
+<section id="pair" data-part="3" data-cue="Here is the best practice to notice.">
+  <h2><code>rating</code> + <code>ratingChange</code></h2>
+  <div class="cols">
+    <div class="card good"><h3 style="color:var(--forest)">input + output</h3><p>Parent owns the value; <code>[(rating)]="r"</code> still works</p></div>
+    <div class="card"><h3>model()</h3><p>Only when the component must write the value itself</p></div>
+  </div>
+</section>
+
+<section id="derived" data-part="4" data-cue="Steps is a plain read only array">
+  <h2>Derived state and methods</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/stars/stars.ts" data-mark="2,5">  protected readonly steps = [1, 2, 3, 4, 5];
+  protected readonly iconSize = computed(() =&gt; (this.size() === 'lg' ? 24 : 18));
+
+  protected pick(step: number): void {
+    this.ratingChange.emit(step === this.rating() ? 0 : step);
+  }
+
+  protected starLabel(step: number): string {
+    return step === 1 ? '1 star' : `${step} stars`;
+  }</pre>
+</section>
+
+<section id="editable" data-part="5" data-cue="The template branches on editable.">
+  <h2>Editable: five radio buttons</h2>
+  <pre class="code tight" data-lang="html" data-file="components/src/lib/stars/stars.html" data-mark="6-8,11">@if (editable()) {
+  @for (step of steps; track step) {
+    &lt;button
+      class="stars__btn"
+      type="button"
+      role="radio"
+      [attr.aria-checked]="step === rating()"
+      [attr.aria-label]="starLabel(step)"
+      (click)="pick(step)"
+    &gt;
+      &lt;sd-icon name="star" [size]="iconSize()" [filled]="step &lt;= rating()" /&gt;
+    &lt;/button&gt;
+  }</pre>
+</section>
+
+<section id="display" data-part="5" data-cue="In display mode, the same loop renders just the icons">
+  <h2>Display: icons and a caption</h2>
+  <pre class="code" data-lang="html" data-file="components/src/lib/stars/stars.html" data-mark="5">} @else {
+  @for (step of steps; track step) {
+    &lt;sd-icon name="star" [size]="iconSize()" [filled]="step &lt;= rating()" /&gt;
+  }
+  @if (label()) {
+    &lt;span class="stars__label"&gt;{{ label() }}&lt;/span&gt;
+  }
+}</pre>
+</section>
+
+<section id="checked" data-part="5" data-cue="Notice that aria checked is only true for the exact rating">
+  <h2>Filled is not checked</h2>
+  <table class="grid small">
+    <tr><th>rating = 3</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr>
+    <tr><td>filled</td><td>✓</td><td>✓</td><td>✓</td><td></td><td></td></tr>
+    <tr><td>aria-checked</td><td>false</td><td>false</td><td>true</td><td>false</td><td>false</td></tr>
+  </table>
+</section>
+
+<section id="styles" data-part="6" data-cue="Open stars dot S C S S.">
+  <h2>Fill from the icon's host class</h2>
+  <pre class="code tight" data-lang="scss" data-file="components/src/lib/stars/stars.scss" data-mark="5,9">sd-icon {
+  color: var(--colorNeutralForeground3);
+}
+
+sd-icon.icon--filled {
+  color: var(--colorPaletteSunForeground3);
+}
+
+.stars__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  color: var(--colorNeutralForeground3);
+}</pre>
+</section>
+
+<section id="spec-setup" data-part="7" data-cue="Open stars dot spec dot T S.">
+  <h2>Spec setup and helpers</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/stars/stars.spec.ts">  const icons = (): HTMLElement[] =&gt; Array.from(host.querySelectorAll('sd-icon'));
+  const filled = (): number =&gt; icons().filter((i) =&gt; i.classList.contains('icon--filled')).length;
+  const glyphSize = (i: number): string =&gt; icons()[i]?.style.getPropertyValue('--_size') ?? '';
+  const radios = (): HTMLButtonElement[] =&gt;
+    Array.from(host.querySelectorAll('button.stars__btn[role="radio"]'));
+
+  beforeEach(async () =&gt; {
+    await TestBed.configureTestingModule({ imports: [Stars] }).compileComponents();
+    fixture = TestBed.createComponent(Stars);
+    fixture.detectChanges();
+    host = fixture.nativeElement as HTMLElement;
+  });</pre>
+</section>
+
+<section id="tests" data-part="7" data-cue="&quot;creates five empty display stars&quot; proves the defaults">
+  <h2>Display mode tests</h2>
+  <table class="grid small">
+    <tr><th>Test</th><th>Proves</th></tr>
+    <tr><td>creates five empty display stars</td><td>5 icons, 0 <code>.icon--filled</code>, no role, no caption</td></tr>
+    <tr><td>fills stars up to the rating</td><td>3rd has <code>.icon--filled</code>, 4th not</td></tr>
+    <tr><td>shows a caption after the stars in display mode</td><td>"5 of 5"</td></tr>
+    <tr><td>grows the glyphs for the large size</td><td><code>--_size</code> 18px → 24px (the computed)</td></tr>
+  </table>
+</section>
+
+<section id="edit-tests" data-part="7" data-cue="&quot;becomes a radiogroup of five labelled radios when editable&quot; checks">
+  <h2>Editable mode tests</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/stars/stars.spec.ts" data-mark="7-11">  it('emits the picked step and clears when the current star is pressed again', () =&gt; {
+    fixture.componentRef.setInput('editable', true);
+    fixture.componentRef.setInput('rating', 4);
+    fixture.detectChanges();
+    const spy = vi.fn();
+    fixture.componentInstance.ratingChange.subscribe(spy);
+
+    radios()[1]?.click();
+    expect(spy).toHaveBeenLastCalledWith(2);
+
+    radios()[3]?.click();
+    expect(spy).toHaveBeenLastCalledWith(0);
+  });</pre>
+  <p class="muted small">Also: becomes a radiogroup of five labelled radios when editable — "1 star" … "5 stars", one <code>aria-checked="true"</code></p>
+</section>
+
+<section id="pitfalls" data-part="8" data-cue="Expecting the stars to update by themselves when clicked.">
+  <h2>Pitfalls</h2>
+  <ul>
+    <li>Clicks only emit — the parent must feed <code>rating</code> back</li>
+    <li>Five tab stops, no arrow keys: the full radio keyboard pattern isn't implemented</li>
+    <li>Captions are display-mode only</li>
+  </ul>
+</section>
+
+<section id="recap" data-part="9" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div><code>rating</code> + <code>ratingChange</code> = banana-in-a-box</div>
+    <div><code>model()</code> only if the component writes</div>
+    <div><code>computed()</code> icon size; plain steps array</div>
+    <div>Host role + label from a signal</div>
+    <div>One <code>aria-checked</code>, many filled</div>
+    <div>Spec covers both modes</div>
+  </div>
+</section>
+
+<section id="next" data-part="9" data-cue="Next, video forty four builds">
+  <div class="kicker">Next · Video 44</div>
+  <h1>Coding <code>sd-status-row</code></h1>
+</section>
+
+<script src="../../assets/slides.js"></script>
+</body>
+</html>

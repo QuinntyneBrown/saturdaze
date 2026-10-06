@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 35 Slides</title>
+<link rel="stylesheet" href="../../assets/slides.css">
+</head>
+<body data-video-number="35" data-video-title="Coding [sdScrolled]" data-parts="Introduction|Usage|Decorator|State|Constructor|Testing|Pitfalls|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Saturdaze components · Video 35 of 52</div>
+  <h1>Coding <code>[sdScrolled]</code></h1>
+  <p class="lead">A signal, a listener and no template.</p>
+</section>
+
+<section id="usage" data-part="1" data-cue="You will not find the directive's attribute in any page template.">
+  <h2>Applied as a host directive</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/top-bar/top-bar.ts" data-mark="5">@Component({
+  selector: 'sd-top-bar',
+  standalone: true,
+  imports: [Avatar, RouterLink],
+  hostDirectives: [Scrolled],
+  templateUrl: './top-bar.html',
+  styleUrl: './top-bar.scss',
+  /* … */
+})</pre>
+  <p class="muted small"><code>sitebar.ts</code> does the same: <code>hostDirectives: [Scrolled]</code></p>
+</section>
+
+<section id="style" data-part="1" data-cue="Then each one styles the state.">
+  <h2>Styling the state</h2>
+  <pre class="code" data-lang="scss" data-file="components/src/lib/top-bar/top-bar.scss" data-mark="1">:host([data-scrolled]) {
+  background: color-mix(in srgb, var(--colorNeutralBackground2) 86%, transparent);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 1px 0 var(--colorNeutralStroke2);
+}</pre>
+</section>
+
+<section id="decorator" data-part="2" data-cue="Create the scrolled file.">
+  <h2>A <code>@Directive</code>, not a component</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/scrolled/scrolled.ts" data-mark="5">@Directive({
+  selector: '[sdScrolled]',
+  standalone: true,
+  host: {
+    '[attr.data-scrolled]': 'scrolled() ? "" : null',
+  },
+})</pre>
+  <div class="cols">
+    <div class="card"><h3>scrolled() = true</h3><p><code>&lt;header data-scrolled=""&gt;</code></p></div>
+    <div class="card"><h3>scrolled() = false</h3><p><code>&lt;header&gt;</code> — attribute removed</p></div>
+  </div>
+</section>
+
+<section id="state" data-part="3" data-cue="The class injects two things with the inject function">
+  <h2>inject() and one signal</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/scrolled/scrolled.ts" data-mark="2-3,5">export class Scrolled {
+  private readonly zone = inject(NgZone);
+  private readonly destroyRef = inject(DestroyRef);
+
+  readonly scrolled = signal(false);</pre>
+  <p class="muted">Public on purpose: a host that injects the directive can read <code>scrolled()</code>.</p>
+</section>
+
+<section id="ctor" data-part="4" data-cue="All the work happens in the constructor">
+  <h2>The constructor</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/scrolled/scrolled.ts" data-mark="2,5,7-9,10,11">  constructor() {
+    afterNextRender(() =&gt; {
+      const update = (): void =&gt; {
+        const next = window.scrollY &gt; 4;
+        if (next !== this.scrolled()) this.zone.run(() =&gt; this.scrolled.set(next));
+      };
+      this.zone.runOutsideAngular(() =&gt; {
+        window.addEventListener('scroll', update, { passive: true });
+      });
+      this.destroyRef.onDestroy(() =&gt; window.removeEventListener('scroll', update));
+      update();
+    });
+  }</pre>
+</section>
+
+<section id="zone" data-part="4" data-cue="This is the key performance trick.">
+  <h2>Outside the zone, in only on a flip</h2>
+  <div class="flow">
+    <div class="node"><b>every scroll event</b><span class="small">runOutsideAngular</span></div>
+    <div class="arrow">→</div>
+    <div class="node"><b>next !== scrolled()?</b><span class="small">usually no → nothing</span></div>
+    <div class="arrow">→</div>
+    <div class="node accent"><b>zone.run(set)</b><span class="small">one change detection</span></div>
+  </div>
+</section>
+
+<section id="no-effect" data-part="4" data-cue="Notice there is no effect here.">
+  <h2>What it doesn't use</h2>
+  <ul>
+    <li><code>effect()</code> — it reacts to a DOM event, not a signal</li>
+    <li><code>input()</code> / <code>computed()</code> — nothing to configure or derive</li>
+    <li>a template or styles — hosts style <code>[data-scrolled]</code></li>
+  </ul>
+  <p class="muted">The 4px threshold avoids flicker from tiny bounces.</p>
+</section>
+
+<section id="spec-setup" data-part="5" data-cue="Open the spec file. A helper called set scroll Y">
+  <h2>Spec setup</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/scrolled/scrolled.spec.ts" data-mark="6,14">  template: `&lt;div sdScrolled class="probe"&gt;bar&lt;/div&gt;`,
+})
+class HostCmp {}
+
+function setScrollY(value: number): void {
+  Object.defineProperty(window, 'scrollY', { value, configurable: true, writable: true });
+}
+  /* … */
+  beforeEach(async () =&gt; {
+    setScrollY(0);
+    await TestBed.configureTestingModule({ imports: [HostCmp] }).compileComponents();
+    fixture = TestBed.createComponent(HostCmp);
+    fixture.detectChanges();
+    await fixture.whenStable();
+    el = (fixture.nativeElement as HTMLElement).querySelector('.probe') as HTMLElement;
+  });</pre>
+</section>
+
+<section id="spec-list" data-part="5" data-cue="&quot;Creates without data scrolled at the top of the page&quot;">
+  <h2>Six tests</h2>
+  <ol class="steps small">
+    <li>creates without data-scrolled at the top of the page</li>
+    <li>sets data-scrolled once the window scrolls past the top</li>
+    <li>ignores the first few pixels</li>
+    <li>clears data-scrolled when scrolled back to the top</li>
+    <li>reads the initial scroll position on first render</li>
+    <li>removes the window listener when destroyed</li>
+  </ol>
+</section>
+
+<section id="spec-threshold" data-part="5" data-cue="&quot;Ignores the first few pixels&quot;">
+  <h2>The threshold</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/scrolled/scrolled.spec.ts" data-mark="2,9">  it('sets data-scrolled once the window scrolls past the top', () =&gt; {
+    setScrollY(10);
+    window.dispatchEvent(new Event('scroll'));
+    fixture.detectChanges();
+    expect(el.getAttribute('data-scrolled')).toBe('');
+  });
+
+  it('ignores the first few pixels', () =&gt; {
+    setScrollY(4);
+    window.dispatchEvent(new Event('scroll'));
+    fixture.detectChanges();
+    expect(el.hasAttribute('data-scrolled')).toBe(false);
+  });</pre>
+</section>
+
+<section id="spec-cleanup" data-part="5" data-cue="And &quot;removes the window listener when destroyed&quot;">
+  <h2>Guarding against a leak</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/scrolled/scrolled.spec.ts" data-mark="4">  it('removes the window listener when destroyed', () =&gt; {
+    const remove = vi.spyOn(window, 'removeEventListener');
+    fixture.destroy();
+    expect(remove).toHaveBeenCalledWith('scroll', expect.any(Function));
+    remove.mockRestore();
+  });</pre>
+</section>
+
+<section id="pitfalls" data-part="6" data-cue="Touching window in the constructor instead of after next render.">
+  <h2>Pitfalls</h2>
+  <ul>
+    <li><code>window</code> in the constructor — breaks SSR</li>
+    <li>Listening inside the zone</li>
+    <li>No cleanup on destroy</li>
+    <li>Expecting nested scroll containers to be tracked</li>
+    <li><code>sdScrolled</code> in page templates instead of <code>hostDirectives</code></li>
+  </ul>
+</section>
+
+<section id="recap" data-part="7" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div>No template: one <code>signal()</code>, one host binding</div>
+    <div><code>afterNextRender</code> for browser-only setup</div>
+    <div><code>DestroyRef</code> for cleanup</div>
+    <div>Passive listener outside the zone</div>
+    <div><code>hostDirectives</code> + <code>[data-scrolled]</code></div>
+    <div>Tests: threshold, initial read, cleanup</div>
+  </div>
+</section>
+
+<section id="next" data-part="7" data-cue="Next, in video thirty six">
+  <div class="kicker">Next · Video 36</div>
+  <h1>Coding <code>sd-section</code></h1>
+</section>
+
+<script src="../../assets/slides.js"></script>
+</body>
+</html>

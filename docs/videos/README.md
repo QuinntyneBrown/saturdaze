@@ -27,6 +27,10 @@ Five videos on the one place Saturdaze calls a model: catalog ingestion through 
 | 10 | [Configure the .NET solution to use Foundry](10-configure-the-dotnet-solution/README.md) | ~12 min | `AddIngestion` binding and key resolution; local run, Worker, run-once job, App Service WebJob; Anthropic fallback; failure-to-fix table. |
 | 11 | [Event ingestion: the suggested workflow and cadence](11-event-ingestion-workflow-and-cadence/README.md) | ~10 min | Why one Friday pass covers two weekends; Friday 08:00 UTC; events weekly, activities monthly, restaurants quarterly; the weekly checklist; reading `IngestionRuns`; safe reruns. |
 
+## Components series
+
+Fifty-two instructional videos, one per component in `frontend/projects/components/src/lib/`: each codes the component step by step, calls out its best practices (especially signals) and walks through its unit tests. See the [series index](components/README.md).
+
 ## Building a video
 
 Tooling lives in `tools/` (Node 22, no npm dependencies) and needs ffmpeg (libx264 + libass), Chrome/Chromium, and Python with the free `edge-tts` package (`python -m pip install edge-tts`; `PYTHON` overrides the interpreter, default `python3`).

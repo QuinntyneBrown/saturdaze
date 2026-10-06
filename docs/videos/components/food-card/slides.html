@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 25 Slides</title>
+<link rel="stylesheet" href="../../assets/slides.css">
+</head>
+<body data-video-number="25" data-video-title="Coding sd-food-card" data-parts="Introduction|Decorator|Inputs|Template|Styles|Spec|Pitfalls|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Saturdaze components · Video 25 of 52</div>
+  <h1>Coding <code>sd-food-card</code></h1>
+  <p class="lead">States, votes and two outputs on a restaurant pick.</p>
+</section>
+
+<section id="usage" data-part="0" data-cue="It has three states that matter">
+  <h2>Where it is used</h2>
+  <pre class="code tight" data-lang="html" data-file="saturdaze/src/app/pages/ideas-food/ideas-food.page.html" data-mark="6-8,14,15">        &lt;sd-food-card
+          [class.card--span]="card.topPick &amp;&amp; !section.lockedId"
+          [title]="card.name"
+          [meta]="card.meta"
+          [tone]="card.topPick ? 'sun' : 'default'"
+          [topPick]="card.topPick"
+          [locked]="card.locked"
+          [lockedLabel]="card.lockedLabel ?? 'Locked'"
+          [dimmed]="card.dimmed"
+          [menuUrl]="card.menuUrl ?? ''"
+          [media]="card.media"
+          [votes]="cells(card)"
+          [votesDisabled]="card.votesDisabled"
+          (voteChange)="vote(card, $event)"
+          (lockIn)="lockIn(section, card)"
+        &gt;</pre>
+</section>
+
+<section id="decorator" data-part="1" data-cue="Open food card dot T S.">
+  <h2>The decorator</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/food-card/food-card.ts" data-mark="4,9-11">@Component({
+  selector: 'sd-food-card',
+  standalone: true,
+  imports: [Button, Chip, Icon, Media, VoteRow],
+  …
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: 'card card--media',
+    '[class.card--span]': 'topPick()',
+    '[class.card--locked]': 'locked()',
+    '[class.card--dimmed]': 'dimmed()',
+  },
+})</pre>
+</section>
+
+<section id="inputs" data-part="2" data-cue="The class declares eleven signal inputs and two outputs.">
+  <h2>Eleven inputs, two outputs</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/food-card/food-card.ts" data-mark="4,5,8,13">  readonly cardTitle = input&lt;string&gt;('', { alias: 'title' });
+  readonly meta = input&lt;string&gt;('');
+  readonly tone = input&lt;DiscTone&gt;('default');
+  readonly topPick = input(false, { transform: booleanAttribute });
+  readonly locked = input(false, { transform: booleanAttribute });
+  /** "Locked for lunch" / "Locked for dinner". */
+  readonly lockedLabel = input&lt;string&gt;('Locked');
+  readonly dimmed = input(false, { transform: booleanAttribute });
+  readonly menuUrl = input&lt;string&gt;('');
+  /** The restaurant's primary photo; null shows the fallback tile (L2-106). */
+  readonly media = input&lt;CardMedia | null&gt;(null);
+  readonly votes = input&lt;readonly VoteCell[]&gt;([]);
+  readonly votesDisabled = input(false, { transform: booleanAttribute });
+  readonly voteChange = output&lt;{ index: number; vote: Vote }&gt;();
+  readonly lockIn = output&lt;void&gt;();</pre>
+</section>
+
+<section id="votes-type" data-part="2" data-cue="Votes is typed as a read only array of vote cells">
+  <h2>A typed, read-only array</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/vote-row/vote-row.ts">export type Vote = 'up' | 'down' | 'none';
+
+export interface VoteCell {
+  readonly name: string;
+  readonly tone: AvatarTone;
+  readonly vote: Vote;
+}</pre>
+</section>
+
+<section id="tone-note" data-part="2" data-cue="One input deserves an honest note.">
+  <h2>An input nobody reads</h2>
+  <div class="cols">
+    <div class="card bad"><h3><code>tone</code></h3><p class="small">Declared, bound by the ideas food page, never read in <code>food-card.html</code>.</p></div>
+    <div class="card"><h3>Why it matters</h3><p class="small">Every input is public API. Remove it, or use it.</p></div>
+  </div>
+  <pre class="code" data-lang="html" data-file="components/src/lib/food-card/food-card.html">&lt;sd-media class="card__media" [photo]="media()" tone="sun" icon="fork" /&gt;</pre>
+</section>
+
+<section id="outputs" data-part="2" data-cue="Now the outputs, both created with the output function.">
+  <h2>Report, don't decide</h2>
+  <div class="flow">
+    <div class="node"><b>sd-vote-row</b><small>(voteChange)</small></div>
+    <div class="arrow">→</div>
+    <div class="node"><b>sd-food-card</b><small>voteChange · lockIn</small></div>
+    <div class="arrow">→</div>
+    <div class="node accent"><b>ideas-food page</b><small>vote() · lockIn()</small></div>
+  </div>
+  <p class="muted">No <code>computed()</code>, <code>inject()</code> or local <code>signal()</code>.</p>
+</section>
+
+<section id="template-head" data-part="3" data-cue="The head shows the H three title">
+  <h2>One state chip at most</h2>
+  <pre class="code tight" data-lang="html" data-file="components/src/lib/food-card/food-card.html" data-mark="8,12">&lt;div class="card__head"&gt;
+  &lt;div class="card__head-text"&gt;
+    &lt;h3 class="card__title"&gt;{{ cardTitle() }}&lt;/h3&gt;
+    @if (meta()) {
+      &lt;p class="card__meta"&gt;{{ meta() }}&lt;/p&gt;
+    }
+  &lt;/div&gt;
+  @if (locked()) {
+    &lt;sd-chip tone="accent"
+      &gt;&lt;sd-icon name="lock" [size]="13" [stroke]="2" /&gt;{{ lockedLabel() }}&lt;/sd-chip
+    &gt;
+  } @else if (topPick()) {
+    &lt;sd-chip tone="primary"&gt;Top pick&lt;/sd-chip&gt;
+  }
+&lt;/div&gt;</pre>
+</section>
+
+<section id="template-votes" data-part="3" data-cue="The chips slot is declared once.">
+  <h2>Relay the nested output</h2>
+  <pre class="code" data-lang="html" data-file="components/src/lib/food-card/food-card.html" data-mark="6,7">&lt;div class="card__chips"&gt;&lt;ng-content select="[slot=chips]" /&gt;&lt;/div&gt;
+@if (votes().length) {
+  &lt;sd-vote-row
+    [votes]="votes()"
+    [disabled]="votesDisabled()"
+    [label]="'Family vote for ' + cardTitle()"
+    (voteChange)="voteChange.emit($event)"
+  /&gt;
+}</pre>
+</section>
+
+<section id="template-footer" data-part="3" data-cue="The footer uses the between modifier">
+  <h2>The footer</h2>
+  <pre class="code tight" data-lang="html" data-file="components/src/lib/food-card/food-card.html" data-mark="4,6,7">&lt;div class="card__footer card__footer--between"&gt;
+  @if (menuUrl()) {
+    &lt;sd-button variant="quiet" size="sm" [href]="menuUrl()" target="_blank"&gt;See menu&lt;/sd-button&gt;
+  } @else {
+    &lt;span&gt;&lt;/span&gt;
+  }
+  @if (!locked()) {
+    &lt;sd-button variant="primary" size="sm" [disabled]="dimmed()" (click)="lockIn.emit()"&gt;
+      &lt;sd-icon name="lock" /&gt;
+      Lock it in
+    &lt;/sd-button&gt;
+  }
+&lt;/div&gt;</pre>
+</section>
+
+<section id="scss" data-part="4" data-cue="Open food card dot S C S S.">
+  <h2>Mixin + three modifiers</h2>
+  <pre class="code tight" data-lang="scss" data-file="components/src/lib/food-card/food-card.scss · after @use '../styles/card-base' as *;" data-mark="2,6,10,11">:host {
+  @include card-host;
+}
+
+:host(.card--span) {
+  grid-column: 1 / -1;
+}
+
+:host(.card--locked) {
+  border: 2px solid var(--colorStatusSuccessBorderActive);
+  padding: 15px;
+}
+
+:host(.card--dimmed) {
+  opacity: 0.6;
+}</pre>
+</section>
+
+<section id="spec-setup" data-part="5" data-cue="The spec file defines two vote cells">
+  <h2>Spec setup</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/food-card/food-card.spec.ts">const VOTES: readonly VoteCell[] = [
+  { name: 'Quinn', tone: 'primary', vote: 'none' },
+  { name: 'Sara', tone: 'leaf', vote: 'up' },
+];
+…
+    fixture = TestBed.createComponent(FoodCard);
+    fixture.componentRef.setInput('title', 'Pizza Nova');
+    fixture.detectChanges();</pre>
+  <ul class="small"><li><code>creates a photo-led card with a fork fallback tile, the name and a Lock it in button</code></li></ul>
+</section>
+
+<section id="spec-states" data-part="5" data-cue="Two tests cover the style line and the See menu link.">
+  <h2>States and outputs</h2>
+  <ul class="small">
+    <li><code>renders the style line and the See menu link</code></li>
+    <li><code>labels the See menu link with its text</code></li>
+    <li><code>marks the top pick with a spanning card and a primary chip</code></li>
+    <li><code>shows a locked pick with the accent border, chip and no lock button</code></li>
+    <li><code>dims siblings of a locked pick and disables their lock button</code></li>
+    <li><code>emits lockIn when the primary button is pressed</code></li>
+    <li><code>renders the family vote row and relays its votes</code></li>
+    <li><code>projects chips into the chip row</code></li>
+  </ul>
+</section>
+
+<section id="spec-votes" data-part="5" data-cue="Emits lock in when the primary button is pressed covers the second output.">
+  <h2>Relaying votes</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/food-card/food-card.spec.ts" data-mark="8">    fixture.componentRef.setInput('votes', VOTES);
+    fixture.detectChanges();
+    const row = host.querySelector('sd-vote-row') as HTMLElement;
+    expect(row.getAttribute('aria-label')).toBe('Family vote for Pizza Nova');
+    …
+    fixture.componentInstance.voteChange.subscribe(spy);
+    (row.querySelectorAll('.vote-row__btn--up')[0] as HTMLElement).click();
+    expect(spy).toHaveBeenCalledWith({ index: 0, vote: 'up' });</pre>
+</section>
+
+<section id="pitfalls" data-part="6" data-cue="Don't decide locking inside the card">
+  <h2>Pitfalls</h2>
+  <ul>
+    <li>Deciding locking inside the card</li>
+    <li>Handling a nested output instead of relaying it</li>
+    <li>Inputs the template never reads (<code>tone</code>)</li>
+  </ul>
+</section>
+
+<section id="recap" data-part="7" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div>3 booleans → 3 BEM modifiers</div>
+    <div><code>@if</code> / <code>@else if</code>: one state chip</div>
+    <div><code>voteChange</code> relays a typed payload</div>
+    <div><code>lockIn</code> reports a press</div>
+    <div><code>readonly VoteCell[]</code> input</div>
+    <div>Mixin + three modifier rules</div>
+  </div>
+</section>
+
+<section id="next" data-part="7" data-cue="Next, in video twenty six, we build S D ghost row">
+  <div class="kicker">Next · Video 26</div>
+  <h1>Coding <code>sd-ghost-row</code></h1>
+</section>
+
+<script src="../../assets/slides.js"></script>
+</body>
+</html>

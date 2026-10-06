@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 29 Slides</title>
+<link rel="stylesheet" href="../../assets/slides.css">
+</head>
+<body data-video-number="29" data-video-title="Coding sd-list" data-parts="Introduction|Usage|Decorator|Input|Template &amp; styles|Testing|Pitfalls|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Saturdaze components · Video 29 of 52</div>
+  <h1>Coding <code>sd-list</code></h1>
+  <p class="lead">A list host, one boolean input, and a padding knob the rows read.</p>
+</section>
+
+<section id="usage" data-part="1" data-cue="Search the app project for S D list">
+  <h2>Where it is used</h2>
+  <pre class="code tight" data-lang="html" data-file="saturdaze/src/app/pages/family/family.page.html" data-mark="1,13-14">        &lt;sd-list card&gt;
+          @for (member of view().members; track member.id) {
+            &lt;sd-list-item
+              action
+              chevron
+              [title]="member.name"
+              [subtitle]="member.subtitle"
+              (pressed)="editMember(member)"
+            &gt;
+              &lt;sd-avatar slot="leading" [name]="member.name" [tone]="member.tone" size="lg" /&gt;
+            &lt;/sd-list-item&gt;
+          }
+        &lt;/sd-list&gt;
+        &lt;sd-ghost-row icon="plus" (pressed)="addMember()"&gt;Add a family member&lt;/sd-ghost-row&gt;</pre>
+  <p class="muted small">Also: weekend.page.html, calendar-dialog.html, errand-added-dialog.html — always <code>&lt;sd-list card&gt;</code></p>
+</section>
+
+<section id="decorator" data-part="2" data-cue="Create the list file.">
+  <h2>The decorator</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/list/list.ts" data-mark="8-10">@Component({
+  selector: 'sd-list',
+  standalone: true,
+  templateUrl: './list.html',
+  styleUrl: './list.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: 'list',
+    role: 'list',
+    '[class.list--card]': 'card()',
+  },
+})</pre>
+</section>
+
+<section id="mirror" data-part="2" data-cue="Notice what is not there">
+  <h2>Inputs stay inputs (ADR-009)</h2>
+  <div class="cols">
+    <div class="card good"><h3>card = true</h3><p><code>&lt;sd-list class="list list--card" role="list"&gt;</code></p></div>
+    <div class="card bad"><h3>Not on the host</h3><p><code>'[attr.card]': …</code><br><span class="muted small">Only the mock's classes and ARIA state go on the host</span></p></div>
+  </div>
+</section>
+
+<section id="input" data-part="3" data-cue="The class has exactly one line">
+  <h2>One boolean input</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/list/list.ts">export class List {
+  readonly card = input(false, { transform: booleanAttribute });
+}</pre>
+  <table class="map">
+    <tr><th>template</th><th>card()</th></tr>
+    <tr><td>&lt;sd-list card&gt;</td><td>true</td></tr>
+    <tr><td>[card]="true"</td><td>true</td></tr>
+    <tr><td>&lt;sd-list&gt;</td><td>false</td></tr>
+  </table>
+</section>
+
+<section id="not-needed" data-part="3" data-cue="Nothing is derived, so there is no computed signal">
+  <h2>What it doesn't need</h2>
+  <ul>
+    <li><code>computed()</code> — nothing is derived</li>
+    <li><code>output()</code> — rows handle interaction</li>
+    <li><code>imports</code> — the template is only <code>&lt;ng-content /&gt;</code></li>
+  </ul>
+</section>
+
+<section id="template" data-part="4" data-cue="The template is a single ng content element.">
+  <h2>The template</h2>
+  <pre class="code" data-lang="html" data-file="components/src/lib/list/list.html">&lt;ng-content /&gt;</pre>
+  <p class="muted">One default slot, declared once.</p>
+</section>
+
+<section id="styles" data-part="4" data-cue="The styles are where the trick lives.">
+  <h2>The card surface and the knob</h2>
+  <pre class="code" data-lang="scss" data-file="components/src/lib/list/list.scss" data-mark="4,11">:host {
+  display: flex;
+  flex-direction: column;
+  --sd-list-pad-x: 0px;
+}
+
+:host(.list--card) {
+  background: var(--colorNeutralBackground1);
+  border: 1px solid var(--colorNeutralStroke2);
+  border-radius: var(--borderRadiusLarge);
+  --sd-list-pad-x: 16px;
+}</pre>
+</section>
+
+<section id="knob" data-part="4" data-cue="The list never reaches into its rows.">
+  <h2>The row reads the knob</h2>
+  <pre class="code" data-lang="scss" data-file="components/src/lib/list-item/list-item.scss" data-mark="3">.list__item {
+  /* … */
+  padding: 10px var(--sd-list-pad-x, 0px);
+  border-bottom: 1px solid var(--colorNeutralStroke2);
+  /* … */
+}</pre>
+  <div class="flow">
+    <div class="node"><b>sd-list.list--card</b><span class="small">--sd-list-pad-x: 16px</span></div>
+    <div class="arrow">→</div>
+    <div class="node accent"><b>sd-list-item</b><span class="small">inherits the value</span></div>
+  </div>
+</section>
+
+<section id="spec-setup" data-part="5" data-cue="Open the spec file.">
+  <h2>Spec setup</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/list/list.spec.ts">@Component({
+  standalone: true,
+  imports: [List, ListItem],
+  template: `
+    &lt;sd-list card&gt;
+      &lt;sd-list-item title="Quinn" /&gt;
+      &lt;sd-list-item title="Sara" /&gt;
+      &lt;sd-list-item title="Eli" /&gt;
+    &lt;/sd-list&gt;
+  `,
+})
+class HostCmp {}
+  /* … */
+    fixture = TestBed.createComponent(List);
+    fixture.detectChanges();
+    host = fixture.nativeElement as HTMLElement;</pre>
+</section>
+
+<section id="spec-plain" data-part="5" data-cue="The first test, &quot;creates a plain list&quot;">
+  <h2>Defaults and the card state</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/list/list.spec.ts" data-mark="9,11">  it('creates a plain list', () =&gt; {
+    expect(fixture.componentInstance).toBeTruthy();
+    expect(host.classList.contains('list')).toBe(true);
+    expect(host.getAttribute('role')).toBe('list');
+    expect(host.classList.contains('list--card')).toBe(false);
+  });
+
+  it('draws the card surface when asked', () =&gt; {
+    fixture.componentRef.setInput('card', true);
+    fixture.detectChanges();
+    expect(host.classList.contains('list--card')).toBe(true);
+  });</pre>
+</section>
+
+<section id="spec-project" data-part="5" data-cue="The third, &quot;projects list items as its direct children&quot;">
+  <h2>Items are direct children</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/list/list.spec.ts" data-mark="6-8">  it('projects list items as its direct children', () =&gt; {
+    const wrapper = TestBed.createComponent(HostCmp);
+    wrapper.detectChanges();
+    const list = (wrapper.nativeElement as HTMLElement).querySelector('sd-list') as HTMLElement;
+    expect(list.classList.contains('list--card')).toBe(true);
+    const items = Array.from(list.children);
+    expect(items.length).toBe(3);
+    expect(items.every((i) =&gt; i.getAttribute('role') === 'listitem')).toBe(true);
+    /* … titles: 'Quinn', 'Sara', 'Eli' */
+  });</pre>
+</section>
+
+<section id="pitfalls" data-part="6" data-cue="Projecting something other than list items">
+  <h2>Pitfalls</h2>
+  <ul>
+    <li>Ghost rows or other content inside the list — wrong item count</li>
+    <li>A boolean input without <code>booleanAttribute</code></li>
+    <li><code>::ng-deep</code> into rows instead of the <code>--sd-list-pad-x</code> knob</li>
+  </ul>
+</section>
+
+<section id="recap" data-part="7" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div>Host is the list: class + <code>role="list"</code></div>
+    <div><code>booleanAttribute</code>; state as a class, not an attribute</div>
+    <div>Card surface from tokens by role</div>
+    <div><code>--sd-list-pad-x</code> passes padding down</div>
+    <div>One slot, declared once</div>
+    <div>Spec: defaults, card, direct children</div>
+  </div>
+</section>
+
+<section id="next" data-part="7" data-cue="Next, in video thirty">
+  <div class="kicker">Next · Video 30</div>
+  <h1>Coding <code>sd-list-item</code></h1>
+</section>
+
+<script src="../../assets/slides.js"></script>
+</body>
+</html>

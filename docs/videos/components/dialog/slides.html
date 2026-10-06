@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 19 Slides</title>
+<link rel="stylesheet" href="../../assets/slides.css">
+</head>
+<body data-video-number="19" data-video-title="Coding sd-dialog" data-parts="Introduction|The idea|Decorator|Inputs|Render hook|Template|Styles|Spec|Pitfalls|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Saturdaze components · Video 19 of 52</div>
+  <h1>Coding <code>sd-dialog</code></h1>
+  <p class="lead">A presentational panel for CDK dialogs: sheet on phones, modal from 720px.</p>
+</section>
+
+<section id="usages" data-part="0" data-cue="It appears in more than twenty files in the app's dialogs folder">
+  <h2>Where it is used</h2>
+  <pre class="code tight" data-lang="html" data-file="saturdaze/src/app/dialogs/rename-weekend-dialog/rename-weekend-dialog.html">&lt;sd-dialog title="Rename this weekend" [subtitle]="data.eyebrow"&gt;
+  &lt;form class="form" (submit)="save($event)"&gt;
+    …
+  &lt;/form&gt;
+  &lt;sd-button slot="actions" variant="quiet" type="button" (click)="cancel()"&gt;Cancel&lt;/sd-button&gt;
+  &lt;sd-button slot="actions" variant="primary" type="button" (click)="save()"&gt;Save&lt;/sd-button&gt;
+&lt;/sd-dialog&gt;</pre>
+  <p class="muted small">Also: confirm, share, rating, add-errand, commitment, calendar… (<code>app/dialogs/</code>)</p>
+</section>
+
+<section id="idea" data-part="1" data-cue="The key decision comes first.">
+  <h2>Who owns what</h2>
+  <div class="cols">
+    <div class="card sky"><h3>CDK <code>Dialog</code></h3><ul class="small"><li>backdrop</li><li>focus trap, restore focus</li><li>Escape</li><li><code>role="dialog"</code> container</li></ul></div>
+    <div class="card"><h3><code>sd-dialog</code></h3><ul class="small"><li>the panel</li><li>title, subtitle, close ×</li><li>body + action row</li><li>labels the container</li></ul></div>
+  </div>
+</section>
+
+<section id="options" data-part="1" data-cue="The app opens its dialogs with a shared options object">
+  <h2>Opened with shared options</h2>
+  <pre class="code" data-lang="ts" data-file="saturdaze/src/app/dialogs/confirm-dialog/confirm-dialog.ts" data-mark="5">/** The options every app dialog opens with. */
+export const DIALOG_OPTIONS = {
+  autoFocus: 'first-tabbable' as const,
+  restoreFocus: true,
+  panelClass: 'sd-dialog-panel',
+  backdropClass: 'sd-dialog-backdrop',
+};</pre>
+  <p class="muted">Rule: use CDK Dialog/Overlay — never hand-roll a modal.</p>
+</section>
+
+<section id="decorator" data-part="2" data-cue="Open dialog dot T S.">
+  <h2>The decorator</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/dialog/dialog.ts" data-mark="2,3,7,9-11">@Component({
+  selector: 'sd-dialog',
+  standalone: true,
+  imports: [Button, Icon],
+  templateUrl: './dialog.html',
+  styleUrl: './dialog.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: 'dialog',
+    '[class.dialog--specimen]': 'isStatic()',
+    '[class.dialog--wide]': 'wide()',
+  },
+})</pre>
+</section>
+
+<section id="host" data-part="2" data-cue="The host object adds the class dialog">
+  <h2>Host bindings read signals</h2>
+  <ul>
+    <li><code>.dialog</code> — the BEM block from <code>docs/mocks/styles/app.css</code> (ADR-009)</li>
+    <li>Modifiers <code>dialog--specimen</code>, <code>dialog--wide</code> from <code>isStatic()</code>, <code>wide()</code></li>
+    <li>Inputs are <b>not</b> reflected to host attributes — only classes and ARIA (ADR-009)</li>
+  </ul>
+</section>
+
+<section id="inject" data-part="3" data-cue="Two private fields use the inject function">
+  <h2><code>inject()</code>, optional where it may be missing</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/dialog/dialog.ts" data-mark="3">export class Dialog {
+  private readonly host = inject&lt;ElementRef&lt;HTMLElement&gt;&gt;(ElementRef);
+  private readonly ref = inject(DialogRef, { optional: true });</pre>
+  <p class="muted">No <code>DialogRef</code> in Storybook or the <code>/dialogs</code> gallery.</p>
+</section>
+
+<section id="inputs" data-part="3" data-cue="The static input is a signal input with an alias">
+  <h2>Signal inputs</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/dialog/dialog.ts" data-mark="1,5,8">  readonly staticMode = input(false, { alias: 'static', transform: booleanAttribute });
+  private readonly forcedStatic = inject(SD_DIALOG_STATIC, { optional: true }) ?? false;
+  /** Inline when the `static` input or the `SD_DIALOG_STATIC` provider says so. */
+  readonly isStatic = computed(() =&gt; this.staticMode() || this.forcedStatic);
+  readonly dialogTitle = input&lt;string&gt;('', { alias: 'title' });
+  readonly subtitle = input&lt;string&gt;('');
+  /** 520px panel for forms. */
+  readonly wide = input(false, { transform: booleanAttribute });
+  readonly closeLabel = input&lt;string&gt;('Close');
+  /** Emits when the × is pressed; the CDK ref (if any) is closed too. */
+  readonly closed = output&lt;void&gt;();</pre>
+</section>
+
+<section id="token" data-part="3" data-cue="Then there is an injection token called S D dialog static.">
+  <h2>An injection token + <code>computed()</code></h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/dialog/dialog.ts">export const SD_DIALOG_STATIC = new InjectionToken&lt;boolean&gt;('SD_DIALOG_STATIC');</pre>
+  <pre class="code" data-lang="ts" data-file="saturdaze/src/app/pages/dialogs/dialogs.page.ts">        { provide: SD_DIALOG_STATIC, useValue: true },</pre>
+  <p class="muted"><code>isStatic = computed(() =&gt; staticMode() || forcedStatic)</code> — one derived value for host and template.</p>
+</section>
+
+<section id="output" data-part="3" data-cue="The closed output uses the output function">
+  <h2><code>output()</code>, not <code>@Output()</code></h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/dialog/dialog.ts">  readonly closed = output&lt;void&gt;();</pre>
+  <p class="muted">Typed, no <code>EventEmitter</code>; consumers bind <code>(closed)="…"</code>.</p>
+</section>
+
+<section id="after-render" data-part="4" data-cue="Accessibility needs one piece of DOM work.">
+  <h2>Labelling the CDK container</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/dialog/dialog.ts" data-mark="5,8">  /** Unique id of the `&lt;h2&gt;`; the CDK container's `aria-labelledby` points at it. */
+  protected readonly titleId = `sd-dialog-title-${nextDialogId++}`;
+
+  constructor() {
+    afterNextRender(() =&gt; {
+      const container = this.host.nativeElement.closest('[role="dialog"], [role="alertdialog"]');
+      if (container &amp;&amp; !container.hasAttribute('aria-labelledby')) {
+        container.setAttribute('aria-labelledby', this.titleId);
+      }
+    });
+  }</pre>
+</section>
+
+<section id="why-not-effect" data-part="4" data-cue="Why not an effect?">
+  <h2><code>afterNextRender</code> vs <code>effect()</code></h2>
+  <div class="cols">
+    <div class="card good"><h3 style="color:var(--forest)">afterNextRender</h3><p class="small">Runs once, in the browser, after the first render. One-time DOM work.</p></div>
+    <div class="card bad"><h3>effect()</h3><p class="small">Re-runs when signals change. Nothing here to react to.</p></div>
+  </div>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/dialog/dialog.ts">  protected close(): void {
+    this.closed.emit();
+    this.ref?.close();
+  }</pre>
+</section>
+
+<section id="template" data-part="5" data-cue="In the template, the header holds an H two">
+  <h2>The template</h2>
+  <pre class="code tight" data-lang="html" data-file="components/src/lib/dialog/dialog.html" data-mark="4,13-16">  &lt;div class="dialog__header"&gt;
+    &lt;div class="dialog__heading"&gt;
+      &lt;h2 class="dialog__title" [id]="titleId"&gt;{{ dialogTitle() }}&lt;/h2&gt;
+      @if (subtitle()) {
+        &lt;p class="dialog__sub"&gt;{{ subtitle() }}&lt;/p&gt;
+      }
+    &lt;/div&gt;
+    &lt;sd-button
+      class="dialog__close"
+      variant="ghost"
+      size="sm"
+      icon
+      [label]="closeLabel()"
+      (click)="close()"
+    &gt;</pre>
+</section>
+
+<section id="slots" data-part="5" data-cue="Then come three content slots, each declared once.">
+  <h2>Three slots, each declared once</h2>
+  <pre class="code" data-lang="html" data-file="components/src/lib/dialog/dialog.html">  &lt;div class="dialog__body"&gt;&lt;ng-content /&gt;&lt;/div&gt;
+  &lt;div class="dialog__actions"&gt;
+    &lt;div class="dialog__actions-left"&gt;&lt;ng-content select="[slot=actions-left]" /&gt;&lt;/div&gt;
+    &lt;ng-content select="[slot=actions]" /&gt;
+  &lt;/div&gt;</pre>
+  <p class="muted">A slot repeated per <code>@if</code> branch projects into one branch only.</p>
+</section>
+
+<section id="scss-panel" data-part="6" data-cue="Open dialog dot S C S S.">
+  <h2>Tokens by role</h2>
+  <pre class="code tight" data-lang="scss" data-file="components/src/lib/dialog/dialog.scss" data-mark="12-15">.dialog__panel {
+  position: relative;
+  width: 100%;
+  max-width: 480px;
+  margin-inline: auto;
+  max-height: 88svh;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 20px;
+  background: var(--colorNeutralBackground1);
+  border-radius: var(--borderRadiusXLarge) var(--borderRadiusXLarge) 0 0;
+  box-shadow: var(--shadow28);
+  animation: sd-rise var(--durationNormal) var(--curveEasyEase);
+}</pre>
+</section>
+
+<section id="scss-actions" data-part="6" data-cue="On phones the action row is a column.">
+  <h2>Action row: phone first, then tablet</h2>
+  <div class="cols">
+    <pre class="code tight" data-lang="scss" data-file="dialog.scss · phones">.dialog__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 4px;
+  --sd-btn-h: 44px;
+  --sd-btn-w: 100%;
+}
+
+.dialog__actions ::ng-deep .btn--primary,
+.dialog__actions ::ng-deep .btn--danger {
+  order: -1;
+}</pre>
+    <pre class="code tight" data-lang="scss" data-file="dialog.scss · from 720px">@include respond-to(tablet) {
+  .dialog__actions {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    --sd-btn-h: 40px;
+    --sd-btn-w: auto;
+  }
+
+  .dialog__actions-left {
+    display: flex;
+    margin-right: auto;
+  }
+}</pre>
+  </div>
+</section>
+
+<section id="spec-setup" data-part="7" data-cue="The spec file has a small host component">
+  <h2>Spec setup</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/dialog/dialog.spec.ts">  template: `
+    &lt;sd-dialog title="Rename weekend" wide&gt;
+      &lt;p class="body"&gt;Give it a name.&lt;/p&gt;
+      &lt;button slot="actions-left" class="remove"&gt;Remove&lt;/button&gt;
+      &lt;button slot="actions" class="save"&gt;Save&lt;/button&gt;
+    &lt;/sd-dialog&gt;
+  `,
+…
+  beforeEach(async () =&gt; {
+    await TestBed.configureTestingModule({ imports: [Dialog, HostCmp] }).compileComponents();
+    fixture = TestBed.createComponent(Dialog);
+    fixture.detectChanges();
+    host = fixture.nativeElement as HTMLElement;
+  });</pre>
+</section>
+
+<section id="spec-inputs" data-part="7" data-cue="Creates a panel with a heading and a close button checks">
+  <h2>Structure, inputs, output</h2>
+  <ul class="small">
+    <li><code>creates a panel with a heading and a close button</code></li>
+    <li><code>renders title and subtitle</code></li>
+    <li><code>mirrors static and wide to host classes</code></li>
+    <li><code>emits closed when the × is pressed</code></li>
+  </ul>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/dialog/dialog.spec.ts">    fixture.componentRef.setInput('title', 'Rate Saturday');
+    fixture.componentRef.setInput('subtitle', 'How did it go?');
+    fixture.componentRef.setInput('closeLabel', 'Dismiss');
+    fixture.detectChanges();</pre>
+</section>
+
+<section id="spec-a11y" data-part="7" data-cue="Three tests guard accessibility.">
+  <h2>Accessibility and slots</h2>
+  <ul class="small">
+    <li><code>gives the heading an id and does not nest a dialog role of its own</code></li>
+    <li><code>labels the surrounding CDK container with its heading</code></li>
+    <li><code>leaves an existing aria-labelledby on the container alone</code></li>
+    <li><code>projects body, left action and actions into their regions</code></li>
+    <li><b>Dialog inside a CDK dialog</b> · <code>closes the CDK ref when the × is pressed</code></li>
+  </ul>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/dialog/dialog.spec.ts">      container.appendChild(again.nativeElement);
+      again.detectChanges();
+      await again.whenStable();</pre>
+</section>
+
+<section id="pitfalls" data-part="8" data-cue="Don't make S D dialog open itself">
+  <h2>Pitfalls</h2>
+  <ul>
+    <li>Opening from the component — use CDK <code>Dialog.open</code> + shared options</li>
+    <li>Adding <code>role="dialog"</code> to the panel</li>
+    <li>An <code>effect()</code> for one-time DOM work</li>
+    <li>One <code>@if</code> around several <code>[slot=…]</code> nodes (NG8011)</li>
+  </ul>
+</section>
+
+<section id="recap" data-part="9" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div>Presentational; the CDK owns modal behaviour</div>
+    <div>Aliased inputs + <code>booleanAttribute</code></div>
+    <div><code>computed()</code> merges input + token</div>
+    <div><code>output()</code> + optional <code>DialogRef</code></div>
+    <div><code>afterNextRender</code> labels the container</div>
+    <div>Tokens by role · BEM · slots once</div>
+  </div>
+</section>
+
+<section id="next" data-part="9" data-cue="Next, in video twenty, we build S D disc">
+  <div class="kicker">Next · Video 20</div>
+  <h1>Coding <code>sd-disc</code></h1>
+</section>
+
+<script src="../../assets/slides.js"></script>
+</body>
+</html>

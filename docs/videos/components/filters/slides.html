@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 24 Slides</title>
+<link rel="stylesheet" href="../../assets/slides.css">
+</head>
+<body data-video-number="24" data-video-title="Coding sd-filters" data-parts="Introduction|Decorator|Inputs|Template|Styles|Spec|Pitfalls|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Saturdaze components · Video 24 of 52</div>
+  <h1>Coding <code>sd-filters</code></h1>
+  <p class="lead">A labelled row of filter chips that scrolls on phones and wraps from 720px.</p>
+</section>
+
+<section id="usage" data-part="0" data-cue="It appears at the top of the ideas activities, events and food pages">
+  <h2>Where it is used</h2>
+  <pre class="code tight" data-lang="html" data-file="saturdaze/src/app/pages/ideas-events/ideas-events.page.html" data-mark="1,10">&lt;sd-filters class="filters" label="Filters"&gt;
+  @for (chip of view().windowChips; track chip.label) {
+    &lt;sd-filter-chip
+      [tone]="filterTone(chip.tone)"
+      [pressed]="chip.active"
+      (pressedChange)="setWindow(chip)"
+      &gt;{{ chip.label }}&lt;/sd-filter-chip
+    &gt;
+  }
+  &lt;span class="sd-vdivider" aria-hidden="true"&gt;&lt;/span&gt;
+  @for (chip of view().categoryChips; track chip.label) {</pre>
+  <p class="muted small">Also: <code>ideas-activities</code>, <code>ideas-food</code>, <code>past</code></p>
+</section>
+
+<section id="decorator" data-part="1" data-cue="Open filters dot T S.">
+  <h2>The decorator</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/filters/filters.ts" data-mark="7,8">@Component({
+  selector: 'sd-filters',
+  standalone: true,
+  templateUrl: './filters.html',
+  styleUrl: './filters.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    role: 'group',
+    '[attr.aria-label]': 'label()',
+    '[class.scroller-x]': 'scroll()',
+    '[class.filters]': '!scroll()',
+  },
+})</pre>
+</section>
+
+<section id="group" data-part="1" data-cue="The host object starts with a static role of group.">
+  <h2>A named group</h2>
+  <div class="flow">
+    <div class="node accent"><b>"Filters, group"</b><small>role="group" + aria-label</small></div>
+    <div class="arrow">→</div>
+    <div class="node"><b>"Outdoors, toggle button"</b><small>each sd-filter-chip</small></div>
+  </div>
+</section>
+
+<section id="classes" data-part="1" data-cue="Then come two class bindings driven by one signal.">
+  <h2>One signal, two mock classes</h2>
+  <table class="map">
+    <tr><th>scroll()</th><th>host class</th><th>mock rule</th></tr>
+    <tr><td>true (default)</td><td>scroller-x</td><td class="prose">full-bleed scroller, wraps from 720px</td></tr>
+    <tr><td>false</td><td>filters</td><td class="prose">always wraps</td></tr>
+  </table>
+  <p class="muted small">Both from <code>docs/mocks/styles/app.css</code> (ADR-009). No <code>scroll</code> attribute on the host: inputs stay inputs.</p>
+</section>
+
+<section id="inputs" data-part="2" data-cue="The class has two signal inputs.">
+  <h2>Two inputs</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/filters/filters.ts">export class Filters {
+  readonly label = input&lt;string&gt;('Filters');
+  readonly scroll = input(true, { transform: booleanAttribute });
+}</pre>
+  <pre class="code" data-lang="html" data-file="booleanAttribute with a true default">&lt;sd-filters scroll="false"&gt;  →  scroll() === false</pre>
+</section>
+
+<section id="not-needed" data-part="2" data-cue="That's the whole class.">
+  <h2>What it doesn't need</h2>
+  <div class="cols three">
+    <div class="card"><h3>computed()</h3><p class="small"><code>!scroll()</code> is enough</p></div>
+    <div class="card"><h3>output()</h3><p class="small">The chips emit</p></div>
+    <div class="card"><h3>inject() · effect()</h3><p class="small">No services, no side effects</p></div>
+  </div>
+</section>
+
+<section id="template" data-part="3" data-cue="The template is one default N G content.">
+  <h2>The template</h2>
+  <pre class="code" data-lang="html" data-file="components/src/lib/filters/filters.html">&lt;ng-content /&gt;</pre>
+  <pre class="code" data-lang="scss" data-file="components/src/lib/styles/_global.scss">.sd-vdivider {
+  width: 1px;
+  height: 20px;
+  background: var(--colorNeutralStroke1);
+  flex: none;
+  margin: 0 2px;
+}</pre>
+</section>
+
+<section id="scss-filters" data-part="4" data-cue="Open filters dot S C S S.">
+  <h2>Wrapping row</h2>
+  <pre class="code" data-lang="scss" data-file="components/src/lib/filters/filters.scss">:host(.filters) {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}</pre>
+</section>
+
+<section id="scss-scroller" data-part="4" data-cue="The host with the scroller x class is the interesting one.">
+  <h2>Full-bleed scroller</h2>
+  <div class="cols">
+    <pre class="code tight" data-lang="scss" data-file="filters.scss · :host(.scroller-x)" data-mark="8,9">:host(.scroller-x) {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 8px;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+  margin-inline: calc(-1 * var(--layoutGutter));
+  padding-inline: var(--layoutGutter);
+  …</pre>
+    <pre class="code tight" data-lang="scss" data-file="filters.scss · the edge fade">  mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 16px,
+    #000 calc(100% - 16px),
+    transparent
+  );
+}</pre>
+  </div>
+  <p class="muted small"><code>#000</code> here is mask alpha, not a colour.</p>
+</section>
+
+<section id="scss-tablet" data-part="4" data-cue="A rule with N G deep sets flex none">
+  <h2>Children keep their width; tablet wraps</h2>
+  <pre class="code tight" data-lang="scss" data-file="components/src/lib/filters/filters.scss" data-mark="1,6">:host ::ng-deep &gt; * {
+  flex: none;
+}
+
+@include respond-to(tablet) {
+  :host(.scroller-x) {
+    flex-wrap: wrap;
+    overflow: visible;
+    margin-inline: 0;
+    padding-inline: 0;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+}</pre>
+</section>
+
+<section id="spec-setup" data-part="5" data-cue="The spec file has a host component with a filters row labelled Kind">
+  <h2>Spec setup</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/filters/filters.spec.ts">  template: `
+    &lt;sd-filters label="Kind"&gt;
+      &lt;sd-filter-chip&gt;All&lt;/sd-filter-chip&gt;
+      &lt;span class="sd-vdivider"&gt;&lt;/span&gt;
+      &lt;sd-filter-chip&gt;Outdoors&lt;/sd-filter-chip&gt;
+    &lt;/sd-filters&gt;
+  `,</pre>
+  <ul class="small">
+    <li><code>creates as a labelled group</code></li>
+    <li><code>scrolls horizontally by default</code></li>
+    <li><code>wraps when scroll is turned off</code></li>
+    <li><code>uses the label input as the accessible name</code></li>
+  </ul>
+</section>
+
+<section id="spec-order" data-part="5" data-cue="Projects chips and dividers in order renders">
+  <h2>Projection order</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/filters/filters.spec.ts">  it('projects chips and dividers in order', () =&gt; {
+    const wrapper = TestBed.createComponent(HostCmp);
+    wrapper.detectChanges();
+    const group = (wrapper.nativeElement as HTMLElement).querySelector('sd-filters') as HTMLElement;
+    expect(group.getAttribute('aria-label')).toBe('Kind');
+    const children = Array.from(group.children).map((c) =&gt; c.tagName.toLowerCase());
+    expect(children).toEqual(['sd-filter-chip', 'span', 'sd-filter-chip']);
+    expect(group.querySelectorAll('.filter-chip').length).toBe(2);
+  });</pre>
+</section>
+
+<section id="pitfalls" data-part="6" data-cue="Don't drop the label">
+  <h2>Pitfalls</h2>
+  <ul>
+    <li>A group without a name</li>
+    <li>A wrapper element inside the host</li>
+    <li>A fixed number instead of <code>--layoutGutter</code> for the bleed</li>
+    <li>Dividers inside chips instead of between them</li>
+  </ul>
+</section>
+
+<section id="recap" data-part="7" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div><code>role="group"</code> + label input</div>
+    <div><code>booleanAttribute</code> picks the layout</div>
+    <div>Host bindings read signals directly</div>
+    <div>Full bleed with the gutter token</div>
+  </div>
+</section>
+
+<section id="next" data-part="7" data-cue="Next, in video twenty five, we build S D food card">
+  <div class="kicker">Next · Video 25</div>
+  <h1>Coding <code>sd-food-card</code></h1>
+</section>
+
+<script src="../../assets/slides.js"></script>
+</body>
+</html>

@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 33 Slides</title>
+<link rel="stylesheet" href="../../assets/slides.css">
+</head>
+<body data-video-number="33" data-video-title="Coding sd-page-header" data-parts="Introduction|Usage|Decorator|Inputs|Template|Styles|Testing|Pitfalls|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Saturdaze components · Video 33 of 52</div>
+  <h1>Coding <code>sd-page-header</code></h1>
+  <p class="lead">The title, the actions and three slots — on every core screen.</p>
+</section>
+
+<section id="usage-simple" data-part="1" data-cue="Every core page starts with one.">
+  <h2>From simple…</h2>
+  <pre class="code tight" data-lang="html" data-file="saturdaze/src/app/pages/past/past.page.html">&lt;sd-page-header title="Past weekends" [subtitle]="subtitle()" /&gt;</pre>
+  <pre class="code tight" data-lang="html" data-file="saturdaze/src/app/pages/family/family.page.html">&lt;sd-page-header [title]="view().headline" [subtitle]="view().subtitle" /&gt;</pre>
+</section>
+
+<section id="usage-full" data-part="1" data-cue="The Weekend page is the full form.">
+  <h2>…to the full form</h2>
+  <pre class="code tight" data-lang="html" data-file="saturdaze/src/app/pages/weekend/weekend.page.html" data-mark="4,8,11">  &lt;sd-page-header [title]="headline()" [subtitle]="subtitle()"&gt;
+    @if (status() !== 'empty') {
+      &lt;sd-button
+        slot="more"
+        &lt;!-- … quiet, icon, label="More options" … --&gt;
+    }
+    @if (status() !== 'empty') {
+      &lt;sd-button slot="actions" variant="quiet" [disabled]="!actionsEnabled()" (click)="calendar()"&gt;
+    }
+    @if (status() !== 'empty') {
+      &lt;sd-button slot="primary" variant="primary" [disabled]="!actionsEnabled()" (click)="share()"&gt;
+    }</pre>
+  <p class="muted small">Excerpt: button contents and closing tags elided.</p>
+</section>
+
+<section id="one-if" data-part="1" data-cue="Notice each button has its own if block.">
+  <div class="kicker">AGENTS.md · NG8011</div>
+  <p class="quote">A <code>@if</code> wrapping several <code>[slot=…]</code> nodes loses the slot — one <code>@if</code> per node.</p>
+  <pre class="code tight" data-lang="html" data-file="saturdaze/src/app/pages/review-submissions/review-submissions.page.html">  &lt;sd-page-header
+    title="Review submissions"
+    [subtitle]="subtitle()"
+    backHref="/family"
+    backLabel="Family"
+  /&gt;</pre>
+</section>
+
+<section id="decorator" data-part="2" data-cue="Create the page header file.">
+  <h2>The decorator</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/page-header/page-header.ts" data-mark="9">@Component({
+  selector: 'sd-page-header',
+  standalone: true,
+  imports: [Button, Icon],
+  templateUrl: './page-header.html',
+  styleUrl: './page-header.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: 'page-header',
+  },
+})</pre>
+  <p class="muted">No <code>[attr.title]</code>: a host title is a native tooltip (ADR-009).</p>
+</section>
+
+<section id="inputs" data-part="3" data-cue="The class injects the router with the inject function">
+  <h2>inject() and four inputs</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/page-header/page-header.ts" data-mark="2,4">export class PageHeader {
+  private readonly router = inject(Router, { optional: true });
+
+  readonly pageTitle = input&lt;string&gt;('', { alias: 'title' });
+  readonly subtitle = input&lt;string&gt;('');
+  readonly backHref = input&lt;string&gt;('');
+  readonly backLabel = input&lt;string&gt;('Back');
+
+  protected onBack(event: MouseEvent): void {
+    if (this.router) navigateInApp(this.router, event, this.backHref());
+  }
+}</pre>
+</section>
+
+<section id="not-needed" data-part="3" data-cue="There are no outputs: buttons in the slots">
+  <h2>What it doesn't need</h2>
+  <ul>
+    <li><code>output()</code> — slotted buttons bring their own handlers</li>
+    <li><code>computed()</code> — <code>'Back to ' + backLabel()</code> is a simple expression</li>
+    <li><code>booleanAttribute</code> — no flags; empty <code>backHref</code> means no back link</li>
+  </ul>
+</section>
+
+<section id="template-text" data-part="4" data-cue="The template has three regions.">
+  <h2>The text column</h2>
+  <pre class="code tight" data-lang="html" data-file="components/src/lib/page-header/page-header.html" data-mark="4,12,14">&lt;div class="page-header__text"&gt;
+  @if (backHref()) {
+    &lt;a
+      class="page-header__eyebrow sd-hide-lt-720"
+      [attr.href]="backHref()"
+      (click)="onBack($event)"
+    &gt;&lt;!-- … arrow_left icon, {{ backLabel() }} … --&gt;&lt;/a&gt;
+  }
+  &lt;div class="titlerow"&gt;
+    @if (backHref()) {
+      &lt;sd-button
+        class="sd-hide-gte-720"
+        &lt;!-- … ghost, icon … --&gt;
+        [label]="'Back to ' + backLabel()"
+        [href]="backHref()"
+      &gt;</pre>
+</section>
+
+<section id="twice" data-part="4" data-cue="So the back affordance exists twice">
+  <h2>Rendered twice, shown once</h2>
+  <div class="cols">
+    <div class="card"><h3>≥ 720px</h3><p>Eyebrow link <code>.page-header__eyebrow</code><br>"← Family"</p></div>
+    <div class="card indoor"><h3>&lt; 720px</h3><p>Ghost icon <code>sd-button</code><br><code>aria-label="Back to Family"</code></p></div>
+  </div>
+</section>
+
+<section id="template-slots" data-part="4" data-cue="The second region is the more div">
+  <h2>Three slots, each declared once</h2>
+  <pre class="code" data-lang="html" data-file="components/src/lib/page-header/page-header.html" data-mark="5,7-8">    &lt;h1 class="page-header__title"&gt;{{ pageTitle() }}&lt;/h1&gt;
+  &lt;/div&gt;
+  /* … subtitle … */
+&lt;/div&gt;
+&lt;div class="page-header__more"&gt;&lt;ng-content select="[slot=more]" /&gt;&lt;/div&gt;
+&lt;div class="page-header__actions"&gt;
+  &lt;ng-content select="[slot=primary]" /&gt;
+  &lt;ng-content select="[slot=actions]" /&gt;
+&lt;/div&gt;</pre>
+</section>
+
+<section id="phone" data-part="5" data-cue="On phones, the host is a two column grid.">
+  <h2>Phones: a grid</h2>
+  <pre class="code tight" data-lang="scss" data-file="components/src/lib/page-header/page-header.scss" data-mark="3,16">:host {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: 12px;
+  row-gap: 16px;
+  align-items: start;
+  margin-bottom: 24px;
+}
+/* … */
+.page-header__actions {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  --sd-btn-h: 44px;
+}</pre>
+</section>
+
+<section id="deep" data-part="5" data-cue="Projected S D buttons are display contents">
+  <h2>Reaching projected buttons</h2>
+  <pre class="code tight" data-lang="scss" data-file="components/src/lib/page-header/page-header.scss">.page-header__more:not(:has(*)),
+.page-header__actions:not(:has(*)) {
+  display: none;
+}
+
+.page-header__actions ::ng-deep .btn--primary {
+  grid-column: 1 / -1;
+  order: -1;
+}
+
+.page-header__actions ::ng-deep .btn:only-child {
+  grid-column: 1 / -1;
+}</pre>
+  <p class="muted small"><code>sd-button</code>'s host is <code>display: contents</code>, so the inner <code>.btn</code> is the grid item.</p>
+</section>
+
+<section id="tablet" data-part="5" data-cue="From the tablet breakpoint, through the respond to mixin">
+  <h2>From 720px: a flex row</h2>
+  <pre class="code tight" data-lang="scss" data-file="components/src/lib/page-header/page-header.scss" data-mark="1,14">@include respond-to(tablet) {
+  :host {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 16px;
+  }
+  /* … */
+  .page-header__actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    order: 1;
+    --sd-btn-h: 40px;
+  }
+  /* … */
+}</pre>
+</section>
+
+<section id="spec-setup" data-part="6" data-cue="The spec file provides an empty router and a host component">
+  <h2>Spec setup</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/page-header/page-header.spec.ts">  template: `
+    &lt;sd-page-header title="This weekend" subtitle="10 – 11 May"&gt;
+      &lt;button slot="primary" class="primary"&gt;Plan it&lt;/button&gt;
+      &lt;button slot="actions" class="quiet"&gt;Share&lt;/button&gt;
+      &lt;button slot="more" class="more"&gt;More&lt;/button&gt;
+    &lt;/sd-page-header&gt;
+  `,
+  /* … */
+    await TestBed.configureTestingModule({
+      imports: [PageHeader, HostCmp],
+      providers: [provideRouter([])],
+    }).compileComponents();
+    fixture = TestBed.createComponent(PageHeader);
+    fixture.detectChanges();</pre>
+</section>
+
+<section id="spec-list" data-part="6" data-cue="&quot;Creates with an empty h1 and no back affordance&quot;">
+  <h2>Six tests</h2>
+  <ol class="steps small">
+    <li>creates with an empty h1 and no back affordance</li>
+    <li>renders the title and subtitle</li>
+    <li>renders the eyebrow link and the phone back button from backHref</li>
+    <li>draws the arrow glyph inside the phone back button</li>
+    <li>routes a plain click on the eyebrow through the router</li>
+    <li>projects primary, actions and more into their regions</li>
+  </ol>
+</section>
+
+<section id="spec-back" data-part="6" data-cue="&quot;Renders the eyebrow link and the phone back button from back href&quot;">
+  <h2>Both back affordances</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/page-header/page-header.spec.ts" data-mark="7,12-13">    fixture.componentRef.setInput('backHref', '/family');
+    fixture.componentRef.setInput('backLabel', 'Family');
+    fixture.detectChanges();
+
+    const eyebrow = host.querySelector('a.page-header__eyebrow') as HTMLAnchorElement;
+    expect(eyebrow.getAttribute('href')).toBe('/family');
+    expect(eyebrow.classList.contains('sd-hide-lt-720')).toBe(true);
+
+    const back = host.querySelector('.titlerow sd-button') as HTMLElement;
+    expect(back.classList.contains('sd-hide-gte-720')).toBe(true);
+    const backLink = back.querySelector('a.btn') as HTMLAnchorElement;
+    expect(backLink.getAttribute('aria-label')).toBe('Back to Family');
+    expect(backLink.classList.contains('btn--icon')).toBe(true);</pre>
+  <p class="muted small">Excerpt; some assertions elided.</p>
+</section>
+
+<section id="spec-slots" data-part="6" data-cue="And &quot;projects primary, actions and more into their regions&quot;">
+  <h2>Slots land in their regions</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/page-header/page-header.spec.ts">    const actions = el.querySelector('.page-header__actions') as HTMLElement;
+    expect(actions.children[0]?.classList.contains('primary')).toBe(true);
+    expect(actions.children[1]?.classList.contains('quiet')).toBe(true);
+    expect(el.querySelector('.page-header__more .more')?.textContent).toBe('More');</pre>
+</section>
+
+<section id="pitfalls" data-part="7" data-cue="Wrapping several slotted buttons in one if block">
+  <h2>Pitfalls</h2>
+  <ul>
+    <li>One <code>@if</code> around several slotted nodes</li>
+    <li>Two primaries, or more than two quiet actions</li>
+    <li>An icon-only More without <code>label</code></li>
+    <li>Laying out header buttons from the page</li>
+  </ul>
+</section>
+
+<section id="recap" data-part="8" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div>One header, the only <code>h1</code></div>
+    <div><code>alias: 'title'</code>; inputs stay off the host</div>
+    <div>Optional <code>inject(Router)</code></div>
+    <div>Three slots, each declared once</div>
+    <div>Back link twice, shown once</div>
+    <div>Grid → flex, sized by <code>--sd-btn-h</code></div>
+  </div>
+</section>
+
+<section id="next" data-part="8" data-cue="Next, in video thirty four">
+  <div class="kicker">Next · Video 34</div>
+  <h1>Coding <code>sd-past-card</code></h1>
+</section>
+
+<script src="../../assets/slides.js"></script>
+</body>
+</html>

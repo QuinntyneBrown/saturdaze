@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 39 Slides</title>
+<link rel="stylesheet" href="../../assets/slides.css">
+</head>
+<body data-video-number="39" data-video-title="Coding sd-select" data-parts="Introduction|Usage|Decorator|State|Methods|Template|Styles|Tests|Pitfalls|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Saturdaze components · Video 39 of 52</div>
+  <h1>Coding <code>sd-select</code></h1>
+  <p class="lead">A native select in field clothes, wired into Angular forms.</p>
+</section>
+
+<section id="usage" data-part="1" data-cue="Search the app and you will find it in two dialogs.">
+  <h2>Where it is used</h2>
+  <pre class="code" data-lang="html" data-file="saturdaze/src/app/dialogs/add-errand-dialog/add-errand-dialog.html" data-mark="5,6">    &lt;sd-select
+      label="Roughly how long"
+      name="minutes"
+      [options]="durations"
+      [ngModel]="minutes()"
+      (ngModelChange)="minutes.set($event)"
+    /&gt;</pre>
+  <p class="muted small">Also <code>add-to-day-dialog</code>: <code>label="When"</code>.</p>
+</section>
+
+<section id="native" data-part="1" data-cue="Why a native select rather than a custom dropdown?">
+  <h2>Why stay native</h2>
+  <div class="cols four">
+    <div class="card"><h3>Keyboard</h3><p>Arrows, type-ahead</p></div>
+    <div class="card"><h3>Mobile</h3><p>The platform picker</p></div>
+    <div class="card"><h3>Semantics</h3><p>Screen readers already know it</p></div>
+    <div class="card good"><h3 style="color:var(--forest)">You add</h3><p>Field clothes only</p></div>
+  </div>
+</section>
+
+<section id="decorator" data-part="2" data-cue="Open the file called select dot T S.">
+  <h2>The decorator</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/select/select.ts" data-mark="7-9">@Component({
+  selector: 'sd-select',
+  standalone: true,
+  templateUrl: './select.html',
+  styleUrl: './select.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: 'field',
+  },</pre>
+  <p class="muted small">No host attributes for <code>label</code> or <code>required</code>: only classes and ARIA state go on the host (ADR-009).</p>
+</section>
+
+<section id="cva" data-part="2" data-cue="The providers array registers the component">
+  <h2>Plugging into forms</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/select/select.ts" data-mark="3,4">  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() =&gt; Select),
+      multi: true,
+    },
+  ],</pre>
+  <div class="flow">
+    <div class="node"><b>[ngModel] / formControlName</b><span class="small">on &lt;sd-select&gt;</span></div>
+    <div class="arrow">→</div>
+    <div class="node accent"><b>NG_VALUE_ACCESSOR</b><span class="small">this component</span></div>
+    <div class="arrow">→</div>
+    <div class="node"><b>ControlValueAccessor</b><span class="small">writeValue · registerOnChange · setDisabledState</span></div>
+  </div>
+</section>
+
+<section id="state" data-part="3" data-cue="There are five signal inputs">
+  <h2>Inputs and signals</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/select/select.ts" data-mark="5,9,10">export class Select implements ControlValueAccessor {
+  readonly label = input&lt;string&gt;('');
+  readonly options = input&lt;readonly SelectOption[]&gt;([]);
+  readonly hint = input&lt;string&gt;('');
+  readonly required = input(false, { transform: booleanAttribute });
+  readonly name = input&lt;string&gt;('');
+
+  protected readonly id = `sd-select-${nextSelectId++}`;
+  protected readonly value = signal&lt;string&gt;('');
+  protected readonly disabled = signal&lt;boolean&gt;(false);
+
+  private onChange: (value: string) =&gt; void = () =&gt; {};
+  private onTouched: () =&gt; void = () =&gt; {};</pre>
+</section>
+
+<section id="not-needed" data-part="3" data-cue="There is no computed signal here">
+  <h2>What it doesn't need</h2>
+  <div class="cols three">
+    <div class="card"><h3>computed()</h3><p>Nothing is derived</p></div>
+    <div class="card"><h3>output()</h3><p>The accessor reports changes</p></div>
+    <div class="card"><h3>model()</h3><p>Would compete with the form</p></div>
+  </div>
+</section>
+
+<section id="methods" data-part="4" data-cue="Handle change reads the value">
+  <h2>The methods</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/select/select.ts" data-mark="2">  protected handleChange(event: Event): void {
+    const v = (event.target as HTMLSelectElement).value;
+    this.value.set(v);
+    this.onChange(v);
+    this.onTouched();
+  }
+
+  writeValue(value: string | null): void {
+    this.value.set(value ?? '');
+  }</pre>
+</section>
+
+<section id="template-label" data-part="5" data-cue="The template starts with an at if on the label.">
+  <h2>A real label, visible Required</h2>
+  <pre class="code" data-lang="html" data-file="components/src/lib/select/select.html" data-mark="2,5">@if (label()) {
+  &lt;label class="field__label" [attr.for]="id"&gt;
+    {{ label() }}
+    @if (required()) {
+      &lt;span class="field__req"&gt;Required&lt;/span&gt;
+    }
+  &lt;/label&gt;
+}</pre>
+</section>
+
+<section id="template-select" data-part="5" data-cue="Then comes the native select">
+  <h2>The native select</h2>
+  <pre class="code tight" data-lang="html" data-file="components/src/lib/select/select.html" data-mark="7,8,11">&lt;select
+  class="field__input"
+  [id]="id"
+  [attr.name]="name() || null"
+  [disabled]="disabled()"
+  [value]="value()"
+  (change)="handleChange($event)"
+  (blur)="handleChange($event)"
+&gt;
+  @for (option of options(); track option.value) {
+    &lt;option [value]="option.value" [selected]="option.value === value()"&gt;{{ option.label }}&lt;/option&gt;
+  }
+&lt;/select&gt;
+@if (hint()) {
+  &lt;p class="field__hint"&gt;{{ hint() }}&lt;/p&gt;
+}</pre>
+</section>
+
+<section id="styles" data-part="6" data-cue="Open select dot S C S S.">
+  <h2>Label, control, hint</h2>
+  <pre class="code" data-lang="scss" data-file="components/src/lib/select/select.scss" data-mark="5-7">.field__label {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  font-size: var(--fontSizeBase300);
+  font-weight: var(--fontWeightMedium);
+  color: var(--colorNeutralForeground2);
+}</pre>
+  <p class="muted small"><code>:host</code> is a column flex with a 6px gap: label, control, hint.</p>
+</section>
+
+<section id="field" data-part="6" data-cue="The select itself is forty four pixels high">
+  <h2>The field box</h2>
+  <pre class="code tight" data-lang="scss" data-file="components/src/lib/select/select.scss" data-mark="6-11">.field__input {
+  width: 100%;
+  min-width: 0;
+  height: 44px;
+  padding: 0 36px 0 12px;
+  background-color: var(--colorNeutralBackground1);
+  border: 1px solid var(--colorNeutralStroke1);
+  border-radius: var(--borderRadiusMedium);
+  font-size: var(--fontSizeBase400);
+  color: var(--colorNeutralForeground1);
+  appearance: none;</pre>
+  <p class="muted small">The chevron is an inline SVG background image; its stroke is an encoded hex (<code>%236B7280</code>) because <code>var()</code> can't reach into a data URL.</p>
+</section>
+
+<section id="focus" data-part="6" data-cue="Focus visible swaps the outline">
+  <h2>Focus and disabled</h2>
+  <pre class="code" data-lang="scss" data-file="components/src/lib/select/select.scss" data-mark="3,4">.field__input:focus-visible {
+  outline: none;
+  border-color: var(--colorBrandStroke1);
+  box-shadow: 0 0 0 3px var(--colorBrandStroke2);
+}
+
+.field__input:disabled {
+  opacity: 0.6;
+  cursor: default;
+}</pre>
+</section>
+
+<section id="spec-setup" data-part="7" data-cue="Open select dot spec dot T S.">
+  <h2>Spec setup</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/select/select.spec.ts" data-mark="7">  const select = (): HTMLSelectElement =&gt;
+    host.querySelector('select.field__input') as HTMLSelectElement;
+
+  beforeEach(async () =&gt; {
+    await TestBed.configureTestingModule({ imports: [Select] }).compileComponents();
+    fixture = TestBed.createComponent(Select);
+    component = fixture.componentInstance;
+    fixture.componentRef.setInput('options', OPTIONS);
+    fixture.detectChanges();
+    host = fixture.nativeElement as HTMLElement;
+  });</pre>
+</section>
+
+<section id="tests" data-part="7" data-cue="&quot;creates a native select in field clothes with one option per entry&quot; proves">
+  <h2>Structure and labelling</h2>
+  <table class="grid small">
+    <tr><th>Test</th><th>Proves</th></tr>
+    <tr><td>creates a native select in field clothes with one option per entry</td><td><code>.field</code>, id <code>sd-select-N</code>, values + labels, no label/hint</td></tr>
+    <tr><td>links the label to the select and marks required fields</td><td><code>for</code> = select id, "Required", forwarded <code>name</code></td></tr>
+    <tr><td>renders the hint under the select</td><td><code>.field__hint</code> text</td></tr>
+  </table>
+</section>
+
+<section id="cva-tests" data-part="7" data-cue="The last three drive the control value accessor.">
+  <h2>Driving the accessor</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/select/select.spec.ts" data-mark="7,8">  it('reports a user change to the form and marks it touched', () =&gt; {
+    const onChange = vi.fn();
+    const onTouched = vi.fn();
+    component.registerOnChange(onChange);
+    component.registerOnTouched(onTouched);
+
+    select().value = 'either';
+    select().dispatchEvent(new Event('change'));
+
+    expect(onChange).toHaveBeenCalledWith('either');
+    expect(onTouched).toHaveBeenCalled();</pre>
+  <p class="muted small">Also: selects the option matching a written value · disables the select from the form</p>
+</section>
+
+<section id="pitfalls" data-part="8" data-cue="Blur also calls handle change">
+  <h2>Pitfalls</h2>
+  <ul>
+    <li><code>(blur)</code> also calls <code>handleChange</code> — keep form change handlers idempotent</li>
+    <li>No placeholder option: add an explicit empty option if needed</li>
+    <li>Don't swap it for a custom dropdown for looks</li>
+  </ul>
+</section>
+
+<section id="recap" data-part="9" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div>Stay native; add field clothes</div>
+    <div><code>NG_VALUE_ACCESSOR</code> + <code>forwardRef</code></div>
+    <div>Value and disabled in <code>signal()</code></div>
+    <div><code>booleanAttribute</code> for <code>required</code></div>
+    <div><code>&lt;label for&gt;</code> + visible "Required"</div>
+    <div>Spec calls accessor methods</div>
+  </div>
+</section>
+
+<section id="next" data-part="9" data-cue="Next, video forty builds">
+  <div class="kicker">Next · Video 40</div>
+  <h1>Coding <code>sd-sitebar</code></h1>
+</section>
+
+<script src="../../assets/slides.js"></script>
+</body>
+</html>

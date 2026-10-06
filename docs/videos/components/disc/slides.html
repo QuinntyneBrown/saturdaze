@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 20 Slides</title>
+<link rel="stylesheet" href="../../assets/slides.css">
+</head>
+<body data-video-number="20" data-video-title="Coding sd-disc" data-parts="Introduction|Types|Decorator|Inputs|Template|Styles|Spec|Pitfalls|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Saturdaze components · Video 20 of 52</div>
+  <h1>Coding <code>sd-disc</code></h1>
+  <p class="lead">An icon in a coloured circle: host bindings, one computed signal, token pairs.</p>
+</section>
+
+<section id="usages" data-part="0" data-cue="You see it at the start of list rows">
+  <h2>Where it is used</h2>
+  <pre class="code tight" data-lang="html" data-file="saturdaze/src/app · family.page · calendar-dialog · verify-email.page">&lt;sd-disc slot="leading" [icon]="commitment.icon" tone="accent" /&gt;
+&lt;sd-disc slot="leading" icon="calendar" tone="primary" /&gt;
+&lt;sd-disc slot="disc" icon="mail" tone="primary" size="xl" /&gt;</pre>
+  <pre class="code tight" data-lang="html" data-file="components/src/lib · empty.html · day.html">&lt;sd-disc [icon]="icon()" [tone]="tone()" size="xl" /&gt;
+&lt;sd-disc class="weather-disc" [icon]="weatherIcon()" [tone]="weatherTone()" size="lg" /&gt;</pre>
+</section>
+
+<section id="types" data-part="1" data-cue="Before the decorator, the file exports two union types.">
+  <h2>Exported union types</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/disc/disc.ts">export type DiscTone =
+  | 'default'
+  | 'accent'
+  | 'primary'
+  | 'warn'
+  | 'sun'
+  | 'sky'
+  | 'leaf'
+  | 'indoor'
+  | 'surface';
+
+export type DiscSize = 'sm' | 'md' | 'lg' | 'xl';</pre>
+  <p class="muted small"><code>strictTemplates: true</code> in <code>frontend/tsconfig.json</code> — a typo fails the build.</p>
+</section>
+
+<section id="decorator" data-part="2" data-cue="The selector is S D disc">
+  <h2>The decorator</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/disc/disc.ts" data-mark="9,10">@Component({
+  selector: 'sd-disc',
+  standalone: true,
+  imports: [Icon],
+  templateUrl: './disc.html',
+  styleUrl: './disc.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: 'disc',
+    'aria-hidden': 'true',
+    …
+  },
+})</pre>
+</section>
+
+<section id="static-host" data-part="2" data-cue="The host object is where most of the work happens.">
+  <h2>Static host attributes</h2>
+  <div class="cols">
+    <div class="card"><h3><code>class: 'disc'</code></h3><p class="small">The BEM block from <code>docs/mocks/styles/app.css</code> (ADR-009).</p></div>
+    <div class="card forest"><h3><code>'aria-hidden': 'true'</code></h3><p class="small">Decorative. Never changes, so a plain attribute, not a binding.</p></div>
+  </div>
+</section>
+
+<section id="modifiers" data-part="2" data-cue="Then come the modifier classes.">
+  <h2>Modifiers: one class binding each</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/disc/disc.ts" data-mark="1-3">    '[class.disc--sm]': 'size() === "sm"',
+    '[class.disc--lg]': 'size() === "lg"',
+    '[class.disc--xl]': 'size() === "xl"',
+    '[class.disc--accent]': 'tone() === "accent"',
+    '[class.disc--primary]': 'tone() === "primary"',
+    '[class.disc--warn]': 'tone() === "warn"',
+    '[class.disc--sun]': 'tone() === "sun"',
+    '[class.disc--sky]': 'tone() === "sky"',
+    '[class.disc--leaf]': 'tone() === "leaf"',
+    '[class.disc--indoor]': 'tone() === "indoor"',
+    '[class.disc--surface]': 'tone() === "surface"',
+  },</pre>
+</section>
+
+<section id="mirror" data-part="2" data-cue="Finally, notice what the host does not carry">
+  <h2>Inputs stay inputs</h2>
+  <ul>
+    <li>No <code>[attr.icon]</code>, <code>[attr.tone]</code>, <code>[attr.size]</code> on the host</li>
+    <li>Only classes and ARIA state go on the host</li>
+    <li>Nothing read the reflected attributes — ADR-009 records the rule</li>
+  </ul>
+</section>
+
+<section id="inputs" data-part="3" data-cue="The class body is short.">
+  <h2>Three inputs, one <code>computed()</code></h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/disc/disc.ts" data-mark="6-8">export class Disc {
+  readonly icon = input&lt;string&gt;('sparkle');
+  readonly tone = input&lt;DiscTone&gt;('default');
+  readonly size = input&lt;DiscSize&gt;('md');
+
+  protected readonly iconSize = computed(() =&gt;
+    this.size() === 'xl' ? 26 : this.size() === 'sm' ? 16 : 20,
+  );
+}</pre>
+</section>
+
+<section id="why" data-part="3" data-cue="The one piece of derived state">
+  <h2>Why these choices</h2>
+  <ul>
+    <li>No <code>input.required</code> — every disc has a sensible default</li>
+    <li>No transform — string unions, not attribute booleans/numbers</li>
+    <li><code>computed()</code> — recalculated only when <code>size</code> changes</li>
+    <li><code>protected</code> — only the template reads it</li>
+  </ul>
+  <p class="muted small">Mock: <code>.disc--xl .icon { width: 26px; height: 26px; }</code></p>
+</section>
+
+<section id="template" data-part="4" data-cue="The template is a single line">
+  <h2>The template: one line, no wrapper</h2>
+  <pre class="code" data-lang="html" data-file="components/src/lib/disc/disc.html">&lt;sd-icon [name]="icon()" [size]="iconSize()" /&gt;</pre>
+  <p class="muted">The host <em>is</em> the circle — a parent can add <code>class="weather-disc"</code> straight onto it.</p>
+</section>
+
+<section id="scss-base" data-part="5" data-cue="Open disc dot S C S S.">
+  <h2>The host is the circle</h2>
+  <pre class="code tight" data-lang="scss" data-file="components/src/lib/disc/disc.scss" data-mark="9,10">:host {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--colorNeutralBackground3);
+  color: var(--colorNeutralForeground2);
+}
+
+:host(.disc--sm) {
+  width: 32px;
+  height: 32px;
+}</pre>
+</section>
+
+<section id="scss-tones" data-part="5" data-cue="Each tone sets a background and a colour">
+  <h2>Tones are fill + ink pairs</h2>
+  <pre class="code tight" data-lang="scss" data-file="components/src/lib/disc/disc.scss">:host(.disc--accent) {
+  background: var(--colorStatusSuccessBackground1);
+  color: var(--colorStatusSuccessForeground1);
+}
+:host(.disc--primary) {
+  background: var(--colorBrandBackground2);
+  color: var(--colorBrandForeground2);
+}
+:host(.disc--surface) {
+  background: var(--colorNeutralBackground1);
+  color: var(--colorNeutralForeground2);
+  box-shadow: inset 0 0 0 1px var(--colorNeutralStroke2);
+}</pre>
+</section>
+
+<section id="spec-setup" data-part="6" data-cue="The spec file creates the disc with TestBed">
+  <h2>Spec setup</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/disc/disc.spec.ts">  const icon = (): HTMLElement =&gt; host.querySelector('sd-icon') as HTMLElement;
+  const glyph = (): string =&gt; icon().querySelector('svg')?.innerHTML ?? '';
+  const iconSize = (): string =&gt; icon().style.getPropertyValue('--_size');
+
+  beforeEach(async () =&gt; {
+    await TestBed.configureTestingModule({ imports: [Disc] }).compileComponents();
+    fixture = TestBed.createComponent(Disc);
+    fixture.detectChanges();
+    host = fixture.nativeElement as HTMLElement;
+  });</pre>
+  <ul class="small">
+    <li><code>creates a decorative disc with the sparkle glyph</code></li>
+    <li><code>forwards the icon name</code></li>
+  </ul>
+</section>
+
+<section id="spec-tones" data-part="6" data-cue="Mirrors every tone to a host class loops">
+  <h2>Every tone, every size</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/disc/disc.spec.ts">  it('mirrors every tone to a host class', () =&gt; {
+    for (const tone of ['accent', 'primary', 'warn', 'sun', 'sky', 'leaf', 'indoor', 'surface']) {
+      fixture.componentRef.setInput('tone', tone);
+      fixture.detectChanges();
+      expect(host.classList.contains(`disc--${tone}`)).toBe(true);
+    }
+  });</pre>
+  <p class="small"><code>mirrors the size to a host class and scales the glyph with it</code> — <code>--_size</code> 16px · 20px · 26px, and <code>disc--lg</code> removed again</p>
+</section>
+
+<section id="pitfalls" data-part="7" data-cue="Don't give a disc meaning on its own">
+  <h2>Pitfalls</h2>
+  <ul>
+    <li>Meaning only in the disc — it is <code>aria-hidden</code></li>
+    <li>A fill token without its paired ink</li>
+    <li>New tone: update the type, the host binding and the SCSS together</li>
+  </ul>
+</section>
+
+<section id="recap" data-part="8" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div>Union types make inputs type-safe</div>
+    <div>Host class bindings read signals</div>
+    <div>Static <code>aria-hidden</code>: decorative</div>
+    <div><code>computed()</code> scales the glyph</div>
+    <div>Tones = fill + ink token pairs</div>
+    <div>The host is the circle</div>
+  </div>
+</section>
+
+<section id="next" data-part="8" data-cue="Next, in video twenty one, we build S D empty">
+  <div class="kicker">Next · Video 21</div>
+  <h1>Coding <code>sd-empty</code></h1>
+</section>
+
+<script src="../../assets/slides.js"></script>
+</body>
+</html>

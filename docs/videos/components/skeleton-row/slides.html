@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 41 Slides</title>
+<link rel="stylesheet" href="../../assets/slides.css">
+</head>
+<body data-video-number="41" data-video-title="Coding sd-skeleton-row" data-parts="Introduction|Usage|Decorator|Template|Styles|Tests|Pitfalls|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Saturdaze components · Video 41 of 52</div>
+  <h1>Coding <code>sd-skeleton-row</code></h1>
+  <p class="lead">A decorative loading placeholder: no inputs, all shape.</p>
+</section>
+
+<section id="usage" data-part="1" data-cue="Open the Weekend page template.">
+  <h2>Where it is used</h2>
+  <pre class="code tight" data-lang="html" data-file="saturdaze/src/app/pages/weekend/weekend.page.html" data-mark="2,5">  @case ('loading') {
+    &lt;div class="sd-grid-days" aria-busy="true"&gt;
+      @for (day of days; track day) {
+        &lt;sd-day [title]="day" [actions]="false"&gt;
+          @for (i of skeleton; track i) {
+            &lt;sd-skeleton-row /&gt;
+          }
+        &lt;/sd-day&gt;
+      }
+    &lt;/div&gt;
+  }</pre>
+  <p class="muted small">Also the shared weekend page, and one day's blocks while that day regenerates.</p>
+</section>
+
+<section id="shape" data-part="1" data-cue="The idea is that the placeholder has the same shape">
+  <h2>Same shape, no jump</h2>
+  <div class="cols">
+    <div class="card"><h3>Placeholder</h3><p>time bar · disc · two text lines</p></div>
+    <div class="card good"><h3 style="color:var(--forest)">Real block</h3><p>time · icon disc · title and details</p></div>
+  </div>
+</section>
+
+<section id="decorator" data-part="2" data-cue="Open the file called skeleton row dot T S.">
+  <h2>The whole component</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/skeleton-row/skeleton-row.ts" data-mark="7-10">@Component({
+  selector: 'sd-skeleton-row',
+  standalone: true,
+  templateUrl: './skeleton-row.html',
+  styleUrl: './skeleton-row.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: 'skeleton-row',
+    'aria-hidden': 'true',
+  },
+})
+export class SkeletonRow {}</pre>
+</section>
+
+<section id="a11y" data-part="2" data-cue="The host block has two static entries.">
+  <h2>Who announces "loading"?</h2>
+  <div class="flow">
+    <div class="node accent"><b>container</b><span class="small">aria-busy="true"</span></div>
+    <div class="arrow">→</div>
+    <div class="node"><b>sd-skeleton-row ×n</b><span class="small">aria-hidden="true"</span></div>
+    <div class="arrow">→</div>
+    <div class="node"><b>real blocks</b><span class="small">read once the container is no longer busy</span></div>
+  </div>
+</section>
+
+<section id="no-inputs" data-part="2" data-cue="The class itself is empty.">
+  <h2>No inputs is a design</h2>
+  <ul>
+    <li>Nothing varies, so nothing is configurable</li>
+    <li>No <code>input()</code>, <code>signal()</code> or <code>output()</code> to invent</li>
+    <li>OnPush: checked once, then left alone</li>
+  </ul>
+</section>
+
+<section id="template" data-part="3" data-cue="The template is four divs.">
+  <h2>The template: four shapes</h2>
+  <pre class="code" data-lang="html" data-file="components/src/lib/skeleton-row/skeleton-row.html">&lt;div class="skeleton skeleton--time"&gt;&lt;/div&gt;
+&lt;div class="skeleton skeleton--disc"&gt;&lt;/div&gt;
+&lt;div class="skeleton-row__body"&gt;
+  &lt;div class="skeleton skeleton--text"&gt;&lt;/div&gt;
+  &lt;div class="skeleton skeleton--text-sm"&gt;&lt;/div&gt;
+&lt;/div&gt;</pre>
+</section>
+
+<section id="grid" data-part="4" data-cue="Open skeleton row dot S C S S.">
+  <h2>The host is the row</h2>
+  <pre class="code" data-lang="scss" data-file="components/src/lib/skeleton-row/skeleton-row.scss" data-mark="3,7">:host {
+  display: grid;
+  grid-template-columns: 56px 32px minmax(0, 1fr);
+  column-gap: 12px;
+  align-items: start;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--colorNeutralStroke2);
+}</pre>
+</section>
+
+<section id="shimmer" data-part="4" data-cue="Each skeleton shape is relatively positioned">
+  <h2>The shimmer</h2>
+  <pre class="code tight" data-lang="scss" data-file="components/src/lib/skeleton-row/skeleton-row.scss" data-mark="4,13,14">.skeleton {
+  position: relative;
+  overflow: hidden;
+  background: var(--colorNeutralBackground3);
+  border-radius: var(--borderRadiusSmall);
+}
+
+.skeleton::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+  animation: sd-shimmer 1.4s var(--curveEasyEase) infinite;
+}</pre>
+</section>
+
+<section id="motion" data-part="4" data-cue="And the last rule is the important one for accessibility">
+  <h2>Respect reduced motion</h2>
+  <pre class="code" data-lang="scss" data-file="components/src/lib/skeleton-row/skeleton-row.scss" data-mark="1,3">@keyframes sd-shimmer {
+  to {
+    transform: translateX(100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton::after {
+    animation: none;
+  }
+}</pre>
+</section>
+
+<section id="spec" data-part="5" data-cue="Open skeleton row dot spec dot T S.">
+  <h2>Spec setup: the minimum</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/skeleton-row/skeleton-row.spec.ts">  beforeEach(async () =&gt; {
+    await TestBed.configureTestingModule({ imports: [SkeletonRow] }).compileComponents();
+    fixture = TestBed.createComponent(SkeletonRow);
+    fixture.detectChanges();
+    host = fixture.nativeElement as HTMLElement;
+  });</pre>
+</section>
+
+<section id="tests" data-part="5" data-cue="&quot;creates a decorative placeholder row&quot; checks">
+  <h2>What each test proves</h2>
+  <table class="grid small">
+    <tr><th>Test</th><th>Proves</th></tr>
+    <tr><td>creates a decorative placeholder row</td><td><code>.skeleton-row</code>, <code>aria-hidden="true"</code></td></tr>
+    <tr><td>is shaped like a block: time, disc and a two-line body</td><td>each modifier; text lines inside the body; exactly 4 shapes</td></tr>
+    <tr><td>has no text for assistive tech to read</td><td><code>textContent</code> is empty</td></tr>
+  </table>
+</section>
+
+<section id="silence" data-part="5" data-cue="That test guards the decorative contract">
+  <h2>Testing the silence</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/skeleton-row/skeleton-row.spec.ts">  it('has no text for assistive tech to read', () =&gt; {
+    expect(host.textContent?.trim()).toBe('');
+  });</pre>
+</section>
+
+<section id="pitfalls" data-part="6" data-cue="Forgetting aria busy on the container.">
+  <h2>Pitfalls</h2>
+  <ul>
+    <li>No <code>aria-busy</code> on the container — nobody hears "loading"</li>
+    <li>Text inside the row — use <code>sd-status-row</code> for messages</li>
+    <li>Dropping the reduced-motion rule</li>
+  </ul>
+</section>
+
+<section id="recap" data-part="7" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div>No inputs when nothing varies</div>
+    <div>Static host: class + <code>aria-hidden</code></div>
+    <div>Match the real row's geometry</div>
+    <div>Pseudo-element shimmer, off for reduced motion</div>
+    <div>Spec proves shape and silence</div>
+  </div>
+</section>
+
+<section id="next" data-part="7" data-cue="Next, video forty two builds">
+  <div class="kicker">Next · Video 42</div>
+  <h1>Coding <code>sd-spinner</code></h1>
+</section>
+
+<script src="../../assets/slides.js"></script>
+</body>
+</html>

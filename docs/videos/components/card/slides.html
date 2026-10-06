@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 10 Slides</title>
+<link rel="stylesheet" href="../../assets/slides.css">
+</head>
+<body data-video-number="10" data-video-title="Coding sd-card" data-parts="Introduction|Decorator|Inputs|Host bindings|Template &amp; styles|Spec|Pitfalls|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Saturdaze components · Video 10 of 52</div>
+  <h1>Coding <code>sd-card</code></h1>
+  <p class="lead">A host that is the surface: signal inputs, host classes and one content slot.</p>
+</section>
+
+<section id="usages" data-part="0" data-cue="You will also find it on the family page around the account details">
+  <h2>Where the app uses it</h2>
+  <table class="map">
+    <tr><th>file</th><th>usage</th></tr>
+    <tr><td>dialogs/lock-restaurant-dialog</td><td>&lt;sd-card variant="sunk"&gt;</td></tr>
+    <tr><td>dialogs/approve-submission-dialog</td><td>&lt;sd-card variant="sunk"&gt;</td></tr>
+    <tr><td>dialogs/event-submitted-dialog</td><td>&lt;sd-card variant="sunk"&gt;</td></tr>
+    <tr><td>pages/family</td><td>&lt;sd-card variant="sunk" class="account-card"&gt;</td></tr>
+    <tr><td>pages/review-submissions</td><td>&lt;sd-card padding="lg" class="submission"&gt;</td></tr>
+  </table>
+  <p class="muted small">frontend/projects/saturdaze/src/app/…</p>
+</section>
+
+<section id="decorator" data-part="1" data-cue="The decorator and the host">
+  <h2>The decorator</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/card/card.ts" data-mark="2-3,6,8">@Component({
+  selector: 'sd-card',
+  standalone: true,
+  templateUrl: './card.html',
+  styleUrl: './card.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: 'card',
+    '[class.card--sunk]': 'variant() === "sunk"',
+    '[class.card--pad-lg]': 'padding() === "lg"',
+    '[class.card--locked]': 'locked()',
+    /* … dimmed, muted, span, interactive … */
+  },
+})</pre>
+</section>
+
+<section id="contract" data-part="1" data-cue="That is the class contract from A D R nine.">
+  <h2>The host <em>is</em> the card</h2>
+  <div class="cols">
+    <pre class="code tight" data-lang="css" data-file="docs/mocks/styles/app.css">.card--pad-lg { padding: 20px; }
+.card--dimmed { opacity: 0.6; }
+.card--muted { opacity: 0.85; }
+.card--span { grid-column: 1 / -1; }</pre>
+    <pre class="code tight" data-lang="html" data-file="rendered DOM">&lt;sd-card class="card card--dimmed"&gt;
+  …projected content…
+&lt;/sd-card&gt;</pre>
+  </div>
+  <p class="muted">ADR-009: one locator set for the mocks and the app.</p>
+</section>
+
+<section id="unions" data-part="2" data-cue="Now the class body.">
+  <h2>Two string-union inputs with defaults</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/card/card.ts" data-mark="1-2,5-6">export type CardVariant = 'default' | 'sunk';
+export type CardPadding = 'md' | 'lg';
+
+export class Card {
+  readonly variant = input&lt;CardVariant&gt;('default');
+  readonly padding = input&lt;CardPadding&gt;('md');</pre>
+  <p class="muted">No <code>input.required</code>: a bare <code>&lt;sd-card&gt;</code> is valid.</p>
+</section>
+
+<section id="flags" data-part="2" data-cue="The other five are boolean flags">
+  <h2>Boolean flags</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/card/card.ts" data-mark="2,4,6,8,9">  /** 2px accent border (a locked restaurant). */
+  readonly locked = input(false, { transform: booleanAttribute });
+  /** 60% opacity (siblings of a locked pick). */
+  readonly dimmed = input(false, { transform: booleanAttribute });
+  /** 85% opacity (a pending suggestion). */
+  readonly muted = input(false, { transform: booleanAttribute });
+  /** Spans every column of a card grid (the top pick). */
+  readonly span = input(false, { transform: booleanAttribute });
+  readonly interactive = input(false, { transform: booleanAttribute });</pre>
+  <div class="cols">
+    <div class="card good"><h3>input()</h3><p>Read-only signal · OnPush-friendly</p></div>
+    <div class="card"><h3>booleanAttribute</h3><p><code>&lt;sd-card locked&gt;</code> type-checks</p></div>
+  </div>
+</section>
+
+<section id="bindings" data-part="3" data-cue="Look at the bindings again.">
+  <h2>Host bindings read the signals</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/card/card.ts">    '[class.card--sunk]': 'variant() === "sunk"',
+    '[class.card--pad-lg]': 'padding() === "lg"',
+    '[class.card--locked]': 'locked()',
+    '[class.card--dimmed]': 'dimmed()',
+    '[class.card--muted]': 'muted()',
+    '[class.card--span]': 'span()',
+    '[class.card--interactive]': 'interactive()',</pre>
+  <p class="muted">One comparison each — no <code>computed()</code> needed.</p>
+</section>
+
+<section id="attrs" data-part="3" data-cue="Notice what is not here.">
+  <h2>Inputs stay inputs</h2>
+  <div class="cols">
+    <div class="card"><h3>On the host</h3><p>The mock's BEM classes and ARIA state</p></div>
+    <div class="card"><h3>Not on the host</h3><p>No <code>[attr.variant]</code>, <code>[attr.locked]</code>… — nothing read them</p></div>
+  </div>
+  <p class="muted">ADR-009: state that CSS or a locator needs is a host class or an ARIA attribute.</p>
+</section>
+
+<section id="template" data-part="4" data-cue="The template is a single default content slot">
+  <h2>Template: one slot</h2>
+  <pre class="code" data-lang="html" data-file="components/src/lib/card/card.html">&lt;ng-content /&gt;</pre>
+  <p class="lead">Content is projected straight into the surface — no wrapper.</p>
+</section>
+
+<section id="styles" data-part="4" data-cue="The stylesheet is the card block from the mock stylesheet">
+  <h2>Styles: tokens by role</h2>
+  <pre class="code tight" data-lang="scss" data-file="components/src/lib/card/card.scss" data-mark="4-6,10,14">:host {
+  /* display: flex; column; gap: 10px; … */
+  padding: 16px;
+  background: var(--colorNeutralBackground1);
+  border: 1px solid var(--colorNeutralStroke2);
+  border-radius: var(--borderRadiusLarge);
+  /* … transitions on duration/curve tokens … */
+}
+:host(.card--sunk) {
+  background: var(--colorNeutralBackground3);
+  border-color: transparent;
+}
+:host(.card--locked) {
+  border: 2px solid var(--colorStatusSuccessBorderActive);
+  padding: 15px;
+}</pre>
+</section>
+
+<section id="hover" data-part="4" data-cue="The interactive hover lift sits inside a hover media query">
+  <h2>Hover only where hover exists</h2>
+  <pre class="code" data-lang="scss" data-file="components/src/lib/card/card.scss" data-mark="1">@media (hover: hover) {
+  :host(.card--interactive:hover) {
+    border-color: var(--colorNeutralStroke1);
+    box-shadow: var(--shadow16);
+    transform: translateY(-2px);
+  }
+}</pre>
+</section>
+
+<section id="spec-setup" data-part="5" data-cue="It declares a small host component">
+  <h2>Spec setup</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/card/card.spec.ts" data-mark="4,9-12">@Component({
+  standalone: true,
+  imports: [Card],
+  template: `&lt;sd-card variant="sunk" padding="lg"&gt;&lt;h3 class="inner"&gt;Family&lt;/h3&gt;&lt;/sd-card&gt;`,
+})
+class HostCmp {}
+
+  beforeEach(async () =&gt; {
+    await TestBed.configureTestingModule({ imports: [Card, HostCmp] }).compileComponents();
+    fixture = TestBed.createComponent(Card);
+    fixture.detectChanges();
+    host = fixture.nativeElement as HTMLElement;
+  });</pre>
+</section>
+
+<section id="spec-tests" data-part="5" data-cue="The next two drive inputs through the component ref's set input method">
+  <h2>The four tests</h2>
+  <table class="map">
+    <tr><th>it(…)</th><th>proves</th></tr>
+    <tr><td>creates a plain card with no modifiers</td><td class="prose">class is exactly <code>card</code></td></tr>
+    <tr><td>mirrors the sunk variant and large padding to host classes</td><td class="prose">modifier classes via <code>setInput</code></td></tr>
+    <tr><td>mirrors every boolean modifier to a host class</td><td class="prose">on and off, for all five flags</td></tr>
+    <tr><td>projects its content directly into the surface</td><td class="prose">first child is the projected node</td></tr>
+  </table>
+</section>
+
+<section id="spec-loop" data-part="5" data-cue="loops over all five flags">
+  <h2>On, then off again</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/card/card.spec.ts" data-mark="2,6">    for (const flag of ['locked', 'dimmed', 'muted', 'span', 'interactive']) {
+      fixture.componentRef.setInput(flag, true);
+      fixture.detectChanges();
+      expect(host.classList.contains(`card--${flag}`)).toBe(true);
+
+      fixture.componentRef.setInput(flag, false);
+      fixture.detectChanges();
+      expect(host.classList.contains(`card--${flag}`)).toBe(false);
+    }</pre>
+</section>
+
+<section id="pitfalls" data-part="6" data-cue="Pitfalls">
+  <h2>Pitfalls</h2>
+  <ul>
+    <li><code>locked</code> / <code>dimmed</code> / <code>muted</code> are visual only — say the state in text too</li>
+    <li><code>interactive</code> is a hover lift, not semantics — nest a real button or link</li>
+    <li>No wrapper <code>div</code> in the template</li>
+    <li>No hex values in new modifiers — pick a token by role</li>
+  </ul>
+</section>
+
+<section id="recap" data-part="7" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div>The host is the card (mock BEM classes)</div>
+    <div>Signal inputs with defaults</div>
+    <div><code>booleanAttribute</code> for bare flags</div>
+    <div>Bind simple expressions directly</div>
+    <div>Inputs stay inputs — no host attributes</div>
+    <div>Tokens by role · one slot · encapsulated</div>
+  </div>
+</section>
+
+<section id="next" data-part="7" data-cue="Next in the series, video eleven">
+  <div class="kicker">Next · Video 11</div>
+  <h1>Coding <code>sd-checkbox</code></h1>
+</section>
+
+<script src="../../assets/slides.js"></script>
+</body>
+</html>

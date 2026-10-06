@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 44 Slides</title>
+<link rel="stylesheet" href="../../assets/slides.css">
+</head>
+<body data-video-number="44" data-video-title="Coding sd-status-row" data-parts="Introduction|Usage|Decorator|Input|Template|Styles|Tests|Pitfalls|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Saturdaze components · Video 44 of 52</div>
+  <h1>Coding <code>sd-status-row</code></h1>
+  <p class="lead">A polite live region: a spinner for the eyes, words for everyone.</p>
+</section>
+
+<section id="usage" data-part="1" data-cue="Search the app and you will find a status row">
+  <h2>On almost every loading page</h2>
+  <table class="grid small">
+    <tr><th>Page</th><th>Usage</th></tr>
+    <tr><td>Weekend</td><td><code>&lt;sd-status-row class="status" icon="sparkle"</code> …Working through your locks, the forecast and past weekends.</td></tr>
+    <tr><td>Ideas: activities</td><td><code>icon="sparkle"</code> Looking for ideas near you.</td></tr>
+    <tr><td>Ideas: events</td><td><code>icon="ticket"</code> Checking what is on nearby.</td></tr>
+    <tr><td>Ideas: food</td><td><code>icon="fork"</code> Finding places to eat near your weekend.</td></tr>
+    <tr><td>Past</td><td><code>icon="star"</code> Gathering your weekends.</td></tr>
+    <tr><td>Family</td><td><code>icon="user"</code> Loading your family.</td></tr>
+    <tr><td>Review submissions</td><td><code>icon="ticket"</code> Fetching the queue.</td></tr>
+  </table>
+</section>
+
+<section id="decorator" data-part="2" data-cue="Open the file called status row dot T S.">
+  <h2>The whole component</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/status-row/status-row.ts" data-mark="10-12,16">@Component({
+  selector: 'sd-status-row',
+  standalone: true,
+  imports: [Spinner],
+  templateUrl: './status-row.html',
+  styleUrl: './status-row.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: 'status-row',
+    role: 'status',
+    'aria-live': 'polite',
+  },
+})
+export class StatusRow {
+  readonly icon = input&lt;string&gt;('sparkle');
+}</pre>
+</section>
+
+<section id="live" data-part="2" data-cue="The host block has three static entries.">
+  <h2>A polite live region</h2>
+  <div class="cols">
+    <div class="card"><h3><code>role="status"</code></h3><p>Advisory information, not an alert</p></div>
+    <div class="card"><h3><code>aria-live="polite"</code></h3><p>Announced after what the user is hearing — never interrupts</p></div>
+  </div>
+  <p class="muted">Static host attributes: written once, no signal to read.</p>
+</section>
+
+<section id="input" data-part="3" data-cue="The class has one signal input">
+  <h2>One input, a sensible default</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/status-row/status-row.ts">  readonly icon = input&lt;string&gt;('sparkle');</pre>
+  <ul>
+    <li>The planner's case needs nothing extra</li>
+    <li>No output, model, local state or computed</li>
+  </ul>
+</section>
+
+<section id="template" data-part="4" data-cue="The template is two lines.">
+  <h2>The template</h2>
+  <pre class="code" data-lang="html" data-file="components/src/lib/status-row/status-row.html" data-mark="2">&lt;sd-spinner [icon]="icon()" /&gt;
+&lt;span class="status-row__text"&gt;&lt;ng-content /&gt;&lt;/span&gt;</pre>
+  <ul class="small">
+    <li>A non-empty icon makes the spinner a <code>.spinner-disc</code></li>
+    <li>One default slot, declared once, never conditional</li>
+  </ul>
+</section>
+
+<section id="split" data-part="4" data-cue="This split is the accessibility design.">
+  <h2>Decoration vs message</h2>
+  <div class="flow">
+    <div class="node accent"><b>sd-status-row</b><span class="small">role="status" · aria-live="polite"</span></div>
+    <div class="arrow">→</div>
+    <div class="node"><b>sd-spinner</b><span class="small">aria-hidden="true"</span></div>
+    <div class="node"><b>.status-row__text</b><span class="small">the announced message</span></div>
+  </div>
+</section>
+
+<section id="styles" data-part="5" data-cue="Open status row dot S C S S.">
+  <h2>A card, by role</h2>
+  <pre class="code tight" data-lang="scss" data-file="components/src/lib/status-row/status-row.scss" data-mark="6-8,10,17">:host {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  background: var(--colorNeutralBackground1);
+  border: 1px solid var(--colorNeutralStroke2);
+  border-radius: var(--borderRadiusLarge);
+  font-size: 14px;
+  color: var(--colorNeutralForeground2);
+  margin-bottom: 24px;
+}
+
+.status-row__text {
+  min-width: 0;
+}</pre>
+</section>
+
+<section id="spec-setup" data-part="6" data-cue="Open status row dot spec dot T S.">
+  <h2>Spec setup: a host for the content</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/status-row/status-row.spec.ts" data-mark="4">@Component({
+  standalone: true,
+  imports: [StatusRow],
+  template: `&lt;sd-status-row icon="refresh"&gt;Working through your locks.&lt;/sd-status-row&gt;`,
+})
+class HostCmp {}
+…
+  beforeEach(async () =&gt; {
+    await TestBed.configureTestingModule({
+      imports: [StatusRow, HostCmp, Icon],
+    }).compileComponents();
+    fixture = TestBed.createComponent(StatusRow);
+    fixture.detectChanges();
+    host = fixture.nativeElement as HTMLElement;
+  });</pre>
+  <p class="muted small">Above it: <code>glyph(name)</code> and <code>drawn(icon)</code> compare the SVG an <code>sd-icon</code> draws.</p>
+</section>
+
+<section id="tests" data-part="6" data-cue="&quot;creates a polite live status region&quot; checks">
+  <h2>What each test proves</h2>
+  <table class="grid small">
+    <tr><th>Test</th><th>Proves</th></tr>
+    <tr><td>creates a polite live status region</td><td><code>.status-row</code>, <code>role="status"</code>, <code>aria-live="polite"</code></td></tr>
+    <tr><td>shows a spinner disc with the sparkle glyph by default</td><td><code>.spinner-disc</code>; drawn glyph = <code>glyph('sparkle')</code></td></tr>
+    <tr><td>forwards the icon to the spinner</td><td><code>setInput('icon', 'refresh')</code> → drawn refresh glyph</td></tr>
+    <tr><td>projects the message into the text span</td><td>host component: text + refresh glyph from the template</td></tr>
+  </table>
+</section>
+
+<section id="pitfalls" data-part="7" data-cue="Rendering the status row only after the text is ready.">
+  <h2>Pitfalls</h2>
+  <ul>
+    <li>Live regions inserted with their text may not be announced — keep the region mounted when you can</li>
+    <li>No buttons or links inside a status region</li>
+    <li>Errors belong in <code>&lt;sd-banner role="alert"&gt;</code></li>
+  </ul>
+</section>
+
+<section id="recap" data-part="8" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div>Static host attrs → polite live region</div>
+    <div>One input, default <code>'sparkle'</code></div>
+    <div>Spinner decorates; text informs</div>
+    <div>One slot, never conditional</div>
+    <div>Spec guards role, default, forwarding, projection</div>
+  </div>
+</section>
+
+<section id="next" data-part="8" data-cue="Next, video forty five builds">
+  <div class="kicker">Next · Video 45</div>
+  <h1>Coding <code>sd-strength</code></h1>
+</section>
+
+<script src="../../assets/slides.js"></script>
+</body>
+</html>

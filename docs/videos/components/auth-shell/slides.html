@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 03 Slides</title>
+<link rel="stylesheet" href="../../assets/slides.css">
+</head>
+<body data-video-number="03" data-video-title="Coding sd-auth-shell" data-parts="Introduction|Decorator|Input|Template|Styles|Tests|Pitfalls|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Saturdaze components · Video 03 of 52</div>
+  <h1>Coding <code>sd-auth-shell</code></h1>
+  <p class="lead">A page frame with router links.</p>
+</section>
+
+<section id="where" data-part="0" data-cue="Those routes use the bare shell from A D R nine">
+  <h2>Where it lives</h2>
+  <pre class="code" data-lang="html" data-file="saturdaze/src/app/pages/sign-in/sign-in.page.html">&lt;sd-auth-shell&gt;
+  &lt;sd-auth-card title="Welcome back" subtitle="Sign in to see this weekend."&gt;
+    …
+  &lt;/sd-auth-card&gt;
+&lt;/sd-auth-shell&gt;</pre>
+  <div class="cols three">
+    <div class="card"><h3>Brand</h3><p>Lockup, links home</p></div>
+    <div class="card"><h3>Card</h3><p>Projected by the page</p></div>
+    <div class="card"><h3>Footer</h3><p>Terms · Privacy · Back</p></div>
+  </div>
+</section>
+
+<section id="decorator" data-part="1" data-cue="Open the auth shell file in the components library.">
+  <h2>The decorator</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/auth-shell/auth-shell.ts" data-mark="4,10">@Component({
+  selector: 'sd-auth-shell',
+  standalone: true,
+  imports: [RouterLink],
+  templateUrl: './auth-shell.html',
+  styleUrl: './auth-shell.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: 'auth',
+    '[class.auth--stack]': 'stack()',
+  },
+})</pre>
+</section>
+
+<section id="input" data-part="2" data-cue="The class has one line">
+  <h2>One boolean input</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/auth-shell/auth-shell.ts" data-mark="3">export class AuthShell {
+  /** Top-aligned (several stacked cards) instead of vertically centred. */
+  readonly stack = input(false, { transform: booleanAttribute });
+}</pre>
+  <div class="cols">
+    <div class="card"><h3>Mock · sign-in.html</h3><p><code>&lt;main class="auth auth--stack"&gt;</code></p></div>
+    <div class="card"><h3>App</h3><p><code>&lt;sd-auth-shell stack&gt;</code> → <code>class="auth auth--stack"</code></p></div>
+  </div>
+</section>
+
+<section id="onpush" data-part="2" data-cue="The host bindings read the stack signal directly.">
+  <h2>Host bindings read signals</h2>
+  <div class="cols three">
+    <div class="card bad"><h3>No setter</h3><p>The input is a signal</p></div>
+    <div class="card bad"><h3>No @HostBinding</h3><p>The <code>host</code> map reads <code>stack()</code></p></div>
+    <div class="card bad"><h3>No computed()</h3><p>Nothing to derive</p></div>
+  </div>
+  <p class="lead">OnPush + signal input → the class stays in sync. No <code>[attr.stack]</code>: only classes and ARIA on the host (ADR-009).</p>
+</section>
+
+<section id="template" data-part="3" data-cue="The template is a single column div.">
+  <h2>The whole template</h2>
+  <pre class="code" data-lang="html" data-file="components/src/lib/auth-shell/auth-shell.html" data-mark="2,3,5">&lt;div class="auth__col"&gt;
+  &lt;a class="auth__brand" routerLink="/"
+    &gt;&lt;span class="brand-mark" aria-hidden="true"&gt;&lt;/span&gt;Saturdaze&lt;/a
+  &gt;
+  &lt;ng-content /&gt;
+  &lt;p class="auth__foot"&gt;
+    &lt;a class="sd-link--soft" routerLink="/legal"&gt;Terms&lt;/a&gt;
+    &lt;span aria-hidden="true"&gt;·&lt;/span&gt;
+    &lt;a class="sd-link--soft" routerLink="/legal" fragment="privacy"&gt;Privacy&lt;/a&gt;
+    &lt;span aria-hidden="true"&gt;·&lt;/span&gt;
+    &lt;a class="sd-link--soft" routerLink="/"&gt;Back to Saturdaze&lt;/a&gt;
+  &lt;/p&gt;
+&lt;/div&gt;</pre>
+</section>
+
+<section id="footer" data-part="3" data-cue="Last is the footer paragraph with three soft links">
+  <h2>Accessible footer</h2>
+  <table class="map">
+    <tr><th>link</th><th>href</th></tr>
+    <tr><td class="prose">Terms</td><td>/legal</td></tr>
+    <tr><td class="prose">Privacy</td><td>/legal#privacy</td></tr>
+    <tr><td class="prose">Back to Saturdaze</td><td>/</td></tr>
+  </table>
+  <p class="muted">Dots are <code>aria-hidden</code>: a screen reader hears three links, no punctuation.</p>
+</section>
+
+<section id="router" data-part="3" data-cue="Using router link here, instead of plain hrefs">
+  <h2><code>routerLink</code> in a library component</h2>
+  <ul>
+    <li>Navigation stays inside the SPA</li>
+    <li>The anchor still renders a real <code>href</code></li>
+    <li>Tests must <code>provideRouter([])</code></li>
+  </ul>
+</section>
+
+<section id="styles" data-part="4" data-cue="The host is a grid that centres its content">
+  <h2>The host is the page</h2>
+  <pre class="code" data-lang="scss" data-file="components/src/lib/auth-shell/auth-shell.scss" data-mark="4,5,9,10">:host {
+  display: grid;
+  place-items: center;
+  min-height: 100svh;
+  padding: 24px var(--layoutGutter) 40px;
+}
+
+:host(.auth--stack) {
+  place-items: start center;
+  padding-top: 40px;
+}</pre>
+</section>
+
+<section id="brand-mark" data-part="4" data-cue="The brand mark is a layered background">
+  <h2>Decoration from tokens</h2>
+  <pre class="code tight" data-lang="scss" data-file="components/src/lib/auth-shell/auth-shell.scss">.brand-mark {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  flex: none;
+  background:
+    radial-gradient(120% 120% at 20% 0%, var(--colorBrandBackground2) 0%, transparent 60%),
+    radial-gradient(120% 120% at 100% 100%, var(--colorPaletteSunBackground1) 0%, transparent 60%),
+    var(--colorBrandBackground);
+  box-shadow: inset 0 0 0 1px rgba(31, 41, 55, 0.06);
+}</pre>
+</section>
+
+<section id="setup" data-part="5" data-cue="The spec file configures the testing module">
+  <h2>Test setup</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/auth-shell/auth-shell.spec.ts" data-mark="2,3,8">const footLinks = (): HTMLAnchorElement[] =&gt;
+  Array.from(host.querySelectorAll('p.auth__foot a.sd-link--soft'));
+
+beforeEach(async () =&gt; {
+  await TestBed.configureTestingModule({
+    imports: [AuthShell, HostCmp],
+    providers: [provideRouter([])],
+  }).compileComponents();
+  fixture = TestBed.createComponent(AuthShell);
+  fixture.detectChanges();
+  host = fixture.nativeElement as HTMLElement;
+});</pre>
+</section>
+
+<section id="tests-1" data-part="5" data-cue="The first test, creates the centred column with the brand lockup">
+  <h2>Brand and footer</h2>
+  <ul class="small">
+    <li><code>creates the centred column with the brand lockup</code></li>
+    <li><code>links Terms, Privacy and Back in the footer</code></li>
+  </ul>
+  <pre class="code" data-lang="ts" data-file="auth-shell.spec.ts">expect(footLinks().map((a) =&gt; a.getAttribute('href'))).toEqual([
+  '/legal',
+  '/legal#privacy',
+  '/',
+]);</pre>
+</section>
+
+<section id="tests-2" data-part="5" data-cue="The third test, top aligns stacked cards">
+  <h2>Stack and projection</h2>
+  <ul class="small">
+    <li><code>top-aligns stacked cards</code></li>
+    <li><code>projects the card between the brand and the footer</code></li>
+  </ul>
+  <pre class="code" data-lang="ts" data-file="auth-shell.spec.ts">const kids = Array.from(col.children);
+expect(kids[0]?.classList.contains('auth__brand')).toBe(true);
+expect(kids[1]?.classList.contains('card-a')).toBe(true);
+expect(kids[kids.length - 1]?.classList.contains('auth__foot')).toBe(true);</pre>
+</section>
+
+<section id="pitfalls" data-part="6" data-cue="A few pitfalls.">
+  <h2>Pitfalls</h2>
+  <ul>
+    <li>No <code>provideRouter</code> in the spec → <code>routerLink</code> fails</li>
+    <li>Plain <code>href</code>s → full app reload on every click</li>
+    <li>Dropping <code>aria-hidden</code> from the mark or the dots</li>
+  </ul>
+</section>
+
+<section id="recap" data-part="7" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div>The host is the page: <code>auth</code></div>
+    <div><code>stack</code> → a class, not an attribute</div>
+    <div><code>booleanAttribute</code> for the bare flag</div>
+    <div><code>routerLink</code> + <code>provideRouter</code> in tests</div>
+    <div>Decoration is <code>aria-hidden</code></div>
+    <div><code>100svh</code> + layout gutter token</div>
+  </div>
+</section>
+
+<section id="next" data-part="7" data-cue="Next, in video four, we build the S D avatar">
+  <div class="kicker">Next · Video 04</div>
+  <h1>Coding <code>sd-avatar</code></h1>
+</section>
+
+<script src="../../assets/slides.js"></script>
+</body>
+</html>

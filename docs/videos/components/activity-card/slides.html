@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 01 Slides</title>
+<link rel="stylesheet" href="../../assets/slides.css">
+</head>
+<body data-video-number="01" data-video-title="Coding sd-activity-card" data-parts="Introduction|Decorator|Inputs|Template|Styles|Tests|Pitfalls|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Saturdaze components · Video 01 of 52</div>
+  <h1>Coding <code>sd-activity-card</code></h1>
+  <p class="lead">Signal inputs, an output and projected chips.</p>
+</section>
+
+<section id="where" data-part="0" data-cue="The Ideas activities page renders one card per suggestion inside a card grid">
+  <h2>Where it lives</h2>
+  <pre class="code tight" data-lang="html" data-file="saturdaze/src/app/pages/ideas-activities/ideas-activities.page.html">&lt;sd-activity-card
+  [title]="activity.title"
+  [meta]="activity.meta"
+  [why]="activity.why"
+  [icon]="activity.icon"
+  [tone]="activity.tone === 'outdoor' ? 'leaf' : 'indoor'"
+  [mapUrl]="activity.mapUrl ?? ''"
+  [media]="activity.media"
+  addable
+  (addToDay)="addToDay(activity)"
+&gt;</pre>
+  <p class="muted small">Photo or fallback tile · title · place · why · chips · Map · Add to day</p>
+</section>
+
+<section id="decorator" data-part="1" data-cue="Open the activity card file in the components library.">
+  <h2>The decorator</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/activity-card/activity-card.ts" data-mark="2,4,7">@Component({
+  selector: 'sd-activity-card',
+  standalone: true,
+  imports: [Button, Icon, Media],
+  templateUrl: './activity-card.html',
+  styleUrl: './activity-card.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: 'card card--media',
+  },
+})</pre>
+</section>
+
+<section id="host" data-part="1" data-cue="Now look at the host block.">
+  <h2>The host is the mock's block</h2>
+  <div class="cols">
+    <div class="card"><h3>Mock · docs/mocks/pages/ideas.html</h3><p><code>&lt;li class="card card--media"&gt;</code></p></div>
+    <div class="card forest"><h3>App</h3><p><code>&lt;sd-activity-card class="card card--media"&gt;</code></p></div>
+  </div>
+  <ul>
+    <li>Same BEM classes → one Playwright locator set (ADR-009)</li>
+    <li>Inputs stay inputs: no <code>[attr.title]</code>, no <code>[attr.tone]</code></li>
+    <li>Only classes and ARIA state on the host — a reflected <code>title</code> meant native tooltips</li>
+  </ul>
+</section>
+
+<section id="inputs" data-part="2" data-cue="Next, the class body.">
+  <h2>Signal inputs with typed defaults</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/activity-card/activity-card.ts" data-mark="2,6">export class ActivityCard {
+  readonly cardTitle = input&lt;string&gt;('', { alias: 'title' });
+  readonly meta = input&lt;string&gt;('');
+  readonly why = input&lt;string&gt;('');
+  readonly icon = input&lt;string&gt;('tree');
+  readonly tone = input&lt;ActivityCardTone&gt;('leaf');
+  readonly mapUrl = input&lt;string&gt;('');</pre>
+  <p class="muted"><code>export type ActivityCardTone = 'leaf' | 'indoor';</code></p>
+</section>
+
+<section id="alias" data-part="2" data-cue="Notice the title.">
+  <h2><code>alias: 'title'</code></h2>
+  <div class="cols">
+    <div class="card"><h3>Consumer writes</h3><p><code>[title]="activity.title"</code></p></div>
+    <div class="card"><h3>Class reads</h3><p><code>cardTitle()</code> — never confused with the native <code>title</code></p></div>
+  </div>
+</section>
+
+<section id="flags" data-part="2" data-cue="The media input takes a card media object or null">
+  <h2>A flag and an output</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/activity-card/activity-card.ts" data-mark="4,6">  /** The place's primary photo; null shows the fallback tile. */
+  readonly media = input&lt;CardMedia | null&gt;(null);
+  /** Offer "Add to day" (L2-107). */
+  readonly addable = input(false, { transform: booleanAttribute });
+  /** "Add to day" was pressed. */
+  readonly addToDay = output&lt;void&gt;();
+}</pre>
+  <p class="muted"><code>&lt;sd-activity-card addable&gt;</code> → <code>true</code>, not <code>''</code></p>
+</section>
+
+<section id="not-needed" data-part="2" data-cue="Look at what the class does not need.">
+  <h2>What it doesn't need</h2>
+  <div class="cols three">
+    <div class="card bad"><h3>computed()</h3><p>No derived state</p></div>
+    <div class="card bad"><h3>signal()</h3><p>No local state</p></div>
+    <div class="card bad"><h3>effect()</h3><p>No side effects</p></div>
+  </div>
+  <p class="lead">A presentational card stays thin: inputs in, one output out.</p>
+</section>
+
+<section id="template-head" data-part="3" data-cue="The template starts with the media frame">
+  <h2>Media, head and body</h2>
+  <pre class="code" data-lang="html" data-file="components/src/lib/activity-card/activity-card.html" data-mark="1,5,10">&lt;sd-media class="card__media" [photo]="media()" [tone]="tone()" [icon]="icon()" /&gt;
+&lt;div class="card__head"&gt;
+  &lt;div class="card__head-text"&gt;
+    &lt;h3 class="card__title"&gt;{{ cardTitle() }}&lt;/h3&gt;
+    @if (meta()) {
+      &lt;p class="card__meta"&gt;{{ meta() }}&lt;/p&gt;
+    }
+  &lt;/div&gt;
+&lt;/div&gt;
+@if (why()) {
+  &lt;p class="card__body"&gt;{{ why() }}&lt;/p&gt;
+}
+&lt;div class="card__chips"&gt;&lt;ng-content select="[slot=chips]" /&gt;&lt;/div&gt;</pre>
+</section>
+
+<section id="slot" data-part="3" data-cue="The chip row is a single ng content">
+  <h2>One slot, declared once</h2>
+  <pre class="code" data-lang="html" data-file="saturdaze/src/app/pages/ideas-activities/ideas-activities.page.html">@for (chip of activity.chips; track chip.label) {
+  &lt;sd-chip slot="chips" [tone]="chipTone(chip.tone)"&gt;
+    …
+  &lt;/sd-chip&gt;
+}</pre>
+  <p class="muted">One <code>@if</code> per slotted node — an <code>@if</code> around several loses the slot (NG8011).</p>
+</section>
+
+<section id="footer" data-part="3" data-cue="The footer only exists when there is a map link or the card is addable.">
+  <h2>The footer</h2>
+  <pre class="code tight" data-lang="html" data-file="components/src/lib/activity-card/activity-card.html" data-mark="4,14,15">@if (mapUrl() || addable()) {
+  &lt;div class="card__footer"&gt;
+    @if (mapUrl()) {
+      &lt;sd-button variant="quiet" size="sm" [href]="mapUrl()" target="_blank"&gt;
+        &lt;sd-icon name="map" /&gt;
+        Map
+      &lt;/sd-button&gt;
+    }
+    @if (addable()) {
+      &lt;sd-button
+        variant="primary"
+        size="sm"
+        type="button"
+        [label]="'Add to day: ' + cardTitle()"
+        (click)="addToDay.emit()"
+      &gt;</pre>
+</section>
+
+<section id="styles" data-part="4" data-cue="The stylesheet is tiny">
+  <h2>Shared anatomy, one own rule</h2>
+  <div class="cols">
+    <pre class="code tight" data-lang="scss" data-file="components/src/lib/activity-card/activity-card.scss">@use '../styles/card-base' as *;
+
+:host {
+  @include card-host;
+}
+
+.card__body {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}</pre>
+    <pre class="code tight" data-lang="scss" data-file="components/src/lib/styles/_card-base.scss">@mixin card-host {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+  padding: 16px;
+  background: var(--colorNeutralBackground1);
+  border: 1px solid var(--colorNeutralStroke2);
+  border-radius: var(--borderRadiusLarge);
+  /* … transition … */
+}</pre>
+  </div>
+</section>
+
+<section id="setup" data-part="5" data-cue="Now the spec file.">
+  <h2>Test setup</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/activity-card/activity-card.spec.ts" data-mark="4">beforeEach(async () =&gt; {
+  await TestBed.configureTestingModule({ imports: [ActivityCard, HostCmp] }).compileComponents();
+  fixture = TestBed.createComponent(ActivityCard);
+  fixture.componentRef.setInput('title', 'Jack Darling Park');
+  fixture.detectChanges();
+  host = fixture.nativeElement as HTMLElement;
+});</pre>
+</section>
+
+<section id="tests-1" data-part="5" data-cue="The first test, creates a photo led card">
+  <h2>Defaults, content and tone</h2>
+  <ul class="small">
+    <li><code>creates a photo-led card whose fallback tile is leaf-toned with a tree, and the title</code></li>
+    <li><code>renders the place line and the why</code></li>
+    <li><code>switches to the indoor tone and a custom icon</code></li>
+  </ul>
+  <pre class="code" data-lang="ts" data-file="activity-card.spec.ts">expect(tile.classList).toContain('media--leaf');
+expect(tile.getAttribute('aria-hidden')).toBe('true');
+expect(glyph(tile.querySelector('sd-icon'))).toContain('M12 3l-5 7h3l-4 6h12l-4-6h3l-5-7z');
+expect(host.querySelector('.card__footer')).toBeNull();</pre>
+  <p class="muted small">Rendered DOM, not host attributes: classes, ARIA, the drawn glyph.</p>
+</section>
+
+<section id="tests-2" data-part="5" data-cue="Two tests cover the Map link.">
+  <h2>The Map link and the slot</h2>
+  <ul class="small">
+    <li><code>adds a Map link that opens in a new tab when the catalogue has one</code></li>
+    <li><code>labels the Map link with its glyph and text</code></li>
+    <li><code>projects chips into the chip row</code></li>
+  </ul>
+  <pre class="code" data-lang="ts" data-file="activity-card.spec.ts">expect(link.getAttribute('target')).toBe('_blank');
+expect(link.getAttribute('rel')).toBe('noopener');
+expect(link.classList.contains('btn--quiet')).toBe(true);</pre>
+  <p class="muted small">Not covered yet: <code>addable</code> and the <code>addToDay</code> output.</p>
+</section>
+
+<section id="pitfalls" data-part="6" data-cue="A few pitfalls.">
+  <h2>Pitfalls</h2>
+  <ul>
+    <li>Dropping <code>booleanAttribute</code> — bare <code>addable</code> stops working</li>
+    <li>One <code>@if</code> around several slotted chips</li>
+    <li>Wrapping the whole card in a link as well as Map</li>
+    <li>Renaming BEM classes the e2e locators depend on</li>
+  </ul>
+</section>
+
+<section id="recap" data-part="7" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div>Host carries <code>card card--media</code></div>
+    <div>Typed signal inputs, <code>alias: 'title'</code></div>
+    <div><code>booleanAttribute</code> for flags</div>
+    <div><code>output()</code> for Add to day</div>
+    <div>One chips slot, declared once</div>
+    <div>Card styles from a mixin, tokens by role</div>
+  </div>
+</section>
+
+<section id="next" data-part="7" data-cue="Next, in video two, we build the S D auth card">
+  <div class="kicker">Next · Video 02</div>
+  <h1>Coding <code>sd-auth-card</code></h1>
+</section>
+
+<script src="../../assets/slides.js"></script>
+</body>
+</html>

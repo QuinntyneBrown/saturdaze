@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 48 Slides</title>
+<link rel="stylesheet" href="../../assets/slides.css">
+</head>
+<body data-video-number="48" data-video-title="Coding sd-toggle" data-parts="Introduction|Decorator|Inputs|Ownership|Template|Styles|Spec|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Saturdaze components · Video 48 of 52</div>
+  <h1>Coding <code>sd-toggle</code></h1>
+  <p class="lead">A switch built on a real checkbox.</p>
+</section>
+
+<section id="where" data-part="0" data-cue="In the app you meet it in two places.">
+  <h2>Where it lives</h2>
+  <pre class="code" data-lang="html" data-file="saturdaze/src/app/pages/sign-in/sign-in.page.html">        &lt;sd-toggle label="Remember me" formControlName="remember" /&gt;</pre>
+  <pre class="code" data-lang="html" data-file="saturdaze/src/app/pages/family/family.page.html" data-mark="3">              &lt;sd-toggle
+                slot="trailing"
+                [srLabel]="pref.title"
+                [ngModel]="pref.checked"
+                (ngModelChange)="setPreference(pref.key, $event)"
+              /&gt;</pre>
+</section>
+
+<section id="doc" data-part="1" data-cue="Open toggle dot T S.">
+  <div class="kicker">The design in one comment</div>
+  <p class="quote">A real <code>&lt;input type="checkbox" role="switch"&gt;</code> (visually hidden) inside a label, so keyboard, focus and assistive tech come for free.</p>
+  <p class="muted">components/src/lib/toggle/toggle.ts</p>
+</section>
+
+<section id="decorator" data-part="1" data-cue="The selector is S D toggle">
+  <h2>The decorator</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/toggle/toggle.ts" data-mark="2,5,8-10">@Component({
+  selector: 'sd-toggle',
+  standalone: true,
+  /* templateUrl, styleUrl */
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() =&gt; Toggle),
+      multi: true,
+    },
+  ],</pre>
+  <p class="muted">No <code>host</code> object: inputs stay inputs. Checked and disabled live on the real checkbox (ADR-009).</p>
+</section>
+
+<section id="inputs" data-part="2" data-cue="There are three inputs.">
+  <h2>Inputs and local state</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/toggle/toggle.ts" data-mark="3,4,6,7,9">  readonly label = input&lt;string&gt;('');
+  /** Accessible name when no visible label is rendered. */
+  readonly srLabel = input&lt;string&gt;('');
+  readonly checked = input(false, { transform: booleanAttribute });
+
+  protected readonly internalChecked = signal&lt;boolean&gt;(false);
+  protected readonly disabled = signal&lt;boolean&gt;(false);
+
+  private formBound = false;
+  private onChange: (value: boolean) =&gt; void = () =&gt; {};
+  private onTouched: () =&gt; void = () =&gt; {};</pre>
+</section>
+
+<section id="effect" data-part="3" data-cue="The constructor holds one effect.">
+  <h2>Seed until a form binds</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/toggle/toggle.ts" data-mark="4,8">  constructor() {
+    effect(() =&gt; {
+      const c = this.checked();
+      if (!this.formBound) this.internalChecked.set(c);
+    });
+  }
+  writeValue(value: boolean | null): void {
+    this.formBound = true;
+    this.internalChecked.set(!!value);
+  }</pre>
+  <p class="muted small">The constructor and <code>writeValue</code> are not adjacent in the file.</p>
+</section>
+
+<section id="writers" data-part="3" data-cue="That is why this is an effect and not a computed signal.">
+  <h2>Three writers, one signal</h2>
+  <div class="cols three">
+    <div class="card"><h3>Input</h3><p><code>checked</code> seeds</p></div>
+    <div class="card"><h3>Form</h3><p><code>writeValue</code> takes over</p></div>
+    <div class="card"><h3>User</h3><p><code>handleChange</code></p></div>
+  </div>
+  <p class="muted"><code>formBound</code> is a plain field: flipping it must not re-run the effect.</p>
+</section>
+
+<section id="handle" data-part="3" data-cue="Handle change reads the checkbox's checked property">
+  <h2>Reporting to the form</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/toggle/toggle.ts" data-mark="4,5">  protected handleChange(event: Event): void {
+    const next = (event.target as HTMLInputElement).checked;
+    this.internalChecked.set(next);
+    this.onChange(next);
+    this.onTouched();
+  }</pre>
+</section>
+
+<section id="template" data-part="4" data-cue="The template is one label element with the class toggle.">
+  <h2>The template</h2>
+  <pre class="code tight" data-lang="html" data-file="components/src/lib/toggle/toggle.html" data-mark="4,5,8">&lt;label class="toggle"&gt;
+  &lt;input
+    class="toggle__input"
+    type="checkbox"
+    role="switch"
+    [checked]="internalChecked()"
+    [disabled]="disabled()"
+    [attr.aria-label]="label() ? null : srLabel() || null"
+    (change)="handleChange($event)"
+  /&gt;
+  &lt;span class="toggle__track"&gt;&lt;/span&gt;
+  @if (label()) {
+    &lt;span class="toggle__label"&gt;{{ label() }}&lt;/span&gt;
+  }
+&lt;/label&gt;</pre>
+</section>
+
+<section id="styles-input" data-part="5" data-cue="The host is display contents">
+  <h2>Invisible, but still the control</h2>
+  <pre class="code tight" data-lang="scss" data-file="components/src/lib/toggle/toggle.scss" data-mark="2,7,13">:host {
+  display: contents;
+}
+
+.toggle__input {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  cursor: pointer;
+  opacity: 0;
+}</pre>
+</section>
+
+<section id="styles-states" data-part="5" data-cue="The track is forty four by twenty four pixels">
+  <h2>States from the real input</h2>
+  <pre class="code tight" data-lang="scss" data-file="components/src/lib/toggle/toggle.scss" data-mark="1,5,9">.toggle__input:checked + .toggle__track {
+  background: var(--colorStatusSuccessBackground3);
+}
+
+.toggle__input:checked + .toggle__track::after {
+  transform: translateX(20px);
+}
+
+.toggle__input:focus-visible + .toggle__track {
+  outline: var(--strokeWidthThick) solid var(--colorStrokeFocus2);
+  outline-offset: 2px;
+}</pre>
+  <p class="muted small">The thumb (<code>.toggle__track::after</code>) uses <code>background: #fff</code> — the one literal value.</p>
+</section>
+
+<section id="spec-setup" data-part="6" data-cue="Open toggle dot spec dot T S.">
+  <h2>Spec setup and structure</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/toggle/toggle.spec.ts">  it('creates an unchecked switch inside its label', () =&gt; {
+    expect(component).toBeTruthy();
+    const label = host.querySelector('label.toggle') as HTMLLabelElement;
+    expect(label).not.toBeNull();
+    expect(label.contains(input())).toBe(true);
+    expect(input().type).toBe('checkbox');
+    expect(input().getAttribute('role')).toBe('switch');
+    expect(input().checked).toBe(false);</pre>
+</section>
+
+<section id="spec-naming" data-part="6" data-cue="Two tests cover naming.">
+  <h2>Naming</h2>
+  <ul>
+    <li><b>renders the visible label and drops any aria-label</b></li>
+    <li><b>uses srLabel as the accessible name when there is no visible label</b></li>
+  </ul>
+</section>
+
+<section id="spec-owner" data-part="6" data-cue="Two tests cover ownership.">
+  <h2>lets a bound form take over from the static input</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/toggle/toggle.spec.ts" data-mark="1,5,7">    component.writeValue(true);
+    fixture.detectChanges();
+    expect(input().checked).toBe(true);
+
+    fixture.componentRef.setInput('checked', false);
+    fixture.detectChanges();
+    expect(input().checked).toBe(true);</pre>
+  <p class="muted small">Also: <b>seeds the state from the static checked input</b></p>
+</section>
+
+<section id="spec-form" data-part="6" data-cue="The last two cover the form contract.">
+  <h2>The form contract</h2>
+  <ul>
+    <li><b>reports a user toggle to the form and marks it touched</b></li>
+    <li><b>disables the switch from the form</b></li>
+  </ul>
+</section>
+
+<section id="pitfalls" data-part="7" data-cue="Don't remove the native checkbox to style a div.">
+  <h2>Pitfalls</h2>
+  <ul>
+    <li>Keep the native checkbox — keyboard, focus, announcements</li>
+    <li>Unlabelled toggle? Always set <code>srLabel</code></li>
+    <li>No <code>changed</code> output exists despite the doc comment — use the form / <code>ngModelChange</code></li>
+  </ul>
+</section>
+
+<section id="recap" data-part="7" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div>Real checkbox, <code>role="switch"</code>, inside a label</div>
+    <div>Exactly one accessible name</div>
+    <div>Input seeds; <code>writeValue</code> wins once bound</div>
+    <div><code>effect()</code> + plain flag for several writers</div>
+    <div>Styles key off the real input's states</div>
+  </div>
+</section>
+
+<section id="next" data-part="7" data-cue="Next, in video forty nine">
+  <div class="kicker">Next · Video 49</div>
+  <h1>Coding <code>[sdTooltip]</code></h1>
+</section>
+
+<script src="../../assets/slides.js"></script>
+</body>
+</html>

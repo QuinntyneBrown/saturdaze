@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 40 Slides</title>
+<link rel="stylesheet" href="../../assets/slides.css">
+</head>
+<body data-video-number="40" data-video-title="Coding sd-sitebar" data-parts="Introduction|Usage|Decorator|Input|Scrolled|Template|Styles|Tests|Pitfalls|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Saturdaze components · Video 40 of 52</div>
+  <h1>Coding <code>sd-sitebar</code></h1>
+  <p class="lead">The public top bar: one boolean input and a host directive.</p>
+</section>
+
+<section id="usage" data-part="1" data-cue="The sitebar is rendered once, by the application shell.">
+  <h2>Rendered once, by the shell</h2>
+  <pre class="code" data-lang="html" data-file="saturdaze/src/app/app.html" data-mark="2">  } @else if (shell() === 'site') {
+    &lt;sd-sitebar [cta]="siteCta()" /&gt;
+  }</pre>
+  <table class="grid small">
+    <tr><th>Route (app.routes.ts)</th><th>data</th></tr>
+    <tr><td>landing</td><td><code>{ shell: 'site', cta: true, page: 'landing' }</code></td></tr>
+    <tr><td>shared weekend</td><td><code>{ shell: 'site', cta: true, page: 'shared-weekend' }</code></td></tr>
+    <tr><td>legal</td><td><code>{ shell: 'site', page: 'legal' }</code></td></tr>
+  </table>
+</section>
+
+<section id="decorator" data-part="2" data-cue="Open the file called sitebar dot T S.">
+  <h2>The decorator</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/sitebar/sitebar.ts" data-mark="4,5,10,11">@Component({
+  selector: 'sd-sitebar',
+  standalone: true,
+  imports: [Button, RouterLink],
+  hostDirectives: [Scrolled],
+  templateUrl: './sitebar.html',
+  styleUrl: './sitebar.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: 'sitebar',
+    '[class.sitebar--cta]': 'cta()',
+  },
+})</pre>
+</section>
+
+<section id="host-directives" data-part="2" data-cue="Then there is a line worth pausing on">
+  <h2>Host directives compose behaviour</h2>
+  <div class="flow">
+    <div class="node accent"><b>Scrolled</b><span class="small">[sdScrolled] · data-scrolled</span></div>
+    <div class="arrow">→</div>
+    <div class="node"><b>sd-sitebar</b><span class="small">hostDirectives: [Scrolled]</span></div>
+    <div class="node"><b>sd-top-bar</b><span class="small">hostDirectives: [Scrolled]</span></div>
+  </div>
+  <p class="muted">Applied to the host automatically; consumers never write <code>sdScrolled</code>.</p>
+</section>
+
+<section id="host-class" data-part="2" data-cue="This used to be a reflected C T A attribute on the host.">
+  <h2>A host class, not a reflected attribute</h2>
+  <div class="cols">
+    <div class="card bad"><h3>Before</h3><p><code>'[attr.cta]': 'cta() ? "" : null'</code> read by <code>:host([cta])</code></p></div>
+    <div class="card good"><h3 style="color:var(--forest)">Now</h3><p><code>'[class.sitebar--cta]': 'cta()'</code> read by <code>:host(.sitebar--cta)</code></p></div>
+  </div>
+  <p class="muted small">ADR-009: inputs stay inputs; only classes and ARIA state go on the host. <code>data-scrolled</code> stays — the mock sets it too.</p>
+</section>
+
+<section id="input" data-part="3" data-cue="The class body is a single line.">
+  <h2>One input</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/sitebar/sitebar.ts" data-mark="2">export class Sitebar {
+  readonly cta = input(false, { transform: booleanAttribute });
+}</pre>
+  <ul>
+    <li><code>&lt;sd-sitebar cta /&gt;</code> → <code>true</code></li>
+    <li>No output, model or local state</li>
+  </ul>
+</section>
+
+<section id="scrolled" data-part="4" data-cue="Since the behaviour comes from the directive">
+  <h2>The Scrolled directive</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/scrolled/scrolled.ts" data-mark="5,9,10,12">@Directive({
+  selector: '[sdScrolled]',
+  standalone: true,
+  host: {
+    '[attr.data-scrolled]': 'scrolled() ? "" : null',
+  },
+})
+export class Scrolled {
+  private readonly zone = inject(NgZone);
+  private readonly destroyRef = inject(DestroyRef);
+
+  readonly scrolled = signal(false);</pre>
+</section>
+
+<section id="scrolled-ctor" data-part="4" data-cue="In the constructor it calls after next render">
+  <h2>Outside the zone, signal on change</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/scrolled/scrolled.ts" data-mark="2,4,5,7,8,10">  constructor() {
+    afterNextRender(() =&gt; {
+      const update = (): void =&gt; {
+        const next = window.scrollY &gt; 4;
+        if (next !== this.scrolled()) this.zone.run(() =&gt; this.scrolled.set(next));
+      };
+      this.zone.runOutsideAngular(() =&gt; {
+        window.addEventListener('scroll', update, { passive: true });
+      });
+      this.destroyRef.onDestroy(() =&gt; window.removeEventListener('scroll', update));
+      update();
+    });
+  }</pre>
+</section>
+
+<section id="pattern" data-part="4" data-cue="That is a good pattern for any high frequency browser event">
+  <h2>High-frequency events</h2>
+  <ol class="steps">
+    <li>Listen outside the zone, <code>passive</code></li>
+    <li>Derive the state you care about</li>
+    <li>Write a signal only when it flips</li>
+    <li>Clean up with <code>DestroyRef</code></li>
+  </ol>
+</section>
+
+<section id="template" data-part="5" data-cue="The template is a div with the class sitebar inner.">
+  <h2>The template</h2>
+  <pre class="code tight" data-lang="html" data-file="components/src/lib/sitebar/sitebar.html" data-mark="3,6,8">&lt;div class="sitebar__inner"&gt;
+  &lt;a class="sitebar__brand" routerLink="/"
+    &gt;&lt;span class="brand-mark" aria-hidden="true"&gt;&lt;/span&gt;Saturdaze&lt;/a
+  &gt;
+  &lt;div class="sitebar__actions"&gt;
+    &lt;a class="sitebar__link" routerLink="/sign-in"&gt;Sign in&lt;/a&gt;
+    @if (cta()) {
+      &lt;sd-button variant="primary" size="sm" href="/create-account"&gt;Create your account&lt;/sd-button&gt;
+    }
+  &lt;/div&gt;
+&lt;/div&gt;</pre>
+</section>
+
+<section id="styles" data-part="6" data-cue="Open sitebar dot S C S S.">
+  <h2>Sticky, with a frosted backdrop</h2>
+  <pre class="code tight" data-lang="scss" data-file="components/src/lib/sitebar/sitebar.scss" data-mark="7,8,14-18">:host {
+  display: block;
+  position: sticky;
+  top: 0;
+  z-index: var(--zIndexTopBar);
+  height: var(--layoutTopBarHeight);
+  transition:
+    background var(--durationNormal) var(--curveEasyEase),
+    box-shadow var(--durationNormal) var(--curveEasyEase);
+}
+
+:host([data-scrolled]) {
+  background: color-mix(in srgb, var(--colorNeutralBackground2) 86%, transparent);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 1px 0 var(--colorNeutralStroke2);
+}</pre>
+</section>
+
+<section id="layout" data-part="6" data-cue="The inner container uses layout content max width">
+  <h2>Layout tokens line it up with the page</h2>
+  <pre class="code" data-lang="scss" data-file="components/src/lib/sitebar/sitebar.scss" data-mark="3,5">.sitebar__inner {
+  width: 100%;
+  max-width: var(--layoutContentMaxWidth);
+  margin-inline: auto;
+  padding-inline: var(--layoutGutter);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  height: var(--layoutTopBarHeight);
+}</pre>
+</section>
+
+<section id="small" data-part="6" data-cue="Finally, below three hundred and eighty pixels">
+  <h2>The host class pays off</h2>
+  <pre class="code" data-lang="scss" data-file="components/src/lib/sitebar/sitebar.scss" data-mark="7">@media (max-width: 379px) {
+  .sitebar__inner {
+    gap: 8px;
+  }
+
+  // The hero repeats Sign in.
+  :host(.sitebar--cta) .sitebar__link {
+    display: none;
+  }
+}</pre>
+</section>
+
+<section id="spec-setup" data-part="7" data-cue="Open sitebar dot spec dot T S.">
+  <h2>Spec setup</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/sitebar/sitebar.spec.ts" data-mark="4,8">  beforeEach(async () =&gt; {
+    await TestBed.configureTestingModule({
+      imports: [Sitebar],
+      providers: [provideRouter([])],
+    }).compileComponents();
+    fixture = TestBed.createComponent(Sitebar);
+    fixture.detectChanges();
+    await fixture.whenStable();
+    host = fixture.nativeElement as HTMLElement;
+  });</pre>
+</section>
+
+<section id="tests" data-part="7" data-cue="&quot;creates the public bar with the wordmark linking to the landing page&quot; checks">
+  <h2>What each test proves</h2>
+  <table class="grid small">
+    <tr><th>Test</th><th>Proves</th></tr>
+    <tr><td>creates the public bar with the wordmark linking to the landing page</td><td><code>href="/"</code>, wordmark, hidden brand mark, no <code>data-scrolled</code></td></tr>
+    <tr><td>offers Sign in and no CTA by default</td><td><code>/sign-in</code>; no <code>sd-button</code>, no <code>.sitebar--cta</code></td></tr>
+    <tr><td>adds the Create your account CTA when asked</td><td>host <code>.sitebar--cta</code>; <code>a.btn.btn--primary.btn--sm</code> → <code>/create-account</code></td></tr>
+    <tr><td>labels the CTA with its text</td><td>"Create your account"</td></tr>
+    <tr><td>fades in its backdrop once the page scrolls</td><td><code>data-scrolled</code> after a scroll</td></tr>
+  </table>
+</section>
+
+<section id="scroll-test" data-part="7" data-cue="And &quot;fades in its backdrop once the page scrolls&quot;">
+  <h2>Faking the scroll</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/sitebar/sitebar.spec.ts" data-mark="2,6">  it('fades in its backdrop once the page scrolls', () =&gt; {
+    Object.defineProperty(window, 'scrollY', { value: 30, configurable: true, writable: true });
+    window.dispatchEvent(new Event('scroll'));
+    fixture.detectChanges();
+    expect(host.getAttribute('data-scrolled')).toBe('');
+    Object.defineProperty(window, 'scrollY', { value: 0, configurable: true, writable: true });
+  });</pre>
+  <p class="muted">Reset the shared window so later tests start clean.</p>
+</section>
+
+<section id="pitfalls" data-part="8" data-cue="Adding the scrolled attribute by hand on the bar.">
+  <h2>Pitfalls</h2>
+  <ul>
+    <li>Don't add <code>sdScrolled</code> by hand — it's a host directive</li>
+    <li>Scroll listeners inside the zone, or a signal write per event</li>
+    <li>Hiding Sign in without the hero repeating it</li>
+  </ul>
+</section>
+
+<section id="recap" data-part="9" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div><code>booleanAttribute</code> input → host class for CSS</div>
+    <div><code>hostDirectives</code> compose shared behaviour</div>
+    <div>Outside the zone; signal on change</div>
+    <div>Layout tokens align with the page</div>
+    <div>Spec fakes <code>scrollY</code> and resets it</div>
+  </div>
+</section>
+
+<section id="next" data-part="9" data-cue="Next, video forty one builds">
+  <div class="kicker">Next · Video 41</div>
+  <h1>Coding <code>sd-skeleton-row</code></h1>
+</section>
+
+<script src="../../assets/slides.js"></script>
+</body>
+</html>

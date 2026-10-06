@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 46 Slides</title>
+<link rel="stylesheet" href="../../assets/slides.css">
+</head>
+<body data-video-number="46" data-video-title="Coding sd-text-input" data-parts="Introduction|Decorator|Inputs|State|Effect|Template|Styles|Spec|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Saturdaze components · Video 46 of 52</div>
+  <h1>Coding <code>sd-text-input</code></h1>
+  <p class="lead">A labelled field that speaks Angular forms.</p>
+</section>
+
+<section id="where" data-part="0" data-cue="It appears wherever a user types">
+  <h2>Where it lives</h2>
+  <pre class="code tight" data-lang="html" data-file="saturdaze/src/app/pages/sign-in/sign-in.page.html" data-mark="6">      &lt;sd-text-input
+        label="Email"
+        type="email"
+        name="email"
+        autocomplete="email"
+        formControlName="email"
+        [invalid]="!!errorMessage() || (form.controls.email.invalid &amp;&amp; form.controls.email.touched)"
+      /&gt;</pre>
+  <p class="muted">sign-in · create-account · reset-password · add-errand, commitment, family-member dialogs …</p>
+</section>
+
+<section id="decorator" data-part="1" data-cue="Open text input dot T S.">
+  <h2>The decorator <span class="muted small">· after <code>let nextFieldId = 0;</code></span></h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/text-input/text-input.ts" data-mark="2,6,8">@Component({
+  selector: 'sd-text-input',
+  standalone: true,
+  imports: [Icon],
+  /* templateUrl, styleUrl */
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: 'field',
+  },</pre>
+  <p class="muted">Inputs stay inputs: no <code>[attr.label]</code>, <code>[attr.type]</code> … on the host. Classes and ARIA only (ADR-009); ARIA lives on the inner control.</p>
+</section>
+
+<section id="providers" data-part="1" data-cue="The providers array registers the component itself">
+  <h2>Plugging into forms</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/text-input/text-input.ts" data-mark="3,4,5">  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() =&gt; TextInput),
+      multi: true,
+    },
+  ],
+})
+export class TextInput implements ControlValueAccessor {</pre>
+</section>
+
+<section id="inputs" data-part="2" data-cue="Every input uses the input function.">
+  <h2>Signal inputs</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/text-input/text-input.ts" data-mark="8,10,11,13">  readonly label = input&lt;string&gt;('');
+  readonly value = input&lt;string&gt;('');
+  readonly placeholder = input&lt;string&gt;('');
+  readonly type = input&lt;string&gt;('text');
+  readonly hint = input&lt;string&gt;('');
+  /** Inline error; non-empty also sets `aria-invalid`. */
+  readonly error = input&lt;string&gt;('');
+  readonly required = input(false, { transform: booleanAttribute });
+  /** Mark invalid without an inline message (a form-level error banner). */
+  readonly invalid = input(false, { transform: booleanAttribute });
+  readonly multiline = input(false, { transform: booleanAttribute });
+  readonly rows = input&lt;number&gt;(3);
+  readonly readonly = input(false, { transform: booleanAttribute });</pre>
+</section>
+
+<section id="forwarded" data-part="2" data-cue="Rows defaults to three for the text area.">
+  <h2>Forwarded to the inner control</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/text-input/text-input.ts">  // Forwarded to the inner control so password managers and autofill
+  // recognise sign-in / sign-up fields.
+  readonly autocomplete = input&lt;string&gt;('');
+  readonly name = input&lt;string&gt;('');
+  readonly min = input&lt;string | number | null&gt;(null);
+  readonly max = input&lt;string | number | null&gt;(null);
+  readonly step = input&lt;string | number | null&gt;(null);</pre>
+</section>
+
+<section id="state" data-part="3" data-cue="The id, hint id and error id are plain strings">
+  <h2>Local state: plain strings and writable signals</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/text-input/text-input.ts" data-mark="4,5">  protected readonly id = `sd-field-${nextFieldId++}`;
+  protected readonly hintId = `${this.id}-hint`;
+  protected readonly errorId = `${this.id}-error`;
+  protected readonly internalValue = signal&lt;string&gt;('');
+  protected readonly disabled = signal&lt;boolean&gt;(false);</pre>
+  <p class="muted">Never changes → plain field. Changes → <code>signal()</code>.</p>
+</section>
+
+<section id="computed" data-part="3" data-cue="Then the computed signal called described by.">
+  <h2>Derived state with <code>computed()</code></h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/text-input/text-input.ts" data-mark="1,5">  protected readonly describedBy = computed(() =&gt; {
+    const ids: string[] = [];
+    if (this.error()) ids.push(this.errorId);
+    if (this.hint()) ids.push(this.hintId);
+    return ids.length ? ids.join(' ') : null;
+  });</pre>
+  <p class="muted">Pure, cached, recalculated only when <code>error</code> or <code>hint</code> change.</p>
+</section>
+
+<section id="effect" data-part="4" data-cue="The constructor has the only effect.">
+  <h2>One effect: seed from <code>value</code></h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/text-input/text-input.ts" data-mark="3-4">  constructor() {
+    effect(() =&gt; {
+      const v = this.value();
+      if (v) this.internalValue.set(v);
+    });
+  }</pre>
+  <div class="cols">
+    <div class="card"><h3>Why not computed?</h3><p>Two writers: the input and the form</p></div>
+    <div class="card"><h3>Keep effects rare</h3><p>Only for syncing state a derivation can't express</p></div>
+  </div>
+</section>
+
+<section id="cva" data-part="4" data-cue="The accessor methods are one line each.">
+  <h2>The accessor methods</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/text-input/text-input.ts">  protected handleInput(event: Event): void {
+    const v = (event.target as HTMLInputElement | HTMLTextAreaElement).value;
+    this.internalValue.set(v);
+    this.onChange(v);
+  }
+
+  protected handleBlur(): void {
+    this.onTouched();
+  }
+
+  writeValue(value: string | null): void {
+    this.internalValue.set(value ?? '');
+  }
+
+  setDisabledState(isDisabled: boolean): void {
+    this.disabled.set(isDisabled);
+  }</pre>
+</section>
+
+<section id="template-input" data-part="5" data-cue="An at if renders the label only when there is one">
+  <h2>The template: label and control</h2>
+  <pre class="code tight" data-lang="html" data-file="components/src/lib/text-input/text-input.html" data-mark="2,9,12-14">@if (label()) {
+  &lt;label class="field__label" [attr.for]="id"&gt;
+  …
+} @else {
+  &lt;input
+    class="field__input"
+    [id]="id"
+    [attr.type]="type()"
+    [value]="internalValue()"
+    [attr.placeholder]="placeholder() || null"
+    …
+    [attr.aria-invalid]="error() || invalid() ? 'true' : null"
+    [attr.aria-describedby]="describedBy()"
+    [attr.aria-required]="required() ? 'true' : null"
+    (input)="handleInput($event)"
+    (blur)="handleBlur()"
+  /&gt;</pre>
+</section>
+
+<section id="template-error" data-part="5" data-cue="Last, at if error renders the error paragraph">
+  <h2>Error replaces hint</h2>
+  <pre class="code" data-lang="html" data-file="components/src/lib/text-input/text-input.html">@if (error()) {
+  &lt;p class="field__error" [id]="errorId"&gt;
+    &lt;sd-icon name="close" [size]="12" [stroke]="2" /&gt;
+    {{ error() }}
+  &lt;/p&gt;
+} @else if (hint()) {
+  &lt;p class="field__hint" [id]="hintId"&gt;{{ hint() }}&lt;/p&gt;
+}</pre>
+</section>
+
+<section id="styles" data-part="6" data-cue="The host is the field: a column flex box.">
+  <h2>States on real attributes</h2>
+  <pre class="code tight" data-lang="scss" data-file="components/src/lib/text-input/text-input.scss" data-mark="1,7,11">.field__input:focus-visible {
+  outline: none;
+  border-color: var(--colorBrandStroke1);
+  box-shadow: 0 0 0 3px var(--colorBrandStroke2);
+}
+
+.field__input[aria-invalid='true'] {
+  border-color: var(--colorStatusDangerBorderActive);
+}
+
+.field__input[readonly] {
+  background: var(--colorNeutralBackground3);
+  border-color: transparent;
+}</pre>
+</section>
+
+<section id="spec-setup" data-part="7" data-cue="The setup imports the component, creates it">
+  <h2>Spec setup</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/text-input/text-input.spec.ts">  const control = (): HTMLInputElement | HTMLTextAreaElement =&gt;
+    host.querySelector('.field__input') as HTMLInputElement | HTMLTextAreaElement;
+
+  beforeEach(async () =&gt; {
+    await TestBed.configureTestingModule({ imports: [TextInput] }).compileComponents();
+    fixture = TestBed.createComponent(TextInput);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+    host = fixture.nativeElement as HTMLElement;
+  });</pre>
+</section>
+
+<section id="spec-render" data-part="7" data-cue="The first group checks rendering.">
+  <h2>Rendering and ARIA wiring</h2>
+  <ul class="small">
+    <li><b>creates an unlabelled text field</b></li>
+    <li><b>links the label to the control and marks required fields</b></li>
+    <li><b>describes the control with its hint</b></li>
+    <li><b>shows the error instead of the hint and flags the control invalid</b></li>
+  </ul>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/text-input/text-input.spec.ts">    expect(control().getAttribute('aria-describedby')).toBe(
+      `${control().id}-error ${control().id}-hint`,
+    );</pre>
+</section>
+
+<section id="spec-forward" data-part="7" data-cue="The second group,">
+  <h2>Forwarding inputs</h2>
+  <ul class="small">
+    <li><b>forwards type, placeholder, autocomplete, name and numeric bounds</b></li>
+    <li><b>renders a textarea with the given rows when multiline</b></li>
+    <li><b>seeds the control from the static value input</b></li>
+  </ul>
+</section>
+
+<section id="spec-cva" data-part="7" data-cue="The third group drives the accessor directly">
+  <h2>Driving the accessor</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/text-input/text-input.spec.ts">  it('reports typing and blur back to the form', () =&gt; {
+    const onChange = vi.fn();
+    const onTouched = vi.fn();
+    component.registerOnChange(onChange);
+    component.registerOnTouched(onTouched);
+
+    control().value = 'abc';
+    control().dispatchEvent(new Event('input'));
+    expect(onChange).toHaveBeenCalledWith('abc');
+
+    control().dispatchEvent(new Event('blur'));
+    expect(onTouched).toHaveBeenCalledTimes(1);
+  });</pre>
+  <p class="muted small">Also: <b>writes form values into the control</b> · <b>disables the control from the form</b></p>
+</section>
+
+<section id="pitfalls" data-part="8" data-cue="Clearing the value input does not clear the control">
+  <h2>Pitfalls</h2>
+  <ul>
+    <li><code>value=""</code> doesn't clear — only non-empty values seed. Reset through the form.</li>
+    <li>Keep label, hint and error inside the component so the ids stay wired.</li>
+  </ul>
+</section>
+
+<section id="recap" data-part="8" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div><code>NG_VALUE_ACCESSOR</code> + <code>forwardRef</code> + <code>multi</code></div>
+    <div><code>booleanAttribute</code> for bare attributes</div>
+    <div><code>signal()</code> local state; <code>computed()</code> describedBy</div>
+    <div>One <code>effect()</code> seeds the value</div>
+    <div>States on real attributes, tokens by role</div>
+  </div>
+</section>
+
+<section id="next" data-part="8" data-cue="Next, in video forty seven">
+  <div class="kicker">Next · Video 47</div>
+  <h1>Coding <code>[sdThemeProvider]</code></h1>
+</section>
+
+<script src="../../assets/slides.js"></script>
+</body>
+</html>

@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 07 Slides</title>
+<link rel="stylesheet" href="../../assets/slides.css">
+</head>
+<body data-video-number="07" data-video-title="Coding sd-bottom-nav" data-parts="Introduction|Decorator|Input|Template|ADR-005|Styles|Tests|Pitfalls|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Saturdaze components · Video 07 of 52</div>
+  <h1>Coding <code>sd-bottom-nav</code></h1>
+  <p class="lead">A navigation landmark and a protected offset.</p>
+</section>
+
+<section id="where" data-part="0" data-cue="The app shell renders it exactly once">
+  <h2>Rendered once, by the shell</h2>
+  <pre class="code" data-lang="html" data-file="saturdaze/src/app/app.html">  &lt;main
+    id="main"
+    class="sd-frame"
+    …
+  &gt;
+    &lt;router-outlet /&gt;
+  &lt;/main&gt;
+  @if (shell() === 'app') {
+    &lt;sd-bottom-nav [active]="nav()" /&gt;
+  }</pre>
+  <p class="muted">Below 720px only — from 720px <code>sd-top-bar</code> takes over (ADR-009).</p>
+</section>
+
+<section id="decorator" data-part="1" data-cue="Open the bottom nav file in the components library.">
+  <h2>The host is the landmark</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/bottom-nav/bottom-nav.ts" data-mark="9-11">@Component({
+  selector: 'sd-bottom-nav',
+  standalone: true,
+  imports: [Icon, RouterLink],
+  templateUrl: './bottom-nav.html',
+  styleUrl: './bottom-nav.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: 'bottom-nav',
+    role: 'navigation',
+    'aria-label': 'Primary',
+  },
+})</pre>
+</section>
+
+<section id="input" data-part="2" data-cue="The class has one input, active">
+  <h2>One nullable input</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/bottom-nav/bottom-nav.ts" data-mark="2,4">export class BottomNav {
+  readonly active = input&lt;NavKey | null&gt;(null);
+
+  protected readonly items = NAV_ITEMS;
+}</pre>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/shared/nav-key.ts">export type NavKey = 'weekend' | 'ideas' | 'past' | 'family';</pre>
+</section>
+
+<section id="items" data-part="2" data-cue="The items come from a shared constant called nav items">
+  <h2>Constant data stays constant</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/shared/nav-key.ts">export const NAV_ITEMS: readonly NavItem[] = [
+  { key: 'weekend', label: 'Weekend', icon: 'home', route: '/weekend' },
+  { key: 'ideas', label: 'Ideas', icon: 'sparkle', route: '/ideas' },
+  { key: 'past', label: 'Past', icon: 'star', route: '/past' },
+  { key: 'family', label: 'Family', icon: 'user', route: '/family' },
+];</pre>
+  <ul class="small">
+    <li>Never changes at runtime → no <code>signal()</code></li>
+    <li>Shared with <code>sd-top-bar</code> → the two navs can't disagree</li>
+  </ul>
+</section>
+
+<section id="template" data-part="3" data-cue="The template is a for loop over the items, tracked by key.">
+  <h2>The whole template</h2>
+  <pre class="code" data-lang="html" data-file="components/src/lib/bottom-nav/bottom-nav.html" data-mark="1,6">@for (item of items; track item.key) {
+  &lt;a
+    class="bottom-nav__item"
+    [attr.data-nav]="item.key"
+    [routerLink]="item.route"
+    [attr.aria-current]="active() === item.key ? 'page' : null"
+  &gt;
+    &lt;span class="bottom-nav__icon"&gt;&lt;sd-icon [name]="item.icon" [size]="22" /&gt;&lt;/span&gt;
+    {{ item.label }}
+  &lt;/a&gt;
+}</pre>
+</section>
+
+<section id="mock" data-part="3" data-cue="That is the state the mocks use too">
+  <h2>Same state as the mock</h2>
+  <pre class="code tight" data-lang="html" data-file="docs/mocks/pages/weekend.html">&lt;a class="bottom-nav__item" data-nav="weekend" href="./weekend.html" aria-current="page"&gt;…Weekend&lt;/a&gt;
+&lt;a class="bottom-nav__item" data-nav="ideas" href="./ideas.html"&gt;…Ideas&lt;/a&gt;</pre>
+  <p class="muted">One locator set for mock and app: <code>[data-nav]</code>, <code>[aria-current="page"]</code> (ADR-009).</p>
+</section>
+
+<section id="offset" data-part="4" data-cue="Now the stylesheet, starting with the most important line.">
+  <h2>The protected line</h2>
+  <pre class="code tight" data-lang="scss" data-file="components/src/lib/bottom-nav/bottom-nav.scss" data-mark="16">:host {
+  position: fixed;
+  left: 12px;
+  right: 12px;
+  z-index: var(--zIndexBottomNav);
+  // ADR-005 (BUG-047 + BUG-049). The bottom nav must clear whichever
+  // bottom-edge obstruction is currently present:
+  //   - `env(safe-area-inset-bottom)` for the home indicator (~34px on
+  //     Face-ID iPhones in PWA / standalone mode).
+  //   - `var(--sd-chrome-bottom)` for iOS Safari's *current* bottom URL/tab
+  //     bar height — set by `trackBottomChrome()` in main.ts using the
+  //     VisualViewport API. …
+  // These are NOT additive — … we take the larger of the two and
+  // add a 12px visual floor. …
+  // Do not simplify without re-reading ADR-005.
+  bottom: calc(12px + max(env(safe-area-inset-bottom, 0px), var(--sd-chrome-bottom, 0px)));</pre>
+</section>
+
+<section id="adr" data-part="4" data-cue="A D R five explains why.">
+  <h2>Measuring the bottom chrome</h2>
+  <pre class="code tight" data-lang="ts" data-file="saturdaze/src/main.ts" data-mark="4-6">  const update = (): void =&gt; {
+    const layoutHeight = root.clientHeight;
+    const visibleBottom = vv.offsetTop + vv.height;
+    const bottomChrome = Math.max(0, layoutHeight - visibleBottom);
+    root.style.setProperty('--sd-chrome-bottom', `${bottomChrome}px`);
+  };
+  vv.addEventListener('resize', update);
+  vv.addEventListener('scroll', update);
+  window.addEventListener('resize', update);
+  update();
+}
+
+trackBottomChrome();
+
+bootstrapApplication(App, appConfig).catch((err) =&gt; console.error(err));</pre>
+</section>
+
+<section id="guard" data-part="4" data-cue="The comment above the line says do not simplify">
+  <h2>Four CSS attempts failed</h2>
+  <table class="map">
+    <tr><th>attempt</th><th>what broke</th></tr>
+    <tr><td>+ env(safe-area-inset-bottom)</td><td class="prose">ignored Safari's toolbar</td></tr>
+    <tr><td>+ env(…) + max(0, 100lvh - 100svh)</td><td class="prose">additive — floated too high</td></tr>
+    <tr><td>+ max(env(…), 100lvh - 100svh)</td><td class="prose">always reserved the max</td></tr>
+    <tr><td>+ max(env(…), 100lvh - 100dvh)</td><td class="prose">top + bottom chrome combined</td></tr>
+  </table>
+  <p class="muted small">Guard: <code>e2e/tests/regression/bottom-nav-clearance.spec.ts</code></p>
+</section>
+
+<section id="styles" data-part="5" data-cue="The rest is ordinary.">
+  <h2>Style the ARIA state</h2>
+  <pre class="code tight" data-lang="scss" data-file="components/src/lib/bottom-nav/bottom-nav.scss" data-mark="1,5,10">.bottom-nav__item[aria-current='page'] {
+  color: var(--colorNeutralForeground1);
+}
+
+.bottom-nav__item[aria-current='page'] .bottom-nav__icon {
+  background: var(--colorBrandBackground2);
+  color: var(--colorBrandForeground1);
+}
+
+@include respond-to(tablet) {
+  :host {
+    display: none;
+  }
+}</pre>
+</section>
+
+<section id="setup" data-part="6" data-cue="The spec file configures the testing module with the bottom nav">
+  <h2>Test setup</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/bottom-nav/bottom-nav.spec.ts" data-mark="1,6">const items = (): HTMLAnchorElement[] =&gt; Array.from(host.querySelectorAll('a.bottom-nav__item'));
+
+beforeEach(async () =&gt; {
+  await TestBed.configureTestingModule({
+    imports: [BottomNav],
+    providers: [provideRouter([])],
+  }).compileComponents();
+  fixture = TestBed.createComponent(BottomNav);
+  fixture.detectChanges();
+  host = fixture.nativeElement as HTMLElement;
+});</pre>
+  <ul class="small">
+    <li><code>creates the primary navigation landmark</code></li>
+    <li><code>renders exactly four items in the fixed order</code></li>
+    <li><code>draws each item glyph at 22px</code></li>
+  </ul>
+</section>
+
+<section id="tests-active" data-part="6" data-cue="Marks the active destination with aria current is the behaviour test.">
+  <h2><code>marks the active destination with aria-current</code></h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/bottom-nav/bottom-nav.spec.ts">expect(host.querySelector('[aria-current]')).toBeNull();
+
+fixture.componentRef.setInput('active', 'ideas');
+fixture.detectChanges();
+expect(host.querySelector('[aria-current="page"]')?.textContent?.trim()).toBe('Ideas');
+expect(host.querySelectorAll('[aria-current="page"]').length).toBe(1);
+
+fixture.componentRef.setInput('active', null);
+fixture.detectChanges();
+expect(host.querySelector('[aria-current]')).toBeNull();</pre>
+</section>
+
+<section id="pitfalls" data-part="7" data-cue="A few pitfalls.">
+  <h2>Pitfalls</h2>
+  <ul>
+    <li>Simplifying the <code>bottom</code> calc, or adding the insets</li>
+    <li>A separate active class instead of <code>aria-current</code></li>
+    <li>Rendering the nav per page</li>
+    <li>Wrapping constant items in a signal</li>
+  </ul>
+</section>
+
+<section id="recap" data-part="8" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div>Host is the <code>navigation</code> landmark</div>
+    <div><code>active: NavKey | null</code></div>
+    <div>Shared constant items, tracked by key</div>
+    <div><code>aria-current</code> drives the style</div>
+    <div>Bottom offset follows ADR-005</div>
+    <div>Regression spec guards it</div>
+  </div>
+</section>
+
+<section id="next" data-part="8" data-cue="Next, in video eight, we build the S D browser frame">
+  <div class="kicker">Next · Video 08</div>
+  <h1>Coding <code>sd-browser-frame</code></h1>
+</section>
+
+<script src="../../assets/slides.js"></script>
+</body>
+</html>

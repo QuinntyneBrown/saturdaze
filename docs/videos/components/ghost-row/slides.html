@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 26 Slides</title>
+<link rel="stylesheet" href="../../assets/slides.css">
+</head>
+<body data-video-number="26" data-video-title="Coding sd-ghost-row" data-parts="Introduction|Decorator|Inputs|Navigation|Template|Styles|Spec|Pitfalls|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Saturdaze components · Video 26 of 52</div>
+  <h1>Coding <code>sd-ghost-row</code></h1>
+  <p class="lead">One slot, two elements: the dashed add row as a button or an in-app link.</p>
+</section>
+
+<section id="usage" data-part="0" data-cue="On the family page it says Add a family member">
+  <h2>Where it is used</h2>
+  <pre class="code" data-lang="html" data-file="saturdaze/src/app/pages/family/family.page.html">        &lt;sd-ghost-row icon="plus" (pressed)="addMember()"&gt;Add a family member&lt;/sd-ghost-row&gt;</pre>
+  <pre class="code" data-lang="html" data-file="saturdaze/src/app/pages/weekend/weekend.page.html">            &lt;sd-ghost-row slot="footer" icon="bag" (pressed)="addErrand()"
+              &gt;Add an errand&lt;/sd-ghost-row
+            &gt;</pre>
+</section>
+
+<section id="decorator" data-part="1" data-cue="Open ghost row dot T S.">
+  <h2>The decorator</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/ghost-row/ghost-row.ts" data-mark="4">@Component({
+  selector: 'sd-ghost-row',
+  standalone: true,
+  imports: [Icon, NgTemplateOutlet],
+  templateUrl: './ghost-row.html',
+  styleUrl: './ghost-row.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})</pre>
+  <p class="muted small">No host class: <code>.ghost-row</code> is on the inner <code>&lt;a&gt;</code>/<code>&lt;button&gt;</code>; the host is <code>display: contents</code>. No <code>host</code> object: <code>icon</code> and <code>href</code> are not reflected (ADR-009).</p>
+</section>
+
+<section id="class" data-part="2" data-cue="The first field injects the Angular router">
+  <h2>Optional <code>inject()</code>, two inputs, one output</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/ghost-row/ghost-row.ts" data-mark="2,6">export class GhostRow {
+  private readonly router = inject(Router, { optional: true });
+
+  readonly icon = input&lt;string&gt;('plus');
+  readonly href = input&lt;string&gt;('');
+  readonly pressed = output&lt;void&gt;();
+
+  protected onAnchorClick(event: MouseEvent): void {
+    if (this.router) navigateInApp(this.router, event, this.href());
+  }
+}</pre>
+</section>
+
+<section id="which" data-part="2" data-cue="The output is called pressed and emits void.">
+  <h2>Which element?</h2>
+  <table class="map">
+    <tr><th>href()</th><th>renders</th><th>on click</th></tr>
+    <tr><td>''</td><td>&lt;button type="button"&gt;</td><td class="prose">emits <code>pressed</code></td></tr>
+    <tr><td>'/family/new'</td><td>&lt;a href&gt;</td><td class="prose">router navigates (plain click)</td></tr>
+  </table>
+</section>
+
+<section id="helper" data-part="3" data-cue="The one method, on anchor click">
+  <h2>The shared in-app link helper</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/shared/in-app-link.ts">export function isPlainClick(event: MouseEvent): boolean {
+  if (event.defaultPrevented) return false;
+  if (event.button !== 0) return false;
+  if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return false;
+  return true;
+}
+
+/** Absolute, same-origin, in-app paths only (`/weekend`, `/ideas/food`). */
+export function isInAppHref(href: string): boolean {
+  return href.startsWith('/') &amp;&amp; !href.startsWith('//');
+}</pre>
+</section>
+
+<section id="navigate" data-part="3" data-cue="That helper lives in the shared in app link file">
+  <h2>Real links, SPA navigation</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/shared/in-app-link.ts" data-mark="3,4">export function navigateInApp(router: Router, event: MouseEvent, href: string): void {
+  if (!isPlainClick(event) || !isInAppHref(href)) return;
+  event.preventDefault();
+  void router.navigateByUrl(href);
+}</pre>
+  <p class="muted">Also used by <code>sd-button</code>, <code>sd-list-item</code>, <code>sd-menu</code>, <code>sd-page-header</code>.</p>
+</section>
+
+<section id="template" data-part="4" data-cue="Open ghost row dot H T M L.">
+  <h2>One content template, two elements</h2>
+  <pre class="code tight" data-lang="html" data-file="components/src/lib/ghost-row/ghost-row.html" data-mark="2-5,9,13">&lt;!-- One content template for both elements; see button.html for why. --&gt;
+&lt;ng-template #content&gt;
+  &lt;sd-icon [name]="icon()" [size]="16" /&gt;
+  &lt;ng-content /&gt;
+&lt;/ng-template&gt;
+
+@if (href()) {
+  &lt;a class="ghost-row" [attr.href]="href()" (click)="onAnchorClick($event)"&gt;
+    &lt;ng-container *ngTemplateOutlet="content" /&gt;
+  &lt;/a&gt;
+} @else {
+  &lt;button class="ghost-row" type="button" (click)="pressed.emit()"&gt;
+    &lt;ng-container *ngTemplateOutlet="content" /&gt;
+  &lt;/button&gt;
+}</pre>
+</section>
+
+<section id="why" data-part="4" data-cue="Here is why this matters.">
+  <h2>Why not one slot per branch?</h2>
+  <div class="cols">
+    <div class="card bad"><h3>Slot in each <code>@if</code> branch</h3><p class="small">Angular projects each <code>ng-content</code> into one place at compile time — the other variant renders empty.</p></div>
+    <div class="card good"><h3 style="color:var(--forest)">Slot in one <code>ng-template</code></h3><p class="small">Declared once, stamped into whichever branch is active. Same in <code>sd-button</code> and <code>sd-list-item</code>.</p></div>
+  </div>
+</section>
+
+<section id="scss" data-part="5" data-cue="Open ghost row dot S C S S.">
+  <h2>Dashed, full width, 44px</h2>
+  <pre class="code tight" data-lang="scss" data-file="components/src/lib/ghost-row/ghost-row.scss" data-mark="6,10,11,14">.ghost-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 44px;
+  margin-top: 12px;
+  padding: 0 12px;
+  border: 1px dashed var(--colorNeutralStroke1);
+  border-radius: var(--borderRadiusMedium);
+  font-size: var(--fontSizeBase300);
+  font-weight: var(--fontWeightSemibold);
+  color: var(--colorNeutralForeground2);
+  background: transparent;</pre>
+</section>
+
+<section id="hover" data-part="5" data-cue="Colours transition with duration fast">
+  <h2>Hover only where hover exists</h2>
+  <pre class="code" data-lang="scss" data-file="components/src/lib/ghost-row/ghost-row.scss">@media (hover: hover) {
+  .ghost-row:hover {
+    background: var(--colorNeutralBackground3);
+    color: var(--colorNeutralForeground1);
+  }
+}</pre>
+</section>
+
+<section id="spec-setup" data-part="6" data-cue="The spec file has a host component that renders a ghost row">
+  <h2>Spec setup</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/ghost-row/ghost-row.spec.ts" data-mark="4">    await TestBed.configureTestingModule({
+      imports: [GhostRow, HostCmp],
+      providers: [provideRouter([])],
+    }).compileComponents();
+    fixture = TestBed.createComponent(GhostRow);
+    fixture.detectChanges();</pre>
+  <ul class="small">
+    <li><code>creates a dashed add button with a plus glyph</code></li>
+    <li><code>forwards the icon name</code></li>
+    <li><code>emits pressed when the button is clicked</code></li>
+  </ul>
+</section>
+
+<section id="spec-anchor" data-part="6" data-cue="The most interesting test is renders an in app anchor">
+  <h2>Routing a plain click</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/ghost-row/ghost-row.spec.ts" data-mark="13,14">  it('renders an in-app anchor when href is given and routes plain clicks', () =&gt; {
+    const router = TestBed.inject(Router);
+    const navigate = vi.spyOn(router, 'navigateByUrl').mockResolvedValue(true);
+    fixture.componentRef.setInput('href', '/family/new');
+    fixture.detectChanges();
+
+    const a = host.querySelector('a.ghost-row') as HTMLAnchorElement;
+    expect(a).not.toBeNull();
+    expect(host.querySelector('button')).toBeNull();
+    …
+    const event = new MouseEvent('click', { bubbles: true, cancelable: true });
+    a.dispatchEvent(event);
+    expect(navigate).toHaveBeenCalledWith('/family/new');
+    expect(event.defaultPrevented).toBe(true);
+  });</pre>
+</section>
+
+<section id="spec-slot" data-part="6" data-cue="Projects the row text after the glyph renders">
+  <h2>Proving the shared template</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/ghost-row/ghost-row.spec.ts">  it('projects the row text after the glyph', () =&gt; {
+    const wrapper = TestBed.createComponent(HostCmp);
+    wrapper.detectChanges();
+    const btn = (wrapper.nativeElement as HTMLElement).querySelector('.ghost-row') as HTMLElement;
+    expect(btn.textContent?.trim()).toBe('Add a family member');
+    expect(btn.firstElementChild?.tagName.toLowerCase()).toBe('sd-icon');
+  });</pre>
+</section>
+
+<section id="pitfalls" data-part="7" data-cue="Never repeat N G content in each branch">
+  <h2>Pitfalls</h2>
+  <ul>
+    <li><code>ng-content</code> repeated per <code>@if</code> branch</li>
+    <li>Hijacking modifier clicks or external links</li>
+    <li>A required router (breaks Storybook and bare tests)</li>
+    <li>Giving the host a box</li>
+  </ul>
+</section>
+
+<section id="recap" data-part="8" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div>One <code>ng-template</code>, two elements</div>
+    <div>Optional router + shared helper</div>
+    <div><code>pressed</code> only for the button</div>
+    <div>No host bindings: inputs stay inputs</div>
+    <div>Tokens by role, dashed border</div>
+    <div>44px touch target</div>
+  </div>
+</section>
+
+<section id="next" data-part="8" data-cue="Next, in video twenty seven, we build S D icon">
+  <div class="kicker">Next · Video 27</div>
+  <h1>Coding <code>sd-icon</code></h1>
+</section>
+
+<script src="../../assets/slides.js"></script>
+</body>
+</html>

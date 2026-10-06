@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 06 Slides</title>
+<link rel="stylesheet" href="../../assets/slides.css">
+</head>
+<body data-video-number="06" data-video-title="Coding sd-block" data-parts="Introduction|Decorator|Inputs|Focus|Template|Styles|Tests|Pitfalls|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Saturdaze components · Video 06 of 52</div>
+  <h1>Coding <code>sd-block</code></h1>
+  <p class="lead">Host listeners, two outputs and a timeline row.</p>
+</section>
+
+<section id="where" data-part="0" data-cue="The Weekend page renders one block per stop">
+  <h2>Where it lives</h2>
+  <pre class="code tight" data-lang="html" data-file="saturdaze/src/app/pages/weekend/weekend.page.html" data-mark="3-5,17">&lt;sd-block
+  [attr.id]="block.stopNumber !== null ? stopId(day.day, block.stopNumber) : null"
+  [stopNumber]="block.stopNumber"
+  [active]="block.stopNumber !== null &amp;&amp; activeStop() === block.stopNumber"
+  (activeChange)="hoverStop(block, $event)"
+  [time]="block.time"
+  [duration]="block.duration"
+  [icon]="block.icon"
+  [title]="block.title"
+  [subtitle]="block.subtitle ?? ''"
+  [commitment]="block.commitment"
+  [locked]="block.locked"
+  [drive]="block.drive"
+  [errand]="block.errand"
+  [done]="block.done"
+  (details)="blockDetails(block)"
+&gt;</pre>
+</section>
+
+<section id="decorator" data-part="1" data-cue="Open the block file in the components library.">
+  <h2>The host: a list item with modifiers</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/block/block.ts" data-mark="2,3,9">  host: {
+    class: 'block',
+    role: 'listitem',
+    '[class.block--commitment]': 'commitment()',
+    '[class.block--locked]': 'locked()',
+    '[class.block--drive]': 'drive()',
+    '[class.block--errand]': 'errand()',
+    '[class.block--done]': 'done()',
+    '[class.block--active]': 'active()',
+    '[attr.tabindex]': 'stopNumber() !== null ? -1 : null',</pre>
+  <p class="muted small"><code>sd-day</code> wraps its blocks in <code>&lt;div class="day__list" role="list"&gt;</code></p>
+</section>
+
+<section id="tabindex" data-part="1" data-cue="Next comes the tab index.">
+  <h2><code>tabindex="-1"</code> for numbered stops</h2>
+  <pre class="code" data-lang="ts" data-file="saturdaze/src/app/pages/weekend/weekend.page.ts">    el.focus({ preventScroll: true });</pre>
+  <ul>
+    <li>Focusable from code — a map pin moves focus to its row</li>
+    <li>Not in the tab order</li>
+    <li><code>null</code> → no attribute at all on ordinary rows</li>
+  </ul>
+</section>
+
+<section id="listeners" data-part="1" data-cue="Then four event listeners on the host.">
+  <h2>Host listeners</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/block/block.ts">    '(mouseenter)': 'activeChange.emit(true)',
+    '(mouseleave)': 'activeChange.emit(false)',
+    '(focusin)': 'activeChange.emit(true)',
+    '(focusout)': 'focusLeft($event)',
+  },
+})</pre>
+</section>
+
+<section id="no-reflect" data-part="1" data-cue="And that is the whole host block.">
+  <h2>Inputs stay inputs</h2>
+  <div class="cols">
+    <div class="card bad"><h3>Removed</h3><pre class="code tight" data-lang="ts">'[attr.time]': 'time() || null',
+'[attr.title]': 'blockTitle() || null',
+'[attr.commitment]': 'commitment() ? "" : null',
+…</pre></div>
+    <div class="card forest"><h3>Why</h3><ul class="small">
+      <li>A host <code>title</code> is a native tooltip on every row</li>
+      <li>Nothing read the other attributes</li>
+      <li>Only classes and ARIA state on the host (ADR-009)</li>
+    </ul></div>
+  </div>
+</section>
+
+<section id="inputs" data-part="2" data-cue="The inputs are all signal inputs.">
+  <h2>Inputs</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/block/block.ts" data-mark="5,12">export class Block {
+  readonly time = input&lt;string&gt;('');
+  readonly duration = input&lt;string&gt;('');
+  readonly icon = input&lt;string&gt;('sparkle');
+  readonly blockTitle = input&lt;string&gt;('', { alias: 'title' });
+  readonly subtitle = input&lt;string&gt;('');
+  readonly commitment = input(false, { transform: booleanAttribute });
+  readonly locked = input(false, { transform: booleanAttribute });
+  readonly drive = input(false, { transform: booleanAttribute });
+  readonly errand = input(false, { transform: booleanAttribute });
+  readonly done = input(false, { transform: booleanAttribute });
+  /** Hide the phone chevron (read-only shared view). */
+  readonly readonly = input(false, { transform: booleanAttribute });</pre>
+</section>
+
+<section id="outputs" data-part="2" data-cue="Stop number is a number or null">
+  <h2>Two outputs, one source of truth</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/block/block.ts" data-mark="2,7,11">  /** The phone chevron / row tap. */
+  readonly details = output&lt;void&gt;();
+  /**
+   * The stop's number in the day (L2-103): the disc shows it instead of the
+   * icon, and the row becomes programmatically focusable for its map pin.
+   */
+  readonly stopNumber = input&lt;number | null&gt;(null);
+  /** Highlighted with its map pin (L2-104). */
+  readonly active = input(false, { transform: booleanAttribute });
+  /** Pointer or keyboard focus entered (true) or left (false) the row. */
+  readonly activeChange = output&lt;boolean&gt;();</pre>
+  <div class="flow">
+    <div class="node"><b>sd-block</b><span class="small">emits activeChange</span></div>
+    <div class="arrow">→</div>
+    <div class="node accent"><b>Weekend page</b><span class="small">owns activeStop()</span></div>
+    <div class="arrow">→</div>
+    <div class="node"><b>[active]</b><span class="small">back down</span></div>
+  </div>
+</section>
+
+<section id="focus-left" data-part="3" data-cue="Now the one method.">
+  <h2><code>focusLeft</code></h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/block/block.ts" data-mark="3">  protected focusLeft(event: FocusEvent): void {
+    const host = event.currentTarget as HTMLElement;
+    if (!host.contains(event.relatedTarget as Node | null)) this.activeChange.emit(false);
+  }</pre>
+  <p class="muted">Tabbing between the row's own buttons keeps the pin highlighted.</p>
+</section>
+
+<section id="template-rail" data-part="4" data-cue="The template follows the mock's anatomy.">
+  <h2>Time and rail</h2>
+  <pre class="code tight" data-lang="html" data-file="components/src/lib/block/block.html" data-mark="9,13">&lt;div class="block__time"&gt;
+  &lt;span class="block__clock"&gt;{{ time() }}&lt;/span&gt;
+  @if (duration()) {
+    &lt;span class="block__dur"&gt;{{ duration() }}&lt;/span&gt;
+  }
+&lt;/div&gt;
+&lt;div class="block__rail"&gt;
+  @if (stopNumber() !== null) {
+    &lt;span class="block__disc block__disc--num" [attr.aria-label]="'Stop ' + stopNumber()"&gt;{{
+      stopNumber()
+    }}&lt;/span&gt;
+  } @else {
+    &lt;span class="block__disc"&gt;&lt;sd-icon [name]="icon()" [size]="drive() ? 13 : 16" /&gt;&lt;/span&gt;
+  }
+&lt;/div&gt;</pre>
+</section>
+
+<section id="template-body" data-part="4" data-cue="The body has an h3 for the title">
+  <h2>Body, actions and chevron</h2>
+  <pre class="code tight" data-lang="html" data-file="components/src/lib/block/block.html" data-mark="6,8,12,13">&lt;div class="block__body"&gt;
+  &lt;h3 class="block__title"&gt;{{ blockTitle() }}&lt;/h3&gt;
+  @if (subtitle()) {
+    &lt;p class="block__sub"&gt;{{ subtitle() }}&lt;/p&gt;
+  }
+  &lt;div class="block__chips"&gt;&lt;ng-content select="[slot=chips]" /&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="block__actions"&gt;&lt;ng-content select="[slot=actions]" /&gt;&lt;/div&gt;
+@if (!drive() &amp;&amp; !readonly()) {
+  &lt;button
+    class="block__chev"
+    type="button"
+    [attr.aria-label]="'Details for ' + blockTitle()"
+    (click)="details.emit()"
+  &gt;</pre>
+</section>
+
+<section id="styles" data-part="5" data-cue="The host is a four column grid">
+  <h2>Grid, tablet actions, visible focus</h2>
+  <pre class="code tight" data-lang="scss" data-file="components/src/lib/block/block.scss" data-mark="3,9,14">:host {
+  /* … */
+  grid-template-columns: 56px 24px minmax(0, 1fr) auto;
+  /* … */
+}
+
+@include respond-to(tablet) {
+  .block__chev {
+    display: none;
+  }
+  /* … actions on hover and :focus-within … */
+}
+
+:host(:focus-visible) {
+  outline: 2px solid var(--colorStrokeFocus2);
+  outline-offset: 4px;
+}</pre>
+</section>
+
+<section id="setup" data-part="6" data-cue="The spec creates the block">
+  <h2>Test setup</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/block/block.spec.ts">const chevron = (): HTMLButtonElement | null =&gt; host.querySelector('button.block__chev');
+
+beforeEach(async () =&gt; {
+  await TestBed.configureTestingModule({ imports: [Block, HostCmp] }).compileComponents();
+  fixture = TestBed.createComponent(Block);
+  fixture.componentRef.setInput('title', 'Breakfast at home');
+  fixture.componentRef.setInput('time', '8:00');
+  fixture.detectChanges();
+  host = fixture.nativeElement as HTMLElement;
+});</pre>
+</section>
+
+<section id="tests-1" data-part="6" data-cue="Creates a timeline row with time, rail and title checks the defaults">
+  <h2>Rendering and modifiers</h2>
+  <ul class="small">
+    <li><code>creates a timeline row with time, rail and title</code></li>
+    <li><code>renders duration, subtitle and the icon</code></li>
+    <li><code>mirrors every modifier to a host class</code></li>
+  </ul>
+  <pre class="code tight" data-lang="ts" data-file="block.spec.ts">for (const flag of ['commitment', 'locked', 'errand', 'done']) {
+  fixture.componentRef.setInput(flag, true);
+  fixture.detectChanges();
+  expect(host.classList.contains(`block--${flag}`)).toBe(true);
+
+  fixture.componentRef.setInput(flag, false);
+  fixture.detectChanges();
+  expect(host.classList.contains(`block--${flag}`)).toBe(false);
+}</pre>
+</section>
+
+<section id="tests-2" data-part="6" data-cue="Offers a chevron that names the row and emits details">
+  <h2>The chevron and the output</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/block/block.spec.ts" data-mark="6,7">const chev = chevron() as HTMLButtonElement;
+expect(chev.getAttribute('type')).toBe('button');
+expect(chev.getAttribute('aria-label')).toBe('Details for Breakfast at home');
+expect(chev.querySelector('sd-icon')?.getAttribute('name')).toBe('chevron_right');
+
+const spy = vi.fn();
+fixture.componentInstance.details.subscribe(spy);
+chev.click();
+expect(spy).toHaveBeenCalledTimes(1);</pre>
+  <ul class="small">
+    <li><code>is compact with a smaller glyph and no chevron for drive rows</code></li>
+    <li><code>hides the chevron in the read-only shared view</code></li>
+    <li><code>projects chips into the body and actions into their own region</code></li>
+  </ul>
+</section>
+
+<section id="gaps" data-part="6" data-cue="Be honest about the gaps">
+  <h2>Not covered yet</h2>
+  <div class="cols four">
+    <div class="card bad"><h3>stopNumber</h3><p>disc, aria-label, tabindex</p></div>
+    <div class="card bad"><h3>active</h3><p>block--active</p></div>
+    <div class="card bad"><h3>activeChange</h3><p>host listeners</p></div>
+    <div class="card bad"><h3>focusLeft</h3><p>relatedTarget check</p></div>
+  </div>
+  <p class="lead">Change them test-first.</p>
+</section>
+
+<section id="pitfalls" data-part="7" data-cue="A few pitfalls.">
+  <h2>Pitfalls</h2>
+  <ul>
+    <li><code>tabindex="0"</code> on rows — <code>-1</code> is enough</li>
+    <li>Emitting <code>false</code> on every <code>focusout</code></li>
+    <li>Keeping active state inside the block</li>
+    <li>Reflecting <code>title</code> onto the host — the native tooltip returns</li>
+  </ul>
+</section>
+
+<section id="recap" data-part="8" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div>Host is a <code>listitem</code>, class per flag</div>
+    <div>Host listeners emit <code>activeChange</code></div>
+    <div>The page owns the active state</div>
+    <div><code>focusLeft</code> checks <code>relatedTarget</code></div>
+    <div><code>output()</code> × 2</div>
+    <div>Slots once; <code>aria-label</code> on stops</div>
+  </div>
+</section>
+
+<section id="next" data-part="8" data-cue="Next, in video seven, we build the S D bottom nav">
+  <div class="kicker">Next · Video 07</div>
+  <h1>Coding <code>sd-bottom-nav</code></h1>
+</section>
+
+<script src="../../assets/slides.js"></script>
+</body>
+</html>

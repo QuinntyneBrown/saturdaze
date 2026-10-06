@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 02 Slides</title>
+<link rel="stylesheet" href="../../assets/slides.css">
+</head>
+<body data-video-number="02" data-video-title="Coding sd-auth-card" data-parts="Introduction|Decorator|Inputs|Template|Styles|Tests|Pitfalls|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Saturdaze components · Video 02 of 52</div>
+  <h1>Coding <code>sd-auth-card</code></h1>
+  <p class="lead">Four slots and a centred head.</p>
+</section>
+
+<section id="where" data-part="0" data-cue="Sign in, create account, reset password and verify email all put one or more auth cards inside the auth shell.">
+  <h2>Where it lives</h2>
+  <pre class="code tight" data-lang="html" data-file="saturdaze/src/app/pages/reset-password/reset-password.page.html">&lt;sd-auth-card title="Check your email" subtitle="The link works for 30 minutes." center&gt;
+  &lt;sd-disc slot="disc" icon="mail" tone="primary" size="xl" /&gt;
+  &lt;span slot="head" class="email-chip"
+    &gt;&lt;sd-icon name="mail" [size]="16" /&gt;{{ maskedEmail() }}&lt;/span
+  &gt;
+  &lt;sd-button … &gt;…&lt;/sd-button&gt;
+  &lt;a slot="alt" class="sd-link" routerLink="/sign-in"&gt;Back to sign in&lt;/a&gt;
+&lt;/sd-auth-card&gt;</pre>
+  <p class="muted small">Also: sign-in, create-account, verify-email</p>
+</section>
+
+<section id="decorator" data-part="1" data-cue="Open the auth card file in the components library.">
+  <h2>The decorator</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/auth-card/auth-card.ts" data-mark="2,6,8">@Component({
+  selector: 'sd-auth-card',
+  standalone: true,
+  templateUrl: './auth-card.html',
+  styleUrl: './auth-card.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: 'auth-card',
+  },
+})</pre>
+</section>
+
+<section id="attrs" data-part="1" data-cue="Notice what the host does not carry.">
+  <h2>Inputs stay inputs</h2>
+  <div class="cols">
+    <div class="card bad"><h3>Not on the host</h3><p><code>[attr.title]</code>, <code>[attr.center]</code> — nothing read them; a reflected <code>title</code> means a native tooltip</p></div>
+    <div class="card forest"><h3>On the host</h3><p>Classes and ARIA state only (ADR-009). <code>center</code> becomes <code>.auth-card__head--center</code> in the template.</p></div>
+  </div>
+</section>
+
+<section id="inputs" data-part="2" data-cue="The class body is three lines.">
+  <h2>Three inputs</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/auth-card/auth-card.ts" data-mark="2,4">export class AuthCard {
+  readonly cardTitle = input&lt;string&gt;('', { alias: 'title' });
+  readonly subtitle = input&lt;string&gt;('');
+  readonly center = input(false, { transform: booleanAttribute });
+}</pre>
+  <p class="muted"><code>&lt;sd-auth-card … center&gt;</code> → <code>center()</code> is <code>true</code></p>
+</section>
+
+<section id="small" data-part="2" data-cue="That is the whole class.">
+  <h2>Keep layout components small</h2>
+  <div class="cols">
+    <div class="card bad"><h3>No output()</h3><p>The projected form owns its submit</p></div>
+    <div class="card bad"><h3>No computed()</h3><p>Nothing to derive</p></div>
+  </div>
+  <p class="lead">The page owns the behaviour; the card owns the frame.</p>
+</section>
+
+<section id="template" data-part="3" data-cue="The template opens with the head.">
+  <h2>The whole template</h2>
+  <pre class="code" data-lang="html" data-file="components/src/lib/auth-card/auth-card.html" data-mark="1,2,7,9,10">&lt;div class="auth-card__head" [class.auth-card__head--center]="center()"&gt;
+  &lt;ng-content select="[slot=disc]" /&gt;
+  &lt;h1 class="auth-card__title"&gt;{{ cardTitle() }}&lt;/h1&gt;
+  @if (subtitle()) {
+    &lt;p class="auth-card__sub"&gt;{{ subtitle() }}&lt;/p&gt;
+  }
+  &lt;ng-content select="[slot=head]" /&gt;
+&lt;/div&gt;
+&lt;ng-content /&gt;
+&lt;p class="auth-card__alt"&gt;&lt;ng-content select="[slot=alt]" /&gt;&lt;/p&gt;</pre>
+</section>
+
+<section id="slots" data-part="3" data-cue="After the head comes a plain ng content with no select.">
+  <h2>Four slots, each declared once</h2>
+  <table class="map">
+    <tr><th>slot</th><th>lands in</th><th>example</th></tr>
+    <tr><td>[slot=disc]</td><td>top of the head</td><td>&lt;sd-disc&gt;</td></tr>
+    <tr><td>[slot=head]</td><td>under the subtitle</td><td>email chip</td></tr>
+    <tr><td>(default)</td><td>card body</td><td>&lt;form&gt;</td></tr>
+    <tr><td>[slot=alt]</td><td>p.auth-card__alt</td><td>"Back to sign in"</td></tr>
+  </table>
+</section>
+
+<section id="styles" data-part="4" data-cue="The host is a column with an eighteen pixel gap">
+  <h2>The host is the card</h2>
+  <pre class="code" data-lang="scss" data-file="components/src/lib/auth-card/auth-card.scss">:host {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 28px 24px;
+  background: var(--colorNeutralBackground1);
+  border: 1px solid var(--colorNeutralStroke2);
+  border-radius: var(--borderRadiusXLarge);
+  box-shadow: var(--shadow16);
+}</pre>
+</section>
+
+<section id="details" data-part="4" data-cue="Two details are worth copying.">
+  <h2>Two details worth copying</h2>
+  <pre class="code tight" data-lang="scss" data-file="components/src/lib/auth-card/auth-card.scss" data-mark="5,9">.auth-card__head ::ng-deep [slot='disc'] {
+  margin-bottom: 4px;
+}
+
+.auth-card__alt:not(:has(*)) {
+  display: none;
+}
+
+@include respond-to(tablet) {
+  :host {
+    padding: 32px;
+  }
+}</pre>
+</section>
+
+<section id="setup" data-part="5" data-cue="The spec file creates the auth card directly">
+  <h2>Test setup</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/auth-card/auth-card.spec.ts">template: `
+  &lt;sd-auth-card title="Welcome back" subtitle="Sign in to plan the weekend" center&gt;
+    &lt;i slot="disc" class="disc-a"&gt;&lt;/i&gt;
+    &lt;p slot="head" class="head-a"&gt;Verifying&lt;/p&gt;
+    &lt;form class="form-a"&gt;&lt;/form&gt;
+    &lt;a slot="alt" class="alt-a" href="/create-account"&gt;Create an account&lt;/a&gt;
+  &lt;/sd-auth-card&gt;
+`,
+…
+fixture = TestBed.createComponent(AuthCard);
+fixture.detectChanges();</pre>
+</section>
+
+<section id="tests-1" data-part="5" data-cue="The first test, creates the card with an h1 and an alt line">
+  <h2>Defaults and inputs</h2>
+  <ul class="small">
+    <li><code>creates the card with an h1 and an alt line</code></li>
+    <li><code>renders the title and subtitle</code></li>
+    <li><code>centres the head when asked</code></li>
+  </ul>
+  <pre class="code" data-lang="ts" data-file="auth-card.spec.ts">fixture.componentRef.setInput('center', true);
+fixture.detectChanges();
+expect(
+  host.querySelector('.auth-card__head')?.classList.contains('auth-card__head--center'),
+).toBe(true);</pre>
+  <p class="muted small">Rendered DOM, not host attributes.</p>
+</section>
+
+<section id="tests-2" data-part="5" data-cue="The last test, projects disc, head, form and alt into their slots">
+  <h2>The projection contract</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/auth-card/auth-card.spec.ts">expect(head.firstElementChild?.classList.contains('disc-a')).toBe(true);
+expect(head.querySelector('.auth-card__title')?.textContent?.trim()).toBe('Welcome back');
+expect(head.lastElementChild?.classList.contains('head-a')).toBe(true);
+expect(head.classList.contains('auth-card__head--center')).toBe(true);
+expect(el.querySelector(':scope &gt; .form-a')).not.toBeNull();
+expect(el.querySelector('.auth-card__alt .alt-a')?.textContent).toBe('Create an account');</pre>
+</section>
+
+<section id="pitfalls" data-part="6" data-cue="Watch for three things.">
+  <h2>Pitfalls</h2>
+  <ul>
+    <li>One <code>@if</code> around several slotted nodes (NG8011)</li>
+    <li>A second <code>&lt;h1&gt;</code> inside the projected form</li>
+    <li>Dropping <code>booleanAttribute</code> from <code>center</code></li>
+  </ul>
+</section>
+
+<section id="recap" data-part="7" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div>The host is the card: <code>auth-card</code></div>
+    <div>Aliased <code>title</code>, <code>subtitle</code>, <code>center</code></div>
+    <div><code>booleanAttribute</code> for the bare flag</div>
+    <div>disc · head · default · alt, each once</div>
+    <div>Alt line hides itself when empty</div>
+    <div>One test guards the slot order</div>
+  </div>
+</section>
+
+<section id="next" data-part="7" data-cue="Next, in video three, we build the S D auth shell">
+  <div class="kicker">Next · Video 03</div>
+  <h1>Coding <code>sd-auth-shell</code></h1>
+</section>
+
+<script src="../../assets/slides.js"></script>
+</body>
+</html>

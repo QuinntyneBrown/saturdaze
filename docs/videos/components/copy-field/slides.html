@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 14 Slides</title>
+<link rel="stylesheet" href="../../assets/slides.css">
+</head>
+<body data-video-number="14" data-video-title="Coding sd-copy-field" data-parts="Introduction|Decorator|State|Copy|Template|Styles|Spec|Pitfalls|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Saturdaze components · Video 14 of 52</div>
+  <h1>Coding <code>sd-copy-field</code></h1>
+  <p class="lead">Async work, a timed signal and a typed output.</p>
+</section>
+
+<section id="usage" data-part="0" data-cue="In the app it has one job">
+  <h2>Where the app uses it</h2>
+  <pre class="code tight" data-lang="html" data-file="saturdaze/src/app/dialogs/share-dialog/share-dialog.html" data-mark="2">&lt;sd-dialog title="Share this weekend" subtitle="Anyone with the link can view it. Nobody can edit."&gt;
+  &lt;sd-copy-field [value]="data.shareUrl" /&gt;
+  &lt;p class="sd-text-xs sd-text-soft"&gt;Read-only · expires in 7 days&lt;/p&gt;
+  &lt;sd-button slot="actions" variant="primary" type="button" (click)="done()"&gt;Done&lt;/sd-button&gt;
+&lt;/sd-dialog&gt;</pre>
+</section>
+
+<section id="decorator" data-part="1" data-cue="Open the copy field component file.">
+  <h2>The decorator</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/copy-field/copy-field.ts" data-mark="4,9">@Component({
+  selector: 'sd-copy-field',
+  standalone: true,
+  imports: [Button, Icon],
+  templateUrl: './copy-field.html',
+  styleUrl: './copy-field.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: 'copy-field',
+  },
+})</pre>
+</section>
+
+<section id="state" data-part="2" data-cue="There is one input, value">
+  <h2>One input, one output, one signal</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/copy-field/copy-field.ts" data-mark="2-3,5">export class CopyField {
+  readonly value = input&lt;string&gt;('');
+  readonly copied = output&lt;string&gt;();
+
+  protected readonly justCopied = signal(false);</pre>
+  <div class="cols">
+    <div class="card"><h3>output&lt;string&gt;()</h3><p>Emits the copied text — the parent never reads the input back</p></div>
+    <div class="card good"><h3>signal(false)</h3><p>Short-lived state the component sets and clears itself</p></div>
+  </div>
+</section>
+
+<section id="copy" data-part="3" data-cue="The copy method is async">
+  <h2>The copy method</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/copy-field/copy-field.ts" data-mark="2,4,9-11">  protected async copy(): Promise&lt;void&gt; {
+    const text = this.value();
+    try {
+      await navigator.clipboard?.writeText(text);
+    } catch {
+      // Clipboard access can be denied (insecure context, permissions); the
+      // value stays visible so the user can select it by hand.
+    }
+    this.justCopied.set(true);
+    this.copied.emit(text);
+    setTimeout(() =&gt; this.justCopied.set(false), 2000);
+  }</pre>
+</section>
+
+<section id="read-once" data-part="3" data-cue="Then a try block awaits">
+  <h2>Three deliberate choices</h2>
+  <ol class="steps small">
+    <li>Read the signal <b>once</b>, before the <code>await</code> — copied text = emitted text</li>
+    <li><code>clipboard?.</code> — the API may not exist in an insecure context</li>
+    <li>Empty <code>catch</code> — failure is not fatal; the value stays selectable</li>
+  </ol>
+</section>
+
+<section id="onpush" data-part="3" data-cue="After the try block, whatever happened">
+  <div class="kicker">OnPush + signals</div>
+  <p class="quote">A <code>setTimeout</code> that sets a signal is enough to re-render. No <code>ChangeDetectorRef</code>, no <code>markForCheck()</code>, no zone tricks.</p>
+</section>
+
+<section id="template" data-part="4" data-cue="The template has two parts.">
+  <h2>The template composes <code>sd-button</code></h2>
+  <pre class="code" data-lang="html" data-file="components/src/lib/copy-field/copy-field.html" data-mark="2,5">&lt;span class="copy-field__value"&gt;{{ value() }}&lt;/span&gt;
+&lt;sd-button variant="quiet" label="Copy link" [pressed]="justCopied()" (click)="copy()"&gt;
+  @if (justCopied()) {
+    &lt;sd-icon name="check" [size]="18" /&gt;
+    &lt;span aria-live="polite"&gt;Copied&lt;/span&gt;
+  } @else {
+    &lt;sd-icon name="copy" [size]="18" /&gt;
+    &lt;span&gt;Copy&lt;/span&gt;
+  }
+&lt;/sd-button&gt;</pre>
+</section>
+
+<section id="a11y" data-part="4" data-cue="Inside the button, an if block switches the content.">
+  <h2>Accessible state</h2>
+  <table class="map">
+    <tr><th>binding</th><th>result</th></tr>
+    <tr><td>label="Copy link"</td><td>aria-label="Copy link"</td></tr>
+    <tr><td>[pressed]="justCopied()"</td><td>aria-pressed="true" / "false"</td></tr>
+    <tr><td>&lt;span aria-live="polite"&gt;</td><td class="prose">screen reader announces “Copied”</td></tr>
+  </table>
+  <p class="muted">The <code>@if</code> lives in the consumer, choosing what goes into the button's one slot.</p>
+</section>
+
+<section id="styles" data-part="5" data-cue="The host is the grid">
+  <h2>Styles</h2>
+  <pre class="code tight" data-lang="scss" data-file="components/src/lib/copy-field/copy-field.scss" data-mark="3,10-11,13,15">:host {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+  align-items: center;
+}
+.copy-field__value {
+  height: 44px;
+  /* … flex, padding … */
+  border-radius: var(--borderRadiusMedium);
+  background: var(--colorNeutralBackground3);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: var(--fontSizeBase300);
+  /* overflow: hidden; … */
+  text-overflow: ellipsis;
+}</pre>
+</section>
+
+<section id="spec-setup" data-part="6" data-cue="Before each test, it creates a vitest mock for write text">
+  <h2>Spec setup</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/copy-field/copy-field.spec.ts" data-mark="3-4,9-10,12">  const button = (): HTMLButtonElement =&gt; host.querySelector('sd-button .btn') as HTMLButtonElement;
+
+  async function flush(): Promise&lt;void&gt; {
+    for (let i = 0; i &lt; 4; i++) await Promise.resolve();
+    fixture.detectChanges();
+  }
+
+  beforeEach(async () =&gt; {
+    writeText = vi.fn&lt;(text: string) =&gt; Promise&lt;void&gt;&gt;().mockResolvedValue(undefined);
+    Object.defineProperty(navigator, 'clipboard', { value: { writeText }, configurable: true });
+    /* … TestBed … */
+    fixture.componentRef.setInput('value', 'https://saturdaze.app/s/abc123');
+    fixture.detectChanges();
+  });</pre>
+</section>
+
+<section id="spec-basic" data-part="6" data-cue="Creates a read only value with a quiet Copy button checks">
+  <h2>Starting state and the happy path</h2>
+  <table class="map">
+    <tr><th>it(…)</th><th>proves</th></tr>
+    <tr><td>creates a read-only value with a quiet Copy button</td><td class="prose">class, value, quiet button, <code>aria-label</code>, <code>aria-pressed="false"</code>, copy icon</td></tr>
+    <tr><td>writes the value to the clipboard and emits copied</td><td class="prose">clipboard and output both get the link</td></tr>
+  </table>
+</section>
+
+<section id="spec-timer" data-part="6" data-cue="is the timing test.">
+  <h2>Prove the boundary from both sides</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/copy-field/copy-field.spec.ts" data-mark="2,5,9">  it('flips to a pressed "Copied" state and reverts after two seconds', async () =&gt; {
+    vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
+    /* click, flush, expect aria-pressed="true", "Copied", check icon, live region */
+
+    vi.advanceTimersByTime(1999);
+    fixture.detectChanges();
+    expect(button().textContent?.trim()).toBe('Copied');
+
+    vi.advanceTimersByTime(1);
+    fixture.detectChanges();
+    expect(button().getAttribute('aria-pressed')).toBe('false');
+    expect(button().textContent?.trim()).toBe('Copy');
+  });</pre>
+</section>
+
+<section id="spec-denied" data-part="6" data-cue="Still confirms when the clipboard is unavailable makes">
+  <h2>The forgiving catch, locked in</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/copy-field/copy-field.spec.ts" data-mark="2">  it('still confirms when the clipboard is unavailable', async () =&gt; {
+    writeText.mockRejectedValue(new Error('denied'));
+    /* … subscribe, click, flush … */
+    expect(spy).toHaveBeenCalledTimes(1);
+    expect(button().textContent?.trim()).toBe('Copied');</pre>
+</section>
+
+<section id="pitfalls" data-part="7" data-cue="Pitfalls">
+  <h2>Pitfalls</h2>
+  <ul>
+    <li>Reading the input again after an <code>await</code></li>
+    <li>Letting a clipboard failure throw</li>
+    <li>The timeout isn't cleared on destroy or a second click — fine here; use <code>DestroyRef</code> for longer timers</li>
+    <li>Icon swap without a live region</li>
+    <li>Faking all timers, or not restoring real ones</li>
+  </ul>
+</section>
+
+<section id="recap" data-part="8" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div>One input · one output · one signal</div>
+    <div>Async copy, forgiving catch</div>
+    <div>Timeout + signal re-renders under OnPush</div>
+    <div>Compose <code>sd-button</code>: label, pressed</div>
+    <div>Polite live region</div>
+    <div>Fake timers prove the boundary</div>
+  </div>
+</section>
+
+<section id="next" data-part="8" data-cue="Next, video fifteen builds S D cover">
+  <div class="kicker">Next · Video 15</div>
+  <h1>Coding <code>sd-cover</code></h1>
+</section>
+
+<script src="../../assets/slides.js"></script>
+</body>
+</html>

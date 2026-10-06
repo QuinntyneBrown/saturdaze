@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 27 Slides</title>
+<link rel="stylesheet" href="../../assets/slides.css">
+</head>
+<body data-video-number="27" data-video-title="Coding sd-icon" data-parts="Introduction|Glyph map|Decorator|Inputs|Template|Styles|Spec|Pitfalls|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Saturdaze components · Video 27 of 52</div>
+  <h1>Coding <code>sd-icon</code></h1>
+  <p class="lead">One source of truth for every glyph: inline SVG, currentColor, no network.</p>
+</section>
+
+<section id="usage" data-part="0" data-cue="It appears ninety nine times across fifty templates">
+  <h2>Everywhere</h2>
+  <pre class="code tight" data-lang="html" data-file="components/src/lib · past-card.html · stars.html · dialog.html">&lt;sd-icon name="heart" [filled]="favourite()" /&gt;
+&lt;sd-icon name="star" [size]="iconSize()" [filled]="step &lt;= rating()" /&gt;
+&lt;sd-icon name="close" /&gt;</pre>
+  <pre class="code tight" data-lang="html" data-file="saturdaze/src/app/pages/ideas-events/ideas-events.page.html">&lt;sd-icon [name]="chip.icon" [size]="13" [stroke]="2" /&gt;</pre>
+  <p class="muted small">99 <code>&lt;sd-icon</code> tags in 50 templates (app + library)</p>
+</section>
+
+<section id="map" data-part="1" data-cue="Open icon dot T S.">
+  <h2>The glyph map</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/icon/icon.ts">const ICONS: Record&lt;string, string&gt; = {
+  …
+  cloud: `&lt;path d="M17 18a4 4 0 0 0 0-8 6 6 0 0 0-11.5 1.5A3.5 3.5 0 0 0 6 18h11Z"/&gt;`,
+  …
+  plus: `&lt;path d="M12 5v14M5 12h14"/&gt;`,
+  close: `&lt;path d="M6 6l12 12M18 6L6 18"/&gt;`,
+  …
+  sparkle: `&lt;path d="M12 3l1.7 5.3L19 10l-5.3 1.7L12 17l-1.7-5.3L5 10l5.3-1.7L12 3z"/&gt;`,
+  …
+  check: `&lt;path d="M5 12l5 5 9-11"/&gt;`,
+};</pre>
+  <p class="muted small">Mirrors the 40-glyph sprite in the mock's <code>app.js</code></p>
+</section>
+
+<section id="names" data-part="1" data-cue="Right after it, the file exports icon names">
+  <h2>Derive the list, don't copy it</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/icon/icon.ts">/** Every glyph name the sprite knows; useful for tests and galleries. */
+export const ICON_NAMES: readonly string[] = Object.keys(ICONS);</pre>
+</section>
+
+<section id="decorator" data-part="2" data-cue="The selector is S D icon">
+  <h2>The decorator</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/icon/icon.ts" data-mark="8,9">@Component({
+  selector: 'sd-icon',
+  standalone: true,
+  templateUrl: './icon.html',
+  styleUrl: './icon.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    '[class.icon--filled]': 'filled()',
+    '[style.--_size.px]': 'size()',
+  },
+})</pre>
+</section>
+
+<section id="rule" data-part="2" data-cue="Notice that name, size and filled are not mirrored onto host attributes.">
+  <h2>Inputs stay inputs</h2>
+  <div class="cols">
+    <div class="card bad"><h3>Before</h3><p class="small"><code>[attr.name]</code>, <code>[attr.size]</code>, <code>[attr.filled]</code><br>CSS: <code>:host([filled]) svg</code></p></div>
+    <div class="card good"><h3 style="color:var(--forest)">Now</h3><p class="small"><code>[class.icon--filled]</code> — the mock's own class<br>CSS: <code>:host(.icon--filled) svg</code></p></div>
+  </div>
+  <p class="muted">Only classes and ARIA state go on the host (ADR-009).</p>
+</section>
+
+<section id="knob" data-part="2" data-cue="The second is a style binding to a custom property">
+  <h2>A private knob</h2>
+  <div class="cols">
+    <div class="card"><h3><code>--sd-…</code></h3><p class="small">Public component knob, part of the API (e.g. <code>--sd-btn-h</code>)</p></div>
+    <div class="card indoor"><h3><code>--_size</code></h3><p class="small">Private: set on the host, read by <code>icon.scss</code></p></div>
+  </div>
+</section>
+
+<section id="inputs" data-part="3" data-cue="The class injects the D O M sanitizer">
+  <h2><code>inject()</code> and four inputs</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/icon/icon.ts" data-mark="2,7">export class Icon {
+  private readonly sanitizer = inject(DomSanitizer);
+
+  readonly name = input&lt;string&gt;('sparkle');
+  readonly size = input&lt;number&gt;(20);
+  /** Solid glyph (stars, favourite heart). */
+  readonly filled = input(false, { transform: booleanAttribute });
+  /** Stroke weight; chips use 2 at 13px, the default 1.7 elsewhere. */
+  readonly stroke = input&lt;number&gt;(1.7);</pre>
+</section>
+
+<section id="numbers" data-part="3" data-cue="Notice that size and stroke don't use the number attribute transform.">
+  <h2>No <code>numberAttribute</code> — bind numbers</h2>
+  <table class="map">
+    <tr><th>template</th><th>size receives</th></tr>
+    <tr><td>[size]="13"</td><td>13 (number) ✓</td></tr>
+    <tr><td>size="16"</td><td class="prose">a string — type error under <code>strictTemplates</code></td></tr>
+  </table>
+</section>
+
+<section id="path" data-part="3" data-cue="The derived state is a protected computed signal called path.">
+  <h2><code>computed()</code>: look up, fall back, sanitize</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/icon/icon.ts" data-mark="2">  protected readonly path = computed&lt;SafeHtml&gt;(() =&gt;
+    this.sanitizer.bypassSecurityTrustHtml(ICONS[this.name()] ?? ICONS['sparkle']!),
+  );</pre>
+</section>
+
+<section id="bypass" data-part="3" data-cue="Pause on that, because bypassing the sanitizer is normally a red flag.">
+  <div class="kicker">Safe only because the markup is constant</div>
+  <p class="quote"><code>name</code> can only pick a key. Accept SVG from an input, an API or a CMS, and the bypass becomes an XSS hole.</p>
+</section>
+
+<section id="template" data-part="4" data-cue="The template is one S V G element">
+  <h2>The template</h2>
+  <pre class="code" data-lang="html" data-file="components/src/lib/icon/icon.html" data-mark="4,5,7,8,11">&lt;svg
+  class="icon"
+  viewBox="0 0 24 24"
+  aria-hidden="true"
+  focusable="false"
+  fill="none"
+  stroke="currentColor"
+  [attr.stroke-width]="stroke()"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  [innerHTML]="path()"
+&gt;&lt;/svg&gt;</pre>
+</section>
+
+<section id="scss" data-part="5" data-cue="Open icon dot S C S S.">
+  <h2>Size from the knob, fill on demand</h2>
+  <pre class="code tight" data-lang="scss" data-file="components/src/lib/icon/icon.scss" data-mark="8,9,14,15">:host {
+  …
+  line-height: 0;
+  flex: none;
+}
+
+svg {
+  width: var(--_size, 20px);
+  height: var(--_size, 20px);
+  display: block;
+}
+
+:host(.icon--filled) svg {
+  fill: currentColor;
+  stroke: none;
+}</pre>
+</section>
+
+<section id="parent-knob" data-part="5" data-cue="Parents can also set the underscore size knob themselves.">
+  <h2>A parent sets the knob</h2>
+  <pre class="code" data-lang="scss" data-file="components/src/lib/filter-chip/filter-chip.scss">.filter-chip ::ng-deep sd-icon {
+  --_size: 14px;
+}</pre>
+</section>
+
+<section id="spec-1" data-part="6" data-cue="The spec file creates the component with TestBed">
+  <h2>The tests</h2>
+  <ul class="small">
+    <li><code>creates and renders a decorative inline svg</code></li>
+    <li><code>exposes the sprite names</code></li>
+    <li><code>renders name, size and filled through the glyph, size variable and host class</code></li>
+    <li><code>accepts the attribute form of filled</code></li>
+    <li><code>draws the named glyph</code></li>
+    <li><code>falls back to the sparkle glyph for an unknown name</code></li>
+    <li><code>forwards the stroke weight to the svg</code></li>
+  </ul>
+</section>
+
+<section id="spec-host" data-part="6" data-cue="Renders name, size and filled through the glyph, size variable and host class checks the defaults">
+  <h2>Assert the rendered DOM</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/icon/icon.spec.ts" data-mark="6,7,8">    fixture.componentRef.setInput('name', 'check');
+    fixture.componentRef.setInput('size', 14);
+    fixture.componentRef.setInput('filled', true);
+    fixture.detectChanges();
+
+    expect(svg.innerHTML).toContain('M5 12l5 5 9-11');
+    expect(host.classList.contains('icon--filled')).toBe(true);
+    expect(host.style.getPropertyValue('--_size')).toBe('14px');</pre>
+</section>
+
+<section id="spec-fallback" data-part="6" data-cue="Draws the named glyph sets check">
+  <h2>Fallback, proven</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/icon/icon.spec.ts">  it('falls back to the sparkle glyph for an unknown name', () =&gt; {
+    fixture.componentRef.setInput('name', 'sparkle');
+    fixture.detectChanges();
+    const sparkle = host.querySelector('svg')?.innerHTML;
+
+    fixture.componentRef.setInput('name', 'does-not-exist');
+    fixture.detectChanges();
+    expect(host.querySelector('svg')?.innerHTML).toBe(sparkle);
+  });</pre>
+</section>
+
+<section id="pitfalls" data-part="7" data-cue="Never feed external markup into this component">
+  <h2>Pitfalls</h2>
+  <ul>
+    <li>External markup through the sanitizer bypass</li>
+    <li>Meaning carried only by an icon (it is <code>aria-hidden</code>)</li>
+    <li><code>size="16"</code> instead of <code>[size]="16"</code></li>
+    <li>New glyph → update the spec's count of 40</li>
+  </ul>
+</section>
+
+<section id="recap" data-part="8" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div>One constant map; <code>ICON_NAMES</code> derived</div>
+    <div><code>computed()</code> looks up, falls back, sanitizes</div>
+    <div>Bypass safe only for constant markup</div>
+    <div>Private <code>--_size</code> knob from the host</div>
+    <div>Decorative, <code>currentColor</code></div>
+    <div><code>.icon--filled</code> swaps to solid</div>
+  </div>
+</section>
+
+<section id="next" data-part="8" data-cue="Next, in video twenty eight, we build S D leg">
+  <div class="kicker">Next · Video 28</div>
+  <h1>Coding <code>sd-leg</code></h1>
+</section>
+
+<script src="../../assets/slides.js"></script>
+</body>
+</html>

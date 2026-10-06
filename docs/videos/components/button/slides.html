@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 09 Slides</title>
+<link rel="stylesheet" href="../../assets/slides.css">
+</head>
+<body data-video-number="09" data-video-title="Coding sd-button" data-parts="Introduction|Decorator|Inputs|Computed|Router|Template|Styles|Tests|Pitfalls|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Saturdaze components · Video 09 of 52</div>
+  <h1>Coding <code>sd-button</code></h1>
+  <p class="lead">Signals, slots and a tooltip.</p>
+</section>
+
+<section id="where" data-part="0" data-cue="It can render a real button element">
+  <h2>The one button</h2>
+  <pre class="code" data-lang="html" data-file="saturdaze/src/app/pages/weekend/weekend.page.html">&lt;sd-button slot="cta" variant="primary" size="lg" (click)="plan()"&gt;
+  &lt;sd-icon name="sparkle" /&gt;
+  Plan this weekend
+&lt;/sd-button&gt;</pre>
+  <div class="row">
+    <span class="tag">primary</span><span class="tag">quiet</span><span class="tag">ghost</span><span class="tag">danger</span><span class="tag">text</span>
+    <span class="tag sky">sm · md · lg</span><span class="tag forest">icon + tooltip</span><span class="tag indoor">href → &lt;a&gt;</span>
+  </div>
+</section>
+
+<section id="decorator" data-part="1" data-cue="Open the button file in the components library.">
+  <h2>The decorator</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/button/button.ts" data-mark="4">@Component({
+  selector: 'sd-button',
+  standalone: true,
+  imports: [NgTemplateOutlet, Tooltip],
+  templateUrl: './button.html',
+  styleUrl: './button.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})</pre>
+  <p class="muted">No <code>host</code> block: no class, no reflected <code>variant</code> / <code>size</code> / flags (ADR-009).</p>
+</section>
+
+<section id="contents" data-part="1" data-cue="The decorator has no host block at all">
+  <h2>A <code>display: contents</code> host</h2>
+  <pre class="code" data-lang="html" data-file="rendered DOM">&lt;sd-button variant="quiet" size="sm"&gt;          &lt;!-- no box --&gt;
+  &lt;button class="btn btn--quiet btn--sm" type="button"&gt;Map&lt;/button&gt;
+&lt;/sd-button&gt;</pre>
+  <ul>
+    <li>The inner element is the mock's <code>.btn</code> — pixel parity</li>
+    <li>Locators and role + name hit the focusable element (ADR-009)</li>
+  </ul>
+</section>
+
+<section id="inputs" data-part="2" data-cue="The inputs are all signal inputs with typed defaults.">
+  <h2>Inputs</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/button/button.ts" data-mark="3,10">  readonly variant = input&lt;ButtonVariant&gt;('primary');
+  readonly size = input&lt;ButtonSize&gt;('md');
+  readonly type = input&lt;ButtonType&gt;('button');
+  /** Full width (`.btn--block`). */
+  readonly full = input(false, { transform: booleanAttribute });
+  /** Square icon-only button (`.btn--icon`); pair with `label`. */
+  readonly icon = input(false, { transform: booleanAttribute });
+  …
+  /** Toggle state → `aria-pressed`; null leaves the attribute off. */
+  readonly pressed = input&lt;boolean | null&gt;(null);
+  /** Accessible name; required for icon-only buttons. */
+  readonly label = input&lt;string&gt;('');
+  /** Hover/focus hint. Defaults to `label` on icon-only buttons; `''` turns it off. */
+  readonly tooltip = input&lt;string | null&gt;(null);</pre>
+</section>
+
+<section id="classes" data-part="3" data-cue="The button has four computed signals.">
+  <h2><code>classes</code></h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/button/button.ts">  protected readonly classes = computed(() =&gt;
+    [
+      'btn',
+      `btn--${this.variant()}`,
+      this.size() !== 'md' ? `btn--${this.size()}` : '',
+      this.full() ? 'btn--block' : '',
+      this.icon() ? 'btn--icon' : '',
+      this.warnText() ? 'btn--warn-text' : '',
+      this.btnClass(),
+    ]
+      .filter(Boolean)
+      .join(' '),
+  );</pre>
+</section>
+
+<section id="tooltip" data-part="3" data-cue="The second, tooltip text">
+  <h2>Tooltip text, relationship and rel</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/button/button.ts" data-mark="2,7">  protected readonly tooltipText = computed(
+    () =&gt; this.tooltip() ?? (this.icon() ? this.label() : ''),
+  );
+
+  /** Icon-only buttons are named by `aria-label`; the tooltip only describes text ones. */
+  protected readonly tooltipRelationship = computed&lt;TooltipRelationship&gt;(() =&gt;
+    this.icon() ? 'label' : 'description',
+  );
+
+  protected readonly rel = computed(() =&gt; (this.target() === '_blank' ? 'noopener' : null));</pre>
+</section>
+
+<section id="router" data-part="4" data-cue="The router is injected with the inject function">
+  <h2>Optional router, anchor click</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/button/button.ts" data-mark="1,8">  private readonly router = inject(Router, { optional: true });
+  …
+  protected onAnchorClick(event: MouseEvent): void {
+    if (this.disabled()) {
+      event.preventDefault();
+      return;
+    }
+    if (this.router &amp;&amp; !this.target()) navigateInApp(this.router, event, this.href());
+  }</pre>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/shared/in-app-link.ts">export function navigateInApp(router: Router, event: MouseEvent, href: string): void {
+  if (!isPlainClick(event) || !isInAppHref(href)) return;
+  event.preventDefault();
+  void router.navigateByUrl(href);
+}</pre>
+</section>
+
+<section id="slots" data-part="5" data-cue="Now the most important lesson in this component.">
+  <h2>Slots declared once</h2>
+  <pre class="code tight" data-lang="html" data-file="components/src/lib/button/button.html" data-mark="1-5,9,13">&lt;ng-template #content&gt;
+  &lt;ng-content select="[slot=leading]" /&gt;
+  &lt;ng-content /&gt;
+  &lt;ng-content select="[slot=trailing]" /&gt;
+&lt;/ng-template&gt;
+
+@if (href()) {
+  &lt;a …&gt;
+    &lt;ng-container *ngTemplateOutlet="content" /&gt;
+  &lt;/a&gt;
+} @else {
+  &lt;button …&gt;
+    &lt;ng-container *ngTemplateOutlet="content" /&gt;
+  &lt;/button&gt;
+}</pre>
+  <p class="muted small">"Angular projects each slot into a single ng-content." — the template's own comment</p>
+</section>
+
+<section id="bindings" data-part="5" data-cue="Both elements bind the classes">
+  <h2>The button branch</h2>
+  <pre class="code" data-lang="html" data-file="components/src/lib/button/button.html">  &lt;button
+    [class]="classes()"
+    [attr.type]="type()"
+    [disabled]="disabled()"
+    [attr.aria-label]="label() || null"
+    [attr.aria-pressed]="pressed() === null ? null : pressed()"
+    [sdTooltip]="tooltipText()"
+    [sdTooltipRelationship]="tooltipRelationship()"
+  &gt;</pre>
+  <p class="muted small">The anchor adds <code>href</code>, <code>target</code>, <code>rel</code>, <code>aria-disabled</code> and <code>(click)="onAnchorClick($event)"</code>.</p>
+</section>
+
+<section id="styles" data-part="6" data-cue="The host is display contents.">
+  <h2>Styles: a knob and roles</h2>
+  <pre class="code tight" data-lang="scss" data-file="components/src/lib/button/button.scss" data-mark="2,7,8">.btn {
+  height: var(--sd-btn-h, 40px);
+  /* … */
+}
+
+.btn--primary {
+  background: var(--colorBrandBackground);
+  color: var(--colorNeutralForegroundOnBrand);
+  box-shadow: var(--shadow4);
+}
+.btn--danger {
+  background: var(--colorStatusDangerBackground3);
+  color: #fff;
+}</pre>
+</section>
+
+<section id="setup" data-part="7" data-cue="The spec file provides the router">
+  <h2>Two test helpers</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/button/button.spec.ts">function click(el: HTMLElement, init: MouseEventInit = {}): boolean {
+  const event = new MouseEvent('click', { bubbles: true, cancelable: true, ...init });
+  let preventedByComponent = false;
+  const guard = (e: Event): void =&gt; {
+    preventedByComponent = e.defaultPrevented;
+    e.preventDefault();
+  };
+  /* … dispatch with a window-level guard … */
+  return preventedByComponent;
+}
+
+/** Focus as the keyboard would, so `:focus-visible` matches (it keys off the last input event). */
+function tabTo(el: HTMLElement): void {
+  document.body.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', bubbles: true }));
+  el.focus();
+}</pre>
+</section>
+
+<section id="tests-render" data-part="7" data-cue="The first group checks rendering">
+  <h2>Rendering</h2>
+  <ul class="small">
+    <li><code>creates a primary, medium &lt;button type="button"&gt; by default</code></li>
+    <li><code>mirrors variant, size, full, icon and warnText to classes</code></li>
+    <li><code>disables the inner button</code></li>
+    <li><code>exposes pressed as aria-pressed only when it is a toggle</code></li>
+    <li><code>uses label as the accessible name</code></li>
+  </ul>
+</section>
+
+<section id="tests-anchor" data-part="7" data-cue="The anchor group">
+  <h2>The anchor</h2>
+  <ul class="small">
+    <li><code>renders an anchor when href is given</code></li>
+    <li><code>routes a plain click on an in-app href through the router</code></li>
+    <li><code>lets external, modifier and targeted clicks keep their browser meaning</code></li>
+    <li><code>marks a disabled anchor with aria-disabled and swallows its click</code></li>
+  </ul>
+  <pre class="code" data-lang="ts" data-file="button.spec.ts">fixture.componentRef.setInput('href', '/weekend');
+fixture.detectChanges();
+expect(click(inner())).toBe(true);
+expect(navigate).toHaveBeenCalledWith('/weekend');</pre>
+</section>
+
+<section id="tests-slots" data-part="7" data-cue="Four projection tests render the host component">
+  <h2>Projection guards the slot rule</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/button/button.spec.ts">it('projects leading, default and trailing content in order into the anchor', () =&gt; {
+  const wrapper = TestBed.createComponent(HostCmp);
+  wrapper.detectChanges();
+  const a = (wrapper.nativeElement as HTMLElement).querySelector('#link .btn') as HTMLElement;
+  expect(a.textContent?.replace(/\s+/g, ' ').trim()).toBe('L Save T');
+  expect(a.firstElementChild?.classList.contains('lead')).toBe(true);
+  expect(a.lastElementChild?.classList.contains('trail')).toBe(true);
+});</pre>
+</section>
+
+<section id="tests-tooltip" data-part="7" data-cue="Finally, the tooltip group.">
+  <h2>Tooltip</h2>
+  <ul class="small">
+    <li><code>shows the label on an icon-only button, hidden from assistive tech</code></li>
+    <li><code>prefers tooltip text over the label, and an empty tooltip turns it off</code></li>
+    <li><code>shows nothing on a text button unless asked, then describes it</code></li>
+  </ul>
+  <pre class="code" data-lang="ts" data-file="button.spec.ts">fixture.componentRef.setInput('tooltip', 'Adds every block to your calendar');
+fixture.detectChanges();
+tabTo(inner());
+expect(inner().getAttribute('aria-describedby')).toBe(bubble()?.id);</pre>
+</section>
+
+<section id="pitfalls" data-part="8" data-cue="A few pitfalls.">
+  <h2>Pitfalls</h2>
+  <ul>
+    <li><code>&lt;ng-content&gt;</code> repeated in both branches</li>
+    <li>Icon-only button without a <code>label</code></li>
+    <li>Defaulting <code>type</code> to <code>submit</code></li>
+    <li>Styling the host instead of <code>.btn</code></li>
+    <li><code>target="_blank"</code> without <code>noopener</code></li>
+  </ul>
+</section>
+
+<section id="recap" data-part="9" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div><code>display: contents</code> host, <code>.btn</code> inside</div>
+    <div>Typed inputs, <code>booleanAttribute</code>, nullable <code>pressed</code></div>
+    <div>Four <code>computed()</code> signals</div>
+    <div>Optional <code>inject(Router)</code></div>
+    <div>Slots once, <code>ngTemplateOutlet</code> twice</div>
+    <div>Tests guard the projection rule</div>
+  </div>
+</section>
+
+<section id="next" data-part="9" data-cue="Next, in video ten, we build the S D card">
+  <div class="kicker">Next · Video 10</div>
+  <h1>Coding <code>sd-card</code></h1>
+</section>
+
+<script src="../../assets/slides.js"></script>
+</body>
+</html>

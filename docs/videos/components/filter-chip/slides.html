@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 23 Slides</title>
+<link rel="stylesheet" href="../../assets/slides.css">
+</head>
+<body data-video-number="23" data-video-title="Coding sd-filter-chip" data-parts="Introduction|Decorator|Inputs|Computed|Template|Styles|Spec|Pitfalls|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Saturdaze components · Video 23 of 52</div>
+  <h1>Coding <code>sd-filter-chip</code></h1>
+  <p class="lead">A toggle that shows its pressed state but doesn't own it.</p>
+</section>
+
+<section id="usage" data-part="0" data-cue="When a chip is off it is an outline">
+  <h2>Where it is used</h2>
+  <pre class="code" data-lang="html" data-file="saturdaze/src/app/pages/ideas-events/ideas-events.page.html" data-mark="5,6">&lt;sd-filters class="filters" label="Filters"&gt;
+  @for (chip of view().windowChips; track chip.label) {
+    &lt;sd-filter-chip
+      [tone]="filterTone(chip.tone)"
+      [pressed]="chip.active"
+      (pressedChange)="setWindow(chip)"
+      &gt;{{ chip.label }}&lt;/sd-filter-chip
+    &gt;
+  }</pre>
+  <p class="muted small">Also: <code>ideas-activities</code> and <code>past</code> pages</p>
+</section>
+
+<section id="decorator" data-part="1" data-cue="Open filter chip dot T S.">
+  <h2>Type and decorator</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/filter-chip/filter-chip.ts">export type FilterChipTone = 'default' | 'leaf' | 'indoor' | 'sky' | 'sun' | 'accent' | 'primary';
+
+@Component({
+  selector: 'sd-filter-chip',
+  standalone: true,
+  templateUrl: './filter-chip.html',
+  styleUrl: './filter-chip.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})</pre>
+</section>
+
+<section id="contents" data-part="1" data-cue="There is no host object at all.">
+  <h2>The host adds no box</h2>
+  <div class="flow">
+    <div class="node"><b>&lt;sd-filter-chip&gt;</b><small>display: contents</small></div>
+    <div class="arrow">→</div>
+    <div class="node accent"><b>&lt;button class="filter-chip"&gt;</b><small>the real flex item</small></div>
+  </div>
+  <p class="muted">BEM class on the button, matching the mock's <code>.filter-chip</code>. No <code>host</code> object: inputs are not reflected to host attributes (ADR-009).</p>
+</section>
+
+<section id="inputs" data-part="2" data-cue="There are three signal inputs.">
+  <h2>Inputs in, an output out</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/filter-chip/filter-chip.ts" data-mark="5">export class FilterChip {
+  readonly pressed = input(false, { transform: booleanAttribute });
+  readonly tone = input&lt;FilterChipTone&gt;('default');
+  readonly disabled = input(false, { transform: booleanAttribute });
+  /** Emits the next pressed state on click; the page owns the truth. */
+  readonly pressedChange = output&lt;boolean&gt;();</pre>
+</section>
+
+<section id="why-not-model" data-part="2" data-cue="You might ask why this isn't a model signal.">
+  <h2>Why not <code>model()</code>?</h2>
+  <div class="cols">
+    <div class="card bad"><h3><code>pressed = model(false)</code></h3><p class="small">The chip writes its own value and flips on click — before the page decides.</p></div>
+    <div class="card good"><h3 style="color:var(--forest)"><code>input()</code> + <code>output()</code></h3><p class="small">The chip requests; the page (here the events service) decides which chip is on.</p></div>
+  </div>
+  <pre class="code" data-lang="ts" data-file="saturdaze/src/app/pages/ideas-events/ideas-events.page.ts">  protected setWindow(chip: FilterChipView): void {
+    this.service.setWindow(chip.label as EventsWindow);
+  }</pre>
+</section>
+
+<section id="computed" data-part="3" data-cue="The class list is derived state">
+  <h2><code>computed()</code> classes + a guarded toggle</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/filter-chip/filter-chip.ts" data-mark="1,7,8">  protected readonly classes = computed(() =&gt; ({
+    'filter-chip': true,
+    [`filter-chip--${this.tone()}`]: this.tone() !== 'default',
+  }));
+
+  protected toggle(): void {
+    if (this.disabled()) return;
+    this.pressedChange.emit(!this.pressed());
+  }</pre>
+</section>
+
+<section id="template" data-part="4" data-cue="The template is a single button.">
+  <h2>A real toggle button</h2>
+  <pre class="code" data-lang="html" data-file="components/src/lib/filter-chip/filter-chip.html" data-mark="3,4">&lt;button
+  [class]="classes()"
+  type="button"
+  [attr.aria-pressed]="pressed()"
+  [disabled]="disabled()"
+  (click)="toggle()"
+&gt;
+  &lt;ng-content /&gt;
+&lt;/button&gt;</pre>
+  <p class="muted small">Screen reader: "Outdoors, toggle button, not pressed"</p>
+</section>
+
+<section id="scss-base" data-part="5" data-cue="Open filter chip dot S C S S.">
+  <h2>The pill</h2>
+  <pre class="code tight" data-lang="scss" data-file="components/src/lib/filter-chip/filter-chip.scss">:host {
+  display: contents;
+}
+
+.filter-chip {
+  display: inline-flex;
+  …
+  height: 32px;
+  padding: 0 12px;
+  border-radius: var(--borderRadiusCircular);
+  font-size: 13px;
+  font-weight: var(--fontWeightSemibold);
+  …
+  border: 1px solid var(--colorNeutralStroke1);
+  color: var(--colorNeutralForeground2);
+  background: transparent;</pre>
+</section>
+
+<section id="scss-pressed" data-part="5" data-cue="The pressed state is selected with the aria pressed attribute">
+  <h2>Style from the accessible state</h2>
+  <pre class="code tight" data-lang="scss" data-file="components/src/lib/filter-chip/filter-chip.scss" data-mark="1,4,7">.filter-chip[aria-pressed='true'] {
+  background: var(--colorNeutralBackgroundInverted);
+  border-color: var(--colorNeutralBackgroundInverted);
+  color: #fff;
+}
+
+.filter-chip--leaf[aria-pressed='true'] {
+  background: var(--colorPaletteLeafBackground1);
+  border-color: var(--colorPaletteLeafBorder1);
+  color: var(--colorPaletteLeafForeground1);
+}</pre>
+  <p class="muted small"><code>#fff</code>: no inverted-foreground token yet — a gap to close, not a pattern.</p>
+</section>
+
+<section id="scss-hover" data-part="5" data-cue="Disabled halves the opacity.">
+  <h2>Disabled and hover</h2>
+  <pre class="code" data-lang="scss" data-file="components/src/lib/filter-chip/filter-chip.scss" data-mark="6">.filter-chip[disabled] {
+  opacity: 0.5;
+  cursor: default;
+}
+
+@media (hover: hover) {
+  .filter-chip:not([aria-pressed='true']):hover {
+    border-color: var(--colorNeutralStrokeAccessible);
+    color: var(--colorNeutralForeground1);
+  }
+}</pre>
+</section>
+
+<section id="spec-setup" data-part="6" data-cue="The spec file has a host component that renders a leaf chip">
+  <h2>Spec setup and the simple tests</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/filter-chip/filter-chip.spec.ts">  template: `&lt;sd-filter-chip tone="leaf"&gt;Outdoors&lt;/sd-filter-chip&gt;`,
+…
+  const button = (): HTMLButtonElement =&gt;
+    host.querySelector('button.filter-chip') as HTMLButtonElement;</pre>
+  <ul class="small">
+    <li><code>creates an unpressed toggle button</code></li>
+    <li><code>mirrors pressed to aria-pressed</code></li>
+    <li><code>mirrors the tone to the button class</code></li>
+  </ul>
+</section>
+
+<section id="spec-truth" data-part="6" data-cue="The key test is emits the next pressed state on click without owning the truth.">
+  <h2>The ownership rule, as a test</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/filter-chip/filter-chip.spec.ts" data-mark="6,8,10">  it('emits the next pressed state on click without owning the truth', () =&gt; {
+    const spy = vi.fn();
+    fixture.componentInstance.pressedChange.subscribe(spy);
+
+    button().click();
+    expect(spy).toHaveBeenLastCalledWith(true);
+    fixture.detectChanges();
+    expect(button().getAttribute('aria-pressed')).toBe('false');
+
+    fixture.componentRef.setInput('pressed', true);
+    fixture.detectChanges();
+    button().click();
+    expect(spy).toHaveBeenLastCalledWith(false);
+  });</pre>
+</section>
+
+<section id="spec-rest" data-part="6" data-cue="Disables the button and swallows clicks when disabled proves the guard">
+  <h2>Guard and slot</h2>
+  <ul>
+    <li><code>disables the button and swallows clicks when disabled</code></li>
+    <li><code>projects the chip text inside the button</code></li>
+  </ul>
+</section>
+
+<section id="pitfalls" data-part="7" data-cue="Don't switch to a model signal">
+  <h2>Pitfalls</h2>
+  <ul>
+    <li><code>model()</code> — the chip would flip itself</li>
+    <li>A parallel "is-on" class instead of <code>[aria-pressed='true']</code></li>
+    <li>Dropping <code>type="button"</code> (submits forms)</li>
+    <li>Giving the host a box</li>
+  </ul>
+</section>
+
+<section id="recap" data-part="8" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div>The page owns the pressed state</div>
+    <div><code>booleanAttribute</code> on pressed/disabled</div>
+    <div><code>computed()</code> class object</div>
+    <div><code>aria-pressed</code> drives a11y and style</div>
+    <div>Tones: background/border/foreground triples</div>
+    <div>Host is <code>display: contents</code></div>
+  </div>
+</section>
+
+<section id="next" data-part="8" data-cue="Next, in video twenty four, we build S D filters">
+  <div class="kicker">Next · Video 24</div>
+  <h1>Coding <code>sd-filters</code></h1>
+</section>
+
+<script src="../../assets/slides.js"></script>
+</body>
+</html>

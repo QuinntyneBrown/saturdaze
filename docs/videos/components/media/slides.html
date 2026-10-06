@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 31 Slides</title>
+<link rel="stylesheet" href="../../assets/slides.css">
+</head>
+<body data-video-number="31" data-video-title="Coding sd-media" data-parts="Introduction|Usage|Types|Decorator|State|Template|Styles|Testing|Pitfalls|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Saturdaze components · Video 31 of 52</div>
+  <h1>Coding <code>sd-media</code></h1>
+  <p class="lead">A photo frame with a graceful fallback: one signal, one computed, no effect.</p>
+</section>
+
+<section id="usage" data-part="1" data-cue="Media is not used directly by app pages">
+  <h2>Composed by the cards</h2>
+  <pre class="code tight" data-lang="html" data-file="components/src/lib/food-card/food-card.html">&lt;sd-media class="card__media" [photo]="media()" tone="sun" icon="fork" /&gt;</pre>
+  <pre class="code tight" data-lang="html" data-file="components/src/lib/event-card/event-card.html">&lt;sd-media class="card__media" [photo]="media()" [tone]="mediaTone()" icon="ticket" /&gt;</pre>
+  <pre class="code tight" data-lang="html" data-file="components/src/lib/activity-card/activity-card.html">&lt;sd-media class="card__media" [photo]="media()" [tone]="tone()" [icon]="icon()" /&gt;</pre>
+  <p class="muted small">Also <code>sd-past-card</code>, for a weekend's cover.</p>
+</section>
+
+<section id="types" data-part="2" data-cue="Open the media file. Before the component">
+  <h2>The data shape and union types</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/media/media.ts" data-mark="11-12">/** A photo for a media frame (L2-100): the primary photo of a place, ready to render. */
+export interface CardMedia {
+  readonly src: string;
+  readonly alt: string;
+  readonly width: number;
+  readonly height: number;
+  /** Attribution shown on the image, e.g. "Photo · Jo Doe". */
+  readonly credit: string;
+}
+
+export type MediaTone = 'leaf' | 'indoor' | 'sky' | 'sun';
+export type MediaRatio = '16:9' | '4:3';</pre>
+</section>
+
+<section id="decorator" data-part="3" data-cue="The selector is S D media, standalone, OnPush">
+  <h2>Host bindings read signals</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/media/media.ts" data-mark="7,14">@Component({
+  selector: 'sd-media',
+  standalone: true,
+  /* … imports, templateUrl, styleUrl … */
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: 'media',
+    '[class.media--4x3]': 'ratio() === "4:3"',
+    '[class.media--fallback]': 'fallback()',
+    '[class.media--leaf]': 'fallback() &amp;&amp; tone() === "leaf"',
+    '[class.media--indoor]': 'fallback() &amp;&amp; tone() === "indoor"',
+    '[class.media--sky]': 'fallback() &amp;&amp; tone() === "sky"',
+    '[class.media--sun]': 'fallback() &amp;&amp; tone() === "sun"',
+    '[attr.aria-hidden]': 'fallback() ? "true" : null',
+  },
+})</pre>
+</section>
+
+<section id="a11y" data-part="3" data-cue="That last binding is an accessibility decision.">
+  <h2>Decorative tile, meaningful photo</h2>
+  <div class="cols">
+    <div class="card sky"><h3>Photo</h3><p><code>&lt;img alt="Rows of lavender"&gt;</code><br>visible to assistive tech</p></div>
+    <div class="card"><h3>Fallback tile</h3><p><code>aria-hidden="true"</code><br>the card title carries the meaning</p></div>
+  </div>
+</section>
+
+<section id="inputs" data-part="4" data-cue="The class has five inputs.">
+  <h2>Five inputs</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/media/media.ts" data-mark="7">export class Media {
+  readonly photo = input&lt;CardMedia | null&gt;(null);
+  readonly ratio = input&lt;MediaRatio&gt;('16:9');
+  readonly tone = input&lt;MediaTone&gt;('sky');
+  readonly icon = input&lt;string&gt;('sparkle');
+  /** Above-the-fold images (a cover) load eagerly; cards stay lazy. */
+  readonly eager = input(false, { transform: booleanAttribute });</pre>
+</section>
+
+<section id="state" data-part="4" data-cue="Then the local state.">
+  <h2><code>signal()</code> + <code>computed()</code></h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/media/media.ts" data-mark="1,3-6">  private readonly failedSrc = signal&lt;string | null&gt;(null);
+
+  protected readonly fallback = computed(() =&gt; {
+    const photo = this.photo();
+    return !photo || this.failedSrc() === photo.src;
+  });
+
+  protected failed(src: string): void {
+    this.failedSrc.set(src);
+  }
+}</pre>
+</section>
+
+<section id="why-src" data-part="4" data-cue="Why store the failed source, and not just a boolean?">
+  <h2>Why the source, not a boolean?</h2>
+  <div class="cols">
+    <div class="card bad"><h3>failed = true</h3><p>Needs an <code>effect()</code> to reset when <code>photo</code> changes — easy to get out of sync</p></div>
+    <div class="card good"><h3>failedSrc === photo.src</h3><p>A new photo no longer matches, so it gets its chance. Nothing to reset.</p></div>
+  </div>
+</section>
+
+<section id="template" data-part="5" data-cue="The template starts with a let declaration">
+  <h2>The template</h2>
+  <pre class="code tight" data-lang="html" data-file="components/src/lib/media/media.html" data-mark="1,7-8,11">@let p = photo();
+@if (p &amp;&amp; !fallback()) {
+  &lt;img
+    class="media__img"
+    [src]="p.src"
+    [alt]="p.alt"
+    [attr.width]="p.width"
+    [attr.height]="p.height"
+    [attr.loading]="eager() ? 'eager' : 'lazy'"
+    decoding="async"
+    (error)="failed(p.src)"
+  /&gt;
+  /* … @if (p.credit) → .media__credit … */
+} @else {
+  &lt;sd-icon [name]="icon()" [size]="32" /&gt;
+}</pre>
+</section>
+
+<section id="host-styles" data-part="6" data-cue="The host sets a component knob">
+  <h2>The frame</h2>
+  <pre class="code tight" data-lang="scss" data-file="components/src/lib/media/media.scss" data-mark="2,7">:host {
+  --sd-media-credit-bg: color-mix(in srgb, var(--colorNeutralForeground1) 78%, transparent);
+
+  position: relative;
+  display: block;
+  overflow: hidden;
+  aspect-ratio: 16 / 9;
+  background: var(--colorNeutralBackground3);
+  border-radius: var(--borderRadiusMedium);
+}
+
+:host(.media--4x3) {
+  aspect-ratio: 4 / 3;
+}</pre>
+</section>
+
+<section id="credit" data-part="6" data-cue="The image fills the frame with object fit cover.">
+  <h2>The credit chip</h2>
+  <pre class="code tight" data-lang="scss" data-file="components/src/lib/media/media.scss" data-mark="1,10-11">// White on a 78 % ink scrim keeps 4.5:1 over any image (L2-106 AC4).
+.media__credit {
+  position: absolute;
+  right: 8px;
+  bottom: 6px;
+  max-width: calc(100% - 16px);
+  padding: 1px 6px;
+  overflow: hidden;
+  border-radius: var(--borderRadiusCircular);
+  background: var(--sd-media-credit-bg);
+  color: var(--colorNeutralForegroundOnBrand);
+  font-size: var(--fontSizeBase200);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}</pre>
+</section>
+
+<section id="tones" data-part="6" data-cue="The fallback class centres the icon">
+  <h2>Tones: fill and ink pairs</h2>
+  <pre class="code tight" data-lang="scss" data-file="components/src/lib/media/media.scss">:host(.media--fallback) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+:host(.media--leaf) {
+  background: var(--colorPaletteLeafBackground1);
+  color: var(--colorPaletteLeafForeground1);
+}
+/* … indoor, sky … */
+:host(.media--sun) {
+  background: var(--colorPaletteSunBackground1);
+  color: var(--colorPaletteSunForeground1);
+}</pre>
+</section>
+
+<section id="spec-setup" data-part="7" data-cue="Open the spec file. It defines a sample photo">
+  <h2>Spec setup</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/media/media.spec.ts">const PHOTO: CardMedia = {
+  src: 'https://images.example.com/terre-bleu.jpg',
+  alt: 'Rows of lavender',
+  width: 1600,
+  height: 900,
+  credit: 'Photo · Jo Doe',
+};
+
+describe('Media', () =&gt; {
+  let fixture: ComponentFixture&lt;Media&gt;;
+  let host: HTMLElement;
+
+  beforeEach(() =&gt; {
+    fixture = TestBed.createComponent(Media);
+    host = fixture.nativeElement as HTMLElement;
+  });</pre>
+</section>
+
+<section id="spec-list" data-part="7" data-cue="&quot;Renders a sized, lazy image with its credit&quot; checks">
+  <h2>Five tests</h2>
+  <ol class="steps small">
+    <li>renders a sized, lazy image with its credit</li>
+    <li>loads eagerly above the fold</li>
+    <li>shows an aria-hidden tinted tile with an icon when there is no photo</li>
+    <li>falls back to the tile when the image fails to load</li>
+    <li>switches to a 4:3 frame</li>
+  </ol>
+</section>
+
+<section id="spec-error" data-part="7" data-cue="&quot;Falls back to the tile when the image fails to load&quot;">
+  <h2>The computed at work</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/media/media.spec.ts" data-mark="4">  it('falls back to the tile when the image fails to load', () =&gt; {
+    fixture.componentRef.setInput('photo', PHOTO);
+    fixture.detectChanges();
+    host.querySelector('img')!.dispatchEvent(new Event('error'));
+    fixture.detectChanges();
+    expect(host.classList).toContain('media--fallback');
+    expect(host.querySelector('img')).toBeNull();
+  });</pre>
+</section>
+
+<section id="pitfalls" data-part="8" data-cue="Dropping width and height; the page jumps">
+  <h2>Pitfalls</h2>
+  <ul>
+    <li>No <code>width</code>/<code>height</code> — layout shift</li>
+    <li>An <code>effect()</code> to reset a failed flag</li>
+    <li>A fallback tile screen readers announce</li>
+    <li>Dropping the credit — the licence requires it</li>
+  </ul>
+</section>
+
+<section id="recap" data-part="9" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div>Export the shape and union types</div>
+    <div><code>signal()</code> + <code>computed()</code>, no <code>effect()</code></div>
+    <div>Explicit size, lazy unless <code>eager</code></div>
+    <div>Fallback is <code>aria-hidden</code></div>
+    <div><code>--sd-media-credit-bg</code> scrim knob</div>
+    <div>Fill + ink token pairs</div>
+  </div>
+</section>
+
+<section id="next" data-part="9" data-cue="Next, in video thirty two">
+  <div class="kicker">Next · Video 32</div>
+  <h1>Coding <code>sd-menu</code></h1>
+</section>
+
+<script src="../../assets/slides.js"></script>
+</body>
+</html>

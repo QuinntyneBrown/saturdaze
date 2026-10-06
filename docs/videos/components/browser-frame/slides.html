@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 08 Slides</title>
+<link rel="stylesheet" href="../../assets/slides.css">
+</head>
+<body data-video-number="08" data-video-title="Coding sd-browser-frame" data-parts="Introduction|Decorator|Inputs|Scale|Measuring|Template|Tests|Pitfalls|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Saturdaze components · Video 08 of 52</div>
+  <h1>Coding <code>sd-browser-frame</code></h1>
+  <p class="lead">inject, a signal, a computed and a ResizeObserver.</p>
+</section>
+
+<section id="where" data-part="0" data-cue="The landing page uses it for its hero">
+  <h2>Where it lives</h2>
+  <pre class="code" data-lang="html" data-file="saturdaze/src/app/pages/landing/landing.page.html">&lt;sd-browser-frame url="saturdaze.app/weekend"&gt;
+  … sd-day + sd-block miniature of the Weekend screen …
+&lt;/sd-browser-frame&gt;</pre>
+  <div class="flow">
+    <div class="node"><b>Composition</b><span class="small">laid out at 720 × 300</span></div>
+    <div class="arrow">→</div>
+    <div class="node accent"><b>scale()</b><span class="small">min(1, hostWidth / 720)</span></div>
+    <div class="arrow">→</div>
+    <div class="node"><b>Fits the hero</b><span class="small">never scales up</span></div>
+  </div>
+</section>
+
+<section id="decorator" data-part="1" data-cue="Open the browser frame file in the components library.">
+  <h2>The decorator</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/browser-frame/browser-frame.ts" data-mark="9-12">@Component({
+  selector: 'sd-browser-frame',
+  standalone: true,
+  templateUrl: './browser-frame.html',
+  styleUrl: './browser-frame.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: 'browser-frame',
+    'aria-hidden': 'true',
+    '[style.--_s]': 'scale()',
+    '[style.--_w.px]': 'frameWidth()',
+    '[style.--_h.px]': 'frameHeight()',
+  },
+})</pre>
+</section>
+
+<section id="style-bindings" data-part="1" data-cue="Then come three style bindings">
+  <h2>Signals → custom properties</h2>
+  <table class="map">
+    <tr><th>binding</th><th>result on the host</th></tr>
+    <tr><td>[style.--_s]="scale()"</td><td>--_s: 1 or less</td></tr>
+    <tr><td>[style.--_w.px]="frameWidth()"</td><td>--_w: 720px</td></tr>
+    <tr><td>[style.--_h.px]="frameHeight()"</td><td>--_h: 300px</td></tr>
+  </table>
+  <p class="muted">The <code>.px</code> unit lives in the binding, so the input stays a number.</p>
+</section>
+
+<section id="inject" data-part="2" data-cue="In the class body, two private fields use the inject function">
+  <h2><code>inject()</code> and the inputs</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/browser-frame/browser-frame.ts" data-mark="2,3">export class BrowserFrame {
+  private readonly host = inject&lt;ElementRef&lt;HTMLElement&gt;&gt;(ElementRef);
+  private readonly destroyRef = inject(DestroyRef);
+
+  readonly url = input&lt;string&gt;('saturdaze.app/weekend');
+  readonly frameWidth = input&lt;number&gt;(720);
+  readonly frameHeight = input&lt;number&gt;(300);</pre>
+  <p class="muted small">Passed as plain attributes? Add <code>transform: numberAttribute</code>.</p>
+</section>
+
+<section id="scale" data-part="3" data-cue="Next, a private signal called host width">
+  <h2>Local signal, derived scale</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/browser-frame/browser-frame.ts" data-mark="1,2,4">  private readonly hostWidth = signal(0);
+  protected readonly scale = computed(() =&gt; {
+    const w = this.hostWidth();
+    return w &gt; 0 ? Math.min(1, w / this.frameWidth()) : 1;
+  });</pre>
+  <div class="cols">
+    <div class="card good"><h3>Never scale up</h3><p><code>Math.min(1, …)</code></p></div>
+    <div class="card good"><h3>Unmeasured → 1</h3><p>Full size, never zero</p></div>
+  </div>
+</section>
+
+<section id="measure" data-part="4" data-cue="The constructor registers an after next render callback.">
+  <h2><code>afterNextRender</code> + ResizeObserver</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/browser-frame/browser-frame.ts" data-mark="2,4,6-9,11">  constructor() {
+    afterNextRender(() =&gt; {
+      const el = this.host.nativeElement;
+      this.hostWidth.set(el.clientWidth);
+      if (typeof ResizeObserver === 'undefined') return;
+      const ro = new ResizeObserver((entries) =&gt; {
+        const width = entries[0]?.contentRect.width ?? el.clientWidth;
+        this.hostWidth.set(width);
+      });
+      ro.observe(el);
+      this.destroyRef.onDestroy(() =&gt; ro.disconnect());
+    });
+  }</pre>
+</section>
+
+<section id="no-effect" data-part="4" data-cue="Notice what is missing: there is no effect.">
+  <h2>Why no <code>effect()</code>?</h2>
+  <div class="cols">
+    <div class="card bad"><h3>effect()</h3><p>Reacts to signal changes with side effects</p></div>
+    <div class="card good"><h3>afterNextRender + signal</h3><p>Starts once after render, <b>feeds</b> a signal</p></div>
+  </div>
+  <p class="lead">The computed does the rest.</p>
+</section>
+
+<section id="template" data-part="5" data-cue="The template is short.">
+  <h2>Template and geometry</h2>
+  <pre class="code tight" data-lang="html" data-file="components/src/lib/browser-frame/browser-frame.html">&lt;span class="browser-frame__url"&gt;{{ url() }}&lt;/span&gt;
+…
+&lt;div class="browser-frame__view"&gt;
+  &lt;div class="browser-frame__scale"&gt;&lt;ng-content /&gt;&lt;/div&gt;
+&lt;/div&gt;</pre>
+  <pre class="code tight" data-lang="scss" data-file="components/src/lib/browser-frame/browser-frame.scss">.browser-frame__view {
+  height: calc(var(--_h, 300px) * var(--_s, 1));
+}
+.browser-frame__scale {
+  transform: scale(var(--_s, 1));
+  transform-origin: top left;
+}</pre>
+</section>
+
+<section id="setup" data-part="6" data-cue="The spec creates the frame">
+  <h2>Test setup</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/browser-frame/browser-frame.spec.ts" data-mark="5">beforeEach(async () =&gt; {
+  await TestBed.configureTestingModule({ imports: [BrowserFrame, HostCmp] }).compileComponents();
+  fixture = TestBed.createComponent(BrowserFrame);
+  fixture.detectChanges();
+  await fixture.whenStable();
+  host = fixture.nativeElement as HTMLElement;
+});</pre>
+  <ul class="small">
+    <li><code>creates as a decorative browser chrome</code></li>
+    <li><code>shows the url in the bar</code></li>
+  </ul>
+</section>
+
+<section id="tests-geometry" data-part="6" data-cue="Lays the composition out at the frame size">
+  <h2>Testing the geometry</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/browser-frame/browser-frame.spec.ts">it('lays the composition out at the frame size', () =&gt; {
+  expect(host.style.getPropertyValue('--_w')).toBe('720px');
+  expect(host.style.getPropertyValue('--_h')).toBe('300px');
+  /* … setInput 1024 × 480 … */
+});
+
+it('does not scale up when the host has no measurable width', () =&gt; {
+  expect(host.style.getPropertyValue('--_s')).toBe('1');
+});</pre>
+  <p class="muted small">Plus <code>projects the composition into the scaled view</code></p>
+</section>
+
+<section id="pitfalls" data-part="7" data-cue="A few pitfalls.">
+  <h2>Pitfalls</h2>
+  <ul>
+    <li>Measuring in the constructor or a field initialiser</li>
+    <li>Forgetting <code>ro.disconnect()</code></li>
+    <li>Starting the observer from an <code>effect()</code></li>
+    <li>Letting the scale exceed 1</li>
+  </ul>
+</section>
+
+<section id="recap" data-part="8" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div><code>inject()</code> as fields</div>
+    <div><code>signal()</code> for measured width</div>
+    <div><code>computed()</code> for the scale</div>
+    <div><code>afterNextRender</code>: browser only, once</div>
+    <div><code>DestroyRef</code> cleans up</div>
+    <div>Style bindings → custom properties</div>
+  </div>
+</section>
+
+<section id="next" data-part="8" data-cue="Next, in video nine, we build the S D button">
+  <div class="kicker">Next · Video 09</div>
+  <h1>Coding <code>sd-button</code></h1>
+</section>
+
+<script src="../../assets/slides.js"></script>
+</body>
+</html>

@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 52 Slides</title>
+<link rel="stylesheet" href="../../assets/slides.css">
+</head>
+<body data-video-number="52" data-video-title="Coding sd-well" data-parts="Introduction|Decorator|Inputs|Template|Styles|Spec|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Saturdaze components · Video 52 of 52</div>
+  <h1>Coding <code>sd-well</code></h1>
+  <p class="lead">The quiet note block — and the end of the series.</p>
+</section>
+
+<section id="where" data-part="0" data-cue="When you open a block on the weekend">
+  <h2>Where it lives</h2>
+  <pre class="code tight" data-lang="html" data-file="saturdaze/src/app/dialogs/block-dialog/block-dialog.html" data-mark="2,6">    @if (block.locked) {
+      &lt;sd-well icon="lock" tone="accent" title="Locked"&gt;
+        Regenerating the weekend or the day leaves this block exactly where it is.
+      &lt;/sd-well&gt;
+    }
+    &lt;sd-well icon="sparkle" title="Why this"&gt;{{ why() }}&lt;/sd-well&gt;</pre>
+  <p class="muted">Also: confirm-dialog · add-to-day-dialog · legal page (“The short version”)</p>
+</section>
+
+<section id="decorator" data-part="1" data-cue="Open well dot T S.">
+  <h2>The decorator <span class="muted small">· templateUrl / styleUrl lines left out</span></h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/well/well.ts" data-mark="1,9-12">export type WellTone = 'default' | 'accent' | 'warn' | 'primary';
+
+@Component({
+  selector: 'sd-well',
+  standalone: true,
+  imports: [Icon],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: 'well',
+    '[class.well--accent]': 'tone() === "accent"',
+    '[class.well--warn]': 'tone() === "warn"',
+    '[class.well--primary]': 'tone() === "primary"',
+  },
+})</pre>
+</section>
+
+<section id="no-reflect" data-part="1" data-cue="Neither the tone nor the title is mirrored onto the host">
+  <h2>Inputs stay inputs</h2>
+  <div class="cols">
+    <div class="card bad"><h3>Not on the host</h3><p><code>[attr.tone]</code>, <code>[attr.title]</code></p></div>
+    <div class="card good"><h3 style="color:var(--forest)">On the host</h3><p>Classes and ARIA state only (ADR-009)</p></div>
+  </div>
+  <p class="muted">A host <code>title</code> attribute is a native hover tooltip the mocks never had.</p>
+</section>
+
+<section id="inputs" data-part="2" data-cue="Icon is a string defaulting to sparkle.">
+  <h2>Three signal inputs, one alias</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/well/well.ts" data-mark="4">export class Well {
+  readonly icon = input&lt;string&gt;('sparkle');
+  readonly tone = input&lt;WellTone&gt;('default');
+  readonly wellTitle = input&lt;string&gt;('', { alias: 'title' });
+}</pre>
+  <div class="cols">
+    <div class="card"><h3>Templates say</h3><p><code>&lt;sd-well title="Why this"&gt;</code></p></div>
+    <div class="card"><h3>The class says</h3><p><code>wellTitle()</code></p></div>
+  </div>
+</section>
+
+<section id="nothing-else" data-part="2" data-cue="There is no computed signal, no output and no local state.">
+  <h2>Nothing else needed</h2>
+  <ul>
+    <li>No <code>computed()</code>, no <code>output()</code>, no <code>signal()</code></li>
+    <li>Host bindings and template read the inputs directly</li>
+    <li>OnPush + signal inputs = all the reactivity it needs</li>
+  </ul>
+</section>
+
+<section id="template" data-part="3" data-cue="The template is short.">
+  <h2>The template</h2>
+  <pre class="code" data-lang="html" data-file="components/src/lib/well/well.html" data-mark="6">&lt;sd-icon [name]="icon()" [size]="16" /&gt;
+&lt;div class="well__text"&gt;
+  @if (wellTitle()) {
+    &lt;p class="well__title"&gt;{{ wellTitle() }}&lt;/p&gt;
+  }
+  &lt;div class="well__body"&gt;&lt;ng-content /&gt;&lt;/div&gt;
+&lt;/div&gt;</pre>
+</section>
+
+<section id="slot" data-part="3" data-cue="That one N G content is the body slot">
+  <h2>Declare each slot once</h2>
+  <div class="cols">
+    <div class="card bad"><h3>Don't</h3><p><code>&lt;ng-content /&gt;</code> repeated in <code>@if</code> branches — it projects into one branch only</p></div>
+    <div class="card good"><h3 style="color:var(--forest)">Do</h3><p>One unconditional <code>&lt;ng-content /&gt;</code> — the body always appears</p></div>
+  </div>
+  <p class="muted small">AGENTS.md: declare each <code>ng-content</code> slot once</p>
+</section>
+
+<section id="styles-host" data-part="4" data-cue="The host is the well: a flex row">
+  <h2>The host is the well</h2>
+  <pre class="code tight" data-lang="scss" data-file="components/src/lib/well/well.scss">:host {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 12px 14px;
+  border-radius: var(--borderRadiusMedium);
+  background: var(--colorNeutralBackground3);
+  font-size: 14px;
+  color: var(--colorNeutralForeground1);
+}
+
+sd-icon {
+  flex: none;
+  margin-top: 3px;
+  color: var(--colorNeutralForeground2);
+}</pre>
+</section>
+
+<section id="styles-tones" data-part="4" data-cue="Each tone swaps both the background and the icon colour">
+  <h2>Tones swap fill + ink together</h2>
+  <pre class="code tight" data-lang="scss" data-file="components/src/lib/well/well.scss">:host(.well--accent) {
+  background: var(--colorStatusSuccessBackground1);
+}
+:host(.well--accent) sd-icon {
+  color: var(--colorStatusSuccessForeground1);
+}
+:host(.well--warn) {
+  background: var(--colorStatusDangerBackground1);
+}
+:host(.well--warn) sd-icon {
+  color: var(--colorStatusDangerForeground1);
+}</pre>
+  <p class="muted"><code>.well--primary</code>: <code>--colorBrandBackground2</code> + <code>--colorBrandForeground2</code></p>
+</section>
+
+<section id="styles-text" data-part="4" data-cue="The title is semibold at font size base four hundred.">
+  <h2>Spacing only when there's a title</h2>
+  <pre class="code" data-lang="scss" data-file="components/src/lib/well/well.scss" data-mark="11">.well__title {
+  font-weight: var(--fontWeightSemibold);
+  font-size: var(--fontSizeBase400);
+}
+
+.well__body {
+  color: var(--colorNeutralForeground2);
+  font-size: var(--fontSizeBase300);
+}
+
+.well__title + .well__body {
+  margin-top: 2px;
+}</pre>
+</section>
+
+<section id="spec-setup" data-part="5" data-cue="Open well dot spec dot T S.">
+  <h2>Spec: a host for projection</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/well/well.spec.ts" data-mark="4,10,11">@Component({
+  standalone: true,
+  imports: [Well],
+  template: `&lt;sd-well title="Why this" icon="sun"&gt;Sunny and 22°, so we kept it outside.&lt;/sd-well&gt;`,
+})
+class HostCmp {}
+…
+  beforeEach(async () =&gt; {
+    await TestBed.configureTestingModule({ imports: [Well, HostCmp, Icon] }).compileComponents();
+    fixture = TestBed.createComponent(Well);
+    fixture.detectChanges();
+    host = fixture.nativeElement as HTMLElement;
+  });</pre>
+</section>
+
+<section id="spec-glyph" data-part="5" data-cue="Two small helpers at the top compare icons by what they draw">
+  <h2>Compare icons by what they draw</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/well/well.spec.ts" data-mark="2,7">/** The svg markup `sd-icon` draws for `name`, to compare against a rendered glyph. */
+const glyph = (name: string): string =&gt; {
+  const ref = TestBed.createComponent(Icon);
+  ref.componentRef.setInput('name', name);
+  ref.detectChanges();
+  return (ref.nativeElement as HTMLElement).querySelector('svg')?.innerHTML ?? '';
+};
+const drawn = (icon: Element | null): string =&gt; icon?.querySelector('svg')?.innerHTML ?? '';</pre>
+  <p class="muted small">No <code>name</code> attribute to read any more — assert the rendered glyph.</p>
+</section>
+
+<section id="spec-tests" data-part="5" data-cue="Creates a plain well with a leading sparkle">
+  <h2>Defaults, tones, title, icon</h2>
+  <ul class="small">
+    <li><b>creates a plain well with a leading sparkle</b></li>
+    <li><b>mirrors the tone to a host class</b></li>
+    <li><b>renders the bold first line from title</b> — <code>setInput('title', …)</code> proves the alias</li>
+    <li><b>forwards the icon name</b> — the lock glyph is drawn</li>
+  </ul>
+</section>
+
+<section id="spec-projection" data-part="5" data-cue="creates the host component instead">
+  <h2>projects the body under the title</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/well/well.spec.ts" data-mark="1,5">    const wrapper = TestBed.createComponent(HostCmp);
+    wrapper.detectChanges();
+    const el = (wrapper.nativeElement as HTMLElement).querySelector('sd-well') as HTMLElement;
+    expect(el.querySelector('.well__title')?.textContent?.trim()).toBe('Why this');
+    expect(el.querySelector('.well__body')?.textContent?.trim()).toBe(
+      'Sunny and 22°, so we kept it outside.',
+    );
+    expect(drawn(el.querySelector('sd-icon'))).toBe(glyph('sun'));</pre>
+</section>
+
+<section id="pitfalls" data-part="6" data-cue="Don't bind the title input onto the host as an attribute.">
+  <h2>Pitfalls</h2>
+  <ul>
+    <li>No <code>[attr.title]</code> on the host — it is a native hover tooltip</li>
+    <li>Never wrap the content slot in a condition</li>
+    <li>Choose the tone for meaning: success, danger, brand</li>
+  </ul>
+</section>
+
+<section id="recap" data-part="6" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div>Signal inputs + <code>alias</code> + host bindings</div>
+    <div>Default tone → no modifier; inputs never become host attributes</div>
+    <div>One unconditional <code>ng-content</code></div>
+    <div>Tones swap fill and ink pairs</div>
+    <div>Test projection through a host component</div>
+  </div>
+</section>
+
+<section id="end" data-part="6" data-cue="That brings the series to a close.">
+  <div class="kicker">Saturdaze components · 52 of 52 · The end</div>
+  <h1>Same ideas, every component</h1>
+  <p class="lead">Signal inputs and <code>computed()</code> · outputs, not mutation · B E M parity · accessible state · tokens by role · specs that prove behaviour</p>
+</section>
+
+<script src="../../assets/slides.js"></script>
+</body>
+</html>

@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 34 Slides</title>
+<link rel="stylesheet" href="../../assets/slides.css">
+</head>
+<body data-video-number="34" data-video-title="Coding sd-past-card" data-parts="Introduction|Usage|Decorator|Inputs &amp; outputs|Computed|Template|Styles|Testing|Pitfalls|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Saturdaze components · Video 34 of 52</div>
+  <h1>Coding <code>sd-past-card</code></h1>
+  <p class="lead">A stateless card where every control emits.</p>
+</section>
+
+<section id="usage" data-part="1" data-cue="The Past page renders one past card per weekend">
+  <h2>Six inputs in, six outputs out</h2>
+  <pre class="code tight" data-lang="html" data-file="saturdaze/src/app/pages/past/past.page.html" data-mark="8-13">          &lt;sd-past-card
+            [title]="card.title"
+            [dateRange]="card.eyebrow"
+            [rating]="card.rating || null"
+            [favourite]="card.favourite"
+            [highlights]="card.highlights"
+            [cover]="card.cover?.media ?? null"
+            (addPhoto)="addPhoto(card)"
+            (favouriteToggle)="favourite(card, $event)"
+            (rename)="rename(card)"
+            (rate)="rate(card)"
+            (remix)="remix(card)"
+            (repeat)="repeat(card)"
+          /&gt;</pre>
+</section>
+
+<section id="decorator" data-part="2" data-cue="Create the past card file.">
+  <h2>The decorator</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/past-card/past-card.ts" data-mark="4,9">@Component({
+  selector: 'sd-past-card',
+  standalone: true,
+  imports: [Button, Icon, Media, Stars],
+  templateUrl: './past-card.html',
+  styleUrl: './past-card.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: 'card card--media',
+  },
+})</pre>
+  <p class="muted">No mirrored <code>title</code>, <code>rating</code> or <code>favourite</code> (ADR-009).</p>
+</section>
+
+<section id="inputs" data-part="3" data-cue="Card title is a string input aliased to title">
+  <h2>Inputs and outputs</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/past-card/past-card.ts" data-mark="5,9,11">export class PastCard {
+  readonly cardTitle = input&lt;string&gt;('', { alias: 'title' });
+  /** "10 – 11 May 2026". */
+  readonly dateRange = input&lt;string&gt;('');
+  readonly rating = input&lt;number | null&gt;(null);
+  readonly favourite = input(false, { transform: booleanAttribute });
+  readonly highlights = input&lt;string&gt;('');
+  /** The weekend's cover; `null` shows "Add a photo to {title}" (L2-110 AC2). */
+  readonly cover = input&lt;CardMedia | null&gt;(null);
+  readonly addPhoto = output&lt;void&gt;();
+  readonly favouriteToggle = output&lt;boolean&gt;();
+  readonly rename = output&lt;void&gt;();
+  readonly rate = output&lt;void&gt;();
+  readonly remix = output&lt;void&gt;();
+  readonly repeat = output&lt;void&gt;();</pre>
+</section>
+
+<section id="no-model" data-part="3" data-cue="Why not a model signal for favourite?">
+  <h2>Input + output, not <code>model()</code></h2>
+  <div class="cols">
+    <div class="card bad"><h3><code>model()</code></h3><p>The card flips its own state; card and server can disagree if the save fails</p></div>
+    <div class="card good"><h3><code>input()</code> + <code>output()</code></h3><p>The page is the single source of truth and writes the value back</p></div>
+  </div>
+</section>
+
+<section id="computed" data-part="4" data-cue="Two protected computed signals derive text from the rating.">
+  <h2>Labels from <code>computed()</code></h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/past-card/past-card.ts">  protected readonly ratingLabel = computed(() =&gt; {
+    const r = this.rating();
+    return r ? `${r} of 5` : 'Rate it';
+  });
+
+  protected readonly rateLabel = computed(() =&gt; {
+    const r = this.rating();
+    return r ? `Rate this weekend, currently ${r} of 5` : 'Rate this weekend';
+  });</pre>
+</section>
+
+<section id="cover" data-part="5" data-cue="The template starts with a let declaration reading the cover once.">
+  <h2>Cover or "Add a photo"</h2>
+  <pre class="code" data-lang="html" data-file="components/src/lib/past-card/past-card.html" data-mark="3,8-9">@let c = cover();
+@if (c) {
+  &lt;sd-media class="card__media" [photo]="c" /&gt;
+} @else {
+  &lt;button
+    class="media media--fallback media--sky card__media"
+    type="button"
+    [attr.aria-label]="'Add a photo to ' + cardTitle()"
+    (click)="addPhoto.emit()"
+  &gt;
+    &lt;sd-icon name="plus" /&gt;
+    Add a photo
+  &lt;/button&gt;
+}</pre>
+</section>
+
+<section id="heart" data-part="5" data-cue="Then the card row: the date range as an eyebrow">
+  <h2>The heart is a pressed toggle</h2>
+  <pre class="code tight" data-lang="html" data-file="components/src/lib/past-card/past-card.html" data-mark="9-10,12">&lt;div class="card__row"&gt;
+  &lt;span class="card__eyebrow"&gt;{{ dateRange() }}&lt;/span&gt;
+  &lt;sd-button
+    variant="ghost"
+    size="sm"
+    icon
+    btnClass="fav-btn"
+    label="Favourite this weekend"
+    [pressed]="favourite()"
+    (click)="favouriteToggle.emit(!favourite())"
+  &gt;
+    &lt;sd-icon name="heart" [filled]="favourite()" /&gt;
+  &lt;/sd-button&gt;
+&lt;/div&gt;</pre>
+</section>
+
+<section id="title-rate" data-part="5" data-cue="The title is an h3 containing a button">
+  <h2>Every control is a named button</h2>
+  <pre class="code tight" data-lang="html" data-file="components/src/lib/past-card/past-card.html" data-mark="5,11">&lt;h3 class="card__title"&gt;
+  &lt;button
+    class="card__title-btn"
+    type="button"
+    [attr.aria-label]="'Rename: ' + cardTitle()"
+    (click)="rename.emit()"
+  &gt;
+    {{ cardTitle() }}
+  &lt;/button&gt;
+&lt;/h3&gt;
+&lt;button class="card__rate" type="button" [attr.aria-label]="rateLabel()" (click)="rate.emit()"&gt;
+  &lt;sd-stars [rating]="rating() ?? 0" [label]="ratingLabel()" /&gt;
+&lt;/button&gt;
+@if (highlights()) {
+  &lt;p class="card__highlights"&gt;{{ highlights() }}&lt;/p&gt;
+}</pre>
+</section>
+
+<section id="styles" data-part="6" data-cue="The host includes the shared card host mixin">
+  <h2>Shared surface, knobs, clamp</h2>
+  <pre class="code tight" data-lang="scss" data-file="components/src/lib/past-card/past-card.scss" data-mark="4,9,16">@use '../styles/card-base' as *;
+/* … */
+:host {
+  @include card-host;
+}
+/* … */
+.card__highlights {
+  /* … */
+  -webkit-line-clamp: 2;
+}
+
+.card__footer--2up {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  --sd-btn-w: 100%;
+}</pre>
+</section>
+
+<section id="deep" data-part="6" data-cue="The pressed heart turns brand foreground one">
+  <h2>State from ARIA, tokens by role</h2>
+  <pre class="code tight" data-lang="scss" data-file="components/src/lib/past-card/past-card.scss">::ng-deep .fav-btn[aria-pressed='true'] {
+  color: var(--colorBrandForeground1);
+}
+/* … */
+.media--fallback {
+  /* … */
+  aspect-ratio: 16 / 9;
+  background: var(--colorPaletteSkyBackground1);
+  color: var(--colorPaletteSkyForeground1);
+  /* … */
+}
+
+.media--fallback:focus-visible {
+  outline: 2px solid var(--colorStrokeFocus2);
+  outline-offset: -4px;
+}</pre>
+</section>
+
+<section id="spec-setup" data-part="7" data-cue="The spec file creates the card with the test bed">
+  <h2>Spec setup</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/past-card/past-card.spec.ts">  beforeEach(async () =&gt; {
+    await TestBed.configureTestingModule({ imports: [PastCard] }).compileComponents();
+    fixture = TestBed.createComponent(PastCard);
+    fixture.componentRef.setInput('title', 'Beach and pizza');
+    fixture.componentRef.setInput('dateRange', '10 – 11 May 2026');
+    fixture.detectChanges();
+    host = fixture.nativeElement as HTMLElement;
+  });</pre>
+</section>
+
+<section id="spec-list" data-part="7" data-cue="&quot;Creates an unrated, unfavourited card&quot; checks">
+  <h2>Six tests</h2>
+  <ol class="steps small">
+    <li>creates an unrated, unfavourited card</li>
+    <li>shows the favourite heart as a pressed toggle</li>
+    <li>reflects the rating in the stars and the rate button name</li>
+    <li>renders the highlights line</li>
+    <li>emits the next favourite state</li>
+    <li>emits rename, rate, remix and repeat from their buttons</li>
+  </ol>
+</section>
+
+<section id="spec-fav" data-part="7" data-cue="&quot;Emits the next favourite state&quot;">
+  <h2>The next value, not the current one</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/past-card/past-card.spec.ts" data-mark="5,10">  it('emits the next favourite state', () =&gt; {
+    const spy = vi.fn();
+    fixture.componentInstance.favouriteToggle.subscribe(spy);
+    favBtn().click();
+    expect(spy).toHaveBeenLastCalledWith(true);
+
+    fixture.componentRef.setInput('favourite', true);
+    fixture.detectChanges();
+    favBtn().click();
+    expect(spy).toHaveBeenLastCalledWith(false);
+  });</pre>
+</section>
+
+<section id="gap" data-part="7" data-cue="The add photo tile and the cover photo branch have no unit test">
+  <h2>Not covered here</h2>
+  <ul>
+    <li>The "Add a photo" tile and <code>addPhoto</code></li>
+    <li>The cover branch — <code>sd-media</code> has its own spec</li>
+  </ul>
+</section>
+
+<section id="pitfalls" data-part="8" data-cue="Letting the card toggle its own favourite state">
+  <h2>Pitfalls</h2>
+  <ul>
+    <li>Local favourite state in the card</li>
+    <li>A heart without <code>label</code> and <code>aria-pressed</code></li>
+    <li>Click handlers on plain text instead of buttons</li>
+    <li>Not writing results back into the inputs</li>
+  </ul>
+</section>
+
+<section id="recap" data-part="9" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div>Stateless: inputs in, six outputs out</div>
+    <div><code>favouriteToggle</code> emits the next value</div>
+    <div>No <code>model()</code>, no local <code>signal()</code></div>
+    <div>Two <code>computed()</code> labels</div>
+    <div>Named buttons; heart uses <code>aria-pressed</code></div>
+    <div><code>card-host</code> mixin + <code>--sd-btn-w</code></div>
+  </div>
+</section>
+
+<section id="next" data-part="9" data-cue="Next, in video thirty five">
+  <div class="kicker">Next · Video 35</div>
+  <h1>Coding <code>[sdScrolled]</code></h1>
+</section>
+
+<script src="../../assets/slides.js"></script>
+</body>
+</html>

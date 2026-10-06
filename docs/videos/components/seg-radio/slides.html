@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 37 Slides</title>
+<link rel="stylesheet" href="../../assets/slides.css">
+</head>
+<body data-video-number="37" data-video-title="Coding sd-seg-radio" data-parts="Introduction|Usage|Decorator|State|Methods|Template|Styles|Tests|Pitfalls|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Saturdaze components · Video 37 of 52</div>
+  <h1>Coding <code>sd-seg-radio</code></h1>
+  <p class="lead">A segmented radio group that plugs into Angular forms.</p>
+</section>
+
+<section id="usage" data-part="1" data-cue="Search the app and you will find it in three dialogs">
+  <h2>Where it is used</h2>
+  <pre class="code" data-lang="html" data-file="saturdaze/src/app/dialogs/add-errand-dialog/add-errand-dialog.html" data-mark="5,6">    &lt;sd-seg-radio
+      label="Which day"
+      name="day"
+      [options]="days"
+      [ngModel]="day()"
+      (ngModelChange)="day.set($event)"
+    /&gt;</pre>
+  <p class="muted small">Also <code>add-to-day-dialog</code> ("Which day") and <code>commitment-dialog</code> ("Day").</p>
+</section>
+
+<section id="goals" data-part="1" data-cue="The job: a labelled group of radios">
+  <h2>What you will build</h2>
+  <ul>
+    <li>A labelled group of two or three native radios</li>
+    <li>One string value, read and written through the forms API</li>
+    <li>The mock's BEM classes: <code>.field</code>, <code>.seg-radio</code>, <code>.seg-radio__opt</code></li>
+    <li>No custom keyboard code</li>
+  </ul>
+</section>
+
+<section id="type" data-part="2" data-cue="Open the file called seg radio dot T S.">
+  <h2>The option type and an id counter</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/seg-radio/seg-radio.ts">export interface SegRadioOption {
+  readonly value: string;
+  readonly label: string;
+}
+
+let nextSegRadioId = 0;</pre>
+</section>
+
+<section id="decorator" data-part="2" data-cue="The decorator uses the selector S D seg radio">
+  <h2>The decorator</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/seg-radio/seg-radio.ts" data-mark="7-9">@Component({
+  selector: 'sd-seg-radio',
+  standalone: true,
+  templateUrl: './seg-radio.html',
+  styleUrl: './seg-radio.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: 'field',
+  },</pre>
+  <p class="muted small">Inputs stay inputs: no host attributes for <code>label</code> or <code>value</code>. Only classes and ARIA state go on the host (ADR-009).</p>
+</section>
+
+<section id="cva" data-part="2" data-cue="Then comes the providers array.">
+  <h2>Plugging into forms</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/seg-radio/seg-radio.ts" data-mark="3,4">  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() =&gt; SegRadio),
+      multi: true,
+    },
+  ],</pre>
+  <div class="flow">
+    <div class="node"><b>[ngModel] / formControlName</b><span class="small">on &lt;sd-seg-radio&gt;</span></div>
+    <div class="arrow">→</div>
+    <div class="node accent"><b>NG_VALUE_ACCESSOR</b><span class="small">this component</span></div>
+    <div class="arrow">→</div>
+    <div class="node"><b>ControlValueAccessor</b><span class="small">writeValue · registerOnChange · setDisabledState</span></div>
+  </div>
+</section>
+
+<section id="state" data-part="3" data-cue="The class implements control value accessor.">
+  <h2>Inputs, signals and a computed</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/seg-radio/seg-radio.ts" data-mark="2,3,7-9">export class SegRadio implements ControlValueAccessor {
+  readonly label = input&lt;string&gt;('');
+  readonly options = input&lt;readonly SegRadioOption[]&gt;([]);
+
+  protected readonly id = `sd-seg-radio-${nextSegRadioId++}`;
+  protected readonly labelId = `${this.id}-label`;
+  protected readonly value = signal&lt;string&gt;('');
+  protected readonly disabled = signal&lt;boolean&gt;(false);
+  protected readonly three = computed(() =&gt; this.options().length &gt;= 3);
+
+  private onChange: (value: string) =&gt; void = () =&gt; {};
+  private onTouched: () =&gt; void = () =&gt; {};</pre>
+</section>
+
+<section id="why-signal" data-part="3" data-cue="Now the interesting choice.">
+  <h2>The form owns the value</h2>
+  <div class="cols three">
+    <div class="card good"><h3 style="color:var(--forest)">signal()</h3><p>Written imperatively by <code>writeValue</code> / <code>setDisabledState</code>; template reacts under OnPush</p></div>
+    <div class="card bad"><h3>input()</h3><p>The parent would bypass the form</p></div>
+    <div class="card bad"><h3>model()</h3><p>Two sources of truth: binding and form</p></div>
+  </div>
+</section>
+
+<section id="computed" data-part="3" data-cue="One computed signal derives the layout.">
+  <h2><code>computed()</code> for derived state</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/seg-radio/seg-radio.ts">  protected readonly three = computed(() =&gt; this.options().length &gt;= 3);</pre>
+  <ul>
+    <li>Cached — recalculates only when <code>options()</code> changes</li>
+    <li>Drives the <code>seg-radio--3</code> modifier class</li>
+  </ul>
+</section>
+
+<section id="methods" data-part="4" data-cue="The pick method runs when a radio changes.">
+  <h2>The methods</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/seg-radio/seg-radio.ts" data-mark="2">  protected pick(v: string): void {
+    if (this.disabled()) return;
+    this.value.set(v);
+    this.onChange(v);
+    this.onTouched();
+  }
+
+  writeValue(value: string | null): void {
+    this.value.set(value ?? '');
+  }</pre>
+  <p class="muted small"><code>registerOnChange</code> / <code>registerOnTouched</code> store callbacks; <code>setDisabledState</code> writes the signal.</p>
+</section>
+
+<section id="template" data-part="5" data-cue="The template opens with an at if on the label.">
+  <h2>The label and the group</h2>
+  <pre class="code" data-lang="html" data-file="components/src/lib/seg-radio/seg-radio.html" data-mark="6-8">@if (label()) {
+  &lt;span class="field__label" [id]="labelId"&gt;{{ label() }}&lt;/span&gt;
+}
+&lt;div
+  class="seg-radio"
+  [class.seg-radio--3]="three()"
+  role="radiogroup"
+  [attr.aria-labelledby]="label() ? labelId : null"
+&gt;</pre>
+</section>
+
+<section id="loop" data-part="5" data-cue="Inside, an at for loop tracks options by their value.">
+  <h2>One native radio per option</h2>
+  <pre class="code tight" data-lang="html" data-file="components/src/lib/seg-radio/seg-radio.html" data-mark="5,7,8,9">  @for (option of options(); track option.value) {
+    &lt;label class="seg-radio__opt"&gt;
+      &lt;input
+        type="radio"
+        [name]="id"
+        [value]="option.value"
+        [checked]="option.value === value()"
+        [disabled]="disabled()"
+        (change)="pick(option.value)"
+      /&gt;
+      {{ option.label }}
+    &lt;/label&gt;
+  }
+&lt;/div&gt;</pre>
+</section>
+
+<section id="native" data-part="5" data-cue="Because they are real radios with one name">
+  <h2>Native radios: accessibility for free</h2>
+  <div class="cols three">
+    <div class="card"><h3>Arrow keys</h3><p>Move between options in one group</p></div>
+    <div class="card"><h3>One tab stop</h3><p>Shared <code>name</code> = one group</p></div>
+    <div class="card"><h3>Announcements</h3><p>Role, position and checked state come from the browser</p></div>
+  </div>
+</section>
+
+<section id="styles" data-part="6" data-cue="Open seg radio dot S C S S.">
+  <h2>The track and the invisible input</h2>
+  <pre class="code tight" data-lang="scss" data-file="components/src/lib/seg-radio/seg-radio.scss" data-mark="3,10,14-17">.seg-radio {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  padding: 4px;
+  gap: 4px;
+  background: var(--colorNeutralBackground3);
+  border-radius: var(--borderRadiusCircular);
+}
+
+.seg-radio--3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.seg-radio__opt input {
+  position: absolute;
+  opacity: 0;
+  inset: 0;</pre>
+</section>
+
+<section id="has" data-part="6" data-cue="The selected look uses the has selector">
+  <h2>State styling with <code>:has</code></h2>
+  <pre class="code" data-lang="scss" data-file="components/src/lib/seg-radio/seg-radio.scss" data-mark="1,7">.seg-radio__opt:has(input:checked) {
+  background: var(--colorNeutralBackground1);
+  color: var(--colorNeutralForeground1);
+  box-shadow: var(--shadow4);
+}
+
+.seg-radio__opt:has(input:focus-visible) {
+  outline: var(--strokeWidthThick) solid var(--colorStrokeFocus2);
+  outline-offset: 2px;
+}</pre>
+</section>
+
+<section id="spec-setup" data-part="7" data-cue="Open seg radio dot spec dot T S.">
+  <h2>Spec setup</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/seg-radio/seg-radio.spec.ts" data-mark="9">  const group = (): HTMLElement =&gt; host.querySelector('.seg-radio') as HTMLElement;
+  const radios = (): HTMLInputElement[] =&gt;
+    Array.from(host.querySelectorAll('label.seg-radio__opt input[type="radio"]'));
+
+  beforeEach(async () =&gt; {
+    await TestBed.configureTestingModule({ imports: [SegRadio] }).compileComponents();
+    fixture = TestBed.createComponent(SegRadio);
+    component = fixture.componentInstance;
+    fixture.componentRef.setInput('options', OPTIONS);
+    fixture.detectChanges();
+    host = fixture.nativeElement as HTMLElement;
+  });</pre>
+</section>
+
+<section id="tests" data-part="7" data-cue="&quot;creates a radiogroup with one native radio per option&quot; proves">
+  <h2>Structure and labelling</h2>
+  <table class="grid small">
+    <tr><th>Test</th><th>Proves</th></tr>
+    <tr><td>creates a radiogroup with one native radio per option</td><td><code>.field</code>, <code>role="radiogroup"</code>, 3 radios, one shared <code>sd-seg-radio-N</code> name, none checked</td></tr>
+    <tr><td>widens to three columns for three options</td><td><code>seg-radio--3</code> follows <code>options</code></td></tr>
+    <tr><td>labels the group with the field label</td><td><code>aria-labelledby</code> → <code>sd-seg-radio-N-label</code>, only with a label</td></tr>
+  </table>
+</section>
+
+<section id="cva-tests" data-part="7" data-cue="The last three tests drive the control value accessor directly.">
+  <h2>Driving the accessor</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/seg-radio/seg-radio.spec.ts" data-mark="4,5,7-9">  it('reports a user pick to the form and marks it touched', () =&gt; {
+    const onChange = vi.fn();
+    const onTouched = vi.fn();
+    component.registerOnChange(onChange);
+    component.registerOnTouched(onTouched);
+
+    const either = radios()[2] as HTMLInputElement;
+    either.checked = true;
+    either.dispatchEvent(new Event('change'));
+
+    expect(onChange).toHaveBeenCalledWith('either');
+    expect(onTouched).toHaveBeenCalledTimes(1);</pre>
+  <p class="muted small">Also: checks the radio matching a written value · disables every radio from the form and ignores picks</p>
+</section>
+
+<section id="pitfalls" data-part="8" data-cue="Binding the value with an input instead of N G model">
+  <h2>Pitfalls</h2>
+  <ul>
+    <li>There is no <code>value</code> input — bind with <code>ngModel</code> or a form control</li>
+    <li>Duplicate option values break <code>track option.value</code></li>
+    <li>More than three options: only 2- and 3-column layouts exist</li>
+  </ul>
+</section>
+
+<section id="recap" data-part="9" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div><code>NG_VALUE_ACCESSOR</code> + <code>forwardRef</code></div>
+    <div>Form-owned state in <code>signal()</code></div>
+    <div><code>computed()</code> for the modifier</div>
+    <div>Native radios, one shared name</div>
+    <div><code>:has</code> styles checked + focus</div>
+    <div>Spec drives the CVA methods</div>
+  </div>
+</section>
+
+<section id="next" data-part="9" data-cue="Next, video thirty eight builds">
+  <div class="kicker">Next · Video 38</div>
+  <h1>Coding <code>sd-segments</code></h1>
+</section>
+
+<script src="../../assets/slides.js"></script>
+</body>
+</html>
