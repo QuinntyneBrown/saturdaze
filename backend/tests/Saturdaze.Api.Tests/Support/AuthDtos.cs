@@ -17,7 +17,7 @@ internal static class AuthDtos
     public record ResendVerificationRequest(string Email);
 
     public record Token(string AccessToken, string RefreshToken, DateTimeOffset AccessTokenExpiresAtUtc, string TokenType);
-    public record User(Guid Id, string Email, string Role, DateTimeOffset? EmailVerifiedUtc);
+    public record User(Guid Id, string Email, string Role, DateTimeOffset? EmailVerifiedUtc, string? AvatarUrl = null);
     public record AuthSuccess(Token Token, User User);
     public record Delivery(string? Email, string? Token, DateTimeOffset? ExpiresAtUtc);
     public record Error(string Code, string Message);

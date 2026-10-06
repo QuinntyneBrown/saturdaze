@@ -1,0 +1,37 @@
+// `.photo-picker` from docs/mocks/styles/app.css (D27).
+
+:host {
+  display: block;
+}
+
+.photo-picker {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px 20px;
+}
+
+.photo-picker__preview {
+  width: 96px;
+  height: 96px;
+  font-size: 36px;
+}
+
+.photo-picker__field {
+  display: flex;
+  flex: 1 1 180px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  min-width: 0;
+}
+
+.field__hint {
+  font-size: var(--fontSizeBase200);
+  color: var(--colorNeutralForeground2);
+}
+
+.field__error {
+  font-size: var(--fontSizeBase200);
+  color: var(--colorStatusDangerForeground1);
+}

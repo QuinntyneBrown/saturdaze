@@ -2,6 +2,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Saturdaze.Application.Auth;
+using Saturdaze.Application.Avatars;
 using Saturdaze.Application.Contracts;
 
 namespace Saturdaze.Api.Controllers;
@@ -106,6 +107,23 @@ public class AuthController : ControllerBase
     {
         return Ok(await _mediator.Send(new GetCurrentUserQuery(), ct));
     }
+
+    /// <summary>Sets or replaces the profile photo from the <c>file</c> form field (L2-087).</summary>
+    [HttpPut("me/avatar")]
+    [Authorize]
+    [RequestSizeLimit(4 * 1024 * 1024)]
+    public async Task<ActionResult<UserDto>> SetAvatar(IFormFile? file, CancellationToken ct)
+    {
+        using var buffer = new MemoryStream();
+        if (file is not null) await file.CopyToAsync(buffer, ct);
+        return Ok(await _mediator.Send(new SetAvatarCommand(buffer.ToArray()), ct));
+    }
+
+    /// <summary>Removes the profile photo; idempotent (L2-087).</summary>
+    [HttpDelete("me/avatar")]
+    [Authorize]
+    public async Task<ActionResult<UserDto>> RemoveAvatar(CancellationToken ct)
+        => Ok(await _mediator.Send(new RemoveAvatarCommand(), ct));
 
     /// <summary>
     /// There is no email provider yet, so Development and the test host hand the

@@ -92,6 +92,21 @@ export interface IAuthService {
    * @returns {Promise<User>} The result of the operation
    */
   me(): Promise<User>;
+  /**
+   * Sets or replaces the profile photo (`PUT /api/auth/me/avatar`). Rejects
+   * with `AuthError { code: 'invalid_photo' }` when the server refuses the file.
+   *
+   * @param {Blob} file - The image file
+   *
+   * @returns {Promise<User>} The updated user
+   */
+  uploadAvatar(file: Blob): Promise<User>;
+  /**
+   * Removes the profile photo (`DELETE /api/auth/me/avatar`); idempotent.
+   *
+   * @returns {Promise<User>} The updated user
+   */
+  removeAvatar(): Promise<User>;
 }
 
 export const AUTH_SERVICE = new InjectionToken<IAuthService>('AUTH_SERVICE');

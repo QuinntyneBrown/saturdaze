@@ -96,6 +96,11 @@ export abstract class BasePage {
     return this.topbar.locator('[aria-label="Account menu"]');
   }
 
+  /** The profile photo inside the top-bar avatar (L2-087); absent while the initial shows. */
+  accountMenuPhoto(): Locator {
+    return this.accountMenuButton().locator("img.avatar__img");
+  }
+
   /* ---------- Page header ---------- */
 
   get pageHeader(): Locator {

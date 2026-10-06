@@ -1,0 +1,35 @@
+@startuml
+title UML sequence behaviour — Remove a profile photo
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+actor "User" as actor
+box "Frontend — Saturdaze Angular application" #E0F2FE
+ participant "FamilyPage\nProfilePhotoDialog" as page
+ participant "SessionStore\nAuthService" as client
+end box
+box "Backend — Saturdaze API" #D1FADF
+ participant "AuthController" as controller
+end box
+box "Backend — Saturdaze Application and Domain" #ECFDF3
+ participant "RemoveAvatarCommandHandler" as handler
+end box
+box "Backend — Saturdaze Infrastructure" #FFF4E5
+ database "AppDbContext\nSQL Server" as db
+end box
+actor -> page : Change photo, then Remove photo
+page -> client : removeAvatar()
+client -> controller : DELETE /api/auth/me/avatar (bearer)
+controller -> handler : RemoveAvatarCommand
+opt photo exists
+handler -> db : Delete UserAvatar; Users.AvatarToken = null
+db --> handler : Saved
+end
+handler --> controller : UserDto(avatarUrl=null)
+controller --> client : 200 UserDto (idempotent)
+client -> client : user.set(user)
+client --> page : Completed
+page --> actor : L2-087 initials return; old URL now 404
+@enduml

@@ -10,6 +10,7 @@ export { Default } from './AvatarDefault.stories';
 export { Tone } from './AvatarTone.stories';
 export { Size } from './AvatarSize.stories';
 export { Initials } from './AvatarInitials.stories';
+export { Photo } from './AvatarPhoto.stories';
 
 export default {
   title: 'Components/Avatar',

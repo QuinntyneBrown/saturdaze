@@ -107,6 +107,28 @@ function rethrowAsAuthError(err: unknown): never {
 }
 
 /**
+ * Profile-photo rejections (400 with `errors.file`) surface the server's
+ * message under `invalid_photo`; anything else maps like other auth calls.
+ *
+ * @param {unknown} err - The err
+ *
+ * @returns {never} The result of the operation
+ */
+function rethrowPhotoError(err: unknown): never {
+  if (
+    err instanceof HttpErrorResponse &&
+    err.status === 400 &&
+    err.error &&
+    typeof err.error === 'object'
+  ) {
+    const errors = (err.error as { errors?: Record<string, string[]> }).errors ?? {};
+    const message = Object.entries(errors).find(([k]) => k.toLowerCase() === 'file')?.[1]?.[0];
+    if (message) throw { code: 'invalid_photo', message } satisfies AuthError;
+  }
+  rethrowAsAuthError(err);
+}
+
+/**
  * Refresh failures collapse onto a single `token_expired` code: the backend
  * distinguishes invalid, revoked and expired refresh tokens, but the client
  * response is the same for all three: the session is over, sign in again.
@@ -148,7 +170,7 @@ export class AuthService implements IAuthService {
       const dto = await firstValueFrom(
         this.http.post<AuthSuccessDto>(`${this.baseUrl}/api/auth/register`, req),
       );
-      return { token: mapToken(dto.token), user: dto.user };
+      return { token: mapToken(dto.token), user: this.toUser(dto.user) };
     } catch (e) {
       rethrowAsAuthError(e);
     }
@@ -166,7 +188,7 @@ export class AuthService implements IAuthService {
       const dto = await firstValueFrom(
         this.http.post<AuthSuccessDto>(`${this.baseUrl}/api/auth/login`, req),
       );
-      return { token: mapToken(dto.token), user: dto.user };
+      return { token: mapToken(dto.token), user: this.toUser(dto.user) };
     } catch (e) {
       rethrowAsAuthError(e);
     }
@@ -184,7 +206,7 @@ export class AuthService implements IAuthService {
       const dto = await firstValueFrom(
         this.http.post<AuthSuccessDto>(`${this.baseUrl}/api/auth/refresh`, req),
       );
-      return { token: mapToken(dto.token), user: dto.user };
+      return { token: mapToken(dto.token), user: this.toUser(dto.user) };
     } catch (e) {
       rethrowRefreshError(e);
     }
@@ -278,9 +300,49 @@ export class AuthService implements IAuthService {
    */
   async me(): Promise<User> {
     try {
-      return await firstValueFrom(this.http.get<User>(`${this.baseUrl}/api/auth/me`));
+      return this.toUser(await firstValueFrom(this.http.get<User>(`${this.baseUrl}/api/auth/me`)));
     } catch (e) {
       rethrowAsAuthError(e);
     }
+  }
+
+  /**
+   * Upload Avatar: sets or replaces the profile photo (L2-087).
+   *
+   * @param {Blob} file - The image file
+   *
+   * @returns {Promise<User>} The updated user
+   */
+  async uploadAvatar(file: Blob): Promise<User> {
+    const body = new FormData();
+    body.append('file', file);
+    try {
+      return this.toUser(
+        await firstValueFrom(this.http.put<User>(`${this.baseUrl}/api/auth/me/avatar`, body)),
+      );
+    } catch (e) {
+      rethrowPhotoError(e);
+    }
+  }
+
+  /**
+   * Remove Avatar: clears the profile photo (L2-087).
+   *
+   * @returns {Promise<User>} The updated user
+   */
+  async removeAvatar(): Promise<User> {
+    try {
+      return this.toUser(
+        await firstValueFrom(this.http.delete<User>(`${this.baseUrl}/api/auth/me/avatar`)),
+      );
+    } catch (e) {
+      rethrowAsAuthError(e);
+    }
+  }
+
+  /** The API returns `avatarUrl` relative to itself; `<img>` needs it absolute. */
+  private toUser(dto: User): User {
+    const avatarUrl = dto.avatarUrl ? `${this.baseUrl}${dto.avatarUrl}` : null;
+    return { ...dto, avatarUrl };
   }
 }

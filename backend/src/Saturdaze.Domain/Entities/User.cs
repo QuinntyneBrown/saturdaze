@@ -13,4 +13,10 @@ public class User
     public DateTimeOffset? EmailVerifiedUtc { get; set; }
     public DateTimeOffset CreatedAtUtc { get; set; }
     public DateTimeOffset UpdatedAtUtc { get; set; }
+
+    /// <summary>
+    /// Capability token of the current profile photo (<see cref="UserAvatar"/>);
+    /// rotated on every upload, null when no photo is set (L2-087).
+    /// </summary>
+    public Guid? AvatarToken { get; set; }
 }

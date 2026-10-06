@@ -1,0 +1,81 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — Manage profile photo
+
+class FamilyPage {
+  #changePhoto(): Promise<void>
+}
+class ProfilePhotoDialog {
+  #pick(event: Event): void
+  #save(): void
+  #remove(): void
+  #cancel(): void
+}
+class Avatar <<sd-avatar>> {
+  +name: string
+  +src: string | null
+}
+class SessionStore {
+  +user: Signal<User | null>
+  +uploadAvatar(file: Blob): Promise<void>
+  +removeAvatar(): Promise<void>
+}
+class AuthService {
+  +uploadAvatar(file: Blob): Promise<User>
+  +removeAvatar(): Promise<User>
+}
+class User <<model>> {
+  +avatarUrl: string | null
+}
+class AuthController {
+  +SetAvatar(file: IFormFile): Task<UserDto>
+  +RemoveAvatar(): Task<UserDto>
+}
+class AvatarsController {
+  +Get(token: Guid): Task<IActionResult>
+}
+class SetAvatarCommandHandler
+class RemoveAvatarCommandHandler
+class GetAvatarQueryHandler
+class AvatarImage <<static>> {
+  +MaxBytes: int
+  +DetectContentType(data: byte[]): string?
+}
+class "User (entity)" as UserEntity {
+  +Guid? AvatarToken
+}
+class UserAvatar {
+  +Guid UserId
+  +string ContentType
+  +byte[] Data
+  +DateTimeOffset UpdatedAtUtc
+}
+class UserDto <<record>> {
+  +string? AvatarUrl
+  +From(user: User): UserDto
+}
+FamilyPage ..> ProfilePhotoDialog : opens
+FamilyPage --> SessionStore
+FamilyPage ..> Avatar
+SessionStore --> AuthService
+SessionStore --> User
+AuthService ..> AuthController : HTTPS
+Avatar ..> AvatarsController : <img src>
+AuthController ..> SetAvatarCommandHandler
+AuthController ..> RemoveAvatarCommandHandler
+AvatarsController ..> GetAvatarQueryHandler
+SetAvatarCommandHandler ..> AvatarImage
+SetAvatarCommandHandler --> UserAvatar : upserts
+SetAvatarCommandHandler --> UserEntity : rotates AvatarToken
+UserEntity "1" o-- "0..1" UserAvatar
+UserDto ..> UserEntity : maps
+@enduml

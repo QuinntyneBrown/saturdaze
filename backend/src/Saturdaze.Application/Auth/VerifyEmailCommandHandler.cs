@@ -41,6 +41,6 @@ public class VerifyEmailCommandHandler : IRequestHandler<VerifyEmailCommand, Use
         user.UpdatedAtUtc = now;
         await _db.SaveChangesAsync(ct);
 
-        return new UserDto(user.Id, user.Email, user.Role, user.EmailVerifiedUtc);
+        return UserDto.From(user);
     }
 }

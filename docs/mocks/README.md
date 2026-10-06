@@ -33,7 +33,7 @@ screenshots/          committed <slug>.<viewport>.png captures (390 / 820 / 1440
 | Review submissions (admin) | `review-submissions.html`, `review-submissions.empty.html` |
 | Auth | `sign-in.html` (2 states), `create-account.html`, `reset-password.html` (5 states), `verify-email.html` (3 states) |
 | Public | `landing.html`, `legal.html` (Terms + Privacy) |
-| Dialogs gallery | `dialogs.html` (D1–D26 rendered inline) |
+| Dialogs gallery | `dialogs.html` (D1–D27 rendered inline) |
 
 ## Running the checks
 

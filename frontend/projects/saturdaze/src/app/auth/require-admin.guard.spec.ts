@@ -45,7 +45,7 @@ describe('requireAdmin', () => {
 
   it('bounces signed-in non-admins to /weekend', () => {
     isAuthenticated.set(true);
-    user.set({ id: 'u1', email: 'a@b.c', role: 'User', emailVerifiedUtc: null });
+    user.set({ id: 'u1', email: 'a@b.c', role: 'User', emailVerifiedUtc: null, avatarUrl: null });
     const result = run();
     expect(result instanceof UrlTree).toBe(true);
     expect(router.serializeUrl(result as UrlTree)).toBe('/weekend');
@@ -53,7 +53,13 @@ describe('requireAdmin', () => {
 
   it('lets admins through', () => {
     isAuthenticated.set(true);
-    user.set({ id: 'u1', email: 'admin@b.c', role: 'Admin', emailVerifiedUtc: null });
+    user.set({
+      id: 'u1',
+      email: 'admin@b.c',
+      role: 'Admin',
+      emailVerifiedUtc: null,
+      avatarUrl: null,
+    });
     expect(run()).toBe(true);
   });
 });

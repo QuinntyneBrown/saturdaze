@@ -115,6 +115,7 @@ const USER: User = {
   email: 'quinntynebrown@gmail.com',
   role: 'User',
   emailVerifiedUtc: '2026-03-02T10:00:00Z',
+  avatarUrl: null,
 };
 
 /** Flush every pending microtask (the app is zoneless, so whenStable cannot see mocked promises). */
@@ -426,7 +427,10 @@ describe('FamilyPage', () => {
     await mount();
     const navigate = vi.spyOn(TestBed.inject(Router), 'navigateByUrl').mockResolvedValue(true);
     dialog.open.mockReturnValueOnce({ closed: of('confirm') });
-    (section('Account').querySelector('sd-button button') as HTMLButtonElement).click();
+    const signOut = Array.from(section('Account').querySelectorAll('sd-button button')).find((b) =>
+      b.textContent?.includes('Sign out'),
+    ) as HTMLButtonElement;
+    signOut.click();
     await settle();
     expect(confirmData()).toMatchObject({
       title: 'Sign out?',
