@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 45 Slides</title>
+<link rel="stylesheet" href="../../assets/slides.css">
+</head>
+<body data-video-number="45" data-video-title="Coding sd-strength" data-parts="Introduction|Decorator|Inputs|Template|Styles|Spec|Pitfalls|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Saturdaze components · Video 45 of 52</div>
+  <h1>Coding <code>sd-strength</code></h1>
+  <p class="lead">A three-segment password meter from two signal inputs.</p>
+</section>
+
+<section id="where" data-part="0" data-cue="You will find it in two places in the app">
+  <h2>Where it lives</h2>
+  <pre class="code" data-lang="html" data-file="saturdaze/src/app/pages/create-account/create-account.page.html">&lt;sd-strength [level]="strength().level" [label]="strength().label" /&gt;</pre>
+  <div class="cols">
+    <div class="card"><h3>create-account</h3><p>Under the password field</p></div>
+    <div class="card"><h3>reset-password</h3><p>Same binding, same helper</p></div>
+  </div>
+</section>
+
+<section id="type" data-part="1" data-cue="Open strength dot T S in the components library.">
+  <h2>One exported type</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/strength/strength.ts">export type StrengthLevel = 'weak' | 'ok' | 'strong';</pre>
+  <pre class="code" data-lang="ts" data-file="saturdaze/src/app/shared/password-strength.ts">import { StrengthLevel } from 'components';
+
+export interface PasswordStrength {
+  readonly level: StrengthLevel | null;
+  readonly label: string;
+}</pre>
+</section>
+
+<section id="decorator" data-part="1" data-cue="The decorator is the standard shape for this library.">
+  <h2>The decorator</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/strength/strength.ts" data-mark="2,3,6,8">@Component({
+  selector: 'sd-strength',
+  standalone: true,
+  templateUrl: './strength.html',
+  styleUrl: './strength.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: 'strength',
+    'aria-live': 'polite',
+    /* … */
+  },
+})</pre>
+</section>
+
+<section id="host" data-part="1" data-cue="The interesting part is the host object.">
+  <h2>The host is the block and a live region</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/strength/strength.ts" data-mark="2,3">  host: {
+    class: 'strength',
+    'aria-live': 'polite',
+    '[class.strength--weak]': 'level() === "weak"',
+    '[class.strength--ok]': 'level() === "ok"',
+    '[class.strength--strong]': 'level() === "strong"',
+    '[attr.level]': 'level()',
+  },</pre>
+  <p class="muted"><b>B E M parity</b> with the mocks (ADR-009) · <code>aria-live="polite"</code> announces label changes</p>
+</section>
+
+<section id="modifiers" data-part="1" data-cue="Then come three class bindings, one modifier per level.">
+  <h2>Host bindings read the signal</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/strength/strength.ts" data-mark="1-3,4">    '[class.strength--weak]': 'level() === "weak"',
+    '[class.strength--ok]': 'level() === "ok"',
+    '[class.strength--strong]': 'level() === "strong"',
+    '[attr.level]': 'level()',</pre>
+  <ul>
+    <li>One modifier class per level</li>
+    <li><code>[attr.level]</code> mirrors the value; <code>null</code> removes the attribute</li>
+  </ul>
+</section>
+
+<section id="inputs" data-part="2" data-cue="The class body is just two lines.">
+  <h2>Two signal inputs</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/strength/strength.ts" data-mark="2,3">export class Strength {
+  readonly level = input&lt;StrengthLevel | null&gt;(null);
+  readonly label = input&lt;string&gt;('');
+}</pre>
+  <ul>
+    <li><code>null</code> default: an empty password shows no colour</li>
+    <li>Signal inputs + OnPush: re-render only when an input changes</li>
+  </ul>
+</section>
+
+<section id="not-here" data-part="2" data-cue="Notice what is not here.">
+  <h2>What it doesn't need</h2>
+  <div class="cols">
+    <div class="card bad"><h3>Not here</h3><p><code>@Input()</code>, setters, <code>ngOnChanges</code>, <code>computed()</code>, <code>output()</code></p></div>
+    <div class="card good"><h3 style="color:var(--forest)">Instead</h3><p>Host bindings call <code>level()</code>; the page computes the level</p></div>
+  </div>
+  <pre class="code" data-lang="ts" data-file="saturdaze/src/app/pages/create-account/create-account.page.ts">  protected readonly strength = computed(() =&gt; passwordStrength(this.password()));</pre>
+</section>
+
+<section id="template" data-part="3" data-cue="The template has two parts.">
+  <h2>The template</h2>
+  <pre class="code" data-lang="html" data-file="components/src/lib/strength/strength.html" data-mark="1,5">&lt;div class="strength__bar" aria-hidden="true"&gt;
+  &lt;span class="strength__seg"&gt;&lt;/span&gt;&lt;span class="strength__seg"&gt;&lt;/span
+  &gt;&lt;span class="strength__seg"&gt;&lt;/span&gt;
+&lt;/div&gt;
+@if (label()) {
+  &lt;span class="strength__label"&gt;{{ label() }}&lt;/span&gt;
+}</pre>
+  <p class="muted">Segments are decoration (<code>aria-hidden</code>); the label carries the meaning.</p>
+</section>
+
+<section id="styles-base" data-part="4" data-cue="Open strength dot S C S S.">
+  <h2>The bar</h2>
+  <pre class="code tight" data-lang="scss" data-file="components/src/lib/strength/strength.scss">:host {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.strength__bar {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 4px;
+  height: 4px;
+}
+
+.strength__seg {
+  border-radius: var(--borderRadiusCircular);
+  background: var(--colorNeutralStroke2);
+}</pre>
+</section>
+
+<section id="styles-levels" data-part="4" data-cue="The level rules are where the design lives.">
+  <h2>One level → one, two or three segments</h2>
+  <pre class="code" data-lang="scss" data-file="components/src/lib/strength/strength.scss" data-mark="1,4,7">:host(.strength--weak) .strength__seg:nth-child(1) {
+  background: var(--colorStatusDangerBackground3);
+}
+:host(.strength--ok) .strength__seg:nth-child(-n + 2) {
+  background: var(--colorPaletteSunBackground3);
+}
+:host(.strength--strong) .strength__seg {
+  background: var(--colorStatusSuccessBackground3);
+}</pre>
+  <p class="muted">Tokens by role (ADR-013) · no hex · encapsulated styles</p>
+</section>
+
+<section id="spec-setup" data-part="5" data-cue="Open strength dot spec dot T S.">
+  <h2>Spec setup</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/strength/strength.spec.ts">  beforeEach(async () =&gt; {
+    await TestBed.configureTestingModule({ imports: [Strength] }).compileComponents();
+    fixture = TestBed.createComponent(Strength);
+    fixture.detectChanges();
+    host = fixture.nativeElement as HTMLElement;
+  });</pre>
+</section>
+
+<section id="spec-contract" data-part="5" data-cue="The first test,">
+  <h2>The contract and the defaults</h2>
+  <ul>
+    <li><b>creates a polite live meter with three hidden segments</b> — class, <code>aria-live</code>, <code>aria-hidden</code>, 3 segments</li>
+    <li><b>has no level and no label until told</b> — no attribute, base class only, no label</li>
+  </ul>
+</section>
+
+<section id="spec-level" data-part="5" data-cue="The third,">
+  <h2>mirrors the level to a host class and attribute</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/strength/strength.spec.ts" data-mark="2,3,9">    for (const level of ['weak', 'ok', 'strong']) {
+      fixture.componentRef.setInput('level', level);
+      fixture.detectChanges();
+      expect(host.classList.contains(`strength--${level}`)).toBe(true);
+      expect(host.getAttribute('level')).toBe(level);
+    }
+    expect(host.classList.contains('strength--weak')).toBe(false);
+
+    fixture.componentRef.setInput('level', null);
+    fixture.detectChanges();
+    expect(host.getAttribute('level')).toBeNull();</pre>
+  <p class="muted small">Plus <b>announces the label text</b>.</p>
+</section>
+
+<section id="pitfalls" data-part="6" data-cue="Don't put aria live on the label span">
+  <h2>Pitfalls</h2>
+  <ul>
+    <li>A live region must exist <b>before</b> its content changes — keep it on the host</li>
+    <li>Colour only through <code>level</code>, never page classes</li>
+    <li>Segments stay decoration: no focus, no roles</li>
+  </ul>
+</section>
+
+<section id="recap" data-part="7" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div>Two signal inputs + host bindings</div>
+    <div>Host = B E M block + polite live region</div>
+    <div>Modifiers + <code>nth-child</code> fill the segments</div>
+    <div>Status and palette roles, never hex</div>
+    <div>Spec: <code>setInput</code>, then check classes and attributes</div>
+  </div>
+</section>
+
+<section id="next" data-part="7" data-cue="Next, in video forty six">
+  <div class="kicker">Next · Video 46</div>
+  <h1>Coding <code>sd-text-input</code></h1>
+</section>
+
+<script src="../../assets/slides.js"></script>
+</body>
+</html>
