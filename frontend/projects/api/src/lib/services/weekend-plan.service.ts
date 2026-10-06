@@ -5,7 +5,7 @@ import { Observable, firstValueFrom } from 'rxjs';
 import { API_BASE_URL } from '../api/api-base-url';
 import { placementFor } from '../api/errand-placement';
 import { calendarFileName } from '../api/weekend-dates';
-import { projectWeekend } from '../api/weekend-projection';
+import { projectWeekend, withApiOrigin } from '../api/weekend-projection';
 import { CalendarExport } from '../models/calendar-export';
 import { ErrandPlacement } from '../models/errand-placement';
 import { WeekendDay } from '../models/weekend-day';
@@ -333,6 +333,15 @@ export class WeekendPlanService implements IWeekendPlanService {
     );
   }
 
+  async uploadCover(file: Blob): Promise<void> {
+    const form = new FormData();
+    form.append('file', file);
+    await this.send(
+      'uploadCover',
+      this.http.post<WeekendDto>(`${this.baseUrl}/api/weekends/${this.targetId()}/cover`, form),
+    );
+  }
+
   /** The current weekend's id, loading it when nothing is cached yet. */
   private async currentId(): Promise<string> {
     if (!this._dto()) await this.loadCurrent();
@@ -357,7 +366,7 @@ export class WeekendPlanService implements IWeekendPlanService {
    * Apply.
    */
   private apply(dto: WeekendDto | null): void {
-    this._dto.set(dto ?? null);
+    this._dto.set(dto ? withApiOrigin(dto, this.baseUrl) : null);
     this._loaded.set(true);
   }
 

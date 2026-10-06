@@ -152,6 +152,16 @@ export interface IWeekendPlanService {
    */
   setCover(selection: CoverSelection): Promise<void>;
   /**
+   * Upload Cover — `POST /api/weekends/{id}/cover` with the family's own
+   * photo (L2-097); the weekend view updates in place. Rejects with the
+   * server's `HttpErrorResponse` (400 `unsupported_image`, 413).
+   *
+   * @param {Blob} file - A JPEG, PNG or WebP up to 10 MB
+   *
+   * @returns {Promise<void>} The result of the operation
+   */
+  uploadCover(file: Blob): Promise<void>;
+  /**
    * Remix Saved — `POST /api/weekends/{id}/remix`; the result becomes the
    * current weekend.
    *

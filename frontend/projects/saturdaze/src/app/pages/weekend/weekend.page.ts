@@ -344,7 +344,10 @@ export class WeekendPage {
     }
   }
 
-  /** "Change photo" → D28; the chosen stop's photo becomes the cover (L2-096 AC2). */
+  /**
+   * "Change photo" → D28; the chosen stop's photo becomes the cover (L2-096
+   * AC2). A family photo is uploaded by the dialog itself (L2-097).
+   */
   protected async changeCover(): Promise<void> {
     const view = this.weekend();
     const ref = this.dialog.open<CoverPhotoDialogResult, CoverPhotoDialogData>(CoverPhotoDialog, {
@@ -352,7 +355,7 @@ export class WeekendPage {
       data: { choices: view.coverChoices, currentPlaceId: view.cover?.placeId ?? null },
     });
     const selection = await firstValueFrom(ref.closed);
-    if (!selection) return;
+    if (!selection || selection.source === 'uploaded') return;
     await this.run(() => this.weekendService.setCover(selection));
   }
 

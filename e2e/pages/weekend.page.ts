@@ -247,6 +247,28 @@ export class WeekendPage extends BasePage {
     return this.dialog().getByRole("radio");
   }
 
+  /** D28: the "Your own photo" tile's file input (L2-097). */
+  ownPhotoInput(): Locator {
+    return this.dialog().getByLabel("Upload your own photo", { exact: true });
+  }
+
+  /** Choose a family photo from disk, or an in-memory file, in D28. */
+  async chooseOwnPhoto(file: string | { name: string; mimeType: string; buffer: Buffer }): Promise<void> {
+    await this.ownPhotoInput().setInputFiles(file);
+  }
+
+  /** D28's error banner: a client-side check or the server's refusal. */
+  coverPhotoError(): Locator {
+    return this.dialog().getByRole("alert");
+  }
+
+  /** True once the cover photo has been fetched and decoded. */
+  async coverImageLoaded(): Promise<boolean> {
+    return this.coverImage().evaluate(
+      (img) => (img as HTMLImageElement).complete && (img as HTMLImageElement).naturalWidth > 0,
+    );
+  }
+
     /* ---------- Day tabs (L2-092, L2-093) ---------- */
 
   dayTab(name: DayName): Locator {

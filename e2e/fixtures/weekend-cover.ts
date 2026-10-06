@@ -28,10 +28,15 @@ export interface CoverStub {
   readonly stops: string[];
   /** The body of the last `PUT …/cover`. */
   lastPut: unknown;
+  /** How many `POST …/cover` uploads reached the API (L2-097). */
+  uploads: number;
 }
 
+/** A small JPEG standing in for a family photo (L2-097). */
+export const FAMILY_PHOTO = join(__dirname, "assets/family-photo.jpg");
+
 export async function stubWeekendCover(page: Page, opts: { cover?: boolean } = {}): Promise<CoverStub> {
-  const stub: CoverStub = { stops: [], lastPut: null };
+  const stub: CoverStub = { stops: [], lastPut: null, uploads: 0 };
   let current: Weekend | null = null;
 
   await page.route(`${COVER_HOST}/**`, (route) =>
@@ -50,6 +55,11 @@ export async function stubWeekendCover(page: Page, opts: { cover?: boolean } = {
     await route.fulfill({ response, json: weekend });
   });
   await page.route(/\/api\/weekends\/[^/]+\/cover$/, async (route) => {
+    // Uploads go to the real API, which cleans, stores and signs the photo.
+    if (route.request().method() === "POST") {
+      stub.uploads++;
+      return route.fallback();
+    }
     const body = route.request().postDataJSON() as { source: string; placeId?: string };
     stub.lastPut = body;
     const chosen = current!.blocks.find((b) => b.refId === body.placeId && b.photo);

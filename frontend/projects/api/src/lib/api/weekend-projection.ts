@@ -65,6 +65,16 @@ export function projectWeekend(dto: WeekendDto | null, status?: WeekendStatus): 
   };
 }
 
+/**
+ * A family upload's signed URL is relative to the API (`/api/photos/…`,
+ * L2-097); the app may be served from another origin, so anchor it there.
+ */
+export function withApiOrigin(dto: WeekendDto, baseUrl: string): WeekendDto {
+  const url = dto.cover?.url;
+  if (!url?.startsWith('/')) return dto;
+  return { ...dto, cover: { ...dto.cover!, url: `${baseUrl}${url}` } };
+}
+
 /** The cover with its label as the credit (L2-096). */
 function coverView(dto: WeekendDto): CoverView | null {
   const c = dto.cover;
