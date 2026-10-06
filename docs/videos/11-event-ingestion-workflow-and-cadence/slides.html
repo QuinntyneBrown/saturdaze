@@ -1,0 +1,374 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 11 Slides</title>
+<link rel="stylesheet" href="../assets/slides.css">
+</head>
+<body data-video-number="11" data-video-title="Event ingestion: the suggested workflow and cadence" data-parts="Introduction|Questions|The window|Why Friday|Cadence|Wiring|Weekly workflow|Audit rows|Recovery|Pitfalls|Recap">
+
+<section id="title" class="center" data-part="0">
+  <div class="kicker">Saturdaze AI series · Video 11</div>
+  <h1>Event ingestion:<br>the suggested workflow and cadence</h1>
+  <p class="lead">How often to run it, when, and what to do around each run</p>
+</section>
+
+<section id="scope" data-part="0" data-cue="You will get a recommended weekly rhythm">
+  <h2>What this video adds</h2>
+  <div class="cols shrink three">
+    <div class="card">
+      <h3>Weekly rhythm</h3>
+      <p>For the <code>LocalEvents</code> catalog.</p>
+    </div>
+    <div class="card">
+      <h3>Slower rhythm</h3>
+      <p>For <code>Activities</code> and <code>Restaurants</code>.</p>
+    </div>
+    <div class="card">
+      <h3>Morning-after checklist</h3>
+      <p>Read the audit rows; recover a failed pass.</p>
+    </div>
+  </div>
+  <p class="small muted">Grounded in the code as of October 2026. Recommendations are labelled <span class="tag">suggested</span>; repository defaults are labelled <span class="tag sky">default</span>.</p>
+</section>
+
+<section id="questions" data-part="1" data-cue="By the end of this video you should be able to answer four questions">
+  <h2>What you will be able to answer</h2>
+  <div class="question">Why Friday morning, and why is once a week enough for events?</div>
+  <div class="question">What does one week of the ingestion workflow look like?</div>
+  <div class="question">Why do events, activities and restaurants need different cadences?</div>
+  <div class="question">What do you check after a pass, and how do you recover a failed one?</div>
+</section>
+
+<section id="saturday" data-part="2" data-cue="Start with the window, because the cadence falls out of it">
+  <h2>The anchor: the upcoming Saturday</h2>
+  <pre class="code tight" data-lang="cs" data-file="backend/src/Saturdaze.Application/Weekends/GetCurrentWeekendQueryHandler.cs" data-mark="6-8">
+/// &lt;summary&gt;Saturday itself, the Saturday of a Sunday, or the next Saturday on a weekday.&lt;/summary&gt;
+public static DateOnly ResolveUpcomingSaturday(DateOnly today)
+{
+    return today.DayOfWeek switch
+    {
+        DayOfWeek.Saturday =&gt; today,
+        DayOfWeek.Sunday =&gt; today.AddDays(-1),
+        _ =&gt; today.AddDays((int)DayOfWeek.Saturday - (int)today.DayOfWeek)
+    };
+}
+</pre>
+  <p class="small muted"><code>IngestionRunner.RunAsync</code> puts this date into <code>IngestionContext.ThisWeekend</code>.</p>
+</section>
+
+<section id="two-weekends" data-part="2" data-cue="The events system prompt then asks Claude">
+  <h2>One pass researches two weekends</h2>
+  <pre class="code tight" data-lang="cs" data-file="backend/src/Saturdaze.Application/Ingestion/IngestionPrompts.cs" data-mark="2,6-7">
+var weekend = ctx.ThisWeekend.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
+var nextWeekend = ctx.ThisWeekend.AddDays(7).ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
+// …
+IngestionType.Events =&gt;
+    $"{preamble}\n\nFind time-bounded events (festivals, markets, theatre, seasonal openings, " +
+    $"community days) happening on or near the weekend of {weekend} and the following weekend " +
+    $"of {nextWeekend}. Avoid adults-only events and ticketed concerts over $50 per adult.\n\n" +
+</pre>
+</section>
+
+<section id="read-side" data-part="2" data-cue="Now look at the reading side">
+  <h2>What families see</h2>
+  <div class="cols shrink">
+    <div class="card">
+      <h3>This weekend</h3>
+      <p>Events overlapping <strong>Friday → Sunday</strong>.</p>
+    </div>
+    <div class="card">
+      <h3>Coming soon</h3>
+      <p>Events starting within <strong>14 days after Sunday</strong>.</p>
+    </div>
+  </div>
+  <p class="small"><code>GET /api/events</code> → <code>GetLocalEventsQueryHandler</code></p>
+</section>
+
+<section id="overlap" data-part="2" data-cue="Put those together and you get a rolling overlap">
+  <h2>The rolling overlap</h2>
+  <table class="grid">
+    <tr><th>Friday pass</th><th>Weekend A</th><th>Weekend B</th><th>Weekend C</th></tr>
+    <tr><td>Week 1</td><td><strong>this weekend</strong></td><td>weekend after</td><td class="muted">—</td></tr>
+    <tr><td>Week 2</td><td class="muted">—</td><td><strong>this weekend</strong></td><td>weekend after</td></tr>
+  </table>
+  <p>Every weekend is researched twice: <strong>seeded</strong> a week early, <strong>corrected</strong> on its own Friday.</p>
+  <p class="small muted">Weekly is enough. Daily mostly buys duplicated spend.</p>
+</section>
+
+<section id="cron" data-part="3" data-cue="The repository default is the cron expression">
+  <h2>The default: <code>0 0 8 * * 5</code> <span class="tag sky">default</span></h2>
+  <table class="grid">
+    <tr><th>sec</th><th>min</th><th>hour</th><th>day of month</th><th>month</th><th>day of week</th></tr>
+    <tr><td>0</td><td>0</td><td>8</td><td>*</td><td>*</td><td>5 = Friday</td></tr>
+  </table>
+  <div class="cols shrink">
+    <div class="card">
+      <h3>Worker</h3>
+      <p class="small"><code>Saturdaze:Ingestion:Schedule:Cron</code>, evaluated in UTC</p>
+    </div>
+    <div class="card">
+      <h3>WebJob</h3>
+      <p class="small"><code>backend/deploy/webjobs/ingest/settings.job</code>, NCRONTAB in UTC</p>
+    </div>
+  </div>
+</section>
+
+<section id="local-time" data-part="3" data-cue="Eight in the morning UTC is four in the morning in Toronto">
+  <h2>Before anyone is awake</h2>
+  <div class="flow">
+    <div class="node accent">Fri 08:00 UTC<small>04:00 Toronto (EDT) · 03:00 (EST)</small></div>
+    <div class="arrow">→</div>
+    <div class="node">Pass completes<small>events, then activities, then restaurants</small></div>
+    <div class="arrow">→</div>
+    <div class="node accent">Friday evening<small>families plan the weekend</small></div>
+  </div>
+  <p class="quote small">"The default cron fires Fridays at 08:00 UTC — the morning before the Friday-6pm weekend plan."</p>
+  <p class="small muted"><code>backend/src/Saturdaze.Worker/IngestionScheduleOptions.cs</code></p>
+</section>
+
+<section id="why-not" data-part="3" data-cue="Why not Saturday morning?">
+  <h2>Why not another day?</h2>
+  <div class="cols shrink three">
+    <div class="card bad">
+      <h3>Monday</h3>
+      <p>Community calendars and markets publish weekend details late in the week.</p>
+    </div>
+    <div class="card good">
+      <h3>Friday morning</h3>
+      <p>The latest point still ahead of the planning window.</p>
+    </div>
+    <div class="card bad">
+      <h3>Saturday</h3>
+      <p>Families have already planned.</p>
+    </div>
+  </div>
+</section>
+
+<section id="default-all" data-part="4" data-cue="Here is my recommendation">
+  <h2>Out of the box: everything, every Friday</h2>
+  <div class="cols shrink">
+    <div class="card">
+      <h3>Worker <span class="tag sky">default</span></h3>
+      <p><code>"Types": "all"</code></p>
+      <p class="small"><code>backend/src/Saturdaze.Worker/appsettings.json</code></p>
+    </div>
+    <div class="card">
+      <h3>WebJob <span class="tag sky">default</span></h3>
+      <p><code>exec saturdaze ingest --type all</code></p>
+      <p class="small"><code>backend/deploy/webjobs/ingest/run.sh</code></p>
+    </div>
+  </div>
+  <p class="small muted">Safe, but the three catalogs age at very different speeds.</p>
+</section>
+
+<section id="cadence" data-part="4" data-cue="Events are time bound">
+  <h2>Suggested cadence by catalog <span class="tag">suggested</span></h2>
+  <table class="grid">
+    <tr><th>Catalog</th><th>Ages</th><th>Cadence</th><th>Cron (UTC)</th></tr>
+    <tr><td><code>events</code></td><td>Weekly: time-bound</td><td><strong>Weekly</strong>, Friday 08:00</td><td><code>0 0 8 * * 5</code></td></tr>
+    <tr><td><code>activities</code></td><td>Seasonally: "not date-bound"</td><td><strong>Monthly</strong> + each new season</td><td><code>0 0 8 1 * *</code></td></tr>
+    <tr><td><code>restaurants</code></td><td>Slowly</td><td><strong>Quarterly</strong>, or on a reported closure</td><td><code>0 0 8 1 */3 *</code></td></tr>
+  </table>
+  <p class="small muted">Monthly and quarterly crons are examples for an external scheduler; adjust to your platform's syntax.</p>
+</section>
+
+<section id="top-up" data-part="4" data-cue="An optional extra">
+  <h2>Optional: a midweek events top-up</h2>
+  <div class="card">
+    <h3>Tuesday 08:00 UTC · <code>0 0 8 * * 2</code> · events only</h3>
+    <p>Add it when Friday passes keep coming back thin.</p>
+    <p class="small muted">Add it because the audit rows show a gap, not by default.</p>
+  </div>
+</section>
+
+<section id="cost" data-part="4" data-cue="Why bother splitting? Cost.">
+  <h2>Why split: cost</h2>
+  <p class="quote">"Web search inflates input tokens; one events pass used about 129K input tokens."</p>
+  <p class="small muted"><code>docs/adr/ADR-011-claude-via-microsoft-foundry.md</code></p>
+  <p>Activities and restaurants run similar searches. Refreshing them weekly roughly triples the bill for rows that barely change.</p>
+</section>
+
+<section id="wiring" data-part="5" data-cue="One Worker instance has exactly one">
+  <h2>One Worker = one <code>Cron</code> + one <code>Types</code></h2>
+  <div class="cols shrink">
+    <div class="card">
+      <h3>Long-lived Worker · events</h3>
+      <pre class="code tight" data-lang="json">
+"Schedule": {
+  "Enabled": true,
+  "Cron": "0 0 8 * * 5",
+  "Types": "events"
+}
+</pre>
+    </div>
+    <div class="card">
+      <h3>One-shot job · slow catalogs</h3>
+      <pre class="code tight" data-lang="json">
+"Schedule": {
+  "RunOnceThenExit": true,
+  "Types": "activities,restaurants"
+}
+</pre>
+      <p class="small">or env vars <code>Saturdaze__Ingestion__Schedule__…</code></p>
+      <p class="small muted">Triggered monthly by Azure Container Apps Jobs or a Kubernetes CronJob.</p>
+    </div>
+  </div>
+</section>
+
+<section id="webjob" data-part="5" data-cue="If you use the App Service WebJob instead">
+  <h2>WebJob and singletons</h2>
+  <ul>
+    <li><code>run.sh</code> hard-codes <code>--type all</code>: events-only needs a second WebJob folder or a script change.</li>
+    <li>One scheduler per catalog. There is <strong>no distributed lease</strong> across replicas.</li>
+    <li>The WebJob's <code>"is_singleton": true</code> and a single Worker replica keep passes from overlapping.</li>
+  </ul>
+</section>
+
+<section id="week" data-part="6" data-cue="Here is one week, step by step">
+  <h2>The weekly workflow</h2>
+  <ol class="steps small">
+    <li><div><strong>Earlier in the week, only after a prompt or setting change:</strong> <code>saturdaze ingest --type events --dry-run</code></div></li>
+    <li><div><strong>Friday 08:00 UTC:</strong> the scheduled pass runs</div></li>
+    <li><div><strong>Friday morning:</strong> read the newest <code>IngestionRuns</code> rows</div></li>
+    <li><div><strong>Before Friday evening:</strong> clear the moderation queue at <code>/review-submissions</code></div></li>
+    <li><div><strong>Only if step 3 found a problem:</strong> fix the cause, rerun by hand</div></li>
+  </ol>
+</section>
+
+<section id="dry-run" data-part="6" data-cue="It calls the model and parses the answer but writes nothing">
+  <h2>Dry run: deliberate, not a habit</h2>
+  <div class="cols shrink">
+    <div class="card good">
+      <h3>Does</h3>
+      <ul>
+        <li>Calls Claude with the real prompts</li>
+        <li>Parses and counts valid / rejected rows</li>
+      </ul>
+    </div>
+    <div class="card bad">
+      <h3>Does not</h3>
+      <ul>
+        <li>Write catalog rows or audit rows</li>
+        <li>Count against the daily budget</li>
+        <li>Cost nothing: it still spends tokens</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="pass" data-part="6" data-cue="Step two, Friday at eight UTC">
+  <h2>Friday: the scheduled pass</h2>
+  <div class="flow">
+    <div class="node">Open <em>Running</em> row<small>IngestionRuns</small></div>
+    <div class="arrow">→</div>
+    <div class="node accent">Claude + web search</div>
+    <div class="arrow">→</div>
+    <div class="node accent">Parse · upsert</div>
+    <div class="arrow">→</div>
+    <div class="node">Close row<small>status, counts, tokens, searches</small></div>
+  </div>
+</section>
+
+<section id="query" data-part="6" data-cue="Step three, Friday morning">
+  <h2>The Friday-morning query</h2>
+  <pre class="code" data-lang="sql">
+SELECT TOP 6 Type, Status, StartedUtc, FinishedUtc,
+       ItemsConsidered, ItemsUpserted, ItemsRejected,
+       InputTokens, WebSearchCount, ErrorMessage
+FROM IngestionRuns
+ORDER BY StartedUtc DESC;
+-- Type:   0 Events · 1 Activities · 2 Restaurants
+-- Status: 0 Running · 1 Succeeded · 2 PartialSuccess · 3 Failed
+</pre>
+</section>
+
+<section id="moderation" data-part="6" data-cue="Step four, before Friday evening">
+  <h2>Two sources, one catalog</h2>
+  <div class="cols shrink">
+    <div class="card">
+      <h3>Ingested</h3>
+      <p><code>CatalogUpserter</code> writes <code>LocalEvent</code> rows on Friday morning.</p>
+    </div>
+    <div class="card">
+      <h3>Community submissions</h3>
+      <p>Approval at <code>/review-submissions</code> creates a <code>LocalEvent</code>.</p>
+      <p class="small muted">Already ingested? Approval returns 409 <code>event_already_published</code>.</p>
+    </div>
+  </div>
+</section>
+
+<section id="audit" data-part="7" data-cue="Every non dry pass leaves one row per catalog">
+  <h2>Reading the audit row</h2>
+  <table class="grid">
+    <tr><th>Pattern</th><th>Meaning</th><th>Action</th></tr>
+    <tr><td>Succeeded, steady items upserted</td><td>Healthy week</td><td>None</td></tr>
+    <tr><td>PartialSuccess</td><td>Parser rejected some rows</td><td>A few is normal; a spike means prompt/schema drift</td></tr>
+    <tr><td>Succeeded, <strong>0 items</strong></td><td>Quiet failure: empty or unparseable output</td><td>Treat as an alert</td></tr>
+    <tr><td>Failed</td><td>See <code>ErrorMessage</code></td><td>"Daily run budget … reached" = trigger firing too often</td></tr>
+    <tr><td>Stuck in Running</td><td>Process cancelled mid-pass</td><td>Never closes on its own</td></tr>
+  </table>
+</section>
+
+
+<section id="rerun-safe" data-part="8" data-cue="The good news is that rerunning is safe">
+  <h2>Reruns are safe</h2>
+  <div class="flow">
+    <div class="node">Incoming event</div>
+    <div class="arrow">→</div>
+    <div class="node accent">Natural key<small>name + start date + location, case-insensitive</small></div>
+    <div class="arrow">→</div>
+    <div class="node">Update in place<small>or insert if new</small></div>
+  </div>
+  <p class="small muted"><code>backend/src/Saturdaze.Application/Ingestion/CatalogUpserter.cs</code></p>
+</section>
+
+<section id="recover" data-part="8" data-cue="So the recovery is short">
+  <h2>Recovering a failed pass</h2>
+  <ol class="steps small">
+    <li><div>Read <code>ErrorMessage</code> on the Failed row.</div></li>
+    <li><div><strong>Transient</strong> (timeout, 429, 5xx): the client already retried once after 30 s. Wait, then <code>saturdaze ingest --type events</code>.</div></li>
+    <li><div><strong>Configuration</strong> (missing key, endpoint): fix it first, then rerun.</div></li>
+    <li><div><code>MaxRunsPerDayPerType</code> defaults to <strong>48</strong>; a few manual reruns never hit it.</div></li>
+  </ol>
+</section>
+
+<section id="exit-code" data-part="8" data-cue="One more trap with the one shot job">
+  <h2>Trust the audit rows, not the green tick</h2>
+  <div class="card bad">
+    <h3>Run-once exits cleanly even when a catalog fails</h3>
+    <p>No non-zero exit code, so the external scheduler reports success.</p>
+  </div>
+</section>
+
+<section id="pitfalls" data-part="9" data-cue="The natural key includes the start date">
+  <h2>Pitfalls</h2>
+  <ul>
+    <li><strong>Moved event = new row.</strong> The start date is part of the natural key.</li>
+    <li><strong>No pruning.</strong> Past events stay; the date filter hides them. Row count ≠ this weekend.</li>
+    <li><strong>Moving home.</strong> Old rows keep drive times measured from the old home.</li>
+    <li><strong>Dry run skips the database.</strong> Field-length problems surface only on a real pass.</li>
+  </ul>
+</section>
+
+<section id="recap" data-part="10" data-cue="One events pass researches two weekends, so every weekend">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div><strong>Twice-seen weekends.</strong> One pass covers two weekends, so weekly is enough.</div>
+    <div><strong>Friday 08:00 UTC.</strong> After organizers publish, before families plan.</div>
+    <div><strong>Split cadence.</strong> Events weekly · activities monthly + season change · restaurants quarterly.</div>
+    <div><strong>Read the audit rows.</strong> Zero items is an alert.</div>
+    <div><strong>Safe reruns.</strong> Natural key upserts; the daily budget guards the bill.</div>
+  </div>
+</section>
+
+<section id="close" class="center" data-part="10" data-cue="That is the operating rhythm">
+  <div class="kicker">Change it in configuration</div>
+  <h2>Watch the first two Fridays of audit rows</h2>
+  <p class="lead">Let the numbers decide whether you need the midweek top-up.</p>
+</section>
+
+<script src="../assets/slides.js"></script>
+</body>
+</html>
