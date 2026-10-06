@@ -1,0 +1,54 @@
+@startuml
+title UML sequence behaviour — Upload or replace a profile photo
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+actor "User" as actor
+box "Frontend — Saturdaze Angular application" #E0F2FE
+ participant "FamilyPage\nProfilePhotoDialog" as page
+ participant "SessionStore\nAuthService" as client
+ participant "TopBar\nAvatar" as avatar
+end box
+box "Backend — Saturdaze API" #D1FADF
+ participant "AuthController\nAvatarsController" as controller
+end box
+box "Backend — Saturdaze Application and Domain" #ECFDF3
+ participant "SetAvatarCommandHandler\nGetAvatarQueryHandler" as handler
+end box
+box "Backend — Saturdaze Infrastructure" #FFF4E5
+ database "AppDbContext\nSQL Server" as db
+end box
+actor -> page : Add photo / Change photo
+page -> page : Open ProfilePhotoDialog
+actor -> page : Pick a file
+alt not JPEG, PNG or WebP, or over 2 MB
+page --> actor : L2-087 inline error; Save stays disabled
+else acceptable
+page --> actor : Preview the picked photo
+actor -> page : Save
+page -> client : uploadAvatar(file)
+client -> controller : PUT /api/auth/me/avatar (multipart file, bearer)
+controller -> handler : SetAvatarCommand(bytes)
+alt empty, over 2 MB or unrecognised signature
+handler --> controller : ValidationException(file)
+controller --> client : 400 errors.file
+client --> page : Rejected
+page --> actor : Error banner; photo unchanged
+else valid image
+handler -> db : Upsert UserAvatar; Users.AvatarToken = new token
+db --> handler : Saved
+handler --> controller : UserDto(avatarUrl=/api/avatars/{token})
+controller --> client : 200 UserDto
+client -> client : user.set(user with absolute avatarUrl)
+client --> avatar : user().avatarUrl
+avatar -> controller : GET /api/avatars/{token} (anonymous)
+controller -> handler : GetAvatarQuery(token)
+handler -> db : Find avatar by token
+db --> handler : Bytes + content type
+controller --> avatar : 200 image, immutable cache
+avatar --> actor : Photo replaces the initial
+end
+end
+@enduml

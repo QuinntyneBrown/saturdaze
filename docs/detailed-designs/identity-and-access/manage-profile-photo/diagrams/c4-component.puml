@@ -1,0 +1,26 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — Manage profile photo
+
+Container_Boundary(web, "Saturdaze web application") {
+  Component(page, "FamilyPage / ProfilePhotoDialog", "Angular component", "Picks, previews and pre-validates the photo")
+  Component(shell, "App / TopBar / Avatar", "Angular component", "Renders the photo in place of the initial")
+  Component(store, "SessionStore / AuthService", "Angular service", "Sends the upload or removal and publishes the updated user")
+}
+Container_Boundary(api, "Saturdaze API") {
+  Component(auth, "AuthController", "ASP.NET Core", "PUT and DELETE /api/auth/me/avatar")
+  Component(avatars, "AvatarsController", "ASP.NET Core", "Anonymous GET /api/avatars/{token}")
+  Component(handlers, "SetAvatarCommandHandler / RemoveAvatarCommandHandler / GetAvatarQueryHandler", "Application handler", "Applies the content and size rules and rotates the token")
+  Component(sniffer, "AvatarImage", "Application service", "Identifies JPEG, PNG and WebP by signature")
+  ComponentDb(db, "AppDbContext", "EF Core", "Users.AvatarToken and UserAvatars")
+}
+Rel(page, store, "uploadAvatar(file) / removeAvatar()")
+Rel(store, shell, "user().avatarUrl", "Signal")
+Rel(store, auth, "PUT / DELETE /api/auth/me/avatar", "HTTPS")
+Rel(shell, avatars, "GET /api/avatars/{token}", "<img>")
+Rel(auth, handlers, "Dispatches command")
+Rel(avatars, handlers, "Dispatches query")
+Rel(handlers, sniffer, "Detects content type")
+Rel(handlers, db, "Reads and writes", "EF Core")
+@enduml
