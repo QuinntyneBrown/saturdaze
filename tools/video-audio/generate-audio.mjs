@@ -6,9 +6,13 @@
 //   node tools/video-audio/generate-audio.mjs docs/videos/01-x             synthesize the MP3
 //   node tools/video-audio/generate-audio.mjs --say "`_tokens.scss`"        pronunciation test (WAV)
 //
-// Engines (--engine azure|piper, default: azure when AZURE_SPEECH_KEY is set, else piper):
+// Engines (--engine azure|edge|piper; default: azure when AZURE_SPEECH_KEY is set, else edge
+// when the `edge-tts` Python package is importable, else piper):
 //   azure  Azure AI Speech REST, one SSML request per `##` section. Reads AZURE_SPEECH_KEY and
 //          AZURE_SPEECH_REGION (default eastus2) from the environment only.
+//   edge   The same Microsoft neural voices (Andrew / Ava) through the free Edge read-aloud
+//          service via `pip install edge-tts`, one request per paragraph. No key. Honours
+//          HTTPS_PROXY; behind a TLS-inspecting proxy set SSL_CERT_FILE to its CA bundle.
 //   piper  Offline neural TTS (`pip install piper-tts`), one request per paragraph. Needs
 //          PIPER_MODEL pointing at a voice .onnx (e.g. en_US-ryan-high.onnx); PIPER_MODEL_2
 //          optionally voices `**Name:**` paragraphs.
@@ -170,6 +174,34 @@ function piperSay(text, model, out) {
 
 const xml = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
+const PYTHON = process.env.PYTHON ?? 'python3';
+
+/** True when `python3 -c "import edge_tts"` succeeds. */
+function edgeAvailable() {
+  return spawnSync(PYTHON, ['-c', 'import edge_tts'], { stdio: 'ignore' }).status === 0;
+}
+
+/** One paragraph through edge-tts (retried: the service drops a stream now and then). */
+function edgeSay(text, voice, out, attempts = 4) {
+  const proxy = process.env.HTTPS_PROXY ?? process.env.https_proxy;
+  let last = '';
+  for (let i = 0; i < attempts; i++) {
+    rmSync(out, { force: true });
+    const r = spawnSync(PYTHON, ['-m', 'edge_tts', '--voice', voice, '--text', text, '--write-media', out, ...(proxy ? ['--proxy', proxy] : [])], {
+      encoding: 'utf8',
+    });
+    if (r.status === 0 && existsSync(out)) {
+      const wav = out.replace(/\.mp3$/, '.wav');
+      execFileSync(ffmpeg, ['-y', '-v', 'error', '-i', out, '-ar', '24000', '-ac', '1', '-c:a', 'pcm_s16le', wav]);
+      return wav;
+    }
+    last = (r.stderr || r.stdout || '').trim().split('\n').at(-1) ?? '';
+    const wait = 2 ** (i + 1);
+    spawnSync('sleep', [String(wait)]);
+  }
+  throw new Error(`edge-tts failed after ${attempts} attempts: ${last}`);
+}
+
 async function azureSay(ssml, out) {
   const key = process.env.AZURE_SPEECH_KEY;
   const region = process.env.AZURE_SPEECH_REGION ?? 'eastus2';
@@ -206,13 +238,15 @@ async function main() {
   const args = process.argv.slice(2);
   const flag = (name) => args.includes(name);
   const opt = (name) => (args.includes(name) ? args[args.indexOf(name) + 1] : undefined);
-  const engine = opt('--engine') ?? (process.env.AZURE_SPEECH_KEY ? 'azure' : 'piper');
+  const engine = opt('--engine') ?? (process.env.AZURE_SPEECH_KEY ? 'azure' : edgeAvailable() ? 'edge' : 'piper');
+  if (!['azure', 'edge', 'piper'].includes(engine)) throw new Error(`unknown engine "${engine}" (azure|edge|piper)`);
 
   if (flag('--say')) {
     const text = spoken(opt('--say'));
     console.log(`spoken: ${text}`);
     const out = resolve(opt('--out') ?? 'pronunciation-test.wav');
     if (engine === 'piper') execFileSync('cp', [piperSay(text, process.env.PIPER_MODEL, out), out]);
+    else if (engine === 'edge') edgeSay(text, AZURE_VOICE, out.replace(/\.wav$/, '.mp3')); // the 24 kHz WAV lands at `out`
     else execFileSync('cp', [await azureSay(`<speak version="1.0" xml:lang="en-US"><voice name="${AZURE_VOICE}">${xml(text)}</voice></speak>`, out.replace(/\.wav$/, '.mp3')), out]);
     console.log(`wrote ${out}`);
     return;
@@ -248,12 +282,14 @@ async function main() {
 
   if (engine === 'azure' && !process.env.AZURE_SPEECH_KEY) throw new Error('AZURE_SPEECH_KEY is not set');
   if (engine === 'piper' && !process.env.PIPER_MODEL) throw new Error('PIPER_MODEL is not set (path to a piper voice .onnx)');
+  if (engine === 'edge' && !edgeAvailable()) throw new Error('edge-tts is not installed (pip install edge-tts)');
+  console.log(`  engine: ${engine}`);
 
   const cache = join(repo, '.cache', name);
   rmSync(join(cache, 'audio'), { recursive: true, force: true });
   mkdirSync(join(cache, 'audio'), { recursive: true });
   const clips = [];
-  const manifest = { title: script.title, engine, voice: engine === 'azure' ? AZURE_VOICE : basename(process.env.PIPER_MODEL), sections: [] };
+  const manifest = { title: script.title, engine, voice: engine === 'piper' ? basename(process.env.PIPER_MODEL) : AZURE_VOICE, sections: [] };
   let t = 0;
   let k = 0;
   const gapFile = (sec) => {
@@ -286,8 +322,14 @@ async function main() {
           t += b.pause;
           continue;
         }
-        const model = b.speaker && process.env.PIPER_MODEL_2 ? process.env.PIPER_MODEL_2 : process.env.PIPER_MODEL;
-        const wav = piperSay(spoken(b.text), model, join(cache, 'audio', `p${String(k++).padStart(3, '0')}.wav`));
+        const clip = join(cache, 'audio', `p${String(k++).padStart(3, '0')}`);
+        let wav;
+        if (engine === 'edge') {
+          wav = edgeSay(spoken(b.text), b.speaker ? AZURE_VOICE_2 : AZURE_VOICE, `${clip}.mp3`);
+        } else {
+          const model = b.speaker && process.env.PIPER_MODEL_2 ? process.env.PIPER_MODEL_2 : process.env.PIPER_MODEL;
+          wav = piperSay(spoken(b.text), model, `${clip}.wav`);
+        }
         const d = probeDuration(wav);
         sec.blocks.push({ start: t, end: t + d, speaker: b.speaker, text: b.text, caption: caption(b.text) });
         clips.push(wav, gapFile(PARAGRAPH_GAP));

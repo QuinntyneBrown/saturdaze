@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 09 Slides</title>
+<link rel="stylesheet" href="../assets/slides.css">
+</head>
+<body data-video-number="09" data-video-title="Provision Claude in Microsoft Foundry on Azure" data-parts="Introduction|Outcomes|Before you start|Three objects|Bicep|Deploy script|Portal|Verify|Rotate and remove|Pitfalls|Recap">
+
+<section id="title" class="center" data-part="0">
+  <div class="kicker">Saturdaze AI series · Video 09 of 10</div>
+  <h1>Provision Claude in<br>Microsoft Foundry on Azure</h1>
+  <p class="lead">The account, the deployment and the key that sit on the other end of <code>POST v1/messages</code></p>
+</section>
+
+<section id="one-command" data-part="0" data-cue="Saturdaze scripts all of that so the setup is one command">
+  <h2>One command, three objects</h2>
+  <pre class="code" data-lang="sh">
+pwsh ./eng/Deploy-Foundry.ps1 -OrganizationName "&lt;legal organization name&gt;"
+</pre>
+  <div class="flow">
+    <div class="node accent">Foundry account<small>sd-ai-uofnt2 · eastus2</small></div>
+    <div class="arrow">→</div>
+    <div class="node accent">Claude deployment<small>claude-sonnet-5 · version 2</small></div>
+    <div class="arrow">→</div>
+    <div class="node accent">Key<small>.deploy/azure.env</small></div>
+  </div>
+  <p class="small muted">This video explains what the command creates, why each setting is there, and how to verify, rotate and tear down.</p>
+</section>
+
+<section id="outcomes" data-part="1" data-cue="By the end of this video you should be able to do five things">
+  <h2>What you will be able to do</h2>
+  <ol class="steps">
+    <li><div>Explain account, deployment and key, and how they map to the URL the client calls</div></li>
+    <li><div>Run <code>eng/Deploy-Foundry.ps1</code> knowing what each parameter means</div></li>
+    <li><div>Read <code>eng/foundry/claude.bicep</code>: region, model version, capacity, attestation, upgrade pin</div></li>
+    <li><div>Find the endpoint and key afterwards; rotate the key safely</div></li>
+    <li><div>Tear it all down without leaving quota held</div></li>
+  </ol>
+</section>
+
+<section id="prereqs" data-part="2" data-cue="You need four things">
+  <h2>Before you start</h2>
+  <div class="cols shrink">
+    <div class="card">
+      <h3>Azure subscription</h3>
+      <p class="small">Permission to create resources in a resource group. Saturdaze uses <code>saturdaze-rg</code>.</p>
+    </div>
+    <div class="card">
+      <h3>Azure CLI (<code>az</code>)</h3>
+      <p class="small"><code>az login</code>, then <code>az account set --subscription …</code></p>
+    </div>
+    <div class="card">
+      <h3>PowerShell 7 (<code>pwsh</code>)</h3>
+      <p class="small">The deployment script is PowerShell; runs on Windows, macOS and Linux.</p>
+    </div>
+    <div class="card">
+      <h3>A clone of the repo</h3>
+      <p class="small">Script and template live in <code>eng/</code>.</p>
+    </div>
+  </div>
+  <p class="small muted">No Anthropic account needed: on Foundry, Claude is billed through Azure.</p>
+</section>
+
+<section id="objects" data-part="3" data-cue="Think of the Azure side as three nested objects">
+  <h2>The three objects</h2>
+  <table class="grid">
+    <tr><th>Object</th><th>Azure type</th><th>Saturdaze value</th><th>Where the client uses it</th></tr>
+    <tr><td>Foundry account</td><td><code>Microsoft.CognitiveServices/accounts</code> kind <code>AIServices</code></td><td><code>sd-ai-uofnt2</code></td><td>Base URL: <code>https://sd-ai-uofnt2.services.ai.azure.com/anthropic/</code></td></tr>
+    <tr><td>Model deployment</td><td><code>…/accounts/deployments</code></td><td><code>claude-sonnet-5</code></td><td>The <code>model</code> field of every request</td></tr>
+    <tr><td>Key (key1 / key2)</td><td>Account keys</td><td>in <code>.deploy/azure.env</code></td><td><code>x-api-key</code> header</td></tr>
+  </table>
+</section>
+
+<section id="url" class="center" data-part="3" data-cue="Put the three together and you get the full endpoint">
+  <div class="kicker">The full request</div>
+  <pre class="code" data-lang="sh" data-mark="1,2,4">
+POST https://sd-ai-uofnt2.services.ai.azure.com/anthropic/v1/messages
+x-api-key: &lt;key1&gt;
+anthropic-version: 2023-06-01
+{ "model": "claude-sonnet-5", "max_tokens": 4096, "system": "...", "messages": [...], "tools": [...] }
+</pre>
+  <p class="lead">account subdomain + <code>/anthropic/</code> + <code>v1/messages</code> · key in the header · deployment name in the body</p>
+</section>
+
+<section id="bicep-params" data-part="4" data-cue="The parameters come first">
+  <h2>Bicep · parameters</h2>
+  <pre class="code tight" data-lang="json" data-file="eng/foundry/claude.bicep" data-mark="3,6,8">
+param accountName string = 'sd-ai-uofnt2'
+@description('Region that offers the chosen Claude model on Global Standard.')
+param location string = 'eastus2'
+param deploymentName string = 'claude-sonnet-5'
+param modelName string = 'claude-sonnet-5'
+@description('Model version 2 is the "Hosted on Azure" build; 1 runs on Anthropic infrastructure.')
+param modelVersion string = '2'
+@description('Thousands of tokens per minute. Capacity is free; tokens are billed per use.')
+param capacity int = 80
+</pre>
+  <p class="small muted">Claude is not offered in <code>canadacentral</code>; this is the one resource outside the group's region.</p>
+</section>
+
+<section id="bicep-attest" data-part="4" data-cue="Then come three attestation parameters">
+  <h2>Bicep · Marketplace attestation</h2>
+  <pre class="code tight" data-lang="json" data-mark="1,2,5,8">
+@description('Legal name of the organization using Claude.')
+param organizationName string
+@description('Two-letter ISO country code.')
+@minLength(2) @maxLength(2)
+param countryCode string
+@allowed(['technology', 'finance', 'healthcare', 'education', 'retail',
+          'manufacturing', 'government', 'media', 'other'])
+param industry string = 'technology'
+</pre>
+  <p>Claude on Foundry is a Marketplace offer. Sending these under <code>modelProviderData</code> accepts it for the subscription without a portal click. They must describe your real organization.</p>
+</section>
+
+<section id="bicep-account" data-part="4" data-cue="The account resource sets the kind to">
+  <h2>Bicep · the account</h2>
+  <pre class="code tight" data-lang="json" data-mark="4,8,10">
+resource account 'Microsoft.CognitiveServices/accounts@2025-10-01-preview' = {
+  name: accountName
+  location: location
+  kind: 'AIServices'
+  sku: { name: 'S0' }
+  properties: {
+    customSubDomainName: accountName
+    publicNetworkAccess: 'Enabled'
+    // Ingestion authenticates with the account key (x-api-key).
+    disableLocalAuth: false
+  }
+}
+</pre>
+  <p class="small muted"><code>disableLocalAuth: false</code> keeps key authentication on. Turn it off and every request is a 401.</p>
+</section>
+
+<section id="bicep-deployment" data-part="4" data-cue="The deployment resource names the SKU">
+  <h2>Bicep · the deployment</h2>
+  <pre class="code tight" data-lang="json" data-mark="4,7,11-12,14">
+resource claude 'Microsoft.CognitiveServices/accounts/deployments@2025-10-01-preview' = {
+  parent: account
+  name: deploymentName
+  sku: { name: 'GlobalStandard', capacity: capacity }
+  properties: {
+    model: { format: 'Anthropic', name: modelName, version: modelVersion }
+    #disable-next-line BCP037
+    modelProviderData: { organizationName: organizationName,
+                         countryCode: countryCode, industry: industry }
+    // Pin the Azure-hosted version; an automatic upgrade must not move the deployment.
+    versionUpgradeOption: 'NoAutoUpgrade'
+    raiPolicyName: 'Microsoft.DefaultV2'
+  }
+}
+output baseUrl string = 'https://${account.name}.services.ai.azure.com/anthropic/'
+</pre>
+</section>
+
+<section id="script" data-part="5" data-cue="Now open">
+  <h2>The deployment script</h2>
+  <pre class="code" data-lang="sh" data-file="eng/Deploy-Foundry.ps1">
+pwsh ./eng/Deploy-Foundry.ps1 -OrganizationName "&lt;legal organization name&gt;"
+#   -CountryCode CA  -Industry technology  -ResourceGroup saturdaze-rg
+#   -AccountName sd-ai-uofnt2  -Location eastus2  -Capacity 80  -NoKey
+</pre>
+  <ol class="steps">
+    <li><div><code>az deployment group create</code> with the Bicep file and parameters. A few minutes the first time; idempotent after that.</div></li>
+    <li><div>Prints the endpoint (<code>…/anthropic/</code>, trailing slash) and the deployment name from the outputs.</div></li>
+    <li><div>Reads key1 with <code>az cognitiveservices account keys list</code> and writes <code>ANTHROPIC_FOUNDRY_API_KEY=…</code> into the gitignored <code>.deploy/azure.env</code>. Never printed.</div></li>
+  </ol>
+</section>
+
+<section id="script-key" data-part="5" data-cue="Third, unless you pass">
+  <h2>Where the key lands</h2>
+  <pre class="code tight" data-lang="sh" data-mark="1-2,6-7">
+$key = az cognitiveservices account keys list -g $ResourceGroup -n $AccountName `
+    --query key1 -o tsv
+$envFile = Join-Path $repoRoot ".deploy\azure.env"
+$lines = @(if (Test-Path $envFile) { Get-Content $envFile |
+    Where-Object { $_ -notmatch '^ANTHROPIC_FOUNDRY_API_KEY=' } })
+$lines += "ANTHROPIC_FOUNDRY_API_KEY=$key"
+[System.IO.File]::WriteAllLines($envFile, [string[]]$lines)
+Write-Host "Stored ANTHROPIC_FOUNDRY_API_KEY in .deploy\azure.env"
+</pre>
+  <div class="cols shrink">
+    <div class="card"><h3><code>.gitignore</code></h3><p class="small"><code># Azure deployment state (contains secrets)</code><br><code>.deploy/</code></p></div>
+    <div class="card bad"><h3>Quota error?</h3><p class="small">Shared Global Standard Claude quota in the region is exhausted. Retry later, lower <code>-Capacity</code>, or fall back to <code>Provider: Anthropic</code> (video 10).</p></div>
+  </div>
+</section>
+
+<section id="portal" data-part="6" data-cue="If you prefer clicking">
+  <h2>The portal path (as of October 2026)</h2>
+  <ol class="steps">
+    <li><div>Create an <strong>Azure AI Foundry</strong> resource in <code>eastus2</code>; its name becomes <code>FoundryResource</code> in configuration.</div></li>
+    <li><div>In the Foundry portal, open the <strong>model catalog</strong>, pick Claude Sonnet 5, choose the Azure-hosted version, deploy with the default name.</div></li>
+    <li><div>Accept the Marketplace terms when prompted.</div></li>
+    <li><div>Open <strong>Keys and endpoint</strong>; copy key1 into <code>.deploy/azure.env</code>.</div></li>
+  </ol>
+  <p class="small muted">Prefer the script: every setting is in a reviewable file and re-running converges. If you clicked, run the script afterwards so the template matches reality.</p>
+</section>
+
+<section id="verify" data-part="7" data-cue="Before touching the .NET code, test the endpoint with a plain HTTP request">
+  <h2>Checking it works</h2>
+  <pre class="code tight" data-lang="sh" data-mark="2-4">
+KEY="$(grep '^ANTHROPIC_FOUNDRY_API_KEY=' .deploy/azure.env | cut -d= -f2-)"
+curl -sS https://sd-ai-uofnt2.services.ai.azure.com/anthropic/v1/messages \
+  -H "x-api-key: $KEY" -H "anthropic-version: 2023-06-01" -H "content-type: application/json" \
+  -d '{"model":"claude-sonnet-5","max_tokens":32,"messages":[{"role":"user","content":"Say hello."}]}'
+</pre>
+  <pre class="code tight" data-lang="sh">
+export ANTHROPIC_FOUNDRY_API_KEY="$KEY"
+dotnet run --project backend/src/Saturdaze.Cli -- ingest --type events --dry-run
+</pre>
+  <p class="small muted">A 200 with a text block means the three objects line up. ADR-011 recorded the live check: a dry run parsed events after 5 searches.</p>
+</section>
+
+<section id="rotate" data-part="8" data-cue="Keys leak">
+  <h2>Rotate and tear down</h2>
+  <h3>Rotate</h3>
+  <pre class="code tight" data-lang="sh">
+az cognitiveservices account keys regenerate -g saturdaze-rg -n sd-ai-uofnt2 --key-name key1
+pwsh ./eng/Deploy-Foundry.ps1 -OrganizationName "…"      # refreshes .deploy/azure.env
+</pre>
+  <h3>Tear down</h3>
+  <pre class="code tight" data-lang="sh" data-mark="4">
+az cognitiveservices account deployment delete -g saturdaze-rg -n sd-ai-uofnt2 \
+    --deployment-name claude-sonnet-5
+az cognitiveservices account delete -g saturdaze-rg -n sd-ai-uofnt2
+az cognitiveservices account purge  -g saturdaze-rg -n sd-ai-uofnt2 -l eastus2
+</pre>
+  <p class="small muted">Update any host setting that carried the old key. Soft-deleted accounts keep holding quota until purged.</p>
+</section>
+
+<section id="pitfalls" data-part="9" data-cue="Choosing" data-template="pits" data-show="5">
+  <h2>Pitfalls</h2>
+</section>
+<template id="pits">
+  <ul>
+    <li class="item"><strong><code>canadacentral</code></strong> has no Claude; the deployment fails.</li>
+    <li class="item"><strong>Model version 1</strong> works but runs on Anthropic infrastructure; ADR-011 chose version 2.</li>
+    <li class="item"><strong><code>disableLocalAuth: true</code></strong> breaks key authentication. Entra ID is deferred, not a switch.</li>
+    <li class="item"><strong>Missing trailing slash</strong> makes <code>v1/messages</code> replace <code>/anthropic</code> → 404. The options class adds it; test tools don't.</li>
+    <li class="item"><strong>Un-purged soft-deleted account</strong> keeps quota; the next deployment reports none.</li>
+  </ul>
+</template>
+
+<section id="recap" data-part="10" data-cue="Three objects: account, deployment, key">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div><strong>Three objects.</strong> Account → base URL, deployment → <code>model</code>, key → <code>x-api-key</code>.</div>
+    <div><strong>Source of truth.</strong> <code>claude.bicep</code> describes; <code>Deploy-Foundry.ps1</code> applies and stores the key in <code>.deploy/azure.env</code>.</div>
+    <div><strong>Settings that matter.</strong> <code>eastus2</code>, version 2, <code>NoAutoUpgrade</code>, key auth on.</div>
+    <div><strong>Verify twice.</strong> Raw HTTP, then <code>saturdaze ingest --type events --dry-run</code>.</div>
+    <div><strong>Rotate through the script;</strong> tear down with delete and purge.</div>
+  </div>
+</section>
+
+<section id="next" class="center" data-part="10" data-cue="In the final video we return to the .NET solution">
+  <div class="kicker">Next</div>
+  <h1>10 · Configure the .NET solution</h1>
+  <p class="lead">Wire the endpoint and key into the CLI, the Worker and the Azure hosts, and read every failure mode.</p>
+</section>
+
+<script src="../assets/slides.js"></script>
+</body>
+</html>

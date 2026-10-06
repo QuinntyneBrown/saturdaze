@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 07 Slides</title>
+<link rel="stylesheet" href="../assets/slides.css">
+</head>
+<body data-video-number="07" data-video-title="How Saturdaze uses AI through Microsoft Foundry" data-parts="Introduction|Questions|Where AI lives|The pipeline|Why Foundry|Layers|Safety rails|Recap">
+
+<section id="title" class="center" data-part="0">
+  <div class="kicker">Saturdaze AI series · Video 07 of 10</div>
+  <h1>How Saturdaze uses AI<br>through Microsoft Foundry</h1>
+  <p class="lead">From a trigger to a catalog row: where the model lives, what it may do, and where the knobs are</p>
+</section>
+
+<section id="series" data-part="0" data-cue="It is the first of four videos">
+  <h2>This series</h2>
+  <ol class="steps">
+    <li><div><strong>How Saturdaze uses AI through Microsoft Foundry</strong> <span class="muted">— this video, 07</span></div></li>
+    <li><div>Prompts and AI behaviour, end to end <span class="muted">— video 08</span></div></li>
+    <li><div>Provision Claude in Microsoft Foundry on Azure <span class="muted">— video 09</span></div></li>
+    <li><div>Configure the .NET solution to use Foundry <span class="muted">— video 10</span></div></li>
+  </ol>
+</section>
+
+<section id="questions" data-part="1" data-cue="By the end of this video you should be able to answer four questions">
+  <h2>What you will be able to answer</h2>
+  <div class="question">Where does Saturdaze call a model, and where does it not?</div>
+  <div class="question">What happens, step by step, from a trigger to a database row?</div>
+  <div class="question">Why Microsoft Foundry instead of Anthropic directly?</div>
+  <div class="question">Which safety rails keep the bill boring?</div>
+</section>
+
+<section id="one-place" data-part="2" data-cue="the only place Saturdaze calls a model is catalog ingestion">
+  <h2>The one place AI is used</h2>
+  <div class="cols shrink">
+    <div class="card">
+      <h3>Catalog ingestion <span class="tag">uses Claude</span></h3>
+      <ul>
+        <li><code>LocalEvents</code> — festivals, markets, seasonal openings</li>
+        <li><code>Activities</code> — parks, trails, museums, indoor play</li>
+        <li><code>Restaurants</code> — family-friendly lunch and dinner</li>
+      </ul>
+      <p class="small muted">Refreshed weekly by a grounded web search that returns strict JSON.</p>
+    </div>
+    <div class="card">
+      <h3>Weekend planner <span class="tag sky">deterministic</span></h3>
+      <ul>
+        <li>Reads the catalogs, weather, commitments, preferences</li>
+        <li>Builds the itinerary with plain C# rules</li>
+        <li>Never calls a model</li>
+      </ul>
+      <p class="small muted">If the model is down or wrong, the existing plan still works.</p>
+    </div>
+  </div>
+</section>
+
+<section id="edge" class="center" data-part="2" data-cue="Keep that picture in mind">
+  <p class="quote">AI is a data supplier at the edge of the system,<br>not the decision maker in the middle.</p>
+</section>
+
+<section id="triggers" data-part="3" data-cue="There are three ways to start it">
+  <h2>Three triggers, one pipeline</h2>
+  <div class="cols shrink three">
+    <div class="card">
+      <h3>CLI</h3>
+      <p><code>saturdaze ingest --type events</code></p>
+      <p class="small muted">Add <code>--dry-run</code> to call the model but write nothing.</p>
+      <p class="small"><code>backend/src/Saturdaze.Cli/Ingest</code></p>
+    </div>
+    <div class="card">
+      <h3>Worker</h3>
+      <p>Cron <code>0 0 8 * * 5</code></p>
+      <p class="small muted">Fridays 08:00 UTC by default. Long-lived service or run-once container.</p>
+      <p class="small"><code>backend/src/Saturdaze.Worker</code></p>
+    </div>
+    <div class="card">
+      <h3>WebJob</h3>
+      <p><code>run.sh</code> → <code>saturdaze ingest --type all</code></p>
+      <p class="small muted">Triggered WebJob co-located with the API.</p>
+      <p class="small"><code>backend/deploy/webjobs/ingest</code></p>
+    </div>
+  </div>
+  <p class="small muted">All three resolve <code>IngestionRunner</code> and call <code>RunAsync</code>.</p>
+</section>
+
+<section id="context" data-part="3" data-cue="the runner first builds a small context record">
+  <h2>The context the model sees</h2>
+  <pre class="code tight" data-lang="cs" data-file="backend/src/Saturdaze.Application/Ingestion/IngestionRecords.cs" data-mark="7">
+/// &lt;summary&gt;
+/// The per-run, PII-free context passed to IngestionPrompts:
+/// the family's geographic centre, the drive radius, and the weekend to
+/// anchor the search around. No member names, ages, or preferences are ever
+/// included.
+/// &lt;/summary&gt;
+public sealed record IngestionContext(string HomeLocation, int MaxDriveMinutes, DateOnly ThisWeekend);
+</pre>
+  <p class="small muted">Home location name, drive radius, upcoming Saturday. Nothing personal leaves the system.</p>
+</section>
+
+<section id="prompts" data-part="3" data-cue="Next the runner asks">
+  <h2>Two prompts per catalog type</h2>
+  <p class="small"><code>backend/src/Saturdaze.Application/Ingestion/IngestionPrompts.cs</code></p>
+  <div class="cols shrink">
+    <div class="card">
+      <h3>System prompt</h3>
+      <ul>
+        <li>Researcher persona, family-friendly preference</li>
+        <li>Drive radius and home location</li>
+        <li>"Verify each row against a real page"</li>
+        <li>Exact JSON schema to return</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>User prompt</h3>
+      <p>One sentence: <em>"List family-friendly events near … for the weekend of … Return the JSON array only."</em></p>
+      <p class="small muted">Video 08 covers both prompts in detail.</p>
+    </div>
+  </div>
+</section>
+
+<section id="contract" data-part="3" data-cue="Then the runner hands both prompts to">
+  <h2>The contract: <code>IWebSearchClient</code></h2>
+  <pre class="code" data-lang="cs" data-file="backend/src/Saturdaze.Application/Ingestion/IWebSearchClient.cs" data-mark="3,10-14">
+public interface IWebSearchClient
+{
+    Task&lt;WebSearchResult&gt; SearchAsync(
+        string systemPrompt,
+        string userPrompt,
+        CancellationToken cancellationToken = default);
+}
+
+public sealed record WebSearchResult(
+    string RawText,
+    int InputTokens,
+    int OutputTokens,
+    int WebSearchCount);
+</pre>
+</section>
+
+<section id="request" data-part="3" data-cue="The client sends one HTTP POST">
+  <h2>One request to Claude</h2>
+  <pre class="code tight" data-lang="cs" data-file="backend/src/Saturdaze.Infrastructure/Ingestion/ClaudeWebSearchClient.cs" data-mark="2-5,9-11">
+var request = new {
+    model = _options.Model,
+    max_tokens = _options.MaxTokens,
+    system = systemPrompt,
+    messages,
+    tools = new object[]
+    {
+        new Dictionary&lt;string, object?&gt;
+        {
+            ["type"] = "web_search_20250305",
+            ["name"] = "web_search",
+            ["max_uses"] = _options.MaxSearches
+        }
+    }
+};
+</pre>
+  <p class="small muted"><code>POST v1/messages</code> with headers <code>x-api-key</code> and <code>anthropic-version: 2023-06-01</code>. Claude runs the search loop itself.</p>
+</section>
+
+<section id="response" data-part="3" data-cue="The client pulls the text blocks out of the response">
+  <h2>What comes back</h2>
+  <div class="cols shrink">
+    <div>
+      <ul>
+        <li><strong>text</strong> blocks → concatenated into <code>RawText</code></li>
+        <li><strong>server_tool_use</strong> blocks → counted as searches</li>
+        <li><strong>usage</strong> → <code>input_tokens</code>, <code>output_tokens</code>, <code>web_search_requests</code></li>
+        <li><strong>stop_reason</strong> <code>pause_turn</code> → replay and continue, at most <code>MaxContinuationTurns</code> (3) times</li>
+      </ul>
+    </div>
+    <pre class="code tight" data-lang="json">
+{
+  "stop_reason": "end_turn",
+  "content": [
+    { "type": "server_tool_use",
+      "name": "web_search", ... },
+    { "type": "web_search_tool_result", ... },
+    { "type": "text",
+      "text": "[{\"name\": \"...\", ...}]" }
+  ],
+  "usage": {
+    "input_tokens": 129000,
+    "output_tokens": 1800,
+    "server_tool_use": {
+      "web_search_requests": 5 }
+  }
+}
+</pre>
+  </div>
+</section>
+
+<section id="parse-upsert" data-part="3" data-cue="Back in the runner">
+  <h2>Parse, upsert, audit</h2>
+  <div class="flow">
+    <div class="node">Raw text<small>may include prose or fences</small></div>
+    <div class="arrow">→</div>
+    <div class="node accent">IngestionResultParser<small>finds the array, validates each row</small></div>
+    <div class="arrow">→</div>
+    <div class="node accent">CatalogUpserter<small>natural key: insert or update</small></div>
+    <div class="arrow">→</div>
+    <div class="node">LocalEvents · Activities · Restaurants</div>
+  </div>
+  <div class="card">
+    <h3>IngestionRun audit row</h3>
+    <p class="small">Status (Running → Succeeded / PartialSuccess / Failed), items considered / upserted / rejected, input and output tokens, web search count, error message. Nothing in the product reads it; it exists for cost and quality forensics.</p>
+  </div>
+</section>
+
+<section id="why-foundry" data-part="4" data-cue="So where does that HTTP POST actually go">
+  <h2>Why Microsoft Foundry</h2>
+  <p class="small"><code>docs/adr/ADR-011-claude-via-microsoft-foundry.md</code></p>
+  <ul>
+    <li><strong>Same API.</strong> Foundry serves the Claude Messages API at <code>https://&lt;resource&gt;.services.ai.azure.com/anthropic/v1/messages</code>; same body, same headers, same response.</li>
+    <li><strong>One bill.</strong> Saturdaze already lives in Azure (<code>saturdaze-rg</code>); Claude traffic joins the same cost view.</li>
+    <li><strong>Region.</strong> Claude is not offered in <code>canadacentral</code>, so the Foundry resource <code>sd-ai-uofnt2</code> sits in <code>eastus2</code>.</li>
+    <li><strong>Hosting.</strong> Deployment <code>claude-sonnet-5</code>, model version 2: hosted on Azure end to end.</li>
+  </ul>
+</section>
+
+<section id="fallback" data-part="4" data-cue="Anthropic is kept as a fallback">
+  <h2>Anthropic stays one setting away</h2>
+  <table class="grid">
+    <tr><th>Setting</th><th>Foundry (default)</th><th>Anthropic</th></tr>
+    <tr><td><code>Provider</code></td><td><code>Foundry</code></td><td><code>Anthropic</code></td></tr>
+    <tr><td>Base URL</td><td><code>https://sd-ai-uofnt2.services.ai.azure.com/anthropic/</code></td><td><code>https://api.anthropic.com/</code></td></tr>
+    <tr><td>Key variable</td><td><code>ANTHROPIC_FOUNDRY_API_KEY</code></td><td><code>ANTHROPIC_API_KEY</code></td></tr>
+    <tr><td>Request body</td><td colspan="2">identical</td></tr>
+  </table>
+  <p class="small muted">Only the selected provider's variable is read, so a key exported for another tool is never sent to the wrong endpoint.</p>
+</section>
+
+<section id="layers" data-part="5" data-cue="Ingestion respects that">
+  <h2>How the layers fit</h2>
+  <div class="flow">
+    <div class="node">Domain<small>IngestionRun, IngestionType, IngestionStatus</small></div>
+    <div class="arrow">←</div>
+    <div class="node accent">Application<small>IngestionRunner, IngestionPrompts, Parser, Upserter, IWebSearchClient</small></div>
+    <div class="arrow">←</div>
+    <div class="node accent">Infrastructure<small>ClaudeWebSearchClient, ClaudeWebSearchOptions, AddIngestion</small></div>
+    <div class="arrow">←</div>
+    <div class="node">Hosts<small>Saturdaze.Cli · Saturdaze.Worker</small></div>
+  </div>
+  <p class="small muted">The contract lives one layer in from the provider, so the model can be swapped, faked in tests, or pointed at Anthropic without touching the workflow.</p>
+</section>
+
+<section id="rails" data-part="6" data-cue="Saturdaze has five rails" data-template="rails-list" data-show="5">
+  <h2>The safety rails</h2>
+</section>
+<template id="rails-list">
+  <ol class="steps">
+    <li class="item"><div><strong>Dry run.</strong> <code>--dry-run</code> calls the model and parses, but writes nothing.</div></li>
+    <li class="item"><div><strong>Daily budget.</strong> <code>MaxRunsPerDayPerType</code> = 48 per UTC day; the 49th pass is refused and recorded as Failed.</div></li>
+    <li class="item"><div><strong>Caps.</strong> <code>MaxSearches</code> = 5, <code>MaxTokens</code> = 4096.</div></li>
+    <li class="item"><div><strong>One retry.</strong> 429 or 5xx → wait 30 s, try once more, then fail the pass.</div></li>
+    <li class="item"><div><strong>Lazy failure.</strong> No resource or key? <code>ClaudeApiException</code> on first search; <code>saturdaze migrate</code> still works.</div></li>
+  </ol>
+</template>
+
+<section id="scale" class="center" data-part="6" data-cue="For scale, one real events pass">
+  <div class="kicker">One events pass, as of September 2026</div>
+  <h1>≈129K input tokens</h1>
+  <p class="lead">Web search results count as input. That number is why the budget and the search cap exist.</p>
+</section>
+
+<section id="recap" data-part="7" data-cue="AI in Saturdaze means catalog ingestion, and only that">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div><strong>One place.</strong> AI means catalog ingestion; the planner is deterministic.</div>
+    <div><strong>One flow.</strong> Trigger → runner → prompts → Claude + web search → parser → upserter → audit row.</div>
+    <div><strong>One bill.</strong> Microsoft Foundry by default, Anthropic one setting away.</div>
+    <div><strong>One contract.</strong> <code>IWebSearchClient</code> in Application, provider in Infrastructure.</div>
+    <div><strong>Five rails.</strong> Dry run, daily budget, caps, one retry, lazy failure.</div>
+  </div>
+</section>
+
+<section id="next" class="center" data-part="7" data-cue="In the next video we open">
+  <div class="kicker">Next</div>
+  <h1>08 · Prompts and AI behaviour</h1>
+  <p class="lead">Open <code>IngestionPrompts</code>, change what the model is asked, prove it with a dry run and a unit test.</p>
+</section>
+
+<script src="../assets/slides.js"></script>
+</body>
+</html>
