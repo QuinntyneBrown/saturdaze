@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 04 Slides</title>
+<link rel="stylesheet" href="../../assets/slides.css">
+</head>
+<body data-video-number="04" data-video-title="Coding sd-avatar" data-parts="Introduction|Decorator|Inputs|Template|Styles|Tests|Pitfalls|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Saturdaze components · Video 04 of 52</div>
+  <h1>Coding <code>sd-avatar</code></h1>
+  <p class="lead">A computed initial and host class bindings.</p>
+</section>
+
+<section id="where" data-part="0" data-cue="You will find it all over the app">
+  <h2>Where it lives</h2>
+  <pre class="code tight" data-lang="html" data-file="saturdaze/src/app/pages/family/family.page.html">&lt;sd-avatar slot="leading" [name]="member.name" [tone]="member.tone" size="lg" /&gt;</pre>
+  <pre class="code tight" data-lang="html" data-file="saturdaze/src/app/dialogs/profile-photo-dialog/profile-photo-dialog.html">&lt;sd-avatar
+  class="photo-picker__preview"
+  tone="primary"
+  [name]="data.name"
+  [src]="previewUrl()"
+/&gt;</pre>
+  <p class="muted small">Also: sd-top-bar, sd-vote-row, review-submissions</p>
+</section>
+
+<section id="decorator" data-part="1" data-cue="Open the avatar file in the components library.">
+  <h2>The decorator</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/avatar/avatar.ts" data-mark="8,9">@Component({
+  selector: 'sd-avatar',
+  standalone: true,
+  templateUrl: './avatar.html',
+  styleUrl: './avatar.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: 'avatar',
+    'aria-hidden': 'true',
+    /* … modifiers … */
+  },
+})</pre>
+  <p class="muted">Decorative: the name is always written next to it.</p>
+</section>
+
+<section id="modifiers" data-part="1" data-cue="Then come the modifiers.">
+  <h2>One class binding per modifier</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/avatar/avatar.ts" data-mark="4-7">    '[class.avatar--sm]': 'size() === "sm"',
+    '[class.avatar--md]': 'size() === "md"',
+    '[class.avatar--xl]': 'size() === "xl"',
+    '[class.avatar--q]': 'tone() === "primary"',
+    '[class.avatar--s]': 'tone() === "leaf"',
+    '[class.avatar--e]': 'tone() === "sky"',
+    '[class.avatar--m]': 'tone() === "sun"',
+    '[class.avatar--indoor]': 'tone() === "indoor"',</pre>
+  <p class="muted small">q · s · e · m = Quinn · Sara · Eli · Mae — the mock's class names, kept verbatim (ADR-009)</p>
+</section>
+
+<section id="photo-attrs" data-part="1" data-cue="The avatar photo modifier is on whenever there is a source">
+  <h2>Photo modifier and mirrored attributes</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/avatar/avatar.ts" data-mark="1,3">    '[class.avatar--photo]': '!!src()',
+    '[attr.name]': 'name()',
+    '[attr.tone]': 'tone() === "default" ? null : tone()',
+    '[attr.size]': 'size()',</pre>
+  <p class="muted"><code>null</code> removes the attribute — no <code>tone</code> attribute for the default tone.</p>
+</section>
+
+<section id="inputs" data-part="2" data-cue="The class has four inputs.">
+  <h2>Four typed inputs</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/avatar/avatar.ts">export type AvatarTone = 'default' | 'primary' | 'leaf' | 'sky' | 'sun' | 'indoor';
+export type AvatarSize = 'sm' | 'md' | 'lg' | 'xl';
+…
+export class Avatar {
+  readonly name = input&lt;string&gt;('?');
+  readonly tone = input&lt;AvatarTone&gt;('default');
+  /** sm 24px · md 28px · lg 32px (default) · xl 36px. */
+  readonly size = input&lt;AvatarSize&gt;('lg');
+  /** Profile photo URL; when set it is shown instead of the initial. */
+  readonly src = input&lt;string | null&gt;(null);</pre>
+</section>
+
+<section id="computed" data-part="2" data-cue="Now the derived state.">
+  <h2>The computed initial</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/avatar/avatar.ts" data-mark="1">  protected readonly initial = computed(() =&gt; (this.name().trim().charAt(0) || '?').toUpperCase());</pre>
+  <div class="cols three">
+    <div class="card good"><h3>Pure</h3><p>Reads only signals</p></div>
+    <div class="card good"><h3>No side effects</h3><p>Just returns a value</p></div>
+    <div class="card good"><h3>Memoised</h3><p>Recomputes when <code>name</code> changes</p></div>
+  </div>
+</section>
+
+<section id="template" data-part="3" data-cue="The template is five lines.">
+  <h2>The whole template</h2>
+  <pre class="code" data-lang="html" data-file="components/src/lib/avatar/avatar.html" data-mark="2,4">@if (src()) {
+  &lt;img class="avatar__img" [src]="src()" alt="" /&gt;
+} @else {
+  &lt;ng-container&gt;{{ initial() }}&lt;/ng-container&gt;
+}</pre>
+  <p class="muted">Empty <code>alt</code>: decorative image inside an <code>aria-hidden</code> host.</p>
+</section>
+
+<section id="styles" data-part="4" data-cue="The host is an inline flex circle">
+  <h2>Sizes and paired tones</h2>
+  <div class="cols">
+    <pre class="code tight" data-lang="scss" data-file="avatar.scss">:host {
+  /* … */
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  font-weight: var(--fontWeightBold);
+  background: var(--colorNeutralBackground3);
+  color: var(--colorNeutralForeground2);
+}</pre>
+    <pre class="code tight" data-lang="scss" data-file="avatar.scss">:host(.avatar--q) {
+  background: var(--colorBrandBackground2);
+  color: var(--colorBrandForeground2);
+}
+:host(.avatar--s) {
+  background: var(--colorPaletteLeafBackground1);
+  color: var(--colorPaletteLeafForeground1);
+}</pre>
+  </div>
+</section>
+
+<section id="setup" data-part="5" data-cue="The spec file is simple">
+  <h2>Test setup and defaults</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/avatar/avatar.spec.ts">it('creates a decorative large avatar with a placeholder initial', () =&gt; {
+  expect(fixture.componentInstance).toBeTruthy();
+  expect(host.classList.contains('avatar')).toBe(true);
+  expect(host.getAttribute('aria-hidden')).toBe('true');
+  expect(host.textContent?.trim()).toBe('?');
+  expect(host.getAttribute('name')).toBe('?');
+  expect(host.getAttribute('size')).toBe('lg');
+  expect(host.getAttribute('tone')).toBeNull();
+});</pre>
+</section>
+
+<section id="tests-computed" data-part="5" data-cue="The next two tests prove the computed.">
+  <h2>Testing the computed</h2>
+  <ul class="small">
+    <li><code>renders the upper-cased first letter of the name</code></li>
+    <li><code>falls back to ? for a blank name</code></li>
+  </ul>
+  <pre class="code" data-lang="ts" data-file="avatar.spec.ts">fixture.componentRef.setInput('name', '  eli');
+fixture.detectChanges();
+expect(host.textContent?.trim()).toBe('E');</pre>
+</section>
+
+<section id="tests-map" data-part="5" data-cue="Maps person tones to the mock avatar classes">
+  <h2>The table is the contract</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/avatar/avatar.spec.ts">const map: Record&lt;string, string&gt; = {
+  primary: 'avatar--q',
+  leaf: 'avatar--s',
+  sky: 'avatar--e',
+  sun: 'avatar--m',
+  indoor: 'avatar--indoor',
+};
+for (const [tone, cls] of Object.entries(map)) {
+  fixture.componentRef.setInput('tone', tone);
+  fixture.detectChanges();
+  expect(host.classList.contains(cls)).toBe(true);
+  expect(host.getAttribute('tone')).toBe(tone);
+}</pre>
+  <p class="muted small">Plus <code>mirrors the size to a class and attribute</code> · no test yet for <code>src</code></p>
+</section>
+
+<section id="pitfalls" data-part="6" data-cue="A few pitfalls.">
+  <h2>Pitfalls</h2>
+  <ul>
+    <li>Adding an <code>avatar--lg</code> class — large is the base</li>
+    <li>Renaming q / s / e / m — breaks mock parity</li>
+    <li>A real <code>alt</code> inside an <code>aria-hidden</code> host</li>
+    <li>Side effects inside <code>computed()</code></li>
+  </ul>
+</section>
+
+<section id="recap" data-part="7" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div>Decorative host: <code>aria-hidden</code></div>
+    <div>Class binding per modifier</div>
+    <div>Mock class names verbatim</div>
+    <div><code>computed()</code> for the initial</div>
+    <div>Background + foreground pairs</div>
+    <div>Tone → class table as contract</div>
+  </div>
+</section>
+
+<section id="next" data-part="7" data-cue="Next, in video five, we build the S D banner">
+  <div class="kicker">Next · Video 05</div>
+  <h1>Coding <code>sd-banner</code></h1>
+</section>
+
+<script src="../../assets/slides.js"></script>
+</body>
+</html>
