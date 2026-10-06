@@ -74,6 +74,8 @@ export * from './lib/auth-card/auth-card';
 // admin (Saturdaze Admin, ADR-014)
 export * from './lib/admin-nav/admin-nav';
 export * from './lib/admin-gate/admin-gate';
+export * from './lib/photo-tile/photo-tile';
+export * from './lib/slot-preview/slot-preview';
 
 // tokens & theming
 export * from './lib/tokens/index';

@@ -26,6 +26,13 @@ export const routes: Routes = [
     canActivate: [requireAuth],
     loadComponent: () => import('./pages/places/places.page').then((m) => m.PlacesPage),
   },
+  {
+    path: 'places/:kind/:id',
+    data: { nav: 'places', screen: 'place' },
+    canActivate: [requireAuth],
+    loadComponent: () =>
+      import('./pages/place-photos/place-photos.page').then((m) => m.PlacePhotosPage),
+  },
   // Photo health (A2) takes `/` once it is built; until then the home is Places.
   { path: '', pathMatch: 'full', redirectTo: 'places' },
   { path: '**', redirectTo: '' },

@@ -1,0 +1,20 @@
+@if (blocked()) {
+  <div class="media media--4x3 media--fallback media--indoor photo-tile__media" aria-hidden="true">
+    <sd-icon name="close" [size]="32" />
+    Blocked URL
+  </div>
+} @else {
+  <sd-media class="photo-tile__media" ratio="4:3" [photo]="media()" tone="indoor" icon="sparkle" />
+}
+<div class="photo-tile__badges">
+  @for (badge of badges(); track badge.label) {
+    <sd-chip [tone]="badge.tone">
+      @if (badge.icon) {
+        <sd-icon [name]="badge.icon" />
+      }
+      {{ badge.label }}
+    </sd-chip>
+  }
+</div>
+<sd-details class="photo-tile__meta" [items]="details()" />
+<div class="photo-tile__actions"><ng-content select="[slot=actions]" /></div>

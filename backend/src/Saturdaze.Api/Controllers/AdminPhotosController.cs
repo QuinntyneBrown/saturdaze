@@ -2,6 +2,8 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Saturdaze.Application.Admin.Photos;
+using Saturdaze.Application.Exceptions;
+using Saturdaze.Domain.Enums;
 
 namespace Saturdaze.Api.Controllers;
 
@@ -31,4 +33,14 @@ public sealed class AdminPhotosController : ControllerBase
         [FromQuery] int page,
         CancellationToken ct)
         => Ok(await _sender.Send(new ListAdminPlacesQuery(q, kind, flag, source, upcoming, sort, page < 1 ? 1 : page), ct));
+
+    /// <summary>Every photo of one place, its review state and the cover impact (L2-114).</summary>
+    [HttpGet("places/{kind}/{id:guid}/photos")]
+    public async Task<ActionResult<PlacePhotosDto>> PlacePhotos(string kind, Guid id, CancellationToken ct)
+        => Ok(await _sender.Send(new GetPlacePhotosQuery(ParseKind(kind), id), ct));
+
+    private static PlaceKind ParseKind(string kind)
+        => Enum.TryParse<PlaceKind>(kind, true, out var parsed)
+            ? parsed
+            : throw new ValidationException("kind", "Kind must be Activity, Restaurant or LocalEvent.");
 }

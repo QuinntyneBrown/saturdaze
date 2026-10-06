@@ -4,9 +4,12 @@ import { firstValueFrom } from 'rxjs';
 
 import { API_BASE_URL } from '../api/api-base-url';
 import { toMedia } from '../api/media';
+import { AdminPhotoDto, PlacePhotosDto } from '../models/admin/admin-photo.dto';
 import { AdminPlaceDto, AdminPlacePageDto } from '../models/admin/admin-place.dto';
 import { AdminPlacesQuery, toAdminPlacesParams } from '../models/admin/admin-places-query';
 import { AdminPlacesView } from '../models/admin/admin-places-view';
+import { PhotoTileView } from '../models/admin/photo-tile-view';
+import { PlacePhotosView } from '../models/admin/place-photos-view';
 import { PlaceRow } from '../models/admin/place-row';
 import { ChipView } from '../models/chip-view';
 import { IAdminPlacesService } from './admin-places.service.contract';
@@ -63,6 +66,72 @@ export function toPlaceRow(dto: AdminPlaceDto): PlaceRow {
   };
 }
 
+/** The badges of a photo tile, in the order a curator decides on them. */
+export function tileBadges(dto: AdminPhotoDto): ChipView[] {
+  const badges: ChipView[] = [];
+  if (dto.isPrimary) badges.push({ tone: 'primary', icon: 'star', label: 'Primary' });
+  if (dto.blocked) badges.push({ tone: 'warn', icon: 'close', label: 'Blocked URL' });
+  badges.push(
+    dto.source === 'Provider'
+      ? { tone: 'sky', label: 'Provider' }
+      : { tone: 'accent', label: dto.source === 'Curated' ? 'Curated' : 'Submitted' },
+  );
+  badges.push(
+    dto.reviewState === 'Unreviewed'
+      ? { tone: 'sun', label: 'Unreviewed' }
+      : { tone: 'accent', icon: 'check', label: 'Reviewed' },
+  );
+  if (!dto.alt) badges.push({ tone: 'indoor', label: 'Missing alt text' });
+  return badges;
+}
+
+export function toPhotoTile(dto: AdminPhotoDto): PhotoTileView {
+  return {
+    id: dto.id,
+    url: dto.url,
+    media: dto.blocked
+      ? null
+      : {
+          src: dto.url,
+          alt: dto.alt,
+          width: dto.width,
+          height: dto.height,
+          credit: dto.attribution,
+        },
+    blocked: dto.blocked,
+    isPrimary: dto.isPrimary,
+    source: dto.source,
+    unreviewed: dto.reviewState === 'Unreviewed',
+    badges: tileBadges(dto),
+    alt: dto.alt,
+    credit: dto.attribution,
+    licence: dto.license,
+    size: `${dto.width} × ${dto.height}`,
+  };
+}
+
+/** "5 weekend covers follow this place", "1 weekend cover follows this place", or the none line. */
+export function coverImpactText(n: number): string {
+  if (n === 0) return 'No weekend covers follow this place';
+  return n === 1 ? '1 weekend cover follows this place' : `${n} weekend covers follow this place`;
+}
+
+export function toPlacePhotosView(dto: PlacePhotosDto): PlacePhotosView {
+  const tiles = dto.photos.map(toPhotoTile);
+  const primary = tiles.find((t) => t.isPrimary);
+  return {
+    kind: dto.kind,
+    id: dto.id,
+    name: dto.name,
+    subtitle: `${KIND_LABEL[dto.kind]} · ${photoCount(dto.photos.length)} · ${coverImpactText(dto.coverImpact)}`,
+    coverImpact: dto.coverImpact,
+    primary: primary?.media ?? null,
+    tone: KIND_TONE[dto.kind],
+    icon: KIND_ICON[dto.kind],
+    tiles,
+  };
+}
+
 const EMPTY: AdminPlacesView = { status: 'loading', rows: [], total: 0, page: 1, pageSize: 50 };
 
 /** HTTP implementation of `IAdminPlacesService`. */
@@ -91,5 +160,14 @@ export class AdminPlacesService implements IAdminPlacesService {
       page: page.page,
       pageSize: page.pageSize,
     });
+  }
+
+  async photos(kind: string, id: string): Promise<PlacePhotosView> {
+    const dto = await firstValueFrom(
+      this.http.get<PlacePhotosDto>(
+        `${this.baseUrl}/api/admin/places/${encodeURIComponent(kind)}/${encodeURIComponent(id)}/photos`,
+      ),
+    );
+    return toPlacePhotosView(dto);
   }
 }

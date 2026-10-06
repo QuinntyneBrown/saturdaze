@@ -87,6 +87,8 @@ export const ROUTES = {
   adminSignIn:       { app: "/sign-in",                        mock: "/pages/admin.sign-in.html",        page: "admin" },
   adminHome:         { app: "/",                               mock: "/pages/admin.html",                guard: "admin", page: "admin" },
   adminPlaces:       { app: "/places",                         mock: "/pages/admin.places.html",         guard: "admin", page: "admin" },
+  /** App-only: the place is picked per test from the Places list. */
+  adminPlace:        { app: "/places/{kind}/{id}",              mock: "/pages/admin.place.html",          guard: "admin", page: "admin" },
 } as const satisfies Record<string, RouteEntry>;
 
 export type RouteKey = keyof typeof ROUTES;

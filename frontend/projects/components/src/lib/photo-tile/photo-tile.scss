@@ -1,0 +1,64 @@
+@use '../styles/breakpoints' as *;
+
+// `.photo-tile` from docs/mocks/styles/app.css (admin) — the host is the card.
+
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+  padding: 12px;
+  background: var(--colorNeutralBackground1);
+  border: 1px solid var(--colorNeutralStroke2);
+  border-radius: var(--borderRadiusLarge);
+}
+
+.photo-tile__media {
+  border-radius: var(--borderRadiusMedium);
+}
+
+// The blocked tile: the fallback frame with a label, drawn here because
+// `sd-media`'s fallback is icon-only and decorative.
+.media--fallback {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  font-size: var(--fontSizeBase300);
+  font-weight: var(--fontWeightSemibold);
+  background: var(--colorPaletteIndoorBackground1);
+  color: var(--colorPaletteIndoorForeground1);
+}
+
+.photo-tile__badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.photo-tile__meta {
+  row-gap: 4px;
+  font-size: var(--fontSizeBase300);
+}
+
+.photo-tile__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: auto;
+  padding-top: 4px;
+}
+
+.photo-tile__actions:empty {
+  display: none;
+}
+
+@media (min-width: 576px) {
+  .photo-tile__meta {
+    --sd-details-label-w: 72px;
+  }
+}

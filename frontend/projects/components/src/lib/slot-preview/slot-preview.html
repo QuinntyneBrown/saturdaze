@@ -1,0 +1,40 @@
+<figure class="preview">
+  <figcaption class="preview__label">Idea card · 16:9 at 390 and 1440 px</figcaption>
+  <sd-card class="card--media preview__card">
+    <sd-media class="card__media" [photo]="media()" [tone]="tone()" [icon]="icon()" eager />
+    <div class="card__head">
+      <div class="card__head-text">
+        <h3 class="card__title">{{ name() }}</h3>
+        @if (meta()) {
+          <p class="card__meta">{{ meta() }}</p>
+        }
+      </div>
+    </div>
+  </sd-card>
+</figure>
+<figure class="preview">
+  <figcaption class="preview__label">Thumbnail · 4:3</figcaption>
+  <div class="preview__thumbs">
+    @let m = media();
+    @if (m) {
+      <img class="block__thumb" [src]="m.src" [alt]="m.alt" width="72" height="54" />
+    } @else {
+      <sd-media class="block__thumb" ratio="4:3" [tone]="tone()" [icon]="icon()" />
+    }
+    <div class="preview__pick">
+      <sd-media ratio="4:3" [photo]="media()" [tone]="tone()" [icon]="icon()" eager />
+      <span class="photo-pick__name">{{ name() }}</span>
+    </div>
+  </div>
+</figure>
+<figure class="preview preview--wide">
+  <figcaption class="preview__label">Weekend cover · with scrim and title</figcaption>
+  <sd-cover
+    class="preview__cover"
+    [media]="media()"
+    [tone]="tone()"
+    eyebrow="This weekend"
+    title="Sat and Sun"
+    [subtitle]="'From ' + name()"
+  />
+</figure>
