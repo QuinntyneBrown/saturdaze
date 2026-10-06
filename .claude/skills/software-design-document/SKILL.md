@@ -191,7 +191,10 @@ Write a `.puml` per diagram into the feature's `diagrams/` folder, following
 
 The README links to `.png` files, so each `.puml` must have a rendered sibling.
 Render the whole tree with the bundled script (it locates `plantuml.jar` or
-`plantuml` on PATH and writes each `.png` next to its source):
+`plantuml` on PATH and writes each `.png` next to its source). C4 and class
+diagrams also need Graphviz (`dot`); the script checks for it first and exits 2
+if it is missing, because PlantUML would otherwise write an error image and
+still report success:
 
 ```bash
 python <skill>/scripts/render_puml.py docs/detailed-designs
@@ -199,7 +202,8 @@ python <skill>/scripts/render_puml.py docs/detailed-designs
 
 A non-zero exit means at least one diagram failed to render — an image the README
 points at does not exist. Read the reported error, fix the `.puml`, and re-run
-until the exit is clean. (Equivalent direct call if needed:
+until the exit is clean. (Equivalent direct call if needed, after `java -jar $PLANTUML_JAR -testdot`
+reports "Installation seems OK":
 `java -jar $PLANTUML_JAR -tpng docs/detailed-designs/**/diagrams/*.puml`.)
 
 ## Step 7 — Verify before finishing
