@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vitest Video 11 Slides</title>
+<link rel="stylesheet" href="../../assets/slides.css">
+</head>
+<body data-video-number="11" data-video-title="Asserting calls" data-parts="Introduction|Called|Times|With|Last|Nth|mock.calls|mockClear|Pitfalls|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Saturdaze · Vitest · Video 11 of 14</div>
+  <h1>Asserting calls</h1>
+  <p class="lead">Five call matchers, the <code>mock.calls</code> array, and <code>mockClear</code>.</p>
+</section>
+
+<section id="counts" data-part="0" data-cue="Vitest has five call matchers">
+  <h2>Five matchers, 281 uses</h2>
+  <div class="cols">
+    <div class="card"><h3>Matchers</h3><p><code>toHaveBeenCalled</code> · 61<br><code>toHaveBeenCalledTimes</code> · 55<br><code>toHaveBeenCalledWith</code> · 124<br><code>toHaveBeenLastCalledWith</code> · 35<br><code>toHaveBeenNthCalledWith</code> · 6</p></div>
+    <div class="card good"><h3>Beyond the matchers</h3><p><code>.mock.calls</code> · 5 lines<br><code>mockClear()</code> · 4</p></div>
+  </div>
+</section>
+
+<section id="not-called" data-part="1" data-cue="The plainest matcher is">
+  <h2>Mostly: proving it did <em>not</em> happen</h2>
+  <div class="cols three">
+    <div class="card"><h3>61</h3><p><code>toHaveBeenCalled</code></p></div>
+    <div class="card good"><h3>57</h3><p>negated with <code>.not</code></p></div>
+    <div class="card"><h3>4</h3><p>positive, no arguments</p></div>
+  </div>
+</section>
+
+<section id="not-examples" data-part="1" data-cue="In the past page spec, the empty state test">
+  <h2>Negative assertions</h2>
+  <pre class="code" data-lang="ts" data-file="saturdaze/src/app/pages/past/past.page.spec.ts" data-mark="3">  it('shows the empty state for ?state=empty without loading', async () =&gt; {
+    await mount({ state: 'empty' });
+    expect(saved.load).not.toHaveBeenCalled();</pre>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/chip-input/chip-input.spec.ts" data-mark="8">  it('ignores blanks and case-insensitive duplicates', () =&gt; {
+    type('   ');
+    key('Enter');
+    type('pizza');
+    key('Enter');
+    fixture.detectChanges();
+    expect(chipText()).toEqual(['Parks', 'Pizza']);
+    expect(onChange).not.toHaveBeenCalled();</pre>
+</section>
+
+<section id="times" data-part="2" data-cue="appears fifty-five times. Use it when the count is the behaviour.">
+  <h2>The count is the throttle</h2>
+  <pre class="code" data-lang="ts" data-file="saturdaze/src/app/pages/reset-password/reset-password.page.spec.ts" data-mark="5,9">  it('resends once and then rests for a minute', async () =&gt; {
+    ...
+      await component['resend']();
+      fixture.detectChanges();
+      expect(session.forgotPassword).toHaveBeenCalledWith({ email: 'quinn@example.com' });
+      expect(component['resent']()).toBe(true);
+      ...
+      await component['resend']();
+      expect(session.forgotPassword).toHaveBeenCalledTimes(1);</pre>
+</section>
+
+<section id="with" data-part="3" data-cue="is the workhorse, with one hundred and twenty-four uses.">
+  <h2><code>toHaveBeenCalledWith</code>: any call, deep equality</h2>
+  <pre class="code" data-lang="ts" data-file="saturdaze/src/app/shell/menu-opener.spec.ts" data-mark="4">  it('opens a bottom sheet below 720px and resolves with the chosen item', async () =&gt; {
+    const opener = TestBed.inject(MenuOpener);
+    const picked = await opener.open(anchor, { title: 'Weekend options', items: ITEMS });
+    expect(breakpoints.isMatched).toHaveBeenCalledWith('(min-width: 720px)');</pre>
+</section>
+
+<section id="with-asym" data-part="3" data-cue="Called with combines naturally with asymmetric matchers">
+  <h2>With asymmetric matchers</h2>
+  <pre class="code" data-lang="ts" data-file="saturdaze/src/app/shell/menu-opener.spec.ts" data-mark="3">    expect(dialog.open).toHaveBeenCalledWith(
+      MenuDialog,
+      expect.objectContaining({
+        data: { title: 'Weekend options', items: ITEMS },
+        panelClass: 'sd-dialog-panel',
+        backdropClass: 'sd-dialog-backdrop',
+      }),
+    );</pre>
+  <p class="muted">Other dialog options are ignored · asymmetric matchers are video 07</p>
+</section>
+
+<section id="any-call" data-part="3" data-cue="Remember the any call part.">
+  <h2>Any call, not the last one</h2>
+  <div class="flow">
+    <div class="node"><b>call 1</b><small>✗</small></div>
+    <div class="node"><b>call 2</b><small>✗</small></div>
+    <div class="node accent"><b>call 3</b><small>✓ match</small></div>
+    <div class="node"><b>call 4</b><small>✗</small></div>
+    <div class="node"><b>call 5</b><small>✗</small></div>
+  </div>
+  <p class="muted center"><code>toHaveBeenCalledWith</code> passes. Order or recency? Use last or nth.</p>
+</section>
+
+<section id="last" data-part="4" data-cue="appears thirty-five times, and it fits anything that reports a running state.">
+  <h2>The last call is the truth</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/chip-input/chip-input.spec.ts" data-mark="7">  it('adds the draft on Enter, clears the input and swallows the key', () =&gt; {
+    type('Lego');
+    const event = key('Enter');
+    fixture.detectChanges();
+    expect(event.defaultPrevented).toBe(true);
+    expect(chipText()).toEqual(['Parks', 'Pizza', 'Lego']);
+    expect(onChange).toHaveBeenLastCalledWith(['Parks', 'Pizza', 'Lego']);</pre>
+</section>
+
+<section id="last-empty" data-part="4" data-cue="The confirm dialog spec shows a neat edge case.">
+  <h2>Last call with no arguments</h2>
+  <pre class="code" data-lang="ts" data-file="saturdaze/src/app/dialogs/confirm-dialog/confirm-dialog.spec.ts" data-mark="3,5">  it('closes with confirm or nothing', () =&gt; {
+    component['confirm']();
+    expect(mockDialogRef.close).toHaveBeenCalledWith('confirm');
+    component['cancel']();
+    expect(mockDialogRef.close).toHaveBeenLastCalledWith();
+  });</pre>
+</section>
+
+<section id="nth" data-part="5" data-cue="appears six times. Its first argument is a call number">
+  <h2>The nth call, counting from 1</h2>
+  <pre class="code" data-lang="ts" data-file="saturdaze/src/app/pages/weekend/weekend.page.spec.ts" data-mark="5-6">    button('Lock Saturday').click();
+    showDay('Sunday');
+    button('Unlock Sunday').click();
+    await settle();
+    expect(weekend.lockDay).toHaveBeenNthCalledWith(1, 'Saturday', true);
+    expect(weekend.lockDay).toHaveBeenNthCalledWith(2, 'Sunday', false);</pre>
+</section>
+
+<section id="nth-dialogs" data-part="5" data-cue="The ideas page spec uses it to prove a sequence of dialogs">
+  <h2>A sequence of dialogs</h2>
+  <pre class="code" data-lang="ts" data-file="saturdaze/src/app/pages/ideas/ideas.page.spec.ts" data-mark="4-5,9-10">    dialog.open.mockReturnValueOnce({ closed: of(SUBMISSION) });
+    await component['suggest']();
+    expect(dialog.open).toHaveBeenNthCalledWith(
+      1,
+      SubmitEventDialog,
+      expect.objectContaining({ panelClass: 'sd-dialog-panel', autoFocus: 'first-tabbable' }),
+    );
+    expect(dialog.open).toHaveBeenNthCalledWith(
+      2,
+      EventSubmittedDialog,
+      expect.objectContaining({ data: { submission: SUBMISSION } }),
+    );</pre>
+</section>
+
+<section id="calls-array" data-part="6" data-cue="Every mock keeps an array of its calls">
+  <h2><code>mock.calls</code>: one entry per call</h2>
+  <pre class="code" data-lang="ts" data-file="illustration · the errand flow in weekend.page.spec.ts">dialog.open.mock.calls
+// [
+//   [AddErrandDialog,  { panelClass: 'sd-dialog-panel', … }],   ← calls[0]
+//   [ErrandAddedDialog, { data: { placement }, … }],            ← calls[1]
+// ]</pre>
+  <p class="muted">Arrays start at 0; <code>toHaveBeenNthCalledWith</code> starts at 1.</p>
+</section>
+
+<section id="calls-inspect" data-part="6" data-cue="To inspect a big argument.">
+  <h2>Inspect: the last call's big argument</h2>
+  <pre class="code" data-lang="ts" data-file="saturdaze/src/app/pages/family/family.page.spec.ts">  const saved = (): EditableFamilyProfile =&gt; familyService.saveProfile.mock.calls.at(-1)![0];</pre>
+  <pre class="code" data-lang="ts" data-file="saturdaze/src/app/pages/family/family.page.spec.ts">    expect(saved().members).toEqual([...PROFILE.members, { name: 'Eli', age: 9 }]);</pre>
+</section>
+
+<section id="calls-find" data-part="6" data-cue="To find a call by its first argument.">
+  <h2>Search: the call that opened <code>ConfirmDialog</code></h2>
+  <pre class="code" data-lang="ts" data-file="family · past · weekend page specs">  const confirmData = (): any =&gt;
+    dialog.open.mock.calls.find((c) =&gt; c[0] === ConfirmDialog)?.[1].data;</pre>
+  <pre class="code" data-lang="ts" data-file="saturdaze/src/app/pages/family/family.page.spec.ts">    expect(confirmData()).toMatchObject({
+      title: 'Remove Mae from the family?',
+      danger: true,
+      confirmLabel: 'Remove',
+    });</pre>
+</section>
+
+<section id="calls-match" data-part="6" data-cue="To use a matcher the call matchers don't offer.">
+  <h2>Match: a matcher the call matchers don't offer</h2>
+  <pre class="code" data-lang="ts" data-file="saturdaze/src/app/auth/auth.interceptor.spec.ts" data-mark="2">    expect(navigateSpy).toHaveBeenCalledTimes(1);
+    expect(String(navigateSpy.mock.calls[0]?.[0])).toMatch(/^\/sign-in\?returnUrl=/);</pre>
+</section>
+
+<section id="clear" data-part="7" data-cue="Sometimes a test needs to count from zero again.">
+  <h2><code>mockClear</code>: count from zero</h2>
+  <pre class="code" data-lang="ts" data-file="saturdaze/src/app/pages/weekend/weekend.page.spec.ts" data-mark="1,4">    dialog.open.mockClear();
+    (host.querySelector('sd-ghost-row button') as HTMLButtonElement).click();
+    await settle();
+    expect(dialog.open).toHaveBeenCalledTimes(1);</pre>
+  <p class="muted">The base dialog is dismissed, so the flow stops after the first <code>open</code>.</p>
+</section>
+
+<section id="clear-shared" data-part="7" data-cue="The events service spec shows the other reason.">
+  <h2>A mock shared across tests</h2>
+  <pre class="code" data-lang="ts" data-file="api/src/lib/services/events.service.spec.ts" data-mark="5,9,13">describe('EventsService', () =&gt; {
+  let service: EventsService;
+  let httpMock: HttpTestingController;
+  const mine = signal&lt;readonly EventSubmissionDto[]&gt;([]);
+  const loadMine = vi.fn(() =&gt; Promise.resolve());
+  ...
+  beforeEach(() =&gt; {
+    mine.set([]);
+    loadMine.mockClear();
+    TestBed.configureTestingModule({
+      providers: [
+        ...
+        { provide: EVENT_SUBMISSIONS_SERVICE, useValue: { mine: () =&gt; mine, loadMine } },</pre>
+</section>
+
+<section id="clear-reset-restore" data-part="7" data-cue="Three similar names, three different scopes.">
+  <h2>Clear, reset, restore</h2>
+  <div class="cols three">
+    <div class="card good"><h3><code>mockClear</code></h3><p>Forgets calls and results<br><span class="small muted">keeps behaviour</span></p></div>
+    <div class="card"><h3><code>mockReset</code></h3><p>Clear + empty the once queue + implementation back to <code>vi.fn(impl)</code></p></div>
+    <div class="card bad"><h3><code>mockRestore</code></h3><p>Reset + put a spy's real method back<br><span class="small muted">video 12</span></p></div>
+  </div>
+</section>
+
+<section id="pitfalls" data-part="8" data-cue="A few pitfalls.">
+  <h2>Pitfalls</h2>
+  <ul>
+    <li>A bare <code>toHaveBeenCalled</code> when you know the arguments</li>
+    <li><code>toHaveBeenCalledWith</code> when order matters</li>
+    <li>Nth counts from 1; <code>mock.calls</code> from 0</li>
+    <li>Sharing a mock across tests without <code>mockClear</code></li>
+    <li><code>mockReset</code> when you only meant to clear</li>
+  </ul>
+</section>
+
+<section id="recap" data-part="9" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div><code>.not.toHaveBeenCalled</code>: 57 of 61</div>
+    <div>Called times when the count is the behaviour</div>
+    <div>Called with = any call; last and nth for order</div>
+    <div><code>mock.calls</code> to inspect, search, match</div>
+    <div><code>mockClear</code> keeps behaviour</div>
+  </div>
+</section>
+
+<section id="next" data-part="9" data-cue="Next, in video twelve, we spy on real objects">
+  <div class="kicker">Next · Video 12</div>
+  <h1><code>vi.spyOn</code> and restoring</h1>
+</section>
+
+<script src="../../assets/slides.js"></script>
+</body>
+</html>

@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vitest Video 03 Slides</title>
+<link rel="stylesheet" href="../../assets/slides.css">
+</head>
+<body data-video-number="03" data-video-title="Table-driven tests with describe.each" data-parts="Introduction|One shape|The table|Titles|Callback|Collection|Table or loop|When not|Pitfalls|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Saturdaze · Vitest · Video 03 of 14</div>
+  <h1>Table-driven tests with <code>describe.each</code></h1>
+  <p class="lead">One block of tests, one row per case.</p>
+</section>
+
+<section id="once" data-part="0" data-cue="Vitest's answer is a table">
+  <h2>One use, every part of the feature</h2>
+  <div class="file">frontend/projects/api/src/lib/services/auth.service.spec.ts</div>
+  <ul>
+    <li>The only <code>describe.each</code> in the repository</li>
+    <li>Rows as tuples, <code>as const</code>, a <code>'%s'</code> title</li>
+    <li>Destructured columns, template-literal <code>it</code> titles</li>
+  </ul>
+</section>
+
+<section id="shape" data-part="1" data-cue="Open the auth service in the api project">
+  <h2>Four methods with one shape</h2>
+  <pre class="code" data-lang="ts" data-file="api/src/lib/services/auth.service.ts" data-mark="1,3,5">  async forgotPassword(req: ForgotPasswordRequest): Promise&lt;void&gt; {
+    try {
+      await firstValueFrom(this.http.post&lt;void&gt;(`${this.baseUrl}/api/auth/forgot-password`, req));
+    } catch (e) {
+      rethrowAsAuthError(e);
+    }
+  }</pre>
+  <div class="cols four">
+    <div class="card"><h3>forgotPassword</h3></div>
+    <div class="card"><h3>resendVerification</h3></div>
+    <div class="card"><h3>resetPassword</h3></div>
+    <div class="card"><h3>verifyEmail</h3></div>
+  </div>
+</section>
+
+<section id="signal" data-part="1" data-cue="Same shape, four endpoints.">
+  <h2>The signal for a table</h2>
+  <div class="quote">The behaviour is identical. Only the data changes.</div>
+</section>
+
+<section id="table" data-part="2" data-cue="Now open the auth service spec.">
+  <h2>The table</h2>
+  <pre class="code" data-lang="ts" data-file="api/src/lib/services/auth.service.spec.ts" data-mark="1,3-5,9">  describe.each([
+    [
+      'forgotPassword',
+      '/api/auth/forgot-password',
+      () =&gt; service.forgotPassword({ email: 'quinn@example.com' }),
+    ],
+    …  // resendVerification, resetPassword: the same three columns
+    ['verifyEmail', '/api/auth/verify-email', () =&gt; service.verifyEmail({ token: 't' })],
+  ] as const)('%s', (_name, path, call) =&gt; {</pre>
+</section>
+
+<section id="as-const" data-part="2" data-cue="After the array come the words `as const`.">
+  <h2><code>as const</code>: rows become typed tuples</h2>
+  <div class="cols three">
+    <div class="card"><h3>column 1</h3><p>method name<br><code>_name</code></p></div>
+    <div class="card"><h3>column 2</h3><p>endpoint path<br><code>path</code></p></div>
+    <div class="card"><h3>column 3</h3><p>a function returning a promise<br><code>call</code></p></div>
+  </div>
+  <p class="muted">Vitest's typings map each tuple position onto a callback parameter.</p>
+</section>
+
+<section id="curried" data-part="2" data-cue="Then `describe.each` returns a function">
+  <h2>Two calls</h2>
+  <pre class="code" data-lang="ts" data-file="the shape">describe.each(rows)(name, (...columns) =&gt; { /* tests */ });</pre>
+  <p class="muted">The second call is a normal <code>describe</code>: a name and a body.</p>
+</section>
+
+<section id="format" data-part="3" data-cue="The name is a format string, percent s.">
+  <h2><code>'%s'</code> takes the first column</h2>
+  <div class="cols four">
+    <div class="card good"><h3>forgotPassword</h3></div>
+    <div class="card good"><h3>resendVerification</h3></div>
+    <div class="card good"><h3>resetPassword</h3></div>
+    <div class="card good"><h3>verifyEmail</h3></div>
+  </div>
+</section>
+
+<section id="placeholders" data-part="3" data-cue="Percent s is the one placeholder this repository uses">
+  <h2>Other placeholders</h2>
+  <div class="cols four">
+    <div class="card"><h3><code>%s</code></h3><p>string · used here</p></div>
+    <div class="card"><h3><code>%d</code></h3><p>number</p></div>
+    <div class="card"><h3><code>%j</code></h3><p>JSON</p></div>
+    <div class="card"><h3><code>%#</code></h3><p>row index, from 0</p></div>
+  </div>
+  <p class="muted">Object rows: <code>$propertyName</code> pulls a property into the title.</p>
+</section>
+
+<section id="body" data-part="4" data-cue="The body receives one parameter per column.">
+  <h2>Two ordinary tests per row</h2>
+  <pre class="code" data-lang="ts" data-file="api/src/lib/services/auth.service.spec.ts" data-mark="1,2,3,6">    it(`POSTs ${path}`, async () =&gt; {
+      const promise = call();
+      const req = httpMock.expectOne(`${BASE}${path}`);
+      expect(req.request.method).toBe('POST');
+      req.flush(null, { status: 202, statusText: 'Accepted' });
+      await expect(promise).resolves.toBeUndefined();
+    });</pre>
+</section>
+
+<section id="body-reject" data-part="4" data-cue="The second, rejects on an error response">
+  <h2>The failure path, once for all four</h2>
+  <pre class="code" data-lang="ts" data-file="api/src/lib/services/auth.service.spec.ts" data-mark="6,9">    it('rejects on an error response', async () =&gt; {
+      const promise = call();
+      httpMock
+        .expectOne(`${BASE}${path}`)
+        .flush(
+          { code: 'token_invalid', message: 'bad' },
+          { status: 400, statusText: 'Bad Request' },
+        );
+      await expect(promise).rejects.toEqual({ code: 'token_invalid', message: 'bad' });
+    });</pre>
+</section>
+
+<section id="report" data-part="4" data-cue="Four rows times two tests is eight tests.">
+  <h2>Eight tests, each reported on its own</h2>
+  <pre class="code tight" data-lang="sh" data-file="npx ng test api --include='**/auth.service.spec.ts' --reporters=verbose">✓ AuthService &gt; forgotPassword &gt; POSTs /api/auth/forgot-password
+✓ AuthService &gt; forgotPassword &gt; rejects on an error response
+✓ AuthService &gt; resendVerification &gt; POSTs /api/auth/resend-verification
+✓ AuthService &gt; resendVerification &gt; rejects on an error response
+✓ AuthService &gt; resetPassword &gt; POSTs /api/auth/reset-password
+✓ AuthService &gt; resetPassword &gt; rejects on an error response
+✓ AuthService &gt; verifyEmail &gt; POSTs /api/auth/verify-email
+✓ AuthService &gt; verifyEmail &gt; rejects on an error response</pre>
+</section>
+
+<section id="collection" data-part="5" data-cue="Here is the subtle part.">
+  <h2>Rows are built at collection time</h2>
+  <div class="flow">
+    <div class="node accent"><b>collect</b><small>table evaluated · service undefined</small></div>
+    <div class="arrow">→</div>
+    <div class="node"><b>beforeEach</b><small>service = TestBed.inject(…)</small></div>
+    <div class="arrow">→</div>
+    <div class="node"><b>it</b><small>call() reaches the fresh service</small></div>
+  </div>
+  <pre class="code" data-lang="ts" data-file="api/src/lib/services/auth.service.spec.ts">      () =&gt; service.forgotPassword({ email: 'quinn@example.com' }),</pre>
+</section>
+
+<section id="loop" data-part="6" data-cue="The repository has a second way to repeat a check.">
+  <h2>A loop inside one test</h2>
+  <pre class="code tight" data-lang="ts" data-file="saturdaze/src/app/pages/reset-password/reset-password.page.spec.ts" data-mark="9,12">  it('renders each of the five states for the design harness', async () =&gt; {
+    const titles: Record&lt;string, string&gt; = {
+      request: 'Reset your password',
+      sent: 'Check your email',
+      new: 'Choose a new password',
+      done: 'Password updated',
+      expired: 'This link has expired',
+    };
+    for (const [state, expected] of Object.entries(titles)) {
+      TestBed.resetTestingModule();
+      await mount({ state });
+      expect(title(), state).toBe(expected);
+    }</pre>
+</section>
+
+<section id="loop-vs-table" data-part="6" data-cue="The difference is reporting.">
+  <h2>Loop or table?</h2>
+  <div class="cols">
+    <div class="card"><h3>Loop</h3><p>One test · stops at the first failure · one name in the report</p><p class="small muted">A quick sweep</p></div>
+    <div class="card good"><h3><code>describe.each</code></h3><p>One test per row · every row runs · each failure named</p><p class="small muted">Rows you would otherwise write by hand</p></div>
+  </div>
+</section>
+
+<section id="when-not" data-part="7" data-cue="The rest of the auth service spec stays hand written">
+  <h2>Similar is not identical</h2>
+  <ul>
+    <li><code>refresh</code>: maps any 401 onto <code>token_expired</code></li>
+    <li><code>login</code>: falls back to <code>invalid_credentials</code> when the body carries no code</li>
+    <li>A table would need expected-result columns and branches in the body</li>
+  </ul>
+  <p class="muted"><code>it.each</code> / <code>test.each</code> repeat one test — same rules, not used here yet.</p>
+</section>
+
+<section id="pitfalls" data-part="8" data-cue="A few pitfalls.">
+  <h2>Pitfalls</h2>
+  <ul>
+    <li>Calling the code under test while building the table</li>
+    <li>One shared title for every row</li>
+    <li>Columns that switch the body's behaviour</li>
+    <li>Rows too long to read at a glance</li>
+  </ul>
+</section>
+
+<section id="recap" data-part="9" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div>One block per row: 4 rows × 2 tests = 8</div>
+    <div><code>as const</code> keeps rows typed tuples</div>
+    <div><code>%s</code> first column · <code>%#</code> index</div>
+    <div>Wrap calls in arrow functions</div>
+    <div>Identical behaviour only</div>
+    <div>Loop = one test · table = many</div>
+  </div>
+</section>
+
+<section id="next" data-part="9" data-cue="Next, in video four">
+  <div class="kicker">Next · Video 04</div>
+  <h1><code>toBe</code>, <code>toEqual</code> and <code>toMatchObject</code></h1>
+</section>
+
+<script src="../../assets/slides.js"></script>
+</body>
+</html>

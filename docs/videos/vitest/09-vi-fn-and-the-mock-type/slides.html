@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vitest Video 09 Slides</title>
+<link rel="stylesheet" href="../../assets/slides.css">
+</head>
+<body data-video-number="09" data-video-title="vi.fn and the Mock type" data-parts="Introduction|Mock functions|Bare mocks|Implementations|Injector|vi.mock|Strict types|Loose types|Pitfalls|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Saturdaze · Vitest · Video 09 of 14</div>
+  <h1><code>vi.fn</code> and the <code>Mock</code> type</h1>
+  <p class="lead">Mock functions, fake services through the injector, and how to type them.</p>
+</section>
+
+<section id="numbers" data-part="0" data-cue="It appears two hundred and thirty-three times">
+  <h2>The most used Vitest feature after <code>expect</code></h2>
+  <div class="cols three">
+    <div class="card"><h3>233</h3><p><code>vi.fn</code> calls</p></div>
+    <div class="card"><h3>61</h3><p>spec files</p></div>
+    <div class="card"><h3>3</h3><p>ways to create one</p></div>
+  </div>
+</section>
+
+<section id="what" data-part="1" data-cue="A mock function is a function that records every call.">
+  <h2>A function that records its calls</h2>
+  <div class="flow">
+    <div class="node"><b>call it</b><small>(args)</small></div>
+    <div class="arrow">→</div>
+    <div class="node accent"><b>fn.mock</b><small>calls · results</small></div>
+    <div class="arrow">→</div>
+    <div class="node"><b>matchers read it</b><small>toHaveBeenCalledWith</small></div>
+  </div>
+</section>
+
+<section id="two-forms" data-part="1" data-cue="makes one. Called with nothing">
+  <h2>Two forms</h2>
+  <div class="cols">
+    <div class="card"><h3><code>vi.fn()</code></h3><p>Does nothing, returns <code>undefined</code>, records every call</p></div>
+    <div class="card good"><h3><code>vi.fn(impl)</code></h3><p>Runs <code>impl</code>, returns its result, still records every call</p></div>
+  </div>
+</section>
+
+<section id="bare" data-part="2" data-cue="The simplest use is in the copy field spec.">
+  <h2>A bare mock as an output subscriber</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/copy-field/copy-field.spec.ts" data-mark="2-3,8-9">  it('writes the value to the clipboard and emits copied', async () =&gt; {
+    const spy = vi.fn();
+    fixture.componentInstance.copied.subscribe(spy);
+
+    button().click();
+    await flush();
+
+    expect(writeText).toHaveBeenCalledWith('https://saturdaze.app/s/abc123');
+    expect(spy).toHaveBeenCalledWith('https://saturdaze.app/s/abc123');
+  });</pre>
+</section>
+
+<section id="bare-pattern" data-part="2" data-cue="Nothing about the mock is programmed.">
+  <h2>Subscribe, act, check</h2>
+  <ul>
+    <li>A listener that remembers; nothing programmed</li>
+    <li>14 component specs, 25 output subscriptions</li>
+    <li><code>output()</code> still supports <code>subscribe</code>, so no host component is needed</li>
+  </ul>
+</section>
+
+<section id="impl" data-part="3" data-cue="When the code under test needs a return value">
+  <h2>Mocks with implementations</h2>
+  <pre class="code tight" data-lang="ts" data-file="saturdaze/src/app/pages/past/past.page.spec.ts" data-mark="4-5,15">  beforeEach(() =&gt; {
+    view = signal&lt;PastView&gt;(LOADING);
+    saved = {
+      list: () =&gt; view,
+      load: vi.fn(async () =&gt; view.set(READY)),
+      setFilter: vi.fn(),
+      setFavourite: vi.fn(async () =&gt; undefined),
+      rate: vi.fn(async () =&gt; undefined),
+      rename: vi.fn(async () =&gt; undefined),
+    };
+    weekend = {
+      repeatSaved: vi.fn(async () =&gt; undefined),
+      remixSaved: vi.fn(async () =&gt; undefined),
+    };
+    dialog = { open: vi.fn(() =&gt; ({ closed: of(undefined) })) };
+  });</pre>
+</section>
+
+<section id="impl-details" data-part="3" data-cue="Two details are worth copying.">
+  <h2>Two details worth copying</h2>
+  <div class="cols">
+    <div class="card good"><h3>The fake does real work</h3><p><code>load</code> sets the signal that <code>list()</code> returns: loading → ready, no HTTP</p></div>
+    <div class="card"><h3><code>list</code> is not a mock</h3><p>Wrap a member in <code>vi.fn</code> only when a test asserts on it or reprograms it</p></div>
+  </div>
+</section>
+
+<section id="providers" data-part="4" data-cue="Those objects reach the page through Angular's dependency injection.">
+  <h2>Fakes through the injector</h2>
+  <pre class="code" data-lang="ts" data-file="saturdaze/src/app/pages/past/past.page.spec.ts" data-mark="5-7">    await TestBed.configureTestingModule({
+      imports: [PastPage],
+      providers: [
+        provideRouter([{ path: '**', children: [] }]),
+        { provide: SAVED_SERVICE, useValue: saved },
+        { provide: WEEKEND_PLAN_SERVICE, useValue: weekend },
+        { provide: Dialog, useValue: dialog },
+        ...</pre>
+</section>
+
+<section id="contract" data-part="4" data-cue="This is the repository's interface driven services rule at work.">
+  <h2>Interface-driven services make the seam</h2>
+  <pre class="code" data-lang="ts" data-file="api/src/lib/services/saved.service.contract.ts">export const SAVED_SERVICE = new InjectionToken&lt;ISavedService&gt;('SAVED_SERVICE');</pre>
+  <pre class="code" data-lang="ts" data-file="saturdaze/src/app/app.config.ts">    { provide: SAVED_SERVICE, useExisting: SavedService },</pre>
+  <pre class="code" data-lang="ts" data-file="saturdaze/src/app/pages/past/past.page.ts">  private readonly saved = inject(SAVED_SERVICE);</pre>
+  <p class="muted">The page injects the token, never the class: a fake is one provider line.</p>
+</section>
+
+<section id="framework-fakes" data-part="4" data-cue="The same move works for Angular and C D K classes.">
+  <h2>Framework classes too</h2>
+  <pre class="code" data-lang="ts" data-file="saturdaze/src/app/shell/menu-opener.spec.ts" data-mark="2-3,6-7">  beforeEach(() =&gt; {
+    breakpoints = { isMatched: vi.fn(() =&gt; false) };
+    dialog = { open: vi.fn(() =&gt; ({ closed: of(ITEMS[1]) })) };
+    TestBed.configureTestingModule({
+      providers: [
+        { provide: BreakpointObserver, useValue: breakpoints },
+        { provide: Dialog, useValue: dialog },
+      ],
+    });</pre>
+  <pre class="code" data-lang="ts" data-file="saturdaze/src/app/dialogs/confirm-dialog/confirm-dialog.spec.ts">    mockDialogRef = { close: vi.fn() };</pre>
+</section>
+
+<section id="no-vi-mock" data-part="5" data-cue="Vitest has a module mocking feature">
+  <h2>Why not <code>vi.mock</code></h2>
+  <pre class="code tight" data-lang="ts" data-file="saturdaze/src/app/shared/dev-state.spec.ts" data-mark="3">  // The production branch (`galleryRoutes: false` → always null) is a
+  // compile-time constant swapped in by fileReplacements; the Angular unit-test
+  // builder does not support vi.mock on relative imports, so it is not
+  // exercised here.</pre>
+  <div class="cols three">
+    <div class="card good"><h3>A seam</h3><p>Injection tokens, no module magic</p></div>
+    <div class="card good"><h3>Readable</h3><p>The fake is an object in the test</p></div>
+    <div class="card good"><h3>Uniform</h3><p>Same technique in every spec</p></div>
+  </div>
+</section>
+
+<section id="strict-chip" data-part="6" data-cue="By default a mock accepts any arguments and returns anything.">
+  <h2>Strict: the <code>Mock</code> type</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/chip-input/chip-input.spec.ts" data-mark="1,4,8-9">import type { Mock } from 'vitest';
+...
+describe('ChipInput', () =&gt; {
+  let onChange: Mock&lt;(value: string[]) =&gt; void&gt;;
+  ...
+  beforeEach(async () =&gt; {
+    ...
+    onChange = vi.fn&lt;(value: string[]) =&gt; void&gt;();
+    component.registerOnChange(onChange);</pre>
+  <p class="muted">The wrong argument shape is now a compile error.</p>
+</section>
+
+<section id="strict-copy" data-part="6" data-cue="The copy field spec does the same for the clipboard.">
+  <h2>The type argument is the signature</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/copy-field/copy-field.spec.ts" data-mark="1,4">  let writeText: Mock&lt;(text: string) =&gt; Promise&lt;void&gt;&gt;;
+  ...
+  beforeEach(async () =&gt; {
+    writeText = vi.fn&lt;(text: string) =&gt; Promise&lt;void&gt;&gt;().mockResolvedValue(undefined);
+    Object.defineProperty(navigator, 'clipboard', { value: { writeText }, configurable: true });</pre>
+  <div class="cols">
+    <div class="card good"><h3><code>vi.fn&lt;(text: string) =&gt; Promise&lt;void&gt;&gt;()</code></h3><p>The whole function type</p></div>
+    <div class="card bad"><h3><code>vi.fn&lt;Promise&lt;void&gt;&gt;()</code></h3><p>Not the return value</p></div>
+  </div>
+</section>
+
+<section id="loose" data-part="7" data-cue="Most page and dialog specs take a shortcut.">
+  <h2>Loose: the return type of <code>vi.fn</code></h2>
+  <pre class="code" data-lang="ts" data-file="saturdaze/src/app/pages/past/past.page.spec.ts" data-mark="5-7">  let fixture: ComponentFixture&lt;PastPage&gt;;
+  let component: PastPage;
+  let host: HTMLElement;
+  let view: ReturnType&lt;typeof signal&lt;PastView&gt;&gt;;
+  let saved: any;
+  let weekend: { repeatSaved: ReturnType&lt;typeof vi.fn&gt;; remixSaved: ReturnType&lt;typeof vi.fn&gt; };
+  let dialog: { open: ReturnType&lt;typeof vi.fn&gt; };</pre>
+  <p class="muted">67 uses across 35 spec files.</p>
+</section>
+
+<section id="trade-off" data-part="7" data-cue="That type is a mock of any function">
+  <h2>The trade-off</h2>
+  <div class="cols">
+    <div class="card good"><h3>Cheap and flexible</h3><p>Program any shape with <code>mockReturnValueOnce</code> (video 10)</p></div>
+    <div class="card bad"><h3>Unchecked</h3><p>The fake is not checked against the contract; <code>saved</code> is <code>any</code> and implements 6 members</p></div>
+  </div>
+</section>
+
+<section id="choose" data-part="7" data-cue="So choose deliberately.">
+  <h2>Choose deliberately</h2>
+  <div class="cols">
+    <div class="card"><h3>Strict <code>Mock&lt;…&gt;</code></h3><p>Small, stable callbacks: forms <code>onChange</code>, the clipboard</p></div>
+    <div class="card"><h3>Loose <code>ReturnType&lt;typeof vi.fn&gt;</code></h3><p>Large fake services where a test touches a few members</p></div>
+  </div>
+</section>
+
+<section id="pitfalls" data-part="8" data-cue="A few pitfalls.">
+  <h2>Pitfalls</h2>
+  <ul>
+    <li>Wrapping every member in <code>vi.fn</code></li>
+    <li>Building a fake in the <code>describe</code> body without resetting it</li>
+    <li>Reaching for <code>vi.mock</code> instead of a provider</li>
+    <li>Awaiting a bare mock's <code>undefined</code> result</li>
+  </ul>
+</section>
+
+<section id="recap" data-part="9" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div>A mock records its calls on <code>.mock</code></div>
+    <div>Bare for listeners, <code>vi.fn(impl)</code> for results</div>
+    <div>Fakes via tokens and <code>useValue</code></div>
+    <div>No <code>vi.mock</code> on relative imports</div>
+    <div>Strict <code>Mock</code> for small callbacks, loose for big fakes</div>
+  </div>
+</section>
+
+<section id="next" data-part="9" data-cue="Next, in video ten, we program those mocks">
+  <div class="kicker">Next · Video 10</div>
+  <h1>Programming mock behaviour</h1>
+</section>
+
+<script src="../../assets/slides.js"></script>
+</body>
+</html>

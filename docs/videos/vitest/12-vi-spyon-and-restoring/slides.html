@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vitest Video 12 Slides</title>
+<link rel="stylesheet" href="../../assets/slides.css">
+</head>
+<body data-video-number="12" data-video-title="vi.spyOn and restoring" data-parts="Introduction|Choosing|Router|Console|Restoring|Call-through|Restore semantics|No vi.mock|Pitfalls|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Saturdaze · Vitest · Video 12 of 14</div>
+  <h1><code>vi.spyOn</code> and restoring</h1>
+  <p class="lead">Watch or replace a method on a real object, then put it back.</p>
+</section>
+
+<section id="targets" data-part="1" data-cue="The specs call `vi.spyOn` twenty-six times">
+  <h2>26 spies, three targets</h2>
+  <div class="cols three">
+    <div class="card"><h3>14 × <code>console.error</code></h3><p>Silence expected failures</p></div>
+    <div class="card"><h3>11 × <code>Router</code></h3><p><code>navigateByUrl</code> (10) · <code>navigate</code> (1)</p></div>
+    <div class="card"><h3>1 × <code>window</code></h3><p><code>removeEventListener</code></p></div>
+  </div>
+</section>
+
+<section id="choose" data-part="1" data-cue="Here is how to choose.">
+  <h2>Spy on, or fake?</h2>
+  <div class="cols">
+    <div class="card"><h3><code>vi.fn()</code></h3><p>The code <b>receives</b> the dependency: a fake service through an injection token</p></div>
+    <div class="card good"><h3><code>vi.spyOn(obj, 'method')</code></h3><p>The code <b>reaches for</b> a real object: a global, or a service the test bed created. Remembers the original.</p></div>
+  </div>
+</section>
+
+<section id="router" data-part="2" data-cue="Start with the button spec.">
+  <h2>Spying on the router</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/button/button.spec.ts" data-mark="3,8">  it('routes a plain click on an in-app href through the router', () =&gt; {
+    const router = TestBed.inject(Router);
+    const navigate = vi.spyOn(router, 'navigateByUrl').mockResolvedValue(true);
+    fixture.componentRef.setInput('href', '/weekend');
+    fixture.detectChanges();
+
+    expect(click(inner())).toBe(true);
+    expect(navigate).toHaveBeenCalledWith('/weekend');
+  });</pre>
+  <p class="muted">No chained call → the spy calls through to the real method.</p>
+</section>
+
+<section id="router-never" data-part="2" data-cue="The second button test uses the same spy">
+  <h2>The same spy, the other way round</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/button/button.spec.ts" data-mark="3,15">  it('lets external, modifier and targeted clicks keep their browser meaning', () =&gt; {
+    const router = TestBed.inject(Router);
+    const navigate = vi.spyOn(router, 'navigateByUrl').mockResolvedValue(true);
+
+    fixture.componentRef.setInput('href', 'https://example.com');
+    fixture.detectChanges();
+    expect(click(inner())).toBe(false);
+
+    fixture.componentRef.setInput('href', '/weekend');
+    fixture.detectChanges();
+    expect(click(inner(), { ctrlKey: true })).toBe(false);
+    ...
+    expect(click(inner())).toBe(false);
+
+    expect(navigate).not.toHaveBeenCalled();
+  });</pre>
+</section>
+
+<section id="router-pages" data-part="2" data-cue="Pages do the same, with one twist.">
+  <h2>A spy shared by every test</h2>
+  <pre class="code" data-lang="ts" data-file="saturdaze/src/app/pages/create-account/create-account.page.spec.ts" data-mark="2,13">  let session: { clearError: ReturnType&lt;typeof vi.fn&gt;; signUp: ReturnType&lt;typeof vi.fn&gt; };
+  let navigate: ReturnType&lt;typeof vi.spyOn&gt;;
+
+  beforeEach(async () =&gt; {
+    session = { clearError: vi.fn(), signUp: vi.fn(async () =&gt; undefined) };
+    await TestBed.configureTestingModule({
+      imports: [CreateAccountPage],
+      providers: [
+        provideRouter([{ path: '**', children: [] }]),
+        { provide: SESSION_STORE, useValue: session },
+      ],
+    }).compileComponents();
+    navigate = vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);</pre>
+</section>
+
+<section id="router-lifetime" data-part="2" data-cue="None of these router spies is restored">
+  <h2>Who owns the object?</h2>
+  <div class="cols">
+    <div class="card good"><h3>Test bed owns it</h3><p><code>Router</code>: TestBed resets between tests, the next test injects a fresh one. The spy dies with the old instance.</p></div>
+    <div class="card bad"><h3>Nobody resets it</h3><p><code>console</code>, <code>window</code>: a spy lives until you restore it.</p></div>
+  </div>
+</section>
+
+<section id="console-why" data-part="3" data-cue="The services log before they recover.">
+  <h2>Why silence <code>console.error</code>?</h2>
+  <pre class="code tight" data-lang="ts" data-file="api/src/lib/services/weekend-plan.service.ts" data-mark="12-13">  async loadCurrent(): Promise&lt;void&gt; {
+    try {
+      const dto = await firstValueFrom(
+        this.http.get&lt;WeekendDto&gt;(`${this.baseUrl}/api/weekends/current`),
+      );
+      this.apply(dto);
+    } catch (err) {
+      if (err instanceof HttpErrorResponse &amp;&amp; err.status === 404) {
+        this.apply(null);
+        return;
+      }
+      console.error('WeekendPlanService.loadCurrent failed', err);
+      throw err;
+    }
+  }</pre>
+</section>
+
+<section id="console-spy" data-part="3" data-cue="So the spec spies on console dot error">
+  <h2>Replace for the test, then remove</h2>
+  <pre class="code" data-lang="ts" data-file="any of 14 specs">vi.spyOn(console, 'error').mockImplementation(() =&gt; undefined);</pre>
+  <ul>
+    <li>The original is replaced while the spy is in place</li>
+    <li><code>console</code> is a global and <code>isolate</code> is <code>false</code></li>
+    <li>Not restored → later tests and files lose their error output</li>
+  </ul>
+</section>
+
+<section id="restore-afterEach" data-part="4" data-cue="The repository restores these spies in three styles.">
+  <h2>Style 1 · <code>afterEach</code> (robust)</h2>
+  <pre class="code" data-lang="ts" data-file="api/src/lib/services/weekend-plan.service.spec.ts" data-mark="2,10">  beforeEach(() =&gt; {
+    vi.spyOn(console, 'error').mockImplementation(() =&gt; undefined);
+    TestBed.configureTestingModule({ ... });
+    service = TestBed.inject(WeekendPlanService);
+    httpMock = TestBed.inject(HttpTestingController);
+  });
+
+  afterEach(() =&gt; {
+    httpMock.verify();
+    vi.restoreAllMocks();
+  });</pre>
+</section>
+
+<section id="restore-end" data-part="4" data-cue="Five tests in the activity, events, restaurant and saved service specs">
+  <h2>Styles 2 and 3 · last line of the test</h2>
+  <pre class="code" data-lang="ts" data-file="api/src/lib/services/saved.service.spec.ts" data-mark="2,6">  it('shows the empty state when the history call fails', async () =&gt; {
+    vi.spyOn(console, 'error').mockImplementation(() =&gt; undefined);
+    httpMock.expectOne(HISTORY).flush(null, { status: 500, statusText: 'Boom' });
+    await settle();
+    expect(service.list()().status).toBe('empty');
+    vi.restoreAllMocks();
+  });</pre>
+  <div class="cols">
+    <div class="card"><h3>2 · <code>vi.restoreAllMocks()</code></h3><p>5 tests: activity, events, restaurant ×2, saved</p></div>
+    <div class="card"><h3>3 · <code>consoleError.mockRestore()</code></h3><p>8 page and dialog specs</p></div>
+  </div>
+</section>
+
+<section id="restore-family" data-part="4" data-cue="Eight page and dialog specs keep the spy">
+  <h2>Style 3 in a page spec</h2>
+  <pre class="code" data-lang="ts" data-file="saturdaze/src/app/pages/family/family.page.spec.ts" data-mark="2,10">  it('shows a warn banner when a save fails', async () =&gt; {
+    const consoleError = vi.spyOn(console, 'error').mockImplementation(() =&gt; undefined);
+    await mount();
+    familyService.saveProfile.mockRejectedValueOnce(new Error('500'));
+    await component['setPreference']('budget', true);
+    fixture.detectChanges();
+    expect(host.querySelector('sd-banner.error')?.textContent?.trim()).toBe(
+      'That did not save. Try again in a moment.',
+    );
+    consoleError.mockRestore();
+  });</pre>
+</section>
+
+<section id="restore-weakness" data-part="4" data-cue="The last two styles have the same weakness.">
+  <h2>When the assertion fails first</h2>
+  <div class="flow">
+    <div class="node"><b>spy created</b><small>console silenced</small></div>
+    <div class="arrow">→</div>
+    <div class="node ext"><b>expect fails</b><small>test stops here</small></div>
+    <div class="arrow">→</div>
+    <div class="node"><b>restore skipped</b><small>never reached</small></div>
+    <div class="arrow">→</div>
+    <div class="node accent"><b>later tests</b><small>errors hidden</small></div>
+  </div>
+  <p class="center">Put the restore in <code>afterEach</code>: it runs even when the test fails.</p>
+</section>
+
+<section id="call-through" data-part="5" data-cue="The scrolled spec shows the other half">
+  <h2>Spying without replacing</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/scrolled/scrolled.spec.ts" data-mark="2,4-5">  it('removes the window listener when destroyed', () =&gt; {
+    const remove = vi.spyOn(window, 'removeEventListener');
+    fixture.destroy();
+    expect(remove).toHaveBeenCalledWith('scroll', expect.any(Function));
+    remove.mockRestore();
+  });</pre>
+  <p class="muted">No implementation → the real method still runs. The spy only records.</p>
+</section>
+
+<section id="semantics" data-part="6" data-cue="As of Vitest four point one, mock restore on a spy">
+  <h2>What restore actually does</h2>
+  <div class="cols">
+    <div class="card"><h3><code>spy.mockRestore()</code></h3><p>Clears recorded calls and puts the original method back on the object</p></div>
+    <div class="card"><h3><code>vi.restoreAllMocks()</code></h3><p>Does that for every spy created with <code>vi.spyOn</code></p></div>
+  </div>
+  <p class="muted">As of Vitest 4.1</p>
+</section>
+
+<section id="semantics-fn" data-part="6" data-cue="It does not touch mocks made with `vi.fn`.">
+  <h2>Restore all mocks skips <code>vi.fn</code></h2>
+  <pre class="code" data-lang="ts" data-file="node_modules/@vitest/spy/dist/index.js" data-mark="3-5">function createMockInstance(options = {}) {
+  const { originalImplementation, restore, /* … */ } = options;
+  if (restore) {
+    MOCK_RESTORE.add(restore);
+  }
+}
+function restoreAllMocks() {
+  for (const restore of MOCK_RESTORE) {
+    restore();
+  }
+  MOCK_RESTORE.clear();
+}</pre>
+  <p class="muted">Only <code>spyOn</code> passes a <code>restore</code>.</p>
+</section>
+
+<section id="no-vi-mock" data-part="7" data-cue="You might reach for `vi.mock`">
+  <h2>Spies instead of module mocks</h2>
+  <div class="cols">
+    <div class="card bad"><h3><code>vi.mock('./x')</code></h3><p>Not supported on relative imports by the Angular unit-test builder (<code>dev-state.spec.ts</code>)</p></div>
+    <div class="card good"><h3>Inject or spy</h3><p>Fake what you inject with <code>vi.fn</code> + a provider; spy on what you can't inject</p></div>
+  </div>
+</section>
+
+<section id="pitfalls" data-part="8" data-cue="A few pitfalls.">
+  <h2>Pitfalls</h2>
+  <ul>
+    <li>A spy with no implementation <b>calls through</b></li>
+    <li>Restoring at the end of the test body instead of <code>afterEach</code></li>
+    <li>Expecting <code>vi.restoreAllMocks()</code> to clear a <code>vi.fn</code></li>
+    <li>Spying on a global without restoring it (<code>isolate: false</code>)</li>
+  </ul>
+</section>
+
+<section id="recap" data-part="9" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div><code>spyOn</code> wraps a real method; <code>vi.fn</code> is new</div>
+    <div>Chain a mock to stop the real method</div>
+    <div>Test bed objects reset; globals don't</div>
+    <div>Restore in <code>afterEach</code></div>
+    <div><code>restoreAllMocks</code> restores spies only</div>
+  </div>
+</section>
+
+<section id="next" data-part="9" data-cue="Next, in video thirteen">
+  <div class="kicker">Next · Video 13</div>
+  <h1>Fake timers and <code>vi.advanceTimersByTime</code></h1>
+</section>
+
+<script src="../../assets/slides.js"></script>
+</body>
+</html>

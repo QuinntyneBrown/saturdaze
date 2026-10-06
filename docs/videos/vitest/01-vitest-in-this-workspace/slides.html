@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vitest Video 01 Slides</title>
+<link rel="stylesheet" href="../../assets/slides.css">
+</head>
+<body data-video-number="01" data-video-title="Vitest in this workspace" data-parts="Introduction|npm test|Builder|Types|Runner config|Running|Inventory|Pitfalls|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Saturdaze · Vitest · Video 01 of 14</div>
+  <h1>Vitest in this workspace</h1>
+  <p class="lead">What runs when you type <code>npm test</code>, and which configuration applies.</p>
+</section>
+
+<section id="question" data-part="0" data-cue="This one answers a simpler question first">
+  <h2>Three questions first</h2>
+  <div class="question">What actually runs when you type <code>npm test</code>?</div>
+  <div class="question">Where does <code>describe</code> come from?</div>
+  <div class="question">Which configuration applies?</div>
+</section>
+
+<section id="npm-test" data-part="1" data-cue="Start in the frontend folder.">
+  <h2>From the package script to the CLI</h2>
+  <pre class="code" data-lang="json" data-file="frontend/package.json" data-mark="2">"scripts": {
+  "test": "ng test",
+  ...
+},
+"devDependencies": {
+  "jsdom": "^28.0.0",
+  "vitest": "^4.0.8"
+}</pre>
+  <p class="muted">At the workspace root, <code>ng test</code> runs every project's <code>test</code> target.</p>
+</section>
+
+<section id="targets" data-part="1" data-cue="Three projects have a test target in the angular file">
+  <h2>Three test targets, one builder</h2>
+  <pre class="code" data-lang="json" data-file="frontend/angular.json" data-mark="2">"test": {
+  "builder": "@angular/build:unit-test",
+  "options": {
+    "tsConfig": "projects/components/tsconfig.spec.json"
+  }
+}</pre>
+  <div class="cols three">
+    <div class="card"><h3>components</h3><p>51 spec files</p></div>
+    <div class="card"><h3>api</h3><p>18 spec files</p></div>
+    <div class="card"><h3>saturdaze</h3><p>49 spec files</p></div>
+  </div>
+</section>
+
+<section id="chain" data-part="1" data-cue="So the chain is">
+  <h2>The chain</h2>
+  <div class="flow">
+    <div class="node"><b>npm test</b><small>package.json</small></div>
+    <div class="arrow">→</div>
+    <div class="node"><b>ng test</b><small>Angular CLI</small></div>
+    <div class="arrow">→</div>
+    <div class="node accent"><b>unit-test builder</b><small>esbuild compile</small></div>
+    <div class="arrow">→</div>
+    <div class="node"><b>Vitest</b><small>runs the specs</small></div>
+  </div>
+  <p class="muted center">You never run the <code>vitest</code> CLI yourself here.</p>
+</section>
+
+<section id="defaults" data-part="2" data-cue="The builder sets several Vitest options">
+  <h2>What the builder decides for you</h2>
+  <pre class="code" data-lang="ts" data-file="@angular/build/…/unit-test/runners/vitest/plugins.js" data-mark="4,6">const projectDefaults = {
+  test: {
+    setupFiles,
+    globals: true,
+    // Default to `false` to align with the Karma/Jasmine experience.
+    isolate: false,
+    sequence: { setupFiles: 'list' },
+  },
+};</pre>
+  <p class="muted">As of October 2026 · <code>@angular/build</code> 21.2 · Vitest 4.1</p>
+</section>
+
+<section id="include-env" data-part="2" data-cue="It finds the tests.">
+  <h2>Include and environment</h2>
+  <div class="cols">
+    <div class="card"><h3>include</h3><p><code>**/*.spec.ts</code>, <code>**/*.test.ts</code><br>relative to the project root</p><p class="small muted">This repo uses only <code>.spec.ts</code></p></div>
+    <div class="card"><h3>environment</h3><p>Node + <code>jsdom</code> when no <code>browsers</code> option is set</p><p class="small muted">No <code>PointerEvent</code> constructor, so the tooltip spec fakes one</p></div>
+  </div>
+</section>
+
+<section id="globals-isolate" data-part="2" data-cue="It turns on globals.">
+  <h2>Globals on, isolation off</h2>
+  <div class="cols">
+    <div class="card good"><h3>globals: true</h3><p><code>describe</code>, <code>it</code>, <code>expect</code>, <code>beforeEach</code> and <code>vi</code> need no import</p></div>
+    <div class="card bad"><h3>isolate: false</h3><p>Spec files share one module context: a leftover spy or fake clock can leak into the next file</p></div>
+  </div>
+</section>
+
+<section id="types" data-part="3" data-cue="Globals at runtime are only half the story.">
+  <h2>Types for the compiler</h2>
+  <pre class="code" data-lang="json" data-file="frontend/projects/components/tsconfig.spec.json" data-mark="5,7">{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../../out-tsc/spec",
+    "types": ["vitest/globals"]
+  },
+  "include": ["src/**/*.d.ts", "src/**/*.spec.ts"]
+}</pre>
+  <p class="muted">Same in <code>api</code> and <code>saturdaze</code>.</p>
+</section>
+
+<section id="vi-import" data-part="3" data-cue="You will still see an explicit import">
+  <h2>Imports you will see</h2>
+  <pre class="code" data-lang="ts" data-file="40 spec files">import { vi } from 'vitest';</pre>
+  <pre class="code" data-lang="ts" data-file="chip-input.spec.ts · copy-field.spec.ts">import type { Mock } from 'vitest';</pre>
+  <ul>
+    <li><code>vi</code> import: redundant at runtime, harmless, explicit</li>
+    <li><code>Mock</code>: type-only, for typed mock variables (video 09)</li>
+    <li>Pinned <code>^4.0.8</code>, installed 4.1 · jsdom 28</li>
+  </ul>
+</section>
+
+<section id="runner-config" data-part="4" data-cue="There is one Vitest config file in the frontend folder">
+  <h2>The optional runner config</h2>
+  <pre class="code" data-lang="ts" data-file="frontend/vitest-base.config.mjs" data-mark="4-6,10">// Measurement harness setting (coverage-maximization plan P0.7): vitest's
+// coverage.reportOnFailure defaults to false, so a run with failing tests
+// writes no coverage report at all. The honest-denominator file list is
+// passed via the builder's own --coverage-include option, NOT here — an
+// include list in this config filters against a different root and zeroes
+// the collected coverage (measured).
+export default defineConfig({
+  test: {
+    coverage: {
+      reportOnFailure: true,
+    },
+  },
+});</pre>
+</section>
+
+<section id="runner-config-flag" data-part="4" data-cue="Here is the subtle part.">
+  <h2>Loaded only when you ask</h2>
+  <div class="cols">
+    <div class="card"><h3><code>npm test</code></h3><p><code>runnerConfig</code> defaults to <code>false</code>: the file is ignored</p></div>
+    <div class="card good"><h3><code>--runner-config</code></h3><p>Searches the project root, then the workspace root, for <code>vitest-base.config.*</code> and merges it</p></div>
+  </div>
+  <p class="muted">Coverage file list? Use <code>--coverage-include</code>, never an <code>include</code> in this file.</p>
+</section>
+
+<section id="running" data-part="5" data-cue="Three commands cover nearly everything.">
+  <h2>Running tests</h2>
+  <pre class="code" data-lang="sh" data-file="frontend/">npm test                                   # all projects, watch in a TTY
+npm test -- --watch=false                  # one pass (CI)
+npx ng test components --watch=false       # one project
+npx ng test components \
+  --include='**/copy-field/copy-field.spec.ts'   # one file</pre>
+  <pre class="code" data-lang="yaml" data-file=".github/workflows/ci.yml">- name: Unit tests (Vitest)
+  working-directory: frontend
+  run: npm test -- --watch=false</pre>
+</section>
+
+<section id="inventory" data-part="6" data-cue="Across the three projects there are one hundred and eighteen spec files">
+  <h2>What the specs use</h2>
+  <div class="cols three">
+    <div class="card"><h3>118</h3><p>spec files</p></div>
+    <div class="card"><h3>748</h3><p>tests passing<br><span class="small muted">293 · 193 · 262</span></p></div>
+    <div class="card"><h3>~2,460</h3><p><code>expect</code> calls</p></div>
+  </div>
+</section>
+
+<section id="features" data-part="6" data-cue="Structure:">
+  <h2>The series</h2>
+  <div class="cols">
+    <ul class="small">
+      <li>02 · <code>describe</code>, <code>it</code> and hooks</li>
+      <li>03 · <code>describe.each</code></li>
+      <li>04 · <code>toBe</code>, <code>toEqual</code>, <code>toMatchObject</code></li>
+      <li>05 · Null, truthy and type matchers</li>
+      <li>06 · Strings and collections</li>
+      <li>07 · Asymmetric matchers</li>
+      <li>08 · <code>resolves</code>, <code>rejects</code>, <code>toThrow</code></li>
+    </ul>
+    <ul class="small">
+      <li>09 · <code>vi.fn</code> and <code>Mock</code></li>
+      <li>10 · Programming mock behaviour</li>
+      <li>11 · Asserting calls</li>
+      <li>12 · <code>vi.spyOn</code> and restoring</li>
+      <li>13 · Fake timers and <code>advanceTimersByTime</code></li>
+      <li>14 · <code>vi.setSystemTime</code></li>
+    </ul>
+  </div>
+</section>
+
+<section id="absent" data-part="6" data-cue="Just as telling is what is absent.">
+  <h2>What is absent</h2>
+  <div class="cols">
+    <div class="card bad"><h3>No snapshots</h3><p>Every assertion states the expected value</p></div>
+    <div class="card bad"><h3>No <code>vi.mock</code></h3><p>Dependencies are swapped through Angular's injector</p></div>
+  </div>
+  <pre class="code tight" data-lang="ts" data-file="saturdaze/src/app/shared/dev-state.spec.ts">// The production branch (`galleryRoutes: false` → always null) is a
+// compile-time constant swapped in by fileReplacements; the Angular unit-test
+// builder does not support vi.mock on relative imports, so it is not
+// exercised here.</pre>
+</section>
+
+<section id="pitfalls" data-part="7" data-cue="A few pitfalls.">
+  <h2>Pitfalls</h2>
+  <ul>
+    <li>Running the <code>vitest</code> CLI directly</li>
+    <li>Expecting <code>vitest-base.config.mjs</code> to apply without <code>--runner-config</code></li>
+    <li>Removing <code>vitest/globals</code> from a <code>tsconfig.spec.json</code></li>
+    <li>Forgetting cleanup when <code>isolate</code> is <code>false</code></li>
+  </ul>
+</section>
+
+<section id="recap" data-part="8" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div><code>npm test</code> → <code>ng test</code> → unit-test builder</div>
+    <div>Builder: include, jsdom, globals, isolate false</div>
+    <div><code>vitest/globals</code> types in each spec tsconfig</div>
+    <div>Runner config only with <code>--runner-config</code></div>
+    <div>No snapshots, no module mocking</div>
+  </div>
+</section>
+
+<section id="next" data-part="8" data-cue="Next, in video two">
+  <div class="kicker">Next · Video 02</div>
+  <h1><code>describe</code>, <code>it</code> and the hooks</h1>
+</section>
+
+<script src="../../assets/slides.js"></script>
+</body>
+</html>

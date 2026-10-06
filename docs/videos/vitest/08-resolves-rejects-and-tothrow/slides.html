@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vitest Video 08 Slides</title>
+<link rel="stylesheet" href="../../assets/slides.css">
+</head>
+<body data-video-number="08" data-video-title="resolves, rejects and toThrow" data-parts="Introduction|Promises|resolves|rejects|HTTP order|toThrow|Async throws|Pitfalls|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Saturdaze · Vitest · Video 08 of 14</div>
+  <h1>Promises and errors</h1>
+  <p class="lead"><code>resolves</code>, <code>rejects</code> and <code>toThrow</code>.</p>
+</section>
+
+<section id="outline" data-part="0" data-cue="It also covers the ordering rule">
+  <h2>In this video</h2>
+  <div class="cols three">
+    <div class="card"><h3>resolves · rejects</h3><p>Assertions on a promise's outcome</p></div>
+    <div class="card"><h3>HTTP order</h3><p>Call · flush · await</p></div>
+    <div class="card"><h3>toThrow</h3><p>Synchronous throws — and async ones</p></div>
+  </div>
+</section>
+
+<section id="shape" data-part="1" data-cue="Put a promise inside">
+  <h2>The shape</h2>
+  <pre class="code" data-lang="ts" data-file="the pattern">await expect(promise).resolves.&lt;matcher&gt;(…);
+await expect(promise).rejects.&lt;matcher&gt;(…);</pre>
+  <div class="cols">
+    <div class="card good"><h3>resolves</h3><p>Matcher runs on the resolved value · a rejection fails</p></div>
+    <div class="card bad"><h3>rejects</h3><p>Matcher runs on the rejection reason · a resolution fails</p></div>
+  </div>
+</section>
+
+<section id="await" data-part="1" data-cue="Because Vitest has to wait, the assertion itself returns a promise">
+  <h2>The assertion is a promise too</h2>
+  <div class="cols three">
+    <div class="card"><h3>40</h3><p><code>resolves</code> / <code>rejects</code> assertions</p></div>
+    <div class="card good"><h3>40</h3><p>start with <code>await expect</code></p></div>
+    <div class="card"><h3>0</h3><p>left floating</p></div>
+  </div>
+</section>
+
+<section id="resolves-counts" data-part="2" data-cue="There are twenty-one">
+  <h2><code>resolves</code>: 21 uses</h2>
+  <div class="cols four">
+    <div class="card"><h3>toBe</h3><p>11</p></div>
+    <div class="card"><h3>toBeUndefined</h3><p>6</p></div>
+    <div class="card"><h3>toEqual</h3><p>3</p></div>
+    <div class="card"><h3>toBeNull</h3><p>1</p></div>
+  </div>
+</section>
+
+<section id="confirm" data-part="2" data-cue="The confirm dialog spec tests a helper called confirm with.">
+  <h2>Both outcomes in two lines</h2>
+  <pre class="code" data-lang="ts" data-file="saturdaze/src/app/dialogs/confirm-dialog/confirm-dialog.spec.ts" data-mark="3,5">it('confirmWith resolves true only on confirm', async () =&gt; {
+  const dialog = { open: vi.fn(() =&gt; ({ closed: of('confirm') })) } as any;
+  await expect(confirmWith(dialog, { title: 'x' })).resolves.toBe(true);
+  dialog.open = vi.fn(() =&gt; ({ closed: of(undefined) }));
+  await expect(confirmWith(dialog, { title: 'x' })).resolves.toBe(false);
+});</pre>
+</section>
+
+<section id="menu" data-part="2" data-cue="The menu opener spec opens a menu">
+  <h2><code>resolves.toBe</code>: the same object</h2>
+  <pre class="code tight" data-lang="ts" data-file="saturdaze/src/app/shell/menu-opener.spec.ts" data-mark="2,7">const opener = TestBed.inject(MenuOpener);
+const pending = opener.open(anchor, { title: 'Account', header: 'q@x.com', items: ITEMS });
+TestBed.inject(ApplicationRef).tick();
+...
+items[0]!.click();
+
+await expect(pending).resolves.toBe(ITEMS[0]);</pre>
+  <pre class="code" data-lang="ts" data-file="api/src/lib/services/auth.service.spec.ts · logout">req.flush(null, { status: 204, statusText: 'No Content' });
+await expect(promise).resolves.toBeUndefined();</pre>
+  <p class="muted"><code>resolves.toBeUndefined</code>: succeeded, returns nothing</p>
+</section>
+
+<section id="rejects-counts" data-part="3" data-cue="There are nineteen">
+  <h2><code>rejects</code>: 19 uses</h2>
+  <div class="cols four">
+    <div class="card"><h3>toBeTruthy</h3><p>10</p></div>
+    <div class="card"><h3>toMatchObject</h3><p>5</p></div>
+    <div class="card"><h3>toEqual</h3><p>3</p></div>
+    <div class="card"><h3>toThrow</h3><p>1</p></div>
+  </div>
+  <p class="muted">The strongest ones say what the error is</p>
+</section>
+
+<section id="auth-error" data-part="3" data-cue="The auth service maps every failure to an auth error">
+  <h2>Assert the shape of the error</h2>
+  <pre class="code" data-lang="ts" data-file="api/src/lib/services/auth.service.spec.ts">await expect(promise).rejects.toEqual({ code: 'email_in_use', message: 'taken' });</pre>
+  <pre class="code" data-lang="ts" data-file="api/src/lib/services/auth.service.spec.ts" data-mark="6-8">it('falls back to invalid_credentials when the body carries no code', async () =&gt; {
+  const promise = service.login({ email: 'quinn@example.com', password: 'pw' });
+  httpMock
+    .expectOne(`${BASE}/api/auth/login`)
+    .flush(null, { status: 500, statusText: 'Server Error' });
+  await expect(promise).rejects.toMatchObject({
+    code: 'invalid_credentials',
+  } satisfies Partial&lt;AuthError&gt;);
+});</pre>
+  <p class="muted"><code>satisfies</code>: a typo in the expected code is a compile error</p>
+</section>
+
+<section id="truthy" data-part="3" data-cue="Ten assertions use">
+  <h2><code>rejects.toBeTruthy</code>: it rejected, with something</h2>
+  <pre class="code" data-lang="ts" data-file="api/src/lib/services/weekend-plan.service.spec.ts" data-mark="4-5">it('rejects on any other failure and stays loading', async () =&gt; {
+  const first = service.loadCurrent();
+  httpMock.expectOne(CURRENT).flush(null, { status: 500, statusText: 'Server Error' });
+  await expect(first).rejects.toBeTruthy();
+  expect(service.getWeekend()().status).toBe('loading');</pre>
+  <p class="muted">Fine when the contract is the state afterwards · assert the shape when callers branch on the error</p>
+</section>
+
+<section id="order" data-part="4" data-cue="The A P I service specs all follow one order">
+  <h2>Call · flush · await</h2>
+  <div class="flow">
+    <div class="node"><b>1 · call</b><small>keep the promise</small></div>
+    <div class="arrow">→</div>
+    <div class="node"><b>2 · expectOne + flush</b><small>answer the request</small></div>
+    <div class="arrow">→</div>
+    <div class="node accent"><b>3 · await expect</b><small>resolves / rejects</small></div>
+  </div>
+</section>
+
+<section id="signup" data-part="4" data-cue="Look at the sign up test.">
+  <h2>The sign up test</h2>
+  <pre class="code" data-lang="ts" data-file="api/src/lib/services/auth.service.spec.ts" data-mark="2,9-11,12">it('rethrows the backend AuthError body', async () =&gt; {
+  const promise = service.signUp({
+    familyName: 'Browns',
+    homeLocation: 'Port Credit',
+    email: 'quinn@example.com',
+    password: 'pw',
+    fridayPreview: true,
+  });
+  httpMock
+    .expectOne(`${BASE}/api/auth/register`)
+    .flush({ code: 'email_in_use', message: 'taken' }, { status: 409, statusText: 'Conflict' });
+  await expect(promise).rejects.toEqual({ code: 'email_in_use', message: 'taken' });
+});</pre>
+</section>
+
+<section id="hang" data-part="4" data-cue="Swap the last two steps and the test hangs.">
+  <h2>Swap the steps and it hangs</h2>
+  <div class="cols">
+    <div class="card bad"><h3>await, then flush</h3><p>The promise waits for the flush · the flush waits for the await · timeout</p></div>
+    <div class="card good"><h3>Nothing to answer?</h3><p>Call inside <code>expect</code> directly</p>
+      <pre class="code" data-lang="ts" data-file="session-store.spec.ts">await expect(service.refreshSession()).resolves.toBe(true);</pre></div>
+  </div>
+</section>
+
+<section id="tothrow" data-part="5" data-cue="is for code that throws while it runs.">
+  <h2><code>toThrow</code> takes a function</h2>
+  <div class="cols">
+    <div class="card bad"><h3>A value</h3><pre class="code" data-lang="ts">expect(run()).toThrow();</pre><p class="small">Throws before <code>expect</code> sees it</p></div>
+    <div class="card good"><h3>A function</h3><pre class="code" data-lang="ts">expect(() =&gt; run()).toThrow();</pre><p class="small">Vitest calls it and catches</p></div>
+  </div>
+</section>
+
+<section id="not-throw" data-part="5" data-cue="The specs use it three times in the negative form.">
+  <h2>Smoke tests with <code>.not.toThrow</code></h2>
+  <pre class="code tight" data-lang="ts" data-file="saturdaze/src/app/app.config.spec.ts" data-mark="2,8">it('should run the zero-dependency provider factories of appConfig', () =&gt; {
+  expect(() =&gt; {
+    for (const provider of (appConfig as any).providers as any[]) {
+      if (provider &amp;&amp; provider.useFactory &amp;&amp; (!provider.deps || provider.deps.length === 0)) {
+        provider.useFactory();
+      }
+    }
+  }).not.toThrow();
+});</pre>
+  <pre class="code tight" data-lang="ts" data-file="saturdaze/src/app/auth/require-auth.guard.spec.ts" data-mark="1,5">expect(() =&gt; {
+  TestBed.runInInjectionContext(() =&gt;
+    (requireAuth as unknown as (...args: any[]) =&gt; unknown)(route, { url: '/test' } as any),
+  );
+}).not.toThrow();</pre>
+</section>
+
+<section id="regenerate-source" data-part="6" data-cue="The fourth use is">
+  <h2>A throw inside an async method</h2>
+  <pre class="code" data-lang="ts" data-file="api/src/lib/services/weekend-plan.service.ts · regenerate() and targetId()" data-mark="1-2,11">async regenerate(id?: string): Promise&lt;void&gt; {
+  const target = this.targetId(id);
+  await this.send(
+    'regenerate',
+    this.http.post&lt;WeekendDto&gt;(`${this.baseUrl}/api/weekends/${target}/regenerate`, {}),
+  );
+}
+
+private targetId(id?: string): string {
+  const target = id ?? this._dto()?.id;
+  if (!target) throw new Error('No current weekend is loaded yet.');
+  return target;
+}</pre>
+</section>
+
+<section id="regenerate-spec" data-part="6" data-cue="Because regenerate is async, that throw doesn't escape the call.">
+  <h2>…is a rejection: <code>rejects.toThrow</code></h2>
+  <pre class="code" data-lang="ts" data-file="api/src/lib/services/weekend-plan.service.spec.ts" data-mark="2">it('rejects before any weekend is loaded', async () =&gt; {
+  await expect(service.regenerate()).rejects.toThrow('No current weekend is loaded yet.');
+});</pre>
+  <div class="cols">
+    <div class="card bad"><h3><code>expect(() =&gt; service.regenerate()).toThrow()</code></h3><p>Fails: the function returns a promise without throwing</p></div>
+    <div class="card"><h3>Plain-object rejections</h3><p>The auth service rejects with <code>AuthError</code> objects, so its spec uses <code>toEqual</code> / <code>toMatchObject</code></p></div>
+  </div>
+</section>
+
+<section id="pitfalls" data-part="7" data-cue="A few pitfalls.">
+  <h2>Pitfalls</h2>
+  <ul>
+    <li>No <code>await</code> on <code>resolves</code>/<code>rejects</code>: Vitest 4.1 warns and auto-awaits at the end; the next major fails</li>
+    <li>Awaiting before flushing the HTTP request: a hang</li>
+    <li>Passing a value to <code>toThrow</code> instead of a function</li>
+    <li><code>toThrow</code> on an async function instead of <code>rejects</code></li>
+    <li><code>rejects.toBeTruthy</code> when the error's shape is the contract</li>
+  </ul>
+</section>
+
+<section id="recap" data-part="8" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div>Always <code>await expect(…).resolves / .rejects</code></div>
+    <div><code>resolves.toBe</code>: identity · <code>toBeUndefined</code>: no value</div>
+    <div>Assert the rejection's shape when callers depend on it</div>
+    <div>HTTP specs: call · flush · await</div>
+    <div><code>toThrow</code> takes a function; synchronous only</div>
+    <div>Async throw = rejection: <code>rejects.toThrow</code></div>
+  </div>
+</section>
+
+<section id="next" data-part="8" data-cue="Next, in video nine">
+  <div class="kicker">Next · Video 09</div>
+  <h1><code>vi.fn</code> and the <code>Mock</code> type</h1>
+</section>
+
+<script src="../../assets/slides.js"></script>
+</body>
+</html>

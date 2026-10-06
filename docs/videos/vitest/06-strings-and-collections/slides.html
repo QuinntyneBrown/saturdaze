@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vitest Video 06 Slides</title>
+<link rel="stylesheet" href="../../assets/slides.css">
+</head>
+<body data-video-number="06" data-video-title="Strings and collections" data-parts="Introduction|toContain|Messages|.not|toContainEqual|toMatch|toHaveLength|Map + toEqual|Pitfalls|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Saturdaze · Vitest · Video 06 of 14</div>
+  <h1>Strings and collections</h1>
+  <p class="lead"><code>toContain</code>, <code>toContainEqual</code>, <code>toMatch</code> and <code>toHaveLength</code>.</p>
+</section>
+
+<section id="outcome" data-part="0" data-cue="By the end you will know which to reach for">
+  <h2>Four matchers, four comparisons</h2>
+  <div class="cols four">
+    <div class="card"><h3>toContain</h3><p>substring · class · <code>===</code> member</p></div>
+    <div class="card"><h3>toContainEqual</h3><p>deeply equal member</p></div>
+    <div class="card"><h3>toMatch</h3><p>regular expression</p></div>
+    <div class="card"><h3>toHaveLength</h3><p><code>.length</code></p></div>
+  </div>
+  <p class="muted">…and when to skip all four for a mapped <code>toEqual</code>.</p>
+</section>
+
+<section id="contain-string" data-part="1" data-cue="Give it a string and it checks for a substring.">
+  <h2>Strings: a substring</h2>
+  <pre class="code" data-lang="ts" data-file="saturdaze/src/app/dialogs/confirm-dialog/confirm-dialog.spec.ts" data-mark="3-4">it('renders the question and a danger confirm button', () =&gt; {
+  const el = fixture.nativeElement as HTMLElement;
+  expect(el.textContent).toContain('Delete Mae?');
+  expect(el.textContent).toContain('Gone for good.');</pre>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/icon/icon.spec.ts">expect(svg.innerHTML).toContain('M5 12l5 5 9-11');</pre>
+  <p class="muted">Forgiving about template whitespace · a glyph fragment proves the right icon</p>
+</section>
+
+<section id="contain-class" data-part="1" data-cue="Give it a class list and it checks for a class.">
+  <h2>Class lists: a class</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/media/media.spec.ts" data-mark="5-6">it('shows an aria-hidden tinted tile with an icon when there is no photo', () =&gt; {
+  fixture.componentRef.setInput('tone', 'leaf');
+  fixture.componentRef.setInput('icon', 'tree');
+  fixture.detectChanges();
+  expect(host.classList).toContain('media--fallback');
+  expect(host.classList).toContain('media--leaf');
+  expect(host.getAttribute('aria-hidden')).toBe('true');</pre>
+  <p class="muted"><code>classList</code> is a <code>DOMTokenList</code> · also activity-card and food-card specs</p>
+</section>
+
+<section id="contain-array" data-part="1" data-cue="Give it an array and it checks membership with strict equality">
+  <h2>Arrays: strict membership</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/icon/icon.spec.ts" data-mark="4">it('exposes the sprite names', () =&gt; {
+  expect(ICON_NAMES.length).toBe(40);
+  for (const name of ['sparkle', 'home', 'star', 'user', 'lock', 'check']) {
+    expect(ICON_NAMES).toContain(name);
+  }
+});</pre>
+  <p class="muted">Same comparison as <code>===</code></p>
+</section>
+
+<section id="messages" data-part="2" data-cue="Compare two styles in the same library.">
+  <h2>Let the matcher do the looking</h2>
+  <div class="card bad"><h3>Unwrapped to a boolean · <code>icon.spec.ts</code></h3>
+    <pre class="code" data-lang="ts">expect(host.classList.contains('icon--filled')).toBe(true);</pre>
+    <p class="small">Fails with <code>expected false to be true</code></p></div>
+  <div class="card good"><h3>The class list itself · <code>media.spec.ts</code></h3>
+    <pre class="code" data-lang="ts">expect(host.classList).toContain('media--leaf');</pre>
+    <p class="small">Fails with <code>expected "…actual classes…" to contain "media--leaf"</code></p></div>
+</section>
+
+<section id="not" data-part="3" data-cue="Every matcher has a">
+  <h2>The negative form: nothing leaked</h2>
+  <pre class="code" data-lang="ts" data-file="saturdaze/src/app/dialogs/likes-dialog/likes-dialog.spec.ts" data-mark="3">it('works on copies so cancelling leaves the input data alone', () =&gt; {
+  component['likes'].update((l) =&gt; [...l, 'Beaches']);
+  expect(LIKES).not.toContain('Beaches');
+  component['cancel']();
+  expect(dialogRef.close).toHaveBeenCalledWith();
+});</pre>
+  <p class="muted">The only <code>.not.toContain</code> in the repo</p>
+</section>
+
+<section id="contain-equal-why" data-part="4" data-cue="can never find an object literal you write in the test">
+  <h2>Objects need <code>toContainEqual</code></h2>
+  <div class="cols">
+    <div class="card bad"><h3>toContain</h3><p>A new object literal is never the same reference as one the code built</p></div>
+    <div class="card good"><h3>toContainEqual</h3><p>Passes if <em>any</em> element is deeply equal</p></div>
+  </div>
+</section>
+
+<section id="contain-equal" data-part="4" data-cue="There are three uses: two in the weekend projection spec">
+  <h2>Chips in a block row</h2>
+  <pre class="code tight" data-lang="ts" data-file="api/src/lib/api/weekend-projection.spec.ts" data-mark="3,8">it('marks the first activity as the day highlight with the primary chip', () =&gt; {
+  expect(row('b1').highlight).toBe(true);
+  expect(row('b1').chips).toContainEqual({ tone: 'primary', label: 'Day highlight' });
+  expect(row('m1').highlight).toBe(false);
+});
+
+it('hands the drive minutes to the activity that follows the drive', () =&gt; {
+  expect(row('b1').chips).toContainEqual({ tone: 'sky', icon: 'car', label: '45 min drive' });</pre>
+  <pre class="code" data-lang="ts" data-file="api/src/lib/services/activity.service.spec.ts">expect(fresh!.activities[0]!.chips).toContainEqual({ tone: 'primary', label: 'First time' });</pre>
+  <p class="muted">Says nothing about position or other chips</p>
+</section>
+
+<section id="match-ids" data-part="5" data-cue="takes a regular expression, and it is how the specs pin down">
+  <h2><code>toMatch</code>: generated ids</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/chip-input/chip-input.spec.ts">expect(field().id).toMatch(/^sd-chip-input-\d+$/);</pre>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/dialog/dialog.spec.ts">expect(h2.id).toMatch(/^sd-dialog-title-\d+$/);</pre>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/seg-radio/seg-radio.spec.ts">expect(label.id).toMatch(/^sd-seg-radio-\d+-label$/);</pre>
+  <p class="muted">Also day, empty, section, select, text-input · <code>^</code> and <code>$</code> keep it strict</p>
+</section>
+
+<section id="match-url" data-part="5" data-cue="The auth interceptor spec reads the first argument">
+  <h2>A redirect with a return address</h2>
+  <pre class="code tight" data-lang="ts" data-file="saturdaze/src/app/auth/auth.interceptor.spec.ts" data-mark="10">it('does not retry and bounces to /sign-in when the refresh fails', async () =&gt; {
+  session.refreshSession = vi.fn(() =&gt; Promise.resolve(false));
+  let error: unknown;
+  httpClient.get('/api/data').subscribe({ error: (e) =&gt; (error = e) });
+
+  httpMock.expectOne('/api/data').flush(null, { status: 401, statusText: 'Unauthorized' });
+  await flushPromises();
+
+  httpMock.expectNone('/api/data');
+  expect(String(navigateSpy.mock.calls[0]?.[0])).toMatch(/^\/sign-in\?returnUrl=/);
+});</pre>
+</section>
+
+<section id="match-loose" data-part="5" data-cue="One caution.">
+  <h2>Loose patterns prove little</h2>
+  <pre class="code" data-lang="ts" data-file="api/src/lib/api/format.spec.ts" data-mark="4">it('includes the weekday and hour', () =&gt; {
+  const s = formatWhen('2026-05-16T14:00');
+  expect(s).toMatch(/Sat/);
+  expect(s).toMatch(/2/);
+});</pre>
+  <p class="muted">Locale-dependent output justifies some looseness · anchor whenever you can</p>
+</section>
+
+<section id="length" data-part="6" data-cue="checks a length property. There are ten uses.">
+  <h2><code>toHaveLength</code></h2>
+  <pre class="code" data-lang="ts" data-file="api/src/lib/api/format.spec.ts">expect(MONTH_ABBR).toHaveLength(12);</pre>
+  <pre class="code" data-lang="ts" data-file="api/src/lib/services/restaurant.service.spec.ts">expect(view.sections[0]!.picks).toHaveLength(3);
+expect(view.sections[1]!.picks).toHaveLength(2);</pre>
+  <div class="cols">
+    <div class="card"><h3>Works</h3><p><code>expect(ICON_NAMES.length).toBe(40)</code></p></div>
+    <div class="card good"><h3>Better</h3><p><code>toHaveLength</code> reports against the list itself</p></div>
+  </div>
+</section>
+
+<section id="map-habit" data-part="7" data-cue="Here is the most useful habit in this video.">
+  <h2>Order and completeness? Map, then <code>toEqual</code></h2>
+  <div class="cols">
+    <div class="card bad"><h3>Stacked toContain</h3><p>Passes with the wrong order or an extra item</p></div>
+    <div class="card good"><h3>Mapped toEqual</h3><p>Fails on order and extras; the diff shows the position</p></div>
+  </div>
+</section>
+
+<section id="map-past" data-part="7" data-cue="The past page spec does this with the filter chips.">
+  <h2>Filter chips on the past page</h2>
+  <pre class="code" data-lang="ts" data-file="saturdaze/src/app/pages/past/past.page.spec.ts" data-mark="2,8">const chips = Array.from(host.querySelectorAll('sd-filter-chip'));
+expect(chips.map((c) =&gt; c.textContent?.trim())).toEqual([
+  'All',
+  'Favourites',
+  'This year',
+  '5★',
+]);
+expect(chips.map((c) =&gt; c.querySelector('button')?.getAttribute('aria-pressed'))).toEqual([
+  'true',
+  'false',
+  'false',
+  'false',
+]);</pre>
+</section>
+
+<section id="pitfalls" data-part="8" data-cue="A few pitfalls.">
+  <h2>Pitfalls</h2>
+  <ul>
+    <li><code>toContain</code> for objects in an array: it compares references</li>
+    <li><code>classList.contains(…)</code> then <code>toBe(true)</code>: an unhelpful failure</li>
+    <li>Unanchored patterns when you mean the whole value</li>
+    <li>Stacked <code>toContain</code> calls when order matters</li>
+  </ul>
+</section>
+
+<section id="recap" data-part="9" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div><code>toContain</code>: substring · class · <code>===</code> member</div>
+    <div>Pass the class list or string itself</div>
+    <div><code>.not.toContain</code> proves nothing leaked</div>
+    <div><code>toContainEqual</code>: a deeply equal member</div>
+    <div>Anchored <code>toMatch</code> for generated values</div>
+    <div><code>toHaveLength</code> over <code>.length</code> + <code>toBe</code></div>
+    <div>Order matters? Map and <code>toEqual</code></div>
+  </div>
+</section>
+
+<section id="next" data-part="9" data-cue="Next, in video seven">
+  <div class="kicker">Next · Video 07</div>
+  <h1>Asymmetric matchers</h1>
+</section>
+
+<script src="../../assets/slides.js"></script>
+</body>
+</html>

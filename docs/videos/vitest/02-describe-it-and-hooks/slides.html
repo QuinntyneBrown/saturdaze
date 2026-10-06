@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vitest Video 02 Slides</title>
+<link rel="stylesheet" href="../../assets/slides.css">
+</head>
+<body data-video-number="02" data-video-title="describe, it and the hooks" data-parts="Introduction|Structure|Async|beforeEach|Order|afterEach|Helpers|try/finally|Why|Pitfalls|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Saturdaze · Vitest · Video 02 of 14</div>
+  <h1><code>describe</code>, <code>it</code> and the hooks</h1>
+  <p class="lead">The skeleton of every spec, the order hooks run in, and why cleanup is not optional.</p>
+</section>
+
+<section id="skeleton" data-part="0" data-cue="In this video you learn how those four pieces fit together">
+  <h2>Four pieces</h2>
+  <div class="cols four">
+    <div class="card"><h3><code>describe</code></h3><p>groups</p></div>
+    <div class="card"><h3><code>it</code></h3><p>one behaviour</p></div>
+    <div class="card good"><h3><code>beforeEach</code></h3><p>builds the world</p></div>
+    <div class="card bad"><h3><code>afterEach</code></h3><p>tears it down</p></div>
+  </div>
+</section>
+
+<section id="groups" data-part="1" data-cue="Open the weekend plan service spec in the api project.">
+  <h2>Group by class, then by method</h2>
+  <pre class="code" data-lang="ts" data-file="api/src/lib/services/weekend-plan.service.spec.ts" data-mark="1,3,4">describe('WeekendPlanService', () =&gt; {
+  …
+  describe('loadCurrent', () =&gt; {
+    it('maps a 404 to the empty state', async () =&gt; {
+  …
+  describe('plan', () =&gt; {
+  describe('regenerate', () =&gt; {
+  it('creates a share link', async () =&gt; {
+  it('describes the calendar export for the current weekend', async () =&gt; {
+  describe('block actions', () =&gt; {
+  describe('addErrand', () =&gt; {</pre>
+</section>
+
+<section id="sentence" data-part="1" data-cue="Each `it` names one behaviour as a sentence.">
+  <h2>The names read as a specification</h2>
+  <div class="quote">WeekendPlanService › loadCurrent › maps a 404 to the empty state</div>
+  <ul>
+    <li>The failure report prints the same path</li>
+    <li>The name alone tells you what broke</li>
+  </ul>
+</section>
+
+<section id="ungrouped" data-part="1" data-cue="Not every test needs a group.">
+  <h2>Group when there is more than one thing to say</h2>
+  <pre class="code" data-lang="ts" data-file="api/src/lib/services/weekend-plan.service.spec.ts" data-mark="1">  it('creates a share link', async () =&gt; {
+    await loadCurrent();
+    const promise = service.createShareLink();
+    const req = httpMock.expectOne(`${BASE}/api/weekends/w1/share`);
+    expect(req.request.method).toBe('POST');
+    req.flush({ shareUrl: 'https://app/sample-weekend?share=abc', token: 'abc' });
+    await expect(promise).resolves.toBe('https://app/sample-weekend?share=abc');
+  });</pre>
+  <p class="muted">~150 <code>describe</code> · ~740 <code>it</code> · all globals</p>
+</section>
+
+<section id="async" data-part="2" data-cue="Almost every test here is an async function.">
+  <h2>Async tests are awaited</h2>
+  <div class="cols">
+    <div class="card good"><h3>Return a promise</h3><p>Vitest waits for it before deciding pass or fail</p></div>
+    <div class="card bad"><h3>Forget an <code>await</code></h3><p>The test finishes green; the real assertion runs later, or never</p></div>
+  </div>
+</section>
+
+<section id="before-sync" data-part="3" data-cue="`beforeEach` runs before every `it` in its block">
+  <h2>A synchronous <code>beforeEach</code></h2>
+  <pre class="code tight" data-lang="ts" data-file="api/src/lib/services/weekend-plan.service.spec.ts" data-mark="2-3,6,7,15-16">describe('WeekendPlanService', () =&gt; {
+  let service: WeekendPlanService;
+  let httpMock: HttpTestingController;
+
+  beforeEach(() =&gt; {
+    vi.spyOn(console, 'error').mockImplementation(() =&gt; undefined);
+    TestBed.configureTestingModule({
+      providers: [
+        WeekendPlanService,
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        { provide: API_BASE_URL, useValue: BASE },
+      ],
+    });
+    service = TestBed.inject(WeekendPlanService);
+    httpMock = TestBed.inject(HttpTestingController);
+  });</pre>
+</section>
+
+<section id="before-async" data-part="3" data-cue="A hook can also be async.">
+  <h2>An async <code>beforeEach</code></h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/tooltip/tooltip.spec.ts" data-mark="1,5">  beforeEach(async () =&gt; {
+    vi.useFakeTimers();
+    // Step past the "warm" window left by the previous test's hide.
+    vi.setSystemTime(Date.now() + 10_000);
+    await TestBed.configureTestingModule({ imports: [HostCmp] }).compileComponents();
+    fixture = TestBed.createComponent(HostCmp);
+    fixture.detectChanges();
+    trigger = fixture.nativeElement.querySelector('#trigger');
+  });</pre>
+</section>
+
+<section id="nested" data-part="4" data-cue="Hooks nest with their blocks.">
+  <h2>A nested <code>beforeEach</code></h2>
+  <pre class="code" data-lang="ts" data-file="api/src/lib/services/weekend-plan.service.spec.ts" data-mark="2-4">  describe('block actions', () =&gt; {
+    beforeEach(async () =&gt; {
+      await loadCurrent();
+    });
+
+    it('PUTs the lock flag', async () =&gt; {
+      const promise = service.lockBlock('b1', true);
+      const req = httpMock.expectOne(`${BASE}/api/blocks/b1/lock`);
+      expect(req.request.method).toBe('PUT');
+      expect(req.request.body).toEqual({ locked: true });</pre>
+</section>
+
+<section id="order" data-part="4" data-cue="For each test in that group, the outer `beforeEach` runs first">
+  <h2>Setup in, teardown out</h2>
+  <div class="flow">
+    <div class="node"><b>outer beforeEach</b><small>TestBed</small></div>
+    <div class="arrow">→</div>
+    <div class="node"><b>inner beforeEach</b><small>loadCurrent()</small></div>
+    <div class="arrow">→</div>
+    <div class="node accent"><b>it</b><small>the test</small></div>
+    <div class="arrow">→</div>
+    <div class="node"><b>inner afterEach</b><small>first</small></div>
+    <div class="arrow">→</div>
+    <div class="node"><b>outer afterEach</b><small>last</small></div>
+  </div>
+  <p class="muted center">Vitest's default stack order: teardown unwinds the reverse of setup.</p>
+</section>
+
+<section id="after" data-part="5" data-cue="The weekend plan service spec's `afterEach` does two jobs.">
+  <h2><code>afterEach</code> verifies and restores</h2>
+  <pre class="code" data-lang="ts" data-file="api/src/lib/services/weekend-plan.service.spec.ts" data-mark="2-3">  afterEach(() =&gt; {
+    httpMock.verify();
+    vi.restoreAllMocks();
+  });</pre>
+  <div class="cols">
+    <div class="card"><h3><code>verify()</code></h3><p>Fails if a request was made and never answered</p></div>
+    <div class="card"><h3><code>vi.restoreAllMocks()</code></h3><p>Puts the real <code>console.error</code> back</p></div>
+  </div>
+</section>
+
+<section id="after-others" data-part="5" data-cue="The tooltip spec destroys its fixture">
+  <h2>Undo exactly what you changed</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/tooltip/tooltip.spec.ts">  afterEach(() =&gt; {
+    fixture.destroy();
+    vi.useRealTimers();
+  });</pre>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/copy-field/copy-field.spec.ts">  afterEach(() =&gt; {
+    vi.useRealTimers();
+  });</pre>
+  <p class="muted">Restoring real timers when none were faked is harmless.</p>
+</section>
+
+<section id="testbed-reset" data-part="5" data-cue="Notice what no spec does: reset the test bed.">
+  <h2>Angular resets the test bed for you</h2>
+  <pre class="code" data-lang="ts" data-file="node_modules/@angular/core/fesm2022/testing.mjs">globalThis.beforeEach?.(getCleanupHook(false));
+globalThis.afterEach?.(getCleanupHook(true));</pre>
+  <p class="muted">Global hooks registered by <code>@angular/core/testing</code> — they exist only because globals are on.</p>
+</section>
+
+<section id="lets" data-part="6" data-cue="Shared variables are declared with let">
+  <h2>Declare at the top, assign in <code>beforeEach</code></h2>
+  <pre class="code" data-lang="ts" data-file="api/src/lib/services/weekend-plan.service.spec.ts" data-mark="2">  /** Load the current weekend, answer the GET and wait for it to apply. */
+  async function loadCurrent(dto = weekendDto()): Promise&lt;void&gt; {
+    const pending = service.loadCurrent();
+    httpMock.expectOne(CURRENT).flush(dto);
+    await pending;
+    await settle();
+  }</pre>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/tooltip/tooltip.spec.ts">  const bubble = (): HTMLElement | null =&gt; document.querySelector('.tooltip');</pre>
+</section>
+
+<section id="mount" data-part="6" data-cue="The past page spec shows a pattern worth copying.">
+  <h2>A mount helper for what varies</h2>
+  <pre class="code tight" data-lang="ts" data-file="saturdaze/src/app/pages/past/past.page.spec.ts" data-mark="1,3,5">  async function mount(query: Record&lt;string, string&gt; = {}): Promise&lt;void&gt; {
+    const queryParamMap = convertToParamMap(query);
+    await TestBed.configureTestingModule({
+      imports: [PastPage],
+      providers: [ /* fake services, Dialog, ActivatedRoute with queryParamMap */ ],
+    }).compileComponents();
+    navigate = vi.spyOn(TestBed.inject(Router), 'navigateByUrl').mockResolvedValue(true);
+    fixture = TestBed.createComponent(PastPage);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+    await settle();
+    fixture.detectChanges();
+    host = fixture.nativeElement as HTMLElement;
+  }</pre>
+  <p class="muted"><code>beforeEach</code> builds the shared fakes · each test calls <code>mount({ state: 'empty' })</code> or <code>mount()</code></p>
+</section>
+
+<section id="finally" data-part="7" data-cue="The reset password page spec has one test that fakes timers">
+  <h2>try / finally for a one-off</h2>
+  <pre class="code tight" data-lang="ts" data-file="saturdaze/src/app/pages/reset-password/reset-password.page.spec.ts" data-mark="2,3,8,10-12">  it('resends once and then rests for a minute', async () =&gt; {
+    vi.useFakeTimers();
+    try {
+      await mount({ state: 'sent', email: 'quinn@example.com' });
+      await component['resend']();
+      …
+      expect(session.forgotPassword).toHaveBeenCalledTimes(1);
+      vi.advanceTimersByTime(60_000);
+      …
+    } finally {
+      vi.useRealTimers();
+    }
+  });</pre>
+</section>
+
+<section id="two-ways" data-part="7" data-cue="So you have two ways to clean up.">
+  <h2>Two ways to clean up</h2>
+  <div class="cols">
+    <div class="card good"><h3><code>afterEach</code></h3><p>Automatic, covers every test in the block — for cleanup most tests need</p></div>
+    <div class="card good"><h3><code>try</code> / <code>finally</code></h3><p>Keeps the cleanup next to the one test that made the mess</p></div>
+  </div>
+  <p class="muted center">Both are fine. Leaving the mess is not.</p>
+</section>
+
+<section id="why" data-part="8" data-cue="Remember from video one that the builder sets isolate to false.">
+  <h2>Why cleanup matters here</h2>
+  <div class="cols">
+    <div class="card bad"><h3>Fake timers left on</h3><p>Every <code>setTimeout</code> in the next spec file freezes</p></div>
+    <div class="card bad"><h3>A console spy left mocked</h3><p>Real errors vanish from unrelated tests</p></div>
+  </div>
+  <p class="muted center"><code>isolate: false</code> — spec files share one module context.</p>
+</section>
+
+<section id="pitfalls" data-part="9" data-cue="A few pitfalls.">
+  <h2>Pitfalls</h2>
+  <ul>
+    <li>Mutable state assigned in a <code>describe</code> body runs once, at collection</li>
+    <li>Read-only is fine: <code>const day = projectDay(weekendDto(), 'Saturday')</code> in <code>weekend-projection.spec.ts</code></li>
+    <li>Forgetting to <code>await</code> in a test or a hook</li>
+    <li>Assertions inside hooks</li>
+    <li>Tests that depend on another test running first</li>
+  </ul>
+</section>
+
+<section id="recap" data-part="10" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div><code>describe</code> groups, <code>it</code> states one behaviour</div>
+    <div>Async tests and hooks are awaited</div>
+    <div>Outer setup first, teardown in reverse</div>
+    <div><code>afterEach</code> verifies and restores</div>
+    <div>Angular resets the test bed</div>
+    <div>Mount helper · <code>try</code>/<code>finally</code> for one-offs</div>
+  </div>
+</section>
+
+<section id="next" data-part="10" data-cue="Next, in video three">
+  <div class="kicker">Next · Video 03</div>
+  <h1>Table-driven tests with <code>describe.each</code></h1>
+</section>
+
+<script src="../../assets/slides.js"></script>
+</body>
+</html>

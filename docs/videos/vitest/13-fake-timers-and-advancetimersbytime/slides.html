@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vitest Video 13 Slides</title>
+<link rel="stylesheet" href="../../assets/slides.css">
+</head>
+<body data-video-number="13" data-video-title="Fake timers and vi.advanceTimersByTime" data-parts="Introduction|How it works|Copy field|Tooltip|Reset password|Sync or async|Pitfalls|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Saturdaze · Vitest · Video 13 of 14</div>
+  <h1>Fake timers and <code>vi.advanceTimersByTime</code></h1>
+  <p class="lead">Replace the clock, then decide exactly when time passes.</p>
+</section>
+
+<section id="waits" data-part="0" data-cue="The tooltip waits four hundred milliseconds">
+  <h2>Code that waits</h2>
+  <div class="cols three">
+    <div class="card"><h3>2,000 ms</h3><p><code>sd-copy-field</code> shows <b>Copied</b></p></div>
+    <div class="card"><h3>400 · 100 ms</h3><p><code>[sdTooltip]</code> show and hide delays</p></div>
+    <div class="card"><h3>60,000 ms</h3><p>Reset password resend cooldown</p></div>
+  </div>
+</section>
+
+<section id="how" data-part="1" data-cue="Calling `vi.useFakeTimers` installs a fake clock.">
+  <h2>How fake timers work</h2>
+  <div class="flow">
+    <div class="node"><b><code>vi.useFakeTimers()</code></b><small>install fake clock</small></div>
+    <div class="arrow">→</div>
+    <div class="node"><b><code>setTimeout(cb, ms)</code></b><small>queued, not run</small></div>
+    <div class="arrow">→</div>
+    <div class="node accent"><b><code>vi.advanceTimersByTime(ms)</code></b><small>runs due timers, in order</small></div>
+    <div class="arrow">→</div>
+    <div class="node"><b><code>vi.useRealTimers()</code></b><small>real functions back</small></div>
+  </div>
+</section>
+
+<section id="advance" data-part="1" data-cue="`vi.advanceTimersByTime` moves the fake clock forward">
+  <h2><code>advanceTimersByTime(ms)</code></h2>
+  <ul>
+    <li>Moves the fake clock forward by <code>ms</code></li>
+    <li>Runs every timer due inside that window, <b>in order</b></li>
+    <li><b>Synchronously</b>, before the call returns</li>
+    <li>Timers scheduled by those callbacks run too, if due in the window</li>
+  </ul>
+</section>
+
+<section id="defaults" data-part="1" data-cue="Two defaults matter, as of Vitest four point one.">
+  <h2>Defaults (Vitest 4.1)</h2>
+  <div class="cols">
+    <div class="card"><h3>What is faked</h3><p>Every timer API it knows (<code>setTimeout</code>, <code>setInterval</code>, <code>Date</code>, …) <b>except</b> <code>nextTick</code> and <code>queueMicrotask</code></p></div>
+    <div class="card good"><h3>So promises still work</h3><p>Microtasks are never faked. The clock starts at the real current time.</p></div>
+  </div>
+  <div class="cols three">
+    <div class="card"><h3>3 ×</h3><p><code>vi.useFakeTimers</code></p></div>
+    <div class="card"><h3>11 ×</h3><p><code>vi.advanceTimersByTime</code></p></div>
+    <div class="card"><h3>3 ×</h3><p><code>vi.useRealTimers</code></p></div>
+  </div>
+</section>
+
+<section id="copy-source" data-part="2" data-cue="Look at the copy field component first.">
+  <h2>The code under test</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/copy-field/copy-field.ts" data-mark="9-11">  protected async copy(): Promise&lt;void&gt; {
+    const text = this.value();
+    try {
+      await navigator.clipboard?.writeText(text);
+    } catch {
+      // Clipboard access can be denied (insecure context, permissions); the
+      // value stays visible so the user can select it by hand.
+    }
+    this.justCopied.set(true);
+    this.copied.emit(text);
+    setTimeout(() =&gt; this.justCopied.set(false), 2000);
+  }</pre>
+</section>
+
+<section id="copy-install" data-part="2" data-cue="Now the test, called flips to a pressed Copied state">
+  <h2>Install the clock before the timer exists</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/copy-field/copy-field.spec.ts" data-mark="2,4-5">  it('flips to a pressed "Copied" state and reverts after two seconds', async () =&gt; {
+    vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
+
+    button().click();
+    await flush();
+
+    expect(button().getAttribute('aria-pressed')).toBe('true');
+    expect(button().textContent?.trim()).toBe('Copied');
+    expect(button().querySelector('sd-icon')?.getAttribute('name')).toBe('check');
+    expect(button().querySelector('[aria-live="polite"]')?.textContent?.trim()).toBe('Copied');</pre>
+  <p class="muted">A timer scheduled with the real <code>setTimeout</code> stays real.</p>
+</section>
+
+<section id="copy-flush" data-part="2" data-cue="Then it clicks the button and calls its flush helper">
+  <h2>Microtasks still run</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/copy-field/copy-field.spec.ts">  async function flush(): Promise&lt;void&gt; {
+    for (let i = 0; i &lt; 4; i++) await Promise.resolve();
+    fixture.detectChanges();
+  }</pre>
+  <p>Awaiting resolved promises works under fake timers: microtasks are never faked.</p>
+</section>
+
+<section id="copy-boundary" data-part="2" data-cue="Here is the heart of the video.">
+  <h2>The boundary, from both sides</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/copy-field/copy-field.spec.ts" data-mark="1,5">    vi.advanceTimersByTime(1999);
+    fixture.detectChanges();
+    expect(button().textContent?.trim()).toBe('Copied');
+
+    vi.advanceTimersByTime(1);
+    fixture.detectChanges();
+    expect(button().getAttribute('aria-pressed')).toBe('false');
+    expect(button().textContent?.trim()).toBe('Copy');
+  });</pre>
+</section>
+
+<section id="copy-why" data-part="2" data-cue="Two small calls prove the boundary from both sides.">
+  <h2>What each check catches</h2>
+  <div class="cols">
+    <div class="card"><h3>After 1,999 ms: still Copied</h3><p>Fails if the delay is <b>shortened</b>, e.g. to 1,500</p></div>
+    <div class="card"><h3>After 1 more ms: Copy</h3><p>Fails if the delay is <b>lengthened</b>, or the reset never happens</p></div>
+  </div>
+  <p class="muted">One 3-second advance would only prove "eventually".</p>
+</section>
+
+<section id="copy-dc" data-part="2" data-cue="Notice the detect changes after each advance.">
+  <h2><code>detectChanges()</code> after advancing</h2>
+  <div class="flow">
+    <div class="node"><b>advance</b><small>callback runs</small></div>
+    <div class="arrow">→</div>
+    <div class="node"><b><code>justCopied.set(false)</code></b><small>signal changes</small></div>
+    <div class="arrow">→</div>
+    <div class="node accent"><b><code>fixture.detectChanges()</code></b><small>DOM updated now</small></div>
+    <div class="arrow">→</div>
+    <div class="node"><b>expect</b><small>reads the DOM</small></div>
+  </div>
+</section>
+
+<section id="copy-tofake" data-part="2" data-cue="Why narrow to fake at all?">
+  <h2>Fake only what the code uses</h2>
+  <div class="cols">
+    <div class="card good"><h3>Faked</h3><p><code>setTimeout</code>, <code>clearTimeout</code></p></div>
+    <div class="card"><h3>Still real</h3><p><code>Date</code>, <code>setInterval</code>, <code>requestAnimationFrame</code>, everything else</p></div>
+  </div>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/copy-field/copy-field.spec.ts">  afterEach(() =&gt; {
+    vi.useRealTimers();
+  });</pre>
+</section>
+
+<section id="tooltip-consts" data-part="3" data-cue="The tooltip directive has three constants">
+  <h2>The tooltip's clock</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/tooltip/tooltip.ts" data-mark="2,4,6">/** Hover delay before the first tooltip; later ones in a row show at once. */
+const SHOW_DELAY_MS = 400;
+/** Grace period to move the pointer onto the bubble (WCAG 1.4.13 hoverable). */
+const HIDE_DELAY_MS = 100;
+/** A tooltip shown within this long after another hid skips the delay. */
+const WARM_MS = 600;</pre>
+</section>
+
+<section id="tooltip-hooks" data-part="3" data-cue="Its spec fakes timers for every test.">
+  <h2>Fake in <code>beforeEach</code>, real in <code>afterEach</code></h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/tooltip/tooltip.spec.ts" data-mark="2,13">  beforeEach(async () =&gt; {
+    vi.useFakeTimers();
+    // Step past the "warm" window left by the previous test's hide.
+    vi.setSystemTime(Date.now() + 10_000);
+    await TestBed.configureTestingModule({ imports: [HostCmp] }).compileComponents();
+    fixture = TestBed.createComponent(HostCmp);
+    fixture.detectChanges();
+    trigger = fixture.nativeElement.querySelector('#trigger');
+  });
+
+  afterEach(() =&gt; {
+    fixture.destroy();
+    vi.useRealTimers();
+  });</pre>
+</section>
+
+<section id="tooltip-timeline" data-part="3" data-cue="The first test, shows after a hover delay">
+  <h2>A test that reads like a timeline</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/tooltip/tooltip.spec.ts" data-mark="4,9">  it('shows after a hover delay and hides on pointer-out', () =&gt; {
+    pointer(trigger, 'pointerenter');
+    expect(bubble()).toBeNull();
+    vi.advanceTimersByTime(400);
+    expect(bubble()?.textContent?.trim()).toBe('Swap for something else');
+    expect(bubble()?.getAttribute('role')).toBe('tooltip');
+
+    pointer(trigger, 'pointerleave');
+    vi.advanceTimersByTime(100);
+    expect(bubble()).toBeNull();
+  });</pre>
+</section>
+
+<section id="tooltip-grace" data-part="3" data-cue="The second test, stays open while the pointer moves onto the bubble">
+  <h2>The grace period</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/tooltip/tooltip.spec.ts" data-mark="6-7">  it('stays open while the pointer moves onto the bubble', () =&gt; {
+    pointer(trigger, 'pointerenter');
+    vi.advanceTimersByTime(400);
+    pointer(trigger, 'pointerleave');
+    pointer(bubble()!, 'pointerenter');
+    vi.advanceTimersByTime(500);
+    expect(bubble()).not.toBeNull();
+    pointer(bubble()!, 'pointerleave');
+    vi.advanceTimersByTime(100);
+    expect(bubble()).toBeNull();
+  });</pre>
+  <p class="muted">Entering the bubble cleared the hide timer, so 500 ms changes nothing.</p>
+</section>
+
+<section id="tooltip-touch" data-part="3" data-cue="The touch test is short.">
+  <h2>Proving "never"</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/tooltip/tooltip.spec.ts" data-mark="3">  it('never shows for touch', () =&gt; {
+    pointer(trigger, 'pointerenter', 'touch');
+    vi.advanceTimersByTime(1000);
+    expect(bubble()).toBeNull();
+  });</pre>
+  <p>Advance well past the 400 ms delay: <b>never</b>, not merely <b>not yet</b>.</p>
+</section>
+
+<section id="reset-source" data-part="4" data-cue="The reset password page sets a resent signal">
+  <h2>A one-minute cooldown</h2>
+  <pre class="code" data-lang="ts" data-file="saturdaze/src/app/pages/reset-password/reset-password.page.ts" data-mark="11">  protected async resend(): Promise&lt;void&gt; {
+    if (this.resent() || this.submitting()) return;
+    this.submitting.set(true);
+    try {
+      await this.session.forgotPassword({ email: this.email() });
+    } catch {
+      // Same as above: no account-existence leak.
+    } finally {
+      this.submitting.set(false);
+      this.resent.set(true);
+      setTimeout(() =&gt; this.resent.set(false), 60_000);
+    }
+  }</pre>
+</section>
+
+<section id="reset-test" data-part="4" data-cue="The test, called resends once and then rests for a minute">
+  <h2>A minute in a millisecond</h2>
+  <pre class="code tight" data-lang="ts" data-file="saturdaze/src/app/pages/reset-password/reset-password.page.spec.ts" data-mark="2,10,15">  it('resends once and then rests for a minute', async () =&gt; {
+    vi.useFakeTimers();
+    try {
+      await mount({ state: 'sent', email: 'quinn@example.com' });
+      await component['resend']();
+      ...
+      await component['resend']();
+      expect(session.forgotPassword).toHaveBeenCalledTimes(1);
+
+      vi.advanceTimersByTime(60_000);
+      fixture.detectChanges();
+      expect(component['resent']()).toBe(false);
+      expect(resendButton()?.textContent).toContain('Resend');
+    } finally {
+      vi.useRealTimers();
+    }
+  });</pre>
+</section>
+
+<section id="reset-finally" data-part="4" data-cue="The try and finally is the same lesson">
+  <h2>Two ways to always restore</h2>
+  <div class="cols">
+    <div class="card good"><h3><code>afterEach</code></h3><p>Copy field, tooltip: every test in the file</p></div>
+    <div class="card good"><h3><code>try … finally</code></h3><p>Reset password: the one test that fakes</p></div>
+  </div>
+  <p class="center">Both run when an assertion fails, so the fake clock can't leak (<code>isolate: false</code>).</p>
+</section>
+
+<section id="sync" data-part="5" data-cue="`vi.advanceTimersByTime` is synchronous.">
+  <h2>Synchronous or async?</h2>
+  <div class="cols">
+    <div class="card good"><h3><code>advanceTimersByTime</code></h3><p>Runs due callbacks synchronously. Enough when a callback just sets a signal: all three here.</p></div>
+    <div class="card"><h3><code>advanceTimersByTimeAsync</code></h3><p>Lets promises settle between timers. For a callback that awaits, then schedules again.</p></div>
+  </div>
+  <p class="muted">Not used in this repo: the async variant, <code>runAllTimers</code>, <code>runOnlyPendingTimers</code>.</p>
+</section>
+
+<section id="pitfalls" data-part="6" data-cue="A few pitfalls.">
+  <h2>Pitfalls</h2>
+  <ul>
+    <li>Installing fake timers <b>after</b> the timer was scheduled</li>
+    <li>Not restoring real timers (use <code>afterEach</code> or <code>finally</code>)</li>
+    <li>Awaiting <code>settle()</code> (a 0 ms <code>setTimeout</code>) while timers are fake</li>
+    <li>Testing only one side of a delay</li>
+    <li>Forgetting <code>detectChanges()</code> after the callback changes state</li>
+    <li>Faking more than you need</li>
+  </ul>
+</section>
+
+<section id="recap" data-part="7" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div>Fake clock: nothing runs until you advance</div>
+    <div>Advance runs due timers, synchronously, in order</div>
+    <div>Boundary from both sides: 1999, then 1</div>
+    <div>Install before scheduling; narrow with <code>toFake</code></div>
+    <div>Restore in <code>afterEach</code> or <code>finally</code></div>
+  </div>
+</section>
+
+<section id="next" data-part="7" data-cue="Next, in video fourteen">
+  <div class="kicker">Next · Video 14 · the last in the series</div>
+  <h1><code>vi.setSystemTime</code></h1>
+</section>
+
+<script src="../../assets/slides.js"></script>
+</body>
+</html>

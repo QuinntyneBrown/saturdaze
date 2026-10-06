@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vitest Video 07 Slides</title>
+<link rel="stylesheet" href="../../assets/slides.css">
+</head>
+<body data-video-number="07" data-video-title="Asymmetric matchers" data-parts="Introduction|Why|objectContaining|Strictness|Nesting|any|anything|stringMatching|Pitfalls|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Saturdaze · Vitest · Video 07 of 14</div>
+  <h1>Asymmetric matchers</h1>
+  <p class="lead"><code>expect.objectContaining</code>, <code>expect.any</code>, <code>expect.anything</code> and <code>expect.stringMatching</code>.</p>
+</section>
+
+<section id="by-rule" data-part="0" data-cue="match by rule instead of by equality">
+  <h2>Placeholders that match by rule</h2>
+  <div class="cols four">
+    <div class="card"><h3>objectContaining</h3><p>25 uses</p></div>
+    <div class="card"><h3>any</h3><p>5 uses</p></div>
+    <div class="card"><h3>anything</h3><p>2 uses</p></div>
+    <div class="card"><h3>stringMatching</h3><p>1 use</p></div>
+  </div>
+  <p class="muted">They go on the <em>expected</em> side</p>
+</section>
+
+<section id="why" data-part="1" data-cue="Think about what the app hands to a dialog or a menu.">
+  <h2>A dialog call carries more than the test cares about</h2>
+  <pre class="code" data-lang="ts" data-file="saturdaze/src/app/dialogs/confirm-dialog/confirm-dialog.ts">/** The options every app dialog opens with. */
+export const DIALOG_OPTIONS = {
+  autoFocus: 'first-tabbable' as const,
+  restoreFocus: true,
+  panelClass: 'sd-dialog-panel',
+  backdropClass: 'sd-dialog-backdrop',
+};</pre>
+  <pre class="code" data-lang="ts" data-file="saturdaze/src/app/pages/ideas/ideas.page.ts">const ref = this.dialog.open&lt;SubmitEventDialogResult&gt;(SubmitEventDialog, DIALOG_OPTIONS);</pre>
+</section>
+
+<section id="where" data-part="1" data-cue="That is where asymmetric matchers sit">
+  <h2>Where they work</h2>
+  <div class="cols">
+    <div class="card"><h3>Assertions</h3><p><code>toEqual</code> · <code>toHaveBeenCalledWith</code> · <code>toHaveBeenNthCalledWith</code> · <code>toHaveBeenLastCalledWith</code></p></div>
+    <div class="card"><h3>Positions</h3><p>An argument · an object property · an array element</p></div>
+  </div>
+</section>
+
+<section id="oc-intro" data-part="2" data-cue="is the workhorse, with twenty-five uses across nine spec files.">
+  <h2><code>expect.objectContaining</code></h2>
+  <div class="cols">
+    <div class="card good"><h3>Listed properties</h3><p>Must exist, with equal values</p></div>
+    <div class="card"><h3>Every other property</h3><p>Ignored</p></div>
+  </div>
+</section>
+
+<section id="oc-ideas" data-part="2" data-cue="The ideas page spec shows the classic case.">
+  <h2>Two settings out of four</h2>
+  <pre class="code tight" data-lang="ts" data-file="saturdaze/src/app/pages/ideas/ideas.page.spec.ts" data-mark="7,12">it('runs D10 then D11 and reloads the family suggestions after a submission', async () =&gt; {
+  dialog.open.mockReturnValueOnce({ closed: of(SUBMISSION) });
+  await component['suggest']();
+  expect(dialog.open).toHaveBeenNthCalledWith(
+    1,
+    SubmitEventDialog,
+    expect.objectContaining({ panelClass: 'sd-dialog-panel', autoFocus: 'first-tabbable' }),
+  );
+  expect(dialog.open).toHaveBeenNthCalledWith(
+    2,
+    EventSubmittedDialog,
+    expect.objectContaining({ data: { submission: SUBMISSION } }),
+  );
+  expect(submissions.loadMine).toHaveBeenCalledTimes(1);
+});</pre>
+</section>
+
+<section id="oc-commitment" data-part="2" data-cue="The commitment dialog spec uses it on a result.">
+  <h2>On a dialog's result</h2>
+  <pre class="code" data-lang="ts" data-file="saturdaze/src/app/dialogs/commitment-dialog/commitment-dialog.spec.ts" data-mark="4">component['day'].set('Sunday');
+component['submit']();
+expect(dialogRef.close).toHaveBeenCalledWith(
+  expect.objectContaining({ kind: 'save', title: 'swim LESSONS', day: 'Sunday' }),
+);</pre>
+  <p class="muted">The title keeps the case the user typed</p>
+</section>
+
+<section id="strict-source" data-part="3" data-cue="Here is the detail people get wrong.">
+  <h2>Partial at its own level only</h2>
+  <pre class="code tight" data-lang="ts" data-file="node_modules/@vitest/expect/dist/index.js · class ObjectContaining" data-mark="3,9">const properties = this.getProperties(this.sample);
+for (const property of properties) {
+  if (!this.hasProperty(other, property)) {
+    result = false;
+    break;
+  }
+  const value = this.sample[property];
+  const otherValue = other[property];
+  if (!equals(value, otherValue, customTesters)) {
+    result = false;
+    break;
+  }
+}</pre>
+  <p class="muted">Each listed value is compared with full deep equality</p>
+</section>
+
+<section id="strict-family" data-part="3" data-cue="Look at the family page spec.">
+  <h2>Loose envelope, exact payload</h2>
+  <pre class="code tight" data-lang="ts" data-file="saturdaze/src/app/pages/family/family.page.spec.ts" data-mark="8">it('adds a member through D17 and saves the whole profile', async () =&gt; {
+  await mount();
+  dialog.open.mockReturnValueOnce({ closed: of({ kind: 'save', name: 'Eli', age: 9 }) });
+  (section("Who's in").querySelector('sd-ghost-row button') as HTMLButtonElement).click();
+  await settle();
+  expect(dialog.open).toHaveBeenCalledWith(
+    FamilyMemberDialog,
+    expect.objectContaining({ data: { mode: 'add', existingNames: ['Quinn', 'Mae'] } }),
+  );</pre>
+  <p class="muted">Config: any other keys allowed · <code>data</code>: must equal exactly · deeper partials: nest a matcher or use <code>toMatchObject</code> (video 04)</p>
+</section>
+
+<section id="nesting" data-part="4" data-cue="Asymmetric matchers nest anywhere a value can go.">
+  <h2>Nesting: the More options menu</h2>
+  <pre class="code tight" data-lang="ts" data-file="saturdaze/src/app/pages/weekend/weekend.page.spec.ts" data-mark="2,5-8">expect(menu.open).toHaveBeenCalledWith(
+  expect.any(HTMLElement),
+  expect.objectContaining({
+    title: 'Weekend options',
+    items: [
+      expect.objectContaining({ id: 'regenerate' }),
+      expect.objectContaining({ id: 'calendar' }),
+    ],
+  }),
+);</pre>
+  <p class="muted">The array is plain: exactly two items, in this order · each item: only the id matters</p>
+</section>
+
+<section id="any" data-part="5" data-cue="takes a constructor and matches any value of that type.">
+  <h2><code>expect.any(Constructor)</code></h2>
+  <pre class="code tight" data-lang="ts" data-file="node_modules/@vitest/expect/dist/index.js · class Any">asymmetricMatch(other) {
+  if (this.sample === String) {
+    return typeof other == "string" || other instanceof String;
+  }
+  if (this.sample === Number) {
+    return typeof other == "number" || other instanceof Number;
+  }
+  if (this.sample === Function) {
+    return typeof other == "function" || typeof other === "function";
+  }</pre>
+  <div class="cols three">
+    <div class="card"><h3>HTMLElement</h3><p>app · weekend page</p></div>
+    <div class="card"><h3>Function</h3><p>scrolled</p></div>
+    <div class="card"><h3>String</h3><p>session store</p></div>
+  </div>
+</section>
+
+<section id="any-function" data-part="5" data-cue="Any function appears in the scrolled spec.">
+  <h2>A listener you can't reference</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/scrolled/scrolled.ts">window.addEventListener('scroll', update, { passive: true });
+...
+this.destroyRef.onDestroy(() =&gt; window.removeEventListener('scroll', update));</pre>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/scrolled/scrolled.spec.ts" data-mark="4">it('removes the window listener when destroyed', () =&gt; {
+  const remove = vi.spyOn(window, 'removeEventListener');
+  fixture.destroy();
+  expect(remove).toHaveBeenCalledWith('scroll', expect.any(Function));
+  remove.mockRestore();
+});</pre>
+</section>
+
+<section id="any-string" data-part="5" data-cue="Any string appears twice in the session store spec">
+  <h2>A timestamp computed from the clock</h2>
+  <pre class="code" data-lang="ts" data-file="api/src/lib/services/session-store.spec.ts" data-mark="4">await service.rehydrate();
+expect(service.token()).toEqual({
+  value: 'legacy',
+  expiresUtc: expect.any(String),
+  refreshToken: '',
+});</pre>
+  <pre class="code" data-lang="ts" data-file="api/src/lib/services/session-store.spec.ts">expect(service.user()?.emailVerifiedUtc).toEqual(expect.any(String));</pre>
+  <p class="muted">Pin the type of the moving field; the rest stays exact</p>
+</section>
+
+<section id="anything" data-part="6" data-cue="matches any value except null and undefined. It has two uses">
+  <h2><code>expect.anything()</code></h2>
+  <pre class="code" data-lang="ts" data-file="saturdaze/src/app/pages/weekend/weekend.page.spec.ts">expect(dialog.open).toHaveBeenLastCalledWith(CalendarDialog, expect.anything());</pre>
+  <pre class="code" data-lang="ts" data-file="saturdaze/src/app/pages/weekend/weekend.page.spec.ts">expect(dialog.open).toHaveBeenCalledWith(ConfirmDialog, expect.anything());</pre>
+  <pre class="code" data-lang="ts" data-file="node_modules/@vitest/expect/dist/index.js · class Anything">asymmetricMatch(other) {
+  return other != null;
+}</pre>
+  <p class="muted"><code>toHaveBeenCalledWith</code> compares the whole argument list: "there was a config, it wasn't null"</p>
+</section>
+
+<section id="string-matching" data-part="7" data-cue="takes a regular expression and matches any string that fits it.">
+  <h2><code>expect.stringMatching(regex)</code></h2>
+  <pre class="code" data-lang="ts" data-file="saturdaze/src/app/pages/weekend/weekend.page.ts">await this.weekendService.plan(upcomingSaturdayIso());</pre>
+  <pre class="code" data-lang="ts" data-file="saturdaze/src/app/pages/weekend/weekend.page.spec.ts" data-mark="4">(host.querySelector('sd-empty sd-button[slot="cta"] button') as HTMLButtonElement).click();
+await settle();
+fixture.detectChanges();
+expect(weekend.plan).toHaveBeenCalledWith(expect.stringMatching(/^\d{4}-\d{2}-\d{2}$/));</pre>
+  <p class="muted">The shape is pinned; the date moves with the day the test runs · <code>toMatch</code> as a placeholder</p>
+</section>
+
+<section id="pitfalls" data-part="8" data-cue="A few pitfalls.">
+  <h2>Pitfalls</h2>
+  <ul>
+    <li><code>objectContaining</code> is not partial all the way down</li>
+    <li>Scattering <code>expect.anything()</code> until nothing is asserted</li>
+    <li><code>expect.anything()</code> rejects <code>null</code> and <code>undefined</code></li>
+    <li><code>expect.any()</code> with no constructor throws</li>
+  </ul>
+</section>
+
+<section id="recap" data-part="9" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div>Expected side, match by rule</div>
+    <div><code>objectContaining</code>: extra keys ignored, listed values exact</div>
+    <div>Loose envelope, strict payload</div>
+    <div><code>any</code>: HTMLElement · Function · String</div>
+    <div><code>anything</code>: not null or undefined</div>
+    <div><code>stringMatching</code>: the shape of a moving string</div>
+  </div>
+</section>
+
+<section id="next" data-part="9" data-cue="Next, in video eight">
+  <div class="kicker">Next · Video 08</div>
+  <h1><code>resolves</code>, <code>rejects</code> and <code>toThrow</code></h1>
+</section>
+
+<script src="../../assets/slides.js"></script>
+</body>
+</html>
