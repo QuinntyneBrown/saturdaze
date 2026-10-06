@@ -69,7 +69,14 @@ Read ADR-005 before changing bottom navigation or its safe-area/chrome behavior,
 Mocks and the design system are design artifacts. ATDD does not apply to their
 development. Do not write tests for mocks or the design system.
 
-Every production feature implementation MUST invoke and follow the
+Every new feature or change to production behavior MUST have a requirement, a
+detailed design, and a mock before implementation begins. This includes
+behavioral changes to existing features, such as changing how a page behaves.
+This requirement applies to production-code changes only; documentation-only,
+design-system-only, mock-only, and test-only changes are out of scope unless
+they are part of implementing a production behavior change.
+
+Every production behavior implementation MUST invoke and follow the
 `incremental-implementation` skill (`.claude/skills/incremental-implementation`
 and `.agents/skills/incremental-implementation`) before any code is written,
 combined with acceptance test-driven development (ATDD). Plan small,
@@ -79,7 +86,8 @@ the expected reason BEFORE writing production code. Implement only what satisfie
 that slice, refactor with tests green, and run the relevant regression checks.
 Do not move to the next slice until those checks pass. No bulk implementation,
 no tests added afterward, and no weakening tests to manufacture a pass. Keep
-criteria, tests, and implementation aligned until the entire feature is complete.
+the requirement, detailed design, mock, criteria, tests, and implementation
+aligned until the entire feature or behavior change is complete.
 
 Back end: integration tests against the API. Front end: Playwright, using the
 Page Object Model - one page object per screen, owning the selectors and the
