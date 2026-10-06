@@ -5,8 +5,8 @@ export const FAMILY_STYLES = [
   `.family-grid__col sd-section { margin-bottom: 0; }`,
   `.account-card { flex-direction: row; align-items: center; gap: 12px; }`,
   `.account-card__text { flex: 1; min-width: 0; }`,
-  `.account-card__title { font-weight: var(--sd-fw-semibold); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }`,
-  `.account-card__sub { font-size: var(--sd-fs-sm); color: var(--sd-ink-soft); margin-top: 2px; }`,
+  `.account-card__title { font-weight: var(--fontWeightSemibold); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }`,
+  `.account-card__sub { font-size: var(--fontSizeBase300); color: var(--colorNeutralForeground2); margin-top: 2px; }`,
   `@media (min-width: 1024px) { .family-grid { grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 40px; } }`,
 ];
 

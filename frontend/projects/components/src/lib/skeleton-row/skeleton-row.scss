@@ -6,14 +6,14 @@
   column-gap: 12px;
   align-items: start;
   padding: 14px 0;
-  border-bottom: 1px solid var(--sd-line);
+  border-bottom: 1px solid var(--colorNeutralStroke2);
 }
 
 .skeleton {
   position: relative;
   overflow: hidden;
-  background: var(--sd-surface-2);
-  border-radius: var(--sd-r-sm);
+  background: var(--colorNeutralBackground3);
+  border-radius: var(--borderRadiusSmall);
 }
 
 .skeleton::after {
@@ -22,7 +22,7 @@
   inset: 0;
   transform: translateX(-100%);
   background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
-  animation: sd-shimmer 1.4s var(--sd-ease) infinite;
+  animation: sd-shimmer 1.4s var(--curveEasyEase) infinite;
 }
 
 .skeleton--time {

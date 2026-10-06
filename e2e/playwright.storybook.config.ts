@@ -3,7 +3,8 @@ import { defineConfig, devices } from '@playwright/test';
 export default defineConfig({
   testDir: './storybook',
   fullyParallel: true,
-  workers: process.env.CI ? 2 : 4,
+  // GitHub's ubuntu runners have 4 vCPUs for public repos; 2 workers left half idle.
+  workers: 4,
   forbidOnly: !!process.env.CI,
   retries: 0,
   reporter: 'list',

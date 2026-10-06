@@ -1,0 +1,80 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+import { brandSaturdaze } from '../../../src/lib/tokens';
+import { RampGrid } from './components/TokenBlocks';
+
+<Meta title="Theme/Overview" />
+
+# Design tokens
+
+Saturdaze's tokens follow the [Fluent UI v9 token model](https://github.com/QuinntyneBrown/fluentui/tree/master/packages/tokens):
+a typed **theme** object, built in layers, whose keys are the CSS custom property names every component reads. The source
+lives in `src/lib/tokens/` (ADR-013).
+
+| Layer      | Where            | What                                                                                                                                                           |
+| ---------- | ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Global** | `tokens/global/` | Raw values: the coral brand ramp, named palettes (`slate`, `cream`, `sun`, `forest`, …) and the type, spacing, radius, stroke, motion, layout and z ramps.     |
+| **Alias**  | `tokens/alias/`  | Semantic colours computed from the globals — `colorNeutralForeground1`, `colorBrandBackground`, `colorStatusSuccessBackground3`, `colorPaletteSunBackground1`. |
+| **Theme**  | `tokens/themes/` | `saturdazeLightTheme = createLightTheme(brandSaturdaze)`: one flat object holding every global ramp and alias token, plus the responsive retunes.              |
+
+`npm run tokens` (from `frontend/`) renders the theme to `src/lib/styles/_tokens.scss` — the `:root` custom properties the
+app and Storybook load — and to the typed `tokens` object. Both files are generated; CI runs `npm run tokens:check`.
+
+## Brand ramp
+
+Sixteen steps, as in Fluent. Alias tokens pick from it by role: `80` is `colorBrandBackground`, `colorBrandForeground1`,
+`colorBrandStroke1` and `colorStrokeFocus2`; `70` is `colorBrandForeground2`; `160` is `colorBrandBackground2` and
+`colorBrandStroke2`.
+
+<RampGrid ramp={brandSaturdaze} label="brand" />
+
+## Using tokens
+
+In a component stylesheet, read the custom property. Choose by **role** — `colorBrandForeground1` for coral text,
+`colorBrandBackground` for a coral fill, `colorBrandStroke1` for a coral border — even where two roles share a value today.
+
+```scss
+.chip--selected {
+  background: var(--colorNeutralBackgroundInverted);
+  color: var(--colorNeutralForegroundOnBrand);
+  border-radius: var(--borderRadiusCircular);
+  transition: background var(--durationFast) var(--curveEasyEase);
+}
+```
+
+In TypeScript, import the `tokens` object — each value is the matching `var(--…)` reference:
+
+```ts
+import { tokens } from 'components';
+
+const style = { color: tokens.colorNeutralForeground2, padding: tokens.spacingHorizontalM };
+```
+
+## Theming a subtree
+
+`sdThemeProvider` is the counterpart of Fluent's `FluentProvider`: it writes a (partial) theme onto its host as custom
+properties, so everything inside picks the override up through the cascade. Build a whole re-brand from a new ramp with
+`createLightTheme(brand)`:
+
+```ts
+import { ThemeProvider, brandSaturdaze, createLightTheme } from 'components';
+
+readonly forestTheme = createLightTheme({ ...brandSaturdaze, 70: '#1f5a44', 80: '#2d7d5f', 160: '#deede5' });
+```
+
+```html
+<section [sdThemeProvider]="forestTheme">…</section>
+```
+
+## Naming
+
+Saturdaze keeps Fluent's names and roles and adds only what Fluent has no word for:
+
+- `colorPalette{Sun,Sky,Leaf,Indoor}*` — the weather & category tones, with Fluent's palette roles (`Background1` fill,
+  `Foreground1` ink, `Background3`/`Foreground3` saturated base, `Border1`, `BorderActive`).
+- `colorStatusSuccess*` is forest green (locked, confirmed); `colorStatusDanger*` is the gentle terracotta warning.
+- `lineHeight{Tight,Snug,Normal}` are unitless ratios rather than Fluent's per-size pixel heights.
+- `layout*` and `zIndex{Sticky,TopBar,BottomNav}` describe the v2 responsive shell (ADR-009).
+
+Component-scoped knobs such as `--sd-btn-h`, `--sd-list-pad-x` and `--sd-chrome-bottom` are part of a component's API, not
+the theme, and keep their `--sd-` prefix.

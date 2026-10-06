@@ -7,26 +7,26 @@
 }
 
 .details__label {
-  font-size: var(--sd-fs-sm);
-  color: var(--sd-ink-soft);
+  font-size: var(--fontSizeBase300);
+  color: var(--colorNeutralForeground2);
 }
 
 .details__value {
-  font-size: var(--sd-fs-base);
+  font-size: var(--fontSizeBase400);
   overflow-wrap: anywhere;
 }
 
 .details__value--faint {
-  color: var(--sd-ink-faint);
+  color: var(--colorNeutralForeground3);
 }
 
 .details__link {
-  color: var(--sd-primary-deep);
-  font-weight: var(--sd-fw-medium);
+  color: var(--colorBrandForeground2);
+  font-weight: var(--fontWeightMedium);
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  border-radius: var(--sd-r-sm);
+  border-radius: var(--borderRadiusSmall);
   overflow-wrap: anywhere;
 }
 

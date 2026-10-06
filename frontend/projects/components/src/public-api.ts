@@ -67,6 +67,10 @@ export * from './lib/browser-frame/browser-frame';
 export * from './lib/auth-shell/auth-shell';
 export * from './lib/auth-card/auth-card';
 
+// tokens & theming
+export * from './lib/tokens/index';
+export * from './lib/theme-provider/theme-provider';
+
 // shared
 export * from './lib/shared/nav-key';
 export * from './lib/shared/in-app-link';

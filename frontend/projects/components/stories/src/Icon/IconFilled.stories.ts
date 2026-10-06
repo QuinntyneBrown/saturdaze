@@ -7,9 +7,9 @@ export const Filled: StoryObj<Icon> = {
     template: `
       <div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center">
         <sd-icon name="star" [size]="24" />
-        <sd-icon name="star" [size]="24" filled style="color: var(--sd-sun)" />
+        <sd-icon name="star" [size]="24" filled style="color: var(--colorPaletteSunForeground3)" />
         <sd-icon name="heart" [size]="24" />
-        <sd-icon name="heart" [size]="24" filled style="color: var(--sd-primary)" />
+        <sd-icon name="heart" [size]="24" filled style="color: var(--colorBrandForeground1)" />
       </div>
     `,
   }),

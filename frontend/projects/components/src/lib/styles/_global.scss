@@ -69,16 +69,16 @@ legend {
 
 // ---------------------------------------------------------------- base
 html {
-  background: var(--sd-bg);
-  color: var(--sd-ink);
-  font-family: var(--sd-font-sans);
-  font-size: var(--sd-fs-base);
-  line-height: var(--sd-lh-base);
+  background: var(--colorNeutralBackground2);
+  color: var(--colorNeutralForeground1);
+  font-family: var(--fontFamilyBase);
+  font-size: var(--fontSizeBase400);
+  line-height: var(--lineHeightNormal);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-size-adjust: 100%;
   // In-page anchors (legal.html) land below the sticky top bar.
-  scroll-padding-top: calc(var(--sd-topbar-h) + 16px);
+  scroll-padding-top: calc(var(--layoutTopBarHeight) + 16px);
   // Reserve the classic scrollbar's width on every route, so the centred
   // top bar (brand + nav) does not shift when a short page has no scrollbar.
   scrollbar-gutter: stable;
@@ -93,33 +93,33 @@ body {
 body {
   min-height: 100vh;
   min-height: 100svh;
-  background: var(--sd-bg);
+  background: var(--colorNeutralBackground2);
 }
 
 h1,
 h2,
 h3,
 h4 {
-  line-height: var(--sd-lh-tight);
-  font-weight: var(--sd-fw-bold);
+  line-height: var(--lineHeightTight);
+  font-weight: var(--fontWeightBold);
   overflow-wrap: anywhere;
 }
 p {
   overflow-wrap: anywhere;
 }
 strong {
-  font-weight: var(--sd-fw-semibold);
+  font-weight: var(--fontWeightSemibold);
 }
 small {
-  font-size: var(--sd-fs-xs);
+  font-size: var(--fontSizeBase200);
 }
 
 :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
-  outline: var(--sd-focus-ring);
+  outline: var(--strokeWidthThick) solid var(--colorStrokeFocus2);
   outline-offset: 2px;
 }
 ::selection {
-  background: var(--sd-primary-soft);
+  background: var(--colorBrandBackground2);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -143,7 +143,7 @@ app-root {
 .sd-app-loading {
   width: 100%;
   min-height: 100vh;
-  background: var(--sd-bg);
+  background: var(--colorNeutralBackground2);
 }
 
 // ---------------------------------------------------------------- frame
@@ -154,11 +154,11 @@ app-root {
 .sd-frame {
   display: block;
   width: 100%;
-  max-width: var(--sd-content-max-w);
+  max-width: var(--layoutContentMaxWidth);
   margin-inline: auto;
-  padding-inline: var(--sd-gutter);
+  padding-inline: var(--layoutGutter);
   padding-top: calc(16px + env(safe-area-inset-top, 0px));
-  padding-bottom: calc(var(--sd-bottom-nav-h) + 36px + env(safe-area-inset-bottom, 0px));
+  padding-bottom: calc(var(--layoutBottomNavHeight) + 36px + env(safe-area-inset-bottom, 0px));
 }
 
 // The router inserts each page's host element between `.sd-frame` and the
@@ -196,7 +196,7 @@ app-root {
 
 // ---------------------------------------------------------------- layout utilities
 .sd-narrow {
-  max-width: var(--sd-stack-max-w);
+  max-width: var(--layoutStackMaxWidth);
   margin-inline: auto;
 }
 
@@ -291,8 +291,8 @@ app-root {
   overflow-x: auto;
   overscroll-behavior-x: contain;
   scrollbar-width: none;
-  margin-inline: calc(-1 * var(--sd-gutter));
-  padding-inline: var(--sd-gutter);
+  margin-inline: calc(-1 * var(--layoutGutter));
+  padding-inline: var(--layoutGutter);
   -webkit-mask-image: linear-gradient(
     to right,
     transparent,
@@ -328,7 +328,7 @@ app-root {
 .sd-vdivider {
   width: 1px;
   height: 20px;
-  background: var(--sd-line-strong);
+  background: var(--colorNeutralStroke1);
   flex: none;
   margin: 0 2px;
 }
@@ -364,37 +364,37 @@ app-root {
   text-overflow: ellipsis;
 }
 .sd-text-soft {
-  color: var(--sd-ink-soft);
+  color: var(--colorNeutralForeground2);
 }
 .sd-text-faint {
-  color: var(--sd-ink-faint);
+  color: var(--colorNeutralForeground3);
 }
 .sd-text-warn {
-  color: var(--sd-warn-deep);
+  color: var(--colorStatusDangerForeground1);
 }
 .sd-text-accent {
-  color: var(--sd-accent);
+  color: var(--colorStatusSuccessForeground1);
 }
 .sd-text-sm {
-  font-size: var(--sd-fs-sm);
+  font-size: var(--fontSizeBase300);
 }
 .sd-text-xs {
-  font-size: var(--sd-fs-xs);
+  font-size: var(--fontSizeBase200);
 }
 .sd-text-center {
   text-align: center;
 }
 .sd-link {
-  color: var(--sd-primary-deep);
-  font-weight: var(--sd-fw-semibold);
-  border-radius: var(--sd-r-sm);
+  color: var(--colorBrandForeground2);
+  font-weight: var(--fontWeightSemibold);
+  border-radius: var(--borderRadiusSmall);
 }
 .sd-link--soft {
   color: inherit;
   text-decoration: underline;
   text-underline-offset: 3px;
-  text-decoration-color: var(--sd-line-strong);
-  font-weight: var(--sd-fw-regular);
+  text-decoration-color: var(--colorNeutralStroke1);
+  font-weight: var(--fontWeightRegular);
 }
 .sd-mt-2 {
   margin-top: 8px;

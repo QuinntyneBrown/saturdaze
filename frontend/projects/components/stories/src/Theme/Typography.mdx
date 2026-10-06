@@ -12,19 +12,21 @@ landing screens. The stack is system-first: nothing web-loads Inter on purpose, 
 
 ## Font family
 
-<TokenRows tokens={byPrefix('--sd-font-')} preview={previews.fontFamily} />
+<TokenRows tokens={byPrefix('fontFamily')} preview={previews.fontFamily} />
 
 ## Font sizes
 
-A seven-step scale. The three display sizes step **up** from 1024px and the two largest step **down** on 320–379px
+A seven-step scale named on Fluent's ramp (`Base200`–`Base600`, `Hero700`–`Hero800`). The three display sizes step **up** from 1024px and the two largest step **down** on 320–379px
 phones — the responsive retunes are listed under each token.
 
-<TokenRows tokens={byPrefix('--sd-fs-')} preview={previews.fontSize} />
+<TokenRows tokens={byPrefix('fontSize')} preview={previews.fontSize} />
 
 ## Line heights
 
-<TokenRows tokens={byPrefix('--sd-lh-')} preview={previews.lineHeight} />
+Unitless ratios, so one line height serves every size.
+
+<TokenRows tokens={byPrefix('lineHeight')} preview={previews.lineHeight} />
 
 ## Font weights
 
-<TokenRows tokens={byPrefix('--sd-fw-')} preview={previews.fontWeight} />
+<TokenRows tokens={byPrefix('fontWeight')} preview={previews.fontWeight} />

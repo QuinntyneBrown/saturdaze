@@ -9,8 +9,8 @@
   column-gap: 12px;
   align-items: start;
   padding: 12px 0;
-  border-bottom: 1px solid var(--sd-line);
-  transition: background var(--sd-dur-fast) var(--sd-ease);
+  border-bottom: 1px solid var(--colorNeutralStroke2);
+  transition: background var(--durationFast) var(--curveEasyEase);
 }
 
 :host(:last-child) {
@@ -24,16 +24,16 @@
 
 .block__clock {
   display: block;
-  font-size: var(--sd-fs-sm);
-  font-weight: var(--sd-fw-semibold);
-  color: var(--sd-ink);
+  font-size: var(--fontSizeBase300);
+  font-weight: var(--fontWeightSemibold);
+  color: var(--colorNeutralForeground1);
   line-height: 1.2;
 }
 
 .block__dur {
   display: block;
-  font-size: var(--sd-fs-xs);
-  color: var(--sd-ink-faint);
+  font-size: var(--fontSizeBase200);
+  color: var(--colorNeutralForeground3);
   margin-top: 2px;
 }
 
@@ -51,7 +51,7 @@
   bottom: -13px;
   left: 50%;
   width: 1px;
-  background: var(--sd-line-strong);
+  background: var(--colorNeutralStroke1);
   transform: translateX(-50%);
 }
 
@@ -74,9 +74,9 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: var(--sd-surface-2);
-  color: var(--sd-ink-soft);
-  box-shadow: 0 0 0 4px var(--sd-bg);
+  background: var(--colorNeutralBackground3);
+  color: var(--colorNeutralForeground2);
+  box-shadow: 0 0 0 4px var(--colorNeutralBackground2);
 }
 
 .block__body {
@@ -85,14 +85,14 @@
 }
 
 .block__title {
-  font-size: var(--sd-fs-base);
-  font-weight: var(--sd-fw-semibold);
+  font-size: var(--fontSizeBase400);
+  font-weight: var(--fontWeightSemibold);
   line-height: 1.35;
 }
 
 .block__sub {
-  font-size: var(--sd-fs-sm);
-  color: var(--sd-ink-soft);
+  font-size: var(--fontSizeBase300);
+  color: var(--colorNeutralForeground2);
   margin-top: 2px;
   display: -webkit-box;
   -webkit-line-clamp: 1;
@@ -124,20 +124,20 @@
   justify-content: center;
   width: 32px;
   height: 32px;
-  color: var(--sd-ink-faint);
+  color: var(--colorNeutralForeground3);
   border-radius: 50%;
   margin-top: 2px;
 }
 
 :host(.block--commitment) .block__disc,
 :host(.block--locked) .block__disc {
-  background: var(--sd-accent-soft);
-  color: var(--sd-accent);
+  background: var(--colorStatusSuccessBackground1);
+  color: var(--colorStatusSuccessForeground1);
 }
 
 :host(.block--errand) .block__disc {
-  background: var(--sd-indoor-soft);
-  color: var(--sd-indoor-ink);
+  background: var(--colorPaletteIndoorBackground1);
+  color: var(--colorPaletteIndoorForeground1);
 }
 
 :host(.block--done) {
@@ -156,8 +156,8 @@
 
 :host(.block--drive) .block__title {
   font-size: 14px;
-  font-weight: var(--sd-fw-medium);
-  color: var(--sd-ink-soft);
+  font-weight: var(--fontWeightMedium);
+  color: var(--colorNeutralForeground2);
 }
 
 :host(.block--drive) .block__disc {
@@ -178,7 +178,7 @@
   .block__actions {
     display: inline-flex;
     opacity: 0;
-    transition: opacity var(--sd-dur-fast) var(--sd-ease);
+    transition: opacity var(--durationFast) var(--curveEasyEase);
   }
 
   :host(:focus-within) .block__actions {
@@ -192,9 +192,9 @@
 
 @media (hover: hover) and (min-width: 720px) {
   :host(:hover) {
-    background: var(--sd-surface-2);
-    box-shadow: 0 0 0 8px var(--sd-surface-2);
-    border-radius: var(--sd-r-sm);
+    background: var(--colorNeutralBackground3);
+    box-shadow: 0 0 0 8px var(--colorNeutralBackground3);
+    border-radius: var(--borderRadiusSmall);
   }
 
   :host(:hover) .block__actions {
@@ -202,6 +202,6 @@
   }
 
   :host(:hover) .block__disc {
-    box-shadow: 0 0 0 4px var(--sd-surface-2);
+    box-shadow: 0 0 0 4px var(--colorNeutralBackground3);
   }
 }

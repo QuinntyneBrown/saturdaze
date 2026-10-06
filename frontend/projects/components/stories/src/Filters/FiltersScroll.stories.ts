@@ -5,7 +5,7 @@ import type { Filters } from 'components';
 export const Scroll: StoryObj<Filters> = {
   render: () => ({
     template: `
-      <div style="max-width: 360px; --sd-gutter: 16px">
+      <div style="max-width: 360px; --layoutGutter: 16px">
         <sd-filters label="Kind of event">
           <sd-filter-chip pressed>All</sd-filter-chip>
           <sd-filter-chip tone="leaf">Festivals</sd-filter-chip>

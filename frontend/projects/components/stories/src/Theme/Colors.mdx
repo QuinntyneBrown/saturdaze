@@ -10,36 +10,51 @@ import { byPrefix } from './components/tokens';
 Warm, family, sun-dappled — calm, not corporate. Warm neutrals make the interface feel calm, **coral** identifies the one
 next step on a screen, and **forest green** confirms decisions without feeling clinical.
 
-Every value on this page is read from `src/lib/styles/_tokens.scss` and painted with the live `var(--sd-*)` custom
-property, so the swatches cannot drift from what the components render. Never hard-code a hex value in a component
-stylesheet — if a colour is missing, add the token first.
+Every swatch on this page is read from `saturdazeLightTheme` and painted with its live custom property, so the swatches
+cannot drift from what the components render. Never hard-code a hex value in a component stylesheet — if a colour is
+missing, add an alias token to the theme first (see [Overview](?path=/docs/theme-overview--docs)).
 
-## Surfaces & ink
+## Neutral foreground
 
-<ColorGrid tokens={byPrefix('--sd-bg', '--sd-surface', '--sd-ink', '--sd-line')} />
+<ColorGrid tokens={byPrefix('colorNeutralForeground')} />
+
+## Neutral background
+
+<ColorGrid tokens={byPrefix('colorNeutralBackground', 'colorBackgroundOverlay')} />
+
+## Neutral stroke
+
+<ColorGrid tokens={byPrefix('colorNeutralStroke', 'colorStrokeFocus')} />
 
 ## Brand
 
-`--sd-primary` is the coral button — one per screen. `--sd-primary-deep` is the coral text that passes AA on
-`--sd-primary-soft`. `--sd-accent` marks locked, confirmed and saved states.
+`colorBrandBackground` is the coral button — one per screen. `colorBrandForeground2` is the coral text that passes AA on
+`colorBrandBackground2`.
 
-<ColorGrid tokens={byPrefix('--sd-primary', '--sd-accent')} />
+<ColorGrid tokens={byPrefix('colorBrand')} />
 
-## Feedback
+## Status
 
-A gentle warning, not an alarming one: destructive buttons, invalid fields and error banners.
+`Success` marks locked, confirmed and saved states. `Danger` is a gentle warning, not an alarming one: destructive buttons,
+invalid fields and error banners.
 
-<ColorGrid tokens={byPrefix('--sd-warn')} />
+<ColorGrid tokens={byPrefix('colorStatus')} />
 
 ## Weather & category tones
 
-The chip, disc and avatar tones. Each tone has a saturated base, a `-soft` fill and an `-ink` text colour that passes
-AA on the fill — always pair the fill with its ink.
+The chip, disc and avatar tones. Each tone has a saturated base (`Background3`), a soft fill (`Background1`) and an ink
+(`Foreground1`) that passes AA on the fill — always pair the fill with its ink.
 
-<ColorGrid tokens={byPrefix('--sd-sun', '--sd-sky', '--sd-leaf', '--sd-indoor')} />
+<ColorGrid tokens={byPrefix('colorPaletteSun')} />
 
-## Brand art
+<ColorGrid tokens={byPrefix('colorPaletteSky')} />
 
-The warm gradient behind the landing hero and the first-run card.
+<ColorGrid tokens={byPrefix('colorPaletteLeaf')} />
 
-<ColorGrid tokens={byPrefix('--sd-warm-gradient')} />
+<ColorGrid tokens={byPrefix('colorPaletteIndoor')} />
+
+## Shadow colours
+
+The colours the [shadow](?path=/docs/theme-shadows--docs) tokens are built from.
+
+<ColorGrid tokens={byPrefix('colorNeutralShadow')} />

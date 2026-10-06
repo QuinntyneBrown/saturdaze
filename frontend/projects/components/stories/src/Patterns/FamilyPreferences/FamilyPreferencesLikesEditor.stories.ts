@@ -9,7 +9,7 @@ export const LikesEditor: StoryObj = {
     return {
       props: { likes, dislikes },
       template: `
-        <div style="padding: 24px var(--sd-gutter); display: grid; justify-items: center">
+        <div style="padding: 24px var(--layoutGutter); display: grid; justify-items: center">
           <sd-dialog static wide title="Likes and dislikes" subtitle="Liked tags get a boost. Disliked ones are left out.">
             <div class="sd-stack" style="--gap: 14px">
               <sd-chip-input label="Likes" tone="leaf" [ngModel]="likes()" (ngModelChange)="likes.set($event)" />

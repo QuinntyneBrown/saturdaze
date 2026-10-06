@@ -14,21 +14,21 @@
 }
 
 .strength__seg {
-  border-radius: var(--sd-r-pill);
-  background: var(--sd-line);
+  border-radius: var(--borderRadiusCircular);
+  background: var(--colorNeutralStroke2);
 }
 
 :host(.strength--weak) .strength__seg:nth-child(1) {
-  background: var(--sd-warn);
+  background: var(--colorStatusDangerBackground3);
 }
 :host(.strength--ok) .strength__seg:nth-child(-n + 2) {
-  background: var(--sd-sun);
+  background: var(--colorPaletteSunBackground3);
 }
 :host(.strength--strong) .strength__seg {
-  background: var(--sd-accent);
+  background: var(--colorStatusSuccessBackground3);
 }
 
 .strength__label {
-  font-size: var(--sd-fs-xs);
-  color: var(--sd-ink-soft);
+  font-size: var(--fontSizeBase200);
+  color: var(--colorNeutralForeground2);
 }

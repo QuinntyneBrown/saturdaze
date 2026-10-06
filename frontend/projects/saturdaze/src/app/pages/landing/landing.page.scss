@@ -11,9 +11,9 @@
   position: relative;
   overflow: hidden;
   padding: 40px 24px;
-  background: var(--sd-warm-gradient), var(--sd-surface);
-  border: 1px solid var(--sd-line);
-  border-radius: var(--sd-r-xl);
+  background: var(--colorBrandBackgroundGradient), var(--colorNeutralBackground1);
+  border: 1px solid var(--colorNeutralStroke2);
+  border-radius: var(--borderRadiusXLarge);
 }
 
 .hero__grid {
@@ -31,11 +31,11 @@
 }
 
 .hero__eyebrow {
-  font-size: var(--sd-fs-xs);
-  font-weight: var(--sd-fw-semibold);
+  font-size: var(--fontSizeBase200);
+  font-weight: var(--fontWeightSemibold);
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--sd-ink-soft);
+  color: var(--colorNeutralForeground2);
 }
 
 .hero__title {
@@ -47,7 +47,7 @@
 
 .hero__lede {
   font-size: 18px;
-  color: var(--sd-ink-soft);
+  color: var(--colorNeutralForeground2);
   max-width: 540px;
   line-height: 1.5;
 }
@@ -61,13 +61,13 @@
 }
 
 .hero__note {
-  font-size: var(--sd-fs-sm);
-  color: var(--sd-ink-faint);
+  font-size: var(--fontSizeBase300);
+  color: var(--colorNeutralForeground3);
 }
 
 .hero__alt {
   font-size: 14px;
-  color: var(--sd-ink-soft);
+  color: var(--colorNeutralForeground2);
 }
 
 .hero__preview {
@@ -96,8 +96,8 @@
 }
 
 .how__sub {
-  font-size: var(--sd-fs-base);
-  color: var(--sd-ink-soft);
+  font-size: var(--fontSizeBase400);
+  color: var(--colorNeutralForeground2);
   margin-top: 6px;
   margin-bottom: 24px;
 }
@@ -113,35 +113,35 @@
   flex-direction: column;
   gap: 8px;
   padding: 20px;
-  background: var(--sd-surface);
-  border: 1px solid var(--sd-line);
-  border-radius: var(--sd-r-lg);
+  background: var(--colorNeutralBackground1);
+  border: 1px solid var(--colorNeutralStroke2);
+  border-radius: var(--borderRadiusLarge);
 }
 
 .step__num {
-  font-size: var(--sd-fs-xs);
-  font-weight: var(--sd-fw-bold);
+  font-size: var(--fontSizeBase200);
+  font-weight: var(--fontWeightBold);
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--sd-primary-deep);
+  color: var(--colorBrandForeground2);
 }
 
 .step__title {
   font-size: 18px;
-  font-weight: var(--sd-fw-bold);
+  font-weight: var(--fontWeightBold);
 }
 
 .step__body {
   font-size: 14px;
-  color: var(--sd-ink-soft);
+  color: var(--colorNeutralForeground2);
 }
 
 .site-footer {
   margin-top: 80px;
   padding-bottom: 40px;
   text-align: center;
-  font-size: var(--sd-fs-xs);
-  color: var(--sd-ink-faint);
+  font-size: var(--fontSizeBase200);
+  color: var(--colorNeutralForeground3);
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -152,7 +152,7 @@
   color: inherit;
   text-decoration: underline;
   text-underline-offset: 3px;
-  text-decoration-color: var(--sd-line-strong);
+  text-decoration-color: var(--colorNeutralStroke1);
 }
 
 @include respond-to(xsmall) {

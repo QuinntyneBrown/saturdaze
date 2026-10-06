@@ -16,8 +16,8 @@
   overflow-x: auto;
   overscroll-behavior-x: contain;
   scrollbar-width: none;
-  margin-inline: calc(-1 * var(--sd-gutter));
-  padding-inline: var(--sd-gutter);
+  margin-inline: calc(-1 * var(--layoutGutter));
+  padding-inline: var(--layoutGutter);
   -webkit-mask-image: linear-gradient(
     to right,
     transparent,

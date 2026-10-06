@@ -7,10 +7,10 @@
   flex-direction: column;
   gap: 18px;
   padding: 28px 24px;
-  background: var(--sd-surface);
-  border: 1px solid var(--sd-line);
-  border-radius: var(--sd-r-xl);
-  box-shadow: var(--sd-shadow-2);
+  background: var(--colorNeutralBackground1);
+  border: 1px solid var(--colorNeutralStroke2);
+  border-radius: var(--borderRadiusXLarge);
+  box-shadow: var(--shadow16);
 }
 
 .auth-card__head {
@@ -29,20 +29,20 @@
 }
 
 .auth-card__title {
-  font-size: var(--sd-fs-xl);
-  font-weight: var(--sd-fw-bold);
+  font-size: var(--fontSizeHero700);
+  font-weight: var(--fontWeightBold);
   letter-spacing: -0.02em;
 }
 
 .auth-card__sub {
   font-size: 14px;
-  color: var(--sd-ink-soft);
+  color: var(--colorNeutralForeground2);
 }
 
 .auth-card__alt {
   text-align: center;
   font-size: 14px;
-  color: var(--sd-ink-soft);
+  color: var(--colorNeutralForeground2);
 }
 
 .auth-card__alt:not(:has(*)) {

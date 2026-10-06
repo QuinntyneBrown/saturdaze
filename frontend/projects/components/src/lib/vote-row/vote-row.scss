@@ -5,7 +5,7 @@
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 8px;
   padding-top: 12px;
-  border-top: 1px solid var(--sd-line);
+  border-top: 1px solid var(--colorNeutralStroke2);
 }
 
 .vote-row__cell {
@@ -17,8 +17,8 @@
 }
 
 .vote-row__name {
-  font-size: var(--sd-fs-xs);
-  color: var(--sd-ink-soft);
+  font-size: var(--fontSizeBase200);
+  color: var(--colorNeutralForeground2);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -37,24 +37,24 @@
   width: 28px;
   height: 28px;
   border-radius: 50%;
-  color: var(--sd-ink-faint);
-  border: 1px solid var(--sd-line);
-  background: var(--sd-surface);
+  color: var(--colorNeutralForeground3);
+  border: 1px solid var(--colorNeutralStroke2);
+  background: var(--colorNeutralBackground1);
   transition:
-    background var(--sd-dur-fast) var(--sd-ease),
-    color var(--sd-dur-fast) var(--sd-ease);
+    background var(--durationFast) var(--curveEasyEase),
+    color var(--durationFast) var(--curveEasyEase);
 }
 
 .vote-row__btn--up[aria-pressed='true'] {
-  background: var(--sd-accent-soft);
+  background: var(--colorStatusSuccessBackground1);
   border-color: transparent;
-  color: var(--sd-accent);
+  color: var(--colorStatusSuccessForeground1);
 }
 
 .vote-row__btn--down[aria-pressed='true'] {
-  background: var(--sd-warn-soft);
+  background: var(--colorStatusDangerBackground1);
   border-color: transparent;
-  color: var(--sd-warn-deep);
+  color: var(--colorStatusDangerForeground1);
 }
 
 .vote-row__btn[disabled] {
@@ -64,7 +64,7 @@
 
 @media (hover: hover) {
   .vote-row__btn:not([aria-pressed='true']):hover {
-    color: var(--sd-ink);
-    border-color: var(--sd-line-strong);
+    color: var(--colorNeutralForeground1);
+    border-color: var(--colorNeutralStroke1);
   }
 }

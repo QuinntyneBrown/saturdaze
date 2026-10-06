@@ -11,19 +11,19 @@
   flex: none;
   height: 32px;
   padding: 0 12px;
-  border-radius: var(--sd-r-pill);
+  border-radius: var(--borderRadiusCircular);
   font-size: 13px;
-  font-weight: var(--sd-fw-semibold);
+  font-weight: var(--fontWeightSemibold);
   line-height: 1;
   white-space: nowrap;
-  border: 1px solid var(--sd-line-strong);
-  color: var(--sd-ink-soft);
+  border: 1px solid var(--colorNeutralStroke1);
+  color: var(--colorNeutralForeground2);
   background: transparent;
   cursor: pointer;
   transition:
-    background var(--sd-dur-fast) var(--sd-ease),
-    color var(--sd-dur-fast) var(--sd-ease),
-    border-color var(--sd-dur-fast) var(--sd-ease);
+    background var(--durationFast) var(--curveEasyEase),
+    color var(--durationFast) var(--curveEasyEase),
+    border-color var(--durationFast) var(--curveEasyEase);
 }
 
 .filter-chip ::ng-deep sd-icon {
@@ -31,40 +31,40 @@
 }
 
 .filter-chip[aria-pressed='true'] {
-  background: var(--sd-ink);
-  border-color: var(--sd-ink);
+  background: var(--colorNeutralBackgroundInverted);
+  border-color: var(--colorNeutralBackgroundInverted);
   color: #fff;
 }
 
 .filter-chip--leaf[aria-pressed='true'] {
-  background: var(--sd-leaf-soft);
-  border-color: var(--sd-leaf-soft);
-  color: var(--sd-leaf-ink);
+  background: var(--colorPaletteLeafBackground1);
+  border-color: var(--colorPaletteLeafBorder1);
+  color: var(--colorPaletteLeafForeground1);
 }
 .filter-chip--indoor[aria-pressed='true'] {
-  background: var(--sd-indoor-soft);
-  border-color: var(--sd-indoor-soft);
-  color: var(--sd-indoor-ink);
+  background: var(--colorPaletteIndoorBackground1);
+  border-color: var(--colorPaletteIndoorBorder1);
+  color: var(--colorPaletteIndoorForeground1);
 }
 .filter-chip--sky[aria-pressed='true'] {
-  background: var(--sd-sky-soft);
-  border-color: var(--sd-sky-soft);
-  color: var(--sd-sky-ink);
+  background: var(--colorPaletteSkyBackground1);
+  border-color: var(--colorPaletteSkyBorder1);
+  color: var(--colorPaletteSkyForeground1);
 }
 .filter-chip--sun[aria-pressed='true'] {
-  background: var(--sd-sun-soft);
-  border-color: var(--sd-sun-soft);
-  color: var(--sd-sun-ink);
+  background: var(--colorPaletteSunBackground1);
+  border-color: var(--colorPaletteSunBorder1);
+  color: var(--colorPaletteSunForeground1);
 }
 .filter-chip--accent[aria-pressed='true'] {
-  background: var(--sd-accent-soft);
-  border-color: var(--sd-accent-soft);
-  color: var(--sd-accent);
+  background: var(--colorStatusSuccessBackground1);
+  border-color: var(--colorStatusSuccessBorder1);
+  color: var(--colorStatusSuccessForeground1);
 }
 .filter-chip--primary[aria-pressed='true'] {
-  background: var(--sd-primary-soft);
-  border-color: var(--sd-primary-soft);
-  color: var(--sd-primary-deep);
+  background: var(--colorBrandBackground2);
+  border-color: var(--colorBrandStroke2);
+  color: var(--colorBrandForeground2);
 }
 
 .filter-chip[disabled] {
@@ -74,7 +74,7 @@
 
 @media (hover: hover) {
   .filter-chip:not([aria-pressed='true']):hover {
-    border-color: var(--sd-ink-faint);
-    color: var(--sd-ink);
+    border-color: var(--colorNeutralStrokeAccessible);
+    color: var(--colorNeutralForeground1);
   }
 }

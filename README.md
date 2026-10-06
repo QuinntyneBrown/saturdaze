@@ -163,6 +163,7 @@ npm run build -- api
 npm test
 npm run lint          # angular-eslint (npm run lint:fix to autofix)
 npm run format        # Prettier (npm run format:check in CI)
+npm run tokens        # regenerate _tokens.scss + tokens.ts from the TS theme (npm run tokens:check in CI, ADR-013)
 
 # E2E
 cd ..\e2e
@@ -195,6 +196,7 @@ Development conventions:
 | Storybook contract and browser tests | Build Storybook, then `npm run test:storybook` from `e2e/` | Public component documentation coverage, every indexed example and docs page, and form interaction in Chromium |
 | Frontend lint | `npm run lint` from `frontend/` | angular-eslint over TypeScript and templates |
 | Frontend format | `npm run format:check` from `frontend/` | Prettier formatting check |
+| Design tokens | `npm run tokens:check` from `frontend/` | Generated `_tokens.scss` / `tokens.ts` match the TypeScript theme (ADR-013) |
 | Playwright behavior | `npm run test:behavior` from `e2e/` | End-to-end behavior tests |
 | Playwright visual | `npm run test:visual` from `e2e/` | Visual comparisons against baselines |
 | Baseline update | `npm run baseline` from `e2e/` | Refresh visual snapshots from the mock app |

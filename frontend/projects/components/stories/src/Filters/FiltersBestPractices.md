@@ -3,7 +3,7 @@
 ### Layout
 
 - Keep the default `scroll` on page-level filter rows (Ideas, Food, Events, Past) so a long row never pushes the cards down on phones.
-- `.scroller-x` bleeds into the page gutter (`--sd-gutter`) on phones; place it directly in the page column, not inside a padded card.
+- `.scroller-x` bleeds into the page gutter (`--layoutGutter`) on phones; place it directly in the page column, not inside a padded card.
 - Turn `scroll` off inside dialogs and cards, where the row should simply wrap.
 - Separate unrelated groups (day vs. kind) with an `sd-vdivider`, not extra margin.
 

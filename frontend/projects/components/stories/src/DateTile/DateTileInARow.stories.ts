@@ -9,7 +9,7 @@ export const InARow: StoryObj<DateTile> = {
         <sd-date-tile date="2026-10-17" />
         <div>
           <div style="font-weight: 600">Pumpkin patch &amp; corn maze</div>
-          <div style="font-size: 13px; color: var(--sd-ink-soft)">Sat, Oct 17 · 10:00 · 25 min drive</div>
+          <div style="font-size: 13px; color: var(--colorNeutralForeground2)">Sat, Oct 17 · 10:00 · 25 min drive</div>
         </div>
       </div>
     `,

@@ -12,6 +12,9 @@ permissions:
 
 env:
   DOTNET_VERSION: '10.0.101'
+  DOTNET_NOLOGO: 'true'
+  DOTNET_CLI_TELEMETRY_OPTOUT: 'true'
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 'true'
   NODE_VERSION: '22'
 
 concurrency:
@@ -29,6 +32,13 @@ jobs:
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: nuget-${{ runner.os }}-${{ hashFiles('backend/**/*.csproj', 'backend/Directory.Packages.props', 'backend/global.json') }}
+          restore-keys: nuget-${{ runner.os }}-
+
       - name: Ensure LocalDB is available
         shell: pwsh
         run: |
@@ -38,8 +48,11 @@ jobs:
           sqllocaldb start MSSQLLocalDB
           sqllocaldb info MSSQLLocalDB
 
+      # Builds once, then runs the test assemblies side by side instead of
+      # one after another (see the script for why that is safe).
       - name: Build and test
-        run: dotnet test backend/Saturdaze.sln --nologo --configuration Release
+        shell: pwsh
+        run: ./eng/Test-Backend.ps1 -Configuration Release
 
   test-frontend:
     name: Frontend build and unit tests
@@ -64,6 +77,10 @@ jobs:
       - name: Lint (angular-eslint)
         working-directory: frontend
         run: npm run lint
+
+      - name: Design tokens up to date
+        working-directory: frontend
+        run: npm run tokens:check
 
       - name: Build libraries
         working-directory: frontend
@@ -96,19 +113,22 @@ jobs:
         working-directory: frontend
         run: npm ci
 
-      # Compiles every story and MDX page against the real components
-      # library; a broken story or a removed input fails here.
-      - name: Build Storybook
-        working-directory: frontend
-        run: npm run build-storybook
-
       - name: Install browser test dependencies
         working-directory: e2e
         run: npm ci
 
-      - name: Install Chromium
-        working-directory: e2e
-        run: npx playwright install --with-deps chromium
+      # Compiles every story and MDX page against the real components
+      # library; a broken story or a removed input fails here. Chromium
+      # downloads in the background meanwhile instead of after the build.
+      - name: Build Storybook (installing Chromium alongside)
+        run: |
+          (cd e2e && npx playwright install --with-deps chromium) > "$RUNNER_TEMP/chromium.log" 2>&1 &
+          chromium=$!
+          (cd frontend && npm run build-storybook)
+          if ! wait "$chromium"; then
+            cat "$RUNNER_TEMP/chromium.log"
+            exit 1
+          fi
 
       - name: Verify Storybook contract and examples
         working-directory: e2e

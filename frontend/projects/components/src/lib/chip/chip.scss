@@ -7,13 +7,13 @@
   flex: none;
   height: 24px;
   padding: 0 10px;
-  border-radius: var(--sd-r-pill);
+  border-radius: var(--borderRadiusCircular);
   font-size: 12px;
-  font-weight: var(--sd-fw-semibold);
+  font-weight: var(--fontWeightSemibold);
   line-height: 1;
   white-space: nowrap;
-  background: var(--sd-surface-2);
-  color: var(--sd-ink-soft);
+  background: var(--colorNeutralBackground3);
+  color: var(--colorNeutralForeground2);
 }
 
 :host ::ng-deep > sd-icon {
@@ -27,35 +27,35 @@
 }
 
 :host(.chip--sun) {
-  background: var(--sd-sun-soft);
-  color: var(--sd-sun-ink);
+  background: var(--colorPaletteSunBackground1);
+  color: var(--colorPaletteSunForeground1);
 }
 :host(.chip--sky) {
-  background: var(--sd-sky-soft);
-  color: var(--sd-sky-ink);
+  background: var(--colorPaletteSkyBackground1);
+  color: var(--colorPaletteSkyForeground1);
 }
 :host(.chip--leaf) {
-  background: var(--sd-leaf-soft);
-  color: var(--sd-leaf-ink);
+  background: var(--colorPaletteLeafBackground1);
+  color: var(--colorPaletteLeafForeground1);
 }
 :host(.chip--indoor) {
-  background: var(--sd-indoor-soft);
-  color: var(--sd-indoor-ink);
+  background: var(--colorPaletteIndoorBackground1);
+  color: var(--colorPaletteIndoorForeground1);
 }
 :host(.chip--accent) {
-  background: var(--sd-accent-soft);
-  color: var(--sd-accent);
+  background: var(--colorStatusSuccessBackground1);
+  color: var(--colorStatusSuccessForeground1);
 }
 :host(.chip--primary) {
-  background: var(--sd-primary-soft);
-  color: var(--sd-primary-deep);
+  background: var(--colorBrandBackground2);
+  color: var(--colorBrandForeground2);
 }
 :host(.chip--warn) {
-  background: var(--sd-warn-soft);
-  color: var(--sd-warn-deep);
+  background: var(--colorStatusDangerBackground1);
+  color: var(--colorStatusDangerForeground1);
 }
 :host(.chip--ink) {
-  background: var(--sd-ink);
+  background: var(--colorNeutralBackgroundInverted);
   color: #fff;
 }
 :host(.chip--count) {

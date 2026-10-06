@@ -6,24 +6,24 @@
   gap: 10px;
   min-width: 0;
   padding: 16px;
-  background: var(--sd-surface);
-  border: 1px solid var(--sd-line);
-  border-radius: var(--sd-r-lg);
+  background: var(--colorNeutralBackground1);
+  border: 1px solid var(--colorNeutralStroke2);
+  border-radius: var(--borderRadiusLarge);
   transition:
-    border-color var(--sd-dur-fast) var(--sd-ease),
-    box-shadow var(--sd-dur-fast) var(--sd-ease),
-    transform var(--sd-dur-fast) var(--sd-ease);
+    border-color var(--durationFast) var(--curveEasyEase),
+    box-shadow var(--durationFast) var(--curveEasyEase),
+    transform var(--durationFast) var(--curveEasyEase);
 }
 
 :host(.card--pad-lg) {
   padding: 20px;
 }
 :host(.card--sunk) {
-  background: var(--sd-surface-2);
+  background: var(--colorNeutralBackground3);
   border-color: transparent;
 }
 :host(.card--locked) {
-  border: 2px solid var(--sd-accent);
+  border: 2px solid var(--colorStatusSuccessBorderActive);
   padding: 15px;
 }
 :host(.card--locked.card--pad-lg) {
@@ -41,8 +41,8 @@
 
 @media (hover: hover) {
   :host(.card--interactive:hover) {
-    border-color: var(--sd-line-strong);
-    box-shadow: var(--sd-shadow-2);
+    border-color: var(--colorNeutralStroke1);
+    box-shadow: var(--shadow16);
     transform: translateY(-2px);
   }
 }

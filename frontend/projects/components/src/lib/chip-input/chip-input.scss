@@ -11,9 +11,9 @@
   display: flex;
   align-items: baseline;
   gap: 6px;
-  font-size: var(--sd-fs-sm);
-  font-weight: var(--sd-fw-medium);
-  color: var(--sd-ink-soft);
+  font-size: var(--fontSizeBase300);
+  font-weight: var(--fontWeightMedium);
+  color: var(--colorNeutralForeground2);
 }
 
 .chip-input {
@@ -23,14 +23,14 @@
   gap: 6px;
   min-height: 44px;
   padding: 7px 8px;
-  background: var(--sd-surface);
-  border: 1px solid var(--sd-line-strong);
-  border-radius: var(--sd-r-md);
+  background: var(--colorNeutralBackground1);
+  border: 1px solid var(--colorNeutralStroke1);
+  border-radius: var(--borderRadiusMedium);
 }
 
 .chip-input:focus-within {
-  border-color: var(--sd-primary);
-  box-shadow: 0 0 0 3px var(--sd-primary-soft);
+  border-color: var(--colorBrandStroke1);
+  box-shadow: 0 0 0 3px var(--colorBrandStroke2);
 }
 
 .chip-input__field {
@@ -44,5 +44,5 @@
 }
 
 .chip-input__field::placeholder {
-  color: var(--sd-ink-faint);
+  color: var(--colorNeutralForeground3);
 }
