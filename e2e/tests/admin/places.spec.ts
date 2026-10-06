@@ -29,7 +29,7 @@ test.describe("Admin places", () => {
     await expect(a.rowThumb(row)).toBeVisible();
     await expect(a.rowMeta(row)).toHaveText("Activity · 0 photos");
     await expect(a.rowFlags(row)).toHaveText(["No photo"]);
-    await expect(row).toHaveAttribute("href", /\/places\/Activity\//);
+    await expect(a.rowLink(row)).toHaveAttribute("href", /\/places\/Activity\//);
   });
 
   test("kind chips filter and are read back from the URL", async ({ page, pages }) => {

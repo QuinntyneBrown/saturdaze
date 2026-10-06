@@ -41,6 +41,11 @@ export class AdminPlacesPage extends AdminPage {
     return row.locator(".list__sub");
   }
 
+  /** The row's link (the host no longer reflects `href`; the anchor inside carries it). */
+  rowLink(row: Locator): Locator {
+    return row.locator("a.list__item");
+  }
+
   rowThumb(row: Locator): Locator {
     return row.locator(".place-thumb");
   }
