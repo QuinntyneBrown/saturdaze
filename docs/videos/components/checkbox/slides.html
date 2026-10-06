@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 11 Slides</title>
+<link rel="stylesheet" href="../../assets/slides.css">
+</head>
+<body data-video-number="11" data-video-title="Coding sd-checkbox" data-parts="Introduction|Decorator|State|Forms contract|Template|Styles|Spec|Pitfalls|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Saturdaze components · Video 11 of 52</div>
+  <h1>Coding <code>sd-checkbox</code></h1>
+  <p class="lead">A native box that speaks reactive forms: signals for state, a value accessor for the form.</p>
+</section>
+
+<section id="usage" data-part="0" data-cue="On the create account page there are two of them">
+  <h2>Where the app uses it</h2>
+  <pre class="code" data-lang="html" data-file="saturdaze/src/app/pages/create-account/create-account.page.html" data-mark="1,5">      &lt;sd-checkbox name="terms" required formControlName="terms"&gt;
+        I agree to the &lt;a class="sd-link" routerLink="/legal"&gt;Terms&lt;/a&gt; and
+        &lt;a class="sd-link" routerLink="/legal" fragment="privacy"&gt;Privacy Policy&lt;/a&gt;.
+      &lt;/sd-checkbox&gt;
+      &lt;sd-checkbox name="fridayPreview" formControlName="fridayPreview"&gt;
+        Send me the Friday preview. A draft of the weekend in my inbox at 6pm.
+      &lt;/sd-checkbox&gt;</pre>
+</section>
+
+<section id="decorator" data-part="1" data-cue="Open the checkbox component file.">
+  <h2>The decorator</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/checkbox/checkbox.ts" data-mark="7-9">@Component({
+  selector: 'sd-checkbox',
+  standalone: true,
+  templateUrl: './checkbox.html',
+  styleUrl: './checkbox.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    '[attr.checked]': 'checked() ? "" : null',
+    '[attr.required]': 'required() ? "" : null',
+  },
+  /* providers … */
+})</pre>
+</section>
+
+<section id="provider" data-part="1" data-cue="The new part is the providers array.">
+  <h2>The value accessor provider</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/checkbox/checkbox.ts" data-mark="3-5">  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() =&gt; Checkbox),
+      multi: true,
+    },
+  ],</pre>
+  <ul class="small">
+    <li><code>NG_VALUE_ACCESSOR</code>: how <code>formControlName</code> and <code>ngModel</code> find the component</li>
+    <li><code>forwardRef</code>: the class is used inside its own decorator, before it is defined</li>
+  </ul>
+</section>
+
+<section id="inputs" data-part="2" data-cue="Inputs and local state">
+  <h2>Inputs vs. local signals</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/checkbox/checkbox.ts" data-mark="2-3,5-6">export class Checkbox implements ControlValueAccessor {
+  readonly required = input(false, { transform: booleanAttribute });
+  readonly name = input&lt;string&gt;('');
+
+  protected readonly checked = signal&lt;boolean&gt;(false);
+  protected readonly disabled = signal&lt;boolean&gt;(false);</pre>
+</section>
+
+<section id="why-signal" data-part="2" data-cue="Notice what is not an input.">
+  <h2>Why not <code>input()</code> or <code>model()</code> for checked?</h2>
+  <div class="cols">
+    <div class="card bad"><h3>checked = model()</h3><p>Parent binding <b>and</b> form control both own the value — two sources of truth</p></div>
+    <div class="card good"><h3>checked = signal()</h3><p>The form writes in through the accessor; the template reads the signal</p></div>
+  </div>
+  <p class="muted"><code>protected</code>: visible to the template, not part of the public API.</p>
+</section>
+
+<section id="onpush" data-part="2" data-cue="Best practice: a signal is the right tool">
+  <div class="kicker">OnPush + signals</div>
+  <p class="quote">Setting a signal the template reads schedules the re-render. No <code>ChangeDetectorRef</code>, no <code>markForCheck()</code>.</p>
+</section>
+
+<section id="cva" data-part="3" data-cue="Next, two private callbacks">
+  <h2>The forms contract</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/checkbox/checkbox.ts" data-mark="3-7,9-10,13-14">  private onChange: (value: boolean) =&gt; void = () =&gt; {};
+  private onTouched: () =&gt; void = () =&gt; {};
+  protected handleChange(event: Event): void {
+    const v = (event.target as HTMLInputElement).checked;
+    this.checked.set(v);
+    this.onChange(v);
+    this.onTouched();
+  }
+  writeValue(value: boolean | null): void {
+    this.checked.set(!!value);
+  }
+  /* … registerOnChange / registerOnTouched store fn … */
+  setDisabledState(isDisabled: boolean): void {
+    this.disabled.set(isDisabled);
+  }</pre>
+</section>
+
+<section id="flow" data-part="3" data-cue="The other direction is the protected method handle change.">
+  <h2>Two directions</h2>
+  <div class="flow">
+    <div class="node"><b>FormControl</b><span class="small">setValue / reset / disable</span></div>
+    <div class="arrow">→</div>
+    <div class="node accent"><b>writeValue · setDisabledState</b><span class="small">set the signals</span></div>
+    <div class="arrow">→</div>
+    <div class="node"><b>template</b><span class="small">[checked] · [disabled]</span></div>
+  </div>
+  <div class="flow">
+    <div class="node"><b>user click</b><span class="small">(change)</span></div>
+    <div class="arrow">→</div>
+    <div class="node accent"><b>handleChange</b><span class="small">set signal</span></div>
+    <div class="arrow">→</div>
+    <div class="node"><b>onChange(v) · onTouched()</b><span class="small">value + touched</span></div>
+  </div>
+</section>
+
+<section id="template" data-part="4" data-cue="The template is the mock's check block.">
+  <h2>The template</h2>
+  <pre class="code" data-lang="html" data-file="components/src/lib/checkbox/checkbox.html" data-mark="1,5-9,11">&lt;label class="check"&gt;
+  &lt;input
+    class="check__input"
+    type="checkbox"
+    [attr.name]="name() || null"
+    [checked]="checked()"
+    [disabled]="disabled()"
+    [attr.aria-required]="required() ? 'true' : null"
+    (change)="handleChange($event)"
+  /&gt;
+  &lt;span class="check__label"&gt;&lt;ng-content /&gt;&lt;/span&gt;
+&lt;/label&gt;</pre>
+</section>
+
+<section id="a11y" data-part="4" data-cue="Because the control is a native input">
+  <h2>Accessibility for free</h2>
+  <ul>
+    <li>Wrapping <code>&lt;label&gt;</code>: the whole text toggles the box, no <code>for</code>/<code>id</code> pair</li>
+    <li>Native <code>input type="checkbox"</code>: keyboard, focus and checked state</li>
+    <li><code>aria-required="true"</code> only when required</li>
+    <li>One content slot: the label can carry links</li>
+  </ul>
+</section>
+
+<section id="styles" data-part="5" data-cue="The host is display contents.">
+  <h2>Styles</h2>
+  <pre class="code tight" data-lang="scss" data-file="components/src/lib/checkbox/checkbox.scss" data-mark="2,16">:host {
+  display: contents;
+}
+
+.check {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  /* … */
+}
+
+.check__input {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  accent-color: var(--colorStatusSuccessBackground3);
+}</pre>
+</section>
+
+<section id="spec-setup" data-part="6" data-cue="It declares a host component that renders a required checkbox">
+  <h2>Spec setup</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/checkbox/checkbox.spec.ts" data-mark="1-3,10">  template: `&lt;sd-checkbox required name="terms"
+    &gt;I agree to the &lt;a href="/legal"&gt;Terms&lt;/a&gt;&lt;/sd-checkbox
+  &gt;`,
+  /* … */
+  const input = (): HTMLInputElement =&gt;
+    host.querySelector('input.check__input') as HTMLInputElement;
+
+  beforeEach(async () =&gt; {
+    await TestBed.configureTestingModule({ imports: [Checkbox, HostCmp] }).compileComponents();
+    fixture = TestBed.createComponent(Checkbox);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+    host = fixture.nativeElement as HTMLElement;
+  });</pre>
+</section>
+
+<section id="spec-inputs" data-part="6" data-cue="Creates an unchecked native checkbox inside its label checks the structure">
+  <h2>Structure and inputs</h2>
+  <table class="map">
+    <tr><th>it(…)</th><th>proves</th></tr>
+    <tr><td>creates an unchecked native checkbox inside its label</td><td class="prose">label wraps a native, unchecked box; no host attributes</td></tr>
+    <tr><td>marks required fields and forwards the name</td><td class="prose"><code>setInput</code> → <code>aria-required</code>, <code>name</code>, host <code>required</code></td></tr>
+  </table>
+</section>
+
+<section id="spec-forms" data-part="6" data-cue="The next three exercise the forms contract directly">
+  <h2>The forms contract</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/checkbox/checkbox.spec.ts" data-mark="7-10">  it('reports a user toggle to the form and marks it touched', () =&gt; {
+    const onChange = vi.fn();
+    const onTouched = vi.fn();
+    component.registerOnChange(onChange);
+    component.registerOnTouched(onTouched);
+
+    input().checked = true;
+    input().dispatchEvent(new Event('change'));
+    expect(onChange).toHaveBeenCalledWith(true);
+    expect(onTouched).toHaveBeenCalledTimes(1);
+    fixture.detectChanges();
+    expect(host.getAttribute('checked')).toBe('');
+  });</pre>
+  <p class="muted small">Also: checks the box from a written value and mirrors it to the host · disables the box from the form</p>
+</section>
+
+<section id="spec-projection" data-part="6" data-cue="The last, projects rich label content beside the box">
+  <h2>Projection</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/checkbox/checkbox.spec.ts">  it('projects rich label content beside the box', () =&gt; {
+    /* … */
+    expect(label.textContent?.replace(/\s+/g, ' ').trim()).toBe('I agree to the Terms');
+    expect(label.querySelector('a')?.getAttribute('href')).toBe('/legal');
+    expect(el.getAttribute('required')).toBe('');
+  });</pre>
+</section>
+
+<section id="pitfalls" data-part="7" data-cue="Pitfalls">
+  <h2>Pitfalls</h2>
+  <ul>
+    <li><code>checked</code> as an input or model — two sources of truth</li>
+    <li>Missing <code>forwardRef</code> in the provider</li>
+    <li>Not coercing <code>null</code> in <code>writeValue</code></li>
+    <li>Calling <code>onChange</code> without <code>onTouched</code></li>
+    <li>Replacing the native input with a styled <code>div</code></li>
+  </ul>
+</section>
+
+<section id="recap" data-part="8" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div>Inputs configure; signals hold owned state</div>
+    <div>NG_VALUE_ACCESSOR + four methods</div>
+    <div>Change handler: signal, then form</div>
+    <div>Label + native input + aria-required</div>
+    <div><code>display: contents</code> host</div>
+    <div>Tokens by role · one slot</div>
+  </div>
+</section>
+
+<section id="next" data-part="8" data-cue="Next, video twelve builds S D chip">
+  <div class="kicker">Next · Video 12</div>
+  <h1>Coding <code>sd-chip</code></h1>
+</section>
+
+<script src="../../assets/slides.js"></script>
+</body>
+</html>
