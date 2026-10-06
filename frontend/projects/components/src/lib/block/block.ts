@@ -27,6 +27,12 @@ import { Icon } from '../icon/icon';
     '[class.block--drive]': 'drive()',
     '[class.block--errand]': 'errand()',
     '[class.block--done]': 'done()',
+    '[class.block--active]': 'active()',
+    '[attr.tabindex]': 'stopNumber() !== null ? -1 : null',
+    '(mouseenter)': 'activeChange.emit(true)',
+    '(mouseleave)': 'activeChange.emit(false)',
+    '(focusin)': 'activeChange.emit(true)',
+    '(focusout)': 'focusLeft($event)',
     '[attr.time]': 'time() || null',
     '[attr.title]': 'blockTitle() || null',
     '[attr.commitment]': 'commitment() ? "" : null',
@@ -51,4 +57,18 @@ export class Block {
   readonly readonly = input(false, { transform: booleanAttribute });
   /** The phone chevron / row tap. */
   readonly details = output<void>();
+  /**
+   * The stop's number in the day (L2-091): the disc shows it instead of the
+   * icon, and the row becomes programmatically focusable for its map pin.
+   */
+  readonly stopNumber = input<number | null>(null);
+  /** Highlighted with its map pin (L2-092). */
+  readonly active = input(false, { transform: booleanAttribute });
+  /** Pointer or keyboard focus entered (true) or left (false) the row. */
+  readonly activeChange = output<boolean>();
+
+  protected focusLeft(event: FocusEvent): void {
+    const host = event.currentTarget as HTMLElement;
+    if (!host.contains(event.relatedTarget as Node | null)) this.activeChange.emit(false);
+  }
 }

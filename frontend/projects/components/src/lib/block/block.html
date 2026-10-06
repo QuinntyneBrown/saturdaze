@@ -5,7 +5,13 @@
   }
 </div>
 <div class="block__rail">
-  <span class="block__disc"><sd-icon [name]="icon()" [size]="drive() ? 13 : 16" /></span>
+  @if (stopNumber() !== null) {
+    <span class="block__disc block__disc--num" [attr.aria-label]="'Stop ' + stopNumber()">{{
+      stopNumber()
+    }}</span>
+  } @else {
+    <span class="block__disc"><sd-icon [name]="icon()" [size]="drive() ? 13 : 16" /></span>
+  }
 </div>
 <div class="block__body">
   <h3 class="block__title">{{ blockTitle() }}</h3>

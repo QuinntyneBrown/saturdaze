@@ -2,6 +2,8 @@ import { BlockKind } from '../models/block-kind';
 import { BlockRow } from '../models/block-row';
 import { ChipView } from '../models/chip-view';
 import { DayView } from '../models/day-view';
+import { LegView } from '../models/leg-view';
+import { MapPin } from '../models/map-pin';
 import { ItineraryBlockDto } from '../models/itinerary-block.dto';
 import { ShoppingErrandDto } from '../models/shopping-errand.dto';
 import { WeatherDay } from '../models/weather-day';
@@ -65,22 +67,46 @@ export function projectDay(dto: WeekendDto, day: WeekendDay): DayView {
   const forecast = forecastFor(dto.weather, dateIso);
   const sorted = dto.blocks.filter((b) => b.day === day).sort(bySortThenStart);
   const highlightId = sorted.find((b) => b.kind === 'Activity')?.id ?? null;
-  const blocks = sorted.map((b, i) =>
-    toBlockRow(b, dto.errands, {
-      previous: sorted[i - 1] ?? null,
-      highlight: b.id === highlightId,
-    }),
-  );
+  // Travel legs replace the standalone drive blocks in the timeline (L2-090).
+  const blocks = sorted
+    .map((b, i) =>
+      toBlockRow(b, dto.errands, {
+        previous: sorted[i - 1] ?? null,
+        highlight: b.id === highlightId,
+      }),
+    )
+    .filter((b) => !b.drive);
   const lockable = blocks.filter((b) => b.lockable);
+  const stops: MapPin[] = sorted.flatMap((b) =>
+    b.stopNumber != null && b.stop
+      ? [
+          {
+            n: b.stopNumber,
+            blockId: b.id,
+            title: b.title,
+            latitude: b.stop.latitude,
+            longitude: b.stop.longitude,
+          },
+        ]
+      : [],
+  );
+  const summary = dto.days?.find((d) => d.day === day);
+  const drivingMinutes =
+    summary?.drivingMinutes ?? blocks.reduce((sum, b) => sum + (b.leg?.minutes ?? 0), 0);
+  const drivingKm = summary?.drivingKm ?? blocks.reduce((sum, b) => sum + (b.leg?.km ?? 0), 0);
   return {
     day,
     dateIso,
     dateLabel,
     weather: toWeatherDay(day, forecast),
-    meta: dayMeta(dateLabel, forecast),
+    meta: dayMeta(dateLabel, forecast, stops.length, drivingMinutes),
     locked: lockable.length > 0 && lockable.every((b) => b.locked),
     keeping: dayKeeping(sorted),
     blocks,
+    stops,
+    home: dto.home ? { latitude: dto.home.latitude, longitude: dto.home.longitude } : null,
+    drivingMinutes,
+    drivingKm,
   };
 }
 
@@ -123,7 +149,34 @@ export function toBlockRow(
     highlight,
     swappable: b.kind === 'Activity' && !b.isLocked,
     lockable: !commitment && !drive,
+    stopNumber: b.stopNumber ?? null,
+    leg: b.legBefore ? toLegView(b.legBefore.minutes, b.legBefore.distanceKm, b) : null,
   };
+}
+
+/** True for blocks the planner places at home: downtime and home meals. */
+function isAtHome(b: ItineraryBlockDto): boolean {
+  return b.kind === 'Downtime' || (b.kind === 'Meal' && b.refId == null);
+}
+
+/** "45 min · 52 km" and "Travel: 45 minutes, 52 kilometres to …" (L2-090 AC1, AC4). */
+function toLegView(minutes: number, distanceKm: number, to: ItineraryBlockDto): LegView {
+  const km = distanceKm < 10 ? Math.round(distanceKm * 10) / 10 : Math.round(distanceKm);
+  const home = isAtHome(to);
+  return {
+    minutes,
+    km,
+    label: `${minutes} min · ${km} km${home ? ' home' : ''}`,
+    ariaLabel: `Travel: ${minutes} minutes, ${km} kilometres ${home ? 'home' : `to ${to.title}`}`,
+    directionsUrl: to.legBefore?.directionsUrl ?? null,
+  };
+}
+
+/** "1 h 36 min" / "51 min" — a day's driving total. */
+export function drivingLabel(minutes: number): string {
+  const h = Math.floor(minutes / 60);
+  const m = minutes % 60;
+  return h > 0 ? `${h} h ${m} min` : `${m} min`;
 }
 
 /**
@@ -244,12 +297,25 @@ function toWeatherDay(day: WeekendDay, w: WeatherForecastDto | null): WeatherDay
   };
 }
 
-/** "17 May · 22° / 14° · Light breeze, good for outdoors". */
-function dayMeta(dateLabel: string, w: WeatherForecastDto | null): string {
+/**
+ * "17 May · 22° / 14° · 3 stops · 1 h 36 min driving" (L2-090 AC5); a day with
+ * no stops keeps the weather note: "17 May · 22° / 14° · Light breeze, good for outdoors".
+ */
+function dayMeta(
+  dateLabel: string,
+  w: WeatherForecastDto | null,
+  stops: number,
+  drivingMinutes: number,
+): string {
   const parts = [dateLabel];
   if (w && !w.unavailable && w.highCelsius != null && w.lowCelsius != null) {
     parts.push(`${Math.round(w.highCelsius)}° / ${Math.round(w.lowCelsius)}°`);
   }
-  parts.push(weatherNote(w));
+  if (stops > 0) {
+    parts.push(`${stops} ${stops === 1 ? 'stop' : 'stops'}`);
+    parts.push(`${drivingLabel(drivingMinutes)} driving`);
+  } else {
+    parts.push(weatherNote(w));
+  }
   return parts.join(' · ');
 }

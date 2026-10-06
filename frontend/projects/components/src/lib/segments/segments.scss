@@ -29,14 +29,23 @@
     color var(--durationFast) var(--curveEasyEase);
 }
 
-.segments__tab[aria-current='page'] {
+// Tabs mode renders buttons.
+button.segments__tab {
+  border: 0;
+  background: transparent;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.segments__tab[aria-current='page'],
+.segments__tab[aria-selected='true'] {
   background: var(--colorNeutralBackground1);
   color: var(--colorNeutralForeground1);
   box-shadow: var(--shadow4);
 }
 
 @media (hover: hover) {
-  .segments__tab:not([aria-current='page']):hover {
+  .segments__tab:not([aria-current='page']):not([aria-selected='true']):hover {
     color: var(--colorNeutralForeground1);
   }
 }

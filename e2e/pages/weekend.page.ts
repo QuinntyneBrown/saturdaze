@@ -7,8 +7,9 @@ import { PageSlug } from "../fixtures/routes.js";
  *
  * Structure (ready state):
  *   .page-header  "This weekend" + subtitle + [More] + [Add to calendar] [Share]
- *   .grid-days
- *     .day (Saturday)
+ *   .planner__toolbar  [role=tablist] Saturday | Sunday   (one day at a time, L2-093)
+ *   .planner#<day>-panel[role=tabpanel]
+ *     .day (selected day)
  *       .day__header  weather disc · .day__title · .day__meta · .day__actions
  *                     ("Regenerate Saturday", "Lock Saturday"/"Unlock Saturday")
  *       ol.day__list > li.block (+ --commitment --locked --drive --errand --done)
@@ -16,8 +17,11 @@ import { PageSlug } from "../fixtures/routes.js";
  *          (.block__title .block__sub .block__chips) · .block__actions
  *          ("Why this: …" | "About …", "Swap …", "Lock …"/"Unlock …", "Mark … done")
  *          · a.block__chev ("Details for …", <720)
+ *       li.leg between blocks at different places: "N min · N km" (+ Directions > 10 min)
+ *       .block__disc--num for numbered stops
  *       .ghost-row "Add an errand"
- *     .day (Sunday) …
+ *     aside.planner__map[aria-label="<Day> map"]  pins: home + button "Stop n: <title>"
+ *       (stacked above the timeline < 1024px, sticky beside it ≥ 1024px; "Open map" < 1024px)
  *
  * Empty: .empty.empty--warm "Saturday and Sunday, drafted around the Browns"
  *        + "Planned around" list (.list--card → Family).
@@ -38,7 +42,7 @@ export class WeekendPage extends BasePage {
   async waitForPlan(): Promise<void> {
     await this.waitForReady();
     await expect(this.skeletonRows()).toHaveCount(0, { timeout: 30_000 });
-    await expect(this.days()).toHaveCount(2, { timeout: 30_000 });
+    await expect(this.days()).toHaveCount(1, { timeout: 30_000 });
   }
 
   /* ---------- Header actions ---------- */
@@ -54,7 +58,7 @@ export class WeekendPage extends BasePage {
   /* ---------- Days ---------- */
 
   get grid(): Locator {
-    return this.main.locator(".grid-days");
+    return this.main.locator(".planner");
   }
 
   days(): Locator {
@@ -170,6 +174,91 @@ export class WeekendPage extends BasePage {
   /** Planner blocks the user can act on (everything but drives). */
   actionableBlocks(name?: DayName): Locator {
     return (name ? this.day(name) : this.grid).locator(".block:not(.block--drive):not(.block--commitment)");
+  }
+
+  /* ---------- Day tabs (L2-092, L2-093) ---------- */
+
+  dayTab(name: DayName): Locator {
+    return this.main.getByRole("tab", { name, exact: true });
+  }
+
+  async selectDay(name: DayName): Promise<void> {
+    await this.dayTab(name).click();
+    await expect(this.dayTitle(name)).toBeVisible();
+  }
+
+  /** Columns of the planner grid (timeline + map), from its computed template. */
+  async plannerColumnCount(): Promise<number> {
+    return this.grid
+      .filter({ visible: true })
+      .evaluate((el) => getComputedStyle(el).gridTemplateColumns.split(" ").filter(Boolean).length);
+  }
+
+  /** The visible day's timeline list. */
+  timeline(): Locator {
+    return this.grid.filter({ visible: true }).locator(".day");
+  }
+
+  /* ---------- Stops and legs (L2-090, L2-091) ---------- */
+
+  /** Numbered stop discs in the visible day, in order. */
+  stopDiscs(): Locator {
+    return this.timeline().locator(".block__disc--num");
+  }
+
+  /** The block whose disc reads `n`. */
+  stopBlock(n: number): Locator {
+    return this.timeline()
+      .locator(".block")
+      .filter({ has: this.page.locator(".block__disc--num", { hasText: new RegExp(`^${n}$`) }) });
+  }
+
+  legs(): Locator {
+    return this.timeline().locator(".leg");
+  }
+
+  legText(leg: Locator): Locator {
+    return leg.locator(".leg__text");
+  }
+
+  directionsLink(leg: Locator): Locator {
+    return leg.getByRole("link", { name: "Directions" });
+  }
+
+  /** Minutes of each leg in the visible day, read from "N min · N km". */
+  async legMinutes(): Promise<number[]> {
+    const texts = await this.legs().locator(".leg__text").allTextContents();
+    return texts.map((t) => Number(/(\d+) min/.exec(t)?.[1] ?? NaN));
+  }
+
+  /* ---------- Day map (L2-091, L2-092) ---------- */
+
+  dayMap(name: DayName): Locator {
+    return this.main.getByRole("complementary", { name: `${name} map` });
+  }
+
+  mapPins(name: DayName): Locator {
+    return this.dayMap(name).getByRole("button", { name: /^Stop \d+: / });
+  }
+
+  mapPin(name: DayName, n: number): Locator {
+    return this.dayMap(name).getByRole("button", { name: new RegExp(`^Stop ${n}: `) });
+  }
+
+  homePin(name: DayName): Locator {
+    return this.dayMap(name).locator(".map__pin--home");
+  }
+
+  mapAttribution(name: DayName): Locator {
+    return this.dayMap(name).locator(".map__attr");
+  }
+
+  homeDayMessage(name: DayName): Locator {
+    return this.dayMap(name).getByText("A home day: nothing to map.");
+  }
+
+  openMapButton(): Locator {
+    return control(this.grid.filter({ visible: true }), "Open map");
   }
 
   /* ---------- Empty state ---------- */

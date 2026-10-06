@@ -1,3 +1,5 @@
+@use 'styles/breakpoints' as *;
+
 :host {
   display: block;
 }
@@ -11,4 +13,36 @@
 .planned {
   display: block;
   margin-top: 24px;
+}
+
+// One day beside its map — `.planner` in docs/mocks/pages/weekend.html (L2-093).
+.planner__toolbar {
+  display: flex;
+  margin-bottom: 16px;
+}
+
+.planner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+}
+
+// Under 1024px the map sits above the timeline at 4:3 (AC2).
+.planner__map {
+  order: -1;
+}
+
+@include respond-to(desktop) {
+  .planner {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 32px;
+  }
+
+  // Beside the timeline, the map stays in view below the top bar (AC1).
+  .planner__map {
+    order: 0;
+    position: sticky;
+    top: calc(var(--sd-topbar-h, 64px) + 16px);
+  }
 }

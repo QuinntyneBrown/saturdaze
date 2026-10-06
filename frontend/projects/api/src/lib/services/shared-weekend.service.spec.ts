@@ -39,7 +39,8 @@ describe('SharedWeekendService', () => {
     expect(view.subtitle).toBe(
       'Sunny Saturday for Lavender fields, a cloudy Sunday for The Rec Room.',
     );
-    expect(view.days.map((d) => d.blocks.length)).toEqual([5, 3]);
+    // The Saturday drive block is folded into a travel leg (L2-090).
+    expect(view.days.map((d) => d.blocks.length)).toEqual([4, 3]);
     expect(view.days[0]!.blocks[0]).toMatchObject({ title: 'Swim lessons', commitment: true });
   });
 

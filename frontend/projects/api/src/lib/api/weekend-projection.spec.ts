@@ -161,7 +161,8 @@ describe('weekend-projection', () => {
 
     it('hands the drive minutes to the activity that follows the drive', () => {
       expect(row('b1').chips).toContainEqual({ tone: 'sky', icon: 'car', label: '45 min drive' });
-      expect(row('d1')).toMatchObject({ drive: true, subtitle: null, chips: [], lockable: false });
+      // Drive blocks give way to travel legs in the timeline (L2-090).
+      expect(day.blocks.some((b) => b.id === 'd1')).toBe(false);
       expect(row('m1').chips.some((c) => c.label.endsWith('drive'))).toBe(false);
     });
 

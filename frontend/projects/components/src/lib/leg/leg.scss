@@ -1,0 +1,41 @@
+// `.leg` from docs/mocks/styles/app.css: a quiet row on the timeline rail.
+
+:host {
+  display: grid;
+  grid-template-columns: 56px 24px minmax(0, 1fr);
+  column-gap: 12px;
+  align-items: center;
+  min-height: 32px;
+  border-bottom: 1px solid var(--colorNeutralStroke2);
+}
+
+.leg__rail {
+  position: relative;
+  align-self: stretch;
+}
+
+.leg__rail::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  bottom: -1px;
+  left: 50%;
+  border-left: 2px dotted var(--colorNeutralStroke1);
+  transform: translateX(-50%);
+}
+
+.leg__text {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+  font-size: var(--fontSizeBase200);
+  color: var(--colorNeutralForeground2);
+}
+
+.leg__link {
+  font-weight: var(--fontWeightSemibold);
+  color: var(--colorPaletteSkyForeground1);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}

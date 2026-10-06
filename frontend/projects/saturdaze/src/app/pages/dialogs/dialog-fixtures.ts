@@ -34,6 +34,8 @@ const BASE_BLOCK: BlockRow = {
   highlight: true,
   swappable: true,
   lockable: true,
+  stopNumber: null,
+  leg: null,
 };
 
 export const BLOCK: BlockRow = BASE_BLOCK;

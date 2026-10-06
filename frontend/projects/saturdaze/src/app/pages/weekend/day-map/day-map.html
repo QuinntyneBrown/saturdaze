@@ -1,0 +1,74 @@
+<aside class="planner__map" [attr.aria-label]="day() + ' map'">
+  @let v = view();
+  @if (v) {
+    <div class="map">
+      <div class="map__view">
+        @for (tile of v.tiles; track tile.key) {
+          <img
+            class="map__tile"
+            alt=""
+            loading="lazy"
+            [src]="tile.src"
+            [style.left.%]="tile.left"
+            [style.top.%]="tile.top"
+            [style.width.%]="v.tileWidth"
+            [style.height.%]="v.tileHeight"
+            (error)="tileFailed($event)"
+          />
+        }
+        <svg
+          class="map__route"
+          [attr.viewBox]="'0 0 ' + frame.width + ' ' + frame.height"
+          preserveAspectRatio="none"
+          aria-hidden="true"
+        >
+          <polyline [attr.points]="v.route" />
+        </svg>
+        @if (v.home) {
+          <span
+            class="map__pin map__pin--home"
+            aria-hidden="true"
+            [style.left.%]="v.home.left"
+            [style.top.%]="v.home.top"
+            ><sd-icon name="home" [size]="13"
+          /></span>
+        }
+        @for (pin of v.pins; track pin.n) {
+          <button
+            class="map__pin"
+            type="button"
+            [class.map__pin--active]="active() === pin.n"
+            [attr.aria-label]="'Stop ' + pin.n + ': ' + pin.title"
+            [style.left.%]="pin.left"
+            [style.top.%]="pin.top"
+            (click)="activate.emit(pin.n)"
+            (mouseenter)="hover.emit(pin.n)"
+            (mouseleave)="hover.emit(null)"
+          >
+            {{ pin.n }}
+          </button>
+        }
+      </div>
+      @if (expandable()) {
+        <sd-button class="map__expand" variant="quiet" size="sm" (click)="openMap.emit()">
+          <sd-icon name="map" />
+          Open map
+        </sd-button>
+      }
+      <p class="map__legend">
+        <span>{{ legend() }}</span>
+        <span class="map__attr"
+          >©
+          <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener"
+            >OpenStreetMap</a
+          >
+          contributors</span
+        >
+      </p>
+    </div>
+  } @else {
+    <div class="map map--empty">
+      <p class="map__empty">A home day: nothing to map.</p>
+    </div>
+  }
+</aside>

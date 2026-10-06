@@ -25,6 +25,10 @@ const READY: WeekendView = {
       locked: false,
       keeping: ['Swim 9:00'],
       blocks: [BLOCK_COMMITMENT, BLOCK],
+      stops: [],
+      home: null,
+      drivingMinutes: 0,
+      drivingKm: 0,
     },
     {
       day: 'Sunday',
@@ -35,6 +39,10 @@ const READY: WeekendView = {
       locked: true,
       keeping: [],
       blocks: [{ ...BLOCK, id: 'b-pancakes', day: 'Sunday', title: 'Pancakes at home' }],
+      stops: [],
+      home: null,
+      drivingMinutes: 0,
+      drivingKm: 0,
     },
   ],
 };

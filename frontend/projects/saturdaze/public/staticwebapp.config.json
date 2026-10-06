@@ -7,6 +7,6 @@
     ".json": "application/json"
   },
   "globalHeaders": {
-    "Content-Security-Policy": "img-src 'self' data:"
+    "Content-Security-Policy": "img-src 'self' data: https://tile.openstreetmap.org"
   }
 }

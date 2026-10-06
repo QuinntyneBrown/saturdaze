@@ -26,6 +26,7 @@ test.describe("Weekend", () => {
   test("renders Saturday and Sunday with weather meta and day actions", async ({ pages }) => {
     const w = pages.weekend;
     for (const day of ["Saturday", "Sunday"] as const) {
+      await w.selectDay(day);
       await expect(w.dayTitle(day)).toHaveText(day);
       await expect(w.dayMeta(day)).not.toBeEmpty();
       await expect(w.dayWeatherDisc(day)).toBeVisible();
