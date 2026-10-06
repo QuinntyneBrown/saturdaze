@@ -15,6 +15,16 @@
   margin-top: 24px;
 }
 
+// Add to calendar / Share / More under the cover (L2-096 AC5).
+.cover-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
 // One day beside its map — `.planner` in docs/mocks/pages/weekend.html (L2-093).
 .planner__toolbar {
   display: flex;

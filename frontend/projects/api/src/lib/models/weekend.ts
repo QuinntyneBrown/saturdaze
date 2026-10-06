@@ -2,6 +2,7 @@ export type { BlockKind } from './block-kind';
 export type { BlockRow } from './block-row';
 export type { CalendarExport } from './calendar-export';
 export type { DayView } from './day-view';
+export type { CoverChoice, CoverSelection, CoverView } from './cover-view';
 export type { ErrandPlacement } from './errand-placement';
 export type { IdeaKind, IdeaRequest, IdeaTiming } from './idea-request';
 export type { IdeaPlacementView } from './idea-placement-view';

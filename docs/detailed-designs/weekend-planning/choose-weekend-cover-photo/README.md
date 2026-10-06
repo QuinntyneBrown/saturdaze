@@ -22,23 +22,23 @@ This feature adds the cover to the `Weekend` aggregate, the "Change photo" dialo
 
 ### Domain
 
-`Weekend` gains a `Cover` owned value: `Source` (`CoverSource`: `Default`, `Stop`, `Upload`), `BlockId?` (the chosen stop), and `Upload?` (`CoverUpload`: `StorageKey`, `Width`, `Height`, `SizeBytes`, `UploadedAtUtc`). A new weekend starts with `Source = Default`.
+`Weekend` gains `CoverSource` (`Default`, `Stop`, `Upload`) and, for a chosen stop, `CoverPlaceKind` and `CoverPlaceId`, the place rather than the block, so the choice survives regeneration while that place is still planned. Upload fields arrive with L2-097. A new weekend starts with `CoverSource = Default`.
 
-`CoverResolver` is a domain service that turns a weekend into a `ResolvedCover(Url, Alt, Attribution, Label, IsUpload)` or `null`:
+`WeekendEnrichment` resolves the cover into a `CoverDto(Url, Width, Height, Alt, Attribution, Label, Source, PlaceId)` or `null`. `WeekendEnrichmentBehavior`, a MediatR pipeline behaviour, runs it on every response that is a `WeekendDto`, so the many weekend handlers keep sharing the static `WeekendMapper`; it also adds each stop's place photo to its block (`ItineraryBlockDto.Photo`) for thumbnails and the picker:
 
-- `Default` uses the primary photo of Saturday's highlight block, else Sunday's (L2-096 AC1).
-- `Stop` uses the primary photo of the place behind `BlockId`.
+- `Default` uses the photo of Saturday's highlight (its first activity), else Sunday's (L2-096 AC1).
+- `Stop` uses the chosen place's photo while a block still points at that place; otherwise the default rule applies, which is how a regenerated weekend reverts (AC6).
 - `Upload` uses a signed URL for `StorageKey`.
 
 The label is "Your photo" for an upload and "From {place}" otherwise (L2-098 AC1). With no photo, the result is `null` and clients show the fallback; the title still renders as the page `h1` (L2-096 AC3).
 
-`RegenerateWeekendCommandHandler`, `RegenerateWeekendDayCommandHandler`, and `ReuseWeekendCommandHandler` call `Cover.Reconcile(blocks)` after replanning. A `Stop` cover whose place still appears in a surviving block re-points to that block; otherwise the cover reverts to `Default` (L2-096 AC6). An `Upload` cover survives regeneration.
+Because the fallback happens when the cover is resolved, no replanning handler needs to reconcile it. An `Upload` cover survives regeneration.
 
 ### API
 
 `WeekendDto` and `WeekendSummaryDto` gain `Cover: CoverDto?` (`Url`, `Alt`, `Attribution`, `Label`, `IsUpload`). `GetWeekendHistoryQueryHandler` resolves covers for each summary.
 
-`PUT /api/weekends/{id}/cover` takes `{ source: "default" }` or `{ source: "stop", blockId }` and dispatches `SetWeekendCoverCommand`. A `blockId` that is not a stop of this weekend with a photo returns 400. The choice persists (L2-096 AC2).
+`PUT /api/weekends/{id}/cover` takes `{ source: "default" }` or `{ source: "stop", placeId }` and dispatches `SetWeekendCoverCommand`. A `placeId` that is not a stop of this weekend with a photo returns 400 `cover_not_a_stop`. The choice persists (L2-096 AC2).
 
 `POST /api/weekends/{id}/cover` takes `multipart/form-data` with one `file` part and dispatches `UploadWeekendCoverCommand` (L2-097):
 

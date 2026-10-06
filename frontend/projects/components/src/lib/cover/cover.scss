@@ -1,0 +1,112 @@
+@use '../styles/breakpoints' as *;
+
+// `.cover` from docs/mocks/styles/app.css: 16:9 on phones, 21:8 from 720px.
+
+:host {
+  --sd-cover-scrim: color-mix(in srgb, var(--colorNeutralForeground1) 78%, transparent);
+
+  position: relative;
+  display: block;
+  overflow: hidden;
+  margin-bottom: 12px;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--borderRadiusLarge);
+  background: var(--colorNeutralBackground3);
+}
+
+.cover__img,
+.cover__fallback {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.cover__fallback {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+  padding: 16px;
+}
+
+.cover__fallback--sky {
+  background: var(--colorPaletteSkyBackground1);
+  color: var(--colorPaletteSkyForeground1);
+}
+
+.cover__fallback--leaf {
+  background: var(--colorPaletteLeafBackground1);
+  color: var(--colorPaletteLeafForeground1);
+}
+
+.cover__fallback--sun {
+  background: var(--colorPaletteSunBackground1);
+  color: var(--colorPaletteSunForeground1);
+}
+
+.cover__fallback--indoor {
+  background: var(--colorPaletteIndoorBackground1);
+  color: var(--colorPaletteIndoorForeground1);
+}
+
+.media__credit {
+  position: absolute;
+  top: 14px;
+  left: 12px;
+  max-width: calc(100% - 140px);
+  padding: 1px 6px;
+  overflow: hidden;
+  border-radius: var(--borderRadiusCircular);
+  background: var(--sd-cover-scrim);
+  color: var(--colorNeutralForegroundOnBrand);
+  font-size: var(--fontSizeBase200);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+// The scrim's dark end sits under the text, so it reads at 4.5:1 or better
+// whatever the photo (L2-096 AC4).
+.cover__body {
+  position: absolute;
+  inset: auto 0 0 0;
+  padding: 48px 16px 16px;
+  background: linear-gradient(to top, var(--sd-cover-scrim) 55%, transparent);
+  color: var(--colorNeutralForegroundOnBrand);
+}
+
+.cover__eyebrow {
+  font-size: var(--fontSizeBase200);
+  font-weight: var(--fontWeightSemibold);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.cover__title {
+  margin-top: 4px;
+  font-size: var(--fontSizeBase600);
+  font-weight: var(--fontWeightBold);
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+
+.cover__sub {
+  max-width: 60ch;
+  margin-top: 4px;
+  font-size: var(--fontSizeBase300);
+}
+
+.cover__edit {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+}
+
+@include respond-to(tablet) {
+  :host {
+    aspect-ratio: 21 / 8;
+  }
+
+  .cover__body {
+    padding: 64px 24px 20px;
+  }
+}

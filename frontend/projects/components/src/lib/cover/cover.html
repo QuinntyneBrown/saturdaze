@@ -1,0 +1,29 @@
+@let m = media();
+@if (m) {
+  <img
+    class="cover__img"
+    [src]="m.src"
+    [alt]="m.alt"
+    [attr.width]="m.width"
+    [attr.height]="m.height"
+    loading="eager"
+    fetchpriority="high"
+  />
+  @if (m.credit) {
+    <span class="media__credit">{{ m.credit }}</span>
+  }
+} @else {
+  <div class="cover__fallback" [class]="'cover__fallback--' + tone()" aria-hidden="true">
+    <sd-icon name="sparkle" [size]="40" />
+  </div>
+}
+<div class="cover__body">
+  @if (eyebrow()) {
+    <p class="cover__eyebrow">{{ eyebrow() }}</p>
+  }
+  <h1 class="cover__title">{{ coverTitle() }}</h1>
+  @if (subtitle()) {
+    <p class="cover__sub">{{ subtitle() }}</p>
+  }
+</div>
+<div class="cover__edit"><ng-content select="[slot=edit]" /></div>

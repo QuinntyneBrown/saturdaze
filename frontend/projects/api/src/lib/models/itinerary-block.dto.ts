@@ -1,3 +1,4 @@
+import { PlacePhotoDto } from './place-photo.dto';
 import { LocationDto } from './location.dto';
 import { TravelLegDto } from './travel-leg.dto';
 import { BlockKind } from './block-kind';
@@ -59,4 +60,8 @@ export interface ItineraryBlockDto {
    * Leg Before — the drive into this block from the previous place (L2-090).
    */
   readonly legBefore?: TravelLegDto | null;
+  /**
+   * Photo — the place's primary photo, for thumbnails and the cover picker.
+   */
+  readonly photo?: PlacePhotoDto | null;
 }

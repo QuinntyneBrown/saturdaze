@@ -12,6 +12,7 @@ import { WeekendDay } from '../models/weekend-day';
 import { WeekendDto } from '../models/weekend.dto';
 import { WeekendView } from '../models/weekend-view';
 import { IWeekendPlanService } from './weekend-plan.service.contract';
+import { CoverSelection } from '../models/cover-view';
 import { IdeaPlacementDto } from '../models/idea-placement.dto';
 import { IdeaPlacementView } from '../models/idea-placement-view';
 import { IdeaRequest } from '../models/idea-request';
@@ -315,6 +316,20 @@ export class WeekendPlanService implements IWeekendPlanService {
     await this.send(
       'addIdea',
       this.http.post<WeekendDto>(`${this.baseUrl}/api/weekends/${target}/ideas`, request),
+    );
+  }
+
+  /**
+   * Set Cover — the default rule or a stop's photo (L2-096 AC2).
+   *
+   * @param {CoverSelection} selection - The default rule or a stop
+   *
+   * @returns {Promise<void>} The result of the operation
+   */
+  async setCover(selection: CoverSelection): Promise<void> {
+    await this.send(
+      'setCover',
+      this.http.put<WeekendDto>(`${this.baseUrl}/api/weekends/${this.targetId()}/cover`, selection),
     );
   }
 

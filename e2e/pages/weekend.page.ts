@@ -181,7 +181,73 @@ export class WeekendPage extends BasePage {
     return (name ? this.day(name) : this.grid).locator(".block:not(.block--drive):not(.block--commitment)");
   }
 
-  /* ---------- Day tabs (L2-092, L2-093) ---------- */
+  /* ---------- Header: the cover in the ready state, the page header otherwise ---------- */
+
+  override pageTitle(): Locator {
+    return this.main.locator(".page-header__title, .cover__title");
+  }
+
+  override pageSubtitle(): Locator {
+    return this.main.locator(".page-header__subtitle, .cover__sub");
+  }
+
+  override headerAction(name: string): Locator {
+    return control(this.pageActions(), name).or(control(this.coverActions(), name));
+  }
+
+  override moreButton(): Locator {
+    return this.pageHeader.locator(".page-header__more").or(control(this.coverActions(), "More options"));
+  }
+
+  /* ---------- Cover (L2-096) ---------- */
+
+  cover(): Locator {
+    return this.main.locator(".cover");
+  }
+
+  coverImage(): Locator {
+    return this.cover().locator("img.cover__img");
+  }
+
+  coverFallback(): Locator {
+    return this.cover().locator(".cover__fallback");
+  }
+
+  coverTitle(): Locator {
+    return this.cover().getByRole("heading", { level: 1 });
+  }
+
+  coverEyebrow(): Locator {
+    return this.cover().locator(".cover__eyebrow");
+  }
+
+  coverSubtitle(): Locator {
+    return this.cover().locator(".cover__sub");
+  }
+
+  coverCredit(): Locator {
+    return this.cover().locator(".media__credit");
+  }
+
+  changePhotoButton(): Locator {
+    return control(this.cover(), "Change photo");
+  }
+
+  /** Add to calendar / Share / More, in the row under the cover. */
+  coverActions(): Locator {
+    return this.main.locator(".cover-actions");
+  }
+
+  /** D28: one radio per stop photo, named by the stop. */
+  coverPhotoOption(name: string): Locator {
+    return this.dialog().getByRole("radio", { name, exact: true });
+  }
+
+  coverPhotoOptions(): Locator {
+    return this.dialog().getByRole("radio");
+  }
+
+    /* ---------- Day tabs (L2-092, L2-093) ---------- */
 
   dayTab(name: DayName): Locator {
     return this.main.getByRole("tab", { name, exact: true });

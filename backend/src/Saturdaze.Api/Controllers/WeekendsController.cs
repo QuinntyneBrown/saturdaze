@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Saturdaze.Application.Contracts;
+using Saturdaze.Application.Covers;
 using Saturdaze.Application.Exceptions;
 using Saturdaze.Application.Ideas;
 using Saturdaze.Application.Weekends;
@@ -53,6 +54,19 @@ public sealed class WeekendsController : ControllerBase
     [HttpPost("{id:guid}/repeat")]
     public async Task<ActionResult<WeekendDto>> Repeat(Guid id, CancellationToken ct)
         => Ok(await _sender.Send(new ReuseWeekendCommand(id, Remix: false), ct));
+
+    /// <summary>Use the default cover, or one of the weekend's stops' photos (L2-096).</summary>
+    [HttpPut("{id:guid}/cover")]
+    public async Task<ActionResult<WeekendDto>> SetCover(Guid id, [FromBody] CoverRequest body, CancellationToken ct)
+    {
+        var source = body.Source?.ToLowerInvariant() switch
+        {
+            "stop" => CoverSource.Stop,
+            "default" => CoverSource.Default,
+            _ => throw new ValidationException("source", "Source must be default or stop."),
+        };
+        return Ok(await _sender.Send(new SetWeekendCoverCommand(id, source, body.PlaceId), ct));
+    }
 
     /// <summary>Where an idea would land on a day, without changing the plan (L2-095).</summary>
     [HttpPost("{id:guid}/ideas/preview")]
@@ -203,3 +217,6 @@ file static class WeekendControllerHelpers
 
 /// <summary>Body of the ideas endpoints: <c>{ ideaKind, ideaId, day, timing }</c>.</summary>
 public sealed record IdeaRequest(string IdeaKind, Guid IdeaId, string Day, string? Timing);
+
+/// <summary>Body of <c>PUT /api/weekends/{id}/cover</c>: <c>{ source: "default" | "stop", placeId }</c>.</summary>
+public sealed record CoverRequest(string? Source, Guid? PlaceId);

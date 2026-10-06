@@ -17,6 +17,7 @@ export * from './lib/filters/filters';
 export * from './lib/disc/disc';
 export * from './lib/media/media';
 export * from './lib/leg/leg';
+export * from './lib/cover/cover';
 export * from './lib/avatar/avatar';
 export * from './lib/date-tile/date-tile';
 export * from './lib/stars/stars';

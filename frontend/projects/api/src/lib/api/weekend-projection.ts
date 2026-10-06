@@ -1,6 +1,7 @@
 import { BlockKind } from '../models/block-kind';
 import { BlockRow } from '../models/block-row';
 import { ChipView } from '../models/chip-view';
+import { CoverChoice, CoverView } from '../models/cover-view';
 import { DayView } from '../models/day-view';
 import { LegView } from '../models/leg-view';
 import { MapPin } from '../models/map-pin';
@@ -13,6 +14,7 @@ import { WeekendDto } from '../models/weekend.dto';
 import { WeekendStatus, WeekendView } from '../models/weekend-view';
 import { capitalise, formatDuration, hhmm, minutesBetween, timeRange, toMinutes } from './format';
 import { forecastFor, roundOrDash, weatherAdjective, weatherIcon, weatherNote } from './weather';
+import { toMedia } from './media';
 import { formatDayDate, weekendDayIso } from './weekend-dates';
 
 /**
@@ -57,7 +59,47 @@ export function projectWeekend(dto: WeekendDto | null, status?: WeekendStatus): 
           ),
     days,
     blockCount: dto.blocks.length,
+    cover: coverView(dto),
+    dateRange: dateRange(sat.dateIso, sun.dateIso),
+    coverChoices: coverChoices(dto),
   };
+}
+
+/** The cover with its label as the credit (L2-096). */
+function coverView(dto: WeekendDto): CoverView | null {
+  const c = dto.cover;
+  if (!c) return null;
+  return {
+    media: { src: c.url, alt: c.alt, width: c.width, height: c.height, credit: c.label },
+    source: c.source,
+    placeId: c.placeId,
+  };
+}
+
+/** Each place in the plan with a photo, once, for D28. */
+function coverChoices(dto: WeekendDto): CoverChoice[] {
+  const seen = new Set<string>();
+  const choices: CoverChoice[] = [];
+  const ordered = [...dto.blocks].sort((a, b) =>
+    a.day === b.day ? bySortThenStart(a, b) : a.day === 'Saturday' ? -1 : 1,
+  );
+  for (const b of ordered) {
+    const media = toMedia(b.photo);
+    if (!b.refId || !media || seen.has(b.refId)) continue;
+    seen.add(b.refId);
+    const name = b.kind === 'Meal' ? b.title.replace(/^[^:]+: /, '') : b.title;
+    choices.push({ placeId: b.refId, name, media });
+  }
+  return choices;
+}
+
+/** "16 – 17 May", or "31 May – 1 Jun" across a month end. */
+function dateRange(satIso: string, sunIso: string): string {
+  const [satDay, satMonth] = formatDayDate(satIso).split(' ');
+  const sun = formatDayDate(sunIso);
+  return satMonth === sun.split(' ')[1]
+    ? `${satDay} – ${sun}`
+    : `${formatDayDate(satIso)} – ${sun}`;
 }
 
 /** One `sd-day` column: header meta, lock state, keeping list and rows. */
@@ -241,6 +283,9 @@ function placeholder(status: WeekendStatus): WeekendView {
     subtitle: status === 'empty' ? SUBTITLE_EMPTY : SUBTITLE_LOADING,
     days: [],
     blockCount: 0,
+    cover: null,
+    dateRange: '',
+    coverChoices: [],
   };
 }
 

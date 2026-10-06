@@ -16,6 +16,7 @@ import {
   Block,
   Button,
   Chip,
+  Cover,
   Day,
   DayWeather,
   Disc,
@@ -38,6 +39,11 @@ import {
   AddErrandDialogResult,
 } from '../../dialogs/add-errand-dialog/add-errand-dialog';
 import { CalendarDialog, CalendarDialogData } from '../../dialogs/calendar-dialog/calendar-dialog';
+import {
+  CoverPhotoDialog,
+  CoverPhotoDialogData,
+  CoverPhotoDialogResult,
+} from '../../dialogs/cover-photo-dialog/cover-photo-dialog';
 import {
   DayMapDialog,
   DayMapDialogData,
@@ -79,6 +85,7 @@ const DAYS: readonly WeekendDay[] = ['Saturday', 'Sunday'];
     Block,
     Button,
     Chip,
+    Cover,
     Day,
     Disc,
     Empty,
@@ -335,6 +342,18 @@ export class WeekendPage {
       this.error.set('Something did not go through. Try again in a moment.');
       console.error('WeekendPage action failed', err);
     }
+  }
+
+  /** "Change photo" → D28; the chosen stop's photo becomes the cover (L2-096 AC2). */
+  protected async changeCover(): Promise<void> {
+    const view = this.weekend();
+    const ref = this.dialog.open<CoverPhotoDialogResult, CoverPhotoDialogData>(CoverPhotoDialog, {
+      ...DIALOG_OPTIONS,
+      data: { choices: view.coverChoices, currentPlaceId: view.cover?.placeId ?? null },
+    });
+    const selection = await firstValueFrom(ref.closed);
+    if (!selection) return;
+    await this.run(() => this.weekendService.setCover(selection));
   }
 
   protected selectDay(label: string | null): void {

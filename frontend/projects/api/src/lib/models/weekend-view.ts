@@ -1,3 +1,4 @@
+import { CoverChoice, CoverView } from './cover-view';
 import { DayView } from './day-view';
 
 /** Where the weekend page is in its lifecycle. */
@@ -36,4 +37,16 @@ export interface WeekendView {
    * Block Count.
    */
   readonly blockCount: number;
+  /**
+   * Cover — null shows the fallback tile (L2-096 AC3).
+   */
+  readonly cover: CoverView | null;
+  /**
+   * Date Range — "16 – 17 May", the cover's eyebrow.
+   */
+  readonly dateRange: string;
+  /**
+   * Cover Choices — the stop photos D28 offers.
+   */
+  readonly coverChoices: readonly CoverChoice[];
 }

@@ -1,3 +1,4 @@
+import { CoverDto } from './cover.dto';
 import { DaySummaryDto } from './day-summary.dto';
 import { LocationDto } from './location.dto';
 import { ItineraryBlockDto } from './itinerary-block.dto';
@@ -57,4 +58,8 @@ export interface WeekendDto {
    * Home — where each day's journey starts and ends.
    */
   readonly home?: LocationDto | null;
+  /**
+   * Cover — the weekend's cover photo, or null for the fallback (L2-096).
+   */
+  readonly cover?: CoverDto | null;
 }

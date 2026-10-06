@@ -43,6 +43,7 @@ test.describe("Ideas — Add to day", () => {
     const title = (await i.cardTitle(card).textContent())!.trim();
     await i.addToDayButton(card).click();
     await i.addToDayDayOption("Sunday").check();
+    await expect(i.addToDayPreviewTitle()).toHaveText(/^Sunday · /);
     const preview = (await i.addToDayPreviewTitle().textContent())!.trim();
     const start = /· (\d{1,2}:\d{2}) to/.exec(preview)![1];
 

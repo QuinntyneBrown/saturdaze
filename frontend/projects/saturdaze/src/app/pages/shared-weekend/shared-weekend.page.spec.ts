@@ -15,6 +15,9 @@ const READY: WeekendView = {
   headline: 'This weekend',
   subtitle: 'Lavender on Saturday, pancakes on Sunday.',
   blockCount: 3,
+  cover: null,
+  dateRange: '16 – 17 May',
+  coverChoices: [],
   days: [
     {
       day: 'Saturday',

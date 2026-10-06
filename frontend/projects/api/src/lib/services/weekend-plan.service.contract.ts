@@ -4,6 +4,7 @@ import { CalendarExport } from '../models/calendar-export';
 import { ErrandPlacement } from '../models/errand-placement';
 import { WeekendDay } from '../models/weekend-day';
 import { WeekendView } from '../models/weekend-view';
+import { CoverSelection } from '../models/cover-view';
 import { IdeaPlacementView } from '../models/idea-placement-view';
 import { IdeaRequest } from '../models/idea-request';
 
@@ -141,6 +142,15 @@ export interface IWeekendPlanService {
    * @returns {Promise<void>} The result of the operation
    */
   addIdea(request: IdeaRequest): Promise<void>;
+  /**
+   * Set Cover — `PUT /api/weekends/{id}/cover` with the default rule or a
+   * stop's photo (L2-096); the weekend view updates in place.
+   *
+   * @param {CoverSelection} selection - The default rule or a stop
+   *
+   * @returns {Promise<void>} The result of the operation
+   */
+  setCover(selection: CoverSelection): Promise<void>;
   /**
    * Remix Saved — `POST /api/weekends/{id}/remix`; the result becomes the
    * current weekend.

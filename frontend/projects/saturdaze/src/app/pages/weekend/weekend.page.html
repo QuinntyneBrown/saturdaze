@@ -1,7 +1,25 @@
-<sd-page-header [title]="headline()" [subtitle]="subtitle()">
-  @if (status() !== 'empty') {
+@if (status() === 'ready') {
+  <sd-cover
+    [media]="weekend().cover?.media ?? null"
+    [eyebrow]="weekend().dateRange"
+    [title]="headline()"
+    [subtitle]="subtitle()"
+  >
+    <sd-button slot="edit" variant="quiet" size="sm" (click)="changeCover()">
+      <sd-icon name="edit" />
+      Change photo
+    </sd-button>
+  </sd-cover>
+  <div class="cover-actions">
+    <sd-button variant="quiet" [disabled]="!actionsEnabled()" (click)="calendar()">
+      <sd-icon name="calendar" />
+      Add to calendar
+    </sd-button>
+    <sd-button variant="primary" [disabled]="!actionsEnabled()" (click)="share()">
+      <sd-icon name="share" />
+      Share
+    </sd-button>
     <sd-button
-      slot="more"
       variant="quiet"
       icon
       label="More options"
@@ -10,20 +28,35 @@
     >
       <sd-icon name="more" />
     </sd-button>
-  }
-  @if (status() !== 'empty') {
-    <sd-button slot="actions" variant="quiet" [disabled]="!actionsEnabled()" (click)="calendar()">
-      <sd-icon name="calendar" />
-      Add to calendar
-    </sd-button>
-  }
-  @if (status() !== 'empty') {
-    <sd-button slot="primary" variant="primary" [disabled]="!actionsEnabled()" (click)="share()">
-      <sd-icon name="share" />
-      Share
-    </sd-button>
-  }
-</sd-page-header>
+  </div>
+} @else {
+  <sd-page-header [title]="headline()" [subtitle]="subtitle()">
+    @if (status() !== 'empty') {
+      <sd-button
+        slot="more"
+        variant="quiet"
+        icon
+        label="More options"
+        [disabled]="!actionsEnabled()"
+        (click)="more($event)"
+      >
+        <sd-icon name="more" />
+      </sd-button>
+    }
+    @if (status() !== 'empty') {
+      <sd-button slot="actions" variant="quiet" [disabled]="!actionsEnabled()" (click)="calendar()">
+        <sd-icon name="calendar" />
+        Add to calendar
+      </sd-button>
+    }
+    @if (status() !== 'empty') {
+      <sd-button slot="primary" variant="primary" [disabled]="!actionsEnabled()" (click)="share()">
+        <sd-icon name="share" />
+        Share
+      </sd-button>
+    }
+  </sd-page-header>
+}
 
 @if (error()) {
   <sd-banner class="error" tone="warn" role="alert" icon="close">{{ error() }}</sd-banner>

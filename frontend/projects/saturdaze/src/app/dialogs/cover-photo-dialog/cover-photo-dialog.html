@@ -1,0 +1,37 @@
+<sd-dialog
+  wide
+  title="Cover photo"
+  subtitle="Shown on this weekend, in Past, and on the link you share."
+>
+  @if (data.choices.length) {
+    <div class="photo-pick" role="radiogroup" aria-label="Choose a cover photo">
+      @for (choice of data.choices; track choice.placeId) {
+        <label class="photo-pick__opt">
+          <input
+            type="radio"
+            name="cover-photo"
+            [value]="choice.placeId"
+            [checked]="selected() === choice.placeId"
+            [attr.aria-label]="choice.name"
+            (change)="selected.set(choice.placeId)"
+          />
+          <img [src]="choice.media.src" alt="" loading="lazy" />
+          <span class="photo-pick__name">{{ choice.name }}</span>
+        </label>
+      }
+    </div>
+  } @else {
+    <p class="empty">None of this weekend's stops has a photo yet.</p>
+  }
+  <sd-button slot="actions" variant="quiet" type="button" (click)="cancel()">Cancel</sd-button>
+  <sd-button
+    slot="actions"
+    variant="primary"
+    type="button"
+    [disabled]="!selected()"
+    (click)="use()"
+  >
+    <sd-icon name="check" />
+    Use this photo
+  </sd-button>
+</sd-dialog>

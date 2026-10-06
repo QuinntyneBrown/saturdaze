@@ -42,6 +42,9 @@ const LOADING: WeekendView = {
   subtitle: '',
   days: [],
   blockCount: 0,
+  cover: null,
+  dateRange: '16 – 17 May',
+  coverChoices: [],
 };
 
 const EMPTY: WeekendView = { ...LOADING, status: 'empty', headline: 'Your first weekend' };
@@ -53,6 +56,9 @@ const READY: WeekendView = {
   headline: 'This weekend',
   subtitle: 'Lavender on Saturday, pancakes on Sunday.',
   blockCount: 3,
+  cover: null,
+  dateRange: '16 – 17 May',
+  coverChoices: [],
   days: [
     {
       day: 'Saturday',
@@ -211,6 +217,10 @@ describe('WeekendPage', () => {
   });
 
   const header = (): Element => host.querySelector('sd-page-header')!;
+  /** Ready state: the cover leads, its actions sit below it (L2-096). */
+  const cover = (): Element => host.querySelector('sd-cover')!;
+  const coverAction = (selector: string): HTMLButtonElement =>
+    host.querySelector(`.cover-actions ${selector} button`) as HTMLButtonElement;
   /** Switch the day tab (L2-092): one day is on screen at a time. */
   const showDay = (day: 'Saturday' | 'Sunday'): void => {
     const tab = Array.from(host.querySelectorAll<HTMLButtonElement>('[role="tab"]')).find(
@@ -238,8 +248,9 @@ describe('WeekendPage', () => {
   it('renders the selected day with its blocks and row actions once the plan is ready', async () => {
     await mountReady();
     expect(family.load).not.toHaveBeenCalled();
-    expect(header().getAttribute('subtitle')).toBe(READY.subtitle);
-    expect(host.querySelector('sd-button[slot="primary"]')?.hasAttribute('disabled')).toBe(false);
+    expect(cover().querySelector('.cover__sub')?.textContent?.trim()).toBe(READY.subtitle);
+    expect(cover().querySelector('h1')?.textContent?.trim()).toBe('This weekend');
+    expect(coverAction('sd-button[variant="primary"]').disabled).toBe(false);
 
     const days = (): Element[] => Array.from(host.querySelectorAll('sd-day'));
     expect(days().map((d) => d.getAttribute('title'))).toEqual(['Saturday']);
@@ -313,7 +324,7 @@ describe('WeekendPage', () => {
 
   it('shares through a fresh link and opens the calendar dialog', async () => {
     await mountReady();
-    (host.querySelector('sd-button[slot="primary"] button') as HTMLButtonElement).click();
+    coverAction('sd-button[variant="primary"]').click();
     await settle();
     expect(weekend.createShareLink).toHaveBeenCalledTimes(1);
     expect(dialog.open).toHaveBeenCalledWith(
@@ -323,7 +334,7 @@ describe('WeekendPage', () => {
       }),
     );
 
-    (host.querySelector('sd-button[slot="actions"] button') as HTMLButtonElement).click();
+    coverAction('sd-button[variant="quiet"]:not([label])').click();
     expect(weekend.calendarExport).toHaveBeenCalledTimes(1);
     expect(dialog.open).toHaveBeenLastCalledWith(
       CalendarDialog,
@@ -342,7 +353,7 @@ describe('WeekendPage', () => {
   it('offers Regenerate and Add to calendar from the More menu', async () => {
     await mountReady();
     menu.open.mockResolvedValueOnce({ id: 'calendar', label: 'Add to calendar', icon: 'calendar' });
-    (host.querySelector('sd-button[slot="more"] button') as HTMLButtonElement).click();
+    coverAction('sd-button[label="More options"]').click();
     await settle();
     expect(menu.open).toHaveBeenCalledWith(
       expect.any(HTMLElement),
@@ -362,7 +373,7 @@ describe('WeekendPage', () => {
       icon: 'refresh',
     });
     dialog.open.mockReturnValueOnce({ closed: of('confirm') });
-    (host.querySelector('sd-button[slot="more"] button') as HTMLButtonElement).click();
+    coverAction('sd-button[label="More options"]').click();
     await settle();
     expect(confirmData()).toMatchObject({
       title: 'Regenerate the weekend?',
