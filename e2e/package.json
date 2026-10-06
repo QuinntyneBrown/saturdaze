@@ -11,6 +11,7 @@
     "baseline": "cross-env SD_BASELINE=1 playwright test --config=playwright.config.ts --update-snapshots all tests/visual",
     "audit": "playwright test --config=playwright.audit.config.ts",
     "audit:mocks": "cross-env SD_BASELINE=1 playwright test --config=playwright.audit.config.ts",
+    "perf-test": "node perf-test/perf-test.mjs",
     "report": "playwright show-report",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "mocks:check": "node ../docs/mocks-v2/.check.mjs"

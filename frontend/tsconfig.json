@@ -44,6 +44,9 @@
     },
     {
       "path": "./projects/saturdaze/tsconfig.spec.json"
+    },
+    {
+      "path": "./projects/perf-test/tsconfig.app.json"
     }
   ]
 }

@@ -186,6 +186,55 @@
           }
         }
       }
+    },
+    "perf-test": {
+      "projectType": "application",
+      "root": "projects/perf-test",
+      "sourceRoot": "projects/perf-test/src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:application",
+          "options": {
+            "browser": "projects/perf-test/src/main.ts",
+            "tsConfig": "projects/perf-test/tsconfig.app.json",
+            "inlineStyleLanguage": "scss",
+            "styles": ["projects/perf-test/src/styles.scss"],
+            "stylePreprocessorOptions": {
+              "includePaths": ["projects/components/src/lib"]
+            }
+          },
+          "configurations": {
+            "production": {
+              "outputHashing": "all"
+            },
+            "development": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular/build:dev-server",
+          "configurations": {
+            "production": {
+              "buildTarget": "perf-test:build:production"
+            },
+            "development": {
+              "buildTarget": "perf-test:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": ["projects/perf-test/**/*.ts", "projects/perf-test/**/*.html"]
+          }
+        }
+      }
     }
   }
 }
