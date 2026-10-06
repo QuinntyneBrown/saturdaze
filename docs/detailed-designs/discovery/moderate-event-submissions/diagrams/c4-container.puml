@@ -1,7 +1,7 @@
 @startuml
 !include <C4/C4_Container>
 LAYOUT_WITH_LEGEND()
-title Containers — Moderate event submissions
+title Containers - Moderate event submissions
 
 Person(actor, "Event administrator", "Approves or rejects contributed events")
 System_Boundary(saturdaze, "Saturdaze") {

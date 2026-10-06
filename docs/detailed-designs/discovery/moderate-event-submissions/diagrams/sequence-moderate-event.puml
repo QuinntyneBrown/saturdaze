@@ -1,26 +1,26 @@
 @startuml
-title UML sequence behaviour — Moderate event submissions
+title UML sequence behaviour - Moderate event submissions
 skinparam backgroundColor #FFFFFF
 skinparam shadowing false
 skinparam roundcorner 12
 skinparam defaultFontName Arial
 skinparam ArrowColor #344054
 actor "User" as actor
-box "Frontend — Saturdaze Angular application" #E0F2FE
+box "Frontend - Saturdaze Angular application" #E0F2FE
  participant "ReviewSubmissionsPage" as page
  participant "EventSubmissionsService" as client
 end box
-box "Backend — Saturdaze API" #D1FADF
+box "Backend - Saturdaze API" #D1FADF
  participant "EventSubmissionsController" as controller
 end box
-box "Backend — Saturdaze Application and Domain" #ECFDF3
+box "Backend - Saturdaze Application and Domain" #ECFDF3
  participant "ApproveSubmissionCommandHandler\nRejectSubmissionCommandHandler" as handler
 end box
-box "Backend — Saturdaze Infrastructure" #FFF4E5
+box "Backend - Saturdaze Infrastructure" #FFF4E5
  database "AppDbContext\nSQL Server" as db
 end box
 actor -> page : Confirm approval or rejection
-page -> client : approve(id, driveMinutes) or reject(id, reason)
+page -> client : approve(id) or reject(id, reason)
 client -> controller : POST decision endpoint
 alt caller lacks Admin policy
 controller --> client : 401 or 403 before handler
@@ -28,7 +28,9 @@ else authorized
 controller -> handler : L2-050 decision command
 handler -> db : Load submission and submitter
 db --> handler : Current review state
-alt same decision already recorded
+alt submission not found
+handler --> controller : 404 not found
+else same decision already recorded
 handler --> controller : Existing result
 else incompatible decision or duplicate publication
 handler --> controller : 409 conflict

@@ -9,7 +9,7 @@ skinparam class {
   FontColor #101828
   BackgroundColor #F9FAFB
 }
-title Class structure — Deploy to Azure
+title Class structure - Deploy to Azure
 
 class deploy_yml <<workflow>> {
   +trigger: push main / workflow_dispatch

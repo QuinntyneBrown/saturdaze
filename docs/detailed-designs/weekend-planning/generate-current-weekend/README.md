@@ -18,7 +18,7 @@ Saturdaze is a web application that plans personalized family weekends. Weekend 
 
 `WeekendPlanner.Plan()` creates Saturday and Sunday blocks around commitments, meal windows, drives, downtime, and available activities. `WeekendForecastService` supplies configured-coordinate forecasts.
 
-`ShareDialog` calls the owner-scoped share endpoint. `SharedWeekendPage` reads `/api/weekends/shared/{token}` from `/sample-weekend?share=...`. `CalendarDialog` exposes the anonymous calendar URL. The shared handler returns the full WeekendDto, not a redacted DTO.
+`WeekendPage.share()` calls `WeekendPlanService.createShareLink()`, which posts to the owner-scoped share endpoint, and opens `ShareDialog` with the returned URL. `SharedWeekendPage` reads `/api/weekends/shared/{token}` through `SHARED_WEEKEND_SERVICE` from `/sample-weekend?share=...`. `CalendarDialog` exposes the anonymous `/api/weekends/{id}/calendar.ics` URL, keyed by the weekend ID rather than the share token. The shared handler returns the full WeekendDto, not a redacted DTO.
 
 ## Requirements
 

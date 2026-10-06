@@ -1,7 +1,7 @@
 @startuml
 !include <C4/C4_Component>
 LAYOUT_WITH_LEGEND()
-title Components — Manage shopping errands
+title Components - Manage shopping errands
 
 Container_Boundary(web, "Saturdaze web application") {
   Component(page, "AddErrandDialog", "Angular component", "Collects shopping task details")

@@ -25,6 +25,15 @@ C4 diagrams that ``!include <C4/C4_Component>`` (and friends) render offline:
 the C4-PlantUML standard library ships inside a recent ``plantuml.jar``. No
 network is required.
 
+Graphviz
+--------
+C4 and class diagrams are laid out by Graphviz ``dot``. Without it PlantUML
+does not fail: it writes a "Cannot find Graphviz" error image and exits 0, so
+every such diagram would silently ship broken. The script therefore runs
+``plantuml -testdot`` first and refuses to render if Graphviz is missing.
+Install it (``apt-get install graphviz``, ``brew install graphviz``,
+``choco install graphviz``) or point ``GRAPHVIZ_DOT`` at the ``dot`` binary.
+
 Exit status is non-zero if any diagram fails to render, so a caller can tell
 whether the design's images are complete.
 """
@@ -64,6 +73,15 @@ def find_runner():
             return ["java", "-jar", candidate]
 
     return None
+
+
+def check_graphviz(runner):
+    """Return None if PlantUML can run Graphviz dot, else the diagnostic text."""
+    proc = subprocess.run(runner + ["-testdot"], capture_output=True, text=True)
+    output = ((proc.stdout or "") + (proc.stderr or "")).strip()
+    if proc.returncode == 0 and "Installation seems OK" in output:
+        return None
+    return output or f"plantuml -testdot exited with {proc.returncode}"
 
 
 def collect_puml(paths):
@@ -128,6 +146,17 @@ def main(argv):
             "  Set PLANTUML_JAR to a plantuml.jar, put `plantuml` on PATH,\n"
             "  or place plantuml.jar at one of:\n    "
             + "\n    ".join(JAR_CANDIDATES),
+            file=sys.stderr,
+        )
+        return 2
+
+    dot_error = check_graphviz(runner)
+    if dot_error is not None:
+        print(
+            "ERROR: PlantUML cannot run Graphviz dot, so C4 and class diagrams\n"
+            "  would render as error images. Install Graphviz or set\n"
+            "  GRAPHVIZ_DOT to the dot executable.\n\n  "
+            + "\n  ".join(dot_error.splitlines()),
             file=sys.stderr,
         )
         return 2

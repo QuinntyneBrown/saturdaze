@@ -1,28 +1,28 @@
 @startuml
-title UML sequence behaviour — Pick restaurants
+title UML sequence behaviour - Pick restaurants
 skinparam backgroundColor #FFFFFF
 skinparam shadowing false
 skinparam roundcorner 12
 skinparam defaultFontName Arial
 skinparam ArrowColor #344054
 actor "User" as actor
-box "Frontend — Saturdaze Angular application" #E0F2FE
+box "Frontend - Saturdaze Angular application" #E0F2FE
  participant "IdeasFoodPage" as page
  participant "RestaurantService" as client
 end box
-box "Backend — Saturdaze API" #D1FADF
+box "Backend - Saturdaze API" #D1FADF
  participant "RestaurantsController" as controller
 end box
-box "Backend — Saturdaze Application and Domain" #ECFDF3
+box "Backend - Saturdaze Application and Domain" #ECFDF3
  participant "GetRestaurantPicksQueryHandler\nvote and lock handlers" as handler
 end box
-box "Backend — Saturdaze Infrastructure" #FFF4E5
+box "Backend - Saturdaze Infrastructure" #FFF4E5
  database "AppDbContext\nSQL Server" as db
 end box
 actor -> page : Open /ideas/food
 page -> client : load()
 loop Saturday / Sunday, Lunch / Dinner
-client -> controller : GET picks with wifeApprovedOnly=false
+client -> controller : GET /api/restaurants?day&slot&wifeApprovedOnly=false&take=10
 controller -> handler : L2-019 day and slot query
 handler -> db : Catalog plus family votes and day/slot locks
 db --> handler : Matching rows
@@ -30,8 +30,8 @@ handler --> controller : RestaurantDto array
 controller --> client : 200 picks
 end
 client --> page : Ranked FoodSections
-actor -> page : Vote or confirm LockRestaurantDialog
-page -> client : vote(...) or lock(...)
+actor -> page : Vote, or lock in and confirm LockRestaurantDialog
+page -> client : vote(restaurantId, voterName, vote) or lock(restaurantId, day, slot)
 client -> controller : POST /api/restaurants/{id}/vote or /lock
 controller -> handler : Dispatch family-scoped command
 handler -> db : Save vote or lock and current meal change

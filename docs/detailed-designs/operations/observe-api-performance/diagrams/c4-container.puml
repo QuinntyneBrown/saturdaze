@@ -1,7 +1,7 @@
 @startuml
 !include <C4/C4_Container>
 LAYOUT_WITH_LEGEND()
-title Containers — Observe API performance
+title Containers - Observe API performance
 
 Person(client, "API client", "Invokes endpoints")
 Person(operator, "System operator", "Reviews request metrics")

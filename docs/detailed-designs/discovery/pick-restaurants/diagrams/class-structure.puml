@@ -9,30 +9,69 @@ skinparam class {
   FontColor #101828
   BackgroundColor #F9FAFB
 }
-title Class structure — Pick restaurants
+title Class structure - Pick restaurants
 
 class IdeasFoodPage {
+  #view: Signal<IdeasFoodView>
+  #setDay(chip: FilterChip): void
+  #setSlot(chip: FilterChip): void
   #setExtra(chip: FilterChip): void
+  #vote(card: FoodCard, change): Promise<void>
+  #lockIn(section: FoodSection, card: FoodCard): Promise<void>
 }
-class RestaurantService {
+class LockRestaurantDialog
+interface IRestaurantService <<RESTAURANT_SERVICE>> {
+  +list(): Signal<IdeasFoodView>
   +load(): Promise<void>
   +setFilters(patch: Partial<FoodFilters>): void
+  +vote(restaurantId: string, voterName: string, vote: Vote): Promise<void>
+  +lock(restaurantId: string, day: WeekendDay, slot: MealSlot): Promise<void>
 }
-class GetRestaurantPicksQuery {
+class RestaurantService
+class RestaurantsController {
+  +Get(day, slot, nearActivityId, wifeApprovedOnly = true, take = 10)
+  +Vote(id: Guid, body: VoteRestaurantRequest)
+  +Lock(id: Guid, body: LockRestaurantRequest)
+}
+class GetRestaurantPicksQuery <<record>> {
   +DateOnly Day
   +MealSlot Slot
   +Guid? NearActivityId
-  +bool WifeApprovedOnly
+  +bool WifeApprovedOnly = true
+  +int Take = 10
 }
 class GetRestaurantPicksQueryHandler {
-  +Handle(query: GetRestaurantPicksQuery): Task<IReadOnlyList<RestaurantDto>>
+  +Handle(request: GetRestaurantPicksQuery, ct: CancellationToken): Task<IReadOnlyList<RestaurantDto>>
+}
+class LockRestaurantCommandHandler {
+  +Handle(request: LockRestaurantCommand, ct: CancellationToken): Task<RestaurantDto>
 }
 class Restaurant {
+  +Guid Id
+  +string Name
+  +string Style
   +MealSlot Slot
   +bool WifeApproved
+  +string Notes
   +int DriveMinutes
 }
-IdeasFoodPage --> RestaurantService : calls
-RestaurantService ..> GetRestaurantPicksQuery : maps to
+class RestaurantLock {
+  +Guid FamilyId
+  +Guid RestaurantId
+  +DayOfWeekend Day
+  +MealSlot Slot
+}
+enum MealSlot {
+  Lunch
+  Dinner
+}
+IdeasFoodPage --> IRestaurantService : injects
+IdeasFoodPage ..> LockRestaurantDialog : opens
+RestaurantService ..|> IRestaurantService
+RestaurantService ..> RestaurantsController : GET /api/restaurants\nPOST {id}/vote, {id}/lock
+RestaurantsController ..> GetRestaurantPicksQuery : sends
+GetRestaurantPicksQueryHandler ..> GetRestaurantPicksQuery : handles
 GetRestaurantPicksQueryHandler --> Restaurant : filters
+LockRestaurantCommandHandler --> RestaurantLock : upserts per family/day/slot
+Restaurant --> MealSlot
 @enduml

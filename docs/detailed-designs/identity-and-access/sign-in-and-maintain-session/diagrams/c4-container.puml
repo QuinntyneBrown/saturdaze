@@ -1,7 +1,7 @@
 @startuml
 !include <C4/C4_Container>
 LAYOUT_WITH_LEGEND()
-title Containers — Sign in and maintain a session
+title Containers - Sign in and maintain a session
 
 Person(actor, "Account holder", "Authenticates to use family features")
 System_Boundary(saturdaze, "Saturdaze") {

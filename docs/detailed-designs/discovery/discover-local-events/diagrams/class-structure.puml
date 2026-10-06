@@ -9,34 +9,57 @@ skinparam class {
   FontColor #101828
   BackgroundColor #F9FAFB
 }
-title Class structure — Discover local events
+title Class structure - Discover local events
 
 class IdeasEventsPage {
+  #view: Signal<IdeasEventsView>
+  #setWindow(chip: FilterChip): void
   #setCategory(chip: FilterChip): void
 }
-class FilterChip {
-  +string Label
-  +bool Active
+interface FilterChip {
+  +label: string
+  +tone: ChipTone
+  +icon?: string
+  +active: boolean
+}
+interface IEventsService <<EVENTS_SERVICE>> {
+  +load(weekendOfIso?: string): Promise<void>
+  +list(): Signal<IdeasEventsView>
+  +setWindow(window: EventsWindow): void
+  +setCategory(label: string | null): void
 }
 class EventsService {
-  +load(weekendOfIso: string): Promise<void>
+  +load(weekendOfIso?: string): Promise<void>
   +list(): Signal<IdeasEventsView>
+  +setWindow(window: EventsWindow): void
+  +setCategory(label: string | null): void
 }
-class GetLocalEventsQuery {
+class EventsController {
+  +Get(weekendOf: DateOnly, maxDriveMinutes: int = 120): Task<ActionResult<IReadOnlyList<LocalEventDto>>>
+}
+class GetLocalEventsQuery <<record>> {
   +DateOnly WeekendOf
-  +int MaxDriveMinutes
+  +int MaxDriveMinutes = 120
 }
 class GetLocalEventsQueryHandler {
-  +Handle(query: GetLocalEventsQuery): Task<IReadOnlyList<LocalEventDto>>
+  +ComingSoonDays: int = 14
+  +Handle(request: GetLocalEventsQuery, ct: CancellationToken): Task<IReadOnlyList<LocalEventDto>>
 }
 class LocalEvent {
+  +Guid Id
+  +string Name
   +DateOnly StartsOn
   +DateOnly EndsOn
+  +string Location
   +int DriveMinutes
+  +string Url
   +string Category
 }
-IdeasEventsPage --> EventsService : calls
+IdeasEventsPage --> IEventsService : injects
 IdeasEventsPage ..> FilterChip : reads
-EventsService ..> GetLocalEventsQuery : maps to
+EventsService ..|> IEventsService
+EventsService ..> EventsController : GET /api/events
+EventsController ..> GetLocalEventsQuery : sends
+GetLocalEventsQueryHandler ..> GetLocalEventsQuery : handles
 GetLocalEventsQueryHandler --> LocalEvent : filters
 @enduml

@@ -1,33 +1,34 @@
 @startuml
-title UML sequence behaviour — Discover local events
+title UML sequence behaviour - Discover local events
 skinparam backgroundColor #FFFFFF
 skinparam shadowing false
 skinparam roundcorner 12
 skinparam defaultFontName Arial
 skinparam ArrowColor #344054
 actor "User" as actor
-box "Frontend — Saturdaze Angular application" #E0F2FE
+box "Frontend - Saturdaze Angular application" #E0F2FE
  participant "IdeasEventsPage" as page
  participant "EventsService" as client
 end box
-box "Backend — Saturdaze API" #D1FADF
+box "Backend - Saturdaze API" #D1FADF
  participant "EventsController" as controller
 end box
-box "Backend — Saturdaze Application and Domain" #ECFDF3
+box "Backend - Saturdaze Application and Domain" #ECFDF3
  participant "GetLocalEventsQueryHandler" as handler
 end box
-box "Backend — Saturdaze Infrastructure" #FFF4E5
+box "Backend - Saturdaze Infrastructure" #FFF4E5
  database "AppDbContext\nSQL Server" as db
 end box
 actor -> page : Open /ideas/events
 page -> client : load()
+client -> client : EVENT_SUBMISSIONS_SERVICE.loadMine()\nGET /api/events/submissions/mine
 client -> controller : GET /api/events?weekendOf=...&maxDriveMinutes=45
 controller -> handler : GetLocalEventsQuery
 handler -> db : L2-020 overlap Friday-Sunday or start within 14 days after
 db --> handler : Events ordered by start, drive, name
 handler --> controller : LocalEventDto array
 controller --> client : 200, including an empty array
-client -> client : Group Saturday / Sunday / Coming soon
+client -> client : Group Saturday / Sunday / Coming soon;\nprepend pending submissions; omit empty sections
 client --> page : IdeasEventsView
 actor -> page : Change window or category
 page -> client : setWindow() or setCategory()

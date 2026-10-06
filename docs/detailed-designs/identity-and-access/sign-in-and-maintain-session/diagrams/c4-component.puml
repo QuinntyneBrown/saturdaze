@@ -1,7 +1,7 @@
 @startuml
 !include <C4/C4_Component>
 LAYOUT_WITH_LEGEND()
-title Components — Sign in and maintain a session
+title Components - Sign in and maintain a session
 
 Container_Boundary(web, "Saturdaze web application") {
   Component(page, "SignInPage", "Angular component", "Collects credentials and remember-me choice")

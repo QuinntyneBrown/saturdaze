@@ -9,7 +9,7 @@ skinparam class {
   FontColor #101828
   BackgroundColor #F9FAFB
 }
-title Class structure — Support accessible interaction
+title Class structure - Support accessible interaction
 
 class RoutedPage <<Angular component>>
 class Button

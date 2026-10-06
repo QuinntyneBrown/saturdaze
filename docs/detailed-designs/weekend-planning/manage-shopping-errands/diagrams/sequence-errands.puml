@@ -1,22 +1,22 @@
 @startuml
-title UML sequence behaviour — Manage shopping errands
+title UML sequence behaviour - Manage shopping errands
 skinparam backgroundColor #FFFFFF
 skinparam shadowing false
 skinparam roundcorner 12
 skinparam defaultFontName Arial
 skinparam ArrowColor #344054
 actor "User" as actor
-box "Frontend — Saturdaze Angular application" #E0F2FE
+box "Frontend - Saturdaze Angular application" #E0F2FE
  participant "WeekendPage\nAddErrandDialog\nErrandAddedDialog" as page
  participant "WeekendPlanService" as client
 end box
-box "Backend — Saturdaze API" #D1FADF
+box "Backend - Saturdaze API" #D1FADF
  participant "ErrandsController" as controller
 end box
-box "Backend — Saturdaze Application and Domain" #ECFDF3
+box "Backend - Saturdaze Application and Domain" #ECFDF3
  participant "AddShoppingErrandCommandHandler\nMarkErrandDoneCommandHandler" as handler
 end box
-box "Backend — Saturdaze Infrastructure" #FFF4E5
+box "Backend - Saturdaze Infrastructure" #FFF4E5
  database "AppDbContext\nSQL Server" as db
 end box
 actor -> page : Submit description, minutes, preferred day
@@ -25,7 +25,7 @@ client -> controller : POST /api/weekends/{id}/errands
 controller -> handler : Validated family-scoped command
 handler -> db : Load weekend and blocks
 db --> handler : Current state
-handler -> handler : L2-021 append task; try preferred day then other day
+handler -> handler : L2-021 append task; try preferred day (else Saturday) then other day
 alt slot available
 handler -> handler : Reclaim overlapping downtime; insert Errand block
 else no slot
@@ -36,9 +36,14 @@ db --> handler : Saved
 handler --> controller : WeekendDto
 controller --> client : 200
 client -> client : Compare before/after to derive placement or null
-client --> page : Show acknowledgement and refreshed plan
+client --> page : Placement or null; refreshed plan
+alt placement found
+page --> actor : ErrandAddedDialog shows day and time
+else null placement
+page --> actor : No acknowledgement dialog
+end
 opt mark errand done
-page -> client : setErrandDone(id, done)
+page -> client : setErrandDone(block.refId, done)
 client -> controller : PUT /api/errands/{id}/done
 controller -> handler : L2-022 done command
 handler -> db : Save owned task flag

@@ -9,10 +9,16 @@ skinparam class {
   FontColor #101828
   BackgroundColor #F9FAFB
 }
-title Class structure — Materialize recurring commitments
+title Class structure - Materialize recurring commitments
 
 class GenerateWeekendCommandHandler {
   +Handle(command: GenerateWeekendCommand): Task<WeekendDto>
+}
+class PlannerInputLoader {
+  +LoadAsync(familyId: Guid, weekendOf: DateOnly, ct: CancellationToken): Task<PlannerContext>
+}
+interface IWeekendPlanner {
+  +Plan(inputs: PlannerInputs): IReadOnlyList<ItineraryBlock>
 }
 class WeekendPlanner {
   +Plan(inputs: PlannerInputs): IReadOnlyList<ItineraryBlock>
@@ -25,12 +31,18 @@ class Commitment {
   +TimeOnly EndTime
 }
 class ItineraryBlock {
+  +Guid Id
+  +DayOfWeekend Day
+  +string Title
   +BlockKind Kind
   +bool IsLocked
   +TimeOnly StartTime
   +TimeOnly EndTime
 }
-GenerateWeekendCommandHandler --> WeekendPlanner : calls
+GenerateWeekendCommandHandler --> PlannerInputLoader : loads inputs
+GenerateWeekendCommandHandler --> IWeekendPlanner : calls
+IWeekendPlanner <|.. WeekendPlanner
+PlannerInputLoader ..> Commitment : reads
 WeekendPlanner ..> Commitment : reads
 WeekendPlanner --> ItineraryBlock : creates
 @enduml

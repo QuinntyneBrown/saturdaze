@@ -1,7 +1,7 @@
 @startuml
 !include <C4/C4_Context>
 LAYOUT_WITH_LEGEND()
-title System Context — View weekend weather
+title System Context - View weekend weather
 
 Person(actor, "Family member", "Uses a Saturday and Sunday forecast")
 System(saturdaze, "Saturdaze", "Family weekend planning platform")

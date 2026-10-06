@@ -6,15 +6,15 @@ Saturdaze is a web application that plans personalized family weekends. Event su
 
 *pending submission* — user-contributed event awaiting an administrator decision
 
-The Ideas header opens one submission dialog. `nextHourDefault()` initializes its local time, and `EventSubmissionsService.submit()` creates a pending submission owned by the caller.
+The Ideas header opens one submission dialog. `nextHourFromNowAsInputValue()` initializes its local time, and `EventSubmissionsService.submit()` creates a pending submission owned by the caller.
 
 ## Description
 
 `IdeasPage` owns the single Suggest an event header action for `/ideas/events`. Its `suggest()` method opens `SubmitEventDialog`, then `EventSubmittedDialog` on success and refreshes owned submissions.
 
-`SubmitEventDialog` uses `nextHourDefault()` for the initial local date and time. It validates title and start time, then calls `EventSubmissionsService.submit()`; optional inputs include end time, location, description, cost, age range, URL, and category.
+`SubmitEventDialog` uses `nextHourFromNowAsInputValue()` for the initial local date and time. It validates title and start time, then calls `EventSubmissionsService.submit()`; optional inputs include end time, location, description, cost, age range, and URL. The dialog does not capture `category`, although `SubmitEventRequest` and the API accept it.
 
-`EventSubmissionsController` dispatches `SubmitEventCommand`. `SubmitEventCommandHandler` stamps current-user ownership, submission time, and Pending status before saving through `IAppDbContext`.
+`EventSubmissionsController` dispatches `SubmitEventCommand`. `SubmitEventCommandValidator` runs in the MediatR `ValidationBehavior` and rejects a missing title or start time, or a non-http(s) `sourceUrl` with `invalid_url`. `SubmitEventCommandHandler` stamps current-user ownership, submission time, and Pending status before saving through `IAppDbContext`.
 
 The API uses enum strings `Pending`, `Approved`, and `Rejected`. Unreviewed submissions remain outside `LocalEvents`. Legacy event-submission routes redirect to `/ideas/events`; no full-page form or floating entry point remains.
 

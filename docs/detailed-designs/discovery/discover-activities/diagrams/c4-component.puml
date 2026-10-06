@@ -1,7 +1,7 @@
 @startuml
 !include <C4/C4_Component>
 LAYOUT_WITH_LEGEND()
-title Components — Discover activities
+title Components - Discover activities
 
 Container_Boundary(web, "Saturdaze web application") {
   Component(page, "IdeasActivitiesPage", "Angular component", "Controls filters and grouped sections")

@@ -1,7 +1,7 @@
 @startuml
 !include <C4/C4_Container>
 LAYOUT_WITH_LEGEND()
-title Containers — Manage a family profile
+title Containers - Manage a family profile
 
 Person(actor, "Family organizer", "Maintains household members and preferences")
 System_Boundary(saturdaze, "Saturdaze") {

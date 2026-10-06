@@ -9,11 +9,14 @@ skinparam class {
   FontColor #101828
   BackgroundColor #F9FAFB
 }
-title Class structure — Control itinerary blocks
+title Class structure - Control itinerary blocks
 
 class WeekendPlanService {
-  +lockBlock(blockId: string, locked: bool): Promise<void>
-  +regenerate(id: string): Promise<void>
+  +lockBlock(blockId: string, locked: boolean): Promise<void>
+  +swapBlock(blockId: string, rejectedActivityIds?: readonly string[]): Promise<void>
+  +lockDay(day: WeekendDay, locked: boolean, id?: string): Promise<void>
+  +regenerate(id?: string): Promise<void>
+  +regenerateDay(day: WeekendDay, id?: string): Promise<void>
 }
 class LockBlockCommandHandler {
   +Handle(command: LockBlockCommand): Task<WeekendDto>
@@ -24,6 +27,12 @@ class SwapBlockCommandHandler {
 class RegenerateWeekendCommandHandler {
   +Handle(command: RegenerateWeekendCommand): Task<WeekendDto>
 }
+class RegenerateWeekendDayCommandHandler {
+  +Handle(command: RegenerateWeekendDayCommand): Task<WeekendDto>
+}
+class LockWeekendDayCommandHandler {
+  +Handle(command: LockWeekendDayCommand): Task<WeekendDto>
+}
 class Weekend {
   +int RegenerateCount
 }
@@ -33,7 +42,9 @@ class ItineraryBlock {
 }
 WeekendPlanService ..> LockBlockCommandHandler : invokes through API
 LockBlockCommandHandler --> ItineraryBlock : sets lock
-SwapBlockCommandHandler --> ItineraryBlock : replaces reference
+SwapBlockCommandHandler --> ItineraryBlock : replaces block and adjacent drives
 RegenerateWeekendCommandHandler --> Weekend : increments
+RegenerateWeekendDayCommandHandler --> Weekend : increments
+LockWeekendDayCommandHandler --> ItineraryBlock : sets day locks
 Weekend "1" *-- "*" ItineraryBlock
 @enduml

@@ -14,6 +14,8 @@ Saturdaze is a web application that plans personalized family weekends. Recurrin
 
 `PlannerInputLoader` loads the family and planning inputs. `WeekendPlanner.BuildFixedBlocks()` selects commitments matching Saturday or Sunday and creates locked Commitment blocks at their configured local times.
 
+`GenerateWeekendCommandHandler` returns the existing weekend unchanged when one already exists for the family and date (ADR-003). `WeekendPlanner` throws `ConflictException` when fixed blocks overlap on one day; the API returns 409 and persists no weekend. `SaveFamilyProfileCommandValidator` rejects overlapping same-day commitments before they reach the profile.
+
 `LockBlockCommandHandler` returns 409 `commitment_locked` when asked to unlock a commitment. `LockWeekendDayCommandHandler` also preserves commitment locks.
 
 Regeneration reconstructs commitment blocks from the current family profile. Their database IDs can change, and edited profile times can replace prior times. The stronger identity/content-preservation wording in L2-011 and L2-016 remains an explicit implementation discrepancy.

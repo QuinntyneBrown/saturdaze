@@ -12,13 +12,13 @@ Angular guards and `authInterceptor` protect navigation and attach access tokens
 
 `authInterceptor` attaches the current bearer except on credential-issuance endpoints. It refreshes near-expiry tokens, retries an eligible 401 once, and redirects to `/sign-in` when recovery fails.
 
-`requireAuth` and `requireAdmin` control browser navigation. `Program.cs` applies fallback API authorization; explicit AllowAnonymous attributes identify public auth, weather, shared-weekend, calendar, and development endpoints.
+`requireAuth` and `requireAdmin` control browser navigation. `Program.cs` applies fallback API authorization; explicit `[AllowAnonymous]` attributes identify public auth, weather, shared-weekend, and calendar endpoints. Non-production Swagger middleware runs before authentication and is outside that policy.
 
 `CurrentUserFamilyAccessor` resolves the authenticated account's family. Family-owned handlers filter by that ID and return 404 for another family's resource.
 
 `JwtBearerPostConfigure` configures signature validation, `Pbkdf2PasswordHasher` creates salted hashes, and `JwtTokenService` signs access tokens and hashes refresh material. `RefreshTokenCommandHandler` rotates refresh credentials with creator IP and replacement linkage.
 
-`IAppDbContext` exposes EF Core sets; application queries use LINQ or parameter binding. Public share tokens encode a weekend GUID without expiry or revocation. `GetSharedWeekendQueryHandler` returns the full WeekendDto, including family ID and errands; public-data minimization remains a security gap.
+`IAppDbContext` exposes EF Core sets; application queries use LINQ or parameter binding. Public share tokens encode a weekend GUID without expiry or revocation. `GetSharedWeekendQueryHandler` returns the full `WeekendDto`, including notes and errands; public-data minimization remains a security gap.
 
 ## Requirements
 

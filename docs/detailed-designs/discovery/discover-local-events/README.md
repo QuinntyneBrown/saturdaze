@@ -10,13 +10,13 @@ Saturdaze is a web application that plans personalized family weekends. Local-ev
 
 ## Description
 
-`IdeasEventsPage` at `/ideas/events` reads `EventsService.list(): Signal<IdeasEventsView>`. `setWindow()` and `setCategory()` filter the loaded records in the browser.
+`IdeasEventsPage` at `/ideas/events` injects `EVENTS_SERVICE` and reads `EventsService.list(): Signal<IdeasEventsView>`. `setWindow()` and `setCategory()` filter the loaded records in the browser; selecting the active category chip again clears the category.
 
-`EventsService.load()` sends the upcoming Saturday and `maxDriveMinutes=45` to `GET /api/events`, and loads the caller's submissions. The API default remains 120 minutes for callers omitting that parameter.
+`EventsService.load()` sends the upcoming Saturday and `maxDriveMinutes=45` to `GET /api/events`, and loads the caller's submissions through `EVENT_SUBMISSIONS_SERVICE.loadMine()` (`GET /api/events/submissions/mine`). The API default remains 120 minutes for callers omitting that parameter.
 
 `GetLocalEventsQueryHandler` returns events overlapping Friday through Sunday and events starting within 14 days after Sunday. It filters the stored drive estimate and orders by start date, drive minutes, and name.
 
-`EventsService` places a multi-day event on the first weekend day it touches, adds coming-soon entries, and prepends owned pending submissions. Next-weekend filtering uses the following Saturday and Sunday. `LocalEvent` has a category, not a separate indoor flag; the distinct indoor/outdoor filtering obligation in L1-007 remains an implementation gap.
+`EventsService` places a multi-day event on the first weekend day it touches, adds coming-soon entries, omits empty sections, and prepends owned pending submissions. Next-weekend filtering uses the following Saturday and Sunday. `LocalEvent` has a category, not a separate indoor flag; the distinct indoor/outdoor filtering obligation in L1-007 remains an implementation gap.
 
 ## Requirements
 

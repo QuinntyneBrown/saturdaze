@@ -1,7 +1,7 @@
 @startuml
 !include <C4/C4_Component>
 LAYOUT_WITH_LEGEND()
-title Components — Schedule ingestion
+title Components - Schedule ingestion
 Container_Boundary(host, "Saturdaze Worker") {
  Component(program, "Program", "Composition root", "Registers infrastructure, ingestion, and hosted service")
  Component(options, "IngestionScheduleOptions", "Bound configuration", "Enabled, cron, types, startup, and once flags")

@@ -1,7 +1,7 @@
 @startuml
 !include <C4/C4_Component>
 LAYOUT_WITH_LEGEND()
-title Components — Serve a responsive single-page application
+title Components - Serve a responsive single-page application
 
 Container_Boundary(web, "Saturdaze web application") {
   Component(routes, "routes", "Angular Routes", "Declares lazy loadComponent entries")

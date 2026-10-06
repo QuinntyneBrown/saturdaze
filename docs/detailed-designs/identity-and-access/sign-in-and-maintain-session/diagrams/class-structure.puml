@@ -9,13 +9,13 @@ skinparam class {
   FontColor #101828
   BackgroundColor #F9FAFB
 }
-title Class structure — Sign in and maintain a session
+title Class structure - Sign in and maintain a session
 
 class SignInPage {
   +submit(): Promise<void>
 }
 class SessionStore {
-  +login(req: LoginRequest, remember: bool): Promise<void>
+  +login(req: LoginRequest, remember: boolean): Promise<void>
   +rehydrate(): Promise<void>
 }
 class LoginCommand {

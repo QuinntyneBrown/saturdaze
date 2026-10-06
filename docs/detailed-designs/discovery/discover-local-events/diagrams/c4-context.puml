@@ -1,7 +1,7 @@
 @startuml
 !include <C4/C4_Context>
 LAYOUT_WITH_LEGEND()
-title System Context — Discover local events
+title System Context - Discover local events
 
 Person(actor, "Family member", "Browses community events for a weekend")
 System(saturdaze, "Saturdaze", "Family weekend planning platform")

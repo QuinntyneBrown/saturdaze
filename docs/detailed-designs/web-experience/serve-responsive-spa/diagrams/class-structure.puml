@@ -9,7 +9,7 @@ skinparam class {
   FontColor #101828
   BackgroundColor #F9FAFB
 }
-title Class structure — Serve a responsive single-page application
+title Class structure - Serve a responsive single-page application
 
 class routes <<Routes constant>> {
   +loadComponent: dynamic import
@@ -21,6 +21,7 @@ class App {
 }
 class GlobalStyles <<SCSS>> {
   +navigationBreakpoint: 720 px
+  +sdGridDaysTwoColumns: 1024 px
 }
 class staticwebapp_config <<JSON>> {
   +navigationFallback: /index.html

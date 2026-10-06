@@ -1,7 +1,7 @@
 @startuml
 !include <C4/C4_Component>
 LAYOUT_WITH_LEGEND()
-title Components — Secure authenticated requests
+title Components - Secure authenticated requests
 
 Container_Boundary(web, "Saturdaze web application") {
   Component(page, "Protected Angular page", "Angular component", "Starts an authenticated feature request")

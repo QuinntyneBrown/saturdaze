@@ -1,7 +1,7 @@
 @startuml
 !include <C4/C4_Container>
 LAYOUT_WITH_LEGEND()
-title Containers — Manage the database with the CLI
+title Containers - Manage the database with the CLI
 
 Person(operator, "System operator", "Runs administrative commands")
 System_Boundary(saturdaze, "Saturdaze administration") {

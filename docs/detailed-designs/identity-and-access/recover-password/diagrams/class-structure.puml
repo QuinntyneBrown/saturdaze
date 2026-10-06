@@ -9,7 +9,7 @@ skinparam class {
   FontColor #101828
   BackgroundColor #F9FAFB
 }
-title Class structure — Recover a password
+title Class structure - Recover a password
 
 class ResetPasswordPage {
   #sendLink(): Promise<void>

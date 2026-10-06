@@ -9,33 +9,55 @@ skinparam class {
   FontColor #101828
   BackgroundColor #F9FAFB
 }
-title Class structure — Manage a family profile
+title Class structure - Manage a family profile
 
 class FamilyPage {
   #addMember(): Promise<void>
+  #addCommitment(): Promise<void>
+  #editHome(): Promise<void>
+  #editLikes(): Promise<void>
+  #setPreference(key: PreferenceKey, checked: boolean): Promise<void>
 }
 class FamilyService {
+  +getFamily(): Signal<FamilyView>
+  +getEditableProfile(): Signal<EditableFamilyProfile | null>
   +load(): Promise<void>
   +saveProfile(profile: EditableFamilyProfile): Promise<void>
+}
+class GetFamilyProfileQueryHandler {
+  +Handle(query: GetFamilyProfileQuery): Task<FamilyProfileDto>
 }
 class SaveFamilyProfileCommandHandler {
   +Handle(command: SaveFamilyProfileCommand): Task<FamilyProfileDto>
 }
 class Family {
   +Guid Id
+  +string? Name
   +string HomeLocation
+  +bool BudgetEnabled
+  +bool TryNewEnabled
+  +bool FridayPreviewEnabled
 }
 class FamilyMember {
   +string Name
   +int Age
 }
 class Commitment {
+  +string Title
   +DayOfWeek DayOfWeek
   +TimeOnly StartTime
   +TimeOnly EndTime
 }
-FamilyService ..> SaveFamilyProfileCommandHandler : invokes through API
+class Preference {
+  +PreferenceKind Kind
+  +string Value
+}
+FamilyPage --> FamilyService : FAMILY_SERVICE
+FamilyService ..> GetFamilyProfileQueryHandler : GET /api/family
+FamilyService ..> SaveFamilyProfileCommandHandler : PUT /api/family
+GetFamilyProfileQueryHandler --> Family : reads
 SaveFamilyProfileCommandHandler --> Family : loads
 Family "1" *-- "*" FamilyMember
 Family "1" *-- "*" Commitment
+Family "1" *-- "*" Preference
 @enduml

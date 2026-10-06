@@ -1,7 +1,7 @@
 @startuml
 !include <C4/C4_Container>
 LAYOUT_WITH_LEGEND()
-title Containers — Submit community events
+title Containers - Submit community events
 
 Person(actor, "Authenticated contributor", "Adds a community event for review")
 System_Boundary(saturdaze, "Saturdaze") {

@@ -4,7 +4,7 @@ skinparam shadowing false
 skinparam defaultFontName Arial
 skinparam classBackgroundColor #F9FAFB
 skinparam classBorderColor #344054
-title Class structure — Schedule ingestion
+title Class structure - Schedule ingestion
 abstract class BackgroundService
 class IngestionWorker {
  #ExecuteAsync(stoppingToken: CancellationToken): Task

@@ -1,7 +1,7 @@
 @startuml
 !include <C4/C4_Context>
 LAYOUT_WITH_LEGEND()
-title System Context — Serve a responsive single-page application
+title System Context - Serve a responsive single-page application
 
 Person(visitor, "Browser user", "Uses Saturdaze across supported viewport widths")
 System(saturdaze, "Saturdaze", "Responsive family weekend planning application")

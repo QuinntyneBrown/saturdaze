@@ -6,13 +6,13 @@ Saturdaze is a web application that plans personalized family weekends. Restaura
 
 *meal slot* — named meal window such as lunch or dinner on a weekend day
 
-`RestaurantService` loads restaurant DTOs for the selected presentation state. `GetRestaurantPicksQueryHandler` requires the slot, applies the wife-approved default, and can prioritize proximity.
+`RestaurantService` loads restaurant DTOs for the selected presentation state. `GetRestaurantPicksQueryHandler` filters by the slot, applies the wife-approved default, and can prioritize proximity.
 
 ## Description
 
-`IdeasFoodPage` at `/ideas/food` uses `RestaurantService.list(): Signal<IdeasFoodView>`. The service loads four day/meal lists with `wifeApprovedOnly=false&take=10`; the API's default remains true when omitted.
+`IdeasFoodPage` at `/ideas/food` injects `RESTAURANT_SERVICE` and uses `RestaurantService.list(): Signal<IdeasFoodView>`. The service loads four day/meal lists with `wifeApprovedOnly=false&take=10`; the API's default remains true when omitted. The browser does not supply `nearActivityId`.
 
-`GetRestaurantPicksQueryHandler` filters meal slot, joins family-owned votes and day/slot locks, and optionally ranks by the difference between stored restaurant and activity drive estimates. This is not a geographic route calculation.
+`GetRestaurantPicksQueryHandler` filters meal slot, joins family-owned votes and day/slot locks, and optionally ranks by the difference between stored restaurant and activity drive estimates. This is not a geographic route calculation. Without `nearActivityId`, results order by drive minutes, then name. No validator or binding attribute rejects a request that omits `day` or `slot`; the 400 response in the `L2-019` acceptance criteria remains an implementation gap.
 
 `RestaurantService.setFilters()` selects day, meal, wife-approved, and under-15-minute filters locally. The service ranks locked choices first, then approved and nearby choices. `vote(restaurantId, voterName, vote)` sends a family-scoped vote and replaces the returned record.
 

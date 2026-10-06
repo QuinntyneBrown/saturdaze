@@ -12,9 +12,9 @@ The slice combines block-level lock and swap endpoints with weekend regeneration
 
 `WeekendPage` and `BlockDialog` expose locking, server-selected swaps, and regeneration through `WeekendPlanService`. The API returns the refreshed parent WeekendDto after changes.
 
-`LockBlockCommandHandler` sets lock state after checking family ownership. Commitments cannot be unlocked. `SwapBlockCommandHandler` selects another fitting activity and honors supplied rejected IDs; locked blocks return 409 and no alternatives yield an annotated 200 no-op.
+`LockBlockCommandHandler` sets lock state after checking family ownership. Commitments cannot be unlocked. `SwapBlockCommandHandler` selects another fitting activity and honors supplied rejected IDs, activities already on the weekend, and the current activity. Locked blocks return 409 `block_locked`, non-activity blocks return 409 `block_not_swappable`, and no alternatives yield an annotated 200 no-op. A successful swap replaces the target and its adjacent drive blocks with new blocks under new IDs, so the same-block-ID expectation in L2-015 is not met.
 
-`RegenerateWeekendCommandHandler` and `RegenerateWeekendDayCommandHandler` load common inputs through `PlannerInputLoader` and invoke `IWeekendPlanner.Plan()`. Day regeneration leaves the other day in persistence untouched and increments RegenerateCount.
+`RegenerateWeekendCommandHandler` and `RegenerateWeekendDayCommandHandler` load common inputs through `PlannerInputLoader` and invoke `IWeekendPlanner.Plan()`. Both increment `RegenerateCount`. Day regeneration leaves the other day in persistence untouched.
 
 `LockWeekendDayCommandHandler` sets all selected-day locks while retaining commitment locks. No client alternatives-list endpoint exists.
 

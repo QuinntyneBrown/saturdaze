@@ -9,7 +9,7 @@ skinparam class {
   FontColor #101828
   BackgroundColor #F9FAFB
 }
-title Class structure — Generate the current weekend
+title Class structure - Generate the current weekend
 
 class WeekendPlanService {
   +loadCurrent(): Promise<void>

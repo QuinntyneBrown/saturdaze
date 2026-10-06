@@ -1,33 +1,33 @@
 @startuml
-title UML sequence behaviour — Discover activities
+title UML sequence behaviour - Discover activities
 skinparam backgroundColor #FFFFFF
 skinparam shadowing false
 skinparam roundcorner 12
 skinparam defaultFontName Arial
 skinparam ArrowColor #344054
 actor "User" as actor
-box "Frontend — Saturdaze Angular application" #E0F2FE
+box "Frontend - Saturdaze Angular application" #E0F2FE
  participant "IdeasActivitiesPage" as page
  participant "ActivityService" as client
 end box
-box "Backend — Saturdaze API" #D1FADF
+box "Backend - Saturdaze API" #D1FADF
  participant "ActivitiesController" as controller
 end box
-box "Backend — Saturdaze Application and Domain" #ECFDF3
+box "Backend - Saturdaze Application and Domain" #ECFDF3
  participant "GetActivitySuggestionsQueryHandler" as handler
 end box
-box "Backend — Saturdaze Infrastructure" #FFF4E5
+box "Backend - Saturdaze Infrastructure" #FFF4E5
  database "AppDbContext\nSQL Server" as db
 end box
 actor -> page : Open /ideas
 page -> client : load()
 client -> controller : GET /api/activities\nGET /api/activities?tryNew=true
 controller -> handler : Dispatch queries after authentication
-handler -> db : L2-017 predicates; exclude recent family activities for tryNew
+handler -> db : L2-017 predicates; exclude recent family activities for tryNew\n(last 4 weekends via ICurrentFamilyAccessor)
 db --> handler : Activity records
 handler --> controller : ActivityDto arrays
 controller --> client : 200 arrays
-client -> client : Load public forecast; apply L2-018 browser grouping
+client -> client : GET /api/weather?weekendOf (anonymous; failure yields no forecast)\nApply L2-018 browser grouping
 client --> page : IdeasActivitiesView
 actor -> page : Select filter chip
 page -> client : setFilter(label)

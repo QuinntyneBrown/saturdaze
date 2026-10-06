@@ -1,7 +1,7 @@
 @startuml
 !include <C4/C4_Component>
 LAYOUT_WITH_LEGEND()
-title Components — Ingest catalogs
+title Components - Ingest catalogs
 Container_Boundary(host, "CLI, Worker, or WebJob process") {
  Component(entry, "IngestCommandHandler or IngestionWorker", ".NET entry point", "Selects types and invokes runner")
  Component(runner, "IngestionRunner", "Application service", "Coordinates budget, audit, search, and upsert")

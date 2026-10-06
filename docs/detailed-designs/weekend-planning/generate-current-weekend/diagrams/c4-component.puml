@@ -1,7 +1,7 @@
 @startuml
 !include <C4/C4_Component>
 LAYOUT_WITH_LEGEND()
-title Components — Generate the current weekend
+title Components - Generate the current weekend
 
 Container_Boundary(web, "Saturdaze web application") {
   Component(page, "WeekendPage", "Angular component", "Loads the weekend overview")

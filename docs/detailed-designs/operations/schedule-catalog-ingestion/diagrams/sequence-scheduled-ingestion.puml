@@ -5,16 +5,16 @@ skinparam roundcorner 12
 skinparam defaultFontName Arial
 skinparam ArrowColor #344054
 
-title Behaviour — Scheduled ingestion (L2-082)
-box "Backend — Worker host" #D1FADF
+title Behaviour - Scheduled ingestion (L2-082)
+box "Backend - Worker host" #D1FADF
  participant "Generic Host" as host
  participant IngestionWorker as worker
 end box
-box "Backend — Application" #ECFDF3
+box "Backend - Application" #ECFDF3
  participant CronSchedule as cron
  participant IngestionRunner as runner
 end box
-box "Backend — Infrastructure" #FFF4E5
+box "Backend - Infrastructure" #FFF4E5
  participant "DI scope factory" as scopes
  database "Catalogs and audit" as db
 end box

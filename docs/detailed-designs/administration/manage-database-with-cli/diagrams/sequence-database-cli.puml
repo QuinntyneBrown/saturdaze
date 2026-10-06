@@ -1,5 +1,5 @@
 @startuml
-title UML sequence behaviour — Manage the database with the CLI
+title UML sequence behaviour - Manage the database with the CLI
 skinparam backgroundColor #FFFFFF
 skinparam shadowing false
 skinparam roundcorner 12
@@ -15,17 +15,17 @@ skinparam package {
   BackgroundColor #F9FAFB
 }
 actor "System operator" as operator
-box "Frontend — Saturdaze CLI application" #E0F2FE
+box "Frontend - Saturdaze CLI application" #E0F2FE
   participant "RootCommandFactory" as root
   participant "System.CommandLine command" as command
 end box
-box "Backend — Saturdaze CLI handlers" #ECFDF3
+box "Backend - Saturdaze CLI handlers" #ECFDF3
   participant "MigrateCommandHandler" as migrate
   participant "SeedCommandHandler" as seed
   participant "ResetCommandHandler" as reset
   participant "IngestCommandHandler\nIngestionRunner" as ingest
 end box
-box "Backend — EF Core infrastructure" #FFF4E5
+box "Backend - EF Core infrastructure" #FFF4E5
   participant "IJsonSeeder implementations" as seeders
   database "Configured database" as db
 end box
@@ -37,15 +37,21 @@ alt migrate
   db --> migrate : Schema current
 else seed
   command -> seed : ExecuteAsync(seedDir)
-  seed -> seeders : Read bundled or overridden JSON
-  seeders -> db : Apply L2-044 idempotent upserts
-  db --> seed : Seed result
+  seed -> seed : Resolve --seed-dir, SATURDAZE_SEED_DIR, bundle, or user directory
+  alt Directory missing or no seed files
+    seed --> command : Exit code 2 or 3 without mutation
+  else Seed files found
+    seed -> seeders : SeedAsync for each JSON file
+    seeders -> db : Apply L2-044 idempotent upserts
+    seed -> db : SaveChangesAsync
+    db --> seed : Seed result
+  end
 else ingest
   command -> ingest : L2-077 ExecuteAsync(type, dryRun)
-  ingest --> command : Results and exit code
+  ingest --> command : Per-type results; exit 0, 1 on a failed pass, or 2 on an unknown type
 else reset with --yes and permitted environment
   command -> reset : ExecuteAsync(seedDir)
-  reset -> db : Apply L2-045 delete and migrate
+  reset -> db : Apply L2-045 EnsureDeleted, then Migrate (EnsureCreated for InMemory)
   reset -> seed : Reseed
   seed --> reset : Seed result
 else reset without --yes or disallowed Production

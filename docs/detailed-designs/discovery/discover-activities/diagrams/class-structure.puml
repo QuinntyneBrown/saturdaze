@@ -9,32 +9,52 @@ skinparam class {
   FontColor #101828
   BackgroundColor #F9FAFB
 }
-title Class structure — Discover activities
+title Class structure - Discover activities
 
 class IdeasActivitiesPage {
+  #view: Signal<IdeasActivitiesView>
   #setFilter(label: string): void
+}
+interface IActivityService <<ACTIVITY_SERVICE>> {
+  +load(): Promise<void>
+  +list(): Signal<IdeasActivitiesView>
+  +setFilter(label: string): void
 }
 class ActivityService {
   +load(): Promise<void>
   +list(): Signal<IdeasActivitiesView>
+  +setFilter(label: string): void
 }
-class GetActivitySuggestionsQuery {
+class ActivitiesController {
+  +Get(indoor, maxDriveMinutes, minAge, maxAge, weather, tryNew, take): Task<ActionResult<IReadOnlyList<ActivityDto>>>
+}
+class GetActivitySuggestionsQuery <<record>> {
   +bool? Indoor
   +int? MaxDriveMinutes
   +int? MinAge
   +int? MaxAge
+  +string? Weather
+  +bool TryNew
   +int Take
 }
 class GetActivitySuggestionsQueryHandler {
-  +Handle(query: GetActivitySuggestionsQuery): Task<IReadOnlyList<ActivityDto>>
+  +RecentWeekendWindow: int = 4
+  +Handle(request: GetActivitySuggestionsQuery, ct: CancellationToken): Task<IReadOnlyList<ActivityDto>>
 }
 class Activity {
+  +Guid Id
+  +string Name
+  +string Category
   +bool Indoor
   +int MinAge
   +int MaxAge
   +int DriveMinutes
+  +List<string> WeatherTags
 }
-IdeasActivitiesPage --> ActivityService : calls
-ActivityService ..> GetActivitySuggestionsQuery : maps to
+IdeasActivitiesPage --> IActivityService : injects
+ActivityService ..|> IActivityService
+ActivityService ..> ActivitiesController : GET /api/activities
+ActivitiesController ..> GetActivitySuggestionsQuery : sends
+GetActivitySuggestionsQueryHandler ..> GetActivitySuggestionsQuery : handles
 GetActivitySuggestionsQueryHandler --> Activity : filters
 @enduml

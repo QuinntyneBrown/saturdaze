@@ -280,7 +280,9 @@ After writing or editing any `.puml`, render the whole tree:
 python <skill>/scripts/render_puml.py docs/detailed-designs
 ```
 
-The script finds `plantuml.jar` (or `plantuml` on PATH), writes each `.png` next
-to its `.puml`, and exits non-zero if any diagram fails — so a red exit means an
+The script finds `plantuml.jar` (or `plantuml` on PATH), refuses to run without
+Graphviz `dot` (C4 and class diagrams would otherwise render as a "Cannot find
+Graphviz" error image), writes each `.png` next to its `.puml`, and exits
+non-zero if any diagram fails — so a red exit means an
 image the README links to does not exist yet. Fix the source and re-run until it
 is clean.

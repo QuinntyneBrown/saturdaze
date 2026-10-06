@@ -4,7 +4,7 @@ skinparam shadowing false
 skinparam defaultFontName Arial
 skinparam classBackgroundColor #F9FAFB
 skinparam classBorderColor #344054
-title Class structure — Ingest catalogs
+title Class structure - Ingest catalogs
 class IngestionRunner {
  +RunAsync(...): Task<IReadOnlyList<IngestionRun>>
 }

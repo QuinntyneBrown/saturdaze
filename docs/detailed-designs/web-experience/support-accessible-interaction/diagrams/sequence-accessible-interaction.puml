@@ -1,5 +1,5 @@
 @startuml
-title UML sequence behaviour — Support accessible interaction
+title UML sequence behaviour - Support accessible interaction
 skinparam backgroundColor #FFFFFF
 skinparam shadowing false
 skinparam roundcorner 12
@@ -15,16 +15,16 @@ skinparam package {
   BackgroundColor #F9FAFB
 }
 actor "Keyboard or assistive-technology user" as user
-box "Frontend — Saturdaze Angular application" #E0F2FE
+box "Frontend - Saturdaze Angular application" #E0F2FE
   participant "Routed page" as page
   participant "Shared control" as control
   participant "Feature dialog\nCDK" as dialog
 end box
-box "Frontend — Browser accessibility platform" #D1FADF
+box "Frontend - Browser accessibility platform" #D1FADF
   participant "Focus manager" as focus
   participant "Accessibility tree" as tree
 end box
-box "Frontend — Browser rendering platform" #FFF4E5
+box "Frontend - Browser rendering platform" #FFF4E5
   participant "CSS engine" as css
 end box
 user -> focus : Press Tab
@@ -35,8 +35,16 @@ control -> tree : Expose L2-037 accessible name
 tree --> user : Announce control
 user -> control : Press Enter or Space
 control -> dialog : Open action dialog
-dialog -> focus : Trap focus and announce title
+dialog -> focus : Trap focus; label container from panel h2
 focus --> user : Present operable dialog
 dialog -> css : Apply L2-038 color tokens
 css --> dialog : Configured color tokens
+alt user presses Escape or the labelled close button
+  user -> dialog : Dismiss without completing the action
+  dialog -> focus : Close CDK dialog and restore focus
+  focus --> user : Focus returns to the triggering control
+else user activates a dialog action
+  user -> dialog : Enter or Space on the action button
+  dialog --> page : Close with result
+end
 @enduml

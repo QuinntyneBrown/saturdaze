@@ -7,14 +7,14 @@ skinparam defaultFontName Arial
 skinparam ArrowColor #344054
 
 actor "Maintainer" as actor
-box "Backend — GitHub Actions" #D1FADF
+box "Backend - GitHub Actions" #D1FADF
  participant "test-backend\ntest-frontend" as tests
  participant "preflight" as probe
  participant "api" as api
  participant "migrate" as migrate
  participant "web" as web
 end box
-box "Backend — Azure platform" #FFF4E5
+box "Backend - Azure platform" #FFF4E5
  participant "Azure CLI\nApp Service" as azure
  database "Azure SQL" as sql
  participant "Static Web Apps" as swa

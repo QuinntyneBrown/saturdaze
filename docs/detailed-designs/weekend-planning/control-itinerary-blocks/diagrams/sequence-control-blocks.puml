@@ -1,22 +1,22 @@
 @startuml
-title UML sequence behaviour — Control itinerary blocks
+title UML sequence behaviour - Control itinerary blocks
 skinparam backgroundColor #FFFFFF
 skinparam shadowing false
 skinparam roundcorner 12
 skinparam defaultFontName Arial
 skinparam ArrowColor #344054
 actor "User" as actor
-box "Frontend — Saturdaze Angular application" #E0F2FE
+box "Frontend - Saturdaze Angular application" #E0F2FE
  participant "WeekendPage\nBlockDialog" as page
  participant "WeekendPlanService" as client
 end box
-box "Backend — Saturdaze API" #D1FADF
+box "Backend - Saturdaze API" #D1FADF
  participant "BlocksController\nWeekendsController" as controller
 end box
-box "Backend — Saturdaze Application and Domain" #ECFDF3
+box "Backend - Saturdaze Application and Domain" #ECFDF3
  participant "LockBlockCommandHandler\nSwapBlockCommandHandler\nregeneration handlers" as handler
 end box
-box "Backend — Saturdaze Infrastructure" #FFF4E5
+box "Backend - Saturdaze Infrastructure" #FFF4E5
  database "AppDbContext\nSQL Server" as db
 end box
 actor -> page : Choose block or day operation
@@ -28,7 +28,7 @@ db --> handler : Owned state or absent
 alt target absent or another family
 handler --> controller : 404
 else locked swap or commitment unlock
-handler --> controller : 409 block_locked or commitment_locked
+handler --> controller : 409 block_locked, block_not_swappable or commitment_locked
 else swap has no alternative
 handler -> db : Save no-op reason
 db --> handler : Saved

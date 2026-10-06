@@ -5,54 +5,60 @@ skinparam roundcorner 12
 skinparam defaultFontName Arial
 skinparam ArrowColor #344054
 
-title Behaviour — Share and export (L2-086)
+title Behaviour - Share and export (L2-086)
 actor Owner as owner
 actor "Link recipient" as recipient
-box "Frontend — Angular application" #E0F2FE
- participant "ShareDialog / SharedWeekendPage" as page
+box "Frontend - Angular application" #E0F2FE
+ participant "WeekendPage\nWeekendPlanService" as page
+ participant "ShareDialog\nCalendarDialog" as dialog
+ participant "SharedWeekendPage\nSharedWeekendService" as sharedPage
 end box
-box "Backend — API" #D1FADF
+box "Backend - API" #D1FADF
  participant WeekendsController as controller
 end box
-box "Backend — Application" #ECFDF3
+box "Backend - Application" #ECFDF3
  participant "GetWeekendByIdQueryHandler" as owned
  participant "GetSharedWeekendQueryHandler" as shared
 end box
-box "Backend — Infrastructure" #FFF4E5
+box "Backend - Infrastructure" #FFF4E5
  database AppDbContext as db
 end box
-owner -> page : Create share link
-page -> controller : POST /api/weekends/{id}/share with bearer
+owner -> page : Share
+page -> controller : createShareLink(): POST /api/weekends/{id}/share with bearer
 controller -> owned : GetWeekendByIdQuery(id)
-owned -> db : Read owned weekend
+owned -> db : Read caller-family weekend
 db --> owned : State or absent
 alt absent or not owned
- owned --> controller : 404
- controller --> page : Error
+ owned --> controller : NotFoundException
+ controller --> page : 404
+ page --> owner : Error banner
 else owned
  owned --> controller : WeekendDto
  controller -> controller : Encode GUID as URL-safe base64
- controller --> page : Share URL and token
- page --> owner : Copy link
- recipient -> page : /sample-weekend?share=token
- page -> controller : GET /api/weekends/shared/{token} (anonymous)
+ controller --> page : WeekendShareDto(shareUrl, token)
+ page -> dialog : Open ShareDialog with shareUrl
+ dialog --> owner : Copy link
+ recipient -> sharedPage : /sample-weekend?share=token
+ sharedPage -> controller : GET /api/weekends/shared/{token} (anonymous)
  controller -> controller : Decode token; invalid encoding returns 404
  controller -> shared : GetSharedWeekendQuery(id)
  shared -> db : Read weekend with blocks and errands
  db --> shared : Data or 404
  shared --> controller : Full WeekendDto with forecast
- controller --> page : JSON
- page --> recipient : Read-only presentation
- recipient -> controller : GET /api/weekends/{id}/calendar.ics (anonymous)
- controller -> shared : Same shared query
- shared --> controller : WeekendDto
- controller -> controller : Map blocks to VCALENDAR / VEVENT
- controller --> recipient : text/calendar
+ controller --> sharedPage : JSON
+ sharedPage --> recipient : Read-only presentation
 end
+owner -> page : Add to calendar
+page -> dialog : Open CalendarDialog with calendarExport()
+owner -> controller : GET /api/weekends/{id}/calendar.ics (anonymous)
+controller -> shared : GetSharedWeekendQuery(id)
+shared --> controller : WeekendDto
+controller -> controller : Map blocks to VCALENDAR / VEVENT
+controller --> owner : text/calendar
 note over controller, shared
 Tokens encode IDs; they have no expiry or revocation.
-JSON includes FamilyId and Errands.
+The calendar URL uses the raw weekend ID.
+JSON includes Errands, Notes and Weather.
 Read-only UI is not a redacted API projection.
 end note
 @enduml
-

@@ -1,7 +1,7 @@
 @startuml
 !include <C4/C4_Component>
 LAYOUT_WITH_LEGEND()
-title Components — View weekend weather
+title Components - View weekend weather
 Container_Boundary(web, "Saturdaze web application") {
   Component(activities, "ActivityService", "Angular service", "Loads activity weather")
   Component(weekend, "WeekendPlanService", "Angular service", "Maps embedded weekend forecasts")

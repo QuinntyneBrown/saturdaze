@@ -1,7 +1,7 @@
 @startuml
 !include <C4/C4_Component>
 LAYOUT_WITH_LEGEND()
-title Components — Recover a password
+title Components - Recover a password
 
 Container_Boundary(web, "Saturdaze web application") {
   Component(page, "ResetPasswordPage", "Angular component", "Collect recovery input")

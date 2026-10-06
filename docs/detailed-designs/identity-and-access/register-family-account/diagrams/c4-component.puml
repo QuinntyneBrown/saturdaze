@@ -1,7 +1,7 @@
 @startuml
 !include <C4/C4_Component>
 LAYOUT_WITH_LEGEND()
-title Components — Register a family account
+title Components - Register a family account
 
 Container_Boundary(web, "Saturdaze web application") {
   Component(page, "CreateAccountPage", "Angular component", "Collects signup details")

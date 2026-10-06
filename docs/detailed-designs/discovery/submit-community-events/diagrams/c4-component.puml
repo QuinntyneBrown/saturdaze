@@ -1,7 +1,7 @@
 @startuml
 !include <C4/C4_Component>
 LAYOUT_WITH_LEGEND()
-title Components — Submit community events
+title Components - Submit community events
 
 Container_Boundary(web, "Saturdaze web application") {
   Component(page, "IdeasPage and SubmitEventDialog", "Angular component", "Open the single Ideas header submission dialog")
@@ -9,7 +9,7 @@ Container_Boundary(web, "Saturdaze web application") {
 }
 Container_Boundary(api, "Saturdaze API") {
   Component(controller, "EventSubmissionsController", "ASP.NET Core", "Exposes authorized submission")
-  Component(handler, "SubmitEventCommandHandler", "Application handler", "Validates and stamps ownership")
+  Component(handler, "SubmitEventCommandHandler", "Application handler", "Stamps ownership, time, and Pending status")
   Component(entity, "EventSubmission", "Domain state", "Stores pending contributed event data")
   ComponentDb(db, "AppDbContext", "EF Core", "Stores pending event submissions")
 }
