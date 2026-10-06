@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" preserveAspectRatio="xMidYMid slice" role="img" aria-label="A polar bear by a pool in a zoo enclosure">
+<!-- Placeholder illustration standing in for a licensed photo (docs/mocks/README.md, "Images"). -->
+<defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#DCE9F1"/><stop offset="1" stop-color="#F6FAFC"/></linearGradient></defs>
+<rect width="800" height="500" fill="url(#sky)"/>
+<rect y="300" width="800" height="200" fill="#D9D2C2"/><path d="M0 380 Q300 340 520 390 T800 380 V500 H0Z" fill="#7DB3D3"/><g fill="#FFFFFF" stroke="#C9C2B2" stroke-width="3"><ellipse cx="300" cy="300" rx="110" ry="55"/><circle cx="410" cy="270" r="38"/></g><circle cx="425" cy="262" r="5" fill="#1F2937"/><rect x="230" y="330" width="22" height="44" rx="10" fill="#FFFFFF"/><rect x="350" y="330" width="22" height="44" rx="10" fill="#FFFFFF"/>
+</svg>

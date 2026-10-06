@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Bowling lanes and arcade lights indoors">
+<!-- Placeholder illustration standing in for a licensed photo (docs/mocks/README.md, "Images"). -->
+<defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3B2A57"/><stop offset="1" stop-color="#5A3B82"/></linearGradient></defs>
+<rect width="800" height="500" fill="url(#sky)"/>
+<path d="M0 500 L330 220 H470 L800 500Z" fill="#C9A26B"/><path d="M400 220 V500" stroke="#A88452" stroke-width="6"/><g fill="#FFFFFF"><ellipse cx="375" cy="232" rx="9" ry="20"/><ellipse cx="400" cy="226" rx="9" ry="20"/><ellipse cx="425" cy="232" rx="9" ry="20"/></g><g fill="#F4C969"><circle cx="80" cy="80" r="10"/><circle cx="160" cy="60" r="10"/><circle cx="640" cy="70" r="10"/><circle cx="720" cy="100" r="10"/></g><circle cx="400" cy="440" r="34" fill="#E07856"/>
+</svg>

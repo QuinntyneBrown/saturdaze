@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Tall trees along a forest trail">
+<!-- Placeholder illustration standing in for a licensed photo (docs/mocks/README.md, "Images"). -->
+<defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#DDEEDA"/><stop offset="1" stop-color="#F3F8F1"/></linearGradient></defs>
+<rect width="800" height="500" fill="url(#sky)"/>
+<path d="M330 500 Q400 360 420 250 L440 250 Q440 360 500 500Z" fill="#C9A26B"/><path d="M80 90 l70 240 h-140Z" fill="#3F6B3A"/><rect x="74" y="330" width="12" height="60" fill="#5B4636"/><path d="M200 140 l55 190 h-110Z" fill="#4F7F48"/><rect x="194" y="330" width="12" height="60" fill="#5B4636"/><path d="M620 80 l75 250 h-150Z" fill="#3F6B3A"/><rect x="614" y="330" width="12" height="60" fill="#5B4636"/><path d="M730 150 l55 180 h-110Z" fill="#4F7F48"/><rect x="724" y="330" width="12" height="60" fill="#5B4636"/><path d="M300 180 l40 140 h-80Z" fill="#5C8F55"/><rect x="294" y="320" width="12" height="60" fill="#5B4636"/><path d="M560 170 l45 150 h-90Z" fill="#5C8F55"/><rect x="554" y="320" width="12" height="60" fill="#5B4636"/>
+</svg>

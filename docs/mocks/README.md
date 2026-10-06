@@ -35,6 +35,25 @@ screenshots/          committed <slug>.<viewport>.png captures (390 / 820 / 1440
 | Public | `landing.html`, `legal.html` (Terms + Privacy) |
 | Dialogs gallery | `dialogs.html` (D1–D26 rendered inline) |
 
+## Proposals · photos and maps
+
+Three extra screens explore ideas from a layout study of Wanderlog (a trip planner).
+They sit beside the existing screens and do not replace them. Requirements:
+`docs/specs/L1.md` L1-032 → L1-035, `docs/specs/L2.md` L2-087 → L2-098.
+
+| Screen | File | Shows |
+| --- | --- | --- |
+| Weekend · map | `weekend.map.html` | Cover photo, one day beside its map (stacked under 1024px), numbered stops, travel legs with directions |
+| Ideas · photos | `ideas.photos.html` | Photo-led cards, fallback tile, "Add to day" (dialog D27) |
+| Past · photos | `past.photos.html` | Cover photo per weekend, "Your photo" vs place photo, "Add a photo" (dialog D28) |
+
+### Images
+
+`images/*.svg` are **illustrated placeholders** that stand in for licensed photos;
+they are not real photographs and must not ship. The map in `weekend.map.html` is
+an inline SVG sketch, not tiles. Production sources, licensing and attribution are
+specified in L2-088.
+
 ## Running the checks
 
 From the repo root (pwsh or bash). Playwright is resolved from `e2e/node_modules`, so

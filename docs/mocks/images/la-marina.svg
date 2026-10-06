@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" preserveAspectRatio="xMidYMid slice" role="img" aria-label="A restaurant patio with umbrellas beside the lake">
+<!-- Placeholder illustration standing in for a licensed photo (docs/mocks/README.md, "Images"). -->
+<defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#BFD9E8"/><stop offset="1" stop-color="#EAF3F8"/></linearGradient></defs>
+<rect width="800" height="500" fill="url(#sky)"/>
+<rect y="230" width="800" height="90" fill="#7DB3D3"/><rect y="320" width="800" height="180" fill="#E3D6C3"/><g><path d="M120 250 Q190 190 260 250Z" fill="#E07856"/><rect x="186" y="250" width="8" height="120" fill="#5B4636"/><rect x="140" y="360" width="100" height="10" fill="#5B4636"/></g><g><path d="M480 240 Q560 175 640 240Z" fill="#2D7D5F"/><rect x="556" y="240" width="8" height="130" fill="#5B4636"/><rect x="505" y="360" width="110" height="10" fill="#5B4636"/></g><path d="M330 225 l40 -70 l10 70Z" fill="#FFFFFF"/>
+</svg>
