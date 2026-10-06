@@ -26,7 +26,8 @@ export const Removable: StoryObj<Chip> = {
   parameters: {
     docs: {
       description: {
-        story: '`removable` adds the × button; it emits `remove` and the page drops the item. Name each × with `removeLabel`.',
+        story:
+          '`removable` adds the × button; it emits `remove` and the page drops the item. Name each × with `removeLabel`.',
       },
     },
   },

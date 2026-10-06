@@ -1,5 +1,7 @@
 <div class="topbar__inner">
-  <a class="topbar__brand" routerLink="/weekend"><span class="brand-mark" aria-hidden="true"></span>Saturdaze</a>
+  <a class="topbar__brand" routerLink="/weekend"
+    ><span class="brand-mark" aria-hidden="true"></span>Saturdaze</a
+  >
   <nav class="topbar__nav" aria-label="Primary">
     @for (item of items; track item.key) {
       <a
@@ -7,7 +9,8 @@
         [attr.data-nav]="item.key"
         [routerLink]="item.route"
         [attr.aria-current]="active() === item.key ? 'page' : null"
-      >{{ item.label }}</a>
+        >{{ item.label }}</a
+      >
     }
   </nav>
   <div class="topbar__actions">

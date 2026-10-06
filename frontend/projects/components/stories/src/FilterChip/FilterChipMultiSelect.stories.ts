@@ -5,7 +5,11 @@ import type { FilterChip } from 'components';
 
 export const MultiSelect: StoryObj<FilterChip> = {
   render: () => {
-    const extras = signal<Record<string, boolean>>({ 'Ages 5+': true, 'Under 30 min': false, 'Weather-safe': false });
+    const extras = signal<Record<string, boolean>>({
+      'Ages 5+': true,
+      'Under 30 min': false,
+      'Weather-safe': false,
+    });
     return {
       props: {
         extras,
@@ -23,7 +27,10 @@ export const MultiSelect: StoryObj<FilterChip> = {
   },
   parameters: {
     docs: {
-      description: { story: 'For independent toggles, bind `[pressed]` and write the emitted `pressedChange` value straight back.' },
+      description: {
+        story:
+          'For independent toggles, bind `[pressed]` and write the emitted `pressedChange` value straight back.',
+      },
     },
   },
 };

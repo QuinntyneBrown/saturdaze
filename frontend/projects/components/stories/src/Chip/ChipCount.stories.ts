@@ -11,6 +11,11 @@ export const Count: StoryObj<Chip> = {
     `,
   }),
   parameters: {
-    docs: { description: { story: '`count` centres a number in a pill at least as wide as it is tall (`.chip--count`).' } },
+    docs: {
+      description: {
+        story:
+          '`count` centres a number in a pill at least as wide as it is tall (`.chip--count`).',
+      },
+    },
   },
 };

@@ -17,12 +17,24 @@ sd-icon {
   color: var(--sd-ink-soft);
 }
 
-:host(.well--accent) { background: var(--sd-accent-soft); }
-:host(.well--accent) sd-icon { color: var(--sd-accent); }
-:host(.well--warn) { background: var(--sd-warn-soft); }
-:host(.well--warn) sd-icon { color: var(--sd-warn-deep); }
-:host(.well--primary) { background: var(--sd-primary-soft); }
-:host(.well--primary) sd-icon { color: var(--sd-primary-deep); }
+:host(.well--accent) {
+  background: var(--sd-accent-soft);
+}
+:host(.well--accent) sd-icon {
+  color: var(--sd-accent);
+}
+:host(.well--warn) {
+  background: var(--sd-warn-soft);
+}
+:host(.well--warn) sd-icon {
+  color: var(--sd-warn-deep);
+}
+:host(.well--primary) {
+  background: var(--sd-primary-soft);
+}
+:host(.well--primary) sd-icon {
+  color: var(--sd-primary-deep);
+}
 
 .well__text {
   min-width: 0;

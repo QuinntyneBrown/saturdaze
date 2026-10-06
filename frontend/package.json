@@ -8,7 +8,12 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "storybook": "ng run components:storybook",
-    "build-storybook": "ng run components:build-storybook"
+    "build-storybook": "ng run components:build-storybook",
+    "lint": "ng lint",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "prepare": "cd .. && husky frontend/.husky"
   },
   "private": true,
   "packageManager": "npm@10.9.4",
@@ -24,21 +29,28 @@
     "tslib": "^2.3.0"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^21.2.11",
-    "@angular/animations": "^21.2.25",
     "@angular/build": "^21.2.11",
     "@angular/cli": "^21.2.7",
     "@angular/compiler-cli": "^21.2.25",
+    "@eslint/js": "^10.0.1",
+    "angular-eslint": "21.4.0",
+    "eslint": "^10.3.0",
+    "eslint-config-prettier": "^10.1.8",
+    "husky": "^9.1.7",
+    "jsdom": "^28.0.0",
+    "lint-staged": "^16.4.0",
+    "ng-packagr": "^21.2.0",
+    "prettier": "^3.8.1",
+    "typescript": "~5.9.2",
+    "typescript-eslint": "8.59.2",
+    "vitest": "^4.0.8",
+    "@angular-devkit/build-angular": "^21.2.11",
+    "@angular/animations": "^21.2.25",
     "@angular/platform-browser-dynamic": "^21.2.25",
     "@compodoc/compodoc": "^2.0.0",
     "@storybook/addon-a11y": "^10.6.1",
     "@storybook/addon-docs": "^10.6.1",
     "@storybook/angular": "^10.6.1",
-    "jsdom": "^28.0.0",
-    "ng-packagr": "^21.2.0",
-    "prettier": "^3.8.1",
-    "storybook": "^10.6.1",
-    "typescript": "~5.9.2",
-    "vitest": "^4.0.8"
+    "storybook": "^10.6.1"
   }
 }

@@ -18,14 +18,20 @@
         name="password"
         autocomplete="current-password"
         formControlName="password"
-        [invalid]="!!errorMessage() || (form.controls.password.invalid && form.controls.password.touched)"
+        [invalid]="
+          !!errorMessage() || (form.controls.password.invalid && form.controls.password.touched)
+        "
       />
       <div class="row">
         <sd-toggle label="Remember me" formControlName="remember" />
         <a class="sd-link" routerLink="/reset-password">Forgot password?</a>
       </div>
-      <sd-button variant="primary" size="lg" full type="submit" [disabled]="submitting()">Sign in</sd-button>
+      <sd-button variant="primary" size="lg" full type="submit" [disabled]="submitting()"
+        >Sign in</sd-button
+      >
     </form>
-    <span slot="alt">New here? <a class="sd-link" routerLink="/create-account">Create an account</a></span>
+    <span slot="alt"
+      >New here? <a class="sd-link" routerLink="/create-account">Create an account</a></span
+    >
   </sd-auth-card>
 </sd-auth-shell>

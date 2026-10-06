@@ -29,7 +29,22 @@ export default {
   title: 'Patterns/Shell & Navigation',
   decorators: [
     moduleMetadata({
-      imports: [TopBar, BottomNav, Sitebar, PageHeader, Section, List, ListItem, Avatar, Day, Block, Chip, Icon, Button, GhostRow],
+      imports: [
+        TopBar,
+        BottomNav,
+        Sitebar,
+        PageHeader,
+        Section,
+        List,
+        ListItem,
+        Avatar,
+        Day,
+        Block,
+        Chip,
+        Icon,
+        Button,
+        GhostRow,
+      ],
     }),
   ],
   parameters: {

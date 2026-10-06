@@ -17,7 +17,8 @@ export const Disabled: StoryObj<VoteRow> = {
   parameters: {
     docs: {
       description: {
-        story: '`disabled` turns every thumb off but keeps the votes visible — the siblings of a locked restaurant.',
+        story:
+          '`disabled` turns every thumb off but keeps the votes visible — the siblings of a locked restaurant.',
       },
     },
   },

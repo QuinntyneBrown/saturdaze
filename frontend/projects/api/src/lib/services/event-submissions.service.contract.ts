@@ -10,10 +10,10 @@ import { SubmitEventRequest } from '../models/submit-event-request';
  */
 export interface IEventSubmissionsService {
   /** The caller's own submissions (any status). Reactive — updates after submit/reload. */
-  mine(): Signal<ReadonlyArray<EventSubmissionDto>>;
+  mine(): Signal<readonly EventSubmissionDto[]>;
 
   /** Pending submissions (admin only), oldest first. */
-  pending(): Signal<ReadonlyArray<EventSubmissionDto>>;
+  pending(): Signal<readonly EventSubmissionDto[]>;
 
   /**
    * Review — the review queue as cards, oldest first. Rows approved in this

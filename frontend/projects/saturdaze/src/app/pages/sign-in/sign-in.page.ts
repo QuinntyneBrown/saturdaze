@@ -18,7 +18,16 @@ import { trimmedEmail } from '../../shared/trimmed-email.validator';
 @Component({
   selector: 'app-sign-in',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink, AuthShell, AuthCard, Banner, Button, TextInput, Toggle],
+  imports: [
+    ReactiveFormsModule,
+    RouterLink,
+    AuthShell,
+    AuthCard,
+    Banner,
+    Button,
+    TextInput,
+    Toggle,
+  ],
   templateUrl: './sign-in.page.html',
   styleUrl: './sign-in.page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

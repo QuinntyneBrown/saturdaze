@@ -28,15 +28,21 @@ describe('ApproveSubmissionDialog', () => {
 
   it('names the event and summarises the details with the submitter', async () => {
     await mount(SUBMISSION_CARD);
-    expect(host.querySelector('.dialog__title')?.textContent?.trim()).toBe('Approve Port Credit Buskerfest?');
+    expect(host.querySelector('.dialog__title')?.textContent?.trim()).toBe(
+      'Approve Port Credit Buskerfest?',
+    );
     expect(host.querySelector('.dialog__sub')?.textContent?.trim()).toBe(
       'It becomes visible to every family nearby.',
     );
-    expect(host.querySelector('.head__title')?.textContent?.trim()).toBe('Sat 20 Jun · 2:00 to 9:00pm');
+    expect(host.querySelector('.head__title')?.textContent?.trim()).toBe(
+      'Sat 20 Jun · 2:00 to 9:00pm',
+    );
     expect(host.querySelector('.head__meta')?.textContent?.trim()).toBe(
       'Memorial Park · Free · All ages · sent by quinntynebrown@gmail.com',
     );
-    expect(host.querySelector('sd-date-tile')?.textContent?.replace(/\s+/g, ' ').trim()).toContain('Jun');
+    expect(host.querySelector('sd-date-tile')?.textContent?.replace(/\s+/g, ' ').trim()).toContain(
+      'Jun',
+    );
   });
 
   it('leaves out details the submitter skipped', async () => {

@@ -11,7 +11,8 @@ export const Unrated: StoryObj<PastCard> = {
   parameters: {
     docs: {
       description: {
-        story: 'A weekend that just ended: `rating` is `null`, so the stars read "Rate it", and there are no highlights yet.',
+        story:
+          'A weekend that just ended: `rating` is `null`, so the stars read "Rate it", and there are no highlights yet.',
       },
     },
   },

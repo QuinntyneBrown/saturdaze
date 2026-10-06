@@ -17,7 +17,8 @@ export const Weather: StoryObj<Day> = {
   parameters: {
     docs: {
       description: {
-        story: '`weather` picks the disc: `sun` (sun tone), `cloud`, `rain` and `snow` (sky tone). Leave it `null` and no disc renders.',
+        story:
+          '`weather` picks the disc: `sun` (sun tone), `cloud`, `rain` and `snow` (sky tone). Leave it `null` and no disc renders.',
       },
     },
   },

@@ -67,7 +67,12 @@ describe('IdeasEventsPage', () => {
 
   beforeEach(async () => {
     view = signal<IdeasEventsView>(VIEW);
-    service = { list: () => view, load: vi.fn(async () => undefined), setWindow: vi.fn(), setCategory: vi.fn() };
+    service = {
+      list: () => view,
+      load: vi.fn(async () => undefined),
+      setWindow: vi.fn(),
+      setCategory: vi.fn(),
+    };
     await TestBed.configureTestingModule({
       imports: [IdeasEventsPage],
       providers: [provideRouter([]), { provide: EVENTS_SERVICE, useValue: service }],
@@ -84,7 +89,12 @@ describe('IdeasEventsPage', () => {
   });
 
   it('renders the window and category chips either side of a divider', () => {
-    expect(chips().map((c) => c.textContent?.trim())).toEqual(['This weekend', 'Next weekend', 'Festival', 'Market']);
+    expect(chips().map((c) => c.textContent?.trim())).toEqual([
+      'This weekend',
+      'Next weekend',
+      'Festival',
+      'Market',
+    ]);
     expect(chips().map((c) => c.hasAttribute('pressed'))).toEqual([true, false, false, true]);
     expect(host.querySelectorAll('.sd-vdivider').length).toBe(1);
   });
@@ -95,16 +105,22 @@ describe('IdeasEventsPage', () => {
     expect(sections[0]?.getAttribute('subtitle')).toBe('Only you can see it until it is approved.');
 
     const cards = Array.from(host.querySelectorAll('sd-event-card'));
-    expect(cards.map((c) => c.getAttribute('title'))).toEqual(['Port Credit Buskerfest', 'Lavender Festival']);
+    expect(cards.map((c) => c.getAttribute('title'))).toEqual([
+      'Port Credit Buskerfest',
+      'Lavender Festival',
+    ]);
     expect(cards[0]?.hasAttribute('muted')).toBe(true);
     expect(cards[0]?.querySelector('.card__footer')).toBeNull();
     expect(cards[1]?.hasAttribute('muted')).toBe(false);
-    expect(cards[1]?.querySelector('.card__footer a')?.getAttribute('href')).toBe('https://example.com/lavender');
-    expect(cards[1]?.querySelector('sd-date-tile')?.textContent?.replace(/\s+/g, ' ').trim()).toContain('16');
-    expect(Array.from(cards[1]!.querySelectorAll('sd-chip')).map((c) => c.textContent?.trim())).toEqual([
-      'Festival',
-      '45 min',
-    ]);
+    expect(cards[1]?.querySelector('.card__footer a')?.getAttribute('href')).toBe(
+      'https://example.com/lavender',
+    );
+    expect(
+      cards[1]?.querySelector('sd-date-tile')?.textContent?.replace(/\s+/g, ' ').trim(),
+    ).toContain('16');
+    expect(
+      Array.from(cards[1]!.querySelectorAll('sd-chip')).map((c) => c.textContent?.trim()),
+    ).toEqual(['Festival', '45 min']);
   });
 
   it('switches the window and toggles a category (off when it is already active)', () => {
@@ -120,6 +136,8 @@ describe('IdeasEventsPage', () => {
   it('shows a status row while there is nothing to list', () => {
     view.set({ ...VIEW, sections: [] });
     fixture.detectChanges();
-    expect(host.querySelector('sd-status-row')?.textContent?.trim()).toBe('Checking what is on nearby.');
+    expect(host.querySelector('sd-status-row')?.textContent?.trim()).toBe(
+      'Checking what is on nearby.',
+    );
   });
 });

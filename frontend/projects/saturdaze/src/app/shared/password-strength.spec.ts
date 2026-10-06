@@ -6,7 +6,10 @@ describe('passwordStrength', () => {
   });
 
   it('is weak under eight characters', () => {
-    expect(passwordStrength('Abc123!')).toEqual({ level: 'weak', label: 'Weak · eight characters or more.' });
+    expect(passwordStrength('Abc123!')).toEqual({
+      level: 'weak',
+      label: 'Weak · eight characters or more.',
+    });
   });
 
   it('is OK from eight characters, nudging towards a capital', () => {

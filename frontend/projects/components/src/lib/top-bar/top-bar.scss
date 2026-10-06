@@ -1,4 +1,4 @@
-@use "../styles/breakpoints" as *;
+@use '../styles/breakpoints' as *;
 
 // `.topbar` + `.brand-mark` from docs/mocks-v2/styles/app.css — the host is
 // the bar. Hidden below 720px (the bottom nav takes over).
@@ -79,12 +79,12 @@
     color var(--sd-dur-fast) var(--sd-ease);
 }
 
-.topbar__link[aria-current="page"] {
+.topbar__link[aria-current='page'] {
   color: var(--sd-ink);
 }
 
-.topbar__link[aria-current="page"]::after {
-  content: "";
+.topbar__link[aria-current='page']::after {
+  content: '';
   position: absolute;
   left: 12px;
   right: 12px;

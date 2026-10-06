@@ -2,23 +2,38 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 <Meta title="Concepts/Introduction" />
 
-<div className="sb-unstyled" style={{ background: 'var(--sd-warm-gradient), var(--sd-bg)', borderRadius: 'var(--sd-r-xl)', padding: '40px 32px', margin: '0 0 32px' }}>
-  <p style={{ color: 'var(--sd-primary-deep)', fontWeight: 600, margin: 0 }}>Saturdaze Design System</p>
-  <h1 style={{ fontSize: 'var(--sd-fs-xxl)', margin: '8px 0 12px', lineHeight: 'var(--sd-lh-tight)' }}>Calm weekends, one clear next step.</h1>
+<div
+  className="sb-unstyled"
+  style={{
+    background: 'var(--sd-warm-gradient), var(--sd-bg)',
+    borderRadius: 'var(--sd-r-xl)',
+    padding: '40px 32px',
+    margin: '0 0 32px',
+  }}
+>
+  <p style={{ color: 'var(--sd-primary-deep)', fontWeight: 600, margin: 0 }}>
+    Saturdaze Design System
+  </p>
+  <h1
+    style={{ fontSize: 'var(--sd-fs-xxl)', margin: '8px 0 12px', lineHeight: 'var(--sd-lh-tight)' }}
+  >
+    Calm weekends, one clear next step.
+  </h1>
   <p style={{ color: 'var(--sd-ink-soft)', maxWidth: 560, margin: 0 }}>
-    Tokens, Angular components and responsive patterns for Saturdaze — the warm family weekend planner. Everything here
-    is the real <code>components</code> library the app ships, rendered live.
+    Tokens, Angular components and responsive patterns for Saturdaze — the warm family weekend
+    planner. Everything here is the real <code>components</code> library the app ships, rendered
+    live.
   </p>
 </div>
 
 ## What's here
 
-| Section                                                  | What you'll find                                                                                      |
-| -------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
-| [Concepts](?path=/docs/concepts-developer-quick-start--docs) | Quick start, how components are styled, accessibility rules and how to write stories.                 |
-| [Theme](?path=/docs/theme-colors--docs)                  | The `--sd-*` token vocabulary — colour, type, spacing, radii, shadows, motion and layout — read live from `_tokens.scss`. |
-| Components                                               | Every `sd-*` component with its API table (inputs, outputs, JSDoc), examples and best practices.     |
-| Patterns                                                 | Compositions of components that match whole screens: the shell, the weekend plan, ideas, auth, family and dialogs. |
+| Section                                                      | What you'll find                                                                                                          |
+| ------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------- |
+| [Concepts](?path=/docs/concepts-developer-quick-start--docs) | Quick start, how components are styled, accessibility rules and how to write stories.                                     |
+| [Theme](?path=/docs/theme-colors--docs)                      | The `--sd-*` token vocabulary — colour, type, spacing, radii, shadows, motion and layout — read live from `_tokens.scss`. |
+| Components                                                   | Every `sd-*` component with its API table (inputs, outputs, JSDoc), examples and best practices.                          |
+| Patterns                                                     | Compositions of components that match whole screens: the shell, the weekend plan, ideas, auth, family and dialogs.        |
 
 ## Principles
 
@@ -33,9 +48,9 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 ## Where the code lives
 
-| Path                                            | Purpose                                                       |
-| ----------------------------------------------- | ------------------------------------------------------------- |
-| `frontend/projects/components/src/lib/`         | Component source (`<name>/<name>.ts`, `.html`, `.scss`)       |
-| `frontend/projects/components/src/lib/styles/`  | Tokens, breakpoints and global chrome                         |
-| `frontend/projects/components/stories/src/`     | This Storybook: concept and theme MDX, one folder per component |
-| `frontend/projects/components/.storybook/`      | Storybook configuration, manager theme and branding            |
+| Path                                           | Purpose                                                         |
+| ---------------------------------------------- | --------------------------------------------------------------- |
+| `frontend/projects/components/src/lib/`        | Component source (`<name>/<name>.ts`, `.html`, `.scss`)         |
+| `frontend/projects/components/src/lib/styles/` | Tokens, breakpoints and global chrome                           |
+| `frontend/projects/components/stories/src/`    | This Storybook: concept and theme MDX, one folder per component |
+| `frontend/projects/components/.storybook/`     | Storybook configuration, manager theme and branding             |

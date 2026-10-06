@@ -12,6 +12,10 @@ export const Full: StoryObj<Button> = {
     `,
   }),
   parameters: {
-    docs: { description: { story: '`full` stretches to the container (`.btn--block`) — auth cards and phone sheets.' } },
+    docs: {
+      description: {
+        story: '`full` stretches to the container (`.btn--block`) — auth cards and phone sheets.',
+      },
+    },
   },
 };

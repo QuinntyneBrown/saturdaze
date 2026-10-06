@@ -25,7 +25,10 @@ export const Action: StoryObj<ListItem> = {
   },
   parameters: {
     docs: {
-      description: { story: '`action` renders the row as a `<button>`; `pressed` emits on click — on Family it opens the member dialog.' },
+      description: {
+        story:
+          '`action` renders the row as a `<button>`; `pressed` emits on click — on Family it opens the member dialog.',
+      },
     },
   },
 };

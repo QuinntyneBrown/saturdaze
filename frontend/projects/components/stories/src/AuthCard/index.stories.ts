@@ -15,7 +15,11 @@ export { Loading } from './AuthCardLoading.stories';
 export default {
   title: 'Components/Auth Card',
   component: AuthCard,
-  decorators: [moduleMetadata({ imports: [AuthCard, Banner, Button, Disc, Icon, Spinner, TextInput, Toggle, RouterLink] })],
+  decorators: [
+    moduleMetadata({
+      imports: [AuthCard, Banner, Button, Disc, Icon, Spinner, TextInput, Toggle, RouterLink],
+    }),
+  ],
   parameters: {
     docs: {
       description: {

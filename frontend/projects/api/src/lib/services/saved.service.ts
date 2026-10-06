@@ -74,7 +74,7 @@ export class SavedService implements ISavedService {
   private readonly http = inject(HttpClient);
   private readonly baseUrl = inject(API_BASE_URL);
 
-  private readonly _rows = signal<ReadonlyArray<WeekendSummaryDto>>([]);
+  private readonly _rows = signal<readonly WeekendSummaryDto[]>([]);
   private readonly _loaded = signal(false);
   private readonly _filter = signal<string>(PAST_FILTER_ALL);
 

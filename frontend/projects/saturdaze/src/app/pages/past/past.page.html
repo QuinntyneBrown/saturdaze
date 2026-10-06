@@ -10,7 +10,11 @@
   }
   @case ('empty') {
     <div class="sd-narrow">
-      <sd-empty icon="star" title="Nothing here yet" body="Plan this weekend and it shows up here on Monday, ready to rate.">
+      <sd-empty
+        icon="star"
+        title="Nothing here yet"
+        body="Plan this weekend and it shows up here on Monday, ready to rate."
+      >
         <sd-button slot="cta" variant="quiet" href="/weekend">
           Go to this weekend
           <sd-icon name="arrow_right" />
@@ -21,7 +25,11 @@
   @case ('ready') {
     <sd-filters class="filters" label="Filters">
       @for (chip of view().filters; track chip.label) {
-        <sd-filter-chip [tone]="filterTone(chip.tone)" [pressed]="chip.active" (pressedChange)="setFilter(chip.label)">
+        <sd-filter-chip
+          [tone]="filterTone(chip.tone)"
+          [pressed]="chip.active"
+          (pressedChange)="setFilter(chip.label)"
+        >
           @if (chip.icon) {
             <sd-icon [name]="chip.icon" [size]="14" [stroke]="2" />
           }

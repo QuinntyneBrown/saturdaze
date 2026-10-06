@@ -63,7 +63,12 @@ describe('authInterceptor', () => {
   });
 
   it('sends no bearer to token-minting endpoints', () => {
-    for (const url of ['/api/auth/login', '/api/auth/register', '/api/auth/refresh', '/api/auth/resend-verification']) {
+    for (const url of [
+      '/api/auth/login',
+      '/api/auth/register',
+      '/api/auth/refresh',
+      '/api/auth/resend-verification',
+    ]) {
       httpClient.post(url, {}).subscribe();
       const req = httpMock.expectOne(url);
       expect(req.request.headers.has('Authorization')).toBe(false);

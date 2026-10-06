@@ -3,7 +3,18 @@ import { RouterLink } from '@angular/router';
 import type { Meta } from '@storybook/angular';
 import { moduleMetadata } from '@storybook/angular';
 
-import { AuthCard, AuthShell, Banner, Button, Checkbox, Disc, Icon, Strength, TextInput, Toggle } from 'components';
+import {
+  AuthCard,
+  AuthShell,
+  Banner,
+  Button,
+  Checkbox,
+  Disc,
+  Icon,
+  Strength,
+  TextInput,
+  Toggle,
+} from 'components';
 
 import descriptionMd from './AuthenticationDescription.md';
 
@@ -17,7 +28,20 @@ export default {
   title: 'Patterns/Authentication',
   decorators: [
     moduleMetadata({
-      imports: [AuthShell, AuthCard, Banner, Button, Checkbox, Disc, Icon, Strength, TextInput, Toggle, FormsModule, RouterLink],
+      imports: [
+        AuthShell,
+        AuthCard,
+        Banner,
+        Button,
+        Checkbox,
+        Disc,
+        Icon,
+        Strength,
+        TextInput,
+        Toggle,
+        FormsModule,
+        RouterLink,
+      ],
     }),
   ],
   parameters: {

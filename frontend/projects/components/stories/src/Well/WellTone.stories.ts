@@ -16,7 +16,8 @@ export const Tone: StoryObj<Well> = {
   parameters: {
     docs: {
       description: {
-        story: '`default` explains a pick, `accent` marks locked days and commitments, `primary` offers a tip and `warn` flags something to double-check.',
+        story:
+          '`default` explains a pick, `accent` marks locked days and commitments, `primary` offers a tip and `warn` flags something to double-check.',
       },
     },
   },

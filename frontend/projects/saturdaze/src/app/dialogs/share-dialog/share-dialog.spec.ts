@@ -15,7 +15,10 @@ describe('ShareDialog', () => {
       imports: [ShareDialog],
       providers: [
         { provide: DialogRef, useValue: dialogRef },
-        { provide: DIALOG_DATA, useValue: { shareUrl: 'https://saturdaze.app/sample-weekend?share=abc123' } },
+        {
+          provide: DIALOG_DATA,
+          useValue: { shareUrl: 'https://saturdaze.app/sample-weekend?share=abc123' },
+        },
       ],
     }).compileComponents();
     fixture = TestBed.createComponent(ShareDialog);
@@ -33,7 +36,9 @@ describe('ShareDialog', () => {
     expect(copy?.querySelector('.copy-field__value')?.textContent?.trim()).toBe(
       'https://saturdaze.app/sample-weekend?share=abc123',
     );
-    expect(host.querySelector('p.sd-text-xs')?.textContent?.trim()).toBe('Read-only · expires in 7 days');
+    expect(host.querySelector('p.sd-text-xs')?.textContent?.trim()).toBe(
+      'Read-only · expires in 7 days',
+    );
   });
 
   it('closes on Done', () => {

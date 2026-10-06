@@ -29,7 +29,14 @@ describe('SignInPage', () => {
         {
           provide: ActivatedRoute,
           useValue: {
-            snapshot: { paramMap: convertToParamMap({}), queryParamMap, params: {}, queryParams: query, data: {}, fragment: null },
+            snapshot: {
+              paramMap: convertToParamMap({}),
+              queryParamMap,
+              params: {},
+              queryParams: query,
+              data: {},
+              fragment: null,
+            },
             paramMap: of(convertToParamMap({})),
             queryParamMap: of(queryParamMap),
             params: of({}),
@@ -40,7 +47,9 @@ describe('SignInPage', () => {
         },
       ],
     }).compileComponents();
-    navigate = vi.spyOn(TestBed.inject(Router), 'navigateByUrl').mockResolvedValue(true) as unknown as ReturnType<typeof vi.fn>;
+    navigate = vi
+      .spyOn(TestBed.inject(Router), 'navigateByUrl')
+      .mockResolvedValue(true) as unknown as ReturnType<typeof vi.fn>;
     fixture = TestBed.createComponent(SignInPage);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -65,8 +74,12 @@ describe('SignInPage', () => {
     expect(fields.map((f) => f.getAttribute('label'))).toEqual(['Email', 'Password']);
     expect(fields.map((f) => f.getAttribute('type'))).toEqual(['email', 'password']);
     expect(host.querySelector('sd-toggle')?.getAttribute('label')).toBe('Remember me');
-    expect(host.querySelector('a[href="/reset-password"]')?.textContent?.trim()).toBe('Forgot password?');
-    expect(host.querySelector('a[href="/create-account"]')?.textContent?.trim()).toBe('Create an account');
+    expect(host.querySelector('a[href="/reset-password"]')?.textContent?.trim()).toBe(
+      'Forgot password?',
+    );
+    expect(host.querySelector('a[href="/create-account"]')?.textContent?.trim()).toBe(
+      'Create an account',
+    );
     expect(banner()).toBeNull();
     expect(component['form'].getRawValue()).toEqual({ email: '', password: '', remember: true });
   });
@@ -75,9 +88,9 @@ describe('SignInPage', () => {
     session.rememberedEmail.set('quinntynebrown@gmail.com');
     await mount();
     expect(component['form'].controls.email.value).toBe('quinntynebrown@gmail.com');
-    expect((host.querySelector('sd-text-input input[type="email"]') as HTMLInputElement).value).toBe(
-      'quinntynebrown@gmail.com',
-    );
+    expect(
+      (host.querySelector('sd-text-input input[type="email"]') as HTMLInputElement).value,
+    ).toBe('quinntynebrown@gmail.com');
   });
 
   it('does not submit an invalid form', async () => {
@@ -90,9 +103,16 @@ describe('SignInPage', () => {
 
   it('signs in with the email and remember flag and lands on /weekend', async () => {
     await mount();
-    component['form'].setValue({ email: 'quinn@example.com', password: 'password123', remember: false });
+    component['form'].setValue({
+      email: 'quinn@example.com',
+      password: 'password123',
+      remember: false,
+    });
     await component['submit']();
-    expect(session.login).toHaveBeenCalledWith({ email: 'quinn@example.com', password: 'password123' }, false);
+    expect(session.login).toHaveBeenCalledWith(
+      { email: 'quinn@example.com', password: 'password123' },
+      false,
+    );
     expect(navigate).toHaveBeenCalledWith('/weekend');
     expect(component['submitting']()).toBe(false);
   });

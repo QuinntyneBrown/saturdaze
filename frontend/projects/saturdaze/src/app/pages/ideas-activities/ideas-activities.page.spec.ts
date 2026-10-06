@@ -57,7 +57,11 @@ describe('IdeasActivitiesPage', () => {
   let fixture: ComponentFixture<IdeasActivitiesPage>;
   let host: HTMLElement;
   let view: ReturnType<typeof signal<IdeasActivitiesView>>;
-  let service: { list: () => unknown; load: ReturnType<typeof vi.fn>; setFilter: ReturnType<typeof vi.fn> };
+  let service: {
+    list: () => unknown;
+    load: ReturnType<typeof vi.fn>;
+    setFilter: ReturnType<typeof vi.fn>;
+  };
 
   beforeEach(async () => {
     view = signal<IdeasActivitiesView>(VIEW);
@@ -93,13 +97,17 @@ describe('IdeasActivitiesPage', () => {
     expect(sections[1]?.getAttribute('subtitle')).toBeNull();
 
     const cards = Array.from(host.querySelectorAll('sd-activity-card'));
-    expect(cards.map((c) => c.getAttribute('title'))).toEqual(['Terre Bleu Lavender Farm', 'The Rec Room']);
-    expect(cards.map((c) => c.getAttribute('tone'))).toEqual(['leaf', 'indoor']);
-    expect(Array.from(cards[0]!.querySelectorAll('sd-chip')).map((c) => c.textContent?.trim())).toEqual([
-      '45 min drive',
-      'Ages 3+',
+    expect(cards.map((c) => c.getAttribute('title'))).toEqual([
+      'Terre Bleu Lavender Farm',
+      'The Rec Room',
     ]);
-    expect(cards[0]?.querySelector('.card__footer a')?.getAttribute('href')).toBe('https://maps.example/terre-bleu');
+    expect(cards.map((c) => c.getAttribute('tone'))).toEqual(['leaf', 'indoor']);
+    expect(
+      Array.from(cards[0]!.querySelectorAll('sd-chip')).map((c) => c.textContent?.trim()),
+    ).toEqual(['45 min drive', 'Ages 3+']);
+    expect(cards[0]?.querySelector('.card__footer a')?.getAttribute('href')).toBe(
+      'https://maps.example/terre-bleu',
+    );
     expect(cards[1]?.querySelector('.card__footer')).toBeNull();
     expect(host.querySelector('sd-status-row')).toBeNull();
   });
@@ -114,7 +122,9 @@ describe('IdeasActivitiesPage', () => {
   it('shows a status row while there are no sections', () => {
     view.set({ ...VIEW, sections: [] });
     fixture.detectChanges();
-    expect(host.querySelector('sd-status-row')?.textContent?.trim()).toBe('Looking for ideas near you.');
+    expect(host.querySelector('sd-status-row')?.textContent?.trim()).toBe(
+      'Looking for ideas near you.',
+    );
     expect(host.querySelectorAll('sd-activity-card').length).toBe(0);
   });
 });

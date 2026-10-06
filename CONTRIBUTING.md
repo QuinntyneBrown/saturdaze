@@ -62,6 +62,10 @@ dotnet restore .\Saturdaze.sln
   is intentionally updating the design — then change the mock first, run
   `node docs/mocks-v2/.check.mjs`, and re-capture baselines (`npm run baseline`
   in `e2e/`).
+- Frontend code is formatted with Prettier and linted with angular-eslint.
+  The husky pre-commit hook (installed by `npm ci` in `frontend/`) fixes
+  staged files automatically; run `npm run lint` and `npm run format:check`
+  before opening a pull request.
 - Avoid unrelated formatting churn and broad refactors in feature or bug-fix
   pull requests.
 

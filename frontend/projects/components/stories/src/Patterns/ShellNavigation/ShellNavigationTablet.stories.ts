@@ -23,7 +23,8 @@ export const Tablet: StoryObj = {
   parameters: {
     docs: {
       description: {
-        story: 'At 820px the top bar has already taken over (the switch is at 720px) while the content stays single-column.',
+        story:
+          'At 820px the top bar has already taken over (the switch is at 720px) while the content stays single-column.',
       },
     },
   },

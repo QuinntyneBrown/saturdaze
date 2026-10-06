@@ -16,7 +16,9 @@ export const Screens: StoryObj<StatusRow> = {
   }),
   parameters: {
     docs: {
-      description: { story: 'The glyph and sentence used on each screen: Ideas, Food, Events, Past and Family.' },
+      description: {
+        story: 'The glyph and sentence used on each screen: Ideas, Food, Events, Past and Family.',
+      },
     },
   },
 };

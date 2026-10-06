@@ -1,4 +1,4 @@
-@use "../styles/breakpoints" as *;
+@use '../styles/breakpoints' as *;
 
 // `.filters` / `.scroller-x` from docs/mocks-v2/styles/app.css.
 
@@ -18,8 +18,20 @@
   scrollbar-width: none;
   margin-inline: calc(-1 * var(--sd-gutter));
   padding-inline: var(--sd-gutter);
-  -webkit-mask-image: linear-gradient(to right, transparent, #000 16px, #000 calc(100% - 16px), transparent);
-  mask-image: linear-gradient(to right, transparent, #000 16px, #000 calc(100% - 16px), transparent);
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 16px,
+    #000 calc(100% - 16px),
+    transparent
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 16px,
+    #000 calc(100% - 16px),
+    transparent
+  );
 }
 
 :host(.scroller-x)::-webkit-scrollbar {

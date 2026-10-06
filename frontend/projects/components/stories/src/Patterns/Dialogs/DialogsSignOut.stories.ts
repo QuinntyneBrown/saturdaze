@@ -16,7 +16,8 @@ export const SignOut: StoryObj = {
   parameters: {
     docs: {
       description: {
-        story: 'From the account menu or the Family screen. Ending the session is confirmed with a danger button; nothing is lost, and the subtitle says so.',
+        story:
+          'From the account menu or the Family screen. Ending the session is confirmed with a danger button; nothing is lost, and the subtitle says so.',
       },
     },
   },

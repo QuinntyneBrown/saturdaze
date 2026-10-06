@@ -100,7 +100,7 @@ function submission(overrides: Partial<EventSubmissionDto> = {}): EventSubmissio
 describe('EventsService', () => {
   let service: EventsService;
   let httpMock: HttpTestingController;
-  const mine = signal<ReadonlyArray<EventSubmissionDto>>([]);
+  const mine = signal<readonly EventSubmissionDto[]>([]);
   const loadMine = vi.fn(() => Promise.resolve());
 
   const url = (weekendOf: string) =>

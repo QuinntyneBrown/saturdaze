@@ -26,7 +26,10 @@ export const WithMap: StoryObj<ActivityCard> = {
   }),
   parameters: {
     docs: {
-      description: { story: 'With `mapUrl` the footer adds a quiet "Map" button that opens in a new tab; without it the card ends at the chips.' },
+      description: {
+        story:
+          'With `mapUrl` the footer adds a quiet "Map" button that opens in a new tab; without it the card ends at the chips.',
+      },
     },
   },
 };

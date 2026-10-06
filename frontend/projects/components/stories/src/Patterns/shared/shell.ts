@@ -13,4 +13,3 @@ export function appShell(active: NavKey | null, content: string): string {
     <sd-bottom-nav${nav} />
   `;
 }
-

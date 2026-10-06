@@ -31,7 +31,14 @@ describe('VerifyEmailPage', () => {
         {
           provide: ActivatedRoute,
           useValue: {
-            snapshot: { paramMap: convertToParamMap({}), queryParamMap, params: {}, queryParams: query, data: {}, fragment: null },
+            snapshot: {
+              paramMap: convertToParamMap({}),
+              queryParamMap,
+              params: {},
+              queryParams: query,
+              data: {},
+              fragment: null,
+            },
             paramMap: of(convertToParamMap({})),
             queryParamMap: of(queryParamMap),
             params: of({}),
@@ -56,7 +63,8 @@ describe('VerifyEmailPage', () => {
     };
   });
 
-  const title = (): string | null => host.querySelector('sd-auth-card')?.getAttribute('title') ?? null;
+  const title = (): string | null =>
+    host.querySelector('sd-auth-card')?.getAttribute('title') ?? null;
 
   it('shows "check your email" with the masked address right after sign-up (no token)', async () => {
     await mount({ email: 'quinntynebrown@gmail.com' });
@@ -65,7 +73,9 @@ describe('VerifyEmailPage', () => {
     expect(host.querySelector('.auth-card__sub')?.textContent?.trim()).toBe(
       'We sent a verification link to q••••••••••••n@gmail.com. It works for 24 hours.',
     );
-    expect(host.querySelector('sd-button[variant="ghost"] a')?.getAttribute('href')).toBe('/weekend');
+    expect(host.querySelector('sd-button[variant="ghost"] a')?.getAttribute('href')).toBe(
+      '/weekend',
+    );
   });
 
   it('falls back to the signed-in user, then to "your inbox"', async () => {
@@ -91,7 +101,9 @@ describe('VerifyEmailPage', () => {
     await settle();
     fixture.detectChanges();
     expect(title()).toBe('You are verified');
-    expect(host.querySelector('sd-button[variant="primary"] a')?.getAttribute('href')).toBe('/family');
+    expect(host.querySelector('sd-button[variant="primary"] a')?.getAttribute('href')).toBe(
+      '/family',
+    );
   });
 
   it('treats an already-verified email as verified', async () => {

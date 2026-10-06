@@ -17,7 +17,9 @@ export const Interactive: StoryObj<FoodCard> = {
         votes,
         locked,
         cast: (change: { index: number; vote: Vote }) =>
-          votes.update((cells) => cells.map((cell, i) => (i === change.index ? { ...cell, vote: change.vote } : cell))),
+          votes.update((cells) =>
+            cells.map((cell, i) => (i === change.index ? { ...cell, vote: change.vote } : cell)),
+          ),
         lockIn: () => locked.set(true),
         reset: () => locked.set(false),
       },

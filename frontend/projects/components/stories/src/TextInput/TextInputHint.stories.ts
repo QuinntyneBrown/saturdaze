@@ -19,7 +19,8 @@ export const Hint: StoryObj<TextInput> = {
   parameters: {
     docs: {
       description: {
-        story: '`hint` renders a `.field__hint` line under the input and is linked through `aria-describedby`. `required` adds the quiet "Required" marker to the label.',
+        story:
+          '`hint` renders a `.field__hint` line under the input and is linked through `aria-describedby`. `required` adds the quiet "Required" marker to the label.',
       },
     },
   },

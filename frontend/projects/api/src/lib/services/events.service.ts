@@ -36,7 +36,7 @@ const SUBTITLE_SOON = 'Worth a note in the calendar';
 const PENDING_REVIEW = 'Pending review';
 
 /** Category chips in display order; anything else sorts after, A→Z. */
-const CATEGORY_TONES: ReadonlyArray<{ label: string; tone: ChipTone }> = [
+const CATEGORY_TONES: readonly { label: string; tone: ChipTone }[] = [
   { label: 'Outdoor', tone: 'leaf' },
   { label: 'Indoor', tone: 'indoor' },
   { label: 'Seasonal', tone: 'sun' },
@@ -111,10 +111,7 @@ function overlaps(e: LocalEventDto, iso: string): boolean {
  * shows on the first weekend day it touches; everything later lands in
  * Coming soon.
  */
-function thisWeekendSections(
-  weekendOf: string,
-  dtos: ReadonlyArray<LocalEventDto>,
-): EventSection[] {
+function thisWeekendSections(weekendOf: string, dtos: readonly LocalEventDto[]): EventSection[] {
   const sat = weekendOf;
   const sun = addDaysIso(weekendOf, 1);
 
@@ -132,10 +129,7 @@ function thisWeekendSections(
 }
 
 /** Everything touching the following Saturday or Sunday. */
-function nextWeekendSections(
-  weekendOf: string,
-  dtos: ReadonlyArray<LocalEventDto>,
-): EventSection[] {
+function nextWeekendSections(weekendOf: string, dtos: readonly LocalEventDto[]): EventSection[] {
   const sat = addDaysIso(weekendOf, 7);
   const sun = addDaysIso(weekendOf, 8);
   const events = dtos.filter((e) => overlaps(e, sat) || overlaps(e, sun));
@@ -148,7 +142,7 @@ function nextWeekendSections(
  * Category Chips — one per category present, ranked by the known order
  * then A→Z; none active means "all".
  */
-function categoryChips(dtos: ReadonlyArray<LocalEventDto>, active: string | null): FilterChip[] {
+function categoryChips(dtos: readonly LocalEventDto[], active: string | null): FilterChip[] {
   const categories = Array.from(new Set(dtos.map((e) => e.category).filter((c) => !!c)));
   const rank = (c: string) => {
     const i = CATEGORY_TONES.findIndex((t) => t.label === c);
@@ -164,7 +158,7 @@ export class EventsService implements IEventsService {
   private readonly baseUrl = inject(API_BASE_URL);
   private readonly submissions = inject(EVENT_SUBMISSIONS_SERVICE);
 
-  private readonly _rows = signal<ReadonlyArray<LocalEventDto>>([]);
+  private readonly _rows = signal<readonly LocalEventDto[]>([]);
   private readonly _weekendOf = signal<string>(upcomingSaturdayIso());
   private readonly _window = signal<EventsWindow>(THIS_WEEKEND);
   private readonly _category = signal<string | null>(null);

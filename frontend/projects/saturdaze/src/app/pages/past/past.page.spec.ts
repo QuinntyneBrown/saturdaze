@@ -84,7 +84,14 @@ describe('PastPage', () => {
         {
           provide: ActivatedRoute,
           useValue: {
-            snapshot: { paramMap: convertToParamMap({}), queryParamMap, params: {}, queryParams: query, data: {}, fragment: null },
+            snapshot: {
+              paramMap: convertToParamMap({}),
+              queryParamMap,
+              params: {},
+              queryParams: query,
+              data: {},
+              fragment: null,
+            },
             paramMap: of(convertToParamMap({})),
             queryParamMap: of(queryParamMap),
             params: of({}),
@@ -114,31 +121,45 @@ describe('PastPage', () => {
       rate: vi.fn(async () => undefined),
       rename: vi.fn(async () => undefined),
     };
-    weekend = { repeatSaved: vi.fn(async () => undefined), remixSaved: vi.fn(async () => undefined) };
+    weekend = {
+      repeatSaved: vi.fn(async () => undefined),
+      remixSaved: vi.fn(async () => undefined),
+    };
     dialog = { open: vi.fn(() => ({ closed: of(undefined) })) };
   });
 
   const header = (): Element => host.querySelector('sd-page-header')!;
   const cards = (): HTMLElement[] => Array.from(host.querySelectorAll('sd-past-card'));
-  const confirmData = (): any => dialog.open.mock.calls.find((c) => c[0] === ConfirmDialog)?.[1].data;
+  const confirmData = (): any =>
+    dialog.open.mock.calls.find((c) => c[0] === ConfirmDialog)?.[1].data;
 
   it('gathers the weekends, then renders filters, the skipping strip and the cards', async () => {
     saved.load.mockImplementationOnce(() => new Promise<void>(() => undefined));
     await mount();
     expect(saved.load).toHaveBeenCalledTimes(1);
     expect(header().getAttribute('title')).toBe('Past weekends');
-    expect(host.querySelector('sd-status-row')?.textContent?.trim()).toBe('Gathering your weekends.');
+    expect(host.querySelector('sd-status-row')?.textContent?.trim()).toBe(
+      'Gathering your weekends.',
+    );
 
     view.set(READY);
     fixture.detectChanges();
     expect(header().getAttribute('subtitle')).toBe(READY.subtitle);
     const chips = Array.from(host.querySelectorAll('sd-filter-chip'));
-    expect(chips.map((c) => c.textContent?.trim())).toEqual(['All', 'Favourites', 'This year', '5★']);
+    expect(chips.map((c) => c.textContent?.trim())).toEqual([
+      'All',
+      'Favourites',
+      'This year',
+      '5★',
+    ]);
     expect(chips[0]?.hasAttribute('pressed')).toBe(true);
     expect(host.querySelector('.strip')?.textContent?.replace(/\s+/g, ' ').trim()).toBe(
       'Skipping next time: The Rec Room · rated 2★ on 6 Apr',
     );
-    expect(cards().map((c) => c.getAttribute('title'))).toEqual(['Bronte Creek + Rec Room', 'Rainy Rec Room']);
+    expect(cards().map((c) => c.getAttribute('title'))).toEqual([
+      'Bronte Creek + Rec Room',
+      'Rainy Rec Room',
+    ]);
     expect(cards()[0]?.getAttribute('rating')).toBe('5');
     expect(cards()[0]?.hasAttribute('favourite')).toBe(true);
     expect(cards()[1]?.getAttribute('rating')).toBeNull();
@@ -147,13 +168,17 @@ describe('PastPage', () => {
   it('shows the empty state for ?state=empty without loading', async () => {
     await mount({ state: 'empty' });
     expect(saved.load).not.toHaveBeenCalled();
-    expect(header().getAttribute('subtitle')).toBe('Your first weekend lands here once Sunday is over.');
+    expect(header().getAttribute('subtitle')).toBe(
+      'Your first weekend lands here once Sunday is over.',
+    );
     expect(host.querySelector('sd-empty')?.getAttribute('title')).toBe('Nothing here yet');
     expect(host.querySelector('sd-empty sd-button a')?.getAttribute('href')).toBe('/weekend');
   });
 
   it('shows the empty state when the family has no history', async () => {
-    saved.load.mockImplementationOnce(async () => view.set({ ...READY, status: 'empty', weekends: [] }));
+    saved.load.mockImplementationOnce(async () =>
+      view.set({ ...READY, status: 'empty', weekends: [] }),
+    );
     await mount();
     expect(host.querySelector('sd-empty')?.getAttribute('title')).toBe('Nothing here yet');
   });
@@ -163,7 +188,11 @@ describe('PastPage', () => {
     (host.querySelectorAll('sd-filter-chip button')[1] as HTMLButtonElement).click();
     expect(saved.setFilter).toHaveBeenCalledWith('Favourites');
 
-    view.set({ ...READY, weekends: [], filterEmpty: 'No favourites yet. Tap the heart on a weekend you loved.' });
+    view.set({
+      ...READY,
+      weekends: [],
+      filterEmpty: 'No favourites yet. Tap the heart on a weekend you loved.',
+    });
     fixture.detectChanges();
     expect(cards().length).toBe(0);
     expect(host.querySelector('sd-empty')?.getAttribute('title')).toBe('Nothing matches');
@@ -209,7 +238,9 @@ describe('PastPage', () => {
     await settle();
     expect(dialog.open).toHaveBeenCalledWith(
       RatingDialog,
-      expect.objectContaining({ data: { eyebrow: '4 – 5 Apr 2026 · Rainy Rec Room', rating: null } }),
+      expect.objectContaining({
+        data: { eyebrow: '4 – 5 Apr 2026 · Rainy Rec Room', rating: null },
+      }),
     );
     expect(saved.rate).toHaveBeenCalledWith('w2', 4);
   });
@@ -217,7 +248,11 @@ describe('PastPage', () => {
   it('repeats a weekend after the danger confirmation and hops to /weekend', async () => {
     await mount();
     dialog.open.mockReturnValueOnce({ closed: of('confirm') });
-    (cards()[0]!.querySelector('.card__footer sd-button[variant="primary"] button') as HTMLButtonElement).click();
+    (
+      cards()[0]!.querySelector(
+        '.card__footer sd-button[variant="primary"] button',
+      ) as HTMLButtonElement
+    ).click();
     await settle();
     expect(confirmData()).toMatchObject({
       title: 'Use this weekend again?',
@@ -232,11 +267,19 @@ describe('PastPage', () => {
   it('remixes after its confirmation, and stays put when dismissed', async () => {
     await mount();
     await component['remix'](LAVENDER);
-    expect(confirmData()).toMatchObject({ title: 'Remix this weekend?', confirmLabel: 'Remix', icon: 'sparkle' });
+    expect(confirmData()).toMatchObject({
+      title: 'Remix this weekend?',
+      confirmLabel: 'Remix',
+      icon: 'sparkle',
+    });
     expect(weekend.remixSaved).not.toHaveBeenCalled();
 
     dialog.open.mockReturnValueOnce({ closed: of('confirm') });
-    (cards()[1]!.querySelector('.card__footer sd-button[variant="quiet"] button') as HTMLButtonElement).click();
+    (
+      cards()[1]!.querySelector(
+        '.card__footer sd-button[variant="quiet"] button',
+      ) as HTMLButtonElement
+    ).click();
     await settle();
     expect(weekend.remixSaved).toHaveBeenCalledWith('w2');
     expect(navigate).toHaveBeenCalledWith('/weekend');

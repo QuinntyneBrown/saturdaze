@@ -22,6 +22,11 @@ export const WithCards: StoryObj<Section> = {
     `,
   }),
   parameters: {
-    docs: { description: { story: 'The Ideas screens group card grids under sections with a short weather or time subtitle.' } },
+    docs: {
+      description: {
+        story:
+          'The Ideas screens group card grids under sections with a short weather or time subtitle.',
+      },
+    },
   },
 };

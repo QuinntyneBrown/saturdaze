@@ -14,7 +14,9 @@ export { Mobile } from './AuthShellMobile.stories';
 export default {
   title: 'Components/Auth Shell',
   component: AuthShell,
-  decorators: [moduleMetadata({ imports: [AuthShell, AuthCard, Button, Disc, Icon, TextInput, RouterLink] })],
+  decorators: [
+    moduleMetadata({ imports: [AuthShell, AuthCard, Button, Disc, Icon, TextInput, RouterLink] }),
+  ],
   parameters: {
     layout: 'fullscreen',
     docs: {

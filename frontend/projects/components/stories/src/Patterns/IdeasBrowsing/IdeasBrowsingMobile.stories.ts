@@ -39,7 +39,8 @@ export const Mobile: StoryObj = {
   parameters: {
     docs: {
       description: {
-        story: 'On phones the filters become a full-bleed horizontal scroller (`.scroller-x`) with faded edges, and cards stack in one column.',
+        story:
+          'On phones the filters become a full-bleed horizontal scroller (`.scroller-x`) with faded edges, and cards stack in one column.',
       },
     },
   },

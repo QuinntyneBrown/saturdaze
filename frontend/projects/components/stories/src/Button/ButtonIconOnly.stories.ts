@@ -15,7 +15,8 @@ export const IconOnly: StoryObj<Button> = {
   parameters: {
     docs: {
       description: {
-        story: '`icon` renders the square `.btn--icon`. It has no visible text, so `label` is required — it becomes the `aria-label`.',
+        story:
+          '`icon` renders the square `.btn--icon`. It has no visible text, so `label` is required — it becomes the `aria-label`.',
       },
     },
   },

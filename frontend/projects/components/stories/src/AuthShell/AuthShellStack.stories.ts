@@ -20,7 +20,10 @@ export const Stack: StoryObj<AuthShell> = {
   parameters: {
     docs: {
       story: { height: '900px' },
-      description: { story: '`stack` top-aligns the column (`.auth--stack`) so several cards read top-down instead of centring.' },
+      description: {
+        story:
+          '`stack` top-aligns the column (`.auth--stack`) so several cards read top-down instead of centring.',
+      },
     },
   },
 };

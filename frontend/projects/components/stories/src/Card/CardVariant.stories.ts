@@ -19,7 +19,10 @@ export const Variant: StoryObj<Card> = {
   }),
   parameters: {
     docs: {
-      description: { story: '`variant="sunk"` (`.card--sunk`) drops the card into the recessed surface for panels nested inside a dialog or another card.' },
+      description: {
+        story:
+          '`variant="sunk"` (`.card--sunk`) drops the card into the recessed surface for panels nested inside a dialog or another card.',
+      },
     },
   },
 };

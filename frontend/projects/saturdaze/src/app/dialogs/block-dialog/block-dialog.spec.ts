@@ -44,15 +44,21 @@ describe('BlockDialog', () => {
 
   it('closes with swap or a lock toggle', async () => {
     await mount(BLOCK);
-    (host.querySelector('sd-button[slot="actions"][variant="quiet"] button') as HTMLButtonElement).click();
+    (
+      host.querySelector('sd-button[slot="actions"][variant="quiet"] button') as HTMLButtonElement
+    ).click();
     expect(dialogRef.close).toHaveBeenCalledWith({ kind: 'swap' });
-    (host.querySelector('sd-button[slot="actions"][variant="primary"] button') as HTMLButtonElement).click();
+    (
+      host.querySelector('sd-button[slot="actions"][variant="primary"] button') as HTMLButtonElement
+    ).click();
     expect(dialogRef.close).toHaveBeenLastCalledWith({ kind: 'lock', locked: true });
   });
 
   it('explains a locked block and offers Unlock', async () => {
     await mount(BLOCK_LOCKED);
-    expect(text(host.querySelector('.dialog__sub'))).toBe('Saturday 8:00 to 9:00pm · Lights out at 9');
+    expect(text(host.querySelector('.dialog__sub'))).toBe(
+      'Saturday 8:00 to 9:00pm · Lights out at 9',
+    );
     expect(wells()).toEqual(['Locked', 'Why this']);
     expect(actions()).toContain('Unlock');
     fixture.componentInstance['toggleLock']();
@@ -75,7 +81,14 @@ describe('BlockDialog', () => {
   });
 
   it('lets an errand be marked done', async () => {
-    await mount({ ...BLOCK, kind: 'Errand', errand: true, refId: 'e-costco', done: false, swappable: false });
+    await mount({
+      ...BLOCK,
+      kind: 'Errand',
+      errand: true,
+      refId: 'e-costco',
+      done: false,
+      swappable: false,
+    });
     expect(actions()).toEqual(['Mark done', 'Lock this block']);
     (host.querySelector('sd-button[slot="actions-left"] button') as HTMLButtonElement).click();
     expect(dialogRef.close).toHaveBeenCalledWith({ kind: 'done', done: true });
@@ -84,6 +97,8 @@ describe('BlockDialog', () => {
   it('falls back to a generic "why" when the planner gave no reason', async () => {
     await mount({ ...BLOCK, reason: null, subtitle: null, chips: [] });
     expect(text(host.querySelector('.dialog__sub'))).toBe('Saturday 11:00 to 1:00');
-    expect(text(host.querySelector('sd-well'))).toContain('Part of the weekend the planner drafted.');
+    expect(text(host.querySelector('sd-well'))).toContain(
+      'Part of the weekend the planner drafted.',
+    );
   });
 });

@@ -27,7 +27,9 @@ describe('RejectSubmissionDialog', () => {
   });
 
   it('asks for an optional reason with a danger Reject button', () => {
-    expect(host.querySelector('.dialog__title')?.textContent?.trim()).toBe('Reject this suggestion?');
+    expect(host.querySelector('.dialog__title')?.textContent?.trim()).toBe(
+      'Reject this suggestion?',
+    );
     expect(host.querySelector('.dialog__sub')?.textContent?.trim()).toBe(
       'The reason is shown to the person who sent it.',
     );
@@ -45,12 +47,16 @@ describe('RejectSubmissionDialog', () => {
     expect(dialogRef.close).toHaveBeenCalledWith({ reason: 'Already listed.' });
 
     component['reason'].set('');
-    (host.querySelector('sd-button[slot="actions"][variant="danger"] button') as HTMLButtonElement).click();
+    (
+      host.querySelector('sd-button[slot="actions"][variant="danger"] button') as HTMLButtonElement
+    ).click();
     expect(dialogRef.close).toHaveBeenLastCalledWith({ reason: '' });
   });
 
   it('closes with nothing on cancel', () => {
-    (host.querySelector('sd-button[slot="actions"][variant="quiet"] button') as HTMLButtonElement).click();
+    (
+      host.querySelector('sd-button[slot="actions"][variant="quiet"] button') as HTMLButtonElement
+    ).click();
     expect(dialogRef.close).toHaveBeenCalledWith();
   });
 });

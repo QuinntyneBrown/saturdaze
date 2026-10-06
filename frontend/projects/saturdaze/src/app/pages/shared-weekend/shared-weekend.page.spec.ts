@@ -58,7 +58,14 @@ describe('SharedWeekendPage', () => {
         {
           provide: ActivatedRoute,
           useValue: {
-            snapshot: { paramMap: convertToParamMap({}), queryParamMap, params: {}, queryParams: query, data: {}, fragment: null },
+            snapshot: {
+              paramMap: convertToParamMap({}),
+              queryParamMap,
+              params: {},
+              queryParams: query,
+              data: {},
+              fragment: null,
+            },
             paramMap: of(convertToParamMap({})),
             queryParamMap: of(queryParamMap),
             params: of({}),
@@ -92,7 +99,9 @@ describe('SharedWeekendPage', () => {
     await mount({ share: 'tok-123' });
     expect(shared.load).toHaveBeenCalledWith('tok-123');
     expect(host.querySelector('sd-page-header')?.getAttribute('title')).toBe('A shared weekend');
-    expect(host.querySelector('sd-page-header')?.getAttribute('subtitle')).toBe('Opening the plan.');
+    expect(host.querySelector('sd-page-header')?.getAttribute('subtitle')).toBe(
+      'Opening the plan.',
+    );
     expect(host.querySelector('.sd-grid-days[aria-busy="true"]')).not.toBeNull();
     expect(host.querySelectorAll('sd-skeleton-row').length).toBe(8);
 
@@ -133,9 +142,13 @@ describe('SharedWeekendPage', () => {
     await mount({ share: 'tok-123' });
     await settle();
     fixture.detectChanges();
-    expect(host.querySelector('sd-page-header')?.getAttribute('title')).toBe('This link has expired');
+    expect(host.querySelector('sd-page-header')?.getAttribute('title')).toBe(
+      'This link has expired',
+    );
     expect(host.querySelector('sd-empty')?.getAttribute('title')).toBe('Plan one of your own');
-    expect(host.querySelector('sd-empty sd-button a')?.getAttribute('href')).toBe('/create-account');
+    expect(host.querySelector('sd-empty sd-button a')?.getAttribute('href')).toBe(
+      '/create-account',
+    );
   });
 
   it('shows the expired state when the API rejects the token', async () => {

@@ -9,7 +9,7 @@ export interface WeatherForecastDto {
   /**
    * Tags.
    */
-  readonly tags: ReadonlyArray<string>;
+  readonly tags: readonly string[];
   /**
    * High Celsius.
    */

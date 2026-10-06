@@ -28,7 +28,8 @@ describe('FamilyMemberDialog', () => {
 
   const primary = (): HTMLElement =>
     host.querySelector('sd-button[slot="actions"][variant="primary"]') as HTMLElement;
-  const field = (name: string): HTMLElement => host.querySelector(`sd-text-input[name="${name}"]`) as HTMLElement;
+  const field = (name: string): HTMLElement =>
+    host.querySelector(`sd-text-input[name="${name}"]`) as HTMLElement;
 
   it('adds a member: empty fields, no Remove, primary disabled until both are filled', async () => {
     await mount({ mode: 'add', existingNames: MEMBER_NAMES });

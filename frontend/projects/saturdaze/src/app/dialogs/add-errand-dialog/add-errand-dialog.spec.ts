@@ -1,8 +1,6 @@
 import { vi } from 'vitest';
-import { Directive, inject } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DialogRef } from '@angular/cdk/dialog';
-import { NgModel } from '@angular/forms';
 
 import { ErrandPlacement, WEEKEND_PLAN_SERVICE } from 'api';
 
@@ -32,8 +30,7 @@ describe('AddErrandDialog', () => {
         { provide: DialogRef, useValue: dialogRef },
         { provide: WEEKEND_PLAN_SERVICE, useValue: weekend },
       ],
-    })
-      .compileComponents();
+    }).compileComponents();
     fixture = TestBed.createComponent(AddErrandDialog);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -93,7 +90,9 @@ describe('AddErrandDialog', () => {
   });
 
   it('closes with nothing on cancel', () => {
-    (host.querySelector('sd-button[slot="actions"][variant="quiet"] button') as HTMLButtonElement).click();
+    (
+      host.querySelector('sd-button[slot="actions"][variant="quiet"] button') as HTMLButtonElement
+    ).click();
     expect(dialogRef.close).toHaveBeenCalledWith();
   });
 });

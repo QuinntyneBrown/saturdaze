@@ -14,7 +14,10 @@ export const WithIcon: StoryObj<Button> = {
   }),
   parameters: {
     docs: {
-      description: { story: 'Project an `sd-icon` into `[slot=leading]` or `[slot=trailing]`; it inherits the label colour.' },
+      description: {
+        story:
+          'Project an `sd-icon` into `[slot=leading]` or `[slot=trailing]`; it inherits the label colour.',
+      },
     },
   },
 };

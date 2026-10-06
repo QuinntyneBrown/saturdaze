@@ -19,7 +19,8 @@ export const Type: StoryObj<TextInput> = {
   parameters: {
     docs: {
       description: {
-        story: '`type` is forwarded to the native input, along with `min`, `max` and `step` — email, password, number (a family member\'s age) and time (a weekly commitment).',
+        story:
+          "`type` is forwarded to the native input, along with `min`, `max` and `step` — email, password, number (a family member's age) and time (a weekly commitment).",
       },
     },
   },

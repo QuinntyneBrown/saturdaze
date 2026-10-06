@@ -34,7 +34,9 @@ describe('MenuDialog', () => {
       'Regenerate the weekend',
       'Add to calendar',
     ]);
-    expect(items[0]!.querySelector('.menu__sub')?.textContent?.trim()).toBe('Locked blocks stay where they are');
+    expect(items[0]!.querySelector('.menu__sub')?.textContent?.trim()).toBe(
+      'Locked blocks stay where they are',
+    );
   });
 
   it('closes with the chosen item', () => {

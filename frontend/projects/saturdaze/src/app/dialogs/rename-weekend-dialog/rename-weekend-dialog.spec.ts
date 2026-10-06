@@ -59,7 +59,9 @@ describe('RenameWeekendDialog', () => {
 
   it('closes with nothing on cancel', async () => {
     await mount('Old');
-    (host.querySelector('sd-button[slot="actions"][variant="quiet"] button') as HTMLButtonElement).click();
+    (
+      host.querySelector('sd-button[slot="actions"][variant="quiet"] button') as HTMLButtonElement
+    ).click();
     expect(dialogRef.close).toHaveBeenCalledWith();
   });
 });

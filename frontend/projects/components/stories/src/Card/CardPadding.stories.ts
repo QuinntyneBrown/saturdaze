@@ -18,6 +18,11 @@ export const Padding: StoryObj<Card> = {
     `,
   }),
   parameters: {
-    docs: { description: { story: '`padding="lg"` (`.card--pad-lg`) gives document-like cards more air; `md` is the default.' } },
+    docs: {
+      description: {
+        story:
+          '`padding="lg"` (`.card--pad-lg`) gives document-like cards more air; `md` is the default.',
+      },
+    },
   },
 };

@@ -26,7 +26,7 @@ export interface WeekendSummaryDto {
   /**
    * Activity Highlights.
    */
-  readonly activityHighlights: ReadonlyArray<string>;
+  readonly activityHighlights: readonly string[];
   /**
    * Title.
    */

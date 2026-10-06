@@ -19,7 +19,8 @@ export const Copied: StoryObj<CopyField> = {
   parameters: {
     docs: {
       description: {
-        story: 'Pressing Copy flips the button to "Copied" (and `aria-pressed`) for two seconds and emits `copied` with the value.',
+        story:
+          'Pressing Copy flips the button to "Copied" (and `aria-pressed`) for two seconds and emits `copied` with the value.',
       },
     },
   },

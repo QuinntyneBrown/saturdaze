@@ -28,8 +28,24 @@ const VIEW: FamilyView = {
   subtitle: 'Port Credit. Every weekend is planned around this.',
   home: { location: 'Port Credit, Mississauga', hint: 'Weather and drive times start here' },
   members: [
-    { id: 'm-quinn', name: 'Quinn', initial: 'Q', tone: 'primary', age: 38, role: 'Parent', subtitle: 'Parent · 38' },
-    { id: 'm-mae', name: 'Mae', initial: 'M', tone: 'sun', age: 5, role: 'Kid', subtitle: 'Kid · 5' },
+    {
+      id: 'm-quinn',
+      name: 'Quinn',
+      initial: 'Q',
+      tone: 'primary',
+      age: 38,
+      role: 'Parent',
+      subtitle: 'Parent · 38',
+    },
+    {
+      id: 'm-mae',
+      name: 'Mae',
+      initial: 'M',
+      tone: 'sun',
+      age: 5,
+      role: 'Kid',
+      subtitle: 'Kid · 5',
+    },
   ],
   commitments: [
     {
@@ -57,7 +73,12 @@ const VIEW: FamilyView = {
   dislikes: [{ tone: 'warn', icon: 'close', label: 'Camping' }],
   preferences: [
     { key: 'budget', title: 'Keep it cheap', subtitle: 'Free or under $40.', checked: false },
-    { key: 'tryNew', title: 'Try something new', subtitle: 'One new place a weekend.', checked: true },
+    {
+      key: 'tryNew',
+      title: 'Try something new',
+      subtitle: 'One new place a weekend.',
+      checked: true,
+    },
     { key: 'fridayPreview', title: 'Friday preview', subtitle: 'A draft at 6pm.', checked: true },
   ],
   plannedAround: [],
@@ -74,7 +95,13 @@ const PROFILE: EditableFamilyProfile = {
     { id: 'm-mae', name: 'Mae', age: 5 },
   ],
   commitments: [
-    { id: 'c-swim', title: 'Swim lessons', dayOfWeek: 'Saturday', startTime: '09:00', endTime: '10:00' },
+    {
+      id: 'c-swim',
+      title: 'Swim lessons',
+      dayOfWeek: 'Saturday',
+      startTime: '09:00',
+      endTime: '10:00',
+    },
     { id: 'c-piano', title: 'Piano', dayOfWeek: 'Wednesday', startTime: '16:00', endTime: '17:00' },
   ],
   preferences: [
@@ -83,7 +110,12 @@ const PROFILE: EditableFamilyProfile = {
   ],
 };
 
-const USER: User = { id: 'u1', email: 'quinntynebrown@gmail.com', role: 'User', emailVerifiedUtc: '2026-03-02T10:00:00Z' };
+const USER: User = {
+  id: 'u1',
+  email: 'quinntynebrown@gmail.com',
+  role: 'User',
+  emailVerifiedUtc: '2026-03-02T10:00:00Z',
+};
 
 /** Flush every pending microtask (the app is zoneless, so whenStable cannot see mocked promises). */
 const settle = (): Promise<void> => new Promise((resolve) => setTimeout(resolve, 0));
@@ -135,8 +167,10 @@ describe('FamilyPage', () => {
   });
 
   const saved = (): EditableFamilyProfile => familyService.saveProfile.mock.calls.at(-1)![0];
-  const section = (title: string): HTMLElement => host.querySelector(`sd-section[title="${title}"]`) as HTMLElement;
-  const confirmData = (): any => dialog.open.mock.calls.find((c) => c[0] === ConfirmDialog)?.[1].data;
+  const section = (title: string): HTMLElement =>
+    host.querySelector(`sd-section[title="${title}"]`) as HTMLElement;
+  const confirmData = (): any =>
+    dialog.open.mock.calls.find((c) => c[0] === ConfirmDialog)?.[1].data;
 
   it('loads the family and renders every section from the view', async () => {
     await mount();
@@ -148,18 +182,28 @@ describe('FamilyPage', () => {
     expect(members.map((m) => m.getAttribute('title'))).toEqual(['Quinn', 'Mae']);
     expect(members.map((m) => m.getAttribute('subtitle'))).toEqual(['Parent · 38', 'Kid · 5']);
     expect(members[1]?.querySelector('sd-avatar')?.getAttribute('tone')).toBe('sun');
-    expect(section("Who's in").querySelector('sd-ghost-row')?.textContent?.trim()).toBe('Add a family member');
+    expect(section("Who's in").querySelector('sd-ghost-row')?.textContent?.trim()).toBe(
+      'Add a family member',
+    );
 
-    const commitments = Array.from(section('Locked in every weekend').querySelectorAll('sd-list-item'));
+    const commitments = Array.from(
+      section('Locked in every weekend').querySelectorAll('sd-list-item'),
+    );
     expect(commitments.map((c) => c.getAttribute('title'))).toEqual(['Swim lessons', 'Piano']);
 
-    expect(section('Home').querySelector('sd-list-item')?.getAttribute('title')).toBe('Port Credit, Mississauga');
+    expect(section('Home').querySelector('sd-list-item')?.getAttribute('title')).toBe(
+      'Port Credit, Mississauga',
+    );
     expect(
-      Array.from(section('Likes and dislikes').querySelectorAll('sd-chip')).map((c) => c.getAttribute('tone')),
+      Array.from(section('Likes and dislikes').querySelectorAll('sd-chip')).map((c) =>
+        c.getAttribute('tone'),
+      ),
     ).toEqual(['leaf', 'warn']);
     expect(section('Preferences').querySelectorAll('sd-toggle').length).toBe(3);
     expect(section('Admin')).toBeNull();
-    expect(section('Account').querySelector('.account-card__title')?.textContent?.trim()).toBe(USER.email);
+    expect(section('Account').querySelector('.account-card__title')?.textContent?.trim()).toBe(
+      USER.email,
+    );
     expect(section('Account').querySelector('.account-card__sub')?.textContent?.trim()).toBe(
       'Signed in since March 2026',
     );
@@ -206,11 +250,17 @@ describe('FamilyPage', () => {
       .mockReturnValueOnce({ closed: of({ kind: 'remove' }) })
       .mockReturnValueOnce({ closed: of('confirm') });
     await component['editMember'](VIEW.members[1]!);
-    expect(confirmData()).toMatchObject({ title: 'Remove Mae from the family?', danger: true, confirmLabel: 'Remove' });
+    expect(confirmData()).toMatchObject({
+      title: 'Remove Mae from the family?',
+      danger: true,
+      confirmLabel: 'Remove',
+    });
     expect(saved().members).toEqual([{ id: 'm-quinn', name: 'Quinn', age: 38 }]);
 
     familyService.saveProfile.mockClear();
-    dialog.open.mockReturnValueOnce({ closed: of({ kind: 'remove' }) }).mockReturnValueOnce({ closed: of(undefined) });
+    dialog.open
+      .mockReturnValueOnce({ closed: of({ kind: 'remove' }) })
+      .mockReturnValueOnce({ closed: of(undefined) });
     await component['editMember'](VIEW.members[1]!);
     expect(familyService.saveProfile).not.toHaveBeenCalled();
   });
@@ -218,7 +268,13 @@ describe('FamilyPage', () => {
   it('adds and edits commitments through D18, passing the siblings for the duplicate check', async () => {
     await mount();
     dialog.open.mockReturnValueOnce({
-      closed: of({ kind: 'save', title: 'Church', day: 'Sunday', startTime: '10:30', endTime: '11:45' }),
+      closed: of({
+        kind: 'save',
+        title: 'Church',
+        day: 'Sunday',
+        startTime: '10:30',
+        endTime: '11:45',
+      }),
     });
     await component['addCommitment']();
     expect(dialog.open).toHaveBeenCalledWith(
@@ -241,7 +297,13 @@ describe('FamilyPage', () => {
     });
 
     dialog.open.mockReturnValueOnce({
-      closed: of({ kind: 'save', title: 'Piano practice', day: null, startTime: '16:00', endTime: '16:45' }),
+      closed: of({
+        kind: 'save',
+        title: 'Piano practice',
+        day: null,
+        startTime: '16:00',
+        endTime: '16:45',
+      }),
     });
     await component['editCommitment'](VIEW.commitments[1]!);
     expect(dialog.open).toHaveBeenLastCalledWith(
@@ -265,8 +327,14 @@ describe('FamilyPage', () => {
 
   it('removes a commitment after D21', async () => {
     await mount();
-    dialog.open.mockReturnValueOnce({ closed: of({ kind: 'remove' }) }).mockReturnValueOnce({ closed: of('confirm') });
-    (section('Locked in every weekend').querySelectorAll('sd-list-item button')[0] as HTMLButtonElement).click();
+    dialog.open
+      .mockReturnValueOnce({ closed: of({ kind: 'remove' }) })
+      .mockReturnValueOnce({ closed: of('confirm') });
+    (
+      section('Locked in every weekend').querySelectorAll(
+        'sd-list-item button',
+      )[0] as HTMLButtonElement
+    ).click();
     await settle();
     expect(confirmData()).toMatchObject({ title: 'Remove Swim lessons?', danger: true });
     expect(saved().commitments.map((c) => c.id)).toEqual(['c-piano']);
@@ -284,7 +352,11 @@ describe('FamilyPage', () => {
     expect(saved().homeLocation).toBe('Lorne Park');
 
     dialog.open.mockReturnValueOnce({ closed: of({ likes: ['Parks', 'Zoo'], dislikes: [] }) });
-    (section('Likes and dislikes').querySelector('sd-button[slot="action"] button') as HTMLButtonElement).click();
+    (
+      section('Likes and dislikes').querySelector(
+        'sd-button[slot="action"] button',
+      ) as HTMLButtonElement
+    ).click();
     await settle();
     expect(dialog.open).toHaveBeenLastCalledWith(
       LikesDialog,
@@ -299,9 +371,17 @@ describe('FamilyPage', () => {
   it('flips one preference at a time', async () => {
     await mount();
     await component['setPreference']('budget', true);
-    expect(saved()).toMatchObject({ budgetEnabled: true, tryNewEnabled: true, fridayPreviewEnabled: true });
+    expect(saved()).toMatchObject({
+      budgetEnabled: true,
+      tryNewEnabled: true,
+      fridayPreviewEnabled: true,
+    });
     await component['setPreference']('fridayPreview', false);
-    expect(saved()).toMatchObject({ budgetEnabled: false, tryNewEnabled: true, fridayPreviewEnabled: false });
+    expect(saved()).toMatchObject({
+      budgetEnabled: false,
+      tryNewEnabled: true,
+      fridayPreviewEnabled: false,
+    });
   });
 
   it('does not save before the editable profile has loaded', async () => {
@@ -337,7 +417,9 @@ describe('FamilyPage', () => {
 
     pending.set([SUBMISSION]);
     fixture.detectChanges();
-    expect(section('Admin').querySelector('sd-list-item')?.getAttribute('subtitle')).toBe('1 waiting');
+    expect(section('Admin').querySelector('sd-list-item')?.getAttribute('subtitle')).toBe(
+      '1 waiting',
+    );
   });
 
   it('signs out through D22 from the account card', async () => {
@@ -346,7 +428,11 @@ describe('FamilyPage', () => {
     dialog.open.mockReturnValueOnce({ closed: of('confirm') });
     (section('Account').querySelector('sd-button button') as HTMLButtonElement).click();
     await settle();
-    expect(confirmData()).toMatchObject({ title: 'Sign out?', confirmLabel: 'Sign out', danger: true });
+    expect(confirmData()).toMatchObject({
+      title: 'Sign out?',
+      confirmLabel: 'Sign out',
+      danger: true,
+    });
     expect(session.logout).toHaveBeenCalledTimes(1);
     expect(navigate).toHaveBeenCalledWith('/sign-in');
   });
@@ -357,7 +443,9 @@ describe('FamilyPage', () => {
     familyService.saveProfile.mockRejectedValueOnce(new Error('500'));
     await component['setPreference']('budget', true);
     fixture.detectChanges();
-    expect(host.querySelector('sd-banner.error')?.textContent?.trim()).toBe('That did not save. Try again in a moment.');
+    expect(host.querySelector('sd-banner.error')?.textContent?.trim()).toBe(
+      'That did not save. Try again in a moment.',
+    );
     consoleError.mockRestore();
   });
 });

@@ -17,7 +17,10 @@ export const MissingValues: StoryObj<Details> = {
   }),
   parameters: {
     docs: {
-      description: { story: 'A `null` value renders the `missing` text ("Not given") in faint ink, so blank fields stay visible to the reviewer.' },
+      description: {
+        story:
+          'A `null` value renders the `missing` text ("Not given") in faint ink, so blank fields stay visible to the reviewer.',
+      },
     },
   },
 };

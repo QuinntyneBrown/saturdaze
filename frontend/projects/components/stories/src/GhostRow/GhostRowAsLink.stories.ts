@@ -13,7 +13,8 @@ export const AsLink: StoryObj<GhostRow> = {
   parameters: {
     docs: {
       description: {
-        story: 'With `href` it renders an `<a class="ghost-row">`; plain clicks on in-app paths go through the Angular router instead of reloading.',
+        story:
+          'With `href` it renders an `<a class="ghost-row">`; plain clicks on in-app paths go through the Angular router instead of reloading.',
       },
     },
   },

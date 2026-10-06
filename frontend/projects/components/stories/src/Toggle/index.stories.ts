@@ -17,7 +17,20 @@ export { ReactiveForms } from './ToggleReactiveForms.stories';
 export default {
   title: 'Components/Toggle',
   component: Toggle,
-  decorators: [moduleMetadata({ imports: [Toggle, List, ListItem, TextInput, FormsModule, ReactiveFormsModule, RouterLink, JsonPipe] })],
+  decorators: [
+    moduleMetadata({
+      imports: [
+        Toggle,
+        List,
+        ListItem,
+        TextInput,
+        FormsModule,
+        ReactiveFormsModule,
+        RouterLink,
+        JsonPipe,
+      ],
+    }),
+  ],
   parameters: {
     docs: {
       description: {

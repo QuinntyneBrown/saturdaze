@@ -35,8 +35,19 @@ describe('SubmitEventDialog', () => {
 
   it('renders the form with the start time defaulted to the next hour', () => {
     expect(host.querySelector('.dialog__title')?.textContent?.trim()).toBe('Suggest an event');
-    const labels = Array.from(host.querySelectorAll('sd-text-input')).map((f) => f.getAttribute('label'));
-    expect(labels).toEqual(['Title', 'Starts', 'Ends', 'Location', 'Description', 'Cost', 'Ages', 'Link']);
+    const labels = Array.from(host.querySelectorAll('sd-text-input')).map((f) =>
+      f.getAttribute('label'),
+    );
+    expect(labels).toEqual([
+      'Title',
+      'Starts',
+      'Ends',
+      'Location',
+      'Description',
+      'Cost',
+      'Ages',
+      'Link',
+    ]);
     expect(component['startsAtLocal']()).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:00$/);
     expect(primary().hasAttribute('disabled')).toBe(true);
   });

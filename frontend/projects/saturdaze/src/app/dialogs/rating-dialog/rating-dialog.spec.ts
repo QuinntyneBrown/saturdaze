@@ -16,7 +16,10 @@ describe('RatingDialog', () => {
       imports: [RatingDialog],
       providers: [
         { provide: DialogRef, useValue: dialogRef },
-        { provide: DIALOG_DATA, useValue: { eyebrow: '10 – 11 May · Bronte Creek + Rec Room', rating } },
+        {
+          provide: DIALOG_DATA,
+          useValue: { eyebrow: '10 – 11 May · Bronte Creek + Rec Room', rating },
+        },
       ],
     }).compileComponents();
     fixture = TestBed.createComponent(RatingDialog);
@@ -26,13 +29,17 @@ describe('RatingDialog', () => {
   }
 
   const star = (n: number): HTMLButtonElement =>
-    host.querySelector(`sd-stars button[aria-label="${n} star${n === 1 ? '' : 's'}"]`) as HTMLButtonElement;
+    host.querySelector(
+      `sd-stars button[aria-label="${n} star${n === 1 ? '' : 's'}"]`,
+    ) as HTMLButtonElement;
   const caption = (): string => host.querySelector('p.sd-text-sm')?.textContent?.trim() ?? '';
 
   it('shows the current rating with its caption', async () => {
     await mount(5);
     expect(host.querySelector('.dialog__title')?.textContent?.trim()).toBe('How was it?');
-    expect(host.querySelector('.dialog__sub')?.textContent?.trim()).toBe('10 – 11 May · Bronte Creek + Rec Room');
+    expect(host.querySelector('.dialog__sub')?.textContent?.trim()).toBe(
+      '10 – 11 May · Bronte Creek + Rec Room',
+    );
     expect(host.querySelector('sd-stars')?.getAttribute('rating')).toBe('5');
     expect(host.querySelector('sd-stars')?.getAttribute('role')).toBe('radiogroup');
     expect(caption()).toBe('5 of 5, a keeper');

@@ -4,7 +4,7 @@ import type { Section } from 'components';
 
 export const Default: StoryObj<Section & { title: string }> = {
   args: {
-    title: 'Who\'s in',
+    title: "Who's in",
     subtitle: 'Ages shape the picks. Tap a person to edit.',
   },
   render: (args) => ({

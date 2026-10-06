@@ -3,7 +3,11 @@ import { firstValueFrom } from 'rxjs';
 
 import type { BlockRow, IWeekendPlanService } from 'api';
 
-import { BlockDialog, BlockDialogData, BlockDialogResult } from '../dialogs/block-dialog/block-dialog';
+import {
+  BlockDialog,
+  BlockDialogData,
+  BlockDialogResult,
+} from '../dialogs/block-dialog/block-dialog';
 import { DIALOG_OPTIONS } from '../dialogs/confirm-dialog/confirm-dialog';
 
 /**

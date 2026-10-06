@@ -12,6 +12,11 @@ export const WithIcon: StoryObj<GhostRow> = {
     `,
   }),
   parameters: {
-    docs: { description: { story: '`icon` swaps the leading `plus` for a glyph that names the list — `bag` for errands, `user` for family.' } },
+    docs: {
+      description: {
+        story:
+          '`icon` swaps the leading `plus` for a glyph that names the list — `bag` for errands, `user` for family.',
+      },
+    },
   },
 };

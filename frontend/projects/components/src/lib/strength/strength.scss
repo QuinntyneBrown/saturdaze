@@ -18,9 +18,15 @@
   background: var(--sd-line);
 }
 
-:host(.strength--weak) .strength__seg:nth-child(1) { background: var(--sd-warn); }
-:host(.strength--ok) .strength__seg:nth-child(-n + 2) { background: var(--sd-sun); }
-:host(.strength--strong) .strength__seg { background: var(--sd-accent); }
+:host(.strength--weak) .strength__seg:nth-child(1) {
+  background: var(--sd-warn);
+}
+:host(.strength--ok) .strength__seg:nth-child(-n + 2) {
+  background: var(--sd-sun);
+}
+:host(.strength--strong) .strength__seg {
+  background: var(--sd-accent);
+}
 
 .strength__label {
   font-size: var(--sd-fs-xs);

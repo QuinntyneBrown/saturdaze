@@ -17,7 +17,11 @@ export { OpenWithCdk } from './DialogOpenWithCdk.stories';
 export default {
   title: 'Components/Dialog',
   component: Dialog,
-  decorators: [moduleMetadata({ imports: [Dialog, Button, Icon, Well, TextInput, CopyField, ReactiveFormsModule] })],
+  decorators: [
+    moduleMetadata({
+      imports: [Dialog, Button, Icon, Well, TextInput, CopyField, ReactiveFormsModule],
+    }),
+  ],
   parameters: {
     docs: {
       description: {

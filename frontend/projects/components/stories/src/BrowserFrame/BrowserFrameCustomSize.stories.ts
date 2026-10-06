@@ -22,7 +22,8 @@ export const CustomSize: StoryObj<BrowserFrame> = {
   parameters: {
     docs: {
       description: {
-        story: 'Set `frameWidth` / `frameHeight` to a phone-sized design (390×420 here) to show a mobile composition in a narrow column.',
+        story:
+          'Set `frameWidth` / `frameHeight` to a phone-sized design (390×420 here) to show a mobile composition in a narrow column.',
       },
     },
   },

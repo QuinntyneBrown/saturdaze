@@ -18,7 +18,8 @@ export const Tone: StoryObj<Avatar> = {
   parameters: {
     docs: {
       description: {
-        story: 'Person tones: Quinn `primary`, Sara `leaf`, Eli `sky`, Mae `sun`, then `indoor`; `default` is the neutral recessed disc.',
+        story:
+          'Person tones: Quinn `primary`, Sara `leaf`, Eli `sky`, Mae `sun`, then `indoor`; `default` is the neutral recessed disc.',
       },
     },
   },

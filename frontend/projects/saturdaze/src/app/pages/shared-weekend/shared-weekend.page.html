@@ -12,9 +12,18 @@
     </div>
   }
   @case ('missing') {
-    <sd-page-header title="This link has expired" subtitle="Shared weekends stay open for seven days." />
+    <sd-page-header
+      title="This link has expired"
+      subtitle="Shared weekends stay open for seven days."
+    />
     <div class="sd-narrow">
-      <sd-empty warm icon="share" tone="primary" title="Plan one of your own" body="Saturdaze drafts Saturday and Sunday around your family, the weather and the drive.">
+      <sd-empty
+        warm
+        icon="share"
+        tone="primary"
+        title="Plan one of your own"
+        body="Saturdaze drafts Saturday and Sunday around your family, the weather and the drive."
+      >
         <sd-button slot="cta" variant="primary" size="lg" href="/create-account">
           <sd-icon name="sparkle" />
           Create your account
@@ -30,7 +39,13 @@
       </sd-banner>
       <div class="sd-grid-days">
         @for (day of plan.days; track day.day) {
-          <sd-day [title]="day.day" [meta]="day.meta" [weather]="dayWeather(day)" [locked]="day.locked" [actions]="false">
+          <sd-day
+            [title]="day.day"
+            [meta]="day.meta"
+            [weather]="dayWeather(day)"
+            [locked]="day.locked"
+            [actions]="false"
+          >
             @for (block of day.blocks; track block.id) {
               <sd-block
                 [time]="block.time"

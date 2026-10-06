@@ -3,7 +3,9 @@
 }
 <div class="chip-input">
   @for (value of values(); track value; let i = $index) {
-    <sd-chip [tone]="tone()" removable [removeLabel]="'Remove ' + value" (remove)="removeAt(i)">{{ value }}</sd-chip>
+    <sd-chip [tone]="tone()" removable [removeLabel]="'Remove ' + value" (remove)="removeAt(i)">{{
+      value
+    }}</sd-chip>
   }
   <input
     class="chip-input__field"

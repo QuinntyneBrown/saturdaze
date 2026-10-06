@@ -96,8 +96,18 @@ const FAMILY_READY: FamilyView = {
   headline: 'The Browns',
   subtitle: 'Port Credit. Every weekend is planned around this.',
   plannedAround: [
-    { icon: 'user', title: 'The Browns, Port Credit', subtitle: '2 parents · Eli 9 · Mae 5', href: '/family' },
-    { icon: 'lock', title: 'Swim lessons, Church', subtitle: 'Locked in every weekend', href: '/family' },
+    {
+      icon: 'user',
+      title: 'The Browns, Port Credit',
+      subtitle: '2 parents · Eli 9 · Mae 5',
+      href: '/family',
+    },
+    {
+      icon: 'lock',
+      title: 'Swim lessons, Church',
+      subtitle: 'Locked in every weekend',
+      href: '/family',
+    },
   ],
 };
 
@@ -128,7 +138,14 @@ describe('WeekendPage', () => {
         {
           provide: ActivatedRoute,
           useValue: {
-            snapshot: { paramMap: convertToParamMap({}), queryParamMap, params: {}, queryParams: query, data: {}, fragment: null },
+            snapshot: {
+              paramMap: convertToParamMap({}),
+              queryParamMap,
+              params: {},
+              queryParams: query,
+              data: {},
+              fragment: null,
+            },
             paramMap: of(convertToParamMap({})),
             queryParamMap: of(queryParamMap),
             params: of({}),
@@ -146,7 +163,10 @@ describe('WeekendPage', () => {
   }
 
   /** Mount and let the constructor's loadCurrent land. */
-  async function mountReady(view: WeekendView = READY, query: Record<string, string> = {}): Promise<void> {
+  async function mountReady(
+    view: WeekendView = READY,
+    query: Record<string, string> = {},
+  ): Promise<void> {
     weekend.loadCurrent.mockImplementation(async () => weekendSig.set(view));
     await mount(query);
     await settle();
@@ -163,7 +183,11 @@ describe('WeekendPage', () => {
       regenerate: vi.fn(async () => undefined),
       regenerateDay: vi.fn(async () => undefined),
       createShareLink: vi.fn(async () => 'https://saturdaze.app/sample-weekend?share=abc'),
-      calendarExport: vi.fn(() => ({ icsUrl: 'http://api/calendar.ics', fileName: 'weekend-16-may.ics', eventCount: 8 })),
+      calendarExport: vi.fn(() => ({
+        icsUrl: 'http://api/calendar.ics',
+        fileName: 'weekend-16-may.ics',
+        eventCount: 8,
+      })),
       lockBlock: vi.fn(async () => undefined),
       swapBlock: vi.fn(async () => undefined),
       lockDay: vi.fn(async () => undefined),
@@ -181,7 +205,8 @@ describe('WeekendPage', () => {
   const header = (): Element => host.querySelector('sd-page-header')!;
   const button = (label: string): HTMLButtonElement =>
     host.querySelector(`button[aria-label="${label}"]`) as HTMLButtonElement;
-  const confirmData = (): any => dialog.open.mock.calls.find((c) => c[0] === ConfirmDialog)?.[1].data;
+  const confirmData = (): any =>
+    dialog.open.mock.calls.find((c) => c[0] === ConfirmDialog)?.[1].data;
 
   it('opens on skeleton days while the weekend loads', async () => {
     await mount();
@@ -225,13 +250,18 @@ describe('WeekendPage', () => {
     await mountReady(EMPTY);
     expect(family.load).toHaveBeenCalledTimes(1);
     expect(header().getAttribute('title')).toBe('Your first weekend');
-    expect(header().getAttribute('subtitle')).toBe('Nothing is drafted yet. Planning takes a few seconds.');
+    expect(header().getAttribute('subtitle')).toBe(
+      'Nothing is drafted yet. Planning takes a few seconds.',
+    );
     expect(host.querySelector('sd-button[slot="primary"]')).toBeNull();
     expect(host.querySelector('sd-empty')?.getAttribute('title')).toBe(
       'Saturday and Sunday, drafted around The Browns',
     );
     const rows = Array.from(host.querySelectorAll('.planned sd-list-item'));
-    expect(rows.map((r) => r.getAttribute('title'))).toEqual(['The Browns, Port Credit', 'Swim lessons, Church']);
+    expect(rows.map((r) => r.getAttribute('title'))).toEqual([
+      'The Browns, Port Credit',
+      'Swim lessons, Church',
+    ]);
     expect(rows.every((r) => r.getAttribute('href') === '/family')).toBe(true);
 
     (host.querySelector('sd-empty sd-button[slot="cta"] button') as HTMLButtonElement).click();
@@ -252,7 +282,9 @@ describe('WeekendPage', () => {
     weekend.loadCurrent.mockClear();
     await mount({ state: 'generating' });
     expect(weekend.loadCurrent).not.toHaveBeenCalled();
-    expect(header().getAttribute('subtitle')).toBe('Sketching Saturday and Sunday. Usually four to six seconds.');
+    expect(header().getAttribute('subtitle')).toBe(
+      'Sketching Saturday and Sunday. Usually four to six seconds.',
+    );
     expect(host.querySelector('sd-status-row')?.textContent?.trim()).toBe(
       'Working through your locks, the forecast and past weekends.',
     );
@@ -266,14 +298,24 @@ describe('WeekendPage', () => {
     expect(weekend.createShareLink).toHaveBeenCalledTimes(1);
     expect(dialog.open).toHaveBeenCalledWith(
       ShareDialog,
-      expect.objectContaining({ data: { shareUrl: 'https://saturdaze.app/sample-weekend?share=abc' } }),
+      expect.objectContaining({
+        data: { shareUrl: 'https://saturdaze.app/sample-weekend?share=abc' },
+      }),
     );
 
     (host.querySelector('sd-button[slot="actions"] button') as HTMLButtonElement).click();
     expect(weekend.calendarExport).toHaveBeenCalledTimes(1);
     expect(dialog.open).toHaveBeenLastCalledWith(
       CalendarDialog,
-      expect.objectContaining({ data: { calendar: { icsUrl: 'http://api/calendar.ics', fileName: 'weekend-16-may.ics', eventCount: 8 } } }),
+      expect.objectContaining({
+        data: {
+          calendar: {
+            icsUrl: 'http://api/calendar.ics',
+            fileName: 'weekend-16-may.ics',
+            eventCount: 8,
+          },
+        },
+      }),
     );
   });
 
@@ -286,12 +328,19 @@ describe('WeekendPage', () => {
       expect.any(HTMLElement),
       expect.objectContaining({
         title: 'Weekend options',
-        items: [expect.objectContaining({ id: 'regenerate' }), expect.objectContaining({ id: 'calendar' })],
+        items: [
+          expect.objectContaining({ id: 'regenerate' }),
+          expect.objectContaining({ id: 'calendar' }),
+        ],
       }),
     );
     expect(dialog.open).toHaveBeenLastCalledWith(CalendarDialog, expect.anything());
 
-    menu.open.mockResolvedValueOnce({ id: 'regenerate', label: 'Regenerate the weekend', icon: 'refresh' });
+    menu.open.mockResolvedValueOnce({
+      id: 'regenerate',
+      label: 'Regenerate the weekend',
+      icon: 'refresh',
+    });
     dialog.open.mockReturnValueOnce({ closed: of('confirm') });
     (host.querySelector('sd-button[slot="more"] button') as HTMLButtonElement).click();
     await settle();
@@ -347,7 +396,10 @@ describe('WeekendPage', () => {
     dialog.open.mockReturnValueOnce({ closed: of({ kind: 'lock', locked: true }) });
     button('Why this: Terre Bleu Lavender Farm').click();
     await settle();
-    expect(dialog.open).toHaveBeenCalledWith(BlockDialog, expect.objectContaining({ data: { block: BLOCK } }));
+    expect(dialog.open).toHaveBeenCalledWith(
+      BlockDialog,
+      expect.objectContaining({ data: { block: BLOCK } }),
+    );
     expect(weekend.lockBlock).toHaveBeenCalledWith('b-lavender', true);
 
     dialog.open.mockReturnValueOnce({ closed: of({ kind: 'done', done: true }) });
@@ -358,12 +410,26 @@ describe('WeekendPage', () => {
 
   it('adds an errand (D7) and then shows where it landed (D9)', async () => {
     await mountReady();
-    const placement = { description: 'Costco run', day: 'Sunday', time: '9:15', endTime: '10:00', blockId: 'b-new' };
+    const placement = {
+      description: 'Costco run',
+      day: 'Sunday',
+      time: '9:15',
+      endTime: '10:00',
+      blockId: 'b-new',
+    };
     dialog.open.mockReturnValueOnce({ closed: of(placement) });
     (host.querySelector('sd-ghost-row button') as HTMLButtonElement).click();
     await settle();
-    expect(dialog.open).toHaveBeenNthCalledWith(1, AddErrandDialog, expect.objectContaining({ panelClass: 'sd-dialog-panel' }));
-    expect(dialog.open).toHaveBeenNthCalledWith(2, ErrandAddedDialog, expect.objectContaining({ data: { placement } }));
+    expect(dialog.open).toHaveBeenNthCalledWith(
+      1,
+      AddErrandDialog,
+      expect.objectContaining({ panelClass: 'sd-dialog-panel' }),
+    );
+    expect(dialog.open).toHaveBeenNthCalledWith(
+      2,
+      ErrandAddedDialog,
+      expect.objectContaining({ data: { placement } }),
+    );
 
     dialog.open.mockClear();
     (host.querySelector('sd-ghost-row button') as HTMLButtonElement).click();

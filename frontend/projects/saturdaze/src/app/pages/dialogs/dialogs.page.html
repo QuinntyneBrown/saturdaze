@@ -1,15 +1,26 @@
 <div class="sd-narrow">
-  <sd-page-header title="Dialogs" subtitle="Every sheet and modal in v2, rendered inline. Under 720px each one is a bottom sheet." />
+  <sd-page-header
+    title="Dialogs"
+    subtitle="Every sheet and modal in v2, rendered inline. Under 720px each one is a bottom sheet."
+  />
   <p class="specimen__hint">
-    Danger fill is reserved for Replace draft, Remove, Sign out and Reject. Form dialogs disable the primary until
-    required fields are valid and focus the first field on open.
+    Danger fill is reserved for Replace draft, Remove, Sign out and Reject. Form dialogs disable the
+    primary until required fields are valid and focus the first field on open.
   </p>
   <div class="gallery">
     @for (specimen of specimens; track specimen.slug) {
-      <section class="specimen" [class.specimen--menu]="specimen.kind === 'menu'" [id]="'dialog-' + specimen.slug">
+      <section
+        class="specimen"
+        [class.specimen--menu]="specimen.kind === 'menu'"
+        [id]="'dialog-' + specimen.slug"
+      >
         <span class="specimen__label">{{ specimen.label }}</span>
         @if (specimen.kind === 'menu') {
-          <sd-menu [label]="specimen.menu.label" [header]="specimen.menu.header ?? ''" [items]="specimen.menu.items" />
+          <sd-menu
+            [label]="specimen.menu.label"
+            [header]="specimen.menu.header ?? ''"
+            [items]="specimen.menu.items"
+          />
         } @else {
           <ng-container *ngComponentOutlet="specimen.component; injector: specimen.injector!" />
         }

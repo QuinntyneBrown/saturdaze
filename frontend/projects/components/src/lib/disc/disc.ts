@@ -51,5 +51,7 @@ export class Disc {
   readonly tone = input<DiscTone>('default');
   readonly size = input<DiscSize>('md');
 
-  protected readonly iconSize = computed(() => (this.size() === 'xl' ? 26 : this.size() === 'sm' ? 16 : 20));
+  protected readonly iconSize = computed(() =>
+    this.size() === 'xl' ? 26 : this.size() === 'sm' ? 16 : 20,
+  );
 }

@@ -11,7 +11,10 @@ describe('ResetPasswordPage', () => {
   let fixture: ComponentFixture<ResetPasswordPage>;
   let component: ResetPasswordPage;
   let host: HTMLElement;
-  let session: { forgotPassword: ReturnType<typeof vi.fn>; resetPassword: ReturnType<typeof vi.fn> };
+  let session: {
+    forgotPassword: ReturnType<typeof vi.fn>;
+    resetPassword: ReturnType<typeof vi.fn>;
+  };
 
   async function mount(query: Record<string, string> = {}): Promise<void> {
     const queryParamMap = convertToParamMap(query);
@@ -23,7 +26,14 @@ describe('ResetPasswordPage', () => {
         {
           provide: ActivatedRoute,
           useValue: {
-            snapshot: { paramMap: convertToParamMap({}), queryParamMap, params: {}, queryParams: query, data: {}, fragment: null },
+            snapshot: {
+              paramMap: convertToParamMap({}),
+              queryParamMap,
+              params: {},
+              queryParams: query,
+              data: {},
+              fragment: null,
+            },
             paramMap: of(convertToParamMap({})),
             queryParamMap: of(queryParamMap),
             params: of({}),
@@ -41,10 +51,14 @@ describe('ResetPasswordPage', () => {
   }
 
   beforeEach(() => {
-    session = { forgotPassword: vi.fn(async () => undefined), resetPassword: vi.fn(async () => undefined) };
+    session = {
+      forgotPassword: vi.fn(async () => undefined),
+      resetPassword: vi.fn(async () => undefined),
+    };
   });
 
-  const title = (): string | null => host.querySelector('sd-auth-card')?.getAttribute('title') ?? null;
+  const title = (): string | null =>
+    host.querySelector('sd-auth-card')?.getAttribute('title') ?? null;
 
   it('starts by asking for the email, or for a new password when a token is present', async () => {
     await mount();
@@ -127,7 +141,9 @@ describe('ResetPasswordPage', () => {
     await component['savePassword']();
     fixture.detectChanges();
     expect(session.resetPassword).not.toHaveBeenCalled();
-    expect(host.querySelector('sd-banner')?.textContent?.trim()).toBe('Those passwords do not match.');
+    expect(host.querySelector('sd-banner')?.textContent?.trim()).toBe(
+      'Those passwords do not match.',
+    );
     expect(host.querySelectorAll('sd-text-input')[1]?.hasAttribute('invalid')).toBe(true);
   });
 
@@ -158,7 +174,10 @@ describe('ResetPasswordPage', () => {
 
   it('keeps other failures inline on the new-password card', async () => {
     await mount({ token: 'abc' });
-    session.resetPassword.mockRejectedValueOnce({ code: 'weak_password', message: 'Pick a stronger one.' });
+    session.resetPassword.mockRejectedValueOnce({
+      code: 'weak_password',
+      message: 'Pick a stronger one.',
+    });
     component['newForm'].setValue({ password: 'password1', confirm: 'password1' });
     await component['savePassword']();
     fixture.detectChanges();

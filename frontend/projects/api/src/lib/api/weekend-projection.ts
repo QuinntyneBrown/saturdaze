@@ -90,7 +90,7 @@ export function projectDay(dto: WeekendDto, day: WeekendDay): DayView {
  */
 export function toBlockRow(
   b: ItineraryBlockDto,
-  errands: ReadonlyArray<ShoppingErrandDto>,
+  errands: readonly ShoppingErrandDto[],
   options: { previous?: ItineraryBlockDto | null; highlight?: boolean } = {},
 ): BlockRow {
   const previous = options.previous ?? null;
@@ -167,7 +167,7 @@ export function blockIcon(kind: BlockKind, title: string): string {
 }
 
 /** "Swim 9:00" for every block a regenerate keeps: commitments and locks. */
-export function dayKeeping(blocks: ReadonlyArray<ItineraryBlockDto>): string[] {
+export function dayKeeping(blocks: readonly ItineraryBlockDto[]): string[] {
   return blocks
     .filter((b) => b.kind !== 'Drive' && (b.kind === 'Commitment' || b.isLocked))
     .map((b) => `${b.title} ${hhmm(b.startTime)}`);

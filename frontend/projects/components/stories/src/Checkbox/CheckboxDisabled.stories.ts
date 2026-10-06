@@ -17,6 +17,11 @@ export const Disabled: StoryObj<Checkbox> = {
     `,
   }),
   parameters: {
-    docs: { description: { story: 'Disable the bound control (checked or not); `setDisabledState` disables the native checkbox.' } },
+    docs: {
+      description: {
+        story:
+          'Disable the bound control (checked or not); `setDisabledState` disables the native checkbox.',
+      },
+    },
   },
 };

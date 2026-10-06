@@ -15,7 +15,16 @@ describe('ConfirmDialog', () => {
       imports: [ConfirmDialog],
       providers: [
         { provide: DialogRef, useValue: mockDialogRef },
-        { provide: DIALOG_DATA, useValue: { title: 'Delete Mae?', body: 'Gone for good.', confirmLabel: 'Delete', danger: true, icon: 'trash' } },
+        {
+          provide: DIALOG_DATA,
+          useValue: {
+            title: 'Delete Mae?',
+            body: 'Gone for good.',
+            confirmLabel: 'Delete',
+            danger: true,
+            icon: 'trash',
+          },
+        },
       ],
     }).compileComponents();
     fixture = TestBed.createComponent(ConfirmDialog);

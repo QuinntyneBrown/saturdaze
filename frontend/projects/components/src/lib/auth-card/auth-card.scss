@@ -1,4 +1,4 @@
-@use "../styles/breakpoints" as *;
+@use '../styles/breakpoints' as *;
 
 // `.auth-card*` from docs/mocks-v2/styles/app.css — the host is the card.
 
@@ -24,7 +24,7 @@
   text-align: center;
 }
 
-.auth-card__head ::ng-deep [slot="disc"] {
+.auth-card__head ::ng-deep [slot='disc'] {
   margin-bottom: 4px;
 }
 

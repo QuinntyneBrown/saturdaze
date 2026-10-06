@@ -14,7 +14,11 @@ export const InCard: StoryObj<Details> = {
           value: 'example.com/port-credit-buskerfest-2026',
           href: 'https://example.com/port-credit-buskerfest-2026',
         },
-        { label: 'Notes', value: "Street performers along Lakeshore. The kids' zone runs 2 to 5, then it gets loud." },
+        {
+          label: 'Notes',
+          value:
+            "Street performers along Lakeshore. The kids' zone runs 2 to 5, then it gets loud.",
+        },
       ],
     },
     template: `
@@ -34,7 +38,10 @@ export const InCard: StoryObj<Details> = {
   }),
   parameters: {
     docs: {
-      description: { story: 'In context: a submission card in the review queue, with the details between the card head and the review actions.' },
+      description: {
+        story:
+          'In context: a submission card in the review queue, with the details between the card head and the review actions.',
+      },
     },
   },
 };

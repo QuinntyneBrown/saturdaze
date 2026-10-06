@@ -17,7 +17,9 @@ export { ReactiveForms } from './CheckboxReactiveForms.stories';
 export default {
   title: 'Components/Checkbox',
   component: Checkbox,
-  decorators: [moduleMetadata({ imports: [Checkbox, Button, ReactiveFormsModule, RouterLink, JsonPipe] })],
+  decorators: [
+    moduleMetadata({ imports: [Checkbox, Button, ReactiveFormsModule, RouterLink, JsonPipe] }),
+  ],
   parameters: {
     docs: {
       description: {

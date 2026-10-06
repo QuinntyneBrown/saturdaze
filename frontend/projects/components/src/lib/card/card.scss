@@ -15,13 +15,29 @@
     transform var(--sd-dur-fast) var(--sd-ease);
 }
 
-:host(.card--pad-lg) { padding: 20px; }
-:host(.card--sunk) { background: var(--sd-surface-2); border-color: transparent; }
-:host(.card--locked) { border: 2px solid var(--sd-accent); padding: 15px; }
-:host(.card--locked.card--pad-lg) { padding: 19px; }
-:host(.card--dimmed) { opacity: 0.6; }
-:host(.card--muted) { opacity: 0.85; }
-:host(.card--span) { grid-column: 1 / -1; }
+:host(.card--pad-lg) {
+  padding: 20px;
+}
+:host(.card--sunk) {
+  background: var(--sd-surface-2);
+  border-color: transparent;
+}
+:host(.card--locked) {
+  border: 2px solid var(--sd-accent);
+  padding: 15px;
+}
+:host(.card--locked.card--pad-lg) {
+  padding: 19px;
+}
+:host(.card--dimmed) {
+  opacity: 0.6;
+}
+:host(.card--muted) {
+  opacity: 0.85;
+}
+:host(.card--span) {
+  grid-column: 1 / -1;
+}
 
 @media (hover: hover) {
   :host(.card--interactive:hover) {

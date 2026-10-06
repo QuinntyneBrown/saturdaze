@@ -1,4 +1,4 @@
-import {defineConfig} from 'vitest/config';
+import { defineConfig } from 'vitest/config';
 
 // Measurement harness setting (coverage-maximization plan P0.7): vitest's
 // coverage.reportOnFailure defaults to false, so a run with failing tests

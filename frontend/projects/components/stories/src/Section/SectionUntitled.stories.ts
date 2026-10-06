@@ -16,7 +16,10 @@ export const Untitled: StoryObj<Section> = {
   }),
   parameters: {
     docs: {
-      description: { story: 'Without a `title` no header renders — and neither does `[slot=action]` — leaving just the section spacing around the body.' },
+      description: {
+        story:
+          'Without a `title` no header renders — and neither does `[slot=action]` — leaving just the section spacing around the body.',
+      },
     },
   },
 };

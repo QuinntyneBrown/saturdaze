@@ -16,7 +16,8 @@ export const WithIcon: StoryObj<Spinner> = {
   parameters: {
     docs: {
       description: {
-        story: 'With `icon` the host becomes `.spinner-disc`: a still glyph inside the turning ring — planning, verifying email, finding food, checking events.',
+        story:
+          'With `icon` the host becomes `.spinner-disc`: a still glyph inside the turning ring — planning, verifying email, finding food, checking events.',
       },
     },
   },

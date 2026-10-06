@@ -14,7 +14,10 @@ export const Disabled: StoryObj<ChipInput> = {
   }),
   parameters: {
     docs: {
-      description: { story: 'Disabling the control disables the input and makes the chips\' remove buttons do nothing.' },
+      description: {
+        story:
+          "Disabling the control disables the input and makes the chips' remove buttons do nothing.",
+      },
     },
   },
 };

@@ -47,7 +47,7 @@
   box-shadow: 0 0 0 3px var(--sd-primary-soft);
 }
 
-.field__input[aria-invalid="true"] {
+.field__input[aria-invalid='true'] {
   border-color: var(--sd-warn);
 }
 

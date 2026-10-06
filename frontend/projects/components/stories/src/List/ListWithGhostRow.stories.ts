@@ -26,7 +26,10 @@ export const WithGhostRow: StoryObj<List> = {
   }),
   parameters: {
     docs: {
-      description: { story: 'Family\'s "Who\'s in": avatar rows that open the member dialog, with the dashed add row below the list.' },
+      description: {
+        story:
+          'Family\'s "Who\'s in": avatar rows that open the member dialog, with the dashed add row below the list.',
+      },
     },
   },
 };

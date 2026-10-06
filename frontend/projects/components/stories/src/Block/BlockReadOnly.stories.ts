@@ -15,7 +15,10 @@ export const ReadOnly: StoryObj<Block> = {
   }),
   parameters: {
     docs: {
-      description: { story: '`readonly` hides the phone chevron. The shared weekend uses it and projects no actions.' },
+      description: {
+        story:
+          '`readonly` hides the phone chevron. The shared weekend uses it and projects no actions.',
+      },
     },
   },
 };

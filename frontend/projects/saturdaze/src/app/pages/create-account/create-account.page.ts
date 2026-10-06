@@ -4,15 +4,7 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Router, RouterLink } from '@angular/router';
 
 import { AuthError, SESSION_STORE } from 'api';
-import {
-  AuthCard,
-  AuthShell,
-  Banner,
-  Button,
-  Checkbox,
-  Strength,
-  TextInput,
-} from 'components';
+import { AuthCard, AuthShell, Banner, Button, Checkbox, Strength, TextInput } from 'components';
 
 import { passwordStrength } from '../../shared/password-strength';
 import { trimmedEmail } from '../../shared/trimmed-email.validator';
@@ -28,7 +20,17 @@ import { trimmedEmail } from '../../shared/trimmed-email.validator';
 @Component({
   selector: 'app-create-account',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink, AuthShell, AuthCard, Banner, Button, Checkbox, Strength, TextInput],
+  imports: [
+    ReactiveFormsModule,
+    RouterLink,
+    AuthShell,
+    AuthCard,
+    Banner,
+    Button,
+    Checkbox,
+    Strength,
+    TextInput,
+  ],
   templateUrl: './create-account.page.html',
   styleUrl: './create-account.page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -62,10 +64,14 @@ export class CreateAccountPage {
   });
 
   protected readonly strength = computed(() => passwordStrength(this.password()));
-  protected readonly canSubmit = computed(() => this.formStatus() === 'VALID' && !this.submitting());
+  protected readonly canSubmit = computed(
+    () => this.formStatus() === 'VALID' && !this.submitting(),
+  );
 
   protected readonly emailError = computed(() =>
-    this.error()?.code === 'email_in_use' ? 'That email already has an account. Sign in instead.' : '',
+    this.error()?.code === 'email_in_use'
+      ? 'That email already has an account. Sign in instead.'
+      : '',
   );
   protected readonly passwordError = computed(() =>
     this.error()?.code === 'weak_password' ? 'Choose a stronger password.' : '',

@@ -30,8 +30,12 @@ describe('HomeLocationDialog', () => {
 
   it('prefills the current home', () => {
     expect(host.querySelector('.dialog__title')?.textContent?.trim()).toBe('Home location');
-    expect(host.querySelector('.dialog__sub')?.textContent?.trim()).toBe('Weather and drive times start here.');
-    expect(host.querySelector('sd-text-input')?.getAttribute('label')).toBe('Neighbourhood or address');
+    expect(host.querySelector('.dialog__sub')?.textContent?.trim()).toBe(
+      'Weather and drive times start here.',
+    );
+    expect(host.querySelector('sd-text-input')?.getAttribute('label')).toBe(
+      'Neighbourhood or address',
+    );
     expect(component['location']()).toBe('Port Credit, Mississauga');
     expect(primary().hasAttribute('disabled')).toBe(false);
   });
@@ -51,7 +55,9 @@ describe('HomeLocationDialog', () => {
   });
 
   it('closes with nothing on cancel', () => {
-    (host.querySelector('sd-button[slot="actions"][variant="quiet"] button') as HTMLButtonElement).click();
+    (
+      host.querySelector('sd-button[slot="actions"][variant="quiet"] button') as HTMLButtonElement
+    ).click();
     expect(dialogRef.close).toHaveBeenCalledWith();
   });
 });

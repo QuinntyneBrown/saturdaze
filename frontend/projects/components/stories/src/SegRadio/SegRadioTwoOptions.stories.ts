@@ -21,7 +21,8 @@ export const TwoOptions: StoryObj<SegRadio> = {
   parameters: {
     docs: {
       description: {
-        story: 'A weekly commitment (swim lessons, soccer) happens on one day, so the commitment dialog offers just two. Three options add `.seg-radio--3`.',
+        story:
+          'A weekly commitment (swim lessons, soccer) happens on one day, so the commitment dialog offers just two. Three options add `.seg-radio--3`.',
       },
     },
   },

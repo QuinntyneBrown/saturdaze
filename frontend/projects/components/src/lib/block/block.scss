@@ -1,4 +1,4 @@
-@use "../styles/breakpoints" as *;
+@use '../styles/breakpoints' as *;
 
 // `.block` from docs/mocks-v2/styles/app.css — the host is the row.
 
@@ -45,7 +45,7 @@
 }
 
 .block__rail::before {
-  content: "";
+  content: '';
   position: absolute;
   top: -12px;
   bottom: -13px;

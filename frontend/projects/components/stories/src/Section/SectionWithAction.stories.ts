@@ -21,7 +21,10 @@ export const WithAction: StoryObj<Section> = {
   }),
   parameters: {
     docs: {
-      description: { story: 'Project a quiet small button into `[slot=action]` to put it at the right of the header (the "Edit" buttons on Family).' },
+      description: {
+        story:
+          'Project a quiet small button into `[slot=action]` to put it at the right of the header (the "Edit" buttons on Family).',
+      },
     },
   },
 };

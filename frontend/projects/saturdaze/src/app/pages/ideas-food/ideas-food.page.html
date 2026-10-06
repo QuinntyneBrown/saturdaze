@@ -1,14 +1,28 @@
 <sd-filters class="filters" label="Filters">
   @for (chip of view().dayChips; track chip.label) {
-    <sd-filter-chip [tone]="filterTone(chip.tone)" [pressed]="chip.active" (pressedChange)="setDay(chip)">{{ chip.label }}</sd-filter-chip>
+    <sd-filter-chip
+      [tone]="filterTone(chip.tone)"
+      [pressed]="chip.active"
+      (pressedChange)="setDay(chip)"
+      >{{ chip.label }}</sd-filter-chip
+    >
   }
   <span class="sd-vdivider" aria-hidden="true"></span>
   @for (chip of view().slotChips; track chip.label) {
-    <sd-filter-chip [tone]="filterTone(chip.tone)" [pressed]="chip.active" (pressedChange)="setSlot(chip)">{{ chip.label }}</sd-filter-chip>
+    <sd-filter-chip
+      [tone]="filterTone(chip.tone)"
+      [pressed]="chip.active"
+      (pressedChange)="setSlot(chip)"
+      >{{ chip.label }}</sd-filter-chip
+    >
   }
   <span class="sd-vdivider" aria-hidden="true"></span>
   @for (chip of view().extraChips; track chip.label) {
-    <sd-filter-chip [tone]="filterTone(chip.tone)" [pressed]="chip.active" (pressedChange)="setExtra(chip)">
+    <sd-filter-chip
+      [tone]="filterTone(chip.tone)"
+      [pressed]="chip.active"
+      (pressedChange)="setExtra(chip)"
+    >
       @if (chip.icon) {
         <sd-icon [name]="chip.icon" [size]="14" [stroke]="2" />
       }

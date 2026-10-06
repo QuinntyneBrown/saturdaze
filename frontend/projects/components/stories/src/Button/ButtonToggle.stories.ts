@@ -19,7 +19,8 @@ export const Toggle: StoryObj<Button> = {
   parameters: {
     docs: {
       description: {
-        story: '`pressed` mirrors to `aria-pressed` for toggle buttons such as the favourite heart. Leave it `null` on ordinary buttons.',
+        story:
+          '`pressed` mirrors to `aria-pressed` for toggle buttons such as the favourite heart. Leave it `null` on ordinary buttons.',
       },
     },
   },

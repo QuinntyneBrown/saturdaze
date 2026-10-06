@@ -1,6 +1,10 @@
 <sd-filters class="filters" label="Filters">
   @for (chip of view().filters; track chip.label) {
-    <sd-filter-chip [tone]="filterTone(chip.tone)" [pressed]="chip.active" (pressedChange)="setFilter(chip.label)">
+    <sd-filter-chip
+      [tone]="filterTone(chip.tone)"
+      [pressed]="chip.active"
+      (pressedChange)="setFilter(chip.label)"
+    >
       @if (chip.icon) {
         <sd-icon [name]="chip.icon" [size]="14" [stroke]="2" />
       }

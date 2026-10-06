@@ -28,7 +28,8 @@ export const ReactiveForms: StoryObj<Select> = {
   parameters: {
     docs: {
       description: {
-        story: 'The "Add an errand" duration picker. The control holds the selected option\'s `value` string; a change also marks it touched.',
+        story:
+          'The "Add an errand" duration picker. The control holds the selected option\'s `value` string; a change also marks it touched.',
       },
     },
   },

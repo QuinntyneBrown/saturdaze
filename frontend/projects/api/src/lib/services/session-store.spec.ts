@@ -45,7 +45,9 @@ describe('SessionStore', () => {
     auth = {
       signUp: vi.fn(() => Promise.resolve({ token: tokenExpiringIn(900_000), user: USER })),
       login: vi.fn(() => Promise.resolve({ token: tokenExpiringIn(900_000), user: USER })),
-      refresh: vi.fn(() => Promise.resolve({ token: tokenExpiringIn(900_000, 'access-2', 'refresh-2'), user: USER })),
+      refresh: vi.fn(() =>
+        Promise.resolve({ token: tokenExpiringIn(900_000, 'access-2', 'refresh-2'), user: USER }),
+      ),
       logout: vi.fn(() => Promise.resolve(undefined)),
       forgotPassword: vi.fn(() => Promise.resolve(undefined)),
       resendVerification: vi.fn(() => Promise.resolve(undefined)),
@@ -55,10 +57,7 @@ describe('SessionStore', () => {
     };
 
     TestBed.configureTestingModule({
-      providers: [
-        SessionStore,
-        { provide: AUTH_SERVICE, useValue: auth },
-      ],
+      providers: [SessionStore, { provide: AUTH_SERVICE, useValue: auth }],
     });
 
     service = TestBed.inject(SessionStore);
@@ -93,13 +92,22 @@ describe('SessionStore', () => {
     });
 
     it('signUp always remembers', async () => {
-      await service.signUp({ familyName: 'Browns', homeLocation: 'Port Credit', email: 'quinn@example.com', password: 'pw', fridayPreview: true });
+      await service.signUp({
+        familyName: 'Browns',
+        homeLocation: 'Port Credit',
+        email: 'quinn@example.com',
+        password: 'pw',
+        fridayPreview: true,
+      });
       expect(storedToken(localStorage)?.value).toBe('access-1');
     });
 
     it('maps a failed login onto the error signal and rethrows', async () => {
       auth.login = vi.fn(() => Promise.reject({ code: 'invalid_credentials', message: 'nope' }));
-      await expect(service.login({ email: 'x', password: 'y' }, true)).rejects.toEqual({ code: 'invalid_credentials', message: 'nope' });
+      await expect(service.login({ email: 'x', password: 'y' }, true)).rejects.toEqual({
+        code: 'invalid_credentials',
+        message: 'nope',
+      });
       expect(service.error()?.code).toBe('invalid_credentials');
       expect(service.isAuthenticated()).toBe(false);
     });
@@ -143,7 +151,11 @@ describe('SessionStore', () => {
     });
 
     it('adopts a newer pair another tab persisted instead of refreshing', async () => {
-      persist(localStorage, tokenExpiringIn(900_000, 'access-other-tab', 'refresh-other-tab'), 'local');
+      persist(
+        localStorage,
+        tokenExpiringIn(900_000, 'access-other-tab', 'refresh-other-tab'),
+        'local',
+      );
       await expect(service.refreshSession()).resolves.toBe(true);
       expect(auth.refresh).not.toHaveBeenCalled();
       expect(service.token()?.value).toBe('access-other-tab');
@@ -152,7 +164,9 @@ describe('SessionStore', () => {
     it('ends the session when there is no refresh token to present', async () => {
       persist(localStorage, tokenExpiringIn(900_000, 'access-1', ''), 'local');
       TestBed.resetTestingModule();
-      TestBed.configureTestingModule({ providers: [SessionStore, { provide: AUTH_SERVICE, useValue: auth }] });
+      TestBed.configureTestingModule({
+        providers: [SessionStore, { provide: AUTH_SERVICE, useValue: auth }],
+      });
       const fresh = TestBed.inject(SessionStore);
       await fresh.rehydrate();
       await expect(fresh.refreshSession()).resolves.toBe(false);
@@ -213,9 +227,19 @@ describe('SessionStore', () => {
     });
 
     it('loads a legacy pair persisted without a refresh token', async () => {
-      localStorage.setItem(TOKEN_KEY, JSON.stringify({ value: 'legacy', expiresUtc: new Date(Date.now() + 900_000).toISOString() }));
+      localStorage.setItem(
+        TOKEN_KEY,
+        JSON.stringify({
+          value: 'legacy',
+          expiresUtc: new Date(Date.now() + 900_000).toISOString(),
+        }),
+      );
       await service.rehydrate();
-      expect(service.token()).toEqual({ value: 'legacy', expiresUtc: expect.any(String), refreshToken: '' });
+      expect(service.token()).toEqual({
+        value: 'legacy',
+        expiresUtc: expect.any(String),
+        refreshToken: '',
+      });
       expect(auth.me).toHaveBeenCalledTimes(1);
     });
 

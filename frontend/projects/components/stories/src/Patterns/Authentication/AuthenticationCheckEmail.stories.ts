@@ -17,7 +17,8 @@ export const CheckEmail: StoryObj = {
   parameters: {
     docs: {
       description: {
-        story: 'A status card after sign-up: centred head with an `xl` mail disc, then stacked quiet and ghost buttons. No form, no alt line.',
+        story:
+          'A status card after sign-up: centred head with an `xl` mail disc, then stacked quiet and ghost buttons. No form, no alt line.',
       },
     },
   },

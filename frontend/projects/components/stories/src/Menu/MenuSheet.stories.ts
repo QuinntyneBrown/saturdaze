@@ -6,8 +6,18 @@ export const Sheet: StoryObj<Menu> = {
   render: () => ({
     props: {
       items: [
-        { id: 'regenerate', label: 'Regenerate the weekend', icon: 'refresh', sub: 'Locked blocks stay where they are' },
-        { id: 'calendar', label: 'Add to calendar', icon: 'calendar', sub: 'One .ics with both days' },
+        {
+          id: 'regenerate',
+          label: 'Regenerate the weekend',
+          icon: 'refresh',
+          sub: 'Locked blocks stay where they are',
+        },
+        {
+          id: 'calendar',
+          label: 'Add to calendar',
+          icon: 'calendar',
+          sub: 'One .ics with both days',
+        },
       ],
     },
     template: `

@@ -45,7 +45,8 @@ describe('LegalPage', () => {
     delete document.body.dataset['doc'];
   });
 
-  const article = (kind: string): HTMLElement => host.querySelector(`article[data-doc="${kind}"]`) as HTMLElement;
+  const article = (kind: string): HTMLElement =>
+    host.querySelector(`article[data-doc="${kind}"]`) as HTMLElement;
   const activeTab = (): string | undefined =>
     host.querySelector('sd-segments a[aria-current="page"]')?.textContent?.trim();
 
@@ -83,11 +84,15 @@ describe('LegalPage', () => {
       const toc = Array.from(article(kind).querySelectorAll('.prose__toc a'));
       const headings = Array.from(article(kind).querySelectorAll('h2'));
       expect(toc.length, kind).toBe(6);
-      expect(headings.map((h) => h.id)).toEqual(toc.map((a) => a.getAttribute('href')?.split('#')[1]));
+      expect(headings.map((h) => h.id)).toEqual(
+        toc.map((a) => a.getAttribute('href')?.split('#')[1]),
+      );
       expect(headings.every((h) => h.id.startsWith(`${kind}-`))).toBe(true);
     }
     expect(article('terms').querySelector('h2')?.id).toBe('terms-acceptance');
-    expect(article('privacy').querySelector('sd-well')?.getAttribute('title')).toBe('The short version');
+    expect(article('privacy').querySelector('sd-well')?.getAttribute('title')).toBe(
+      'The short version',
+    );
   });
 
   it('offers both documents as segments and a site footer', async () => {

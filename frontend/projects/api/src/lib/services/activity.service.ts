@@ -22,7 +22,7 @@ const ALL = 'All';
 
 const WEATHER_SAFE_TAGS: readonly string[] = ['rain', 'cold', 'snow'];
 
-const FILTER_DEFS: ReadonlyArray<FilterDef> = [
+const FILTER_DEFS: readonly FilterDef[] = [
   { label: ALL, tone: 'default' },
   { label: 'Outdoor', tone: 'leaf', match: (a) => !a.indoor },
   { label: 'Indoor', tone: 'indoor', match: (a) => a.indoor },
@@ -109,14 +109,14 @@ function daySubtitle(day: 'Saturday' | 'Sunday', w: WeatherForecastDto | null): 
  *   - try something new: the server's `tryNew` picks
  */
 function buildSections(
-  rows: ReadonlyArray<ActivityDto>,
-  tryNew: ReadonlyArray<ActivityDto>,
+  rows: readonly ActivityDto[],
+  tryNew: readonly ActivityDto[],
   saturday: WeatherForecastDto | null,
   sunday: WeatherForecastDto | null,
 ): ActivitySection[] {
   const outdoorDay = isOutdoorFriendly(saturday);
   const used = new Set<string>();
-  const take = (pool: ReadonlyArray<ActivityDto>): ActivityDto[] => {
+  const take = (pool: readonly ActivityDto[]): ActivityDto[] => {
     const picked = pool.filter((a) => !used.has(a.id)).slice(0, SECTION_LIMIT);
     picked.forEach((a) => used.add(a.id));
     return picked;
@@ -157,7 +157,7 @@ function subtitleFor(kids: string, home: string, maxDrive: number | null): strin
 }
 
 /** The longest drive in the catalogue, rounded up to the next 15 minutes. */
-function driveCeiling(rows: ReadonlyArray<ActivityDto>): number | null {
+function driveCeiling(rows: readonly ActivityDto[]): number | null {
   if (rows.length === 0) return null;
   const max = Math.max(...rows.map((a) => a.driveMinutes));
   return Math.max(DRIVE_ROUNDING, Math.ceil(max / DRIVE_ROUNDING) * DRIVE_ROUNDING);
@@ -169,9 +169,9 @@ export class ActivityService implements IActivityService {
   private readonly baseUrl = inject(API_BASE_URL);
   private readonly family = inject(FAMILY_SERVICE);
 
-  private readonly _rows = signal<ReadonlyArray<ActivityDto>>([]);
-  private readonly _tryNew = signal<ReadonlyArray<ActivityDto>>([]);
-  private readonly _weather = signal<ReadonlyArray<WeatherForecastDto>>([]);
+  private readonly _rows = signal<readonly ActivityDto[]>([]);
+  private readonly _tryNew = signal<readonly ActivityDto[]>([]);
+  private readonly _weather = signal<readonly WeatherForecastDto[]>([]);
   private readonly _weekendOf = signal<string>(upcomingSaturdayIso());
   private readonly _filter = signal<string>(ALL);
 

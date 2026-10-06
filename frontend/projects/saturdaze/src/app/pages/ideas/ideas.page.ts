@@ -4,12 +4,23 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { filter, firstValueFrom } from 'rxjs';
 
-import { ACTIVITY_SERVICE, EVENTS_SERVICE, EVENT_SUBMISSIONS_SERVICE, RESTAURANT_SERVICE } from 'api';
+import {
+  ACTIVITY_SERVICE,
+  EVENTS_SERVICE,
+  EVENT_SUBMISSIONS_SERVICE,
+  RESTAURANT_SERVICE,
+} from 'api';
 import { Button, Icon, PageHeader, Segments } from 'components';
 
 import { DIALOG_OPTIONS } from '../../dialogs/confirm-dialog/confirm-dialog';
-import { EventSubmittedDialog, EventSubmittedDialogData } from '../../dialogs/event-submitted-dialog/event-submitted-dialog';
-import { SubmitEventDialog, SubmitEventDialogResult } from '../../dialogs/submit-event-dialog/submit-event-dialog';
+import {
+  EventSubmittedDialog,
+  EventSubmittedDialogData,
+} from '../../dialogs/event-submitted-dialog/event-submitted-dialog';
+import {
+  SubmitEventDialog,
+  SubmitEventDialogResult,
+} from '../../dialogs/submit-event-dialog/submit-event-dialog';
 import { IDEAS_SEGMENTS } from '../../shared/ideas-segments';
 
 type IdeasTab = 'activities' | 'food' | 'events';

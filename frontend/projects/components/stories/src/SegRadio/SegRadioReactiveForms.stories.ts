@@ -30,7 +30,8 @@ export const ReactiveForms: StoryObj<SegRadio> = {
   parameters: {
     docs: {
       description: {
-        story: 'Part of the "Add an errand" form. The control holds the chosen option\'s `value`; "Either" lets the planner pick the day.',
+        story:
+          'Part of the "Add an errand" form. The control holds the chosen option\'s `value`; "Either" lets the planner pick the day.',
       },
     },
   },

@@ -2,8 +2,26 @@ import { Dialog } from '@angular/cdk/dialog';
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 
-import { FilterChip as FilterChipView, FoodCard as FoodCardView, FoodSection, MealSlot, RESTAURANT_SERVICE, WeekendDay } from 'api';
-import { Banner, Chip, FilterChip, Filters, FoodCard, Icon, Section, StatusRow, Vote, VoteCell } from 'components';
+import {
+  FilterChip as FilterChipView,
+  FoodCard as FoodCardView,
+  FoodSection,
+  MealSlot,
+  RESTAURANT_SERVICE,
+  WeekendDay,
+} from 'api';
+import {
+  Banner,
+  Chip,
+  FilterChip,
+  Filters,
+  FoodCard,
+  Icon,
+  Section,
+  StatusRow,
+  Vote,
+  VoteCell,
+} from 'components';
 
 import { DIALOG_OPTIONS } from '../../dialogs/confirm-dialog/confirm-dialog';
 import {

@@ -30,12 +30,7 @@ type StorageTier = 'local' | 'session';
  * @returns {value is AuthError} The result of the operation
  */
 function isAuthError(value: unknown): value is AuthError {
-  return (
-    typeof value === 'object' &&
-    value !== null &&
-    'code' in value &&
-    'message' in value
-  );
+  return typeof value === 'object' && value !== null && 'code' in value && 'message' in value;
 }
 
 /**
@@ -410,7 +405,7 @@ export class SessionStore implements ISessionStore {
    * @returns {PersistedToken | null} The result of the operation
    */
   private readPersisted(): PersistedToken | null {
-    const tiers: ReadonlyArray<[StorageTier, Storage]> = [
+    const tiers: readonly [StorageTier, Storage][] = [
       ['local', localStorage],
       ['session', sessionStorage],
     ];
