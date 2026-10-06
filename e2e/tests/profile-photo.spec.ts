@@ -59,6 +59,30 @@ test.describe("Profile photo", () => {
     await expect(f.addPhotoButton()).toBeVisible();
   });
 
+  test("a file that is not a JPG, PNG or WebP keeps Save disabled with an inline error", async ({ pages }) => {
+    const f = pages.family;
+    await f.addPhotoButton().click();
+
+    await f.choosePhoto({ name: "notes.txt", mimeType: "text/plain", buffer: Buffer.from("not an image") });
+
+    await expect(f.photoError()).toHaveText("That file is not a JPG, PNG or WebP image.");
+    await expect(f.dialogAction("Save")).toBeDisabled();
+  });
+
+  test("a photo over 2 MB keeps Save disabled with an inline error", async ({ pages }) => {
+    const f = pages.family;
+    await f.addPhotoButton().click();
+
+    await f.choosePhoto({ name: "huge.png", mimeType: "image/png", buffer: Buffer.alloc(2 * 1024 * 1024 + 1) });
+
+    await expect(f.photoError()).toHaveText("That photo is over 2 MB. Choose a smaller one.");
+    await expect(f.dialogAction("Save")).toBeDisabled();
+
+    await f.choosePhoto(PHOTO);
+    await expect(f.photoError()).toHaveCount(0);
+    await expect(f.dialogAction("Save")).toBeEnabled();
+  });
+
   test("the top-bar avatar shows the photo instead of the initial (≥720)", async ({ pages }, testInfo) => {
     test.skip(isPhone(testInfo), "the top bar (and its avatar) is display:none below 720px");
     const f = pages.family;

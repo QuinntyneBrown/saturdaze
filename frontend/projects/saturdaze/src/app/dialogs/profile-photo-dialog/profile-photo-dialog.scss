@@ -30,3 +30,8 @@
   font-size: var(--fontSizeBase200);
   color: var(--colorNeutralForeground2);
 }
+
+.field__error {
+  font-size: var(--fontSizeBase200);
+  color: var(--colorStatusDangerForeground1);
+}
