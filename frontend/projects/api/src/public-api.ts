@@ -60,6 +60,7 @@ export * from './lib/models/verify-email-request';
 // Service contracts (interface + InjectionToken)
 export * from './lib/services/activity.service.contract';
 export * from './lib/services/admin-places.service.contract';
+export * from './lib/services/admin-photos.service.contract';
 export * from './lib/services/auth.service.contract';
 export * from './lib/services/events.service.contract';
 export * from './lib/services/event-submissions.service.contract';
@@ -73,6 +74,7 @@ export * from './lib/services/weekend-plan.service.contract';
 // Concrete implementations (imported only by composition roots)
 export * from './lib/services/activity.service';
 export * from './lib/services/admin-places.service';
+export * from './lib/services/admin-photos.service';
 export * from './lib/services/auth.service';
 export * from './lib/services/events.service';
 export * from './lib/services/event-submissions.service';

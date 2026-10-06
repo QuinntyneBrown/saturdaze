@@ -39,6 +39,11 @@ public sealed class AdminPhotosController : ControllerBase
     public async Task<ActionResult<PlacePhotosDto>> PlacePhotos(string kind, Guid id, CancellationToken ct)
         => Ok(await _sender.Send(new GetPlacePhotosQuery(ParseKind(kind), id), ct));
 
+    /// <summary>Makes the photo its place's only primary (L2-117).</summary>
+    [HttpPost("photos/{photoId:guid}/primary")]
+    public async Task<ActionResult<AdminPhotoDto>> MakePrimary(Guid photoId, CancellationToken ct)
+        => Ok(await _sender.Send(new MakePhotoPrimaryCommand(photoId), ct));
+
     private static PlaceKind ParseKind(string kind)
         => Enum.TryParse<PlaceKind>(kind, true, out var parsed)
             ? parsed

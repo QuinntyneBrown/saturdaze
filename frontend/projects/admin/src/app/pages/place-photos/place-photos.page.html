@@ -48,7 +48,14 @@
                 [credit]="tile.credit"
                 [licence]="tile.licence"
                 [size]="tile.size"
-              />
+              >
+                @if (!tile.isPrimary) {
+                  <sd-button slot="actions" variant="primary" size="sm" (click)="makePrimary(tile)">
+                    <sd-icon name="star" />
+                    Make primary
+                  </sd-button>
+                }
+              </sd-photo-tile>
             }
           </div>
         } @else {
