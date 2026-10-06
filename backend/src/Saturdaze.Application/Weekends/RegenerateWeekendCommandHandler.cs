@@ -7,6 +7,7 @@ using Saturdaze.Application.Exceptions;
 using Saturdaze.Application.Planning;
 using Saturdaze.Domain.Entities;
 using Saturdaze.Domain.Enums;
+using Saturdaze.Domain.ValueObjects;
 
 namespace Saturdaze.Application.Weekends;
 
@@ -76,12 +77,14 @@ public sealed class RegenerateWeekendCommandHandler : IRequestHandler<Regenerate
                 RefId = b.RefId,
                 IsLocked = b.IsLocked,
                 Reason = b.Reason,
-                SortOrder = b.SortOrder
+                SortOrder = b.SortOrder,
+                Stop = b.Stop?.Copy()
             });
         }
 
         await _db.SaveChangesAsync(cancellationToken);
 
+        weekend.Home = GeoLocation.Merge(weekend.Home, ctx.Home.Copy());
         return WeekendMapper.ToDto(weekend, ctx.Forecast);
     }
 }

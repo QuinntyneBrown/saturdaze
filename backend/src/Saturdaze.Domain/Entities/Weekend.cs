@@ -1,3 +1,5 @@
+using Saturdaze.Domain.ValueObjects;
+
 namespace Saturdaze.Domain.Entities;
 
 public class Weekend
@@ -23,5 +25,8 @@ public class Weekend
     public int? Rating { get; set; }
 
     public List<ItineraryBlock> Blocks { get; set; } = new();
+
+    /// <summary>Home as it was when the weekend was planned; travel legs start and end there (L2-090).</summary>
+    public GeoLocation? Home { get; set; }
     public List<ShoppingErrand> Errands { get; set; } = new();
 }

@@ -9,6 +9,7 @@ using Saturdaze.Application.Planning;
 using Saturdaze.Application.Weekends;
 using Saturdaze.Domain.Entities;
 using Saturdaze.Domain.Enums;
+using Saturdaze.Domain.ValueObjects;
 
 namespace Saturdaze.Application.Restaurants;
 
@@ -114,6 +115,7 @@ public sealed class LockRestaurantCommandHandler : IRequestHandler<LockRestauran
 
         meal.Title = $"{slot}: {restaurant.Name}";
         meal.RefId = restaurant.Id;
+        meal.Stop = GeoLocation.Merge(meal.Stop, restaurant.Geo?.Copy());
         meal.IsLocked = true;
         meal.Reason = "restaurant locked by family vote";
     }

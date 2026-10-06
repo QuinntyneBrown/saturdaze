@@ -110,7 +110,8 @@ public sealed class SwapBlockCommandHandler : IRequestHandler<SwapBlockCommand, 
                 Title = nb.Title,
                 RefId = nb.RefId,
                 Reason = "swap pick: " + nb.Reason,
-                SortOrder = ++nextSort
+                SortOrder = ++nextSort,
+                Stop = nb.Stop?.Copy()
             });
         }
         await _db.SaveChangesAsync(cancellationToken);

@@ -10,6 +10,7 @@ public class WeekendConfiguration : IEntityTypeConfiguration<Weekend>
     {
         b.ToTable("Weekends");
         b.HasKey(x => x.Id);
+        b.OwnsGeo(x => x.Home, "Home");
         b.Property(x => x.Notes).HasMaxLength(2000);
         b.Property(x => x.Title).HasMaxLength(120);
         b.Property(x => x.Rating);

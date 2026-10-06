@@ -16,6 +16,9 @@ public sealed class GeoLocation
             ? new GeoLocation { Latitude = lat, Longitude = lng, Address = address?.Trim() ?? string.Empty }
             : null;
 
+    /// <summary>A detached copy: an owned value cannot be shared between two owners.</summary>
+    public GeoLocation Copy() => new() { Latitude = Latitude, Longitude = Longitude, Address = Address };
+
     public bool SameAs(GeoLocation? other) =>
         other is not null && other.Latitude == Latitude && other.Longitude == Longitude && other.Address == Address;
 

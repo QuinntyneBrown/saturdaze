@@ -75,7 +75,8 @@ public sealed class RegenerateWeekendDayCommandHandler
                 RefId = block.RefId,
                 IsLocked = block.IsLocked,
                 Reason = block.Reason,
-                SortOrder = block.SortOrder
+                SortOrder = block.SortOrder,
+                Stop = block.Stop?.Copy()
             });
         }
 

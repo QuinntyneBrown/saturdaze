@@ -13,7 +13,9 @@ public sealed record WeekendDto(
     int? Rating,
     IReadOnlyList<ItineraryBlockDto> Blocks,
     IReadOnlyList<ShoppingErrandDto> Errands,
-    IReadOnlyList<WeatherForecast> Weather);
+    IReadOnlyList<WeatherForecast> Weather,
+    IReadOnlyList<DayDto>? Days = null,
+    LocationDto? Home = null);
 
 public sealed record ItineraryBlockDto(
     Guid Id,
@@ -25,7 +27,10 @@ public sealed record ItineraryBlockDto(
     Guid? RefId,
     bool IsLocked,
     string Reason,
-    int SortOrder);
+    int SortOrder,
+    int? StopNumber = null,
+    LocationDto? Stop = null,
+    TravelLegDto? LegBefore = null);
 
 public sealed record ShoppingErrandDto(
     Guid Id,
