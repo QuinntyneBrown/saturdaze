@@ -49,10 +49,15 @@ They sit beside the existing screens and do not replace them. Requirements:
 
 ### Images
 
-`images/*.svg` are **illustrated placeholders** that stand in for licensed photos;
-they are not real photographs and must not ship. The map in `weekend.map.html` is
-an inline SVG sketch, not tiles. Production sources, licensing and attribution are
-specified in L2-088.
+`images/*.svg` are **illustrated placeholders**. The proposal screens use cropped,
+licensed Unsplash photos in `images/photos/`; credits and source links are in
+`images/photos/PHOTO-CREDITS.md`. Ideas and the weekend map show photographer
+credits; the source list covers every bundled image. These stock photos are
+illustrative stand-ins, not verified photos of the named venues, and must not
+ship as venue imagery. Use verified, venue-specific images with documented
+licensing before production. The map in `weekend.map.html` is an inline SVG
+sketch, not tiles. Production photo requirements are specified in L2-088 and
+L2-089.
 
 ## Running the checks
 
