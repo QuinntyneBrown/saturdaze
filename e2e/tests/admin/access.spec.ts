@@ -72,16 +72,25 @@ test.describe("Admin shell", () => {
     expect(await a.rows().count()).toBeGreaterThan(3);
   });
 
-  test("the bar replaces the side navigation at 390px with no horizontal overflow", async ({ page, goto, pages }) => {
-    // Traces to: L2-123 AC3
-    await page.setViewportSize({ width: 390, height: 844 });
-    await goto("adminPlaces");
-    const a = pages.adminPlaces;
-    await a.waitForScreen("places");
-    await expect(a.adminNav).toBeVisible();
-    await expect(a.activeAdminNavLink()).toHaveAttribute("data-nav", "places");
-    await expect(a.adminNavEmail()).toBeHidden();
-    const scrollWidth = await page.evaluate(() => document.documentElement.scrollWidth);
-    expect(scrollWidth).toBeLessThanOrEqual(390);
-  });
+  for (const [width, chrome] of [
+    [390, "bar"],
+    [820, "bar"],
+    [1024, "side"],
+    [1440, "side"],
+  ] as const) {
+    test(`shows the ${chrome} navigation at ${width}px with the current link marked and no horizontal overflow`, async ({ page, goto, pages }) => {
+      // Traces to: L2-123 AC3
+      await page.setViewportSize({ width, height: 900 });
+      await goto("adminPlaces");
+      const a = pages.adminPlaces;
+      await a.waitForScreen("places");
+      await expect(a.adminNav).toBeVisible();
+      await expect(a.activeAdminNavLink()).toHaveAttribute("data-nav", "places");
+      await expect(a.activeAdminNavLink()).toHaveAttribute("aria-current", "page");
+      if (chrome === "side") await expect(a.adminNavEmail()).toBeVisible();
+      else await expect(a.adminNavEmail()).toBeHidden();
+      const scrollWidth = await page.evaluate(() => document.documentElement.scrollWidth);
+      expect(scrollWidth).toBeLessThanOrEqual(width);
+    });
+  }
 });

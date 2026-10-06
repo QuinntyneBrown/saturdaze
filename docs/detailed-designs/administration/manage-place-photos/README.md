@@ -26,7 +26,7 @@ The slice reads catalog tables only. Family data and weekend identifiers never l
 
 `PlacePhotoSet.MarkPrimary` stays the single way to change the primary. `PlacePhotoSet.DefaultPrimary(photos)` picks the next primary when none is chosen: the first curated photo, else the first reviewed provider photo, else null. `PlacePhotoSet.ShouldPromoteCurated(photos)` returns true when the current primary is an unreviewed provider photo, so a new curated photo becomes primary (L2-121 AC5).
 
-`PhotoAuditEntry` (`Id`, `OccurredAt`, `AdminUserId`, `AdminEmail`, `PlaceKind`, `PlaceId`, `PhotoId`, `Action` of `PhotoAuditAction` = `Upload | AddUrl | Edit | Primary | Remove | Review`, `Before`, `After` as JSON strings) records every change. `PlaceKind` and `PlaceId` stay on the entry after the photo row is deleted.
+`PhotoAuditEntry` (`Id`, `Sequence` assigned by the database so entries written in the same instant keep their insert order, `OccurredAt`, `AdminUserId`, `AdminEmail`, `PlaceKind`, `PlaceId`, `PhotoId`, `Action` of `PhotoAuditAction` = `Upload | AddUrl | Edit | Primary | Remove | Review`, `Before`, `After` as JSON strings) records every change. `PlaceKind` and `PlaceId` stay on the entry after the photo row is deleted.
 
 `PhotoHealth` (Domain service) evaluates one place's photos against the allow-list predicate and returns its flags in severity order: `no-photo`, `blocked-url`, `unreviewed`, `missing-alt`. The same evaluation feeds the health figures, the list filters and the default sort, so the three screens agree.
 

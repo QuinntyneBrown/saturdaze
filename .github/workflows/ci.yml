@@ -96,6 +96,12 @@ jobs:
         working-directory: frontend
         run: npx ng build saturdaze --configuration production
 
+      # Saturdaze Admin is its own application on its own host (ADR-014);
+      # lint, format and the unit tests above already cover the workspace.
+      - name: ng build admin (production)
+        working-directory: frontend
+        run: npx ng build admin --configuration production
+
   storybook:
     # Keep the required branch-protection context while testing its replacement.
     name: Design-system contract + browser tests
