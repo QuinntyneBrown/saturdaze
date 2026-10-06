@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 36 Slides</title>
+<link rel="stylesheet" href="../../assets/slides.css">
+</head>
+<body data-video-number="36" data-video-title="Coding sd-section" data-parts="Introduction|Usage|Decorator|Inputs|Template|Styles|Tests|Pitfalls|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Saturdaze components · Video 36 of 52</div>
+  <h1>Coding <code>sd-section</code></h1>
+  <p class="lead">A titled region with an action slot: two signal inputs, host bindings and one slot each.</p>
+</section>
+
+<section id="usage" data-part="1" data-cue="Open the Family page template.">
+  <h2>Where it is used</h2>
+  <pre class="code tight" data-lang="html" data-file="saturdaze/src/app/pages/family/family.page.html" data-mark="1,2">      &lt;sd-section title="Home"&gt;
+        &lt;sd-button slot="action" variant="quiet" size="sm" (click)="editHome()"&gt;
+          &lt;sd-icon name="edit" /&gt;
+          Edit
+        &lt;/sd-button&gt;
+        &lt;sd-list card&gt;
+          &lt;sd-list-item [title]="view().home.location" [subtitle]="view().home.hint"&gt;
+            &lt;sd-disc slot="leading" icon="pin" /&gt;
+          &lt;/sd-list-item&gt;
+        &lt;/sd-list&gt;
+      &lt;/sd-section&gt;</pre>
+  <p class="muted small">Also: the three Ideas pages (one section per group) and Weekend ("Planned around").</p>
+</section>
+
+<section id="goals" data-part="1" data-cue="By the end you will have a component">
+  <h2>What you will build</h2>
+  <ul>
+    <li>A heading, optional subtitle, optional action, then the body</li>
+    <li>Labels itself with its own heading (<code>aria-labelledby</code>)</li>
+    <li>Keeps the mock's BEM classes: <code>.section</code>, <code>.section-header__*</code></li>
+    <li>Declares each <code>ng-content</code> slot exactly once</li>
+  </ul>
+</section>
+
+<section id="decorator" data-part="2" data-cue="Open the file called section dot T S">
+  <h2>The decorator</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/section/section.ts" data-mark="1,4,9">let nextSectionId = 0;
+
+@Component({
+  selector: 'sd-section',
+  standalone: true,
+  templateUrl: './section.html',
+  styleUrl: './section.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: 'section',
+    '[attr.title]': 'sectionTitle() || null',
+    '[attr.subtitle]': 'subtitle() || null',
+    '[attr.aria-labelledby]': 'sectionTitle() ? headingId : null',
+  },
+})</pre>
+</section>
+
+<section id="host" data-part="2" data-cue="The host block does the interesting work.">
+  <h2>Host bindings read signals</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/section/section.ts" data-mark="2-5">  host: {
+    class: 'section',
+    '[attr.title]': 'sectionTitle() || null',
+    '[attr.subtitle]': 'subtitle() || null',
+    '[attr.aria-labelledby]': 'sectionTitle() ? headingId : null',
+  },</pre>
+  <ul class="small">
+    <li><code>class: 'section'</code> — the host is the mock's block element</li>
+    <li><code>|| null</code> — an empty string removes the attribute</li>
+    <li><code>aria-labelledby</code> only when there is a heading</li>
+  </ul>
+</section>
+
+<section id="host-practice" data-part="2" data-cue="Best practice: put host bindings in the host property">
+  <h2>Best practice: the <code>host</code> property</h2>
+  <div class="cols">
+    <div class="card bad"><h3>Avoid</h3><p><code>@HostBinding('attr.title')</code> getters scattered through the class</p></div>
+    <div class="card good"><h3 style="color:var(--forest)">Prefer</h3><p>One typed <code>host: {}</code> block next to the selector, reading signals</p></div>
+  </div>
+</section>
+
+<section id="inputs" data-part="3" data-cue="The class has two inputs">
+  <h2>Two signal inputs</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/section/section.ts" data-mark="2">export class Section {
+  readonly sectionTitle = input&lt;string&gt;('', { alias: 'title' });
+  readonly subtitle = input&lt;string&gt;('');
+
+  protected readonly headingId = `sd-section-${nextSectionId++}`;
+}</pre>
+  <p class="muted">Consumers write <code>title="Members"</code>; the class keeps <code>sectionTitle</code>.</p>
+</section>
+
+<section id="not-needed" data-part="3" data-cue="Neither input is required">
+  <h2>What it doesn't need</h2>
+  <div class="cols three">
+    <div class="card"><h3>input.required</h3><p>An untitled section is valid</p></div>
+    <div class="card"><h3>signal / computed</h3><p><code>headingId</code> never changes; nothing to derive</p></div>
+    <div class="card"><h3>output()</h3><p>The section reports nothing back</p></div>
+  </div>
+</section>
+
+<section id="template" data-part="4" data-cue="The template opens with an at if block">
+  <h2>The template</h2>
+  <pre class="code tight" data-lang="html" data-file="components/src/lib/section/section.html" data-mark="9,12">@if (sectionTitle()) {
+  &lt;div class="section-header"&gt;
+    &lt;div class="section-header__text"&gt;
+      &lt;h2 class="section-header__title" [id]="headingId"&gt;{{ sectionTitle() }}&lt;/h2&gt;
+      @if (subtitle()) {
+        &lt;p class="section-header__sub"&gt;{{ subtitle() }}&lt;/p&gt;
+      }
+    &lt;/div&gt;
+    &lt;div class="section-header__action"&gt;&lt;ng-content select="[slot=action]" /&gt;&lt;/div&gt;
+  &lt;/div&gt;
+}
+&lt;ng-content /&gt;</pre>
+</section>
+
+<section id="slots" data-part="4" data-cue="Notice the rule from the project instructions.">
+  <h2>Each slot declared once</h2>
+  <div class="cols">
+    <div class="card"><h3><code>[slot=action]</code></h3><p>Once, inside <code>@if (sectionTitle())</code> — no title, no action</p></div>
+    <div class="card"><h3>default slot</h3><p>Once, outside any condition — the body always renders</p></div>
+  </div>
+  <p class="muted small">AGENTS.md: slots repeated per <code>@if</code> branch project into one branch only.</p>
+</section>
+
+<section id="styles" data-part="5" data-cue="Open section dot S C S S.">
+  <h2>Styles: tokens by role</h2>
+  <pre class="code tight" data-lang="scss" data-file="components/src/lib/section/section.scss" data-mark="2,7">.section-header__title {
+  font-size: var(--fontSizeBase600);
+  font-weight: var(--fontWeightBold);
+}
+
+.section-header__sub {
+  margin-top: 2px;
+  font-size: var(--fontSizeBase300);
+  color: var(--colorNeutralForeground2);
+}
+
+@include respond-to(tablet) {
+  :host {
+    margin-bottom: 40px;
+  }
+}</pre>
+</section>
+
+<section id="has" data-part="5" data-cue="One clever line">
+  <h2>An empty action leaves no gap</h2>
+  <pre class="code" data-lang="scss" data-file="components/src/lib/section/section.scss" data-mark="6">.section-header__action {
+  margin-left: auto;
+  flex: none;
+}
+
+.section-header__action:not(:has(*)) {
+  display: none;
+}</pre>
+</section>
+
+<section id="spec-setup" data-part="6" data-cue="Open section dot spec dot T S.">
+  <h2>Spec setup</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/section/section.spec.ts" data-mark="2,3">  beforeEach(async () =&gt; {
+    await TestBed.configureTestingModule({ imports: [Section, HostCmp] }).compileComponents();
+    fixture = TestBed.createComponent(Section);
+    fixture.detectChanges();
+    host = fixture.nativeElement as HTMLElement;
+  });</pre>
+  <p class="muted">The section on its own for inputs; a host component for slots.</p>
+</section>
+
+<section id="host-cmp" data-part="6" data-cue="The host component wraps a section titled Members">
+  <h2>A host component for the slots</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/section/section.spec.ts" data-mark="5-8">@Component({
+  standalone: true,
+  imports: [Section],
+  template: `
+    &lt;sd-section title="Members" subtitle="Four of you"&gt;
+      &lt;button slot="action" class="edit"&gt;Edit&lt;/button&gt;
+      &lt;p class="body"&gt;Quinn, Sara, Eli, Mae&lt;/p&gt;
+    &lt;/sd-section&gt;
+  `,
+})
+class HostCmp {}</pre>
+</section>
+
+<section id="tests" data-part="6" data-cue="The first test, &quot;creates an untitled section without a header&quot;">
+  <h2>What each test proves</h2>
+  <table class="grid small">
+    <tr><th>Test</th><th>Proves</th></tr>
+    <tr><td>creates an untitled section without a header</td><td>class only; no header, no labelledby, no mirrored attrs</td></tr>
+    <tr><td>renders the heading and labels the section with it</td><td><code>setInput('title')</code> → h2 id <code>sd-section-N</code> = host <code>aria-labelledby</code></td></tr>
+    <tr><td>renders the subtitle under the heading</td><td>subtitle paragraph + mirrored attribute</td></tr>
+    <tr><td>projects the action into the header and the body below it</td><td>both slots land in the right place</td></tr>
+  </table>
+</section>
+
+<section id="projection" data-part="6" data-cue="And &quot;projects the action into the header">
+  <h2>Proving projection</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/section/section.spec.ts" data-mark="5-7">  it('projects the action into the header and the body below it', () =&gt; {
+    const wrapper = TestBed.createComponent(HostCmp);
+    wrapper.detectChanges();
+    const el = (wrapper.nativeElement as HTMLElement).querySelector('sd-section') as HTMLElement;
+    expect(el.querySelector('.section-header__action .edit')?.textContent).toBe('Edit');
+    expect(el.querySelector('.section-header .body')).toBeNull();
+    expect(el.querySelector(':scope &gt; .body')?.textContent).toBe('Quinn, Sara, Eli, Mae');
+    expect(el.querySelector('.section-header__title')?.textContent?.trim()).toBe('Members');
+  });</pre>
+</section>
+
+<section id="pitfalls" data-part="7" data-cue="Projecting an action into an untitled section">
+  <h2>Pitfalls</h2>
+  <ul>
+    <li>An action in an untitled section is never rendered</li>
+    <li>One <code>@if</code> around several slotted nodes loses the slot (NG8011) — one per node</li>
+    <li>Don't add your own heading to the body — the section's <code>h2</code> labels it</li>
+  </ul>
+</section>
+
+<section id="recap" data-part="8" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div>Two signal inputs, one aliased to <code>title</code></div>
+    <div>Host carries <code>.section</code> + <code>aria-labelledby</code></div>
+    <div>Module counter → unique heading ids</div>
+    <div>Each slot once; empty action hidden by <code>:has</code></div>
+    <div>Host component proves projection</div>
+    <div>Tokens by role, never hex</div>
+  </div>
+</section>
+
+<section id="next" data-part="8" data-cue="Next, video thirty seven builds">
+  <div class="kicker">Next · Video 37</div>
+  <h1>Coding <code>sd-seg-radio</code></h1>
+</section>
+
+<script src="../../assets/slides.js"></script>
+</body>
+</html>
