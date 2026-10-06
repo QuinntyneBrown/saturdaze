@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vitest Video 14 Slides</title>
+<link rel="stylesheet" href="../../assets/slides.css">
+</head>
+<body data-video-number="14" data-video-title="vi.setSystemTime" data-parts="Introduction|setSystemTime|Warm window|Warm test|The guard|A gap|Pitfalls|Recap|Series">
+
+<section id="title" data-part="0">
+  <div class="kicker">Saturdaze · Vitest · Video 14 of 14</div>
+  <h1><code>vi.setSystemTime</code></h1>
+  <p class="lead">Move the clock without running a single timer.</p>
+</section>
+
+<section id="half" data-part="0" data-cue="Sometimes you want only half of that">
+  <h2>Half of advancing</h2>
+  <div class="cols">
+    <div class="card"><h3><code>vi.advanceTimersByTime(ms)</code></h3><p>Moves the clock <b>and</b> runs every timer due on the way</p></div>
+    <div class="card good"><h3><code>vi.setSystemTime(time)</code></h3><p>Moves the clock. Nothing fires.</p></div>
+  </div>
+  <p class="muted">One call in the repo: <code>components/src/lib/tooltip/tooltip.spec.ts</code></p>
+</section>
+
+<section id="what" data-part="1" data-cue="With fake timers installed, `vi.setSystemTime` sets">
+  <h2>What it does</h2>
+  <div class="flow">
+    <div class="node"><b>fake clock</b><small><code>Date.now()</code> = T</small></div>
+    <div class="arrow">→</div>
+    <div class="node accent"><b><code>setSystemTime(T + 10 s)</code></b><small>no timer runs</small></div>
+    <div class="arrow">→</div>
+    <div class="node"><b><code>Date.now()</code></b><small>= T + 10 s</small></div>
+  </div>
+  <p class="center">Same jump with <code>advanceTimersByTime(10_000)</code>: every timer due in those 10 s runs too.</p>
+</section>
+
+<section id="source" data-part="1" data-cue="Two details from Vitest four point one's source.">
+  <h2>Two details (Vitest 4.1)</h2>
+  <pre class="code tight" data-lang="ts" data-file="node_modules/vitest/dist/chunks/test.DNmyFkvJ.js" data-mark="2,6,8-9">useFakeTimers() {
+  const fakeDate = this._fakingDate || Date.now();
+  ...
+}
+setSystemTime(now) {
+  if (this._fakingTime) this._clock.setSystemTime(date);
+  else {
+    this._fakingDate = date ?? new Date(this.getRealSystemTime());
+    mockDate(this._fakingDate);
+  }
+}</pre>
+  <ul>
+    <li>The fake clock starts at the real <code>Date.now()</code></li>
+    <li>Without fake timers, only <code>Date</code> is mocked</li>
+  </ul>
+</section>
+
+<section id="warm-state" data-part="2" data-cue="To see why the tooltip spec needs it">
+  <h2>The warm window</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/tooltip/tooltip.ts" data-mark="2,5">/** A tooltip shown within this long after another hid skips the delay. */
+const WARM_MS = 600;
+...
+let nextId = 0;
+let lastHiddenAt = 0;
+...
+  hide(): void {
+    ...
+    lastHiddenAt = Date.now();</pre>
+</section>
+
+<section id="warm-check" data-part="2" data-cue="When the pointer enters a trigger, the directive compares the two.">
+  <h2>Cold or warm?</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/tooltip/tooltip.ts" data-mark="6-7">  protected onPointerEnter(event: PointerEvent): void {
+    if (event.pointerType === 'touch') return;
+    clearTimeout(this.hideTimer);
+    if (this.visible) return;
+    clearTimeout(this.showTimer);
+    if (Date.now() - lastHiddenAt &lt; WARM_MS) this.show();
+    else this.showTimer = setTimeout(() =&gt; this.show(), SHOW_DELAY_MS);
+  }</pre>
+  <div class="cols">
+    <div class="card"><h3>Cold</h3><p>Wait 400 ms</p></div>
+    <div class="card good"><h3>Warm (&lt; 600 ms since a hide)</h3><p>Show at once</p></div>
+  </div>
+</section>
+
+<section id="module-level" data-part="2" data-cue="The important word is module level.">
+  <h2>One value for everyone</h2>
+  <div class="cols three">
+    <div class="card"><h3>In the app</h3><p>Every tooltip shares <code>lastHiddenAt</code></p></div>
+    <div class="card bad"><h3>In tests</h3><p><code>isolate: false</code>: every test and spec file in the worker shares it</p></div>
+    <div class="card"><h3>So</h3><p>A hide in one test is remembered in the next</p></div>
+  </div>
+</section>
+
+<section id="warm-test" data-part="3" data-cue="The spec has a test called skips the delay">
+  <h2>The test that proves the warm path</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/tooltip/tooltip.spec.ts" data-mark="5-7">  it('skips the delay for the next tooltip right after one hides', () =&gt; {
+    pointer(trigger, 'pointerenter');
+    vi.advanceTimersByTime(400);
+    pointer(trigger, 'pointerleave');
+    vi.advanceTimersByTime(100);
+    pointer(trigger, 'pointerenter');
+    expect(bubble()).not.toBeNull();
+  });</pre>
+  <p class="muted">Advancing moved <code>Date.now()</code> in step: 0 ms since the hide.</p>
+</section>
+
+<section id="guard" data-part="4" data-cue="Now the one call.">
+  <h2>The guard in <code>beforeEach</code></h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/tooltip/tooltip.spec.ts" data-mark="2-4">  beforeEach(async () =&gt; {
+    vi.useFakeTimers();
+    // Step past the "warm" window left by the previous test's hide.
+    vi.setSystemTime(Date.now() + 10_000);
+    await TestBed.configureTestingModule({ imports: [HostCmp] }).compileComponents();
+    fixture = TestBed.createComponent(HostCmp);
+    fixture.detectChanges();
+    trigger = fixture.nativeElement.querySelector('#trigger');
+  });</pre>
+  <p class="muted"><code>Date.now()</code> here is the fake clock, just set to the real time.</p>
+</section>
+
+<section id="guard-works" data-part="4" data-cue="That guard does protect against one thing.">
+  <h2>What it protects against</h2>
+  <div class="flow">
+    <div class="node"><b>hide on the real clock</b><small><code>lastHiddenAt</code> = R</small></div>
+    <div class="arrow">→</div>
+    <div class="node"><b>a few ms later</b><small>real time R + ε</small></div>
+    <div class="arrow">→</div>
+    <div class="node accent"><b>+ 10,000 ms</b><small>gap ≫ 600: cold</small></div>
+  </div>
+  <p class="center">For example, a tooltip hidden by another spec file in the same worker.</p>
+</section>
+
+<section id="gap" data-part="5" data-cue="But the comment says the previous test's hide">
+  <h2>The previous test's hide</h2>
+  <div class="flow">
+    <div class="node"><b>test A starts</b><small>R + 10 s</small></div>
+    <div class="arrow">→</div>
+    <div class="node"><b>advances 1 s, hides</b><small><code>lastHiddenAt</code> = R + 11 s</small></div>
+    <div class="arrow">→</div>
+    <div class="node ext"><b>test B starts</b><small>R + ε + 10 s</small></div>
+    <div class="arrow">→</div>
+    <div class="node accent"><b>now − lastHiddenAt</b><small>≈ −1 s &lt; 600: warm</small></div>
+  </div>
+  <p class="center muted">"stays open" advances 400 + 500 + 100 ms before its tooltip hides.</p>
+</section>
+
+<section id="experiment" data-part="5" data-cue="Today the suite passes anyway">
+  <h2>Checked with temporary copies</h2>
+  <div class="cols three">
+    <div class="card good"><h3>As committed</h3><p>10 / 10 pass: the cold-start test runs first</p></div>
+    <div class="card bad"><h3>Moved last</h3><p>Fails with <b>and</b> without <code>setSystemTime</code></p></div>
+    <div class="card good"><h3>Monotonic clock</h3><p>Reordered copy: 10 / 10 pass</p></div>
+  </div>
+  <pre class="code" data-lang="sh" data-file="vitest output · reordered copy">× shows after a hover delay and hides on pointer-out
+AssertionError: expected &lt;sd-tooltip …(4)&gt;&lt;/sd-tooltip&gt; to be null</pre>
+</section>
+
+<section id="fix" data-part="5" data-cue="Then I tried a fix in another temporary copy.">
+  <h2>A fix that holds in any order</h2>
+  <pre class="code" data-lang="ts" data-file="tooltip.spec.ts · tried in a temporary copy, not committed" data-mark="2,6">describe('Tooltip', () =&gt; {
+  let clock = Date.now();
+  ...
+  beforeEach(async () =&gt; {
+    vi.useFakeTimers();
+    vi.setSystemTime((clock += 60_000));
+    ...</pre>
+  <p>Each test starts a minute after the previous one started, beyond anything a test advances.</p>
+</section>
+
+<section id="lesson" data-part="5" data-cue="The general lesson:">
+  <div class="quote">Right after you install fake timers, a time relative to <code>Date.now()</code> is relative to <b>real</b> time, not to the previous test's fake time.</div>
+  <p class="center">Separate tests by moving the clock monotonically, or reset the module state.</p>
+</section>
+
+<section id="pitfalls" data-part="6" data-cue="A few pitfalls.">
+  <h2>Pitfalls</h2>
+  <ul>
+    <li>Using <code>setSystemTime</code> when timers need to fire</li>
+    <li>Assuming <code>Date.now() + n</code> separates one test from the next</li>
+    <li>Module-level state surviving between tests (<code>isolate: false</code>)</li>
+    <li>Order-dependent tests: run one alone, or last, to check</li>
+  </ul>
+</section>
+
+<section id="recap" data-part="7" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div><code>setSystemTime</code>: clock moves, no timer runs</div>
+    <div>Fake clock starts at the real time</div>
+    <div>Module state outlives a test</div>
+    <div>Move the clock monotonically to separate tests</div>
+  </div>
+</section>
+
+<section id="series" data-part="8" data-cue="That completes the series.">
+  <h2>The series</h2>
+  <div class="cols">
+    <ul class="small">
+      <li>01 · Vitest in this workspace</li>
+      <li>02 · <code>describe</code>, <code>it</code> and hooks</li>
+      <li>03 · <code>describe.each</code></li>
+      <li>04 · <code>toBe</code>, <code>toEqual</code>, <code>toMatchObject</code></li>
+      <li>05 · Null, truthy and type matchers</li>
+      <li>06 · Strings and collections</li>
+      <li>07 · Asymmetric matchers</li>
+    </ul>
+    <ul class="small">
+      <li>08 · <code>resolves</code>, <code>rejects</code>, <code>toThrow</code></li>
+      <li>09 · <code>vi.fn</code> and <code>Mock</code></li>
+      <li>10 · Programming mock behaviour</li>
+      <li>11 · Asserting calls</li>
+      <li>12 · <code>vi.spyOn</code> and restoring</li>
+      <li>13 · Fake timers and <code>advanceTimersByTime</code></li>
+      <li>14 · <code>vi.setSystemTime</code></li>
+    </ul>
+  </div>
+</section>
+
+<section id="end" data-part="8" data-cue="Every one of those features earns its place">
+  <div class="kicker">Saturdaze · Vitest</div>
+  <h1>Thanks for watching</h1>
+  <p class="lead">Every feature in this series earns its place in a spec in this repository.</p>
+</section>
+
+<script src="../../assets/slides.js"></script>
+</body>
+</html>

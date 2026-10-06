@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vitest Video 05 Slides</title>
+<link rel="stylesheet" href="../../assets/slides.css">
+</head>
+<body data-video-number="05" data-video-title="Presence and type matchers" data-parts="Introduction|toBeNull|One absent|Undefined|Defined|Truthy|Type|Greater|Messages|Pitfalls|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Saturdaze · Vitest · Video 05 of 14</div>
+  <h1>Presence and type matchers</h1>
+  <p class="lead">Is anything there, and what kind of thing is it?</p>
+</section>
+
+<section id="family" data-part="0" data-cue="In this video you meet `toBeNull`">
+  <h2>The family</h2>
+  <div class="cols three">
+    <div class="card"><h3><code>toBeNull</code></h3><p>224 uses</p></div>
+    <div class="card"><h3><code>toBeTruthy</code></h3><p>62</p></div>
+    <div class="card"><h3><code>toBeUndefined</code></h3><p>15</p></div>
+    <div class="card"><h3><code>toBeTypeOf</code></h3><p>5</p></div>
+    <div class="card"><h3><code>toBeDefined</code></h3><p>4</p></div>
+    <div class="card"><h3><code>toBeGreaterThan</code></h3><p>2</p></div>
+  </div>
+  <p class="muted">Plus <code>expect(value, message)</code>.</p>
+</section>
+
+<section id="null" data-part="1" data-cue="`toBeNull` passes only for null, and nothing else.">
+  <h2><code>toBeNull</code>: the absent element</h2>
+  <div class="cols">
+    <div class="card good"><h3><code>querySelector</code></h3><p>Returns <code>null</code> when nothing matches</p></div>
+    <div class="card"><h3>126 lines</h3><p>assert <code>toBeNull</code> straight on a <code>querySelector(…)</code></p></div>
+  </div>
+</section>
+
+<section id="null-tooltip" data-part="1" data-cue="So `toBeNull` says exactly">
+  <h2>Gone, then there</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/tooltip/tooltip.spec.ts" data-mark="2,9">    pointer(trigger, 'pointerenter');
+    expect(bubble()).toBeNull();
+    vi.advanceTimersByTime(400);
+    …
+  it('stays open while the pointer moves onto the bubble', () =&gt; {
+    …
+    pointer(bubble()!, 'pointerenter');
+    vi.advanceTimersByTime(500);
+    expect(bubble()).not.toBeNull();</pre>
+  <pre class="code tight" data-lang="ts" data-file="saturdaze/src/app/app.spec.ts">  it('renders the app chrome by default: top bar, one frame with the outlet, bottom nav', () =&gt; {
+    expect(host.querySelector('sd-top-bar')).not.toBeNull();
+    expect(host.querySelector('sd-bottom-nav')).not.toBeNull();
+    expect(host.querySelector('sd-sitebar')).toBeNull();</pre>
+</section>
+
+<section id="one-absent" data-part="2" data-cue="Optional chaining complicates this.">
+  <h2>Normalize to one kind of absent</h2>
+  <pre class="code" data-lang="ts" data-file="saturdaze/src/app/pages/past/past.page.spec.ts" data-mark="2,4">  const headerTitle = (): string | null =&gt;
+    host.querySelector('.page-header__title')?.textContent?.trim() ?? null;
+  const headerSubtitle = (): string | null =&gt;
+    host.querySelector('.page-header__subtitle')?.textContent?.trim() ?? null;</pre>
+  <div class="cols">
+    <div class="card bad"><h3><code>?.</code> on a missing element</h3><p>produces <code>undefined</code></p></div>
+    <div class="card good"><h3><code>?? null</code></h3><p>26 helpers: every "not there" is <code>null</code></p></div>
+  </div>
+</section>
+
+<section id="null-results" data-part="2" data-cue="The same matcher states a contract">
+  <h2><code>null</code> as a designed answer</h2>
+  <pre class="code" data-lang="ts" data-file="api/src/lib/api/weather.spec.ts">    expect(forecastFor([sat], '2026-05-17')).toBeNull();</pre>
+  <pre class="code" data-lang="ts" data-file="api/src/lib/services/weekend-plan.service.spec.ts" data-mark="1,3">    it('sends the preferred day and resolves null when nothing was placed', async () =&gt; {
+      …
+      await expect(promise).resolves.toBeNull();</pre>
+</section>
+
+<section id="undefined" data-part="3" data-cue="`toBeUndefined` passes only for undefined.">
+  <h2><code>toBeUndefined</code>: deliberately missing</h2>
+  <pre class="code tight" data-lang="ts" data-file="saturdaze/src/app/app.routes.spec.ts" data-mark="5">    for (const path of ['', 'sign-in', 'create-account', 'reset-password']) {
+      expect(find(path)?.canActivate, path).toEqual([requireAnonymous]);
+    }
+    for (const path of ['verify-email', 'legal', 'sample-weekend']) {
+      expect(find(path)?.canActivate, path).toBeUndefined();
+    }</pre>
+  <pre class="code tight" data-lang="ts" data-file="saturdaze/src/app/app.spec.ts">    expect(document.body.dataset['page']).toBeUndefined();</pre>
+  <pre class="code tight" data-lang="ts" data-file="saturdaze/src/app/dialogs/family-member-dialog/family-member-dialog.spec.ts">    expect(errorOf('memberName')).toBe('Enter a name.');
+    expect(errorOf('memberAge')).toBeUndefined();</pre>
+</section>
+
+<section id="resolves-undefined" data-part="3" data-cue="It also appears after `resolves`.">
+  <h2>Succeeded, returned nothing</h2>
+  <pre class="code" data-lang="ts" data-file="api/src/lib/services/auth.service.spec.ts">      req.flush(null, { status: 202, statusText: 'Accepted' });
+      await expect(promise).resolves.toBeUndefined();</pre>
+</section>
+
+<section id="defined" data-part="4" data-cue="`toBeDefined` is the negation of `toBeUndefined`">
+  <h2><code>toBeDefined</code>: weaker than it looks</h2>
+  <pre class="code" data-lang="ts" data-file="api/src/lib/api/api-base-url.spec.ts">  it('should be defined', () =&gt; {
+    expect(API_BASE_URL).toBeDefined();
+  });</pre>
+  <div class="cols">
+    <div class="card bad"><h3>Passes for</h3><p><code>null</code>, <code>0</code>, <code>''</code> — anything but <code>undefined</code></p></div>
+    <div class="card good"><h3>Prefer</h3><p>An equality matcher when you know the value</p></div>
+  </div>
+</section>
+
+<section id="truthy" data-part="5" data-cue="`toBeTruthy` passes for any value that is not false">
+  <h2><code>toBeTruthy</code>: the smoke test</h2>
+  <div class="cols">
+    <div class="card"><h3>Falsy</h3><p><code>false</code> · <code>0</code> · <code>''</code> · <code>null</code> · <code>undefined</code> · <code>NaN</code></p></div>
+    <div class="card good"><h3>40 spec files</h3><p><code>expect(fixture.componentInstance).toBeTruthy()</code></p></div>
+  </div>
+</section>
+
+<section id="truthy-errors" data-part="5" data-cue="The other common use is with errors.">
+  <h2>Proves something went wrong</h2>
+  <pre class="code" data-lang="ts" data-file="api/src/lib/services/weekend-plan.service.spec.ts">      await expect(promise).rejects.toBeTruthy();</pre>
+  <pre class="code tight" data-lang="ts" data-file="saturdaze/src/app/auth/auth.interceptor.spec.ts" data-mark="8,10">  it('does not retry and bounces to /sign-in when the refresh fails', async () =&gt; {
+    session.refreshSession = vi.fn(() =&gt; Promise.resolve(false));
+    let error: unknown;
+    httpClient.get('/api/data').subscribe({ error: (e) =&gt; (error = e) });
+    httpMock.expectOne('/api/data').flush(null, { status: 401, statusText: 'Unauthorized' });
+    await flushPromises();
+    httpMock.expectNone('/api/data');
+    expect(error).toBeTruthy();
+    expect(navigateSpy).toHaveBeenCalledTimes(1);
+    expect(String(navigateSpy.mock.calls[0]?.[0])).toMatch(/^\/sign-in\?returnUrl=/);</pre>
+</section>
+
+<section id="truthy-tradeoff" data-part="5" data-cue="Here is the trade-off.">
+  <h2>Loose by design</h2>
+  <div class="cols">
+    <div class="card bad"><h3><code>toBeTruthy</code></h3><p><code>{}</code>, <code>'oops'</code>, the wrong error — all pass</p></div>
+    <div class="card good"><h3>When the error is the behaviour</h3><p><code>rejects.toMatchObject({ code })</code> · <code>rejects.toThrow(message)</code></p></div>
+  </div>
+</section>
+
+<section id="typeof" data-part="6" data-cue="`toBeTypeOf` compares the type of operator's answer">
+  <h2><code>toBeTypeOf</code>: routes are lazy</h2>
+  <pre class="code tight" data-lang="ts" data-file="saturdaze/src/app/app.routes.spec.ts" data-mark="2,8,9">    for (const path of pages) {
+      expect(find(path)?.loadComponent, path).toBeTypeOf('function');
+    }
+  });
+
+  it('nests the three Ideas segments under /ideas with their subtitles', () =&gt; {
+    …
+      expect(child.loadComponent).toBeTypeOf('function');
+      expect(child.data?.['subtitle']).toBeTypeOf('string');</pre>
+  <pre class="code tight" data-lang="ts" data-file="saturdaze/src/app/app.routes.spec.ts">    const redirect = find('privacy')?.redirectTo;
+    expect(redirect).toBeTypeOf('function');</pre>
+</section>
+
+<section id="greater" data-part="7" data-cue="`toBeGreaterThan` checks a number against a bound.">
+  <h2><code>toBeGreaterThan</code>: a direction</h2>
+  <pre class="code" data-lang="ts" data-file="api/src/lib/api/weekend-projection.spec.ts">      expect(bySortThenStart(dto.blocks[1]!, dto.blocks[2]!)).toBeGreaterThan(0);</pre>
+  <pre class="code" data-lang="ts" data-file="saturdaze/src/app/app.config.spec.ts">    expect((appConfig as any).providers.length).toBeGreaterThan(0);</pre>
+  <p class="muted">A comparator's contract is its sign — an exact value would over-specify it.</p>
+</section>
+
+<section id="message" data-part="8" data-cue="When an assertion sits in a loop">
+  <h2><code>expect(value, message)</code></h2>
+  <pre class="code" data-lang="ts" data-file="saturdaze/src/app/app.routes.spec.ts" data-mark="8">  it('defines a path and a target for every route', () =&gt; {
+    for (const route of routes) {
+      expect(route.path).toBeDefined();
+      const hasTarget =
+        route.loadComponent !== undefined ||
+        route.children !== undefined ||
+        route.redirectTo !== undefined;
+      expect(hasTarget, route.path).toBe(true);
+    }
+  });</pre>
+</section>
+
+<section id="message-output" data-part="8" data-cue="If the sign in route lost its lazy component">
+  <h2>The message names the failing iteration</h2>
+  <pre class="code" data-lang="sh" data-file="Vitest 4.1 output">AssertionError: sign-in: expected undefined to be type of 'function'</pre>
+  <pre class="code" data-lang="ts" data-file="saturdaze/src/app/pages/reset-password/reset-password.page.spec.ts">      expect(title(), state).toBe(expected);</pre>
+</section>
+
+<section id="pitfalls" data-part="9" data-cue="A few pitfalls.">
+  <h2>Pitfalls</h2>
+  <ul>
+    <li><code>toBeFalsy</code> / <code>not.toBeTruthy</code> for a missing element — <code>''</code> passes too</li>
+    <li>Mixing <code>null</code> and <code>undefined</code> for absence — normalize with <code>?? null</code></li>
+    <li>Relying on <code>toBeDefined</code>, which passes for <code>null</code></li>
+    <li>A truthy rejection as the only check when the error is the behaviour</li>
+    <li>Assertions in loops without a message</li>
+  </ul>
+</section>
+
+<section id="recap" data-part="10" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div><code>toBeNull</code> for absent elements</div>
+    <div><code>?? null</code>: one kind of absent</div>
+    <div><code>toBeUndefined</code> when it means something</div>
+    <div><code>toBeTruthy</code> proves something, not what</div>
+    <div><code>toBeTypeOf</code> · <code>toBeGreaterThan</code>: kind and direction</div>
+    <div>A message for every looped assertion</div>
+  </div>
+</section>
+
+<section id="next" data-part="10" data-cue="Next, in video six">
+  <div class="kicker">Next · Video 06</div>
+  <h1>Strings and collections</h1>
+  <p class="lead"><code>toContain</code>, <code>toContainEqual</code>, <code>toMatch</code>, <code>toHaveLength</code></p>
+</section>
+
+<script src="../../assets/slides.js"></script>
+</body>
+</html>

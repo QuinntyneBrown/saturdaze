@@ -267,13 +267,14 @@ function main() {
     '-y', '-v', 'error',
     '-i', stills,
     '-i', mp3,
-    '-vf', `ass=${ass.replace(/:/g, '\\:')},format=yuv420p`,
+    // Relative to cwd: an absolute Windows path (C:\…) breaks the filter's option parsing.
+    '-vf', `ass=${basename(ass)},format=yuv420p`,
     '-c:v', 'libx264', '-preset', 'medium', '-tune', 'stillimage', '-crf', '26',
     '-c:a', 'aac', '-b:a', '96k',
     '-movflags', '+faststart',
     '-shortest',
     mp4,
-  ], { stdio: 'inherit' });
+  ], { stdio: 'inherit', cwd: cache });
   console.log(`wrote ${mp4}`);
 }
 

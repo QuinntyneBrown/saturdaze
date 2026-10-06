@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vitest Video 04 Slides</title>
+<link rel="stylesheet" href="../../assets/slides.css">
+</head>
+<body data-video-number="04" data-video-title="toBe, toEqual and toMatchObject" data-parts="Introduction|toBe|Identity|toEqual|Map + toEqual|toMatchObject|Arrays|not|Choosing|Pitfalls|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Saturdaze · Vitest · Video 04 of 14</div>
+  <h1><code>toBe</code>, <code>toEqual</code> and <code>toMatchObject</code></h1>
+  <p class="lead">Three definitions of "the same".</p>
+</section>
+
+<section id="counts" data-part="0" data-cue="Together they are more than two thirds">
+  <h2>Two thirds of every <code>expect</code></h2>
+  <div class="cols three">
+    <div class="card"><h3>1,452</h3><p><code>toBe</code></p></div>
+    <div class="card"><h3>273</h3><p><code>toEqual</code></p></div>
+    <div class="card"><h3>41</h3><p><code>toMatchObject</code></p></div>
+  </div>
+  <p class="muted">Of ~2,460 <code>expect</code> calls in the frontend specs.</p>
+</section>
+
+<section id="tobe" data-part="1" data-cue="`toBe` compares with `Object.is`">
+  <h2><code>toBe</code>: the same value</h2>
+  <pre class="code" data-lang="ts" data-file="api/src/lib/services/weekend-plan.service.spec.ts" data-mark="4,5,8">      expect(service.getWeekend()().status).toBe('loading');
+      await loadCurrent();
+      const view = service.getWeekend()();
+      expect(view.status).toBe('ready');
+      expect(view.id).toBe('w1');
+      expect(view.headline).toBe('This weekend');
+      expect(view.days.map((d) =&gt; d.day)).toEqual(['Saturday', 'Sunday']);
+      expect(view.blockCount).toBe(8);</pre>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/tooltip/tooltip.spec.ts">    expect(bubble()?.getAttribute('role')).toBe('tooltip');</pre>
+</section>
+
+<section id="object-is" data-part="1" data-cue="`Object.is` differs from triple equals in only two corners">
+  <h2><code>Object.is</code> vs <code>===</code></h2>
+  <div class="cols">
+    <div class="card"><h3><code>NaN</code></h3><p><code>Object.is(NaN, NaN)</code> is <code>true</code></p></div>
+    <div class="card"><h3><code>+0</code> / <code>-0</code></h3><p><code>Object.is(0, -0)</code> is <code>false</code></p></div>
+  </div>
+  <p class="muted">Hence the failure message: <code>// Object.is equality</code></p>
+</section>
+
+<section id="identity" data-part="2" data-cue="For objects and arrays, `toBe` asks a stricter question">
+  <h2>On objects, <code>toBe</code> means identity</h2>
+  <pre class="code" data-lang="ts" data-file="api/src/lib/api/weather.spec.ts" data-mark="3">  it('finds the forecast for a date', () =&gt; {
+    const sat = forecast(['sunny']);
+    expect(forecastFor([sat], '2026-05-16')).toBe(sat);
+    expect(forecastFor([sat], '2026-05-17')).toBeNull();
+  });</pre>
+  <pre class="code" data-lang="ts" data-file="api/src/lib/services/event-submissions.service.spec.ts" data-mark="2">    const full = toSubmissionCard(NEWER, 'pending', now);
+    expect(full.dto).toBe(NEWER);</pre>
+</section>
+
+<section id="literal" data-part="2" data-cue="The flip side is a classic mistake">
+  <h2><code>toBe</code> with a literal never passes</h2>
+  <pre class="code" data-lang="ts" data-file="a failing example">expect({ locked: true }).toBe({ locked: true });</pre>
+  <pre class="code" data-lang="sh" data-file="Vitest 4.1 output">AssertionError: expected { locked: true } to be { locked: true } // Object.is equality
+If it should pass with deep equality, replace "toBe" with "toStrictEqual"
+Expected: { locked: true }
+Received: serializes to the same string</pre>
+</section>
+
+<section id="toequal" data-part="3" data-cue="`toEqual` compares recursively.">
+  <h2><code>toEqual</code>: the same contents</h2>
+  <pre class="code" data-lang="ts" data-file="api/src/lib/services/weekend-plan.service.spec.ts" data-mark="4">    it('PUTs the lock flag', async () =&gt; {
+      const promise = service.lockBlock('b1', true);
+      const req = httpMock.expectOne(`${BASE}/api/blocks/b1/lock`);
+      expect(req.request.body).toEqual({ locked: true });</pre>
+  <pre class="code" data-lang="ts" data-file="api/src/lib/api/weekend-projection.spec.ts">      expect(locked.chips[0]).toEqual({ tone: 'accent', icon: 'lock', label: 'Locked' });</pre>
+  <p class="muted">Every property checked · an extra one on either side fails.</p>
+</section>
+
+<section id="map-vote" data-part="4" data-cue="One pattern shows up across the page and component specs.">
+  <h2>Map, then compare the list</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/vote-row/vote-row.spec.ts">    expect([up(0), down(0)].map((b) =&gt; b.getAttribute('aria-pressed'))).toEqual(['false', 'false']);
+    expect([up(1), down(1)].map((b) =&gt; b.getAttribute('aria-pressed'))).toEqual(['true', 'false']);
+    expect([up(2), down(2)].map((b) =&gt; b.getAttribute('aria-pressed'))).toEqual(['false', 'true']);</pre>
+</section>
+
+<section id="map-past" data-part="4" data-cue="The past page spec maps its filter chips">
+  <h2>One assertion, the whole list</h2>
+  <pre class="code tight" data-lang="ts" data-file="saturdaze/src/app/pages/past/past.page.spec.ts" data-mark="2,8">    const chips = Array.from(host.querySelectorAll('sd-filter-chip'));
+    expect(chips.map((c) =&gt; c.textContent?.trim())).toEqual([
+      'All',
+      'Favourites',
+      'This year',
+      '5★',
+    ]);
+    expect(chips.map((c) =&gt; c.querySelector('button')?.getAttribute('aria-pressed'))).toEqual([
+      'true',
+      'false',
+      'false',
+      'false',
+    ]);</pre>
+</section>
+
+<section id="ignores" data-part="4" data-cue="`toEqual` ignores properties whose value is undefined">
+  <h2>What <code>toEqual</code> ignores</h2>
+  <div class="cols">
+    <div class="card"><h3><code>toEqual</code></h3><p>Ignores <code>undefined</code> properties and class types</p><p class="small muted"><code>{ a: 1, b: undefined }</code> equals <code>{ a: 1 }</code></p></div>
+    <div class="card"><h3><code>toStrictEqual</code></h3><p>Checks both</p><p class="small muted">Not used here: view models are plain objects</p></div>
+  </div>
+</section>
+
+<section id="subset" data-part="5" data-cue="`toMatchObject` checks only the properties you list.">
+  <h2><code>toMatchObject</code>: a subset</h2>
+  <pre class="code" data-lang="ts" data-file="api/src/lib/api/weekend-projection.spec.ts" data-mark="2-7">    it('formats time, range and duration the way the rail shows them', () =&gt; {
+      expect(row('b1')).toMatchObject({
+        time: '11:00',
+        timeRange: '11:00am to 1:00pm',
+        duration: '2h',
+        durationMinutes: 120,
+      });</pre>
+  <pre class="code" data-lang="ts" data-file="api/src/lib/api/weekend-projection.spec.ts">      expect(locked).toMatchObject({ locked: true, swappable: false, lockable: true });</pre>
+</section>
+
+<section id="subset-body" data-part="5" data-cue="The pattern works for requests too.">
+  <h2>Only the field this test is about</h2>
+  <pre class="code" data-lang="ts" data-file="api/src/lib/services/weekend-plan.service.spec.ts" data-mark="5">    it('sends the preferred day and resolves null when nothing was placed', async () =&gt; {
+      await loadCurrent();
+      const promise = service.addErrand('Milk run', 30, 'Sunday');
+      const req = httpMock.expectOne(`${BASE}/api/weekends/w1/errands`);
+      expect(req.request.body).toMatchObject({ preferredDay: 'Sunday' });</pre>
+  <p class="muted">The body also carries <code>description</code> and <code>estimatedMinutes</code>.</p>
+</section>
+
+<section id="errors" data-part="5" data-cue="The auth service spec uses it with `rejects`.">
+  <h2>Match the code, not the copy</h2>
+  <pre class="code" data-lang="ts" data-file="api/src/lib/services/auth.service.spec.ts" data-mark="6-8">    it('falls back to invalid_credentials when the body carries no code', async () =&gt; {
+      const promise = service.login({ email: 'quinn@example.com', password: 'pw' });
+      httpMock
+        .expectOne(`${BASE}/api/auth/login`)
+        .flush(null, { status: 500, statusText: 'Server Error' });
+      await expect(promise).rejects.toMatchObject({
+        code: 'invalid_credentials',
+      } satisfies Partial&lt;AuthError&gt;);
+    });</pre>
+</section>
+
+<section id="arrays" data-part="6" data-cue="One rule surprises people.">
+  <h2>Nested arrays are not subsets</h2>
+  <pre class="code" data-lang="ts" data-file="a failing example">expect({ a: [1, 2] }).toMatchObject({ a: [1] });</pre>
+  <pre class="code" data-lang="sh" data-file="Vitest 4.1 output">AssertionError: expected { a: [ 1, 2 ] } to match object { a: [ 1 ] }</pre>
+  <pre class="code" data-lang="ts" data-file="api/src/lib/api/weekend-projection.spec.ts">      expect(row('b1').chips).toContainEqual({ tone: 'primary', label: 'Day highlight' });</pre>
+</section>
+
+<section id="not" data-part="7" data-cue="Every matcher can be negated with `not`.">
+  <h2><code>not</code> negates any matcher</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/empty/empty.spec.ts" data-mark="1,6">    const sparkle = svg.innerHTML;
+    expect(sparkle).toContain('M12 3l1.7 5.3');
+
+    fixture.componentRef.setInput('icon', 'calendar');
+    fixture.detectChanges();
+    expect(svg.innerHTML).not.toBe(sparkle);</pre>
+  <p class="muted">"Not this value" passes for every other value — state the expected one when you can.</p>
+</section>
+
+<section id="choosing" data-part="8" data-cue="So the choice comes down to one question each.">
+  <h2>Choosing</h2>
+  <div class="cols three">
+    <div class="card"><h3><code>toBe</code></h3><p>A primitive, or the very same object</p></div>
+    <div class="card"><h3><code>toEqual</code></h3><p>The whole structure must match</p></div>
+    <div class="card"><h3><code>toMatchObject</code></h3><p>Only some properties matter to this test</p></div>
+  </div>
+</section>
+
+<section id="pitfalls" data-part="9" data-cue="A few pitfalls.">
+  <h2>Pitfalls</h2>
+  <ul>
+    <li><code>toBe</code> with an object or array literal</li>
+    <li><code>toEqual</code> on a large view model when two fields matter</li>
+    <li>Expecting <code>toMatchObject</code> to treat arrays as subsets</li>
+    <li><code>not</code> when you could state the expected value</li>
+  </ul>
+</section>
+
+<section id="recap" data-part="10" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div><code>toBe</code> = <code>Object.is</code>: value or identity</div>
+    <div><code>toEqual</code>: contents, recursively</div>
+    <div>Map a list, then <code>toEqual</code></div>
+    <div><code>toMatchObject</code>: a subset of properties</div>
+    <div>Nested arrays must match in length</div>
+    <div><code>not</code> sparingly</div>
+  </div>
+</section>
+
+<section id="next" data-part="10" data-cue="Next, in video five">
+  <div class="kicker">Next · Video 05</div>
+  <h1>Presence and type matchers</h1>
+  <p class="lead"><code>toBeNull</code>, <code>toBeTruthy</code>, <code>toBeUndefined</code>, <code>toBeDefined</code>, <code>toBeTypeOf</code></p>
+</section>
+
+<script src="../../assets/slides.js"></script>
+</body>
+</html>

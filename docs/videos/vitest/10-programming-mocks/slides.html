@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vitest Video 10 Slides</title>
+<link rel="stylesheet" href="../../assets/slides.css">
+</head>
+<body data-video-number="10" data-video-title="Programming mock behaviour" data-parts="Introduction|Return values|Once queue|Resolved|Rejected|Implementations|The rule|Pitfalls|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Saturdaze · Vitest · Video 10 of 14</div>
+  <h1>Programming mock behaviour</h1>
+  <p class="lead">Return values, resolved and rejected promises, implementations, and their <code>Once</code> forms.</p>
+</section>
+
+<section id="eight" data-part="0" data-cue="Vitest gives you four kinds of behaviour">
+  <h2>Four behaviours, two forms, eight helpers</h2>
+  <div class="cols">
+    <div class="card"><h3>Permanent</h3><p><code>mockReturnValue</code> · 2<br><code>mockResolvedValue</code> · 13<br><code>mockRejectedValue</code> · 1<br><code>mockImplementation</code> · 15</p></div>
+    <div class="card good"><h3>Once</h3><p><code>mockReturnValueOnce</code> · 31<br><code>mockResolvedValueOnce</code> · 6<br><code>mockRejectedValueOnce</code> · 21<br><code>mockImplementationOnce</code> · 4</p></div>
+  </div>
+</section>
+
+<section id="return-value" data-part="1" data-cue="Start with the simplest.">
+  <h2>Permanent: <code>mockReturnValue</code></h2>
+  <pre class="code" data-lang="ts" data-file="saturdaze/src/app/shell/menu-opener.spec.ts" data-mark="2,7">  beforeEach(() =&gt; {
+    breakpoints = { isMatched: vi.fn(() =&gt; false) };
+    ...
+  });
+
+  it('anchors a popover from 720px and resolves when an item is picked', async () =&gt; {
+    breakpoints.isMatched.mockReturnValue(true);
+    const opener = TestBed.inject(MenuOpener);</pre>
+  <div class="cols">
+    <div class="card"><h3><code>false</code> by default</h3><p>Narrow screen → bottom sheet dialog</p></div>
+    <div class="card good"><h3><code>true</code> from that line on</h3><p>Wide screen → anchored popover</p></div>
+  </div>
+</section>
+
+<section id="where" data-part="1" data-cue="Notice where the change lives.">
+  <h2>Where the change lives</h2>
+  <div class="flow">
+    <div class="node"><b>beforeEach</b><small>safe default</small></div>
+    <div class="arrow">→</div>
+    <div class="node accent"><b>the test</b><small>override it needs</small></div>
+    <div class="arrow">→</div>
+    <div class="node"><b>next test</b><small>fresh mock, default again</small></div>
+  </div>
+</section>
+
+<section id="once" data-part="2" data-cue="is the most used helper of the eight">
+  <h2>The once queue</h2>
+  <div class="flow">
+    <div class="node accent"><b>Once #1</b><small>next call</small></div>
+    <div class="arrow">→</div>
+    <div class="node accent"><b>Once #2</b><small>call after</small></div>
+    <div class="arrow">→</div>
+    <div class="node"><b>base behaviour</b><small>queue empty</small></div>
+  </div>
+  <p class="muted center">31 <code>mockReturnValueOnce</code> calls · consumed in order</p>
+</section>
+
+<section id="family-chain" data-part="2" data-cue="The family page spec shows why that matters.">
+  <h2>Two dialogs, two answers</h2>
+  <pre class="code tight" data-lang="ts" data-file="saturdaze/src/app/pages/family/family.page.spec.ts" data-mark="2-3,10-11">    dialog.open
+      .mockReturnValueOnce({ closed: of({ kind: 'remove' }) })
+      .mockReturnValueOnce({ closed: of('confirm') });
+    await component['editMember'](VIEW.members[1]!);
+    ...
+    expect(saved().members).toEqual([{ id: 'm-quinn', name: 'Quinn', age: 38 }]);
+
+    familyService.saveProfile.mockClear();
+    dialog.open
+      .mockReturnValueOnce({ closed: of({ kind: 'remove' }) })
+      .mockReturnValueOnce({ closed: of(undefined) });
+    await component['editMember'](VIEW.members[1]!);
+    expect(familyService.saveProfile).not.toHaveBeenCalled();</pre>
+</section>
+
+<section id="family-default" data-part="2" data-cue="The base behaviour matters too.">
+  <h2>The base: a dismissed dialog</h2>
+  <pre class="code" data-lang="ts" data-file="saturdaze/src/app/pages/family/family.page.spec.ts (beforeEach)">    dialog = { open: vi.fn(() =&gt; ({ closed: of(undefined) })) };</pre>
+  <p>Any <code>open</code> the test didn't script is harmlessly cancelled, instead of crashing on <code>undefined</code>.</p>
+</section>
+
+<section id="resolved" data-part="3" data-cue="Most service calls are async">
+  <h2>Resolved: <code>mockResolvedValue</code></h2>
+  <pre class="code" data-lang="ts" data-file="saturdaze/src/app/pages/past/past.page.spec.ts · and 11 more router spies">    navigate = vi.spyOn(TestBed.inject(Router), 'navigateByUrl').mockResolvedValue(true);</pre>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/copy-field/copy-field.spec.ts">    writeText = vi.fn&lt;(text: string) =&gt; Promise&lt;void&gt;&gt;().mockResolvedValue(undefined);</pre>
+  <p class="muted">Shorthand for an implementation returning <code>Promise.resolve(value)</code>: navigation is recorded but never happens.</p>
+</section>
+
+<section id="resolved-once" data-part="3" data-cue="appears six times, three of them in the app spec.">
+  <h2>Resolved once: one menu choice</h2>
+  <pre class="code" data-lang="ts" data-file="saturdaze/src/app/app.spec.ts" data-mark="2,7">    menus = {
+      open: vi.fn(async () =&gt; undefined),
+      dialog: { open: vi.fn(() =&gt; ({ closed: of('confirm') })) },
+    };
+  ...
+  it('opens the account menu from the avatar and signs out through D22', async () =&gt; {
+    menus.open.mockResolvedValueOnce({ id: 'sign-out', label: 'Sign out', icon: 'sign_out' });</pre>
+  <p class="muted">Default: the menu was dismissed. Scripted: <em>Sign out</em> was chosen, once.</p>
+</section>
+
+<section id="rejected" data-part="4" data-cue="Failure paths are where the once form really shines.">
+  <h2>Rejected for the whole test</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/copy-field/copy-field.spec.ts" data-mark="2,9-10">  it('still confirms when the clipboard is unavailable', async () =&gt; {
+    writeText.mockRejectedValue(new Error('denied'));
+    const spy = vi.fn();
+    fixture.componentInstance.copied.subscribe(spy);
+
+    button().click();
+    await flush();
+
+    expect(spy).toHaveBeenCalledTimes(1);
+    expect(button().textContent?.trim()).toBe('Copied');</pre>
+  <p class="muted">The only <code>mockRejectedValue</code> in the repository.</p>
+</section>
+
+<section id="rejected-once" data-part="4" data-cue="appears twenty-one times. The sign in page spec">
+  <h2>One rejection per submit</h2>
+  <pre class="code" data-lang="ts" data-file="saturdaze/src/app/pages/sign-in/sign-in.page.spec.ts" data-mark="2,5,8">    component['form'].setValue({ email: 'quinn@example.com', password: 'pw', remember: true });
+    session.login.mockRejectedValueOnce({ code: 'rate_limited', message: '' });
+    await component['submit']();
+    expect(component['errorMessage']()).toBe('Too many tries. Wait a minute and try again.');
+    session.login.mockRejectedValueOnce({ code: 'token_invalid', message: 'Server said no.' });
+    await component['submit']();
+    expect(component['errorMessage']()).toBe('Server said no.');
+    session.login.mockRejectedValueOnce({ code: 'token_invalid', message: '' });
+    await component['submit']();
+    expect(component['errorMessage']()).toBe('Could not sign you in. Try again in a moment.');</pre>
+  <p class="muted">Plain <code>{ code, message }</code> objects: the <code>AuthError</code> shape, not <code>Error</code> instances.</p>
+</section>
+
+<section id="fallback" data-part="4" data-cue="The weekend page spec shows the fallback in action.">
+  <h2>A failure, then a recovery</h2>
+  <pre class="code tight" data-lang="ts" data-file="saturdaze/src/app/pages/weekend/weekend.page.spec.ts" data-mark="2,10,13">    await mountReady();
+    weekend.lockDay.mockRejectedValueOnce(new Error('500'));
+    button('Lock Saturday').click();
+    await settle();
+    fixture.detectChanges();
+    expect(host.querySelector('sd-banner.error')?.textContent?.trim()).toBe(
+      'Something did not go through. Try again in a moment.',
+    );
+
+    button('Lock Saturday').click();
+    await settle();
+    fixture.detectChanges();
+    expect(host.querySelector('sd-banner.error')).toBeNull();</pre>
+  <p class="muted">Base: <code>lockDay: vi.fn(async () =&gt; undefined)</code></p>
+</section>
+
+<section id="implementation" data-part="5" data-cue="When a return value isn't enough, replace the implementation.">
+  <h2>Whole implementations</h2>
+  <pre class="code" data-lang="ts" data-file="14 specs">vi.spyOn(console, 'error').mockImplementation(() =&gt; undefined);</pre>
+  <pre class="code" data-lang="ts" data-file="saturdaze/src/app/pages/weekend/weekend.page.spec.ts" data-mark="6">  /** Mount and let the constructor's loadCurrent land. */
+  async function mountReady(
+    view: WeekendView = READY,
+    query: Record&lt;string, string&gt; = {},
+  ): Promise&lt;void&gt; {
+    weekend.loadCurrent.mockImplementation(async () =&gt; weekendSig.set(view));
+    await mount(query);
+    await settle();
+    fixture.detectChanges();
+  }</pre>
+</section>
+
+<section id="freeze" data-part="5" data-cue="appears four times, in two pairs.">
+  <h2>Freeze a loading state</h2>
+  <pre class="code" data-lang="ts" data-file="saturdaze/src/app/pages/past/past.page.spec.ts" data-mark="2,10">  it('gathers the weekends, then renders filters, the skipping strip and the cards', async () =&gt; {
+    saved.load.mockImplementationOnce(() =&gt; new Promise&lt;void&gt;(() =&gt; undefined));
+    await mount();
+    expect(saved.load).toHaveBeenCalledTimes(1);
+    expect(headerTitle()).toBe('Past weekends');
+    expect(host.querySelector('sd-status-row')?.textContent?.trim()).toBe(
+      'Gathering your weekends.',
+    );
+
+    view.set(READY);</pre>
+  <p class="muted">Same pattern in <code>review-submissions.page.spec.ts</code>; the other use in each sets an empty view.</p>
+</section>
+
+<section id="rule" data-part="6" data-cue="Here is the order Vitest follows on each call.">
+  <h2>The rule that ties it together</h2>
+  <div class="flow">
+    <div class="node accent"><b>1 · Once queue</b><small>shift the next entry</small></div>
+    <div class="arrow">→</div>
+    <div class="node"><b>2 · Permanent</b><small>last one set wins</small></div>
+    <div class="arrow">→</div>
+    <div class="node"><b>3 · Original</b><small><code>vi.fn(impl)</code></small></div>
+  </div>
+  <pre class="code" data-lang="ts" data-file="node_modules/@vitest/spy/dist/index.js · Vitest 4.1 · wrapped" data-mark="2-3,5">const implementation =
+  config.onceMockImplementations.shift() ||
+  config.mockImplementation ||
+  … ||
+  original ||
+  function() {};</pre>
+</section>
+
+<section id="pitfalls" data-part="7" data-cue="A few pitfalls.">
+  <h2>Pitfalls</h2>
+  <ul>
+    <li>A permanent form where you meant <code>Once</code>: the retry fails too</li>
+    <li>Unconsumed <code>Once</code> values wait for the next call</li>
+    <li>Rejecting with <code>Error</code> when the real dependency rejects with a plain object</li>
+    <li>No safe default on the base mock</li>
+  </ul>
+</section>
+
+<section id="recap" data-part="8" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div>Return · resolved · rejected · implementation</div>
+    <div><code>Once</code> answers the next call, in order</div>
+    <div>Once → permanent → original</div>
+    <div>Safe default in <code>beforeEach</code></div>
+    <div>A never-resolving promise freezes loading</div>
+  </div>
+</section>
+
+<section id="next" data-part="8" data-cue="Next, in video eleven, we read what those mocks recorded">
+  <div class="kicker">Next · Video 11</div>
+  <h1>Asserting calls</h1>
+</section>
+
+<script src="../../assets/slides.js"></script>
+</body>
+</html>
