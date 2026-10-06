@@ -1,9 +1,8 @@
 import { inject } from '@angular/core';
 import { Router, Routes } from '@angular/router';
 
-import { requireAdmin } from './auth/require-admin.guard';
-import { requireAnonymous } from './auth/require-anonymous.guard';
-import { requireAuth } from './auth/require-auth.guard';
+import { requireAdmin, requireAnonymous, requireAuth } from 'api';
+
 import { environment } from '../environments/environment';
 
 /**

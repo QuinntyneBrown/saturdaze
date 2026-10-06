@@ -3,7 +3,8 @@ import { TestBed } from '@angular/core/testing';
 import { HttpClient, provideHttpClient, withInterceptors } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { Router, provideRouter } from '@angular/router';
-import { AuthToken, SESSION_STORE } from 'api';
+import { AuthToken } from '../models/auth-token';
+import { SESSION_STORE } from '../services/session-store.contract';
 import { authInterceptor } from './auth.interceptor';
 
 /** Let queued promise callbacks (the refresh → retry hop) run. */

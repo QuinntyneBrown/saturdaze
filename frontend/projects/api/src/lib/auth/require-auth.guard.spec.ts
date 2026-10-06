@@ -1,10 +1,10 @@
 import { vi } from 'vitest';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter, convertToParamMap, UrlTree } from '@angular/router';
-import { SESSION_STORE } from 'api';
-import { requireAnonymous } from './require-anonymous.guard';
+import { SESSION_STORE } from '../services/session-store.contract';
+import { requireAuth } from './require-auth.guard';
 
-describe('requireAnonymous', () => {
+describe('requireAuth', () => {
   let mockSESSION_STORE: any;
 
   beforeEach(() => {
@@ -21,7 +21,7 @@ describe('requireAnonymous', () => {
   });
 
   it('should be defined', () => {
-    expect(requireAnonymous).toBeDefined();
+    expect(requireAuth).toBeDefined();
   });
 
   it('should execute without throwing', () => {
@@ -35,14 +35,12 @@ describe('requireAnonymous', () => {
     } as any;
     expect(() => {
       TestBed.runInInjectionContext(() =>
-        (requireAnonymous as unknown as (...args: any[]) => unknown)(route, {
-          url: '/test',
-        } as any),
+        (requireAuth as unknown as (...args: any[]) => unknown)(route, { url: '/test' } as any),
       );
     }).not.toThrow();
   });
 
-  it('should redirect when isAuthenticated is truthy', () => {
+  it('should return true when isAuthenticated is truthy', () => {
     mockSESSION_STORE.isAuthenticated = vi.fn(() => true);
     const route = {
       paramMap: convertToParamMap({}),
@@ -53,12 +51,12 @@ describe('requireAnonymous', () => {
       url: [],
     } as any;
     const result = TestBed.runInInjectionContext(() =>
-      (requireAnonymous as unknown as (...args: any[]) => unknown)(route, { url: '/test' } as any),
+      (requireAuth as unknown as (...args: any[]) => unknown)(route, { url: '/test' } as any),
     );
-    expect(result instanceof UrlTree).toBe(true);
+    expect(result).toBe(true);
   });
 
-  it('should return true when isAuthenticated is falsy', () => {
+  it('should redirect when isAuthenticated is falsy', () => {
     mockSESSION_STORE.isAuthenticated = vi.fn(() => false);
     const route = {
       paramMap: convertToParamMap({}),
@@ -69,8 +67,8 @@ describe('requireAnonymous', () => {
       url: [],
     } as any;
     const result = TestBed.runInInjectionContext(() =>
-      (requireAnonymous as unknown as (...args: any[]) => unknown)(route, { url: '/test' } as any),
+      (requireAuth as unknown as (...args: any[]) => unknown)(route, { url: '/test' } as any),
     );
-    expect(result).toBe(true);
+    expect(result instanceof UrlTree).toBe(true);
   });
 });

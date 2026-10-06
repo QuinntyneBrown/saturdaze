@@ -1,0 +1,12 @@
+{
+  "navigationFallback": {
+    "rewrite": "/index.html",
+    "exclude": ["/assets/*", "*.{js,css,ico,png,jpg,jpeg,svg,webp,woff,woff2,ttf,map}"]
+  },
+  "mimeTypes": {
+    ".json": "application/json"
+  },
+  "globalHeaders": {
+    "Content-Security-Policy": "img-src 'self' data: blob: https://tile.openstreetmap.org https://sd-api-uofnt2.azurewebsites.net"
+  }
+}

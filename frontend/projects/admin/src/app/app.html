@@ -1,0 +1,21 @@
+@if (loading()) {
+  <div class="sd-app-loading" aria-hidden="true"></div>
+} @else if (bare()) {
+  <main id="main" class="sd-frame sd-frame--bare">
+    <router-outlet />
+  </main>
+} @else if (gated()) {
+  <sd-admin-gate [email]="email()" [familyAppUrl]="familyAppUrl" (signOut)="signOut()" />
+} @else {
+  <div class="admin">
+    <sd-admin-nav
+      [active]="nav()"
+      [email]="email()"
+      [avatarSrc]="avatarUrl()"
+      (signOut)="signOut()"
+    />
+    <main id="main" class="admin-main">
+      <router-outlet />
+    </main>
+  </div>
+}

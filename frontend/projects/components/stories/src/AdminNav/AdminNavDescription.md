@@ -1,0 +1,3 @@
+Saturdaze Admin's chrome (ADR-014). `sd-admin-nav` carries `.admin-nav` from `docs/mocks/styles/app.css` and renders the brand with its **Admin** tag, the five destinations (Photo health, Places, Review queue, Ingestion skips, Activity log) and the account block (avatar, email, Sign out).
+
+From 1024px it is a full-height side navigation with icons beside each link; below that it is a sticky bar whose links sit in a horizontal scroller, with the email and the Sign out label hidden on phones. The link for `active` carries `aria-current="page"`; the admin app sets it from route data, as the family app does for `sd-top-bar`.

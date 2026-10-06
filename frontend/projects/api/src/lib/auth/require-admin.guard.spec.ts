@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { signal } from '@angular/core';
 import { provideRouter, Router, UrlTree, convertToParamMap } from '@angular/router';
-import { SESSION_STORE } from 'api';
+import { SESSION_STORE } from '../services/session-store.contract';
 import { requireAdmin } from './require-admin.guard';
 
 describe('requireAdmin', () => {

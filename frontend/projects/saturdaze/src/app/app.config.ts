@@ -7,14 +7,13 @@ import {
 import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
 import { provideRouter, withInMemoryScrolling } from '@angular/router';
 
-import { authInterceptor } from './auth/auth.interceptor';
-
 import {
   ACTIVITY_SERVICE,
   API_BASE_URL,
   ActivityService,
   AUTH_SERVICE,
   AuthService,
+  authInterceptor,
   EVENT_SUBMISSIONS_SERVICE,
   EVENTS_SERVICE,
   EventSubmissionsService,

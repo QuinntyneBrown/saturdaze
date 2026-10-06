@@ -1,0 +1,71 @@
+// Saturdaze Admin (ADR-014). The components-library entry forwards the same
+// tokens, breakpoints and global page chrome the family app loads; this file
+// adds only the admin shell frame (`.admin`, `.admin-main`) and the dialog
+// panel rules shared with the family app.
+
+@use '../../components/src/lib/styles';
+
+// @angular/cdk overlay prebuilt — backdrop + positioning for CDK Dialog.
+@import '@angular/cdk/overlay-prebuilt.css';
+
+// `<sd-admin-root>` is the SPA's single root; `display: contents` keeps the
+// shell's nav / main as effective children of <body>.
+sd-admin-root {
+  display: contents;
+}
+
+// `.admin` / `.admin-main` from docs/mocks/styles/app.css: the nav first,
+// the screen second; a two-column grid from 1024px.
+.admin {
+  display: flex;
+  flex-direction: column;
+  min-height: 100svh;
+}
+
+.admin-main {
+  flex: 1;
+  width: 100%;
+  max-width: var(--layoutContentMaxWidth);
+  margin-inline: auto;
+  padding: 24px var(--layoutGutter) 64px;
+}
+
+@media (min-width: 1024px) {
+  .admin {
+    display: grid;
+    grid-template-columns: 240px minmax(0, 1fr);
+    align-items: start;
+  }
+
+  .admin-main {
+    padding-top: 32px;
+  }
+}
+
+// Dialogs open through `Dialog.open(..., { panelClass: 'sd-dialog-panel',
+// backdropClass: 'sd-dialog-backdrop' })`: a sheet below 720px, a modal above.
+.sd-dialog-backdrop {
+  background: var(--colorBackgroundOverlay);
+}
+
+.sd-dialog-panel {
+  width: 100%;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.cdk-global-overlay-wrapper:has(> .sd-dialog-panel) {
+  align-items: flex-end !important;
+  justify-content: center !important;
+}
+
+@media (min-width: 720px) {
+  .sd-dialog-panel {
+    max-width: 568px;
+    padding: 24px;
+  }
+
+  .cdk-global-overlay-wrapper:has(> .sd-dialog-panel) {
+    align-items: center !important;
+  }
+}

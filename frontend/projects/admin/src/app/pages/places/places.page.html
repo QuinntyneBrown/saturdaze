@@ -1,0 +1,40 @@
+<sd-page-header
+  title="Places"
+  subtitle="Every catalog place, worst photo health first. Search, filter, then open a place to fix it."
+/>
+
+@if (error()) {
+  <sd-banner class="error" tone="warn" role="alert" icon="close">{{ error() }}</sd-banner>
+}
+
+@switch (view().status) {
+  @case ('loading') {
+    <sd-status-row icon="map">Fetching the catalog.</sd-status-row>
+  }
+  @case ('empty') {
+    <sd-empty icon="map" title="No places yet" body="Seed or ingest the catalog first." />
+  }
+  @case ('ready') {
+    <p class="toolbar__count" role="status">{{ view().total }} places</p>
+    <sd-list card class="place-list">
+      @for (row of view().rows; track row.id) {
+        <sd-list-item
+          class="place-row"
+          [title]="row.name"
+          [subtitle]="row.meta"
+          [href]="row.href"
+          chevron
+        >
+          <sd-media
+            slot="leading"
+            class="place-thumb"
+            ratio="4:3"
+            [photo]="row.photo"
+            [tone]="row.tone"
+            [icon]="row.icon"
+          />
+        </sd-list-item>
+      }
+    </sd-list>
+  }
+}

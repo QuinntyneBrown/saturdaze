@@ -35,6 +35,9 @@ const VIEWPORTS = {
 
 const isBaselineCapture = process.env.SD_BASELINE === "1";
 
+/** Specs under tests/admin/ run only in the `admin` project (the admin app on :4300). */
+const ADMIN_SPECS = /tests[\\/]admin[\\/]/;
+
 export default defineConfig({
   testDir: "./tests",
   fullyParallel: false,
@@ -73,25 +76,49 @@ export default defineConfig({
         timeout: 30_000,
         cwd: __dirname,
       }
-    : {
-        command: "npm run start -- --port 4200",
-        url: "http://localhost:4200",
-        reuseExistingServer: !process.env.CI,
-        timeout: 180_000,
-        cwd: `${__dirname}/../frontend`,
-      },
+    : [
+        {
+          command: "npm run start -- --port 4200",
+          url: "http://localhost:4200",
+          reuseExistingServer: !process.env.CI,
+          timeout: 180_000,
+          cwd: `${__dirname}/../frontend`,
+        },
+        // Saturdaze Admin (ADR-014): a second app in the workspace on its own port.
+        {
+          command: "npm run start:admin -- --port 4300",
+          url: "http://localhost:4300",
+          reuseExistingServer: !process.env.CI,
+          timeout: 180_000,
+          cwd: `${__dirname}/../frontend`,
+        },
+      ],
   projects: [
     {
       name: "mobile",
+      testIgnore: ADMIN_SPECS,
       use: { ...devices["Desktop Chrome"], viewport: VIEWPORTS.mobile },
     },
     {
       name: "tablet",
+      testIgnore: ADMIN_SPECS,
       use: { ...devices["Desktop Chrome"], viewport: VIEWPORTS.tablet },
     },
     {
       name: "desktop",
+      testIgnore: ADMIN_SPECS,
       use: { ...devices["Desktop Chrome"], viewport: VIEWPORTS.desktop },
+    },
+    // Saturdaze Admin: Chromium only, desktop-first (curators work on laptops);
+    // specs that care about narrow widths resize the page themselves.
+    {
+      name: "admin",
+      testMatch: ADMIN_SPECS,
+      use: {
+        ...devices["Desktop Chrome"],
+        viewport: VIEWPORTS.desktop,
+        baseURL: isBaselineCapture ? "http://localhost:5173" : "http://localhost:4300",
+      },
     },
   ],
 });

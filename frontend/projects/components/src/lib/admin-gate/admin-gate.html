@@ -1,0 +1,16 @@
+<sd-auth-shell>
+  <sd-auth-card class="admin-gate" center title="This account can't use Saturdaze Admin">
+    <sd-disc slot="disc" tone="warn" size="xl" icon="lock" />
+    <p slot="head" class="auth-card__sub">
+      You are signed in as <span class="email-chip">{{ email() }}</span
+      >, which is not an administrator account. Nothing from the catalog was loaded.
+    </p>
+    <sd-button variant="danger" size="lg" full (click)="signOut.emit()">
+      <sd-icon name="sign_out" />
+      Sign out
+    </sd-button>
+    <span slot="alt"
+      >Looking for your weekend? <a class="sd-link" [href]="familyAppUrl()">Open Saturdaze</a></span
+    >
+  </sd-auth-card>
+</sd-auth-shell>

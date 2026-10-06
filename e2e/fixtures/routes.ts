@@ -35,7 +35,8 @@ export type PageSlug =
   | "landing"
   | "legal"
   | "shared-weekend"
-  | "dialogs";
+  | "dialogs"
+  | "admin";
 
 interface RouteEntry {
   readonly app: string;
@@ -81,6 +82,11 @@ export const ROUTES = {
 
   // ---- dialogs gallery (30 specimens rendered statically inline) ----
   dialogs:           { app: "/dialogs",                        mock: "/pages/dialogs.html",          page: "dialogs" },
+
+  // ---- Saturdaze Admin (its own app on :4300; the `admin` Playwright project) ----
+  adminSignIn:       { app: "/sign-in",                        mock: "/pages/admin.sign-in.html",        page: "admin" },
+  adminHome:         { app: "/",                               mock: "/pages/admin.html",                guard: "admin", page: "admin" },
+  adminPlaces:       { app: "/places",                         mock: "/pages/admin.places.html",         guard: "admin", page: "admin" },
 } as const satisfies Record<string, RouteEntry>;
 
 export type RouteKey = keyof typeof ROUTES;

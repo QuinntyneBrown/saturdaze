@@ -47,6 +47,12 @@
     },
     {
       "path": "./projects/perf-test/tsconfig.app.json"
+    },
+    {
+      "path": "./projects/admin/tsconfig.app.json"
+    },
+    {
+      "path": "./projects/admin/tsconfig.spec.json"
     }
   ]
 }

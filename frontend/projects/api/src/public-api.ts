@@ -40,6 +40,9 @@ export * from './lib/models/past';
 export * from './lib/models/review';
 export * from './lib/models/weekend';
 
+// Saturdaze Admin models (ADR-014)
+export * from './lib/models/admin/index';
+
 // Auth models
 export * from './lib/models/auth-error';
 export * from './lib/models/auth-error-code';
@@ -56,6 +59,7 @@ export * from './lib/models/verify-email-request';
 
 // Service contracts (interface + InjectionToken)
 export * from './lib/services/activity.service.contract';
+export * from './lib/services/admin-places.service.contract';
 export * from './lib/services/auth.service.contract';
 export * from './lib/services/events.service.contract';
 export * from './lib/services/event-submissions.service.contract';
@@ -68,6 +72,7 @@ export * from './lib/services/weekend-plan.service.contract';
 
 // Concrete implementations (imported only by composition roots)
 export * from './lib/services/activity.service';
+export * from './lib/services/admin-places.service';
 export * from './lib/services/auth.service';
 export * from './lib/services/events.service';
 export * from './lib/services/event-submissions.service';
@@ -77,3 +82,10 @@ export * from './lib/services/saved.service';
 export * from './lib/services/session-store';
 export * from './lib/services/shared-weekend.service';
 export * from './lib/services/weekend-plan.service';
+
+// Auth plumbing shared by the family app and Saturdaze Admin (ADR-014)
+export * from './lib/auth/auth-routes';
+export * from './lib/auth/auth.interceptor';
+export * from './lib/auth/require-auth.guard';
+export * from './lib/auth/require-anonymous.guard';
+export * from './lib/auth/require-admin.guard';

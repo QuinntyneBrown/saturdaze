@@ -1,0 +1,70 @@
+import { Locator, Page } from "@playwright/test";
+import { BasePage, control } from "../base.page.js";
+import { PageSlug } from "../../fixtures/routes.js";
+
+export type AdminNavKey = "health" | "places" | "reviews" | "skips" | "activity";
+
+/**
+ * Chrome shared by every Saturdaze Admin screen — pages/admin.*.html
+ * (ADR-014). Every admin screen stamps `body[data-page="admin"]` and names
+ * itself in `data-screen`.
+ *
+ *   .admin-nav              side navigation ≥1024, a bar below
+ *     .admin-nav__link[data-nav]  Photo health · Places · Review queue · Ingestion skips · Activity log
+ *     .admin-nav__account   avatar · email · Sign out
+ *   .admin-gate             the "can't use Saturdaze Admin" card for a non-admin (sign out only)
+ */
+export abstract class AdminPage extends BasePage {
+  readonly slug: PageSlug = "admin";
+
+  constructor(page: Page) {
+    super(page);
+  }
+
+  /** `body[data-screen]` names the admin screen (sign-in · health · places · place · …). */
+  async waitForScreen(screen: string): Promise<void> {
+    await this.page.waitForSelector(`body[data-page="admin"][data-screen="${screen}"]`, {
+      state: "attached",
+      timeout: 10_000,
+    });
+    await this.readyAnchor().first().waitFor({ state: "attached", timeout: 10_000 });
+  }
+
+  get adminNav(): Locator {
+    return this.page.locator(".admin-nav");
+  }
+
+  adminNavLink(key: AdminNavKey): Locator {
+    return this.adminNav.locator(`.admin-nav__link[data-nav="${key}"]`);
+  }
+
+  activeAdminNavLink(): Locator {
+    return this.adminNav.locator('.admin-nav__link[aria-current="page"]');
+  }
+
+  adminNavEmail(): Locator {
+    return this.adminNav.locator(".admin-nav__email");
+  }
+
+  signOutButton(): Locator {
+    return control(this.adminNav.locator(".admin-nav__account"), "Sign out");
+  }
+
+  /* ---------- Gate (signed in, not an administrator) ---------- */
+
+  gate(): Locator {
+    return this.page.locator(".admin-gate");
+  }
+
+  gateTitle(): Locator {
+    return this.gate().locator(".auth-card__title");
+  }
+
+  gateEmail(): Locator {
+    return this.gate().locator(".email-chip");
+  }
+
+  gateSignOutButton(): Locator {
+    return control(this.gate(), "Sign out");
+  }
+}

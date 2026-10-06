@@ -8,7 +8,9 @@ import { Injector, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { catchError, from, switchMap, throwError } from 'rxjs';
 
-import { SESSION_STORE, isTokenExpiring } from 'api';
+import { isTokenExpiring } from '../models/auth-token';
+import { SESSION_STORE } from '../services/session-store.contract';
+import { AUTH_ROUTES } from './auth-routes';
 
 /** Endpoints that never get a bearer — they mint or exchange tokens. */
 const NO_BEARER = [
@@ -32,7 +34,7 @@ const REFRESH_SKEW_MS = 60_000;
 
 /**
  * Attaches `Authorization: Bearer <token>` to outgoing API requests, keeps
- * the session alive, and bounces to `/sign-in?returnUrl=<current>` only when
+ * the session alive, and bounces to `AUTH_ROUTES.signIn?returnUrl=<current>` only when
  * the session is really over.
  *
  * - A token inside the 60 s skew window is refreshed *before* the call.
@@ -48,6 +50,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   // The Router is resolved lazily so the interceptor can run inside the
   // app initializer before the router itself is ready.
   const injector = inject(Injector);
+  const routes = inject(AUTH_ROUTES);
 
   const endsWith = (list: readonly string[]): boolean =>
     list.some((suffix) => req.url.endsWith(suffix));
@@ -65,7 +68,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const bounceToLogin = (): void => {
     if (session.loading()) return;
     const router = injector.get(Router);
-    void router.navigateByUrl(`/sign-in?returnUrl=${encodeURIComponent(router.url)}`);
+    void router.navigateByUrl(`${routes.signIn}?returnUrl=${encodeURIComponent(router.url)}`);
   };
 
   const send = () =>

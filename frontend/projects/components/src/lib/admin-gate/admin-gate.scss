@@ -1,0 +1,27 @@
+// `.admin-gate` from docs/mocks/styles/app.css: a centred status card.
+
+:host {
+  display: block;
+}
+
+.admin-gate {
+  align-items: center;
+  text-align: center;
+}
+
+.auth-card__sub {
+  font-size: 14px;
+  color: var(--colorNeutralForeground2);
+}
+
+.email-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: var(--borderRadiusCircular);
+  background: var(--colorNeutralBackground3);
+  font-size: 14px;
+  font-weight: var(--fontWeightMedium);
+  overflow-wrap: anywhere;
+}

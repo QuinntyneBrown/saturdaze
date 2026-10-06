@@ -71,10 +71,15 @@ export * from './lib/browser-frame/browser-frame';
 export * from './lib/auth-shell/auth-shell';
 export * from './lib/auth-card/auth-card';
 
+// admin (Saturdaze Admin, ADR-014)
+export * from './lib/admin-nav/admin-nav';
+export * from './lib/admin-gate/admin-gate';
+
 // tokens & theming
 export * from './lib/tokens/index';
 export * from './lib/theme-provider/theme-provider';
 
 // shared
 export * from './lib/shared/nav-key';
+export * from './lib/shared/admin-nav-key';
 export * from './lib/shared/in-app-link';

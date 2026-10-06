@@ -1,0 +1,21 @@
+// `.place-list` / `.place-row` from docs/mocks/styles/app.css (admin).
+
+:host {
+  display: block;
+}
+
+.error {
+  margin-bottom: 16px;
+}
+
+.toolbar__count {
+  font-size: var(--fontSizeBase300);
+  color: var(--colorNeutralForeground2);
+  margin: 12px 0;
+}
+
+.place-thumb {
+  width: 72px;
+  flex: none;
+  border-radius: var(--borderRadiusSmall);
+}
