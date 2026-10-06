@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 50 Slides</title>
+<link rel="stylesheet" href="../../assets/slides.css">
+</head>
+<body data-video-number="50" data-video-title="Coding sd-top-bar" data-parts="Introduction|Decorator|API|Template|Styles|Spec|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Saturdaze components · Video 50 of 52</div>
+  <h1>Coding <code>sd-top-bar</code></h1>
+  <p class="lead">The sticky desktop navigation.</p>
+</section>
+
+<section id="where" data-part="0" data-cue="It is rendered exactly once, in the app shell template">
+  <h2>Rendered once, by the shell</h2>
+  <pre class="code" data-lang="html" data-file="saturdaze/src/app/app.html">    &lt;sd-top-bar
+      [active]="nav()"
+      [email]="email()"
+      [avatarSrc]="avatarUrl()"
+      (accountClick)="openAccountMenu($event)"
+    /&gt;</pre>
+  <p class="muted">≥ 720px top bar · &lt; 720px <code>sd-bottom-nav</code></p>
+</section>
+
+<section id="decorator" data-part="1" data-cue="Open top bar dot T S.">
+  <h2>The decorator</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/top-bar/top-bar.ts" data-mark="5,10">@Component({
+  selector: 'sd-top-bar',
+  standalone: true,
+  imports: [Avatar, RouterLink],
+  hostDirectives: [Scrolled],
+  templateUrl: './top-bar.html',
+  styleUrl: './top-bar.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: 'topbar',
+  },
+})</pre>
+</section>
+
+<section id="scrolled" data-part="1" data-cue="The new idea in this component is host directives.">
+  <h2>Composition with <code>hostDirectives</code> <span class="muted small">· shared with <code>sd-sitebar</code></span></h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/scrolled/scrolled.ts" data-mark="5,13,14,16">@Directive({
+  selector: '[sdScrolled]',
+  standalone: true,
+  host: {
+    '[attr.data-scrolled]': 'scrolled() ? "" : null',
+  },
+})
+export class Scrolled {
+  …
+  constructor() {
+    afterNextRender(() =&gt; {
+      const update = (): void =&gt; {
+        const next = window.scrollY &gt; 4;
+        if (next !== this.scrolled()) this.zone.run(() =&gt; this.scrolled.set(next));
+      };
+      this.zone.runOutsideAngular(() =&gt; {</pre>
+</section>
+
+<section id="host" data-part="1" data-cue="The host object gives the element the class topbar">
+  <h2>The host: block class only</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/top-bar/top-bar.ts" data-mark="2">  host: {
+    class: 'topbar',
+  },</pre>
+  <ul>
+    <li>No <code>[attr.active]</code>: inputs stay inputs</li>
+    <li>The active state is <code>aria-current</code> on the link</li>
+    <li>Only classes and ARIA state go on a host (ADR-009)</li>
+  </ul>
+</section>
+
+<section id="navkey" data-part="2" data-cue="The active input is a nav key or null.">
+  <h2>One source of truth for the four destinations</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/shared/nav-key.ts">export type NavKey = 'weekend' | 'ideas' | 'past' | 'family';
+…
+export const NAV_ITEMS: readonly NavItem[] = [
+  { key: 'weekend', label: 'Weekend', icon: 'home', route: '/weekend' },
+  { key: 'ideas', label: 'Ideas', icon: 'sparkle', route: '/ideas' },
+  { key: 'past', label: 'Past', icon: 'star', route: '/past' },
+  { key: 'family', label: 'Family', icon: 'user', route: '/family' },
+];</pre>
+  <p class="muted">Read by <code>sd-top-bar</code> and <code>sd-bottom-nav</code>.</p>
+</section>
+
+<section id="api" data-part="2" data-cue="Email is a string, and avatar source is a string or null.">
+  <h2>Inputs, output, computed</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/top-bar/top-bar.ts" data-mark="8,11,13,14">export class TopBar {
+  readonly active = input&lt;NavKey | null&gt;(null);
+  /** Signed-in email; the avatar shows its initial. */
+  readonly email = input&lt;string&gt;('');
+  /** Signed-in user's profile photo; replaces the initial when set. */
+  readonly avatarSrc = input&lt;string | null&gt;(null);
+  /** The avatar button was pressed; the element anchors the account menu. */
+  readonly accountClick = output&lt;HTMLElement&gt;();
+
+  protected readonly items = NAV_ITEMS;
+  protected readonly initial = computed(() =&gt; this.email() || '?');
+
+  protected onAccount(event: MouseEvent): void {
+    this.accountClick.emit(event.currentTarget as HTMLElement);
+  }
+}</pre>
+</section>
+
+<section id="output" data-part="2" data-cue="Notice the output function">
+  <h2><code>output()</code>, not <code>@Output() EventEmitter</code></h2>
+  <div class="cols">
+    <div class="card"><h3>Emits the element</h3><p>The shell anchors the account menu (CDK Overlay from 720px) to it</p></div>
+    <div class="card"><h3>Avatar does the rest</h3><p>First character, upper-cased; <code>?</code> when empty</p></div>
+  </div>
+</section>
+
+<section id="template-brand" data-part="3" data-cue="The template opens with a div, topbar inner.">
+  <h2>The template</h2>
+  <pre class="code tight" data-lang="html" data-file="components/src/lib/top-bar/top-bar.html" data-mark="5,6,11">&lt;div class="topbar__inner"&gt;
+  &lt;a class="topbar__brand" routerLink="/weekend"
+    &gt;&lt;span class="brand-mark" aria-hidden="true"&gt;&lt;/span&gt;Saturdaze&lt;/a
+  &gt;
+  &lt;nav class="topbar__nav" aria-label="Primary"&gt;
+    @for (item of items; track item.key) {
+      &lt;a
+        class="topbar__link"
+        [attr.data-nav]="item.key"
+        [routerLink]="item.route"
+        [attr.aria-current]="active() === item.key ? 'page' : null"
+        &gt;{{ item.label }}&lt;/a
+      &gt;
+    }
+  &lt;/nav&gt;</pre>
+</section>
+
+<section id="template-actions" data-part="3" data-cue="Last, the actions area holds a button">
+  <h2>The account button</h2>
+  <pre class="code tight" data-lang="html" data-file="components/src/lib/top-bar/top-bar.html">  &lt;div class="topbar__actions"&gt;
+    &lt;button class="avatar-btn" type="button" aria-label="Account menu" (click)="onAccount($event)"&gt;
+      &lt;sd-avatar [name]="initial()" [src]="avatarSrc()" tone="primary" /&gt;
+    &lt;/button&gt;
+  &lt;/div&gt;</pre>
+</section>
+
+<section id="styles-host" data-part="4" data-cue="The stylesheet starts by using the breakpoints partial.">
+  <h2>Hidden on phones, in CSS</h2>
+  <pre class="code tight" data-lang="scss" data-file="components/src/lib/top-bar/top-bar.scss" data-mark="1,4,13-15">@use '../styles/breakpoints' as *;
+…
+:host {
+  display: none;
+  position: sticky;
+  top: 0;
+  z-index: var(--zIndexTopBar);
+  height: var(--layoutTopBarHeight);
+  background: transparent;
+  …
+}
+…
+@include respond-to(tablet) {
+  :host {
+    display: block;
+  }
+}</pre>
+</section>
+
+<section id="styles-scrolled" data-part="4" data-cue="When the host has the data scrolled attribute">
+  <h2>The backdrop and the layout row</h2>
+  <pre class="code tight" data-lang="scss" data-file="components/src/lib/top-bar/top-bar.scss" data-mark="1,10,12">:host([data-scrolled]) {
+  background: color-mix(in srgb, var(--colorNeutralBackground2) 86%, transparent);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 1px 0 var(--colorNeutralStroke2);
+}
+
+.topbar__inner {
+  width: 100%;
+  max-width: var(--layoutContentMaxWidth);
+  margin-inline: auto;
+  padding-inline: var(--layoutGutter);</pre>
+</section>
+
+<section id="styles-current" data-part="4" data-cue="The link is styled through aria current.">
+  <h2>Styling the state you announce</h2>
+  <pre class="code tight" data-lang="scss" data-file="components/src/lib/top-bar/top-bar.scss" data-mark="1,5,13">.topbar__link[aria-current='page'] {
+  color: var(--colorNeutralForeground1);
+}
+
+.topbar__link[aria-current='page']::after {
+  content: '';
+  position: absolute;
+  …
+  height: 2px;
+  border-radius: var(--borderRadiusCircular);
+  background: var(--colorBrandBackground);
+}
+@media (hover: hover) {
+  .topbar__link:hover {</pre>
+</section>
+
+<section id="spec-setup" data-part="5" data-cue="Open top bar dot spec dot T S.">
+  <h2>Spec setup: a router and stability</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/top-bar/top-bar.spec.ts" data-mark="4,8">  beforeEach(async () =&gt; {
+    await TestBed.configureTestingModule({
+      imports: [TopBar],
+      providers: [provideRouter([])],
+    }).compileComponents();
+    fixture = TestBed.createComponent(TopBar);
+    fixture.detectChanges();
+    await fixture.whenStable();
+    host = fixture.nativeElement as HTMLElement;
+  });</pre>
+</section>
+
+<section id="spec-structure" data-part="5" data-cue="Creates the bar with the wordmark linking home">
+  <h2>Structure and state</h2>
+  <ul class="small">
+    <li><b>creates the bar with the wordmark linking home</b></li>
+    <li><b>renders the four primary links in order</b></li>
+    <li><b>marks the active destination with aria-current</b></li>
+    <li><b>shows the account initial from the email</b> — <code>?</code> → <code>Q</code></li>
+  </ul>
+</section>
+
+<section id="spec-output" data-part="5" data-cue="Emits the avatar button so the account menu can anchor to it">
+  <h2>Output and host directive</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/top-bar/top-bar.spec.ts" data-mark="2,4,7,10">    const spy = vi.fn();
+    fixture.componentInstance.accountClick.subscribe(spy);
+    accountBtn().click();
+    expect(spy).toHaveBeenCalledWith(accountBtn());
+  …
+  it('fades in its backdrop once the page scrolls', () =&gt; {
+    Object.defineProperty(window, 'scrollY', { value: 30, configurable: true, writable: true });
+    window.dispatchEvent(new Event('scroll'));
+    fixture.detectChanges();
+    expect(host.getAttribute('data-scrolled')).toBe('');</pre>
+</section>
+
+<section id="pitfalls" data-part="6" data-cue="Don't add a fifth link here.">
+  <h2>Pitfalls</h2>
+  <ul>
+    <li>Four destinations are a fixed contract (shared with the bottom nav)</li>
+    <li>Visibility by breakpoint mixin, not TypeScript</li>
+    <li><code>aria-current</code> is the single source of active styling</li>
+  </ul>
+</section>
+
+<section id="recap" data-part="6" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div><code>hostDirectives</code> compose shared behaviour</div>
+    <div>One <code>NAV_ITEMS</code> for both navs</div>
+    <div><code>computed()</code> initial, <code>output()</code> anchor element</div>
+    <div><code>aria-current</code> marks and styles</div>
+    <div>Spec: <code>provideRouter</code> + <code>whenStable</code></div>
+  </div>
+</section>
+
+<section id="next" data-part="6" data-cue="Next, in video fifty one">
+  <div class="kicker">Next · Video 51</div>
+  <h1>Coding <code>sd-vote-row</code></h1>
+</section>
+
+<script src="../../assets/slides.js"></script>
+</body>
+</html>

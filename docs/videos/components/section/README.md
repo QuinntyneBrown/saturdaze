@@ -1,6 +1,6 @@
 # 36 · Coding sd-section: a titled region with an action slot
 
-> **Runtime:** ~6.6 min · **Audience:** developers who know basic Angular · **Prerequisites:** [Consuming tokens](../../05-consuming-tokens/README.md) helps
+> **Runtime:** ~6.9 min · **Audience:** developers who know basic Angular · **Prerequisites:** [Consuming tokens](../../05-consuming-tokens/README.md) helps
 
 **Video:** [section.mp4](section.mp4) · [Slides](slides.html) · **Audio:** [section.mp3](section.mp3) · [Transcript](script.md)
 
@@ -42,15 +42,15 @@ By the end, the viewer can:
 
 | Time | Segment | Content |
 | --- | --- | --- |
-| 00:00-00:23 | Introduction | What the section is. |
-| 00:23-01:03 | Usage | Family, Ideas and Weekend pages; goals. |
-| 01:03-02:16 | Decorator | Counter, selector, OnPush, host bindings, best practice. |
-| 02:16-03:03 | Inputs | `input()` with alias; what it doesn't need. |
-| 03:03-03:51 | Template | `@if` header, slots declared once. |
-| 03:51-04:28 | Styles | Tokens by role, tablet margin, `:has`. |
-| 04:28-05:35 | Tests | Setup, host component, four tests. |
-| 05:35-05:58 | Pitfalls | Untitled actions, `@if` around slots, extra headings. |
-| 05:58-06:35 | Recap | Things to remember; preview of `sd-seg-radio`. |
+| 00:00-00:22 | Introduction | What the section is. |
+| 00:22-01:02 | Usage | Family, Ideas and Weekend pages; goals. |
+| 01:02-02:32 | Decorator | Counter, selector, OnPush, host bindings, inputs stay inputs (ADR-009), best practice. |
+| 02:32-03:19 | Inputs | `input()` with alias; what it doesn't need. |
+| 03:19-04:07 | Template | `@if` header, slots declared once. |
+| 04:07-04:44 | Styles | Tokens by role, tablet margin, `:has`. |
+| 04:44-05:52 | Tests | Setup, host component, four tests. |
+| 05:52-06:15 | Pitfalls | Untitled actions, `@if` around slots, extra headings. |
+| 06:15-06:54 | Recap | Things to remember; preview of `sd-seg-radio`. |
 
 ## Demo commands
 

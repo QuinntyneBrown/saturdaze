@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 42 Slides</title>
+<link rel="stylesheet" href="../../assets/slides.css">
+</head>
+<body data-video-number="42" data-video-title="Coding sd-spinner" data-parts="Introduction|Usage|Decorator|Inputs|Template|Styles|Tests|Pitfalls|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Saturdaze components · Video 42 of 52</div>
+  <h1>Coding <code>sd-spinner</code></h1>
+  <p class="lead">A decorative ring with an optional glyph — two inputs and five host bindings.</p>
+</section>
+
+<section id="usage" data-part="1" data-cue="The spinner is mostly used through another component.">
+  <h2>Where it is used</h2>
+  <pre class="code tight" data-lang="html" data-file="saturdaze/src/app/pages/verify-email/verify-email.page.html" data-mark="3,4">    @case ('verifying') {
+      &lt;sd-auth-card title="Verifying your email" subtitle="One moment." center&gt;
+        &lt;sd-spinner slot="disc" icon="mail" /&gt;
+        &lt;span class="sd-visually-hidden" role="status" aria-live="polite"
+          &gt;Verifying your email&lt;/span
+        &gt;
+      &lt;/sd-auth-card&gt;
+    }</pre>
+  <p class="muted small">Everywhere else through <code>sd-status-row</code>: <code>&lt;sd-spinner [icon]="icon()" /&gt;</code></p>
+</section>
+
+<section id="decorator" data-part="2" data-cue="Open the file called spinner dot T S.">
+  <h2>The decorator</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/spinner/spinner.ts" data-mark="4,8-11">@Component({
+  selector: 'sd-spinner',
+  standalone: true,
+  imports: [Icon],
+  templateUrl: './spinner.html',
+  styleUrl: './spinner.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    'aria-hidden': 'true',
+    '[class.spinner-disc]': '!!icon()',
+    '[class.spinner--sm]': 'size() === "sm"',
+  },
+})</pre>
+</section>
+
+<section id="hidden" data-part="2" data-cue="First, aria hidden is set to true, statically.">
+  <h2>Decorative by contract</h2>
+  <div class="cols">
+    <div class="card"><h3>The spinner</h3><p><code>aria-hidden="true"</code> — shows that something is happening</p></div>
+    <div class="card good"><h3 style="color:var(--forest)">Its container</h3><p>Says it in words: a polite live region</p></div>
+  </div>
+</section>
+
+<section id="classes" data-part="2" data-cue="Second, the class spinner disc is added">
+  <h2>Classes from signals</h2>
+  <table class="grid small">
+    <tr><th>Binding</th><th>Effect</th></tr>
+    <tr><td><code>[class.spinner-disc]: '!!icon()'</code></td><td>ring + glyph when an icon is set</td></tr>
+    <tr><td><code>[class.spinner--sm]: 'size() === "sm"'</code></td><td>20px instead of 40px</td></tr>
+  </table>
+  <p class="muted small">No <code>[attr.size]</code> or <code>[attr.icon]</code>: inputs stay inputs; only classes and ARIA state go on the host (ADR-009).</p>
+</section>
+
+<section id="inputs" data-part="3" data-cue="There are two signal inputs">
+  <h2>Two typed inputs</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/spinner/spinner.ts" data-mark="2">export class Spinner {
+  readonly size = input&lt;'sm' | 'md'&gt;('md');
+  readonly icon = input&lt;string&gt;('');
+}</pre>
+</section>
+
+<section id="not-needed" data-part="3" data-cue="Notice what is not here.">
+  <h2>What it doesn't need</h2>
+  <div class="cols three">
+    <div class="card"><h3>computed()</h3><p>One-line expressions live in the host bindings</p></div>
+    <div class="card"><h3>output / model / signal</h3><p>Nothing to report, nothing local</p></div>
+    <div class="card"><h3>effect()</h3><p>The animation is pure CSS</p></div>
+  </div>
+</section>
+
+<section id="template" data-part="4" data-cue="The template is two lines of logic.">
+  <h2>The template</h2>
+  <pre class="code" data-lang="html" data-file="components/src/lib/spinner/spinner.html">&lt;span class="spinner"&gt;&lt;/span&gt;
+@if (icon()) {
+  &lt;sd-icon [name]="icon()" [size]="16" /&gt;
+}</pre>
+</section>
+
+<section id="host-style" data-part="5" data-cue="Open spinner dot S C S S.">
+  <h2>The host box</h2>
+  <pre class="code tight" data-lang="scss" data-file="components/src/lib/spinner/spinner.scss" data-mark="11,15,16">:host {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 40px;
+  height: 40px;
+  color: var(--colorBrandForeground2);
+}
+
+:host(.spinner--sm) {
+  width: 20px;
+  height: 20px;
+}</pre>
+</section>
+
+<section id="ring" data-part="5" data-cue="The ring is absolutely positioned">
+  <h2>The ring</h2>
+  <pre class="code tight" data-lang="scss" data-file="components/src/lib/spinner/spinner.scss" data-mark="5-7">.spinner {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 3px solid var(--colorNeutralStroke1);
+  border-top-color: var(--colorBrandStroke1);
+  animation: sd-spin 0.9s linear infinite;
+}
+
+@keyframes sd-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}</pre>
+</section>
+
+<section id="spec-helpers" data-part="6" data-cue="Open spinner dot spec dot T S.">
+  <h2>Spec: compare the drawn glyph</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/spinner/spinner.spec.ts" data-mark="5-9,11">import { Icon } from '../icon/icon';
+import { Spinner } from './spinner';
+
+/** The svg markup `sd-icon` draws for `name`, to compare against a rendered glyph. */
+const glyph = (name: string): string =&gt; {
+  const ref = TestBed.createComponent(Icon);
+  ref.componentRef.setInput('name', name);
+  ref.detectChanges();
+  return (ref.nativeElement as HTMLElement).querySelector('svg')?.innerHTML ?? '';
+};
+const drawn = (icon: Element | null): string =&gt; icon?.querySelector('svg')?.innerHTML ?? '';</pre>
+  <p class="muted small">Setup imports <code>[Spinner, Icon]</code>; the test checks what is drawn, not an attribute.</p>
+</section>
+
+<section id="spec" data-part="6" data-cue="&quot;creates a decorative ring with no glyph&quot; proves">
+  <h2>Spec: the default</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/spinner/spinner.spec.ts" data-mark="3,5,6">  it('creates a decorative ring with no glyph', () =&gt; {
+    expect(fixture.componentInstance).toBeTruthy();
+    expect(host.getAttribute('aria-hidden')).toBe('true');
+    expect(host.querySelector('.spinner')).not.toBeNull();
+    expect(host.querySelector('sd-icon')).toBeNull();
+    expect(host.classList.contains('spinner-disc')).toBe(false);
+  });</pre>
+</section>
+
+<section id="disc-test" data-part="6" data-cue="&quot;becomes a spinner disc with the glyph inside when an icon is given&quot;">
+  <h2>Spec: the disc</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/spinner/spinner.spec.ts" data-mark="2,5">  it('becomes a spinner disc with the glyph inside when an icon is given', () =&gt; {
+    fixture.componentRef.setInput('icon', 'sparkle');
+    fixture.detectChanges();
+    expect(host.classList.contains('spinner-disc')).toBe(true);
+    expect(drawn(host.querySelector('sd-icon'))).toBe(glyph('sparkle'));
+    expect(host.querySelector('.spinner')).not.toBeNull();
+  });</pre>
+</section>
+
+<section id="size-test" data-part="6" data-cue="And &quot;mirrors the small size to a host class&quot;">
+  <h2>Spec: set, then clear</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/spinner/spinner.spec.ts" data-mark="5-7">  it('mirrors the small size to a host class', () =&gt; {
+    fixture.componentRef.setInput('size', 'sm');
+    fixture.detectChanges();
+    expect(host.classList.contains('spinner--sm')).toBe(true);
+    fixture.componentRef.setInput('size', 'md');
+    fixture.detectChanges();
+    expect(host.classList.contains('spinner--sm')).toBe(false);
+  });</pre>
+</section>
+
+<section id="pitfalls" data-part="7" data-cue="Using a spinner as the only loading signal.">
+  <h2>Pitfalls</h2>
+  <ul>
+    <li>A spinner alone says nothing to a screen reader — pair it with text</li>
+    <li>Only <code>'sm' | 'md'</code> compile</li>
+    <li>No reduced-motion rule here — keep spinners short-lived</li>
+  </ul>
+</section>
+
+<section id="recap" data-part="8" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div>Two typed signal inputs</div>
+    <div>Host bindings derive classes</div>
+    <div>Inputs stay inputs (ADR-009)</div>
+    <div>Decorative: words come from the container</div>
+    <div>Spec proves set and clear</div>
+  </div>
+</section>
+
+<section id="next" data-part="8" data-cue="Next, video forty three builds">
+  <div class="kicker">Next · Video 43</div>
+  <h1>Coding <code>sd-stars</code></h1>
+</section>
+
+<script src="../../assets/slides.js"></script>
+</body>
+</html>

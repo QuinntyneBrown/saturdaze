@@ -1,6 +1,6 @@
 # 37 · Coding sd-seg-radio: a segmented radio group for Angular forms
 
-> **Runtime:** ~7.5 min · **Audience:** developers who know basic Angular · **Prerequisites:** [Consuming tokens](../../05-consuming-tokens/README.md) helps
+> **Runtime:** ~7.7 min · **Audience:** developers who know basic Angular · **Prerequisites:** [Consuming tokens](../../05-consuming-tokens/README.md) helps
 
 **Video:** [seg-radio.mp4](seg-radio.mp4) · [Slides](slides.html) · **Audio:** [seg-radio.mp3](seg-radio.mp3) · [Transcript](script.md)
 
@@ -23,7 +23,7 @@ By the end, the viewer can:
 
 | Question | What a strong answer includes |
 | --- | --- |
-| Why are `value` and `disabled` signals, not inputs? | The forms API writes them imperatively; signals make OnPush templates and host bindings react. |
+| Why are `value` and `disabled` signals, not inputs? | The forms API writes them imperatively; signals make the OnPush template react. |
 | Why not `model()`? | It would create a second source of truth next to the form control. |
 | Where does keyboard support come from? | Native `type="radio"` inputs sharing one `name`. |
 | How is the selected pill styled? | `.seg-radio__opt:has(input:checked)`; no class toggling in TS. |
@@ -42,16 +42,16 @@ By the end, the viewer can:
 
 | Time | Segment | Content |
 | --- | --- | --- |
-| 00:00-00:24 | Introduction | Coding sd-seg-radio. |
-| 00:25-00:53 | Usage | Where it is used; What you will build. |
-| 00:54-01:51 | Decorator | The option type and an id counter; The decorator; Plugging into forms. |
-| 01:52-02:57 | State | Inputs, signals and a computed; The form owns the value; computed() for derived state. |
-| 02:58-03:24 | Methods | The methods. |
-| 03:25-04:20 | Template | The label and the group; One native radio per option; Native radios: accessibility for free. |
-| 04:21-05:08 | Styles | The track and the invisible input; State styling with :has. |
-| 05:09-06:26 | Tests | Spec setup; Structure and labelling; Driving the accessor. |
-| 06:27-06:49 | Pitfalls | Pitfalls. |
-| 06:50-07:31 | Recap | Things to remember; Coding sd-segments. |
+| 00:00-00:25 | Introduction | Coding sd-seg-radio. |
+| 00:25-00:54 | Usage | Where it is used; What you will build. |
+| 00:54-01:59 | Decorator | The option type and an id counter; The decorator; Plugging into forms. |
+| 01:59-03:04 | State | Inputs, signals and a computed; The form owns the value; computed() for derived state. |
+| 03:04-03:30 | Methods | The methods. |
+| 03:30-04:27 | Template | The label and the group; One native radio per option; Native radios: accessibility for free. |
+| 04:27-05:15 | Styles | The track and the invisible input; State styling with :has. |
+| 05:15-06:36 | Tests | Spec setup; Structure and labelling; Driving the accessor. |
+| 06:36-06:59 | Pitfalls | Pitfalls. |
+| 06:59-07:40 | Recap | Things to remember; Coding sd-segments. |
 
 ## Demo commands
 

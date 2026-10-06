@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 32 Slides</title>
+<link rel="stylesheet" href="../../assets/slides.css">
+</head>
+<body data-video-number="32" data-video-title="Coding sd-menu" data-parts="Introduction|Usage|Item type|Decorator|Inputs|Behaviour|Template|Styles|Testing|Pitfalls|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Saturdaze components · Video 32 of 52</div>
+  <h1>Coding <code>sd-menu</code></h1>
+  <p class="lead">Actions, roles and arrow keys — one menu, popover or sheet.</p>
+</section>
+
+<section id="opener" data-part="1" data-cue="The menu is never placed by hand in a page.">
+  <h2>The menu opener picks the form</h2>
+  <pre class="code tight" data-lang="html" data-file="saturdaze/src/app/dialogs/menu-dialog/menu-dialog.html">  &lt;sd-menu sheet [items]="data.items" [label]="data.title" (select)="pick($event)" /&gt;</pre>
+  <pre class="code tight" data-lang="ts" data-file="saturdaze/src/app/shell/menu-opener.ts">      const ref = overlayRef.attach(new ComponentPortal(Menu));
+      ref.setInput('items', options.items);
+      ref.setInput('header', options.header ?? '');
+      ref.setInput('label', options.title);
+      ref.instance.select.subscribe((item) =&gt; finish(item));</pre>
+  <p class="muted small">&lt; 720px: CDK Dialog bottom sheet · ≥ 720px: CDK Overlay popover</p>
+</section>
+
+<section id="item" data-part="2" data-cue="Open the menu file. It exports an interface called menu item">
+  <h2>The item type</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/menu/menu.ts" data-mark="7">export interface MenuItem {
+  readonly id: string;
+  readonly label: string;
+  readonly icon: string;
+  readonly sub?: string;
+  readonly tone?: 'default' | 'warn';
+  readonly href?: string;
+}</pre>
+</section>
+
+<section id="decorator" data-part="3" data-cue="The selector is S D menu, standalone, OnPush">
+  <h2>The decorator</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/menu/menu.ts" data-mark="10,12,13">@Component({
+  selector: 'sd-menu',
+  standalone: true,
+  imports: [Disc, Icon],
+  templateUrl: './menu.html',
+  styleUrl: './menu.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: 'menu',
+    role: 'menu',
+    '[class.menu--sheet]': 'sheet()',
+    '[attr.aria-label]': 'label()',
+    '(keydown)': 'onKey($event)',
+  },
+})</pre>
+</section>
+
+<section id="inputs" data-part="4" data-cue="The class injects two things with the inject function">
+  <h2>inject(), inputs, output</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/menu/menu.ts" data-mark="2-3,10-12">export class Menu {
+  private readonly router = inject(Router, { optional: true });
+  private readonly host = inject&lt;ElementRef&lt;HTMLElement&gt;&gt;(ElementRef);
+
+  readonly items = input&lt;readonly MenuItem[]&gt;([]);
+  /** Header line (the account email). */
+  readonly header = input&lt;string&gt;('');
+  readonly label = input&lt;string&gt;('Menu');
+  readonly sheet = input(false, { transform: booleanAttribute });
+  // The public `(select)` binding predates the lint rule; renaming it breaks consumers.
+  // eslint-disable-next-line @angular-eslint/no-output-native
+  readonly select = output&lt;MenuItem&gt;();</pre>
+</section>
+
+<section id="choose" data-part="5" data-cue="The choose method emits the item on select">
+  <h2>Choosing an item</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/menu/menu.ts" data-mark="2-3">  protected choose(item: MenuItem, event: MouseEvent): void {
+    this.select.emit(item);
+    if (item.href &amp;&amp; this.router) navigateInApp(this.router, event, item.href);
+  }</pre>
+  <p class="muted">Plain click on <code>/family</code> → router · Ctrl/⌘-click → new tab, as the browser intends.</p>
+</section>
+
+<section id="keys" data-part="5" data-cue="The on key method handles focus.">
+  <h2>Arrow keys move focus and wrap</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/menu/menu.ts" data-mark="2,9-11">  protected onKey(event: KeyboardEvent): void {
+    if (event.key !== 'ArrowDown' &amp;&amp; event.key !== 'ArrowUp') return;
+    const buttons = Array.from(
+      this.host.nativeElement.querySelectorAll&lt;HTMLElement&gt;('[role="menuitem"]'),
+    );
+    if (!buttons.length) return;
+    const current = buttons.indexOf(document.activeElement as HTMLElement);
+    const delta = event.key === 'ArrowDown' ? 1 : -1;
+    const next = (current + delta + buttons.length) % buttons.length;
+    event.preventDefault();
+    buttons[next]?.focus();
+  }</pre>
+</section>
+
+<section id="template" data-part="6" data-cue="If there is a header, a paragraph with the menu header class shows it.">
+  <h2>A data-driven template</h2>
+  <pre class="code tight" data-lang="html" data-file="components/src/lib/menu/menu.html" data-mark="4-5,13-17">@if (header()) {
+  &lt;p class="menu__header"&gt;{{ header() }}&lt;/p&gt;
+}
+@for (item of items(); track item.id) {
+  @if (item.href) {
+    &lt;a
+      class="menu__item"
+      [class.menu__item--warn]="item.tone === 'warn'"
+      role="menuitem"
+      [attr.href]="item.href"
+      (click)="choose(item, $event)"
+    &gt;
+      @if (sheet()) {
+        &lt;sd-disc [icon]="item.icon" /&gt;
+      } @else {
+        &lt;sd-icon [name]="item.icon" [size]="18" /&gt;
+      }</pre>
+</section>
+
+<section id="repeat" data-part="6" data-cue="The inner markup is repeated in both branches.">
+  <h2>Repeated markup vs repeated slots</h2>
+  <div class="cols">
+    <div class="card good"><h3>OK here</h3><p>Anchor and button share markup, but there is no <code>ng-content</code> to lose</p></div>
+    <div class="card bad"><h3>Not OK</h3><p><code>ng-content</code> repeated per <code>@if</code> branch — see <code>sd-list-item</code></p></div>
+  </div>
+</section>
+
+<section id="styles" data-part="7" data-cue="The host is a flex column between two hundred and forty">
+  <h2>The surface</h2>
+  <pre class="code tight" data-lang="scss" data-file="components/src/lib/menu/menu.scss" data-mark="8-11,16">:host {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 240px;
+  max-width: 280px;
+  padding: 6px;
+  background: var(--colorNeutralBackground1);
+  border: 1px solid var(--colorNeutralStroke2);
+  border-radius: var(--borderRadiusLarge);
+  box-shadow: var(--shadow28);
+}
+
+.menu__item--warn,
+.menu__item--warn sd-icon {
+  color: var(--colorStatusDangerForeground1);
+}</pre>
+</section>
+
+<section id="sheet" data-part="7" data-cue="The sheet modifier strips the surface">
+  <h2>The sheet form</h2>
+  <pre class="code tight" data-lang="scss" data-file="components/src/lib/menu/menu.scss">:host(.menu--sheet) {
+  /* … */
+  padding: 0;
+  border: 0;
+  box-shadow: none;
+  background: transparent;
+  gap: 0;
+}
+
+:host(.menu--sheet) .menu__item {
+  padding: 10px 0;
+  border-radius: var(--borderRadiusSmall);
+  border-bottom: 1px solid var(--colorNeutralStroke2);
+  font-size: var(--fontSizeBase400);
+  font-weight: var(--fontWeightSemibold);
+}</pre>
+</section>
+
+<section id="spec-setup" data-part="8" data-cue="The spec file provides an empty router and three items">
+  <h2>Spec setup</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/menu/menu.spec.ts">const ITEMS: readonly MenuItem[] = [
+  { id: 'family', label: 'Family', icon: 'user', sub: 'Members and likes', href: '/family' },
+  { id: 'share', label: 'Share weekend', icon: 'share', sub: 'Copy a link' },
+  { id: 'sign-out', label: 'Sign out', icon: 'sign_out', tone: 'warn' },
+];
+  /* … */
+    await TestBed.configureTestingModule({
+      imports: [Menu],
+      providers: [provideRouter([])],
+    }).compileComponents();
+    fixture = TestBed.createComponent(Menu);
+    fixture.componentRef.setInput('items', ITEMS);
+    fixture.detectChanges();</pre>
+</section>
+
+<section id="spec-list" data-part="8" data-cue="&quot;Creates a labelled menu with one menu item per entry&quot;">
+  <h2>Seven tests</h2>
+  <ol class="steps small">
+    <li>creates a labelled menu with one menuitem per entry</li>
+    <li>renders href items as anchors and the rest as buttons</li>
+    <li>shows the header line and the warn tone</li>
+    <li>uses plain glyphs as a popover and discs with sub lines as a sheet</li>
+    <li>emits the chosen item</li>
+    <li>routes href items through the router on a plain click</li>
+    <li>moves focus with the arrow keys and wraps around</li>
+  </ol>
+</section>
+
+<section id="spec-keys" data-part="8" data-cue="And &quot;moves focus with the arrow keys and wraps around&quot;">
+  <h2>Focus wraps; Tab passes through</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/menu/menu.spec.ts" data-mark="8,12,16">    const down = new KeyboardEvent('keydown', {
+      key: 'ArrowDown',
+      bubbles: true,
+      cancelable: true,
+    });
+    host.dispatchEvent(down);
+    expect(document.activeElement).toBe(items()[1]);
+    expect(down.defaultPrevented).toBe(true);
+
+    host.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp', bubbles: true }));
+    host.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp', bubbles: true }));
+    expect(document.activeElement).toBe(items()[2]);
+
+    const other = new KeyboardEvent('keydown', { key: 'Tab', bubbles: true, cancelable: true });
+    host.dispatchEvent(other);
+    expect(other.defaultPrevented).toBe(false);</pre>
+</section>
+
+<section id="pitfalls" data-part="9" data-cue="Positioning the popover by hand">
+  <h2>Pitfalls</h2>
+  <ul>
+    <li>Hand-positioned popovers — use CDK <code>Overlay</code></li>
+    <li>A menu with no accessible name</li>
+    <li><code>track $index</code> instead of <code>track item.id</code></li>
+    <li>Swallowing keys other than the arrows</li>
+  </ul>
+</section>
+
+<section id="recap" data-part="10" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div>Typed items, <code>@for</code> tracked by id</div>
+    <div>Role, label, class, keydown in <code>host</code></div>
+    <div>Optional <code>inject(Router)</code>, <code>inject(ElementRef)</code></div>
+    <div>One <code>select</code> output</div>
+    <div>Arrow keys move real DOM focus</div>
+    <div>CDK places it; the menu only renders</div>
+  </div>
+</section>
+
+<section id="next" data-part="10" data-cue="Next, in video thirty three">
+  <div class="kicker">Next · Video 33</div>
+  <h1>Coding <code>sd-page-header</code></h1>
+</section>
+
+<script src="../../assets/slides.js"></script>
+</body>
+</html>

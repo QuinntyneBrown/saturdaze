@@ -29,7 +29,7 @@
 
 <section id="decorator" data-part="1" data-cue="Open text input dot T S.">
   <h2>The decorator <span class="muted small">· after <code>let nextFieldId = 0;</code></span></h2>
-  <pre class="code tight" data-lang="ts" data-file="components/src/lib/text-input/text-input.ts" data-mark="2,6,9,14">@Component({
+  <pre class="code" data-lang="ts" data-file="components/src/lib/text-input/text-input.ts" data-mark="2,6,8">@Component({
   selector: 'sd-text-input',
   standalone: true,
   imports: [Icon],
@@ -37,14 +37,8 @@
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class: 'field',
-    '[attr.label]': 'label() || null',
-    '[attr.type]': 'type()',
-    '[attr.hint]': 'hint() || null',
-    '[attr.error]': 'error() || null',
-    '[attr.required]': 'required() ? "" : null',
-    '[attr.invalid]': 'invalid() ? "" : null',
-    '[attr.multiline]': 'multiline() ? "" : null',
   },</pre>
+  <p class="muted">Inputs stay inputs: no <code>[attr.label]</code>, <code>[attr.type]</code> … on the host. Classes and ARIA only (ADR-009); ARIA lives on the inner control.</p>
 </section>
 
 <section id="providers" data-part="1" data-cue="The providers array registers the component itself">

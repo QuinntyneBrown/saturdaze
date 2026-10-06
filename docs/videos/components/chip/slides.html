@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 12 Slides</title>
+<link rel="stylesheet" href="../../assets/slides.css">
+</head>
+<body data-video-number="12" data-video-title="Coding sd-chip" data-parts="Introduction|Decorator|Inputs &amp; output|Template|Styles|Spec|Pitfalls|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Saturdaze components · Video 12 of 52</div>
+  <h1>Coding <code>sd-chip</code></h1>
+  <p class="lead">Tones, sizes, a conditional remove button and one <code>output()</code>.</p>
+</section>
+
+<section id="usages" data-part="0" data-cue="The idea cards on the activities, food and events pages">
+  <h2>Where the app uses it</h2>
+  <table class="map">
+    <tr><th>where</th><th>usage</th></tr>
+    <tr><td>pages/ideas-* , weekend</td><td>&lt;sd-chip slot="chips" [tone]="chipTone(chip.tone)"&gt;</td></tr>
+    <tr><td>pages/review-submissions</td><td>&lt;sd-chip tone="sun"&gt;Pending&lt;/sd-chip&gt;</td></tr>
+    <tr><td>pages/family</td><td>tone="leaf" / tone="warn" + &lt;sd-icon&gt;</td></tr>
+    <tr><td>pages/family</td><td>&lt;sd-chip slot="trailing" tone="sun" count&gt;</td></tr>
+    <tr><td>lib: day, food-card, chip-input</td><td>internal building block</td></tr>
+  </table>
+</section>
+
+<section id="types" data-part="1" data-cue="Above the decorator are two type aliases.">
+  <h2>Types first</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/chip/chip.ts">export type ChipTone =
+  | 'default'
+  | 'sun'
+  | 'sky'
+  | 'leaf'
+  | 'indoor'
+  | 'accent'
+  | 'primary'
+  | 'warn'
+  | 'ink';
+
+export type ChipSize = 'md' | 'sm';</pre>
+</section>
+
+<section id="decorator" data-part="1" data-cue="The decorator has the usual selector">
+  <h2>The decorator imports what it renders</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/chip/chip.ts" data-mark="4,7">@Component({
+  selector: 'sd-chip',
+  standalone: true,
+  imports: [Icon],
+  /* templateUrl, styleUrl */
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: 'chip',
+    '[class.chip--sun]': 'tone() === "sun"',
+    /* … sky, leaf, indoor, accent, primary, warn, ink … */
+    '[class.chip--sm]': 'size() === "sm"',
+    '[class.chip--count]': 'count()',
+  },
+})</pre>
+  <p class="muted small">Classes only — inputs are not reflected as host attributes (ADR-009).</p>
+</section>
+
+<section id="inputs" data-part="2" data-cue="The class has five inputs and one output.">
+  <h2>Five inputs, one output</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/chip/chip.ts" data-mark="5,7,9,10">export class Chip {
+  readonly tone = input&lt;ChipTone&gt;('default');
+  readonly size = input&lt;ChipSize&gt;('md');
+  /** Centred numeric badge (the "3" beside Review submissions). */
+  readonly count = input(false, { transform: booleanAttribute });
+  /** Trailing × button; `remove` emits when it is pressed. */
+  readonly removable = input(false, { transform: booleanAttribute });
+  /** Accessible name for the × (defaults to "Remove"). */
+  readonly removeLabel = input&lt;string&gt;('Remove');
+  readonly remove = output&lt;void&gt;();
+}</pre>
+</section>
+
+<section id="output" data-part="2" data-cue="Then remove, declared with the output function">
+  <h2><code>output()</code>: report, don't decide</h2>
+  <div class="cols">
+    <div class="card"><h3>Child</h3><p><code>remove = output&lt;void&gt;()</code><br>emits when × is pressed</p></div>
+    <div class="card good"><h3>Parent</h3><p><code>(remove)="removeAt(i)"</code><br>owns the list, decides</p></div>
+  </div>
+  <p class="muted">Typed, mirrors the signal input API — no <code>@Output() new EventEmitter()</code>.</p>
+</section>
+
+<section id="not-needed" data-part="2" data-cue="Note what the chip does not need.">
+  <h2>Not needed here</h2>
+  <ul>
+    <li><code>computed()</code> — every binding is one comparison</li>
+    <li><code>model()</code> — nothing flows both ways</li>
+    <li><code>signal()</code> — no local state</li>
+  </ul>
+</section>
+
+<section id="template" data-part="3" data-cue="The template starts with the default content slot">
+  <h2>The template</h2>
+  <pre class="code tight" data-lang="html" data-file="components/src/lib/chip/chip.html" data-mark="1,3">&lt;ng-content /&gt;
+@if (removable()) {
+  &lt;button class="chip__x" type="button" [attr.aria-label]="removeLabel()" (click)="remove.emit()"&gt;
+    &lt;sd-icon name="close" [size]="10" [stroke]="2.5" /&gt;
+  &lt;/button&gt;
+}</pre>
+  <ul class="small">
+    <li><code>type="button"</code>: never submits a surrounding form</li>
+    <li>Slot declared once, <b>outside</b> the <code>@if</code></li>
+  </ul>
+</section>
+
+<section id="styles" data-part="4" data-cue="The host is an inline flex row">
+  <h2>The host is the pill</h2>
+  <pre class="code tight" data-lang="scss" data-file="components/src/lib/chip/chip.scss" data-mark="8,10,13-14">:host {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  flex: none;
+  height: 24px;
+  padding: 0 10px;
+  border-radius: var(--borderRadiusCircular);
+  font-size: 12px;
+  font-weight: var(--fontWeightSemibold);
+  line-height: 1;
+  white-space: nowrap;
+  background: var(--colorNeutralBackground3);
+  color: var(--colorNeutralForeground2);
+}</pre>
+</section>
+
+<section id="tones" data-part="4" data-cue="Each tone is a colon host rule">
+  <h2>Tones as fill + ink pairs</h2>
+  <pre class="code tight" data-lang="scss" data-file="components/src/lib/chip/chip.scss" data-mark="15">:host(.chip--sun) {
+  background: var(--colorPaletteSunBackground1);
+  color: var(--colorPaletteSunForeground1);
+}
+:host(.chip--accent) {
+  background: var(--colorStatusSuccessBackground1);
+  color: var(--colorStatusSuccessForeground1);
+}
+:host(.chip--warn) {
+  background: var(--colorStatusDangerBackground1);
+  color: var(--colorStatusDangerForeground1);
+}
+:host(.chip--ink) {
+  background: var(--colorNeutralBackgroundInverted);
+  color: #fff;
+}</pre>
+</section>
+
+<section id="extras" data-part="4" data-cue="A deep selector sets a private size variable">
+  <h2>Icon size, small, count</h2>
+  <pre class="code tight" data-lang="scss" data-file="components/src/lib/chip/chip.scss" data-mark="2">:host ::ng-deep &gt; sd-icon {
+  --_size: 13px;
+}
+
+:host(.chip--sm) {
+  height: 20px;
+  padding: 0 8px;
+  font-size: 11px;
+}
+/* … */
+:host(.chip--count) {
+  min-width: 24px;
+  justify-content: center;
+  padding: 0 8px;
+}</pre>
+</section>
+
+<section id="spec-setup" data-part="5" data-cue="The host component renders a sun chip">
+  <h2>Spec setup</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/chip/chip.spec.ts" data-mark="4,9-10">@Component({
+  standalone: true,
+  imports: [Chip],
+  template: `&lt;sd-chip tone="sun"&gt;&lt;i class="glyph"&gt;&lt;/i&gt;Sunny&lt;/sd-chip&gt;`,
+})
+class HostCmp {}
+
+  beforeEach(async () =&gt; {
+    await TestBed.configureTestingModule({ imports: [Chip, HostCmp] }).compileComponents();
+    fixture = TestBed.createComponent(Chip);
+    fixture.detectChanges();
+    host = fixture.nativeElement as HTMLElement;
+  });</pre>
+</section>
+
+<section id="spec-classes" data-part="5" data-cue="Mirrors the tone to a host class loops">
+  <h2>Host classes</h2>
+  <table class="map">
+    <tr><th>it(…)</th><th>proves</th></tr>
+    <tr><td>creates as a plain .chip with no modifiers</td><td class="prose">class is exactly <code>chip</code>, no × button</td></tr>
+    <tr><td>mirrors the tone to a host class</td><td class="prose">all eight tones, then back to plain <code>chip</code></td></tr>
+    <tr><td>mirrors the small size and the count badge</td><td class="prose"><code>chip--sm</code>, <code>chip--count</code></td></tr>
+  </table>
+</section>
+
+<section id="spec-remove" data-part="5" data-cue="Renders the remove button with its accessible name when removable checks">
+  <h2>The remove button</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/chip/chip.spec.ts" data-mark="4,7,9">    const x = host.querySelector('button.chip__x') as HTMLButtonElement;
+    expect(x).not.toBeNull();
+    expect(x.getAttribute('type')).toBe('button');
+    expect(x.getAttribute('aria-label')).toBe('Remove');
+    expect(x.querySelector('sd-icon')?.getAttribute('name')).toBe('close');
+
+    fixture.componentRef.setInput('removeLabel', 'Remove Parks');
+    fixture.detectChanges();
+    expect(x.getAttribute('aria-label')).toBe('Remove Parks');</pre>
+</section>
+
+<section id="spec-emit" data-part="5" data-cue="Emits remove when the cross is pressed">
+  <h2>Testing an <code>output()</code></h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/chip/chip.spec.ts" data-mark="5-7">  it('emits remove when the × is pressed', () =&gt; {
+    fixture.componentRef.setInput('removable', true);
+    fixture.detectChanges();
+    const spy = vi.fn();
+    fixture.componentInstance.remove.subscribe(spy);
+    (host.querySelector('.chip__x') as HTMLElement).click();
+    expect(spy).toHaveBeenCalledTimes(1);
+  });</pre>
+  <p class="muted small">Then: projects its content ahead of the remove button</p>
+</section>
+
+<section id="pitfalls" data-part="6" data-cue="Pitfalls">
+  <h2>Pitfalls</h2>
+  <ul>
+    <li>Letting the chip remove itself — emit, the parent decides</li>
+    <li>Generic “Remove” labels in a list — use <code>'Remove ' + value</code></li>
+    <li>Dropping <code>type="button"</code></li>
+    <li>Splitting fill/ink pairs</li>
+    <li>Forgetting <code>imports: [Icon]</code></li>
+  </ul>
+</section>
+
+<section id="recap" data-part="7" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div>The host is the chip</div>
+    <div>Inputs + booleanAttribute</div>
+    <div><code>output()</code> for events</div>
+    <div>One slot, conditional native button</div>
+    <div>Tone pairs → contrast by construction</div>
+    <div>Spec: tones, label, emitted event</div>
+  </div>
+</section>
+
+<section id="next" data-part="7" data-cue="Next, video thirteen builds S D chip input">
+  <div class="kicker">Next · Video 13</div>
+  <h1>Coding <code>sd-chip-input</code></h1>
+</section>
+
+<script src="../../assets/slides.js"></script>
+</body>
+</html>

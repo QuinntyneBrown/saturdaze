@@ -1,6 +1,6 @@
 # 04 · Coding sd-avatar: a computed initial and host class bindings
 
-> **Runtime:** ~6.9 min · **Audience:** developers who know basic Angular and are new to the Saturdaze components library · **Prerequisites:** [01 · sd-activity-card](../activity-card/README.md); [Consuming tokens](../../05-consuming-tokens/README.md) helps
+> **Runtime:** ~7.0 min · **Audience:** developers who know basic Angular and are new to the Saturdaze components library · **Prerequisites:** [01 · sd-activity-card](../activity-card/README.md); [Consuming tokens](../../05-consuming-tokens/README.md) helps
 
 **Video:** [avatar.mp4](avatar.mp4) · [Slides](slides.html) · **Audio:** [avatar.mp3](avatar.mp3) · [Transcript](script.md)
 
@@ -14,7 +14,7 @@ By the end, the viewer can:
 
 - Write a decorative (`aria-hidden`) standalone, OnPush component whose host is the mock's `.avatar`.
 - Map union-typed inputs to one `[class.…]` host binding per modifier, keeping the mock's class names (`avatar--q`, `--s`, `--e`, `--m`).
-- Remove a host attribute by returning `null` from the binding.
+- Keep inputs as inputs: no reflected `name`/`tone`/`size` attributes, only classes and ARIA on the host (ADR-009).
 - Derive the initial with a pure, memoised `computed()`.
 - Render a photo or the initial with `@if` and an `ng-container`.
 - Explain what each test in `avatar.spec.ts` proves, and that `src` has no test yet.
@@ -34,7 +34,7 @@ By the end, the viewer can:
 | --- | --- |
 | `frontend/projects/saturdaze/src/app/pages/family/family.page.html` | Member avatar with tone and size. |
 | `frontend/projects/saturdaze/src/app/dialogs/profile-photo-dialog/profile-photo-dialog.html` | Avatar with `src` as a live preview. |
-| `frontend/projects/components/src/lib/avatar/avatar.ts` | Decorator, host class/attribute bindings, inputs, `initial`. |
+| `frontend/projects/components/src/lib/avatar/avatar.ts` | Decorator, host class bindings, inputs, `initial`. |
 | `frontend/projects/components/src/lib/avatar/avatar.html` | Photo or initial. |
 | `frontend/projects/components/src/lib/avatar/avatar.scss` | Sizes and paired tone tokens. |
 | `frontend/projects/components/src/lib/avatar/avatar.spec.ts` | Five tests; the tone-to-class table. |
@@ -44,13 +44,13 @@ By the end, the viewer can:
 | Time | Segment | Content |
 | --- | --- | --- |
 | 00:00-00:33 | Introduction | What the avatar is; where it is used. |
-| 00:34-02:11 | Decorator | `aria-hidden`, size and tone class bindings, mock class names, photo modifier, attributes. |
-| 02:12-03:23 | Inputs | Four typed inputs; the `initial` computed. |
-| 03:24-03:49 | Template | `@if` photo with empty `alt`, else the initial. |
-| 03:50-04:35 | Styles | Sizes, background/foreground token pairs, photo fit. |
-| 04:36-05:56 | Tests | Defaults, the computed, the tone table, sizes; `src` gap. |
-| 05:57-06:17 | Pitfalls | Base size, class names, alt text, side effects. |
-| 06:18-06:53 | Recap | Things to remember; preview of video 05. |
+| 00:34-02:20 | Decorator | `aria-hidden`, size and tone class bindings, mock class names, photo modifier, no reflected attributes. |
+| 02:21-03:33 | Inputs | Four typed inputs; the `initial` computed. |
+| 03:34-03:58 | Template | `@if` photo with empty `alt`, else the initial. |
+| 03:59-04:44 | Styles | Sizes, background/foreground token pairs, photo fit. |
+| 04:45-06:02 | Tests | Defaults, the computed, the tone table, sizes; `src` gap. |
+| 06:03-06:23 | Pitfalls | Base size, class names, alt text, side effects. |
+| 06:24-07:00 | Recap | Things to remember; preview of video 05. |
 
 ## Demo commands
 

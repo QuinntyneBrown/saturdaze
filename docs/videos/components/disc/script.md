@@ -14,7 +14,7 @@ The host object is where most of the work happens. First, the static class disc,
 
 Then come the modifier classes. Each one is a class binding that compares a signal to a literal: disc small when size is S M, disc large when size is L G, and one binding per tone, from disc accent to disc surface. The defaults, medium and default tone, have no class at all, which matches the mock, where the plain disc class is the medium neutral disc.
 
-Finally, three attribute bindings mirror the inputs back to the host: icon always, tone only when it is not default, and size only when it is not medium. Returning null removes the attribute, so the rendered markup stays as small as the mock's.
+Finally, notice what the host does not carry: the icon, tone and size inputs are not mirrored back onto host attributes. Inputs stay inputs; only classes and ARIA state go on the host. Nothing read those attributes, so A D R nine now records that rule.
 
 ## Inputs and one computed signal
 
@@ -34,11 +34,11 @@ Each tone sets a background and a colour, and they always come in designed pairs
 
 ## The spec file
 
-The spec file creates the disc with TestBed, runs detect changes, and keeps a small helper that finds the inner icon.
+The spec file creates the disc with TestBed, runs detect changes, and keeps three small helpers: one finds the inner icon, one reads the path data of the glyph it draws, and one reads the icon's size custom property.
 
-Creates a decorative disc with the sparkle glyph checks the defaults: the disc class, aria hidden true, the sparkle icon, and no tone or size attributes. Forwards the icon name sets the icon input to fork with fixture dot component ref dot set input and checks both the inner icon and the host attribute.
+Creates a decorative disc with the sparkle glyph checks the defaults: aria hidden true, the sparkle glyph actually drawn, and a host whose only class is disc. Forwards the icon name sets the icon input to fork with fixture dot component ref dot set input and checks that the fork glyph is drawn. The tests assert rendered D O M, not attributes.
 
-Mirrors every tone to a host class and attribute loops over all eight non default tones, so adding a tone to the type without a class binding fails the test. Mirrors the size and scales the glyph with it walks through small, large and extra large, checking the class, the attribute, and the icon size, sixteen, twenty and twenty six. It also checks that the large class is removed when the size moves on, which proves the bindings are reactive, not set once.
+Mirrors every tone to a host class loops over all eight non default tones, so adding a tone to the type without a class binding fails the test. Mirrors the size to a host class and scales the glyph with it walks through small, large and extra large, checking the class and the icon size, sixteen, twenty and twenty six pixels. It also checks that the large class is removed when the size moves on, which proves the bindings are reactive, not set once.
 
 ## Pitfalls
 

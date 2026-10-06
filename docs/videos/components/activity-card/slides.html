@@ -41,8 +41,6 @@
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class: 'card card--media',
-    '[attr.title]': 'cardTitle() || null',
-    '[attr.tone]': 'tone()',
   },
 })</pre>
 </section>
@@ -51,11 +49,12 @@
   <h2>The host is the mock's block</h2>
   <div class="cols">
     <div class="card"><h3>Mock · docs/mocks/pages/ideas.html</h3><p><code>&lt;li class="card card--media"&gt;</code></p></div>
-    <div class="card forest"><h3>App</h3><p><code>&lt;sd-activity-card class="card card--media" title="…" tone="leaf"&gt;</code></p></div>
+    <div class="card forest"><h3>App</h3><p><code>&lt;sd-activity-card class="card card--media"&gt;</code></p></div>
   </div>
   <ul>
     <li>Same BEM classes → one Playwright locator set (ADR-009)</li>
-    <li>Host bindings read signals → tracked under OnPush</li>
+    <li>Inputs stay inputs: no <code>[attr.title]</code>, no <code>[attr.tone]</code></li>
+    <li>Only classes and ARIA state on the host — a reflected <code>title</code> meant native tooltips</li>
   </ul>
 </section>
 
@@ -197,7 +196,9 @@
   </ul>
   <pre class="code" data-lang="ts" data-file="activity-card.spec.ts">expect(tile.classList).toContain('media--leaf');
 expect(tile.getAttribute('aria-hidden')).toBe('true');
+expect(glyph(tile.querySelector('sd-icon'))).toContain('M12 3l-5 7h3l-4 6h12l-4-6h3l-5-7z');
 expect(host.querySelector('.card__footer')).toBeNull();</pre>
+  <p class="muted small">Rendered DOM, not host attributes: classes, ARIA, the drawn glyph.</p>
 </section>
 
 <section id="tests-2" data-part="5" data-cue="Two tests cover the Map link.">

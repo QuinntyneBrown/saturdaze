@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 16 Slides</title>
+<link rel="stylesheet" href="../../assets/slides.css">
+</head>
+<body data-video-number="16" data-video-title="Coding sd-date-tile" data-parts="Introduction|Decorator|Computed|Template &amp; styles|Spec|Pitfalls|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Saturdaze components · Video 16 of 52</div>
+  <h1>Coding <code>sd-date-tile</code></h1>
+  <p class="lead">Derived state with one <code>computed()</code> signal.</p>
+</section>
+
+<section id="usages" data-part="0" data-cue="The event card uses it inside the library">
+  <h2>Where it is used</h2>
+  <table class="map">
+    <tr><th>where</th><th>usage</th></tr>
+    <tr><td>lib/event-card</td><td>&lt;sd-date-tile [date]="date()" [mon]="mon()" [day]="day()" /&gt;</td></tr>
+    <tr><td>pages/review-submissions</td><td>&lt;sd-date-tile [mon]="card.tile.mon" [day]="card.tile.day" /&gt;</td></tr>
+    <tr><td>dialogs/approve-submission-dialog</td><td>&lt;sd-date-tile [mon]="card.tile.mon" [day]="card.tile.day" /&gt;</td></tr>
+    <tr><td>dialogs/event-submitted-dialog</td><td>&lt;sd-date-tile [date]="data.submission.startsAtLocal" /&gt;</td></tr>
+  </table>
+</section>
+
+<section id="decorator" data-part="1" data-cue="Open the date tile component file.">
+  <h2>A constant and the decorator</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/date-tile/date-tile.ts" data-mark="1,10-11">const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+@Component({
+  selector: 'sd-date-tile',
+  standalone: true,
+  templateUrl: './date-tile.html',
+  styleUrl: './date-tile.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: 'date-tile',
+    'aria-hidden': 'true',
+  },
+})</pre>
+</section>
+
+<section id="computed" data-part="2" data-cue="Then the heart of the component">
+  <h2>Inputs and one computed signal</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/date-tile/date-tile.ts" data-mark="7-8,10">  readonly date = input&lt;string&gt;('');
+  /** Pre-split parts ("May" / "17"); when given they win over `date`. */
+  readonly mon = input&lt;string&gt;('');
+  readonly day = input&lt;string&gt;('');
+
+  protected readonly parts = computed(() =&gt; {
+    if (this.mon() || this.day()) return { mon: this.mon(), day: this.day() };
+    const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(this.date());
+    if (!m) return { mon: '', day: '' };
+    return { mon: MONTHS[Number(m[2]) - 1] ?? '', day: String(Number(m[3])) };
+  });</pre>
+</section>
+
+<section id="why-computed" data-part="2" data-cue="This is the textbook use of computed.">
+  <h2>Why <code>computed()</code>?</h2>
+  <table class="map">
+    <tr><th>option</th><th>verdict</th></tr>
+    <tr><td>template expression</td><td class="prose">re-parses on every check</td></tr>
+    <tr><td>effect() writing a signal</td><td class="prose">second state that can drift</td></tr>
+    <tr><td>computed()</td><td class="prose"><b>memoised, recalculated only when an input changes</b></td></tr>
+  </table>
+</section>
+
+<section id="no-date" data-part="2" data-cue="Notice also what the parser avoids.">
+  <div class="kicker">No <code>new Date()</code></div>
+  <p class="quote">Reading the digits from the string means a local date can never shift by a day in the viewer's time zone.</p>
+</section>
+
+<section id="template" data-part="3" data-cue="The template is two spans">
+  <h2>Template and styles</h2>
+  <pre class="code" data-lang="html" data-file="components/src/lib/date-tile/date-tile.html" data-mark="1-2">&lt;span class="date-tile__m"&gt;{{ parts().mon }}&lt;/span
+&gt;&lt;span class="date-tile__d"&gt;{{ parts().day }}&lt;/span&gt;</pre>
+  <pre class="code tight" data-lang="scss" data-file="components/src/lib/date-tile/date-tile.scss" data-mark="6-7">:host {
+  /* … inline-flex column, centred … */
+  width: 44px;
+  height: 44px;
+  border-radius: var(--borderRadiusMedium);
+  background: var(--colorBrandBackground2);
+  color: var(--colorBrandForeground2);
+}</pre>
+</section>
+
+<section id="spec" data-part="4" data-cue="There is no host component. Before each test">
+  <h2>Spec</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/date-tile/date-tile.spec.ts" data-mark="1">  it('accepts an ISO date-time and drops the leading zero on the day', () =&gt; {
+    fixture.componentRef.setInput('date', '2026-12-03T10:30:00Z');
+    fixture.detectChanges();
+    expect(month()).toBe('Dec');
+    expect(day()).toBe('3');
+  });</pre>
+  <table class="map">
+    <tr><th>it(…)</th><th>proves</th></tr>
+    <tr><td>creates a decorative, empty tile</td><td class="prose">class, <code>aria-hidden="true"</code>, empty</td></tr>
+    <tr><td>renders month over day from an ISO date</td><td class="prose">May / 17</td></tr>
+    <tr><td>renders nothing for an unparseable date</td><td class="prose">"next saturday" → empty</td></tr>
+  </table>
+</section>
+
+<section id="gap" data-part="4" data-cue="There is one honest gap.">
+  <h2>A gap worth filling</h2>
+  <p class="lead">No test sets <code>mon</code> and <code>day</code>, though three callers use them.</p>
+  <p class="muted">Add one: set <code>date</code> plus both parts, expect the parts to win.</p>
+</section>
+
+<section id="pitfalls" data-part="5" data-cue="Pitfalls">
+  <h2>Pitfalls</h2>
+  <ul>
+    <li>Parsing with <code>new Date()</code> — time zones move the day</li>
+    <li>Deriving in the template or an <code>effect()</code></li>
+    <li>Dropping <code>aria-hidden</code>, or not saying the date in text</li>
+    <li>Reformatting away the whitespace trick</li>
+  </ul>
+</section>
+
+<section id="recap" data-part="6" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div>Three inputs, one <code>computed()</code></div>
+    <div>Pre-split parts win</div>
+    <div>Anchored pattern, no <code>Date</code></div>
+    <div>Static <code>aria-hidden</code></div>
+    <div>Brand fill + ink pair</div>
+    <div>Test the parts too</div>
+  </div>
+</section>
+
+<section id="next" data-part="6" data-cue="Next, video seventeen builds S D day">
+  <div class="kicker">Next · Video 17</div>
+  <h1>Coding <code>sd-day</code></h1>
+</section>
+
+<script src="../../assets/slides.js"></script>
+</body>
+</html>

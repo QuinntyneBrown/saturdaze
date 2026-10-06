@@ -58,20 +58,19 @@ export interface PasswordStrength {
     '[class.strength--weak]': 'level() === "weak"',
     '[class.strength--ok]': 'level() === "ok"',
     '[class.strength--strong]': 'level() === "strong"',
-    '[attr.level]': 'level()',
   },</pre>
   <p class="muted"><b>B E M parity</b> with the mocks (ADR-009) · <code>aria-live="polite"</code> announces label changes</p>
 </section>
 
 <section id="modifiers" data-part="1" data-cue="Then come three class bindings, one modifier per level.">
   <h2>Host bindings read the signal</h2>
-  <pre class="code" data-lang="ts" data-file="components/src/lib/strength/strength.ts" data-mark="1-3,4">    '[class.strength--weak]': 'level() === "weak"',
+  <pre class="code" data-lang="ts" data-file="components/src/lib/strength/strength.ts" data-mark="1-3">    '[class.strength--weak]': 'level() === "weak"',
     '[class.strength--ok]': 'level() === "ok"',
-    '[class.strength--strong]': 'level() === "strong"',
-    '[attr.level]': 'level()',</pre>
+    '[class.strength--strong]': 'level() === "strong"',</pre>
   <ul>
     <li>One modifier class per level</li>
-    <li><code>[attr.level]</code> mirrors the value; <code>null</code> removes the attribute</li>
+    <li>Inputs stay inputs: no <code>[attr.level]</code> on the host</li>
+    <li>Only ARIA state and classes go on the host (ADR-009)</li>
   </ul>
 </section>
 
@@ -157,23 +156,22 @@ export interface PasswordStrength {
   <h2>The contract and the defaults</h2>
   <ul>
     <li><b>creates a polite live meter with three hidden segments</b> — class, <code>aria-live</code>, <code>aria-hidden</code>, 3 segments</li>
-    <li><b>has no level and no label until told</b> — no attribute, base class only, no label</li>
+    <li><b>has no level and no label until told</b> — base class only, no label</li>
   </ul>
 </section>
 
 <section id="spec-level" data-part="5" data-cue="The third,">
-  <h2>mirrors the level to a host class and attribute</h2>
-  <pre class="code tight" data-lang="ts" data-file="components/src/lib/strength/strength.spec.ts" data-mark="2,3,9">    for (const level of ['weak', 'ok', 'strong']) {
+  <h2>mirrors the level to a host class</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/strength/strength.spec.ts" data-mark="2,3,8">    for (const level of ['weak', 'ok', 'strong']) {
       fixture.componentRef.setInput('level', level);
       fixture.detectChanges();
       expect(host.classList.contains(`strength--${level}`)).toBe(true);
-      expect(host.getAttribute('level')).toBe(level);
     }
     expect(host.classList.contains('strength--weak')).toBe(false);
 
     fixture.componentRef.setInput('level', null);
     fixture.detectChanges();
-    expect(host.getAttribute('level')).toBeNull();</pre>
+    expect(host.classList.contains('strength--strong')).toBe(false);</pre>
   <p class="muted small">Plus <b>announces the label text</b>.</p>
 </section>
 
@@ -193,7 +191,7 @@ export interface PasswordStrength {
     <div>Host = B E M block + polite live region</div>
     <div>Modifiers + <code>nth-child</code> fill the segments</div>
     <div>Status and palette roles, never hex</div>
-    <div>Spec: <code>setInput</code>, then check classes and attributes</div>
+    <div>Spec: <code>setInput</code>, then check rendered classes</div>
   </div>
 </section>
 

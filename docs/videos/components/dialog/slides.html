@@ -59,10 +59,6 @@ export const DIALOG_OPTIONS = {
     class: 'dialog',
     '[class.dialog--specimen]': 'isStatic()',
     '[class.dialog--wide]': 'wide()',
-    '[attr.static]': 'isStatic() ? "" : null',
-    '[attr.wide]': 'wide() ? "" : null',
-    '[attr.title]': 'dialogTitle() || null',
-    '[attr.subtitle]': 'subtitle() || null',
   },
 })</pre>
 </section>
@@ -72,7 +68,7 @@ export const DIALOG_OPTIONS = {
   <ul>
     <li><code>.dialog</code> — the BEM block from <code>docs/mocks/styles/app.css</code> (ADR-009)</li>
     <li>Modifiers <code>dialog--specimen</code>, <code>dialog--wide</code> from <code>isStatic()</code>, <code>wide()</code></li>
-    <li>Attributes mirrored; <code>null</code> removes them when empty</li>
+    <li>Inputs are <b>not</b> reflected to host attributes — only classes and ARIA (ADR-009)</li>
   </ul>
 </section>
 
@@ -243,8 +239,8 @@ export const DIALOG_OPTIONS = {
   <h2>Structure, inputs, output</h2>
   <ul class="small">
     <li><code>creates a panel with a heading and a close button</code></li>
-    <li><code>renders title and subtitle and mirrors them to the host</code></li>
-    <li><code>mirrors static and wide to host classes and attributes</code></li>
+    <li><code>renders title and subtitle</code></li>
+    <li><code>mirrors static and wide to host classes</code></li>
     <li><code>emits closed when the × is pressed</code></li>
   </ul>
   <pre class="code" data-lang="ts" data-file="components/src/lib/dialog/dialog.spec.ts">    fixture.componentRef.setInput('title', 'Rate Saturday');

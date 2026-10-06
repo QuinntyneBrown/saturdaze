@@ -48,7 +48,7 @@ let nextSegRadioId = 0;</pre>
 
 <section id="decorator" data-part="2" data-cue="The decorator uses the selector S D seg radio">
   <h2>The decorator</h2>
-  <pre class="code" data-lang="ts" data-file="components/src/lib/seg-radio/seg-radio.ts" data-mark="7-11">@Component({
+  <pre class="code" data-lang="ts" data-file="components/src/lib/seg-radio/seg-radio.ts" data-mark="7-9">@Component({
   selector: 'sd-seg-radio',
   standalone: true,
   templateUrl: './seg-radio.html',
@@ -56,9 +56,8 @@ let nextSegRadioId = 0;</pre>
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class: 'field',
-    '[attr.label]': 'label() || null',
-    '[attr.value]': 'value() || null',
   },</pre>
+  <p class="muted small">Inputs stay inputs: no host attributes for <code>label</code> or <code>value</code>. Only classes and ARIA state go on the host (ADR-009).</p>
 </section>
 
 <section id="cva" data-part="2" data-cue="Then comes the providers array.">
@@ -243,7 +242,7 @@ let nextSegRadioId = 0;</pre>
 
     expect(onChange).toHaveBeenCalledWith('either');
     expect(onTouched).toHaveBeenCalledTimes(1);</pre>
-  <p class="muted small">Also: checks the radio matching a written value… · disables every radio from the form and ignores picks</p>
+  <p class="muted small">Also: checks the radio matching a written value · disables every radio from the form and ignores picks</p>
 </section>
 
 <section id="pitfalls" data-part="8" data-cue="Binding the value with an input instead of N G model">

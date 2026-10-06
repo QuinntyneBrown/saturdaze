@@ -10,7 +10,7 @@ The key decision comes first. S D dialog does not open anything. Real modals are
 
 Open dialog dot T S. The selector is S D dialog, the component is standalone, it imports the button and icon components, and change detection is On Push, like every component in this library.
 
-The host object adds the class dialog, the B E M block from the mock stylesheet, so styles and end to end locators match the design reference, as A D R nine requires. It binds two modifier classes, dialog specimen and dialog wide, by calling the signals is static and wide. And it mirrors the static, wide, title and subtitle inputs back to host attributes, returning null when they are empty, so the attribute disappears instead of rendering an empty string.
+The host object adds the class dialog, the B E M block from the mock stylesheet, so styles and end to end locators match the design reference, as A D R nine requires. It binds two modifier classes, dialog specimen and dialog wide, by calling the signals is static and wide. Notice what is not there: the inputs are not mirrored back onto host attributes. Only classes and ARIA state go on the host. Nothing read those attributes, and a reflected title attribute gave every dialog a native browser tooltip, so A D R nine now forbids it.
 
 ## Inputs, an output and inject
 
@@ -46,7 +46,7 @@ On phones the action row is a column. It sets the S D button height and width kn
 
 The spec file has a small host component that projects a paragraph, a Remove button into actions left, and a Save button into actions. The main block creates the dialog with TestBed and runs detect changes.
 
-Creates a panel with a heading and a close button checks the B E M structure, the close button's aria label, and that no host attributes appear by default. Renders title and subtitle and mirrors them to the host drives inputs with fixture dot component ref dot set input, the signal friendly way. Mirrors static and wide to host classes and attributes covers the modifiers. Emits closed when the cross is pressed subscribes to the output and clicks the inner button.
+Creates a panel with a heading and a close button checks the B E M structure, the close button's aria label, an empty heading, and that the host carries only the dialog class by default. Renders title and subtitle drives inputs with fixture dot component ref dot set input, the signal friendly way. Mirrors static and wide to host classes covers the modifiers. Emits closed when the cross is pressed subscribes to the output and clicks the inner button.
 
 Three tests guard accessibility. One checks the heading id and that the panel never adds a dialog role of its own. Labels the surrounding C D K container with its heading wraps the component in a fake container and awaits when stable, so after next render has run. Leaves an existing aria labelled by on the container alone proves the guard.
 

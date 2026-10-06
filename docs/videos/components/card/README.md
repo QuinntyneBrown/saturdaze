@@ -1,12 +1,12 @@
 # 10 · Coding sd-card: a host that is the surface
 
-> **Runtime:** ~7.2 min · **Audience:** developers who know basic Angular and want to build or change `sd-card` · **Prerequisites:** [Consuming tokens](../../05-consuming-tokens/README.md) helps
+> **Runtime:** ~7.3 min · **Audience:** developers who know basic Angular and want to build or change `sd-card` · **Prerequisites:** [Consuming tokens](../../05-consuming-tokens/README.md) helps
 
 **Video:** [card.mp4](card.mp4) · [Slides](slides.html) · **Audio:** [card.mp3](card.mp3) · [Transcript](script.md)
 
 ## Why this video exists
 
-`sd-card` is the simplest example of the ADR-009 class contract: the host element *is* the mock's `.card` block, and every input toggles a host modifier. Building it step by step shows signal inputs with defaults, the `booleanAttribute` transform, host bindings that read signals, attribute mirroring with `null`, and a spec that drives inputs through `setInput`.
+`sd-card` is the simplest example of the ADR-009 class contract: the host element *is* the mock's `.card` block, and every input toggles a host modifier. Building it step by step shows signal inputs with defaults, the `booleanAttribute` transform, host bindings that read signals, why inputs are not reflected onto host attributes, and a spec that drives inputs through `setInput`.
 
 ## Learning objectives
 
@@ -14,7 +14,7 @@ By the end, the viewer can:
 
 - Write a standalone, OnPush component whose host carries the mock's BEM block and modifier classes.
 - Declare string-union and boolean signal inputs with defaults and `transform: booleanAttribute`.
-- Bind host classes and attributes to signals, and remove an attribute by returning `null`.
+- Bind host classes to signals, and keep inputs off the host as attributes (ADR-009).
 - Port a mock CSS block to encapsulated `:host(.modifier)` rules using tokens by role.
 - Read and extend `card.spec.ts`.
 
@@ -25,7 +25,7 @@ By the end, the viewer can:
 | Why is there no wrapper element? | The host is the card (ADR-009); page objects and the spec expect content directly inside it. |
 | Why `booleanAttribute`? | So `<sd-card locked>` (an empty-string attribute) type-checks and becomes `true`. |
 | Why no `computed()`? | Each host binding is a single comparison; `computed` is for shared or non-trivial derivations. |
-| How is an attribute removed? | The binding returns `null`. |
+| Why no `[attr.locked]` on the host? | Nothing read reflected inputs; only mock classes and ARIA state go on the host (ADR-009). |
 | Are `locked` / `dimmed` / `muted` accessible? | No, they are visual only; say the state in text (a chip). |
 
 ## Code / assets on screen
@@ -44,13 +44,13 @@ By the end, the viewer can:
 | Time | Segment | Content |
 | --- | --- | --- |
 | 00:00-00:39 | Introduction | Title; Where the app uses it. |
-| 00:40-01:33 | Decorator | The decorator; The host is the card. |
-| 01:34-02:59 | Inputs | Two string-union inputs with defaults; Boolean flags. |
-| 03:00-03:54 | Host bindings | Host bindings read the signals; Mirror state as attributes. |
-| 03:55-04:53 | Template & styles | Template: one slot; Styles: tokens by role; Hover only where hover exists. |
-| 04:54-06:05 | Spec | Spec setup; The four tests; On, then off again. |
-| 06:06-06:35 | Pitfalls | Pitfalls. |
-| 06:36-07:13 | Recap | Things to remember; preview of `sd-checkbox`. |
+| 00:40-01:32 | Decorator | The decorator; The host is the card. |
+| 01:33-02:58 | Inputs | Two string-union inputs with defaults; Boolean flags. |
+| 02:59-03:56 | Host bindings | Host bindings read the signals; Inputs stay inputs. |
+| 03:57-04:55 | Template & styles | Template: one slot; Styles: tokens by role; Hover only where hover exists. |
+| 04:56-06:04 | Spec | Spec setup; The four tests; On, then off again. |
+| 06:05-06:35 | Pitfalls | Pitfalls. |
+| 06:36-07:17 | Recap | Things to remember; preview of `sd-checkbox`. |
 
 ## Demo commands
 

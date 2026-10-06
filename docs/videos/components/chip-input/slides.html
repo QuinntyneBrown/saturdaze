@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 13 Slides</title>
+<link rel="stylesheet" href="../../assets/slides.css">
+</head>
+<body data-video-number="13" data-video-title="Coding sd-chip-input" data-parts="Introduction|Decorator|State|Behaviour|Template|Styles|Spec|Pitfalls|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Saturdaze components · Video 13 of 52</div>
+  <h1>Coding <code>sd-chip-input</code></h1>
+  <p class="lead">A tag editor built on signals and the forms contract.</p>
+</section>
+
+<section id="usage" data-part="0" data-cue="In the app it lives in the likes dialog">
+  <h2>Where the app uses it</h2>
+  <pre class="code" data-lang="html" data-file="saturdaze/src/app/dialogs/likes-dialog/likes-dialog.html">    &lt;sd-chip-input
+      label="Likes"
+      tone="leaf"
+      [ngModel]="likes()"
+      (ngModelChange)="likes.set($event)"
+    /&gt;
+    &lt;sd-chip-input
+      label="Dislikes"
+      tone="warn"
+      [ngModel]="dislikes()"
+      (ngModelChange)="dislikes.set($event)"
+    /&gt;</pre>
+</section>
+
+<section id="decorator" data-part="1" data-cue="Open the chip input component file.">
+  <h2>The decorator</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/chip-input/chip-input.ts" data-mark="1,6,10,13">let nextChipInputId = 0;
+
+@Component({
+  selector: 'sd-chip-input',
+  standalone: true,
+  imports: [Chip],
+  /* templateUrl, styleUrl */
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: 'field',
+  },
+  providers: [
+    /* NG_VALUE_ACCESSOR · useExisting: forwardRef(() =&gt; ChipInput) · multi: true */
+  ],
+})</pre>
+</section>
+
+<section id="state" data-part="2" data-cue="There are three inputs with defaults">
+  <h2>Inputs, an id, and three signals</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/chip-input/chip-input.ts" data-mark="5,6-8">  readonly label = input&lt;string&gt;('');
+  readonly tone = input&lt;ChipTone&gt;('leaf');
+  readonly placeholder = input&lt;string&gt;('Add one, press Enter');
+
+  protected readonly id = `sd-chip-input-${nextChipInputId++}`;
+  protected readonly values = signal&lt;readonly string[]&gt;([]);
+  protected readonly draft = signal&lt;string&gt;('');
+  protected readonly disabled = signal&lt;boolean&gt;(false);</pre>
+</section>
+
+<section id="why-signals" data-part="2" data-cue="The other three are signals.">
+  <h2>What each member is</h2>
+  <table class="map">
+    <tr><th>member</th><th>kind</th><th>why</th></tr>
+    <tr><td>label · tone · placeholder</td><td>input()</td><td class="prose">configuration from the parent</td></tr>
+    <tr><td>id</td><td>plain string</td><td class="prose">never changes — no need to be reactive</td></tr>
+    <tr><td>values · draft · disabled</td><td>signal()</td><td class="prose">owned and written by the component</td></tr>
+  </table>
+  <p class="muted">The value is not a <code>model()</code>: the form owns it.</p>
+</section>
+
+<section id="keys" data-part="3" data-cue="Now the methods.">
+  <h2>Keyboard handling</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/chip-input/chip-input.ts" data-mark="6-7,9">  protected onDraft(event: Event): void {
+    this.draft.set((event.target as HTMLInputElement).value);
+  }
+
+  protected onKey(event: KeyboardEvent): void {
+    if (event.key === 'Enter' || event.key === ',') {
+      event.preventDefault();
+      this.commit();
+    } else if (event.key === 'Backspace' &amp;&amp; !this.draft() &amp;&amp; this.values().length) {
+      this.removeAt(this.values().length - 1);
+    }
+  }</pre>
+</section>
+
+<section id="commit" data-part="3" data-cue="Commit trims the draft">
+  <h2>Commit and remove</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/chip-input/chip-input.ts" data-mark="4,10">  protected commit(): void {
+    const v = this.draft().trim();
+    if (!v) return;
+    const exists = this.values().some((x) =&gt; x.toLowerCase() === v.toLowerCase());
+    if (!exists) this.set([...this.values(), v]);
+    this.draft.set('');
+  }
+
+  protected removeAt(index: number): void {
+    if (this.disabled()) return;
+    this.set(this.values().filter((_, i) =&gt; i !== index));
+  }</pre>
+</section>
+
+<section id="set" data-part="3" data-cue="Both paths go through one private method called set.">
+  <h2>One way out, one way in</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/chip-input/chip-input.ts" data-mark="3,8">  private set(next: readonly string[]): void {
+    this.values.set(next);
+    this.onChange([...next]);
+    this.onTouched();
+  }
+
+  writeValue(value: readonly string[] | null): void {
+    this.values.set(value ? [...value] : []);
+  }</pre>
+  <p class="muted">Copy arrays across the forms boundary — neither side can mutate the other.</p>
+</section>
+
+<section id="no-effect" data-part="3" data-cue="Notice that there is no effect anywhere.">
+  <div class="kicker">Signals best practice</div>
+  <p class="quote">No <code>effect()</code>: every change happens in an event handler, so there is nothing to synchronise afterwards.</p>
+</section>
+
+<section id="template" data-part="4" data-cue="The template opens with an if block on label.">
+  <h2>The template: label and chips</h2>
+  <pre class="code tight" data-lang="html" data-file="components/src/lib/chip-input/chip-input.html" data-mark="2,5-6">@if (label()) {
+  &lt;label class="field__label" [attr.for]="id"&gt;{{ label() }}&lt;/label&gt;
+}
+&lt;div class="chip-input"&gt;
+  @for (value of values(); track value; let i = $index) {
+    &lt;sd-chip [tone]="tone()" removable [removeLabel]="'Remove ' + value" (remove)="removeAt(i)"&gt;{{
+      value
+    }}&lt;/sd-chip&gt;
+  }</pre>
+  <p class="muted"><code>track value</code> is safe: values are de-duplicated.</p>
+</section>
+
+<section id="template-input" data-part="4" data-cue="After the chips comes the native text input">
+  <h2>The template: the bare input</h2>
+  <pre class="code" data-lang="html" data-file="components/src/lib/chip-input/chip-input.html" data-mark="3,5,8-10">  &lt;input
+    class="chip-input__field"
+    [id]="id"
+    type="text"
+    [value]="draft()"
+    [attr.placeholder]="placeholder()"
+    [disabled]="disabled()"
+    (input)="onDraft($event)"
+    (keydown)="onKey($event)"
+    (blur)="commit()"
+  /&gt;
+&lt;/div&gt;</pre>
+</section>
+
+<section id="styles" data-part="5" data-cue="The host is a flex column.">
+  <h2>Focus on the whole field</h2>
+  <pre class="code tight" data-lang="scss" data-file="components/src/lib/chip-input/chip-input.scss" data-mark="8-10,14-15">.chip-input {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 7px 8px;
+  background: var(--colorNeutralBackground1);
+  border: 1px solid var(--colorNeutralStroke1);
+  border-radius: var(--borderRadiusMedium);
+}
+
+.chip-input:focus-within {
+  border-color: var(--colorBrandStroke1);
+  box-shadow: 0 0 0 3px var(--colorBrandStroke2);
+}</pre>
+</section>
+
+<section id="spec-setup" data-part="6" data-cue="There is no host component this time.">
+  <h2>Spec setup and helpers</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/chip-input/chip-input.spec.ts" data-mark="1,7,13-15">  function type(text: string): void {
+    field().value = text;
+    field().dispatchEvent(new Event('input'));
+    fixture.detectChanges();
+  }
+
+  function key(k: string): KeyboardEvent {
+    const event = new KeyboardEvent('keydown', { key: k, cancelable: true, bubbles: true });
+    field().dispatchEvent(event);
+    return event;
+  }
+  /* beforeEach: */
+    onChange = vi.fn&lt;(value: string[]) =&gt; void&gt;();
+    component.registerOnChange(onChange);
+    component.writeValue(['Parks', 'Pizza']);</pre>
+</section>
+
+<section id="spec-render" data-part="6" data-cue="Creates a leaf toned field with the written values">
+  <h2>Rendering</h2>
+  <table class="map">
+    <tr><th>it(…)</th><th>proves</th></tr>
+    <tr><td>creates a leaf-toned field with the written values as removable chips</td><td class="prose"><code>chip--leaf</code> + × on every chip, “Remove Parks”</td></tr>
+    <tr><td>links the label to the bare input and forwards tone and placeholder</td><td class="prose"><code>for</code> = id, <code>sd-chip-input-N</code>, every chip <code>chip--warn</code></td></tr>
+  </table>
+</section>
+
+<section id="spec-typing" data-part="6" data-cue="The next four cover typing.">
+  <h2>Typing</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/chip-input/chip-input.spec.ts" data-mark="5">  it('adds the draft on Enter, clears the input and swallows the key', () =&gt; {
+    type('Lego');
+    const event = key('Enter');
+    fixture.detectChanges();
+    expect(event.defaultPrevented).toBe(true);
+    expect(chipText()).toEqual(['Parks', 'Pizza', 'Lego']);
+    expect(onChange).toHaveBeenLastCalledWith(['Parks', 'Pizza', 'Lego']);
+    expect(field().value).toBe('');
+  });</pre>
+  <p class="muted small">Also: adds on comma and on blur, trimming whitespace · ignores blanks and case-insensitive duplicates · removes the last value on Backspace when the draft is empty</p>
+</section>
+
+<section id="spec-remove" data-part="6" data-cue="Removes a value when its chip cross is pressed">
+  <h2>Removing and the form</h2>
+  <table class="map">
+    <tr><th>it(…)</th><th>proves</th></tr>
+    <tr><td>removes a value when its chip × is pressed</td><td class="prose">chip output → <code>removeAt</code></td></tr>
+    <tr><td>disables the input and ignores removals from the form</td><td class="prose">the early return</td></tr>
+    <tr><td>replaces the values on a later writeValue and clears on null</td><td class="prose">form reset</td></tr>
+  </table>
+</section>
+
+<section id="pitfalls" data-part="7" data-cue="Pitfalls">
+  <h2>Pitfalls</h2>
+  <ul>
+    <li>Values as a <code>model()</code> or input</li>
+    <li>Sharing arrays across the forms boundary</li>
+    <li>Forgetting <code>preventDefault()</code> on Enter and comma</li>
+    <li>A fixed id shared by every instance</li>
+    <li>An <code>effect()</code> where a handler would do</li>
+  </ul>
+</section>
+
+<section id="recap" data-part="8" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div>Signals: values, draft, disabled</div>
+    <div>One private <code>set()</code></div>
+    <div>Handlers, not effects</div>
+    <div>Chip <code>(remove)</code> → <code>removeAt(i)</code></div>
+    <div>Generated id links the label</div>
+    <div><code>:focus-within</code> draws the ring</div>
+  </div>
+</section>
+
+<section id="next" data-part="8" data-cue="Next, video fourteen builds S D copy field">
+  <div class="kicker">Next · Video 14</div>
+  <h1>Coding <code>sd-copy-field</code></h1>
+</section>
+
+<script src="../../assets/slides.js"></script>
+</body>
+</html>

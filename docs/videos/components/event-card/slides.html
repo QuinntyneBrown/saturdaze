@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 22 Slides</title>
+<link rel="stylesheet" href="../../assets/slides.css">
+</head>
+<body data-video-number="22" data-video-title="Coding sd-event-card" data-parts="Introduction|Decorator|Inputs|Template|Styles|Spec|Pitfalls|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Saturdaze components · Video 22 of 52</div>
+  <h1>Coding <code>sd-event-card</code></h1>
+  <p class="lead">A typed card built from smaller parts: media, date tile, chips, footer.</p>
+</section>
+
+<section id="usage" data-part="0" data-cue="The interesting part is composition">
+  <h2>Where it is used</h2>
+  <pre class="code tight" data-lang="html" data-file="saturdaze/src/app/pages/ideas-events/ideas-events.page.html">        &lt;sd-event-card
+          [title]="event.title"
+          [meta]="event.meta"
+          [mon]="event.tile.mon"
+          [day]="event.tile.day"
+          [muted]="event.pending"
+          [url]="event.url ?? ''"
+          [media]="event.media"
+          [addable]="event.addable"
+          (addToDay)="addToDay(event)"
+        &gt;
+          @for (chip of event.chips; track chip.label) {
+            &lt;sd-chip slot="chips" [tone]="chipTone(chip.tone)"&gt;</pre>
+</section>
+
+<section id="decorator" data-part="1" data-cue="Open event card dot T S.">
+  <h2>The decorator</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/event-card/event-card.ts" data-mark="4,9,10">@Component({
+  selector: 'sd-event-card',
+  standalone: true,
+  imports: [Button, DateTile, Icon, Media],
+  templateUrl: './event-card.html',
+  styleUrl: './event-card.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: 'card card--media',
+    '[class.card--muted]': 'muted()',
+  },
+})</pre>
+</section>
+
+<section id="host" data-part="1" data-cue="The host object adds two static classes">
+  <h2>One anatomy for every typed card</h2>
+  <pre class="code" data-lang="ts" data-file="activity-card.ts · food-card.ts · event-card.ts · past-card.ts">    class: 'card card--media',</pre>
+  <p class="muted">BEM block + modifier from the mock (ADR-009); <code>card--muted</code> from <code>muted()</code>. Inputs are not reflected to host attributes.</p>
+</section>
+
+<section id="inputs" data-part="2" data-cue="The class has ten signal inputs and one output.">
+  <h2>Ten inputs, one output</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/event-card/event-card.ts" data-mark="1,8,14,16">  readonly cardTitle = input&lt;string&gt;('', { alias: 'title' });
+  readonly meta = input&lt;string&gt;('');
+  /** ISO date for the tile. */
+  readonly date = input&lt;string&gt;('');
+  /** Pre-split tile parts; when given they win over `date`. */
+  readonly mon = input&lt;string&gt;('');
+  readonly day = input&lt;string&gt;('');
+  readonly muted = input(false, { transform: booleanAttribute });
+  readonly url = input&lt;string&gt;('');
+  /** The event's primary photo; null shows the fallback tile (L2-106). */
+  readonly media = input&lt;CardMedia | null&gt;(null);
+  readonly mediaTone = input&lt;MediaTone&gt;('sky');
+  /** Offer "Add to day" — this weekend's events only (L2-107). */
+  readonly addable = input(false, { transform: booleanAttribute });
+  /** "Add to day" was pressed. */
+  readonly addToDay = output&lt;void&gt;();</pre>
+</section>
+
+<section id="media" data-part="2" data-cue="Media is typed as card media or null">
+  <h2>Shared types from <code>media</code></h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/event-card/event-card.ts">import { CardMedia, Media, MediaTone } from '../media/media';</pre>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/media/media.ts">export type MediaTone = 'leaf' | 'indoor' | 'sky' | 'sun';</pre>
+  <p class="muted"><code>null</code> → the fallback tile with a ticket icon.</p>
+</section>
+
+<section id="output" data-part="2" data-cue="Then the output.">
+  <h2>Report, don't decide</h2>
+  <div class="flow">
+    <div class="node"><b>sd-event-card</b><small>addToDay.emit()</small></div>
+    <div class="arrow">→</div>
+    <div class="node accent"><b>ideas-events page</b><small>(addToDay)="addToDay(event)"</small></div>
+  </div>
+  <p class="muted">No <code>computed()</code>, no <code>inject()</code>, no local <code>signal()</code> — plain signal reads.</p>
+</section>
+
+<section id="template-head" data-part="3" data-cue="The template starts with S D media">
+  <h2>Head: media, date tile, title</h2>
+  <pre class="code tight" data-lang="html" data-file="components/src/lib/event-card/event-card.html" data-mark="11">&lt;sd-media class="card__media" [photo]="media()" [tone]="mediaTone()" icon="ticket" /&gt;
+&lt;div class="card__head"&gt;
+  &lt;sd-date-tile [date]="date()" [mon]="mon()" [day]="day()" /&gt;
+  &lt;div class="card__head-text"&gt;
+    &lt;h3 class="card__title"&gt;{{ cardTitle() }}&lt;/h3&gt;
+    @if (meta()) {
+      &lt;p class="card__meta"&gt;{{ meta() }}&lt;/p&gt;
+    }
+  &lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="card__chips"&gt;&lt;ng-content select="[slot=chips]" /&gt;&lt;/div&gt;</pre>
+</section>
+
+<section id="template-footer" data-part="3" data-cue="The footer is the one place with real logic.">
+  <h2>Footer: only when it has content</h2>
+  <pre class="code tight" data-lang="html" data-file="components/src/lib/event-card/event-card.html" data-mark="1,3">@if ((url() &amp;&amp; !muted()) || addable()) {
+  &lt;div class="card__footer"&gt;
+    @if (url() &amp;&amp; !muted()) {
+      &lt;sd-button variant="quiet" size="sm" [href]="url()" target="_blank"&gt;
+        Details
+        &lt;sd-icon name="arrow_right" slot="trailing" /&gt;
+      &lt;/sd-button&gt;
+    }</pre>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/button/button.ts">  protected readonly rel = computed(() =&gt; (this.target() === '_blank' ? 'noopener' : null));</pre>
+</section>
+
+<section id="template-add" data-part="3" data-cue="The Add to day button is a primary S D button">
+  <h2>A unique accessible name</h2>
+  <pre class="code tight" data-lang="html" data-file="components/src/lib/event-card/event-card.html" data-mark="6,7">    @if (addable()) {
+      &lt;sd-button
+        variant="primary"
+        size="sm"
+        type="button"
+        [label]="'Add to day: ' + cardTitle()"
+        (click)="addToDay.emit()"
+      &gt;
+        &lt;sd-icon name="plus" /&gt;
+        Add to day
+      &lt;/sd-button&gt;
+    }</pre>
+</section>
+
+<section id="scss" data-part="4" data-cue="Open event card dot S C S S.">
+  <h2>The whole stylesheet</h2>
+  <pre class="code" data-lang="scss" data-file="components/src/lib/event-card/event-card.scss">@use '../styles/card-base' as *;
+
+// The event `.card` from docs/mocks-v2/pages/ideas.events.html.
+
+:host {
+  @include card-host;
+}
+
+:host(.card--muted) {
+  opacity: 0.85;
+}</pre>
+</section>
+
+<section id="mixin" data-part="4" data-cue="That mixin draws the flex column">
+  <h2>The shared <code>card-host</code> mixin</h2>
+  <pre class="code tight" data-lang="scss" data-file="components/src/lib/styles/_card-base.scss" data-mark="7-9,11-13">@mixin card-host {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+  padding: 16px;
+  background: var(--colorNeutralBackground1);
+  border: 1px solid var(--colorNeutralStroke2);
+  border-radius: var(--borderRadiusLarge);
+  transition:
+    border-color var(--durationFast) var(--curveEasyEase),
+    box-shadow var(--durationFast) var(--curveEasyEase),
+    transform var(--durationFast) var(--curveEasyEase);
+}</pre>
+</section>
+
+<section id="spec-setup" data-part="5" data-cue="The spec file has a host component that projects a Free chip">
+  <h2>Spec setup</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/event-card/event-card.spec.ts" data-mark="4,5">  beforeEach(async () =&gt; {
+    await TestBed.configureTestingModule({ imports: [EventCard, HostCmp] }).compileComponents();
+    fixture = TestBed.createComponent(EventCard);
+    fixture.componentRef.setInput('title', 'Port Credit Buskerfest');
+    fixture.componentRef.setInput('date', '2026-08-15');
+    fixture.detectChanges();
+    host = fixture.nativeElement as HTMLElement;
+  });</pre>
+  <ul class="small"><li><code>creates a card with the date tile and title</code></li></ul>
+</section>
+
+<section id="spec-tests" data-part="5" data-cue="Renders the place and date line sets meta.">
+  <h2>The tests</h2>
+  <ul class="small">
+    <li><code>renders the place and date line</code></li>
+    <li><code>adds a Details link that opens in a new tab when the event has a url</code></li>
+    <li><code>labels the Details link with its text</code></li>
+    <li><code>mutes a pending suggestion and hides its Details link</code></li>
+    <li><code>projects chips into the chip row</code></li>
+  </ul>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/event-card/event-card.spec.ts">    expect(link.getAttribute('target')).toBe('_blank');
+    expect(link.getAttribute('rel')).toBe('noopener');</pre>
+</section>
+
+<section id="gaps" data-part="5" data-cue="Be honest about the gaps">
+  <h2>Not covered yet</h2>
+  <div class="cols">
+    <div class="card bad"><h3>Missing</h3><ul class="small"><li><code>addable</code></li><li><code>addToDay</code> output</li><li><code>media</code> input</li></ul></div>
+    <div class="card good"><h3 style="color:var(--forest)">Next test</h3><p class="small">Set <code>addable</code>, click, expect one emit and a label containing the title.</p></div>
+  </div>
+</section>
+
+<section id="pitfalls" data-part="6" data-cue="Don't put business logic in the card">
+  <h2>Pitfalls</h2>
+  <ul>
+    <li>Business logic in the card — emit and let the page decide</li>
+    <li>A Details link on a muted suggestion</li>
+    <li>Copying card styles instead of <code>@include card-host</code></li>
+    <li>One <code>@if</code> around several chips</li>
+  </ul>
+</section>
+
+<section id="recap" data-part="7" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div>Composes media, date tile, button, icon</div>
+    <div>Aliased <code>title</code>, <code>booleanAttribute</code></div>
+    <div><code>output()</code> reports Add to day</div>
+    <div>Footer only when it has content</div>
+    <div>Unique label per Add to day button</div>
+    <div>One mixin for every typed card</div>
+  </div>
+</section>
+
+<section id="next" data-part="7" data-cue="Next, in video twenty three, we build S D filter chip">
+  <div class="kicker">Next · Video 23</div>
+  <h1>Coding <code>sd-filter-chip</code></h1>
+</section>
+
+<script src="../../assets/slides.js"></script>
+</body>
+</html>

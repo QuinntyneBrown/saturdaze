@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 21 Slides</title>
+<link rel="stylesheet" href="../../assets/slides.css">
+</head>
+<body data-video-number="21" data-video-title="Coding sd-empty" data-parts="Introduction|Decorator|Inputs|Heading id|Template|Styles|Spec|Pitfalls|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Saturdaze components · Video 21 of 52</div>
+  <h1>Coding <code>sd-empty</code></h1>
+  <p class="lead">An empty state with a disc, a heading and a call to action.</p>
+</section>
+
+<section id="usage" data-part="0" data-cue="The weekend page uses its warm variant">
+  <h2>Where it is used</h2>
+  <pre class="code tight" data-lang="html" data-file="saturdaze/src/app/pages/weekend/weekend.page.html" data-mark="2,10">      &lt;sd-empty
+        warm
+        icon="sparkle"
+        tone="primary"
+        [title]="emptyTitle()"
+        body="Your commitments stay put. …"
+        note="Or wait for Friday at 6pm."
+      &gt;
+        &lt;sd-button slot="cta" variant="primary" size="lg" (click)="plan()"&gt;
+          &lt;sd-icon name="sparkle" /&gt;
+          Plan this weekend
+        &lt;/sd-button&gt;
+      &lt;/sd-empty&gt;</pre>
+  <p class="muted small">Also: <code>past</code>, <code>review-submissions</code>, <code>shared-weekend</code> pages</p>
+</section>
+
+<section id="decorator" data-part="1" data-cue="Open empty dot T S.">
+  <h2>The decorator</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/empty/empty.ts" data-mark="9-11">@Component({
+  selector: 'sd-empty',
+  standalone: true,
+  imports: [Disc],
+  templateUrl: './empty.html',
+  styleUrl: './empty.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: 'empty',
+    '[class.empty--warm]': 'warm()',
+    '[attr.aria-labelledby]': 'headingId',
+  },
+})</pre>
+</section>
+
+<section id="inputs" data-part="2" data-cue="There are six signal inputs">
+  <h2>Six signal inputs</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/empty/empty.ts" data-mark="2,6,10">export class Empty {
+  readonly emptyTitle = input&lt;string&gt;('Nothing here yet', { alias: 'title' });
+  readonly body = input&lt;string&gt;('');
+  readonly icon = input&lt;string&gt;('sparkle');
+  readonly tone = input&lt;DiscTone&gt;('default');
+  readonly warm = input(false, { transform: booleanAttribute });
+  readonly note = input&lt;string&gt;('');
+
+  protected readonly headingId = `sd-empty-${nextEmptyId++}`;
+}</pre>
+</section>
+
+<section id="shared-type" data-part="2" data-cue="Tone reuses the disc tone type">
+  <h2>Share the type, don't copy it</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/empty/empty.ts">import { Disc, DiscTone } from '../disc/disc';</pre>
+  <p class="muted">A tone the disc doesn't support can't reach the empty state.</p>
+</section>
+
+<section id="bool" data-part="2" data-cue="Warm is a boolean input with the boolean attribute transform.">
+  <h2><code>booleanAttribute</code></h2>
+  <table class="map">
+    <tr><th>template</th><th>without transform</th><th>with transform</th></tr>
+    <tr><td>&lt;sd-empty warm&gt;</td><td>''</td><td>true</td></tr>
+    <tr><td>[warm]="false"</td><td>false</td><td>false</td></tr>
+  </table>
+</section>
+
+<section id="not-needed" data-part="2" data-cue="Notice what this component doesn't need.">
+  <h2>What it doesn't need</h2>
+  <div class="cols">
+    <div class="card"><h3>No <code>computed()</code></h3><p class="small">Nothing derived beyond simple <code>@if</code> conditions.</p></div>
+    <div class="card"><h3>No <code>output()</code></h3><p class="small">The CTA is projected; the consumer's button handles its own click.</p></div>
+  </div>
+</section>
+
+<section id="heading-id" data-part="3" data-cue="The last field is a protected heading id">
+  <h2>A unique id from a counter</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/empty/empty.ts">let nextEmptyId = 0;
+…
+  protected readonly headingId = `sd-empty-${nextEmptyId++}`;</pre>
+  <ul class="small">
+    <li>Plain constant, not a signal — never changes</li>
+    <li>Template: <code>[id]="headingId"</code> · host: <code>[attr.aria-labelledby]</code></li>
+  </ul>
+</section>
+
+<section id="template" data-part="4" data-cue="The template starts with an S D disc">
+  <h2>The template</h2>
+  <pre class="code" data-lang="html" data-file="components/src/lib/empty/empty.html" data-mark="7,12">&lt;sd-disc [icon]="icon()" [tone]="tone()" size="xl" /&gt;
+&lt;h2 class="empty__title" [id]="headingId"&gt;{{ emptyTitle() }}&lt;/h2&gt;
+@if (body()) {
+  &lt;p class="empty__body"&gt;{{ body() }}&lt;/p&gt;
+}
+&lt;div class="empty__cta"&gt;
+  &lt;ng-content select="[slot=cta]" /&gt;
+  @if (note()) {
+    &lt;span class="empty__note"&gt;{{ note() }}&lt;/span&gt;
+  }
+&lt;/div&gt;
+&lt;ng-content /&gt;</pre>
+</section>
+
+<section id="scss-host" data-part="5" data-cue="Open empty dot S C S S.">
+  <h2>The host is the card</h2>
+  <pre class="code tight" data-lang="scss" data-file="components/src/lib/empty/empty.scss" data-mark="8-10,15">:host {
+  display: flex;
+  …
+  gap: 12px;
+  max-width: 480px;
+  margin-inline: auto;
+  padding: 32px 24px;
+  background: var(--colorNeutralBackground1);
+  border: 1px solid var(--colorNeutralStroke2);
+  border-radius: var(--borderRadiusXLarge);
+}
+
+:host(.empty--warm) {
+  max-width: 560px;
+  background: var(--colorBrandBackgroundGradient), var(--colorNeutralBackground1);
+  padding: 40px 24px;
+}</pre>
+</section>
+
+<section id="scss-text" data-part="5" data-cue="The title uses font size base six hundred">
+  <h2>Type tokens and an empty-row guard</h2>
+  <pre class="code tight" data-lang="scss" data-file="components/src/lib/empty/empty.scss" data-mark="6-8">.empty__title {
+  font-size: var(--fontSizeBase600);
+  font-weight: var(--fontWeightBold);
+}
+
+.empty__cta:not(:has(*)) {
+  display: none;
+}
+
+.empty__note {
+  font-size: var(--fontSizeBase200);
+  color: var(--colorNeutralForeground3);
+}</pre>
+</section>
+
+<section id="spec-setup" data-part="6" data-cue="The spec file has a small host component">
+  <h2>Spec setup</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/empty/empty.spec.ts">  template: `
+    &lt;sd-empty title="No weekends yet" note="Takes about a minute"&gt;
+      &lt;button slot="cta" class="cta"&gt;Plan this weekend&lt;/button&gt;
+      &lt;p class="extra"&gt;Or wait for Saturday.&lt;/p&gt;
+    &lt;/sd-empty&gt;
+  `,
+…
+    fixture = TestBed.createComponent(Empty);
+    fixture.detectChanges();</pre>
+</section>
+
+<section id="spec-tests" data-part="6" data-cue="Creates a labelled empty state with a default title checks">
+  <h2>The tests</h2>
+  <ul class="small">
+    <li><code>creates a labelled empty state with a default title</code></li>
+    <li><code>draws an extra-large disc with the given icon and tone</code></li>
+    <li><code>renders title, body and note</code></li>
+    <li><code>mirrors the warm first-run variant</code></li>
+    <li><code>projects the cta into the action row and the rest below</code></li>
+  </ul>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/empty/empty.spec.ts">    expect(h2.id).toMatch(/^sd-empty-\d+$/);
+    expect(host.getAttribute('aria-labelledby')).toBe(h2.id);</pre>
+</section>
+
+<section id="spec-slots" data-part="6" data-cue="Projects the C T A into the action row and the rest below renders">
+  <h2>Proving the slots</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/empty/empty.spec.ts">    const cta = el.querySelector('.empty__cta') as HTMLElement;
+    expect(cta.querySelector('.cta')?.textContent).toBe('Plan this weekend');
+    expect(cta.querySelector('.empty__note')?.textContent?.trim()).toBe('Takes about a minute');
+    expect(cta.querySelector('.extra')).toBeNull();
+    expect(el.querySelector(':scope &gt; .extra')?.textContent).toBe('Or wait for Saturday.');</pre>
+</section>
+
+<section id="pitfalls" data-part="7" data-cue="Don't add an output for the call to action">
+  <h2>Pitfalls</h2>
+  <ul>
+    <li>An <code>output()</code> for the CTA — project a button instead</li>
+    <li>A boolean input without <code>booleanAttribute</code></li>
+    <li>Repeating <code>[slot=cta]</code> in <code>@if</code> branches</li>
+  </ul>
+</section>
+
+<section id="recap" data-part="8" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div>Composes <code>sd-disc</code>, reuses <code>DiscTone</code></div>
+    <div>Aliased <code>title</code> input</div>
+    <div><code>booleanAttribute</code> for bare <code>warm</code></div>
+    <div>Counter id + <code>aria-labelledby</code></div>
+    <div>Two slots, each declared once</div>
+    <div>Tokens by role</div>
+  </div>
+</section>
+
+<section id="next" data-part="8" data-cue="Next, in video twenty two, we build S D event card">
+  <div class="kicker">Next · Video 22</div>
+  <h1>Coding <code>sd-event-card</code></h1>
+</section>
+
+<script src="../../assets/slides.js"></script>
+</body>
+</html>

@@ -27,18 +27,15 @@
 
 <section id="decorator" data-part="1" data-cue="Open the checkbox component file.">
   <h2>The decorator</h2>
-  <pre class="code" data-lang="ts" data-file="components/src/lib/checkbox/checkbox.ts" data-mark="7-9">@Component({
+  <pre class="code" data-lang="ts" data-file="components/src/lib/checkbox/checkbox.ts" data-mark="2-3,6">@Component({
   selector: 'sd-checkbox',
   standalone: true,
   templateUrl: './checkbox.html',
   styleUrl: './checkbox.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: {
-    '[attr.checked]': 'checked() ? "" : null',
-    '[attr.required]': 'required() ? "" : null',
-  },
   /* providers … */
 })</pre>
+  <p class="muted">No <code>host</code> object: inputs stay inputs; state lives on the native input (ADR-009).</p>
 </section>
 
 <section id="provider" data-part="1" data-cue="The new part is the providers array.">
@@ -186,8 +183,8 @@
   <h2>Structure and inputs</h2>
   <table class="map">
     <tr><th>it(…)</th><th>proves</th></tr>
-    <tr><td>creates an unchecked native checkbox inside its label</td><td class="prose">label wraps a native, unchecked box; no host attributes</td></tr>
-    <tr><td>marks required fields and forwards the name</td><td class="prose"><code>setInput</code> → <code>aria-required</code>, <code>name</code>, host <code>required</code></td></tr>
+    <tr><td>creates an unchecked native checkbox inside its label</td><td class="prose">label wraps a native, unchecked box; no <code>aria-required</code></td></tr>
+    <tr><td>marks required fields and forwards the name</td><td class="prose"><code>setInput</code> → <code>aria-required</code> and <code>name</code> on the input</td></tr>
   </table>
 </section>
 
@@ -203,10 +200,8 @@
     input().dispatchEvent(new Event('change'));
     expect(onChange).toHaveBeenCalledWith(true);
     expect(onTouched).toHaveBeenCalledTimes(1);
-    fixture.detectChanges();
-    expect(host.getAttribute('checked')).toBe('');
   });</pre>
-  <p class="muted small">Also: checks the box from a written value and mirrors it to the host · disables the box from the form</p>
+  <p class="muted small">Also: checks the box from a written value · disables the box from the form</p>
 </section>
 
 <section id="spec-projection" data-part="6" data-cue="The last, projects rich label content beside the box">
@@ -215,7 +210,9 @@
     /* … */
     expect(label.textContent?.replace(/\s+/g, ' ').trim()).toBe('I agree to the Terms');
     expect(label.querySelector('a')?.getAttribute('href')).toBe('/legal');
-    expect(el.getAttribute('required')).toBe('');
+    const box = el.querySelector('input.check__input') as HTMLInputElement;
+    expect(box.getAttribute('aria-required')).toBe('true');
+    expect(box.getAttribute('name')).toBe('terms');
   });</pre>
 </section>
 

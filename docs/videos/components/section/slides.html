@@ -11,7 +11,7 @@
 <section id="title" data-part="0">
   <div class="kicker">Saturdaze components · Video 36 of 52</div>
   <h1>Coding <code>sd-section</code></h1>
-  <p class="lead">A titled region with an action slot: two signal inputs, host bindings and one slot each.</p>
+  <p class="lead">A titled region with an action slot: two signal inputs, two host bindings and one slot each.</p>
 </section>
 
 <section id="usage" data-part="1" data-cue="Open the Family page template.">
@@ -52,8 +52,6 @@
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class: 'section',
-    '[attr.title]': 'sectionTitle() || null',
-    '[attr.subtitle]': 'subtitle() || null',
     '[attr.aria-labelledby]': 'sectionTitle() ? headingId : null',
   },
 })</pre>
@@ -61,23 +59,29 @@
 
 <section id="host" data-part="2" data-cue="The host block does the interesting work.">
   <h2>Host bindings read signals</h2>
-  <pre class="code" data-lang="ts" data-file="components/src/lib/section/section.ts" data-mark="2-5">  host: {
+  <pre class="code" data-lang="ts" data-file="components/src/lib/section/section.ts" data-mark="2-3">  host: {
     class: 'section',
-    '[attr.title]': 'sectionTitle() || null',
-    '[attr.subtitle]': 'subtitle() || null',
     '[attr.aria-labelledby]': 'sectionTitle() ? headingId : null',
   },</pre>
   <ul class="small">
     <li><code>class: 'section'</code> — the host is the mock's block element</li>
-    <li><code>|| null</code> — an empty string removes the attribute</li>
-    <li><code>aria-labelledby</code> only when there is a heading</li>
+    <li><code>aria-labelledby</code> only when there is a heading; <code>null</code> removes it</li>
   </ul>
+</section>
+
+<section id="no-reflect" data-part="2" data-cue="The title and subtitle stay inputs">
+  <h2>Inputs stay inputs</h2>
+  <div class="cols">
+    <div class="card bad"><h3>Removed</h3><p><code>'[attr.title]'</code> and <code>'[attr.subtitle]'</code> on the host: nothing read them, and a host <code>title</code> is a native tooltip</p></div>
+    <div class="card good"><h3 style="color:var(--forest)">The rule</h3><p>Only classes and ARIA state go on the host</p></div>
+  </div>
+  <p class="muted small">docs/adr/ADR-009-v2-responsive-shell.md</p>
 </section>
 
 <section id="host-practice" data-part="2" data-cue="Best practice: put host bindings in the host property">
   <h2>Best practice: the <code>host</code> property</h2>
   <div class="cols">
-    <div class="card bad"><h3>Avoid</h3><p><code>@HostBinding('attr.title')</code> getters scattered through the class</p></div>
+    <div class="card bad"><h3>Avoid</h3><p><code>@HostBinding('attr.aria-labelledby')</code> getters scattered through the class</p></div>
     <div class="card good"><h3 style="color:var(--forest)">Prefer</h3><p>One typed <code>host: {}</code> block next to the selector, reading signals</p></div>
   </div>
 </section>
@@ -189,9 +193,9 @@ class HostCmp {}</pre>
   <h2>What each test proves</h2>
   <table class="grid small">
     <tr><th>Test</th><th>Proves</th></tr>
-    <tr><td>creates an untitled section without a header</td><td>class only; no header, no labelledby, no mirrored attrs</td></tr>
-    <tr><td>renders the heading and labels the section with it</td><td><code>setInput('title')</code> → h2 id <code>sd-section-N</code> = host <code>aria-labelledby</code></td></tr>
-    <tr><td>renders the subtitle under the heading</td><td>subtitle paragraph + mirrored attribute</td></tr>
+    <tr><td>creates an untitled section without a header</td><td>class only; no header, no <code>aria-labelledby</code></td></tr>
+    <tr><td>renders the heading and labels the section with it</td><td><code>setInput('title')</code> → h2 text, id <code>sd-section-N</code> = host <code>aria-labelledby</code></td></tr>
+    <tr><td>renders the subtitle under the heading</td><td>rendered subtitle text</td></tr>
     <tr><td>projects the action into the header and the body below it</td><td>both slots land in the right place</td></tr>
   </table>
 </section>
@@ -222,7 +226,7 @@ class HostCmp {}</pre>
   <h2>Things to remember</h2>
   <div class="recap">
     <div>Two signal inputs, one aliased to <code>title</code></div>
-    <div>Host carries <code>.section</code> + <code>aria-labelledby</code></div>
+    <div>Host carries only <code>.section</code> + <code>aria-labelledby</code></div>
     <div>Module counter → unique heading ids</div>
     <div>Each slot once; empty action hidden by <code>:has</code></div>
     <div>Host component proves projection</div>

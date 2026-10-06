@@ -6,7 +6,7 @@ S D card is the all purpose surface of Saturdaze: a rounded, bordered box that o
 
 Open the card component file in the components library. The decorator is short and standard. The selector is S D card, the component is standalone, it points at its template and stylesheet, and change detection is OnPush.
 
-The interesting part is the host object. Its first entry is a static class, card. Then come seven class bindings, one per modifier, and seven attribute bindings. There is no wrapper element inside the template: the host element is the card. That is the class contract from A D R nine. The mock stylesheet in the docs mocks folder has a block called card, with modifiers for sunk, large padding, locked, dimmed, muted and span. The component puts exactly those classes on its own host, so the Playwright page objects use one locator for the static mock and the running app.
+The interesting part is the host object. Its first entry is a static class, card. Then come seven class bindings, one per modifier, and nothing else. There is no wrapper element inside the template: the host element is the card. That is the class contract from A D R nine. The mock stylesheet in the docs mocks folder has a block called card, with modifiers for sunk, large padding, locked, dimmed, muted and span. The component puts exactly those classes on its own host, so the Playwright page objects use one locator for the static mock and the running app.
 
 ## Signal inputs
 
@@ -20,7 +20,7 @@ Each flag also carries a doc comment that says when to use it. Locked draws a tw
 
 Look at the bindings again. The sunk class is on when variant equals sunk. The large padding class is on when padding equals large. Each boolean flag maps straight to its class. These expressions are so small that a computed signal would add nothing, so the component binds the inputs directly. Reach for computed when an expression is shared or does real work, not for a single comparison.
 
-The attribute bindings mirror the same state onto the host. Variant and padding render as attributes only when they differ from their defaults, and each flag renders as an empty attribute when true and is removed when false. Returning null is how you remove an attribute in Angular. The result is that a plain card carries just the class card and nothing else, while a modified card says what it is, both in its classes and in its attributes.
+Notice what is not here. The inputs stay inputs: the card does not copy variant, padding or the flags back onto the host as attributes. Earlier versions did, a habit from an old custom element catalog, but nothing in the styles, the mocks or the Playwright suite ever read them. A D R nine now records the rule: only classes and A R I A state go on the host. So a plain card carries just the class card, and a modified card says what it is through its modifier classes.
 
 ## Template and styles
 
@@ -32,9 +32,9 @@ The stylesheet is the card block from the mock stylesheet, with colon host subst
 
 Open the spec file. It declares a small host component whose template renders a sunk card with large padding around a heading. In before each, the test bed imports the card and the host, creates the card on its own, runs detect changes, and keeps the native host element.
 
-The first test, creates a plain card with no modifiers, proves the clean default. The class name is exactly card, and none of the seven attributes is present.
+The first test, creates a plain card with no modifiers, proves the clean default. The class name is exactly card, with no modifier classes.
 
-The next two drive inputs through the component ref's set input method, then call detect changes, because that is how a signal input is set from a test. Mirrors the sunk variant and large padding checks both the classes and the attributes. Mirrors every boolean modifier to a class and attribute loops over all five flags, turning each one on and then off again, and asserts that the class and the empty attribute appear and disappear together.
+The next two drive inputs through the component ref's set input method, then call detect changes, because that is how a signal input is set from a test. Mirrors the sunk variant and large padding to host classes checks the two modifier classes. Mirrors every boolean modifier to a host class loops over all five flags, turning each one on and then off again, and asserts that the class appears and disappears with it.
 
 The last test, projects its content directly into the surface, uses the host component. It checks that the first child of the card is the projected heading, with no wrapper in between, which is the whole point of a host that is the surface.
 
@@ -52,7 +52,7 @@ Things to remember.
 - The host is the card, carrying the mock's block and modifier classes.
 - Signal inputs with defaults, and the boolean attribute transform for bare flags.
 - Simple host bindings read the signals directly; computed is for real derivations.
-- Return null to remove an attribute.
+- Inputs stay inputs: only classes and A R I A state go on the host.
 - Tokens by role, encapsulated colon host rules, and one content slot.
 
 Next in the series, video eleven, S D checkbox: a form control that wraps a real native checkbox.

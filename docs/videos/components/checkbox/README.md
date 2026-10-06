@@ -1,6 +1,6 @@
 # 11 · Coding sd-checkbox: a native box that speaks reactive forms
 
-> **Runtime:** ~7.5 min · **Audience:** developers who know basic Angular and want to build or change `sd-checkbox` · **Prerequisites:** [Video 10 · sd-card](../card/README.md) (host bindings, signal inputs)
+> **Runtime:** ~7.6 min · **Audience:** developers who know basic Angular and want to build or change `sd-checkbox` · **Prerequisites:** [Video 10 · sd-card](../card/README.md) (host bindings, signal inputs)
 
 **Video:** [checkbox.mp4](checkbox.mp4) · [Slides](slides.html) · **Audio:** [checkbox.mp3](checkbox.mp3) · [Transcript](script.md)
 
@@ -26,6 +26,7 @@ By the end, the viewer can:
 | Why `forwardRef`? | The class is referenced in its own decorator before it is defined. |
 | Why `!!value` in `writeValue`? | A reset form can write `null`. |
 | Why call `onTouched` on change? | So touched-based validation messages appear after the first click. |
+| Why does the host carry no `checked`/`required` attributes? | Inputs stay inputs; state lives on the native input, and ADR-009 keeps only classes and ARIA state on a host. |
 | Why `display: contents` on the host? | ADR-009: the label sits in the layout and the native input carries the accessible name. |
 
 ## Code / assets on screen
@@ -43,14 +44,14 @@ By the end, the viewer can:
 | Time | Segment | Content |
 | --- | --- | --- |
 | 00:00-00:32 | Introduction | Title; Where the app uses it. |
-| 00:33-01:20 | Decorator | The decorator; The value accessor provider. |
-| 01:21-02:25 | State | Inputs vs. local signals; Why not input() or model() for checked?. |
-| 02:26-03:18 | Forms contract | The forms contract; Two directions. |
-| 03:19-04:11 | Template | The template; Accessibility for free. |
-| 04:12-04:47 | Styles | Styles. |
-| 04:48-06:23 | Spec | Spec setup; Structure and inputs; The forms contract; Projection. |
-| 06:24-06:51 | Pitfalls | Pitfalls. |
-| 06:52-07:30 | Recap | Things to remember; preview of `sd-chip`. |
+| 00:33-01:28 | Decorator | The decorator; The value accessor provider. |
+| 01:29-02:32 | State | Inputs vs. local signals; Why not input() or model() for checked?. |
+| 02:33-03:25 | Forms contract | The forms contract; Two directions. |
+| 03:26-04:19 | Template | The template; Accessibility for free. |
+| 04:20-04:55 | Styles | Styles. |
+| 04:56-06:28 | Spec | Spec setup; Structure and inputs; The forms contract; Projection. |
+| 06:29-06:57 | Pitfalls | Pitfalls. |
+| 06:58-07:35 | Recap | Things to remember; preview of `sd-chip`. |
 
 ## Demo commands
 

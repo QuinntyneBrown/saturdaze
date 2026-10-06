@@ -67,7 +67,7 @@ export type DiscSize = 'sm' | 'md' | 'lg' | 'xl';</pre>
 
 <section id="modifiers" data-part="2" data-cue="Then come the modifier classes.">
   <h2>Modifiers: one class binding each</h2>
-  <pre class="code tight" data-lang="ts" data-file="components/src/lib/disc/disc.ts" data-mark="12-14">    '[class.disc--sm]': 'size() === "sm"',
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/disc/disc.ts" data-mark="1-3">    '[class.disc--sm]': 'size() === "sm"',
     '[class.disc--lg]': 'size() === "lg"',
     '[class.disc--xl]': 'size() === "xl"',
     '[class.disc--accent]': 'tone() === "accent"',
@@ -78,19 +78,16 @@ export type DiscSize = 'sm' | 'md' | 'lg' | 'xl';</pre>
     '[class.disc--leaf]': 'tone() === "leaf"',
     '[class.disc--indoor]': 'tone() === "indoor"',
     '[class.disc--surface]': 'tone() === "surface"',
-    '[attr.icon]': 'icon()',
-    '[attr.tone]': 'tone() === "default" ? null : tone()',
-    '[attr.size]': 'size() === "md" ? null : size()',</pre>
+  },</pre>
 </section>
 
-<section id="mirror" data-part="2" data-cue="Finally, three attribute bindings mirror the inputs back to the host">
-  <h2>Mirror only what is not default</h2>
-  <table class="map">
-    <tr><th>input</th><th>default</th><th>host attribute</th></tr>
-    <tr><td>icon</td><td>'sparkle'</td><td class="prose">always</td></tr>
-    <tr><td>tone</td><td>'default'</td><td class="prose">omitted (<code>null</code>) when default</td></tr>
-    <tr><td>size</td><td>'md'</td><td class="prose">omitted (<code>null</code>) when md</td></tr>
-  </table>
+<section id="mirror" data-part="2" data-cue="Finally, notice what the host does not carry">
+  <h2>Inputs stay inputs</h2>
+  <ul>
+    <li>No <code>[attr.icon]</code>, <code>[attr.tone]</code>, <code>[attr.size]</code> on the host</li>
+    <li>Only classes and ARIA state go on the host</li>
+    <li>Nothing read the reflected attributes — ADR-009 records the rule</li>
+  </ul>
 </section>
 
 <section id="inputs" data-part="3" data-cue="The class body is short.">
@@ -163,6 +160,8 @@ export type DiscSize = 'sm' | 'md' | 'lg' | 'xl';</pre>
 <section id="spec-setup" data-part="6" data-cue="The spec file creates the disc with TestBed">
   <h2>Spec setup</h2>
   <pre class="code tight" data-lang="ts" data-file="components/src/lib/disc/disc.spec.ts">  const icon = (): HTMLElement =&gt; host.querySelector('sd-icon') as HTMLElement;
+  const glyph = (): string =&gt; icon().querySelector('svg')?.innerHTML ?? '';
+  const iconSize = (): string =&gt; icon().style.getPropertyValue('--_size');
 
   beforeEach(async () =&gt; {
     await TestBed.configureTestingModule({ imports: [Disc] }).compileComponents();
@@ -176,17 +175,16 @@ export type DiscSize = 'sm' | 'md' | 'lg' | 'xl';</pre>
   </ul>
 </section>
 
-<section id="spec-tones" data-part="6" data-cue="Mirrors every tone to a host class and attribute loops">
+<section id="spec-tones" data-part="6" data-cue="Mirrors every tone to a host class loops">
   <h2>Every tone, every size</h2>
-  <pre class="code tight" data-lang="ts" data-file="components/src/lib/disc/disc.spec.ts">  it('mirrors every tone to a host class and attribute', () =&gt; {
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/disc/disc.spec.ts">  it('mirrors every tone to a host class', () =&gt; {
     for (const tone of ['accent', 'primary', 'warn', 'sun', 'sky', 'leaf', 'indoor', 'surface']) {
       fixture.componentRef.setInput('tone', tone);
       fixture.detectChanges();
       expect(host.classList.contains(`disc--${tone}`)).toBe(true);
-      expect(host.getAttribute('tone')).toBe(tone);
     }
   });</pre>
-  <p class="small"><code>mirrors the size and scales the glyph with it</code> — sm 16 · lg 20 · xl 26, and <code>disc--lg</code> removed again</p>
+  <p class="small"><code>mirrors the size to a host class and scales the glyph with it</code> — <code>--_size</code> 16px · 20px · 26px, and <code>disc--lg</code> removed again</p>
 </section>
 
 <section id="pitfalls" data-part="7" data-cue="Don't give a disc meaning on its own">

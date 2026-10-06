@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 47 Slides</title>
+<link rel="stylesheet" href="../../assets/slides.css">
+</head>
+<body data-video-number="47" data-video-title="Coding sdThemeProvider" data-parts="Introduction|Decorator|inject()|Input|Effect|Spec|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Saturdaze components · Video 47 of 52</div>
+  <h1>Coding <code>[sdThemeProvider]</code></h1>
+  <p class="lead">A directive that re-themes a subtree at runtime.</p>
+</section>
+
+<section id="where" data-part="0" data-cue="Where is it used?">
+  <h2>Where it lives: the design system</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/stories/src/ThemeProvider/ThemeProviderDefault.stories.ts" data-mark="1-5,11">const roomier: PartialTheme = {
+  borderRadiusCircular: '8px',
+  borderRadiusLarge: '4px',
+  fontWeightSemibold: '700',
+};
+…
+        &lt;sd-card&gt;
+          &lt;p class="sd-text-soft"&gt;App theme&lt;/p&gt;
+          &lt;sd-button variant="primary"&gt;Plan my weekend&lt;/sd-button&gt;
+        &lt;/sd-card&gt;
+        &lt;sd-card [sdThemeProvider]="roomier"&gt;
+          &lt;p class="sd-text-soft"&gt;Partial override: square radii, bolder labels&lt;/p&gt;
+          &lt;sd-button variant="primary"&gt;Plan my weekend&lt;/sd-button&gt;
+        &lt;/sd-card&gt;</pre>
+  <p class="muted small">No app page uses it: the root already has the theme from <code>_tokens.scss</code>.</p>
+</section>
+
+<section id="decorator" data-part="1" data-cue="Open theme provider dot T S in the components library.">
+  <h2>A directive, not a component</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/theme-provider/theme-provider.ts" data-mark="1,2">@Directive({
+  selector: '[sdThemeProvider]',
+  standalone: true,
+})
+export class ThemeProvider {</pre>
+  <div class="cols">
+    <div class="card"><h3>No template</h3><p>No view to check → no <code>changeDetection</code></p></div>
+    <div class="card"><h3>Attribute selector</h3><p>Sits on any element</p></div>
+  </div>
+</section>
+
+<section id="doc" data-part="1" data-cue="The doc comment shows the intended use">
+  <h2>Intended use</h2>
+  <pre class="code" data-lang="html" data-file="components/src/lib/theme-provider/theme-provider.ts (doc comment)">&lt;section [sdThemeProvider]="{ colorBrandBackground: '#2d7d5f' }"&gt;…&lt;/section&gt;</pre>
+</section>
+
+<section id="inject" data-part="2" data-cue="The class starts with three private fields.">
+  <h2>Dependencies with <code>inject()</code></h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/theme-provider/theme-provider.ts" data-mark="1,2">  private readonly host = inject&lt;ElementRef&lt;HTMLElement&gt;&gt;(ElementRef);
+  private readonly renderer = inject(Renderer2);
+  private applied: string[] = [];</pre>
+  <ul>
+    <li><code>inject()</code> keeps dependencies next to their fields</li>
+    <li><code>applied</code> is bookkeeping, not reactive state → plain array, not <code>signal()</code></li>
+  </ul>
+</section>
+
+<section id="input" data-part="3" data-cue="The only input is the theme.">
+  <h2>A required, aliased signal input</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/theme-provider/theme-provider.ts">  /** The tokens to override below this element. */
+  readonly theme = input.required&lt;PartialTheme&gt;({ alias: 'sdThemeProvider' });</pre>
+  <div class="cols">
+    <div class="card"><h3><code>input.required</code></h3><p>Forget to bind → compile-time error</p></div>
+    <div class="card"><h3><code>alias</code></h3><p>Attribute = input in templates; <code>theme</code> inside the class</p></div>
+  </div>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/tokens/types.ts">export type PartialTheme = Partial&lt;Theme&gt;;</pre>
+</section>
+
+<section id="effect" data-part="4" data-cue="Everything happens in one effect in the constructor.">
+  <h2>The effect</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/theme-provider/theme-provider.ts" data-mark="2,4,6,9,11">  constructor() {
+    effect(() =&gt; {
+      const el = this.host.nativeElement;
+      const vars = themeToCssVariables(this.theme());
+      for (const name of this.applied) {
+        if (!(name in vars)) this.renderer.removeStyle(el, name, RendererStyleFlags2.DashCase);
+      }
+      for (const [name, value] of Object.entries(vars)) {
+        this.renderer.setStyle(el, name, value, RendererStyleFlags2.DashCase);
+      }
+      this.applied = Object.keys(vars);
+    });
+  }</pre>
+</section>
+
+<section id="helper" data-part="4" data-cue="The effect takes the native element and converts the current theme">
+  <h2>Theme keys → custom properties</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/tokens/themeToCss.ts">/** `{ colorBrandBackground: '#e07856' }` → `{ '--colorBrandBackground': '#e07856' }`. */
+export function themeToCssVariables(theme: PartialTheme): Record&lt;string, string&gt; {
+  const vars: Record&lt;string, string&gt; = {};
+  for (const [key, value] of Object.entries(theme)) {
+    if (value !== undefined) vars[`--${key}`] = value;
+  }
+  return vars;
+}</pre>
+  <p class="muted">The same function the token generator uses.</p>
+</section>
+
+<section id="loops" data-part="4" data-cue="Then it does two loops.">
+  <h2>Remove stale, set new</h2>
+  <div class="flow">
+    <div class="node"><b>applied</b><span class="small">names written last run</span></div>
+    <div class="arrow">→</div>
+    <div class="node"><b>removeStyle</b><span class="small">if no longer in the theme</span></div>
+    <div class="arrow">→</div>
+    <div class="node accent"><b>setStyle</b><span class="small">every new name, DashCase</span></div>
+    <div class="arrow">→</div>
+    <div class="node"><b>applied = keys</b></div>
+  </div>
+  <p class="muted"><code>RendererStyleFlags2.DashCase</code>: write the name literally — custom properties need it.</p>
+</section>
+
+<section id="why" data-part="4" data-cue="Why not a host binding?">
+  <h2>Why this shape?</h2>
+  <div class="cols">
+    <div class="card bad"><h3>Host style binding</h3><p>Needs property names at compile time</p></div>
+    <div class="card good"><h3 style="color:var(--forest)">Effect + Renderer2</h3><p>Names come from the theme; platform-neutral writes</p></div>
+  </div>
+</section>
+
+<section id="cascade" data-part="4" data-cue="There are no styles in this directive">
+  <h2>Values change, structure doesn't</h2>
+  <div class="flow">
+    <div class="node"><b>:root</b><span class="small">_tokens.scss</span></div>
+    <div class="arrow">→</div>
+    <div class="node accent"><b>[sdThemeProvider]</b><span class="small">inline --tokens</span></div>
+    <div class="arrow">→</div>
+    <div class="node"><b>sd-button</b><span class="small">var(--colorBrandBackground)</span></div>
+  </div>
+  <p class="muted">Components read tokens by role (ADR-013) and need no change.</p>
+</section>
+
+<section id="spec-host" data-part="5" data-cue="Because a directive needs an element to sit on">
+  <h2>Spec: a host component with a signal</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/theme-provider/theme-provider.spec.ts" data-mark="4,7-10">@Component({
+  standalone: true,
+  imports: [ThemeProvider],
+  template: `&lt;div class="probe" [sdThemeProvider]="theme()"&gt;themed&lt;/div&gt;`,
+})
+class HostCmp {
+  readonly theme = signal&lt;PartialTheme&gt;({
+    colorBrandBackground: '#2d7d5f',
+    borderRadiusSmall: '4px',
+  });
+}</pre>
+</section>
+
+<section id="spec-setup" data-part="5" data-cue="The setup creates the host, runs detect changes">
+  <h2>Let the effect flush</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/theme-provider/theme-provider.spec.ts" data-mark="4,5">  beforeEach(async () =&gt; {
+    await TestBed.configureTestingModule({ imports: [HostCmp] }).compileComponents();
+    fixture = TestBed.createComponent(HostCmp);
+    fixture.detectChanges();
+    await fixture.whenStable();
+    el = (fixture.nativeElement as HTMLElement).querySelector('.probe') as HTMLElement;
+  });</pre>
+</section>
+
+<section id="spec-tests" data-part="5" data-cue="The first test,">
+  <h2>Two tests</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/theme-provider/theme-provider.spec.ts" data-mark="7,10,11">  it('writes each theme key to the host as a CSS custom property', () =&gt; {
+    expect(el.style.getPropertyValue('--colorBrandBackground')).toBe('#2d7d5f');
+    expect(el.style.getPropertyValue('--borderRadiusSmall')).toBe('4px');
+  });
+
+  it('removes properties a new theme no longer sets', async () =&gt; {
+    fixture.componentInstance.theme.set({ colorBrandBackground: '#5a3b82' });
+    fixture.detectChanges();
+    await fixture.whenStable();
+    expect(el.style.getPropertyValue('--colorBrandBackground')).toBe('#5a3b82');
+    expect(el.style.getPropertyValue('--borderRadiusSmall')).toBe('');
+  });</pre>
+</section>
+
+<section id="pitfalls" data-part="6" data-cue="Don't wrap the app root.">
+  <h2>Pitfalls</h2>
+  <ul>
+    <li>Never wrap the app root — it already has the theme</li>
+    <li>Override roles that components read, not raw values</li>
+    <li>Tests: <code>await fixture.whenStable()</code> before asserting</li>
+  </ul>
+</section>
+
+<section id="recap" data-part="6" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div>Attribute directive, <code>input.required</code> + <code>alias</code></div>
+    <div><code>inject()</code> ElementRef and Renderer2</div>
+    <div>One <code>effect()</code> syncs to inline custom properties</div>
+    <div>Dynamic names → no host binding</div>
+    <div>Test through a host component and a signal</div>
+  </div>
+</section>
+
+<section id="next" data-part="6" data-cue="Next, in video forty eight">
+  <div class="kicker">Next · Video 48</div>
+  <h1>Coding <code>sd-toggle</code></h1>
+</section>
+
+<script src="../../assets/slides.js"></script>
+</body>
+</html>

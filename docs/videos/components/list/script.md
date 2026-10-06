@@ -10,9 +10,9 @@ Search the app project for S D list and you find it on the Family screen, the We
 
 Create the list file. The selector is S D list, the component is standalone, and change detection is OnPush. There are no imports, because the template uses nothing but content projection.
 
-The host object does all the work. The class list is always present, so the host is the B E M block from the mock. The role is list, which is what lets a screen reader announce "list, four items". A class binding adds list double dash card when the card signal is true. And an attribute binding writes an empty card attribute when it is true, or null when it is false.
+The host object does all the work. The class list is always present, so the host is the B E M block from the mock. The role is list, which is what lets a screen reader announce "list, four items". A class binding adds list double dash card when the card signal is true. That is the whole host.
 
-Why mirror the input back as an attribute? Because the Playwright page objects and the Storybook source view can then see the state on the host element, exactly like a native boolean attribute. When it is false, null removes the attribute entirely instead of writing card equals false.
+Notice what is not there: the card input is not mirrored back onto the host as a card attribute. The rule, recorded in A D R nine, is that inputs stay inputs. Only the mock's classes and aria state go on the host, because those are what the styles and the Playwright locators read. Nothing ever read a mirrored attribute, so the class is the one place this state shows up.
 
 ## Step two: one boolean input
 
@@ -34,9 +34,9 @@ The list never reaches into its rows. Instead, each list item reads that custom 
 
 Open the spec file. The setup imports the list and a small host component into the test bed, creates the list itself, runs detect changes, and keeps the native element as the host. The host component renders a card list with three list items titled Quinn, Sara and Eli.
 
-The first test, "creates a plain list", proves the defaults: the host has the list class and the list role, but no card class and no card attribute.
+The first test, "creates a plain list", proves the defaults: the host has the list class and the list role, but no card class.
 
-The second, "draws the card surface when asked", sets the card input to true with the component ref's set input method, runs detect changes, and checks both the card class and the empty card attribute. Using set input is the right way to drive signal inputs in a test; assigning to the property would not work, because the input is read only.
+The second, "draws the card surface when asked", sets the card input to true with the component ref's set input method, runs detect changes, and checks for the card class on the host. Using set input is the right way to drive signal inputs in a test; assigning to the property would not work, because the input is read only.
 
 The third, "projects list items as its direct children", renders the host component. It checks that the list has the card class, that it has exactly three children, that every child has the role listitem, and that their titles read Quinn, Sara and Eli in order. That last test is the one that guards the list semantics: rows must be direct children of the list.
 
@@ -51,7 +51,7 @@ The third, "projects list items as its direct children", renders the host compon
 Things to remember.
 
 - The host is the list: the B E M class and the list role live in host metadata.
-- One boolean input with the boolean attribute transform, mirrored as an attribute.
+- One boolean input with the boolean attribute transform; it shows up on the host as a class, never as a mirrored attribute.
 - The card surface uses tokens by role.
 - A component knob, S D list pad x, passes padding down to the rows without breaking encapsulation.
 - The spec checks defaults, the card state, and that items are direct children.

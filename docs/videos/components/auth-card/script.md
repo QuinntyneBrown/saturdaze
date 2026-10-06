@@ -6,7 +6,7 @@ In this video you build the S D auth card, the white card that frames every sign
 
 Open the auth card file in the components library. The selector is S D auth card, the component is standalone, and change detection is OnPush. It imports nothing at all, because everything it renders is either plain markup or projected by the page.
 
-The host block gives the element the class auth card, which is the block class from the mock stylesheet, so the host itself is the card. Following A D R nine, end to end locators find the same class in the static mock and in the app. The host also mirrors two inputs back as attributes. The title attribute is set to the card title, or removed when it is empty. The center attribute is an empty string when center is true, and null otherwise, and null always means the attribute is removed.
+The host block gives the element the class auth card, which is the block class from the mock stylesheet, so the host itself is the card. Following A D R nine, end to end locators find the same class in the static mock and in the app. Notice what the host does not carry. Inputs stay inputs: the title and the center flag are not mirrored back onto the element as attributes. Nothing read them, and a reflected title would give the whole card a native browser tooltip. Only classes and A R I A state belong on the host, and A D R nine records that rule. Center shows up where it matters, as a modifier class in the template.
 
 ## Inputs
 
@@ -34,11 +34,11 @@ Two details are worth copying. First, the alt paragraph hides itself with the ha
 
 The spec file creates the auth card directly, calls detect changes, and keeps a reference to the host element. It also declares a small host component that projects a disc, a head paragraph, a form and an alt link.
 
-The first test, creates the card with an h1 and an alt line, checks the defaults: the auth card class, an h1 inside the head, no subtitle, the alt paragraph present, no center modifier, and neither the title nor the center attribute on the host.
+The first test, creates the card with an h1 and an alt line, checks the defaults: the auth card class, an h1 inside the head, no subtitle, the alt paragraph present, no center modifier, and an empty title.
 
-The second test, renders the title and subtitle and mirrors the title to the host, sets both inputs with set input on the component ref and reads them back, including the title attribute.
+The second test, renders the title and subtitle, sets both inputs with set input on the component ref and reads the rendered text back.
 
-The third test, centres the head when asked, sets center to true and checks both the modifier class and the empty center attribute.
+The third test, centres the head when asked, sets center to true and checks the modifier class on the head. Every assertion reads rendered output, never a host attribute.
 
 The last test, projects disc, head, form and alt into their slots, renders the host component and checks the order: the disc is the first child of the head, the head slot is the last child, the form sits directly inside the card, and the alt link lands in the alt paragraph. That one test is the guard for the whole projection contract.
 

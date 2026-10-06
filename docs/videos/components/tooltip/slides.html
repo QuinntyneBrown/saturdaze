@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 49 Slides</title>
+<link rel="stylesheet" href="../../assets/slides.css">
+</head>
+<body data-video-number="49" data-video-title="Coding sdTooltip" data-parts="Introduction|Panel|Directive|Inputs|Effect|Show/hide|Spec|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Saturdaze components · Video 49 of 52</div>
+  <h1>Coding <code>[sdTooltip]</code></h1>
+  <p class="lead">A directive, a CDK overlay and a tiny panel.</p>
+</section>
+
+<section id="where" data-part="0" data-cue="Most of the app never touches the directive directly.">
+  <h2>Where it lives: inside <code>sd-button</code></h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/button/button.ts">  protected readonly tooltipText = computed(
+    () =&gt; this.tooltip() ?? (this.icon() ? this.label() : ''),
+  );
+
+  /** Icon-only buttons are named by `aria-label`; the tooltip only describes text ones. */
+  protected readonly tooltipRelationship = computed&lt;TooltipRelationship&gt;(() =&gt;
+    this.icon() ? 'label' : 'description',
+  );</pre>
+  <pre class="code" data-lang="html" data-file="components/src/lib/button/button.html">    [sdTooltip]="tooltipText()"
+    [sdTooltipRelationship]="tooltipRelationship()"</pre>
+</section>
+
+<section id="panel" data-part="1" data-cue="Start with tooltip panel dot T S">
+  <h2>The panel: inputs in, text out</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/tooltip/tooltip-panel.ts" data-mark="2,4,9,11,14-16">@Component({
+  selector: 'sd-tooltip',
+  standalone: true,
+  template: '{{ text() }}',
+  styleUrl: './tooltip-panel.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: 'tooltip',
+    role: 'tooltip',
+    '[id]': 'tooltipId()',
+    '[attr.aria-hidden]': 'hidden() ? "true" : null',
+  },
+})
+  readonly text = input&lt;string&gt;('');
+  readonly tooltipId = input&lt;string&gt;('');
+  readonly hidden = input(false, { transform: booleanAttribute });</pre>
+</section>
+
+<section id="panel-styles" data-part="1" data-cue="Its stylesheet makes the bubble">
+  <h2>The bubble's styles</h2>
+  <pre class="code tight" data-lang="scss" data-file="components/src/lib/tooltip/tooltip-panel.scss" data-mark="5,6">:host {
+  max-width: 240px;
+  padding: var(--sd-s-1) var(--sd-s-2);
+  border-radius: var(--sd-r-sm);
+  background: var(--sd-ink);
+  color: var(--sd-bg-elev);
+  …
+  animation: tooltip-in var(--sd-dur-fast) var(--sd-ease);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :host {
+    animation: none;
+  }
+}</pre>
+  <p class="muted small"><code>--sd-ink</code>, <code>--sd-bg-elev</code> … are mock-era names not defined by <code>_tokens.scss</code> → migrate to Fluent roles (ADR-013).</p>
+</section>
+
+<section id="constants" data-part="2" data-cue="Now open tooltip dot T S.">
+  <h2>Timing rules, named and explained</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/tooltip/tooltip.ts">/** Hover delay before the first tooltip; later ones in a row show at once. */
+const SHOW_DELAY_MS = 400;
+/** Grace period to move the pointer onto the bubble (WCAG 1.4.13 hoverable). */
+const HIDE_DELAY_MS = 100;
+/** A tooltip shown within this long after another hid skips the delay. */
+const WARM_MS = 600;
+
+const POSITIONS: Record&lt;TooltipPlacement, ConnectedPosition[]&gt; = {
+  top: [
+    { originX: 'center', originY: 'top', overlayX: 'center', overlayY: 'bottom', offsetY: -6 },
+    { originX: 'center', originY: 'bottom', overlayX: 'center', overlayY: 'top', offsetY: 6 },
+  ],
+  /* … bottom … */
+};
+
+let nextId = 0;
+let lastHiddenAt = 0;</pre>
+</section>
+
+<section id="decorator" data-part="2" data-cue="The directive's selector is S D tooltip in square brackets">
+  <h2>The directive and its host listeners</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/tooltip/tooltip.ts" data-mark="2,4,6-10">@Directive({
+  selector: '[sdTooltip]',
+  standalone: true,
+  exportAs: 'sdTooltip',
+  host: {
+    '(pointerenter)': 'onPointerEnter($event)',
+    '(pointerleave)': 'scheduleHide()',
+    '(pointerdown)': 'hide()',
+    '(focusin)': 'onFocus()',
+    '(focusout)': 'hide()',
+  },
+})</pre>
+</section>
+
+<section id="inputs" data-part="3" data-cue="Three dependencies come from inject">
+  <h2><code>inject()</code> and aliased signal inputs</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/tooltip/tooltip.ts" data-mark="1,5-9">  private readonly overlay = inject(Overlay);
+  private readonly host = inject&lt;ElementRef&lt;HTMLElement&gt;&gt;(ElementRef);
+  private readonly document = inject(DOCUMENT);
+
+  readonly text = input&lt;string&gt;('', { alias: 'sdTooltip' });
+  readonly placement = input&lt;TooltipPlacement&gt;('top', { alias: 'sdTooltipPlacement' });
+  readonly relationship = input&lt;TooltipRelationship&gt;('description', {
+    alias: 'sdTooltipRelationship',
+  });
+
+  private readonly id = `sd-tooltip-${++nextId}`;
+  private overlayRef: OverlayRef | null = null;
+  private panel: ComponentRef&lt;TooltipPanel&gt; | null = null;</pre>
+</section>
+
+<section id="effect" data-part="4" data-cue="The constructor holds one effect">
+  <h2>One effect: sync the open bubble</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/tooltip/tooltip.ts" data-mark="4,5,7">    // Keep an open bubble in step with its trigger (Lock ↔ Unlock).
+    effect(() =&gt; {
+      const text = this.text();
+      if (!this.panel) return;
+      if (!text) this.hide();
+      else {
+        this.panel.setInput('text', text);
+        this.panel.changeDetectorRef.detectChanges();
+      }
+    });</pre>
+  <p class="muted">Pushes signal state into a component outside this view — a legitimate effect.</p>
+</section>
+
+<section id="enter" data-part="5" data-cue="On pointer enter returns at once for touch">
+  <h2>Pointer and focus</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/tooltip/tooltip.ts" data-mark="2,6,7,12">  protected onPointerEnter(event: PointerEvent): void {
+    if (event.pointerType === 'touch') return;
+    clearTimeout(this.hideTimer);
+    if (this.visible) return;
+    clearTimeout(this.showTimer);
+    if (Date.now() - lastHiddenAt &lt; WARM_MS) this.show();
+    else this.showTimer = setTimeout(() =&gt; this.show(), SHOW_DELAY_MS);
+  }
+
+  protected onFocus(): void {
+    // Keyboard focus only — a mouse click focuses the button too.
+    if (matchesFocusVisible(this.host.nativeElement)) this.show();
+  }</pre>
+</section>
+
+<section id="show" data-part="5" data-cue="Show bails out when there is no text">
+  <h2><code>show()</code>: a CDK overlay, created lazily</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/tooltip/tooltip.ts" data-mark="1,4,8,12,15,17">    this.overlayRef ??= this.overlay.create({
+      positionStrategy: this.overlay
+        .position()
+        .flexibleConnectedTo(this.host)
+        .withPositions(POSITIONS[this.placement()])
+        .withFlexibleDimensions(false)
+        .withViewportMargin(8),
+      scrollStrategy: this.overlay.scrollStrategies.close(),
+      panelClass: 'sd-tooltip-pane',
+    });
+
+    this.panel = this.overlayRef.attach(new ComponentPortal(TooltipPanel));
+    this.panel.setInput('text', text);
+    this.panel.setInput('tooltipId', this.id);
+    this.panel.setInput('hidden', this.relationship() === 'label');
+    // Render now so the description exists before a screen reader reads focus.
+    this.panel.changeDetectorRef.detectChanges();</pre>
+</section>
+
+<section id="hide" data-part="5" data-cue="Hide clears both timers">
+  <h2>Hide, Escape, destroy</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/tooltip/tooltip.ts" data-mark="5,7,13">  hide(): void {
+    clearTimeout(this.showTimer);
+    clearTimeout(this.hideTimer);
+    if (!this.visible) return;
+    this.overlayRef?.detach();
+    this.panel = null;
+    lastHiddenAt = Date.now();
+    this.document.removeEventListener('keydown', this.onKeydown, true);
+    this.setDescribedBy(false);
+  }
+  …
+    // Dismiss the hint only; don't let the same Escape close a dialog too.
+    event.stopPropagation();</pre>
+</section>
+
+<section id="relationship" data-part="5" data-cue="The relationship is the accessibility core.">
+  <h2>Label or description?</h2>
+  <div class="cols">
+    <div class="card"><h3>label</h3><p>Icon-only button. Name stays in <code>aria-label</code>; bubble gets <code>aria-hidden="true"</code>.</p></div>
+    <div class="card"><h3>description</h3><p>Text button. Bubble id joins <code>aria-describedby</code>, keeping existing ids.</p></div>
+  </div>
+</section>
+
+<section id="spec-host" data-part="6" data-cue="Open tooltip dot spec dot T S.">
+  <h2>Spec: host and helpers</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/tooltip/tooltip.spec.ts">/** jsdom has no PointerEvent constructor; a MouseEvent carrying pointerType will do. */
+function pointer(el: Element, type: string, pointerType = 'mouse'): void {
+  const event = new MouseEvent(type);
+  Object.defineProperty(event, 'pointerType', { value: pointerType });
+  el.dispatchEvent(event);
+}
+
+/** Focus as the keyboard would, so `:focus-visible` matches (it keys off the last input event). */
+function tabTo(el: HTMLElement): void {
+  document.body.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', bubbles: true }));
+  el.focus();
+}</pre>
+</section>
+
+<section id="spec-setup" data-part="6" data-cue="The setup turns on V I fake timers">
+  <h2>Fake timers</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/tooltip/tooltip.spec.ts" data-mark="2,4">  beforeEach(async () =&gt; {
+    vi.useFakeTimers();
+    // Step past the "warm" window left by the previous test's hide.
+    vi.setSystemTime(Date.now() + 10_000);
+    await TestBed.configureTestingModule({ imports: [HostCmp] }).compileComponents();
+    fixture = TestBed.createComponent(HostCmp);
+    fixture.detectChanges();
+    trigger = fixture.nativeElement.querySelector('#trigger');
+  });</pre>
+</section>
+
+<section id="spec-pointer" data-part="6" data-cue="The pointer tests:">
+  <h2>shows after a hover delay and hides on pointer-out</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/tooltip/tooltip.spec.ts" data-mark="3,7">    pointer(trigger, 'pointerenter');
+    expect(bubble()).toBeNull();
+    vi.advanceTimersByTime(400);
+    expect(bubble()?.textContent?.trim()).toBe('Swap for something else');
+
+    pointer(trigger, 'pointerleave');
+    vi.advanceTimersByTime(100);
+    expect(bubble()).toBeNull();</pre>
+  <p class="muted small">Also: stays open while the pointer moves onto the bubble · skips the delay … right after one hides · never shows for touch</p>
+</section>
+
+<section id="spec-rest" data-part="6" data-cue="The keyboard tests:">
+  <h2>Keyboard, accessibility, text</h2>
+  <ul class="small">
+    <li><b>shows at once on keyboard focus and hides on blur</b></li>
+    <li><b>dismisses on Escape and on press</b></li>
+    <li><b>adds itself to aria-describedby while shown, keeping existing ids</b></li>
+    <li><b>as a label, hides the bubble from assistive tech and leaves aria-describedby alone</b></li>
+    <li><b>follows text changes while open and closes when the text clears</b></li>
+    <li><b>does nothing without text</b></li>
+  </ul>
+</section>
+
+<section id="pitfalls" data-part="7" data-cue="Don't put the tooltip on a disabled button">
+  <h2>Pitfalls</h2>
+  <ul>
+    <li>Disabled triggers never show the bubble</li>
+    <li><code>description</code> on an icon-only button reads the name twice</li>
+    <li>Nothing essential only in a tooltip — touch never sees it</li>
+  </ul>
+</section>
+
+<section id="recap" data-part="7" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div>Directive = behaviour; OnPush panel = text</div>
+    <div>CDK Overlay positions the bubble</div>
+    <div>Aliased inputs, <code>inject()</code>, plain private fields</div>
+    <div>One <code>effect()</code> syncs an open bubble</div>
+    <div>Label vs description decides what AT hears</div>
+  </div>
+</section>
+
+<section id="next" data-part="7" data-cue="Next, in video fifty">
+  <div class="kicker">Next · Video 50</div>
+  <h1>Coding <code>sd-top-bar</code></h1>
+</section>
+
+<script src="../../assets/slides.js"></script>
+</body>
+</html>

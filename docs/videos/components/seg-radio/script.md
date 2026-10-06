@@ -12,7 +12,7 @@ The job: a labelled group of radios that reads and writes one string through the
 
 Open the file called seg radio dot T S. It exports a small interface, seg radio option, with a read only value and a read only label, both strings. Below it sits a module level counter that gives every instance a unique I D.
 
-The decorator uses the selector S D seg radio, standalone, its own template and stylesheet, and On Push change detection. The host gets the class called field, because in the mock the whole control is a field: a label above the control. The host also mirrors the label and the current value back to attributes, with or null so empty strings remove them.
+The decorator uses the selector S D seg radio, standalone, its own template and stylesheet, and On Push change detection. The host gets the class called field, because in the mock the whole control is a field: a label above the control. And that is the whole host block. The label and the value are not mirrored onto the host as attributes: nothing read them, so, as A D R nine now records, only classes and A R I A state go on the host.
 
 Then comes the providers array. It registers the component as N G value accessor, using forward ref to point at the class itself, with multi set to true. That is what lets a parent put N G model or a form control name directly on the element.
 
@@ -20,7 +20,7 @@ Then comes the providers array. It registers the component as N G value accessor
 
 The class implements control value accessor. It has two signal inputs, label and options, both made with the input function, with an empty string and an empty array as defaults.
 
-Now the interesting choice. The current value and the disabled flag are not inputs. They are protected signals made with the signal function. Why? Because in a form control, the forms A P I owns the value. It pushes values in through write value and the disabled state through set disabled state. Storing them in signals means the template and the host bindings react to those imperative calls automatically, even under On Push.
+Now the interesting choice. The current value and the disabled flag are not inputs. They are protected signals made with the signal function. Why? Because in a form control, the forms A P I owns the value. It pushes values in through write value and the disabled state through set disabled state. Storing them in signals means the template reacts to those imperative calls automatically, even under On Push.
 
 Why not a model signal for two way binding? Because that would give the component two sources of truth, the binding and the form.
 
@@ -58,7 +58,7 @@ Open seg radio dot spec dot T S. A constant holds three options. The setup creat
 
 "widens to three columns for three options" proves the modifier comes and goes with the options. "labels the group with the field label" proves the accessibility link: no label, no aria labelled by; with a label, the group points at the label's I D.
 
-The last three tests drive the control value accessor directly. "checks the radio matching a written value and mirrors it to the host" calls write value with Sunday. "reports a user pick to the form and marks it touched" registers mock callbacks, dispatches a change on Either, and expects both callbacks. And "disables every radio from the form and ignores picks" calls set disabled state, then checks a change event does not reach the form.
+The last three tests drive the control value accessor directly. "checks the radio matching a written value" calls write value with Sunday and expects only the middle radio checked. "reports a user pick to the form and marks it touched" registers mock callbacks, dispatches a change on Either, expects both callbacks, and then checks that Either is the checked radio. And "disables every radio from the form and ignores picks" calls set disabled state, then checks a change event does not reach the form.
 
 ## Pitfalls
 

@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 51 Slides</title>
+<link rel="stylesheet" href="../../assets/slides.css">
+</head>
+<body data-video-number="51" data-video-title="Coding sd-vote-row" data-parts="Introduction|Types|Decorator|API|Controlled|Template|Styles|Spec|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Saturdaze components · Video 51 of 52</div>
+  <h1>Coding <code>sd-vote-row</code></h1>
+  <p class="lead">Thumbs up, thumbs down, one output.</p>
+</section>
+
+<section id="where" data-part="0" data-cue="It is not used by pages directly">
+  <h2>Where it lives: inside <code>sd-food-card</code></h2>
+  <pre class="code" data-lang="html" data-file="components/src/lib/food-card/food-card.html">  &lt;sd-vote-row
+    [votes]="votes()"
+    [disabled]="votesDisabled()"
+    [label]="'Family vote for ' + cardTitle()"
+    (voteChange)="voteChange.emit($event)"</pre>
+  <p class="muted">Rendered on every card of the food ideas page.</p>
+</section>
+
+<section id="types" data-part="1" data-cue="Open vote row dot T S.">
+  <h2>Types first</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/vote-row/vote-row.ts">export type Vote = 'up' | 'down' | 'none';
+
+export interface VoteCell {
+  readonly name: string;
+  readonly tone: AvatarTone;
+  readonly vote: Vote;
+}</pre>
+</section>
+
+<section id="decorator" data-part="2" data-cue="The selector is S D vote row">
+  <h2>The decorator: a labelled group</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/vote-row/vote-row.ts" data-mark="9,10,11">@Component({
+  selector: 'sd-vote-row',
+  standalone: true,
+  imports: [Avatar, Icon],
+  templateUrl: './vote-row.html',
+  styleUrl: './vote-row.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: 'vote-row',
+    role: 'group',
+    '[attr.aria-label]': 'label()',
+  },
+})</pre>
+  <p class="muted">Only class and ARIA on the host: no <code>[attr.disabled]</code> (ADR-009). Disabled lands on each button.</p>
+</section>
+
+<section id="api" data-part="3" data-cue="Votes is an input holding a read only array">
+  <h2>Inputs and one output</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/vote-row/vote-row.ts" data-mark="3,4">  readonly votes = input&lt;readonly VoteCell[]&gt;([]);
+  readonly label = input&lt;string&gt;('Family vote');
+  readonly disabled = input(false, { transform: booleanAttribute });
+  readonly voteChange = output&lt;{ index: number; vote: Vote }&gt;();</pre>
+</section>
+
+<section id="cast" data-part="4" data-cue="Here is the key design decision.">
+  <h2>Controlled: emit the next vote</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/vote-row/vote-row.ts" data-mark="2,4">  protected cast(index: number, direction: 'up' | 'down'): void {
+    if (this.disabled()) return;
+    const current = this.votes()[index]?.vote ?? 'none';
+    this.voteChange.emit({ index, vote: current === direction ? 'none' : direction });
+  }</pre>
+  <p class="muted">No <code>signal()</code>, no <code>model()</code> — the votes array is never mutated.</p>
+</section>
+
+<section id="loop" data-part="4" data-cue="The parent owns the truth">
+  <h2>The parent owns the truth</h2>
+  <div class="flow">
+    <div class="node"><b>click</b><span class="small">cast(i, 'up')</span></div>
+    <div class="arrow">→</div>
+    <div class="node accent"><b>voteChange</b><span class="small">{ index, vote }</span></div>
+    <div class="arrow">→</div>
+    <div class="node"><b>parent saves</b><span class="small">new votes array</span></div>
+    <div class="arrow">→</div>
+    <div class="node"><b>votes()</b><span class="small">OnPush re-render</span></div>
+  </div>
+  <p class="muted">Server-owned data: controlled input + output beats two-way <code>model()</code>.</p>
+</section>
+
+<section id="template" data-part="5" data-cue="The template is a single at for loop">
+  <h2>The template</h2>
+  <pre class="code tight" data-lang="html" data-file="components/src/lib/vote-row/vote-row.html" data-mark="1,9,10,12">@for (cell of votes(); track cell.name; let i = $index) {
+  &lt;div class="vote-row__cell"&gt;
+    &lt;sd-avatar [name]="cell.name" [tone]="cell.tone" size="md" /&gt;
+    &lt;span class="vote-row__name"&gt;{{ cell.name }}&lt;/span&gt;
+    &lt;div class="vote-row__choice"&gt;
+      &lt;button
+        class="vote-row__btn vote-row__btn--up"
+        type="button"
+        [attr.aria-pressed]="cell.vote === 'up'"
+        [attr.aria-label]="cell.name + ' votes yes'"
+        [disabled]="disabled()"
+        (click)="cast(i, 'up')"
+      &gt;
+        &lt;sd-icon name="thumbs_up" [size]="14" /&gt;
+      &lt;/button&gt;
+      &lt;!-- … the down button: thumbs_down, 'votes no' --&gt;</pre>
+</section>
+
+<section id="styles-host" data-part="6" data-cue="The host is a four column grid">
+  <h2>The row</h2>
+  <pre class="code tight" data-lang="scss" data-file="components/src/lib/vote-row/vote-row.scss">:host {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  padding-top: 12px;
+  border-top: 1px solid var(--colorNeutralStroke2);
+}
+…
+.vote-row__name {
+  font-size: var(--fontSizeBase200);
+  color: var(--colorNeutralForeground2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}</pre>
+</section>
+
+<section id="styles-pressed" data-part="6" data-cue="The buttons are twenty eight pixel circles">
+  <h2>Style the state you announce</h2>
+  <pre class="code" data-lang="scss" data-file="components/src/lib/vote-row/vote-row.scss" data-mark="1,7">.vote-row__btn--up[aria-pressed='true'] {
+  background: var(--colorStatusSuccessBackground1);
+  border-color: transparent;
+  color: var(--colorStatusSuccessForeground1);
+}
+
+.vote-row__btn--down[aria-pressed='true'] {
+  background: var(--colorStatusDangerBackground1);
+  border-color: transparent;
+  color: var(--colorStatusDangerForeground1);
+}</pre>
+</section>
+
+<section id="spec-setup" data-part="7" data-cue="Open the spec file.">
+  <h2>Spec setup</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/vote-row/vote-row.spec.ts" data-mark="2-4,14">const VOTES: readonly VoteCell[] = [
+  { name: 'Quinn', tone: 'primary', vote: 'none' },
+  { name: 'Sara', tone: 'leaf', vote: 'up' },
+  { name: 'Eli', tone: 'sky', vote: 'down' },
+];
+…
+  const cells = (): HTMLElement[] =&gt; Array.from(host.querySelectorAll('.vote-row__cell'));
+  const up = (i: number): HTMLButtonElement =&gt;
+    cells()[i]?.querySelector('.vote-row__btn--up') as HTMLButtonElement;
+…
+  beforeEach(async () =&gt; {
+    await TestBed.configureTestingModule({ imports: [VoteRow] }).compileComponents();
+    fixture = TestBed.createComponent(VoteRow);
+    fixture.componentRef.setInput('votes', VOTES);
+    fixture.detectChanges();</pre>
+</section>
+
+<section id="spec-render" data-part="7" data-cue="Creates a labelled group with one cell per member">
+  <h2>Rendering and naming</h2>
+  <ul class="small">
+    <li><b>creates a labelled group with one cell per member</b></li>
+    <li><b>draws a medium avatar in each member tone</b></li>
+    <li><b>names each thumb and reflects the current vote in aria-pressed</b></li>
+    <li><b>uses the label input as the accessible name</b></li>
+  </ul>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/vote-row/vote-row.spec.ts">    expect(avatars.map((a) =&gt; a.classList.contains('avatar--q'))).toEqual([true, false, false]);
+    expect(avatars.every((a) =&gt; a.classList.contains('avatar--md'))).toBe(true);</pre>
+  <p class="muted small">Rendered classes, not reflected inputs.</p>
+</section>
+
+<section id="spec-emit" data-part="7" data-cue="Emits the member index and the next vote, clearing a repeated vote">
+  <h2>The clear-on-repeat rule</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/vote-row/vote-row.spec.ts" data-mark="8,9,12,13">    const spy = vi.fn();
+    fixture.componentInstance.voteChange.subscribe(spy);
+
+    up(0).click();
+    expect(spy).toHaveBeenLastCalledWith({ index: 0, vote: 'up' });
+    down(0).click();
+    expect(spy).toHaveBeenLastCalledWith({ index: 0, vote: 'down' });
+    up(1).click();
+    expect(spy).toHaveBeenLastCalledWith({ index: 1, vote: 'none' });
+    up(2).click();
+    expect(spy).toHaveBeenLastCalledWith({ index: 2, vote: 'up' });
+    down(2).click();
+    expect(spy).toHaveBeenLastCalledWith({ index: 2, vote: 'none' });</pre>
+</section>
+
+<section id="spec-disabled" data-part="7" data-cue="Disables every thumb and swallows votes when disabled">
+  <h2>disables every thumb and swallows votes when disabled</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/vote-row/vote-row.spec.ts">    const buttons = Array.from(host.querySelectorAll&lt;HTMLButtonElement&gt;('.vote-row__btn'));
+    expect(buttons.every((b) =&gt; b.disabled)).toBe(true);
+    up(0).click();
+    expect(spy).not.toHaveBeenCalled();</pre>
+</section>
+
+<section id="pitfalls" data-part="8" data-cue="Don't mutate the votes array in place.">
+  <h2>Pitfalls</h2>
+  <ul>
+    <li>Never mutate <code>votes</code> — emit, and let the parent pass a new array</li>
+    <li>Track by name, not index</li>
+    <li>Every icon-only button needs its own <code>aria-label</code></li>
+  </ul>
+</section>
+
+<section id="recap" data-part="8" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div>Exported types shared with the parent</div>
+    <div>Controlled: inputs in, one <code>output()</code> out</div>
+    <div><code>role="group"</code> + label; <code>aria-pressed</code> per thumb</div>
+    <div>Pressed styles read <code>aria-pressed</code>, fill + ink pairs</div>
+    <div>Spec proves clear-on-repeat with a spy</div>
+  </div>
+</section>
+
+<section id="next" data-part="8" data-cue="Next, in video fifty two">
+  <div class="kicker">Next · Video 52 · the last one</div>
+  <h1>Coding <code>sd-well</code></h1>
+</section>
+
+<script src="../../assets/slides.js"></script>
+</body>
+</html>

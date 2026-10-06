@@ -1,6 +1,6 @@
 # 20 · Coding sd-disc: an icon in a coloured circle
 
-> **Runtime:** ~6.6 min · **Audience:** developers who know basic Angular · **Prerequisites:** [Consuming tokens](../../05-consuming-tokens/README.md)
+> **Runtime:** ~6.8 min · **Audience:** developers who know basic Angular · **Prerequisites:** [Consuming tokens](../../05-consuming-tokens/README.md)
 
 **Video:** [disc.mp4](disc.mp4) · [Slides](slides.html) · **Audio:** [disc.mp3](disc.mp3) · [Transcript](script.md)
 
@@ -13,7 +13,7 @@
 By the end, the viewer can:
 
 - Export union types (`DiscTone`, `DiscSize`) for type-safe inputs under `strictTemplates`.
-- Bind BEM modifier classes and mirrored attributes on the host from signals.
+- Bind BEM modifier classes on the host from signals, and keep inputs off host attributes (ADR-009).
 - Explain why `aria-hidden` is a static host attribute.
 - Derive the glyph size with a protected `computed()`.
 - Style tones with paired `…Background1`/`…Foreground1` tokens on `:host(.disc--…)`.
@@ -24,7 +24,7 @@ By the end, the viewer can:
 | Question | What a strong answer includes |
 | --- | --- |
 | Why no `input.required`? | Every input has a sensible default (`'sparkle'`, `'default'`, `'md'`). |
-| Why are `tone`/`size` attributes sometimes absent? | The host binding returns `null` for the default, removing the attribute. |
+| Why are `tone`/`size` not host attributes? | Inputs stay inputs; only classes and ARIA state go on the host. Nothing read them (ADR-009). |
 | Why is there no wrapper element? | The host is the circle; parents can add classes (e.g. `weather-disc`) directly. |
 | How is contrast guaranteed? | Each tone uses a designed fill + ink pair from the theme. |
 
@@ -44,15 +44,15 @@ By the end, the viewer can:
 
 | Time | Segment | Content |
 | --- | --- | --- |
-| 00:00-00:36 | Introduction | What the disc is; real usages. |
-| 00:36-01:09 | Types | `DiscTone`, `DiscSize`. |
-| 01:09-02:30 | Decorator | Static class and `aria-hidden`, modifier bindings, mirrored attributes. |
-| 02:30-03:27 | Inputs | Three inputs, `computed()` icon size, why no required/transform. |
-| 03:27-03:48 | Template | One `sd-icon`, no wrapper. |
-| 03:48-04:44 | Styles | Host circle, sizes, fill/ink pairs. |
-| 04:44-05:44 | Spec | Setup and the four tests. |
-| 05:44-06:00 | Pitfalls | Three mistakes. |
-| 06:00-06:35 | Recap | Things to remember; preview of `sd-empty`. |
+| 00:00-00:34 | Introduction | What the disc is; real usages. |
+| 00:34-01:10 | Types | `DiscTone`, `DiscSize`. |
+| 01:10-02:32 | Decorator | Static class and `aria-hidden`, modifier bindings, inputs stay inputs. |
+| 02:32-03:29 | Inputs | Three inputs, `computed()` icon size, why no required/transform. |
+| 03:29-03:50 | Template | One `sd-icon`, no wrapper. |
+| 03:50-04:46 | Styles | Host circle, sizes, fill/ink pairs. |
+| 04:46-05:56 | Spec | Setup and the four tests. |
+| 05:56-06:11 | Pitfalls | Three mistakes. |
+| 06:11-06:46 | Recap | Things to remember; preview of `sd-empty`. |
 
 ## Demo commands
 

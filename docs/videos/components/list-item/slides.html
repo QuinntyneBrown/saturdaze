@@ -29,7 +29,7 @@
 
 <section id="decorator" data-part="2" data-cue="Create the list item file.">
   <h2>The decorator</h2>
-  <pre class="code tight" data-lang="ts" data-file="components/src/lib/list-item/list-item.ts" data-mark="9-14">@Component({
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/list-item/list-item.ts" data-mark="8-10">@Component({
   selector: 'sd-list-item',
   standalone: true,
   imports: [NgTemplateOutlet, Icon],
@@ -38,13 +38,16 @@
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     role: 'listitem',
-    '[attr.title]': 'rowTitle() || null',
-    '[attr.subtitle]': 'subtitle() || null',
-    '[attr.href]': 'href() || null',
-    '[attr.action]': 'action() ? "" : null',
-    '[attr.chevron]': 'chevron() ? "" : null',
   },
 })</pre>
+</section>
+
+<section id="no-mirror" data-part="2" data-cue="Notice that none of the inputs is mirrored onto the host">
+  <h2>Inputs stay inputs (ADR-009)</h2>
+  <div class="cols">
+    <div class="card bad"><h3>Not on the host</h3><p><code>'[attr.title]': 'rowTitle() || null'</code><br><span class="muted small">A native tooltip on every row; nothing reads it</span></p></div>
+    <div class="card good"><h3>On the host</h3><p><code>role: 'listitem'</code><br><span class="muted small">Only the mock's classes and ARIA state</span></p></div>
+  </div>
 </section>
 
 <section id="inputs" data-part="3" data-cue="Now the class. First, a private router">
@@ -195,7 +198,7 @@
   <h2>Six tests</h2>
   <ol class="steps small">
     <li>creates a static listitem row</li>
-    <li>renders title and subtitle and mirrors them to the host</li>
+    <li>renders title and subtitle</li>
     <li>adds the trailing chevron glyph</li>
     <li>becomes a button that emits pressed when action is set</li>
     <li>becomes an in-app anchor when href is set and routes plain clicks</li>
@@ -205,7 +208,7 @@
 
 <section id="spec-button" data-part="6" data-cue="&quot;Becomes a button that emits pressed when action is set&quot; checks">
   <h2>The button emits <code>pressed</code></h2>
-  <pre class="code tight" data-lang="ts" data-file="components/src/lib/list-item/list-item.spec.ts" data-mark="12-15">  it('becomes a button that emits pressed when action is set', () =&gt; {
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/list-item/list-item.spec.ts" data-mark="11-14">  it('becomes a button that emits pressed when action is set', () =&gt; {
     fixture.componentRef.setInput('action', true);
     fixture.componentRef.setInput('label', 'Edit Sara');
     fixture.detectChanges();
@@ -214,7 +217,6 @@
     expect(btn.getAttribute('type')).toBe('button');
     expect(btn.classList.contains('list__item--action')).toBe(true);
     expect(btn.getAttribute('aria-label')).toBe('Edit Sara');
-    expect(host.getAttribute('action')).toBe('');
 
     const spy = vi.fn();
     fixture.componentInstance.pressed.subscribe(spy);
@@ -225,7 +227,7 @@
 
 <section id="spec-anchor" data-part="6" data-cue="spies on the router's navigate by U R L">
   <h2>href wins, plain clicks route</h2>
-  <pre class="code tight" data-lang="ts" data-file="components/src/lib/list-item/list-item.spec.ts" data-mark="3-4,9,13-14">    const router = TestBed.inject(Router);
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/list-item/list-item.spec.ts" data-mark="3-4,11,15-16">    const router = TestBed.inject(Router);
     const navigate = vi.spyOn(router, 'navigateByUrl').mockResolvedValue(true);
     fixture.componentRef.setInput('href', '/family/review');
     fixture.componentRef.setInput('action', true);
@@ -233,8 +235,10 @@
 
     const a = row() as HTMLAnchorElement;
     expect(a.tagName).toBe('A');
+    expect(a.getAttribute('href')).toBe('/family/review');
+    expect(a.classList.contains('list__item--action')).toBe(true);
     expect(host.querySelector('button')).toBeNull();
-    /* … */
+
     const event = new MouseEvent('click', { bubbles: true, cancelable: true });
     a.dispatchEvent(event);
     expect(navigate).toHaveBeenCalledWith('/family/review');
@@ -249,7 +253,7 @@
     expect(item.querySelector('.list__text .list__title')?.textContent?.trim()).toBe('Quinn');
     const trail = item.querySelector('.list__trail') as HTMLElement;
     expect(trail.querySelector('.trail')).not.toBeNull();
-    expect(trail.querySelector('sd-icon')?.getAttribute('name')).toBe('chevron_right');</pre>
+    expect(trail.querySelector('sd-icon svg')?.innerHTML).toContain('M9 6l6 6-6 6');</pre>
   <p class="muted">Fails if someone duplicates the slots per branch.</p>
 </section>
 

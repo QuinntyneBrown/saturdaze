@@ -6,7 +6,7 @@ In this video you build the S D activity card, the card that suggests one thing 
 
 Open the activity card file in the components library. The decorator sets the selector to S D activity card, marks the component standalone, and imports the three building blocks it renders: the button, the icon and the media frame. Change detection is OnPush. With signal inputs, Angular knows exactly when an input changes, so OnPush is free.
 
-Now look at the host block. The host element itself carries the class card, and the modifier card dash dash media. That is the B E M block from the mock Ideas page, word for word, which is what A D R nine asks for: the component host carries the mock's block class, so the same Playwright locators work against the static mock and the running app. The host block also mirrors two inputs back onto the element as attributes, the title and the tone, by reading the signals directly. A host binding that reads a signal is tracked like a template binding.
+Now look at the host block. The host element itself carries the class card, and the modifier card dash dash media. That is the B E M block from the mock Ideas page, word for word, which is what A D R nine asks for: the component host carries the mock's block class, so the same Playwright locators work against the static mock and the running app. And that is all the host block holds. Inputs stay inputs: the component does not mirror the title or the tone back onto the element as attributes. Nothing read them, and a reflected title put a native browser tooltip on every card. Only classes and A R I A state belong on the host, a rule A D R nine now records.
 
 ## Inputs and the output
 
@@ -36,9 +36,9 @@ The stylesheet is tiny, because the shared card anatomy lives in a partial calle
 
 Now the spec file. The setup configures the testing module with the activity card and a small host component, creates the card, sets the title input with set input on the component ref, and calls detect changes. Set input is the right tool for signal inputs.
 
-The first test, creates a photo led card whose fallback tile is leaf toned with a tree, and the title, checks the defaults: the B E M classes on the host, a leaf toned fallback tile hidden from assistive technology, the title in an h3, and no place line, body or footer.
+The first test, creates a photo led card whose fallback tile is leaf toned with a tree, and the title, checks the defaults: the B E M classes on the host, a leaf toned fallback tile hidden from assistive technology, the tree glyph actually drawn in its S V G, the title in an h3, and no place line, body or footer.
 
-Two tests cover content and tone. Renders the place line and the why sets both inputs and reads them back. Switches to the indoor tone and a custom icon proves the tone flows down to the media tile and back up to the host attribute.
+Two tests cover content and tone. Renders the place line and the why sets both inputs and reads them back. Switches to the indoor tone and a custom icon proves the tone flows down to the media tile as the indoor class, and that the popcorn glyph is drawn. The tests assert rendered output, never a host attribute.
 
 Two tests cover the Map link. Adds a Map link that opens in a new tab when the catalogue has one checks the href, the blank target, the no opener rel and the quiet class. Labels the Map link with its glyph and text checks the visible text and the map icon.
 

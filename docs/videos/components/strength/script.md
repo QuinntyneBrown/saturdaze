@@ -10,7 +10,7 @@ The decorator is the standard shape for this library. The selector is S D streng
 
 The interesting part is the host object. The host element gets the static class strength, which is the B E M block from the mock stylesheet. That parity matters, as A D R nine says, because the mocks, the end to end locators and the component all agree on the same class names. The host also gets aria live set to polite. That turns the whole meter into a polite live region, so when the label changes from "Weak" to "Strong", a screen reader announces it without interrupting the user's typing.
 
-Then come three class bindings, one modifier per level. Each one compares the level signal to a string: strength dash dash weak when the level is weak, and so on. And finally the level itself is mirrored to a plain attribute on the host. That attribute is for tests and for anyone inspecting the DOM; when the level is null, Angular removes the attribute entirely.
+Then come three class bindings, one modifier per level. Each one compares the level signal to a string: strength dash dash weak when the level is weak, and so on. Notice that the level itself is not copied onto the host as an attribute. Inputs stay inputs: only ARIA state and classes go on the host. Nothing ever read a mirrored level attribute, and A D R nine now records the rule: state that CSS or a locator needs becomes a host class.
 
 ## Two signal inputs
 
@@ -38,9 +38,9 @@ Open strength dot spec dot T S. The setup is the simplest form of TestBed: impor
 
 The first test, "creates a polite live meter with three hidden segments", checks the contract you just built: the strength class on the host, aria live polite, the bar hidden from assistive technology, and exactly three segments.
 
-The second, "has no level and no label until told", proves the defaults: no level attribute, only the base class, and no label element in the DOM.
+The second, "has no level and no label until told", proves the defaults: the host carries only the base class, and there is no label element in the DOM.
 
-The third, "mirrors the level to a host class and attribute", loops over weak, ok and strong, setting the input with the component ref's set input method and running detect changes each time. It also checks that the previous modifier is removed, and that setting the level back to null clears the attribute. That last part protects the null default.
+The third, "mirrors the level to a host class", loops over weak, ok and strong, setting the input with the component ref's set input method and running detect changes each time. It checks the rendered class, not an attribute: the previous modifier is removed, and setting the level back to null clears the strong modifier. That last part protects the null default.
 
 The fourth, "announces the label text", sets a label and reads it back from the label element.
 
@@ -58,6 +58,6 @@ Things to remember.
 - The host is the B E M block and a polite live region.
 - Modifier classes and n th child turn one level into one, two or three segments.
 - Colours are status and palette roles, never hex.
-- The spec drives inputs with set input and checks attributes and classes.
+- The spec drives inputs with set input and checks the rendered classes, never a mirrored attribute.
 
 Next, in video forty six, we build S D text input: a labelled field that plugs into Angular forms.

@@ -35,7 +35,7 @@
 
 <section id="decorator" data-part="2" data-cue="Create the list file.">
   <h2>The decorator</h2>
-  <pre class="code" data-lang="ts" data-file="components/src/lib/list/list.ts" data-mark="8-11">@Component({
+  <pre class="code" data-lang="ts" data-file="components/src/lib/list/list.ts" data-mark="8-10">@Component({
   selector: 'sd-list',
   standalone: true,
   templateUrl: './list.html',
@@ -45,16 +45,15 @@
     class: 'list',
     role: 'list',
     '[class.list--card]': 'card()',
-    '[attr.card]': 'card() ? "" : null',
   },
 })</pre>
 </section>
 
-<section id="mirror" data-part="2" data-cue="Why mirror the input back as an attribute?">
-  <h2>Mirror state like a native attribute</h2>
+<section id="mirror" data-part="2" data-cue="Notice what is not there">
+  <h2>Inputs stay inputs (ADR-009)</h2>
   <div class="cols">
-    <div class="card good"><h3>card = true</h3><p><code>&lt;sd-list class="list list--card" role="list" card=""&gt;</code></p></div>
-    <div class="card"><h3>card = false</h3><p><code>&lt;sd-list class="list" role="list"&gt;</code><br><span class="muted small">null removes the attribute</span></p></div>
+    <div class="card good"><h3>card = true</h3><p><code>&lt;sd-list class="list list--card" role="list"&gt;</code></p></div>
+    <div class="card bad"><h3>Not on the host</h3><p><code>'[attr.card]': …</code><br><span class="muted small">Only the mock's classes and ARIA state go on the host</span></p></div>
   </div>
 </section>
 
@@ -139,19 +138,17 @@ class HostCmp {}
 
 <section id="spec-plain" data-part="5" data-cue="The first test, &quot;creates a plain list&quot;">
   <h2>Defaults and the card state</h2>
-  <pre class="code tight" data-lang="ts" data-file="components/src/lib/list/list.spec.ts" data-mark="10">  it('creates a plain list', () =&gt; {
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/list/list.spec.ts" data-mark="9,11">  it('creates a plain list', () =&gt; {
     expect(fixture.componentInstance).toBeTruthy();
     expect(host.classList.contains('list')).toBe(true);
     expect(host.getAttribute('role')).toBe('list');
     expect(host.classList.contains('list--card')).toBe(false);
-    expect(host.getAttribute('card')).toBeNull();
   });
 
   it('draws the card surface when asked', () =&gt; {
     fixture.componentRef.setInput('card', true);
     fixture.detectChanges();
     expect(host.classList.contains('list--card')).toBe(true);
-    expect(host.getAttribute('card')).toBe('');
   });</pre>
 </section>
 
@@ -182,7 +179,7 @@ class HostCmp {}
   <h2>Things to remember</h2>
   <div class="recap">
     <div>Host is the list: class + <code>role="list"</code></div>
-    <div><code>booleanAttribute</code>, mirrored as <code>card=""</code></div>
+    <div><code>booleanAttribute</code>; state as a class, not an attribute</div>
     <div>Card surface from tokens by role</div>
     <div><code>--sd-list-pad-x</code> passes padding down</div>
     <div>One slot, declared once</div>

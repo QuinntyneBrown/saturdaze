@@ -6,7 +6,7 @@ S D text input is the labelled text field used across Saturdaze: a label with an
 
 Open text input dot T S. Above the class sits a module level counter called next field id. Every instance takes the next number, giving each field a unique id for wiring the label and descriptions.
 
-The selector is S D text input. It is standalone, imports the icon component for the error glyph, and uses On Push. The host gets the class field, the B E M block from the mocks, and mirrors several inputs as attributes: label, type, hint, error, and the flags required, invalid and multiline, which appear as empty attributes when true and vanish when false.
+The selector is S D text input. It is standalone, imports the icon component for the error glyph, and uses On Push. The host gets the class field, the B E M block from the mocks, and nothing else. The inputs are not mirrored onto the host as attributes. Inputs stay inputs: only classes and ARIA state go on the host, and here the ARIA state lives on the inner control, where assistive technology reads it. Mirroring the label or type onto the host helped nobody; A D R nine records that rule.
 
 The providers array registers the component itself as an N G value accessor, using forward ref because the class isn't defined yet when the decorator runs, and multi true because the token collects many accessors. That is what lets a page put form control name or N G model directly on the field.
 

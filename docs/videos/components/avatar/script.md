@@ -10,7 +10,7 @@ The host block is where most of this component lives. It starts with the class a
 
 Then come the modifiers. There is one class binding per size, small, medium and extra large, each comparing the size signal with a string. Large is the default and has no modifier, because the base avatar class is already the large size. Then there is one class binding per tone. The person tones map onto the mock's class names, which are the initials of the family in the design: primary gives avatar dash dash q for Quinn, leaf gives s for Sara, sky gives e for Eli, and sun gives m for Mae. Indoor keeps its own name. Keeping the mock's odd names is deliberate: under A D R nine, the component carries the mock's classes exactly, so the same locators and the same stylesheet work in both places.
 
-The avatar photo modifier is on whenever there is a source, using a double negation to turn the string into a boolean. Finally, three attribute bindings mirror name, tone and size onto the host. The tone attribute is removed for the default tone, by returning null.
+The avatar photo modifier is on whenever there is a source, using a double negation to turn the string into a boolean. And that is the end of the host block. Notice what is not there: no attribute bindings for name, tone or size. Inputs stay inputs. Only classes and A R I A state belong on the host, a rule A D R nine records, because nothing ever read the reflected attributes.
 
 ## Inputs and the computed initial
 
@@ -36,13 +36,13 @@ The photo modifier hides overflow, and the image fills the circle with object fi
 
 The spec file is simple: it creates the avatar, detects changes and keeps the host element. There is no host component, because the avatar has no slots.
 
-The first test, creates a decorative large avatar with a placeholder initial, checks the avatar class, aria hidden, the question mark, the name and size attributes, and no tone attribute.
+The first test, creates a decorative large avatar with a placeholder initial, checks the avatar class, aria hidden, the question mark, and that the class name is exactly avatar, with no modifier switched on by default.
 
 The next two tests prove the computed. Renders the upper cased first letter of the name sets quinn and expects a capital Q, then sets a name with leading spaces and expects a capital E, which proves the trim. Falls back to question mark for a blank name sets only spaces and expects the question mark.
 
-Maps person tones to the mock avatar classes loops over a table of tone to class, sets each tone with set input on the component ref, and checks both the class and the attribute. The table in the test is the contract.
+Maps person tones to the mock avatar classes loops over a table of tone to class, sets each tone with set input on the component ref, and checks the class. The table in the test is the contract.
 
-Mirrors the size to a class and attribute loops over small, medium and extra large, then sets large and checks that the extra large class is gone and the size attribute reads large.
+Mirrors the size to a host class loops over small, medium and extra large, then sets large and checks that the extra large class is gone.
 
 Notice that the source input has no test in this spec. If you change the photo branch, add a test for the image and the photo class first.
 

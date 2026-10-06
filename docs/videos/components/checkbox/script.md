@@ -4,7 +4,7 @@ S D checkbox is a native checkbox with its label as content. Because the label i
 
 ## The decorator
 
-Open the checkbox component file. The selector is S D checkbox, the component is standalone, and change detection is OnPush. The host object has just two attribute bindings: checked and required. Each renders as an empty attribute when true and is removed when false, so the host element tells you its state without reaching inside.
+Open the checkbox component file. The selector is S D checkbox, the component is standalone, and change detection is OnPush. There is no host object at all. The component does not copy checked or required onto its own tag as attributes: nothing read them, and A D R nine now says only classes and A R I A state belong on a host. The state that matters lives on the native input inside, where assistive technology and the tests can see it.
 
 The new part is the providers array. It registers the component as an N G value accessor, using use existing with forward ref to the checkbox class, and multi set to true. Forward ref is needed because the class is referenced inside its own decorator, before it is defined. This provider is what lets form control name and N G model talk to the component.
 
@@ -38,13 +38,13 @@ The host is display contents. A D R nine calls this out for interactive atoms: t
 
 Open the spec file. It declares a host component that renders a required checkbox named terms, whose label contains a link to the legal page. In before each, the test bed creates the checkbox on its own, runs detect changes, and keeps both the component instance and the host element. A small helper finds the native input by its class.
 
-Creates an unchecked native checkbox inside its label checks the structure: the label contains the input, its type is checkbox, it starts unchecked, and neither the host attributes nor aria required are present.
+Creates an unchecked native checkbox inside its label checks the structure: the label contains the input, its type is checkbox, it starts unchecked, and aria required is not present.
 
-Marks required fields and forwards the name sets both inputs with set input and detect changes, then expects aria required to be true, the name on the input, and the required attribute on the host.
+Marks required fields and forwards the name sets both inputs with set input and detect changes, then expects aria required to be true and the name on the input.
 
-The next three exercise the forms contract directly, by calling the accessor methods as the forms module would. Checks the box from a written value and mirrors it to the host writes true, then null, and checks both the input and the host attribute each time. Reports a user toggle to the form and marks it touched registers two vitest mock functions, ticks the input, dispatches a change event, and expects on change with true and exactly one touched call. Disables the box from the form calls set disabled state and expects the input to be disabled.
+The next three exercise the forms contract directly, by calling the accessor methods as the forms module would. Checks the box from a written value writes true, then null, and checks the native input's checked property each time. Reports a user toggle to the form and marks it touched registers two vitest mock functions, ticks the input, dispatches a change event, and expects on change with true and exactly one touched call. Disables the box from the form calls set disabled state and expects the input to be disabled.
 
-The last, projects rich label content beside the box, uses the host component to prove that the label text and the link both arrive inside the check label span.
+The last, projects rich label content beside the box, uses the host component to prove that the label text and the link both arrive inside the check label span, and that the required flag and the name reach the native input.
 
 ## Pitfalls
 

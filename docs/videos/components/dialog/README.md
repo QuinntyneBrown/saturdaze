@@ -1,6 +1,6 @@
 # 19 · Coding sd-dialog: a presentational panel for CDK dialogs
 
-> **Runtime:** ~7.6 min · **Audience:** developers who know basic Angular · **Prerequisites:** [Consuming tokens](../../05-consuming-tokens/README.md); the `sd-button` video (09) helps
+> **Runtime:** ~7.7 min · **Audience:** developers who know basic Angular · **Prerequisites:** [Consuming tokens](../../05-consuming-tokens/README.md); the `sd-button` video (09) helps
 
 **Video:** [dialog.mp4](dialog.mp4) · [Slides](slides.html) · **Audio:** [dialog.mp3](dialog.mp3) · [Transcript](script.md)
 
@@ -47,15 +47,15 @@ By the end, the viewer can:
 | Time | Segment | Content |
 | --- | --- | --- |
 | 00:00-00:27 | Introduction | What the panel is; real usages. |
-| 00:27-01:04 | The idea | CDK owns modal behaviour; shared options. |
-| 01:04-01:52 | Decorator | Selector, standalone, OnPush, host bindings. |
-| 01:52-03:03 | Inputs | `inject()`, aliased inputs, `booleanAttribute`, token + `computed()`, `output()`. |
-| 03:03-03:47 | Render hook | `afterNextRender` labels the container; `close()`. |
-| 03:47-04:24 | Template | Header, close button, slots declared once. |
-| 04:24-05:11 | Styles | Tokens by role; action row phone-first, tablet. |
-| 05:11-06:31 | Spec | Setup, structure/input/output tests, accessibility, CDK ref. |
-| 06:31-06:52 | Pitfalls | Four mistakes to avoid. |
-| 06:52-07:38 | Recap | Things to remember; preview of `sd-disc`. |
+| 00:27-01:05 | The idea | CDK owns modal behaviour; shared options. |
+| 01:05-01:57 | Decorator | Selector, standalone, OnPush, host classes (no reflected attributes, ADR-009). |
+| 01:57-03:08 | Inputs | `inject()`, aliased inputs, `booleanAttribute`, token + `computed()`, `output()`. |
+| 03:08-03:52 | Render hook | `afterNextRender` labels the container; `close()`. |
+| 03:52-04:30 | Template | Header, close button, slots declared once. |
+| 04:30-05:17 | Styles | Tokens by role; action row phone-first, tablet. |
+| 05:17-06:36 | Spec | Setup, structure/input/output tests, accessibility, CDK ref. |
+| 06:36-06:57 | Pitfalls | Four mistakes to avoid. |
+| 06:57-07:42 | Recap | Things to remember; preview of `sd-disc`. |
 
 ## Demo commands
 

@@ -1,6 +1,6 @@
 # 01 · Coding sd-activity-card: inputs, an output and projected chips
 
-> **Runtime:** ~6.8 min · **Audience:** developers who know basic Angular and are new to the Saturdaze components library · **Prerequisites:** [Consuming tokens](../../05-consuming-tokens/README.md) helps
+> **Runtime:** ~7.1 min · **Audience:** developers who know basic Angular and are new to the Saturdaze components library · **Prerequisites:** [Consuming tokens](../../05-consuming-tokens/README.md) helps
 
 **Video:** [activity-card.mp4](activity-card.mp4) · [Slides](slides.html) · **Audio:** [activity-card.mp3](activity-card.mp3) · [Transcript](script.md)
 
@@ -12,7 +12,7 @@
 
 By the end, the viewer can:
 
-- Write a standalone, OnPush component whose host carries the mock's BEM block (`card card--media`).
+- Write a standalone, OnPush component whose host carries the mock's BEM block (`card card--media`) and no reflected input attributes.
 - Declare signal inputs with typed defaults, an `alias: 'title'`, and a `booleanAttribute` transform.
 - Emit a typed `output<void>()` straight from the template.
 - Declare a projected `[slot=chips]` once and project into it correctly.
@@ -25,6 +25,7 @@ By the end, the viewer can:
 | --- | --- |
 | Why alias the title input? | Consumers write `title`; the class field `cardTitle` is not confused with the native `title`. |
 | Why `booleanAttribute` on `addable`? | The bare attribute `addable` arrives as `''`; the transform makes it `true`. |
+| Why no `title` or `tone` attribute on the host? | Inputs stay inputs; only classes and ARIA state go on the host (ADR-009). Nothing read them, and a reflected `title` caused native tooltips. |
 | Why no `computed()` or `effect()`? | The template reads inputs directly; there is no derived or local state. |
 | How do chips get in? | `<ng-content select="[slot=chips]" />`, declared once; one `@if` per slotted node. |
 
@@ -45,13 +46,13 @@ By the end, the viewer can:
 | Time | Segment | Content |
 | --- | --- | --- |
 | 00:00-00:35 | Introduction | What the card is; where Ideas uses it. |
-| 00:36-01:57 | Decorator | Selector, standalone, imports, OnPush, host classes and attributes. |
-| 01:58-03:00 | Inputs | Typed inputs, `alias`, `booleanAttribute`, `output()`, what it doesn't need. |
-| 03:01-03:57 | Template | Media, head, chips slot, footer buttons. |
-| 03:58-04:24 | Styles | `card-host` mixin, tokens by role, line clamp. |
-| 04:25-05:50 | Tests | Setup with `setInput`; six tests grouped by behaviour. |
-| 05:51-06:12 | Pitfalls | Transform, slots, links, BEM classes. |
-| 06:13-06:48 | Recap | Things to remember; preview of video 02. |
+| 00:36-01:45 | Decorator | Selector, standalone, imports, OnPush, host classes only (no reflected inputs). |
+| 01:46-03:10 | Inputs | Typed inputs, `alias`, `booleanAttribute`, `output()`, what it doesn't need. |
+| 03:11-04:07 | Template | Media, head, chips slot, footer buttons. |
+| 04:08-04:34 | Styles | `card-host` mixin, tokens by role, line clamp. |
+| 04:35-06:10 | Tests | Setup with `setInput`; six tests grouped by behaviour. |
+| 06:11-06:32 | Pitfalls | Transform, slots, links, BEM classes. |
+| 06:33-07:07 | Recap | Things to remember; preview of video 02. |
 
 ## Demo commands
 

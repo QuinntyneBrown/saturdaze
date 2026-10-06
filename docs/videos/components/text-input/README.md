@@ -1,6 +1,6 @@
 # 46 · Coding sd-text-input: a labelled field that speaks forms
 
-> **Runtime:** ~7.2 min · **Audience:** developers who know basic Angular and want to build components in this library · **Prerequisites:** [Consuming tokens](../../05-consuming-tokens/README.md) helps
+> **Runtime:** ~7.4 min · **Audience:** developers who know basic Angular and want to build components in this library · **Prerequisites:** [Consuming tokens](../../05-consuming-tokens/README.md) helps
 
 **Video:** [text-input.mp4](text-input.mp4) · [Slides](slides.html) · **Audio:** [text-input.mp3](text-input.mp3) · [Transcript](script.md)
 
@@ -43,15 +43,15 @@ By the end, the viewer can:
 | Time | Segment | Content |
 | --- | --- | --- |
 | 00:00-00:38 | Introduction | What the field is; where it is used. |
-| 00:39-01:38 | Decorator | Field id counter, host attributes, `NG_VALUE_ACCESSOR`. |
-| 01:39-02:21 | Inputs | String inputs, `booleanAttribute`, forwarded attributes. |
-| 02:22-03:03 | State | Plain ids, `signal()`s, `computed()` describedBy. |
-| 03:04-03:54 | Effect | Seeding from `value`; the accessor methods. |
-| 03:55-04:41 | Template | Label, control bindings, error/hint. |
-| 04:42-05:18 | Styles | Attribute-driven states, tokens by role. |
-| 05:19-06:24 | Spec | Rendering, forwarding and accessor groups. |
-| 06:25-06:39 | Pitfalls | Clearing `value`; keeping ids wired. |
-| 06:40-07:14 | Recap | Things to remember; preview of `sdThemeProvider`. |
+| 00:39-01:48 | Decorator | Field id counter, host class only (no reflected inputs, ADR-009), `NG_VALUE_ACCESSOR`. |
+| 01:49-02:31 | Inputs | String inputs, `booleanAttribute`, forwarded attributes. |
+| 02:32-03:12 | State | Plain ids, `signal()`s, `computed()` describedBy. |
+| 03:13-04:03 | Effect | Seeding from `value`; the accessor methods. |
+| 04:04-04:50 | Template | Label, control bindings, error/hint. |
+| 04:51-05:27 | Styles | Attribute-driven states, tokens by role. |
+| 05:28-06:33 | Spec | Rendering, forwarding and accessor groups. |
+| 06:34-06:48 | Pitfalls | Clearing `value`; keeping ids wired. |
+| 06:49-07:23 | Recap | Things to remember; preview of `sdThemeProvider`. |
 
 ## Demo commands
 

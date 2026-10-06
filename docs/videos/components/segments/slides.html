@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 38 Slides</title>
+<link rel="stylesheet" href="../../assets/slides.css">
+</head>
+<body data-video-number="38" data-video-title="Coding sd-segments" data-parts="Introduction|Usage|Decorator|Inputs|Methods|Template|Styles|Tests|Pitfalls|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Saturdaze components · Video 38 of 52</div>
+  <h1>Coding <code>sd-segments</code></h1>
+  <p class="lead">Pill-track tabs: router links, or an ARIA tab list with a two-way <code>selected</code>.</p>
+</section>
+
+<section id="usage" data-part="1" data-cue="The Ideas page shows Activities, Food and Events">
+  <h2>Three ways the app uses it</h2>
+  <table class="grid small">
+    <tr><th>Page</th><th>Usage</th></tr>
+    <tr><td>Ideas</td><td><code>&lt;sd-segments class="segments-row" label="Idea type" [tabs]="segments" /&gt;</code></td></tr>
+    <tr><td>Legal</td><td><code>&lt;sd-segments … narrow label="Document" [tabs]="tabs" [active]="activeTab()" /&gt;</code></td></tr>
+    <tr><td>Weekend</td><td>tabs mode, below</td></tr>
+  </table>
+  <pre class="code tight" data-lang="html" data-file="saturdaze/src/app/pages/weekend/weekend.page.html" data-mark="2,7">      &lt;sd-segments
+        mode="tabs"
+        narrow
+        label="Day"
+        [tabs]="dayTabs"
+        [selected]="selectedDay()"
+        (selectedChange)="selectDay($event)"
+      /&gt;</pre>
+</section>
+
+<section id="type" data-part="2" data-cue="Open the file called segments dot T S.">
+  <h2>The tab type</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/segments/segments.ts">export interface SegmentTab {
+  readonly label: string;
+  /** Nav mode: where the tab links. */
+  readonly link?: string | readonly string[];
+  /** Tabs mode: the id of the panel the tab controls. */
+  readonly panel?: string;
+  readonly exact?: boolean;
+  readonly fragment?: string;
+}</pre>
+</section>
+
+<section id="decorator" data-part="2" data-cue="The decorator uses the selector S D segments">
+  <h2>The decorator: role from the mode</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/segments/segments.ts" data-mark="4,12">@Component({
+  selector: 'sd-segments',
+  standalone: true,
+  imports: [RouterLink, RouterLinkActive],
+  templateUrl: './segments.html',
+  styleUrl: './segments.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: 'segments',
+    '[class.segments--narrow]': 'narrow()',
+    '[attr.aria-label]': 'label()',
+    '[attr.role]': 'mode() === "tabs" ? "tablist" : "navigation"',
+  },
+})</pre>
+</section>
+
+<section id="inputs" data-part="3" data-cue="There are five inputs">
+  <h2>Five inputs and a model</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/segments/segments.ts" data-mark="4,10">export class Segments {
+  readonly tabs = input&lt;readonly SegmentTab[]&gt;([]);
+  readonly label = input&lt;string&gt;('Sections');
+  readonly narrow = input(false, { transform: booleanAttribute });
+  /** Explicitly active tab label; null = let the router decide. */
+  readonly active = input&lt;string | null&gt;(null);
+  /** `nav` (links, the default) or `tabs` (an ARIA tablist). */
+  readonly mode = input&lt;'nav' | 'tabs'&gt;('nav');
+  /** Tabs mode: the selected tab's label. */
+  readonly selected = model&lt;string | null&gt;(null);</pre>
+</section>
+
+<section id="model" data-part="3" data-cue="Then the selected tab is declared with the model function.">
+  <h2><code>model()</code>: a writable input</h2>
+  <div class="cols">
+    <div class="card"><h3>Parent → component</h3><p><code>[selected]="selectedDay()"</code></p></div>
+    <div class="card"><h3>Component → parent</h3><p><code>this.selected.set(next.label)</code> emits <code>(selectedChange)</code></p></div>
+  </div>
+  <p class="muted">Or both at once: <code>[(selected)]="day"</code>. Use <code>input()</code> when the component only reads.</p>
+</section>
+
+<section id="helpers" data-part="4" data-cue="Link of turns a tab's link">
+  <h2>Helpers</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/segments/segments.ts">  protected linkOf(tab: SegmentTab): string | string[] {
+    if (tab.link === undefined) return [];
+    return typeof tab.link === 'string' ? tab.link : [...tab.link];
+  }
+
+  protected tabId(tab: SegmentTab): string {
+    return `${tab.panel ?? tab.label}-tab`;
+  }</pre>
+</section>
+
+<section id="keydown" data-part="4" data-cue="The keydown handler is the interesting one.">
+  <h2>Arrow keys: selection follows focus</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/segments/segments.ts" data-mark="6,8,10">  protected onKeydown(event: KeyboardEvent, index: number): void {
+    const step = event.key === 'ArrowRight' ? 1 : event.key === 'ArrowLeft' ? -1 : 0;
+    if (!step) return;
+    event.preventDefault();
+    const tabs = this.tabs();
+    const next = tabs[(index + step + tabs.length) % tabs.length];
+    if (!next) return;
+    this.selected.set(next.label);
+    const host = (event.currentTarget as HTMLElement).parentElement;
+    host?.querySelector&lt;HTMLElement&gt;(`#${CSS.escape(this.tabId(next))}`)?.focus();
+  }</pre>
+</section>
+
+<section id="tabs-mode" data-part="5" data-cue="The template branches on mode.">
+  <h2>Tabs mode: a roving tab index</h2>
+  <pre class="code tight" data-lang="html" data-file="components/src/lib/segments/segments.html" data-mark="6,8-10">@if (mode() === 'tabs') {
+  @for (tab of tabs(); track tab.label; let i = $index) {
+    &lt;button
+      class="segments__tab"
+      type="button"
+      role="tab"
+      [id]="tabId(tab)"
+      [attr.aria-selected]="selected() === tab.label"
+      [attr.aria-controls]="tab.panel ?? null"
+      [attr.tabindex]="selected() === tab.label ? 0 : -1"
+      (click)="selected.set(tab.label)"
+      (keydown)="onKeydown($event, i)"
+    &gt;
+      {{ tab.label }}
+    &lt;/button&gt;
+  }</pre>
+</section>
+
+<section id="nav-mode" data-part="5" data-cue="In nav mode, each tab is an anchor">
+  <h2>Nav mode: explicit or router-driven</h2>
+  <pre class="code tight" data-lang="html" data-file="components/src/lib/segments/segments.html" data-mark="5-7">      &lt;a
+        class="segments__tab"
+        [routerLink]="linkOf(tab)"
+        [fragment]="tab.fragment"
+        routerLinkActive
+        ariaCurrentWhenActive="page"
+        [routerLinkActiveOptions]="{ exact: !!tab.exact }"
+        &gt;{{ tab.label }}&lt;/a
+      &gt;</pre>
+  <p class="muted small">When <code>active() !== null</code>, the other branch binds <code>[attr.aria-current]="active() === tab.label ? 'page' : null"</code> instead.</p>
+</section>
+
+<section id="styles" data-part="6" data-cue="Open segments dot S C S S.">
+  <h2>The host is the track</h2>
+  <pre class="code" data-lang="scss" data-file="components/src/lib/segments/segments.scss" data-mark="4,5">:host {
+  display: flex;
+  padding: 4px;
+  border-radius: var(--borderRadiusCircular);
+  background: var(--colorNeutralBackground3);
+  width: 100%;
+}</pre>
+  <p class="muted small">Each <code>.segments__tab</code>: <code>flex: 1 1 0</code>, 36px high, transitions on <code>var(--durationFast) var(--curveEasyEase)</code>.</p>
+</section>
+
+<section id="aria-style" data-part="6" data-cue="The selected look is keyed off the A R I A state">
+  <h2>Style the ARIA state, not a class</h2>
+  <pre class="code" data-lang="scss" data-file="components/src/lib/segments/segments.scss" data-mark="1,2">.segments__tab[aria-current='page'],
+.segments__tab[aria-selected='true'] {
+  background: var(--colorNeutralBackground1);
+  color: var(--colorNeutralForeground1);
+  box-shadow: var(--shadow4);
+}</pre>
+  <p class="muted small">Tablet and up: <code>max-width: 420px</code>, or <code>280px</code> with <code>.segments--narrow</code>.</p>
+</section>
+
+<section id="spec-setup" data-part="7" data-cue="Open segments dot spec dot T S.">
+  <h2>Spec setup: a real router</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/segments/segments.spec.ts" data-mark="4,8">  beforeEach(async () =&gt; {
+    await TestBed.configureTestingModule({
+      imports: [Segments],
+      providers: [provideRouter([{ path: '**', children: [] }])],
+    }).compileComponents();
+    fixture = TestBed.createComponent(Segments);
+    fixture.componentRef.setInput('tabs', TABS);
+    fixture.detectChanges();
+    host = fixture.nativeElement as HTMLElement;
+  });</pre>
+</section>
+
+<section id="tests" data-part="7" data-cue="&quot;creates a labelled navigation of real links&quot; proves">
+  <h2>What each test proves</h2>
+  <table class="grid small">
+    <tr><th>Test</th><th>Proves</th></tr>
+    <tr><td>creates a labelled navigation of real links</td><td><code>role="navigation"</code>, "Sections", real <code>href</code>s</td></tr>
+    <tr><td>mirrors narrow and the label</td><td><code>segments--narrow</code>, custom <code>aria-label</code></td></tr>
+    <tr><td>appends a fragment to the link</td><td><code>/legal#privacy</code></td></tr>
+    <tr><td>marks the explicitly active tab with aria-current</td><td><code>active</code> wins; unknown label → none</td></tr>
+    <tr><td>lets the router mark the active tab when none is named</td><td>real navigation + exact match</td></tr>
+  </table>
+</section>
+
+<section id="router-test" data-part="7" data-cue="And &quot;lets the router mark the active tab">
+  <h2>Testing with real navigation</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/segments/segments.spec.ts" data-mark="5,6,11">  it('lets the router mark the active tab when none is named', async () =&gt; {
+    const router = TestBed.inject(Router);
+    expect(host.querySelector('[aria-current="page"]')).toBeNull();
+
+    await router.navigateByUrl('/ideas/food');
+    await fixture.whenStable();
+    fixture.detectChanges();
+    expect(host.querySelector('[aria-current="page"]')?.textContent?.trim()).toBe('Food');
+    expect(tabs()[0]?.hasAttribute('aria-current')).toBe(false);
+
+    await router.navigateByUrl('/ideas');</pre>
+</section>
+
+<section id="gap" data-part="7" data-cue="Be honest about the gap">
+  <div class="kicker">Coverage gap</div>
+  <p class="quote">All five tests run nav mode. Tabs mode — roles, roving tab index, arrow keys — has no test in this spec file.</p>
+</section>
+
+<section id="pitfalls" data-part="8" data-cue="Leaving exact off a parent route like ideas.">
+  <h2>Pitfalls</h2>
+  <ul>
+    <li>No <code>exact: true</code> on a parent link: child routes mark it current too</li>
+    <li>The router ignores fragments — pass <code>active</code></li>
+    <li>Tabs mode without <code>panel</code> ids: <code>aria-controls</code> is empty</li>
+  </ul>
+</section>
+
+<section id="recap" data-part="9" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div>Two roles: navigation or tablist</div>
+    <div><code>model()</code> = input + <code>selectedChange</code></div>
+    <div><code>booleanAttribute</code> → bare <code>narrow</code></div>
+    <div>Roving tabindex + arrow keys</div>
+    <div>Style the ARIA state</div>
+    <div>Spec uses real router navigation</div>
+  </div>
+</section>
+
+<section id="next" data-part="9" data-cue="Next, video thirty nine builds">
+  <div class="kicker">Next · Video 39</div>
+  <h1>Coding <code>sd-select</code></h1>
+</section>
+
+<script src="../../assets/slides.js"></script>
+</body>
+</html>

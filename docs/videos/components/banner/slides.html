@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 05 Slides</title>
+<link rel="stylesheet" href="../../assets/slides.css">
+</head>
+<body data-video-number="05" data-video-title="Coding sd-banner" data-parts="Introduction|Decorator|Inputs|Template|Styles|Tests|Pitfalls|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Saturdaze components · Video 05 of 52</div>
+  <h1>Coding <code>sd-banner</code></h1>
+  <p class="lead">Tones, roles and a live region.</p>
+</section>
+
+<section id="where" data-part="0" data-cue="The shared weekend page also uses an info banner as a note.">
+  <h2>Where it lives</h2>
+  <pre class="code" data-lang="html" data-file="saturdaze/src/app/pages/weekend/weekend.page.html">@if (error()) {
+  &lt;sd-banner class="error" tone="warn" role="alert" icon="close"&gt;{{ error() }}&lt;/sd-banner&gt;</pre>
+  <pre class="code" data-lang="html" data-file="saturdaze/src/app/pages/shared-weekend/shared-weekend.page.html">&lt;sd-banner class="note" tone="info" icon="share"&gt;</pre>
+  <p class="muted small">Also: sign-in, create-account, reset-password, ideas-food, past, family, review-submissions, two dialogs</p>
+</section>
+
+<section id="decorator" data-part="1" data-cue="Open the banner file in the components library.">
+  <h2>The decorator</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/banner/banner.ts" data-mark="13,14">@Component({
+  selector: 'sd-banner',
+  standalone: true,
+  imports: [Icon],
+  templateUrl: './banner.html',
+  styleUrl: './banner.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: 'banner',
+    '[class.banner--info]': 'tone() === "info"',
+    '[class.banner--warn]': 'tone() === "warn"',
+    '[class.banner--success]': 'tone() === "success"',
+    '[attr.role]': 'role()',
+    '[attr.aria-live]': 'role() === "alert" ? "assertive" : "polite"',
+  },
+})</pre>
+</section>
+
+<section id="live" data-part="1" data-cue="The interesting part is the last two bindings.">
+  <h2>One input, two ARIA attributes</h2>
+  <table class="map">
+    <tr><th>role input</th><th>role</th><th>aria-live</th><th>use for</th></tr>
+    <tr><td>'status' (default)</td><td>status</td><td>polite</td><td class="prose">saved notices, hints</td></tr>
+    <tr><td>'alert'</td><td>alert</td><td>assertive</td><td class="prose">errors that block the user</td></tr>
+  </table>
+  <p class="muted">Derived in one place — a page can't pair <code>alert</code> with <code>polite</code>.</p>
+</section>
+
+<section id="inputs" data-part="2" data-cue="The class has three inputs.">
+  <h2>Three inputs</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/banner/banner.ts" data-mark="7">export type BannerTone = 'info' | 'warn' | 'success';
+…
+export class Banner {
+  readonly tone = input&lt;BannerTone&gt;('info');
+  /** Leading glyph; empty = none. */
+  readonly icon = input&lt;string&gt;('');
+  readonly role = input&lt;'alert' | 'status'&gt;('status');
+}</pre>
+</section>
+
+<section id="role-name" data-part="2" data-cue="Notice that the input is called role">
+  <h2>An input named <code>role</code></h2>
+  <div class="flow">
+    <div class="node"><b>role="alert"</b><span class="small">page writes it</span></div>
+    <div class="arrow">→</div>
+    <div class="node accent"><b>role()</b><span class="small">signal input</span></div>
+    <div class="arrow">→</div>
+    <div class="node"><b>[attr.role]</b><span class="small">written back to the host</span></div>
+  </div>
+  <p class="muted">Default <code>status</code>: every banner is a live region.</p>
+</section>
+
+<section id="small" data-part="2" data-cue="The aria live expression is short enough to stay in the host binding.">
+  <h2>When to reach for <code>computed()</code></h2>
+  <div class="cols">
+    <div class="card good"><h3>Short expression</h3><p>Stays in the host binding</p></div>
+    <div class="card"><h3>Grows?</h3><p>Move it into a <code>computed()</code>, like the avatar's initial</p></div>
+  </div>
+  <p class="lead">No output, no local state, no effect.</p>
+</section>
+
+<section id="template" data-part="3" data-cue="The template is four lines.">
+  <h2>The whole template</h2>
+  <pre class="code" data-lang="html" data-file="components/src/lib/banner/banner.html" data-mark="4">@if (icon()) {
+  &lt;sd-icon [name]="icon()" [size]="20" /&gt;
+}
+&lt;span class="banner__text"&gt;&lt;ng-content /&gt;&lt;/span&gt;</pre>
+</section>
+
+<section id="styles" data-part="4" data-cue="The host is a flex row with a ten pixel gap">
+  <h2>Tones as paired tokens</h2>
+  <pre class="code tight" data-lang="scss" data-file="components/src/lib/banner/banner.scss">:host {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 12px 14px;
+  border-radius: var(--borderRadiusMedium);
+  font-size: 14px;
+}
+…
+:host(.banner--warn) {
+  background: var(--colorStatusDangerBackground1);
+  color: var(--colorStatusDangerForeground1);
+}
+:host(.banner--success) {
+  background: var(--colorStatusSuccessBackground1);
+  color: var(--colorStatusSuccessForeground1);
+}</pre>
+</section>
+
+<section id="setup" data-part="5" data-cue="The spec file creates the banner directly">
+  <h2>Test setup and defaults</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/banner/banner.spec.ts">template: `&lt;sd-banner tone="warn" role="alert" icon="close"&gt;Something went wrong.&lt;/sd-banner&gt;`,
+…
+it('creates a polite info status by default', () =&gt; {
+  expect(fixture.componentInstance).toBeTruthy();
+  expect(host.classList.contains('banner')).toBe(true);
+  expect(host.classList.contains('banner--info')).toBe(true);
+  expect(host.getAttribute('role')).toBe('status');
+  expect(host.getAttribute('aria-live')).toBe('polite');
+  expect(host.querySelector('sd-icon')).toBeNull();
+  expect(host.querySelector('.banner__text')).not.toBeNull();
+});</pre>
+</section>
+
+<section id="tests-tone" data-part="5" data-cue="The second, mirrors the tone to a host class">
+  <h2>Tone and role</h2>
+  <ul class="small">
+    <li><code>mirrors the tone to a host class</code></li>
+    <li><code>becomes an assertive alert for errors</code></li>
+  </ul>
+  <pre class="code" data-lang="ts" data-file="banner.spec.ts">fixture.componentRef.setInput('role', 'alert');
+fixture.detectChanges();
+expect(host.getAttribute('role')).toBe('alert');
+expect(host.getAttribute('aria-live')).toBe('assertive');</pre>
+</section>
+
+<section id="tests-icon" data-part="5" data-cue="The fourth, renders a leading glyph only when an icon is given">
+  <h2>Icon and projection</h2>
+  <ul class="small">
+    <li><code>renders a leading glyph only when an icon is given</code></li>
+    <li><code>projects the message into the text span</code></li>
+  </ul>
+  <pre class="code" data-lang="ts" data-file="banner.spec.ts">fixture.componentRef.setInput('icon', 'lock');
+fixture.detectChanges();
+expect(glyph(host.querySelector('sd-icon'))).toContain('M8 11V8a4 4 0 0 1 8 0v3');
+fixture.componentRef.setInput('icon', '');
+fixture.detectChanges();
+expect(host.querySelector('sd-icon')).toBeNull();</pre>
+</section>
+
+<section id="pitfalls" data-part="6" data-cue="A few pitfalls.">
+  <h2>Pitfalls</h2>
+  <ul>
+    <li>Setting <code>aria-live</code> on the page</li>
+    <li><code>role="alert"</code> for good news</li>
+    <li>An empty banner left on screen — wrap it in <code>@if</code></li>
+    <li>Hard-coded colours instead of <code>tone</code></li>
+  </ul>
+</section>
+
+<section id="recap" data-part="7" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div>Host is the banner, class per tone</div>
+    <div><code>role</code> drives role + aria-live</div>
+    <div>alert → assertive, status → polite</div>
+    <div>Message in one default slot</div>
+    <div>Paired background + foreground</div>
+    <div>No outputs, no state</div>
+  </div>
+</section>
+
+<section id="next" data-part="7" data-cue="Next, in video six, we build the S D block">
+  <div class="kicker">Next · Video 06</div>
+  <h1>Coding <code>sd-block</code></h1>
+</section>
+
+<script src="../../assets/slides.js"></script>
+</body>
+</html>

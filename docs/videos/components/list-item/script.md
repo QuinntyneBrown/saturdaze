@@ -10,7 +10,9 @@ The app renders list items in nine places. On the Family screen, each family mem
 
 Create the list item file. The selector is S D list item, it is standalone, OnPush, and it imports two things: the N G template outlet directive and the Icon component.
 
-The host has the role list item, so it fits directly inside the list's role list. Then come five attribute bindings that mirror state back onto the host: title, subtitle and href write their value or null, and action and chevron write an empty attribute or null. Page objects can read the row's state from the host without knowing its inner markup.
+The host has the role list item, so it fits directly inside the list's role list. And that is the whole host object.
+
+Notice that none of the inputs is mirrored onto the host as an attribute. A title attribute on the host would make the browser show a native tooltip on every row, which the mocks never have, and nothing in the styles or the page objects reads such attributes anyway. A D R nine records the rule: inputs stay inputs, and only the mock's classes and aria state go on the host.
 
 ## Step two: inputs, an output and inject
 
@@ -42,11 +44,11 @@ The last row drops its bottom border, and action rows get a neutral background t
 
 The spec file uses provide router with an empty route list, and a host component that projects a leading span, an extra em element and a trailing span into a row with title, subtitle and chevron.
 
-"Creates a static list item row" proves the defaults: role list item, a div row without the action class, no title, subtitle or chevron, and none of the five mirrored attributes on the host.
+"Creates a static list item row" proves the defaults: role list item, a div row without the action class, no title, subtitle or chevron, and no anchor or button inside.
 
-"Renders title and subtitle and mirrors them to the host" sets both inputs with set input and checks the text and the host attributes.
+"Renders title and subtitle" sets both inputs with set input and checks the rendered text in the title and subtitle spans.
 
-"Adds the trailing chevron glyph" checks the icon name and the empty chevron attribute.
+"Adds the trailing chevron glyph" checks what is actually drawn: the icon's S V G inside the trail contains the chevron's path.
 
 "Becomes a button that emits pressed when action is set" checks the tag, the button type, the action class and the aria label, then subscribes a spy to pressed, clicks, and expects one call.
 

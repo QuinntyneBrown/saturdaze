@@ -29,7 +29,7 @@
 
 <section id="decorator" data-part="1" data-cue="Open the auth card file in the components library.">
   <h2>The decorator</h2>
-  <pre class="code" data-lang="ts" data-file="components/src/lib/auth-card/auth-card.ts" data-mark="2,6,8-10">@Component({
+  <pre class="code" data-lang="ts" data-file="components/src/lib/auth-card/auth-card.ts" data-mark="2,6,8">@Component({
   selector: 'sd-auth-card',
   standalone: true,
   templateUrl: './auth-card.html',
@@ -37,21 +37,16 @@
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class: 'auth-card',
-    '[attr.title]': 'cardTitle() || null',
-    '[attr.center]': 'center() ? "" : null',
   },
 })</pre>
 </section>
 
-<section id="attrs" data-part="1" data-cue="The host also mirrors two inputs back as attributes.">
-  <h2>Mirrored attributes</h2>
-  <table class="map">
-    <tr><th>input</th><th>host attribute</th></tr>
-    <tr><td>title="Welcome back"</td><td>title="Welcome back"</td></tr>
-    <tr><td>title="" (default)</td><td class="prose">removed — <code>null</code></td></tr>
-    <tr><td>center</td><td>center=""</td></tr>
-    <tr><td>center false</td><td class="prose">removed — <code>null</code></td></tr>
-  </table>
+<section id="attrs" data-part="1" data-cue="Notice what the host does not carry.">
+  <h2>Inputs stay inputs</h2>
+  <div class="cols">
+    <div class="card bad"><h3>Not on the host</h3><p><code>[attr.title]</code>, <code>[attr.center]</code> — nothing read them; a reflected <code>title</code> means a native tooltip</p></div>
+    <div class="card forest"><h3>On the host</h3><p>Classes and ARIA state only (ADR-009). <code>center</code> becomes <code>.auth-card__head--center</code> in the template.</p></div>
+  </div>
 </section>
 
 <section id="inputs" data-part="2" data-cue="The class body is three lines.">
@@ -114,7 +109,11 @@
 
 <section id="details" data-part="4" data-cue="Two details are worth copying.">
   <h2>Two details worth copying</h2>
-  <pre class="code tight" data-lang="scss" data-file="components/src/lib/auth-card/auth-card.scss" data-mark="1,5">.auth-card__alt:not(:has(*)) {
+  <pre class="code tight" data-lang="scss" data-file="components/src/lib/auth-card/auth-card.scss" data-mark="5,9">.auth-card__head ::ng-deep [slot='disc'] {
+  margin-bottom: 4px;
+}
+
+.auth-card__alt:not(:has(*)) {
   display: none;
 }
 
@@ -122,10 +121,6 @@
   :host {
     padding: 32px;
   }
-}
-
-.auth-card__head ::ng-deep [slot='disc'] {
-  margin-bottom: 4px;
 }</pre>
 </section>
 
@@ -148,12 +143,15 @@ fixture.detectChanges();</pre>
   <h2>Defaults and inputs</h2>
   <ul class="small">
     <li><code>creates the card with an h1 and an alt line</code></li>
-    <li><code>renders the title and subtitle and mirrors the title to the host</code></li>
+    <li><code>renders the title and subtitle</code></li>
     <li><code>centres the head when asked</code></li>
   </ul>
   <pre class="code" data-lang="ts" data-file="auth-card.spec.ts">fixture.componentRef.setInput('center', true);
 fixture.detectChanges();
-expect(host.getAttribute('center')).toBe('');</pre>
+expect(
+  host.querySelector('.auth-card__head')?.classList.contains('auth-card__head--center'),
+).toBe(true);</pre>
+  <p class="muted small">Rendered DOM, not host attributes.</p>
 </section>
 
 <section id="tests-2" data-part="5" data-cue="The last test, projects disc, head, form and alt into their slots">

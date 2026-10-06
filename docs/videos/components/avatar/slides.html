@@ -57,12 +57,11 @@
 </section>
 
 <section id="photo-attrs" data-part="1" data-cue="The avatar photo modifier is on whenever there is a source">
-  <h2>Photo modifier and mirrored attributes</h2>
-  <pre class="code" data-lang="ts" data-file="components/src/lib/avatar/avatar.ts" data-mark="1,3">    '[class.avatar--photo]': '!!src()',
-    '[attr.name]': 'name()',
-    '[attr.tone]': 'tone() === "default" ? null : tone()',
-    '[attr.size]': 'size()',</pre>
-  <p class="muted"><code>null</code> removes the attribute — no <code>tone</code> attribute for the default tone.</p>
+  <h2>Photo modifier — and nothing else</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/avatar/avatar.ts" data-mark="1">    '[class.avatar--photo]': '!!src()',
+  },
+})</pre>
+  <p class="muted">No <code>[attr.name]</code>, <code>[attr.tone]</code>, <code>[attr.size]</code>: inputs stay inputs — only classes and ARIA state on the host (ADR-009).</p>
 </section>
 
 <section id="inputs" data-part="2" data-cue="The class has four inputs.">
@@ -129,9 +128,7 @@ export class Avatar {
   expect(host.classList.contains('avatar')).toBe(true);
   expect(host.getAttribute('aria-hidden')).toBe('true');
   expect(host.textContent?.trim()).toBe('?');
-  expect(host.getAttribute('name')).toBe('?');
-  expect(host.getAttribute('size')).toBe('lg');
-  expect(host.getAttribute('tone')).toBeNull();
+  expect(host.className.trim()).toBe('avatar');
 });</pre>
 </section>
 
@@ -159,9 +156,8 @@ for (const [tone, cls] of Object.entries(map)) {
   fixture.componentRef.setInput('tone', tone);
   fixture.detectChanges();
   expect(host.classList.contains(cls)).toBe(true);
-  expect(host.getAttribute('tone')).toBe(tone);
 }</pre>
-  <p class="muted small">Plus <code>mirrors the size to a class and attribute</code> · no test yet for <code>src</code></p>
+  <p class="muted small">Plus <code>mirrors the size to a host class</code> · no test yet for <code>src</code></p>
 </section>
 
 <section id="pitfalls" data-part="6" data-cue="A few pitfalls.">

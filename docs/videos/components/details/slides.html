@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 18 Slides</title>
+<link rel="stylesheet" href="../../assets/slides.css">
+</head>
+<body data-video-number="18" data-video-title="Coding sd-details" data-parts="Introduction|Decorator|Inputs|Template|Styles|Spec|Pitfalls|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Saturdaze components · Video 18 of 52</div>
+  <h1>Coding <code>sd-details</code></h1>
+  <p class="lead">Label and value pairs from one typed, read-only array input.</p>
+</section>
+
+<section id="usage" data-part="0" data-cue="It is used on the review submissions page">
+  <h2>Where the app uses it</h2>
+  <pre class="code" data-lang="html" data-file="saturdaze/src/app/pages/review-submissions/review-submissions.page.html">              &lt;sd-details [items]="details(card)" /&gt;</pre>
+  <p class="lead">Location · Cost · Ages · Link · Notes</p>
+</section>
+
+<section id="type" data-part="1" data-cue="Open the details component file.">
+  <h2>An exported item type</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/details/details.ts" data-mark="3-4">export interface DetailItem {
+  readonly label: string;
+  readonly value: string | null;
+  readonly href?: string | null;
+}</pre>
+  <ul class="small">
+    <li><code>value: null</code> → the family didn't give it</li>
+    <li><code>href</code> set → the value becomes a link</li>
+  </ul>
+</section>
+
+<section id="decorator" data-part="1" data-cue="The decorator is the familiar shape">
+  <h2>The decorator</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/details/details.ts" data-mark="4,9">@Component({
+  selector: 'sd-details',
+  standalone: true,
+  imports: [Icon],
+  templateUrl: './details.html',
+  styleUrl: './details.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: 'details',
+  },
+})</pre>
+</section>
+
+<section id="inputs" data-part="2" data-cue="There are two inputs.">
+  <h2>Two inputs</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/details/details.ts" data-mark="2">export class Details {
+  readonly items = input&lt;readonly DetailItem[]&gt;([]);
+  readonly missing = input&lt;string&gt;('Not given');
+}</pre>
+  <div class="cols">
+    <div class="card good"><h3>readonly DetailItem[]</h3><p>The component promises not to mutate the parent's array</p></div>
+    <div class="card"><h3>No computed, no state, no output</h3><p>Per-item decisions read best in the template</p></div>
+  </div>
+</section>
+
+<section id="template" data-part="3" data-cue="The template is a for loop over items">
+  <h2>The template</h2>
+  <pre class="code tight" data-lang="html" data-file="components/src/lib/details/details.html" data-mark="1,3,5,10,12-13">@for (item of items(); track item.label) {
+  &lt;dt class="details__label"&gt;{{ item.label }}&lt;/dt&gt;
+  @if (item.href &amp;&amp; item.value) {
+    &lt;dd class="details__value"&gt;
+      &lt;a class="details__link" [attr.href]="item.href" target="_blank" rel="noopener"&gt;
+        {{ item.value }}
+        &lt;sd-icon name="arrow_right" [size]="12" [stroke]="2" /&gt;
+      &lt;/a&gt;
+    &lt;/dd&gt;
+  } @else if (item.value) {
+    &lt;dd class="details__value"&gt;{{ item.value }}&lt;/dd&gt;
+  } @else {
+    &lt;dd class="details__value details__value--faint"&gt;{{ missing() }}&lt;/dd&gt;
+  }
+}</pre>
+</section>
+
+<section id="links" data-part="3" data-cue="Notice the order of the first condition.">
+  <h2>Safe links, never empty</h2>
+  <ul>
+    <li><code>target="_blank"</code> always with <code>rel="noopener"</code></li>
+    <li><code>href</code> without a value → the faint placeholder, not an empty link</li>
+  </ul>
+</section>
+
+<section id="styles" data-part="4" data-cue="The host is a single column grid">
+  <h2>Styles</h2>
+  <pre class="code tight" data-lang="scss" data-file="components/src/lib/details/details.scss" data-mark="9,12,15">:host {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  row-gap: 8px;
+}
+/* … .details__label … */
+.details__value {
+  font-size: var(--fontSizeBase400);
+  overflow-wrap: anywhere;
+}
+.details__value--faint {
+  color: var(--colorNeutralForeground3);
+}
+.details__link {
+  color: var(--colorBrandForeground2);
+  /* … */
+}</pre>
+</section>
+
+<section id="breakpoint" data-part="4" data-cue="From five hundred and seventy six pixels">
+  <h2>Two columns from 576px</h2>
+  <pre class="code" data-lang="scss" data-file="components/src/lib/details/details.scss" data-mark="1">@media (min-width: 576px) {
+  :host {
+    grid-template-columns: 96px minmax(0, 1fr);
+    column-gap: 12px;
+  }
+
+  .details__label {
+    padding-top: 2px;
+  }
+}</pre>
+  <p class="muted">Not <code>respond-to()</code>; 576px isn't a shared breakpoint (379 · 720 · 1024).</p>
+</section>
+
+<section id="semantics" data-part="4" data-cue="There is one more thing to be honest about.">
+  <h2>A semantics caveat</h2>
+  <div class="cols">
+    <div class="card bad"><h3>Today</h3><p><code>&lt;sd-details&gt;</code> → <code>&lt;dt&gt;</code>/<code>&lt;dd&gt;</code> children, no <code>&lt;dl&gt;</code>, no role</p></div>
+    <div class="card good"><h3>Option</h3><p>Render a real <code>&lt;dl&gt;</code> in the template, or give the host a fitting role</p></div>
+  </div>
+</section>
+
+<section id="spec-setup" data-part="5" data-cue="At the top is a constant array of three items">
+  <h2>Spec fixture</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/details/details.spec.ts">const ITEMS: readonly DetailItem[] = [
+  { label: 'Location', value: 'Port Credit' },
+  { label: 'Cost', value: null },
+  { label: 'Link', value: 'example.com', href: 'https://example.com' },
+];</pre>
+  <table class="map">
+    <tr><th>it(…)</th><th>proves</th></tr>
+    <tr><td>creates an empty definition list</td><td class="prose">class, no labels or values</td></tr>
+    <tr><td>renders one label / value pair per item</td><td class="prose">order, count, not faint</td></tr>
+  </table>
+</section>
+
+<section id="spec-placeholder" data-part="5" data-cue="Renders a faint placeholder for a missing value checks">
+  <h2>A live placeholder</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/details/details.spec.ts" data-mark="6">    expect(values()[1]?.classList.contains('details__value--faint')).toBe(true);
+    expect(values()[1]?.textContent?.trim()).toBe('Not given');
+
+    fixture.componentRef.setInput('missing', 'Unknown');
+    fixture.detectChanges();
+    expect(values()[1]?.textContent?.trim()).toBe('Unknown');</pre>
+</section>
+
+<section id="spec-link" data-part="5" data-cue="Renders an external link when the item has an href checks">
+  <h2>Links, locked in</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/details/details.spec.ts" data-mark="4">    const link = values()[2]?.querySelector('a.details__link') as HTMLAnchorElement;
+    expect(link.getAttribute('href')).toBe('https://example.com');
+    expect(link.getAttribute('target')).toBe('_blank');
+    expect(link.getAttribute('rel')).toBe('noopener');
+    expect(link.textContent?.trim()).toBe('example.com');
+    expect(link.querySelector('sd-icon')?.getAttribute('name')).toBe('arrow_right');</pre>
+  <p class="muted small">Then: ignores an href without a value — no anchor, faint placeholder</p>
+</section>
+
+<section id="pitfalls" data-part="6" data-cue="Pitfalls">
+  <h2>Pitfalls</h2>
+  <ul>
+    <li><code>target="_blank"</code> without <code>rel="noopener"</code></li>
+    <li>Empty links</li>
+    <li>Mutating the items array</li>
+    <li><code>&lt;dt&gt;</code>/<code>&lt;dd&gt;</code> outside a real <code>&lt;dl&gt;</code></li>
+    <li>One-off media queries</li>
+  </ul>
+</section>
+
+<section id="recap" data-part="7" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div>Exported type, read-only array input</div>
+    <div><code>@for</code> + <code>@if / @else if / @else</code></div>
+    <div><code>rel="noopener"</code>, no empty links</div>
+    <div>Configurable, live placeholder</div>
+    <div><code>overflow-wrap: anywhere</code></div>
+    <div>Two columns from 576px</div>
+  </div>
+</section>
+
+<section id="next" data-part="7" data-cue="Next, video nineteen builds S D dialog">
+  <div class="kicker">Next · Video 19</div>
+  <h1>Coding <code>sd-dialog</code></h1>
+</section>
+
+<script src="../../assets/slides.js"></script>
+</body>
+</html>

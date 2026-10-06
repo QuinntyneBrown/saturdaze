@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 17 Slides</title>
+<link rel="stylesheet" href="../../assets/slides.css">
+</head>
+<body data-video-number="17" data-video-title="Coding sd-day" data-parts="Introduction|Decorator|Inputs &amp; outputs|Derived state|Template|Styles|Spec|Pitfalls|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Saturdaze components · Video 17 of 52</div>
+  <h1>Coding <code>sd-day</code></h1>
+  <p class="lead">A labelled column with a sticky header, two outputs and two slots.</p>
+</section>
+
+<section id="usage" data-part="0" data-cue="The weekend page renders one per day">
+  <h2>Where the app uses it</h2>
+  <pre class="code tight" data-lang="html" data-file="saturdaze/src/app/pages/weekend/weekend.page.html" data-mark="6-8">          &lt;sd-day
+            [title]="day.day"
+            [meta]="day.meta"
+            [weather]="dayWeather(day)"
+            [locked]="day.locked"
+            [busy]="busy() === day.day"
+            (regenerate)="regenerateDay(day)"
+            (lockToggle)="lockDay(day, $event)"
+          &gt;</pre>
+  <p class="muted small">Loading / generating, landing and shared weekend: <code>[actions]="false"</code></p>
+</section>
+
+<section id="table" data-part="1" data-cue="Open the day component file.">
+  <h2>A type, a lookup table, a counter</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/day/day.ts">export type DayWeather = 'sun' | 'cloud' | 'rain' | 'snow';
+
+const WEATHER: Record&lt;DayWeather, { icon: string; tone: DiscTone }&gt; = {
+  sun: { icon: 'sun', tone: 'sun' },
+  cloud: { icon: 'cloud', tone: 'sky' },
+  rain: { icon: 'rain', tone: 'sky' },
+  snow: { icon: 'snow', tone: 'sky' },
+};
+
+let nextDayId = 0;</pre>
+</section>
+
+<section id="decorator" data-part="1" data-cue="The decorator imports four components">
+  <h2>The decorator</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/day/day.ts" data-mark="4,10">@Component({
+  selector: 'sd-day',
+  standalone: true,
+  imports: [Button, Chip, Disc, Icon],
+  /* templateUrl, styleUrl */
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: 'day',
+    '[class.day--locked]': 'locked()',
+    '[attr.aria-labelledby]': 'headingId',
+  },
+})</pre>
+  <p class="muted small">Only classes and ARIA on the host — no <code>[attr.title]</code>, so no native tooltip (ADR-009).</p>
+</section>
+
+<section id="inputs" data-part="2" data-cue="The first input is called day title in the class">
+  <h2>Inputs and outputs</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/day/day.ts" data-mark="1,9-10">  readonly dayTitle = input&lt;string&gt;('Saturday', { alias: 'title' });
+  readonly meta = input&lt;string&gt;('');
+  readonly weather = input&lt;DayWeather | null&gt;(null);
+  readonly locked = input(false, { transform: booleanAttribute });
+  /** Show the Regenerate / Lock day buttons (off while generating, read-only). */
+  readonly actions = input(true, { transform: booleanAttribute });
+  /** Disable the day buttons while a request is in flight. */
+  readonly busy = input(false, { transform: booleanAttribute });
+  readonly regenerate = output&lt;void&gt;();
+  readonly lockToggle = output&lt;boolean&gt;();</pre>
+</section>
+
+<section id="not-model" data-part="2" data-cue="Notice that locked stays an input.">
+  <h2>Input + output, not <code>model()</code></h2>
+  <div class="flow">
+    <div class="node"><b>lock button</b><span class="small">click</span></div>
+    <div class="arrow">→</div>
+    <div class="node accent"><b>lockToggle.emit(!locked())</b><span class="small">asks for the next state</span></div>
+    <div class="arrow">→</div>
+    <div class="node"><b>page: lockDay()</b><span class="small">calls the API</span></div>
+    <div class="arrow">→</div>
+    <div class="node"><b>[locked]</b><span class="small">new state flows down</span></div>
+  </div>
+  <p class="muted">One source of truth on the page.</p>
+</section>
+
+<section id="derived" data-part="3" data-cue="Then three protected members.">
+  <h2>Derived state</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/day/day.ts" data-mark="2-3">  protected readonly headingId = `sd-day-${nextDayId++}`;
+  protected readonly weatherIcon = computed(() =&gt; WEATHER[this.weather() ?? 'sun'].icon);
+  protected readonly weatherTone = computed(() =&gt; WEATHER[this.weather() ?? 'sun'].tone);</pre>
+  <ul class="small">
+    <li><code>headingId</code>: never changes → plain string</li>
+    <li>Two small <code>computed()</code>s, one job each</li>
+  </ul>
+</section>
+
+<section id="header" data-part="4" data-cue="The template opens with a header element">
+  <h2>The header</h2>
+  <pre class="code tight" data-lang="html" data-file="components/src/lib/day/day.html" data-mark="3,6,11-12">&lt;header class="day__header"&gt;
+  @if (weather()) {
+    &lt;sd-disc class="weather-disc" [icon]="weatherIcon()" [tone]="weatherTone()" size="lg" /&gt;
+  }
+  &lt;div class="day__text"&gt;
+    &lt;h2 class="day__title" [id]="headingId"&gt;{{ dayTitle() }}&lt;/h2&gt;
+    @if (meta()) {
+      &lt;p class="day__meta"&gt;{{ meta() }}&lt;/p&gt;
+    }
+    @if (locked()) {
+      &lt;sd-chip class="day__chip" tone="accent"
+        &gt;&lt;sd-icon name="lock" [size]="13" [stroke]="2" /&gt;Day locked&lt;/sd-chip
+      &gt;
+    }
+  &lt;/div&gt;</pre>
+</section>
+
+<section id="actions" data-part="4" data-cue="If actions is true, there are two S D buttons">
+  <h2>The lock toggle</h2>
+  <pre class="code" data-lang="html" data-file="components/src/lib/day/day.html" data-mark="5-6,8">      &lt;sd-button
+        variant="ghost"
+        size="sm"
+        btnClass="day__btn"
+        [label]="(locked() ? 'Unlock ' : 'Lock ') + dayTitle()"
+        [pressed]="locked()"
+        [disabled]="busy()"
+        (click)="lockToggle.emit(!locked())"
+      &gt;
+        &lt;sd-icon [name]="locked() ? 'unlock' : 'lock'" /&gt;
+        &lt;span class="day__btn-label"&gt;{{ locked() ? 'Unlock day' : 'Lock day' }}&lt;/span&gt;
+      &lt;/sd-button&gt;</pre>
+  <p class="muted small">Regenerate: <code>[label]="'Regenerate ' + dayTitle()"</code> · <code>(click)="regenerate.emit()"</code></p>
+</section>
+
+<section id="slots" data-part="4" data-cue="After the header is a div with the day list class">
+  <h2>Two slots, each declared once</h2>
+  <pre class="code" data-lang="html" data-file="components/src/lib/day/day.html">&lt;div class="day__list" role="list"&gt;&lt;ng-content /&gt;&lt;/div&gt;
+&lt;ng-content select="[slot=footer]" /&gt;</pre>
+  <ul class="small">
+    <li><code>sd-block</code> sets <code>role: 'listitem'</code> on its own host</li>
+    <li>Footer: the “Add an errand” ghost row, outside the list</li>
+  </ul>
+</section>
+
+<section id="styles" data-part="5" data-cue="The host is a block with a min width of zero">
+  <h2>A sticky header</h2>
+  <pre class="code" data-lang="scss" data-file="components/src/lib/day/day.scss" data-mark="2-4,10-11">.day__header {
+  position: sticky;
+  top: 0;
+  z-index: var(--zIndexSticky);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  margin-bottom: 4px;
+  background: var(--colorNeutralBackground2);
+  border-bottom: 1px solid var(--colorNeutralStroke2);
+}</pre>
+</section>
+
+<section id="responsive" data-part="5" data-cue="On phones the action buttons are icon only.">
+  <h2>Icon-only on phones, labelled from 720px</h2>
+  <pre class="code tight" data-lang="scss" data-file="components/src/lib/day/day.scss" data-mark="1,8,10">// Icon-only on phones: the label is hidden and the button squares up.
+.day__actions ::ng-deep .day__btn {
+  width: 36px;
+  padding: 0;
+}
+/* … .day__btn-label { display: none; } … */
+
+@include respond-to(tablet) {
+  .day__header {
+    top: var(--layoutTopBarHeight);
+  }
+  /* … width: auto; label display: inline … */
+}</pre>
+</section>
+
+<section id="spec-setup" data-part="6" data-cue="The host component renders a sunny Saturday">
+  <h2>Spec setup</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/day/day.spec.ts" data-mark="2,6,12">  template: `
+    &lt;sd-day title="Saturday" weather="sun"&gt;
+      &lt;sd-block title="Breakfast" time="8:00" /&gt;
+      &lt;sd-block title="Park" time="10:00" /&gt;
+      &lt;sd-block title="Dinner" time="18:00" /&gt;
+      &lt;button slot="footer" class="add"&gt;Add an errand&lt;/button&gt;
+    &lt;/sd-day&gt;
+  `,
+  /* … */
+  const regenerateBtn = (): HTMLButtonElement =&gt; buttons()[0] as HTMLButtonElement;
+  const lockBtn = (): HTMLButtonElement =&gt; buttons()[1] as HTMLButtonElement;
+  const glyph = (el: Element | null | undefined): string =&gt;
+    el?.querySelector('svg')?.innerHTML ?? '';</pre>
+</section>
+
+<section id="spec-render" data-part="6" data-cue="Creates Saturday with a labelled heading and an empty list checks">
+  <h2>Rendering and accessible names</h2>
+  <table class="map">
+    <tr><th>it(…)</th><th>proves</th></tr>
+    <tr><td>creates Saturday with a labelled heading and an empty list</td><td class="prose"><code>aria-labelledby</code> = heading id</td></tr>
+    <tr><td>renders the meta line and the weather disc</td><td class="prose">rain glyph + <code>disc--sky</code>, then sun</td></tr>
+    <tr><td>shows the Regenerate and Lock buttons with accessible names</td><td class="prose">“Regenerate Saturday”, “Lock Saturday”</td></tr>
+    <tr><td>reflects a locked day in the chip, the lock button and the host class</td><td class="prose"><code>day--locked</code>, accent chip, “Unlock Saturday”, <code>aria-pressed</code></td></tr>
+  </table>
+</section>
+
+<section id="spec-emit" data-part="6" data-cue="Hides the actions and disables them while busy checks both inputs.">
+  <h2>Busy, outputs and projection</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/day/day.spec.ts" data-mark="4,9">    regenerateBtn().click();
+    expect(regenerate).toHaveBeenCalledTimes(1);
+
+    lockBtn().click();
+    expect(lockToggle).toHaveBeenLastCalledWith(true);
+
+    fixture.componentRef.setInput('locked', true);
+    fixture.detectChanges();
+    lockBtn().click();
+    expect(lockToggle).toHaveBeenLastCalledWith(false);</pre>
+  <p class="muted small">Also: hides the actions and disables them while busy · projects blocks into the list and the footer after it</p>
+</section>
+
+<section id="pitfalls" data-part="7" data-cue="Pitfalls">
+  <h2>Pitfalls</h2>
+  <ul>
+    <li>The day flipping its own lock</li>
+    <li>Button labels without the day name</li>
+    <li>Losing the <code>aria-labelledby</code> link or a unique heading id</li>
+    <li>A host <code>title</code> attribute — a native tooltip the mocks never had</li>
+    <li>A pixel sticky offset instead of <code>--layoutTopBarHeight</code></li>
+  </ul>
+</section>
+
+<section id="recap" data-part="8" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div>Aliased title · three flags · two outputs</div>
+    <div>Locked: input + output, not model</div>
+    <div>Two small <code>computed()</code>s</div>
+    <div>Names include the day</div>
+    <div><code>aria-pressed</code> + a chip in words</div>
+    <div>List slot + footer slot</div>
+  </div>
+</section>
+
+<section id="next" data-part="8" data-cue="Next, video eighteen builds S D details">
+  <div class="kicker">Next · Video 18</div>
+  <h1>Coding <code>sd-details</code></h1>
+</section>
+
+<script src="../../assets/slides.js"></script>
+</body>
+</html>

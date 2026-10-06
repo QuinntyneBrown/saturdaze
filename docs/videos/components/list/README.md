@@ -6,14 +6,14 @@
 
 ## Why this video exists
 
-`sd-list` is a near-empty container, which makes it the clearest place to learn the `booleanAttribute` transform, host-attribute mirroring and passing layout down to children through a component knob (`--sd-list-pad-x`) instead of deep selectors.
+`sd-list` is a near-empty container, which makes it the clearest place to learn the `booleanAttribute` transform, keeping inputs off the host (ADR-009) and passing layout down to children through a component knob (`--sd-list-pad-x`) instead of deep selectors.
 
 ## Learning objectives
 
 By the end, the viewer can:
 
 - Put the BEM class and `role="list"` in host metadata.
-- Declare a boolean input with `transform: booleanAttribute` and mirror it as `card=""`.
+- Declare a boolean input with `transform: booleanAttribute` and expose its state as the `.list--card` host class, not a mirrored attribute.
 - Explain why the component needs no `computed()` or `output()`.
 - Pass padding to `sd-list-item` through the `--sd-list-pad-x` custom property.
 - Read and extend `list.spec.ts` using `componentRef.setInput` and a host component.
@@ -30,7 +30,7 @@ By the end, the viewer can:
 
 | File | What to show |
 | --- | --- |
-| `frontend/projects/components/src/lib/list/list.ts` | Host metadata and the `card` input. |
+| `frontend/projects/components/src/lib/list/list.ts` | Host metadata (class, role, `.list--card`) and the `card` input. |
 | `frontend/projects/components/src/lib/list/list.html` | `<ng-content />`. |
 | `frontend/projects/components/src/lib/list/list.scss` | Card surface and `--sd-list-pad-x`. |
 | `frontend/projects/components/src/lib/list-item/list-item.scss` | The row reading the knob. |
@@ -42,13 +42,13 @@ By the end, the viewer can:
 | Time | Segment | Content |
 | --- | --- | --- |
 | 00:00-00:32 | Introduction | What the list owns. |
-| 00:33-01:04 | Usage | Family page usage; other call sites. |
-| 01:05-02:02 | Decorator | Selector, host class/role, mirrored `card`. |
-| 02:03-02:47 | Input | `booleanAttribute`; what it doesn't need. |
-| 02:48-03:43 | Template & styles | `<ng-content />`, the card surface, the padding knob. |
-| 03:44-04:58 | Testing | Setup and the three tests. |
-| 04:59-05:20 | Pitfalls | Ghost rows inside, missing transform, deep selectors. |
-| 05:21-06:01 | Recap | Things to remember; next: `sd-list-item`. |
+| 00:33-01:05 | Usage | Family page usage; other call sites. |
+| 01:06-02:03 | Decorator | Selector, host class/role, `.list--card`; inputs stay inputs. |
+| 02:04-02:49 | Input | `booleanAttribute`; what it doesn't need. |
+| 02:50-03:44 | Template & styles | `<ng-content />`, the card surface, the padding knob. |
+| 03:45-04:57 | Testing | Setup and the three tests. |
+| 04:58-05:19 | Pitfalls | Ghost rows inside, missing transform, deep selectors. |
+| 05:20-06:02 | Recap | Things to remember; next: `sd-list-item`. |
 
 ## Demo commands
 
@@ -69,4 +69,5 @@ npm run storybook                                          # List → Default, P
 - [Angular: Inputs — input transforms](https://angular.dev/guide/components/inputs)
 - [Angular: Content projection](https://angular.dev/guide/components/content-projection)
 - [MDN: ARIA list role](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/list_role)
+- `docs/adr/ADR-009-v2-responsive-shell.md`
 - `docs/adr/ADR-013-fluent-design-tokens.md`
