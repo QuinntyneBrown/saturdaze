@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 04 Slides</title>
+<link rel="stylesheet" href="../assets/slides.css">
+</head>
+<body data-video-number="04" data-video-title="The generator: generate-tokens.mjs" data-parts="Introduction|Why generate|Loading TS|Serialiser|Outputs|Check mode|CI &amp; wiring|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Saturdaze design system · Video 04 of 06</div>
+  <h1>The generator: <code>generate-tokens.mjs</code></h1>
+  <p class="lead">How ~90 lines of Node turn a TypeScript theme into a stylesheet — and keep CI honest.</p>
+</section>
+
+<section id="why" data-part="1" data-cue="You might ask: why not let JavaScript set the custom properties at runtime">
+  <h2>Why generate at all?</h2>
+  <div class="cols three">
+    <div class="card"><h3>Performance</h3><p>Static CSS: first paint already has every token. No flash, no waiting on script.</p></div>
+    <div class="card forest"><h3>One source</h3><p>The TS theme is the only place values are written. CSS is an output.</p></div>
+    <div class="card sky"><h3>Typed object</h3><p><code>tokens.ts</code> for free — TS code never copies a hex value.</p></div>
+  </div>
+</section>
+
+<section id="scripts" data-part="1" data-cue="The script is wired up in the frontend package dot json as two scripts.">
+  <h2>Two npm scripts, one file</h2>
+  <pre class="code tight" data-lang="json" data-file="frontend/package.json" data-mark="1,2">"tokens": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/generate-tokens.mjs",
+"tokens:check": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/generate-tokens.mjs --check",</pre>
+  <ul>
+    <li><code>npm run tokens</code> — regenerate</li>
+    <li><code>npm run tokens:check</code> — fail if stale</li>
+  </ul>
+</section>
+
+<section id="header" data-part="2" data-cue="The script opens with a comment that tells you exactly what it does.">
+  <h2>The header says it all</h2>
+  <pre class="code tight" data-lang="js" data-file="frontend/scripts/generate-tokens.mjs" data-mark="11-12">// Token pipeline: renders the TypeScript theme in
+// projects/components/src/lib/tokens/ into the two generated files the rest
+// of the workspace consumes —
+//
+//   src/lib/styles/_tokens.scss   the `:root` custom properties (+ responsive retunes)
+//   src/lib/tokens/tokens.ts      the typed `tokens` object (`var(--name)` per key)
+//
+// Usage (from frontend/):  npm run tokens          regenerate
+//                          npm run tokens:check    fail if either file is stale (CI)
+//
+// Node strips the token sources' TypeScript types natively; the resolve hook
+// only adds the `.ts` extension Angular-style imports leave off.</pre>
+</section>
+
+<section id="type-stripping" data-part="2" data-cue="Modern Node can run TypeScript files directly">
+  <h2>Node runs the real TypeScript</h2>
+  <div class="cols">
+    <div class="card"><h3>Type stripping</h3><p>On by default from Node 22.18. CI pins <code>NODE_VERSION: '22'</code>.</p></div>
+    <div class="card bad"><h3>The snag</h3><p>Sources import Angular-style, without extensions:</p><pre class="code" data-lang="ts">import type { Theme } from '../types';</pre></div>
+  </div>
+</section>
+
+<section id="hook" data-part="2" data-cue="So the script registers a resolve hook">
+  <h2>A six-line resolve hook</h2>
+  <pre class="code" data-lang="js" data-file="frontend/scripts/generate-tokens.mjs" data-mark="3-5">registerHooks({
+  resolve(specifier, context, next) {
+    if (specifier.startsWith('.') &amp;&amp; !/\.[cm]?[jt]s$/.test(specifier)) {
+      return next(`${specifier}.ts`, context);
+    }
+    return next(specifier, context);
+  },
+});</pre>
+  <p class="muted">Relative + no extension → retry with <code>.ts</code>. Everything else passes through.</p>
+</section>
+
+<section id="load" data-part="2" data-cue="Next the script works out where the library lives.">
+  <h2>Load the theme and the serialiser</h2>
+  <pre class="code tight" data-lang="js" data-file="frontend/scripts/generate-tokens.mjs" data-mark="1,4,5">const lib = resolve(dirname(fileURLToPath(import.meta.url)), '../projects/components/src/lib');
+const load = (path) =&gt; import(pathToFileURL(resolve(lib, path)).href);
+
+const { saturdazeLightTheme, responsiveOverrides } = await load('tokens/themes/index.ts');
+const { themeToCss } = await load('tokens/themeToCss.ts');</pre>
+  <p class="muted">Top-level <code>await</code>: <code>.mjs</code> is an ES module.</p>
+</section>
+
+<section id="to-vars" data-part="3" data-cue="Before going further in the script, open `themeToCss.ts`">
+  <h2><code>themeToCssVariables</code></h2>
+  <pre class="code" data-lang="ts" data-file="tokens/themeToCss.ts">/** `{ colorBrandBackground: '#e07856' }` → `{ '--colorBrandBackground': '#e07856' }`. */
+export function themeToCssVariables(theme: PartialTheme): Record&lt;string, string&gt; {
+  const vars: Record&lt;string, string&gt; = {};
+  for (const [key, value] of Object.entries(theme)) {
+    if (value !== undefined) vars[`--${key}`] = value;
+  }
+  return vars;
+}</pre>
+  <p class="muted">Shared: the generator at build time, <code>[sdThemeProvider]</code> at run time.</p>
+</section>
+
+<section id="block" data-part="3" data-cue="A private helper called block">
+  <h2><code>block</code> and <code>themeToCss</code></h2>
+  <pre class="code tight" data-lang="ts" data-file="tokens/themeToCss.ts" data-mark="9-17">function block(selector: string, theme: PartialTheme, indent: string): string {
+  const body = Object.entries(themeToCssVariables(theme))
+    .map(([name, value]) =&gt; `${indent}  ${name}: ${value};`)
+    .join('\n');
+  return `${indent}${selector} {\n${body}\n${indent}}`;
+}
+
+export function themeToCss(
+  theme: PartialTheme,
+  overrides: ThemeOverride[] = [],
+  selector = ':root',
+): string {
+  return [
+    block(selector, theme, ''),
+    ...overrides.map((o) =&gt; `@media ${o.media} {\n${block(selector, o.tokens, '  ')}\n}`),
+  ].join('\n\n');
+}</pre>
+</section>
+
+<section id="pinned" data-part="3" data-cue="The spec file pins this output exactly." style="padding-top:110px;gap:18px">
+  <h2>Pin the output with a test</h2>
+  <pre class="code tight" data-lang="ts" data-file="tokens/tokens.spec.ts">const css = themeToCss({ layoutGutter: '16px' }, [
+  { media: '(min-width: 720px)', tokens: { layoutGutter: '24px' } },
+]);
+expect(css).toBe(
+  ':root {\n  --layoutGutter: 16px;\n}\n\n' +
+    '@media (min-width: 720px) {\n  :root {\n    --layoutGutter: 24px;\n  }\n}',
+);</pre>
+  <pre class="code tight" data-lang="scss" style="font-size:21px;line-height:1.3">:root {
+  --layoutGutter: 16px;
+}
+
+@media (min-width: 720px) {
+  :root {
+    --layoutGutter: 24px;
+  }
+}</pre>
+</section>
+
+<section id="banner" data-part="4" data-cue="A small banner function builds the do not edit header">
+  <h2>The banner and the stylesheet</h2>
+  <pre class="code tight" data-lang="js" data-file="frontend/scripts/generate-tokens.mjs" data-mark="10">const banner = (comment) =&gt;
+  [
+    `${comment} !!! DO NOT EDIT !!!`,
+    `${comment} Generated by \`npm run tokens\` from projects/components/src/lib/tokens/.`,
+    `${comment} Change the TypeScript theme and regenerate (ADR-013).`,
+  ].join('\n');
+
+const scss = `${banner('//')}
+// … how components consume these; breakpoints live in _breakpoints.scss …
+${themeToCss(saturdazeLightTheme, responsiveOverrides)}
+`;</pre>
+</section>
+
+<section id="ts-object" data-part="4" data-cue="The TypeScript string is the banner">
+  <h2>The typed <code>tokens</code> object</h2>
+  <pre class="code tight" data-lang="js" data-file="frontend/scripts/generate-tokens.mjs" data-mark="7-9">const ts = `${banner('//')}
+
+import type { Theme } from './types';
+
+/** Every theme token as a CSS variable reference, for styles written in TypeScript. */
+export const tokens: Record&lt;keyof Theme, string&gt; = {
+${Object.keys(saturdazeLightTheme)
+  .map((key) =&gt; `  ${key}: 'var(--${key})',`)
+  .join('\n')}
+};
+`;</pre>
+  <pre class="code" data-lang="ts" data-file="tokens/tokens.ts (generated)">  colorBrandBackground: 'var(--colorBrandBackground)',</pre>
+</section>
+
+<section id="outputs" data-part="4" data-cue="Then an outputs array pairs each target path with its source">
+  <h2>Two outputs</h2>
+  <pre class="code" data-lang="js" data-file="frontend/scripts/generate-tokens.mjs">const outputs = [
+  [resolve(lib, 'styles/_tokens.scss'), scss],
+  [resolve(lib, 'tokens/tokens.ts'), ts],
+];</pre>
+</section>
+
+<section id="prettier" data-part="5" data-cue="Here is a detail that saves a lot of pain.">
+  <h2>Format with the repo's Prettier config</h2>
+  <pre class="code" data-lang="js" data-file="frontend/scripts/generate-tokens.mjs">const content = await prettier.format(source, {
+  ...(await prettier.resolveConfig(file)),
+  filepath: file,
+});</pre>
+  <p class="muted">CI also runs <code>prettier --check</code>. Formatting inside the generator means it never fights the formatter — and two runs give identical bytes.</p>
+</section>
+
+<section id="loop" data-part="5" data-cue="Now the loop." style="padding-top:110px">
+  <h2>Write mode and check mode</h2>
+  <pre class="code tight" data-lang="js" data-file="frontend/scripts/generate-tokens.mjs" data-mark="12-19" style="font-size:22px">const check = process.argv.includes('--check');
+let stale = false;
+for (const [file, source] of outputs) {
+  const content = await prettier.format(source, { /* … */ });
+  let current = '';
+  try {
+    current = readFileSync(file, 'utf8');
+  } catch {
+    // missing counts as stale
+  }
+  if (current === content) continue;
+  if (check) {
+    stale = true;
+    console.error(`${file} is out of date — run \`npm run tokens\` in frontend/.`);
+  } else {
+    writeFileSync(file, content);
+    console.log(`wrote ${file}`);
+  }
+}
+if (stale) process.exit(1);</pre>
+</section>
+
+<section id="ci" data-part="6" data-cue="Open the C I workflow">
+  <h2>CI: Design tokens up to date</h2>
+  <pre class="code" data-lang="yaml" data-file=".github/workflows/ci.yml" data-mark="9-11">      - name: Format check (Prettier)
+        working-directory: frontend
+        run: npm run format:check
+
+      - name: Lint (angular-eslint)
+        working-directory: frontend
+        run: npm run lint
+
+      - name: Design tokens up to date
+        working-directory: frontend
+        run: npm run tokens:check</pre>
+</section>
+
+<section id="wiring" data-part="6" data-cue="The generated stylesheet is a partial">
+  <h2>How the stylesheet reaches the page</h2>
+  <div class="cols">
+    <pre class="code" data-lang="scss" data-file="components/src/lib/styles/index.scss">@forward 'tokens';
+@forward 'breakpoints';
+@forward 'global';</pre>
+    <pre class="code" data-lang="scss" data-file="saturdaze/src/styles.scss">@use '../../components/src/lib/styles';</pre>
+  </div>
+  <pre class="code" data-lang="json" data-file="frontend/angular.json">"stylePreprocessorOptions": {
+  "includePaths": ["projects/components/src/lib"]
+}</pre>
+</section>
+
+<section id="workflow" data-part="6" data-cue="Putting it together, here is how you change a token in this repository.">
+  <h2>Changing a token</h2>
+  <ol class="steps">
+    <li>Edit the TypeScript in <code>tokens/</code></li>
+    <li><code>npm run tokens</code> from <code>frontend/</code></li>
+    <li>Read the diff of the two generated files</li>
+    <li>Commit source + generated files together</li>
+    <li>Forgot? CI tells you what to run</li>
+  </ol>
+</section>
+
+<section id="recap" data-part="7" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div>Static CSS: first paint never waits</div>
+    <div>Node imports the real TS (strip types + resolve hook)</div>
+    <div>Serialiser in the library, pinned by a test</div>
+    <div>Typed <code>var(--…)</code> object generated alongside</div>
+    <div>Prettier inside the generator → stable output</div>
+    <div>One script, two modes; exit 1 when stale</div>
+  </div>
+</section>
+
+<section id="next" data-part="7" data-cue="Next, in video five, we look at the consumers">
+  <div class="kicker">Next · Video 05</div>
+  <h1>Consuming tokens: SCSS, TypeScript and the theme provider</h1>
+</section>
+
+<script src="../assets/slides.js"></script>
+</body>
+</html>

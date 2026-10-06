@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 05 Slides</title>
+<link rel="stylesheet" href="../assets/slides.css">
+</head>
+<body data-video-number="05" data-video-title="Consuming tokens" data-parts="Introduction|By role|Pairs|Knobs|Layout|TypeScript|ThemeProvider|Rules|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Saturdaze design system · Video 05 of 06</div>
+  <h1>Consuming tokens: SCSS, TypeScript and the theme provider</h1>
+  <p class="lead">The rules that keep a design system consistent after the first hundred components.</p>
+</section>
+
+<section id="button" data-part="1" data-cue="Open the button stylesheet in the components library.">
+  <h2>The button reads roles, not values</h2>
+  <pre class="code" data-lang="scss" data-file="components/src/lib/button/button.scss" data-mark="2-4,7-9">.btn--primary {
+  background: var(--colorBrandBackground);
+  color: var(--colorNeutralForegroundOnBrand);
+  box-shadow: var(--shadow4);
+}
+.btn--quiet {
+  background: var(--colorNeutralBackground1);
+  border-color: var(--colorNeutralStroke1);
+  color: var(--colorNeutralForeground1);
+}</pre>
+</section>
+
+<section id="transition" data-part="1" data-cue="Look at what is missing: there is no hex value anywhere.">
+  <h2>Shared rhythm from motion tokens</h2>
+  <pre class="code" data-lang="scss" data-file="components/src/lib/button/button.scss">  transition:
+    background var(--durationFast) var(--curveEasyEase),
+    color var(--durationFast) var(--curveEasyEase),
+    border-color var(--durationFast) var(--curveEasyEase),
+    transform var(--durationFast) var(--curveEasyEase),
+    box-shadow var(--durationFast) var(--curveEasyEase);</pre>
+</section>
+
+<section id="by-role" data-part="1" data-cue="The project instructions make the rule explicit.">
+  <h2>Ask: what job is this colour doing?</h2>
+  <table class="map">
+    <tr><th>job</th><th>token</th></tr>
+    <tr><td class="prose">coral text</td><td>var(--colorBrandForeground1)</td></tr>
+    <tr><td class="prose">coral fill</td><td>var(--colorBrandBackground)</td></tr>
+    <tr><td class="prose">coral border</td><td>var(--colorBrandStroke1)</td></tr>
+    <tr><td class="prose">a hex value</td><td class="prose"><b>never</b></td></tr>
+  </table>
+  <p class="muted small">AGENTS.md · ADR-013</p>
+</section>
+
+<section id="disc" data-part="2" data-cue="Now open the disc stylesheet">
+  <h2>Fills and inks come in pairs</h2>
+  <div class="cols wide-left">
+    <pre class="code tight" data-lang="scss" data-file="components/src/lib/disc/disc.scss">:host(.disc--primary) {
+  background: var(--colorBrandBackground2);
+  color: var(--colorBrandForeground2);
+}
+:host(.disc--warn) {
+  background: var(--colorStatusDangerBackground1);
+  color: var(--colorStatusDangerForeground1);
+}
+:host(.disc--sun) {
+  background: var(--colorPaletteSunBackground1);
+  color: var(--colorPaletteSunForeground1);
+}</pre>
+    <div class="row">
+      <span class="demo-chip">Primary</span>
+      <span class="demo-chip" style="background:#fadfd6;color:#8f3d27">Warn</span>
+      <span class="demo-chip" style="background:#fbebc4;color:#8a6212">Sun</span>
+      <span class="demo-chip forest">Success</span>
+    </div>
+  </div>
+</section>
+
+<section id="contrast" data-part="2" data-cue="This is the pairing rule from video three in action.">
+  <div class="kicker">Correct by construction</div>
+  <p class="quote">Each <code>Foreground1</code> passes AA on its <code>Background1</code>. Use the pair, and nobody re-checks contrast per badge.</p>
+</section>
+
+<section id="focus" data-part="2" data-cue="Some styles need more than one token.">
+  <h2>Composite values from smaller tokens</h2>
+  <pre class="code" data-lang="scss" data-file="components/src/lib/toggle/toggle.scss" data-mark="2">.toggle__input:focus-visible + .toggle__track {
+  outline: var(--strokeWidthThick) solid var(--colorStrokeFocus2);
+  outline-offset: 2px;
+}</pre>
+  <div class="cols">
+    <div class="card bad"><h3>Before</h3><p><code>outline: var(--sd-focus-ring)</code> — one opaque shorthand</p></div>
+    <div class="card good"><h3 style="color:var(--forest)">After</h3><p>Width and colour themed independently</p></div>
+  </div>
+</section>
+
+<section id="knobs" data-part="3" data-cue="Not every custom property is a theme token.">
+  <h2>Component knobs keep <code>--sd-</code></h2>
+  <pre class="code" data-lang="scss" data-file="components/src/lib/button/button.scss" data-mark="1">  height: var(--sd-btn-h, 40px);
+  width: var(--sd-btn-w, auto);</pre>
+  <div class="cols">
+    <div class="card"><h3>Theme token</h3><p>Unprefixed Fluent name · generated · <code>--colorBrandBackground</code></p></div>
+    <div class="card indoor"><h3>Component knob</h3><p><code>--sd-</code> prefix · lives in the component · part of its API</p></div>
+  </div>
+</section>
+
+<section id="sitebar" data-part="4" data-cue="Open the site bar stylesheet.">
+  <h2>Layout tokens change, components don't</h2>
+  <pre class="code" data-lang="scss" data-file="components/src/lib/sitebar/sitebar.scss" data-mark="3,5,9">.sitebar__inner {
+  width: 100%;
+  max-width: var(--layoutContentMaxWidth);
+  margin-inline: auto;
+  padding-inline: var(--layoutGutter);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  height: var(--layoutTopBarHeight);
+}</pre>
+  <p class="muted"><code>--layoutGutter</code>: 16px → 24px at 720px → 32px at 1024px</p>
+</section>
+
+<section id="breakpoints" data-part="4" data-cue="There is one thing custom properties cannot do">
+  <h2>Breakpoints live in Sass</h2>
+  <pre class="code tight" data-lang="scss" data-file="components/src/lib/styles/_breakpoints.scss">$bp-xsmall-max: 379px;
+$bp-tablet: 720px;
+$bp-desktop: 1024px;
+
+@mixin respond-to($size) {
+  @if $size == xsmall {
+    @media (max-width: #{$bp-xsmall-max}) {
+      @content;
+    }
+  } @else if $size == tablet {
+    @media (min-width: #{$bp-tablet}) {
+      @content;
+    }
+  } /* … desktop … */
+}</pre>
+  <p class="muted small"><code>@media (min-width: var(--x))</code> does not work — media conditions can't read custom properties.</p>
+</section>
+
+<section id="duplication" data-part="4" data-cue="Be aware of one duplication.">
+  <h2>Keep two copies in sync</h2>
+  <div class="cols">
+    <div class="card"><h3>themes/responsive.ts</h3><p><code>'(min-width: 720px)'</code><br><code>'(min-width: 1024px)'</code><br><code>'(max-width: 379px)'</code></p></div>
+    <div class="card"><h3>styles/_breakpoints.scss</h3><p><code>$bp-tablet: 720px</code><br><code>$bp-desktop: 1024px</code><br><code>$bp-xsmall-max: 379px</code></p></div>
+  </div>
+  <p class="muted">Add a breakpoint → change both.</p>
+</section>
+
+<section id="storybook" data-part="5" data-cue="Some styling happens outside stylesheets.">
+  <h2>The Storybook manager imports the theme</h2>
+  <pre class="code tight" data-lang="ts" data-file="components/.storybook/theme.ts" data-mark="1,6,10,13">import { saturdazeLightTheme as t } from '../src/lib/tokens';
+
+const theme = create({
+  base: 'light',
+
+  colorPrimary: t.colorBrandBackground,
+  colorSecondary: t.colorBrandBackground,
+
+  // UI
+  appBg: t.colorNeutralBackground2,
+  appContentBg: t.colorNeutralBackground1,
+  appBorderColor: t.colorNeutralStroke2,
+  appBorderRadius: parseInt(t.borderRadiusMedium, 10),
+
+  textColor: t.colorNeutralForeground1,
+  /* … */
+});</pre>
+</section>
+
+<section id="value-vs-ref" data-part="5" data-cue="When TypeScript needs a reference that still follows theming">
+  <h2>Value or live reference?</h2>
+  <table class="map">
+    <tr><th>you need</th><th>use</th><th>gives</th></tr>
+    <tr><td class="prose">the actual value</td><td>saturdazeLightTheme.colorBrandBackground</td><td>'#e07856'</td></tr>
+    <tr><td class="prose">a themable reference</td><td>tokens.colorBrandBackground</td><td>'var(--colorBrandBackground)'</td></tr>
+  </table>
+  <p class="muted">The reference follows any <code>[sdThemeProvider]</code> above it; the value doesn't.</p>
+</section>
+
+<section id="provider-code" data-part="6" data-cue="Now the runtime half.">
+  <h2><code>[sdThemeProvider]</code></h2>
+  <pre class="code tight" data-lang="ts" data-file="components/src/lib/theme-provider/theme-provider.ts" data-mark="4,8,10,13">  readonly theme = input.required&lt;PartialTheme&gt;({ alias: 'sdThemeProvider' });
+
+  constructor() {
+    effect(() =&gt; {
+      const el = this.host.nativeElement;
+      const vars = themeToCssVariables(this.theme());
+      for (const name of this.applied) {
+        if (!(name in vars)) this.renderer.removeStyle(el, name, RendererStyleFlags2.DashCase);
+      }
+      for (const [name, value] of Object.entries(vars)) {
+        this.renderer.setStyle(el, name, value, RendererStyleFlags2.DashCase);
+      }
+      this.applied = Object.keys(vars);
+    });
+  }</pre>
+</section>
+
+<section id="cascade" data-part="6" data-cue="Because custom properties cascade">
+  <h2>The cascade does the rest</h2>
+  <div class="flow">
+    <div class="node"><b>:root</b><span class="small">_tokens.scss · coral</span></div>
+    <div class="arrow">→</div>
+    <div class="node accent"><b>&lt;section [sdThemeProvider]&gt;</b><span class="small">--colorBrandBackground: #2d7d5f</span></div>
+    <div class="arrow">→</div>
+    <div class="node"><b>&lt;sd-button&gt;</b><span class="small">reads var(--colorBrandBackground) → green</span></div>
+  </div>
+  <p class="muted">Same idea as Fluent's <code>FluentProvider</code> — no component changes.</p>
+</section>
+
+<section id="provider-use" data-part="6" data-cue="There are two ways to use it.">
+  <h2>Two ways to use it</h2>
+  <pre class="code" data-lang="html" data-file="partial theme">&lt;section [sdThemeProvider]="{ colorBrandBackground: '#2d7d5f' }"&gt;…&lt;/section&gt;</pre>
+  <pre class="code tight" data-lang="ts" data-file="stories/src/ThemeProvider/ThemeProviderRebrand.stories.ts">// A forest-green ramp: only the steps the alias tokens read need to change.
+const forest = createLightTheme({
+  ...brandSaturdaze,
+  70: '#1f5a44',
+  80: '#2d7d5f',
+  160: '#deede5',
+});
+// template: &lt;div [sdThemeProvider]="forest"&gt; &lt;sd-button variant="primary"&gt;… &lt;sd-chip&gt;…</pre>
+  <div class="row"><span class="demo-button forest">Plan my weekend</span><span class="demo-chip forest">Brunch</span></div>
+</section>
+
+<section id="provider-notes" data-part="6" data-cue="The description file adds two important notes.">
+  <h2>Two notes</h2>
+  <ul>
+    <li>The app already gets the theme from <code>_tokens.scss</code> — <b>never</b> wrap the root.</li>
+    <li>Changing the bound theme updates properties in place and <b>removes</b> keys it no longer sets.</li>
+  </ul>
+</section>
+
+<section id="rules" data-part="7" data-cue="Let me collect the consumer rules in one place.">
+  <h2>Consumer rules</h2>
+  <ol class="steps small">
+    <li>No hex in components — missing colour? add an alias token</li>
+    <li>Pick the token named after the job</li>
+    <li>Use fills and inks in their pairs</li>
+    <li><code>--sd-</code> for component knobs only</li>
+    <li><code>respond-to()</code> for breakpoint logic; tokens for sizes</li>
+    <li>TS: theme for values, <code>tokens</code> for live references</li>
+  </ol>
+</section>
+
+<section id="recap" data-part="8" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div>Read tokens by role — works under any theme</div>
+    <div>Fill + ink pairs: contrast by construction</div>
+    <div>Composite values from smaller tokens</div>
+    <div>Breakpoints in Sass, matching the overrides</div>
+    <div>ThemeProvider writes a partial theme on one element</div>
+    <div>The cascade does the rest</div>
+  </div>
+</section>
+
+<section id="next" data-part="8" data-cue="Next, in the final video, we put everything together">
+  <div class="kicker">Next · Video 06</div>
+  <h1>Build your own production token system</h1>
+</section>
+
+<script src="../assets/slides.js"></script>
+</body>
+</html>

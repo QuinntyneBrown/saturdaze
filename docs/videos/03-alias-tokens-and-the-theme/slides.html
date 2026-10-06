@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 03 Slides</title>
+<link rel="stylesheet" href="../assets/slides.css">
+</head>
+<body data-video-number="03" data-video-title="Alias tokens and the theme" data-parts="Introduction|Alias|Neutral roles|Brand roles|Palettes|Shadows|Theme|Re-brand|Responsive|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Saturdaze design system · Video 03 of 06</div>
+  <h1>Alias tokens and the theme</h1>
+  <p class="lead">Layer two turns raw values into roles; <code>createLightTheme</code> turns roles into one typed theme.</p>
+</section>
+
+<section id="alias-def" data-part="1" data-cue="An alias token is a role with a value picked from the global layer.">
+  <h2>An alias token = role + picked value</h2>
+  <div class="flow">
+    <div class="node"><b>slate[46]</b><span class="small muted">global · what it is</span></div>
+    <div class="arrow">→</div>
+    <div class="node accent"><b>colorNeutralForeground2</b><span class="small muted">alias · what it does</span></div>
+    <div class="arrow">→</div>
+    <div class="node"><b>.meta { color: var(--colorNeutralForeground2) }</b><span class="small muted">component</span></div>
+  </div>
+</section>
+
+<section id="function" data-part="1" data-cue="Here is the important design choice.">
+  <div class="kicker">The design choice</div>
+  <p class="quote">Alias colours are <b>computed by a function</b> that takes a brand ramp — not written as a static list.</p>
+</section>
+
+<section id="neutral-fg" data-part="2" data-cue="Open `lightColor.ts` in the alias folder.">
+  <h2><code>generateColorTokens(brand)</code></h2>
+  <pre class="code" data-lang="ts" data-file="tokens/alias/lightColor.ts" data-mark="3-6">/** Neutral and brand alias tokens for the light theme, generated from a brand ramp. */
+export const generateColorTokens = (brand: BrandVariants): ColorTokens => ({
+  colorNeutralForeground1: slate[17], // body ink
+  colorNeutralForeground2: slate[46], // secondary text, metadata
+  colorNeutralForeground3: slate[65], // hints, placeholders, disabled
+  colorNeutralForegroundOnBrand: white,
+  /* … */
+});</pre>
+</section>
+
+<section id="neutral-bg" data-part="2" data-cue="Backgrounds follow the same pattern.">
+  <h2>Neutral backgrounds</h2>
+  <pre class="code" data-lang="ts" data-file="tokens/alias/lightColor.ts">  colorNeutralBackground1: white, // cards, dialogs, inputs
+  colorNeutralBackground2: cream, // the page
+  colorNeutralBackground3: sand, // recessed wells, locked blocks
+  colorNeutralBackgroundInverted: slate[17], // selected filter chip, tooltips
+  colorBackgroundOverlay: slateAlpha[40], // the CDK dialog backdrop</pre>
+  <div class="card"><b>Copy this habit:</b> every role has a one-line comment saying where it is used.</div>
+</section>
+
+<section id="brand-roles" data-part="3" data-cue="Now the brand roles, and this is the heart of the file.">
+  <h2>Brand roles read ramp steps</h2>
+  <pre class="code tight" data-lang="ts" data-file="tokens/alias/lightColor.ts" data-mark="1,2,3,5,7,8">  colorStrokeFocus2: brand[80],
+  colorBrandForeground1: brand[80],
+  colorBrandForeground2: brand[70], // coral text that passes AA on colorBrandBackground2
+  colorBrandBackground: brand[80], // the one coral button per screen
+  colorBrandBackgroundHover: `color-mix(in srgb, ${brand[80]} 94%, #000)`,
+  colorBrandBackground2: brand[160],
+  colorBrandStroke1: brand[80],
+  colorBrandStroke2: brand[160],</pre>
+</section>
+
+<section id="brand-map" data-part="3" data-cue="Brand foreground one, brand background, brand stroke one and the focus stroke all read step eighty.">
+  <h2>Many roles, three steps</h2>
+  <table class="map">
+    <tr><th>ramp step</th><th>roles</th></tr>
+    <tr><td><span class="chip" style="background:#e07856"></span>brand[80]</td><td>colorBrandForeground1 · colorBrandBackground · colorBrandStroke1 · colorStrokeFocus2</td></tr>
+    <tr><td><span class="chip" style="background:#a04b2c"></span>brand[70]</td><td>colorBrandForeground2</td></tr>
+    <tr><td><span class="chip" style="background:#fbe7de"></span>brand[160]</td><td>colorBrandBackground2 · colorBrandStroke2</td></tr>
+  </table>
+</section>
+
+<section id="computed" data-part="3" data-cue="Two tokens are computed rather than picked.">
+  <h2>Computed roles</h2>
+  <pre class="code tight" data-lang="ts" data-file="tokens/alias/lightColor.ts">  colorBrandBackgroundHover: `color-mix(in srgb, ${brand[80]} 94%, #000)`,
+  colorBrandBackgroundGradient:
+    `radial-gradient(80% 60% at 0% 0%, ${brand[160]} 0%, transparent 60%), ` +
+    `radial-gradient(80% 60% at 100% 0%, ${sun.tint50} 0%, transparent 60%)`,
+
+  colorNeutralShadowAmbient: slateAlpha[4],
+  colorNeutralShadowKey: slateAlpha[6],
+  colorNeutralShadowKeyDarker: slateAlpha[12],</pre>
+  <div class="row"><span class="demo-button">Brand</span><span class="demo-button" style="background:color-mix(in srgb, #e07856 94%, #000)">Hover</span></div>
+</section>
+
+<section id="roles-helper" data-part="4" data-cue="Open the second alias file, `lightColorPalette.ts`.">
+  <h2>One helper, six roles per palette</h2>
+  <pre class="code" data-lang="ts" data-file="tokens/alias/lightColorPalette.ts">function roles&lt;T extends string&gt;(prefix: T, color: ColorVariants) {
+  return {
+    [`${prefix}Background1`]: color.tint50,
+    [`${prefix}Background3`]: color.primary,
+    [`${prefix}Foreground1`]: color.shade40,
+    [`${prefix}Foreground3`]: color.primary,
+    [`${prefix}Border1`]: color.tint50,
+    [`${prefix}BorderActive`]: color.primary,
+  };
+}</pre>
+</section>
+
+<section id="palette-tables" data-part="4" data-cue="Then two lookup tables.">
+  <h2>Run the helper over two tables</h2>
+  <pre class="code tight" data-lang="ts" data-file="tokens/alias/lightColorPalette.ts" data-mark="7,13">const palettes: Record&lt;PaletteName, ColorVariants&gt; = {
+  Sun: sun,
+  Sky: sky,
+  Leaf: leaf,
+  Indoor: indoor,
+};
+const statuses: Record&lt;StatusName, ColorVariants&gt; = { Success: forest, Danger: terracotta };
+
+export const colorPaletteTokens = Object.assign(
+  {},
+  ...Object.entries(palettes).map(([name, color]) =&gt; roles(`colorPalette${name}`, color)),
+) as ColorPaletteTokens;
+
+export const colorStatusTokens = Object.assign(/* … same, over statuses … */) as ColorStatusTokens;</pre>
+</section>
+
+<section id="pairing" data-part="4" data-cue="The comment states the usage rule">
+  <h2>Pair Background1 with Foreground1</h2>
+  <div class="row">
+    <span class="demo-chip" style="background:#fbebc4;color:#8a6212">☀ Sunny</span>
+    <span class="demo-chip" style="background:#dce9f1;color:#2c5f7a">☁ Cool</span>
+    <span class="demo-chip" style="background:#ddeeda;color:#2d7d5f">🌳 Outdoor</span>
+    <span class="demo-chip" style="background:#eadff4;color:#5a3b82">⌂ Indoor</span>
+    <span class="demo-chip forest">✓ Locked</span>
+  </div>
+  <p class="muted">The <code>Foreground1</code> ink is chosen to pass AA on its <code>Background1</code> fill.</p>
+</section>
+
+<section id="template-types" data-part="4" data-cue="Here is a TypeScript detail worth learning.">
+  <h2>Template literal types check generated names</h2>
+  <pre class="code tight" data-lang="ts" data-file="tokens/types.ts">type PaletteRoles =
+  | 'Background1'
+  | 'Background3'
+  | 'Foreground1'
+  | 'Foreground3'
+  | 'Border1'
+  | 'BorderActive';
+
+export type PaletteName = 'Sun' | 'Sky' | 'Leaf' | 'Indoor';
+
+export type ColorPaletteTokens = Record&lt;`colorPalette${PaletteName}${PaletteRoles}`, string&gt;;</pre>
+  <p class="muted">4 names × 6 roles = 24 keys the compiler knows · statuses: 2 × 6 = 12</p>
+</section>
+
+<section id="shadows" data-part="5" data-cue="Open `shadows.ts` in the utils folder.">
+  <h2>Shadows from shadow colours</h2>
+  <pre class="code tight" data-lang="ts" data-file="tokens/utils/shadows.ts">/** Soft, paper-like elevation built from the theme's shadow colours. */
+export function createShadowTokens(ambient: string, key: string, keyDarker: string): ShadowTokens {
+  return {
+    shadow4: `0 1px 2px ${ambient}, 0 2px 6px ${ambient}`, // cards off the cream page
+    shadow16: `0 4px 10px ${key}, 0 10px 24px ${key}`, // hover, floating chrome
+    shadow28: `0 20px 40px ${keyDarker}`, // dialogs and menus
+  };
+}</pre>
+  <div class="row">
+    <div class="card" style="box-shadow:0 1px 2px rgba(31,41,55,.04),0 2px 6px rgba(31,41,55,.04)">shadow4</div>
+    <div class="card" style="box-shadow:0 4px 10px rgba(31,41,55,.06),0 10px 24px rgba(31,41,55,.06)">shadow16</div>
+    <div class="card" style="box-shadow:0 20px 40px rgba(31,41,55,.12)">shadow28</div>
+  </div>
+</section>
+
+<section id="create-theme" data-part="6" data-cue="Now the function that ties it all together" style="padding-top:110px">
+  <h2><code>createLightTheme(brand)</code></h2>
+  <pre class="code tight" data-lang="ts" data-file="tokens/utils/createLightTheme.ts (global spreads condensed onto 3 lines)" data-mark="1,2,9-11,13-17" style="font-size:23px">export const createLightTheme: (brand: BrandVariants) =&gt; Theme = (brand) =&gt; {
+  const colorTokens = generateColorTokens(brand);
+
+  return {
+    ...borderRadius, ...fontSizes, ...lineHeights, ...fontFamilies,
+    ...fontWeights, ...strokeWidths, ...horizontalSpacings, ...verticalSpacings,
+    ...durations, ...curves, ...layout, ...zIndexes,
+
+    ...colorTokens,
+    ...colorPaletteTokens,
+    ...colorStatusTokens,
+
+    ...createShadowTokens(
+      colorTokens.colorNeutralShadowAmbient,
+      colorTokens.colorNeutralShadowKey,
+      colorTokens.colorNeutralShadowKeyDarker,
+    ),
+  };
+};</pre>
+</section>
+
+<section id="flat" data-part="6" data-cue="The result is one flat object, with no nesting">
+  <h2>Flat and complete</h2>
+  <div class="cols">
+    <div class="card"><h3>Complete</h3><p>Return type is <code>Theme</code> — the intersection of every interface. Forget a group → it doesn't compile.</p></div>
+    <div class="card forest"><h3>Flat</h3><p>Each key becomes one custom property with the same name. No translation layer.</p></div>
+  </div>
+  <pre class="code" data-lang="ts">theme.colorBrandBackground   →   --colorBrandBackground</pre>
+</section>
+
+<section id="light-theme" data-part="7" data-cue="Open `lightTheme.ts` in the themes folder.">
+  <h2>The whole Saturdaze theme</h2>
+  <pre class="code" data-lang="ts" data-file="tokens/themes/lightTheme.ts" data-mark="5">import { brandSaturdaze } from '../global/brandColors';
+import type { Theme } from '../types';
+import { createLightTheme } from '../utils/createLightTheme';
+
+export const saturdazeLightTheme: Theme = createLightTheme(brandSaturdaze);</pre>
+</section>
+
+<section id="rebrand" data-part="7" data-cue="To re brand, you pass a different ramp.">
+  <h2>Re-brand = a new ramp</h2>
+  <pre class="code tight" data-lang="ts" data-file="tokens/tokens.spec.ts">it('re-brands every brand role from a new ramp', () =&gt; {
+  const ramp = { ...brandSaturdaze, 70: '#003366', 80: '#0066cc', 160: '#e6f0fa' };
+  const theme = createLightTheme(ramp);
+  expect(theme.colorBrandBackground).toBe('#0066cc');
+  expect(theme.colorBrandStroke1).toBe('#0066cc');
+  expect(theme.colorBrandForeground2).toBe('#003366');
+  expect(theme.colorBrandBackground2).toBe('#e6f0fa');
+  expect(theme.colorNeutralForeground1).toBe(saturdazeLightTheme.colorNeutralForeground1);
+});</pre>
+  <div class="row"><span class="demo-button">Coral</span><span class="demo-button" style="background:#0066cc">Blue ramp</span><span class="demo-button forest">Forest ramp (story)</span></div>
+</section>
+
+<section id="responsive" data-part="8" data-cue="One more file in the themes folder" style="padding-top:110px">
+  <h2>Responsive overrides</h2>
+  <pre class="code tight" data-lang="ts" data-file="tokens/themes/responsive.ts" style="font-size:22px">export const responsiveOverrides: ThemeOverride[] = [
+  {
+    media: '(min-width: 720px)',
+    tokens: { layoutGutter: '24px' },
+  },
+  {
+    media: '(min-width: 1024px)',
+    tokens: {
+      layoutGutter: '32px',
+      fontSizeHero800: '40px',
+      fontSizeHero700: '30px',
+      fontSizeBase600: '22px',
+    },
+  },
+  {
+    media: '(max-width: 379px)',
+    tokens: { fontSizeHero800: '30px', fontSizeHero700: '24px' },
+  },
+];</pre>
+</section>
+
+<section id="no-branch" data-part="8" data-cue="The point is that components never branch their styles per breakpoint">
+  <div class="kicker">Why</div>
+  <p class="quote">Components read the same token everywhere. The token changes per breakpoint — the component doesn't branch.</p>
+  <p class="muted">The spec also checks every override only retunes keys the theme defines.</p>
+</section>
+
+<section id="recap" data-part="9" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div>Alias = role + value picked from globals</div>
+    <div>Generate aliases from a brand-ramp argument</div>
+    <div>Comment each role with where it's used</div>
+    <div>Template literal types check generated names</div>
+    <div>Shadows built from shadow-colour tokens</div>
+    <div>One flat object typed as <code>Theme</code></div>
+  </div>
+</section>
+
+<section id="next" data-part="9" data-cue="Next, in video four, we read the generator script line by line">
+  <div class="kicker">Next · Video 04</div>
+  <h1>The generator: <code>generate-tokens.mjs</code></h1>
+</section>
+
+<script src="../assets/slides.js"></script>
+</body>
+</html>
