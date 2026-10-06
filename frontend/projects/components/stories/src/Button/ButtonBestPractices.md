@@ -10,5 +10,5 @@
 ### Content
 
 - Sentence case, usually a single verb: "Plan my weekend", "Lock day", "Sign out".
-- Icon-only buttons (`icon`) **must** have a `label`; it becomes the `aria-label`.
+- Icon-only buttons (`icon`) **must** have a `label`; it becomes the `aria-label` and the hover/focus tooltip. Pass a shorter `tooltip` when the label repeats context the screen already shows.
 - Use `variant="danger"` only for destructive, irreversible actions, and confirm them in a dialog.

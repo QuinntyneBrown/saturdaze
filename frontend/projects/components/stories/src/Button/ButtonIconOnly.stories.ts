@@ -16,7 +16,7 @@ export const IconOnly: StoryObj<Button> = {
     docs: {
       description: {
         story:
-          '`icon` renders the square `.btn--icon`. It has no visible text, so `label` is required — it becomes the `aria-label`.',
+          '`icon` renders the square `.btn--icon`. It has no visible text, so `label` is required — it becomes the `aria-label` and the tooltip shown on hover and keyboard focus (see Tooltip).',
       },
     },
   },

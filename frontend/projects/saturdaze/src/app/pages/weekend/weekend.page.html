@@ -129,6 +129,7 @@
                     size="sm"
                     icon
                     [label]="whyLabel(block)"
+                    [tooltip]="block.commitment ? 'About this' : 'Why this pick?'"
                     (click)="blockDetails(block)"
                   >
                     <sd-icon name="sparkle" />
@@ -141,6 +142,7 @@
                     size="sm"
                     icon
                     [label]="'Swap ' + block.title"
+                    tooltip="Swap for something else"
                     (click)="swapBlock(block)"
                   >
                     <sd-icon name="swap" />
@@ -153,6 +155,7 @@
                     size="sm"
                     icon
                     [label]="'Mark ' + block.title + (block.done ? ' not done' : ' done')"
+                    [tooltip]="block.done ? 'Mark not done' : 'Mark done'"
                     [pressed]="block.done"
                     (click)="toggleDone(block)"
                   >
@@ -166,6 +169,7 @@
                     size="sm"
                     icon
                     [label]="(block.locked ? 'Unlock ' : 'Lock ') + block.title"
+                    [tooltip]="block.locked ? 'Unlock' : 'Lock — keep when regenerating'"
                     [pressed]="block.locked"
                     (click)="lockBlock(block)"
                   >
