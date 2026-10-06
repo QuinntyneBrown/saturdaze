@@ -26,6 +26,6 @@ public class GetCurrentUserQueryHandler : IRequestHandler<GetCurrentUserQuery, U
         var user = await _db.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Id == id, ct)
             ?? throw new InvalidCredentialsException();
 
-        return new UserDto(user.Id, user.Email, user.Role, user.EmailVerifiedUtc);
+        return UserDto.From(user);
     }
 }

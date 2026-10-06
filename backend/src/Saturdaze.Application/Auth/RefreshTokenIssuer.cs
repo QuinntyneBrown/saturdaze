@@ -56,7 +56,7 @@ public sealed class RefreshTokenIssuer
 
     public AuthSuccessDto ToSuccess(User user, string rawRefreshToken) => new(
         new AuthTokensDto(_jwt.CreateAccessToken(user), rawRefreshToken, _jwt.AccessTokenExpiresAt),
-        new UserDto(user.Id, user.Email, user.Role, user.EmailVerifiedUtc));
+        UserDto.From(user));
 
     /// <summary>Marks every live token for the user as revoked (does not save).</summary>
     public async Task RevokeAllActiveAsync(Guid userId, DateTimeOffset now, CancellationToken ct)
