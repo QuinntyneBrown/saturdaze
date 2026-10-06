@@ -6,7 +6,7 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs';
@@ -196,11 +196,13 @@ export class PlacesPage {
       this.sort.setValue(q.sort, { emitEvent: false });
       void this.load(q);
     });
+    // Scoped to the page: a debounced search must never fire after the
+    // curator has already opened a place.
     this.search.valueChanges
-      .pipe(debounceTime(250), distinctUntilChanged())
+      .pipe(debounceTime(250), distinctUntilChanged(), takeUntilDestroyed())
       .subscribe((q) => this.apply({ q: q.trim(), page: 1 }));
     this.sort.valueChanges
-      .pipe(distinctUntilChanged())
+      .pipe(distinctUntilChanged(), takeUntilDestroyed())
       .subscribe((sort) => this.apply({ sort, page: 1 }));
   }
 

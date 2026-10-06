@@ -13,12 +13,12 @@
   }
   @case ('ready') {
     @let v = view();
-    <sd-page-header
-      [title]="title()"
-      [subtitle]="subtitle()"
-      backHref="/places"
-      backLabel="Places"
-    />
+    <sd-page-header [title]="title()" [subtitle]="subtitle()" backHref="/places" backLabel="Places">
+      <sd-button slot="primary" variant="primary" (click)="upload()">
+        <sd-icon name="plus" />
+        Upload photo
+      </sd-button>
+    </sd-page-header>
 
     @if (error()) {
       <sd-banner class="error" tone="warn" role="alert" icon="close">{{ error() }}</sd-banner>

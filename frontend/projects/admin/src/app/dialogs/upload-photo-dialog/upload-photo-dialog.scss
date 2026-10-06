@@ -1,0 +1,77 @@
+// `.upload-drop` / `.photo-pick__upload` from docs/mocks/styles/app.css (admin dialogs).
+
+:host {
+  display: block;
+}
+
+.upload-drop {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 120px;
+  padding: 16px;
+  overflow: hidden;
+  border: 1px dashed var(--colorNeutralStroke1);
+  border-radius: var(--borderRadiusMedium);
+  color: var(--colorNeutralForeground2);
+  font-size: var(--fontSizeBase300);
+  font-weight: var(--fontWeightSemibold);
+  text-align: center;
+  cursor: pointer;
+}
+
+.upload-drop input {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.upload-drop:has(input:focus-visible) {
+  outline: var(--strokeWidthThick) solid var(--colorStrokeFocus2);
+  outline-offset: 2px;
+}
+
+.upload-drop.is-chosen {
+  padding: 0;
+  border-style: solid;
+  aspect-ratio: 4 / 3;
+  max-height: 240px;
+}
+
+.upload-drop img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.photo-pick__name {
+  position: absolute;
+  left: 6px;
+  bottom: 6px;
+  max-width: calc(100% - 12px);
+  padding: 1px 6px;
+  overflow: hidden;
+  border-radius: var(--borderRadiusCircular);
+  background: color-mix(in srgb, var(--colorNeutralForeground1) 60%, transparent);
+  color: var(--colorNeutralForegroundOnBrand);
+  font-size: 11px;
+  font-weight: var(--fontWeightRegular);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.hint {
+  font-weight: var(--fontWeightRegular);
+  font-size: var(--fontSizeBase200);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}

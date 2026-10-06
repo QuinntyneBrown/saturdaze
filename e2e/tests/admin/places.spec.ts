@@ -56,7 +56,9 @@ test.describe("Admin places", () => {
     await a.sortSelect().selectOption("name");
     await expect.poll(() => new URL(page.url()).searchParams.get("sort")).toBe("name");
     const names = await a.rowTitle(a.rows()).allTextContents();
-    expect(names).toEqual([...names].sort((x, y) => x.localeCompare(y, undefined, { sensitivity: "base" })));
+    // The API orders by OrdinalIgnoreCase: compare lowercased code units, not locale rules.
+    const lower = names.map((n) => n.toLowerCase());
+    expect(lower).toEqual([...lower].sort());
   });
 
   test("the pager reports the page and disables both ends on one page", async ({ pages }) => {

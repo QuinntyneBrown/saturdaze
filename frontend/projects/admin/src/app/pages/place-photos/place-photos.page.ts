@@ -36,6 +36,11 @@ import {
   MakePrimaryDialogData,
   MakePrimaryDialogResult,
 } from '../../dialogs/make-primary-dialog/make-primary-dialog';
+import {
+  UploadPhotoDialog,
+  UploadPhotoDialogData,
+  UploadPhotoDialogResult,
+} from '../../dialogs/upload-photo-dialog/upload-photo-dialog';
 import { chipTone } from '../../shared/chip-tones';
 
 type Status = 'loading' | 'ready' | 'missing';
@@ -98,6 +103,26 @@ export class PlacePhotosPage {
     await this.run(async () => {
       await this.photos.makePrimary(tile.id);
     });
+  }
+
+  /** AD1: upload a curated photo; the dialog sends it and shows refusals in place (L2-115). */
+  protected async upload(): Promise<void> {
+    const v = this.view();
+    if (!v) return;
+    const ref = this.dialog.open<UploadPhotoDialogResult, UploadPhotoDialogData>(
+      UploadPhotoDialog,
+      {
+        ...DIALOG_OPTIONS,
+        data: {
+          placeName: v.name,
+          upload: async (file, details) => {
+            await this.photos.upload(v.kind, v.id, file, details);
+          },
+        },
+      },
+    );
+    if ((await firstValueFrom(ref.closed)) !== 'uploaded') return;
+    await this.run(async () => undefined);
   }
 
   /** AD3: edit alt text, attribution and licence (L2-118). */

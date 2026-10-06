@@ -52,8 +52,9 @@ export class AdminPlacePage extends AdminPage {
     return this.photoGrid.locator(".photo-tile");
   }
 
+  /** A tile by its alt-text detail (the image itself may be a fallback when its host is unreachable). */
   tile(alt: string): Locator {
-    return this.tiles().filter({ has: this.page.locator(`img[alt="${alt}"]`) });
+    return this.tiles().filter({ has: this.page.locator(".details__value", { hasText: alt }) });
   }
 
   primaryTile(): Locator {
@@ -70,5 +71,27 @@ export class AdminPlacePage extends AdminPage {
 
   tileAction(tile: Locator, name: string): Locator {
     return control(tile.locator(".photo-tile__actions"), name);
+  }
+
+  /* ---------- Header actions and dialogs ---------- */
+
+  uploadButton(): Locator {
+    return this.headerAction("Upload photo");
+  }
+
+  /** AD1's file input ("Choose a photo"). */
+  uploadFileInput(): Locator {
+    return this.dialog().getByLabel("Choose a photo", { exact: true });
+  }
+
+  /** AD1 / AD3: alt text, attribution and licence (a required field's label also reads "Required"). */
+  async fillPhotoDetails(details: { alt?: string; attribution?: string; licence?: string }): Promise<void> {
+    if (details.alt !== undefined) await this.dialogField("Alt text").fill(details.alt);
+    if (details.attribution !== undefined) await this.dialog().getByLabel("Attribution").fill(details.attribution);
+    if (details.licence !== undefined) await this.dialogField("Licence").selectOption(details.licence);
+  }
+
+  dialogBanner(): Locator {
+    return this.dialog().locator('.banner--warn[role="alert"]');
   }
 }

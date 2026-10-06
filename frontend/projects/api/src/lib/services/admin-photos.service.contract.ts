@@ -19,6 +19,11 @@ export interface IAdminPhotosService {
   makePrimary(photoId: string): Promise<AdminPhotoDto>;
   /** `PATCH /api/admin/photos/{photoId}`: alt text, attribution and licence; the URL never changes. */
   edit(photoId: string, details: PhotoDetails): Promise<AdminPhotoDto>;
+  /**
+   * `POST /api/admin/places/{kind}/{id}/photos` as multipart (L2-115): a JPEG, PNG or WebP up to
+   * 10 MB with its details. Rejects with the server's error (413, `unsupported_image`, field errors).
+   */
+  upload(kind: string, placeId: string, file: Blob, details: PhotoDetails): Promise<AdminPhotoDto>;
 }
 
 export const ADMIN_PHOTOS_SERVICE = new InjectionToken<IAdminPhotosService>('ADMIN_PHOTOS_SERVICE');

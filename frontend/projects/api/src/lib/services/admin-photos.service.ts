@@ -23,4 +23,14 @@ export class AdminPhotosService implements IAdminPhotosService {
   edit(photoId: string, details: PhotoDetails): Promise<AdminPhotoDto> {
     return firstValueFrom(this.http.patch<AdminPhotoDto>(this.photoUrl(photoId), details));
   }
+
+  upload(kind: string, placeId: string, file: Blob, details: PhotoDetails): Promise<AdminPhotoDto> {
+    const form = new FormData();
+    form.append('file', file);
+    form.append('alt', details.alt);
+    form.append('attribution', details.attribution);
+    form.append('licence', details.licence);
+    const url = `${this.baseUrl}/api/admin/places/${encodeURIComponent(kind)}/${encodeURIComponent(placeId)}/photos`;
+    return firstValueFrom(this.http.post<AdminPhotoDto>(url, form));
+  }
 }

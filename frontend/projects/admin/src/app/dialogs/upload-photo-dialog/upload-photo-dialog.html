@@ -1,0 +1,56 @@
+<sd-dialog
+  wide
+  title="Upload a photo"
+  subtitle="JPEG, PNG or WebP up to 10 MB. It is re-encoded and location data is removed before it is saved."
+>
+  <label class="photo-pick__opt photo-pick__upload upload-drop" [class.is-chosen]="!!preview()">
+    <input
+      type="file"
+      accept="image/jpeg,image/png,image/webp"
+      aria-label="Choose a photo"
+      (change)="choose($event)"
+    />
+    @if (preview(); as src) {
+      <img [src]="src" alt="" />
+      <span class="photo-pick__name">{{ fileLabel() }}</span>
+    } @else {
+      <sd-icon name="plus" />
+      Choose a photo
+      <span class="hint">for {{ data.placeName }}</span>
+    }
+  </label>
+  @if (error()) {
+    <sd-banner tone="warn" role="alert" icon="close">{{ error() }}</sd-banner>
+  }
+  <form class="form" [formGroup]="form" (ngSubmit)="save()">
+    <sd-text-input
+      label="Alt text"
+      name="alt"
+      formControlName="alt"
+      hint='What a person who cannot see the photo should know. Families see "Photo of the place" when it is empty.'
+    />
+    <sd-text-input label="Attribution" name="attribution" formControlName="attribution" required />
+    <sd-select label="Licence" name="licence" [options]="licences" formControlName="licence" />
+    @if (isOther()) {
+      <sd-text-input
+        label="Licence text"
+        name="licenceText"
+        formControlName="licenceText"
+        placeholder="Who allows this photo, and under what terms"
+        required
+      />
+    }
+    <button type="submit" hidden></button>
+  </form>
+  <sd-button slot="actions" variant="quiet" type="button" (click)="cancel()">Cancel</sd-button>
+  <sd-button
+    slot="actions"
+    variant="primary"
+    type="button"
+    [disabled]="!canSave()"
+    (click)="save()"
+  >
+    <sd-icon name="check" />
+    Save photo
+  </sd-button>
+</sd-dialog>

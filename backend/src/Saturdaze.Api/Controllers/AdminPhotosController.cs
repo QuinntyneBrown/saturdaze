@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Saturdaze.Application.Admin.Photos;
 using Saturdaze.Application.Exceptions;
+using Saturdaze.Application.Photos;
 using Saturdaze.Domain.Enums;
 
 namespace Saturdaze.Api.Controllers;
@@ -38,6 +39,42 @@ public sealed class AdminPhotosController : ControllerBase
     [HttpGet("places/{kind}/{id:guid}/photos")]
     public async Task<ActionResult<PlacePhotosDto>> PlacePhotos(string kind, Guid id, CancellationToken ct)
         => Ok(await _sender.Send(new GetPlacePhotosQuery(ParseKind(kind), id), ct));
+
+    /// <summary>
+    /// A curated upload (L2-115): multipart <c>file</c> (JPEG, PNG or WebP up to 10 MB) with
+    /// <c>alt</c>, <c>attribution</c> and <c>licence</c> fields. Oversize uploads are refused with
+    /// 413 before anything is read or stored.
+    /// </summary>
+    [HttpPost("places/{kind}/{id:guid}/photos")]
+    [RequestSizeLimit(UploadRequestLimit)]
+    [Consumes("multipart/form-data")]
+    public async Task<ActionResult<AdminPhotoDto>> Upload(string kind, Guid id, CancellationToken ct)
+    {
+        var placeKind = ParseKind(kind);
+        const long max = PhotoOptions.MaxUploadBytes;
+        if (Request.ContentLength > max + MultipartOverhead) return TooLarge();
+        if (!Request.HasFormContentType)
+            throw new ValidationException("file", "Send the photo as multipart form data.");
+
+        var form = await Request.ReadFormAsync(ct);
+        var file = form.Files.GetFile("file")
+            ?? throw new ValidationException("file", "Choose a photo to upload.");
+        if (file.Length > max) return TooLarge();
+
+        using var buffer = new MemoryStream((int)file.Length);
+        await file.CopyToAsync(buffer, ct);
+        var dto = await _sender.Send(new UploadCuratedPhotoCommand(
+            placeKind, id, buffer.ToArray(), form["alt"], form["attribution"], form["licence"]), ct);
+        return CreatedAtAction(nameof(PlacePhotos), new { kind = placeKind.ToString(), id }, dto);
+    }
+
+    private const long UploadRequestLimit = 12 * 1024 * 1024;
+    private const long MultipartOverhead = 64 * 1024;
+
+    private ObjectResult TooLarge() => Problem(
+        statusCode: StatusCodes.Status413PayloadTooLarge,
+        title: "Photo too large",
+        detail: "Photos must be 10 MB or smaller.");
 
     public record EditPhotoRequest(string? Alt, string? Attribution, string? Licence);
 
