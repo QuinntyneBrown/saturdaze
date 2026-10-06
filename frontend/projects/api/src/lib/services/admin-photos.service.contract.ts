@@ -35,6 +35,12 @@ export interface IAdminPhotosService {
     url: string,
     details: PhotoDetails,
   ): Promise<AdminPhotoDto>;
+
+  /**
+   * `DELETE /api/admin/photos/{photoId}?nextPrimaryId=` (L2-119). Removing the primary needs
+   * `nextPrimaryId`: a sibling's id, or `'none'` to leave the place without a photo.
+   */
+  remove(photoId: string, nextPrimaryId: string | null): Promise<void>;
 }
 
 export const ADMIN_PHOTOS_SERVICE = new InjectionToken<IAdminPhotosService>('ADMIN_PHOTOS_SERVICE');

@@ -107,4 +107,13 @@ export class AdminPlacePage extends AdminPage {
   dialogBanner(): Locator {
     return this.dialog().locator('.banner--warn[role="alert"]');
   }
+
+  /** AD5's next-primary picker: a radio per sibling plus "No photo". */
+  nextPrimaryOptions(): Locator {
+    return this.dialog().locator('.photo-pick input[type="radio"]');
+  }
+
+  nextPrimaryOption(name: string | RegExp): Locator {
+    return this.dialog().getByRole("radio", { name });
+  }
 }

@@ -1,0 +1,43 @@
+<sd-dialog [wide]="isPrimary" [title]="title" [subtitle]="subtitle">
+  @if (isPrimary) {
+    <div class="field">
+      <span class="field__label" id="remove-next-label">Next primary</span>
+      <div class="photo-pick" role="radiogroup" aria-labelledby="remove-next-label">
+        @for (sibling of data.siblings; track sibling.id) {
+          <label class="photo-pick__opt">
+            <input
+              type="radio"
+              name="next-primary"
+              [value]="sibling.id"
+              [checked]="next() === sibling.id"
+              [attr.aria-label]="optionLabel(sibling)"
+              (change)="next.set(sibling.id)"
+            />
+            <sd-media ratio="4:3" [photo]="sibling.media" tone="indoor" eager />
+            <span class="photo-pick__name">{{ optionLabel(sibling) }}</span>
+          </label>
+        }
+        <label class="photo-pick__opt photo-pick__upload">
+          <input
+            type="radio"
+            name="next-primary"
+            [value]="noPhoto"
+            [checked]="next() === noPhoto"
+            aria-label="No photo"
+            (change)="next.set(noPhoto)"
+          />
+          <sd-icon name="close" />
+          No photo
+        </label>
+      </div>
+    </div>
+    <p class="hint">{{ impact() }}</p>
+  } @else {
+    <sd-media class="photo-edit__media" ratio="4:3" [photo]="data.tile.media" tone="indoor" eager />
+  }
+  <sd-button slot="actions" variant="quiet" type="button" (click)="cancel()">Cancel</sd-button>
+  <sd-button slot="actions" variant="danger" type="button" (click)="remove()">
+    <sd-icon name="trash" />
+    Remove photo
+  </sd-button>
+</sd-dialog>

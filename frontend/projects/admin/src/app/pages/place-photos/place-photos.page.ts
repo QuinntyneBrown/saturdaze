@@ -42,6 +42,11 @@ import {
   MakePrimaryDialogResult,
 } from '../../dialogs/make-primary-dialog/make-primary-dialog';
 import {
+  RemovePhotoDialog,
+  RemovePhotoDialogData,
+  RemovePhotoDialogResult,
+} from '../../dialogs/remove-photo-dialog/remove-photo-dialog';
+import {
   UploadPhotoDialog,
   UploadPhotoDialogData,
   UploadPhotoDialogResult,
@@ -160,6 +165,29 @@ export class PlacePhotosPage {
     if (!result) return;
     await this.run(async () => {
       await this.photos.edit(tile.id, result);
+    });
+  }
+
+  /** AD5: remove a photo; the primary needs its successor chosen first (L2-119). */
+  protected async remove(tile: PhotoTileView): Promise<void> {
+    const v = this.view();
+    if (!v) return;
+    const ref = this.dialog.open<RemovePhotoDialogResult, RemovePhotoDialogData>(
+      RemovePhotoDialog,
+      {
+        ...DIALOG_OPTIONS,
+        data: {
+          tile,
+          siblings: v.tiles.filter((t) => t.id !== tile.id),
+          placeName: v.name,
+          coverImpact: v.coverImpact,
+        },
+      },
+    );
+    const result = await firstValueFrom(ref.closed);
+    if (!result) return;
+    await this.run(async () => {
+      await this.photos.remove(tile.id, result.nextPrimaryId);
     });
   }
 

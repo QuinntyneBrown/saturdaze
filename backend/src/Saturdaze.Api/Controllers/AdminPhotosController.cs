@@ -100,6 +100,17 @@ public sealed class AdminPhotosController : ControllerBase
     public async Task<ActionResult<AdminPhotoDto>> MakePrimary(Guid photoId, CancellationToken ct)
         => Ok(await _sender.Send(new MakePhotoPrimaryCommand(photoId), ct));
 
+    /// <summary>
+    /// Removes the photo and, for a curated upload, its file (L2-119). Removing the primary needs
+    /// <c>nextPrimaryId</c>: a sibling's id or <c>none</c>.
+    /// </summary>
+    [HttpDelete("photos/{photoId:guid}")]
+    public async Task<IActionResult> Remove(Guid photoId, [FromQuery] string? nextPrimaryId, CancellationToken ct)
+    {
+        await _sender.Send(new RemovePhotoCommand(photoId, nextPrimaryId), ct);
+        return NoContent();
+    }
+
     private static PlaceKind ParseKind(string kind)
         => Enum.TryParse<PlaceKind>(kind, true, out var parsed)
             ? parsed

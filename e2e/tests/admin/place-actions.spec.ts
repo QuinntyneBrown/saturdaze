@@ -134,4 +134,42 @@ test.describe("Admin place photo actions", () => {
     await expect(a.tileDetail(tile, "Credit")).toHaveText("Photo · Jo Doe");
     await expect(a.tileDetail(tile, "Licence")).toHaveText("CC BY-SA 4.0");
   });
+
+  test("removes a photo, and removing the primary means choosing its successor", async ({ page, pages }) => {
+    // Traces to: L2-119 AC1, AC4
+    const a = pages.adminPlace;
+    const alt = `Gone ${Date.now().toString(36)}`;
+    await a.uploadButton().click();
+    await a.uploadFileInput().setInputFiles(FAMILY_PHOTO);
+    await a.fillPhotoDetails({ alt, attribution: "Photo · Saturdaze", licence: "CC0" });
+    await a.dialogAction("Save photo").click();
+    await expect(a.dialog()).toHaveCount(0);
+    const count = await a.tiles().count();
+
+    // A non-primary photo just confirms.
+    await a.tileAction(a.tile(alt), "Remove").click();
+    await expect(a.dialogTitle()).toHaveText("Remove this photo?");
+    await expect(a.nextPrimaryOptions()).toHaveCount(0);
+    const removed = page.waitForResponse((r) => /\/api\/admin\/photos\/[^/?]+/.test(r.url()) && r.request().method() === "DELETE");
+    await a.dialogAction("Remove photo").click();
+    expect((await removed).status()).toBe(204);
+    await expect(a.tile(alt)).toHaveCount(0);
+    await expect(a.tiles()).toHaveCount(count - 1);
+
+    // The primary needs a successor: pick the first sibling and it becomes primary.
+    const primaryAlt = (await a.tileDetail(a.primaryTile(), "Alt text").textContent())!.trim();
+    await a.tileAction(a.primaryTile(), "Remove").click();
+    await expect(a.dialogTitle()).toHaveText("Remove the primary photo?");
+    await expect(a.nextPrimaryOptions()).toHaveCount(count - 1);
+    await expect(a.nextPrimaryOption("No photo")).not.toBeChecked();
+    const chosen = a.nextPrimaryOptions().first();
+    await chosen.check();
+    const chosenName = await chosen.getAttribute("aria-label");
+    await a.dialogAction("Remove photo").click();
+    await expect(a.dialog()).toHaveCount(0);
+    await expect(a.tiles()).toHaveCount(count - 2);
+    await expect(a.primaryTile()).toHaveCount(1);
+    await expect(a.tileDetail(a.primaryTile(), "Alt text")).not.toHaveText(primaryAlt);
+    await expect(a.tileDetail(a.primaryTile(), "Alt text")).toHaveText(chosenName!.replace(/^[^·]+· /, ""));
+  });
 });

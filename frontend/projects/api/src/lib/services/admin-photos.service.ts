@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 
@@ -46,5 +46,10 @@ export class AdminPhotosService implements IAdminPhotosService {
     return firstValueFrom(
       this.http.post<AdminPhotoDto>(this.placePhotosUrl(kind, placeId), { url, ...details }),
     );
+  }
+
+  async remove(photoId: string, nextPrimaryId: string | null): Promise<void> {
+    const params = nextPrimaryId ? new HttpParams().set('nextPrimaryId', nextPrimaryId) : undefined;
+    await firstValueFrom(this.http.delete<void>(this.photoUrl(photoId), { params }));
   }
 }
