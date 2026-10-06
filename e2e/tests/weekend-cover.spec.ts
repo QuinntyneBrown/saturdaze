@@ -1,7 +1,7 @@
 import { test, expect } from "../fixtures/sd-test.js";
 import { stubWeekendCover } from "../fixtures/weekend-cover.js";
 
-/** Weekend cover photo — `.cover` and D28 (L2-108). */
+/** Weekend cover photo — `.cover` and D29 (L2-108). */
 
 test.describe("Weekend — cover photo", () => {
   test("the cover leads with the photo, its credit, the dates, the title and the summary", async ({ page, goto, pages }) => {

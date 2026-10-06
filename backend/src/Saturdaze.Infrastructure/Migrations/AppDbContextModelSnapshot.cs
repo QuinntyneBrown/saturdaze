@@ -702,6 +702,9 @@ namespace Saturdaze.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("AvatarToken")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<DateTimeOffset>("CreatedAtUtc")
                         .HasColumnType("datetimeoffset");
 
@@ -734,10 +737,36 @@ namespace Saturdaze.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("AvatarToken")
+                        .IsUnique()
+                        .HasFilter("[AvatarToken] IS NOT NULL");
+
                     b.HasIndex("NormalizedEmail")
                         .IsUnique();
 
                     b.ToTable("Users", (string)null);
+                });
+
+            modelBuilder.Entity("Saturdaze.Domain.Entities.UserAvatar", b =>
+                {
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ContentType")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("nvarchar(32)");
+
+                    b.Property<byte[]>("Data")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<DateTimeOffset>("UpdatedAtUtc")
+                        .HasColumnType("datetimeoffset");
+
+                    b.HasKey("UserId");
+
+                    b.ToTable("UserAvatars", (string)null);
                 });
 
             modelBuilder.Entity("Saturdaze.Domain.Entities.Weekend", b =>
@@ -1120,6 +1149,15 @@ namespace Saturdaze.Infrastructure.Migrations
                         });
 
                     b.Navigation("Home");
+                });
+
+            modelBuilder.Entity("Saturdaze.Domain.Entities.UserAvatar", b =>
+                {
+                    b.HasOne("Saturdaze.Domain.Entities.User", null)
+                        .WithOne()
+                        .HasForeignKey("Saturdaze.Domain.Entities.UserAvatar", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Saturdaze.Domain.Entities.Family", b =>

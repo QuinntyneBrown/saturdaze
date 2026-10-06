@@ -79,7 +79,13 @@ describe('VerifyEmailPage', () => {
   });
 
   it('falls back to the signed-in user, then to "your inbox"', async () => {
-    session.user.set({ id: 'u1', email: 'sara@example.com', role: 'User', emailVerifiedUtc: null });
+    session.user.set({
+      id: 'u1',
+      email: 'sara@example.com',
+      role: 'User',
+      emailVerifiedUtc: null,
+      avatarUrl: null,
+    });
     await mount();
     expect(component['maskedEmail']()).toBe('s•••a@example.com');
 

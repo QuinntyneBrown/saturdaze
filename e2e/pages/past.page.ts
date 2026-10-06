@@ -98,7 +98,7 @@ export class PastPage extends BasePage {
     return card.locator(".card__media .media__credit");
   }
 
-  /** "Add a photo to {title}" on a weekend without a cover; opens D28. */
+  /** "Add a photo to {title}" on a weekend without a cover; opens D29. */
   addPhotoControl(card: Locator): Locator {
     return card.getByRole("button", { name: /^Add a photo to / });
   }
@@ -116,7 +116,7 @@ export class PastPage extends BasePage {
     return firstRow.length;
   }
 
-  /** D28's "Your own photo" input, when opened from a card. */
+  /** D29's "Your own photo" input, when opened from a card. */
   async chooseOwnPhoto(file: string): Promise<void> {
     await this.dialog().getByLabel("Upload your own photo", { exact: true }).setInputFiles(file);
   }

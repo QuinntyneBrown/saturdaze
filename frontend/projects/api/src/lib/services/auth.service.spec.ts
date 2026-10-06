@@ -14,7 +14,13 @@ const SUCCESS = {
     accessTokenExpiresAtUtc: '2026-09-02T12:00:00Z',
     tokenType: 'Bearer',
   },
-  user: { id: 'u1', email: 'quinn@example.com', role: 'User', emailVerifiedUtc: null },
+  user: {
+    id: 'u1',
+    email: 'quinn@example.com',
+    role: 'User',
+    emailVerifiedUtc: null,
+    avatarUrl: null,
+  },
 };
 
 describe('AuthService', () => {

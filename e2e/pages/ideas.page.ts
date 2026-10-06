@@ -130,7 +130,7 @@ export class IdeasPage extends BasePage {
     return card.getByRole("button", { name: /^Add to day/ });
   }
 
-  /** D27's day choice: a radio in the "Which day" group. */
+  /** D28's day choice: a radio in the "Which day" group. */
   addToDayDayOption(day: "Saturday" | "Sunday"): Locator {
     return this.dialog().getByRole("radio", { name: day, exact: true });
   }

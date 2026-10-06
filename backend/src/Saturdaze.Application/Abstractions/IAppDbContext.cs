@@ -21,6 +21,7 @@ public interface IAppDbContext
     DbSet<ItineraryBlock> ItineraryBlocks { get; }
     DbSet<ShoppingErrand> ShoppingErrands { get; }
     DbSet<User> Users { get; }
+    DbSet<UserAvatar> UserAvatars { get; }
     DbSet<RefreshToken> RefreshTokens { get; }
     DbSet<PasswordResetToken> PasswordResetTokens { get; }
     DbSet<EmailVerificationToken> EmailVerificationTokens { get; }

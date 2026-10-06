@@ -15,5 +15,6 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         b.HasIndex(x => x.NormalizedEmail).IsUnique();
         b.Property(x => x.PasswordHash).HasMaxLength(512).IsRequired();
         b.Property(x => x.Role).HasConversion<int>();
+        b.HasIndex(x => x.AvatarToken).IsUnique().HasFilter("[AvatarToken] IS NOT NULL");
     }
 }

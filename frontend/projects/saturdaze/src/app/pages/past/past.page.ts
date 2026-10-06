@@ -116,7 +116,7 @@ export class PastPage {
     await this.run(() => this.saved.rate(card.id, result.rating));
   }
 
-  /** "Add a photo" on a card without a cover → D28 (L2-110 AC2). */
+  /** "Add a photo" on a card without a cover → D29 (L2-110 AC2). */
   protected async addPhoto(card: PastWeekendCard): Promise<void> {
     let choices: CoverPhotoDialogData['choices'] = [];
     try {

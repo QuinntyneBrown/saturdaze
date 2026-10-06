@@ -130,7 +130,7 @@ export interface IWeekendPlanService {
    *
    * @param {IdeaRequest} request - Which idea, day and timing
    *
-   * @returns {Promise<IdeaPlacementView>} The preview for D27
+   * @returns {Promise<IdeaPlacementView>} The preview for D28
    */
   previewIdea(request: IdeaRequest): Promise<IdeaPlacementView>;
   /**

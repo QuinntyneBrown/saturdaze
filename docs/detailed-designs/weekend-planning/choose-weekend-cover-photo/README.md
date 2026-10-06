@@ -16,7 +16,7 @@ Saturdaze is a web application that plans personalized family weekends. Each wee
 
 *signed URL* — time-limited URL that grants read access to one private object
 
-This feature adds the cover to the `Weekend` aggregate, the "Change photo" dialog (D28 in `docs/mocks/pages/dialogs.html`), a safe upload path, cover photos on Past cards, and Open Graph tags for shared links. Place photos come from `discovery/store-place-location-and-imagery`; the rest of the Weekend screen is `weekend-planning/map-itinerary-and-travel-legs`.
+This feature adds the cover to the `Weekend` aggregate, the "Change photo" dialog (D29 in `docs/mocks/pages/dialogs.html`), a safe upload path, cover photos on Past cards, and Open Graph tags for shared links. Place photos come from `discovery/store-place-location-and-imagery`; the rest of the Weekend screen is `weekend-planning/map-itinerary-and-travel-legs`.
 
 ## Description
 
@@ -75,9 +75,9 @@ The following L2 requirements refine the cited L1 capabilities.
 
 | L2 ID | Refines (L1) | Requirement |
 |-------|--------------|-------------|
-| `L2-108` | `L1-034` | The Weekend screen shall open with a cover (`.cover`) showing the weekend's cover photo with the date range, the title, and the summary overlaid. The cover defaults to the primary photo of Saturday's day highlight, else Sunday's, else a tinted fallback. "Change photo" opens a CDK dialog (D28) offering every stop's photo plus "Your own photo". |
+| `L2-108` | `L1-034` | The Weekend screen shall open with a cover (`.cover`) showing the weekend's cover photo with the date range, the title, and the summary overlaid. The cover defaults to the primary photo of Saturday's day highlight, else Sunday's, else a tinted fallback. "Change photo" opens a CDK dialog (D29) offering every stop's photo plus "Your own photo". |
 | `L2-109` | `L1-034`, `L1-012` | `POST /api/weekends/{id}/cover` shall accept a JPEG, PNG, or WebP up to 10 MB from a member of the owning family, store it in private object storage, and set it as the cover. The server shall verify the file by content (magic bytes), re-encode it, strip all metadata including EXIF location, and serve it only through short-lived signed URLs to the family or to a valid share-link holder. |
-| `L2-110` | `L1-034`, `L1-010` | Past weekend cards shall lead with the weekend's cover (`docs/mocks/pages/past.html`), labelled "Your photo" for family uploads and "From {place}" otherwise. A past weekend without a cover shall show an "Add a photo" tile that opens D28. The shared-weekend page shall emit Open Graph `og:image`, `og:title`, and `og:description` so link previews show the cover. |
+| `L2-110` | `L1-034`, `L1-010` | Past weekend cards shall lead with the weekend's cover (`docs/mocks/pages/past.html`), labelled "Your photo" for family uploads and "From {place}" otherwise. A past weekend without a cover shall show an "Add a photo" tile that opens D29. The shared-weekend page shall emit Open Graph `og:image`, `og:title`, and `og:description` so link previews show the cover. |
 
 ## Diagrams
 

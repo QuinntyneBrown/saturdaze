@@ -45,7 +45,7 @@ export interface ISavedService {
    */
   rename(id: string, title: string | null): Promise<void>;
   /**
-   * Cover Choices — each of a past weekend's stop photos, for D28 (L2-110 AC2).
+   * Cover Choices — each of a past weekend's stop photos, for D29 (L2-110 AC2).
    *
    * @param {string} id - The weekend id
    *

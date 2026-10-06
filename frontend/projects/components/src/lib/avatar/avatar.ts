@@ -3,7 +3,8 @@ import { ChangeDetectionStrategy, Component, computed, input } from '@angular/co
 /**
  * Initials disc for a family member. Mirrors `.avatar` in
  * docs/mocks-v2/styles/app.css. Person tones: Quinn primary, Sara leaf, Eli
- * sky, Mae sun — pages map member index → tone.
+ * sky, Mae sun — pages map member index → tone. A `src` (profile photo)
+ * replaces the initial with the image.
  */
 
 export type AvatarTone = 'default' | 'primary' | 'leaf' | 'sky' | 'sun' | 'indoor';
@@ -26,6 +27,7 @@ export type AvatarSize = 'sm' | 'md' | 'lg' | 'xl';
     '[class.avatar--e]': 'tone() === "sky"',
     '[class.avatar--m]': 'tone() === "sun"',
     '[class.avatar--indoor]': 'tone() === "indoor"',
+    '[class.avatar--photo]': '!!src()',
     '[attr.name]': 'name()',
     '[attr.tone]': 'tone() === "default" ? null : tone()',
     '[attr.size]': 'size()',
@@ -36,6 +38,8 @@ export class Avatar {
   readonly tone = input<AvatarTone>('default');
   /** sm 24px · md 28px · lg 32px (default) · xl 36px. */
   readonly size = input<AvatarSize>('lg');
+  /** Profile photo URL; when set it is shown instead of the initial. */
+  readonly src = input<string | null>(null);
 
   protected readonly initial = computed(() => (this.name().trim().charAt(0) || '?').toUpperCase());
 }

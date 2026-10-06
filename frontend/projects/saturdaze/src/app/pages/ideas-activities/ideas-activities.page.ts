@@ -11,7 +11,7 @@ import { chipTone, filterTone } from '../../shared/chip-tones';
  * Ideas · Activities — `docs/mocks-v2/pages/ideas.html`: filter chips, then
  * "Right for this weekend's weather", "If the weather turns" and "Try
  * something new". Cards lead with the place's photo (L2-106), link out to a
- * map, and offer "Add to day" (D27, L2-107).
+ * map, and offer "Add to day" (D28, L2-107).
  */
 @Component({
   selector: 'app-ideas-activities',

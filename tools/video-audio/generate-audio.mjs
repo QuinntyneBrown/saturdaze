@@ -6,16 +6,16 @@
 //   node tools/video-audio/generate-audio.mjs docs/videos/01-x             synthesize the MP3
 //   node tools/video-audio/generate-audio.mjs --say "`_tokens.scss`"        pronunciation test (WAV)
 //
-// Engines (--engine azure|edge|piper; default: azure when AZURE_SPEECH_KEY is set, else edge
-// when the `edge-tts` Python package is importable, else piper):
-//   azure  Azure AI Speech REST, one SSML request per `##` section. Reads AZURE_SPEECH_KEY and
-//          AZURE_SPEECH_REGION (default eastus2) from the environment only.
-//   edge   The same Microsoft neural voices (Andrew / Ava) through the free Edge read-aloud
-//          service via `pip install edge-tts`, one request per paragraph. No key. Honours
+// Engines (--engine edge|piper, default edge). Both synthesize one clip per paragraph, so the
+// timing manifest is built from measured clip durations, never estimated:
+//   edge   Free Microsoft Edge read-aloud voices via the `edge-tts` Python package
+//          (`python -m pip install edge-tts`). Needs internet access; no key or subscription.
+//          PYTHON overrides the interpreter (default python3), EDGE_VOICE / EDGE_VOICE_2 the
+//          narrator and second-speaker voices (`python -m edge_tts --list-voices`). Honours
 //          HTTPS_PROXY; behind a TLS-inspecting proxy set SSL_CERT_FILE to its CA bundle.
-//   piper  Offline neural TTS (`pip install piper-tts`), one request per paragraph. Needs
-//          PIPER_MODEL pointing at a voice .onnx (e.g. en_US-ryan-high.onnx); PIPER_MODEL_2
-//          optionally voices `**Name:**` paragraphs.
+//   piper  Offline neural TTS (`pip install piper-tts`). Needs PIPER_MODEL pointing at a voice
+//          .onnx (e.g. en_US-ryan-high.onnx); PIPER_MODEL_2 optionally voices `**Name:**`
+//          paragraphs.
 //
 // Writes <folder>/<folder-name>.mp3 and the timing manifest
 // .cache/<folder-name>/manifest.json that tools/video-build syncs slides and captions to.
@@ -29,10 +29,9 @@ const repo = resolve(here, '../..');
 const WORDS_PER_MINUTE = 150;
 const PARAGRAPH_GAP = 0.35; // seconds of silence between paragraphs
 const SECTION_GAP = 0.8; // and between sections
-const AZURE_VOICE = 'en-US-AndrewMultilingualNeural';
-const AZURE_VOICE_2 = 'en-US-AvaMultilingualNeural';
-// Azure bills neural voices per character; override when the price list changes.
-const USD_PER_MILLION_CHARS = Number(process.env.AZURE_TTS_USD_PER_MILLION ?? 15);
+const EDGE_VOICE = process.env.EDGE_VOICE ?? 'en-US-AndrewMultilingualNeural';
+const EDGE_VOICE_2 = process.env.EDGE_VOICE_2 ?? 'en-US-AvaMultilingualNeural';
+const python = process.env.PYTHON ?? 'python3';
 
 const ffmpeg = process.env.FFMPEG_PATH ?? 'ffmpeg';
 const ffprobe = process.env.FFPROBE_PATH ?? 'ffprobe';
@@ -161,76 +160,57 @@ function silence(file, seconds) {
   execFileSync(ffmpeg, ['-y', '-v', 'error', '-f', 'lavfi', '-i', 'anullsrc=r=24000:cl=mono', '-t', String(seconds), '-c:a', 'pcm_s16le', file]);
 }
 
-function piperSay(text, model, out) {
-  const r = spawnSync(process.env.PIPER_BIN ?? 'python3', [...(process.env.PIPER_BIN ? [] : ['-m', 'piper']), '-m', model, '-f', out, '--sentence-silence', '0.25'], {
-    input: text,
-  });
-  if (r.status !== 0 || !existsSync(out)) throw new Error(`piper failed: ${r.stderr}`);
-  // Normalise to 24 kHz mono so every clip concatenates cleanly.
-  const norm = out.replace(/\.wav$/, '.24k.wav');
-  execFileSync(ffmpeg, ['-y', '-v', 'error', '-i', out, '-ar', '24000', '-ac', '1', '-c:a', 'pcm_s16le', norm]);
+/** Normalise a clip to 24 kHz mono PCM so every clip concatenates cleanly. */
+function normalise(file) {
+  const norm = file.replace(/\.(wav|mp3)$/, '.24k.wav');
+  execFileSync(ffmpeg, ['-y', '-v', 'error', '-i', file, '-ar', '24000', '-ac', '1', '-c:a', 'pcm_s16le', norm]);
   return norm;
 }
 
-const xml = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-
-const PYTHON = process.env.PYTHON ?? 'python3';
-
-/** True when `python3 -c "import edge_tts"` succeeds. */
-function edgeAvailable() {
-  return spawnSync(PYTHON, ['-c', 'import edge_tts'], { stdio: 'ignore' }).status === 0;
+function piperSay(text, speaker, out) {
+  const model = speaker && process.env.PIPER_MODEL_2 ? process.env.PIPER_MODEL_2 : process.env.PIPER_MODEL;
+  const r = spawnSync(process.env.PIPER_BIN ?? python, [...(process.env.PIPER_BIN ? [] : ['-m', 'piper']), '-m', model, '-f', out, '--sentence-silence', '0.25'], {
+    input: text,
+  });
+  if (r.status !== 0 || !existsSync(out)) throw new Error(`piper failed: ${r.stderr}`);
+  return normalise(out);
 }
 
-/** One paragraph through edge-tts (retried: the service drops a stream now and then). */
-function edgeSay(text, voice, out, attempts = 4) {
+/**
+ * One paragraph through edge-tts. Honours HTTPS_PROXY (behind a TLS-inspecting proxy, set
+ * SSL_CERT_FILE to its CA bundle) and retries with backoff: the service drops a stream now and then.
+ */
+function edgeSay(text, speaker, out, attempts = 4) {
+  const voice = speaker ? EDGE_VOICE_2 : EDGE_VOICE;
+  const mp3 = out.replace(/\.wav$/, '.mp3');
   const proxy = process.env.HTTPS_PROXY ?? process.env.https_proxy;
   let last = '';
   for (let i = 0; i < attempts; i++) {
-    rmSync(out, { force: true });
-    const r = spawnSync(PYTHON, ['-m', 'edge_tts', '--voice', voice, '--text', text, '--write-media', out, ...(proxy ? ['--proxy', proxy] : [])], {
-      encoding: 'utf8',
-    });
-    if (r.status === 0 && existsSync(out)) {
-      const wav = out.replace(/\.mp3$/, '.wav');
-      execFileSync(ffmpeg, ['-y', '-v', 'error', '-i', out, '-ar', '24000', '-ac', '1', '-c:a', 'pcm_s16le', wav]);
-      return wav;
+    const r = spawnSync(
+      python,
+      ['-m', 'edge_tts', '--voice', voice, '--text', text, '--write-media', mp3, ...(proxy ? ['--proxy', proxy] : [])],
+      { encoding: 'utf8' },
+    );
+    if (r.status === 0 && existsSync(mp3)) return normalise(mp3);
+    if (/No module named/.test(r.stderr ?? '')) {
+      throw new Error(`edge-tts failed (install it: ${python} -m pip install edge-tts): ${r.stderr.trim()}`);
     }
-    last = (r.stderr || r.stdout || '').trim().split('\n').at(-1) ?? '';
-    const wait = 2 ** (i + 1);
-    spawnSync('sleep', [String(wait)]);
+    last = (r.stderr || r.stdout || '').trim();
+    spawnSync('sleep', [String(2 ** (i + 1))]);
   }
   throw new Error(`edge-tts failed after ${attempts} attempts: ${last}`);
 }
 
-async function azureSay(ssml, out) {
-  const key = process.env.AZURE_SPEECH_KEY;
-  const region = process.env.AZURE_SPEECH_REGION ?? 'eastus2';
-  const res = await fetch(`https://${region}.tts.speech.microsoft.com/cognitiveservices/v1`, {
-    method: 'POST',
-    headers: {
-      'Ocp-Apim-Subscription-Key': key,
-      'Content-Type': 'application/ssml+xml',
-      'X-Microsoft-OutputFormat': 'audio-24khz-96kbitrate-mono-mp3',
-      'User-Agent': 'saturdaze-video-audio',
+const engines = {
+  edge: { say: edgeSay, voice: () => EDGE_VOICE, ready: () => {} },
+  piper: {
+    say: piperSay,
+    voice: () => basename(process.env.PIPER_MODEL ?? ''),
+    ready: () => {
+      if (!process.env.PIPER_MODEL) throw new Error('PIPER_MODEL is not set (path to a piper voice .onnx)');
     },
-    body: ssml,
-  });
-  if (!res.ok) throw new Error(`Azure Speech ${res.status}: ${await res.text()}`);
-  writeFileSync(out, Buffer.from(await res.arrayBuffer()));
-  const wav = out.replace(/\.mp3$/, '.wav');
-  execFileSync(ffmpeg, ['-y', '-v', 'error', '-i', out, '-ar', '24000', '-ac', '1', '-c:a', 'pcm_s16le', wav]);
-  return wav;
-}
-
-function sectionSsml(section) {
-  const voice = (speaker) => (speaker ? AZURE_VOICE_2 : AZURE_VOICE);
-  const parts = [];
-  for (const b of section.blocks) {
-    if (b.pause) parts.push(`<voice name="${AZURE_VOICE}"><break time="${b.pause}s"/></voice>`);
-    else parts.push(`<voice name="${voice(b.speaker)}">${xml(spoken(b.text))}<break time="${PARAGRAPH_GAP * 1000}ms"/></voice>`);
-  }
-  return `<speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xml:lang="en-US">${parts.join('')}</speak>`;
-}
+  },
+};
 
 // ---------------------------------------------------------------- main
 
@@ -238,16 +218,19 @@ async function main() {
   const args = process.argv.slice(2);
   const flag = (name) => args.includes(name);
   const opt = (name) => (args.includes(name) ? args[args.indexOf(name) + 1] : undefined);
-  const engine = opt('--engine') ?? (process.env.AZURE_SPEECH_KEY ? 'azure' : edgeAvailable() ? 'edge' : 'piper');
-  if (!['azure', 'edge', 'piper'].includes(engine)) throw new Error(`unknown engine "${engine}" (azure|edge|piper)`);
+  const engine = opt('--engine') ?? 'edge';
+  if (!engines[engine]) throw new Error(`unknown engine "${engine}" (use --engine edge|piper)`);
+  const { say, ready } = engines[engine];
 
   if (flag('--say')) {
     const text = spoken(opt('--say'));
     console.log(`spoken: ${text}`);
+    ready();
     const out = resolve(opt('--out') ?? 'pronunciation-test.wav');
-    if (engine === 'piper') execFileSync('cp', [piperSay(text, process.env.PIPER_MODEL, out), out]);
-    else if (engine === 'edge') edgeSay(text, AZURE_VOICE, out.replace(/\.wav$/, '.mp3')); // the 24 kHz WAV lands at `out`
-    else execFileSync('cp', [await azureSay(`<speak version="1.0" xml:lang="en-US"><voice name="${AZURE_VOICE}">${xml(text)}</voice></speak>`, out.replace(/\.wav$/, '.mp3')), out]);
+    mkdirSync(dirname(out), { recursive: true });
+    mkdirSync(join(repo, '.cache', 'say'), { recursive: true });
+    const clip = say(text, null, join(repo, '.cache', 'say', 'say.wav'));
+    execFileSync(ffmpeg, ['-y', '-v', 'error', '-i', clip, out]);
     console.log(`wrote ${out}`);
     return;
   }
@@ -257,7 +240,6 @@ async function main() {
   const script = parseScript(readFileSync(join(folder, 'script.md'), 'utf8'), join(folder, 'script.md'));
   const paras = script.sections.flatMap((s) => s.blocks.filter((b) => b.text));
   const totalWords = paras.reduce((n, b) => n + words(spoken(b.text)), 0);
-  const chars = paras.reduce((n, b) => n + spoken(b.text).length, 0);
   const pauses = script.sections.flatMap((s) => s.blocks).reduce((n, b) => n + (b.pause ?? 0), 0);
 
   if (flag('--spoken')) {
@@ -276,20 +258,15 @@ async function main() {
     if (min > 9) throw new Error(`section "${s.title}" is over 9 minutes`);
   }
   const est = totalWords / WORDS_PER_MINUTE + pauses / 60;
-  console.log(`  total ${totalWords} words, ~${est.toFixed(1)} min, ${chars} characters`);
-  console.log(`  Azure neural cost estimate: ~$${((chars / 1e6) * USD_PER_MILLION_CHARS).toFixed(2)}`);
+  console.log(`  total ${totalWords} words, ~${est.toFixed(1)} min`);
   if (flag('--dry-run')) return;
-
-  if (engine === 'azure' && !process.env.AZURE_SPEECH_KEY) throw new Error('AZURE_SPEECH_KEY is not set');
-  if (engine === 'piper' && !process.env.PIPER_MODEL) throw new Error('PIPER_MODEL is not set (path to a piper voice .onnx)');
-  if (engine === 'edge' && !edgeAvailable()) throw new Error('edge-tts is not installed (pip install edge-tts)');
-  console.log(`  engine: ${engine}`);
+  ready();
 
   const cache = join(repo, '.cache', name);
   rmSync(join(cache, 'audio'), { recursive: true, force: true });
   mkdirSync(join(cache, 'audio'), { recursive: true });
   const clips = [];
-  const manifest = { title: script.title, engine, voice: engine === 'piper' ? basename(process.env.PIPER_MODEL) : AZURE_VOICE, sections: [] };
+  const manifest = { title: script.title, engine, voice: engines[engine].voice(), sections: [] };
   let t = 0;
   let k = 0;
   const gapFile = (sec) => {
@@ -300,42 +277,18 @@ async function main() {
 
   for (const [si, s] of script.sections.entries()) {
     const sec = { title: s.title, start: t, blocks: [] };
-    if (engine === 'azure') {
-      const wav = await azureSay(sectionSsml(s), join(cache, 'audio', `s${si}.mp3`));
+    for (const b of s.blocks) {
+      if (b.pause) {
+        clips.push(gapFile(b.pause));
+        t += b.pause;
+        continue;
+      }
+      const wav = say(spoken(b.text), b.speaker, join(cache, 'audio', `p${String(k++).padStart(3, '0')}.wav`));
       const d = probeDuration(wav);
-      // Paragraph times inside a section are estimated from spoken length.
-      const weights = s.blocks.map((b) => (b.pause ? null : spoken(b.text).length + PARAGRAPH_GAP * 15));
-      const pauseTotal = s.blocks.reduce((n, b) => n + (b.pause ?? 0), 0);
-      const totalW = weights.reduce((n, w) => n + (w ?? 0), 0);
-      let bt = t;
-      for (const [bi, b] of s.blocks.entries()) {
-        const bd = b.pause ?? ((weights[bi] / totalW) * (d - pauseTotal));
-        if (b.text) sec.blocks.push({ start: bt, end: bt + bd, speaker: b.speaker, text: b.text, caption: caption(b.text) });
-        bt += bd;
-      }
-      clips.push(wav);
-      t += d;
-    } else {
-      for (const b of s.blocks) {
-        if (b.pause) {
-          clips.push(gapFile(b.pause));
-          t += b.pause;
-          continue;
-        }
-        const clip = join(cache, 'audio', `p${String(k++).padStart(3, '0')}`);
-        let wav;
-        if (engine === 'edge') {
-          wav = edgeSay(spoken(b.text), b.speaker ? AZURE_VOICE_2 : AZURE_VOICE, `${clip}.mp3`);
-        } else {
-          const model = b.speaker && process.env.PIPER_MODEL_2 ? process.env.PIPER_MODEL_2 : process.env.PIPER_MODEL;
-          wav = piperSay(spoken(b.text), model, `${clip}.wav`);
-        }
-        const d = probeDuration(wav);
-        sec.blocks.push({ start: t, end: t + d, speaker: b.speaker, text: b.text, caption: caption(b.text) });
-        clips.push(wav, gapFile(PARAGRAPH_GAP));
-        t += d + PARAGRAPH_GAP;
-        process.stdout.write('.');
-      }
+      sec.blocks.push({ start: t, end: t + d, speaker: b.speaker, text: b.text, caption: caption(b.text) });
+      clips.push(wav, gapFile(PARAGRAPH_GAP));
+      t += d + PARAGRAPH_GAP;
+      process.stdout.write('.');
     }
     sec.end = t;
     manifest.sections.push(sec);

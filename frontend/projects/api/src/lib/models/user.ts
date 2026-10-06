@@ -20,4 +20,9 @@ export interface User {
    * Email Verified Utc.
    */
   readonly emailVerifiedUtc: string | null;
+  /**
+   * Absolute URL of the profile photo, or `null` when the initial shows
+   * (L2-087). Anonymous capability URL, safe for `<img src>`.
+   */
+  readonly avatarUrl: string | null;
 }

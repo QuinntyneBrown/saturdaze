@@ -46,7 +46,7 @@ export interface WeekendView {
    */
   readonly dateRange: string;
   /**
-   * Cover Choices — the stop photos D28 offers.
+   * Cover Choices — the stop photos D29 offers.
    */
   readonly coverChoices: readonly CoverChoice[];
 }

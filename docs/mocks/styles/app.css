@@ -285,6 +285,8 @@
   .avatar--e { background: var(--sd-person-e-bg); color: var(--sd-person-e-ink); }
   .avatar--m { background: var(--sd-person-m-bg); color: var(--sd-person-m-ink); }
   .avatar--btn { cursor: pointer; transition: box-shadow var(--sd-dur-fast) var(--sd-ease); }
+  .avatar--photo { overflow: hidden; }
+  .avatar__img { display: block; width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
 
   /* ---- button ---- */
   .btn {
@@ -657,6 +659,9 @@
   }
   .dialog__panel::before { content: ""; width: 36px; height: 4px; border-radius: var(--sd-r-pill); background: var(--sd-ink-faint); margin: -6px auto 2px; opacity: 0.5; }
   .dialog--wide .dialog__panel { max-width: 520px; }
+  .photo-picker { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 20px; }
+  .photo-picker__preview { width: 96px; height: 96px; font-size: 36px; }
+  .photo-picker__field { flex: 1 1 180px; align-items: flex-start; }
   .dialog__header { display: flex; align-items: flex-start; gap: 12px; }
   .dialog__heading { min-width: 0; flex: 1; }
   .dialog__title { font-size: var(--sd-fs-lg); font-weight: var(--sd-fw-bold); line-height: 1.25; }

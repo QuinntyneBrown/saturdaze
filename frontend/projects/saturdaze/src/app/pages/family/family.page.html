@@ -117,15 +117,26 @@
 
       <sd-section title="Account">
         <sd-card variant="sunk" class="account-card">
-          <sd-avatar [name]="user()?.email ?? '?'" tone="primary" size="lg" />
+          <sd-avatar
+            [name]="user()?.email ?? '?'"
+            [src]="user()?.avatarUrl ?? null"
+            tone="primary"
+            size="lg"
+          />
           <div class="account-card__text">
             <p class="account-card__title">{{ user()?.email }}</p>
             <p class="account-card__sub">{{ accountSubtitle() }}</p>
           </div>
-          <sd-button variant="quiet" warnText (click)="signOut()">
-            <sd-icon name="sign_out" />
-            Sign out
-          </sd-button>
+          <div class="account-card__actions">
+            <sd-button variant="quiet" (click)="changePhoto()">
+              <sd-icon name="edit" />
+              {{ user()?.avatarUrl ? 'Change photo' : 'Add photo' }}
+            </sd-button>
+            <sd-button variant="quiet" warnText (click)="signOut()">
+              <sd-icon name="sign_out" />
+              Sign out
+            </sd-button>
+          </div>
         </sd-card>
       </sd-section>
     </div>

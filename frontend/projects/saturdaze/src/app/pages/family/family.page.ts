@@ -51,6 +51,11 @@ import {
   LikesDialogData,
   LikesDialogResult,
 } from '../../dialogs/likes-dialog/likes-dialog';
+import {
+  ProfilePhotoDialog,
+  ProfilePhotoDialogData,
+  ProfilePhotoDialogResult,
+} from '../../dialogs/profile-photo-dialog/profile-photo-dialog';
 import { signOutWith } from '../../shared/sign-out';
 
 const MONTHS = [
@@ -275,6 +280,26 @@ export class FamilyPage {
   }
 
   // ---- account --------------------------------------------------------
+
+  protected async changePhoto(): Promise<void> {
+    const user = this.user();
+    if (!user) return;
+    const ref = this.dialog.open<ProfilePhotoDialogResult, ProfilePhotoDialogData>(
+      ProfilePhotoDialog,
+      { ...DIALOG_OPTIONS, data: { name: user.email, currentUrl: user.avatarUrl } },
+    );
+    const result = await firstValueFrom(ref.closed);
+    if (!result) return;
+    this.error.set('');
+    try {
+      await (result.kind === 'save'
+        ? this.session.uploadAvatar(result.file)
+        : this.session.removeAvatar());
+    } catch (err) {
+      const message = (err as { message?: string } | null)?.message;
+      this.error.set(message ?? 'That did not save. Try again in a moment.');
+    }
+  }
 
   protected signOut(): Promise<boolean> {
     return signOutWith(this.dialog, this.session, this.router);

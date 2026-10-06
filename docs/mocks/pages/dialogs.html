@@ -698,6 +698,95 @@
       </div>
     </section>
 
+    <!-- ============================== ACCOUNT ============================== -->
+
+    <section class="specimen" id="dialog-photo">
+      <span class="specimen__label">D27 · Profile photo · no photo yet (Family → Add photo)</span>
+      <div class="dialog dialog--specimen" role="dialog" aria-modal="true" aria-labelledby="d27-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="d27-title">Profile photo</h2><p class="dialog__sub">It replaces your initial in the top bar and on Family.</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="dialog__body">
+            <div class="photo-picker">
+              <span class="avatar avatar--q photo-picker__preview" aria-hidden="true">Q</span>
+              <div class="field photo-picker__field">
+                <label class="btn btn--quiet photo-picker__choose" for="d27-title-file"><svg class="icon" aria-hidden="true"><use href="#i-edit"/></svg>Choose a photo</label>
+                <input class="visually-hidden" id="d27-title-file" type="file" accept="image/jpeg,image/png,image/webp">
+                <p class="field__hint">JPG, PNG or WebP, up to 2 MB.</p>
+              </div>
+            </div>
+          </div>
+          <div class="dialog__actions">
+            <button class="btn btn--quiet" type="button">Cancel</button>
+            <button class="btn btn--primary" type="button" disabled>Save</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="specimen" id="dialog-photo-chosen">
+      <span class="specimen__label">D27b · Profile photo · photo set (Family → Change photo)</span>
+      <div class="dialog dialog--specimen" role="dialog" aria-modal="true" aria-labelledby="d27b-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="d27b-title">Profile photo</h2><p class="dialog__sub">It replaces your initial in the top bar and on Family.</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="dialog__body">
+            <div class="photo-picker">
+              <span class="avatar avatar--q avatar--photo photo-picker__preview" aria-hidden="true"><img class="avatar__img" src="../assets/profile-photo.svg" alt=""></span>
+              <div class="field photo-picker__field">
+                <label class="btn btn--quiet photo-picker__choose" for="d27b-title-file"><svg class="icon" aria-hidden="true"><use href="#i-edit"/></svg>Choose a different photo</label>
+                <input class="visually-hidden" id="d27b-title-file" type="file" accept="image/jpeg,image/png,image/webp">
+                <p class="field__hint">JPG, PNG or WebP, up to 2 MB.</p>
+              </div>
+            </div>
+          </div>
+          <div class="dialog__actions">
+            <div class="dialog__actions-left"><button class="btn btn--quiet btn--warn-text" type="button"><svg class="icon" aria-hidden="true"><use href="#i-trash"/></svg>Remove photo</button></div>
+            <button class="btn btn--quiet" type="button">Cancel</button>
+            <button class="btn btn--primary" type="button">Save</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="specimen" id="dialog-photo-invalid">
+      <span class="specimen__label">D27c · Profile photo · unsupported file picked</span>
+      <div class="dialog dialog--specimen" role="dialog" aria-modal="true" aria-labelledby="d27c-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="d27c-title">Profile photo</h2><p class="dialog__sub">It replaces your initial in the top bar and on Family.</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="dialog__body">
+            <div class="photo-picker">
+              <span class="avatar avatar--q photo-picker__preview" aria-hidden="true">Q</span>
+              <div class="field photo-picker__field">
+                <label class="btn btn--quiet photo-picker__choose" for="d27c-title-file"><svg class="icon" aria-hidden="true"><use href="#i-edit"/></svg>Choose a photo</label>
+                <input class="visually-hidden" id="d27c-title-file" type="file" accept="image/jpeg,image/png,image/webp">
+                <p class="field__error" role="alert">That file is not a JPG, PNG or WebP image.</p>
+              </div>
+            </div>
+          </div>
+          <div class="dialog__actions">
+            <button class="btn btn--quiet" type="button">Cancel</button>
+            <button class="btn btn--primary" type="button" disabled>Save</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="specimen specimen--menu" id="dialog-photo-avatars">
+      <span class="specimen__label">D27d · With a photo set, the top-bar and Account-card avatars show it instead of the initial</span>
+      <div class="cluster">
+        <a class="avatar avatar--q avatar--btn avatar--photo" href="#dialog-account" aria-label="Account menu"><img class="avatar__img" src="../assets/profile-photo.svg" alt=""></a>
+        <span class="avatar avatar--lg avatar--q avatar--photo" aria-hidden="true"><img class="avatar__img" src="../assets/profile-photo.svg" alt=""></span>
+      </div>
+    </section>
+
     <!-- ============================== ADMIN ============================== -->
 
     <section class="specimen" id="dialog-approve">
@@ -804,24 +893,24 @@
 
     <!-- docs/specs L2-107, L2-108: add an idea to a day; choose a weekend cover photo. -->
     <section class="specimen" id="dialog-add-to-day">
-      <span class="specimen__label">D27 · Add an idea to a day</span>
-      <div class="dialog dialog--specimen dialog--wide" role="dialog" aria-modal="true" aria-labelledby="d27-title">
+      <span class="specimen__label">D28 · Add an idea to a day</span>
+      <div class="dialog dialog--specimen dialog--wide" role="dialog" aria-modal="true" aria-labelledby="d28-title">
         <div class="dialog__panel">
           <div class="dialog__header">
-            <div class="dialog__heading"><h2 class="dialog__title" id="d27-title">Add Royal Botanical Gardens</h2><p class="dialog__sub">We fit it in and move unlocked blocks around it. Locked blocks and commitments stay put.</p></div>
+            <div class="dialog__heading"><h2 class="dialog__title" id="d28-title">Add Royal Botanical Gardens</h2><p class="dialog__sub">We fit it in and move unlocked blocks around it. Locked blocks and commitments stay put.</p></div>
             <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
           </div>
           <div class="dialog__body">
             <div class="field">
-              <span class="field__label" id="d27-day-label">Which day</span>
-              <div class="seg-radio" role="radiogroup" aria-labelledby="d27-day-label">
-                <label class="seg-radio__opt"><input type="radio" name="d27-day" checked>Saturday</label>
-                <label class="seg-radio__opt"><input type="radio" name="d27-day">Sunday</label>
+              <span class="field__label" id="d28-day-label">Which day</span>
+              <div class="seg-radio" role="radiogroup" aria-labelledby="d28-day-label">
+                <label class="seg-radio__opt"><input type="radio" name="d28-day" checked>Saturday</label>
+                <label class="seg-radio__opt"><input type="radio" name="d28-day">Sunday</label>
               </div>
             </div>
             <div class="field">
-              <label class="field__label" for="d27-when">When</label>
-              <select class="field__input" id="d27-when">
+              <label class="field__label" for="d28-when">When</label>
+              <select class="field__input" id="d28-when">
                 <option selected>Best fit</option><option>Morning</option><option>Afternoon</option>
               </select>
             </div>
@@ -839,18 +928,18 @@
     </section>
 
     <section class="specimen" id="dialog-cover-photo">
-      <span class="specimen__label">D28 · Weekend cover photo</span>
-      <div class="dialog dialog--specimen dialog--wide" role="dialog" aria-modal="true" aria-labelledby="d28-title">
+      <span class="specimen__label">D29 · Weekend cover photo</span>
+      <div class="dialog dialog--specimen dialog--wide" role="dialog" aria-modal="true" aria-labelledby="d29-title">
         <div class="dialog__panel">
           <div class="dialog__header">
-            <div class="dialog__heading"><h2 class="dialog__title" id="d28-title">Cover photo</h2><p class="dialog__sub">Shown on this weekend, in Past, and on the link you share.</p></div>
+            <div class="dialog__heading"><h2 class="dialog__title" id="d29-title">Cover photo</h2><p class="dialog__sub">Shown on this weekend, in Past, and on the link you share.</p></div>
             <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
           </div>
           <div class="dialog__body">
             <div class="photo-pick" role="radiogroup" aria-label="Choose a cover photo">
-              <label class="photo-pick__opt"><input type="radio" name="d28-photo" checked aria-label="Lavender fields"><img src="../images/lavender-farm.svg" alt="" width="800" height="500"><span class="photo-pick__name">Lavender fields</span></label>
-              <label class="photo-pick__opt"><input type="radio" name="d28-photo" aria-label="La Marina"><img src="../images/la-marina.svg" alt="" width="800" height="500"><span class="photo-pick__name">La Marina</span></label>
-              <label class="photo-pick__opt"><input type="radio" name="d28-photo" aria-label="The Rec Room"><img src="../images/rec-room.svg" alt="" width="800" height="500"><span class="photo-pick__name">The Rec Room</span></label>
+              <label class="photo-pick__opt"><input type="radio" name="d29-photo" checked aria-label="Lavender fields"><img src="../images/lavender-farm.svg" alt="" width="800" height="500"><span class="photo-pick__name">Lavender fields</span></label>
+              <label class="photo-pick__opt"><input type="radio" name="d29-photo" aria-label="La Marina"><img src="../images/la-marina.svg" alt="" width="800" height="500"><span class="photo-pick__name">La Marina</span></label>
+              <label class="photo-pick__opt"><input type="radio" name="d29-photo" aria-label="The Rec Room"><img src="../images/rec-room.svg" alt="" width="800" height="500"><span class="photo-pick__name">The Rec Room</span></label>
               <label class="photo-pick__opt photo-pick__upload"><input type="file" accept="image/jpeg,image/png,image/webp" aria-label="Upload your own photo"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg>Your own photo</label>
             </div>
             <p class="field__hint">JPEG, PNG or WebP, up to 10 MB. Location data is removed before it is saved. Only your family and people you share the weekend with can see it.</p>

@@ -24,6 +24,7 @@ public class AppDbContext : DbContext, IAppDbContext
     public DbSet<ItineraryBlock> ItineraryBlocks => Set<ItineraryBlock>();
     public DbSet<ShoppingErrand> ShoppingErrands => Set<ShoppingErrand>();
     public DbSet<User> Users => Set<User>();
+    public DbSet<UserAvatar> UserAvatars => Set<UserAvatar>();
     public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
     public DbSet<PasswordResetToken> PasswordResetTokens => Set<PasswordResetToken>();
     public DbSet<EmailVerificationToken> EmailVerificationTokens => Set<EmailVerificationToken>();

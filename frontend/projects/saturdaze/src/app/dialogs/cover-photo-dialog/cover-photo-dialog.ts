@@ -33,7 +33,7 @@ const NOT_A_PHOTO = 'That file is not a photo we can use. Choose a JPEG, PNG or 
 const FAILED = 'The photo did not upload. Try again in a moment.';
 
 /**
- * D28 — "Cover photo" (L2-108 AC2, L2-109, L2-110 AC2): every stop's photo
+ * D29 — "Cover photo" (L2-108 AC2, L2-109, L2-110 AC2): every stop's photo
  * as a radio tile, plus "Your own photo". Opened from the Weekend cover and
  * from a Past card. A family photo is checked here, uploaded from
  * here, and server refusals are shown in place so the family can pick again.

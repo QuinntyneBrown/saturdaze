@@ -1,0 +1,41 @@
+<sd-dialog title="Profile photo" subtitle="It replaces your initial in the top bar and on Family.">
+  <div class="photo-picker">
+    <sd-avatar
+      class="photo-picker__preview"
+      tone="primary"
+      [name]="data.name"
+      [src]="previewUrl()"
+    />
+    <div class="field photo-picker__field">
+      <sd-button variant="quiet" type="button" (click)="fileInput.click()">
+        <sd-icon name="edit" />
+        {{ previewUrl() ? 'Choose a different photo' : 'Choose a photo' }}
+      </sd-button>
+      <input
+        #fileInput
+        class="sd-visually-hidden"
+        type="file"
+        accept="image/jpeg,image/png,image/webp"
+        aria-label="Profile photo file"
+        tabindex="-1"
+        (change)="pick($event)"
+      />
+      @if (error()) {
+        <p class="field__error" role="alert">{{ error() }}</p>
+      } @else {
+        <p class="field__hint">JPG, PNG or WebP, up to 2 MB.</p>
+      }
+    </div>
+  </div>
+
+  @if (data.currentUrl) {
+    <sd-button slot="actions-left" variant="quiet" warnText type="button" (click)="remove()">
+      <sd-icon name="trash" />
+      Remove photo
+    </sd-button>
+  }
+  <sd-button slot="actions" variant="quiet" type="button" (click)="cancel()">Cancel</sd-button>
+  <sd-button slot="actions" variant="primary" type="button" [disabled]="!canSave()" (click)="save()"
+    >Save</sd-button
+  >
+</sd-dialog>

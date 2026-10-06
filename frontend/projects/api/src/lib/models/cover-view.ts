@@ -10,14 +10,14 @@ export interface CoverView {
   readonly placeId: string | null;
 }
 
-/** One stop photo the family can pick as the cover (D28). */
+/** One stop photo the family can pick as the cover (D29). */
 export interface CoverChoice {
   readonly placeId: string;
   readonly name: string;
   readonly media: MediaView;
 }
 
-/** What D28 sends back: the default rule, or a stop's photo. */
+/** What D29 sends back: the default rule, or a stop's photo. */
 export type CoverSelection =
   | { readonly source: 'default' }
   | { readonly source: 'stop'; readonly placeId: string };

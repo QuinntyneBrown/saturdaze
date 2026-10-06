@@ -305,6 +305,26 @@ export class SessionStore implements ISessionStore {
   }
 
   /**
+   * Upload Avatar.
+   *
+   * @param {Blob} file - The image file
+   *
+   * @returns {Promise<void>} The result of the operation
+   */
+  async uploadAvatar(file: Blob): Promise<void> {
+    this._user.set(await this.auth.uploadAvatar(file));
+  }
+
+  /**
+   * Remove Avatar.
+   *
+   * @returns {Promise<void>} The result of the operation
+   */
+  async removeAvatar(): Promise<void> {
+    this._user.set(await this.auth.removeAvatar());
+  }
+
+  /**
    * Rehydrate.
    *
    * @returns {Promise<void>} The result of the operation

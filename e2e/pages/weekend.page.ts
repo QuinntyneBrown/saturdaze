@@ -238,7 +238,7 @@ export class WeekendPage extends BasePage {
     return this.main.locator(".cover-actions");
   }
 
-  /** D28: one radio per stop photo, named by the stop. */
+  /** D29: one radio per stop photo, named by the stop. */
   coverPhotoOption(name: string): Locator {
     return this.dialog().getByRole("radio", { name, exact: true });
   }
@@ -247,17 +247,17 @@ export class WeekendPage extends BasePage {
     return this.dialog().getByRole("radio");
   }
 
-  /** D28: the "Your own photo" tile's file input (L2-109). */
+  /** D29: the "Your own photo" tile's file input (L2-109). */
   ownPhotoInput(): Locator {
     return this.dialog().getByLabel("Upload your own photo", { exact: true });
   }
 
-  /** Choose a family photo from disk, or an in-memory file, in D28. */
+  /** Choose a family photo from disk, or an in-memory file, in D29. */
   async chooseOwnPhoto(file: string | { name: string; mimeType: string; buffer: Buffer }): Promise<void> {
     await this.ownPhotoInput().setInputFiles(file);
   }
 
-  /** D28's error banner: a client-side check or the server's refusal. */
+  /** D29's error banner: a client-side check or the server's refusal. */
   coverPhotoError(): Locator {
     return this.dialog().getByRole("alert");
   }

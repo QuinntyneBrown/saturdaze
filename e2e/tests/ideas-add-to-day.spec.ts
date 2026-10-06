@@ -1,7 +1,7 @@
 import { test, expect } from "../fixtures/sd-test.js";
 
 /**
- * Add an idea to a day — D27 (L2-107). The preview comes from the API's
+ * Add an idea to a day — D28 (L2-107). The preview comes from the API's
  * placement for the seeded family's weekend; confirming changes that weekend.
  */
 
@@ -11,7 +11,7 @@ test.describe("Ideas — Add to day", () => {
     await pages.ideas.waitForReady();
   });
 
-  test("opens D27 for the idea with Saturday and Best fit chosen", async ({ pages }) => {
+  test("opens D28 for the idea with Saturday and Best fit chosen", async ({ pages }) => {
     // Traces to: L2-107 AC1, AC6
     const i = pages.ideas;
     const card = i.cards().first();

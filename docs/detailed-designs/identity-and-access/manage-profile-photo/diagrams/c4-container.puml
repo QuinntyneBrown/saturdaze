@@ -1,0 +1,16 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers — Manage profile photo
+
+Person(actor, "Account holder", "Personalises the account avatar with a photo")
+System_Boundary(saturdaze, "Saturdaze") {
+  Container(web, "Saturdaze web application", "Angular", "Hosts the Account card, Profile photo dialog and top-bar avatar")
+  Container(api, "Saturdaze API", "ASP.NET Core", "Validates, stores and serves profile photos")
+  ContainerDb(db, "Saturdaze database", "SQL Server", "Stores the photo bytes and the avatar capability token")
+}
+Rel(actor, web, "Uses", "HTTPS")
+Rel(web, api, "Uploads or removes the photo", "multipart/form-data, JSON/HTTPS")
+Rel(web, api, "Loads the photo through <img>", "Anonymous capability URL")
+Rel(api, db, "Reads and writes UserAvatars and Users", "EF Core")
+@enduml

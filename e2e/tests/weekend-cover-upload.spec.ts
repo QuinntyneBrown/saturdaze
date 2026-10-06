@@ -1,11 +1,11 @@
 import { test, expect } from "../fixtures/sd-test.js";
 import { FAMILY_PHOTO, stubWeekendCover } from "../fixtures/weekend-cover.js";
 
-/** D28 "Your own photo" — family cover uploads (L2-109). */
+/** D29 "Your own photo" — family cover uploads (L2-109). */
 
 test.describe("Weekend — upload a cover photo", () => {
   test("a family photo becomes the cover, labelled as theirs", async ({ page, goto, pages }) => {
-    // Traces to: L2-109 (D28 "Your own photo"), L2-108 AC2
+    // Traces to: L2-109 (D29 "Your own photo"), L2-108 AC2
     const stub = await stubWeekendCover(page);
     await goto("weekend");
     const w = pages.weekend;

@@ -10,7 +10,7 @@ Saturdaze is a web application that plans personalized family weekends. The Idea
 
 *timing* — family's coarse preference for a placement: Best fit, Morning, or Afternoon
 
-This feature makes each card lead with its photo, as in `docs/mocks/pages/ideas.html`, `ideas.food.html`, and `ideas.events.html`, and adds an "Add to day" action to activity cards and to this weekend's event cards. The action opens dialog D27 (`docs/mocks/pages/dialogs.html#dialog-add-to-day`), previews the placement, and adds the block on confirmation. Restaurant cards keep "Lock it in" (`discovery/pick-restaurants`) as their way into the plan. Photos come from `discovery/store-place-location-and-imagery`; travel legs around the new block come from `weekend-planning/map-itinerary-and-travel-legs`.
+This feature makes each card lead with its photo, as in `docs/mocks/pages/ideas.html`, `ideas.food.html`, and `ideas.events.html`, and adds an "Add to day" action to activity cards and to this weekend's event cards. The action opens dialog D28 (`docs/mocks/pages/dialogs.html#dialog-add-to-day`), previews the placement, and adds the block on confirmation. Restaurant cards keep "Lock it in" (`discovery/pick-restaurants`) as their way into the plan. Photos come from `discovery/store-place-location-and-imagery`; travel legs around the new block come from `weekend-planning/map-itinerary-and-travel-legs`.
 
 ## Description
 
@@ -50,7 +50,7 @@ The following L2 requirements refine the cited L1 capabilities.
 | L2 ID | Refines (L1) | Requirement |
 |-------|--------------|-------------|
 | `L2-106` | `L1-033` | Activity, restaurant, and event cards in Ideas shall show the place's primary photo flush with the top of the card at 16:9, with its attribution overlaid, followed by the existing title, meta, blurb, chips, and actions (`docs/mocks/pages/ideas.html`, `ideas.food.html`, `ideas.events.html`). |
-| `L2-107` | `L1-033` | Each activity card, and each event card dated within the current weekend, shall have an "Add to day" action that opens a CDK dialog (D27 in `docs/mocks/pages/dialogs.html`) asking for the day (Saturday \| Sunday) and timing (Best fit, Morning, Afternoon). Before confirming, the dialog shall preview the placement the planner proposes, including any unlocked block it replaces. Confirming shall add the block to the current weekend. Locked blocks and commitments shall never be displaced (L1-004). Restaurant cards keep "Lock it in" as their way into the plan and carry no "Add to day" action. |
+| `L2-107` | `L1-033` | Each activity card, and each event card dated within the current weekend, shall have an "Add to day" action that opens a CDK dialog (D28 in `docs/mocks/pages/dialogs.html`) asking for the day (Saturday \| Sunday) and timing (Best fit, Morning, Afternoon). Before confirming, the dialog shall preview the placement the planner proposes, including any unlocked block it replaces. Confirming shall add the block to the current weekend. Locked blocks and commitments shall never be displaced (L1-004). Restaurant cards keep "Lock it in" as their way into the plan and carry no "Add to day" action. |
 
 ## Diagrams
 

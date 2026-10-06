@@ -34,7 +34,7 @@ screenshots/          committed <slug>.<viewport>.png captures (390 / 820 / 1440
 | Review submissions (admin) | `review-submissions.html`, `review-submissions.empty.html` |
 | Auth | `sign-in.html` (2 states), `create-account.html`, `reset-password.html` (5 states), `verify-email.html` (3 states) |
 | Public | `landing.html`, `legal.html` (Terms + Privacy) |
-| Dialogs gallery | `dialogs.html` (D1–D28 rendered inline) |
+| Dialogs gallery | `dialogs.html` (D1–D29 rendered inline) |
 
 ## Photos and maps (Wanderlog layout study)
 
@@ -48,11 +48,11 @@ Past mocks on 2026-10-06. Requirements: `docs/specs/L1.md` L1-032 → L1-035,
 
 | Screen | File | Shows |
 | --- | --- | --- |
-| Weekend | `weekend.html` | Cover photo with Change photo (D28); Saturday / Sunday tabs; the selected day beside its map (stacked under 1024px); numbered stops; travel legs with Directions over 10 min |
-| Ideas · Activities | `ideas.html` | Photo-led cards, fallback tile, "Add to day" (D27) |
+| Weekend | `weekend.html` | Cover photo with Change photo (D29); Saturday / Sunday tabs; the selected day beside its map (stacked under 1024px); numbered stops; travel legs with Directions over 10 min |
+| Ideas · Activities | `ideas.html` | Photo-led cards, fallback tile, "Add to day" (D28) |
 | Ideas · Food | `ideas.food.html` | Photo-led restaurant cards; "Lock it in" stays the way to place a restaurant |
-| Ideas · Events | `ideas.events.html` | Photo-led event cards; this weekend's events get "Add to day" (D27) |
-| Past | `past.html` | Cover photo per weekend, "Your photo" vs "From {place}", "Add a photo" (D28) |
+| Ideas · Events | `ideas.events.html` | Photo-led event cards; this weekend's events get "Add to day" (D28) |
+| Past | `past.html` | Cover photo per weekend, "Your photo" vs "From {place}", "Add a photo" (D29) |
 
 The Saturday / Sunday tabs on `weekend.html` work in the mock (`app.js` §5);
 `weekend.html#sun-panel` opens on Sunday.

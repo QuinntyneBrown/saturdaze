@@ -9,6 +9,7 @@
 
 - Pass the person's display name (or their email when that's all there is); the component picks the initial.
 - Keep a member's tone stable across screens — assign it from the member's position in the family, not at random.
+- Pass `src` only when a photo exists (`null` otherwise) so the initial stays as the fallback; keep `name` and `tone` set either way.
 
 ### Accessibility
 

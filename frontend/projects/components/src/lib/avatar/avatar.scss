@@ -52,3 +52,15 @@
   background: var(--colorPaletteIndoorBackground1);
   color: var(--colorPaletteIndoorForeground1);
 }
+
+:host(.avatar--photo) {
+  overflow: hidden;
+}
+
+.avatar__img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}

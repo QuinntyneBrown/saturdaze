@@ -10,6 +10,7 @@ export { Default } from './TopBarDefault.stories';
 export { ActiveDestination } from './TopBarActiveDestination.stories';
 export { Scrolled } from './TopBarScrolled.stories';
 export { Handoff } from './TopBarHandoff.stories';
+export { Photo } from './TopBarPhoto.stories';
 
 export default {
   title: 'Components/Top Bar',

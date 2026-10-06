@@ -94,7 +94,7 @@ export function toCoverView(c: CoverDto | null | undefined): CoverView | null {
   };
 }
 
-/** Each place in the plan with a photo, once, for D28. */
+/** Each place in the plan with a photo, once, for D29. */
 function coverChoices(dto: WeekendDto): CoverChoice[] {
   const seen = new Set<string>();
   const choices: CoverChoice[] = [];

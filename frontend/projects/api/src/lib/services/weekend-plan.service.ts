@@ -285,7 +285,7 @@ export class WeekendPlanService implements IWeekendPlanService {
   }
 
   /**
-   * Preview Idea — the placement for D27 (L2-107). Loads the current weekend
+   * Preview Idea — the placement for D28 (L2-107). Loads the current weekend
    * first when the family opened Ideas before Weekend.
    *
    * @param {IdeaRequest} request - Which idea, day and timing

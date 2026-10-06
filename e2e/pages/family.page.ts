@@ -13,7 +13,10 @@ import { PageSlug } from "../fixtures/routes.js";
  *     Likes and dislikes    [Edit] · .cluster > .chip--leaf (likes) / .chip--warn (dislikes)
  *     Preferences           li.list__item + label.toggle > input.toggle__input[role=switch]
  *     Admin (.admin-only)   "Review submissions" row + count chip — Admin role only
- *     Account               .account-card (avatar · email · "Signed in since …" · [Sign out])
+ *     Account               .account-card (avatar · email · "Signed in since …" · [Add photo | Change photo] · [Sign out])
+ *
+ *   D27 Profile photo dialog  .photo-picker (.photo-picker__preview avatar · input[type=file] · hint / .field__error)
+ *                             actions: [Remove photo] (photo set only) · Cancel · Save
  */
 export class FamilyPage extends BasePage {
   readonly slug: PageSlug = "family";
@@ -151,5 +154,37 @@ export class FamilyPage extends BasePage {
 
   signOutButton(): Locator {
     return control(this.accountCard(), "Sign out");
+  }
+
+  /* ---------- Profile photo (L2-087) ---------- */
+
+  /** The Account card avatar: the initial, or the photo once one is set. */
+  accountAvatar(): Locator {
+    return this.accountCard().locator(".avatar").first();
+  }
+
+  accountAvatarPhoto(): Locator {
+    return this.accountAvatar().locator("img.avatar__img");
+  }
+
+  addPhotoButton(): Locator {
+    return control(this.accountCard(), "Add photo");
+  }
+
+  changePhotoButton(): Locator {
+    return control(this.accountCard(), "Change photo");
+  }
+
+  /** Picks a file in the open Profile photo dialog (D27). */
+  async choosePhoto(file: string | { name: string; mimeType: string; buffer: Buffer }): Promise<void> {
+    await this.dialog().locator('input[type="file"]').setInputFiles(file);
+  }
+
+  photoPreview(): Locator {
+    return this.dialog().locator(".photo-picker__preview");
+  }
+
+  photoError(): Locator {
+    return this.dialog().locator(".field__error");
   }
 }

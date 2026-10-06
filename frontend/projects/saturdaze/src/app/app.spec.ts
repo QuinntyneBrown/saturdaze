@@ -26,7 +26,13 @@ describe('App', () => {
   beforeEach(async () => {
     session = {
       loading: signal(false),
-      user: signal({ id: 'u1', email: 'quinn@example.com', role: 'User', emailVerifiedUtc: null }),
+      user: signal({
+        id: 'u1',
+        email: 'quinn@example.com',
+        role: 'User',
+        emailVerifiedUtc: null,
+        avatarUrl: null,
+      }),
       logout: vi.fn(async () => undefined),
     };
     menus = {

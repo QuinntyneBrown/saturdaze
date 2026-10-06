@@ -345,7 +345,7 @@ export class WeekendPage {
   }
 
   /**
-   * "Change photo" → D28; the chosen stop's photo becomes the cover (L2-108
+   * "Change photo" → D29; the chosen stop's photo becomes the cover (L2-108
    * AC2). A family photo is uploaded by the dialog itself (L2-109).
    */
   protected async changeCover(): Promise<void> {
