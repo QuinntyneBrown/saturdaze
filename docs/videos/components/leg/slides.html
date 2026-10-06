@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 28 Slides</title>
+<link rel="stylesheet" href="../../assets/slides.css">
+</head>
+<body data-video-number="28" data-video-title="Coding sd-leg" data-parts="Introduction|Usage|Decorator|Inputs|Template|Styles|Testing|Pitfalls|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Saturdaze components · Video 28 of 52</div>
+  <h1>Coding <code>sd-leg</code></h1>
+  <p class="lead">A tiny, honest timeline row: the drive between two blocks.</p>
+</section>
+
+<section id="usage" data-part="1" data-cue="Open the weekend page template in the app project.">
+  <h2>Used once: between blocks on the Weekend screen</h2>
+  <pre class="code" data-lang="html" data-file="saturdaze/src/app/pages/weekend/weekend.page.html" data-mark="2-6">              @for (block of day.blocks; track block.id) {
+                @if (block.leg) {
+                  &lt;sd-leg
+                    [label]="block.leg.label"
+                    [ariaLabel]="block.leg.ariaLabel"
+                    [directionsUrl]="block.leg.directionsUrl ?? ''"
+                  /&gt;
+                }
+                &lt;sd-block</pre>
+</section>
+
+<section id="mock" data-part="1" data-cue="The mock is the reference.">
+  <h2>The shape to match (ADR-009)</h2>
+  <pre class="code tight" data-lang="html" data-file="docs/mocks/pages/weekend.html">&lt;li class="leg" aria-label="Travel: 45 minutes, 52 kilometres to Lavender fields"&gt;
+  &lt;span&gt;&lt;/span&gt;&lt;span class="leg__rail" aria-hidden="true"&gt;&lt;/span&gt;
+  &lt;p class="leg__text"&gt;&lt;svg class="icon" …&gt;…&lt;/svg&gt;45 min · 52 km
+    &lt;a class="leg__link" href="…" target="_blank" rel="noopener"&gt;Directions&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;</pre>
+  <p class="muted">Excerpt, wrapped for the slide. E2E locators and visual parity depend on these classes.</p>
+</section>
+
+<section id="decorator" data-part="2" data-cue="Create the leg file in its own folder.">
+  <h2>The decorator</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/leg/leg.ts" data-mark="9-13">@Component({
+  selector: 'sd-leg',
+  standalone: true,
+  imports: [Icon],
+  templateUrl: './leg.html',
+  styleUrl: './leg.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: 'leg',
+    role: 'listitem',
+    '[attr.aria-label]': 'ariaLabel() || null',
+  },
+})</pre>
+</section>
+
+<section id="host-rule" data-part="2" data-cue="Best practice: put host attributes in the host metadata">
+  <h2>Host metadata, read from signals</h2>
+  <div class="cols">
+    <div class="card good"><h3>Do</h3><p><code>host: { '[attr.aria-label]': 'ariaLabel() || null' }</code></p></div>
+    <div class="card bad"><h3>Avoid</h3><p><code>@HostBinding</code> decorators and empty-string attributes</p></div>
+  </div>
+  <p class="muted">OnPush + signals: the host re-renders only when a signal it reads changes.</p>
+</section>
+
+<section id="inputs" data-part="3" data-cue="The class has three inputs">
+  <h2>Three signal inputs</h2>
+  <pre class="code" data-lang="ts" data-file="components/src/lib/leg/leg.ts">export class Leg {
+  /** "45 min · 52 km". */
+  readonly label = input&lt;string&gt;('');
+  /** "Travel: 45 minutes, 52 kilometres to Lavender fields". */
+  readonly ariaLabel = input&lt;string&gt;('');
+  /** Directions for the leg; empty hides the link. */
+  readonly directionsUrl = input&lt;string&gt;('');
+}</pre>
+</section>
+
+<section id="not-here" data-part="3" data-cue="Notice what is not here.">
+  <h2>What it doesn't need</h2>
+  <ul>
+    <li><code>input.required</code> — an empty leg still renders</li>
+    <li><code>booleanAttribute</code> — there are no flags</li>
+    <li><code>computed()</code> — nothing is derived</li>
+    <li><code>output()</code> — the link is a plain anchor</li>
+  </ul>
+</section>
+
+<section id="template" data-part="4" data-cue="The template is four lines of structure.">
+  <h2>The template</h2>
+  <pre class="code tight" data-lang="html" data-file="components/src/lib/leg/leg.html" data-mark="2,6-8">&lt;span&gt;&lt;/span&gt;
+&lt;span class="leg__rail" aria-hidden="true"&gt;&lt;/span&gt;
+&lt;p class="leg__text"&gt;
+  &lt;sd-icon name="car" [size]="13" /&gt;
+  {{ label() }}
+  @if (directionsUrl()) {
+    &lt;a class="leg__link" [href]="directionsUrl()" target="_blank" rel="noopener"&gt;Directions&lt;/a&gt;
+  }
+&lt;/p&gt;</pre>
+</section>
+
+<section id="noopener" data-part="4" data-cue="The link opens in a new tab">
+  <div class="kicker">New tab, no back door</div>
+  <p class="quote"><code>target="_blank"</code> always travels with <code>rel="noopener"</code>, so the maps page can't reach <code>window.opener</code>.</p>
+</section>
+
+<section id="grid" data-part="5" data-cue="The host is a three column grid">
+  <h2>The host is the grid</h2>
+  <pre class="code" data-lang="scss" data-file="components/src/lib/leg/leg.scss" data-mark="3,7">:host {
+  display: grid;
+  grid-template-columns: 56px 24px minmax(0, 1fr);
+  column-gap: 12px;
+  align-items: center;
+  min-height: 32px;
+  border-bottom: 1px solid var(--colorNeutralStroke2);
+}</pre>
+  <p class="muted">time column · rail · text</p>
+</section>
+
+<section id="rail" data-part="5" data-cue="The rail is a relative span">
+  <h2>The dotted rail</h2>
+  <pre class="code" data-lang="scss" data-file="components/src/lib/leg/leg.scss" data-mark="12">.leg__rail {
+  position: relative;
+  align-self: stretch;
+}
+
+.leg__rail::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  bottom: -1px;
+  left: 50%;
+  border-left: 2px dotted var(--colorNeutralStroke1);
+  transform: translateX(-50%);
+}</pre>
+</section>
+
+<section id="text" data-part="5" data-cue="The text uses font size base two hundred">
+  <h2>Text and link: tokens by role</h2>
+  <pre class="code" data-lang="scss" data-file="components/src/lib/leg/leg.scss" data-mark="4-5,9">.leg__text {
+  display: flex;
+  /* … */
+  font-size: var(--fontSizeBase200);
+  color: var(--colorNeutralForeground2);
+}
+
+.leg__link {
+  font-weight: var(--fontWeightSemibold);
+  color: var(--colorPaletteSkyForeground1);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}</pre>
+</section>
+
+<section id="no-spec" data-part="6" data-cue="The leg folder has no spec file today.">
+  <h2>No <code>leg.spec.ts</code> yet</h2>
+  <div class="cols">
+    <div class="card"><h3>Exercised today by</h3><p><code>e2e/pages/weekend.page.ts</code><br>Stories: <code>Default</code>, <code>Short</code></p></div>
+    <div class="card indoor"><h3>A spec would set up</h3><p><code>TestBed.createComponent(Leg)</code><br><code>componentRef.setInput(…)</code><br><code>detectChanges()</code></p></div>
+  </div>
+</section>
+
+<section id="should-test" data-part="6" data-cue="The host carries the class leg and the role list item.">
+  <h2>What a spec should prove</h2>
+  <ol class="steps small">
+    <li>Host has <code>.leg</code> and <code>role="listitem"</code></li>
+    <li><code>aria-label</code> mirrors the input; empty → no attribute</li>
+    <li>Label renders in <code>.leg__text</code> beside the car icon</li>
+    <li>No URL → no link; URL → <code>href</code>, <code>_blank</code>, <code>noopener</code></li>
+    <li>The rail is <code>aria-hidden</code></li>
+  </ol>
+</section>
+
+<section id="pitfalls" data-part="7" data-cue="Wrapping the host in an extra div">
+  <h2>Pitfalls</h2>
+  <ul>
+    <li>A wrapper div breaks the grid and mock parity</li>
+    <li><code>aria-label=""</code> leaves an unnamed list item</li>
+    <li>A new-tab link without <code>rel="noopener"</code></li>
+    <li>Dropping the empty first span — the rail shifts left</li>
+  </ul>
+</section>
+
+<section id="recap" data-part="8" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div>The host is the BEM block, <code>role="listitem"</code></div>
+    <div>Nullable <code>aria-label</code> from a signal</div>
+    <div>Three plain inputs, nothing derived</div>
+    <div>Decorative rail is <code>aria-hidden</code></div>
+    <div>Colours from tokens by role</div>
+    <div>No spec yet — you know what it should test</div>
+  </div>
+</section>
+
+<section id="next" data-part="8" data-cue="Next, in video twenty nine">
+  <div class="kicker">Next · Video 29</div>
+  <h1>Coding <code>sd-list</code></h1>
+</section>
+
+<script src="../../assets/slides.js"></script>
+</body>
+</html>
