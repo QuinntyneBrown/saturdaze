@@ -51,6 +51,7 @@ public sealed class SaturdazeApiFactory : WebApplicationFactory<Program>, IAsync
                 ["Saturdaze:Images:AllowedOrigins:0"] = "https://images.example.com",
                 ["Saturdaze:Photos:Directory"] = PhotoDirectory,
                 ["Saturdaze:Photos:SigningKey"] = "test-only-photo-signing-key-at-least-32-bytes",
+                ["Saturdaze:Share:AppOrigin"] = "https://app.example.com",
             });
         });
         builder.ConfigureTestServices(services =>

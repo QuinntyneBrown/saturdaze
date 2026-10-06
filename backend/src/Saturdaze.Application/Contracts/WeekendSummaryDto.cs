@@ -8,4 +8,5 @@ public sealed record WeekendSummaryDto(
     int BlockCount,
     IReadOnlyList<string> ActivityHighlights,
     string? Title,
-    int? Rating);
+    int? Rating,
+    CoverDto? Cover = null);

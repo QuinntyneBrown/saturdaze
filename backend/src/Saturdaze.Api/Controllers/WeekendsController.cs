@@ -123,12 +123,29 @@ public sealed class WeekendsController : ControllerBase
     {
         _ = await _sender.Send(new GetWeekendByIdQuery(id), ct);
         var token = WeekendControllerHelpers.EncodeToken(id);
-        var origin = Request.Headers.Origin.FirstOrDefault();
-        if (string.IsNullOrWhiteSpace(origin))
-            origin = $"{Request.Scheme}://{Request.Host}";
-
-        return Ok(new WeekendShareDto($"{origin}/sample-weekend?share={token}", token));
+        // The link is the API's preview page so link previews show the cover (L2-098 AC3).
+        return Ok(new WeekendShareDto($"{ApiOrigin}/s/{token}", token));
     }
+
+    /// <summary>
+    /// The share link (L2-098 AC3). Link-preview crawlers do not run the app, so this page
+    /// carries the Open Graph tags (the cover signed for a week) and sends browsers on to
+    /// <c>{Saturdaze:Share:AppOrigin}/sample-weekend?share={token}</c>.
+    /// </summary>
+    [HttpGet("/s/{token}")]
+    [AllowAnonymous]
+    public async Task<ContentResult> SharePreview(
+        string token, [FromServices] IConfiguration config, CancellationToken ct)
+    {
+        var weekend = await _sender.Send(new GetSharedWeekendQuery(WeekendControllerHelpers.DecodeToken(token)), ct);
+        var appOrigin = (config["Saturdaze:Share:AppOrigin"] ?? ApiOrigin).TrimEnd('/');
+        var target = $"{appOrigin}/sample-weekend?share={Uri.EscapeDataString(token)}";
+        var image = weekend.Cover?.Url is { } url && url.StartsWith('/') ? $"{ApiOrigin}{url}" : weekend.Cover?.Url;
+        Response.Headers.CacheControl = "no-store";
+        return Content(WeekendControllerHelpers.SharePreviewHtml(weekend, image, target), "text/html; charset=utf-8");
+    }
+
+    private string ApiOrigin => $"{Request.Scheme}://{Request.Host}";
 
     /// <summary>Public read-only view behind a share link.</summary>
     [HttpGet("shared/{token}")]
@@ -193,6 +210,47 @@ file static class WeekendControllerHelpers
         => Enum.TryParse<DayOfWeekend>(value, ignoreCase: true, out var day)
             ? day
             : throw new ValidationException("day", "Day must be Saturday or Sunday.");
+
+    public static string SharePreviewHtml(WeekendDto weekend, string? image, string target)
+    {
+        static string E(string value) => System.Net.WebUtility.HtmlEncode(value);
+        var sunday = weekend.WeekendOf.AddDays(1);
+        var dates = $"{weekend.WeekendOf:ddd d MMM} – {sunday:ddd d MMM}";
+        var title = string.IsNullOrWhiteSpace(weekend.Title) ? $"Our weekend · {dates}" : weekend.Title!;
+        var highlights = weekend.Blocks
+            .Where(b => b.Kind == BlockKind.Activity)
+            .OrderBy(b => b.Day).ThenBy(b => b.StartTime)
+            .Select(b => b.Title)
+            .Distinct()
+            .Take(3)
+            .ToList();
+        var description = highlights.Count > 0 ? $"{dates}: {string.Join(", ", highlights)}" : dates;
+
+        var sb = new StringBuilder();
+        sb.AppendLine("<!doctype html>");
+        sb.AppendLine("<html lang=\"en\"><head><meta charset=\"utf-8\">");
+        sb.AppendLine($"<title>{E(title)}</title>");
+        sb.AppendLine($"<meta property=\"og:title\" content=\"{E(title)}\">");
+        sb.AppendLine($"<meta property=\"og:description\" content=\"{E(description)}\">");
+        sb.AppendLine("<meta property=\"og:type\" content=\"website\">");
+        sb.AppendLine($"<meta property=\"og:url\" content=\"{E(target)}\">");
+        if (image is not null)
+        {
+            sb.AppendLine($"<meta property=\"og:image\" content=\"{E(image)}\">");
+            if (weekend.Cover is { Width: > 0, Height: > 0 } c)
+            {
+                sb.AppendLine($"<meta property=\"og:image:width\" content=\"{c.Width}\">");
+                sb.AppendLine($"<meta property=\"og:image:height\" content=\"{c.Height}\">");
+            }
+            sb.AppendLine($"<meta property=\"og:image:alt\" content=\"{E(weekend.Cover!.Alt)}\">");
+        }
+        sb.AppendLine($"<meta name=\"twitter:card\" content=\"{(image is null ? "summary" : "summary_large_image")}\">");
+        sb.AppendLine($"<meta http-equiv=\"refresh\" content=\"0; url={E(target)}\">");
+        sb.AppendLine("</head><body>");
+        sb.AppendLine($"<p><a href=\"{E(target)}\">Open {E(title)}</a></p>");
+        sb.AppendLine("</body></html>");
+        return sb.ToString();
+    }
 
     public static string EncodeToken(Guid id)
         => Convert.ToBase64String(id.ToByteArray()).TrimEnd('=').Replace('+', '-').Replace('/', '_');

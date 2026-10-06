@@ -30,13 +30,28 @@ public sealed class WeekendEnrichment
     /// <param name="shared">Signed URLs for a share link outlive a family's (L2-097 AC6, L2-098 AC3).</param>
     public async Task<WeekendDto> EnrichAsync(WeekendDto weekend, CancellationToken ct, bool shared = false)
     {
-        var photos = await StopPhotosAsync(weekend.Blocks, ct);
-        var blocks = weekend.Blocks
+        var blocks = await WithPhotosAsync(weekend.Blocks, ct);
+        return weekend with { Blocks = blocks, Cover = await ResolveAsync(weekend.Id, blocks, shared, ct) };
+    }
+
+    /// <summary>The cover for a weekend summary in Past (L2-098 AC1, AC2), as the Weekend screen shows it.</summary>
+    public async Task<CoverDto?> CoverAsync(Guid weekendId, IReadOnlyList<ItineraryBlockDto> blocks, CancellationToken ct)
+        => await ResolveAsync(weekendId, await WithPhotosAsync(blocks, ct), shared: false, ct);
+
+    private async Task<IReadOnlyList<ItineraryBlockDto>> WithPhotosAsync(
+        IReadOnlyList<ItineraryBlockDto> blocks, CancellationToken ct)
+    {
+        var photos = await StopPhotosAsync(blocks, ct);
+        return blocks
             .Select(b => b.RefId is { } id && photos.TryGetValue(id, out var p) ? b with { Photo = p } : b)
             .ToList();
+    }
 
+    private async Task<CoverDto?> ResolveAsync(
+        Guid weekendId, IReadOnlyList<ItineraryBlockDto> blocks, bool shared, CancellationToken ct)
+    {
         var choice = await _db.Weekends.AsNoTracking()
-            .Where(w => w.Id == weekend.Id)
+            .Where(w => w.Id == weekendId)
             .Select(w => new { w.CoverSource, w.CoverPlaceId, w.CoverUploadKey, w.CoverUploadWidth, w.CoverUploadHeight })
             .FirstOrDefaultAsync(ct);
 
@@ -45,7 +60,7 @@ public sealed class WeekendEnrichment
             var lifetime = shared
                 ? TimeSpan.FromDays(_options.ShareUrlDays)
                 : TimeSpan.FromMinutes(_options.FamilyUrlMinutes);
-            var upload = new CoverDto(
+            return new CoverDto(
                 _signer.SignedUrl(key, lifetime),
                 choice.CoverUploadWidth ?? 0,
                 choice.CoverUploadHeight ?? 0,
@@ -54,10 +69,9 @@ public sealed class WeekendEnrichment
                 "Your photo",
                 "upload",
                 null);
-            return weekend with { Blocks = blocks, Cover = upload };
         }
 
-        return weekend with { Blocks = blocks, Cover = ResolveCover(blocks, choice?.CoverSource, choice?.CoverPlaceId) };
+        return ResolveCover(blocks, choice?.CoverSource, choice?.CoverPlaceId);
     }
 
     /// <summary>Primary photos of the places the weekend's blocks point at, keyed by place id.</summary>

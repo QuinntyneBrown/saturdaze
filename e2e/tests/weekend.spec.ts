@@ -163,7 +163,7 @@ test.describe("Weekend", () => {
     expect((await minted).ok()).toBeTruthy();
 
     await expect(w.dialogTitle()).toHaveText("Share this weekend");
-    await expect(w.dialogBody().locator(".copy-field__value")).toContainText("sample-weekend?share=");
+    await expect(w.dialogBody().locator(".copy-field__value")).toContainText(/\/s\/[\w-]+$/);
     await expect(w.dialogBody().getByRole("button", { name: "Copy", exact: true })).toHaveAttribute("aria-pressed", "false");
     await w.dialogAction("Done").click();
     await expect(w.dialog()).toHaveCount(0);
