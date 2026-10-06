@@ -1,0 +1,13 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+import { TokenRows, previews } from './components/TokenBlocks';
+import { byPrefix } from './components/tokens';
+
+<Meta title="Theme/Shadows" />
+
+# Shadows
+
+Elevation is soft and paper-like. `shadow-1` lifts cards off the cream page, `shadow-2` marks hover and floating chrome
+(the bottom nav), `shadow-3` is reserved for dialogs and menus.
+
+<TokenRows tokens={byPrefix('--sd-shadow-')} preview={previews.shadow} />

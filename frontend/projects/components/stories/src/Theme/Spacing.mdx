@@ -1,0 +1,14 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+import { TokenRows, previews } from './components/TokenBlocks';
+import { byPrefix } from './components/tokens';
+
+<Meta title="Theme/Spacing" />
+
+# Spacing
+
+A four-pixel base creates predictable density from compact metadata (`--sd-s-1`) through full page sections
+(`--sd-s-9`). Use the scale for padding, gaps and margins; the page gutter is the one responsive spacing token and lives
+on the [Layout](?path=/docs/theme-layout--docs) page.
+
+<TokenRows tokens={byPrefix('--sd-s-')} preview={previews.space} />

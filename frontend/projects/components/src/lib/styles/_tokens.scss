@@ -1,6 +1,7 @@
-// Saturdaze design tokens — mirrors design-system/assets/tokens.css (the
-// authoritative copy) plus the v2-only layout tokens from
-// docs/mocks-v2/styles/app.css (@layer base).
+// Saturdaze design tokens — the authoritative `--sd-*` vocabulary, matching
+// docs/mocks-v2/styles/app.css (@layer base). The Storybook Theme pages
+// (stories/src/Theme) parse this file, so a token added here is documented
+// automatically.
 //
 // Components consume these as CSS custom properties (`var(--sd-bg)` etc.).
 // Never hard-code a hex value in a component stylesheet — if a colour is

@@ -1,0 +1,13 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+import { TokenRows, previews } from './components/TokenBlocks';
+import { byPrefix } from './components/tokens';
+
+<Meta title="Theme/Border Radii" />
+
+# Border radii
+
+Soft radii make surfaces approachable. `sm` for inputs and small buttons, `md` for list rows and wells, `lg` for cards,
+`xl` for dialogs and sheets, `pill` for chips, buttons and the bottom nav.
+
+<TokenRows tokens={byPrefix('--sd-r-')} preview={previews.radius} />

@@ -144,7 +144,7 @@ Then open `http://localhost:5173/`.
 | Component library | `frontend/projects/components` | Standalone Angular UI components aligned with the mock system |
 | E2E suite | `e2e` | Playwright behavior and visual tests |
 | Design reference | `docs/mocks-v2` | Static HTML/CSS design, screenshots, and its own lint/verify scripts (`.check.mjs`, `.verify.mjs`) |
-| Design system | `design-system` | Standalone token/component catalog with its own Playwright suite and Azure Static Web App (`deploy-design-system.yml`) |
+| Design system | `frontend/projects/components/stories` | Storybook docsite for the component library — concepts, theme tokens, component docs and patterns (`npm run storybook`; deployed by `deploy-storybook.yml`, ADR-012) |
 
 ## Development
 
@@ -186,6 +186,8 @@ Development conventions:
 | Angular app build | `npm run build -- saturdaze --configuration development` | Build the runnable frontend |
 | Angular libraries | `npm run build -- components` and `npm run build -- api` | Build shared frontend packages |
 | Frontend unit tests | `npm test` from `frontend/` | Angular/Vitest tests |
+| Storybook | `npm run storybook` / `npm run build-storybook` from `frontend/` | Design-system docsite on :6006 / static build to `frontend/dist/storybook` |
+| Storybook contract and browser tests | Build Storybook, then `npm run test:storybook` from `e2e/` | Public component documentation coverage, every indexed example and docs page, and form interaction in Chromium |
 | Playwright behavior | `npm run test:behavior` from `e2e/` | End-to-end behavior tests |
 | Playwright visual | `npm run test:visual` from `e2e/` | Visual comparisons against baselines |
 | Baseline update | `npm run baseline` from `e2e/` | Refresh visual snapshots from the mock app |

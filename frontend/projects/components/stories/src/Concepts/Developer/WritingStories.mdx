@@ -1,0 +1,62 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Concepts/Developer/Writing Stories" />
+
+# Writing stories
+
+Stories follow the Fluent UI docsite layout: one folder per component under
+`frontend/projects/components/stories/src/`, with small, copy-pasteable story files.
+
+```text
+stories/src/Button/
+├── index.stories.ts           # meta (title, component, imports) + re-exports
+├── ButtonDescription.md       # what it is, which mock classes it carries
+├── ButtonBestPractices.md     # ## Best practices — Layout / Content / Accessibility
+├── ButtonDefault.stories.ts   # `Default` — args wired to inputs for Controls
+├── ButtonVariant.stories.ts
+└── ButtonSize.stories.ts
+```
+
+Only `index.stories.ts` is globbed by `.storybook/main.ts`; it owns the meta and re-exports each story:
+
+```ts
+import type { Meta } from '@storybook/angular';
+import { moduleMetadata } from '@storybook/angular';
+import { Button, Icon } from 'components';
+
+import descriptionMd from './ButtonDescription.md';
+import bestPracticesMd from './ButtonBestPractices.md';
+
+export { Default } from './ButtonDefault.stories';
+export { Variant } from './ButtonVariant.stories';
+
+export default {
+  title: 'Components/Button',
+  component: Button,
+  decorators: [moduleMetadata({ imports: [Button, Icon] })],
+  parameters: {
+    docs: { description: { component: [descriptionMd, bestPracticesMd].join('\n') } },
+  },
+} as Meta<Button>;
+```
+
+Each story file exports one `StoryObj` with a template and a short description:
+
+```ts
+export const Variant: StoryObj<Button> = {
+  render: () => ({
+    template: `<sd-button variant="quiet">Quiet</sd-button>`,
+  }),
+  parameters: {
+    docs: { description: { story: '`quiet` is the default secondary action.' } },
+  },
+};
+```
+
+## Checklist
+
+- `Default` comes first and binds `args` to inputs so Controls work.
+- Use realistic Saturdaze copy — real activities, days and weather, not "Lorem ipsum".
+- Shell and pattern stories set `layout: 'fullscreen'` and a viewport global where the tier matters.
+- Inputs, outputs and their JSDoc come from compodoc — document them on the component, not in the story.
+- New component? Add it to `src/public-api.ts`, then add its story folder.

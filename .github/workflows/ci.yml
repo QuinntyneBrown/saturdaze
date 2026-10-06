@@ -71,18 +71,43 @@ jobs:
         working-directory: frontend
         run: npx ng build saturdaze --configuration production
 
-  design-system:
+  storybook:
+    # Keep the required branch-protection context while testing its replacement.
     name: Design-system contract + browser tests
     runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request'
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-      - run: npm ci
-        working-directory: design-system
-      - run: npx playwright install --with-deps chromium
-        working-directory: design-system
-      - run: npm test
-        working-directory: design-system
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install Angular workspace deps
+        working-directory: frontend
+        run: npm ci
+
+      # Compiles every story and MDX page against the real components
+      # library; a broken story or a removed input fails here.
+      - name: Build Storybook
+        working-directory: frontend
+        run: npm run build-storybook
+
+      - name: Install browser test dependencies
+        working-directory: e2e
+        run: npm ci
+
+      - name: Install Chromium
+        working-directory: e2e
+        run: npx playwright install --with-deps chromium
+
+      - name: Verify Storybook contract and examples
+        working-directory: e2e
+        run: npm run test:storybook
+
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: storybook-test-results
+          path: e2e/test-results/

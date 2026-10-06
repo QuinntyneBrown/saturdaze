@@ -1,0 +1,3 @@
+A native `<select>` dressed as a Saturdaze field. `sd-select` renders an optional label (with the "Required" marker), the select and an optional hint; the options come from the `options` input as `{ value, label }` pairs.
+
+The host carries the `.field` block from `docs/mocks/styles/app.css` and the control is `select.field__input`, with the chevron drawn as a background image — so it keeps the platform picker on phones. It implements `ControlValueAccessor` over the option's string `value`: there is no `value` input, so bind it with `formControlName`, `[formControl]` or `ngModel`, and disable it through the control.

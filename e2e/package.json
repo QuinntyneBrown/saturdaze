@@ -5,6 +5,7 @@
   "description": "Playwright e2e suite. POMs under pages/, specs under tests/, fixtures under fixtures/. Visual specs under tests/visual/ compare the Angular implementation to docs/mocks-v2 region-by-region.",
   "scripts": {
     "test": "playwright test --config=playwright.config.ts",
+    "test:storybook": "playwright test --config=playwright.storybook.config.ts",
     "test:visual": "playwright test --config=playwright.config.ts tests/visual",
     "test:behavior": "playwright test --config=playwright.config.ts --ignore-snapshots tests --grep-invert visual",
     "baseline": "cross-env SD_BASELINE=1 playwright test --config=playwright.config.ts --update-snapshots all tests/visual",

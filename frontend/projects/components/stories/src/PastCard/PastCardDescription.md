@@ -1,0 +1,3 @@
+A past weekend on the Past screen. `sd-past-card` is a `.card` host (the card in `docs/mocks/pages/past.html`): a `.card__row` with the `dateRange` eyebrow and the favourite heart, the `h3.card__title` as a rename button, the `sd-stars` rating as a rate button ("Rate it" until rated), two-line `.card__highlights`, and a two-up `.card__footer` with Remix and Repeat.
+
+The card holds no state of its own — every control emits: `favouriteToggle` (with the next value), `rename`, `rate`, `remix` and `repeat`. The page opens the rename and rating dialogs and writes the results back into `title`, `rating` and `favourite`.

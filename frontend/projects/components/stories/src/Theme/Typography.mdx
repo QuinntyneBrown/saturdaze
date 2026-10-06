@@ -1,0 +1,30 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+import { TokenRows, previews } from './components/TokenBlocks';
+import { byPrefix } from './components/tokens';
+
+<Meta title="Theme/Typography" />
+
+# Typography
+
+A compact scale keeps phone planning comfortable while allowing confident editorial moments on the weekend and
+landing screens. The stack is system-first: nothing web-loads Inter on purpose, so first paint never waits on a font.
+
+## Font family
+
+<TokenRows tokens={byPrefix('--sd-font-')} preview={previews.fontFamily} />
+
+## Font sizes
+
+A seven-step scale. The three display sizes step **up** from 1024px and the two largest step **down** on 320–379px
+phones — the responsive retunes are listed under each token.
+
+<TokenRows tokens={byPrefix('--sd-fs-')} preview={previews.fontSize} />
+
+## Line heights
+
+<TokenRows tokens={byPrefix('--sd-lh-')} preview={previews.lineHeight} />
+
+## Font weights
+
+<TokenRows tokens={byPrefix('--sd-fw-')} preview={previews.fontWeight} />
