@@ -17,14 +17,13 @@ export interface ProfilePhotoDialogData {
   readonly currentUrl: string | null;
 }
 
-export interface ProfilePhotoDialogResult {
-  readonly kind: 'save';
-  readonly file: File;
-}
+export type ProfilePhotoDialogResult =
+  | { readonly kind: 'save'; readonly file: File }
+  | { readonly kind: 'remove' };
 
 /**
  * D27 — "Profile photo" (L2-087). Previews the picked image and closes with
- * it; the page performs the upload.
+ * it, or with `remove` when a photo is set; the page performs the call.
  */
 @Component({
   selector: 'app-profile-photo-dialog',
@@ -55,6 +54,10 @@ export class ProfilePhotoDialog {
     this.revokePicked();
     this.file.set(file);
     this.pickedUrl.set(URL.createObjectURL(file));
+  }
+
+  protected remove(): void {
+    this.dialogRef.close({ kind: 'remove' });
   }
 
   protected cancel(): void {

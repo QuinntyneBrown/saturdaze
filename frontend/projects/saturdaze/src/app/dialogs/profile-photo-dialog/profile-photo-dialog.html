@@ -24,6 +24,12 @@
     </div>
   </div>
 
+  @if (data.currentUrl) {
+    <sd-button slot="actions-left" variant="quiet" warnText type="button" (click)="remove()">
+      <sd-icon name="trash" />
+      Remove photo
+    </sd-button>
+  }
   <sd-button slot="actions" variant="quiet" type="button" (click)="cancel()">Cancel</sd-button>
   <sd-button slot="actions" variant="primary" type="button" [disabled]="!canSave()" (click)="save()"
     >Save</sd-button

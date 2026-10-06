@@ -42,6 +42,23 @@ test.describe("Profile photo", () => {
     await expect(f.accountAvatarPhoto()).toHaveAttribute("src", AVATAR_URL);
   });
 
+  test("removing the photo brings the initial back", async ({ pages }) => {
+    const f = pages.family;
+    await f.addPhotoButton().click();
+    await f.choosePhoto(PHOTO);
+    await f.dialogAction("Save").click();
+    await expect(f.accountAvatarPhoto()).toHaveAttribute("src", AVATAR_URL);
+
+    await f.changePhotoButton().click();
+    await expect(f.photoPreview().locator("img")).toHaveAttribute("src", AVATAR_URL);
+    await f.dialogAction("Remove photo").click();
+    await expect(f.dialog()).toHaveCount(0);
+
+    await expect(f.accountAvatarPhoto()).toHaveCount(0);
+    await expect(f.accountAvatar()).toHaveText("P");
+    await expect(f.addPhotoButton()).toBeVisible();
+  });
+
   test("the top-bar avatar shows the photo instead of the initial (≥720)", async ({ pages }, testInfo) => {
     test.skip(isPhone(testInfo), "the top bar (and its avatar) is display:none below 720px");
     const f = pages.family;

@@ -292,7 +292,9 @@ export class FamilyPage {
     if (!result) return;
     this.error.set('');
     try {
-      await this.session.uploadAvatar(result.file);
+      await (result.kind === 'save'
+        ? this.session.uploadAvatar(result.file)
+        : this.session.removeAvatar());
     } catch (err) {
       const message = (err as { message?: string } | null)?.message;
       this.error.set(message ?? 'That did not save. Try again in a moment.');
