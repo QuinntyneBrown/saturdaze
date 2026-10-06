@@ -1,13 +1,41 @@
 <sd-dialog [title]="title" subtitle="It becomes visible to every family nearby.">
   <sd-card variant="sunk">
-    <div class="head">
+    <div class="card__head">
       <sd-date-tile [mon]="card.tile.mon" [day]="card.tile.day" />
-      <div class="head__text">
-        <p class="head__title">{{ card.when }}</p>
-        <p class="head__meta">{{ meta }}</p>
+      <div class="card__head-text">
+        <p class="card__title">{{ card.when }}</p>
+        <p class="card__meta">{{ meta }}</p>
       </div>
     </div>
   </sd-card>
+  <form class="form" (submit)="confirm($event)">
+    <sd-text-input
+      label="Address"
+      name="address"
+      autocomplete="off"
+      [ngModel]="address()"
+      (ngModelChange)="address.set($event)"
+    />
+    <div class="coords">
+      <sd-text-input
+        label="Latitude"
+        name="latitude"
+        type="number"
+        placeholder="43.5530"
+        [ngModel]="latitude()"
+        (ngModelChange)="latitude.set($event)"
+      />
+      <sd-text-input
+        label="Longitude"
+        name="longitude"
+        type="number"
+        placeholder="-79.5830"
+        [ngModel]="longitude()"
+        (ngModelChange)="longitude.set($event)"
+      />
+    </div>
+    <p class="hint">Needed to put the event on the map. Copy the coordinates from any map app.</p>
+  </form>
   <sd-button slot="actions" variant="quiet" type="button" (click)="cancel()">Cancel</sd-button>
   <sd-button slot="actions" variant="primary" type="button" (click)="confirm()">
     <sd-icon name="check" />

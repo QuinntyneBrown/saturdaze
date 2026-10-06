@@ -4,6 +4,9 @@ import { CalendarExport } from '../models/calendar-export';
 import { ErrandPlacement } from '../models/errand-placement';
 import { WeekendDay } from '../models/weekend-day';
 import { WeekendView } from '../models/weekend-view';
+import { CoverSelection } from '../models/cover-view';
+import { IdeaPlacementView } from '../models/idea-placement-view';
+import { IdeaRequest } from '../models/idea-request';
 
 /**
  * I Weekend Plan Service — the current weekend and every mutation on it.
@@ -121,6 +124,43 @@ export interface IWeekendPlanService {
    * @returns {Promise<void>} The result of the operation
    */
   setErrandDone(errandId: string, done: boolean): Promise<void>;
+  /**
+   * Preview Idea — where the planner would put an idea on the current weekend,
+   * without changing it (`POST /api/weekends/{id}/ideas/preview`, L2-107).
+   *
+   * @param {IdeaRequest} request - Which idea, day and timing
+   *
+   * @returns {Promise<IdeaPlacementView>} The preview for D28
+   */
+  previewIdea(request: IdeaRequest): Promise<IdeaPlacementView>;
+  /**
+   * Add Idea — put the idea on the current weekend at the previewed placement
+   * (`POST /api/weekends/{id}/ideas`); the weekend view updates in place.
+   *
+   * @param {IdeaRequest} request - Which idea, day and timing
+   *
+   * @returns {Promise<void>} The result of the operation
+   */
+  addIdea(request: IdeaRequest): Promise<void>;
+  /**
+   * Set Cover — `PUT /api/weekends/{id}/cover` with the default rule or a
+   * stop's photo (L2-108); the weekend view updates in place.
+   *
+   * @param {CoverSelection} selection - The default rule or a stop
+   *
+   * @returns {Promise<void>} The result of the operation
+   */
+  setCover(selection: CoverSelection): Promise<void>;
+  /**
+   * Upload Cover — `POST /api/weekends/{id}/cover` with the family's own
+   * photo (L2-109); the weekend view updates in place. Rejects with the
+   * server's `HttpErrorResponse` (400 `unsupported_image`, 413).
+   *
+   * @param {Blob} file - A JPEG, PNG or WebP up to 10 MB
+   *
+   * @returns {Promise<void>} The result of the operation
+   */
+  uploadCover(file: Blob): Promise<void>;
   /**
    * Remix Saved — `POST /api/weekends/{id}/remix`; the result becomes the
    * current weekend.

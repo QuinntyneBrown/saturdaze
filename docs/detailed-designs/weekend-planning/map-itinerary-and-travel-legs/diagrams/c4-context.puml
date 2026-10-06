@@ -1,0 +1,14 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context - Map the itinerary and its travel legs
+
+Person(family, "Family member", "Follows the weekend plan")
+System(saturdaze, "Saturdaze", "Plans personalized family weekends")
+System_Ext(tiles, "Map tile provider", "OpenStreetMap-based tiles")
+System_Ext(directions, "Directions provider", "Turn-by-turn routes")
+
+Rel(family, saturdaze, "Reads each day's stops, legs and map in")
+Rel(family, tiles, "Browser loads tiles from", "HTTPS")
+Rel(family, directions, "Opens Directions links in", "HTTPS")
+@enduml

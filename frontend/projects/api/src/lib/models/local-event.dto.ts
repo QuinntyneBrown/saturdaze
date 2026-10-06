@@ -1,3 +1,6 @@
+import { LocationDto } from './location.dto';
+import { PlacePhotoDto } from './place-photo.dto';
+
 /**
  * Server-side shape of one row from `GET /api/events`. Mirrors
  * `Saturdaze.Application.Contracts.LocalEventDto`.
@@ -20,9 +23,9 @@ export interface LocalEventDto {
    */
   readonly endsOn: string;
   /**
-   * Location.
+   * Venue name shown on the card (e.g. "Milton").
    */
-  readonly location: string;
+  readonly venue: string;
   /**
    * Drive Minutes.
    */
@@ -35,4 +38,12 @@ export interface LocalEventDto {
    * Category.
    */
   readonly category: string;
+  /**
+   * Location (L2-099); null until the place is backfilled.
+   */
+  readonly location?: LocationDto | null;
+  /**
+   * Photo (L2-100); null when the place has none.
+   */
+  readonly photo?: PlacePhotoDto | null;
 }

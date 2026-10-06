@@ -53,6 +53,7 @@
           [lockedLabel]="card.lockedLabel ?? 'Locked'"
           [dimmed]="card.dimmed"
           [menuUrl]="card.menuUrl ?? ''"
+          [media]="card.media"
           [votes]="cells(card)"
           [votesDisabled]="card.votesDisabled"
           (voteChange)="vote(card, $event)"

@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, Signal, computed, inject, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 
+import { toMedia } from '../api/media';
 import { API_BASE_URL } from '../api/api-base-url';
 import { initialOf, toMinutes } from '../api/format';
 import { addDaysIso, upcomingSaturdayIso } from '../api/weekend-dates';
@@ -115,6 +116,7 @@ function toCard(
     chips,
     votes,
     menuUrl: dto.menuUrl || null,
+    media: toMedia(dto.photo),
     topPick: ctx.topPick,
     locked,
     lockedLabel: locked ? `Locked for ${slot.toLowerCase()}` : null,

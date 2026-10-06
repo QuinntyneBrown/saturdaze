@@ -10,6 +10,7 @@ public class ItineraryBlockConfiguration : IEntityTypeConfiguration<ItineraryBlo
     {
         b.ToTable("ItineraryBlocks");
         b.HasKey(x => x.Id);
+        b.OwnsGeo(x => x.Stop, "Stop");
         b.Property(x => x.Title).HasMaxLength(160).IsRequired();
         b.Property(x => x.Reason).HasMaxLength(500).IsRequired();
         b.HasIndex(x => new { x.WeekendId, x.Day, x.SortOrder });

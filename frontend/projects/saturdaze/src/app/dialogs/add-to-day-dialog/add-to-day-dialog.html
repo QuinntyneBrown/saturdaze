@@ -1,0 +1,43 @@
+<sd-dialog
+  wide
+  [title]="title"
+  subtitle="It is fitted in and unlocked plans move around it. Locked blocks and commitments stay put."
+>
+  <div class="form">
+    <sd-seg-radio
+      label="Which day"
+      name="day"
+      [options]="days"
+      [ngModel]="day()"
+      (ngModelChange)="setDay($event)"
+    />
+    <sd-select
+      label="When"
+      name="timing"
+      [options]="timings"
+      [ngModel]="timing()"
+      (ngModelChange)="setTiming($event)"
+    />
+    @if (error()) {
+      <sd-banner tone="warn" role="alert" icon="close">{{ error() }}</sd-banner>
+    }
+    @if (preview(); as p) {
+      <sd-well [tone]="p.fits ? 'primary' : 'warn'" icon="sparkle" [title]="p.title">
+        {{ p.body }}
+      </sd-well>
+    } @else if (!error()) {
+      <sd-well icon="sparkle" title="Checking the plan">Finding the best slot.</sd-well>
+    }
+  </div>
+  <sd-button slot="actions" variant="quiet" type="button" (click)="cancel()">Cancel</sd-button>
+  <sd-button
+    slot="actions"
+    variant="primary"
+    type="button"
+    [disabled]="!canConfirm()"
+    (click)="confirm()"
+  >
+    <sd-icon name="plus" />
+    Add to {{ day() }}
+  </sd-button>
+</sd-dialog>

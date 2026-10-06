@@ -1,3 +1,5 @@
+using Saturdaze.Domain.ValueObjects;
+
 namespace Saturdaze.Domain.Entities;
 
 public class LocalEvent
@@ -10,4 +12,5 @@ public class LocalEvent
     public int DriveMinutes { get; set; }
     public string Url { get; set; } = string.Empty;
     public string Category { get; set; } = string.Empty;
+    public GeoLocation? Geo { get; set; }
 }

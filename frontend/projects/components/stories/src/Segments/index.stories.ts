@@ -9,6 +9,7 @@ import bestPracticesMd from './SegmentsBestPractices.md';
 export { Default } from './SegmentsDefault.stories';
 export { Narrow } from './SegmentsNarrow.stories';
 export { Interactive } from './SegmentsInteractive.stories';
+export { Tabs } from './SegmentsTabs.stories';
 
 export default {
   title: 'Components/Segments',

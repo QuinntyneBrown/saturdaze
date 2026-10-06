@@ -2,6 +2,7 @@ using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using Saturdaze.Domain.Entities;
 using Saturdaze.Domain.Enums;
+using Saturdaze.Domain.ValueObjects;
 using Saturdaze.Infrastructure.Persistence;
 
 namespace Saturdaze.Cli.Seed;
@@ -41,6 +42,8 @@ public sealed class RestaurantSeeder : IJsonSeeder
             entity.WifeApproved = seed.WifeApproved;
             entity.Notes = seed.Notes ?? string.Empty;
             entity.DriveMinutes = seed.DriveMinutes;
+            entity.Geo = GeoLocation.Merge(entity.Geo, GeoLocation.From(seed.Latitude, seed.Longitude, seed.Address));
+            SeedPhotos.Apply(db, PlaceKind.Restaurant, entity.Id, seed.Photos);
             written++;
         }
 
@@ -55,5 +58,9 @@ public sealed class RestaurantSeeder : IJsonSeeder
         MealSlot Slot,
         bool WifeApproved,
         int DriveMinutes,
-        string? Notes);
+        string? Notes,
+        decimal? Latitude = null,
+        decimal? Longitude = null,
+        string? Address = null,
+        List<PhotoRecord>? Photos = null);
 }

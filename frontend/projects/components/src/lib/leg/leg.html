@@ -1,0 +1,9 @@
+<span></span>
+<span class="leg__rail" aria-hidden="true"></span>
+<p class="leg__text">
+  <sd-icon name="car" [size]="13" />
+  {{ label() }}
+  @if (directionsUrl()) {
+    <a class="leg__link" [href]="directionsUrl()" target="_blank" rel="noopener">Directions</a>
+  }
+</p>

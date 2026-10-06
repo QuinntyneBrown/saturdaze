@@ -16,25 +16,25 @@
   gap: 16px;
 }
 
-.head {
+.card__head {
   display: flex;
   align-items: flex-start;
   gap: 12px;
 }
 
-.head__text {
+.card__head-text {
   min-width: 0;
   flex: 1;
 }
 
-.head__title {
+.card__title {
   font-size: var(--fontSizeBase600);
   font-weight: var(--fontWeightBold);
   line-height: 1.25;
   letter-spacing: -0.01em;
 }
 
-.head__meta {
+.card__meta {
   font-size: var(--fontSizeBase300);
   color: var(--colorNeutralForeground2);
   margin-top: 2px;

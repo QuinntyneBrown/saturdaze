@@ -1,0 +1,127 @@
+@use 'styles/breakpoints' as *;
+
+// `.map` from docs/mocks/styles/app.css: OpenStreetMap tiles under the route
+// and pins, a legend with the required attribution (L2-103 AC3).
+
+:host {
+  display: block;
+}
+
+.map {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--colorNeutralStroke2);
+  border-radius: var(--borderRadiusLarge);
+  background: var(--colorNeutralBackground1);
+}
+
+.map__view {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 4 / 3;
+  background: var(--colorNeutralBackground3);
+}
+
+.map__tile {
+  position: absolute;
+  max-width: none;
+  user-select: none;
+  pointer-events: none;
+}
+
+.map__route {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.map__route polyline {
+  fill: none;
+  stroke: var(--colorBrandForeground2);
+  stroke-width: 3;
+  stroke-dasharray: 6 5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.map__pin {
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: 2px solid var(--colorNeutralBackground1);
+  border-radius: 50%;
+  background: var(--colorBrandForeground2);
+  color: var(--colorNeutralForegroundOnBrand);
+  font: inherit;
+  font-size: var(--fontSizeBase300);
+  font-weight: var(--fontWeightBold);
+  cursor: pointer;
+  transform: translate(-50%, -50%);
+}
+
+.map__pin--home {
+  width: 24px;
+  height: 24px;
+  background: var(--colorNeutralForeground1);
+  cursor: default;
+}
+
+.map__pin--active {
+  z-index: 1;
+  width: 34px;
+  height: 34px;
+  box-shadow: 0 0 0 3px var(--colorNeutralForeground1);
+}
+
+.map__pin:focus-visible {
+  outline: 2px solid var(--colorStrokeFocus2);
+  outline-offset: 2px;
+}
+
+.map__expand {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+.map__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  padding: 10px 14px;
+  border-top: 1px solid var(--colorNeutralStroke2);
+  font-size: var(--fontSizeBase200);
+  color: var(--colorNeutralForeground2);
+}
+
+.map__attr {
+  margin-left: auto;
+}
+
+.map__attr a {
+  color: inherit;
+  text-decoration: underline;
+}
+
+.map__empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 4 / 3;
+  padding: 16px;
+  text-align: center;
+  color: var(--colorNeutralForeground2);
+}
+
+// Beside the timeline from 1024px the map is already in view (L2-105 AC2).
+@include respond-to(desktop) {
+  .map__expand {
+    display: none;
+  }
+}

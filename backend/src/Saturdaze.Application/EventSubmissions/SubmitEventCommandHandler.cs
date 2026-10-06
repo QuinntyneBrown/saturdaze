@@ -7,6 +7,7 @@ using Saturdaze.Application.Contracts;
 using Saturdaze.Application.Exceptions;
 using Saturdaze.Domain.Entities;
 using Saturdaze.Domain.Enums;
+using Saturdaze.Domain.ValueObjects;
 
 namespace Saturdaze.Application.EventSubmissions;
 
@@ -47,6 +48,7 @@ public sealed class SubmitEventCommandHandler
             AgeRange = Trim(request.AgeRange),
             SourceUrl = Trim(request.SourceUrl),
             Category = Trim(request.Category),
+            Geo = GeoLocation.From(request.Latitude, request.Longitude, request.Address ?? request.Location),
             Status = EventSubmissionStatus.Pending,
             SubmittedByUserId = userId,
             SubmittedAtUtc = _clock.UtcNow,

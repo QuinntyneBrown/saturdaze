@@ -29,7 +29,8 @@ public static class IngestionPrompts
 
         var output =
             "Return ONLY a single JSON array as your final message — no prose, no markdown fences, " +
-            "no commentary before or after. Each element MUST match this exact schema (omit any row " +
+            "no commentary before or after. \"latitude\" and \"longitude\" are WGS84 decimal degrees of the " +
+            "venue and \"address\" its street address. Each element MUST match this exact schema (omit any row " +
             "you cannot fully populate and verify):";
 
         return type switch
@@ -40,7 +41,8 @@ public static class IngestionPrompts
                 $"of {nextWeekend}. Avoid adults-only events and ticketed concerts over $50 per adult.\n\n" +
                 $"{output}\n" +
                 "[{\"name\": string, \"startsOn\": \"YYYY-MM-DD\", \"endsOn\": \"YYYY-MM-DD\", " +
-                "\"location\": string, \"driveMinutes\": integer, \"url\": string, \"category\": string}]",
+                "\"location\": string, \"driveMinutes\": integer, \"url\": string, \"category\": string, " +
+                "\"latitude\": number, \"longitude\": number, \"address\": string}]",
 
             IngestionType.Activities =>
                 $"{preamble}\n\nFind mostly-evergreen places to spend an afternoon (parks, trails, " +
@@ -51,7 +53,8 @@ public static class IngestionPrompts
                 $"{output}\n" +
                 "[{\"name\": string, \"category\": string, \"indoor\": boolean, \"minAge\": integer, " +
                 "\"maxAge\": integer, \"driveMinutes\": integer, \"weatherTags\": [string], " +
-                "\"typicalDurationMinutes\": integer, \"description\": string, \"mapUrl\": string}]",
+                "\"typicalDurationMinutes\": integer, \"description\": string, \"mapUrl\": string, " +
+                "\"latitude\": number, \"longitude\": number, \"address\": string}]",
 
             IngestionType.Restaurants =>
                 $"{preamble}\n\nFind family-friendly restaurants. \"slot\" is \"Lunch\" or \"Dinner\". " +
@@ -60,7 +63,8 @@ public static class IngestionPrompts
                 $"reason it earns its place.\n\n" +
                 $"{output}\n" +
                 "[{\"name\": string, \"style\": string, \"slot\": \"Lunch\"|\"Dinner\", " +
-                "\"wifeApproved\": boolean, \"driveMinutes\": integer, \"notes\": string}]",
+                "\"wifeApproved\": boolean, \"driveMinutes\": integer, \"notes\": string, " +
+                "\"latitude\": number, \"longitude\": number, \"address\": string}]",
 
             _ => throw new ArgumentOutOfRangeException(nameof(type), type, "Unsupported ingestion type.")
         };

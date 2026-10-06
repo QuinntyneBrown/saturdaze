@@ -15,6 +15,9 @@ const READY: WeekendView = {
   headline: 'This weekend',
   subtitle: 'Lavender on Saturday, pancakes on Sunday.',
   blockCount: 3,
+  cover: null,
+  dateRange: '16 – 17 May',
+  coverChoices: [],
   days: [
     {
       day: 'Saturday',
@@ -25,6 +28,10 @@ const READY: WeekendView = {
       locked: false,
       keeping: ['Swim 9:00'],
       blocks: [BLOCK_COMMITMENT, BLOCK],
+      stops: [],
+      home: null,
+      drivingMinutes: 0,
+      drivingKm: 0,
     },
     {
       day: 'Sunday',
@@ -35,6 +42,10 @@ const READY: WeekendView = {
       locked: true,
       keeping: [],
       blocks: [{ ...BLOCK, id: 'b-pancakes', day: 'Sunday', title: 'Pancakes at home' }],
+      stops: [],
+      home: null,
+      drivingMinutes: 0,
+      drivingKm: 0,
     },
   ],
 };

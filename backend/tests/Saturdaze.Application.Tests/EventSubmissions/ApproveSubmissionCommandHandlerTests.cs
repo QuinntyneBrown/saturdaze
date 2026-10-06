@@ -5,6 +5,7 @@ using Saturdaze.Application.Tests.Support;
 using Saturdaze.Domain.Entities;
 using Saturdaze.Domain.Enums;
 using Xunit;
+using Saturdaze.Domain.ValueObjects;
 
 namespace Saturdaze.Application.Tests.EventSubmissions;
 
@@ -145,6 +146,7 @@ public class ApproveSubmissionCommandHandlerTests
             StartsAtLocal = new DateTime(2026, 6, 20, 14, 0, 0),
             EndsAtLocal = new DateTime(2026, 6, 20, 21, 0, 0),
             Location = "Memorial Park",
+            Geo = new GeoLocation { Latitude = 43.5530m, Longitude = -79.5830m, Address = "32 Park St E" },
             Category = "Festival",
             DriveMinutes = 5,
             Status = EventSubmissionStatus.Pending,

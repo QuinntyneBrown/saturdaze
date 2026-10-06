@@ -18,6 +18,8 @@ Saturdaze is a web application that plans personalized family weekends. Local-ev
 
 `EventsService` places a multi-day event on the first weekend day it touches, adds coming-soon entries, omits empty sections, and prepends owned pending submissions. Next-weekend filtering uses the following Saturday and Sunday. `LocalEvent` has a category, not a separate indoor flag; the distinct indoor/outdoor filtering obligation in L1-007 remains an implementation gap.
 
+Event cards lead with the event's photo since the 2026-10-06 mock (`docs/mocks/pages/ideas.events.html`), and cards dated this weekend offer "Add to day". `discovery/store-place-location-and-imagery` and `discovery/add-idea-to-day` design those changes; grouping and queries in this design are unchanged.
+
 ## Requirements
 
 The following L2 requirements refine the cited L1 capabilities. Implementation gaps stated in Description do not waive these obligations.

@@ -1,3 +1,6 @@
+using Saturdaze.Domain.Enums;
+using Saturdaze.Domain.ValueObjects;
+
 namespace Saturdaze.Domain.Entities;
 
 public class Weekend
@@ -23,5 +26,23 @@ public class Weekend
     public int? Rating { get; set; }
 
     public List<ItineraryBlock> Blocks { get; set; } = new();
+
+    /// <summary>Home as it was when the weekend was planned; travel legs start and end there (L2-102).</summary>
+    public GeoLocation? Home { get; set; }
+
+    /// <summary>Where the cover comes from (L2-108); a new weekend uses the default rule.</summary>
+    public CoverSource CoverSource { get; set; } = CoverSource.Default;
+
+    /// <summary>The chosen stop's catalog and id when <see cref="CoverSource"/> is <c>Stop</c>.</summary>
+    public PlaceKind? CoverPlaceKind { get; set; }
+
+    public Guid? CoverPlaceId { get; set; }
+
+    /// <summary>The uploaded photo's private storage key when <see cref="CoverSource"/> is <c>Upload</c> (L2-109).</summary>
+    public string? CoverUploadKey { get; set; }
+
+    public int? CoverUploadWidth { get; set; }
+
+    public int? CoverUploadHeight { get; set; }
     public List<ShoppingErrand> Errands { get; set; } = new();
 }

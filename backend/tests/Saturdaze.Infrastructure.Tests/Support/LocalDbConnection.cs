@@ -6,6 +6,8 @@ namespace Saturdaze.Infrastructure.Tests.Support;
 /// Resolves a LocalDB connection string via named pipe. Works around a known issue
 /// where the `(localdb)\Instance` shortcut fails to load SqlUserInstance.dll on
 /// LocalDB v17 / SQL Server 2025.
+/// Set <c>SATURDAZE_TEST_SQLSERVER</c> to a connection string without a database
+/// (e.g. a SQL Server container on Linux) to bypass LocalDB entirely.
 /// </summary>
 public static class LocalDbConnection
 {
@@ -14,6 +16,10 @@ public static class LocalDbConnection
 
     public static string For(string database)
     {
+        var server = Environment.GetEnvironmentVariable("SATURDAZE_TEST_SQLSERVER");
+        if (!string.IsNullOrWhiteSpace(server))
+            return $"{server.TrimEnd(';')};Database={database}";
+
         var pipe = ResolvePipe();
         return $"Server={pipe};Database={database};Trusted_Connection=True;TrustServerCertificate=True;Connect Timeout=30";
     }

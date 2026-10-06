@@ -22,6 +22,7 @@ const LAVENDER: PastWeekendCard = {
   ratingLabel: '5 of 5',
   highlights: 'Bronte Creek · Rec Room',
   favourite: true,
+  cover: null,
 };
 
 const RAINY: PastWeekendCard = {
@@ -34,6 +35,7 @@ const RAINY: PastWeekendCard = {
   ratingLabel: 'Rate it',
   highlights: 'The Rec Room',
   favourite: false,
+  cover: null,
 };
 
 const LOADING: PastView = {

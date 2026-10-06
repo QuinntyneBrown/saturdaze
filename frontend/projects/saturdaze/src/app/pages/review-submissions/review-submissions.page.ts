@@ -1,4 +1,5 @@
 import { Dialog } from '@angular/cdk/dialog';
+import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
@@ -94,9 +95,9 @@ export class ReviewSubmissionsPage {
       { ...DIALOG_OPTIONS, data: { card } },
     );
     const result = await firstValueFrom(ref.closed);
-    if (result !== 'confirm') return;
+    if (!result) return;
     await this.run(async () => {
-      await this.submissions.approve(card.id);
+      await this.submissions.approve(card.id, null, result.location);
     });
   }
 
@@ -117,8 +118,21 @@ export class ReviewSubmissionsPage {
     try {
       await work();
     } catch (err) {
-      this.error.set('That did not go through. Try again in a moment.');
+      this.error.set(
+        errorCode(err) === 'location_required'
+          ? 'This event needs a location first. Add its latitude and longitude, then approve.'
+          : 'That did not go through. Try again in a moment.',
+      );
       console.error('ReviewSubmissionsPage action failed', err);
     }
   }
+}
+
+/** The API's ProblemDetails `code`, when the failure carries one. */
+function errorCode(err: unknown): string | null {
+  if (!(err instanceof HttpErrorResponse)) return null;
+  const body: unknown = err.error;
+  return body && typeof body === 'object' && 'code' in body && typeof body.code === 'string'
+    ? body.code
+    : null;
 }

@@ -1,6 +1,8 @@
 {
   "name": "The Browns",
   "homeLocation": "Port Credit, Mississauga, ON",
+  "homeLatitude": 43.5547,
+  "homeLongitude": -79.5816,
   "budgetEnabled": false,
   "members": [
     {

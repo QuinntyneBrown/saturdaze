@@ -20,7 +20,7 @@ function event(overrides: Partial<LocalEventDto> = {}): LocalEventDto {
     name: 'Terre Bleu Lavender Bloom Opening',
     startsOn: '2026-05-16',
     endsOn: '2026-05-16',
-    location: 'Milton',
+    venue: 'Milton',
     driveMinutes: 45,
     url: 'https://example.com/terre-bleu',
     category: 'Seasonal',
@@ -33,7 +33,7 @@ const EVENTS: LocalEventDto[] = [
   event({
     id: 'ev2',
     name: 'Cirque Mechanics',
-    location: 'Living Arts Centre',
+    venue: 'Living Arts Centre',
     driveMinutes: 5,
     category: 'Theatre',
     url: '',
@@ -43,7 +43,7 @@ const EVENTS: LocalEventDto[] = [
     name: 'Spring Tulip Festival',
     startsOn: '2026-05-15',
     endsOn: '2026-05-17',
-    location: 'RBG',
+    venue: 'RBG',
     category: 'Festival',
   }),
   event({
@@ -165,6 +165,9 @@ describe('EventsService', () => {
       ],
       url: 'https://example.com/terre-bleu',
       pending: false,
+      media: null,
+      // A Saturday event of this weekend can be added to a day (L2-107).
+      addable: true,
     });
     expect(second!.url).toBeNull();
     expect(second!.chips[0]).toEqual({ tone: 'indoor', label: 'Theatre' });
@@ -226,6 +229,8 @@ describe('EventsService', () => {
         chips: [{ tone: 'sun', label: 'Pending review' }],
         url: 'https://example.com/buskerfest',
         pending: true,
+        media: null,
+        addable: false,
       },
     ]);
     service.setCategory('Theatre');

@@ -174,7 +174,7 @@ public class WeekendsControllerTests : IClassFixture<SaturdazeApiFactory>, IAsyn
         var share = await _client.PostAsync($"/api/weekends/{weekendId}/share", content: null);
         share.EnsureSuccessStatusCode();
         var shareBody = JsonDocument.Parse(await share.Content.ReadAsStringAsync()).RootElement;
-        shareBody.GetProperty("shareUrl").GetString().Should().Contain("/sample-weekend?share=");
+        shareBody.GetProperty("shareUrl").GetString().Should().EndWith($"/s/{shareBody.GetProperty("token").GetString()}");
 
         // The share link and the calendar feed are consumed without a bearer.
         var anonymous = _factory.CreateClient();

@@ -110,6 +110,7 @@ describe('SavedService', () => {
       ratingLabel: '5 of 5',
       highlights: 'Bronte Creek · Rec Room · Splash pad',
       favourite: true,
+      cover: null,
     });
     expect(
       toPastCard(row({ title: ' Zoo day ', rating: null, activityHighlights: [] })),

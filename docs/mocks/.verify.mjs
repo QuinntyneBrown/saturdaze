@@ -50,11 +50,11 @@ export const PAGES = [
   { url: "/pages/_shell.html",    nav: null,     expects: { selector: "main h1", text: "Shell" } },
 
   // Core
-  { url: "/pages/weekend.html",            nav: "weekend", expects: { selector: ".day__header", text: "Saturday" },                         cols: { ".grid-days": { 390: 1, 820: 1, 1440: 2, 1920: 2 } } },
-  { url: "/pages/ideas.html",              nav: "ideas",   expects: { selector: '.segments__tab[aria-current="page"]', text: "Activities" }, cols: { ".grid-cards": { 390: 1, 820: 2, 1440: 3 } } },
+  { url: "/pages/weekend.html",            nav: "weekend", expects: { selector: ".cover__title", text: "This weekend" },                     cols: { ".planner": { 390: 1, 820: 1, 1440: 2, 1920: 2 } } },
+  { url: "/pages/ideas.html",              nav: "ideas",   expects: { selector: ".card--media .card__title", text: "Terre Bleu" },           cols: { ".grid-cards": { 390: 1, 820: 2, 1440: 3 } } },
   { url: "/pages/ideas.food.html",         nav: "ideas",   expects: { selector: '.segments__tab[aria-current="page"]', text: "Food" },       cols: { ".grid-cards": { 390: 1, 820: 2, 1440: 2 } } },
   { url: "/pages/ideas.events.html",       nav: "ideas",   expects: { selector: '.segments__tab[aria-current="page"]', text: "Events" },     cols: { ".grid-cards": { 390: 1, 820: 2, 1440: 3 } } },
-  { url: "/pages/past.html",               nav: "past",    expects: { selector: ".page-header__title", text: "Past weekends" },              cols: { ".grid-cards": { 390: 1, 820: 2, 1440: 3 } } },
+  { url: "/pages/past.html",               nav: "past",    expects: { selector: ".card--media .media__credit", text: "Your photo" },         cols: { ".grid-cards": { 390: 1, 820: 2, 1440: 3 } } },
   { url: "/pages/family.html",             nav: "family",  expects: { selector: ".page-header__title", text: "The Browns" },                 cols: { ".family-grid": { 390: 1, 820: 1, 1440: 2 } } },
   { url: "/pages/review-submissions.html", nav: "family",  expects: { selector: ".page-header__title", text: "Review submissions" } },
 

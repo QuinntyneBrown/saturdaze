@@ -34,6 +34,8 @@ const BASE_BLOCK: BlockRow = {
   highlight: true,
   swappable: true,
   lockable: true,
+  stopNumber: null,
+  leg: null,
 };
 
 export const BLOCK: BlockRow = BASE_BLOCK;
@@ -200,6 +202,7 @@ export const FOOD_CARD: FoodCard = {
   lockedLabel: null,
   dimmed: false,
   votesDisabled: false,
+  media: null,
 };
 
 export const MORE_ITEMS: readonly MenuItem[] = [

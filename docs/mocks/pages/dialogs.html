@@ -804,6 +804,22 @@
                 <div class="card__head-text"><p class="card__title">Sat 20 Jun · 2:00 to 9:00pm</p><p class="card__meta">Memorial Park · Free · All ages · sent by quinntynebrown@gmail.com</p></div>
               </div>
             </div>
+            <!-- docs/specs L2-099 AC3: a published event needs a location. Blank coordinates keep the submission's own. -->
+            <div class="field">
+              <label class="field__label" for="d23-address">Address</label>
+              <input class="field__input" id="d23-address" type="text" value="Memorial Park, Lakeshore Rd, Port Credit" autocomplete="off">
+            </div>
+            <div class="grid-2">
+              <div class="field">
+                <label class="field__label" for="d23-lat">Latitude</label>
+                <input class="field__input" id="d23-lat" type="number" step="any" min="-90" max="90" inputmode="decimal" placeholder="43.5530">
+              </div>
+              <div class="field">
+                <label class="field__label" for="d23-lng">Longitude</label>
+                <input class="field__input" id="d23-lng" type="number" step="any" min="-180" max="180" inputmode="decimal" placeholder="-79.5830">
+              </div>
+            </div>
+            <p class="field__hint">Needed to put the event on the map. Copy the coordinates from any map app.</p>
           </div>
           <div class="dialog__actions">
             <button class="btn btn--quiet" type="button">Cancel</button>
@@ -872,6 +888,67 @@
         <p class="menu__header">quinntynebrown@gmail.com</p>
         <a class="menu__item" role="menuitem" href="./family.html"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg>Family settings</a>
         <a class="menu__item menu__item--warn" role="menuitem" href="#dialog-signout"><svg class="icon" aria-hidden="true"><use href="#i-sign_out"/></svg>Sign out</a>
+      </div>
+    </section>
+
+    <!-- docs/specs L2-107, L2-108: add an idea to a day; choose a weekend cover photo. -->
+    <section class="specimen" id="dialog-add-to-day">
+      <span class="specimen__label">D28 · Add an idea to a day</span>
+      <div class="dialog dialog--specimen dialog--wide" role="dialog" aria-modal="true" aria-labelledby="d28-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="d28-title">Add Royal Botanical Gardens</h2><p class="dialog__sub">We fit it in and move unlocked blocks around it. Locked blocks and commitments stay put.</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="dialog__body">
+            <div class="field">
+              <span class="field__label" id="d28-day-label">Which day</span>
+              <div class="seg-radio" role="radiogroup" aria-labelledby="d28-day-label">
+                <label class="seg-radio__opt"><input type="radio" name="d28-day" checked>Saturday</label>
+                <label class="seg-radio__opt"><input type="radio" name="d28-day">Sunday</label>
+              </div>
+            </div>
+            <div class="field">
+              <label class="field__label" for="d28-when">When</label>
+              <select class="field__input" id="d28-when">
+                <option selected>Best fit</option><option>Morning</option><option>Afternoon</option>
+              </select>
+            </div>
+            <div class="well well--primary">
+              <svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg>
+              <div><p class="well__title">Saturday · 15:00 to 17:00</p><p class="well__body">Replaces Quiet time at home. 35 min drive from La Marina, back by 17:35 for dinner.</p></div>
+            </div>
+          </div>
+          <div class="dialog__actions">
+            <button class="btn btn--quiet" type="button">Cancel</button>
+            <button class="btn btn--primary" type="button"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg>Add to Saturday</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="specimen" id="dialog-cover-photo">
+      <span class="specimen__label">D29 · Weekend cover photo</span>
+      <div class="dialog dialog--specimen dialog--wide" role="dialog" aria-modal="true" aria-labelledby="d29-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="d29-title">Cover photo</h2><p class="dialog__sub">Shown on this weekend, in Past, and on the link you share.</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="dialog__body">
+            <div class="photo-pick" role="radiogroup" aria-label="Choose a cover photo">
+              <label class="photo-pick__opt"><input type="radio" name="d29-photo" checked aria-label="Lavender fields"><img src="../images/lavender-farm.svg" alt="" width="800" height="500"><span class="photo-pick__name">Lavender fields</span></label>
+              <label class="photo-pick__opt"><input type="radio" name="d29-photo" aria-label="La Marina"><img src="../images/la-marina.svg" alt="" width="800" height="500"><span class="photo-pick__name">La Marina</span></label>
+              <label class="photo-pick__opt"><input type="radio" name="d29-photo" aria-label="The Rec Room"><img src="../images/rec-room.svg" alt="" width="800" height="500"><span class="photo-pick__name">The Rec Room</span></label>
+              <label class="photo-pick__opt photo-pick__upload"><input type="file" accept="image/jpeg,image/png,image/webp" aria-label="Upload your own photo"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg>Your own photo</label>
+            </div>
+            <p class="field__hint">JPEG, PNG or WebP, up to 10 MB. Location data is removed before it is saved. Only your family and people you share the weekend with can see it.</p>
+          </div>
+          <div class="dialog__actions">
+            <button class="btn btn--quiet" type="button">Cancel</button>
+            <button class="btn btn--primary" type="button"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Use this photo</button>
+          </div>
+        </div>
       </div>
     </section>
 

@@ -61,6 +61,8 @@
             [rating]="card.rating || null"
             [favourite]="card.favourite"
             [highlights]="card.highlights"
+            [cover]="card.cover?.media ?? null"
+            (addPhoto)="addPhoto(card)"
             (favouriteToggle)="favourite(card, $event)"
             (rename)="rename(card)"
             (rate)="rate(card)"

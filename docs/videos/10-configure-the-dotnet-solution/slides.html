@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 10 Slides</title>
+<link rel="stylesheet" href="../assets/slides.css">
+</head>
+<body data-video-number="10" data-video-title="Configure the .NET solution to use Foundry" data-parts="Introduction|Outcomes|Binding|Defaults|Local run|Worker|WebJob|Anthropic fallback|Failures|Recap">
+
+<section id="title" class="center" data-part="0">
+  <div class="kicker">Saturdaze AI series · Video 10 of 10</div>
+  <h1>Configure the .NET solution<br>to use Foundry</h1>
+  <p class="lead">Endpoint and key into every host: laptop, Worker container, App Service WebJob</p>
+</section>
+
+<section id="hosts" data-part="0" data-cue="Along the way you will see exactly how configuration is bound">
+  <h2>Three hosts, two secrets, one section</h2>
+  <div class="cols shrink three">
+    <div class="card"><h3>Laptop</h3><p class="small"><code>saturdaze ingest --dry-run</code><br>key from <code>.deploy/azure.env</code></p></div>
+    <div class="card"><h3>Worker container</h3><p class="small">cron daemon or run-once job<br>key from the platform secret store</p></div>
+    <div class="card"><h3>App Service WebJob</h3><p class="small">triggered, co-located with the API<br>key from application settings</p></div>
+  </div>
+  <p>Every host reads <code>SATURDAZE_CONNECTION</code> and <code>ANTHROPIC_FOUNDRY_API_KEY</code> from the environment and the rest from <code>Saturdaze:Ingestion:Claude</code>.</p>
+</section>
+
+<section id="outcomes" data-part="1" data-cue="By the end of this video you should be able to do five things">
+  <h2>What you will be able to do</h2>
+  <ol class="steps">
+    <li><div>Explain how <code>ClaudeWebSearchOptions</code> is bound and how the key is injected</div></li>
+    <li><div>Run <code>saturdaze ingest</code> locally against Foundry with the gitignored key file</div></li>
+    <li><div>Configure the Worker, a one-shot job and an App Service WebJob</div></li>
+    <li><div>Switch the provider to Anthropic with two settings, and back</div></li>
+    <li><div>Read an ingestion failure and name the fix</div></li>
+  </ol>
+</section>
+
+<section id="binding" data-part="2" data-cue="Three lines do the work">
+  <h2>How the settings are bound</h2>
+  <pre class="code tight" data-lang="cs" data-file="backend/src/Saturdaze.Infrastructure/Ingestion/IngestionServiceCollectionExtensions.cs" data-mark="1-2,4-5,10-11,13">
+services.AddOptions&lt;ClaudeWebSearchOptions&gt;()
+    .Bind(configuration.GetSection(ClaudeWebSearchOptions.SectionName))
+    // Secret comes from the environment in production (never the repo).
+    .PostConfigure(o =&gt; o.ApiKey =
+        ClaudeWebSearchOptions.ResolveApiKey(o, Environment.GetEnvironmentVariable));
+
+services
+    .AddHttpClient&lt;IWebSearchClient, ClaudeWebSearchClient&gt;(
+        ClaudeWebSearchClient.HttpClientName, (sp, http) =&gt;
+    {
+        http.BaseAddress = ClaudeWebSearchOptions.ResolveBaseUri(
+            sp.GetRequiredService&lt;IOptions&lt;ClaudeWebSearchOptions&gt;&gt;().Value);
+        http.Timeout = TimeSpan.FromMinutes(5);
+    });
+</pre>
+  <p class="small muted">Bind the section · inject the key from the environment · base address from the provider · five-minute timeout.</p>
+</section>
+
+<section id="resolve-key" data-part="2" data-cue="Look at ResolveApiKey">
+  <h2>One provider, one variable</h2>
+  <pre class="code tight" data-lang="cs" data-file="backend/src/Saturdaze.Infrastructure/Ingestion/ClaudeWebSearchOptions.cs" data-mark="1-2,6-7">
+public static string ApiKeyVariable(ClaudeProvider provider)
+    =&gt; provider == ClaudeProvider.Foundry ? FoundryApiKeyVariable : AnthropicApiKeyVariable;
+
+public static string ResolveApiKey(ClaudeWebSearchOptions options, Func&lt;string, string?&gt; environment)
+{
+    var fromEnvironment = environment(ApiKeyVariable(options.Provider));
+    return string.IsNullOrWhiteSpace(fromEnvironment) ? options.ApiKey : fromEnvironment;
+}
+</pre>
+  <table class="grid">
+    <tr><th>Provider</th><th>Variable read</th><th>Ignored</th></tr>
+    <tr><td><code>Foundry</code></td><td><code>ANTHROPIC_FOUNDRY_API_KEY</code></td><td><code>ANTHROPIC_API_KEY</code></td></tr>
+    <tr><td><code>Anthropic</code></td><td><code>ANTHROPIC_API_KEY</code></td><td><code>ANTHROPIC_FOUNDRY_API_KEY</code></td></tr>
+  </table>
+</section>
+
+<section id="resolve-uri" data-part="2" data-cue="Now look at">
+  <h2>Where the base URL comes from</h2>
+  <pre class="code tight" data-lang="cs" data-mark="6-9,14-15">
+public static Uri? ResolveBaseUri(ClaudeWebSearchOptions options)
+{
+    var url = options.BaseUrl?.Trim();
+    if (string.IsNullOrEmpty(url))
+    {
+        url = options.Provider switch
+        {
+            ClaudeProvider.Anthropic =&gt; "https://api.anthropic.com/",
+            _ when !string.IsNullOrWhiteSpace(options.FoundryResource)
+                =&gt; $"https://{options.FoundryResource.Trim()}.services.ai.azure.com/anthropic/",
+            _ =&gt; null
+        };
+    }
+    if (url is null) return null;          // unconfigured: fail lazily, on first search
+    if (!url.EndsWith('/')) url += "/";    // v1/messages must not replace /anthropic
+    return new Uri(url, UriKind.Absolute);
+}
+</pre>
+</section>
+
+<section id="defaults" data-part="3" data-cue="Open" data-template="defaults-tpl">
+  <h2>The checked-in defaults</h2>
+</section>
+<template id="defaults-tpl">
+  <div class="cols shrink">
+    <div class="item">
+      <pre class="code tight" data-lang="json" data-file="backend/src/Saturdaze.Worker/appsettings.json" data-mark="4-6">
+"Ingestion": {
+  "MaxDriveMinutes": 200,
+  "MaxRunsPerDayPerType": 48,
+  "Claude": {
+    "Provider": "Foundry",
+    "FoundryResource": "sd-ai-uofnt2",
+    "Model": "claude-sonnet-5",
+    "MaxSearches": 5,
+    "MaxTokens": 4096
+  },
+  "Schedule": {
+    "Enabled": true, "Cron": "0 0 8 * * 5",
+    "Types": "all", "RunOnStartup": false,
+    "RunOnceThenExit": false
+  }
+}
+</pre>
+    </div>
+    <div class="item">
+      <div class="card"><h3>What is not there</h3><p class="small">No <code>ApiKey</code>. The key arrives only through the environment, in every host.</p></div>
+      <div class="card"><h3>Who binds it</h3><p class="small"><code>Saturdaze.Cli</code> and <code>Saturdaze.Worker</code> call <code>AddIngestion</code>. <code>Saturdaze.Api</code> never does: the web API does not ingest and needs no key.</p></div>
+    </div>
+  </div>
+</template>
+
+<section id="local" data-part="4" data-cue="On your machine the flow is three steps">
+  <h2>Running locally</h2>
+  <ol class="steps">
+    <li><div><strong>Provision</strong> (video 09). <code>eng/Deploy-Foundry.ps1</code> wrote the key to the gitignored <code>.deploy/azure.env</code>.</div></li>
+    <li><div><strong>Load the key</strong> into the shell. Never echo it, never paste it into a settings file.</div></li>
+    <li><div><strong>Run.</strong> JSON → environment → command line, in that order.</div></li>
+  </ol>
+  <pre class="code tight" data-lang="sh">
+# bash
+export ANTHROPIC_FOUNDRY_API_KEY="$(grep '^ANTHROPIC_FOUNDRY_API_KEY=' \
+    .deploy/azure.env | cut -d= -f2-)"
+dotnet run --project backend/src/Saturdaze.Cli -- ingest --type events --dry-run
+
+# PowerShell
+$env:ANTHROPIC_FOUNDRY_API_KEY =
+    (Select-String '^ANTHROPIC_FOUNDRY_API_KEY=' .deploy\azure.env).Line.Split('=', 2)[1]
+</pre>
+</section>
+
+<section id="overrides" data-part="4" data-cue="That also means you can override any setting for one run">
+  <h2>Override anything with double underscores</h2>
+  <table class="grid">
+    <tr><th>Configuration path</th><th>Environment variable</th></tr>
+    <tr><td><code>Saturdaze:Ingestion:Claude:MaxSearches</code></td><td><code>Saturdaze__Ingestion__Claude__MaxSearches=3</code></td></tr>
+    <tr><td><code>Saturdaze:Ingestion:Claude:FoundryResource</code></td><td><code>Saturdaze__Ingestion__Claude__FoundryResource=another-account</code></td></tr>
+    <tr><td><code>Saturdaze:Ingestion:Claude:Provider</code></td><td><code>Saturdaze__Ingestion__Claude__Provider=Anthropic</code></td></tr>
+    <tr><td><code>ConnectionStrings:Saturdaze</code></td><td><code>SATURDAZE_CONNECTION=…</code> (or <code>--connection</code>)</td></tr>
+  </table>
+  <p class="small muted">A dry run still needs the connection string to start the host, even though it never writes.</p>
+</section>
+
+<section id="worker" data-part="5" data-cue="The Worker is a .NET worker service with a">
+  <h2>Configuring the Worker</h2>
+  <pre class="code tight" data-lang="sh" data-file="backend/src/Saturdaze.Worker/Dockerfile" data-mark="3-4,8">
+cd backend
+docker build -f src/Saturdaze.Worker/Dockerfile -t saturdaze-worker .
+docker run --rm -e SATURDAZE_CONNECTION="Server=...;Database=Saturdaze;..." \
+  -e ANTHROPIC_FOUNDRY_API_KEY="&lt;foundry-key&gt;" saturdaze-worker
+
+# one-shot job for Kubernetes CronJob / Azure Container Apps Job
+docker run --rm -e SATURDAZE_CONNECTION="..." -e ANTHROPIC_FOUNDRY_API_KEY="..." \
+  -e Saturdaze__Ingestion__Schedule__RunOnceThenExit=true saturdaze-worker
+</pre>
+  <table class="grid">
+    <tr><th><code>Schedule</code> setting</th><th>Default</th><th>Effect</th></tr>
+    <tr><td><code>Cron</code></td><td><code>0 0 8 * * 5</code></td><td>Fridays 08:00 UTC, evaluated in UTC</td></tr>
+    <tr><td><code>RunOnStartup</code> / <code>RunOnceThenExit</code></td><td>false / false</td><td>immediate pass / one pass then stop</td></tr>
+    <tr><td><code>Enabled</code></td><td>true</td><td>false → the Worker idles</td></tr>
+  </table>
+</section>
+
+<section id="webjob" data-part="6" data-cue="The third option needs no new infrastructure">
+  <h2>Configuring the App Service WebJob</h2>
+  <div class="cols shrink wide-left">
+    <div>
+      <pre class="code tight" data-lang="json" data-file="backend/deploy/webjobs/ingest/">
+// settings.job (NCRONTAB, UTC)
+{ "schedule": "0 0 8 * * 5", "is_singleton": true }
+</pre>
+      <pre class="code tight" data-lang="sh">
+# run.sh
+exec saturdaze ingest --type all
+</pre>
+      <p class="small muted">Ship the folder under <code>App_Data/jobs/triggered/ingest/</code> in the API package.</p>
+    </div>
+    <div class="card">
+      <h3>App Service application settings</h3>
+      <ul class="small">
+        <li><code>ANTHROPIC_FOUNDRY_API_KEY</code></li>
+        <li><code>SATURDAZE_CONNECTION</code></li>
+      </ul>
+      <p class="small">Exposed to the process as environment variables; prefer Key Vault references.</p>
+      <p class="small">Caveat: the deploy workflow publishes the API only. Add the Worker or WebJob packaging step before the schedule is live.</p>
+    </div>
+  </div>
+</section>
+
+<section id="fallback" data-part="7" data-cue="If Foundry's shared Claude quota runs dry">
+  <h2>Switching to Anthropic and back</h2>
+  <pre class="code" data-lang="sh" data-mark="1-2">
+export Saturdaze__Ingestion__Claude__Provider=Anthropic
+export ANTHROPIC_API_KEY="&lt;anthropic-key&gt;"
+# optional, if the Anthropic model id differs from the Foundry deployment name
+export Saturdaze__Ingestion__Claude__Model="&lt;anthropic-model-id&gt;"
+</pre>
+  <p>Same request body, same headers, now sent to <code>https://api.anthropic.com/v1/messages</code>. Remove the variables to switch back. No rebuild, no code change: what ADR-011 promised.</p>
+</section>
+
+<section id="failures" data-part="8" data-cue="Here is what each one means">
+  <h2>Reading failures</h2>
+  <table class="grid small">
+    <tr><th>Message or status</th><th>Cause</th><th>Fix</th></tr>
+    <tr><td>The Foundry endpoint is not configured</td><td><code>FoundryResource</code> and <code>BaseUrl</code> blank</td><td>Set the resource name</td></tr>
+    <tr><td><code>ANTHROPIC_FOUNDRY_API_KEY</code> is not configured</td><td>Variable missing or blank in this process</td><td>Load from <code>.deploy/azure.env</code> or host settings</td></tr>
+    <tr><td>401</td><td>Wrong or rotated key; <code>disableLocalAuth</code> on</td><td>Refresh the key; keep local auth enabled</td></tr>
+    <tr><td>404</td><td><code>Model</code> is not a deployment; hand-set <code>BaseUrl</code> lacks <code>/</code></td><td>Match the deployment name; fix the URL</td></tr>
+    <tr><td>429 / 5xx after one retry</td><td>Quota or service</td><td>Retry later or switch provider</td></tr>
+    <tr><td>pause_turn … times without completing</td><td>Needed more turns than <code>MaxContinuationTurns</code></td><td>Raise it or lower <code>MaxSearches</code></td></tr>
+    <tr><td>Daily run budget … reached</td><td>48 passes for the type today</td><td>Check the scheduler via <code>IngestionRun</code></td></tr>
+  </table>
+</section>
+
+<section id="recap" data-part="9" data-cue="One section" >
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div><strong>One section.</strong> <code>Saturdaze:Ingestion:Claude</code>, bound by <code>AddIngestion</code>; key from the provider's own variable, never checked in.</div>
+    <div><strong>Locally.</strong> Provision → load <code>ANTHROPIC_FOUNDRY_API_KEY</code> → <code>saturdaze ingest --dry-run</code>.</div>
+    <div><strong>Hosts.</strong> Worker and WebJob take the same two variables; override the rest with <code>__</code> names.</div>
+    <div><strong>Fallback.</strong> Provider swap is two settings, no rebuild.</div>
+    <div><strong>Failures</strong> land in the console and in <code>IngestionRun</code>; the message names the fix.</div>
+  </div>
+</section>
+
+<section id="end" class="center" data-part="9" data-cue="That completes the series">
+  <div class="kicker">Series complete</div>
+  <h1>Your turn</h1>
+  <p class="lead">Pick a prompt change, write the failing test, run your first dry run.</p>
+</section>
+
+<script src="../assets/slides.js"></script>
+</body>
+</html>

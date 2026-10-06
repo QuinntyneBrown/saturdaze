@@ -1,5 +1,6 @@
 import { InjectionToken, Signal } from '@angular/core';
 
+import { ApprovalLocation } from '../models/approval-location';
 import { EventSubmissionDto } from '../models/event-submission.dto';
 import { ReviewView } from '../models/review-view';
 import { SubmitEventRequest } from '../models/submit-event-request';
@@ -49,10 +50,15 @@ export interface IEventSubmissionsService {
    *
    * @param {string} id - The id
    * @param {number | null} driveMinutes - The drive time to publish with
+   * @param {ApprovalLocation | null} location - Where the event happens (L2-099 AC3)
    *
    * @returns {Promise<EventSubmissionDto>} The result of the operation
    */
-  approve(id: string, driveMinutes?: number | null): Promise<EventSubmissionDto>;
+  approve(
+    id: string,
+    driveMinutes?: number | null,
+    location?: ApprovalLocation | null,
+  ): Promise<EventSubmissionDto>;
   /**
    * Reject — `POST /api/events/submissions/{id}/reject`.
    *

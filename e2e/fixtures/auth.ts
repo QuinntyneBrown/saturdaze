@@ -141,7 +141,7 @@ export async function ensureCurrentWeekend(request: APIRequestContext, session: 
 }
 
 export interface ShareLink {
-  /** Absolute URL the API builds from the request Origin: `…/sample-weekend?share=<token>`. */
+  /** The API's link-preview page, `…/s/<token>`, which sends browsers on to `/sample-weekend?share=<token>` (L2-110). */
   readonly shareUrl: string;
   readonly token: string;
 }

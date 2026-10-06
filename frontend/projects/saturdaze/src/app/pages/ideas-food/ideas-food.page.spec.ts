@@ -31,6 +31,7 @@ const PIZZA: FoodCard = {
   lockedLabel: null,
   dimmed: false,
   votesDisabled: false,
+  media: null,
 };
 
 const VIEW: IdeasFoodView = {

@@ -297,6 +297,10 @@ namespace Saturdaze.Infrastructure.Migrations
                     b.Property<int>("OutputTokens")
                         .HasColumnType("int");
 
+                    b.Property<string>("SkipReasons")
+                        .HasMaxLength(4000)
+                        .HasColumnType("nvarchar(4000)");
+
                     b.Property<DateTimeOffset>("StartedUtc")
                         .HasColumnType("datetimeoffset");
 
@@ -441,6 +445,60 @@ namespace Saturdaze.Infrastructure.Migrations
                     b.HasIndex("UserId", "ConsumedAtUtc");
 
                     b.ToTable("PasswordResetTokens", (string)null);
+                });
+
+            modelBuilder.Entity("Saturdaze.Domain.Entities.PlacePhoto", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("AltText")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<string>("Attribution")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<int>("Height")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsPrimary")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("License")
+                        .IsRequired()
+                        .HasMaxLength(120)
+                        .HasColumnType("nvarchar(120)");
+
+                    b.Property<Guid>("PlaceId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("PlaceKind")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Source")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<int>("Width")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PlaceKind", "PlaceId")
+                        .IsUnique()
+                        .HasDatabaseName("IX_PlacePhotos_Primary")
+                        .HasFilter("[IsPrimary] = 1");
+
+                    b.ToTable("PlacePhotos", (string)null);
                 });
 
             modelBuilder.Entity("Saturdaze.Domain.Entities.Preference", b =>
@@ -717,6 +775,25 @@ namespace Saturdaze.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("CoverPlaceId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int?>("CoverPlaceKind")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CoverSource")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("CoverUploadHeight")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CoverUploadKey")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int?>("CoverUploadWidth")
+                        .HasColumnType("int");
+
                     b.Property<Guid>("FamilyId")
                         .HasColumnType("uniqueidentifier");
 
@@ -749,6 +826,40 @@ namespace Saturdaze.Infrastructure.Migrations
                     b.ToTable("Weekends", (string)null);
                 });
 
+            modelBuilder.Entity("Saturdaze.Domain.Entities.Activity", b =>
+                {
+                    b.OwnsOne("Saturdaze.Domain.ValueObjects.GeoLocation", "Geo", b1 =>
+                        {
+                            b1.Property<Guid>("ActivityId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<string>("Address")
+                                .IsRequired()
+                                .HasMaxLength(300)
+                                .HasColumnType("nvarchar(300)")
+                                .HasColumnName("Address");
+
+                            b1.Property<decimal>("Latitude")
+                                .HasPrecision(9, 6)
+                                .HasColumnType("decimal(9,6)")
+                                .HasColumnName("Latitude");
+
+                            b1.Property<decimal>("Longitude")
+                                .HasPrecision(9, 6)
+                                .HasColumnType("decimal(9,6)")
+                                .HasColumnName("Longitude");
+
+                            b1.HasKey("ActivityId");
+
+                            b1.ToTable("Activities");
+
+                            b1.WithOwner()
+                                .HasForeignKey("ActivityId");
+                        });
+
+                    b.Navigation("Geo");
+                });
+
             modelBuilder.Entity("Saturdaze.Domain.Entities.Commitment", b =>
                 {
                     b.HasOne("Saturdaze.Domain.Entities.Family", null)
@@ -767,6 +878,74 @@ namespace Saturdaze.Infrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Saturdaze.Domain.Entities.EventSubmission", b =>
+                {
+                    b.OwnsOne("Saturdaze.Domain.ValueObjects.GeoLocation", "Geo", b1 =>
+                        {
+                            b1.Property<Guid>("EventSubmissionId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<string>("Address")
+                                .IsRequired()
+                                .HasMaxLength(300)
+                                .HasColumnType("nvarchar(300)")
+                                .HasColumnName("Address");
+
+                            b1.Property<decimal>("Latitude")
+                                .HasPrecision(9, 6)
+                                .HasColumnType("decimal(9,6)")
+                                .HasColumnName("Latitude");
+
+                            b1.Property<decimal>("Longitude")
+                                .HasPrecision(9, 6)
+                                .HasColumnType("decimal(9,6)")
+                                .HasColumnName("Longitude");
+
+                            b1.HasKey("EventSubmissionId");
+
+                            b1.ToTable("EventSubmissions");
+
+                            b1.WithOwner()
+                                .HasForeignKey("EventSubmissionId");
+                        });
+
+                    b.Navigation("Geo");
+                });
+
+            modelBuilder.Entity("Saturdaze.Domain.Entities.Family", b =>
+                {
+                    b.OwnsOne("Saturdaze.Domain.ValueObjects.GeoLocation", "HomeCoordinates", b1 =>
+                        {
+                            b1.Property<Guid>("FamilyId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<string>("Address")
+                                .IsRequired()
+                                .HasMaxLength(300)
+                                .HasColumnType("nvarchar(300)")
+                                .HasColumnName("HomeAddress");
+
+                            b1.Property<decimal>("Latitude")
+                                .HasPrecision(9, 6)
+                                .HasColumnType("decimal(9,6)")
+                                .HasColumnName("HomeLatitude");
+
+                            b1.Property<decimal>("Longitude")
+                                .HasPrecision(9, 6)
+                                .HasColumnType("decimal(9,6)")
+                                .HasColumnName("HomeLongitude");
+
+                            b1.HasKey("FamilyId");
+
+                            b1.ToTable("Families");
+
+                            b1.WithOwner()
+                                .HasForeignKey("FamilyId");
+                        });
+
+                    b.Navigation("HomeCoordinates");
+                });
+
             modelBuilder.Entity("Saturdaze.Domain.Entities.FamilyMember", b =>
                 {
                     b.HasOne("Saturdaze.Domain.Entities.Family", null)
@@ -783,6 +962,71 @@ namespace Saturdaze.Infrastructure.Migrations
                         .HasForeignKey("WeekendId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.OwnsOne("Saturdaze.Domain.ValueObjects.GeoLocation", "Stop", b1 =>
+                        {
+                            b1.Property<Guid>("ItineraryBlockId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<string>("Address")
+                                .IsRequired()
+                                .HasMaxLength(300)
+                                .HasColumnType("nvarchar(300)")
+                                .HasColumnName("StopAddress");
+
+                            b1.Property<decimal>("Latitude")
+                                .HasPrecision(9, 6)
+                                .HasColumnType("decimal(9,6)")
+                                .HasColumnName("StopLatitude");
+
+                            b1.Property<decimal>("Longitude")
+                                .HasPrecision(9, 6)
+                                .HasColumnType("decimal(9,6)")
+                                .HasColumnName("StopLongitude");
+
+                            b1.HasKey("ItineraryBlockId");
+
+                            b1.ToTable("ItineraryBlocks");
+
+                            b1.WithOwner()
+                                .HasForeignKey("ItineraryBlockId");
+                        });
+
+                    b.Navigation("Stop");
+                });
+
+            modelBuilder.Entity("Saturdaze.Domain.Entities.LocalEvent", b =>
+                {
+                    b.OwnsOne("Saturdaze.Domain.ValueObjects.GeoLocation", "Geo", b1 =>
+                        {
+                            b1.Property<Guid>("LocalEventId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<string>("Address")
+                                .IsRequired()
+                                .HasMaxLength(300)
+                                .HasColumnType("nvarchar(300)")
+                                .HasColumnName("Address");
+
+                            b1.Property<decimal>("Latitude")
+                                .HasPrecision(9, 6)
+                                .HasColumnType("decimal(9,6)")
+                                .HasColumnName("Latitude");
+
+                            b1.Property<decimal>("Longitude")
+                                .HasPrecision(9, 6)
+                                .HasColumnType("decimal(9,6)")
+                                .HasColumnName("Longitude");
+
+                            b1.HasKey("LocalEventId");
+
+                            b1.ToTable("LocalEvents");
+
+                            b1.WithOwner()
+                                .HasForeignKey("LocalEventId");
+                        });
+
+                    b.Navigation("Geo");
                 });
 
             modelBuilder.Entity("Saturdaze.Domain.Entities.PasswordResetToken", b =>
@@ -812,6 +1056,40 @@ namespace Saturdaze.Infrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Saturdaze.Domain.Entities.Restaurant", b =>
+                {
+                    b.OwnsOne("Saturdaze.Domain.ValueObjects.GeoLocation", "Geo", b1 =>
+                        {
+                            b1.Property<Guid>("RestaurantId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<string>("Address")
+                                .IsRequired()
+                                .HasMaxLength(300)
+                                .HasColumnType("nvarchar(300)")
+                                .HasColumnName("Address");
+
+                            b1.Property<decimal>("Latitude")
+                                .HasPrecision(9, 6)
+                                .HasColumnType("decimal(9,6)")
+                                .HasColumnName("Latitude");
+
+                            b1.Property<decimal>("Longitude")
+                                .HasPrecision(9, 6)
+                                .HasColumnType("decimal(9,6)")
+                                .HasColumnName("Longitude");
+
+                            b1.HasKey("RestaurantId");
+
+                            b1.ToTable("Restaurants");
+
+                            b1.WithOwner()
+                                .HasForeignKey("RestaurantId");
+                        });
+
+                    b.Navigation("Geo");
+                });
+
             modelBuilder.Entity("Saturdaze.Domain.Entities.RestaurantLock", b =>
                 {
                     b.HasOne("Saturdaze.Domain.Entities.Restaurant", null)
@@ -837,6 +1115,40 @@ namespace Saturdaze.Infrastructure.Migrations
                         .HasForeignKey("WeekendId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Saturdaze.Domain.Entities.Weekend", b =>
+                {
+                    b.OwnsOne("Saturdaze.Domain.ValueObjects.GeoLocation", "Home", b1 =>
+                        {
+                            b1.Property<Guid>("WeekendId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<string>("Address")
+                                .IsRequired()
+                                .HasMaxLength(300)
+                                .HasColumnType("nvarchar(300)")
+                                .HasColumnName("HomeAddress");
+
+                            b1.Property<decimal>("Latitude")
+                                .HasPrecision(9, 6)
+                                .HasColumnType("decimal(9,6)")
+                                .HasColumnName("HomeLatitude");
+
+                            b1.Property<decimal>("Longitude")
+                                .HasPrecision(9, 6)
+                                .HasColumnType("decimal(9,6)")
+                                .HasColumnName("HomeLongitude");
+
+                            b1.HasKey("WeekendId");
+
+                            b1.ToTable("Weekends");
+
+                            b1.WithOwner()
+                                .HasForeignKey("WeekendId");
+                        });
+
+                    b.Navigation("Home");
                 });
 
             modelBuilder.Entity("Saturdaze.Domain.Entities.UserAvatar", b =>

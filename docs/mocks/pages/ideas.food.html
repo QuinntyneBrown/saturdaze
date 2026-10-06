@@ -27,6 +27,7 @@
 </header>
 <!-- @/shell:topbar -->
 <main class="app-main container" id="main">
+  <!-- docs/specs L2-106: restaurant cards lead with a photo or a fallback tile; "Lock it in" stays the way to place a restaurant. -->
   <header class="page-header">
     <div class="page-header__text">
       <h1 class="page-header__title">Ideas</h1>
@@ -60,9 +61,9 @@
       </div>
     </div>
     <ul class="grid-cards grid-cards--2">
-      <li class="card card--span">
+      <li class="card card--span card--media">
+        <div class="media card__media"><img class="media__img" src="../images/la-marina.svg" alt="Tables on a harbour-side patio" width="800" height="500" loading="lazy"><span class="media__credit">Photo · placeholder</span></div>
         <div class="card__head">
-          <span class="disc disc--lg disc--sun" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-fork"/></svg></span>
           <div class="card__head-text">
             <h3 class="card__title">La Marina</h3>
             <p class="card__meta">Mediterranean · Patio · 6 min from Terre Bleu</p>
@@ -85,9 +86,9 @@
         </div>
       </li>
 
-      <li class="card">
+      <li class="card card--media">
+        <div class="media media--fallback media--sun card__media" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-fork"/></svg></div>
         <div class="card__head">
-          <span class="disc disc--lg" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-fork"/></svg></span>
           <div class="card__head-text">
             <h3 class="card__title">Symposium Café</h3>
             <p class="card__meta">Brunch · Family booths · 9 min from Terre Bleu</p>
@@ -109,9 +110,9 @@
         </div>
       </li>
 
-      <li class="card">
+      <li class="card card--media">
+        <div class="media media--fallback media--sun card__media" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-fork"/></svg></div>
         <div class="card__head">
-          <span class="disc disc--lg" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-fork"/></svg></span>
           <div class="card__head-text">
             <h3 class="card__title">The Sicilian Sidewalk Café</h3>
             <p class="card__meta">Italian · Casual · On the way back to Port Credit</p>
@@ -143,9 +144,9 @@
       </div>
     </div>
     <ul class="grid-cards grid-cards--2">
-      <li class="card card--locked">
+      <li class="card card--locked card--media">
+        <div class="media media--fallback media--sun card__media" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-fork"/></svg></div>
         <div class="card__head">
-          <span class="disc disc--lg disc--accent" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-fork"/></svg></span>
           <div class="card__head-text">
             <h3 class="card__title">Jack Astor's</h3>
             <p class="card__meta">Casual · Kids' menu · Square One</p>
@@ -167,9 +168,9 @@
         </div>
       </li>
 
-      <li class="card card--dimmed">
+      <li class="card card--dimmed card--media">
+        <div class="media media--fallback media--sun card__media" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-fork"/></svg></div>
         <div class="card__head">
-          <span class="disc disc--lg" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-fork"/></svg></span>
           <div class="card__head-text">
             <h3 class="card__title">Snug Harbour</h3>
             <p class="card__meta">Seafood · Patio on the lake · Port Credit</p>

@@ -1,3 +1,6 @@
+import { CoverDto } from './cover.dto';
+import { DaySummaryDto } from './day-summary.dto';
+import { LocationDto } from './location.dto';
 import { ItineraryBlockDto } from './itinerary-block.dto';
 import { ShoppingErrandDto } from './shopping-errand.dto';
 import { WeatherForecastDto } from './weather-forecast.dto';
@@ -47,4 +50,16 @@ export interface WeekendDto {
    * Weather.
    */
   readonly weather: readonly WeatherForecastDto[];
+  /**
+   * Days — stop count and driving totals per day (L2-102 AC5).
+   */
+  readonly days?: readonly DaySummaryDto[];
+  /**
+   * Home — where each day's journey starts and ends.
+   */
+  readonly home?: LocationDto | null;
+  /**
+   * Cover — the weekend's cover photo, or null for the fallback (L2-108).
+   */
+  readonly cover?: CoverDto | null;
 }

@@ -19,6 +19,11 @@ import {
 
 import { DIALOG_OPTIONS, confirmWith } from '../../dialogs/confirm-dialog/confirm-dialog';
 import {
+  CoverPhotoDialog,
+  CoverPhotoDialogData,
+  CoverPhotoDialogResult,
+} from '../../dialogs/cover-photo-dialog/cover-photo-dialog';
+import {
   RatingDialog,
   RatingDialogData,
   RatingDialogResult,
@@ -109,6 +114,28 @@ export class PastPage {
     const result = await firstValueFrom(ref.closed);
     if (!result) return;
     await this.run(() => this.saved.rate(card.id, result.rating));
+  }
+
+  /** "Add a photo" on a card without a cover → D29 (L2-110 AC2). */
+  protected async addPhoto(card: PastWeekendCard): Promise<void> {
+    let choices: CoverPhotoDialogData['choices'] = [];
+    try {
+      choices = await this.saved.coverChoices(card.id);
+    } catch (err) {
+      // The family can still upload their own photo.
+      console.error('PastPage could not load cover choices', err);
+    }
+    const ref = this.dialog.open<CoverPhotoDialogResult, CoverPhotoDialogData>(CoverPhotoDialog, {
+      ...DIALOG_OPTIONS,
+      data: {
+        choices,
+        currentPlaceId: null,
+        upload: (file) => this.saved.uploadCover(card.id, file),
+      },
+    });
+    const selection = await firstValueFrom(ref.closed);
+    if (!selection || selection.source === 'uploaded') return;
+    await this.run(() => this.saved.setCover(card.id, selection));
   }
 
   protected async repeat(card: PastWeekendCard): Promise<void> {

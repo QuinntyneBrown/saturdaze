@@ -1,9 +1,11 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Saturdaze.Application.Abstractions;
 using Saturdaze.Application.Exceptions;
 using Saturdaze.Application.Weather;
 using Saturdaze.Domain.Entities;
 using Saturdaze.Domain.Enums;
+using Saturdaze.Domain.ValueObjects;
 
 namespace Saturdaze.Application.Planning;
 
@@ -20,7 +22,8 @@ public sealed record PlannerContext(
     IReadOnlyList<Restaurant> Restaurants,
     IReadOnlyList<LocalEvent> Events,
     IReadOnlyList<WeatherForecast> Forecast,
-    IReadOnlyList<HistoricalActivity> History)
+    IReadOnlyList<HistoricalActivity> History,
+    GeoLocation Home)
 {
     public PlannerInputs ToInputs(
         IReadOnlyList<ItineraryBlock> lockedBlocks,
@@ -54,11 +57,13 @@ public sealed class PlannerInputLoader
 {
     private readonly IAppDbContext _db;
     private readonly WeekendForecastService _forecast;
+    private readonly HomeLocationOptions _home;
 
-    public PlannerInputLoader(IAppDbContext db, WeekendForecastService forecast)
+    public PlannerInputLoader(IAppDbContext db, WeekendForecastService forecast, IOptions<HomeLocationOptions> home)
     {
         _db = db;
         _forecast = forecast;
+        _home = home.Value;
     }
 
     public async Task<PlannerContext> LoadAsync(Guid familyId, DateOnly weekendOf, CancellationToken ct)
@@ -89,6 +94,13 @@ public sealed class PlannerInputLoader
             .Select(x => new HistoricalActivity(x.WeekendOf, x.ActivityId))
             .ToListAsync(ct);
 
-        return new PlannerContext(family, weekendOf, activities, restaurants, events, forecast, history);
+        var home = family.HomeCoordinates?.Copy() ?? new GeoLocation
+        {
+            Latitude = (decimal)_home.Latitude,
+            Longitude = (decimal)_home.Longitude,
+            Address = _home.Name,
+        };
+
+        return new PlannerContext(family, weekendOf, activities, restaurants, events, forecast, history, home);
     }
 }

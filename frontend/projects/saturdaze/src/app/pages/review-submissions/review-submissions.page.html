@@ -37,11 +37,11 @@
             </div>
           } @else {
             <sd-card padding="lg" class="submission" [attr.aria-label]="card.title">
-              <div class="head">
+              <div class="card__head">
                 <sd-date-tile [mon]="card.tile.mon" [day]="card.tile.day" />
-                <div class="head__text">
-                  <h2 class="head__title">{{ card.title }}</h2>
-                  <p class="head__meta">{{ card.when }}</p>
+                <div class="card__head-text">
+                  <h2 class="card__title">{{ card.title }}</h2>
+                  <p class="card__meta">{{ card.when }}</p>
                 </div>
                 <sd-chip tone="sun">Pending</sd-chip>
               </div>

@@ -1,6 +1,8 @@
 using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using Saturdaze.Domain.Entities;
+using Saturdaze.Domain.Enums;
+using Saturdaze.Domain.ValueObjects;
 using Saturdaze.Infrastructure.Persistence;
 
 namespace Saturdaze.Cli.Seed;
@@ -38,6 +40,8 @@ public sealed class ActivitySeeder : IJsonSeeder
             entity.TypicalDurationMinutes = seed.TypicalDurationMinutes;
             entity.Description = seed.Description ?? string.Empty;
             entity.MapUrl = seed.MapUrl ?? string.Empty;
+            entity.Geo = GeoLocation.Merge(entity.Geo, GeoLocation.From(seed.Latitude, seed.Longitude, seed.Address));
+            SeedPhotos.Apply(db, PlaceKind.Activity, entity.Id, seed.Photos);
             written++;
         }
 
@@ -54,5 +58,9 @@ public sealed class ActivitySeeder : IJsonSeeder
         List<string>? WeatherTags,
         int TypicalDurationMinutes,
         string? Description,
-        string? MapUrl);
+        string? MapUrl,
+        decimal? Latitude = null,
+        decimal? Longitude = null,
+        string? Address = null,
+        List<PhotoRecord>? Photos = null);
 }

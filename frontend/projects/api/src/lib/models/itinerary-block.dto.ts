@@ -1,3 +1,6 @@
+import { PlacePhotoDto } from './place-photo.dto';
+import { LocationDto } from './location.dto';
+import { TravelLegDto } from './travel-leg.dto';
 import { BlockKind } from './block-kind';
 import { WeekendDay } from './weekend-day';
 
@@ -45,4 +48,20 @@ export interface ItineraryBlockDto {
    * Sort Order.
    */
   readonly sortOrder: number;
+  /**
+   * Stop Number — 1-based among the day's stops away from home (L2-103); null otherwise.
+   */
+  readonly stopNumber?: number | null;
+  /**
+   * Stop — where the block happens, for its map pin.
+   */
+  readonly stop?: LocationDto | null;
+  /**
+   * Leg Before — the drive into this block from the previous place (L2-102).
+   */
+  readonly legBefore?: TravelLegDto | null;
+  /**
+   * Photo — the place's primary photo, for thumbnails and the cover picker.
+   */
+  readonly photo?: PlacePhotoDto | null;
 }

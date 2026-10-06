@@ -1,3 +1,4 @@
+<sd-media class="card__media" [photo]="media()" [tone]="mediaTone()" icon="ticket" />
 <div class="card__head">
   <sd-date-tile [date]="date()" [mon]="mon()" [day]="day()" />
   <div class="card__head-text">
@@ -8,11 +9,25 @@
   </div>
 </div>
 <div class="card__chips"><ng-content select="[slot=chips]" /></div>
-@if (url() && !muted()) {
+@if ((url() && !muted()) || addable()) {
   <div class="card__footer">
-    <sd-button variant="quiet" size="sm" [href]="url()" target="_blank">
-      Details
-      <sd-icon name="arrow_right" slot="trailing" />
-    </sd-button>
+    @if (url() && !muted()) {
+      <sd-button variant="quiet" size="sm" [href]="url()" target="_blank">
+        Details
+        <sd-icon name="arrow_right" slot="trailing" />
+      </sd-button>
+    }
+    @if (addable()) {
+      <sd-button
+        variant="primary"
+        size="sm"
+        type="button"
+        [label]="'Add to day: ' + cardTitle()"
+        (click)="addToDay.emit()"
+      >
+        <sd-icon name="plus" />
+        Add to day
+      </sd-button>
+    }
   </div>
 }

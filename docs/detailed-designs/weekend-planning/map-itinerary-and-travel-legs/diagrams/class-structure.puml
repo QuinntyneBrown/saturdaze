@@ -1,0 +1,93 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure - Map the itinerary and its travel legs
+
+class ItineraryBlock {
+  +DayOfWeekend Day
+  +TimeOnly StartTime
+  +TimeOnly EndTime
+  +BlockKind Kind
+  +Guid? RefId
+  +StopSnapshot? Stop
+}
+class StopSnapshot <<owned value>> {
+  +decimal Latitude
+  +decimal Longitude
+  +string PlaceName
+}
+interface ITravelEstimator {
+  +Estimate(from, to): TravelEstimate
+}
+class HaversineTravelEstimator
+class TravelEstimate {
+  +int Minutes
+  +decimal DistanceKm
+}
+class WeekendPlanner {
+  +Plan(inputs: PlannerInputs): IReadOnlyList<ItineraryBlock>
+}
+class WeekendMapper {
+  +ToDto(weekend, forecast): WeekendDto
+}
+class DirectionsLinkBuilder {
+  +Build(from, to, minutes): string?
+}
+class ItineraryBlockDto {
+  +int? StopNumber
+  +StopDto? Stop
+  +TravelLegDto? LegBefore
+  +PlacePhotoDto? Thumb
+}
+class TravelLegDto {
+  +int Minutes
+  +decimal DistanceKm
+  +string? DirectionsUrl
+}
+class DayDto {
+  +DayOfWeekend Day
+  +int StopCount
+  +int DrivingMinutes
+  +StopDto Home
+}
+class DayView <<Angular>> {
+  +stopCount: number
+  +drivingMinutes: number
+  +items: TimelineItem[]
+}
+class BlockRow <<Angular>> {
+  +stopNumber: number | null
+  +active: boolean
+}
+class LegRow <<Angular>> {
+  +minutes: number
+  +km: number
+  +toTitle: string
+  +directionsUrl: string | null
+  +accessibleName: string
+}
+class MapSync <<Angular>> {
+  +activeStop: WritableSignal<number | null>
+}
+
+ItineraryBlock *-- StopSnapshot
+HaversineTravelEstimator ..|> ITravelEstimator
+ITravelEstimator ..> TravelEstimate
+WeekendPlanner --> ITravelEstimator
+WeekendPlanner ..> ItineraryBlock : creates
+WeekendMapper ..> ItineraryBlockDto
+WeekendMapper ..> DayDto
+WeekendMapper --> DirectionsLinkBuilder
+ItineraryBlockDto --> TravelLegDto
+DayView "1" *-- "*" BlockRow
+DayView "1" *-- "*" LegRow
+MapSync ..> BlockRow : highlights
+@enduml

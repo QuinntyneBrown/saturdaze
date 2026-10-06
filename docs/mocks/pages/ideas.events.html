@@ -27,6 +27,7 @@
 </header>
 <!-- @/shell:topbar -->
 <main class="app-main container" id="main">
+  <!-- docs/specs L2-106, L2-107: photo-led event cards; this weekend's events can be added to a day. -->
   <header class="page-header">
     <div class="page-header__text">
       <h1 class="page-header__title">Ideas</h1>
@@ -63,7 +64,8 @@
       </div>
     </div>
     <ul class="grid-cards">
-      <li class="card card--muted">
+      <li class="card card--muted card--media">
+        <div class="media media--fallback media--sky card__media" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-ticket"/></svg></div>
         <div class="card__head">
           <span class="date-tile" aria-hidden="true"><span class="date-tile__m">Jun</span><span class="date-tile__d">20</span></span>
           <div class="card__head-text">
@@ -88,7 +90,8 @@
       </div>
     </div>
     <ul class="grid-cards">
-      <li class="card">
+      <li class="card card--media">
+        <div class="media card__media"><img class="media__img" src="../images/lavender-farm.svg" alt="Rows of lavender running to the horizon" width="800" height="500" loading="lazy"><span class="media__credit">Photo · placeholder</span></div>
         <div class="card__head">
           <span class="date-tile" aria-hidden="true"><span class="date-tile__m">May</span><span class="date-tile__d">17</span></span>
           <div class="card__head-text">
@@ -103,9 +106,11 @@
         </div>
         <div class="card__footer">
           <a class="btn btn--quiet btn--sm" href="https://example.com/terre-bleu-lavender-bloom-opening" target="_blank" rel="noopener">Details<svg class="icon icon--sm" aria-hidden="true"><use href="#i-arrow_right"/></svg></a>
+          <a class="btn btn--primary btn--sm" href="./dialogs.html#dialog-add-to-day" aria-label="Add to day: Terre Bleu Lavender Bloom Opening"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg>Add to day</a>
         </div>
       </li>
-      <li class="card">
+      <li class="card card--media">
+        <div class="media card__media"><img class="media__img" src="../images/living-arts.svg" alt="The Living Arts Centre stage under warm lights" width="800" height="500" loading="lazy"><span class="media__credit">Photo · placeholder</span></div>
         <div class="card__head">
           <span class="date-tile" aria-hidden="true"><span class="date-tile__m">May</span><span class="date-tile__d">17</span></span>
           <div class="card__head-text">
@@ -119,9 +124,11 @@
         </div>
         <div class="card__footer">
           <a class="btn btn--quiet btn--sm" href="https://example.com/cirque-mechanics-pedal-punk" target="_blank" rel="noopener">Details<svg class="icon icon--sm" aria-hidden="true"><use href="#i-arrow_right"/></svg></a>
+          <a class="btn btn--primary btn--sm" href="./dialogs.html#dialog-add-to-day" aria-label="Add to day: Cirque Mechanics: Pedal Punk"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg>Add to day</a>
         </div>
       </li>
-      <li class="card">
+      <li class="card card--media">
+        <div class="media card__media"><img class="media__img" src="../images/botanical-gardens.svg" alt="Tulip beds in front of a glass conservatory" width="800" height="500" loading="lazy"><span class="media__credit">Photo · placeholder</span></div>
         <div class="card__head">
           <span class="date-tile" aria-hidden="true"><span class="date-tile__m">May</span><span class="date-tile__d">17</span></span>
           <div class="card__head-text">
@@ -132,6 +139,9 @@
         <div class="card__chips">
           <span class="chip chip--leaf">Festival</span>
           <span class="chip chip--sky"><svg class="icon" aria-hidden="true"><use href="#i-car"/></svg>35 min</span>
+        </div>
+        <div class="card__footer">
+          <a class="btn btn--primary btn--sm" href="./dialogs.html#dialog-add-to-day" aria-label="Add to day: Spring Tulip Festival"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg>Add to day</a>
         </div>
       </li>
     </ul>
@@ -146,7 +156,8 @@
       </div>
     </div>
     <ul class="grid-cards">
-      <li class="card">
+      <li class="card card--media">
+        <div class="media card__media"><img class="media__img" src="../images/living-arts.svg" alt="The Living Arts Centre stage under warm lights" width="800" height="500" loading="lazy"><span class="media__credit">Photo · placeholder</span></div>
         <div class="card__head">
           <span class="date-tile" aria-hidden="true"><span class="date-tile__m">May</span><span class="date-tile__d">18</span></span>
           <div class="card__head-text">
@@ -160,9 +171,11 @@
         </div>
         <div class="card__footer">
           <a class="btn btn--quiet btn--sm" href="https://example.com/mississauga-symphony-kids-concert" target="_blank" rel="noopener">Details<svg class="icon icon--sm" aria-hidden="true"><use href="#i-arrow_right"/></svg></a>
+          <a class="btn btn--primary btn--sm" href="./dialogs.html#dialog-add-to-day" aria-label="Add to day: Mississauga Symphony: Kids&#39; Concert"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg>Add to day</a>
         </div>
       </li>
-      <li class="card">
+      <li class="card card--media">
+        <div class="media media--fallback media--leaf card__media" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-ticket"/></svg></div>
         <div class="card__head">
           <span class="date-tile" aria-hidden="true"><span class="date-tile__m">May</span><span class="date-tile__d">18</span></span>
           <div class="card__head-text">
@@ -173,6 +186,9 @@
         <div class="card__chips">
           <span class="chip">Local</span>
           <span class="chip chip--sky"><svg class="icon" aria-hidden="true"><use href="#i-car"/></svg>2 min</span>
+        </div>
+        <div class="card__footer">
+          <a class="btn btn--primary btn--sm" href="./dialogs.html#dialog-add-to-day" aria-label="Add to day: Port Credit Farmers&#39; Market"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg>Add to day</a>
         </div>
       </li>
     </ul>
@@ -187,7 +203,8 @@
       </div>
     </div>
     <ul class="grid-cards">
-      <li class="card">
+      <li class="card card--media">
+        <div class="media media--fallback media--leaf card__media" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-ticket"/></svg></div>
         <div class="card__head">
           <span class="date-tile" aria-hidden="true"><span class="date-tile__m">May</span><span class="date-tile__d">24</span></span>
           <div class="card__head-text">
@@ -200,7 +217,8 @@
           <span class="chip chip--sky"><svg class="icon" aria-hidden="true"><use href="#i-car"/></svg>40 min</span>
         </div>
       </li>
-      <li class="card">
+      <li class="card card--media">
+        <div class="media media--fallback media--leaf card__media" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-ticket"/></svg></div>
         <div class="card__head">
           <span class="date-tile" aria-hidden="true"><span class="date-tile__m">Sep</span><span class="date-tile__d">13</span></span>
           <div class="card__head-text">

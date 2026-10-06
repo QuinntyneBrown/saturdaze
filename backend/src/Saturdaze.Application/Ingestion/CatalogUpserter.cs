@@ -1,7 +1,9 @@
+using System.Text.Json.Nodes;
 using Microsoft.EntityFrameworkCore;
 using Saturdaze.Application.Abstractions;
 using Saturdaze.Domain.Entities;
 using Saturdaze.Domain.Enums;
+using Saturdaze.Domain.ValueObjects;
 
 namespace Saturdaze.Application.Ingestion;
 
@@ -16,6 +18,7 @@ namespace Saturdaze.Application.Ingestion;
 public sealed class CatalogUpserter
 {
     private readonly IAppDbContext _db;
+    private readonly List<string> _skips = new();
 
     public CatalogUpserter(IAppDbContext db) => _db = db;
 
@@ -24,6 +27,7 @@ public sealed class CatalogUpserter
     {
         if (items.Count == 0) return UpsertResult.Empty;
 
+        _skips.Clear();
         var result = type switch
         {
             IngestionType.Events => await UpsertEventsAsync(items, cancellationToken),
@@ -33,7 +37,51 @@ public sealed class CatalogUpserter
         };
 
         await _db.SaveChangesAsync(cancellationToken);
-        return result;
+        return result with { SkipReasons = _skips.ToList() };
+    }
+
+    /// <summary>
+    /// Adds the row's <c>photos</c> candidates as provider photos (L2-100). A candidate without
+    /// attribution or licence is never stored; its skip is reported for the run audit. A URL the
+    /// place already has is left alone, and the first stored photo becomes primary when the
+    /// place has none.
+    /// </summary>
+    private async Task AddPhotosAsync(PlaceKind kind, Guid placeId, string placeName, JsonObject p, CancellationToken ct)
+    {
+        if (!p.TryGetPropertyValue("photos", out var node) || node is not JsonArray candidates)
+            return;
+
+        var known = _db.PlacePhotos.Local.Where(x => x.PlaceKind == kind && x.PlaceId == placeId).ToList();
+        var stored = await _db.PlacePhotos.Where(x => x.PlaceKind == kind && x.PlaceId == placeId).ToListAsync(ct);
+        known.AddRange(stored.Where(s => !known.Contains(s)));
+        var hasPrimary = known.Any(x => x.IsPrimary);
+
+        foreach (var candidate in candidates.OfType<JsonObject>())
+        {
+            var url = PayloadReader.GetStringOrEmpty(candidate, "url");
+            if (url.Length == 0 || url.Length > 1000 || known.Any(x => x.Url == url)) continue;
+
+            var photo = PlacePhoto.Create(
+                kind,
+                placeId,
+                url,
+                PayloadReader.GetIntOrDefault(candidate, "width"),
+                PayloadReader.GetIntOrDefault(candidate, "height"),
+                Truncate(PayloadReader.GetStringOrEmpty(candidate, "alt"), 300),
+                Truncate(PayloadReader.GetStringOrEmpty(candidate, "attribution"), 300),
+                PhotoSource.Provider,
+                Truncate(PayloadReader.GetStringOrEmpty(candidate, "license"), 120),
+                primary: !hasPrimary);
+            if (photo is null)
+            {
+                _skips.Add($"{placeName}: photo {url} skipped, missing attribution or licence");
+                continue;
+            }
+
+            hasPrimary = true;
+            known.Add(photo);
+            _db.PlacePhotos.Add(photo);
+        }
     }
 
     private async Task<UpsertResult> UpsertEventsAsync(IReadOnlyList<IngestionItem> items, CancellationToken ct)
@@ -76,6 +124,8 @@ public sealed class CatalogUpserter
             entity.DriveMinutes = PayloadReader.GetIntOrDefault(p, "driveMinutes");
             entity.Url = Truncate(PayloadReader.GetStringOrEmpty(p, "url"), 500);
             entity.Category = Truncate(PayloadReader.GetStringOrEmpty(p, "category"), 80);
+            entity.Geo = GeoLocation.Merge(entity.Geo, PayloadReader.GetGeo(p));
+            await AddPhotosAsync(PlaceKind.LocalEvent, entity.Id, name, p, ct);
         }
 
         return new UpsertResult(inserted, updated, rejected);
@@ -123,6 +173,8 @@ public sealed class CatalogUpserter
             entity.TypicalDurationMinutes = PayloadReader.GetIntOrDefault(p, "typicalDurationMinutes");
             entity.Description = Truncate(PayloadReader.GetStringOrEmpty(p, "description"), 2000);
             entity.MapUrl = Truncate(PayloadReader.GetStringOrEmpty(p, "mapUrl"), 500);
+            entity.Geo = GeoLocation.Merge(entity.Geo, PayloadReader.GetGeo(p));
+            await AddPhotosAsync(PlaceKind.Activity, entity.Id, name, p, ct);
         }
 
         return new UpsertResult(inserted, updated, rejected);
@@ -166,6 +218,8 @@ public sealed class CatalogUpserter
             entity.WifeApproved = PayloadReader.GetBoolOrDefault(p, "wifeApproved");
             entity.DriveMinutes = PayloadReader.GetIntOrDefault(p, "driveMinutes");
             entity.Notes = Truncate(PayloadReader.GetStringOrEmpty(p, "notes"), 500);
+            entity.Geo = GeoLocation.Merge(entity.Geo, PayloadReader.GetGeo(p));
+            await AddPhotosAsync(PlaceKind.Restaurant, entity.Id, name, p, ct);
         }
 
         return new UpsertResult(inserted, updated, rejected);

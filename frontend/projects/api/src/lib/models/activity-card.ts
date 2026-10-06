@@ -1,3 +1,4 @@
+import { MediaView } from './media-view';
 import { ChipView } from './chip-view';
 
 /** The disc tone on an activity card. */
@@ -39,4 +40,8 @@ export interface ActivityCard {
    * Map Url — the card's "Map" link; `null` when the catalogue has none.
    */
   readonly mapUrl: string | null;
+  /**
+   * Media — the place's photo; null shows the fallback tile (L2-106).
+   */
+  readonly media: MediaView | null;
 }

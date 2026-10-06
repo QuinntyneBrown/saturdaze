@@ -27,6 +27,7 @@
 </header>
 <!-- @/shell:topbar -->
 <main class="app-main container" id="main">
+  <!-- docs/specs L2-106, L2-107: photo-led idea cards with an "Add to day" action. -->
   <header class="page-header">
     <div class="page-header__text">
       <h1 class="page-header__title">Ideas</h1>
@@ -58,9 +59,9 @@
       </div>
     </div>
     <ul class="grid-cards">
-      <li class="card">
+      <li class="card card--media">
+        <div class="media card__media"><img class="media__img" src="../images/lavender-farm.svg" alt="Rows of lavender running to the horizon" width="800" height="500" loading="lazy"><span class="media__credit">Photo · placeholder</span></div>
         <div class="card__head">
-          <span class="disc disc--lg disc--leaf" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-tree"/></svg></span>
           <div class="card__head-text">
             <h3 class="card__title">Terre Bleu Lavender Farm</h3>
             <p class="card__meta">Milton</p>
@@ -73,11 +74,12 @@
         </div>
         <div class="card__footer">
           <a class="btn btn--quiet btn--sm" href="https://maps.example.com/terre-bleu-lavender-farm" target="_blank" rel="noopener"><svg class="icon" aria-hidden="true"><use href="#i-map"/></svg>Map</a>
+          <a class="btn btn--primary btn--sm" href="./dialogs.html#dialog-add-to-day" aria-label="Add to day: Terre Bleu Lavender Farm"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg>Add to day</a>
         </div>
       </li>
-      <li class="card">
+      <li class="card card--media">
+        <div class="media card__media"><img class="media__img" src="../images/bronte-creek.svg" alt="A creek winding through green parkland" width="800" height="500" loading="lazy"><span class="media__credit">Photo · placeholder</span></div>
         <div class="card__head">
-          <span class="disc disc--lg disc--leaf" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-tree"/></svg></span>
           <div class="card__head-text">
             <h3 class="card__title">Bronte Creek Provincial Park</h3>
             <p class="card__meta">Oakville</p>
@@ -90,11 +92,12 @@
         </div>
         <div class="card__footer">
           <a class="btn btn--quiet btn--sm" href="https://maps.example.com/bronte-creek-provincial-park" target="_blank" rel="noopener"><svg class="icon" aria-hidden="true"><use href="#i-map"/></svg>Map</a>
+          <a class="btn btn--primary btn--sm" href="./dialogs.html#dialog-add-to-day" aria-label="Add to day: Bronte Creek Provincial Park"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg>Add to day</a>
         </div>
       </li>
-      <li class="card">
+      <li class="card card--media">
+        <div class="media card__media"><img class="media__img" src="../images/botanical-gardens.svg" alt="Tulip beds in front of a glass conservatory" width="800" height="500" loading="lazy"><span class="media__credit">Photo · placeholder</span></div>
         <div class="card__head">
-          <span class="disc disc--lg disc--leaf" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-tree"/></svg></span>
           <div class="card__head-text">
             <h3 class="card__title">Royal Botanical Gardens</h3>
             <p class="card__meta">Burlington</p>
@@ -106,6 +109,7 @@
         </div>
         <div class="card__footer">
           <a class="btn btn--quiet btn--sm" href="https://maps.example.com/royal-botanical-gardens" target="_blank" rel="noopener"><svg class="icon" aria-hidden="true"><use href="#i-map"/></svg>Map</a>
+          <a class="btn btn--primary btn--sm" href="./dialogs.html#dialog-add-to-day" aria-label="Add to day: Royal Botanical Gardens"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg>Add to day</a>
         </div>
       </li>
     </ul>
@@ -120,9 +124,9 @@
       </div>
     </div>
     <ul class="grid-cards">
-      <li class="card">
+      <li class="card card--media">
+        <div class="media card__media"><img class="media__img" src="../images/rec-room.svg" alt="Bowling lanes under arcade lights" width="800" height="500" loading="lazy"><span class="media__credit">Photo · placeholder</span></div>
         <div class="card__head">
-          <span class="disc disc--lg disc--indoor" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-popcorn"/></svg></span>
           <div class="card__head-text">
             <h3 class="card__title">The Rec Room</h3>
             <p class="card__meta">Square One</p>
@@ -135,11 +139,12 @@
         </div>
         <div class="card__footer">
           <a class="btn btn--quiet btn--sm" href="https://maps.example.com/the-rec-room" target="_blank" rel="noopener"><svg class="icon" aria-hidden="true"><use href="#i-map"/></svg>Map</a>
+          <a class="btn btn--primary btn--sm" href="./dialogs.html#dialog-add-to-day" aria-label="Add to day: The Rec Room"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg>Add to day</a>
         </div>
       </li>
-      <li class="card">
+      <li class="card card--media">
+        <div class="media card__media"><img class="media__img" src="../images/science-centre.svg" alt="Planets on a planetarium ceiling" width="800" height="500" loading="lazy"><span class="media__credit">Photo · placeholder</span></div>
         <div class="card__head">
-          <span class="disc disc--lg disc--indoor" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-ticket"/></svg></span>
           <div class="card__head-text">
             <h3 class="card__title">Ontario Science Centre</h3>
             <p class="card__meta">Toronto</p>
@@ -151,11 +156,12 @@
         </div>
         <div class="card__footer">
           <a class="btn btn--quiet btn--sm" href="https://maps.example.com/ontario-science-centre" target="_blank" rel="noopener"><svg class="icon" aria-hidden="true"><use href="#i-map"/></svg>Map</a>
+          <a class="btn btn--primary btn--sm" href="./dialogs.html#dialog-add-to-day" aria-label="Add to day: Ontario Science Centre"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg>Add to day</a>
         </div>
       </li>
-      <li class="card">
+      <li class="card card--media">
+        <div class="media card__media"><img class="media__img" src="../images/toronto-zoo.svg" alt="A polar bear beside its pool" width="800" height="500" loading="lazy"><span class="media__credit">Photo · placeholder</span></div>
         <div class="card__head">
-          <span class="disc disc--lg disc--leaf" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-tree"/></svg></span>
           <div class="card__head-text">
             <h3 class="card__title">Toronto Zoo</h3>
             <p class="card__meta">Scarborough</p>
@@ -168,6 +174,7 @@
         </div>
         <div class="card__footer">
           <a class="btn btn--quiet btn--sm" href="https://maps.example.com/toronto-zoo" target="_blank" rel="noopener"><svg class="icon" aria-hidden="true"><use href="#i-map"/></svg>Map</a>
+          <a class="btn btn--primary btn--sm" href="./dialogs.html#dialog-add-to-day" aria-label="Add to day: Toronto Zoo"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg>Add to day</a>
         </div>
       </li>
     </ul>
@@ -182,9 +189,9 @@
       </div>
     </div>
     <ul class="grid-cards">
-      <li class="card">
+      <li class="card card--media">
+        <div class="media card__media"><img class="media__img" src="../images/riverwood.svg" alt="Tall trees along a forest trail" width="800" height="500" loading="lazy"><span class="media__credit">Photo · placeholder</span></div>
         <div class="card__head">
-          <span class="disc disc--lg disc--leaf" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-tree"/></svg></span>
           <div class="card__head-text">
             <h3 class="card__title">Riverwood Conservancy</h3>
             <p class="card__meta">Mississauga</p>
@@ -197,11 +204,12 @@
         </div>
         <div class="card__footer">
           <a class="btn btn--quiet btn--sm" href="https://maps.example.com/riverwood-conservancy" target="_blank" rel="noopener"><svg class="icon" aria-hidden="true"><use href="#i-map"/></svg>Map</a>
+          <a class="btn btn--primary btn--sm" href="./dialogs.html#dialog-add-to-day" aria-label="Add to day: Riverwood Conservancy"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg>Add to day</a>
         </div>
       </li>
-      <li class="card">
+      <li class="card card--media">
+        <div class="media media--fallback media--indoor card__media" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-ticket"/></svg></div>
         <div class="card__head">
-          <span class="disc disc--lg disc--indoor" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-ticket"/></svg></span>
           <div class="card__head-text">
             <h3 class="card__title">Living Arts Centre kids' theatre</h3>
             <p class="card__meta">Mississauga</p>
@@ -214,6 +222,7 @@
         </div>
         <div class="card__footer">
           <a class="btn btn--quiet btn--sm" href="https://maps.example.com/living-arts-centre-kids-theatre" target="_blank" rel="noopener"><svg class="icon" aria-hidden="true"><use href="#i-map"/></svg>Map</a>
+          <a class="btn btn--primary btn--sm" href="./dialogs.html#dialog-add-to-day" aria-label="Add to day: Living Arts Centre kids&#39; theatre"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg>Add to day</a>
         </div>
       </li>
     </ul>

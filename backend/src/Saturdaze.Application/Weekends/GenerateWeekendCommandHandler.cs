@@ -71,8 +71,10 @@ public sealed class GenerateWeekendCommandHandler : IRequestHandler<GenerateWeek
                 RefId = b.RefId,
                 IsLocked = b.IsLocked,
                 Reason = b.Reason,
-                SortOrder = b.SortOrder
-            }).ToList()
+                SortOrder = b.SortOrder,
+                Stop = b.Stop?.Copy()
+            }).ToList(),
+            Home = ctx.Home.Copy()
         };
         _db.Weekends.Add(weekend);
         await _db.SaveChangesAsync(cancellationToken);

@@ -10,6 +10,7 @@ public class FamilyConfiguration : IEntityTypeConfiguration<Family>
     {
         b.ToTable("Families");
         b.HasKey(x => x.Id);
+        b.OwnsGeo(x => x.HomeCoordinates, "Home");
         b.Property(x => x.Name).HasMaxLength(100);
         b.Property(x => x.HomeLocation).HasMaxLength(200).IsRequired();
         b.Property(x => x.FridayPreviewEnabled).HasDefaultValue(true);

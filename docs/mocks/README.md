@@ -5,7 +5,7 @@ Static HTML mocks for Saturdaze redesigned as a **responsive web app first** wit
 capability the product has today keeps a home, nothing new was added.
 
 Open `index.html` in a browser and resize the window: **720px** swaps the phone
-bottom nav for a top bar, **1024px** puts Saturday and Sunday side by side.
+bottom nav for a top bar, **1024px** puts the selected day beside its map.
 
 ## What's here
 
@@ -18,6 +18,7 @@ styles/app.css        everything else, in @layer order (reset → base → shell
                       components → pages → utilities)
 pages/_shell.html     the canonical skeleton every page copies (not a screen)
 pages/*.html          18 screens (list below)
+images/*.svg          illustrated photo placeholders (see Images)
 .check.mjs            static consistency check, no dependencies
 .verify.mjs           Playwright: 5 widths, overflow walker, shell checks, screenshots
 screenshots/          committed <slug>.<viewport>.png captures (390 / 820 / 1440)
@@ -26,14 +27,42 @@ screenshots/          committed <slug>.<viewport>.png captures (390 / 820 / 1440
 
 | Screen | File(s) |
 | --- | --- |
-| Weekend (home + itinerary merged) | `weekend.html`, `weekend.empty.html`, `weekend.generating.html` |
-| Ideas (activities · food · events) | `ideas.html`, `ideas.food.html`, `ideas.events.html` |
-| Past weekends | `past.html`, `past.empty.html` |
+| Weekend (cover photo, one day beside its map) | `weekend.html`, `weekend.empty.html`, `weekend.generating.html` |
+| Ideas (photo-led activities · food · events) | `ideas.html`, `ideas.food.html`, `ideas.events.html` |
+| Past weekends (cover photo per weekend) | `past.html`, `past.empty.html` |
 | Family | `family.html` |
 | Review submissions (admin) | `review-submissions.html`, `review-submissions.empty.html` |
 | Auth | `sign-in.html` (2 states), `create-account.html`, `reset-password.html` (5 states), `verify-email.html` (3 states) |
 | Public | `landing.html`, `legal.html` (Terms + Privacy) |
-| Dialogs gallery | `dialogs.html` (D1–D27 rendered inline) |
+| Dialogs gallery | `dialogs.html` (D1–D29 rendered inline) |
+
+## Photos and maps (Wanderlog layout study)
+
+The Weekend, Ideas and Past screens follow a layout study of Wanderlog (a trip
+planner). They replaced the earlier two-day Weekend, icon-led Ideas and text-only
+Past mocks on 2026-10-06. Requirements: `docs/specs/L1.md` L1-032 → L1-035,
+`docs/specs/L2.md` L2-099 → L2-110. Detailed designs:
+`docs/detailed-designs/discovery/store-place-location-and-imagery`,
+`discovery/add-idea-to-day`, `weekend-planning/map-itinerary-and-travel-legs`,
+`weekend-planning/choose-weekend-cover-photo`.
+
+| Screen | File | Shows |
+| --- | --- | --- |
+| Weekend | `weekend.html` | Cover photo with Change photo (D29); Saturday / Sunday tabs; the selected day beside its map (stacked under 1024px); numbered stops; travel legs with Directions over 10 min |
+| Ideas · Activities | `ideas.html` | Photo-led cards, fallback tile, "Add to day" (D28) |
+| Ideas · Food | `ideas.food.html` | Photo-led restaurant cards; "Lock it in" stays the way to place a restaurant |
+| Ideas · Events | `ideas.events.html` | Photo-led event cards; this weekend's events get "Add to day" (D28) |
+| Past | `past.html` | Cover photo per weekend, "Your photo" vs "From {place}", "Add a photo" (D29) |
+
+The Saturday / Sunday tabs on `weekend.html` work in the mock (`app.js` §5);
+`weekend.html#sun-panel` opens on Sunday.
+
+### Images
+
+`images/*.svg` are **illustrated placeholders** that stand in for licensed photos;
+they are not real photographs and must not ship. The map in `weekend.html` is
+an inline SVG sketch, not tiles. Production sources, licensing and attribution are
+specified in L2-100.
 
 ## Running the checks
 
@@ -104,7 +133,7 @@ focus ring, tone pairs) live at the top of `app.css` in `@layer base`.
 
 | v1 (`docs/mocks/pages/`) | v2 |
 | --- | --- |
-| `home.html`, `itinerary.html`, `itinerary.sunday.html` | `weekend.html` (Sat + Sun together; day switcher gone) |
+| `home.html`, `itinerary.html`, `itinerary.sunday.html` | `weekend.html` (one day at a time beside its map; Saturday / Sunday tabs) |
 | `home.empty.html` | `weekend.empty.html` |
 | `home.generating.html` | `weekend.generating.html` |
 | `home.lock-mode.html` | per-block lock buttons on `weekend.html`; no separate mode |
@@ -132,8 +161,7 @@ Dropped on purpose (no requirement behind them): open-mail-app picker, webcal / 
 Calendar rows, Friday-preview sheet, send-to-Sara, see-on-map, surprise-me, Saved "More"
 sheet, export-as-text, day options sheet, day totals, heads-up cards, quick-actions list.
 
-Adapted to the API as it is (no backend changes): no "Add to Saturday / Sunday" on Ideas
-cards (activity cards link to a map, event cards to their details); swap is server-chosen
+Adapted to the API as it is (no backend changes): swap is server-chosen
 (D2 retired); the errand dialog asks What / How long / Which day and the planner picks
 the slot (D8 retired, no detour figure); no Unlock, Refresh picks or Patio on Food;
 members are name + age (role derived from age, no notes); commitments are one day each

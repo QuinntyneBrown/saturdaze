@@ -1,0 +1,16 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context - Choose a weekend cover photo
+
+Person(family, "Family member", "Plans and remembers weekends")
+Person_Ext(recipient, "Link recipient", "Opens a shared weekend")
+System_Ext(crawler, "Link-preview crawler", "Messaging and social apps")
+System(saturdaze, "Saturdaze", "Plans personalized family weekends")
+System_Ext(storage, "Azure Blob Storage", "Private container for uploaded covers")
+
+Rel(family, saturdaze, "Chooses or uploads a cover in")
+Rel(recipient, saturdaze, "Views a shared weekend in")
+Rel(crawler, saturdaze, "Reads Open Graph tags from", "HTTPS")
+Rel(saturdaze, storage, "Stores uploads; issues signed URLs", "HTTPS")
+@enduml

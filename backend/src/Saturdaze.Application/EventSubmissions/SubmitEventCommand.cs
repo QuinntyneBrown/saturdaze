@@ -12,4 +12,7 @@ public sealed record SubmitEventCommand(
     string? CostNote = null,
     string? AgeRange = null,
     string? SourceUrl = null,
-    string? Category = null) : IRequest<EventSubmissionDto>;
+    string? Category = null,
+    decimal? Latitude = null,
+    decimal? Longitude = null,
+    string? Address = null) : IRequest<EventSubmissionDto>;

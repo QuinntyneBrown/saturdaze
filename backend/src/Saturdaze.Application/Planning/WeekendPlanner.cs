@@ -143,7 +143,8 @@ public sealed class WeekendPlanner : IWeekendPlanner
                 Title = l.Title,
                 RefId = l.RefId,
                 IsLocked = true,
-                Reason = string.IsNullOrEmpty(l.Reason) ? "locked by user" : l.Reason
+                Reason = string.IsNullOrEmpty(l.Reason) ? "locked by user" : l.Reason,
+                Stop = l.Stop?.Copy()
             });
         }
         return list.OrderBy(b => b.StartTime).ToList();
@@ -298,7 +299,8 @@ public sealed class WeekendPlanner : IWeekendPlanner
             Kind = BlockKind.Activity,
             Title = act.Name,
             RefId = act.Id,
-            Reason = BuildActivityReason(act, forecast, tryNew, GapMinutes(gap))
+            Reason = BuildActivityReason(act, forecast, tryNew, GapMinutes(gap)),
+            Stop = act.Geo?.Copy()
         };
 
         if (drive > 0 && activityEnd.AddMinutes(drive) <= gap.end)
@@ -377,7 +379,8 @@ public sealed class WeekendPlanner : IWeekendPlanner
                 RefId = restaurant.Id,
                 Reason = anchorActivity is null
                     ? $"closest {slot.ToString().ToLowerInvariant()} spot"
-                    : $"close to {anchorActivity.Name}"
+                    : $"close to {anchorActivity.Name}",
+                Stop = restaurant.Geo?.Copy()
             });
         }
         return meals;

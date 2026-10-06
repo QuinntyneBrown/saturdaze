@@ -211,7 +211,7 @@ export abstract class BasePage {
   }
 
   /** Footer action by accessible name ("Cancel", "Regenerate", "Save"…). */
-  dialogAction(name: string): Locator {
+  dialogAction(name: string | RegExp): Locator {
     return control(this.dialog().locator(".dialog__actions"), name);
   }
 

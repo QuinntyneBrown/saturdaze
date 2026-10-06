@@ -6,6 +6,7 @@ using Saturdaze.Application.Contracts;
 using Saturdaze.Application.Exceptions;
 using Saturdaze.Application.Weather;
 using Saturdaze.Domain.Entities;
+using Saturdaze.Domain.ValueObjects;
 
 namespace Saturdaze.Application.Weekends;
 
@@ -79,6 +80,7 @@ public sealed class ReuseWeekendCommandHandler : IRequestHandler<ReuseWeekendCom
 
         target.IsFavourite = false;
         target.Notes = source.Notes;
+        target.Home = GeoLocation.Merge(target.Home, source.Home?.Copy());
         target.Title = request.Remix ? $"Remix of {source.Title ?? "saved weekend"}" : source.Title;
         target.Rating = null;
         target.RegenerateCount = request.Remix ? source.RegenerateCount + 1 : source.RegenerateCount;
@@ -99,7 +101,8 @@ public sealed class ReuseWeekendCommandHandler : IRequestHandler<ReuseWeekendCom
                 Reason = request.Remix && !block.IsLocked
                     ? "seeded from saved weekend; ready to remix"
                     : block.Reason,
-                SortOrder = block.SortOrder
+                SortOrder = block.SortOrder,
+                Stop = block.Stop?.Copy()
             });
         }
 

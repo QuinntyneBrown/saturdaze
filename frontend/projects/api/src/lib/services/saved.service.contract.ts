@@ -1,5 +1,6 @@
 import { InjectionToken, Signal } from '@angular/core';
 
+import { CoverChoice, CoverSelection } from '../models/cover-view';
 import { PastView } from '../models/past-view';
 
 /**
@@ -43,6 +44,34 @@ export interface ISavedService {
    * @returns {Promise<void>} The result of the operation
    */
   rename(id: string, title: string | null): Promise<void>;
+  /**
+   * Cover Choices — each of a past weekend's stop photos, for D29 (L2-110 AC2).
+   *
+   * @param {string} id - The weekend id
+   *
+   * @returns {Promise<readonly CoverChoice[]>} The stops with photos, Saturday first
+   */
+  coverChoices(id: string): Promise<readonly CoverChoice[]>;
+  /**
+   * Set Cover — `PUT /api/weekends/{id}/cover`; the card updates in place.
+   *
+   * @param {string} id - The weekend id
+   * @param {CoverSelection} selection - The default rule or a stop
+   *
+   * @returns {Promise<void>} The result of the operation
+   */
+  setCover(id: string, selection: CoverSelection): Promise<void>;
+  /**
+   * Upload Cover — `POST /api/weekends/{id}/cover` with the family's own
+   * photo (L2-109); the card updates in place. Rejects with the server's
+   * `HttpErrorResponse`.
+   *
+   * @param {string} id - The weekend id
+   * @param {Blob} file - A JPEG, PNG or WebP up to 10 MB
+   *
+   * @returns {Promise<void>} The result of the operation
+   */
+  uploadCover(id: string, file: Blob): Promise<void>;
 }
 
 export const SAVED_SERVICE = new InjectionToken<ISavedService>('SAVED_SERVICE');

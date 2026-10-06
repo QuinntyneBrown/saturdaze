@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 08 Slides</title>
+<link rel="stylesheet" href="../assets/slides.css">
+</head>
+<body data-video-number="08" data-video-title="Prompts and AI behaviour, end to end" data-parts="Introduction|Outcomes|Three layers|System prompt|Schema contract|Change it|Context|Model knobs|Results|Pitfalls|Recap">
+
+<section id="title" class="center" data-part="0">
+  <div class="kicker">Saturdaze AI series · Video 08 of 10</div>
+  <h1>Prompts and AI behaviour,<br>end to end</h1>
+  <p class="lead">What Claude is told, how that text is built, and how to change it the repository way</p>
+</section>
+
+<section id="loop" data-part="0" data-cue="Then we change the model's behaviour for real">
+  <h2>The loop this video teaches</h2>
+  <div class="flow">
+    <div class="node accent">Failing test<small>IngestionPromptsAndTypesTests</small></div>
+    <div class="arrow">→</div>
+    <div class="node accent">Edit the prompt<small>IngestionPrompts.cs</small></div>
+    <div class="arrow">→</div>
+    <div class="node">Green</div>
+    <div class="arrow">→</div>
+    <div class="node accent">Dry run<small>saturdaze ingest --dry-run</small></div>
+    <div class="arrow">→</div>
+    <div class="node">Real run</div>
+  </div>
+  <p class="small muted">AGENTS.md: behaviour changes are test first. Prompt wording is production behaviour.</p>
+</section>
+
+<section id="outcomes" data-part="1" data-cue="By the end of this video you should be able to do four things">
+  <h2>What you will be able to do</h2>
+  <ol class="steps">
+    <li><div>Read <code>IngestionPrompts</code> and explain every sentence the model is sent</div></li>
+    <li><div>Change what the model looks for, proven by a unit test and a dry run</div></li>
+    <li><div>Change location, radius, model, search budget and token ceiling with configuration only</div></li>
+    <li><div>Treat the schema as a contract: prompt + parser + upserter move together</div></li>
+  </ol>
+</section>
+
+<section id="layers" data-part="2" data-cue="It helps to think of AI behaviour in Saturdaze as three layers">
+  <h2>Three layers of behaviour</h2>
+  <div class="cols shrink three">
+    <div class="card">
+      <h3>1 · Prompt wording</h3>
+      <p class="small"><code>Application/Ingestion/IngestionPrompts.cs</code></p>
+      <p class="small">Content, not logic. A one-file change reviewable in isolation.</p>
+      <span class="tag">code</span>
+    </div>
+    <div class="card">
+      <h3>2 · Context values</h3>
+      <p class="small"><code>appsettings.json</code></p>
+      <p class="small"><code>Saturdaze:HomeLocation:Name</code><br><code>Saturdaze:Ingestion:MaxDriveMinutes</code><br>+ upcoming Saturday from the clock</p>
+      <span class="tag sky">configuration</span>
+    </div>
+    <div class="card">
+      <h3>3 · Model knobs</h3>
+      <p class="small"><code>Saturdaze:Ingestion:Claude</code></p>
+      <p class="small"><code>Model</code>, <code>MaxSearches</code>, <code>MaxTokens</code>, <code>MaxContinuationTurns</code>, <code>RetryDelaySeconds</code></p>
+      <span class="tag sky">configuration</span>
+    </div>
+  </div>
+</section>
+
+<section id="not-a-prompt" class="center" data-part="2" data-cue="And there is one thing that looks like a prompt but is not">
+  <p class="quote">The JSON schema at the end of each system prompt is not wording.<br>It is a contract with <code>IngestionResultParser</code> and <code>CatalogUpserter</code>.</p>
+</section>
+
+<section id="preamble" data-part="3" data-cue="Part one is the preamble">
+  <h2>Part 1 · The shared preamble</h2>
+  <pre class="code tight" data-lang="cs" data-file="backend/src/Saturdaze.Application/Ingestion/IngestionPrompts.cs" data-mark="6-8">
+var preamble =
+    $"You are a meticulous local-events researcher curating a weekend catalog for a family " +
+    $"living in {ctx.HomeLocation}. You only return places and events within about " +
+    $"{ctx.MaxDriveMinutes} minutes' drive of that home. You strongly prefer family- and " +
+    $"kid-friendly options. Use the web_search tool to find REAL, currently-listed results " +
+    $"from venue, tourism-board, municipal, and farm websites. Verify each row against a real " +
+    $"page before including it; if you cannot verify it, leave it out. Never invent a venue, " +
+    $"date, or URL.";
+</pre>
+  <p class="small muted">Persona · location · radius · family-friendly · the tool · <strong>verify, never invent</strong></p>
+</section>
+
+<section id="type-rules" data-part="3" data-cue="Part two is type specific">
+  <h2>Part 2 · Type-specific rules</h2>
+  <div class="cols shrink three">
+    <div class="card">
+      <h3>Events</h3>
+      <ul class="small">
+        <li>Time-bounded: this weekend and the next, dates spelled out</li>
+        <li>No adults-only events</li>
+        <li>No ticketed concerts over $50 per adult</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Activities</h3>
+      <ul class="small">
+        <li>Mostly evergreen places for an afternoon</li>
+        <li><code>indoor</code> true for bad-weather venues</li>
+        <li><code>weatherTags</code> ⊆ sunny, warm, mild, cool, rain, cold</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Restaurants</h3>
+      <ul class="small">
+        <li><code>slot</code> is Lunch or Dinner</li>
+        <li><code>wifeApproved</code>: relaxed, quality, not too loud</li>
+        <li><code>notes</code>: a short reason it earns its place</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="output" data-part="3" data-cue="Part three is the output instruction">
+  <h2>Parts 3 and 4 · Output instruction and schema</h2>
+  <pre class="code tight" data-lang="cs" data-file="backend/src/Saturdaze.Application/Ingestion/IngestionPrompts.cs" data-mark="2-3,10-12">
+var output =
+    "Return ONLY a single JSON array as your final message — no prose, no markdown fences, " +
+    "no commentary before or after. \"latitude\" and \"longitude\" are WGS84 decimal degrees of the " +
+    "venue and \"address\" its street address. Each element MUST match this exact schema (omit any row " +
+    "you cannot fully populate and verify):";
+
+IngestionType.Events =>
+    $"{preamble}\n\nFind time-bounded events ... on or near the weekend of {weekend} ...\n\n{output}\n" +
+    "[{\"name\": string, \"startsOn\": \"YYYY-MM-DD\", \"endsOn\": \"YYYY-MM-DD\", " +
+    "\"location\": string, \"driveMinutes\": integer, \"url\": string, \"category\": string, " +
+    "\"latitude\": number, \"longitude\": number, \"address\": string}]",
+</pre>
+</section>
+
+<section id="user-prompt" data-part="3" data-cue="The user prompt, from">
+  <h2>The user prompt is deliberately tiny</h2>
+  <pre class="code tight" data-lang="cs" data-file="backend/src/Saturdaze.Application/Ingestion/IngestionPrompts.cs">
+IngestionType.Events =>
+    $"List family-friendly events near {ctx.HomeLocation} for the weekend of {weekend} and the " +
+    $"weekend after. Return the JSON array only.",
+</pre>
+  <p>All the weight sits in the <strong>system</strong> prompt, where Claude expects standing instructions. The user turn just names the catalog, the place and the date.</p>
+</section>
+
+<section id="contract" data-part="4" data-cue="Here is why the schema is not just wording">
+  <h2>The schema is a contract</h2>
+  <table class="grid">
+    <tr><th>Type</th><th>Parser requires</th><th>Natural key</th><th>Upserter truncates</th></tr>
+    <tr><td>Events</td><td><code>name</code>, <code>startsOn</code>, <code>location</code> (<code>endsOn</code> defaults to start)</td><td>name | startsOn | location</td><td>name/location 200, category 80, url 500</td></tr>
+    <tr><td>Activities</td><td><code>name</code></td><td>name</td><td>name 160, category 80, description 2000, mapUrl 500</td></tr>
+    <tr><td>Restaurants</td><td><code>name</code>, <code>slot</code> ∈ Lunch | Dinner</td><td>name | slot</td><td>name 160, style 80, notes 500</td></tr>
+    <tr><td class="muted">all types</td><td colspan="2"><code>latitude</code>, <code>longitude</code>, <code>address</code> are optional: a location is stored only when both coordinates are present and in range</td><td>address 300</td></tr>
+  </table>
+  <p class="small muted">A row missing a required field is rejected and counted; the rest of the batch still lands.</p>
+</section>
+
+<section id="three-places" data-part="4" data-cue="So if you want the model to return a new field">
+  <h2>A new field is a three-place change</h2>
+  <div class="flow">
+    <div class="node accent">Prompt schema line<small>IngestionPrompts.cs</small></div>
+    <div class="arrow">+</div>
+    <div class="node accent">Reader / mapping<small>IngestionResultParser.cs · CatalogUpserter.cs</small></div>
+    <div class="arrow">+</div>
+    <div class="node accent">Entity + migration<small>Saturdaze.Domain · Infrastructure</small></div>
+  </div>
+  <p class="small muted">That is how <code>latitude</code>, <code>longitude</code> and <code>address</code> arrived (L2-099): the schema line, <code>PayloadReader.GetGeo</code>, and <code>GeoLocation</code> on each entity, in one change.</p>
+  <div class="cols shrink">
+    <div class="card bad"><h3>Prompt only</h3><p class="small">New field arrives in the JSON and is silently ignored.</p></div>
+    <div class="card bad"><h3>Rename a required field in the prompt only</h3><p class="small">Every row is rejected; the audit row shows partial success or zero items.</p></div>
+  </div>
+</section>
+
+<section id="test-first" data-part="5" data-cue="Open IngestionPromptsAndTypesTests in the Application test project">
+  <h2>Step 1 · Write the failing test</h2>
+  <pre class="code" data-lang="cs" data-file="backend/tests/Saturdaze.Application.Tests/Ingestion/IngestionPromptsAndTypesTests.cs" data-mark="2-6">
+[Fact]
+public void Restaurant_prompt_prefers_independents_over_chains()
+{
+    var prompt = IngestionPrompts.BuildSystemPrompt(IngestionType.Restaurants, Ctx);
+    prompt.Should().Contain("chain");
+}
+</pre>
+  <p class="small muted">Run <code>dotnet test</code>. It fails: the current prompt never mentions chains. That failure proves the test is real.</p>
+</section>
+
+<section id="edit-prompt" data-part="5" data-cue="Now open">
+  <h2>Step 2 · Change the wording</h2>
+  <pre class="code tight" data-lang="cs" data-file="backend/src/Saturdaze.Application/Ingestion/IngestionPrompts.cs" data-mark="5-6">
+IngestionType.Restaurants =>
+    $"{preamble}\n\nFind family-friendly restaurants. \"slot\" is \"Lunch\" or \"Dinner\". " +
+    $"\"wifeApproved\" is true for relaxed, quality, not-too-loud places a discerning adult " +
+    $"would happily return to (as opposed to purely kid-driven chains). \"notes\" is a short " +
+    $"reason it earns its place. Prefer independent restaurants and exclude chains " +
+    $"with more than twenty locations.\n\n" +
+    $"{output}\n" +
+    "[{\"name\": string, \"style\": string, \"slot\": \"Lunch\"|\"Dinner\", " +
+    "\"wifeApproved\": boolean, \"driveMinutes\": integer, \"notes\": string}]",
+</pre>
+  <p class="small muted">Run the tests again. Green. The schema line did not change, so parser and upserter are untouched.</p>
+</section>
+
+<section id="dry-run" data-part="5" data-cue="Next, a dry run">
+  <h2>Step 3 · Dry run, then real run</h2>
+  <pre class="code" data-lang="sh" data-mark="3">
+export ANTHROPIC_FOUNDRY_API_KEY="$(grep '^ANTHROPIC_FOUNDRY_API_KEY=' \
+    .deploy/azure.env | cut -d= -f2-)"
+dotnet run --project backend/src/Saturdaze.Cli -- ingest --type restaurants --dry-run
+</pre>
+  <pre class="code tight" data-lang="sh">
+info: Ingesting Restaurants for weekend 2026-10-10 near Port Credit, Mississauga, ON...
+info: [dry-run] Restaurants: parsed 11 valid / 12 considered (1 rejected); writes skipped.
+info:   Restaurants Succeeded      considered=12 upserted=0 rejected=1 searches=5 tokens=98412+1630
+</pre>
+  <p class="small muted">Still chains? Sharpen the wording and run again. Each dry run costs tokens. Happy? Drop <code>--dry-run</code>.</p>
+</section>
+
+<section id="context" data-part="6" data-cue="The preamble is filled from two configuration values">
+  <h2>Change the context without code</h2>
+  <pre class="code" data-lang="json" data-file="backend/src/Saturdaze.Cli/appsettings.json" data-mark="4,9">
+{
+  "Saturdaze": {
+    "HomeLocation": {
+      "Name": "Port Credit, Mississauga, ON",
+      "Latitude": 43.5547,
+      "Longitude": -79.5816
+    },
+    "Ingestion": {
+      "MaxDriveMinutes": 200,
+      "MaxRunsPerDayPerType": 48,
+</pre>
+  <p class="small muted">Per process: <code>Saturdaze__Ingestion__MaxDriveMinutes=90</code>. The radius is guidance to the model, not a geographic filter in code.</p>
+</section>
+
+<section id="knobs" data-part="7" data-cue="The third layer is the Claude section">
+  <h2>Model knobs · <code>Saturdaze:Ingestion:Claude</code></h2>
+  <table class="grid">
+    <tr><th>Setting</th><th>Default</th><th>What it changes</th></tr>
+    <tr><td><code>Model</code></td><td><code>claude-sonnet-5</code></td><td>Foundry deployment name (must exist on the resource) or Anthropic model id</td></tr>
+    <tr><td><code>MaxSearches</code></td><td>5</td><td><code>max_uses</code> of the web search tool: more verification, more input tokens</td></tr>
+    <tr><td><code>MaxTokens</code></td><td>4096</td><td>Output ceiling; too low cuts the JSON array mid-row</td></tr>
+    <tr><td><code>MaxContinuationTurns</code></td><td>3</td><td>How many <code>pause_turn</code> answers the client continues</td></tr>
+    <tr><td><code>RetryDelaySeconds</code></td><td>30</td><td>Back-off before the single retry on 429 / 5xx</td></tr>
+  </table>
+  <p class="small muted">Override any of them per process, e.g. <code>Saturdaze__Ingestion__Claude__Model</code>.</p>
+</section>
+
+<section id="results" data-part="8" data-cue="After any pass, dry or real, you have two sources of truth">
+  <h2>Reading the results</h2>
+  <div class="cols shrink">
+    <div class="card">
+      <h3>Console, every pass</h3>
+      <p class="small">One line per type: status, considered, upserted, rejected, searches, input + output tokens, error.</p>
+    </div>
+    <div class="card">
+      <h3><code>IngestionRun</code>, real passes</h3>
+      <p class="small">Same numbers, permanent, plus the first error message when Failed.</p>
+    </div>
+  </div>
+  <h3>Three numbers to watch</h3>
+  <ul>
+    <li><strong>Considered vs rejected</strong> — did the model understand the schema?</li>
+    <li><strong>Web search count</strong> — did it verify, or answer from memory?</li>
+    <li><strong>Input tokens</strong> — what did the pass cost?</li>
+  </ul>
+</section>
+
+<section id="pitfalls" data-part="9" data-cue="An empty or unparseable answer is a success with zero items" data-template="pits" data-show="5">
+  <h2>Pitfalls</h2>
+</section>
+<template id="pits">
+  <ul>
+    <li class="item"><strong>Zero-item success is a warning sign.</strong> Suspect a truncated answer or a broken schema line.</li>
+    <li class="item"><strong>Fences and prose are tolerated.</strong> The parser scans for the array; don't spend tokens fighting it.</li>
+    <li class="item"><strong>Keep <code>IngestionContext</code> PII-free.</strong> No names, ages or preferences, ever.</li>
+    <li class="item"><strong>Lenient numbers, strict-ish dates.</strong> Strings that look like numbers pass; a date .NET cannot read rejects the row.</li>
+    <li class="item"><strong>Model name must agree on both sides.</strong> Configuration and the Foundry deployment, or you get a 404.</li>
+  </ul>
+</template>
+
+<section id="recap" data-part="10" data-cue="Behaviour has three layers">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div><strong>Three layers.</strong> Wording in code; context and knobs in configuration.</div>
+    <div><strong>One contract.</strong> Prompt schema, parser, upserter move together.</div>
+    <div><strong>One order.</strong> Failing test → prompt → green → <code>--dry-run</code> → real run.</div>
+    <div><strong>Dry runs cost tokens.</strong> Precise wording beats many iterations.</div>
+    <div><strong>Zero items</strong> is a warning, not a quiet week.</div>
+  </div>
+</section>
+
+<section id="next" class="center" data-part="10" data-cue="Next, we leave the code and go to Azure">
+  <div class="kicker">Next</div>
+  <h1>09 · Provision Claude in Microsoft Foundry</h1>
+  <p class="lead">Create the Foundry resource and the <code>claude-sonnet-5</code> deployment this client talks to.</p>
+</section>
+
+<script src="../assets/slides.js"></script>
+</body>
+</html>

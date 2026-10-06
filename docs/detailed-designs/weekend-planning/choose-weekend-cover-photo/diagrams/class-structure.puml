@@ -1,0 +1,89 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure - Choose a weekend cover photo
+
+class Weekend {
+  +Guid Id
+  +Guid FamilyId
+  +DateOnly WeekendOf
+  +string? Title
+  +Cover Cover
+}
+enum CoverSource {
+  Default
+  Stop
+  Upload
+}
+class Cover <<owned value>> {
+  +CoverSource Source
+  +Guid? BlockId
+  +CoverUpload? Upload
+  +Reconcile(blocks): void
+}
+class CoverUpload <<owned value>> {
+  +string StorageKey
+  +int Width
+  +int Height
+  +long SizeBytes
+  +DateTimeOffset UploadedAtUtc
+}
+class CoverResolver <<domain service>> {
+  +Resolve(weekend, scope: UrlScope): ResolvedCover?
+}
+enum UrlScope {
+  Family
+  Share
+}
+class CoverDto {
+  +string Url
+  +string Alt
+  +string Attribution
+  +string Label
+  +bool IsUpload
+}
+class UploadWeekendCoverCommand {
+  +Guid WeekendId
+  +Stream Content
+  +long Length
+}
+class SetWeekendCoverCommand {
+  +Guid WeekendId
+  +CoverSource Source
+  +Guid? BlockId
+}
+class ImageSanitizer {
+  +Inspect(stream): ImageFormat?
+  +Reencode(stream): SanitizedImage
+}
+interface IPhotoStore {
+  +PutAsync(key, image): Task
+  +DeleteAsync(key): Task
+  +SignedUrl(key, ttl): Uri
+}
+class AzureBlobPhotoStore
+class SharePreviewController {
+  +Get(token): ContentResult
+}
+
+Weekend *-- Cover
+Cover --> CoverSource
+Cover *-- CoverUpload
+CoverResolver ..> Weekend : reads
+CoverResolver ..> IPhotoStore : signs
+CoverResolver ..> UrlScope
+CoverResolver ..> CoverDto : produces
+AzureBlobPhotoStore ..|> IPhotoStore
+UploadWeekendCoverCommand ..> ImageSanitizer : handler uses
+UploadWeekendCoverCommand ..> IPhotoStore : handler uses
+SetWeekendCoverCommand ..> Cover : handler mutates
+SharePreviewController ..> CoverResolver
+@enduml

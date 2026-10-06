@@ -10,6 +10,7 @@ public class RestaurantConfiguration : IEntityTypeConfiguration<Restaurant>
     {
         b.ToTable("Restaurants");
         b.HasKey(x => x.Id);
+        b.OwnsGeo(x => x.Geo);
         b.Property(x => x.Name).HasMaxLength(160).IsRequired();
         b.Property(x => x.Style).HasMaxLength(80).IsRequired();
         b.Property(x => x.Notes).HasMaxLength(500);

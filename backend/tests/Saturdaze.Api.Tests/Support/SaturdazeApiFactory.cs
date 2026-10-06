@@ -28,6 +28,10 @@ public sealed class SaturdazeApiFactory : WebApplicationFactory<Program>, IAsync
 
     public FakeWeatherClient Weather { get; } = new();
     public FakeDateTimeProvider Clock { get; } = new(new DateOnly(2026, 5, 16));
+    public CapturingLogSink Logs { get; } = new();
+
+    /// <summary>Where uploaded covers go for this fixture (deleted on disposal).</summary>
+    public string PhotoDirectory { get; } = Path.Combine(Path.GetTempPath(), "saturdaze-photos-" + Guid.NewGuid().ToString("N"));
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
@@ -44,6 +48,10 @@ public sealed class SaturdazeApiFactory : WebApplicationFactory<Program>, IAsync
                 ["Saturdaze:Jwt:Audience"] = "saturdaze-test-clients",
                 ["Saturdaze:Jwt:SigningKey"] = "test-only-signing-key-must-be-at-least-32-bytes-long",
                 ["Saturdaze:Jwt:AccessTokenMinutes"] = "15",
+                ["Saturdaze:Images:AllowedOrigins:0"] = "https://images.example.com",
+                ["Saturdaze:Photos:Directory"] = PhotoDirectory,
+                ["Saturdaze:Photos:SigningKey"] = "test-only-photo-signing-key-at-least-32-bytes",
+                ["Saturdaze:Share:AppOrigin"] = "https://app.example.com",
             });
         });
         builder.ConfigureTestServices(services =>
@@ -52,6 +60,7 @@ public sealed class SaturdazeApiFactory : WebApplicationFactory<Program>, IAsync
             services.AddSingleton<Saturdaze.Application.Weather.IWeatherClient>(Weather);
             services.RemoveAll<Saturdaze.Application.Common.IDateTimeProvider>();
             services.AddSingleton<Saturdaze.Application.Common.IDateTimeProvider>(Clock);
+            services.AddSingleton<Serilog.Core.ILogEventSink>(Logs);
         });
     }
 
@@ -70,6 +79,7 @@ public sealed class SaturdazeApiFactory : WebApplicationFactory<Program>, IAsync
 
     async Task IAsyncLifetime.DisposeAsync()
     {
+        if (Directory.Exists(PhotoDirectory)) Directory.Delete(PhotoDirectory, recursive: true);
         try
         {
             await using var conn = new SqlConnection(LocalDbConnection.For("master"));

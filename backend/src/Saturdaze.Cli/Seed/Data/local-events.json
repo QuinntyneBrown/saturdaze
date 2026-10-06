@@ -3,6 +3,9 @@
   "events": [
     {
       "name": "Terre Bleu — Lavender Bloom Opening",
+      "latitude": 43.5386,
+      "longitude": -79.9611,
+      "address": "2501 Dublin Line, Milton, ON",
       "startsOn": "2026-05-16",
       "endsOn":   "2026-05-16",
       "location": "Milton",
@@ -12,6 +15,9 @@
     },
     {
       "name": "Cirque Mechanics — Pedal Punk",
+      "latitude": 43.5917,
+      "longitude": -79.642,
+      "address": "4141 Living Arts Dr, Mississauga, ON",
       "startsOn": "2026-05-16",
       "endsOn":   "2026-05-16",
       "location": "Living Arts Centre",
@@ -21,6 +27,9 @@
     },
     {
       "name": "Spring Tulip Festival",
+      "latitude": 43.29,
+      "longitude": -79.8763,
+      "address": "680 Plains Rd W, Burlington, ON",
       "startsOn": "2026-05-16",
       "endsOn":   "2026-05-17",
       "location": "Royal Botanical Gardens",
@@ -30,6 +39,9 @@
     },
     {
       "name": "Mississauga Symphony — Kids Concert",
+      "latitude": 43.5917,
+      "longitude": -79.642,
+      "address": "4141 Living Arts Dr, Mississauga, ON",
       "startsOn": "2026-05-17",
       "endsOn":   "2026-05-17",
       "location": "Living Arts Centre",
@@ -39,6 +51,9 @@
     },
     {
       "name": "Port Credit Farmer's Market",
+      "latitude": 43.5512,
+      "longitude": -79.5866,
+      "address": "Lakeshore Rd E, Mississauga, ON",
       "startsOn": "2026-05-17",
       "endsOn":   "2026-05-17",
       "location": "Lakeshore Rd",
@@ -48,6 +63,9 @@
     },
     {
       "name": "Strawberry-picking opens",
+      "latitude": 43.888,
+      "longitude": -79.212,
+      "address": "8100 Steeles Ave E, Markham, ON",
       "startsOn": "2026-05-23",
       "endsOn":   "2026-05-23",
       "location": "Whittamore's Farm",
@@ -57,6 +75,9 @@
     },
     {
       "name": "Pumpkin patch — early access",
+      "latitude": 43.816,
+      "longitude": -79.835,
+      "address": "13682 Heart Lake Rd, Caledon, ON",
       "startsOn": "2026-09-12",
       "endsOn":   "2026-09-12",
       "location": "Downey's Farm",

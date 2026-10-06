@@ -2,8 +2,9 @@ import { ChangeDetectionStrategy, Component, booleanAttribute, input, output } f
 
 import { Button } from '../button/button';
 import { Chip } from '../chip/chip';
-import { Disc, DiscTone } from '../disc/disc';
+import { DiscTone } from '../disc/disc';
 import { Icon } from '../icon/icon';
+import { CardMedia, Media } from '../media/media';
 import { Vote, VoteCell, VoteRow } from '../vote-row/vote-row';
 
 /**
@@ -16,12 +17,12 @@ import { Vote, VoteCell, VoteRow } from '../vote-row/vote-row';
 @Component({
   selector: 'sd-food-card',
   standalone: true,
-  imports: [Button, Chip, Disc, Icon, VoteRow],
+  imports: [Button, Chip, Icon, Media, VoteRow],
   templateUrl: './food-card.html',
   styleUrl: './food-card.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    class: 'card',
+    class: 'card card--media',
     '[class.card--span]': 'topPick()',
     '[class.card--locked]': 'locked()',
     '[class.card--dimmed]': 'dimmed()',
@@ -41,6 +42,8 @@ export class FoodCard {
   readonly lockedLabel = input<string>('Locked');
   readonly dimmed = input(false, { transform: booleanAttribute });
   readonly menuUrl = input<string>('');
+  /** The restaurant's primary photo; null shows the fallback tile (L2-106). */
+  readonly media = input<CardMedia | null>(null);
   readonly votes = input<readonly VoteCell[]>([]);
   readonly votesDisabled = input(false, { transform: booleanAttribute });
   readonly voteChange = output<{ index: number; vote: Vote }>();

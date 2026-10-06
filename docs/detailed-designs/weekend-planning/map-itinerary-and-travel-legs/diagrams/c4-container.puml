@@ -1,0 +1,17 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers - Map the itinerary and its travel legs
+
+Person(family, "Family member", "Follows the plan")
+System_Boundary(sd, "Saturdaze") {
+  Container(spa, "Saturdaze web application", "Angular", "Weekend screen: tabs, timeline, legs, day map")
+  Container(api, "Saturdaze API", "ASP.NET Core", "Plans legs; projects stops and legs")
+  ContainerDb(db, "Saturdaze database", "SQL Server", "Weekends, blocks with stop snapshots")
+}
+System_Ext(tiles, "Map tile provider", "OSM-based")
+Rel(family, spa, "Uses", "HTTPS")
+Rel(spa, api, "GET /api/weekends/current", "JSON/HTTPS")
+Rel(spa, tiles, "Fetches tiles", "HTTPS")
+Rel(api, db, "Reads and writes", "EF Core")
+@enduml

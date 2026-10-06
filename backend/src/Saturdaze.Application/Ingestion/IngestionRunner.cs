@@ -131,6 +131,11 @@ public sealed class IngestionRunner
                 var upsert = await _upserter.UpsertAsync(parsed.Items, type, ct);
                 run.ItemsUpserted = upsert.Upserted;
                 run.ItemsRejected = parsed.Rejected + upsert.Rejected;
+                if (upsert.SkipReasons.Count > 0)
+                {
+                    var reasons = string.Join('\n', upsert.SkipReasons);
+                    run.SkipReasons = reasons.Length > 4000 ? reasons[..4000] : reasons;
+                }
                 run.Status = run.ItemsRejected > 0 ? IngestionStatus.PartialSuccess : IngestionStatus.Succeeded;
                 _logger.LogInformation(
                     "{Type}: {Inserted} inserted, {Updated} updated, {Rejected} rejected ({Searches} searches, {In}+{Out} tokens).",

@@ -26,6 +26,7 @@ test.describe("Weekend", () => {
   test("renders Saturday and Sunday with weather meta and day actions", async ({ pages }) => {
     const w = pages.weekend;
     for (const day of ["Saturday", "Sunday"] as const) {
+      await w.selectDay(day);
       await expect(w.dayTitle(day)).toHaveText(day);
       await expect(w.dayMeta(day)).not.toBeEmpty();
       await expect(w.dayWeatherDisc(day)).toBeVisible();
@@ -162,7 +163,7 @@ test.describe("Weekend", () => {
     expect((await minted).ok()).toBeTruthy();
 
     await expect(w.dialogTitle()).toHaveText("Share this weekend");
-    await expect(w.dialogBody().locator(".copy-field__value")).toContainText("sample-weekend?share=");
+    await expect(w.dialogBody().locator(".copy-field__value")).toContainText(/\/s\/[\w-]+$/);
     await expect(w.dialogBody().getByRole("button", { name: "Copy", exact: true })).toHaveAttribute("aria-pressed", "false");
     await w.dialogAction("Done").click();
     await expect(w.dialog()).toHaveCount(0);

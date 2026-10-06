@@ -5,6 +5,7 @@
       --sd-chrome-bottom so the phone bottom-nav clearance rule is real.
    3. Sets data-scrolled on .topbar / .sitebar once the page has scrolled.
    4. legal.html: switches Terms / Privacy on the URL hash.
+   5. weekend.html: Saturday / Sunday tabs swap the day panel (timeline + map).
    Nothing else. Pages must stay readable with this script disabled. */
 (function () {
   "use strict";
@@ -118,11 +119,30 @@
     update();
   }
 
+  /* ---------- 5. weekend.html — Saturday / Sunday day tabs */
+  function trackDayTabs() {
+    var tabs = document.querySelectorAll('.planner__toolbar [role="tab"]');
+    if (!tabs.length) return;
+    var select = function (tab) {
+      for (var i = 0; i < tabs.length; i++) {
+        var on = tabs[i] === tab;
+        tabs[i].setAttribute("aria-selected", on ? "true" : "false");
+        var panel = document.getElementById(tabs[i].getAttribute("aria-controls"));
+        if (panel) panel.hidden = !on;
+      }
+    };
+    for (var i = 0; i < tabs.length; i++) {
+      tabs[i].addEventListener("click", function (e) { select(e.currentTarget); });
+    }
+    if (location.hash === "#sun-panel") select(document.getElementById("sun-tab"));
+  }
+
   function start() {
     injectSprite();
     trackBottomChrome();
     trackScrolledTopbar();
     trackLegalHash();
+    trackDayTabs();
   }
 
   if (document.readyState === "loading") {

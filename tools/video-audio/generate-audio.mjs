@@ -11,7 +11,8 @@
 //   edge   Free Microsoft Edge read-aloud voices via the `edge-tts` Python package
 //          (`python -m pip install edge-tts`). Needs internet access; no key or subscription.
 //          PYTHON overrides the interpreter (default python3), EDGE_VOICE / EDGE_VOICE_2 the
-//          narrator and second-speaker voices (`python -m edge_tts --list-voices`).
+//          narrator and second-speaker voices (`python -m edge_tts --list-voices`). Honours
+//          HTTPS_PROXY; behind a TLS-inspecting proxy set SSL_CERT_FILE to its CA bundle.
 //   piper  Offline neural TTS (`pip install piper-tts`). Needs PIPER_MODEL pointing at a voice
 //          .onnx (e.g. en_US-ryan-high.onnx); PIPER_MODEL_2 optionally voices `**Name:**`
 //          paragraphs.
@@ -175,15 +176,29 @@ function piperSay(text, speaker, out) {
   return normalise(out);
 }
 
-function edgeSay(text, speaker, out) {
+/**
+ * One paragraph through edge-tts. Honours HTTPS_PROXY (behind a TLS-inspecting proxy, set
+ * SSL_CERT_FILE to its CA bundle) and retries with backoff: the service drops a stream now and then.
+ */
+function edgeSay(text, speaker, out, attempts = 4) {
   const voice = speaker ? EDGE_VOICE_2 : EDGE_VOICE;
   const mp3 = out.replace(/\.wav$/, '.mp3');
-  const r = spawnSync(python, ['-m', 'edge_tts', '--voice', voice, '--text', text, '--write-media', mp3], { encoding: 'utf8' });
-  if (r.status !== 0 || !existsSync(mp3)) {
-    const hint = /No module named/.test(r.stderr ?? '') ? ` (install it: ${python} -m pip install edge-tts)` : '';
-    throw new Error(`edge-tts failed${hint}: ${(r.stderr || r.stdout || '').trim()}`);
+  const proxy = process.env.HTTPS_PROXY ?? process.env.https_proxy;
+  let last = '';
+  for (let i = 0; i < attempts; i++) {
+    const r = spawnSync(
+      python,
+      ['-m', 'edge_tts', '--voice', voice, '--text', text, '--write-media', mp3, ...(proxy ? ['--proxy', proxy] : [])],
+      { encoding: 'utf8' },
+    );
+    if (r.status === 0 && existsSync(mp3)) return normalise(mp3);
+    if (/No module named/.test(r.stderr ?? '')) {
+      throw new Error(`edge-tts failed (install it: ${python} -m pip install edge-tts): ${r.stderr.trim()}`);
+    }
+    last = (r.stderr || r.stdout || '').trim();
+    spawnSync('sleep', [String(2 ** (i + 1))]);
   }
-  return normalise(mp3);
+  throw new Error(`edge-tts failed after ${attempts} attempts: ${last}`);
 }
 
 const engines = {

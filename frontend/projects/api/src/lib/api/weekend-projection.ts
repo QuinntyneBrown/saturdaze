@@ -1,7 +1,11 @@
 import { BlockKind } from '../models/block-kind';
 import { BlockRow } from '../models/block-row';
 import { ChipView } from '../models/chip-view';
+import { CoverChoice, CoverView } from '../models/cover-view';
+import { CoverDto } from '../models/cover.dto';
 import { DayView } from '../models/day-view';
+import { LegView } from '../models/leg-view';
+import { MapPin } from '../models/map-pin';
 import { ItineraryBlockDto } from '../models/itinerary-block.dto';
 import { ShoppingErrandDto } from '../models/shopping-errand.dto';
 import { WeatherDay } from '../models/weather-day';
@@ -11,6 +15,7 @@ import { WeekendDto } from '../models/weekend.dto';
 import { WeekendStatus, WeekendView } from '../models/weekend-view';
 import { capitalise, formatDuration, hhmm, minutesBetween, timeRange, toMinutes } from './format';
 import { forecastFor, roundOrDash, weatherAdjective, weatherIcon, weatherNote } from './weather';
+import { toMedia } from './media';
 import { formatDayDate, weekendDayIso } from './weekend-dates';
 
 /**
@@ -55,7 +60,64 @@ export function projectWeekend(dto: WeekendDto | null, status?: WeekendStatus): 
           ),
     days,
     blockCount: dto.blocks.length,
+    cover: coverView(dto),
+    dateRange: dateRange(sat.dateIso, sun.dateIso),
+    coverChoices: coverChoices(dto),
   };
+}
+
+/**
+ * A family upload's signed URL is relative to the API (`/api/photos/…`,
+ * L2-109); the app may be served from another origin, so anchor it there.
+ */
+export function withApiOrigin<T extends { readonly cover?: CoverDto | null }>(
+  dto: T,
+  baseUrl: string,
+): T {
+  const url = dto.cover?.url;
+  if (!url?.startsWith('/')) return dto;
+  return { ...dto, cover: { ...dto.cover!, url: `${baseUrl}${url}` } };
+}
+
+/** The cover with its label as the credit (L2-108). */
+function coverView(dto: WeekendDto): CoverView | null {
+  return toCoverView(dto.cover);
+}
+
+/** A cover DTO as card media; the label is the credit (L2-108, L2-110 AC1). */
+export function toCoverView(c: CoverDto | null | undefined): CoverView | null {
+  if (!c) return null;
+  return {
+    media: { src: c.url, alt: c.alt, width: c.width, height: c.height, credit: c.label },
+    source: c.source,
+    placeId: c.placeId,
+  };
+}
+
+/** Each place in the plan with a photo, once, for D29. */
+function coverChoices(dto: WeekendDto): CoverChoice[] {
+  const seen = new Set<string>();
+  const choices: CoverChoice[] = [];
+  const ordered = [...dto.blocks].sort((a, b) =>
+    a.day === b.day ? bySortThenStart(a, b) : a.day === 'Saturday' ? -1 : 1,
+  );
+  for (const b of ordered) {
+    const media = toMedia(b.photo);
+    if (!b.refId || !media || seen.has(b.refId)) continue;
+    seen.add(b.refId);
+    const name = b.kind === 'Meal' ? b.title.replace(/^[^:]+: /, '') : b.title;
+    choices.push({ placeId: b.refId, name, media });
+  }
+  return choices;
+}
+
+/** "16 – 17 May", or "31 May – 1 Jun" across a month end. */
+function dateRange(satIso: string, sunIso: string): string {
+  const [satDay, satMonth] = formatDayDate(satIso).split(' ');
+  const sun = formatDayDate(sunIso);
+  return satMonth === sun.split(' ')[1]
+    ? `${satDay} – ${sun}`
+    : `${formatDayDate(satIso)} – ${sun}`;
 }
 
 /** One `sd-day` column: header meta, lock state, keeping list and rows. */
@@ -65,22 +127,46 @@ export function projectDay(dto: WeekendDto, day: WeekendDay): DayView {
   const forecast = forecastFor(dto.weather, dateIso);
   const sorted = dto.blocks.filter((b) => b.day === day).sort(bySortThenStart);
   const highlightId = sorted.find((b) => b.kind === 'Activity')?.id ?? null;
-  const blocks = sorted.map((b, i) =>
-    toBlockRow(b, dto.errands, {
-      previous: sorted[i - 1] ?? null,
-      highlight: b.id === highlightId,
-    }),
-  );
+  // Travel legs replace the standalone drive blocks in the timeline (L2-102).
+  const blocks = sorted
+    .map((b, i) =>
+      toBlockRow(b, dto.errands, {
+        previous: sorted[i - 1] ?? null,
+        highlight: b.id === highlightId,
+      }),
+    )
+    .filter((b) => !b.drive);
   const lockable = blocks.filter((b) => b.lockable);
+  const stops: MapPin[] = sorted.flatMap((b) =>
+    b.stopNumber != null && b.stop
+      ? [
+          {
+            n: b.stopNumber,
+            blockId: b.id,
+            title: b.title,
+            latitude: b.stop.latitude,
+            longitude: b.stop.longitude,
+          },
+        ]
+      : [],
+  );
+  const summary = dto.days?.find((d) => d.day === day);
+  const drivingMinutes =
+    summary?.drivingMinutes ?? blocks.reduce((sum, b) => sum + (b.leg?.minutes ?? 0), 0);
+  const drivingKm = summary?.drivingKm ?? blocks.reduce((sum, b) => sum + (b.leg?.km ?? 0), 0);
   return {
     day,
     dateIso,
     dateLabel,
     weather: toWeatherDay(day, forecast),
-    meta: dayMeta(dateLabel, forecast),
+    meta: dayMeta(dateLabel, forecast, stops.length, drivingMinutes),
     locked: lockable.length > 0 && lockable.every((b) => b.locked),
     keeping: dayKeeping(sorted),
     blocks,
+    stops,
+    home: dto.home ? { latitude: dto.home.latitude, longitude: dto.home.longitude } : null,
+    drivingMinutes,
+    drivingKm,
   };
 }
 
@@ -123,7 +209,34 @@ export function toBlockRow(
     highlight,
     swappable: b.kind === 'Activity' && !b.isLocked,
     lockable: !commitment && !drive,
+    stopNumber: b.stopNumber ?? null,
+    leg: b.legBefore ? toLegView(b.legBefore.minutes, b.legBefore.distanceKm, b) : null,
   };
+}
+
+/** True for blocks the planner places at home: downtime and home meals. */
+function isAtHome(b: ItineraryBlockDto): boolean {
+  return b.kind === 'Downtime' || (b.kind === 'Meal' && b.refId == null);
+}
+
+/** "45 min · 52 km" and "Travel: 45 minutes, 52 kilometres to …" (L2-102 AC1, AC4). */
+function toLegView(minutes: number, distanceKm: number, to: ItineraryBlockDto): LegView {
+  const km = distanceKm < 10 ? Math.round(distanceKm * 10) / 10 : Math.round(distanceKm);
+  const home = isAtHome(to);
+  return {
+    minutes,
+    km,
+    label: `${minutes} min · ${km} km${home ? ' home' : ''}`,
+    ariaLabel: `Travel: ${minutes} minutes, ${km} kilometres ${home ? 'home' : `to ${to.title}`}`,
+    directionsUrl: to.legBefore?.directionsUrl ?? null,
+  };
+}
+
+/** "1 h 36 min" / "51 min" — a day's driving total. */
+export function drivingLabel(minutes: number): string {
+  const h = Math.floor(minutes / 60);
+  const m = minutes % 60;
+  return h > 0 ? `${h} h ${m} min` : `${m} min`;
 }
 
 /**
@@ -188,6 +301,9 @@ function placeholder(status: WeekendStatus): WeekendView {
     subtitle: status === 'empty' ? SUBTITLE_EMPTY : SUBTITLE_LOADING,
     days: [],
     blockCount: 0,
+    cover: null,
+    dateRange: '',
+    coverChoices: [],
   };
 }
 
@@ -244,12 +360,25 @@ function toWeatherDay(day: WeekendDay, w: WeatherForecastDto | null): WeatherDay
   };
 }
 
-/** "17 May · 22° / 14° · Light breeze, good for outdoors". */
-function dayMeta(dateLabel: string, w: WeatherForecastDto | null): string {
+/**
+ * "17 May · 22° / 14° · 3 stops · 1 h 36 min driving" (L2-102 AC5); a day with
+ * no stops keeps the weather note: "17 May · 22° / 14° · Light breeze, good for outdoors".
+ */
+function dayMeta(
+  dateLabel: string,
+  w: WeatherForecastDto | null,
+  stops: number,
+  drivingMinutes: number,
+): string {
   const parts = [dateLabel];
   if (w && !w.unavailable && w.highCelsius != null && w.lowCelsius != null) {
     parts.push(`${Math.round(w.highCelsius)}° / ${Math.round(w.lowCelsius)}°`);
   }
-  parts.push(weatherNote(w));
+  if (stops > 0) {
+    parts.push(`${stops} ${stops === 1 ? 'stop' : 'stops'}`);
+    parts.push(`${drivingLabel(drivingMinutes)} driving`);
+  } else {
+    parts.push(weatherNote(w));
+  }
   return parts.join(' · ');
 }

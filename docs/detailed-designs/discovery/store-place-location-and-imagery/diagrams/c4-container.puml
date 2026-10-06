@@ -1,0 +1,24 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers - Store place location and imagery
+
+Person(family, "Family member", "Browses ideas")
+System_Boundary(sd, "Saturdaze") {
+  Container(spa, "Saturdaze web application", "Angular on Azure Static Web Apps", "Renders sd-media; host sends CSP img-src")
+  Container(api, "Saturdaze API", "ASP.NET Core", "Projects location and primary photo")
+  Container(worker, "Ingestion worker", ".NET", "Runs IngestionRunner on demand or on schedule")
+  Container(cli, "saturdaze CLI", ".NET", "migrate and seed")
+  ContainerDb(db, "Saturdaze database", "SQL Server", "Catalogs, PlacePhotos, IngestionRuns")
+}
+System_Ext(search, "Web-search provider", "Place candidates")
+System_Ext(photos, "Photo providers", "Allow-listed image origins")
+
+Rel(family, spa, "Uses", "HTTPS")
+Rel(spa, api, "GET /api/activities, /restaurants, /events", "JSON/HTTPS")
+Rel(spa, photos, "Loads images", "HTTPS")
+Rel(api, db, "Reads", "EF Core")
+Rel(worker, search, "Queries", "HTTPS")
+Rel(worker, db, "Upserts places and photos", "EF Core")
+Rel(cli, db, "Applies AddPlaceLocationAndPhotos; seeds", "EF Core")
+@enduml

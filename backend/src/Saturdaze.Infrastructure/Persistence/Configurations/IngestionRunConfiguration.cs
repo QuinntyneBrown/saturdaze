@@ -11,6 +11,7 @@ public class IngestionRunConfiguration : IEntityTypeConfiguration<IngestionRun>
         b.ToTable("IngestionRuns");
         b.HasKey(x => x.Id);
         b.Property(x => x.ErrorMessage).HasMaxLength(2000);
+        b.Property(x => x.SkipReasons).HasMaxLength(4000);
         // Enums persist as int (EF default), matching the rest of the model.
         b.HasIndex(x => new { x.Type, x.StartedUtc });
     }

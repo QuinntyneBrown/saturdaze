@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Saturdaze.Application.Abstractions;
 using Saturdaze.Domain.Entities;
+using Saturdaze.Domain.ValueObjects;
 
 namespace Saturdaze.Application.Tests.Support;
 
@@ -22,6 +23,7 @@ internal sealed class TestAppDbContext : DbContext, IAppDbContext
     public DbSet<RestaurantLock> RestaurantLocks => Set<RestaurantLock>();
     public DbSet<LocalEvent> LocalEvents => Set<LocalEvent>();
     public DbSet<EventSubmission> EventSubmissions => Set<EventSubmission>();
+    public DbSet<PlacePhoto> PlacePhotos => Set<PlacePhoto>();
     public DbSet<IngestionRun> IngestionRuns => Set<IngestionRun>();
     public DbSet<Weekend> Weekends => Set<Weekend>();
     public DbSet<ItineraryBlock> ItineraryBlocks => Set<ItineraryBlock>();
@@ -34,12 +36,12 @@ internal sealed class TestAppDbContext : DbContext, IAppDbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Owned<GeoLocation>();
         modelBuilder.Entity<Family>().HasMany(f => f.Members).WithOne().HasForeignKey(m => m.FamilyId);
         modelBuilder.Entity<Family>().HasMany(f => f.Commitments).WithOne().HasForeignKey(c => c.FamilyId);
         modelBuilder.Entity<Family>().HasMany(f => f.Preferences).WithOne().HasForeignKey(p => p.FamilyId);
         modelBuilder.Entity<Weekend>().HasMany(w => w.Blocks).WithOne().HasForeignKey(b => b.WeekendId);
         modelBuilder.Entity<Weekend>().HasMany(w => w.Errands).WithOne().HasForeignKey(e => e.WeekendId);
         modelBuilder.Entity<UserAvatar>().HasKey(a => a.UserId);
-
     }
 }

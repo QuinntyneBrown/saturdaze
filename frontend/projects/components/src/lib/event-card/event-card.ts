@@ -1,8 +1,9 @@
-import { ChangeDetectionStrategy, Component, booleanAttribute, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, booleanAttribute, input, output } from '@angular/core';
 
 import { Button } from '../button/button';
 import { DateTile } from '../date-tile/date-tile';
 import { Icon } from '../icon/icon';
+import { CardMedia, Media, MediaTone } from '../media/media';
 
 /**
  * A local event on Ideas · Events. Mirrors the event `.card` in
@@ -13,12 +14,12 @@ import { Icon } from '../icon/icon';
 @Component({
   selector: 'sd-event-card',
   standalone: true,
-  imports: [Button, DateTile, Icon],
+  imports: [Button, DateTile, Icon, Media],
   templateUrl: './event-card.html',
   styleUrl: './event-card.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    class: 'card',
+    class: 'card card--media',
     '[class.card--muted]': 'muted()',
     '[attr.title]': 'cardTitle() || null',
     '[attr.date]': 'date() || null',
@@ -35,4 +36,11 @@ export class EventCard {
   readonly day = input<string>('');
   readonly muted = input(false, { transform: booleanAttribute });
   readonly url = input<string>('');
+  /** The event's primary photo; null shows the fallback tile (L2-106). */
+  readonly media = input<CardMedia | null>(null);
+  readonly mediaTone = input<MediaTone>('sky');
+  /** Offer "Add to day" — this weekend's events only (L2-107). */
+  readonly addable = input(false, { transform: booleanAttribute });
+  /** "Add to day" was pressed. */
+  readonly addToDay = output<void>();
 }

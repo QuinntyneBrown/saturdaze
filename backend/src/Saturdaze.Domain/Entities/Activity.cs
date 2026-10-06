@@ -1,3 +1,5 @@
+using Saturdaze.Domain.ValueObjects;
+
 namespace Saturdaze.Domain.Entities;
 
 public class Activity
@@ -12,5 +14,6 @@ public class Activity
     public List<string> WeatherTags { get; set; } = new();
     public string Description { get; set; } = string.Empty;
     public string MapUrl { get; set; } = string.Empty;
+    public GeoLocation? Geo { get; set; }
     public int TypicalDurationMinutes { get; set; }
 }

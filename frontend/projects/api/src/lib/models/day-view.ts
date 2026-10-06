@@ -1,3 +1,4 @@
+import { MapPin, MapPoint } from './map-pin';
 import { BlockRow } from './block-row';
 import { WeatherDay } from './weather-day';
 import { WeekendDay } from './weekend-day';
@@ -39,4 +40,20 @@ export interface DayView {
    * Blocks.
    */
   readonly blocks: readonly BlockRow[];
+  /**
+   * Stops — numbered stops away from home, for the day map (L2-103).
+   */
+  readonly stops: readonly MapPin[];
+  /**
+   * Home — the map's home pin; null when unknown.
+   */
+  readonly home: MapPoint | null;
+  /**
+   * Driving Minutes — the sum of the day's legs (L2-102 AC5).
+   */
+  readonly drivingMinutes: number;
+  /**
+   * Driving Km — the day's total road distance.
+   */
+  readonly drivingKm: number;
 }

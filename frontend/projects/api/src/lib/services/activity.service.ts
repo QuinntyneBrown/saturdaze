@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, Signal, computed, inject, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 
+import { toMedia } from '../api/media';
 import { API_BASE_URL } from '../api/api-base-url';
 import { kidsPhrase } from '../api/family-presentation';
 import { capitalise } from '../api/format';
@@ -85,6 +86,7 @@ function toCard(dto: ActivityDto, firstTime = false): ActivityCard {
     tone: toneFor(dto),
     chips,
     mapUrl: dto.mapUrl || null,
+    media: toMedia(dto.photo),
   };
 }
 

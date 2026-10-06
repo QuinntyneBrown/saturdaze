@@ -7,6 +7,8 @@ import descriptionMd from './PastCardDescription.md';
 import bestPracticesMd from './PastCardBestPractices.md';
 
 export { Default } from './PastCardDefault.stories';
+export { WithCover } from './PastCardWithCover.stories';
+export { AddAPhoto } from './PastCardAddAPhoto.stories';
 export { Unrated } from './PastCardUnrated.stories';
 export { Interactive } from './PastCardInteractive.stories';
 export { Grid } from './PastCardGrid.stories';

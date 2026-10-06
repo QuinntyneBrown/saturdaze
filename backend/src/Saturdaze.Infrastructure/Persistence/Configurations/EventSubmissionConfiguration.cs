@@ -10,6 +10,7 @@ public class EventSubmissionConfiguration : IEntityTypeConfiguration<EventSubmis
     {
         b.ToTable("EventSubmissions");
         b.HasKey(x => x.Id);
+        b.OwnsGeo(x => x.Geo);
         b.Property(x => x.Title).HasMaxLength(200).IsRequired();
         b.Property(x => x.Location).HasMaxLength(200);
         b.Property(x => x.Description).HasMaxLength(2000);

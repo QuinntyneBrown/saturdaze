@@ -1,0 +1,27 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components - Store place location and imagery
+
+Container_Boundary(web, "Saturdaze web application") {
+  Component(cards, "Ideas and Past pages", "Angular pages", "Map DTO photos to MediaView")
+  Component(media, "sd-media", "components library", "Sized, lazy image with credit or fallback tile")
+}
+Container_Boundary(api, "Saturdaze API and Application") {
+  Component(ctrl, "ActivitiesController, RestaurantsController, EventsController", "ASP.NET Core", "List endpoints")
+  Component(proj, "PlacePhotoProjector", "Application service", "Primary photo, allow-list, alt fallback")
+  Component(opts, "ImageOptions", "Options", "AllowedOrigins")
+  Component(submit, "SubmitEventCommandValidator and ApproveSubmissionCommandHandler", "MediatR", "Validate coordinates; require a location")
+  Component(upsert, "CatalogUpserter", "Application service", "Writes location; keeps attributed photos")
+  Component(rule, "PlacePhotoSet", "Domain service", "One primary photo per place")
+  ComponentDb(db, "AppDbContext", "EF Core", "Catalog rows, PlacePhotos")
+}
+Rel(cards, media, "Renders")
+Rel(cards, ctrl, "Requests lists", "JSON/HTTPS")
+Rel(ctrl, proj, "Projects through")
+Rel(proj, opts, "Reads")
+Rel(upsert, rule, "Applies")
+Rel(upsert, db, "Writes")
+Rel(submit, db, "Reads and writes")
+Rel(ctrl, db, "Reads")
+@enduml

@@ -18,6 +18,8 @@ Saturdaze is a web application that plans personalized family weekends. Activity
 
 `Activity` stores catalog attributes; browser services own card mapping and section grouping. Cards open map links. Family-age and drive limits are not automatically supplied by the current browser load; complete family personalization remains a gap under L1-005.
 
+Activity cards lead with the place's photo and offer "Add to day" since the 2026-10-06 mock (`docs/mocks/pages/ideas.html`). `discovery/store-place-location-and-imagery` designs the photo data and `sd-media`; `discovery/add-idea-to-day` designs the photo-led card and the placement dialog. Section building and filters in this design are unchanged.
+
 ## Requirements
 
 The following L2 requirements refine the cited L1 capabilities. Implementation gaps stated in Description do not waive these obligations.

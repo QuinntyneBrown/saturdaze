@@ -6,6 +6,7 @@ import { API_BASE_URL } from '../api/api-base-url';
 import { capitalise, clock12, initialOf, numberWord, timeAgo, timeRange } from '../api/format';
 import { formatEventDate, monthAbbr, parseIsoDate } from '../api/weekend-dates';
 import { DateTile } from '../models/date-tile';
+import { ApprovalLocation } from '../models/approval-location';
 import { EventSubmissionDto } from '../models/event-submission.dto';
 import { ReviewView } from '../models/review-view';
 import { SubmissionCard } from '../models/submission-card';
@@ -187,11 +188,19 @@ export class EventSubmissionsService implements IEventSubmissionsService {
    *
    * @returns {Promise<EventSubmissionDto>} The result of the operation
    */
-  async approve(id: string, driveMinutes: number | null = null): Promise<EventSubmissionDto> {
+  async approve(
+    id: string,
+    driveMinutes: number | null = null,
+    location: ApprovalLocation | null = null,
+  ): Promise<EventSubmissionDto> {
+    const body = {
+      ...(driveMinutes == null ? {} : { driveMinutes }),
+      ...(location == null ? {} : location),
+    };
     const updated = await firstValueFrom(
       this.http.post<EventSubmissionDto>(
         `${this.baseUrl}/api/events/submissions/${id}/approve`,
-        driveMinutes == null ? null : { driveMinutes },
+        Object.keys(body).length === 0 ? null : body,
       ),
     );
     this._queue.update((rows) => rows.map((r) => (r.id === id ? updated : r)));

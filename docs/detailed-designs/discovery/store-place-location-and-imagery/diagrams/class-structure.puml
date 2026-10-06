@@ -1,0 +1,111 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure - Store place location and imagery
+
+class GeoLocation <<owned value>> {
+  +decimal Latitude
+  +decimal Longitude
+  +string Address
+}
+class Activity {
+  +Guid Id
+  +string Name
+  +GeoLocation? Geo
+}
+class Restaurant {
+  +Guid Id
+  +string Name
+  +GeoLocation? Geo
+}
+class LocalEvent {
+  +Guid Id
+  +string Name
+  +GeoLocation? Geo
+}
+class EventSubmission {
+  +Guid Id
+  +string Title
+  +GeoLocation? Geo
+}
+enum PlaceKind {
+  Activity
+  Restaurant
+  LocalEvent
+}
+enum PhotoSource {
+  Curated
+  Provider
+  Submitter
+}
+class PlacePhoto {
+  +Guid Id
+  +PlaceKind PlaceKind
+  +Guid PlaceId
+  +string Url
+  +int Width
+  +int Height
+  +string AltText
+  +string Attribution
+  +PhotoSource Source
+  +string License
+  +bool IsPrimary
+  +{static} Create(...): Result<PlacePhoto>
+}
+class PlacePhotoSet <<domain service>> {
+  +MarkPrimary(photos, photoId): void
+}
+class PlacePhotoProjector {
+  +Project(name: string, photos): PlacePhotoDto?
+}
+class ImageOptions {
+  +IReadOnlyList<string> AllowedOrigins
+}
+class PlacePhotoDto {
+  +string Url
+  +int Width
+  +int Height
+  +string Alt
+  +string Attribution
+}
+class LocationDto {
+  +decimal Latitude
+  +decimal Longitude
+  +string Address
+}
+class ActivityDto {
+  +LocationDto? Location
+  +PlacePhotoDto? Photo
+}
+class CatalogUpserter {
+  +UpsertAsync(records, run): Task<UpsertResult>
+}
+class IngestionRun {
+  +int ItemsRejected
+  +List<string> SkipReasons
+}
+
+Activity *-- GeoLocation
+Restaurant *-- GeoLocation
+LocalEvent *-- GeoLocation
+EventSubmission *-- GeoLocation
+PlacePhoto --> PlaceKind
+PlacePhoto --> PhotoSource
+Activity "1" o-- "*" PlacePhoto : PlaceKind + PlaceId
+PlacePhotoSet ..> PlacePhoto : mutates IsPrimary
+CatalogUpserter ..> PlacePhoto : creates
+CatalogUpserter ..> PlacePhotoSet : applies
+CatalogUpserter --> IngestionRun : records skips
+PlacePhotoProjector ..> ImageOptions : reads
+PlacePhotoProjector ..> PlacePhotoDto : produces
+ActivityDto --> LocationDto
+ActivityDto --> PlacePhotoDto
+@enduml

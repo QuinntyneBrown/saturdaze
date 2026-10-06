@@ -31,6 +31,7 @@ const VIEW: IdeasActivitiesView = {
             { tone: 'neutral', label: 'Ages 3+' },
           ],
           mapUrl: 'https://maps.example/terre-bleu',
+          media: null,
         },
       ],
     },
@@ -47,6 +48,7 @@ const VIEW: IdeasActivitiesView = {
           tone: 'indoor',
           chips: [{ tone: 'primary', label: 'First time' }],
           mapUrl: null,
+          media: null,
         },
       ],
     },
@@ -108,7 +110,11 @@ describe('IdeasActivitiesPage', () => {
     expect(cards[0]?.querySelector('.card__footer a')?.getAttribute('href')).toBe(
       'https://maps.example/terre-bleu',
     );
-    expect(cards[1]?.querySelector('.card__footer')).toBeNull();
+    // No map link, but every activity offers "Add to day" (L2-107).
+    expect(cards[1]?.querySelector('.card__footer a')).toBeNull();
+    expect(cards[1]?.querySelector('.card__footer button')?.getAttribute('aria-label')).toMatch(
+      /^Add to day: /,
+    );
     expect(host.querySelector('sd-status-row')).toBeNull();
   });
 

@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" preserveAspectRatio="xMidYMid slice" role="img" aria-label="A creek winding through green parkland with trees">
+<!-- Placeholder illustration standing in for a licensed photo (docs/mocks/README.md, "Images"). -->
+<defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#BFD9E8"/><stop offset="1" stop-color="#EAF3F8"/></linearGradient></defs>
+<rect width="800" height="500" fill="url(#sky)"/>
+<path d="M0 260 Q220 200 420 250 T800 230 V500 H0Z" fill="#8DBA7F"/><path d="M0 330 Q260 280 460 330 T800 320 V500 H0Z" fill="#6E9F62"/><path d="M300 500 C360 420 520 400 480 330 C450 290 560 270 600 255 L620 258 C580 280 500 300 520 340 C560 410 420 440 400 500Z" fill="#7DB3D3"/><g fill="#3F6B3A"><circle cx="140" cy="230" r="44"/><circle cx="190" cy="240" r="36"/><circle cx="690" cy="215" r="40"/></g><g fill="#5B4636"><rect x="136" y="260" width="8" height="40"/><rect x="686" y="245" width="8" height="40"/></g>
+</svg>

@@ -36,12 +36,12 @@ describe('FoodCard', () => {
     host = fixture.nativeElement as HTMLElement;
   });
 
-  it('creates a card with a fork disc, the name and a Lock it in button', () => {
+  it('creates a photo-led card with a fork fallback tile, the name and a Lock it in button', () => {
     expect(fixture.componentInstance).toBeTruthy();
     expect(host.classList.contains('card')).toBe(true);
-    const disc = host.querySelector('.card__head sd-disc') as HTMLElement;
-    expect(disc.getAttribute('icon')).toBe('fork');
-    expect(disc.getAttribute('tone')).toBeNull();
+    const tile = host.querySelector('sd-media.card__media') as HTMLElement;
+    expect(tile.querySelector('sd-icon')?.getAttribute('name')).toBe('fork');
+    expect(tile.classList).toContain('media--sun');
     expect(host.querySelector('h3.card__title')?.textContent?.trim()).toBe('Pizza Nova');
     expect(chip()).toBeNull();
     expect(host.querySelector('sd-vote-row')).toBeNull();
@@ -89,7 +89,6 @@ describe('FoodCard', () => {
     expect(chip()?.textContent?.trim()).toBe('Locked for dinner');
     expect(chip()?.getAttribute('tone')).toBe('accent');
     expect(chip()?.querySelector('sd-icon')?.getAttribute('name')).toBe('lock');
-    expect(host.querySelector('sd-disc')?.getAttribute('tone')).toBe('accent');
     expect(lockBtn()).toBeNull();
   });
 

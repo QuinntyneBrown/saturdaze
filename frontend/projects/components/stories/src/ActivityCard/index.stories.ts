@@ -9,6 +9,7 @@ import bestPracticesMd from './ActivityCardBestPractices.md';
 export { Default } from './ActivityCardDefault.stories';
 export { Tone } from './ActivityCardTone.stories';
 export { WithMap } from './ActivityCardWithMap.stories';
+export { WithPhoto } from './ActivityCardWithPhoto.stories';
 
 export default {
   title: 'Components/Activity Card',

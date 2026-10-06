@@ -1,0 +1,21 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers - Choose a weekend cover photo
+
+Person(family, "Family member", "Owns the weekend")
+System_Ext(crawler, "Link-preview crawler", "Fetches /s/{token}")
+System_Boundary(sd, "Saturdaze") {
+  Container(spa, "Saturdaze web application", "Angular", "sd-cover, CoverPhotoDialog, Past cards")
+  Container(api, "Saturdaze API", "ASP.NET Core", "Cover endpoints, sanitizer, share preview")
+  ContainerDb(db, "Saturdaze database", "SQL Server", "Weekend.Cover")
+}
+System_Ext(blob, "Azure Blob Storage", "Private covers container")
+Rel(family, spa, "Uses", "HTTPS")
+Rel(spa, api, "PUT/POST /api/weekends/{id}/cover", "JSON or multipart/HTTPS")
+Rel(spa, blob, "Loads signed cover URLs", "HTTPS")
+Rel(crawler, api, "GET /s/{token}", "HTTPS")
+Rel(crawler, blob, "Loads og:image", "HTTPS")
+Rel(api, db, "Reads and writes", "EF Core")
+Rel(api, blob, "Puts objects; signs URLs", "HTTPS")
+@enduml
