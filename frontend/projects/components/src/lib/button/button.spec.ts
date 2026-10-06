@@ -43,6 +43,12 @@ function click(el: HTMLElement, init: MouseEventInit = {}): boolean {
   return preventedByComponent;
 }
 
+/** Focus as the keyboard would, so `:focus-visible` matches (it keys off the last input event). */
+function tabTo(el: HTMLElement): void {
+  document.body.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', bubbles: true }));
+  el.focus();
+}
+
 describe('Button', () => {
   let fixture: ComponentFixture<Button>;
   let host: HTMLElement;
@@ -219,5 +225,47 @@ describe('Button', () => {
     expect(a.textContent?.replace(/\s+/g, ' ').trim()).toBe('L Save T');
     expect(a.firstElementChild?.classList.contains('lead')).toBe(true);
     expect(a.lastElementChild?.classList.contains('trail')).toBe(true);
+  });
+  describe('tooltip', () => {
+    const bubble = (): HTMLElement | null => document.querySelector('.tooltip');
+
+    afterEach(() => fixture.destroy());
+
+    it('shows the label on an icon-only button, hidden from assistive tech', () => {
+      fixture.componentRef.setInput('icon', true);
+      fixture.componentRef.setInput('label', 'Swap Riverwood');
+      fixture.detectChanges();
+      tabTo(inner());
+      expect(bubble()?.textContent?.trim()).toBe('Swap Riverwood');
+      expect(bubble()?.getAttribute('aria-hidden')).toBe('true');
+      expect(inner().getAttribute('aria-label')).toBe('Swap Riverwood');
+      expect(inner().hasAttribute('aria-describedby')).toBe(false);
+    });
+
+    it('prefers tooltip text over the label, and an empty tooltip turns it off', () => {
+      fixture.componentRef.setInput('icon', true);
+      fixture.componentRef.setInput('label', 'Swap Riverwood');
+      fixture.componentRef.setInput('tooltip', 'Swap for something else');
+      fixture.detectChanges();
+      tabTo(inner());
+      expect(bubble()?.textContent?.trim()).toBe('Swap for something else');
+      inner().blur();
+
+      fixture.componentRef.setInput('tooltip', '');
+      fixture.detectChanges();
+      tabTo(inner());
+      expect(bubble()).toBeNull();
+    });
+
+    it('shows nothing on a text button unless asked, then describes it', () => {
+      tabTo(inner());
+      expect(bubble()).toBeNull();
+      inner().blur();
+
+      fixture.componentRef.setInput('tooltip', 'Adds every block to your calendar');
+      fixture.detectChanges();
+      tabTo(inner());
+      expect(inner().getAttribute('aria-describedby')).toBe(bubble()?.id);
+    });
   });
 });

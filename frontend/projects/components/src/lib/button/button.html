@@ -18,6 +18,8 @@
     [attr.rel]="rel()"
     [attr.aria-label]="label() || null"
     [attr.aria-pressed]="pressed() === null ? null : pressed()"
+    [sdTooltip]="tooltipText()"
+    [sdTooltipRelationship]="tooltipRelationship()"
     [attr.aria-disabled]="disabled() ? 'true' : null"
     (click)="onAnchorClick($event)"
   >
@@ -30,6 +32,8 @@
     [disabled]="disabled()"
     [attr.aria-label]="label() || null"
     [attr.aria-pressed]="pressed() === null ? null : pressed()"
+    [sdTooltip]="tooltipText()"
+    [sdTooltipRelationship]="tooltipRelationship()"
   >
     <ng-container *ngTemplateOutlet="content" />
   </button>
