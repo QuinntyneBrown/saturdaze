@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, booleanAttribute, input, output } from '@angular/core';
 
 import { Button } from '../button/button';
 import { Icon } from '../icon/icon';
@@ -35,4 +35,8 @@ export class ActivityCard {
   readonly mapUrl = input<string>('');
   /** The place's primary photo; null shows the fallback tile. */
   readonly media = input<CardMedia | null>(null);
+  /** Offer "Add to day" (L2-095). */
+  readonly addable = input(false, { transform: booleanAttribute });
+  /** "Add to day" was pressed. */
+  readonly addToDay = output<void>();
 }

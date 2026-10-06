@@ -29,6 +29,8 @@
           [tone]="activity.tone === 'outdoor' ? 'leaf' : 'indoor'"
           [mapUrl]="activity.mapUrl ?? ''"
           [media]="activity.media"
+          addable
+          (addToDay)="addToDay(activity)"
         >
           @for (chip of activity.chips; track chip.label) {
             <sd-chip slot="chips" [tone]="chipTone(chip.tone)">

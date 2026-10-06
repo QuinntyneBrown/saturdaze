@@ -166,6 +166,8 @@ describe('EventsService', () => {
       url: 'https://example.com/terre-bleu',
       pending: false,
       media: null,
+      // A Saturday event of this weekend can be added to a day (L2-095).
+      addable: true,
     });
     expect(second!.url).toBeNull();
     expect(second!.chips[0]).toEqual({ tone: 'indoor', label: 'Theatre' });
@@ -228,6 +230,7 @@ describe('EventsService', () => {
         url: 'https://example.com/buskerfest',
         pending: true,
         media: null,
+        addable: false,
       },
     ]);
     service.setCategory('Theatre');

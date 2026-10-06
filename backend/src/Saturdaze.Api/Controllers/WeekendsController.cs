@@ -1,11 +1,12 @@
+using System.Text;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Saturdaze.Application.Contracts;
 using Saturdaze.Application.Exceptions;
+using Saturdaze.Application.Ideas;
 using Saturdaze.Application.Weekends;
 using Saturdaze.Domain.Enums;
-using System.Text;
 
 namespace Saturdaze.Api.Controllers;
 
@@ -52,6 +53,22 @@ public sealed class WeekendsController : ControllerBase
     [HttpPost("{id:guid}/repeat")]
     public async Task<ActionResult<WeekendDto>> Repeat(Guid id, CancellationToken ct)
         => Ok(await _sender.Send(new ReuseWeekendCommand(id, Remix: false), ct));
+
+    /// <summary>Where an idea would land on a day, without changing the plan (L2-095).</summary>
+    [HttpPost("{id:guid}/ideas/preview")]
+    public async Task<ActionResult<IdeaPlacementDto>> PreviewIdea(Guid id, [FromBody] IdeaRequest body, CancellationToken ct)
+    {
+        var (kind, day, timing) = WeekendControllerHelpers.ParseIdea(body);
+        return Ok(await _sender.Send(new PreviewIdeaPlacementQuery(id, kind, body.IdeaId, day, timing), ct));
+    }
+
+    /// <summary>Adds an idea to a day of the family's weekend (L2-095); 409 when it does not fit.</summary>
+    [HttpPost("{id:guid}/ideas")]
+    public async Task<ActionResult<WeekendDto>> AddIdea(Guid id, [FromBody] IdeaRequest body, CancellationToken ct)
+    {
+        var (kind, day, timing) = WeekendControllerHelpers.ParseIdea(body);
+        return Ok(await _sender.Send(new AddIdeaToWeekendCommand(id, kind, body.IdeaId, day, timing), ct));
+    }
 
     /// <summary>Only the owning family can mint a share link (scoped query).</summary>
     [HttpPost("{id:guid}/share")]
@@ -115,6 +132,16 @@ public sealed record TitleRequest(string? Title);
 
 file static class WeekendControllerHelpers
 {
+    public static (IdeaKind Kind, DayOfWeekend Day, IdeaTiming Timing) ParseIdea(IdeaRequest body)
+    {
+        if (!Enum.TryParse<IdeaKind>(body.IdeaKind, ignoreCase: true, out var kind) || !Enum.IsDefined(kind))
+            throw new ValidationException("ideaKind", "Idea kind must be activity or event.");
+        if (!Enum.TryParse<IdeaTiming>(body.Timing ?? nameof(IdeaTiming.BestFit), ignoreCase: true, out var timing)
+            || !Enum.IsDefined(timing))
+            throw new ValidationException("timing", "Timing must be bestFit, morning or afternoon.");
+        return (kind, ParseDay(body.Day), timing);
+    }
+
     public static DayOfWeekend ParseDay(string value)
         => Enum.TryParse<DayOfWeekend>(value, ignoreCase: true, out var day)
             ? day
@@ -173,3 +200,6 @@ file static class WeekendControllerHelpers
             .Replace("\r\n", "\\n")
             .Replace("\n", "\\n");
 }
+
+/// <summary>Body of the ideas endpoints: <c>{ ideaKind, ideaId, day, timing }</c>.</summary>
+public sealed record IdeaRequest(string IdeaKind, Guid IdeaId, string Day, string? Timing);

@@ -4,6 +4,8 @@ import { CalendarExport } from '../models/calendar-export';
 import { ErrandPlacement } from '../models/errand-placement';
 import { WeekendDay } from '../models/weekend-day';
 import { WeekendView } from '../models/weekend-view';
+import { IdeaPlacementView } from '../models/idea-placement-view';
+import { IdeaRequest } from '../models/idea-request';
 
 /**
  * I Weekend Plan Service — the current weekend and every mutation on it.
@@ -121,6 +123,24 @@ export interface IWeekendPlanService {
    * @returns {Promise<void>} The result of the operation
    */
   setErrandDone(errandId: string, done: boolean): Promise<void>;
+  /**
+   * Preview Idea — where the planner would put an idea on the current weekend,
+   * without changing it (`POST /api/weekends/{id}/ideas/preview`, L2-095).
+   *
+   * @param {IdeaRequest} request - Which idea, day and timing
+   *
+   * @returns {Promise<IdeaPlacementView>} The preview for D27
+   */
+  previewIdea(request: IdeaRequest): Promise<IdeaPlacementView>;
+  /**
+   * Add Idea — put the idea on the current weekend at the previewed placement
+   * (`POST /api/weekends/{id}/ideas`); the weekend view updates in place.
+   *
+   * @param {IdeaRequest} request - Which idea, day and timing
+   *
+   * @returns {Promise<void>} The result of the operation
+   */
+  addIdea(request: IdeaRequest): Promise<void>;
   /**
    * Remix Saved — `POST /api/weekends/{id}/remix`; the result becomes the
    * current weekend.

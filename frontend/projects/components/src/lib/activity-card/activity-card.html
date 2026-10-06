@@ -11,11 +11,25 @@
   <p class="card__body">{{ why() }}</p>
 }
 <div class="card__chips"><ng-content select="[slot=chips]" /></div>
-@if (mapUrl()) {
+@if (mapUrl() || addable()) {
   <div class="card__footer">
-    <sd-button variant="quiet" size="sm" [href]="mapUrl()" target="_blank">
-      <sd-icon name="map" />
-      Map
-    </sd-button>
+    @if (mapUrl()) {
+      <sd-button variant="quiet" size="sm" [href]="mapUrl()" target="_blank">
+        <sd-icon name="map" />
+        Map
+      </sd-button>
+    }
+    @if (addable()) {
+      <sd-button
+        variant="primary"
+        size="sm"
+        type="button"
+        [label]="'Add to day: ' + cardTitle()"
+        (click)="addToDay.emit()"
+      >
+        <sd-icon name="plus" />
+        Add to day
+      </sd-button>
+    }
   </div>
 }

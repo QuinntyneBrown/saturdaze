@@ -123,6 +123,40 @@ export class IdeasPage extends BasePage {
       .evaluate((el) => getComputedStyle(el).gridTemplateColumns.split(" ").filter(Boolean).length);
   }
 
+    /* ---------- Add to day (L2-095) ---------- */
+
+  /** The card's "Add to day" action (its accessible name starts with the visible label). */
+  addToDayButton(card: Locator): Locator {
+    return card.getByRole("button", { name: /^Add to day/ });
+  }
+
+  /** D27's day choice: a radio in the "Which day" group. */
+  addToDayDayOption(day: "Saturday" | "Sunday"): Locator {
+    return this.dialog().getByRole("radio", { name: day, exact: true });
+  }
+
+  addToDayTiming(): Locator {
+    return this.dialogField("When");
+  }
+
+  /** The placement preview: "Saturday · 15:00 to 17:00", then what it replaces. */
+  addToDayPreview(): Locator {
+    return this.dialog().locator(".well");
+  }
+
+  addToDayPreviewTitle(): Locator {
+    return this.addToDayPreview().locator(".well__title");
+  }
+
+  addToDayConfirm(): Locator {
+    return this.dialogAction(/^Add to (Saturday|Sunday)$/);
+  }
+
+  /** Event cards in a dated section ("Saturday", "Sunday", "Coming soon", "Your suggestion"). */
+  eventSection(title: string): Locator {
+    return this.section(title);
+  }
+
     /* ---------- Food ---------- */
 
   lunchSection(): Locator {

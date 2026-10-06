@@ -39,4 +39,8 @@ export interface EventCard {
    * Media — the place's photo; null shows the fallback tile (L2-094).
    */
   readonly media: MediaView | null;
+  /**
+   * Addable — dated within the current weekend, so it can be added to a day (L2-095).
+   */
+  readonly addable: boolean;
 }

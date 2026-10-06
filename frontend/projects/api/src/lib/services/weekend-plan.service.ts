@@ -12,6 +12,10 @@ import { WeekendDay } from '../models/weekend-day';
 import { WeekendDto } from '../models/weekend.dto';
 import { WeekendView } from '../models/weekend-view';
 import { IWeekendPlanService } from './weekend-plan.service.contract';
+import { IdeaPlacementDto } from '../models/idea-placement.dto';
+import { IdeaPlacementView } from '../models/idea-placement-view';
+import { IdeaRequest } from '../models/idea-request';
+import { hhmm } from '../api/format';
 
 /**
  * Weekend Share Dto — `POST /api/weekends/{id}/share`.
@@ -280,6 +284,47 @@ export class WeekendPlanService implements IWeekendPlanService {
   }
 
   /**
+   * Preview Idea — the placement for D27 (L2-095). Loads the current weekend
+   * first when the family opened Ideas before Weekend.
+   *
+   * @param {IdeaRequest} request - Which idea, day and timing
+   *
+   * @returns {Promise<IdeaPlacementView>} The preview
+   */
+  async previewIdea(request: IdeaRequest): Promise<IdeaPlacementView> {
+    const target = await this.currentId();
+    const dto = await firstValueFrom(
+      this.http.post<IdeaPlacementDto>(
+        `${this.baseUrl}/api/weekends/${target}/ideas/preview`,
+        request,
+      ),
+    );
+    return placementView(dto);
+  }
+
+  /**
+   * Add Idea — `POST /api/weekends/{id}/ideas`; the returned weekend replaces
+   * the cached one, so the Weekend screen shows the block without a reload.
+   *
+   * @param {IdeaRequest} request - Which idea, day and timing
+   *
+   * @returns {Promise<void>} The result of the operation
+   */
+  async addIdea(request: IdeaRequest): Promise<void> {
+    const target = await this.currentId();
+    await this.send(
+      'addIdea',
+      this.http.post<WeekendDto>(`${this.baseUrl}/api/weekends/${target}/ideas`, request),
+    );
+  }
+
+  /** The current weekend's id, loading it when nothing is cached yet. */
+  private async currentId(): Promise<string> {
+    if (!this._dto()) await this.loadCurrent();
+    return this.targetId();
+  }
+
+  /**
    * Send — run one mutation, apply the weekend it returns, rethrow on failure.
    */
   private async send(label: string, request: Observable<WeekendDto>): Promise<WeekendDto> {
@@ -309,4 +354,23 @@ export class WeekendPlanService implements IWeekendPlanService {
     if (!target) throw new Error('No current weekend is loaded yet.');
     return target;
   }
+}
+
+/** "Saturday · 15:00 to 17:00" + what it replaces, or why it does not fit (L2-095). */
+function placementView(dto: IdeaPlacementDto): IdeaPlacementView {
+  if (!dto.fits) {
+    return {
+      fits: false,
+      title: `No room on ${dto.day}`,
+      body: dto.reason ?? 'There is no slot long enough on that day.',
+    };
+  }
+  const replaced = dto.replacedBlockTitles;
+  return {
+    fits: true,
+    title: `${dto.day} · ${hhmm(dto.startTime)} to ${hhmm(dto.endTime)}`,
+    body: replaced.length
+      ? `Replaces ${replaced.join(', ')}.`
+      : 'Fits into free time; nothing else moves.',
+  };
 }

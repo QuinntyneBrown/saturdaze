@@ -112,7 +112,12 @@ export class WeekendPage extends BasePage {
     return this.blocks(name).filter({ has: this.page.locator(".block__title", { hasText: title }) });
   }
 
-  blockTitle(block: Locator): Locator {
+  /** The block titled `title` on `name` that starts at `clock` ("9:00"). */
+  blockAt(title: string, name: DayName, clock: string): Locator {
+    return this.block(title, name).filter({ has: this.page.locator(".block__clock", { hasText: clock }) });
+  }
+
+    blockTitle(block: Locator): Locator {
     return block.locator(".block__title");
   }
 

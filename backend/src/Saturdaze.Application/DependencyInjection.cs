@@ -25,6 +25,7 @@ public static class DependencyInjection
         services.AddScoped<WeekendForecastService>();
         services.AddScoped<PlannerInputLoader>();
         services.AddScoped<IPlacePhotoReader, PlacePhotoReader>();
+        services.AddScoped<Ideas.IdeaResolver>();
         services.AddOptions<TimeOptions>();
         services.AddSingleton<IDateTimeProvider, SystemDateTimeProvider>();
         services.AddSingleton<IWeekendPlanner, WeekendPlanner>();

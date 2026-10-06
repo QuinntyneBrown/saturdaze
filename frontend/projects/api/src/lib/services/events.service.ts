@@ -69,7 +69,7 @@ function metaFor(dto: LocalEventDto): string {
 /**
  * To Card.
  */
-function toCard(dto: LocalEventDto): EventCard {
+function toCard(dto: LocalEventDto, addable = false): EventCard {
   const chips: ChipView[] = [];
   if (dto.category) chips.push({ tone: categoryTone(dto.category), label: dto.category });
   chips.push({ tone: 'sky', icon: 'car', label: `${dto.driveMinutes} min` });
@@ -82,6 +82,7 @@ function toCard(dto: LocalEventDto): EventCard {
     url: dto.url || null,
     pending: false,
     media: toMedia(dto.photo),
+    addable,
   };
 }
 
@@ -100,6 +101,7 @@ function toPendingCard(dto: EventSubmissionDto): EventCard {
     url: dto.sourceUrl || null,
     pending: true,
     media: null,
+    addable: false,
   };
 }
 
@@ -125,9 +127,14 @@ function thisWeekendSections(weekendOf: string, dtos: readonly LocalEventDto[]):
   const comingSoon = dtos.filter((e) => !seen.has(e.id) && e.startsOn > sun);
 
   return [
-    { title: 'Saturday', subtitle: formatDayDate(sat), events: saturday.map(toCard) },
-    { title: 'Sunday', subtitle: formatDayDate(sun), events: sunday.map(toCard) },
-    { title: 'Coming soon', subtitle: SUBTITLE_SOON, events: comingSoon.map(toCard) },
+    // Only this weekend's events can go onto one of its days (L2-095).
+    {
+      title: 'Saturday',
+      subtitle: formatDayDate(sat),
+      events: saturday.map((e) => toCard(e, true)),
+    },
+    { title: 'Sunday', subtitle: formatDayDate(sun), events: sunday.map((e) => toCard(e, true)) },
+    { title: 'Coming soon', subtitle: SUBTITLE_SOON, events: comingSoon.map((e) => toCard(e)) },
   ];
 }
 
@@ -137,7 +144,11 @@ function nextWeekendSections(weekendOf: string, dtos: readonly LocalEventDto[]):
   const sun = addDaysIso(weekendOf, 8);
   const events = dtos.filter((e) => overlaps(e, sat) || overlaps(e, sun));
   return [
-    { title: 'Next weekend', subtitle: formatWeekendEyebrow(sat), events: events.map(toCard) },
+    {
+      title: 'Next weekend',
+      subtitle: formatWeekendEyebrow(sat),
+      events: events.map((e) => toCard(e)),
+    },
   ];
 }
 

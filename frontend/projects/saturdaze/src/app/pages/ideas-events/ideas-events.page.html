@@ -34,6 +34,8 @@
           [muted]="event.pending"
           [url]="event.url ?? ''"
           [media]="event.media"
+          [addable]="event.addable"
+          (addToDay)="addToDay(event)"
         >
           @for (chip of event.chips; track chip.label) {
             <sd-chip slot="chips" [tone]="chipTone(chip.tone)">
