@@ -31,7 +31,10 @@ export const Tone: StoryObj<ActivityCard> = {
   }),
   parameters: {
     docs: {
-      description: { story: '`tone="leaf"` for outdoor activities, `tone="indoor"` for the rainy-day backups. Pair each with a matching `icon`.' },
+      description: {
+        story:
+          '`tone="leaf"` for outdoor activities, `tone="indoor"` for the rainy-day backups. Pair each with a matching `icon`.',
+      },
     },
   },
 };

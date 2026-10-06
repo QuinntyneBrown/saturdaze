@@ -21,7 +21,8 @@ export const Pending: StoryObj<EventCard> = {
   parameters: {
     docs: {
       description: {
-        story: '`muted` (`.card--muted`) is the family\'s own suggestion awaiting review: 85% opacity and no Details button, even with a `url`.',
+        story:
+          "`muted` (`.card--muted`) is the family's own suggestion awaiting review: 85% opacity and no Details button, even with a `url`.",
       },
     },
   },

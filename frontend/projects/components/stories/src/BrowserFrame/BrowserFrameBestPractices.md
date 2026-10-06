@@ -2,7 +2,7 @@
 
 ### Layout
 
-- Size the frame with its container, not with `frameWidth`. `frameWidth` / `frameHeight` are the *design* size of the composition inside; the frame scales that down.
+- Size the frame with its container, not with `frameWidth`. `frameWidth` / `frameHeight` are the _design_ size of the composition inside; the frame scales that down.
 - Keep `frameWidth` at the desktop width the composition was designed for (720px for the weekend miniature) so the miniature looks like the real screen.
 - Content overflowing `frameHeight` is clipped — crop the composition deliberately rather than letting it cut mid-row.
 

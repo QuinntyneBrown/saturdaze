@@ -12,6 +12,10 @@ export const Size: StoryObj<Chip> = {
     `,
   }),
   parameters: {
-    docs: { description: { story: '`md` (24px, default) on cards; `sm` (20px) in dense rows such as the review queue.' } },
+    docs: {
+      description: {
+        story: '`md` (24px, default) on cards; `sm` (20px) in dense rows such as the review queue.',
+      },
+    },
   },
 };

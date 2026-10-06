@@ -18,7 +18,11 @@ setCompodocJson(docJson);
  * iframe instead of rewriting `iframe.html`.
  */
 const preview: Preview = {
-  decorators: [applicationConfig({ providers: [provideRouter([{ path: '**', children: [] }], withHashLocation())] })],
+  decorators: [
+    applicationConfig({
+      providers: [provideRouter([{ path: '**', children: [] }], withHashLocation())],
+    }),
+  ],
   tags: ['autodocs'],
   parameters: {
     layout: 'padded',
@@ -33,10 +37,26 @@ const preview: Preview = {
       // The three Playwright projects (e2e/playwright.config.ts) plus the
       // 320px floor the xsmall tier retunes for.
       options: {
-        xsmall: { name: 'xsmall (320×640)', styles: { width: '320px', height: '640px' }, type: 'mobile' },
-        mobile: { name: 'Mobile (390×844)', styles: { width: '390px', height: '844px' }, type: 'mobile' },
-        tablet: { name: 'Tablet (820×1180)', styles: { width: '820px', height: '1180px' }, type: 'tablet' },
-        desktop: { name: 'Desktop (1440×900)', styles: { width: '1440px', height: '900px' }, type: 'desktop' },
+        xsmall: {
+          name: 'xsmall (320×640)',
+          styles: { width: '320px', height: '640px' },
+          type: 'mobile',
+        },
+        mobile: {
+          name: 'Mobile (390×844)',
+          styles: { width: '390px', height: '844px' },
+          type: 'mobile',
+        },
+        tablet: {
+          name: 'Tablet (820×1180)',
+          styles: { width: '820px', height: '1180px' },
+          type: 'tablet',
+        },
+        desktop: {
+          name: 'Desktop (1440×900)',
+          styles: { width: '1440px', height: '900px' },
+          type: 'desktop',
+        },
       },
     },
     controls: {

@@ -15,7 +15,10 @@ export const Rating: StoryObj<Stars> = {
   }),
   parameters: {
     docs: {
-      description: { story: 'Stars fill up to `rating`; `label` adds a caption. An unrated weekend shows five empty stars and "Rate it".' },
+      description: {
+        story:
+          'Stars fill up to `rating`; `label` adds a caption. An unrated weekend shows five empty stars and "Rate it".',
+      },
     },
   },
 };

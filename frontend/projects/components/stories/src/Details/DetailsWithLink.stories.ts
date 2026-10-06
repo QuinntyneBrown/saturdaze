@@ -19,7 +19,10 @@ export const WithLink: StoryObj<Details> = {
   }),
   parameters: {
     docs: {
-      description: { story: 'An item with `href` renders its value as an external `.details__link` with a trailing arrow, opening in a new tab.' },
+      description: {
+        story:
+          'An item with `href` renders its value as an external `.details__link` with a trailing arrow, opening in a new tab.',
+      },
     },
   },
 };

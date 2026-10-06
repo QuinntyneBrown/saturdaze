@@ -5,7 +5,12 @@ import type { VoteCell } from 'components';
 import { appShell } from '../shared/shell';
 import { IDEAS_STYLES, IDEAS_TABS, ideasHeader } from './ideas';
 
-const votes = (q: VoteCell['vote'], s: VoteCell['vote'], e: VoteCell['vote'], m: VoteCell['vote']): VoteCell[] => [
+const votes = (
+  q: VoteCell['vote'],
+  s: VoteCell['vote'],
+  e: VoteCell['vote'],
+  m: VoteCell['vote'],
+): VoteCell[] => [
   { name: 'Quinn', tone: 'primary', vote: q },
   { name: 'Sara', tone: 'sun', vote: s },
   { name: 'Eli', tone: 'sky', vote: e },

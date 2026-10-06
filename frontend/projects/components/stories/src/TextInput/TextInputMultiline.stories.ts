@@ -17,6 +17,11 @@ export const Multiline: StoryObj<TextInput> = {
     `,
   }),
   parameters: {
-    docs: { description: { story: '`multiline` swaps the input for a `<textarea>`; `rows` sets its starting height (default 3).' } },
+    docs: {
+      description: {
+        story:
+          '`multiline` swaps the input for a `<textarea>`; `rows` sets its starting height (default 3).',
+      },
+    },
   },
 };

@@ -20,7 +20,8 @@ const theme = create({
   appBorderRadius: 12, // --sd-r-md
 
   // Fonts — --sd-font-sans
-  fontBase: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+  fontBase:
+    '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
   fontCode: 'ui-monospace, SFMono-Regular, Menlo, Consolas, monospace',
 
   // Text colors

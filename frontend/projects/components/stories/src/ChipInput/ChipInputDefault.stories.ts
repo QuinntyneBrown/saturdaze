@@ -10,7 +10,10 @@ export const Default: StoryObj<ChipInput> = {
     placeholder: 'Add one, press Enter',
   },
   argTypes: {
-    tone: { control: 'select', options: ['default', 'sun', 'sky', 'leaf', 'indoor', 'accent', 'primary', 'warn', 'ink'] },
+    tone: {
+      control: 'select',
+      options: ['default', 'sun', 'sky', 'leaf', 'indoor', 'accent', 'primary', 'warn', 'ink'],
+    },
   },
   render: (args) => ({
     props: { ...args, likes: new FormControl(['Parks', 'Pancakes', 'Museums']) },

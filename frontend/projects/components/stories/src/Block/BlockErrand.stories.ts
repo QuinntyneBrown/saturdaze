@@ -31,7 +31,8 @@ export const Errand: StoryObj<Block> = {
   parameters: {
     docs: {
       description: {
-        story: '`errand` rows get a Done toggle; `done` (`.block--done`) fades the row to 60% once it is ticked off.',
+        story:
+          '`errand` rows get a Done toggle; `done` (`.block--done`) fades the row to 60% once it is ticked off.',
       },
     },
   },

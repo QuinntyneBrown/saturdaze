@@ -19,7 +19,8 @@ export const Tone: StoryObj<Empty> = {
   parameters: {
     docs: {
       description: {
-        story: '`icon` and `tone` set the extra-large disc. The review queue uses an accent check; an empty Events list a sun ticket. The CTA slot is optional.',
+        story:
+          '`icon` and `tone` set the extra-large disc. The review queue uses an accent check; an empty Events list a sun ticket. The CTA slot is optional.',
       },
     },
   },

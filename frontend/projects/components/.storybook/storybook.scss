@@ -2,8 +2,8 @@
 // `projects/saturdaze/src/styles.scss`, so a component renders here exactly
 // as it does on a screen.
 
-@use "styles";
-@import "@angular/cdk/overlay-prebuilt.css";
+@use 'styles';
+@import '@angular/cdk/overlay-prebuilt.css';
 
 // Overlay panel classes — the same rules as projects/saturdaze/src/styles.scss,
 // so stories that open a CDK Dialog or anchored menu look like the app: a

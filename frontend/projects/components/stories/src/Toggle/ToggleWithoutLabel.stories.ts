@@ -7,7 +7,12 @@ export const WithoutLabel: StoryObj<Toggle> = {
   render: () => {
     const prefs = signal([
       { key: 'budget', title: 'Keep it cheap', subtitle: 'Free or under $40.', checked: false },
-      { key: 'tryNew', title: 'Try something new', subtitle: 'One new place a weekend.', checked: true },
+      {
+        key: 'tryNew',
+        title: 'Try something new',
+        subtitle: 'One new place a weekend.',
+        checked: true,
+      },
       { key: 'fridayPreview', title: 'Friday preview', subtitle: 'A draft at 6pm.', checked: true },
     ]);
     return {

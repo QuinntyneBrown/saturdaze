@@ -17,7 +17,8 @@ export const Regenerate: StoryObj = {
   parameters: {
     docs: {
       description: {
-        story: 'A non-destructive confirmation with an `sd-well` listing what survives. The confirm button is the coral primary.',
+        story:
+          'A non-destructive confirmation with an `sd-well` listing what survives. The confirm button is the coral primary.',
       },
     },
   },

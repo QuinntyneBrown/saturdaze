@@ -11,7 +11,8 @@ export const Xsmall: StoryObj<BottomNav> = {
   parameters: {
     docs: {
       description: {
-        story: 'At the 320px floor the four `minmax(0, 1fr)` columns still fit their one-word labels without truncation.',
+        story:
+          'At the 320px floor the four `minmax(0, 1fr)` columns still fit their one-word labels without truncation.',
       },
     },
   },

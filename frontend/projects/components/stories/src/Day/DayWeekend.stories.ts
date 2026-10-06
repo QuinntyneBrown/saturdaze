@@ -34,7 +34,8 @@ export const Weekend: StoryObj<Day> = {
   parameters: {
     docs: {
       description: {
-        story: 'The Weekend screen: Saturday and Sunday in `sd-grid-days`, side by side from tablet up and stacked on phones.',
+        story:
+          'The Weekend screen: Saturday and Sunday in `sd-grid-days`, side by side from tablet up and stacked on phones.',
       },
     },
   },

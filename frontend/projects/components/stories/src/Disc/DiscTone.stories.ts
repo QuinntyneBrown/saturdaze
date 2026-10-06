@@ -21,7 +21,8 @@ export const Tone: StoryObj<Disc> = {
   parameters: {
     docs: {
       description: {
-        story: 'Nine tones: the neutral default, `accent`, `primary`, `warn`, the activity hues `sun` / `sky` / `leaf` / `indoor`, and `surface` (white with a hairline) for recessed backgrounds.',
+        story:
+          'Nine tones: the neutral default, `accent`, `primary`, `warn`, the activity hues `sun` / `sky` / `leaf` / `indoor`, and `surface` (white with a hairline) for recessed backgrounds.',
       },
     },
   },

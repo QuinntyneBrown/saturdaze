@@ -19,7 +19,8 @@ export const Disabled: StoryObj<Toggle> = {
   parameters: {
     docs: {
       description: {
-        story: 'There is no `disabled` input: disable the bound control; `setDisabledState` disables the switch.',
+        story:
+          'There is no `disabled` input: disable the bound control; `setDisabledState` disables the switch.',
       },
     },
   },

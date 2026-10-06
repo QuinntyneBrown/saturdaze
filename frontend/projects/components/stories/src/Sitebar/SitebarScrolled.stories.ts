@@ -22,7 +22,10 @@ export const Scrolled: StoryObj<Sitebar> = {
   parameters: {
     docs: {
       story: { height: '360px' },
-      description: { story: 'Over scrolled content the bar turns translucent with a blur and a hairline (`[data-scrolled]`).' },
+      description: {
+        story:
+          'Over scrolled content the bar turns translucent with a blur and a hairline (`[data-scrolled]`).',
+      },
     },
   },
 };

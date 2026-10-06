@@ -27,7 +27,8 @@ export const UnderAList: StoryObj<GhostRow> = {
   parameters: {
     docs: {
       description: {
-        story: 'As a button it emits `pressed`. In the app that opens a CDK dialog; here it appends an errand so you can see the list grow.',
+        story:
+          'As a button it emits `pressed`. In the app that opens a CDK dialog; here it appends an errand so you can see the list grow.',
       },
     },
   },

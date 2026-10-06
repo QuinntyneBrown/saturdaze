@@ -21,7 +21,8 @@ export const WithError: StoryObj<AuthCard> = {
   parameters: {
     docs: {
       description: {
-        story: 'A failed sign-in: a warn banner with `role="alert"` above the form and both fields `invalid` (`aria-invalid="true"`).',
+        story:
+          'A failed sign-in: a warn banner with `role="alert"` above the form and both fields `invalid` (`aria-invalid="true"`).',
       },
     },
   },

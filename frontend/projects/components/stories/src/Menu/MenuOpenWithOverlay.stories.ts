@@ -16,14 +16,18 @@ const ACCOUNT_ITEMS: readonly MenuItem[] = [
  * from 720px; `.storybook/storybook.scss` carries the `.sd-menu-*` rules.
  */
 @Component({
-  selector: 'story-menu-launcher',
+  selector: 'sd-story-menu-launcher',
   standalone: true,
   imports: [Button, Icon],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div style="min-height: 200px; display: flex; justify-content: space-between; align-items: flex-start; gap: 12px">
+    <div
+      style="min-height: 200px; display: flex; justify-content: space-between; align-items: flex-start; gap: 12px"
+    >
       <span class="sd-text-soft" aria-live="polite">{{ result() }}</span>
-      <sd-button variant="quiet" icon label="Account menu" (click)="open($event)"><sd-icon name="user" /></sd-button>
+      <sd-button variant="quiet" icon label="Account menu" (click)="open($event)"
+        ><sd-icon name="user"
+      /></sd-button>
     </div>
   `,
 })
@@ -32,7 +36,8 @@ class MenuLauncher {
   protected readonly result = signal('');
 
   protected open(event: Event): void {
-    const anchor = (event.target as HTMLElement).closest<HTMLElement>('button') ?? (event.target as HTMLElement);
+    const anchor =
+      (event.target as HTMLElement).closest<HTMLElement>('button') ?? (event.target as HTMLElement);
     const overlayRef = this.overlay.create({
       positionStrategy: this.overlay
         .position()
@@ -76,7 +81,7 @@ class MenuLauncher {
 export const OpenWithOverlay: StoryObj<Menu> = {
   decorators: [moduleMetadata({ imports: [MenuLauncher] })],
   render: () => ({
-    template: `<story-menu-launcher />`,
+    template: `<sd-story-menu-launcher />`,
   }),
   parameters: {
     docs: {

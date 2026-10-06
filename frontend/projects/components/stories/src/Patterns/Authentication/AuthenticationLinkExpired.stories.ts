@@ -17,7 +17,8 @@ export const LinkExpired: StoryObj = {
   parameters: {
     docs: {
       description: {
-        story: 'Recovery error: a warn key disc, the coral primary to start over, and a quiet way back to sign in.',
+        story:
+          'Recovery error: a warn key disc, the coral primary to start over, and a quiet way back to sign in.',
       },
     },
   },

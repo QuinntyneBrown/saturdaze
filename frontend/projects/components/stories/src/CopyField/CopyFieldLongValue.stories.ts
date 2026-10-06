@@ -13,7 +13,10 @@ export const LongValue: StoryObj<CopyField> = {
   }),
   parameters: {
     docs: {
-      description: { story: 'At phone width a long link stays on one line and truncates with an ellipsis; the Copy button never wraps or shrinks.' },
+      description: {
+        story:
+          'At phone width a long link stays on one line and truncates with an ellipsis; the Copy button never wraps or shrinks.',
+      },
     },
   },
 };

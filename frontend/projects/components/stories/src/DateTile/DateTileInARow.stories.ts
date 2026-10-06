@@ -16,7 +16,10 @@ export const InARow: StoryObj<DateTile> = {
   }),
   parameters: {
     docs: {
-      description: { story: 'The tile leads an event row; the meta text beside it carries the full date for screen readers.' },
+      description: {
+        story:
+          'The tile leads an event row; the meta text beside it carries the full date for screen readers.',
+      },
     },
   },
 };

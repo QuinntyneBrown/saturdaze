@@ -15,7 +15,10 @@ export const Stroke: StoryObj<Icon> = {
   }),
   parameters: {
     docs: {
-      description: { story: '`stroke` sets the line weight. Keep the default 1.7; chips use 2 at 13px and the chip × uses 2.5 at 10px.' },
+      description: {
+        story:
+          '`stroke` sets the line weight. Keep the default 1.7; chips use 2 at 13px and the chip × uses 2.5 at 10px.',
+      },
     },
   },
 };

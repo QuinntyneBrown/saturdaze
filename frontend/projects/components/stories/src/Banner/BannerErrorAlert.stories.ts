@@ -9,7 +9,8 @@ export const ErrorAlert: StoryObj<Banner> = {
     return {
       props: {
         error,
-        signIn: () => error.set("That email and password don't match. Try again or reset your password."),
+        signIn: () =>
+          error.set("That email and password don't match. Try again or reset your password."),
         clear: () => error.set(''),
       },
       template: `

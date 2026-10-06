@@ -19,7 +19,8 @@ export const Gallery: StoryObj<Icon> = {
   parameters: {
     docs: {
       description: {
-        story: 'Every glyph in `ICON_NAMES`, the exported list of names the sprite knows. Use it to pick a glyph — anything else falls back to `sparkle`.',
+        story:
+          'Every glyph in `ICON_NAMES`, the exported list of names the sprite knows. Use it to pick a glyph — anything else falls back to `sparkle`.',
       },
     },
   },

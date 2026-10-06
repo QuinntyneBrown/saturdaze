@@ -16,7 +16,10 @@ export const Size: StoryObj<Icon> = {
   }),
   parameters: {
     docs: {
-      description: { story: '`size` is the square box in pixels (13, 16, 20 default, 24, 32). It is written to the host as `--_size`.' },
+      description: {
+        story:
+          '`size` is the square box in pixels (13, 16, 20 default, 24, 32). It is written to the host as `--_size`.',
+      },
     },
   },
 };

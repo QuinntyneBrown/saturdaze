@@ -19,7 +19,7 @@ export const Variant: StoryObj<Button> = {
     docs: {
       description: {
         story:
-          '`primary` is the one coral call to action per screen. `quiet` is the default secondary, `ghost` sits on tinted surfaces, `danger` confirms destructive work and `text` is an inline action. `warnText` colours a quiet button\'s label (Sign out).',
+          "`primary` is the one coral call to action per screen. `quiet` is the default secondary, `ghost` sits on tinted surfaces, `danger` confirms destructive work and `text` is an inline action. `warnText` colours a quiet button's label (Sign out).",
       },
     },
   },

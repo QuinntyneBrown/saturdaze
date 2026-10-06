@@ -15,7 +15,8 @@ export const Level: StoryObj<Strength> = {
   parameters: {
     docs: {
       description: {
-        story: '`weak` fills one segment, `ok` two and `strong` all three, each in its own tone. A `null` level leaves the bar empty.',
+        story:
+          '`weak` fills one segment, `ok` two and `strong` all three, each in its own tone. A `null` level leaves the bar empty.',
       },
     },
   },

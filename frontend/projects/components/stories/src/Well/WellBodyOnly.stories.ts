@@ -11,6 +11,10 @@ export const BodyOnly: StoryObj<Well> = {
     `,
   }),
   parameters: {
-    docs: { description: { story: 'Without `title` the well is a single soft line of body text beside the glyph.' } },
+    docs: {
+      description: {
+        story: 'Without `title` the well is a single soft line of body text beside the glyph.',
+      },
+    },
   },
 };

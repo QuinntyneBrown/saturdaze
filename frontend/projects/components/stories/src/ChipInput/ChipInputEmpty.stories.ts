@@ -13,6 +13,8 @@ export const Empty: StoryObj<ChipInput> = {
     `,
   }),
   parameters: {
-    docs: { description: { story: 'With no values the box shows only the input and its `placeholder`.' } },
+    docs: {
+      description: { story: 'With no values the box shows only the input and its `placeholder`.' },
+    },
   },
 };

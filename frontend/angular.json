@@ -3,9 +3,7 @@
   "version": 1,
   "cli": {
     "packageManager": "npm",
-    "schematicCollections": [
-      "angular-eslint"
-    ]
+    "schematicCollections": ["angular-eslint"]
   },
   "newProjectRoot": "projects",
   "projects": {
@@ -40,20 +38,10 @@
             "browserTarget": "components:build",
             "tsConfig": "projects/components/.storybook/tsconfig.json",
             "compodoc": true,
-            "compodocArgs": [
-              "-e",
-              "json",
-              "-d",
-              "projects/components",
-              "--disableRoutesGraph"
-            ],
-            "styles": [
-              "projects/components/.storybook/storybook.scss"
-            ],
+            "compodocArgs": ["-e", "json", "-d", "projects/components", "--disableRoutesGraph"],
+            "styles": ["projects/components/.storybook/storybook.scss"],
             "stylePreprocessorOptions": {
-              "includePaths": [
-                "projects/components/src/lib"
-              ]
+              "includePaths": ["projects/components/src/lib"]
             },
             "experimentalZoneless": true,
             "port": 6006
@@ -66,20 +54,10 @@
             "browserTarget": "components:build",
             "tsConfig": "projects/components/.storybook/tsconfig.json",
             "compodoc": true,
-            "compodocArgs": [
-              "-e",
-              "json",
-              "-d",
-              "projects/components",
-              "--disableRoutesGraph"
-            ],
-            "styles": [
-              "projects/components/.storybook/storybook.scss"
-            ],
+            "compodocArgs": ["-e", "json", "-d", "projects/components", "--disableRoutesGraph"],
+            "styles": ["projects/components/.storybook/storybook.scss"],
             "stylePreprocessorOptions": {
-              "includePaths": [
-                "projects/components/src/lib"
-              ]
+              "includePaths": ["projects/components/src/lib"]
             },
             "experimentalZoneless": true,
             "outputDir": "dist/storybook"
@@ -88,10 +66,7 @@
         "lint": {
           "builder": "@angular-eslint/builder:lint",
           "options": {
-            "lintFilePatterns": [
-              "projects/components/**/*.ts",
-              "projects/components/**/*.html"
-            ]
+            "lintFilePatterns": ["projects/components/**/*.ts", "projects/components/**/*.html"]
           }
         }
       }
@@ -123,10 +98,7 @@
         "lint": {
           "builder": "@angular-eslint/builder:lint",
           "options": {
-            "lintFilePatterns": [
-              "projects/api/**/*.ts",
-              "projects/api/**/*.html"
-            ]
+            "lintFilePatterns": ["projects/api/**/*.ts", "projects/api/**/*.html"]
           }
         }
       }
@@ -154,13 +126,9 @@
                 "input": "projects/saturdaze/public"
               }
             ],
-            "styles": [
-              "projects/saturdaze/src/styles.scss"
-            ],
+            "styles": ["projects/saturdaze/src/styles.scss"],
             "stylePreprocessorOptions": {
-              "includePaths": [
-                "projects/components/src/lib"
-              ]
+              "includePaths": ["projects/components/src/lib"]
             }
           },
           "configurations": {
@@ -214,10 +182,7 @@
         "lint": {
           "builder": "@angular-eslint/builder:lint",
           "options": {
-            "lintFilePatterns": [
-              "projects/saturdaze/**/*.ts",
-              "projects/saturdaze/**/*.html"
-            ]
+            "lintFilePatterns": ["projects/saturdaze/**/*.ts", "projects/saturdaze/**/*.html"]
           }
         }
       }

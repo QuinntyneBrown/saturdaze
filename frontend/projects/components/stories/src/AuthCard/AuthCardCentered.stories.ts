@@ -22,7 +22,8 @@ export const Centered: StoryObj<AuthCard> = {
   parameters: {
     docs: {
       description: {
-        story: 'Status cards: `center` plus an `xl` `sd-disc` in `[slot=disc]` and stacked full-width buttons. No alt line, so it collapses.',
+        story:
+          'Status cards: `center` plus an `xl` `sd-disc` in `[slot=disc]` and stacked full-width buttons. No alt line, so it collapses.',
       },
     },
   },

@@ -29,7 +29,7 @@ export const States: StoryObj<Card> = {
     docs: {
       description: {
         story:
-          '`locked` draws the 2px accent border of a locked pick, `dimmed` fades its siblings to 60%, and `muted` (85%) marks the family\'s own pending suggestion. Pair each with a chip that says the state.',
+          "`locked` draws the 2px accent border of a locked pick, `dimmed` fades its siblings to 60%, and `muted` (85%) marks the family's own pending suggestion. Pair each with a chip that says the state.",
       },
     },
   },

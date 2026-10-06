@@ -16,7 +16,8 @@ export const Loading: StoryObj<Day> = {
   parameters: {
     docs: {
       description: {
-        story: 'While the weekend loads or generates, the page turns `actions` off and fills the day with `sd-skeleton-row`s.',
+        story:
+          'While the weekend loads or generates, the page turns `actions` off and fills the day with `sd-skeleton-row`s.',
       },
     },
   },

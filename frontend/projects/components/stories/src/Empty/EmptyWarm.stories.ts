@@ -25,7 +25,8 @@ export const Warm: StoryObj<Empty> = {
   parameters: {
     docs: {
       description: {
-        story: '`warm` (`.empty--warm`) is the brand-gradient first run on the Weekend screen. `note` sits faint under the call to action.',
+        story:
+          '`warm` (`.empty--warm`) is the brand-gradient first run on the Weekend screen. `note` sits faint under the call to action.',
       },
     },
   },

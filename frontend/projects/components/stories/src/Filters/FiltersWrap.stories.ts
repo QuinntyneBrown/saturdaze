@@ -18,7 +18,10 @@ export const Wrap: StoryObj<Filters> = {
   }),
   parameters: {
     docs: {
-      description: { story: 'With `scroll` off the row is `.filters` and always wraps — use it inside cards and dialogs.' },
+      description: {
+        story:
+          'With `scroll` off the row is `.filters` and always wraps — use it inside cards and dialogs.',
+      },
     },
   },
 };

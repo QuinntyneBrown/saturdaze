@@ -15,7 +15,8 @@ export const Disabled: StoryObj<Button> = {
   parameters: {
     docs: {
       description: {
-        story: 'A disabled `<button>` gets the native `disabled`; a disabled link gets `aria-disabled="true"` and swallows the click.',
+        story:
+          'A disabled `<button>` gets the native `disabled`; a disabled link gets `aria-disabled="true"` and swallows the click.',
       },
     },
   },

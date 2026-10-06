@@ -19,7 +19,8 @@ export const AsLink: StoryObj<ListItem> = {
   parameters: {
     docs: {
       description: {
-        story: 'With `href` the row is an `<a>` that routes in-app paths through the Angular router — the Admin row on Family, or "Planned around" on an empty weekend.',
+        story:
+          'With `href` the row is an `<a>` that routes in-app paths through the Angular router — the Admin row on Family, or "Planned around" on an empty weekend.',
       },
     },
   },

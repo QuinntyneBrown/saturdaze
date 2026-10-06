@@ -16,7 +16,8 @@ export const MobileSheet: StoryObj = {
   parameters: {
     docs: {
       description: {
-        story: 'Below 720px the panel takes the sheet shape (grip, rounded top corners) and the actions stack full width with the primary on top.',
+        story:
+          'Below 720px the panel takes the sheet shape (grip, rounded top corners) and the actions stack full width with the primary on top.',
       },
     },
   },

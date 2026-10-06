@@ -13,6 +13,11 @@ export const WithIcon: StoryObj<FilterChip> = {
     `,
   }),
   parameters: {
-    docs: { description: { story: 'Project an `sd-icon` before the label; the chip sizes it to 14px and it inherits the label colour.' } },
+    docs: {
+      description: {
+        story:
+          'Project an `sd-icon` before the label; the chip sizes it to 14px and it inherits the label colour.',
+      },
+    },
   },
 };

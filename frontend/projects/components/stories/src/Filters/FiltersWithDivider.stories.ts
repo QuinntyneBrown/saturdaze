@@ -29,7 +29,8 @@ export const WithDivider: StoryObj<Filters> = {
   parameters: {
     docs: {
       description: {
-        story: 'Separate two chip groups with `<span class="sd-vdivider">`. Each group keeps its own single selection.',
+        story:
+          'Separate two chip groups with `<span class="sd-vdivider">`. Each group keeps its own single selection.',
       },
     },
   },

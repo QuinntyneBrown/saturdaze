@@ -14,15 +14,15 @@ Saturdaze v2 is a full-width web app with a 1120px reading width — there is no
 Breakpoints live SCSS-side in `_breakpoints.scss`; components use the `respond-to()` mixin so the constants stay in one
 place.
 
-| Tier    | Width       | Chrome                                         |
-| ------- | ----------- | ---------------------------------------------- |
-| xsmall  | 320–379px   | Display type one step down                     |
-| phone   | &lt; 720px  | Floating bottom nav (`sd-bottom-nav`)          |
-| tablet  | 720–1023px  | Sticky top bar, single column                  |
-| desktop | ≥ 1024px    | Top bar, Saturday \| Sunday side by side       |
+| Tier    | Width      | Chrome                                   |
+| ------- | ---------- | ---------------------------------------- |
+| xsmall  | 320–379px  | Display type one step down               |
+| phone   | &lt; 720px | Floating bottom nav (`sd-bottom-nav`)    |
+| tablet  | 720–1023px | Sticky top bar, single column            |
+| desktop | ≥ 1024px   | Top bar, Saturday \| Sunday side by side |
 
 ```scss
-@use "breakpoints" as *;
+@use 'breakpoints' as *;
 
 .day-pair {
   display: grid;
@@ -39,7 +39,16 @@ story at each tier.
 
 ## Layout dimensions
 
-<TokenRows tokens={byPrefix('--sd-content-', '--sd-stack-', '--sd-gutter', '--sd-topbar-', '--sd-bottom-nav-')} preview={previews.length} />
+<TokenRows
+  tokens={byPrefix(
+    '--sd-content-',
+    '--sd-stack-',
+    '--sd-gutter',
+    '--sd-topbar-',
+    '--sd-bottom-nav-',
+  )}
+  preview={previews.length}
+/>
 
 ## Stacking
 
@@ -49,4 +58,19 @@ The z ladder for sticky regions and shell chrome; the CDK overlay keeps its own 
 
 ## Focus
 
-<TokenRows tokens={byPrefix('--sd-focus-')} preview={() => <button style={{ outline: 'var(--sd-focus-ring)', outlineOffset: 2, padding: '6px 14px', borderRadius: 999, background: 'var(--sd-surface)' }}>Focused</button>} />
+<TokenRows
+  tokens={byPrefix('--sd-focus-')}
+  preview={() => (
+    <button
+      style={{
+        outline: 'var(--sd-focus-ring)',
+        outlineOffset: 2,
+        padding: '6px 14px',
+        borderRadius: 999,
+        background: 'var(--sd-surface)',
+      }}
+    >
+      Focused
+    </button>
+  )}
+/>

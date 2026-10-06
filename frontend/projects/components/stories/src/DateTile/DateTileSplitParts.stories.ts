@@ -13,7 +13,10 @@ export const SplitParts: StoryObj<DateTile> = {
   }),
   parameters: {
     docs: {
-      description: { story: 'Pre-split `mon` / `day` render as given and win over `date` (the second tile ignores its January date).' },
+      description: {
+        story:
+          'Pre-split `mon` / `day` render as given and win over `date` (the second tile ignores its January date).',
+      },
     },
   },
 };

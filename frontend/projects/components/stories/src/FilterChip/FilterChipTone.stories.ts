@@ -30,7 +30,8 @@ export const Tone: StoryObj<FilterChip> = {
   parameters: {
     docs: {
       description: {
-        story: 'Off (top row) every tone is the same outline; the tone only shows once pressed (bottom row). `default` fills with ink.',
+        story:
+          'Off (top row) every tone is the same outline; the tone only shows once pressed (bottom row). `default` fills with ink.',
       },
     },
   },

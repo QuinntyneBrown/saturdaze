@@ -19,7 +19,10 @@ export const Mobile: StoryObj<AuthShell> = {
   globals: { viewport: { value: 'mobile' } },
   parameters: {
     docs: {
-      description: { story: 'On phones the column fills the width inside the page gutter; the card keeps its 24px inner padding.' },
+      description: {
+        story:
+          'On phones the column fills the width inside the page gutter; the card keeps its 24px inner padding.',
+      },
     },
   },
 };

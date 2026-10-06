@@ -12,6 +12,11 @@ export const Size: StoryObj<Spinner> = {
     `,
   }),
   parameters: {
-    docs: { description: { story: '`sm` is 20px with a 2px ring (`.spinner--sm`); `md` is the 40px default with a 3px ring.' } },
+    docs: {
+      description: {
+        story:
+          '`sm` is 20px with a 2px ring (`.spinner--sm`); `md` is the 40px default with a 3px ring.',
+      },
+    },
   },
 };

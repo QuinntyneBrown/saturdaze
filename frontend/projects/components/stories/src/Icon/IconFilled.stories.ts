@@ -15,7 +15,10 @@ export const Filled: StoryObj<Icon> = {
   }),
   parameters: {
     docs: {
-      description: { story: '`filled` swaps the outline for a solid glyph — rated stars and the saved favourite heart.' },
+      description: {
+        story:
+          '`filled` swaps the outline for a solid glyph — rated stars and the saved favourite heart.',
+      },
     },
   },
 };

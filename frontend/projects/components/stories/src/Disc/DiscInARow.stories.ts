@@ -25,7 +25,10 @@ export const InARow: StoryObj<Disc> = {
   }),
   parameters: {
     docs: {
-      description: { story: 'Discs lead list rows; the title beside it carries the meaning, since the disc itself is `aria-hidden`.' },
+      description: {
+        story:
+          'Discs lead list rows; the title beside it carries the meaning, since the disc itself is `aria-hidden`.',
+      },
     },
   },
 };

@@ -14,7 +14,10 @@ export const Tone: StoryObj<Banner> = {
   }),
   parameters: {
     docs: {
-      description: { story: '`info` (default) for neutral notices, `success` to confirm, `warn` for errors and failures.' },
+      description: {
+        story:
+          '`info` (default) for neutral notices, `success` to confirm, `warn` for errors and failures.',
+      },
     },
   },
 };

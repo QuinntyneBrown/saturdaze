@@ -21,6 +21,11 @@ export const Hint: StoryObj<Select> = {
     `,
   }),
   parameters: {
-    docs: { description: { story: '`hint` adds a `.field__hint` line; `required` adds the "Required" marker to the label.' } },
+    docs: {
+      description: {
+        story:
+          '`hint` adds a `.field__hint` line; `required` adds the "Required" marker to the label.',
+      },
+    },
   },
 };

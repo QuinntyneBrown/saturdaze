@@ -15,7 +15,8 @@ export const Initials: StoryObj<Avatar> = {
   parameters: {
     docs: {
       description: {
-        story: 'The initial is the first non-space character, upper-cased. An email works as a name; a blank name renders `?`.',
+        story:
+          'The initial is the first non-space character, upper-cased. An email works as a name; a blank name renders `?`.',
       },
     },
   },

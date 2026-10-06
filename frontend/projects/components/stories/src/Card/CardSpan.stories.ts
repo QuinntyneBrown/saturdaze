@@ -27,7 +27,8 @@ export const Span: StoryObj<Card> = {
   parameters: {
     docs: {
       description: {
-        story: '`span` (`.card--span`) stretches across every column of the grid for the one card that leads it. `interactive` adds the hover lift.',
+        story:
+          '`span` (`.card--span`) stretches across every column of the grid for the one card that leads it. `interactive` adds the hover lift.',
       },
     },
   },

@@ -20,6 +20,10 @@ export const Disabled: StoryObj<SegRadio> = {
     `,
   }),
   parameters: {
-    docs: { description: { story: 'Disable the bound control; every radio is disabled and clicks are ignored.' } },
+    docs: {
+      description: {
+        story: 'Disable the bound control; every radio is disabled and clicks are ignored.',
+      },
+    },
   },
 };

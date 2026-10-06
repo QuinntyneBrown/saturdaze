@@ -16,7 +16,10 @@ export const Color: StoryObj<Icon> = {
   }),
   parameters: {
     docs: {
-      description: { story: 'Glyphs stroke with `currentColor`, so they take the text colour of whatever contains them — no colour input needed.' },
+      description: {
+        story:
+          'Glyphs stroke with `currentColor`, so they take the text colour of whatever contains them — no colour input needed.',
+      },
     },
   },
 };

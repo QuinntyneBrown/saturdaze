@@ -17,7 +17,12 @@ export const Activities: StoryObj = {
   render: () => {
     const active = signal('All');
     return {
-      props: { tabs: IDEAS_TABS, filters: FILTERS, active, pick: (label: string) => active.set(label) },
+      props: {
+        tabs: IDEAS_TABS,
+        filters: FILTERS,
+        active,
+        pick: (label: string) => active.set(label),
+      },
       styles: IDEAS_STYLES,
       template: appShell(
         'ideas',

@@ -6,7 +6,10 @@ import type { TextInput } from 'components';
 export const ReactiveForms: StoryObj<TextInput> = {
   render: () => {
     const form = new FormGroup({
-      email: new FormControl('quinntynebrown@gmail.com', { nonNullable: true, validators: [Validators.required, Validators.email] }),
+      email: new FormControl('quinntynebrown@gmail.com', {
+        nonNullable: true,
+        validators: [Validators.required, Validators.email],
+      }),
       password: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
     });
     return {

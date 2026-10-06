@@ -16,7 +16,8 @@ export const WithSkeletons: StoryObj<StatusRow> = {
   parameters: {
     docs: {
       description: {
-        story: 'The weekend generating state: the status row announces the work while skeleton rows hold the shape of the day.',
+        story:
+          'The weekend generating state: the status row announces the work while skeleton rows hold the shape of the day.',
       },
     },
   },

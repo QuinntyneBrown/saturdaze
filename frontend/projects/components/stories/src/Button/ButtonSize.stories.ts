@@ -13,6 +13,10 @@ export const Size: StoryObj<Button> = {
     `,
   }),
   parameters: {
-    docs: { description: { story: 'Three sizes: `sm` (dense rows), `md` (default) and `lg` (hero and auth CTAs).' } },
+    docs: {
+      description: {
+        story: 'Three sizes: `sm` (dense rows), `md` (default) and `lg` (hero and auth CTAs).',
+      },
+    },
   },
 };

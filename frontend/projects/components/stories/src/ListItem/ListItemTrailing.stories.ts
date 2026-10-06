@@ -20,7 +20,8 @@ export const Trailing: StoryObj<ListItem> = {
   parameters: {
     docs: {
       description: {
-        story: 'Static rows (no `href`, no `action`) can carry one control or chip in `[slot=trailing]` — on Family the preference rows put an `sd-toggle` there.',
+        story:
+          'Static rows (no `href`, no `action`) can carry one control or chip in `[slot=trailing]` — on Family the preference rows put an `sd-toggle` there.',
       },
     },
   },

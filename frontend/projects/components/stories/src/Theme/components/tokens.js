@@ -33,7 +33,10 @@ const rootMatch = /:root\s*\{([\s\S]*?)\n\}/.exec(clean);
 const noteMap = notes(tokensScss);
 
 /** Every default token: `{ name, value, note }`. */
-export const tokens = declarations(rootMatch ? rootMatch[1] : '').map((t) => ({ ...t, note: noteMap[t.name] ?? '' }));
+export const tokens = declarations(rootMatch ? rootMatch[1] : '').map((t) => ({
+  ...t,
+  note: noteMap[t.name] ?? '',
+}));
 
 /** Responsive retunes: `[{ query, tokens: [{ name, value }] }]`. */
 export const overrides = [];
@@ -48,5 +51,7 @@ export function byPrefix(...prefixes) {
 }
 
 export function overridesFor(name) {
-  return overrides.flatMap((o) => o.tokens.filter((t) => t.name === name).map((t) => ({ query: o.query, value: t.value })));
+  return overrides.flatMap((o) =>
+    o.tokens.filter((t) => t.name === name).map((t) => ({ query: o.query, value: t.value })),
+  );
 }

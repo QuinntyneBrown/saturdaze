@@ -13,7 +13,10 @@ export const TitleOnly: StoryObj<PageHeader> = {
   }),
   parameters: {
     docs: {
-      description: { story: 'Screens without actions (Family, Ideas) leave the slots empty; the subtitle is optional too.' },
+      description: {
+        story:
+          'Screens without actions (Family, Ideas) leave the slots empty; the subtitle is optional too.',
+      },
     },
   },
 };

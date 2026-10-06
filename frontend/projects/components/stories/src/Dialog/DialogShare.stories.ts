@@ -14,7 +14,10 @@ export const Share: StoryObj<Dialog> = {
   }),
   parameters: {
     docs: {
-      description: { story: 'An informational dialog has a single primary action. The body can hold any component — here `sd-copy-field`.' },
+      description: {
+        story:
+          'An informational dialog has a single primary action. The body can hold any component — here `sd-copy-field`.',
+      },
     },
   },
 };

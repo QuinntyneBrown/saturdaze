@@ -15,7 +15,8 @@ export const FromDate: StoryObj<DateTile> = {
   parameters: {
     docs: {
       description: {
-        story: '`date` takes an ISO date or date-time. Only the `YYYY-MM-DD` prefix is read and the day drops its leading zero.',
+        story:
+          '`date` takes an ISO date or date-time. Only the `YYYY-MM-DD` prefix is read and the day drops its leading zero.',
       },
     },
   },

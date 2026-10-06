@@ -29,7 +29,8 @@ export const ReactiveForms: StoryObj<Checkbox> = {
   parameters: {
     docs: {
       description: {
-        story: 'The end of the Create account form: the terms consent gates the submit button; the Friday preview opt-in starts ticked.',
+        story:
+          'The end of the Create account form: the terms consent gates the submit button; the Friday preview opt-in starts ticked.',
       },
     },
   },

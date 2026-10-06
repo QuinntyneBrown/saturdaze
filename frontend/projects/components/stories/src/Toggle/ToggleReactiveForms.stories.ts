@@ -26,7 +26,8 @@ export const ReactiveForms: StoryObj<Toggle> = {
   parameters: {
     docs: {
       description: {
-        story: 'Sign-in\'s "Remember me": bound with `formControlName`, the control\'s value wins over the static `checked` input.',
+        story:
+          'Sign-in\'s "Remember me": bound with `formControlName`, the control\'s value wins over the static `checked` input.',
       },
     },
   },

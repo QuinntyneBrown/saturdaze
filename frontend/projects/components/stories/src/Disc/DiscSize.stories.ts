@@ -15,7 +15,10 @@ export const Size: StoryObj<Disc> = {
   }),
   parameters: {
     docs: {
-      description: { story: '`sm` 32px, `md` 36px (default), `lg` 40px, `xl` 56px. The glyph scales with it: 16, 20, 20 and 26px.' },
+      description: {
+        story:
+          '`sm` 32px, `md` 36px (default), `lg` 40px, `xl` 56px. The glyph scales with it: 16, 20, 20 and 26px.',
+      },
     },
   },
 };

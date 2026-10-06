@@ -15,7 +15,10 @@ export const WithIcon: StoryObj<Chip> = {
   }),
   parameters: {
     docs: {
-      description: { story: 'Project an `sd-icon` before the text; the chip sizes it to 13px. Use `stroke="2"` so the small glyph stays crisp.' },
+      description: {
+        story:
+          'Project an `sd-icon` before the text; the chip sizes it to 13px. Use `stroke="2"` so the small glyph stays crisp.',
+      },
     },
   },
 };

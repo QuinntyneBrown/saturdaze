@@ -20,7 +20,9 @@ export const Interactive: StoryObj<VoteRow> = {
         votes,
         tally,
         cast: (change: { index: number; vote: Vote }) =>
-          votes.update((cells) => cells.map((cell, i) => (i === change.index ? { ...cell, vote: change.vote } : cell))),
+          votes.update((cells) =>
+            cells.map((cell, i) => (i === change.index ? { ...cell, vote: change.vote } : cell)),
+          ),
       },
       template: `
         <sd-vote-row style="max-width: 420px" label="Family vote for Symposium Café" [votes]="votes()" (voteChange)="cast($event)" />
@@ -32,7 +34,7 @@ export const Interactive: StoryObj<VoteRow> = {
     docs: {
       description: {
         story:
-          '`voteChange` emits `{ index, vote }`; write it back into `votes`. Pressing the thumb that is already pressed clears that member\'s vote to `none`.',
+          "`voteChange` emits `{ index, vote }`; write it back into `votes`. Pressing the thumb that is already pressed clears that member's vote to `none`.",
       },
     },
   },

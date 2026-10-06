@@ -48,7 +48,8 @@ export const TopPick: StoryObj<FoodCard> = {
   parameters: {
     docs: {
       description: {
-        story: '`topPick` spans the grid (`.card--span`) and adds the "Top pick" chip; the page also passes `tone="sun"` for its disc.',
+        story:
+          '`topPick` spans the grid (`.card--span`) and adds the "Top pick" chip; the page also passes `tone="sun"` for its disc.',
       },
     },
   },

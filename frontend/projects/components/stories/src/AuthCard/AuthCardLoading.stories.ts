@@ -16,7 +16,8 @@ export const Loading: StoryObj<AuthCard> = {
   parameters: {
     docs: {
       description: {
-        story: 'An `sd-spinner` can take the disc slot while a token is checked; pair it with a visually hidden live status.',
+        story:
+          'An `sd-spinner` can take the disc slot while a token is checked; pair it with a visually hidden live status.',
       },
     },
   },

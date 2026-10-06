@@ -13,7 +13,10 @@ export const Disabled: StoryObj<FilterChip> = {
   }),
   parameters: {
     docs: {
-      description: { story: '`disabled` sets the native attribute, fades the chip and swallows clicks — `pressedChange` never fires.' },
+      description: {
+        story:
+          '`disabled` sets the native attribute, fades the chip and swallows clicks — `pressedChange` never fires.',
+      },
     },
   },
 };

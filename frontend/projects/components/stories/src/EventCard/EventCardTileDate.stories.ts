@@ -20,7 +20,8 @@ export const TileDate: StoryObj<EventCard> = {
   parameters: {
     docs: {
       description: {
-        story: 'The tile reads an ISO `date` ("2026-05-17" → May 17) or pre-split `mon` / `day`; the split parts win when both are given.',
+        story:
+          'The tile reads an ISO `date` ("2026-05-17" → May 17) or pre-split `mon` / `day`; the split parts win when both are given.',
       },
     },
   },

@@ -16,6 +16,10 @@ export const SubtitleFirst: StoryObj<ListItem> = {
     `,
   }),
   parameters: {
-    docs: { description: { story: '`subtitleFirst` puts the small label above the value — account and settings rows.' } },
+    docs: {
+      description: {
+        story: '`subtitleFirst` puts the small label above the value — account and settings rows.',
+      },
+    },
   },
 };

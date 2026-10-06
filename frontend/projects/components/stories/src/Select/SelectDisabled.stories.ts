@@ -21,7 +21,10 @@ export const Disabled: StoryObj<Select> = {
   }),
   parameters: {
     docs: {
-      description: { story: 'There is no `disabled` input: disable the bound control and `setDisabledState` disables the native select.' },
+      description: {
+        story:
+          'There is no `disabled` input: disable the bound control and `setDisabledState` disables the native select.',
+      },
     },
   },
 };

@@ -29,6 +29,11 @@ export const Grid: StoryObj<PastCard> = {
     `,
   }),
   parameters: {
-    docs: { description: { story: 'The Past screen: newest first in `sd-grid-cards`, favourites marked with the filled heart.' } },
+    docs: {
+      description: {
+        story:
+          'The Past screen: newest first in `sd-grid-cards`, favourites marked with the filled heart.',
+      },
+    },
   },
 };

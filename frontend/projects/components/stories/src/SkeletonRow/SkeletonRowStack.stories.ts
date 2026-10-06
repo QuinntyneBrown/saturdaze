@@ -16,7 +16,10 @@ export const Stack: StoryObj<SkeletonRow> = {
   }),
   parameters: {
     docs: {
-      description: { story: 'A day loading: four rows stand in for the morning, lunch, afternoon and dinner blocks.' },
+      description: {
+        story:
+          'A day loading: four rows stand in for the morning, lunch, afternoon and dinner blocks.',
+      },
     },
   },
 };

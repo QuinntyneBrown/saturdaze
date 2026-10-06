@@ -22,7 +22,10 @@ export const Plain: StoryObj<List> = {
   }),
   parameters: {
     docs: {
-      description: { story: 'Without `card` the list adds no surface — use it when the rows already sit inside a card or a dialog.' },
+      description: {
+        story:
+          'Without `card` the list adds no surface — use it when the rows already sit inside a card or a dialog.',
+      },
     },
   },
 };
