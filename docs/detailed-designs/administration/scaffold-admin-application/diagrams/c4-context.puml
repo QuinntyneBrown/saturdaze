@@ -1,0 +1,11 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context - Scaffold the admin application
+
+Person(admin, "Catalog curator", "Administrator who maintains place photos")
+Person(family, "Family member", "Plans weekends in the family app")
+System(saturdaze, "Saturdaze", "Family weekend planning platform: family app, admin app, one API")
+Rel(admin, saturdaze, "Signs in and maintains the catalog using", "HTTPS")
+Rel(family, saturdaze, "Plans weekends using", "HTTPS")
+@enduml

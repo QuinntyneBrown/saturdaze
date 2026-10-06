@@ -1,0 +1,92 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure - Review ingested photos
+
+enum PhotoReviewState {
+  Unreviewed
+  Reviewed
+}
+enum PhotoReviewDecision {
+  Keep
+  Primary
+  Reject
+}
+class PlacePhoto {
+  +Guid Id
+  +PlaceKind PlaceKind
+  +Guid PlaceId
+  +string Url
+  +PhotoSource Source
+  +bool IsPrimary
+  +PhotoReviewState ReviewState
+  +bool AdminLocked
+}
+class RejectedPlacePhoto {
+  +Guid Id
+  +PlaceKind PlaceKind
+  +Guid PlaceId
+  +string Url
+  +DateTimeOffset RejectedAt
+  +Guid RejectedBy
+  +string? Reason
+}
+class ReviewPhotoCommand {
+  +Guid PhotoId
+  +PhotoReviewDecision Decision
+  +string? Reason
+}
+class ReviewPhotoCommandHandler {
+  +Handle(command): Task<AdminPhotoDto?>
+}
+class ListPhotoReviewsQueryHandler {
+  +Handle(query): Task<IReadOnlyList<PhotoReviewItemDto>>
+}
+class ListIngestionPhotoSkipsQueryHandler {
+  +Handle(query): Task<IReadOnlyList<IngestionPhotoSkipsDto>>
+}
+class CatalogUpserter {
+  -AddPhotosAsync(kind, placeId, placeName, row): Task
+}
+class SeedPhotos <<static>> {
+  +{static} Apply(db, kind, placeId, records): void
+}
+class PhotoReviewItemDto {
+  +AdminPhotoDto photo
+  +string placeKind
+  +Guid placeId
+  +string placeName
+  +PlacePhotoDto? replaces
+}
+class IngestionPhotoSkipsDto {
+  +Guid runId
+  +DateTimeOffset startedUtc
+  +string type
+  +string status
+  +PhotoSkipDto[] skips
+}
+class PhotoSkipDto {
+  +string reason
+  +string? placeKind
+  +Guid? placeId
+}
+PlacePhoto --> PhotoReviewState
+ReviewPhotoCommand --> PhotoReviewDecision
+ReviewPhotoCommandHandler ..> ReviewPhotoCommand : handles
+ReviewPhotoCommandHandler --> PlacePhoto : decides
+ReviewPhotoCommandHandler --> RejectedPlacePhoto : creates on reject
+ListPhotoReviewsQueryHandler --> PhotoReviewItemDto : returns
+ListIngestionPhotoSkipsQueryHandler --> IngestionPhotoSkipsDto : returns
+IngestionPhotoSkipsDto "1" *-- "*" PhotoSkipDto
+CatalogUpserter ..> RejectedPlacePhoto : skips matching URLs
+CatalogUpserter --> PlacePhoto : stores Unreviewed
+SeedPhotos ..> PlacePhoto : respects AdminLocked
+@enduml

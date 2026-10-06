@@ -1,0 +1,29 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components - Scaffold the admin application
+
+Container_Boundary(adminweb, "Saturdaze Admin") {
+  Component(app, "App", "Angular root component", "Loading, gate or shell plus outlet")
+  Component(config, "appConfig", "Composition root", "Binds API_BASE_URL, AUTH_ROUTES, SESSION_STORE and admin service tokens")
+  Component(signin, "SignInPage", "Angular page", "sd-auth-shell and sd-auth-card")
+}
+Container_Boundary(libs, "components and api libraries") {
+  Component(nav, "sd-admin-nav", "components", "Side navigation from 1024 px, top bar below")
+  Component(gate, "sd-admin-gate", "components", "Cannot-use state with Sign out")
+  Component(guards, "requireAuth, requireAnonymous, requireAdmin", "api auth guards", "Read AUTH_ROUTES for redirects")
+  Component(interceptor, "authInterceptor", "api", "Bearer header and refresh on 401")
+  Component(session, "SessionStore", "api", "Token pair, user and role")
+}
+Container_Boundary(api, "Saturdaze API") {
+  Component(policy, "Admin policy and fallback policy", "ASP.NET Core authorization", "401 anonymous, 403 non-admin")
+  Component(ctrl, "api/admin/* controllers", "ASP.NET Core", "Authorize(Policy = Admin)")
+}
+Rel(app, session, "Reads user and loading")
+Rel(app, gate, "Renders for non-admin")
+Rel(app, nav, "Renders for admin")
+Rel(config, guards, "Provides AUTH_ROUTES")
+Rel(signin, session, "signIn()")
+Rel(interceptor, ctrl, "Sends bearer", "HTTPS")
+Rel(ctrl, policy, "Guarded by")
+@enduml

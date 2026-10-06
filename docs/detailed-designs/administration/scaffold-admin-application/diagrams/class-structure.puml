@@ -1,0 +1,61 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure - Scaffold the admin application
+
+class App {
+  #loading: Signal<boolean>
+  #isAdmin: Signal<boolean>
+  #email: Signal<string>
+  #screen: Signal<string>
+  #signOut(): Promise<void>
+}
+class AdminNav {
+  +active: InputSignal<AdminNavKey | null>
+  +email: InputSignal<string>
+  +signOut: OutputEmitterRef<void>
+}
+class AdminGate {
+  +email: InputSignal<string>
+  +signOut: OutputEmitterRef<void>
+}
+interface AuthRoutes {
+  +signIn: string
+  +home: string
+}
+class "AUTH_ROUTES" as AuthRoutesToken <<InjectionToken>>
+class "requireAuth" as RequireAuth <<CanActivateFn>>
+class "requireAnonymous" as RequireAnonymous <<CanActivateFn>>
+class "requireAdmin" as RequireAdmin <<CanActivateFn>>
+class "authInterceptor" as AuthInterceptor <<HttpInterceptorFn>>
+class SessionStore {
+  +user: Signal<User | null>
+  +loading: Signal<boolean>
+  +signIn(req: LoginRequest): Promise<void>
+  +signOut(): Promise<void>
+}
+class "ADMIN_PLACES_SERVICE" as PlacesToken <<InjectionToken>>
+class "ADMIN_PHOTOS_SERVICE" as PhotosToken <<InjectionToken>>
+class "ADMIN_AUDIT_SERVICE" as AuditToken <<InjectionToken>>
+
+App --> SessionStore : reads
+App --> AdminNav : renders
+App --> AdminGate : renders
+RequireAuth ..> AuthRoutesToken : redirects with
+RequireAnonymous ..> AuthRoutesToken : redirects with
+RequireAdmin ..> AuthRoutesToken : redirects with
+AuthRoutesToken ..> AuthRoutes : provides
+RequireAuth ..> SessionStore : reads
+AuthInterceptor ..> SessionStore : reads token
+App ..> PlacesToken : composition root binds
+App ..> PhotosToken : composition root binds
+App ..> AuditToken : composition root binds
+@enduml

@@ -1,0 +1,13 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context - Review ingested photos
+
+Person(admin, "Catalog curator", "Keeps, promotes or rejects ingested photos")
+Person(operator, "Operator", "Runs ingestion and reads photo skips")
+System(saturdaze, "Saturdaze", "Family weekend planning platform")
+System_Ext(search, "Web-search provider", "Grounded model that returns catalog candidates with photos")
+Rel(admin, saturdaze, "Reviews ingested photos using", "HTTPS")
+Rel(operator, saturdaze, "Runs ingestion and reads skips using", "CLI, HTTPS")
+Rel(saturdaze, search, "Discovers candidates through", "HTTPS")
+@enduml

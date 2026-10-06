@@ -1,0 +1,22 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers - Manage place photos
+
+Person(admin, "Catalog curator", "Administrator")
+Person(family, "Family member", "Plans weekends")
+System_Boundary(saturdaze, "Saturdaze") {
+  Container(adminweb, "Saturdaze Admin", "Angular", "Photo health, Places, Place photos, Activity log and dialogs")
+  Container(web, "Saturdaze web application", "Angular", "Idea cards and covers")
+  Container(api, "Saturdaze API", "ASP.NET Core", "/api/admin/* handlers, /api/catalog-photos/{key}")
+  ContainerDb(db, "Saturdaze database", "SQL Server", "PlacePhotos, PhotoAuditEntries")
+  Container(store, "Curated photo store", "File system or Azure Blob (ADR-015)", "Public, cacheable uploaded photos")
+}
+Rel(admin, adminweb, "Uses", "HTTPS")
+Rel(family, web, "Uses", "HTTPS")
+Rel(adminweb, api, "Calls /api/admin/*", "JSON and multipart/HTTPS")
+Rel(web, api, "Lists places with their primary photo", "JSON/HTTPS")
+Rel(api, db, "Reads and writes photos and audit entries", "EF Core")
+Rel(api, store, "Puts and deletes curated uploads")
+Rel(web, store, "Loads curated photos from", "HTTPS")
+@enduml
