@@ -42,9 +42,9 @@ public sealed class CatalogUpserter
 
     /// <summary>
     /// Adds the row's <c>photos</c> candidates as provider photos (L2-100). A candidate without
-    /// attribution or licence is never stored; its skip is reported for the run audit. A URL the
-    /// place already has is left alone, and the first stored photo becomes primary when the
-    /// place has none.
+    /// attribution or licence is never stored, nor is one an administrator rejected (L2-121 AC1);
+    /// each skip is reported for the run audit. A URL the place already has is left alone, and
+    /// the first stored photo becomes primary when the place has none (L2-121 AC2).
     /// </summary>
     private async Task AddPhotosAsync(PlaceKind kind, Guid placeId, string placeName, JsonObject p, CancellationToken ct)
     {
@@ -55,11 +55,21 @@ public sealed class CatalogUpserter
         var stored = await _db.PlacePhotos.Where(x => x.PlaceKind == kind && x.PlaceId == placeId).ToListAsync(ct);
         known.AddRange(stored.Where(s => !known.Contains(s)));
         var hasPrimary = known.Any(x => x.IsPrimary);
+        var rejected = await _db.RejectedPlacePhotos
+            .Where(r => r.PlaceKind == kind && r.PlaceId == placeId)
+            .Select(r => r.Url)
+            .ToListAsync(ct);
 
         foreach (var candidate in candidates.OfType<JsonObject>())
         {
             var url = PayloadReader.GetStringOrEmpty(candidate, "url");
             if (url.Length == 0 || url.Length > 1000 || known.Any(x => x.Url == url)) continue;
+            if (rejected.Contains(url, StringComparer.Ordinal))
+            {
+                // An administrator rejected this address for the place; never store it again (L2-121 AC1).
+                _skips.Add($"{placeName}: photo {url} skipped, previously rejected");
+                continue;
+            }
 
             var photo = PlacePhoto.Create(
                 kind,

@@ -50,6 +50,11 @@ export abstract class AdminPage extends BasePage {
     return control(this.adminNav.locator(".admin-nav__account"), "Sign out");
   }
 
+  /** The highlighted note inside an admin dialog (AD4's cover impact). */
+  dialogNote(): Locator {
+    return this.dialog().locator(".well");
+  }
+
   /* ---------- Gate (signed in, not an administrator) ---------- */
 
   gate(): Locator {

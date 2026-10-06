@@ -14,19 +14,19 @@ import { PlaceRow } from '../models/admin/place-row';
 import { ChipView } from '../models/chip-view';
 import { IAdminPlacesService } from './admin-places.service.contract';
 
-const KIND_LABEL: Record<AdminPlaceDto['kind'], string> = {
+export const KIND_LABEL: Record<AdminPlaceDto['kind'], string> = {
   Activity: 'Activity',
   Restaurant: 'Restaurant',
   LocalEvent: 'Event',
 };
 
-const KIND_TONE: Record<AdminPlaceDto['kind'], PlaceRow['tone']> = {
+export const KIND_TONE: Record<AdminPlaceDto['kind'], PlaceRow['tone']> = {
   Activity: 'leaf',
   Restaurant: 'sun',
   LocalEvent: 'sky',
 };
 
-const KIND_ICON: Record<AdminPlaceDto['kind'], string> = {
+export const KIND_ICON: Record<AdminPlaceDto['kind'], string> = {
   Activity: 'tree',
   Restaurant: 'fork',
   LocalEvent: 'ticket',

@@ -1,6 +1,8 @@
 import { InjectionToken } from '@angular/core';
 
 import { AdminPhotoDto } from '../models/admin/admin-photo.dto';
+import { ReviewDecision } from '../models/admin/photo-review.dto';
+import { ReviewItemView } from '../models/admin/review-item-view';
 
 /**
  * Contract for Saturdaze Admin's photo actions (L2-115 to L2-120). Admin
@@ -41,6 +43,14 @@ export interface IAdminPhotosService {
    * `nextPrimaryId`: a sibling's id, or `'none'` to leave the place without a photo.
    */
   remove(photoId: string, nextPrimaryId: string | null): Promise<void>;
+  /** `GET /api/admin/photo-reviews` (L2-120): unreviewed provider photos, newest first. */
+  reviews(): Promise<ReviewItemView[]>;
+  /**
+   * `POST /api/admin/photos/{photoId}/review` (L2-120): keep, make primary or reject the
+   * photo; a rejection may carry a reason. Rejects with the server's error (409
+   * `already_reviewed` when it was decided meanwhile).
+   */
+  review(photoId: string, decision: ReviewDecision, reason?: string): Promise<void>;
 }
 
 export const ADMIN_PHOTOS_SERVICE = new InjectionToken<IAdminPhotosService>('ADMIN_PHOTOS_SERVICE');

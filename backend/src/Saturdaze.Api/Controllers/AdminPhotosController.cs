@@ -111,6 +111,21 @@ public sealed class AdminPhotosController : ControllerBase
         return NoContent();
     }
 
+    /// <summary>Unreviewed provider photos, newest first, with the primary each would replace (L2-120).</summary>
+    [HttpGet("photo-reviews")]
+    public async Task<ActionResult<IReadOnlyList<PhotoReviewItemDto>>> PhotoReviews(CancellationToken ct)
+        => Ok(await _sender.Send(new ListPhotoReviewsQuery(), ct));
+
+    public record ReviewPhotoRequest(string? Decision, string? Reason);
+
+    /// <summary>Keeps, promotes or rejects an unreviewed provider photo (L2-120).</summary>
+    [HttpPost("photos/{photoId:guid}/review")]
+    public async Task<IActionResult> Review(Guid photoId, [FromBody] ReviewPhotoRequest req, CancellationToken ct)
+    {
+        await _sender.Send(new ReviewPhotoCommand(photoId, req.Decision, req.Reason), ct);
+        return NoContent();
+    }
+
     private static PlaceKind ParseKind(string kind)
         => Enum.TryParse<PlaceKind>(kind, true, out var parsed)
             ? parsed

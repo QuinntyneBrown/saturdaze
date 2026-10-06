@@ -3,8 +3,31 @@ import { Injectable, inject } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 
 import { API_BASE_URL } from '../api/api-base-url';
+import { toMedia } from '../api/media';
 import { AdminPhotoDto } from '../models/admin/admin-photo.dto';
+import { PhotoReviewItemDto, ReviewDecision } from '../models/admin/photo-review.dto';
+import { ReviewItemView } from '../models/admin/review-item-view';
+import { KIND_ICON, KIND_LABEL, KIND_TONE } from './admin-places.service';
 import { IAdminPhotosService, PhotoDetails } from './admin-photos.service.contract';
+
+export function toReviewItem(dto: PhotoReviewItemDto): ReviewItemView {
+  const p = dto.photo;
+  return {
+    id: p.id,
+    kind: dto.kind,
+    placeId: dto.placeId,
+    placeName: dto.placeName,
+    placeHref: `/places/${dto.kind}/${dto.placeId}`,
+    meta: `${KIND_LABEL[dto.kind]} · ${p.license}`,
+    candidate: p.blocked
+      ? null
+      : { src: p.url, alt: p.alt, width: p.width, height: p.height, credit: p.attribution },
+    replaces: toMedia(dto.replaces),
+    replacesCaption: dto.replaces ? 'Would replace' : 'Would become primary',
+    tone: KIND_TONE[dto.kind],
+    icon: KIND_ICON[dto.kind],
+  };
+}
 
 /** HTTP implementation of `IAdminPhotosService`. */
 @Injectable({ providedIn: 'root' })
@@ -51,5 +74,21 @@ export class AdminPhotosService implements IAdminPhotosService {
   async remove(photoId: string, nextPrimaryId: string | null): Promise<void> {
     const params = nextPrimaryId ? new HttpParams().set('nextPrimaryId', nextPrimaryId) : undefined;
     await firstValueFrom(this.http.delete<void>(this.photoUrl(photoId), { params }));
+  }
+
+  async reviews(): Promise<ReviewItemView[]> {
+    const items = await firstValueFrom(
+      this.http.get<PhotoReviewItemDto[]>(`${this.baseUrl}/api/admin/photo-reviews`),
+    );
+    return items.map(toReviewItem);
+  }
+
+  async review(photoId: string, decision: ReviewDecision, reason?: string): Promise<void> {
+    await firstValueFrom(
+      this.http.post<void>(`${this.photoUrl(photoId)}/review`, {
+        decision,
+        reason: reason ?? null,
+      }),
+    );
   }
 }

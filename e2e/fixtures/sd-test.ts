@@ -47,6 +47,7 @@ import { SharedWeekendPage } from "../pages/shared-weekend.page.js";
 import { AdminSignInPage } from "../pages/admin/admin-sign-in.page.js";
 import { AdminPlacesPage } from "../pages/admin/admin-places.page.js";
 import { AdminPlacePage } from "../pages/admin/admin-place.page.js";
+import { AdminReviewsPage } from "../pages/admin/admin-reviews.page.js";
 
 interface Pages {
   weekend: WeekendPage;
@@ -65,6 +66,7 @@ interface Pages {
   adminSignIn: AdminSignInPage;
   adminPlaces: AdminPlacesPage;
   adminPlace: AdminPlacePage;
+  adminReviews: AdminReviewsPage;
 }
 
 export interface GotoOptions {
@@ -146,6 +148,7 @@ export const test = base.extend<SdFixtures>({
       adminSignIn: new AdminSignInPage(page),
       adminPlaces: new AdminPlacesPage(page),
       adminPlace: new AdminPlacePage(page),
+      adminReviews: new AdminReviewsPage(page),
     });
   },
 
