@@ -93,20 +93,25 @@ describe('ReviewSubmissionsPage', () => {
     dialog = { open: vi.fn(() => ({ closed: of(undefined) })) };
   });
 
-  const header = (): Element => host.querySelector('sd-page-header')!;
+  const headerTitle = (): string | null =>
+    host.querySelector('.page-header__title')?.textContent?.trim() ?? null;
+  const headerSubtitle = (): string | null =>
+    host.querySelector('.page-header__subtitle')?.textContent?.trim() ?? null;
+  const emptyTitle = (): string | null =>
+    host.querySelector('sd-empty .empty__title')?.textContent?.trim() ?? null;
   const cards = (): HTMLElement[] => Array.from(host.querySelectorAll('sd-card.submission'));
 
   it('fetches the queue and renders each pending card, oldest first', async () => {
     submissions.loadPending.mockImplementationOnce(() => new Promise<void>(() => undefined));
     await mount();
     expect(submissions.loadPending).toHaveBeenCalledTimes(1);
-    expect(header().getAttribute('title')).toBe('Review submissions');
+    expect(headerTitle()).toBe('Review submissions');
     expect(host.querySelector('.page-header__eyebrow')?.getAttribute('href')).toBe('/family');
     expect(host.querySelector('sd-status-row')?.textContent?.trim()).toBe('Fetching the queue.');
 
     view.set(READY);
     fixture.detectChanges();
-    expect(header().getAttribute('subtitle')).toBe(READY.subtitle);
+    expect(headerSubtitle()).toBe(READY.subtitle);
     expect(cards().map((c) => c.getAttribute('aria-label'))).toEqual([
       'Port Credit Buskerfest',
       'Farmers Market',
@@ -116,9 +121,8 @@ describe('ReviewSubmissionsPage', () => {
       'Sat 20 Jun · 2:00 to 9:00pm',
     );
     expect(first.querySelector('sd-chip')?.textContent?.trim()).toBe('Pending');
-    expect(first.querySelector('.submitter sd-avatar')?.getAttribute('name')).toBe(
-      'quinntynebrown@gmail.com',
-    );
+    // The avatar is drawn from the submitter's email: its initial, uppercased.
+    expect(first.querySelector('.submitter sd-avatar')?.textContent?.trim()).toBe('Q');
     expect(first.querySelector('.submitter')?.textContent?.replace(/\s+/g, ' ').trim()).toContain(
       'quinntynebrown@gmail.com · 2 hours ago',
     );
@@ -133,10 +137,10 @@ describe('ReviewSubmissionsPage', () => {
   it('shows the cleared queue for ?state=empty without fetching', async () => {
     await mount({ state: 'empty' });
     expect(submissions.loadPending).not.toHaveBeenCalled();
-    expect(header().getAttribute('subtitle')).toBe(
+    expect(headerSubtitle()).toBe(
       'Nothing waiting. New suggestions show up here as families send them.',
     );
-    expect(host.querySelector('sd-empty')?.getAttribute('title')).toBe('Queue is clear');
+    expect(emptyTitle()).toBe('Queue is clear');
     expect(host.querySelector('sd-empty sd-button a')?.getAttribute('href')).toBe('/family');
   });
 
@@ -145,7 +149,7 @@ describe('ReviewSubmissionsPage', () => {
       view.set({ ...READY, status: 'empty', cards: [] }),
     );
     await mount();
-    expect(host.querySelector('sd-empty')?.getAttribute('title')).toBe('Queue is clear');
+    expect(emptyTitle()).toBe('Queue is clear');
   });
 
   it('collapses an approved card to a status row', async () => {

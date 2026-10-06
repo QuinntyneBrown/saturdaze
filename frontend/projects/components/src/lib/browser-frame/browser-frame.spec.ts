@@ -29,18 +29,16 @@ describe('BrowserFrame', () => {
     expect(host.querySelectorAll('.browser-frame__bar .browser-frame__dot').length).toBe(3);
   });
 
-  it('shows the url in the bar and mirrors it to the host', () => {
+  it('shows the url in the bar', () => {
     expect(host.querySelector('.browser-frame__url')?.textContent?.trim()).toBe(
       'saturdaze.app/weekend',
     );
-    expect(host.getAttribute('url')).toBe('saturdaze.app/weekend');
 
     fixture.componentRef.setInput('url', 'saturdaze.app/past');
     fixture.detectChanges();
     expect(host.querySelector('.browser-frame__url')?.textContent?.trim()).toBe(
       'saturdaze.app/past',
     );
-    expect(host.getAttribute('url')).toBe('saturdaze.app/past');
   });
 
   it('lays the composition out at the frame size', () => {

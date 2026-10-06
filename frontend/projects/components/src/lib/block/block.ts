@@ -33,13 +33,6 @@ import { Icon } from '../icon/icon';
     '(mouseleave)': 'activeChange.emit(false)',
     '(focusin)': 'activeChange.emit(true)',
     '(focusout)': 'focusLeft($event)',
-    '[attr.time]': 'time() || null',
-    '[attr.title]': 'blockTitle() || null',
-    '[attr.commitment]': 'commitment() ? "" : null',
-    '[attr.locked]': 'locked() ? "" : null',
-    '[attr.drive]': 'drive() ? "" : null',
-    '[attr.errand]': 'errand() ? "" : null',
-    '[attr.done]': 'done() ? "" : null',
   },
 })
 export class Block {

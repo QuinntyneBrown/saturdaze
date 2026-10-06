@@ -19,7 +19,7 @@ import { Scrolled } from '../scrolled/scrolled';
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class: 'sitebar',
-    '[attr.cta]': 'cta() ? "" : null',
+    '[class.sitebar--cta]': 'cta()',
   },
 })
 export class Sitebar {

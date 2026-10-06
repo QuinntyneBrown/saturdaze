@@ -36,7 +36,6 @@ describe('CopyField', () => {
     expect(host.querySelector('.copy-field__value')?.textContent?.trim()).toBe(
       'https://saturdaze.app/s/abc123',
     );
-    expect(host.getAttribute('value')).toBe('https://saturdaze.app/s/abc123');
     expect(button().classList.contains('btn--quiet')).toBe(true);
     expect(button().getAttribute('aria-label')).toBe('Copy link');
     expect(button().getAttribute('aria-pressed')).toBe('false');

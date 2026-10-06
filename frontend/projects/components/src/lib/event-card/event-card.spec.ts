@@ -33,7 +33,6 @@ describe('EventCard', () => {
     expect(fixture.componentInstance).toBeTruthy();
     expect(host.classList.contains('card')).toBe(true);
     const tile = host.querySelector('.card__head sd-date-tile') as HTMLElement;
-    expect(tile.getAttribute('date')).toBe('2026-08-15');
     expect(tile.querySelector('.date-tile__m')?.textContent).toBe('Aug');
     expect(tile.querySelector('.date-tile__d')?.textContent).toBe('15');
     expect(host.querySelector('h3.card__title')?.textContent?.trim()).toBe(
@@ -41,9 +40,7 @@ describe('EventCard', () => {
     );
     expect(host.querySelector('.card__meta')).toBeNull();
     expect(host.querySelector('.card__footer')).toBeNull();
-    expect(host.getAttribute('title')).toBe('Port Credit Buskerfest');
-    expect(host.getAttribute('date')).toBe('2026-08-15');
-    expect(host.getAttribute('muted')).toBeNull();
+    expect(host.classList.contains('card--muted')).toBe(false);
   });
 
   it('renders the place and date line', () => {
@@ -63,7 +60,7 @@ describe('EventCard', () => {
     expect(link.getAttribute('rel')).toBe('noopener');
     expect(link.classList.contains('btn--quiet')).toBe(true);
     expect(link.lastElementChild?.tagName.toLowerCase()).toBe('sd-icon');
-    expect(link.lastElementChild?.getAttribute('name')).toBe('arrow_right');
+    expect(link.lastElementChild?.querySelector('svg')?.innerHTML).toContain('M9 6l6 6-6 6');
   });
   it('labels the Details link with its text', () => {
     fixture.componentRef.setInput('url', 'https://buskerfest.example');
@@ -76,7 +73,6 @@ describe('EventCard', () => {
     fixture.componentRef.setInput('muted', true);
     fixture.detectChanges();
     expect(host.classList.contains('card--muted')).toBe(true);
-    expect(host.getAttribute('muted')).toBe('');
     expect(footerLink()).toBeNull();
   });
 

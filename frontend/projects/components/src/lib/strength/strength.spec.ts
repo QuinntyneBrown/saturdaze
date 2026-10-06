@@ -23,23 +23,20 @@ describe('Strength', () => {
   });
 
   it('has no level and no label until told', () => {
-    expect(host.getAttribute('level')).toBeNull();
     expect(host.className.trim()).toBe('strength');
     expect(host.querySelector('.strength__label')).toBeNull();
   });
 
-  it('mirrors the level to a host class and attribute', () => {
+  it('mirrors the level to a host class', () => {
     for (const level of ['weak', 'ok', 'strong']) {
       fixture.componentRef.setInput('level', level);
       fixture.detectChanges();
       expect(host.classList.contains(`strength--${level}`)).toBe(true);
-      expect(host.getAttribute('level')).toBe(level);
     }
     expect(host.classList.contains('strength--weak')).toBe(false);
 
     fixture.componentRef.setInput('level', null);
     fixture.detectChanges();
-    expect(host.getAttribute('level')).toBeNull();
     expect(host.classList.contains('strength--strong')).toBe(false);
   });
 

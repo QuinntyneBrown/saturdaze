@@ -18,6 +18,9 @@ describe('ActivityCard', () => {
   let fixture: ComponentFixture<ActivityCard>;
   let host: HTMLElement;
 
+  const glyph = (el: Element | null | undefined): string =>
+    el?.querySelector('svg')?.innerHTML ?? '';
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({ imports: [ActivityCard, HostCmp] }).compileComponents();
     fixture = TestBed.createComponent(ActivityCard);
@@ -34,15 +37,13 @@ describe('ActivityCard', () => {
     expect(tile.classList).toContain('media--fallback');
     expect(tile.classList).toContain('media--leaf');
     expect(tile.getAttribute('aria-hidden')).toBe('true');
-    expect(tile.querySelector('sd-icon')?.getAttribute('name')).toBe('tree');
+    expect(glyph(tile.querySelector('sd-icon'))).toContain('M12 3l-5 7h3l-4 6h12l-4-6h3l-5-7z');
     expect(host.querySelector('.card__head-text h3.card__title')?.textContent?.trim()).toBe(
       'Jack Darling Park',
     );
     expect(host.querySelector('.card__meta')).toBeNull();
     expect(host.querySelector('.card__body')).toBeNull();
     expect(host.querySelector('.card__footer')).toBeNull();
-    expect(host.getAttribute('title')).toBe('Jack Darling Park');
-    expect(host.getAttribute('tone')).toBe('leaf');
   });
 
   it('renders the place line and the why', () => {
@@ -60,9 +61,8 @@ describe('ActivityCard', () => {
     fixture.componentRef.setInput('icon', 'popcorn');
     fixture.detectChanges();
     const tile = host.querySelector('sd-media') as HTMLElement;
-    expect(tile.querySelector('sd-icon')?.getAttribute('name')).toBe('popcorn');
+    expect(glyph(tile.querySelector('sd-icon'))).toContain('M6 9h12l-1 12H7L6 9z');
     expect(tile.classList).toContain('media--indoor');
-    expect(host.getAttribute('tone')).toBe('indoor');
   });
 
   it('adds a Map link that opens in a new tab when the catalogue has one', () => {

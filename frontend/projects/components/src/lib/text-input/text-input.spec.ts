@@ -25,8 +25,6 @@ describe('TextInput', () => {
     expect(control().getAttribute('type')).toBe('text');
     expect(control().id).toMatch(/^sd-field-\d+$/);
     expect(host.querySelector('.field__label')).toBeNull();
-    expect(host.getAttribute('type')).toBe('text');
-    expect(host.getAttribute('label')).toBeNull();
     expect(control().hasAttribute('aria-invalid')).toBe(false);
     expect(control().hasAttribute('aria-describedby')).toBe(false);
   });
@@ -41,8 +39,6 @@ describe('TextInput', () => {
     expect(label.textContent).toContain('Email');
     expect(label.querySelector('.field__req')?.textContent?.trim()).toBe('Required');
     expect(control().getAttribute('aria-required')).toBe('true');
-    expect(host.getAttribute('label')).toBe('Email');
-    expect(host.getAttribute('required')).toBe('');
   });
 
   it('describes the control with its hint', () => {
@@ -52,7 +48,6 @@ describe('TextInput', () => {
     expect(hint.textContent?.trim()).toBe('We never share it.');
     expect(hint.id).toBe(`${control().id}-hint`);
     expect(control().getAttribute('aria-describedby')).toBe(hint.id);
-    expect(host.getAttribute('hint')).toBe('We never share it.');
   });
 
   it('shows the error instead of the hint and flags the control invalid', () => {
@@ -68,7 +63,6 @@ describe('TextInput', () => {
     expect(control().getAttribute('aria-describedby')).toBe(
       `${control().id}-error ${control().id}-hint`,
     );
-    expect(host.getAttribute('error')).toBe('Enter a valid email');
   });
 
   it('forwards type, placeholder, autocomplete, name and numeric bounds', () => {
@@ -91,7 +85,6 @@ describe('TextInput', () => {
     expect(input.getAttribute('max')).toBe('10');
     expect(input.getAttribute('step')).toBe('1');
     expect(input.readOnly).toBe(true);
-    expect(host.getAttribute('type')).toBe('number');
   });
 
   it('renders a textarea with the given rows when multiline', () => {
@@ -101,7 +94,6 @@ describe('TextInput', () => {
     const area = control() as HTMLTextAreaElement;
     expect(area.tagName).toBe('TEXTAREA');
     expect(area.rows).toBe(5);
-    expect(host.getAttribute('multiline')).toBe('');
   });
 
   it('seeds the control from the static value input', () => {

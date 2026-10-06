@@ -30,13 +30,13 @@ describe('SubmitEventDialog', () => {
     host = fixture.nativeElement as HTMLElement;
   });
 
-  const primary = (): HTMLElement =>
-    host.querySelector('sd-button[slot="actions"][variant="primary"]') as HTMLElement;
+  const primary = (): HTMLButtonElement =>
+    host.querySelector('sd-button[slot="actions"] button.btn--primary') as HTMLButtonElement;
 
   it('renders the form with the start time defaulted to the next hour', () => {
     expect(host.querySelector('.dialog__title')?.textContent?.trim()).toBe('Suggest an event');
-    const labels = Array.from(host.querySelectorAll('sd-text-input')).map((f) =>
-      f.getAttribute('label'),
+    const labels = Array.from(host.querySelectorAll('sd-text-input .field__label')).map((l) =>
+      l.firstChild?.textContent?.trim(),
     );
     expect(labels).toEqual([
       'Title',
@@ -49,18 +49,22 @@ describe('SubmitEventDialog', () => {
       'Link',
     ]);
     expect(component['startsAtLocal']()).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:00$/);
-    expect(primary().hasAttribute('disabled')).toBe(true);
+    expect(primary().disabled).toBe(true);
   });
 
   it('enables submit once there is a title, and flags a missing start time', () => {
     component['title'].set('Port Credit Buskerfest');
     fixture.detectChanges();
-    expect(primary().hasAttribute('disabled')).toBe(false);
+    expect(primary().disabled).toBe(false);
 
     component['startsAtLocal'].set('');
     fixture.detectChanges();
     expect(component['dateError']()).toBe('Pick a start date and time.');
-    expect(primary().hasAttribute('disabled')).toBe(true);
+    const starts = host.querySelector('input[name="startsAtLocal"]')?.closest('sd-text-input');
+    expect(starts?.querySelector('.field__error')?.textContent?.trim()).toBe(
+      'Pick a start date and time.',
+    );
+    expect(primary().disabled).toBe(true);
   });
 
   it('submits trimmed values with blanks as null and closes with the created submission', async () => {

@@ -38,8 +38,11 @@ describe('LockRestaurantDialog', () => {
   it('renders the card chips with their tones', () => {
     const chips = Array.from(host.querySelectorAll('sd-chip'));
     expect(chips.map((c) => c.textContent?.trim())).toEqual(['Wife-approved', '3 of 4 yes']);
-    expect(chips.map((c) => c.getAttribute('tone'))).toEqual(['accent', 'leaf']);
-    expect(chips[0]!.querySelector('sd-icon')?.getAttribute('name')).toBe('heart');
+    expect(chips.map((c) => Array.from(c.classList).filter((k) => k.startsWith('chip--')))).toEqual(
+      [['chip--accent'], ['chip--leaf']],
+    );
+    expect(chips[0]!.querySelector('sd-icon svg')).not.toBeNull();
+    expect(chips[1]!.querySelector('sd-icon')).toBeNull();
   });
 
   it('closes with confirm from "Lock it in", or with nothing from "Not yet"', () => {

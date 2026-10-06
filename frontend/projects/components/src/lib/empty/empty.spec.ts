@@ -33,23 +33,24 @@ describe('Empty', () => {
     expect(h2.textContent?.trim()).toBe('Nothing here yet');
     expect(h2.id).toMatch(/^sd-empty-\d+$/);
     expect(host.getAttribute('aria-labelledby')).toBe(h2.id);
-    expect(host.getAttribute('title')).toBe('Nothing here yet');
     expect(host.querySelector('.empty__body')).toBeNull();
     expect(host.querySelector('.empty__note')).toBeNull();
-    expect(host.getAttribute('warm')).toBeNull();
+    expect(host.classList.contains('empty--warm')).toBe(false);
   });
 
   it('draws an extra-large disc with the given icon and tone', () => {
     const disc = host.querySelector('sd-disc') as HTMLElement;
-    expect(disc.getAttribute('icon')).toBe('sparkle');
-    expect(disc.getAttribute('size')).toBe('xl');
-    expect(disc.getAttribute('tone')).toBeNull();
+    const svg = disc.querySelector('svg') as SVGElement;
+    const sparkle = svg.innerHTML;
+    expect(sparkle).toContain('M12 3l1.7 5.3');
+    expect(disc.classList.contains('disc--xl')).toBe(true);
+    expect(disc.classList.contains('disc--primary')).toBe(false);
 
     fixture.componentRef.setInput('icon', 'calendar');
     fixture.componentRef.setInput('tone', 'primary');
     fixture.detectChanges();
-    expect(disc.getAttribute('icon')).toBe('calendar');
-    expect(disc.getAttribute('tone')).toBe('primary');
+    expect(svg.innerHTML).not.toBe(sparkle);
+    expect(disc.classList.contains('disc--primary')).toBe(true);
   });
 
   it('renders title, body and note', () => {
@@ -64,14 +65,12 @@ describe('Empty', () => {
     expect(host.querySelector('.empty__cta .empty__note')?.textContent?.trim()).toBe(
       'Takes a minute',
     );
-    expect(host.getAttribute('title')).toBe('No past weekends');
   });
 
   it('mirrors the warm first-run variant', () => {
     fixture.componentRef.setInput('warm', true);
     fixture.detectChanges();
     expect(host.classList.contains('empty--warm')).toBe(true);
-    expect(host.getAttribute('warm')).toBe('');
   });
 
   it('projects the cta into the action row and the rest below', () => {

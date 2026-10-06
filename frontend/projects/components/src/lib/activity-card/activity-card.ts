@@ -22,8 +22,6 @@ export type ActivityCardTone = 'leaf' | 'indoor';
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class: 'card card--media',
-    '[attr.title]': 'cardTitle() || null',
-    '[attr.tone]': 'tone()',
   },
 })
 export class ActivityCard {

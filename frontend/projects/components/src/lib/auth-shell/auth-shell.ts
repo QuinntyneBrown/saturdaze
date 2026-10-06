@@ -17,7 +17,6 @@ import { RouterLink } from '@angular/router';
   host: {
     class: 'auth',
     '[class.auth--stack]': 'stack()',
-    '[attr.stack]': 'stack() ? "" : null',
   },
 })
 export class AuthShell {

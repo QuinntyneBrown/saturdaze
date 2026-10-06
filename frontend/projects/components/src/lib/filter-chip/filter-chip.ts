@@ -21,11 +21,6 @@ export type FilterChipTone = 'default' | 'leaf' | 'indoor' | 'sky' | 'sun' | 'ac
   templateUrl: './filter-chip.html',
   styleUrl: './filter-chip.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: {
-    '[attr.pressed]': 'pressed() ? "" : null',
-    '[attr.tone]': 'tone() === "default" ? null : tone()',
-    '[attr.disabled]': 'disabled() ? "" : null',
-  },
 })
 export class FilterChip {
   readonly pressed = input(false, { transform: booleanAttribute });

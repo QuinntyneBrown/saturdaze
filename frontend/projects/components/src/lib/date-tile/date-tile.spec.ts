@@ -29,7 +29,6 @@ describe('DateTile', () => {
     fixture.detectChanges();
     expect(month()).toBe('May');
     expect(day()).toBe('17');
-    expect(host.getAttribute('date')).toBe('2026-05-17');
   });
 
   it('accepts an ISO date-time and drops the leading zero on the day', () => {

@@ -7,7 +7,8 @@ describe('Stars', () => {
   let host: HTMLElement;
 
   const icons = (): HTMLElement[] => Array.from(host.querySelectorAll('sd-icon'));
-  const filled = (): number => icons().filter((i) => i.hasAttribute('filled')).length;
+  const filled = (): number => icons().filter((i) => i.classList.contains('icon--filled')).length;
+  const glyphSize = (i: number): string => icons()[i]?.style.getPropertyValue('--_size') ?? '';
   const radios = (): HTMLButtonElement[] =>
     Array.from(host.querySelectorAll('button.stars__btn[role="radio"]'));
 
@@ -24,19 +25,16 @@ describe('Stars', () => {
     expect(icons().length).toBe(5);
     expect(icons().every((i) => i.getAttribute('name') === 'star')).toBe(true);
     expect(filled()).toBe(0);
-    expect(host.getAttribute('rating')).toBe('0');
     expect(host.getAttribute('role')).toBeNull();
-    expect(host.getAttribute('editable')).toBeNull();
     expect(host.querySelector('.stars__label')).toBeNull();
   });
 
-  it('fills stars up to the rating and mirrors it to the host', () => {
+  it('fills stars up to the rating', () => {
     fixture.componentRef.setInput('rating', 3);
     fixture.detectChanges();
     expect(filled()).toBe(3);
-    expect(icons()[2]?.hasAttribute('filled')).toBe(true);
-    expect(icons()[3]?.hasAttribute('filled')).toBe(false);
-    expect(host.getAttribute('rating')).toBe('3');
+    expect(icons()[2]?.classList.contains('icon--filled')).toBe(true);
+    expect(icons()[3]?.classList.contains('icon--filled')).toBe(false);
   });
 
   it('shows a caption after the stars in display mode', () => {
@@ -46,11 +44,11 @@ describe('Stars', () => {
   });
 
   it('grows the glyphs for the large size', () => {
-    expect(icons()[0]?.getAttribute('size')).toBe('18');
+    expect(glyphSize(0)).toBe('18px');
     fixture.componentRef.setInput('size', 'lg');
     fixture.detectChanges();
     expect(host.classList.contains('stars--lg')).toBe(true);
-    expect(icons()[0]?.getAttribute('size')).toBe('24');
+    expect(glyphSize(0)).toBe('24px');
   });
 
   it('becomes a radiogroup of five labelled radios when editable', () => {
@@ -60,7 +58,6 @@ describe('Stars', () => {
 
     expect(host.getAttribute('role')).toBe('radiogroup');
     expect(host.getAttribute('aria-label')).toBe('Rating');
-    expect(host.getAttribute('editable')).toBe('');
     expect(host.querySelector('.stars__label')).toBeNull();
 
     const btns = radios();

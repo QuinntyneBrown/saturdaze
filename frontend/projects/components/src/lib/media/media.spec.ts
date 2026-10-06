@@ -47,7 +47,9 @@ describe('Media', () => {
     expect(host.classList).toContain('media--leaf');
     expect(host.getAttribute('aria-hidden')).toBe('true');
     expect(host.querySelector('img')).toBeNull();
-    expect(host.querySelector('sd-icon')?.getAttribute('name')).toBe('tree');
+    expect(host.querySelector('sd-icon svg')?.innerHTML).toContain(
+      'M12 3l-5 7h3l-4 6h12l-4-6h3l-5-7z',
+    );
   });
 
   it('falls back to the tile when the image fails to load', () => {

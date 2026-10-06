@@ -37,13 +37,14 @@ describe('ConfirmDialog', () => {
     expect(el.textContent).toContain('Delete Mae?');
     expect(el.textContent).toContain('Gone for good.');
     // The shell's own close button is the first sd-button; the action row follows.
-    const buttons = Array.from(el.querySelectorAll('sd-button[slot="actions"]'));
+    const buttons = Array.from(el.querySelectorAll('sd-button[slot="actions"] .btn'));
     expect(buttons.length).toBe(2);
-    expect(buttons[0]!.getAttribute('variant')).toBe('quiet');
+    expect(buttons[0]!.classList.contains('btn--quiet')).toBe(true);
     expect(buttons[0]!.textContent).toContain('Cancel');
-    expect(buttons[1]!.getAttribute('variant')).toBe('danger');
+    expect(buttons[1]!.classList.contains('btn--danger')).toBe(true);
     expect(buttons[1]!.textContent).toContain('Delete');
-    expect(buttons[1]!.querySelector('sd-icon')?.getAttribute('name')).toBe('trash');
+    expect(buttons[0]!.querySelector('sd-icon')).toBeNull();
+    expect(buttons[1]!.querySelector('sd-icon svg')).not.toBeNull();
   });
 
   it('renders the optional well and custom labels', async () => {
@@ -66,12 +67,13 @@ describe('ConfirmDialog', () => {
     f.detectChanges();
     const el = f.nativeElement as HTMLElement;
     const well = el.querySelector('sd-well');
-    expect(well?.getAttribute('title')).toBe('Keeping');
-    expect(well?.getAttribute('tone')).toBe('accent');
-    expect(well?.textContent).toContain('Swim 9:00');
-    const buttons = Array.from(el.querySelectorAll('sd-button[slot="actions"]'));
+    expect(well?.querySelector('.well__title')?.textContent?.trim()).toBe('Keeping');
+    expect(well?.classList.contains('well--accent')).toBe(true);
+    expect(well?.querySelector('.well__body')?.textContent).toContain('Swim 9:00');
+    const buttons = Array.from(el.querySelectorAll('sd-button[slot="actions"] .btn'));
     expect(buttons[0]!.textContent?.trim()).toBe('Stay signed in');
-    expect(buttons[1]!.getAttribute('variant')).toBe('primary');
+    expect(buttons[1]!.classList.contains('btn--primary')).toBe(true);
+    expect(buttons[1]!.classList.contains('btn--danger')).toBe(false);
     expect(buttons[1]!.textContent?.trim()).toBe('Confirm');
   });
 

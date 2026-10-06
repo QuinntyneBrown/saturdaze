@@ -24,7 +24,6 @@ describe('BottomNav', () => {
     expect(host.classList.contains('bottom-nav')).toBe(true);
     expect(host.getAttribute('role')).toBe('navigation');
     expect(host.getAttribute('aria-label')).toBe('Primary');
-    expect(host.getAttribute('active')).toBeNull();
   });
 
   it('renders exactly four items in the fixed order', () => {
@@ -51,8 +50,12 @@ describe('BottomNav', () => {
 
   it('draws each item glyph at 22px', () => {
     const icons = items().map((a) => a.querySelector('.bottom-nav__icon sd-icon') as HTMLElement);
-    expect(icons.map((i) => i.getAttribute('name'))).toEqual(['home', 'sparkle', 'star', 'user']);
-    expect(icons.every((i) => i.getAttribute('size') === '22')).toBe(true);
+    const glyphs = icons.map((i) => i.querySelector('svg')?.innerHTML ?? '');
+    expect(glyphs[0]).toContain('M3 11l9-8 9 8');
+    expect(glyphs[1]).toContain('M12 3l1.7 5.3L19 10l-5.3 1.7L12 17');
+    expect(glyphs[2]).toContain('M12 3l2.7 5.7 6.3.9');
+    expect(glyphs[3]).toContain('M4 21a8 8 0 0 1 16 0');
+    expect(icons.every((i) => i.style.getPropertyValue('--_size') === '22px')).toBe(true);
   });
 
   it('marks the active destination with aria-current', () => {
@@ -62,11 +65,9 @@ describe('BottomNav', () => {
     fixture.detectChanges();
     expect(host.querySelector('[aria-current="page"]')?.textContent?.trim()).toBe('Ideas');
     expect(host.querySelectorAll('[aria-current="page"]').length).toBe(1);
-    expect(host.getAttribute('active')).toBe('ideas');
 
     fixture.componentRef.setInput('active', null);
     fixture.detectChanges();
     expect(host.querySelector('[aria-current]')).toBeNull();
-    expect(host.getAttribute('active')).toBeNull();
   });
 });

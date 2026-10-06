@@ -41,26 +41,22 @@ describe('ListItem', () => {
     expect(host.querySelector('.list__title')).toBeNull();
     expect(host.querySelector('.list__sub')).toBeNull();
     expect(host.querySelector('.list__trail sd-icon')).toBeNull();
-    for (const attr of ['title', 'subtitle', 'href', 'action', 'chevron']) {
-      expect(host.hasAttribute(attr)).toBe(false);
-    }
+    expect(host.querySelector('a')).toBeNull();
+    expect(host.querySelector('button')).toBeNull();
   });
 
-  it('renders title and subtitle and mirrors them to the host', () => {
+  it('renders title and subtitle', () => {
     fixture.componentRef.setInput('title', 'Sara');
     fixture.componentRef.setInput('subtitle', 'Parent');
     fixture.detectChanges();
     expect(host.querySelector('.list__text .list__title')?.textContent?.trim()).toBe('Sara');
     expect(host.querySelector('.list__text .list__sub')?.textContent?.trim()).toBe('Parent');
-    expect(host.getAttribute('title')).toBe('Sara');
-    expect(host.getAttribute('subtitle')).toBe('Parent');
   });
 
   it('adds the trailing chevron glyph', () => {
     fixture.componentRef.setInput('chevron', true);
     fixture.detectChanges();
-    expect(host.querySelector('.list__trail sd-icon')?.getAttribute('name')).toBe('chevron_right');
-    expect(host.getAttribute('chevron')).toBe('');
+    expect(host.querySelector('.list__trail sd-icon svg')?.innerHTML).toContain('M9 6l6 6-6 6');
   });
 
   it('becomes a button that emits pressed when action is set', () => {
@@ -72,7 +68,6 @@ describe('ListItem', () => {
     expect(btn.getAttribute('type')).toBe('button');
     expect(btn.classList.contains('list__item--action')).toBe(true);
     expect(btn.getAttribute('aria-label')).toBe('Edit Sara');
-    expect(host.getAttribute('action')).toBe('');
 
     const spy = vi.fn();
     fixture.componentInstance.pressed.subscribe(spy);
@@ -92,7 +87,6 @@ describe('ListItem', () => {
     expect(a.getAttribute('href')).toBe('/family/review');
     expect(a.classList.contains('list__item--action')).toBe(true);
     expect(host.querySelector('button')).toBeNull();
-    expect(host.getAttribute('href')).toBe('/family/review');
 
     const event = new MouseEvent('click', { bubbles: true, cancelable: true });
     a.dispatchEvent(event);
@@ -110,6 +104,6 @@ describe('ListItem', () => {
     expect(item.querySelector('.list__text .list__title')?.textContent?.trim()).toBe('Quinn');
     const trail = item.querySelector('.list__trail') as HTMLElement;
     expect(trail.querySelector('.trail')).not.toBeNull();
-    expect(trail.querySelector('sd-icon')?.getAttribute('name')).toBe('chevron_right');
+    expect(trail.querySelector('sd-icon svg')?.innerHTML).toContain('M9 6l6 6-6 6');
   });
 });

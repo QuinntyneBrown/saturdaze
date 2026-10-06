@@ -42,10 +42,9 @@ describe('ChipInput', () => {
   it('creates a leaf-toned field with the written values as removable chips', () => {
     expect(component).toBeTruthy();
     expect(host.classList.contains('field')).toBe(true);
-    expect(host.getAttribute('tone')).toBe('leaf');
     expect(chipText()).toEqual(['Parks', 'Pizza']);
-    expect(chips().every((c) => c.hasAttribute('removable'))).toBe(true);
-    expect(chips().every((c) => c.getAttribute('tone') === 'leaf')).toBe(true);
+    expect(chips().every((c) => c.querySelector('button.chip__x') !== null)).toBe(true);
+    expect(chips().every((c) => c.classList.contains('chip--leaf'))).toBe(true);
     expect(chips()[0]?.querySelector('.chip__x')?.getAttribute('aria-label')).toBe('Remove Parks');
     expect(field().getAttribute('placeholder')).toBe('Add one, press Enter');
     expect(field().value).toBe('');
@@ -60,9 +59,8 @@ describe('ChipInput', () => {
     expect(label.textContent?.trim()).toBe('Likes');
     expect(label.getAttribute('for')).toBe(field().id);
     expect(field().id).toMatch(/^sd-chip-input-\d+$/);
-    expect(host.getAttribute('label')).toBe('Likes');
-    expect(host.getAttribute('tone')).toBe('warn');
-    expect(chips()[0]?.getAttribute('tone')).toBe('warn');
+    expect(chips().every((c) => c.classList.contains('chip--warn'))).toBe(true);
+    expect(chips().some((c) => c.classList.contains('chip--leaf'))).toBe(false);
     expect(field().getAttribute('placeholder')).toBe('Add a dislike');
   });
 

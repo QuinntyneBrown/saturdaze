@@ -130,8 +130,15 @@ describe('PastPage', () => {
     dialog = { open: vi.fn(() => ({ closed: of(undefined) })) };
   });
 
-  const header = (): Element => host.querySelector('sd-page-header')!;
+  const headerTitle = (): string | null =>
+    host.querySelector('.page-header__title')?.textContent?.trim() ?? null;
+  const headerSubtitle = (): string | null =>
+    host.querySelector('.page-header__subtitle')?.textContent?.trim() ?? null;
+  const emptyTitle = (): string | null =>
+    host.querySelector('sd-empty .empty__title')?.textContent?.trim() ?? null;
   const cards = (): HTMLElement[] => Array.from(host.querySelectorAll('sd-past-card'));
+  const filledStars = (card: Element): number =>
+    card.querySelectorAll('.card__rate sd-icon.icon--filled').length;
   const confirmData = (): any =>
     dialog.open.mock.calls.find((c) => c[0] === ConfirmDialog)?.[1].data;
 
@@ -139,14 +146,14 @@ describe('PastPage', () => {
     saved.load.mockImplementationOnce(() => new Promise<void>(() => undefined));
     await mount();
     expect(saved.load).toHaveBeenCalledTimes(1);
-    expect(header().getAttribute('title')).toBe('Past weekends');
+    expect(headerTitle()).toBe('Past weekends');
     expect(host.querySelector('sd-status-row')?.textContent?.trim()).toBe(
       'Gathering your weekends.',
     );
 
     view.set(READY);
     fixture.detectChanges();
-    expect(header().getAttribute('subtitle')).toBe(READY.subtitle);
+    expect(headerSubtitle()).toBe(READY.subtitle);
     const chips = Array.from(host.querySelectorAll('sd-filter-chip'));
     expect(chips.map((c) => c.textContent?.trim())).toEqual([
       'All',
@@ -154,26 +161,37 @@ describe('PastPage', () => {
       'This year',
       '5★',
     ]);
-    expect(chips[0]?.hasAttribute('pressed')).toBe(true);
+    expect(chips.map((c) => c.querySelector('button')?.getAttribute('aria-pressed'))).toEqual([
+      'true',
+      'false',
+      'false',
+      'false',
+    ]);
     expect(host.querySelector('.strip')?.textContent?.replace(/\s+/g, ' ').trim()).toBe(
       'Skipping next time: The Rec Room · rated 2★ on 6 Apr',
     );
-    expect(cards().map((c) => c.getAttribute('title'))).toEqual([
+    expect(cards().map((c) => c.querySelector('.card__title-btn')?.textContent?.trim())).toEqual([
       'Bronte Creek + Rec Room',
       'Rainy Rec Room',
     ]);
-    expect(cards()[0]?.getAttribute('rating')).toBe('5');
-    expect(cards()[0]?.hasAttribute('favourite')).toBe(true);
-    expect(cards()[1]?.getAttribute('rating')).toBeNull();
+    const [lavender, rainy] = cards();
+    expect(lavender?.querySelector('.card__rate')?.getAttribute('aria-label')).toBe(
+      'Rate this weekend, currently 5 of 5',
+    );
+    expect(filledStars(lavender!)).toBe(5);
+    expect(lavender?.querySelector('.fav-btn')?.getAttribute('aria-pressed')).toBe('true');
+    expect(rainy?.querySelector('.card__rate')?.getAttribute('aria-label')).toBe(
+      'Rate this weekend',
+    );
+    expect(filledStars(rainy!)).toBe(0);
+    expect(rainy?.querySelector('.fav-btn')?.getAttribute('aria-pressed')).toBe('false');
   });
 
   it('shows the empty state for ?state=empty without loading', async () => {
     await mount({ state: 'empty' });
     expect(saved.load).not.toHaveBeenCalled();
-    expect(header().getAttribute('subtitle')).toBe(
-      'Your first weekend lands here once Sunday is over.',
-    );
-    expect(host.querySelector('sd-empty')?.getAttribute('title')).toBe('Nothing here yet');
+    expect(headerSubtitle()).toBe('Your first weekend lands here once Sunday is over.');
+    expect(emptyTitle()).toBe('Nothing here yet');
     expect(host.querySelector('sd-empty sd-button a')?.getAttribute('href')).toBe('/weekend');
   });
 
@@ -182,7 +200,7 @@ describe('PastPage', () => {
       view.set({ ...READY, status: 'empty', weekends: [] }),
     );
     await mount();
-    expect(host.querySelector('sd-empty')?.getAttribute('title')).toBe('Nothing here yet');
+    expect(emptyTitle()).toBe('Nothing here yet');
   });
 
   it('filters through the service and explains an empty filter', async () => {
@@ -197,7 +215,7 @@ describe('PastPage', () => {
     });
     fixture.detectChanges();
     expect(cards().length).toBe(0);
-    expect(host.querySelector('sd-empty')?.getAttribute('title')).toBe('Nothing matches');
+    expect(emptyTitle()).toBe('Nothing matches');
     expect(host.querySelector('sd-empty .empty__body')?.textContent?.trim()).toBe(
       'No favourites yet. Tap the heart on a weekend you loved.',
     );

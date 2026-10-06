@@ -20,8 +20,7 @@
   }
   <div class="block__chips"><ng-content select="[slot=chips]" /></div>
 </div>
-<!-- title="" stops the row's native title tooltip doubling the buttons' own. -->
-<div class="block__actions" title=""><ng-content select="[slot=actions]" /></div>
+<div class="block__actions"><ng-content select="[slot=actions]" /></div>
 @if (!drive() && !readonly()) {
   <button
     class="block__chev"

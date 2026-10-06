@@ -22,7 +22,6 @@ export type BannerTone = 'info' | 'warn' | 'success';
     '[class.banner--info]': 'tone() === "info"',
     '[class.banner--warn]': 'tone() === "warn"',
     '[class.banner--success]': 'tone() === "success"',
-    '[attr.tone]': 'tone()',
     '[attr.role]': 'role()',
     '[attr.aria-live]': 'role() === "alert" ? "assertive" : "polite"',
   },

@@ -14,8 +14,6 @@ import { ChangeDetectionStrategy, Component, booleanAttribute, input } from '@an
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class: 'auth-card',
-    '[attr.title]': 'cardTitle() || null',
-    '[attr.center]': 'center() ? "" : null',
   },
 })
 export class AuthCard {

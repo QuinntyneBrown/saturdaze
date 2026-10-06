@@ -28,9 +28,6 @@ describe('Toggle', () => {
     expect(input().checked).toBe(false);
     expect(host.querySelector('.toggle__track')).not.toBeNull();
     expect(host.querySelector('.toggle__label')).toBeNull();
-    expect(host.getAttribute('checked')).toBeNull();
-    expect(host.getAttribute('disabled')).toBeNull();
-    expect(host.getAttribute('label')).toBeNull();
   });
 
   it('renders the visible label and drops any aria-label', () => {
@@ -39,7 +36,6 @@ describe('Toggle', () => {
     fixture.detectChanges();
     expect(host.querySelector('.toggle__label')?.textContent?.trim()).toBe('Lock Saturday');
     expect(input().hasAttribute('aria-label')).toBe(false);
-    expect(host.getAttribute('label')).toBe('Lock Saturday');
   });
 
   it('uses srLabel as the accessible name when there is no visible label', () => {
@@ -53,12 +49,10 @@ describe('Toggle', () => {
     fixture.componentRef.setInput('checked', true);
     fixture.detectChanges();
     expect(input().checked).toBe(true);
-    expect(host.getAttribute('checked')).toBe('');
 
     fixture.componentRef.setInput('checked', false);
     fixture.detectChanges();
     expect(input().checked).toBe(false);
-    expect(host.getAttribute('checked')).toBeNull();
   });
 
   it('lets a bound form take over from the static input', () => {
@@ -69,7 +63,6 @@ describe('Toggle', () => {
     fixture.componentRef.setInput('checked', false);
     fixture.detectChanges();
     expect(input().checked).toBe(true);
-    expect(host.getAttribute('checked')).toBe('');
 
     component.writeValue(null);
     fixture.detectChanges();
@@ -86,14 +79,11 @@ describe('Toggle', () => {
     input().dispatchEvent(new Event('change'));
     expect(onChange).toHaveBeenCalledWith(true);
     expect(onTouched).toHaveBeenCalledTimes(1);
-    fixture.detectChanges();
-    expect(host.getAttribute('checked')).toBe('');
   });
 
-  it('disables the switch from the form and mirrors it to the host', () => {
+  it('disables the switch from the form', () => {
     component.setDisabledState(true);
     fixture.detectChanges();
     expect(input().disabled).toBe(true);
-    expect(host.getAttribute('disabled')).toBe('');
   });
 });

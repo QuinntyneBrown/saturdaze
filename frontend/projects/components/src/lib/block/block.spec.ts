@@ -20,6 +20,9 @@ describe('Block', () => {
   let host: HTMLElement;
 
   const chevron = (): HTMLButtonElement | null => host.querySelector('button.block__chev');
+  const discIcon = (): HTMLElement => host.querySelector('.block__disc sd-icon') as HTMLElement;
+  const glyph = (el: Element | null | undefined): string =>
+    el?.querySelector('svg')?.innerHTML ?? '';
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({ imports: [Block, HostCmp] }).compileComponents();
@@ -36,15 +39,12 @@ describe('Block', () => {
     expect(host.getAttribute('role')).toBe('listitem');
     expect(host.querySelector('.block__time .block__clock')?.textContent?.trim()).toBe('8:00');
     expect(host.querySelector('.block__dur')).toBeNull();
-    expect(host.querySelector('.block__rail .block__disc sd-icon')?.getAttribute('name')).toBe(
-      'sparkle',
-    );
+    expect(host.querySelector('.block__rail .block__disc sd-icon')).not.toBeNull();
+    expect(glyph(discIcon())).toContain('M12 3l1.7 5.3L19 10l-5.3 1.7L12 17');
     expect(host.querySelector('.block__body h3.block__title')?.textContent?.trim()).toBe(
       'Breakfast at home',
     );
     expect(host.querySelector('.block__sub')).toBeNull();
-    expect(host.getAttribute('time')).toBe('8:00');
-    expect(host.getAttribute('title')).toBe('Breakfast at home');
   });
 
   it('renders duration, subtitle and the icon', () => {
@@ -54,22 +54,19 @@ describe('Block', () => {
     fixture.detectChanges();
     expect(host.querySelector('.block__dur')?.textContent?.trim()).toBe('45 min');
     expect(host.querySelector('.block__sub')?.textContent?.trim()).toBe('Pancakes, the usual');
-    const icon = host.querySelector('.block__disc sd-icon') as HTMLElement;
-    expect(icon.getAttribute('name')).toBe('fork');
-    expect(icon.getAttribute('size')).toBe('16');
+    expect(glyph(discIcon())).toContain('M7 3v8a2 2 0 0 0 4 0V3');
+    expect(discIcon().style.getPropertyValue('--_size')).toBe('16px');
   });
 
-  it('mirrors every modifier to a class and attribute', () => {
+  it('mirrors every modifier to a host class', () => {
     for (const flag of ['commitment', 'locked', 'errand', 'done']) {
       fixture.componentRef.setInput(flag, true);
       fixture.detectChanges();
       expect(host.classList.contains(`block--${flag}`)).toBe(true);
-      expect(host.getAttribute(flag)).toBe('');
 
       fixture.componentRef.setInput(flag, false);
       fixture.detectChanges();
       expect(host.classList.contains(`block--${flag}`)).toBe(false);
-      expect(host.hasAttribute(flag)).toBe(false);
     }
   });
 
@@ -89,8 +86,7 @@ describe('Block', () => {
     fixture.componentRef.setInput('drive', true);
     fixture.detectChanges();
     expect(host.classList.contains('block--drive')).toBe(true);
-    expect(host.getAttribute('drive')).toBe('');
-    expect(host.querySelector('.block__disc sd-icon')?.getAttribute('size')).toBe('13');
+    expect(discIcon().style.getPropertyValue('--_size')).toBe('13px');
     expect(chevron()).toBeNull();
   });
 

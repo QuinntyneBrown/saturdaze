@@ -36,20 +36,22 @@ describe('CalendarDialog', () => {
     expect(host.querySelector('.dialog__sub')?.textContent?.trim()).toBe(
       'One file with both days.',
     );
-    expect(host.querySelector('sd-list-item')?.getAttribute('title')).toBe('weekend-17-may.ics');
-    expect(host.querySelector('sd-list-item')?.getAttribute('subtitle')).toBe(
+    expect(host.querySelector('sd-list-item .list__title')?.textContent?.trim()).toBe(
+      'weekend-17-may.ics',
+    );
+    expect(host.querySelector('sd-list-item .list__sub')?.textContent?.trim()).toBe(
       '10 events · Saturday and Sunday',
     );
   });
 
   it('downloads through a plain link to the API', () => {
     const link = host.querySelector(
-      'sd-button[slot="actions"][variant="primary"] a',
+      'sd-button[slot="actions"] a.btn--primary',
     ) as HTMLAnchorElement;
     expect(link.getAttribute('href')).toBe(calendar.icsUrl);
     expect(link.getAttribute('target')).toBe('_blank');
     expect(link.getAttribute('rel')).toBe('noopener');
-    expect(link.querySelector('sd-icon')?.getAttribute('name')).toBe('calendar');
+    expect(link.querySelector('sd-icon svg')).not.toBeNull();
     // The label "Download .ics" is not asserted: sd-button drops the default
     // text of its <a> branch (see the TODO in components/button.spec.ts).
   });

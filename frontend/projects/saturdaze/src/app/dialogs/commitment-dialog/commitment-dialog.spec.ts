@@ -25,8 +25,8 @@ describe('CommitmentDialog', () => {
     host = fixture.nativeElement as HTMLElement;
   }
 
-  const primary = (): HTMLElement =>
-    host.querySelector('sd-button[slot="actions"][variant="primary"]') as HTMLElement;
+  const primary = (): HTMLButtonElement =>
+    host.querySelector('sd-button[slot="actions"] button.btn--primary') as HTMLButtonElement;
 
   it('adds a commitment with Saturday 9 to 10 as the starting point', async () => {
     await mount({ mode: 'add', siblings: [] });
@@ -40,11 +40,11 @@ describe('CommitmentDialog', () => {
     expect(component['day']()).toBe('Saturday');
     expect(component['startTime']()).toBe('09:00');
     expect(component['endTime']()).toBe('10:00');
-    expect(primary().hasAttribute('disabled')).toBe(true);
+    expect(primary().disabled).toBe(true);
 
     component['name'].set(' Piano lesson ');
     fixture.detectChanges();
-    expect(primary().hasAttribute('disabled')).toBe(false);
+    expect(primary().disabled).toBe(false);
     component['submit']();
     expect(dialogRef.close).toHaveBeenCalledWith({
       kind: 'save',
@@ -79,9 +79,11 @@ describe('CommitmentDialog', () => {
     component['submit']();
     expect(component['error']()).toBe('Start time must be before end time.');
     fixture.detectChanges();
-    expect(host.querySelector('sd-text-input[name="endTime"]')?.getAttribute('error')).toBe(
+    const endField = host.querySelector('input[name="endTime"]')?.closest('sd-text-input');
+    expect(endField?.querySelector('.field__error')?.textContent?.trim()).toBe(
       'Start time must be before end time.',
     );
+    expect(endField?.querySelector('input')?.getAttribute('aria-invalid')).toBe('true');
     expect(dialogRef.close).not.toHaveBeenCalled();
   });
 

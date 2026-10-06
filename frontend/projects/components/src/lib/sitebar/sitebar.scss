@@ -83,7 +83,7 @@
   }
 
   // The hero repeats Sign in.
-  :host([cta]) .sitebar__link {
+  :host(.sitebar--cta) .sitebar__link {
     display: none;
   }
 }

@@ -16,7 +16,6 @@ const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', '
   host: {
     class: 'date-tile',
     'aria-hidden': 'true',
-    '[attr.date]': 'date()',
   },
 })
 export class DateTile {

@@ -25,6 +25,8 @@ describe('Day', () => {
   const buttons = (): HTMLButtonElement[] => Array.from(host.querySelectorAll('button.day__btn'));
   const regenerateBtn = (): HTMLButtonElement => buttons()[0] as HTMLButtonElement;
   const lockBtn = (): HTMLButtonElement => buttons()[1] as HTMLButtonElement;
+  const glyph = (el: Element | null | undefined): string =>
+    el?.querySelector('svg')?.innerHTML ?? '';
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({ imports: [Day, HostCmp] }).compileComponents();
@@ -40,12 +42,11 @@ describe('Day', () => {
     expect(h2.textContent?.trim()).toBe('Saturday');
     expect(h2.id).toMatch(/^sd-day-\d+$/);
     expect(host.getAttribute('aria-labelledby')).toBe(h2.id);
-    expect(host.getAttribute('title')).toBe('Saturday');
     expect(host.querySelector('.day__list')?.getAttribute('role')).toBe('list');
     expect(host.querySelector('.weather-disc')).toBeNull();
     expect(host.querySelector('.day__meta')).toBeNull();
     expect(host.querySelector('.day__chip')).toBeNull();
-    expect(host.getAttribute('locked')).toBeNull();
+    expect(host.classList.contains('day--locked')).toBe(false);
   });
 
   it('renders the meta line and the weather disc', () => {
@@ -56,15 +57,15 @@ describe('Day', () => {
     expect(host.querySelector('.day__title')?.textContent?.trim()).toBe('Sunday');
     expect(host.querySelector('.day__meta')?.textContent?.trim()).toBe('11 May · 18° and cloudy');
     const disc = host.querySelector('sd-disc.weather-disc') as HTMLElement;
-    expect(disc.getAttribute('icon')).toBe('rain');
-    expect(disc.getAttribute('tone')).toBe('sky');
-    expect(disc.getAttribute('size')).toBe('lg');
-    expect(host.getAttribute('weather')).toBe('rain');
+    expect(glyph(disc.querySelector('sd-icon'))).toContain('M8 18l-1 2M12 18l-1 2M16 18l-1 2');
+    expect(disc.classList.contains('disc--sky')).toBe(true);
+    expect(disc.classList.contains('disc--lg')).toBe(true);
 
     fixture.componentRef.setInput('weather', 'sun');
     fixture.detectChanges();
-    expect(disc.getAttribute('icon')).toBe('sun');
-    expect(disc.getAttribute('tone')).toBe('sun');
+    expect(glyph(disc.querySelector('sd-icon'))).toContain('M12 2v2M12 20v2M2 12h2M20 12h2');
+    expect(disc.classList.contains('disc--sun')).toBe(true);
+    expect(disc.classList.contains('disc--sky')).toBe(false);
   });
 
   it('shows the Regenerate and Lock buttons with accessible names', () => {
@@ -77,21 +78,20 @@ describe('Day', () => {
     expect(lockBtn().getAttribute('aria-label')).toBe('Lock Saturday');
     expect(lockBtn().getAttribute('aria-pressed')).toBe('false');
     expect(lockBtn().querySelector('.day__btn-label')?.textContent?.trim()).toBe('Lock day');
-    expect(lockBtn().querySelector('sd-icon')?.getAttribute('name')).toBe('lock');
+    expect(glyph(lockBtn().querySelector('sd-icon'))).toContain('M8 11V8a4 4 0 0 1 8 0v3');
   });
 
-  it('reflects a locked day in the chip, the lock button and the host', () => {
+  it('reflects a locked day in the chip, the lock button and the host class', () => {
     fixture.componentRef.setInput('locked', true);
     fixture.detectChanges();
     expect(host.classList.contains('day--locked')).toBe(true);
-    expect(host.getAttribute('locked')).toBe('');
     const chip = host.querySelector('sd-chip.day__chip') as HTMLElement;
     expect(chip.textContent?.trim()).toBe('Day locked');
-    expect(chip.getAttribute('tone')).toBe('accent');
+    expect(chip.classList.contains('chip--accent')).toBe(true);
     expect(lockBtn().getAttribute('aria-label')).toBe('Unlock Saturday');
     expect(lockBtn().getAttribute('aria-pressed')).toBe('true');
     expect(lockBtn().querySelector('.day__btn-label')?.textContent?.trim()).toBe('Unlock day');
-    expect(lockBtn().querySelector('sd-icon')?.getAttribute('name')).toBe('unlock');
+    expect(glyph(lockBtn().querySelector('sd-icon'))).toContain('M8 11V8a4 4 0 0 1 7.5-2');
   });
 
   it('hides the actions and disables them while busy', () => {
@@ -140,6 +140,9 @@ describe('Day', () => {
     ]);
     expect(list.querySelector('.add')).toBeNull();
     expect(day.lastElementChild?.classList.contains('add')).toBe(true);
-    expect(day.querySelector('.weather-disc')?.getAttribute('icon')).toBe('sun');
+    expect(glyph(day.querySelector('.weather-disc sd-icon'))).toContain(
+      'M12 2v2M12 20v2M2 12h2M20 12h2',
+    );
+    expect(day.querySelector('.weather-disc')?.classList.contains('disc--sun')).toBe(true);
   });
 });

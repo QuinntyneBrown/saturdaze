@@ -12,7 +12,7 @@ svg {
   display: block;
 }
 
-:host([filled]) svg {
+:host(.icon--filled) svg {
   fill: currentColor;
   stroke: none;
 }

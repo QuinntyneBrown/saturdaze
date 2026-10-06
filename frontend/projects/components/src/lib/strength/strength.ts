@@ -19,7 +19,6 @@ export type StrengthLevel = 'weak' | 'ok' | 'strong';
     '[class.strength--weak]': 'level() === "weak"',
     '[class.strength--ok]': 'level() === "ok"',
     '[class.strength--strong]': 'level() === "strong"',
-    '[attr.level]': 'level()',
   },
 })
 export class Strength {

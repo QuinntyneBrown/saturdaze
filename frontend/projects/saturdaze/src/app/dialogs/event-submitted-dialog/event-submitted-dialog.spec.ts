@@ -48,11 +48,11 @@ describe('EventSubmittedDialog', () => {
     expect(host.querySelector('.summary__meta')?.textContent?.trim()).toBe(
       'Memorial Park, Lakeshore Rd · Sat 20 Jun',
     );
-    expect(host.querySelector('sd-date-tile')?.getAttribute('date')).toBe('2026-06-20');
-    expect(host.querySelector('sd-date-tile')?.textContent?.replace(/\s+/g, ' ').trim()).toContain(
-      'Jun',
-    );
-    expect(host.querySelector('sd-chip')?.textContent?.trim()).toBe('Pending review');
+    expect(host.querySelector('sd-date-tile .date-tile__m')?.textContent?.trim()).toBe('Jun');
+    expect(host.querySelector('sd-date-tile .date-tile__d')?.textContent?.trim()).toBe('20');
+    const chip = host.querySelector('sd-chip');
+    expect(chip?.textContent?.trim()).toBe('Pending review');
+    expect(chip?.classList.contains('chip--sun')).toBe(true);
   });
 
   it('drops the location from the meta line when there is none', async () => {

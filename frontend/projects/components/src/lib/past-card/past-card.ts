@@ -28,9 +28,6 @@ import { Stars } from '../stars/stars';
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class: 'card card--media',
-    '[attr.title]': 'cardTitle() || null',
-    '[attr.rating]': 'rating() ?? null',
-    '[attr.favourite]': 'favourite() ? "" : null',
   },
 })
 export class PastCard {

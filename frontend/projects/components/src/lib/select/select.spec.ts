@@ -48,8 +48,6 @@ describe('Select', () => {
     expect(label.textContent).toContain('Day');
     expect(label.querySelector('.field__req')?.textContent?.trim()).toBe('Required');
     expect(select().getAttribute('name')).toBe('day');
-    expect(host.getAttribute('label')).toBe('Day');
-    expect(host.getAttribute('required')).toBe('');
   });
 
   it('renders the hint under the select', () => {

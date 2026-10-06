@@ -25,25 +25,25 @@ describe('HomeLocationDialog', () => {
     host = fixture.nativeElement as HTMLElement;
   });
 
-  const primary = (): HTMLElement =>
-    host.querySelector('sd-button[slot="actions"][variant="primary"]') as HTMLElement;
+  const primary = (): HTMLButtonElement =>
+    host.querySelector('sd-button[slot="actions"] button.btn--primary') as HTMLButtonElement;
 
   it('prefills the current home', () => {
     expect(host.querySelector('.dialog__title')?.textContent?.trim()).toBe('Home location');
     expect(host.querySelector('.dialog__sub')?.textContent?.trim()).toBe(
       'Weather and drive times start here.',
     );
-    expect(host.querySelector('sd-text-input')?.getAttribute('label')).toBe(
+    expect(host.querySelector('sd-text-input .field__label')?.firstChild?.textContent?.trim()).toBe(
       'Neighbourhood or address',
     );
     expect(component['location']()).toBe('Port Credit, Mississauga');
-    expect(primary().hasAttribute('disabled')).toBe(false);
+    expect(primary().disabled).toBe(false);
   });
 
   it('will not save a blank location', () => {
     component['location'].set('   ');
     fixture.detectChanges();
-    expect(primary().hasAttribute('disabled')).toBe(true);
+    expect(primary().disabled).toBe(true);
     component['save']();
     expect(dialogRef.close).not.toHaveBeenCalled();
   });
@@ -56,7 +56,7 @@ describe('HomeLocationDialog', () => {
 
   it('closes with nothing on cancel', () => {
     (
-      host.querySelector('sd-button[slot="actions"][variant="quiet"] button') as HTMLButtonElement
+      host.querySelector('sd-button[slot="actions"] button.btn--quiet') as HTMLButtonElement
     ).click();
     expect(dialogRef.close).toHaveBeenCalledWith();
   });

@@ -38,7 +38,6 @@ describe('SegRadio', () => {
       Array.from(host.querySelectorAll('.seg-radio__opt')).map((l) => l.textContent?.trim()),
     ).toEqual(['Saturday', 'Sunday', 'Either']);
     expect(radios().some((r) => r.checked)).toBe(false);
-    expect(host.getAttribute('value')).toBeNull();
   });
 
   it('widens to three columns for three options', () => {
@@ -58,14 +57,12 @@ describe('SegRadio', () => {
     expect(label.textContent?.trim()).toBe('Which day');
     expect(label.id).toMatch(/^sd-seg-radio-\d+-label$/);
     expect(group().getAttribute('aria-labelledby')).toBe(label.id);
-    expect(host.getAttribute('label')).toBe('Which day');
   });
 
-  it('checks the radio matching a written value and mirrors it to the host', () => {
+  it('checks the radio matching a written value', () => {
     component.writeValue('sun');
     fixture.detectChanges();
     expect(radios().map((r) => r.checked)).toEqual([false, true, false]);
-    expect(host.getAttribute('value')).toBe('sun');
   });
 
   it('reports a user pick to the form and marks it touched', () => {
@@ -81,7 +78,7 @@ describe('SegRadio', () => {
     expect(onChange).toHaveBeenCalledWith('either');
     expect(onTouched).toHaveBeenCalledTimes(1);
     fixture.detectChanges();
-    expect(host.getAttribute('value')).toBe('either');
+    expect(radios().map((r) => r.checked)).toEqual([false, false, true]);
   });
 
   it('disables every radio from the form and ignores picks', () => {

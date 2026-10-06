@@ -33,13 +33,13 @@ describe('Sitebar', () => {
     expect(signIn.getAttribute('href')).toBe('/sign-in');
     expect(signIn.textContent?.trim()).toBe('Sign in');
     expect(host.querySelector('sd-button')).toBeNull();
-    expect(host.getAttribute('cta')).toBeNull();
+    expect(host.classList.contains('sitebar--cta')).toBe(false);
   });
 
   it('adds the Create your account CTA when asked', () => {
     fixture.componentRef.setInput('cta', true);
     fixture.detectChanges();
-    expect(host.getAttribute('cta')).toBe('');
+    expect(host.classList.contains('sitebar--cta')).toBe(true);
     const cta = host.querySelector('.sitebar__actions a.btn') as HTMLAnchorElement;
     expect(cta.getAttribute('href')).toBe('/create-account');
     expect(cta.classList.contains('btn--primary')).toBe(true);

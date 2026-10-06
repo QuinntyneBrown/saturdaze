@@ -36,7 +36,6 @@ describe('AuthShell', () => {
     expect(brand.textContent?.trim()).toBe('Saturdaze');
     expect(brand.querySelector('.brand-mark')?.getAttribute('aria-hidden')).toBe('true');
     expect(host.classList.contains('auth--stack')).toBe(false);
-    expect(host.getAttribute('stack')).toBeNull();
   });
 
   it('links Terms, Privacy and Back in the footer', () => {
@@ -58,7 +57,6 @@ describe('AuthShell', () => {
     fixture.componentRef.setInput('stack', true);
     fixture.detectChanges();
     expect(host.classList.contains('auth--stack')).toBe(true);
-    expect(host.getAttribute('stack')).toBe('');
   });
 
   it('projects the card between the brand and the footer', () => {

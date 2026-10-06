@@ -20,8 +20,6 @@ let nextChipInputId = 0;
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class: 'field',
-    '[attr.label]': 'label() || null',
-    '[attr.tone]': 'tone()',
   },
   providers: [
     {

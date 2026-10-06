@@ -18,10 +18,6 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
   templateUrl: './checkbox.html',
   styleUrl: './checkbox.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: {
-    '[attr.checked]': 'checked() ? "" : null',
-    '[attr.required]': 'required() ? "" : null',
-  },
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,

@@ -35,11 +35,10 @@ describe('AuthCard', () => {
     expect(host.querySelector('.auth-card__sub')).toBeNull();
     expect(host.querySelector('p.auth-card__alt')).not.toBeNull();
     expect(host.querySelector('.auth-card__head--center')).toBeNull();
-    expect(host.getAttribute('title')).toBeNull();
-    expect(host.getAttribute('center')).toBeNull();
+    expect(host.querySelector('.auth-card__title')?.textContent?.trim()).toBe('');
   });
 
-  it('renders the title and subtitle and mirrors the title to the host', () => {
+  it('renders the title and subtitle', () => {
     fixture.componentRef.setInput('title', 'Create your account');
     fixture.componentRef.setInput('subtitle', 'Takes about a minute');
     fixture.detectChanges();
@@ -47,7 +46,6 @@ describe('AuthCard', () => {
       'Create your account',
     );
     expect(host.querySelector('.auth-card__sub')?.textContent?.trim()).toBe('Takes about a minute');
-    expect(host.getAttribute('title')).toBe('Create your account');
   });
 
   it('centres the head when asked', () => {
@@ -56,7 +54,6 @@ describe('AuthCard', () => {
     expect(
       host.querySelector('.auth-card__head')?.classList.contains('auth-card__head--center'),
     ).toBe(true);
-    expect(host.getAttribute('center')).toBe('');
   });
 
   it('projects disc, head, form and alt into their slots', () => {

@@ -41,12 +41,11 @@ describe('Dialog', () => {
     expect(closeBtn().classList.contains('btn--icon')).toBe(true);
     expect(closeBtn().querySelector('sd-icon')?.getAttribute('name')).toBe('close');
     expect(host.querySelector('.dialog__sub')).toBeNull();
-    for (const attr of ['static', 'wide', 'title', 'subtitle']) {
-      expect(host.hasAttribute(attr)).toBe(false);
-    }
+    expect(host.querySelector('.dialog__title')?.textContent?.trim()).toBe('');
+    expect(host.className.trim()).toBe('dialog');
   });
 
-  it('renders title and subtitle and mirrors them to the host', () => {
+  it('renders title and subtitle', () => {
     fixture.componentRef.setInput('title', 'Rate Saturday');
     fixture.componentRef.setInput('subtitle', 'How did it go?');
     fixture.componentRef.setInput('closeLabel', 'Dismiss');
@@ -54,18 +53,14 @@ describe('Dialog', () => {
     expect(host.querySelector('h2.dialog__title')?.textContent?.trim()).toBe('Rate Saturday');
     expect(host.querySelector('.dialog__sub')?.textContent?.trim()).toBe('How did it go?');
     expect(closeBtn().getAttribute('aria-label')).toBe('Dismiss');
-    expect(host.getAttribute('title')).toBe('Rate Saturday');
-    expect(host.getAttribute('subtitle')).toBe('How did it go?');
   });
 
-  it('mirrors static and wide to host classes and attributes', () => {
+  it('mirrors static and wide to host classes', () => {
     fixture.componentRef.setInput('static', true);
     fixture.componentRef.setInput('wide', true);
     fixture.detectChanges();
     expect(host.classList.contains('dialog--specimen')).toBe(true);
     expect(host.classList.contains('dialog--wide')).toBe(true);
-    expect(host.getAttribute('static')).toBe('');
-    expect(host.getAttribute('wide')).toBe('');
   });
 
   it('emits closed when the × is pressed', () => {

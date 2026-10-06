@@ -52,10 +52,6 @@ export const SD_DIALOG_STATIC = new InjectionToken<boolean>('SD_DIALOG_STATIC');
     class: 'dialog',
     '[class.dialog--specimen]': 'isStatic()',
     '[class.dialog--wide]': 'wide()',
-    '[attr.static]': 'isStatic() ? "" : null',
-    '[attr.wide]': 'wide() ? "" : null',
-    '[attr.title]': 'dialogTitle() || null',
-    '[attr.subtitle]': 'subtitle() || null',
   },
 })
 export class Dialog {

@@ -25,13 +25,6 @@ export type CardPadding = 'md' | 'lg';
     '[class.card--muted]': 'muted()',
     '[class.card--span]': 'span()',
     '[class.card--interactive]': 'interactive()',
-    '[attr.variant]': 'variant() === "default" ? null : variant()',
-    '[attr.padding]': 'padding() === "md" ? null : padding()',
-    '[attr.locked]': 'locked() ? "" : null',
-    '[attr.dimmed]': 'dimmed() ? "" : null',
-    '[attr.muted]': 'muted() ? "" : null',
-    '[attr.span]': 'span() ? "" : null',
-    '[attr.interactive]': 'interactive() ? "" : null',
   },
 })
 export class Card {

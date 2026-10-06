@@ -40,7 +40,7 @@ describe('FoodCard', () => {
     expect(fixture.componentInstance).toBeTruthy();
     expect(host.classList.contains('card')).toBe(true);
     const tile = host.querySelector('sd-media.card__media') as HTMLElement;
-    expect(tile.querySelector('sd-icon')?.getAttribute('name')).toBe('fork');
+    expect(tile.querySelector('sd-icon svg')?.innerHTML).toContain('M7 3v8a2 2 0 0 0 4 0V3');
     expect(tile.classList).toContain('media--sun');
     expect(host.querySelector('h3.card__title')?.textContent?.trim()).toBe('Pizza Nova');
     expect(chip()).toBeNull();
@@ -48,9 +48,8 @@ describe('FoodCard', () => {
     expect(lockBtn()?.textContent?.trim()).toBe('Lock it in');
     expect(lockBtn()?.disabled).toBe(false);
     expect(host.querySelector('.card__footer a')).toBeNull();
-    expect(host.getAttribute('title')).toBe('Pizza Nova');
-    for (const attr of ['top-pick', 'locked', 'dimmed'])
-      expect(host.hasAttribute(attr)).toBe(false);
+    for (const cls of ['card--span', 'card--locked', 'card--dimmed'])
+      expect(host.classList.contains(cls)).toBe(false);
   });
 
   it('renders the style line and the See menu link', () => {
@@ -74,9 +73,8 @@ describe('FoodCard', () => {
     fixture.componentRef.setInput('topPick', true);
     fixture.detectChanges();
     expect(host.classList.contains('card--span')).toBe(true);
-    expect(host.getAttribute('top-pick')).toBe('');
     expect(chip()?.textContent?.trim()).toBe('Top pick');
-    expect(chip()?.getAttribute('tone')).toBe('primary');
+    expect(chip()?.classList.contains('chip--primary')).toBe(true);
   });
 
   it('shows a locked pick with the accent border, chip and no lock button', () => {
@@ -85,10 +83,9 @@ describe('FoodCard', () => {
     fixture.componentRef.setInput('lockedLabel', 'Locked for dinner');
     fixture.detectChanges();
     expect(host.classList.contains('card--locked')).toBe(true);
-    expect(host.getAttribute('locked')).toBe('');
     expect(chip()?.textContent?.trim()).toBe('Locked for dinner');
-    expect(chip()?.getAttribute('tone')).toBe('accent');
-    expect(chip()?.querySelector('sd-icon')?.getAttribute('name')).toBe('lock');
+    expect(chip()?.classList.contains('chip--accent')).toBe(true);
+    expect(chip()?.querySelector('sd-icon svg')?.innerHTML).toContain('M8 11V8a4 4 0 0 1 8 0v3');
     expect(lockBtn()).toBeNull();
   });
 
@@ -96,7 +93,6 @@ describe('FoodCard', () => {
     fixture.componentRef.setInput('dimmed', true);
     fixture.detectChanges();
     expect(host.classList.contains('card--dimmed')).toBe(true);
-    expect(host.getAttribute('dimmed')).toBe('');
     expect(lockBtn()?.disabled).toBe(true);
   });
 
@@ -113,7 +109,9 @@ describe('FoodCard', () => {
     const row = host.querySelector('sd-vote-row') as HTMLElement;
     expect(row.getAttribute('aria-label')).toBe('Family vote for Pizza Nova');
     expect(row.querySelectorAll('.vote-row__cell').length).toBe(2);
-    expect(row.hasAttribute('disabled')).toBe(false);
+    expect(
+      Array.from(row.querySelectorAll<HTMLButtonElement>('.vote-row__btn')).some((b) => b.disabled),
+    ).toBe(false);
 
     const spy = vi.fn();
     fixture.componentInstance.voteChange.subscribe(spy);
@@ -122,7 +120,6 @@ describe('FoodCard', () => {
 
     fixture.componentRef.setInput('votesDisabled', true);
     fixture.detectChanges();
-    expect(row.getAttribute('disabled')).toBe('');
     expect(
       Array.from(row.querySelectorAll<HTMLButtonElement>('.vote-row__btn')).every(
         (b) => b.disabled,

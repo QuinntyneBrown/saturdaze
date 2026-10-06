@@ -99,23 +99,32 @@ describe('IdeasEventsPage', () => {
       'Festival',
       'Market',
     ]);
-    expect(chips().map((c) => c.hasAttribute('pressed'))).toEqual([true, false, false, true]);
+    expect(chips().map((c) => c.querySelector('button')?.getAttribute('aria-pressed'))).toEqual([
+      'true',
+      'false',
+      'false',
+      'true',
+    ]);
     expect(host.querySelectorAll('.sd-vdivider').length).toBe(1);
   });
 
   it('renders sections with event cards, muting the pending suggestion', () => {
     const sections = Array.from(host.querySelectorAll('sd-section'));
-    expect(sections.map((s) => s.getAttribute('title'))).toEqual(['Your suggestion', 'Saturday']);
-    expect(sections[0]?.getAttribute('subtitle')).toBe('Only you can see it until it is approved.');
+    expect(
+      sections.map((s) => s.querySelector('.section-header__title')?.textContent?.trim()),
+    ).toEqual(['Your suggestion', 'Saturday']);
+    expect(sections[0]?.querySelector('.section-header__sub')?.textContent?.trim()).toBe(
+      'Only you can see it until it is approved.',
+    );
 
     const cards = Array.from(host.querySelectorAll('sd-event-card'));
-    expect(cards.map((c) => c.getAttribute('title'))).toEqual([
+    expect(cards.map((c) => c.querySelector('.card__title')?.textContent?.trim())).toEqual([
       'Port Credit Buskerfest',
       'Lavender Festival',
     ]);
-    expect(cards[0]?.hasAttribute('muted')).toBe(true);
+    expect(cards[0]?.classList.contains('card--muted')).toBe(true);
     expect(cards[0]?.querySelector('.card__footer')).toBeNull();
-    expect(cards[1]?.hasAttribute('muted')).toBe(false);
+    expect(cards[1]?.classList.contains('card--muted')).toBe(false);
     expect(cards[1]?.querySelector('.card__footer a')?.getAttribute('href')).toBe(
       'https://example.com/lavender',
     );

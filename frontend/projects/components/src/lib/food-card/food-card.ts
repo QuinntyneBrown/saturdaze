@@ -26,10 +26,6 @@ import { Vote, VoteCell, VoteRow } from '../vote-row/vote-row';
     '[class.card--span]': 'topPick()',
     '[class.card--locked]': 'locked()',
     '[class.card--dimmed]': 'dimmed()',
-    '[attr.title]': 'cardTitle() || null',
-    '[attr.top-pick]': 'topPick() ? "" : null',
-    '[attr.locked]': 'locked() ? "" : null',
-    '[attr.dimmed]': 'dimmed() ? "" : null',
   },
 })
 export class FoodCard {

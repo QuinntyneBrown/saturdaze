@@ -98,6 +98,16 @@ describe('SharedWeekendPage', () => {
     shared = { load: vi.fn(async () => READY) };
   });
 
+  const headerTitle = (): string | null =>
+    host.querySelector('.page-header__title')?.textContent?.trim() ?? null;
+  const headerSubtitle = (): string | null =>
+    host.querySelector('.page-header__subtitle')?.textContent?.trim() ?? null;
+  /** sun draws the sun-toned weather disc; cloud (and anything unknown) the sky-toned one. */
+  const discTone = (day: Element): string | null =>
+    ['sun', 'sky'].find((t) =>
+      day.querySelector('.weather-disc')?.classList.contains(`disc--${t}`),
+    ) ?? null;
+
   it('bounces to the landing page when there is no share token', async () => {
     await mount({});
     expect(router.navigateByUrl).toHaveBeenCalledWith('/');
@@ -109,10 +119,8 @@ describe('SharedWeekendPage', () => {
     shared.load.mockReturnValueOnce(new Promise<WeekendView>((r) => (resolve = r)));
     await mount({ share: 'tok-123' });
     expect(shared.load).toHaveBeenCalledWith('tok-123');
-    expect(host.querySelector('sd-page-header')?.getAttribute('title')).toBe('A shared weekend');
-    expect(host.querySelector('sd-page-header')?.getAttribute('subtitle')).toBe(
-      'Opening the plan.',
-    );
+    expect(headerTitle()).toBe('A shared weekend');
+    expect(headerSubtitle()).toBe('Opening the plan.');
     expect(host.querySelector('.sd-grid-days[aria-busy="true"]')).not.toBeNull();
     expect(host.querySelectorAll('sd-skeleton-row').length).toBe(8);
 
@@ -127,23 +135,30 @@ describe('SharedWeekendPage', () => {
     await settle();
     fixture.detectChanges();
 
-    expect(host.querySelector('sd-page-header')?.getAttribute('subtitle')).toBe(READY.subtitle);
+    expect(headerSubtitle()).toBe(READY.subtitle);
     expect(host.querySelector('sd-banner')?.textContent?.replace(/\s+/g, ' ').trim()).toBe(
       'Shared with you, read-only. Create an account to plan your own.',
     );
     const days = Array.from(host.querySelectorAll('sd-day'));
-    expect(days.map((d) => d.getAttribute('title'))).toEqual(['Saturday', 'Sunday']);
-    expect(days.map((d) => d.getAttribute('weather'))).toEqual(['sun', 'cloud']);
-    expect(days[1]?.hasAttribute('locked')).toBe(true);
+    expect(days.map((d) => d.querySelector('.day__title')?.textContent?.trim())).toEqual([
+      'Saturday',
+      'Sunday',
+    ]);
+    expect(days.map(discTone)).toEqual(['sun', 'sky']);
+    expect(days.map((d) => d.classList.contains('day--locked'))).toEqual([false, true]);
     expect(host.querySelectorAll('sd-day .day__actions').length).toBe(0);
 
     const blocks = Array.from(host.querySelectorAll('sd-block'));
-    expect(blocks.map((b) => b.getAttribute('title'))).toEqual([
+    expect(blocks.map((b) => b.querySelector('.block__title')?.textContent?.trim())).toEqual([
       'Swim lessons',
       'Terre Bleu Lavender Farm',
       'Pancakes at home',
     ]);
-    expect(blocks[0]?.hasAttribute('commitment')).toBe(true);
+    expect(blocks.map((b) => b.classList.contains('block--commitment'))).toEqual([
+      true,
+      false,
+      false,
+    ]);
     expect(host.querySelectorAll('.block__chev').length).toBe(0);
     expect(host.querySelectorAll('sd-block sd-chip').length).toBe(5);
   });
@@ -153,10 +168,10 @@ describe('SharedWeekendPage', () => {
     await mount({ share: 'tok-123' });
     await settle();
     fixture.detectChanges();
-    expect(host.querySelector('sd-page-header')?.getAttribute('title')).toBe(
-      'This link has expired',
+    expect(headerTitle()).toBe('This link has expired');
+    expect(host.querySelector('sd-empty .empty__title')?.textContent?.trim()).toBe(
+      'Plan one of your own',
     );
-    expect(host.querySelector('sd-empty')?.getAttribute('title')).toBe('Plan one of your own');
     expect(host.querySelector('sd-empty sd-button a')?.getAttribute('href')).toBe(
       '/create-account',
     );
@@ -169,9 +184,7 @@ describe('SharedWeekendPage', () => {
     await settle();
     fixture.detectChanges();
     expect(fixture.componentInstance['state']()).toBe('missing');
-    expect(host.querySelector('sd-page-header')?.getAttribute('subtitle')).toBe(
-      'Shared weekends stay open for seven days.',
-    );
+    expect(headerSubtitle()).toBe('Shared weekends stay open for seven days.');
     consoleError.mockRestore();
   });
 });

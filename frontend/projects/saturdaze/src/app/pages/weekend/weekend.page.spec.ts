@@ -216,7 +216,20 @@ describe('WeekendPage', () => {
     menu = { open: vi.fn(async () => undefined), dialog };
   });
 
-  const header = (): Element => host.querySelector('sd-page-header')!;
+  const headerTitle = (): string | null =>
+    host.querySelector('.page-header__title')?.textContent?.trim() ?? null;
+  const headerSubtitle = (): string | null =>
+    host.querySelector('.page-header__subtitle')?.textContent?.trim() ?? null;
+  const emptyTitle = (): string | null =>
+    host.querySelector('sd-empty .empty__title')?.textContent?.trim() ?? null;
+  const dayTitles = (): (string | undefined)[] =>
+    Array.from(host.querySelectorAll('sd-day')).map((d) =>
+      d.querySelector('.day__title')?.textContent?.trim(),
+    );
+  const blockTitles = (): (string | undefined)[] =>
+    Array.from(host.querySelectorAll('sd-block')).map((b) =>
+      b.querySelector('.block__title')?.textContent?.trim(),
+    );
   /** Ready state: the cover leads, its actions sit below it (L2-108). */
   const cover = (): Element => host.querySelector('sd-cover')!;
   const coverAction = (selector: string): HTMLButtonElement =>
@@ -237,12 +250,14 @@ describe('WeekendPage', () => {
   it('opens on skeleton days while the weekend loads', async () => {
     await mount();
     expect(weekend.loadCurrent).toHaveBeenCalledTimes(1);
-    expect(header().getAttribute('title')).toBe('This weekend');
-    expect(header().getAttribute('subtitle')).toBe('Opening this weekend.');
+    expect(headerTitle()).toBe('This weekend');
+    expect(headerSubtitle()).toBe('Opening this weekend.');
     expect(host.querySelector('.sd-grid-days[aria-busy="true"]')).not.toBeNull();
     expect(host.querySelectorAll('sd-day').length).toBe(2);
     expect(host.querySelectorAll('sd-skeleton-row').length).toBe(8);
-    expect(host.querySelector('sd-button[slot="primary"]')?.hasAttribute('disabled')).toBe(true);
+    expect(
+      (host.querySelector('sd-button[slot="primary"] button') as HTMLButtonElement).disabled,
+    ).toBe(true);
   });
 
   it('renders the selected day with its blocks and row actions once the plan is ready', async () => {
@@ -253,16 +268,15 @@ describe('WeekendPage', () => {
     expect(coverAction('sd-button[variant="primary"]').disabled).toBe(false);
 
     const days = (): Element[] => Array.from(host.querySelectorAll('sd-day'));
-    expect(days().map((d) => d.getAttribute('title'))).toEqual(['Saturday']);
-    expect(days()[0]?.getAttribute('weather')).toBe('sun');
+    expect(dayTitles()).toEqual(['Saturday']);
+    expect(days()[0]?.querySelector('.weather-disc')?.classList.contains('disc--sun')).toBe(true);
+    expect(days()[0]?.classList.contains('day--locked')).toBe(false);
     expect(host.querySelectorAll('sd-ghost-row').length).toBe(1);
     expect(host.querySelector('[role="tab"][aria-selected="true"]')?.textContent?.trim()).toBe(
       'Saturday',
     );
 
-    const titles = (): (string | null)[] =>
-      Array.from(host.querySelectorAll('sd-block')).map((b) => b.getAttribute('title'));
-    expect(titles()).toEqual(['Swim lessons', 'Terre Bleu Lavender Farm']);
+    expect(blockTitles()).toEqual(['Swim lessons', 'Terre Bleu Lavender Farm']);
     expect(button('About Swim lessons')).not.toBeNull();
     expect(button('Swap Swim lessons')).toBeNull();
     expect(button('Lock Swim lessons')).toBeNull();
@@ -271,29 +285,28 @@ describe('WeekendPage', () => {
     expect(button('Lock Terre Bleu Lavender Farm')).not.toBeNull();
 
     showDay('Sunday');
-    expect(days().map((d) => d.getAttribute('title'))).toEqual(['Sunday']);
-    expect(days()[0]?.hasAttribute('locked')).toBe(true);
-    expect(titles()).toEqual(['Costco run']);
+    expect(dayTitles()).toEqual(['Sunday']);
+    expect(days()[0]?.classList.contains('day--locked')).toBe(true);
+    expect(blockTitles()).toEqual(['Costco run']);
     expect(button('Mark Costco run done')).not.toBeNull();
   });
 
   it('shows the first-run empty state, drafted around the family', async () => {
     await mountReady(EMPTY);
     expect(family.load).toHaveBeenCalledTimes(1);
-    expect(header().getAttribute('title')).toBe('Your first weekend');
-    expect(header().getAttribute('subtitle')).toBe(
-      'Nothing is drafted yet. Planning takes a few seconds.',
-    );
+    expect(headerTitle()).toBe('Your first weekend');
+    expect(headerSubtitle()).toBe('Nothing is drafted yet. Planning takes a few seconds.');
     expect(host.querySelector('sd-button[slot="primary"]')).toBeNull();
-    expect(host.querySelector('sd-empty')?.getAttribute('title')).toBe(
-      'Saturday and Sunday, drafted around The Browns',
-    );
+    expect(emptyTitle()).toBe('Saturday and Sunday, drafted around The Browns');
     const rows = Array.from(host.querySelectorAll('.planned sd-list-item'));
-    expect(rows.map((r) => r.getAttribute('title'))).toEqual([
+    expect(rows.map((r) => r.querySelector('.list__title')?.textContent?.trim())).toEqual([
       'The Browns, Port Credit',
       'Swim lessons, Church',
     ]);
-    expect(rows.every((r) => r.getAttribute('href') === '/family')).toBe(true);
+    expect(rows.map((r) => r.querySelector('a.list__item')?.getAttribute('href'))).toEqual([
+      '/family',
+      '/family',
+    ]);
 
     (host.querySelector('sd-empty sd-button[slot="cta"] button') as HTMLButtonElement).click();
     await settle();
@@ -304,18 +317,14 @@ describe('WeekendPage', () => {
 
   it('honours ?state=empty and ?state=generating for the design harness', async () => {
     await mountReady(READY, { state: 'empty' });
-    expect(header().getAttribute('title')).toBe('Your first weekend');
-    expect(host.querySelector('sd-empty')?.getAttribute('title')).toBe(
-      'Saturday and Sunday, drafted around The Browns',
-    );
+    expect(headerTitle()).toBe('Your first weekend');
+    expect(emptyTitle()).toBe('Saturday and Sunday, drafted around The Browns');
 
     TestBed.resetTestingModule();
     weekend.loadCurrent.mockClear();
     await mount({ state: 'generating' });
     expect(weekend.loadCurrent).not.toHaveBeenCalled();
-    expect(header().getAttribute('subtitle')).toBe(
-      'Sketching Saturday and Sunday. Usually four to six seconds.',
-    );
+    expect(headerSubtitle()).toBe('Sketching Saturday and Sunday. Usually four to six seconds.');
     expect(host.querySelector('sd-status-row')?.textContent?.trim()).toBe(
       'Working through your locks, the forecast and past weekends.',
     );
@@ -437,7 +446,7 @@ describe('WeekendPage', () => {
 
     dialog.open.mockReturnValueOnce({ closed: of({ kind: 'done', done: true }) });
     showDay('Sunday');
-    (host.querySelector('sd-block[title="Costco run"] .block__chev') as HTMLButtonElement).click();
+    button('Details for Costco run').click();
     await settle();
     expect(weekend.setErrandDone).toHaveBeenCalledWith('e-costco', true);
   });

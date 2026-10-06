@@ -64,7 +64,9 @@ describe('VerifyEmailPage', () => {
   });
 
   const title = (): string | null =>
-    host.querySelector('sd-auth-card')?.getAttribute('title') ?? null;
+    host.querySelector('.auth-card__title')?.textContent?.trim() ?? null;
+  const primaryButton = (): HTMLButtonElement =>
+    host.querySelector('sd-button[variant="primary"] button') as HTMLButtonElement;
 
   it('shows "check your email" with the masked address right after sign-up (no token)', async () => {
     await mount({ email: 'quinntynebrown@gmail.com' });
@@ -128,22 +130,22 @@ describe('VerifyEmailPage', () => {
     fixture.detectChanges();
     expect(title()).toBe('This link has expired');
     expect(component['error']()).toEqual({ code: 'token_expired', message: 'Expired.' });
-    const resend = host.querySelector('sd-button[variant="primary"]') as HTMLElement;
-    expect(resend.hasAttribute('disabled')).toBe(false);
+    const resend = primaryButton();
+    expect(resend.disabled).toBe(false);
     expect(resend.textContent).toContain('Resend verification email');
 
-    (resend.querySelector('button') as HTMLButtonElement).click();
+    resend.click();
     await settle();
     fixture.detectChanges();
     expect(session.resendVerification).toHaveBeenCalledWith({ email: 'quinn@example.com' });
     expect(component['resent']()).toBe(true);
     expect(resend.textContent).toContain('Sent');
-    expect(resend.hasAttribute('disabled')).toBe(true);
+    expect(resend.disabled).toBe(true);
   });
 
   it('cannot resend without an address', async () => {
     await mount({ state: 'expired' });
-    expect(host.querySelector('sd-button[variant="primary"]')?.hasAttribute('disabled')).toBe(true);
+    expect(primaryButton().disabled).toBe(true);
     await component['resend']();
     expect(session.resendVerification).not.toHaveBeenCalled();
   });

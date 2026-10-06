@@ -21,9 +21,6 @@ import { CardMedia, Media, MediaTone } from '../media/media';
   host: {
     class: 'card card--media',
     '[class.card--muted]': 'muted()',
-    '[attr.title]': 'cardTitle() || null',
-    '[attr.date]': 'date() || null',
-    '[attr.muted]': 'muted() ? "" : null',
   },
 })
 export class EventCard {

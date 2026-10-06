@@ -41,9 +41,6 @@ export type DiscSize = 'sm' | 'md' | 'lg' | 'xl';
     '[class.disc--leaf]': 'tone() === "leaf"',
     '[class.disc--indoor]': 'tone() === "indoor"',
     '[class.disc--surface]': 'tone() === "surface"',
-    '[attr.icon]': 'icon()',
-    '[attr.tone]': 'tone() === "default" ? null : tone()',
-    '[attr.size]': 'size() === "md" ? null : size()',
   },
 })
 export class Disc {

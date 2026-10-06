@@ -168,8 +168,15 @@ describe('FamilyPage', () => {
   });
 
   const saved = (): EditableFamilyProfile => familyService.saveProfile.mock.calls.at(-1)![0];
+  /** The section whose rendered heading reads `title` (null when it is not on the page). */
   const section = (title: string): HTMLElement =>
-    host.querySelector(`sd-section[title="${title}"]`) as HTMLElement;
+    (Array.from(host.querySelectorAll<HTMLElement>('sd-section')).find(
+      (s) => s.querySelector('.section-header__title')?.textContent?.trim() === title,
+    ) ?? null) as HTMLElement;
+  const rowTitle = (row: Element | null | undefined): string | null =>
+    row?.querySelector('.list__title')?.textContent?.trim() ?? null;
+  const rowSubtitle = (row: Element | null | undefined): string | null =>
+    row?.querySelector('.list__sub')?.textContent?.trim() ?? null;
   const confirmData = (): any =>
     dialog.open.mock.calls.find((c) => c[0] === ConfirmDialog)?.[1].data;
 
@@ -177,12 +184,14 @@ describe('FamilyPage', () => {
     await mount();
     expect(familyService.load).toHaveBeenCalledTimes(1);
     expect(submissions.loadPending).not.toHaveBeenCalled();
-    expect(host.querySelector('sd-page-header')?.getAttribute('title')).toBe('The Browns');
+    expect(host.querySelector('.page-header__title')?.textContent?.trim()).toBe('The Browns');
 
     const members = Array.from(section("Who's in").querySelectorAll('sd-list-item'));
-    expect(members.map((m) => m.getAttribute('title'))).toEqual(['Quinn', 'Mae']);
-    expect(members.map((m) => m.getAttribute('subtitle'))).toEqual(['Parent · 38', 'Kid · 5']);
-    expect(members[1]?.querySelector('sd-avatar')?.getAttribute('tone')).toBe('sun');
+    expect(members.map(rowTitle)).toEqual(['Quinn', 'Mae']);
+    expect(members.map(rowSubtitle)).toEqual(['Parent · 38', 'Kid · 5']);
+    // Mae's avatar carries the sun tone (`.avatar--m`); Quinn's the primary one.
+    expect(members[1]?.querySelector('sd-avatar')?.classList.contains('avatar--m')).toBe(true);
+    expect(members[0]?.querySelector('sd-avatar')?.classList.contains('avatar--m')).toBe(false);
     expect(section("Who's in").querySelector('sd-ghost-row')?.textContent?.trim()).toBe(
       'Add a family member',
     );
@@ -190,16 +199,14 @@ describe('FamilyPage', () => {
     const commitments = Array.from(
       section('Locked in every weekend').querySelectorAll('sd-list-item'),
     );
-    expect(commitments.map((c) => c.getAttribute('title'))).toEqual(['Swim lessons', 'Piano']);
+    expect(commitments.map(rowTitle)).toEqual(['Swim lessons', 'Piano']);
 
-    expect(section('Home').querySelector('sd-list-item')?.getAttribute('title')).toBe(
+    expect(rowTitle(section('Home').querySelector('sd-list-item'))).toBe(
       'Port Credit, Mississauga',
     );
-    expect(
-      Array.from(section('Likes and dislikes').querySelectorAll('sd-chip')).map((c) =>
-        c.getAttribute('tone'),
-      ),
-    ).toEqual(['leaf', 'warn']);
+    const chips = Array.from(section('Likes and dislikes').querySelectorAll('sd-chip'));
+    expect(chips.map((c) => c.classList.contains('chip--leaf'))).toEqual([true, false]);
+    expect(chips.map((c) => c.classList.contains('chip--warn'))).toEqual([false, true]);
     expect(section('Preferences').querySelectorAll('sd-toggle').length).toBe(3);
     expect(section('Admin')).toBeNull();
     expect(section('Account').querySelector('.account-card__title')?.textContent?.trim()).toBe(
@@ -397,9 +404,9 @@ describe('FamilyPage', () => {
     await mount();
     expect(submissions.loadPending).toHaveBeenCalledTimes(1);
     const row = section('Admin').querySelector('sd-list-item');
-    expect(row?.getAttribute('href')).toBe('/review-submissions');
-    expect(row?.getAttribute('title')).toBe('Review submissions');
-    expect(row?.getAttribute('subtitle')).toBe('Nothing waiting');
+    expect(row?.querySelector('a.list__item')?.getAttribute('href')).toBe('/review-submissions');
+    expect(rowTitle(row)).toBe('Review submissions');
+    expect(rowSubtitle(row)).toBe('Nothing waiting');
     expect(section('Admin').querySelector('sd-chip[slot="trailing"]')).toBeNull();
   });
 
@@ -413,14 +420,12 @@ describe('FamilyPage', () => {
     pending.set([SUBMISSION, { ...SUBMISSION, id: 's-2' }]);
     await mount();
     const row = section('Admin').querySelector('sd-list-item');
-    expect(row?.getAttribute('subtitle')).toBe('2 waiting');
+    expect(rowSubtitle(row)).toBe('2 waiting');
     expect(row?.querySelector('sd-chip[slot="trailing"]')?.textContent?.trim()).toBe('2');
 
     pending.set([SUBMISSION]);
     fixture.detectChanges();
-    expect(section('Admin').querySelector('sd-list-item')?.getAttribute('subtitle')).toBe(
-      '1 waiting',
-    );
+    expect(rowSubtitle(section('Admin').querySelector('sd-list-item'))).toBe('1 waiting');
   });
 
   it('signs out through D22 from the account card', async () => {

@@ -17,7 +17,6 @@ import { ChangeDetectionStrategy, Component, booleanAttribute, input } from '@an
     '[attr.aria-label]': 'label()',
     '[class.scroller-x]': 'scroll()',
     '[class.filters]': '!scroll()',
-    '[attr.scroll]': 'scroll() ? "" : null',
   },
 })
 export class Filters {

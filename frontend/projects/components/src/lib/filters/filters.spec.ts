@@ -37,7 +37,6 @@ describe('Filters', () => {
   it('scrolls horizontally by default', () => {
     expect(host.classList.contains('scroller-x')).toBe(true);
     expect(host.classList.contains('filters')).toBe(false);
-    expect(host.getAttribute('scroll')).toBe('');
   });
 
   it('wraps when scroll is turned off', () => {
@@ -45,7 +44,6 @@ describe('Filters', () => {
     fixture.detectChanges();
     expect(host.classList.contains('filters')).toBe(true);
     expect(host.classList.contains('scroller-x')).toBe(false);
-    expect(host.getAttribute('scroll')).toBeNull();
   });
 
   it('uses the label input as the accessible name', () => {

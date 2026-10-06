@@ -54,7 +54,6 @@ describe('TopBar', () => {
       '/family',
     ]);
     expect(host.querySelector('[aria-current]')).toBeNull();
-    expect(host.getAttribute('active')).toBeNull();
   });
 
   it('marks the active destination with aria-current', () => {
@@ -65,13 +64,12 @@ describe('TopBar', () => {
     expect(host.querySelector('.topbar__link[data-nav="past"]')?.getAttribute('aria-current')).toBe(
       'page',
     );
-    expect(host.getAttribute('active')).toBe('past');
   });
 
   it('shows the account initial from the email', () => {
     const avatar = host.querySelector('.topbar__actions sd-avatar') as HTMLElement;
     expect(avatar.textContent?.trim()).toBe('?');
-    expect(avatar.getAttribute('tone')).toBe('primary');
+    expect(avatar.classList.contains('avatar--q')).toBe(true);
 
     fixture.componentRef.setInput('email', 'quinn@example.com');
     fixture.detectChanges();
