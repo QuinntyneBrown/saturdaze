@@ -250,12 +250,24 @@ function main() {
   writeFileSync(list, lines.join('\n'));
   const mp3 = join(folder, `${name}.mp3`);
   const mp4 = join(folder, `${name}.mp4`);
+  // Two passes, because the concat demuxer yields one frame per slide. Expanding a
+  // 60-second slide to 30 fps inside the filter graph (fps=30,ass=...) queues ~1,800
+  // uncompressed 1080p frames ahead of the caption renderer and gets ffmpeg killed for
+  // memory. Pass 1 duplicates frames at the encoder (bounded), pass 2 burns captions
+  // while streaming that constant-frame-rate video.
+  const stills = join(cache, 'slides.mp4');
   execFileSync(ffmpeg, [
     '-y', '-v', 'error',
     '-f', 'concat', '-safe', '0', '-i', list,
+    '-r', '30', '-fps_mode', 'cfr',
+    '-c:v', 'libx264', '-preset', 'veryfast', '-tune', 'stillimage', '-crf', '12', '-pix_fmt', 'yuv420p',
+    stills,
+  ], { stdio: 'inherit' });
+  execFileSync(ffmpeg, [
+    '-y', '-v', 'error',
+    '-i', stills,
     '-i', mp3,
-    // fps before ass: the concat demuxer yields one frame per slide, captions need every frame.
-    '-vf', `fps=30,ass=${ass.replace(/:/g, '\\:')},format=yuv420p`,
+    '-vf', `ass=${ass.replace(/:/g, '\\:')},format=yuv420p`,
     '-c:v', 'libx264', '-preset', 'medium', '-tune', 'stillimage', '-crf', '26',
     '-c:a', 'aac', '-b:a', '96k',
     '-movflags', '+faststart',
