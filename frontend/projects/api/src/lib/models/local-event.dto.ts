@@ -1,4 +1,5 @@
 import { LocationDto } from './location.dto';
+import { PlacePhotoDto } from './place-photo.dto';
 
 /**
  * Server-side shape of one row from `GET /api/events`. Mirrors
@@ -41,4 +42,8 @@ export interface LocalEventDto {
    * Location (L2-087); null until the place is backfilled.
    */
   readonly location?: LocationDto | null;
+  /**
+   * Photo (L2-088); null when the place has none.
+   */
+  readonly photo?: PlacePhotoDto | null;
 }

@@ -1,3 +1,4 @@
+import { MediaView } from './media-view';
 import { ChipView } from './chip-view';
 import { FamilyVote } from './family-vote';
 
@@ -51,4 +52,8 @@ export interface FoodCard {
    * Votes Disabled — voting is closed once a pick is locked.
    */
   readonly votesDisabled: boolean;
+  /**
+   * Media — the place's photo; null shows the fallback tile (L2-094).
+   */
+  readonly media: MediaView | null;
 }

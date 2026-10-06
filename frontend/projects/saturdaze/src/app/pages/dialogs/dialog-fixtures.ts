@@ -200,6 +200,7 @@ export const FOOD_CARD: FoodCard = {
   lockedLabel: null,
   dimmed: false,
   votesDisabled: false,
+  media: null,
 };
 
 export const MORE_ITEMS: readonly MenuItem[] = [

@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, Signal, computed, inject, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 
+import { toMedia } from '../api/media';
 import { API_BASE_URL } from '../api/api-base-url';
 import {
   addDaysIso,
@@ -80,6 +81,7 @@ function toCard(dto: LocalEventDto): EventCard {
     chips,
     url: dto.url || null,
     pending: false,
+    media: toMedia(dto.photo),
   };
 }
 
@@ -97,6 +99,7 @@ function toPendingCard(dto: EventSubmissionDto): EventCard {
     chips: [{ tone: 'sun', label: PENDING_REVIEW }],
     url: dto.sourceUrl || null,
     pending: true,
+    media: null,
   };
 }
 

@@ -1,3 +1,4 @@
+import { MediaView } from './media-view';
 import { ChipView } from './chip-view';
 import { DateTile } from './date-tile';
 
@@ -34,4 +35,8 @@ export interface EventCard {
    * Pending — a suggestion only this family can see.
    */
   readonly pending: boolean;
+  /**
+   * Media — the place's photo; null shows the fallback tile (L2-094).
+   */
+  readonly media: MediaView | null;
 }

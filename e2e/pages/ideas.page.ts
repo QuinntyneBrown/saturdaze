@@ -48,7 +48,7 @@ export class IdeasPage extends BasePage {
   /* ---------- Cards ---------- */
 
   cards(section?: Locator): Locator {
-    return (section ?? this.main).locator(".grid-cards .card");
+    return (section ?? this.main).locator(".sd-grid-cards .card");
   }
 
   card(title: string, section?: Locator): Locator {
@@ -81,7 +81,49 @@ export class IdeasPage extends BasePage {
     return card.getByRole("link", { name: "Details", exact: true });
   }
 
-  /* ---------- Food ---------- */
+  /* ---------- Photos (L2-094, L2-089) ---------- */
+
+  /** Cards that lead with a photo frame (photo or fallback tile). */
+  mediaCards(section?: Locator): Locator {
+    return this.cards(section).and(this.page.locator(".card--media"));
+  }
+
+  /** Cards whose photo frame holds a loaded image. */
+  cardsWithPhoto(section?: Locator): Locator {
+    return this.mediaCards(section).filter({ has: this.page.locator(".card__media img.media__img") });
+  }
+
+  /** Cards whose photo frame is the tinted fallback tile. */
+  cardsWithFallback(section?: Locator): Locator {
+    return this.mediaCards(section).filter({ has: this.page.locator(".card__media.media--fallback") });
+  }
+
+  cardMedia(card: Locator): Locator {
+    return card.locator(".card__media");
+  }
+
+  cardImage(card: Locator): Locator {
+    return card.locator(".card__media img.media__img");
+  }
+
+  cardCredit(card: Locator): Locator {
+    return card.locator(".card__media .media__credit");
+  }
+
+  /** Every photo image on the screen. */
+  cardImages(): Locator {
+    return this.main.locator(".sd-grid-cards .card__media img");
+  }
+
+  /** Columns of the first card grid, from its computed template. */
+  async gridColumnCount(): Promise<number> {
+    return this.main
+      .locator(".sd-grid-cards")
+      .first()
+      .evaluate((el) => getComputedStyle(el).gridTemplateColumns.split(" ").filter(Boolean).length);
+  }
+
+    /* ---------- Food ---------- */
 
   lunchSection(): Locator {
     return this.section("Lunch");
@@ -97,7 +139,7 @@ export class IdeasPage extends BasePage {
 
   /** Plain food cards: not the spanning top pick, not locked, not dimmed. */
   regularCards(section?: Locator): Locator {
-    return (section ?? this.main).locator(".grid-cards .card:not(.card--span):not(.card--locked):not(.card--dimmed)");
+    return (section ?? this.main).locator(".sd-grid-cards .card:not(.card--span):not(.card--locked):not(.card--dimmed)");
   }
 
   /** Event cards that carry an external "Details" link. */

@@ -10,6 +10,7 @@ export type { FoodSection } from './food-section';
 export type { IdeasActivitiesView } from './ideas-activities-view';
 export type { IdeasEventsView } from './ideas-events-view';
 export type { IdeasFoodView } from './ideas-food-view';
+export type { MediaView } from './media-view';
 export type { MealSlot } from './meal-slot';
 export type { Vote } from './vote';
 export type { VoterTone } from './voter-tone';

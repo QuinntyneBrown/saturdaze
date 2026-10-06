@@ -33,6 +33,7 @@
           [day]="event.tile.day"
           [muted]="event.pending"
           [url]="event.url ?? ''"
+          [media]="event.media"
         >
           @for (chip of event.chips; track chip.label) {
             <sd-chip slot="chips" [tone]="chipTone(chip.tone)">

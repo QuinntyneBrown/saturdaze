@@ -165,6 +165,7 @@ describe('EventsService', () => {
       ],
       url: 'https://example.com/terre-bleu',
       pending: false,
+      media: null,
     });
     expect(second!.url).toBeNull();
     expect(second!.chips[0]).toEqual({ tone: 'indoor', label: 'Theatre' });
@@ -226,6 +227,7 @@ describe('EventsService', () => {
         chips: [{ tone: 'sun', label: 'Pending review' }],
         url: 'https://example.com/buskerfest',
         pending: true,
+        media: null,
       },
     ]);
     service.setCategory('Theatre');

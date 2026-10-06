@@ -1,0 +1,18 @@
+@let p = photo();
+@if (p && !fallback()) {
+  <img
+    class="media__img"
+    [src]="p.src"
+    [alt]="p.alt"
+    [attr.width]="p.width"
+    [attr.height]="p.height"
+    [attr.loading]="eager() ? 'eager' : 'lazy'"
+    decoding="async"
+    (error)="failed(p.src)"
+  />
+  @if (p.credit) {
+    <span class="media__credit">{{ p.credit }}</span>
+  }
+} @else {
+  <sd-icon [name]="icon()" [size]="32" />
+}

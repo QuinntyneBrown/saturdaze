@@ -1,0 +1,66 @@
+// `.media` from docs/mocks/styles/app.css: a fixed-ratio photo frame with a
+// credit chip, or the tinted fallback tile.
+
+:host {
+  --sd-media-credit-bg: color-mix(in srgb, var(--colorNeutralForeground1) 78%, transparent);
+
+  position: relative;
+  display: block;
+  overflow: hidden;
+  aspect-ratio: 16 / 9;
+  background: var(--colorNeutralBackground3);
+  border-radius: var(--borderRadiusMedium);
+}
+
+:host(.media--4x3) {
+  aspect-ratio: 4 / 3;
+}
+
+.media__img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+// White on a 78 % ink scrim keeps 4.5:1 over any image (L2-094 AC4).
+.media__credit {
+  position: absolute;
+  right: 8px;
+  bottom: 6px;
+  max-width: calc(100% - 16px);
+  padding: 1px 6px;
+  overflow: hidden;
+  border-radius: var(--borderRadiusCircular);
+  background: var(--sd-media-credit-bg);
+  color: var(--colorNeutralForegroundOnBrand);
+  font-size: var(--fontSizeBase200);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+:host(.media--fallback) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+:host(.media--leaf) {
+  background: var(--colorPaletteLeafBackground1);
+  color: var(--colorPaletteLeafForeground1);
+}
+
+:host(.media--indoor) {
+  background: var(--colorPaletteIndoorBackground1);
+  color: var(--colorPaletteIndoorForeground1);
+}
+
+:host(.media--sky) {
+  background: var(--colorPaletteSkyBackground1);
+  color: var(--colorPaletteSkyForeground1);
+}
+
+:host(.media--sun) {
+  background: var(--colorPaletteSunBackground1);
+  color: var(--colorPaletteSunForeground1);
+}

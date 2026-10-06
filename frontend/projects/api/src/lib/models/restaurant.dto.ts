@@ -1,5 +1,6 @@
 import { MealSlot } from './meal-slot';
 import { LocationDto } from './location.dto';
+import { PlacePhotoDto } from './place-photo.dto';
 
 /**
  * Restaurant Dto.
@@ -54,4 +55,8 @@ export interface RestaurantDto {
    * Location (L2-087); null until the place is backfilled.
    */
   readonly location?: LocationDto | null;
+  /**
+   * Photo (L2-088); null when the place has none.
+   */
+  readonly photo?: PlacePhotoDto | null;
 }

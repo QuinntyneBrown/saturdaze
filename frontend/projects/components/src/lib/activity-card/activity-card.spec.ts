@@ -26,13 +26,15 @@ describe('ActivityCard', () => {
     host = fixture.nativeElement as HTMLElement;
   });
 
-  it('creates a leaf-toned card with a tree disc and the title', () => {
+  it('creates a photo-led card whose fallback tile is leaf-toned with a tree, and the title', () => {
     expect(fixture.componentInstance).toBeTruthy();
     expect(host.classList.contains('card')).toBe(true);
-    const disc = host.querySelector('.card__head sd-disc') as HTMLElement;
-    expect(disc.getAttribute('icon')).toBe('tree');
-    expect(disc.getAttribute('tone')).toBe('leaf');
-    expect(disc.getAttribute('size')).toBe('lg');
+    expect(host.classList.contains('card--media')).toBe(true);
+    const tile = host.querySelector('sd-media.card__media') as HTMLElement;
+    expect(tile.classList).toContain('media--fallback');
+    expect(tile.classList).toContain('media--leaf');
+    expect(tile.getAttribute('aria-hidden')).toBe('true');
+    expect(tile.querySelector('sd-icon')?.getAttribute('name')).toBe('tree');
     expect(host.querySelector('.card__head-text h3.card__title')?.textContent?.trim()).toBe(
       'Jack Darling Park',
     );
@@ -57,9 +59,9 @@ describe('ActivityCard', () => {
     fixture.componentRef.setInput('tone', 'indoor');
     fixture.componentRef.setInput('icon', 'popcorn');
     fixture.detectChanges();
-    const disc = host.querySelector('sd-disc') as HTMLElement;
-    expect(disc.getAttribute('icon')).toBe('popcorn');
-    expect(disc.getAttribute('tone')).toBe('indoor');
+    const tile = host.querySelector('sd-media') as HTMLElement;
+    expect(tile.querySelector('sd-icon')?.getAttribute('name')).toBe('popcorn');
+    expect(tile.classList).toContain('media--indoor');
     expect(host.getAttribute('tone')).toBe('indoor');
   });
 
