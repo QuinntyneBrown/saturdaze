@@ -108,6 +108,40 @@ public class ProfilePhotoTests : IClassFixture<SaturdazeApiFactory>
     private record ValidationProblem(Dictionary<string, string[]> Errors);
 
     [Fact]
+    public async Task Replacing_the_photo_issues_a_new_url_and_retires_the_old_one()
+    {
+        var session = await SignedInClient.CreateAsync(_factory);
+        var first = await UploadOk(session.Client, Png, "image/png");
+
+        var second = await UploadOk(session.Client, Webp, "image/webp");
+
+        second.AvatarUrl.Should().NotBeNull().And.NotBe(first.AvatarUrl);
+        var anon = _factory.CreateClient();
+        (await anon.GetAsync(first.AvatarUrl)).StatusCode.Should().Be(HttpStatusCode.NotFound);
+        (await anon.GetAsync(second.AvatarUrl)).StatusCode.Should().Be(HttpStatusCode.OK);
+    }
+
+    [Fact]
+    public async Task Removing_the_photo_clears_the_url_retires_it_and_is_idempotent()
+    {
+        var session = await SignedInClient.CreateAsync(_factory);
+        var uploaded = await UploadOk(session.Client, Png, "image/png");
+
+        var res = await session.Client.DeleteAsync(AvatarRoute);
+
+        res.StatusCode.Should().Be(HttpStatusCode.OK);
+        (await res.Content.ReadFromJsonAsync<AuthDtos.User>())!.AvatarUrl.Should().BeNull();
+        (await _factory.CreateClient().GetAsync(uploaded.AvatarUrl)).StatusCode
+            .Should().Be(HttpStatusCode.NotFound);
+        var me = await session.Client.GetFromJsonAsync<AuthDtos.User>("/api/auth/me");
+        me!.AvatarUrl.Should().BeNull();
+
+        var again = await session.Client.DeleteAsync(AvatarRoute);
+        again.StatusCode.Should().Be(HttpStatusCode.OK);
+        (await again.Content.ReadFromJsonAsync<AuthDtos.User>())!.AvatarUrl.Should().BeNull();
+    }
+
+    [Fact]
     public async Task Avatar_endpoints_require_a_bearer()
     {
         var anon = _factory.CreateClient();
