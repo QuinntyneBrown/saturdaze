@@ -1,0 +1,345 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 02 Slides</title>
+<link rel="stylesheet" href="../assets/slides.css">
+</head>
+<body data-video-number="02" data-video-title="Global tokens: the raw values" data-parts="Introduction|Types|Brand ramp|Palettes|Type|Spacing|Shape &amp; layout|The rule|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Saturdaze design system · Video 02 of 06</div>
+  <h1>Global tokens: the raw values</h1>
+  <p class="lead">Layer one — every colour, size and duration a theme is built from.</p>
+</section>
+
+<section id="types" data-part="1" data-cue="Start with the contract">
+  <h2>Start with the contract: <code>types.ts</code></h2>
+  <pre class="code" data-lang="ts" data-file="tokens/types.ts (excerpt)" data-mark="1,10">export interface FontSizeTokens {
+  fontSizeBase200: string;
+  fontSizeBase300: string;
+  fontSizeBase400: string;
+  fontSizeBase500: string;
+  fontSizeBase600: string;
+  fontSizeHero700: string;
+  fontSizeHero800: string;
+}
+export interface BorderRadiusTokens {
+  borderRadiusNone: string;
+  borderRadiusSmall: string;
+  /* … Medium, Large, XLarge, Circular */
+}</pre>
+</section>
+
+<section id="types-check" data-part="1" data-cue="When a global file declares its values, it annotates them">
+  <h2>Annotated values fail at compile time</h2>
+  <pre class="code tight" data-lang="ts" data-file="tokens/global/fonts.ts" data-mark="1">export const fontSizes: FontSizeTokens = {
+  fontSizeBase200: '12px',
+  fontSizeBase300: '13px',
+  fontSizeBase400: '15px',
+  fontSizeBase500: '17px',
+  fontSizeBase600: '20px',
+  fontSizeHero700: '26px',
+  fontSizeHero800: '34px',
+};</pre>
+  <p class="muted">Forget or misspell a key → <b>compiler error</b>, not a missing CSS variable at runtime.</p>
+</section>
+
+<section id="theme-type" data-part="1" style="padding-top:110px" data-cue="At the bottom of the file, the full `Theme` type">
+  <h2>The full <code>Theme</code> is an intersection</h2>
+  <pre class="code" data-lang="ts" data-file="tokens/types.ts" style="font-size:22px">export type Theme = ColorTokens &amp;
+  ColorPaletteTokens &amp;
+  ColorStatusTokens &amp;
+  FontFamilyTokens &amp;
+  FontSizeTokens &amp;
+  LineHeightTokens &amp;
+  FontWeightTokens &amp;
+  HorizontalSpacingTokens &amp;
+  VerticalSpacingTokens &amp;
+  BorderRadiusTokens &amp;
+  StrokeWidthTokens &amp;
+  ShadowTokens &amp;
+  DurationTokens &amp;
+  CurveTokens &amp;
+  LayoutTokens &amp;
+  ZIndexTokens;</pre>
+</section>
+
+<section id="ramp" data-part="2" data-cue="It exports `brandSaturdaze`, a sixteen step coral ramp.">
+  <h2><code>brandSaturdaze</code>: a 16-step ramp</h2>
+  <div class="swatches">
+    <div class="sw"><i style="background:#1c0d07"></i>10</div>
+    <div class="sw"><i style="background:#32170d"></i>20</div>
+    <div class="sw"><i style="background:#482213"></i>30</div>
+    <div class="sw"><i style="background:#5e2c1a"></i>40</div>
+    <div class="sw"><i style="background:#743620"></i>50</div>
+    <div class="sw"><i style="background:#8a4126"></i>60</div>
+    <div class="sw"><i style="background:#a04b2c"></i>70</div>
+    <div class="sw"><i style="background:#e07856"></i>80</div>
+    <div class="sw"><i style="background:#e38667"></i>90</div>
+    <div class="sw"><i style="background:#e79478"></i>100</div>
+    <div class="sw"><i style="background:#eaa289"></i>110</div>
+    <div class="sw"><i style="background:#eeb09a"></i>120</div>
+    <div class="sw"><i style="background:#f1bdab"></i>130</div>
+    <div class="sw"><i style="background:#f4cbbc"></i>140</div>
+    <div class="sw"><i style="background:#f8d9cd"></i>150</div>
+    <div class="sw"><i style="background:#fbe7de"></i>160</div>
+  </div>
+  <p class="muted">10 = darkest → 160 = lightest · <span class="file">tokens/global/brandColors.ts</span></p>
+</section>
+
+<section id="ramp-keys" data-part="2" data-cue="Why sixteen steps when the app only uses three?">
+  <h2>A scale to pick from, not a list to use</h2>
+  <div class="swatches">
+    <div class="sw"><i style="background:#1c0d07"></i>10</div>
+    <div class="sw"><i style="background:#32170d"></i>20</div>
+    <div class="sw"><i style="background:#482213"></i>30</div>
+    <div class="sw"><i style="background:#5e2c1a"></i>40</div>
+    <div class="sw"><i style="background:#743620"></i>50</div>
+    <div class="sw"><i style="background:#8a4126"></i>60</div>
+    <div class="sw key"><i style="background:#a04b2c"></i>70</div>
+    <div class="sw key"><i style="background:#e07856"></i>80</div>
+    <div class="sw"><i style="background:#e38667"></i>90</div>
+    <div class="sw"><i style="background:#e79478"></i>100</div>
+    <div class="sw"><i style="background:#eaa289"></i>110</div>
+    <div class="sw"><i style="background:#eeb09a"></i>120</div>
+    <div class="sw"><i style="background:#f1bdab"></i>130</div>
+    <div class="sw"><i style="background:#f4cbbc"></i>140</div>
+    <div class="sw"><i style="background:#f8d9cd"></i>150</div>
+    <div class="sw key"><i style="background:#fbe7de"></i>160</div>
+  </div>
+  <table class="map">
+    <tr><td>80 · #e07856</td><td class="prose">the primary button</td></tr>
+    <tr><td>70 · #a04b2c</td><td class="prose">coral text that passes AA on 160</td></tr>
+    <tr><td>160 · #fbe7de</td><td class="prose">the soft coral fill</td></tr>
+  </table>
+</section>
+
+<section id="ramp-comment" data-part="2" data-cue="The comment in the file is honest about this.">
+  <h2>Anchor three values, interpolate the rest</h2>
+  <pre class="code" data-lang="ts" data-file="tokens/global/brandColors.ts" data-mark="2-4">/**
+ * The Saturdaze coral ramp. 80 is the primary button (`#e07856`), 70 the
+ * coral text that passes AA on 160, and 160 the soft coral fill — the three
+ * values the mocks were drawn with. The steps between are interpolated.
+ */
+export const brandSaturdaze: BrandVariants = {
+  10: `#1c0d07`,
+  /* … */
+  160: `#fbe7de`,
+};</pre>
+</section>
+
+<section id="colors-file" data-part="3" data-cue="Next, `colors.ts`.">
+  <h2><code>colors.ts</code>: raw values only</h2>
+  <pre class="code" data-lang="ts" data-file="tokens/global/colors.ts" data-mark="1-2">// Global colour palette — raw values only. Themes map these onto alias
+// tokens; components never read them directly.
+
+export const white = '#ffffff';
+
+/** Warm neutrals: the cream page and the recessed sand of wells and locked blocks. */
+export const cream = '#faf7f2';
+export const sand = '#f3efe8';</pre>
+</section>
+
+<section id="slate" data-part="3" data-cue="Then there is slate, the ink.">
+  <h2>Slate, keyed by lightness</h2>
+  <div class="cols">
+    <table class="map">
+      <tr><th>slate</th><th>value</th></tr>
+      <tr><td>17</td><td><span class="chip" style="background:#1f2937"></span>#1f2937</td></tr>
+      <tr><td>46</td><td><span class="chip" style="background:#6b7280"></span>#6b7280</td></tr>
+      <tr><td>65</td><td><span class="chip" style="background:#9ca3af"></span>#9ca3af</td></tr>
+    </table>
+    <div class="card">
+      <h3>The key is the lightness</h3>
+      <p>Borrowed from Fluent's <code>grey[14]</code>: the name tells you how dark it is.</p>
+    </div>
+  </div>
+</section>
+
+<section id="slate-alpha" data-part="3" data-cue="There is also slate alpha">
+  <h2>One ink, six alphas</h2>
+  <pre class="code" data-lang="ts" data-file="tokens/global/colors.ts">export const slateAlpha = {
+  4: 'rgba(31, 41, 55, 0.04)',
+  6: 'rgba(31, 41, 55, 0.06)',
+  8: 'rgba(31, 41, 55, 0.08)',
+  12: 'rgba(31, 41, 55, 0.12)',
+  16: 'rgba(31, 41, 55, 0.16)',
+  40: 'rgba(31, 41, 55, 0.4)',
+} as const;</pre>
+  <p class="muted">Hairlines, shadow colours and the dialog backdrop — all one colour family.</p>
+</section>
+
+<section id="palettes" data-part="3" data-cue="Finally there are six palettes with three shades each">
+  <h2>Six palettes · <code>ColorVariants</code></h2>
+  <table class="map">
+    <tr><th>palette</th><th>shade40 (ink)</th><th>primary (base)</th><th>tint50 (fill)</th><th>meaning</th></tr>
+    <tr><td>forest</td><td><span class="chip" style="background:#2d7d5f"></span></td><td><span class="chip" style="background:#2d7d5f"></span></td><td><span class="chip" style="background:#deede5"></span></td><td class="prose">locked, confirmed</td></tr>
+    <tr><td>terracotta</td><td><span class="chip" style="background:#8f3d27"></span></td><td><span class="chip" style="background:#c45a3f"></span></td><td><span class="chip" style="background:#fadfd6"></span></td><td class="prose">gentle warning</td></tr>
+    <tr><td>sun</td><td><span class="chip" style="background:#8a6212"></span></td><td><span class="chip" style="background:#f4c969"></span></td><td><span class="chip" style="background:#fbebc4"></span></td><td class="prose">sunny chip</td></tr>
+    <tr><td>sky</td><td><span class="chip" style="background:#2c5f7a"></span></td><td><span class="chip" style="background:#bfd9e8"></span></td><td><span class="chip" style="background:#dce9f1"></span></td><td class="prose">cool weather</td></tr>
+    <tr><td>leaf</td><td><span class="chip" style="background:#2d7d5f"></span></td><td><span class="chip" style="background:#a9c9a4"></span></td><td><span class="chip" style="background:#ddeeda"></span></td><td class="prose">outdoor</td></tr>
+    <tr><td>indoor</td><td><span class="chip" style="background:#5a3b82"></span></td><td><span class="chip" style="background:#c9b6e0"></span></td><td><span class="chip" style="background:#eadff4"></span></td><td class="prose">indoor</td></tr>
+  </table>
+</section>
+
+<section id="value-names" data-part="3" data-cue="Notice that the palette names describe the colour, not the job.">
+  <h2>Value names are fine — here only</h2>
+  <div class="cols">
+    <div class="card good"><h3 style="color:var(--forest)">Global layer</h3><p><code>slate</code>, <code>cream</code>, <code>forest</code>, <code>sun</code> — named by what they <em>are</em>. Nothing in a component reads them.</p></div>
+    <div class="card"><h3>Alias layer</h3><p><code>colorNeutralForeground1</code>, <code>colorStatusSuccessBackground1</code> — named by what they <em>do</em>.</p></div>
+  </div>
+</section>
+
+<section id="fonts" data-part="4" data-cue="Now `fonts.ts`.">
+  <h2>Typography</h2>
+  <pre class="code tight" data-lang="ts" data-file="tokens/global/fonts.ts" data-mark="1">/** Sans-serif system stack. Nothing web-loads Inter on purpose. */
+export const fontFamilies: FontFamilyTokens = {
+  fontFamilyBase:
+    "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
+};</pre>
+</section>
+
+<section id="font-sizes" data-part="4" data-cue="Font sizes are a seven step scale.">
+  <h2>Seven sizes, named by rank <span class="tag">samples at 2×</span></h2>
+  <table class="map">
+    <tr><th>token</th><th>value</th><th>sample</th></tr>
+    <tr><td>fontSizeBase200</td><td>12px</td><td class="prose" style="font-size:24px">Weekend plan</td></tr>
+    <tr><td>fontSizeBase300</td><td>13px</td><td class="prose" style="font-size:26px">Weekend plan</td></tr>
+    <tr><td>fontSizeBase400</td><td>15px</td><td class="prose" style="font-size:30px">Weekend plan · body default</td></tr>
+    <tr><td>fontSizeBase500</td><td>17px</td><td class="prose" style="font-size:34px">Weekend plan</td></tr>
+    <tr><td>fontSizeBase600</td><td>20px</td><td class="prose" style="font-size:40px">Weekend plan</td></tr>
+    <tr><td>fontSizeHero700</td><td>26px</td><td class="prose" style="font-size:52px">Weekend plan</td></tr>
+    <tr><td>fontSizeHero800</td><td>34px</td><td class="prose" style="font-size:68px;font-weight:700">Weekend plan</td></tr>
+  </table>
+</section>
+
+<section id="line-heights" data-part="4" data-cue="Line heights are unitless ratios">
+  <h2>Line heights and weights</h2>
+  <div class="cols">
+    <table class="map">
+      <tr><th>lineHeight…</th><th>ratio</th></tr>
+      <tr><td>Tight</td><td>1.2</td></tr>
+      <tr><td>Snug</td><td>1.35</td></tr>
+      <tr><td>Normal</td><td>1.5</td></tr>
+    </table>
+    <table class="map">
+      <tr><th>fontWeight…</th><th>value</th></tr>
+      <tr><td>Regular</td><td>400</td></tr>
+      <tr><td>Medium</td><td>500</td></tr>
+      <tr><td>Semibold</td><td>600</td></tr>
+      <tr><td>Bold</td><td>700</td></tr>
+    </table>
+  </div>
+  <p class="muted">Unitless, so one ratio serves every font size.</p>
+</section>
+
+<section id="spacing" data-part="5" data-cue="Open `spacings.ts`.">
+  <h2>A private 4px ramp</h2>
+  <pre class="code tight" data-lang="ts" data-file="tokens/global/spacings.ts" data-mark="1-2">// Intentionally not exported! Use horizontalSpacings and verticalSpacings instead.
+const spacings: SpacingTokens = {
+  none: '0',
+  xs: '4px',
+  s: '8px',
+  m: '12px',
+  l: '16px',
+  xl: '20px',
+  xxl: '24px',
+  xxxl: '32px',
+  xxxxl: '40px',
+  xxxxxl: '56px',
+};</pre>
+</section>
+
+<section id="spacing-axes" data-part="5" data-cue="Why have two names for the same number?">
+  <h2>Two axes, two decisions</h2>
+  <pre class="code" data-lang="ts" data-file="tokens/global/spacings.ts">export const horizontalSpacings: HorizontalSpacingTokens = {
+  spacingHorizontalM: spacings.m,
+  /* … */
+};
+export const verticalSpacings: VerticalSpacingTokens = {
+  spacingVerticalM: spacings.m,
+  /* … */
+};</pre>
+  <p class="muted">Loosen vertical rhythm later without moving a single horizontal padding.</p>
+</section>
+
+<section id="radius" data-part="6" data-cue="The remaining global files are small.">
+  <h2>Corner radii</h2>
+  <table class="map">
+    <tr><th>token</th><th>value</th><th>used for</th></tr>
+    <tr><td>borderRadiusNone</td><td>0</td><td class="prose">—</td></tr>
+    <tr><td>borderRadiusSmall</td><td>8px</td><td class="prose">inputs, small buttons</td></tr>
+    <tr><td>borderRadiusMedium</td><td>12px</td><td class="prose">list rows, wells</td></tr>
+    <tr><td>borderRadiusLarge</td><td>16px</td><td class="prose">cards</td></tr>
+    <tr><td>borderRadiusXLarge</td><td>22px</td><td class="prose">dialogs, sheets</td></tr>
+    <tr><td>borderRadiusCircular</td><td>999px</td><td class="prose">chips, buttons, bottom nav</td></tr>
+  </table>
+</section>
+
+<section id="motion" data-part="6" data-cue="Stroke widths are thin, one pixel">
+  <h2>Stroke and motion</h2>
+  <div class="cols three">
+    <div class="card"><h3>Stroke</h3><p><code>strokeWidthThin</code> 1px<br><code>strokeWidthThick</code> 2px</p></div>
+    <div class="card sky"><h3>Duration</h3><p><code>durationFast</code> 120ms — hover, press<br><code>durationNormal</code> 220ms — state changes</p></div>
+    <div class="card indoor"><h3>Curve</h3><p><code>curveEasyEase</code><br><span class="small">cubic-bezier(0.2, 0.7, 0.2, 1)</span></p></div>
+  </div>
+</section>
+
+<section id="layout" data-part="6" data-cue="Last, `layout.ts`.">
+  <h2>Layout and z-index are tokens too</h2>
+  <pre class="code tight" data-lang="ts" data-file="tokens/global/layout.ts">/** v2 is a full-width web app with a 1120px reading width and no phone canvas (ADR-009). */
+export const layout: LayoutTokens = {
+  layoutContentMaxWidth: '1120px',
+  layoutStackMaxWidth: '720px',
+  layoutGutter: '16px',
+  layoutTopBarHeight: '64px', // ≥720px sticky top bar
+  layoutBottomNavHeight: '60px', // &lt;720px floating bottom nav
+};
+
+export const zIndexes: ZIndexTokens = {
+  zIndexSticky: '5',
+  zIndexTopBar: '20',
+  zIndexBottomNav: '30',
+};</pre>
+</section>
+
+<section id="index" data-part="7" data-cue="All of these files are re exported from one index file">
+  <h2>One door into the global layer</h2>
+  <pre class="code tight" data-lang="ts" data-file="tokens/global/index.ts" style="font-size:23px">export { brandSaturdaze } from './brandColors';
+export { cream, forest, indoor, leaf, sand, sky, slate, slateAlpha, sun, terracotta, white } from './colors';
+export { borderRadius } from './borderRadius';
+export { curves } from './curves';
+export { durations } from './durations';
+export { fontFamilies, fontSizes, fontWeights, lineHeights } from './fonts';
+export { layout, zIndexes } from './layout';
+export { horizontalSpacings, verticalSpacings } from './spacings';
+export { strokeWidths } from './strokeWidths';</pre>
+</section>
+
+<section id="rule" data-part="7" data-cue="And here is the rule">
+  <div class="kicker">The rule</div>
+  <p class="quote">Components never read global values. Missing a colour? Add an <b>alias token</b> for that role and regenerate.</p>
+</section>
+
+<section id="recap" data-part="8" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div>Write the types first — mistakes fail at compile time</div>
+    <div>A brand ramp is a scale to pick from</div>
+    <div>Globals may be named by value; aliases by role</div>
+    <div>Ramp names are ranks, not pixel values</div>
+    <div>Base spacing is private; two axes, two decisions</div>
+    <div>Layout and z-index are tokens too</div>
+  </div>
+</section>
+
+<section id="next" data-part="8" data-cue="Next, in video three, we turn these raw values into roles">
+  <div class="kicker">Next · Video 03</div>
+  <h1>Alias tokens and the theme</h1>
+</section>
+
+<script src="../assets/slides.js"></script>
+</body>
+</html>

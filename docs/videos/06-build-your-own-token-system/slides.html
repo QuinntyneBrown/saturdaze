@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 06 Slides</title>
+<link rel="stylesheet" href="../assets/slides.css">
+</head>
+<body data-video-number="06" data-video-title="Build your own production token system" data-parts="Introduction|1-2 Names &amp; types|3-5 Layers|6-7 Generator|8-10 Ship it|Pitfalls|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Saturdaze design system · Video 06 of 06</div>
+  <h1>Build your own production token system</h1>
+  <p class="lead">Ten steps from an empty folder — each mapped to the Saturdaze file to copy.</p>
+</section>
+
+<template id="roadmap">
+  <ol class="steps small" style="columns:2;column-gap:60px">
+    <li class="item">Scope and names</li>
+    <li class="item">Types</li>
+    <li class="item">Global layer</li>
+    <li class="item">Alias generator</li>
+    <li class="item">Assemble the theme</li>
+    <li class="item">Serialiser + test</li>
+    <li class="item">Generator script</li>
+    <li class="item">Build + CI</li>
+    <li class="item">Migrate and consume</li>
+    <li class="item">Runtime theming + docs</li>
+  </ol>
+</template>
+
+<section id="roadmap" data-part="0" data-cue="in ten steps, using everything Saturdaze does" data-template="roadmap">
+  <h2>Ten steps</h2>
+</section>
+
+<section id="s1" data-part="1" data-cue="Before writing code, write down three decisions." data-template="roadmap" data-highlight="1">
+  <h2>Step 1 · Scope and names</h2>
+</section>
+
+<section id="borrow" data-part="1" data-cue="My strong recommendation is to borrow, not invent.">
+  <h2>Borrow a proven model — and record it</h2>
+  <div class="cols">
+    <div class="card"><h3>Categories</h3><p>colour · type · spacing · radius · stroke · shadow · motion · layout · z-index</p></div>
+    <div class="card forest"><h3>Naming + layers</h3><p>Fluent UI v9 — written down in <span class="file">docs/adr/ADR-013-fluent-design-tokens.md</span></p></div>
+  </div>
+</section>
+
+<section id="s2" data-part="1" data-cue="Create a tokens folder in your component library">
+  <h2>Step 2 · <code>types.ts</code></h2>
+  <pre class="code tight" data-lang="ts" data-file="your-lib/tokens/types.ts  ← copy from Saturdaze tokens/types.ts">export interface BrandVariants { 10: string; 20: string; /* … */ 160: string; }
+export interface ColorVariants { shade40: string; primary: string; tint50: string; }
+
+export interface ColorTokens {
+  colorNeutralForeground1: string;
+  colorBrandBackground: string;
+  /* … one key per role … */
+}
+
+type SpacingSuffix = 'None' | 'XS' | 'S' | 'M' | 'L' | 'XL' | 'XXL' | 'XXXL' | 'XXXXL' | 'XXXXXL';
+export type HorizontalSpacingTokens = Record&lt;`spacingHorizontal${SpacingSuffix}`, string&gt;;
+
+export type Theme = ColorTokens &amp; HorizontalSpacingTokens &amp; /* … every group … */;
+export type PartialTheme = Partial&lt;Theme&gt;;
+export interface ThemeOverride { media: string; tokens: PartialTheme; }</pre>
+</section>
+
+<section id="s3" data-part="2" data-cue="Create a global folder with one file per category" data-template="roadmap" data-highlight="3">
+  <h2>Step 3 · Global layer</h2>
+</section>
+
+<section id="ramp-start" data-part="2" data-cue="Start the brand ramp from the few colours your designers actually drew.">
+  <h2>Start the ramp from what designers drew</h2>
+  <div class="swatches">
+    <div class="sw"><i style="background:#1c0d07"></i>10</div>
+    <div class="sw"><i style="background:#32170d"></i>20</div>
+    <div class="sw"><i style="background:#482213"></i>30</div>
+    <div class="sw"><i style="background:#5e2c1a"></i>40</div>
+    <div class="sw"><i style="background:#743620"></i>50</div>
+    <div class="sw"><i style="background:#8a4126"></i>60</div>
+    <div class="sw key"><i style="background:#a04b2c"></i>70</div>
+    <div class="sw key"><i style="background:#e07856"></i>80</div>
+    <div class="sw"><i style="background:#e38667"></i>90</div>
+    <div class="sw"><i style="background:#e79478"></i>100</div>
+    <div class="sw"><i style="background:#eaa289"></i>110</div>
+    <div class="sw"><i style="background:#eeb09a"></i>120</div>
+    <div class="sw"><i style="background:#f1bdab"></i>130</div>
+    <div class="sw"><i style="background:#f4cbbc"></i>140</div>
+    <div class="sw"><i style="background:#f8d9cd"></i>150</div>
+    <div class="sw key"><i style="background:#fbe7de"></i>160</div>
+  </div>
+  <ul class="small">
+    <li>Anchor 3 drawn colours (button, accessible text, soft fill); interpolate the rest</li>
+    <li>Neutrals keyed by lightness; ink at fixed alphas</li>
+    <li>Private base spacing ramp → horizontal + vertical exports</li>
+  </ul>
+</section>
+
+<section id="s4" data-part="2" data-cue="Create an alias folder." data-template="roadmap" data-highlight="4">
+  <h2>Step 4 · Alias generator</h2>
+</section>
+
+<section id="alias-skeleton" data-part="2" data-cue="Then write a second file for palette and status roles.">
+  <h2>Two alias files</h2>
+  <div class="cols">
+    <pre class="code tight" data-lang="ts" data-file="alias/lightColor.ts" style="font-size:22px">export const generateColorTokens =
+  (brand: BrandVariants): ColorTokens =&gt; ({
+    colorNeutralForeground1: slate[17], // body ink
+    colorBrandBackground: brand[80],
+    colorBrandForeground2: brand[70],
+    colorBrandBackground2: brand[160],
+    /* … */
+  });</pre>
+    <pre class="code tight" data-lang="ts" data-file="alias/lightColorPalette.ts" style="font-size:22px">function roles(prefix, color) {
+  return {
+    [`${prefix}Background1`]: color.tint50,
+    [`${prefix}Foreground1`]: color.shade40,
+    /* … 4 more roles … */
+  };
+}</pre>
+  </div>
+  <p class="muted">Check every <code>Foreground1</code> on its <code>Background1</code> for AA — then write the pairing rule down.</p>
+</section>
+
+<section id="s5" data-part="2" data-cue="Create a utils folder with two files." data-template="roadmap" data-highlight="5">
+  <h2>Step 5 · Assemble the theme</h2>
+</section>
+
+<section id="theme-files" data-part="2" data-cue="Then a themes folder">
+  <h2>The theme files</h2>
+  <div class="layers">
+    <div class="l1"><b>utils/shadows.ts</b><span>3 shadow colours → <code>shadow4</code> · <code>shadow16</code> · <code>shadow28</code></span></div>
+    <div class="l2"><b>utils/createLightTheme.ts</b><span>spread every group → one flat object typed <code>Theme</code></span></div>
+    <div class="l3"><b>themes/lightTheme.ts</b><span><code>createLightTheme(yourBrandRamp)</code></span></div>
+    <div class="l4"><b>themes/responsive.ts</b><span>gutters, display sizes per media query</span></div>
+  </div>
+</section>
+
+<section id="s6" data-part="3" data-cue="In the tokens folder, write `themeToCss.ts`." data-template="roadmap" data-highlight="6">
+  <h2>Step 6 · Serialiser + test</h2>
+</section>
+
+<section id="tests" data-part="3" data-cue="Then write the test before you trust it.">
+  <h2>Five tests worth copying</h2>
+  <ol class="steps small">
+    <li>Every key of <code>tokens</code> maps to <code>var(--key)</code></li>
+    <li>Brand roles come from the right ramp steps</li>
+    <li>A new ramp re-brands every brand role; neutrals stay put</li>
+    <li>Overrides only retune keys the theme defines</li>
+    <li><code>themeToCss</code> output pinned exactly</li>
+  </ol>
+  <p class="muted small">Saturdaze: <span class="file">tokens/tokens.spec.ts</span></p>
+</section>
+
+<section id="s7" data-part="3" data-cue="Now the script, in a scripts folder next to your package dot json." data-template="roadmap" data-highlight="7">
+  <h2>Step 7 · Generator script</h2>
+</section>
+
+<section id="script-steps" data-part="3" data-cue="Register a resolve hook that appends dot T S">
+  <h2>What the script does, in order</h2>
+  <div class="flow">
+    <div class="node"><b>Hook</b><span class="small">add .ts to bare relative imports</span></div>
+    <div class="arrow">→</div>
+    <div class="node"><b>Load</b><span class="small">theme, overrides, serialiser</span></div>
+    <div class="arrow">→</div>
+    <div class="node"><b>Build</b><span class="small">SCSS + tokens.ts text</span></div>
+    <div class="arrow">→</div>
+    <div class="node"><b>Format</b><span class="small">Prettier, repo config</span></div>
+    <div class="arrow">→</div>
+    <div class="node accent"><b>Write / check</b><span class="small">exit 1 when stale</span></div>
+  </div>
+</section>
+
+<section id="package-scripts" data-part="3" data-cue="Then add two scripts to your package dot json">
+  <h2>Two commands</h2>
+  <pre class="code" data-lang="json" data-file="package.json">"scripts": {
+  "tokens": "node scripts/generate-tokens.mjs",
+  "tokens:check": "node scripts/generate-tokens.mjs --check"
+}</pre>
+  <p class="muted">Start from <span class="file">frontend/scripts/generate-tokens.mjs</span> (93 lines) — change only paths and theme names.</p>
+</section>
+
+<section id="first-run" data-part="3" data-cue="Run it once.">
+  <h2>Read the first output top to bottom</h2>
+  <pre class="code tight" data-lang="scss" data-file="styles/_tokens.scss (generated)">// !!! DO NOT EDIT !!!
+// Generated by `npm run tokens` from …/tokens/.
+:root {
+  --borderRadiusNone: 0;
+  --borderRadiusSmall: 8px;
+  /* … every token … */
+}
+
+@media (min-width: 720px) {
+  :root {
+    --layoutGutter: 24px;
+  }
+}</pre>
+  <p class="muted">Commit source, script and both generated files together.</p>
+</section>
+
+<section id="s8" data-part="4" data-cue="Make the generated stylesheet a partial" data-template="roadmap" data-highlight="8">
+  <h2>Step 8 · Build + CI</h2>
+</section>
+
+<section id="ci" data-part="4" data-cue="Then add a step to your continuous integration workflow">
+  <h2>Enforce it in CI</h2>
+  <pre class="code" data-lang="yaml" data-file="ci.yml">      - name: Design tokens up to date
+        working-directory: frontend
+        run: npm run tokens:check</pre>
+  <p class="muted">Next to format and lint. A hand edit or a forgotten regenerate → red build with the fix in the message.</p>
+</section>
+
+<section id="s9" data-part="4" data-cue="If you have existing styles, migrate them by CSS property" data-template="roadmap" data-highlight="9">
+  <h2>Step 9 · Migrate and consume</h2>
+</section>
+
+<section id="migrate" data-part="4" data-cue="A colour used as a background becomes">
+  <h2>Migrate by CSS property</h2>
+  <table class="map">
+    <tr><th>before</th><th>after</th></tr>
+    <tr><td>background: var(--sd-primary)</td><td>var(--colorBrandBackground)</td></tr>
+    <tr><td>color: var(--sd-primary)</td><td>var(--colorBrandForeground1)</td></tr>
+    <tr><td>border-color: var(--sd-primary)</td><td>var(--colorBrandStroke1)</td></tr>
+    <tr><td>outline: var(--sd-focus-ring)</td><td>var(--strokeWidthThick) solid var(--colorStrokeFocus2)</td></tr>
+  </table>
+  <p class="muted">Values don't change during a migration — only names. Compare screenshots.</p>
+</section>
+
+<section id="s10" data-part="4" data-cue="Last, the runtime half." data-template="roadmap" data-highlight="10">
+  <h2>Step 10 · Runtime theming + docs</h2>
+</section>
+
+<section id="provider" data-part="4" data-cue="It takes a partial theme, uses the same">
+  <h2>A provider in ~50 lines</h2>
+  <div class="cols">
+    <div class="card"><h3>Does</h3><ul><li>takes a <code>PartialTheme</code></li><li><code>themeToCssVariables</code></li><li>sets each property on its host</li><li>removes ones the new theme dropped</li></ul></div>
+    <div class="card forest"><h3>Docs from the theme</h3><p>Storybook pages and the manager theme import the theme object — never parse CSS.</p></div>
+  </div>
+</section>
+
+<section id="pitfalls" data-part="5" data-cue="A few mistakes to avoid.">
+  <h2>Pitfalls</h2>
+  <div class="cols">
+    <ul class="small">
+      <li>Naming by value (<code>coral</code>, <code>primary</code>)</li>
+      <li>Components reading globals</li>
+      <li>Hand-editing generated files</li>
+      <li>No formatting in the generator</li>
+    </ul>
+    <ul class="small">
+      <li><code>var()</code> in media queries — doesn't work</li>
+      <li>Provider wrapping the whole app</li>
+      <li>Dark theme by copy-paste → write <code>createDarkTheme(brand)</code></li>
+    </ul>
+  </div>
+</section>
+
+<section id="recap" data-part="6" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div>Borrow a proven model; record the decision</div>
+    <div>Types → globals → aliases → flat theme</div>
+    <div>Serialiser tested and shared with the provider</div>
+    <div>One script: write + check, Prettier, CI</div>
+    <div>Migrate by CSS property; write rules down</div>
+    <div>Document from the theme object</div>
+  </div>
+</section>
+
+<section id="end" data-part="6" data-cue="That's the series.">
+  <div class="kicker">Your turn</div>
+  <h1>Change one token. Run <code>npm run tokens</code>. Watch it flow.</h1>
+  <p class="lead">Thanks for watching.</p>
+</section>
+
+<script src="../assets/slides.js"></script>
+</body>
+</html>

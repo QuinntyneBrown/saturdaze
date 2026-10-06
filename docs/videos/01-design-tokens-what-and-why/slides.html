@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 01 Slides</title>
+<link rel="stylesheet" href="../assets/slides.css">
+</head>
+<body data-video-number="01" data-video-title="Design tokens: what they are and why" data-parts="Introduction|The problem|Tokens|Naming|Layers|Pipeline|In this repo|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Saturdaze design system · Video 01 of 06</div>
+  <h1>Design tokens: what they are and why</h1>
+  <p class="lead">The mental model behind a production token system — before any code.</p>
+</section>
+
+<section id="questions" data-part="0" data-cue="We will answer four questions.">
+  <h2>Four questions</h2>
+  <ol class="steps">
+    <li>What is a design token?</li>
+    <li>What problem does a token system actually solve?</li>
+    <li>Why split tokens into layers?</li>
+    <li>How does a value travel from TypeScript to a pixel?</li>
+  </ol>
+</section>
+
+<section id="old-names" data-part="1" data-cue="Let's start with a real story from this repository.">
+  <h2>Before: names by value family</h2>
+  <p class="muted">A hand-written stylesheet of <code>--sd-*</code> custom properties</p>
+  <div class="row">
+    <span class="file">--sd-primary</span>
+    <span class="file">--sd-ink-soft</span>
+    <span class="file">--sd-fs-sm</span>
+  </div>
+  <p class="quote">“Primary” means <em>the coral colour</em> — not a job.</p>
+</section>
+
+<section id="four-jobs" data-part="1" data-cue="The same `--sd-primary` was the fill of the main button">
+  <h2>One name, four jobs</h2>
+  <div class="cols">
+    <div class="card bad">
+      <h3><code>--sd-primary</code> was…</h3>
+      <ul>
+        <li>the primary button fill</li>
+        <li>coral text</li>
+        <li>a coral border</li>
+        <li>the focus ring</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>“Make coral text darker for contrast”</h3>
+      <p>…changes all four. You can't retune one job without the others.</p>
+    </div>
+  </div>
+</section>
+
+<section id="three-copies" data-part="1" data-cue="There were two more problems.">
+  <h2>Three copies of the truth</h2>
+  <div class="cols three">
+    <div class="card"><h3>Stylesheet</h3><p>The hand-written <code>--sd-*</code> list</p></div>
+    <div class="card sky"><h3>TypeScript</h3><p>Hex values copied by hand into stories and the Storybook theme</p></div>
+    <div class="card indoor"><h3>Docs</h3><p>Theme pages regex-parsed the SCSS</p></div>
+  </div>
+  <p class="muted small">Fixed by <span class="file">docs/adr/ADR-013-fluent-design-tokens.md</span></p>
+</section>
+
+<section id="definition" data-part="2" data-cue="A design token is a named design decision.">
+  <h2>A token is a named design decision</h2>
+  <table class="map">
+    <tr><th>Part</th><th>Example</th><th>Used by</th></tr>
+    <tr><td class="prose"><b>Name</b></td><td>colorBrandBackground</td><td class="prose">code</td></tr>
+    <tr><td class="prose"><b>Value</b></td><td><span class="chip" style="background:#e07856"></span>#e07856</td><td class="prose">the browser</td></tr>
+    <tr><td class="prose"><b>Role</b></td><td class="prose">fill of the primary button</td><td class="prose">people</td></tr>
+  </table>
+</section>
+
+<section id="no-values" data-part="2" data-cue="The key idea is that components never mention values.">
+  <h2>Components never mention values</h2>
+  <div class="cols">
+    <div class="card bad"><h3>Not this</h3><pre class="code" data-lang="scss">.btn--primary {
+  background: #e07856;
+  color: #ffffff;
+}</pre></div>
+    <div class="card good"><h3 style="color:var(--forest)">This</h3><pre class="code" data-lang="scss">.btn--primary {
+  background: var(--colorBrandBackground);
+  color: var(--colorNeutralForegroundOnBrand);
+}</pre></div>
+  </div>
+  <p class="muted">The value lives in one place; changing it changes that role everywhere — and nothing else.</p>
+</section>
+
+<section id="custom-props" data-part="2" data-cue="In the browser, Saturdaze delivers tokens as CSS custom properties">
+  <h2>Delivered as CSS custom properties</h2>
+  <pre class="code" data-lang="scss" data-file="styles/_tokens.scss (generated)" data-mark="2">:root {
+  --colorBrandBackground: #e07856;
+}
+
+.btn--primary {
+  background: var(--colorBrandBackground);
+}</pre>
+  <ul>
+    <li>Declared once on <code>:root</code></li>
+    <li>They cascade — any element can override them (that's theming)</li>
+  </ul>
+</section>
+
+<section id="fluent-neutral" data-part="3" data-cue="Saturdaze copies its naming from Microsoft's Fluent UI version nine design system.">
+  <h2>Fluent UI v9 names: role + rank</h2>
+  <table class="map">
+    <tr><th>Token</th><th>Role</th></tr>
+    <tr><td><span class="chip" style="background:#1f2937"></span>colorNeutralForeground1</td><td class="prose">body text</td></tr>
+    <tr><td><span class="chip" style="background:#6b7280"></span>colorNeutralForeground2</td><td class="prose">secondary text</td></tr>
+    <tr><td><span class="chip" style="background:#9ca3af"></span>colorNeutralForeground3</td><td class="prose">hints, placeholders</td></tr>
+    <tr><td><span class="chip" style="background:#ffffff"></span>colorNeutralBackground1</td><td class="prose">cards, dialogs</td></tr>
+    <tr><td><span class="chip" style="background:#faf7f2"></span>colorNeutralBackground2</td><td class="prose">the page</td></tr>
+    <tr><td><span class="chip" style="background:#f3efe8"></span>colorNeutralBackground3</td><td class="prose">recessed wells</td></tr>
+  </table>
+</section>
+
+<section id="fluent-brand" data-part="3" data-cue="Brand tokens follow the same shape.">
+  <h2>Same value, separate decisions</h2>
+  <table class="map">
+    <tr><th>Token</th><th>Role</th><th>Value today</th></tr>
+    <tr><td>colorBrandBackground</td><td class="prose">coral fill</td><td><span class="chip" style="background:#e07856"></span>#e07856</td></tr>
+    <tr><td>colorBrandForeground1</td><td class="prose">coral text</td><td><span class="chip" style="background:#e07856"></span>#e07856</td></tr>
+    <tr><td>colorBrandStroke1</td><td class="prose">coral border</td><td><span class="chip" style="background:#e07856"></span>#e07856</td></tr>
+  </table>
+  <p class="quote small">They agree today so they can disagree tomorrow — without touching a component.</p>
+</section>
+
+<section id="pattern" data-part="3" data-cue="Notice the pattern: category, then concept">
+  <h2>The naming pattern</h2>
+  <div class="flow">
+    <div class="node"><b>color</b><span class="muted small">category</span></div>
+    <div class="arrow">+</div>
+    <div class="node"><b>Brand</b><span class="muted small">concept</span></div>
+    <div class="arrow">+</div>
+    <div class="node accent"><b>Background</b><span class="muted small">role</span></div>
+    <div class="arrow">+</div>
+    <div class="node"><b>Hover</b><span class="muted small">rank / state</span></div>
+  </div>
+  <p class="lead">Predictable names beat short names: you can guess one without looking it up.</p>
+</section>
+
+<template id="layers">
+  <div class="layers">
+    <div class="l1 item"><b>1 · Global</b><span>Raw values: coral ramp, slate, cream, forest… type, spacing, radius, motion ramps</span></div>
+    <div class="l2 item"><b>2 · Alias</b><span>Roles chosen from globals: <code>colorBrandBackground</code> = brand[80]</span></div>
+    <div class="l3 item"><b>3 · Theme</b><span>One flat, typed object: <code>createLightTheme(brand)</code></span></div>
+  </div>
+</template>
+
+<section id="layer-global" data-part="4" data-cue="Tokens in this repo come in three layers, exactly like Fluent." data-template="layers" data-show="1">
+  <h2>Three layers</h2>
+</section>
+
+<section id="layer-alias" data-part="4" data-cue="The second layer is alias tokens." data-template="layers" data-show="2">
+  <h2>Three layers</h2>
+</section>
+
+<section id="layer-theme" data-part="4" data-cue="The third layer is the theme." data-template="layers" data-show="3">
+  <h2>Three layers</h2>
+</section>
+
+<section id="golden-rule" data-part="4" data-cue="The golden rule across all three layers">
+  <div class="kicker">The golden rule</div>
+  <p class="quote">Components read <b>alias</b> tokens and <b>ramp</b> tokens (spacing, radius…). Never a raw palette value.</p>
+</section>
+
+<section id="pipeline" data-part="5" data-cue="So how does a value reach the screen?">
+  <h2>From TypeScript to pixels</h2>
+  <div class="flow">
+    <div class="node accent"><b>tokens/*.ts</b><span class="small">source of truth</span></div>
+    <div class="arrow">→</div>
+    <div class="node"><b>generate-tokens.mjs</b><span class="small">npm run tokens</span></div>
+    <div class="arrow">→</div>
+    <div class="node"><b>_tokens.scss</b><span class="small">:root custom properties</span><b>tokens.ts</b><span class="small">var(--…) per key</span></div>
+    <div class="arrow">→</div>
+    <div class="node"><b>components</b><span class="small">var(--role)</span></div>
+  </div>
+</section>
+
+<section id="generated" data-part="5" data-cue="Both generated files say &quot;do not edit&quot; at the top.">
+  <h2>Generated, never hand-edited</h2>
+  <pre class="code" data-lang="scss" data-file="styles/_tokens.scss">// !!! DO NOT EDIT !!!
+// Generated by `npm run tokens` from projects/components/src/lib/tokens/.
+// Change the TypeScript theme and regenerate (ADR-013).</pre>
+  <div class="card"><b>CI:</b> <code>npm run tokens:check</code> fails the build if either file is stale.</div>
+</section>
+
+<section id="runtime" data-part="5" data-cue="Finally, components read the custom properties by role">
+  <h2>Build time + run time</h2>
+  <div class="cols">
+    <div class="card"><h3>Build time</h3><p><code>_tokens.scss</code> puts the whole theme on <code>:root</code>. First paint never waits on script.</p></div>
+    <div class="card forest"><h3>Run time</h3><p><code>[sdThemeProvider]</code> overrides any subset of tokens on one subtree.</p></div>
+  </div>
+</section>
+
+<section id="paths" data-part="6" data-cue="Here are the exact places to look.">
+  <h2>Where it lives</h2>
+  <ul class="small">
+    <li><span class="file">frontend/projects/components/src/lib/tokens/</span> global/ · alias/ · themes/ · utils/ · types.ts</li>
+    <li><span class="file">frontend/scripts/generate-tokens.mjs</span></li>
+    <li><span class="file">frontend/projects/components/src/lib/styles/_tokens.scss</span> (generated)</li>
+    <li><span class="file">frontend/projects/components/src/lib/tokens/tokens.ts</span> (generated)</li>
+  </ul>
+  <pre class="code" data-lang="sh">cd frontend
+npm run tokens          # regenerate
+npm run tokens:check    # fail if stale (CI)</pre>
+</section>
+
+<section id="series" data-part="6" data-cue="Here is the road map.">
+  <h2>The series</h2>
+  <ol class="steps small">
+    <li>What tokens are and why <span class="tag">you are here</span></li>
+    <li>Global tokens: ramps and palettes</li>
+    <li>Alias tokens and <code>createLightTheme</code></li>
+    <li>The generator: <code>generate-tokens.mjs</code></li>
+    <li>Consuming tokens: SCSS, TypeScript, ThemeProvider</li>
+    <li>Build your own production token system</li>
+  </ol>
+</section>
+
+<section id="recap" data-part="7" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div>A token is a named decision: name, value, role</div>
+    <div>Name by role, not by value</div>
+    <div>Three layers: global → alias → theme</div>
+    <div>Components read alias and ramp tokens only</div>
+    <div>TypeScript is the source; a script generates the CSS</div>
+    <div>CI rejects stale generated files</div>
+  </div>
+</section>
+
+<section id="next" data-part="7" data-cue="Next, in video two, we open the global folder">
+  <div class="kicker">Next · Video 02</div>
+  <h1>Global tokens: the raw values</h1>
+</section>
+
+<script src="../assets/slides.js"></script>
+</body>
+</html>
