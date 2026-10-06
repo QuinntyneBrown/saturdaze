@@ -28,7 +28,8 @@ public class SetAvatarCommandHandler : IRequestHandler<SetAvatarCommand, UserDto
         var user = await _db.Users.FirstOrDefaultAsync(u => u.Id == id, ct)
             ?? throw new InvalidCredentialsException();
 
-        var contentType = AvatarImage.DetectContentType(request.Data) ?? "application/octet-stream";
+        // SetAvatarCommandValidator has already rejected unrecognised content.
+        var contentType = AvatarImage.DetectContentType(request.Data)!;
 
         var now = _clock.UtcNow;
         var avatar = await _db.UserAvatars.FirstOrDefaultAsync(a => a.UserId == id, ct);

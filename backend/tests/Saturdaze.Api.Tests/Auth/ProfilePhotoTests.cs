@@ -77,6 +77,36 @@ public class ProfilePhotoTests : IClassFixture<SaturdazeApiFactory>
         body!.User.AvatarUrl.Should().Be(uploaded.AvatarUrl);
     }
 
+    public static TheoryData<string, byte[], string> RejectedFiles() => new()
+    {
+        { "empty", [], "image/png" },
+        { "svg declared as png", "<svg xmlns=\"http://www.w3.org/2000/svg\"><script>alert(1)</script></svg>"u8.ToArray(), "image/png" },
+        { "text", "not an image"u8.ToArray(), "text/plain" },
+        { "png over 2 MB", [.. Png, .. new byte[2 * 1024 * 1024]], "image/png" },
+    };
+
+    [Theory]
+    [MemberData(nameof(RejectedFiles))]
+    public async Task Rejected_file_returns_400_naming_file_and_keeps_the_current_photo(
+        string _, byte[] bytes, string contentType)
+    {
+        var session = await SignedInClient.CreateAsync(_factory);
+        var current = await UploadOk(session.Client, Jpeg, "image/jpeg");
+
+        var res = await session.Client.PutAsync(AvatarRoute, Upload(bytes, contentType));
+
+        res.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        var problem = await res.Content.ReadFromJsonAsync<ValidationProblem>();
+        problem!.Errors.Keys.Should().Contain(k => string.Equals(k, "file", StringComparison.OrdinalIgnoreCase));
+
+        var me = await session.Client.GetFromJsonAsync<AuthDtos.User>("/api/auth/me");
+        me!.AvatarUrl.Should().Be(current.AvatarUrl);
+        var image = await _factory.CreateClient().GetAsync(current.AvatarUrl);
+        (await image.Content.ReadAsByteArrayAsync()).Should().Equal(Jpeg);
+    }
+
+    private record ValidationProblem(Dictionary<string, string[]> Errors);
+
     [Fact]
     public async Task Avatar_endpoints_require_a_bearer()
     {
