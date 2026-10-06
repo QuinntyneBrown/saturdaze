@@ -18,6 +18,10 @@
         <sd-icon name="plus" />
         Upload photo
       </sd-button>
+      <sd-button slot="actions" variant="quiet" (click)="addFromUrl()">
+        <sd-icon name="pin" />
+        Add from URL
+      </sd-button>
     </sd-page-header>
 
     @if (error()) {

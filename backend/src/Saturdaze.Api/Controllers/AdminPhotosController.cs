@@ -68,6 +68,18 @@ public sealed class AdminPhotosController : ControllerBase
         return CreatedAtAction(nameof(PlacePhotos), new { kind = placeKind.ToString(), id }, dto);
     }
 
+    public record AddPhotoUrlRequest(string? Url, string? Alt, string? Attribution, string? Licence);
+
+    /// <summary>A curated photo by its allow-listed HTTPS address (L2-116): the same route as the upload, as JSON.</summary>
+    [HttpPost("places/{kind}/{id:guid}/photos")]
+    [Consumes("application/json")]
+    public async Task<ActionResult<AdminPhotoDto>> AddFromUrl(string kind, Guid id, [FromBody] AddPhotoUrlRequest req, CancellationToken ct)
+    {
+        var placeKind = ParseKind(kind);
+        var dto = await _sender.Send(new AddPhotoFromUrlCommand(placeKind, id, req.Url, req.Alt, req.Attribution, req.Licence), ct);
+        return CreatedAtAction(nameof(PlacePhotos), new { kind = placeKind.ToString(), id }, dto);
+    }
+
     private const long UploadRequestLimit = 12 * 1024 * 1024;
     private const long MultipartOverhead = 64 * 1024;
 

@@ -59,6 +59,31 @@ test.describe("Admin place photo actions", () => {
     await expect(a.dialogAction("Save photo")).toBeDisabled();
   });
 
+  test("refuses an address off the allow-list, before and after asking the server", async ({ pages }) => {
+    // Traces to: L2-116 AC1, AC2
+    const a = pages.adminPlace;
+    await a.addFromUrlButton().click();
+    await expect(a.dialogTitle()).toHaveText("Add a photo from a URL");
+    await a.fillPhotoDetails({ attribution: "Photo · City of Mississauga", licence: "CC BY 4.0" });
+
+    await a.urlInput().fill("http://images.example.com/bronte.jpg");
+    await expect(a.urlError()).toHaveText("This address isn't on the image allow-list.");
+    await expect(a.dialogAction("Save photo")).toBeDisabled();
+
+    await a.urlInput().fill("https://elsewhere.example.net/bronte.jpg");
+    await expect(a.urlError()).toHaveCount(0);
+    await expect(a.dialogAction("Save photo")).toBeEnabled();
+    await a.dialogAction("Save photo").click();
+    await expect(a.urlError()).toHaveText("This address isn't on the image allow-list.");
+    await expect(a.dialogAction("Save photo")).toBeDisabled();
+    await expect(a.dialog()).toHaveCount(1);
+
+    // An allowed origin that does not answer with an image is refused the same way.
+    await a.urlInput().fill("https://images.example.com/not-there.jpg");
+    await a.dialogAction("Save photo").click();
+    await expect(a.urlError()).toHaveText("That address did not return a JPEG, PNG or WebP image.");
+  });
+
   test("makes another photo primary after confirming the cover impact", async ({ page, pages }) => {
     // Traces to: L2-117 AC1, AC2, AC3
     const a = pages.adminPlace;

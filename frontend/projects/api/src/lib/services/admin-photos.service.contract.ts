@@ -24,6 +24,17 @@ export interface IAdminPhotosService {
    * 10 MB with its details. Rejects with the server's error (413, `unsupported_image`, field errors).
    */
   upload(kind: string, placeId: string, file: Blob, details: PhotoDetails): Promise<AdminPhotoDto>;
+  /**
+   * `POST /api/admin/places/{kind}/{id}/photos` as JSON (L2-116): an HTTPS address on an allowed
+   * origin with its details. Rejects with the server's error (`url_not_allowed`, `unsupported_image`,
+   * `photo_exists`, field errors).
+   */
+  addFromUrl(
+    kind: string,
+    placeId: string,
+    url: string,
+    details: PhotoDetails,
+  ): Promise<AdminPhotoDto>;
 }
 
 export const ADMIN_PHOTOS_SERVICE = new InjectionToken<IAdminPhotosService>('ADMIN_PHOTOS_SERVICE');

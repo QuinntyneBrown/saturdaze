@@ -29,6 +29,7 @@ public sealed class SaturdazeApiFactory : WebApplicationFactory<Program>, IAsync
     public FakeWeatherClient Weather { get; } = new();
     public FakeDateTimeProvider Clock { get; } = new(new DateOnly(2026, 5, 16));
     public CapturingLogSink Logs { get; } = new();
+    public FakeRemoteImageFetcher Images { get; } = new();
 
     /// <summary>Where uploaded covers go for this fixture (deleted on disposal).</summary>
     public string PhotoDirectory { get; } = Path.Combine(Path.GetTempPath(), "saturdaze-photos-" + Guid.NewGuid().ToString("N"));
@@ -69,6 +70,8 @@ public sealed class SaturdazeApiFactory : WebApplicationFactory<Program>, IAsync
             services.RemoveAll<Saturdaze.Application.Common.IDateTimeProvider>();
             services.AddSingleton<Saturdaze.Application.Common.IDateTimeProvider>(Clock);
             services.AddSingleton<Serilog.Core.ILogEventSink>(Logs);
+            services.RemoveAll<Saturdaze.Application.Photos.IRemoteImageFetcher>();
+            services.AddSingleton<Saturdaze.Application.Photos.IRemoteImageFetcher>(Images);
         });
     }
 

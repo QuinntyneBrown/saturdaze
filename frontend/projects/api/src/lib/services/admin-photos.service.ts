@@ -24,13 +24,27 @@ export class AdminPhotosService implements IAdminPhotosService {
     return firstValueFrom(this.http.patch<AdminPhotoDto>(this.photoUrl(photoId), details));
   }
 
+  private placePhotosUrl(kind: string, placeId: string): string {
+    return `${this.baseUrl}/api/admin/places/${encodeURIComponent(kind)}/${encodeURIComponent(placeId)}/photos`;
+  }
+
   upload(kind: string, placeId: string, file: Blob, details: PhotoDetails): Promise<AdminPhotoDto> {
     const form = new FormData();
     form.append('file', file);
     form.append('alt', details.alt);
     form.append('attribution', details.attribution);
     form.append('licence', details.licence);
-    const url = `${this.baseUrl}/api/admin/places/${encodeURIComponent(kind)}/${encodeURIComponent(placeId)}/photos`;
-    return firstValueFrom(this.http.post<AdminPhotoDto>(url, form));
+    return firstValueFrom(this.http.post<AdminPhotoDto>(this.placePhotosUrl(kind, placeId), form));
+  }
+
+  addFromUrl(
+    kind: string,
+    placeId: string,
+    url: string,
+    details: PhotoDetails,
+  ): Promise<AdminPhotoDto> {
+    return firstValueFrom(
+      this.http.post<AdminPhotoDto>(this.placePhotosUrl(kind, placeId), { url, ...details }),
+    );
   }
 }

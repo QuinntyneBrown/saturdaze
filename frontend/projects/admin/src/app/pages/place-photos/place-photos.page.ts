@@ -25,6 +25,11 @@ import {
   StatusRow,
 } from 'components';
 
+import {
+  AddPhotoUrlDialog,
+  AddPhotoUrlDialogData,
+  AddPhotoUrlDialogResult,
+} from '../../dialogs/add-photo-url-dialog/add-photo-url-dialog';
 import { DIALOG_OPTIONS } from '../../dialogs/dialog-options';
 import {
   EditPhotoDialog,
@@ -122,6 +127,26 @@ export class PlacePhotosPage {
       },
     );
     if ((await firstValueFrom(ref.closed)) !== 'uploaded') return;
+    await this.run(async () => undefined);
+  }
+
+  /** AD2: add a curated photo by its allow-listed address (L2-116). */
+  protected async addFromUrl(): Promise<void> {
+    const v = this.view();
+    if (!v) return;
+    const ref = this.dialog.open<AddPhotoUrlDialogResult, AddPhotoUrlDialogData>(
+      AddPhotoUrlDialog,
+      {
+        ...DIALOG_OPTIONS,
+        data: {
+          placeName: v.name,
+          add: async (url, details) => {
+            await this.photos.addFromUrl(v.kind, v.id, url, details);
+          },
+        },
+      },
+    );
+    if ((await firstValueFrom(ref.closed)) !== 'added') return;
     await this.run(async () => undefined);
   }
 

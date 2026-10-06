@@ -79,6 +79,19 @@ export class AdminPlacePage extends AdminPage {
     return this.headerAction("Upload photo");
   }
 
+  addFromUrlButton(): Locator {
+    return this.headerAction("Add from URL");
+  }
+
+  /** AD2's address field and its inline reason. */
+  urlInput(): Locator {
+    return this.dialog().getByLabel("Image URL");
+  }
+
+  urlError(): Locator {
+    return this.dialog().locator(".field__error");
+  }
+
   /** AD1's file input ("Choose a photo"). */
   uploadFileInput(): Locator {
     return this.dialog().getByLabel("Choose a photo", { exact: true });

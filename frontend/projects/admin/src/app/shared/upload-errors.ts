@@ -7,6 +7,18 @@ export const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 export const TOO_LARGE = 'That photo is over 10 MB. Choose a smaller one.';
 export const NOT_A_PHOTO = 'That file is not a photo we can use. Choose a JPEG, PNG or WebP.';
 export const FAILED = 'The photo did not save. Try again in a moment.';
+export const URL_NOT_ALLOWED = "This address isn't on the image allow-list.";
+export const URL_NOT_IMAGE = 'That address did not return a JPEG, PNG or WebP image.';
+export const PHOTO_EXISTS = 'This place already has that photo.';
+
+/** The API's ProblemDetails `code`, when the failure carries one. */
+export function errorCode(err: unknown): string | null {
+  if (!(err instanceof HttpErrorResponse)) return null;
+  const body: unknown = err.error;
+  return body && typeof body === 'object' && 'code' in body && typeof body.code === 'string'
+    ? body.code
+    : null;
+}
 
 /** The message for a server refusal of a photo (413, `unsupported_image`, a field error). */
 export function uploadErrorMessage(err: unknown): string {
