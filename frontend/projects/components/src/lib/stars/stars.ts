@@ -26,8 +26,6 @@ import { Icon } from '../icon/icon';
   host: {
     class: 'stars',
     '[class.stars--lg]': 'size() === "lg"',
-    '[attr.rating]': 'rating()',
-    '[attr.editable]': 'editable() ? "" : null',
     '[attr.role]': 'editable() ? "radiogroup" : null',
     '[attr.aria-label]': 'editable() ? groupLabel() : null',
   },

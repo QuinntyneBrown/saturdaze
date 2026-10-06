@@ -7,6 +7,8 @@ describe('Disc', () => {
   let host: HTMLElement;
 
   const icon = (): HTMLElement => host.querySelector('sd-icon') as HTMLElement;
+  const glyph = (): string => icon().querySelector('svg')?.innerHTML ?? '';
+  const iconSize = (): string => icon().style.getPropertyValue('--_size');
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({ imports: [Disc] }).compileComponents();
@@ -19,46 +21,41 @@ describe('Disc', () => {
     expect(fixture.componentInstance).toBeTruthy();
     expect(host.classList.contains('disc')).toBe(true);
     expect(host.getAttribute('aria-hidden')).toBe('true');
-    expect(icon().getAttribute('name')).toBe('sparkle');
-    expect(host.getAttribute('icon')).toBe('sparkle');
-    expect(host.getAttribute('tone')).toBeNull();
-    expect(host.getAttribute('size')).toBeNull();
+    expect(glyph()).toContain('M12 3l1.7 5.3L19 10l-5.3 1.7L12 17');
+    expect(host.className.trim()).toBe('disc');
   });
 
   it('forwards the icon name', () => {
     fixture.componentRef.setInput('icon', 'fork');
     fixture.detectChanges();
-    expect(icon().getAttribute('name')).toBe('fork');
-    expect(host.getAttribute('icon')).toBe('fork');
+    expect(glyph()).toContain('M7 3v8a2 2 0 0 0 4 0V3');
   });
 
-  it('mirrors every tone to a host class and attribute', () => {
+  it('mirrors every tone to a host class', () => {
     for (const tone of ['accent', 'primary', 'warn', 'sun', 'sky', 'leaf', 'indoor', 'surface']) {
       fixture.componentRef.setInput('tone', tone);
       fixture.detectChanges();
       expect(host.classList.contains(`disc--${tone}`)).toBe(true);
-      expect(host.getAttribute('tone')).toBe(tone);
     }
   });
 
-  it('mirrors the size and scales the glyph with it', () => {
-    expect(icon().getAttribute('size')).toBe('20');
+  it('mirrors the size to a host class and scales the glyph with it', () => {
+    expect(iconSize()).toBe('20px');
 
     fixture.componentRef.setInput('size', 'sm');
     fixture.detectChanges();
     expect(host.classList.contains('disc--sm')).toBe(true);
-    expect(host.getAttribute('size')).toBe('sm');
-    expect(icon().getAttribute('size')).toBe('16');
+    expect(iconSize()).toBe('16px');
 
     fixture.componentRef.setInput('size', 'lg');
     fixture.detectChanges();
     expect(host.classList.contains('disc--lg')).toBe(true);
-    expect(icon().getAttribute('size')).toBe('20');
+    expect(iconSize()).toBe('20px');
 
     fixture.componentRef.setInput('size', 'xl');
     fixture.detectChanges();
     expect(host.classList.contains('disc--xl')).toBe(true);
     expect(host.classList.contains('disc--lg')).toBe(false);
-    expect(icon().getAttribute('size')).toBe('26');
+    expect(iconSize()).toBe('26px');
   });
 });

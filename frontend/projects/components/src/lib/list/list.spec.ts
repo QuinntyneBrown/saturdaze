@@ -33,14 +33,12 @@ describe('List', () => {
     expect(host.classList.contains('list')).toBe(true);
     expect(host.getAttribute('role')).toBe('list');
     expect(host.classList.contains('list--card')).toBe(false);
-    expect(host.getAttribute('card')).toBeNull();
   });
 
   it('draws the card surface when asked', () => {
     fixture.componentRef.setInput('card', true);
     fixture.detectChanges();
     expect(host.classList.contains('list--card')).toBe(true);
-    expect(host.getAttribute('card')).toBe('');
   });
 
   it('projects list items as its direct children', () => {

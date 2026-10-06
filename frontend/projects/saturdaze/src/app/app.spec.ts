@@ -99,9 +99,8 @@ describe('App', () => {
   });
 
   it('passes the signed-in email to the top bar', () => {
-    expect(host.querySelector('sd-top-bar sd-avatar')?.getAttribute('name')).toBe(
-      'quinn@example.com',
-    );
+    // The avatar renders the initial of whatever name it is given.
+    expect(host.querySelector('sd-top-bar sd-avatar')?.textContent?.trim()).toBe('Q');
   });
 
   it('switches to the site bar (with the CTA) for public pages', async () => {
@@ -109,13 +108,17 @@ describe('App', () => {
     expect(host.querySelector('sd-top-bar')).toBeNull();
     expect(host.querySelector('sd-bottom-nav')).toBeNull();
     const sitebar = host.querySelector('sd-sitebar');
-    expect(sitebar?.hasAttribute('cta')).toBe(true);
+    expect(sitebar?.classList.contains('sitebar--cta')).toBe(true);
+    expect(sitebar?.querySelector('a.btn--primary')?.textContent?.trim()).toBe(
+      'Create your account',
+    );
     expect(host.querySelector('main')?.classList.contains('sd-frame--site')).toBe(true);
     expect(document.body.dataset['shell']).toBe('site');
     expect(document.body.dataset['page']).toBe('landing');
 
     await go('/legal');
-    expect(host.querySelector('sd-sitebar')?.hasAttribute('cta')).toBe(false);
+    expect(host.querySelector('sd-sitebar')?.classList.contains('sitebar--cta')).toBe(false);
+    expect(host.querySelector('sd-sitebar a.btn--primary')).toBeNull();
     expect(document.body.dataset['page']).toBe('legal');
   });
 
@@ -129,13 +132,18 @@ describe('App', () => {
     expect(document.body.dataset['page']).toBe('sign-in');
   });
 
+  const current = (bar: string): string | null | undefined =>
+    host.querySelector(`${bar} a[aria-current="page"]`)?.getAttribute('data-nav');
+
   it('highlights the primary destination, inherited from the parent route', async () => {
     await go('/weekend');
-    expect(host.querySelector('sd-top-bar')?.getAttribute('active')).toBe('weekend');
-    expect(host.querySelector('sd-bottom-nav')?.getAttribute('active')).toBe('weekend');
+    expect(current('sd-top-bar')).toBe('weekend');
+    expect(current('sd-bottom-nav')).toBe('weekend');
+    expect(host.querySelectorAll('a[aria-current="page"]').length).toBe(2);
 
     await go('/ideas/food');
-    expect(host.querySelector('sd-top-bar')?.getAttribute('active')).toBe('ideas');
+    expect(current('sd-top-bar')).toBe('ideas');
+    expect(current('sd-bottom-nav')).toBe('ideas');
     expect(document.body.dataset['page']).toBe('ideas');
   });
 

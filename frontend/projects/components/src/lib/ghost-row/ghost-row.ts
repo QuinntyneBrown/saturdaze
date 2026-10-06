@@ -17,10 +17,6 @@ import { navigateInApp } from '../shared/in-app-link';
   templateUrl: './ghost-row.html',
   styleUrl: './ghost-row.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: {
-    '[attr.icon]': 'icon()',
-    '[attr.href]': 'href() || null',
-  },
 })
 export class GhostRow {
   private readonly router = inject(Router, { optional: true });

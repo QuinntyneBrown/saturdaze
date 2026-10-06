@@ -24,11 +24,6 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
   templateUrl: './toggle.html',
   styleUrl: './toggle.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: {
-    '[attr.label]': 'label() || null',
-    '[attr.checked]': 'internalChecked() ? "" : null',
-    '[attr.disabled]': 'disabled() ? "" : null',
-  },
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,

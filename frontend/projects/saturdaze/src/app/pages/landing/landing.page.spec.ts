@@ -37,12 +37,20 @@ describe('LandingPage', () => {
   it('draws the sample weekend with real day and block components inside a browser frame', () => {
     expect(host.querySelector('sd-browser-frame')).not.toBeNull();
     const days = Array.from(host.querySelectorAll('sd-day'));
-    expect(days.map((d) => d.getAttribute('title'))).toEqual(['Saturday', 'Sunday']);
-    expect(days.map((d) => d.getAttribute('weather'))).toEqual(['sun', 'cloud']);
+    expect(days.map((d) => d.querySelector('.day__title')?.textContent?.trim())).toEqual([
+      'Saturday',
+      'Sunday',
+    ]);
+    // sun draws the sun-toned weather disc; cloud the sky-toned one.
+    const discTone = (day: Element): string | null =>
+      ['sun', 'sky'].find((t) =>
+        day.querySelector('.weather-disc')?.classList.contains(`disc--${t}`),
+      ) ?? null;
+    expect(days.map(discTone)).toEqual(['sun', 'sky']);
     const blocks = Array.from(host.querySelectorAll('sd-block'));
     expect(blocks.length).toBe(LANDING_SAMPLE.reduce((n, d) => n + d.blocks.length, 0));
-    expect(blocks[0]?.hasAttribute('commitment')).toBe(true);
-    expect(blocks[1]?.hasAttribute('drive')).toBe(true);
+    expect(blocks[0]?.classList.contains('block--commitment')).toBe(true);
+    expect(blocks[1]?.classList.contains('block--drive')).toBe(true);
     expect(host.querySelectorAll('sd-block .block__chev').length).toBe(0);
     expect(host.querySelectorAll('sd-day .day__actions').length).toBe(0);
   });

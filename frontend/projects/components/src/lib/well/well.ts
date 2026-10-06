@@ -22,8 +22,6 @@ export type WellTone = 'default' | 'accent' | 'warn' | 'primary';
     '[class.well--accent]': 'tone() === "accent"',
     '[class.well--warn]': 'tone() === "warn"',
     '[class.well--primary]': 'tone() === "primary"',
-    '[attr.tone]': 'tone() === "default" ? null : tone()',
-    '[attr.title]': 'wellTitle() || null',
   },
 })
 export class Well {

@@ -38,11 +38,9 @@ describe('PageHeader', () => {
     expect(host.querySelector('.page-header__eyebrow')).toBeNull();
     expect(host.querySelector('.titlerow sd-button')).toBeNull();
     expect(host.querySelector('.page-header__subtitle')).toBeNull();
-    expect(host.getAttribute('title')).toBeNull();
-    expect(host.getAttribute('subtitle')).toBeNull();
   });
 
-  it('renders the title and subtitle and mirrors them to the host', () => {
+  it('renders the title and subtitle', () => {
     fixture.componentRef.setInput('title', 'Past weekends');
     fixture.componentRef.setInput('subtitle', 'Every Saturday and Sunday so far');
     fixture.detectChanges();
@@ -50,8 +48,6 @@ describe('PageHeader', () => {
     expect(host.querySelector('.page-header__subtitle')?.textContent?.trim()).toBe(
       'Every Saturday and Sunday so far',
     );
-    expect(host.getAttribute('title')).toBe('Past weekends');
-    expect(host.getAttribute('subtitle')).toBe('Every Saturday and Sunday so far');
   });
 
   it('renders the eyebrow link and the phone back button from backHref', () => {

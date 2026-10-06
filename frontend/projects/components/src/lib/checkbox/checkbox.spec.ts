@@ -35,8 +35,6 @@ describe('Checkbox', () => {
     expect(label.contains(input())).toBe(true);
     expect(input().type).toBe('checkbox');
     expect(input().checked).toBe(false);
-    expect(host.getAttribute('checked')).toBeNull();
-    expect(host.getAttribute('required')).toBeNull();
     expect(input().hasAttribute('aria-required')).toBe(false);
   });
 
@@ -46,19 +44,16 @@ describe('Checkbox', () => {
     fixture.detectChanges();
     expect(input().getAttribute('aria-required')).toBe('true');
     expect(input().getAttribute('name')).toBe('terms');
-    expect(host.getAttribute('required')).toBe('');
   });
 
-  it('checks the box from a written value and mirrors it to the host', () => {
+  it('checks the box from a written value', () => {
     component.writeValue(true);
     fixture.detectChanges();
     expect(input().checked).toBe(true);
-    expect(host.getAttribute('checked')).toBe('');
 
     component.writeValue(null);
     fixture.detectChanges();
     expect(input().checked).toBe(false);
-    expect(host.getAttribute('checked')).toBeNull();
   });
 
   it('reports a user toggle to the form and marks it touched', () => {
@@ -71,8 +66,6 @@ describe('Checkbox', () => {
     input().dispatchEvent(new Event('change'));
     expect(onChange).toHaveBeenCalledWith(true);
     expect(onTouched).toHaveBeenCalledTimes(1);
-    fixture.detectChanges();
-    expect(host.getAttribute('checked')).toBe('');
   });
 
   it('disables the box from the form', () => {
@@ -88,6 +81,8 @@ describe('Checkbox', () => {
     const label = el.querySelector('.check__label') as HTMLElement;
     expect(label.textContent?.replace(/\s+/g, ' ').trim()).toBe('I agree to the Terms');
     expect(label.querySelector('a')?.getAttribute('href')).toBe('/legal');
-    expect(el.getAttribute('required')).toBe('');
+    const box = el.querySelector('input.check__input') as HTMLInputElement;
+    expect(box.getAttribute('aria-required')).toBe('true');
+    expect(box.getAttribute('name')).toBe('terms');
   });
 });

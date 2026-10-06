@@ -41,7 +41,6 @@ export interface MenuItem {
     role: 'menu',
     '[class.menu--sheet]': 'sheet()',
     '[attr.aria-label]': 'label()',
-    '[attr.sheet]': 'sheet() ? "" : null',
     '(keydown)': 'onKey($event)',
   },
 })

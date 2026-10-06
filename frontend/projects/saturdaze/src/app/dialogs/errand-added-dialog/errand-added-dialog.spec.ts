@@ -42,11 +42,14 @@ describe('ErrandAddedDialog', () => {
       'It sits around what was already planned.',
     );
     const rows = Array.from(host.querySelectorAll('sd-list-item'));
-    expect(rows.map((r) => r.getAttribute('title'))).toEqual([
+    expect(rows.map((r) => r.querySelector('.list__title')?.textContent?.trim())).toEqual([
       'Costco run',
       'Sunday · 9:15 to 10:00',
     ]);
-    expect(rows.map((r) => r.getAttribute('subtitle'))).toEqual(['What', 'When']);
+    expect(rows.map((r) => r.querySelector('.list__sub')?.textContent?.trim())).toEqual([
+      'What',
+      'When',
+    ]);
   });
 
   it('closes on Done', () => {

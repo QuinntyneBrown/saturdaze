@@ -28,9 +28,6 @@ export type AvatarSize = 'sm' | 'md' | 'lg' | 'xl';
     '[class.avatar--m]': 'tone() === "sun"',
     '[class.avatar--indoor]': 'tone() === "indoor"',
     '[class.avatar--photo]': '!!src()',
-    '[attr.name]': 'name()',
-    '[attr.tone]': 'tone() === "default" ? null : tone()',
-    '[attr.size]': 'size()',
   },
 })
 export class Avatar {

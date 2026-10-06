@@ -24,32 +24,25 @@ describe('Card', () => {
   it('creates a plain card with no modifiers', () => {
     expect(fixture.componentInstance).toBeTruthy();
     expect(host.className.trim()).toBe('card');
-    for (const attr of ['variant', 'padding', 'locked', 'dimmed', 'muted', 'span', 'interactive']) {
-      expect(host.hasAttribute(attr)).toBe(false);
-    }
   });
 
-  it('mirrors the sunk variant and large padding', () => {
+  it('mirrors the sunk variant and large padding to host classes', () => {
     fixture.componentRef.setInput('variant', 'sunk');
     fixture.componentRef.setInput('padding', 'lg');
     fixture.detectChanges();
     expect(host.classList.contains('card--sunk')).toBe(true);
     expect(host.classList.contains('card--pad-lg')).toBe(true);
-    expect(host.getAttribute('variant')).toBe('sunk');
-    expect(host.getAttribute('padding')).toBe('lg');
   });
 
-  it('mirrors every boolean modifier to a class and attribute', () => {
+  it('mirrors every boolean modifier to a host class', () => {
     for (const flag of ['locked', 'dimmed', 'muted', 'span', 'interactive']) {
       fixture.componentRef.setInput(flag, true);
       fixture.detectChanges();
       expect(host.classList.contains(`card--${flag}`)).toBe(true);
-      expect(host.getAttribute(flag)).toBe('');
 
       fixture.componentRef.setInput(flag, false);
       fixture.detectChanges();
       expect(host.classList.contains(`card--${flag}`)).toBe(false);
-      expect(host.hasAttribute(flag)).toBe(false);
     }
   });
 

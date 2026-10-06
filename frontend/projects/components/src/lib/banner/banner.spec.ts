@@ -14,6 +14,9 @@ describe('Banner', () => {
   let fixture: ComponentFixture<Banner>;
   let host: HTMLElement;
 
+  const glyph = (el: Element | null | undefined): string =>
+    el?.querySelector('svg')?.innerHTML ?? '';
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({ imports: [Banner, HostCmp] }).compileComponents();
     fixture = TestBed.createComponent(Banner);
@@ -25,19 +28,17 @@ describe('Banner', () => {
     expect(fixture.componentInstance).toBeTruthy();
     expect(host.classList.contains('banner')).toBe(true);
     expect(host.classList.contains('banner--info')).toBe(true);
-    expect(host.getAttribute('tone')).toBe('info');
     expect(host.getAttribute('role')).toBe('status');
     expect(host.getAttribute('aria-live')).toBe('polite');
     expect(host.querySelector('sd-icon')).toBeNull();
     expect(host.querySelector('.banner__text')).not.toBeNull();
   });
 
-  it('mirrors the tone to a host class and attribute', () => {
+  it('mirrors the tone to a host class', () => {
     for (const tone of ['warn', 'success', 'info']) {
       fixture.componentRef.setInput('tone', tone);
       fixture.detectChanges();
       expect(host.classList.contains(`banner--${tone}`)).toBe(true);
-      expect(host.getAttribute('tone')).toBe(tone);
     }
     expect(host.classList.contains('banner--warn')).toBe(false);
   });
@@ -52,7 +53,7 @@ describe('Banner', () => {
   it('renders a leading glyph only when an icon is given', () => {
     fixture.componentRef.setInput('icon', 'lock');
     fixture.detectChanges();
-    expect(host.querySelector('sd-icon')?.getAttribute('name')).toBe('lock');
+    expect(glyph(host.querySelector('sd-icon'))).toContain('M8 11V8a4 4 0 0 1 8 0v3');
     fixture.componentRef.setInput('icon', '');
     fixture.detectChanges();
     expect(host.querySelector('sd-icon')).toBeNull();
@@ -65,6 +66,6 @@ describe('Banner', () => {
     expect(el.querySelector('.banner__text')?.textContent?.trim()).toBe('Something went wrong.');
     expect(el.getAttribute('role')).toBe('alert');
     expect(el.classList.contains('banner--warn')).toBe(true);
-    expect(el.querySelector('sd-icon')?.getAttribute('name')).toBe('close');
+    expect(glyph(el.querySelector('sd-icon'))).toContain('M6 6l12 12M18 6L6 18');
   });
 });

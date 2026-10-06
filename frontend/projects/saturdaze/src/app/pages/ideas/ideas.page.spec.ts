@@ -78,11 +78,14 @@ describe('IdeasPage', () => {
     fixture.detectChanges();
   }
 
-  const header = (): Element => host.querySelector('sd-page-header')!;
+  const headerTitle = (): string | null =>
+    host.querySelector('.page-header__title')?.textContent?.trim() ?? null;
+  const headerSubtitle = (): string | null =>
+    host.querySelector('.page-header__subtitle')?.textContent?.trim() ?? null;
   const suggestButton = (): Element | null => host.querySelector('sd-button[slot="primary"]');
 
   it('renders the Ideas header with the three segments and an outlet', () => {
-    expect(header().getAttribute('title')).toBe('Ideas');
+    expect(headerTitle()).toBe('Ideas');
     const tabs = Array.from(host.querySelectorAll('sd-segments a'));
     expect(tabs.map((t) => t.textContent?.trim())).toEqual(['Activities', 'Food', 'Events']);
     expect(tabs.map((t) => t.getAttribute('href'))).toEqual([
@@ -97,29 +100,25 @@ describe('IdeasPage', () => {
   it('starts on Activities with the live subtitle and no Suggest button', async () => {
     await go('/ideas');
     expect(component['tab']()).toBe('activities');
-    expect(header().getAttribute('subtitle')).toBe(
-      'Picked for Eli and Mae, under 45 minutes from Port Credit.',
-    );
+    expect(headerSubtitle()).toBe('Picked for Eli and Mae, under 45 minutes from Port Credit.');
     expect(suggestButton()).toBeNull();
   });
 
   it('falls back to the mock subtitle when the segment has not loaded yet', async () => {
     await go('/ideas/food');
     expect(component['tab']()).toBe('food');
-    expect(header().getAttribute('subtitle')).toBe(
-      'Places to eat near what you are already doing.',
-    );
+    expect(headerSubtitle()).toBe('Places to eat near what you are already doing.');
     expect(suggestButton()).toBeNull();
 
     foodView.set({ ...foodView(), subtitle: 'Near Terre Bleu and close to home.' });
     fixture.detectChanges();
-    expect(header().getAttribute('subtitle')).toBe('Near Terre Bleu and close to home.');
+    expect(headerSubtitle()).toBe('Near Terre Bleu and close to home.');
   });
 
   it('shows "Suggest an event" only on the Events segment', async () => {
     await go('/ideas/events');
     expect(component['tab']()).toBe('events');
-    expect(header().getAttribute('subtitle')).toBe('What is on within 45 minutes of Port Credit.');
+    expect(headerSubtitle()).toBe('What is on within 45 minutes of Port Credit.');
     expect(suggestButton()?.textContent).toContain('Suggest an event');
     await go('/ideas');
     expect(suggestButton()).toBeNull();

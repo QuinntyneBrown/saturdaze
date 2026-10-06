@@ -33,6 +33,9 @@ describe('RatingDialog', () => {
       `sd-stars button[aria-label="${n} star${n === 1 ? '' : 's'}"]`,
     ) as HTMLButtonElement;
   const caption = (): string => host.querySelector('p.sd-text-sm')?.textContent?.trim() ?? '';
+  const filled = (): number => host.querySelectorAll('sd-stars sd-icon.icon--filled').length;
+  const checked = (): string | null | undefined =>
+    host.querySelector('sd-stars button[aria-checked="true"]')?.getAttribute('aria-label');
 
   it('shows the current rating with its caption', async () => {
     await mount(5);
@@ -40,14 +43,16 @@ describe('RatingDialog', () => {
     expect(host.querySelector('.dialog__sub')?.textContent?.trim()).toBe(
       '10 – 11 May · Bronte Creek + Rec Room',
     );
-    expect(host.querySelector('sd-stars')?.getAttribute('rating')).toBe('5');
+    expect(filled()).toBe(5);
+    expect(checked()).toBe('5 stars');
     expect(host.querySelector('sd-stars')?.getAttribute('role')).toBe('radiogroup');
     expect(caption()).toBe('5 of 5, a keeper');
   });
 
   it('starts unrated with a prompt', async () => {
     await mount(null);
-    expect(host.querySelector('sd-stars')?.getAttribute('rating')).toBe('0');
+    expect(filled()).toBe(0);
+    expect(checked()).toBeUndefined();
     expect(caption()).toBe('Tap a star to rate it.');
   });
 
@@ -56,11 +61,13 @@ describe('RatingDialog', () => {
     star(3).click();
     fixture.detectChanges();
     expect(component['rating']()).toBe(3);
+    expect(filled()).toBe(3);
     expect(caption()).toBe('3 of 5, fine');
 
     star(3).click();
     fixture.detectChanges();
     expect(component['rating']()).toBe(0);
+    expect(filled()).toBe(0);
     expect(caption()).toBe('Tap a star to rate it.');
   });
 

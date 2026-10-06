@@ -69,11 +69,17 @@ describe('SignInPage', () => {
   it('renders the welcome card with email, password, remember-me and the two links', async () => {
     await mount();
     expect(session.clearError).toHaveBeenCalled();
-    expect(host.querySelector('sd-auth-card')?.getAttribute('title')).toBe('Welcome back');
+    expect(host.querySelector('.auth-card__title')?.textContent?.trim()).toBe('Welcome back');
     const fields = Array.from(host.querySelectorAll('sd-text-input'));
-    expect(fields.map((f) => f.getAttribute('label'))).toEqual(['Email', 'Password']);
-    expect(fields.map((f) => f.getAttribute('type'))).toEqual(['email', 'password']);
-    expect(host.querySelector('sd-toggle')?.getAttribute('label')).toBe('Remember me');
+    expect(fields.map((f) => f.querySelector('.field__label')?.textContent?.trim())).toEqual([
+      'Email',
+      'Password',
+    ]);
+    expect(fields.map((f) => f.querySelector('input')?.getAttribute('type'))).toEqual([
+      'email',
+      'password',
+    ]);
+    expect(host.querySelector('sd-toggle .toggle__label')?.textContent?.trim()).toBe('Remember me');
     expect(host.querySelector('a[href="/reset-password"]')?.textContent?.trim()).toBe(
       'Forgot password?',
     );
@@ -137,7 +143,7 @@ describe('SignInPage', () => {
     await component['submit']();
     fixture.detectChanges();
     expect(banner()).toBe('That email and password did not match.');
-    expect(host.querySelectorAll('sd-text-input[invalid]').length).toBe(2);
+    expect(host.querySelectorAll('sd-text-input input[aria-invalid="true"]').length).toBe(2);
     expect(navigate).not.toHaveBeenCalled();
   });
 

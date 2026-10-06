@@ -58,7 +58,9 @@ describe('ResetPasswordPage', () => {
   });
 
   const title = (): string | null =>
-    host.querySelector('sd-auth-card')?.getAttribute('title') ?? null;
+    host.querySelector('.auth-card__title')?.textContent?.trim() ?? null;
+  const resendButton = (): HTMLButtonElement | null =>
+    host.querySelector('sd-button[variant="quiet"] button');
 
   it('starts by asking for the email, or for a new password when a token is present', async () => {
     await mount();
@@ -83,7 +85,8 @@ describe('ResetPasswordPage', () => {
       await mount({ state });
       expect(title(), state).toBe(expected);
     }
-    expect(host.querySelector('sd-disc[slot="disc"]')?.getAttribute('icon')).toBe('key');
+    // The expired card leads with the warn-toned disc (the key glyph has no rendered name).
+    expect(host.querySelector('sd-disc[slot="disc"]')?.classList.contains('disc--warn')).toBe(true);
   });
 
   it('prefills ?email= and masks it on the sent card', async () => {
@@ -120,8 +123,8 @@ describe('ResetPasswordPage', () => {
       fixture.detectChanges();
       expect(session.forgotPassword).toHaveBeenCalledWith({ email: 'quinn@example.com' });
       expect(component['resent']()).toBe(true);
-      expect(host.querySelector('sd-button[variant="quiet"]')?.textContent).toContain('Sent');
-      expect(host.querySelector('sd-button[variant="quiet"]')?.hasAttribute('disabled')).toBe(true);
+      expect(resendButton()?.textContent).toContain('Sent');
+      expect(resendButton()?.disabled).toBe(true);
 
       await component['resend']();
       expect(session.forgotPassword).toHaveBeenCalledTimes(1);
@@ -129,7 +132,8 @@ describe('ResetPasswordPage', () => {
       vi.advanceTimersByTime(60_000);
       fixture.detectChanges();
       expect(component['resent']()).toBe(false);
-      expect(host.querySelector('sd-button[variant="quiet"]')?.textContent).toContain('Resend');
+      expect(resendButton()?.textContent).toContain('Resend');
+      expect(resendButton()?.disabled).toBe(false);
     } finally {
       vi.useRealTimers();
     }
@@ -144,14 +148,16 @@ describe('ResetPasswordPage', () => {
     expect(host.querySelector('sd-banner')?.textContent?.trim()).toBe(
       'Those passwords do not match.',
     );
-    expect(host.querySelectorAll('sd-text-input')[1]?.hasAttribute('invalid')).toBe(true);
+    const inputs = host.querySelectorAll('sd-text-input input');
+    expect(inputs[1]?.getAttribute('aria-invalid')).toBe('true');
+    expect(inputs[0]?.getAttribute('aria-invalid')).toBeNull();
   });
 
   it('saves the new password with the token and shows the done card', async () => {
     await mount({ token: 'abc' });
     component['newForm'].setValue({ password: 'Lavender2026!', confirm: 'Lavender2026!' });
     fixture.detectChanges();
-    expect(host.querySelector('sd-strength')?.getAttribute('level')).toBe('strong');
+    expect(host.querySelector('sd-strength')?.classList.contains('strength--strong')).toBe(true);
     await component['savePassword']();
     fixture.detectChanges();
     expect(session.resetPassword).toHaveBeenCalledWith({ token: 'abc', password: 'Lavender2026!' });

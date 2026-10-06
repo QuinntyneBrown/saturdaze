@@ -25,23 +25,19 @@ describe('Chip', () => {
     expect(fixture.componentInstance).toBeTruthy();
     expect(host.classList.contains('chip')).toBe(true);
     expect(host.className.trim()).toBe('chip');
-    expect(host.getAttribute('tone')).toBeNull();
-    expect(host.getAttribute('size')).toBeNull();
-    expect(host.getAttribute('removable')).toBeNull();
     expect(host.querySelector('.chip__x')).toBeNull();
   });
 
-  it('mirrors the tone to a host class and attribute', () => {
+  it('mirrors the tone to a host class', () => {
     for (const tone of ['sun', 'sky', 'leaf', 'indoor', 'accent', 'primary', 'warn', 'ink']) {
       fixture.componentRef.setInput('tone', tone);
       fixture.detectChanges();
       expect(host.classList.contains(`chip--${tone}`)).toBe(true);
-      expect(host.getAttribute('tone')).toBe(tone);
     }
     fixture.componentRef.setInput('tone', 'default');
     fixture.detectChanges();
     expect(host.classList.contains('chip--ink')).toBe(false);
-    expect(host.getAttribute('tone')).toBeNull();
+    expect(host.className.trim()).toBe('chip');
   });
 
   it('mirrors the small size and the count badge', () => {
@@ -50,7 +46,6 @@ describe('Chip', () => {
     fixture.detectChanges();
     expect(host.classList.contains('chip--sm')).toBe(true);
     expect(host.classList.contains('chip--count')).toBe(true);
-    expect(host.getAttribute('size')).toBe('sm');
   });
 
   it('renders the remove button with its accessible name when removable', () => {
@@ -61,7 +56,6 @@ describe('Chip', () => {
     expect(x.getAttribute('type')).toBe('button');
     expect(x.getAttribute('aria-label')).toBe('Remove');
     expect(x.querySelector('sd-icon')?.getAttribute('name')).toBe('close');
-    expect(host.getAttribute('removable')).toBe('');
 
     fixture.componentRef.setInput('removeLabel', 'Remove Parks');
     fixture.detectChanges();

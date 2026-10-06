@@ -12,6 +12,7 @@ describe('PastCard', () => {
   const rateBtn = (): HTMLButtonElement =>
     host.querySelector('button.card__rate') as HTMLButtonElement;
   const stars = (): HTMLElement => host.querySelector('sd-stars') as HTMLElement;
+  const filledStars = (): number => stars().querySelectorAll('sd-icon.icon--filled').length;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({ imports: [PastCard] }).compileComponents();
@@ -31,34 +32,29 @@ describe('PastCard', () => {
     expect(titleBtn().textContent?.trim()).toBe('Beach and pizza');
     expect(titleBtn().getAttribute('aria-label')).toBe('Rename: Beach and pizza');
     expect(rateBtn().getAttribute('aria-label')).toBe('Rate this weekend');
-    expect(stars().getAttribute('rating')).toBe('0');
+    expect(filledStars()).toBe(0);
     expect(stars().querySelector('.stars__label')?.textContent?.trim()).toBe('Rate it');
     expect(host.querySelector('.card__highlights')).toBeNull();
-    expect(host.getAttribute('title')).toBe('Beach and pizza');
-    expect(host.getAttribute('rating')).toBeNull();
-    expect(host.getAttribute('favourite')).toBeNull();
   });
 
   it('shows the favourite heart as a pressed toggle', () => {
     expect(favBtn().getAttribute('aria-label')).toBe('Favourite this weekend');
     expect(favBtn().getAttribute('aria-pressed')).toBe('false');
     expect(favBtn().querySelector('sd-icon')?.getAttribute('name')).toBe('heart');
-    expect(favBtn().querySelector('sd-icon')?.hasAttribute('filled')).toBe(false);
+    expect(favBtn().querySelector('sd-icon')?.classList.contains('icon--filled')).toBe(false);
 
     fixture.componentRef.setInput('favourite', true);
     fixture.detectChanges();
     expect(favBtn().getAttribute('aria-pressed')).toBe('true');
-    expect(favBtn().querySelector('sd-icon')?.getAttribute('filled')).toBe('');
-    expect(host.getAttribute('favourite')).toBe('');
+    expect(favBtn().querySelector('sd-icon')?.classList.contains('icon--filled')).toBe(true);
   });
 
-  it('reflects the rating in the stars, the rate button name and the host', () => {
+  it('reflects the rating in the stars and the rate button name', () => {
     fixture.componentRef.setInput('rating', 4);
     fixture.detectChanges();
-    expect(stars().getAttribute('rating')).toBe('4');
+    expect(filledStars()).toBe(4);
     expect(stars().querySelector('.stars__label')?.textContent?.trim()).toBe('4 of 5');
     expect(rateBtn().getAttribute('aria-label')).toBe('Rate this weekend, currently 4 of 5');
-    expect(host.getAttribute('rating')).toBe('4');
   });
 
   it('renders the highlights line', () => {

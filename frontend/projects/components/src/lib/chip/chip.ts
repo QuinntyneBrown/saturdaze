@@ -41,9 +41,6 @@ export type ChipSize = 'md' | 'sm';
     '[class.chip--ink]': 'tone() === "ink"',
     '[class.chip--sm]': 'size() === "sm"',
     '[class.chip--count]': 'count()',
-    '[attr.tone]': 'tone() === "default" ? null : tone()',
-    '[attr.size]': 'size() === "md" ? null : size()',
-    '[attr.removable]': 'removable() ? "" : null',
   },
 })
 export class Chip {

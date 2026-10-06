@@ -35,14 +35,6 @@ export type ButtonType = 'button' | 'submit' | 'reset';
   templateUrl: './button.html',
   styleUrl: './button.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: {
-    '[attr.variant]': 'variant()',
-    '[attr.size]': 'size() === "md" ? null : size()',
-    '[attr.full]': 'full() ? "" : null',
-    '[attr.icon]': 'icon() ? "" : null',
-    '[attr.disabled]': 'disabled() ? "" : null',
-    '[attr.pressed]': 'pressed() === null ? null : pressed()',
-  },
 })
 export class Button {
   private readonly router = inject(Router, { optional: true });

@@ -15,7 +15,6 @@ import { ChangeDetectionStrategy, Component, booleanAttribute, input } from '@an
     class: 'list',
     role: 'list',
     '[class.list--card]': 'card()',
-    '[attr.card]': 'card() ? "" : null',
   },
 })
 export class List {

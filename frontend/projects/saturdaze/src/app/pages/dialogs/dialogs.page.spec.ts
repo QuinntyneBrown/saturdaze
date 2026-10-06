@@ -28,7 +28,7 @@ describe('DialogsPage', () => {
     Array.from(host.querySelectorAll('section.specimen[id^="dialog-"]'));
 
   it('renders the page header and every specimen in the mock order', () => {
-    expect(host.querySelector('sd-page-header')?.getAttribute('title')).toBe('Dialogs');
+    expect(host.querySelector('.page-header__title')?.textContent?.trim()).toBe('Dialogs');
     expect(specimens().length).toBe(30);
     expect(specimens().map((s) => s.id)).toEqual([
       'dialog-block',
@@ -70,7 +70,7 @@ describe('DialogsPage', () => {
     for (const section of dialogs) {
       const shell = section.querySelector('sd-dialog');
       expect(shell, section.id).not.toBeNull();
-      expect(shell?.hasAttribute('static'), section.id).toBe(true);
+      expect(shell?.classList.contains('dialog--specimen'), section.id).toBe(true);
       expect(section.querySelector('.specimen__label')?.textContent?.trim(), section.id).toMatch(
         /^D\d+ · /,
       );

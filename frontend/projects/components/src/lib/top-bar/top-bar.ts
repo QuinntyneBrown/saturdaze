@@ -21,7 +21,6 @@ import { NAV_ITEMS, NavKey } from '../shared/nav-key';
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class: 'topbar',
-    '[attr.active]': 'active()',
   },
 })
 export class TopBar {

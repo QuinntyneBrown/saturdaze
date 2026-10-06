@@ -98,7 +98,12 @@ describe('IdeasFoodPage', () => {
       .find((c) => c.textContent?.trim() === label)!
       .querySelector('button') as HTMLButtonElement;
   const card = (title: string): HTMLElement =>
-    host.querySelector(`sd-food-card[title="${title}"]`) as HTMLElement;
+    Array.from(host.querySelectorAll<HTMLElement>('sd-food-card')).find(
+      (c) => c.querySelector('.card__title')?.textContent?.trim() === title,
+    ) as HTMLElement;
+  /** The badge beside the title: "Top pick", the locked label, or nothing. */
+  const headChip = (title: string): string | null =>
+    card(title).querySelector('.card__head sd-chip')?.textContent?.trim() ?? null;
 
   it('loads both days on construction and renders the three chip rows', () => {
     expect(service.load).toHaveBeenCalledTimes(1);
@@ -111,24 +116,27 @@ describe('IdeasFoodPage', () => {
       'Wife-approved',
       'Under 15 min',
     ]);
-    expect(chips.map((c) => c.hasAttribute('pressed'))).toEqual([
-      true,
-      false,
-      false,
-      true,
-      false,
-      true,
+    expect(chips.map((c) => c.querySelector('button')?.getAttribute('aria-pressed'))).toEqual([
+      'true',
+      'false',
+      'false',
+      'true',
+      'false',
+      'true',
     ]);
     expect(host.querySelectorAll('.sd-vdivider').length).toBe(2);
   });
 
   it('renders the meal section with the top pick spanning and the family vote row', () => {
     const section = host.querySelector('sd-section');
-    expect(section?.getAttribute('title')).toBe('Lunch');
-    expect(section?.getAttribute('subtitle')).toBe('Near Terre Bleu · 12:00 to 1:30pm');
-    expect(card('La Marina').hasAttribute('top-pick')).toBe(true);
+    expect(section?.querySelector('.section-header__title')?.textContent?.trim()).toBe('Lunch');
+    expect(section?.querySelector('.section-header__sub')?.textContent?.trim()).toBe(
+      'Near Terre Bleu · 12:00 to 1:30pm',
+    );
+    expect(headChip('La Marina')).toBe('Top pick');
     expect(card('La Marina').classList.contains('card--span')).toBe(true);
-    expect(card('Pizza Nova').hasAttribute('top-pick')).toBe(false);
+    expect(headChip('Pizza Nova')).toBeNull();
+    expect(card('Pizza Nova').classList.contains('card--span')).toBe(false);
     expect(
       Array.from(card('La Marina').querySelectorAll('sd-chip')).map((c) => c.textContent?.trim()),
     ).toEqual(['Top pick', 'Wife-approved', '3 of 4 yes']);

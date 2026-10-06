@@ -81,29 +81,46 @@ describe('IdeasActivitiesPage', () => {
     expect(service.load).toHaveBeenCalledTimes(1);
   });
 
+  /** The hue a filter chip's rendered button carries, or null for the plain ink one. */
+  const chipTone = (chip: Element): string | null =>
+    ['leaf', 'indoor', 'sky', 'sun', 'accent', 'primary'].find((t) =>
+      chip.querySelector('button')?.classList.contains(`filter-chip--${t}`),
+    ) ?? null;
+  /** The tint of a card's fallback media tile (no photo in the fixture). */
+  const mediaTone = (card: Element): string | null =>
+    ['leaf', 'indoor', 'sky', 'sun'].find((t) =>
+      card.querySelector('.card__media')?.classList.contains(`media--${t}`),
+    ) ?? null;
+
   it('renders the filter strip with the active chip pressed', () => {
     const chips = Array.from(host.querySelectorAll('sd-filter-chip'));
     expect(chips.map((c) => c.textContent?.trim())).toEqual(['All', 'Outdoor', 'Indoor']);
-    expect(chips.map((c) => c.hasAttribute('pressed'))).toEqual([true, false, false]);
-    expect(chips.map((c) => c.getAttribute('tone'))).toEqual([null, 'leaf', 'indoor']);
-    expect(chips[1]?.querySelector('sd-icon')?.getAttribute('name')).toBe('tree');
+    expect(chips.map((c) => c.querySelector('button')?.getAttribute('aria-pressed'))).toEqual([
+      'true',
+      'false',
+      'false',
+    ]);
+    expect(chips.map(chipTone)).toEqual([null, 'leaf', 'indoor']);
+    // Only the chip with an icon in the view renders one.
+    expect(chips.map((c) => c.querySelector('sd-icon') !== null)).toEqual([false, true, false]);
   });
 
   it('renders each section with its activity cards, chips and map link', () => {
     const sections = Array.from(host.querySelectorAll('sd-section'));
-    expect(sections.map((s) => s.getAttribute('title'))).toEqual([
-      "Right for this weekend's weather",
-      'Try something new',
-    ]);
-    expect(sections[0]?.getAttribute('subtitle')).toBe('Sunny Saturday, 22°.');
-    expect(sections[1]?.getAttribute('subtitle')).toBeNull();
+    expect(
+      sections.map((s) => s.querySelector('.section-header__title')?.textContent?.trim()),
+    ).toEqual(["Right for this weekend's weather", 'Try something new']);
+    expect(sections[0]?.querySelector('.section-header__sub')?.textContent?.trim()).toBe(
+      'Sunny Saturday, 22°.',
+    );
+    expect(sections[1]?.querySelector('.section-header__sub')).toBeNull();
 
     const cards = Array.from(host.querySelectorAll('sd-activity-card'));
-    expect(cards.map((c) => c.getAttribute('title'))).toEqual([
+    expect(cards.map((c) => c.querySelector('.card__title')?.textContent?.trim())).toEqual([
       'Terre Bleu Lavender Farm',
       'The Rec Room',
     ]);
-    expect(cards.map((c) => c.getAttribute('tone'))).toEqual(['leaf', 'indoor']);
+    expect(cards.map(mediaTone)).toEqual(['leaf', 'indoor']);
     expect(
       Array.from(cards[0]!.querySelectorAll('sd-chip')).map((c) => c.textContent?.trim()),
     ).toEqual(['45 min drive', 'Ages 3+']);

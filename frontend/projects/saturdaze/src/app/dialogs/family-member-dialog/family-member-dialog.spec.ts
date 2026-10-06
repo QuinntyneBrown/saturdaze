@@ -26,10 +26,14 @@ describe('FamilyMemberDialog', () => {
     host = fixture.nativeElement as HTMLElement;
   }
 
-  const primary = (): HTMLElement =>
-    host.querySelector('sd-button[slot="actions"][variant="primary"]') as HTMLElement;
+  const primary = (): HTMLButtonElement =>
+    host.querySelector('sd-button[slot="actions"] button.btn--primary') as HTMLButtonElement;
   const field = (name: string): HTMLElement =>
-    host.querySelector(`sd-text-input[name="${name}"]`) as HTMLElement;
+    host.querySelector(`input[name="${name}"]`)?.closest('sd-text-input') as HTMLElement;
+  const errorOf = (name: string): string | undefined =>
+    field(name).querySelector('.field__error')?.textContent?.trim();
+  const hintOf = (name: string): string | undefined =>
+    field(name).querySelector('.field__hint')?.textContent?.trim();
 
   it('adds a member: empty fields, no Remove, primary disabled until both are filled', async () => {
     await mount({ mode: 'add', existingNames: MEMBER_NAMES });
@@ -37,12 +41,12 @@ describe('FamilyMemberDialog', () => {
     expect(host.querySelector('.dialog__sub')?.textContent?.trim()).toBe('Ages shape the picks.');
     expect(primary().textContent?.trim()).toBe('Add member');
     expect(host.querySelector('sd-button[slot="actions-left"]')).toBeNull();
-    expect(primary().hasAttribute('disabled')).toBe(true);
+    expect(primary().disabled).toBe(true);
 
     component['name'].set('Theo');
     component['age'].set('3');
     fixture.detectChanges();
-    expect(primary().hasAttribute('disabled')).toBe(false);
+    expect(primary().disabled).toBe(false);
     component['submit']();
     expect(dialogRef.close).toHaveBeenCalledWith({ kind: 'save', name: 'Theo', age: 3 });
   });
@@ -64,8 +68,8 @@ describe('FamilyMemberDialog', () => {
     component['submit']();
     fixture.detectChanges();
     expect(component['error']()).toBe('Enter a name.');
-    expect(field('memberName').getAttribute('error')).toBe('Enter a name.');
-    expect(field('memberAge').getAttribute('error')).toBeNull();
+    expect(errorOf('memberName')).toBe('Enter a name.');
+    expect(errorOf('memberAge')).toBeUndefined();
     expect(dialogRef.close).not.toHaveBeenCalled();
   });
 
@@ -78,7 +82,8 @@ describe('FamilyMemberDialog', () => {
       expect(component['error']()).toBe('Enter an age between 0 and 120.');
     }
     fixture.detectChanges();
-    expect(field('memberAge').getAttribute('error')).toBe('Enter an age between 0 and 120.');
+    expect(errorOf('memberAge')).toBe('Enter an age between 0 and 120.');
+    expect(errorOf('memberName')).toBeUndefined();
     expect(dialogRef.close).not.toHaveBeenCalled();
 
     component['age'].set('0');
@@ -106,7 +111,7 @@ describe('FamilyMemberDialog', () => {
     component['age'].set('38');
     expect(component['ageHint']()).toBe('Parent · 18 and over.');
     fixture.detectChanges();
-    expect(field('memberAge').getAttribute('hint')).toBe('Parent · 18 and over.');
+    expect(hintOf('memberAge')).toBe('Parent · 18 and over.');
   });
 
   it('closes with nothing on cancel', async () => {

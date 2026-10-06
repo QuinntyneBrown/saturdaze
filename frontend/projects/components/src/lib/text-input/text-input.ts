@@ -32,13 +32,6 @@ let nextFieldId = 0;
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class: 'field',
-    '[attr.label]': 'label() || null',
-    '[attr.type]': 'type()',
-    '[attr.hint]': 'hint() || null',
-    '[attr.error]': 'error() || null',
-    '[attr.required]': 'required() ? "" : null',
-    '[attr.invalid]': 'invalid() ? "" : null',
-    '[attr.multiline]': 'multiline() ? "" : null',
   },
   providers: [
     {

@@ -26,8 +26,6 @@ import { navigateInApp } from '../shared/in-app-link';
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class: 'page-header',
-    '[attr.title]': 'pageTitle() || null',
-    '[attr.subtitle]': 'subtitle() || null',
   },
 })
 export class PageHeader {

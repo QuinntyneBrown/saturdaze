@@ -32,6 +32,8 @@ Every component host carries the mock's block class and modifiers (`<sd-block cl
 
 The point is one locator set: the Playwright page objects work against the static mocks and the running app without a translation layer, and a pixel comparison of the two is meaningful.
 
+The mock's classes and ARIA state are the whole contract. Components do not reflect their inputs onto host attributes (`<sd-card locked>`, `<sd-text-input label="…">`): the retired custom-element catalog needed that for `:host([…])` styling, but here nothing reads such attributes, and reflecting a `title` input as a host `title` attribute produced native browser tooltips the mocks never had. State that CSS or a locator needs is a host class (`.card--locked`, `.icon--filled`, `.sitebar--cta`) or an ARIA attribute.
+
 ### 3. Per-component encapsulated SCSS, copied from the mock stylesheet
 
 Each component's SCSS is the matching block of `app.css` with `:host` / `:host(.modifier)` substitutions. Global SCSS holds only the reset, tokens and `sd-`-prefixed layout utilities (`.sd-frame`, `.sd-narrow`, `.sd-grid-days`, `.sd-grid-cards`, `.sd-vdivider` …). Single-use blocks (landing hero and steps, legal prose, the family grid, the review queue, the past strip, the dialogs gallery) live in the page that uses them. The production budget stays at 6kB warn / 10kB error per component style.

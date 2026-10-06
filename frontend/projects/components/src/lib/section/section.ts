@@ -16,8 +16,6 @@ let nextSectionId = 0;
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class: 'section',
-    '[attr.title]': 'sectionTitle() || null',
-    '[attr.subtitle]': 'subtitle() || null',
     '[attr.aria-labelledby]': 'sectionTitle() ? headingId : null',
   },
 })

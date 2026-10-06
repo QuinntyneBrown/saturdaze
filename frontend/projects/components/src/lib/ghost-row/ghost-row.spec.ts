@@ -30,17 +30,14 @@ describe('GhostRow', () => {
     const btn = host.querySelector('button.ghost-row') as HTMLButtonElement;
     expect(btn).not.toBeNull();
     expect(btn.getAttribute('type')).toBe('button');
-    expect(btn.querySelector('sd-icon')?.getAttribute('name')).toBe('plus');
+    expect(btn.querySelector('sd-icon svg')?.innerHTML).toContain('M12 5v14M5 12h14');
     expect(host.querySelector('a')).toBeNull();
-    expect(host.getAttribute('icon')).toBe('plus');
-    expect(host.getAttribute('href')).toBeNull();
   });
 
   it('forwards the icon name', () => {
     fixture.componentRef.setInput('icon', 'user');
     fixture.detectChanges();
-    expect(host.querySelector('sd-icon')?.getAttribute('name')).toBe('user');
-    expect(host.getAttribute('icon')).toBe('user');
+    expect(host.querySelector('sd-icon svg')?.innerHTML).toContain('M4 21a8 8 0 0 1 16 0');
   });
 
   it('emits pressed when the button is clicked', () => {
@@ -60,7 +57,6 @@ describe('GhostRow', () => {
     expect(a).not.toBeNull();
     expect(host.querySelector('button')).toBeNull();
     expect(a.getAttribute('href')).toBe('/family/new');
-    expect(host.getAttribute('href')).toBe('/family/new');
 
     const event = new MouseEvent('click', { bubbles: true, cancelable: true });
     a.dispatchEvent(event);

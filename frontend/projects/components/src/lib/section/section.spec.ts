@@ -31,8 +31,6 @@ describe('Section', () => {
     expect(host.classList.contains('section')).toBe(true);
     expect(host.querySelector('.section-header')).toBeNull();
     expect(host.hasAttribute('aria-labelledby')).toBe(false);
-    expect(host.getAttribute('title')).toBeNull();
-    expect(host.getAttribute('subtitle')).toBeNull();
   });
 
   it('renders the heading and labels the section with it', () => {
@@ -42,7 +40,6 @@ describe('Section', () => {
     expect(h2.textContent?.trim()).toBe('Likes');
     expect(h2.id).toMatch(/^sd-section-\d+$/);
     expect(host.getAttribute('aria-labelledby')).toBe(h2.id);
-    expect(host.getAttribute('title')).toBe('Likes');
     expect(host.querySelector('.section-header__sub')).toBeNull();
   });
 
@@ -53,7 +50,6 @@ describe('Section', () => {
     expect(host.querySelector('.section-header__sub')?.textContent?.trim()).toBe(
       'What the family enjoys',
     );
-    expect(host.getAttribute('subtitle')).toBe('What the family enjoys');
   });
 
   it('projects the action into the header and the body below it', () => {

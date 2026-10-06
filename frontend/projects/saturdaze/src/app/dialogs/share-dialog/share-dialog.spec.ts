@@ -32,10 +32,10 @@ describe('ShareDialog', () => {
       'Anyone with the link can view it. Nobody can edit.',
     );
     const copy = host.querySelector('sd-copy-field');
-    expect(copy?.getAttribute('value')).toBe('https://saturdaze.app/sample-weekend?share=abc123');
     expect(copy?.querySelector('.copy-field__value')?.textContent?.trim()).toBe(
       'https://saturdaze.app/sample-weekend?share=abc123',
     );
+    expect(copy?.querySelector('button[aria-label="Copy link"]')).not.toBeNull();
     expect(host.querySelector('p.sd-text-xs')?.textContent?.trim()).toBe(
       'Read-only · expires in 7 days',
     );

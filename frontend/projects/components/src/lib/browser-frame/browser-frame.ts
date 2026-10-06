@@ -26,7 +26,6 @@ import {
   host: {
     class: 'browser-frame',
     'aria-hidden': 'true',
-    '[attr.url]': 'url()',
     '[style.--_s]': 'scale()',
     '[style.--_w.px]': 'frameWidth()',
     '[style.--_h.px]': 'frameHeight()',

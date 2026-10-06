@@ -37,20 +37,22 @@ describe('AddErrandDialog', () => {
     host = fixture.nativeElement as HTMLElement;
   });
 
-  const primary = (): HTMLElement =>
-    host.querySelector('sd-button[slot="actions"][variant="primary"]') as HTMLElement;
+  const primary = (): HTMLButtonElement =>
+    host.querySelector('sd-button[slot="actions"] button.btn--primary') as HTMLButtonElement;
+  const labelOf = (field: string): string | undefined =>
+    host.querySelector(`${field} .field__label`)?.firstChild?.textContent?.trim();
 
   it('renders the three fields and keeps the primary disabled until there is a description', () => {
     expect(host.querySelector('.dialog__title')?.textContent?.trim()).toBe('Add an errand');
-    expect(host.querySelector('sd-text-input')?.getAttribute('label')).toBe('What is it');
-    expect(host.querySelector('sd-select')?.getAttribute('label')).toBe('Roughly how long');
-    expect(host.querySelector('sd-seg-radio')?.getAttribute('label')).toBe('Which day');
+    expect(labelOf('sd-text-input')).toBe('What is it');
+    expect(labelOf('sd-select')).toBe('Roughly how long');
+    expect(labelOf('sd-seg-radio')).toBe('Which day');
     expect(host.querySelectorAll('sd-seg-radio input[type="radio"]').length).toBe(3);
-    expect(primary().hasAttribute('disabled')).toBe(true);
+    expect(primary().disabled).toBe(true);
 
     component['description'].set('Costco run');
     fixture.detectChanges();
-    expect(primary().hasAttribute('disabled')).toBe(false);
+    expect(primary().disabled).toBe(false);
   });
 
   it('ignores submit while the description is blank', async () => {
@@ -81,9 +83,10 @@ describe('AddErrandDialog', () => {
     await component['submit']();
     fixture.detectChanges();
     expect(component['error']()).toBe('Could not add that. Try again in a moment.');
-    expect(host.querySelector('sd-text-input')?.getAttribute('error')).toBe(
+    expect(host.querySelector('sd-text-input .field__error')?.textContent?.trim()).toBe(
       'Could not add that. Try again in a moment.',
     );
+    expect(host.querySelector('sd-text-input input')?.getAttribute('aria-invalid')).toBe('true');
     expect(dialogRef.close).not.toHaveBeenCalled();
     expect(component['submitting']()).toBe(false);
     consoleError.mockRestore();
@@ -91,7 +94,7 @@ describe('AddErrandDialog', () => {
 
   it('closes with nothing on cancel', () => {
     (
-      host.querySelector('sd-button[slot="actions"][variant="quiet"] button') as HTMLButtonElement
+      host.querySelector('sd-button[slot="actions"] button.btn--quiet') as HTMLButtonElement
     ).click();
     expect(dialogRef.close).toHaveBeenCalledWith();
   });

@@ -28,7 +28,6 @@ export interface VoteCell {
     class: 'vote-row',
     role: 'group',
     '[attr.aria-label]': 'label()',
-    '[attr.disabled]': 'disabled() ? "" : null',
   },
 })
 export class VoteRow {

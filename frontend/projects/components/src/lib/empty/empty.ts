@@ -21,8 +21,6 @@ let nextEmptyId = 0;
   host: {
     class: 'empty',
     '[class.empty--warm]': 'warm()',
-    '[attr.title]': 'emptyTitle() || null',
-    '[attr.warm]': 'warm() ? "" : null',
     '[attr.aria-labelledby]': 'headingId',
   },
 })

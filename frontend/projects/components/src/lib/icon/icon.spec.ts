@@ -30,10 +30,10 @@ describe('Icon', () => {
     }
   });
 
-  it('mirrors name, size and filled to the host', () => {
-    expect(host.getAttribute('name')).toBe('sparkle');
-    expect(host.getAttribute('size')).toBe('20');
-    expect(host.getAttribute('filled')).toBeNull();
+  it('renders name, size and filled through the glyph, size variable and host class', () => {
+    const svg = host.querySelector('svg') as SVGElement;
+    expect(svg.innerHTML).toContain('M12 3l1.7 5.3');
+    expect(host.classList.contains('icon--filled')).toBe(false);
     expect(host.style.getPropertyValue('--_size')).toBe('20px');
 
     fixture.componentRef.setInput('name', 'check');
@@ -41,16 +41,15 @@ describe('Icon', () => {
     fixture.componentRef.setInput('filled', true);
     fixture.detectChanges();
 
-    expect(host.getAttribute('name')).toBe('check');
-    expect(host.getAttribute('size')).toBe('14');
-    expect(host.getAttribute('filled')).toBe('');
+    expect(svg.innerHTML).toContain('M5 12l5 5 9-11');
+    expect(host.classList.contains('icon--filled')).toBe(true);
     expect(host.style.getPropertyValue('--_size')).toBe('14px');
   });
 
   it('accepts the attribute form of filled', () => {
     fixture.componentRef.setInput('filled', '');
     fixture.detectChanges();
-    expect(host.getAttribute('filled')).toBe('');
+    expect(host.classList.contains('icon--filled')).toBe(true);
   });
 
   it('draws the named glyph', () => {
@@ -67,7 +66,6 @@ describe('Icon', () => {
     fixture.componentRef.setInput('name', 'does-not-exist');
     fixture.detectChanges();
     expect(host.querySelector('svg')?.innerHTML).toBe(sparkle);
-    expect(host.getAttribute('name')).toBe('does-not-exist');
   });
 
   it('forwards the stroke weight to the svg', () => {

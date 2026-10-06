@@ -22,7 +22,6 @@ import { NAV_ITEMS, NavKey } from '../shared/nav-key';
     class: 'bottom-nav',
     role: 'navigation',
     'aria-label': 'Primary',
-    '[attr.active]': 'active()',
   },
 })
 export class BottomNav {

@@ -1,7 +1,17 @@
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { Icon } from '../icon/icon';
 import { Well } from './well';
+
+/** The svg markup `sd-icon` draws for `name`, to compare against a rendered glyph. */
+const glyph = (name: string): string => {
+  const ref = TestBed.createComponent(Icon);
+  ref.componentRef.setInput('name', name);
+  ref.detectChanges();
+  return (ref.nativeElement as HTMLElement).querySelector('svg')?.innerHTML ?? '';
+};
+const drawn = (icon: Element | null): string => icon?.querySelector('svg')?.innerHTML ?? '';
 
 @Component({
   standalone: true,
@@ -15,7 +25,7 @@ describe('Well', () => {
   let host: HTMLElement;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({ imports: [Well, HostCmp] }).compileComponents();
+    await TestBed.configureTestingModule({ imports: [Well, HostCmp, Icon] }).compileComponents();
     fixture = TestBed.createComponent(Well);
     fixture.detectChanges();
     host = fixture.nativeElement as HTMLElement;
@@ -24,19 +34,16 @@ describe('Well', () => {
   it('creates a plain well with a leading sparkle', () => {
     expect(fixture.componentInstance).toBeTruthy();
     expect(host.classList.contains('well')).toBe(true);
-    expect(host.querySelector('sd-icon')?.getAttribute('name')).toBe('sparkle');
+    expect(drawn(host.querySelector('sd-icon'))).toBe(glyph('sparkle'));
     expect(host.querySelector('.well__title')).toBeNull();
     expect(host.querySelector('.well__text .well__body')).not.toBeNull();
-    expect(host.getAttribute('tone')).toBeNull();
-    expect(host.getAttribute('title')).toBeNull();
   });
 
-  it('mirrors the tone to a host class and attribute', () => {
+  it('mirrors the tone to a host class', () => {
     for (const tone of ['accent', 'warn', 'primary']) {
       fixture.componentRef.setInput('tone', tone);
       fixture.detectChanges();
       expect(host.classList.contains(`well--${tone}`)).toBe(true);
-      expect(host.getAttribute('tone')).toBe(tone);
     }
   });
 
@@ -44,13 +51,12 @@ describe('Well', () => {
     fixture.componentRef.setInput('title', 'Keeping Saturday');
     fixture.detectChanges();
     expect(host.querySelector('.well__title')?.textContent?.trim()).toBe('Keeping Saturday');
-    expect(host.getAttribute('title')).toBe('Keeping Saturday');
   });
 
   it('forwards the icon name', () => {
     fixture.componentRef.setInput('icon', 'lock');
     fixture.detectChanges();
-    expect(host.querySelector('sd-icon')?.getAttribute('name')).toBe('lock');
+    expect(drawn(host.querySelector('sd-icon'))).toBe(glyph('lock'));
   });
 
   it('projects the body under the title', () => {
@@ -61,6 +67,6 @@ describe('Well', () => {
     expect(el.querySelector('.well__body')?.textContent?.trim()).toBe(
       'Sunny and 22°, so we kept it outside.',
     );
-    expect(el.querySelector('sd-icon')?.getAttribute('name')).toBe('sun');
+    expect(drawn(el.querySelector('sd-icon'))).toBe(glyph('sun'));
   });
 });

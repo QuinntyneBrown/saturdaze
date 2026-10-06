@@ -18,8 +18,6 @@ import { Icon } from '../icon/icon';
     'aria-hidden': 'true',
     '[class.spinner-disc]': '!!icon()',
     '[class.spinner--sm]': 'size() === "sm"',
-    '[attr.size]': 'size() === "md" ? null : size()',
-    '[attr.icon]': 'icon() || null',
   },
 })
 export class Spinner {

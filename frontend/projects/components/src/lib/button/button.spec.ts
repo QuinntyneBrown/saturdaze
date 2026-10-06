@@ -72,12 +72,11 @@ describe('Button', () => {
     expect(btn.getAttribute('type')).toBe('button');
     expect(btn.classList.contains('btn--primary')).toBe(true);
     expect(btn.classList.contains('btn--md')).toBe(false);
-    expect(host.getAttribute('variant')).toBe('primary');
-    expect(host.getAttribute('size')).toBeNull();
+    expect(btn.className.trim()).toBe('btn btn--primary');
     expect(host.querySelector('a')).toBeNull();
   });
 
-  it('mirrors variant, size, full, icon and warnText to classes and host attributes', () => {
+  it('mirrors variant, size, full, icon and warnText to classes', () => {
     fixture.componentRef.setInput('variant', 'quiet');
     fixture.componentRef.setInput('size', 'sm');
     fixture.componentRef.setInput('full', true);
@@ -100,33 +99,25 @@ describe('Button', () => {
     }
     expect(btn.classList.contains('btn--primary')).toBe(false);
     expect(btn.getAttribute('type')).toBe('submit');
-    expect(host.getAttribute('variant')).toBe('quiet');
-    expect(host.getAttribute('size')).toBe('sm');
-    expect(host.getAttribute('full')).toBe('');
-    expect(host.getAttribute('icon')).toBe('');
   });
 
-  it('disables the inner button and mirrors disabled to the host', () => {
-    expect(host.getAttribute('disabled')).toBeNull();
+  it('disables the inner button', () => {
+    expect((inner() as HTMLButtonElement).disabled).toBe(false);
     fixture.componentRef.setInput('disabled', true);
     fixture.detectChanges();
     expect((inner() as HTMLButtonElement).disabled).toBe(true);
-    expect(host.getAttribute('disabled')).toBe('');
   });
 
   it('exposes pressed as aria-pressed only when it is a toggle', () => {
     expect(inner().hasAttribute('aria-pressed')).toBe(false);
-    expect(host.hasAttribute('pressed')).toBe(false);
 
     fixture.componentRef.setInput('pressed', true);
     fixture.detectChanges();
     expect(inner().getAttribute('aria-pressed')).toBe('true');
-    expect(host.getAttribute('pressed')).toBe('true');
 
     fixture.componentRef.setInput('pressed', false);
     fixture.detectChanges();
     expect(inner().getAttribute('aria-pressed')).toBe('false');
-    expect(host.getAttribute('pressed')).toBe('false');
   });
 
   it('uses label as the accessible name', () => {

@@ -18,16 +18,13 @@ describe('Avatar', () => {
     expect(host.classList.contains('avatar')).toBe(true);
     expect(host.getAttribute('aria-hidden')).toBe('true');
     expect(host.textContent?.trim()).toBe('?');
-    expect(host.getAttribute('name')).toBe('?');
-    expect(host.getAttribute('size')).toBe('lg');
-    expect(host.getAttribute('tone')).toBeNull();
+    expect(host.className.trim()).toBe('avatar');
   });
 
   it('renders the upper-cased first letter of the name', () => {
     fixture.componentRef.setInput('name', 'quinn');
     fixture.detectChanges();
     expect(host.textContent?.trim()).toBe('Q');
-    expect(host.getAttribute('name')).toBe('quinn');
 
     fixture.componentRef.setInput('name', '  eli');
     fixture.detectChanges();
@@ -52,20 +49,17 @@ describe('Avatar', () => {
       fixture.componentRef.setInput('tone', tone);
       fixture.detectChanges();
       expect(host.classList.contains(cls)).toBe(true);
-      expect(host.getAttribute('tone')).toBe(tone);
     }
   });
 
-  it('mirrors the size to a class and attribute', () => {
+  it('mirrors the size to a host class', () => {
     for (const size of ['sm', 'md', 'xl']) {
       fixture.componentRef.setInput('size', size);
       fixture.detectChanges();
       expect(host.classList.contains(`avatar--${size}`)).toBe(true);
-      expect(host.getAttribute('size')).toBe(size);
     }
     fixture.componentRef.setInput('size', 'lg');
     fixture.detectChanges();
     expect(host.classList.contains('avatar--xl')).toBe(false);
-    expect(host.getAttribute('size')).toBe('lg');
   });
 });

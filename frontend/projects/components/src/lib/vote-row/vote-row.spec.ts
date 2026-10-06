@@ -31,7 +31,6 @@ describe('VoteRow', () => {
     expect(host.classList.contains('vote-row')).toBe(true);
     expect(host.getAttribute('role')).toBe('group');
     expect(host.getAttribute('aria-label')).toBe('Family vote');
-    expect(host.getAttribute('disabled')).toBeNull();
     expect(cells().length).toBe(3);
     expect(cells().map((c) => c.querySelector('.vote-row__name')?.textContent?.trim())).toEqual([
       'Quinn',
@@ -42,9 +41,10 @@ describe('VoteRow', () => {
 
   it('draws a medium avatar in each member tone', () => {
     const avatars = cells().map((c) => c.querySelector('sd-avatar') as HTMLElement);
-    expect(avatars.map((a) => a.getAttribute('name'))).toEqual(['Quinn', 'Sara', 'Eli']);
-    expect(avatars.map((a) => a.getAttribute('tone'))).toEqual(['primary', 'leaf', 'sky']);
-    expect(avatars.every((a) => a.getAttribute('size') === 'md')).toBe(true);
+    expect(avatars.map((a) => a.classList.contains('avatar--q'))).toEqual([true, false, false]);
+    expect(avatars.map((a) => a.classList.contains('avatar--s'))).toEqual([false, true, false]);
+    expect(avatars.map((a) => a.classList.contains('avatar--e'))).toEqual([false, false, true]);
+    expect(avatars.every((a) => a.classList.contains('avatar--md'))).toBe(true);
     expect(avatars.map((a) => a.textContent?.trim())).toEqual(['Q', 'S', 'E']);
   });
 
@@ -87,7 +87,6 @@ describe('VoteRow', () => {
     const spy = vi.fn();
     fixture.componentInstance.voteChange.subscribe(spy);
 
-    expect(host.getAttribute('disabled')).toBe('');
     const buttons = Array.from(host.querySelectorAll<HTMLButtonElement>('.vote-row__btn'));
     expect(buttons.every((b) => b.disabled)).toBe(true);
     up(0).click();

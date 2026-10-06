@@ -70,9 +70,7 @@ export const ICON_NAMES: readonly string[] = Object.keys(ICONS);
   styleUrl: './icon.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    '[attr.name]': 'name()',
-    '[attr.size]': 'size()',
-    '[attr.filled]': 'filled() ? "" : null',
+    '[class.icon--filled]': 'filled()',
     '[style.--_size.px]': 'size()',
   },
 })

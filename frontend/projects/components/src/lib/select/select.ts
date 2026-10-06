@@ -29,8 +29,6 @@ let nextSelectId = 0;
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class: 'field',
-    '[attr.label]': 'label() || null',
-    '[attr.required]': 'required() ? "" : null',
   },
   providers: [
     {

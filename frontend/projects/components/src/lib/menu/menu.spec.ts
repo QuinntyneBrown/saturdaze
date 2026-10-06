@@ -40,7 +40,6 @@ describe('Menu', () => {
     ]);
     expect(host.querySelector('.menu__header')).toBeNull();
     expect(host.classList.contains('menu--sheet')).toBe(false);
-    expect(host.getAttribute('sheet')).toBeNull();
   });
 
   it('renders href items as anchors and the rest as buttons', () => {
@@ -61,15 +60,14 @@ describe('Menu', () => {
   });
 
   it('uses plain glyphs as a popover and discs with sub lines as a sheet', () => {
-    expect(items()[0]?.querySelector('sd-icon')?.getAttribute('name')).toBe('user');
+    expect(items()[0]?.querySelector('sd-icon svg')?.innerHTML).toContain('M4 21a8 8 0 0 1 16 0');
     expect(host.querySelector('sd-disc')).toBeNull();
     expect(host.querySelector('.menu__sub')).toBeNull();
 
     fixture.componentRef.setInput('sheet', true);
     fixture.detectChanges();
     expect(host.classList.contains('menu--sheet')).toBe(true);
-    expect(host.getAttribute('sheet')).toBe('');
-    expect(items()[0]?.querySelector('sd-disc')?.getAttribute('icon')).toBe('user');
+    expect(items()[0]?.querySelector('sd-disc svg')?.innerHTML).toContain('M4 21a8 8 0 0 1 16 0');
     expect(items()[0]?.querySelector('.menu__sub')?.textContent?.trim()).toBe('Members and likes');
     expect(items()[2]?.querySelector('.menu__sub')).toBeNull();
   });

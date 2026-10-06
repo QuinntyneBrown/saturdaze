@@ -31,11 +31,6 @@ import { navigateInApp } from '../shared/in-app-link';
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     role: 'listitem',
-    '[attr.title]': 'rowTitle() || null',
-    '[attr.subtitle]': 'subtitle() || null',
-    '[attr.href]': 'href() || null',
-    '[attr.action]': 'action() ? "" : null',
-    '[attr.chevron]': 'chevron() ? "" : null',
   },
 })
 export class ListItem {

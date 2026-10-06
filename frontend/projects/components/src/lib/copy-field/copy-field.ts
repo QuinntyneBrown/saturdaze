@@ -17,7 +17,6 @@ import { Icon } from '../icon/icon';
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class: 'copy-field',
-    '[attr.value]': 'value()',
   },
 })
 export class CopyField {

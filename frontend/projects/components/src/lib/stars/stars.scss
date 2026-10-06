@@ -11,7 +11,7 @@ sd-icon {
   color: var(--colorNeutralForeground3);
 }
 
-sd-icon[filled] {
+sd-icon.icon--filled {
   color: var(--colorPaletteSunForeground3);
 }
 
@@ -31,7 +31,7 @@ sd-icon[filled] {
   color: var(--colorNeutralForeground3);
 }
 
-.stars__btn sd-icon[filled] {
+.stars__btn sd-icon.icon--filled {
   color: var(--colorPaletteSunForeground3);
 }
 

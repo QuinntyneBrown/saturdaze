@@ -40,9 +40,6 @@ let nextDayId = 0;
   host: {
     class: 'day',
     '[class.day--locked]': 'locked()',
-    '[attr.title]': 'dayTitle() || null',
-    '[attr.weather]': 'weather()',
-    '[attr.locked]': 'locked() ? "" : null',
     '[attr.aria-labelledby]': 'headingId',
   },
 })

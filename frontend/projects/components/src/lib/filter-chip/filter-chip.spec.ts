@@ -30,23 +30,19 @@ describe('FilterChip', () => {
     expect(button().getAttribute('type')).toBe('button');
     expect(button().getAttribute('aria-pressed')).toBe('false');
     expect(button().disabled).toBe(false);
-    expect(host.getAttribute('pressed')).toBeNull();
-    expect(host.getAttribute('tone')).toBeNull();
-    expect(host.getAttribute('disabled')).toBeNull();
+    expect(button().classList.contains('filter-chip--leaf')).toBe(false);
   });
 
-  it('mirrors pressed to aria-pressed and the host', () => {
+  it('mirrors pressed to aria-pressed', () => {
     fixture.componentRef.setInput('pressed', true);
     fixture.detectChanges();
     expect(button().getAttribute('aria-pressed')).toBe('true');
-    expect(host.getAttribute('pressed')).toBe('');
   });
 
-  it('mirrors the tone to the button class and host attribute', () => {
+  it('mirrors the tone to the button class', () => {
     fixture.componentRef.setInput('tone', 'leaf');
     fixture.detectChanges();
     expect(button().classList.contains('filter-chip--leaf')).toBe(true);
-    expect(host.getAttribute('tone')).toBe('leaf');
   });
 
   it('emits the next pressed state on click without owning the truth', () => {
@@ -71,7 +67,6 @@ describe('FilterChip', () => {
     fixture.componentInstance.pressedChange.subscribe(spy);
 
     expect(button().disabled).toBe(true);
-    expect(host.getAttribute('disabled')).toBe('');
     button().click();
     expect(spy).not.toHaveBeenCalled();
   });
