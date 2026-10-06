@@ -19,6 +19,7 @@ public sealed class AddPhotoFromUrlCommandHandler : IRequestHandler<AddPhotoFrom
     private readonly ICurrentUserAccessor _user;
     private readonly IDateTimeProvider _clock;
     private readonly ImageOptions _images;
+    private readonly PhotoAuditWriter _audit;
 
     public AddPhotoFromUrlCommandHandler(
         IAppDbContext db,
@@ -26,8 +27,10 @@ public sealed class AddPhotoFromUrlCommandHandler : IRequestHandler<AddPhotoFrom
         IImageSanitizer sanitizer,
         ICurrentUserAccessor user,
         IDateTimeProvider clock,
-        IOptions<ImageOptions> images)
+        IOptions<ImageOptions> images,
+        PhotoAuditWriter audit)
     {
+        _audit = audit;
         _db = db;
         _fetcher = fetcher;
         _sanitizer = sanitizer;
@@ -65,6 +68,9 @@ public sealed class AddPhotoFromUrlCommandHandler : IRequestHandler<AddPhotoFrom
         var promote = PlacePhotoSet.ShouldPromoteCurated(siblings);
         _db.PlacePhotos.Add(photo);
         siblings.Add(photo);
+        photo.IsPrimary = promote;
+        _audit.Write(request.Kind, request.PlaceId, photo.Id, PhotoAuditAction.AddUrl, null, PhotoAuditWriter.Snapshot(photo));
+        photo.IsPrimary = false;
         if (promote) await PrimaryPhotoWriter.MarkPrimaryAsync(_db, siblings, photo.Id, ct);
         else await _db.SaveChangesAsync(ct);
 

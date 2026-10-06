@@ -49,6 +49,8 @@ import { AdminPlacesPage } from "../pages/admin/admin-places.page.js";
 import { AdminPlacePage } from "../pages/admin/admin-place.page.js";
 import { AdminReviewsPage } from "../pages/admin/admin-reviews.page.js";
 import { AdminHealthPage } from "../pages/admin/admin-health.page.js";
+import { AdminActivityPage } from "../pages/admin/admin-activity.page.js";
+import { AdminSkipsPage } from "../pages/admin/admin-skips.page.js";
 
 interface Pages {
   weekend: WeekendPage;
@@ -69,6 +71,8 @@ interface Pages {
   adminPlace: AdminPlacePage;
   adminReviews: AdminReviewsPage;
   adminHealth: AdminHealthPage;
+  adminActivity: AdminActivityPage;
+  adminSkips: AdminSkipsPage;
 }
 
 export interface GotoOptions {
@@ -152,6 +156,8 @@ export const test = base.extend<SdFixtures>({
       adminPlace: new AdminPlacePage(page),
       adminReviews: new AdminReviewsPage(page),
       adminHealth: new AdminHealthPage(page),
+      adminActivity: new AdminActivityPage(page),
+      adminSkips: new AdminSkipsPage(page),
     });
   },
 

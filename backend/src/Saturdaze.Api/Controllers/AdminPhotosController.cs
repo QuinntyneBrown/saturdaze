@@ -131,6 +131,17 @@ public sealed class AdminPhotosController : ControllerBase
         return NoContent();
     }
 
+    /// <summary>The Activity log: every admin photo change, newest first, filterable by place and administrator (L2-122).</summary>
+    [HttpGet("photo-audit")]
+    public async Task<ActionResult<PhotoAuditPageDto>> PhotoAudit(
+        [FromQuery] string? kind, [FromQuery] Guid? placeId, [FromQuery] Guid? adminId, [FromQuery] int page, CancellationToken ct)
+        => Ok(await _sender.Send(new ListPhotoAuditQuery(kind, placeId, adminId, page < 1 ? 1 : page), ct));
+
+    /// <summary>Each ingestion run's photo skips, read-only, with the place linked when it exists (L2-120 AC5).</summary>
+    [HttpGet("ingestion-runs/photo-skips")]
+    public async Task<ActionResult<IReadOnlyList<IngestionPhotoSkipsDto>>> IngestionPhotoSkips(CancellationToken ct)
+        => Ok(await _sender.Send(new ListIngestionPhotoSkipsQuery(), ct));
+
     private static PlaceKind ParseKind(string kind)
         => Enum.TryParse<PlaceKind>(kind, true, out var parsed)
             ? parsed

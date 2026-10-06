@@ -41,6 +41,20 @@ export const routes: Routes = [
       import('./pages/review-queue/review-queue.page').then((m) => m.ReviewQueuePage),
   },
   {
+    path: 'ingestion-skips',
+    data: { nav: 'skips', screen: 'ingestion-skips' },
+    canActivate: [requireAuth],
+    loadComponent: () =>
+      import('./pages/ingestion-skips/ingestion-skips.page').then((m) => m.IngestionSkipsPage),
+  },
+  {
+    path: 'activity',
+    data: { nav: 'activity', screen: 'activity' },
+    canActivate: [requireAuth],
+    loadComponent: () =>
+      import('./pages/activity-log/activity-log.page').then((m) => m.ActivityLogPage),
+  },
+  {
     path: '',
     pathMatch: 'full',
     data: { nav: 'health', screen: 'health' },

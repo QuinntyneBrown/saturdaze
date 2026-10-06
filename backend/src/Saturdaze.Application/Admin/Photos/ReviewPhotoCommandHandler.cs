@@ -14,9 +14,11 @@ public sealed class ReviewPhotoCommandHandler : IRequestHandler<ReviewPhotoComma
     private readonly IAppDbContext _db;
     private readonly ICurrentUserAccessor _user;
     private readonly IDateTimeProvider _clock;
+    private readonly PhotoAuditWriter _audit;
 
-    public ReviewPhotoCommandHandler(IAppDbContext db, ICurrentUserAccessor user, IDateTimeProvider clock)
+    public ReviewPhotoCommandHandler(IAppDbContext db, ICurrentUserAccessor user, IDateTimeProvider clock, PhotoAuditWriter audit)
     {
+        _audit = audit;
         _db = db;
         _user = user;
         _clock = clock;
@@ -33,7 +35,12 @@ public sealed class ReviewPhotoCommandHandler : IRequestHandler<ReviewPhotoComma
             .Where(p => p.PlaceKind == photo.PlaceKind && p.PlaceId == photo.PlaceId)
             .ToListAsync(ct);
 
-        switch (request.Decision!.Trim().ToLowerInvariant())
+        var decision = request.Decision!.Trim().ToLowerInvariant();
+        var reason = string.IsNullOrWhiteSpace(request.Reason) ? null : request.Reason.Trim();
+        _audit.Write(photo.PlaceKind, photo.PlaceId, photo.Id, PhotoAuditAction.Review,
+            new { url = photo.Url, reviewState = "Unreviewed", primary = photo.IsPrimary },
+            new { decision, reason, reviewState = decision == ReviewPhotoCommand.Reject ? "Rejected" : "Reviewed" });
+        switch (decision)
         {
             case ReviewPhotoCommand.Keep:
                 AdminPhotoTouch.Apply(photo, _user, _clock);

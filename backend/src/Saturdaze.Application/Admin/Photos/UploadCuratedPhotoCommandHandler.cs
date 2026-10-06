@@ -21,6 +21,7 @@ public sealed class UploadCuratedPhotoCommandHandler : IRequestHandler<UploadCur
     private readonly IDateTimeProvider _clock;
     private readonly ImageOptions _images;
     private readonly ILogger<UploadCuratedPhotoCommandHandler> _logger;
+    private readonly PhotoAuditWriter _audit;
 
     public UploadCuratedPhotoCommandHandler(
         IAppDbContext db,
@@ -29,8 +30,10 @@ public sealed class UploadCuratedPhotoCommandHandler : IRequestHandler<UploadCur
         ICurrentUserAccessor user,
         IDateTimeProvider clock,
         IOptions<ImageOptions> images,
-        ILogger<UploadCuratedPhotoCommandHandler> logger)
+        ILogger<UploadCuratedPhotoCommandHandler> logger,
+        PhotoAuditWriter audit)
     {
+        _audit = audit;
         _db = db;
         _sanitizer = sanitizer;
         _store = store;
@@ -61,6 +64,9 @@ public sealed class UploadCuratedPhotoCommandHandler : IRequestHandler<UploadCur
         var promote = PlacePhotoSet.ShouldPromoteCurated(siblings);
         _db.PlacePhotos.Add(photo);
         siblings.Add(photo);
+        // L2-122 AC3: the audit names the size and address, never the file name or content.
+        _audit.Write(request.Kind, request.PlaceId, photo.Id, PhotoAuditAction.Upload, null,
+            new { url = photo.Url, bytes = image.Content.Length, width = photo.Width, height = photo.Height, alt = photo.AltText, attribution = photo.Attribution, licence = photo.License, primary = promote });
         if (promote) await PrimaryPhotoWriter.MarkPrimaryAsync(_db, siblings, photo.Id, ct);
         else await _db.SaveChangesAsync(ct);
 

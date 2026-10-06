@@ -6,6 +6,7 @@ using Saturdaze.Application.Common;
 using Saturdaze.Application.Exceptions;
 using Saturdaze.Application.Photos;
 using Saturdaze.Domain.Entities;
+using Saturdaze.Domain.Enums;
 
 namespace Saturdaze.Application.Admin.Photos;
 
@@ -17,9 +18,11 @@ public sealed class RemovePhotoCommandHandler : IRequestHandler<RemovePhotoComma
     private readonly ICuratedPhotoStore _store;
     private readonly ICurrentUserAccessor _user;
     private readonly IDateTimeProvider _clock;
+    private readonly PhotoAuditWriter _audit;
 
-    public RemovePhotoCommandHandler(IAppDbContext db, ICuratedPhotoStore store, ICurrentUserAccessor user, IDateTimeProvider clock)
+    public RemovePhotoCommandHandler(IAppDbContext db, ICuratedPhotoStore store, ICurrentUserAccessor user, IDateTimeProvider clock, PhotoAuditWriter audit)
     {
+        _audit = audit;
         _db = db;
         _store = store;
         _user = user;
@@ -49,6 +52,8 @@ public sealed class RemovePhotoCommandHandler : IRequestHandler<RemovePhotoComma
             }
         }
 
+        _audit.Write(photo.PlaceKind, photo.PlaceId, photo.Id, PhotoAuditAction.Remove,
+            new { url = photo.Url, primary = photo.IsPrimary, nextPrimaryId = next?.Id, nextPrimaryUrl = next?.Url }, null);
         // The row goes first, so the one-primary index is free before the sibling takes over.
         _db.PlacePhotos.Remove(photo);
         await _db.SaveChangesAsync(ct);

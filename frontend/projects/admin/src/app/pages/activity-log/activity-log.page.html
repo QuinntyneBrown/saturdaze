@@ -1,0 +1,73 @@
+<sd-page-header
+  title="Activity log"
+  subtitle="Every photo change: who, when, the place, and what changed."
+/>
+
+<div class="toolbar">
+  <sd-select
+    class="toolbar__sort"
+    label="Place"
+    name="place"
+    [options]="placeOptions()"
+    [formControl]="place"
+  />
+  <sd-select
+    class="toolbar__sort"
+    label="Administrator"
+    name="admin"
+    [options]="adminOptions()"
+    [formControl]="admin"
+  />
+</div>
+
+@if (error()) {
+  <sd-banner class="error" tone="warn" role="alert" icon="close">{{ error() }}</sd-banner>
+}
+
+@switch (status()) {
+  @case ('loading') {
+    <sd-status-row icon="clock">Fetching the log.</sd-status-row>
+  }
+  @case ('ready') {
+    @if (view().rows.length) {
+      <ol class="audit-list list list--card">
+        @for (row of view().rows; track row.id) {
+          <li class="audit-row">
+            <time class="audit-row__time" [attr.datetime]="row.datetime">{{ row.time }}</time>
+            <span class="audit-row__who">{{ row.who }}</span>
+            <a class="audit-row__place" [href]="row.placeHref">{{ row.placeName }}</a>
+            <sd-chip [tone]="chipTone(row.action.tone)">{{ row.action.label }}</sd-chip>
+            <span class="audit-row__change">{{ row.change }}</span>
+          </li>
+        }
+      </ol>
+      <div class="pager">
+        <span class="pager__text">{{ pagerText() }}</span>
+        <sd-button
+          variant="quiet"
+          size="sm"
+          [disabled]="!hasPrevious()"
+          (click)="goToPage(view().page - 1)"
+        >
+          <sd-icon name="arrow_left" />
+          Previous
+        </sd-button>
+        <sd-button
+          variant="quiet"
+          size="sm"
+          [disabled]="!hasNext()"
+          (click)="goToPage(view().page + 1)"
+        >
+          Next
+          <sd-icon name="arrow_right" />
+        </sd-button>
+      </div>
+    } @else {
+      <sd-empty
+        icon="clock"
+        title="No changes yet"
+        body="Photo changes made in Saturdaze Admin show up here."
+      />
+    }
+  }
+}

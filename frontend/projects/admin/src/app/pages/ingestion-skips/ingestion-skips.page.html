@@ -1,0 +1,50 @@
+<sd-page-header
+  title="Ingestion photo skips"
+  subtitle="Why a run left a photo out. Read-only; a place that still exists links to its photos."
+/>
+
+@if (error()) {
+  <sd-banner class="error" tone="warn" role="alert" icon="close">{{ error() }}</sd-banner>
+}
+
+@switch (status()) {
+  @case ('loading') {
+    <sd-status-row icon="refresh">Fetching the runs.</sd-status-row>
+  }
+  @case ('ready') {
+    @if (runs().length) {
+      <div class="queue">
+        @for (run of runs(); track run.runId) {
+          <article class="card card--pad-lg" [attr.aria-label]="run.type + ' run ' + run.meta">
+            <div class="card__head">
+              <div class="card__head-text">
+                <h2 class="card__title">{{ run.type }}</h2>
+                <p class="card__meta">{{ run.meta }}</p>
+              </div>
+              <sd-chip [tone]="chipTone(run.status.tone)">{{ run.status.label }}</sd-chip>
+            </div>
+            <ul class="skip-list">
+              @for (skip of run.skips; track $index) {
+                <li class="skip">
+                  @if (skip.placeHref) {
+                    <a class="skip__place" [href]="skip.placeHref">{{ skip.placeName }}</a>
+                  } @else {
+                    <span class="skip__place skip__place--none">{{ skip.placeName }}</span>
+                  }
+                  <span class="skip__reason">{{ skip.reason }}</span>
+                  <code class="skip__url">{{ skip.url }}</code>
+                </li>
+              }
+            </ul>
+          </article>
+        }
+      </div>
+    } @else {
+      <sd-empty
+        icon="refresh"
+        title="No photo skips"
+        body="Every photo ingestion met was stored, or no run has happened yet."
+      />
+    }
+  }
+}

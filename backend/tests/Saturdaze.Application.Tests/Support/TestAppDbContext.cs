@@ -25,6 +25,7 @@ internal sealed class TestAppDbContext : DbContext, IAppDbContext
     public DbSet<EventSubmission> EventSubmissions => Set<EventSubmission>();
     public DbSet<PlacePhoto> PlacePhotos => Set<PlacePhoto>();
     public DbSet<RejectedPlacePhoto> RejectedPlacePhotos => Set<RejectedPlacePhoto>();
+    public DbSet<PhotoAuditEntry> PhotoAuditEntries => Set<PhotoAuditEntry>();
     public DbSet<IngestionRun> IngestionRuns => Set<IngestionRun>();
     public DbSet<Weekend> Weekends => Set<Weekend>();
     public DbSet<ItineraryBlock> ItineraryBlocks => Set<ItineraryBlock>();
@@ -44,5 +45,6 @@ internal sealed class TestAppDbContext : DbContext, IAppDbContext
         modelBuilder.Entity<Weekend>().HasMany(w => w.Blocks).WithOne().HasForeignKey(b => b.WeekendId);
         modelBuilder.Entity<Weekend>().HasMany(w => w.Errands).WithOne().HasForeignKey(e => e.WeekendId);
         modelBuilder.Entity<UserAvatar>().HasKey(a => a.UserId);
+        modelBuilder.Entity<PhotoAuditEntry>().Property(e => e.Sequence).ValueGeneratedOnAdd();
     }
 }
