@@ -64,6 +64,11 @@ export const PAGES = [
   { url: "/pages/past.empty.html",               nav: "past",    expects: { selector: ".empty__title", text: "Nothing here yet" } },
   { url: "/pages/review-submissions.empty.html", nav: "family",  expects: { selector: ".empty__title", text: "Queue is clear" } },
 
+  // Proposals · photos and maps (docs/specs L1-032 → L1-035)
+  { url: "/pages/weekend.map.html",  nav: "weekend", expects: { selector: ".cover__title", text: "This weekend" },              cols: { ".planner": { 390: 1, 820: 1, 1440: 2, 1920: 2 } } },
+  { url: "/pages/ideas.photos.html", nav: "ideas",   expects: { selector: ".card--media .card__title", text: "Terre Bleu" },   cols: { ".grid-cards": { 390: 1, 820: 2, 1440: 3 } } },
+  { url: "/pages/past.photos.html",  nav: "past",    expects: { selector: ".card--media .media__credit", text: "Your photo" }, cols: { ".grid-cards": { 390: 1, 820: 2, 1440: 3 } } },
+
   // Auth (bare shell, stacked states addressed by id)
   { url: "/pages/sign-in.html",        shell: "bare", expects: { selector: "#state-error .banner", text: "did not match" } },
   { url: "/pages/create-account.html", shell: "bare", expects: { selector: ".auth-card__title", text: "Start planning weekends" } },

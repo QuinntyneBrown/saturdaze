@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" preserveAspectRatio="xMidYMid slice" role="img" aria-label="A theatre stage framed by red curtains">
+<!-- Placeholder illustration standing in for a licensed photo (docs/mocks/README.md, "Images"). -->
+<defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2A1F2E"/><stop offset="1" stop-color="#3B2A3F"/></linearGradient></defs>
+<rect width="800" height="500" fill="url(#sky)"/>
+<rect x="160" y="120" width="480" height="300" fill="#F4C969" opacity="0.35"/><path d="M0 0 H260 Q200 260 230 500 H0Z" fill="#B23A3A"/><path d="M800 0 H540 Q600 260 570 500 H800Z" fill="#B23A3A"/><rect width="800" height="60" fill="#8E2C2C"/><rect y="420" width="800" height="80" fill="#5B4636"/><circle cx="400" cy="300" r="30" fill="#FBE7DE"/><rect x="380" y="330" width="40" height="80" rx="14" fill="#E07856"/>
+</svg>
