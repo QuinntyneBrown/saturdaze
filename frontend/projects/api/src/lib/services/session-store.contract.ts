@@ -114,6 +114,21 @@ export interface ISessionStore {
    */
   verifyEmail(req: VerifyEmailRequest): Promise<void>;
   /**
+   * Sets or replaces the signed-in user's profile photo and publishes the
+   * updated `user` (L2-087). Rejects with the `AuthError`; `error` is not set.
+   *
+   * @param {Blob} file - The image file
+   *
+   * @returns {Promise<void>} The result of the operation
+   */
+  uploadAvatar(file: Blob): Promise<void>;
+  /**
+   * Removes the profile photo and publishes the updated `user` (L2-087).
+   *
+   * @returns {Promise<void>} The result of the operation
+   */
+  removeAvatar(): Promise<void>;
+  /**
    * Rehydrate.
    *
    * @returns {Promise<void>} The result of the operation

@@ -10,4 +10,5 @@ export type AuthErrorCode =
   | 'token_expired'
   | 'token_invalid'
   | 'email_already_verified'
-  | 'rate_limited';
+  | 'rate_limited'
+  | 'invalid_photo';

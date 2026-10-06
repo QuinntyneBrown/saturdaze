@@ -2,7 +2,12 @@
   <div class="sd-app-loading" aria-hidden="true"></div>
 } @else {
   @if (shell() === 'app') {
-    <sd-top-bar [active]="nav()" [email]="email()" (accountClick)="openAccountMenu($event)" />
+    <sd-top-bar
+      [active]="nav()"
+      [email]="email()"
+      [avatarSrc]="avatarUrl()"
+      (accountClick)="openAccountMenu($event)"
+    />
   } @else if (shell() === 'site') {
     <sd-sitebar [cta]="siteCta()" />
   }

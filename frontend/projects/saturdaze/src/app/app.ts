@@ -74,6 +74,7 @@ export class App {
   protected readonly nav = computed(() => this.shellData().nav);
   protected readonly siteCta = computed(() => this.shellData().cta);
   protected readonly email = computed(() => this.session.user()?.email ?? '');
+  protected readonly avatarUrl = computed(() => this.session.user()?.avatarUrl ?? null);
   protected readonly loading = this.session.loading;
 
   constructor() {

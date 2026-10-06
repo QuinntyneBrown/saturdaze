@@ -8,7 +8,13 @@ import { SessionStore } from './session-store';
 const TOKEN_KEY = 'sd.auth.token';
 const STORAGE_FLAG_KEY = 'sd.auth.storage';
 
-const USER: User = { id: 'u1', email: 'quinn@example.com', role: 'User', emailVerifiedUtc: null };
+const USER: User = {
+  id: 'u1',
+  email: 'quinn@example.com',
+  role: 'User',
+  emailVerifiedUtc: null,
+  avatarUrl: null,
+};
 
 function tokenExpiringIn(ms: number, value = 'access-1', refreshToken = 'refresh-1'): AuthToken {
   return { value, expiresUtc: new Date(Date.now() + ms).toISOString(), refreshToken };

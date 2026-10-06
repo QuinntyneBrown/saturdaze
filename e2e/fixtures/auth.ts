@@ -57,6 +57,21 @@ export interface SeedOptions {
   readonly refreshToken?: string;
 }
 
+/**
+ * Registers a throwaway account (`POST /api/auth/register`) for specs that
+ * change per-user state, such as the profile photo, so the seeded account
+ * stays untouched.
+ */
+export async function registerUser(request: APIRequestContext, prefix = "e2e"): Promise<Credentials> {
+  const creds = {
+    email: `${prefix}-${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}@example.com`,
+    password: "password123",
+  };
+  const res = await request.post(`${API_URL}/api/auth/register`, { data: creds });
+  if (!res.ok()) throw new Error(`POST /api/auth/register failed: ${res.status()} ${await res.text()}`);
+  return creds;
+}
+
 export async function apiLogin(request: APIRequestContext, creds: Credentials): Promise<TestSession> {
   const res = await request.post(`${API_URL}/api/auth/login`, { data: creds });
   if (!res.ok()) {

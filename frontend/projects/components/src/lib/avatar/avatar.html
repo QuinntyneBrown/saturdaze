@@ -1,5 +1,5 @@
 @if (src()) {
   <img class="avatar__img" [src]="src()" alt="" />
 } @else {
-  {{ initial() }}
+  <ng-container>{{ initial() }}</ng-container>
 }

@@ -33,12 +33,15 @@
 
 .account-card {
   flex-direction: row;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 12px;
+  gap: 12px 16px;
+  // Phones stack the account actions full width under the email (mock D27).
+  --sd-btn-w: 100%;
 }
 
 .account-card__text {
-  flex: 1;
+  flex: 1 1 200px;
   min-width: 0;
 }
 
@@ -54,6 +57,12 @@
   font-size: var(--fontSizeBase300);
   color: var(--colorNeutralForeground2);
   margin-top: 2px;
+}
+
+@include respond-to(tablet) {
+  .account-card {
+    --sd-btn-w: auto;
+  }
 }
 
 @include respond-to(desktop) {
