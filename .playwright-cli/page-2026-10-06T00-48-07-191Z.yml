@@ -1,0 +1,277 @@
+- generic [ref=e2]:
+  - generic [ref=e38]:
+    - link "Saturdaze" [ref=e39] [cursor=pointer]:
+      - /url: /weekend
+      - text: Saturdaze
+    - navigation "Primary" [ref=e41]:
+      - link "Weekend" [ref=e42] [cursor=pointer]:
+        - /url: /weekend
+      - link "Ideas" [ref=e43] [cursor=pointer]:
+        - /url: /ideas
+      - link "Past" [ref=e44] [cursor=pointer]:
+        - /url: /past
+      - link "Family" [ref=e45] [cursor=pointer]:
+        - /url: /family
+    - button "Account menu" [ref=e47] [cursor=pointer]:
+      - generic [ref=e48]: Q
+  - main [ref=e3]:
+    - generic [ref=e49]:
+      - generic "This weekend" [ref=e50]:
+        - generic [ref=e51]:
+          - heading "This weekend" [level=1] [ref=e53]
+          - paragraph [ref=e54]: Cloudy Saturday for Terre Bleu Lavender Farm, a cloudy Sunday for The Rec Room — Square One.
+        - button "More options" [ref=e57] [cursor=pointer]:
+          - img [ref=e59]
+        - generic [ref=e63]:
+          - button "Share" [ref=e65] [cursor=pointer]:
+            - img [ref=e67]
+            - text: Share
+          - button "Add to calendar" [ref=e73] [cursor=pointer]:
+            - img [ref=e75]
+            - text: Add to calendar
+      - generic [ref=e78]:
+        - generic "Saturday" [ref=e79]:
+          - generic [ref=e80]:
+            - img [ref=e83]
+            - generic [ref=e85]:
+              - heading "Saturday" [level=2] [ref=e86]
+              - paragraph [ref=e87]: 10 Oct · 15° / 10° · Variable cloud, flex the plan
+            - generic [ref=e88]:
+              - button "Regenerate Saturday" [ref=e90] [cursor=pointer]:
+                - img [ref=e92]
+                - generic [ref=e97]: Regenerate
+              - button "Lock Saturday" [ref=e99] [cursor=pointer]:
+                - img [ref=e101]
+                - generic [ref=e104]: Lock day
+          - list [ref=e105]:
+            - listitem "Swim lessons" [ref=e106]:
+              - generic [ref=e107]:
+                - generic [ref=e108]: 9:00
+                - generic [ref=e109]: 60m
+              - img [ref=e113]
+              - generic [ref=e116]:
+                - heading "Swim lessons" [level=3] [ref=e117]
+                - paragraph [ref=e118]: Every Saturday · locked in
+                - generic [ref=e120]:
+                  - img [ref=e122]
+                  - text: Commitment
+              - button "About Swim lessons" [ref=e127] [cursor=pointer]:
+                - img [ref=e129]
+            - listitem "Drive to Terre Bleu Lavender Farm" [ref=e131]:
+              - generic [ref=e132]:
+                - generic [ref=e133]: 10:00
+                - generic [ref=e134]: 45m
+              - img [ref=e138]
+              - heading "Drive to Terre Bleu Lavender Farm" [level=3] [ref=e143]
+            - listitem "Terre Bleu Lavender Farm" [ref=e144]:
+              - generic [ref=e145]:
+                - generic [ref=e146]: 10:45
+                - generic [ref=e147]: 2h 30m
+              - img [ref=e151]
+              - generic [ref=e153]:
+                - heading "Terre Bleu Lavender Farm" [level=3] [ref=e154]
+                - paragraph [ref=e155]: fits 150-min window in 420-min gap
+                - generic [ref=e156]:
+                  - generic [ref=e157]: Day highlight
+                  - generic [ref=e158]:
+                    - img [ref=e160]
+                    - text: 45 min drive
+              - generic [ref=e164]:
+                - 'button "Why this: Terre Bleu Lavender Farm" [ref=e166] [cursor=pointer]':
+                  - img [ref=e168]
+                - button "Swap Terre Bleu Lavender Farm" [ref=e171] [cursor=pointer]:
+                  - img [ref=e173]
+                - button "Lock Terre Bleu Lavender Farm" [ref=e177] [cursor=pointer]:
+                  - img [ref=e179]
+            - listitem "Drive home from Terre Bleu Lavender Farm" [ref=e182]:
+              - generic [ref=e183]:
+                - generic [ref=e184]: 13:15
+                - generic [ref=e185]: 45m
+              - img [ref=e189]
+              - heading "Drive home from Terre Bleu Lavender Farm" [level=3] [ref=e194]
+            - 'listitem "Lunch: Symposium Café" [ref=e195]':
+              - generic [ref=e196]:
+                - generic [ref=e197]: 14:00
+                - generic [ref=e198]: 60m
+              - img [ref=e202]
+              - generic [ref=e205]:
+                - 'heading "Lunch: Symposium Café" [level=3] [ref=e206]'
+                - paragraph [ref=e207]: close to The Rec Room — Square One
+              - generic [ref=e208]:
+                - 'button "Why this: Lunch: Symposium Café" [ref=e210] [cursor=pointer]':
+                  - img [ref=e212]
+                - 'button "Lock Lunch: Symposium Café" [ref=e215] [cursor=pointer]':
+                  - img [ref=e217]
+            - 'listitem "Dinner: Spice Lounge" [ref=e220]':
+              - generic [ref=e221]:
+                - generic [ref=e222]: 15:00
+                - generic [ref=e223]: 60m
+              - img [ref=e227]
+              - generic [ref=e230]:
+                - 'heading "Dinner: Spice Lounge" [level=3] [ref=e231]'
+                - paragraph [ref=e232]: close to Terre Bleu Lavender Farm
+              - generic [ref=e233]:
+                - 'button "Why this: Dinner: Spice Lounge" [ref=e235] [cursor=pointer]':
+                  - img [ref=e237]
+                - 'button "Lock Dinner: Spice Lounge" [ref=e240] [cursor=pointer]':
+                  - img [ref=e242]
+            - listitem "Downtime" [ref=e245]:
+              - generic [ref=e246]:
+                - generic [ref=e247]: 16:00
+                - generic [ref=e248]: 60m
+              - img [ref=e252]
+              - generic [ref=e255]:
+                - heading "Downtime" [level=3] [ref=e256]
+                - paragraph [ref=e257]: 60-min open slot
+              - generic [ref=e258]:
+                - 'button "Why this: Downtime" [ref=e260] [cursor=pointer]':
+                  - img [ref=e262]
+                - button "Lock Downtime" [ref=e265] [cursor=pointer]:
+                  - img [ref=e267]
+            - listitem "Workout window" [ref=e270]:
+              - generic [ref=e271]:
+                - generic [ref=e272]: 17:00
+                - generic [ref=e273]: 60m
+              - img [ref=e277]
+              - generic [ref=e280]:
+                - heading "Workout window" [level=3] [ref=e281]
+                - paragraph [ref=e282]: Every Saturday · locked in
+                - generic [ref=e284]:
+                  - img [ref=e286]
+                  - text: Commitment
+              - button "About Workout window" [ref=e291] [cursor=pointer]:
+                - img [ref=e293]
+            - listitem "Drive to The Rec Room — Square One" [ref=e295]:
+              - generic [ref=e296]:
+                - generic [ref=e297]: 18:00
+                - generic [ref=e298]: 10m
+              - img [ref=e302]
+              - heading "Drive to The Rec Room — Square One" [level=3] [ref=e307]
+            - listitem "The Rec Room — Square One" [ref=e308]:
+              - generic [ref=e309]:
+                - generic [ref=e310]: 18:10
+                - generic [ref=e311]: 2h 30m
+              - img [ref=e315]
+              - generic [ref=e318]:
+                - heading "The Rec Room — Square One" [level=3] [ref=e319]
+                - paragraph [ref=e320]: fits 150-min window in 180-min gap
+                - generic [ref=e322]:
+                  - img [ref=e324]
+                  - text: 10 min drive
+              - generic [ref=e328]:
+                - 'button "Why this: The Rec Room — Square One" [ref=e330] [cursor=pointer]':
+                  - img [ref=e332]
+                - button "Swap The Rec Room — Square One" [ref=e335] [cursor=pointer]:
+                  - img [ref=e337]
+                - button "Lock The Rec Room — Square One" [ref=e341] [cursor=pointer]:
+                  - img [ref=e343]
+            - listitem "Drive home from The Rec Room — Square One" [ref=e346]:
+              - generic [ref=e347]:
+                - generic [ref=e348]: 20:40
+                - generic [ref=e349]: 10m
+              - img [ref=e353]
+              - heading "Drive home from The Rec Room — Square One" [level=3] [ref=e358]
+          - button "Add an errand" [ref=e360] [cursor=pointer]:
+            - img [ref=e362]
+            - text: Add an errand
+        - generic "Sunday" [ref=e365]:
+          - generic [ref=e366]:
+            - img [ref=e369]
+            - generic [ref=e371]:
+              - heading "Sunday" [level=2] [ref=e372]
+              - paragraph [ref=e373]: 11 Oct · 16° / 13° · Variable cloud, flex the plan
+            - generic [ref=e374]:
+              - button "Regenerate Sunday" [ref=e376] [cursor=pointer]:
+                - img [ref=e378]
+                - generic [ref=e383]: Regenerate
+              - button "Lock Sunday" [ref=e385] [cursor=pointer]:
+                - img [ref=e387]
+                - generic [ref=e390]: Lock day
+          - list [ref=e391]:
+            - listitem "Downtime" [ref=e392]:
+              - generic [ref=e393]:
+                - generic [ref=e394]: 9:00
+                - generic [ref=e395]: 90m
+              - img [ref=e399]
+              - generic [ref=e402]:
+                - heading "Downtime" [level=3] [ref=e403]
+                - paragraph [ref=e404]: 90-min open slot
+              - generic [ref=e405]:
+                - 'button "Why this: Downtime" [ref=e407] [cursor=pointer]':
+                  - img [ref=e409]
+                - button "Lock Downtime" [ref=e412] [cursor=pointer]:
+                  - img [ref=e414]
+            - listitem "Church" [ref=e417]:
+              - generic [ref=e418]:
+                - generic [ref=e419]: 10:30
+                - generic [ref=e420]: 75m
+              - img [ref=e424]
+              - generic [ref=e427]:
+                - heading "Church" [level=3] [ref=e428]
+                - paragraph [ref=e429]: Every Sunday · locked in
+                - generic [ref=e431]:
+                  - img [ref=e433]
+                  - text: Commitment
+              - button "About Church" [ref=e438] [cursor=pointer]:
+                - img [ref=e440]
+            - listitem "Drive to The Rec Room — Square One" [ref=e442]:
+              - generic [ref=e443]:
+                - generic [ref=e444]: 11:45
+                - generic [ref=e445]: 10m
+              - img [ref=e449]
+              - heading "Drive to The Rec Room — Square One" [level=3] [ref=e454]
+            - listitem "The Rec Room — Square One" [ref=e455]:
+              - generic [ref=e456]:
+                - generic [ref=e457]: 11:55
+                - generic [ref=e458]: 2h 30m
+              - img [ref=e462]
+              - generic [ref=e465]:
+                - heading "The Rec Room — Square One" [level=3] [ref=e466]
+                - paragraph [ref=e467]: fits 150-min window in 465-min gap
+                - generic [ref=e468]:
+                  - generic [ref=e469]: Day highlight
+                  - generic [ref=e470]:
+                    - img [ref=e472]
+                    - text: 10 min drive
+              - generic [ref=e476]:
+                - 'button "Why this: The Rec Room — Square One" [ref=e478] [cursor=pointer]':
+                  - img [ref=e480]
+                - button "Swap The Rec Room — Square One" [ref=e483] [cursor=pointer]:
+                  - img [ref=e485]
+                - button "Lock The Rec Room — Square One" [ref=e489] [cursor=pointer]:
+                  - img [ref=e491]
+            - listitem "Drive home from The Rec Room — Square One" [ref=e494]:
+              - generic [ref=e495]:
+                - generic [ref=e496]: 14:25
+                - generic [ref=e497]: 10m
+              - img [ref=e501]
+              - heading "Drive home from The Rec Room — Square One" [level=3] [ref=e506]
+            - 'listitem "Lunch: Symposium Café" [ref=e507]':
+              - generic [ref=e508]:
+                - generic [ref=e509]: 14:35
+                - generic [ref=e510]: 60m
+              - img [ref=e514]
+              - generic [ref=e517]:
+                - 'heading "Lunch: Symposium Café" [level=3] [ref=e518]'
+                - paragraph [ref=e519]: close to The Rec Room — Square One
+              - generic [ref=e520]:
+                - 'button "Why this: Lunch: Symposium Café" [ref=e522] [cursor=pointer]':
+                  - img [ref=e524]
+                - 'button "Lock Lunch: Symposium Café" [ref=e527] [cursor=pointer]':
+                  - img [ref=e529]
+            - listitem "Downtime" [ref=e532]:
+              - generic [ref=e533]:
+                - generic [ref=e534]: 15:35
+                - generic [ref=e535]: 3h 55m
+              - img [ref=e539]
+              - generic [ref=e542]:
+                - heading "Downtime" [level=3] [ref=e543]
+                - paragraph [ref=e544]: 235-min open slot
+              - generic [ref=e545]:
+                - 'button "Why this: Downtime" [ref=e547] [cursor=pointer]':
+                  - img [ref=e549]
+                - button "Lock Downtime" [ref=e552] [cursor=pointer]:
+                  - img [ref=e554]
+          - button "Add an errand" [ref=e558] [cursor=pointer]:
+            - img [ref=e560]
+            - text: Add an errand
