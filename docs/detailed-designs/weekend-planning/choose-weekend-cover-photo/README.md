@@ -36,7 +36,7 @@ Because the fallback happens when the cover is resolved, no replanning handler n
 
 ### API
 
-`WeekendDto` and `WeekendSummaryDto` gain `Cover: CoverDto?` (`Url`, `Alt`, `Attribution`, `Label`, `IsUpload`). `GetWeekendHistoryQueryHandler` resolves covers for each summary.
+`WeekendDto` and `WeekendSummaryDto` gain `Cover: CoverDto?` (`Url`, `Width`, `Height`, `Alt`, `Attribution`, `Label`, `Source`, `PlaceId`). `GetWeekendHistoryQueryHandler` projects each weekend's activity and meal stops and asks `WeekendEnrichment.CoverAsync` for the same cover the Weekend screen resolves.
 
 `PUT /api/weekends/{id}/cover` takes `{ source: "default" }` or `{ source: "stop", placeId }` and dispatches `SetWeekendCoverCommand`. A `placeId` that is not a stop of this weekend with a photo returns 400 `cover_not_a_stop`. The choice persists (L2-096 AC2).
 
@@ -55,7 +55,7 @@ Because the fallback happens when the cover is resolved, no replanning handler n
 
 ### Link previews
 
-Link-preview crawlers do not run the Angular application, so the static host cannot emit per-weekend tags. `SharePreviewController` adds an anonymous `GET /s/{token}` route on the API (opted out of the fallback policy, ADR-008). It returns a small HTML document with `og:title` (the weekend title), `og:description` (the summary), `og:image` (a share-scoped signed URL valid for at least 7 days), and `twitter:card`, then redirects browsers to `/sample-weekend?share={token}` with a `<meta http-equiv="refresh">` and a link (L2-098 AC3). `WeekendsController.Share` returns this `/s/{token}` URL as `shareUrl`. The public host name for `/s/` is `<TO SUPPLY>`.
+Link-preview crawlers do not run the Angular application, so the static host cannot emit per-weekend tags. `WeekendsController.SharePreview` adds an anonymous `GET /s/{token}` route on the API (opted out of the fallback policy, ADR-008). It returns a small HTML document with `og:title` (the weekend title), `og:description` (the summary), `og:image` (a share-scoped signed URL valid for at least 7 days), and `twitter:card`, then redirects browsers to `{Saturdaze:Share:AppOrigin}/sample-weekend?share={token}` with a `<meta http-equiv="refresh">` and a link (L2-098 AC3). An API-relative upload URL is made absolute with the API's own origin. `WeekendsController.Share` returns this `/s/{token}` URL as `shareUrl`, built from the request's scheme and host. The public host name for `/s/`, and forwarded-header handling behind the App Service front end, are `<TO SUPPLY>`; `Saturdaze:Share:AppOrigin` must be set per environment.
 
 ### Frontend
 
@@ -63,9 +63,9 @@ Link-preview crawlers do not run the Angular application, so the static host can
 
 `CoverPhotoDialog` is a new CDK dialog in `frontend/projects/saturdaze/src/app/dialogs/cover-photo-dialog`. It lists the weekend's stops that have photos as a radio group of `photo-pick__opt` tiles, plus a "Your own photo" file input that accepts `image/jpeg,image/png,image/webp`. It checks type and the 10 MB limit before upload, previews the chosen file in the tile, uploads it itself through `IWeekendPlanService.uploadCover` when "Use this photo" is pressed, and keeps the dialog open with the server's refusal (413, `unsupported_image`) in an `sd-banner`. A stop choice is returned to the page, which calls `setCover`.
 
-`IWeekendPlanService` gains `setCover(choice, id?)` and `uploadCover(file, id?)`. `WeekendView` gains `cover: CoverView | null` and `dateRange`. `ISavedService` gains `uploadCover(weekendId, file)` and `setCover(weekendId, choice)`, and `PastWeekendCard` gains `cover: CoverView | null`.
+`IWeekendPlanService` gains `setCover(selection)` and `uploadCover(file)` for the current weekend. `WeekendView` gains `cover: CoverView | null` and `dateRange`. `ISavedService` gains `coverChoices(weekendId)`, `uploadCover(weekendId, file)` and `setCover(weekendId, selection)`, and `PastWeekendCard` gains `cover: CoverView | null`. `CoverPhotoDialogData` carries an `upload(file)` callback, so the same dialog serves the Weekend cover and a Past card.
 
-`sd-past-card` leads with `sd-media` and the cover label as its credit. A past weekend without a cover renders an "Add a photo" control in the media slot, named "Add a photo to {title}", which opens `CoverPhotoDialog` (L2-098 AC2). The Past grid keeps 1, 2, and 3 columns at 390, 820, and 1440 px with 16:9 covers (L2-098 AC4).
+`sd-past-card` gains a `cover` input and an `addPhoto` output; it leads with `sd-media` and the cover label as its credit. A past weekend without a cover renders an "Add a photo" button in the media slot, named "Add a photo to {title}", which opens `CoverPhotoDialog` with that weekend's stop photos (L2-098 AC2). The Past grid keeps 1, 2, and 3 columns at 390, 820, and 1440 px with 16:9 covers (L2-098 AC4).
 
 `SharedWeekendPage` shows the cover read-only.
 

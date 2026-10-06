@@ -1,3 +1,5 @@
+import { CoverDto } from './cover.dto';
+
 /**
  * Server-side shape of one row from `GET /api/weekends/history`. Mirrors
  * `Saturdaze.Application.Contracts.WeekendSummaryDto`.
@@ -35,4 +37,8 @@ export interface WeekendSummaryDto {
    * Rating.
    */
   readonly rating: number | null;
+  /**
+   * Cover — the same cover the Weekend screen shows, or `null` (L2-098).
+   */
+  readonly cover?: CoverDto | null;
 }

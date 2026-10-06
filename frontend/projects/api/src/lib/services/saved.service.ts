@@ -12,6 +12,8 @@ import {
   skippingChips,
 } from '../api/history-filters';
 import { formatWeekendEyebrow } from '../api/weekend-dates';
+import { projectWeekend, toCoverView, withApiOrigin } from '../api/weekend-projection';
+import { CoverChoice, CoverSelection } from '../models/cover-view';
 import { PastView } from '../models/past-view';
 import { PastWeekendCard } from '../models/past-weekend-card';
 import { WeekendDto } from '../models/weekend.dto';
@@ -45,6 +47,7 @@ export function toPastCard(dto: WeekendSummaryDto): PastWeekendCard {
     ratingLabel: rating > 0 ? `${rating} of 5` : RATE_IT,
     highlights: highlightLine(dto),
     favourite: dto.isFavourite,
+    cover: toCoverView(dto.cover),
   };
 }
 
@@ -157,7 +160,7 @@ export class SavedService implements ISavedService {
           `${this.baseUrl}/api/weekends/history?take=${HISTORY_TAKE}`,
         ),
       );
-      this._rows.set(rows ?? []);
+      this._rows.set((rows ?? []).map((r) => withApiOrigin(r, this.baseUrl)));
     } catch (err) {
       console.error('SavedService.load failed', err);
       this._rows.set([]);
@@ -201,6 +204,29 @@ export class SavedService implements ISavedService {
       this.http.put<WeekendDto>(`${this.baseUrl}/api/weekends/${id}/title`, { title: clean }),
     );
     this.patch(id, { title: dto ? dto.title : clean });
+  }
+
+  async coverChoices(id: string): Promise<readonly CoverChoice[]> {
+    const dto = await firstValueFrom(
+      this.http.get<WeekendDto>(`${this.baseUrl}/api/weekends/${id}`),
+    );
+    return projectWeekend(dto).coverChoices;
+  }
+
+  async setCover(id: string, selection: CoverSelection): Promise<void> {
+    const dto = await firstValueFrom(
+      this.http.put<WeekendDto>(`${this.baseUrl}/api/weekends/${id}/cover`, selection),
+    );
+    this.patch(id, { cover: withApiOrigin(dto, this.baseUrl).cover ?? null });
+  }
+
+  async uploadCover(id: string, file: Blob): Promise<void> {
+    const form = new FormData();
+    form.append('file', file);
+    const dto = await firstValueFrom(
+      this.http.post<WeekendDto>(`${this.baseUrl}/api/weekends/${id}/cover`, form),
+    );
+    this.patch(id, { cover: withApiOrigin(dto, this.baseUrl).cover ?? null });
   }
 
   private patch(id: string, changes: Partial<WeekendSummaryDto>): void {

@@ -9,13 +9,15 @@ import {
   signal,
 } from '@angular/core';
 
-import { CoverChoice, CoverSelection, WEEKEND_PLAN_SERVICE } from 'api';
+import { CoverChoice, CoverSelection } from 'api';
 import { Banner, Button, Dialog as DialogShell, Icon } from 'components';
 
 export interface CoverPhotoDialogData {
   readonly choices: readonly CoverChoice[];
   /** The place whose photo is the cover now, if any. */
   readonly currentPlaceId: string | null;
+  /** Sends the family's photo as the cover; rejects with the server's error (L2-097). */
+  readonly upload: (file: Blob) => Promise<void>;
 }
 
 /** A stop or the default rule for the page to apply, or a family photo already uploaded. */
@@ -31,8 +33,9 @@ const NOT_A_PHOTO = 'That file is not a photo we can use. Choose a JPEG, PNG or 
 const FAILED = 'The photo did not upload. Try again in a moment.';
 
 /**
- * D28 — "Cover photo" (L2-096 AC2, L2-097): every stop's photo as a radio
- * tile, plus "Your own photo". A family photo is checked here, uploaded from
+ * D28 — "Cover photo" (L2-096 AC2, L2-097, L2-098 AC2): every stop's photo
+ * as a radio tile, plus "Your own photo". Opened from the Weekend cover and
+ * from a Past card. A family photo is checked here, uploaded from
  * here, and server refusals are shown in place so the family can pick again.
  */
 @Component({
@@ -45,7 +48,6 @@ const FAILED = 'The photo did not upload. Try again in a moment.';
 })
 export class CoverPhotoDialog {
   private readonly dialogRef = inject<DialogRef<CoverPhotoDialogResult>>(DialogRef);
-  private readonly weekend = inject(WEEKEND_PLAN_SERVICE);
   protected readonly data = inject<CoverPhotoDialogData>(DIALOG_DATA);
   protected readonly upload = UPLOAD;
 
@@ -101,7 +103,7 @@ export class CoverPhotoDialog {
     if (!file) return;
     this.sending.set(true);
     try {
-      await this.weekend.uploadCover(file);
+      await this.data.upload(file);
       this.dialogRef.close({ source: 'uploaded' });
     } catch (err) {
       this.error.set(messageFor(err));

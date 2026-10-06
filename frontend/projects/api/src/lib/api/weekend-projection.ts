@@ -2,6 +2,7 @@ import { BlockKind } from '../models/block-kind';
 import { BlockRow } from '../models/block-row';
 import { ChipView } from '../models/chip-view';
 import { CoverChoice, CoverView } from '../models/cover-view';
+import { CoverDto } from '../models/cover.dto';
 import { DayView } from '../models/day-view';
 import { LegView } from '../models/leg-view';
 import { MapPin } from '../models/map-pin';
@@ -69,7 +70,10 @@ export function projectWeekend(dto: WeekendDto | null, status?: WeekendStatus): 
  * A family upload's signed URL is relative to the API (`/api/photos/…`,
  * L2-097); the app may be served from another origin, so anchor it there.
  */
-export function withApiOrigin(dto: WeekendDto, baseUrl: string): WeekendDto {
+export function withApiOrigin<T extends { readonly cover?: CoverDto | null }>(
+  dto: T,
+  baseUrl: string,
+): T {
   const url = dto.cover?.url;
   if (!url?.startsWith('/')) return dto;
   return { ...dto, cover: { ...dto.cover!, url: `${baseUrl}${url}` } };
@@ -77,7 +81,11 @@ export function withApiOrigin(dto: WeekendDto, baseUrl: string): WeekendDto {
 
 /** The cover with its label as the credit (L2-096). */
 function coverView(dto: WeekendDto): CoverView | null {
-  const c = dto.cover;
+  return toCoverView(dto.cover);
+}
+
+/** A cover DTO as card media; the label is the credit (L2-096, L2-098 AC1). */
+export function toCoverView(c: CoverDto | null | undefined): CoverView | null {
   if (!c) return null;
   return {
     media: { src: c.url, alt: c.alt, width: c.width, height: c.height, credit: c.label },

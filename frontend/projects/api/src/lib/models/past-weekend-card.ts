@@ -1,3 +1,5 @@
+import { CoverView } from './cover-view';
+
 /**
  * Past Weekend Card — one `sd-past-card` on the Past page.
  */
@@ -38,4 +40,8 @@ export interface PastWeekendCard {
    * Favourite.
    */
   readonly favourite: boolean;
+  /**
+   * Cover — the photo the card leads with; `null` offers "Add a photo" (L2-098).
+   */
+  readonly cover: CoverView | null;
 }

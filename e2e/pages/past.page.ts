@@ -8,7 +8,8 @@ import { PageSlug } from "../fixtures/routes.js";
  *   .page-header "Past weekends" + count subtitle
  *   filters (All · Favourites · This year · 5★)
  *   p.strip "Skipping next time:" + .chip--warn per avoided item
- *   ul.grid-cards > li.card
+ *   .sd-grid-cards > sd-past-card.card.card--media
+ *      .card__media: sd-media (cover + .media__credit) or the "Add a photo to …" control
  *      .card__row  .card__eyebrow (date range) · .fav-btn[aria-pressed]
  *      h3.card__title > button.card__title-btn[aria-label="Rename: …"]
  *      button.stars[aria-label="Rate this weekend, currently n of 5"]
@@ -24,7 +25,7 @@ export class PastPage extends BasePage {
   }
 
   protected readyAnchor(): Locator {
-    return this.page.locator(".grid-cards .card, .empty__title");
+    return this.page.locator(".sd-grid-cards .card, .empty__title");
   }
 
   get strip(): Locator {
@@ -36,7 +37,7 @@ export class PastPage extends BasePage {
   }
 
   cards(): Locator {
-    return this.main.locator(".grid-cards .card");
+    return this.main.locator(".sd-grid-cards .card");
   }
 
   card(title: string): Locator {
@@ -81,6 +82,43 @@ export class PastPage extends BasePage {
 
   favouriteCards(): Locator {
     return this.cards().filter({ has: this.page.locator('.fav-btn[aria-pressed="true"]') });
+  }
+
+  /* ---------- Covers (L2-098) ---------- */
+
+  cardMedia(card: Locator): Locator {
+    return card.locator(".card__media");
+  }
+
+  cardCoverImage(card: Locator): Locator {
+    return card.locator(".card__media img");
+  }
+
+  cardCoverCredit(card: Locator): Locator {
+    return card.locator(".card__media .media__credit");
+  }
+
+  /** "Add a photo to {title}" on a weekend without a cover; opens D28. */
+  addPhotoControl(card: Locator): Locator {
+    return card.getByRole("button", { name: /^Add a photo to / });
+  }
+
+  async cardCoverLoaded(card: Locator): Promise<boolean> {
+    return this.cardCoverImage(card).evaluate(
+      (img) => (img as HTMLImageElement).complete && (img as HTMLImageElement).naturalWidth > 0,
+    );
+  }
+
+  /** How many columns the card grid lays out, from the first row's left edges. */
+  async columnCount(): Promise<number> {
+    const boxes = await this.cards().evaluateAll((els) => els.map((e) => e.getBoundingClientRect().top));
+    const firstRow = boxes.filter((top) => Math.abs(top - boxes[0]!) < 2);
+    return firstRow.length;
+  }
+
+  /** D28's "Your own photo" input, when opened from a card. */
+  async chooseOwnPhoto(file: string): Promise<void> {
+    await this.dialog().getByLabel("Upload your own photo", { exact: true }).setInputFiles(file);
   }
 
   goToWeekendButton(): Locator {

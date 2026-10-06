@@ -1,6 +1,6 @@
 @use '../styles/card-base' as *;
 
-// The past-weekend `.card` from docs/mocks-v2/pages/past.html.
+// The past-weekend `.card.card--media` from docs/mocks/pages/past.html.
 
 :host {
   @include card-host;
@@ -49,4 +49,31 @@
     background: var(--colorBrandBackground2);
     color: var(--colorBrandForeground1);
   }
+}
+
+// The "Add a photo" tile stands where the cover would be, at the same 16:9 (L2-098).
+.media--fallback {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  width: calc(100% + 32px);
+  aspect-ratio: 16 / 9;
+  border: 0;
+  background: var(--colorPaletteSkyBackground1);
+  color: var(--colorPaletteSkyForeground1);
+  font: inherit;
+  font-size: var(--fontSizeBase300);
+  font-weight: var(--fontWeightSemibold);
+  cursor: pointer;
+}
+
+.media--fallback:hover {
+  text-decoration: underline;
+}
+
+.media--fallback:focus-visible {
+  outline: 2px solid var(--colorStrokeFocus2);
+  outline-offset: -4px;
 }

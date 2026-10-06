@@ -352,7 +352,11 @@ export class WeekendPage {
     const view = this.weekend();
     const ref = this.dialog.open<CoverPhotoDialogResult, CoverPhotoDialogData>(CoverPhotoDialog, {
       ...DIALOG_OPTIONS,
-      data: { choices: view.coverChoices, currentPlaceId: view.cover?.placeId ?? null },
+      data: {
+        choices: view.coverChoices,
+        currentPlaceId: view.cover?.placeId ?? null,
+        upload: (file) => this.weekendService.uploadCover(file),
+      },
     });
     const selection = await firstValueFrom(ref.closed);
     if (!selection || selection.source === 'uploaded') return;

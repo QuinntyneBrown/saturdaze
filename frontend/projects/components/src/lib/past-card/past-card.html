@@ -1,3 +1,17 @@
+@let c = cover();
+@if (c) {
+  <sd-media class="card__media" [photo]="c" />
+} @else {
+  <button
+    class="media media--fallback media--sky card__media"
+    type="button"
+    [attr.aria-label]="'Add a photo to ' + cardTitle()"
+    (click)="addPhoto.emit()"
+  >
+    <sd-icon name="plus" />
+    Add a photo
+  </button>
+}
 <div class="card__row">
   <span class="card__eyebrow">{{ dateRange() }}</span>
   <sd-button
