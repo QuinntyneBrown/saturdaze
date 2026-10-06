@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 15 Slides</title>
+<link rel="stylesheet" href="../assets/slides.css">
+</head>
+<body data-video-number="15" data-video-title="Adding curated photos: upload and URL" data-parts="Introduction|Upload|On the server|Curated store|From a URL|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Saturdaze Admin series · Video 15</div>
+  <h1>Adding curated photos:<br>upload and URL</h1>
+  <p class="lead">Two ways in, one curated photo, and a public store to serve it</p>
+</section>
+
+<section id="two-ways" data-part="0" data-cue="Both create a curated photo that is reviewed and locked from the start.">
+  <h2>Two ways in</h2>
+  <div class="cols">
+    <div class="card"><h3>Upload (AD1)</h3><p class="small">Sanitized, then stored by Saturdaze in the curated store.</p><p class="small muted"><code>multipart/form-data</code></p></div>
+    <div class="card sky"><h3>Add from URL (AD2)</h3><p class="small">Verified once, stored as an address on an allowed host.</p><p class="small muted"><code>application/json</code></p></div>
+  </div>
+  <p class="small muted">Same route: <code>POST /api/admin/places/{kind}/{id}/photos</code> · <code>Source = Curated</code>, <code>ReviewState = Reviewed</code>, <code>AdminLocked = true</code></p>
+</section>
+
+<section id="upload" data-part="1" data-cue="Riverwood Conservancy has no photos yet" data-clip="clips/upload.mp4" data-clip-delay="9">
+  <aside class="clip-notes">
+    <h3>Upload a photo</h3>
+    <ul>
+      <li>JPEG, PNG or WebP, up to 10 MB</li>
+      <li>Preview with name, size and dimensions</li>
+      <li>Attribution and licence are mandatory</li>
+      <li>No primary yet → it becomes primary</li>
+    </ul>
+  </aside>
+</section>
+
+<section id="refused" data-part="1" data-cue="The dialog checks the type and size before sending" data-clip="clips/refused.mp4">
+  <aside class="clip-notes">
+    <h3>Not a photo</h3>
+    <ul>
+      <li>Refused before anything is sent</li>
+      <li>"That file is not a photo we can use."</li>
+      <li>The server checks again, by content</li>
+    </ul>
+  </aside>
+</section>
+
+<section id="handler" data-part="2" data-cue="works in a fixed order">
+  <h2>Sanitize, store, then save</h2>
+  <pre class="code tight" data-lang="cs" data-mark="4-5,7,12">
+_ = await PlaceLookup.NameAsync(_db, request.Kind, request.PlaceId, ct)
+    ?? throw new NotFoundException("Place", request.PlaceId);
+
+var image = _sanitizer.Sanitize(request.Content)
+    ?? throw new BadRequestException("unsupported_image", "Upload a JPEG, PNG or WebP photo.");
+
+var key = await _store.PutAsync(image.Content, image.ContentType, ct);
+var photo = PlacePhoto.Create(
+    request.Kind, request.PlaceId, _store.PublicUrl(key), image.Width, image.Height,
+    request.Alt, request.Attribution, PhotoSource.Curated, request.Licence, primary: false)!;
+photo.StorageKey = key;
+AdminPhotoTouch.Apply(photo, _user, _clock);
+</pre>
+  <p class="small muted"><span class="file">backend/src/Saturdaze.Application/Admin/Photos/UploadCuratedPhotoCommandHandler.cs</span> (first half)</p>
+</section>
+
+<section id="sanitizer" data-part="2" data-cue="It recognises JPEG, PNG and WebP by their magic bytes">
+  <h2>What the sanitizer does</h2>
+  <div class="flow">
+    <div class="node">Magic bytes<small>JPEG · PNG · WebP</small></div>
+    <div class="arrow">→</div>
+    <div class="node">Decode<small>apply orientation</small></div>
+    <div class="arrow">→</div>
+    <div class="node">Cap long edge<small>2400 px</small></div>
+    <div class="arrow">→</div>
+    <div class="node accent">Re-encode JPEG<small>pixels only: no EXIF, GPS, XMP</small></div>
+  </div>
+  <div class="row"><span class="tag">not an image → 400 <code>unsupported_image</code></span> <span class="tag sky">over 10 MB → 413, before reading</span></div>
+  <p class="small muted"><span class="file">backend/src/Saturdaze.Infrastructure/Photos/SkiaImageSanitizer.cs</span> (shared with family cover uploads)</p>
+</section>
+
+<section id="promote" data-part="2" data-cue="Then comes the promotion rule">
+  <h2>Curated beats unreviewed, never a curator</h2>
+  <pre class="code" data-lang="cs" data-mark="3-6">
+public static bool ShouldPromoteCurated(IEnumerable&lt;PlacePhoto&gt; photos)
+{
+    var primary = photos.FirstOrDefault(p =&gt; p.IsPrimary);
+    if (primary is null) return true;
+    return primary.Source == PhotoSource.Provider
+        &amp;&amp; primary.ReviewState == PhotoReviewState.Unreviewed
+        &amp;&amp; !primary.AdminLocked;
+}
+</pre>
+  <p class="small muted"><span class="file">backend/src/Saturdaze.Domain/Entities/PlacePhotoSet.cs</span></p>
+</section>
+
+<section id="privacy" data-part="2" data-cue="One privacy detail.">
+  <h2>Size, never the file name</h2>
+  <pre class="code tight" data-lang="cs" data-mark="2-3,6-7">
+// L2-122 AC3: the audit names the size and address, never the file name or content.
+_audit.Write(request.Kind, request.PlaceId, photo.Id, PhotoAuditAction.Upload, null,
+    new { url = photo.Url, bytes = image.Content.Length, width = photo.Width, height = photo.Height, ... });
+
+// L2-115 AC7: the place and the size only, never the file name or content.
+_logger.LogInformation("Curated photo uploaded for {PlaceKind} {PlaceId} ({Bytes} bytes)",
+    request.Kind, request.PlaceId, image.Content.Length);
+</pre>
+  <p class="small muted"><span class="file">UploadCuratedPhotoCommandHandler.cs</span> (abridged)</p>
+</section>
+
+<section id="stores" data-part="3" data-cue="Family cover uploads already have a private store">
+  <h2>Two stores, opposite needs</h2>
+  <div class="cols">
+    <div class="card forest"><h3><code>IPhotoStore</code></h3><ul class="small"><li>Family cover uploads</li><li>Private: short-lived signed URLs</li><li><code>GET /api/photos/{key}?exp=&amp;sig=</code></li></ul></div>
+    <div class="card"><h3><code>ICuratedPhotoStore</code></h3><ul class="small"><li>Catalog photos for every family</li><li>Public, cacheable, allow-listed</li><li><code>GET /api/catalog-photos/{key}</code></li></ul></div>
+  </div>
+  <p class="small muted">ADR-015 · a URL that expires in minutes cannot be stored on a <code>PlacePhoto</code>.</p>
+</section>
+
+<section id="port" data-part="3" data-cue="So ADR-015 adds a second port">
+  <h2>The port and its controller <span class="small muted">CuratedPhotoPorts.cs · CatalogPhotosController.cs</span></h2>
+  <pre class="code tight" data-lang="cs" data-mark="3-6,15-16">
+public interface ICuratedPhotoStore
+{
+    Task&lt;string&gt; PutAsync(byte[] content, string contentType, CancellationToken ct);
+    Task&lt;StoredPhoto?&gt; OpenAsync(string key, CancellationToken ct);
+    Task DeleteAsync(string key, CancellationToken ct);
+    string PublicUrl(string key);
+}
+
+[HttpGet("{key}")]
+[AllowAnonymous]
+public async Task&lt;IActionResult&gt; Get(string key, CancellationToken ct)
+{
+    var photo = await _store.OpenAsync(key, ct);
+    if (photo is null) return NotFound();
+    Response.Headers.CacheControl = "public, max-age=31536000, immutable";
+    Response.Headers["X-Content-Type-Options"] = "nosniff";
+    return File(photo.Content, photo.ContentType);
+}
+</pre>
+</section>
+
+<section id="config" data-part="3" data-cue="followed by that route">
+  <h2>Two settings that must agree</h2>
+  <pre class="code" data-lang="json" data-mark="4,8">
+"Saturdaze": {
+  "CuratedPhotos": {
+    "Directory": "App_Data/catalog-photos",
+    "PublicOrigin": "https://&lt;api-host&gt;"
+  },
+  "Images": {
+    "AllowedOrigins": [
+      "https://&lt;api-host&gt;"
+    ]
+  }
+}
+</pre>
+  <p class="small muted">Plus the origin in both apps' <code>staticwebapp.config.json</code> CSP <code>img-src</code>. Azure Blob + CDN can replace the file store by configuration.</p>
+</section>
+
+<section id="url" data-part="4" data-cue="The second way in is Add from URL." data-clip="clips/url.mp4">
+  <aside class="clip-notes">
+    <h3>Add from a URL</h3>
+    <ul>
+      <li><code>http://</code> → refused in the browser</li>
+      <li>Off the allow-list → <code>url_not_allowed</code> from the server</li>
+      <li>Allowed host → saved; not primary</li>
+    </ul>
+    <p class="small muted">Demo: <code>https://localhost:5443</code> stands in for a provider CDN.</p>
+  </aside>
+</section>
+
+<section id="url-handler" data-part="4" data-cue="checks the allow-list with">
+  <h2>Allow-list first, then one fetch</h2>
+  <pre class="code tight" data-lang="cs" data-mark="3-4,7-8,10-11">
+var url = request.Url!.Trim();
+// The same rule the family app projects photos through (L2-101 AC3), applied before any fetch.
+if (!PlacePhotoReader.IsAllowed(url, _images))
+    throw new BadRequestException("url_not_allowed", "This address isn't on the image allow-list.");
+var siblings = await _db.PlacePhotos.Where(...).ToListAsync(ct);
+if (siblings.Any(p =&gt; string.Equals(p.Url, url, StringComparison.OrdinalIgnoreCase)))
+    throw new ConflictException("photo_exists", "This place already has that photo.");
+
+var bytes = await _fetcher.FetchAsync(new Uri(url, UriKind.Absolute), ct)
+    ?? throw new BadRequestException("unsupported_image", "That address did not return a JPEG, PNG or WebP image.");
+var image = _sanitizer.Sanitize(bytes)
+    ?? throw new BadRequestException("unsupported_image", "That address did not return a JPEG, PNG or WebP image.");
+</pre>
+  <p class="small muted"><span class="file">AddPhotoFromUrlCommandHandler.cs</span> (abridged) · <span class="file">HttpRemoteImageFetcher.cs</span>: HTTPS only, 10 s, 10 MB, no retries</p>
+</section>
+
+<section id="recap" data-part="5" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div>Uploads are verified by content, re-encoded and stripped of metadata.</div>
+    <div>Curated photos are reviewed and locked; primary only over nothing or an unreviewed provider photo.</div>
+    <div>The curated store is public and immutable; its origin goes on the allow-list and in both CSPs.</div>
+    <div>URL adds check the allow-list first, fetch once, and store the address.</div>
+  </div>
+  <p class="small muted">Next · Video 16: reviewing ingested photos.</p>
+</section>
+
+<script src="../assets/slides.js"></script>
+</body>
+</html>

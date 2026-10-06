@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 16 Slides</title>
+<link rel="stylesheet" href="../assets/slides.css">
+</head>
+<body data-video-number="16" data-video-title="Reviewing ingested photos" data-parts="Introduction|Provider photos|Review queue|Rejections stick|Photo skips|Seeding|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Saturdaze Admin series · Video 16</div>
+  <h1>Reviewing ingested photos</h1>
+  <p class="lead">Keep, promote or reject, and make the rejection stick</p>
+</section>
+
+<section id="loop" data-part="0" data-cue="This video covers the review loop Saturdaze Admin adds around them">
+  <h2>The review loop</h2>
+  <div class="flow">
+    <div class="node">Ingestion<small><code>CatalogUpserter</code></small></div>
+    <div class="arrow">→</div>
+    <div class="node accent">Review queue<small>keep · primary · reject</small></div>
+    <div class="arrow">→</div>
+    <div class="node">Rejected address<small><code>RejectedPlacePhoto</code></small></div>
+    <div class="arrow">→</div>
+    <div class="node">Next run<small>"previously rejected"</small></div>
+  </div>
+</section>
+
+<section id="state" data-part="1" data-cue="Every `PlacePhoto` now carries a review state.">
+  <h2>Unreviewed until a person decides</h2>
+  <pre class="code tight" data-lang="cs" data-mark="8-9">
+var photo = PlacePhoto.Create(
+    kind,
+    placeId,
+    url,
+    ...
+    PhotoSource.Provider,
+    Truncate(PayloadReader.GetStringOrEmpty(candidate, "license"), 120),
+    primary: !hasPrimary,
+    reviewState: PhotoReviewState.Unreviewed);
+</pre>
+  <p class="small muted"><span class="file">backend/src/Saturdaze.Application/Ingestion/CatalogUpserter.cs</span> (abridged) · <code>enum PhotoReviewState { Unreviewed = 1, Reviewed = 2 }</code></p>
+</section>
+
+<section id="queue" data-part="2" data-cue="The Photo health header offers to review four new photos" data-clip="clips/queue.mp4" data-clip-delay="8">
+  <aside class="clip-notes">
+    <h3>Review queue (A5)</h3>
+    <ul>
+      <li>Newest first</li>
+      <li>"New from ingestion" beside "Would replace" or "Would become primary"</li>
+      <li>Keep: reviewed, unchanged</li>
+      <li>Make primary: cover impact first</li>
+    </ul>
+  </aside>
+</section>
+
+<section id="handler" data-part="2" data-cue="Behind the buttons is one endpoint">
+  <h2>One endpoint, three decisions <span class="small muted">POST …/photos/{id}/review</span></h2>
+  <pre class="code tight" data-lang="cs" data-mark="1-2,7,11-12,15">
+if (photo.ReviewState != PhotoReviewState.Unreviewed)
+    throw new ConflictException("already_reviewed", "This photo has already been reviewed.");
+...
+switch (decision)
+{
+    case ReviewPhotoCommand.Keep:
+        AdminPhotoTouch.Apply(photo, _user, _clock);
+        await _db.SaveChangesAsync(ct);
+        break;
+    case ReviewPhotoCommand.Primary:
+        AdminPhotoTouch.Apply(photo, _user, _clock);
+        await PrimaryPhotoWriter.MarkPrimaryAsync(_db, siblings, photo.Id, ct);
+        break;
+    case ReviewPhotoCommand.Reject:
+        await RejectAsync(photo, siblings, request.Reason, ct);
+        break;
+}
+</pre>
+</section>
+
+<section id="reject" data-part="3" data-cue="La Marina's new photo is the Port Credit lighthouse" data-clip="clips/reject.mp4">
+  <aside class="clip-notes">
+    <h3>Reject (AD6)</h3>
+    <ul>
+      <li>"Ingestion never adds this address for La Marina again"</li>
+      <li>Reason optional, kept for the log</li>
+      <li>Exactly one review call</li>
+      <li>Empty queue: "Nothing to review"</li>
+    </ul>
+  </aside>
+</section>
+
+<section id="reject-async" data-part="3" data-cue="A rejection does two things.">
+  <h2>Delete the photo, remember the address <span class="small muted">RejectAsync</span></h2>
+  <pre class="code tight" data-lang="cs" data-mark="1,6,9,11,16-17">
+_db.RejectedPlacePhotos.Add(new RejectedPlacePhoto
+{
+    Id = Guid.NewGuid(),
+    PlaceKind = photo.PlaceKind,
+    PlaceId = photo.PlaceId,
+    Url = photo.Url,
+    RejectedAt = _clock.UtcNow,
+    RejectedBy = _user.UserId ?? throw new UnauthorizedAccessException(...),
+    Reason = string.IsNullOrEmpty(trimmed) ? null : trimmed,
+});
+_db.PlacePhotos.Remove(photo);
+await _db.SaveChangesAsync(ct);
+
+if (!photo.IsPrimary) return;
+var rest = siblings.Where(s =&gt; s.Id != photo.Id).ToList();
+var next = PlacePhotoSet.DefaultPrimary(rest);
+if (next is not null) await PrimaryPhotoWriter.MarkPrimaryAsync(_db, rest, next.Id, ct);
+</pre>
+</section>
+
+<section id="upserter" data-part="3" data-cue="That record is what makes the rejection stick.">
+  <h2>Ingestion checks the list</h2>
+  <pre class="code tight" data-lang="cs" data-mark="1-4,10,13">
+var rejected = await _db.RejectedPlacePhotos
+    .Where(r =&gt; r.PlaceKind == kind &amp;&amp; r.PlaceId == placeId)
+    .Select(r =&gt; r.Url)
+    .ToListAsync(ct);
+
+foreach (var candidate in candidates.OfType&lt;JsonObject&gt;())
+{
+    var url = PayloadReader.GetStringOrEmpty(candidate, "url");
+    if (url.Length == 0 || url.Length &gt; 1000 || known.Any(x =&gt; x.Url == url)) continue;
+    if (rejected.Contains(url, StringComparer.Ordinal))
+    {
+        // An administrator rejected this address for the place; never store it again (L2-121 AC1).
+        _skips.Add($"{placeName}: photo {url} skipped, previously rejected");
+        continue;
+    }
+</pre>
+  <p class="small muted"><span class="file">backend/src/Saturdaze.Application/Ingestion/CatalogUpserter.cs</span> (excerpt)</p>
+</section>
+
+<section id="skips" data-part="4" data-cue="Those skip reasons have their own screen." data-clip="clips/skips.mp4" data-clip-delay="5">
+  <aside class="clip-notes">
+    <h3>Ingestion photo skips (A6)</h3>
+    <ul>
+      <li>One card per run: type, start (UTC), status</li>
+      <li>Place · reason · address</li>
+      <li>Read-only; existing places link</li>
+    </ul>
+    <p class="small muted">The restaurants run is staged for the demo.</p>
+  </aside>
+</section>
+
+<section id="pattern" data-part="4" data-cue="the screen parses it with a pattern that mirrors that format">
+  <h2>One line format, both ends</h2>
+  <pre class="code" data-lang="cs" data-mark="2,5">
+// CatalogUpserter writes
+_skips.Add($"{placeName}: photo {url} skipped, previously rejected");
+
+// ListIngestionPhotoSkipsQueryHandler reads
+[GeneratedRegex(@"^(?&lt;place&gt;.+?): photo (?&lt;url&gt;\S+) skipped, (?&lt;reason&gt;.+)$")]
+private static partial Regex SkipLine();
+</pre>
+  <p class="small muted"><code>GET /api/admin/ingestion-runs/photo-skips</code> · a name shared by two places links to neither</p>
+</section>
+
+<section id="seed" data-part="5" data-cue="Ingestion is one side of the promise">
+  <h2>Seeding leaves locked photos alone <span class="small muted">SeedPhotos.cs</span></h2>
+  <pre class="code tight" data-lang="cs" data-mark="7,17-18">
+if (photo is null)
+{
+    photo = fresh;
+    photos.Add(photo);
+    db.PlacePhotos.Add(photo);
+}
+else if (!photo.AdminLocked)
+{
+    photo.Width = fresh.Width;
+    photo.Height = fresh.Height;
+    photo.AltText = fresh.AltText;
+    photo.Attribution = fresh.Attribution;
+    photo.Source = fresh.Source;
+    photo.License = fresh.License;
+}
+...
+var adminPrimary = photos.Any(p =&gt; p.IsPrimary &amp;&amp; p.AdminLocked);
+if (primary is not null &amp;&amp; !adminPrimary) PlacePhotoSet.MarkPrimary(photos, primary.Id);
+</pre>
+</section>
+
+<section id="recap" data-part="6" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div>Provider photos arrive unreviewed and wait in the queue.</div>
+    <div>Keep and Make primary review and lock; Make primary states the cover impact.</div>
+    <div>Reject deletes the photo and remembers its address; ingestion skips it and says so.</div>
+    <div>Ingestion photo skips: every run's skips, read-only, linked.</div>
+    <div>Seeding and ingestion never undo an administrator's decision.</div>
+  </div>
+  <p class="small muted">Next · Video 17: the activity log.</p>
+</section>
+
+<script src="../assets/slides.js"></script>
+</body>
+</html>

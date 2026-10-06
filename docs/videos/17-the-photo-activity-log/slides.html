@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 17 Slides</title>
+<link rel="stylesheet" href="../assets/slides.css">
+</head>
+<body data-video-number="17" data-video-title="The photo activity log" data-parts="Introduction|What gets recorded|Activity log|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Saturdaze Admin series · Video 17</div>
+  <h1>The photo activity log</h1>
+  <p class="lead">Who changed which photo, when, and what changed</p>
+</section>
+
+<section id="questions" data-part="0" data-cue="When someone asks why a weekend cover changed">
+  <h2>Questions the log answers</h2>
+  <div class="question">Why did this weekend's cover change?</div>
+  <div class="question">Where did the photographer's credit go?</div>
+  <div class="question">Who rejected that photo, and why?</div>
+</section>
+
+<section id="entry" data-part="1" data-cue="Every create, edit, primary change, removal and review that goes through the admin API">
+  <h2>One entry per change</h2>
+  <pre class="code tight" data-lang="cs" data-mark="5-8,12-14">
+public class PhotoAuditEntry
+{
+    public Guid Id { get; set; }
+    /// Database-assigned insert order: same-instant entries still list newest first.
+    public long Sequence { get; set; }
+    public DateTimeOffset OccurredAt { get; set; }
+    public Guid AdminUserId { get; set; }
+    public string AdminEmail { get; set; } = string.Empty;
+    public PlaceKind PlaceKind { get; set; }
+    public Guid PlaceId { get; set; }
+    public Guid PhotoId { get; set; }
+    public PhotoAuditAction Action { get; set; }
+    public string? Before { get; set; }
+    public string? After { get; set; }
+}
+</pre>
+  <p class="small muted"><span class="file">backend/src/Saturdaze.Domain/Entities/PhotoAuditEntry.cs</span> (comments abridged) · <code>Upload · AddUrl · Edit · Primary · Remove · Review</code></p>
+</section>
+
+<section id="writer" data-part="1" data-cue="is the one place that creates entries">
+  <h2>Written with the change, not after it</h2>
+  <pre class="code tight" data-lang="cs" data-mark="4,7-8,12-13">
+public void Write(PlaceKind kind, Guid placeId, Guid photoId,
+    PhotoAuditAction action, object? before, object? after)
+{
+    _db.PhotoAuditEntries.Add(new PhotoAuditEntry
+    {
+        Id = Guid.NewGuid(),
+        OccurredAt = _clock.UtcNow.ToUniversalTime(),
+        AdminUserId = _user.UserId
+            ?? throw new UnauthorizedAccessException("Photo changes need a signed-in administrator."),
+        AdminEmail = _user.Email ?? string.Empty,
+        PlaceKind = kind, PlaceId = placeId, PhotoId = photoId, Action = action,
+        Before = before is null ? null : JsonSerializer.Serialize(before, Json),
+        After = after is null ? null : JsonSerializer.Serialize(after, Json),
+    });
+}
+</pre>
+  <p class="small muted"><span class="file">PhotoAuditWriter.cs</span> (reflowed) · the handler's <code>SaveChangesAsync</code> commits the entry with the change</p>
+</section>
+
+<template id="per-action">
+  <div class="cols three">
+    <div class="card item"><h3>Primary</h3><p class="small">Previous and new primary id and address.</p></div>
+    <div class="card item"><h3>Edit</h3><p class="small">Alt text, attribution, licence: before and after.</p></div>
+    <div class="card item"><h3>Remove</h3><p class="small">Address, was it primary, the next primary.</p></div>
+    <div class="card item"><h3>Review</h3><p class="small">Decision and reason.</p></div>
+    <div class="card item"><h3>Upload</h3><p class="small">Address, bytes, dimensions. Never the file name or image.</p></div>
+    <div class="card item"><h3>Add from URL</h3><p class="small">Address, dimensions and details.</p></div>
+  </div>
+</template>
+
+<section id="per-action" data-part="1" data-cue="What goes into before and after is chosen per action." data-template="per-action" data-show="6">
+  <h2>Before and after, per action</h2>
+</section>
+
+<section id="log" data-part="2" data-cue="Before this recording, two administrators made a morning of changes" data-clip="clips/log.mp4" data-clip-delay="8">
+  <aside class="clip-notes">
+    <h3>Activity log (A7)</h3>
+    <ul>
+      <li>UTC time · administrator · place · action · what changed</li>
+      <li>Edit: "Alt text: — → …"</li>
+      <li>Reject: file and reason</li>
+      <li>Primary: old file → new file</li>
+    </ul>
+  </aside>
+</section>
+
+<section id="filters" data-part="2" data-cue="Two filters narrow it down." data-clip="clips/filters.mp4" data-clip-delay="4">
+  <aside class="clip-notes">
+    <h3>Filter by place or person</h3>
+    <ul>
+      <li>Bronte Creek: 3 uploads, a primary change, a removal</li>
+      <li>One administrator's changes</li>
+      <li>Filters in the query string</li>
+    </ul>
+  </aside>
+</section>
+
+<section id="query" data-part="2" data-cue="On the server, the photo audit endpoint">
+  <h2>Newest first, fifty a page</h2>
+  <pre class="code tight" data-lang="cs" data-mark="8-11">
+if (request.PlaceId is { } placeId) entries = entries.Where(e =&gt; e.PlaceId == placeId);
+if (request.AdminId is { } adminId) entries = entries.Where(e =&gt; e.AdminUserId == adminId);
+
+var total = await entries.CountAsync(ct);
+var page = await entries
+    .OrderByDescending(e =&gt; e.OccurredAt).ThenByDescending(e =&gt; e.Sequence)
+    .Skip((request.Page - 1) * ListPhotoAuditQuery.PageSize)
+    .Take(ListPhotoAuditQuery.PageSize)
+    .ToListAsync(ct);
+
+// The place name is looked up live; a place removed from the catalog still shows its id.
+</pre>
+  <p class="small muted"><code>GET /api/admin/photo-audit?kind=&amp;placeId=&amp;adminId=&amp;page=</code> · <span class="file">ListPhotoAuditQueryHandler.cs</span> (abridged)</p>
+</section>
+
+<section id="recap" data-part="3" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div>One audit entry per admin photo change, committed with the change.</div>
+    <div>Who, when (UTC), place, action, before and after; never a file name or image.</div>
+    <div>The log survives deleted photos and names places live.</div>
+    <div>Filter by place or administrator; every view is a link.</div>
+  </div>
+  <p class="small muted">Designs: <span class="file">docs/detailed-designs/administration/</span> · Series index: <span class="file">docs/videos/README.md</span></p>
+</section>
+
+<script src="../assets/slides.js"></script>
+</body>
+</html>

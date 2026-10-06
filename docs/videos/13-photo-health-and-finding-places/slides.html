@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 13 Slides</title>
+<link rel="stylesheet" href="../assets/slides.css">
+</head>
+<body data-video-number="13" data-video-title="Photo health and finding places" data-parts="Introduction|Health flags|Photo health|Places|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Saturdaze Admin series · Video 13</div>
+  <h1>Photo health and<br>finding places</h1>
+  <p class="lead">The admin home, and the list that finds the places that need you</p>
+</section>
+
+<section id="two-screens" data-part="0" data-cue="Both screens are built on the same four health flags">
+  <h2>Two screens, one evaluation</h2>
+  <div class="cols">
+    <div class="card"><h3>Photo health (A2)</h3><p class="small">The admin home. Coverage per catalog, flag counts, the six worst places.</p></div>
+    <div class="card sky"><h3>Places (A3)</h3><p class="small">Every catalog place. Search, filter, sort, page, open.</p></div>
+  </div>
+  <p class="small muted">Both read <code>PhotoHealth.Flags</code> on the server, so the numbers always agree.</p>
+</section>
+
+<section id="flags" data-part="1" data-cue="A place's health is judged on its primary photo">
+  <h2>Judged on the primary photo</h2>
+  <pre class="code tight" data-lang="cs" data-mark="4,8-10">
+public static IReadOnlyList&lt;string&gt; Flags(
+    IEnumerable&lt;PlacePhoto&gt; photos, Func&lt;string, bool&gt; isAllowed)
+{
+    var primary = photos.FirstOrDefault(p =&gt; p.IsPrimary);
+    if (primary is null) return new[] { NoPhoto };
+
+    var flags = new List&lt;string&gt;(2);
+    if (!isAllowed(primary.Url)) flags.Add(BlockedUrl);
+    if (primary.Source == PhotoSource.Provider
+        &amp;&amp; primary.ReviewState == PhotoReviewState.Unreviewed) flags.Add(Unreviewed);
+    if (string.IsNullOrWhiteSpace(primary.AltText)) flags.Add(MissingAlt);
+    return flags;
+}
+</pre>
+  <p class="small muted"><span class="file">backend/src/Saturdaze.Domain/Entities/PhotoHealth.cs</span></p>
+</section>
+
+<template id="flag-list">
+  <div class="cols four">
+    <div class="card item"><h3>No photo</h3><p class="small">No primary; families see the fallback tile.</p></div>
+    <div class="card item"><h3>Blocked URL</h3><p class="small">Not HTTPS on an allowed origin; families would not see it.</p></div>
+    <div class="card item"><h3>Unreviewed</h3><p class="small">A provider photo nobody has reviewed.</p></div>
+    <div class="card item"><h3>Missing alt text</h3><p class="small">Families hear "Photo of {place}".</p></div>
+  </div>
+</template>
+
+<section id="flag-cards" data-part="1" data-cue="No photo: the place has no primary at all" data-template="flag-list" data-show="2">
+  <h2>Four flags, worst first</h2>
+</section>
+
+<section id="flag-cards-2" data-part="1" data-cue="Unreviewed: the primary is a provider photo" data-template="flag-list" data-show="4">
+  <h2>Four flags, worst first</h2>
+</section>
+
+<section id="allowed" data-part="1" data-cue="The allowed origin check is not new code">
+  <h2>Blocked means what families get</h2>
+  <pre class="code" data-lang="cs" data-mark="3-4,6-7">
+public static bool IsAllowed(string url, ImageOptions options)
+{
+    if (!Uri.TryCreate(url, UriKind.Absolute, out var uri)
+        || uri.Scheme != Uri.UriSchemeHttps) return false;
+    var origin = uri.GetLeftPart(UriPartial.Authority);
+    return options.AllowedOrigins.Any(o =&gt;
+        string.Equals(o.TrimEnd('/'), origin, StringComparison.OrdinalIgnoreCase));
+}
+</pre>
+  <p class="small muted"><span class="file">backend/src/Saturdaze.Application/Photos/PlacePhotoReader.cs</span> · configured by <code>Saturdaze:Images:AllowedOrigins</code></p>
+</section>
+
+<section id="severity" data-part="1" data-cue="turns the flags into a sort key">
+  <h2>One ordering for both screens</h2>
+  <div class="flow">
+    <div class="node accent">0 · No photo</div>
+    <div class="arrow">→</div>
+    <div class="node">1 · Blocked URL</div>
+    <div class="arrow">→</div>
+    <div class="node">2 · Unreviewed</div>
+    <div class="arrow">→</div>
+    <div class="node">3 · Missing alt</div>
+    <div class="arrow">→</div>
+    <div class="node">4 · Healthy</div>
+  </div>
+  <p class="small muted"><code>PhotoHealth.Severity(flags)</code>: the worst flag wins; healthy places sort last.</p>
+</section>
+
+<section id="health" data-part="2" data-cue="This is the admin home." data-clip="clips/health.mp4" data-clip-delay="3">
+  <aside class="clip-notes">
+    <h3>One card per catalog</h3>
+    <ul>
+      <li>Places with a primary photo <em>that shows</em></li>
+      <li>Four flag counts</li>
+      <li>A blocked primary never counts as shown</li>
+      <li>"Review 4 new photos" when provider photos wait</li>
+    </ul>
+  </aside>
+</section>
+
+<section id="worst" data-part="2" data-cue="Below the cards is worst first" data-clip="clips/worst-first.mp4">
+  <aside class="clip-notes">
+    <h3>Worst first</h3>
+    <ul>
+      <li>The six worst places</li>
+      <li>Same health-first sort as Places</li>
+      <li>"All places" opens the full list</li>
+    </ul>
+  </aside>
+</section>
+
+<section id="drill" data-part="2" data-cue="Every figure is a link." data-clip="clips/drill-down.mp4">
+  <aside class="clip-notes">
+    <h3>Every figure is a link</h3>
+    <ul>
+      <li><code>/places?kind=Restaurant&amp;flag=no-photo</code></li>
+      <li>Card count = list length</li>
+      <li>Events: starting today or later</li>
+    </ul>
+  </aside>
+</section>
+
+<section id="measure" data-part="2" data-cue="runs the same flag evaluation per place that the list runs">
+  <h2>The same evaluation, counted</h2>
+  <pre class="code tight" data-lang="cs" data-mark="4,9">
+foreach (var id in placeIds)
+{
+    var own = photos.GetValueOrDefault((kind, id)) ?? new List&lt;PlacePhoto&gt;();
+    var flags = PhotoHealth.Flags(own, IsAllowed);
+    if (flags.Contains(PhotoHealth.NoPhoto)) noPhoto++;
+    if (flags.Contains(PhotoHealth.BlockedUrl)) blocked++;
+    if (flags.Contains(PhotoHealth.Unreviewed)) unreviewed++;
+    if (flags.Contains(PhotoHealth.MissingAlt)) missingAlt++;
+    if (!flags.Contains(PhotoHealth.NoPhoto) &amp;&amp; !flags.Contains(PhotoHealth.BlockedUrl)) withPrimary++;
+}
+</pre>
+  <p class="small muted"><span class="file">backend/src/Saturdaze.Application/Admin/Photos/GetPhotoHealthQueryHandler.cs</span></p>
+</section>
+
+<section id="search" data-part="3" data-cue="Places lists every catalog place, across all three catalogs" data-clip="clips/search.mp4" data-clip-delay="8">
+  <aside class="clip-notes">
+    <h3>Search by name</h3>
+    <ul>
+      <li>Case-insensitive contains</li>
+      <li>"port" → 2 places</li>
+      <li>"bronte" → 1 place</li>
+      <li>Debounced 250 ms</li>
+    </ul>
+  </aside>
+</section>
+
+<section id="filters" data-part="3" data-cue="The filter chips combine." data-clip="clips/filters.mp4" data-clip-delay="4">
+  <aside class="clip-notes">
+    <h3>Filters, sort, open</h3>
+    <ul>
+      <li>Kind · flag · primary source · upcoming</li>
+      <li>Restaurants + Unreviewed → 2</li>
+      <li>Sort: worst health, name, recently changed</li>
+      <li>50 per page</li>
+    </ul>
+  </aside>
+</section>
+
+<section id="url-state" data-part="3" data-cue="The filters, the search and the sort all live in the query string">
+  <h2>The address is the state</h2>
+  <pre class="code tight" data-lang="ts" data-mark="2-3,13">
+/** The query as the URL says it (the single source of truth). */
+protected readonly query = toSignal(
+  this.route.queryParamMap.pipe(map((params) =&gt; parseAdminPlacesQuery((k) =&gt; params.get(k)))),
+  { initialValue: DEFAULT_ADMIN_PLACES_QUERY },
+);
+
+this.search.valueChanges
+  .pipe(debounceTime(250), distinctUntilChanged(), takeUntilDestroyed())
+  .subscribe((q) =&gt; this.apply({ q: q.trim(), page: 1 }));
+
+private apply(patch: Partial&lt;AdminPlacesQuery&gt;): void {
+  const next = toAdminPlacesParams({ ...this.query(), ...patch });
+  void this.router.navigate([], { relativeTo: this.route, queryParams: next });
+}
+</pre>
+  <p class="small muted"><span class="file">frontend/projects/admin/src/app/pages/places/places.page.ts</span> (abridged)</p>
+</section>
+
+<section id="list-handler" data-part="3" data-cue="loads the places, applies the kind, upcoming and search filters">
+  <h2>The default sort</h2>
+  <pre class="code tight" data-lang="cs" data-mark="9">
+if (request.Flag is not null) rows = rows.Where(r =&gt; r.Dto.Flags.Contains(request.Flag));
+if (source is not null) rows = rows.Where(r =&gt; r.Primary?.Source == source);
+
+var ordered = (request.Sort ?? "health") switch
+{
+    "name" =&gt; rows.OrderBy(r =&gt; r.Dto.Name, StringComparer.OrdinalIgnoreCase),
+    "changed" =&gt; rows.OrderByDescending(r =&gt; r.Dto.UpdatedAt ?? DateTimeOffset.MinValue)
+        .ThenBy(r =&gt; r.Dto.Name, StringComparer.OrdinalIgnoreCase),
+    _ =&gt; rows.OrderBy(r =&gt; r.Severity).ThenBy(r =&gt; r.Dto.Name, StringComparer.OrdinalIgnoreCase),
+};
+</pre>
+  <p class="small muted"><span class="file">backend/src/Saturdaze.Application/Admin/Photos/ListAdminPlacesQueryHandler.cs</span> · <code>GET /api/admin/places?q=&amp;kind=&amp;flag=&amp;source=&amp;upcoming=&amp;sort=&amp;page=</code></p>
+</section>
+
+<section id="recap" data-part="4" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div>Health is judged on the primary: no photo, blocked URL, unreviewed, missing alt text.</div>
+    <div>Blocked = the family app's allow-list would refuse it; never counted as shown.</div>
+    <div>Home and Places share one evaluation, so counts match lists.</div>
+    <div>Filters, search and sort live in the address: every view is a link.</div>
+  </div>
+  <p class="small muted">Next · Video 14: managing a place's photos.</p>
+</section>
+
+<script src="../assets/slides.js"></script>
+</body>
+</html>

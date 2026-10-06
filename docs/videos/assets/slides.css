@@ -741,3 +741,65 @@ table.grid code {
 }
 
 .center pre.code { text-align: left; }
+
+/* ------------------------------------------------------------ screen recordings */
+
+/* <section data-clip="clips/x.mp4">: a 1408x792 recording at the left, notes at the right.
+   tools/video-build overlays the MP4 exactly over .clip, so keep the box 16:9 and square-cornered. */
+body > section.clip-slide {
+  padding: 0;
+}
+
+.clip {
+  position: absolute;
+  left: 56px;
+  top: 100px;
+  width: 1408px;
+  height: 792px;
+  background: #1f2937;
+  border: 0;
+  box-shadow: 0 0 0 1px var(--stroke), 0 18px 48px rgba(31, 41, 55, 0.18);
+  object-fit: contain;
+}
+
+/* A phone-width recording (390x792), centred in the same frame. */
+.clip.phone {
+  left: 565px;
+  width: 390px;
+}
+
+.clip-notes {
+  position: absolute;
+  left: 1500px;
+  top: 108px;
+  width: 372px;
+  font-size: 29px;
+  line-height: 1.35;
+}
+
+.clip-notes h3 {
+  font-size: 36px;
+  line-height: 1.15;
+  color: var(--coral-ink);
+  margin-bottom: 18px;
+}
+
+.clip-notes ul {
+  padding-left: 0.9em;
+}
+
+.clip-notes li {
+  margin: 0 0 14px;
+}
+
+.clip-notes code {
+  font-size: 0.78em;
+  padding: 1px 6px;
+}
+
+/* A phone recording leaves room for wider notes. */
+.clip-slide .clip.phone ~ .clip-notes {
+  left: 1080px;
+  width: 720px;
+  font-size: 34px;
+}
