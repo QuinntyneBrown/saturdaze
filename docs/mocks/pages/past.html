@@ -27,6 +27,7 @@
 </header>
 <!-- @/shell:topbar -->
 <main class="app-main container" id="main">
+  <!-- docs/specs L2-098: each past weekend leads with its cover photo; families can add their own. -->
   <header class="page-header">
     <div class="page-header__text">
       <h1 class="page-header__title">Past weekends</h1>
@@ -47,7 +48,8 @@
   </p>
 
   <ul class="grid-cards">
-    <li class="card">
+    <li class="card card--media">
+      <div class="media card__media"><img class="media__img" src="../images/bronte-creek.svg" alt="Bronte Creek winding through parkland" width="800" height="500" loading="lazy"><span class="media__credit">Your photo</span></div>
       <div class="card__row">
         <span class="card__eyebrow">10 – 11 May 2026</span>
         <button class="btn btn--ghost btn--sm btn--icon fav-btn" type="button" aria-pressed="true" aria-label="Favourite this weekend"><svg class="icon" aria-hidden="true"><use href="#i-heart"/></svg></button>
@@ -64,7 +66,8 @@
       </div>
     </li>
 
-    <li class="card">
+    <li class="card card--media">
+      <div class="media card__media"><img class="media__img" src="../images/stay-home.svg" alt="Rain on the window beside the craft table" width="800" height="500" loading="lazy"><span class="media__credit">Your photo</span></div>
       <div class="card__row">
         <span class="card__eyebrow">3 – 4 May 2026</span>
         <button class="btn btn--ghost btn--sm btn--icon fav-btn" type="button" aria-pressed="false" aria-label="Favourite this weekend"><svg class="icon" aria-hidden="true"><use href="#i-heart"/></svg></button>
@@ -81,7 +84,8 @@
       </div>
     </li>
 
-    <li class="card">
+    <li class="card card--media">
+      <div class="media card__media"><img class="media__img" src="../images/toronto-zoo.svg" alt="A polar bear beside its pool" width="800" height="500" loading="lazy"><span class="media__credit">From Toronto Zoo</span></div>
       <div class="card__row">
         <span class="card__eyebrow">26 – 27 Apr 2026</span>
         <button class="btn btn--ghost btn--sm btn--icon fav-btn" type="button" aria-pressed="false" aria-label="Favourite this weekend"><svg class="icon" aria-hidden="true"><use href="#i-heart"/></svg></button>
@@ -98,7 +102,8 @@
       </div>
     </li>
 
-    <li class="card">
+    <li class="card card--media">
+      <div class="media card__media"><img class="media__img" src="../images/science-centre.svg" alt="Planets on the planetarium ceiling" width="800" height="500" loading="lazy"><span class="media__credit">From Ontario Science Centre</span></div>
       <div class="card__row">
         <span class="card__eyebrow">19 – 20 Apr 2026</span>
         <button class="btn btn--ghost btn--sm btn--icon fav-btn" type="button" aria-pressed="false" aria-label="Favourite this weekend"><svg class="icon" aria-hidden="true"><use href="#i-heart"/></svg></button>
@@ -115,7 +120,8 @@
       </div>
     </li>
 
-    <li class="card">
+    <li class="card card--media">
+      <div class="media card__media"><img class="media__img" src="../images/botanical-gardens.svg" alt="Tulip beds in front of the conservatory" width="800" height="500" loading="lazy"><span class="media__credit">From Royal Botanical Gardens</span></div>
       <div class="card__row">
         <span class="card__eyebrow">12 – 13 Apr 2026</span>
         <button class="btn btn--ghost btn--sm btn--icon fav-btn" type="button" aria-pressed="true" aria-label="Favourite this weekend"><svg class="icon" aria-hidden="true"><use href="#i-heart"/></svg></button>
@@ -132,7 +138,8 @@
       </div>
     </li>
 
-    <li class="card">
+    <li class="card card--media">
+      <a class="media media--fallback media--sky card__media" href="./dialogs.html#dialog-cover-photo" aria-label="Add a photo to Rainy Rec Room"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg>Add a photo</a>
       <div class="card__row">
         <span class="card__eyebrow">5 – 6 Apr 2026</span>
         <button class="btn btn--ghost btn--sm btn--icon fav-btn" type="button" aria-pressed="false" aria-label="Favourite this weekend"><svg class="icon" aria-hidden="true"><use href="#i-heart"/></svg></button>

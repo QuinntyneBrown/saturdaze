@@ -801,7 +801,7 @@
   .tile { display: flex; flex-direction: column; gap: 4px; padding: 14px 16px; background: var(--sd-surface); border: 1px solid var(--sd-line); border-radius: var(--sd-r-lg); font-size: var(--sd-fs-base); font-weight: var(--sd-fw-semibold); transition: border-color var(--sd-dur-fast) var(--sd-ease), box-shadow var(--sd-dur-fast) var(--sd-ease); }
   .tile small { font-size: var(--sd-fs-sm); font-weight: var(--sd-fw-regular); color: var(--sd-ink-soft); }
 
-  /* ---- media (photo frames; proposal: docs/specs L1-032 → L1-035) ---- */
+  /* ---- media (photo frames; docs/specs L1-032 → L1-035) ---- */
   .media { position: relative; display: block; overflow: hidden; aspect-ratio: 16 / 9; background: var(--sd-surface-2); border-radius: var(--sd-r-md); }
   .media--4x3 { aspect-ratio: 4 / 3; }
   .media__img { width: 100%; height: 100%; object-fit: cover; }
@@ -811,6 +811,7 @@
   .media--leaf { background: var(--sd-leaf-soft); color: var(--sd-leaf-ink); }
   .media--indoor { background: var(--sd-indoor-soft); color: var(--sd-indoor-ink); }
   .media--sky { background: var(--sd-sky-soft); color: var(--sd-sky-ink); }
+  .media--sun { background: var(--sd-sun-soft); color: var(--sd-sun-ink); }
   .card--media { padding-top: 0; overflow: hidden; }
   .card--media > .card__media { margin: 0 -16px 4px; border-radius: 0; }
 
@@ -830,6 +831,7 @@
 
   /* ---- planner (itinerary beside a map) ---- */
   .planner { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; align-items: start; }
+  .planner[hidden] { display: none; }
   .planner__map { order: -1; }
   @media (min-width: 1024px) {
     .planner { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 32px; }

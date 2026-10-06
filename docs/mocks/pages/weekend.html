@@ -27,27 +27,39 @@
 </header>
 <!-- @/shell:topbar -->
 <main class="app-main container" id="main">
-  <header class="page-header">
-    <div class="page-header__text">
-      <h1 class="page-header__title">This weekend</h1>
-      <p class="page-header__subtitle">Sunny Saturday for the lavender, a cloudy Sunday for the Rec Room.</p>
-    </div>
-    <a class="btn btn--quiet btn--icon page-header__more" href="./dialogs.html#dialog-more" aria-label="More options"><svg class="icon" aria-hidden="true"><use href="#i-more"/></svg></a>
-    <div class="page-header__actions">
-      <a class="btn btn--quiet" href="./dialogs.html#dialog-calendar"><svg class="icon" aria-hidden="true"><use href="#i-calendar"/></svg>Add to calendar</a>
-      <a class="btn btn--primary" href="./dialogs.html#dialog-share"><svg class="icon" aria-hidden="true"><use href="#i-share"/></svg>Share</a>
-    </div>
-  </header>
+  <!-- docs/specs L2-090 → L2-093, L2-096: cover photo, one day beside its map, numbered stops, travel legs. -->
+  <figure class="cover">
+    <img class="cover__img" src="../images/lavender-farm.svg" alt="Rows of lavender running to the horizon at Terre Bleu Lavender Farm" width="800" height="500">
+    <span class="media__credit">Photo · Terre Bleu</span>
+    <figcaption class="cover__body">
+      <p class="cover__eyebrow">17 – 18 May</p>
+      <h1 class="cover__title">This weekend</h1>
+      <p class="cover__sub">Sunny Saturday for the lavender, a cloudy Sunday for the Rec Room.</p>
+    </figcaption>
+    <a class="btn btn--quiet btn--sm cover__edit" href="./dialogs.html#dialog-cover-photo"><svg class="icon" aria-hidden="true"><use href="#i-edit"/></svg>Change photo</a>
+  </figure>
 
-  <div class="grid-days">
+  <div class="cover-actions">
+    <a class="btn btn--quiet" href="./dialogs.html#dialog-calendar"><svg class="icon" aria-hidden="true"><use href="#i-calendar"/></svg>Add to calendar</a>
+    <a class="btn btn--primary" href="./dialogs.html#dialog-share"><svg class="icon" aria-hidden="true"><use href="#i-share"/></svg>Share</a>
+    <a class="btn btn--quiet btn--icon" href="./dialogs.html#dialog-more" aria-label="More options"><svg class="icon" aria-hidden="true"><use href="#i-more"/></svg></a>
+  </div>
 
+  <div class="planner__toolbar">
+    <div class="segments segments--narrow" role="tablist" aria-label="Day">
+      <button class="segments__tab" type="button" role="tab" aria-selected="true" aria-controls="sat-panel" id="sat-tab">Saturday</button>
+      <button class="segments__tab" type="button" role="tab" aria-selected="false" aria-controls="sun-panel" id="sun-tab">Sunday</button>
+    </div>
+  </div>
+
+  <div class="planner" id="sat-panel" role="tabpanel" aria-labelledby="sat-tab" data-day-panel>
     <!-- ============================== SATURDAY ============================== -->
     <section class="day" aria-labelledby="sat-title">
       <header class="day__header">
         <span class="weather-disc weather-disc--sun" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-sun"/></svg></span>
         <div class="day__text">
           <h2 class="day__title" id="sat-title">Saturday</h2>
-          <p class="day__meta">17 May · 22° / 14° · Light breeze, good for outdoors</p>
+          <p class="day__meta">17 May · 22° / 14° · 3 stops · 1 h 36 min driving</p>
         </div>
         <div class="day__actions">
           <a class="btn btn--ghost btn--sm day__btn" href="./dialogs.html#dialog-regenerate-day" aria-label="Regenerate Saturday"><svg class="icon" aria-hidden="true"><use href="#i-refresh"/></svg><span class="day__btn-label">Regenerate</span></a>
@@ -62,44 +74,42 @@
             <h3 class="block__title">Breakfast at home</h3>
             <p class="block__sub clamp-1">Cereal day, Eli's choice</p>
           </div>
-          <div class="block__actions">
-            <a class="btn btn--ghost btn--sm btn--icon" href="./dialogs.html#dialog-block" aria-label="Why this: Breakfast at home"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg></a>
-            <a class="btn btn--ghost btn--sm btn--icon" href="./dialogs.html#dialog-block" aria-label="Swap Breakfast at home"><svg class="icon" aria-hidden="true"><use href="#i-swap"/></svg></a>
-            <button class="btn btn--ghost btn--sm btn--icon" type="button" aria-label="Lock Breakfast at home" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg></button>
-          </div>
           <a class="block__chev" href="./dialogs.html#dialog-block" aria-label="Details for Breakfast at home"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron_right"/></svg></a>
+        </li>
+
+        <li class="leg" aria-label="Travel: 6 minutes, 3 kilometres to Swim lessons">
+          <span></span><span class="leg__rail" aria-hidden="true"></span>
+          <p class="leg__text"><svg class="icon" aria-hidden="true"><use href="#i-car"/></svg>6 min · 3 km</p>
         </li>
 
         <li class="block block--commitment">
           <div class="block__time"><span class="block__clock">9:00</span><span class="block__dur">60m</span></div>
-          <div class="block__rail"><span class="block__disc"><svg class="icon" aria-hidden="true"><use href="#i-bike"/></svg></span></div>
+          <div class="block__rail"><span class="block__disc block__disc--num" aria-label="Stop 1">1</span></div>
           <div class="block__body">
             <h3 class="block__title">Swim lessons</h3>
-            <p class="block__sub clamp-1">Every Saturday · locked in</p>
+            <p class="block__sub clamp-1">Port Credit pool · every Saturday</p>
             <div class="block__chips"><span class="chip chip--accent"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg>Commitment</span></div>
-          </div>
-          <div class="block__actions">
-            <a class="btn btn--ghost btn--sm btn--icon" href="./dialogs.html#dialog-block-commitment" aria-label="About Swim lessons"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg></a>
           </div>
           <a class="block__chev" href="./dialogs.html#dialog-block-commitment" aria-label="Details for Swim lessons"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron_right"/></svg></a>
         </li>
 
-        <li class="block block--drive">
-          <div class="block__time"><span class="block__clock">10:30</span><span class="block__dur">45m</span></div>
-          <div class="block__rail"><span class="block__disc"><svg class="icon" aria-hidden="true"><use href="#i-car"/></svg></span></div>
-          <div class="block__body"><h3 class="block__title">Drive to Terre Bleu</h3></div>
+        <li class="leg" aria-label="Travel: 45 minutes, 52 kilometres to Lavender fields">
+          <span></span><span class="leg__rail" aria-hidden="true"></span>
+          <p class="leg__text"><svg class="icon" aria-hidden="true"><use href="#i-car"/></svg>45 min · 52 km<a class="leg__link" href="https://maps.example.com/directions/port-credit-pool/terre-bleu" target="_blank" rel="noopener">Directions</a></p>
         </li>
 
-        <li class="block">
-          <div class="block__time"><span class="block__clock">11:00</span><span class="block__dur">2h</span></div>
-          <div class="block__rail"><span class="block__disc"><svg class="icon" aria-hidden="true"><use href="#i-tree"/></svg></span></div>
+        <li class="block block--active">
+          <div class="block__time"><span class="block__clock">11:00</span><span class="block__dur">1h 45m</span></div>
+          <div class="block__rail"><span class="block__disc block__disc--num" aria-label="Stop 2">2</span></div>
           <div class="block__body">
-            <h3 class="block__title">Lavender fields</h3>
-            <p class="block__sub clamp-1">Terre Bleu, Milton · walk the rows</p>
-            <div class="block__chips">
-              <span class="chip chip--primary">Day highlight</span>
-              <span class="chip chip--sky"><svg class="icon" aria-hidden="true"><use href="#i-car"/></svg>45 min drive</span>
+            <div class="block__media-row">
+              <div>
+                <h3 class="block__title">Lavender fields</h3>
+                <p class="block__sub clamp-1">Terre Bleu, Milton · walk the rows</p>
+              </div>
+              <img class="block__thumb" src="../images/lavender-farm.svg" alt="" width="72" height="54">
             </div>
+            <div class="block__chips"><span class="chip chip--primary">Day highlight</span></div>
           </div>
           <div class="block__actions">
             <a class="btn btn--ghost btn--sm btn--icon" href="./dialogs.html#dialog-block" aria-label="Why this: Lavender fields"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg></a>
@@ -109,9 +119,14 @@
           <a class="block__chev" href="./dialogs.html#dialog-block" aria-label="Details for Lavender fields"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron_right"/></svg></a>
         </li>
 
+        <li class="leg" aria-label="Travel: 40 minutes, 48 kilometres to Lunch at La Marina">
+          <span></span><span class="leg__rail" aria-hidden="true"></span>
+          <p class="leg__text"><svg class="icon" aria-hidden="true"><use href="#i-car"/></svg>40 min · 48 km<a class="leg__link" href="https://maps.example.com/directions/terre-bleu/la-marina" target="_blank" rel="noopener">Directions</a></p>
+        </li>
+
         <li class="block">
-          <div class="block__time"><span class="block__clock">13:00</span><span class="block__dur">75m</span></div>
-          <div class="block__rail"><span class="block__disc"><svg class="icon" aria-hidden="true"><use href="#i-fork"/></svg></span></div>
+          <div class="block__time"><span class="block__clock">13:30</span><span class="block__dur">75m</span></div>
+          <div class="block__rail"><span class="block__disc block__disc--num" aria-label="Stop 3">3</span></div>
           <div class="block__body">
             <h3 class="block__title">Lunch at La Marina</h3>
             <p class="block__sub clamp-1">Wife-approved · patio · 3 of 4 votes</p>
@@ -124,39 +139,19 @@
           <a class="block__chev" href="./dialogs.html#dialog-block" aria-label="Details for Lunch at La Marina"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron_right"/></svg></a>
         </li>
 
-        <li class="block block--drive">
-          <div class="block__time"><span class="block__clock">14:30</span><span class="block__dur">45m</span></div>
-          <div class="block__rail"><span class="block__disc"><svg class="icon" aria-hidden="true"><use href="#i-car"/></svg></span></div>
-          <div class="block__body"><h3 class="block__title">Drive home</h3></div>
+        <li class="leg" aria-label="Travel: 5 minutes, 2 kilometres home">
+          <span></span><span class="leg__rail" aria-hidden="true"></span>
+          <p class="leg__text"><svg class="icon" aria-hidden="true"><use href="#i-car"/></svg>5 min · 2 km home</p>
         </li>
 
         <li class="block">
-          <div class="block__time"><span class="block__clock">15:30</span><span class="block__dur">90m</span></div>
+          <div class="block__time"><span class="block__clock">15:00</span><span class="block__dur">2h</span></div>
           <div class="block__rail"><span class="block__disc"><svg class="icon" aria-hidden="true"><use href="#i-bed"/></svg></span></div>
           <div class="block__body">
             <h3 class="block__title">Quiet time at home</h3>
             <p class="block__sub clamp-1">Recharge before evening</p>
           </div>
-          <div class="block__actions">
-            <a class="btn btn--ghost btn--sm btn--icon" href="./dialogs.html#dialog-block" aria-label="Why this: Quiet time at home"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg></a>
-            <a class="btn btn--ghost btn--sm btn--icon" href="./dialogs.html#dialog-block" aria-label="Swap Quiet time at home"><svg class="icon" aria-hidden="true"><use href="#i-swap"/></svg></a>
-            <button class="btn btn--ghost btn--sm btn--icon" type="button" aria-label="Lock Quiet time at home" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg></button>
-          </div>
           <a class="block__chev" href="./dialogs.html#dialog-block" aria-label="Details for Quiet time at home"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron_right"/></svg></a>
-        </li>
-
-        <li class="block block--commitment">
-          <div class="block__time"><span class="block__clock">17:00</span><span class="block__dur">60m</span></div>
-          <div class="block__rail"><span class="block__disc"><svg class="icon" aria-hidden="true"><use href="#i-bike"/></svg></span></div>
-          <div class="block__body">
-            <h3 class="block__title">Workout window</h3>
-            <p class="block__sub clamp-1">Every Saturday · locked in</p>
-            <div class="block__chips"><span class="chip chip--accent"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg>Commitment</span></div>
-          </div>
-          <div class="block__actions">
-            <a class="btn btn--ghost btn--sm btn--icon" href="./dialogs.html#dialog-block-commitment" aria-label="About Workout window"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg></a>
-          </div>
-          <a class="block__chev" href="./dialogs.html#dialog-block-commitment" aria-label="Details for Workout window"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron_right"/></svg></a>
         </li>
 
         <li class="block">
@@ -165,11 +160,6 @@
           <div class="block__body">
             <h3 class="block__title">Dinner at home</h3>
             <p class="block__sub clamp-1">Pasta and veg, picky-approved</p>
-          </div>
-          <div class="block__actions">
-            <a class="btn btn--ghost btn--sm btn--icon" href="./dialogs.html#dialog-block" aria-label="Why this: Dinner at home"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg></a>
-            <a class="btn btn--ghost btn--sm btn--icon" href="./dialogs.html#dialog-block" aria-label="Swap Dinner at home"><svg class="icon" aria-hidden="true"><use href="#i-swap"/></svg></a>
-            <button class="btn btn--ghost btn--sm btn--icon" type="button" aria-label="Lock Dinner at home" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg></button>
           </div>
           <a class="block__chev" href="./dialogs.html#dialog-block" aria-label="Details for Dinner at home"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron_right"/></svg></a>
         </li>
@@ -182,24 +172,48 @@
             <p class="block__sub clamp-1">Lights out at 9</p>
             <div class="block__chips"><span class="chip chip--accent"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg>Locked</span></div>
           </div>
-          <div class="block__actions">
-            <a class="btn btn--ghost btn--sm btn--icon" href="./dialogs.html#dialog-block-locked" aria-label="Why this: Bath and books"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg></a>
-            <a class="btn btn--ghost btn--sm btn--icon" href="./dialogs.html#dialog-block" aria-label="Swap Bath and books"><svg class="icon" aria-hidden="true"><use href="#i-swap"/></svg></a>
-            <button class="btn btn--ghost btn--sm btn--icon" type="button" aria-label="Unlock Bath and books" aria-pressed="true"><svg class="icon" aria-hidden="true"><use href="#i-unlock"/></svg></button>
-          </div>
           <a class="block__chev" href="./dialogs.html#dialog-block-locked" aria-label="Details for Bath and books"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron_right"/></svg></a>
         </li>
       </ol>
       <a class="ghost-row" href="./dialogs.html#dialog-errand"><svg class="icon" aria-hidden="true"><use href="#i-bag"/></svg>Add an errand</a>
     </section>
 
+    <!-- ============================== MAP ============================== -->
+    <aside class="planner__map" aria-label="Saturday map">
+      <div class="map">
+        <svg class="map__svg" viewBox="0 0 400 300" role="img" aria-label="Map of Saturday's route: home in Port Credit, 1 Swim lessons, 2 Lavender fields at Terre Bleu in Milton, 3 Lunch at La Marina, then home. Stop 2 is highlighted.">
+          <rect width="400" height="300" fill="#EEF0E6"/>
+          <path d="M0 262 C90 250 170 268 250 256 S360 244 400 250 V300 H0Z" fill="#BFD9E8"/>
+          <path d="M40 0 L230 255" stroke="#FFFFFF" stroke-width="7"/><path d="M40 0 L230 255" stroke="#D9D2C2" stroke-width="1"/>
+          <path d="M0 210 C120 220 260 205 400 180" stroke="#FFFFFF" stroke-width="7" fill="none"/>
+          <path d="M150 0 C170 80 200 150 300 300" stroke="#FFFFFF" stroke-width="4" fill="none"/>
+          <path d="M248 238 L268 214 L92 66 L218 248 L248 238" fill="none" stroke="#A04B2C" stroke-width="3" stroke-dasharray="6 5" stroke-linecap="round" stroke-linejoin="round"/>
+          <text class="map__label" x="60" y="40">Milton</text>
+          <text class="map__label" x="290" y="150">Mississauga</text>
+          <text class="map__label" x="280" y="246">Port Credit</text>
+          <text class="map__label" x="150" y="288">Lake Ontario</text>
+          <g class="map__pin"><circle cx="248" cy="238" r="11" fill="#1F2937"/><path d="M243 239 l5 -5 l5 5 v5 h-10Z" fill="#FFFFFF"/></g>
+          <g class="map__pin"><circle cx="268" cy="214" r="12" fill="#A04B2C"/><text class="map__pin-num" x="268" y="214">1</text></g>
+          <g class="map__pin map__pin--active"><circle cx="92" cy="66" r="15" fill="#A04B2C"/><text class="map__pin-num" x="92" y="66">2</text></g>
+          <g class="map__pin"><circle cx="218" cy="248" r="12" fill="#A04B2C"/><text class="map__pin-num" x="218" y="248">3</text></g>
+        </svg>
+        <a class="btn btn--quiet btn--sm map__expand" href="./weekend.html#sat-panel"><svg class="icon" aria-hidden="true"><use href="#i-map"/></svg>Open map</a>
+        <p class="map__legend">
+          <span>3 stops · 1 h 36 min · 105 km</span>
+          <span class="map__attr">Illustrative. Production: © OpenStreetMap contributors</span>
+        </p>
+      </div>
+    </aside>
+  </div>
+
+  <div class="planner" id="sun-panel" role="tabpanel" aria-labelledby="sun-tab" data-day-panel hidden>
     <!-- ============================== SUNDAY ============================== -->
     <section class="day" aria-labelledby="sun-title">
       <header class="day__header">
         <span class="weather-disc weather-disc--cloud" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-cloud"/></svg></span>
         <div class="day__text">
           <h2 class="day__title" id="sun-title">Sunday</h2>
-          <p class="day__meta">18 May · 18° / 12° · Cloudy by 2pm, indoor afternoon</p>
+          <p class="day__meta">18 May · 18° / 12° · 4 stops · 51 min driving</p>
         </div>
         <div class="day__actions">
           <a class="btn btn--ghost btn--sm day__btn" href="./dialogs.html#dialog-regenerate-day" aria-label="Regenerate Sunday"><svg class="icon" aria-hidden="true"><use href="#i-refresh"/></svg><span class="day__btn-label">Regenerate</span></a>
@@ -222,9 +236,14 @@
           <a class="block__chev" href="./dialogs.html#dialog-block" aria-label="Details for Pancakes at home"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron_right"/></svg></a>
         </li>
 
+        <li class="leg" aria-label="Travel: 8 minutes, 5 kilometres to Costco run">
+          <span></span><span class="leg__rail" aria-hidden="true"></span>
+          <p class="leg__text"><svg class="icon" aria-hidden="true"><use href="#i-car"/></svg>8 min · 5 km</p>
+        </li>
+
         <li class="block block--errand">
           <div class="block__time"><span class="block__clock">9:15</span><span class="block__dur">45m</span></div>
-          <div class="block__rail"><span class="block__disc"><svg class="icon" aria-hidden="true"><use href="#i-bag"/></svg></span></div>
+          <div class="block__rail"><span class="block__disc block__disc--num" aria-label="Stop 1">1</span></div>
           <div class="block__body">
             <h3 class="block__title">Costco run</h3>
             <p class="block__sub clamp-1">Paper towels, bread, yogurt</p>
@@ -238,9 +257,14 @@
           <a class="block__chev" href="./dialogs.html#dialog-block" aria-label="Details for Costco run"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron_right"/></svg></a>
         </li>
 
+        <li class="leg" aria-label="Travel: 7 minutes, 4 kilometres to Church">
+          <span></span><span class="leg__rail" aria-hidden="true"></span>
+          <p class="leg__text"><svg class="icon" aria-hidden="true"><use href="#i-car"/></svg>7 min · 4 km</p>
+        </li>
+
         <li class="block block--commitment">
           <div class="block__time"><span class="block__clock">10:30</span><span class="block__dur">75m</span></div>
-          <div class="block__rail"><span class="block__disc"><svg class="icon" aria-hidden="true"><use href="#i-pin"/></svg></span></div>
+          <div class="block__rail"><span class="block__disc block__disc--num" aria-label="Stop 2">2</span></div>
           <div class="block__body">
             <h3 class="block__title">Church</h3>
             <p class="block__sub clamp-1">Every Sunday · locked in</p>
@@ -252,9 +276,14 @@
           <a class="block__chev" href="./dialogs.html#dialog-block-commitment" aria-label="Details for Church"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron_right"/></svg></a>
         </li>
 
+        <li class="leg" aria-label="Travel: 9 minutes, 6 kilometres to Lunch at Symposium Café">
+          <span></span><span class="leg__rail" aria-hidden="true"></span>
+          <p class="leg__text"><svg class="icon" aria-hidden="true"><use href="#i-car"/></svg>9 min · 6 km</p>
+        </li>
+
         <li class="block">
           <div class="block__time"><span class="block__clock">12:15</span><span class="block__dur">60m</span></div>
-          <div class="block__rail"><span class="block__disc"><svg class="icon" aria-hidden="true"><use href="#i-fork"/></svg></span></div>
+          <div class="block__rail"><span class="block__disc block__disc--num" aria-label="Stop 3">3</span></div>
           <div class="block__body">
             <h3 class="block__title">Lunch at Symposium Café</h3>
             <p class="block__sub clamp-1">Brunch · family booths</p>
@@ -267,18 +296,23 @@
           <a class="block__chev" href="./dialogs.html#dialog-block" aria-label="Details for Lunch at Symposium Café"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron_right"/></svg></a>
         </li>
 
-        <li class="block block--drive">
-          <div class="block__time"><span class="block__clock">13:30</span><span class="block__dur">10m</span></div>
-          <div class="block__rail"><span class="block__disc"><svg class="icon" aria-hidden="true"><use href="#i-car"/></svg></span></div>
-          <div class="block__body"><h3 class="block__title">Drive to Square One</h3></div>
+
+        <li class="leg" aria-label="Travel: 12 minutes, 9 kilometres to The Rec Room">
+          <span></span><span class="leg__rail" aria-hidden="true"></span>
+          <p class="leg__text"><svg class="icon" aria-hidden="true"><use href="#i-car"/></svg>12 min · 9 km<a class="leg__link" href="https://maps.example.com/directions/symposium-cafe/square-one" target="_blank" rel="noopener">Directions</a></p>
         </li>
 
         <li class="block">
           <div class="block__time"><span class="block__clock">14:00</span><span class="block__dur">2h</span></div>
-          <div class="block__rail"><span class="block__disc"><svg class="icon" aria-hidden="true"><use href="#i-popcorn"/></svg></span></div>
+          <div class="block__rail"><span class="block__disc block__disc--num" aria-label="Stop 4">4</span></div>
           <div class="block__body">
-            <h3 class="block__title">The Rec Room</h3>
-            <p class="block__sub clamp-1">Bowling and arcade · Eli's pick</p>
+            <div class="block__media-row">
+              <div>
+                <h3 class="block__title">The Rec Room</h3>
+                <p class="block__sub clamp-1">Bowling and arcade · Eli's pick</p>
+              </div>
+              <img class="block__thumb" src="../images/rec-room.svg" alt="" width="72" height="54">
+            </div>
             <div class="block__chips"><span class="chip chip--primary">Day highlight</span></div>
           </div>
           <div class="block__actions">
@@ -289,10 +323,10 @@
           <a class="block__chev" href="./dialogs.html#dialog-block" aria-label="Details for The Rec Room"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron_right"/></svg></a>
         </li>
 
-        <li class="block block--drive">
-          <div class="block__time"><span class="block__clock">16:30</span><span class="block__dur">10m</span></div>
-          <div class="block__rail"><span class="block__disc"><svg class="icon" aria-hidden="true"><use href="#i-car"/></svg></span></div>
-          <div class="block__body"><h3 class="block__title">Drive home</h3></div>
+
+        <li class="leg" aria-label="Travel: 15 minutes, 12 kilometres home">
+          <span></span><span class="leg__rail" aria-hidden="true"></span>
+          <p class="leg__text"><svg class="icon" aria-hidden="true"><use href="#i-car"/></svg>15 min · 12 km home<a class="leg__link" href="https://maps.example.com/directions/square-one/port-credit" target="_blank" rel="noopener">Directions</a></p>
         </li>
 
         <li class="block">
@@ -313,6 +347,32 @@
       <a class="ghost-row" href="./dialogs.html#dialog-errand"><svg class="icon" aria-hidden="true"><use href="#i-bag"/></svg>Add an errand</a>
     </section>
 
+    <aside class="planner__map" aria-label="Sunday map">
+      <div class="map">
+        <svg class="map__svg" viewBox="0 0 400 300" role="img" aria-label="Map of Sunday's route: home in Port Credit, 1 Costco run, 2 Church, 3 Lunch at Symposium Café, 4 The Rec Room at Square One, then home.">
+          <rect width="400" height="300" fill="#EEF0E6"/>
+          <path d="M0 262 C90 250 170 268 250 256 S360 244 400 250 V300 H0Z" fill="#BFD9E8"/>
+          <path d="M40 0 L230 255" stroke="#FFFFFF" stroke-width="7"/><path d="M40 0 L230 255" stroke="#D9D2C2" stroke-width="1"/>
+          <path d="M0 210 C120 220 260 205 400 180" stroke="#FFFFFF" stroke-width="7" fill="none"/>
+          <path d="M150 0 C170 80 200 150 300 300" stroke="#FFFFFF" stroke-width="4" fill="none"/>
+          <path d="M248 238 L330 196 L284 176 L344 138 L300 104 L248 238" fill="none" stroke="#A04B2C" stroke-width="3" stroke-dasharray="6 5" stroke-linecap="round" stroke-linejoin="round"/>
+          <text class="map__label" x="60" y="40">Milton</text>
+          <text class="map__label" x="210" y="80">Square One</text>
+          <text class="map__label" x="290" y="246">Port Credit</text>
+          <text class="map__label" x="150" y="288">Lake Ontario</text>
+          <g class="map__pin"><circle cx="248" cy="238" r="11" fill="#1F2937"/><path d="M243 239 l5 -5 l5 5 v5 h-10Z" fill="#FFFFFF"/></g>
+          <g class="map__pin"><circle cx="330" cy="196" r="12" fill="#A04B2C"/><text class="map__pin-num" x="330" y="196">1</text></g>
+          <g class="map__pin"><circle cx="284" cy="176" r="12" fill="#A04B2C"/><text class="map__pin-num" x="284" y="176">2</text></g>
+          <g class="map__pin"><circle cx="344" cy="138" r="12" fill="#A04B2C"/><text class="map__pin-num" x="344" y="138">3</text></g>
+          <g class="map__pin"><circle cx="300" cy="104" r="12" fill="#A04B2C"/><text class="map__pin-num" x="300" y="104">4</text></g>
+        </svg>
+        <a class="btn btn--quiet btn--sm map__expand" href="./weekend.html#sun-panel"><svg class="icon" aria-hidden="true"><use href="#i-map"/></svg>Open map</a>
+        <p class="map__legend">
+          <span>4 stops · 51 min · 36 km</span>
+          <span class="map__attr">Illustrative. Production: © OpenStreetMap contributors</span>
+        </p>
+      </div>
+    </aside>
   </div>
 </main>
 <!-- @shell:bottomnav -->
