@@ -32,7 +32,7 @@ The slice reads catalog tables only. Family data and weekend identifiers never l
 
 ### Persistence
 
-The migration `AddAdminPhotoManagement` adds the four columns on `PlacePhotos` (existing rows become `Reviewed`, unlocked), the `PhotoAuditEntries` table with an index on `(PlaceKind, PlaceId)` and one on `AdminUserId`, and the `RejectedPlacePhotos` table (`review-ingested-photos`). It applies through `saturdaze migrate`.
+The migration `AddAdminPhotoColumns` adds the five columns on `PlacePhotos`; existing provider rows become `Unreviewed` and every other row `Reviewed`, all unlocked. Later migrations add the `PhotoAuditEntries` table with an index on `(PlaceKind, PlaceId)` and one on `AdminUserId`, and the `RejectedPlacePhotos` table (`review-ingested-photos`). Each applies through `saturdaze migrate`.
 
 ### Application
 

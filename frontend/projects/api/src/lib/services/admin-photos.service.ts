@@ -4,7 +4,7 @@ import { firstValueFrom } from 'rxjs';
 
 import { API_BASE_URL } from '../api/api-base-url';
 import { AdminPhotoDto } from '../models/admin/admin-photo.dto';
-import { IAdminPhotosService } from './admin-photos.service.contract';
+import { IAdminPhotosService, PhotoDetails } from './admin-photos.service.contract';
 
 /** HTTP implementation of `IAdminPhotosService`. */
 @Injectable({ providedIn: 'root' })
@@ -18,5 +18,9 @@ export class AdminPhotosService implements IAdminPhotosService {
 
   makePrimary(photoId: string): Promise<AdminPhotoDto> {
     return firstValueFrom(this.http.post<AdminPhotoDto>(`${this.photoUrl(photoId)}/primary`, null));
+  }
+
+  edit(photoId: string, details: PhotoDetails): Promise<AdminPhotoDto> {
+    return firstValueFrom(this.http.patch<AdminPhotoDto>(this.photoUrl(photoId), details));
   }
 }

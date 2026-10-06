@@ -39,6 +39,13 @@ public sealed class AdminPhotosController : ControllerBase
     public async Task<ActionResult<PlacePhotosDto>> PlacePhotos(string kind, Guid id, CancellationToken ct)
         => Ok(await _sender.Send(new GetPlacePhotosQuery(ParseKind(kind), id), ct));
 
+    public record EditPhotoRequest(string? Alt, string? Attribution, string? Licence);
+
+    /// <summary>Edits alt text, attribution and licence; the URL never changes (L2-118).</summary>
+    [HttpPatch("photos/{photoId:guid}")]
+    public async Task<ActionResult<AdminPhotoDto>> Edit(Guid photoId, [FromBody] EditPhotoRequest req, CancellationToken ct)
+        => Ok(await _sender.Send(new EditPhotoDetailsCommand(photoId, req.Alt, req.Attribution, req.Licence), ct));
+
     /// <summary>Makes the photo its place's only primary (L2-117).</summary>
     [HttpPost("photos/{photoId:guid}/primary")]
     public async Task<ActionResult<AdminPhotoDto>> MakePrimary(Guid photoId, CancellationToken ct)

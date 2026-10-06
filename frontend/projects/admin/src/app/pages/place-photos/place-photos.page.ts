@@ -27,6 +27,11 @@ import {
 
 import { DIALOG_OPTIONS } from '../../dialogs/dialog-options';
 import {
+  EditPhotoDialog,
+  EditPhotoDialogData,
+  EditPhotoDialogResult,
+} from '../../dialogs/edit-photo-dialog/edit-photo-dialog';
+import {
   MakePrimaryDialog,
   MakePrimaryDialogData,
   MakePrimaryDialogResult,
@@ -92,6 +97,19 @@ export class PlacePhotosPage {
     if ((await firstValueFrom(ref.closed)) !== 'confirm') return;
     await this.run(async () => {
       await this.photos.makePrimary(tile.id);
+    });
+  }
+
+  /** AD3: edit alt text, attribution and licence (L2-118). */
+  protected async edit(tile: PhotoTileView): Promise<void> {
+    const ref = this.dialog.open<EditPhotoDialogResult, EditPhotoDialogData>(EditPhotoDialog, {
+      ...DIALOG_OPTIONS,
+      data: { tile },
+    });
+    const result = await firstValueFrom(ref.closed);
+    if (!result) return;
+    await this.run(async () => {
+      await this.photos.edit(tile.id, result);
     });
   }
 
