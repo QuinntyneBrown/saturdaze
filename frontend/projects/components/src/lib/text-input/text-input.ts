@@ -3,9 +3,9 @@ import {
   Component,
   booleanAttribute,
   computed,
-  effect,
   forwardRef,
   input,
+  linkedSignal,
   signal,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -73,7 +73,11 @@ export class TextInput implements ControlValueAccessor {
   protected readonly id = `sd-field-${nextFieldId++}`;
   protected readonly hintId = `${this.id}-hint`;
   protected readonly errorId = `${this.id}-error`;
-  protected readonly internalValue = signal<string>('');
+  // Follows a non-empty `value`; an empty one keeps the current text.
+  protected readonly internalValue = linkedSignal<string, string>({
+    source: this.value,
+    computation: (value, previous) => value || previous?.value || '',
+  });
   protected readonly disabled = signal<boolean>(false);
 
   protected readonly describedBy = computed(() => {
@@ -85,13 +89,6 @@ export class TextInput implements ControlValueAccessor {
 
   private onChange: (value: string) => void = () => {};
   private onTouched: () => void = () => {};
-
-  constructor() {
-    effect(() => {
-      const v = this.value();
-      if (v) this.internalValue.set(v);
-    });
-  }
 
   protected handleInput(event: Event): void {
     const v = (event.target as HTMLInputElement | HTMLTextAreaElement).value;

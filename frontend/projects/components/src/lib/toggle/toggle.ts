@@ -2,9 +2,9 @@ import {
   ChangeDetectionStrategy,
   Component,
   booleanAttribute,
-  effect,
   forwardRef,
   input,
+  linkedSignal,
   signal,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -43,19 +43,17 @@ export class Toggle implements ControlValueAccessor {
   readonly srLabel = input<string>('');
   readonly checked = input(false, { transform: booleanAttribute });
 
-  protected readonly internalChecked = signal<boolean>(false);
+  // Follows `checked` until a form binds; after that a later `checked`
+  // change keeps the form's value.
+  protected readonly internalChecked = linkedSignal<boolean, boolean>({
+    source: this.checked,
+    computation: (checked, previous) => (this.formBound && previous ? previous.value : checked),
+  });
   protected readonly disabled = signal<boolean>(false);
 
   private formBound = false;
   private onChange: (value: boolean) => void = () => {};
   private onTouched: () => void = () => {};
-
-  constructor() {
-    effect(() => {
-      const c = this.checked();
-      if (!this.formBound) this.internalChecked.set(c);
-    });
-  }
 
   protected handleChange(event: Event): void {
     const next = (event.target as HTMLInputElement).checked;
