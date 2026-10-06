@@ -1,0 +1,129 @@
+- generic [ref=e2]:
+  - generic [ref=e4]:
+    - link "Saturdaze" [ref=e5] [cursor=pointer]:
+      - /url: /
+      - text: Saturdaze
+    - generic [ref=e7]:
+      - link "Sign in" [ref=e8] [cursor=pointer]:
+        - /url: /sign-in
+      - link "Create your account" [ref=e10] [cursor=pointer]:
+        - /url: /create-account
+  - main [ref=e11]:
+    - generic [ref=e12]:
+      - region "Two days. Already planned." [ref=e13]:
+        - generic [ref=e14]:
+          - generic [ref=e15]:
+            - paragraph [ref=e16]: Weekends, drafted for your family
+            - heading "Two days. Already planned." [level=1] [ref=e17]:
+              - text: Two days.
+              - text: Already planned.
+            - paragraph [ref=e18]: Saturdaze drafts Saturday and Sunday around swim lessons, church and the weather, then fills the rest with things your family will say yes to.
+            - generic [ref=e19]:
+              - link "Create your account" [ref=e21] [cursor=pointer]:
+                - /url: /create-account
+                - img [ref=e23]
+                - text: Create your account
+              - generic [ref=e25]: Free during the beta.
+            - paragraph [ref=e26]:
+              - text: Already have an account?
+              - link "Sign in" [ref=e27] [cursor=pointer]:
+                - /url: /sign-in
+          - generic [ref=e29]:
+            - generic [ref=e34]: saturdaze.app/weekend
+            - generic [ref=e37]:
+              - generic [ref=e38]:
+                - generic [ref=e39]:
+                  - img [ref=e42]
+                  - generic [ref=e45]:
+                    - heading [level=2] [ref=e46]: Saturday
+                    - paragraph [ref=e47]: 17 May · 22° / 14° · Light breeze
+                - list [ref=e48]:
+                  - listitem [ref=e49]:
+                    - generic [ref=e50]:
+                      - generic [ref=e51]: 9:00
+                      - generic [ref=e52]: 60m
+                    - img [ref=e56]
+                    - generic [ref=e60]:
+                      - heading [level=3] [ref=e61]: Swim lessons
+                      - paragraph [ref=e62]: Every Saturday · locked in
+                      - generic [ref=e64]:
+                        - img [ref=e66]
+                        - text: Commitment
+                  - listitem [ref=e69]:
+                    - generic [ref=e70]:
+                      - generic [ref=e71]: 10:30
+                      - generic [ref=e72]: 45m
+                    - img [ref=e76]
+                    - heading [level=3] [ref=e81]: Drive to Terre Bleu
+                  - listitem [ref=e82]:
+                    - generic [ref=e83]:
+                      - generic [ref=e84]: 11:00
+                      - generic [ref=e85]: 2h
+                    - img [ref=e89]
+                    - generic [ref=e91]:
+                      - heading [level=3] [ref=e92]: Lavender fields
+                      - paragraph [ref=e93]: Terre Bleu, Milton · walk the rows
+                      - generic [ref=e94]:
+                        - generic [ref=e95]: Day highlight
+                        - generic [ref=e96]:
+                          - img [ref=e98]
+                          - text: 45 min drive
+              - generic [ref=e102]:
+                - generic [ref=e103]:
+                  - img [ref=e106]
+                  - generic [ref=e108]:
+                    - heading [level=2] [ref=e109]: Sunday
+                    - paragraph [ref=e110]: 18 May · 18° / 12° · Cloudy by 2pm
+                - list [ref=e111]:
+                  - listitem [ref=e112]:
+                    - generic [ref=e113]:
+                      - generic [ref=e114]: 8:30
+                      - generic [ref=e115]: 45m
+                    - img [ref=e119]
+                    - generic [ref=e122]:
+                      - heading [level=3] [ref=e123]: Pancakes at home
+                      - paragraph [ref=e124]: Mae flips, Eli pours
+                  - listitem [ref=e125]:
+                    - generic [ref=e126]:
+                      - generic [ref=e127]: 9:15
+                      - generic [ref=e128]: 45m
+                    - img [ref=e132]
+                    - generic [ref=e135]:
+                      - heading [level=3] [ref=e136]: Costco run
+                      - paragraph [ref=e137]: Paper towels, bread, yogurt
+                      - generic [ref=e139]: Errand
+                  - listitem [ref=e140]:
+                    - generic [ref=e141]:
+                      - generic [ref=e142]: 10:30
+                      - generic [ref=e143]: 75m
+                    - img [ref=e147]
+                    - generic [ref=e150]:
+                      - heading [level=3] [ref=e151]: Church
+                      - paragraph [ref=e152]: Every Sunday · locked in
+                      - generic [ref=e154]:
+                        - img [ref=e156]
+                        - text: Commitment
+      - region "How a weekend comes together" [ref=e159]:
+        - heading "How a weekend comes together" [level=2] [ref=e160]
+        - paragraph [ref=e161]: Three small moments and the logistics disappear.
+        - list [ref=e162]:
+          - listitem [ref=e163]:
+            - generic [ref=e164]: "01"
+            - heading "Tell us who is in the family" [level=3] [ref=e165]
+            - paragraph [ref=e166]: Names, ages and what each kid is into. A minute of setup, paid back every weekend.
+          - listitem [ref=e167]:
+            - generic [ref=e168]: "02"
+            - heading "Lock what does not move" [level=3] [ref=e169]
+            - paragraph [ref=e170]: Saturday swim, Sunday church, the weekly workout. They are anchors, and the plan goes around them.
+          - listitem [ref=e171]:
+            - generic [ref=e172]: "03"
+            - heading "Get a weekend every Friday" [level=3] [ref=e173]
+            - paragraph [ref=e174]: A draft of both days at 6pm, weather-checked and drive-time-checked. Swap anything you do not love.
+      - generic [ref=e175]:
+        - generic [ref=e176]: Saturdaze
+        - link "Terms" [ref=e177] [cursor=pointer]:
+          - /url: /legal
+        - link "Privacy" [ref=e178] [cursor=pointer]:
+          - /url: /legal#privacy
+        - link "Sign in" [ref=e179] [cursor=pointer]:
+          - /url: /sign-in
