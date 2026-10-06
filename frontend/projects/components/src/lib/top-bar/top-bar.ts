@@ -28,6 +28,8 @@ export class TopBar {
   readonly active = input<NavKey | null>(null);
   /** Signed-in email; the avatar shows its initial. */
   readonly email = input<string>('');
+  /** Signed-in user's profile photo; replaces the initial when set. */
+  readonly avatarSrc = input<string | null>(null);
   /** The avatar button was pressed; the element anchors the account menu. */
   readonly accountClick = output<HTMLElement>();
 
