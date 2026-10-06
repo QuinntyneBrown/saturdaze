@@ -1,0 +1,66 @@
+@startuml
+title UML sequence behaviour - Choose or upload a cover
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+actor "Family member" as actor
+box "Frontend - Saturdaze Angular application" #E0F2FE
+ participant "WeekendPage\nsd-cover" as page
+ participant "CoverPhotoDialog" as dialog
+ participant "WeekendPlanService" as client
+end box
+box "Backend - Saturdaze API" #D1FADF
+ participant "WeekendsController" as controller
+end box
+box "Backend - Saturdaze Application and Domain" #ECFDF3
+ participant "Set / Upload cover handlers" as handler
+ participant "CoverResolver" as resolver
+end box
+box "Backend - Saturdaze Infrastructure" #FFF4E5
+ participant "ImageSanitizer" as sanitizer
+ participant "AzureBlobPhotoStore" as store
+ database "AppDbContext\nSQL Server" as db
+end box
+actor -> page : Change photo
+page -> dialog : Open with stops that have photos
+alt choose a stop photo
+ actor -> dialog : La Marina, Use this photo
+ dialog -> client : setCover({ source: stop, blockId })
+ client -> controller : PUT /api/weekends/{id}/cover
+ controller -> handler : SetWeekendCoverCommand
+ handler -> db : Load caller-family weekend; set Cover.Stop; save (L2-096 AC2)
+else upload a photo
+ actor -> dialog : Your own photo (file)
+ dialog -> dialog : Check type and 10 MB in the browser
+ dialog -> client : uploadCover(file)
+ client -> controller : POST /api/weekends/{id}/cover (multipart)
+ alt body over 10 MB
+  controller --> client : 413, nothing stored (L2-097 AC3)
+ else within limit
+  controller -> handler : UploadWeekendCoverCommand
+  handler -> db : Load caller-family weekend
+  alt not owned
+   handler --> controller : 404 (L2-097 AC1)
+  else owned
+   handler -> sanitizer : Inspect magic bytes
+   alt not JPEG, PNG, or WebP
+    handler --> controller : 400 unsupported_image (L2-097 AC2)
+   else image
+    handler -> sanitizer : Re-encode, strip all metadata (L2-097 AC4)
+    handler -> store : PutAsync(random key) to private container
+    handler -> db : Cover.Upload; save
+    handler -> handler : Log weekend ID and size only (L2-097 AC7)
+   end
+  end
+ end
+end
+handler -> resolver : Resolve(weekend, Family)
+resolver -> store : SignedUrl(key, short TTL) when upload
+resolver --> handler : CoverDto with label
+handler --> controller : WeekendDto
+controller --> client : 200
+client --> page : WeekendView.cover updated
+page --> actor : New cover; scrim keeps overlay at 4.5:1 (L2-096 AC4)
+@enduml

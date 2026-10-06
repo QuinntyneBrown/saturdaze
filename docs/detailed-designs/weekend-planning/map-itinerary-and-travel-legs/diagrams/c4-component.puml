@@ -1,0 +1,31 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components - Map the itinerary and its travel legs
+
+Container_Boundary(web, "Saturdaze web application") {
+  Component(page, "WeekendPage", "Angular page", "Tabs, planner grid, scroll and focus")
+  Component(seg, "sd-segments (tabs mode)", "components library", "Saturday | Sunday tablist")
+  Component(day, "sd-day, sd-block, sd-leg", "components library", "Numbered stops and travel legs")
+  Component(map, "sd-day-map and DayMapDialog", "Angular + Leaflet", "Pins, route, attribution")
+  Component(sync, "MapSync", "Signal store", "activeStop shared by timeline and map")
+  Component(client, "WeekendPlanService", "Angular service", "Maps WeekendDto to DayView items")
+}
+Container_Boundary(api, "Saturdaze API and Application") {
+  Component(planner, "WeekendPlanner", "Planning service", "Reserves drive time per leg")
+  Component(est, "ITravelEstimator / HaversineTravelEstimator", "Port / Infrastructure", "Minutes and km between points")
+  Component(mapper, "WeekendMapper", "Projection", "Folds Drive blocks into legs; numbers stops")
+  Component(dir, "DirectionsLinkBuilder", "Application service", "Coordinates-only links over 10 min")
+  ComponentDb(db, "AppDbContext", "EF Core", "Blocks with Stop snapshots")
+}
+Rel(page, seg, "Hosts")
+Rel(page, day, "Renders selected day")
+Rel(page, map, "Renders selected day")
+Rel(day, sync, "Sets activeStop")
+Rel(map, sync, "Reads and sets activeStop")
+Rel(page, client, "Reads getWeekend()")
+Rel(planner, est, "Estimates legs")
+Rel(planner, db, "Persists blocks")
+Rel(mapper, dir, "Builds links")
+Rel(mapper, db, "Reads")
+@enduml

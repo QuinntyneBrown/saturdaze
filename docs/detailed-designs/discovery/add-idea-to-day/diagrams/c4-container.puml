@@ -1,0 +1,15 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers - Add an idea to a day
+
+Person(family, "Family member", "Plans the weekend")
+System_Boundary(sd, "Saturdaze") {
+  Container(spa, "Saturdaze web application", "Angular", "Ideas screens and AddToDayDialog")
+  Container(api, "Saturdaze API", "ASP.NET Core", "Preview and add endpoints; placement")
+  ContainerDb(db, "Saturdaze database", "SQL Server", "Weekends, blocks, catalogs")
+}
+Rel(family, spa, "Uses", "HTTPS")
+Rel(spa, api, "POST /api/weekends/{id}/ideas/preview and /ideas", "JSON/HTTPS")
+Rel(api, db, "Reads and writes", "EF Core")
+@enduml

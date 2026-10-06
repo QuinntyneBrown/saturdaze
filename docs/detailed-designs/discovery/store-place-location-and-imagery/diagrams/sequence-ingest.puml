@@ -1,0 +1,44 @@
+@startuml
+title UML sequence behaviour - Ingest a place with photos
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+actor "Scheduler or administrator" as actor
+box "Backend - Saturdaze ingestion worker" #D1FADF
+ participant "IngestionRunner" as runner
+end box
+box "Backend - Saturdaze Application and Domain" #ECFDF3
+ participant "IngestionResultParser" as parser
+ participant "CatalogUpserter" as upserter
+ participant "PlacePhoto\nPlacePhotoSet" as photo
+end box
+box "Backend - Saturdaze Infrastructure" #FFF4E5
+ participant "IWebSearchClient" as search
+ database "AppDbContext\nSQL Server" as db
+end box
+actor -> runner : saturdaze ingest activities
+runner -> search : Prompt for places, coordinates, photo candidates
+search --> runner : Provider text
+runner -> parser : Parse JSON array
+parser --> runner : IngestionRecords with location and photos
+runner -> upserter : UpsertAsync(records, run)
+loop each record
+ upserter -> db : Match by natural key
+ upserter -> upserter : L2-087 write GeoLocation
+ loop each photo candidate
+  upserter -> photo : PlacePhoto.Create(...)
+  alt attribution or licence empty
+   photo --> upserter : Failure
+   upserter -> upserter : L2-088 ItemsRejected++, SkipReasons.Add(reason)
+  else valid
+   photo --> upserter : PlacePhoto
+   upserter -> photo : PlacePhotoSet.MarkPrimary when first or flagged
+  end
+ end
+end
+upserter -> db : Save changes and IngestionRun audit
+db --> upserter : Committed
+upserter --> runner : UpsertResult
+@enduml

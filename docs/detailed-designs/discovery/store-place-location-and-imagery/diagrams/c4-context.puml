@@ -1,0 +1,16 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context - Store place location and imagery
+
+Person(family, "Family member", "Browses ideas and plans weekends")
+Person(admin, "Administrator", "Reviews event submissions")
+System(saturdaze, "Saturdaze", "Plans personalized family weekends")
+System_Ext(search, "Web-search provider", "Returns candidate places, coordinates and photo candidates")
+System_Ext(photos, "Photo providers", "Allow-listed HTTPS image origins")
+
+Rel(family, saturdaze, "Sees photo-led cards and maps in")
+Rel(admin, saturdaze, "Approves submissions with a location in")
+Rel(saturdaze, search, "Ingests places from", "HTTPS")
+Rel(family, photos, "Browser loads images from", "HTTPS")
+@enduml

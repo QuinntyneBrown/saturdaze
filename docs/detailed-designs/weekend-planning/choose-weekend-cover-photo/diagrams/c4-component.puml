@@ -1,0 +1,32 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components - Choose a weekend cover photo
+
+Container_Boundary(web, "Saturdaze web application") {
+  Component(page, "WeekendPage and PastPage", "Angular pages", "Show covers; open the dialog")
+  Component(cover, "sd-cover and sd-past-card", "components library", "Cover with scrim, credit, actions")
+  Component(dialog, "CoverPhotoDialog", "CDK dialog", "Stop photos or upload")
+  Component(client, "WeekendPlanService and SavedService", "Angular services", "setCover, uploadCover")
+}
+Container_Boundary(api, "Saturdaze API and Application") {
+  Component(ctrl, "WeekendsController", "ASP.NET Core", "PUT and POST cover; 10 MB limit")
+  Component(preview, "SharePreviewController", "ASP.NET Core, anonymous", "GET /s/{token} with Open Graph tags")
+  Component(handlers, "SetWeekendCoverCommandHandler and UploadWeekendCoverCommandHandler", "MediatR", "Family-scoped cover changes")
+  Component(resolver, "CoverResolver", "Domain service", "Default, stop, or upload cover and label")
+  Component(sanitizer, "ImageSanitizer", "Infrastructure", "Magic bytes, re-encode, strip metadata")
+  Component(store, "IPhotoStore / AzureBlobPhotoStore", "Port / Infrastructure", "Private objects and signed URLs")
+  ComponentDb(db, "AppDbContext", "EF Core", "Weekend.Cover")
+}
+Rel(page, cover, "Renders")
+Rel(page, dialog, "Opens")
+Rel(dialog, client, "Calls")
+Rel(client, ctrl, "PUT or POST", "HTTPS")
+Rel(ctrl, handlers, "Dispatches")
+Rel(handlers, sanitizer, "Inspects and re-encodes")
+Rel(handlers, store, "Puts upload")
+Rel(handlers, db, "Saves Cover")
+Rel(handlers, resolver, "Returns resolved cover")
+Rel(preview, resolver, "Resolves with share scope")
+Rel(resolver, store, "Signs URLs")
+@enduml

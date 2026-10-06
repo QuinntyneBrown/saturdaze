@@ -1,0 +1,12 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context - Add an idea to a day
+
+Person(family, "Family member", "Browses ideas and plans the weekend")
+System(saturdaze, "Saturdaze", "Plans personalized family weekends")
+System_Ext(photos, "Photo providers", "Allow-listed image origins")
+
+Rel(family, saturdaze, "Adds an activity or event to Saturday or Sunday in")
+Rel(family, photos, "Browser loads card photos from", "HTTPS")
+@enduml

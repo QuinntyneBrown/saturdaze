@@ -20,6 +20,8 @@ Saturdaze is a web application that plans personalized family weekends. Weekend 
 
 `WeekendPage.share()` calls `WeekendPlanService.createShareLink()`, which posts to the owner-scoped share endpoint, and opens `ShareDialog` with the returned URL. `SharedWeekendPage` reads `/api/weekends/shared/{token}` through `SHARED_WEEKEND_SERVICE` from `/sample-weekend?share=...`. `CalendarDialog` exposes the anonymous `/api/weekends/{id}/calendar.ics` URL, keyed by the weekend ID rather than the share token. The shared handler returns the full WeekendDto, not a redacted DTO.
 
+The Weekend screen layout follows `docs/mocks/pages/weekend.html` since 2026-10-06: a cover photo, Saturday | Sunday tabs, and the selected day beside its map. `weekend-planning/map-itinerary-and-travel-legs` designs the tabs, numbered stops, travel legs, and map; `weekend-planning/choose-weekend-cover-photo` designs the cover and the Open Graph share preview. The current `WeekendPage` still renders both days side by side until those designs are implemented.
+
 ## Requirements
 
 The following L2 requirements refine the cited L1 capabilities. Implementation gaps stated in Description do not waive these obligations.

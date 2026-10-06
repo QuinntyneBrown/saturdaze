@@ -1,0 +1,27 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components - Add an idea to a day
+
+Container_Boundary(web, "Saturdaze web application") {
+  Component(page, "IdeasActivitiesPage and IdeasEventsPage", "Angular pages", "Open the dialog from a card")
+  Component(card, "sd-activity-card and sd-event-card", "components library", "Photo-led card with Add to day")
+  Component(dialog, "AddToDayDialog", "CDK dialog", "Day, timing, preview, confirm")
+  Component(client, "WeekendPlanService", "Angular service", "previewIdea and addIdea")
+}
+Container_Boundary(api, "Saturdaze API and Application") {
+  Component(ctrl, "WeekendsController", "ASP.NET Core", "Ideas endpoints")
+  Component(handlers, "PreviewIdeaPlacementQueryHandler and AddIdeaToWeekendCommandHandler", "MediatR", "Preview or apply a placement")
+  Component(resolver, "IdeaResolver", "Application service", "Activity or LocalEvent by ID, else 404")
+  Component(placer, "IdeaPlacementService", "Planning domain service", "Window search around fixed blocks")
+  ComponentDb(db, "AppDbContext", "EF Core", "Weekend aggregate and catalogs")
+}
+Rel(card, page, "addToDay output")
+Rel(page, dialog, "Opens")
+Rel(dialog, client, "Calls")
+Rel(client, ctrl, "POST", "JSON/HTTPS")
+Rel(ctrl, handlers, "Dispatches")
+Rel(handlers, resolver, "Resolves idea")
+Rel(handlers, placer, "Computes placement")
+Rel(handlers, db, "Reads and saves")
+@enduml

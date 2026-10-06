@@ -1,0 +1,54 @@
+@startuml
+title UML sequence behaviour - Plan legs and load the day
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+actor "Family member" as actor
+box "Frontend - Saturdaze Angular application" #E0F2FE
+ participant "WeekendPage" as page
+ participant "WeekendPlanService" as client
+ participant "sd-day-map" as map
+end box
+box "Backend - Saturdaze API" #D1FADF
+ participant "WeekendsController" as controller
+end box
+box "Backend - Saturdaze Application and Domain" #ECFDF3
+ participant "WeekendPlanner" as planner
+ participant "ITravelEstimator" as est
+ participant "WeekendMapper\nDirectionsLinkBuilder" as mapper
+end box
+box "Backend - Saturdaze Infrastructure" #FFF4E5
+ database "AppDbContext\nSQL Server" as db
+end box
+== Planning (generate, regenerate, add idea) ==
+planner -> est : Estimate(previous location, next stop)
+est --> planner : 45 min, 52 km
+planner -> planner : Reserve Drive block before the stop (L2-090)
+planner -> db : Save blocks with Stop snapshots
+== Loading ==
+actor -> page : Open /weekend
+page -> client : loadCurrent()
+client -> controller : GET /api/weekends/current
+controller -> db : Load caller-family weekend
+db --> controller : Weekend with blocks
+controller -> mapper : ToDto
+mapper -> mapper : Fold each Drive block into next block's LegBefore
+mapper -> mapper : No leg between two home blocks (L2-090 AC2)
+mapper -> mapper : Number stops 1..n per day (L2-091 AC1)
+mapper -> mapper : DirectionsUrl only when Minutes > 10 (L2-090 AC3, AC6)
+mapper -> mapper : DayDto.DrivingMinutes = sum of legs (L2-090 AC5)
+mapper --> controller : WeekendDto
+controller --> client : 200
+client --> page : WeekendView with DayView.items (blocks and legs)
+page --> actor : Saturday tab selected; timeline renders first (L2-093 AC5)
+page -> map : Lazy-load Leaflet; render pins and route
+alt tiles fail or still loading
+ map --> actor : Timeline and legs remain usable (L2-091 AC5)
+else no stops
+ map --> actor : "A home day: nothing to map." (L2-091 AC2)
+else loaded
+ map --> actor : Home pin, numbered pins, route, OSM attribution (L2-091 AC3)
+end
+@enduml

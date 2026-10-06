@@ -1,0 +1,48 @@
+@startuml
+title UML sequence behaviour - List places with safe photos
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+actor "Family member" as actor
+box "Frontend - Saturdaze Angular application" #E0F2FE
+ participant "IdeasActivitiesPage" as page
+ participant "ActivityService" as client
+ participant "sd-media" as media
+end box
+box "Backend - Saturdaze API" #D1FADF
+ participant "ActivitiesController" as controller
+end box
+box "Backend - Saturdaze Application and Domain" #ECFDF3
+ participant "GetActivitySuggestionsQueryHandler" as handler
+ participant "PlacePhotoProjector" as proj
+end box
+box "Backend - Saturdaze Infrastructure" #FFF4E5
+ database "AppDbContext\nSQL Server" as db
+end box
+actor -> page : Open /ideas
+page -> client : load()
+client -> controller : GET /api/activities
+controller -> handler : GetActivitySuggestionsQuery
+handler -> db : Activities with locations and primary photos
+db --> handler : Rows
+loop each activity
+ handler -> proj : Project(name, photos)
+ alt no photo, not HTTPS, or origin not allow-listed
+  proj --> handler : null (L2-089 AC3)
+ else allowed
+  proj --> handler : PlacePhotoDto, alt defaults to "Photo of {name}" (L2-088 AC4)
+ end
+end
+handler --> controller : ActivityDto list with location and photo
+controller --> client : 200
+client -> client : Map to MediaView with srcset capped per slot (L2-089 AC4)
+client --> page : IdeasActivitiesView
+page -> media : Render with width, height, ratio 16:9, loading lazy (L2-089 AC1, AC2)
+alt photo null or image error
+ media --> actor : Fallback tile, aria-hidden (L2-089 AC5)
+else loaded
+ media --> actor : Photo with credit
+end
+@enduml

@@ -1,0 +1,99 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure - Add an idea to a day
+
+enum IdeaKind {
+  Activity
+  Event
+}
+enum IdeaTiming {
+  BestFit
+  Morning
+  Afternoon
+}
+class AddIdeaRequest {
+  +IdeaKind IdeaKind
+  +Guid IdeaId
+  +DayOfWeekend Day
+  +IdeaTiming Timing
+}
+class PreviewIdeaPlacementQuery {
+  +Guid WeekendId
+  +AddIdeaRequest Request
+}
+class AddIdeaToWeekendCommand {
+  +Guid WeekendId
+  +AddIdeaRequest Request
+}
+class IdeaPlacementDto {
+  +DayOfWeekend Day
+  +TimeOnly StartTime
+  +TimeOnly EndTime
+  +IReadOnlyList<string> ReplacedBlockTitles
+  +bool Fits
+  +string? Reason
+}
+class ResolvedIdea {
+  +IdeaKind Kind
+  +Guid Id
+  +string Name
+  +int DurationMinutes
+  +GeoLocation? Location
+}
+class IdeaResolver {
+  +ResolveAsync(kind, id): Task<ResolvedIdea>
+}
+class IdeaPlacementService {
+  +Place(day: IReadOnlyList<ItineraryBlock>, idea: ResolvedIdea, timing: IdeaTiming): IdeaPlacement
+}
+class IdeaPlacement {
+  +bool Fits
+  +TimeOnly Start
+  +TimeOnly End
+  +IReadOnlyList<Guid> ReplacedBlockIds
+}
+class AddIdeaToWeekendCommandHandler {
+  +Handle(command): Task<WeekendDto>
+}
+class PreviewIdeaPlacementQueryHandler {
+  +Handle(query): Task<IdeaPlacementDto>
+}
+class ItineraryBlock {
+  +BlockKind Kind
+  +Guid? RefId
+  +bool IsLocked
+}
+class AddToDayDialog <<Angular>> {
+  +day: WeekendDay
+  +timing: IdeaTiming
+  +preview: Signal<IdeaPlacementView>
+  +confirm(): Promise<void>
+}
+class WeekendPlanService <<Angular>> {
+  +previewIdea(request): Promise<IdeaPlacementView>
+  +addIdea(request): Promise<void>
+}
+
+AddIdeaRequest --> IdeaKind
+AddIdeaRequest --> IdeaTiming
+PreviewIdeaPlacementQuery *-- AddIdeaRequest
+AddIdeaToWeekendCommand *-- AddIdeaRequest
+PreviewIdeaPlacementQueryHandler ..> IdeaResolver
+PreviewIdeaPlacementQueryHandler ..> IdeaPlacementService
+PreviewIdeaPlacementQueryHandler ..> IdeaPlacementDto : returns
+AddIdeaToWeekendCommandHandler ..> IdeaResolver
+AddIdeaToWeekendCommandHandler ..> IdeaPlacementService
+AddIdeaToWeekendCommandHandler --> ItineraryBlock : removes replaced, inserts new
+IdeaResolver ..> ResolvedIdea : produces
+IdeaPlacementService ..> IdeaPlacement : produces
+AddToDayDialog --> WeekendPlanService
+@enduml

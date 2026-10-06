@@ -20,6 +20,8 @@ Legacy paths such as `/login`, `/profile`, `/saved`, and `/itinerary` redirect t
 
 `staticwebapp.config.json` provides deep-route fallback. ADR-010 defines visual tiers, masks, and mock-derived baselines; rendering bounds remain 320 through 1920 px.
 
+The 2026-10-06 Weekend mock replaces the two-day `.sd-grid-days` layout with a one-day `.planner` grid: one column with the map above the timeline below 1024 px, timeline and sticky map side by side from 1024 px. `weekend-planning/map-itinerary-and-travel-legs` designs it, and L2-028 AC2 and AC3 are revised to match.
+
 ## Requirements
 
 The following L2 requirements refine the cited L1 capabilities. Implementation gaps stated in Description do not waive these obligations.

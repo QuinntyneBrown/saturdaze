@@ -1,0 +1,101 @@
+# Map the itinerary and its travel legs
+
+## Overview
+
+Saturdaze is a web application that plans personalized family weekends. The Weekend screen (`/weekend`) shows the plan for the current weekend. Before this feature it set Saturday and Sunday side by side and showed driving as standalone "Drive to …" blocks, with no sense of where the day goes.
+
+*stop* — itinerary block at a location other than home
+
+*stop number* — 1-based position of a stop in time order within its day
+
+*travel leg* — drive between two consecutive blocks at different locations, with its minutes, kilometres, and an optional directions link
+
+*day map* — map of one day showing the home pin, a numbered pin per stop, and the route through them in order
+
+*active stop* — stop that the pointer, keyboard focus, or a pin activation currently highlights in both the timeline and the map
+
+This feature reshapes the Weekend screen to `docs/mocks/pages/weekend.html`: Saturday | Sunday tabs show one day at a time; the day's timeline numbers its stops and shows a travel leg between them; the day map sits beside the timeline from 1024 px and above it, at 4:3, below 1024 px. The map is supplementary: every fact on it is also in the timeline. Coordinates come from `discovery/store-place-location-and-imagery`. The cover above the tabs is `weekend-planning/choose-weekend-cover-photo`.
+
+## Description
+
+### Planner and legs
+
+`ItineraryBlock` gains a nullable `Stop` owned value (`Latitude`, `Longitude`, `PlaceName`). `WeekendPlanner` copies it from the referenced catalog place when it creates an `Activity` or restaurant `Meal` block, and from an errand's chosen store when one exists. Home blocks (`Downtime`, home meals) have no `Stop`. A snapshot, rather than a lookup at read time, keeps past weekends stable when the catalog changes.
+
+`ITravelEstimator` is a new application port with `Estimate(from, to): TravelEstimate(Minutes, DistanceKm)`. `HaversineTravelEstimator` in Infrastructure is the default: great-circle distance times a road factor, divided by an average speed. The factor and speed values are `<TO SUPPLY>`; a routing provider may replace the estimator later without changing callers. `WeekendPlanner` calls it from the previous location (home or the last stop) to each new stop and reserves that time before the block, so the planner continues to schedule drive time (L2-090). It still persists that reservation as a `Drive` block, so locks, regeneration, and calendar export keep working unchanged.
+
+`WeekendMapper` stops emitting `Drive` blocks to clients. It folds each one into a `TravelLegDto(Minutes, DistanceKm, DirectionsUrl?)` on the next block's new `LegBefore` field. No leg is emitted between two home blocks (L2-090 AC2). `ItineraryBlockDto` also gains `StopNumber?`, `Stop?` (`StopDto(Latitude, Longitude, PlaceName)`), and `Thumb?` (`PlacePhotoDto` of the place, used by the highlight thumbnail). `DayDto` is a new grouping on `WeekendDto` with `Day`, `StopCount`, `DrivingMinutes` (sum of that day's legs, L2-090 AC5), and `Home` (`StopDto`).
+
+`DirectionsLinkBuilder` produces `DirectionsUrl` only for legs over 10 minutes (L2-090 AC3). The URL carries only the two coordinate pairs and travel mode, never a family, weekend, or block identifier (L2-090 AC6). The provider is `<TO SUPPLY>`; the mock uses `maps.example.com`.
+
+Commitments have no place today. The mock numbers "Swim lessons" and "Church" as stops, so `Commitment` gains an optional `GeoLocation`, entered in `CommitmentDialog`. Until a commitment has one, it renders without a stop number and without legs around it.
+
+### Weekend screen
+
+`WeekendPage` keeps reading `WeekendPlanService.getWeekend(): Signal<WeekendView>`. Its template becomes: `sd-cover`, the cover actions, `sd-segments` in tab mode, and one `.planner` grid holding the selected `sd-day` and `sd-day-map`.
+
+`sd-segments` gains a `mode` input (`nav` default, `tabs`) and a `selected` model. In tab mode it renders `role="tablist"` with `role="tab"` buttons, `aria-selected`, `aria-controls`, and arrow-key roving focus (L2-092 AC4). Saturday is selected when the screen opens; one day's timeline and map show at a time (L2-093 AC5).
+
+`DayView` gains `stopCount`, `drivingMinutes`, `home`, and `items: readonly TimelineItem[]`, where `TimelineItem` is `BlockRow | LegRow`. `BlockRow` gains `stopNumber`, `stop`, and `thumb`. `LegRow` holds `minutes`, `km`, `toTitle`, `directionsUrl`, and the accessible name "Travel: {minutes} minutes, {km} kilometres to {next block}" (L2-090 AC4). The day meta reads "{date} · {high}° / {low}° · {n} stops · {driving} driving".
+
+`sd-block` gains a `stopNumber` input; when set, the disc renders the number with `block__disc--num` instead of the icon (L2-091 AC1), and an `active` input that adds `block--active`. It emits `activeChange` on pointer enter, pointer leave, focus in, and focus out. The numbered disc uses `--colorBrandBackground` with `--colorNeutralForegroundOnBrand`, a pair that meets 4.5:1, and its ring meets 4.5:1 against the page (L2-091 AC4).
+
+`sd-leg` is a new component for `.leg`: a rail, the car icon, "{minutes} min · {km} km", and the "Directions" link with `target="_blank"` and `rel="noopener"`.
+
+`sd-day-map` is a new component in the app (it depends on a map library, so it stays out of `components`). It renders an `<aside>` landmark labelled "{Day} map" (L2-092 AC5), a Leaflet map with OpenStreetMap-based tiles and their attribution always visible (L2-091 AC3), a home pin, a `<button>` pin per stop named "Stop {n}: {title}", and a dashed route polyline in stop order. A day with no stops renders "A home day: nothing to map." instead (L2-091 AC2). The legend repeats stop count, driving time, and kilometres. The tile provider and its usage terms are `<TO SUPPLY>`; Leaflet loads lazily so the timeline renders first and stays usable while tiles load or fail (L2-091 AC5).
+
+`MapSync` is a small signal store provided by `WeekendPage`: `activeStop: WritableSignal<number | null>`. Block hover or focus sets it, which gives the pin its active style (L2-092 AC1, AC2). A pin activation sets it and asks `WeekendPage` to scroll the block into view and focus it (L2-092 AC3). Scrolling, panning, and zooming use `behavior: 'auto'` under `prefers-reduced-motion: reduce` (L2-092 AC6).
+
+### Layout
+
+`weekend.page.scss` defines `.planner` as one `minmax(0, 1fr)` column below 1024 px with the map first, and two equal columns from 1024 px with the map `position: sticky` below the top bar (L2-093 AC1, AC2). Below 1024 px an "Open map" `sd-button` opens `DayMapDialog`, a full-screen CDK dialog that hosts the same `sd-day-map`. The page bottom keeps the ADR-005 clearance so the bottom nav never covers the last row (L2-093 AC4). The old `.sd-grid-days` rules are removed; L2-028 is revised to match.
+
+## Requirements
+
+The following L2 requirements refine the cited L1 capabilities.
+
+| L2 ID | Refines (L1) | Requirement |
+|-------|--------------|-------------|
+| `L2-090` | `L1-035` | Between two consecutive blocks at different locations, the Weekend timeline shall render a travel leg (`.leg`) showing drive time and distance, plus a "Directions" link to an external maps provider for legs longer than 10 minutes. Legs replace the standalone "Drive to …" blocks of the earlier two-day Weekend mock. The planner shall compute legs from coordinates (L2-087) and shall continue to schedule drive time. |
+| `L2-091` | `L1-035` | Each block with a location other than home shall be numbered in time order within its day (1, 2, 3, …); the number replaces the block's icon disc. The day map shall show the home pin, one numbered pin per stop, and the route through them in order. Map tiles shall come from an OpenStreetMap-based provider with its required attribution visible. |
+| `L2-092` | `L1-035` | Hovering or focusing a numbered stop shall highlight its pin, and activating a pin shall scroll to, highlight, and focus its stop in the timeline. Switching the day (Saturday \| Sunday tabs) shall swap both the timeline and the map. The map shall be supplementary: everything it shows shall also be available in the timeline. |
+| `L2-093` | `L1-035`, `L1-011` | The Weekend layout shall follow `docs/mocks/pages/weekend.html`. The screen shows one day at a time; the Saturday \| Sunday tabs (L2-092) switch between them. |
+| `L2-028` | `L1-011` | Every routed page (`/`, `/weekend`, `/ideas`, `/ideas/food`, `/ideas/events`, `/past`, `/family`, `/review-submissions`, `/legal`, `/sample-weekend`, all auth pages) shall render usably at viewport widths 320 px, 390 px, 820 px, 1440 px, and 1920 px. |
+
+## Diagrams
+
+### System context
+
+The context view adds the two external services the Weekend screen now reaches from the browser: the map tile provider and the directions provider.
+
+![C4 system context for mapping the itinerary](diagrams/c4-context.png)
+
+### Containers
+
+The container view shows legs computed in the API and the map drawn in the browser from tiles the browser fetches directly.
+
+![C4 container view for mapping the itinerary](diagrams/c4-container.png)
+
+### Components
+
+The component view names the planner port and mapper on the server, and the page, timeline, leg, map, and sync store in the browser.
+
+![C4 component view for mapping the itinerary](diagrams/c4-component.png)
+
+### Class structure
+
+The class view shows the stop snapshot on `ItineraryBlock`, the travel estimator port, and the DTO and view types that carry legs and stop numbers.
+
+![Class diagram for mapping the itinerary](diagrams/class-structure.png)
+
+### Behaviour — plan legs and load the day
+
+The planner reserves drive time from estimated legs, and the mapper folds `Drive` blocks into legs and numbers the stops (`L2-090`, `L2-091`).
+
+![Sequence — plan legs and load the day](diagrams/sequence-legs.png)
+
+### Behaviour — keep the timeline and map in sync
+
+This browser-only sequence covers hover, focus, pin activation, and switching the day (`L2-092`).
+
+![Sequence — keep the timeline and map in sync](diagrams/sequence-sync.png)

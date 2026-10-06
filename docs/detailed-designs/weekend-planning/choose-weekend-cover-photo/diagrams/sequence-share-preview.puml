@@ -1,0 +1,42 @@
+@startuml
+title UML sequence behaviour - Preview a shared weekend
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+actor "Link-preview crawler\nor recipient browser" as actor
+box "Frontend - Saturdaze Angular application" #E0F2FE
+ participant "SharedWeekendPage" as shared
+end box
+box "Backend - Saturdaze API" #D1FADF
+ participant "SharePreviewController" as controller
+end box
+box "Backend - Saturdaze Application and Domain" #ECFDF3
+ participant "GetSharedWeekendQueryHandler" as handler
+ participant "CoverResolver" as resolver
+end box
+box "Backend - Saturdaze Infrastructure" #FFF4E5
+ participant "AzureBlobPhotoStore" as store
+ database "AppDbContext\nSQL Server" as db
+end box
+actor -> controller : GET /s/{token} (anonymous, ADR-008)
+controller -> controller : Decode token
+alt invalid or revoked token
+ controller --> actor : 404, no cover URL (L2-097 AC6)
+else valid
+ controller -> handler : GetSharedWeekendQuery(id)
+ handler -> db : Read weekend with blocks and Cover
+ db --> handler : Weekend
+ handler -> resolver : Resolve(weekend, Share)
+ resolver -> store : SignedUrl(key, at least 7 days)
+ store --> resolver : URL
+ resolver --> handler : CoverDto
+ handler --> controller : WeekendDto
+ controller --> actor : HTML with og:title, og:description, og:image (L2-098 AC3)
+ opt browser follows meta refresh
+  actor -> shared : /sample-weekend?share={token}
+  shared --> actor : Read-only weekend with cover
+ end
+end
+@enduml
