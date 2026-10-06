@@ -1,6 +1,6 @@
 ---
 name: video-creator
-description: Create a narrated video (slide deck + MP3 narration + captioned 1080p MP4) from text files - a transcript script, a timed HTML slide deck and an outline - using Azure AI Speech for the audio and a headless browser plus ffmpeg for the video. Use when asked to make, script, record, regenerate or fix a video, tutorial, walkthrough, demo, explainer, training lesson, screencast or slide deck for this repository or product.
+description: Create a narrated video (slide deck + MP3 narration + captioned 1080p MP4) from text files - a transcript script, a timed HTML slide deck and an outline - using free edge-tts for the audio and a headless browser plus ffmpeg for the video. Use when asked to make, script, record, regenerate or fix a video, tutorial, walkthrough, demo, explainer, training lesson, screencast or slide deck for this repository or product.
 ---
 
 # Video creator
@@ -12,7 +12,7 @@ docs/videos/NN-kebab-topic/
   script.md      transcript the audio is synthesized from            (you write)
   slides.html    one <section> per slide, each cued to a script phrase (you write)
   README.md      outline: purpose, objectives, assets on screen, run sheet (you write)
-  NN-kebab-topic.mp3   Azure AI Speech synthesis                      (generated)
+  NN-kebab-topic.mp3   free edge-tts synthesis                        (generated)
   NN-kebab-topic.mp4   slides rendered to PNG + audio + captions      (generated)
 ```
 
@@ -27,8 +27,8 @@ Before writing, read any existing video in the repo (tone, length, structure) an
 3. **Write `script.md`** (format below). Default target ~5-10 minutes (~150 words per minute); longer only if asked.
 4. **Write `README.md`** (outline below).
 5. **Write `slides.html`** (structure below), cueing each slide to a verbatim phrase in the script.
-6. **Validate offline** with the repo's audio tool in dry-run mode (script format, word count, estimated duration and cost). If no tool exists yet, create the two small tools described under "Tooling" before continuing.
-7. **Synthesize audio** with Azure AI Speech. Needs `AZURE_SPEECH_KEY` and optional `AZURE_SPEECH_REGION` (default `eastus2`). Never write a key into the repo or echo it in a command; if no key is available, stop and tell the user the exact command to run. Synthesis also writes a timing manifest (per-section start/end, in `.cache/`) that the video is synced to. Keep acronyms and code identifiers in a pronunciation lexicon (`pronunciations.json`) and check them with a pronunciation test.
+6. **Validate offline** with the repo's audio tool in dry-run mode (script format, word count and estimated duration; edge-tts has no synthesis charge). If no tool exists yet, create the two small tools described under "Tooling" before continuing.
+7. **Synthesize audio** with free `edge-tts` (Microsoft Edge online read-aloud). It needs Python, the `edge-tts` package and internet access; no API key, Azure subscription or paid Speech service. Install with `python -m pip install edge-tts` using the same interpreter as the audio tool. Always select `--engine edge` on the existing generator, including dry-runs and pronunciation tests: its automatic selection can choose Azure when a key is present. Do not use the paid Azure engine or switch to it if Edge fails. Synthesis also writes a timing manifest (per-section and per-paragraph start/end, in `.cache/`) that the video is synced to. Keep acronyms and code identifiers in a pronunciation lexicon (`pronunciations.json`) as plain-text spoken replacements and check them with a pronunciation test.
 8. **Build the video** (needs Chrome/Edge - `EDGE_PATH` overrides - and ffmpeg with libx264 - `FFMPEG_PATH` overrides):
    - `--check`: every `data-cue` is found; prints the schedule.
    - `--slides-only`: renders PNGs to `.cache/<folder>/`. View them before encoding; overflowing code, clipped tables and unreadable text are the common failures.
@@ -40,7 +40,7 @@ Before writing, read any existing video in the repo (tone, length, structure) an
 ## `script.md` format
 
 - First line `# NN · Title`.
-- `## Section` headings; each section is one synthesis request and should stay under ~9 minutes of speech.
+- `## Section` headings group narration; synthesize each paragraph separately and keep sections under ~9 minutes of speech.
 - Plain paragraphs and `-` list items are spoken by the narrator. `**Name:** ...` paragraphs for a second speaker (e.g. `**Interviewer:**`, `**Host:**`) use a second voice.
 - `[pause 5s]` on its own line inserts silence.
 - Inline `` `code` `` is allowed and spoken via the pronunciation lexicon.
@@ -115,10 +115,21 @@ Rules:
 
 Keep two small scripts under `tools/` (language of the repo's choice; a .NET single-file app, Node or Python all work):
 
-- **Audio generator** (`tools/video-audio/`): parses `script.md` strictly; `--dry-run` validates and estimates length/cost without network. Otherwise it calls the Azure AI Speech REST endpoint (`https://<region>.tts.speech.microsoft.com/cognitiveservices/v1`, header `Ocp-Apim-Subscription-Key`, `X-Microsoft-OutputFormat: audio-24khz-96kbitrate-mono-mp3`) with SSML per section: a neural narrator voice (e.g. `en-US-AndrewMultilingualNeural`), a second voice for other speakers (e.g. `en-US-AvaMultilingualNeural`), `<break time="5s"/>` for pauses, `<sub>`/`<phoneme>` entries from `pronunciations.json`. It concatenates sections into the MP3 and writes the timing manifest. Read the key only from the environment.
+- **Audio generator** (`tools/video-audio/`): parses `script.md` strictly; `--dry-run` validates and estimates length without network. Otherwise it uses the `edge-tts` Python package or `python -m edge_tts` CLI with plain text per paragraph: a neural narrator voice (e.g. `en-US-AndrewMultilingualNeural`) and a second voice for other speakers (e.g. `en-US-AvaMultilingualNeural`). Check available voices with `python -m edge_tts --list-voices`. Edge does not support custom SSML: apply `pronunciations.json` as spoken text replacements before synthesis, synthesize speaker paragraphs separately, and insert `[pause 5s]` as ffmpeg-generated silence. Normalize clips to a common audio format, measure their actual durations with ffprobe, concatenate clips and silence into the MP3, and write the timing manifest from those durations.
 - **Video builder** (`tools/video-build/`): opens `slides.html` in headless Chrome/Edge, resolves each `data-cue` to a time using the manifest (section boundaries exact, in-section by word count), screenshots each slide at 1920x1080, writes an SRT/ASS caption file from the script, and runs ffmpeg (libx264, aac) to produce the MP4 with burned-in captions. Supports `--check` and `--slides-only`.
 
-Prefer an existing equivalent if the repo already has one.
+Prefer an existing equivalent if the repo already has one, with its free Edge engine explicitly selected. In this repository, run from the repo root:
+
+```powershell
+# Use the same Python interpreter for installation and the generator.
+$env:PYTHON = "python"
+python -m pip install edge-tts
+node tools/video-audio/generate-audio.mjs docs/videos/NN-kebab-topic --engine edge --dry-run
+node tools/video-audio/generate-audio.mjs --engine edge --say "Saturdaze" --out .cache/pronunciation-test.wav
+node tools/video-audio/generate-audio.mjs docs/videos/NN-kebab-topic --engine edge
+```
+
+Replace `NN-kebab-topic` with the actual folder. The existing generator may print an Azure cost estimate even with `--engine edge`; that estimate does not apply to Edge synthesis. For package usage and supported options, see the [edge-tts documentation](https://github.com/rany2/edge-tts).
 
 ## Quality checklist
 
@@ -132,4 +143,4 @@ Prefer an existing equivalent if the repo already has one.
 
 ## When the tooling can't run
 
-If `dotnet`/Node/Python, a speech key, a browser or ffmpeg isn't available, still deliver the three text files, run whatever validation is possible, and tell the user precisely which commands remain and what they need. Never fabricate an MP3/MP4 or claim media was built or checked when it wasn't.
+If `dotnet`/Node/Python, the `edge-tts` package, internet access, a browser or ffmpeg isn't available, still deliver the three text files, run whatever validation is possible, and tell the user precisely which commands remain and what they need. Never fabricate an MP3/MP4 or claim media was built or checked when it wasn't.
