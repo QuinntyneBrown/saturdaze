@@ -52,7 +52,8 @@ public sealed class PlacePhotoReader : IPlacePhotoReader
         return new PlacePhotoDto(photo.Url, photo.Width, photo.Height, alt, photo.Attribution);
     }
 
-    private static bool IsAllowed(string url, ImageOptions options)
+    /// <summary>True when the URL is HTTPS on an origin in <see cref="ImageOptions.AllowedOrigins"/> (L2-101 AC3).</summary>
+    public static bool IsAllowed(string url, ImageOptions options)
     {
         if (!Uri.TryCreate(url, UriKind.Absolute, out var uri) || uri.Scheme != Uri.UriSchemeHttps) return false;
         var origin = uri.GetLeftPart(UriPartial.Authority);

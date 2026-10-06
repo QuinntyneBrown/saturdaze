@@ -10,6 +10,9 @@ export interface AdminPlaceDto {
   readonly name: string;
   readonly photoCount: number;
   readonly photo: PlacePhotoDto | null;
+  /** Health flags, worst first: no-photo · blocked-url · unreviewed · missing-alt. */
+  readonly flags: readonly string[];
+  readonly updatedAt: string | null;
 }
 
 /** A page of places. Mirrors `AdminPlacePageDto`. */

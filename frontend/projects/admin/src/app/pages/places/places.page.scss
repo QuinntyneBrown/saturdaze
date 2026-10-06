@@ -1,7 +1,28 @@
-// `.place-list` / `.place-row` from docs/mocks/styles/app.css (admin).
+@use '../../../../../components/src/lib/styles/breakpoints' as *;
+
+// `.toolbar`, `.place-list`, `.place-row`, `.pager` from docs/mocks/styles/app.css (admin).
 
 :host {
   display: block;
+}
+
+.toolbar {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.filters {
+  margin-bottom: 12px;
+}
+
+.filters__divider {
+  width: 1px;
+  height: 20px;
+  flex: none;
+  margin: 0 2px;
+  background: var(--colorNeutralStroke1);
 }
 
 .error {
@@ -18,4 +39,32 @@
   width: 72px;
   flex: none;
   border-radius: var(--borderRadiusSmall);
+}
+
+.place-row__flags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 6px;
+}
+
+.pager {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.pager__text {
+  margin-right: auto;
+  font-size: var(--fontSizeBase300);
+  color: var(--colorNeutralForeground2);
+}
+
+@include respond-to(tablet) {
+  .toolbar {
+    grid-template-columns: minmax(0, 1fr) 240px;
+    gap: 16px;
+    align-items: end;
+  }
 }

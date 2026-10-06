@@ -52,7 +52,7 @@ test.describe("Admin gate", () => {
     const revoked = page.waitForResponse((r) => r.url().endsWith("/api/auth/logout"));
     await a.signOutButton().click();
     expect((await revoked).ok()).toBeTruthy();
-    await page.waitForURL("**/sign-in");
+    await page.waitForURL(/\/sign-in(\?|$)/);
     await pages.adminSignIn.waitForScreen("sign-in");
   });
 });

@@ -1,3 +1,4 @@
+import { ChipView } from '../chip-view';
 import { MediaView } from '../media-view';
 
 /** One row of the admin Places list (A3). */
@@ -11,6 +12,8 @@ export interface PlaceRow {
   /** Fallback tile tone and icon when there is no photo. */
   readonly tone: 'leaf' | 'sun' | 'sky';
   readonly icon: string;
+  /** Health chips, worst first; a healthy place shows one "Healthy" chip. */
+  readonly flags: readonly ChipView[];
   /** The Place photos screen for this row. */
   readonly href: string;
 }

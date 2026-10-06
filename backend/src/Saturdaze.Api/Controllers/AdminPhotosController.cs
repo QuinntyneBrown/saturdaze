@@ -19,8 +19,16 @@ public sealed class AdminPhotosController : ControllerBase
 
     public AdminPhotosController(ISender sender) => _sender = sender;
 
-    /// <summary>The catalog places with their primary photo (L2-113).</summary>
+    /// <summary>The catalog places with their primary photo and health flags (L2-113).</summary>
     [HttpGet("places")]
-    public async Task<ActionResult<AdminPlacePageDto>> Places(CancellationToken ct)
-        => Ok(await _sender.Send(new ListAdminPlacesQuery(), ct));
+    public async Task<ActionResult<AdminPlacePageDto>> Places(
+        [FromQuery] string? q,
+        [FromQuery] string? kind,
+        [FromQuery] string? flag,
+        [FromQuery] string? source,
+        [FromQuery] bool upcoming,
+        [FromQuery] string? sort,
+        [FromQuery] int page,
+        CancellationToken ct)
+        => Ok(await _sender.Send(new ListAdminPlacesQuery(q, kind, flag, source, upcoming, sort, page < 1 ? 1 : page), ct));
 }

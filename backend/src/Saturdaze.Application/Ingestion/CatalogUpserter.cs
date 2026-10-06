@@ -71,7 +71,8 @@ public sealed class CatalogUpserter
                 Truncate(PayloadReader.GetStringOrEmpty(candidate, "attribution"), 300),
                 PhotoSource.Provider,
                 Truncate(PayloadReader.GetStringOrEmpty(candidate, "license"), 120),
-                primary: !hasPrimary);
+                primary: !hasPrimary,
+                reviewState: PhotoReviewState.Unreviewed);
             if (photo is null)
             {
                 _skips.Add($"{placeName}: photo {url} skipped, missing attribution or licence");

@@ -8,7 +8,9 @@ public sealed record AdminPlaceDto(
     Guid Id,
     string Name,
     int PhotoCount,
-    PlacePhotoDto? Photo);
+    PlacePhotoDto? Photo,
+    IReadOnlyList<string> Flags,
+    DateTimeOffset? UpdatedAt);
 
 /// <summary>A page of <see cref="AdminPlaceDto"/>.</summary>
 public sealed record AdminPlacePageDto(IReadOnlyList<AdminPlaceDto> Items, int Total, int Page, int PageSize);
