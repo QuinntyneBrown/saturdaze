@@ -6,6 +6,7 @@ using Saturdaze.Application.Contracts;
 using Saturdaze.Application.Covers;
 using Saturdaze.Application.Exceptions;
 using Saturdaze.Application.Ideas;
+using Saturdaze.Application.Photos;
 using Saturdaze.Application.Weekends;
 using Saturdaze.Domain.Enums;
 
@@ -67,6 +68,38 @@ public sealed class WeekendsController : ControllerBase
         };
         return Ok(await _sender.Send(new SetWeekendCoverCommand(id, source, body.PlaceId), ct));
     }
+
+    /// <summary>
+    /// The family's own photo as the cover (L2-097): multipart <c>file</c>, JPEG/PNG/WebP up to
+    /// 10 MB. Oversize uploads are refused with 413 before anything is read or stored.
+    /// </summary>
+    [HttpPost("{id:guid}/cover")]
+    [RequestSizeLimit(UploadRequestLimit)]
+    public async Task<ActionResult<WeekendDto>> UploadCover(
+        Guid id, CancellationToken ct)
+    {
+        const long max = PhotoOptions.MaxUploadBytes;
+        if (Request.ContentLength > max + MultipartOverhead) return TooLarge();
+        if (!Request.HasFormContentType)
+            throw new ValidationException("file", "Send the photo as multipart form data.");
+
+        var form = await Request.ReadFormAsync(ct);
+        var file = form.Files.GetFile("file")
+            ?? throw new ValidationException("file", "Choose a photo to upload.");
+        if (file.Length > max) return TooLarge();
+
+        using var buffer = new MemoryStream((int)file.Length);
+        await file.CopyToAsync(buffer, ct);
+        return Ok(await _sender.Send(new UploadWeekendCoverCommand(id, buffer.ToArray()), ct));
+    }
+
+    private const long UploadRequestLimit = 12 * 1024 * 1024;
+    private const long MultipartOverhead = 64 * 1024;
+
+    private ObjectResult TooLarge() => Problem(
+        statusCode: StatusCodes.Status413PayloadTooLarge,
+        title: "Photo too large",
+        detail: "Photos must be 10 MB or smaller.");
 
     /// <summary>Where an idea would land on a day, without changing the plan (L2-095).</summary>
     [HttpPost("{id:guid}/ideas/preview")]

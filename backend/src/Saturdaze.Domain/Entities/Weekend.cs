@@ -37,5 +37,12 @@ public class Weekend
     public PlaceKind? CoverPlaceKind { get; set; }
 
     public Guid? CoverPlaceId { get; set; }
+
+    /// <summary>The uploaded photo's private storage key when <see cref="CoverSource"/> is <c>Upload</c> (L2-097).</summary>
+    public string? CoverUploadKey { get; set; }
+
+    public int? CoverUploadWidth { get; set; }
+
+    public int? CoverUploadHeight { get; set; }
     public List<ShoppingErrand> Errands { get; set; } = new();
 }

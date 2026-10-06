@@ -19,7 +19,8 @@ public sealed class WeekendEnrichmentBehavior<TRequest, TResponse> : IPipelineBe
     {
         var response = await next();
         return response is WeekendDto weekend
-            ? (TResponse)(object)await _enrichment.EnrichAsync(weekend, cancellationToken)
+            ? (TResponse)(object)await _enrichment.EnrichAsync(
+                weekend, cancellationToken, shared: request is Weekends.GetSharedWeekendQuery)
             : response;
     }
 }

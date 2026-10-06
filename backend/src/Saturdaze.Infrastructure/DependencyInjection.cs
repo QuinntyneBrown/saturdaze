@@ -36,6 +36,11 @@ public static class DependencyInjection
         services.Configure<HomeLocationOptions>(configuration.GetSection(HomeLocationOptions.SectionName));
         services.Configure<Saturdaze.Application.Photos.ImageOptions>(
             configuration.GetSection(Saturdaze.Application.Photos.ImageOptions.SectionName));
+        services.Configure<Saturdaze.Application.Photos.PhotoOptions>(
+            configuration.GetSection(Saturdaze.Application.Photos.PhotoOptions.SectionName));
+        services.AddSingleton<Saturdaze.Application.Photos.IPhotoStore, Photos.FileSystemPhotoStore>();
+        services.AddSingleton<Saturdaze.Application.Photos.IPhotoUrlSigner, Photos.HmacPhotoUrlSigner>();
+        services.AddSingleton<Saturdaze.Application.Photos.IImageSanitizer, Photos.SkiaImageSanitizer>();
         services.Configure<Application.Common.TimeOptions>(configuration.GetSection(Application.Common.TimeOptions.SectionName));
 
         // Auth. Signing key resolution: env var first (production), config
