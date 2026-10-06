@@ -5,9 +5,10 @@ Saturdaze is a full-stack family weekend planner that combines household prefere
 ## Repository layout
 
 - `backend/` — .NET solution
-- `frontend/` — Angular workspace (`saturdaze`, `api`, and `components`)
+- `frontend/` — Angular workspace (`saturdaze`, `api`, `components`, and `perf-test`)
 - `e2e/` — Playwright suite
 - `frontend/projects/components/.storybook` + `stories/` — the design system: a Storybook docsite for the `components` library, laid out like the Fluent UI v9 docsite (ADR-012)
+- `frontend/projects/perf-test` + `e2e/perf-test/` — component perf test modelled on Fluent UI's `apps/perf-test` (ADR-014): scenario app and its Chromium profiling runner
 - `docs/mocks/` — static design reference
 - `docs/adr/` — architecture decisions; read relevant ADRs before changing the areas they cover
 
@@ -40,7 +41,7 @@ API tests run sequentially because of shared logger state (ADR-002). Follow the 
 
 ## Frontend architecture
 
-Workspace has three projects under `frontend/projects/`:
+Workspace has four projects under `frontend/projects/`:
 
 ### Conventions enforced across the codebase
 
@@ -55,6 +56,7 @@ Workspace has three projects under `frontend/projects/`:
 - **No inline forms in pages**. Button-triggered editing always opens a CDK Dialog (`frontend/projects/saturdaze/src/app/dialogs/`) or navigates to a screen.
 - Use Angular CDK Dialog/Overlay for modal behavior; don't hand-roll modals.
 - Every component has a story folder `frontend/projects/components/stories/src/<Name>/`: `index.stories.ts` (meta + re-exports; the only file Storybook globs), one `<Name><Story>.stories.ts` per example (`Default` first), and `<Name>Description.md` + `<Name>BestPractices.md` (ADR-012). Run `npm run build-storybook` from `frontend/` after changing a component's API; CI builds it on every PR.
+- New components also get a perf-test scenario in `frontend/projects/perf-test/src/scenarios/` (ADR-014); see that project's README for running it.
 
 ### Bottom-nav iOS chrome handling
 

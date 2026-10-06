@@ -4,3 +4,4 @@ playwright-report/
 playwright/.cache/
 .auth/
 audit-output/
+perf-test/logfiles/

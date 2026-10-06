@@ -200,6 +200,7 @@ Development conventions:
 | Playwright behavior | `npm run test:behavior` from `e2e/` | End-to-end behavior tests |
 | Playwright visual | `npm run test:visual` from `e2e/` | Visual comparisons against baselines |
 | Baseline update | `npm run baseline` from `e2e/` | Refresh visual snapshots from the mock app |
+| Perf test | `npx ng build perf-test` from `frontend/`, then `npm run perf-test` from `e2e/` | Component render cost under the CPU profiler, compared against the base branch on PRs ([guide](frontend/projects/perf-test/README.md), ADR-014) |
 
 ## Documentation
 
