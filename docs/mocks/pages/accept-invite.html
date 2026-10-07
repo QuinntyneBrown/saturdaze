@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+<!-- @shell:head -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Join your family — Saturdaze</title>
+<link rel="stylesheet" href="../styles/tokens.css">
+<link rel="stylesheet" href="../styles/app.css">
+<!-- @/shell:head -->
+</head>
+<body data-page="accept-invite" data-shell="bare">
+<main class="auth auth--stack" id="main">
+  <div class="auth__col">
+    <a class="auth__brand" href="./landing.html"><span class="brand-mark" aria-hidden="true"></span>Saturdaze</a>
+
+    <!-- 1 · Join -->
+    <section class="specimen" id="state-join" aria-labelledby="ai-title-1">
+      <span class="specimen__label">1 · Join the family</span>
+      <div class="auth-card">
+        <div class="auth-card__head auth-card__head--center">
+          <span class="disc disc--xl disc--accent auth-card__disc" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-home"/></svg></span>
+          <h1 class="auth-card__title" id="ai-title-1">Join The Browns on Saturdaze</h1>
+          <p class="auth-card__sub">quinntynebrown@gmail.com invited you. Choose a password to sign in with your own account.</p>
+        </div>
+        <form class="auth-card__form" action="./weekend.html">
+          <div class="field">
+            <label class="field__label" for="ai-email">Email</label>
+            <input class="field__input" id="ai-email" type="email" value="sara@example.com" readonly>
+          </div>
+          <div class="field">
+            <label class="field__label" for="ai-password">Password</label>
+            <input class="field__input" id="ai-password" type="password" autocomplete="new-password" value="Lavender-17-May" aria-describedby="ai-strength">
+            <div class="strength strength--strong" id="ai-strength" aria-live="polite">
+              <div class="strength__bar" aria-hidden="true"><span class="strength__seg"></span><span class="strength__seg"></span><span class="strength__seg"></span></div>
+              <span class="strength__label">Strong.</span>
+            </div>
+          </div>
+          <div class="field">
+            <label class="field__label" for="ai-confirm">Confirm password</label>
+            <input class="field__input" id="ai-confirm" type="password" autocomplete="new-password" value="Lavender-17-May">
+          </div>
+          <button class="btn btn--primary btn--lg btn--block" type="submit">Join the family</button>
+        </form>
+        <p class="auth-card__alt">Already have a sign-in? <a href="./sign-in.html">Sign in</a></p>
+      </div>
+    </section>
+
+    <!-- 2 · Invalid -->
+    <section class="specimen" id="state-invalid" aria-labelledby="ai-title-2">
+      <span class="specimen__label">2 · Invite no longer works</span>
+      <div class="auth-card">
+        <div class="auth-card__head auth-card__head--center">
+          <span class="disc disc--xl disc--warn auth-card__disc" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-mail"/></svg></span>
+          <h2 class="auth-card__title" id="ai-title-2">This invite no longer works</h2>
+          <p class="auth-card__sub">It was used, removed or is more than 7 days old. Ask whoever invited you for a new link.</p>
+        </div>
+        <a class="btn btn--quiet btn--lg btn--block" href="./sign-in.html">Sign in</a>
+      </div>
+    </section>
+
+    <p class="auth__foot"><a class="link--soft" href="./legal.html">Terms</a><span aria-hidden="true">·</span><a class="link--soft" href="./legal.html#privacy">Privacy</a><span aria-hidden="true">·</span><a class="link--soft" href="./landing.html">Back to Saturdaze</a></p>
+  </div>
+</main>
+<script src="../app.js"></script>
+</body>
+</html>

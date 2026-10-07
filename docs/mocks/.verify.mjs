@@ -56,6 +56,8 @@ export const PAGES = [
   { url: "/pages/ideas.events.html",       nav: "ideas",   expects: { selector: '.segments__tab[aria-current="page"]', text: "Events" },     cols: { ".grid-cards": { 390: 1, 820: 2, 1440: 3 } } },
   { url: "/pages/past.html",               nav: "past",    expects: { selector: ".card--media .media__credit", text: "Your photo" },         cols: { ".grid-cards": { 390: 1, 820: 2, 1440: 3 } } },
   { url: "/pages/family.html",             nav: "family",  expects: { selector: ".page-header__title", text: "The Browns" },                 cols: { ".family-grid": { 390: 1, 820: 1, 1440: 2 } } },
+  { url: "/pages/family.members.html",     nav: "family",  expects: { selector: "#s-members", text: "Who's in" },                            cols: { ".family-grid": { 390: 1, 820: 1, 1440: 2 } } },
+  { url: "/pages/family.member.html",      nav: "family",  expects: { selector: "#s-members", text: "Who's in" },                            cols: { ".family-grid": { 390: 1, 820: 1, 1440: 2 } } },
   { url: "/pages/review-submissions.html", nav: "family",  expects: { selector: ".page-header__title", text: "Review submissions" } },
 
   // States
@@ -68,6 +70,7 @@ export const PAGES = [
   { url: "/pages/sign-in.html",        shell: "bare", expects: { selector: "#state-error .banner", text: "did not match" } },
   { url: "/pages/create-account.html", shell: "bare", expects: { selector: ".auth-card__title", text: "Start planning weekends" } },
   { url: "/pages/reset-password.html", shell: "bare", expects: { selector: "#state-expired .auth-card__title", text: "This link has expired" } },
+  { url: "/pages/accept-invite.html",  shell: "bare", expects: { selector: "#state-invalid .auth-card__title", text: "This invite no longer works" } },
   { url: "/pages/verify-email.html",   shell: "bare", expects: { selector: "#state-verified .auth-card__title", text: "You are verified" } },
 
   // Public
