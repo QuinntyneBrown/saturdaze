@@ -952,6 +952,179 @@
       </div>
     </section>
 
+    <!-- ============================== ADMIN (Saturdaze Admin, ADR-014) ============================== -->
+
+    <section class="specimen" id="dialog-admin-upload">
+      <span class="specimen__label">AD1 · Admin · Add photo · upload</span>
+      <div class="dialog dialog--specimen dialog--wide" role="dialog" aria-modal="true" aria-labelledby="ad1-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="ad1-title">Upload a photo</h2><p class="dialog__sub">JPEG, PNG or WebP up to 10 MB. It is re-encoded and location data is removed before it is saved.</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="dialog__body">
+            <label class="photo-pick__opt photo-pick__upload upload-drop"><input type="file" accept="image/jpeg,image/png,image/webp" aria-label="Choose a photo"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg>Choose a photo<span class="field__hint">memorial-park.jpg · 3.1 MB · 1200 × 675</span></label>
+            <div class="field">
+              <label class="field__label" for="ad1-alt">Alt text <span class="field__req">Recommended</span></label>
+              <input class="field__input" id="ad1-alt" type="text" value="Lawn running down to the lake">
+              <span class="field__hint">What a person who cannot see the photo should know. Families see "Photo of Port Credit Memorial Park" when it is empty.</span>
+            </div>
+            <div class="field">
+              <label class="field__label" for="ad1-attr">Attribution</label>
+              <input class="field__input" id="ad1-attr" type="text" value="Photo · Saturdaze">
+            </div>
+            <div class="field">
+              <label class="field__label" for="ad1-licence">Licence</label>
+              <select class="field__input" id="ad1-licence"><option>Saturdaze owned</option><option selected>CC BY 4.0</option><option>CC BY-SA 4.0</option><option>CC0</option><option>Provider terms</option><option>Other</option></select>
+            </div>
+          </div>
+          <div class="dialog__actions">
+            <button class="btn btn--quiet" type="button">Cancel</button>
+            <button class="btn btn--primary" type="button"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Save photo</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="specimen" id="dialog-admin-url">
+      <span class="specimen__label">AD2 · Admin · Add photo · from URL</span>
+      <div class="dialog dialog--specimen dialog--wide" role="dialog" aria-modal="true" aria-labelledby="ad2-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="ad2-title">Add a photo from a URL</h2><p class="dialog__sub">HTTPS on an allowed origin only. The image is fetched once to check its type and size.</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="dialog__body">
+            <div class="field">
+              <label class="field__label" for="ad2-url">Image URL</label>
+              <input class="field__input" id="ad2-url" type="url" value="http://images.example.com/memorial-park.jpg" aria-invalid="true" aria-describedby="ad2-url-err">
+              <span class="field__error" id="ad2-url-err"><svg class="icon icon--xs" aria-hidden="true"><use href="#i-close"/></svg>This address isn't on the image allow-list.</span>
+            </div>
+            <div class="field">
+              <label class="field__label" for="ad2-alt">Alt text <span class="field__req">Recommended</span></label>
+              <input class="field__input" id="ad2-alt" type="text" value="">
+            </div>
+            <div class="field">
+              <label class="field__label" for="ad2-attr">Attribution</label>
+              <input class="field__input" id="ad2-attr" type="text" value="Photo · City of Mississauga">
+            </div>
+            <div class="field">
+              <label class="field__label" for="ad2-licence">Licence</label>
+              <select class="field__input" id="ad2-licence"><option>Saturdaze owned</option><option selected>CC BY 4.0</option><option>CC BY-SA 4.0</option><option>CC0</option><option>Provider terms</option><option>Other</option></select>
+            </div>
+          </div>
+          <div class="dialog__actions">
+            <button class="btn btn--quiet" type="button">Cancel</button>
+            <button class="btn btn--primary" type="button" disabled><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Save photo</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="specimen" id="dialog-admin-edit">
+      <span class="specimen__label">AD3 · Admin · Edit photo details</span>
+      <div class="dialog dialog--specimen" role="dialog" aria-modal="true" aria-labelledby="ad3-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="ad3-title">Edit photo details</h2><p class="dialog__sub">The address cannot change. To swap the image, add a new photo and remove this one.</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="dialog__body">
+            <div class="media media--4x3 photo-edit__media"><img class="media__img" src="../images/lavender-farm.svg" alt="" width="800" height="600"><span class="media__credit">images.example.com/memorial-park.jpg</span></div>
+            <div class="field">
+              <label class="field__label" for="ad3-alt">Alt text <span class="field__req">Recommended</span></label>
+              <input class="field__input" id="ad3-alt" type="text" value="Lawn running down to the lake">
+            </div>
+            <div class="field">
+              <label class="field__label" for="ad3-attr">Attribution</label>
+              <input class="field__input" id="ad3-attr" type="text" value="Photo · Jo Doe">
+            </div>
+            <div class="field">
+              <label class="field__label" for="ad3-licence">Licence</label>
+              <select class="field__input" id="ad3-licence"><option>Saturdaze owned</option><option selected>CC BY 4.0</option><option>CC BY-SA 4.0</option><option>CC0</option><option>Provider terms</option><option>Other</option></select>
+            </div>
+          </div>
+          <div class="dialog__actions">
+            <button class="btn btn--quiet" type="button">Cancel</button>
+            <button class="btn btn--primary" type="button"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Save changes</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="specimen" id="dialog-admin-primary">
+      <span class="specimen__label">AD4 · Admin · Make primary</span>
+      <div class="dialog dialog--specimen" role="dialog" aria-modal="true" aria-labelledby="ad4-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="ad4-title">Make this the primary photo?</h2><p class="dialog__sub">Port Credit Memorial Park · the photo on every idea card and cover.</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="dialog__body">
+            <div class="media media--4x3 photo-edit__media"><img class="media__img" src="../images/bronte-creek.svg" alt="The bandshell" width="800" height="600"><span class="media__credit">Photo · Jo Doe</span></div>
+            <div class="well well--primary">
+              <svg class="icon" aria-hidden="true"><use href="#i-star"/></svg>
+              <div><p class="well__title">5 weekend covers will change</p><p class="well__body">Weekends whose cover follows this place show the new primary on their next load, in Past and on shared links too.</p></div>
+            </div>
+          </div>
+          <div class="dialog__actions">
+            <button class="btn btn--quiet" type="button">Cancel</button>
+            <button class="btn btn--primary" type="button"><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg>Make primary</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="specimen" id="dialog-admin-remove">
+      <span class="specimen__label">AD5 · Admin · Remove photo</span>
+      <div class="dialog dialog--specimen dialog--wide" role="dialog" aria-modal="true" aria-labelledby="ad5-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="ad5-title">Remove the primary photo?</h2><p class="dialog__sub">Its file is deleted. Choose what families see next.</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="dialog__body">
+            <div class="field">
+              <span class="field__label" id="ad5-next-label">Next primary</span>
+              <div class="photo-pick" role="radiogroup" aria-labelledby="ad5-next-label">
+                <label class="photo-pick__opt"><input type="radio" name="ad5-next" checked aria-label="The bandshell (curated)"><img src="../images/bronte-creek.svg" alt="" width="800" height="600"><span class="photo-pick__name">Curated · The bandshell</span></label>
+                <label class="photo-pick__opt"><input type="radio" name="ad5-next" aria-label="Provider photo, unreviewed"><img src="../images/riverwood.svg" alt="" width="800" height="600"><span class="photo-pick__name">Provider · unreviewed</span></label>
+                <label class="photo-pick__opt photo-pick__upload"><input type="radio" name="ad5-next" aria-label="No photo"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg>No photo</label>
+              </div>
+            </div>
+            <p class="field__hint">5 weekend covers follow this place and will show the next primary.</p>
+          </div>
+          <div class="dialog__actions">
+            <button class="btn btn--quiet" type="button">Cancel</button>
+            <button class="btn btn--danger" type="button"><svg class="icon" aria-hidden="true"><use href="#i-trash"/></svg>Remove photo</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="specimen" id="dialog-admin-reject">
+      <span class="specimen__label">AD6 · Admin · Reject provider photo</span>
+      <div class="dialog dialog--specimen" role="dialog" aria-modal="true" aria-labelledby="ad6-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="ad6-title">Reject this photo?</h2><p class="dialog__sub">It is deleted and ingestion never adds this address for Harbour Grill again.</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="dialog__body">
+            <div class="media media--4x3 photo-edit__media"><img class="media__img" src="../images/la-marina.svg" alt="Candidate photo for Harbour Grill" width="800" height="600"><span class="media__credit">Photo · Port Credit BIA</span></div>
+            <div class="field">
+              <label class="field__label" for="ad6-reason">Reason <span class="field__req">Optional</span></label>
+              <textarea class="field__input" id="ad6-reason" rows="3" placeholder="Wrong venue, or not family friendly."></textarea>
+            </div>
+          </div>
+          <div class="dialog__actions">
+            <button class="btn btn--quiet" type="button">Cancel</button>
+            <button class="btn btn--danger" type="button"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg>Reject</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
   </div>
 </main>
 <!-- @shell:bottomnav -->

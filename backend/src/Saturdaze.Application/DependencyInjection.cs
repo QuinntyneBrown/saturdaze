@@ -23,6 +23,7 @@ public static class DependencyInjection
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(Covers.WeekendEnrichmentBehavior<,>));
         services.AddScoped<ICurrentFamilyAccessor, CurrentUserFamilyAccessor>();
         services.AddScoped<RefreshTokenIssuer>();
+        services.AddScoped<Admin.Photos.PhotoAuditWriter>();
         services.AddScoped<WeekendForecastService>();
         services.AddScoped<PlannerInputLoader>();
         services.AddScoped<IPlacePhotoReader, PlacePhotoReader>();

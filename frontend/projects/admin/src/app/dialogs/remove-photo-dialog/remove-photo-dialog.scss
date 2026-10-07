@@ -1,0 +1,10 @@
+// The next-primary choice is `sd-photo-pick`; the photo is `sd-dialog`'s media slot.
+
+:host {
+  display: block;
+}
+
+.hint {
+  font-size: var(--fontSizeBase200);
+  color: var(--colorNeutralForeground2);
+}

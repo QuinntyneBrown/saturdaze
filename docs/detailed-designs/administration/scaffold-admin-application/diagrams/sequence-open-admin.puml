@@ -1,0 +1,40 @@
+@startuml
+title UML sequence behaviour - Open the admin application
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+actor "Visitor" as actor
+box "Frontend - Saturdaze Admin Angular application" #E0F2FE
+ participant "requireAuth" as guard
+ participant "App" as app
+ participant "SignInPage" as signin
+end box
+box "Frontend - api library" #DBEAFE
+ participant "SessionStore" as session
+end box
+box "Backend - Saturdaze API" #D1FADF
+ participant "AuthController" as auth
+ participant "Admin policy" as policy
+end box
+actor -> session : bootstrap rehydrate()
+alt no persisted session
+ actor -> guard : open /places
+ guard --> actor : redirect /sign-in?returnUrl=/places (L2-111 AC4)
+ actor -> signin : email + password
+ signin -> session : signIn()
+ session -> auth : POST /api/auth/login
+ auth --> session : tokens + user
+ signin --> actor : navigate to /places
+end
+app -> session : user()
+alt user.role is User
+ app --> actor : sd-admin-gate "This account can't use Saturdaze Admin" + Sign out (L2-111 AC1)
+ note right of app : no /api/admin/* request is sent
+else user.role is Admin
+ app --> actor : sd-admin-nav + routed screen
+ app -> policy : GET /api/admin/... with bearer
+ policy --> app : 200 (403 for a User role, 401 anonymous: L2-111 AC2, AC3)
+end
+@enduml

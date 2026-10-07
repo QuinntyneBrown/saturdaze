@@ -1,0 +1,89 @@
+@use '../../../../../components/src/lib/styles/breakpoints' as *;
+@use '../../../../../components/src/lib/styles/card-base' as *;
+
+// `.review-list`, `.review-item`, `.review-actions` from docs/mocks/styles/app.css (admin);
+// each item is an `sd-card`, and `card-base` brings its `.card__head` anatomy.
+
+:host {
+  display: block;
+}
+
+.error {
+  margin-bottom: 16px;
+}
+
+.review-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.review-item {
+  gap: 12px;
+}
+
+.review-item__photos {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.review-item__photo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  margin: 0;
+}
+
+.review-item__cap {
+  font-size: var(--fontSizeBase200);
+  font-weight: var(--fontWeightSemibold);
+  color: var(--colorNeutralForeground2);
+}
+
+.review-item__link {
+  border-radius: var(--borderRadiusMedium);
+  color: inherit;
+  text-decoration: none;
+}
+
+.review-item__link:hover {
+  text-decoration: underline;
+}
+
+.review-item__link:focus-visible {
+  outline: 2px solid var(--colorBrandStroke1);
+  outline-offset: 2px;
+}
+
+.review-actions {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  padding-top: 4px;
+}
+
+@media (min-width: 576px) {
+  .review-actions {
+    display: flex;
+    justify-content: flex-end;
+  }
+}
+
+@include respond-to(tablet) {
+  .review-item {
+    display: grid;
+    grid-template-columns: 360px minmax(0, 1fr);
+    grid-template-rows: auto auto;
+    column-gap: 20px;
+  }
+
+  .review-item__photos {
+    grid-row: 1 / 3;
+  }
+
+  .review-actions {
+    align-self: end;
+  }
+}

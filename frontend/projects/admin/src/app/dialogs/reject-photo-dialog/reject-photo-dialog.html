@@ -1,0 +1,24 @@
+<sd-dialog title="Reject this photo?" [subtitle]="subtitle">
+  <sd-media
+    slot="media"
+    class="photo-edit__media"
+    ratio="4:3"
+    [photo]="data.media"
+    [tone]="'indoor'"
+    eager
+  />
+  <sd-text-input
+    label="Reason"
+    name="reason"
+    multiline
+    [rows]="3"
+    placeholder="Wrong venue, or not family friendly."
+    hint="Optional. Kept with the rejection for the activity log."
+    [formControl]="reason"
+  />
+  <sd-button slot="actions" variant="quiet" type="button" (click)="cancel()">Cancel</sd-button>
+  <sd-button slot="actions" variant="danger" type="button" (click)="reject()">
+    <sd-icon name="close" />
+    Reject
+  </sd-button>
+</sd-dialog>

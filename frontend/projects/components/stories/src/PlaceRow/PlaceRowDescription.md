@@ -1,0 +1,3 @@
+One catalog place in an admin list (L2-112, L2-113). `sd-place-row` carries `.place-row` from `docs/mocks/pages/admin.places.html`: the place's primary photo as a 4:3 `.place-thumb` (the tinted fallback tile when there is none), the name and a meta line, and the health chips in `.place-row__flags`, all as one `sd-list-item` that links to the place's photos.
+
+It is the row of both the Photo health "Worst first" list and the Places list, so a place reads the same on both screens. The wrapper sets `--sd-list-last-divider` so rows keep the list's dividers even though each `sd-list-item` is the last child of its own row.

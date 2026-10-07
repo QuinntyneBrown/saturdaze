@@ -16,6 +16,8 @@ public interface IAppDbContext
     DbSet<LocalEvent> LocalEvents { get; }
     DbSet<EventSubmission> EventSubmissions { get; }
     DbSet<PlacePhoto> PlacePhotos { get; }
+    DbSet<RejectedPlacePhoto> RejectedPlacePhotos { get; }
+    DbSet<PhotoAuditEntry> PhotoAuditEntries { get; }
     DbSet<IngestionRun> IngestionRuns { get; }
     DbSet<Weekend> Weekends { get; }
     DbSet<ItineraryBlock> ItineraryBlocks { get; }

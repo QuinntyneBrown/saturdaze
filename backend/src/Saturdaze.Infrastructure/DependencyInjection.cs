@@ -41,6 +41,16 @@ public static class DependencyInjection
         services.AddSingleton<Saturdaze.Application.Photos.IPhotoStore, Photos.FileSystemPhotoStore>();
         services.AddSingleton<Saturdaze.Application.Photos.IPhotoUrlSigner, Photos.HmacPhotoUrlSigner>();
         services.AddSingleton<Saturdaze.Application.Photos.IImageSanitizer, Photos.SkiaImageSanitizer>();
+        services.Configure<Saturdaze.Application.Photos.CuratedPhotoOptions>(
+            configuration.GetSection(Saturdaze.Application.Photos.CuratedPhotoOptions.SectionName));
+        services.AddSingleton<Saturdaze.Application.Photos.ICuratedPhotoStore, Photos.FileSystemCuratedPhotoStore>();
+        // One verification fetch per URL add (L2-116): no retries, the fetcher owns the 10 s budget.
+        services.AddHttpClient(Photos.HttpRemoteImageFetcher.HttpClientName, http =>
+        {
+            http.Timeout = Photos.HttpRemoteImageFetcher.Timeout;
+            http.MaxResponseContentBufferSize = Photos.HttpRemoteImageFetcher.MaxBytes;
+        });
+        services.AddSingleton<Saturdaze.Application.Photos.IRemoteImageFetcher, Photos.HttpRemoteImageFetcher>();
         services.Configure<Application.Common.TimeOptions>(configuration.GetSection(Application.Common.TimeOptions.SectionName));
 
         // Auth. Signing key resolution: env var first (production), config

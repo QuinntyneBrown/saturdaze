@@ -1,0 +1,20 @@
+<label class="photo-pick__opt" [class.photo-pick__upload]="plain()">
+  <input
+    type="radio"
+    [attr.name]="name()"
+    [value]="value()"
+    [checked]="checked()"
+    [attr.aria-label]="label() || null"
+    (change)="picked.emit(value())"
+  />
+  @if (plain()) {
+    <ng-content />
+  } @else if (src()) {
+    <img class="photo-pick__img" [src]="src()" alt="" loading="lazy" />
+  } @else {
+    <sd-media class="photo-pick__media" ratio="4:3" [photo]="shownMedia()" [tone]="tone()" eager />
+  }
+  @if (caption()) {
+    <span class="photo-pick__name">{{ caption() }}</span>
+  }
+</label>

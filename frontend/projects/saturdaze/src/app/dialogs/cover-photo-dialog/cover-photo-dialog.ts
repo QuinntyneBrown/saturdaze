@@ -10,7 +10,15 @@ import {
 } from '@angular/core';
 
 import { CoverChoice, CoverSelection } from 'api';
-import { Banner, Button, Dialog as DialogShell, Icon } from 'components';
+import {
+  Banner,
+  Button,
+  Dialog as DialogShell,
+  Icon,
+  PhotoDrop,
+  PhotoPick,
+  PhotoPickOption,
+} from 'components';
 
 export interface CoverPhotoDialogData {
   readonly choices: readonly CoverChoice[];
@@ -41,7 +49,7 @@ const FAILED = 'The photo did not upload. Try again in a moment.';
 @Component({
   selector: 'app-cover-photo-dialog',
   standalone: true,
-  imports: [Banner, Button, DialogShell, Icon],
+  imports: [Banner, Button, DialogShell, Icon, PhotoDrop, PhotoPick, PhotoPickOption],
   templateUrl: './cover-photo-dialog.html',
   styleUrl: './cover-photo-dialog.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -68,10 +76,7 @@ export class CoverPhotoDialog {
     inject(DestroyRef).onDestroy(() => this.revokePreview());
   }
 
-  protected choose(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    const file = input.files?.[0];
-    if (!file) return;
+  protected choose(file: File): void {
     this.revokePreview();
     this.selected.set(UPLOAD);
     this.error.set('');

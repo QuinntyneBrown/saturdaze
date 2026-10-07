@@ -5,6 +5,10 @@
 //   node tools/video-build/build-video.mjs docs/videos/01-x --slides-only   render PNGs to .cache/01-x/slides/
 //   node tools/video-build/build-video.mjs docs/videos/01-x                 encode the 1920x1080 MP4
 //
+// A slide with data-clip="clips/x.mp4" (a screen recording from tools/video-record) gets that
+// MP4 overlaid on its .clip box for the slide's time: held on its last frame when the narration
+// runs longer, sped up evenly when it runs shorter. data-clip-delay="s" holds the first frame.
+//
 // Needs the manifest written by tools/video-audio (run it first), Chrome/Chromium (EDGE_PATH
 // or CHROME_PATH override; Playwright's bundled Chromium is found automatically) and ffmpeg
 // with libx264 and libass (FFMPEG_PATH override).
@@ -16,6 +20,8 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 const here = dirname(fileURLToPath(import.meta.url));
 const repo = resolve(here, '../..');
 const ffmpeg = process.env.FFMPEG_PATH ?? 'ffmpeg';
+const ffprobe = process.env.FFPROBE_PATH ?? 'ffprobe';
+const MAX_CLIP_RATE = 1.6;
 const MIN_SLIDE = 4;
 const MAX_SLIDE = 90;
 
@@ -63,7 +69,14 @@ const norm = (s) =>
 function parseSlides(html) {
   return [...html.matchAll(/<section\b([^>]*)>/g)].map((m, i) => {
     const attr = (name) => m[1].match(new RegExp(`${name}="([^"]*)"`))?.[1];
-    return { index: i, id: attr('id') ?? `slide-${i + 1}`, cue: attr('data-cue'), part: Number(attr('data-part') ?? 0) };
+    return {
+      index: i,
+      id: attr('id') ?? `slide-${i + 1}`,
+      cue: attr('data-cue'),
+      part: Number(attr('data-part') ?? 0),
+      clip: attr('data-clip'),
+      clipDelay: Number(attr('data-clip-delay') ?? 0),
+    };
   });
 }
 
@@ -169,7 +182,7 @@ function writeSrt(events, file) {
   writeFileSync(file, events.map((e, i) => `${i + 1}\n${t(e.start)} --> ${t(e.end)}\n${e.text}\n`).join('\n'));
 }
 
-/** Lays out every slide at 1920x1080 in one headless pass and returns overflow problems. */
+/** Lays out every slide at 1920x1080 in one headless pass; returns overflow problems and clip boxes. */
 function auditSlides(slidesFile) {
   const browser = findBrowser();
   const dom = execFileSync(browser, [
@@ -178,9 +191,13 @@ function auditSlides(slidesFile) {
     '--window-size=1920,1080', '--virtual-time-budget=3000', '--dump-dom',
     `${pathToFileURL(slidesFile).href}?render=1&audit=1`,
   ], { stdio: ['ignore', 'pipe', 'ignore'], maxBuffer: 64 * 1024 * 1024 }).toString();
-  const m = dom.match(/data-audit="([^"]*)"/);
-  if (!m) throw new Error('slide audit did not run (no data-audit on <body>)');
-  return JSON.parse(m[1].replace(/&quot;/g, '"').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>'));
+  const read = (name) => {
+    const m = dom.match(new RegExp(`${name}="([^"]*)"`));
+    return m && JSON.parse(m[1].replace(/&quot;/g, '"').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>'));
+  };
+  const problems = read('data-audit');
+  if (!problems) throw new Error('slide audit did not run (no data-audit on <body>)');
+  return { problems, clips: read('data-clips') ?? [] };
 }
 
 function renderSlides(slidesFile, slides, outDir) {
@@ -229,8 +246,22 @@ function main() {
     if (flag) warnings.push(`slide ${s.index + 1} (#${s.id}) is ${d.toFixed(1)} s`);
     console.log(`  ${String(s.index + 1).padStart(2)}  ${mmss(s.start)}  ${d.toFixed(1).padStart(5)} s  #${s.id}${flag}`);
   }
-  for (const p of auditSlides(slidesFile)) {
+  const audit = auditSlides(slidesFile);
+  for (const p of audit.problems) {
     warnings.push(`slide ${p.slide} (#${p.id}): ${p.issue} ${JSON.stringify(p.el ?? '')} ${JSON.stringify(p.bottom ?? p.over ?? p.height)}`);
+  }
+  for (const s of slides.filter((x) => x.clip)) {
+    s.clipFile = resolve(folder, s.clip);
+    s.box = audit.clips.find((c) => c.slide === s.index + 1);
+    if (!existsSync(s.clipFile)) throw new Error(`slide ${s.index + 1} (#${s.id}): ${s.clip} not found — run tools/video-record`);
+    if (!s.box) throw new Error(`slide ${s.index + 1} (#${s.id}): no .clip box measured`);
+    const length = Number(execFileSync(ffprobe, ['-v', 'error', '-show_entries', 'format=duration', '-of', 'csv=p=0', s.clipFile]).toString());
+    const room = s.end - s.start - s.clipDelay;
+    s.rate = length > room ? length / room : 1;
+    s.pad = Math.max(0, room - length / s.rate) + 1;
+    const fit = s.rate > 1 ? `x${s.rate.toFixed(2)} speed` : `holds its last frame ${(room - length).toFixed(1)} s`;
+    console.log(`  clip #${s.id}: ${length.toFixed(1)} s in ${room.toFixed(1)} s, ${fit}`);
+    if (s.rate > MAX_CLIP_RATE) warnings.push(`slide ${s.index + 1} (#${s.id}) plays its clip at x${s.rate.toFixed(2)}; give it more narration`);
   }
   if (warnings.length) console.warn(`warnings:\n  ${warnings.join('\n  ')}`);
   if (args.includes('--check')) return;
@@ -263,13 +294,31 @@ function main() {
     '-c:v', 'libx264', '-preset', 'veryfast', '-tune', 'stillimage', '-crf', '12', '-pix_fmt', 'yuv420p',
     stills,
   ], { stdio: 'inherit' });
+  // Recordings are overlaid in this pass, each delayed to its slide's start, so the stills
+  // stay a constant-frame-rate stream and only the clip slides carry motion.
+  const clips = slides.filter((s) => s.clip);
+  const graph = [];
+  let last = '0:v';
+  clips.forEach((s, i) => {
+    const { x, y, w, h } = s.box;
+    graph.push(
+      `[${i + 2}:v]setpts=(PTS-STARTPTS)/${s.rate.toFixed(4)},scale=${w}:${h},` +
+        `tpad=start_mode=clone:start_duration=${s.clipDelay}:stop_mode=clone:stop_duration=${s.pad.toFixed(3)},` +
+        `setpts=PTS+${s.start.toFixed(3)}/TB[c${i}]`,
+      `[${last}][c${i}]overlay=${x}:${y}:enable='between(t,${s.start.toFixed(3)},${s.end.toFixed(3)})'[v${i}]`,
+    );
+    last = `v${i}`;
+  });
+  // Relative to cwd: an absolute Windows path (C:\…) breaks the filter's option parsing.
+  graph.push(`[${last}]ass=${basename(ass)},format=yuv420p[out]`);
   execFileSync(ffmpeg, [
     '-y', '-v', 'error',
     '-i', stills,
     '-i', mp3,
-    // Relative to cwd: an absolute Windows path (C:\…) breaks the filter's option parsing.
-    '-vf', `ass=${basename(ass)},format=yuv420p`,
-    '-c:v', 'libx264', '-preset', 'medium', '-tune', 'stillimage', '-crf', '26',
+    ...clips.flatMap((s) => ['-i', s.clipFile]),
+    '-filter_complex', graph.join(';'),
+    '-map', '[out]', '-map', '1:a',
+    '-c:v', 'libx264', '-preset', 'medium', ...(clips.length ? ['-crf', '22'] : ['-tune', 'stillimage', '-crf', '26']),
     '-c:a', 'aac', '-b:a', '96k',
     '-movflags', '+faststart',
     '-shortest',

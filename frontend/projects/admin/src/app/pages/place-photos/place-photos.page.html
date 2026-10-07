@@ -1,0 +1,84 @@
+@switch (status()) {
+  @case ('loading') {
+    <sd-page-header title="Place photos" backHref="/places" backLabel="Places" />
+    <sd-status-row icon="map">Fetching the place.</sd-status-row>
+  }
+  @case ('missing') {
+    <sd-page-header title="Place not found" backHref="/places" backLabel="Places" />
+    <sd-empty
+      icon="map"
+      title="This place is not in the catalog"
+      body="It may have been removed. Go back to Places and pick another."
+    />
+  }
+  @case ('ready') {
+    @let v = view();
+    <sd-page-header [title]="title()" [subtitle]="subtitle()" backHref="/places" backLabel="Places">
+      <sd-button slot="primary" variant="primary" (click)="upload()">
+        <sd-icon name="plus" />
+        Upload photo
+      </sd-button>
+      <sd-button slot="actions" variant="quiet" (click)="addFromUrl()">
+        <sd-icon name="pin" />
+        Add from URL
+      </sd-button>
+    </sd-page-header>
+
+    @if (error()) {
+      <sd-banner class="error" tone="warn" role="alert" icon="close">{{ error() }}</sd-banner>
+    }
+
+    @if (v) {
+      <sd-section
+        title="How families see it"
+        subtitle="The primary photo in every slot the family app uses."
+      >
+        <sd-slot-preview [media]="v.primary" [name]="v.name" [tone]="v.tone" [icon]="v.icon" />
+      </sd-section>
+
+      <sd-section
+        title="Photos"
+        subtitle="One primary. Curated beats provider; a provider photo stays unreviewed until you keep, promote or reject it."
+      >
+        @if (v.tiles.length) {
+          <div class="photo-grid">
+            @for (tile of v.tiles; track tile.id) {
+              <sd-photo-tile
+                [media]="tile.media"
+                [blocked]="tile.blocked"
+                [primary]="tile.isPrimary"
+                [badges]="badges(tile)"
+                [alt]="tile.alt"
+                [credit]="tile.credit"
+                [licence]="tile.licence"
+                [size]="tile.size"
+              >
+                @if (!tile.isPrimary) {
+                  <sd-button slot="actions" variant="primary" size="sm" (click)="makePrimary(tile)">
+                    <sd-icon name="star" />
+                    Make primary
+                  </sd-button>
+                }
+                <sd-button slot="actions" variant="quiet" size="sm" (click)="edit(tile)">
+                  <sd-icon name="edit" />
+                  Edit
+                </sd-button>
+                <sd-button slot="actions" variant="ghost" size="sm" (click)="remove(tile)">
+                  <sd-icon name="trash" />
+                  Remove
+                </sd-button>
+              </sd-photo-tile>
+            }
+          </div>
+        } @else {
+          <sd-empty
+            icon="sparkle"
+            tone="leaf"
+            title="No photos yet"
+            body="Families see the fallback tile until a curated photo is added."
+          />
+        }
+      </sd-section>
+    }
+  }
+}

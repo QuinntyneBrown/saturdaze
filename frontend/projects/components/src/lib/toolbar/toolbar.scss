@@ -1,0 +1,23 @@
+@use '../styles/breakpoints' as *;
+
+// `.toolbar` from docs/mocks/styles/app.css (admin) — the host is the toolbar.
+
+:host {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+@include respond-to(tablet) {
+  :host {
+    grid-template-columns: minmax(0, 1fr) 240px;
+    gap: 16px;
+    align-items: end;
+  }
+
+  :host(.toolbar--fields) {
+    grid-template-columns: repeat(auto-fill, minmax(0, 320px));
+    gap: 12px;
+  }
+}

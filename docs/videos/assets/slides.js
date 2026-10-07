@@ -31,6 +31,23 @@
     }
   }
 
+  // Screen recordings: <section data-clip="clips/x.mp4"> plays the clip in a .clip box
+  // (a <video> here; tools/video-build overlays the MP4 at the box's position instead).
+  const renderMode = new URLSearchParams(location.search).has('render');
+  for (const s of slides) {
+    if (!s.dataset.clip) continue;
+    s.classList.add('clip-slide');
+    let box = s.querySelector('.clip');
+    if (!box) {
+      box = document.createElement('video');
+      box.className = 'clip';
+      s.prepend(box);
+    }
+    if (box.tagName === 'VIDEO' && !renderMode) {
+      Object.assign(box, { src: s.dataset.clip, muted: true, loop: true, autoplay: true, playsInline: true });
+    }
+  }
+
   // Code: data-mark="2,5-7" highlights lines; // and # comments are dimmed.
   for (const pre of document.querySelectorAll('pre.code')) {
     const marks = new Set();
@@ -117,6 +134,15 @@
       if (s.scrollHeight > 1081) problems.push({ slide: i + 1, id: s.id, issue: 'slide taller than 1080', height: s.scrollHeight });
     });
     body.setAttribute('data-audit', JSON.stringify(problems));
+    // Where each recording sits, for the builder's overlay.
+    const clips = [];
+    slides.forEach((s, i) => {
+      if (!s.dataset.clip) return;
+      show(i);
+      const r = s.querySelector('.clip').getBoundingClientRect();
+      clips.push({ slide: i + 1, x: Math.round(r.left), y: Math.round(r.top), w: Math.round(r.width), h: Math.round(r.height) });
+    });
+    body.setAttribute('data-clips', JSON.stringify(clips));
     show(0);
   }
   body.classList.add('ready');

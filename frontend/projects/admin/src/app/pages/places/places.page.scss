@@ -1,0 +1,20 @@
+// `.toolbar__count`, `.place-list` from docs/mocks/styles/app.css (admin); the
+// toolbar, rows and pager are `sd-toolbar`, `sd-place-row` and `sd-pager`.
+
+:host {
+  display: block;
+}
+
+.filters {
+  margin-bottom: 12px;
+}
+
+.error {
+  margin-bottom: 16px;
+}
+
+.toolbar__count {
+  font-size: var(--fontSizeBase300);
+  color: var(--colorNeutralForeground2);
+  margin: 12px 0;
+}

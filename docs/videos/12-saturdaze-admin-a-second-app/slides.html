@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 12 Slides</title>
+<link rel="stylesheet" href="../assets/slides.css">
+</head>
+<body data-video-number="12" data-video-title="Saturdaze Admin: a second app, one sign-in" data-parts="Introduction|Why a second app|Shared code|Who gets in|Layout|Shipping|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Saturdaze Admin series · Video 12</div>
+  <h1>Saturdaze Admin:<br>a second app, one sign-in</h1>
+  <p class="lead">Why admin ships on its own, what it shares, and who gets in</p>
+</section>
+
+<section id="series" data-part="0" data-cue="This is the first of six videos about it">
+  <h2>The Saturdaze Admin series</h2>
+  <div class="cols three">
+    <div class="card"><h3>12 · The shell</h3><p class="small">A second app, shared libraries, sign-in and the gate, shipping.</p></div>
+    <div class="card"><h3>13 · Photo health</h3><p class="small">Coverage per catalog; finding places.</p></div>
+    <div class="card"><h3>14 · A place's photos</h3><p class="small">Previews, primary, edit, remove.</p></div>
+    <div class="card"><h3>15 · Adding photos</h3><p class="small">Upload and add from URL; the curated store.</p></div>
+    <div class="card"><h3>16 · Reviewing</h3><p class="small">The review queue; rejections that stick.</p></div>
+    <div class="card"><h3>17 · Activity log</h3><p class="small">Every photo change, audited.</p></div>
+  </div>
+  <p class="small muted">Recorded from the real app against a local demo database, as of October 2026.</p>
+</section>
+
+<section id="why" data-part="1" data-cue="The family app is meant to stay radically simple">
+  <h2>Two audiences, two shells</h2>
+  <div class="cols">
+    <div class="card forest"><h3>Family app</h3><ul class="small"><li>Five screens, one primary action each</li><li>Phone-first, bottom navigation</li><li>Every family downloads it</li></ul></div>
+    <div class="card"><h3>Photo administration</h3><ul class="small"><li>Seven screens and six dialogs</li><li>Desktop-first, side navigation</li><li>A curator, a few hours a week</li></ul></div>
+  </div>
+</section>
+
+<section id="adr" data-part="1" data-cue="So ADR-014 makes admin a second Angular application">
+  <h2>ADR-014: a second application</h2>
+  <p><span class="file">frontend/projects/admin</span></p>
+  <ul>
+    <li>Same <code>sd</code> prefix, standalone components, builder, budgets, lint and format</li>
+    <li><code>npm run start:admin</code> on its own port</li>
+    <li>Its own host: a separate Azure Static Web App</li>
+  </ul>
+</section>
+
+<section id="shared" data-part="2" data-cue="The rule is shared libraries, no copied code">
+  <h2>Shared libraries, no copied code</h2>
+  <div class="cols wide-left">
+    <div class="card"><h3>New in <code>components</code></h3><p class="small"><code>sd-admin-nav</code> · <code>sd-admin-gate</code> · <code>sd-stat-card</code> · <code>sd-photo-tile</code> · <code>sd-slot-preview</code></p><p class="small muted">Each with a Storybook story folder (ADR-012).</p></div>
+    <div class="card sky"><h3>New in <code>api</code></h3><p class="small">Admin DTOs and three services; the auth guards and interceptor.</p></div>
+  </div>
+</section>
+
+<section id="config" data-part="2" data-cue="Now open the admin composition root">
+  <h2>Pages depend on tokens</h2>
+  <pre class="code tight" data-lang="ts" data-mark="8-10">
+export const appConfig: ApplicationConfig = {
+  providers: [
+    provideAppInitializer(() =&gt; inject(SESSION_STORE).rehydrate()),
+    provideRouter(routes),
+    provideHttpClient(withFetch(), withInterceptors([authInterceptor])),
+    { provide: API_BASE_URL, useValue: environment.apiBaseUrl },
+    { provide: AUTH_ROUTES, useValue: { signIn: '/sign-in', home: '/' } },
+    { provide: ADMIN_PLACES_SERVICE, useExisting: AdminPlacesService },
+    { provide: ADMIN_PHOTOS_SERVICE, useExisting: AdminPhotosService },
+    { provide: ADMIN_AUDIT_SERVICE, useExisting: AdminAuditService },
+    { provide: AUTH_SERVICE, useExisting: AuthService },
+    { provide: SESSION_STORE, useExisting: SessionStore },
+  ],
+};
+</pre>
+  <p class="small muted"><span class="file">frontend/projects/admin/src/app/app.config.ts</span> (abridged)</p>
+</section>
+
+<section id="auth-routes" data-part="2" data-cue="The auth plumbing moved as well">
+  <h2>One set of guards, two destinations</h2>
+  <pre class="code" data-lang="ts" data-mark="1-6">
+export interface AuthRoutes {
+  /** Where an anonymous visitor signs in (`?returnUrl=` is appended). */
+  readonly signIn: string;
+  /** Where a signed-in visitor lands when a page is not for them. */
+  readonly home: string;
+}
+
+export const DEFAULT_AUTH_ROUTES: AuthRoutes = { signIn: '/sign-in', home: '/weekend' };
+</pre>
+  <p class="small muted"><span class="file">frontend/projects/api/src/lib/auth/auth-routes.ts</span> · admin binds <code>{ signIn: '/sign-in', home: '/' }</code></p>
+</section>
+
+<section id="identity" data-part="3" data-cue="There is one identity and one API">
+  <h2>One account, one API</h2>
+  <div class="flow">
+    <div class="node">Saturdaze account<small>role User or Admin</small></div>
+    <div class="arrow">→</div>
+    <div class="node accent">Saturdaze API<small>local JWT (ADR-007)</small></div>
+    <div class="arrow">←</div>
+    <div class="node">Family app · Admin<small>same <code>SessionStore</code></small></div>
+  </div>
+</section>
+
+<section id="deep-link" data-part="3" data-cue="Watch an anonymous visitor ask for the Places screen" data-clip="clips/deep-link.mp4">
+  <aside class="clip-notes">
+    <h3>Deep link, then sign in</h3>
+    <ul>
+      <li>Anonymous visit to <code>/places</code></li>
+      <li><code>requireAuth</code> sends them to sign-in with a return address</li>
+      <li>The administrator lands on Places</li>
+    </ul>
+  </aside>
+</section>
+
+<section id="gate" data-part="3" data-cue="Now a family account." data-clip="clips/gate.mp4">
+  <aside class="clip-notes">
+    <h3>A family account meets the gate</h3>
+    <ul>
+      <li>Correct password, role <code>User</code></li>
+      <li>"This account can't use Saturdaze Admin"</li>
+      <li>Nothing from the catalog was loaded</li>
+      <li>Sign out revokes the session</li>
+    </ul>
+  </aside>
+</section>
+
+<section id="app-html" data-part="3" data-cue="Notice that the gate is not a route guard">
+  <h2>The gate replaces the outlet</h2>
+  <pre class="code tight" data-lang="html" data-mark="5-6">
+@if (loading()) {
+  &lt;div class="sd-app-loading" aria-hidden="true"&gt;&lt;/div&gt;
+} @else if (bare()) {
+  &lt;main id="main" class="sd-frame sd-frame--bare"&gt;&lt;router-outlet /&gt;&lt;/main&gt;
+} @else if (gated()) {
+  &lt;sd-admin-gate [email]="email()" [familyAppUrl]="familyAppUrl" (signOut)="signOut()" /&gt;
+} @else {
+  &lt;div class="admin"&gt;
+    &lt;sd-admin-nav [active]="nav()" [email]="email()" (signOut)="signOut()" /&gt;
+    &lt;main id="main" class="admin-main"&gt;&lt;router-outlet /&gt;&lt;/main&gt;
+  &lt;/div&gt;
+}
+</pre>
+  <p class="small muted"><span class="file">frontend/projects/admin/src/app/app.html</span> (abridged) · <code>gated = user !== null &amp;&amp; user.role !== 'Admin'</code></p>
+</section>
+
+<section id="server" data-part="3" data-cue="That client-side gate is a courtesy, not security">
+  <h2>The boundary is on the server</h2>
+  <pre class="code tight" data-lang="cs" data-mark="3,9">
+[ApiController]
+[Route("api/admin")]
+[Authorize(Policy = "Admin")]
+public sealed class AdminPhotosController : ControllerBase
+
+// Program.cs
+builder.Services.AddAuthorization(o =&gt;
+{
+    o.AddPolicy("Admin", p =&gt; p.RequireRole(nameof(UserRole.Admin)));
+    o.FallbackPolicy = new AuthorizationPolicyBuilder(JwtBearerDefaults.AuthenticationScheme)
+        .RequireAuthenticatedUser()
+        .Build();
+});
+</pre>
+  <div class="row"><span class="tag">family token → 403</span> <span class="tag sky">no token → 401</span></div>
+</section>
+
+<section id="tour" data-part="4" data-cue="Once in, an administrator gets a side navigation" data-clip="clips/tour.mp4">
+  <aside class="clip-notes">
+    <h3>Five destinations</h3>
+    <ul>
+      <li>Photo health (home)</li>
+      <li>Places</li>
+      <li>Review queue</li>
+      <li>Ingestion skips</li>
+      <li>Activity log</li>
+    </ul>
+    <p class="small muted">The current link carries <code>aria-current="page"</code>.</p>
+  </aside>
+</section>
+
+<section id="narrow" data-part="4" data-cue="The shell is desktop-first, because curators work on laptops" data-clip="clips/narrow.mp4">
+  <video class="clip phone"></video>
+  <aside class="clip-notes">
+    <h3>Below 1024 px: a top bar</h3>
+    <ul>
+      <li>Same destinations, scrolling sideways</li>
+      <li>Usable at 390 px, no horizontal scroll</li>
+      <li>Same foundation styles and design tokens</li>
+      <li>No bottom nav, no iOS chrome handling</li>
+    </ul>
+  </aside>
+</section>
+
+<section id="scripts" data-part="5" data-cue="gains `start:admin` and `build:admin`">
+  <h2>Build and CI</h2>
+  <pre class="code" data-lang="json" data-mark="3,5">
+"scripts": {
+  "start": "ng serve saturdaze",
+  "start:admin": "ng serve admin --port 4300",
+  "build": "ng build",
+  "build:admin": "ng build admin",
+</pre>
+  <p class="small"><span class="file">.github/workflows/ci.yml</span> adds one step: <code>npx ng build admin --configuration production</code></p>
+</section>
+
+<section id="deploy" data-part="5" data-cue="The deploy workflow builds the admin bundle">
+  <h2>Its own Static Web App</h2>
+  <pre class="code tight" data-lang="yaml" data-mark="4,6,9">
+admin-web:
+  name: Deploy admin (SWA)
+  # L2-123 AC4: after the migrations, like the family app, with its own token.
+  needs: [test-frontend, migrate]
+  env:
+    SWA_ADMIN_DEPLOYMENT_TOKEN: ${{ secrets.SWA_ADMIN_DEPLOYMENT_TOKEN }}
+  steps:
+    - name: Check for the admin deployment token   # skipped, with a summary, until it exists
+    - name: Download admin bundle                   # dist/admin/browser
+    - name: Deploy to Azure Static Web Apps
+</pre>
+  <p class="small muted"><span class="file">.github/workflows/deploy.yml</span> (abridged)</p>
+</section>
+
+<section id="settings" data-part="5" data-cue="Two API settings matter">
+  <h2>Two API settings</h2>
+  <div class="cols">
+    <div class="card"><h3>CORS</h3><p class="small">List the admin origin in <code>Cors:AllowedOrigins</code>, next to the family app's.</p></div>
+    <div class="card sky"><h3>Curated photos</h3><p class="small">The API origin goes in <code>Saturdaze:Images:AllowedOrigins</code> and both apps' CSP <code>img-src</code> (ADR-015, video 15).</p></div>
+  </div>
+</section>
+
+<section id="recap" data-part="6" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div>A second Angular app on its own host; admin code never reaches families.</div>
+    <div>Shared <code>components</code> and <code>api</code>; services bound to tokens; no copied code.</div>
+    <div>One account, one API: the gate is a courtesy, the Admin policy is the boundary.</div>
+    <div>Side navigation from 1024 px, top bar below.</div>
+    <div>The admin deploy runs after migrations, with its own token.</div>
+  </div>
+  <p class="small muted">Next · Video 13: photo health and finding places.</p>
+</section>
+
+<script src="../assets/slides.js"></script>
+</body>
+</html>

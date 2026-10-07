@@ -1,10 +1,9 @@
 import { TestBed } from '@angular/core/testing';
 import { Route, Router, UrlTree, provideRouter } from '@angular/router';
 
+import { requireAdmin, requireAnonymous, requireAuth } from 'api';
+
 import { routes } from './app.routes';
-import { requireAdmin } from './auth/require-admin.guard';
-import { requireAnonymous } from './auth/require-anonymous.guard';
-import { requireAuth } from './auth/require-auth.guard';
 
 const find = (path: string): Route | undefined => routes.find((r) => r.path === path);
 

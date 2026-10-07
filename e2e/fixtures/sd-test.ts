@@ -44,6 +44,13 @@ import { LandingPage } from "../pages/landing.page.js";
 import { LegalPage } from "../pages/legal.page.js";
 import { DialogsPage } from "../pages/dialogs.page.js";
 import { SharedWeekendPage } from "../pages/shared-weekend.page.js";
+import { AdminSignInPage } from "../pages/admin/admin-sign-in.page.js";
+import { AdminPlacesPage } from "../pages/admin/admin-places.page.js";
+import { AdminPlacePage } from "../pages/admin/admin-place.page.js";
+import { AdminReviewsPage } from "../pages/admin/admin-reviews.page.js";
+import { AdminHealthPage } from "../pages/admin/admin-health.page.js";
+import { AdminActivityPage } from "../pages/admin/admin-activity.page.js";
+import { AdminSkipsPage } from "../pages/admin/admin-skips.page.js";
 
 interface Pages {
   weekend: WeekendPage;
@@ -59,6 +66,13 @@ interface Pages {
   legal: LegalPage;
   dialogs: DialogsPage;
   sharedWeekend: SharedWeekendPage;
+  adminSignIn: AdminSignInPage;
+  adminPlaces: AdminPlacesPage;
+  adminPlace: AdminPlacePage;
+  adminReviews: AdminReviewsPage;
+  adminHealth: AdminHealthPage;
+  adminActivity: AdminActivityPage;
+  adminSkips: AdminSkipsPage;
 }
 
 export interface GotoOptions {
@@ -137,6 +151,13 @@ export const test = base.extend<SdFixtures>({
       legal: new LegalPage(page),
       dialogs: new DialogsPage(page),
       sharedWeekend: new SharedWeekendPage(page),
+      adminSignIn: new AdminSignInPage(page),
+      adminPlaces: new AdminPlacesPage(page),
+      adminPlace: new AdminPlacePage(page),
+      adminReviews: new AdminReviewsPage(page),
+      adminHealth: new AdminHealthPage(page),
+      adminActivity: new AdminActivityPage(page),
+      adminSkips: new AdminSkipsPage(page),
     });
   },
 

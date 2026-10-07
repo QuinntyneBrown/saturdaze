@@ -447,11 +447,71 @@ namespace Saturdaze.Infrastructure.Migrations
                     b.ToTable("PasswordResetTokens", (string)null);
                 });
 
+            modelBuilder.Entity("Saturdaze.Domain.Entities.PhotoAuditEntry", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Action")
+                        .HasColumnType("int");
+
+                    b.Property<string>("AdminEmail")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<Guid>("AdminUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("After")
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<string>("Before")
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<DateTimeOffset>("OccurredAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<Guid>("PhotoId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("PlaceId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("PlaceKind")
+                        .HasColumnType("int");
+
+                    b.Property<long>("Sequence")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Sequence"));
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AdminUserId")
+                        .HasDatabaseName("IX_PhotoAuditEntries_Admin");
+
+                    b.HasIndex("OccurredAt")
+                        .HasDatabaseName("IX_PhotoAuditEntries_OccurredAt");
+
+                    b.HasIndex("PlaceKind", "PlaceId")
+                        .HasDatabaseName("IX_PhotoAuditEntries_Place");
+
+                    b.ToTable("PhotoAuditEntries", (string)null);
+                });
+
             modelBuilder.Entity("Saturdaze.Domain.Entities.PlacePhoto", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("AdminLocked")
+                        .HasColumnType("bit");
 
                     b.Property<string>("AltText")
                         .IsRequired()
@@ -480,8 +540,21 @@ namespace Saturdaze.Infrastructure.Migrations
                     b.Property<int>("PlaceKind")
                         .HasColumnType("int");
 
+                    b.Property<int>("ReviewState")
+                        .HasColumnType("int");
+
                     b.Property<int>("Source")
                         .HasColumnType("int");
+
+                    b.Property<string>("StorageKey")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTimeOffset?>("UpdatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Url")
                         .IsRequired()
@@ -563,6 +636,42 @@ namespace Saturdaze.Infrastructure.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("RefreshTokens", (string)null);
+                });
+
+            modelBuilder.Entity("Saturdaze.Domain.Entities.RejectedPlacePhoto", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("PlaceId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("PlaceKind")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Reason")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<DateTimeOffset>("RejectedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<Guid>("RejectedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PlaceKind", "PlaceId", "Url")
+                        .IsUnique()
+                        .HasDatabaseName("IX_RejectedPlacePhotos_Place_Url");
+
+                    b.ToTable("RejectedPlacePhotos", (string)null);
                 });
 
             modelBuilder.Entity("Saturdaze.Domain.Entities.Restaurant", b =>
@@ -1117,6 +1226,15 @@ namespace Saturdaze.Infrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Saturdaze.Domain.Entities.UserAvatar", b =>
+                {
+                    b.HasOne("Saturdaze.Domain.Entities.User", null)
+                        .WithOne()
+                        .HasForeignKey("Saturdaze.Domain.Entities.UserAvatar", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Saturdaze.Domain.Entities.Weekend", b =>
                 {
                     b.OwnsOne("Saturdaze.Domain.ValueObjects.GeoLocation", "Home", b1 =>
@@ -1149,15 +1267,6 @@ namespace Saturdaze.Infrastructure.Migrations
                         });
 
                     b.Navigation("Home");
-                });
-
-            modelBuilder.Entity("Saturdaze.Domain.Entities.UserAvatar", b =>
-                {
-                    b.HasOne("Saturdaze.Domain.Entities.User", null)
-                        .WithOne()
-                        .HasForeignKey("Saturdaze.Domain.Entities.UserAvatar", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Saturdaze.Domain.Entities.Family", b =>

@@ -1,0 +1,16 @@
+// The file is chosen in `sd-photo-drop`; this styles its projected empty state.
+
+:host {
+  display: block;
+}
+
+.hint {
+  font-weight: var(--fontWeightRegular);
+  font-size: var(--fontSizeBase200);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}

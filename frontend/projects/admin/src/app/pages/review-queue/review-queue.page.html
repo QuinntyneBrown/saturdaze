@@ -1,0 +1,73 @@
+<sd-page-header title="Review queue" [subtitle]="subtitle()" />
+
+@if (error()) {
+  <sd-banner class="error" tone="warn" role="alert" icon="close">{{ error() }}</sd-banner>
+}
+
+@switch (status()) {
+  @case ('loading') {
+    <sd-status-row icon="check">Fetching the queue.</sd-status-row>
+  }
+  @case ('ready') {
+    @if (items().length) {
+      <div class="review-list">
+        @for (item of items(); track item.id) {
+          <sd-card class="review-item" role="article" [attr.aria-label]="item.placeName">
+            <div class="review-item__photos">
+              <figure class="review-item__photo">
+                <sd-media
+                  ratio="4:3"
+                  [photo]="item.candidate"
+                  [tone]="item.tone"
+                  [icon]="item.icon"
+                />
+                <figcaption class="review-item__cap">New from ingestion</figcaption>
+              </figure>
+              <figure class="review-item__photo">
+                <sd-media
+                  ratio="4:3"
+                  [photo]="item.replaces"
+                  [tone]="item.tone"
+                  [icon]="item.icon"
+                />
+                <figcaption class="review-item__cap">{{ item.replacesCaption }}</figcaption>
+              </figure>
+            </div>
+            <div class="card__head">
+              <div class="card__head-text">
+                <h2 class="card__title">
+                  <a class="review-item__link" [routerLink]="item.placeHref">{{
+                    item.placeName
+                  }}</a>
+                </h2>
+                <p class="card__meta">{{ item.meta }}</p>
+              </div>
+              <sd-chip tone="sun">Unreviewed</sd-chip>
+            </div>
+            <div class="review-actions">
+              <sd-button variant="ghost" [disabled]="isBusy(item)" (click)="reject(item)">
+                <sd-icon name="close" />
+                Reject
+              </sd-button>
+              <sd-button variant="quiet" [disabled]="isBusy(item)" (click)="keep(item)">
+                <sd-icon name="check" />
+                Keep
+              </sd-button>
+              <sd-button variant="primary" [disabled]="isBusy(item)" (click)="makePrimary(item)">
+                <sd-icon name="star" />
+                Make primary
+              </sd-button>
+            </div>
+          </sd-card>
+        }
+      </div>
+    } @else {
+      <sd-empty
+        icon="check"
+        tone="leaf"
+        title="Nothing to review"
+        body="Provider photos ingestion brings in wait here until you keep, promote or reject them."
+      />
+    }
+  }
+}

@@ -1,0 +1,39 @@
+<sd-dialog
+  title="Edit photo details"
+  subtitle="The address cannot change. To swap the image, add a new photo and remove this one."
+>
+  @if (data.tile.media) {
+    <sd-media slot="media" class="photo-edit__media" ratio="4:3" [photo]="data.tile.media" eager />
+  }
+  <form class="form" [formGroup]="form" (ngSubmit)="save()">
+    <sd-text-input
+      label="Alt text"
+      name="alt"
+      formControlName="alt"
+      hint='What a person who cannot see the photo should know. Families see "Photo of the place" when it is empty.'
+    />
+    <sd-text-input label="Attribution" name="attribution" formControlName="attribution" required />
+    <sd-select label="Licence" name="licence" [options]="licences" formControlName="licence" />
+    @if (isOther()) {
+      <sd-text-input
+        label="Licence text"
+        name="licenceText"
+        formControlName="licenceText"
+        placeholder="Who allows this photo, and under what terms"
+        required
+      />
+    }
+    <button type="submit" hidden></button>
+  </form>
+  <sd-button slot="actions" variant="quiet" type="button" (click)="cancel()">Cancel</sd-button>
+  <sd-button
+    slot="actions"
+    variant="primary"
+    type="button"
+    [disabled]="!canSave()"
+    (click)="save()"
+  >
+    <sd-icon name="check" />
+    Save changes
+  </sd-button>
+</sd-dialog>

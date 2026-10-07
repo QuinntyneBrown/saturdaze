@@ -14,7 +14,7 @@
   padding: 0 12px;
   border-radius: var(--borderRadiusMedium);
   background: var(--colorNeutralBackground3);
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-family: var(--fontFamilyMonospace);
   font-size: var(--fontSizeBase300);
   overflow: hidden;
   text-overflow: ellipsis;

@@ -1,0 +1,3 @@
+One photo of a catalog place on the admin Place photos screen (L2-114). `sd-photo-tile` carries `.card.photo-tile` from `docs/mocks/styles/app.css` and stacks a 4:3 `sd-media` frame, the badges (`sd-chip`s: Primary, Curated or Provider, Reviewed or Unreviewed, Missing alt text, Blocked URL), an `sd-details` list of alt text, credit, licence and size, and whatever actions the screen projects into `[slot=actions]`.
+
+A `blocked` photo, one whose URL the API would project as `null` because it is not HTTPS on an allowed origin, draws the "Blocked URL" tile instead of loading the image, so the curator sees why families do not.

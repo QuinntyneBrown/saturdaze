@@ -1,0 +1,25 @@
+<a class="admin-nav__brand" routerLink="/"
+  ><span class="brand-mark" aria-hidden="true"></span
+  ><span class="admin-nav__brand-text">Saturdaze</span><span class="admin-nav__tag">Admin</span></a
+>
+<div class="admin-nav__links">
+  @for (item of items; track item.key) {
+    <a
+      class="admin-nav__link"
+      [attr.data-nav]="item.key"
+      [routerLink]="item.route"
+      [attr.aria-current]="active() === item.key ? 'page' : null"
+    >
+      <sd-icon [name]="item.icon" [size]="18" />
+      {{ item.label }}
+    </a>
+  }
+</div>
+<div class="admin-nav__account">
+  <sd-avatar [name]="email() || '?'" [src]="avatarSrc()" tone="primary" size="sm" />
+  <span class="admin-nav__email">{{ email() }}</span>
+  <sd-button variant="ghost" size="sm" (click)="signOut.emit()">
+    <sd-icon name="sign_out" />
+    Sign out
+  </sd-button>
+</div>

@@ -27,6 +27,19 @@ Five videos on the one place Saturdaze calls a model: catalog ingestion through 
 | 10 | [Configure the .NET solution to use Foundry](10-configure-the-dotnet-solution/README.md) | ~12 min | `AddIngestion` binding and key resolution; local run, Worker, run-once job, App Service WebJob; Anthropic fallback; failure-to-fix table. |
 | 11 | [Event ingestion: the suggested workflow and cadence](11-event-ingestion-workflow-and-cadence/README.md) | ~10 min | Why one Friday pass covers two weekends; Friday 08:00 UTC; events weekly, activities monthly, restaurants quarterly; the weekly checklist; reading `IngestionRuns`; safe reruns. |
 
+## Saturdaze Admin series
+
+Six videos on Saturdaze Admin, the second web application that curates the catalog's place photos (L1-036, ADR-014, ADR-015). Each mixes screen recordings of the real app, made against the admin demo data (`tools/video-record/admin-demo`), with the code behind each screen. Watch in order.
+
+| # | Video | Runtime | What you learn |
+| --- | --- | --- | --- |
+| 12 | [Saturdaze Admin: a second app, one sign-in](12-saturdaze-admin-a-second-app/README.md) | ~7.6 min | Why admin is its own app; shared libraries and tokens; sign-in, the admin gate and the `Admin` policy; layout; CI and the `admin-web` deploy job. |
+| 13 | [Photo health and finding places](13-photo-health-and-finding-places/README.md) | ~5.9 min | The four health flags; the Photo health home; Places search, filters and sort; why the counts always match. |
+| 14 | [Managing a place's photos](14-managing-a-places-photos/README.md) | ~6.7 min | Slot previews and cover impact; Make primary and the one-primary rule; editing details; removing with a chosen next primary; the admin lock. |
+| 15 | [Adding curated photos: upload and URL](15-adding-curated-photos/README.md) | ~7 min | Uploads, the sanitizer and the promotion rule; the public curated store (ADR-015) and its settings; adding from an allow-listed URL. |
+| 16 | [Reviewing ingested photos](16-reviewing-ingested-photos/README.md) | ~5.8 min | The review queue; Keep, Make primary, Reject; rejections that stick; ingestion photo skips; seeding and the lock. |
+| 17 | [The photo activity log](17-the-photo-activity-log/README.md) | ~4.4 min | What every audit entry records; committing it with the change; the Activity log and its filters. |
+
 ## Components series
 
 Fifty-two instructional videos, one per component in `frontend/projects/components/src/lib/`: each codes the component step by step, calls out its best practices (especially signals) and walks through its unit tests. See the [series index](components/README.md).
@@ -61,3 +74,14 @@ node tools/video-audio/generate-audio.mjs --say '`_tokens.scss`' --out /tmp/say.
 The engine is Edge by default (`--engine edge|piper` forces one); Edge voices default to `en-US-AndrewMultilingualNeural` for the narrator and `en-US-AvaMultilingualNeural` for `**Name:**` speakers (`EDGE_VOICE` / `EDGE_VOICE_2` override; `python -m edge_tts --list-voices` lists them). The design tokens series was narrated with Piper's `en_US-ryan-high` voice when it was produced, and the AI series with Edge's `en-US-AndrewMultilingualNeural`; re-run steps 2 and 3 to re-voice the design tokens series with Edge. Behind a TLS-inspecting proxy, set `SSL_CERT_FILE` to its CA bundle; `HTTPS_PROXY` is passed to edge-tts.
 
 Slides use the shared `assets/slides.css` and `assets/slides.js`; open any `slides.html` in a browser and use the arrow keys, or `?slide=N`.
+
+### Screen recordings
+
+A slide with `data-clip="clips/x.mp4"` plays a screen recording in a 1408x792 box, with notes in an `<aside class="clip-notes">` beside it (`<video class="clip phone">` for a 390-wide recording). `tools/video-record/record-clips.mjs` drives the real app with Playwright (from `e2e/node_modules`) and records each clip in a folder's `clips/clips.mjs` through the Chrome DevTools screencast, with a drawn cursor. The builder overlays each MP4 on its box for the slide's duration: it holds the last frame when the narration runs longer, and speeds the clip up evenly when the narration is shorter (it warns above x1.6). `data-clip-delay="s"` holds the first frame while the narration introduces the clip.
+
+```sh
+SD_DEMO_RESET="node tools/video-record/admin-demo/reset.mjs" \
+  node tools/video-record/record-clips.mjs docs/videos/14-managing-a-places-photos   # all clips, or add name,name
+```
+
+The admin series records against a separate demo database and image host; see `tools/video-record/admin-demo/README.md`.

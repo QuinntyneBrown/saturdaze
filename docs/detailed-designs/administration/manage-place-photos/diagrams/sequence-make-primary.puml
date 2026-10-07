@@ -1,0 +1,47 @@
+@startuml
+title UML sequence behaviour - Make a photo primary
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+actor "Catalog curator" as actor
+actor "Family member" as family
+box "Frontend - Saturdaze Admin Angular application" #E0F2FE
+ participant "PlacePhotosPage" as page
+ participant "MakePrimaryDialog (AD4)" as dialog
+end box
+box "Frontend - api library" #DBEAFE
+ participant "AdminPhotosService" as client
+end box
+box "Backend - Saturdaze API" #D1FADF
+ participant "AdminPhotosController" as controller
+ participant "ActivitiesController" as activities
+end box
+box "Backend - Saturdaze Application and Domain" #ECFDF3
+ participant "MakePhotoPrimaryCommandHandler" as handler
+ participant "PlacePhotoSet" as set
+ participant "PhotoAuditWriter" as audit
+end box
+box "Backend - Saturdaze Infrastructure" #FFF4E5
+ database "AppDbContext\nSQL Server" as db
+end box
+actor -> page : Make primary on a tile
+page -> dialog : open with coverImpact from GET .../photos (L2-114 AC3)
+dialog --> actor : "5 weekend covers will change" (L2-117 AC2)
+actor -> dialog : Confirm
+dialog -> client : makePrimary(photoId)
+client -> controller : POST /api/admin/photos/{photoId}/primary
+controller -> handler : MakePhotoPrimaryCommand
+handler -> db : load the photo and its siblings
+handler -> set : MarkPrimary(photos, photoId) (L2-100 AC1)
+handler -> handler : AdminLocked = true, ReviewState = Reviewed
+handler -> audit : RecordAsync(Primary, before = old primary id, after = photoId)
+handler -> db : SaveChangesAsync
+handler --> controller : AdminPhotoDto
+controller --> client : 200
+client --> page : photo
+page --> actor : primary marker moves, previews update (L2-117 AC3)
+family -> activities : GET /api/activities (next load)
+activities --> family : card photo is the new primary (L2-117 AC1)
+@enduml

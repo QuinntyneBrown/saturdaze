@@ -1,0 +1,26 @@
+<h2 class="stat__label">{{ label() }}</h2>
+<p class="stat__figure">
+  <strong>{{ figure() }}</strong> of {{ total() }}
+</p>
+<p class="stat__sub">{{ caption() }}</p>
+<div class="stat__bar" role="img" [attr.aria-label]="percent() + '% with a primary photo'">
+  <span
+    class="stat__fill"
+    [class.stat__fill--leaf]="tone() === 'leaf'"
+    [class.stat__fill--sun]="tone() === 'sun'"
+    [class.stat__fill--sky]="tone() === 'sky'"
+    [style.width.%]="percent()"
+  ></span>
+</div>
+@if (links().length) {
+  <ul class="stat__list">
+    @for (link of links(); track link.label) {
+      <li>
+        <a class="stat__link" [attr.href]="link.href" (click)="open($event, link.href)">
+          <sd-chip count>{{ link.count }}</sd-chip>
+          {{ link.label }}
+        </a>
+      </li>
+    }
+  </ul>
+}

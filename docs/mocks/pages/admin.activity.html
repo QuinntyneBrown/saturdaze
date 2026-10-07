@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+<!-- @shell:head -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Activity log — Saturdaze Admin</title>
+<link rel="stylesheet" href="../styles/tokens.css">
+<link rel="stylesheet" href="../styles/app.css">
+<!-- @/shell:head -->
+</head>
+<body data-page="admin" data-shell="bare" data-screen="activity">
+<div class="admin">
+  <nav class="admin-nav" aria-label="Admin">
+    <a class="admin-nav__brand" href="./admin.html"><span class="brand-mark" aria-hidden="true"></span><span class="admin-nav__brand-text">Saturdaze</span><span class="admin-nav__tag">Admin</span></a>
+    <div class="admin-nav__links">
+      <a class="admin-nav__link" data-nav="health" href="./admin.html"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg>Photo health</a>
+      <a class="admin-nav__link" data-nav="places" href="./admin.places.html"><svg class="icon" aria-hidden="true"><use href="#i-map"/></svg>Places</a>
+      <a class="admin-nav__link" data-nav="reviews" href="./admin.reviews.html"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Review queue</a>
+      <a class="admin-nav__link" data-nav="skips" href="./admin.ingestion-skips.html"><svg class="icon" aria-hidden="true"><use href="#i-refresh"/></svg>Ingestion skips</a>
+      <a class="admin-nav__link" data-nav="activity" href="./admin.activity.html" aria-current="page"><svg class="icon" aria-hidden="true"><use href="#i-calendar"/></svg>Activity log</a>
+    </div>
+    <div class="admin-nav__account">
+      <span class="avatar avatar--sm avatar--q" aria-hidden="true">A</span>
+      <span class="admin-nav__email">admin@saturdaze.app</span>
+      <a class="btn btn--ghost btn--sm" href="./admin.sign-in.html"><svg class="icon" aria-hidden="true"><use href="#i-sign_out"/></svg>Sign out</a>
+    </div>
+  </nav>
+  <main class="admin-main container" id="main">
+  <header class="page-header">
+    <div class="page-header__text">
+      <h1 class="page-header__title">Activity log</h1>
+      <p class="page-header__subtitle">Every photo change: who, when, the place, and what changed.</p>
+    </div>
+  </header>
+  <div class="toolbar">
+    <div class="field toolbar__sort"><label class="field__label" for="al-place">Place</label><select class="field__input" id="al-place"><option selected>All places</option><option>Port Credit Memorial Park</option><option>Harbour Grill</option></select></div>
+    <div class="field toolbar__sort"><label class="field__label" for="al-admin">Administrator</label><select class="field__input" id="al-admin"><option selected>Everyone</option><option>admin@saturdaze.app</option><option>curator@saturdaze.app</option></select></div>
+  </div>
+  <ol class="audit-list list list--card">
+      <li class="audit-row">
+        <time class="audit-row__time" datetime="2026-10-06T14:02Z">2026-10-06 14:02 UTC</time>
+        <span class="audit-row__who">admin@saturdaze.app</span>
+        <a class="audit-row__place" href="./admin.place.html">Port Credit Memorial Park</a>
+        <span class="chip chip--primary">Primary</span>
+        <span class="audit-row__change">memorial-park-side.jpg → memorial-park.jpg</span>
+      </li>
+      <li class="audit-row">
+        <time class="audit-row__time" datetime="2026-10-06T13:58Z">2026-10-06 13:58 UTC</time>
+        <span class="audit-row__who">admin@saturdaze.app</span>
+        <a class="audit-row__place" href="./admin.place.html">Port Credit Memorial Park</a>
+        <span class="chip chip--accent">Upload</span>
+        <span class="audit-row__change">Added memorial-park.jpg · 1200 × 675 · 412 KB</span>
+      </li>
+      <li class="audit-row">
+        <time class="audit-row__time" datetime="2026-10-06T13:41Z">2026-10-06 13:41 UTC</time>
+        <span class="audit-row__who">curator@saturdaze.app</span>
+        <a class="audit-row__place" href="./admin.place.html">Harbour Grill</a>
+        <span class="chip chip--sky">Edit</span>
+        <span class="audit-row__change">Alt text: — → Patio tables by the water</span>
+      </li>
+      <li class="audit-row">
+        <time class="audit-row__time" datetime="2026-10-06T11:20Z">2026-10-06 11:20 UTC</time>
+        <span class="audit-row__who">curator@saturdaze.app</span>
+        <a class="audit-row__place" href="./admin.place.html">Port Credit Harbour Festival</a>
+        <span class="chip chip--sun">Review</span>
+        <span class="audit-row__change">Rejected harbourfest-2024.jpg · Wrong year</span>
+      </li>
+      <li class="audit-row">
+        <time class="audit-row__time" datetime="2026-10-05T16:05Z">2026-10-05 16:05 UTC</time>
+        <span class="audit-row__who">admin@saturdaze.app</span>
+        <a class="audit-row__place" href="./admin.place.html">Rec Room Mississauga</a>
+        <span class="chip chip--warn">Remove</span>
+        <span class="audit-row__change">Removed rec-room-old.jpg · next primary: none</span>
+      </li>
+  </ol>
+  <div class="pager">
+    <span class="pager__text">1 to 5 of 5</span>
+    <button class="btn btn--quiet btn--sm" type="button" disabled><svg class="icon" aria-hidden="true"><use href="#i-arrow_left"/></svg>Previous</button>
+    <button class="btn btn--quiet btn--sm" type="button" disabled>Next<svg class="icon" aria-hidden="true"><use href="#i-arrow_right"/></svg></button>
+  </div>
+  </main>
+</div>
+<script src="../app.js"></script>
+</body>
+</html>

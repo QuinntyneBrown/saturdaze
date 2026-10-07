@@ -1,0 +1,43 @@
+<sd-dialog [wide]="isPrimary" [title]="title" [subtitle]="subtitle">
+  @if (isPrimary) {
+    <sd-photo-pick label="Next primary" showLabel>
+      @for (sibling of data.siblings; track sibling.id) {
+        <sd-photo-pick-option
+          name="next-primary"
+          [value]="sibling.id"
+          [checked]="next() === sibling.id"
+          [label]="optionLabel(sibling)"
+          [caption]="optionLabel(sibling)"
+          [media]="sibling.media"
+          (picked)="next.set($event)"
+        />
+      }
+      <sd-photo-pick-option
+        name="next-primary"
+        [value]="noPhoto"
+        [checked]="next() === noPhoto"
+        label="No photo"
+        plain
+        (picked)="next.set($event)"
+      >
+        <sd-icon name="close" />
+        No photo
+      </sd-photo-pick-option>
+    </sd-photo-pick>
+    <p class="hint">{{ impact() }}</p>
+  } @else {
+    <sd-media
+      slot="media"
+      class="photo-edit__media"
+      ratio="4:3"
+      [photo]="data.tile.media"
+      tone="indoor"
+      eager
+    />
+  }
+  <sd-button slot="actions" variant="quiet" type="button" (click)="cancel()">Cancel</sd-button>
+  <sd-button slot="actions" variant="danger" type="button" (click)="remove()">
+    <sd-icon name="trash" />
+    Remove photo
+  </sd-button>
+</sd-dialog>

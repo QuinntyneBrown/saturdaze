@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+<!-- @shell:head -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Review queue — Saturdaze Admin</title>
+<link rel="stylesheet" href="../styles/tokens.css">
+<link rel="stylesheet" href="../styles/app.css">
+<!-- @/shell:head -->
+</head>
+<body data-page="admin" data-shell="bare" data-screen="reviews">
+<div class="admin">
+  <nav class="admin-nav" aria-label="Admin">
+    <a class="admin-nav__brand" href="./admin.html"><span class="brand-mark" aria-hidden="true"></span><span class="admin-nav__brand-text">Saturdaze</span><span class="admin-nav__tag">Admin</span></a>
+    <div class="admin-nav__links">
+      <a class="admin-nav__link" data-nav="health" href="./admin.html"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg>Photo health</a>
+      <a class="admin-nav__link" data-nav="places" href="./admin.places.html"><svg class="icon" aria-hidden="true"><use href="#i-map"/></svg>Places</a>
+      <a class="admin-nav__link" data-nav="reviews" href="./admin.reviews.html" aria-current="page"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Review queue</a>
+      <a class="admin-nav__link" data-nav="skips" href="./admin.ingestion-skips.html"><svg class="icon" aria-hidden="true"><use href="#i-refresh"/></svg>Ingestion skips</a>
+      <a class="admin-nav__link" data-nav="activity" href="./admin.activity.html"><svg class="icon" aria-hidden="true"><use href="#i-calendar"/></svg>Activity log</a>
+    </div>
+    <div class="admin-nav__account">
+      <span class="avatar avatar--sm avatar--q" aria-hidden="true">A</span>
+      <span class="admin-nav__email">admin@saturdaze.app</span>
+      <a class="btn btn--ghost btn--sm" href="./admin.sign-in.html"><svg class="icon" aria-hidden="true"><use href="#i-sign_out"/></svg>Sign out</a>
+    </div>
+  </nav>
+  <main class="admin-main container" id="main">
+  <header class="page-header">
+    <div class="page-header__text">
+      <h1 class="page-header__title">Review queue</h1>
+      <p class="page-header__subtitle">Seven provider photos ingestion brought in, newest first. Keep, make primary, or reject in one step.</p>
+    </div>
+  </header>
+  <div class="review-list">
+      <article class="card review-item" aria-label="Harbour Grill">
+        <div class="review-item__photos">
+          <figure class="review-item__photo"><div class="media media--4x3"><img class="media__img" src="../images/la-marina.svg" alt="Candidate photo for Harbour Grill" width="800" height="600" loading="lazy"><span class="media__credit">Photo · Port Credit BIA</span></div><figcaption class="review-item__cap">New from ingestion</figcaption></figure>
+          <figure class="review-item__photo"><div class="media media--4x3"><img class="media__img" src="../images/science-centre.svg" alt="" width="800" height="600" loading="lazy"><span class="media__credit">Current primary</span></div><figcaption class="review-item__cap">Would replace</figcaption></figure>
+        </div>
+        <div class="card__head">
+          <div class="card__head-text"><h2 class="card__title"><a class="review-item__link" href="./admin.place.html">Harbour Grill</a></h2><p class="card__meta">Restaurant · ingested 2 hours ago · Provider terms</p></div>
+          <span class="chip chip--sun">Unreviewed</span>
+        </div>
+        <div class="review-actions">
+          <a class="btn btn--ghost" href="./dialogs.html#dialog-admin-reject"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg>Reject</a>
+          <a class="btn btn--quiet" href="./admin.reviews.html"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Keep</a>
+          <a class="btn btn--primary" href="./dialogs.html#dialog-admin-primary"><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg>Make primary</a>
+        </div>
+      </article>
+      <article class="card review-item" aria-label="Port Credit Harbour Festival">
+        <div class="review-item__photos">
+          <figure class="review-item__photo"><div class="media media--4x3"><img class="media__img" src="../images/rec-room.svg" alt="Candidate photo for Port Credit Harbour Festival" width="800" height="600" loading="lazy"><span class="media__credit">Photo · Port Credit BIA</span></div><figcaption class="review-item__cap">New from ingestion</figcaption></figure>
+          <figure class="review-item__photo"><div class="media media--4x3 media--fallback media--sky" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-ticket"/></svg>No photo today</div><figcaption class="review-item__cap">Would become primary</figcaption></figure>
+        </div>
+        <div class="card__head">
+          <div class="card__head-text"><h2 class="card__title"><a class="review-item__link" href="./admin.place.html">Port Credit Harbour Festival</a></h2><p class="card__meta">Event · ingested 2 hours ago · Provider terms</p></div>
+          <span class="chip chip--sun">Unreviewed</span>
+        </div>
+        <div class="review-actions">
+          <a class="btn btn--ghost" href="./dialogs.html#dialog-admin-reject"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg>Reject</a>
+          <a class="btn btn--quiet" href="./admin.reviews.html"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Keep</a>
+          <a class="btn btn--primary" href="./dialogs.html#dialog-admin-primary"><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg>Make primary</a>
+        </div>
+      </article>
+      <article class="card review-item" aria-label="Riverwood Conservancy">
+        <div class="review-item__photos">
+          <figure class="review-item__photo"><div class="media media--4x3"><img class="media__img" src="../images/riverwood.svg" alt="Candidate photo for Riverwood Conservancy" width="800" height="600" loading="lazy"><span class="media__credit">Photo · Port Credit BIA</span></div><figcaption class="review-item__cap">New from ingestion</figcaption></figure>
+          <figure class="review-item__photo"><div class="media media--4x3 media--fallback media--leaf" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-tree"/></svg>No photo today</div><figcaption class="review-item__cap">Would become primary</figcaption></figure>
+        </div>
+        <div class="card__head">
+          <div class="card__head-text"><h2 class="card__title"><a class="review-item__link" href="./admin.place.html">Riverwood Conservancy</a></h2><p class="card__meta">Activity · ingested yesterday · Provider terms</p></div>
+          <span class="chip chip--sun">Unreviewed</span>
+        </div>
+        <div class="review-actions">
+          <a class="btn btn--ghost" href="./dialogs.html#dialog-admin-reject"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg>Reject</a>
+          <a class="btn btn--quiet" href="./admin.reviews.html"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Keep</a>
+          <a class="btn btn--primary" href="./dialogs.html#dialog-admin-primary"><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg>Make primary</a>
+        </div>
+      </article>
+  </div>
+  </main>
+</div>
+<script src="../app.js"></script>
+</body>
+</html>

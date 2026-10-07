@@ -1,0 +1,14 @@
+// `.pager` from docs/mocks/styles/app.css (admin) — the host is the pager.
+
+:host {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.pager__text {
+  margin-right: auto;
+  font-size: var(--fontSizeBase300);
+  color: var(--colorNeutralForeground2);
+}

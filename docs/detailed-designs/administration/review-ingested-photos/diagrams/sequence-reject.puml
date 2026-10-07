@@ -1,0 +1,51 @@
+@startuml
+title UML sequence behaviour - Reject a provider photo and re-ingest
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+actor "Catalog curator" as actor
+actor "Operator" as operator
+box "Frontend - Saturdaze Admin Angular application" #E0F2FE
+ participant "ReviewQueuePage" as page
+ participant "RejectPhotoDialog (AD6)" as dialog
+end box
+box "Frontend - api library" #DBEAFE
+ participant "AdminPhotosService" as client
+end box
+box "Backend - Saturdaze API" #D1FADF
+ participant "AdminPhotosController" as controller
+end box
+box "Backend - Saturdaze Application and Domain" #ECFDF3
+ participant "ReviewPhotoCommandHandler" as handler
+ participant "PhotoAuditWriter" as audit
+ participant "CatalogUpserter" as upsert
+end box
+box "Backend - Saturdaze Infrastructure" #FFF4E5
+ database "AppDbContext\nSQL Server" as db
+end box
+actor -> page : Reject on a queue item
+page -> dialog : open
+actor -> dialog : reason "Wrong venue", Reject
+dialog -> client : review(photoId, "reject", reason)
+client -> controller : POST /api/admin/photos/{photoId}/review
+controller -> handler : ReviewPhotoCommand(reject)
+handler -> db : load photo and siblings
+alt photo already reviewed
+ handler --> controller : Conflict already_reviewed
+end
+handler -> db : remove PlacePhoto, add RejectedPlacePhoto(url, reason)
+handler -> handler : promote DefaultPrimary when the rejected photo was primary
+handler -> audit : RecordAsync(Review, after = reject)
+handler -> db : SaveChangesAsync
+handler --> controller : null
+controller --> client : 204
+client --> page : done
+page --> actor : item leaves the queue (L2-120 AC3, AC4)
+operator -> upsert : saturdaze ingest (later)
+upsert -> db : known photos + rejected URLs for the place
+upsert -> upsert : candidate URL matches a rejection
+upsert -> db : skip; SkipReasons += "previously rejected" (L2-121 AC1)
+note right of upsert : a place with a primary keeps it (L2-121 AC2)
+@enduml

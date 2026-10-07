@@ -1,0 +1,22 @@
+<sd-list-item [title]="rowTitle()" [subtitle]="subtitle()" [href]="href()" chevron>
+  <sd-media
+    slot="leading"
+    class="place-thumb"
+    ratio="4:3"
+    [photo]="photo()"
+    [tone]="tone()"
+    [icon]="icon()"
+  />
+  @if (flags().length) {
+    <span class="place-row__flags">
+      @for (flag of flags(); track flag.label) {
+        <sd-chip [tone]="flag.tone" size="sm">
+          @if (flag.icon) {
+            <sd-icon [name]="flag.icon" />
+          }
+          {{ flag.label }}
+        </sd-chip>
+      }
+    </span>
+  }
+</sd-list-item>

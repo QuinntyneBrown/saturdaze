@@ -1,0 +1,25 @@
+// `.photo-pick` from docs/mocks/styles/app.css; `.field__label` as `sd-text-input` draws it.
+
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.field__label {
+  font-size: var(--fontSizeBase300);
+  font-weight: var(--fontWeightMedium);
+  color: var(--colorNeutralForeground2);
+}
+
+.photo-pick {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+@media (min-width: 576px) {
+  .photo-pick {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}

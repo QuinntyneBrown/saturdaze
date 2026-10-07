@@ -29,9 +29,16 @@ public sealed class SaturdazeApiFactory : WebApplicationFactory<Program>, IAsync
     public FakeWeatherClient Weather { get; } = new();
     public FakeDateTimeProvider Clock { get; } = new(new DateOnly(2026, 5, 16));
     public CapturingLogSink Logs { get; } = new();
+    public FakeRemoteImageFetcher Images { get; } = new();
 
     /// <summary>Where uploaded covers go for this fixture (deleted on disposal).</summary>
     public string PhotoDirectory { get; } = Path.Combine(Path.GetTempPath(), "saturdaze-photos-" + Guid.NewGuid().ToString("N"));
+
+    /// <summary>Where curated uploads go (ADR-015); inside <see cref="PhotoDirectory"/> so disposal removes it.</summary>
+    public string CuratedPhotoDirectory => Path.Combine(PhotoDirectory, "curated");
+
+    /// <summary>The curated store's public origin: the allow-listed test origin, so uploads project.</summary>
+    public const string CuratedPublicOrigin = "https://images.example.com";
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
@@ -51,6 +58,8 @@ public sealed class SaturdazeApiFactory : WebApplicationFactory<Program>, IAsync
                 ["Saturdaze:Images:AllowedOrigins:0"] = "https://images.example.com",
                 ["Saturdaze:Photos:Directory"] = PhotoDirectory,
                 ["Saturdaze:Photos:SigningKey"] = "test-only-photo-signing-key-at-least-32-bytes",
+                ["Saturdaze:CuratedPhotos:Directory"] = CuratedPhotoDirectory,
+                ["Saturdaze:CuratedPhotos:PublicOrigin"] = CuratedPublicOrigin,
                 ["Saturdaze:Share:AppOrigin"] = "https://app.example.com",
             });
         });
@@ -61,6 +70,8 @@ public sealed class SaturdazeApiFactory : WebApplicationFactory<Program>, IAsync
             services.RemoveAll<Saturdaze.Application.Common.IDateTimeProvider>();
             services.AddSingleton<Saturdaze.Application.Common.IDateTimeProvider>(Clock);
             services.AddSingleton<Serilog.Core.ILogEventSink>(Logs);
+            services.RemoveAll<Saturdaze.Application.Photos.IRemoteImageFetcher>();
+            services.AddSingleton<Saturdaze.Application.Photos.IRemoteImageFetcher>(Images);
         });
     }
 

@@ -1,0 +1,125 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure - Manage place photos
+
+enum PhotoSource {
+  Curated
+  Provider
+  Submitter
+}
+enum PhotoReviewState {
+  Unreviewed
+  Reviewed
+}
+enum PhotoAuditAction {
+  Upload
+  AddUrl
+  Edit
+  Primary
+  Remove
+  Review
+}
+class PlacePhoto {
+  +Guid Id
+  +PlaceKind PlaceKind
+  +Guid PlaceId
+  +string Url
+  +int Width
+  +int Height
+  +string AltText
+  +string Attribution
+  +PhotoSource Source
+  +string License
+  +bool IsPrimary
+  +PhotoReviewState ReviewState
+  +string? StorageKey
+  +DateTimeOffset? UpdatedAt
+  +Guid? UpdatedBy
+  +bool AdminLocked
+  +{static} Create(...): PlacePhoto?
+}
+class PlacePhotoSet <<static>> {
+  +{static} MarkPrimary(photos, photoId): void
+  +{static} DefaultPrimary(photos): PlacePhoto?
+  +{static} ShouldPromoteCurated(photos): bool
+}
+class PhotoHealth <<static>> {
+  +{static} Flags(photos, isAllowed): IReadOnlyList<string>
+}
+class PhotoAuditEntry {
+  +Guid Id
+  +DateTimeOffset OccurredAt
+  +Guid AdminUserId
+  +string AdminEmail
+  +PlaceKind PlaceKind
+  +Guid PlaceId
+  +Guid? PhotoId
+  +PhotoAuditAction Action
+  +string? Before
+  +string? After
+}
+class PhotoAuditWriter {
+  +RecordAsync(action, photo, before, after): Task
+}
+interface ICuratedPhotoStore {
+  +PutAsync(content, contentType): Task<string>
+  +OpenAsync(key): Task<StoredPhoto?>
+  +DeleteAsync(key): Task
+  +PublicUrl(key): string
+}
+interface IRemoteImageFetcher {
+  +FetchAsync(url): Task<byte[]?>
+}
+class UploadCuratedPhotoCommandHandler {
+  +Handle(command): Task<AdminPhotoDto>
+}
+class AddPhotoFromUrlCommandHandler {
+  +Handle(command): Task<AdminPhotoDto>
+}
+class MakePhotoPrimaryCommandHandler {
+  +Handle(command): Task<AdminPhotoDto>
+}
+class RemovePhotoCommandHandler {
+  +Handle(command): Task
+}
+class AdminPhotoDto {
+  +Guid id
+  +string url
+  +bool isPrimary
+  +string reviewState
+  +bool adminLocked
+  +bool blocked
+}
+class PlacePhotosDto {
+  +string kind
+  +Guid id
+  +string name
+  +int coverImpact
+  +AdminPhotoDto[] photos
+}
+PlacePhoto --> PhotoSource
+PlacePhoto --> PhotoReviewState
+PhotoAuditEntry --> PhotoAuditAction
+PlacePhotoSet ..> PlacePhoto : rules over
+PhotoHealth ..> PlacePhoto : evaluates
+UploadCuratedPhotoCommandHandler ..> ICuratedPhotoStore : stores
+UploadCuratedPhotoCommandHandler ..> PlacePhotoSet : promotes
+UploadCuratedPhotoCommandHandler ..> PhotoAuditWriter : audits
+AddPhotoFromUrlCommandHandler ..> IRemoteImageFetcher : fetches
+AddPhotoFromUrlCommandHandler ..> PhotoAuditWriter : audits
+MakePhotoPrimaryCommandHandler ..> PlacePhotoSet : MarkPrimary
+MakePhotoPrimaryCommandHandler ..> PhotoAuditWriter : audits
+RemovePhotoCommandHandler ..> ICuratedPhotoStore : deletes file
+RemovePhotoCommandHandler ..> PhotoAuditWriter : audits
+PhotoAuditWriter --> PhotoAuditEntry : creates
+PlacePhotosDto "1" *-- "*" AdminPhotoDto
+@enduml

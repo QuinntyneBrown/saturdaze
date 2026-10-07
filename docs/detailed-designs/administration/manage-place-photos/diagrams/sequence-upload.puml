@@ -1,0 +1,59 @@
+@startuml
+title UML sequence behaviour - Upload a curated photo
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+actor "Catalog curator" as actor
+box "Frontend - Saturdaze Admin Angular application" #E0F2FE
+ participant "PlacePhotosPage" as page
+ participant "UploadPhotoDialog (AD1)" as dialog
+end box
+box "Frontend - api library" #DBEAFE
+ participant "AdminPhotosService" as client
+end box
+box "Backend - Saturdaze API" #D1FADF
+ participant "AdminPhotosController" as controller
+end box
+box "Backend - Saturdaze Application and Domain" #ECFDF3
+ participant "UploadCuratedPhotoCommandHandler" as handler
+ participant "IImageSanitizer" as sanitizer
+ participant "PlacePhotoSet" as set
+ participant "PhotoAuditWriter" as audit
+end box
+box "Backend - Saturdaze Infrastructure" #FFF4E5
+ participant "ICuratedPhotoStore" as store
+ database "AppDbContext\nSQL Server" as db
+end box
+actor -> page : Add photo > Upload
+page -> dialog : open
+actor -> dialog : file, alt, attribution, licence
+note right of dialog : Save disabled until attribution and licence are filled (L2-115 AC4)
+dialog -> client : upload(kind, id, form)
+client -> controller : POST /api/admin/places/{kind}/{id}/photos (multipart)
+alt Content-Length over 10 MB
+ controller --> client : 413 (L2-115 AC3)
+end
+controller -> handler : UploadCuratedPhotoCommand
+handler -> sanitizer : Sanitize(bytes)
+alt not JPEG, PNG or WebP by content
+ sanitizer --> handler : null
+ handler --> controller : BadRequest unsupported_image (L2-115 AC2)
+end
+sanitizer --> handler : re-encoded image, EXIF stripped, width, height
+handler -> store : PutAsync(content, contentType)
+store --> handler : key
+handler -> db : load the place's photos
+handler -> set : ShouldPromoteCurated(photos) or no primary
+handler -> db : add PlacePhoto (Curated, Reviewed, AdminLocked, StorageKey, Url = PublicUrl(key))
+handler -> set : MarkPrimary when promoted (L2-121 AC5)
+handler -> audit : RecordAsync(Upload) (L2-122)
+handler -> db : SaveChangesAsync
+handler --> controller : AdminPhotoDto
+note right of handler : log place and byte size only (L2-115 AC7)
+controller --> client : 201 Created
+client --> dialog : photo
+dialog --> page : close with photo
+page --> actor : new tile, primary marker, previews updated
+@enduml

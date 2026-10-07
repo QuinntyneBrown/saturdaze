@@ -1,0 +1,22 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers - Scaffold the admin application
+
+Person(admin, "Catalog curator", "Administrator")
+Person(family, "Family member", "Plans weekends")
+System_Boundary(saturdaze, "Saturdaze") {
+  Container(adminweb, "Saturdaze Admin", "Angular, own Static Web App", "Photo management screens")
+  Container(web, "Saturdaze web application", "Angular, Static Web App", "Family planning screens")
+  Container(libs, "components and api libraries", "Angular libraries", "sd-* components, tokens, services, auth guards and interceptor")
+  Container(api, "Saturdaze API", "ASP.NET Core", "JWT auth, Admin policy, /api/admin/* endpoints")
+  ContainerDb(db, "Saturdaze database", "SQL Server", "Users, catalog, photos")
+}
+Rel(admin, adminweb, "Uses", "HTTPS")
+Rel(family, web, "Uses", "HTTPS")
+Rel(adminweb, libs, "Built from")
+Rel(web, libs, "Built from")
+Rel(adminweb, api, "Calls /api/auth and /api/admin/*", "JSON/HTTPS")
+Rel(web, api, "Calls /api/*", "JSON/HTTPS")
+Rel(api, db, "Reads and writes", "EF Core")
+@enduml

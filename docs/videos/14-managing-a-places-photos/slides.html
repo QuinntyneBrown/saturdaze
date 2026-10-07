@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 14 Slides</title>
+<link rel="stylesheet" href="../assets/slides.css">
+</head>
+<body data-video-number="14" data-video-title="Managing a place's photos" data-parts="Introduction|Place photos|Primary|Edit|Remove|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Saturdaze Admin series · Video 14</div>
+  <h1>Managing a place's photos</h1>
+  <p class="lead">Previews, the primary photo, details and removal</p>
+</section>
+
+<section id="scope" data-part="0" data-cue="This video opens a place in Saturdaze Admin">
+  <h2>What you can do with a place's photos</h2>
+  <div class="cols four">
+    <div class="card"><h3>Preview</h3><p class="small">The primary in every family slot.</p></div>
+    <div class="card"><h3>Make primary</h3><p class="small">With the cover impact stated.</p></div>
+    <div class="card"><h3>Edit</h3><p class="small">Alt text, attribution, licence.</p></div>
+    <div class="card"><h3>Remove</h3><p class="small">Choosing what families see next.</p></div>
+  </div>
+  <p class="small muted">Adding photos is video 15.</p>
+</section>
+
+<section id="place" data-part="1" data-cue="Open Bronte Creek Provincial Park from Places." data-clip="clips/place.mp4" data-clip-delay="9">
+  <aside class="clip-notes">
+    <h3>The Place photos screen (A4)</h3>
+    <ul>
+      <li>"5 weekend covers follow this place"</li>
+      <li>How families see it: idea card 16:9, thumbnail 4:3, cover</li>
+      <li>A place with no primary: the fallback tile</li>
+    </ul>
+  </aside>
+</section>
+
+<section id="tiles" data-part="1" data-cue="Below that are the photos, one" data-clip="clips/tiles.mp4">
+  <aside class="clip-notes">
+    <h3>Photo tiles</h3>
+    <ul>
+      <li>Primary · Curated or Provider · Reviewed</li>
+      <li>Alt text, credit, licence, real size</li>
+      <li>Make primary · Edit · Remove</li>
+    </ul>
+  </aside>
+</section>
+
+<section id="dto" data-part="1" data-cue="The place's photos endpoint returns every photo">
+  <h2>Every photo, not just the primary</h2>
+  <pre class="code" data-lang="cs" data-mark="4-5,9">
+public sealed record AdminPhotoDto(
+    Guid Id, string Url, int Width, int Height,
+    string Alt, string Attribution, string License, string Source,
+    bool IsPrimary, string ReviewState, bool AdminLocked,
+    DateTimeOffset? UpdatedAt, Guid? UpdatedBy, bool Blocked)
+
+public sealed record PlacePhotosDto(
+    string Kind, Guid Id, string Name,
+    int CoverImpact, IReadOnlyList&lt;AdminPhotoDto&gt; Photos);
+</pre>
+  <p class="small muted"><span class="file">GET /api/admin/places/{kind}/{id}/photos</span> · <code>CoverImpact</code> is a number only (ADR-008) · <code>Blocked</code> = would not project · reflowed</p>
+</section>
+
+<section id="make-primary" data-part="2" data-cue="Each tile that is not the primary offers Make primary." data-clip="clips/make-primary.mp4" data-clip-delay="4">
+  <aside class="clip-notes">
+    <h3>Make primary (AD4)</h3>
+    <ul>
+      <li>"5 weekend covers will change"</li>
+      <li>Or: "No weekend covers follow this place"</li>
+      <li>One <code>POST …/primary</code> on confirm</li>
+    </ul>
+  </aside>
+</section>
+
+<section id="handler" data-part="2" data-cue="loads the photo and its siblings, stamps the photo">
+  <h2>The primary handler</h2>
+  <pre class="code tight" data-lang="cs" data-mark="8-12">
+var photo = await _db.PlacePhotos.FirstOrDefaultAsync(p =&gt; p.Id == request.PhotoId, ct)
+    ?? throw new NotFoundException(nameof(PlacePhoto), request.PhotoId);
+var siblings = await _db.PlacePhotos
+    .Where(p =&gt; p.PlaceKind == photo.PlaceKind &amp;&amp; p.PlaceId == photo.PlaceId)
+    .ToListAsync(ct);
+
+var previous = siblings.FirstOrDefault(p =&gt; p.IsPrimary &amp;&amp; p.Id != photo.Id);
+AdminPhotoTouch.Apply(photo, _user, _clock);
+_audit.Write(photo.PlaceKind, photo.PlaceId, photo.Id, PhotoAuditAction.Primary,
+    previous is null ? null : new { primaryId = previous.Id, url = previous.Url },
+    new { primaryId = photo.Id, url = photo.Url });
+await PrimaryPhotoWriter.MarkPrimaryAsync(_db, siblings, photo.Id, ct);
+</pre>
+  <p class="small muted"><span class="file">backend/src/Saturdaze.Application/Admin/Photos/MakePhotoPrimaryCommandHandler.cs</span></p>
+</section>
+
+<section id="writer" data-part="2" data-cue="The rule itself is one loop in the domain">
+  <h2>One rule, saved in two steps</h2>
+  <p class="small"><code>PlacePhotoSet.MarkPrimary</code>: <code>photo.IsPrimary = photo.Id == photoId</code> for every photo of the place.</p>
+  <pre class="code tight" data-lang="cs" data-mark="7,11-12">
+var cleared = false;
+foreach (var sibling in siblings.Where(s =&gt; s.IsPrimary &amp;&amp; s.Id != photoId))
+{
+    sibling.IsPrimary = false;
+    cleared = true;
+}
+if (cleared) await db.SaveChangesAsync(ct);
+
+if (photoId is { } id)
+{
+    PlacePhotoSet.MarkPrimary(siblings, id);
+    await db.SaveChangesAsync(ct);
+}
+</pre>
+  <p class="small muted"><span class="file">PlacePhotoSet.cs</span> · <span class="file">PrimaryPhotoWriter.cs</span> · index <code>IsPrimary</code> unique per place, <code>HasFilter("[IsPrimary] = 1")</code></p>
+</section>
+
+<section id="touch" data-part="2" data-cue="The second detail is `AdminPhotoTouch`.">
+  <h2>Every admin change locks the photo</h2>
+  <pre class="code" data-lang="cs" data-mark="3">
+public static void Apply(PlacePhoto photo, ICurrentUserAccessor user, IDateTimeProvider clock)
+{
+    photo.AdminLocked = true;
+    photo.ReviewState = PhotoReviewState.Reviewed;
+    photo.UpdatedAt = clock.UtcNow;
+    photo.UpdatedBy = user.UserId;
+}
+</pre>
+  <p class="small muted"><span class="file">backend/src/Saturdaze.Application/Admin/Photos/AdminPhotoTouch.cs</span> · seeding and ingestion honour the lock (video 16)</p>
+</section>
+
+<section id="edit" data-part="3" data-cue="The Ontario Science Centre's photo has no alt text" data-clip="clips/edit.mp4" data-clip-delay="4">
+  <aside class="clip-notes">
+    <h3>Edit details (AD3)</h3>
+    <ul>
+      <li>"Missing alt text" chip</li>
+      <li>Families still get "Photo of {place}"</li>
+      <li>No attribution → Save disabled</li>
+      <li>The address cannot change</li>
+    </ul>
+  </aside>
+</section>
+
+<section id="validator" data-part="3" data-cue="The patch endpoint applies the same rules on the server.">
+  <h2>Mandatory on the server too</h2>
+  <pre class="code" data-lang="cs" data-mark="2,7-10">
+public sealed record EditPhotoDetailsCommand(
+    Guid PhotoId, string? Alt, string? Attribution, string? Licence);
+
+public EditPhotoDetailsCommandValidator()
+{
+    RuleFor(c =&gt; c.Alt).MaximumLength(300).WithName("alt");
+    RuleFor(c =&gt; c.Attribution).NotEmpty().MaximumLength(300).WithName("attribution")
+        .WithMessage("Attribution is required.");
+    RuleFor(c =&gt; c.Licence).NotEmpty().MaximumLength(120).WithName("licence")
+        .WithMessage("Licence is required.");
+}
+</pre>
+  <p class="small muted"><span class="file">PATCH /api/admin/photos/{photoId}</span> · no <code>Url</code> in the command</p>
+</section>
+
+<section id="remove" data-part="4" data-cue="Removing a photo that is not the primary just asks you to confirm." data-clip="clips/remove.mp4" data-clip-delay="3">
+  <aside class="clip-notes">
+    <h3>Remove (AD5)</h3>
+    <ul>
+      <li>Primary: choose the next one, or No photo</li>
+      <li>Default: first curated, else first reviewed provider</li>
+      <li>Repeats the cover impact</li>
+    </ul>
+  </aside>
+</section>
+
+<section id="remove-handler" data-part="4" data-cue="never guesses">
+  <h2>The server never guesses</h2>
+  <pre class="code tight" data-lang="cs" data-mark="4-5,9-10">
+if (photo.IsPrimary)
+{
+    var choice = request.NextPrimaryId?.Trim();
+    if (string.IsNullOrEmpty(choice))
+        throw new BadRequestException("next_primary_required", "Choose the next primary photo, or no photo.");
+    if (!string.Equals(choice, None, StringComparison.OrdinalIgnoreCase))
+    {
+        next = Guid.TryParse(choice, out var nextId) ? siblings.FirstOrDefault(s =&gt; s.Id == nextId) : null;
+        if (next is null)
+            throw new BadRequestException("next_primary_invalid", "The next primary must be another photo …");
+    }
+}
+</pre>
+  <div class="row"><span class="tag">1 · delete the row</span> <span class="tag">2 · promote the chosen sibling</span> <span class="tag">3 · delete the curated file</span></div>
+  <p class="small muted"><span class="file">RemovePhotoCommandHandler.cs</span> (abridged) · <code>DELETE /api/admin/photos/{id}?nextPrimaryId=</code></p>
+</section>
+
+<section id="recap" data-part="5" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div>Families see one photo per place; the previews show it in every slot first.</div>
+    <div>Make primary states the cover impact; the database keeps exactly one primary.</div>
+    <div>Attribution and licence are mandatory; the address never changes.</div>
+    <div>Removing the primary always makes you choose what comes next.</div>
+    <div>Every admin change locks the photo against seeding and ingestion.</div>
+  </div>
+  <p class="small muted">Next · Video 15: adding curated photos.</p>
+</section>
+
+<script src="../assets/slides.js"></script>
+</body>
+</html>

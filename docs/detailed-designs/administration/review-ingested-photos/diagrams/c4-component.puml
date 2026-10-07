@@ -1,0 +1,36 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components - Review ingested photos
+
+Container_Boundary(adminweb, "Saturdaze Admin and libraries") {
+  Component(queue, "ReviewQueuePage", "Angular page", "Keep, Make primary, Reject per item")
+  Component(skips, "IngestionSkipsPage", "Angular page", "Read-only skip reasons per run")
+  Component(reject, "RejectPhotoDialog (AD6)", "CDK dialog", "Optional reason")
+  Component(svc, "AdminPhotosService, AdminAuditService", "api library", "reviews(), review(), ingestionSkips()")
+}
+Container_Boundary(api, "Saturdaze API and Application") {
+  Component(ctrl, "AdminPhotosController", "ASP.NET Core, Authorize(Policy = Admin)", "Review routes")
+  Component(list, "ListPhotoReviewsQueryHandler", "MediatR", "Unreviewed provider photos, newest first")
+  Component(review, "ReviewPhotoCommandHandler", "MediatR", "keep, primary, reject")
+  Component(skipsq, "ListIngestionPhotoSkipsQueryHandler", "MediatR", "Parses SkipReasons, resolves places")
+  Component(upsert, "CatalogUpserter", "Application service", "Skips rejected URLs; never changes an existing primary")
+  Component(seed, "SeedPhotos", "CLI seeder", "Respects AdminLocked")
+  Component(rejected, "RejectedPlacePhoto", "Domain entity", "URL ingestion never re-adds")
+  ComponentDb(db, "AppDbContext", "EF Core", "PlacePhotos, RejectedPlacePhotos, IngestionRuns")
+}
+Rel(queue, reject, "Opens")
+Rel(queue, svc, "Calls")
+Rel(skips, svc, "Calls")
+Rel(svc, ctrl, "HTTP", "JSON")
+Rel(ctrl, list, "Sends")
+Rel(ctrl, review, "Sends")
+Rel(ctrl, skipsq, "Sends")
+Rel(review, rejected, "Creates on reject")
+Rel(review, db, "Writes")
+Rel(list, db, "Reads")
+Rel(skipsq, db, "Reads IngestionRuns")
+Rel(upsert, rejected, "Checks before storing")
+Rel(upsert, db, "Writes")
+Rel(seed, db, "Upserts unlocked photos")
+@enduml

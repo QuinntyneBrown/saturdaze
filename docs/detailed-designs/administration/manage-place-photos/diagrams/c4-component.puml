@@ -1,0 +1,36 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components - Manage place photos
+
+Container_Boundary(adminweb, "Saturdaze Admin and libraries") {
+  Component(pages, "PhotoHealthPage, PlacesPage, PlacePhotosPage, ActivityLogPage", "Angular pages", "Depend on the admin service tokens")
+  Component(dialogs, "UploadPhotoDialog, AddPhotoUrlDialog, EditPhotoDialog, MakePrimaryDialog, RemovePhotoDialog", "CDK dialogs", "Every edit opens a dialog")
+  Component(svc, "AdminPlacesService, AdminPhotosService, AdminAuditService", "api library", "HTTP implementations behind tokens")
+  Component(ui, "sd-stat-card, sd-photo-tile, sd-slot-preview, sd-media", "components library", "Figures, tiles, slot previews")
+}
+Container_Boundary(api, "Saturdaze API and Application") {
+  Component(ctrl, "AdminPhotosController", "ASP.NET Core, Authorize(Policy = Admin)", "api/admin routes")
+  Component(handlers, "Admin/Photos handlers", "MediatR", "Health, list, photos, upload, add URL, edit, primary, remove, audit")
+  Component(health, "PhotoHealth", "Domain service", "Flags per place")
+  Component(set, "PlacePhotoSet", "Domain service", "MarkPrimary, DefaultPrimary, ShouldPromoteCurated")
+  Component(audit, "PhotoAuditWriter", "Application service", "Writes PhotoAuditEntry")
+  Component(sanitizer, "IImageSanitizer", "Port", "Verify by content, strip metadata")
+  Component(fetcher, "IRemoteImageFetcher", "Port", "One fetch, 10 s, 10 MB")
+  Component(cstore, "ICuratedPhotoStore", "Port", "Public store, PublicUrl(key)")
+  ComponentDb(db, "AppDbContext", "EF Core", "PlacePhotos, PhotoAuditEntries, Weekends (count only)")
+}
+Rel(pages, dialogs, "Opens")
+Rel(pages, ui, "Renders")
+Rel(pages, svc, "Calls through tokens")
+Rel(dialogs, svc, "Calls through tokens")
+Rel(svc, ctrl, "HTTP", "JSON, multipart")
+Rel(ctrl, handlers, "Sends commands and queries")
+Rel(handlers, health, "Evaluates")
+Rel(handlers, set, "Applies")
+Rel(handlers, audit, "Records")
+Rel(handlers, sanitizer, "Sanitizes uploads and fetched images")
+Rel(handlers, fetcher, "Fetches URL adds")
+Rel(handlers, cstore, "Stores and deletes uploads")
+Rel(handlers, db, "Reads and writes")
+@enduml

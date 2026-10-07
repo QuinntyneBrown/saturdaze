@@ -1,0 +1,69 @@
+@use '../../../../../components/src/lib/styles/breakpoints' as *;
+@use '../../../../../components/src/lib/styles/card-base' as *;
+
+// `.queue`, `.skip-list`, `.skip` from docs/mocks/styles/app.css (admin); each
+// run is an `sd-card`, and `card-base` brings its `.card__head` anatomy.
+
+:host {
+  display: block;
+}
+
+.error {
+  margin-bottom: 16px;
+}
+
+.queue {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.skip-list {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.skip {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 2px 12px;
+  padding: 10px 0;
+  border-top: 1px solid var(--colorNeutralStroke2);
+  font-size: var(--fontSizeBase300);
+}
+
+.skip__place {
+  border-radius: var(--borderRadiusMedium);
+  font-weight: var(--fontWeightSemibold);
+  color: var(--colorBrandForeground1);
+  text-decoration: none;
+}
+
+.skip__place:hover {
+  text-decoration: underline;
+}
+
+.skip__place--none {
+  color: var(--colorNeutralForeground1);
+}
+
+.skip__reason {
+  color: var(--colorNeutralForeground2);
+}
+
+.skip__url {
+  grid-column: 1 / -1;
+  font-family: var(--fontFamilyMonospace);
+  font-size: var(--fontSizeBase200);
+  color: var(--colorNeutralForeground3);
+  overflow-wrap: anywhere;
+}
+
+@include respond-to(tablet) {
+  .skip {
+    grid-template-columns: 240px minmax(0, 1fr);
+  }
+}

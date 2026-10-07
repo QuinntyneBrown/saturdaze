@@ -20,6 +20,7 @@ env:
   API_PROJECT: backend/src/Saturdaze.Api/Saturdaze.Api.csproj
   CLI_PROJECT: backend/src/Saturdaze.Cli/Saturdaze.Cli.csproj
   ANGULAR_DIST: frontend/dist/saturdaze/browser
+  ADMIN_DIST: frontend/dist/admin/browser
 
 concurrency:
   group: deploy-${{ github.ref }}
@@ -96,6 +97,20 @@ jobs:
         with:
           name: angular-dist
           path: ${{ env.ANGULAR_DIST }}
+          if-no-files-found: error
+          retention-days: 1
+
+      # Saturdaze Admin (ADR-014): built from the same workspace, deployed to
+      # its own Static Web App by the admin-web job below.
+      - name: ng build admin (production)
+        working-directory: frontend
+        run: npx ng build admin --configuration production
+
+      - name: Upload admin bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: admin-dist
+          path: ${{ env.ADMIN_DIST }}
           if-no-files-found: error
           retention-days: 1
 
@@ -214,4 +229,47 @@ jobs:
           azure_static_web_apps_api_token: ${{ secrets.SWA_DEPLOYMENT_TOKEN }}
           action: upload
           app_location: ${{ env.ANGULAR_DIST }}
+          skip_app_build: true
+
+  admin-web:
+    name: Deploy admin (SWA)
+    runs-on: ubuntu-latest
+    # L2-123 AC4: after the migrations, like the family app, with its own token.
+    needs: [test-frontend, migrate]
+    env:
+      SWA_ADMIN_DEPLOYMENT_TOKEN: ${{ secrets.SWA_ADMIN_DEPLOYMENT_TOKEN }}
+    steps:
+      # The admin Static Web App and its token are provisioned separately
+      # (ADR-014). Until they exist, say so instead of failing the deploy.
+      - name: Check for the admin deployment token
+        id: token
+        run: |
+          if [ -n "$SWA_ADMIN_DEPLOYMENT_TOKEN" ]; then
+            echo "present=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "present=false" >> "$GITHUB_OUTPUT"
+            {
+              echo "## Admin deploy skipped"
+              echo
+              echo "The \`SWA_ADMIN_DEPLOYMENT_TOKEN\` secret is not set, so the admin Static Web App was not deployed."
+              echo "Create the admin Static Web App, add its deployment token as that secret, and list the admin"
+              echo "origin in the API's \`Cors:AllowedOrigins\`; then re-run this workflow."
+            } >> "$GITHUB_STEP_SUMMARY"
+            echo "::warning::SWA_ADMIN_DEPLOYMENT_TOKEN is not set; the admin deploy was skipped."
+          fi
+
+      - name: Download admin bundle
+        if: steps.token.outputs.present == 'true'
+        uses: actions/download-artifact@v4
+        with:
+          name: admin-dist
+          path: ${{ env.ADMIN_DIST }}
+
+      - name: Deploy to Azure Static Web Apps
+        if: steps.token.outputs.present == 'true'
+        uses: Azure/static-web-apps-deploy@v1
+        with:
+          azure_static_web_apps_api_token: ${{ secrets.SWA_ADMIN_DEPLOYMENT_TOKEN }}
+          action: upload
+          app_location: ${{ env.ADMIN_DIST }}
           skip_app_build: true

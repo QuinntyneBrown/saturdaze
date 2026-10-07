@@ -3,37 +3,30 @@
   title="Cover photo"
   subtitle="Shown on this weekend, in Past, and on the link you share."
 >
-  <div class="photo-pick" role="radiogroup" aria-label="Choose a cover photo">
+  <sd-photo-pick label="Choose a cover photo">
     @for (choice of data.choices; track choice.placeId) {
-      <label class="photo-pick__opt">
-        <input
-          type="radio"
-          name="cover-photo"
-          [value]="choice.placeId"
-          [checked]="selected() === choice.placeId"
-          [attr.aria-label]="choice.name"
-          (change)="selected.set(choice.placeId)"
-        />
-        <img [src]="choice.media.src" alt="" loading="lazy" />
-        <span class="photo-pick__name">{{ choice.name }}</span>
-      </label>
-    }
-    <label class="photo-pick__opt photo-pick__upload" [class.is-chosen]="selected() === upload">
-      <input
-        type="file"
-        accept="image/jpeg,image/png,image/webp"
-        aria-label="Upload your own photo"
-        (change)="choose($event)"
+      <sd-photo-pick-option
+        name="cover-photo"
+        [value]="choice.placeId"
+        [checked]="selected() === choice.placeId"
+        [label]="choice.name"
+        [caption]="choice.name"
+        [src]="choice.media.src"
+        (picked)="selected.set($event)"
       />
-      @if (preview(); as src) {
-        <img [src]="src" alt="" />
-        <span class="photo-pick__name">Your photo</span>
-      } @else {
-        <sd-icon name="plus" />
-        Your own photo
-      }
-    </label>
-  </div>
+    }
+    <sd-photo-drop
+      tile
+      label="Upload your own photo"
+      [src]="preview() ?? ''"
+      [caption]="preview() ? 'Your photo' : ''"
+      [chosen]="selected() === upload"
+      (fileChange)="choose($event)"
+    >
+      <sd-icon name="plus" />
+      Your own photo
+    </sd-photo-drop>
+  </sd-photo-pick>
   @if (!data.choices.length) {
     <p class="empty">None of this weekend's stops has a photo yet.</p>
   }

@@ -6,6 +6,7 @@ using Saturdaze.Application.Common;
 using Saturdaze.Application.Ingestion;
 using Saturdaze.Application.Tests.Support;
 using Saturdaze.Application.Weather;
+using Saturdaze.Domain.Entities;
 using Saturdaze.Domain.Enums;
 using Xunit;
 
@@ -59,5 +60,42 @@ public class CatalogUpserterPhotoTests
         var run = await app.Db.IngestionRuns.SingleAsync();
         run.SkipReasons.Should().Contain("attribution");
         run.ItemsUpserted.Should().Be(1);
+    }
+
+    [Fact]
+    public async Task A_rejected_address_is_skipped_and_the_primary_is_left_alone()
+    {
+        // Traces to: L2-121 AC1, AC2
+        await using var app = TestApp.Create();
+        var park = new Activity { Id = Guid.NewGuid(), Name = "Bronte Creek", Category = "Park" };
+        app.Db.Activities.Add(park);
+        var chosen = PlacePhoto.Create(PlaceKind.Activity, park.Id, "https://images.example.com/chosen.jpg",
+            1600, 900, "Chosen", "Photo · Admin", PhotoSource.Curated, "CC BY 4.0", primary: true)!;
+        chosen.AdminLocked = true;
+        app.Db.PlacePhotos.Add(chosen);
+        app.Db.RejectedPlacePhotos.Add(new RejectedPlacePhoto
+        {
+            Id = Guid.NewGuid(), PlaceKind = PlaceKind.Activity, PlaceId = park.Id,
+            Url = "https://images.example.com/bronte.jpg", RejectedAt = DateTimeOffset.UtcNow, RejectedBy = Guid.NewGuid(),
+        });
+        await app.Db.SaveChangesAsync();
+        const string again = """
+            [ {"name":"Bronte Creek","category":"Park","photos":[
+                {"url":"https://images.example.com/bronte.jpg","width":1600,"height":900,"alt":"Creek","attribution":"Photo · Ana Lee","license":"CC BY 4.0"},
+                {"url":"https://images.example.com/bronte-3.jpg","width":1600,"height":900,"alt":"Pond","attribution":"Photo · Ana Lee","license":"CC BY 4.0"}
+            ]} ]
+            """;
+        var items = new IngestionResultParser().Parse(again, IngestionType.Activities).Items;
+
+        var result = await new CatalogUpserter(app.Db).UpsertAsync(items, IngestionType.Activities, default);
+        await app.Db.SaveChangesAsync();
+
+        var photos = await app.Db.PlacePhotos.Where(p => p.PlaceId == park.Id).ToListAsync();
+        result.SkipReasons.Should().ContainSingle().Which.Should().Contain("bronte.jpg").And.Contain("previously rejected");
+        photos.Select(p => p.Url).Should().BeEquivalentTo("https://images.example.com/chosen.jpg", "https://images.example.com/bronte-3.jpg");
+        var added = photos.Single(p => p.Url.EndsWith("bronte-3.jpg"));
+        added.IsPrimary.Should().BeFalse();
+        added.ReviewState.Should().Be(PhotoReviewState.Unreviewed);
+        photos.Single(p => p.IsPrimary).Url.Should().EndWith("chosen.jpg", "ingestion never changes a chosen primary");
     }
 }

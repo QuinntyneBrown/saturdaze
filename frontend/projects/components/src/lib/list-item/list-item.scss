@@ -1,5 +1,8 @@
 // `.list__item` from docs/mocks-v2/styles/app.css. The host is the
 // list item; `--sd-list-pad-x` comes from `sd-list` (16px inside a card).
+// `--sd-list-last-divider` is the last row's divider (none by default); a
+// component that wraps one row per host (`sd-place-row`) sets it, because
+// its row is always the last child of the wrapper.
 
 :host {
   display: block;
@@ -26,7 +29,7 @@
 }
 
 :host(:last-child) .list__item {
-  border-bottom: 0;
+  border-bottom: var(--sd-list-last-divider, 0);
 }
 
 .list__item--action {

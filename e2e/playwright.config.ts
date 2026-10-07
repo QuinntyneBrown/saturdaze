@@ -8,6 +8,12 @@ import { defineConfig, devices } from "@playwright/test";
  *     it; guarded routes need the API on :5100 with a seeded database
  *      (`eng/Start-FreshStack.ps1`).
  *
+ *   - Saturdaze Admin (ADR-014) runs on http://localhost:4300 for the `admin`
+ *     project. Its upload specs need the API's curated store to sit on an
+ *     allow-listed origin: start the API with
+ *     `Saturdaze__CuratedPhotos__PublicOrigin=https://images.example.com` and
+ *     `Saturdaze__Images__AllowedOrigins__0=https://images.example.com`.
+ *
  *   - The v2 mocks (docs/mocks-v2) are served on http://localhost:5173 by
  *     `http-server` when SD_BASELINE=1. Visual baselines are captured from
  *     them once with `npm run baseline` and committed. Subsequent runs
@@ -34,6 +40,9 @@ const VIEWPORTS = {
 } as const;
 
 const isBaselineCapture = process.env.SD_BASELINE === "1";
+
+/** Specs under tests/admin/ run only in the `admin` project (the admin app on :4300). */
+const ADMIN_SPECS = /tests[\\/]admin[\\/]/;
 
 export default defineConfig({
   testDir: "./tests",
@@ -73,25 +82,49 @@ export default defineConfig({
         timeout: 30_000,
         cwd: __dirname,
       }
-    : {
-        command: "npm run start -- --port 4200",
-        url: "http://localhost:4200",
-        reuseExistingServer: !process.env.CI,
-        timeout: 180_000,
-        cwd: `${__dirname}/../frontend`,
-      },
+    : [
+        {
+          command: "npm run start -- --port 4200",
+          url: "http://localhost:4200",
+          reuseExistingServer: !process.env.CI,
+          timeout: 180_000,
+          cwd: `${__dirname}/../frontend`,
+        },
+        // Saturdaze Admin (ADR-014): a second app in the workspace on its own port.
+        {
+          command: "npm run start:admin -- --port 4300",
+          url: "http://localhost:4300",
+          reuseExistingServer: !process.env.CI,
+          timeout: 180_000,
+          cwd: `${__dirname}/../frontend`,
+        },
+      ],
   projects: [
     {
       name: "mobile",
+      testIgnore: ADMIN_SPECS,
       use: { ...devices["Desktop Chrome"], viewport: VIEWPORTS.mobile },
     },
     {
       name: "tablet",
+      testIgnore: ADMIN_SPECS,
       use: { ...devices["Desktop Chrome"], viewport: VIEWPORTS.tablet },
     },
     {
       name: "desktop",
+      testIgnore: ADMIN_SPECS,
       use: { ...devices["Desktop Chrome"], viewport: VIEWPORTS.desktop },
+    },
+    // Saturdaze Admin: Chromium only, desktop-first (curators work on laptops);
+    // specs that care about narrow widths resize the page themselves.
+    {
+      name: "admin",
+      testMatch: ADMIN_SPECS,
+      use: {
+        ...devices["Desktop Chrome"],
+        viewport: VIEWPORTS.desktop,
+        baseURL: isBaselineCapture ? "http://localhost:5173" : "http://localhost:4300",
+      },
     },
   ],
 });

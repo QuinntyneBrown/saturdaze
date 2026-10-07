@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<!-- @shell:head -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ingestion photo skips — Saturdaze Admin</title>
+<link rel="stylesheet" href="../styles/tokens.css">
+<link rel="stylesheet" href="../styles/app.css">
+<!-- @/shell:head -->
+</head>
+<body data-page="admin" data-shell="bare" data-screen="skips">
+<div class="admin">
+  <nav class="admin-nav" aria-label="Admin">
+    <a class="admin-nav__brand" href="./admin.html"><span class="brand-mark" aria-hidden="true"></span><span class="admin-nav__brand-text">Saturdaze</span><span class="admin-nav__tag">Admin</span></a>
+    <div class="admin-nav__links">
+      <a class="admin-nav__link" data-nav="health" href="./admin.html"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg>Photo health</a>
+      <a class="admin-nav__link" data-nav="places" href="./admin.places.html"><svg class="icon" aria-hidden="true"><use href="#i-map"/></svg>Places</a>
+      <a class="admin-nav__link" data-nav="reviews" href="./admin.reviews.html"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Review queue</a>
+      <a class="admin-nav__link" data-nav="skips" href="./admin.ingestion-skips.html" aria-current="page"><svg class="icon" aria-hidden="true"><use href="#i-refresh"/></svg>Ingestion skips</a>
+      <a class="admin-nav__link" data-nav="activity" href="./admin.activity.html"><svg class="icon" aria-hidden="true"><use href="#i-calendar"/></svg>Activity log</a>
+    </div>
+    <div class="admin-nav__account">
+      <span class="avatar avatar--sm avatar--q" aria-hidden="true">A</span>
+      <span class="admin-nav__email">admin@saturdaze.app</span>
+      <a class="btn btn--ghost btn--sm" href="./admin.sign-in.html"><svg class="icon" aria-hidden="true"><use href="#i-sign_out"/></svg>Sign out</a>
+    </div>
+  </nav>
+  <main class="admin-main container" id="main">
+  <header class="page-header">
+    <div class="page-header__text">
+      <h1 class="page-header__title">Ingestion photo skips</h1>
+      <p class="page-header__subtitle">Why a run left a photo out. Read-only; a place that still exists links to its photos.</p>
+    </div>
+  </header>
+  <div class="queue">
+      <article class="card card--pad-lg" aria-label="Events run 6 Oct 2026, 04:12 UTC">
+        <div class="card__head"><div class="card__head-text"><h2 class="card__title">Events</h2><p class="card__meta">6 Oct 2026, 04:12 UTC · 2 photo skips</p></div><span class="chip chip--accent">Succeeded</span></div>
+        <ul class="skip-list">
+          <li class="skip"><a class="skip__place" href="./admin.place.html">Port Credit Harbour Festival</a><span class="skip__reason">previously rejected</span><code class="skip__url">https://images.example.com/harbourfest-2024.jpg</code></li>
+          <li class="skip"><a class="skip__place" href="./admin.place.html">Port Credit Harbour Festival</a><span class="skip__reason">missing attribution or licence</span><code class="skip__url">https://cdn.example.org/festival/hero.jpg</code></li>
+        </ul>
+      </article>
+      <article class="card card--pad-lg" aria-label="Restaurants run 6 Oct 2026, 04:10 UTC">
+        <div class="card__head"><div class="card__head-text"><h2 class="card__title">Restaurants</h2><p class="card__meta">6 Oct 2026, 04:10 UTC · 1 photo skips</p></div><span class="chip chip--accent">Succeeded</span></div>
+        <ul class="skip-list">
+          <li class="skip"><a class="skip__place" href="./admin.place.html">Harbour Grill</a><span class="skip__reason">missing attribution or licence</span><code class="skip__url">https://harbourgrill.example.com/patio.jpg</code></li>
+        </ul>
+      </article>
+      <article class="card card--pad-lg" aria-label="Activities run 5 Oct 2026, 04:11 UTC">
+        <div class="card__head"><div class="card__head-text"><h2 class="card__title">Activities</h2><p class="card__meta">5 Oct 2026, 04:11 UTC · 1 photo skips</p></div><span class="chip chip--warn">Failed</span></div>
+        <ul class="skip-list">
+          <li class="skip"><span class="skip__place skip__place--none">Lakeside Climbing Gym</span><span class="skip__reason">missing attribution or licence</span><code class="skip__url">https://photos.example.net/climb.jpg</code></li>
+        </ul>
+      </article>
+  </div>
+  </main>
+</div>
+<script src="../app.js"></script>
+</body>
+</html>

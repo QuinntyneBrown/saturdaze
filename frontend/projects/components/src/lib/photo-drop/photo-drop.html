@@ -1,0 +1,16 @@
+<label
+  class="photo-pick__opt photo-pick__upload"
+  [class.upload-drop]="!tile()"
+  [class.is-chosen]="chosen()"
+  [class.has-preview]="!!src()"
+>
+  <input type="file" [attr.accept]="accept()" [attr.aria-label]="label()" (change)="pick($event)" />
+  @if (src()) {
+    <img class="photo-drop__img" [src]="src()" alt="" />
+    @if (caption()) {
+      <span class="photo-pick__name">{{ caption() }}</span>
+    }
+  } @else {
+    <ng-content />
+  }
+</label>

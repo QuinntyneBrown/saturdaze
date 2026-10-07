@@ -1,0 +1,14 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context - Manage place photos
+
+Person(admin, "Catalog curator", "Adds, edits, promotes and removes place photos")
+Person(family, "Family member", "Sees place photos on idea cards and covers")
+System(saturdaze, "Saturdaze", "Family weekend planning platform")
+System_Ext(providers, "Allow-listed photo origins", "HTTPS origins photos may be served from")
+Rel(admin, saturdaze, "Manages photos using", "HTTPS")
+Rel(family, saturdaze, "Plans weekends using", "HTTPS")
+Rel(saturdaze, providers, "Fetches a URL-added photo once to verify it", "HTTPS")
+Rel(family, providers, "Loads card images from", "HTTPS, CSP img-src")
+@enduml

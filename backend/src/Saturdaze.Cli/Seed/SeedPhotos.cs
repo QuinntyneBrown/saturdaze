@@ -19,7 +19,9 @@ internal static class SeedPhotos
 {
     /// <summary>
     /// Upserts the place's photos by URL. Records without attribution or licence are dropped.
-    /// The record marked primary (else the first) is the place's only primary photo.
+    /// The record marked primary (else the first) is the place's only primary photo, unless an
+    /// administrator chose one: a photo with <see cref="PlacePhoto.AdminLocked"/> keeps its
+    /// details, and a locked primary keeps the place's primary (L2-121 AC3, AC4).
     /// </summary>
     public static void Apply(AppDbContext db, PlaceKind kind, Guid placeId, IReadOnlyList<PhotoRecord>? records)
     {
@@ -44,7 +46,7 @@ internal static class SeedPhotos
                 photos.Add(photo);
                 db.PlacePhotos.Add(photo);
             }
-            else
+            else if (!photo.AdminLocked)
             {
                 photo.Width = fresh.Width;
                 photo.Height = fresh.Height;
@@ -58,6 +60,7 @@ internal static class SeedPhotos
             if (wanted && primary is null) primary = photo;
         }
 
-        if (primary is not null) PlacePhotoSet.MarkPrimary(photos, primary.Id);
+        var adminPrimary = photos.Any(p => p.IsPrimary && p.AdminLocked);
+        if (primary is not null && !adminPrimary) PlacePhotoSet.MarkPrimary(photos, primary.Id);
     }
 }

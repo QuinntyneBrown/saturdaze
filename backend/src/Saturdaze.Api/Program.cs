@@ -47,6 +47,9 @@ try
     builder.Services.AddSwaggerGen(o =>
     {
         o.SwaggerDoc("v1", new OpenApiInfo { Title = "Saturdaze API", Version = "v1" });
+        // POST /api/admin/places/{kind}/{id}/photos takes multipart (upload) or JSON (add from URL)
+        // through two actions; OpenAPI 3.0 keys operations by method and path, so document the first.
+        o.ResolveConflictingActions(apis => apis.First());
     });
 
     var corsOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>() ?? Array.Empty<string>();

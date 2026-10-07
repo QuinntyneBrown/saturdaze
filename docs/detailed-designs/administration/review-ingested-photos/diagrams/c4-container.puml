@@ -1,0 +1,19 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers - Review ingested photos
+
+Person(admin, "Catalog curator", "Administrator")
+System_Boundary(saturdaze, "Saturdaze") {
+  Container(adminweb, "Saturdaze Admin", "Angular", "Review queue and Ingestion photo skips")
+  Container(api, "Saturdaze API", "ASP.NET Core", "/api/admin/photo-reviews, /review, /ingestion-runs/photo-skips")
+  Container(worker, "Saturdaze Worker and CLI", ".NET", "Runs CatalogUpserter on a schedule or on demand")
+  ContainerDb(db, "Saturdaze database", "SQL Server", "PlacePhotos, RejectedPlacePhotos, IngestionRuns")
+}
+System_Ext(search, "Web-search provider", "Candidate photos")
+Rel(admin, adminweb, "Uses", "HTTPS")
+Rel(adminweb, api, "Lists and decides photos", "JSON/HTTPS")
+Rel(api, db, "Reads queue, writes decisions and rejections", "EF Core")
+Rel(worker, search, "Asks for candidates", "HTTPS")
+Rel(worker, db, "Stores unreviewed photos, skips rejected URLs, writes SkipReasons", "EF Core")
+@enduml

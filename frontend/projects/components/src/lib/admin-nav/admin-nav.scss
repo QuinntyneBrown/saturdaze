@@ -1,0 +1,200 @@
+@use '../styles/breakpoints' as *;
+
+// `.admin-nav` from docs/mocks/styles/app.css — the host is the nav. A
+// sticky bar below 1024px; a full-height side navigation from 1024px.
+
+:host {
+  position: sticky;
+  top: 0;
+  z-index: var(--zIndexTopBar);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: var(--layoutTopBarHeight);
+  padding-inline: var(--layoutGutter);
+  background: var(--colorNeutralBackground1);
+  border-bottom: 1px solid var(--colorNeutralStroke2);
+}
+
+.admin-nav__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex: none;
+  font-size: var(--fontSizeBase500);
+  font-weight: var(--fontWeightBold);
+  color: var(--colorNeutralForeground1);
+  white-space: nowrap;
+  text-decoration: none;
+  border-radius: var(--borderRadiusSmall);
+}
+
+.brand-mark {
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  flex: none;
+  background:
+    radial-gradient(120% 120% at 20% 0%, var(--colorBrandBackground2) 0%, transparent 60%),
+    radial-gradient(120% 120% at 100% 100%, var(--colorPaletteSunBackground1) 0%, transparent 60%),
+    var(--colorBrandBackground);
+  box-shadow: inset 0 0 0 1px rgba(31, 41, 55, 0.06);
+}
+
+.admin-nav__brand-text {
+  display: none;
+}
+
+.admin-nav__tag {
+  display: inline-flex;
+  align-items: center;
+  height: 20px;
+  padding: 0 8px;
+  border-radius: var(--borderRadiusCircular);
+  background: var(--colorBrandBackground2);
+  color: var(--colorBrandForeground1);
+  font-size: 11px;
+  font-weight: var(--fontWeightSemibold);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.admin-nav__links {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.admin-nav__links::-webkit-scrollbar {
+  display: none;
+}
+
+.admin-nav__link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex: none;
+  padding: 8px 12px;
+  border-radius: var(--borderRadiusMedium);
+  font-size: 14px;
+  font-weight: var(--fontWeightSemibold);
+  color: var(--colorNeutralForeground2);
+  white-space: nowrap;
+  text-decoration: none;
+  transition:
+    background var(--durationFast) var(--curveEasyEase),
+    color var(--durationFast) var(--curveEasyEase);
+}
+
+.admin-nav__link sd-icon {
+  display: none;
+}
+
+.admin-nav__link[aria-current='page'] {
+  color: var(--colorNeutralForeground1);
+}
+
+.admin-nav__link[aria-current='page']::after {
+  content: '';
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 0;
+  height: 2px;
+  border-radius: var(--borderRadiusCircular);
+  background: var(--colorBrandBackground);
+}
+
+.admin-nav__account {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: none;
+  margin-left: auto;
+}
+
+.admin-nav__email {
+  display: none;
+  font-size: var(--fontSizeBase300);
+  color: var(--colorNeutralForeground2);
+  overflow-wrap: anywhere;
+}
+
+// Below the tablet breakpoint the links need the room: brand mark + tag only.
+.admin-nav__account sd-button {
+  display: none;
+}
+
+@media (hover: hover) {
+  .admin-nav__link:hover {
+    background: var(--colorNeutralBackground3);
+    color: var(--colorNeutralForeground1);
+  }
+}
+
+@include respond-to(tablet) {
+  .admin-nav__brand-text {
+    display: inline;
+  }
+
+  .admin-nav__account sd-button {
+    display: contents;
+  }
+}
+
+@include respond-to(desktop) {
+  :host {
+    height: 100svh;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 28px;
+    padding: 24px 16px;
+    border-bottom: 0;
+    border-right: 1px solid var(--colorNeutralStroke2);
+  }
+
+  .admin-nav__brand {
+    padding-inline: 12px;
+  }
+
+  .admin-nav__links {
+    flex: 0 0 auto;
+    flex-direction: column;
+    align-items: stretch;
+    overflow: visible;
+  }
+
+  .admin-nav__link {
+    padding: 10px 12px;
+  }
+
+  .admin-nav__link sd-icon {
+    display: inline-flex;
+  }
+
+  .admin-nav__link[aria-current='page'] {
+    background: var(--colorNeutralBackground3);
+  }
+
+  .admin-nav__link[aria-current='page']::after {
+    display: none;
+  }
+
+  .admin-nav__account {
+    margin: auto 0 0;
+    flex-wrap: wrap;
+    padding: 12px;
+    border-top: 1px solid var(--colorNeutralStroke2);
+  }
+
+  .admin-nav__email {
+    display: block;
+    flex: 1 1 100px;
+    min-width: 0;
+  }
+}

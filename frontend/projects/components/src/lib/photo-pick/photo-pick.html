@@ -1,0 +1,11 @@
+@if (showLabel()) {
+  <span class="field__label" [id]="labelId">{{ label() }}</span>
+}
+<div
+  class="photo-pick"
+  role="radiogroup"
+  [attr.aria-labelledby]="showLabel() ? labelId : null"
+  [attr.aria-label]="showLabel() ? null : label()"
+>
+  <ng-content />
+</div>

@@ -108,6 +108,7 @@ Rules:
 - Slides support the narration, they don't transcribe it: a heading, 3-5 short bullets, a diagram, or a short code excerpt.
 - Code: `<pre class="code" data-lang="cs|ts|json|yaml|sql|sh|md|xml" data-mark="2,5">` (escape `<`, `>`, `&`); add `tight` for longer excerpts. Keep excerpts to ~16 lines, copied from the real file.
 - Progressive builds: `<template id="x">` with `class="item"` children, then `<section data-template="x" data-show="3">` (reveal) or `data-highlight="2-4">` (focus).
+- Screen recordings of the real UI: `<section data-clip="clips/x.mp4">` with an `<aside class="clip-notes">` plays a 1408x792 recording (`<video class="clip phone">` for 390 wide) made by `tools/video-record/record-clips.mjs` from the folder's `clips/clips.mjs`; `data-clip-delay="s"` holds its first frame. Give each clip slide at least as much narration as the clip runs (the builder speeds clips up to fit and warns above x1.6). See `docs/videos/README.md`.
 - Reuse existing classes in `slides.css` (e.g. `kicker`, `lead`, `quote`, `muted`, `small`, `cols`, `card`, `file`, `tag`, `steps`, `question`, `recap`). Add a class only if none fits, and check it doesn't change other decks.
 - If no shared stylesheet/runtime exists, create them first: 1920x1080 slides, one visible at a time, `?slide=N` or hash navigation so the renderer can screenshot each slide, header label and progress bar from `data-parts`.
 

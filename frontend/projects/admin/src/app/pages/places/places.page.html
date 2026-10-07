@@ -1,0 +1,85 @@
+<sd-page-header
+  title="Places"
+  subtitle="Every catalog place, worst photo health first. Search, filter, then open a place to fix it."
+/>
+
+<sd-toolbar>
+  <sd-text-input
+    class="toolbar__search"
+    label="Search"
+    type="search"
+    name="q"
+    placeholder="Place name"
+    [formControl]="search"
+  />
+  <sd-select
+    class="toolbar__sort"
+    label="Sort"
+    name="sort"
+    [options]="sortOptions"
+    [formControl]="sort"
+  />
+</sd-toolbar>
+
+<sd-filters class="filters" label="Filters">
+  @for (chip of kindChips; track chip.label) {
+    <sd-filter-chip [tone]="chip.tone" [pressed]="isActive(chip)" (pressedChange)="toggle(chip)">
+      @if (chip.icon) {
+        <sd-icon [name]="chip.icon" [size]="14" [stroke]="2" />
+      }
+      {{ chip.label }}
+    </sd-filter-chip>
+  }
+  <span class="sd-vdivider" aria-hidden="true"></span>
+  @for (chip of flagChips; track chip.label) {
+    <sd-filter-chip [pressed]="isActive(chip)" (pressedChange)="toggle(chip)">{{
+      chip.label
+    }}</sd-filter-chip>
+  }
+  <span class="sd-vdivider" aria-hidden="true"></span>
+  @for (chip of sourceChips; track chip.label) {
+    <sd-filter-chip [pressed]="isActive(chip)" (pressedChange)="toggle(chip)">{{
+      chip.label
+    }}</sd-filter-chip>
+  }
+</sd-filters>
+
+@if (error()) {
+  <sd-banner class="error" tone="warn" role="alert" icon="close">{{ error() }}</sd-banner>
+}
+
+@switch (view().status) {
+  @case ('loading') {
+    <sd-status-row icon="map">Fetching the catalog.</sd-status-row>
+  }
+  @case ('empty') {
+    <sd-empty
+      icon="map"
+      title="No places match"
+      body="Clear a filter or search for something else."
+    />
+  }
+  @case ('ready') {
+    <p class="toolbar__count" role="status">{{ countText() }}</p>
+    <sd-list card class="place-list">
+      @for (row of rows(); track row.id) {
+        <sd-place-row
+          [title]="row.name"
+          [subtitle]="row.meta"
+          [href]="row.href"
+          [photo]="row.photo"
+          [tone]="row.tone"
+          [icon]="row.icon"
+          [flags]="row.chips"
+        />
+      }
+    </sd-list>
+    <sd-pager
+      [page]="view().page"
+      [pageSize]="view().pageSize"
+      [total]="view().total"
+      emptyText="No places"
+      (pageChange)="goToPage($event)"
+    />
+  }
+}

@@ -140,6 +140,7 @@ Then open `http://localhost:5173/`.
 | CLI | `backend/src/Saturdaze.Cli` | Database migration, seed, reset, and `ingest` commands |
 | Worker | `backend/src/Saturdaze.Worker` | Cron-scheduled .NET Worker Service that runs catalog ingestion |
 | Angular app | `frontend/projects/saturdaze` | Routed user-facing application |
+| Admin app | `frontend/projects/admin` | Saturdaze Admin: catalog photo management on its own host (`npm run start:admin`, ADR-014) |
 | API library | `frontend/projects/api` | Client-side models and services for backend integration |
 | Component library | `frontend/projects/components` | Standalone Angular UI components aligned with the mock system |
 | E2E suite | `e2e` | Playwright behavior and visual tests |
@@ -227,10 +228,19 @@ The workflow:
 
 - publishes and deploys the ASP.NET Core API to Azure App Service;
 - applies EF migrations through `Saturdaze.Cli`;
-- builds the Angular app and deploys it to Azure Static Web Apps.
+- builds the Angular app and deploys it to Azure Static Web Apps;
+- builds Saturdaze Admin and deploys it to its own Static Web App after the
+  migrations (ADR-014). The job needs the `SWA_ADMIN_DEPLOYMENT_TOKEN` secret;
+  until it is set the job reports that it was skipped instead of failing.
 
-Deployment requires the relevant Azure publish profile, Static Web Apps token,
+Deployment requires the relevant Azure publish profile, Static Web Apps tokens,
 and database connection string secrets to be configured in GitHub Actions.
+
+The API only answers browsers from the origins in `Cors:AllowedOrigins`, so
+the admin host must be listed next to the family app's (for example
+`Cors__AllowedOrigins__1` in the Web App's settings). Curated photo uploads
+are served from the API itself (ADR-015): set `Saturdaze:CuratedPhotos:PublicOrigin`
+to the API's public origin and list that origin in `Saturdaze:Images:AllowedOrigins`.
 
 ## Contributing
 
