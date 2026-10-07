@@ -1,0 +1,60 @@
+<sd-auth-shell>
+  @switch (state()) {
+    @case ('loading') {
+      <sd-status-row icon="mail">Opening your invite.</sd-status-row>
+    }
+    @case ('join') {
+      <sd-auth-card [title]="title()" [subtitle]="subtitle()" center>
+        <sd-disc slot="disc" icon="home" tone="accent" size="xl" />
+        @if (error()) {
+          <sd-banner tone="warn" role="alert" icon="close">{{ error() }}</sd-banner>
+        }
+        <form class="form" [formGroup]="form" (ngSubmit)="join()">
+          <sd-text-input
+            label="Email"
+            type="email"
+            name="email"
+            readonly
+            [value]="invitation()?.email ?? ''"
+          />
+          <div class="password">
+            <sd-text-input
+              label="Password"
+              type="password"
+              name="password"
+              autocomplete="new-password"
+              formControlName="password"
+            />
+            @if (strength().level) {
+              <sd-strength [level]="strength().level" [label]="strength().label" />
+            }
+          </div>
+          <sd-text-input
+            label="Confirm password"
+            type="password"
+            name="confirm"
+            autocomplete="new-password"
+            formControlName="confirm"
+            [invalid]="form.hasError('mismatch') && form.controls.confirm.touched"
+          />
+          <sd-button variant="primary" size="lg" full type="submit" [disabled]="submitting()"
+            >Join the family</sd-button
+          >
+        </form>
+        <span slot="alt"
+          >Already have a sign-in? <a class="sd-link" routerLink="/sign-in">Sign in</a></span
+        >
+      </sd-auth-card>
+    }
+    @case ('invalid') {
+      <sd-auth-card
+        title="This invite no longer works"
+        subtitle="It was used, removed or is more than 7 days old. Ask whoever invited you for a new link."
+        center
+      >
+        <sd-disc slot="disc" icon="mail" tone="warn" size="xl" />
+        <sd-button variant="quiet" size="lg" full href="/sign-in">Sign in</sd-button>
+      </sd-auth-card>
+    }
+  }
+</sd-auth-shell>

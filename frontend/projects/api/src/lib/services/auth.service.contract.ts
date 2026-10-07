@@ -6,6 +6,7 @@ import { LoginRequest } from '../models/login-request';
 import { LogoutRequest } from '../models/logout-request';
 import { RefreshRequest } from '../models/refresh-request';
 import { ResetPasswordRequest } from '../models/reset-password-request';
+import { AcceptInvitationRequest, Invitation } from '../models/invitation';
 import { ResendVerificationRequest } from '../models/resend-verification-request';
 import { SignupRequest } from '../models/signup-request';
 import { User } from '../models/user';
@@ -78,6 +79,22 @@ export interface IAuthService {
    * @returns {Promise<void>} The result of the operation
    */
   resetPassword(req: ResetPasswordRequest): Promise<void>;
+  /**
+   * Preview Invitation — `POST /api/auth/invitation` (L2-127).
+   *
+   * @param {string} token - The invite token
+   *
+   * @returns {Promise<Invitation>} The result of the operation
+   */
+  previewInvitation(token: string): Promise<Invitation>;
+  /**
+   * Accept Invitation — `POST /api/auth/accept-invitation`; signs the new member in (L2-127).
+   *
+   * @param {AcceptInvitationRequest} req - The req
+   *
+   * @returns {Promise<} The result of the operation
+   */
+  acceptInvitation(req: AcceptInvitationRequest): Promise<{ token: AuthToken; user: User }>;
   /**
    * Verify Email.
    *

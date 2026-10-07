@@ -17,6 +17,8 @@ import { environment } from '../environments/environment';
  *   bounced to `/weekend` by `requireAnonymous`.
  * - `/verify-email` deliberately has no guard — signed-in *and* signed-out
  *   users reach it from an email link (and right after creating an account).
+ * - `/accept-invite?token=<token>` has no guard either: whoever opens an
+ *   invite link joins the family as a new account (L2-127).
  * - `/sample-weekend?share=<token>` is the read-only shared weekend; the
  *   backend builds share links with that path.
  * - `/review-submissions` chains `requireAuth` then `requireAdmin`.
@@ -58,6 +60,12 @@ export const routes: Routes = [
     data: { shell: 'bare', page: 'verify-email' },
     loadComponent: () =>
       import('./pages/verify-email/verify-email.page').then((m) => m.VerifyEmailPage),
+  },
+  {
+    path: 'accept-invite',
+    data: { shell: 'bare', page: 'accept-invite' },
+    loadComponent: () =>
+      import('./pages/accept-invite/accept-invite.page').then((m) => m.AcceptInvitePage),
   },
   {
     path: 'legal',
