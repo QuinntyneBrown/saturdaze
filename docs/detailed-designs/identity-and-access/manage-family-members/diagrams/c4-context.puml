@@ -1,0 +1,13 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context — Manage family members
+
+Person(owner, "Family owner", "Created the account; decides who is in the family")
+Person(member, "Invited family member", "Signs in with their own email and password")
+System(saturdaze, "Saturdaze", "Family weekend planning platform")
+
+Rel(owner, saturdaze, "Adds, invites and removes members using", "HTTPS")
+Rel(owner, member, "Shares the invite link with", "Any channel")
+Rel(member, saturdaze, "Accepts the invite and signs in to", "HTTPS")
+@enduml

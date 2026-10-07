@@ -1,0 +1,45 @@
+@startuml
+title UML sequence behaviour — Accept an invitation and sign in
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+actor "Invited member" as actor
+box "Frontend — Saturdaze Angular application" #E0F2FE
+ participant "AcceptInvitePage" as page
+ participant "SessionStore\nAuthService" as client
+end box
+box "Backend — Saturdaze API" #D1FADF
+ participant "AuthController" as controller
+end box
+box "Backend — Saturdaze Application and Domain" #ECFDF3
+ participant "GetInvitationQueryHandler\nAcceptInvitationCommandHandler\nRefreshTokenIssuer" as handler
+end box
+box "Backend — Saturdaze Infrastructure" #FFF4E5
+ database "AppDbContext\nSQL Server" as db
+end box
+actor -> page : Opens /accept-invite?token=…
+page -> client : previewInvitation(token)
+client -> controller : POST /api/auth/invitation {token} (anonymous)
+controller -> handler : GetInvitationQuery
+handler -> db : Find FamilyInvitation by SHA-256(token)
+alt missing, accepted or revoked
+  controller --> client : 400 token_invalid (L2-127 AC4)
+  page --> actor : "This invite no longer works" + Sign in
+else expired
+  controller --> client : 400 token_expired (L2-127 AC4)
+  page --> actor : "This invite no longer works" + Sign in
+else usable
+  controller --> client : 200 {familyName, email, invitedByEmail} (L2-127 AC1)
+  page --> actor : "Join The Browns on Saturdaze"
+  actor -> page : Password + confirm; Join the family
+  page -> client : acceptInvitation({token, password})
+  client -> controller : POST /api/auth/accept-invitation (anonymous)
+  controller -> handler : AcceptInvitationCommand
+  handler -> db : Insert User(FamilyId, EmailVerifiedUtc=now)\nFamilyMember.UserId = user\nInvitation.AcceptedAtUtc = now\nRefreshToken
+  controller --> client : 201 {token, user} (L2-127 AC2)
+  client -> client : Persist session
+  page --> actor : Navigates to /weekend
+end
+@enduml

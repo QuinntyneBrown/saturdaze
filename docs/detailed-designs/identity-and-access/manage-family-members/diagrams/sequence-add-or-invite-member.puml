@@ -1,0 +1,46 @@
+@startuml
+title UML sequence behaviour — Add a member or invite them to sign in
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+actor "Family owner" as actor
+box "Frontend — Saturdaze Angular application" #E0F2FE
+ participant "FamilyPage\nFamilyMemberDialog (D17b)\nInviteLinkDialog (D30)" as page
+ participant "FamilyService" as client
+end box
+box "Backend — Saturdaze API" #D1FADF
+ participant "FamilyController" as controller
+end box
+box "Backend — Saturdaze Application and Domain" #ECFDF3
+ participant "AddFamilyMemberCommandHandler\nFamilyOwnership" as handler
+end box
+box "Backend — Saturdaze Infrastructure" #FFF4E5
+ database "AppDbContext\nSQL Server" as db
+end box
+actor -> page : Add a family member; name, age, "Will they sign in?"
+page -> client : addMember({name, age, email?})
+client -> controller : POST /api/family/members (bearer)
+controller -> handler : AddFamilyMemberCommand
+handler -> db : Load caller's family (Users.FamilyId)
+alt caller is not the owner
+  handler --> controller : ForbiddenException owner_only
+  controller --> client : 403 owner_only (L2-125 AC2)
+else name already used
+  controller --> client : 409 member_name_in_use (L2-125 AC3)
+else email given and already an account
+  controller --> client : 409 email_in_use (L2-126 AC3)
+else no email (L2-125)
+  handler -> db : Insert FamilyMember
+  controller --> client : 201 {member: access None, invite: null}
+else email given (L2-126)
+  handler -> db : Insert FamilyMember + FamilyInvitation(TokenHash, expires +7 days)
+  controller --> client : 201 {member: access Invited, invite: {email, token, url, expiresAtUtc}}
+  client --> page : FamilyInvite
+  page -> actor : D30 shows the invite link with Copy link
+end
+client -> controller : GET /api/family
+controller --> client : 200 FamilyProfileDto
+page --> actor : Row "Kid · 5" or "Parent · 36 · Invite sent to sara@example.com"
+@enduml
