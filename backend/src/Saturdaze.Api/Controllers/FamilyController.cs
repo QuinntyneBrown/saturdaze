@@ -42,4 +42,12 @@ public sealed class FamilyController : ControllerBase
         }
         return StatusCode(StatusCodes.Status201Created, result);
     }
+
+    /// <summary>The owner removes a member, revoking any invite or sign-in they have (L2-128).</summary>
+    [HttpDelete("members/{id:guid}")]
+    public async Task<IActionResult> RemoveMember(Guid id, CancellationToken ct)
+    {
+        await _sender.Send(new RemoveFamilyMemberCommand(id), ct);
+        return NoContent();
+    }
 }

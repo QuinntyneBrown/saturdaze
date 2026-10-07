@@ -1,4 +1,5 @@
 using System.Net;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
 using FluentAssertions;
@@ -192,6 +193,113 @@ public class FamilyMembersTests : IClassFixture<SaturdazeApiFactory>
 
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         body.Should().Contain("Email");
+    }
+
+    [Fact]
+    public async Task The_owner_removes_a_member_who_does_not_sign_in()
+    {
+        // Traces to: L2-128 #1
+        var owner = await SignedInClient.CreateAsync(_factory, FamilyMode.Own);
+        var maeId = await Add(owner, new { Name = "Mae", Age = 5 });
+
+        var response = await owner.Client.DeleteAsync($"/api/family/members/{maeId}");
+
+        response.StatusCode.Should().Be(HttpStatusCode.NoContent);
+        (await GetFamily(owner.Client)).GetProperty("members").GetArrayLength().Should().Be(0);
+    }
+
+    [Fact]
+    public async Task Removing_an_invited_member_revokes_the_invitation()
+    {
+        // Traces to: L2-128 #2
+        var owner = await SignedInClient.CreateAsync(_factory, FamilyMode.Own);
+        var token = await Invite(owner, "Sara", NewEmail("sara"));
+        var saraId = Member(await GetFamily(owner.Client), "Sara").GetProperty("id").GetGuid();
+
+        (await owner.Client.DeleteAsync($"/api/family/members/{saraId}")).StatusCode.Should().Be(HttpStatusCode.NoContent);
+
+        var accept = await _factory.CreateClient().PostAsJsonAsync("/api/auth/accept-invitation", new { Token = token, Password = "Passw0rd!" });
+        accept.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        (await Code(accept)).Should().Be("token_invalid");
+    }
+
+    [Fact]
+    public async Task Removing_a_member_who_signs_in_ends_their_access()
+    {
+        // Traces to: L2-128 #3
+        var owner = await SignedInClient.CreateAsync(_factory, FamilyMode.Own);
+        var email = NewEmail("sara");
+        var token = await Invite(owner, "Sara", email);
+        var accept = await _factory.CreateClient().PostAsJsonAsync("/api/auth/accept-invitation", new { Token = token, Password = "Passw0rd!" });
+        var auth = (await accept.Content.ReadFromJsonAsync<AuthDtos.AuthSuccess>())!;
+        var sara = _factory.CreateClient();
+        sara.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", auth.Token.AccessToken);
+        (await sara.GetAsync("/api/family")).StatusCode.Should().Be(HttpStatusCode.OK);
+        var saraId = Member(await GetFamily(owner.Client), "Sara").GetProperty("id").GetGuid();
+
+        (await owner.Client.DeleteAsync($"/api/family/members/{saraId}")).StatusCode.Should().Be(HttpStatusCode.NoContent);
+
+        (await _factory.CreateClient().PostAsJsonAsync("/api/auth/refresh", new AuthDtos.RefreshRequest(auth.Token.RefreshToken)))
+            .StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+        (await sara.GetAsync("/api/family")).StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+        var login = await _factory.CreateClient().PostAsJsonAsync("/api/auth/login", new AuthDtos.LoginRequest(email, "Passw0rd!"));
+        login.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+        (await Code(login)).Should().Be("invalid_credentials");
+    }
+
+    [Fact]
+    public async Task Only_the_owner_removes_members()
+    {
+        // Traces to: L2-128 #4
+        var owner = await SignedInClient.CreateAsync(_factory, FamilyMode.Own);
+        var maeId = await Add(owner, new { Name = "Mae", Age = 5 });
+        var other = await SignedInClient.JoinAsync(_factory, owner.FamilyId!.Value);
+
+        var response = await other.Client.DeleteAsync($"/api/family/members/{maeId}");
+
+        response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+        (await Code(response)).Should().Be("owner_only");
+        (await GetFamily(owner.Client)).GetProperty("members").GetArrayLength().Should().Be(1);
+    }
+
+    [Fact]
+    public async Task Another_familys_member_cannot_be_removed()
+    {
+        // Traces to: L2-128 #5
+        var owner = await SignedInClient.CreateAsync(_factory, FamilyMode.Own);
+        var neighbour = await SignedInClient.CreateAsync(_factory, FamilyMode.Own);
+        var theirs = await Add(neighbour, new { Name = "Mae", Age = 5 });
+
+        (await owner.Client.DeleteAsync($"/api/family/members/{theirs}")).StatusCode.Should().Be(HttpStatusCode.NotFound);
+        (await owner.Client.DeleteAsync($"/api/family/members/{Guid.NewGuid()}")).StatusCode.Should().Be(HttpStatusCode.NotFound);
+        (await GetFamily(neighbour.Client)).GetProperty("members").GetArrayLength().Should().Be(1);
+    }
+
+    [Fact]
+    public async Task The_owner_cannot_remove_their_own_account()
+    {
+        // Traces to: L2-128 #6
+        var owner = await SignedInClient.CreateAsync(_factory, FamilyMode.Own);
+        var quinnId = await Add(owner, new { Name = "Quinn", Age = 38 });
+        using (var scope = _factory.Services.CreateScope())
+        {
+            var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+            (await db.FamilyMembers.SingleAsync(m => m.Id == quinnId)).UserId = owner.UserId;
+            await db.SaveChangesAsync();
+        }
+
+        var response = await owner.Client.DeleteAsync($"/api/family/members/{quinnId}");
+
+        response.StatusCode.Should().Be(HttpStatusCode.Conflict);
+        (await Code(response)).Should().Be("cannot_remove_owner");
+    }
+
+    private static async Task<Guid> Add(SignedInClient.Session owner, object member)
+    {
+        var response = await owner.Client.PostAsJsonAsync("/api/family/members", member);
+        var body = await response.Content.ReadAsStringAsync();
+        response.StatusCode.Should().Be(HttpStatusCode.Created, body);
+        return JsonDocument.Parse(body).RootElement.GetProperty("member").GetProperty("id").GetGuid();
     }
 
     private static string NewEmail(string prefix) => $"{prefix}-{Guid.NewGuid():N}@example.com";
