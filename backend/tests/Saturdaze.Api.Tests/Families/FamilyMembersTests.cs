@@ -294,6 +294,84 @@ public class FamilyMembersTests : IClassFixture<SaturdazeApiFactory>
         (await Code(response)).Should().Be("cannot_remove_owner");
     }
 
+    [Fact]
+    public async Task Only_the_owner_changes_members_through_the_profile_save()
+    {
+        // Traces to: L2-129 #1
+        var owner = await SignedInClient.CreateAsync(_factory, FamilyMode.Own);
+        await Add(owner, new { Name = "Mae", Age = 5 });
+        var other = await SignedInClient.JoinAsync(_factory, owner.FamilyId!.Value);
+
+        foreach (var members in new[]
+                 {
+                     new object[] { new { Name = "Mae", Age = 5 }, new { Name = "Eli", Age = 9 } },
+                     Array.Empty<object>(),
+                     new object[] { new { Name = "May", Age = 5 } },
+                     new object[] { new { Name = "Mae", Age = 6 } },
+                 })
+        {
+            var response = await other.Client.PutAsJsonAsync("/api/family", Profile(members));
+            response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+            (await Code(response)).Should().Be("owner_only");
+        }
+
+        var mae = Member(await GetFamily(owner.Client), "Mae");
+        mae.GetProperty("age").GetInt32().Should().Be(5);
+        (await GetFamily(owner.Client)).GetProperty("members").GetArrayLength().Should().Be(1);
+    }
+
+    [Fact]
+    public async Task A_member_who_is_not_the_owner_still_saves_the_rest_of_the_profile()
+    {
+        // Traces to: L2-129 #2
+        var owner = await SignedInClient.CreateAsync(_factory, FamilyMode.Own);
+        await Add(owner, new { Name = "Mae", Age = 5 });
+        var other = await SignedInClient.JoinAsync(_factory, owner.FamilyId!.Value);
+        var profile = new
+        {
+            HomeLocation = "Oakville, ON",
+            BudgetEnabled = true,
+            Members = new[] { new { Name = "Mae", Age = 5 } },
+            Commitments = Array.Empty<object>(),
+            Preferences = Array.Empty<object>(),
+        };
+
+        var response = await other.Client.PutAsJsonAsync("/api/family", profile);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
+        (await GetFamily(owner.Client)).GetProperty("homeLocation").GetString().Should().Be("Oakville, ON");
+    }
+
+    [Fact]
+    public async Task The_profile_save_does_not_drop_an_invited_member()
+    {
+        // Traces to: L2-129 #3
+        var owner = await SignedInClient.CreateAsync(_factory, FamilyMode.Own);
+        await Invite(owner, "Sara", NewEmail("sara"));
+
+        var response = await owner.Client.PutAsJsonAsync("/api/family", Profile());
+
+        response.StatusCode.Should().Be(HttpStatusCode.Conflict);
+        (await Code(response)).Should().Be("member_has_access");
+        Member(await GetFamily(owner.Client), "Sara").GetProperty("access").GetString().Should().Be("Invited");
+    }
+
+    [Fact]
+    public async Task The_profile_save_does_not_drop_a_member_who_signs_in()
+    {
+        // Traces to: L2-129 #3
+        var owner = await SignedInClient.CreateAsync(_factory, FamilyMode.Own);
+        var token = await Invite(owner, "Sara", NewEmail("sara"));
+        (await _factory.CreateClient().PostAsJsonAsync("/api/auth/accept-invitation", new { Token = token, Password = "Passw0rd!" }))
+            .StatusCode.Should().Be(HttpStatusCode.Created);
+
+        var response = await owner.Client.PutAsJsonAsync("/api/family", Profile(new { Name = "Mae", Age = 5 }));
+
+        response.StatusCode.Should().Be(HttpStatusCode.Conflict);
+        (await Code(response)).Should().Be("member_has_access");
+        Member(await GetFamily(owner.Client), "Sara").GetProperty("access").GetString().Should().Be("Account");
+    }
+
     private static async Task<Guid> Add(SignedInClient.Session owner, object member)
     {
         var response = await owner.Client.PostAsJsonAsync("/api/family/members", member);
