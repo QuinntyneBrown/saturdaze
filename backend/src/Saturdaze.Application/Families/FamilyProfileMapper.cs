@@ -1,11 +1,17 @@
 using Saturdaze.Application.Contracts;
 using Saturdaze.Domain.Entities;
+using Saturdaze.Domain.Enums;
 
 namespace Saturdaze.Application.Families;
 
 internal static class FamilyProfileMapper
 {
-    public static FamilyProfileDto ToDto(Family family, bool isOwner, string? ownerEmail) => new(
+    /// <param name="invited">Outstanding invitation email per member id.</param>
+    public static FamilyProfileDto ToDto(
+        Family family,
+        bool isOwner,
+        string? ownerEmail,
+        IReadOnlyDictionary<Guid, string> invited) => new(
         family.Id,
         family.Name,
         family.HomeLocation,
@@ -14,7 +20,9 @@ internal static class FamilyProfileMapper
         family.FridayPreviewEnabled,
         family.Members
             .OrderBy(m => m.Age)
-            .Select(m => new FamilyMemberDto(m.Id, m.Name, m.Age))
+            .Select(m => invited.TryGetValue(m.Id, out var email)
+                ? new FamilyMemberDto(m.Id, m.Name, m.Age, MemberAccess.Invited, email)
+                : new FamilyMemberDto(m.Id, m.Name, m.Age))
             .ToList(),
         family.Commitments
             .OrderBy(c => ((int)c.DayOfWeek + 1) % 7) // Sat=0, Sun=1, Mon=2, ...

@@ -39,6 +39,10 @@ public sealed class FamilyProfileReader
         // every caller is shown the owner's controls.
         var isOwner = family.OwnerUserId is null || family.OwnerUserId == _user.UserId;
 
-        return FamilyProfileMapper.ToDto(family, isOwner, ownerEmail);
+        var invited = await _db.FamilyInvitations.AsNoTracking()
+            .Where(i => i.FamilyId == familyId && i.AcceptedAtUtc == null)
+            .ToDictionaryAsync(i => i.FamilyMemberId, i => i.Email, ct);
+
+        return FamilyProfileMapper.ToDto(family, isOwner, ownerEmail, invited);
     }
 }
