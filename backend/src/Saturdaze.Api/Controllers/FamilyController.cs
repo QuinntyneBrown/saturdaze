@@ -22,4 +22,11 @@ public sealed class FamilyController : ControllerBase
         [FromBody] SaveFamilyProfileCommand command,
         CancellationToken ct)
         => Ok(await _sender.Send(command, ct));
+
+    /// <summary>The owner adds a member who will not sign in (L2-125).</summary>
+    [HttpPost("members")]
+    public async Task<ActionResult<AddFamilyMemberResultDto>> AddMember(
+        [FromBody] AddFamilyMemberCommand command,
+        CancellationToken ct)
+        => StatusCode(StatusCodes.Status201Created, await _sender.Send(command, ct));
 }

@@ -31,3 +31,9 @@ public sealed record CommitmentDto(
     TimeOnly EndTime);
 
 public sealed record PreferenceDto(Guid Id, PreferenceKind Kind, string Value);
+
+/// <param name="Invite">The invitation to share with the new member; null when they will not sign in (L2-125).</param>
+public sealed record AddFamilyMemberResultDto(FamilyMemberDto Member, FamilyInviteDto? Invite);
+
+/// <param name="Url">The accept-invite link the owner shares (L2-126).</param>
+public sealed record FamilyInviteDto(string Email, string Token, string Url, DateTimeOffset ExpiresAtUtc);
