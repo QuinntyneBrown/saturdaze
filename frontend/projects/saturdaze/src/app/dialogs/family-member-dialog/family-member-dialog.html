@@ -22,6 +22,35 @@
       [ngModel]="age()"
       (ngModelChange)="age.set($event); error.set('')"
     />
+    @if (isEdit) {
+      @if (accessHint) {
+        <p class="sd-text-xs sd-text-soft">{{ accessHint }}</p>
+      }
+    } @else {
+      <div class="sign-in">
+        <sd-seg-radio
+          label="Will they sign in?"
+          name="memberSignIn"
+          [options]="signInOptions"
+          [ngModel]="signIn()"
+          (ngModelChange)="signIn.set($event); error.set('')"
+        />
+        <p class="sd-text-xs sd-text-soft">{{ signInHint() }}</p>
+      </div>
+      @if (inviting()) {
+        <sd-text-input
+          label="Email"
+          name="memberEmail"
+          type="email"
+          required
+          autocomplete="off"
+          placeholder="name@example.com"
+          [error]="emailError()"
+          [ngModel]="email()"
+          (ngModelChange)="email.set($event); emailError.set('')"
+        />
+      }
+    }
     <button type="submit" hidden></button>
   </form>
 
@@ -39,6 +68,9 @@
     [disabled]="!canSubmit()"
     (click)="submit()"
   >
-    {{ submitLabel }}
+    @if (inviting()) {
+      <sd-icon name="mail" />
+    }
+    {{ submitLabel() }}
   </sd-button>
 </sd-dialog>

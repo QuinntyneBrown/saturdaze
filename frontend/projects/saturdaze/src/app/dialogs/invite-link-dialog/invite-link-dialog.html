@@ -1,0 +1,8 @@
+<sd-dialog
+  [title]="'Invite ready for ' + data.name"
+  [subtitle]="'Send this link to ' + data.email + '. It works once.'"
+>
+  <sd-copy-field [value]="data.url" />
+  <p class="sd-text-xs sd-text-soft">Expires in 7 days · they choose their own password</p>
+  <sd-button slot="actions" variant="primary" type="button" (click)="done()">Done</sd-button>
+</sd-dialog>

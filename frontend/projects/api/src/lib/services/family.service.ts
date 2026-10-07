@@ -22,7 +22,12 @@ import { FamilyView } from '../models/family-view';
 import { MemberRow } from '../models/member-row';
 import { PlannedAroundRow } from '../models/planned-around-row';
 import { PreferenceToggle } from '../models/preference-toggle';
-import { EditableFamilyProfile, IFamilyService } from './family.service.contract';
+import {
+  EditableFamilyProfile,
+  FamilyInvite,
+  IFamilyService,
+  NewFamilyMember,
+} from './family.service.contract';
 
 const HEADLINE_UNNAMED = 'Your family';
 const SUBTITLE_TAIL = 'Every weekend is planned around this.';
@@ -67,6 +72,8 @@ const LOADING_VIEW: FamilyView = {
   headline: HEADLINE_UNNAMED,
   subtitle: SUBTITLE_TAIL,
   home: { location: '', hint: HOME_HINT },
+  isOwner: false,
+  ownerEmail: null,
   members: [],
   commitments: [],
   likes: [],
@@ -92,6 +99,8 @@ function toMemberRow(m: FamilyDto['members'][number], index: number): MemberRow 
     tone: memberTone(index),
     age: m.age,
     role: memberRole(m.age),
+    access: m.access ?? 'None',
+    email: m.email ?? null,
     subtitle: memberSubtitle(m),
   };
 }
@@ -167,6 +176,8 @@ function mapFamily(dto: FamilyDto): FamilyView {
     headline: name ?? HEADLINE_UNNAMED,
     subtitle: subtitleFor(dto.homeLocation),
     home: { location: dto.homeLocation, hint: HOME_HINT },
+    isOwner: dto.isOwner ?? true,
+    ownerEmail: dto.ownerEmail ?? null,
     members: sortedMembers.map(toMemberRow),
     commitments: dto.commitments.map(toCommitmentRow),
     likes,
@@ -286,6 +297,39 @@ export class FamilyService implements IFamilyService {
       }),
     );
     this.apply(dto);
+  }
+
+  /**
+   * Add Member.
+   *
+   * @param {NewFamilyMember} member - The member
+   *
+   * @returns {Promise<FamilyInvite | null>} The result of the operation
+   */
+  async addMember(member: NewFamilyMember): Promise<FamilyInvite | null> {
+    const result = await firstValueFrom(
+      this.http.post<{ invite: FamilyInvite | null }>(`${this.baseUrl}/api/family/members`, {
+        name: member.name.trim(),
+        age: member.age,
+        email: member.email?.trim() || null,
+      }),
+    );
+    await this.load();
+    return result.invite ?? null;
+  }
+
+  /**
+   * Remove Member.
+   *
+   * @param {string} id - The member id
+   *
+   * @returns {Promise<void>} The result of the operation
+   */
+  async removeMember(id: string): Promise<void> {
+    await firstValueFrom(
+      this.http.delete<void>(`${this.baseUrl}/api/family/members/${encodeURIComponent(id)}`),
+    );
+    await this.load();
   }
 
   /**

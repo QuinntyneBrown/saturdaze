@@ -9,6 +9,7 @@ import {
   EVENT_SUBMISSIONS_SERVICE,
   EditableFamilyProfile,
   FAMILY_SERVICE,
+  FamilyInvite,
   MemberRow,
   PreferenceKey,
   SESSION_STORE,
@@ -47,6 +48,10 @@ import {
   HomeLocationDialogData,
 } from '../../dialogs/home-location-dialog/home-location-dialog';
 import {
+  InviteLinkDialog,
+  InviteLinkDialogData,
+} from '../../dialogs/invite-link-dialog/invite-link-dialog';
+import {
   LikesDialog,
   LikesDialogData,
   LikesDialogResult,
@@ -77,10 +82,37 @@ function weekendDayOf(day: CommitmentRow['dayOfWeek']): WeekendDay | null {
   return day === 'Saturday' || day === 'Sunday' ? day : null;
 }
 
+/** Why adding a member was refused (L2-125 #3, L2-126 #3, #4). */
+function addMemberError(err: unknown): string {
+  const code = (err as { error?: { code?: string } } | null)?.error?.code;
+  switch (code) {
+    case 'email_in_use':
+      return 'That email already signs in to Saturdaze.';
+    case 'already_invited':
+      return 'That email already has an invite to this family.';
+    case 'member_name_in_use':
+      return 'Someone in the family already has that name.';
+    default:
+      return 'That did not save. Try again in a moment.';
+  }
+}
+
+/** D21 body for removing a member, by how they sign in (L2-128). */
+function removalConsequence(member: MemberRow): string {
+  if (member.access === 'Account')
+    return `${member.name} will be signed out and will no longer be able to sign in.`;
+  if (member.access === 'Invited' && member.email)
+    return `The invite sent to ${member.email} will stop working.`;
+  return 'Future weekends will not plan for them.';
+}
+
 /**
- * Family — `docs/mocks-v2/pages/family.html`: who's in, commitments, home,
+ * Family — `docs/mocks/pages/family.html`: who's in, commitments, home,
  * likes and dislikes, preferences, admin (role-gated) and account. Every
- * edit opens a dialog and saves the whole editable profile.
+ * edit opens a dialog. Only the owner changes who's in
+ * (`family.members.html` / `family.member.html`, L2-124): adding and
+ * removing a member call the member endpoints; every other edit saves the
+ * whole editable profile.
  */
 @Component({
   selector: 'app-family',
@@ -118,6 +150,11 @@ export class FamilyPage {
   protected readonly error = signal('');
 
   protected readonly user = this.session.user;
+  protected readonly membersSubtitle = computed(() => {
+    const view = this.view();
+    if (view.isOwner) return 'Ages shape the picks. Tap a person to edit.';
+    return `Ages shape the picks. Only ${view.ownerEmail ?? 'the owner'} can change who's in.`;
+  });
   protected readonly isAdmin = computed(() => this.user()?.role === 'Admin');
   protected readonly pendingCount = computed(() => this.submissions.pending()().length);
   protected readonly pendingSubtitle = computed(() => {
@@ -141,10 +178,25 @@ export class FamilyPage {
   protected async addMember(): Promise<void> {
     const result = await this.openMember({ mode: 'add', existingNames: this.memberNames() });
     if (result?.kind !== 'save') return;
-    await this.save((p) => ({
-      ...p,
-      members: [...p.members, { name: result.name, age: result.age }],
-    }));
+    this.error.set('');
+    let invite: FamilyInvite | null;
+    try {
+      invite = await this.familyService.addMember({
+        name: result.name,
+        age: result.age,
+        email: result.email,
+      });
+    } catch (err) {
+      this.error.set(addMemberError(err));
+      return;
+    }
+    if (!invite) return;
+    const { email, url } = invite;
+    const ref = this.dialog.open<void, InviteLinkDialogData>(InviteLinkDialog, {
+      ...DIALOG_OPTIONS,
+      data: { name: result.name, email, url },
+    });
+    await firstValueFrom(ref.closed);
   }
 
   protected async editMember(member: MemberRow): Promise<void> {
@@ -152,18 +204,20 @@ export class FamilyPage {
       mode: 'edit',
       initial: { name: member.name, age: member.age },
       existingNames: this.memberNames(),
+      access: member.access,
+      email: member.email,
     });
     if (!result) return;
     if (result.kind === 'remove') {
       const ok = await confirmWith(this.dialog, {
         title: `Remove ${member.name} from the family?`,
-        body: 'Future weekends will not plan for them.',
+        body: removalConsequence(member),
         confirmLabel: 'Remove',
         danger: true,
         icon: 'trash',
       });
       if (!ok) return;
-      await this.save((p) => ({ ...p, members: p.members.filter((m) => m.id !== member.id) }));
+      await this.run(() => this.familyService.removeMember(member.id));
       return;
     }
     await this.save((p) => ({

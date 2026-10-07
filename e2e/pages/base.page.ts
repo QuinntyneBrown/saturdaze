@@ -220,8 +220,10 @@ export abstract class BasePage {
     return this.dialog().locator('button[aria-label="Close"]');
   }
 
+  /** A dialog field by its label; a required field's label also reads "Required". */
   dialogField(label: string): Locator {
-    return this.dialog().getByLabel(label, { exact: true });
+    const escaped = label.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    return this.dialog().getByLabel(new RegExp(`^\\s*${escaped}(\\s+Required)?\\s*$`));
   }
 
   /** Anchored menu (≥720): `.menu[role="menu"]` in the overlay. */

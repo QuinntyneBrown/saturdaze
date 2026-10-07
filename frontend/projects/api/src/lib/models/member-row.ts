@@ -3,6 +3,9 @@ import { FamilyMemberTone } from './family-member-tone';
 /** Derived from age: 18 and over is a parent. */
 export type MemberRole = 'Parent' | 'Kid';
 
+/** Whether a member signs in: never, invited, or with their own account (L2-124). */
+export type MemberAccess = 'None' | 'Invited' | 'Account';
+
 /**
  * Member Row — one person in the "Who's in" list.
  */
@@ -32,7 +35,15 @@ export interface MemberRow {
    */
   readonly role: MemberRole;
   /**
-   * Subtitle — "Parent · 38" / "Kid · 9".
+   * Access — how the member signs in.
+   */
+  readonly access: MemberAccess;
+  /**
+   * Email — the invited or signed-in address; `null` for `None`.
+   */
+  readonly email: string | null;
+  /**
+   * Subtitle — "Parent · 38" / "Kid · 9" / "Parent · 36 · Invite sent to sara@example.com".
    */
   readonly subtitle: string;
 }

@@ -32,13 +32,18 @@ export const DIALOG_SLUGS = [
   // family
   "member",
   "member-add",
+  "member-invite",
+  "member-account",
   "commitment",
   "commitment-add",
   "home",
   "likes",
   "remove",
+  "remove-invited",
+  "remove-account",
   "remove-commitment",
   "signout",
+  "invite-link",
   // admin
   "approve",
   "reject",
@@ -54,7 +59,13 @@ export type DialogSlug = (typeof DIALOG_SLUGS)[number];
 export const MENU_SLUGS: readonly DialogSlug[] = ["more-menu", "account"];
 
 /** Specimens whose panel is `role="alertdialog"` (destructive confirms). */
-export const ALERT_SLUGS: readonly DialogSlug[] = ["remove", "remove-commitment", "signout"];
+export const ALERT_SLUGS: readonly DialogSlug[] = [
+  "remove",
+  "remove-invited",
+  "remove-account",
+  "remove-commitment",
+  "signout",
+];
 
 export class DialogsPage extends BasePage {
   readonly slug: PageSlug = "dialogs";

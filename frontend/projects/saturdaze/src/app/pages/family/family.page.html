@@ -9,21 +9,29 @@
 } @else {
   <div class="family-grid">
     <div class="family-grid__col">
-      <sd-section title="Who's in" subtitle="Ages shape the picks. Tap a person to edit.">
+      <sd-section title="Who's in" [subtitle]="membersSubtitle()">
         <sd-list card>
           @for (member of view().members; track member.id) {
-            <sd-list-item
-              action
-              chevron
-              [title]="member.name"
-              [subtitle]="member.subtitle"
-              (pressed)="editMember(member)"
-            >
-              <sd-avatar slot="leading" [name]="member.name" [tone]="member.tone" size="lg" />
-            </sd-list-item>
+            @if (view().isOwner) {
+              <sd-list-item
+                action
+                chevron
+                [title]="member.name"
+                [subtitle]="member.subtitle"
+                (pressed)="editMember(member)"
+              >
+                <sd-avatar slot="leading" [name]="member.name" [tone]="member.tone" size="lg" />
+              </sd-list-item>
+            } @else {
+              <sd-list-item [title]="member.name" [subtitle]="member.subtitle">
+                <sd-avatar slot="leading" [name]="member.name" [tone]="member.tone" size="lg" />
+              </sd-list-item>
+            }
           }
         </sd-list>
-        <sd-ghost-row icon="plus" (pressed)="addMember()">Add a family member</sd-ghost-row>
+        @if (view().isOwner) {
+          <sd-ghost-row icon="plus" (pressed)="addMember()">Add a family member</sd-ghost-row>
+        }
       </sd-section>
 
       <sd-section title="Locked in every weekend" subtitle="Anchors. The plan goes around them.">
