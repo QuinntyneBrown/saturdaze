@@ -3,7 +3,7 @@
   subtitle="Every catalog place, worst photo health first. Search, filter, then open a place to fix it."
 />
 
-<div class="toolbar">
+<sd-toolbar>
   <sd-text-input
     class="toolbar__search"
     label="Search"
@@ -19,7 +19,7 @@
     [options]="sortOptions"
     [formControl]="sort"
   />
-</div>
+</sd-toolbar>
 
 <sd-filters class="filters" label="Filters">
   @for (chip of kindChips; track chip.label) {
@@ -30,13 +30,13 @@
       {{ chip.label }}
     </sd-filter-chip>
   }
-  <span class="filters__divider" aria-hidden="true"></span>
+  <span class="sd-vdivider" aria-hidden="true"></span>
   @for (chip of flagChips; track chip.label) {
     <sd-filter-chip [pressed]="isActive(chip)" (pressedChange)="toggle(chip)">{{
       chip.label
     }}</sd-filter-chip>
   }
-  <span class="filters__divider" aria-hidden="true"></span>
+  <span class="sd-vdivider" aria-hidden="true"></span>
   @for (chip of sourceChips; track chip.label) {
     <sd-filter-chip [pressed]="isActive(chip)" (pressedChange)="toggle(chip)">{{
       chip.label
@@ -62,55 +62,24 @@
   @case ('ready') {
     <p class="toolbar__count" role="status">{{ countText() }}</p>
     <sd-list card class="place-list">
-      @for (row of view().rows; track row.id) {
-        <sd-list-item
-          class="place-row"
+      @for (row of rows(); track row.id) {
+        <sd-place-row
           [title]="row.name"
           [subtitle]="row.meta"
           [href]="row.href"
-          chevron
-        >
-          <sd-media
-            slot="leading"
-            class="place-thumb"
-            ratio="4:3"
-            [photo]="row.photo"
-            [tone]="row.tone"
-            [icon]="row.icon"
-          />
-          <span class="place-row__flags">
-            @for (chip of row.flags; track chip.label) {
-              <sd-chip [tone]="chipTone(chip.tone)" size="sm">
-                @if (chip.icon) {
-                  <sd-icon [name]="chip.icon" />
-                }
-                {{ chip.label }}
-              </sd-chip>
-            }
-          </span>
-        </sd-list-item>
+          [photo]="row.photo"
+          [tone]="row.tone"
+          [icon]="row.icon"
+          [flags]="row.chips"
+        />
       }
     </sd-list>
-    <div class="pager">
-      <span class="pager__text">{{ pagerText() }}</span>
-      <sd-button
-        variant="quiet"
-        size="sm"
-        [disabled]="!hasPrevious()"
-        (click)="goToPage(view().page - 1)"
-      >
-        <sd-icon name="arrow_left" />
-        Previous
-      </sd-button>
-      <sd-button
-        variant="quiet"
-        size="sm"
-        [disabled]="!hasNext()"
-        (click)="goToPage(view().page + 1)"
-      >
-        Next
-        <sd-icon name="arrow_right" />
-      </sd-button>
-    </div>
+    <sd-pager
+      [page]="view().page"
+      [pageSize]="view().pageSize"
+      [total]="view().total"
+      emptyText="No places"
+      (pageChange)="goToPage($event)"
+    />
   }
 }

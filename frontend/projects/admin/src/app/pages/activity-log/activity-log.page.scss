@@ -1,16 +1,10 @@
 @use '../../../../../components/src/lib/styles/breakpoints' as *;
 
-// `.toolbar`, `.audit-list`, `.audit-row`, `.pager` from docs/mocks/styles/app.css (admin).
+// `.audit-list`, `.audit-row` from docs/mocks/styles/app.css (admin); the
+// toolbar, list surface and pager are `sd-toolbar`, `sd-list card` and `sd-pager`.
 
 :host {
   display: block;
-}
-
-.toolbar {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 12px;
-  margin-bottom: 12px;
 }
 
 .error {
@@ -18,12 +12,7 @@
 }
 
 .audit-list {
-  margin: 16px 0 0;
-  padding: 0;
-  list-style: none;
-  border: 1px solid var(--colorNeutralStroke2);
-  border-radius: var(--borderRadiusLarge);
-  background: var(--colorNeutralBackground1);
+  margin-top: 16px;
 }
 
 .audit-row {
@@ -32,7 +21,7 @@
   gap: 4px 12px;
   padding: 12px 16px;
   border-bottom: 1px solid var(--colorNeutralStroke2);
-  font-size: var(--fontSizeBase200);
+  font-size: var(--fontSizeBase300);
 }
 
 .audit-row:last-child {
@@ -40,8 +29,8 @@
 }
 
 .audit-row__time {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  font-size: var(--fontSizeBase100);
+  font-family: var(--fontFamilyMonospace);
+  font-size: var(--fontSizeBase200);
   color: var(--colorNeutralForeground2);
 }
 
@@ -73,25 +62,6 @@
   grid-column: 1 / -1;
   color: var(--colorNeutralForeground1);
   overflow-wrap: anywhere;
-}
-
-.pager {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 16px;
-}
-
-.pager__text {
-  margin-right: auto;
-  font-size: var(--fontSizeBase300);
-  color: var(--colorNeutralForeground2);
-}
-
-@include respond-to(tablet) {
-  .toolbar {
-    grid-template-columns: repeat(2, minmax(0, 320px));
-  }
 }
 
 @include respond-to(desktop) {

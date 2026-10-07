@@ -8,8 +8,9 @@ import { AdminPage } from "./admin.page.js";
  *   .toolbar      Search field · Sort select
  *   .filters      kind chips ‖ flag chips ‖ source chips · Upcoming events only
  *   .toolbar__count  "8 of 43 places"
- *   .place-list   .list__item.place-row  .place-thumb (sd-media 4:3) · .list__title · .list__sub
- *                 · .place-row__flags .chip · chevron
+ *   .place-list   .place-row  .place-thumb (sd-media 4:3) · .list__title · .list__sub
+ *                 · .place-row__flags .chip · chevron; the link is a.list__item (the row
+ *                 itself in the mock, inside sd-place-row in the app)
  *   .pager        "1 to 8 of 8" · Previous · Next
  */
 export class AdminPlacesPage extends AdminPage {
@@ -41,13 +42,15 @@ export class AdminPlacesPage extends AdminPage {
     return row.locator(".list__sub");
   }
 
-  /** The row's link (the host no longer reflects `href`; the anchor inside carries it). */
-  rowLink(row: Locator): Locator {
-    return row.locator("a.list__item");
-  }
-
   rowThumb(row: Locator): Locator {
     return row.locator(".place-thumb");
+  }
+
+  /** The row's link to the place's photos: the row in the mock, its `a.list__item` in the app. */
+  rowLink(row: Locator): Locator {
+    return row.locator(
+      'xpath=descendant-or-self::a[contains(concat(" ", normalize-space(@class), " "), " list__item ")]',
+    );
   }
 
   rowFlags(row: Locator): Locator {

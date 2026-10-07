@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 
 import { ADMIN_AUDIT_SERVICE, IngestionRunSkipsView } from 'api';
-import { Banner, Chip, Empty, PageHeader, StatusRow } from 'components';
+import { Banner, Card, Chip, Empty, PageHeader, StatusRow } from 'components';
 
 import { chipTone } from '../../shared/chip-tones';
 
@@ -13,7 +13,7 @@ import { chipTone } from '../../shared/chip-tones';
 @Component({
   selector: 'sd-admin-ingestion-skips',
   standalone: true,
-  imports: [Banner, Chip, Empty, PageHeader, StatusRow],
+  imports: [Banner, Card, Chip, Empty, PageHeader, StatusRow],
   templateUrl: './ingestion-skips.page.html',
   styleUrl: './ingestion-skips.page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

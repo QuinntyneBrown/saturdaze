@@ -12,7 +12,7 @@
     @if (items().length) {
       <div class="review-list">
         @for (item of items(); track item.id) {
-          <article class="card review-item" [attr.aria-label]="item.placeName">
+          <sd-card class="review-item" role="article" [attr.aria-label]="item.placeName">
             <div class="review-item__photos">
               <figure class="review-item__photo">
                 <sd-media
@@ -58,7 +58,7 @@
                 Make primary
               </sd-button>
             </div>
-          </article>
+          </sd-card>
         }
       </div>
     } @else {

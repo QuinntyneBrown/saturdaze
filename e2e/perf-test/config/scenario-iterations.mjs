@@ -8,5 +8,8 @@ export const scenarioIterations = {
   Day: 100,
   EventCard: 250,
   ListItem: 500,
+  PhotoPick: 250,
+  PlaceRow: 500,
   TextInput: 500,
+  Toolbar: 500,
 };

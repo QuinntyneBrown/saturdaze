@@ -23,6 +23,7 @@ export const tokens: Record<keyof Theme, string> = {
   lineHeightSnug: 'var(--lineHeightSnug)',
   lineHeightNormal: 'var(--lineHeightNormal)',
   fontFamilyBase: 'var(--fontFamilyBase)',
+  fontFamilyMonospace: 'var(--fontFamilyMonospace)',
   fontWeightRegular: 'var(--fontWeightRegular)',
   fontWeightMedium: 'var(--fontWeightMedium)',
   fontWeightSemibold: 'var(--fontWeightSemibold)',

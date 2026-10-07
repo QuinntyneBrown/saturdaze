@@ -4,7 +4,7 @@ import { RouterLink } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 
 import { ADMIN_PHOTOS_SERVICE, ADMIN_PLACES_SERVICE, ReviewItemView, numberWord } from 'api';
-import { Banner, Button, Chip, Empty, Icon, Media, PageHeader, StatusRow } from 'components';
+import { Banner, Button, Card, Chip, Empty, Icon, Media, PageHeader, StatusRow } from 'components';
 
 import { DIALOG_OPTIONS } from '../../dialogs/dialog-options';
 import {
@@ -38,7 +38,7 @@ export function queueSubtitle(count: number): string {
 @Component({
   selector: 'sd-admin-review-queue',
   standalone: true,
-  imports: [RouterLink, Banner, Button, Chip, Empty, Icon, Media, PageHeader, StatusRow],
+  imports: [RouterLink, Banner, Button, Card, Chip, Empty, Icon, Media, PageHeader, StatusRow],
   templateUrl: './review-queue.page.html',
   styleUrl: './review-queue.page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

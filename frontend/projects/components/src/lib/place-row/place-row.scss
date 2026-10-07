@@ -1,0 +1,25 @@
+// `.place-row`, `.place-thumb`, `.place-row__flags` from docs/mocks/styles/app.css (admin).
+// The row inside is always the wrapper's last child, so the wrapper decides
+// whether it draws a divider: every row but the list's last one does.
+
+:host {
+  display: block;
+  --sd-list-last-divider: 1px solid var(--colorNeutralStroke2);
+}
+
+:host(:last-child) {
+  --sd-list-last-divider: 0;
+}
+
+.place-thumb {
+  width: 72px;
+  flex: none;
+  border-radius: var(--borderRadiusSmall);
+}
+
+.place-row__flags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 6px;
+}

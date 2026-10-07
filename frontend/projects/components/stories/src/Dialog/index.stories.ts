@@ -2,7 +2,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import type { Meta } from '@storybook/angular';
 import { moduleMetadata } from '@storybook/angular';
 
-import { Button, CopyField, Dialog, Icon, TextInput, Well } from 'components';
+import { Button, CopyField, Dialog, Icon, Media, TextInput, Well } from 'components';
 
 import descriptionMd from './DialogDescription.md';
 import bestPracticesMd from './DialogBestPractices.md';
@@ -12,6 +12,7 @@ export { Confirmation } from './DialogConfirmation.stories';
 export { Destructive } from './DialogDestructive.stories';
 export { Form } from './DialogForm.stories';
 export { Share } from './DialogShare.stories';
+export { WithMedia } from './DialogWithMedia.stories';
 export { OpenWithCdk } from './DialogOpenWithCdk.stories';
 
 export default {
@@ -19,7 +20,7 @@ export default {
   component: Dialog,
   decorators: [
     moduleMetadata({
-      imports: [Dialog, Button, Icon, Well, TextInput, CopyField, ReactiveFormsModule],
+      imports: [Dialog, Button, Icon, Media, Well, TextInput, CopyField, ReactiveFormsModule],
     }),
   ],
   parameters: {

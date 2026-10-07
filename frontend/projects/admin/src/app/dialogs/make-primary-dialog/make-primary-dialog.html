@@ -1,5 +1,12 @@
 <sd-dialog title="Make this the primary photo?" [subtitle]="subtitle()">
-  <sd-media class="photo-edit__media" ratio="4:3" [photo]="data.media" tone="indoor" eager />
+  <sd-media
+    slot="media"
+    class="photo-edit__media"
+    ratio="4:3"
+    [photo]="data.media"
+    tone="indoor"
+    eager
+  />
   <sd-well icon="star" tone="primary" [title]="warning()">{{ warningBody() }}</sd-well>
   <sd-button slot="actions" variant="quiet" type="button" (click)="cancel()">Cancel</sd-button>
   <sd-button slot="actions" variant="primary" type="button" (click)="confirm()">

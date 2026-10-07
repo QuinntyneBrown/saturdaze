@@ -80,6 +80,13 @@
   display: none;
 }
 
+// `[slot=media]`: the photo a dialog is about (`.photo-edit__media` in the
+// admin mocks), first in the body and never wider than a thumbnail.
+.dialog__body ::ng-deep [slot='media'] {
+  width: 100%;
+  max-width: 240px;
+}
+
 .dialog__actions {
   display: flex;
   flex-direction: column;

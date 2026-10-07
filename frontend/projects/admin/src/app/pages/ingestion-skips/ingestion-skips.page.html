@@ -15,7 +15,7 @@
     @if (runs().length) {
       <div class="queue">
         @for (run of runs(); track run.runId) {
-          <article class="card card--pad-lg" [attr.aria-label]="run.type + ' run ' + run.meta">
+          <sd-card padding="lg" role="article" [attr.aria-label]="run.type + ' run ' + run.meta">
             <div class="card__head">
               <div class="card__head-text">
                 <h2 class="card__title">{{ run.type }}</h2>
@@ -36,7 +36,7 @@
                 </li>
               }
             </ul>
-          </article>
+          </sd-card>
         }
       </div>
     } @else {

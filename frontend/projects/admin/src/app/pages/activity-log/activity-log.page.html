@@ -3,7 +3,7 @@
   subtitle="Every photo change: who, when, the place, and what changed."
 />
 
-<div class="toolbar">
+<sd-toolbar layout="fields">
   <sd-select
     class="toolbar__sort"
     label="Place"
@@ -18,7 +18,7 @@
     [options]="adminOptions()"
     [formControl]="admin"
   />
-</div>
+</sd-toolbar>
 
 @if (error()) {
   <sd-banner class="error" tone="warn" role="alert" icon="close">{{ error() }}</sd-banner>
@@ -30,38 +30,24 @@
   }
   @case ('ready') {
     @if (view().rows.length) {
-      <ol class="audit-list list list--card">
+      <sd-list card class="audit-list">
         @for (row of view().rows; track row.id) {
-          <li class="audit-row">
+          <div class="audit-row" role="listitem">
             <time class="audit-row__time" [attr.datetime]="row.datetime">{{ row.time }}</time>
             <span class="audit-row__who">{{ row.who }}</span>
             <a class="audit-row__place" [href]="row.placeHref">{{ row.placeName }}</a>
             <sd-chip [tone]="chipTone(row.action.tone)">{{ row.action.label }}</sd-chip>
             <span class="audit-row__change">{{ row.change }}</span>
-          </li>
+          </div>
         }
-      </ol>
-      <div class="pager">
-        <span class="pager__text">{{ pagerText() }}</span>
-        <sd-button
-          variant="quiet"
-          size="sm"
-          [disabled]="!hasPrevious()"
-          (click)="goToPage(view().page - 1)"
-        >
-          <sd-icon name="arrow_left" />
-          Previous
-        </sd-button>
-        <sd-button
-          variant="quiet"
-          size="sm"
-          [disabled]="!hasNext()"
-          (click)="goToPage(view().page + 1)"
-        >
-          Next
-          <sd-icon name="arrow_right" />
-        </sd-button>
-      </div>
+      </sd-list>
+      <sd-pager
+        [page]="view().page"
+        [pageSize]="view().pageSize"
+        [total]="view().total"
+        emptyText="No changes"
+        (pageChange)="goToPage($event)"
+      />
     } @else {
       <sd-empty
         icon="clock"

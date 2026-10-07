@@ -17,7 +17,10 @@
       <sd-icon name="close" />
     </sd-button>
   </div>
-  <div class="dialog__body"><ng-content /></div>
+  <div class="dialog__body">
+    <ng-content select="[slot=media]" />
+    <ng-content />
+  </div>
   <div class="dialog__actions">
     <div class="dialog__actions-left"><ng-content select="[slot=actions-left]" /></div>
     <ng-content select="[slot=actions]" />

@@ -11,7 +11,15 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { PhotoDetails } from 'api';
-import { Banner, Button, Dialog as DialogShell, Icon, Select, TextInput } from 'components';
+import {
+  Banner,
+  Button,
+  Dialog as DialogShell,
+  Icon,
+  PhotoDrop,
+  Select,
+  TextInput,
+} from 'components';
 
 import { LICENCE_OPTIONS, LICENCE_OTHER } from '../../shared/licences';
 import {
@@ -47,7 +55,7 @@ function describe(file: File, width: number | null, height: number | null): stri
 @Component({
   selector: 'sd-admin-upload-photo-dialog',
   standalone: true,
-  imports: [ReactiveFormsModule, Banner, Button, DialogShell, Icon, Select, TextInput],
+  imports: [ReactiveFormsModule, Banner, Button, DialogShell, Icon, PhotoDrop, Select, TextInput],
   templateUrl: './upload-photo-dialog.html',
   styleUrl: './upload-photo-dialog.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -93,10 +101,7 @@ export class UploadPhotoDialog {
     inject(DestroyRef).onDestroy(() => this.revokePreview());
   }
 
-  protected choose(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    const file = input.files?.[0];
-    if (!file) return;
+  protected choose(file: File): void {
     this.revokePreview();
     this.error.set('');
     this.file.set(null);

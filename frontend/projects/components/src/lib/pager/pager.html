@@ -1,0 +1,9 @@
+<span class="pager__text">{{ text() }}</span>
+<sd-button variant="quiet" size="sm" [disabled]="!hasPrevious()" (click)="go(page() - 1)">
+  <sd-icon name="arrow_left" />
+  Previous
+</sd-button>
+<sd-button variant="quiet" size="sm" [disabled]="!hasNext()" (click)="go(page() + 1)">
+  Next
+  <sd-icon name="arrow_right" />
+</sd-button>

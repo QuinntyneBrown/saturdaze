@@ -37,6 +37,9 @@ export * from './lib/chip-input/chip-input';
 export * from './lib/strength/strength';
 export * from './lib/copy-field/copy-field';
 export * from './lib/toggle/toggle';
+export * from './lib/photo-pick/photo-pick';
+export * from './lib/photo-pick-option/photo-pick-option';
+export * from './lib/photo-drop/photo-drop';
 
 // structure
 export * from './lib/card/card';
@@ -45,6 +48,8 @@ export * from './lib/page-header/page-header';
 export * from './lib/segments/segments';
 export * from './lib/list/list';
 export * from './lib/list-item/list-item';
+export * from './lib/toolbar/toolbar';
+export * from './lib/pager/pager';
 export * from './lib/details/details';
 export * from './lib/empty/empty';
 export * from './lib/dialog/dialog';
@@ -77,6 +82,7 @@ export * from './lib/admin-gate/admin-gate';
 export * from './lib/photo-tile/photo-tile';
 export * from './lib/slot-preview/slot-preview';
 export * from './lib/stat-card/stat-card';
+export * from './lib/place-row/place-row';
 
 // tokens & theming
 export * from './lib/tokens/index';

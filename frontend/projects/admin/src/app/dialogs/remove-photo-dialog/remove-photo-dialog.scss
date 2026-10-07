@@ -1,96 +1,10 @@
-// `.photo-pick` from docs/mocks/styles/app.css (the cover picker, reused for the next primary).
+// The next-primary choice is `sd-photo-pick`; the photo is `sd-dialog`'s media slot.
 
 :host {
   display: block;
 }
 
-.field {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.field__label {
-  font-size: var(--fontSizeBase300);
-  font-weight: var(--fontWeightMedium);
-  color: var(--colorNeutralForeground2);
-}
-
-.photo-pick {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 8px;
-}
-
-.photo-pick__opt {
-  position: relative;
-  display: block;
-  overflow: hidden;
-  aspect-ratio: 4 / 3;
-  border-radius: var(--borderRadiusMedium);
-  cursor: pointer;
-}
-
-.photo-pick__opt sd-media {
-  width: 100%;
-  height: 100%;
-}
-
-.photo-pick__opt input {
-  position: absolute;
-  inset: 0;
-  margin: 0;
-  opacity: 0;
-  cursor: pointer;
-}
-
-.photo-pick__opt:has(input:checked) {
-  box-shadow: inset 0 0 0 3px var(--colorBrandForeground1);
-}
-
-.photo-pick__opt:has(input:focus-visible) {
-  outline: 2px solid var(--colorNeutralForeground1);
-  outline-offset: 2px;
-}
-
-.photo-pick__name {
-  position: absolute;
-  left: 6px;
-  bottom: 6px;
-  max-width: calc(100% - 12px);
-  padding: 1px 6px;
-  overflow: hidden;
-  border-radius: var(--borderRadiusCircular);
-  background: color-mix(in srgb, var(--colorNeutralForeground1) 60%, transparent);
-  color: var(--colorNeutralForegroundOnBrand);
-  font-size: 11px;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
-.photo-pick__upload {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  border: 1px dashed var(--colorNeutralStroke1);
-  color: var(--colorNeutralForeground2);
-  font-size: var(--fontSizeBase300);
-  font-weight: var(--fontWeightSemibold);
-}
-
 .hint {
   font-size: var(--fontSizeBase200);
   color: var(--colorNeutralForeground2);
-}
-
-.photo-edit__media {
-  max-width: 240px;
-}
-
-@media (min-width: 576px) {
-  .photo-pick {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
 }

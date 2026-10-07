@@ -5,10 +5,14 @@ import type {
   LineHeightTokens,
 } from '../types';
 
-/** Sans-serif system stack. Nothing web-loads Inter on purpose. */
+/**
+ * Sans-serif system stack (nothing web-loads Inter on purpose), and the
+ * monospace stack for codes, URLs and timestamps.
+ */
 export const fontFamilies: FontFamilyTokens = {
   fontFamilyBase:
     "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
+  fontFamilyMonospace: 'ui-monospace, SFMono-Regular, Menlo, Consolas, monospace',
 };
 
 /** A seven-step scale; `themes/responsive.ts` retunes the display sizes per breakpoint. */

@@ -97,6 +97,7 @@ export type ColorStatusTokens = Record<`colorStatus${StatusName}${PaletteRoles}`
 
 export interface FontFamilyTokens {
   fontFamilyBase: string;
+  fontFamilyMonospace: string;
 }
 
 export interface FontSizeTokens {

@@ -3,7 +3,7 @@
   subtitle="The address cannot change. To swap the image, add a new photo and remove this one."
 >
   @if (data.tile.media) {
-    <sd-media class="photo-edit__media" ratio="4:3" [photo]="data.tile.media" eager />
+    <sd-media slot="media" class="photo-edit__media" ratio="4:3" [photo]="data.tile.media" eager />
   }
   <form class="form" [formGroup]="form" (ngSubmit)="save()">
     <sd-text-input

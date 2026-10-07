@@ -1,7 +1,8 @@
 @use '../../../../../components/src/lib/styles/breakpoints' as *;
 @use '../../../../../components/src/lib/styles/card-base' as *;
 
-// `.queue`, `.skip-list`, `.skip` from docs/mocks/styles/app.css (admin).
+// `.queue`, `.skip-list`, `.skip` from docs/mocks/styles/app.css (admin); each
+// run is an `sd-card`, and `card-base` brings its `.card__head` anatomy.
 
 :host {
   display: block;
@@ -15,12 +16,6 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
-}
-
-.card {
-  @include card-host;
-
-  padding: 20px;
 }
 
 .skip-list {
@@ -37,7 +32,7 @@
   gap: 2px 12px;
   padding: 10px 0;
   border-top: 1px solid var(--colorNeutralStroke2);
-  font-size: var(--fontSizeBase200);
+  font-size: var(--fontSizeBase300);
 }
 
 .skip__place {
@@ -61,7 +56,8 @@
 
 .skip__url {
   grid-column: 1 / -1;
-  font-size: var(--fontSizeBase100);
+  font-family: var(--fontFamilyMonospace);
+  font-size: var(--fontSizeBase200);
   color: var(--colorNeutralForeground3);
   overflow-wrap: anywhere;
 }

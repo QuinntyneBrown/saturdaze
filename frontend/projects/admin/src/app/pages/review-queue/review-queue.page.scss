@@ -1,7 +1,8 @@
 @use '../../../../../components/src/lib/styles/breakpoints' as *;
 @use '../../../../../components/src/lib/styles/card-base' as *;
 
-// `.review-list`, `.review-item`, `.review-actions` from docs/mocks/styles/app.css (admin).
+// `.review-list`, `.review-item`, `.review-actions` from docs/mocks/styles/app.css (admin);
+// each item is an `sd-card`, and `card-base` brings its `.card__head` anatomy.
 
 :host {
   display: block;
@@ -18,8 +19,6 @@
 }
 
 .review-item {
-  @include card-host;
-
   gap: 12px;
 }
 

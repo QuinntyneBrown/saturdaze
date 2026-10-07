@@ -1,0 +1,3 @@
+Choose a photo file. `sd-photo-drop` carries `.upload-drop` (Saturdaze Admin's Upload a photo, AD1) and, with `tile`, `.photo-pick__upload` (the weekend cover's "Your own photo", D29) from `docs/mocks/styles/app.css`: a dashed zone with projected content (an icon and a word) that turns into a preview of the chosen image.
+
+The native file input covers the zone, so it is one keyboard stop and opens the system picker on Enter or Space, and `label` is its accessible name. `fileChange` emits the chosen `File`; the screen checks its type and size, then passes an object URL back as `src`. The component never uploads anything itself.

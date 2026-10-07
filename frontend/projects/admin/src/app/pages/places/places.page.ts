@@ -11,7 +11,7 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs';
 
-import { chipTone } from '../../shared/chip-tones';
+import { placeRowFlags } from '../../shared/chip-tones';
 import {
   ADMIN_PLACES_SERVICE,
   AdminPlacesQuery,
@@ -21,20 +21,19 @@ import {
 } from 'api';
 import {
   Banner,
-  Button,
-  Chip,
   Empty,
   FilterChip,
   Filters,
   Icon,
   List,
-  ListItem,
-  Media,
+  Pager,
+  PlaceRow,
   PageHeader,
   Select,
   SelectOption,
   StatusRow,
   TextInput,
+  Toolbar,
 } from 'components';
 
 /** One chip of the filter row; `patch` is the query change it applies. */
@@ -129,19 +128,18 @@ const SORT_OPTIONS: readonly SelectOption[] = [
   imports: [
     ReactiveFormsModule,
     Banner,
-    Button,
-    Chip,
     Empty,
     FilterChip,
     Filters,
     Icon,
     List,
-    ListItem,
-    Media,
     PageHeader,
+    Pager,
+    PlaceRow,
     Select,
     StatusRow,
     TextInput,
+    Toolbar,
   ],
   templateUrl: './places.page.html',
   styleUrl: './places.page.scss',
@@ -158,7 +156,6 @@ export class PlacesPage {
   protected readonly flagChips = FLAG_CHIPS;
   protected readonly sourceChips = SOURCE_CHIPS;
   protected readonly sortOptions = SORT_OPTIONS;
-  protected readonly chipTone = chipTone;
 
   protected readonly search = new FormControl('', { nonNullable: true });
   protected readonly sort = new FormControl<AdminPlacesQuery['sort']>('health', {
@@ -171,23 +168,15 @@ export class PlacesPage {
     { initialValue: DEFAULT_ADMIN_PLACES_QUERY },
   );
 
+  /** The rows with their health chips as `sd-place-row` flags. */
+  protected readonly rows = computed(() =>
+    this.view().rows.map((row) => ({ ...row, chips: placeRowFlags(row.flags) })),
+  );
+
   protected readonly countText = computed(() => {
     const v = this.view();
     return v.total === 1 ? '1 place' : `${v.total} places`;
   });
-
-  protected readonly pagerText = computed(() => {
-    const v = this.view();
-    if (v.total === 0) return 'No places';
-    const from = (v.page - 1) * v.pageSize + 1;
-    const to = Math.min(v.total, v.page * v.pageSize);
-    return `${from} to ${to} of ${v.total}`;
-  });
-
-  protected readonly hasPrevious = computed(() => this.view().page > 1);
-  protected readonly hasNext = computed(
-    () => this.view().page * this.view().pageSize < this.view().total,
-  );
 
   constructor() {
     effect(() => {

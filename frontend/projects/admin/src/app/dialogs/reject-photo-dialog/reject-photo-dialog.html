@@ -1,5 +1,12 @@
 <sd-dialog title="Reject this photo?" [subtitle]="subtitle">
-  <sd-media class="photo-edit__media" ratio="4:3" [photo]="data.media" [tone]="'indoor'" eager />
+  <sd-media
+    slot="media"
+    class="photo-edit__media"
+    ratio="4:3"
+    [photo]="data.media"
+    [tone]="'indoor'"
+    eager
+  />
   <sd-text-input
     label="Reason"
     name="reason"

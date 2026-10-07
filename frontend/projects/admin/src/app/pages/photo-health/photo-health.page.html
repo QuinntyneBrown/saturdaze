@@ -45,32 +45,15 @@
       @if (worst().length) {
         <sd-list card>
           @for (row of worst(); track row.id) {
-            <sd-list-item
-              class="place-row"
+            <sd-place-row
               [title]="row.name"
               [subtitle]="row.meta"
               [href]="row.href"
-              chevron
-            >
-              <sd-media
-                slot="leading"
-                class="place-thumb"
-                ratio="4:3"
-                [photo]="row.photo"
-                [tone]="row.tone"
-                [icon]="row.icon"
-              />
-              <span class="place-row__flags">
-                @for (chip of row.flags; track chip.label) {
-                  <sd-chip [tone]="chipTone(chip.tone)" size="sm">
-                    @if (chip.icon) {
-                      <sd-icon [name]="chip.icon" />
-                    }
-                    {{ chip.label }}
-                  </sd-chip>
-                }
-              </span>
-            </sd-list-item>
+              [photo]="row.photo"
+              [tone]="row.tone"
+              [icon]="row.icon"
+              [flags]="row.chips"
+            />
           }
         </sd-list>
       } @else {

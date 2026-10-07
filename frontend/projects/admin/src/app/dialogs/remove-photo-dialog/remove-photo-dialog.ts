@@ -2,7 +2,7 @@ import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 
 import { PhotoTileView } from 'api';
-import { Button, Dialog as DialogShell, Icon, Media } from 'components';
+import { Button, Dialog as DialogShell, Icon, Media, PhotoPick, PhotoPickOption } from 'components';
 
 import { coverImpactWarning } from '../make-primary-dialog/make-primary-dialog';
 
@@ -52,7 +52,7 @@ export function optionLabel(tile: PhotoTileView): string {
 @Component({
   selector: 'sd-admin-remove-photo-dialog',
   standalone: true,
-  imports: [Button, DialogShell, Icon, Media],
+  imports: [Button, DialogShell, Icon, Media, PhotoPick, PhotoPickOption],
   templateUrl: './remove-photo-dialog.html',
   styleUrl: './remove-photo-dialog.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

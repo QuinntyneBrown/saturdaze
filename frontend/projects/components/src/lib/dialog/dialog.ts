@@ -25,7 +25,8 @@ import { Icon } from '../icon/icon';
  * `panelClass: 'sd-dialog-panel'` so the overlay aligns the sheet. On first
  * render the panel labels that container with its own `<h2>`.
  *
- * Slots: default (body), `[slot=actions]` (quiet then primary; on phones the
+ * Slots: default (body), `[slot=media]` (the photo the dialog is about, first
+ * in the body, at most 240px wide), `[slot=actions]` (quiet then primary; on phones the
  * primary lands on top), `[slot=actions-left]` (a destructive "Remove" that
  * stays on the left from 720px).
  *

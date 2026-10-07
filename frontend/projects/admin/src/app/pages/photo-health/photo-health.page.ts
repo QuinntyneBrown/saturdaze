@@ -1,21 +1,19 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 
-import { ADMIN_PLACES_SERVICE, DEFAULT_ADMIN_PLACES_QUERY, HealthView, PlaceRow } from 'api';
+import { ADMIN_PLACES_SERVICE, DEFAULT_ADMIN_PLACES_QUERY, HealthView } from 'api';
 import {
   Banner,
   Button,
-  Chip,
   Icon,
   List,
-  ListItem,
-  Media,
   PageHeader,
+  PlaceRow,
   Section,
   StatCard,
   StatusRow,
 } from 'components';
 
-import { chipTone } from '../../shared/chip-tones';
+import { placeRowFlags } from '../../shared/chip-tones';
 
 type Status = 'loading' | 'ready';
 
@@ -33,19 +31,7 @@ export function reviewButtonText(pending: number): string {
 @Component({
   selector: 'sd-admin-photo-health',
   standalone: true,
-  imports: [
-    Banner,
-    Button,
-    Chip,
-    Icon,
-    List,
-    ListItem,
-    Media,
-    PageHeader,
-    Section,
-    StatCard,
-    StatusRow,
-  ],
+  imports: [Banner, Button, Icon, List, PageHeader, PlaceRow, Section, StatCard, StatusRow],
   templateUrl: './photo-health.page.html',
   styleUrl: './photo-health.page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -56,12 +42,15 @@ export class PhotoHealthPage {
   protected readonly status = signal<Status>('loading');
   protected readonly health = signal<HealthView | null>(null);
   protected readonly error = signal('');
-  protected readonly chipTone = chipTone;
 
   private readonly list = this.places.list();
   /** The worst six places, from the same health-first sort the Places screen uses. */
-  protected readonly worst = computed<readonly PlaceRow[]>(() =>
-    this.list().status === 'ready' ? this.list().rows.slice(0, 6) : [],
+  protected readonly worst = computed(() =>
+    this.list().status === 'ready'
+      ? this.list()
+          .rows.slice(0, 6)
+          .map((row) => ({ ...row, chips: placeRowFlags(row.flags) }))
+      : [],
   );
   protected readonly reviewText = computed(() =>
     reviewButtonText(this.health()?.pendingReviews ?? 0),

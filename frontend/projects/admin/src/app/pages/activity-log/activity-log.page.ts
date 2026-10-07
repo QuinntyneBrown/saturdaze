@@ -20,14 +20,15 @@ import {
 } from 'api';
 import {
   Banner,
-  Button,
   Chip,
   Empty,
-  Icon,
+  List,
   PageHeader,
+  Pager,
   Select,
   SelectOption,
   StatusRow,
+  Toolbar,
 } from 'components';
 
 import { chipTone } from '../../shared/chip-tones';
@@ -67,7 +68,18 @@ export function toAuditParams(query: PhotoAuditQuery): Record<string, string> {
 @Component({
   selector: 'sd-admin-activity-log',
   standalone: true,
-  imports: [ReactiveFormsModule, Banner, Button, Chip, Empty, Icon, PageHeader, Select, StatusRow],
+  imports: [
+    ReactiveFormsModule,
+    Banner,
+    Chip,
+    Empty,
+    List,
+    PageHeader,
+    Pager,
+    Select,
+    StatusRow,
+    Toolbar,
+  ],
   templateUrl: './activity-log.page.html',
   styleUrl: './activity-log.page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -108,18 +120,6 @@ export class ActivityLogPage {
 
   protected readonly place = new FormControl(ALL_PLACES, { nonNullable: true });
   protected readonly admin = new FormControl(EVERYONE, { nonNullable: true });
-
-  protected readonly pagerText = computed(() => {
-    const v = this.view();
-    if (v.total === 0) return 'No changes';
-    const from = (v.page - 1) * v.pageSize + 1;
-    const to = Math.min(v.total, v.page * v.pageSize);
-    return `${from} to ${to} of ${v.total}`;
-  });
-  protected readonly hasPrevious = computed(() => this.view().page > 1);
-  protected readonly hasNext = computed(
-    () => this.view().page * this.view().pageSize < this.view().total,
-  );
 
   constructor() {
     effect(() => {
