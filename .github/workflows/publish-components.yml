@@ -1,0 +1,78 @@
+name: Publish components
+
+# Publishes the components library to npm as @saturdaze/components whenever a
+# push to main changes what goes into the package (ADR-016). The version comes
+# from the conventional-commit messages since the last components-v* tag and is
+# stamped into the built package only; nothing is committed back to main.
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'frontend/projects/components/src/**'
+      - 'frontend/projects/components/package.json'
+      - 'frontend/projects/components/ng-package.json'
+      - 'frontend/projects/components/README.md'
+
+# Releases must not race: each one reads the version the previous one published.
+concurrency:
+  group: publish-components
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # push the components-v* tag
+      id-token: write # npm trusted publishing and provenance
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # the bump reads tags and history
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: https://registry.npmjs.org
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Work out the next version
+        id: version
+        working-directory: frontend
+        run: node scripts/next-components-version.mjs
+
+      - run: npm ci
+        if: steps.version.outputs.release == 'true'
+        working-directory: frontend
+
+      - name: Design tokens up to date
+        if: steps.version.outputs.release == 'true'
+        working-directory: frontend
+        run: npm run tokens:check
+
+      - name: Build library
+        if: steps.version.outputs.release == 'true'
+        working-directory: frontend
+        run: npx ng build components
+
+      - name: Unit tests (Vitest)
+        if: steps.version.outputs.release == 'true'
+        working-directory: frontend
+        run: npx ng test components --watch=false
+
+      # Trusted publishing needs npm >= 11.5.1; Node 22 ships npm 10. Upgraded
+      # only after `npm ci` so the workspace install keeps its lockfile npm.
+      - name: Publish ${{ steps.version.outputs.version }}
+        if: steps.version.outputs.release == 'true'
+        working-directory: frontend/dist/components
+        run: |
+          npm install -g npm@latest
+          npm pkg set version=${{ steps.version.outputs.version }}
+          npm publish
+
+      - name: Tag the release
+        if: steps.version.outputs.release == 'true'
+        run: |
+          git tag components-v${{ steps.version.outputs.version }}
+          git push origin components-v${{ steps.version.outputs.version }}
