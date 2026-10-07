@@ -15,17 +15,20 @@ public sealed class SaveFamilyProfileCommandHandler : IRequestHandler<SaveFamily
     private readonly ICurrentFamilyAccessor _current;
     private readonly ICurrentUserAccessor _user;
     private readonly IDateTimeProvider _clock;
+    private readonly FamilyProfileReader _reader;
 
     public SaveFamilyProfileCommandHandler(
         IAppDbContext db,
         ICurrentFamilyAccessor current,
         ICurrentUserAccessor user,
-        IDateTimeProvider clock)
+        IDateTimeProvider clock,
+        FamilyProfileReader reader)
     {
         _db = db;
         _current = current;
         _user = user;
         _clock = clock;
+        _reader = reader;
     }
 
     public async Task<FamilyProfileDto> Handle(SaveFamilyProfileCommand request, CancellationToken cancellationToken)
@@ -57,7 +60,7 @@ public sealed class SaveFamilyProfileCommandHandler : IRequestHandler<SaveFamily
             var owner = await _db.Users.SingleOrDefaultAsync(u => u.Id == userId, cancellationToken)
                 ?? throw new InvalidCredentialsException("unauthenticated", "Sign in to continue.");
 
-            family = new Family { Id = Guid.NewGuid() };
+            family = new Family { Id = Guid.NewGuid(), OwnerUserId = owner.Id };
             _db.Families.Add(family);
             owner.FamilyId = family.Id;
             owner.UpdatedAtUtc = _clock.UtcNow;
@@ -78,13 +81,7 @@ public sealed class SaveFamilyProfileCommandHandler : IRequestHandler<SaveFamily
         // Re-read so the response reflects exactly what was persisted, without
         // depending on the family accessor having seen a family that was created
         // a moment ago.
-        var saved = await _db.Families
-            .AsNoTracking()
-            .Include(f => f.Members)
-            .Include(f => f.Commitments)
-            .Include(f => f.Preferences)
-            .SingleAsync(f => f.Id == family.Id, cancellationToken);
-        return FamilyProfileMapper.ToDto(saved);
+        return (await _reader.ReadAsync(family.Id, cancellationToken))!;
     }
 
     // NOTE: each sync snapshots the existing rows first. EF fixes up the

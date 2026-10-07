@@ -138,6 +138,7 @@ public class SaveFamilyProfileCommandHandlerTests
         services.AddSingleton<ICurrentFamilyAccessor>(app.FamilyAccessor);
         services.AddSingleton<ICurrentUserAccessor>(new StubCurrentUserAccessor { UserId = userId });
         services.AddSingleton<IDateTimeProvider>(new StubDateTimeProvider());
+        services.AddScoped<FamilyProfileReader>();
         services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<SaveFamilyProfileCommand>());
         return services.BuildServiceProvider().GetRequiredService<IMediator>();
     }

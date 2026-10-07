@@ -5,7 +5,7 @@ namespace Saturdaze.Application.Families;
 
 internal static class FamilyProfileMapper
 {
-    public static FamilyProfileDto ToDto(Family family) => new(
+    public static FamilyProfileDto ToDto(Family family, bool isOwner, string? ownerEmail) => new(
         family.Id,
         family.Name,
         family.HomeLocation,
@@ -24,5 +24,7 @@ internal static class FamilyProfileMapper
         family.Preferences
             .OrderBy(p => p.Kind).ThenBy(p => p.Value)
             .Select(p => new PreferenceDto(p.Id, p.Kind, p.Value))
-            .ToList());
+            .ToList(),
+        isOwner,
+        ownerEmail);
 }

@@ -40,7 +40,7 @@ public class GetFamilyProfileQueryHandlerTests
         await app.Db.SaveChangesAsync();
         app.FamilyAccessor.FamilyId = family.Id;
 
-        var handler = new GetFamilyProfileQueryHandler(app.Db, app.FamilyAccessor);
+        var handler = new GetFamilyProfileQueryHandler(new FamilyProfileReader(app.Db, new StubCurrentUserAccessor()), app.FamilyAccessor);
         var dto = await handler.Handle(new GetFamilyProfileQuery(), default);
 
         dto.Id.Should().Be(family.Id);
@@ -59,7 +59,7 @@ public class GetFamilyProfileQueryHandlerTests
         await using var app = TestApp.Create();
         app.FamilyAccessor.FamilyId = Guid.NewGuid();
 
-        var handler = new GetFamilyProfileQueryHandler(app.Db, app.FamilyAccessor);
+        var handler = new GetFamilyProfileQueryHandler(new FamilyProfileReader(app.Db, new StubCurrentUserAccessor()), app.FamilyAccessor);
         var act = async () => await handler.Handle(new GetFamilyProfileQuery(), default);
         await act.Should().ThrowAsync<NotFoundException>();
     }

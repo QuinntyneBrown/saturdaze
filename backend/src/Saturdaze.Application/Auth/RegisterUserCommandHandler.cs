@@ -42,11 +42,13 @@ public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, A
 
         var now = _clock.UtcNow;
 
-        // Every account owns exactly one family (L2-001). The first sign-in
+        // Every account owns exactly one family (L2-001, L2-124). The first sign-in
         // routes to /profile to populate members + commitments.
+        var userId = Guid.NewGuid();
         var family = new Family
         {
             Id = Guid.NewGuid(),
+            OwnerUserId = userId,
             Name = string.IsNullOrWhiteSpace(request.FamilyName) ? null : request.FamilyName.Trim(),
             HomeLocation = request.HomeLocation?.Trim() ?? string.Empty,
             BudgetEnabled = false,
@@ -56,7 +58,7 @@ public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, A
 
         var user = new User
         {
-            Id = Guid.NewGuid(),
+            Id = userId,
             Email = request.Email.Trim(),
             NormalizedEmail = normalized,
             PasswordHash = _hasher.Hash(request.Password),

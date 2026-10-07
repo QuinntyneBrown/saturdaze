@@ -11,9 +11,17 @@ public sealed record FamilyProfileDto(
     bool FridayPreviewEnabled,
     IReadOnlyList<FamilyMemberDto> Members,
     IReadOnlyList<CommitmentDto> Commitments,
-    IReadOnlyList<PreferenceDto> Preferences);
+    IReadOnlyList<PreferenceDto> Preferences,
+    bool IsOwner = false,
+    string? OwnerEmail = null);
 
-public sealed record FamilyMemberDto(Guid Id, string Name, int Age);
+/// <param name="Email">The invited or signed-in address; null when <see cref="Access"/> is None.</param>
+public sealed record FamilyMemberDto(
+    Guid Id,
+    string Name,
+    int Age,
+    MemberAccess Access = MemberAccess.None,
+    string? Email = null);
 
 public sealed record CommitmentDto(
     Guid Id,
