@@ -30,6 +30,8 @@ Swagger is plain middleware; the authorization middleware applies the fallback e
 
 ### 2. `CurrentUserFamilyAccessor`
 
+> Superseded in part by [ADR-016](ADR-016-family-ownership-and-member-sign-in.md) decision 5: the accessor now reads `Users.FamilyId` on every request instead of trusting the `family_id` claim.
+
 The `family_id` claim is used first; when it is absent the accessor falls back to `Users.FamilyId` (tokens minted before a family existed). Unauthenticated callers get `InvalidCredentialsException` (401); accounts with no family get `NotFoundException`, which the first-time profile save catches to create and link a family. The value is cached per request scope so nested MediatR sends share one lookup.
 
 ### 3. Ownership is a 404, never a 403
