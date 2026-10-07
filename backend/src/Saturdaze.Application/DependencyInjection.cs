@@ -25,6 +25,7 @@ public static class DependencyInjection
         services.AddScoped<RefreshTokenIssuer>();
         services.AddScoped<Families.FamilyProfileReader>();
         services.AddScoped<Families.FamilyOwnership>();
+        services.AddScoped<InvitationResolver>();
         services.AddScoped<Admin.Photos.PhotoAuditWriter>();
         services.AddScoped<WeekendForecastService>();
         services.AddScoped<PlannerInputLoader>();

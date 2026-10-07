@@ -43,6 +43,11 @@ public sealed class FamilyProfileReader
             .Where(i => i.FamilyId == familyId && i.AcceptedAtUtc == null)
             .ToDictionaryAsync(i => i.FamilyMemberId, i => i.Email, ct);
 
-        return FamilyProfileMapper.ToDto(family, isOwner, ownerEmail, invited);
+        var accountIds = family.Members.Where(m => m.UserId is not null).Select(m => m.UserId!.Value).ToList();
+        var accounts = await _db.Users.AsNoTracking()
+            .Where(u => accountIds.Contains(u.Id))
+            .ToDictionaryAsync(u => u.Id, u => u.Email, ct);
+
+        return FamilyProfileMapper.ToDto(family, isOwner, ownerEmail, invited, accounts);
     }
 }
