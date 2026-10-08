@@ -1,0 +1,593 @@
+{
+  "$comment": "Foreground/background token pairs checked by check_contrast.py for both themes. 4.5:1 is WCAG 2.2 AA for text (1.4.3); 3:1 is AA for UI edges, focus indicators and meaningful graphics (1.4.11). Decorative strokes (--colorNeutralStroke1/2) are exempt and not listed.",
+  "pairs": [
+    {
+      "fg": "--colorNeutralForeground1",
+      "bg": "--colorNeutralBackground1",
+      "min": 4.5,
+      "note": "body text on cards/inputs"
+    },
+    {
+      "fg": "--colorNeutralForeground2",
+      "bg": "--colorNeutralBackground1",
+      "min": 4.5,
+      "note": "secondary text on cards/inputs"
+    },
+    {
+      "fg": "--colorNeutralForeground3",
+      "bg": "--colorNeutralBackground1",
+      "min": 4.5,
+      "note": "hints/placeholders/durations on cards/inputs"
+    },
+    {
+      "fg": "--colorBrandForeground1",
+      "bg": "--colorNeutralBackground1",
+      "min": 4.5,
+      "note": "brand text / text button on cards/inputs"
+    },
+    {
+      "fg": "--colorStrokeFocus2",
+      "bg": "--colorNeutralBackground1",
+      "min": 3,
+      "note": "focus ring on cards/inputs (2.4.7, 1.4.11)"
+    },
+    {
+      "fg": "--colorNeutralStrokeAccessible",
+      "bg": "--colorNeutralBackground1",
+      "min": 3,
+      "note": "input border / switch track on cards/inputs (1.4.11)"
+    },
+    {
+      "fg": "--colorNeutralForeground1",
+      "bg": "--colorNeutralBackground2",
+      "min": 4.5,
+      "note": "body text on page canvas"
+    },
+    {
+      "fg": "--colorNeutralForeground2",
+      "bg": "--colorNeutralBackground2",
+      "min": 4.5,
+      "note": "secondary text on page canvas"
+    },
+    {
+      "fg": "--colorNeutralForeground3",
+      "bg": "--colorNeutralBackground2",
+      "min": 4.5,
+      "note": "hints/placeholders/durations on page canvas"
+    },
+    {
+      "fg": "--colorBrandForeground1",
+      "bg": "--colorNeutralBackground2",
+      "min": 4.5,
+      "note": "brand text / text button on page canvas"
+    },
+    {
+      "fg": "--colorStrokeFocus2",
+      "bg": "--colorNeutralBackground2",
+      "min": 3,
+      "note": "focus ring on page canvas (2.4.7, 1.4.11)"
+    },
+    {
+      "fg": "--colorNeutralStrokeAccessible",
+      "bg": "--colorNeutralBackground2",
+      "min": 3,
+      "note": "input border / switch track on page canvas (1.4.11)"
+    },
+    {
+      "fg": "--colorNeutralForeground1",
+      "bg": "--colorNeutralBackground3",
+      "min": 4.5,
+      "note": "body text on wells/chips"
+    },
+    {
+      "fg": "--colorNeutralForeground2",
+      "bg": "--colorNeutralBackground3",
+      "min": 4.5,
+      "note": "secondary text on wells/chips"
+    },
+    {
+      "fg": "--colorNeutralForeground3",
+      "bg": "--colorNeutralBackground3",
+      "min": 4.5,
+      "note": "hints/placeholders/durations on wells/chips"
+    },
+    {
+      "fg": "--colorBrandForeground1",
+      "bg": "--colorNeutralBackground3",
+      "min": 4.5,
+      "note": "brand text / text button on wells/chips"
+    },
+    {
+      "fg": "--colorStrokeFocus2",
+      "bg": "--colorNeutralBackground3",
+      "min": 3,
+      "note": "focus ring on wells/chips (2.4.7, 1.4.11)"
+    },
+    {
+      "fg": "--colorNeutralStrokeAccessible",
+      "bg": "--colorNeutralBackground3",
+      "min": 3,
+      "note": "input border / switch track on wells/chips (1.4.11)"
+    },
+    {
+      "fg": "--colorNeutralForeground1",
+      "bg": "--colorNeutralBackgroundRaised",
+      "min": 4.5,
+      "note": "body text on dialogs/menus"
+    },
+    {
+      "fg": "--colorNeutralForeground2",
+      "bg": "--colorNeutralBackgroundRaised",
+      "min": 4.5,
+      "note": "secondary text on dialogs/menus"
+    },
+    {
+      "fg": "--colorNeutralForeground3",
+      "bg": "--colorNeutralBackgroundRaised",
+      "min": 4.5,
+      "note": "hints/placeholders/durations on dialogs/menus"
+    },
+    {
+      "fg": "--colorBrandForeground1",
+      "bg": "--colorNeutralBackgroundRaised",
+      "min": 4.5,
+      "note": "brand text / text button on dialogs/menus"
+    },
+    {
+      "fg": "--colorStrokeFocus2",
+      "bg": "--colorNeutralBackgroundRaised",
+      "min": 3,
+      "note": "focus ring on dialogs/menus (2.4.7, 1.4.11)"
+    },
+    {
+      "fg": "--colorNeutralStrokeAccessible",
+      "bg": "--colorNeutralBackgroundRaised",
+      "min": 3,
+      "note": "input border / switch track on dialogs/menus (1.4.11)"
+    },
+    {
+      "fg": "--colorNeutralForeground1",
+      "bg": "--colorSubtleBackgroundHover",
+      "min": 4.5,
+      "note": "body text on hovered rows"
+    },
+    {
+      "fg": "--colorNeutralForeground2",
+      "bg": "--colorSubtleBackgroundHover",
+      "min": 4.5,
+      "note": "secondary text on hovered rows"
+    },
+    {
+      "fg": "--colorNeutralForeground3",
+      "bg": "--colorSubtleBackgroundHover",
+      "min": 4.5,
+      "note": "hints/placeholders/durations on hovered rows"
+    },
+    {
+      "fg": "--colorBrandForeground1",
+      "bg": "--colorSubtleBackgroundHover",
+      "min": 4.5,
+      "note": "brand text / text button on hovered rows"
+    },
+    {
+      "fg": "--colorStrokeFocus2",
+      "bg": "--colorSubtleBackgroundHover",
+      "min": 3,
+      "note": "focus ring on hovered rows (2.4.7, 1.4.11)"
+    },
+    {
+      "fg": "--colorNeutralStrokeAccessible",
+      "bg": "--colorSubtleBackgroundHover",
+      "min": 3,
+      "note": "input border / switch track on hovered rows (1.4.11)"
+    },
+    {
+      "fg": "--colorBrandForegroundLink",
+      "bg": "--colorNeutralBackground1",
+      "min": 4.5,
+      "note": "link text"
+    },
+    {
+      "fg": "--colorBrandForegroundLinkHover",
+      "bg": "--colorNeutralBackground1",
+      "min": 4.5,
+      "note": "hovered link"
+    },
+    {
+      "fg": "--colorBrandStroke1",
+      "bg": "--colorNeutralBackground1",
+      "min": 3,
+      "note": "current-page underline"
+    },
+    {
+      "fg": "--colorBrandBackground",
+      "bg": "--colorNeutralBackground1",
+      "min": 3,
+      "note": "primary button edge"
+    },
+    {
+      "fg": "--colorStatusDangerBackground3",
+      "bg": "--colorNeutralBackground1",
+      "min": 3,
+      "note": "danger button edge"
+    },
+    {
+      "fg": "--colorNeutralBackgroundInverted",
+      "bg": "--colorNeutralBackground1",
+      "min": 3,
+      "note": "pressed filter chip edge"
+    },
+    {
+      "fg": "--colorBrandForegroundLink",
+      "bg": "--colorNeutralBackground2",
+      "min": 4.5,
+      "note": "link text"
+    },
+    {
+      "fg": "--colorBrandForegroundLinkHover",
+      "bg": "--colorNeutralBackground2",
+      "min": 4.5,
+      "note": "hovered link"
+    },
+    {
+      "fg": "--colorBrandStroke1",
+      "bg": "--colorNeutralBackground2",
+      "min": 3,
+      "note": "current-page underline"
+    },
+    {
+      "fg": "--colorBrandBackground",
+      "bg": "--colorNeutralBackground2",
+      "min": 3,
+      "note": "primary button edge"
+    },
+    {
+      "fg": "--colorStatusDangerBackground3",
+      "bg": "--colorNeutralBackground2",
+      "min": 3,
+      "note": "danger button edge"
+    },
+    {
+      "fg": "--colorNeutralBackgroundInverted",
+      "bg": "--colorNeutralBackground2",
+      "min": 3,
+      "note": "pressed filter chip edge"
+    },
+    {
+      "fg": "--colorNeutralForegroundOnBrand",
+      "bg": "--colorBrandBackground",
+      "min": 4.5,
+      "note": "primary button label"
+    },
+    {
+      "fg": "--colorNeutralForegroundOnBrand",
+      "bg": "--colorBrandBackgroundHover",
+      "min": 4.5,
+      "note": "primary button label"
+    },
+    {
+      "fg": "--colorNeutralForegroundOnBrand",
+      "bg": "--colorBrandBackgroundPressed",
+      "min": 4.5,
+      "note": "primary button label"
+    },
+    {
+      "fg": "--colorNeutralForegroundInverted",
+      "bg": "--colorNeutralBackgroundInverted",
+      "min": 4.5,
+      "note": "pressed filter chip / ink chip / tooltip text"
+    },
+    {
+      "fg": "--colorNeutralForeground1",
+      "bg": "--colorBrandBackground2",
+      "min": 4.5,
+      "note": "text in a brand well"
+    },
+    {
+      "fg": "--colorNeutralForeground2",
+      "bg": "--colorBrandBackground2",
+      "min": 4.5,
+      "note": "secondary text in a brand well"
+    },
+    {
+      "fg": "--colorBrandForeground1",
+      "bg": "--colorBrandBackground2",
+      "min": 4.5,
+      "note": "brand chip, date tile, current nav label"
+    },
+    {
+      "fg": "--colorBrandForeground2",
+      "bg": "--colorBrandBackground2",
+      "min": 4.5,
+      "note": "brand chip text, hover"
+    },
+    {
+      "fg": "--colorBrandForeground1",
+      "bg": "--colorBrandBackground2Hover",
+      "min": 3,
+      "note": "current nav icon on hover tint"
+    },
+    {
+      "fg": "--colorNeutralForegroundStaticInverted",
+      "bg": "--colorBackgroundOverlayStrong",
+      "min": 4.5,
+      "note": "photo credit / photo label pill"
+    },
+    {
+      "fg": "--colorNeutralForegroundOnBrand",
+      "bg": "--colorBrandForeground1",
+      "min": 4.5,
+      "note": "numbered stop disc and map pin"
+    },
+    {
+      "fg": "--colorNeutralBackground1",
+      "bg": "--colorStatusSuccessBackground3",
+      "min": 3,
+      "note": "switch thumb on the on track"
+    },
+    {
+      "fg": "--colorNeutralBackground1",
+      "bg": "--colorNeutralStrokeAccessible",
+      "min": 3,
+      "note": "switch thumb on the off track"
+    },
+    {
+      "fg": "--colorStatusInfoForeground1",
+      "bg": "--colorStatusInfoBackground1",
+      "min": 4.5,
+      "note": "info banner/chip text"
+    },
+    {
+      "fg": "--colorStatusInfoForeground3",
+      "bg": "--colorStatusInfoBackground1",
+      "min": 3,
+      "note": "info icon on its tint"
+    },
+    {
+      "fg": "--colorStatusInfoForegroundInverted",
+      "bg": "--colorStatusInfoBackground3",
+      "min": 4.5,
+      "note": "label on solid info"
+    },
+    {
+      "fg": "--colorStatusInfoForeground1",
+      "bg": "--colorNeutralBackground1",
+      "min": 4.5,
+      "note": "info text on a card"
+    },
+    {
+      "fg": "--colorStatusInfoForeground1",
+      "bg": "--colorNeutralBackground2",
+      "min": 4.5,
+      "note": "info text on the page"
+    },
+    {
+      "fg": "--colorStatusInfoBackground3",
+      "bg": "--colorNeutralBackground1",
+      "min": 3,
+      "note": "solid info edge vs card"
+    },
+    {
+      "fg": "--colorNeutralForeground2",
+      "bg": "--colorStatusInfoBackground1",
+      "min": 4.5,
+      "note": "secondary text in a info well"
+    },
+    {
+      "fg": "--colorStatusSuccessForeground1",
+      "bg": "--colorStatusSuccessBackground1",
+      "min": 4.5,
+      "note": "success banner/chip text"
+    },
+    {
+      "fg": "--colorStatusSuccessForeground3",
+      "bg": "--colorStatusSuccessBackground1",
+      "min": 3,
+      "note": "success icon on its tint"
+    },
+    {
+      "fg": "--colorStatusSuccessForegroundInverted",
+      "bg": "--colorStatusSuccessBackground3",
+      "min": 4.5,
+      "note": "label on solid success"
+    },
+    {
+      "fg": "--colorStatusSuccessForeground1",
+      "bg": "--colorNeutralBackground1",
+      "min": 4.5,
+      "note": "success text on a card"
+    },
+    {
+      "fg": "--colorStatusSuccessForeground1",
+      "bg": "--colorNeutralBackground2",
+      "min": 4.5,
+      "note": "success text on the page"
+    },
+    {
+      "fg": "--colorStatusSuccessBackground3",
+      "bg": "--colorNeutralBackground1",
+      "min": 3,
+      "note": "solid success edge vs card"
+    },
+    {
+      "fg": "--colorNeutralForeground2",
+      "bg": "--colorStatusSuccessBackground1",
+      "min": 4.5,
+      "note": "secondary text in a success well"
+    },
+    {
+      "fg": "--colorStatusWarningForeground1",
+      "bg": "--colorStatusWarningBackground1",
+      "min": 4.5,
+      "note": "warning banner/chip text"
+    },
+    {
+      "fg": "--colorStatusWarningForeground3",
+      "bg": "--colorStatusWarningBackground1",
+      "min": 3,
+      "note": "warning icon on its tint"
+    },
+    {
+      "fg": "--colorStatusWarningForegroundInverted",
+      "bg": "--colorStatusWarningBackground3",
+      "min": 4.5,
+      "note": "label on solid warning"
+    },
+    {
+      "fg": "--colorStatusWarningForeground1",
+      "bg": "--colorNeutralBackground1",
+      "min": 4.5,
+      "note": "warning text on a card"
+    },
+    {
+      "fg": "--colorStatusWarningForeground1",
+      "bg": "--colorNeutralBackground2",
+      "min": 4.5,
+      "note": "warning text on the page"
+    },
+    {
+      "fg": "--colorStatusWarningBackground3",
+      "bg": "--colorNeutralBackground1",
+      "min": 3,
+      "note": "solid warning edge vs card"
+    },
+    {
+      "fg": "--colorNeutralForeground2",
+      "bg": "--colorStatusWarningBackground1",
+      "min": 4.5,
+      "note": "secondary text in a warning well"
+    },
+    {
+      "fg": "--colorStatusDangerForeground1",
+      "bg": "--colorStatusDangerBackground1",
+      "min": 4.5,
+      "note": "danger banner/chip text"
+    },
+    {
+      "fg": "--colorStatusDangerForeground3",
+      "bg": "--colorStatusDangerBackground1",
+      "min": 3,
+      "note": "danger icon on its tint"
+    },
+    {
+      "fg": "--colorStatusDangerForegroundInverted",
+      "bg": "--colorStatusDangerBackground3",
+      "min": 4.5,
+      "note": "label on solid danger"
+    },
+    {
+      "fg": "--colorStatusDangerForeground1",
+      "bg": "--colorNeutralBackground1",
+      "min": 4.5,
+      "note": "danger text on a card"
+    },
+    {
+      "fg": "--colorStatusDangerForeground1",
+      "bg": "--colorNeutralBackground2",
+      "min": 4.5,
+      "note": "danger text on the page"
+    },
+    {
+      "fg": "--colorStatusDangerBackground3",
+      "bg": "--colorNeutralBackground1",
+      "min": 3,
+      "note": "solid danger edge vs card"
+    },
+    {
+      "fg": "--colorNeutralForeground2",
+      "bg": "--colorStatusDangerBackground1",
+      "min": 4.5,
+      "note": "secondary text in a danger well"
+    },
+    {
+      "fg": "--colorStatusDangerForegroundInverted",
+      "bg": "--colorStatusDangerBackground3Hover",
+      "min": 4.5,
+      "note": "danger button label, hover"
+    },
+    {
+      "fg": "--colorStatusDangerForeground3",
+      "bg": "--colorNeutralBackground1",
+      "min": 3,
+      "note": "invalid field border"
+    },
+    {
+      "fg": "--colorStatusDangerForeground1",
+      "bg": "--colorNeutralBackgroundRaised",
+      "min": 4.5,
+      "note": "field error text in a dialog"
+    },
+    {
+      "fg": "--colorStatusSuccessBackground3",
+      "bg": "--colorNeutralBackground3",
+      "min": 3,
+      "note": "switch on track / locked border vs well"
+    },
+    {
+      "fg": "--colorPaletteSunForeground1",
+      "bg": "--colorPaletteSunBackground1",
+      "min": 4.5,
+      "note": "sun chip / disc / filter chip text"
+    },
+    {
+      "fg": "--colorPaletteSunForeground3",
+      "bg": "--colorNeutralBackground1",
+      "min": 3,
+      "note": "sun graphic on a card"
+    },
+    {
+      "fg": "--colorPaletteSkyForeground1",
+      "bg": "--colorPaletteSkyBackground1",
+      "min": 4.5,
+      "note": "sky chip / disc / filter chip text"
+    },
+    {
+      "fg": "--colorPaletteSkyForeground3",
+      "bg": "--colorNeutralBackground1",
+      "min": 3,
+      "note": "sky graphic on a card"
+    },
+    {
+      "fg": "--colorPaletteLeafForeground1",
+      "bg": "--colorPaletteLeafBackground1",
+      "min": 4.5,
+      "note": "leaf chip / disc / filter chip text"
+    },
+    {
+      "fg": "--colorPaletteLeafForeground3",
+      "bg": "--colorNeutralBackground1",
+      "min": 3,
+      "note": "leaf graphic on a card"
+    },
+    {
+      "fg": "--colorPaletteIndoorForeground1",
+      "bg": "--colorPaletteIndoorBackground1",
+      "min": 4.5,
+      "note": "indoor chip / disc / filter chip text"
+    },
+    {
+      "fg": "--colorPaletteIndoorForeground3",
+      "bg": "--colorNeutralBackground1",
+      "min": 3,
+      "note": "indoor graphic on a card"
+    },
+    {
+      "fg": "--colorPaletteSunForeground3",
+      "bg": "--colorNeutralBackground3",
+      "min": 3,
+      "note": "filled rating star on a hovered ghost button"
+    },
+    {
+      "fg": "--colorPaletteSkyForeground1",
+      "bg": "--colorNeutralBackground1",
+      "min": 4.5,
+      "note": "Directions link in a travel leg"
+    },
+    {
+      "fg": "--colorPaletteSkyForeground1",
+      "bg": "--colorNeutralBackground2",
+      "min": 4.5,
+      "note": "Directions link on the page"
+    }
+  ]
+}

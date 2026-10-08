@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Textarea — Saturdaze design system</title>
+<meta name="description" content="A multi-line text field that grows with its content, with an optional character counter, for event descriptions and review reasons.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html"><span class="brand-mark" aria-hidden="true"></span>Saturdaze DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Actions</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+    </ul></details>
+    <details open><summary>Inputs</summary><ul>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/chip-input.html">Chip input</a></li>
+      <li><a href="../components/file-upload.html">File upload</a></li>
+      <li><a href="../components/photo-pick.html">Photo pick</a></li>
+      <li><a href="../components/rating.html">Rating</a></li>
+      <li><a href="../components/vote-row.html">Vote row</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+    </ul></details>
+    <details open><summary>Navigation</summary><ul>
+      <li><a href="../components/top-bar.html">Top bar</a></li>
+      <li><a href="../components/bottom-nav.html">Bottom nav</a></li>
+      <li><a href="../components/sidebar-navigation.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs (segments)</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+      <li><a href="../components/footer.html">Footer</a></li>
+    </ul></details>
+    <details open><summary>Containers and overlays</summary><ul>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/container.html">Container and grid</a></li>
+      <li><a href="../components/page-header.html">Page header</a></li>
+    </ul></details>
+    <details open><summary>Data display</summary><ul>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/activity-feed.html">Activity feed</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/chip.html">Chip</a></li>
+      <li><a href="../components/filter-chip.html">Filter chip</a></li>
+      <li><a href="../components/disc.html">Disc</a></li>
+      <li><a href="../components/media.html">Media</a></li>
+      <li><a href="../components/cover.html">Cover photo</a></li>
+      <li><a href="../components/stat.html">Stat</a></li>
+      <li><a href="../components/itinerary.html">Itinerary</a></li>
+      <li><a href="../components/map.html">Map</a></li>
+    </ul></details>
+    <details open><summary>Feedback</summary><ul>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/alert.html">Alert</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/progress-bar.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Auth and marketing</summary><ul>
+      <li><a href="../components/auth-card.html">Auth card</a></li>
+      <li><a href="../components/hero.html">Hero</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/data-tables-and-lists.html">Tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Component · Inputs</p>
+      <h1>Textarea</h1>
+      <p class="ds-lead">A textarea takes a few sentences: what a suggested event is and who it suits, or why a suggestion was turned down. It starts three lines tall and grows as the person writes.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA</span><span class="ds-pill">Status: stable</span><span class="ds-pill">Angular: <code>sd-text-input multiline</code></span><span class="ds-pill">Native <code>&lt;textarea&gt;</code></span></div>
+      <ul class="ds-toc">
+        <li><a href="#overview">Overview</a></li><li><a href="#anatomy">Anatomy</a></li><li><a href="#variants">Variants</a></li><li><a href="#sizes">Sizes</a></li><li><a href="#states">States</a></li><li><a href="#responsive">Responsive</a></li><li><a href="#theming">Theming</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#content">Content</a></li><li><a href="#do-dont">Do and don't</a></li><li><a href="#tokens">Tokens</a></li><li><a href="#code">Code</a></li><li><a href="#sources">Sources</a></li>
+      </ul>
+    </header>
+
+    <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+      <p>Use a textarea when the answer is more than one line: a description, a note, a reason. For a title, a name or a URL use a <a href="text-field.html">text field</a>, even if the value is long; a single-line input tells people the answer should be short. The textarea is <code>textarea.field__input</code>, so it shares the text field's border, focus, invalid, disabled and read-only states, inside the same <a href="form-field.html">form field</a> wrapper.</p>
+      <ul>
+        <li><b>Plain</b>: grows with the content (<code>field-sizing: content</code>), from at least 96px (about three lines). The person can also drag the corner to make it taller.</li>
+        <li><b>With counter</b>: when the server stores a limited length, a <code>.field__foot</code> shows the hint and a counter such as "212 / 500".</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="anatomy"><h2><a href="#anatomy">Anatomy</a></h2>
+      <div class="ds-anatomy">
+        <figure class="ds-anatomy__figure">
+          <div class="field" style="width: 100%; max-width: 22rem;">
+            <label class="field__label" for="an-desc">Description</label>
+            <textarea class="field__input" id="an-desc" rows="3" aria-describedby="an-desc-hint">Street performers along Lakeshore Rd all afternoon. Good for kids who can handle crowds.</textarea>
+            <div class="field__foot"><p class="field__hint" id="an-desc-hint">Who is it good for?</p><span class="field__counter" aria-hidden="true">88 / 500</span></div>
+          </div>
+          <span class="ds-callout" style="left: max(0.25rem, calc(50% - 12.75rem)); top: 18%;" aria-hidden="true">1</span>
+          <span class="ds-callout" style="left: max(0.25rem, calc(50% - 12.75rem)); top: 46%;" aria-hidden="true">2</span>
+          <span class="ds-callout" style="left: min(calc(50% + 9.5rem), calc(100% - 1.75rem)); top: 62%;" aria-hidden="true">3</span>
+          <span class="ds-callout" style="left: min(calc(50% + 8rem), calc(100% - 3.5rem)); top: 88%;" aria-hidden="true">4</span>
+        </figure>
+        <ol class="ds-anatomy__list">
+          <li><div><b>Label</b><small>From the form field: visible, above, with an optional marker.</small></div></li>
+          <li><div><b>Text area</b><small>Body 1 at line height 1.5, 10px top and bottom padding, 12px sides. Minimum 96px tall; grows with content.</small></div></li>
+          <li><div><b>Resize handle</b><small>Vertical only (<code>resize: vertical</code>), so the layout never widens.</small></div></li>
+          <li><div><b>Foot (optional)</b><small>Hint on the left, counter on the right in tabular figures.</small></div></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="ds-section" id="variants"><h2><a href="#variants">Variants</a></h2>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack" style="max-width: 32rem;">
+          <div class="field">
+            <label class="field__label" for="v-desc">Description</label>
+            <textarea class="field__input" id="v-desc" rows="3" placeholder="What is it, and who is it good for?"></textarea>
+          </div>
+          <div class="field">
+            <label class="field__label" for="v-reason">Reason <span class="field__req">Optional</span></label>
+            <textarea class="field__input" id="v-reason" rows="3" maxlength="280" placeholder="Already listed as the Lavender Festival weekend." aria-describedby="v-reason-hint"></textarea>
+            <div class="field__foot"><p class="field__hint" id="v-reason-hint">The reason is shown to the person who sent it.</p><span class="field__counter" aria-hidden="true">0 / 280</span></div>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>D10 Suggest an event (plain, empty); D24 Reject a submission (optional, with counter).</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;div class="field"&gt;
+  &lt;label class="field__label" for="d24-reason"&gt;Reason &lt;span class="field__req"&gt;Optional&lt;/span&gt;&lt;/label&gt;
+  &lt;textarea class="field__input" id="d24-reason" rows="3" maxlength="280"
+            placeholder="Already listed as the Lavender Festival weekend."
+            aria-describedby="d24-reason-hint d24-reason-count"&gt;&lt;/textarea&gt;
+  &lt;div class="field__foot"&gt;
+    &lt;p class="field__hint" id="d24-reason-hint"&gt;The reason is shown to the person who sent it.&lt;/p&gt;
+    &lt;span class="field__counter" aria-hidden="true"&gt;0 / 280&lt;/span&gt;
+  &lt;/div&gt;
+  &lt;span class="visually-hidden" id="d24-reason-count"&gt;Up to 280 characters.&lt;/span&gt;
+&lt;/div&gt;</code></pre></details>
+      </div>
+      <h3>Counter near and over the limit</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack" style="max-width: 32rem;">
+          <div class="field">
+            <label class="field__label" for="v-near">Reason <span class="field__req">Optional</span></label>
+            <textarea class="field__input" id="v-near" rows="3" aria-describedby="v-near-count">This is the same Buskerfest that is already listed for 18 May, with the same times and stages along Lakeshore Rd, so families would see it twice in Ideas. Thanks for sending it in: we copied the extra Sunday sets from your listing into the existing event.</textarea>
+            <div class="field__foot"><span class="field__counter" id="v-near-count">255 / 280</span></div>
+          </div>
+          <div class="field">
+            <label class="field__label" for="v-over">Description</label>
+            <textarea class="field__input" id="v-over" rows="3" aria-invalid="true" aria-describedby="v-over-err">A free afternoon of street performers along Lakeshore Rd in Port Credit. Jugglers, a fire show at dusk, and buskers on every corner from Hurontario to Mississauga Rd. Bring a blanket for the lawn at Memorial Park; there is a kids' corner with face painting and balloon animals by the library. Food trucks park on Elizabeth St. Parking fills by noon, so take the GO train to Port Credit station and walk down. Strollers are fine on the main strip but the side streets get very crowded after 3pm. Dogs on leash are welcome.</textarea>
+            <div class="field__foot"><p class="field__error" id="v-over-err"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg>Shorten the description to 500 characters.</p><span class="field__counter">521 / 500</span></div>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>When a tenth of the limit is left the counter is announced; over the limit the field is invalid and the error says by how much to shorten it.</span></div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="sizes"><h2><a href="#sizes">Sizes</a></h2>
+      <p>One size, set by content rather than a class. The textarea starts at three lines (<code>rows="3"</code>, minimum 96px), grows with what is typed in browsers that support <code>field-sizing: content</code>, and can be dragged taller. Use <code>rows="2"</code> for a short note; never fewer than two lines, or it reads as a text field. Width follows the column, like every field.</p>
+    </section>
+
+    <section class="ds-section" id="states"><h2><a href="#states">States</a></h2>
+      <p>The same states as the <a href="text-field.html">text field</a>. Hover and focus are forced with <code>data-state</code>.</p>
+      <div class="ds-matrix"><table>
+        <thead><tr><th scope="col">Variant</th><th scope="col">Default</th><th scope="col">Hover</th><th scope="col">Focus</th><th scope="col">Invalid</th><th scope="col">Disabled</th><th scope="col">Read-only</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Empty</th>
+            <td><textarea class="field__input" rows="3" aria-label="Description, default" placeholder="What is it?" style="min-width: 12rem;"></textarea></td>
+            <td><textarea class="field__input" rows="3" aria-label="Description, hover" placeholder="What is it?" data-state="hover" style="min-width: 12rem;"></textarea></td>
+            <td><textarea class="field__input" rows="3" aria-label="Description, focus" placeholder="What is it?" data-state="focus" style="min-width: 12rem;"></textarea></td>
+            <td><textarea class="field__input" rows="3" aria-label="Description, invalid" placeholder="What is it?" aria-invalid="true" style="min-width: 12rem;"></textarea></td>
+            <td><textarea class="field__input" rows="3" aria-label="Description, disabled" placeholder="What is it?" disabled style="min-width: 12rem;"></textarea></td>
+            <td><textarea class="field__input" rows="3" aria-label="Description, read-only" readonly style="min-width: 12rem;"></textarea></td></tr>
+          <tr><th scope="row">Filled</th>
+            <td><textarea class="field__input" rows="3" aria-label="Reason, default" style="min-width: 12rem;">Already listed as the Lavender Festival weekend.</textarea></td>
+            <td><textarea class="field__input" rows="3" aria-label="Reason, hover" data-state="hover" style="min-width: 12rem;">Already listed as the Lavender Festival weekend.</textarea></td>
+            <td><textarea class="field__input" rows="3" aria-label="Reason, focus" data-state="focus" style="min-width: 12rem;">Already listed as the Lavender Festival weekend.</textarea></td>
+            <td><textarea class="field__input" rows="3" aria-label="Reason, invalid" aria-invalid="true" style="min-width: 12rem;">Already listed as the Lavender Festival weekend.</textarea></td>
+            <td><textarea class="field__input" rows="3" aria-label="Reason, disabled" disabled style="min-width: 12rem;">Already listed as the Lavender Festival weekend.</textarea></td>
+            <td><textarea class="field__input" rows="3" aria-label="Reason, read-only" readonly style="min-width: 12rem;">Already listed as the Lavender Festival weekend.</textarea></td></tr>
+        </tbody>
+      </table></div>
+      <h3>Both themes</h3>
+      <div class="ds-themes">
+        <div data-theme="light"><div class="field"><label class="field__label" for="tl-desc">Description</label><textarea class="field__input" id="tl-desc" rows="3" data-state="focus">Street performers along Lakeshore Rd all afternoon.</textarea><div class="field__foot"><p class="field__hint">Who is it good for?</p><span class="field__counter" aria-hidden="true">52 / 500</span></div></div></div>
+        <div data-theme="dark"><div class="field"><label class="field__label" for="td-desc">Description</label><textarea class="field__input" id="td-desc" rows="3" data-state="focus">Street performers along Lakeshore Rd all afternoon.</textarea><div class="field__foot"><p class="field__hint">Who is it good for?</p><span class="field__counter" aria-hidden="true">52 / 500</span></div></div></div>
+      </div>
+      <ul>
+        <li><b>Over the limit</b>: let people type past it (then trim), rather than cutting them off with <code>maxlength</code> mid-sentence when the limit is a soft one. Mark the field invalid and say how much to shorten.</li>
+        <li><b>Read-only</b> shows a submitted description to an admin: well fill, no border, selectable.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="responsive"><h2><a href="#responsive">Responsive behaviour</a></h2>
+      <ul>
+        <li>Full width of its column at every breakpoint.</li>
+        <li>Growing with content keeps the whole text visible while typing on a phone; inside a bottom-sheet dialog the sheet scrolls, not the textarea, until the sheet reaches 88% of the viewport height.</li>
+        <li>The resize handle is for pointer users; on touch screens the auto-grow does the same job.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="theming"><h2><a href="#theming">Theming</a></h2>
+      <p>Identical to the <a href="text-field.html#theming">text field</a>: alias tokens for fill, value and placeholder, and <code>--sd-field-border</code> for the edge. The counter reads <code>--colorNeutralForeground3</code>; over the limit, the error line carries the colour, not the counter.</p>
+    </section>
+
+    <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
+      <h3>Role and pattern</h3>
+      <p>Native <code>&lt;textarea&gt;</code> (role textbox, multi-line); no APG widget pattern is needed.</p>
+      <h3>Keyboard</h3>
+      <table class="ds-table ds-keys"><thead><tr><th scope="col">Key</th><th scope="col">Action</th></tr></thead><tbody>
+        <tr><td><kbd>Tab</kbd> / <kbd>Shift</kbd>+<kbd>Tab</kbd></td><td>Into and out of the textarea. Tab never inserts a tab character.</td></tr>
+        <tr><td><kbd>Enter</kbd></td><td>New line. It does not submit the form; the person uses the dialog's button.</td></tr>
+        <tr><td><kbd>↑</kbd> / <kbd>↓</kbd>, <kbd>Home</kbd> / <kbd>End</kbd></td><td>Move the caret between lines and to the line ends.</td></tr>
+      </tbody></table>
+      <h3>Focus</h3>
+      <p>The field's own ring (focus border and 3px halo), as on every text field.</p>
+      <h3>Labelling</h3>
+      <p>A visible <code>&lt;label for&gt;</code>. The limit is described once ("Up to 280 characters.") through <code>aria-describedby</code>. The visible counter is <code>aria-hidden</code> while there is plenty of room, so it is not read on every keystroke; when a tenth of the limit is left it joins the described-by list and a polite live region says "25 characters left".</p>
+      <h3>Contrast</h3>
+      <div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0; gap: var(--spacingHorizontalS);">
+        <div class="ds-pair"><span>Text on textarea</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground1|--colorNeutralBackground1" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Placeholder and counter on card</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground3|--colorNeutralBackground1" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Border on card</span><span class="ds-pair__ratio" data-contrast="--colorNeutralStrokeAccessible|--colorNeutralBackground1" data-min="3"></span></div>
+        <div class="ds-pair"><span>Focus border on card</span><span class="ds-pair__ratio" data-contrast="--colorStrokeFocus2|--colorNeutralBackground1" data-min="3"></span></div>
+        <div class="ds-pair"><span>Error text on card</span><span class="ds-pair__ratio" data-contrast="--colorStatusDangerForeground1|--colorNeutralBackground1" data-min="4.5"></span></div>
+      </div>
+      <h3>Motion</h3>
+      <p>The height follows the content instantly; only the border and halo transition (<code>--durationFast</code>, zero with reduced motion).</p>
+      <h3>Touch</h3>
+      <p>At least 96px tall, well over the target minimum. Text spacing overrides (1.4.12) only make it grow; nothing is clipped.</p>
+    </section>
+
+    <section class="ds-section" id="content"><h2><a href="#content">Content</a></h2>
+      <ul>
+        <li>The label names the thing: "Description", "Reason". Put the question in the placeholder or hint: "What is it, and who is it good for?"</li>
+        <li>Say who will read it when that changes what people write: "The reason is shown to the person who sent it."</li>
+        <li>Counters read "212 / 500" visually; announced, "288 characters left".</li>
+        <li>Over the limit, say what to do: "Shorten the description to 500 characters."</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="do-dont"><h2><a href="#do-dont">Do and don't</a></h2>
+      <div class="ds-dodont">
+        <figure class="ds-do"><div class="ds-example__canvas ds-example__canvas--stack"><div class="field"><label class="field__label" for="dd1">Description</label><textarea class="field__input" id="dd1" rows="3" placeholder="What is it, and who is it good for?"></textarea></div></div><figcaption>Three lines to start, a visible label, and a question that prompts a useful answer (D10).</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas ds-example__canvas--stack"><div class="field"><label class="field__label" for="dd2">Description</label><input class="field__input" id="dd2" type="text" placeholder="What is it, and who is it good for?"></div></div><figcaption>A single-line input for a description: the text scrolls out of sight as the person writes.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas ds-example__canvas--stack"><div class="field"><label class="field__label" for="dd3">Reason <span class="field__req">Optional</span></label><textarea class="field__input" id="dd3" rows="3"></textarea></div></div><figcaption>Say in words that a reason is optional (D24), so admins are not blocked from rejecting.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas ds-example__canvas--stack"><div class="field"><label class="field__label" for="dd4">Reason</label><textarea class="field__input" id="dd4" rows="1" style="min-height: 0; height: var(--targetComfortable);"></textarea></div></div><figcaption>A one-row textarea squeezed to input height: it looks like a text field and hides the second line.</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="ds-section" id="tokens"><h2><a href="#tokens">Tokens</a></h2>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Part</th><th scope="col">Token</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead>
+        <tbody>
+          <tr><td>Fill</td><td><code>--colorNeutralBackground1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralBackground1" data-swatch></i><span data-token="--colorNeutralBackground1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralBackground1" data-swatch></i><span data-token="--colorNeutralBackground1"></span></span></td></tr>
+          <tr><td>Text</td><td><code>--colorNeutralForeground1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralForeground1" data-swatch></i><span data-token="--colorNeutralForeground1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralForeground1" data-swatch></i><span data-token="--colorNeutralForeground1"></span></span></td></tr>
+          <tr><td>Placeholder, counter</td><td><code>--colorNeutralForeground3</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralForeground3" data-swatch></i><span data-token="--colorNeutralForeground3"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralForeground3" data-swatch></i><span data-token="--colorNeutralForeground3"></span></span></td></tr>
+          <tr><td>Border (<code>--sd-field-border</code>)</td><td><code>--colorNeutralStrokeAccessible</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralStrokeAccessible" data-swatch></i><span data-token="--colorNeutralStrokeAccessible"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralStrokeAccessible" data-swatch></i><span data-token="--colorNeutralStrokeAccessible"></span></span></td></tr>
+          <tr><td>Focus border</td><td><code>--colorStrokeFocus2</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorStrokeFocus2" data-swatch></i><span data-token="--colorStrokeFocus2"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorStrokeFocus2" data-swatch></i><span data-token="--colorStrokeFocus2"></span></span></td></tr>
+          <tr><td>Invalid border</td><td><code>--colorStatusDangerForeground3</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorStatusDangerForeground3" data-swatch></i><span data-token="--colorStatusDangerForeground3"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorStatusDangerForeground3" data-swatch></i><span data-token="--colorStatusDangerForeground3"></span></span></td></tr>
+          <tr><td>Padding, vertical / horizontal</td><td><code>--spacingVerticalMNudge</code> / <code>--spacingHorizontalM</code></td><td colspan="2"><span data-token="--spacingVerticalMNudge"></span> / <span data-token="--spacingHorizontalM"></span></td></tr>
+          <tr><td>Line height</td><td><code>--lineHeightNormal</code></td><td colspan="2"><span data-token="--lineHeightNormal"></span></td></tr>
+          <tr><td>Type</td><td><code>--typographyBody1</code></td><td colspan="2"><span data-token="--typographyBody1"></span></td></tr>
+          <tr><td>Radius</td><td><code>--borderRadiusMedium</code></td><td colspan="2"><span data-token="--borderRadiusMedium"></span></td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section class="ds-section" id="code"><h2><a href="#code">Code</a></h2>
+      <pre><code>&lt;div class="field"&gt;
+  &lt;label class="field__label" for="d10-desc"&gt;Description&lt;/label&gt;
+  &lt;textarea class="field__input" id="d10-desc" rows="3"
+            placeholder="What is it, and who is it good for?"&gt;&lt;/textarea&gt;
+&lt;/div&gt;
+
+&lt;sd-text-input label="Reason" multiline [rows]="3" placeholder="Already listed as the Lavender Festival weekend." /&gt;</code></pre>
+      <table class="ds-table"><thead><tr><th scope="col">Class / attribute</th><th scope="col">Effect</th></tr></thead><tbody>
+        <tr><td><code>textarea.field__input</code></td><td>Auto height, 96px minimum, vertical resize, 1.5 line height.</td></tr>
+        <tr><td><code>rows="3"</code></td><td>Starting height where <code>field-sizing</code> is unsupported.</td></tr>
+        <tr><td><code>maxlength</code></td><td>Hard limit; only when the server truncates. Pair with a counter.</td></tr>
+        <tr><td><code>.field__foot</code> + <code>.field__counter</code></td><td>Hint and counter on one line.</td></tr>
+        <tr><td><code>aria-invalid</code>, <code>readonly</code>, <code>disabled</code></td><td>Same as the text field.</td></tr>
+      </tbody></table>
+    </section>
+
+    <section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>
+      <p>Extracted from these mocks:</p>
+      <ul>
+        <li><a href="../../mocks/pages/dialogs.html#dialog-suggest">pages/dialogs D10</a> Suggest an event: Description.</li>
+        <li><a href="../../mocks/pages/dialogs.html#dialog-reject">pages/dialogs D24</a> Reject a submission: optional Reason.</li>
+        <li><a href="../../mocks/pages/dialogs.html#dialog-admin-edit">pages/dialogs AD3</a> Edit photo details: alt text and attribution are single-line inputs on purpose (short values); a longer caption field would be a textarea.</li>
+      </ul>
+      <p>Drift fixed during extraction (see the <a href="../README.md">README drift log</a>): D04 (placeholder contrast), D06 (border contrast), D15 (14px padding snapped to the 4px scale). Not yet in the mocks: the counter, the over-limit error, and auto-grow.</p>
+    </section>
+
+    <footer class="ds-footer"><span>Saturdaze design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/icons.js"></script>
+<script src="../assets/ds.js"></script>
+</body>
+</html>

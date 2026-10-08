@@ -1,0 +1,346 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Layout — Saturdaze design system</title>
+<meta name="description" content="Breakpoints, the 4/8/12 column grid, container widths, page spacing and the four page templates.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html"><span class="brand-mark" aria-hidden="true"></span>Saturdaze DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Actions</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+    </ul></details>
+    <details open><summary>Inputs</summary><ul>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/chip-input.html">Chip input</a></li>
+      <li><a href="../components/file-upload.html">File upload</a></li>
+      <li><a href="../components/photo-pick.html">Photo pick</a></li>
+      <li><a href="../components/rating.html">Rating</a></li>
+      <li><a href="../components/vote-row.html">Vote row</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+    </ul></details>
+    <details open><summary>Navigation</summary><ul>
+      <li><a href="../components/top-bar.html">Top bar</a></li>
+      <li><a href="../components/bottom-nav.html">Bottom nav</a></li>
+      <li><a href="../components/sidebar-navigation.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs (segments)</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+      <li><a href="../components/footer.html">Footer</a></li>
+    </ul></details>
+    <details open><summary>Containers and overlays</summary><ul>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/container.html">Container and grid</a></li>
+      <li><a href="../components/page-header.html">Page header</a></li>
+    </ul></details>
+    <details open><summary>Data display</summary><ul>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/activity-feed.html">Activity feed</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/chip.html">Chip</a></li>
+      <li><a href="../components/filter-chip.html">Filter chip</a></li>
+      <li><a href="../components/disc.html">Disc</a></li>
+      <li><a href="../components/media.html">Media</a></li>
+      <li><a href="../components/cover.html">Cover photo</a></li>
+      <li><a href="../components/stat.html">Stat</a></li>
+      <li><a href="../components/itinerary.html">Itinerary</a></li>
+      <li><a href="../components/map.html">Map</a></li>
+    </ul></details>
+    <details open><summary>Feedback</summary><ul>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/alert.html">Alert</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/progress-bar.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Auth and marketing</summary><ul>
+      <li><a href="../components/auth-card.html">Auth card</a></li>
+      <li><a href="../components/hero.html">Hero</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/data-tables-and-lists.html">Tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Foundation</p>
+      <h1>Layout</h1>
+      <p class="ds-lead">Layout decides where things go as the window grows: one column on a phone, a top bar and centred dialogs from 720px, the day beside its map from 1024px.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">Reflows at 320px</span><span class="ds-pill">Tokens: <code>--layout*</code></span><span class="ds-pill">Mobile first · rem breakpoints</span></div>
+      <ul class="ds-toc">
+        <li><a href="#overview">Overview</a></li><li><a href="#breakpoints">Breakpoints</a></li><li><a href="#grid">Grid</a></li><li><a href="#containers">Containers</a></li><li><a href="#page-spacing">Page spacing</a></li><li><a href="#templates">Templates</a></li><li><a href="#usage">Usage</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#tokens">Tokens</a></li><li><a href="#sources">Sources</a></li>
+      </ul>
+    </header>
+
+    <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+      <p>Saturdaze is a phone app first: most planning happens on a phone on Friday night or Saturday morning. Layout starts at one column at 360px and adds structure at four rem breakpoints, on a 4, 8 then 12 column grid whose gutters and margins grow with it.</p>
+      <ul>
+        <li><b>Four breakpoints:</b> 380, 576, 720 and 1024px, written in rem.</li>
+        <li><b>A responsive grid:</b> 4 / 8 / 12 columns, 16 / 24 / 32px gutters, margins equal to the gutter.</li>
+        <li><b>Seven container widths</b> from the 240px sidebar to the 1120px content column, plus the chrome heights and page spacing.</li>
+        <li><b>Four page templates:</b> app shell, auth, admin and the weekend planner.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="breakpoints"><h2><a href="#breakpoints">Breakpoints</a></h2>
+      <p>Saturdaze is designed at 360px first and adds layout as space allows: every rule is a <code>min-width</code> query except the two small-phone retunes. The breakpoints are in rem (D24), so a reader with a larger default font reaches the phone layout sooner instead of getting cramped text in a desktop layout.</p>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Token</th><th scope="col">Value</th><th scope="col">What changes at and above it</th></tr></thead>
+        <tbody>
+          <tr><td><code>--layoutBreakpointSm</code></td><td><span data-token="--layoutBreakpointSm"></span> (380px)</td><td>Small phones end. Below it the four largest type sizes step down, and the site bar hides its secondary links so the brand and sign-in button fit.</td></tr>
+          <tr><td><code>--layoutBreakpointMd</code></td><td><span data-token="--layoutBreakpointMd"></span> (576px)</td><td>Description lists put the label in a column beside the value; photo pickers go three across.</td></tr>
+          <tr><td><code>--layoutBreakpointLg</code></td><td><span data-token="--layoutBreakpointLg"></span> (720px)</td><td>The top bar replaces the bottom nav. Dialogs change from a bottom sheet to a centred modal and their footer buttons move into one right-aligned row. The grid goes to 8 columns with 24px gutters, section spacing to 40px, the auth card to 32px padding, and card grids to two across.</td></tr>
+          <tr><td><code>--layoutBreakpointXl</code></td><td><span data-token="--layoutBreakpointXl"></span> (1024px)</td><td>The Weekend planner puts the day beside a sticky map. Admin navigation becomes a 240px sidebar. The grid goes to 12 columns with 32px gutters, card grids to three across, the two days side by side, and display type steps up.</td></tr>
+        </tbody>
+      </table></div>
+      <p>CSS media queries cannot read custom properties, so <code>components.css</code> repeats the rem values literally (<code>@media (min-width: 45rem)</code>). The tokens are the reference; keep them and the queries in step. Upper bounds use the value just below the next breakpoint (<code>max-width: 44.9375rem</code>, <code>23.6875rem</code>) so no width matches two ranges.</p>
+      <div class="ds-note">Navigation and dialogs both switch at 720px on purpose: a phone-sized window gets the thumb-reachable bottom nav and bottom sheets together, and a tablet or desktop gets the top bar and centred dialogs together. See <a href="responsive.html">responsive</a> for each component's behaviour.</div>
+    </section>
+
+    <section class="ds-section" id="grid"><h2><a href="#grid">Columns, gutters and margins</a></h2>
+      <p>Columns, gutters and margins grow together. The margin (the padding at the edge of the container) always equals the gutter, so content lines up with the columns and nothing touches the screen edge.</p>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Window</th><th scope="col">Columns</th><th scope="col">Gutter</th><th scope="col">Margin</th></tr></thead>
+        <tbody>
+          <tr><td>Under 720px</td><td>4</td><td>16px</td><td>16px</td></tr>
+          <tr><td>720 to 1023px</td><td>8</td><td>24px</td><td>24px</td></tr>
+          <tr><td>1024px and up</td><td>12</td><td>32px</td><td>32px</td></tr>
+        </tbody>
+      </table></div>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0;">
+          <div class="ds-grid-demo" aria-hidden="true"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span><span>11</span><span>12</span></div>
+        </div>
+        <div class="ds-example__caption"><span>Live: <span data-token="--layoutColumns"></span> columns, <span data-token="--layoutGutter"></span> gutter and margin at this window width. Resize to see 4, 8 and 12.</span></div>
+      </div>
+      <p>Most screens do not place things on the 12-column grid directly; they use the layout primitives built on the same tokens: <code>.container</code> (centred, margin padding), <code>.grid-cards</code> (1, 2, then 3 across), <code>.grid-2</code> and <code>.grid-3</code>, <code>.grid-days</code> (Saturday and Sunday side by side from 1024px) and <code>.planner</code>. See <a href="../components/container.html">container and grid</a>. Every track is <code>minmax(0, 1fr)</code>, so long place names wrap instead of pushing a column wider.</p>
+    </section>
+
+    <section class="ds-section" id="containers"><h2><a href="#containers">Containers</a></h2>
+      <p>Content never runs the full width of a wide window. Each kind of screen has a maximum width; the container centres it and adds the margin.</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0;">
+          <div class="ds-grid-demo" style="--layoutColumns: 1;" aria-hidden="true">
+            <span style="max-width: var(--layoutContentMaxWidth); height: 2.5rem;">Content · 1120px</span>
+            <span style="max-width: var(--layoutStackMaxWidth); height: 2.5rem;">Stack · 720px</span>
+            <span style="max-width: var(--layoutProseMaxWidth); height: 2.5rem;">Prose · 680px</span>
+            <span style="max-width: var(--layoutDialogWidthWide); height: 2.5rem;">Wide dialog · 520px</span>
+            <span style="max-width: var(--layoutDialogWidth); height: 2.5rem;">Dialog · 480px</span>
+            <span style="max-width: var(--layoutNarrowMaxWidth); height: 2.5rem;">Narrow · 440px</span>
+            <span style="max-width: var(--layoutSidebarWidth); height: 2.5rem;">Sidebar · 240px</span>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>Each bar is capped at its token; on a narrow window they all reach the edge, which is the point.</span></div>
+      </div>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Token</th><th scope="col">Value</th><th scope="col">Used for</th></tr></thead>
+        <tbody>
+          <tr><td><code>--layoutContentMaxWidth</code></td><td><span data-token="--layoutContentMaxWidth"></span> (1120px)</td><td><code>.container</code>: Weekend, Ideas, Past, admin pages, the landing page</td></tr>
+          <tr><td><code>--layoutStackMaxWidth</code></td><td><span data-token="--layoutStackMaxWidth"></span> (720px)</td><td><code>.container--stack</code>: single-column screens such as Family and settings</td></tr>
+          <tr><td><code>--layoutProseMaxWidth</code></td><td><span data-token="--layoutProseMaxWidth"></span> (680px)</td><td>Legal pages (<code>.prose</code>)</td></tr>
+          <tr><td><code>--layoutNarrowMaxWidth</code></td><td><span data-token="--layoutNarrowMaxWidth"></span> (440px)</td><td>The auth column, the floating bottom nav</td></tr>
+          <tr><td><code>--layoutDialogWidth</code>, <code>--layoutDialogWidthWide</code></td><td><span data-token="--layoutDialogWidth"></span> / <span data-token="--layoutDialogWidthWide"></span> (480 / 520px)</td><td>Dialog panels; wide for forms with a photo or two-column fields</td></tr>
+          <tr><td><code>--layoutSidebarWidth</code></td><td><span data-token="--layoutSidebarWidth"></span> (240px)</td><td>Admin sidebar from 1024px (and the sidebar of this site)</td></tr>
+          <tr><td><code>--layoutMeasure</code></td><td><span data-token="--layoutMeasure"></span></td><td>The longest line of running text (see <a href="typography.html#measure">typography</a>)</td></tr>
+          <tr><td><code>--layoutTopBarHeight</code></td><td><span data-token="--layoutTopBarHeight"></span> (64px)</td><td>Top bar, site bar, admin bar; the sticky map's offset</td></tr>
+          <tr><td><code>--layoutBottomNavHeight</code></td><td><span data-token="--layoutBottomNavHeight"></span> (60px)</td><td>Bottom nav; the page's bottom padding and the toast offset clear it</td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section class="ds-section" id="page-spacing"><h2><a href="#page-spacing">Section and page spacing</a></h2>
+      <p>Three tokens set the rhythm of a whole page, outside any component.</p>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Token</th><th scope="col">Value</th><th scope="col">Used for</th></tr></thead>
+        <tbody>
+          <tr><td><code>--layoutSpaceSection</code></td><td><span data-token="--layoutSpaceSection"></span> (32px, 40px from 720px)</td><td>Between the sections of a page: the cover and the planner, Saturday and Sunday on a phone, groups of cards on Ideas</td></tr>
+          <tr><td><code>--layoutSpacePage</code></td><td><span data-token="--layoutSpacePage"></span> (64px)</td><td>Page bottom padding from 720px, landing bands, desktop hero padding (D16)</td></tr>
+          <tr><td><code>--layoutSpacePageLarge</code></td><td><span data-token="--layoutSpacePageLarge"></span> (80px)</td><td>Before the site footer on the landing and legal pages</td></tr>
+        </tbody>
+      </table></div>
+      <p>On phones the app's main area also clears the floating bottom nav: its bottom padding is the nav height plus 12px offset plus 24px plus the safe-area inset, so the last card is never hidden behind the nav (ADR-005 covers the iOS chrome handling).</p>
+    </section>
+
+    <section class="ds-section" id="templates"><h2><a href="#templates">Page templates</a></h2>
+      <p>Four page shapes cover every screen in the mocks. The schematics show the regions and the tokens that size them; the components that fill them are linked.</p>
+      <h3>App shell</h3>
+      <p>Weekend, Ideas, Past and Family. Under 720px: a page header, the content, and the floating <a href="../components/bottom-nav.html">bottom nav</a> pill, 440px wide at most and 12px above the bottom edge and safe area. From 720px: the sticky <a href="../components/top-bar.html">top bar</a> (transparent until the page scrolls, then a blurred canvas with <code>--shadow2</code>) and a centred 1120px container.</p>
+      <div class="ds-grid-2">
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack">
+          <div class="ds-grid-demo" style="--layoutColumns: 1; max-width: 14rem;" role="img" aria-label="App shell on a phone: page header, content, floating bottom nav">
+            <span style="height: 3rem;">Page header</span>
+            <span style="height: 9rem;">Content: cards, the day timeline</span>
+            <span style="height: 2.5rem; border-radius: var(--borderRadiusCircular);">Bottom nav · 60px pill</span>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>Under 720px.</span></div>
+      </div>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack">
+          <div class="ds-grid-demo" style="--layoutColumns: 1;" role="img" aria-label="App shell from 720px: sticky top bar, page header, content">
+            <span style="height: 2.5rem;">Top bar · 64px, sticky</span>
+            <span style="height: 3rem;">Page header</span>
+            <span style="height: 7.5rem;">Content · up to 1120px</span>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>From 720px.</span></div>
+      </div>
+      </div>
+      <h3>Auth</h3>
+      <p>Sign in, create account, reset password, verify email, admin sign in. A single 440px column centred on the canvas (<code>.auth</code>, <code>.auth__col</code>): the brand, one <a href="../components/auth-card.html">auth card</a>, then quiet footer links. No navigation.</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack">
+          <div class="ds-grid-demo" style="--layoutColumns: 1;" role="img" aria-label="Auth screen: brand, auth card and footer links in a centred 440px column">
+            <span style="height: 2rem; max-width: var(--layoutNarrowMaxWidth); width: 100%; justify-self: center;">Brand</span>
+            <span style="height: 8rem; max-width: var(--layoutNarrowMaxWidth); width: 100%; justify-self: center;">Auth card · 440px column</span>
+            <span style="height: 2rem; max-width: var(--layoutNarrowMaxWidth); width: 100%; justify-self: center;">Footer links</span>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>Centred at every width; the card's padding grows from 24 to 32px at 720px.</span></div>
+      </div>
+      <h3>Admin</h3>
+      <p>Places, reviews, activity, ingestion skips. Under 1024px the admin navigation is a sticky bar with scrollable links; from 1024px it is a 240px <a href="../components/sidebar-navigation.html">sidebar</a> on the left with the account at the bottom, and the page sits in the remaining columns.</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack">
+          <div class="ds-grid-demo" style="--layoutColumns: 4;" role="img" aria-label="Admin from 1024px: sidebar on the left, page header and content on the right">
+            <span style="grid-row: span 2; height: auto;">Sidebar · 240px</span>
+            <span style="grid-column: span 3; height: 3rem;">Page header</span>
+            <span style="grid-column: span 3; height: 8rem;">Table, stats, cards</span>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>From 1024px.</span></div>
+      </div>
+      <h3>Weekend planner</h3>
+      <p>The Weekend page under the cover: a toolbar with the Saturday and Sunday <a href="../components/tabs.html">segments</a>, then the day's <a href="../components/itinerary.html">itinerary</a> and its <a href="../components/map.html">map</a>. Under 1024px they stack with the map first, so the route is visible before the list; from 1024px they sit side by side in two equal columns with a 32px gap, and the map sticks 16px below the top bar while the day scrolls.</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack">
+          <div class="ds-grid-demo" style="--layoutColumns: 2;" role="img" aria-label="Weekend planner from 1024px: segments across the top, day timeline beside a sticky map">
+            <span style="grid-column: 1 / -1; height: 2.5rem;">Saturday | Sunday segments</span>
+            <span style="height: 10rem;">Day timeline</span>
+            <span style="height: 10rem;">Map · sticky under the top bar</span>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>From 1024px. Under it, one column: segments, map, day.</span></div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="usage"><h2><a href="#usage">Usage</a></h2>
+      <ul>
+        <li><b>Mobile first.</b> Write the 360px layout, then add <code>min-width</code> queries at the four breakpoints. Do not invent breakpoints for one component; if something breaks between them, fix the component's flexibility.</li>
+        <li><b>Use the containers.</b> Pages start with <code>.container</code> or <code>.container--stack</code>; no ad-hoc <code>max-width</code> on page sections.</li>
+        <li><b>No horizontal scroll at 320px.</b> Every grid track is <code>minmax(0, 1fr)</code>, long words wrap (<code>overflow-wrap: anywhere</code> on names and URLs), media is <code>max-width: 100%</code>. The one exception is <code>.scroller-x</code>, a deliberate horizontal list of chips or photos on phones, which bleeds to the screen edge and becomes a wrapping row from 720px.</li>
+        <li><b>Margins equal gutters.</b> Never set page padding by hand; <code>--layoutMargin</code> follows the gutter.</li>
+        <li><b>Respect the chrome.</b> Fixed and sticky elements clear the top bar, bottom nav and safe-area insets with the layout tokens, never with magic numbers.</li>
+        <li><b>Reorder with care.</b> Visual order follows source order. The planner's map-first phone layout is the one exception, and the map duplicates information the day list carries, so keyboard and screen reader order (day first) loses nothing.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
+      <ul>
+        <li><b>Reflow (1.4.10).</b> Every page works at 320px CSS width (a 1280px window at 400% zoom) without two-dimensional scrolling. Tables are the exception the criterion allows, and they scroll inside their own wrapper.</li>
+        <li><b>Resize text (1.4.4).</b> Breakpoints in rem mean that enlarging the browser's text size moves the page to a narrower layout before anything overlaps (D24).</li>
+        <li><b>Orientation (1.3.4).</b> No layout is locked to portrait or landscape; a phone on its side gets the 720px layout if it is wide enough.</li>
+        <li><b>Focus not obscured (2.4.11).</b> The sticky top bar and floating bottom nav must not cover the focused element. The mocks set <code>scroll-padding-top</code> to the top bar height plus 16px; the app should do the same with <code>--layoutTopBarHeight</code>, and add <code>scroll-padding-bottom</code> for <code>--layoutBottomNavHeight</code> on phones, which the mocks do not yet.</li>
+        <li><b>Landmarks.</b> Each template has one <code>header</code> (top bar), one <code>nav</code> per navigation (labelled), one <code>main</code>, and a <code>footer</code> where there is one; the bottom nav and the top bar are the same <code>nav</code> landmark at different widths.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="tokens"><h2><a href="#tokens">Tokens</a></h2>
+      <p>Responsive tokens (columns, gutter, margin, section space) show their value at the current window width.</p>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Part</th><th scope="col">Token</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead>
+        <tbody>
+          <tr><td>Breakpoint: small phones end</td><td><code>--layoutBreakpointSm</code></td><td colspan="2"><span data-token="--layoutBreakpointSm"></span></td></tr>
+          <tr><td>Breakpoint: label beside value, 3-up photo picks</td><td><code>--layoutBreakpointMd</code></td><td colspan="2"><span data-token="--layoutBreakpointMd"></span></td></tr>
+          <tr><td>Breakpoint: top bar, centred dialogs</td><td><code>--layoutBreakpointLg</code></td><td colspan="2"><span data-token="--layoutBreakpointLg"></span></td></tr>
+          <tr><td>Breakpoint: day beside map, admin sidebar</td><td><code>--layoutBreakpointXl</code></td><td colspan="2"><span data-token="--layoutBreakpointXl"></span></td></tr>
+          <tr><td>Columns (4 / 8 / 12)</td><td><code>--layoutColumns</code></td><td colspan="2"><span data-token="--layoutColumns"></span></td></tr>
+          <tr><td>Gutter (16 / 24 / 32px)</td><td><code>--layoutGutter</code></td><td colspan="2"><span data-token="--layoutGutter"></span></td></tr>
+          <tr><td>Margin (equals the gutter)</td><td><code>--layoutMargin</code></td><td colspan="2"><span data-token="--layoutMargin"></span></td></tr>
+          <tr><td>Content container</td><td><code>--layoutContentMaxWidth</code></td><td colspan="2"><span data-token="--layoutContentMaxWidth"></span></td></tr>
+          <tr><td>Single-column container</td><td><code>--layoutStackMaxWidth</code></td><td colspan="2"><span data-token="--layoutStackMaxWidth"></span></td></tr>
+          <tr><td>Legal prose</td><td><code>--layoutProseMaxWidth</code></td><td colspan="2"><span data-token="--layoutProseMaxWidth"></span></td></tr>
+          <tr><td>Auth column, bottom nav</td><td><code>--layoutNarrowMaxWidth</code></td><td colspan="2"><span data-token="--layoutNarrowMaxWidth"></span></td></tr>
+          <tr><td>Dialog</td><td><code>--layoutDialogWidth</code></td><td colspan="2"><span data-token="--layoutDialogWidth"></span></td></tr>
+          <tr><td>Wide dialog</td><td><code>--layoutDialogWidthWide</code></td><td colspan="2"><span data-token="--layoutDialogWidthWide"></span></td></tr>
+          <tr><td>Measure for running text</td><td><code>--layoutMeasure</code></td><td colspan="2"><span data-token="--layoutMeasure"></span></td></tr>
+          <tr><td>Admin sidebar</td><td><code>--layoutSidebarWidth</code></td><td colspan="2"><span data-token="--layoutSidebarWidth"></span></td></tr>
+          <tr><td>Top bar height</td><td><code>--layoutTopBarHeight</code></td><td colspan="2"><span data-token="--layoutTopBarHeight"></span></td></tr>
+          <tr><td>Bottom nav height</td><td><code>--layoutBottomNavHeight</code></td><td colspan="2"><span data-token="--layoutBottomNavHeight"></span></td></tr>
+          <tr><td>Between page sections (32 / 40px)</td><td><code>--layoutSpaceSection</code></td><td colspan="2"><span data-token="--layoutSpaceSection"></span></td></tr>
+          <tr><td>Page bottom, landing bands</td><td><code>--layoutSpacePage</code></td><td colspan="2"><span data-token="--layoutSpacePage"></span></td></tr>
+          <tr><td>Before the site footer</td><td><code>--layoutSpacePageLarge</code></td><td colspan="2"><span data-token="--layoutSpacePageLarge"></span></td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section class="ds-section" id="sources"><h2><a href="#sources">Sources and drift</a></h2>
+      <p>Extracted from <code>styles/app.css</code> (<code>--sd-content-max-w</code>, <code>--sd-stack-max-w</code>, <code>--sd-gutter</code>, <code>--sd-topbar-h</code>, <code>--sd-bottom-nav-h</code> and every <code>@media</code> query) and <a href="../../mocks/styles/tokens.css">styles/tokens.css</a> (<code>--sd-app-max-w</code>), checked on <a href="../../mocks/pages/weekend.html">pages/weekend</a>, <a href="../../mocks/pages/family.html">pages/family</a>, <a href="../../mocks/pages/sign-in.html">pages/sign-in</a>, <a href="../../mocks/pages/admin.places.html">pages/admin.places</a>, <a href="../../mocks/pages/landing.html">pages/landing</a> and <a href="../../mocks/pages/legal.html">pages/legal</a>.</p>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Mock</th><th scope="col">System</th><th scope="col">Drift</th></tr></thead>
+        <tbody>
+          <tr><td>Breakpoints 379, 576, 719/720, 1024px</td><td><code>--layoutBreakpointSm/Md/Lg/Xl</code> at 23.75, 36, 45, 64rem</td><td>D24</td></tr>
+          <tr><td><code>--sd-content-max-w</code> 1120px, <code>--sd-stack-max-w</code> 720px, <code>--sd-app-max-w</code> 440px</td><td><code>--layoutContentMaxWidth</code>, <code>--layoutStackMaxWidth</code>, <code>--layoutNarrowMaxWidth</code></td><td>Same values in rem</td></tr>
+          <tr><td><code>--sd-gutter</code> 16px at every width</td><td><code>--layoutGutter</code> 16 / 24 / 32px with <code>--layoutColumns</code> 4 / 8 / 12</td><td>New responsive grid</td></tr>
+          <tr><td><code>--sd-topbar-h</code> 64px, <code>--sd-bottom-nav-h</code> 60px</td><td><code>--layoutTopBarHeight</code>, <code>--layoutBottomNavHeight</code></td><td>Same values</td></tr>
+          <tr><td>Hero padding 72px at desktop</td><td><code>--layoutSpacePage</code> (64px)</td><td>D16</td></tr>
+        </tbody>
+      </table></div>
+      <p>New in the system: <code>--layoutProseMaxWidth</code>, the dialog widths, <code>--layoutSidebarWidth</code> and the section and page spacing tokens, all harvested from values the mocks repeated inline.</p>
+    </section>
+
+    <footer class="ds-footer"><span>Saturdaze design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/icons.js"></script>
+<script src="../assets/ds.js"></script>
+</body>
+</html>

@@ -1,0 +1,421 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Page header — Saturdaze design system</title>
+<meta name="description" content="The page header names the screen, says what it is for and holds its actions; the section header does the same for each group on the page.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html"><span class="brand-mark" aria-hidden="true"></span>Saturdaze DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Actions</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+    </ul></details>
+    <details open><summary>Inputs</summary><ul>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/chip-input.html">Chip input</a></li>
+      <li><a href="../components/file-upload.html">File upload</a></li>
+      <li><a href="../components/photo-pick.html">Photo pick</a></li>
+      <li><a href="../components/rating.html">Rating</a></li>
+      <li><a href="../components/vote-row.html">Vote row</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+    </ul></details>
+    <details open><summary>Navigation</summary><ul>
+      <li><a href="../components/top-bar.html">Top bar</a></li>
+      <li><a href="../components/bottom-nav.html">Bottom nav</a></li>
+      <li><a href="../components/sidebar-navigation.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs (segments)</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+      <li><a href="../components/footer.html">Footer</a></li>
+    </ul></details>
+    <details open><summary>Containers and overlays</summary><ul>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/container.html">Container and grid</a></li>
+      <li><a href="../components/page-header.html">Page header</a></li>
+    </ul></details>
+    <details open><summary>Data display</summary><ul>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/activity-feed.html">Activity feed</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/chip.html">Chip</a></li>
+      <li><a href="../components/filter-chip.html">Filter chip</a></li>
+      <li><a href="../components/disc.html">Disc</a></li>
+      <li><a href="../components/media.html">Media</a></li>
+      <li><a href="../components/cover.html">Cover photo</a></li>
+      <li><a href="../components/stat.html">Stat</a></li>
+      <li><a href="../components/itinerary.html">Itinerary</a></li>
+      <li><a href="../components/map.html">Map</a></li>
+    </ul></details>
+    <details open><summary>Feedback</summary><ul>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/alert.html">Alert</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/progress-bar.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Auth and marketing</summary><ul>
+      <li><a href="../components/auth-card.html">Auth card</a></li>
+      <li><a href="../components/hero.html">Hero</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/data-tables-and-lists.html">Tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Component · Containers and overlays</p>
+      <h1>Page header</h1>
+      <p class="ds-lead">Every screen opens with its name, one sentence on what it is for, and the actions that belong to the whole screen. Sections inside the page repeat the pattern at a smaller size.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA</span><span class="ds-pill">Status: stable</span><span class="ds-pill">Angular: <code>sd-page-header</code>, <code>sd-section</code></span><span class="ds-pill">Native <code>&lt;header&gt;</code> + <code>&lt;h1&gt;</code></span></div>
+      <ul class="ds-toc">
+        <li><a href="#overview">Overview</a></li><li><a href="#anatomy">Anatomy</a></li><li><a href="#variants">Variants</a></li><li><a href="#sizes">Sizes</a></li><li><a href="#states">States</a></li><li><a href="#responsive">Responsive</a></li><li><a href="#theming">Theming</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#content">Content</a></li><li><a href="#do-dont">Do and don't</a></li><li><a href="#tokens">Tokens</a></li><li><a href="#code">Code</a></li><li><a href="#sources">Sources</a></li>
+      </ul>
+    </header>
+
+    <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+      <p>Use one <code>.page-header</code> at the top of every app and admin screen, inside the <a href="container.html">container</a>. Use <code>.section</code> with a <code>.section-header</code> for each group below it (Who's in, Locked in every weekend, Right for this weekend's weather).</p>
+      <ul>
+        <li><b>Title and subtitle</b> are always there. The subtitle says what the screen is for or what shaped it: "Picked for Eli and Mae, under 45 minutes from Port Credit."</li>
+        <li><b>Back eyebrow</b> (<code>.page-header__eyebrow</code>) appears only on screens one level down (a place in admin Places, Review submissions under Family). It is one link back, not a breadcrumb trail; use the <a href="breadcrumb.html">breadcrumb</a> when there are more levels.</li>
+        <li><b>Actions</b> (<code>.page-header__actions</code>) hold at most two buttons for the whole screen, primary first. More go in the <b>More</b> menu (<code>.page-header__more</code>).</li>
+        <li>The Weekend screen is the exception: its cover photo takes the header's place and <code>.cover-actions</code> holds the buttons. See <a href="cover.html">cover photo</a>.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="anatomy"><h2><a href="#anatomy">Anatomy</a></h2>
+      <div class="ds-anatomy">
+        <figure class="ds-anatomy__figure" style="padding-inline: 3rem var(--spacingHorizontalXL); background: var(--colorNeutralBackground2);">
+          <div class="page-header" style="width: 100%; margin: 0;">
+            <div class="page-header__text">
+              <a class="page-header__eyebrow" href="../../mocks/pages/admin.places.html"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-arrow_left"/></svg>Places</a>
+              <p class="page-header__title">Port Credit Memorial Park</p>
+              <p class="page-header__subtitle">Activity · 4 photos · 5 weekend covers follow this place</p>
+            </div>
+            <button class="btn btn--quiet btn--icon page-header__more" type="button" aria-label="More place options" aria-haspopup="menu" aria-expanded="false"><svg class="icon" aria-hidden="true"><use href="#i-more"/></svg></button>
+            <div class="page-header__actions">
+              <button class="btn btn--primary" type="button"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg>Upload photo</button>
+              <button class="btn btn--quiet" type="button"><svg class="icon" aria-hidden="true"><use href="#i-pin"/></svg>Add from URL</button>
+            </div>
+          </div>
+          <span class="ds-callout" style="left: 1.5%; top: 16%;" aria-hidden="true">1</span>
+          <span class="ds-callout" style="left: 1.5%; top: 34%;" aria-hidden="true">2</span>
+          <span class="ds-callout" style="left: 1.5%; top: 54%;" aria-hidden="true">3</span>
+          <span class="ds-callout" style="left: 1.5%; top: 63%;" aria-hidden="true">4</span>
+          <span class="ds-callout" style="left: 69%; top: 63%;" aria-hidden="true">5</span>
+        </figure>
+        <ol class="ds-anatomy__list">
+          <li><div><b>Back eyebrow (optional)</b><small><code>.page-header__eyebrow</code>: a link with a left arrow and the parent's name, 13px label in the secondary colour.</small></div></li>
+          <li><div><b>Title</b><small><code>.page-header__title</code>, the page's only <code>h1</code>, <code>--typographyTitle1</code> with tight tracking.</small></div></li>
+          <li><div><b>Subtitle</b><small><code>.page-header__subtitle</code>, <code>--typographyBody1</code> in <code>--colorNeutralForeground2</code>, capped at the reading measure.</small></div></li>
+          <li><div><b>Actions (optional)</b><small><code>.page-header__actions</code>: primary first, then one quiet button.</small></div></li>
+          <li><div><b>More (optional)</b><small><code>.page-header__more</code>: a quiet icon button that opens a <a href="menu.html">menu</a>; top right on phones, last in the row from 720px.</small></div></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="ds-section" id="variants"><h2><a href="#variants">Variants</a></h2>
+      <h3>Title and subtitle</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack ds-example__canvas--canvas">
+          <header class="page-header" style="margin: 0;">
+            <div class="page-header__text">
+              <p class="page-header__title">The Browns</p>
+              <p class="page-header__subtitle">Port Credit, Mississauga. Every weekend is planned around this.</p>
+            </div>
+          </header>
+        </div>
+        <div class="ds-example__caption"><span>Family. Most screens need nothing more.</span></div>
+      </div>
+
+      <h3>With a back eyebrow</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack ds-example__canvas--canvas">
+          <header class="page-header" style="margin: 0;">
+            <div class="page-header__text">
+              <a class="page-header__eyebrow hide-lt-720" href="../../mocks/pages/family.html"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-arrow_left"/></svg>Family</a>
+              <div class="cluster cluster--nowrap">
+                <a class="btn btn--ghost btn--icon hide-gte-720" href="../../mocks/pages/family.html" aria-label="Back to Family"><svg class="icon" aria-hidden="true"><use href="#i-arrow_left"/></svg></a>
+                <p class="page-header__title">Review submissions</p>
+              </div>
+              <p class="page-header__subtitle">Three waiting, oldest first. Approving publishes to every family nearby.</p>
+            </div>
+          </header>
+        </div>
+        <div class="ds-example__caption"><span>Review submissions. From 720px the eyebrow link sits above the title; on phones it becomes a 40px back button beside the title, named "Back to Family".</span></div>
+      </div>
+
+      <h3>With actions and More</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack ds-example__canvas--canvas">
+          <header class="page-header" style="margin: 0;">
+            <div class="page-header__text">
+              <p class="page-header__title">This weekend</p>
+              <p class="page-header__subtitle">Sat 16 to Sun 17 May. Sunny Saturday, cloudy Sunday afternoon.</p>
+            </div>
+            <button class="btn btn--quiet btn--icon page-header__more" type="button" aria-label="More weekend options" aria-haspopup="menu" aria-expanded="false"><svg class="icon" aria-hidden="true"><use href="#i-more"/></svg></button>
+            <div class="page-header__actions">
+              <button class="btn btn--primary" type="button"><svg class="icon" aria-hidden="true"><use href="#i-share"/></svg>Share</button>
+              <button class="btn btn--quiet" type="button"><svg class="icon" aria-hidden="true"><use href="#i-calendar"/></svg>Add to calendar</button>
+            </div>
+          </header>
+          <header class="page-header" style="margin: 0;">
+            <div class="page-header__text">
+              <p class="page-header__title">Ideas</p>
+              <p class="page-header__subtitle">What is on within 45 minutes of home.</p>
+            </div>
+            <div class="page-header__actions">
+              <button class="btn btn--primary" type="button"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg>Suggest an event</button>
+            </div>
+          </header>
+        </div>
+        <div class="ds-example__caption"><span>Two actions plus More (the generating Weekend), and a single primary (Events). On phones the primary spans the full width; a lone button does too.</span></div>
+      </div>
+
+      <h3>Section header</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack ds-example__canvas--canvas">
+          <section class="section" aria-labelledby="v-s1">
+            <div class="section-header">
+              <div class="section-header__text"><h4 class="section-header__title" id="v-s1">Who's in</h4><p class="section-header__sub">Ages shape the picks. Tap a person to edit.</p></div>
+            </div>
+            <ul class="list list--card">
+              <li><a class="list__item list__item--action" href="../../mocks/pages/dialogs.html"><span class="avatar avatar--lg avatar--e" aria-hidden="true">E</span><span class="list__text"><span class="list__title">Eli</span><span class="list__sub">Kid · 9</span></span><span class="list__trail"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron_right"/></svg></span></a></li>
+            </ul>
+          </section>
+          <section class="section" aria-labelledby="v-s2">
+            <div class="section-header">
+              <div class="section-header__text"><h4 class="section-header__title" id="v-s2">Home</h4></div>
+              <button class="btn btn--quiet btn--sm section-header__action" type="button" aria-label="Edit home location"><svg class="icon" aria-hidden="true"><use href="#i-edit"/></svg>Edit</button>
+            </div>
+            <ul class="list list--card"><li class="list__item"><span class="disc"><svg class="icon" aria-hidden="true"><use href="#i-pin"/></svg></span><span class="list__text"><span class="list__title">Port Credit, Mississauga</span><span class="list__sub">Weather and drive times start here</span></span></li></ul>
+          </section>
+        </div>
+        <div class="ds-example__caption"><span>From Family: title and sub; title with an action at the right edge. The action opens a dialog (D19), never an inline form.</span></div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="sizes"><h2><a href="#sizes">Sizes</a></h2>
+      <p>Two levels, one size each. The page header uses Title 1 (<code>--typographyTitle1</code>) for its <code>h1</code>; the section header uses Title 2 (<code>--typographyTitle2</code>) for its <code>h2</code>. There is no third level: a group inside a section is a <a href="card.html">card</a> or a <a href="list.html">list</a> with its own title.</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack ds-example__canvas--canvas">
+          <p class="page-header__title">Page title · Title 1</p>
+          <p class="section-header__title">Section title · Title 2</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="states"><h2><a href="#states">States</a></h2>
+      <p>The header is static; its controls have states. While a screen is generating (Weekend), its actions are disabled and <code>&lt;main aria-busy="true"&gt;</code> announces the wait through a status row.</p>
+      <div class="ds-matrix"><table>
+        <thead><tr><th scope="col">Part</th><th scope="col">Default</th><th scope="col">Hover</th><th scope="col">Focus</th><th scope="col">Disabled</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Back eyebrow</th>
+            <td><a class="page-header__eyebrow" href="../../mocks/pages/admin.places.html"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-arrow_left"/></svg>Places</a></td>
+            <td><a class="page-header__eyebrow" href="../../mocks/pages/admin.places.html" data-state="hover"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-arrow_left"/></svg>Places</a></td>
+            <td><a class="page-header__eyebrow" href="../../mocks/pages/admin.places.html" data-state="focus"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-arrow_left"/></svg>Places</a></td>
+            <td><span class="text-faint text-sm">Never disabled</span></td>
+          </tr>
+          <tr><th scope="row">Primary action</th>
+            <td><button class="btn btn--primary" type="button">Share</button></td>
+            <td><button class="btn btn--primary" type="button" data-state="hover">Share</button></td>
+            <td><button class="btn btn--primary" type="button" data-state="focus">Share</button></td>
+            <td><button class="btn btn--primary" type="button" disabled>Share</button></td>
+          </tr>
+          <tr><th scope="row">More</th>
+            <td><button class="btn btn--quiet btn--icon" type="button" aria-label="More options"><svg class="icon" aria-hidden="true"><use href="#i-more"/></svg></button></td>
+            <td><button class="btn btn--quiet btn--icon" type="button" aria-label="More options" data-state="hover"><svg class="icon" aria-hidden="true"><use href="#i-more"/></svg></button></td>
+            <td><button class="btn btn--quiet btn--icon" type="button" aria-label="More options" data-state="focus"><svg class="icon" aria-hidden="true"><use href="#i-more"/></svg></button></td>
+            <td><button class="btn btn--quiet btn--icon" type="button" aria-label="More options" disabled><svg class="icon" aria-hidden="true"><use href="#i-more"/></svg></button></td>
+          </tr>
+          <tr><th scope="row">Section action</th>
+            <td><button class="btn btn--quiet btn--sm" type="button">Edit</button></td>
+            <td><button class="btn btn--quiet btn--sm" type="button" data-state="hover">Edit</button></td>
+            <td><button class="btn btn--quiet btn--sm" type="button" data-state="focus">Edit</button></td>
+            <td><button class="btn btn--quiet btn--sm" type="button" disabled>Edit</button></td>
+          </tr>
+        </tbody>
+      </table></div>
+      <h3>Both themes</h3>
+      <div class="ds-themes">
+        <div data-theme="light"><div class="page-header" style="margin: 0;"><div class="page-header__text"><a class="page-header__eyebrow" href="../../mocks/pages/admin.places.html"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-arrow_left"/></svg>Places</a><p class="page-header__title">Snug Harbour</p><p class="page-header__subtitle">Restaurant · 0 photos</p></div></div></div>
+        <div data-theme="dark"><div class="page-header" style="margin: 0;"><div class="page-header__text"><a class="page-header__eyebrow" href="../../mocks/pages/admin.places.html"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-arrow_left"/></svg>Places</a><p class="page-header__title">Snug Harbour</p><p class="page-header__subtitle">Restaurant · 0 photos</p></div></div></div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="responsive"><h2><a href="#responsive">Responsive behaviour</a></h2>
+      <ul>
+        <li><b>Under 720px</b> the header is a two-column grid: text on the left, More pinned top right. Actions drop to a second row as a two-column grid of 44px buttons; the primary takes the whole first row, and a lone button is full width. The back eyebrow hides and a 40px back icon button sits beside the title instead.</li>
+        <li><b>From 720px</b> it becomes one wrapping row aligned to the bottom: the text block grows (at least 20rem), then the actions at 40px, then More last. The eyebrow returns above the title.</li>
+        <li>The title wraps; it never truncates. The subtitle stops at the reading measure (<code>--layoutMeasure</code>).</li>
+        <li>The section header stays one row at every width: the action keeps to the right edge and the title wraps beside it.</li>
+        <li>Space below the page header is 24px; between sections 32px on phones and 40px from 720px (<code>--layoutSpaceSection</code>).</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="theming"><h2><a href="#theming">Theming</a></h2>
+      <p>Headers sit on the page canvas (<code>--colorNeutralBackground2</code>) and draw no surface of their own. The title reads <code>--colorNeutralForeground1</code>, subtitle, eyebrow and section sub <code>--colorNeutralForeground2</code>; both switch with the theme. Action buttons are themed by the <a href="button.html">button</a>'s own tokens. The phone action height is a knob on the buttons (<code>--sd-btn-h: var(--targetComfortable)</code>), not a new size.</p>
+    </section>
+
+    <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
+      <h3>Role and pattern</h3>
+      <p>No APG widget pattern. The page header is a <code>&lt;header&gt;</code> inside <code>&lt;main&gt;</code> (so it is not the banner landmark) and holds the page's single <code>&lt;h1&gt;</code>, which matches the document <code>&lt;title&gt;</code>. Each section is <code>&lt;section aria-labelledby="…"&gt;</code> pointing at its <code>&lt;h2&gt;</code>, so it becomes a named region screen-reader users can jump to. The More button follows the <a href="https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/">APG Menu Button</a> pattern.</p>
+      <h3>Keyboard</h3>
+      <table class="ds-table ds-keys"><thead><tr><th scope="col">Key</th><th scope="col">Action</th></tr></thead><tbody>
+        <tr><td><kbd>Tab</kbd></td><td>Back link, then the actions in DOM order, then More. Put the primary first in the DOM so focus order matches the phone layout, where it is drawn first (2.4.3).</td></tr>
+        <tr><td><kbd>Enter</kbd></td><td>Follows the back link; activates an action.</td></tr>
+        <tr><td><kbd>Enter</kbd> / <kbd>Space</kbd> / <kbd>↓</kbd> on More</td><td>Opens the menu and focuses its first item; <kbd>Esc</kbd> closes it and returns focus to More.</td></tr>
+      </tbody></table>
+      <h3>Focus</h3>
+      <p>Every control draws the shared 2px ring. The back link has a 24px minimum height and a small radius so its ring wraps the arrow and the text together.</p>
+      <h3>Labelling</h3>
+      <p>The back link's name is the parent page ("Places", "Family"); the arrow is <code>aria-hidden</code>. The phone back button, which has no visible text, says "Back to Family". More names its object: "More weekend options", "More place options". The back link is a real link to the parent URL, not <code>history.back()</code>, so it is predictable when the page was opened from a bookmark.</p>
+      <h3>Contrast</h3>
+      <div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0; gap: var(--spacingHorizontalS);">
+        <div class="ds-pair"><span>Title on page</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground1|--colorNeutralBackground2" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Subtitle, eyebrow and section sub on page</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground2|--colorNeutralBackground2" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Focus ring on page</span><span class="ds-pair__ratio" data-contrast="--colorStrokeFocus2|--colorNeutralBackground2" data-min="3"></span></div>
+      </div>
+      <h3>Motion</h3>
+      <p>None of its own; buttons keep their 120ms hover transition, zeroed under <code>prefers-reduced-motion</code>.</p>
+      <h3>Touch</h3>
+      <p>Phone actions are 44px tall and at least 8px apart. The back eyebrow is at least 24px tall from 720px; on phones the 40px back button replaces it.</p>
+    </section>
+
+    <section class="ds-section" id="content"><h2><a href="#content">Content</a></h2>
+      <ul>
+        <li><b>Page titles</b> are the nav label or the thing's own name: "Ideas", "Past weekends", "The Browns", "Port Credit Memorial Park". Sentence case, no full stop.</li>
+        <li><b>Subtitles</b> are one sentence about this family or this data, with a full stop: "Picked for Eli and Mae, under 45 minutes from Port Credit." Admin subtitles say how the list is sorted: "Every catalog place, worst photo health first."</li>
+        <li><b>Section titles</b> say what the group means to the family: "Right for this weekend's weather", "If the weather turns", "Locked in every weekend". Section subs are a short fact: "Sunny Saturday, 22°".</li>
+        <li><b>Back links</b> are the parent's name alone; the arrow says "back".</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="do-dont"><h2><a href="#do-dont">Do and don't</a></h2>
+      <div class="ds-dodont">
+        <figure class="ds-do"><div class="ds-example__canvas ds-example__canvas--stack"><div class="page-header__actions" style="display: flex; gap: var(--spacingHorizontalS);"><button class="btn btn--primary" type="button">Upload photo</button><button class="btn btn--quiet" type="button">Add from URL</button></div></div><figcaption>Primary first in the DOM (admin Place): phone layout, desktop layout and focus order all agree.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas ds-example__canvas--stack"><div style="display: flex; gap: var(--spacingHorizontalS); flex-wrap: wrap;"><button class="btn btn--quiet" type="button">Add to calendar</button><button class="btn btn--primary" type="button">Share</button></div></div><figcaption>Primary last in the DOM (the generating Weekend mock): on phones CSS draws it first, so Tab visits Add to calendar before the button shown above it.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas ds-example__canvas--stack"><a class="page-header__eyebrow" href="../../mocks/pages/admin.places.html"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-arrow_left"/></svg>Places</a><p class="page-header__title">Snug Harbour</p></div><figcaption>One back link to the parent, as a real link.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas ds-example__canvas--stack"><button class="btn btn--text" type="button"><svg class="icon" aria-hidden="true"><use href="#i-arrow_left"/></svg>Back</button><p class="page-header__title">Snug Harbour</p></div><figcaption>A "Back" button that runs <code>history.back()</code>: says nothing about where it goes, and leaves the app when the page was opened from a link.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas ds-example__canvas--stack"><p class="section-header__title">Locked in every weekend</p><p class="text-soft text-sm">Anchors. The plan goes around them.</p></div><figcaption>Each group gets an <code>h2</code> section header.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas ds-example__canvas--stack"><p class="card__eyebrow">Locked in every weekend</p></div><figcaption>A styled caption instead of a heading: it looks like a section but screen-reader users cannot find it in the headings list.</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="ds-section" id="tokens"><h2><a href="#tokens">Tokens</a></h2>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Part</th><th scope="col">Token</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead>
+        <tbody>
+          <tr><td>Title</td><td><code>--colorNeutralForeground1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralForeground1" data-swatch></i><span data-token="--colorNeutralForeground1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralForeground1" data-swatch></i><span data-token="--colorNeutralForeground1"></span></span></td></tr>
+          <tr><td>Subtitle, eyebrow, section sub</td><td><code>--colorNeutralForeground2</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralForeground2" data-swatch></i><span data-token="--colorNeutralForeground2"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralForeground2" data-swatch></i><span data-token="--colorNeutralForeground2"></span></span></td></tr>
+          <tr><td>Page canvas</td><td><code>--colorNeutralBackground2</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralBackground2" data-swatch></i><span data-token="--colorNeutralBackground2"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralBackground2" data-swatch></i><span data-token="--colorNeutralBackground2"></span></span></td></tr>
+          <tr><td>Page title type</td><td><code>--typographyTitle1</code>, <code>--letterSpacingTight</code></td><td colspan="2"><span data-token="--typographyTitle1"></span></td></tr>
+          <tr><td>Subtitle type</td><td><code>--typographyBody1</code>, max <code>--layoutMeasure</code></td><td colspan="2"><span data-token="--typographyBody1"></span></td></tr>
+          <tr><td>Section title / sub type</td><td><code>--typographyTitle2</code> / <code>--typographyBody2</code></td><td colspan="2"><span data-token="--typographyTitle2"></span></td></tr>
+          <tr><td>Phone / desktop action height</td><td><code>--targetComfortable</code> / <code>--controlHeightMedium</code></td><td colspan="2"><span data-token="--targetComfortable"></span> / <span data-token="--controlHeightMedium"></span></td></tr>
+          <tr><td>Space below page header</td><td><code>--spacingVerticalXXL</code></td><td colspan="2"><span data-token="--spacingVerticalXXL"></span></td></tr>
+          <tr><td>Space between sections</td><td><code>--layoutSpaceSection</code></td><td colspan="2"><span data-token="--layoutSpaceSection"></span></td></tr>
+          <tr><td>Row and column gaps</td><td><code>--spacingVerticalL</code>, <code>--spacingHorizontalM</code>, <code>--spacingHorizontalS</code></td><td colspan="2"><span data-token="--spacingVerticalL"></span> / <span data-token="--spacingHorizontalM"></span> / <span data-token="--spacingHorizontalS"></span></td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section class="ds-section" id="code"><h2><a href="#code">Code</a></h2>
+      <pre><code>&lt;header class="page-header"&gt;
+  &lt;div class="page-header__text"&gt;
+    &lt;a class="page-header__eyebrow" href="/admin/places"&gt;…Places&lt;/a&gt;
+    &lt;h1 class="page-header__title"&gt;Port Credit Memorial Park&lt;/h1&gt;
+    &lt;p class="page-header__subtitle"&gt;Activity · 4 photos · 5 weekend covers follow this place&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;div class="page-header__actions"&gt;
+    &lt;button class="btn btn--primary" type="button"&gt;…Upload photo&lt;/button&gt;
+    &lt;button class="btn btn--quiet" type="button"&gt;…Add from URL&lt;/button&gt;
+  &lt;/div&gt;
+&lt;/header&gt;
+
+&lt;section class="section" aria-labelledby="s-home"&gt;
+  &lt;div class="section-header"&gt;
+    &lt;div class="section-header__text"&gt;&lt;h2 class="section-header__title" id="s-home"&gt;Home&lt;/h2&gt;&lt;/div&gt;
+    &lt;button class="btn btn--quiet btn--sm section-header__action" type="button"&gt;…Edit&lt;/button&gt;
+  &lt;/div&gt;
+  …
+&lt;/section&gt;
+
+&lt;sd-page-header title="Review submissions" subtitle="…" backHref="/family" backLabel="Family"&gt;
+  &lt;sd-button slot="primary" variant="primary"&gt;…&lt;/sd-button&gt;
+&lt;/sd-page-header&gt;</code></pre>
+      <table class="ds-table"><thead><tr><th scope="col">Class</th><th scope="col">Effect</th></tr></thead><tbody>
+        <tr><td><code>.page-header</code> <code>.page-header__text</code></td><td>Grid on phones, wrapping row from 720px; 24px below.</td></tr>
+        <tr><td><code>.page-header__eyebrow</code></td><td>Back link above the title; underline on hover.</td></tr>
+        <tr><td><code>.page-header__title</code> <code>.page-header__subtitle</code></td><td>Title 1; body text at the reading measure.</td></tr>
+        <tr><td><code>.page-header__actions</code></td><td>Two-column 44px grid with primary first on phones; a 40px row from 720px.</td></tr>
+        <tr><td><code>.page-header__more</code></td><td>Top right on phones, last in the row from 720px.</td></tr>
+        <tr><td><code>.section</code></td><td>Bottom margin <code>--layoutSpaceSection</code>; none on the last.</td></tr>
+        <tr><td><code>.section-header</code> <code>__text</code> <code>__title</code> <code>__sub</code> <code>__action</code></td><td>Bottom-aligned row: title block, then an action pushed right.</td></tr>
+      </tbody></table>
+    </section>
+
+    <section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>
+      <ul>
+        <li><a href="../../mocks/pages/ideas.html">pages/ideas</a> and <a href="../../mocks/pages/family.html">pages/family</a>: title and subtitle; section headers with subs and an Edit action.</li>
+        <li><a href="../../mocks/pages/admin.place.html">pages/admin.place</a>: back eyebrow and two actions, primary first.</li>
+        <li><a href="../../mocks/pages/review-submissions.html">pages/review-submissions</a>: eyebrow from 720px, back icon button on phones.</li>
+        <li><a href="../../mocks/pages/weekend.generating.html">pages/weekend.generating</a>: More plus two disabled actions while generating; <a href="../../mocks/pages/weekend.html">pages/weekend</a> uses the cover instead.</li>
+        <li><a href="../../mocks/pages/ideas.events.html">pages/ideas.events</a> and <a href="../../mocks/pages/admin.html">pages/admin</a>: a single primary action.</li>
+      </ul>
+      <p>Drift fixed: D05 subtitle contrast, D14 the off-scale title line height, D24 px breakpoints. Open: the generating Weekend mock puts the primary last in the DOM; the Angular <code>sd-page-header</code> already projects <code>slot="primary"</code> first. The mocks' <code>.titlerow</code> (back button beside the title on phones) is page-scoped CSS; this page uses <code>.cluster.cluster--nowrap</code> for it.</p>
+    </section>
+
+    <footer class="ds-footer"><span>Saturdaze design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/icons.js"></script>
+<script src="../assets/ds.js"></script>
+</body>
+</html>

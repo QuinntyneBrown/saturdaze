@@ -1,0 +1,349 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Media — Saturdaze design system</title>
+<meta name="description" content="The photo frame for places, events and past weekends: 16:9 and 4:3 ratios, a photo credit, and tinted fallback tiles when there is no photo.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html"><span class="brand-mark" aria-hidden="true"></span>Saturdaze DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Actions</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+    </ul></details>
+    <details open><summary>Inputs</summary><ul>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/chip-input.html">Chip input</a></li>
+      <li><a href="../components/file-upload.html">File upload</a></li>
+      <li><a href="../components/photo-pick.html">Photo pick</a></li>
+      <li><a href="../components/rating.html">Rating</a></li>
+      <li><a href="../components/vote-row.html">Vote row</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+    </ul></details>
+    <details open><summary>Navigation</summary><ul>
+      <li><a href="../components/top-bar.html">Top bar</a></li>
+      <li><a href="../components/bottom-nav.html">Bottom nav</a></li>
+      <li><a href="../components/sidebar-navigation.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs (segments)</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+      <li><a href="../components/footer.html">Footer</a></li>
+    </ul></details>
+    <details open><summary>Containers and overlays</summary><ul>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/container.html">Container and grid</a></li>
+      <li><a href="../components/page-header.html">Page header</a></li>
+    </ul></details>
+    <details open><summary>Data display</summary><ul>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/activity-feed.html">Activity feed</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/chip.html">Chip</a></li>
+      <li><a href="../components/filter-chip.html">Filter chip</a></li>
+      <li><a href="../components/disc.html">Disc</a></li>
+      <li><a href="../components/media.html">Media</a></li>
+      <li><a href="../components/cover.html">Cover photo</a></li>
+      <li><a href="../components/stat.html">Stat</a></li>
+      <li><a href="../components/itinerary.html">Itinerary</a></li>
+      <li><a href="../components/map.html">Map</a></li>
+    </ul></details>
+    <details open><summary>Feedback</summary><ul>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/alert.html">Alert</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/progress-bar.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Auth and marketing</summary><ul>
+      <li><a href="../components/auth-card.html">Auth card</a></li>
+      <li><a href="../components/hero.html">Hero</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/data-tables-and-lists.html">Tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Component · Data display</p>
+      <h1>Media</h1>
+      <p class="ds-lead">Media is the photo frame on idea cards, past weekends and admin place rows. It crops any photo to a fixed ratio, credits the photographer, and falls back to a tinted tile with an icon when a place has no photo yet.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA</span><span class="ds-pill">Status: stable</span><span class="ds-pill">Angular: <code>sd-media</code></span><span class="ds-pill">Native <code>&lt;img&gt;</code></span></div>
+      <ul class="ds-toc">
+        <li><a href="#overview">Overview</a></li><li><a href="#anatomy">Anatomy</a></li><li><a href="#variants">Variants</a></li><li><a href="#sizes">Sizes</a></li><li><a href="#states">States</a></li><li><a href="#responsive">Responsive</a></li><li><a href="#theming">Theming</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#content">Content</a></li><li><a href="#do-dont">Do and don't</a></li><li><a href="#tokens">Tokens</a></li><li><a href="#code">Code</a></li><li><a href="#sources">Sources</a></li>
+      </ul>
+    </header>
+
+    <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+      <p>Use media whenever a photo of a place, event or weekend sits inside another component: the top of a <a href="card.html">card</a> (<code>.card__media</code>), a place thumbnail in an admin <a href="list.html">list</a> row, a candidate photo in the review queue. The frame owns the ratio, the crop and the credit, so cards line up in a grid whatever the source photo's shape.</p>
+      <ul>
+        <li><b>16:9</b> (<code>.media</code>) is the default for idea and past-weekend cards.</li>
+        <li><b>4:3</b> (<code>.media--4x3</code>) is for thumbnails and side-by-side comparisons (admin place rows, the review queue, photo dialogs).</li>
+        <li><b>Fallback</b> (<code>.media--fallback</code> with a tone) replaces the photo when there is none, so a card never shows an empty grey box. As a link it becomes the way to add one ("Add a photo" on Past).</li>
+      </ul>
+      <p>Use the <a href="cover.html">cover photo</a> for the full-width hero of a weekend, and an <a href="avatar.html">avatar</a> for a person's photo.</p>
+      <p class="ds-note">The images in <code>docs/mocks/images/*.svg</code> used on this page are <b>illustrated placeholders</b> that stand in for licensed photos. They are not real photographs and must not ship (<a href="../../mocks/README.md">docs/mocks/README.md</a>). Production sources, licensing and attribution are specified in L2-100.</p>
+    </section>
+
+    <section class="ds-section" id="anatomy"><h2><a href="#anatomy">Anatomy</a></h2>
+      <div class="ds-anatomy">
+        <figure class="ds-anatomy__figure">
+          <div class="media" style="width: min(100%, 20rem);"><img class="media__img" src="../../mocks/images/lavender-farm.svg" alt="Rows of lavender running to the horizon" width="800" height="500"><span class="media__credit">Photo · Terre Bleu</span>
+            <span class="ds-callout" style="left: 0.5rem; top: 0.5rem;" aria-hidden="true">1</span>
+            <span class="ds-callout" style="left: 45%; top: 35%;" aria-hidden="true">2</span>
+            <span class="ds-callout" style="right: 1rem; bottom: 2.25rem;" aria-hidden="true">3</span></div>
+        </figure>
+        <ol class="ds-anatomy__list">
+          <li><div><b>Frame</b><small><code>aspect-ratio</code> 16 / 9 (or 4 / 3), <code>--borderRadiusMedium</code>, <code>overflow: hidden</code>, neutral well behind the photo while it loads.</small></div></li>
+          <li><div><b>Photo</b><small><code>.media__img</code>: fills the frame with <code>object-fit: cover</code>; always has <code>width</code>, <code>height</code> and <code>alt</code>.</small></div></li>
+          <li><div><b>Credit (optional)</b><small><code>.media__credit</code>: 12px caption on a 72% dark pill at the bottom right (drift D11).</small></div></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="ds-section" id="variants"><h2><a href="#variants">Variants</a></h2>
+      <p>Pick the ratio by where the photo lives; pick the fallback tone by what kind of place it is, using the same tones as chips and filters.</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas">
+          <div class="media" style="width: min(100%, 18rem);"><img class="media__img" src="../../mocks/images/bronte-creek.svg" alt="A creek winding through green parkland" width="800" height="500"><span class="media__credit">Photo · placeholder</span></div>
+          <div class="media media--4x3" style="width: min(100%, 13rem);"><img class="media__img" src="../../mocks/images/la-marina.svg" alt="Patio tables by the water at La Marina" width="800" height="600"><span class="media__credit">Photo · Port Credit BIA</span></div>
+        </div>
+        <div class="ds-example__caption"><span>16:9 on an idea card (Bronte Creek); 4:3 in the review queue (La Marina).</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;div class="media"&gt;
+  &lt;img class="media__img" src="bronte-creek.jpg" alt="A creek winding through green parkland" width="800" height="450" loading="lazy"&gt;
+  &lt;span class="media__credit"&gt;Photo · Ontario Parks&lt;/span&gt;
+&lt;/div&gt;
+&lt;div class="media media--4x3"&gt;…&lt;/div&gt;</code></pre></details>
+      </div>
+      <h3>Fallback tiles</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas">
+          <span class="media media--4x3 media--fallback media--leaf" style="width: 9rem;"><svg class="icon" aria-hidden="true"><use href="#i-tree"/></svg>Activity</span>
+          <span class="media media--4x3 media--fallback media--sun" style="width: 9rem;"><svg class="icon" aria-hidden="true"><use href="#i-fork"/></svg>Restaurant</span>
+          <span class="media media--4x3 media--fallback media--sky" style="width: 9rem;"><svg class="icon" aria-hidden="true"><use href="#i-ticket"/></svg>Event</span>
+          <span class="media media--4x3 media--fallback media--indoor" style="width: 9rem;"><svg class="icon" aria-hidden="true"><use href="#i-popcorn"/></svg>Indoor</span>
+        </div>
+        <div class="ds-example__caption"><span>Leaf for outdoor activities, sun for food, sky for events, indoor for indoor places. Icon plus a short label; the label can be dropped in a 72px thumbnail.</span></div>
+      </div>
+      <h3>Fallback as the way to add a photo</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas">
+          <a class="media media--fallback media--sky" href="../../mocks/pages/dialogs.html#dialog-cover-photo" aria-label="Add a photo to Rainy Rec Room" style="width: min(100%, 18rem);"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg>Add a photo</a>
+        </div>
+        <div class="ds-example__caption"><span>On Past, a weekend with no photo shows a link tile that opens dialog D29 (Cover photo). Its name says which weekend.</span></div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="sizes"><h2><a href="#sizes">Sizes</a></h2>
+      <p>Media has no size scale. It is as wide as its container and its height follows the ratio, so it scales with the card grid. The only fixed width is the admin place thumbnail (<code>.place-thumb</code>, 72px at 4:3).</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas">
+          <span class="media media--4x3 place-thumb"><img class="media__img" src="../../mocks/images/botanical-gardens.svg" alt="" width="800" height="600"></span>
+          <span class="media media--4x3 media--fallback media--leaf place-thumb" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-tree"/></svg></span>
+          <div class="media media--4x3" style="width: 12rem;"><img class="media__img" src="../../mocks/images/riverwood.svg" alt="A forest trail at Riverwood Conservancy" width="800" height="600"></div>
+          <div class="media" style="width: min(100%, 20rem);"><img class="media__img" src="../../mocks/images/toronto-zoo.svg" alt="A polar bear beside its pool" width="800" height="500"><span class="media__credit">From Toronto Zoo</span></div>
+        </div>
+        <div class="ds-example__caption"><span>72px place thumbnail (photo and fallback), a 4:3 review photo, a 16:9 card photo. Thumbnails drop the credit; it returns on the place page.</span></div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="states"><h2><a href="#states">States</a></h2>
+      <p>A photo frame is usually content, not a control. It has a loading state, a no-photo state, and, only when it is a link tile, a focus state. Focus is forced here with <code>data-state</code>.</p>
+      <div class="ds-matrix"><table>
+        <thead><tr><th scope="col">Variant</th><th scope="col">Loaded</th><th scope="col">Loading</th><th scope="col">No photo</th><th scope="col">Focus</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">16:9</th><td><div class="media" style="width: 10rem;"><img class="media__img" src="../../mocks/images/science-centre.svg" alt="Planets on the planetarium ceiling" width="800" height="500"></div></td><td><span class="skeleton skeleton--rect" aria-hidden="true" style="width: 10rem;"></span></td><td><span class="media media--fallback media--indoor" style="width: 10rem;"><svg class="icon" aria-hidden="true"><use href="#i-popcorn"/></svg>Indoor</span></td><td><span class="ds-na" style="display: inline-block;">Not focusable</span></td></tr>
+          <tr><th scope="row">4:3</th><td><div class="media media--4x3" style="width: 8rem;"><img class="media__img" src="../../mocks/images/rec-room.svg" alt="Bowling lanes under arcade lights" width="800" height="600"></div></td><td><span class="skeleton" aria-hidden="true" style="width: 8rem; aspect-ratio: 4 / 3; border-radius: var(--borderRadiusMedium);"></span></td><td><span class="media media--4x3 media--fallback media--sun" style="width: 8rem;"><svg class="icon" aria-hidden="true"><use href="#i-fork"/></svg>Restaurant</span></td><td><span class="ds-na" style="display: inline-block;">Not focusable</span></td></tr>
+          <tr><th scope="row">Link tile</th><td><span class="ds-na" style="display: inline-block;">Only without a photo</span></td><td><span class="skeleton skeleton--rect" aria-hidden="true" style="width: 10rem;"></span></td><td><a class="media media--fallback media--sky" href="#states" aria-label="Add a photo to Rainy Rec Room" style="width: 10rem;"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg>Add a photo</a></td><td><a class="media media--fallback media--sky" href="#states" aria-label="Add a photo to Stay-home reset" data-state="focus" style="width: 10rem;"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg>Add a photo</a></td></tr>
+        </tbody>
+      </table></div>
+      <h3>Both themes</h3>
+      <div class="ds-themes">
+        <div data-theme="light"><div class="ds-example__canvas" style="padding: 0;"><div class="media media--4x3" style="width: 7rem;"><img class="media__img" src="../../mocks/images/stay-home.svg" alt="Rain on the window beside the craft table" width="800" height="600"></div><span class="media media--4x3 media--fallback media--leaf" style="width: 7rem;"><svg class="icon" aria-hidden="true"><use href="#i-tree"/></svg>Activity</span><span class="media media--4x3 media--fallback media--sun" style="width: 7rem;"><svg class="icon" aria-hidden="true"><use href="#i-fork"/></svg>Food</span><span class="media media--4x3 media--fallback media--sky" style="width: 7rem;"><svg class="icon" aria-hidden="true"><use href="#i-ticket"/></svg>Event</span><span class="media media--4x3 media--fallback media--indoor" style="width: 7rem;"><svg class="icon" aria-hidden="true"><use href="#i-popcorn"/></svg>Indoor</span></div></div>
+        <div data-theme="dark"><div class="ds-example__canvas" style="padding: 0;"><div class="media media--4x3" style="width: 7rem;"><img class="media__img" src="../../mocks/images/stay-home.svg" alt="Rain on the window beside the craft table" width="800" height="600"></div><span class="media media--4x3 media--fallback media--leaf" style="width: 7rem;"><svg class="icon" aria-hidden="true"><use href="#i-tree"/></svg>Activity</span><span class="media media--4x3 media--fallback media--sun" style="width: 7rem;"><svg class="icon" aria-hidden="true"><use href="#i-fork"/></svg>Food</span><span class="media media--4x3 media--fallback media--sky" style="width: 7rem;"><svg class="icon" aria-hidden="true"><use href="#i-ticket"/></svg>Event</span><span class="media media--4x3 media--fallback media--indoor" style="width: 7rem;"><svg class="icon" aria-hidden="true"><use href="#i-popcorn"/></svg>Indoor</span></div></div>
+      </div>
+      <ul>
+        <li><b>Loading</b>: the frame reserves its ratio before the photo arrives (the <code>width</code>/<code>height</code> attributes plus <code>aspect-ratio</code>), so nothing shifts. While data loads, a <code>.skeleton--rect</code> stands in.</li>
+        <li><b>No photo / failed</b>: swap to the fallback tile with the place's tone. A broken image icon never shows; the product catches the <code>error</code> event and renders the fallback.</li>
+        <li><b>Focus</b>: only the link tile is focusable; it takes the shared ring outside its rounded corners. On a card the stretched title link carries focus, not the photo.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="responsive"><h2><a href="#responsive">Responsive behaviour</a></h2>
+      <ul>
+        <li>Inside <code>.grid-cards</code> the frame follows the card: one column under 720px, two from 720px, three from 1024px. The ratio holds at every width.</li>
+        <li>On a <code>.card--media</code> the frame bleeds to the card's edges and loses its own radius, so the card's corners clip it.</li>
+        <li>Serve a <code>srcset</code> so phones get a 720px-wide file and desktops a 1200px one; the frame never needs more than 2× its rendered width.</li>
+        <li>Use <code>loading="lazy"</code> below the fold; the first row of cards on Ideas loads eagerly.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="theming"><h2><a href="#theming">Theming</a></h2>
+      <p>Photos do not change with the theme. Everything around them does: the loading well (<code>--colorNeutralBackground3</code>), the fallback tints and their icons (palette Background1 / Foreground1 pairs), and the credit pill, which stays dark on any photo (<code>--colorBackgroundOverlayStrong</code> with <code>--colorNeutralForegroundStaticInverted</code>, which stay dark in both themes: ink at 72% in light, black at 72% in dark).</p>
+      <pre><code>/* A frame inside the photo picker drops its own radius and ratio */
+.photo-pick__opt .media { border-radius: 0; aspect-ratio: auto; }</code></pre>
+      <p>Add a new fallback tone by pairing a palette Background1 with its Foreground1; never put a raw tint on the frame.</p>
+    </section>
+
+    <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
+      <h3>Role and pattern</h3>
+      <p>A native <code>&lt;img&gt;</code> inside a <code>&lt;div&gt;</code>; no ARIA pattern applies. The fallback tile is a <code>&lt;span&gt;</code> (decorative, <code>aria-hidden="true"</code> when the row already names the place) or an <code>&lt;a href&gt;</code> when it adds a photo.</p>
+      <h3>Keyboard</h3>
+      <table class="ds-table ds-keys"><thead><tr><th scope="col">Key</th><th scope="col">Action</th></tr></thead><tbody>
+        <tr><td><kbd>Tab</kbd></td><td>Skips photos. Stops on a link tile ("Add a photo to Rainy Rec Room").</td></tr>
+        <tr><td><kbd>Enter</kbd></td><td>On a link tile, opens the photo dialog.</td></tr>
+      </tbody></table>
+      <h3>Focus</h3>
+      <p>The link tile uses the shared ring (<code>2px --colorStrokeFocus2</code>, 2px offset). The frame's <code>overflow: hidden</code> does not clip an outline, so the ring stays whole.</p>
+      <h3>Labelling</h3>
+      <ul>
+        <li><b>Alt text describes the photo</b>, not the place's name: "Rows of lavender running to the horizon", "A polar bear beside its pool". The card title already names the place.</li>
+        <li><b>Empty alt</b> (<code>alt=""</code>) when the photo adds nothing to the text next to it: admin place thumbnails beside the place name, the "Current primary" comparison photo.</li>
+        <li><b>The credit</b> is visible text and is read in order after the image; keep it short ("Photo · Jo Doe").</li>
+        <li><b>Link tiles</b> name the object: <code>aria-label="Add a photo to Rainy Rec Room"</code>, since every tile on Past would otherwise read "Add a photo".</li>
+      </ul>
+      <h3>Contrast</h3>
+      <div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0; gap: var(--spacingHorizontalS);">
+        <div class="ds-pair"><span>Credit text on its pill</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForegroundStaticInverted|--colorBackgroundOverlayStrong" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Leaf fallback label</span><span class="ds-pair__ratio" data-contrast="--colorPaletteLeafForeground1|--colorPaletteLeafBackground1" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Sun fallback label</span><span class="ds-pair__ratio" data-contrast="--colorPaletteSunForeground1|--colorPaletteSunBackground1" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Sky fallback label</span><span class="ds-pair__ratio" data-contrast="--colorPaletteSkyForeground1|--colorPaletteSkyBackground1" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Indoor fallback label</span><span class="ds-pair__ratio" data-contrast="--colorPaletteIndoorForeground1|--colorPaletteIndoorBackground1" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Focus ring on the page</span><span class="ds-pair__ratio" data-contrast="--colorStrokeFocus2|--colorNeutralBackground2" data-min="3"></span></div>
+      </div>
+      <p>The credit pill is measured as if over pure white, the worst case; the 72% overlay keeps the text above 4.5:1 over any photo (drift D11 raised it from the mocks' 55 to 60%).</p>
+      <h3>Motion</h3>
+      <p>None. Photos do not fade in; the card lift on hover belongs to the card and stops under <code>prefers-reduced-motion</code>.</p>
+      <h3>Touch</h3>
+      <p>The "Add a photo" tile is the full card width and at least 160px tall at 360px, far above the 24px minimum. Photos themselves are not targets.</p>
+    </section>
+
+    <section class="ds-section" id="content"><h2><a href="#content">Content</a></h2>
+      <ul>
+        <li>Alt text: one plain sentence fragment, no "Image of" or "Photo of", no full stop. Describe what a parent would see: "Tulip beds in front of a glass conservatory".</li>
+        <li>Credit: "Photo · Name" for a photographer or source, "From Toronto Zoo" for a venue's own photo, "Your photo" for a family upload. Never a URL in the product (admin dialogs may show the file name).</li>
+        <li>Fallback label: the kind of place in one word ("Activity", "Restaurant", "Event"), or the action on a link tile ("Add a photo").</li>
+        <li>Photos are of the place, never of people who have not agreed to be shown; family uploads stay private to the family.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="do-dont"><h2><a href="#do-dont">Do and don't</a></h2>
+      <div class="ds-dodont">
+        <figure class="ds-do"><div class="ds-example__canvas"><div class="media" style="width: min(100%, 14rem);"><img class="media__img" src="../../mocks/images/toronto-zoo.svg" alt="A polar bear beside its pool" width="800" height="500"><span class="media__credit">From Toronto Zoo</span></div></div><figcaption>Credit on the 72% pill at 12px, readable over a bright photo.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><div class="media" style="width: min(100%, 14rem);"><img class="media__img" src="../../mocks/images/toronto-zoo.svg" alt="A polar bear beside its pool" width="800" height="500"><span class="media__credit" style="background: var(--colorBackgroundOverlay); font-size: 0.6875rem;">From Toronto Zoo</span></div></div><figcaption>The mocks' 11px credit on a lighter scrim disappears over pale sky (drift D11).</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas"><span class="media media--4x3 media--fallback media--leaf" style="width: 9rem;"><svg class="icon" aria-hidden="true"><use href="#i-tree"/></svg>Activity</span></div><figcaption>No photo yet: a tinted tile in the place's tone, so the grid stays even.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><span class="media media--4x3" style="width: 9rem;" role="img" aria-label="Empty photo frame"></span></div><figcaption>An empty grey frame looks broken and says nothing about the place.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas"><span class="text-soft">alt="Rows of lavender running to the horizon"</span></div><figcaption>Alt text describes what is in the photo.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><span class="text-soft">alt="lavender-farm.svg"</span></div><figcaption>A file name (or "Photo", or the card title repeated) tells a screen-reader user nothing.</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="ds-section" id="tokens"><h2><a href="#tokens">Tokens</a></h2>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Part</th><th scope="col">Token</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead>
+        <tbody>
+          <tr><td>Loading well</td><td><code>--colorNeutralBackground3</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralBackground3" data-swatch></i><span data-token="--colorNeutralBackground3"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralBackground3" data-swatch></i><span data-token="--colorNeutralBackground3"></span></span></td></tr>
+          <tr><td>Credit pill</td><td><code>--colorBackgroundOverlayStrong</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorBackgroundOverlayStrong" data-swatch></i><span data-token="--colorBackgroundOverlayStrong"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorBackgroundOverlayStrong" data-swatch></i><span data-token="--colorBackgroundOverlayStrong"></span></span></td></tr>
+          <tr><td>Credit text</td><td><code>--colorNeutralForegroundStaticInverted</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralForegroundStaticInverted" data-swatch></i><span data-token="--colorNeutralForegroundStaticInverted"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralForegroundStaticInverted" data-swatch></i><span data-token="--colorNeutralForegroundStaticInverted"></span></span></td></tr>
+          <tr><td>Leaf fallback fill / label</td><td><code>--colorPaletteLeafBackground1</code> / <code>--colorPaletteLeafForeground1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorPaletteLeafBackground1" data-swatch></i><span data-token="--colorPaletteLeafBackground1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorPaletteLeafBackground1" data-swatch></i><span data-token="--colorPaletteLeafBackground1"></span></span></td></tr>
+          <tr><td>Sun fallback fill / label</td><td><code>--colorPaletteSunBackground1</code> / <code>--colorPaletteSunForeground1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorPaletteSunBackground1" data-swatch></i><span data-token="--colorPaletteSunBackground1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorPaletteSunBackground1" data-swatch></i><span data-token="--colorPaletteSunBackground1"></span></span></td></tr>
+          <tr><td>Sky fallback fill / label</td><td><code>--colorPaletteSkyBackground1</code> / <code>--colorPaletteSkyForeground1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorPaletteSkyBackground1" data-swatch></i><span data-token="--colorPaletteSkyBackground1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorPaletteSkyBackground1" data-swatch></i><span data-token="--colorPaletteSkyBackground1"></span></span></td></tr>
+          <tr><td>Indoor fallback fill / label</td><td><code>--colorPaletteIndoorBackground1</code> / <code>--colorPaletteIndoorForeground1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorPaletteIndoorBackground1" data-swatch></i><span data-token="--colorPaletteIndoorBackground1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorPaletteIndoorBackground1" data-swatch></i><span data-token="--colorPaletteIndoorBackground1"></span></span></td></tr>
+          <tr><td>Radius</td><td><code>--borderRadiusMedium</code></td><td colspan="2"><span data-token="--borderRadiusMedium"></span></td></tr>
+          <tr><td>Credit type</td><td><code>--typographyCaption1</code>, <code>--lineHeightTight</code></td><td colspan="2"><span data-token="--typographyCaption1"></span></td></tr>
+          <tr><td>Credit inset</td><td><code>--spacingHorizontalS</code>, <code>--spacingVerticalSNudge</code></td><td colspan="2"><span data-token="--spacingHorizontalS"></span> / <span data-token="--spacingVerticalSNudge"></span></td></tr>
+          <tr><td>Fallback label</td><td><code>--typographyBody2</code>, <code>--fontWeightSemibold</code></td><td colspan="2"><span data-token="--typographyBody2"></span></td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section class="ds-section" id="code"><h2><a href="#code">Code</a></h2>
+      <pre><code>&lt;div class="media card__media"&gt;
+  &lt;img class="media__img" src="terre-bleu.jpg" alt="Rows of lavender running to the horizon"
+       width="800" height="450" loading="lazy"&gt;
+  &lt;span class="media__credit"&gt;Photo · Terre Bleu&lt;/span&gt;
+&lt;/div&gt;
+
+&lt;span class="media media--4x3 media--fallback media--leaf place-thumb" aria-hidden="true"&gt;
+  &lt;svg class="icon" aria-hidden="true"&gt;&lt;use href="#i-tree"/&gt;&lt;/svg&gt;
+&lt;/span&gt;
+
+&lt;a class="media media--fallback media--sky card__media" href="/weekends/42/photo"
+   aria-label="Add a photo to Rainy Rec Room"&gt;
+  &lt;svg class="icon" aria-hidden="true"&gt;&lt;use href="#i-plus"/&gt;&lt;/svg&gt;Add a photo
+&lt;/a&gt;</code></pre>
+      <table class="ds-table"><thead><tr><th scope="col">Class / attribute</th><th scope="col">Effect</th></tr></thead><tbody>
+        <tr><td><code>.media</code></td><td>16:9 frame, medium radius, neutral well, clips its photo.</td></tr>
+        <tr><td><code>.media--4x3</code></td><td>4:3 ratio for thumbnails and comparisons.</td></tr>
+        <tr><td><code>.media__img</code></td><td>Photo filling the frame with <code>object-fit: cover</code>.</td></tr>
+        <tr><td><code>.media__credit</code></td><td>Credit pill, bottom right (top left inside a <a href="cover.html">cover</a>).</td></tr>
+        <tr><td><code>.media--fallback</code> + <code>--leaf</code> <code>--sun</code> <code>--sky</code> <code>--indoor</code></td><td>No-photo tile: centred icon and label in the tone.</td></tr>
+        <tr><td><code>.card__media</code> / <code>.place-thumb</code></td><td>Context classes: bleed to a media card's edges / 72px admin thumbnail.</td></tr>
+        <tr><td><code>width</code> <code>height</code> <code>alt</code> <code>loading</code></td><td>Required on every <code>&lt;img&gt;</code>; <code>loading="lazy"</code> below the fold.</td></tr>
+      </tbody></table>
+    </section>
+
+    <section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>
+      <p>Extracted from these mocks:</p>
+      <ul>
+        <li><a href="../../mocks/pages/ideas.html">pages/ideas</a>, <a href="../../mocks/pages/ideas.food.html">pages/ideas.food</a> and <a href="../../mocks/pages/ideas.events.html">pages/ideas.events</a>: 16:9 card photos with "Photo · placeholder" credits.</li>
+        <li><a href="../../mocks/pages/past.html">pages/past</a>: "Your photo" and "From Toronto Zoo" credits; the sky "Add a photo" link tile.</li>
+        <li><a href="../../mocks/pages/admin.places.html">pages/admin.places</a>: 4:3 place thumbnails and the four fallback tones.</li>
+        <li><a href="../../mocks/pages/admin.reviews.html">pages/admin.reviews</a> and <a href="../../mocks/pages/admin.place.html">pages/admin.place</a>: 4:3 candidate photos, "Photo · Port Credit BIA" and "Photo · Jo Doe".</li>
+        <li><a href="../../mocks/pages/dialogs.html">pages/dialogs</a>: dialogs AD3 to AD6 (admin photo dialogs) and dialog D29 (Cover photo), which the link tile opens.</li>
+      </ul>
+      <p>Drift fixed during extraction (see the <a href="../README.md">README drift log</a>): drift D11 (credit raised to 12px on a 72% overlay), drift D12 (no text under 12px), drift D17 (the rgba() credit background is now a token). The images in <code>docs/mocks/images/</code> are illustrated placeholders and must not ship. The mocks do not show the loading or failed-image states; they are specified here.</p>
+    </section>
+
+    <footer class="ds-footer"><span>Saturdaze design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/icons.js"></script>
+<script src="../assets/ds.js"></script>
+</body>
+</html>

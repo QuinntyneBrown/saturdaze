@@ -1,0 +1,383 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Progress bar — Saturdaze design system</title>
+<meta name="description" content="Progress bars show how far a task has got: determinate, indeterminate and failed, plus the password strength meter and the stat bar that share its track.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html"><span class="brand-mark" aria-hidden="true"></span>Saturdaze DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Actions</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+    </ul></details>
+    <details open><summary>Inputs</summary><ul>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/chip-input.html">Chip input</a></li>
+      <li><a href="../components/file-upload.html">File upload</a></li>
+      <li><a href="../components/photo-pick.html">Photo pick</a></li>
+      <li><a href="../components/rating.html">Rating</a></li>
+      <li><a href="../components/vote-row.html">Vote row</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+    </ul></details>
+    <details open><summary>Navigation</summary><ul>
+      <li><a href="../components/top-bar.html">Top bar</a></li>
+      <li><a href="../components/bottom-nav.html">Bottom nav</a></li>
+      <li><a href="../components/sidebar-navigation.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs (segments)</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+      <li><a href="../components/footer.html">Footer</a></li>
+    </ul></details>
+    <details open><summary>Containers and overlays</summary><ul>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/container.html">Container and grid</a></li>
+      <li><a href="../components/page-header.html">Page header</a></li>
+    </ul></details>
+    <details open><summary>Data display</summary><ul>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/activity-feed.html">Activity feed</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/chip.html">Chip</a></li>
+      <li><a href="../components/filter-chip.html">Filter chip</a></li>
+      <li><a href="../components/disc.html">Disc</a></li>
+      <li><a href="../components/media.html">Media</a></li>
+      <li><a href="../components/cover.html">Cover photo</a></li>
+      <li><a href="../components/stat.html">Stat</a></li>
+      <li><a href="../components/itinerary.html">Itinerary</a></li>
+      <li><a href="../components/map.html">Map</a></li>
+    </ul></details>
+    <details open><summary>Feedback</summary><ul>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/alert.html">Alert</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/progress-bar.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Auth and marketing</summary><ul>
+      <li><a href="../components/auth-card.html">Auth card</a></li>
+      <li><a href="../components/hero.html">Hero</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/data-tables-and-lists.html">Tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Component · Feedback</p>
+      <h1>Progress bar</h1>
+      <p class="ds-lead">A progress bar shows how far a task has got when it takes more than a couple of seconds: a photo uploading, an admin ingestion run checking places. It says what is happening, how much is done, and whether it failed.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA</span><span class="ds-pill ds-pill--warn">Core: no mock uses it yet</span><span class="ds-pill">Angular: <code>sd-strength</code> (meter only)</span><span class="ds-pill"><code>role="progressbar"</code></span></div>
+      <ul class="ds-toc">
+        <li><a href="#overview">Overview</a></li><li><a href="#anatomy">Anatomy</a></li><li><a href="#variants">Variants</a></li><li><a href="#sizes">Sizes</a></li><li><a href="#states">States</a></li><li><a href="#responsive">Responsive</a></li><li><a href="#theming">Theming</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#content">Content</a></li><li><a href="#do-dont">Do and don't</a></li><li><a href="#tokens">Tokens</a></li><li><a href="#code">Code</a></li><li><a href="#sources">Sources</a></li>
+      </ul>
+    </header>
+
+    <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+      <p>Use a progress bar when a task takes longer than about two seconds and the person waits for it on this screen. Three components share one 8px track:</p>
+      <ul>
+        <li><b>Progress</b> (<code>.progress</code>): a task moving toward done. Determinate when the total is known (bytes uploaded, places checked); indeterminate (<code>.progress--indeterminate</code>) until it is.</li>
+        <li><b>Strength meter</b> (<code>.strength</code>): three segments and a sentence under a new password, on create account and reset password.</li>
+        <li><b>Stat bar</b> (<code>.stat__bar</code>): a static share on an admin <a href="stat.html">stat card</a>. It is a measure, not progress, so it is <code>role="img"</code>.</li>
+      </ul>
+      <p>For a short wait with no measurable steps, use a <a href="spinner.html">spinner</a> (the weekend planner's "Working through your locks…" status row). For content that is loading into place, use a <a href="skeleton.html">skeleton</a>. See <a href="../patterns/feedback-and-loading.html">feedback and loading</a>.</p>
+    </section>
+
+    <section class="ds-section" id="anatomy"><h2><a href="#anatomy">Anatomy</a></h2>
+      <div class="ds-anatomy">
+        <figure class="ds-anatomy__figure">
+          <div class="progress progress--brand" style="width: 100%; max-width: 24rem;">
+            <div class="progress__head"><span id="an-label">Uploading memorial-park.jpg</span><span class="progress__value">64%</span></div>
+            <div class="progress__bar" role="progressbar" aria-labelledby="an-label" aria-valuenow="64" aria-valuemin="0" aria-valuemax="100" aria-valuetext="64%, 1.3 of 2 MB"><span class="progress__fill" style="--sd-progress: 64%;"></span></div>
+          </div>
+          <span class="ds-callout" style="left: 12%; top: 18%;" aria-hidden="true">1</span>
+          <span class="ds-callout" style="left: 82%; top: 18%;" aria-hidden="true">2</span>
+          <span class="ds-callout" style="left: 46%; top: 66%;" aria-hidden="true">3</span>
+          <span class="ds-callout" style="left: 74%; top: 66%;" aria-hidden="true">4</span>
+        </figure>
+        <ol class="ds-anatomy__list">
+          <li><div><b>Label</b><small>What is happening, <code>--typographyBody2</code>. Names the progressbar through <code>aria-labelledby</code>.</small></div></li>
+          <li><div><b>Value</b><small><code>.progress__value</code>: percentage or "3 of 42", tabular numerals, <code>--colorNeutralForeground2</code>. Hidden for indeterminate.</small></div></li>
+          <li><div><b>Fill</b><small><code>.progress__fill</code>: pill, width from <code>--sd-progress</code>, colour from <code>--sd-progress-fill</code>.</small></div></li>
+          <li><div><b>Track</b><small><code>.progress__bar</code>: 8px, <code>--colorNeutralBackground3</code> with a 1px <code>--colorNeutralStroke2</code> inner edge.</small></div></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="ds-section" id="variants"><h2><a href="#variants">Variants</a></h2>
+      <h3>Progress</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack" style="max-width: 28rem;">
+          <div class="progress">
+            <div class="progress__head"><span id="v-ing">Checking places for photos</span><span class="progress__value">31 of 42</span></div>
+            <div class="progress__bar" role="progressbar" aria-labelledby="v-ing" aria-valuenow="31" aria-valuemin="0" aria-valuemax="42" aria-valuetext="31 of 42 places"><span class="progress__fill" style="--sd-progress: 74%;"></span></div>
+          </div>
+          <div class="progress progress--brand">
+            <div class="progress__head"><span id="v-up">Uploading memorial-park.jpg</span><span class="progress__value">64%</span></div>
+            <div class="progress__bar" role="progressbar" aria-labelledby="v-up" aria-valuenow="64" aria-valuemin="0" aria-valuemax="100"><span class="progress__fill" style="--sd-progress: 64%;"></span></div>
+          </div>
+          <div class="progress progress--danger">
+            <div class="progress__head"><span id="v-fail">Upload stopped at 64%</span><span class="progress__value">Failed</span></div>
+            <div class="progress__bar" role="progressbar" aria-labelledby="v-fail" aria-valuenow="64" aria-valuemin="0" aria-valuemax="100" aria-valuetext="Failed at 64%"><span class="progress__fill" style="--sd-progress: 64%;"></span></div>
+          </div>
+          <div class="progress progress--indeterminate progress--brand">
+            <div class="progress__head"><span id="v-ind">Fetching the image from images.example.com</span></div>
+            <div class="progress__bar" role="progressbar" aria-labelledby="v-ind"><span class="progress__fill"></span></div>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>Default (success fill), <code>.progress--brand</code>, <code>.progress--danger</code>, <code>.progress--indeterminate</code> (no <code>aria-valuenow</code>).</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;div class="progress progress--brand"&gt;
+  &lt;div class="progress__head"&gt;&lt;span id="up-label"&gt;Uploading memorial-park.jpg&lt;/span&gt;&lt;span class="progress__value"&gt;64%&lt;/span&gt;&lt;/div&gt;
+  &lt;div class="progress__bar" role="progressbar" aria-labelledby="up-label"
+       aria-valuenow="64" aria-valuemin="0" aria-valuemax="100"&gt;
+    &lt;span class="progress__fill" style="--sd-progress: 64%"&gt;&lt;/span&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre></details>
+      </div>
+      <h3>Password strength</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack" style="max-width: 24rem;">
+          <div class="field">
+            <label class="field__label" for="v-pw1">Password</label>
+            <input class="field__input" id="v-pw1" type="password" autocomplete="new-password" value="lavender" aria-describedby="v-pw1-s">
+            <div class="strength strength--weak" id="v-pw1-s"><div class="strength__bar" aria-hidden="true"><span class="strength__seg"></span><span class="strength__seg"></span><span class="strength__seg"></span></div><span class="strength__label">Weak · add a number or a symbol.</span></div>
+          </div>
+          <div class="field">
+            <label class="field__label" for="v-pw2">Password</label>
+            <input class="field__input" id="v-pw2" type="password" autocomplete="new-password" value="lavender-17" aria-describedby="v-pw2-s">
+            <div class="strength strength--ok" id="v-pw2-s"><div class="strength__bar" aria-hidden="true"><span class="strength__seg"></span><span class="strength__seg"></span><span class="strength__seg"></span></div><span class="strength__label">OK · eight characters or more. Add a capital letter to make it strong.</span></div>
+          </div>
+          <div class="field">
+            <label class="field__label" for="v-pw3">New password</label>
+            <input class="field__input" id="v-pw3" type="password" autocomplete="new-password" value="Lavender-17-May" aria-describedby="v-pw3-s">
+            <div class="strength strength--strong" id="v-pw3-s"><div class="strength__bar" aria-hidden="true"><span class="strength__seg"></span><span class="strength__seg"></span><span class="strength__seg"></span></div><span class="strength__label">Strong.</span></div>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span><code>.strength--weak</code> (1 segment, terracotta), <code>--ok</code> (2, sun), <code>--strong</code> (3, forest). The sentence carries the meaning; the segments are <code>aria-hidden</code>.</span></div>
+      </div>
+      <h3>Stat bar</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas" style="max-width: 24rem;">
+          <div class="stat__bar" role="img" aria-label="80% with a primary photo" style="flex: 1;"><span class="stat__fill stat__fill--leaf" style="--sd-progress: 80%;"></span></div>
+        </div>
+        <div class="ds-example__caption"><span>The same track, static, on the <a href="stat.html">stat card</a>.</span></div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="sizes" data-na="One size. The track is 8px everywhere; the strength meter's segments are 4px. Width follows the container."><h2><a href="#sizes">Sizes</a></h2><p class="ds-na">One size. The track is 8px everywhere; the strength meter's segments are 4px. Width follows the container.</p></section>
+
+    <section class="ds-section" id="states"><h2><a href="#states">States</a></h2>
+      <p>Progress has no pointer or focus states; it is not interactive. Its states are how far the task has got.</p>
+      <div class="ds-matrix"><table>
+        <thead><tr><th scope="col">Variant</th><th scope="col">Starting</th><th scope="col">In progress</th><th scope="col">Complete</th><th scope="col">Indeterminate</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Default</th>
+            <td><div class="progress" style="min-width: 12rem;"><div class="progress__head"><span id="m-d0">Checking places</span><span class="progress__value">0 of 42</span></div><div class="progress__bar" role="progressbar" aria-labelledby="m-d0" aria-valuenow="0" aria-valuemin="0" aria-valuemax="42"><span class="progress__fill" style="--sd-progress: 0%;"></span></div></div></td>
+            <td><div class="progress" style="min-width: 12rem;"><div class="progress__head"><span id="m-d1">Checking places</span><span class="progress__value">31 of 42</span></div><div class="progress__bar" role="progressbar" aria-labelledby="m-d1" aria-valuenow="31" aria-valuemin="0" aria-valuemax="42"><span class="progress__fill" style="--sd-progress: 74%;"></span></div></div></td>
+            <td><div class="progress" style="min-width: 12rem;"><div class="progress__head"><span id="m-d2">Checked 42 places</span><span class="progress__value">Done</span></div><div class="progress__bar" role="progressbar" aria-labelledby="m-d2" aria-valuenow="42" aria-valuemin="0" aria-valuemax="42"><span class="progress__fill" style="--sd-progress: 100%;"></span></div></div></td>
+            <td><div class="progress progress--indeterminate" style="min-width: 12rem;"><div class="progress__head"><span id="m-d3">Finding places</span></div><div class="progress__bar" role="progressbar" aria-labelledby="m-d3"><span class="progress__fill"></span></div></div></td>
+          </tr>
+          <tr><th scope="row">Brand</th>
+            <td><div class="progress progress--brand" style="min-width: 12rem;"><div class="progress__head"><span id="m-b0">Uploading</span><span class="progress__value">0%</span></div><div class="progress__bar" role="progressbar" aria-labelledby="m-b0" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"><span class="progress__fill" style="--sd-progress: 0%;"></span></div></div></td>
+            <td><div class="progress progress--brand" style="min-width: 12rem;"><div class="progress__head"><span id="m-b1">Uploading</span><span class="progress__value">64%</span></div><div class="progress__bar" role="progressbar" aria-labelledby="m-b1" aria-valuenow="64" aria-valuemin="0" aria-valuemax="100"><span class="progress__fill" style="--sd-progress: 64%;"></span></div></div></td>
+            <td><div class="progress progress--brand" style="min-width: 12rem;"><div class="progress__head"><span id="m-b2">Uploaded</span><span class="progress__value">100%</span></div><div class="progress__bar" role="progressbar" aria-labelledby="m-b2" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"><span class="progress__fill" style="--sd-progress: 100%;"></span></div></div></td>
+            <td><div class="progress progress--brand progress--indeterminate" style="min-width: 12rem;"><div class="progress__head"><span id="m-b3">Fetching image</span></div><div class="progress__bar" role="progressbar" aria-labelledby="m-b3"><span class="progress__fill"></span></div></div></td>
+          </tr>
+          <tr><th scope="row">Danger</th>
+            <td>—</td>
+            <td><div class="progress progress--danger" style="min-width: 12rem;"><div class="progress__head"><span id="m-x1">Upload stopped</span><span class="progress__value">Failed</span></div><div class="progress__bar" role="progressbar" aria-labelledby="m-x1" aria-valuenow="64" aria-valuemin="0" aria-valuemax="100" aria-valuetext="Failed at 64%"><span class="progress__fill" style="--sd-progress: 64%;"></span></div></div></td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+        </tbody>
+      </table></div>
+      <ul>
+        <li><b>Complete</b> stays for a moment with "Done" or the final count, then the bar is replaced by the result (the uploaded photo, a toast "Photo sent for review.").</li>
+        <li><b>Failed</b> keeps the fill where it stopped, turns it danger, and puts the reason and a retry next to it: an <a href="inline-message.html">inline message</a> in a dialog, or a <a href="toast.html">toast</a> when the dialog has closed.</li>
+        <li><b>Indeterminate</b> switches to determinate as soon as the total is known; it never runs for more than a few seconds without text that says what it is waiting for.</li>
+      </ul>
+      <h3>Both themes</h3>
+      <div class="ds-themes">
+        <div data-theme="light"><div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0;"><div class="progress"><div class="progress__head"><span id="t-l1">Checking places</span><span class="progress__value">31 of 42</span></div><div class="progress__bar" role="progressbar" aria-labelledby="t-l1" aria-valuenow="31" aria-valuemin="0" aria-valuemax="42"><span class="progress__fill" style="--sd-progress: 74%;"></span></div></div><div class="progress progress--brand"><div class="progress__head"><span id="t-l2">Uploading</span><span class="progress__value">64%</span></div><div class="progress__bar" role="progressbar" aria-labelledby="t-l2" aria-valuenow="64" aria-valuemin="0" aria-valuemax="100"><span class="progress__fill" style="--sd-progress: 64%;"></span></div></div><div class="strength strength--ok"><div class="strength__bar" aria-hidden="true"><span class="strength__seg"></span><span class="strength__seg"></span><span class="strength__seg"></span></div><span class="strength__label">OK · add a capital letter.</span></div></div></div>
+        <div data-theme="dark"><div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0;"><div class="progress"><div class="progress__head"><span id="t-d1">Checking places</span><span class="progress__value">31 of 42</span></div><div class="progress__bar" role="progressbar" aria-labelledby="t-d1" aria-valuenow="31" aria-valuemin="0" aria-valuemax="42"><span class="progress__fill" style="--sd-progress: 74%;"></span></div></div><div class="progress progress--brand"><div class="progress__head"><span id="t-d2">Uploading</span><span class="progress__value">64%</span></div><div class="progress__bar" role="progressbar" aria-labelledby="t-d2" aria-valuenow="64" aria-valuemin="0" aria-valuemax="100"><span class="progress__fill" style="--sd-progress: 64%;"></span></div></div><div class="strength strength--ok"><div class="strength__bar" aria-hidden="true"><span class="strength__seg"></span><span class="strength__seg"></span><span class="strength__seg"></span></div><span class="strength__label">OK · add a capital letter.</span></div></div></div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="responsive"><h2><a href="#responsive">Responsive behaviour</a></h2>
+      <ul>
+        <li>The bar fills its container at every width; it never has a fixed width.</li>
+        <li>In <code>.progress__head</code> the label wraps and the value keeps its place at the end. Long file names wrap rather than truncate, so the person can tell two uploads apart.</li>
+        <li>The strength meter matches its password field's width; its sentence wraps under the segments.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="theming"><h2><a href="#theming">Theming</a></h2>
+      <p>The fill reads <code>--sd-progress-fill</code> (colour) and <code>--sd-progress</code> (width); <code>.progress--brand</code>, <code>--danger</code> and the stat tones only set the colour. The track is shared with <code>.stat__bar</code>. In the dark theme the track is the umber well, the fills switch to their lighter steps, and the strength segments follow the status ramps. Dark brand and danger fills are close in hue, which is one more reason the failed state always says "Failed" in words.</p>
+      <pre><code>/* Width is data, not a class: set it from the template */
+&lt;span class="progress__fill" [style.--sd-progress.%]="percent"&gt;&lt;/span&gt;</code></pre>
+    </section>
+
+    <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
+      <h3>Role and pattern</h3>
+      <p>The track is <code>role="progressbar"</code> with <code>aria-valuenow</code>, <code>aria-valuemin</code> and <code>aria-valuemax</code>; add <code>aria-valuetext</code> when a count reads better than a percentage ("31 of 42 places", "Failed at 64%"). Indeterminate bars omit <code>aria-valuenow</code>. A native <code>&lt;progress&gt;</code> is equivalent if the product prefers it. The strength meter is not a progressbar: its sentence is the content, linked to the password field with <code>aria-describedby</code>. Static shares (stat bar) are <code>role="img"</code>.</p>
+      <h3>Keyboard</h3>
+      <table class="ds-table ds-keys"><thead><tr><th scope="col">Key</th><th scope="col">Action</th></tr></thead><tbody>
+        <tr><td><kbd>Tab</kbd></td><td>Skips the bar; it is not focusable. Cancel or Try again next to it are ordinary buttons.</td></tr>
+      </tbody></table>
+      <h3>Focus</h3>
+      <p>Progress never takes focus. When an upload finishes inside a dialog, focus stays where it was; the result is announced through a status region.</p>
+      <h3>Labelling</h3>
+      <p>Name the bar with its visible label (<code>aria-labelledby</code>). Announce milestones, not every percent: put "Uploading memorial-park.jpg", "Uploaded" and "Upload failed" in a <code>role="status"</code> region, and leave the bar's value for people who ask for it. The strength sentence is <code>aria-live="polite"</code> in the mocks; announce only when the level changes, not on every key press.</p>
+      <h3>Contrast</h3>
+      <div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0; gap: var(--spacingHorizontalS);">
+        <div class="ds-pair"><span>Label</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground1|--colorNeutralBackground1" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Value</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground2|--colorNeutralBackground1" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Default fill on track</span><span class="ds-pair__ratio" data-contrast="--colorStatusSuccessBackground3|--colorNeutralBackground3" data-min="3"></span></div>
+        <div class="ds-pair"><span>Brand fill on track</span><span class="ds-pair__ratio" data-contrast="--colorBrandStroke1|--colorNeutralBackground3" data-min="3"></span></div>
+        <div class="ds-pair"><span>Danger fill on track</span><span class="ds-pair__ratio" data-contrast="--colorStatusDangerForeground3|--colorNeutralBackground3" data-min="3"></span></div>
+        <div class="ds-pair"><span>Strength weak segment</span><span class="ds-pair__ratio" data-contrast="--colorStatusDangerForeground3|--colorNeutralBackground1" data-min="3"></span></div>
+        <div class="ds-pair"><span>Strength OK segment</span><span class="ds-pair__ratio" data-contrast="--colorPaletteSunForeground3|--colorNeutralBackground1" data-min="3"></span></div>
+        <div class="ds-pair"><span>Strength strong segment</span><span class="ds-pair__ratio" data-contrast="--colorStatusSuccessBackground3|--colorNeutralBackground1" data-min="3"></span></div>
+        <div class="ds-pair"><span>Strength sentence</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground2|--colorNeutralBackground1" data-min="4.5"></span></div>
+      </div>
+      <h3>Motion</h3>
+      <p>The fill's width eases over <code>--durationNormal</code>. The indeterminate fill sweeps across the track every <code>--durationShimmer</code>. Under <code>prefers-reduced-motion</code> those durations are zeroed, so instead of flickering the fill holds still at full width in a quieter brand step, and the label carries the "still working" message.</p>
+      <h3>Touch</h3>
+      <p>Not a target. Keep Cancel or Try again next to the bar at the 32px small button size or larger.</p>
+    </section>
+
+    <section class="ds-section" id="content"><h2><a href="#content">Content</a></h2>
+      <ul>
+        <li>Label with a verb in the present while running, the past when done: "Uploading memorial-park.jpg" → "Uploaded".</li>
+        <li>Use the unit the person cares about: "31 of 42" places for an ingestion run, a percentage for a file.</li>
+        <li>Failure says where it stopped and why, next to the bar: "Upload stopped at 64%" and "The connection dropped. Try again."</li>
+        <li>Strength: the level, a middle dot, and the one change that would raise it: "OK · eight characters or more. Add a capital letter to make it strong."</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="do-dont"><h2><a href="#do-dont">Do and don't</a></h2>
+      <div class="ds-dodont">
+        <figure class="ds-do"><div class="ds-example__canvas ds-example__canvas--stack"><div class="progress progress--brand"><div class="progress__head"><span id="dd-1">Uploading memorial-park.jpg</span><span class="progress__value">64%</span></div><div class="progress__bar" role="progressbar" aria-labelledby="dd-1" aria-valuenow="64" aria-valuemin="0" aria-valuemax="100"><span class="progress__fill" style="--sd-progress: 64%;"></span></div></div></div><figcaption>Say what is happening and how far it has got.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas ds-example__canvas--stack"><div class="progress__bar" role="progressbar" aria-label="Progress" aria-valuenow="64" aria-valuemin="0" aria-valuemax="100"><span class="progress__fill" style="--sd-progress: 64%;"></span></div></div><figcaption>A bare bar named "Progress" does not say what is loading or whether to wait.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas ds-example__canvas--stack"><div class="strength strength--weak"><div class="strength__bar" aria-hidden="true"><span class="strength__seg"></span><span class="strength__seg"></span><span class="strength__seg"></span></div><span class="strength__label">Weak · add a number or a symbol.</span></div></div><figcaption>The level in words, plus the one change that helps.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas ds-example__canvas--stack"><div class="strength strength--weak"><div class="strength__bar" aria-hidden="true"><span class="strength__seg"></span><span class="strength__seg"></span><span class="strength__seg"></span></div></div></div><figcaption>Coloured segments alone: red and green are the colours most often confused (1.4.1).</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas"><div class="status-row" role="status" style="margin: 0; flex: 1;"><span class="spinner-disc" aria-hidden="true"><span class="spinner"></span><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg></span><span>Working through your locks, the forecast and past weekends.</span></div></div><figcaption>Planning has no countable steps: the mocks use a spinner and a sentence.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas ds-example__canvas--stack"><div class="progress progress--brand"><div class="progress__head"><span id="dd-2">Planning your weekend</span><span class="progress__value">37%</span></div><div class="progress__bar" role="progressbar" aria-labelledby="dd-2" aria-valuenow="37" aria-valuemin="0" aria-valuemax="100"><span class="progress__fill" style="--sd-progress: 37%;"></span></div></div></div><figcaption>A made-up percentage that jumps or stalls is worse than an honest spinner.</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="ds-section" id="tokens"><h2><a href="#tokens">Tokens</a></h2>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Part</th><th scope="col">Token</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead>
+        <tbody>
+          <tr><td>Track</td><td><code>--colorNeutralBackground3</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralBackground3" data-swatch></i><span data-token="--colorNeutralBackground3"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralBackground3" data-swatch></i><span data-token="--colorNeutralBackground3"></span></span></td></tr>
+          <tr><td>Track edge</td><td><code>--colorNeutralStroke2</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralStroke2" data-swatch></i><span data-token="--colorNeutralStroke2"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralStroke2" data-swatch></i><span data-token="--colorNeutralStroke2"></span></span></td></tr>
+          <tr><td>Fill, default; strength strong</td><td><code>--colorStatusSuccessBackground3</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorStatusSuccessBackground3" data-swatch></i><span data-token="--colorStatusSuccessBackground3"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorStatusSuccessBackground3" data-swatch></i><span data-token="--colorStatusSuccessBackground3"></span></span></td></tr>
+          <tr><td>Fill, brand</td><td><code>--colorBrandStroke1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorBrandStroke1" data-swatch></i><span data-token="--colorBrandStroke1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorBrandStroke1" data-swatch></i><span data-token="--colorBrandStroke1"></span></span></td></tr>
+          <tr><td>Fill, danger; strength weak</td><td><code>--colorStatusDangerForeground3</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorStatusDangerForeground3" data-swatch></i><span data-token="--colorStatusDangerForeground3"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorStatusDangerForeground3" data-swatch></i><span data-token="--colorStatusDangerForeground3"></span></span></td></tr>
+          <tr><td>Strength OK</td><td><code>--colorPaletteSunForeground3</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorPaletteSunForeground3" data-swatch></i><span data-token="--colorPaletteSunForeground3"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorPaletteSunForeground3" data-swatch></i><span data-token="--colorPaletteSunForeground3"></span></span></td></tr>
+          <tr><td>Strength empty segment</td><td><code>--colorNeutralStroke1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralStroke1" data-swatch></i><span data-token="--colorNeutralStroke1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralStroke1" data-swatch></i><span data-token="--colorNeutralStroke1"></span></span></td></tr>
+          <tr><td>Label</td><td><code>--colorNeutralForeground1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralForeground1" data-swatch></i><span data-token="--colorNeutralForeground1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralForeground1" data-swatch></i><span data-token="--colorNeutralForeground1"></span></span></td></tr>
+          <tr><td>Value, strength sentence</td><td><code>--colorNeutralForeground2</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralForeground2" data-swatch></i><span data-token="--colorNeutralForeground2"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralForeground2" data-swatch></i><span data-token="--colorNeutralForeground2"></span></span></td></tr>
+          <tr><td>Label type / sentence type</td><td><code>--typographyBody2</code>, <code>--typographyCaption1</code></td><td colspan="2"><span data-token="--typographyBody2"></span> / <span data-token="--typographyCaption1"></span></td></tr>
+          <tr><td>Radius</td><td><code>--borderRadiusCircular</code></td><td colspan="2"><span data-token="--borderRadiusCircular"></span></td></tr>
+          <tr><td>Head-to-bar gap / segment gap</td><td><code>--spacingVerticalSNudge</code>, <code>--spacingHorizontalXS</code></td><td colspan="2"><span data-token="--spacingVerticalSNudge"></span> / <span data-token="--spacingHorizontalXS"></span></td></tr>
+          <tr><td>Fill width change</td><td><code>--durationNormal</code>, <code>--curveEasyEase</code></td><td colspan="2"><span data-token="--durationNormal"></span> / <span data-token="--curveEasyEase"></span></td></tr>
+          <tr><td>Indeterminate sweep</td><td><code>--durationShimmer</code></td><td colspan="2"><span data-token="--durationShimmer"></span></td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section class="ds-section" id="code"><h2><a href="#code">Code</a></h2>
+      <pre><code>&lt;div class="progress"&gt;
+  &lt;div class="progress__head"&gt;&lt;span id="ing-label"&gt;Checking places for photos&lt;/span&gt;&lt;span class="progress__value"&gt;31 of 42&lt;/span&gt;&lt;/div&gt;
+  &lt;div class="progress__bar" role="progressbar" aria-labelledby="ing-label"
+       aria-valuenow="31" aria-valuemin="0" aria-valuemax="42" aria-valuetext="31 of 42 places"&gt;
+    &lt;span class="progress__fill" style="--sd-progress: 74%"&gt;&lt;/span&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="progress progress--indeterminate progress--brand"&gt;
+  &lt;div class="progress__head"&gt;&lt;span id="fetch-label"&gt;Fetching the image&lt;/span&gt;&lt;/div&gt;
+  &lt;div class="progress__bar" role="progressbar" aria-labelledby="fetch-label"&gt;&lt;span class="progress__fill"&gt;&lt;/span&gt;&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;input class="field__input" id="pw" type="password" aria-describedby="pw-strength"&gt;
+&lt;div class="strength strength--ok" id="pw-strength" aria-live="polite"&gt;
+  &lt;div class="strength__bar" aria-hidden="true"&gt;&lt;span class="strength__seg"&gt;&lt;/span&gt;&lt;span class="strength__seg"&gt;&lt;/span&gt;&lt;span class="strength__seg"&gt;&lt;/span&gt;&lt;/div&gt;
+  &lt;span class="strength__label"&gt;OK · eight characters or more. Add a capital letter to make it strong.&lt;/span&gt;
+&lt;/div&gt;</code></pre>
+      <table class="ds-table"><thead><tr><th scope="col">Class / attribute</th><th scope="col">Effect</th></tr></thead><tbody>
+        <tr><td><code>.progress</code> <code>.progress__head</code> <code>.progress__value</code></td><td>Wrapper, label row, value.</td></tr>
+        <tr><td><code>.progress__bar</code> + <code>.progress__fill</code></td><td>Track and fill; width from <code>style="--sd-progress: 64%"</code>.</td></tr>
+        <tr><td><code>.progress--brand</code> <code>.progress--danger</code></td><td>Fill colour; none is the success fill.</td></tr>
+        <tr><td><code>.progress--indeterminate</code></td><td>Sweeping 40% fill; omit <code>aria-valuenow</code>.</td></tr>
+        <tr><td><code>.strength</code> + <code>--weak</code> <code>--ok</code> <code>--strong</code>, <code>__bar</code> <code>__seg</code> <code>__label</code></td><td>Password strength meter.</td></tr>
+        <tr><td><code>.stat__bar</code> + <code>.stat__fill</code></td><td>Static share on a stat card (<a href="stat.html">stat</a>).</td></tr>
+      </tbody></table>
+      <p>Angular: <code>&lt;sd-strength level="ok" label="…" /&gt;</code> for the meter; there is no progress bar component yet.</p>
+    </section>
+
+    <section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>
+      <ul>
+        <li><a href="../../mocks/pages/create-account.html">pages/create-account</a> and <a href="../../mocks/pages/reset-password.html">pages/reset-password</a>: the strength meter at OK and Strong.</li>
+        <li><a href="../../mocks/pages/admin.html">pages/admin</a>: the stat bars that share the track.</li>
+        <li><a href="../../mocks/pages/weekend.generating.html">pages/weekend.generating</a>: the spinner status row used instead of progress for planning.</li>
+        <li><a href="../../mocks/pages/dialogs.html">pages/dialogs</a>: the photo upload dialogs where a progress bar belongs.</li>
+      </ul>
+      <p>No mock shows a progress bar: <code>.progress</code> is a core component. Drift that applies: D12 (no text under 12px), D29 (reduced motion zeroes durations, so the indeterminate bar holds still). The weak strength level is not in any mock.</p>
+    </section>
+
+    <footer class="ds-footer"><span>Saturdaze design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/icons.js"></script>
+<script src="../assets/ds.js"></script>
+</body>
+</html>

@@ -1,0 +1,516 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Card — Saturdaze design system</title>
+<meta name="description" content="Cards group one place, event, past weekend or submission with its facts and actions: photo-led, padded, sunk, locked, dimmed, muted, selected and interactive.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html"><span class="brand-mark" aria-hidden="true"></span>Saturdaze DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Actions</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+    </ul></details>
+    <details open><summary>Inputs</summary><ul>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/chip-input.html">Chip input</a></li>
+      <li><a href="../components/file-upload.html">File upload</a></li>
+      <li><a href="../components/photo-pick.html">Photo pick</a></li>
+      <li><a href="../components/rating.html">Rating</a></li>
+      <li><a href="../components/vote-row.html">Vote row</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+    </ul></details>
+    <details open><summary>Navigation</summary><ul>
+      <li><a href="../components/top-bar.html">Top bar</a></li>
+      <li><a href="../components/bottom-nav.html">Bottom nav</a></li>
+      <li><a href="../components/sidebar-navigation.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs (segments)</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+      <li><a href="../components/footer.html">Footer</a></li>
+    </ul></details>
+    <details open><summary>Containers and overlays</summary><ul>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/container.html">Container and grid</a></li>
+      <li><a href="../components/page-header.html">Page header</a></li>
+    </ul></details>
+    <details open><summary>Data display</summary><ul>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/activity-feed.html">Activity feed</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/chip.html">Chip</a></li>
+      <li><a href="../components/filter-chip.html">Filter chip</a></li>
+      <li><a href="../components/disc.html">Disc</a></li>
+      <li><a href="../components/media.html">Media</a></li>
+      <li><a href="../components/cover.html">Cover photo</a></li>
+      <li><a href="../components/stat.html">Stat</a></li>
+      <li><a href="../components/itinerary.html">Itinerary</a></li>
+      <li><a href="../components/map.html">Map</a></li>
+    </ul></details>
+    <details open><summary>Feedback</summary><ul>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/alert.html">Alert</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/progress-bar.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Auth and marketing</summary><ul>
+      <li><a href="../components/auth-card.html">Auth card</a></li>
+      <li><a href="../components/hero.html">Hero</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/data-tables-and-lists.html">Tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Component · Containers and overlays</p>
+      <h1>Card</h1>
+      <p class="ds-lead">A card holds one thing the family might do or has done: a place, a restaurant, an event, a past weekend, a submission waiting for review. It shows the facts that decide it and the actions that act on it.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA</span><span class="ds-pill">Status: stable</span><span class="ds-pill">Angular: <code>sd-card</code></span><span class="ds-pill">Native <code>&lt;li&gt;</code> or <code>&lt;article&gt;</code></span></div>
+      <ul class="ds-toc">
+        <li><a href="#overview">Overview</a></li><li><a href="#anatomy">Anatomy</a></li><li><a href="#variants">Variants</a></li><li><a href="#sizes">Sizes</a></li><li><a href="#states">States</a></li><li><a href="#responsive">Responsive</a></li><li><a href="#theming">Theming</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#content">Content</a></li><li><a href="#do-dont">Do and don't</a></li><li><a href="#tokens">Tokens</a></li><li><a href="#code">Code</a></li><li><a href="#sources">Sources</a></li>
+      </ul>
+    </header>
+
+    <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+      <p>Use a card when each item in a collection needs its own picture, facts and actions, and people compare items side by side: the Ideas grids, Past weekends, the review queue. Use a <a href="list.html">list</a> when items are uniform rows a person scans and opens (Who's in, the admin Places list). Use a <a href="page-header.html">section</a> to group a page, never a card around a whole section.</p>
+      <ul>
+        <li><b>Default</b> (<code>.card</code>) is a white surface with a hairline border and 16px padding.</li>
+        <li><b>Media</b> (<code>.card--media</code> with <code>.card__media</code>) leads with a 16:9 photo or a tinted fallback tile. Every idea card and past weekend uses it (28 of the 47 cards in the mocks).</li>
+        <li><b>Large padding</b> (<code>.card--pad-lg</code>) is for dense, standalone records: review submissions and admin stat cards.</li>
+        <li><b>Sunk</b> (<code>.card--sunk</code>) is a summary inside another surface, such as the submission recap in a dialog (D11, D23).</li>
+        <li><b>Locked</b>, <b>dimmed</b>, <b>muted</b> and <b>selected</b> show a decision: this pick is locked in, these picks stepped back, this event is not public yet, this one is chosen.</li>
+        <li><b>Interactive</b> (<code>.card--interactive</code>) is a card whose only job is to open something. One real link stretches over it (<code>.card__stretch</code>); the card itself is not the control.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="anatomy"><h2><a href="#anatomy">Anatomy</a></h2>
+      <div class="ds-anatomy">
+        <figure class="ds-anatomy__figure">
+          <div class="card card--media" style="width: 100%; max-width: 20rem;">
+            <div class="media card__media"><img class="media__img" src="../../mocks/images/lavender-farm.svg" alt="Rows of lavender running to the horizon" width="800" height="500"><span class="media__credit">Photo · placeholder</span></div>
+            <div class="card__head">
+              <div class="card__head-text">
+                <p class="card__title">Terre Bleu Lavender Farm</p>
+                <p class="card__meta">Milton</p>
+              </div>
+              <span class="chip chip--primary">Top pick</span>
+            </div>
+            <p class="card__body clamp-2">Lavender peaks 17 to 24 May, and Mae is old enough to walk the rows this year.</p>
+            <div class="card__chips"><span class="chip chip--sky"><svg class="icon" aria-hidden="true"><use href="#i-car"/></svg>45 min</span><span class="chip">All ages</span></div>
+            <div class="card__footer">
+              <button class="btn btn--quiet btn--sm" type="button"><svg class="icon" aria-hidden="true"><use href="#i-map"/></svg>Map</button>
+              <button class="btn btn--primary btn--sm" type="button"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg>Add to day</button>
+            </div>
+          </div>
+          <span class="ds-callout" style="left: 50%; top: 18%;" aria-hidden="true">1</span>
+          <span class="ds-callout" style="left: 18%; top: 47%;" aria-hidden="true">2</span>
+          <span class="ds-callout" style="left: 78%; top: 47%;" aria-hidden="true">3</span>
+          <span class="ds-callout" style="left: 18%; top: 62%;" aria-hidden="true">4</span>
+          <span class="ds-callout" style="left: 18%; top: 72%;" aria-hidden="true">5</span>
+          <span class="ds-callout" style="left: 18%; top: 82%;" aria-hidden="true">6</span>
+          <span class="ds-callout" style="left: 92%; top: 92%;" aria-hidden="true">7</span>
+        </figure>
+        <ol class="ds-anatomy__list">
+          <li><div><b>Media (optional)</b><small><code>.media.card__media</code>, 16:9, bleeds to the card edges; credit pill bottom right. A tinted <code>.media--fallback</code> tile when there is no photo.</small></div></li>
+          <li><div><b>Head</b><small><code>.card__head</code>: optional date tile, then <code>.card__title</code> (<code>--typographyTitle3</code>) and <code>.card__meta</code> in <code>.card__head-text</code>.</small></div></li>
+          <li><div><b>Status chip (optional)</b><small>A <code>.chip</code> as the last child of the head is pushed to the right: Top pick, Locked for dinner, Pending.</small></div></li>
+          <li><div><b>Body (optional)</b><small><code>.card__body</code>, <code>--typographyBody2</code> in the secondary colour; clamp to two lines in grids.</small></div></li>
+          <li><div><b>Chips (optional)</b><small><code>.card__chips</code>: drive time, ages, tags. Three at most.</small></div></li>
+          <li><div><b>Footer (optional)</b><small><code>.card__footer</code> sits at the bottom (<code>margin-top: auto</code>) so footers line up across a row. Small buttons, primary last.</small></div></li>
+          <li><div><b>Container</b><small><code>--colorNeutralBackground1</code>, 1px <code>--colorNeutralStroke2</code>, <code>--borderRadiusLarge</code>, 16px padding, 10px gap.</small></div></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="ds-section" id="variants"><h2><a href="#variants">Variants</a></h2>
+      <p>Three content shapes cover every collection in the mocks: a photo-led idea, a fallback tile when a place has no photo, and an event with a date tile.</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack ds-example__canvas--canvas">
+          <ul class="grid-cards" style="margin: 0; padding: 0; list-style: none;">
+            <li class="card card--media">
+              <div class="media card__media"><img class="media__img" src="../../mocks/images/bronte-creek.svg" alt="A creek winding through green parkland" width="800" height="500"><span class="media__credit">Photo · placeholder</span></div>
+              <div class="card__head"><div class="card__head-text"><h3 class="card__title">Bronte Creek Provincial Park</h3><p class="card__meta">Oakville</p></div></div>
+              <p class="card__body clamp-2">Short trail, washrooms, picnic tables. Your usual win, with a splash pad if it gets hot.</p>
+              <div class="card__chips"><span class="chip chip--sky"><svg class="icon" aria-hidden="true"><use href="#i-car"/></svg>25 min</span><span class="chip">Ages 5+</span></div>
+              <div class="card__footer">
+                <button class="btn btn--quiet btn--sm" type="button"><svg class="icon" aria-hidden="true"><use href="#i-map"/></svg>Map</button>
+                <button class="btn btn--primary btn--sm" type="button" aria-label="Add to day: Bronte Creek Provincial Park"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg>Add to day</button>
+              </div>
+            </li>
+            <li class="card card--media">
+              <div class="media media--fallback media--sun card__media" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-fork"/></svg></div>
+              <div class="card__head"><div class="card__head-text"><h3 class="card__title">La Marina</h3><p class="card__meta">Mediterranean · Patio · 6 min from Terre Bleu</p></div><span class="chip chip--primary">Top pick</span></div>
+              <div class="card__chips"><span class="chip chip--accent"><svg class="icon" aria-hidden="true"><use href="#i-heart"/></svg>Wife-approved</span><span class="chip chip--sky"><svg class="icon" aria-hidden="true"><use href="#i-car"/></svg>6 min</span></div>
+              <div class="card__footer cluster--between">
+                <button class="btn btn--quiet btn--sm" type="button">See menu</button>
+                <button class="btn btn--primary btn--sm" type="button"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg>Lock it in</button>
+              </div>
+            </li>
+            <li class="card card--media">
+              <div class="media media--fallback media--sky card__media" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-ticket"/></svg></div>
+              <div class="card__head">
+                <span class="date-tile" aria-hidden="true"><span class="date-tile__m">Jun</span><span class="date-tile__d">20</span></span>
+                <div class="card__head-text"><h3 class="card__title">Port Credit Buskerfest</h3><p class="card__meta">Lakeshore Rd · Sat 2pm to 9pm</p></div>
+              </div>
+              <div class="card__chips"><span class="chip chip--leaf">Free</span><span class="chip chip--sky"><svg class="icon" aria-hidden="true"><use href="#i-car"/></svg>2 min</span></div>
+              <div class="card__footer">
+                <button class="btn btn--primary btn--sm" type="button" aria-label="Add to day: Port Credit Buskerfest"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg>Add to day</button>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <div class="ds-example__caption"><span>Photo-led idea (Ideas), fallback tile with a status chip (Food), event with a date tile (Events). All three are <code>.card--media</code>.</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;li class="card card--media"&gt;
+  &lt;div class="media card__media"&gt;&lt;img class="media__img" src="bronte-creek.jpg" alt="A creek winding through green parkland"&gt;&lt;span class="media__credit"&gt;Photo · Jo Doe&lt;/span&gt;&lt;/div&gt;
+  &lt;div class="card__head"&gt;&lt;div class="card__head-text"&gt;&lt;h3 class="card__title"&gt;Bronte Creek Provincial Park&lt;/h3&gt;&lt;p class="card__meta"&gt;Oakville&lt;/p&gt;&lt;/div&gt;&lt;/div&gt;
+  &lt;p class="card__body clamp-2"&gt;Short trail, washrooms, picnic tables.&lt;/p&gt;
+  &lt;div class="card__chips"&gt;…&lt;/div&gt;
+  &lt;div class="card__footer"&gt;…&lt;/div&gt;
+&lt;/li&gt;</code></pre></details>
+      </div>
+
+      <h3>Past weekend</h3>
+      <p>Past cards put a date eyebrow and a favourite toggle in a <code>.card__row</code>, make the title a rename button (<code>.card__title-btn</code>), and split the footer into two equal buttons (<code>.card__footer--2up</code>).</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--canvas">
+          <div class="card card--media" style="width: 100%; max-width: 21rem;">
+            <div class="media card__media"><img class="media__img" src="../../mocks/images/stay-home.svg" alt="Rain on the window beside the craft table" width="800" height="500"><span class="media__credit">Your photo</span></div>
+            <div class="card__row">
+              <span class="card__eyebrow">3 – 4 May 2026</span>
+              <button class="btn btn--ghost btn--sm btn--icon" type="button" aria-pressed="true" aria-label="Favourite this weekend"><svg class="icon" aria-hidden="true"><use href="#i-heart"/></svg></button>
+            </div>
+            <h3 class="card__title"><button class="card__title-btn" type="button" aria-label="Rename: Stay-home reset">Stay-home reset</button></h3>
+            <p class="card__body clamp-2">Rained Saturday. Indoor crafts saved it; Sunday hike at Riverwood.</p>
+            <div class="card__footer card__footer--2up">
+              <button class="btn btn--quiet btn--sm" type="button"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg>Remix</button>
+              <button class="btn btn--primary btn--sm" type="button"><svg class="icon" aria-hidden="true"><use href="#i-refresh"/></svg>Repeat</button>
+            </div>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>From Past. Rename and favourite are buttons inside the card, so this card is never <code>--interactive</code>.</span></div>
+      </div>
+
+      <h3>Surface and padding</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack ds-example__canvas--canvas">
+          <div class="grid-2">
+            <article class="card card--pad-lg" aria-labelledby="card-sub-1">
+              <div class="card__head">
+                <span class="date-tile" aria-hidden="true"><span class="date-tile__m">Jun</span><span class="date-tile__d">6</span></span>
+                <div class="card__head-text"><h3 class="card__title" id="card-sub-1">St. Christopher's spring fair</h3><p class="card__meta">Sat 6 Jun · 10:00am to 2:00pm</p></div>
+                <span class="chip chip--sun">Pending</span>
+              </div>
+              <dl class="details">
+                <dt class="details__label">Location</dt><dd class="details__value">St. Christopher's school, Port Credit</dd>
+                <dt class="details__label">Cost</dt><dd class="details__value details__value--faint">Not given</dd>
+              </dl>
+              <div class="card__footer cluster--end">
+                <button class="btn btn--quiet" type="button"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg>Reject</button>
+                <button class="btn btn--primary" type="button"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Approve</button>
+              </div>
+            </article>
+            <div class="card card--sunk">
+              <div class="card__head">
+                <span class="date-tile" aria-hidden="true"><span class="date-tile__m">Jun</span><span class="date-tile__d">20</span></span>
+                <div class="card__head-text"><p class="card__title">Port Credit Buskerfest</p><p class="card__meta">Lakeshore Rd · Sat 2pm to 9pm</p></div>
+                <span class="chip chip--sun">Pending review</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>Large padding for a standalone review record (Review submissions); sunk for a recap inside a dialog (D11 Submitted).</span></div>
+      </div>
+
+      <h3>Decision states as variants</h3>
+      <p>These change how a card reads after the family decided something. Each one also says it in words: a chip, a disabled button with a reason nearby, or a heading above the group.</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack ds-example__canvas--canvas">
+          <ul class="grid-cards" style="margin: 0; padding: 0; list-style: none;">
+            <li class="card card--locked">
+              <div class="card__head"><div class="card__head-text"><h3 class="card__title">Jack Astor's</h3><p class="card__meta">Casual · Kids' menu · Square One</p></div><span class="chip chip--accent"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg>Locked for dinner</span></div>
+              <div class="card__footer"><button class="btn btn--quiet btn--sm" type="button"><svg class="icon" aria-hidden="true"><use href="#i-unlock"/></svg>Unlock</button></div>
+            </li>
+            <li class="card card--dimmed">
+              <div class="card__head"><div class="card__head-text"><h3 class="card__title">Snug Harbour</h3><p class="card__meta">Seafood · Patio on the lake · Port Credit</p></div></div>
+              <p class="card__body">Dinner is locked at Jack Astor's.</p>
+              <div class="card__footer"><button class="btn btn--primary btn--sm" type="button" disabled><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg>Lock it in</button></div>
+            </li>
+            <li class="card card--muted">
+              <div class="card__head"><div class="card__head-text"><h3 class="card__title">Port Credit Buskerfest</h3><p class="card__meta">Lakeshore Rd · Sat 2pm to 9pm</p></div></div>
+              <div class="card__chips"><span class="chip chip--sun">Pending review</span></div>
+            </li>
+            <li class="card card--selected">
+              <div class="card__head"><div class="card__head-text"><h3 class="card__title">Royal Botanical Gardens</h3><p class="card__meta">Burlington · 35 min</p></div><span class="chip chip--primary"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Chosen</span></div>
+              <div class="card__footer"><button class="btn btn--quiet btn--sm" type="button" aria-pressed="true">Chosen for Sunday</button></div>
+            </li>
+          </ul>
+        </div>
+        <div class="ds-example__caption"><span>Locked (Food, the locked dinner), dimmed (the other dinner picks), muted (your own event before approval), selected (proposed; no mock yet).</span></div>
+      </div>
+
+      <h3>Interactive</h3>
+      <p>When the whole card opens one thing and has no other controls, make the title a link with <code>.card__stretch</code> on a <code>.card--interactive</code>. Its <code>::after</code> covers the card, so a tap anywhere follows the link, but the accessible control is still just the link.</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--canvas">
+          <article class="card card--interactive card--media" style="width: 100%; max-width: 21rem;">
+            <div class="media card__media"><img class="media__img" src="../../mocks/images/la-marina.svg" alt="" width="800" height="500"></div>
+            <p class="card__eyebrow">16 – 17 May 2026</p>
+            <h3 class="card__title"><a class="card__stretch" href="../../mocks/pages/weekend.html">This weekend</a></h3>
+            <p class="card__meta">Lavender fields at Terre Bleu, lunch at La Marina, Swim lessons</p>
+          </article>
+        </div>
+        <div class="ds-example__caption"><span>No mock uses it yet. The photo is decorative here (<code>alt=""</code>) because the title names the weekend.</span></div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="sizes"><h2><a href="#sizes">Sizes</a></h2>
+      <p>Cards take their width from the grid they sit in (<a href="container.html">container and grid</a>). The only size choice is padding: 16px by default and 24px with <code>.card--pad-lg</code> (Angular <code>padding="lg"</code>). Locked and selected cards subtract 1px from the padding to absorb their 2px border, so content does not shift when the state changes.</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--canvas" style="align-items: flex-start;">
+          <div class="card" style="width: 14rem;"><p class="card__title">Default</p><p class="card__meta">16px padding · <code>--spacingHorizontalL</code></p></div>
+          <div class="card card--pad-lg" style="width: 14rem;"><p class="card__title">Large</p><p class="card__meta">24px padding · <code>--spacingHorizontalXL</code></p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="states"><h2><a href="#states">States</a></h2>
+      <p>Only <code>.card--interactive</code> responds to the pointer. A static card never changes on hover; its buttons do. Focus is drawn on whatever has focus: on a static card that is a footer button, on an interactive card it is the stretched link, and the ring goes round the whole card.</p>
+      <div class="ds-matrix"><table>
+        <thead><tr><th scope="col">Variant</th><th scope="col">Default</th><th scope="col">Hover</th><th scope="col">Focus within</th><th scope="col">Selected</th><th scope="col">Locked</th><th scope="col">Dimmed</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Static</th>
+            <td><div class="card" style="width: 12rem;"><p class="card__title">The Rec Room</p><p class="card__meta">Square One</p><div class="card__footer"><button class="btn btn--primary btn--sm" type="button">Add to day</button></div></div></td>
+            <td><div class="card" style="width: 12rem;"><p class="card__title">The Rec Room</p><p class="card__meta">No change</p><div class="card__footer"><button class="btn btn--primary btn--sm" type="button" data-state="hover">Add to day</button></div></div></td>
+            <td><div class="card" style="width: 12rem;"><p class="card__title">The Rec Room</p><p class="card__meta">Square One</p><div class="card__footer"><button class="btn btn--primary btn--sm" type="button" data-state="focus">Add to day</button></div></div></td>
+            <td><div class="card card--selected" style="width: 12rem;"><p class="card__title">The Rec Room</p><p class="card__meta">Square One</p><div class="card__footer"><button class="btn btn--quiet btn--sm" type="button" aria-pressed="true">Chosen</button></div></div></td>
+            <td><div class="card card--locked" style="width: 12rem;"><p class="card__title">The Rec Room</p><p class="card__meta">Locked for Sunday</p><div class="card__footer"><button class="btn btn--quiet btn--sm" type="button">Unlock</button></div></div></td>
+            <td><div class="card card--dimmed" style="width: 12rem;"><p class="card__title">The Rec Room</p><p class="card__meta">Sunday is locked</p><div class="card__footer"><button class="btn btn--primary btn--sm" type="button" disabled>Add to day</button></div></div></td>
+          </tr>
+          <tr><th scope="row">Interactive</th>
+            <td><div class="card card--interactive" style="width: 12rem;"><p class="card__title"><a class="card__stretch" href="../../mocks/pages/past.html">10 – 11 May</a></p><p class="card__meta">Bronte Creek + Rec Room</p></div></td>
+            <td><div class="card card--interactive" style="width: 12rem;" data-state="hover"><p class="card__title"><a class="card__stretch" href="../../mocks/pages/past.html">10 – 11 May</a></p><p class="card__meta">Bronte Creek + Rec Room</p></div></td>
+            <td><div class="card card--interactive" style="width: 12rem;" data-state="focus"><p class="card__title"><a class="card__stretch" href="../../mocks/pages/past.html">10 – 11 May</a></p><p class="card__meta">Bronte Creek + Rec Room</p></div></td>
+            <td><div class="card card--interactive card--selected" style="width: 12rem;"><p class="card__title"><a class="card__stretch" href="../../mocks/pages/past.html" aria-current="true">10 – 11 May</a></p><p class="card__meta">Bronte Creek + Rec Room</p></div></td>
+            <td><div class="card card--interactive card--locked" style="width: 12rem;"><p class="card__title"><a class="card__stretch" href="../../mocks/pages/past.html">10 – 11 May</a></p><p class="card__meta">Locked weekend</p></div></td>
+            <td><div class="card card--interactive card--dimmed" style="width: 12rem;"><p class="card__title"><a class="card__stretch" href="../../mocks/pages/past.html">10 – 11 May</a></p><p class="card__meta">Not this year</p></div></td>
+          </tr>
+        </tbody>
+      </table></div>
+      <h3>Both themes</h3>
+      <div class="ds-themes">
+        <div data-theme="light"><div class="stack stack--sm">
+          <div class="card"><p class="card__title">Terre Bleu Lavender Farm</p><p class="card__meta">Milton · 45 min</p></div>
+          <div class="card card--locked"><p class="card__title">Jack Astor's</p><p class="card__meta">Locked for dinner</p></div>
+          <div class="card card--sunk"><p class="card__title">Port Credit Buskerfest</p><p class="card__meta">Pending review</p></div>
+          <div class="card card--interactive" data-state="hover"><p class="card__title">This weekend</p><p class="card__meta">Interactive, hover</p></div>
+        </div></div>
+        <div data-theme="dark"><div class="stack stack--sm">
+          <div class="card"><p class="card__title">Terre Bleu Lavender Farm</p><p class="card__meta">Milton · 45 min</p></div>
+          <div class="card card--locked"><p class="card__title">Jack Astor's</p><p class="card__meta">Locked for dinner</p></div>
+          <div class="card card--sunk"><p class="card__title">Port Credit Buskerfest</p><p class="card__meta">Pending review</p></div>
+          <div class="card card--interactive" data-state="hover"><p class="card__title">This weekend</p><p class="card__meta">Interactive, hover</p></div>
+        </div></div>
+      </div>
+      <ul>
+        <li><b>Hover</b> (interactive only, pointer devices only): border darkens to <code>--colorNeutralStroke1</code>, <code>--shadow16</code>, 2px lift.</li>
+        <li><b>Focus within</b>: the focused control draws the shared ring. On an interactive card the ring belongs around the card, because the whole card is the hit area: <code>.card--interactive:has(.card__stretch:focus-visible)</code> draws it there and drops the link's own ring, so there is only one.</li>
+        <li><b>Selected</b>: 2px <code>--colorBrandStroke1</code> border. The control that chose it carries the state (<code>aria-pressed="true"</code>, a checked radio or <code>aria-current</code>); the border only echoes it.</li>
+        <li><b>Locked</b>: 2px <code>--colorStatusSuccessBackground3</code> border plus a "Locked" chip.</li>
+        <li><b>Dimmed</b> (60% opacity) for picks that stepped back; their actions are disabled. <b>Muted</b> (85%) for content only you can see yet. Opacity costs contrast: dimmed meta text falls to about 2.5:1 and muted to about 4.4:1, both under 4.5:1. Until the product fades only the media and chips, say the reason at full contrast outside the faded text (the chip, the section heading, or a body line on a muted card), and never fade a card twice.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="responsive"><h2><a href="#responsive">Responsive behaviour</a></h2>
+      <ul>
+        <li><b>Grids</b>: <code>.grid-cards</code> is one column on phones, two from 720px and three from 1024px; <code>.grid-cards--2</code> stops at two (Food's dinner picks). A <code>.card--span</code> card takes the full row (the Top pick on Food).</li>
+        <li><b>Media</b> stays 16:9 at every width and bleeds to the card's edges; photos never crop faces at the top because <code>object-fit: cover</code> centres them.</li>
+        <li><b>Footers</b> wrap; on a 360px phone two small buttons fit one row. <code>.card__footer--2up</code> keeps two equal columns at every width. Footers sit at the bottom so a row of cards lines its buttons up.</li>
+        <li><b>Actions are always visible.</b> Nothing on a card appears only on hover; touch tablets at 720px and wider have no hover (the lesson of D21).</li>
+        <li>Titles wrap; bodies clamp to two lines with <code>.clamp-2</code>; meta lines wrap rather than truncate.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="theming"><h2><a href="#theming">Theming</a></h2>
+      <p>The card has no component tokens: it reads alias tokens directly, and every variant is a class. In the dark theme the card surface (<code>--colorNeutralBackground1</code>) is a warm umber one step lighter than the page, so cards rise rather than sink; the hairline stays visible because <code>--colorNeutralStroke2</code> lightens with it. Sunk cards use <code>--colorNeutralBackground3</code> in both themes. Locked and selected borders switch to their lighter dark-theme steps and stay above 3:1 against the page.</p>
+      <pre><code>/* A card inside a dialog reads as a recap, not a second dialog */
+.dialog__body .card { /* use .card--sunk instead of restyling */ }</code></pre>
+    </section>
+
+    <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
+      <h3>Role and pattern</h3>
+      <p>No ARIA pattern: a card is a grouping, not a widget. In a collection it is an <code>&lt;li&gt;</code> in a <code>&lt;ul class="grid-cards"&gt;</code>, so screen readers announce "list, 3 items". Standalone records are <code>&lt;article aria-labelledby="…"&gt;</code> pointing at the title (Review submissions). An interactive card is a plain element with one <code>&lt;a&gt;</code> inside; never put <code>role="link"</code> or a click handler on the card, and never wrap a card that contains buttons in an <code>&lt;a&gt;</code>.</p>
+      <h3>Keyboard</h3>
+      <table class="ds-table ds-keys"><thead><tr><th scope="col">Key</th><th scope="col">Action</th></tr></thead><tbody>
+        <tr><td><kbd>Tab</kbd> / <kbd>Shift</kbd>+<kbd>Tab</kbd></td><td>Moves through the card's controls in reading order: title button, favourite, footer buttons. An interactive card is one tab stop.</td></tr>
+        <tr><td><kbd>Enter</kbd></td><td>Follows the stretched link, or activates the focused button.</td></tr>
+        <tr><td><kbd>Space</kbd></td><td>Activates the focused button (favourite, vote, Add to day).</td></tr>
+      </tbody></table>
+      <h3>Focus</h3>
+      <p>Controls inside a card show the shared 2px <code>--colorStrokeFocus2</code> ring. On an interactive card the ring goes round the whole card (2px offset, outside the border), so it matches the area a tap would hit. The card never takes focus itself.</p>
+      <h3>Labelling</h3>
+      <p>The title is a heading at the right level (h3 under a section's h2). Repeated buttons name their object, either in the visible label or with an <code>aria-label</code> that starts with the visible text ("Add to day: Terre Bleu Lavender Farm"), so voice control still works (2.5.3). Photos describe the scene (<code>alt="Rows of lavender running to the horizon"</code>); fallback tiles and photos that repeat the title are <code>aria-hidden</code> or <code>alt=""</code>. A date tile is <code>aria-hidden</code> because the meta line says the date in words.</p>
+      <h3>Contrast</h3>
+      <div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0; gap: var(--spacingHorizontalS);">
+        <div class="ds-pair"><span>Title on card</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground1|--colorNeutralBackground1" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Meta and body on card</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground2|--colorNeutralBackground1" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Meta on sunk card</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground2|--colorNeutralBackground3" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Locked border on page</span><span class="ds-pair__ratio" data-contrast="--colorStatusSuccessBackground3|--colorNeutralBackground2" data-min="3"></span></div>
+        <div class="ds-pair"><span>Selected border on page</span><span class="ds-pair__ratio" data-contrast="--colorBrandStroke1|--colorNeutralBackground2" data-min="3"></span></div>
+        <div class="ds-pair"><span>Photo credit on overlay</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForegroundStaticInverted|--colorBackgroundOverlayStrong" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Focus ring on page</span><span class="ds-pair__ratio" data-contrast="--colorStrokeFocus2|--colorNeutralBackground2" data-min="3"></span></div>
+      </div>
+      <p>The card's own hairline (<code>--colorNeutralStroke2</code>) is decorative: the card is identified by its content, not its edge, so it does not need 3:1.</p>
+      <h3>Motion</h3>
+      <p>Interactive cards transition border, shadow and a 2px lift over <code>--durationFast</code>. Under <code>prefers-reduced-motion</code> the duration is zero and the lift is instant.</p>
+      <h3>Touch</h3>
+      <p>Footer buttons are 32px tall with 8px between them; an interactive card's whole surface is the target. Favourite and vote toggles keep at least 32px. Never place a small control inside an interactive card: the stretched link would cover it.</p>
+    </section>
+
+    <section class="ds-section" id="content"><h2><a href="#content">Content</a></h2>
+      <ul>
+        <li><b>Title</b>: the place or event's own name, as the venue writes it ("Jack Astor's", "Royal Botanical Gardens"). Past weekends get a short family title ("Bronte Creek + Rec Room").</li>
+        <li><b>Meta</b>: where and when, joined with a middle dot: "Seafood · Patio on the lake · Port Credit", "Lakeshore Rd · Sat 2pm to 9pm".</li>
+        <li><b>Body</b>: why it suits this family this weekend, in one or two plain sentences: "Lavender peaks 17 to 24 May, and Mae is old enough to walk the rows this year."</li>
+        <li><b>Chips</b>: facts that sort the list (drive time, ages, cost), three at most. Status words go in the head chip, not the body.</li>
+        <li><b>Footer</b>: verb-first, two buttons at most; primary last.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="do-dont"><h2><a href="#do-dont">Do and don't</a></h2>
+      <div class="ds-dodont">
+        <figure class="ds-do"><div class="ds-example__canvas"><div class="card card--interactive" style="width: 100%;"><p class="card__title"><a class="card__stretch" href="../../mocks/pages/weekend.html">This weekend</a></p><p class="card__meta">One link, stretched over the card</p></div></div><figcaption>One real link with <code>.card__stretch</code>. Screen readers hear one link with a clear name.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><div class="card" style="width: 100%;"><p class="card__title">Bronte Creek + Rec Room</p><p class="card__meta">Wrapped in &lt;a&gt; with Remix and Repeat inside</p></div></div><figcaption>A card wrapped in a link that also holds buttons: nested interactive content, and a click on a button also opens the card.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas"><div class="card card--locked" style="width: 100%;"><div class="card__head"><div class="card__head-text"><p class="card__title">Jack Astor's</p></div><span class="chip chip--accent"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg>Locked for dinner</span></div></div></div><figcaption>Say "Locked" in a chip; the green border repeats it.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><div class="card card--locked" style="width: 100%;"><p class="card__title">Jack Astor's</p><p class="card__meta">Casual · Kids' menu</p></div></div><figcaption>A border colour alone fails 1.4.1 and means nothing to a screen reader.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas"><div class="card" style="width: 100%;"><p class="card__title">Royal Botanical Gardens</p><div class="card__footer"><button class="btn btn--primary btn--sm" type="button">Add to day</button></div></div></div><figcaption>Footer actions always show, on every device.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><div class="card" style="width: 100%;"><p class="card__title">Royal Botanical Gardens</p><p class="card__meta">Actions appear on hover</p></div></div><figcaption>Hover-only actions vanish on touch tablets (the D21 block-actions bug).</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="ds-section" id="tokens"><h2><a href="#tokens">Tokens</a></h2>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Part</th><th scope="col">Token</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead>
+        <tbody>
+          <tr><td>Surface</td><td><code>--colorNeutralBackground1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralBackground1" data-swatch></i><span data-token="--colorNeutralBackground1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralBackground1" data-swatch></i><span data-token="--colorNeutralBackground1"></span></span></td></tr>
+          <tr><td>Border</td><td><code>--colorNeutralStroke2</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralStroke2" data-swatch></i><span data-token="--colorNeutralStroke2"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralStroke2" data-swatch></i><span data-token="--colorNeutralStroke2"></span></span></td></tr>
+          <tr><td>Border, interactive hover</td><td><code>--colorNeutralStroke1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralStroke1" data-swatch></i><span data-token="--colorNeutralStroke1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralStroke1" data-swatch></i><span data-token="--colorNeutralStroke1"></span></span></td></tr>
+          <tr><td>Sunk surface</td><td><code>--colorNeutralBackground3</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralBackground3" data-swatch></i><span data-token="--colorNeutralBackground3"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralBackground3" data-swatch></i><span data-token="--colorNeutralBackground3"></span></span></td></tr>
+          <tr><td>Title</td><td><code>--colorNeutralForeground1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralForeground1" data-swatch></i><span data-token="--colorNeutralForeground1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralForeground1" data-swatch></i><span data-token="--colorNeutralForeground1"></span></span></td></tr>
+          <tr><td>Meta, body, eyebrow</td><td><code>--colorNeutralForeground2</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralForeground2" data-swatch></i><span data-token="--colorNeutralForeground2"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralForeground2" data-swatch></i><span data-token="--colorNeutralForeground2"></span></span></td></tr>
+          <tr><td>Locked border</td><td><code>--colorStatusSuccessBackground3</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorStatusSuccessBackground3" data-swatch></i><span data-token="--colorStatusSuccessBackground3"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorStatusSuccessBackground3" data-swatch></i><span data-token="--colorStatusSuccessBackground3"></span></span></td></tr>
+          <tr><td>Selected border</td><td><code>--colorBrandStroke1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorBrandStroke1" data-swatch></i><span data-token="--colorBrandStroke1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorBrandStroke1" data-swatch></i><span data-token="--colorBrandStroke1"></span></span></td></tr>
+          <tr><td>Border width, default / locked</td><td><code>--strokeWidthThin</code> / <code>--strokeWidthThick</code></td><td colspan="2"><span data-token="--strokeWidthThin"></span> / <span data-token="--strokeWidthThick"></span></td></tr>
+          <tr><td>Radius</td><td><code>--borderRadiusLarge</code></td><td colspan="2"><span data-token="--borderRadiusLarge"></span></td></tr>
+          <tr><td>Padding default / large</td><td><code>--spacingHorizontalL</code> / <code>--spacingHorizontalXL</code></td><td colspan="2"><span data-token="--spacingHorizontalL"></span> / <span data-token="--spacingHorizontalXL"></span></td></tr>
+          <tr><td>Gap between parts</td><td><code>--spacingVerticalMNudge</code></td><td colspan="2"><span data-token="--spacingVerticalMNudge"></span></td></tr>
+          <tr><td>Title / body / eyebrow type</td><td><code>--typographyTitle3</code>, <code>--typographyBody2</code>, <code>--typographyCaption1Strong</code></td><td colspan="2"><span data-token="--typographyTitle3"></span></td></tr>
+          <tr><td>Hover shadow</td><td><code>--shadow16</code></td><td colspan="2"><span data-token="--shadow16"></span></td></tr>
+          <tr><td>Transition</td><td><code>--durationFast</code>, <code>--curveEasyEase</code></td><td colspan="2"><span data-token="--durationFast"></span> <span data-token="--curveEasyEase"></span></td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section class="ds-section" id="code"><h2><a href="#code">Code</a></h2>
+      <pre><code>&lt;ul class="grid-cards"&gt;
+  &lt;li class="card card--media card--locked"&gt;
+    &lt;div class="media media--fallback media--sun card__media" aria-hidden="true"&gt;…&lt;/div&gt;
+    &lt;div class="card__head"&gt;
+      &lt;div class="card__head-text"&gt;&lt;h3 class="card__title"&gt;Jack Astor's&lt;/h3&gt;&lt;p class="card__meta"&gt;Casual · Kids' menu · Square One&lt;/p&gt;&lt;/div&gt;
+      &lt;span class="chip chip--accent"&gt;…Locked for dinner&lt;/span&gt;
+    &lt;/div&gt;
+    &lt;div class="card__footer"&gt;&lt;button class="btn btn--quiet btn--sm" type="button"&gt;Unlock&lt;/button&gt;&lt;/div&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;article class="card card--interactive"&gt;
+  &lt;h3 class="card__title"&gt;&lt;a class="card__stretch" href="/weekends/2026-05-16"&gt;This weekend&lt;/a&gt;&lt;/h3&gt;
+  &lt;p class="card__meta"&gt;Lavender fields at Terre Bleu, lunch at La Marina&lt;/p&gt;
+&lt;/article&gt;
+
+&lt;sd-card variant="sunk" padding="lg"&gt;…&lt;/sd-card&gt;</code></pre>
+      <table class="ds-table"><thead><tr><th scope="col">Class</th><th scope="col">Effect</th></tr></thead><tbody>
+        <tr><td><code>.card</code></td><td>Base surface, border, radius, 16px padding, column with 10px gap.</td></tr>
+        <tr><td><code>.card--media</code> + <code>.card__media</code></td><td>No top padding; the media bleeds to the edges.</td></tr>
+        <tr><td><code>.card--pad-lg</code></td><td>24px padding.</td></tr>
+        <tr><td><code>.card--sunk</code></td><td>Well surface, no border; for recaps inside another surface.</td></tr>
+        <tr><td><code>.card--locked</code> <code>.card--selected</code></td><td>2px success or brand border; pair with words.</td></tr>
+        <tr><td><code>.card--dimmed</code> <code>.card--muted</code></td><td>60% / 85% opacity; pair with a reason or a status chip.</td></tr>
+        <tr><td><code>.card--span</code></td><td>Spans every column of the grid.</td></tr>
+        <tr><td><code>.card--interactive</code> + <code>.card__stretch</code></td><td>Hover lift; the link's <code>::after</code> covers the card.</td></tr>
+        <tr><td><code>.card__head</code> <code>.card__head-text</code> <code>.card__title</code> <code>.card__meta</code></td><td>Head row; a trailing <code>.chip</code> is pushed right.</td></tr>
+        <tr><td><code>.card__body</code> <code>.card__chips</code> <code>.card__eyebrow</code> <code>.card__row</code></td><td>Body text, chip row, uppercase date line, space-between row.</td></tr>
+        <tr><td><code>.card__footer</code> <code>.card__footer--2up</code></td><td>Action row pinned to the bottom; two equal columns.</td></tr>
+        <tr><td><code>.card__title-btn</code></td><td>A title that is also a button (rename on Past).</td></tr>
+        <tr><td><code>data-state="hover|focus"</code></td><td>Documentation only.</td></tr>
+      </tbody></table>
+    </section>
+
+    <section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>
+      <p>Extracted from these mocks (47 cards):</p>
+      <ul>
+        <li><a href="../../mocks/pages/ideas.html">pages/ideas</a>: photo-led idea cards with Map and Add to day.</li>
+        <li><a href="../../mocks/pages/ideas.food.html">pages/ideas.food</a>: fallback tiles, Top pick span card, locked and dimmed dinner picks, vote rows.</li>
+        <li><a href="../../mocks/pages/ideas.events.html">pages/ideas.events</a>: date tiles, the muted pending event.</li>
+        <li><a href="../../mocks/pages/past.html">pages/past</a>: eyebrow row, rename title button, favourite toggle, 2-up footer.</li>
+        <li><a href="../../mocks/pages/review-submissions.html">pages/review-submissions</a>: large-padding articles with details.</li>
+        <li><a href="../../mocks/pages/dialogs.html">pages/dialogs</a>: sunk recaps in D11 and D23.</li>
+        <li><a href="../../mocks/pages/admin.html">pages/admin</a> and <a href="../../mocks/pages/admin.place.html">pages/admin.place</a>: stat cards and photo tiles.</li>
+      </ul>
+      <p>Drift fixed: D05 meta text contrast on wells, D07 accent chip text, D11 photo credit, D12 the 11px credit, D17 the literal colours, D21 hover-only actions. <code>.card--selected</code> and <code>.card--interactive</code> exist in the mocks' CSS but no mock uses them yet. Added in extraction: the focus ring round an interactive card when its stretched link has focus.</p>
+    </section>
+
+    <footer class="ds-footer"><span>Saturdaze design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/icons.js"></script>
+<script src="../assets/ds.js"></script>
+</body>
+</html>

@@ -1,0 +1,459 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Text field — Saturdaze design system</title>
+<meta name="description" content="Single-line inputs for text, email, password with show and strength, number, search, time and URL, plus read-only, invalid, disabled and the copy field, in both themes.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html"><span class="brand-mark" aria-hidden="true"></span>Saturdaze DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Actions</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+    </ul></details>
+    <details open><summary>Inputs</summary><ul>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/chip-input.html">Chip input</a></li>
+      <li><a href="../components/file-upload.html">File upload</a></li>
+      <li><a href="../components/photo-pick.html">Photo pick</a></li>
+      <li><a href="../components/rating.html">Rating</a></li>
+      <li><a href="../components/vote-row.html">Vote row</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+    </ul></details>
+    <details open><summary>Navigation</summary><ul>
+      <li><a href="../components/top-bar.html">Top bar</a></li>
+      <li><a href="../components/bottom-nav.html">Bottom nav</a></li>
+      <li><a href="../components/sidebar-navigation.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs (segments)</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+      <li><a href="../components/footer.html">Footer</a></li>
+    </ul></details>
+    <details open><summary>Containers and overlays</summary><ul>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/container.html">Container and grid</a></li>
+      <li><a href="../components/page-header.html">Page header</a></li>
+    </ul></details>
+    <details open><summary>Data display</summary><ul>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/activity-feed.html">Activity feed</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/chip.html">Chip</a></li>
+      <li><a href="../components/filter-chip.html">Filter chip</a></li>
+      <li><a href="../components/disc.html">Disc</a></li>
+      <li><a href="../components/media.html">Media</a></li>
+      <li><a href="../components/cover.html">Cover photo</a></li>
+      <li><a href="../components/stat.html">Stat</a></li>
+      <li><a href="../components/itinerary.html">Itinerary</a></li>
+      <li><a href="../components/map.html">Map</a></li>
+    </ul></details>
+    <details open><summary>Feedback</summary><ul>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/alert.html">Alert</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/progress-bar.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Auth and marketing</summary><ul>
+      <li><a href="../components/auth-card.html">Auth card</a></li>
+      <li><a href="../components/hero.html">Hero</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/data-tables-and-lists.html">Tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Component · Inputs</p>
+      <h1>Text field</h1>
+      <p class="ds-lead">A text field takes one line of typing: an email, a family member's name, an errand, a start time. It is a native <code>&lt;input&gt;</code> with the right <code>type</code> and <code>autocomplete</code>, so phones show the right keyboard and password managers fill it.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA</span><span class="ds-pill">Status: stable</span><span class="ds-pill">Angular: <code>sd-text-input</code>, <code>sd-copy-field</code>, <code>sd-strength</code></span><span class="ds-pill">Native <code>&lt;input&gt;</code></span></div>
+      <ul class="ds-toc">
+        <li><a href="#overview">Overview</a></li><li><a href="#anatomy">Anatomy</a></li><li><a href="#variants">Variants</a></li><li><a href="#sizes">Sizes</a></li><li><a href="#states">States</a></li><li><a href="#responsive">Responsive</a></li><li><a href="#theming">Theming</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#content">Content</a></li><li><a href="#do-dont">Do and don't</a></li><li><a href="#tokens">Tokens</a></li><li><a href="#code">Code</a></li><li><a href="#sources">Sources</a></li>
+      </ul>
+    </header>
+
+    <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+      <p>Use a text field for a short value someone types. Always put it in a <a href="form-field.html">form field</a> wrapper for its label and messages. Use a <a href="textarea.html">textarea</a> for more than one sentence, a <a href="select.html">select</a> to pick from a fixed list of more than four options, a <a href="radio-group.html">radio group</a> or seg-radio for two to four, and a <a href="chip-input.html">chip input</a> for a list of tags.</p>
+      <ul>
+        <li>Pick the <code>type</code> for the value: <code>email</code>, <code>password</code>, <code>number</code>, <code>search</code>, <code>time</code>, <code>datetime-local</code>, <code>url</code>. The type sets the phone keyboard and the browser's checks.</li>
+        <li>Set <code>autocomplete</code> on anything about the person: <code>email</code>, <code>current-password</code>, <code>new-password</code>, <code>name</code>. Use <code>autocomplete="off"</code> only for values a browser could not know, such as the family name.</li>
+        <li>The <b>copy field</b> (<code>.copy-field</code>) is not an input: it shows a value to copy, such as the share link.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="anatomy"><h2><a href="#anatomy">Anatomy</a></h2>
+      <div class="ds-anatomy">
+        <figure class="ds-anatomy__figure">
+          <div class="field" style="width: 100%; max-width: 20rem;">
+            <label class="visually-hidden" for="an-search">Search places</label>
+            <input class="field__input" id="an-search" type="search" placeholder="Place name" value="harbour">
+          </div>
+          <span class="ds-callout" style="left: max(0.25rem, calc(50% - 11.75rem)); top: 40%;" aria-hidden="true">1</span>
+          <span class="ds-callout" style="left: calc(50% - 8.5rem); top: 14%;" aria-hidden="true">2</span>
+          <span class="ds-callout" style="left: calc(50% - 5rem); top: 70%;" aria-hidden="true">3</span>
+        </figure>
+        <ol class="ds-anatomy__list">
+          <li><div><b>Container</b><small>44px tall (<code>--targetComfortable</code>), 1px <code>--sd-field-border</code>, 8px radius (<code>--borderRadiusMedium</code>), card background.</small></div></li>
+          <li><div><b>Leading icon (search only)</b><small>16px magnifier drawn as a background image 12px from the left; text starts 36px in.</small></div></li>
+          <li><div><b>Value or placeholder</b><small>Body 1 (15px), <code>--colorNeutralForeground1</code>; placeholder <code>--colorNeutralForeground3</code>. 12px side padding.</small></div></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="ds-section" id="variants"><h2><a href="#variants">Variants</a></h2>
+      <p>Variants are input types. They share one look; the type changes the keyboard, the browser's own controls and validation.</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack" style="max-width: 28rem;">
+          <div class="field">
+            <label class="field__label" for="v-home">Neighbourhood or address</label>
+            <input class="field__input" id="v-home" type="text" autocomplete="street-address" value="Port Credit, Mississauga">
+          </div>
+          <div class="field">
+            <label class="field__label" for="v-email">Email</label>
+            <input class="field__input" id="v-email" type="email" autocomplete="email" value="quinntynebrown@gmail.com">
+          </div>
+          <div class="field">
+            <label class="field__label" for="v-age">Age</label>
+            <input class="field__input" id="v-age" type="number" inputmode="numeric" min="0" max="120" value="5" aria-describedby="v-age-hint">
+            <p class="field__hint" id="v-age-hint">Kid · under 18 counts as a kid.</p>
+          </div>
+          <div class="field">
+            <label class="field__label" for="v-link">Link</label>
+            <input class="field__input" id="v-link" type="url" placeholder="https://">
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>Text (D19 Home location), email (Sign in), number (D17 Edit Mae), URL (D10 Suggest an event).</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;input class="field__input" id="si-email" type="email" autocomplete="email"&gt;
+&lt;input class="field__input" id="d17-age" type="number" inputmode="numeric" min="0" max="120"&gt;
+&lt;input class="field__input" id="d10-link" type="url" placeholder="https://"&gt;</code></pre></details>
+      </div>
+      <h3>Password with show and strength</h3>
+      <p>The show button sits beside the input in <code>.field__with-btn</code>. It is a toggle (<code>aria-pressed</code>) that switches the input between <code>type="password"</code> and <code>type="text"</code>; its name stays "Show password" in both states. The icon set has no eye glyph, so the button uses the word "Show", which is clearer anyway. On new passwords the <code>.strength</code> meter sits under the input and updates as the person types.</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack" style="max-width: 28rem;">
+          <div class="field">
+            <label class="field__label" for="v-pass">Password</label>
+            <div class="field__with-btn">
+              <input class="field__input" id="v-pass" type="password" autocomplete="new-password" value="lavender-17" aria-describedby="v-strength">
+              <button class="btn btn--ghost" type="button" aria-label="Show password" aria-pressed="false" aria-controls="v-pass">Show</button>
+            </div>
+            <div class="strength strength--ok" id="v-strength" aria-live="polite">
+              <div class="strength__bar" aria-hidden="true"><span class="strength__seg"></span><span class="strength__seg"></span><span class="strength__seg"></span></div>
+              <span class="strength__label">OK · eight characters or more. Add a capital letter to make it strong.</span>
+            </div>
+          </div>
+          <div class="field">
+            <label class="field__label" for="v-pass2">New password</label>
+            <div class="field__with-btn">
+              <input class="field__input" id="v-pass2" type="text" autocomplete="new-password" value="Lavender-17-May" aria-describedby="v-strength2">
+              <button class="btn btn--ghost" type="button" aria-label="Show password" aria-pressed="true" aria-controls="v-pass2">Show</button>
+            </div>
+            <div class="strength strength--strong" id="v-strength2" aria-live="polite">
+              <div class="strength__bar" aria-hidden="true"><span class="strength__seg"></span><span class="strength__seg"></span><span class="strength__seg"></span></div>
+              <span class="strength__label">Strong.</span>
+            </div>
+          </div>
+          <div class="strength strength--weak">
+            <div class="strength__bar" aria-hidden="true"><span class="strength__seg"></span><span class="strength__seg"></span><span class="strength__seg"></span></div>
+            <span class="strength__label">Weak · use eight characters or more.</span>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>Create account (OK), Reset password step 3 (strong, shown as text), and the weak level. The label carries the meaning; the bar repeats it.</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;div class="field__with-btn"&gt;
+  &lt;input class="field__input" id="ca-pass" type="password" autocomplete="new-password" aria-describedby="ca-strength"&gt;
+  &lt;button class="btn btn--ghost" type="button" aria-label="Show password" aria-pressed="false" aria-controls="ca-pass"&gt;Show&lt;/button&gt;
+&lt;/div&gt;
+&lt;div class="strength strength--ok" id="ca-strength" aria-live="polite"&gt;
+  &lt;div class="strength__bar" aria-hidden="true"&gt;&lt;span class="strength__seg"&gt;&lt;/span&gt;…&lt;/div&gt;
+  &lt;span class="strength__label"&gt;OK · eight characters or more. Add a capital letter to make it strong.&lt;/span&gt;
+&lt;/div&gt;</code></pre></details>
+      </div>
+      <h3>Search, time and date-time</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack" style="max-width: 28rem;">
+          <div class="field">
+            <label class="field__label" for="v-q">Search</label>
+            <input class="field__input" id="v-q" type="search" placeholder="Place name" value="harbour">
+          </div>
+          <div class="field--row">
+            <div class="field">
+              <label class="field__label" for="v-start">Start</label>
+              <input class="field__input" id="v-start" type="time" value="09:00">
+            </div>
+            <div class="field">
+              <label class="field__label" for="v-end">End</label>
+              <input class="field__input" id="v-end" type="time" value="10:00">
+            </div>
+          </div>
+          <div class="field">
+            <label class="field__label" for="v-starts">Starts <span class="field__req">Required</span></label>
+            <input class="field__input" id="v-starts" type="datetime-local" value="2026-05-18T13:00" aria-describedby="v-starts-hint">
+            <p class="field__hint" id="v-starts-hint">Set to the next hour.</p>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>Admin Places search; D18 Swim lessons Start and End; D10 Starts.</span></div>
+      </div>
+      <h3>Copy field</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack" style="max-width: 28rem;">
+          <div class="copy-field">
+            <span class="copy-field__value" id="v-share">saturdaze.app/s/may17-browns</span>
+            <button class="btn btn--quiet" type="button" aria-describedby="v-share"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg>Copy</button>
+          </div>
+          <div class="copy-field">
+            <span class="copy-field__value" id="v-share2">saturdaze.app/s/may17-browns</span>
+            <button class="btn btn--quiet" type="button" aria-describedby="v-share2"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Copied</button>
+          </div>
+          <p class="text-xs text-soft" role="status">Link copied.</p>
+        </div>
+        <div class="ds-example__caption"><span>D5 Share this weekend, before and after copying. The status line announces the copy.</span></div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="sizes"><h2><a href="#sizes">Sizes</a></h2>
+      <p>One height: 44px (<code>--targetComfortable</code>), everywhere, including the admin toolbars. Why one size:</p>
+      <ul>
+        <li>Most forms live in dialogs that become bottom sheets on phones. 44px is the comfortable touch target, and a field is tapped, not clicked.</li>
+        <li>Fields sit next to buttons (<code>.field__with-btn</code>, <code>.copy-field</code>). One height means the button can match it exactly.</li>
+        <li>The forms are short (two to six fields), so there is no density to win by shrinking. Admin screens use the same height so the two products feel like one.</li>
+      </ul>
+      <p>Width is set by the column, not the field (see <a href="form-field.html">form field</a>). Known issue: field text is 15px (<code>--fontSizeBase400</code>), and iOS Safari zooms the page when a field under 16px takes focus. A 16px minimum for touch devices is proposed in the CSS requests.</p>
+    </section>
+
+    <section class="ds-section" id="states"><h2><a href="#states">States</a></h2>
+      <p>Hover and focus are forced with <code>data-state</code>; the rest use real attributes. Hover only darkens the border, and only on devices with a pointer.</p>
+      <div class="ds-matrix"><table>
+        <thead><tr><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Hover</th><th scope="col">Focus</th><th scope="col">Invalid</th><th scope="col">Disabled</th><th scope="col">Read-only</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Text</th>
+            <td><input class="field__input" type="text" value="Swim lessons" aria-label="Commitment name, default" style="min-width: 11rem;"></td>
+            <td><input class="field__input" type="text" value="Swim lessons" aria-label="Commitment name, hover" data-state="hover" style="min-width: 11rem;"></td>
+            <td><input class="field__input" type="text" value="Swim lessons" aria-label="Commitment name, focus" data-state="focus" style="min-width: 11rem;"></td>
+            <td><input class="field__input" type="text" value="" aria-label="Commitment name, invalid" aria-invalid="true" style="min-width: 11rem;"></td>
+            <td><input class="field__input" type="text" value="Swim lessons" aria-label="Commitment name, disabled" disabled style="min-width: 11rem;"></td>
+            <td><input class="field__input" type="text" value="Swim lessons" aria-label="Commitment name, read-only" readonly style="min-width: 11rem;"></td></tr>
+          <tr><th scope="row">Email</th>
+            <td><input class="field__input" type="email" value="admin@saturdaze.app" aria-label="Email, default" style="min-width: 11rem;"></td>
+            <td><input class="field__input" type="email" value="admin@saturdaze.app" aria-label="Email, hover" data-state="hover" style="min-width: 11rem;"></td>
+            <td><input class="field__input" type="email" value="admin@saturdaze.app" aria-label="Email, focus" data-state="focus" style="min-width: 11rem;"></td>
+            <td><input class="field__input" type="email" value="admin@saturdaze" aria-label="Email, invalid" aria-invalid="true" style="min-width: 11rem;"></td>
+            <td><input class="field__input" type="email" value="admin@saturdaze.app" aria-label="Email, disabled" disabled style="min-width: 11rem;"></td>
+            <td><input class="field__input" type="email" value="admin@saturdaze.app" aria-label="Email, read-only" readonly style="min-width: 11rem;"></td></tr>
+          <tr><th scope="row">Search</th>
+            <td><input class="field__input" type="search" placeholder="Place name" aria-label="Search places, default" style="min-width: 11rem;"></td>
+            <td><input class="field__input" type="search" placeholder="Place name" aria-label="Search places, hover" data-state="hover" style="min-width: 11rem;"></td>
+            <td><input class="field__input" type="search" value="harbour" aria-label="Search places, focus" data-state="focus" style="min-width: 11rem;"></td>
+            <td><input class="field__input" type="search" value="h" aria-label="Search places, invalid" aria-invalid="true" style="min-width: 11rem;"></td>
+            <td><input class="field__input" type="search" placeholder="Place name" aria-label="Search places, disabled" disabled style="min-width: 11rem;"></td>
+            <td><input class="field__input" type="search" value="harbour" aria-label="Search places, read-only" readonly style="min-width: 11rem;"></td></tr>
+          <tr><th scope="row">Time</th>
+            <td><input class="field__input" type="time" value="09:00" aria-label="Start, default" style="min-width: 11rem;"></td>
+            <td><input class="field__input" type="time" value="09:00" aria-label="Start, hover" data-state="hover" style="min-width: 11rem;"></td>
+            <td><input class="field__input" type="time" value="09:00" aria-label="Start, focus" data-state="focus" style="min-width: 11rem;"></td>
+            <td><input class="field__input" type="time" value="11:00" aria-label="Start, invalid" aria-invalid="true" style="min-width: 11rem;"></td>
+            <td><input class="field__input" type="time" value="09:00" aria-label="Start, disabled" disabled style="min-width: 11rem;"></td>
+            <td><input class="field__input" type="time" value="09:00" aria-label="Start, read-only" readonly style="min-width: 11rem;"></td></tr>
+        </tbody>
+      </table></div>
+      <h3>Both themes</h3>
+      <div class="ds-themes">
+        <div data-theme="light"><div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0;">
+          <input class="field__input" type="email" value="quinntynebrown@gmail.com" aria-label="Email, light theme">
+          <input class="field__input" type="text" value="Costco run" aria-label="Errand, focus, light theme" data-state="focus">
+          <input class="field__input" type="url" value="http://images.example.com/park.jpg" aria-label="Image URL, invalid, light theme" aria-invalid="true">
+          <div class="copy-field"><span class="copy-field__value">saturdaze.app/s/may17-browns</span><button class="btn btn--quiet" type="button">Copy</button></div>
+        </div></div>
+        <div data-theme="dark"><div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0;">
+          <input class="field__input" type="email" value="quinntynebrown@gmail.com" aria-label="Email, dark theme">
+          <input class="field__input" type="text" value="Costco run" aria-label="Errand, focus, dark theme" data-state="focus">
+          <input class="field__input" type="url" value="http://images.example.com/park.jpg" aria-label="Image URL, invalid, dark theme" aria-invalid="true">
+          <div class="copy-field"><span class="copy-field__value">saturdaze.app/s/may17-browns</span><button class="btn btn--quiet" type="button">Copy</button></div>
+        </div></div>
+      </div>
+      <ul>
+        <li><b>Focus</b>: the border turns <code>--colorStrokeFocus2</code>, doubled by an inset 1px line, with a 3px <code>--colorBrandStroke2</code> halo outside. It replaces the shared outline so the ring follows the 8px corners.</li>
+        <li><b>Invalid</b> (<code>aria-invalid="true"</code>): danger border; focused, the halo turns danger too. Always pair with a <code>.field__error</code> message.</li>
+        <li><b>Disabled</b>: 50% opacity, not focusable, not submitted. Use it only while something else must happen first, and say what in the hint.</li>
+        <li><b>Read-only</b>: no border, well fill, still focusable and copyable, still submitted. Use it for values that are shown for reference (the place's address on an admin photo).</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="responsive"><h2><a href="#responsive">Responsive behaviour</a></h2>
+      <ul>
+        <li>Fields are full width of their column at every breakpoint; the height does not change.</li>
+        <li>Phones show the keyboard for the type: email shows @, number and <code>inputmode="numeric"</code> show digits, URL shows a .com key, search shows a Go or Search key.</li>
+        <li>Time and date-time open the platform picker on phones (a wheel or a calendar). The value format follows the person's locale.</li>
+        <li>In the copy field the value truncates with an ellipsis at narrow widths; the Copy button never shrinks. Screen readers still read the full value, because the ellipsis is only visual.</li>
+        <li>In <code>.field__with-btn</code> the button keeps its width; the input takes the rest.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="theming"><h2><a href="#theming">Theming</a></h2>
+      <p>The input reads <code>--colorNeutralBackground1</code> (fill), <code>--colorNeutralForeground1</code> (value), <code>--colorNeutralForeground3</code> (placeholder) and the component token <code>--sd-field-border</code>, which defaults to <code>--colorNeutralStrokeAccessible</code> and is overridden by hover, focus, invalid and read-only. Re-skin a field by setting <code>--sd-field-border</code> on a scoped class.</p>
+      <p>Two parts do not follow the theme: the search magnifier and the select chevron are inline SVG data URIs in a fixed mid grey. It reads on both the light and the dark input fill, but it will not follow a future high-contrast theme. Native time and date pickers follow <code>color-scheme</code>, which each theme sets.</p>
+    </section>
+
+    <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
+      <h3>Role and pattern</h3>
+      <p>Native <code>&lt;input&gt;</code>; no APG widget pattern is needed. The show-password button follows the <a href="https://www.w3.org/WAI/ARIA/apg/patterns/button/">APG Button pattern</a> as a toggle (<code>aria-pressed</code>, constant name). The copy field's value is plain text; the button is the control.</p>
+      <h3>Keyboard</h3>
+      <table class="ds-table ds-keys"><thead><tr><th scope="col">Key</th><th scope="col">Action</th></tr></thead><tbody>
+        <tr><td><kbd>Tab</kbd> / <kbd>Shift</kbd>+<kbd>Tab</kbd></td><td>Into and out of the field; then to its show or copy button.</td></tr>
+        <tr><td><kbd>Enter</kbd></td><td>Submits the form.</td></tr>
+        <tr><td><kbd>↑</kbd> / <kbd>↓</kbd></td><td>Number: step the value. Time and date-time: change the focused part (hour, minute).</td></tr>
+        <tr><td><kbd>←</kbd> / <kbd>→</kbd></td><td>Text: move the caret. Time: move between hour, minute and AM/PM.</td></tr>
+        <tr><td><kbd>Esc</kbd></td><td>Search: clears the value.</td></tr>
+        <tr><td><kbd>Space</kbd> / <kbd>Enter</kbd> on Show</td><td>Toggles between hidden and shown; focus stays on the button.</td></tr>
+      </tbody></table>
+      <h3>Focus</h3>
+      <p>The field draws its own ring (border plus halo) on <code>:focus-visible</code>, which for text inputs is any focus, including a tap. When an invalid field gets focus the ring turns danger. After submit with errors, focus moves to the error summary, then to the first invalid field from its link.</p>
+      <h3>Labelling</h3>
+      <p>Every input has a visible <code>&lt;label for&gt;</code>, even search (admin.places labels it "Search"). Hints, errors and the strength meter are joined with <code>aria-describedby</code>. The strength label is a polite live region, so changes are read once typing pauses; the bar is <code>aria-hidden</code>. "Copied" is announced through a <code>role="status"</code> line, not by changing the button alone.</p>
+      <h3>Contrast</h3>
+      <div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0; gap: var(--spacingHorizontalS);">
+        <div class="ds-pair"><span>Value on input</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground1|--colorNeutralBackground1" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Placeholder on input</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground3|--colorNeutralBackground1" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Border on input fill</span><span class="ds-pair__ratio" data-contrast="--colorNeutralStrokeAccessible|--colorNeutralBackground1" data-min="3"></span></div>
+        <div class="ds-pair"><span>Border on page</span><span class="ds-pair__ratio" data-contrast="--colorNeutralStrokeAccessible|--colorNeutralBackground2" data-min="3"></span></div>
+        <div class="ds-pair"><span>Focus border on input</span><span class="ds-pair__ratio" data-contrast="--colorStrokeFocus2|--colorNeutralBackground1" data-min="3"></span></div>
+        <div class="ds-pair"><span>Invalid border on input</span><span class="ds-pair__ratio" data-contrast="--colorStatusDangerForeground3|--colorNeutralBackground1" data-min="3"></span></div>
+        <div class="ds-pair"><span>Read-only and copy value on well</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground1|--colorNeutralBackground3" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Strength OK segment on card</span><span class="ds-pair__ratio" data-contrast="--colorPaletteSunForeground3|--colorNeutralBackground1" data-min="3"></span></div>
+        <div class="ds-pair"><span>Strength strong segment on card</span><span class="ds-pair__ratio" data-contrast="--colorStatusSuccessBackground3|--colorNeutralBackground1" data-min="3"></span></div>
+      </div>
+      <h3>Motion</h3>
+      <p>Border and halo transition over <code>--durationFast</code>; reduced motion makes it instant.</p>
+      <h3>Touch</h3>
+      <p>44px tall at every width; show and copy buttons grow to 44px beside them. Paste is never blocked, so password managers and one-time codes work (3.3.8).</p>
+    </section>
+
+    <section class="ds-section" id="content"><h2><a href="#content">Content</a></h2>
+      <ul>
+        <li>Placeholders show a realistic example, not an instruction: "Costco run", "Place name", "Memorial Park, Lakeshore Rd".</li>
+        <li>Prefill what Saturdaze already knows: the email on Reset password, the current name in Rename (3.3.7).</li>
+        <li>Password rules go in the strength label, in plain words: "Eight characters or more."</li>
+        <li>Errors name the fix: "Enter a time after 9:00.", "Enter an email like name@example.com."</li>
+        <li>The copy button says "Copy", then "Copied" for a moment.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="do-dont"><h2><a href="#do-dont">Do and don't</a></h2>
+      <div class="ds-dodont">
+        <figure class="ds-do"><div class="ds-example__canvas ds-example__canvas--stack"><div class="field"><label class="field__label" for="dd1">Email</label><input class="field__input" id="dd1" type="email" autocomplete="email" value="quinntynebrown@gmail.com"></div></div><figcaption>Use <code>type="email"</code> and <code>autocomplete="email"</code> so the keyboard and the browser help.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas ds-example__canvas--stack"><div class="field"><label class="field__label" for="dd2">Email</label><input class="field__input" id="dd2" type="text" autocomplete="off" value="quinntynebrown@gmail.com"></div></div><figcaption>A plain text input with autocomplete off for an email: no @ key, no autofill, no browser check.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas ds-example__canvas--stack"><div class="field"><label class="field__label" for="dd3">Image URL</label><input class="field__input" id="dd3" type="url" value="http://images.example.com/park.jpg" aria-invalid="true" aria-describedby="dd3e"><p class="field__error" id="dd3e"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg>Use an https:// address.</p></div></div><figcaption>Pair the danger border with a message joined by <code>aria-describedby</code> (AD2).</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas ds-example__canvas--stack"><div class="field"><label class="field__label" for="dd4">Password</label><input class="field__input" id="dd4" type="password" value="" aria-invalid="true" style="--sd-field-border: var(--colorNeutralStroke2);"></div></div><figcaption>The mocks' 16% border (1.36:1) and a silent invalid state: the field and the problem are both hard to see (D06).</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="ds-section" id="tokens"><h2><a href="#tokens">Tokens</a></h2>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Part</th><th scope="col">Token</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead>
+        <tbody>
+          <tr><td>Fill</td><td><code>--colorNeutralBackground1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralBackground1" data-swatch></i><span data-token="--colorNeutralBackground1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralBackground1" data-swatch></i><span data-token="--colorNeutralBackground1"></span></span></td></tr>
+          <tr><td>Value</td><td><code>--colorNeutralForeground1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralForeground1" data-swatch></i><span data-token="--colorNeutralForeground1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralForeground1" data-swatch></i><span data-token="--colorNeutralForeground1"></span></span></td></tr>
+          <tr><td>Placeholder</td><td><code>--colorNeutralForeground3</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralForeground3" data-swatch></i><span data-token="--colorNeutralForeground3"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralForeground3" data-swatch></i><span data-token="--colorNeutralForeground3"></span></span></td></tr>
+          <tr><td>Border (<code>--sd-field-border</code>)</td><td><code>--colorNeutralStrokeAccessible</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralStrokeAccessible" data-swatch></i><span data-token="--colorNeutralStrokeAccessible"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralStrokeAccessible" data-swatch></i><span data-token="--colorNeutralStrokeAccessible"></span></span></td></tr>
+          <tr><td>Hover border</td><td><code>--colorNeutralForeground2</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralForeground2" data-swatch></i><span data-token="--colorNeutralForeground2"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralForeground2" data-swatch></i><span data-token="--colorNeutralForeground2"></span></span></td></tr>
+          <tr><td>Focus border / halo</td><td><code>--colorStrokeFocus2</code> / <code>--colorBrandStroke2</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorBrandStroke2" data-swatch></i><span data-token="--colorBrandStroke2"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorBrandStroke2" data-swatch></i><span data-token="--colorBrandStroke2"></span></span></td></tr>
+          <tr><td>Invalid border / focused halo</td><td><code>--colorStatusDangerForeground3</code> / <code>--colorStatusDangerBackground1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorStatusDangerForeground3" data-swatch></i><span data-token="--colorStatusDangerForeground3"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorStatusDangerForeground3" data-swatch></i><span data-token="--colorStatusDangerForeground3"></span></span></td></tr>
+          <tr><td>Read-only fill, copy value</td><td><code>--colorNeutralBackground3</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralBackground3" data-swatch></i><span data-token="--colorNeutralBackground3"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralBackground3" data-swatch></i><span data-token="--colorNeutralBackground3"></span></span></td></tr>
+          <tr><td>Strength track / weak / OK / strong</td><td><code>--colorNeutralStroke1</code>, <code>--colorStatusDangerForeground3</code>, <code>--colorPaletteSunForeground3</code>, <code>--colorStatusSuccessBackground3</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorPaletteSunForeground3" data-swatch></i><span data-token="--colorPaletteSunForeground3"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorPaletteSunForeground3" data-swatch></i><span data-token="--colorPaletteSunForeground3"></span></span></td></tr>
+          <tr><td>Height</td><td><code>--targetComfortable</code></td><td colspan="2"><span data-token="--targetComfortable"></span></td></tr>
+          <tr><td>Side padding</td><td><code>--spacingHorizontalM</code></td><td colspan="2"><span data-token="--spacingHorizontalM"></span></td></tr>
+          <tr><td>Radius</td><td><code>--borderRadiusMedium</code></td><td colspan="2"><span data-token="--borderRadiusMedium"></span></td></tr>
+          <tr><td>Value type / copy value type</td><td><code>--typographyBody1</code> / <code>--typographyCode</code></td><td colspan="2"><span data-token="--typographyBody1"></span></td></tr>
+          <tr><td>Focus halo width</td><td><code>--strokeWidthThicker</code></td><td colspan="2"><span data-token="--strokeWidthThicker"></span></td></tr>
+          <tr><td>Transition</td><td><code>--durationFast</code>, <code>--curveEasyEase</code></td><td colspan="2"><span data-token="--durationFast"></span> <span data-token="--curveEasyEase"></span></td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section class="ds-section" id="code"><h2><a href="#code">Code</a></h2>
+      <pre><code>&lt;div class="field"&gt;
+  &lt;label class="field__label" for="si-email"&gt;Email&lt;/label&gt;
+  &lt;input class="field__input" id="si-email" type="email" autocomplete="email"&gt;
+&lt;/div&gt;
+
+&lt;div class="copy-field"&gt;
+  &lt;span class="copy-field__value" id="d5-link"&gt;saturdaze.app/s/may17-browns&lt;/span&gt;
+  &lt;button class="btn btn--quiet" type="button" aria-describedby="d5-link"&gt;…Copy&lt;/button&gt;
+&lt;/div&gt;
+&lt;p role="status" class="text-xs text-soft"&gt;&lt;/p&gt;  &lt;!-- "Link copied." after a copy --&gt;</code></pre>
+      <table class="ds-table"><thead><tr><th scope="col">Class / attribute</th><th scope="col">Effect</th></tr></thead><tbody>
+        <tr><td><code>.field__input</code></td><td>The input box. Same class on textarea and select.</td></tr>
+        <tr><td><code>type="search"</code></td><td>Adds the leading magnifier and left padding.</td></tr>
+        <tr><td><code>aria-invalid="true"</code></td><td>Danger border; pair with <code>.field__error</code>.</td></tr>
+        <tr><td><code>readonly</code> / <code>disabled</code></td><td>Well fill, no border / 50% opacity, not focusable.</td></tr>
+        <tr><td><code>.field__with-btn</code></td><td>Input plus a 44px button (show password).</td></tr>
+        <tr><td><code>.strength</code> <code>.strength--weak|ok|strong</code></td><td>Three-segment meter with a text label.</td></tr>
+        <tr><td><code>.copy-field</code> / <code>.copy-field__value</code></td><td>Read-only value in code type with a Copy button.</td></tr>
+        <tr><td><code>sd-text-input [type] [autocomplete] [readonly] [invalid]</code></td><td>Angular: renders the field wrapper and the input.</td></tr>
+      </tbody></table>
+    </section>
+
+    <section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>
+      <p>Extracted from these mocks:</p>
+      <ul>
+        <li><a href="../../mocks/pages/sign-in.html">pages/sign-in</a>, <a href="../../mocks/pages/admin.sign-in.html">pages/admin.sign-in</a>: email and password with autocomplete, the invalid state.</li>
+        <li><a href="../../mocks/pages/create-account.html">pages/create-account</a> and <a href="../../mocks/pages/reset-password.html">pages/reset-password</a>: new password with the strength meter.</li>
+        <li><a href="../../mocks/pages/dialogs.html">pages/dialogs</a>: D5 copy field, D7 and D14 text, D10 datetime-local and URL, D17 number, D18 time, D19 address, AD2 and AD3 photo details.</li>
+        <li><a href="../../mocks/pages/admin.places.html">pages/admin.places</a>: search.</li>
+      </ul>
+      <p>Drift fixed during extraction (see the <a href="../README.md">README drift log</a>): D04 (placeholder contrast), D06 (border contrast), D03 (focus), D24 (type in rem). Not yet in the mocks: the show-password button, the weak strength level, and the "Copied" state with a status message (the mock marks Copy with <code>aria-pressed</code>, which describes a toggle rather than an action; the system drops it). Read-only appears in no mock yet.</p>
+    </section>
+
+    <footer class="ds-footer"><span>Saturdaze design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/icons.js"></script>
+<script src="../assets/ds.js"></script>
+</body>
+</html>

@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Divider — Saturdaze design system</title>
+<meta name="description" content="A hairline that separates groups where no component border already does: horizontal, vertical between filter groups, and labelled.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html"><span class="brand-mark" aria-hidden="true"></span>Saturdaze DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Actions</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+    </ul></details>
+    <details open><summary>Inputs</summary><ul>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/chip-input.html">Chip input</a></li>
+      <li><a href="../components/file-upload.html">File upload</a></li>
+      <li><a href="../components/photo-pick.html">Photo pick</a></li>
+      <li><a href="../components/rating.html">Rating</a></li>
+      <li><a href="../components/vote-row.html">Vote row</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+    </ul></details>
+    <details open><summary>Navigation</summary><ul>
+      <li><a href="../components/top-bar.html">Top bar</a></li>
+      <li><a href="../components/bottom-nav.html">Bottom nav</a></li>
+      <li><a href="../components/sidebar-navigation.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs (segments)</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+      <li><a href="../components/footer.html">Footer</a></li>
+    </ul></details>
+    <details open><summary>Containers and overlays</summary><ul>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/container.html">Container and grid</a></li>
+      <li><a href="../components/page-header.html">Page header</a></li>
+    </ul></details>
+    <details open><summary>Data display</summary><ul>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/activity-feed.html">Activity feed</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/chip.html">Chip</a></li>
+      <li><a href="../components/filter-chip.html">Filter chip</a></li>
+      <li><a href="../components/disc.html">Disc</a></li>
+      <li><a href="../components/media.html">Media</a></li>
+      <li><a href="../components/cover.html">Cover photo</a></li>
+      <li><a href="../components/stat.html">Stat</a></li>
+      <li><a href="../components/itinerary.html">Itinerary</a></li>
+      <li><a href="../components/map.html">Map</a></li>
+    </ul></details>
+    <details open><summary>Feedback</summary><ul>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/alert.html">Alert</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/progress-bar.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Auth and marketing</summary><ul>
+      <li><a href="../components/auth-card.html">Auth card</a></li>
+      <li><a href="../components/hero.html">Hero</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/data-tables-and-lists.html">Tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Component · Containers and overlays</p>
+      <h1>Divider</h1>
+      <p class="ds-lead">A divider is a 1px line between two groups that nothing else separates. Saturdaze rarely needs one: list rows, cards, day headers and menus already draw their own borders.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA</span><span class="ds-pill">Status: core, one use in the mocks</span><span class="ds-pill">Native <code>&lt;hr&gt;</code></span></div>
+      <ul class="ds-toc">
+        <li><a href="#overview">Overview</a></li><li><a href="#anatomy">Anatomy</a></li><li><a href="#variants">Variants</a></li><li><a href="#sizes">Sizes</a></li><li><a href="#states">States</a></li><li><a href="#responsive">Responsive</a></li><li><a href="#theming">Theming</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#content">Content</a></li><li><a href="#do-dont">Do and don't</a></li><li><a href="#tokens">Tokens</a></li><li><a href="#code">Code</a></li><li><a href="#sources">Sources</a></li>
+      </ul>
+    </header>
+
+    <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+      <p>Before adding a divider, check whether a component already separates the content. These do, and should never get an extra line:</p>
+      <ul>
+        <li><a href="list.html">List</a> rows have a bottom border; <a href="card.html">cards</a> have their own edge; a <code>.day__header</code> has a border under it; a vote row has a border above it; a menu has <code>.menu__sep</code>.</li>
+        <li>Page <a href="page-header.html">sections</a> are separated by space and a heading (<code>--layoutSpaceSection</code>), not by lines.</li>
+      </ul>
+      <p>A divider element is warranted in three places only:</p>
+      <ul>
+        <li><b>Between groups of controls in one row</b> where there is no container: the filter rows on Food and admin Places split "which day" from "which meal" from "which tags" with <code>.filters__divider</code>.</li>
+        <li><b>Between two unrelated blocks inside one surface</b> with no heading of their own, such as the account details and Sign out at the foot of an account card.</li>
+        <li><b>Between two alternative ways to do one thing</b>, labelled "or": upload a photo, or add one from a link.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="anatomy"><h2><a href="#anatomy">Anatomy</a></h2>
+      <div class="ds-anatomy">
+        <figure class="ds-anatomy__figure">
+          <div style="width: 100%; max-width: 20rem;">
+            <div class="divider divider--label">or</div>
+          </div>
+          <span class="ds-callout" style="left: 20%; top: 28%;" aria-hidden="true">1</span>
+          <span class="ds-callout" style="left: 50%; top: 22%;" aria-hidden="true">2</span>
+          <span class="ds-callout" style="left: 70%; top: 72%;" aria-hidden="true">3</span>
+        </figure>
+        <ol class="ds-anatomy__list">
+          <li><div><b>Line</b><small>1px (<code>--strokeWidthThin</code>) in <code>--colorNeutralStroke2</code>; vertical dividers use the stronger <code>--colorNeutralStroke1</code> because they are short.</small></div></li>
+          <li><div><b>Label (optional)</b><small><code>--typographyCaption1Strong</code> in <code>--colorNeutralForeground2</code>, 12px gap to each line.</small></div></li>
+          <li><div><b>Space</b><small>16px above and below a horizontal divider (<code>--spacingVerticalL</code>); 2px each side of a vertical one, plus the row's own gap.</small></div></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="ds-section" id="variants"><h2><a href="#variants">Variants</a></h2>
+      <h3>Horizontal</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack">
+          <div class="card" style="max-width: 24rem;">
+            <div class="card__head"><span class="avatar avatar--lg avatar--q" aria-hidden="true">Q</span><div class="card__head-text"><p class="card__title">Quinn</p><p class="card__meta">Signed in since May 2026</p></div></div>
+            <hr class="divider" style="margin-block: var(--spacingVerticalXS);">
+            <div><button class="btn btn--quiet btn--warn-text btn--sm" type="button"><svg class="icon" aria-hidden="true"><use href="#i-sign_out"/></svg>Sign out</button></div>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span><code>&lt;hr class="divider"&gt;</code> between who you are and leaving, inside one card (a proposal: the Family account card puts them in one row). The card's gap replaces the default margin here.</span></div>
+      </div>
+
+      <h3>Vertical, between filter groups</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas">
+          <div class="filters" role="group" aria-label="Filters">
+            <button class="filter-chip" type="button" aria-pressed="true">Saturday</button>
+            <button class="filter-chip" type="button" aria-pressed="false">Sunday</button>
+            <span class="filters__divider" aria-hidden="true"></span>
+            <button class="filter-chip" type="button" aria-pressed="true">Lunch</button>
+            <button class="filter-chip" type="button" aria-pressed="false">Dinner</button>
+            <span class="filters__divider" aria-hidden="true"></span>
+            <button class="filter-chip filter-chip--accent" type="button" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-heart"/></svg>Wife-approved</button>
+            <button class="filter-chip" type="button" aria-pressed="false">Under 15 min</button>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>The Food filters: day, meal, then tags. <code>.filters__divider</code> is the same rule as <code>.divider--vertical</code>, kept under the mocks' name.</span></div>
+      </div>
+
+      <h3>Labelled</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack" style="max-width: 26rem;">
+          <button class="btn btn--quiet btn--block" type="button"><svg class="icon" aria-hidden="true"><use href="#i-upload"/></svg>Upload a photo</button>
+          <div class="divider divider--label" style="margin: 0;">or</div>
+          <div class="field"><label class="field__label" for="v-url">Photo link</label><input class="field__input" id="v-url" type="url" placeholder="https://"></div>
+        </div>
+        <div class="ds-example__caption"><span>Two ways to add a place photo. Proposed: the mocks split these into two dialogs (AD1, AD2).</span></div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="sizes" data-na="One weight (1px) and one length rule: horizontal dividers fill their container, vertical ones are 20px tall."><h2><a href="#sizes">Sizes</a></h2><p class="ds-na">One weight (1px) and one length rule: horizontal dividers fill their container, vertical ones are 20px tall.</p></section>
+
+    <section class="ds-section" id="states"><h2><a href="#states">States</a></h2>
+      <p>Dividers are not interactive, so they have no hover, focus or disabled state. What changes is the surface they sit on; the line must stay visible on each.</p>
+      <div class="ds-matrix"><table>
+        <thead><tr><th scope="col">Variant</th><th scope="col">On page</th><th scope="col">On card</th><th scope="col">On well</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Horizontal</th>
+            <td style="background: var(--colorNeutralBackground2);"><div style="width: 10rem;"><hr class="divider"></div></td>
+            <td><div style="width: 10rem;"><hr class="divider"></div></td>
+            <td style="background: var(--colorNeutralBackground3);"><div style="width: 10rem;"><hr class="divider"></div></td>
+          </tr>
+          <tr><th scope="row">Vertical</th>
+            <td style="background: var(--colorNeutralBackground2);"><div class="cluster"><span class="text-sm">Day</span><span class="divider--vertical" aria-hidden="true"></span><span class="text-sm">Meal</span></div></td>
+            <td><div class="cluster"><span class="text-sm">Day</span><span class="divider--vertical" aria-hidden="true"></span><span class="text-sm">Meal</span></div></td>
+            <td style="background: var(--colorNeutralBackground3);"><div class="cluster"><span class="text-sm">Day</span><span class="divider--vertical" aria-hidden="true"></span><span class="text-sm">Meal</span></div></td>
+          </tr>
+          <tr><th scope="row">Labelled</th>
+            <td style="background: var(--colorNeutralBackground2);"><div style="width: 10rem;"><div class="divider divider--label">or</div></div></td>
+            <td><div style="width: 10rem;"><div class="divider divider--label">or</div></div></td>
+            <td style="background: var(--colorNeutralBackground3);"><div style="width: 10rem;"><div class="divider divider--label">or</div></div></td>
+          </tr>
+        </tbody>
+      </table></div>
+      <h3>Both themes</h3>
+      <div class="ds-themes">
+        <div data-theme="light"><hr class="divider"><div class="divider divider--label">or</div><div class="cluster"><span>Saturday</span><span class="divider--vertical" aria-hidden="true"></span><span>Lunch</span></div></div>
+        <div data-theme="dark"><hr class="divider"><div class="divider divider--label">or</div><div class="cluster"><span>Saturday</span><span class="divider--vertical" aria-hidden="true"></span><span>Lunch</span></div></div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="responsive"><h2><a href="#responsive">Responsive behaviour</a></h2>
+      <ul>
+        <li>Horizontal and labelled dividers fill their container at every width.</li>
+        <li>Vertical dividers travel with the chips. On phones the filter row is a horizontal scroller (<code>.scroller-x</code>), so the divider never wraps to the start of a line; from 720px the row wraps, and a divider that lands at the start of a line is acceptable because the group still reads left to right.</li>
+        <li>Never use a vertical divider to fake columns; use the <a href="container.html">grid</a>, which stacks on phones.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="theming"><h2><a href="#theming">Theming</a></h2>
+      <p>Dividers read <code>--colorNeutralStroke2</code> (horizontal and labelled lines) and <code>--colorNeutralStroke1</code> (vertical), both of which lighten in the dark theme so the line stays as faint as in light. The label reads <code>--colorNeutralForeground2</code>. The mocks drew the filter divider in <code>--sd-line-strong</code>; it now uses the stroke tokens like every other line.</p>
+    </section>
+
+    <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
+      <h3>Role and pattern</h3>
+      <p>No APG widget pattern: a divider is a static <code>separator</code>, never focusable (a focusable separator is the Window Splitter pattern, which Saturdaze does not use). A meaningful horizontal break is a native <code>&lt;hr&gt;</code>, which has the separator role already. A meaningful vertical break is <code>&lt;span class="divider--vertical" role="separator" aria-orientation="vertical"&gt;</code>. A purely visual break, like the filter dividers, is <code>aria-hidden="true"</code>.</p>
+      <h3>Keyboard</h3>
+      <table class="ds-table ds-keys"><thead><tr><th scope="col">Key</th><th scope="col">Action</th></tr></thead><tbody>
+        <tr><td><kbd>Tab</kbd></td><td>Skips the divider; it is never a tab stop.</td></tr>
+      </tbody></table>
+      <h3>Focus</h3>
+      <p>Not focusable. A divider must not sit so close to a control that it clips the control's 2px focus ring; vertical dividers keep 2px plus the row gap on each side.</p>
+      <h3>Labelling</h3>
+      <p>The "or" label is real text and is read as "or" between the two alternatives. Do not put <code>role="separator"</code> on a labelled divider: a separator's content is not read. When the groups a vertical divider separates matter (single-choice day filters), say so in the markup with nested <code>role="group" aria-label="Day"</code>; the hidden line cannot.</p>
+      <h3>Contrast</h3>
+      <div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0; gap: var(--spacingHorizontalS);">
+        <div class="ds-pair"><span>"or" label on card</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground2|--colorNeutralBackground1" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>"or" label on page</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground2|--colorNeutralBackground2" data-min="4.5"></span></div>
+      </div>
+      <p>The lines themselves are decorative: removing them loses no information, because headings, spacing or the "or" label carry the structure. They are exempt from the 3:1 non-text minimum, and they should be: a strong line competes with content.</p>
+      <h3>Motion</h3>
+      <p>None.</p>
+      <h3>Touch</h3>
+      <p>Not a target. A vertical divider adds 2px each side so chips either side keep at least 8px between their edges.</p>
+    </section>
+
+    <section class="ds-section" id="content"><h2><a href="#content">Content</a></h2>
+      <ul>
+        <li>The only label is "or", lower case. If the two sides need more explanation than "or", give each its own heading instead.</li>
+        <li>Never label a divider with a section name ("Preferences"); that is a heading.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="do-dont"><h2><a href="#do-dont">Do and don't</a></h2>
+      <div class="ds-dodont">
+        <figure class="ds-do"><div class="ds-example__canvas"><ul class="list list--card" style="width: 100%;"><li class="list__item"><span class="avatar avatar--lg avatar--e" aria-hidden="true">E</span><span class="list__text"><span class="list__title">Eli</span><span class="list__sub">Kid · 9</span></span></li><li class="list__item"><span class="avatar avatar--lg avatar--m" aria-hidden="true">M</span><span class="list__text"><span class="list__title">Mae</span><span class="list__sub">Kid · 5</span></span></li></ul></div><figcaption>List rows bring their own border.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas ds-example__canvas--stack"><p>Eli · Kid · 9</p><hr class="divider" style="margin: 0;"><hr class="divider" style="margin: 0;"><p>Mae · Kid · 5</p></div><figcaption>Adding <code>&lt;hr&gt;</code> between list rows doubles the line and announces a separator between every person.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas ds-example__canvas--stack"><p class="section-header__title">Who's in</p><p class="text-soft text-sm">Ages shape the picks.</p></div><figcaption>Separate page sections with a heading and space.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas ds-example__canvas--stack"><hr class="divider" style="margin: 0;"><p class="text-soft text-sm">Ages shape the picks.</p></div><figcaption>A line instead of a heading: screen-reader users cannot jump to the section, and sighted users lose its name.</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="ds-section" id="tokens"><h2><a href="#tokens">Tokens</a></h2>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Part</th><th scope="col">Token</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead>
+        <tbody>
+          <tr><td>Horizontal and labelled line</td><td><code>--colorNeutralStroke2</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralStroke2" data-swatch></i><span data-token="--colorNeutralStroke2"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralStroke2" data-swatch></i><span data-token="--colorNeutralStroke2"></span></span></td></tr>
+          <tr><td>Vertical line</td><td><code>--colorNeutralStroke1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralStroke1" data-swatch></i><span data-token="--colorNeutralStroke1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralStroke1" data-swatch></i><span data-token="--colorNeutralStroke1"></span></span></td></tr>
+          <tr><td>Label</td><td><code>--colorNeutralForeground2</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralForeground2" data-swatch></i><span data-token="--colorNeutralForeground2"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralForeground2" data-swatch></i><span data-token="--colorNeutralForeground2"></span></span></td></tr>
+          <tr><td>Weight</td><td><code>--strokeWidthThin</code></td><td colspan="2"><span data-token="--strokeWidthThin"></span></td></tr>
+          <tr><td>Space above and below</td><td><code>--spacingVerticalL</code></td><td colspan="2"><span data-token="--spacingVerticalL"></span></td></tr>
+          <tr><td>Space beside vertical / label gap</td><td><code>--spacingHorizontalXXS</code> / <code>--spacingHorizontalM</code></td><td colspan="2"><span data-token="--spacingHorizontalXXS"></span> / <span data-token="--spacingHorizontalM"></span></td></tr>
+          <tr><td>Label type</td><td><code>--typographyCaption1Strong</code></td><td colspan="2"><span data-token="--typographyCaption1Strong"></span></td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section class="ds-section" id="code"><h2><a href="#code">Code</a></h2>
+      <pre><code>&lt;hr class="divider"&gt;
+
+&lt;div class="filters" role="group" aria-label="Filters"&gt;
+  …day chips…
+  &lt;span class="filters__divider" aria-hidden="true"&gt;&lt;/span&gt;
+  …meal chips…
+&lt;/div&gt;
+
+&lt;span class="divider--vertical" role="separator" aria-orientation="vertical"&gt;&lt;/span&gt;
+
+&lt;div class="divider divider--label"&gt;or&lt;/div&gt;</code></pre>
+      <table class="ds-table"><thead><tr><th scope="col">Class</th><th scope="col">Effect</th></tr></thead><tbody>
+        <tr><td><code>.divider</code></td><td>1px top border, 16px vertical margin. Use on <code>&lt;hr&gt;</code>.</td></tr>
+        <tr><td><code>.divider--vertical</code> / <code>.filters__divider</code></td><td>1 × 20px line in a flex row.</td></tr>
+        <tr><td><code>.divider--label</code></td><td>Centred caption text with a line on each side; combine with <code>.divider</code> on a <code>&lt;div&gt;</code>.</td></tr>
+      </tbody></table>
+    </section>
+
+    <section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>
+      <p>The only divider element in the mocks is <code>.filters__divider</code>, in the filter rows of <a href="../../mocks/pages/ideas.food.html">pages/ideas.food</a>, <a href="../../mocks/pages/ideas.events.html">pages/ideas.events</a> and <a href="../../mocks/pages/admin.places.html">pages/admin.places</a>. Every other line in the mocks is a component border (list rows, cards, the day header, the menu header, the vote row). <code>&lt;hr class="divider"&gt;</code> and the labelled divider are core components that no mock shows yet.</p>
+      <p>Drift: the mocks' filter divider used the 16% <code>--sd-line-strong</code> stroke (the same token as D06); it now reads <code>--colorNeutralStroke1</code>, and like every line it uses tokens rather than literal colours (D17).</p>
+    </section>
+
+    <footer class="ds-footer"><span>Saturdaze design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/icons.js"></script>
+<script src="../assets/ds.js"></script>
+</body>
+</html>

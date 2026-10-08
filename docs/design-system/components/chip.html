@@ -1,0 +1,399 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chip — Saturdaze design system</title>
+<meta name="description" content="Chips are small static tags that describe a place, block or person: tone carries a fixed meaning, the words carry it first.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html"><span class="brand-mark" aria-hidden="true"></span>Saturdaze DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Actions</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+    </ul></details>
+    <details open><summary>Inputs</summary><ul>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/chip-input.html">Chip input</a></li>
+      <li><a href="../components/file-upload.html">File upload</a></li>
+      <li><a href="../components/photo-pick.html">Photo pick</a></li>
+      <li><a href="../components/rating.html">Rating</a></li>
+      <li><a href="../components/vote-row.html">Vote row</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+    </ul></details>
+    <details open><summary>Navigation</summary><ul>
+      <li><a href="../components/top-bar.html">Top bar</a></li>
+      <li><a href="../components/bottom-nav.html">Bottom nav</a></li>
+      <li><a href="../components/sidebar-navigation.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs (segments)</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+      <li><a href="../components/footer.html">Footer</a></li>
+    </ul></details>
+    <details open><summary>Containers and overlays</summary><ul>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/container.html">Container and grid</a></li>
+      <li><a href="../components/page-header.html">Page header</a></li>
+    </ul></details>
+    <details open><summary>Data display</summary><ul>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/activity-feed.html">Activity feed</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/chip.html">Chip</a></li>
+      <li><a href="../components/filter-chip.html">Filter chip</a></li>
+      <li><a href="../components/disc.html">Disc</a></li>
+      <li><a href="../components/media.html">Media</a></li>
+      <li><a href="../components/cover.html">Cover photo</a></li>
+      <li><a href="../components/stat.html">Stat</a></li>
+      <li><a href="../components/itinerary.html">Itinerary</a></li>
+      <li><a href="../components/map.html">Map</a></li>
+    </ul></details>
+    <details open><summary>Feedback</summary><ul>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/alert.html">Alert</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/progress-bar.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Auth and marketing</summary><ul>
+      <li><a href="../components/auth-card.html">Auth card</a></li>
+      <li><a href="../components/hero.html">Hero</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/data-tables-and-lists.html">Tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Component · Data display</p>
+      <h1>Chip</h1>
+      <p class="ds-lead">Chips are the small tags on cards and timeline blocks: "45 min drive", "Outdoor", "Commitment", "Day highlight". Each tone has one meaning across the product, so a family learns to read a card at a glance.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA</span><span class="ds-pill">Status: stable</span><span class="ds-pill">Angular: <code>sd-chip</code></span><span class="ds-pill">Static text</span></div>
+      <ul class="ds-toc">
+        <li><a href="#overview">Overview</a></li><li><a href="#anatomy">Anatomy</a></li><li><a href="#variants">Variants</a></li><li><a href="#sizes">Sizes</a></li><li><a href="#states">States</a></li><li><a href="#responsive">Responsive</a></li><li><a href="#theming">Theming</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#content">Content</a></li><li><a href="#do-dont">Do and don't</a></li><li><a href="#tokens">Tokens</a></li><li><a href="#code">Code</a></li><li><a href="#sources">Sources</a></li>
+      </ul>
+    </header>
+
+    <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+      <p>A chip is a static label. It describes something already decided: how far away a place is, whether it is indoors, that a block is locked. It is not a control. When people choose chips to narrow a list, use a <a href="filter-chip.html">filter chip</a>; when they build a set (likes and dislikes), use a <a href="chip-input.html">chip input</a>, whose chips carry the removable form shown below; when the chip reports a state or a number, it is a <a href="badge.html">badge</a>.</p>
+      <p>Tones have fixed meanings. Pick the tone from the meaning, never for variety:</p>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Tone</th><th scope="col">Means</th><th scope="col">Examples in the mocks</th></tr></thead>
+        <tbody>
+          <tr><td><span class="chip chip--sun">Sun</span></td><td>Weather, sunny, seasonal</td><td>Seasonal, Pending review (moved to caution, see badge)</td></tr>
+          <tr><td><span class="chip chip--sky">Sky</span></td><td>Cool or rainy weather, travel</td><td>Every drive-time chip ("45 min"), weather-safe</td></tr>
+          <tr><td><span class="chip chip--leaf">Leaf</span></td><td>Outdoor, likes</td><td>Outdoor, Parks, Short hikes</td></tr>
+          <tr><td><span class="chip chip--indoor">Indoor</span></td><td>Indoor, errands, theatre</td><td>Theatre, Errand</td></tr>
+          <tr><td><span class="chip chip--accent">Accent</span></td><td>Commitment, locked, good to go</td><td>Commitment, Locked, Wife-approved</td></tr>
+          <tr><td><span class="chip chip--primary">Primary</span></td><td>Highlight, new</td><td>Day highlight, Top pick, First time, New</td></tr>
+          <tr><td><span class="chip chip--warn">Warn</span></td><td>Skip, dislike, remove</td><td>Camping, Drives over 60 min, "The Rec Room · rated 2★"</td></tr>
+          <tr><td><span class="chip chip--caution">Caution</span> <span class="chip chip--info">Info</span></td><td>Status only; see <a href="badge.html">badge</a></td><td>Pending, Provider</td></tr>
+          <tr><td><span class="chip chip--ink">Ink</span></td><td>High emphasis over a photo or busy surface</td><td>Not used in the mocks yet</td></tr>
+          <tr><td><span class="chip">Neutral</span></td><td>A plain fact with no category</td><td>All ages, Ages 5+, Local</td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section class="ds-section" id="anatomy"><h2><a href="#anatomy">Anatomy</a></h2>
+      <div class="ds-anatomy">
+        <figure class="ds-anatomy__figure">
+          <span class="chip chip--leaf" style="transform: scale(1.6);"><svg class="icon" aria-hidden="true"><use href="#i-tree"/></svg>Parks<button class="chip__x" type="button" aria-label="Remove Parks"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></span>
+          <span class="ds-callout" style="left: 30%; top: 20%;" aria-hidden="true">1</span>
+          <span class="ds-callout" style="left: 47%; top: 20%;" aria-hidden="true">2</span>
+          <span class="ds-callout" style="left: 64%; top: 20%;" aria-hidden="true">3</span>
+          <span class="ds-callout" style="left: 70%; top: 70%;" aria-hidden="true">4</span>
+        </figure>
+        <ol class="ds-anatomy__list">
+          <li><div><b>Leading icon (optional)</b><small>13px, stroke 2, <code>currentColor</code>, <code>aria-hidden="true"</code>; 4px gap.</small></div></li>
+          <li><div><b>Label</b><small><code>--typographyCaption1Strong</code> (12px semibold), one line, never truncated.</small></div></li>
+          <li><div><b>Remove button (chip input only)</b><small><code>.chip__x</code>: 16px glyph, 24px hit area through <code>::before</code> (drift D27), <code>aria-label="Remove Parks"</code>.</small></div></li>
+          <li><div><b>Container</b><small>Pill, 24px tall (<code>--targetMin</code>), 10px side padding, fill and label colour from the tone.</small></div></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="ds-section" id="variants"><h2><a href="#variants">Variants</a></h2>
+      <h3>Tones</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas">
+          <span class="chip chip--sun">Seasonal</span>
+          <span class="chip chip--sky">Weather-safe</span>
+          <span class="chip chip--leaf">Outdoor</span>
+          <span class="chip chip--indoor">Theatre</span>
+          <span class="chip chip--accent">Commitment</span>
+          <span class="chip chip--primary">Day highlight</span>
+          <span class="chip chip--warn">Skip</span>
+          <span class="chip chip--ink">Lavender peaks this week</span>
+          <span class="chip">All ages</span>
+        </div>
+        <div class="ds-example__caption"><span>Sun, sky, leaf, indoor, accent, primary, warn, ink, neutral. Caution and info are status tones: see <a href="badge.html">badge</a>.</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;span class="chip chip--sun"&gt;Seasonal&lt;/span&gt;
+&lt;span class="chip chip--leaf"&gt;Outdoor&lt;/span&gt;
+&lt;span class="chip chip--indoor"&gt;Theatre&lt;/span&gt;
+&lt;span class="chip"&gt;All ages&lt;/span&gt;</code></pre></details>
+      </div>
+      <h3>With an icon</h3>
+      <p>An icon repeats the meaning for people scanning a grid of cards: a car for drive time, a lock for commitments, a sun or cloud for weather, a tree or house for outdoor and indoor.</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas">
+          <span class="chip chip--sky"><svg class="icon" aria-hidden="true"><use href="#i-car"/></svg>45 min drive</span>
+          <span class="chip chip--accent"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg>Commitment</span>
+          <span class="chip chip--sun"><svg class="icon" aria-hidden="true"><use href="#i-sun"/></svg>Sunny · 22°</span>
+          <span class="chip chip--sky"><svg class="icon" aria-hidden="true"><use href="#i-rain"/></svg>Rain after 2pm</span>
+          <span class="chip chip--leaf"><svg class="icon" aria-hidden="true"><use href="#i-tree"/></svg>Outdoor</span>
+          <span class="chip chip--indoor"><svg class="icon" aria-hidden="true"><use href="#i-home"/></svg>Indoor</span>
+          <span class="chip chip--warn"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg>The Rec Room · rated 2★ on 6 Apr</span>
+        </div>
+        <div class="ds-example__caption"><span>Ideas cards, timeline blocks and the Past "Skipping next time" strip.</span></div>
+      </div>
+      <h3>Removable</h3>
+      <p>Inside a <a href="chip-input.html">chip input</a> each chip ends in a remove button. This is the only interactive part of a chip; the chip itself stays static.</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack" style="max-width: 32rem;">
+          <div class="field">
+            <label class="field__label" for="chip-likes">Likes</label>
+            <div class="chip-input">
+              <span class="chip chip--leaf">Parks<button class="chip__x" type="button" aria-label="Remove Parks"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></span>
+              <span class="chip chip--leaf">Short hikes<button class="chip__x" type="button" aria-label="Remove Short hikes"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></span>
+              <span class="chip chip--leaf">Live theatre<button class="chip__x" type="button" aria-label="Remove Live theatre"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></span>
+              <input class="chip-input__field" id="chip-likes" type="text" placeholder="Add one, press Enter">
+            </div>
+          </div>
+          <div class="field">
+            <label class="field__label" for="chip-dislikes">Dislikes</label>
+            <div class="chip-input">
+              <span class="chip chip--warn">Camping<button class="chip__x" type="button" aria-label="Remove Camping"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></span>
+              <span class="chip chip--warn">Drives over 60 min<button class="chip__x" type="button" aria-label="Remove Drives over 60 min"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></span>
+              <input class="chip-input__field" id="chip-dislikes" type="text" placeholder="Add one, press Enter">
+            </div>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>Dialog D20 Likes and dislikes: likes in leaf, dislikes in warn.</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;span class="chip chip--leaf"&gt;Parks&lt;button class="chip__x" type="button" aria-label="Remove Parks"&gt;
+  &lt;svg class="icon" aria-hidden="true"&gt;&lt;use href="#i-close"/&gt;&lt;/svg&gt;&lt;/button&gt;&lt;/span&gt;</code></pre></details>
+      </div>
+      <h3>Email chip</h3>
+      <p><code>.email-chip</code> sets an email address apart inside a sentence so it reads as one unit and can break anywhere on a phone. It is 14px, not 12px, because the address is the content.</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack" style="max-width: 32rem;">
+          <p class="auth-card__sub">You are signed in as <span class="email-chip">quinntynebrown@gmail.com</span>, which is not an administrator account.</p>
+          <p><span class="email-chip"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-mail"/></svg>q••••••••n@gmail.com</span></p>
+        </div>
+        <div class="ds-example__caption"><span>Admin sign-in (wrong account) and Reset password (masked address with a mail icon).</span></div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="sizes"><h2><a href="#sizes">Sizes</a></h2>
+      <p>Default (24px) on cards, blocks and in chip inputs. Small (20px, <code>.chip--sm</code>) where three or more chips share a narrow row, such as admin photo tiles. Both use 12px text; drift D12 raised the mocks' 11px small chip.</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas">
+          <span class="chip chip--sky"><svg class="icon" aria-hidden="true"><use href="#i-car"/></svg>45 min · 24px</span>
+          <span class="chip chip--sky chip--sm"><svg class="icon" aria-hidden="true"><use href="#i-car"/></svg>45 min · 20px</span>
+          <span class="email-chip">admin@saturdaze.app</span>
+        </div>
+        <div class="ds-example__caption"><span>Heights <code>--targetMin</code> and 1.25rem; padding <code>--spacingHorizontalMNudge</code> and <code>--spacingHorizontalS</code>.</span></div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="states"><h2><a href="#states">States</a></h2>
+      <p>A static chip has one state. A removable chip's remove button has hover and focus; they are forced here with <code>data-state</code>. The hover tint uses <code>--colorNeutralStroke2</code> so it works on every tone.</p>
+      <div class="ds-matrix"><table>
+        <thead><tr><th scope="col">Variant</th><th scope="col">Default</th><th scope="col">Hover</th><th scope="col">Focus</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Static</th><td><span class="chip chip--leaf">Outdoor</span></td><td><span class="text-soft">Not interactive</span></td><td><span class="text-soft">Not focusable</span></td></tr>
+          <tr><th scope="row">Removable, leaf</th><td><span class="chip chip--leaf">Parks<button class="chip__x" type="button" aria-label="Remove Parks (default)"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></span></td><td><span class="chip chip--leaf">Parks<button class="chip__x" type="button" aria-label="Remove Parks (hover)" data-state="hover"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></span></td><td><span class="chip chip--leaf">Parks<button class="chip__x" type="button" aria-label="Remove Parks (focus)" data-state="focus"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></span></td></tr>
+          <tr><th scope="row">Removable, warn</th><td><span class="chip chip--warn">Camping<button class="chip__x" type="button" aria-label="Remove Camping (default)"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></span></td><td><span class="chip chip--warn">Camping<button class="chip__x" type="button" aria-label="Remove Camping (hover)" data-state="hover"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></span></td><td><span class="chip chip--warn">Camping<button class="chip__x" type="button" aria-label="Remove Camping (focus)" data-state="focus"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></span></td></tr>
+          <tr><th scope="row">Email</th><td><span class="email-chip" style="white-space: nowrap;">admin@saturdaze.app</span></td><td><span class="text-soft">Not interactive</span></td><td><span class="text-soft">Not focusable</span></td></tr>
+        </tbody>
+      </table></div>
+      <h3>Both themes</h3>
+      <div class="ds-themes">
+        <div data-theme="light"><div class="ds-example__canvas" style="padding: 0;"><span class="chip chip--sun">Seasonal</span><span class="chip chip--sky">45 min</span><span class="chip chip--leaf">Outdoor</span><span class="chip chip--indoor">Theatre</span><span class="chip chip--accent">Commitment</span><span class="chip chip--primary">Day highlight</span><span class="chip chip--warn">Skip</span><span class="chip chip--ink">Ink</span><span class="chip">All ages</span><span class="chip chip--leaf">Parks<button class="chip__x" type="button" aria-label="Remove Parks (light theme)" data-state="focus"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></span></div></div>
+        <div data-theme="dark"><div class="ds-example__canvas" style="padding: 0;"><span class="chip chip--sun">Seasonal</span><span class="chip chip--sky">45 min</span><span class="chip chip--leaf">Outdoor</span><span class="chip chip--indoor">Theatre</span><span class="chip chip--accent">Commitment</span><span class="chip chip--primary">Day highlight</span><span class="chip chip--warn">Skip</span><span class="chip chip--ink">Ink</span><span class="chip">All ages</span><span class="chip chip--leaf">Parks<button class="chip__x" type="button" aria-label="Remove Parks (dark theme)" data-state="focus"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></span></div></div>
+      </div>
+      <ul>
+        <li><b>Removed</b>: the chip disappears at once, focus moves to the next chip's remove button (or the text field when it was the last), and a polite live region says "Parks removed".</li>
+        <li><b>Disabled</b> does not exist. A read-only set shows static chips without remove buttons.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="responsive"><h2><a href="#responsive">Responsive behaviour</a></h2>
+      <ul>
+        <li>Chips never wrap their text or truncate. Their container wraps them onto the next line: <code>.card__chips</code> and <code>.block__chips</code> are wrapping flex rows with a 6px gap.</li>
+        <li>Keep a card to two or three chips so the row stays one line at 360px; a fourth chip belongs in the card body text.</li>
+        <li>An email chip is the exception: it may break inside the address (<code>overflow-wrap: anywhere</code>) because long addresses would otherwise overflow a 360px auth card.</li>
+        <li>Chip size does not change with the viewport.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="theming"><h2><a href="#theming">Theming</a></h2>
+      <p>The chip reads two component tokens, <code>--sd-chip-bg</code> and <code>--sd-chip-fg</code>. Each tone maps them to a palette pair (<code>--colorPaletteSunBackground1</code> / <code>--colorPaletteSunForeground1</code>) or a status pair. A theme changes the palette aliases; a local re-skin overrides the two component tokens.</p>
+      <pre><code>/* A neutral chip sitting on a sunk well instead of a card */
+.card--sunk .chip:not([class*="chip--"]) { --sd-chip-bg: var(--colorNeutralBackground1); }</code></pre>
+      <p>In the dark theme the palette fills become deep tints of the same hue and the labels lighten to the 300 to 100 steps, so every tone still reads as its colour and passes 4.5:1.</p>
+    </section>
+
+    <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
+      <h3>Role and pattern</h3>
+      <p>A static chip is a <code>&lt;span&gt;</code> of text with no role, read in order with its card. No WAI-ARIA APG pattern applies. A group of chips that describe one card can sit in a plain <code>&lt;div class="card__chips"&gt;</code>; it needs no list semantics. The remove button is a native <code>&lt;button type="button"&gt;</code>.</p>
+      <h3>Keyboard</h3>
+      <table class="ds-table ds-keys"><thead><tr><th scope="col">Key</th><th scope="col">Action</th></tr></thead><tbody>
+        <tr><td><kbd>Tab</kbd></td><td>Skips static chips. Moves to each remove button in a chip input, then to the text field.</td></tr>
+        <tr><td><kbd>Enter</kbd> / <kbd>Space</kbd></td><td>On a remove button: removes that chip and moves focus to the next remove button or the field.</td></tr>
+        <tr><td><kbd>Backspace</kbd></td><td>In an empty chip-input field: removes the last chip (see <a href="chip-input.html">chip input</a>).</td></tr>
+      </tbody></table>
+      <h3>Focus</h3>
+      <p>The remove button shows the shared ring (<code>2px --colorStrokeFocus2</code>, 2px offset) around its 16px circle on <code>:focus-visible</code>. Static chips never take focus.</p>
+      <h3>Labelling</h3>
+      <p>The chip text is the content; write it so it makes sense read aloud without the icon or colour. "45 min" beside a car icon is heard as just "45 min", so write "45 min drive" (or add <code>&lt;span class="visually-hidden"&gt; drive&lt;/span&gt;</code>). Remove buttons name the chip: <code>aria-label="Remove Parks"</code>, never just "Remove" or "×".</p>
+      <h3>Contrast</h3>
+      <div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0; gap: var(--spacingHorizontalS);">
+        <div class="ds-pair"><span>Sun label on sun fill</span><span class="ds-pair__ratio" data-contrast="--colorPaletteSunForeground1|--colorPaletteSunBackground1" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Sky label on sky fill</span><span class="ds-pair__ratio" data-contrast="--colorPaletteSkyForeground1|--colorPaletteSkyBackground1" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Leaf label on leaf fill</span><span class="ds-pair__ratio" data-contrast="--colorPaletteLeafForeground1|--colorPaletteLeafBackground1" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Indoor label on indoor fill</span><span class="ds-pair__ratio" data-contrast="--colorPaletteIndoorForeground1|--colorPaletteIndoorBackground1" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Accent label on accent fill</span><span class="ds-pair__ratio" data-contrast="--colorStatusSuccessForeground1|--colorStatusSuccessBackground1" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Primary label on primary fill</span><span class="ds-pair__ratio" data-contrast="--colorBrandForeground1|--colorBrandBackground2" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Warn label on warn fill</span><span class="ds-pair__ratio" data-contrast="--colorStatusDangerForeground1|--colorStatusDangerBackground1" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Ink label on ink fill</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForegroundInverted|--colorNeutralBackgroundInverted" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Neutral label on neutral fill</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground2|--colorNeutralBackground3" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Email chip text</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground1|--colorNeutralBackground3" data-min="4.5"></span></div>
+      </div>
+      <h3>Motion</h3>
+      <p>None on the chip. The remove button's hover tint is instant. Removing a chip does not animate it out, so focus never lands on something that is leaving.</p>
+      <h3>Touch</h3>
+      <p>Static chips are not targets. The remove glyph is 16px, but <code>.chip__x::before</code> extends the hit area to 24 × 24px (WCAG 2.5.8, drift D27). Chips in a chip input sit 6px apart, so neighbouring hit areas do not overlap the next chip's label by more than its padding.</p>
+    </section>
+
+    <section class="ds-section" id="content"><h2><a href="#content">Content</a></h2>
+      <ul>
+        <li>One to three words, sentence case, no full stop: "Outdoor", "Day highlight", "All ages".</li>
+        <li>Numbers with units: "45 min drive", "Sunny · 22°". Use the middle dot to join two facts.</li>
+        <li>Say what the family gets, not internal categories: "Weather-safe", not "Indoor-capable".</li>
+        <li>Likes and dislikes are nouns the family typed; keep their wording and casing ("Rec Room", "Live theatre").</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="do-dont"><h2><a href="#do-dont">Do and don't</a></h2>
+      <div class="ds-dodont">
+        <figure class="ds-do"><div class="ds-example__canvas"><span class="chip chip--leaf">Outdoor</span><span class="chip chip--indoor">Theatre</span></div><figcaption>Pick the tone from its meaning: leaf for outdoor, indoor for theatre.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><span class="chip chip--sun">Outdoor</span><span class="chip chip--primary">Theatre</span></div><figcaption>Tones chosen for variety. Sun means weather and primary means a highlight, so the card now says the wrong thing.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas"><span class="chip chip--sky"><svg class="icon" aria-hidden="true"><use href="#i-car"/></svg>45 min drive</span></div><figcaption>The words say "drive"; the car icon repeats it.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><span class="chip chip--sky"><svg class="icon" aria-hidden="true"><use href="#i-car"/></svg>45 min</span></div><figcaption>Most Ideas cards in the mocks: only the hidden icon says it is a drive, so a screen reader hears "45 min" of what?</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas"><span class="chip chip--warn">Camping<button class="chip__x" type="button" aria-label="Remove Camping (example)"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></span></div><figcaption>The remove button names the chip and has a 24px hit area (drift D27).</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><button class="chip chip--leaf" type="button">Outdoor</button></div><figcaption>A chip used as a toggle. It has no pressed state or focus style; use a <a href="filter-chip.html">filter chip</a>.</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="ds-section" id="tokens"><h2><a href="#tokens">Tokens</a></h2>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Part</th><th scope="col">Token</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead>
+        <tbody>
+          <tr><td>Neutral fill</td><td><code>--colorNeutralBackground3</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralBackground3" data-swatch></i><span data-token="--colorNeutralBackground3"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralBackground3" data-swatch></i><span data-token="--colorNeutralBackground3"></span></span></td></tr>
+          <tr><td>Neutral label</td><td><code>--colorNeutralForeground2</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralForeground2" data-swatch></i><span data-token="--colorNeutralForeground2"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralForeground2" data-swatch></i><span data-token="--colorNeutralForeground2"></span></span></td></tr>
+          <tr><td>Sun fill</td><td><code>--colorPaletteSunBackground1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorPaletteSunBackground1" data-swatch></i><span data-token="--colorPaletteSunBackground1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorPaletteSunBackground1" data-swatch></i><span data-token="--colorPaletteSunBackground1"></span></span></td></tr>
+          <tr><td>Sun label</td><td><code>--colorPaletteSunForeground1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorPaletteSunForeground1" data-swatch></i><span data-token="--colorPaletteSunForeground1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorPaletteSunForeground1" data-swatch></i><span data-token="--colorPaletteSunForeground1"></span></span></td></tr>
+          <tr><td>Sky fill</td><td><code>--colorPaletteSkyBackground1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorPaletteSkyBackground1" data-swatch></i><span data-token="--colorPaletteSkyBackground1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorPaletteSkyBackground1" data-swatch></i><span data-token="--colorPaletteSkyBackground1"></span></span></td></tr>
+          <tr><td>Sky label</td><td><code>--colorPaletteSkyForeground1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorPaletteSkyForeground1" data-swatch></i><span data-token="--colorPaletteSkyForeground1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorPaletteSkyForeground1" data-swatch></i><span data-token="--colorPaletteSkyForeground1"></span></span></td></tr>
+          <tr><td>Leaf fill</td><td><code>--colorPaletteLeafBackground1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorPaletteLeafBackground1" data-swatch></i><span data-token="--colorPaletteLeafBackground1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorPaletteLeafBackground1" data-swatch></i><span data-token="--colorPaletteLeafBackground1"></span></span></td></tr>
+          <tr><td>Leaf label</td><td><code>--colorPaletteLeafForeground1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorPaletteLeafForeground1" data-swatch></i><span data-token="--colorPaletteLeafForeground1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorPaletteLeafForeground1" data-swatch></i><span data-token="--colorPaletteLeafForeground1"></span></span></td></tr>
+          <tr><td>Indoor fill</td><td><code>--colorPaletteIndoorBackground1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorPaletteIndoorBackground1" data-swatch></i><span data-token="--colorPaletteIndoorBackground1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorPaletteIndoorBackground1" data-swatch></i><span data-token="--colorPaletteIndoorBackground1"></span></span></td></tr>
+          <tr><td>Indoor label</td><td><code>--colorPaletteIndoorForeground1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorPaletteIndoorForeground1" data-swatch></i><span data-token="--colorPaletteIndoorForeground1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorPaletteIndoorForeground1" data-swatch></i><span data-token="--colorPaletteIndoorForeground1"></span></span></td></tr>
+          <tr><td>Accent fill / label</td><td><code>--colorStatusSuccessBackground1</code> / <code>--colorStatusSuccessForeground1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorStatusSuccessForeground1" data-swatch></i><span data-token="--colorStatusSuccessForeground1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorStatusSuccessForeground1" data-swatch></i><span data-token="--colorStatusSuccessForeground1"></span></span></td></tr>
+          <tr><td>Primary fill / label</td><td><code>--colorBrandBackground2</code> / <code>--colorBrandForeground1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorBrandForeground1" data-swatch></i><span data-token="--colorBrandForeground1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorBrandForeground1" data-swatch></i><span data-token="--colorBrandForeground1"></span></span></td></tr>
+          <tr><td>Warn fill / label</td><td><code>--colorStatusDangerBackground1</code> / <code>--colorStatusDangerForeground1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorStatusDangerForeground1" data-swatch></i><span data-token="--colorStatusDangerForeground1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorStatusDangerForeground1" data-swatch></i><span data-token="--colorStatusDangerForeground1"></span></span></td></tr>
+          <tr><td>Ink fill / label</td><td><code>--colorNeutralBackgroundInverted</code> / <code>--colorNeutralForegroundInverted</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralBackgroundInverted" data-swatch></i><span data-token="--colorNeutralBackgroundInverted"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralBackgroundInverted" data-swatch></i><span data-token="--colorNeutralBackgroundInverted"></span></span></td></tr>
+          <tr><td>Remove hover</td><td><code>--colorNeutralStroke2</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralStroke2" data-swatch></i><span data-token="--colorNeutralStroke2"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralStroke2" data-swatch></i><span data-token="--colorNeutralStroke2"></span></span></td></tr>
+          <tr><td>Height default</td><td><code>--targetMin</code></td><td colspan="2"><span data-token="--targetMin"></span></td></tr>
+          <tr><td>Padding default / small</td><td><code>--spacingHorizontalMNudge</code> / <code>--spacingHorizontalS</code></td><td colspan="2"><span data-token="--spacingHorizontalMNudge"></span> / <span data-token="--spacingHorizontalS"></span></td></tr>
+          <tr><td>Icon gap</td><td><code>--spacingHorizontalXS</code></td><td colspan="2"><span data-token="--spacingHorizontalXS"></span></td></tr>
+          <tr><td>Label</td><td><code>--typographyCaption1Strong</code></td><td colspan="2"><span data-token="--typographyCaption1Strong"></span></td></tr>
+          <tr><td>Email chip text</td><td><code>--fontSizeBase350</code>, <code>--fontWeightMedium</code></td><td colspan="2"><span data-token="--fontSizeBase350"></span> <span data-token="--fontWeightMedium"></span></td></tr>
+          <tr><td>Radius</td><td><code>--borderRadiusCircular</code></td><td colspan="2"><span data-token="--borderRadiusCircular"></span></td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section class="ds-section" id="code"><h2><a href="#code">Code</a></h2>
+      <pre><code>&lt;div class="card__chips"&gt;
+  &lt;span class="chip chip--sky"&gt;&lt;svg class="icon" aria-hidden="true"&gt;&lt;use href="#i-car"/&gt;&lt;/svg&gt;45 min drive&lt;/span&gt;
+  &lt;span class="chip"&gt;All ages&lt;/span&gt;
+&lt;/div&gt;
+
+&lt;span class="chip chip--warn"&gt;Camping&lt;button class="chip__x" type="button" aria-label="Remove Camping"&gt;
+  &lt;svg class="icon" aria-hidden="true"&gt;&lt;use href="#i-close"/&gt;&lt;/svg&gt;&lt;/button&gt;&lt;/span&gt;
+
+&lt;span class="email-chip"&gt;quinntynebrown@gmail.com&lt;/span&gt;</code></pre>
+      <table class="ds-table"><thead><tr><th scope="col">Class</th><th scope="col">Effect</th></tr></thead><tbody>
+        <tr><td><code>.chip</code></td><td>Base: neutral pill, 24px, 12px semibold label.</td></tr>
+        <tr><td><code>.chip--sun</code> <code>--sky</code> <code>--leaf</code> <code>--indoor</code> <code>--accent</code> <code>--primary</code> <code>--warn</code> <code>--ink</code></td><td>Tone; each has one meaning (see Overview).</td></tr>
+        <tr><td><code>.chip--caution</code> <code>.chip--info</code> <code>.chip--count</code></td><td>Status and count forms; documented on <a href="badge.html">badge</a>.</td></tr>
+        <tr><td><code>.chip--sm</code></td><td>20px tall.</td></tr>
+        <tr><td><code>.chip__x</code></td><td>Remove button inside a chip; requires <code>aria-label="Remove …"</code>; 24px hit area.</td></tr>
+        <tr><td><code>.email-chip</code></td><td>An email address set apart inside a sentence; breaks anywhere.</td></tr>
+      </tbody></table>
+    </section>
+
+    <section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>
+      <ul>
+        <li><a href="../../mocks/pages/weekend.html">pages/weekend</a>: Commitment, Day highlight, Locked chips on timeline blocks.</li>
+        <li><a href="../../mocks/pages/ideas.html">pages/ideas</a>, <a href="../../mocks/pages/ideas.food.html">pages/ideas.food</a>, <a href="../../mocks/pages/ideas.events.html">pages/ideas.events</a>: drive-time, age, Seasonal, Outdoor, Theatre and Wife-approved chips on idea cards.</li>
+        <li><a href="../../mocks/pages/past.html">pages/past</a>: the warn chip in the "Skipping next time" strip.</li>
+        <li><a href="../../mocks/pages/dialogs.html">pages/dialogs</a>: removable chips in dialog D20 Likes and dislikes.</li>
+        <li><a href="../../mocks/pages/admin.sign-in.html">pages/admin.sign-in</a> and <a href="../../mocks/pages/reset-password.html">pages/reset-password</a>: <code>.email-chip</code>.</li>
+      </ul>
+      <p>Drift applied: drift D05 (neutral label contrast), drift D07 (leaf and accent labels darkened to 5.25:1), drift D12 (11px small chip raised to 12px), drift D17 (literal white on the ink chip now <code>--colorNeutralForegroundInverted</code>), drift D27 (24px remove hit area). Not yet in the mocks: the ink tone, weather chips with sun and rain icons, and drive-time chips that say "drive" in words (only some mocks do).</p>
+    </section>
+
+    <footer class="ds-footer"><span>Saturdaze design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/icons.js"></script>
+<script src="../assets/ds.js"></script>
+</body>
+</html>

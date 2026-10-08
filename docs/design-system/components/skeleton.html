@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Skeleton — Saturdaze design system</title>
+<meta name="description" content="Skeletons hold the shape of content that is on its way: six shapes, a timeline row and a card, hidden from assistive technology while the region is marked busy.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html"><span class="brand-mark" aria-hidden="true"></span>Saturdaze DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Actions</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+    </ul></details>
+    <details open><summary>Inputs</summary><ul>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/chip-input.html">Chip input</a></li>
+      <li><a href="../components/file-upload.html">File upload</a></li>
+      <li><a href="../components/photo-pick.html">Photo pick</a></li>
+      <li><a href="../components/rating.html">Rating</a></li>
+      <li><a href="../components/vote-row.html">Vote row</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+    </ul></details>
+    <details open><summary>Navigation</summary><ul>
+      <li><a href="../components/top-bar.html">Top bar</a></li>
+      <li><a href="../components/bottom-nav.html">Bottom nav</a></li>
+      <li><a href="../components/sidebar-navigation.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs (segments)</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+      <li><a href="../components/footer.html">Footer</a></li>
+    </ul></details>
+    <details open><summary>Containers and overlays</summary><ul>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/container.html">Container and grid</a></li>
+      <li><a href="../components/page-header.html">Page header</a></li>
+    </ul></details>
+    <details open><summary>Data display</summary><ul>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/activity-feed.html">Activity feed</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/chip.html">Chip</a></li>
+      <li><a href="../components/filter-chip.html">Filter chip</a></li>
+      <li><a href="../components/disc.html">Disc</a></li>
+      <li><a href="../components/media.html">Media</a></li>
+      <li><a href="../components/cover.html">Cover photo</a></li>
+      <li><a href="../components/stat.html">Stat</a></li>
+      <li><a href="../components/itinerary.html">Itinerary</a></li>
+      <li><a href="../components/map.html">Map</a></li>
+    </ul></details>
+    <details open><summary>Feedback</summary><ul>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/alert.html">Alert</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/progress-bar.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Auth and marketing</summary><ul>
+      <li><a href="../components/auth-card.html">Auth card</a></li>
+      <li><a href="../components/hero.html">Hero</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/data-tables-and-lists.html">Tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Component · Feedback</p>
+      <h1>Skeleton</h1>
+      <p class="ds-lead">A skeleton draws the outline of what is coming, so the page does not jump when Saturday's blocks or a row of ideas arrive. It is a placeholder for layout, not a message: the words live in a status row beside it.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA</span><span class="ds-pill">Status: stable</span><span class="ds-pill">Angular: <code>sd-skeleton-row</code></span><span class="ds-pill"><code>aria-hidden</code> shapes, <code>aria-busy</code> region</span></div>
+      <ul class="ds-toc">
+        <li><a href="#overview">Overview</a></li><li><a href="#anatomy">Anatomy</a></li><li><a href="#variants">Variants</a></li><li><a href="#sizes">Sizes</a></li><li><a href="#states">States</a></li><li><a href="#responsive">Responsive</a></li><li><a href="#theming">Theming</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#content">Content</a></li><li><a href="#do-dont">Do and don't</a></li><li><a href="#tokens">Tokens</a></li><li><a href="#code">Code</a></li><li><a href="#sources">Sources</a></li>
+      </ul>
+    </header>
+
+    <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+      <p>Use a skeleton when you know the layout of the content that is loading: the timeline of a day, a grid of idea cards, a list of past weekends. It reserves the space so nothing shifts when real content lands (WCAG's "no surprise" principle and a lower layout shift). Use a <a href="spinner.html">spinner</a> when the shape is unknown, and an <a href="empty-state.html">empty state</a> once you know there is nothing to show.</p>
+      <ul>
+        <li><b>Shapes</b> (<code>.skeleton--text</code>, <code>--text-sm</code>, <code>--title</code>, <code>--disc</code>, <code>--rect</code>, <code>--time</code>) mirror one piece of real content each.</li>
+        <li><b>Skeleton row</b> (<code>.skeleton-row</code> with <code>.skeleton-row__body</code>) mirrors a timeline <a href="itinerary.html">block</a>: time, disc, title and subtitle, on the same 56 / 32px columns.</li>
+        <li><b>Composed card</b> (shapes inside a <code>.card</code>) mirrors an idea <a href="card.html">card</a>: photo, title, meta.</li>
+      </ul>
+      <p>Show a skeleton only for content that takes longer than about 300ms, and for no more than the layout the screen will really show (six rows per day on the generating page, not twenty).</p>
+    </section>
+
+    <section class="ds-section" id="anatomy"><h2><a href="#anatomy">Anatomy</a></h2>
+      <div class="ds-anatomy">
+        <figure class="ds-anatomy__figure">
+          <ol class="day__list" aria-hidden="true" style="width: 100%; max-width: 22rem;">
+            <li class="skeleton-row" style="border-bottom: 0;"><div class="skeleton skeleton--time"></div><div class="skeleton skeleton--disc"></div><div class="skeleton-row__body"><div class="skeleton skeleton--text"></div><div class="skeleton skeleton--text-sm"></div></div></li>
+          </ol>
+          <span class="ds-callout" style="left: 14%; top: 22%;" aria-hidden="true">1</span>
+          <span class="ds-callout" style="left: 31%; top: 22%;" aria-hidden="true">2</span>
+          <span class="ds-callout" style="left: 52%; top: 22%;" aria-hidden="true">3</span>
+          <span class="ds-callout" style="left: 52%; top: 70%;" aria-hidden="true">4</span>
+        </figure>
+        <ol class="ds-anatomy__list">
+          <li><div><b>Time</b><small><code>.skeleton--time</code>: 36 × 12px, right-aligned in the 56px time column.</small></div></li>
+          <li><div><b>Disc</b><small><code>.skeleton--disc</code>: 32px circle on the rail, where the block's icon will be.</small></div></li>
+          <li><div><b>Title line</b><small><code>.skeleton--text</code>: 12px tall, 60% wide. Every shape is <code>--colorNeutralStencil1</code> with a shimmer sweep.</small></div></li>
+          <li><div><b>Subtitle line</b><small><code>.skeleton--text-sm</code>: 10px tall, 40% wide. 8px between lines (<code>.skeleton-row__body</code>).</small></div></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="ds-section" id="variants"><h2><a href="#variants">Variants</a></h2>
+      <p>Six shapes, named after what they stand in for. Compose them into the layout of the real component; do not invent new shapes per screen.</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack" aria-hidden="true">
+          <div class="skeleton skeleton--title"></div>
+          <div class="skeleton skeleton--text"></div>
+          <div class="skeleton skeleton--text-sm"></div>
+          <div class="cluster"><div class="skeleton skeleton--disc"></div><div class="skeleton skeleton--time" style="margin-left: 0;"></div></div>
+          <div class="skeleton skeleton--rect" style="max-width: 20rem;"></div>
+        </div>
+        <div class="ds-example__caption"><span>Title (20px, 45%), text (12px, 60%), small text (10px, 40%), disc (32px) and time (36px), rect (16:9, full width).</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;div class="skeleton skeleton--title"&gt;&lt;/div&gt;
+&lt;div class="skeleton skeleton--text"&gt;&lt;/div&gt;
+&lt;div class="skeleton skeleton--text-sm"&gt;&lt;/div&gt;
+&lt;div class="skeleton skeleton--disc"&gt;&lt;/div&gt;
+&lt;div class="skeleton skeleton--time"&gt;&lt;/div&gt;
+&lt;div class="skeleton skeleton--rect"&gt;&lt;/div&gt;</code></pre></details>
+      </div>
+      <h3>Timeline rows</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack ds-example__canvas--canvas">
+          <section class="day" aria-labelledby="sk-sat" aria-busy="true">
+            <header class="day__header" style="position: static;">
+              <span class="weather-disc weather-disc--sun" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-sun"/></svg></span>
+              <div class="day__text"><h3 class="day__title" id="sk-sat">Saturday</h3><p class="day__meta">17 May · 22° / 14° · Light breeze, good for outdoors</p></div>
+            </header>
+            <ol class="day__list" aria-hidden="true">
+              <li class="skeleton-row"><div class="skeleton skeleton--time"></div><div class="skeleton skeleton--disc"></div><div class="skeleton-row__body"><div class="skeleton skeleton--text"></div><div class="skeleton skeleton--text-sm"></div></div></li>
+              <li class="skeleton-row"><div class="skeleton skeleton--time"></div><div class="skeleton skeleton--disc"></div><div class="skeleton-row__body"><div class="skeleton skeleton--text"></div><div class="skeleton skeleton--text-sm"></div></div></li>
+              <li class="skeleton-row"><div class="skeleton skeleton--time"></div><div class="skeleton skeleton--disc"></div><div class="skeleton-row__body"><div class="skeleton skeleton--text"></div><div class="skeleton skeleton--text-sm"></div></div></li>
+            </ol>
+          </section>
+        </div>
+        <div class="ds-example__caption"><span>The day header is real (date and forecast are known); only the blocks are placeholders.</span></div>
+      </div>
+      <h3>Composed card</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--canvas">
+          <ul class="grid-cards" aria-busy="true" aria-label="Ideas, loading" style="width: 100%; list-style: none; margin: 0; padding: 0;">
+            <li class="card" aria-hidden="true"><div class="skeleton skeleton--rect"></div><div class="skeleton skeleton--title"></div><div class="skeleton skeleton--text-sm"></div><div class="skeleton skeleton--text"></div></li>
+            <li class="card" aria-hidden="true"><div class="skeleton skeleton--rect"></div><div class="skeleton skeleton--title"></div><div class="skeleton skeleton--text-sm"></div><div class="skeleton skeleton--text"></div></li>
+            <li class="card" aria-hidden="true"><div class="skeleton skeleton--rect"></div><div class="skeleton skeleton--title"></div><div class="skeleton skeleton--text-sm"></div><div class="skeleton skeleton--text"></div></li>
+          </ul>
+        </div>
+        <div class="ds-example__caption"><span>Idea cards: photo, name, town, one line of description. Three on desktop, two from 720px, one on a phone.</span></div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="sizes"><h2><a href="#sizes">Sizes</a></h2>
+      <p>Shapes take the size of the type or object they replace, so there is no separate size scale. Heights are in rem and follow the user's font size; widths are percentages so lines look ragged like real text.</p>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Shape</th><th scope="col">Stands in for</th><th scope="col">Size</th></tr></thead>
+        <tbody>
+          <tr><td><code>.skeleton--title</code></td><td>Card or section title (<code>--typographyTitle3</code>)</td><td>20px × 45%</td></tr>
+          <tr><td><code>.skeleton--text</code></td><td>Block title, body line</td><td>12px × 60%</td></tr>
+          <tr><td><code>.skeleton--text-sm</code></td><td>Subtitle, meta line</td><td>10px × 40%</td></tr>
+          <tr><td><code>.skeleton--time</code></td><td>Block clock ("9:00")</td><td>12 × 36px, pushed right</td></tr>
+          <tr><td><code>.skeleton--disc</code></td><td>Block disc, avatar</td><td>32px circle</td></tr>
+          <tr><td><code>.skeleton--rect</code></td><td>Photo (<a href="media.html">media</a>)</td><td>100% × 16:9, <code>--borderRadiusMedium</code></td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section class="ds-section" id="states"><h2><a href="#states">States</a></h2>
+      <p>Skeletons have no pointer or focus states: they are not interactive. Their states are loading, loaded, and loading under reduced motion. The real content replaces the skeleton in place, with the same outer size.</p>
+      <div class="ds-matrix"><table>
+        <thead><tr><th scope="col">Variant</th><th scope="col">Loading</th><th scope="col">Loaded</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Timeline row</th>
+            <td style="min-width: 18rem;"><ol class="day__list" aria-busy="true" aria-label="Saturday, loading"><li class="skeleton-row" aria-hidden="true" style="border-bottom: 0;"><div class="skeleton skeleton--time"></div><div class="skeleton skeleton--disc"></div><div class="skeleton-row__body"><div class="skeleton skeleton--text"></div><div class="skeleton skeleton--text-sm"></div></div></li></ol></td>
+            <td style="min-width: 18rem;"><ol class="day__list"><li class="block block--commitment"><div class="block__time"><span class="block__clock">9:00</span><span class="block__dur">60m</span></div><div class="block__rail"><span class="block__disc"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg></span></div><div class="block__body"><p class="block__title">Swim lessons</p><p class="block__sub">Every Saturday · locked in</p></div></li></ol></td></tr>
+          <tr><th scope="row">Idea card</th>
+            <td style="min-width: 15rem;"><div class="card" aria-busy="true" aria-label="Idea, loading"><div class="skeleton skeleton--rect" aria-hidden="true"></div><div class="skeleton skeleton--title" aria-hidden="true"></div><div class="skeleton skeleton--text-sm" aria-hidden="true"></div></div></td>
+            <td style="min-width: 15rem;"><div class="card card--media"><div class="media card__media"><img class="media__img" src="../../mocks/images/lavender-farm.svg" alt="Rows of lavender running to the horizon" width="800" height="500"></div><div class="card__head"><div class="card__head-text"><p class="card__title">Lavender fields at Terre Bleu</p><p class="card__meta">Milton · 45 min</p></div></div></div></td></tr>
+        </tbody>
+      </table></div>
+      <h3>Both themes</h3>
+      <div class="ds-themes">
+        <div data-theme="light"><div class="stack" aria-hidden="true"><div class="skeleton-row"><div class="skeleton skeleton--time"></div><div class="skeleton skeleton--disc"></div><div class="skeleton-row__body"><div class="skeleton skeleton--text"></div><div class="skeleton skeleton--text-sm"></div></div></div><div class="card"><div class="skeleton skeleton--rect"></div><div class="skeleton skeleton--title"></div><div class="skeleton skeleton--text-sm"></div></div></div></div>
+        <div data-theme="dark"><div class="stack" aria-hidden="true"><div class="skeleton-row"><div class="skeleton skeleton--time"></div><div class="skeleton skeleton--disc"></div><div class="skeleton-row__body"><div class="skeleton skeleton--text"></div><div class="skeleton skeleton--text-sm"></div></div></div><div class="card"><div class="skeleton skeleton--rect"></div><div class="skeleton skeleton--title"></div><div class="skeleton skeleton--text-sm"></div></div></div></div>
+      </div>
+      <ul>
+        <li><b>Loading</b>: the stencil sweeps left to right every <code>--durationShimmer</code> (1.4s). The region has <code>aria-busy="true"</code>; a <a href="spinner.html">status row</a> says what is happening.</li>
+        <li><b>Reduced motion</b>: the sweep stops and the shapes stay as flat stencils. The status row's spinner keeps turning, so the page still looks alive (D29).</li>
+        <li><b>Loaded</b>: swap the whole region at once and remove <code>aria-busy</code>. Do not reveal rows one by one; it reads as flicker and announces piecemeal.</li>
+        <li><b>Nothing came back</b>: replace the skeleton with an <a href="empty-state.html">empty state</a>. <b>Failed</b>: replace it with an <a href="alert.html">alert</a> and a retry, never a skeleton that spins forever.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="responsive"><h2><a href="#responsive">Responsive behaviour</a></h2>
+      <ul>
+        <li>Skeleton rows use the block's grid (56px time, 32px disc, flexible body), so they line up with real rows at every width.</li>
+        <li>Skeleton cards sit in <code>.grid-cards</code>: one column on a phone, two from 720px, three from 1024px. Show as many placeholders as fill one screen at that width (three on a phone, six on a desktop), not more.</li>
+        <li>Days stack under 1024px and sit side by side from 1024px (<code>.grid-days</code>); each day shows six rows while generating.</li>
+        <li>Percentage widths keep text lines ragged at 360px and at 1280px.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="theming"><h2><a href="#theming">Theming</a></h2>
+      <p>The base is <code>--colorNeutralStencil1</code> (cream 100 in light, a warm umber in dark) and the sweep is <code>--colorNeutralStencil2Alpha</code>, a translucent highlight that is stronger in light (60%) than in dark (6%), so the shimmer is visible without glowing. Both used to be literal rgba() values in the mocks (D17). Shapes keep the radius of what they replace: <code>--borderRadiusSmall</code> for lines, circular for discs, <code>--borderRadiusMedium</code> for photos.</p>
+    </section>
+
+    <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
+      <h3>Role and pattern</h3>
+      <p>Skeleton shapes are decoration: every shape, or the list that holds them, is <code>aria-hidden="true"</code>. The region that is loading carries <code>aria-busy="true"</code> so assistive technology waits for the finished content, and a <code>role="status"</code> row says what is loading. There is no APG pattern; this follows the <a href="https://www.w3.org/TR/wai-aria-1.2/#aria-busy"><code>aria-busy</code> state</a>.</p>
+      <h3>Keyboard</h3>
+      <table class="ds-table ds-keys"><thead><tr><th scope="col">Key</th><th scope="col">Action</th></tr></thead><tbody>
+        <tr><td><kbd>Tab</kbd></td><td>Skips skeletons entirely. Never put a focusable placeholder (a fake link or button) inside one.</td></tr>
+      </tbody></table>
+      <h3>Focus</h3>
+      <p>When the real content replaces the skeleton, focus stays where it was. If the person was focused inside the region (for example on "Regenerate"), keep focus on that control rather than jumping to the new rows.</p>
+      <h3>Labelling</h3>
+      <p>Give the busy region a name that says it is loading when no visible heading does ("Ideas, loading"). Real headings that are already known (Saturday, the forecast) stay visible and readable while the rows load.</p>
+      <h3>Contrast</h3>
+      <p>Placeholder shapes convey no information, so 1.4.11 non-text contrast does not apply to them; they are deliberately faint. The words around them must still pass.</p>
+      <div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0; gap: var(--spacingHorizontalS);">
+        <div class="ds-pair"><span>Status row text on card</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground2|--colorNeutralBackground1" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Day meta on page</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground2|--colorNeutralBackground2" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Day title on page</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground1|--colorNeutralBackground2" data-min="4.5"></span></div>
+      </div>
+      <h3>Motion</h3>
+      <p>The shimmer is decoration. Under <code>prefers-reduced-motion</code> it stops (<code>animation: none</code> on <code>.skeleton::after</code>, and <code>--durationShimmer</code> is zeroed). The sweep is slow (1.4s), low contrast and never flashes more than three times a second.</p>
+      <h3>Touch</h3>
+      <p>Not interactive. Do not attach tap handlers to skeletons, and do not let a skeleton cover controls that already work.</p>
+    </section>
+
+    <section class="ds-section" id="content"><h2><a href="#content">Content</a></h2>
+      <ul>
+        <li>Skeletons have no text. Put the words in the status row: "Sketching Saturday and Sunday. Usually four to six seconds."</li>
+        <li>Show what you already know for real: day names, dates, the forecast, the page title. Only the unknown parts are placeholders.</li>
+        <li>Match the count to the likely result (six blocks per day), so the page does not grow or shrink a lot when it lands.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="do-dont"><h2><a href="#do-dont">Do and don't</a></h2>
+      <div class="ds-dodont">
+        <figure class="ds-do"><div class="ds-example__canvas ds-example__canvas--stack"><ol class="day__list" aria-hidden="true"><li class="skeleton-row"><div class="skeleton skeleton--time"></div><div class="skeleton skeleton--disc"></div><div class="skeleton-row__body"><div class="skeleton skeleton--text"></div><div class="skeleton skeleton--text-sm"></div></div></li></ol></div><figcaption>Mirror the real row: same columns, same height, so nothing jumps.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas ds-example__canvas--stack" aria-hidden="true"><div class="skeleton skeleton--rect" style="aspect-ratio: auto; height: 5rem;"></div></div><figcaption>One big grey box for a whole day. It says nothing about the layout and the page jumps when rows arrive.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas ds-example__canvas--stack"><div class="status-row" style="margin: 0;"><span class="spinner-disc" aria-hidden="true"><span class="spinner"></span><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg></span><span>Planning your weekend…</span></div><div class="skeleton skeleton--text" aria-hidden="true"></div></div><figcaption>Pair skeletons with a status row, and mark the region <code>aria-busy="true"</code>.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas ds-example__canvas--stack" aria-hidden="true"><div class="skeleton skeleton--text"></div><div class="skeleton skeleton--text"></div><div class="skeleton skeleton--text"></div></div><figcaption>Skeletons with no status and no busy region: a screen reader hears an empty page, and it is unclear whether anything is happening.</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="ds-section" id="tokens"><h2><a href="#tokens">Tokens</a></h2>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Part</th><th scope="col">Token</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead>
+        <tbody>
+          <tr><td>Stencil</td><td><code>--colorNeutralStencil1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralStencil1" data-swatch></i><span data-token="--colorNeutralStencil1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralStencil1" data-swatch></i><span data-token="--colorNeutralStencil1"></span></span></td></tr>
+          <tr><td>Shimmer highlight</td><td><code>--colorNeutralStencil2Alpha</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralStencil2Alpha" data-swatch></i><span data-token="--colorNeutralStencil2Alpha"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralStencil2Alpha" data-swatch></i><span data-token="--colorNeutralStencil2Alpha"></span></span></td></tr>
+          <tr><td>Row divider</td><td><code>--colorNeutralStroke2</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralStroke2" data-swatch></i><span data-token="--colorNeutralStroke2"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralStroke2" data-swatch></i><span data-token="--colorNeutralStroke2"></span></span></td></tr>
+          <tr><td>Sweep duration</td><td><code>--durationShimmer</code>, <code>--curveEasyEase</code></td><td colspan="2"><span data-token="--durationShimmer"></span> <span data-token="--curveEasyEase"></span></td></tr>
+          <tr><td>Line radius / photo radius</td><td><code>--borderRadiusSmall</code> / <code>--borderRadiusMedium</code></td><td colspan="2"><span data-token="--borderRadiusSmall"></span> / <span data-token="--borderRadiusMedium"></span></td></tr>
+          <tr><td>Disc radius</td><td><code>--borderRadiusCircular</code></td><td colspan="2"><span data-token="--borderRadiusCircular"></span></td></tr>
+          <tr><td>Row padding / column gap</td><td><code>--spacingVerticalM</code> / <code>--spacingHorizontalM</code></td><td colspan="2"><span data-token="--spacingVerticalM"></span> / <span data-token="--spacingHorizontalM"></span></td></tr>
+          <tr><td>Line gap</td><td><code>--spacingVerticalS</code></td><td colspan="2"><span data-token="--spacingVerticalS"></span></td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section class="ds-section" id="code"><h2><a href="#code">Code</a></h2>
+      <pre><code>&lt;section class="day" aria-labelledby="sat-title" aria-busy="true"&gt;
+  &lt;header class="day__header"&gt;…Saturday, 17 May…&lt;/header&gt;
+  &lt;ol class="day__list" aria-hidden="true"&gt;
+    &lt;li class="skeleton-row"&gt;
+      &lt;div class="skeleton skeleton--time"&gt;&lt;/div&gt;
+      &lt;div class="skeleton skeleton--disc"&gt;&lt;/div&gt;
+      &lt;div class="skeleton-row__body"&gt;
+        &lt;div class="skeleton skeleton--text"&gt;&lt;/div&gt;
+        &lt;div class="skeleton skeleton--text-sm"&gt;&lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/li&gt;
+  &lt;/ol&gt;
+&lt;/section&gt;
+
+&lt;!-- Angular --&gt;
+@for (row of placeholders; track $index) { &lt;sd-skeleton-row /&gt; }</code></pre>
+      <table class="ds-table"><thead><tr><th scope="col">Class / attribute</th><th scope="col">Effect</th></tr></thead><tbody>
+        <tr><td><code>.skeleton</code></td><td>Stencil block with the shimmer sweep. Always add a shape modifier.</td></tr>
+        <tr><td><code>.skeleton--text</code> <code>--text-sm</code> <code>--title</code> <code>--time</code></td><td>Line shapes.</td></tr>
+        <tr><td><code>.skeleton--disc</code> <code>.skeleton--rect</code></td><td>Circle; 16:9 photo.</td></tr>
+        <tr><td><code>.skeleton-row</code> / <code>.skeleton-row__body</code></td><td>Timeline row grid (56px, 32px, flexible) / stacked lines.</td></tr>
+        <tr><td><code>aria-hidden="true"</code></td><td>On every shape or the list holding them.</td></tr>
+        <tr><td><code>aria-busy="true"</code></td><td>On the region being filled; remove it when content lands.</td></tr>
+      </tbody></table>
+    </section>
+
+    <section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>
+      <ul>
+        <li><a href="../../mocks/pages/weekend.generating.html">pages/weekend.generating</a>: six <code>.skeleton-row</code>s per day under real day headers, <code>aria-busy="true"</code> on <code>&lt;main&gt;</code>, lists <code>aria-hidden</code>.</li>
+        <li><a href="../../mocks/pages/ideas.html">pages/ideas</a>: the card layout the composed card mirrors.</li>
+      </ul>
+      <p>Drift fixed during extraction (see the <a href="../README.md">README drift log</a>): D17 the rgba() shimmer is now <code>--colorNeutralStencil2Alpha</code> with a dark value; D29 the shimmer stops under reduced motion while the spinner beside it keeps turning; D15 off-grid row spacing. The composed card and <code>--title</code> / <code>--rect</code> shapes are core additions; no mock shows them yet.</p>
+    </section>
+
+    <footer class="ds-footer"><span>Saturdaze design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/icons.js"></script>
+<script src="../assets/ds.js"></script>
+</body>
+</html>

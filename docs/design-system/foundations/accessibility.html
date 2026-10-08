@@ -1,0 +1,392 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Accessibility — Saturdaze design system</title>
+<meta name="description" content="Saturdaze's WCAG 2.2 AA commitments: the checklist every page and component meets, the shared focus ring, target sizes, contrast, the accessibility drift fixed from the mocks, and how to test.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html"><span class="brand-mark" aria-hidden="true"></span>Saturdaze DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Actions</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+    </ul></details>
+    <details open><summary>Inputs</summary><ul>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/chip-input.html">Chip input</a></li>
+      <li><a href="../components/file-upload.html">File upload</a></li>
+      <li><a href="../components/photo-pick.html">Photo pick</a></li>
+      <li><a href="../components/rating.html">Rating</a></li>
+      <li><a href="../components/vote-row.html">Vote row</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+    </ul></details>
+    <details open><summary>Navigation</summary><ul>
+      <li><a href="../components/top-bar.html">Top bar</a></li>
+      <li><a href="../components/bottom-nav.html">Bottom nav</a></li>
+      <li><a href="../components/sidebar-navigation.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs (segments)</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+      <li><a href="../components/footer.html">Footer</a></li>
+    </ul></details>
+    <details open><summary>Containers and overlays</summary><ul>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/container.html">Container and grid</a></li>
+      <li><a href="../components/page-header.html">Page header</a></li>
+    </ul></details>
+    <details open><summary>Data display</summary><ul>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/activity-feed.html">Activity feed</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/chip.html">Chip</a></li>
+      <li><a href="../components/filter-chip.html">Filter chip</a></li>
+      <li><a href="../components/disc.html">Disc</a></li>
+      <li><a href="../components/media.html">Media</a></li>
+      <li><a href="../components/cover.html">Cover photo</a></li>
+      <li><a href="../components/stat.html">Stat</a></li>
+      <li><a href="../components/itinerary.html">Itinerary</a></li>
+      <li><a href="../components/map.html">Map</a></li>
+    </ul></details>
+    <details open><summary>Feedback</summary><ul>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/alert.html">Alert</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/progress-bar.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Auth and marketing</summary><ul>
+      <li><a href="../components/auth-card.html">Auth card</a></li>
+      <li><a href="../components/hero.html">Hero</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/data-tables-and-lists.html">Tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Foundation</p>
+      <h1>Accessibility</h1>
+      <p class="ds-lead">Every family member who plans a weekend should be able to: on a small phone, with a screen reader, by keyboard, at 200% text, in bright sun or with motion turned off. Saturdaze commits to WCAG 2.2 level AA, built into the tokens and components so pages get it by default.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA</span><span class="ds-pill">Owns <code>--target*</code></span><span class="ds-pill">Owns <code>--focusRingOffset</code></span></div>
+      <ul class="ds-toc">
+        <li><a href="#overview">Overview</a></li><li><a href="#checklist">Checklist</a></li><li><a href="#focus">Focus</a></li><li><a href="#targets">Target sizes</a></li><li><a href="#contrast">Contrast</a></li><li><a href="#drift">Fixed from the mocks</a></li><li><a href="#testing">Testing</a></li><li><a href="#contract">Component contract</a></li><li><a href="#usage">Usage</a></li><li><a href="#tokens">Tokens</a></li><li><a href="#sources">Sources</a></li>
+      </ul>
+    </header>
+
+    <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+      <p>Accessibility is decided once, low in the stack, so nobody has to remember it on a Friday afternoon:</p>
+      <ul>
+        <li><b>Tokens</b> carry contrast (every text and edge pair passes in both themes), the focus ring, target sizes and reduced motion.</li>
+        <li><b>Components</b> carry roles, keyboard behaviour, labelling and states. Each component page has an Accessibility section in the same seven parts (see <a href="#contract">the contract</a>).</li>
+        <li><b>Pages</b> carry structure: a skip link, landmarks, one <code>&lt;h1&gt;</code>, headings in order, a unique title.</li>
+      </ul>
+      <p>The checklist below is the commitment. Where the mocks fell short, the fix is recorded in <a href="#drift">the drift table</a>.</p>
+    </section>
+
+    <section class="ds-section" id="checklist"><h2><a href="#checklist">The checklist</a></h2>
+      <h3>Perceivable</h3>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Requirement</th><th scope="col">SC</th><th scope="col">How Saturdaze meets it</th></tr></thead>
+        <tbody>
+          <tr><td>Text contrast</td><td>1.4.3</td><td>Body, label, meta and hint text reach 4.5:1 on every surface they sit on, in light and dark. The pairs are listed in <code>tokens/contrast-pairs.json</code>; no text relies on the 3:1 large-text allowance.</td></tr>
+          <tr><td>Non-text contrast</td><td>1.4.11</td><td>Field borders, the switch track, the focus ring, rating stars and icons that carry meaning reach 3:1. Card edges and dividers are decorative and say so (<code>--colorNeutralStroke2</code>).</td></tr>
+          <tr><td>Use of colour</td><td>1.4.1</td><td>Links are underlined; "Locked" is a chip with a lock icon and a word, not only green; pressed filter chips take a border; votes fill their icon; required fields say "Required".</td></tr>
+          <tr><td>Resize and reflow</td><td>1.4.4, 1.4.10</td><td>Sizes and breakpoints in rem; every screen reflows to 320px. Only tables and the map may scroll sideways, inside their own frame.</td></tr>
+          <tr><td>Text spacing</td><td>1.4.12</td><td>No fixed heights on text; buttons and chips grow with 1.5 line height and 0.12em letter spacing.</td></tr>
+          <tr><td>Images</td><td>1.1.1</td><td>Place photos have alt text, falling back to "Photo of Port Credit Memorial Park"; decorative SVG is <code>aria-hidden</code>; icon-only buttons have <code>aria-label</code>.</td></tr>
+          <tr><td>Orientation and motion</td><td>1.3.4, 2.3.3</td><td>No orientation lock. Reduced motion zeroes the duration tokens; spinners keep turning because they report status.</td></tr>
+          <tr><td>Input purpose</td><td>1.3.5</td><td><code>autocomplete</code> on name, email, <code>current-password</code>, <code>new-password</code> and the home address.</td></tr>
+        </tbody>
+      </table></div>
+      <h3>Operable</h3>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Requirement</th><th scope="col">SC</th><th scope="col">How Saturdaze meets it</th></tr></thead>
+        <tbody>
+          <tr><td>Keyboard</td><td>2.1.1, 2.1.2</td><td>Everything works with <kbd>Tab</kbd>, <kbd>Enter</kbd>, <kbd>Space</kbd>, and arrows where an APG pattern says so (tabs, radio groups, menus, the rating). Only modal dialogs hold focus, and <kbd>Esc</kbd> releases them.</td></tr>
+          <tr><td>Focus visible</td><td>2.4.7</td><td>One ring on <code>:focus-visible</code> everywhere: 2px, coral deep, 2px offset, at least 3:1 against the surface in both themes (<a href="#focus">below</a>).</td></tr>
+          <tr><td>Focus not obscured</td><td>2.4.11</td><td>The sticky top bar and day headers never cover the focused element: scrolling pads by the top bar height, and the page's bottom padding keeps content above the floating bottom nav and toasts.</td></tr>
+          <tr><td>Focus order</td><td>2.4.3</td><td>DOM order is reading order; no positive <code>tabindex</code>. Dialogs (Angular CDK Dialog in the product) move focus in and return it to the trigger on close.</td></tr>
+          <tr><td>Target size</td><td>2.5.8</td><td>At least 24 × 24px for every target (<code>--targetMin</code>); 44px for phone page actions, dialog buttons and fields (<code>--targetComfortable</code>).</td></tr>
+          <tr><td>Dragging</td><td>2.5.7</td><td>Nothing needs a drag. Blocks move by Swap and Lock buttons; map stops are also a numbered list.</td></tr>
+          <tr><td>Timing</td><td>2.2.1, 2.2.2</td><td>Nothing times out without saying so ("Reset links last 30 minutes"). Toasts that dismiss themselves stay at least 8 seconds and pause on hover and focus; errors never dismiss themselves.</td></tr>
+          <tr><td>Bypass blocks</td><td>2.4.1</td><td>A skip link to <code>#main</code> is the first focusable element on every page; landmarks <code>header</code>, <code>nav</code>, <code>main</code>, <code>footer</code>.</td></tr>
+          <tr><td>Titles and headings</td><td>2.4.2, 2.4.6</td><td>A unique <code>&lt;title&gt;</code> ("This weekend · Saturdaze"), one <code>&lt;h1&gt;</code>, headings in order.</td></tr>
+          <tr><td>Link and button purpose</td><td>2.4.4</td><td>Names make sense alone: "Swap Lavender fields", "Why this: Lunch at La Marina", "Mae votes yes".</td></tr>
+          <tr><td>Label in name</td><td>2.5.3</td><td>An <code>aria-label</code> starts with the visible words, so voice control users can say what they see: the day header's "Regenerate" is named "Regenerate Saturday". The mock names its "Lock day" button "Lock Saturday", which does not contain the visible label; name it "Lock day: Saturday".</td></tr>
+          <tr><td>Pointer cancellation</td><td>2.5.2</td><td>Actions fire on click (pointer up), never on pointer down.</td></tr>
+        </tbody>
+      </table></div>
+      <h3>Understandable</h3>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Requirement</th><th scope="col">SC</th><th scope="col">How Saturdaze meets it</th></tr></thead>
+        <tbody>
+          <tr><td>Labels</td><td>3.3.2</td><td>Every control has a visible label. Placeholders are examples ("Costco run"), never the label. "Required", "Optional" or "Recommended" is part of the label text.</td></tr>
+          <tr><td>Error identification and suggestion</td><td>3.3.1, 3.3.3</td><td>The error names the problem and the way out ("That file is not a JPG, PNG or WebP image."), is tied to the field with <code>aria-invalid</code> and <code>aria-describedby</code>, and a summary at the top links each error on submit.</td></tr>
+          <tr><td>Error prevention</td><td>3.3.4</td><td>Removing a member or commitment, signing out, rejecting a submission and regenerating all confirm first and say what happens (D3, D21, D22, D24).</td></tr>
+          <tr><td>Redundant entry</td><td>3.3.7</td><td>Home, family members and commitments are entered once and reused by every weekend; Repeat and Remix start from a past weekend.</td></tr>
+          <tr><td>Accessible authentication</td><td>3.3.8</td><td>Email and password with paste and password managers allowed; reset by email link; no puzzles.</td></tr>
+          <tr><td>Consistency</td><td>3.2.3, 3.2.4</td><td>The same four tabs in the same order on every screen; each icon has one meaning (<a href="iconography.html#set">the set</a>).</td></tr>
+          <tr><td>Consistent help</td><td>3.2.6</td><td>Legal and contact links sit in the same footer on every public page; when in-app help arrives it goes in the account menu on every screen.</td></tr>
+          <tr><td>Language</td><td>3.1.1</td><td><code>&lt;html lang="en"&gt;</code> on every page.</td></tr>
+          <tr><td>On input</td><td>3.2.2</td><td>Changing a select, switch or filter chip never navigates or submits by itself.</td></tr>
+        </tbody>
+      </table></div>
+      <h3>Robust</h3>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Requirement</th><th scope="col">SC</th><th scope="col">How Saturdaze meets it</th></tr></thead>
+        <tbody>
+          <tr><td>Name, role, value</td><td>4.1.2</td><td>Native elements first (<code>button</code>, <code>a</code>, <code>input</code>, <code>select</code>, <code>details</code>); ARIA only to fill gaps, following the APG pattern named on each component page.</td></tr>
+          <tr><td>Status messages</td><td>4.1.3</td><td>"Sketching Saturday and Sunday" and toasts use <code>role="status"</code>; form errors that appear on submit use <code>role="alert"</code>.</td></tr>
+          <tr><td>Valid markup</td><td>(4.1.1 in 2.0)</td><td>Unique ids, no interactive element inside another (cards use one stretched link), no block content inside a button.</td></tr>
+        </tbody>
+      </table></div>
+      <h3>Every page, every time</h3>
+      <ul class="ds-checklist">
+        <li><span>Skip link first, then landmarks; one <code>&lt;h1&gt;</code>; a unique title.</span></li>
+        <li><span>Tab through it: every control is reachable, in reading order, with a visible ring.</span></li>
+        <li><span>Every control has a name a stranger would understand out of context.</span></li>
+        <li><span>Nothing relies on colour, hover or motion alone.</span></li>
+        <li><span>It works at 320px and at 200% text.</span></li>
+        <li><span>Status changes are announced; errors say how to fix them.</span></li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="focus"><h2><a href="#focus">Focus</a></h2>
+      <p>One shared ring for every interactive element: a 2px outline in <code>--colorStrokeFocus2</code>, drawn <code>--focusRingOffset</code> outside the element so the surface shows between ring and control. It appears on <code>:focus-visible</code> only, so taps and clicks do not trigger it. Text fields replace it with a coral border and a soft halo, which reads as "typing here".</p>
+      <div class="ds-themes">
+        <div data-theme="light"><div class="cluster" style="--sd-cluster-gap: var(--spacingHorizontalL);">
+          <button class="btn btn--primary" type="button" data-state="focus">Save</button>
+          <button class="btn btn--quiet" type="button" data-state="focus">Cancel</button>
+          <a class="link" href="#focus" data-state="focus">See all ideas</a>
+          <button class="filter-chip" type="button" aria-pressed="false" data-state="focus">Outdoors</button>
+          <label class="toggle" data-state="focus"><input class="toggle__input" type="checkbox" role="switch" checked><span class="toggle__track" aria-hidden="true"></span><span class="toggle__label">Budget matters</span></label>
+          <label class="field" style="flex: 1 1 12rem;"><span class="field__label">Errand</span><input class="field__input" type="text" value="Costco run" data-state="focus"></label>
+        </div></div>
+        <div data-theme="dark"><div class="cluster" style="--sd-cluster-gap: var(--spacingHorizontalL);">
+          <button class="btn btn--primary" type="button" data-state="focus">Save</button>
+          <button class="btn btn--quiet" type="button" data-state="focus">Cancel</button>
+          <a class="link" href="#focus" data-state="focus">See all ideas</a>
+          <button class="filter-chip" type="button" aria-pressed="false" data-state="focus">Outdoors</button>
+          <label class="toggle" data-state="focus"><input class="toggle__input" type="checkbox" role="switch" checked><span class="toggle__track" aria-hidden="true"></span><span class="toggle__label">Budget matters</span></label>
+          <label class="field" style="flex: 1 1 12rem;"><span class="field__label">Errand</span><input class="field__input" type="text" value="Costco run" data-state="focus"></label>
+        </div></div>
+      </div>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Part</th><th scope="col">Token</th><th scope="col">Value</th></tr></thead>
+        <tbody>
+          <tr><td>Width</td><td><code>--strokeWidthThick</code></td><td>2px (owned by <a href="shape.html">Shape</a>)</td></tr>
+          <tr><td>Colour</td><td><code>--colorStrokeFocus2</code></td><td>Coral 600 in light, coral 300 in dark (owned by <a href="color.html">Color</a>)</td></tr>
+          <tr><td>Offset</td><td><code>--focusRingOffset</code></td><td><span data-token="--focusRingOffset"></span></td></tr>
+        </tbody>
+      </table></div>
+      <pre><code>:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: var(--strokeWidthThick) solid var(--colorStrokeFocus2);
+  outline-offset: var(--focusRingOffset);
+}</code></pre>
+      <div class="ds-themes">
+        <div data-theme="light"><div class="stack stack--sm">
+          <div class="ds-pair"><span>Ring on page</span><span class="ds-pair__ratio" data-contrast="--colorStrokeFocus2|--colorNeutralBackground2" data-min="3"></span></div>
+          <div class="ds-pair"><span>Ring on card</span><span class="ds-pair__ratio" data-contrast="--colorStrokeFocus2|--colorNeutralBackground1" data-min="3"></span></div>
+          <div class="ds-pair"><span>Ring on well</span><span class="ds-pair__ratio" data-contrast="--colorStrokeFocus2|--colorNeutralBackground3" data-min="3"></span></div>
+        </div></div>
+        <div data-theme="dark"><div class="stack stack--sm">
+          <div class="ds-pair"><span>Ring on page</span><span class="ds-pair__ratio" data-contrast="--colorStrokeFocus2|--colorNeutralBackground2" data-min="3"></span></div>
+          <div class="ds-pair"><span>Ring on card</span><span class="ds-pair__ratio" data-contrast="--colorStrokeFocus2|--colorNeutralBackground1" data-min="3"></span></div>
+          <div class="ds-pair"><span>Ring on well</span><span class="ds-pair__ratio" data-contrast="--colorStrokeFocus2|--colorNeutralBackground3" data-min="3"></span></div>
+        </div></div>
+      </div>
+      <p>Menu items draw the ring inside themselves (offset -2px) so it is not clipped by the menu's rounded edge. In forced-colours mode the ring becomes the system <code>Highlight</code> colour.</p>
+    </section>
+
+    <section class="ds-section" id="targets"><h2><a href="#targets">Target sizes</a></h2>
+      <p>Two sizes, both tokens. The minimum applies to everything; the comfortable size is for the controls a parent hits most on a phone.</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas" style="align-items: flex-end;">
+          <span class="stack stack--sm" style="align-items: center;"><span style="display: block; width: var(--targetMin); height: var(--targetMin); border: 1px dashed var(--colorBrandStroke1); background: var(--colorBrandBackground2); border-radius: var(--borderRadiusSmall);"></span><small>24px minimum</small></span>
+          <span class="stack stack--sm" style="align-items: center;"><span style="display: block; width: var(--targetComfortable); height: var(--targetComfortable); border: 1px dashed var(--colorBrandStroke1); background: var(--colorBrandBackground2); border-radius: var(--borderRadiusSmall);"></span><small>44px comfortable</small></span>
+          <span class="chip chip--leaf">Outdoors<button class="chip__x" type="button" aria-label="Remove Outdoors"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></span>
+          <span class="vote-row__choice"><button class="vote-row__btn vote-row__btn--up" type="button" aria-label="Eli votes yes" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-thumbs_up"/></svg></button><button class="vote-row__btn vote-row__btn--down" type="button" aria-label="Eli votes no" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-thumbs_down"/></svg></button></span>
+          <button class="ghost-row" type="button" style="width: auto;"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg>Add an errand</button>
+        </div>
+        <div class="ds-example__caption"><span>The chip's remove glyph is 16px but its hit area is 24px (D27); vote buttons are 28px with 4px between; the ghost row is 44px.</span></div>
+      </div>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Token</th><th scope="col">Value</th><th scope="col">Where</th></tr></thead>
+        <tbody>
+          <tr><td><code>--targetMin</code></td><td><span data-token="--targetMin"></span></td><td>Every target (2.5.8): chips and their remove buttons, text buttons, links in lists and footers, nav summaries, the chip-row height.</td></tr>
+          <tr><td><code>--targetComfortable</code></td><td><span data-token="--targetComfortable"></span></td><td>Text fields and selects, phone page actions, dialog and form buttons under 720px, menu items, ghost rows, the date tile.</td></tr>
+        </tbody>
+      </table></div>
+      <ul>
+        <li>Small buttons (32px) only appear in rows, card footers and dialog headers, with at least 4px between neighbours.</li>
+        <li>Inline links inside a sentence are exempt from 2.5.8, but links that stand alone in a list or footer get <code>min-height: var(--targetMin)</code>.</li>
+        <li>Grow the hit area with padding or a <code>::before</code>, not by enlarging the glyph.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="contrast"><h2><a href="#contrast">Contrast</a></h2>
+      <p>Every foreground and background pairing the components use is declared in <code>tokens/contrast-pairs.json</code> and checked in both themes. <a href="color.html">Color</a> lists them all with live ratios; these are the ones most pages depend on.</p>
+      <div class="ds-themes">
+        <div data-theme="light"><div class="stack stack--sm">
+          <div class="ds-pair"><span>Body text on page</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground1|--colorNeutralBackground2" data-min="4.5"></span></div>
+          <div class="ds-pair"><span>Meta on well</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground2|--colorNeutralBackground3" data-min="4.5"></span></div>
+          <div class="ds-pair"><span>Hint on well</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground3|--colorNeutralBackground3" data-min="4.5"></span></div>
+          <div class="ds-pair"><span>Link on card</span><span class="ds-pair__ratio" data-contrast="--colorBrandForegroundLink|--colorNeutralBackground1" data-min="4.5"></span></div>
+          <div class="ds-pair"><span>Label on primary</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForegroundOnBrand|--colorBrandBackground" data-min="4.5"></span></div>
+          <div class="ds-pair"><span>Field border on card</span><span class="ds-pair__ratio" data-contrast="--colorNeutralStrokeAccessible|--colorNeutralBackground1" data-min="3"></span></div>
+        </div></div>
+        <div data-theme="dark"><div class="stack stack--sm">
+          <div class="ds-pair"><span>Body text on page</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground1|--colorNeutralBackground2" data-min="4.5"></span></div>
+          <div class="ds-pair"><span>Meta on well</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground2|--colorNeutralBackground3" data-min="4.5"></span></div>
+          <div class="ds-pair"><span>Hint on well</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground3|--colorNeutralBackground3" data-min="4.5"></span></div>
+          <div class="ds-pair"><span>Link on card</span><span class="ds-pair__ratio" data-contrast="--colorBrandForegroundLink|--colorNeutralBackground1" data-min="4.5"></span></div>
+          <div class="ds-pair"><span>Label on primary</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForegroundOnBrand|--colorBrandBackground" data-min="4.5"></span></div>
+          <div class="ds-pair"><span>Field border on card</span><span class="ds-pair__ratio" data-contrast="--colorNeutralStrokeAccessible|--colorNeutralBackground1" data-min="3"></span></div>
+        </div></div>
+      </div>
+      <p>Disabled controls (50% opacity, <code>--colorNeutralForegroundDisabled</code>) are exempt from 1.4.3; that exemption is the only reason the mock grey <code>#9CA3AF</code> survives.</p>
+    </section>
+
+    <section class="ds-section" id="drift"><h2><a href="#drift">Fixed from the mocks</a></h2>
+      <p>The mocks were the starting point, not the standard. These are the accessibility failures found while extracting them and how the system resolves each. The full drift log is in the <a href="../README.md">README</a>.</p>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">ID</th><th scope="col">SC</th><th scope="col">In the mocks</th><th scope="col">In the system</th></tr></thead>
+        <tbody>
+          <tr><td>D02</td><td>1.4.3</td><td>White on the coral button fill, 3.00:1.</td><td><code>--colorBrandBackground</code> coral 500, 4.74:1. The mock coral is decorative only.</td></tr>
+          <tr><td>D03</td><td>1.4.11, 2.4.7</td><td>Coral focus ring, 2.81:1 on the cream page.</td><td><code>--colorStrokeFocus2</code> coral 600, 5.56:1.</td></tr>
+          <tr><td>D04</td><td>1.4.3</td><td>Faint grey text (placeholders, durations, notes, footers), 2.4 to 2.5:1.</td><td><code>--colorNeutralForeground3</code>, 4.75:1 on wells.</td></tr>
+          <tr><td>D05</td><td>1.4.3</td><td>Soft grey text on wells, 4.22:1.</td><td><code>--colorNeutralForeground2</code>, 5.35:1.</td></tr>
+          <tr><td>D06</td><td>1.4.11</td><td>Field borders and the off switch track at 1.36:1.</td><td><code>--colorNeutralStrokeAccessible</code>, 3.67:1 on white.</td></tr>
+          <tr><td>D07</td><td>1.4.3</td><td>Forest text on its own tint (Wife-approved chip, approved rows), 4.11:1.</td><td>Forest 600, 5.25:1.</td></tr>
+          <tr><td>D08</td><td>1.4.3</td><td>Danger button, 4.30:1 and too close to the new brand coral.</td><td>Brick red <code>--colorStatusDangerBackground3</code>, 6.60:1.</td></tr>
+          <tr><td>D09</td><td>1.4.11</td><td>Rating stars at 1.57:1 (filled) and 2.54:1 (empty) in an input.</td><td>Darker sun for filled, accessible stroke for empty, and filled versus outline shape.</td></tr>
+          <tr><td>D10</td><td>1.4.11</td><td>Current bottom-nav icon at 2.6:1.</td><td><code>--colorBrandForeground1</code>, 4.97:1.</td></tr>
+          <tr><td>D11</td><td>1.4.3</td><td>11px white photo credits on a thin scrim over any photo.</td><td>12px on a 72% scrim (<code>--colorBackgroundOverlayStrong</code>).</td></tr>
+          <tr><td>D20</td><td>1.4.1</td><td>"No account? Create one": a coral link with no underline.</td><td>Links are underlined; hover thickens the line.</td></tr>
+          <tr><td>D21</td><td>2.1.1, 2.5.8</td><td>Timeline Swap and Lock only on hover, so touch tablets never see them.</td><td>Visible on <code>:focus-within</code> and always under <code>(hover: none)</code>.</td></tr>
+          <tr><td>D22</td><td>2.4.1</td><td>No skip link on any page.</td><td>A <a href="../components/skip-link.html">skip link</a> first on every page.</td></tr>
+          <tr><td>D23</td><td>1.3.1</td><td>The activity log is a table drawn as a div grid with no headers.</td><td>A real <a href="../components/table.html">table</a> on wide screens; the <a href="../components/activity-feed.html">activity feed</a> on phones.</td></tr>
+          <tr><td>D26</td><td>1.4.11</td><td>Tinted pressed filter chips differ from unpressed ones only by a pale fill.</td><td>Pressed tinted chips also take a border in their ink colour.</td></tr>
+          <tr><td>D27</td><td>2.5.8</td><td>The chip remove button is 16 × 16px.</td><td>24px hit area; the glyph stays 16px.</td></tr>
+        </tbody>
+      </table></div>
+      <p>Related, not strictly AA: text under 12px raised to 12px (D12), sizes and breakpoints moved to rem (D24), and reduced motion that no longer freezes spinners (D29).</p>
+    </section>
+
+    <section class="ds-section" id="testing"><h2><a href="#testing">Testing</a></h2>
+      <h3>Automated, on every change</h3>
+      <ul>
+        <li><code>check_contrast.py</code> over <code>tokens/contrast-pairs.json</code>, both themes. A new pairing gets a new entry first.</li>
+        <li><code>check_design_system.py</code> over this site: names on every button and link, labels on every field, <code>alt</code> on every image, one <code>&lt;h1&gt;</code>, landmarks, no broken links or fragments, no raw colours.</li>
+        <li>The mocks' <code>.verify.mjs</code> and the e2e responsive audit for overflow at 320 to 1920px.</li>
+      </ul>
+      <h3>By hand, for each new screen or component</h3>
+      <ol>
+        <li><b>Keyboard.</b> Unplug the mouse. Tab through everything; open and close every dialog and menu; check the ring is always visible and focus returns where it started.</li>
+        <li><b>Screen reader.</b> VoiceOver with Safari on an iPhone (the main way families use Saturdaze), and NVDA with Chrome on Windows. Listen to one dialog, one form with an error and one list of cards.</li>
+        <li><b>Zoom and text size.</b> 200% and 400% zoom at 1280px; browser text size at its largest.</li>
+        <li><b>Preferences.</b> In Chromium DevTools, emulate <code>prefers-reduced-motion</code>, <code>prefers-contrast: more</code>, <code>forced-colors: active</code> and dark mode.</li>
+        <li><b>Touch.</b> A real phone and a tablet: every action reachable without hover; the bottom nav clear of the browser bar.</li>
+        <li><b>Text spacing.</b> Apply 1.5 line height, 0.12em letter spacing and 2× paragraph spacing; nothing clips.</li>
+      </ol>
+    </section>
+
+    <section class="ds-section" id="contract"><h2><a href="#contract">The component contract</a></h2>
+      <p>Every component page's Accessibility section answers the same seven questions, in this order, so a reviewer always knows where to look:</p>
+      <ol>
+        <li><b>Role and pattern</b>: the native element or ARIA role, with a link to the WAI-ARIA Authoring Practices pattern it follows (for example the <a href="https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/">Dialog (Modal) pattern</a>).</li>
+        <li><b>Keyboard</b>: a key table covering <kbd>Tab</kbd>, <kbd>Shift</kbd>+<kbd>Tab</kbd>, <kbd>Enter</kbd>, <kbd>Space</kbd>, <kbd>Esc</kbd>, arrows and <kbd>Home</kbd>/<kbd>End</kbd> where they apply.</li>
+        <li><b>Focus</b>: where focus starts, where it goes on close, how the ring looks on this component.</li>
+        <li><b>Labelling</b>: what must be named, how, and what a screen reader announces.</li>
+        <li><b>Contrast</b>: the token pairs involved, with live ratios in both themes.</li>
+        <li><b>Motion</b>: what animates and what reduced motion does to it.</li>
+        <li><b>Touch</b>: target sizes and what replaces hover.</li>
+      </ol>
+      <p>See <a href="../components/button.html#accessibility">Button</a> for a complete example.</p>
+    </section>
+
+    <section class="ds-section" id="usage"><h2><a href="#usage">Usage</a></h2>
+      <div class="ds-dodont">
+        <figure class="ds-do"><div class="ds-example__canvas"><p class="auth-card__alt" style="margin: 0;">No account? <a class="link" href="#usage">Create one</a></p></div><figcaption>An underlined link in a sentence, so it does not depend on colour (D20).</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><p class="auth-card__alt" style="margin: 0;">No account? <a href="#usage" style="text-decoration: none; font-weight: var(--fontWeightSemibold);">Create one</a></p></div><figcaption>Colour alone marks the link; people who cannot tell coral from grey see plain text.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas" style="display: block;"><label class="field"><span class="field__label">Errand <span class="field__req">Required</span></span><input class="field__input" type="text" placeholder="Costco run"></label></div><figcaption>A visible label that stays put, with "Required" in it; the placeholder is only an example.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas" style="display: block;"><input class="field__input" type="text" placeholder="Errand name" aria-label="Errand name"></div><figcaption>A placeholder as the only label disappears as soon as someone types, and is too faint to read as a label.</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="ds-section" id="tokens"><h2><a href="#tokens">Tokens</a></h2>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Part</th><th scope="col">Token</th><th scope="col" colspan="2">Light and dark</th></tr></thead>
+        <tbody>
+          <tr><td>Minimum target</td><td><code>--targetMin</code></td><td colspan="2"><span data-token="--targetMin"></span></td></tr>
+          <tr><td>Comfortable target</td><td><code>--targetComfortable</code></td><td colspan="2"><span data-token="--targetComfortable"></span></td></tr>
+          <tr><td>Focus ring offset</td><td><code>--focusRingOffset</code></td><td colspan="2"><span data-token="--focusRingOffset"></span></td></tr>
+        </tbody>
+      </table></div>
+      <p>The ring's width is owned by <a href="shape.html">Shape</a>; its colour and every contrast colour by <a href="color.html">Color</a>.</p>
+    </section>
+
+    <section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>
+      <ul>
+        <li><a href="../../mocks/pages/sign-in.html">pages/sign-in</a> and <a href="../../mocks/pages/create-account.html">pages/create-account</a>: the unstyled link (D20) and auth fields.</li>
+        <li><a href="../../mocks/pages/weekend.html">pages/weekend</a>: hover-only block actions (D21), bottom nav (D10).</li>
+        <li><a href="../../mocks/pages/dialogs.html">pages/dialogs</a>: confirmations (D3, D21, D22, D24), rating (D09), field errors.</li>
+        <li><a href="../../mocks/pages/admin.activity.html">pages/admin.activity</a>: the div-grid table (D23).</li>
+        <li><a href="../../mocks/pages/admin.place.html">pages/admin.place</a>: the alt text hint and photo credits (D11).</li>
+      </ul>
+      <p>Drift fixed: D02 to D11, D20 to D23, D26 and D27, plus D12, D24 and D29 as related fixes. No mock shows a skip link, toast or table yet.</p>
+    </section>
+
+    <footer class="ds-footer"><span>Saturdaze design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/icons.js"></script>
+<script src="../assets/ds.js"></script>
+</body>
+</html>

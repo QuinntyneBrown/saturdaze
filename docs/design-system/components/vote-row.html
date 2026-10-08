@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vote row — Saturdaze design system</title>
+<meta name="description" content="The vote row lets each family member give an idea a yes or a no, one pair of toggle buttons per person, with every state in both themes.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html"><span class="brand-mark" aria-hidden="true"></span>Saturdaze DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Actions</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+    </ul></details>
+    <details open><summary>Inputs</summary><ul>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/chip-input.html">Chip input</a></li>
+      <li><a href="../components/file-upload.html">File upload</a></li>
+      <li><a href="../components/photo-pick.html">Photo pick</a></li>
+      <li><a href="../components/rating.html">Rating</a></li>
+      <li><a href="../components/vote-row.html">Vote row</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+    </ul></details>
+    <details open><summary>Navigation</summary><ul>
+      <li><a href="../components/top-bar.html">Top bar</a></li>
+      <li><a href="../components/bottom-nav.html">Bottom nav</a></li>
+      <li><a href="../components/sidebar-navigation.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs (segments)</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+      <li><a href="../components/footer.html">Footer</a></li>
+    </ul></details>
+    <details open><summary>Containers and overlays</summary><ul>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/container.html">Container and grid</a></li>
+      <li><a href="../components/page-header.html">Page header</a></li>
+    </ul></details>
+    <details open><summary>Data display</summary><ul>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/activity-feed.html">Activity feed</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/chip.html">Chip</a></li>
+      <li><a href="../components/filter-chip.html">Filter chip</a></li>
+      <li><a href="../components/disc.html">Disc</a></li>
+      <li><a href="../components/media.html">Media</a></li>
+      <li><a href="../components/cover.html">Cover photo</a></li>
+      <li><a href="../components/stat.html">Stat</a></li>
+      <li><a href="../components/itinerary.html">Itinerary</a></li>
+      <li><a href="../components/map.html">Map</a></li>
+    </ul></details>
+    <details open><summary>Feedback</summary><ul>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/alert.html">Alert</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/progress-bar.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Auth and marketing</summary><ul>
+      <li><a href="../components/auth-card.html">Auth card</a></li>
+      <li><a href="../components/hero.html">Hero</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/data-tables-and-lists.html">Tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Component · Inputs</p>
+      <h1>Vote row</h1>
+      <p class="ds-lead">The vote row sits at the bottom of a food idea and lets each person in the family say yes or no to it. It answers "where do we all want to eat?" without anyone opening a dialog.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA</span><span class="ds-pill">Status: stable</span><span class="ds-pill">Angular: <code>sd-vote-row</code></span><span class="ds-pill">Native <code>&lt;button aria-pressed&gt;</code></span></div>
+      <ul class="ds-toc">
+        <li><a href="#overview">Overview</a></li><li><a href="#anatomy">Anatomy</a></li><li><a href="#variants">Variants</a></li><li><a href="#sizes">Sizes</a></li><li><a href="#states">States</a></li><li><a href="#responsive">Responsive</a></li><li><a href="#theming">Theming</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#content">Content</a></li><li><a href="#do-dont">Do and don't</a></li><li><a href="#tokens">Tokens</a></li><li><a href="#code">Code</a></li><li><a href="#sources">Sources</a></li>
+      </ul>
+    </header>
+
+    <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+      <p>Use the vote row when the whole family weighs in on one idea and the answer is yes, no or not yet. Each person gets one cell: their avatar, their name and two toggle buttons. A vote is per person, so it never collapses into a single count.</p>
+      <ul>
+        <li><b>Use it</b> on food idea cards (Ideas → Food), where the parents pick lunch near the planned activity and the kids get a say.</li>
+        <li><b>Do not use it</b> for a single person's opinion: a favourite is a pressed <a href="button.html">icon button</a> (the heart on Past), and a weekend's score is a <a href="rating.html">rating</a>.</li>
+        <li><b>Do not use it</b> as a filter. Narrowing a list is a <a href="filter-chip.html">filter chip</a>.</li>
+      </ul>
+      <p>The vote row only records opinions. Locking an idea into the weekend is still the card's "Lock it in" button, which opens a confirmation.</p>
+    </section>
+
+    <section class="ds-section" id="anatomy"><h2><a href="#anatomy">Anatomy</a></h2>
+      <div class="ds-anatomy">
+        <figure class="ds-anatomy__figure" style="padding-inline: var(--spacingHorizontalM);">
+          <div style="position: relative; width: 100%; max-width: 26rem; padding-left: 2rem;"><div class="vote-row" role="group" aria-label="Family vote for La Marina (anatomy)">
+            <div class="vote-row__cell"><span class="avatar avatar--md avatar--q" aria-hidden="true">Q</span><span class="vote-row__name">Quinn</span><div class="vote-row__choice"><button class="vote-row__btn vote-row__btn--up" type="button" aria-pressed="true" aria-label="Quinn votes yes"><svg class="icon" aria-hidden="true"><use href="#i-thumbs_up"/></svg></button><button class="vote-row__btn vote-row__btn--down" type="button" aria-pressed="false" aria-label="Quinn votes no"><svg class="icon" aria-hidden="true"><use href="#i-thumbs_down"/></svg></button></div></div>
+            <div class="vote-row__cell"><span class="avatar avatar--md avatar--s" aria-hidden="true">S</span><span class="vote-row__name">Sara</span><div class="vote-row__choice"><button class="vote-row__btn vote-row__btn--up" type="button" aria-pressed="true" aria-label="Sara votes yes"><svg class="icon" aria-hidden="true"><use href="#i-thumbs_up"/></svg></button><button class="vote-row__btn vote-row__btn--down" type="button" aria-pressed="false" aria-label="Sara votes no"><svg class="icon" aria-hidden="true"><use href="#i-thumbs_down"/></svg></button></div></div>
+            <div class="vote-row__cell"><span class="avatar avatar--md avatar--e" aria-hidden="true">E</span><span class="vote-row__name">Eli</span><div class="vote-row__choice"><button class="vote-row__btn vote-row__btn--up" type="button" aria-pressed="true" aria-label="Eli votes yes"><svg class="icon" aria-hidden="true"><use href="#i-thumbs_up"/></svg></button><button class="vote-row__btn vote-row__btn--down" type="button" aria-pressed="false" aria-label="Eli votes no"><svg class="icon" aria-hidden="true"><use href="#i-thumbs_down"/></svg></button></div></div>
+            <div class="vote-row__cell"><span class="avatar avatar--md avatar--m" aria-hidden="true">M</span><span class="vote-row__name">Mae</span><div class="vote-row__choice"><button class="vote-row__btn vote-row__btn--up" type="button" aria-pressed="false" aria-label="Mae votes yes"><svg class="icon" aria-hidden="true"><use href="#i-thumbs_up"/></svg></button><button class="vote-row__btn vote-row__btn--down" type="button" aria-pressed="false" aria-label="Mae votes no"><svg class="icon" aria-hidden="true"><use href="#i-thumbs_down"/></svg></button></div></div>
+          </div>
+            <span class="ds-callout" style="left: 55%; top: -0.75rem;" aria-hidden="true">1</span>
+            <span class="ds-callout" style="left: 0; top: 0.875rem;" aria-hidden="true">2</span>
+            <span class="ds-callout" style="left: 0; top: 2.625rem;" aria-hidden="true">3</span>
+            <span class="ds-callout" style="left: 0; top: 4.375rem;" aria-hidden="true">4</span>
+            <span class="ds-callout" style="left: calc(2rem + (100% - 2rem) * 0.75 - 0.75rem); top: 2.625rem;" aria-hidden="true">5</span>
+          </div>
+        </figure>
+        <ol class="ds-anatomy__list">
+          <li><div><b>Group</b><small><code>.vote-row</code>, <code>role="group"</code> with <code>aria-label="Family vote for La Marina"</code>. Four equal columns, a 1px divider above.</small></div></li>
+          <li><div><b>Avatar</b><small>28px <a href="avatar.html">avatar</a> in the person's tone, <code>aria-hidden="true"</code>; the name carries the meaning.</small></div></li>
+          <li><div><b>Name</b><small><code>.vote-row__name</code>, 12px caption, truncates with an ellipsis rather than wrapping.</small></div></li>
+          <li><div><b>Yes and no buttons</b><small><code>.vote-row__btn--up</code> and <code>--down</code>, 28px circles, 4px apart, each a toggle with <code>aria-pressed</code>.</small></div></li>
+          <li><div><b>Cell</b><small><code>.vote-row__cell</code>, one per family member, in family order (parents first, then kids by age).</small></div></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="ds-section" id="variants"><h2><a href="#variants">Variants</a></h2>
+      <p>There is one vote row. What changes is the votes it carries and whether it still takes them. Each card below is a real row from Ideas → Food.</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--canvas">
+        <article class="card" style="max-width: 26rem; width: 100%;">
+          <div class="card__head"><div class="card__head-text"><h3 class="card__title">La Marina</h3><p class="card__meta">Mediterranean · Patio · 6 min from Terre Bleu</p></div></div>
+          <div class="vote-row" role="group" aria-label="Family vote for La Marina">
+            <div class="vote-row__cell"><span class="avatar avatar--md avatar--q" aria-hidden="true">Q</span><span class="vote-row__name">Quinn</span><div class="vote-row__choice"><button class="vote-row__btn vote-row__btn--up" type="button" aria-pressed="true" aria-label="Quinn votes yes"><svg class="icon" aria-hidden="true"><use href="#i-thumbs_up"/></svg></button><button class="vote-row__btn vote-row__btn--down" type="button" aria-pressed="false" aria-label="Quinn votes no"><svg class="icon" aria-hidden="true"><use href="#i-thumbs_down"/></svg></button></div></div>
+            <div class="vote-row__cell"><span class="avatar avatar--md avatar--s" aria-hidden="true">S</span><span class="vote-row__name">Sara</span><div class="vote-row__choice"><button class="vote-row__btn vote-row__btn--up" type="button" aria-pressed="true" aria-label="Sara votes yes"><svg class="icon" aria-hidden="true"><use href="#i-thumbs_up"/></svg></button><button class="vote-row__btn vote-row__btn--down" type="button" aria-pressed="false" aria-label="Sara votes no"><svg class="icon" aria-hidden="true"><use href="#i-thumbs_down"/></svg></button></div></div>
+            <div class="vote-row__cell"><span class="avatar avatar--md avatar--e" aria-hidden="true">E</span><span class="vote-row__name">Eli</span><div class="vote-row__choice"><button class="vote-row__btn vote-row__btn--up" type="button" aria-pressed="true" aria-label="Eli votes yes"><svg class="icon" aria-hidden="true"><use href="#i-thumbs_up"/></svg></button><button class="vote-row__btn vote-row__btn--down" type="button" aria-pressed="false" aria-label="Eli votes no"><svg class="icon" aria-hidden="true"><use href="#i-thumbs_down"/></svg></button></div></div>
+            <div class="vote-row__cell"><span class="avatar avatar--md avatar--m" aria-hidden="true">M</span><span class="vote-row__name">Mae</span><div class="vote-row__choice"><button class="vote-row__btn vote-row__btn--up" type="button" aria-pressed="false" aria-label="Mae votes yes"><svg class="icon" aria-hidden="true"><use href="#i-thumbs_up"/></svg></button><button class="vote-row__btn vote-row__btn--down" type="button" aria-pressed="false" aria-label="Mae votes no"><svg class="icon" aria-hidden="true"><use href="#i-thumbs_down"/></svg></button></div></div>
+          </div>
+        </article>
+        <article class="card" style="max-width: 26rem; width: 100%;">
+          <div class="card__head"><div class="card__head-text"><h3 class="card__title">The Sicilian Sidewalk Café</h3><p class="card__meta">Italian · Casual · On the way back to Port Credit</p></div></div>
+          <div class="vote-row" role="group" aria-label="Family vote for The Sicilian Sidewalk Café">
+            <div class="vote-row__cell"><span class="avatar avatar--md avatar--q" aria-hidden="true">Q</span><span class="vote-row__name">Quinn</span><div class="vote-row__choice"><button class="vote-row__btn vote-row__btn--up" type="button" aria-pressed="true" aria-label="Quinn votes yes"><svg class="icon" aria-hidden="true"><use href="#i-thumbs_up"/></svg></button><button class="vote-row__btn vote-row__btn--down" type="button" aria-pressed="false" aria-label="Quinn votes no"><svg class="icon" aria-hidden="true"><use href="#i-thumbs_down"/></svg></button></div></div>
+            <div class="vote-row__cell"><span class="avatar avatar--md avatar--s" aria-hidden="true">S</span><span class="vote-row__name">Sara</span><div class="vote-row__choice"><button class="vote-row__btn vote-row__btn--up" type="button" aria-pressed="false" aria-label="Sara votes yes"><svg class="icon" aria-hidden="true"><use href="#i-thumbs_up"/></svg></button><button class="vote-row__btn vote-row__btn--down" type="button" aria-pressed="true" aria-label="Sara votes no"><svg class="icon" aria-hidden="true"><use href="#i-thumbs_down"/></svg></button></div></div>
+            <div class="vote-row__cell"><span class="avatar avatar--md avatar--e" aria-hidden="true">E</span><span class="vote-row__name">Eli</span><div class="vote-row__choice"><button class="vote-row__btn vote-row__btn--up" type="button" aria-pressed="true" aria-label="Eli votes yes"><svg class="icon" aria-hidden="true"><use href="#i-thumbs_up"/></svg></button><button class="vote-row__btn vote-row__btn--down" type="button" aria-pressed="false" aria-label="Eli votes no"><svg class="icon" aria-hidden="true"><use href="#i-thumbs_down"/></svg></button></div></div>
+            <div class="vote-row__cell"><span class="avatar avatar--md avatar--m" aria-hidden="true">M</span><span class="vote-row__name">Mae</span><div class="vote-row__choice"><button class="vote-row__btn vote-row__btn--up" type="button" aria-pressed="true" aria-label="Mae votes yes"><svg class="icon" aria-hidden="true"><use href="#i-thumbs_up"/></svg></button><button class="vote-row__btn vote-row__btn--down" type="button" aria-pressed="false" aria-label="Mae votes no"><svg class="icon" aria-hidden="true"><use href="#i-thumbs_down"/></svg></button></div></div>
+          </div>
+        </article>
+        </div>
+        <div class="ds-example__caption"><span>Three yeses with Mae still to vote; a split vote where Sara said no.</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;div class="vote-row" role="group" aria-label="Family vote for La Marina"&gt;
+  &lt;div class="vote-row__cell"&gt;
+    &lt;span class="avatar avatar--md avatar--q" aria-hidden="true"&gt;Q&lt;/span&gt;
+    &lt;span class="vote-row__name"&gt;Quinn&lt;/span&gt;
+    &lt;div class="vote-row__choice"&gt;
+      &lt;button class="vote-row__btn vote-row__btn--up" type="button" aria-pressed="true" aria-label="Quinn votes yes"&gt;…&lt;/button&gt;
+      &lt;button class="vote-row__btn vote-row__btn--down" type="button" aria-pressed="false" aria-label="Quinn votes no"&gt;…&lt;/button&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  &lt;!-- one cell per family member --&gt;
+&lt;/div&gt;</code></pre></details>
+      </div>
+      <h3>Closed</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--canvas">
+        <article class="card card--dimmed" style="max-width: 26rem; width: 100%;">
+          <div class="card__head"><div class="card__head-text"><h3 class="card__title">Snug Harbour</h3><p class="card__meta">Seafood · Patio on the lake · Port Credit</p></div></div>
+          <div class="vote-row" role="group" aria-label="Family vote for Snug Harbour">
+            <div class="vote-row__cell"><span class="avatar avatar--md avatar--q" aria-hidden="true">Q</span><span class="vote-row__name">Quinn</span><div class="vote-row__choice"><button class="vote-row__btn vote-row__btn--up" type="button" aria-pressed="false" aria-label="Quinn votes yes" disabled><svg class="icon" aria-hidden="true"><use href="#i-thumbs_up"/></svg></button><button class="vote-row__btn vote-row__btn--down" type="button" aria-pressed="false" aria-label="Quinn votes no" disabled><svg class="icon" aria-hidden="true"><use href="#i-thumbs_down"/></svg></button></div></div>
+            <div class="vote-row__cell"><span class="avatar avatar--md avatar--s" aria-hidden="true">S</span><span class="vote-row__name">Sara</span><div class="vote-row__choice"><button class="vote-row__btn vote-row__btn--up" type="button" aria-pressed="false" aria-label="Sara votes yes" disabled><svg class="icon" aria-hidden="true"><use href="#i-thumbs_up"/></svg></button><button class="vote-row__btn vote-row__btn--down" type="button" aria-pressed="false" aria-label="Sara votes no" disabled><svg class="icon" aria-hidden="true"><use href="#i-thumbs_down"/></svg></button></div></div>
+            <div class="vote-row__cell"><span class="avatar avatar--md avatar--e" aria-hidden="true">E</span><span class="vote-row__name">Eli</span><div class="vote-row__choice"><button class="vote-row__btn vote-row__btn--up" type="button" aria-pressed="false" aria-label="Eli votes yes" disabled><svg class="icon" aria-hidden="true"><use href="#i-thumbs_up"/></svg></button><button class="vote-row__btn vote-row__btn--down" type="button" aria-pressed="false" aria-label="Eli votes no" disabled><svg class="icon" aria-hidden="true"><use href="#i-thumbs_down"/></svg></button></div></div>
+            <div class="vote-row__cell"><span class="avatar avatar--md avatar--m" aria-hidden="true">M</span><span class="vote-row__name">Mae</span><div class="vote-row__choice"><button class="vote-row__btn vote-row__btn--up" type="button" aria-pressed="false" aria-label="Mae votes yes" disabled><svg class="icon" aria-hidden="true"><use href="#i-thumbs_up"/></svg></button><button class="vote-row__btn vote-row__btn--down" type="button" aria-pressed="false" aria-label="Mae votes no" disabled><svg class="icon" aria-hidden="true"><use href="#i-thumbs_down"/></svg></button></div></div>
+          </div>
+        </article>
+        </div>
+        <div class="ds-example__caption"><span>Dinner is already locked in at Jack Astor's, so the other dinner idea dims and its votes close. Say why on the card, not only by greying it out.</span></div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="sizes" data-na="One size. The buttons are 28px circles so four people fit across a 360px card; a larger row would wrap."><h2><a href="#sizes">Sizes</a></h2><p class="ds-na">One size. The buttons are 28px circles so four people fit across a 360px card; a larger row would wrap.</p></section>
+
+    <section class="ds-section" id="states"><h2><a href="#states">States</a></h2>
+      <p>Each button is a toggle. Pointer and focus states are forced with <code>data-state</code>; real pages get them from <code>:hover</code> (pointer devices only), <code>:focus-visible</code>, <code>aria-pressed</code> and <code>disabled</code>. Shown on Mae's cell.</p>
+      <div class="ds-matrix"><table>
+        <thead><tr><th scope="col">Button</th><th scope="col">Default</th><th scope="col">Hover</th><th scope="col">Focus</th><th scope="col">Pressed</th><th scope="col">Pressed, focus</th><th scope="col">Disabled</th><th scope="col">Disabled, pressed</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Yes</th><td><div class="vote-row" role="group" aria-label="Example vote" style="grid-template-columns: minmax(0, 1fr); border-top: 0; padding-top: 0;"><div class="vote-row__cell"><span class="avatar avatar--md avatar--m" aria-hidden="true">M</span><span class="vote-row__name">Mae</span><div class="vote-row__choice"><button class="vote-row__btn vote-row__btn--up" type="button" aria-pressed="false" aria-label="Mae votes yes"><svg class="icon" aria-hidden="true"><use href="#i-thumbs_up"/></svg></button><button class="vote-row__btn vote-row__btn--down" type="button" aria-pressed="false" aria-label="Mae votes no"><svg class="icon" aria-hidden="true"><use href="#i-thumbs_down"/></svg></button></div></div></div></td><td><div class="vote-row" role="group" aria-label="Example vote" style="grid-template-columns: minmax(0, 1fr); border-top: 0; padding-top: 0;"><div class="vote-row__cell"><span class="avatar avatar--md avatar--m" aria-hidden="true">M</span><span class="vote-row__name">Mae</span><div class="vote-row__choice"><button class="vote-row__btn vote-row__btn--up" type="button" aria-pressed="false" aria-label="Mae votes yes" data-state="hover"><svg class="icon" aria-hidden="true"><use href="#i-thumbs_up"/></svg></button><button class="vote-row__btn vote-row__btn--down" type="button" aria-pressed="false" aria-label="Mae votes no"><svg class="icon" aria-hidden="true"><use href="#i-thumbs_down"/></svg></button></div></div></div></td><td><div class="vote-row" role="group" aria-label="Example vote" style="grid-template-columns: minmax(0, 1fr); border-top: 0; padding-top: 0;"><div class="vote-row__cell"><span class="avatar avatar--md avatar--m" aria-hidden="true">M</span><span class="vote-row__name">Mae</span><div class="vote-row__choice"><button class="vote-row__btn vote-row__btn--up" type="button" aria-pressed="false" aria-label="Mae votes yes" data-state="focus"><svg class="icon" aria-hidden="true"><use href="#i-thumbs_up"/></svg></button><button class="vote-row__btn vote-row__btn--down" type="button" aria-pressed="false" aria-label="Mae votes no"><svg class="icon" aria-hidden="true"><use href="#i-thumbs_down"/></svg></button></div></div></div></td><td><div class="vote-row" role="group" aria-label="Example vote" style="grid-template-columns: minmax(0, 1fr); border-top: 0; padding-top: 0;"><div class="vote-row__cell"><span class="avatar avatar--md avatar--m" aria-hidden="true">M</span><span class="vote-row__name">Mae</span><div class="vote-row__choice"><button class="vote-row__btn vote-row__btn--up" type="button" aria-pressed="true" aria-label="Mae votes yes"><svg class="icon" aria-hidden="true"><use href="#i-thumbs_up"/></svg></button><button class="vote-row__btn vote-row__btn--down" type="button" aria-pressed="false" aria-label="Mae votes no"><svg class="icon" aria-hidden="true"><use href="#i-thumbs_down"/></svg></button></div></div></div></td><td><div class="vote-row" role="group" aria-label="Example vote" style="grid-template-columns: minmax(0, 1fr); border-top: 0; padding-top: 0;"><div class="vote-row__cell"><span class="avatar avatar--md avatar--m" aria-hidden="true">M</span><span class="vote-row__name">Mae</span><div class="vote-row__choice"><button class="vote-row__btn vote-row__btn--up" type="button" aria-pressed="true" aria-label="Mae votes yes" data-state="focus"><svg class="icon" aria-hidden="true"><use href="#i-thumbs_up"/></svg></button><button class="vote-row__btn vote-row__btn--down" type="button" aria-pressed="false" aria-label="Mae votes no"><svg class="icon" aria-hidden="true"><use href="#i-thumbs_down"/></svg></button></div></div></div></td><td><div class="vote-row" role="group" aria-label="Example vote" style="grid-template-columns: minmax(0, 1fr); border-top: 0; padding-top: 0;"><div class="vote-row__cell"><span class="avatar avatar--md avatar--m" aria-hidden="true">M</span><span class="vote-row__name">Mae</span><div class="vote-row__choice"><button class="vote-row__btn vote-row__btn--up" type="button" aria-pressed="false" aria-label="Mae votes yes" disabled><svg class="icon" aria-hidden="true"><use href="#i-thumbs_up"/></svg></button><button class="vote-row__btn vote-row__btn--down" type="button" aria-pressed="false" aria-label="Mae votes no" disabled><svg class="icon" aria-hidden="true"><use href="#i-thumbs_down"/></svg></button></div></div></div></td><td><div class="vote-row" role="group" aria-label="Example vote" style="grid-template-columns: minmax(0, 1fr); border-top: 0; padding-top: 0;"><div class="vote-row__cell"><span class="avatar avatar--md avatar--m" aria-hidden="true">M</span><span class="vote-row__name">Mae</span><div class="vote-row__choice"><button class="vote-row__btn vote-row__btn--up" type="button" aria-pressed="true" aria-label="Mae votes yes" disabled><svg class="icon" aria-hidden="true"><use href="#i-thumbs_up"/></svg></button><button class="vote-row__btn vote-row__btn--down" type="button" aria-pressed="false" aria-label="Mae votes no" disabled><svg class="icon" aria-hidden="true"><use href="#i-thumbs_down"/></svg></button></div></div></div></td></tr>
+          <tr><th scope="row">No</th><td><div class="vote-row" role="group" aria-label="Example vote" style="grid-template-columns: minmax(0, 1fr); border-top: 0; padding-top: 0;"><div class="vote-row__cell"><span class="avatar avatar--md avatar--m" aria-hidden="true">M</span><span class="vote-row__name">Mae</span><div class="vote-row__choice"><button class="vote-row__btn vote-row__btn--up" type="button" aria-pressed="false" aria-label="Mae votes yes"><svg class="icon" aria-hidden="true"><use href="#i-thumbs_up"/></svg></button><button class="vote-row__btn vote-row__btn--down" type="button" aria-pressed="false" aria-label="Mae votes no"><svg class="icon" aria-hidden="true"><use href="#i-thumbs_down"/></svg></button></div></div></div></td><td><div class="vote-row" role="group" aria-label="Example vote" style="grid-template-columns: minmax(0, 1fr); border-top: 0; padding-top: 0;"><div class="vote-row__cell"><span class="avatar avatar--md avatar--m" aria-hidden="true">M</span><span class="vote-row__name">Mae</span><div class="vote-row__choice"><button class="vote-row__btn vote-row__btn--up" type="button" aria-pressed="false" aria-label="Mae votes yes"><svg class="icon" aria-hidden="true"><use href="#i-thumbs_up"/></svg></button><button class="vote-row__btn vote-row__btn--down" type="button" aria-pressed="false" aria-label="Mae votes no" data-state="hover"><svg class="icon" aria-hidden="true"><use href="#i-thumbs_down"/></svg></button></div></div></div></td><td><div class="vote-row" role="group" aria-label="Example vote" style="grid-template-columns: minmax(0, 1fr); border-top: 0; padding-top: 0;"><div class="vote-row__cell"><span class="avatar avatar--md avatar--m" aria-hidden="true">M</span><span class="vote-row__name">Mae</span><div class="vote-row__choice"><button class="vote-row__btn vote-row__btn--up" type="button" aria-pressed="false" aria-label="Mae votes yes"><svg class="icon" aria-hidden="true"><use href="#i-thumbs_up"/></svg></button><button class="vote-row__btn vote-row__btn--down" type="button" aria-pressed="false" aria-label="Mae votes no" data-state="focus"><svg class="icon" aria-hidden="true"><use href="#i-thumbs_down"/></svg></button></div></div></div></td><td><div class="vote-row" role="group" aria-label="Example vote" style="grid-template-columns: minmax(0, 1fr); border-top: 0; padding-top: 0;"><div class="vote-row__cell"><span class="avatar avatar--md avatar--m" aria-hidden="true">M</span><span class="vote-row__name">Mae</span><div class="vote-row__choice"><button class="vote-row__btn vote-row__btn--up" type="button" aria-pressed="false" aria-label="Mae votes yes"><svg class="icon" aria-hidden="true"><use href="#i-thumbs_up"/></svg></button><button class="vote-row__btn vote-row__btn--down" type="button" aria-pressed="true" aria-label="Mae votes no"><svg class="icon" aria-hidden="true"><use href="#i-thumbs_down"/></svg></button></div></div></div></td><td><div class="vote-row" role="group" aria-label="Example vote" style="grid-template-columns: minmax(0, 1fr); border-top: 0; padding-top: 0;"><div class="vote-row__cell"><span class="avatar avatar--md avatar--m" aria-hidden="true">M</span><span class="vote-row__name">Mae</span><div class="vote-row__choice"><button class="vote-row__btn vote-row__btn--up" type="button" aria-pressed="false" aria-label="Mae votes yes"><svg class="icon" aria-hidden="true"><use href="#i-thumbs_up"/></svg></button><button class="vote-row__btn vote-row__btn--down" type="button" aria-pressed="true" aria-label="Mae votes no" data-state="focus"><svg class="icon" aria-hidden="true"><use href="#i-thumbs_down"/></svg></button></div></div></div></td><td><div class="vote-row" role="group" aria-label="Example vote" style="grid-template-columns: minmax(0, 1fr); border-top: 0; padding-top: 0;"><div class="vote-row__cell"><span class="avatar avatar--md avatar--m" aria-hidden="true">M</span><span class="vote-row__name">Mae</span><div class="vote-row__choice"><button class="vote-row__btn vote-row__btn--up" type="button" aria-pressed="false" aria-label="Mae votes yes" disabled><svg class="icon" aria-hidden="true"><use href="#i-thumbs_up"/></svg></button><button class="vote-row__btn vote-row__btn--down" type="button" aria-pressed="false" aria-label="Mae votes no" disabled><svg class="icon" aria-hidden="true"><use href="#i-thumbs_down"/></svg></button></div></div></div></td><td><div class="vote-row" role="group" aria-label="Example vote" style="grid-template-columns: minmax(0, 1fr); border-top: 0; padding-top: 0;"><div class="vote-row__cell"><span class="avatar avatar--md avatar--m" aria-hidden="true">M</span><span class="vote-row__name">Mae</span><div class="vote-row__choice"><button class="vote-row__btn vote-row__btn--up" type="button" aria-pressed="false" aria-label="Mae votes yes" disabled><svg class="icon" aria-hidden="true"><use href="#i-thumbs_up"/></svg></button><button class="vote-row__btn vote-row__btn--down" type="button" aria-pressed="true" aria-label="Mae votes no" disabled><svg class="icon" aria-hidden="true"><use href="#i-thumbs_down"/></svg></button></div></div></div></td></tr>
+        </tbody>
+      </table></div>
+      <ul>
+        <li><b>Not voted</b>: both buttons are outlined, neither is pressed. This is the start state for every person.</li>
+        <li><b>Yes</b> or <b>No</b>: the pressed button fills with the success or danger tint, its icon fills, and its border takes the ink colour so "on" never depends on a pale fill alone (the same rule as D26 for filter chips).</li>
+        <li><b>Changing a vote</b>: pressing the other button moves the vote. Pressing the pressed button again clears it back to not voted.</li>
+        <li><b>Disabled</b> keeps any recorded vote visible at 50% opacity and takes the buttons out of the tab order.</li>
+      </ul>
+      <h3>Both themes</h3>
+      <div class="ds-themes">
+        <div data-theme="light"><div class="card" style="padding: var(--spacingHorizontalL);"><div class="vote-row" role="group" aria-label="Family vote for La Marina (theme sample)">
+            <div class="vote-row__cell"><span class="avatar avatar--md avatar--q" aria-hidden="true">Q</span><span class="vote-row__name">Quinn</span><div class="vote-row__choice"><button class="vote-row__btn vote-row__btn--up" type="button" aria-pressed="true" aria-label="Quinn votes yes"><svg class="icon" aria-hidden="true"><use href="#i-thumbs_up"/></svg></button><button class="vote-row__btn vote-row__btn--down" type="button" aria-pressed="false" aria-label="Quinn votes no"><svg class="icon" aria-hidden="true"><use href="#i-thumbs_down"/></svg></button></div></div>
+            <div class="vote-row__cell"><span class="avatar avatar--md avatar--s" aria-hidden="true">S</span><span class="vote-row__name">Sara</span><div class="vote-row__choice"><button class="vote-row__btn vote-row__btn--up" type="button" aria-pressed="true" aria-label="Sara votes yes"><svg class="icon" aria-hidden="true"><use href="#i-thumbs_up"/></svg></button><button class="vote-row__btn vote-row__btn--down" type="button" aria-pressed="false" aria-label="Sara votes no"><svg class="icon" aria-hidden="true"><use href="#i-thumbs_down"/></svg></button></div></div>
+            <div class="vote-row__cell"><span class="avatar avatar--md avatar--e" aria-hidden="true">E</span><span class="vote-row__name">Eli</span><div class="vote-row__choice"><button class="vote-row__btn vote-row__btn--up" type="button" aria-pressed="false" aria-label="Eli votes yes"><svg class="icon" aria-hidden="true"><use href="#i-thumbs_up"/></svg></button><button class="vote-row__btn vote-row__btn--down" type="button" aria-pressed="true" aria-label="Eli votes no"><svg class="icon" aria-hidden="true"><use href="#i-thumbs_down"/></svg></button></div></div>
+            <div class="vote-row__cell"><span class="avatar avatar--md avatar--m" aria-hidden="true">M</span><span class="vote-row__name">Mae</span><div class="vote-row__choice"><button class="vote-row__btn vote-row__btn--up" type="button" aria-pressed="false" aria-label="Mae votes yes"><svg class="icon" aria-hidden="true"><use href="#i-thumbs_up"/></svg></button><button class="vote-row__btn vote-row__btn--down" type="button" aria-pressed="false" aria-label="Mae votes no"><svg class="icon" aria-hidden="true"><use href="#i-thumbs_down"/></svg></button></div></div>
+          </div></div></div>
+        <div data-theme="dark"><div class="card" style="padding: var(--spacingHorizontalL);"><div class="vote-row" role="group" aria-label="Family vote for La Marina (dark theme sample)">
+            <div class="vote-row__cell"><span class="avatar avatar--md avatar--q" aria-hidden="true">Q</span><span class="vote-row__name">Quinn</span><div class="vote-row__choice"><button class="vote-row__btn vote-row__btn--up" type="button" aria-pressed="true" aria-label="Quinn votes yes"><svg class="icon" aria-hidden="true"><use href="#i-thumbs_up"/></svg></button><button class="vote-row__btn vote-row__btn--down" type="button" aria-pressed="false" aria-label="Quinn votes no"><svg class="icon" aria-hidden="true"><use href="#i-thumbs_down"/></svg></button></div></div>
+            <div class="vote-row__cell"><span class="avatar avatar--md avatar--s" aria-hidden="true">S</span><span class="vote-row__name">Sara</span><div class="vote-row__choice"><button class="vote-row__btn vote-row__btn--up" type="button" aria-pressed="true" aria-label="Sara votes yes"><svg class="icon" aria-hidden="true"><use href="#i-thumbs_up"/></svg></button><button class="vote-row__btn vote-row__btn--down" type="button" aria-pressed="false" aria-label="Sara votes no"><svg class="icon" aria-hidden="true"><use href="#i-thumbs_down"/></svg></button></div></div>
+            <div class="vote-row__cell"><span class="avatar avatar--md avatar--e" aria-hidden="true">E</span><span class="vote-row__name">Eli</span><div class="vote-row__choice"><button class="vote-row__btn vote-row__btn--up" type="button" aria-pressed="false" aria-label="Eli votes yes"><svg class="icon" aria-hidden="true"><use href="#i-thumbs_up"/></svg></button><button class="vote-row__btn vote-row__btn--down" type="button" aria-pressed="true" aria-label="Eli votes no"><svg class="icon" aria-hidden="true"><use href="#i-thumbs_down"/></svg></button></div></div>
+            <div class="vote-row__cell"><span class="avatar avatar--md avatar--m" aria-hidden="true">M</span><span class="vote-row__name">Mae</span><div class="vote-row__choice"><button class="vote-row__btn vote-row__btn--up" type="button" aria-pressed="false" aria-label="Mae votes yes"><svg class="icon" aria-hidden="true"><use href="#i-thumbs_up"/></svg></button><button class="vote-row__btn vote-row__btn--down" type="button" aria-pressed="false" aria-label="Mae votes no"><svg class="icon" aria-hidden="true"><use href="#i-thumbs_down"/></svg></button></div></div>
+          </div></div></div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="responsive"><h2><a href="#responsive">Responsive behaviour</a></h2>
+      <ul>
+        <li>The row is a four-column grid of equal cells (<code>repeat(4, minmax(0, 1fr))</code>) at every width. At 360px each cell is about 70px wide, enough for the 60px button pair.</li>
+        <li>Names truncate with an ellipsis rather than wrap, so every cell keeps the same height. The full name is still in each button's label.</li>
+        <li>The cards it sits in go from one column on phones to two from 720px (<code>.grid-cards</code>) and three from 1024px; the row itself does not change.</li>
+        <li>A family of five or more needs another column count. Set <code>grid-template-columns</code> from the member count in the component rather than letting a fifth cell wrap onto its own line.</li>
+        <li>Hover only applies under <code>(hover: hover)</code>, so a tap never leaves a sticky outline.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="theming"><h2><a href="#theming">Theming</a></h2>
+      <p>The vote row reads alias tokens only. "Yes" uses the success role (forest), "No" the danger role (terracotta), and the outlined resting button uses the accessible neutral stroke, so it stays visible on the white card and on the cream canvas. There are no component tokens; the pressed colours come straight from the status roles so a theme change reaches them.</p>
+      <p>In the dark theme the tints darken, the inks lighten, and the button fill becomes the raised umber card colour. The pressed border keeps its ink colour, so the pressed button reads by its edge and filled icon as well as its tint.</p>
+      <pre><code>/* Re-skin for a theme: change the alias roles, never .vote-row__btn */
+[data-theme="dark"] { --colorStatusSuccessBackground1: …; --colorStatusSuccessForeground1: …; }</code></pre>
+    </section>
+
+    <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
+      <h3>Role and pattern</h3>
+      <p>Each vote is a native <code>&lt;button type="button"&gt;</code> toggle with <code>aria-pressed</code>, following the <a href="https://www.w3.org/WAI/ARIA/apg/patterns/button/">APG Button pattern</a> (toggle button). The row is a <code>role="group"</code> named after the idea. It is deliberately not a radio group: a person can have no vote at all, and clearing a vote by pressing it again is part of the design.</p>
+      <h3>Keyboard</h3>
+      <table class="ds-table ds-keys"><thead><tr><th scope="col">Key</th><th scope="col">Action</th></tr></thead><tbody>
+        <tr><td><kbd>Tab</kbd> / <kbd>Shift</kbd>+<kbd>Tab</kbd></td><td>Moves through the buttons in reading order: Quinn yes, Quinn no, Sara yes, and so on.</td></tr>
+        <tr><td><kbd>Enter</kbd> / <kbd>Space</kbd></td><td>Toggles the focused button. If the other button in the cell was pressed, it is released.</td></tr>
+      </tbody></table>
+      <h3>Focus</h3>
+      <p>The shared ring (<code>2px --colorStrokeFocus2</code>, 2px offset) appears on <code>:focus-visible</code>. The offset gap keeps it apart from the button's own border and from the neighbouring button 4px away. After a press focus stays on the button so a person can change their mind straight away.</p>
+      <h3>Labelling</h3>
+      <p>Every button is named for the person and the choice: "Mae votes yes", "Mae votes no". The pressed state is announced by <code>aria-pressed</code> ("Mae votes yes, toggle button, pressed"), so the label never changes with the state. The group label names the idea ("Family vote for La Marina"), which matters when a screen reader user tabs in from the card above. Avatars are hidden; the visible name is enough.</p>
+      <h3>Contrast</h3>
+      <div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0; gap: var(--spacingHorizontalS);">
+        <div class="ds-pair"><span>Name on card</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground2|--colorNeutralBackground1" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Resting icon on button</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground2|--colorNeutralBackground1" data-min="3"></span></div>
+        <div class="ds-pair"><span>Resting border on card</span><span class="ds-pair__ratio" data-contrast="--colorNeutralStrokeAccessible|--colorNeutralBackground1" data-min="3"></span></div>
+        <div class="ds-pair"><span>Yes icon on its tint</span><span class="ds-pair__ratio" data-contrast="--colorStatusSuccessForeground1|--colorStatusSuccessBackground1" data-min="3"></span></div>
+        <div class="ds-pair"><span>Yes border on card</span><span class="ds-pair__ratio" data-contrast="--colorStatusSuccessForeground3|--colorNeutralBackground1" data-min="3"></span></div>
+        <div class="ds-pair"><span>No icon on its tint</span><span class="ds-pair__ratio" data-contrast="--colorStatusDangerForeground1|--colorStatusDangerBackground1" data-min="3"></span></div>
+        <div class="ds-pair"><span>No border on card</span><span class="ds-pair__ratio" data-contrast="--colorStatusDangerForeground3|--colorNeutralBackground1" data-min="3"></span></div>
+        <div class="ds-pair"><span>Focus ring on card</span><span class="ds-pair__ratio" data-contrast="--colorStrokeFocus2|--colorNeutralBackground1" data-min="3"></span></div>
+      </div>
+      <h3>Motion</h3>
+      <p>Fill and icon colour change over <code>--durationFast</code> (120ms). Nothing moves or scales. Under <code>prefers-reduced-motion</code> the duration token is zeroed and the change is instant.</p>
+      <h3>Touch</h3>
+      <p>The buttons are 28px, above the 24px minimum (2.5.8), with 4px between the yes and no of one person and at least 8px to the next person. They are smaller than the 44px comfortable target on purpose so four people fit across a phone card; a mistaken tap is harmless and undone with one more tap.</p>
+    </section>
+
+    <section class="ds-section" id="content"><h2><a href="#content">Content</a></h2>
+      <ul>
+        <li>Button labels follow one pattern: "&lt;Name&gt; votes yes" and "&lt;Name&gt; votes no", using the first name the family entered ("Mae votes yes"). This is the copy in the mocks and in <code>sd-vote-row</code>.</li>
+        <li>The group label is "Family vote for &lt;place&gt;", using the place name as the card title shows it.</li>
+        <li>Visible names are first names only. Do not add the role ("Parent", "Kid") or the age; the Family page carries those.</li>
+        <li>No tally text inside the row ("3 of 4 yes"). If the card needs a summary, put it in a <a href="chip.html">chip</a> on the card ("Top pick").</li>
+        <li>When the row is closed, say why on the card ("Dinner is locked in at Jack Astor's"), because disabled buttons cannot explain themselves.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="do-dont"><h2><a href="#do-dont">Do and don't</a></h2>
+      <div class="ds-dodont">
+        <figure class="ds-do"><div class="ds-example__canvas"><div style="width: 100%;"><div class="vote-row" role="group" aria-label="Family vote for La Marina (do example)">
+            <div class="vote-row__cell"><span class="avatar avatar--md avatar--q" aria-hidden="true">Q</span><span class="vote-row__name">Quinn</span><div class="vote-row__choice"><button class="vote-row__btn vote-row__btn--up" type="button" aria-pressed="true" aria-label="Quinn votes yes"><svg class="icon" aria-hidden="true"><use href="#i-thumbs_up"/></svg></button><button class="vote-row__btn vote-row__btn--down" type="button" aria-pressed="false" aria-label="Quinn votes no"><svg class="icon" aria-hidden="true"><use href="#i-thumbs_down"/></svg></button></div></div>
+            <div class="vote-row__cell"><span class="avatar avatar--md avatar--s" aria-hidden="true">S</span><span class="vote-row__name">Sara</span><div class="vote-row__choice"><button class="vote-row__btn vote-row__btn--up" type="button" aria-pressed="false" aria-label="Sara votes yes"><svg class="icon" aria-hidden="true"><use href="#i-thumbs_up"/></svg></button><button class="vote-row__btn vote-row__btn--down" type="button" aria-pressed="true" aria-label="Sara votes no"><svg class="icon" aria-hidden="true"><use href="#i-thumbs_down"/></svg></button></div></div>
+            <div class="vote-row__cell"><span class="avatar avatar--md avatar--e" aria-hidden="true">E</span><span class="vote-row__name">Eli</span><div class="vote-row__choice"><button class="vote-row__btn vote-row__btn--up" type="button" aria-pressed="false" aria-label="Eli votes yes"><svg class="icon" aria-hidden="true"><use href="#i-thumbs_up"/></svg></button><button class="vote-row__btn vote-row__btn--down" type="button" aria-pressed="false" aria-label="Eli votes no"><svg class="icon" aria-hidden="true"><use href="#i-thumbs_down"/></svg></button></div></div>
+            <div class="vote-row__cell"><span class="avatar avatar--md avatar--m" aria-hidden="true">M</span><span class="vote-row__name">Mae</span><div class="vote-row__choice"><button class="vote-row__btn vote-row__btn--up" type="button" aria-pressed="false" aria-label="Mae votes yes"><svg class="icon" aria-hidden="true"><use href="#i-thumbs_up"/></svg></button><button class="vote-row__btn vote-row__btn--down" type="button" aria-pressed="false" aria-label="Mae votes no"><svg class="icon" aria-hidden="true"><use href="#i-thumbs_down"/></svg></button></div></div>
+          </div></div></div><figcaption>Pressed buttons fill, fill their icon and take an ink border, so yes and no read without colour alone.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><div style="width: 100%;" class="vote-row" role="group" aria-label="Family vote (don't example)"><div class="vote-row__cell"><span class="vote-row__name">Quinn</span><div class="vote-row__choice"><button class="vote-row__btn vote-row__btn--up" type="button" aria-pressed="true" aria-label="Quinn votes yes" style="border-color: transparent;"><svg class="icon" aria-hidden="true"><use href="#i-thumbs_up"/></svg></button><button class="vote-row__btn vote-row__btn--down" type="button" aria-pressed="false" aria-label="Quinn votes no" style="border-color: var(--colorNeutralStroke2); color: var(--colorNeutralForegroundDisabled);"><svg class="icon" aria-hidden="true"><use href="#i-thumbs_down"/></svg></button></div></div></div></div><figcaption>The mock's faint grey icons and 16% border (D04, D06) with a borderless pressed state: hard to see at rest, and on only by a pale tint.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas"><button class="vote-row__btn vote-row__btn--up" type="button" aria-pressed="false" aria-label="Eli votes yes"><svg class="icon" aria-hidden="true"><use href="#i-thumbs_up"/></svg></button><code>aria-label="Eli votes yes"</code></div><figcaption>Name the person and the choice, and let <code>aria-pressed</code> carry the state.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><button class="vote-row__btn vote-row__btn--up" type="button" aria-pressed="false" aria-label="Thumbs up"><svg class="icon" aria-hidden="true"><use href="#i-thumbs_up"/></svg></button><code>aria-label="Thumbs up"</code></div><figcaption>Eight buttons called "Thumbs up" and "Thumbs down": a screen reader user cannot tell whose vote they are changing.</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="ds-section" id="tokens"><h2><a href="#tokens">Tokens</a></h2>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Part</th><th scope="col">Token</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead>
+        <tbody>
+          <tr><td>Divider above the row</td><td><code>--colorNeutralStroke2</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralStroke2" data-swatch></i><span data-token="--colorNeutralStroke2"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralStroke2" data-swatch></i><span data-token="--colorNeutralStroke2"></span></span></td></tr>
+          <tr><td>Name</td><td><code>--colorNeutralForeground2</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralForeground2" data-swatch></i><span data-token="--colorNeutralForeground2"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralForeground2" data-swatch></i><span data-token="--colorNeutralForeground2"></span></span></td></tr>
+          <tr><td>Button fill</td><td><code>--colorNeutralBackground1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralBackground1" data-swatch></i><span data-token="--colorNeutralBackground1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralBackground1" data-swatch></i><span data-token="--colorNeutralBackground1"></span></span></td></tr>
+          <tr><td>Button border</td><td><code>--colorNeutralStrokeAccessible</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralStrokeAccessible" data-swatch></i><span data-token="--colorNeutralStrokeAccessible"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralStrokeAccessible" data-swatch></i><span data-token="--colorNeutralStrokeAccessible"></span></span></td></tr>
+          <tr><td>Icon at rest</td><td><code>--colorNeutralForeground2</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralForeground2" data-swatch></i><span data-token="--colorNeutralForeground2"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralForeground2" data-swatch></i><span data-token="--colorNeutralForeground2"></span></span></td></tr>
+          <tr><td>Icon and border, hover</td><td><code>--colorNeutralForeground1</code> / <code>--colorNeutralForeground2</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralForeground1" data-swatch></i><span data-token="--colorNeutralForeground1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralForeground1" data-swatch></i><span data-token="--colorNeutralForeground1"></span></span></td></tr>
+          <tr><td>Yes pressed fill</td><td><code>--colorStatusSuccessBackground1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorStatusSuccessBackground1" data-swatch></i><span data-token="--colorStatusSuccessBackground1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorStatusSuccessBackground1" data-swatch></i><span data-token="--colorStatusSuccessBackground1"></span></span></td></tr>
+          <tr><td>Yes pressed icon</td><td><code>--colorStatusSuccessForeground1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorStatusSuccessForeground1" data-swatch></i><span data-token="--colorStatusSuccessForeground1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorStatusSuccessForeground1" data-swatch></i><span data-token="--colorStatusSuccessForeground1"></span></span></td></tr>
+          <tr><td>Yes pressed border</td><td><code>--colorStatusSuccessForeground3</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorStatusSuccessForeground3" data-swatch></i><span data-token="--colorStatusSuccessForeground3"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorStatusSuccessForeground3" data-swatch></i><span data-token="--colorStatusSuccessForeground3"></span></span></td></tr>
+          <tr><td>No pressed fill</td><td><code>--colorStatusDangerBackground1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorStatusDangerBackground1" data-swatch></i><span data-token="--colorStatusDangerBackground1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorStatusDangerBackground1" data-swatch></i><span data-token="--colorStatusDangerBackground1"></span></span></td></tr>
+          <tr><td>No pressed icon</td><td><code>--colorStatusDangerForeground1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorStatusDangerForeground1" data-swatch></i><span data-token="--colorStatusDangerForeground1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorStatusDangerForeground1" data-swatch></i><span data-token="--colorStatusDangerForeground1"></span></span></td></tr>
+          <tr><td>No pressed border</td><td><code>--colorStatusDangerForeground3</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorStatusDangerForeground3" data-swatch></i><span data-token="--colorStatusDangerForeground3"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorStatusDangerForeground3" data-swatch></i><span data-token="--colorStatusDangerForeground3"></span></span></td></tr>
+          <tr><td>Focus ring</td><td><code>--colorStrokeFocus2</code>, <code>--strokeWidthThick</code>, <code>--focusRingOffset</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorStrokeFocus2" data-swatch></i><span data-token="--colorStrokeFocus2"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorStrokeFocus2" data-swatch></i><span data-token="--colorStrokeFocus2"></span></span></td></tr>
+          <tr><td>Column gap / top padding</td><td><code>--spacingHorizontalS</code> / <code>--spacingVerticalM</code></td><td colspan="2"><span data-token="--spacingHorizontalS"></span> / <span data-token="--spacingVerticalM"></span></td></tr>
+          <tr><td>Gap inside a cell / between buttons</td><td><code>--spacingVerticalSNudge</code> / <code>--spacingHorizontalXS</code></td><td colspan="2"><span data-token="--spacingVerticalSNudge"></span> / <span data-token="--spacingHorizontalXS"></span></td></tr>
+          <tr><td>Button shape</td><td><code>--borderRadiusCircular</code>, <code>--strokeWidthThin</code></td><td colspan="2"><span data-token="--borderRadiusCircular"></span> <span data-token="--strokeWidthThin"></span></td></tr>
+          <tr><td>Name type</td><td><code>--typographyCaption1</code></td><td colspan="2"><span data-token="--typographyCaption1"></span></td></tr>
+          <tr><td>Transition</td><td><code>--durationFast</code>, <code>--curveEasyEase</code></td><td colspan="2"><span data-token="--durationFast"></span> <span data-token="--curveEasyEase"></span></td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section class="ds-section" id="code"><h2><a href="#code">Code</a></h2>
+      <pre><code>&lt;!-- Angular --&gt;
+&lt;sd-vote-row
+  label="Family vote for La Marina"
+  [votes]="[{ name: 'Quinn', tone: 'q', vote: 'up' }, { name: 'Sara', tone: 's', vote: 'up' },
+           { name: 'Eli', tone: 'e', vote: 'up' }, { name: 'Mae', tone: 'm', vote: 'none' }]"
+  (voteChange)="saveVote($event)" /&gt;
+
+&lt;!-- HTML: one cell --&gt;
+&lt;div class="vote-row__cell"&gt;
+  &lt;span class="avatar avatar--md avatar--m" aria-hidden="true"&gt;M&lt;/span&gt;
+  &lt;span class="vote-row__name"&gt;Mae&lt;/span&gt;
+  &lt;div class="vote-row__choice"&gt;
+    &lt;button class="vote-row__btn vote-row__btn--up" type="button" aria-pressed="false" aria-label="Mae votes yes"&gt;
+      &lt;svg class="icon" aria-hidden="true"&gt;&lt;use href="#i-thumbs_up"/&gt;&lt;/svg&gt;
+    &lt;/button&gt;
+    &lt;button class="vote-row__btn vote-row__btn--down" type="button" aria-pressed="false" aria-label="Mae votes no"&gt;
+      &lt;svg class="icon" aria-hidden="true"&gt;&lt;use href="#i-thumbs_down"/&gt;&lt;/svg&gt;
+    &lt;/button&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+      <table class="ds-table"><thead><tr><th scope="col">Class / attribute</th><th scope="col">Effect</th></tr></thead><tbody>
+        <tr><td><code>.vote-row</code> + <code>role="group"</code> + <code>aria-label</code></td><td>Four-column row with a divider above; the label names the idea.</td></tr>
+        <tr><td><code>.vote-row__cell</code></td><td>One person: avatar, name, choice.</td></tr>
+        <tr><td><code>.vote-row__name</code></td><td>First name, truncates.</td></tr>
+        <tr><td><code>.vote-row__choice</code></td><td>Holds the yes and no buttons, 4px apart.</td></tr>
+        <tr><td><code>.vote-row__btn--up</code> / <code>.vote-row__btn--down</code></td><td>Yes (success tint when pressed) / No (danger tint when pressed).</td></tr>
+        <tr><td><code>aria-pressed="true|false"</code></td><td>The vote. At most one button per cell is pressed.</td></tr>
+        <tr><td><code>disabled</code></td><td>Voting closed: 50% opacity, out of the tab order. <code>sd-vote-row</code> takes a <code>disabled</code> input for the whole row.</td></tr>
+        <tr><td><code>data-state="hover|focus"</code></td><td>Documentation only: forces a pointer or focus state.</td></tr>
+      </tbody></table>
+      <p><code>sd-vote-row</code> emits <code>voteChange</code> with <code>{ index, vote }</code>, where <code>vote</code> is <code>'up'</code>, <code>'down'</code> or <code>'none'</code> (pressing the pressed button clears it).</p>
+    </section>
+
+    <section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>
+      <p>Extracted from these mocks (5 vote rows, 40 buttons):</p>
+      <ul>
+        <li><a href="../../mocks/pages/ideas.food.html">pages/ideas.food</a>: La Marina, Symposium Café, The Sicilian Sidewalk Café, Jack Astor's (locked for dinner), and Snug Harbour with every button disabled once dinner is locked.</li>
+        <li><code>frontend/projects/components/src/lib/vote-row/</code>: the <code>sd-vote-row</code> template, labels and clear-on-second-press behaviour.</li>
+      </ul>
+      <p>Drift fixed during extraction (see the <a href="../README.md">README drift log</a>): D04 the faint #9CA3AF resting icon is now <code>--colorNeutralForeground2</code>; D05 the name colour; D06 the 16% button border is now <code>--colorNeutralStrokeAccessible</code>; D07 the forest "yes" ink on its tint; D17 literal colours. The mocks' pressed buttons drop their border; here they keep one in their ink colour, following the D26 rule for tinted toggles. The vote row is not on Ideas → Events or Weekend; it only appears on food ideas.</p>
+    </section>
+
+    <footer class="ds-footer"><span>Saturdaze design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/icons.js"></script>
+<script src="../assets/ds.js"></script>
+</body>
+</html>

@@ -1,0 +1,521 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dialog — Saturdaze design system</title>
+<meta name="description" content="Dialogs hold one focused task or decision: block details, confirmations, short forms and success. A bottom sheet on phones and a centred modal from 720px.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html"><span class="brand-mark" aria-hidden="true"></span>Saturdaze DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Actions</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+    </ul></details>
+    <details open><summary>Inputs</summary><ul>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/chip-input.html">Chip input</a></li>
+      <li><a href="../components/file-upload.html">File upload</a></li>
+      <li><a href="../components/photo-pick.html">Photo pick</a></li>
+      <li><a href="../components/rating.html">Rating</a></li>
+      <li><a href="../components/vote-row.html">Vote row</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+    </ul></details>
+    <details open><summary>Navigation</summary><ul>
+      <li><a href="../components/top-bar.html">Top bar</a></li>
+      <li><a href="../components/bottom-nav.html">Bottom nav</a></li>
+      <li><a href="../components/sidebar-navigation.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs (segments)</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+      <li><a href="../components/footer.html">Footer</a></li>
+    </ul></details>
+    <details open><summary>Containers and overlays</summary><ul>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/container.html">Container and grid</a></li>
+      <li><a href="../components/page-header.html">Page header</a></li>
+    </ul></details>
+    <details open><summary>Data display</summary><ul>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/activity-feed.html">Activity feed</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/chip.html">Chip</a></li>
+      <li><a href="../components/filter-chip.html">Filter chip</a></li>
+      <li><a href="../components/disc.html">Disc</a></li>
+      <li><a href="../components/media.html">Media</a></li>
+      <li><a href="../components/cover.html">Cover photo</a></li>
+      <li><a href="../components/stat.html">Stat</a></li>
+      <li><a href="../components/itinerary.html">Itinerary</a></li>
+      <li><a href="../components/map.html">Map</a></li>
+    </ul></details>
+    <details open><summary>Feedback</summary><ul>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/alert.html">Alert</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/progress-bar.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Auth and marketing</summary><ul>
+      <li><a href="../components/auth-card.html">Auth card</a></li>
+      <li><a href="../components/hero.html">Hero</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/data-tables-and-lists.html">Tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Component · Containers and overlays</p>
+      <h1>Dialog</h1>
+      <p class="ds-lead">A dialog asks for one thing and nothing else: lock this block, regenerate the weekend, edit Mae, remove a member. It slides up as a sheet on phones and sits centred from 720px.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA</span><span class="ds-pill">Status: stable</span><span class="ds-pill">Angular: <code>sd-dialog</code> in CDK <code>Dialog</code></span><span class="ds-pill">APG Dialog (Modal)</span></div>
+      <ul class="ds-toc">
+        <li><a href="#overview">Overview</a></li><li><a href="#anatomy">Anatomy</a></li><li><a href="#variants">Variants</a></li><li><a href="#sizes">Sizes</a></li><li><a href="#states">States</a></li><li><a href="#responsive">Responsive</a></li><li><a href="#theming">Theming</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#content">Content</a></li><li><a href="#do-dont">Do and don't</a></li><li><a href="#tokens">Tokens</a></li><li><a href="#code">Code</a></li><li><a href="#sources">Sources</a></li>
+      </ul>
+    </header>
+
+    <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+      <p>Every button-triggered edit in Saturdaze opens a dialog or goes to a screen; pages never grow inline forms. Use a dialog when the task is short (one to four fields), the person should stay in context, and the page behind should not change until they decide. The mocks draw 39 of them (D1 to D29, AD1 to AD6).</p>
+      <ul>
+        <li>Use a <a href="toast.html">toast</a> for news that needs no answer ("Saved"), a <a href="menu.html">menu</a> for a list of commands, and a <a href="tooltip.html">tooltip</a> for a hint.</li>
+        <li>Use a full screen when the task is long, needs its own URL, or may be left half done (the admin place editor).</li>
+        <li>One dialog at a time. A confirmation started from a dialog (Remove in D17) replaces it; it never stacks on top.</li>
+      </ul>
+      <p class="ds-note">The specimens on this page are drawn in the page flow (<code>.dialog--specimen</code>), so they carry <code>role="dialog"</code> and a label but not <code>aria-modal</code>. A shipped dialog is opened by Angular CDK <code>Dialog</code>, which adds <code>aria-modal="true"</code>, the scrim, the focus trap, Esc and focus return.</p>
+    </section>
+
+    <section class="ds-section" id="anatomy"><h2><a href="#anatomy">Anatomy</a></h2>
+      <div class="ds-anatomy">
+        <figure class="ds-anatomy__figure" style="padding-inline: var(--spacingHorizontalL);">
+          <div class="dialog dialog--specimen dialog--modal-only" role="dialog" aria-labelledby="an-title" aria-describedby="an-sub" style="width: 100%;">
+            <div class="dialog__panel">
+              <div class="dialog__header">
+                <div class="dialog__heading"><h3 class="dialog__title" id="an-title">Regenerate the weekend?</h3><p class="dialog__sub" id="an-sub">Locked blocks stay where they are.</p></div>
+                <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+              </div>
+              <div class="dialog__body">
+                <div class="well well--accent"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg><div><p class="well__title">Keeping</p><p class="well__body">Swim 9:00 · Church 10:30 · Workout 5:00 · Bath and books 8:00</p></div></div>
+              </div>
+              <div class="dialog__actions">
+                <button class="btn btn--quiet" type="button">Cancel</button>
+                <button class="btn btn--primary" type="button"><svg class="icon" aria-hidden="true"><use href="#i-refresh"/></svg>Regenerate</button>
+              </div>
+            </div>
+          </div>
+          <span class="ds-callout" style="left: 3%; top: 20%;" aria-hidden="true">1</span>
+          <span class="ds-callout" style="left: 3%; top: 31%;" aria-hidden="true">2</span>
+          <span class="ds-callout" style="left: 88%; top: 20%;" aria-hidden="true">3</span>
+          <span class="ds-callout" style="left: 3%; top: 52%;" aria-hidden="true">4</span>
+          <span class="ds-callout" style="left: 50%; top: 82%;" aria-hidden="true">5</span>
+          <span class="ds-callout" style="left: 50%; top: 6%;" aria-hidden="true">6</span>
+        </figure>
+        <ol class="ds-anatomy__list">
+          <li><div><b>Title</b><small><code>.dialog__title</code>, <code>--typographyTitle2</code>, an <code>h2</code>. Referenced by <code>aria-labelledby</code>.</small></div></li>
+          <li><div><b>Subtitle (optional)</b><small><code>.dialog__sub</code>: the consequence or context in one line. Referenced by <code>aria-describedby</code>.</small></div></li>
+          <li><div><b>Close</b><small><code>.dialog__close</code>: ghost small icon button, <code>aria-label="Close"</code>. Always present.</small></div></li>
+          <li><div><b>Body (optional)</b><small><code>.dialog__body</code>: wells, fields, lists, a sunk recap card; 16px gap. Confirmations may have none.</small></div></li>
+          <li><div><b>Actions</b><small><code>.dialog__actions</code>: safe action then primary or danger; <code>.dialog__actions-left</code> holds a warn-text action.</small></div></li>
+          <li><div><b>Panel and scrim</b><small><code>.dialog__panel</code> on <code>--colorNeutralBackgroundRaised</code>, <code>--shadow28</code>, <code>--borderRadiusXLarge</code>; <code>.dialog__scrim</code> dims the page.</small></div></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="ds-section" id="variants"><h2><a href="#variants">Variants</a></h2>
+      <p>The structure never changes; the content and the action pair do. Pick the variant by what the person is being asked.</p>
+
+      <h3>Default: details with actions (D1)</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack ds-example__canvas--canvas">
+          <div class="dialog dialog--specimen" role="dialog" aria-labelledby="v-d1-title">
+            <div class="dialog__panel">
+              <div class="dialog__header">
+                <div class="dialog__heading"><h4 class="dialog__title" id="v-d1-title">Terre Bleu Lavender Farm</h4><p class="dialog__sub">Saturday 11:00 to 1:00 · 45 min drive</p></div>
+                <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+              </div>
+              <div class="dialog__body">
+                <div class="well"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg><div><p class="well__title">Why this</p><p class="well__body">Lavender peaks 17 to 24 May, Saturday is the sunny day, and Mae can walk the rows this year.</p></div></div>
+              </div>
+              <div class="dialog__actions">
+                <button class="btn btn--quiet" type="button"><svg class="icon" aria-hidden="true"><use href="#i-swap"/></svg>Swap for something else</button>
+                <button class="btn btn--primary" type="button"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg>Lock this block</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>Block details from the weekend timeline.</span></div>
+      </div>
+
+      <h3>Confirm (D3) and destructive (D21)</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack ds-example__canvas--canvas">
+          <div class="grid-2">
+            <div class="dialog dialog--specimen" role="dialog" aria-labelledby="v-d3-title" aria-describedby="v-d3-sub">
+              <div class="dialog__panel">
+                <div class="dialog__header">
+                  <div class="dialog__heading"><h4 class="dialog__title" id="v-d3-title">Regenerate Saturday?</h4><p class="dialog__sub" id="v-d3-sub">Sunday will not change.</p></div>
+                  <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+                </div>
+                <div class="dialog__actions">
+                  <button class="btn btn--quiet" type="button">Cancel</button>
+                  <button class="btn btn--primary" type="button"><svg class="icon" aria-hidden="true"><use href="#i-refresh"/></svg>Regenerate</button>
+                </div>
+              </div>
+            </div>
+            <div class="dialog dialog--specimen" role="alertdialog" aria-labelledby="v-d21-title" aria-describedby="v-d21-sub">
+              <div class="dialog__panel">
+                <div class="dialog__header">
+                  <div class="dialog__heading"><h4 class="dialog__title" id="v-d21-title">Remove Mae from the family?</h4><p class="dialog__sub" id="v-d21-sub">Future weekends will not plan for her.</p></div>
+                  <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+                </div>
+                <div class="dialog__actions">
+                  <button class="btn btn--quiet" type="button">Cancel</button>
+                  <button class="btn btn--danger" type="button"><svg class="icon" aria-hidden="true"><use href="#i-trash"/></svg>Remove</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>A question as the title, the consequence as the subtitle, no body. Destructive uses <code>role="alertdialog"</code> and <code>.btn--danger</code>.</span></div>
+      </div>
+
+      <h3>Form (D17)</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack ds-example__canvas--canvas">
+          <div class="dialog dialog--specimen dialog--wide" role="dialog" aria-labelledby="v-d17-title">
+            <form class="dialog__panel" action="#variants" onsubmit="return false;">
+              <div class="dialog__header">
+                <div class="dialog__heading"><h4 class="dialog__title" id="v-d17-title">Edit Mae</h4><p class="dialog__sub">Ages shape the picks.</p></div>
+                <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+              </div>
+              <div class="dialog__body">
+                <div class="field"><label class="field__label" for="v-d17-name">Name <span class="field__req">Required</span></label><input class="field__input" id="v-d17-name" type="text" value="Mae" autocomplete="off"></div>
+                <div class="field"><label class="field__label" for="v-d17-age">Age</label><input class="field__input" id="v-d17-age" type="number" value="5" min="0" max="120" aria-describedby="v-d17-age-hint"><p class="field__hint" id="v-d17-age-hint">Kid · under 18 counts as a kid.</p></div>
+              </div>
+              <div class="dialog__actions">
+                <div class="dialog__actions-left"><button class="btn btn--quiet btn--warn-text" type="button"><svg class="icon" aria-hidden="true"><use href="#i-trash"/></svg>Remove</button></div>
+                <button class="btn btn--quiet" type="button">Cancel</button>
+                <button class="btn btn--primary" type="submit">Save</button>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>The panel is the <code>&lt;form&gt;</code>, so Enter in a field submits. Remove sits far left and opens the D21 confirmation.</span></div>
+      </div>
+
+      <h3>Success (D9, D11)</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack ds-example__canvas--canvas">
+          <div class="grid-2">
+            <div class="dialog dialog--specimen" role="dialog" aria-labelledby="v-d9-title">
+              <div class="dialog__panel">
+                <div class="dialog__header">
+                  <div class="dialog__heading"><h4 class="dialog__title" id="v-d9-title">Added to Sunday at 9:15</h4><p class="dialog__sub">It sits around what was already planned.</p></div>
+                  <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+                </div>
+                <div class="dialog__body">
+                  <ul class="list list--card">
+                    <li class="list__item"><span class="disc disc--indoor"><svg class="icon" aria-hidden="true"><use href="#i-bag"/></svg></span><span class="list__text"><span class="list__sub">What</span><span class="list__title">Costco run</span></span></li>
+                    <li class="list__item"><span class="disc"><svg class="icon" aria-hidden="true"><use href="#i-calendar"/></svg></span><span class="list__text"><span class="list__sub">When</span><span class="list__title">Sunday · 9:15 to 10:00</span></span></li>
+                  </ul>
+                </div>
+                <div class="dialog__actions"><button class="btn btn--primary" type="button">Done</button></div>
+              </div>
+            </div>
+            <div class="dialog dialog--specimen" role="dialog" aria-labelledby="v-d11-title">
+              <div class="dialog__panel">
+                <div class="dialog__header">
+                  <div class="dialog__heading"><h4 class="dialog__title" id="v-d11-title">Thanks, it is in the queue</h4><p class="dialog__sub">Only you can see it until it is approved.</p></div>
+                  <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+                </div>
+                <div class="dialog__body">
+                  <div class="card card--sunk"><div class="card__head"><span class="date-tile" aria-hidden="true"><span class="date-tile__m">Jun</span><span class="date-tile__d">20</span></span><div class="card__head-text"><p class="card__title">Port Credit Buskerfest</p><p class="card__meta">Lakeshore Rd · Sat 2pm to 9pm</p></div></div></div>
+                </div>
+                <div class="dialog__actions"><button class="btn btn--primary" type="button">Done</button></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>The title says what happened; one "Done". Use a success dialog only when the result needs reading (where it went, who can see it); otherwise a toast.</span></div>
+      </div>
+
+      <h3>Sheet and modal</h3>
+      <p>The same dialog is a bottom sheet under 720px and a centred modal from 720px. Shown here side by side with the specimen classes <code>.dialog--sheet-only</code> and <code>.dialog--modal-only</code>; a real dialog switches at 720px on its own.</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--canvas" style="align-items: flex-end;">
+          <div class="dialog dialog--specimen dialog--sheet-only" role="dialog" aria-labelledby="v-sheet-title" style="flex: 1 1 18rem;">
+            <div class="dialog__panel">
+              <div class="dialog__header">
+                <div class="dialog__heading"><h4 class="dialog__title" id="v-sheet-title">Regenerate the weekend?</h4><p class="dialog__sub">Locked blocks stay where they are.</p></div>
+                <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+              </div>
+              <div class="dialog__actions">
+                <button class="btn btn--quiet" type="button">Cancel</button>
+                <button class="btn btn--primary" type="button">Regenerate</button>
+              </div>
+            </div>
+          </div>
+          <div class="dialog dialog--specimen dialog--modal-only" role="dialog" aria-labelledby="v-modal-title" style="flex: 1 1 18rem;">
+            <div class="dialog__panel">
+              <div class="dialog__header">
+                <div class="dialog__heading"><h4 class="dialog__title" id="v-modal-title">Regenerate the weekend?</h4><p class="dialog__sub">Locked blocks stay where they are.</p></div>
+                <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+              </div>
+              <div class="dialog__actions">
+                <button class="btn btn--quiet" type="button">Cancel</button>
+                <button class="btn btn--primary" type="button">Regenerate</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>Sheet: top corners only, grab handle, stacked 44px buttons with the primary on top. Modal: all corners, buttons in a row with the primary last.</span></div>
+      </div>
+
+      <h3>Busy</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack ds-example__canvas--canvas">
+          <div class="dialog dialog--specimen" role="dialog" aria-labelledby="v-busy-title" aria-busy="true">
+            <div class="dialog__panel">
+              <div class="dialog__header">
+                <div class="dialog__heading"><h4 class="dialog__title" id="v-busy-title">Rename this weekend</h4><p class="dialog__sub">10 – 11 May 2026</p></div>
+                <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close" disabled><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+              </div>
+              <div class="dialog__body">
+                <div class="field"><label class="field__label" for="v-busy-name">Name</label><input class="field__input" id="v-busy-name" type="text" value="Bronte Creek + Rec Room" readonly></div>
+              </div>
+              <div class="dialog__actions">
+                <button class="btn btn--quiet" type="button" disabled>Cancel</button>
+                <button class="btn btn--primary" type="button" aria-busy="true"><span>Save</span></button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span><code>aria-busy="true"</code> on the dialog fades the body and blocks it; the pressed button shows its spinner; Cancel and Close wait until the request settles.</span></div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="sizes"><h2><a href="#sizes">Sizes</a></h2>
+      <p>Two widths. Default is 480px (<code>--layoutDialogWidth</code>) for confirmations and details; <code>.dialog--wide</code> is 520px (<code>--layoutDialogWidthWide</code>) for forms with side-by-side fields (D17, D23, D28). Height follows content up to 88% of the viewport, then the panel scrolls with its header in view. On phones both widths are the full screen width.</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack ds-example__canvas--canvas">
+          <div class="dialog dialog--specimen dialog--modal-only" role="dialog" aria-labelledby="s-default-title"><div class="dialog__panel"><div class="dialog__header"><div class="dialog__heading"><h4 class="dialog__title" id="s-default-title">Default · 480px</h4><p class="dialog__sub">Sign out? Your family and weekends stay saved.</p></div><button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></div></div></div>
+          <div class="dialog dialog--specimen dialog--modal-only dialog--wide" role="dialog" aria-labelledby="s-wide-title"><div class="dialog__panel"><div class="dialog__header"><div class="dialog__heading"><h4 class="dialog__title" id="s-wide-title">Wide · 520px</h4><p class="dialog__sub">Add Royal Botanical Gardens: which day, and when.</p></div><button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></div></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="states"><h2><a href="#states">States</a></h2>
+      <p>The dialog itself has three states: open, busy and closed. Its parts carry the rest: the focused control draws the ring, an invalid field shows its error, a busy button spins.</p>
+      <div class="ds-matrix"><table>
+        <thead><tr><th scope="col">Variant</th><th scope="col">Default</th><th scope="col">Focus (close)</th><th scope="col">Invalid</th><th scope="col">Busy</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Confirm</th>
+            <td><div class="dialog dialog--specimen dialog--modal-only" role="dialog" aria-labelledby="m1a" style="width: 17rem;"><div class="dialog__panel"><div class="dialog__header"><div class="dialog__heading"><p class="dialog__title" id="m1a">Regenerate?</p></div><button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></div><div class="dialog__actions"><button class="btn btn--quiet" type="button">Cancel</button><button class="btn btn--primary" type="button">Regenerate</button></div></div></div></td>
+            <td><div class="dialog dialog--specimen dialog--modal-only" role="dialog" aria-labelledby="m1b" style="width: 17rem;"><div class="dialog__panel"><div class="dialog__header"><div class="dialog__heading"><p class="dialog__title" id="m1b">Regenerate?</p></div><button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close" data-state="focus"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></div><div class="dialog__actions"><button class="btn btn--quiet" type="button">Cancel</button><button class="btn btn--primary" type="button">Regenerate</button></div></div></div></td>
+            <td><span class="text-faint">No fields</span></td>
+            <td><div class="dialog dialog--specimen dialog--modal-only" role="dialog" aria-labelledby="m1d" aria-busy="true" style="width: 17rem;"><div class="dialog__panel"><div class="dialog__header"><div class="dialog__heading"><p class="dialog__title" id="m1d">Regenerate?</p></div><button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close" disabled><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></div><div class="dialog__actions"><button class="btn btn--quiet" type="button" disabled>Cancel</button><button class="btn btn--primary" type="button" aria-busy="true"><span>Regenerate</span></button></div></div></div></td>
+          </tr>
+          <tr><th scope="row">Destructive</th>
+            <td><div class="dialog dialog--specimen dialog--modal-only" role="alertdialog" aria-labelledby="m2a" style="width: 17rem;"><div class="dialog__panel"><div class="dialog__header"><div class="dialog__heading"><p class="dialog__title" id="m2a">Remove Mae?</p></div><button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></div><div class="dialog__actions"><button class="btn btn--quiet" type="button">Cancel</button><button class="btn btn--danger" type="button">Remove</button></div></div></div></td>
+            <td><div class="dialog dialog--specimen dialog--modal-only" role="alertdialog" aria-labelledby="m2b" style="width: 17rem;"><div class="dialog__panel"><div class="dialog__header"><div class="dialog__heading"><p class="dialog__title" id="m2b">Remove Mae?</p></div><button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close" data-state="focus"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></div><div class="dialog__actions"><button class="btn btn--quiet" type="button">Cancel</button><button class="btn btn--danger" type="button">Remove</button></div></div></div></td>
+            <td><span class="text-faint">No fields</span></td>
+            <td><div class="dialog dialog--specimen dialog--modal-only" role="alertdialog" aria-labelledby="m2d" aria-busy="true" style="width: 17rem;"><div class="dialog__panel"><div class="dialog__header"><div class="dialog__heading"><p class="dialog__title" id="m2d">Remove Mae?</p></div><button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close" disabled><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></div><div class="dialog__actions"><button class="btn btn--quiet" type="button" disabled>Cancel</button><button class="btn btn--danger" type="button" aria-busy="true"><span>Remove</span></button></div></div></div></td>
+          </tr>
+          <tr><th scope="row">Form</th>
+            <td><div class="dialog dialog--specimen dialog--modal-only" role="dialog" aria-labelledby="m3a" style="width: 17rem;"><div class="dialog__panel"><div class="dialog__header"><div class="dialog__heading"><p class="dialog__title" id="m3a">Add an errand</p></div><button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></div><div class="dialog__body"><div class="field"><label class="field__label" for="m3a-what">What</label><input class="field__input" id="m3a-what" type="text" value="Costco run"></div></div><div class="dialog__actions"><button class="btn btn--quiet" type="button">Cancel</button><button class="btn btn--primary" type="button">Add</button></div></div></div></td>
+            <td><div class="dialog dialog--specimen dialog--modal-only" role="dialog" aria-labelledby="m3b" style="width: 17rem;"><div class="dialog__panel"><div class="dialog__header"><div class="dialog__heading"><p class="dialog__title" id="m3b">Add an errand</p></div><button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close" data-state="focus"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></div><div class="dialog__body"><div class="field"><label class="field__label" for="m3b-what">What</label><input class="field__input" id="m3b-what" type="text" value="Costco run"></div></div><div class="dialog__actions"><button class="btn btn--quiet" type="button">Cancel</button><button class="btn btn--primary" type="button">Add</button></div></div></div></td>
+            <td><div class="dialog dialog--specimen dialog--modal-only" role="dialog" aria-labelledby="m3c" style="width: 17rem;"><div class="dialog__panel"><div class="dialog__header"><div class="dialog__heading"><p class="dialog__title" id="m3c">Add an errand</p></div><button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></div><div class="dialog__body"><div class="field"><label class="field__label" for="m3c-what">What</label><input class="field__input" id="m3c-what" type="text" value="" aria-invalid="true" aria-describedby="m3c-err"><p class="field__error" id="m3c-err"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg>Say what the errand is.</p></div></div><div class="dialog__actions"><button class="btn btn--quiet" type="button">Cancel</button><button class="btn btn--primary" type="button">Add</button></div></div></div></td>
+            <td><div class="dialog dialog--specimen dialog--modal-only" role="dialog" aria-labelledby="m3d" aria-busy="true" style="width: 17rem;"><div class="dialog__panel"><div class="dialog__header"><div class="dialog__heading"><p class="dialog__title" id="m3d">Add an errand</p></div><button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close" disabled><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></div><div class="dialog__body"><div class="field"><label class="field__label" for="m3d-what">What</label><input class="field__input" id="m3d-what" type="text" value="Costco run" readonly></div></div><div class="dialog__actions"><button class="btn btn--quiet" type="button" disabled>Cancel</button><button class="btn btn--primary" type="button" aria-busy="true"><span>Add</span></button></div></div></div></td>
+          </tr>
+        </tbody>
+      </table></div>
+      <h3>Both themes</h3>
+      <div class="ds-themes">
+        <div data-theme="light">
+          <div class="dialog dialog--specimen dialog--modal-only" role="alertdialog" aria-labelledby="t-light-title"><div class="dialog__panel"><div class="dialog__header"><div class="dialog__heading"><p class="dialog__title" id="t-light-title">Remove Swim lessons?</p><p class="dialog__sub">Weekends stop planning around it.</p></div><button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></div><div class="dialog__actions"><button class="btn btn--quiet" type="button">Cancel</button><button class="btn btn--danger" type="button">Remove</button></div></div></div>
+        </div>
+        <div data-theme="dark">
+          <div class="dialog dialog--specimen dialog--modal-only" role="alertdialog" aria-labelledby="t-dark-title"><div class="dialog__panel"><div class="dialog__header"><div class="dialog__heading"><p class="dialog__title" id="t-dark-title">Remove Swim lessons?</p><p class="dialog__sub">Weekends stop planning around it.</p></div><button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></div><div class="dialog__actions"><button class="btn btn--quiet" type="button">Cancel</button><button class="btn btn--danger" type="button">Remove</button></div></div></div>
+        </div>
+      </div>
+      <ul>
+        <li><b>Open</b>: scrim over the page, panel rises 4px and fades in over <code>--durationNormal</code>; the page behind is inert and does not scroll.</li>
+        <li><b>Busy</b>: <code>aria-busy="true"</code> on the dialog fades and blocks the body; the pressed button spins; Esc, Close and the scrim are ignored until the request settles, so a half-saved edit cannot be dismissed.</li>
+        <li><b>Invalid</b>: errors appear under their fields on submit and focus moves to the first invalid field. The dialog stays open. See <a href="../patterns/forms.html">forms</a>.</li>
+        <li><b>Failed</b>: a request error shows as an <a href="inline-message.html">inline message</a> at the top of the body; the person's input is kept.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="responsive"><h2><a href="#responsive">Responsive behaviour</a></h2>
+      <ul>
+        <li><b>Under 720px: bottom sheet.</b> Full width, anchored to the bottom, top corners rounded, a grab handle, 20px padding plus the safe-area inset so the buttons clear the iPhone home indicator. Buttons stack full width at 44px with the primary or danger on top, under the thumb; a <code>.dialog__actions-left</code> action drops into the stack.</li>
+        <li><b>From 720px: centred modal.</b> 480 or 520px wide, all corners rounded, 24px padding, buttons in one right-aligned row at 40px with the primary last and the warn-text action far left.</li>
+        <li><b>Tall content</b> scrolls inside the panel (max 88% of the small viewport height, <code>svh</code>), so the browser's own chrome never hides the actions on iOS.</li>
+        <li>The handle is decorative: the sheet does not need a drag gesture. Close, Cancel, Esc and a tap on the scrim all dismiss it (2.5.7).</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="theming"><h2><a href="#theming">Theming</a></h2>
+      <p>The panel reads <code>--colorNeutralBackgroundRaised</code>, the highest surface in both themes: white in light, the lightest umber in dark, so the dialog rises above the cards behind the scrim. The scrim is <code>--colorBackgroundOverlay</code>, deeper in dark so the panel still separates. Width is themable through <code>--layoutDialogWidth</code> and <code>--layoutDialogWidthWide</code>; nothing in a dialog uses a raw colour, including the scrim that was rgba() in the mocks (D17).</p>
+    </section>
+
+    <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
+      <h3>Role and pattern</h3>
+      <p><a href="https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/">APG Dialog (Modal)</a>. The product opens every dialog through Angular CDK <code>Dialog</code> with the shared options (<code>autoFocus: 'first-tabbable'</code>, <code>restoreFocus: true</code>), which renders <code>role="dialog" aria-modal="true" aria-labelledby="&lt;title id&gt;"</code>, traps focus, makes the page behind inert, closes on Esc and returns focus to the trigger. Destructive confirmations use <code>role="alertdialog"</code> (<a href="https://www.w3.org/WAI/ARIA/apg/patterns/alertdialog/">APG Alert Dialog</a>). Never hand-roll a modal.</p>
+      <h3>Keyboard</h3>
+      <table class="ds-table ds-keys"><thead><tr><th scope="col">Key</th><th scope="col">Action</th></tr></thead><tbody>
+        <tr><td><kbd>Tab</kbd> / <kbd>Shift</kbd>+<kbd>Tab</kbd></td><td>Moves through the dialog's controls and wraps; focus never reaches the page behind.</td></tr>
+        <tr><td><kbd>Esc</kbd></td><td>Closes the dialog like Cancel and returns focus to the button that opened it. Ignored while busy.</td></tr>
+        <tr><td><kbd>Enter</kbd></td><td>In a form dialog, submits from any text field. Elsewhere activates the focused button.</td></tr>
+        <tr><td><kbd>Space</kbd></td><td>Activates the focused button.</td></tr>
+      </tbody></table>
+      <h3>Focus</h3>
+      <p>On open, focus goes to the first tabbable element, which is the Close button: a safe place for every variant, including destructive ones, so an accidental Enter never deletes. Form dialogs may move it to the first field. On close, focus returns to the trigger; if the trigger is gone (the member was removed), it goes to the section heading that held it. The ring is the shared 2px <code>--colorStrokeFocus2</code> and stays inside the panel's padding, never clipped.</p>
+      <h3>Labelling</h3>
+      <p><code>aria-labelledby</code> points at the title; <code>aria-describedby</code> at the subtitle when it states the consequence ("Future weekends will not plan for her."). The close button is <code>aria-label="Close"</code>. A busy dialog announces its progress through the button's <code>aria-busy</code> and a polite live region ("Saving"), not by changing the title.</p>
+      <h3>Contrast</h3>
+      <div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0; gap: var(--spacingHorizontalS);">
+        <div class="ds-pair"><span>Title on panel</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground1|--colorNeutralBackgroundRaised" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Subtitle on panel</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground2|--colorNeutralBackgroundRaised" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Close icon on panel</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground2|--colorNeutralBackgroundRaised" data-min="3"></span></div>
+        <div class="ds-pair"><span>Grab handle on panel</span><span class="ds-pair__ratio" data-contrast="--colorNeutralStrokeAccessible|--colorNeutralBackgroundRaised" data-min="3"></span></div>
+        <div class="ds-pair"><span>Focus ring on panel</span><span class="ds-pair__ratio" data-contrast="--colorStrokeFocus2|--colorNeutralBackgroundRaised" data-min="3"></span></div>
+      </div>
+      <h3>Motion</h3>
+      <p>The panel rises 4px and fades in over <code>--durationNormal</code> (<code>sd-rise</code>). Under <code>prefers-reduced-motion</code> the duration is zero and the dialog simply appears. Closing has no animation, so focus return is immediate.</p>
+      <h3>Touch</h3>
+      <p>Phone footers are 44px full-width buttons. The close button is 32px with a 4px negative margin into the corner; it clears the 24px minimum and has no neighbours within 8px. Tapping the scrim cancels, except while busy.</p>
+    </section>
+
+    <section class="ds-section" id="content"><h2><a href="#content">Content</a></h2>
+      <ul>
+        <li><b>Confirmations ask a question that names the thing</b>: "Remove Mae from the family?", "Regenerate Saturday?", "Lock La Marina for Saturday lunch?". Never "Are you sure?".</li>
+        <li><b>The subtitle says what happens next or what stays</b>: "Locked blocks stay where they are." "Sunday will not change."</li>
+        <li><b>The primary button repeats the verb</b>: Regenerate, Remove, Approve, Add to Saturday. Cancel is always "Cancel"; a success dialog's only button is "Done".</li>
+        <li><b>Success titles state the result</b>: "Added to Sunday at 9:15", "Thanks, it is in the queue".</li>
+        <li><b>Edit titles name the person or thing</b>: "Edit Mae", "Edit Swim lessons", "Add a family member".</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="do-dont"><h2><a href="#do-dont">Do and don't</a></h2>
+      <div class="ds-dodont">
+        <figure class="ds-do"><div class="ds-example__canvas"><div class="dialog dialog--specimen dialog--modal-only" role="alertdialog" aria-labelledby="dd1" style="width: 100%;"><div class="dialog__panel"><div class="dialog__header"><div class="dialog__heading"><p class="dialog__title" id="dd1">Remove Swim lessons?</p><p class="dialog__sub">Weekends stop planning around it.</p></div></div><div class="dialog__actions"><button class="btn btn--quiet" type="button">Cancel</button><button class="btn btn--danger" type="button">Remove</button></div></div></div></div><figcaption>Name the thing in the question and the verb on the button (D21).</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><div class="dialog dialog--specimen dialog--modal-only" role="alertdialog" aria-labelledby="dd2" style="width: 100%;"><div class="dialog__panel"><div class="dialog__header"><div class="dialog__heading"><p class="dialog__title" id="dd2">Are you sure?</p></div></div><div class="dialog__actions"><button class="btn btn--quiet" type="button">No</button><button class="btn btn--primary" type="button">OK</button></div></div></div></div><figcaption>"Are you sure?" with OK hides what will be lost, and the brand fill makes a deletion look like a routine save.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas"><button class="btn btn--quiet btn--sm" type="button"><svg class="icon" aria-hidden="true"><use href="#i-edit"/></svg>Edit</button><span class="text-soft text-sm">opens D19 Home location</span></div><figcaption>An Edit button opens a dialog (or a screen). The page keeps its layout.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><div class="field" style="width: 100%;"><label class="field__label" for="dd-inline">Home</label><input class="field__input" id="dd-inline" type="text" value="Port Credit, Mississauga"></div></div><figcaption>An inline form that appears in the Family page when Edit is pressed. Off-pattern: no focus management, no Cancel, the layout jumps.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas"><span class="text-sm">CDK <code>Dialog.open(…, DIALOG_OPTIONS)</code></span></div><figcaption>Open through the CDK so focus trap, Esc, inert background and focus return come for free.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><span class="text-sm"><code>&lt;div class="dialog" *ngIf="open"&gt;</code></span></div><figcaption>A hand-rolled overlay: Tab escapes into the page, Esc does nothing and screen readers read the page behind.</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="ds-section" id="tokens"><h2><a href="#tokens">Tokens</a></h2>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Part</th><th scope="col">Token</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead>
+        <tbody>
+          <tr><td>Panel</td><td><code>--colorNeutralBackgroundRaised</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralBackgroundRaised" data-swatch></i><span data-token="--colorNeutralBackgroundRaised"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralBackgroundRaised" data-swatch></i><span data-token="--colorNeutralBackgroundRaised"></span></span></td></tr>
+          <tr><td>Scrim</td><td><code>--colorBackgroundOverlay</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorBackgroundOverlay" data-swatch></i><span data-token="--colorBackgroundOverlay"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorBackgroundOverlay" data-swatch></i><span data-token="--colorBackgroundOverlay"></span></span></td></tr>
+          <tr><td>Title</td><td><code>--colorNeutralForeground1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralForeground1" data-swatch></i><span data-token="--colorNeutralForeground1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralForeground1" data-swatch></i><span data-token="--colorNeutralForeground1"></span></span></td></tr>
+          <tr><td>Subtitle</td><td><code>--colorNeutralForeground2</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralForeground2" data-swatch></i><span data-token="--colorNeutralForeground2"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralForeground2" data-swatch></i><span data-token="--colorNeutralForeground2"></span></span></td></tr>
+          <tr><td>Grab handle</td><td><code>--colorNeutralStrokeAccessible</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralStrokeAccessible" data-swatch></i><span data-token="--colorNeutralStrokeAccessible"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralStrokeAccessible" data-swatch></i><span data-token="--colorNeutralStrokeAccessible"></span></span></td></tr>
+          <tr><td>Width default / wide</td><td><code>--layoutDialogWidth</code> / <code>--layoutDialogWidthWide</code></td><td colspan="2"><span data-token="--layoutDialogWidth"></span> / <span data-token="--layoutDialogWidthWide"></span></td></tr>
+          <tr><td>Padding phone / 720+</td><td><code>--spacingHorizontalXL</code> / <code>--spacingHorizontalXXL</code></td><td colspan="2"><span data-token="--spacingHorizontalXL"></span> / <span data-token="--spacingHorizontalXXL"></span></td></tr>
+          <tr><td>Gap between parts</td><td><code>--spacingVerticalL</code></td><td colspan="2"><span data-token="--spacingVerticalL"></span></td></tr>
+          <tr><td>Radius</td><td><code>--borderRadiusXLarge</code></td><td colspan="2"><span data-token="--borderRadiusXLarge"></span></td></tr>
+          <tr><td>Shadow</td><td><code>--shadow28</code></td><td colspan="2"><span data-token="--shadow28"></span></td></tr>
+          <tr><td>Title type</td><td><code>--typographyTitle2</code></td><td colspan="2"><span data-token="--typographyTitle2"></span></td></tr>
+          <tr><td>Phone button height</td><td><code>--targetComfortable</code></td><td colspan="2"><span data-token="--targetComfortable"></span></td></tr>
+          <tr><td>Layer</td><td><code>--zIndexDialog</code></td><td colspan="2"><span data-token="--zIndexDialog"></span></td></tr>
+          <tr><td>Enter motion</td><td><code>--durationNormal</code>, <code>--curveEasyEase</code></td><td colspan="2"><span data-token="--durationNormal"></span> <span data-token="--curveEasyEase"></span></td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section class="ds-section" id="code"><h2><a href="#code">Code</a></h2>
+      <pre><code>&lt;!-- Rendered by CDK Dialog; the host gets role, aria-modal and aria-labelledby --&gt;
+&lt;div class="dialog" role="alertdialog" aria-modal="true" aria-labelledby="d21-title" aria-describedby="d21-sub"&gt;
+  &lt;div class="dialog__scrim"&gt;&lt;/div&gt;
+  &lt;div class="dialog__panel"&gt;
+    &lt;div class="dialog__header"&gt;
+      &lt;div class="dialog__heading"&gt;
+        &lt;h2 class="dialog__title" id="d21-title"&gt;Remove Mae from the family?&lt;/h2&gt;
+        &lt;p class="dialog__sub" id="d21-sub"&gt;Future weekends will not plan for her.&lt;/p&gt;
+      &lt;/div&gt;
+      &lt;button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"&gt;…&lt;/button&gt;
+    &lt;/div&gt;
+    &lt;div class="dialog__actions"&gt;
+      &lt;button class="btn btn--quiet" type="button"&gt;Cancel&lt;/button&gt;
+      &lt;button class="btn btn--danger" type="button"&gt;…Remove&lt;/button&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+// Angular: always through the CDK, with the shared options
+const ok = await confirmWith(this.dialog, { title: 'Remove Mae from the family?', body: 'Future weekends will not plan for her.', confirmLabel: 'Remove', danger: true, icon: 'trash' });
+this.dialog.open(MemberDialog, { data: member, ...DIALOG_OPTIONS });</code></pre>
+      <table class="ds-table"><thead><tr><th scope="col">Class / attribute</th><th scope="col">Effect</th></tr></thead><tbody>
+        <tr><td><code>.dialog</code> <code>.dialog__scrim</code> <code>.dialog__panel</code></td><td>Fixed layer, dimmed backdrop, the sheet or modal surface.</td></tr>
+        <tr><td><code>.dialog__header</code> <code>.dialog__heading</code> <code>.dialog__title</code> <code>.dialog__sub</code> <code>.dialog__close</code></td><td>Header row: title block and close button.</td></tr>
+        <tr><td><code>.dialog__body</code></td><td>Content column with 16px gap.</td></tr>
+        <tr><td><code>.dialog__actions</code> <code>.dialog__actions-left</code></td><td>Footer: stacked on phones (primary first), a right-aligned row from 720px; the left group holds warn-text.</td></tr>
+        <tr><td><code>.dialog--wide</code></td><td>520px panel.</td></tr>
+        <tr><td><code>aria-busy="true"</code> on <code>.dialog</code></td><td>Fades and blocks the body while a request runs.</td></tr>
+        <tr><td><code>.dialog--specimen</code> <code>.dialog--modal-only</code> <code>.dialog--sheet-only</code></td><td>Documentation only: the panel in the page flow, forced to the modal or sheet look.</td></tr>
+      </tbody></table>
+    </section>
+
+    <section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>
+      <p>Extracted from <a href="../../mocks/pages/dialogs.html">pages/dialogs</a> (39 specimens): D1 block details and its locked and commitment variants, D3 and D4 regenerate, D9 errand added, D11 submitted, D17 edit and add a family member, D21 remove confirmations, D22 sign out, D23 approve, D25 the More sheet, D28 add an idea to a day, AD1 to AD6 admin photo dialogs. Triggers live on <a href="../../mocks/pages/weekend.html">pages/weekend</a>, <a href="../../mocks/pages/family.html">pages/family</a>, <a href="../../mocks/pages/ideas.html">pages/ideas</a> and <a href="../../mocks/pages/past.html">pages/past</a>.</p>
+      <p>Drift fixed: D02 primary contrast, D08 danger contrast, D15 the 14px dialog gap (now 16px), D17 the rgba() scrim and literal <code>#fff</code> on danger. The busy state, the invalid and failed states, and <code>role="alertdialog"</code> on every destructive confirmation (the mocks set it on D21 and D22 but not on D24 or AD5) are documented here first. Added in extraction: <code>.dialog--sheet-only</code>, the documentation twin of <code>.dialog--modal-only</code>.</p>
+    </section>
+
+    <footer class="ds-footer"><span>Saturdaze design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/icons.js"></script>
+<script src="../assets/ds.js"></script>
+</body>
+</html>

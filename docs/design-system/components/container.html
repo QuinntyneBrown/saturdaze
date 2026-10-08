@@ -1,0 +1,395 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Container and grid — Saturdaze design system</title>
+<meta name="description" content="Layout primitives: container, stack, cluster, the 4/8/12-column grid, card and day grids, the phone scroller, bleed and sticky.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html"><span class="brand-mark" aria-hidden="true"></span>Saturdaze DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Actions</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+    </ul></details>
+    <details open><summary>Inputs</summary><ul>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/chip-input.html">Chip input</a></li>
+      <li><a href="../components/file-upload.html">File upload</a></li>
+      <li><a href="../components/photo-pick.html">Photo pick</a></li>
+      <li><a href="../components/rating.html">Rating</a></li>
+      <li><a href="../components/vote-row.html">Vote row</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+    </ul></details>
+    <details open><summary>Navigation</summary><ul>
+      <li><a href="../components/top-bar.html">Top bar</a></li>
+      <li><a href="../components/bottom-nav.html">Bottom nav</a></li>
+      <li><a href="../components/sidebar-navigation.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs (segments)</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+      <li><a href="../components/footer.html">Footer</a></li>
+    </ul></details>
+    <details open><summary>Containers and overlays</summary><ul>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/container.html">Container and grid</a></li>
+      <li><a href="../components/page-header.html">Page header</a></li>
+    </ul></details>
+    <details open><summary>Data display</summary><ul>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/activity-feed.html">Activity feed</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/chip.html">Chip</a></li>
+      <li><a href="../components/filter-chip.html">Filter chip</a></li>
+      <li><a href="../components/disc.html">Disc</a></li>
+      <li><a href="../components/media.html">Media</a></li>
+      <li><a href="../components/cover.html">Cover photo</a></li>
+      <li><a href="../components/stat.html">Stat</a></li>
+      <li><a href="../components/itinerary.html">Itinerary</a></li>
+      <li><a href="../components/map.html">Map</a></li>
+    </ul></details>
+    <details open><summary>Feedback</summary><ul>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/alert.html">Alert</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/progress-bar.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Auth and marketing</summary><ul>
+      <li><a href="../components/auth-card.html">Auth card</a></li>
+      <li><a href="../components/hero.html">Hero</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/data-tables-and-lists.html">Tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Component · Containers and overlays</p>
+      <h1>Container and grid</h1>
+      <p class="ds-lead">Eleven small classes lay out every screen: a container that sets the page width and margins, stacks and clusters that space things, and grids that put cards and days side by side as the screen grows.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA</span><span class="ds-pill">Status: stable</span><span class="ds-pill">Layout primitives (CSS only)</span><span class="ds-pill">Foundation: <a href="../foundations/layout.html">Layout</a></span></div>
+      <ul class="ds-toc">
+        <li><a href="#overview">Overview</a></li><li><a href="#anatomy">Anatomy</a></li><li><a href="#variants">Variants</a></li><li><a href="#sizes">Sizes</a></li><li><a href="#states">States</a></li><li><a href="#responsive">Responsive</a></li><li><a href="#theming">Theming</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#content">Content</a></li><li><a href="#do-dont">Do and don't</a></li><li><a href="#tokens">Tokens</a></li><li><a href="#code">Code</a></li><li><a href="#sources">Sources</a></li>
+      </ul>
+    </header>
+
+    <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+      <p>These classes own space so components do not have to. A component never sets its own outer margin; the stack, cluster or grid around it sets the gap. The tokens they read (columns, gutter, margin, maximum widths, breakpoints) are defined on the <a href="../foundations/layout.html">Layout foundation</a>; this page shows how to use them.</p>
+      <ul>
+        <li><b>Container</b> (<code>.container</code>) centres the page at 1120px with a side margin equal to the gutter. <code>.container--stack</code> narrows it to 720px for single-column screens (Review submissions, Legal, the empty states).</li>
+        <li><b>Stack</b> (<code>.stack</code>) spaces children vertically; <b>cluster</b> (<code>.cluster</code>) spaces them horizontally and wraps.</li>
+        <li><b>Grid</b> (<code>.grid</code>) is the 4 / 8 / 12-column layout grid. The purpose-built grids (<code>.grid-2</code>, <code>.grid-3</code>, <code>.grid-cards</code>, <code>.grid-days</code>) are one column on phones and add columns at fixed breakpoints; use them first.</li>
+        <li><b>Scroller</b> (<code>.scroller-x</code>) turns a row of filter chips into a swipeable strip on phones and lets it wrap from 720px. <b>Bleed</b> (<code>.bleed</code>) pulls a child to the screen edges. <b>Sticky top</b> (<code>.sticky-top</code>) pins a bar while its section scrolls.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="anatomy"><h2><a href="#anatomy">Anatomy</a></h2>
+      <div class="ds-anatomy">
+        <figure class="ds-anatomy__figure" style="padding-inline: var(--spacingHorizontalL);">
+          <div class="ds-grid-demo" style="width: 100%;" aria-hidden="true"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span><span>11</span><span>12</span></div>
+          <span class="ds-callout" style="left: 5%; top: 50%;" aria-hidden="true">1</span>
+          <span class="ds-callout" style="left: 26%; top: 18%;" aria-hidden="true">2</span>
+          <span class="ds-callout" style="left: 50%; top: 82%;" aria-hidden="true">3</span>
+        </figure>
+        <ol class="ds-anatomy__list">
+          <li><div><b>Margin</b><small><code>--layoutMargin</code>: the container's side padding, equal to the gutter (16 / 24 / 32px).</small></div></li>
+          <li><div><b>Column</b><small><code>--layoutColumns</code>: 4 on phones, 8 from 720px, 12 from 1024px. The demo is live; resize the window.</small></div></li>
+          <li><div><b>Gutter</b><small><code>--layoutGutter</code>: 16 / 24 / 32px between columns.</small></div></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="ds-section" id="variants"><h2><a href="#variants">Variants</a></h2>
+
+      <h3>Container</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack ds-example__canvas--canvas" style="padding-inline: 0;">
+          <div class="ds-frame"><div class="container" style="padding-block: var(--spacingVerticalL);"><div class="card card--sunk"><p class="card__title">.container</p><p class="card__meta">Up to 1120px, margin = gutter. Every app and admin page.</p></div></div></div>
+          <div class="ds-frame"><div class="container container--stack" style="padding-block: var(--spacingVerticalL);"><div class="card card--sunk"><p class="card__title">.container.container--stack</p><p class="card__meta">Up to 720px of content. Review submissions, Legal, empty states.</p></div></div></div>
+        </div>
+      </div>
+
+      <h3>Stack</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--canvas" style="align-items: flex-start;">
+          <div class="stack stack--sm" style="flex: 1 1 8rem;"><span class="text-xs text-soft">stack--sm · 8px</span><div class="card card--sunk"><p class="card__meta">Swim lessons</p></div><div class="card card--sunk"><p class="card__meta">Church</p></div></div>
+          <div class="stack" style="flex: 1 1 8rem;"><span class="text-xs text-soft">stack · 16px</span><div class="card card--sunk"><p class="card__meta">Swim lessons</p></div><div class="card card--sunk"><p class="card__meta">Church</p></div></div>
+          <div class="stack stack--lg" style="flex: 1 1 8rem;"><span class="text-xs text-soft">stack--lg · 24px</span><div class="card card--sunk"><p class="card__meta">Swim lessons</p></div><div class="card card--sunk"><p class="card__meta">Church</p></div></div>
+          <div class="stack stack--xl" style="flex: 1 1 8rem;"><span class="text-xs text-soft">stack--xl · 32px</span><div class="card card--sunk"><p class="card__meta">Swim lessons</p></div><div class="card card--sunk"><p class="card__meta">Church</p></div></div>
+        </div>
+        <div class="ds-example__caption"><span>Small inside a group (fields in a fieldset), default between components, large between groups, extra large between page sections that have no section header.</span></div>
+      </div>
+
+      <h3>Cluster</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack" style="flex-wrap: nowrap;">
+          <div class="cluster"><span class="chip chip--leaf"><svg class="icon" aria-hidden="true"><use href="#i-heart"/></svg>Parks</span><span class="chip chip--leaf"><svg class="icon" aria-hidden="true"><use href="#i-heart"/></svg>Short hikes</span><span class="chip chip--leaf"><svg class="icon" aria-hidden="true"><use href="#i-heart"/></svg>Lavender</span><span class="chip chip--warn"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg>Camping</span><span class="chip chip--warn"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg>Drives over 60 min</span></div>
+          <div class="cluster cluster--between"><button class="btn btn--quiet btn--sm" type="button">See menu</button><button class="btn btn--primary btn--sm" type="button"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg>Lock it in</button></div>
+          <div class="cluster cluster--end"><button class="btn btn--quiet" type="button">Cancel</button><button class="btn btn--primary" type="button">Save</button></div>
+          <div class="cluster cluster--nowrap"><span class="avatar avatar--sm avatar--q" aria-hidden="true">Q</span><span class="truncate" style="min-width: 0;">quinntynebrown@gmail.com · 2 hours ago</span></div>
+        </div>
+        <div class="ds-example__caption"><span>Default (likes and dislikes on Family), <code>--between</code> (a Food card footer), <code>--end</code> (a right-aligned action row), <code>--nowrap</code> (an avatar beside a line that truncates).</span></div>
+      </div>
+
+      <h3>Layout grid (live)</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack ds-example__canvas--canvas">
+          <div class="grid">
+            <div class="card card--sunk" style="grid-column: 1 / -1;"><p class="card__meta">Full width · <code>1 / -1</code></p></div>
+            <div class="card card--sunk" style="grid-column: span 2;"><p class="card__meta">span 2</p></div>
+            <div class="card card--sunk" style="grid-column: span 2;"><p class="card__meta">span 2</p></div>
+            <div class="card card--sunk" style="grid-column: span 4;"><p class="card__meta">span 4</p></div>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>On a phone the two "span 2" cells share a row and "span 4" fills the next; at 8 and 12 columns they sit side by side. Reach for <code>.grid</code> only for one-off layouts; the named grids below cover the product.</span></div>
+      </div>
+
+      <h3>Named grids</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack ds-example__canvas--canvas">
+          <span class="text-xs text-soft">.grid-2 · 1 → 2 columns at 720px (latitude and longitude in D23)</span>
+          <div class="grid-2"><div class="card card--sunk"><p class="card__meta">Latitude</p></div><div class="card card--sunk"><p class="card__meta">Longitude</p></div></div>
+          <span class="text-xs text-soft">.grid-3 · 1 → 3 columns at 720px</span>
+          <div class="grid-3"><div class="card card--sunk"><p class="card__meta">Activities</p></div><div class="card card--sunk"><p class="card__meta">Restaurants</p></div><div class="card card--sunk"><p class="card__meta">Events</p></div></div>
+          <span class="text-xs text-soft">.grid-cards · 1 → 2 at 720px → 3 at 1024px (Ideas, Past)</span>
+          <ul class="grid-cards" style="margin: 0; padding: 0; list-style: none;"><li class="card"><p class="card__title">Terre Bleu Lavender Farm</p><p class="card__meta">Milton</p></li><li class="card"><p class="card__title">Bronte Creek</p><p class="card__meta">Oakville</p></li><li class="card"><p class="card__title">Royal Botanical Gardens</p><p class="card__meta">Burlington</p></li></ul>
+          <span class="text-xs text-soft">.grid-cards.grid-cards--2 · stops at 2 columns, 880px wide (Food's dinner picks)</span>
+          <ul class="grid-cards grid-cards--2" style="margin: 0; padding: 0; list-style: none;"><li class="card"><p class="card__title">Jack Astor's</p><p class="card__meta">Square One</p></li><li class="card"><p class="card__title">Snug Harbour</p><p class="card__meta">Port Credit</p></li></ul>
+          <span class="text-xs text-soft">.grid-days · 1 → 2 columns at 1024px (Saturday beside Sunday)</span>
+          <div class="grid-days"><div class="card card--sunk"><p class="card__title">Saturday</p><p class="card__meta">Sunny, 22°</p></div><div class="card card--sunk"><p class="card__title">Sunday</p><p class="card__meta">Cloudy afternoon</p></div></div>
+        </div>
+      </div>
+
+      <h3>Scroller</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack">
+          <div class="scroller-x" role="group" aria-label="Filters">
+            <button class="filter-chip" type="button" aria-pressed="true">All</button>
+            <button class="filter-chip filter-chip--leaf" type="button" aria-pressed="false">Outdoor</button>
+            <button class="filter-chip filter-chip--indoor" type="button" aria-pressed="false">Indoor</button>
+            <button class="filter-chip" type="button" aria-pressed="false">Under 30 min</button>
+            <button class="filter-chip" type="button" aria-pressed="false">Ages 5+</button>
+            <button class="filter-chip filter-chip--sky" type="button" aria-pressed="false">Weather-safe</button>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>The Ideas filters. Under 720px the row scrolls sideways, runs edge to edge and fades at both ends; from 720px it wraps like a cluster.</span></div>
+      </div>
+
+      <h3>Bleed and sticky top</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--canvas" style="align-items: flex-start;">
+          <div class="ds-frame" style="flex: 1 1 16rem;"><div class="container" style="padding-block: var(--spacingVerticalL);">
+            <p class="card__meta mb-2">Inside the container</p>
+            <div class="bleed"><div class="media media--fallback media--leaf" aria-hidden="true" style="border-radius: 0;"><svg class="icon" aria-hidden="true"><use href="#i-tree"/></svg></div></div>
+            <p class="card__meta mt-2"><code>.bleed</code> reaches the frame's edges</p>
+          </div></div>
+          <div class="ds-frame" style="flex: 1 1 16rem; max-height: 12rem; overflow: auto;" role="region" aria-label="Sticky header demo" tabindex="0">
+            <div class="sticky-top" style="background: var(--colorNeutralBackground2); padding: var(--spacingVerticalS) var(--spacingHorizontalL); border-bottom: var(--strokeWidthThin) solid var(--colorNeutralStroke2);"><b>Saturday</b> <span class="text-soft text-sm">· sticky</span></div>
+            <div class="stack stack--sm" style="padding: var(--spacingHorizontalL);"><span>9:00 Swim lessons</span><span>10:30 Church</span><span>11:00 Lavender fields at Terre Bleu</span><span>1:00 Lunch at La Marina</span><span>3:00 Quiet time at home</span><span>5:00 Workout window</span><span>8:00 Bath and books</span></div>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>Bleed is for photos and maps that should touch the screen edge on phones. Sticky top pins a header; the header brings its own background (the day header does this with <code>--zIndexSticky</code>). Scroll the right frame.</span></div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="sizes"><h2><a href="#sizes">Sizes</a></h2>
+      <p>The container has four widths, each a layout token. Pick by what the screen is for, not by how much content it has today.</p>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Width</th><th scope="col">Token</th><th scope="col">Used for</th></tr></thead>
+        <tbody>
+          <tr><td><span data-token="--layoutContentMaxWidth"></span> (1120px)</td><td><code>--layoutContentMaxWidth</code> · <code>.container</code></td><td>Weekend, Ideas, Past, Family, every admin page.</td></tr>
+          <tr><td><span data-token="--layoutStackMaxWidth"></span> (720px)</td><td><code>--layoutStackMaxWidth</code> · <code>.container--stack</code></td><td>Single-column screens: Review submissions, empty states.</td></tr>
+          <tr><td><span data-token="--layoutProseMaxWidth"></span> (680px)</td><td><code>--layoutProseMaxWidth</code></td><td>Legal text.</td></tr>
+          <tr><td><span data-token="--layoutNarrowMaxWidth"></span> (440px)</td><td><code>--layoutNarrowMaxWidth</code></td><td>Auth column and the bottom nav.</td></tr>
+        </tbody>
+      </table></div>
+      <p>Gaps come from the spacing scale: stacks 8 / 16 / 24 / 32px, clusters 8px, card grids 12px on phones then 16 and 20px.</p>
+    </section>
+
+    <section class="ds-section" id="states"><h2><a href="#states">States</a></h2>
+      <p>Layout has no interactive states. Its states are breakpoints: what each primitive does in each range.</p>
+      <div class="ds-matrix"><table>
+        <thead><tr><th scope="col">Primitive</th><th scope="col">Under 720px</th><th scope="col">720 to 1023px</th><th scope="col">1024px and up</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">.container</th><td>16px margin</td><td>24px margin</td><td>32px margin, 1120px max</td></tr>
+          <tr><th scope="row">.grid</th><td>4 columns, 16px gutter</td><td>8 columns, 24px gutter</td><td>12 columns, 32px gutter</td></tr>
+          <tr><th scope="row">.grid-2</th><td>1 column</td><td>2 columns</td><td>2 columns</td></tr>
+          <tr><th scope="row">.grid-3</th><td>1 column</td><td>3 columns, 20px gap</td><td>3 columns, 20px gap</td></tr>
+          <tr><th scope="row">.grid-cards</th><td>1 column, 12px gap</td><td>2 columns, 16px gap</td><td>3 columns, 20px gap</td></tr>
+          <tr><th scope="row">.grid-cards--2</th><td>1 column</td><td>2 columns</td><td>2 columns, 880px max</td></tr>
+          <tr><th scope="row">.grid-days</th><td>1 column, 32px gap</td><td>1 column</td><td>2 columns</td></tr>
+          <tr><th scope="row">.scroller-x</th><td>Scrolls sideways, edge to edge</td><td>Wraps</td><td>Wraps</td></tr>
+          <tr><th scope="row">--layoutSpaceSection</th><td>32px</td><td>40px</td><td>40px</td></tr>
+        </tbody>
+      </table></div>
+      <h3>Both themes</h3>
+      <div class="ds-themes">
+        <div data-theme="light"><div class="grid-2"><div class="card"><p class="card__meta">Card on page</p></div><div class="card card--sunk"><p class="card__meta">Sunk card</p></div></div></div>
+        <div data-theme="dark"><div class="grid-2"><div class="card"><p class="card__meta">Card on page</p></div><div class="card card--sunk"><p class="card__meta">Sunk card</p></div></div></div>
+      </div>
+      <p>The primitives are transparent; they look the same in both themes because they draw nothing.</p>
+    </section>
+
+    <section class="ds-section" id="responsive"><h2><a href="#responsive">Responsive behaviour</a></h2>
+      <ul>
+        <li>Breakpoints are in rem (23.75 / 36 / 45 / 64rem = 380 / 576 / 720 / 1024px at the default font size), so a person who sets a larger browser font gets the phone layout sooner instead of a squeezed desktop one (D24).</li>
+        <li>Everything is one column at 360px. Columns appear only when each one has room for its content: two cards at 720px, three at 1024px.</li>
+        <li>Margins equal gutters at every size, so the outer edge never looks tighter than the space between cards.</li>
+        <li>The page never scrolls sideways (1.4.10). The only horizontal scroll is <code>.scroller-x</code>, inside the page, and only under 720px.</li>
+        <li>Sticky headers sit under the top bar from 720px (<code>top: var(--layoutTopBarHeight)</code> on the day header) and at the top of the viewport on phones, where the bottom nav replaces the top bar. See <a href="../foundations/responsive.html">Responsive</a>.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="theming"><h2><a href="#theming">Theming</a></h2>
+      <p>The primitives read only layout and spacing tokens, which do not change between light and dark. A product that wants a denser layout changes <code>--layoutGutter</code> per breakpoint (and the margin follows) or overrides the component knobs <code>--sd-stack-gap</code> and <code>--sd-cluster-gap</code> on one element. Never set gaps with margins on children.</p>
+      <pre><code>/* A tighter stack for one dialog body */
+.dialog__body .stack { --sd-stack-gap: var(--spacingVerticalM); }</code></pre>
+    </section>
+
+    <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
+      <h3>Role and pattern</h3>
+      <p>No ARIA pattern: these are <code>&lt;div&gt;</code>s, or <code>&lt;ul&gt;</code> when the children are a collection (<code>&lt;ul class="grid-cards"&gt;</code>), so screen readers announce how many items there are. Never put <code>role="grid"</code> on a CSS grid; the APG grid is an interactive widget with arrow-key navigation.</p>
+      <h3>Keyboard</h3>
+      <table class="ds-table ds-keys"><thead><tr><th scope="col">Key</th><th scope="col">Action</th></tr></thead><tbody>
+        <tr><td><kbd>Tab</kbd></td><td>Follows DOM order, which must match the visual order at every breakpoint (2.4.3). Do not reorder with CSS <code>order</code> or <code>grid-row</code> beyond the page header's primary-first rule.</td></tr>
+        <tr><td><kbd>Tab</kbd> in <code>.scroller-x</code></td><td>Each chip is a button, so tabbing scrolls the next chip into view; the scroller itself needs no tab stop.</td></tr>
+      </tbody></table>
+      <h3>Focus</h3>
+      <p>Grid and stack gaps are at least 8px, enough for a neighbour's 2px ring at 2px offset to show in full. <code>.scroller-x</code> pads its ends by the page margin so the first and last chips' rings are not clipped. A sticky header must not hide the focused element under it (2.4.11): the page sets <code>scroll-padding-top</code> to the header height.</p>
+      <h3>Labelling</h3>
+      <p>A scroller of filters is <code>role="group"</code> with <code>aria-label="Filters"</code>. A sticky region that scrolls on its own (like the demo above) needs <code>role="region"</code>, a label and <code>tabindex="0"</code> so keyboard users can scroll it; the product's page-level sticky headers do not, because the page scrolls.</p>
+      <h3>Contrast</h3>
+      <div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0; gap: var(--spacingHorizontalS);">
+        <div class="ds-pair"><span>Text on the page canvas</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground1|--colorNeutralBackground2" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Secondary text on the page canvas</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground2|--colorNeutralBackground2" data-min="4.5"></span></div>
+      </div>
+      <p>The primitives draw nothing themselves; a sticky header must carry an opaque background so text scrolling under it never shows through.</p>
+      <h3>Motion</h3>
+      <p>None. The scroller uses native scrolling and <code>overscroll-behavior-x: contain</code>, so a swipe never navigates the browser back.</p>
+      <h3>Touch</h3>
+      <p>Grid and cluster gaps keep at least 8px between targets. The scroller is reachable by swipe and by keyboard; nothing in it is hidden behind a hover.</p>
+    </section>
+
+    <section class="ds-section" id="content"><h2><a href="#content">Content</a></h2>
+      <ul>
+        <li>A grid holds items of one kind (all ideas, all past weekends). Mixing a stat card into a grid of idea cards breaks the comparison.</li>
+        <li>Keep card text in a grid to similar lengths (clamp bodies to two lines) so rows line up and footers align.</li>
+        <li>One item does not need a grid; two items in <code>.grid-cards</code> leave a gap at 1024px, so use <code>.grid-cards--2</code>.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="do-dont"><h2><a href="#do-dont">Do and don't</a></h2>
+      <div class="ds-dodont">
+        <figure class="ds-do"><div class="ds-example__canvas"><div class="stack stack--sm" style="width: 100%;"><div class="card card--sunk"><p class="card__meta">Swim lessons</p></div><div class="card card--sunk"><p class="card__meta">Church</p></div></div></div><figcaption>The stack owns the gap; the cards have no margins.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><div style="width: 100%;"><div class="card card--sunk" style="margin-bottom: 0.6rem;"><p class="card__meta">margin-bottom: 9.6px</p></div><div class="card card--sunk" style="margin-top: 0.4rem;"><p class="card__meta">margin-top: 6.4px</p></div></div></div><figcaption>Margins on children collapse unpredictably and drift off the scale (D15).</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas"><ul class="grid-cards" style="margin: 0; padding: 0; list-style: none; width: 100%;"><li class="card"><p class="card__meta">Ideas card</p></li><li class="card"><p class="card__meta">Ideas card</p></li></ul></div><figcaption>Cards fill the columns of <code>.grid-cards</code> and reflow by breakpoint.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas" style="overflow: hidden; flex-wrap: nowrap;"><div class="card" style="width: 18rem; flex: none;"><p class="card__meta">width: 288px</p></div><div class="card" style="width: 18rem; flex: none;"><p class="card__meta">width: 288px</p></div></div><figcaption>Fixed card widths overflow a 360px phone and leave holes on a laptop.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas"><div class="scroller-x" style="width: 100%;" role="group" aria-label="Example filters"><button class="filter-chip" type="button" aria-pressed="true">All</button><button class="filter-chip" type="button" aria-pressed="false">Outdoor</button><button class="filter-chip" type="button" aria-pressed="false">Indoor</button></div></div><figcaption>Negative margins only in <code>.scroller-x</code> and <code>.bleed</code>.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><div class="card" style="width: 100%; margin-inline: -0.5rem;"><p class="card__meta">margin-inline: -8px</p></div></div><figcaption>A one-off negative margin to "line things up" breaks at the next breakpoint and can cause sideways page scroll.</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="ds-section" id="tokens"><h2><a href="#tokens">Tokens</a></h2>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Part</th><th scope="col">Token</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead>
+        <tbody>
+          <tr><td>Columns (now)</td><td><code>--layoutColumns</code></td><td colspan="2"><span data-token="--layoutColumns"></span> (4 / 8 / 12)</td></tr>
+          <tr><td>Gutter (now)</td><td><code>--layoutGutter</code></td><td colspan="2"><span data-token="--layoutGutter"></span> (16 / 24 / 32px)</td></tr>
+          <tr><td>Margin</td><td><code>--layoutMargin</code></td><td colspan="2"><span data-token="--layoutMargin"></span></td></tr>
+          <tr><td>Content width</td><td><code>--layoutContentMaxWidth</code></td><td colspan="2"><span data-token="--layoutContentMaxWidth"></span></td></tr>
+          <tr><td>Stack width</td><td><code>--layoutStackMaxWidth</code></td><td colspan="2"><span data-token="--layoutStackMaxWidth"></span></td></tr>
+          <tr><td>Stack gaps sm / md / lg / xl</td><td><code>--spacingVerticalS/L/XXL/XXXL</code></td><td colspan="2"><span data-token="--spacingVerticalS"></span> / <span data-token="--spacingVerticalL"></span> / <span data-token="--spacingVerticalXXL"></span> / <span data-token="--spacingVerticalXXXL"></span></td></tr>
+          <tr><td>Cluster gap</td><td><code>--spacingHorizontalS</code></td><td colspan="2"><span data-token="--spacingHorizontalS"></span></td></tr>
+          <tr><td>Card grid gaps</td><td><code>--spacingVerticalM</code>, <code>--spacingHorizontalL</code>, <code>--spacingHorizontalXL</code></td><td colspan="2"><span data-token="--spacingVerticalM"></span> / <span data-token="--spacingHorizontalL"></span> / <span data-token="--spacingHorizontalXL"></span></td></tr>
+          <tr><td>Space between sections</td><td><code>--layoutSpaceSection</code></td><td colspan="2"><span data-token="--layoutSpaceSection"></span></td></tr>
+          <tr><td>Sticky layer</td><td><code>--zIndexSticky</code></td><td colspan="2"><span data-token="--zIndexSticky"></span></td></tr>
+        </tbody>
+      </table></div>
+      <p>Values marked "now" are read at the current window width. The primitives use no colour tokens.</p>
+    </section>
+
+    <section class="ds-section" id="code"><h2><a href="#code">Code</a></h2>
+      <pre><code>&lt;main class="app-main container" id="main"&gt;
+  &lt;header class="page-header"&gt;…&lt;/header&gt;
+  &lt;div class="scroller-x mb-6" role="group" aria-label="Filters"&gt;…filter chips…&lt;/div&gt;
+  &lt;section class="section" aria-labelledby="g-weather"&gt;
+    &lt;div class="section-header"&gt;…&lt;/div&gt;
+    &lt;ul class="grid-cards"&gt;
+      &lt;li class="card card--media"&gt;…&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/section&gt;
+&lt;/main&gt;</code></pre>
+      <table class="ds-table"><thead><tr><th scope="col">Class</th><th scope="col">Effect</th></tr></thead><tbody>
+        <tr><td><code>.container</code> <code>.container--stack</code></td><td>Centred page width with margins; 1120px or 720px of content.</td></tr>
+        <tr><td><code>.stack</code> <code>--sm</code> <code>--lg</code> <code>--xl</code></td><td>Vertical flex with gap 16px (8 / 24 / 32px); knob <code>--sd-stack-gap</code>.</td></tr>
+        <tr><td><code>.cluster</code> <code>--between</code> <code>--end</code> <code>--nowrap</code></td><td>Wrapping row, 8px gap, centred vertically; knob <code>--sd-cluster-gap</code>.</td></tr>
+        <tr><td><code>.grid</code></td><td><code>--layoutColumns</code> equal columns with <code>--layoutGutter</code>.</td></tr>
+        <tr><td><code>.grid-2</code> <code>.grid-3</code> <code>.grid-cards</code> <code>.grid-cards--2</code> <code>.grid-days</code></td><td>One column, then 2 / 3 / 2-3 / 2 columns at their breakpoints.</td></tr>
+        <tr><td><code>.scroller-x</code></td><td>Phone-width horizontal scroller that wraps from 720px.</td></tr>
+        <tr><td><code>.bleed</code></td><td>Pulls a child out to the screen edges by the page margin.</td></tr>
+        <tr><td><code>.sticky-top</code></td><td>Sticks to the top of its scroll container above content.</td></tr>
+      </tbody></table>
+    </section>
+
+    <section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>
+      <ul>
+        <li><code>.container</code> is on every page (36 uses); <code>.container--stack</code> on <a href="../../mocks/pages/review-submissions.html">pages/review-submissions</a>, <a href="../../mocks/pages/legal.html">pages/legal</a> and the empty states.</li>
+        <li><code>.grid-cards</code> on <a href="../../mocks/pages/ideas.html">pages/ideas</a>, <a href="../../mocks/pages/ideas.food.html">ideas.food</a> (with <code>--2</code>), <a href="../../mocks/pages/ideas.events.html">ideas.events</a> and <a href="../../mocks/pages/past.html">past</a>; <code>.scroller-x</code> on the same four.</li>
+        <li><code>.grid-days</code> on <a href="../../mocks/pages/weekend.generating.html">pages/weekend.generating</a> and <a href="../../mocks/pages/landing.html">pages/landing</a>; <code>.grid-2</code> in <a href="../../mocks/pages/dialogs.html">dialogs</a> D23; <code>.cluster</code> on <a href="../../mocks/pages/family.html">pages/family</a>.</li>
+      </ul>
+      <p>Drift fixed: D15 off-grid gaps, D24 px breakpoints (now rem). <code>.stack</code>, <code>.grid</code>, <code>.grid-3</code>, <code>.bleed</code>, <code>.sticky-top</code>, <code>.cluster--end</code> and <code>.cluster--nowrap</code> are in the mocks' CSS but no mock markup uses them yet; pages use page-specific grids (<code>family-grid</code>, <code>stat-grid</code>, <code>photo-grid</code>) that these should replace.</p>
+    </section>
+
+    <footer class="ds-footer"><span>Saturdaze design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/icons.js"></script>
+<script src="../assets/ds.js"></script>
+</body>
+</html>

@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Inline message — Saturdaze design system</title>
+<meta name="description" content="Field-level hints, errors and success messages, tied to their field with aria-describedby, and when to validate.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html"><span class="brand-mark" aria-hidden="true"></span>Saturdaze DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Actions</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+    </ul></details>
+    <details open><summary>Inputs</summary><ul>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/chip-input.html">Chip input</a></li>
+      <li><a href="../components/file-upload.html">File upload</a></li>
+      <li><a href="../components/photo-pick.html">Photo pick</a></li>
+      <li><a href="../components/rating.html">Rating</a></li>
+      <li><a href="../components/vote-row.html">Vote row</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+    </ul></details>
+    <details open><summary>Navigation</summary><ul>
+      <li><a href="../components/top-bar.html">Top bar</a></li>
+      <li><a href="../components/bottom-nav.html">Bottom nav</a></li>
+      <li><a href="../components/sidebar-navigation.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs (segments)</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+      <li><a href="../components/footer.html">Footer</a></li>
+    </ul></details>
+    <details open><summary>Containers and overlays</summary><ul>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/container.html">Container and grid</a></li>
+      <li><a href="../components/page-header.html">Page header</a></li>
+    </ul></details>
+    <details open><summary>Data display</summary><ul>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/activity-feed.html">Activity feed</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/chip.html">Chip</a></li>
+      <li><a href="../components/filter-chip.html">Filter chip</a></li>
+      <li><a href="../components/disc.html">Disc</a></li>
+      <li><a href="../components/media.html">Media</a></li>
+      <li><a href="../components/cover.html">Cover photo</a></li>
+      <li><a href="../components/stat.html">Stat</a></li>
+      <li><a href="../components/itinerary.html">Itinerary</a></li>
+      <li><a href="../components/map.html">Map</a></li>
+    </ul></details>
+    <details open><summary>Feedback</summary><ul>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/alert.html">Alert</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/progress-bar.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Auth and marketing</summary><ul>
+      <li><a href="../components/auth-card.html">Auth card</a></li>
+      <li><a href="../components/hero.html">Hero</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/data-tables-and-lists.html">Tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Component · Feedback</p>
+      <h1>Inline message</h1>
+      <p class="ds-lead">An inline message sits right under one field and talks about that field only: a hint before typing ("How we greet you."), an error after ("This address isn't on the image allow-list."), or a quiet confirmation when a check passed.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA</span><span class="ds-pill">Status: stable</span><span class="ds-pill">Angular: part of <code>sd-text-input</code></span><span class="ds-pill"><code>aria-describedby</code></span></div>
+      <ul class="ds-toc">
+        <li><a href="#overview">Overview</a></li><li><a href="#anatomy">Anatomy</a></li><li><a href="#variants">Variants</a></li><li><a href="#sizes">Sizes</a></li><li><a href="#states">States</a></li><li><a href="#responsive">Responsive</a></li><li><a href="#theming">Theming</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#content">Content</a></li><li><a href="#do-dont">Do and don't</a></li><li><a href="#tokens">Tokens</a></li><li><a href="#code">Code</a></li><li><a href="#sources">Sources</a></li>
+      </ul>
+    </header>
+
+    <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+      <ul>
+        <li><b>Hint</b> (<code>.field__hint</code>): what the field wants, before anyone types. Formats, limits, why we ask.</li>
+        <li><b>Error</b> (<code>.field__error</code>): what is wrong and how to fix it, with an alert icon. Pairs with <code>aria-invalid="true"</code> on the field.</li>
+        <li><b>Success</b> (<code>.field__success</code>): a check that passed and is worth saying out loud, such as coordinates that were found on the map. Most fields never show one.</li>
+      </ul>
+      <p>A message about the whole form or the account is an <a href="alert.html">alert</a>; a summary of several field errors is the error summary in <a href="../patterns/forms.html">forms</a>. The field itself is documented in <a href="form-field.html">form field</a> and <a href="text-field.html">text field</a>; password strength uses the meter on <a href="progress-bar.html">progress bar</a>.</p>
+    </section>
+
+    <section class="ds-section" id="anatomy"><h2><a href="#anatomy">Anatomy</a></h2>
+      <div class="ds-anatomy">
+        <figure class="ds-anatomy__figure">
+          <div class="field" style="width: 100%; max-width: 22rem;">
+            <label class="field__label" for="an-url">Image URL</label>
+            <input class="field__input" id="an-url" type="url" value="http://images.example.com/memorial-park.jpg" aria-invalid="true" aria-describedby="an-url-err an-url-hint">
+            <p class="field__error" id="an-url-err"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg>Use an https address on an allowed site.</p>
+            <p class="field__hint" id="an-url-hint">HTTPS on an allowed origin only.</p>
+          </div>
+          <span class="ds-callout" style="left: 78%; top: 24%;" aria-hidden="true">1</span>
+          <span class="ds-callout" style="left: 74%; top: 56%;" aria-hidden="true">2</span>
+          <span class="ds-callout" style="left: 66%; top: 76%;" aria-hidden="true">3</span>
+        </figure>
+        <ol class="ds-anatomy__list">
+          <li><div><b>Field in error</b><small><code>aria-invalid="true"</code> turns the border to <code>--colorStatusDangerForeground3</code>; the focus halo turns red too.</small></div></li>
+          <li><div><b>Error</b><small>14px alert icon and caption-size medium text in <code>--colorStatusDangerForeground1</code>, 4px gap. The icon makes it more than colour.</small></div></li>
+          <li><div><b>Hint</b><small>Caption size, <code>--colorNeutralForeground2</code>. Stays visible under the error when it helps fix it.</small></div></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="ds-section" id="variants"><h2><a href="#variants">Variants</a></h2>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack" style="max-width: 26rem;">
+          <div class="field">
+            <label class="field__label" for="v-fam">Family name</label>
+            <input class="field__input" id="v-fam" type="text" value="The Browns" aria-describedby="v-fam-hint">
+            <p class="field__hint" id="v-fam-hint">How we greet you.</p>
+          </div>
+          <div class="field">
+            <label class="field__label" for="v-age">Age</label>
+            <input class="field__input" id="v-age" type="text" inputmode="numeric" value="five" aria-invalid="true" aria-describedby="v-age-err v-age-hint">
+            <p class="field__error" id="v-age-err"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg>Enter Mae's age as a number, like 5.</p>
+            <p class="field__hint" id="v-age-hint">Under 18 counts as a kid.</p>
+          </div>
+          <div class="field">
+            <label class="field__label" for="v-coord">Coordinates</label>
+            <input class="field__input" id="v-coord" type="text" value="43.5507, -79.5862" aria-describedby="v-coord-ok">
+            <p class="field__success" id="v-coord-ok"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-check"/></svg>Found: Port Credit Memorial Park.</p>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>Hint, error (with the hint kept), success.</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;input class="field__input" id="age" aria-invalid="true" aria-describedby="age-err age-hint"&gt;
+&lt;p class="field__error" id="age-err"&gt;&lt;svg class="icon" aria-hidden="true"&gt;&lt;use href="#i-alert"/&gt;&lt;/svg&gt;Enter Mae's age as a number, like 5.&lt;/p&gt;
+&lt;p class="field__hint" id="age-hint"&gt;Under 18 counts as a kid.&lt;/p&gt;</code></pre></details>
+      </div>
+      <h3>With a counter</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack" style="max-width: 26rem;">
+          <div class="field">
+            <label class="field__label" for="v-notes">Notes <span class="field__req">Optional</span></label>
+            <textarea class="field__input" id="v-notes" aria-describedby="v-notes-hint v-notes-count">Street performers along Lakeshore. The kids' zone runs 2 to 5.</textarea>
+            <div class="field__foot"><p class="field__hint" id="v-notes-hint">What a family should know before going.</p><span class="field__counter" id="v-notes-count">62 / 280</span></div>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span><code>.field__foot</code> puts the hint and <code>.field__counter</code> on one line.</span></div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="sizes" data-na="One size. Messages use the caption type step under every field size."><h2><a href="#sizes">Sizes</a></h2><p class="ds-na">One size. Messages use the caption type step under every field size.</p></section>
+
+    <section class="ds-section" id="states"><h2><a href="#states">States</a></h2>
+      <p>The message is static text; it follows its field. Each row shows a field with that message through the field's states.</p>
+      <div class="ds-matrix"><table>
+        <thead><tr><th scope="col">Message</th><th scope="col">Rest</th><th scope="col">Hover</th><th scope="col">Focus</th><th scope="col">Disabled</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Hint</th>
+            <td><div class="field" style="min-width: 13rem;"><label class="field__label" for="s-h1">Email</label><input class="field__input" id="s-h1" type="email" value="q@browns.ca" aria-describedby="s-h1-h"><p class="field__hint" id="s-h1-h">We send the plan here.</p></div></td>
+            <td><div class="field" style="min-width: 13rem;"><label class="field__label" for="s-h2">Email</label><input class="field__input" id="s-h2" type="email" value="q@browns.ca" data-state="hover" aria-describedby="s-h2-h"><p class="field__hint" id="s-h2-h">We send the plan here.</p></div></td>
+            <td><div class="field" style="min-width: 13rem;"><label class="field__label" for="s-h3">Email</label><input class="field__input" id="s-h3" type="email" value="q@browns.ca" data-state="focus" aria-describedby="s-h3-h"><p class="field__hint" id="s-h3-h">We send the plan here.</p></div></td>
+            <td><div class="field" style="min-width: 13rem;"><label class="field__label" for="s-h4">Email</label><input class="field__input" id="s-h4" type="email" value="q@browns.ca" disabled aria-describedby="s-h4-h"><p class="field__hint" id="s-h4-h">We send the plan here.</p></div></td>
+          </tr>
+          <tr><th scope="row">Error</th>
+            <td><div class="field" style="min-width: 13rem;"><label class="field__label" for="s-e1">Email</label><input class="field__input" id="s-e1" type="email" value="q@browns" aria-invalid="true" aria-describedby="s-e1-e"><p class="field__error" id="s-e1-e"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg>Add the part after the dot, like .ca</p></div></td>
+            <td><div class="field" style="min-width: 13rem;"><label class="field__label" for="s-e2">Email</label><input class="field__input" id="s-e2" type="email" value="q@browns" aria-invalid="true" data-state="hover" aria-describedby="s-e2-e"><p class="field__error" id="s-e2-e"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg>Add the part after the dot, like .ca</p></div></td>
+            <td><div class="field" style="min-width: 13rem;"><label class="field__label" for="s-e3">Email</label><input class="field__input" id="s-e3" type="email" value="q@browns" aria-invalid="true" data-state="focus" aria-describedby="s-e3-e"><p class="field__error" id="s-e3-e"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg>Add the part after the dot, like .ca</p></div></td>
+            <td>—</td>
+          </tr>
+          <tr><th scope="row">Success</th>
+            <td><div class="field" style="min-width: 13rem;"><label class="field__label" for="s-s1">Coordinates</label><input class="field__input" id="s-s1" type="text" value="43.5507, -79.5862" aria-describedby="s-s1-s"><p class="field__success" id="s-s1-s"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-check"/></svg>Found on the map.</p></div></td>
+            <td><div class="field" style="min-width: 13rem;"><label class="field__label" for="s-s2">Coordinates</label><input class="field__input" id="s-s2" type="text" value="43.5507, -79.5862" data-state="hover" aria-describedby="s-s2-s"><p class="field__success" id="s-s2-s"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-check"/></svg>Found on the map.</p></div></td>
+            <td><div class="field" style="min-width: 13rem;"><label class="field__label" for="s-s3">Coordinates</label><input class="field__input" id="s-s3" type="text" value="43.5507, -79.5862" data-state="focus" aria-describedby="s-s3-s"><p class="field__success" id="s-s3-s"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-check"/></svg>Found on the map.</p></div></td>
+            <td>—</td>
+          </tr>
+        </tbody>
+      </table></div>
+      <p>A disabled field keeps its hint (it may explain why it is disabled) but never shows an error or success: the person cannot act on it.</p>
+      <h3>When to validate</h3>
+      <ol>
+        <li><b>While typing the first time:</b> say nothing. An error that appears after one letter of an email is noise.</li>
+        <li><b>On blur:</b> check the field. Show the error under it and set <code>aria-invalid="true"</code>.</li>
+        <li><b>Once a field has an error:</b> re-check on every input, so the error clears the moment it is fixed. Never add a new error while typing.</li>
+        <li><b>On submit:</b> check everything, show each field's error, and show the error summary at the top of the form with focus on it (<a href="../patterns/forms.html">forms</a>).</li>
+        <li><b>Checks with no blur</b>, such as a file chosen in a picker: show the error at once in a <code>role="alert"</code> message (the profile photo dialog does this).</li>
+      </ol>
+      <h3>Both themes</h3>
+      <div class="ds-themes">
+        <div data-theme="light"><div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0;"><p class="field__hint">JPG, PNG or WebP, up to 2 MB.</p><p class="field__error"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg>That file is not a JPG, PNG or WebP image.</p><p class="field__success"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-check"/></svg>Found: Port Credit Memorial Park.</p><span class="field__counter">62 / 280</span></div></div>
+        <div data-theme="dark"><div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0;"><p class="field__hint">JPG, PNG or WebP, up to 2 MB.</p><p class="field__error"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg>That file is not a JPG, PNG or WebP image.</p><p class="field__success"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-check"/></svg>Found: Port Credit Memorial Park.</p><span class="field__counter">62 / 280</span></div></div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="responsive"><h2><a href="#responsive">Responsive behaviour</a></h2>
+      <ul>
+        <li>Messages wrap under the field at the field's width; they never truncate and never sit beside the field.</li>
+        <li>In a two-column row (<code>.field--row</code>) each message stays under its own field, so rows can end at different heights.</li>
+        <li>A counter in <code>.field__foot</code> keeps its place at the end of the line; the hint wraps before it.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="theming"><h2><a href="#theming">Theming</a></h2>
+      <p>Messages read status and neutral foreground tokens directly; there are no component tokens. The invalid field reads <code>--sd-field-border</code>, which <code>aria-invalid</code> sets to <code>--colorStatusDangerForeground3</code>. In the dark theme the danger and success foregrounds switch to their light steps on the dark field surface.</p>
+    </section>
+
+    <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
+      <h3>Role and pattern</h3>
+      <p>Messages are plain paragraphs linked to the field with <code>aria-describedby</code>, error first: <code>aria-describedby="age-err age-hint"</code>. Every id listed must exist in the DOM: the Angular <code>sd-text-input</code> hides the hint while an error shows but still lists the hint's id. Errors use <code>aria-invalid="true"</code> on the field (3.3.1). No APG widget pattern applies.</p>
+      <h3>Keyboard</h3>
+      <table class="ds-table ds-keys"><thead><tr><th scope="col">Key</th><th scope="col">Action</th></tr></thead><tbody>
+        <tr><td><kbd>Tab</kbd></td><td>Leaving a field validates it; the message is read when focus returns.</td></tr>
+        <tr><td><kbd>Enter</kbd></td><td>Submits the form; all errors appear and focus moves to the summary.</td></tr>
+      </tbody></table>
+      <h3>Focus</h3>
+      <p>Validation never moves focus on blur; the person is already on the next field. On submit focus goes to the error summary, whose links move focus to each invalid field.</p>
+      <h3>Labelling</h3>
+      <p>The error repeats enough of the field to stand alone in the summary ("Enter Mae's age as a number, like 5."). Do not use <code>role="alert"</code> on errors shown on blur: it would interrupt the label of the field the person just moved to. The icon is decorative.</p>
+      <h3>Contrast</h3>
+      <div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0; gap: var(--spacingHorizontalS);">
+        <div class="ds-pair"><span>Hint on a card or dialog</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground2|--colorNeutralBackground1" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Hint on the page</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground2|--colorNeutralBackground2" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Error text</span><span class="ds-pair__ratio" data-contrast="--colorStatusDangerForeground1|--colorNeutralBackground1" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Success text</span><span class="ds-pair__ratio" data-contrast="--colorStatusSuccessForeground1|--colorNeutralBackground1" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Counter</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground3|--colorNeutralBackground1" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Invalid border</span><span class="ds-pair__ratio" data-contrast="--colorStatusDangerForeground3|--colorNeutralBackground1" data-min="3"></span></div>
+      </div>
+      <h3>Motion</h3>
+      <p>The border colour changes over <code>--durationFast</code>; messages appear without animation, so nothing slides under the cursor.</p>
+      <h3>Touch</h3>
+      <p>Messages are not targets. Links inside a hint ("Copy the coordinates from any map app") keep the 24px minimum.</p>
+    </section>
+
+    <section class="ds-section" id="content"><h2><a href="#content">Content</a></h2>
+      <ul>
+        <li>Hints: short and specific, a full stop: "How we greet you.", "JPG, PNG or WebP, up to 2 MB.", "Under 18 counts as a kid."</li>
+        <li>Errors: say how to fix it, with an example when the format is the problem: "Enter Mae's age as a number, like 5." Not "Invalid input".</li>
+        <li>Name the actual problem: "That file is not a JPG, PNG or WebP image." Not "Upload failed".</li>
+        <li>No blame, no "please", no exclamation marks.</li>
+        <li>Success: what was confirmed, not praise: "Found: Port Credit Memorial Park." Not "Looks good!"</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="do-dont"><h2><a href="#do-dont">Do and don't</a></h2>
+      <div class="ds-dodont">
+        <figure class="ds-do"><div class="ds-example__canvas ds-example__canvas--stack"><div class="field"><label class="field__label" for="dd-1">Email</label><input class="field__input" id="dd-1" type="email" value="q@browns" aria-invalid="true" aria-describedby="dd-1-e"><p class="field__error" id="dd-1-e"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg>Add the part after the dot, like .ca</p></div></div><figcaption>Red border, icon and words together.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas ds-example__canvas--stack"><div class="field"><label class="field__label" for="dd-2">Email</label><input class="field__input" id="dd-2" type="email" value="q@browns" aria-invalid="true"></div></div><figcaption>A red border alone, as on the sign-in mock's fields, does not say what is wrong (1.4.1, 3.3.1).</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas ds-example__canvas--stack"><div class="field"><label class="field__label" for="dd-3">Coordinates</label><input class="field__input" id="dd-3" type="text" aria-describedby="dd-3-h"><p class="field__hint" id="dd-3-h">Latitude, longitude. Copy them from any map app.</p></div></div><figcaption>Put the format in a hint that stays visible.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas ds-example__canvas--stack"><div class="field"><label class="field__label" for="dd-4">Coordinates</label><input class="field__input" id="dd-4" type="text" placeholder="Latitude, longitude"></div></div><figcaption>A placeholder hint disappears as soon as typing starts, and is hard to read.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas"><p class="field__error"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg>That file is not a JPG, PNG or WebP image.</p></div><figcaption>An alert icon for errors.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><p class="field__error"><svg class="icon icon--xs" aria-hidden="true"><use href="#i-close"/></svg>This address isn't on the image allow-list.</p></div><figcaption>The mocks use a 12px close (×) glyph, which reads as "clear this" and is too small to recognise.</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="ds-section" id="tokens"><h2><a href="#tokens">Tokens</a></h2>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Part</th><th scope="col">Token</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead>
+        <tbody>
+          <tr><td>Hint</td><td><code>--colorNeutralForeground2</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralForeground2" data-swatch></i><span data-token="--colorNeutralForeground2"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralForeground2" data-swatch></i><span data-token="--colorNeutralForeground2"></span></span></td></tr>
+          <tr><td>Error text</td><td><code>--colorStatusDangerForeground1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorStatusDangerForeground1" data-swatch></i><span data-token="--colorStatusDangerForeground1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorStatusDangerForeground1" data-swatch></i><span data-token="--colorStatusDangerForeground1"></span></span></td></tr>
+          <tr><td>Invalid border</td><td><code>--colorStatusDangerForeground3</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorStatusDangerForeground3" data-swatch></i><span data-token="--colorStatusDangerForeground3"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorStatusDangerForeground3" data-swatch></i><span data-token="--colorStatusDangerForeground3"></span></span></td></tr>
+          <tr><td>Invalid focus halo</td><td><code>--colorStatusDangerBackground1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorStatusDangerBackground1" data-swatch></i><span data-token="--colorStatusDangerBackground1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorStatusDangerBackground1" data-swatch></i><span data-token="--colorStatusDangerBackground1"></span></span></td></tr>
+          <tr><td>Success text</td><td><code>--colorStatusSuccessForeground1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorStatusSuccessForeground1" data-swatch></i><span data-token="--colorStatusSuccessForeground1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorStatusSuccessForeground1" data-swatch></i><span data-token="--colorStatusSuccessForeground1"></span></span></td></tr>
+          <tr><td>Counter, optional marker</td><td><code>--colorNeutralForeground3</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralForeground3" data-swatch></i><span data-token="--colorNeutralForeground3"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralForeground3" data-swatch></i><span data-token="--colorNeutralForeground3"></span></span></td></tr>
+          <tr><td>Type</td><td><code>--typographyCaption1</code>, <code>--fontWeightMedium</code> for error and success</td><td colspan="2"><span data-token="--typographyCaption1"></span> / <span data-token="--fontWeightMedium"></span></td></tr>
+          <tr><td>Gap to field / icon gap</td><td><code>--spacingVerticalSNudge</code>, <code>--spacingHorizontalXS</code></td><td colspan="2"><span data-token="--spacingVerticalSNudge"></span> / <span data-token="--spacingHorizontalXS"></span></td></tr>
+          <tr><td>Border transition</td><td><code>--durationFast</code></td><td colspan="2"><span data-token="--durationFast"></span></td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section class="ds-section" id="code"><h2><a href="#code">Code</a></h2>
+      <pre><code>&lt;div class="field"&gt;
+  &lt;label class="field__label" for="ad2-url"&gt;Image URL&lt;/label&gt;
+  &lt;input class="field__input" id="ad2-url" type="url" aria-invalid="true" aria-describedby="ad2-url-err ad2-url-hint"&gt;
+  &lt;p class="field__error" id="ad2-url-err"&gt;
+    &lt;svg class="icon" aria-hidden="true"&gt;&lt;use href="#i-alert"/&gt;&lt;/svg&gt;Use an https address on an allowed site.
+  &lt;/p&gt;
+  &lt;p class="field__hint" id="ad2-url-hint"&gt;HTTPS on an allowed origin only.&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;!-- No blur to wait for: announce at once --&gt;
+&lt;p class="field__error" role="alert"&gt;…That file is not a JPG, PNG or WebP image.&lt;/p&gt;</code></pre>
+      <table class="ds-table"><thead><tr><th scope="col">Class / attribute</th><th scope="col">Effect</th></tr></thead><tbody>
+        <tr><td><code>.field__hint</code></td><td>Neutral helper text.</td></tr>
+        <tr><td><code>.field__error</code></td><td>Danger text with a leading 14px icon.</td></tr>
+        <tr><td><code>.field__success</code></td><td>Success text with a leading icon.</td></tr>
+        <tr><td><code>.field__foot</code> + <code>.field__counter</code></td><td>Hint and counter on one line.</td></tr>
+        <tr><td><code>aria-invalid="true"</code></td><td>On the field: red border and halo, announced as invalid.</td></tr>
+        <tr><td><code>aria-describedby</code></td><td>On the field: error id, then hint id.</td></tr>
+      </tbody></table>
+      <p>Angular: <code>&lt;sd-text-input label="Age" hint="Under 18 counts as a kid." [error]="ageError" /&gt;</code>.</p>
+    </section>
+
+    <section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>
+      <ul>
+        <li><a href="../../mocks/pages/create-account.html">pages/create-account</a>: the family name hint.</li>
+        <li><a href="../../mocks/pages/dialogs.html">pages/dialogs</a>: hints in the member, block time and photo dialogs; the AD2 URL error with <code>aria-describedby</code>; the profile photo error with <code>role="alert"</code>.</li>
+        <li><a href="../../mocks/pages/sign-in.html">pages/sign-in</a>: fields marked <code>aria-invalid</code> with the reason in a banner.</li>
+      </ul>
+      <p>Drift fixed: D04 (faint text for the optional marker and counter now <code>--colorNeutralForeground3</code>), D05 (hint colour), D06 (field border contrast), D12 (no message text under 12px). Found while extracting: the 12px close glyph used as the error icon, and the Angular text input listing a hint id it does not render. <code>.field__success</code> and the counter are not used in any mock yet.</p>
+    </section>
+
+    <footer class="ds-footer"><span>Saturdaze design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/icons.js"></script>
+<script src="../assets/ds.js"></script>
+</body>
+</html>

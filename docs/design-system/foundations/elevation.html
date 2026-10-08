@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Elevation — Saturdaze design system</title>
+<meta name="description" content="Shadow levels, the surface hierarchy, how the dark theme shows depth, and the z-order layers.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html"><span class="brand-mark" aria-hidden="true"></span>Saturdaze DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Actions</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+    </ul></details>
+    <details open><summary>Inputs</summary><ul>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/chip-input.html">Chip input</a></li>
+      <li><a href="../components/file-upload.html">File upload</a></li>
+      <li><a href="../components/photo-pick.html">Photo pick</a></li>
+      <li><a href="../components/rating.html">Rating</a></li>
+      <li><a href="../components/vote-row.html">Vote row</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+    </ul></details>
+    <details open><summary>Navigation</summary><ul>
+      <li><a href="../components/top-bar.html">Top bar</a></li>
+      <li><a href="../components/bottom-nav.html">Bottom nav</a></li>
+      <li><a href="../components/sidebar-navigation.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs (segments)</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+      <li><a href="../components/footer.html">Footer</a></li>
+    </ul></details>
+    <details open><summary>Containers and overlays</summary><ul>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/container.html">Container and grid</a></li>
+      <li><a href="../components/page-header.html">Page header</a></li>
+    </ul></details>
+    <details open><summary>Data display</summary><ul>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/activity-feed.html">Activity feed</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/chip.html">Chip</a></li>
+      <li><a href="../components/filter-chip.html">Filter chip</a></li>
+      <li><a href="../components/disc.html">Disc</a></li>
+      <li><a href="../components/media.html">Media</a></li>
+      <li><a href="../components/cover.html">Cover photo</a></li>
+      <li><a href="../components/stat.html">Stat</a></li>
+      <li><a href="../components/itinerary.html">Itinerary</a></li>
+      <li><a href="../components/map.html">Map</a></li>
+    </ul></details>
+    <details open><summary>Feedback</summary><ul>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/alert.html">Alert</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/progress-bar.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Auth and marketing</summary><ul>
+      <li><a href="../components/auth-card.html">Auth card</a></li>
+      <li><a href="../components/hero.html">Hero</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/data-tables-and-lists.html">Tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Foundation</p>
+      <h1>Elevation</h1>
+      <p class="ds-lead">Elevation separates the page from what sits on it for a moment. Surfaces step up in colour, overlays cast a shadow, and nine named layers decide what covers what.</p>
+      <div class="ds-meta"><span class="ds-pill">Tokens: <code>--shadow*</code>, <code>--zIndex*</code>, shadow colours</span><span class="ds-pill">Surface first, shadow second</span></div>
+      <ul class="ds-toc">
+        <li><a href="#overview">Overview</a></li><li><a href="#shadows">Shadows</a></li><li><a href="#surfaces">Surfaces</a></li><li><a href="#dark">Dark theme</a></li><li><a href="#z-order">Z-order</a></li><li><a href="#usage">Usage</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#tokens">Tokens</a></li><li><a href="#sources">Sources</a></li>
+      </ul>
+    </header>
+
+    <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+      <p>Elevation tells a family what is part of the page and what is on top of it for a moment. Saturdaze keeps it flat: most surfaces are separated by colour and a hairline, and real shadows are saved for things that float.</p>
+      <ul>
+        <li><b>Four shadow levels</b> (2, 4, 16, 28) and a focus ring, with themed shadow colours.</li>
+        <li><b>Three surfaces and a recess:</b> canvas, surface, raised, and wells inside surfaces.</li>
+        <li><b>Nine z-order layers</b> from page content to tooltips.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="shadows"><h2><a href="#shadows">Shadow levels</a></h2>
+      <p>Four shadow levels, named by Fluent's blur depth, plus a focus ring. A higher number means the surface is further from the page and more temporary: a hover lifts to 16, an overlay that will close sits at 28.</p>
+      <div class="ds-shadow-grid" style="margin-block: var(--spacingVerticalL);"><div style="--shadow: var(--shadow2);">2</div><div style="--shadow: var(--shadow4);">4</div><div style="--shadow: var(--shadow16);">16</div><div style="--shadow: var(--shadow28);">28</div><div style="--shadow: var(--shadowFocusRing);">Focus ring</div></div>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Level</th><th scope="col">Token</th><th scope="col">Where it is used</th></tr></thead>
+        <tbody>
+          <tr><td>2 · Hairline</td><td><code>--shadow2</code></td><td>The top bar and site bar once the page scrolls: a 1px line in the divider colour, not a blur.</td></tr>
+          <tr><td>4 · Resting lift</td><td><code>--shadow4</code></td><td>The primary button, the selected segment or radio option, the switch thumb.</td></tr>
+          <tr><td>16 · Hover and cards that float</td><td><code>--shadow16</code></td><td>An interactive card on hover, the auth card, the dialog specimen, the landing browser frame, tooltips.</td></tr>
+          <tr><td>28 · Overlays</td><td><code>--shadow28</code></td><td>Dialogs and sheets, menus, the floating bottom nav, toasts, the skip link.</td></tr>
+          <tr><td>Focus ring</td><td><code>--shadowFocusRing</code></td><td>A two-colour ring (surface gap, then the focus colour) for surfaces where an outline would be clipped. Components use an outline today; this is the fallback.</td></tr>
+        </tbody>
+      </table></div>
+      <p>Each shadow mixes a tight ambient layer (contact) with a softer key layer (distance). Their colours are theme tokens: <code>--colorNeutralShadowAmbient</code>, <code>--colorNeutralShadowKey</code> and <code>--colorNeutralShadowKeyDarker</code>, ink at 4, 6 and 12% in light and black at 30, 40 and 55% in dark.</p>
+    </section>
+
+    <section class="ds-section" id="surfaces"><h2><a href="#surfaces">Surface hierarchy</a></h2>
+      <p>Depth in Saturdaze comes from surface colour first and shadow second. There are three levels and one recess:</p>
+      <ol>
+        <li><b>Canvas</b> (<code>--colorNeutralBackground2</code>): the page itself, cream in light.</li>
+        <li><b>Surface</b> (<code>--colorNeutralBackground1</code>): cards, lists, inputs, panels. White in light, with a decorative <code>--colorNeutralStroke2</code> edge and no shadow at rest.</li>
+        <li><b>Raised</b> (<code>--colorNeutralBackgroundRaised</code> + <code>--shadow28</code>): dialogs, menus, the bottom nav, toasts. Anything that floats above the page and will go away.</li>
+      </ol>
+      <p><b>Wells</b> (<code>--colorNeutralBackground3</code>) sit inside a surface and read as recessed: locked rows, chips, segment tracks, copy fields. They never take a shadow.</p>
+      <div class="ds-themes" style="margin-block: var(--spacingVerticalL);">
+        <div data-theme="light"><div class="stack">
+            <p style="font: var(--typographyBody2); color: var(--colorNeutralForeground2);">Canvas · <code>--colorNeutralBackground2</code></p>
+            <article class="card">
+              <p class="card__title">Saturday</p>
+              <p class="card__meta">Surface · <code>--colorNeutralBackground1</code></p>
+              <div class="well"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg><div><p class="well__title">Swim lessons</p><p class="well__body">Well · <code>--colorNeutralBackground3</code></p></div></div>
+            </article>
+            <ul class="menu" aria-label="Weekend options (example)" style="min-width: 0; width: 100%;">
+              <li><button class="menu__item" type="button"><svg class="icon" aria-hidden="true"><use href="#i-edit"/></svg>Rename weekend</button></li>
+              <li><button class="menu__item" type="button"><svg class="icon" aria-hidden="true"><use href="#i-share"/></svg>Share</button></li>
+            </ul>
+            <p style="font: var(--typographyCaption1); color: var(--colorNeutralForeground2);">Raised · <code>--colorNeutralBackgroundRaised</code> + <code>--shadow28</code></p>
+          </div></div>
+        <div data-theme="dark"><div class="stack">
+            <p style="font: var(--typographyBody2); color: var(--colorNeutralForeground2);">Canvas · <code>--colorNeutralBackground2</code></p>
+            <article class="card">
+              <p class="card__title">Saturday</p>
+              <p class="card__meta">Surface · <code>--colorNeutralBackground1</code></p>
+              <div class="well"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg><div><p class="well__title">Swim lessons</p><p class="well__body">Well · <code>--colorNeutralBackground3</code></p></div></div>
+            </article>
+            <ul class="menu" aria-label="Weekend options (example)" style="min-width: 0; width: 100%;">
+              <li><button class="menu__item" type="button"><svg class="icon" aria-hidden="true"><use href="#i-edit"/></svg>Rename weekend</button></li>
+              <li><button class="menu__item" type="button"><svg class="icon" aria-hidden="true"><use href="#i-share"/></svg>Share</button></li>
+            </ul>
+            <p style="font: var(--typographyCaption1); color: var(--colorNeutralForeground2);">Raised · <code>--colorNeutralBackgroundRaised</code> + <code>--shadow28</code></p>
+          </div></div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="dark"><h2><a href="#dark">Elevation in the dark theme</a></h2>
+      <p>Shadows barely read on a dark page, so the dark theme carries elevation with lightness instead: <b>the higher a surface, the lighter it is</b>.</p>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Level</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead>
+        <tbody>
+          <tr><td>Canvas</td><td>Cream 50</td><td>Umber 900 (darkest)</td></tr>
+          <tr><td>Surface</td><td>White</td><td>Umber 850</td></tr>
+          <tr><td>Raised</td><td>White + shadow</td><td>Umber 800 + a darker shadow</td></tr>
+          <tr><td>Well, hover</td><td>Cream 100 (darker than the surface)</td><td>Umber 750 (lighter than the surface)</td></tr>
+        </tbody>
+      </table></div>
+      <ul>
+        <li><b>Shadows get darker, not lighter.</b> The shadow colours switch from ink at 4 to 12% to black at 30 to 55%, so the edge of a menu or dialog still separates from the umber page.</li>
+        <li><b>Edges take over.</b> The decorative strokes become cream at 10 and 18%, so a card's border does the work its shadow cannot.</li>
+        <li><b>Wells flip direction.</b> In light a well is darker than its card; in dark it is lighter. Both read as "a different layer" without a shadow.</li>
+        <li><b>The scrim deepens</b> from ink at 40% to black at 60%, so a dialog still stands out from the page behind it.</li>
+      </ul>
+      <div class="ds-themes">
+        <div data-theme="light"><div class="ds-shadow-grid" style="padding: 0; background: transparent;"><div style="--shadow: var(--shadow2);">2</div><div style="--shadow: var(--shadow4);">4</div><div style="--shadow: var(--shadow16);">16</div><div style="--shadow: var(--shadow28);">28</div><div style="--shadow: var(--shadowFocusRing);">Focus ring</div></div></div>
+        <div data-theme="dark"><div class="ds-shadow-grid" style="padding: 0; background: transparent;"><div style="--shadow: var(--shadow2);">2</div><div style="--shadow: var(--shadow4);">4</div><div style="--shadow: var(--shadow16);">16</div><div style="--shadow: var(--shadow28);">28</div><div style="--shadow: var(--shadowFocusRing);">Focus ring</div></div></div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="z-order"><h2><a href="#z-order">Z-order</a></h2>
+      <p>Nine named layers, spaced so a new layer can slot in without renumbering. A component never sets a raw <code>z-index</code>; it picks its layer here.</p>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Layer</th><th scope="col">Token</th><th scope="col">Value</th><th scope="col">What lives there</th></tr></thead>
+        <tbody>
+          <tr><td>Base</td><td><code>--zIndexBase</code></td><td><span data-token="--zIndexBase"></span></td><td>Page content</td></tr>
+          <tr><td>Raised</td><td><code>--zIndexRaised</code></td><td><span data-token="--zIndexRaised"></span></td><td>A timeline disc above its rail; a stacked avatar above its neighbour</td></tr>
+          <tr><td>Sticky</td><td><code>--zIndexSticky</code></td><td><span data-token="--zIndexSticky"></span></td><td>The day header that sticks while the day scrolls</td></tr>
+          <tr><td>Top bar</td><td><code>--zIndexTopBar</code></td><td><span data-token="--zIndexTopBar"></span></td><td>Top bar, site bar, admin navigation bar</td></tr>
+          <tr><td>Bottom nav</td><td><code>--zIndexBottomNav</code></td><td><span data-token="--zIndexBottomNav"></span></td><td>The floating bottom nav, above content and any sticky header</td></tr>
+          <tr><td>Dialog</td><td><code>--zIndexDialog</code></td><td><span data-token="--zIndexDialog"></span></td><td>Dialog panels and their scrim, above all navigation</td></tr>
+          <tr><td>Popover</td><td><code>--zIndexPopover</code></td><td><span data-token="--zIndexPopover"></span></td><td>Menus and select popovers; above dialogs because a menu can open from inside one</td></tr>
+          <tr><td>Toast</td><td><code>--zIndexToast</code></td><td><span data-token="--zIndexToast"></span></td><td>Toasts, above dialogs so &quot;Saved&quot; is seen after a dialog closes over it</td></tr>
+          <tr><td>Tooltip</td><td><code>--zIndexTooltip</code></td><td><span data-token="--zIndexTooltip"></span></td><td>Tooltips and the skip link: the top of everything</td></tr>
+        </tbody>
+      </table></div>
+      <p>Layers only compete inside the same stacking context. Dialogs, menus, toasts and tooltips render at the end of <code>body</code> (Angular CDK Overlay in the product), so their tokens decide the order; a <code>transform</code> or <code>filter</code> on an ancestor would trap them, which is why overlays are never rendered inside a card.</p>
+    </section>
+
+    <section class="ds-section" id="usage"><h2><a href="#usage">Usage</a></h2>
+      <ul>
+        <li><b>Surface before shadow.</b> Resting cards and lists are separated by colour and a decorative edge, not by a shadow. Shadow is for things that move or float.</li>
+        <li><b>One level per surface.</b> Pick the level for what the surface is (resting control 4, lifted card 16, overlay 28); never stack two shadows or invent an in-between.</li>
+        <li><b>Hover lifts one step.</b> An interactive card goes from no shadow to <code>--shadow16</code> and rises 2px; a primary button from 4 to 16. Only under <code>(hover: hover)</code>, never on touch.</li>
+        <li><b>Wells never cast.</b> A recessed surface takes a fill, not a shadow.</li>
+        <li><b>Layers by token.</b> Use <code>--zIndex*</code>; if two layers need a new order, change the scale, not one component.</li>
+        <li><b>Overlays at the root.</b> Anything at dialog level or above is portalled out of the page flow so its layer is honoured.</li>
+      </ul>
+      <div class="ds-dodont">
+        <figure class="ds-do"><div class="ds-example__canvas ds-example__canvas--canvas"><article class="card" style="width: 100%;"><p class="card__title">Lunch at La Marina</p><p class="card__meta">Saturday · 13:30</p></article></div><figcaption>A resting card: white on cream with a hairline edge.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas ds-example__canvas--canvas"><article class="card" style="width: 100%; box-shadow: var(--shadow28);"><p class="card__title">Lunch at La Marina</p><p class="card__meta">Saturday · 13:30</p></article></div><figcaption>An overlay shadow on a resting card. It looks like a dialog and competes with real ones.</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
+      <ul>
+        <li><b>Shadow is never the only edge.</b> Every raised surface also has a <code>--colorNeutralStroke2</code> border (menus, toasts, the dialog specimen) or a scrim (dialogs), because shadows can be faint on some screens and vanish entirely in forced colours.</li>
+        <li><b>Forced colours.</b> Windows high contrast drops box shadows and replaces fills; borders become <code>CanvasText</code>, so surfaces stay separated by their edges.</li>
+        <li><b>Focus is an outline.</b> The focus ring is a 2px outline in <code>--colorStrokeFocus2</code> that survives forced colours; <code>--shadowFocusRing</code> is used only where an outline would be clipped, and must then be paired with a transparent outline so forced colours still show focus.</li>
+        <li><b>Focus not obscured (2.4.11).</b> Sticky and floating layers (day header, top bar, bottom nav) must not hide the focused element; see <a href="layout.html#accessibility">layout</a>.</li>
+        <li><b>Modal layers trap focus and inert the page below</b> (dialogs); popovers and toasts do not. See <a href="../components/dialog.html">dialog</a>.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="tokens"><h2><a href="#tokens">Tokens</a></h2>
+      <p>Shadow values are shown as written in <code>tokens.css</code>, with their colours resolved at the root. The shadow colours have a light and a dark value.</p>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Part</th><th scope="col">Token</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead>
+        <tbody>
+          <tr><th scope="colgroup" colspan="4">Shadows</th></tr>
+          <tr><td>2 · Hairline</td><td><code>--shadow2</code></td><td colspan="2"><span data-token="--shadow2"></span></td></tr>
+          <tr><td>4 · Resting lift</td><td><code>--shadow4</code></td><td colspan="2"><span data-token="--shadow4"></span></td></tr>
+          <tr><td>16 · Hover and cards that float</td><td><code>--shadow16</code></td><td colspan="2"><span data-token="--shadow16"></span></td></tr>
+          <tr><td>28 · Overlays</td><td><code>--shadow28</code></td><td colspan="2"><span data-token="--shadow28"></span></td></tr>
+          <tr><td>Focus ring</td><td><code>--shadowFocusRing</code></td><td colspan="2"><span data-token="--shadowFocusRing"></span></td></tr>
+          <tr><th scope="colgroup" colspan="4">Shadow colours</th></tr>
+          <tr><td>Ambient: contact layer of shadow 4</td><td><code>--colorNeutralShadowAmbient</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralShadowAmbient" data-swatch></i><span data-token="--colorNeutralShadowAmbient"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralShadowAmbient" data-swatch></i><span data-token="--colorNeutralShadowAmbient"></span></span></td></tr>
+          <tr><td>Key: shadow 16</td><td><code>--colorNeutralShadowKey</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralShadowKey" data-swatch></i><span data-token="--colorNeutralShadowKey"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralShadowKey" data-swatch></i><span data-token="--colorNeutralShadowKey"></span></span></td></tr>
+          <tr><td>Key, darker: shadow 28</td><td><code>--colorNeutralShadowKeyDarker</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralShadowKeyDarker" data-swatch></i><span data-token="--colorNeutralShadowKeyDarker"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralShadowKeyDarker" data-swatch></i><span data-token="--colorNeutralShadowKeyDarker"></span></span></td></tr>
+          <tr><th scope="colgroup" colspan="4">Z-order</th></tr>
+          <tr><td>Base</td><td><code>--zIndexBase</code></td><td colspan="2"><span data-token="--zIndexBase"></span></td></tr>
+          <tr><td>Raised</td><td><code>--zIndexRaised</code></td><td colspan="2"><span data-token="--zIndexRaised"></span></td></tr>
+          <tr><td>Sticky</td><td><code>--zIndexSticky</code></td><td colspan="2"><span data-token="--zIndexSticky"></span></td></tr>
+          <tr><td>Top bar</td><td><code>--zIndexTopBar</code></td><td colspan="2"><span data-token="--zIndexTopBar"></span></td></tr>
+          <tr><td>Bottom nav</td><td><code>--zIndexBottomNav</code></td><td colspan="2"><span data-token="--zIndexBottomNav"></span></td></tr>
+          <tr><td>Dialog</td><td><code>--zIndexDialog</code></td><td colspan="2"><span data-token="--zIndexDialog"></span></td></tr>
+          <tr><td>Popover</td><td><code>--zIndexPopover</code></td><td colspan="2"><span data-token="--zIndexPopover"></span></td></tr>
+          <tr><td>Toast</td><td><code>--zIndexToast</code></td><td colspan="2"><span data-token="--zIndexToast"></span></td></tr>
+          <tr><td>Tooltip</td><td><code>--zIndexTooltip</code></td><td colspan="2"><span data-token="--zIndexTooltip"></span></td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section class="ds-section" id="sources"><h2><a href="#sources">Sources and drift</a></h2>
+      <p>Extracted from <a href="../../mocks/styles/tokens.css">styles/tokens.css</a> (<code>--sd-shadow-1/2/3</code>) and <code>styles/app.css</code> (<code>--sd-z-*</code>, the scrolled top bar), checked on <a href="../../mocks/pages/weekend.html">pages/weekend</a>, <a href="../../mocks/pages/dialogs.html">pages/dialogs</a>, <a href="../../mocks/pages/sign-in.html">pages/sign-in</a> and <a href="../../mocks/pages/landing.html">pages/landing</a>.</p>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Mock</th><th scope="col">System</th><th scope="col">Drift</th></tr></thead>
+        <tbody>
+          <tr><td><code>--sd-shadow-1</code>, <code>-2</code>, <code>-3</code></td><td><code>--shadow4</code>, <code>--shadow16</code>, <code>--shadow28</code></td><td>Same geometry; colours are tokens (D17)</td></tr>
+          <tr><td>Scrolled top bar: a 1px line</td><td><code>--shadow2</code></td><td>New token</td></tr>
+          <tr><td><code>--sd-z-sticky</code> 5, <code>--sd-z-topbar</code> 20, <code>--sd-z-nav</code> 30, <code>--sd-z-dialog</code> 40</td><td><code>--zIndexSticky</code>, <code>--zIndexTopBar</code>, <code>--zIndexBottomNav</code>, <code>--zIndexDialog</code></td><td>Same values</td></tr>
+          <tr><td>No layer for menus, toasts or tooltips</td><td><code>--zIndexPopover</code> 50, <code>--zIndexToast</code> 60, <code>--zIndexTooltip</code> 70; <code>--zIndexBase</code> 0 and <code>--zIndexRaised</code> 1</td><td>New tokens</td></tr>
+          <tr><td>Light-only <code>rgba(31, 41, 55, …)</code> shadow colours</td><td><code>--colorNeutralShadowAmbient/Key/KeyDarker</code> with dark values</td><td>D17, D25</td></tr>
+        </tbody>
+      </table></div>
+      <div class="ds-note">Token note: <code>--shadow*</code> are declared in every theme block of <code>tokens.css</code>, not only on <code>:root</code>, because a shadow resolves its colour where it is declared. That is what lets a <code>[data-theme="dark"]</code> panel inside a light page show dark shadows.</div>
+    </section>
+
+    <footer class="ds-footer"><span>Saturdaze design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/icons.js"></script>
+<script src="../assets/ds.js"></script>
+</body>
+</html>

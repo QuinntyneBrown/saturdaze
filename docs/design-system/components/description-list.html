@@ -1,0 +1,351 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Description list — Saturdaze design system</title>
+<meta name="description" content="Label and value pairs about one thing: a submitted event, a place photo. Stacked on phones, label beside value from 576px, with a quiet value for anything not given.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html"><span class="brand-mark" aria-hidden="true"></span>Saturdaze DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Actions</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+    </ul></details>
+    <details open><summary>Inputs</summary><ul>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/chip-input.html">Chip input</a></li>
+      <li><a href="../components/file-upload.html">File upload</a></li>
+      <li><a href="../components/photo-pick.html">Photo pick</a></li>
+      <li><a href="../components/rating.html">Rating</a></li>
+      <li><a href="../components/vote-row.html">Vote row</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+    </ul></details>
+    <details open><summary>Navigation</summary><ul>
+      <li><a href="../components/top-bar.html">Top bar</a></li>
+      <li><a href="../components/bottom-nav.html">Bottom nav</a></li>
+      <li><a href="../components/sidebar-navigation.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs (segments)</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+      <li><a href="../components/footer.html">Footer</a></li>
+    </ul></details>
+    <details open><summary>Containers and overlays</summary><ul>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/container.html">Container and grid</a></li>
+      <li><a href="../components/page-header.html">Page header</a></li>
+    </ul></details>
+    <details open><summary>Data display</summary><ul>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/activity-feed.html">Activity feed</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/chip.html">Chip</a></li>
+      <li><a href="../components/filter-chip.html">Filter chip</a></li>
+      <li><a href="../components/disc.html">Disc</a></li>
+      <li><a href="../components/media.html">Media</a></li>
+      <li><a href="../components/cover.html">Cover photo</a></li>
+      <li><a href="../components/stat.html">Stat</a></li>
+      <li><a href="../components/itinerary.html">Itinerary</a></li>
+      <li><a href="../components/map.html">Map</a></li>
+    </ul></details>
+    <details open><summary>Feedback</summary><ul>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/alert.html">Alert</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/progress-bar.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Auth and marketing</summary><ul>
+      <li><a href="../components/auth-card.html">Auth card</a></li>
+      <li><a href="../components/hero.html">Hero</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/data-tables-and-lists.html">Tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Component · Data display</p>
+      <h1>Description list</h1>
+      <p class="ds-lead">A description list sets out the facts about one thing as label and value pairs: where a submitted event is, what it costs, who it suits; a photo's alt text, credit, licence and size. A missing fact says "Not given" rather than leaving a gap.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA</span><span class="ds-pill">Status: stable</span><span class="ds-pill">Angular: <code>sd-details</code></span><span class="ds-pill">Native <code>&lt;dl&gt;</code></span></div>
+      <ul class="ds-toc">
+        <li><a href="#overview">Overview</a></li><li><a href="#anatomy">Anatomy</a></li><li><a href="#variants">Variants</a></li><li><a href="#sizes">Sizes</a></li><li><a href="#states">States</a></li><li><a href="#responsive">Responsive</a></li><li><a href="#theming">Theming</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#content">Content</a></li><li><a href="#do-dont">Do and don't</a></li><li><a href="#tokens">Tokens</a></li><li><a href="#code">Code</a></li><li><a href="#sources">Sources</a></li>
+      </ul>
+    </header>
+
+    <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+      <p>Use <code>.details</code> when three or more labelled facts describe one item and a person reads them to decide something: approve a submission, keep a photo. For one or two facts, a meta line does the job ("Sat 20 Jun · 2:00 to 9:00pm"). For many items with the same fields, use a <a href="table.html">table</a> or a <a href="list.html">list</a>.</p>
+      <ul>
+        <li><b>Value</b> (<code>.details__value</code>) is plain text and may run to a sentence or two (Notes).</li>
+        <li><b>Faint value</b> (<code>.details__value--faint</code>) marks a fact the sender left out: "Not given".</li>
+        <li><b>Link value</b> (<code>.details__link</code>) is a URL the reviewer may want to check.</li>
+        <li><b>Stacked</b> (<code>.details--stacked</code>) keeps the label above the value at every width, for narrow columns such as admin photo tiles.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="anatomy"><h2><a href="#anatomy">Anatomy</a></h2>
+      <div class="ds-anatomy">
+        <figure class="ds-anatomy__figure" style="padding-inline: 3rem;">
+          <dl class="details" style="width: 100%;">
+            <dt class="details__label">Location</dt><dd class="details__value">Memorial Park, Lakeshore Rd</dd>
+            <dt class="details__label">Cost</dt><dd class="details__value">Free</dd>
+            <dt class="details__label">Link</dt><dd class="details__value details__value--faint">Not given</dd>
+          </dl>
+          <span class="ds-callout" style="left: 3%; top: 30%;" aria-hidden="true">1</span>
+          <span class="ds-callout" style="left: 60%; top: 20%;" aria-hidden="true">2</span>
+          <span class="ds-callout" style="left: 60%; top: 80%;" aria-hidden="true">3</span>
+          <span class="ds-callout" style="left: 97%; top: 50%;" aria-hidden="true">4</span>
+        </figure>
+        <ol class="ds-anatomy__list">
+          <li><div><b>Label</b><small><code>&lt;dt class="details__label"&gt;</code>, <code>--typographyBody2</code> in the secondary colour; a 96px column from 576px.</small></div></li>
+          <li><div><b>Value</b><small><code>&lt;dd class="details__value"&gt;</code>, <code>--typographyBody1</code>; long words break.</small></div></li>
+          <li><div><b>Faint value</b><small><code>.details__value--faint</code> in <code>--colorNeutralForeground3</code>: "Not given".</small></div></li>
+          <li><div><b>List</b><small><code>&lt;dl class="details"&gt;</code>: a grid, 8px between rows, 12px between columns.</small></div></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="ds-section" id="variants"><h2><a href="#variants">Variants</a></h2>
+      <h3>Default, in a review card</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack ds-example__canvas--canvas">
+          <article class="card card--pad-lg" aria-labelledby="v-sub" style="max-width: 36rem;">
+            <div class="card__head">
+              <span class="date-tile" aria-hidden="true"><span class="date-tile__m">Jun</span><span class="date-tile__d">20</span></span>
+              <div class="card__head-text"><h3 class="card__title" id="v-sub">Port Credit Buskerfest</h3><p class="card__meta">Sat 20 Jun · 2:00 to 9:00pm</p></div>
+              <span class="chip chip--sun">Pending</span>
+            </div>
+            <dl class="details">
+              <dt class="details__label">Location</dt><dd class="details__value">Memorial Park, Lakeshore Rd</dd>
+              <dt class="details__label">Cost</dt><dd class="details__value">Free</dd>
+              <dt class="details__label">Ages</dt><dd class="details__value">All ages</dd>
+              <dt class="details__label">Link</dt><dd class="details__value"><a class="details__link" href="https://example.com/port-credit-buskerfest-2026" target="_blank" rel="noopener">example.com/port-credit-buskerfest-2026<span class="visually-hidden"> (opens in a new tab)</span><svg class="icon icon--xs" aria-hidden="true"><use href="#i-external"/></svg></a></dd>
+              <dt class="details__label">Notes</dt><dd class="details__value">Street performers along Lakeshore. The kids' zone runs 2 to 5, then it gets loud.</dd>
+            </dl>
+          </article>
+        </div>
+        <div class="ds-example__caption"><span>Review submissions. Resize below 576px and the labels move above their values.</span></div>
+      </div>
+
+      <h3>With values not given</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack">
+          <dl class="details" style="max-width: 36rem;">
+            <dt class="details__label">Location</dt><dd class="details__value">St. Christopher's school, Port Credit</dd>
+            <dt class="details__label">Cost</dt><dd class="details__value details__value--faint">Not given</dd>
+            <dt class="details__label">Ages</dt><dd class="details__value">All ages</dd>
+            <dt class="details__label">Link</dt><dd class="details__value details__value--faint">Not given</dd>
+          </dl>
+        </div>
+        <div class="ds-example__caption"><span>Every label stays, so reviewers see at a glance what is missing; the faint value is still real text that screen readers read.</span></div>
+      </div>
+
+      <h3>Stacked, in a photo tile</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--canvas">
+          <article class="card" style="width: 100%; max-width: 17rem;" aria-label="Photo of the lawn running down to the lake">
+            <div class="media media--4x3"><img class="media__img" src="../../mocks/images/lavender-farm.svg" alt="Lawn running down to the lake" width="800" height="600"></div>
+            <dl class="details details--stacked">
+              <dt class="details__label">Alt text</dt><dd class="details__value">Lawn running down to the lake</dd>
+              <dt class="details__label">Credit</dt><dd class="details__value">Photo · Jo Doe</dd>
+              <dt class="details__label">Licence</dt><dd class="details__value">CC BY 4.0</dd>
+              <dt class="details__label">Size</dt><dd class="details__value">1200 × 675</dd>
+            </dl>
+          </article>
+        </div>
+        <div class="ds-example__caption"><span>Proposed for admin place photo tiles, which are about 270px wide: the mock squeezes the label column to 72px with page CSS; stacking keeps every value at full width.</span></div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="sizes" data-na="One size: body text values with smaller labels. Width comes from the container."><h2><a href="#sizes">Sizes</a></h2><p class="ds-na">One size: body text values with smaller labels. Width comes from the container.</p></section>
+
+    <section class="ds-section" id="states"><h2><a href="#states">States</a></h2>
+      <p>A description list is read, not operated. Its only interactive part is a link value; its only data state is a missing value.</p>
+      <div class="ds-matrix"><table>
+        <thead><tr><th scope="col">Value</th><th scope="col">Default</th><th scope="col">Focus</th><th scope="col">Not given</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Text</th>
+            <td><dl class="details details--stacked" style="width: 13rem;"><dt class="details__label">Ages</dt><dd class="details__value">All ages</dd></dl></td>
+            <td><span class="text-faint text-sm">Not focusable</span></td>
+            <td><dl class="details details--stacked" style="width: 13rem;"><dt class="details__label">Ages</dt><dd class="details__value details__value--faint">Not given</dd></dl></td>
+          </tr>
+          <tr><th scope="row">Link</th>
+            <td><dl class="details details--stacked" style="width: 13rem;"><dt class="details__label">Link</dt><dd class="details__value"><a class="details__link" href="https://example.com/terre-bleu" target="_blank" rel="noopener">example.com/terre-bleu<span class="visually-hidden"> (opens in a new tab)</span><svg class="icon icon--xs" aria-hidden="true"><use href="#i-external"/></svg></a></dd></dl></td>
+            <td><dl class="details details--stacked" style="width: 13rem;"><dt class="details__label">Link</dt><dd class="details__value"><a class="details__link" href="https://example.com/terre-bleu" target="_blank" rel="noopener" data-state="focus">example.com/terre-bleu<span class="visually-hidden"> (opens in a new tab)</span><svg class="icon icon--xs" aria-hidden="true"><use href="#i-external"/></svg></a></dd></dl></td>
+            <td><dl class="details details--stacked" style="width: 13rem;"><dt class="details__label">Link</dt><dd class="details__value details__value--faint">Not given</dd></dl></td>
+          </tr>
+        </tbody>
+      </table></div>
+      <h3>Both themes</h3>
+      <div class="ds-themes">
+        <div data-theme="light"><dl class="details"><dt class="details__label">Location</dt><dd class="details__value">Memorial Park</dd><dt class="details__label">Cost</dt><dd class="details__value details__value--faint">Not given</dd><dt class="details__label">Link</dt><dd class="details__value"><a class="details__link" href="https://example.com/buskerfest" target="_blank" rel="noopener">example.com/buskerfest<span class="visually-hidden"> (opens in a new tab)</span><svg class="icon icon--xs" aria-hidden="true"><use href="#i-external"/></svg></a></dd></dl></div>
+        <div data-theme="dark"><dl class="details"><dt class="details__label">Location</dt><dd class="details__value">Memorial Park</dd><dt class="details__label">Cost</dt><dd class="details__value details__value--faint">Not given</dd><dt class="details__label">Link</dt><dd class="details__value"><a class="details__link" href="https://example.com/buskerfest" target="_blank" rel="noopener">example.com/buskerfest<span class="visually-hidden"> (opens in a new tab)</span><svg class="icon icon--xs" aria-hidden="true"><use href="#i-external"/></svg></a></dd></dl></div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="responsive"><h2><a href="#responsive">Responsive behaviour</a></h2>
+      <ul>
+        <li><b>Under 576px</b> each label sits above its value in one column, so long values (a Notes sentence, a URL) get the full width of a phone.</li>
+        <li><b>From 576px</b> labels take a 96px column and values the rest; the label drops 2px so its smaller text lines up with the value's first line.</li>
+        <li><code>.details--stacked</code> keeps the phone layout at every width, for narrow containers.</li>
+        <li>Values wrap and break long words and URLs (<code>overflow-wrap: anywhere</code>); they never truncate, because a reviewer needs the whole URL.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="theming"><h2><a href="#theming">Theming</a></h2>
+      <p>Labels read <code>--colorNeutralForeground2</code>, values <code>--colorNeutralForeground1</code>, faint values <code>--colorNeutralForeground3</code> and links <code>--colorBrandForegroundLink</code>. All four switch with the theme and keep 4.5:1 on the card and well surfaces they sit on. The list draws no surface of its own.</p>
+    </section>
+
+    <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
+      <h3>Role and pattern</h3>
+      <p>No APG widget pattern: a native <code>&lt;dl&gt;</code> with <code>&lt;dt&gt;</code> and <code>&lt;dd&gt;</code> pairs, direct children only (no wrapping <code>&lt;div&gt;</code> per pair, so the grid can place them). Screen readers announce the list and its term count, and read each label with its value. Never fake the pairs with <code>&lt;p&gt;&lt;b&gt;Cost:&lt;/b&gt; Free&lt;/p&gt;</code>.</p>
+      <h3>Keyboard</h3>
+      <table class="ds-table ds-keys"><thead><tr><th scope="col">Key</th><th scope="col">Action</th></tr></thead><tbody>
+        <tr><td><kbd>Tab</kbd></td><td>Stops only on link values.</td></tr>
+        <tr><td><kbd>Enter</kbd></td><td>Opens the link in a new tab.</td></tr>
+      </tbody></table>
+      <h3>Focus</h3>
+      <p>Link values draw the shared 2px ring with a small radius; a wrapped URL gets a ring per line fragment, which is expected.</p>
+      <h3>Labelling</h3>
+      <p>Labels are short nouns that name the value ("Cost", not "How much does it cost?"). A link that opens a new tab says so: visually hidden "(opens in a new tab)" plus the external icon, rather than the arrow used in the mock, which reads as "go to". The faint "Not given" is real text, so a screen-reader user hears that the value is missing rather than nothing.</p>
+      <h3>Contrast</h3>
+      <div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0; gap: var(--spacingHorizontalS);">
+        <div class="ds-pair"><span>Value on card</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground1|--colorNeutralBackground1" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Label on card</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground2|--colorNeutralBackground1" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>"Not given" on card</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground3|--colorNeutralBackground1" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>"Not given" on well</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground3|--colorNeutralBackground3" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Link on card</span><span class="ds-pair__ratio" data-contrast="--colorBrandForegroundLink|--colorNeutralBackground1" data-min="4.5"></span></div>
+      </div>
+      <p>Links are underlined, so they do not rely on colour alone (D20).</p>
+      <h3>Motion</h3>
+      <p>None.</p>
+      <h3>Touch</h3>
+      <p>A link value is an inline target; it is exempt from the 24px minimum as text in a sentence-like block (2.5.8), but keep at least 8px between two link values by giving each its own row.</p>
+    </section>
+
+    <section class="ds-section" id="content"><h2><a href="#content">Content</a></h2>
+      <ul>
+        <li><b>Labels</b>: one word where possible, sentence case, no colon: Location, Cost, Ages, Link, Notes; Alt text, Credit, Licence, Size.</li>
+        <li><b>Values</b>: as the sender wrote them, trimmed. Prices and ages in the product's words: "Free", "All ages", "Ages 5+".</li>
+        <li><b>Missing</b>: always "Not given". Never a dash, "N/A" or an empty row.</li>
+        <li><b>Links</b>: show the URL without the protocol (<code>example.com/port-credit-buskerfest-2026</code>) so the reviewer sees where it goes.</li>
+        <li>Keep the same labels in the same order for every item of a kind, so a reviewer can scan down a queue.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="do-dont"><h2><a href="#do-dont">Do and don't</a></h2>
+      <div class="ds-dodont">
+        <figure class="ds-do"><div class="ds-example__canvas"><dl class="details" style="width: 100%;"><dt class="details__label">Cost</dt><dd class="details__value details__value--faint">Not given</dd></dl></div><figcaption>Keep the row and say "Not given".</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><dl class="details" style="width: 100%;"><dt class="details__label">Cost</dt><dd class="details__value">–</dd></dl></div><figcaption>A dash is read as "dash" or skipped, and does not say whether the value is zero, unknown or free.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas"><dl class="details" style="width: 100%;"><dt class="details__label">Link</dt><dd class="details__value"><a class="details__link" href="https://example.com/buskerfest" target="_blank" rel="noopener">example.com/buskerfest<span class="visually-hidden"> (opens in a new tab)</span><svg class="icon icon--xs" aria-hidden="true"><use href="#i-external"/></svg></a></dd></dl></div><figcaption>Show the address, underline it, and say it opens a new tab.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><dl class="details" style="width: 100%;"><dt class="details__label">Link</dt><dd class="details__value"><a class="details__link" href="https://example.com/buskerfest" target="_blank" rel="noopener">Click here</a></dd></dl></div><figcaption>"Click here" hides where the link goes, and nothing warns that a new tab opens.</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="ds-section" id="tokens"><h2><a href="#tokens">Tokens</a></h2>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Part</th><th scope="col">Token</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead>
+        <tbody>
+          <tr><td>Label</td><td><code>--colorNeutralForeground2</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralForeground2" data-swatch></i><span data-token="--colorNeutralForeground2"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralForeground2" data-swatch></i><span data-token="--colorNeutralForeground2"></span></span></td></tr>
+          <tr><td>Value</td><td><code>--colorNeutralForeground1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralForeground1" data-swatch></i><span data-token="--colorNeutralForeground1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralForeground1" data-swatch></i><span data-token="--colorNeutralForeground1"></span></span></td></tr>
+          <tr><td>Faint value</td><td><code>--colorNeutralForeground3</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralForeground3" data-swatch></i><span data-token="--colorNeutralForeground3"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralForeground3" data-swatch></i><span data-token="--colorNeutralForeground3"></span></span></td></tr>
+          <tr><td>Link</td><td><code>--colorBrandForegroundLink</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorBrandForegroundLink" data-swatch></i><span data-token="--colorBrandForegroundLink"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorBrandForegroundLink" data-swatch></i><span data-token="--colorBrandForegroundLink"></span></span></td></tr>
+          <tr><td>Label / value type</td><td><code>--typographyBody2</code> / <code>--typographyBody1</code></td><td colspan="2"><span data-token="--typographyBody2"></span> / <span data-token="--typographyBody1"></span></td></tr>
+          <tr><td>Link weight</td><td><code>--fontWeightMedium</code></td><td colspan="2"><span data-token="--fontWeightMedium"></span></td></tr>
+          <tr><td>Row gap / column gap</td><td><code>--spacingVerticalS</code> / <code>--spacingHorizontalM</code></td><td colspan="2"><span data-token="--spacingVerticalS"></span> / <span data-token="--spacingHorizontalM"></span></td></tr>
+          <tr><td>Label nudge</td><td><code>--spacingVerticalXXS</code></td><td colspan="2"><span data-token="--spacingVerticalXXS"></span></td></tr>
+          <tr><td>Label column from</td><td><code>--layoutBreakpointMd</code></td><td colspan="2"><span data-token="--layoutBreakpointMd"></span></td></tr>
+        </tbody>
+      </table></div>
+      <p>The 6rem (96px) label column is a fixed value; a longer label wraps inside it.</p>
+    </section>
+
+    <section class="ds-section" id="code"><h2><a href="#code">Code</a></h2>
+      <pre><code>&lt;dl class="details"&gt;
+  &lt;dt class="details__label"&gt;Location&lt;/dt&gt;&lt;dd class="details__value"&gt;Memorial Park, Lakeshore Rd&lt;/dd&gt;
+  &lt;dt class="details__label"&gt;Cost&lt;/dt&gt;&lt;dd class="details__value details__value--faint"&gt;Not given&lt;/dd&gt;
+  &lt;dt class="details__label"&gt;Link&lt;/dt&gt;
+  &lt;dd class="details__value"&gt;
+    &lt;a class="details__link" href="https://example.com/port-credit-buskerfest-2026" target="_blank" rel="noopener"&gt;
+      example.com/port-credit-buskerfest-2026&lt;span class="visually-hidden"&gt; (opens in a new tab)&lt;/span&gt;
+      &lt;svg class="icon icon--xs" aria-hidden="true"&gt;&lt;use href="#i-external"/&gt;&lt;/svg&gt;
+    &lt;/a&gt;
+  &lt;/dd&gt;
+&lt;/dl&gt;
+
+&lt;sd-details [items]="[
+  { label: 'Location', value: 'Memorial Park, Lakeshore Rd' },
+  { label: 'Cost', value: null },
+  { label: 'Link', value: 'example.com/…', href: 'https://example.com/…' }
+]" /&gt;</code></pre>
+      <table class="ds-table"><thead><tr><th scope="col">Class</th><th scope="col">Effect</th></tr></thead><tbody>
+        <tr><td><code>.details</code></td><td>One-column grid; a 96px label column from 576px.</td></tr>
+        <tr><td><code>.details__label</code> <code>.details__value</code></td><td>The <code>&lt;dt&gt;</code> and <code>&lt;dd&gt;</code>.</td></tr>
+        <tr><td><code>.details__value--faint</code></td><td>Tertiary colour for "Not given".</td></tr>
+        <tr><td><code>.details__link</code></td><td>Underlined link with a trailing icon; breaks anywhere.</td></tr>
+        <tr><td><code>.details--stacked</code></td><td>Label above value at every width.</td></tr>
+      </tbody></table>
+    </section>
+
+    <section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>
+      <ul>
+        <li><a href="../../mocks/pages/review-submissions.html">pages/review-submissions</a>: Location, Cost, Ages, Link, Notes, with "Not given".</li>
+        <li><a href="../../mocks/pages/admin.place.html">pages/admin.place</a>: photo tiles with Alt text, Credit, Licence, Size.</li>
+        <li><a href="../../mocks/pages/dialogs.html">pages/dialogs</a>: D1 explains a block in wells and D23 sums up a submission in a sunk card meta line; once they carry three or more labelled facts, a <code>.details</code> list is the fit.</li>
+      </ul>
+      <p>Drift fixed: D04 the faint grey (now <code>--colorNeutralForeground3</code>, 4.75:1 on wells), D05 label contrast, D20 links underlined, D24 the 576px breakpoint in rem. Open: the mock and <code>sd-details</code> mark new-tab links with a right arrow and no warning; this page proposes the external icon and visually hidden "(opens in a new tab)". The photo tiles narrow the label column to 72px and shrink values with page-scoped CSS (<code>body[data-page="admin"] .photo-tile__meta</code>); <code>.details--stacked</code> is the shared alternative.</p>
+    </section>
+
+    <footer class="ds-footer"><span>Saturdaze design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/icons.js"></script>
+<script src="../assets/ds.js"></script>
+</body>
+</html>

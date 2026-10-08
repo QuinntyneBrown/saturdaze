@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Activity feed — Saturdaze design system</title>
+<meta name="description" content="The activity feed lists photo changes newest first as stacked rows: time, who, place, action and change. It is the phone layout of the admin activity log.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html"><span class="brand-mark" aria-hidden="true"></span>Saturdaze DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Actions</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+    </ul></details>
+    <details open><summary>Inputs</summary><ul>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/chip-input.html">Chip input</a></li>
+      <li><a href="../components/file-upload.html">File upload</a></li>
+      <li><a href="../components/photo-pick.html">Photo pick</a></li>
+      <li><a href="../components/rating.html">Rating</a></li>
+      <li><a href="../components/vote-row.html">Vote row</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+    </ul></details>
+    <details open><summary>Navigation</summary><ul>
+      <li><a href="../components/top-bar.html">Top bar</a></li>
+      <li><a href="../components/bottom-nav.html">Bottom nav</a></li>
+      <li><a href="../components/sidebar-navigation.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs (segments)</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+      <li><a href="../components/footer.html">Footer</a></li>
+    </ul></details>
+    <details open><summary>Containers and overlays</summary><ul>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/container.html">Container and grid</a></li>
+      <li><a href="../components/page-header.html">Page header</a></li>
+    </ul></details>
+    <details open><summary>Data display</summary><ul>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/activity-feed.html">Activity feed</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/chip.html">Chip</a></li>
+      <li><a href="../components/filter-chip.html">Filter chip</a></li>
+      <li><a href="../components/disc.html">Disc</a></li>
+      <li><a href="../components/media.html">Media</a></li>
+      <li><a href="../components/cover.html">Cover photo</a></li>
+      <li><a href="../components/stat.html">Stat</a></li>
+      <li><a href="../components/itinerary.html">Itinerary</a></li>
+      <li><a href="../components/map.html">Map</a></li>
+    </ul></details>
+    <details open><summary>Feedback</summary><ul>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/alert.html">Alert</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/progress-bar.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Auth and marketing</summary><ul>
+      <li><a href="../components/auth-card.html">Auth card</a></li>
+      <li><a href="../components/hero.html">Hero</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/data-tables-and-lists.html">Tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Component · Data display</p>
+      <h1>Activity feed</h1>
+      <p class="ds-lead">An ordered list of what changed, newest first: when, who, which place, what kind of change, and the change itself. Each record stacks into a few short lines so the admin activity log reads on a phone.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA</span><span class="ds-pill">Status: stable</span><span class="ds-pill">Angular: admin <code>activity-log</code> page</span><span class="ds-pill">Native <code>&lt;ol&gt;</code> + <code>&lt;time&gt;</code></span></div>
+      <ul class="ds-toc">
+        <li><a href="#overview">Overview</a></li><li><a href="#anatomy">Anatomy</a></li><li><a href="#variants">Variants</a></li><li><a href="#sizes">Sizes</a></li><li><a href="#states">States</a></li><li><a href="#responsive">Responsive</a></li><li><a href="#theming">Theming</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#content">Content</a></li><li><a href="#do-dont">Do and don't</a></li><li><a href="#tokens">Tokens</a></li><li><a href="#code">Code</a></li><li><a href="#sources">Sources</a></li>
+      </ul>
+    </header>
+
+    <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+      <p>Use the activity feed for a time-ordered record of changes that people read top to bottom: the admin activity log of every photo change. Each row is one event and every value in it reads on its own ("admin@saturdaze.app", "Removed rec-room-old.jpg"), so it works without column headers at phone width.</p>
+      <ul>
+        <li>From 720px, prefer the <a href="table.html">table</a> for the same records: column headers let the reader compare times or people down the page. The mock keeps the feed at every width and lines it up in five columns from 1024px; that grid has no headers (drift D23).</li>
+        <li>Use a <a href="list.html">list</a> when each row is a thing to open rather than an event that happened.</li>
+        <li>Use a <a href="toast.html">toast</a> or <a href="alert.html">alert</a> to tell someone about a change as it happens; the feed is the history.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="anatomy"><h2><a href="#anatomy">Anatomy</a></h2>
+      <div class="ds-anatomy">
+        <figure class="ds-anatomy__figure" style="display: block; padding: var(--spacingVerticalXXXL) var(--spacingHorizontalXXL);">
+          <ol class="audit-list list list--card" aria-label="Anatomy example" style="margin: 0; max-width: 22rem;">
+            <li class="audit-row" style="grid-template-columns: minmax(0, 1fr) auto; align-items: start;">
+              <time class="audit-row__time" datetime="2026-10-06T13:41Z">2026-10-06 13:41 UTC</time>
+              <span class="audit-row__who">curator@saturdaze.app</span>
+              <a class="audit-row__place" href="../../mocks/pages/admin.place.html" style="grid-column: 1; justify-self: start;">Harbour Grill</a>
+              <span class="chip chip--sky" style="grid-column: 2; grid-row: 1 / 3; justify-self: end;">Edit</span>
+              <span class="audit-row__change" style="grid-column: 1 / -1;">Alt text: — → Patio tables by the water</span>
+            </li>
+          </ol>
+          <span class="ds-callout" style="left: calc(30% - 2.25rem); top: 23%;" aria-hidden="true">1</span>
+          <span class="ds-callout" style="left: calc(30% - 2.25rem); top: 36.5%;" aria-hidden="true">2</span>
+          <span class="ds-callout" style="left: calc(30% - 2.25rem); top: 50%;" aria-hidden="true">3</span>
+          <span class="ds-callout" style="left: calc(70% + 0.75rem); top: 24%;" aria-hidden="true">4</span>
+          <span class="ds-callout" style="left: calc(30% - 2.25rem); top: 62.5%;" aria-hidden="true">5</span>
+        </figure>
+        <ol class="ds-anatomy__list">
+          <li><div><b>Time</b><small><code>.audit-row__time</code>: <code>&lt;time datetime&gt;</code>, monospace 12px, <code>--colorNeutralForeground2</code>, zone written out.</small></div></li>
+          <li><div><b>Who</b><small><code>.audit-row__who</code>: the account that made the change, <code>--colorNeutralForeground2</code>, breaks anywhere so a long email never overflows.</small></div></li>
+          <li><div><b>Place</b><small><code>.audit-row__place</code>: link to the place, semibold, underlined, <code>--colorBrandForegroundLink</code>.</small></div></li>
+          <li><div><b>Action</b><small>A <a href="chip.html">chip</a> naming the kind of change; top right while stacked.</small></div></li>
+          <li><div><b>Change</b><small><code>.audit-row__change</code>: before → after, full width, <code>--colorNeutralForeground1</code>.</small></div></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="ds-section" id="variants"><h2><a href="#variants">Variants</a></h2>
+      <p>One row layout; the action chip varies. Its word names the change, and its tone groups like changes for scanning. Keep this mapping so the same tone always means the same action.</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--canvas" style="display: block;">
+          <h3 class="visually-hidden" id="feed-title">Activity log</h3>
+          <ol class="audit-list list list--card" aria-labelledby="feed-title" style="margin: 0;">
+            <li class="audit-row">
+              <time class="audit-row__time" datetime="2026-10-06T14:02Z">2026-10-06 14:02 UTC</time>
+              <span class="audit-row__who">admin@saturdaze.app</span>
+              <a class="audit-row__place" href="../../mocks/pages/admin.place.html">Port Credit Memorial Park</a>
+              <span class="chip chip--primary">Primary</span>
+              <span class="audit-row__change">memorial-park-side.jpg → memorial-park.jpg</span>
+            </li>
+            <li class="audit-row">
+              <time class="audit-row__time" datetime="2026-10-06T13:58Z">2026-10-06 13:58 UTC</time>
+              <span class="audit-row__who">admin@saturdaze.app</span>
+              <a class="audit-row__place" href="../../mocks/pages/admin.place.html">Port Credit Memorial Park</a>
+              <span class="chip chip--accent">Upload</span>
+              <span class="audit-row__change">Added memorial-park.jpg · 1200 × 675 · 412 KB</span>
+            </li>
+            <li class="audit-row">
+              <time class="audit-row__time" datetime="2026-10-06T13:41Z">2026-10-06 13:41 UTC</time>
+              <span class="audit-row__who">curator@saturdaze.app</span>
+              <a class="audit-row__place" href="../../mocks/pages/admin.place.html">Harbour Grill</a>
+              <span class="chip chip--sky">Edit</span>
+              <span class="audit-row__change">Alt text: — → Patio tables by the water</span>
+            </li>
+            <li class="audit-row">
+              <time class="audit-row__time" datetime="2026-10-06T11:20Z">2026-10-06 11:20 UTC</time>
+              <span class="audit-row__who">curator@saturdaze.app</span>
+              <a class="audit-row__place" href="../../mocks/pages/admin.place.html">Port Credit Harbour Festival</a>
+              <span class="chip chip--sun">Review</span>
+              <span class="audit-row__change">Rejected harbourfest-2024.jpg · Wrong year</span>
+            </li>
+            <li class="audit-row">
+              <time class="audit-row__time" datetime="2026-10-05T16:05Z">2026-10-05 16:05 UTC</time>
+              <span class="audit-row__who">admin@saturdaze.app</span>
+              <a class="audit-row__place" href="../../mocks/pages/admin.place.html">Rec Room Mississauga</a>
+              <span class="chip chip--warn">Remove</span>
+              <span class="audit-row__change">Removed rec-room-old.jpg · next primary: none</span>
+            </li>
+          </ol>
+          <div class="pager">
+            <span class="pager__text">1 to 5 of 5</span>
+            <button class="btn btn--quiet btn--sm" type="button" disabled><svg class="icon" aria-hidden="true"><use href="#i-arrow_left"/></svg>Previous</button>
+            <button class="btn btn--quiet btn--sm" type="button" disabled>Next<svg class="icon" aria-hidden="true"><use href="#i-arrow_right"/></svg></button>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>The mock's five records. Resize the window: stacked under 1024px, one line per record from 1024px. The <a href="pagination.html">pager</a> sits under the list.</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;ol class="audit-list list list--card" aria-labelledby="log-title"&gt;
+  &lt;li class="audit-row"&gt;
+    &lt;time class="audit-row__time" datetime="2026-10-06T14:02Z"&gt;2026-10-06 14:02 UTC&lt;/time&gt;
+    &lt;span class="audit-row__who"&gt;admin@saturdaze.app&lt;/span&gt;
+    &lt;a class="audit-row__place" href="/admin/places/memorial-park"&gt;Port Credit Memorial Park&lt;/a&gt;
+    &lt;span class="chip chip--primary"&gt;Primary&lt;/span&gt;
+    &lt;span class="audit-row__change"&gt;memorial-park-side.jpg → memorial-park.jpg&lt;/span&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;</code></pre></details>
+      </div>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Action</th><th scope="col">Chip</th><th scope="col">Change reads</th></tr></thead>
+        <tbody>
+          <tr><td>Make primary</td><td><span class="chip chip--primary">Primary</span></td><td>old file → new file</td></tr>
+          <tr><td>Upload</td><td><span class="chip chip--accent">Upload</span></td><td>Added file · width × height · size</td></tr>
+          <tr><td>Edit details</td><td><span class="chip chip--sky">Edit</span></td><td>Field: before → after</td></tr>
+          <tr><td>Review a provider photo</td><td><span class="chip chip--sun">Review</span></td><td>Approved or Rejected file · reason</td></tr>
+          <tr><td>Remove</td><td><span class="chip chip--warn">Remove</span></td><td>Removed file · next primary</td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section class="ds-section" id="sizes" data-na="One size. Rows are padded 12 × 16px; density comes from how much the change says, not from a size modifier."><h2><a href="#sizes">Sizes</a></h2><p class="ds-na">One size. Rows are padded 12 × 16px; density comes from how much the change says, not from a size modifier.</p></section>
+
+    <section class="ds-section" id="states"><h2><a href="#states">States</a></h2>
+      <p>Rows are not interactive; only the place link is. It takes the shared focus ring and, on pointer devices, the link hover. Loading and empty belong to the whole list.</p>
+      <div class="ds-matrix"><table>
+        <thead><tr><th scope="col">Action</th><th scope="col">Default</th><th scope="col">Focus (place link)</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Primary</th><td><span class="cluster"><a class="audit-row__place" href="../../mocks/pages/admin.place.html">Memorial Park</a><span class="chip chip--primary">Primary</span></span></td><td><span class="cluster"><a class="audit-row__place" href="../../mocks/pages/admin.place.html" data-state="focus">Memorial Park</a><span class="chip chip--primary">Primary</span></span></td></tr>
+          <tr><th scope="row">Remove</th><td><span class="cluster"><a class="audit-row__place" href="../../mocks/pages/admin.place.html">Rec Room</a><span class="chip chip--warn">Remove</span></span></td><td><span class="cluster"><a class="audit-row__place" href="../../mocks/pages/admin.place.html" data-state="focus">Rec Room</a><span class="chip chip--warn">Remove</span></span></td></tr>
+        </tbody>
+      </table></div>
+
+      <h3>Loading and empty</h3>
+      <div class="ds-grid-2">
+        <ol class="audit-list list list--card" aria-label="Activity log (loading)" aria-busy="true" style="margin: 0;">
+          <li class="audit-row"><span class="skeleton skeleton--text" style="width: 9rem;"></span><span class="skeleton skeleton--text" style="width: 3.5rem; height: 1.5rem; border-radius: var(--borderRadiusCircular);"></span><span class="skeleton skeleton--text"></span><span class="skeleton skeleton--text-sm" style="grid-column: 1 / -1;"></span></li>
+          <li class="audit-row"><span class="skeleton skeleton--text" style="width: 9rem;"></span><span class="skeleton skeleton--text" style="width: 3.5rem; height: 1.5rem; border-radius: var(--borderRadiusCircular);"></span><span class="skeleton skeleton--text"></span><span class="skeleton skeleton--text-sm" style="grid-column: 1 / -1;"></span></li>
+        </ol>
+        <div class="empty empty--compact"><p class="empty__title">No changes match</p><p class="empty__body">Nobody has changed a photo at Harbour Grill. Try everyone, or all places.</p><button class="btn btn--quiet btn--sm" type="button">Clear filters</button></div>
+      </div>
+      <ul>
+        <li><b>Loading</b>: two or three <a href="skeleton.html">skeleton</a> rows in the same grid, <code>aria-busy="true"</code> on the list. A status line ("Loading activity…") goes to a live region if loading takes over a second.</li>
+        <li><b>Empty</b>: a compact <a href="empty-state.html">empty state</a> instead of the list, naming the filter that emptied it and offering to clear it. A log with no changes at all says "No photo changes yet".</li>
+        <li><b>New rows</b> arriving while the page is open are added at the top on the next load, not pushed in live; the admin is reading.</li>
+      </ul>
+
+      <h3>Both themes</h3>
+      <div class="ds-themes" style="grid-template-columns: minmax(0, 1fr);">
+        <div data-theme="light"><ol class="audit-list list list--card" aria-label="Light theme example" style="margin: 0;"><li class="audit-row"><time class="audit-row__time" datetime="2026-10-06T13:41Z">2026-10-06 13:41 UTC</time><span class="audit-row__who">curator@saturdaze.app</span><a class="audit-row__place" href="../../mocks/pages/admin.place.html">Harbour Grill</a><span class="chip chip--sky">Edit</span><span class="audit-row__change">Alt text: — → Patio tables by the water</span></li></ol></div>
+        <div data-theme="dark"><ol class="audit-list list list--card" aria-label="Dark theme example" style="margin: 0;"><li class="audit-row"><time class="audit-row__time" datetime="2026-10-06T13:41Z">2026-10-06 13:41 UTC</time><span class="audit-row__who">curator@saturdaze.app</span><a class="audit-row__place" href="../../mocks/pages/admin.place.html">Harbour Grill</a><span class="chip chip--sky">Edit</span><span class="audit-row__change">Alt text: — → Patio tables by the water</span></li></ol></div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="responsive"><h2><a href="#responsive">Responsive behaviour</a></h2>
+      <ul>
+        <li><b>Under 1024px</b> each row is a two-column grid: time, who and the place stack in the left column, the action chip sits top right, and the change takes the full width underneath.</li>
+        <li><b>From 1024px</b> (mock behaviour) the row becomes one line of five columns: 9.5rem time, 12.5rem who, flexible place, 6rem action, wider change. These columns have no headers, so the design system renders a <a href="table.html">table</a> from 720px instead (<code>.hide-gte-720</code> on the feed, <code>.hide-lt-720</code> on the table). Keep the five-column grid only where the e2e locators still depend on it.</li>
+        <li>Long emails and file names break anywhere (<code>overflow-wrap: anywhere</code>) rather than widening the page at 360px.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="theming"><h2><a href="#theming">Theming</a></h2>
+      <p>The feed reads alias tokens only and sits on the <a href="list.html">list</a>'s card surface (<code>.list--card</code>). Time and who use <code>--colorNeutralForeground2</code>, the place link <code>--colorBrandForegroundLink</code>, the change <code>--colorNeutralForeground1</code>; rules between rows are <code>--colorNeutralStroke2</code>. The chips bring their own tone pairs. In the dark theme the card becomes warm umber, the link lightens to coral 300 and the chip tints darken with lighter text; nothing in <code>.audit-row</code> changes.</p>
+    </section>
+
+    <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
+      <h3>Role and pattern</h3>
+      <p>An ordered list (<code>&lt;ol&gt;</code>) because the order is the meaning: newest first. Each event is an <code>&lt;li&gt;</code>; screen readers announce "list, 5 items" and the position of each. No ARIA pattern applies. The <a href="https://www.w3.org/WAI/ARIA/apg/patterns/feed/">APG Feed pattern</a> is for content that loads as you scroll; this log is paginated, so it stays a plain list.</p>
+      <h3>Keyboard</h3>
+      <table class="ds-table ds-keys"><thead><tr><th scope="col">Key</th><th scope="col">Action</th></tr></thead><tbody>
+        <tr><td><kbd>Tab</kbd> / <kbd>Shift</kbd>+<kbd>Tab</kbd></td><td>Moves from one place link to the next; rows themselves are not tab stops.</td></tr>
+        <tr><td><kbd>Enter</kbd></td><td>Opens the place.</td></tr>
+      </tbody></table>
+      <h3>Focus</h3>
+      <p>The place link takes the shared ring (<code>2px --colorStrokeFocus2</code>, 2px offset) on <code>:focus-visible</code>, with a small radius so it hugs the text.</p>
+      <h3>Labelling</h3>
+      <p>Name the list with the page or section heading (<code>aria-labelledby</code>). Times are <code>&lt;time datetime="2026-10-06T14:02Z"&gt;</code> so machines read the instant and people read the zone. Values must make sense without a column header: an email for who, a sentence for the change. The action chip is text, so it is read in order after the place.</p>
+      <h3>Contrast</h3>
+      <div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0; gap: var(--spacingHorizontalS);">
+        <div class="ds-pair"><span>Time and who on card</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground2|--colorNeutralBackground1" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Place link on card</span><span class="ds-pair__ratio" data-contrast="--colorBrandForegroundLink|--colorNeutralBackground1" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Change on card</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground1|--colorNeutralBackground1" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Primary chip</span><span class="ds-pair__ratio" data-contrast="--colorBrandForeground1|--colorBrandBackground2" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Upload chip</span><span class="ds-pair__ratio" data-contrast="--colorStatusSuccessForeground1|--colorStatusSuccessBackground1" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Edit chip</span><span class="ds-pair__ratio" data-contrast="--colorPaletteSkyForeground1|--colorPaletteSkyBackground1" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Review chip</span><span class="ds-pair__ratio" data-contrast="--colorPaletteSunForeground1|--colorPaletteSunBackground1" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Remove chip</span><span class="ds-pair__ratio" data-contrast="--colorStatusDangerForeground1|--colorStatusDangerBackground1" data-min="4.5"></span></div>
+      </div>
+      <h3>Motion</h3>
+      <p>None. Skeleton shimmer stops under <code>prefers-reduced-motion</code>.</p>
+      <h3>Touch</h3>
+      <p>The place link is a line of 14px semibold text; with the row's 12px vertical padding its target clears 24px and no other target sits within 24px of it. The pager buttons are 32px.</p>
+    </section>
+
+    <section class="ds-section" id="content"><h2><a href="#content">Content</a></h2>
+      <ul>
+        <li>Time: <code>YYYY-MM-DD HH:MM UTC</code>. Admins work across zones; never "2 hours ago" in a log someone may quote in a bug report.</li>
+        <li>Who: the account email, exactly as stored.</li>
+        <li>Place: the place's catalog name, linked.</li>
+        <li>Action: one capitalised word from the fixed set: Primary, Upload, Edit, Review, Remove.</li>
+        <li>Change: before → after, with an em dash for "was empty": "Alt text: — → Patio tables by the water". Add the reason after a middle dot: "Rejected harbourfest-2024.jpg · Wrong year".</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="do-dont"><h2><a href="#do-dont">Do and don't</a></h2>
+      <div class="ds-dodont" style="grid-template-columns: minmax(0, 1fr);">
+        <figure class="ds-do"><div class="ds-example__canvas" style="display: block;"><ol class="audit-list list list--card" aria-label="Do example" style="margin: 0;"><li class="audit-row"><time class="audit-row__time" datetime="2026-10-06T11:20Z">2026-10-06 11:20 UTC</time><span class="audit-row__who">curator@saturdaze.app</span><span class="chip chip--sun">Review</span><span class="audit-row__change">Rejected harbourfest-2024.jpg · Wrong year</span></li></ol></div><figcaption>Absolute time with its zone, inside <code>&lt;time datetime&gt;</code>; the change says what and why.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas" style="display: block;"><ol class="audit-list list list--card" aria-label="Don't example" style="margin: 0;"><li class="audit-row"><span class="audit-row__time">2 hours ago</span><span class="audit-row__who">curator</span><span class="chip chip--sun">Review</span><span class="audit-row__change">Rejected</span></li></ol></div><figcaption>Relative time in a plain span, a short name and a bare verb: nobody can tell later which photo or when.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas"><p style="margin: 0;">Feed under 720px, <a href="table.html">table</a> from 720px.</p></div><figcaption>Give wide screens real column headers.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><p style="margin: 0;">The same feed spread into five unlabelled columns at 1280px.</p></div><figcaption>A grid that looks like a table but has no headers (drift D23).</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="ds-section" id="tokens"><h2><a href="#tokens">Tokens</a></h2>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Part</th><th scope="col">Token</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead>
+        <tbody>
+          <tr><td>Card surface</td><td><code>--colorNeutralBackground1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralBackground1" data-swatch></i><span data-token="--colorNeutralBackground1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralBackground1" data-swatch></i><span data-token="--colorNeutralBackground1"></span></span></td></tr>
+          <tr><td>Row rule</td><td><code>--colorNeutralStroke2</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralStroke2" data-swatch></i><span data-token="--colorNeutralStroke2"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralStroke2" data-swatch></i><span data-token="--colorNeutralStroke2"></span></span></td></tr>
+          <tr><td>Time, who</td><td><code>--colorNeutralForeground2</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralForeground2" data-swatch></i><span data-token="--colorNeutralForeground2"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralForeground2" data-swatch></i><span data-token="--colorNeutralForeground2"></span></span></td></tr>
+          <tr><td>Place link</td><td><code>--colorBrandForegroundLink</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorBrandForegroundLink" data-swatch></i><span data-token="--colorBrandForegroundLink"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorBrandForegroundLink" data-swatch></i><span data-token="--colorBrandForegroundLink"></span></span></td></tr>
+          <tr><td>Change</td><td><code>--colorNeutralForeground1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralForeground1" data-swatch></i><span data-token="--colorNeutralForeground1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralForeground1" data-swatch></i><span data-token="--colorNeutralForeground1"></span></span></td></tr>
+          <tr><td>Row padding</td><td><code>--spacingVerticalM</code> × <code>--spacingHorizontalL</code></td><td colspan="2"><span data-token="--spacingVerticalM"></span> × <span data-token="--spacingHorizontalL"></span></td></tr>
+          <tr><td>Row gap</td><td><code>--spacingVerticalXS</code> / <code>--spacingHorizontalM</code></td><td colspan="2"><span data-token="--spacingVerticalXS"></span> / <span data-token="--spacingHorizontalM"></span></td></tr>
+          <tr><td>Row text</td><td><code>--typographyBody2</code></td><td colspan="2"><span data-token="--typographyBody2"></span></td></tr>
+          <tr><td>Time</td><td><code>--typographyCode</code> at <code>--fontSizeBase200</code></td><td colspan="2"><span data-token="--fontSizeBase200"></span></td></tr>
+          <tr><td>Place weight</td><td><code>--fontWeightSemibold</code></td><td colspan="2"><span data-token="--fontWeightSemibold"></span></td></tr>
+          <tr><td>Card radius</td><td><code>--borderRadiusLarge</code></td><td colspan="2"><span data-token="--borderRadiusLarge"></span></td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section class="ds-section" id="code"><h2><a href="#code">Code</a></h2>
+      <pre><code>&lt;h2 class="section-header__title" id="log-title"&gt;Activity log&lt;/h2&gt;
+&lt;ol class="audit-list list list--card hide-gte-720" aria-labelledby="log-title"&gt;
+  &lt;li class="audit-row"&gt;
+    &lt;time class="audit-row__time" datetime="2026-10-05T16:05Z"&gt;2026-10-05 16:05 UTC&lt;/time&gt;
+    &lt;span class="audit-row__who"&gt;admin@saturdaze.app&lt;/span&gt;
+    &lt;a class="audit-row__place" href="/admin/places/rec-room"&gt;Rec Room Mississauga&lt;/a&gt;
+    &lt;span class="chip chip--warn"&gt;Remove&lt;/span&gt;
+    &lt;span class="audit-row__change"&gt;Removed rec-room-old.jpg · next primary: none&lt;/span&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class="table-wrap hide-lt-720" …&gt;…the same records as a table…&lt;/div&gt;</code></pre>
+      <table class="ds-table"><thead><tr><th scope="col">Class / attribute</th><th scope="col">Effect</th></tr></thead><tbody>
+        <tr><td><code>.audit-list</code></td><td>The <code>&lt;ol&gt;</code>; pair with <code>.list.list--card</code> for the card frame.</td></tr>
+        <tr><td><code>.audit-row</code></td><td>One event: two-column stack under 1024px, five columns from 1024px.</td></tr>
+        <tr><td><code>.audit-row__time</code></td><td>On a <code>&lt;time datetime&gt;</code>; monospace 12px.</td></tr>
+        <tr><td><code>.audit-row__who</code></td><td>Account; breaks anywhere.</td></tr>
+        <tr><td><code>.audit-row__place</code></td><td>On an <code>&lt;a&gt;</code>: underlined link to the place.</td></tr>
+        <tr><td><code>.audit-row &gt; .chip</code></td><td>Action chip; top right while stacked.</td></tr>
+        <tr><td><code>.audit-row__change</code></td><td>Before → after; full width while stacked.</td></tr>
+        <tr><td><code>aria-busy="true"</code></td><td>On the list while skeleton rows show.</td></tr>
+      </tbody></table>
+    </section>
+
+    <section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>
+      <ul>
+        <li><a href="../../mocks/pages/admin.activity.html">pages/admin.activity</a>: the log of five photo changes, the Place and Administrator filters above it, and the pager below.</li>
+      </ul>
+      <p>Drift: D23 (the five-column grid with no headers); this page keeps the stacked rows and sends wide screens to the <a href="table.html">table</a>. D12 keeps the time at 12px, not smaller.</p>
+      <p>Not in the mocks: loading and empty states for the log, and the switch to a table from 720px.</p>
+    </section>
+
+    <footer class="ds-footer"><span>Saturdaze design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/icons.js"></script>
+<script src="../assets/ds.js"></script>
+</body>
+</html>
