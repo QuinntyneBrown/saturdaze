@@ -40,6 +40,12 @@ Six videos on Saturdaze Admin, the second web application that curates the catal
 | 16 | [Reviewing ingested photos](16-reviewing-ingested-photos/README.md) | ~5.8 min | The review queue; Keep, Make primary, Reject; rejections that stick; ingestion photo skips; seeding and the lock. |
 | 17 | [The photo activity log](17-the-photo-activity-log/README.md) | ~4.4 min | What every audit entry records; committing it with the change; the Activity log and its filters. |
 
+## Accounts
+
+| # | Video | Runtime | What you learn |
+| --- | --- | --- | --- |
+| 18 | [How account emails are drafted](18-how-account-emails-are-drafted/README.md) | ~7.1 min | Verification and reset links as built: random tokens stored as SHA-256 hashes, single use via `ConsumedAtUtc`, no account leak, `DevDelivery` and `devToken`; no email provider yet (G01). |
+
 ## Components series
 
 Fifty-two instructional videos, one per component in `frontend/projects/components/src/lib/`: each codes the component step by step, calls out its best practices (especially signals) and walks through its unit tests. See the [series index](components/README.md).

@@ -330,5 +330,10 @@
   "PublicUrl": "public U R L",
   "Saturdaze:Images:AllowedOrigins": "Saturdays, colon, Images, colon, Allowed Origins",
   "Saturdaze:CuratedPhotos:PublicOrigin": "Saturdays, colon, Curated Photos, colon, Public Origin",
-  "Cors:AllowedOrigins": "Cors, colon, Allowed Origins"
+  "Cors:AllowedOrigins": "Cors, colon, Allowed Origins",
+  "SHA-256": "shaw two fifty-six",
+  "L2-005": "L two, double oh five",
+  "G01": "G, oh one",
+  "AuthTokenDeliveryDto": "Auth Token Delivery D T O",
+  "devToken": "dev token"
 }
