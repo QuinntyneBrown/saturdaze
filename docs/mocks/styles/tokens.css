@@ -1,6 +1,5 @@
-/* VERBATIM COPY of design-system/assets/tokens.css (source sha 024b14f).
-   Do not edit here. Re-copy from the design system when it changes;
-   docs/mocks-v2/.check.mjs fails if this file drifts from the source.
+/* Saturdaze mock design tokens. The mocks own this file; the extracted
+   reference is docs/design-system/tokens/tokens.css (ADR-013).
    v2-only layout tokens live in styles/app.css (@layer base). */
 
 /* Saturdaze — design tokens

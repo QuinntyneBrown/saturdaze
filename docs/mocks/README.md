@@ -13,7 +13,7 @@ bottom nav for a top bar, **1024px** puts the selected day beside its map.
 index.html            launcher
 app.js                the only script: icon sprite, ADR-005 bottom-chrome tracking,
                       scrolled top bar, legal.html Terms/Privacy switch
-styles/tokens.css     VERBATIM copy of design-system/assets/tokens.css + provenance header
+styles/tokens.css     the mocks' design tokens (reference: docs/design-system/tokens/tokens.css)
 styles/app.css        everything else, in @layer order (reset → base → shell → layout →
                       components → pages → utilities)
 pages/_shell.html     the canonical skeleton every page copies (not a screen)
@@ -94,8 +94,7 @@ $env:SD_MOCKS_URL = "http://localhost:5180"; node ..\docs\mocks-v2\.verify.mjs
 
 1. The three shell regions (`@shell:head`, `@shell:topbar`, `@shell:bottomnav`) of every
    app page match `pages/_shell.html` after normalisation; bare pages carry only the head.
-2. `styles/tokens.css` is byte-identical to `design-system/assets/tokens.css` after its
-   provenance header.
+2. `styles/tokens.css` exists.
 3. No `<style>` blocks or `style=""` attributes anywhere under `pages/`.
 4. Every launcher tile resolves to a file, and every page has a tile.
 5. Every `<use href="#i-…">` matches a symbol in `app.js`; every relative link resolves.
