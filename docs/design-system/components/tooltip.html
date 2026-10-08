@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tooltip — Saturdaze design system</title>
+<meta name="description" content="A short text hint for an icon-only control, shown on hover and keyboard focus, dismissed with Esc, never interactive.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html"><span class="brand-mark" aria-hidden="true"></span>Saturdaze DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Actions</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+    </ul></details>
+    <details open><summary>Inputs</summary><ul>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/chip-input.html">Chip input</a></li>
+      <li><a href="../components/file-upload.html">File upload</a></li>
+      <li><a href="../components/photo-pick.html">Photo pick</a></li>
+      <li><a href="../components/rating.html">Rating</a></li>
+      <li><a href="../components/vote-row.html">Vote row</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+    </ul></details>
+    <details open><summary>Navigation</summary><ul>
+      <li><a href="../components/top-bar.html">Top bar</a></li>
+      <li><a href="../components/bottom-nav.html">Bottom nav</a></li>
+      <li><a href="../components/sidebar-navigation.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs (segments)</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+      <li><a href="../components/footer.html">Footer</a></li>
+    </ul></details>
+    <details open><summary>Containers and overlays</summary><ul>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/container.html">Container and grid</a></li>
+      <li><a href="../components/page-header.html">Page header</a></li>
+    </ul></details>
+    <details open><summary>Data display</summary><ul>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/activity-feed.html">Activity feed</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/chip.html">Chip</a></li>
+      <li><a href="../components/filter-chip.html">Filter chip</a></li>
+      <li><a href="../components/disc.html">Disc</a></li>
+      <li><a href="../components/media.html">Media</a></li>
+      <li><a href="../components/cover.html">Cover photo</a></li>
+      <li><a href="../components/stat.html">Stat</a></li>
+      <li><a href="../components/itinerary.html">Itinerary</a></li>
+      <li><a href="../components/map.html">Map</a></li>
+    </ul></details>
+    <details open><summary>Feedback</summary><ul>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/alert.html">Alert</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/progress-bar.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Auth and marketing</summary><ul>
+      <li><a href="../components/auth-card.html">Auth card</a></li>
+      <li><a href="../components/hero.html">Hero</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/data-tables-and-lists.html">Tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Component · Containers and overlays</p>
+      <h1>Tooltip</h1>
+      <p class="ds-lead">A tooltip names an icon-only button for people using a mouse or keyboard: "More weekend options", "Favourite this weekend", "Swap Lavender fields". It repeats or adds to the accessible name; it never holds anything a person needs to act on.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA</span><span class="ds-pill">Status: core, not in the mocks</span><span class="ds-pill">Angular: <code>[sdTooltip]</code> / <code>sd-tooltip</code></span><span class="ds-pill">APG Tooltip</span></div>
+      <ul class="ds-toc">
+        <li><a href="#overview">Overview</a></li><li><a href="#anatomy">Anatomy</a></li><li><a href="#variants">Variants</a></li><li><a href="#sizes">Sizes</a></li><li><a href="#states">States</a></li><li><a href="#responsive">Responsive</a></li><li><a href="#theming">Theming</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#content">Content</a></li><li><a href="#do-dont">Do and don't</a></li><li><a href="#tokens">Tokens</a></li><li><a href="#code">Code</a></li><li><a href="#sources">Sources</a></li>
+      </ul>
+    </header>
+
+    <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+      <p>Use a tooltip on an icon-only button whose icon could be read two ways: the More button, the favourite heart, a day header's regenerate icon under 720px, a timeline block's swap and lock icons. The button still has its own <code>aria-label</code>; the tooltip shows the same words to sighted mouse and keyboard users.</p>
+      <ul>
+        <li>Do not use a tooltip for anything a person must read to succeed: field rules belong in a <a href="form-field.html">hint</a>, consequences in a <a href="dialog.html">dialog</a> subtitle.</li>
+        <li>Never put links, buttons or rich text inside. If it needs a control, it is a <a href="menu.html">menu</a> or a dialog.</li>
+        <li>Touch screens have no hover, so tooltips never show on touch. Anything a phone user needs must be visible without one.</li>
+      </ul>
+      <p class="ds-note">No mock uses a tooltip; the button page names it as the companion of icon-only buttons. The product ships it as the <code>[sdTooltip]</code> directive on a CDK Overlay. This page documents its geometry on Fluent tokens (drift D30).</p>
+    </section>
+
+    <section class="ds-section" id="anatomy"><h2><a href="#anatomy">Anatomy</a></h2>
+      <div class="ds-anatomy">
+        <figure class="ds-anatomy__figure" style="padding-top: 6rem;">
+          <span class="tooltip-anchor">
+            <button class="btn btn--quiet btn--icon" type="button" aria-label="More weekend options" data-state="hover"><svg class="icon" aria-hidden="true"><use href="#i-more"/></svg></button>
+            <span class="tooltip" role="tooltip" id="an-tip" aria-hidden="true" data-open>More weekend options</span>
+          </span>
+          <span class="ds-callout" style="left: 30%; top: 26%;" aria-hidden="true">1</span>
+          <span class="ds-callout" style="left: 50%; top: 52%;" aria-hidden="true">2</span>
+          <span class="ds-callout" style="left: 60%; top: 72%;" aria-hidden="true">3</span>
+        </figure>
+        <ol class="ds-anatomy__list">
+          <li><div><b>Bubble</b><small><code>.tooltip</code>: inverted surface, <code>--borderRadiusSmall</code>, 4 × 8px padding, <code>--shadow16</code>, wraps at 240px.</small></div></li>
+          <li><div><b>Gap</b><small>8px (<code>--spacingVerticalS</code>) between the bubble and its trigger, centred on it.</small></div></li>
+          <li><div><b>Trigger</b><small>The control inside <code>.tooltip-anchor</code>; it owns the focus and the accessible name.</small></div></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="ds-section" id="variants"><h2><a href="#variants">Variants</a></h2>
+      <p>One look, two relationships and two placements. The relationship decides what assistive technology hears; the placement only decides where it sits.</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas" style="padding-block: 4.5rem;">
+          <div class="ds-grid-2" style="width: 100%; row-gap: 5rem; justify-items: center;">
+          <span class="tooltip-anchor">
+            <button class="btn btn--ghost btn--sm btn--icon" type="button" aria-label="Favourite this weekend" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-heart"/></svg></button>
+            <span class="tooltip" role="tooltip" id="v-label" aria-hidden="true" data-open>Favourite this weekend</span>
+          </span>
+          <span class="tooltip-anchor">
+            <button class="btn btn--quiet btn--sm" type="button" aria-describedby="v-desc"><svg class="icon" aria-hidden="true"><use href="#i-refresh"/></svg>Regenerate</button>
+            <span class="tooltip" role="tooltip" id="v-desc" data-open>Locked blocks stay put</span>
+          </span>
+          <span class="tooltip-anchor">
+            <button class="btn btn--ghost btn--sm btn--icon" type="button" aria-label="Swap Lavender fields"><svg class="icon" aria-hidden="true"><use href="#i-swap"/></svg></button>
+            <span class="tooltip tooltip--below" role="tooltip" id="v-below" aria-hidden="true" data-open>Swap Lavender fields</span>
+          </span>
+          <span class="tooltip-anchor">
+            <button class="btn btn--quiet btn--sm" type="button" aria-describedby="v-kbd">Dark theme</button>
+            <span class="tooltip tooltip--below" role="tooltip" id="v-kbd" data-open>Switch theme <kbd>T</kbd></span>
+          </span>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>Label (icon-only, bubble hidden from assistive tech), description (adds a fact to a labelled button), below, with a shortcut.</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;!-- Label: the button's aria-label is the name; the bubble repeats it --&gt;
+&lt;span class="tooltip-anchor"&gt;
+  &lt;button class="btn btn--ghost btn--sm btn--icon" type="button" aria-label="Favourite this weekend"&gt;…&lt;/button&gt;
+  &lt;span class="tooltip" role="tooltip" id="tip-fav" aria-hidden="true"&gt;Favourite this weekend&lt;/span&gt;
+&lt;/span&gt;
+
+&lt;!-- Description: the bubble adds to a named button --&gt;
+&lt;span class="tooltip-anchor"&gt;
+  &lt;button class="btn btn--quiet btn--sm" type="button" aria-describedby="tip-regen"&gt;…Regenerate&lt;/button&gt;
+  &lt;span class="tooltip" role="tooltip" id="tip-regen"&gt;Locked blocks stay put&lt;/span&gt;
+&lt;/span&gt;</code></pre></details>
+      </div>
+      <ul>
+        <li><b>Label</b> (<code>sdTooltipRelationship="label"</code>): for icon-only buttons. The text equals the button's <code>aria-label</code>, and the bubble is <code>aria-hidden</code> so nothing is read twice.</li>
+        <li><b>Description</b> (the default): the bubble adds a fact to a button that already has a visible name, linked with <code>aria-describedby</code> while it shows.</li>
+        <li><b>Above</b> is the default; <b>below</b> (<code>.tooltip--below</code>, <code>sdTooltipPlacement="bottom"</code>) for triggers at the top of the viewport, such as the top bar. The product flips to the other side when there is no room.</li>
+        <li><b>With shortcut</b>: a <code>&lt;kbd&gt;</code> after the text, at 75% opacity. Saturdaze has no keyboard shortcuts yet; the docs site's own theme toggle (<kbd>T</kbd>) is the example.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="sizes" data-na="Tooltips have one size: caption text in a bubble that wraps at 240px."><h2><a href="#sizes">Sizes</a></h2><p class="ds-na">Tooltips have one size: caption text in a bubble that wraps at 240px.</p></section>
+
+    <section class="ds-section" id="states"><h2><a href="#states">States</a></h2>
+      <p>Hidden until the trigger is hovered (after a short delay) or receives keyboard focus (at once). Here the bubble is forced open with <code>data-open</code> and the trigger with <code>data-state</code>; hover the "Hidden" column to see the real behaviour.</p>
+      <div class="ds-matrix"><table>
+        <thead><tr><th scope="col">Variant</th><th scope="col">Hidden</th><th scope="col">Hover</th><th scope="col">Focus</th><th scope="col">Disabled trigger</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Above</th>
+            <td><div style="padding: 3rem 4rem 0.5rem;"><span class="tooltip-anchor"><button class="btn btn--quiet btn--icon" type="button" aria-label="More weekend options"><svg class="icon" aria-hidden="true"><use href="#i-more"/></svg></button><span class="tooltip" role="tooltip" id="m-a1" aria-hidden="true">More weekend options</span></span></div></td>
+            <td><div style="padding: 3rem 4rem 0.5rem;"><span class="tooltip-anchor"><button class="btn btn--quiet btn--icon" type="button" aria-label="More weekend options" data-state="hover"><svg class="icon" aria-hidden="true"><use href="#i-more"/></svg></button><span class="tooltip" role="tooltip" id="m-a2" aria-hidden="true" data-open>More weekend options</span></span></div></td>
+            <td><div style="padding: 3rem 4rem 0.5rem;"><span class="tooltip-anchor"><button class="btn btn--quiet btn--icon" type="button" aria-label="More weekend options" data-state="focus"><svg class="icon" aria-hidden="true"><use href="#i-more"/></svg></button><span class="tooltip" role="tooltip" id="m-a3" aria-hidden="true" data-open>More weekend options</span></span></div></td>
+            <td><div style="padding: 3rem 4rem 0.5rem;"><button class="btn btn--quiet btn--icon" type="button" aria-label="More weekend options" disabled><svg class="icon" aria-hidden="true"><use href="#i-more"/></svg></button></div></td>
+          </tr>
+          <tr><th scope="row">Below</th>
+            <td><div style="padding: 0.5rem 4rem 3rem;"><span class="tooltip-anchor"><button class="btn btn--ghost btn--sm btn--icon" type="button" aria-label="Lock Lavender fields"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg></button><span class="tooltip tooltip--below" role="tooltip" id="m-b1" aria-hidden="true">Lock Lavender fields</span></span></div></td>
+            <td><div style="padding: 0.5rem 4rem 3rem;"><span class="tooltip-anchor"><button class="btn btn--ghost btn--sm btn--icon" type="button" aria-label="Lock Lavender fields" data-state="hover"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg></button><span class="tooltip tooltip--below" role="tooltip" id="m-b2" aria-hidden="true" data-open>Lock Lavender fields</span></span></div></td>
+            <td><div style="padding: 0.5rem 4rem 3rem;"><span class="tooltip-anchor"><button class="btn btn--ghost btn--sm btn--icon" type="button" aria-label="Lock Lavender fields" data-state="focus"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg></button><span class="tooltip tooltip--below" role="tooltip" id="m-b3" aria-hidden="true" data-open>Lock Lavender fields</span></span></div></td>
+            <td><div style="padding: 0.5rem 4rem 3rem;"><button class="btn btn--ghost btn--sm btn--icon" type="button" aria-label="Lock Lavender fields" disabled><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg></button></div></td>
+          </tr>
+          <tr><th scope="row">Description</th>
+            <td><div style="padding: 3rem 4rem 0.5rem;"><span class="tooltip-anchor"><button class="btn btn--quiet btn--sm" type="button">Regenerate</button><span class="tooltip" role="tooltip" id="m-c1">Locked blocks stay put</span></span></div></td>
+            <td><div style="padding: 3rem 4rem 0.5rem;"><span class="tooltip-anchor"><button class="btn btn--quiet btn--sm" type="button" data-state="hover" aria-describedby="m-c2">Regenerate</button><span class="tooltip" role="tooltip" id="m-c2" data-open>Locked blocks stay put</span></span></div></td>
+            <td><div style="padding: 3rem 4rem 0.5rem;"><span class="tooltip-anchor"><button class="btn btn--quiet btn--sm" type="button" data-state="focus" aria-describedby="m-c3">Regenerate</button><span class="tooltip" role="tooltip" id="m-c3" data-open>Locked blocks stay put</span></span></div></td>
+            <td><div style="padding: 3rem 4rem 0.5rem;"><button class="btn btn--quiet btn--sm" type="button" disabled>Regenerate</button></div></td>
+          </tr>
+        </tbody>
+      </table></div>
+      <h3>Both themes</h3>
+      <div class="ds-themes">
+        <div data-theme="light"><div class="cluster" style="padding-top: 3rem; justify-content: center;"><span class="tooltip-anchor"><button class="btn btn--quiet btn--icon" type="button" aria-label="Add an errand" data-state="hover"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg></button><span class="tooltip" role="tooltip" id="t-light" aria-hidden="true" data-open>Add an errand</span></span></div></div>
+        <div data-theme="dark"><div class="cluster" style="padding-top: 3rem; justify-content: center;"><span class="tooltip-anchor"><button class="btn btn--quiet btn--icon" type="button" aria-label="Add an errand" data-state="hover"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg></button><span class="tooltip" role="tooltip" id="t-dark" aria-hidden="true" data-open>Add an errand</span></span></div></div>
+      </div>
+      <ul>
+        <li><b>Hover</b>: shows after a delay so a passing pointer does not flash bubbles (300ms in this CSS; the product directive waits 400ms). A second tooltip within 600ms of the last one shows at once. It stays while the pointer moves onto the bubble (100ms grace) and hides when the pointer leaves both.</li>
+        <li><b>Focus</b>: keyboard focus (<code>:focus-visible</code>) shows it at once; a mouse click that focuses the button does not.</li>
+        <li><b>Pressed</b>: pressing the trigger hides the bubble so it never covers the result.</li>
+        <li><b>Disabled</b>: a disabled trigger shows no tooltip. Explain why something is unavailable in visible text instead.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="responsive"><h2><a href="#responsive">Responsive behaviour</a></h2>
+      <ul>
+        <li>Touch input never opens a tooltip (the directive ignores <code>pointerType === "touch"</code>), so on phones the only name is the <code>aria-label</code> and the icon. Choose icons that stand on their own, and give the phone layout text labels where it can (day header buttons show their label from 720px).</li>
+        <li>The bubble keeps 8px from the viewport edge and flips between above and below when it would not fit. It wraps at 240px rather than running off a 360px screen.</li>
+        <li>It closes when the page scrolls, so it never floats away from its trigger.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="theming"><h2><a href="#theming">Theming</a></h2>
+      <p>The bubble is the inverse of the surface: <code>--colorNeutralBackgroundInverted</code> behind <code>--colorNeutralForegroundInverted</code>. In light that is near-black slate with white text; in dark it flips to a light cream bubble with dark text, so it always reads over any card or photo. The product's <code>tooltip-panel.scss</code> still reads the retired <code>--sd-ink</code> and <code>--sd-bg-elev</code> tokens (D30); moving it to these two Fluent tokens gives it the dark theme for free.</p>
+    </section>
+
+    <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
+      <h3>Role and pattern</h3>
+      <p><a href="https://www.w3.org/WAI/ARIA/apg/patterns/tooltip/">APG Tooltip</a>. The bubble has <code>role="tooltip"</code> and an <code>id</code>. As a description it is linked from the trigger with <code>aria-describedby</code>, added only while it shows (any descriptions already on the trigger are kept). As a label it is <code>aria-hidden</code> and the trigger's <code>aria-label</code> carries the same words. Focus never moves into a tooltip.</p>
+      <h3>Keyboard</h3>
+      <table class="ds-table ds-keys"><thead><tr><th scope="col">Key</th><th scope="col">Action</th></tr></thead><tbody>
+        <tr><td><kbd>Tab</kbd></td><td>Focusing the trigger shows the tooltip at once; moving focus away hides it.</td></tr>
+        <tr><td><kbd>Esc</kbd></td><td>Hides the tooltip without moving focus. The key stops there, so the same Esc does not also close the dialog the trigger sits in.</td></tr>
+        <tr><td><kbd>Enter</kbd> / <kbd>Space</kbd></td><td>Activate the trigger and hide the tooltip.</td></tr>
+      </tbody></table>
+      <h3>Focus</h3>
+      <p>The trigger draws the shared ring; the bubble sits 8px away so it never covers the ring (2.4.11). Tooltips never trap or take focus.</p>
+      <h3>Labelling</h3>
+      <p>The trigger must be fully named without the tooltip: <code>aria-label</code> on icon-only buttons, visible text elsewhere. The tooltip text for a label must match that name word for word, so voice control users can say what they see (2.5.3).</p>
+      <h3>Contrast</h3>
+      <div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0; gap: var(--spacingHorizontalS);">
+        <div class="ds-pair"><span>Tooltip text on bubble</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForegroundInverted|--colorNeutralBackgroundInverted" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Bubble edge on page</span><span class="ds-pair__ratio" data-contrast="--colorNeutralBackgroundInverted|--colorNeutralBackground2" data-min="3"></span></div>
+        <div class="ds-pair"><span>Bubble edge on card</span><span class="ds-pair__ratio" data-contrast="--colorNeutralBackgroundInverted|--colorNeutralBackground1" data-min="3"></span></div>
+      </div>
+      <p>The shortcut <code>&lt;kbd&gt;</code> at 75% opacity stays well above 4.5:1 because the base pair is above 12:1 in both themes.</p>
+      <h3>Motion</h3>
+      <p>Opacity fades in over <code>--durationFast</code> after the delay; there is no movement. Under <code>prefers-reduced-motion</code> it appears without the fade.</p>
+      <h3>Touch</h3>
+      <p>Not shown on touch. It also meets 1.4.13 for pointer users: dismissible (Esc), hoverable (the pointer can move onto the bubble) and persistent (it stays until the pointer or focus leaves). The CSS-only <code>.tooltip</code> used on this page has <code>pointer-events: none</code> and is not hoverable; ship the directive, not the CSS alone.</p>
+    </section>
+
+    <section class="ds-section" id="content"><h2><a href="#content">Content</a></h2>
+      <ul>
+        <li>A label tooltip is the button's name: verb plus object, sentence case, no full stop. "Swap Lavender fields", "Add an errand", "More weekend options".</li>
+        <li>A description tooltip adds one short fact: "Locked blocks stay put". Under 60 characters; never two sentences.</li>
+        <li>Never the only place a fact lives, and never a repeat of visible text ("Regenerate" on a button that says Regenerate).</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="do-dont"><h2><a href="#do-dont">Do and don't</a></h2>
+      <div class="ds-dodont">
+        <figure class="ds-do"><div class="ds-example__canvas" style="padding-top: 3.5rem; justify-content: center;"><span class="tooltip-anchor"><button class="btn btn--quiet btn--icon" type="button" aria-label="More weekend options"><svg class="icon" aria-hidden="true"><use href="#i-more"/></svg></button><span class="tooltip" role="tooltip" id="dd-1" aria-hidden="true" data-open>More weekend options</span></span></div><figcaption>The tooltip repeats the <code>aria-label</code> of an icon-only button.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas" style="padding-top: 3.5rem; justify-content: center;"><span class="tooltip-anchor"><button class="btn btn--quiet btn--sm" type="button">Share</button><span class="tooltip" role="tooltip" id="dd-2" aria-hidden="true" data-open>Share</span></span></div><figcaption>A tooltip that repeats a visible label adds noise and covers the page.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas"><div class="field" style="width: 100%;"><label class="field__label" for="dd-age">Age</label><input class="field__input" id="dd-age" type="number" value="5" aria-describedby="dd-age-hint"><p class="field__hint" id="dd-age-hint">Kid · under 18 counts as a kid.</p></div></div><figcaption>Rules a person needs go in a visible hint (D17).</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas" style="padding-top: 3.5rem; justify-content: center;"><span class="tooltip-anchor"><button class="btn btn--ghost btn--sm btn--icon" type="button" aria-label="Age rules"><svg class="icon" aria-hidden="true"><use href="#i-info"/></svg></button><span class="tooltip" role="tooltip" id="dd-3" aria-hidden="true" data-open>Under 18 counts as a kid</span></span></div><figcaption>Hiding the rule behind an info icon: invisible on phones, and easy to miss everywhere.</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="ds-section" id="tokens"><h2><a href="#tokens">Tokens</a></h2>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Part</th><th scope="col">Token</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead>
+        <tbody>
+          <tr><td>Bubble</td><td><code>--colorNeutralBackgroundInverted</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralBackgroundInverted" data-swatch></i><span data-token="--colorNeutralBackgroundInverted"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralBackgroundInverted" data-swatch></i><span data-token="--colorNeutralBackgroundInverted"></span></span></td></tr>
+          <tr><td>Text</td><td><code>--colorNeutralForegroundInverted</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralForegroundInverted" data-swatch></i><span data-token="--colorNeutralForegroundInverted"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralForegroundInverted" data-swatch></i><span data-token="--colorNeutralForegroundInverted"></span></span></td></tr>
+          <tr><td>Type</td><td><code>--typographyCaption1</code>, <code>--fontWeightMedium</code>, <code>--lineHeightSnug</code></td><td colspan="2"><span data-token="--typographyCaption1"></span></td></tr>
+          <tr><td>Padding</td><td><code>--spacingVerticalXS</code> <code>--spacingHorizontalS</code></td><td colspan="2"><span data-token="--spacingVerticalXS"></span> / <span data-token="--spacingHorizontalS"></span></td></tr>
+          <tr><td>Gap to trigger</td><td><code>--spacingVerticalS</code></td><td colspan="2"><span data-token="--spacingVerticalS"></span></td></tr>
+          <tr><td>Radius</td><td><code>--borderRadiusSmall</code></td><td colspan="2"><span data-token="--borderRadiusSmall"></span></td></tr>
+          <tr><td>Shadow</td><td><code>--shadow16</code></td><td colspan="2"><span data-token="--shadow16"></span></td></tr>
+          <tr><td>Layer</td><td><code>--zIndexTooltip</code></td><td colspan="2"><span data-token="--zIndexTooltip"></span></td></tr>
+          <tr><td>Fade</td><td><code>--durationFast</code>, <code>--curveEasyEase</code></td><td colspan="2"><span data-token="--durationFast"></span> <span data-token="--curveEasyEase"></span></td></tr>
+        </tbody>
+      </table></div>
+      <p>Max width (15rem) and the show delay are fixed values, not tokens.</p>
+    </section>
+
+    <section class="ds-section" id="code"><h2><a href="#code">Code</a></h2>
+      <pre><code>&lt;!-- Angular: the directive renders the bubble in a CDK Overlay --&gt;
+&lt;sd-button variant="quiet" icon label="More weekend options"
+           sdTooltip="More weekend options" sdTooltipRelationship="label"&gt;…&lt;/sd-button&gt;
+&lt;sd-button variant="quiet" size="sm"
+           sdTooltip="Locked blocks stay put" sdTooltipPlacement="bottom"&gt;Regenerate&lt;/sd-button&gt;
+
+&lt;!-- Static HTML (docs, mocks) --&gt;
+&lt;span class="tooltip-anchor"&gt;
+  &lt;button class="btn btn--quiet btn--icon" type="button" aria-label="More weekend options"&gt;…&lt;/button&gt;
+  &lt;span class="tooltip" role="tooltip" id="tip-more" aria-hidden="true"&gt;More weekend options&lt;/span&gt;
+&lt;/span&gt;</code></pre>
+      <table class="ds-table"><thead><tr><th scope="col">Class / input</th><th scope="col">Effect</th></tr></thead><tbody>
+        <tr><td><code>.tooltip-anchor</code></td><td>Positioning context; shows its tooltip on hover and focus-within.</td></tr>
+        <tr><td><code>.tooltip</code> + <code>role="tooltip"</code></td><td>The bubble, above and centred.</td></tr>
+        <tr><td><code>.tooltip--below</code> / <code>sdTooltipPlacement="bottom"</code></td><td>Below the trigger.</td></tr>
+        <tr><td><code>sdTooltipRelationship="label|description"</code></td><td>Hidden duplicate of the name, or a linked description (default).</td></tr>
+        <tr><td><code>data-open</code></td><td>Documentation only: shows the bubble statically.</td></tr>
+      </tbody></table>
+    </section>
+
+    <section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>
+      <p>No mock uses a tooltip yet; it is a core component. The icon-only buttons that would carry one are on <a href="../../mocks/pages/weekend.html">pages/weekend</a> (More, day header and block actions) and <a href="../../mocks/pages/past.html">pages/past</a> (favourite). The behaviour comes from the product directive in <code>frontend/projects/components/src/lib/tooltip/</code>.</p>
+      <p>Drift: D30 (the product bubble still reads <code>--sd-*</code> tokens). Open: the product waits 400ms before showing on hover; this CSS waits 300ms. Pick one and align both.</p>
+    </section>
+
+    <footer class="ds-footer"><span>Saturdaze design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/icons.js"></script>
+<script src="../assets/ds.js"></script>
+</body>
+</html>

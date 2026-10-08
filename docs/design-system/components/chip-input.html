@@ -1,0 +1,376 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chip input — Saturdaze design system</title>
+<meta name="description" content="A text field that turns each entry into a removable chip: the Likes and dislikes editor, with keyboard rules, every state and both themes.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html"><span class="brand-mark" aria-hidden="true"></span>Saturdaze DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Actions</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+    </ul></details>
+    <details open><summary>Inputs</summary><ul>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/chip-input.html">Chip input</a></li>
+      <li><a href="../components/file-upload.html">File upload</a></li>
+      <li><a href="../components/photo-pick.html">Photo pick</a></li>
+      <li><a href="../components/rating.html">Rating</a></li>
+      <li><a href="../components/vote-row.html">Vote row</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+    </ul></details>
+    <details open><summary>Navigation</summary><ul>
+      <li><a href="../components/top-bar.html">Top bar</a></li>
+      <li><a href="../components/bottom-nav.html">Bottom nav</a></li>
+      <li><a href="../components/sidebar-navigation.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs (segments)</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+      <li><a href="../components/footer.html">Footer</a></li>
+    </ul></details>
+    <details open><summary>Containers and overlays</summary><ul>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/container.html">Container and grid</a></li>
+      <li><a href="../components/page-header.html">Page header</a></li>
+    </ul></details>
+    <details open><summary>Data display</summary><ul>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/activity-feed.html">Activity feed</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/chip.html">Chip</a></li>
+      <li><a href="../components/filter-chip.html">Filter chip</a></li>
+      <li><a href="../components/disc.html">Disc</a></li>
+      <li><a href="../components/media.html">Media</a></li>
+      <li><a href="../components/cover.html">Cover photo</a></li>
+      <li><a href="../components/stat.html">Stat</a></li>
+      <li><a href="../components/itinerary.html">Itinerary</a></li>
+      <li><a href="../components/map.html">Map</a></li>
+    </ul></details>
+    <details open><summary>Feedback</summary><ul>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/alert.html">Alert</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/progress-bar.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Auth and marketing</summary><ul>
+      <li><a href="../components/auth-card.html">Auth card</a></li>
+      <li><a href="../components/hero.html">Hero</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/data-tables-and-lists.html">Tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Component · Inputs</p>
+      <h1>Chip input</h1>
+      <p class="ds-lead">A chip input collects a short list of free-text tags, one chip per entry: the things the family likes and the things the planner should leave out.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA</span><span class="ds-pill">Status: stable</span><span class="ds-pill">Angular: <code>sd-chip-input</code></span><span class="ds-pill">Native <code>&lt;input type="text"&gt;</code></span></div>
+      <ul class="ds-toc">
+        <li><a href="#overview">Overview</a></li><li><a href="#anatomy">Anatomy</a></li><li><a href="#variants">Variants</a></li><li><a href="#sizes">Sizes</a></li><li><a href="#states">States</a></li><li><a href="#responsive">Responsive</a></li><li><a href="#theming">Theming</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#content">Content</a></li><li><a href="#do-dont">Do and don't</a></li><li><a href="#tokens">Tokens</a></li><li><a href="#code">Code</a></li><li><a href="#sources">Sources</a></li>
+      </ul>
+    </header>
+
+    <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+      <p>Use a chip input when the answer is a handful of short, free-text values the person types themselves, and each value is worth seeing and removing on its own. It lives in the D20 Likes and dislikes dialog, where liked tags boost picks and disliked ones are left out.</p>
+      <ul>
+        <li>Use a <a href="text-field.html">text field</a> for one value, even a long one.</li>
+        <li>Use <a href="checkbox.html">checkboxes</a> or <a href="filter-chip.html">filter chips</a> when the options are known in advance; picking beats typing.</li>
+        <li>Use a static <a href="chip.html">chip</a> list to show tags that cannot be edited here. There is no disabled chip input.</li>
+        <li>If suggestions are added later, the field becomes a combobox (see <a href="#accessibility">Accessibility</a>); the chips and keys stay the same.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="anatomy"><h2><a href="#anatomy">Anatomy</a></h2>
+      <div class="ds-anatomy">
+        <figure class="ds-anatomy__figure">
+          <div class="field" style="position: relative; width: 100%; max-width: 18rem; margin-bottom: var(--spacingVerticalXXL);">
+            <label class="field__label" for="an-likes">Likes</label>
+            <div class="chip-input">
+              <span class="chip chip--leaf">Parks<button class="chip__x" type="button" aria-label="Remove Parks"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></span>
+              <input class="chip-input__field" id="an-likes" type="text" placeholder="Add one">
+            </div>
+            <span class="ds-callout" style="left: -2rem; top: 0;" aria-hidden="true">1</span>
+            <span class="ds-callout" style="left: -2rem; top: 2.4rem;" aria-hidden="true">2</span>
+            <span class="ds-callout" style="left: 0.9rem; top: 4.7rem;" aria-hidden="true">3</span>
+            <span class="ds-callout" style="left: 2.7rem; top: 4.7rem;" aria-hidden="true">4</span>
+            <span class="ds-callout" style="left: 6.5rem; top: 4.7rem;" aria-hidden="true">5</span>
+          </div>
+        </figure>
+        <ol class="ds-anatomy__list">
+          <li><div><b>Label</b><small><code>.field__label</code>, a real <code>&lt;label for&gt;</code> pointing at the text input.</small></div></li>
+          <li><div><b>Container</b><small><code>.chip-input</code>: looks like a text field (44px minimum, 1px accessible stroke, medium radius) and wraps as chips are added.</small></div></li>
+          <li><div><b>Chip</b><small><code>.chip</code> with a tone: leaf for likes, warn for dislikes. Text is the value as typed.</small></div></li>
+          <li><div><b>Remove button</b><small><code>.chip__x</code>: a 16px glyph with a 24px hit area, labelled "Remove Parks".</small></div></li>
+          <li><div><b>Text input</b><small><code>.chip-input__field</code>: borderless, takes the rest of the row (at least 120px), so it drops to a new line before it gets cramped.</small></div></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="ds-section" id="variants"><h2><a href="#variants">Variants</a></h2>
+      <p>The chip tone says what the list means; the control is otherwise the same. Pick the tone from the meaning of the list, never per value.</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack" style="max-width: 36rem;">
+          <div class="field">
+            <label class="field__label" for="v-likes">Likes</label>
+            <div class="chip-input">
+              <span class="chip chip--leaf">Parks<button class="chip__x" type="button" aria-label="Remove Parks"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></span>
+              <span class="chip chip--leaf">Short hikes<button class="chip__x" type="button" aria-label="Remove Short hikes"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></span>
+              <span class="chip chip--leaf">Zoo<button class="chip__x" type="button" aria-label="Remove Zoo"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></span>
+              <span class="chip chip--leaf">Rec Room<button class="chip__x" type="button" aria-label="Remove Rec Room"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></span>
+              <span class="chip chip--leaf">Lavender<button class="chip__x" type="button" aria-label="Remove Lavender"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></span>
+              <span class="chip chip--leaf">Live theatre<button class="chip__x" type="button" aria-label="Remove Live theatre"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></span>
+              <input class="chip-input__field" id="v-likes" type="text" placeholder="Add one, press Enter">
+            </div>
+          </div>
+          <div class="field">
+            <label class="field__label" for="v-dislikes">Dislikes</label>
+            <div class="chip-input">
+              <span class="chip chip--warn">Camping<button class="chip__x" type="button" aria-label="Remove Camping"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></span>
+              <span class="chip chip--warn">Drives over 60 min<button class="chip__x" type="button" aria-label="Remove Drives over 60 min"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></span>
+              <input class="chip-input__field" id="v-dislikes" type="text" placeholder="Add one, press Enter">
+            </div>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>Likes (<code>.chip--leaf</code>) and dislikes (<code>.chip--warn</code>), as in the D20 dialog.</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;div class="field"&gt;
+  &lt;label class="field__label" for="likes"&gt;Likes&lt;/label&gt;
+  &lt;div class="chip-input"&gt;
+    &lt;span class="chip chip--leaf"&gt;Parks&lt;button class="chip__x" type="button" aria-label="Remove Parks"&gt;…&lt;/button&gt;&lt;/span&gt;
+    &lt;input class="chip-input__field" id="likes" type="text" placeholder="Add one, press Enter"&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre></details>
+      </div>
+      <h3>Empty and with a hint</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack" style="max-width: 36rem;">
+          <div class="field">
+            <label class="field__label" for="v-empty">Dislikes</label>
+            <div class="chip-input">
+              <input class="chip-input__field" id="v-empty" type="text" placeholder="Add one, press Enter" aria-describedby="v-empty-hint">
+            </div>
+            <p class="field__hint" id="v-empty-hint">Places and activities the planner should leave out, like "Camping".</p>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>With no chips the control is a plain field. The placeholder is a reminder of the key, not the label; the hint carries the explanation.</span></div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="sizes" data-na="One size. The container is a 44px field that grows in height as chips wrap; chips are the 24px tag size."><h2><a href="#sizes">Sizes</a></h2><p class="ds-na">One size. The container is a 44px field that grows in height as chips wrap; chips are the 24px tag size.</p></section>
+
+    <section class="ds-section" id="states"><h2><a href="#states">States</a></h2>
+      <p>Pointer and focus states are forced with <code>data-state</code> for review. In the product, the container takes its focus style from <code>:focus-within</code>, and the remove button from <code>:hover</code> (pointer devices only) and <code>:focus-visible</code>.</p>
+      <div class="ds-matrix"><table>
+        <thead><tr><th scope="col">Variant</th><th scope="col">Default</th><th scope="col">Field focused</th><th scope="col">Remove hover</th><th scope="col">Remove focus</th><th scope="col">Error</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Likes</th>
+            <td><div class="chip-input" style="min-width: 16rem;"><span class="chip chip--leaf">Parks<button class="chip__x" type="button" aria-label="Remove Parks"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></span><input class="chip-input__field" id="s-l1" type="text" aria-label="Likes" placeholder="Add one"></div></td>
+            <td><div class="chip-input" data-state="focus" style="min-width: 16rem;"><span class="chip chip--leaf">Parks<button class="chip__x" type="button" aria-label="Remove Parks"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></span><input class="chip-input__field" id="s-l2" type="text" aria-label="Likes" value="Zoo"></div></td>
+            <td><div class="chip-input" style="min-width: 16rem;"><span class="chip chip--leaf">Parks<button class="chip__x" type="button" aria-label="Remove Parks" data-state="hover"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></span><input class="chip-input__field" id="s-l3" type="text" aria-label="Likes" placeholder="Add one"></div></td>
+            <td><div class="chip-input" style="min-width: 16rem;"><span class="chip chip--leaf">Parks<button class="chip__x" type="button" aria-label="Remove Parks" data-state="focus"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></span><input class="chip-input__field" id="s-l4" type="text" aria-label="Likes" placeholder="Add one"></div></td>
+            <td><div class="field" style="min-width: 16rem;"><div class="chip-input"><span class="chip chip--leaf">Parks<button class="chip__x" type="button" aria-label="Remove Parks"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></span><input class="chip-input__field" id="s-l5" type="text" aria-label="Likes" value="Parks" aria-describedby="s-l5-err"></div><p class="field__error" id="s-l5-err"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg>Parks is already in Likes.</p></div></td>
+          </tr>
+          <tr><th scope="row">Dislikes</th>
+            <td><div class="chip-input" style="min-width: 16rem;"><span class="chip chip--warn">Camping<button class="chip__x" type="button" aria-label="Remove Camping"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></span><input class="chip-input__field" id="s-d1" type="text" aria-label="Dislikes" placeholder="Add one"></div></td>
+            <td><div class="chip-input" data-state="focus" style="min-width: 16rem;"><span class="chip chip--warn">Camping<button class="chip__x" type="button" aria-label="Remove Camping"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></span><input class="chip-input__field" id="s-d2" type="text" aria-label="Dislikes" value="Malls"></div></td>
+            <td><div class="chip-input" style="min-width: 16rem;"><span class="chip chip--warn">Camping<button class="chip__x" type="button" aria-label="Remove Camping" data-state="hover"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></span><input class="chip-input__field" id="s-d3" type="text" aria-label="Dislikes" placeholder="Add one"></div></td>
+            <td><div class="chip-input" style="min-width: 16rem;"><span class="chip chip--warn">Camping<button class="chip__x" type="button" aria-label="Remove Camping" data-state="focus"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></span><input class="chip-input__field" id="s-d4" type="text" aria-label="Dislikes" placeholder="Add one"></div></td>
+            <td><div class="field" style="min-width: 16rem;"><div class="chip-input"><span class="chip chip--warn">Camping<button class="chip__x" type="button" aria-label="Remove Camping"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></span><input class="chip-input__field" id="s-d5" type="text" aria-label="Dislikes" value="Parks" aria-describedby="s-d5-err"></div><p class="field__error" id="s-d5-err"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg>Parks is in Likes. Remove it there first.</p></div></td>
+          </tr>
+        </tbody>
+      </table></div>
+      <h3>Both themes</h3>
+      <div class="ds-themes">
+        <div data-theme="light"><div class="chip-input"><span class="chip chip--leaf">Parks<button class="chip__x" type="button" aria-label="Remove Parks"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></span><span class="chip chip--warn">Camping<button class="chip__x" type="button" aria-label="Remove Camping" data-state="focus"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></span><input class="chip-input__field" id="t-light" type="text" aria-label="Tags, light theme" placeholder="Add one, press Enter"></div></div>
+        <div data-theme="dark"><div class="chip-input"><span class="chip chip--leaf">Parks<button class="chip__x" type="button" aria-label="Remove Parks"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></span><span class="chip chip--warn">Camping<button class="chip__x" type="button" aria-label="Remove Camping" data-state="focus"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></span><input class="chip-input__field" id="t-dark" type="text" aria-label="Tags, dark theme" placeholder="Add one, press Enter"></div></div>
+      </div>
+      <ul>
+        <li><b>Field focused</b> uses the text-field focus treatment on the whole container: focus-coloured border plus a soft brand halo, so the box reads as one field while the caret sits after the last chip.</li>
+        <li><b>Remove focus</b> uses the shared 2px focus ring around the 16px glyph. <b>Remove hover</b> darkens the glyph and fills its circle.</li>
+        <li><b>Error</b> is for duplicates and conflicts. The typed text stays in the field so it can be fixed, and the message says what to do. Nothing is added silently and nothing is dropped silently.</li>
+        <li><b>Disabled and read-only</b> are not states of this control. When the list cannot be edited, render the values as plain <a href="chip.html">chips</a> without remove buttons.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="responsive"><h2><a href="#responsive">Responsive behaviour</a></h2>
+      <ul>
+        <li>Chips and the text input share one wrapping row. The input keeps at least 120px (<code>flex: 1 1 7.5rem</code>); when less is left it moves to its own line, so the caret never sits in a sliver.</li>
+        <li>Chips never truncate. A value too long for 360px, such as "Drives over 60 min", still fits; anything longer should be a shorter tag.</li>
+        <li>The control fills its field's width: full width in the D20 bottom sheet on phones, the wide dialog's column from 720px.</li>
+        <li>The remove button's hover fill applies only under <code>(hover: hover)</code>; on touch the 24px hit area does the work.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="theming"><h2><a href="#theming">Theming</a></h2>
+      <p>The container reads the same alias tokens as a <a href="text-field.html">text field</a>: <code>--colorNeutralBackground1</code> fill, <code>--colorNeutralStrokeAccessible</code> border, <code>--colorStrokeFocus2</code> and <code>--colorBrandStroke2</code> for focus. Chips bring their own component tokens (<code>--sd-chip-bg</code>, <code>--sd-chip-fg</code>) set by the tone class, and the remove button inherits the chip's text colour.</p>
+      <pre><code>/* A third list with its own tone: override the chip, not the container */
+.chip--maybe { --sd-chip-bg: var(--colorPaletteSkyBackground1); --sd-chip-fg: var(--colorPaletteSkyForeground1); }</code></pre>
+      <p>In the dark theme the field sits on the raised dialog surface, the leaf and warn tints darken and their text lightens, keeping each chip above 4.5:1. The remove glyph follows the chip text, so it never needs its own dark value.</p>
+    </section>
+
+    <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
+      <h3>Role and pattern</h3>
+      <p>A native <code>&lt;input type="text"&gt;</code> labelled by the field label, plus one native <code>&lt;button&gt;</code> per chip. There is no ARIA widget role on the container. If suggestions are added later, the input becomes an editable combobox following the <a href="https://www.w3.org/WAI/ARIA/apg/patterns/combobox/">APG Combobox pattern</a> (<code>role="combobox"</code>, <code>aria-expanded</code>, <code>aria-controls</code> on a <code>listbox</code>, <code>aria-activedescendant</code> for the highlighted option); Enter then adds the highlighted suggestion, or the typed text when none is highlighted.</p>
+      <h3>Keyboard</h3>
+      <table class="ds-table ds-keys"><thead><tr><th scope="col">Key</th><th scope="col">Action</th></tr></thead><tbody>
+        <tr><td><kbd>Tab</kbd> / <kbd>Shift</kbd>+<kbd>Tab</kbd></td><td>Moves through each chip's remove button, then the text input, in DOM order (chips come first, so <kbd>Shift</kbd>+<kbd>Tab</kbd> from the input reaches the last chip).</td></tr>
+        <tr><td><kbd>Enter</kbd> or <kbd>,</kbd></td><td>In the input: adds the trimmed text as a chip and clears the input. Enter does not submit the dialog. Empty text does nothing.</td></tr>
+        <tr><td><kbd>Backspace</kbd></td><td>In an empty input: removes the last chip. With text in the input it deletes characters as normal.</td></tr>
+        <tr><td><kbd>Enter</kbd> / <kbd>Space</kbd></td><td>On a remove button: removes that chip and moves focus to the next chip's remove button, or to the input if it was the last.</td></tr>
+        <tr><td><kbd>Esc</kbd></td><td>No effect on the field; it closes the dialog as usual. Leaving the field (blur) adds any typed text, so nothing typed is lost.</td></tr>
+      </tbody></table>
+      <h3>Focus</h3>
+      <p>The text input draws no outline of its own; the container shows focus through <code>:focus-within</code> with the text-field treatment (focus-coloured border and 3px halo). Each remove button shows the shared 2px ring on <code>:focus-visible</code>. Focus never lands on a chip that was just removed: it moves to the neighbour or the input.</p>
+      <h3>Labelling</h3>
+      <p>The visible label ("Likes") names the input through <code>&lt;label for&gt;</code>. Each remove button is "Remove" plus the value: "Remove Short hikes", never just "Remove" or "×". Add and remove announce through a polite live region next to the field ("Zoo added to Likes", "Camping removed"), because the chip appearing is not announced by itself. Errors are linked with <code>aria-describedby</code>.</p>
+      <h3>Contrast</h3>
+      <div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0; gap: var(--spacingHorizontalS);">
+        <div class="ds-pair"><span>Like chip text on its tint</span><span class="ds-pair__ratio" data-contrast="--colorPaletteLeafForeground1|--colorPaletteLeafBackground1" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Dislike chip text on its tint</span><span class="ds-pair__ratio" data-contrast="--colorStatusDangerForeground1|--colorStatusDangerBackground1" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Typed text on field</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground1|--colorNeutralBackground1" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Placeholder on field</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground3|--colorNeutralBackground1" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Field border on field</span><span class="ds-pair__ratio" data-contrast="--colorNeutralStrokeAccessible|--colorNeutralBackground1" data-min="3"></span></div>
+        <div class="ds-pair"><span>Focus border on field</span><span class="ds-pair__ratio" data-contrast="--colorStrokeFocus2|--colorNeutralBackground1" data-min="3"></span></div>
+        <div class="ds-pair"><span>Error text on field surface</span><span class="ds-pair__ratio" data-contrast="--colorStatusDangerForeground1|--colorNeutralBackground1" data-min="4.5"></span></div>
+      </div>
+      <p>The remove glyph is the chip's text colour at 75% opacity at rest; it is a 10px icon inside a 24px target, and hover or focus brings it to full strength.</p>
+      <h3>Motion</h3>
+      <p>Chips appear and disappear without animation. The container's border and halo transition over <code>--durationFast</code>, zeroed under <code>prefers-reduced-motion</code>.</p>
+      <h3>Touch</h3>
+      <p>The remove glyph is 16px but its <code>::before</code> extends the hit area to 24 × 24px (drift D27), clearing the 2.5.8 minimum. Neighbouring chips sit 6px apart, so the enlarged hit areas do not overlap the next chip's text. The container is 44px tall, so tapping anywhere on the empty part of the row is easy; tapping between chips focuses the input.</p>
+    </section>
+
+    <section class="ds-section" id="content"><h2><a href="#content">Content</a></h2>
+      <ul>
+        <li>Chips are short nouns or noun phrases in sentence case: "Parks", "Short hikes", "Live theatre", "Drives over 60 min". Keep the person's words; only trim spaces.</li>
+        <li>Placeholder says the key, not the meaning: "Add one, press Enter". The label and hint carry the meaning.</li>
+        <li>Duplicates are refused with a message naming the value: "Parks is already in Likes." A value in the other list says how to fix it: "Parks is in Likes. Remove it there first."</li>
+        <li>Remove buttons read "Remove" plus the value. Announcements read "Zoo added to Likes", "Camping removed".</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="do-dont"><h2><a href="#do-dont">Do and don't</a></h2>
+      <div class="ds-dodont">
+        <figure class="ds-do"><div class="ds-example__canvas"><span class="chip chip--leaf">Short hikes<button class="chip__x" type="button" aria-label="Remove Short hikes"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></span></div><figcaption>Label each remove button with its value, "Remove Short hikes", so a list of six buttons is not six "Remove"s.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><span class="chip chip--leaf">Short hikes<button class="chip__x" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></span></div><figcaption>A remove button named "Close" or "×". Screen-reader users cannot tell which chip it removes.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas"><span class="chip chip--warn">Camping<button class="chip__x" type="button" aria-label="Remove Camping"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></span></div><figcaption>Keep the 24px hit area around the 16px glyph (<code>.chip__x::before</code>, drift D27).</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><span class="chip chip--sm chip--warn">Camping<button class="chip__x" type="button" aria-label="Remove Camping" style="width: 0.75rem; height: 0.75rem;"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></span></div><figcaption>Shrinking the chip or the remove target to fit more tags. The mock's 16 × 16px button was already under the 24px minimum.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas"><div class="field" style="width: 100%;"><label class="field__label" for="dd-ok">Likes</label><div class="chip-input"><input class="chip-input__field" id="dd-ok" type="text" placeholder="Add one, press Enter"></div></div></div><figcaption>A visible label above the control; the placeholder only reminds people of the key.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><div class="chip-input" style="width: 100%;"><input class="chip-input__field" id="dd-bad" type="text" aria-label="Likes" placeholder="Likes (press Enter)"></div></div><figcaption>The placeholder as the label. It disappears with the first chip and the placeholder grey is too faint to carry meaning.</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="ds-section" id="tokens"><h2><a href="#tokens">Tokens</a></h2>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Part</th><th scope="col">Token</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead>
+        <tbody>
+          <tr><td>Container fill</td><td><code>--colorNeutralBackground1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralBackground1" data-swatch></i><span data-token="--colorNeutralBackground1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralBackground1" data-swatch></i><span data-token="--colorNeutralBackground1"></span></span></td></tr>
+          <tr><td>Container border</td><td><code>--colorNeutralStrokeAccessible</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralStrokeAccessible" data-swatch></i><span data-token="--colorNeutralStrokeAccessible"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralStrokeAccessible" data-swatch></i><span data-token="--colorNeutralStrokeAccessible"></span></span></td></tr>
+          <tr><td>Focus border</td><td><code>--colorStrokeFocus2</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorStrokeFocus2" data-swatch></i><span data-token="--colorStrokeFocus2"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorStrokeFocus2" data-swatch></i><span data-token="--colorStrokeFocus2"></span></span></td></tr>
+          <tr><td>Focus halo</td><td><code>--colorBrandStroke2</code>, <code>--strokeWidthThicker</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorBrandStroke2" data-swatch></i><span data-token="--colorBrandStroke2"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorBrandStroke2" data-swatch></i><span data-token="--colorBrandStroke2"></span></span></td></tr>
+          <tr><td>Typed text</td><td><code>--colorNeutralForeground1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralForeground1" data-swatch></i><span data-token="--colorNeutralForeground1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralForeground1" data-swatch></i><span data-token="--colorNeutralForeground1"></span></span></td></tr>
+          <tr><td>Placeholder</td><td><code>--colorNeutralForeground3</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralForeground3" data-swatch></i><span data-token="--colorNeutralForeground3"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralForeground3" data-swatch></i><span data-token="--colorNeutralForeground3"></span></span></td></tr>
+          <tr><td>Like chip fill / text</td><td><code>--colorPaletteLeafBackground1</code> / <code>--colorPaletteLeafForeground1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorPaletteLeafBackground1" data-swatch></i><span data-token="--colorPaletteLeafBackground1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorPaletteLeafBackground1" data-swatch></i><span data-token="--colorPaletteLeafBackground1"></span></span></td></tr>
+          <tr><td>Dislike chip fill / text</td><td><code>--colorStatusDangerBackground1</code> / <code>--colorStatusDangerForeground1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorStatusDangerBackground1" data-swatch></i><span data-token="--colorStatusDangerBackground1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorStatusDangerBackground1" data-swatch></i><span data-token="--colorStatusDangerBackground1"></span></span></td></tr>
+          <tr><td>Remove button hover fill</td><td><code>--colorNeutralStroke2</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralStroke2" data-swatch></i><span data-token="--colorNeutralStroke2"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralStroke2" data-swatch></i><span data-token="--colorNeutralStroke2"></span></span></td></tr>
+          <tr><td>Minimum height</td><td><code>--targetComfortable</code></td><td colspan="2"><span data-token="--targetComfortable"></span></td></tr>
+          <tr><td>Chip height / remove hit area</td><td><code>--targetMin</code></td><td colspan="2"><span data-token="--targetMin"></span></td></tr>
+          <tr><td>Radius</td><td><code>--borderRadiusMedium</code></td><td colspan="2"><span data-token="--borderRadiusMedium"></span></td></tr>
+          <tr><td>Gap between chips</td><td><code>--spacingHorizontalSNudge</code></td><td colspan="2"><span data-token="--spacingHorizontalSNudge"></span></td></tr>
+          <tr><td>Padding</td><td><code>--spacingVerticalSNudge</code>, <code>--spacingHorizontalS</code></td><td colspan="2"><span data-token="--spacingVerticalSNudge"></span> <span data-token="--spacingHorizontalS"></span></td></tr>
+          <tr><td>Input text / chip label</td><td><code>--fontSizeBase350</code> / <code>--typographyCaption1Strong</code></td><td colspan="2"><span data-token="--fontSizeBase350"></span></td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section class="ds-section" id="code"><h2><a href="#code">Code</a></h2>
+      <pre><code>&lt;div class="field"&gt;
+  &lt;label class="field__label" for="likes"&gt;Likes&lt;/label&gt;
+  &lt;div class="chip-input"&gt;
+    &lt;span class="chip chip--leaf"&gt;Short hikes
+      &lt;button class="chip__x" type="button" aria-label="Remove Short hikes"&gt;
+        &lt;svg class="icon" aria-hidden="true"&gt;&lt;use href="#i-close"/&gt;&lt;/svg&gt;
+      &lt;/button&gt;
+    &lt;/span&gt;
+    &lt;input class="chip-input__field" id="likes" type="text" placeholder="Add one, press Enter"&gt;
+  &lt;/div&gt;
+  &lt;p class="visually-hidden" aria-live="polite"&gt;&lt;!-- "Zoo added to Likes" --&gt;&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;!-- Angular --&gt;
+&lt;sd-chip-input label="Likes" tone="leaf" formControlName="likes" /&gt;</code></pre>
+      <table class="ds-table"><thead><tr><th scope="col">Class / attribute</th><th scope="col">Effect</th></tr></thead><tbody>
+        <tr><td><code>.chip-input</code></td><td>Field-styled wrapping container; shows focus with <code>:focus-within</code>.</td></tr>
+        <tr><td><code>.chip-input__field</code></td><td>The borderless text input; takes the remaining row width, at least 120px.</td></tr>
+        <tr><td><code>.chip</code> + <code>.chip--leaf</code> / <code>.chip--warn</code></td><td>One chip per value; the tone comes from the list's meaning.</td></tr>
+        <tr><td><code>.chip__x</code></td><td>Remove button: 16px glyph, 24px hit area. Requires <code>aria-label="Remove …"</code>.</td></tr>
+        <tr><td><code>aria-describedby</code></td><td>On the input, pointing at the hint and any <code>.field__error</code>.</td></tr>
+        <tr><td><code>data-state="focus"</code> / <code>data-state="hover"</code></td><td>Documentation only: forces the container's focus, or the remove button's hover or focus.</td></tr>
+      </tbody></table>
+      <p>The Angular component is a form control over <code>string[]</code>. It commits on <kbd>Enter</kbd>, <kbd>,</kbd> and blur, removes the last value on <kbd>Backspace</kbd> in an empty input, and renders each value as <code>sd-chip</code> with <code>removable</code> and <code>removeLabel</code> set to "Remove" plus the value. It trims values and drops case-insensitive duplicates silently; the duplicate message above is not built yet.</p>
+    </section>
+
+    <section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>
+      <p>Extracted from:</p>
+      <ul>
+        <li><a href="../../mocks/pages/dialogs.html">pages/dialogs</a>: D20 Likes and dislikes, the only chip input in the mocks (likes in leaf, dislikes in warn).</li>
+        <li><a href="../../mocks/pages/family.html">pages/family</a>: the Preferences section that opens D20.</li>
+      </ul>
+      <p>Drift fixed during extraction (see the <a href="../README.md">README drift log</a>): D27 the 16px remove button now has a 24px hit area; D06 the container border uses the accessible stroke; D04 the placeholder uses <code>--colorNeutralForeground3</code>; D03 the focus colour; D07 the leaf chip text. The mocks do not show the duplicate error, the live-region announcements or suggestions; those are specified here and not yet drawn.</p>
+    </section>
+
+    <footer class="ds-footer"><span>Saturdaze design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/icons.js"></script>
+<script src="../assets/ds.js"></script>
+</body>
+</html>

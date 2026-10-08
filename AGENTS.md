@@ -79,8 +79,8 @@ design-system-only, mock-only, and test-only changes are out of scope unless
 they are part of implementing a production behavior change.
 
 Every production behavior implementation MUST invoke and follow the
-`incremental-implementation` skill (`.claude/skills/incremental-implementation`
-and `.agents/skills/incremental-implementation`) before any code is written,
+`implementing-incrementally` skill (`.claude/skills/implementing-incrementally`
+and `.agents/skills/implementing-incrementally`) before any code is written,
 combined with acceptance test-driven development (ATDD). Plan small,
 reviewable slices, then complete one slice at a time: write Given-When-Then
 acceptance criteria, write the acceptance test, and run it to prove it fails for

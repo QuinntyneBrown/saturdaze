@@ -1,0 +1,360 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Switch — Saturdaze design system</title>
+<meta name="description" content="A switch turns one setting on or off: Remember me, Budget matters, Friday preview email. Native checkbox with role switch, two layouts, every state, both themes.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html"><span class="brand-mark" aria-hidden="true"></span>Saturdaze DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Actions</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+    </ul></details>
+    <details open><summary>Inputs</summary><ul>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/chip-input.html">Chip input</a></li>
+      <li><a href="../components/file-upload.html">File upload</a></li>
+      <li><a href="../components/photo-pick.html">Photo pick</a></li>
+      <li><a href="../components/rating.html">Rating</a></li>
+      <li><a href="../components/vote-row.html">Vote row</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+    </ul></details>
+    <details open><summary>Navigation</summary><ul>
+      <li><a href="../components/top-bar.html">Top bar</a></li>
+      <li><a href="../components/bottom-nav.html">Bottom nav</a></li>
+      <li><a href="../components/sidebar-navigation.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs (segments)</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+      <li><a href="../components/footer.html">Footer</a></li>
+    </ul></details>
+    <details open><summary>Containers and overlays</summary><ul>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/container.html">Container and grid</a></li>
+      <li><a href="../components/page-header.html">Page header</a></li>
+    </ul></details>
+    <details open><summary>Data display</summary><ul>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/activity-feed.html">Activity feed</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/chip.html">Chip</a></li>
+      <li><a href="../components/filter-chip.html">Filter chip</a></li>
+      <li><a href="../components/disc.html">Disc</a></li>
+      <li><a href="../components/media.html">Media</a></li>
+      <li><a href="../components/cover.html">Cover photo</a></li>
+      <li><a href="../components/stat.html">Stat</a></li>
+      <li><a href="../components/itinerary.html">Itinerary</a></li>
+      <li><a href="../components/map.html">Map</a></li>
+    </ul></details>
+    <details open><summary>Feedback</summary><ul>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/alert.html">Alert</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/progress-bar.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Auth and marketing</summary><ul>
+      <li><a href="../components/auth-card.html">Auth card</a></li>
+      <li><a href="../components/hero.html">Hero</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/data-tables-and-lists.html">Tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Component · Inputs</p>
+      <h1>Switch</h1>
+      <p class="ds-lead">A switch turns one setting on or off: stay signed in, prefer free picks, get the Friday preview email. It reads as a preference that holds until someone changes it, not as an answer to a question.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA</span><span class="ds-pill">Status: stable</span><span class="ds-pill">Angular: <code>sd-toggle</code></span><span class="ds-pill">Native <code>&lt;input type="checkbox" role="switch"&gt;</code></span></div>
+      <ul class="ds-toc">
+        <li><a href="#overview">Overview</a></li><li><a href="#anatomy">Anatomy</a></li><li><a href="#variants">Variants</a></li><li><a href="#sizes">Sizes</a></li><li><a href="#states">States</a></li><li><a href="#responsive">Responsive</a></li><li><a href="#theming">Theming</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#content">Content</a></li><li><a href="#do-dont">Do and don't</a></li><li><a href="#tokens">Tokens</a></li><li><a href="#code">Code</a></li><li><a href="#sources">Sources</a></li>
+      </ul>
+    </header>
+
+    <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+      <p>Use a switch for a single setting with two states where "on" is meaningful by itself: the Family page preferences (Budget matters, Try something new each weekend, Friday preview email) save as soon as they flip, and "Remember me" on sign-in keeps the session. The control is a real checkbox with <code>role="switch"</code>, so it submits like a checkbox and announces as "on" or "off".</p>
+      <ul>
+        <li>Use a <a href="checkbox.html">checkbox</a> to agree or opt in as part of a form that is submitted later ("I agree to the Terms and Privacy Policy" on Create account), or to pick several items from a list.</li>
+        <li>Use a <a href="radio-group.html">radio group</a> when the two states are not on and off (Saturday or Sunday).</li>
+        <li>Use a <a href="button.html">toggle button</a> (<code>aria-pressed</code>) for an action-like state on content, such as Favourite on a past weekend.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="anatomy"><h2><a href="#anatomy">Anatomy</a></h2>
+      <div class="ds-anatomy">
+        <figure class="ds-anatomy__figure">
+          <div style="position: relative; padding: var(--spacingVerticalXL) var(--spacingHorizontalXL) var(--spacingVerticalS);">
+            <label class="toggle"><input class="toggle__input" type="checkbox" role="switch" checked><span class="toggle__track"></span><span class="toggle__label">Remember me</span></label>
+            <span class="ds-callout" style="left: 0; top: 0;" aria-hidden="true">1</span>
+            <span class="ds-callout" style="left: 3.25rem; top: 0;" aria-hidden="true">2</span>
+            <span class="ds-callout" style="left: 7rem; top: 0;" aria-hidden="true">3</span>
+          </div>
+        </figure>
+        <ol class="ds-anatomy__list">
+          <li><div><b>Track</b><small><code>.toggle__track</code>, 44 × 24px pill. Off: <code>--colorNeutralStrokeAccessible</code>; on: <code>--colorStatusSuccessBackground3</code>. It is the visible control; the real input is visually hidden.</small></div></li>
+          <li><div><b>Thumb</b><small>20px circle (<code>::after</code>), <code>--colorNeutralBackground1</code> with <code>--shadow4</code>; slides 20px to the right when on.</small></div></li>
+          <li><div><b>Label</b><small><code>.toggle__label</code>, 14px medium. The whole <code>&lt;label&gt;</code> is the hit target and the accessible name.</small></div></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="ds-section" id="variants"><h2><a href="#variants">Variants</a></h2>
+      <p>One control, two layouts. Put the switch before a short label inside forms; put it at the end of a settings row so labels line up on the left and switches line up on the right.</p>
+      <h3>Label after the switch</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas">
+          <label class="toggle"><input class="toggle__input" type="checkbox" role="switch" checked><span class="toggle__track"></span><span class="toggle__label">Remember me</span></label>
+          <label class="toggle"><input class="toggle__input" type="checkbox" role="switch"><span class="toggle__track"></span><span class="toggle__label">Show past weekends first</span></label>
+        </div>
+        <div class="ds-example__caption"><span>Sign in and Saturdaze Admin sign in use this form for "Remember me".</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;label class="toggle"&gt;
+  &lt;input class="toggle__input" type="checkbox" role="switch" checked&gt;
+  &lt;span class="toggle__track"&gt;&lt;/span&gt;
+  &lt;span class="toggle__label"&gt;Remember me&lt;/span&gt;
+&lt;/label&gt;</code></pre></details>
+      </div>
+      <h3>Settings row: label and description first, switch at the end</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack" style="max-width: 32rem;">
+          <label class="toggle toggle--end"><input class="toggle__input" type="checkbox" role="switch"><span class="toggle__track"></span><span class="toggle__text"><span class="toggle__label">Budget matters</span><span class="toggle__desc">Prefer free and low-cost picks</span></span></label>
+          <label class="toggle toggle--end"><input class="toggle__input" type="checkbox" role="switch"><span class="toggle__track"></span><span class="toggle__text"><span class="toggle__label">Try something new each weekend</span><span class="toggle__desc">One first-time activity per weekend</span></span></label>
+          <label class="toggle toggle--end"><input class="toggle__input" type="checkbox" role="switch" checked><span class="toggle__track"></span><span class="toggle__text"><span class="toggle__label">Friday preview email</span><span class="toggle__desc">A draft in your inbox at 6pm Friday</span></span></label>
+        </div>
+        <div class="ds-example__caption"><span><code>.toggle--end</code> reverses the row and spreads it full width; the text and description are part of the label, so tapping either flips the switch.</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;label class="toggle toggle--end"&gt;
+  &lt;input class="toggle__input" type="checkbox" role="switch" checked&gt;
+  &lt;span class="toggle__track"&gt;&lt;/span&gt;
+  &lt;span class="toggle__text"&gt;
+    &lt;span class="toggle__label"&gt;Friday preview email&lt;/span&gt;
+    &lt;span class="toggle__desc"&gt;A draft in your inbox at 6pm Friday&lt;/span&gt;
+  &lt;/span&gt;
+&lt;/label&gt;</code></pre></details>
+      </div>
+    </section>
+
+    <section class="ds-section" id="sizes" data-na="One size: a 44 × 24px track with a 20px thumb. The label, not a bigger track, provides the larger target."><h2><a href="#sizes">Sizes</a></h2><p class="ds-na">One size: a 44 × 24px track with a 20px thumb. The label, not a bigger track, provides the larger target.</p></section>
+
+    <section class="ds-section" id="states"><h2><a href="#states">States</a></h2>
+      <p>Hover is forced with <code>data-state="hover"</code> on the <code>.toggle</code>. Focus is forced with <code>data-state="focus"</code> on the track, which is where a real <code>:focus-visible</code> on the hidden input draws the ring. On, off and disabled use the real <code>checked</code> and <code>disabled</code> attributes.</p>
+      <div class="ds-matrix"><table>
+        <thead><tr><th scope="col">Layout</th><th scope="col">Off</th><th scope="col">On</th><th scope="col">Hover</th><th scope="col">Focus</th><th scope="col">Disabled off</th><th scope="col">Disabled on</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Label after</th>
+            <td><label class="toggle"><input class="toggle__input" type="checkbox" role="switch"><span class="toggle__track"></span><span class="toggle__label">Remember me</span></label></td>
+            <td><label class="toggle"><input class="toggle__input" type="checkbox" role="switch" checked><span class="toggle__track"></span><span class="toggle__label">Remember me</span></label></td>
+            <td><label class="toggle" data-state="hover"><input class="toggle__input" type="checkbox" role="switch"><span class="toggle__track"></span><span class="toggle__label">Remember me</span></label></td>
+            <td><label class="toggle"><input class="toggle__input" type="checkbox" role="switch" checked><span class="toggle__track" data-state="focus"></span><span class="toggle__label">Remember me</span></label></td>
+            <td><label class="toggle"><input class="toggle__input" type="checkbox" role="switch" disabled><span class="toggle__track"></span><span class="toggle__label">Remember me</span></label></td>
+            <td><label class="toggle"><input class="toggle__input" type="checkbox" role="switch" checked disabled><span class="toggle__track"></span><span class="toggle__label">Remember me</span></label></td></tr>
+          <tr><th scope="row">Settings row</th>
+            <td><label class="toggle toggle--end" style="min-width: 11rem;"><input class="toggle__input" type="checkbox" role="switch"><span class="toggle__track"></span><span class="toggle__label">Budget matters</span></label></td>
+            <td><label class="toggle toggle--end" style="min-width: 11rem;"><input class="toggle__input" type="checkbox" role="switch" checked><span class="toggle__track"></span><span class="toggle__label">Budget matters</span></label></td>
+            <td><label class="toggle toggle--end" style="min-width: 11rem;" data-state="hover"><input class="toggle__input" type="checkbox" role="switch"><span class="toggle__track"></span><span class="toggle__label">Budget matters</span></label></td>
+            <td><label class="toggle toggle--end" style="min-width: 11rem;"><input class="toggle__input" type="checkbox" role="switch" checked><span class="toggle__track" data-state="focus"></span><span class="toggle__label">Budget matters</span></label></td>
+            <td><label class="toggle toggle--end" style="min-width: 11rem;"><input class="toggle__input" type="checkbox" role="switch" disabled><span class="toggle__track"></span><span class="toggle__label">Budget matters</span></label></td>
+            <td><label class="toggle toggle--end" style="min-width: 11rem;"><input class="toggle__input" type="checkbox" role="switch" checked disabled><span class="toggle__track"></span><span class="toggle__label">Budget matters</span></label></td></tr>
+        </tbody>
+      </table></div>
+      <h3>Both themes</h3>
+      <div class="ds-themes">
+        <div data-theme="light"><div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0;">
+          <label class="toggle"><input class="toggle__input" type="checkbox" role="switch"><span class="toggle__track"></span><span class="toggle__label">Budget matters</span></label>
+          <label class="toggle"><input class="toggle__input" type="checkbox" role="switch" checked><span class="toggle__track"></span><span class="toggle__label">Friday preview email</span></label>
+          <label class="toggle"><input class="toggle__input" type="checkbox" role="switch" checked><span class="toggle__track" data-state="focus"></span><span class="toggle__label">Remember me</span></label>
+          <label class="toggle"><input class="toggle__input" type="checkbox" role="switch" disabled><span class="toggle__track"></span><span class="toggle__label">Try something new</span></label>
+        </div></div>
+        <div data-theme="dark"><div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0;">
+          <label class="toggle"><input class="toggle__input" type="checkbox" role="switch"><span class="toggle__track"></span><span class="toggle__label">Budget matters</span></label>
+          <label class="toggle"><input class="toggle__input" type="checkbox" role="switch" checked><span class="toggle__track"></span><span class="toggle__label">Friday preview email</span></label>
+          <label class="toggle"><input class="toggle__input" type="checkbox" role="switch" checked><span class="toggle__track" data-state="focus"></span><span class="toggle__label">Remember me</span></label>
+          <label class="toggle"><input class="toggle__input" type="checkbox" role="switch" disabled><span class="toggle__track"></span><span class="toggle__label">Try something new</span></label>
+        </div></div>
+      </div>
+      <ul>
+        <li><b>On</b> fills the track forest green and moves the thumb right. Position and colour both change, so the state never relies on colour alone.</li>
+        <li><b>Hover</b> (pointer devices only) adds a 4px subtle halo around the track.</li>
+        <li><b>Disabled</b> uses the native attribute: the track drops to 50% opacity, the cursor shows not-allowed and the input leaves the tab order. Say why nearby (for example, "Ask a parent to change this").</li>
+        <li><b>Saving</b>: a switch that saves straight away flips at once and saves in the background. If the save fails, flip it back and say so in a <a href="toast.html">toast</a>; do not add a spinner to the track.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="responsive"><h2><a href="#responsive">Responsive behaviour</a></h2>
+      <ul>
+        <li>The switch never changes size. A <code>.toggle--end</code> row spans its container at every width, so switches in a list share one right edge.</li>
+        <li>Long labels and descriptions wrap; the track stays vertically centred on the text block and never shrinks (<code>flex: none</code>).</li>
+        <li>Inside an <code>.auth-card__row</code> the switch and the "Forgot password?" link wrap onto two lines under about 340px of card width.</li>
+        <li>Hover halos apply only under <code>(hover: hover)</code>.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="theming"><h2><a href="#theming">Theming</a></h2>
+      <p>The switch reads alias tokens only: <code>--colorNeutralStrokeAccessible</code> for the off track, <code>--colorStatusSuccessBackground3</code> for the on track, <code>--colorNeutralBackground1</code> for the thumb (white in light, dark umber in dark), <code>--colorSubtleBackgroundHover</code> for the hover halo, and <code>--colorStrokeFocus2</code> for the ring. There are no component tokens; a theme changes the alias values.</p>
+      <p>In the dark theme the off track is the lighter dark-mode accessible stroke and the on track the lighter forest green, both well above 3:1 against the dark surface. The thumb takes the card surface, so it is dark on the light tracks and stays visible in both positions. The mocks' thumb was a literal <code>#fff</code>, which in dark sat at about 2:1 on the on track. The mocks' off track was the 16% decorative line, invisible on cream (D06); the thumb was a literal <code>#fff</code> (D17).</p>
+    </section>
+
+    <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
+      <h3>Role and pattern</h3>
+      <p>A native <code>&lt;input type="checkbox" role="switch"&gt;</code>, following the <a href="https://www.w3.org/WAI/ARIA/apg/patterns/switch/">APG Switch pattern</a>. Screen readers announce "Remember me, switch, on". Keep the native checkbox so the value submits with a form and the browser handles keys; never build a switch from a <code>&lt;div&gt;</code> or a <code>&lt;button&gt;</code> without <code>aria-checked</code>.</p>
+      <h3>Keyboard</h3>
+      <table class="ds-table ds-keys"><thead><tr><th scope="col">Key</th><th scope="col">Action</th></tr></thead><tbody>
+        <tr><td><kbd>Tab</kbd> / <kbd>Shift</kbd>+<kbd>Tab</kbd></td><td>Moves focus to and from the switch.</td></tr>
+        <tr><td><kbd>Space</kbd></td><td>Turns it on or off.</td></tr>
+        <tr><td><kbd>Enter</kbd></td><td>No effect on the switch; in a form it submits the form, as with any checkbox.</td></tr>
+      </tbody></table>
+      <h3>Focus</h3>
+      <p>The input is visually hidden, so <code>.toggle__input:focus-visible + .toggle__track</code> draws the shared ring (<code>2px --colorStrokeFocus2</code>, 2px offset) around the track. It appears for keyboard focus only.</p>
+      <h3>Labelling</h3>
+      <p>The <code>&lt;label class="toggle"&gt;</code> wraps the input, so <code>.toggle__label</code> is the accessible name and <code>.toggle__desc</code> is read with it. When the visible setting name sits outside the label (the Family preferences list), add a <code>.visually-hidden</code> label inside with the same words, or in Angular pass <code>srLabel</code>; better still, use <code>.toggle--end</code> so the visible text is the label. Never put "on" or "off" in the label; the role announces the state.</p>
+      <h3>Contrast</h3>
+      <div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0; gap: var(--spacingHorizontalS);">
+        <div class="ds-pair"><span>Off track on card</span><span class="ds-pair__ratio" data-contrast="--colorNeutralStrokeAccessible|--colorNeutralBackground1" data-min="3"></span></div>
+        <div class="ds-pair"><span>Off track on page</span><span class="ds-pair__ratio" data-contrast="--colorNeutralStrokeAccessible|--colorNeutralBackground2" data-min="3"></span></div>
+        <div class="ds-pair"><span>On track on card</span><span class="ds-pair__ratio" data-contrast="--colorStatusSuccessBackground3|--colorNeutralBackground1" data-min="3"></span></div>
+        <div class="ds-pair"><span>Thumb on on track</span><span class="ds-pair__ratio" data-contrast="--colorNeutralBackground1|--colorStatusSuccessBackground3" data-min="3"></span></div>
+        <div class="ds-pair"><span>Thumb on off track</span><span class="ds-pair__ratio" data-contrast="--colorNeutralBackground1|--colorNeutralStrokeAccessible" data-min="3"></span></div>
+        <div class="ds-pair"><span>Label on card</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground1|--colorNeutralBackground1" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Description on card</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground2|--colorNeutralBackground1" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Focus ring on card</span><span class="ds-pair__ratio" data-contrast="--colorStrokeFocus2|--colorNeutralBackground1" data-min="3"></span></div>
+      </div>
+      <h3>Motion</h3>
+      <p>The thumb slides and the track colour changes over <code>--durationNormal</code> with <code>--curveEasyEase</code>. Under <code>prefers-reduced-motion</code> the duration tokens are zero, so the switch jumps to its new state; position still shows the change.</p>
+      <h3>Touch</h3>
+      <p>The track alone is 44 × 24px, which meets the 24px minimum. With a visible label the whole label row is the target. Keep at least 8px between stacked switches; in the Family list each row is 44px or taller.</p>
+    </section>
+
+    <section class="ds-section" id="content"><h2><a href="#content">Content</a></h2>
+      <ul>
+        <li>Name the setting, not the action: "Friday preview email", "Budget matters". Not "Turn on the Friday email".</li>
+        <li>The label must make sense with "on" after it. "Remember me" on reads well; "Forget me" would read as a double negative when off.</li>
+        <li>Use the description for the effect: "A draft in your inbox at 6pm Friday". Keep it to one line at 360px where possible.</li>
+        <li>Sentence case, no full stop, no "Enable" or "Allow" prefix.</li>
+        <li>Do not add "On" and "Off" text next to the track.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="do-dont"><h2><a href="#do-dont">Do and don't</a></h2>
+      <div class="ds-dodont">
+        <figure class="ds-do"><div class="ds-example__canvas ds-example__canvas--stack"><label class="toggle toggle--end"><input class="toggle__input" type="checkbox" role="switch" checked><span class="toggle__track"></span><span class="toggle__text"><span class="toggle__label">Friday preview email</span><span class="toggle__desc">A draft in your inbox at 6pm Friday</span></span></label></div><figcaption>The visible setting name is the label, so tapping the words flips the switch.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas ds-example__canvas--stack"><div class="cluster cluster--between" style="width: 100%;"><span>Friday preview email</span><label class="toggle"><input class="toggle__input" type="checkbox" role="switch" aria-label="Toggle"><span class="toggle__track"></span></label></div></div><figcaption>The visible text sits outside the label and the switch is named "Toggle". Tapping the words does nothing, and screen readers hear no setting name.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas"><label class="toggle"><input class="toggle__input" type="checkbox" role="switch"><span class="toggle__track"></span><span class="toggle__label">Budget matters</span></label></div><figcaption>The off track uses the accessible stroke, 3:1 or more on the card (D06).</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><label class="toggle"><input class="toggle__input" type="checkbox" role="switch"><span class="toggle__track" style="background: var(--colorNeutralStroke2);"></span><span class="toggle__label">Budget matters</span></label></div><figcaption>The mocks' off track used the decorative line colour. It almost disappears, so "off" looks like "missing".</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas"><label class="check"><input class="check__input" type="checkbox" checked>I agree to the Terms and Privacy Policy.</label></div><figcaption>Agreement in a form that is submitted later is a checkbox.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><label class="toggle"><input class="toggle__input" type="checkbox" role="switch" checked><span class="toggle__track"></span><span class="toggle__label">I agree to the Terms</span></label></div><figcaption>Consent is not a setting someone turns on and off. Use a checkbox.</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="ds-section" id="tokens"><h2><a href="#tokens">Tokens</a></h2>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Part</th><th scope="col">Token</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead>
+        <tbody>
+          <tr><td>Track, off</td><td><code>--colorNeutralStrokeAccessible</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralStrokeAccessible" data-swatch></i><span data-token="--colorNeutralStrokeAccessible"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralStrokeAccessible" data-swatch></i><span data-token="--colorNeutralStrokeAccessible"></span></span></td></tr>
+          <tr><td>Track, on</td><td><code>--colorStatusSuccessBackground3</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorStatusSuccessBackground3" data-swatch></i><span data-token="--colorStatusSuccessBackground3"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorStatusSuccessBackground3" data-swatch></i><span data-token="--colorStatusSuccessBackground3"></span></span></td></tr>
+          <tr><td>Thumb</td><td><code>--colorNeutralBackground1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralBackground1" data-swatch></i><span data-token="--colorNeutralBackground1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralBackground1" data-swatch></i><span data-token="--colorNeutralBackground1"></span></span></td></tr>
+          <tr><td>Hover halo</td><td><code>--colorSubtleBackgroundHover</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorSubtleBackgroundHover" data-swatch></i><span data-token="--colorSubtleBackgroundHover"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorSubtleBackgroundHover" data-swatch></i><span data-token="--colorSubtleBackgroundHover"></span></span></td></tr>
+          <tr><td>Label</td><td><code>--colorNeutralForeground1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralForeground1" data-swatch></i><span data-token="--colorNeutralForeground1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralForeground1" data-swatch></i><span data-token="--colorNeutralForeground1"></span></span></td></tr>
+          <tr><td>Description</td><td><code>--colorNeutralForeground2</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralForeground2" data-swatch></i><span data-token="--colorNeutralForeground2"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralForeground2" data-swatch></i><span data-token="--colorNeutralForeground2"></span></span></td></tr>
+          <tr><td>Focus ring</td><td><code>--colorStrokeFocus2</code>, <code>--strokeWidthThick</code>, <code>--focusRingOffset</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorStrokeFocus2" data-swatch></i><span data-token="--colorStrokeFocus2"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorStrokeFocus2" data-swatch></i><span data-token="--colorStrokeFocus2"></span></span></td></tr>
+          <tr><td>Thumb shadow</td><td><code>--shadow4</code></td><td colspan="2"><span data-token="--shadow4"></span></td></tr>
+          <tr><td>Track and thumb radius</td><td><code>--borderRadiusCircular</code></td><td colspan="2"><span data-token="--borderRadiusCircular"></span></td></tr>
+          <tr><td>Hover halo width</td><td><code>--strokeWidthThicker</code></td><td colspan="2"><span data-token="--strokeWidthThicker"></span></td></tr>
+          <tr><td>Track to label gap</td><td><code>--spacingHorizontalMNudge</code></td><td colspan="2"><span data-token="--spacingHorizontalMNudge"></span></td></tr>
+          <tr><td>Label / description</td><td><code>--fontSizeBase350</code> + <code>--fontWeightMedium</code> / <code>--typographyBody2</code></td><td colspan="2"><span data-token="--fontSizeBase350"></span> / <span data-token="--typographyBody2"></span></td></tr>
+          <tr><td>Slide and fill</td><td><code>--durationNormal</code>, <code>--curveEasyEase</code></td><td colspan="2"><span data-token="--durationNormal"></span> <span data-token="--curveEasyEase"></span></td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section class="ds-section" id="code"><h2><a href="#code">Code</a></h2>
+      <pre><code>&lt;label class="toggle"&gt;
+  &lt;input class="toggle__input" type="checkbox" role="switch" name="remember" checked&gt;
+  &lt;span class="toggle__track"&gt;&lt;/span&gt;
+  &lt;span class="toggle__label"&gt;Remember me&lt;/span&gt;
+&lt;/label&gt;
+
+&lt;!-- Visible name outside the control (Family preferences list) --&gt;
+&lt;label class="toggle"&gt;
+  &lt;input class="toggle__input" type="checkbox" role="switch"&gt;
+  &lt;span class="toggle__track"&gt;&lt;/span&gt;
+  &lt;span class="visually-hidden"&gt;Budget matters&lt;/span&gt;
+&lt;/label&gt;
+
+&lt;!-- Angular --&gt;
+&lt;sd-toggle label="Remember me" formControlName="remember" /&gt;
+&lt;sd-toggle srLabel="Budget matters" [checked]="prefs.budget" /&gt;</code></pre>
+      <table class="ds-table"><thead><tr><th scope="col">Class / attribute</th><th scope="col">Effect</th></tr></thead><tbody>
+        <tr><td><code>.toggle</code></td><td>The <code>&lt;label&gt;</code> wrapper: inline row, 12px gap, pointer cursor.</td></tr>
+        <tr><td><code>.toggle--end</code></td><td>Label first, switch last, full width: the settings-row layout.</td></tr>
+        <tr><td><code>.toggle__input</code></td><td>The real checkbox with <code>role="switch"</code>, visually hidden. Must come straight before the track.</td></tr>
+        <tr><td><code>.toggle__track</code></td><td>The visible track and thumb; reflects <code>:checked</code>, <code>:focus-visible</code> and <code>:disabled</code> of the input before it.</td></tr>
+        <tr><td><code>.toggle__label</code></td><td>The setting name.</td></tr>
+        <tr><td><code>.toggle__text</code> + <code>.toggle__desc</code></td><td>Stacks a name and a one-line description.</td></tr>
+        <tr><td><code>checked</code> / <code>disabled</code></td><td>On / disabled (on the input).</td></tr>
+        <tr><td><code>data-state="hover"</code> on <code>.toggle</code>, <code>data-state="focus"</code> on <code>.toggle__track</code></td><td>Documentation only: forces hover or focus on a static page.</td></tr>
+      </tbody></table>
+    </section>
+
+    <section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>
+      <p>Extracted from these mocks:</p>
+      <ul>
+        <li><a href="../../mocks/pages/sign-in.html">pages/sign-in</a> and <a href="../../mocks/pages/admin.sign-in.html">pages/admin.sign-in</a>: "Remember me" with a visible label, in <code>.auth-card__row</code> beside "Forgot password?", including the wrong-password state.</li>
+        <li><a href="../../mocks/pages/family.html">pages/family</a>: the Preferences list (Budget matters, Try something new each weekend, Friday preview email) with the name in the list row and a visually hidden label in the switch.</li>
+      </ul>
+      <p>Drift fixed during extraction (see the <a href="../README.md">README drift log</a>): D06 the off track used the 16% line (1.36:1), now <code>--colorNeutralStrokeAccessible</code>; D17 the literal <code>#fff</code> thumb, now a token; D03 focus ring contrast; D13 the raw 14px label. The <code>.toggle--end</code> settings row is the recommended replacement for the Family list's hidden-label pattern; the mocks do not use it yet.</p>
+      <p>Rules added to components.css for this page: the surface-coloured thumb, <code>position: relative</code> on <code>.toggle</code> (keeps the visually hidden input inside its label), and no shared ring on <code>.toggle[data-state="focus"]</code> so the forced focus state rings only the track.</p>
+    </section>
+
+    <footer class="ds-footer"><span>Saturdaze design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/icons.js"></script>
+<script src="../assets/ds.js"></script>
+</body>
+</html>

@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Notifications — Saturdaze design system</title>
+<meta name="description" content="Toast, banner, inline well or status row: which one Saturdaze uses to tell a family something, how messages are prioritised and grouped, when they dismiss themselves, and how they reach screen readers.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html"><span class="brand-mark" aria-hidden="true"></span>Saturdaze DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Actions</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+    </ul></details>
+    <details open><summary>Inputs</summary><ul>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/chip-input.html">Chip input</a></li>
+      <li><a href="../components/file-upload.html">File upload</a></li>
+      <li><a href="../components/photo-pick.html">Photo pick</a></li>
+      <li><a href="../components/rating.html">Rating</a></li>
+      <li><a href="../components/vote-row.html">Vote row</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+    </ul></details>
+    <details open><summary>Navigation</summary><ul>
+      <li><a href="../components/top-bar.html">Top bar</a></li>
+      <li><a href="../components/bottom-nav.html">Bottom nav</a></li>
+      <li><a href="../components/sidebar-navigation.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs (segments)</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+      <li><a href="../components/footer.html">Footer</a></li>
+    </ul></details>
+    <details open><summary>Containers and overlays</summary><ul>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/container.html">Container and grid</a></li>
+      <li><a href="../components/page-header.html">Page header</a></li>
+    </ul></details>
+    <details open><summary>Data display</summary><ul>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/activity-feed.html">Activity feed</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/chip.html">Chip</a></li>
+      <li><a href="../components/filter-chip.html">Filter chip</a></li>
+      <li><a href="../components/disc.html">Disc</a></li>
+      <li><a href="../components/media.html">Media</a></li>
+      <li><a href="../components/cover.html">Cover photo</a></li>
+      <li><a href="../components/stat.html">Stat</a></li>
+      <li><a href="../components/itinerary.html">Itinerary</a></li>
+      <li><a href="../components/map.html">Map</a></li>
+    </ul></details>
+    <details open><summary>Feedback</summary><ul>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/alert.html">Alert</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/progress-bar.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Auth and marketing</summary><ul>
+      <li><a href="../components/auth-card.html">Auth card</a></li>
+      <li><a href="../components/hero.html">Hero</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/data-tables-and-lists.html">Tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Pattern</p>
+      <h1>Notifications</h1>
+      <p class="ds-lead">Saturdaze talks to a family in four ways: a toast for what they just did, a banner for a condition that holds, a well for something worth knowing, and a status row for work in progress. Pick by how long the message stays true.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA</span><span class="ds-pill">Status: proposed for toasts</span><span class="ds-pill">Angular: <code>sd-banner</code>, <code>sd-well</code>, <code>sd-status-row</code></span></div>
+      <ul class="ds-toc">
+        <li><a href="#overview">Overview</a></li><li><a href="#when">When to use</a></li><li><a href="#structure">Structure</a></li><li><a href="#states">States</a></li><li><a href="#responsive">Responsive</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#content">Content</a></li><li><a href="#do-dont">Do and don't</a></li><li><a href="#sources">Sources</a></li>
+      </ul>
+    </header>
+
+    <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Message</th><th scope="col">True for</th><th scope="col">Lives</th><th scope="col">Goes away</th></tr></thead>
+        <tbody>
+          <tr><td><a href="../components/toast.html">Toast</a></td><td>A moment: "Saved Mae"</td><td>Toast region, over the page</td><td>By itself after at least 8 seconds, or on dismiss; errors only on dismiss</td></tr>
+          <tr><td><a href="../components/alert.html">Banner</a></td><td>Until something changes: sign-in failed, offline, the forecast is unavailable</td><td>Top of the page, form or card it affects</td><td>When the condition is fixed, or on dismiss if it is only informative</td></tr>
+          <tr><td><a href="../components/inline-message.html">Inline well</a></td><td>Always, for this content: "A recurring commitment"</td><td>Inside the content it explains</td><td>Never; it is part of the page</td></tr>
+          <tr><td>Status row</td><td>While work runs: "Working through your locks…"</td><td>Above the region being worked on</td><td>When the work ends; replaced by the result</td></tr>
+        </tbody>
+      </table></div>
+      <p>Saturdaze has no notification centre or inbox. The Friday preview is an email; nothing in the app needs to be caught up on later.</p>
+    </section>
+
+    <section class="ds-section" id="when"><h2><a href="#when">When to use</a></h2>
+      <ul>
+        <li><b>Toast</b> when the person did something and the result is easy to miss or off-screen: "Removed Costco run from Sunday", "Link copied", "Saved Mae". Not for something the control already shows.</li>
+        <li><b>Banner</b> when the page or form cannot do its job, or will do it differently, until something changes: "That email and password did not match", "You are offline. Changes will save when you are back."</li>
+        <li><b>Well</b> to explain the content next to it: why Swim lessons cannot be swapped, the short version of the privacy policy. Not an event, so never announced.</li>
+        <li><b>Status row</b> while the system works on this page for more than a couple of seconds: weekend generating, "Approved · Bronte Creek Maple Magic" after a review action.</li>
+        <li><b>Dialog</b> only when the message needs a decision or has details to read; see <a href="dialogs-and-overlays.html">Dialogs and overlays</a>.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="structure"><h2><a href="#structure">Structure</a></h2>
+      <h3>The four, side by side</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack ds-example__canvas--canvas">
+          <ul class="toast-region toast-region--static">
+            <li class="toast toast--success" role="status">
+              <svg class="icon" aria-hidden="true"><use href="#i-check_circle"/></svg>
+              <span class="toast__text">Saved Mae</span>
+              <button class="btn btn--ghost btn--sm btn--icon toast__close" type="button" aria-label="Dismiss"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+            </li>
+          </ul>
+          <div class="banner banner--caution">
+            <svg class="icon" aria-hidden="true"><use href="#i-cloud"/></svg>
+            <div class="banner__text"><span class="banner__title">Sunday's forecast is not in yet</span>The plan assumes a dry day. It is checked again Saturday morning.</div>
+          </div>
+          <div class="well well--accent">
+            <svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg>
+            <div><p class="well__title">A recurring commitment</p><p class="well__body">It is in every weekend and cannot be swapped here. Edit it on Family.</p></div>
+          </div>
+          <div class="status-row" role="status" style="margin: 0;">
+            <span class="spinner-disc" aria-hidden="true"><span class="spinner"></span><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg></span>
+            <span>Working through your locks, the forecast and past weekends.</span>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>Toast, caution banner, accent well, status row.</span></div>
+      </div>
+      <h3>Anatomy of a toast</h3>
+      <ol>
+        <li><b>Icon</b> by tone: check circle for success, alert for warnings and errors, info otherwise.</li>
+        <li><b>Message</b>: one line, the object and the outcome.</li>
+        <li><b>Action</b> (optional, at most one): "Undo", "Try again", "View".</li>
+        <li><b>Dismiss</b>: an icon button labelled "Dismiss", always present.</li>
+      </ol>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack ds-example__canvas--canvas">
+          <ul class="toast-region toast-region--static">
+            <li class="toast" role="status"><svg class="icon" aria-hidden="true"><use href="#i-info"/></svg><span class="toast__text">Link copied</span><button class="btn btn--ghost btn--sm btn--icon toast__close" type="button" aria-label="Dismiss"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></li>
+            <li class="toast toast--success" role="status"><svg class="icon" aria-hidden="true"><use href="#i-check_circle"/></svg><span class="toast__text">Removed Costco run from Sunday</span><button class="btn btn--text toast__action" type="button">Undo</button><button class="btn btn--ghost btn--sm btn--icon toast__close" type="button" aria-label="Dismiss"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></li>
+            <li class="toast toast--caution" role="status"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg><span class="toast__text">Saved. The drive is now over an hour.</span><button class="btn btn--ghost btn--sm btn--icon toast__close" type="button" aria-label="Dismiss"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></li>
+            <li class="toast toast--warn" role="alert"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg><span class="toast__text">Could not copy the link.</span><button class="btn btn--text toast__action" type="button">Try again</button><button class="btn btn--ghost btn--sm btn--icon toast__close" type="button" aria-label="Dismiss"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></li>
+          </ul>
+        </div>
+        <div class="ds-example__caption"><span>Info, success with Undo, caution, error. A real page shows at most three at once.</span></div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="states"><h2><a href="#states">States</a></h2>
+      <h3>Priority</h3>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Priority</th><th scope="col">Tone</th><th scope="col">Live region</th><th scope="col">Auto-dismiss</th></tr></thead>
+        <tbody>
+          <tr><td>1. Error</td><td><code>--warn</code>, alert icon</td><td><code>role="alert"</code> (assertive)</td><td>Never</td></tr>
+          <tr><td>2. Caution</td><td><code>--caution</code>, alert icon</td><td><code>role="status"</code></td><td>Banner: no. Toast: 10 seconds</td></tr>
+          <tr><td>3. Success</td><td><code>--success</code>, check circle</td><td><code>role="status"</code></td><td>8 seconds; 10 seconds with an action</td></tr>
+          <tr><td>4. Info</td><td>Default, info icon</td><td><code>role="status"</code></td><td>8 seconds</td></tr>
+        </tbody>
+      </table></div>
+      <h3>Auto-dismiss rules</h3>
+      <ul>
+        <li>No toast leaves in under 8 seconds (2.2.1). One with an action stays at least 10 seconds, and Undo is never the only way to recover something precious.</li>
+        <li>The timer pauses while the pointer is over the toast region or focus is inside it, and restarts in full when it leaves.</li>
+        <li>Errors never dismiss themselves. Banners never dismiss themselves; a caution or info banner may have a close button.</li>
+        <li>Toasts survive a route change within the app, so "Saved Mae" still shows after the dialog closes and Family re-renders.</li>
+      </ul>
+      <h3>Grouping</h3>
+      <ul>
+        <li>Newest at the bottom of the region, nearest the thumb; older ones move up.</li>
+        <li>At most three visible (one under 720px). A fourth replaces the oldest non-error toast.</li>
+        <li>Repeats merge: three errands removed in a row become "Removed 3 errands · Undo", which restores all three.</li>
+        <li>A new error replaces an older error about the same thing instead of stacking.</li>
+      </ul>
+      <h3>Both themes</h3>
+      <div class="ds-themes">
+        <div data-theme="light"><ul class="toast-region toast-region--static"><li class="toast toast--success"><svg class="icon" aria-hidden="true"><use href="#i-check_circle"/></svg><span class="toast__text">Saved Mae</span><button class="btn btn--ghost btn--sm btn--icon toast__close" type="button" aria-label="Dismiss"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></li></ul><div class="banner banner--warn mt-3"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg><span class="banner__text">That email and password did not match.</span></div></div>
+        <div data-theme="dark"><ul class="toast-region toast-region--static"><li class="toast toast--success"><svg class="icon" aria-hidden="true"><use href="#i-check_circle"/></svg><span class="toast__text">Saved Mae</span><button class="btn btn--ghost btn--sm btn--icon toast__close" type="button" aria-label="Dismiss"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></li></ul><div class="banner banner--warn mt-3"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg><span class="banner__text">That email and password did not match.</span></div></div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="responsive"><h2><a href="#responsive">Responsive behaviour</a></h2>
+      <ul>
+        <li><b>Under 720px</b> the toast region spans the content width and sits above the bottom nav, clearing it the same way the nav clears the browser chrome (ADR-005). One toast at a time.</li>
+        <li><b>From 720px</b> the region is 24rem wide in the bottom-right corner, 24px from the edges, with up to three toasts.</li>
+        <li>Banners span the content column; <code>.banner--page</code> runs edge to edge under the top bar for whole-app conditions such as being offline.</li>
+        <li>Toasts never cover a focused element or the primary action: if a phone dialog sheet is open, the toast waits until it closes.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
+      <h3>Role and pattern</h3>
+      <p>The toast region is in the DOM from page load, empty, so that messages written into it are announced (4.1.3). Success and info use <code>role="status"</code>; errors use <code>role="alert"</code>. A banner that appears in response to an action (the sign-in error) uses <code>role="alert"</code>; a banner present on load has no live role. Wells are plain content. See the <a href="https://www.w3.org/WAI/ARIA/apg/patterns/alert/">APG Alert pattern</a>.</p>
+      <h3>Keyboard</h3>
+      <table class="ds-table ds-keys"><thead><tr><th scope="col">Key</th><th scope="col">Action</th></tr></thead><tbody>
+        <tr><td><kbd>Tab</kbd></td><td>Toasts sit at the end of the DOM; Tab reaches their action and Dismiss after the page content. Focus is never moved into a toast.</td></tr>
+        <tr><td><kbd>Enter</kbd> / <kbd>Space</kbd></td><td>Runs the toast's action or dismisses it.</td></tr>
+        <tr><td><kbd>Esc</kbd></td><td>With focus in a toast, dismisses it and returns focus to where it was.</td></tr>
+      </tbody></table>
+      <h3>Focus</h3>
+      <p>Notifications never take focus, with one exception: after a failed submit, a form's error banner or summary takes it (see <a href="forms.html">Forms</a>). Undo restores focus to the restored item.</p>
+      <h3>Labelling</h3>
+      <p>The message text is the whole announcement, so it must stand alone: "Removed Costco run from Sunday", not "Removed". Icons are decorative; the dismiss button is "Dismiss".</p>
+      <h3>Contrast</h3>
+      <div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0; gap: var(--spacingHorizontalS);">
+        <div class="ds-pair"><span>Toast text on toast</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground1|--colorNeutralBackgroundRaised" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Success icon on toast</span><span class="ds-pair__ratio" data-contrast="--colorStatusSuccessForeground3|--colorNeutralBackgroundRaised" data-min="3"></span></div>
+        <div class="ds-pair"><span>Caution banner text</span><span class="ds-pair__ratio" data-contrast="--colorStatusWarningForeground1|--colorStatusWarningBackground1" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Info banner text</span><span class="ds-pair__ratio" data-contrast="--colorStatusInfoForeground1|--colorStatusInfoBackground1" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Well body on accent well</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground2|--colorStatusSuccessBackground1" data-min="4.5"></span></div>
+      </div>
+      <h3>Motion</h3>
+      <p>Toasts rise 4px and fade in over <code>--durationNormal</code> and fade out the same way; under reduced motion they appear and disappear at once.</p>
+      <h3>Touch</h3>
+      <p>Toasts are at least 52px tall; Dismiss is 32px and the action at least 24px, 8px apart. No swipe-to-dismiss, so nothing depends on a gesture.</p>
+    </section>
+
+    <section class="ds-section" id="content"><h2><a href="#content">Content</a></h2>
+      <ul>
+        <li>Toasts: past tense, object first or verb first, no "successfully", no exclamation marks: "Saved Mae", "Link copied".</li>
+        <li>Banners: what is true now, then what it means: "Sunday's forecast is not in yet. The plan assumes a dry day."</li>
+        <li>Errors: what did not happen, and the next step: "Could not copy the link." + "Try again".</li>
+        <li>Wells: a short bold title and one or two sentences of explanation.</li>
+        <li>More formulas on <a href="content-and-tone.html">Content and tone</a>.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="do-dont"><h2><a href="#do-dont">Do and don't</a></h2>
+      <div class="ds-dodont">
+        <figure class="ds-do"><div class="ds-example__canvas ds-example__canvas--stack"><div class="banner banner--warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg><span class="banner__text">That email and password did not match.</span></div></div><figcaption>A sign-in failure is a banner on the form: it stays until the person tries again.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas ds-example__canvas--stack"><ul class="toast-region toast-region--static"><li class="toast toast--warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg><span class="toast__text">Login failed</span></li></ul></div><figcaption>A toast that disappears while the parent is still reading the password field.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas ds-example__canvas--stack"><div class="banner banner--warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg><span class="banner__text">That email and password did not match.</span></div></div><figcaption>Alert icon for an error.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas ds-example__canvas--stack"><div class="banner banner--warn"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg><span class="banner__text">That email and password did not match.</span></div></div><figcaption>The sign-in mock uses a close glyph as the status icon; it looks like a dismiss button that does nothing.</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>
+      <ul>
+        <li><a href="../../mocks/pages/sign-in.html">pages/sign-in</a>: the danger banner with <code>role="alert"</code>.</li>
+        <li><a href="../../mocks/pages/weekend.generating.html">pages/weekend.generating</a>: the status row; <a href="../../mocks/pages/review-submissions.html">pages/review-submissions</a>: "Approved" status after a review.</li>
+        <li><a href="../../mocks/pages/dialogs.html#dialog-block-commitment">pages/dialogs</a> D1 commitment variant and <a href="../../mocks/pages/legal.html">pages/legal</a>: wells.</li>
+      </ul>
+      <p>Drift that applies: D15 well and banner padding snapped from 14px to 12 and 16px; D11 overlay text on photos; ADR-005 for the toast region's bottom offset. Not in the mocks yet: toasts of any kind (the region, timing, grouping and Undo are specified here), caution and info banners, and <code>.banner--page</code>.</p>
+    </section>
+
+    <footer class="ds-footer"><span>Saturdaze design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/icons.js"></script>
+<script src="../assets/ds.js"></script>
+</body>
+</html>

@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Empty and error states — Saturdaze design system</title>
+<meta name="description" content="How Saturdaze fills a screen or region that has nothing to show: first run, nothing yet, all done, no results, a region that failed to load, and full error pages.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html"><span class="brand-mark" aria-hidden="true"></span>Saturdaze DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Actions</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+    </ul></details>
+    <details open><summary>Inputs</summary><ul>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/chip-input.html">Chip input</a></li>
+      <li><a href="../components/file-upload.html">File upload</a></li>
+      <li><a href="../components/photo-pick.html">Photo pick</a></li>
+      <li><a href="../components/rating.html">Rating</a></li>
+      <li><a href="../components/vote-row.html">Vote row</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+    </ul></details>
+    <details open><summary>Navigation</summary><ul>
+      <li><a href="../components/top-bar.html">Top bar</a></li>
+      <li><a href="../components/bottom-nav.html">Bottom nav</a></li>
+      <li><a href="../components/sidebar-navigation.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs (segments)</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+      <li><a href="../components/footer.html">Footer</a></li>
+    </ul></details>
+    <details open><summary>Containers and overlays</summary><ul>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/container.html">Container and grid</a></li>
+      <li><a href="../components/page-header.html">Page header</a></li>
+    </ul></details>
+    <details open><summary>Data display</summary><ul>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/activity-feed.html">Activity feed</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/chip.html">Chip</a></li>
+      <li><a href="../components/filter-chip.html">Filter chip</a></li>
+      <li><a href="../components/disc.html">Disc</a></li>
+      <li><a href="../components/media.html">Media</a></li>
+      <li><a href="../components/cover.html">Cover photo</a></li>
+      <li><a href="../components/stat.html">Stat</a></li>
+      <li><a href="../components/itinerary.html">Itinerary</a></li>
+      <li><a href="../components/map.html">Map</a></li>
+    </ul></details>
+    <details open><summary>Feedback</summary><ul>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/alert.html">Alert</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/progress-bar.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Auth and marketing</summary><ul>
+      <li><a href="../components/auth-card.html">Auth card</a></li>
+      <li><a href="../components/hero.html">Hero</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/data-tables-and-lists.html">Tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Pattern</p>
+      <h1>Empty and error states</h1>
+      <p class="ds-lead">An empty screen is a moment to explain, not a dead end. Each one says what will be here, why it is not yet, and offers one thing to do next.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA</span><span class="ds-pill">Status: stable</span><span class="ds-pill">Angular: <code>sd-empty</code></span></div>
+      <ul class="ds-toc">
+        <li><a href="#overview">Overview</a></li><li><a href="#when">When to use</a></li><li><a href="#structure">Structure</a></li><li><a href="#states">States</a></li><li><a href="#responsive">Responsive</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#content">Content</a></li><li><a href="#do-dont">Do and don't</a></li><li><a href="#sources">Sources</a></li>
+      </ul>
+    </header>
+
+    <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+      <p>Empty and error states are built from one <a href="../components/empty-state.html">empty state</a> block (<code>.empty</code>) with a <a href="../components/disc.html">disc</a>, a title, a body, one action and an optional note. Full-page failures use the <a href="../components/error-page.html">error page</a>. Saturdaze does not use illustrations: an icon in a tinted disc carries the mood, and the copy does the work.</p>
+      <p>The formula, every time:</p>
+      <ol>
+        <li><b>Title</b>: the state in plain words. "Nothing here yet", "Queue is clear".</li>
+        <li><b>Body</b>: why, and what happens next. "Plan this weekend and it shows up here on Monday, ready to rate."</li>
+        <li><b>One action</b> that moves the person on. Primary only on first run; quiet everywhere else.</li>
+        <li><b>Note</b> (optional): the alternative. "Or wait for Friday at 6pm."</li>
+      </ol>
+    </section>
+
+    <section class="ds-section" id="when"><h2><a href="#when">When to use</a></h2>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Kind</th><th scope="col">When</th><th scope="col">Block</th><th scope="col">Disc</th><th scope="col">Action</th></tr></thead>
+        <tbody>
+          <tr><td>First run</td><td>The person has never done the main thing on this screen</td><td><code>.empty--warm</code></td><td>Primary, sparkle</td><td>Primary large: "Plan this weekend"</td></tr>
+          <tr><td>Nothing yet</td><td>Content arrives by itself with time</td><td><code>.empty</code></td><td>Neutral</td><td>Quiet: "Go to this weekend"</td></tr>
+          <tr><td>All done</td><td>A queue or to-do list was emptied by the person</td><td><code>.empty</code></td><td>Accent, check</td><td>Quiet: "Back to Family"</td></tr>
+          <tr><td>No results</td><td>Filters or a search hide everything</td><td><code>.empty--compact</code> in place of the list</td><td>Neutral, search</td><td>Quiet: "Clear filters"</td></tr>
+          <tr><td>Error as empty</td><td>One region failed to load; the rest of the page works</td><td><code>.empty--compact</code> in place of the region</td><td>Warn, alert</td><td>Quiet: "Try again"</td></tr>
+          <tr><td>Error page</td><td>The whole page cannot render: not found, no access, server down</td><td><code>.error-page</code> with <code>.empty</code></td><td>None; the status code is the visual</td><td>Primary: "Go to this weekend"</td></tr>
+        </tbody>
+      </table></div>
+      <p>An empty state replaces the content, not the page: the page header, navigation and any toolbar stay, so the person can change what they asked for.</p>
+    </section>
+
+    <section class="ds-section" id="structure"><h2><a href="#structure">Structure</a></h2>
+      <h3>First run</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack ds-example__canvas--canvas">
+          <section class="empty empty--warm" aria-labelledby="es-first-title">
+            <span class="disc disc--xl disc--primary" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg></span>
+            <p class="empty__title" id="es-first-title">Saturday and Sunday, drafted around the Browns</p>
+            <p class="empty__body">Swim, church and the workout stay put. Everything else gets planned around the weather and what the kids like.</p>
+            <div class="empty__cta">
+              <a class="btn btn--primary btn--lg" href="feedback-and-loading.html#structure"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg>Plan this weekend</a>
+              <span class="empty__note">Or wait for Friday at 6pm.</span>
+            </div>
+          </section>
+        </div>
+        <div class="ds-example__caption"><span>weekend.empty. The one primary on the page; the note offers the automatic alternative.</span></div>
+      </div>
+      <h3>Nothing yet and all done</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--canvas" style="align-items: stretch;">
+          <section class="empty" aria-labelledby="es-past-title" style="flex: 1 1 16rem;">
+            <span class="disc disc--xl" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg></span>
+            <p class="empty__title" id="es-past-title">Nothing here yet</p>
+            <p class="empty__body">Plan this weekend and it shows up here on Monday, ready to rate.</p>
+            <div class="empty__cta"><a class="btn btn--quiet" href="../../mocks/pages/weekend.html">Go to this weekend<svg class="icon" aria-hidden="true"><use href="#i-arrow_right"/></svg></a></div>
+          </section>
+          <section class="empty" aria-labelledby="es-queue-title" style="flex: 1 1 16rem;">
+            <span class="disc disc--xl disc--accent" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg></span>
+            <p class="empty__title" id="es-queue-title">Queue is clear</p>
+            <p class="empty__body">Approved events are already live on Ideas. Rejected ones are gone.</p>
+            <div class="empty__cta"><a class="btn btn--quiet" href="../../mocks/pages/family.html"><svg class="icon" aria-hidden="true"><use href="#i-arrow_left"/></svg>Back to Family</a></div>
+          </section>
+        </div>
+        <div class="ds-example__caption"><span>past.empty and review-submissions.empty. Neutral disc for "not yet", accent check for "you finished".</span></div>
+      </div>
+      <h3>No results and error as empty</h3>
+      <p>Compact, dashed, and in the space the list would take. Filters stay above it, still pressed, so the cause is visible.</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack">
+          <div class="filters" role="group" aria-label="Filters">
+            <button class="filter-chip" type="button" aria-pressed="false">All</button>
+            <button class="filter-chip filter-chip--indoor" type="button" aria-pressed="true">Indoor</button>
+            <button class="filter-chip" type="button" aria-pressed="true">Under 30 min</button>
+            <button class="filter-chip" type="button" aria-pressed="true">Ages 5+</button>
+          </div>
+          <section class="empty empty--compact" aria-labelledby="es-none-title">
+            <span class="disc" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-search"/></svg></span>
+            <p class="empty__title" id="es-none-title">No ideas match all three</p>
+            <p class="empty__body">Indoor, under 30 minutes and ages 5+ leaves nothing this weekend. Try dropping one.</p>
+            <div class="empty__cta"><button class="btn btn--quiet btn--sm" type="button">Clear filters</button></div>
+          </section>
+          <section class="empty empty--compact" aria-labelledby="es-err-title">
+            <span class="disc disc--warn" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg></span>
+            <p class="empty__title" id="es-err-title">Events did not load</p>
+            <p class="empty__body">The rest of Ideas is fine. Events usually come back in a minute.</p>
+            <div class="empty__cta"><button class="btn btn--quiet btn--sm" type="button"><svg class="icon" aria-hidden="true"><use href="#i-refresh"/></svg>Try again</button></div>
+          </section>
+        </div>
+        <div class="ds-example__caption"><span>No-results names the filters; error-as-empty says what still works.</span></div>
+      </div>
+      <h3>Error page</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack ds-example__canvas--canvas" style="padding: 0;">
+          <div class="error-page" style="min-height: 0;">
+            <section class="empty" aria-labelledby="es-404-title">
+              <p class="error-page__status" aria-hidden="true">404</p>
+              <p class="empty__title" id="es-404-title">That page is not here</p>
+              <p class="empty__body">The link may be old, or the weekend it pointed to was replaced.</p>
+              <div class="empty__cta">
+                <a class="btn btn--primary" href="../../mocks/pages/weekend.html">Go to this weekend</a>
+                <span class="empty__note">Error <span class="empty__code">404 · /weekends/2026-05-10</span></span>
+              </div>
+            </section>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>The shell (top bar or bottom nav) stays around it. The code is small print for support, never the headline copy.</span></div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="states"><h2><a href="#states">States</a></h2>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Page</th><th scope="col">Loading</th><th scope="col">Empty</th><th scope="col">Error</th></tr></thead>
+        <tbody>
+          <tr><td>Weekend</td><td>Skeleton rows and a status row</td><td>First run: "Plan this weekend"</td><td>Banner with Try again (generating failed)</td></tr>
+          <tr><td>Ideas</td><td>Skeleton cards</td><td>No results: "Clear filters"</td><td>Error as empty per section</td></tr>
+          <tr><td>Past</td><td>Skeleton cards</td><td>Nothing yet: "Go to this weekend"</td><td>Error as empty</td></tr>
+          <tr><td>Review submissions</td><td>Skeleton cards</td><td>All done: "Queue is clear"</td><td>Error as empty</td></tr>
+          <tr><td>Admin Places</td><td>Skeleton rows</td><td>No results: "No places match harbour"</td><td>Error as empty</td></tr>
+          <tr><td>Any route</td><td>–</td><td>–</td><td>Error page (404, 403, 500)</td></tr>
+        </tbody>
+      </table></div>
+      <p>Order of precedence: loading, then error, then empty. Never show "Nothing here yet" while a request is still out, and never show it when the request failed.</p>
+      <h3>Both themes</h3>
+      <div class="ds-themes">
+        <div data-theme="light"><section class="empty empty--warm" aria-labelledby="es-th-l" style="padding: var(--spacingVerticalXXL) var(--spacingHorizontalL);"><span class="disc disc--xl disc--primary" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg></span><p class="empty__title" id="es-th-l">Your first weekend</p><p class="empty__body">Planning takes a few seconds.</p><div class="empty__cta"><button class="btn btn--primary" type="button">Plan this weekend</button></div></section></div>
+        <div data-theme="dark"><section class="empty empty--warm" aria-labelledby="es-th-d" style="padding: var(--spacingVerticalXXL) var(--spacingHorizontalL);"><span class="disc disc--xl disc--primary" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg></span><p class="empty__title" id="es-th-d">Your first weekend</p><p class="empty__body">Planning takes a few seconds.</p><div class="empty__cta"><button class="btn btn--primary" type="button">Plan this weekend</button></div></section></div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="responsive"><h2><a href="#responsive">Responsive behaviour</a></h2>
+      <ul>
+        <li>The block is centred and capped (30rem, 35rem for warm) at every width; at 360px it fills the content column with 24px inner padding.</li>
+        <li>Compact states stretch to the width of the list or grid they replace, so the layout does not jump when results come back.</li>
+        <li>Action buttons keep their natural width; they do not stretch on phones, because there is only one.</li>
+        <li>The error page centres in at least 60% of the viewport height so it never sits under the bottom nav.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
+      <h3>Role and pattern</h3>
+      <p>An empty state is a <code>&lt;section&gt;</code> labelled by its title (an <code>h2</code> on a real page). A state that appears because of something the person did (filters emptied the list, a region failed) is announced through the page's status region: "No ideas match", "Events did not load". First-run and nothing-yet states are part of the page and are not announced.</p>
+      <h3>Keyboard</h3>
+      <table class="ds-table ds-keys"><thead><tr><th scope="col">Key</th><th scope="col">Action</th></tr></thead><tbody>
+        <tr><td><kbd>Tab</kbd></td><td>Reaches the one action after the filters or header that precede it.</td></tr>
+        <tr><td><kbd>Enter</kbd></td><td>Activates the action.</td></tr>
+      </tbody></table>
+      <h3>Focus</h3>
+      <p>Focus is not moved to an empty state. After "Clear filters", focus moves to the first filter chip (the button that was pressed is gone). The error page's <code>h1</code> is its title, and the skip link still leads to <code>#main</code>.</p>
+      <h3>Labelling</h3>
+      <p>Discs and status numbers are <code>aria-hidden</code>; the title says it in words. Link text names the destination: "Go to this weekend", "Back to Family".</p>
+      <h3>Contrast</h3>
+      <div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0; gap: var(--spacingHorizontalS);">
+        <div class="ds-pair"><span>Body on card</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground2|--colorNeutralBackground1" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Note on card (drift D04)</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground3|--colorNeutralBackground1" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Body on page (compact)</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground2|--colorNeutralBackground2" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Status number on page</span><span class="ds-pair__ratio" data-contrast="--colorBrandForeground1|--colorNeutralBackground2" data-min="3"></span></div>
+      </div>
+      <h3>Motion</h3>
+      <p>None. Empty states appear without animation so they are not mistaken for something loading.</p>
+      <h3>Touch</h3>
+      <p>Actions are 40px (32px for compact) and stand alone, with no neighbouring targets.</p>
+    </section>
+
+    <section class="ds-section" id="content"><h2><a href="#content">Content</a></h2>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Kind</th><th scope="col">Title</th><th scope="col">Body</th></tr></thead>
+        <tbody>
+          <tr><td>First run</td><td>The promise: "Saturday and Sunday, drafted around the Browns"</td><td>What stays put and what gets planned</td></tr>
+          <tr><td>Nothing yet</td><td>"Nothing here yet"</td><td>When it fills: "…shows up here on Monday, ready to rate."</td></tr>
+          <tr><td>All done</td><td>The achievement: "Queue is clear"</td><td>Where the work went: "Approved events are already live on Ideas."</td></tr>
+          <tr><td>No results</td><td>"No ideas match all three"</td><td>Name the filters and suggest dropping one</td></tr>
+          <tr><td>Error as empty</td><td>What did not load: "Events did not load"</td><td>What still works, and whether to wait</td></tr>
+          <tr><td>Error page</td><td>"That page is not here", "You do not have access to this"</td><td>Likely reason, no blame</td></tr>
+        </tbody>
+      </table></div>
+      <p>Avoid "No data", "Empty", "Oops" and exclamation marks. The full formula is on <a href="../foundations/content.html">Content</a>.</p>
+    </section>
+
+    <section class="ds-section" id="do-dont"><h2><a href="#do-dont">Do and don't</a></h2>
+      <div class="ds-dodont">
+        <figure class="ds-do"><div class="ds-example__canvas ds-example__canvas--stack"><section class="empty empty--compact" aria-label="Example: no results"><p class="empty__title">No places match "harbour"</p><div class="empty__cta"><button class="btn btn--quiet btn--sm" type="button">Clear search</button></div></section></div><figcaption>Say what was searched and offer the way back.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas ds-example__canvas--stack"><section class="empty empty--compact" aria-label="Example: bare empty"><p class="empty__title">No data</p></section></div><figcaption>No reason, no next step, and it reads like a fault.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas ds-example__canvas--stack"><section class="empty" aria-label="Example: one action"><p class="empty__title">Nothing here yet</p><div class="empty__cta"><button class="btn btn--quiet" type="button">Go to this weekend</button></div></section></div><figcaption>One action. On Past it is quiet, because the page's job is to remember, not to plan.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas ds-example__canvas--stack"><section class="empty" aria-label="Example: three actions"><p class="empty__title">Nothing here yet</p><div class="empty__cta"><button class="btn btn--primary" type="button">Plan this weekend</button><button class="btn btn--primary" type="button">Browse ideas</button><button class="btn btn--quiet" type="button">Invite family</button></div></section></div><figcaption>Three actions compete, and two of them are primary.</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>
+      <ul>
+        <li><a href="../../mocks/pages/weekend.empty.html">pages/weekend.empty</a>: first run, <code>.empty--warm</code>, primary large action and note.</li>
+        <li><a href="../../mocks/pages/past.empty.html">pages/past.empty</a>: nothing yet, neutral disc, quiet action.</li>
+        <li><a href="../../mocks/pages/review-submissions.empty.html">pages/review-submissions.empty</a>: all done, accent check disc.</li>
+      </ul>
+      <p>Drift that applies: D04 <code>.empty__note</code> was #9CA3AF at 2.5:1 and is now <code>--colorNeutralForeground3</code>; D12 the 12px minimum for notes and codes. Not in the mocks yet: no-results, error-as-empty and the error page. They are specified here from <code>.empty--compact</code> and <code>.error-page</code>.</p>
+    </section>
+
+    <footer class="ds-footer"><span>Saturdaze design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/icons.js"></script>
+<script src="../assets/ds.js"></script>
+</body>
+</html>

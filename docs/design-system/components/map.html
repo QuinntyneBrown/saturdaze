@@ -1,0 +1,446 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Map — Saturdaze design system</title>
+<meta name="description" content="The day map: home, numbered stops and the dashed route, drawn from token classes, and the planner layout that puts it beside the itinerary.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html"><span class="brand-mark" aria-hidden="true"></span>Saturdaze DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Actions</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+    </ul></details>
+    <details open><summary>Inputs</summary><ul>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/chip-input.html">Chip input</a></li>
+      <li><a href="../components/file-upload.html">File upload</a></li>
+      <li><a href="../components/photo-pick.html">Photo pick</a></li>
+      <li><a href="../components/rating.html">Rating</a></li>
+      <li><a href="../components/vote-row.html">Vote row</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+    </ul></details>
+    <details open><summary>Navigation</summary><ul>
+      <li><a href="../components/top-bar.html">Top bar</a></li>
+      <li><a href="../components/bottom-nav.html">Bottom nav</a></li>
+      <li><a href="../components/sidebar-navigation.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs (segments)</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+      <li><a href="../components/footer.html">Footer</a></li>
+    </ul></details>
+    <details open><summary>Containers and overlays</summary><ul>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/container.html">Container and grid</a></li>
+      <li><a href="../components/page-header.html">Page header</a></li>
+    </ul></details>
+    <details open><summary>Data display</summary><ul>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/activity-feed.html">Activity feed</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/chip.html">Chip</a></li>
+      <li><a href="../components/filter-chip.html">Filter chip</a></li>
+      <li><a href="../components/disc.html">Disc</a></li>
+      <li><a href="../components/media.html">Media</a></li>
+      <li><a href="../components/cover.html">Cover photo</a></li>
+      <li><a href="../components/stat.html">Stat</a></li>
+      <li><a href="../components/itinerary.html">Itinerary</a></li>
+      <li><a href="../components/map.html">Map</a></li>
+    </ul></details>
+    <details open><summary>Feedback</summary><ul>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/alert.html">Alert</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/progress-bar.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Auth and marketing</summary><ul>
+      <li><a href="../components/auth-card.html">Auth card</a></li>
+      <li><a href="../components/hero.html">Hero</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/data-tables-and-lists.html">Tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Component · Data display</p>
+      <h1>Map</h1>
+      <p class="ds-lead">The map shows the shape of one day: home in Port Credit, the stops in order, and the drive that joins them. Its numbers are the same as the itinerary's, so "stop 2" means Lavender fields on both.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA</span><span class="ds-pill">Status: illustrative in the mocks</span><span class="ds-pill">Angular: no component yet</span><span class="ds-pill">Inline <code>&lt;svg role="img"&gt;</code></span></div>
+      <ul class="ds-toc">
+        <li><a href="#overview">Overview</a></li><li><a href="#anatomy">Anatomy</a></li><li><a href="#variants">Variants</a></li><li><a href="#sizes">Sizes</a></li><li><a href="#states">States</a></li><li><a href="#responsive">Responsive</a></li><li><a href="#theming">Theming</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#content">Content</a></li><li><a href="#do-dont">Do and don't</a></li><li><a href="#tokens">Tokens</a></li><li><a href="#code">Code</a></li><li><a href="#sources">Sources</a></li>
+      </ul>
+    </header>
+
+    <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+      <p>Use the map beside an <a href="itinerary.html">itinerary</a> to answer "where are we going, and how far apart is it?". It is a companion, never the only way to read the plan: everything on it is also in the ordered list of blocks.</p>
+      <ul>
+        <li><b>Map</b> (<code>.map</code>): a framed 4:3 drawing with land, water, roads, the route, a home marker, numbered pins and place labels, an Open map button and a legend with the totals and attribution.</li>
+        <li><b>Planner</b> (<code>.planner</code>): the day and its map together. Under 1024px the map sits above the day; from 1024px it sits beside it and stays in view while the day scrolls.</li>
+        <li><b>Planner toolbar</b> (<code>.planner__toolbar</code>): the Saturday / Sunday <a href="tabs.html">segments</a> that pick the day.</li>
+      </ul>
+      <div class="ds-note">The mocks draw an illustrative SVG. Production renders real map tiles with the same pins, route and legend (docs/specs L2-100); the tokens, numbering, legend and text alternative on this page apply to both.</div>
+    </section>
+
+    <section class="ds-section" id="anatomy"><h2><a href="#anatomy">Anatomy</a></h2>
+      <div class="ds-anatomy">
+        <figure class="ds-anatomy__figure">
+          <div class="map" style="width: 100%; max-width: 26rem;">
+            <svg class="map__svg" viewBox="0 0 400 300" role="img" aria-label="Map of Saturday's route: home in Port Credit, 1 Swim lessons, 2 Lavender fields at Terre Bleu in Milton, 3 Lunch at La Marina, then home. Stop 2 is highlighted.">
+              <rect class="map__land" width="400" height="300"/>
+              <path class="map__water" d="M0 262 C90 250 170 268 250 256 S360 244 400 250 V300 H0Z"/>
+              <path class="map__road" d="M40 0 L230 255"/><path class="map__road-edge" d="M40 0 L230 255"/>
+              <path class="map__road" d="M0 210 C120 220 260 205 400 180"/>
+              <path class="map__route" d="M248 238 L268 214 L92 66 L218 248 L248 238" stroke-linejoin="round"/>
+              <text class="map__label" x="60" y="40">Milton</text>
+              <text class="map__label" x="280" y="246">Port Credit</text>
+              <text class="map__label" x="150" y="288">Lake Ontario</text>
+              <g><circle class="map__home" cx="248" cy="238" r="11"/><path class="map__home-glyph" d="M243 239 l5 -5 l5 5 v5 h-10Z"/></g>
+              <g class="map__pin"><circle cx="268" cy="214" r="12"/><text class="map__pin-num" x="268" y="214">1</text></g>
+              <g class="map__pin map__pin--active"><circle cx="92" cy="66" r="15"/><text class="map__pin-num" x="92" y="66">2</text></g>
+              <g class="map__pin"><circle cx="218" cy="248" r="12"/><text class="map__pin-num" x="218" y="248">3</text></g>
+            </svg>
+            <button class="btn btn--quiet btn--sm map__expand" type="button"><svg class="icon" aria-hidden="true"><use href="#i-map"/></svg>Open map</button>
+            <p class="map__legend"><span>3 stops · 1 h 36 min · 105 km</span><span class="map__attr">Illustrative. Production: © OpenStreetMap contributors</span></p>
+          </div>
+          <span class="ds-callout" style="left: 22%; top: 44%;" aria-hidden="true">1</span>
+          <span class="ds-callout" style="left: 60%; top: 66%;" aria-hidden="true">2</span>
+          <span class="ds-callout" style="left: 46%; top: 40%;" aria-hidden="true">3</span>
+          <span class="ds-callout" style="left: 64%; top: 51%;" aria-hidden="true">4</span>
+          <span class="ds-callout" style="left: 36%; top: 17%;" aria-hidden="true">5</span>
+          <span class="ds-callout" style="left: 55%; top: 9%;" aria-hidden="true">6</span>
+          <span class="ds-callout" style="left: 13%; top: 81%;" aria-hidden="true">7</span>
+        </figure>
+        <ol class="ds-anatomy__list">
+          <li><div><b>Land, water, roads</b><small><code>.map__land</code>, <code>.map__water</code>, <code>.map__road</code> with a <code>.map__road-edge</code> centre line. Quiet tints that stay behind the route.</small></div></li>
+          <li><div><b>Home</b><small><code>.map__home</code>: an ink disc with a house glyph, where every day starts and ends.</small></div></li>
+          <li><div><b>Route</b><small><code>.map__route</code>: 3px dashed brand line, in stop order, back home.</small></div></li>
+          <li><div><b>Pin</b><small><code>.map__pin</code>: brand disc with a 2px surface ring and the stop number (<code>.map__pin-num</code>), 24px.</small></div></li>
+          <li><div><b>Active pin and label</b><small><code>.map__pin--active</code>: 30px with an ink ring, for the selected block. <code>.map__label</code>: 12px place names with a surface halo.</small></div></li>
+          <li><div><b>Open map</b><small><code>.map__expand</code>: a small quiet button pinned to the top right.</small></div></li>
+          <li><div><b>Legend</b><small><code>.map__legend</code>: stops, driving time and distance; <code>.map__attr</code> holds the attribution, pushed right.</small></div></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="ds-section" id="variants"><h2><a href="#variants">Variants</a></h2>
+      <h3>With and without a selected stop</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--canvas">
+          <div class="map" style="flex: 1 1 18rem;">
+            <svg class="map__svg" viewBox="0 0 400 300" role="img" aria-label="Map of Saturday's route: home in Port Credit, 1 Swim lessons, 2 Lavender fields at Terre Bleu in Milton, 3 Lunch at La Marina, then home. Stop 2 is highlighted.">
+              <rect class="map__land" width="400" height="300"/>
+              <path class="map__water" d="M0 262 C90 250 170 268 250 256 S360 244 400 250 V300 H0Z"/>
+              <path class="map__road" d="M40 0 L230 255"/><path class="map__road-edge" d="M40 0 L230 255"/>
+              <path class="map__road" d="M0 210 C120 220 260 205 400 180"/>
+              <path class="map__road" d="M150 0 C170 80 200 150 300 300"/>
+              <path class="map__route" d="M248 238 L268 214 L92 66 L218 248 L248 238" stroke-linejoin="round"/>
+              <text class="map__label" x="60" y="40">Milton</text>
+              <text class="map__label" x="290" y="150">Mississauga</text>
+              <text class="map__label" x="280" y="246">Port Credit</text>
+              <text class="map__label" x="150" y="288">Lake Ontario</text>
+              <g><circle class="map__home" cx="248" cy="238" r="11"/><path class="map__home-glyph" d="M243 239 l5 -5 l5 5 v5 h-10Z"/></g>
+              <g class="map__pin"><circle cx="268" cy="214" r="12"/><text class="map__pin-num" x="268" y="214">1</text></g>
+              <g class="map__pin map__pin--active"><circle cx="92" cy="66" r="15"/><text class="map__pin-num" x="92" y="66">2</text></g>
+              <g class="map__pin"><circle cx="218" cy="248" r="12"/><text class="map__pin-num" x="218" y="248">3</text></g>
+            </svg>
+            <button class="btn btn--quiet btn--sm map__expand" type="button"><svg class="icon" aria-hidden="true"><use href="#i-map"/></svg>Open map</button>
+            <p class="map__legend"><span>3 stops · 1 h 36 min · 105 km</span><span class="map__attr">Illustrative. Production: © OpenStreetMap contributors</span></p>
+          </div>
+          <div class="map" style="flex: 1 1 18rem;">
+            <svg class="map__svg" viewBox="0 0 400 300" role="img" aria-label="Map of Sunday's route: home in Port Credit, 1 Costco run, 2 Church, 3 Lunch at Symposium Café, 4 The Rec Room at Square One, then home.">
+              <rect class="map__land" width="400" height="300"/>
+              <path class="map__water" d="M0 262 C90 250 170 268 250 256 S360 244 400 250 V300 H0Z"/>
+              <path class="map__road" d="M40 0 L230 255"/><path class="map__road-edge" d="M40 0 L230 255"/>
+              <path class="map__road" d="M0 210 C120 220 260 205 400 180"/>
+              <path class="map__road" d="M150 0 C170 80 200 150 300 300"/>
+              <path class="map__route" d="M248 238 L330 196 L284 176 L344 138 L300 104 L248 238" stroke-linejoin="round"/>
+              <text class="map__label" x="60" y="40">Milton</text>
+              <text class="map__label" x="210" y="80">Square One</text>
+              <text class="map__label" x="290" y="246">Port Credit</text>
+              <text class="map__label" x="150" y="288">Lake Ontario</text>
+              <g><circle class="map__home" cx="248" cy="238" r="11"/><path class="map__home-glyph" d="M243 239 l5 -5 l5 5 v5 h-10Z"/></g>
+              <g class="map__pin"><circle cx="330" cy="196" r="12"/><text class="map__pin-num" x="330" y="196">1</text></g>
+              <g class="map__pin"><circle cx="284" cy="176" r="12"/><text class="map__pin-num" x="284" y="176">2</text></g>
+              <g class="map__pin"><circle cx="344" cy="138" r="12"/><text class="map__pin-num" x="344" y="138">3</text></g>
+              <g class="map__pin"><circle cx="300" cy="104" r="12"/><text class="map__pin-num" x="300" y="104">4</text></g>
+            </svg>
+            <button class="btn btn--quiet btn--sm map__expand" type="button"><svg class="icon" aria-hidden="true"><use href="#i-map"/></svg>Open map</button>
+            <p class="map__legend"><span>4 stops · 51 min · 36 km</span><span class="map__attr">Illustrative. Production: © OpenStreetMap contributors</span></p>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>Saturday with Lavender fields selected (stop 2), and Sunday with nothing selected. Every fill and stroke comes from a class; the SVG has no colour attributes (D18).</span></div>
+      </div>
+
+      <h3>Planner: the day beside its map</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--canvas ds-example__canvas--stack">
+          <div class="planner__toolbar" style="margin-bottom: 0;">
+            <div class="segments segments--narrow" role="tablist" aria-label="Day">
+              <button class="segments__tab" type="button" role="tab" aria-selected="true" aria-controls="pl-sat" id="pl-sat-tab">Saturday</button>
+              <button class="segments__tab" type="button" role="tab" aria-selected="false" aria-controls="pl-sun" id="pl-sun-tab" tabindex="-1">Sunday</button>
+            </div>
+          </div>
+          <div class="planner" id="pl-sat" role="tabpanel" aria-labelledby="pl-sat-tab">
+            <section class="day" aria-labelledby="pl-day">
+              <header class="day__header" style="position: static;">
+                <span class="weather-disc weather-disc--sun" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-sun"/></svg></span>
+                <div class="day__text"><h3 class="day__title" id="pl-day">Saturday</h3><p class="day__meta">17 May · 22° / 14° · 3 stops · 1 h 36 min driving</p></div>
+              </header>
+              <ol class="day__list">
+                <li class="block block--commitment"><div class="block__time"><span class="block__clock">9:00</span><span class="block__dur">60m</span></div><div class="block__rail"><span class="block__disc block__disc--num"><span class="visually-hidden">Stop </span>1</span></div><div class="block__body"><h4 class="block__title">Swim lessons</h4><p class="block__sub clamp-1">Port Credit pool · every Saturday</p></div></li>
+                <li class="leg" aria-label="Travel: 45 minutes, 52 kilometres to Lavender fields"><span></span><span class="leg__rail" aria-hidden="true"></span><p class="leg__text"><svg class="icon" aria-hidden="true"><use href="#i-car"/></svg>45 min · 52 km</p></li>
+                <li class="block block--active"><div class="block__time"><span class="block__clock">11:00</span><span class="block__dur">1h 45m</span></div><div class="block__rail"><span class="block__disc block__disc--num"><span class="visually-hidden">Stop </span>2</span></div><div class="block__body"><h4 class="block__title">Lavender fields</h4><p class="block__sub clamp-1">Terre Bleu, Milton · walk the rows</p></div></li>
+                <li class="leg" aria-label="Travel: 40 minutes, 48 kilometres to Lunch at La Marina"><span></span><span class="leg__rail" aria-hidden="true"></span><p class="leg__text"><svg class="icon" aria-hidden="true"><use href="#i-car"/></svg>40 min · 48 km</p></li>
+                <li class="block"><div class="block__time"><span class="block__clock">13:30</span><span class="block__dur">75m</span></div><div class="block__rail"><span class="block__disc block__disc--num"><span class="visually-hidden">Stop </span>3</span></div><div class="block__body"><h4 class="block__title">Lunch at La Marina</h4><p class="block__sub clamp-1">Patio · 3 of 4 votes</p></div></li>
+              </ol>
+            </section>
+            <aside class="planner__map" aria-label="Saturday map">
+              <div class="map">
+                <svg class="map__svg" viewBox="0 0 400 300" role="img" aria-label="Map of Saturday's route: home in Port Credit, 1 Swim lessons, 2 Lavender fields at Terre Bleu in Milton, 3 Lunch at La Marina, then home. Stop 2 is highlighted.">
+                  <rect class="map__land" width="400" height="300"/>
+                  <path class="map__water" d="M0 262 C90 250 170 268 250 256 S360 244 400 250 V300 H0Z"/>
+                  <path class="map__road" d="M40 0 L230 255"/><path class="map__road-edge" d="M40 0 L230 255"/>
+                  <path class="map__road" d="M0 210 C120 220 260 205 400 180"/>
+                  <path class="map__route" d="M248 238 L268 214 L92 66 L218 248 L248 238" stroke-linejoin="round"/>
+                  <text class="map__label" x="60" y="40">Milton</text>
+                  <text class="map__label" x="280" y="246">Port Credit</text>
+                  <g><circle class="map__home" cx="248" cy="238" r="11"/><path class="map__home-glyph" d="M243 239 l5 -5 l5 5 v5 h-10Z"/></g>
+                  <g class="map__pin"><circle cx="268" cy="214" r="12"/><text class="map__pin-num" x="268" y="214">1</text></g>
+                  <g class="map__pin map__pin--active"><circle cx="92" cy="66" r="15"/><text class="map__pin-num" x="92" y="66">2</text></g>
+                  <g class="map__pin"><circle cx="218" cy="248" r="12"/><text class="map__pin-num" x="218" y="248">3</text></g>
+                </svg>
+                <button class="btn btn--quiet btn--sm map__expand" type="button"><svg class="icon" aria-hidden="true"><use href="#i-map"/></svg>Open map</button>
+                <p class="map__legend"><span>3 stops · 1 h 36 min · 105 km</span><span class="map__attr">© OpenStreetMap contributors</span></p>
+              </div>
+            </aside>
+          </div>
+          <div class="planner" id="pl-sun" role="tabpanel" aria-labelledby="pl-sun-tab" hidden></div>
+        </div>
+        <div class="ds-example__caption"><span>Under 1024px the map shows above the day through CSS <code>order: -1</code> only; in the source the day comes first, so the list is read before the picture. Resize past 1024px to see them side by side.</span></div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="sizes" data-na="One size. The map fills its column at 4:3; the planner, not the map, decides how wide that column is."><h2><a href="#sizes">Sizes</a></h2><p class="ds-na">One size. The map fills its column at 4:3; the planner, not the map, decides how wide that column is.</p></section>
+
+    <section class="ds-section" id="states"><h2><a href="#states">States</a></h2>
+      <p>The drawing is static; its states come from the plan. A pin is active when its block is selected. Only Open map takes focus.</p>
+      <div class="ds-matrix"><table>
+        <thead><tr><th scope="col">Part</th><th scope="col">Default</th><th scope="col">Hover</th><th scope="col">Focus</th><th scope="col">Active / selected</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Pin</th>
+            <td><svg class="map" viewBox="0 0 40 40" width="40" height="40" aria-hidden="true"><rect class="map__land" width="40" height="40"/><g class="map__pin"><circle cx="20" cy="20" r="12"/><text class="map__pin-num" x="20" y="20">2</text></g></svg></td>
+            <td>—</td>
+            <td>—</td>
+            <td><svg class="map" viewBox="0 0 40 40" width="40" height="40" aria-hidden="true"><rect class="map__land" width="40" height="40"/><g class="map__pin map__pin--active"><circle cx="20" cy="20" r="15"/><text class="map__pin-num" x="20" y="20">2</text></g></svg></td>
+          </tr>
+          <tr><th scope="row">Open map</th>
+            <td><button class="btn btn--quiet btn--sm" type="button"><svg class="icon" aria-hidden="true"><use href="#i-map"/></svg>Open map</button></td>
+            <td><button class="btn btn--quiet btn--sm" type="button" data-state="hover"><svg class="icon" aria-hidden="true"><use href="#i-map"/></svg>Open map</button></td>
+            <td><button class="btn btn--quiet btn--sm" type="button" data-state="focus"><svg class="icon" aria-hidden="true"><use href="#i-map"/></svg>Open map</button></td>
+            <td><button class="btn btn--quiet btn--sm" type="button" data-state="active"><svg class="icon" aria-hidden="true"><use href="#i-map"/></svg>Open map</button></td>
+          </tr>
+        </tbody>
+      </table></div>
+      <h3>Loading and unavailable</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--canvas">
+          <div class="map" style="flex: 1 1 16rem;" aria-busy="true">
+            <span class="skeleton skeleton--rect" style="aspect-ratio: 4 / 3; border-radius: 0;"></span>
+            <p class="map__legend"><span>Loading the map…</span></p>
+          </div>
+          <div class="map" style="flex: 1 1 16rem;">
+            <div class="media media--4x3 media--fallback media--sky" style="border-radius: 0;"><svg class="icon" aria-hidden="true"><use href="#i-map"/></svg>Map unavailable</div>
+            <p class="map__legend"><span>The stops are listed in order beside the map.</span></p>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>Loading keeps the 4:3 frame so the day does not jump. If tiles fail, say so plainly and point to the list; never leave an empty box.</span></div>
+      </div>
+      <h3>Both themes</h3>
+      <div class="ds-themes">
+        <div data-theme="light"><div class="map"><svg class="map__svg" viewBox="0 0 400 300" role="img" aria-label="Map of Saturday's route, light theme"><rect class="map__land" width="400" height="300"/><path class="map__water" d="M0 262 C90 250 170 268 250 256 S360 244 400 250 V300 H0Z"/><path class="map__road" d="M0 210 C120 220 260 205 400 180"/><path class="map__route" d="M248 238 L268 214 L92 66 L218 248 L248 238" stroke-linejoin="round"/><text class="map__label" x="280" y="246">Port Credit</text><g><circle class="map__home" cx="248" cy="238" r="11"/><path class="map__home-glyph" d="M243 239 l5 -5 l5 5 v5 h-10Z"/></g><g class="map__pin"><circle cx="268" cy="214" r="12"/><text class="map__pin-num" x="268" y="214">1</text></g><g class="map__pin map__pin--active"><circle cx="92" cy="66" r="15"/><text class="map__pin-num" x="92" y="66">2</text></g><g class="map__pin"><circle cx="218" cy="248" r="12"/><text class="map__pin-num" x="218" y="248">3</text></g></svg><p class="map__legend"><span>3 stops · 1 h 36 min · 105 km</span></p></div></div>
+        <div data-theme="dark"><div class="map"><svg class="map__svg" viewBox="0 0 400 300" role="img" aria-label="Map of Saturday's route, dark theme"><rect class="map__land" width="400" height="300"/><path class="map__water" d="M0 262 C90 250 170 268 250 256 S360 244 400 250 V300 H0Z"/><path class="map__road" d="M0 210 C120 220 260 205 400 180"/><path class="map__route" d="M248 238 L268 214 L92 66 L218 248 L248 238" stroke-linejoin="round"/><text class="map__label" x="280" y="246">Port Credit</text><g><circle class="map__home" cx="248" cy="238" r="11"/><path class="map__home-glyph" d="M243 239 l5 -5 l5 5 v5 h-10Z"/></g><g class="map__pin"><circle cx="268" cy="214" r="12"/><text class="map__pin-num" x="268" y="214">1</text></g><g class="map__pin map__pin--active"><circle cx="92" cy="66" r="15"/><text class="map__pin-num" x="92" y="66">2</text></g><g class="map__pin"><circle cx="218" cy="248" r="12"/><text class="map__pin-num" x="218" y="248">3</text></g></svg><p class="map__legend"><span>3 stops · 1 h 36 min · 105 km</span></p></div></div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="responsive"><h2><a href="#responsive">Responsive behaviour</a></h2>
+      <ul>
+        <li><b>Under 1024px</b> <code>.planner</code> is one column and <code>.planner__map</code> moves above the day (<code>order: -1</code>), full width at 4:3. A phone sees the shape of the day first, then scrolls into the times.</li>
+        <li><b>From 1024px</b> the planner is two equal columns with a 40px gap. The map sits on the right and is sticky, 16px under the top bar (<code>--layoutTopBarHeight</code> + <code>--spacingVerticalL</code>), so it stays in view beside a long day.</li>
+        <li>The toolbar's segments grow to fill the row on a phone (<code>flex: 1 1 13.75rem</code>) and cap at 17.5rem from 720px.</li>
+        <li>The legend wraps: totals first, attribution on its own line when there is no room.</li>
+        <li>Open map gives the full map its own screen on a phone, where a 4:3 frame is too small to pan.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="theming"><h2><a href="#theming">Theming</a></h2>
+      <p>The map reads six component tokens, set on <code>.map</code>: <code>--sd-map-land</code>, <code>--sd-map-water</code>, <code>--sd-map-road</code>, <code>--sd-map-road-edge</code>, <code>--sd-map-route</code> and <code>--sd-map-pin</code>. The SVG classes only read these, so a re-skin or a dark theme never touches the drawing.</p>
+      <pre><code>/* A quieter map for a printed weekend */
+.map--print { --sd-map-land: var(--colorNeutralBackground1); --sd-map-water: var(--colorNeutralBackground3); }</code></pre>
+      <p>In the dark theme land becomes deep leaf and roads take the dark surface. Water is a mix rather than a single token, <code>color-mix(in srgb, var(--colorPaletteSkyForeground1) 28%, var(--colorNeutralBackground1))</code>, so it follows the surface: a pale lake on the light theme, a deep slate-blue one on the dark theme. Pins switch to the light coral with a dark numeral. Production tiles should use a matching dark style.</p>
+    </section>
+
+    <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
+      <h3>Role and pattern</h3>
+      <p>The drawing is one <code>&lt;svg role="img"&gt;</code> with an <code>aria-label</code> that lists the route in order. Its pins and labels are not read separately. The map sits in an <code>&lt;aside aria-label="Saturday map"&gt;</code>. The ordered list of blocks is the full text equivalent (1.1.1): it carries the same stops, numbers and drive times. The day switch uses the <a href="https://www.w3.org/WAI/ARIA/apg/patterns/tabs/">APG Tabs pattern</a>.</p>
+      <h3>Keyboard</h3>
+      <table class="ds-table ds-keys"><thead><tr><th scope="col">Key</th><th scope="col">Action</th></tr></thead><tbody>
+        <tr><td><kbd>Tab</kbd></td><td>Reaches Open map; pins are not tab stops. Select a stop from its block in the list instead.</td></tr>
+        <tr><td><kbd>Enter</kbd> / <kbd>Space</kbd></td><td>Opens the full map.</td></tr>
+        <tr><td><kbd>←</kbd> / <kbd>→</kbd></td><td>On the day tabs, switches between Saturday and Sunday and their maps.</td></tr>
+      </tbody></table>
+      <h3>Focus</h3>
+      <p>Open map shows the shared ring. On the full map, focus starts on its close button and returns to Open map when it closes.</p>
+      <h3>Labelling</h3>
+      <p>The label follows one pattern: "Map of Saturday's route: home in Port Credit, 1 Swim lessons, 2 Lavender fields at Terre Bleu in Milton, 3 Lunch at La Marina, then home. Stop 2 is highlighted." Update it whenever a block is swapped. Text drawn inside the SVG is decorative to assistive technology because of <code>role="img"</code>.</p>
+      <h3>Contrast</h3>
+      <div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0; gap: var(--spacingHorizontalS);">
+        <div class="ds-pair"><span>Pin number on pin</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForegroundOnBrand|--colorBrandForeground1" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Place label on land</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground1|--colorPaletteLeafBackground1" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Pin on land</span><span class="ds-pair__ratio" data-contrast="--colorBrandForeground1|--colorPaletteLeafBackground1" data-min="3"></span></div>
+        <div class="ds-pair"><span>Route on land</span><span class="ds-pair__ratio" data-contrast="--colorBrandForeground1|--colorPaletteLeafBackground1" data-min="3"></span></div>
+        <div class="ds-pair"><span>Home marker on land</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground1|--colorPaletteLeafBackground1" data-min="3"></span></div>
+        <div class="ds-pair"><span>Legend text</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground2|--colorNeutralBackground1" data-min="4.5"></span></div>
+      </div>
+      <p>Water is a <code>color-mix()</code> scoped to <code>.map</code>, which the live pairs above cannot resolve, so it was measured in the browser: a pin or the route on water is 3.84:1 in the light theme and 4.11:1 in the dark theme (minimum 3:1), and a place label on water is 9.50:1 and 7.46:1. Water against land is 1.27:1 and 1.52:1; it is a background shape, not information, so it needs no minimum.</p>
+      <h3>Motion</h3>
+      <p>The illustrative map does not move. Production tiles must not animate pans or zooms on their own; a pan to the selected pin follows <code>prefers-reduced-motion</code> and jumps instead of gliding.</p>
+      <h3>Touch</h3>
+      <p>Open map is a 32px small button with space around it. Pins are 24px (30px active); they are a pointer shortcut, never the only way to select a stop.</p>
+    </section>
+
+    <section class="ds-section" id="content"><h2><a href="#content">Content</a></h2>
+      <ul>
+        <li>Legend: "<i>n</i> stops · driving time · distance": "3 stops · 1 h 36 min · 105 km".</li>
+        <li>Place labels: towns and landmarks the family knows ("Milton", "Port Credit", "Square One", "Lake Ontario"), not street names.</li>
+        <li>Attribution is required wherever tiles are used: "© OpenStreetMap contributors". The mocks say "Illustrative" in front of it.</li>
+        <li>The button says "Open map". Not "Expand" or "View".</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="do-dont"><h2><a href="#do-dont">Do and don't</a></h2>
+      <div class="ds-dodont">
+        <figure class="ds-do"><div class="ds-example__canvas"><pre style="margin: 0; flex: 1;"><code>&lt;path class="map__water" d="…"/&gt;</code></pre></div><figcaption>Draw with classes, so the dark theme and production colours follow the tokens.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><pre style="margin: 0; flex: 1;"><code>&lt;path d="…" fill="#BFD9E8"/&gt;</code></pre></div><figcaption>The mock's 21 inline hex fills cannot change with a theme (D18).</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas"><svg class="map" viewBox="0 0 120 40" width="120" height="40" aria-hidden="true"><rect class="map__land" width="120" height="40"/><g class="map__pin"><circle cx="20" cy="20" r="12"/><text class="map__pin-num" x="20" y="20">1</text></g><g class="map__pin"><circle cx="60" cy="20" r="12"/><text class="map__pin-num" x="60" y="20">2</text></g><g class="map__pin"><circle cx="100" cy="20" r="12"/><text class="map__pin-num" x="100" y="20">3</text></g></svg></div><figcaption>Number pins exactly as the stops in the list.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><svg class="map" viewBox="0 0 120 40" width="120" height="40" aria-hidden="true"><rect class="map__land" width="120" height="40"/><g class="map__pin"><circle cx="20" cy="20" r="8"/></g><g class="map__pin"><circle cx="60" cy="20" r="8"/></g><g class="map__pin"><circle cx="100" cy="20" r="8"/></g></svg></div><figcaption>Unnumbered pins make the reader match places by guessing.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas"><span class="ds-pill">Stops listed in the day beside the map</span></div><figcaption>Keep the list as the equivalent, and describe the route in the SVG's label.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><span class="ds-pill">aria-label="Map"</span></div><figcaption>A label that only says "Map" tells a screen reader user nothing about the day.</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="ds-section" id="tokens"><h2><a href="#tokens">Tokens</a></h2>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Part</th><th scope="col">Token</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead>
+        <tbody>
+          <tr><td>Land (<code>--sd-map-land</code>)</td><td><code>--colorPaletteLeafBackground1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorPaletteLeafBackground1" data-swatch></i><span data-token="--colorPaletteLeafBackground1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorPaletteLeafBackground1" data-swatch></i><span data-token="--colorPaletteLeafBackground1"></span></span></td></tr>
+          <tr><td>Water (<code>--sd-map-water</code>)</td><td><code>color-mix(in srgb, --colorPaletteSkyForeground1 28%, --colorNeutralBackground1)</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorPaletteSkyForeground1" data-swatch></i><span data-token="--colorPaletteSkyForeground1"></span></span> at 28%</td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorPaletteSkyForeground1" data-swatch></i><span data-token="--colorPaletteSkyForeground1"></span></span> at 28%</td></tr>
+          <tr><td>Roads, pin ring, label halo, map frame</td><td><code>--colorNeutralBackground1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralBackground1" data-swatch></i><span data-token="--colorNeutralBackground1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralBackground1" data-swatch></i><span data-token="--colorNeutralBackground1"></span></span></td></tr>
+          <tr><td>Road centre line</td><td><code>--colorNeutralStroke1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralStroke1" data-swatch></i><span data-token="--colorNeutralStroke1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralStroke1" data-swatch></i><span data-token="--colorNeutralStroke1"></span></span></td></tr>
+          <tr><td>Route and pins</td><td><code>--colorBrandForeground1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorBrandForeground1" data-swatch></i><span data-token="--colorBrandForeground1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorBrandForeground1" data-swatch></i><span data-token="--colorBrandForeground1"></span></span></td></tr>
+          <tr><td>Pin number</td><td><code>--colorNeutralForegroundOnBrand</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralForegroundOnBrand" data-swatch></i><span data-token="--colorNeutralForegroundOnBrand"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralForegroundOnBrand" data-swatch></i><span data-token="--colorNeutralForegroundOnBrand"></span></span></td></tr>
+          <tr><td>Home, active pin ring, labels</td><td><code>--colorNeutralForeground1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralForeground1" data-swatch></i><span data-token="--colorNeutralForeground1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralForeground1" data-swatch></i><span data-token="--colorNeutralForeground1"></span></span></td></tr>
+          <tr><td>Frame border, legend divider</td><td><code>--colorNeutralStroke2</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralStroke2" data-swatch></i><span data-token="--colorNeutralStroke2"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralStroke2" data-swatch></i><span data-token="--colorNeutralStroke2"></span></span></td></tr>
+          <tr><td>Legend text</td><td><code>--colorNeutralForeground2</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralForeground2" data-swatch></i><span data-token="--colorNeutralForeground2"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralForeground2" data-swatch></i><span data-token="--colorNeutralForeground2"></span></span></td></tr>
+          <tr><td>Frame radius</td><td><code>--borderRadiusLarge</code></td><td colspan="2"><span data-token="--borderRadiusLarge"></span></td></tr>
+          <tr><td>Legend type</td><td><code>--typographyCaption1</code></td><td colspan="2"><span data-token="--typographyCaption1"></span></td></tr>
+          <tr><td>Label and pin font</td><td><code>--fontFamilyBase</code>, <code>--fontWeightSemibold</code>, <code>--fontWeightBold</code></td><td colspan="2"><span data-token="--fontWeightSemibold"></span> / <span data-token="--fontWeightBold"></span></td></tr>
+          <tr><td>Open map offset</td><td><code>--spacingVerticalMNudge</code>, <code>--spacingHorizontalMNudge</code></td><td colspan="2"><span data-token="--spacingVerticalMNudge"></span> / <span data-token="--spacingHorizontalMNudge"></span></td></tr>
+          <tr><td>Planner gap under / from 1024px</td><td><code>--spacingVerticalL</code>, <code>--spacingHorizontalXXXL</code></td><td colspan="2"><span data-token="--spacingVerticalL"></span> / <span data-token="--spacingHorizontalXXXL"></span></td></tr>
+          <tr><td>Sticky offset from 1024px</td><td><code>--layoutTopBarHeight</code> + <code>--spacingVerticalL</code></td><td colspan="2"><span data-token="--layoutTopBarHeight"></span> / <span data-token="--spacingVerticalL"></span></td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section class="ds-section" id="code"><h2><a href="#code">Code</a></h2>
+      <pre><code>&lt;div class="planner" id="sat-panel" role="tabpanel" aria-labelledby="sat-tab"&gt;
+  &lt;section class="day" aria-labelledby="sat-title"&gt;…&lt;/section&gt;
+  &lt;aside class="planner__map" aria-label="Saturday map"&gt;
+    &lt;div class="map"&gt;
+      &lt;svg class="map__svg" viewBox="0 0 400 300" role="img" aria-label="Map of Saturday's route: home in Port Credit, 1 Swim lessons, …"&gt;
+        &lt;rect class="map__land" width="400" height="300"/&gt;
+        &lt;path class="map__water" d="…"/&gt;
+        &lt;path class="map__road" d="…"/&gt;&lt;path class="map__road-edge" d="…"/&gt;
+        &lt;path class="map__route" d="…"/&gt;
+        &lt;text class="map__label" x="60" y="40"&gt;Milton&lt;/text&gt;
+        &lt;g&gt;&lt;circle class="map__home" cx="248" cy="238" r="11"/&gt;&lt;path class="map__home-glyph" d="…"/&gt;&lt;/g&gt;
+        &lt;g class="map__pin map__pin--active"&gt;&lt;circle cx="92" cy="66" r="15"/&gt;&lt;text class="map__pin-num" x="92" y="66"&gt;2&lt;/text&gt;&lt;/g&gt;
+      &lt;/svg&gt;
+      &lt;button class="btn btn--quiet btn--sm map__expand" type="button"&gt;…Open map&lt;/button&gt;
+      &lt;p class="map__legend"&gt;&lt;span&gt;3 stops · 1 h 36 min · 105 km&lt;/span&gt;&lt;span class="map__attr"&gt;© OpenStreetMap contributors&lt;/span&gt;&lt;/p&gt;
+    &lt;/div&gt;
+  &lt;/aside&gt;
+&lt;/div&gt;</code></pre>
+      <table class="ds-table"><thead><tr><th scope="col">Class</th><th scope="col">Effect</th></tr></thead><tbody>
+        <tr><td><code>.planner__toolbar</code></td><td>Row above the planner for the day segments.</td></tr>
+        <tr><td><code>.planner</code> <code>.planner__map</code></td><td>Map above the day under 1024px; two columns with a sticky map from 1024px.</td></tr>
+        <tr><td><code>.map</code> <code>.map__svg</code></td><td>Frame and 4:3 drawing.</td></tr>
+        <tr><td><code>.map__land</code> <code>.map__water</code> <code>.map__road</code> <code>.map__road-edge</code> <code>.map__route</code></td><td>Base layers and the dashed route.</td></tr>
+        <tr><td><code>.map__home</code></td><td>Home disc; its house glyph is <code>.map__home-glyph</code>, filled with the surface colour.</td></tr>
+        <tr><td><code>.map__pin</code> + <code>circle</code> + <code>.map__pin-num</code>, <code>.map__pin--active</code></td><td>Numbered stop; active adds the ink ring (use r="15").</td></tr>
+        <tr><td><code>.map__label</code></td><td>Place name with a surface halo.</td></tr>
+        <tr><td><code>.map__expand</code> <code>.map__legend</code> <code>.map__attr</code></td><td>Open map button, totals and attribution.</td></tr>
+      </tbody></table>
+    </section>
+
+    <section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>
+      <ul>
+        <li><a href="../../mocks/pages/weekend.html">pages/weekend</a>: the Saturday and Sunday maps, the planner and its toolbar.</li>
+      </ul>
+      <p>Drift fixed: D18 (21 inline hex fills replaced by <code>.map__*</code> classes on tokens), D17 (the literal white on pins), D24 (the 1024px breakpoint in rem). Added during extraction: <code>.map__home-glyph</code> for the house icon, and a water colour mixed from the sky ink and the surface so the lake works in both themes. Not in the mocks: production tiles (docs/specs L2-100), the full map behind Open map, and the loading and unavailable states.</p>
+    </section>
+
+    <footer class="ds-footer"><span>Saturdaze design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/icons.js"></script>
+<script src="../assets/ds.js"></script>
+</body>
+</html>

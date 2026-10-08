@@ -1,0 +1,349 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pagination — Saturdaze design system</title>
+<meta name="description" content="The pager under long Admin lists (a range like 21 to 40 of 312 with Previous and Next) and the toolbar and result count above them.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html"><span class="brand-mark" aria-hidden="true"></span>Saturdaze DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Actions</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+    </ul></details>
+    <details open><summary>Inputs</summary><ul>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/chip-input.html">Chip input</a></li>
+      <li><a href="../components/file-upload.html">File upload</a></li>
+      <li><a href="../components/photo-pick.html">Photo pick</a></li>
+      <li><a href="../components/rating.html">Rating</a></li>
+      <li><a href="../components/vote-row.html">Vote row</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+    </ul></details>
+    <details open><summary>Navigation</summary><ul>
+      <li><a href="../components/top-bar.html">Top bar</a></li>
+      <li><a href="../components/bottom-nav.html">Bottom nav</a></li>
+      <li><a href="../components/sidebar-navigation.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs (segments)</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+      <li><a href="../components/footer.html">Footer</a></li>
+    </ul></details>
+    <details open><summary>Containers and overlays</summary><ul>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/container.html">Container and grid</a></li>
+      <li><a href="../components/page-header.html">Page header</a></li>
+    </ul></details>
+    <details open><summary>Data display</summary><ul>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/activity-feed.html">Activity feed</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/chip.html">Chip</a></li>
+      <li><a href="../components/filter-chip.html">Filter chip</a></li>
+      <li><a href="../components/disc.html">Disc</a></li>
+      <li><a href="../components/media.html">Media</a></li>
+      <li><a href="../components/cover.html">Cover photo</a></li>
+      <li><a href="../components/stat.html">Stat</a></li>
+      <li><a href="../components/itinerary.html">Itinerary</a></li>
+      <li><a href="../components/map.html">Map</a></li>
+    </ul></details>
+    <details open><summary>Feedback</summary><ul>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/alert.html">Alert</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/progress-bar.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Auth and marketing</summary><ul>
+      <li><a href="../components/auth-card.html">Auth card</a></li>
+      <li><a href="../components/hero.html">Hero</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/data-tables-and-lists.html">Tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Component · Navigation</p>
+      <h1>Pagination</h1>
+      <p class="ds-lead">Long Admin lists show one page of rows at a time. Under the list, the pager says which rows are showing and offers Previous and Next; above it, the toolbar searches and sorts and the count says how many match.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA</span><span class="ds-pill">Status: stable</span><span class="ds-pill">Angular: <code>sd-pager</code>, <code>sd-toolbar</code></span><span class="ds-pill">Admin lists</span></div>
+      <ul class="ds-toc">
+        <li><a href="#overview">Overview</a></li><li><a href="#anatomy">Anatomy</a></li><li><a href="#variants">Variants</a></li><li><a href="#sizes">Sizes</a></li><li><a href="#states">States</a></li><li><a href="#responsive">Responsive</a></li><li><a href="#theming">Theming</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#content">Content</a></li><li><a href="#do-dont">Do and don't</a></li><li><a href="#tokens">Tokens</a></li><li><a href="#code">Code</a></li><li><a href="#sources">Sources</a></li>
+      </ul>
+    </header>
+
+    <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+      <p>Use the pager (<code>.pager</code>) under any list that can grow past one page: Admin's Places (312 places), Activity log, Review queue and Ingestion skips. A page holds 50 rows. The family app's lists are short (a weekend, this week's ideas) and never page.</p>
+      <ul>
+        <li>The pager is <b>Previous and Next only</b>, with the range as text. See <a href="#numbered">why not numbered pages</a>.</li>
+        <li>The <b>toolbar</b> (<code>.toolbar</code>) sits above the list: a search field and one or two sort or filter selects. <code>.toolbar__count</code> under it says how many rows match ("8 places") and is a polite live region.</li>
+        <li>Do not page a list a person needs to see whole to decide (a weekend's blocks, a family's members). Do not use infinite scroll: a curator needs to come back to the same row, and a footer would never be reached.</li>
+      </ul>
+      <p>For list and table layouts, see <a href="list.html">list</a>, <a href="table.html">table</a> and <a href="../patterns/data-tables-and-lists.html">tables and lists</a>.</p>
+    </section>
+
+    <section class="ds-section" id="anatomy"><h2><a href="#anatomy">Anatomy</a></h2>
+      <div class="ds-anatomy">
+        <figure class="ds-anatomy__figure" style="display: block; padding: var(--spacingVerticalXXXL) var(--spacingHorizontalL);">
+          <nav class="pager" aria-label="Pagination (anatomy example)" style="margin: 0; width: 100%;">
+            <span class="pager__text">21 to 40 of 312</span>
+            <button class="btn btn--quiet btn--sm" type="button"><svg class="icon" aria-hidden="true"><use href="#i-arrow_left"/></svg>Previous</button>
+            <button class="btn btn--quiet btn--sm" type="button">Next<svg class="icon" aria-hidden="true"><use href="#i-arrow_right"/></svg></button>
+          </nav>
+          <span class="ds-callout" style="left: 2%; top: 8%;" aria-hidden="true">1</span>
+          <span class="ds-callout" style="right: 2%; top: 8%;" aria-hidden="true">2</span>
+          <span class="ds-callout" style="left: 2%; top: 70%;" aria-hidden="true">3</span>
+        </figure>
+        <ol class="ds-anatomy__list">
+          <li><div><b>Range</b><small><code>.pager__text</code>: "21 to 40 of 312" in <code>--typographyBody2</code>, <code>--colorNeutralForeground2</code>, tabular figures; it takes the free space and pushes the buttons right.</small></div></li>
+          <li><div><b>Previous and Next</b><small>Small quiet <a href="button.html">buttons</a> with arrow icons on the outside edge; disabled at either end.</small></div></li>
+          <li><div><b>Landmark</b><small><code>&lt;nav aria-label="Pagination"&gt;</code>, 16px below the list.</small></div></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="ds-section" id="variants"><h2><a href="#variants">Variants</a></h2>
+      <h3>Pager</h3>
+      <p>The same pager at each position in a list. The ends disable the button that has nowhere to go; a one-page list disables both and still shows the range.</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack ds-example__canvas--canvas" style="padding: var(--spacingHorizontalL);">
+          <nav class="pager" aria-label="Pagination, first page" style="margin: 0;"><span class="pager__text">1 to 50 of 312</span><button class="btn btn--quiet btn--sm" type="button" disabled><svg class="icon" aria-hidden="true"><use href="#i-arrow_left"/></svg>Previous</button><button class="btn btn--quiet btn--sm" type="button">Next<svg class="icon" aria-hidden="true"><use href="#i-arrow_right"/></svg></button></nav>
+          <nav class="pager" aria-label="Pagination, middle page" style="margin: 0;"><span class="pager__text">51 to 100 of 312</span><button class="btn btn--quiet btn--sm" type="button"><svg class="icon" aria-hidden="true"><use href="#i-arrow_left"/></svg>Previous</button><button class="btn btn--quiet btn--sm" type="button">Next<svg class="icon" aria-hidden="true"><use href="#i-arrow_right"/></svg></button></nav>
+          <nav class="pager" aria-label="Pagination, last page" style="margin: 0;"><span class="pager__text">301 to 312 of 312</span><button class="btn btn--quiet btn--sm" type="button"><svg class="icon" aria-hidden="true"><use href="#i-arrow_left"/></svg>Previous</button><button class="btn btn--quiet btn--sm" type="button" disabled>Next<svg class="icon" aria-hidden="true"><use href="#i-arrow_right"/></svg></button></nav>
+          <nav class="pager" aria-label="Pagination, single page" style="margin: 0;"><span class="pager__text">1 to 8 of 8</span><button class="btn btn--quiet btn--sm" type="button" disabled><svg class="icon" aria-hidden="true"><use href="#i-arrow_left"/></svg>Previous</button><button class="btn btn--quiet btn--sm" type="button" disabled>Next<svg class="icon" aria-hidden="true"><use href="#i-arrow_right"/></svg></button></nav>
+        </div>
+        <div class="ds-example__caption"><span>First, middle, last and only page. The mocks show the last case ("1 to 8 of 8").</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;nav class="pager" aria-label="Pagination"&gt;
+  &lt;span class="pager__text"&gt;51 to 100 of 312&lt;/span&gt;
+  &lt;button class="btn btn--quiet btn--sm" type="button"&gt;&lt;svg class="icon" aria-hidden="true"&gt;&lt;use href="#i-arrow_left"/&gt;&lt;/svg&gt;Previous&lt;/button&gt;
+  &lt;button class="btn btn--quiet btn--sm" type="button"&gt;Next&lt;svg class="icon" aria-hidden="true"&gt;&lt;use href="#i-arrow_right"/&gt;&lt;/svg&gt;&lt;/button&gt;
+&lt;/nav&gt;</code></pre></details>
+      </div>
+
+      <h3>Toolbar and count</h3>
+      <p>Above the list: search and sort (Places), or two filters (Activity log). The count follows any filter chips and announces the new total when the filters change.</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack ds-example__canvas--canvas" style="padding: var(--spacingHorizontalL);">
+          <div class="toolbar" style="margin: 0;">
+            <div class="field">
+              <label class="field__label" for="pg-q">Search</label>
+              <input class="field__input" id="pg-q" type="search" placeholder="Place name" value="harbour">
+            </div>
+            <div class="field">
+              <label class="field__label" for="pg-sort">Sort</label>
+              <select class="field__input" id="pg-sort"><option selected>Worst health first</option><option>Name</option><option>Recently changed</option></select>
+            </div>
+          </div>
+          <p class="toolbar__count" role="status">8 places</p>
+          <div class="list list--card">
+            <a class="list__item list__item--action" href="../../mocks/pages/admin.place.html"><span class="media media--4x3 media--fallback media--sun place-thumb" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-fork"/></svg></span><span class="list__text"><span class="list__title">Snug Harbour</span><span class="list__sub">Restaurant · 0 photos</span></span><span class="list__trail"><svg class="icon" aria-hidden="true"><use href="#i-chevron_right"/></svg></span></a>
+            <a class="list__item list__item--action" href="../../mocks/pages/admin.place.html"><span class="media media--4x3 media--fallback media--sky place-thumb" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-ticket"/></svg></span><span class="list__text"><span class="list__title">Port Credit Harbour Festival</span><span class="list__sub">Event · 0 photos</span></span><span class="list__trail"><svg class="icon" aria-hidden="true"><use href="#i-chevron_right"/></svg></span></a>
+            <a class="list__item list__item--action" href="../../mocks/pages/admin.place.html"><span class="media media--4x3 media--fallback media--sun place-thumb" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-fork"/></svg></span><span class="list__text"><span class="list__title">Harbour Grill</span><span class="list__sub">Restaurant · 2 photos</span></span><span class="list__trail"><svg class="icon" aria-hidden="true"><use href="#i-chevron_right"/></svg></span></a>
+          </div>
+          <nav class="pager" aria-label="Pagination, places" style="margin: 0;"><span class="pager__text">1 to 8 of 8</span><button class="btn btn--quiet btn--sm" type="button" disabled><svg class="icon" aria-hidden="true"><use href="#i-arrow_left"/></svg>Previous</button><button class="btn btn--quiet btn--sm" type="button" disabled>Next<svg class="icon" aria-hidden="true"><use href="#i-arrow_right"/></svg></button></nav>
+        </div>
+        <div class="ds-example__caption"><span>admin.places, shortened: toolbar, count, list, pager.</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;div class="toolbar"&gt;
+  &lt;div class="field"&gt;&lt;label class="field__label" for="pl-q"&gt;Search&lt;/label&gt;&lt;input class="field__input" id="pl-q" type="search" placeholder="Place name"&gt;&lt;/div&gt;
+  &lt;div class="field"&gt;&lt;label class="field__label" for="pl-sort"&gt;Sort&lt;/label&gt;&lt;select class="field__input" id="pl-sort"&gt;…&lt;/select&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;p class="toolbar__count" role="status"&gt;8 places&lt;/p&gt;
+&lt;div class="list list--card"&gt;…&lt;/div&gt;
+&lt;nav class="pager" aria-label="Pagination"&gt;…&lt;/nav&gt;</code></pre></details>
+      </div>
+
+      <h3 id="numbered">Why not numbered pages</h3>
+      <ul>
+        <li>The lists are sorted for work: "Worst health first" puts what needs fixing on page 1. A curator works from the top and stops; nobody needs page 7 of a priority order.</li>
+        <li>To find a particular place, search is faster and stable; page numbers shift every time a photo is fixed and the sort reorders.</li>
+        <li>The range text ("51 to 100 of 312") already says where you are and how much is left, which is what page numbers were for.</li>
+        <li>A numbered row with ellipses does not fit beside the range at 360px, and its targets would be too small to share a row.</li>
+      </ul>
+      <p>If a list ever needs random access (an audit by date), add a filter that narrows it (a date or a place select in the toolbar), not page numbers.</p>
+    </section>
+
+    <section class="ds-section" id="sizes" data-na="One size: the pager uses small (32px) quiet buttons and 13px range text."><h2><a href="#sizes">Sizes</a></h2><p class="ds-na">One size: the pager uses small (32px) quiet buttons and 13px range text.</p></section>
+
+    <section class="ds-section" id="states"><h2><a href="#states">States</a></h2>
+      <p>The buttons carry every button state (forced here with <code>data-state</code>); the range text has none.</p>
+      <div class="ds-matrix"><table>
+        <thead><tr><th scope="col">Button</th><th scope="col">Default</th><th scope="col">Hover</th><th scope="col">Focus</th><th scope="col">Active</th><th scope="col">Disabled</th><th scope="col">Loading</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Previous</th>
+            <td><button class="btn btn--quiet btn--sm" type="button"><svg class="icon" aria-hidden="true"><use href="#i-arrow_left"/></svg>Previous</button></td>
+            <td><button class="btn btn--quiet btn--sm" type="button" data-state="hover"><svg class="icon" aria-hidden="true"><use href="#i-arrow_left"/></svg>Previous</button></td>
+            <td><button class="btn btn--quiet btn--sm" type="button" data-state="focus"><svg class="icon" aria-hidden="true"><use href="#i-arrow_left"/></svg>Previous</button></td>
+            <td><button class="btn btn--quiet btn--sm" type="button" data-state="active"><svg class="icon" aria-hidden="true"><use href="#i-arrow_left"/></svg>Previous</button></td>
+            <td><button class="btn btn--quiet btn--sm" type="button" disabled><svg class="icon" aria-hidden="true"><use href="#i-arrow_left"/></svg>Previous</button></td>
+            <td><button class="btn btn--quiet btn--sm" type="button" aria-busy="true"><span>Previous</span></button></td>
+          </tr>
+          <tr><th scope="row">Next</th>
+            <td><button class="btn btn--quiet btn--sm" type="button">Next<svg class="icon" aria-hidden="true"><use href="#i-arrow_right"/></svg></button></td>
+            <td><button class="btn btn--quiet btn--sm" type="button" data-state="hover">Next<svg class="icon" aria-hidden="true"><use href="#i-arrow_right"/></svg></button></td>
+            <td><button class="btn btn--quiet btn--sm" type="button" data-state="focus">Next<svg class="icon" aria-hidden="true"><use href="#i-arrow_right"/></svg></button></td>
+            <td><button class="btn btn--quiet btn--sm" type="button" data-state="active">Next<svg class="icon" aria-hidden="true"><use href="#i-arrow_right"/></svg></button></td>
+            <td><button class="btn btn--quiet btn--sm" type="button" disabled>Next<svg class="icon" aria-hidden="true"><use href="#i-arrow_right"/></svg></button></td>
+            <td><button class="btn btn--quiet btn--sm" type="button" aria-busy="true"><span>Next</span></button></td>
+          </tr>
+        </tbody>
+      </table></div>
+      <h3>Both themes</h3>
+      <div class="ds-themes">
+        <div data-theme="light"><nav class="pager" aria-label="Pagination, light theme" style="margin: 0;"><span class="pager__text">51 to 100 of 312</span><button class="btn btn--quiet btn--sm" type="button" data-state="focus"><svg class="icon" aria-hidden="true"><use href="#i-arrow_left"/></svg>Previous</button><button class="btn btn--quiet btn--sm" type="button" aria-busy="true"><span>Next</span></button></nav></div>
+        <div data-theme="dark"><nav class="pager" aria-label="Pagination, dark theme" style="margin: 0;"><span class="pager__text">51 to 100 of 312</span><button class="btn btn--quiet btn--sm" type="button" data-state="focus"><svg class="icon" aria-hidden="true"><use href="#i-arrow_left"/></svg>Previous</button><button class="btn btn--quiet btn--sm" type="button" aria-busy="true"><span>Next</span></button></nav></div>
+      </div>
+      <ul>
+        <li><b>Loading</b>: the pressed button shows its spinner (<code>aria-busy="true"</code>) while the next page loads; the list keeps the current rows until the new ones arrive, then swaps them at once.</li>
+        <li><b>Disabled</b> at the ends uses native <code>disabled</code>. The range text still explains why ("301 to 312 of 312").</li>
+        <li><b>Empty</b>: when nothing matches, the list shows an <a href="empty-state.html">empty state</a> and the pager shows the empty text ("No places") with both buttons disabled; the count says "0 places".</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="responsive"><h2><a href="#responsive">Responsive behaviour</a></h2>
+      <ul>
+        <li>The pager is one row at every width: range on the left, buttons on the right. At 360px, "301 to 312 of 312" and both buttons fit in the 328px column.</li>
+        <li><b>Toolbar under 720px</b>: one column, search above sort, each full width with 44px fields. <b>From 720px</b>: search takes the space and sort sits in a 240px column beside it, bottoms aligned.</li>
+        <li>After Next or Previous the view scrolls to the top of the list, not the top of the page, so the toolbar and count stay in view.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="theming"><h2><a href="#theming">Theming</a></h2>
+      <p>The pager adds only the range text colour (<code>--colorNeutralForeground2</code>) and the spacing above it; the buttons are quiet buttons and theme with them (see <a href="button.html#theming">button theming</a>). The toolbar is layout only; its fields theme with <a href="form-field.html">form field</a>. No component tokens.</p>
+    </section>
+
+    <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
+      <h3>Role and pattern</h3>
+      <p>A <code>&lt;nav&gt;</code> landmark named "Pagination" (name it after the list when a page has two, "Places pages"). Previous and Next are buttons that load the page in place. When the page number lives in the address (<code>?page=3</code>), they may be links instead (<code>&lt;a class="btn btn--quiet btn--sm" href&gt;</code>), and a disabled end becomes a <code>&lt;span&gt;</code> styled the same with <code>aria-disabled="true"</code>, since a link cannot be disabled. No APG widget pattern applies; it is two buttons and text.</p>
+      <h3>Keyboard</h3>
+      <table class="ds-table ds-keys"><thead><tr><th scope="col">Key</th><th scope="col">Action</th></tr></thead><tbody>
+        <tr><td><kbd>Tab</kbd> / <kbd>Shift</kbd>+<kbd>Tab</kbd></td><td>Previous, then Next; disabled buttons are skipped.</td></tr>
+        <tr><td><kbd>Enter</kbd> / <kbd>Space</kbd></td><td>Loads that page.</td></tr>
+      </tbody></table>
+      <h3>Focus</h3>
+      <p>After the new page loads, move focus to the list's heading or first row (with <code>tabindex="-1"</code> on the target) so a keyboard user starts reading the new rows, not the bottom of the old page. If Next becomes disabled while it has focus (the last page), focus must not drop to <code>&lt;body&gt;</code>; moving it to the list prevents that too.</p>
+      <h3>Labelling</h3>
+      <p>"Previous" and "Next" are enough inside a landmark called "Pagination". The range text is plain text, read in order. <code>.toolbar__count</code> has <code>role="status"</code>, so "8 places" is announced politely after a search or filter change; do not also announce the pager range.</p>
+      <h3>Contrast</h3>
+      <div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0; gap: var(--spacingHorizontalS);">
+        <div class="ds-pair"><span>Range text and count on the page</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground2|--colorNeutralBackground2" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Button label on its fill</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground1|--colorNeutralBackground1" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Button border on the page (D28)</span><span class="ds-pair__ratio" data-contrast="--colorNeutralStrokeAccessible|--colorNeutralBackground2" data-min="3"></span></div>
+        <div class="ds-pair"><span>Focus ring on the page</span><span class="ds-pair__ratio" data-contrast="--colorStrokeFocus2|--colorNeutralBackground2" data-min="3"></span></div>
+      </div>
+      <p>Disabled buttons (50% opacity) are exempt from contrast requirements; the range text carries the information.</p>
+      <h3>Motion</h3>
+      <p>Button transitions only (<code>--durationFast</code>). The new rows replace the old without animation, and the scroll to the list is instant under <code>prefers-reduced-motion</code>.</p>
+      <h3>Touch</h3>
+      <p>Small buttons are 32px tall and about 90px wide, with 8px between them: above the 24px minimum. Admin is desktop-first; on a phone they are still comfortably apart.</p>
+    </section>
+
+    <section class="ds-section" id="content"><h2><a href="#content">Content</a></h2>
+      <ul>
+        <li>Range: "21 to 40 of 312", with "to" rather than a dash, so it reads the same aloud and on screen. Numbers use tabular figures so the text does not jitter between pages.</li>
+        <li>Buttons: "Previous" and "Next". Never "Older" / "Newer" (the sort decides what is older) or "More".</li>
+        <li>Count: the number and the plural noun of the list: "8 places", "1 place", "0 places".</li>
+        <li>Empty pager text names the list: "No places", "No activity yet".</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="do-dont"><h2><a href="#do-dont">Do and don't</a></h2>
+      <div class="ds-dodont">
+        <figure class="ds-do"><div class="ds-example__canvas" style="padding: var(--spacingHorizontalL);"><nav class="pager" aria-label="Pagination, do example" style="margin: 0; width: 100%;"><span class="pager__text">1 to 8 of 8</span><button class="btn btn--quiet btn--sm" type="button" disabled>Previous</button><button class="btn btn--quiet btn--sm" type="button" disabled>Next</button></nav></div><figcaption>Wrap the pager in a <code>&lt;nav aria-label="Pagination"&gt;</code> landmark.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><code>&lt;div class="pager"&gt;…&lt;/div&gt;</code></div><figcaption>The mocks use a bare <code>&lt;div&gt;</code>, so the pager cannot be found from the landmarks list. The Angular <code>sd-pager</code> already sets <code>role="navigation"</code>.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas"><p class="toolbar__count" role="status" style="margin: 0;">8 places</p></div><figcaption>One polite status for the result count, updated after a search.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><span class="pager__text">Page 2</span></div><figcaption>"Page 2" alone hides how many rows there are and how many are left.</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="ds-section" id="tokens"><h2><a href="#tokens">Tokens</a></h2>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Part</th><th scope="col">Token</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead>
+        <tbody>
+          <tr><td>Range text, count</td><td><code>--colorNeutralForeground2</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralForeground2" data-swatch></i><span data-token="--colorNeutralForeground2"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralForeground2" data-swatch></i><span data-token="--colorNeutralForeground2"></span></span></td></tr>
+          <tr><td>Button border</td><td><code>--colorNeutralStrokeAccessible</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralStrokeAccessible" data-swatch></i><span data-token="--colorNeutralStrokeAccessible"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralStrokeAccessible" data-swatch></i><span data-token="--colorNeutralStrokeAccessible"></span></span></td></tr>
+          <tr><td>Focus ring</td><td><code>--colorStrokeFocus2</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorStrokeFocus2" data-swatch></i><span data-token="--colorStrokeFocus2"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorStrokeFocus2" data-swatch></i><span data-token="--colorStrokeFocus2"></span></span></td></tr>
+          <tr><td>Range text</td><td><code>--typographyBody2</code></td><td colspan="2"><span data-token="--typographyBody2"></span></td></tr>
+          <tr><td>Button height</td><td><code>--controlHeightSmall</code></td><td colspan="2"><span data-token="--controlHeightSmall"></span></td></tr>
+          <tr><td>Gap between parts</td><td><code>--spacingHorizontalS</code></td><td colspan="2"><span data-token="--spacingHorizontalS"></span></td></tr>
+          <tr><td>Pager top margin</td><td><code>--spacingVerticalL</code></td><td colspan="2"><span data-token="--spacingVerticalL"></span></td></tr>
+          <tr><td>Toolbar gap, count margin</td><td><code>--spacingVerticalM</code> (phone), <code>--spacingHorizontalL</code> (720px and up)</td><td colspan="2"><span data-token="--spacingVerticalM"></span> / <span data-token="--spacingHorizontalL"></span></td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section class="ds-section" id="code"><h2><a href="#code">Code</a></h2>
+      <pre><code>&lt;!-- Angular: the consumer owns the page, usually in the address --&gt;
+&lt;sd-pager label="Pagination" [page]="page" [pageSize]="50" [total]="312"
+          emptyText="No places" (pageChange)="goTo($event)" /&gt;</code></pre>
+      <table class="ds-table"><thead><tr><th scope="col">Class / attribute</th><th scope="col">Effect</th></tr></thead><tbody>
+        <tr><td><code>.pager</code></td><td>One row: range, Previous, Next; 16px above.</td></tr>
+        <tr><td><code>.pager__text</code></td><td>The range; takes the free space so the buttons sit right.</td></tr>
+        <tr><td><code>.toolbar</code></td><td>Search and selects: one column, then search plus a 240px column from 720px.</td></tr>
+        <tr><td><code>.toolbar__count</code></td><td>Result count under the toolbar; give it <code>role="status"</code>.</td></tr>
+        <tr><td><code>.btn.btn--quiet.btn--sm</code></td><td>Previous and Next.</td></tr>
+        <tr><td><code>disabled</code> / <code>aria-busy="true"</code></td><td>End of list / page loading.</td></tr>
+      </tbody></table>
+    </section>
+
+    <section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>
+      <ul>
+        <li><a href="../../mocks/pages/admin.places.html">pages/admin.places</a>: toolbar (Search, Sort), filter chips, "8 places" count, pager "1 to 8 of 8".</li>
+        <li><a href="../../mocks/pages/admin.activity.html">pages/admin.activity</a>: toolbar with Place and Administrator selects, pager "1 to 5 of 5".</li>
+      </ul>
+      <p>Drift: D24 the toolbar's 720px switch in rem, D28 the quiet button border, D03 focus ring. Not in the drift log: the mocks' pager is a <code>&lt;div&gt;</code>, not a navigation landmark (fixed here and in <code>sd-pager</code>); the mocks only show single-page lists, so the first, middle and last page states here are extrapolated.</p>
+    </section>
+
+    <footer class="ds-footer"><span>Saturdaze design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/icons.js"></script>
+<script src="../assets/ds.js"></script>
+</body>
+</html>

@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Typography — Saturdaze design system</title>
+<meta name="description" content="Type families, the size scale, weights, line heights, letter spacing and the thirteen role shorthands, with responsive retunes.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html"><span class="brand-mark" aria-hidden="true"></span>Saturdaze DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Actions</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+    </ul></details>
+    <details open><summary>Inputs</summary><ul>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/chip-input.html">Chip input</a></li>
+      <li><a href="../components/file-upload.html">File upload</a></li>
+      <li><a href="../components/photo-pick.html">Photo pick</a></li>
+      <li><a href="../components/rating.html">Rating</a></li>
+      <li><a href="../components/vote-row.html">Vote row</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+    </ul></details>
+    <details open><summary>Navigation</summary><ul>
+      <li><a href="../components/top-bar.html">Top bar</a></li>
+      <li><a href="../components/bottom-nav.html">Bottom nav</a></li>
+      <li><a href="../components/sidebar-navigation.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs (segments)</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+      <li><a href="../components/footer.html">Footer</a></li>
+    </ul></details>
+    <details open><summary>Containers and overlays</summary><ul>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/container.html">Container and grid</a></li>
+      <li><a href="../components/page-header.html">Page header</a></li>
+    </ul></details>
+    <details open><summary>Data display</summary><ul>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/activity-feed.html">Activity feed</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/chip.html">Chip</a></li>
+      <li><a href="../components/filter-chip.html">Filter chip</a></li>
+      <li><a href="../components/disc.html">Disc</a></li>
+      <li><a href="../components/media.html">Media</a></li>
+      <li><a href="../components/cover.html">Cover photo</a></li>
+      <li><a href="../components/stat.html">Stat</a></li>
+      <li><a href="../components/itinerary.html">Itinerary</a></li>
+      <li><a href="../components/map.html">Map</a></li>
+    </ul></details>
+    <details open><summary>Feedback</summary><ul>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/alert.html">Alert</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/progress-bar.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Auth and marketing</summary><ul>
+      <li><a href="../components/auth-card.html">Auth card</a></li>
+      <li><a href="../components/hero.html">Hero</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/data-tables-and-lists.html">Tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Foundation</p>
+      <h1>Typography</h1>
+      <p class="ds-lead">Type in Saturdaze is plain and readable: one family, a short scale and thirteen named roles, so a card title or a dialog title looks the same wherever it appears.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA</span><span class="ds-pill">Tokens: <code>--fontSize*</code>, <code>--typography*</code></span><span class="ds-pill">Inter · rem</span></div>
+      <ul class="ds-toc">
+        <li><a href="#overview">Overview</a></li><li><a href="#families">Families</a></li><li><a href="#roles">Roles</a></li><li><a href="#scale">Sizes</a></li><li><a href="#weights">Weights</a></li><li><a href="#line-heights">Line heights</a></li><li><a href="#letter-spacing">Letter spacing</a></li><li><a href="#measure">Measure</a></li><li><a href="#responsive">Responsive</a></li><li><a href="#body-size">Body size</a></li><li><a href="#usage">Usage</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#tokens">Tokens</a></li><li><a href="#sources">Sources</a></li>
+      </ul>
+    </header>
+
+    <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+      <p>Saturdaze sets everything in Inter, falling back to the system UI font, with a monospace for codes and times. The scale is small and practical: 15px body for dense planner rows, 17px card titles, 20 to 26px for section and page titles, and a 44px display size the landing page uses once.</p>
+      <ul>
+        <li><b>Thirteen roles</b> (<code>--typography*</code>) bundle weight, size, line height and family into one <code>font</code> shorthand. Components read roles.</li>
+        <li><b>Rem throughout</b>, so type follows the reader's font size and zoom.</li>
+        <li><b>Responsive at the top only:</b> the four largest sizes step down under 380px and up from 1024px through token retunes in <code>tokens.css</code>.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="families"><h2><a href="#families">Families</a></h2>
+      <p>One sans for everything a family reads, one monospace for strings they might copy or compare: invite codes, error references, the admin activity log's times.</p>
+      <div class="ds-example">
+        <div class="ds-specimen"><div class="ds-specimen__meta"><code>--fontFamilyBase</code><br>Inter, then the system UI stack</div><p style="font-family: var(--fontFamilyBase); font-size: var(--fontSizeBase500);">Saturday plans for the Browns: swim lessons at 9:00, lavender at 11:00, lunch at La Marina.</p></div>
+        <div class="ds-specimen"><div class="ds-specimen__meta"><code>--fontFamilyMonospace</code><br>System monospace</div><p style="font-family: var(--fontFamilyMonospace); font-size: var(--fontSizeBase400);">PORT-CREDIT-7F3K · 09:00 · 13:30</p></div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="roles"><h2><a href="#roles">Type roles</a></h2>
+      <p>Components set type with one role shorthand (<code>font: var(--typographyTitle2)</code>), never with a loose size and weight. Thirteen roles cover every text style in the mocks; a few components adjust one property on top of a role (the hero title tightens its line height, menu items drop Body1 to 14px), and that adjustment is written in <code>components.css</code>, not improvised in a page.</p>
+      <div class="ds-example">
+        <div class="ds-specimen"><div class="ds-specimen__meta"><code>--typographyDisplay</code><br>44px · bold · 1.2 (34 under 380, 56 from 1024)<br>Landing hero title (the hero sets line height 1)</div><p style="font: var(--typographyDisplay); letter-spacing: var(--letterSpacingTight); line-height: var(--lineHeightNone);">Two days. Already planned.</p></div>
+        <div class="ds-specimen"><div class="ds-specimen__meta"><code>--typographyLargeTitle</code><br>34px · bold · 1 (30 under 380, 40 from 1024)<br>Admin stat figures, error page status</div><p style="font: var(--typographyLargeTitle); letter-spacing: var(--letterSpacingTight); font-variant-numeric: tabular-nums;">128</p></div>
+        <div class="ds-specimen"><div class="ds-specimen__meta"><code>--typographyTitle1</code><br>26px · bold · 1.2 (24 under 380, 30 from 1024)<br>Page titles, cover title, auth card title, legal title</div><p style="font: var(--typographyTitle1); letter-spacing: var(--letterSpacingTight);">This weekend</p></div>
+        <div class="ds-specimen"><div class="ds-specimen__meta"><code>--typographyTitle2</code><br>20px · bold · 1.2 (22 from 1024)<br>Section, day and dialog titles; empty state title</div><p style="font: var(--typographyTitle2); letter-spacing: var(--letterSpacingTight);">Add an errand</p></div>
+        <div class="ds-specimen"><div class="ds-specimen__meta"><code>--typographyTitle3</code><br>17px · semibold · 1.35<br>Card titles, brand in the top bar, step titles</div><p style="font: var(--typographyTitle3);">Lavender fields at Terre Bleu</p></div>
+        <div class="ds-specimen"><div class="ds-specimen__meta"><code>--typographySubtitle1</code><br>15px · semibold · 1.35<br>Itinerary block and list titles, table caption</div><p style="font: var(--typographySubtitle1);">Swim lessons</p></div>
+        <div class="ds-specimen"><div class="ds-specimen__meta"><code>--typographyBody1</code><br>15px · regular · 1.5<br>Body copy, field values, banners, menu items (at 14px)</div><p style="font: var(--typographyBody1); max-width: var(--layoutMeasure);">Saturdaze drafts Saturday and Sunday around swim lessons, church and the weather, then fills the rest with things your family will say yes to.</p></div>
+        <div class="ds-specimen"><div class="ds-specimen__meta"><code>--typographyBody1Strong</code><br>15px · semibold · 1.5<br>Well and error summary titles</div><p style="font: var(--typographyBody1Strong);">Two things need a look before you save</p></div>
+        <div class="ds-specimen"><div class="ds-specimen__meta"><code>--typographyBody2</code><br>13px · regular · 1.5<br>Meta, field labels, card body, dialog subtitle</div><p style="font: var(--typographyBody2);">Terre Bleu, Milton · walk the rows · 45 min drive</p></div>
+        <div class="ds-specimen"><div class="ds-specimen__meta"><code>--typographyLabel</code><br>14px · semibold · 1<br>Buttons, nav links, tabs, control labels</div><p style="font: var(--typographyLabel);">Plan this weekend</p></div>
+        <div class="ds-specimen"><div class="ds-specimen__meta"><code>--typographyCaption1</code><br>12px · regular · 1.5<br>Hints, photo credits, footers, tooltips</div><p style="font: var(--typographyCaption1);">Free during the beta.</p></div>
+        <div class="ds-specimen"><div class="ds-specimen__meta"><code>--typographyCaption1Strong</code><br>12px · semibold · 1.5<br>Chips, table headers, bottom nav labels; the overline below</div><p style="font: var(--typographyCaption1Strong);">45 min drive</p></div>
+        <div class="ds-specimen"><div class="ds-specimen__meta"><code>--typographyCode</code><br>13px · regular · 1.5 · mono<br>Invite codes, activity log times, error codes</div><p style="font: var(--typographyCode);">PORT-CREDIT-7F3K</p></div>
+        <div class="ds-specimen"><div class="ds-specimen__meta"><code>--typographyCaption1Strong</code> + <code>--letterSpacingWider</code>, uppercase<br>12px · semibold · 0.12em<br>Overlines and eyebrows: hero, cover, card, auth brand, step number</div><p style="font: var(--typographyCaption1Strong); letter-spacing: var(--letterSpacingWider); text-transform: uppercase; color: var(--colorNeutralForeground2);">Weekends, drafted for your family</p></div>
+      </div>
+      <p>Headings 20px and larger add <code>--letterSpacingTight</code> (−0.02em) and <code>text-wrap: balance</code>. Uppercase is reserved for the short overline style above and the small uppercase <code>.tag</code>; it uses <code>--letterSpacingWide</code> (0.06em) on tags and <code>--letterSpacingWider</code> (0.12em) on overlines, because uppercase letters set without tracking read as cramped.</p>
+    </section>
+
+    <section class="ds-section" id="scale"><h2><a href="#scale">Size scale</a></h2>
+      <p>Nine steps from 12 to 44px, named on Fluent's Base and Hero ramps. Every size is in rem, so the whole scale follows the reader's browser font size and zoom. The live value next to each name is the one in force at your current window width.</p>
+      <div class="ds-example">
+        <div class="ds-specimen"><div class="ds-specimen__meta"><code>--fontSizeBase200</code><br><span data-token="--fontSizeBase200"></span> · 12px<br>Captions, chips, hints: the smallest text allowed (D12)</div><p style="font-size: var(--fontSizeBase200); line-height: var(--lineHeightTight); font-weight: var(--fontWeightSemibold);">Saturday at Terre Bleu</p></div>
+        <div class="ds-specimen"><div class="ds-specimen__meta"><code>--fontSizeBase300</code><br><span data-token="--fontSizeBase300"></span> · 13px<br>Meta, small buttons, field labels</div><p style="font-size: var(--fontSizeBase300); line-height: var(--lineHeightTight); font-weight: var(--fontWeightSemibold);">Saturday at Terre Bleu</p></div>
+        <div class="ds-specimen"><div class="ds-specimen__meta"><code>--fontSizeBase350</code><br><span data-token="--fontSizeBase350"></span> · 14px<br>Control labels, nav links, menu items, banners (D13)</div><p style="font-size: var(--fontSizeBase350); line-height: var(--lineHeightTight); font-weight: var(--fontWeightSemibold);">Saturday at Terre Bleu</p></div>
+        <div class="ds-specimen"><div class="ds-specimen__meta"><code>--fontSizeBase400</code><br><span data-token="--fontSizeBase400"></span> · 15px<br>Body</div><p style="font-size: var(--fontSizeBase400); line-height: var(--lineHeightTight); font-weight: var(--fontWeightSemibold);">Saturday at Terre Bleu</p></div>
+        <div class="ds-specimen"><div class="ds-specimen__meta"><code>--fontSizeBase500</code><br><span data-token="--fontSizeBase500"></span> · 17px<br>Card titles, brand, lede</div><p style="font-size: var(--fontSizeBase500); line-height: var(--lineHeightTight); font-weight: var(--fontWeightSemibold);">Saturday at Terre Bleu</p></div>
+        <div class="ds-specimen"><div class="ds-specimen__meta"><code>--fontSizeBase600</code><br><span data-token="--fontSizeBase600"></span> · 20px<br>Section and dialog titles (22px from 1024)</div><p style="font-size: var(--fontSizeBase600); line-height: var(--lineHeightTight); font-weight: var(--fontWeightSemibold);">Saturday at Terre Bleu</p></div>
+        <div class="ds-specimen"><div class="ds-specimen__meta"><code>--fontSizeHero700</code><br><span data-token="--fontSizeHero700"></span> · 26px<br>Page titles (24 under 380, 30 from 1024)</div><p style="font-size: var(--fontSizeHero700); line-height: var(--lineHeightTight); font-weight: var(--fontWeightSemibold);">Saturday at Terre Bleu</p></div>
+        <div class="ds-specimen"><div class="ds-specimen__meta"><code>--fontSizeHero800</code><br><span data-token="--fontSizeHero800"></span> · 34px<br>Stat figures (30 under 380, 40 from 1024)</div><p style="font-size: var(--fontSizeHero800); line-height: var(--lineHeightTight); font-weight: var(--fontWeightSemibold);">Saturday at Terre Bleu</p></div>
+        <div class="ds-specimen"><div class="ds-specimen__meta"><code>--fontSizeHero900</code><br><span data-token="--fontSizeHero900"></span> · 44px<br>Landing display (34 under 380, 56 from 1024)</div><p style="font-size: var(--fontSizeHero900); line-height: var(--lineHeightTight); font-weight: var(--fontWeightSemibold);">Saturday at Terre Bleu</p></div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="weights"><h2><a href="#weights">Weights</a></h2>
+      <p>Four weights. The mock hero title at 800 was snapped to 700 (D14): Inter's 800 is heavier than anything else on the page and pulled attention from the call to action.</p>
+      <div class="ds-example">
+        <div class="ds-specimen"><div class="ds-specimen__meta"><code>--fontWeightRegular</code><br><span data-token="--fontWeightRegular"></span><br>Body, meta, captions</div><p style="font-size: var(--fontSizeBase500); font-weight: var(--fontWeightRegular);">Lunch at La Marina</p></div>
+        <div class="ds-specimen"><div class="ds-specimen__meta"><code>--fontWeightMedium</code><br><span data-token="--fontWeightMedium"></span><br>Field labels, menu items, list emphasis, Directions links</div><p style="font-size: var(--fontSizeBase500); font-weight: var(--fontWeightMedium);">Lunch at La Marina</p></div>
+        <div class="ds-specimen"><div class="ds-specimen__meta"><code>--fontWeightSemibold</code><br><span data-token="--fontWeightSemibold"></span><br>Control labels, card and block titles, chips, links in sentences</div><p style="font-size: var(--fontSizeBase500); font-weight: var(--fontWeightSemibold);">Lunch at La Marina</p></div>
+        <div class="ds-specimen"><div class="ds-specimen__meta"><code>--fontWeightBold</code><br><span data-token="--fontWeightBold"></span><br>Headings 20px and up, brand, stat figures, the hero title</div><p style="font-size: var(--fontSizeBase500); font-weight: var(--fontWeightBold);">Lunch at La Marina</p></div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="line-heights"><h2><a href="#line-heights">Line heights</a></h2>
+      <p>Five unitless line heights. The mocks used nine (1.05 to 1.6); they were snapped to these (D14). Unitless values scale with the font size, so a retuned heading keeps its proportion.</p>
+      <div class="ds-example">
+        <div class="ds-specimen"><div class="ds-specimen__meta"><code>--lineHeightNone</code><br><span data-token="--lineHeightNone"></span><br>Single-line controls: buttons, chips, tags, bottom nav labels</div><p style="font-size: var(--fontSizeBase400); line-height: var(--lineHeightNone); max-width: 22rem;">Pancakes at home, then the Costco run for paper towels, bread and yogurt before church at 10:30.</p></div>
+        <div class="ds-specimen"><div class="ds-specimen__meta"><code>--lineHeightTight</code><br><span data-token="--lineHeightTight"></span><br>Headings</div><p style="font-size: var(--fontSizeBase400); line-height: var(--lineHeightTight); max-width: 22rem;">Pancakes at home, then the Costco run for paper towels, bread and yogurt before church at 10:30.</p></div>
+        <div class="ds-specimen"><div class="ds-specimen__meta"><code>--lineHeightSnug</code><br><span data-token="--lineHeightSnug"></span><br>Card, row and block titles that may wrap to two lines</div><p style="font-size: var(--fontSizeBase400); line-height: var(--lineHeightSnug); max-width: 22rem;">Pancakes at home, then the Costco run for paper towels, bread and yogurt before church at 10:30.</p></div>
+        <div class="ds-specimen"><div class="ds-specimen__meta"><code>--lineHeightNormal</code><br><span data-token="--lineHeightNormal"></span><br>Body and meta</div><p style="font-size: var(--fontSizeBase400); line-height: var(--lineHeightNormal); max-width: 22rem;">Pancakes at home, then the Costco run for paper towels, bread and yogurt before church at 10:30.</p></div>
+        <div class="ds-specimen"><div class="ds-specimen__meta"><code>--lineHeightRelaxed</code><br><span data-token="--lineHeightRelaxed"></span><br>Long-form prose (the legal pages)</div><p style="font-size: var(--fontSizeBase400); line-height: var(--lineHeightRelaxed); max-width: 22rem;">Pancakes at home, then the Costco run for paper towels, bread and yogurt before church at 10:30.</p></div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="letter-spacing"><h2><a href="#letter-spacing">Letter spacing</a></h2>
+      <p>Large type tightens slightly so titles hold together; small uppercase type opens up so it stays legible.</p>
+      <div class="ds-example">
+        <div class="ds-specimen"><div class="ds-specimen__meta"><code>--letterSpacingTight</code><br><span data-token="--letterSpacingTight"></span><br>Titles 20px and up</div><p style="font-size: var(--fontSizeHero700); font-weight: var(--fontWeightBold); letter-spacing: var(--letterSpacingTight);">This weekend</p></div>
+        <div class="ds-specimen"><div class="ds-specimen__meta"><code>--letterSpacingNormal</code><br><span data-token="--letterSpacingNormal"></span><br>Everything else</div><p style="font-size: var(--fontSizeBase400); letter-spacing: var(--letterSpacingNormal);">Swim lessons every Saturday</p></div>
+        <div class="ds-specimen"><div class="ds-specimen__meta"><code>--letterSpacingWide</code><br><span data-token="--letterSpacingWide"></span><br>Small uppercase tags, the docs' kicker</div><p style="font-size: var(--fontSizeBase200); font-weight: var(--fontWeightSemibold); text-transform: uppercase; letter-spacing: var(--letterSpacingWide);">New</p></div>
+        <div class="ds-specimen"><div class="ds-specimen__meta"><code>--letterSpacingWider</code><br><span data-token="--letterSpacingWider"></span><br>Overlines and eyebrows</div><p style="font-size: var(--fontSizeBase200); font-weight: var(--fontWeightSemibold); text-transform: uppercase; letter-spacing: var(--letterSpacingWider);">17 – 18 May</p></div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="measure"><h2><a href="#measure">Measure</a></h2>
+      <p>Running text stops at 60 characters (<code>--layoutMeasure</code>, owned by <a href="layout.html">layout</a>), roughly ten to twelve words a line. Legal prose uses <code>--layoutProseMaxWidth</code> (680px) with the relaxed line height. Cards, rows and dialogs are narrower than the measure already, so the limit matters on wide pages: the landing hero lede (540px), empty-state bodies, the docs you are reading.</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas">
+          <p style="max-width: var(--layoutMeasure);">Saturdaze drafts Saturday and Sunday around swim lessons, church and the weather, then fills the rest with things your family will say yes to. Lock what you love, swap what you do not, and the rest of the day re-flows around it.</p>
+        </div>
+        <div class="ds-example__caption"><span>This paragraph is capped at <code>--layoutMeasure</code> (60ch). Widen the window: the line stops growing.</span></div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="responsive"><h2><a href="#responsive">Responsive type</a></h2>
+      <p>Only the four largest sizes change with the window, and they change in <code>tokens.css</code>, not in components. Two media queries retune the tokens: <code>@media (max-width: 23.6875rem)</code> (under 380px) steps the hero sizes down so "This weekend" and the landing title fit a small phone without wrapping awkwardly, and <code>@media (min-width: 64rem)</code> (1024px and up) steps them up for desktop. Components keep writing <code>font: var(--typographyTitle1)</code> and pick up the new size; nothing below 20px moves, so body text never shrinks on a phone.</p>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Token</th><th scope="col">Under 380px</th><th scope="col">380 to 1023px</th><th scope="col">From 1024px</th><th scope="col">Used for</th></tr></thead>
+        <tbody>
+          <tr><td><code>--fontSizeBase600</code></td><td>20px</td><td>20px</td><td>22px</td><td>Section and dialog titles</td></tr>
+          <tr><td><code>--fontSizeHero700</code></td><td>24px</td><td>26px</td><td>30px</td><td>Page titles</td></tr>
+          <tr><td><code>--fontSizeHero800</code></td><td>30px</td><td>34px</td><td>40px</td><td>Stat figures</td></tr>
+          <tr><td><code>--fontSizeHero900</code></td><td>34px</td><td>44px</td><td>56px</td><td>Landing display</td></tr>
+        </tbody>
+      </table></div>
+      <p>The breakpoints are in rem (D24), so a reader who sets a larger default font reaches the smaller layout and the smaller hero sizes sooner, which is the point: the text they asked for still fits.</p>
+    </section>
+
+    <section class="ds-section" id="body-size"><h2><a href="#body-size">Why body is 15px</a></h2>
+      <p>Body text is 15px (<code>--fontSizeBase400</code>, 0.9375rem), one step below the 16px most systems default to. This is a product decision carried over from the mocks (<code>--sd-fs-base: 15px</code>), not an oversight:</p>
+      <ul>
+        <li><b>Inter runs large.</b> Its tall x-height makes 15px read like 16px in most other faces, and the planner's dense rows (time, title, place, chips) fit a 360px phone without wrapping every title.</li>
+        <li><b>It is rem, not px.</b> 0.9375rem follows the reader's browser setting: someone who sets 20px as their default gets 18.75px body text, and zoom scales everything (1.4.4).</li>
+        <li><b>Nothing below 12px.</b> The 10 and 11px labels in the mocks were raised to 12px (D12), so the bottom of the scale is still comfortable.</li>
+        <li><b>Line height 1.5</b> gives body text the spacing 1.4.12 expects without any extra rule.</li>
+      </ul>
+      <p>One trade-off to watch: iOS Safari zooms the page when a field whose text is under 16px gets focus. Fields use Body1 (15px), so if that zoom becomes a complaint in testing, fields are the first place to move to 16px.</p>
+    </section>
+
+    <section class="ds-section" id="usage"><h2><a href="#usage">Usage</a></h2>
+      <ul>
+        <li><b>Use a role, not a size.</b> <code>font: var(--typographyBody2)</code>, never <code>font-size: 13px</code>. If no role fits, the design needs a decision, not a new number.</li>
+        <li><b>One title per level.</b> Page title (Title1), section and dialog title (Title2), card title (Title3), row title (Subtitle1). Do not skip a level to get a different size; change the heading level and the role together.</li>
+        <li><b>Sentence case everywhere</b>, including buttons, titles and tabs. Uppercase only for overlines and small tags, always with letter spacing, and never more than four words.</li>
+        <li><b>Weights mean something.</b> 400 reads, 500 names, 600 acts or titles, 700 heads a page or section. Do not bold words inside a sentence for emphasis; restructure the sentence.</li>
+        <li><b>Numbers line up.</b> Times, counts and figures use <code>font-variant-numeric: tabular-nums</code> where they stack (timeline clocks, stat figures, count chips).</li>
+        <li><b>Long text has a measure.</b> Cap paragraphs at <code>--layoutMeasure</code>; balance headings with <code>text-wrap: balance</code>.</li>
+        <li><b>Truncate only what can be recovered.</b> Place names in a list may truncate with the full name in the detail view; titles, labels and errors wrap.</li>
+      </ul>
+      <div class="ds-dodont">
+        <figure class="ds-do"><div class="ds-example__canvas"><p style="font: var(--typographyCaption1Strong); letter-spacing: var(--letterSpacingWider); text-transform: uppercase; color: var(--colorNeutralForeground2);">17 – 18 May</p></div><figcaption>A short uppercase overline with wider tracking, above a title.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><p style="font-size: 0.625rem; text-transform: uppercase; font-weight: var(--fontWeightBold);">May</p></div><figcaption>The mock's 10px date-tile month (D12). Nothing goes below 12px.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas"><p style="font: var(--typographyTitle2); letter-spacing: var(--letterSpacingTight);">Add a commitment</p></div><figcaption>A dialog title from the role, sentence case.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><p style="font-size: 1.75rem; font-weight: 800; line-height: 1.05;">How It Works</p></div><figcaption>Off-scale 28px at weight 800 and line height 1.05, in title case (D14). Use Title1 or Title2.</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
+      <ul>
+        <li><b>Resize text (1.4.4).</b> Every size, breakpoint and line length is in rem or ch, so 200% browser text size or zoom enlarges text and moves the layout to its phone form instead of clipping.</li>
+        <li><b>Text spacing (1.4.12).</b> Body uses line height 1.5; text containers size with padding rather than fixed heights, so reader overrides of line, letter and word spacing do not clip content. Single-line controls (buttons, chips) never wrap their labels; keep those labels short.</li>
+        <li><b>Minimum size.</b> 12px is the floor for any text, including chips, credits and photo labels (D12, D11).</li>
+        <li><b>Contrast</b> is a property of colour, not size: all text meets 4.5:1 regardless of weight, so no text relies on the large-text exception. See <a href="color.html#accessibility">colour contrast</a>.</li>
+        <li><b>Headings are real headings.</b> The role sets the look; the element (<code>h1</code> to <code>h3</code>) sets the outline. One <code>h1</code> per page.</li>
+        <li><b>Uppercase is visual.</b> Write overlines in sentence case in the markup and uppercase them in CSS, so screen readers do not spell them out letter by letter.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="tokens"><h2><a href="#tokens">Tokens</a></h2>
+      <p>Every type token with its resolved value. Size values reflect the current window width (see <a href="#responsive">responsive type</a>).</p>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Part</th><th scope="col">Token</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead>
+        <tbody>
+          <tr><th scope="colgroup" colspan="4">Families</th></tr>
+          <tr><td>Family: everything</td><td><code>--fontFamilyBase</code></td><td colspan="2"><span data-token="--fontFamilyBase"></span></td></tr>
+          <tr><td>Family: codes, times</td><td><code>--fontFamilyMonospace</code></td><td colspan="2"><span data-token="--fontFamilyMonospace"></span></td></tr>
+          <tr><th scope="colgroup" colspan="4">Sizes</th></tr>
+          <tr><td>Size 12px: Captions, chips, hints</td><td><code>--fontSizeBase200</code></td><td colspan="2"><span data-token="--fontSizeBase200"></span></td></tr>
+          <tr><td>Size 13px: Meta, small buttons, field labels</td><td><code>--fontSizeBase300</code></td><td colspan="2"><span data-token="--fontSizeBase300"></span></td></tr>
+          <tr><td>Size 14px: Control labels, nav links, menu items, banners (D13)</td><td><code>--fontSizeBase350</code></td><td colspan="2"><span data-token="--fontSizeBase350"></span></td></tr>
+          <tr><td>Size 15px: Body</td><td><code>--fontSizeBase400</code></td><td colspan="2"><span data-token="--fontSizeBase400"></span></td></tr>
+          <tr><td>Size 17px: Card titles, brand, lede</td><td><code>--fontSizeBase500</code></td><td colspan="2"><span data-token="--fontSizeBase500"></span></td></tr>
+          <tr><td>Size 20px: Section and dialog titles (22px from 1024)</td><td><code>--fontSizeBase600</code></td><td colspan="2"><span data-token="--fontSizeBase600"></span></td></tr>
+          <tr><td>Size 26px: Page titles (24 under 380, 30 from 1024)</td><td><code>--fontSizeHero700</code></td><td colspan="2"><span data-token="--fontSizeHero700"></span></td></tr>
+          <tr><td>Size 34px: Stat figures (30 under 380, 40 from 1024)</td><td><code>--fontSizeHero800</code></td><td colspan="2"><span data-token="--fontSizeHero800"></span></td></tr>
+          <tr><td>Size 44px: Landing display (34 under 380, 56 from 1024)</td><td><code>--fontSizeHero900</code></td><td colspan="2"><span data-token="--fontSizeHero900"></span></td></tr>
+          <tr><th scope="colgroup" colspan="4">Weights</th></tr>
+          <tr><td>Weight 400</td><td><code>--fontWeightRegular</code></td><td colspan="2"><span data-token="--fontWeightRegular"></span></td></tr>
+          <tr><td>Weight 500</td><td><code>--fontWeightMedium</code></td><td colspan="2"><span data-token="--fontWeightMedium"></span></td></tr>
+          <tr><td>Weight 600</td><td><code>--fontWeightSemibold</code></td><td colspan="2"><span data-token="--fontWeightSemibold"></span></td></tr>
+          <tr><td>Weight 700</td><td><code>--fontWeightBold</code></td><td colspan="2"><span data-token="--fontWeightBold"></span></td></tr>
+          <tr><th scope="colgroup" colspan="4">Line heights</th></tr>
+          <tr><td>Line height: Single-line controls</td><td><code>--lineHeightNone</code></td><td colspan="2"><span data-token="--lineHeightNone"></span></td></tr>
+          <tr><td>Line height: Headings</td><td><code>--lineHeightTight</code></td><td colspan="2"><span data-token="--lineHeightTight"></span></td></tr>
+          <tr><td>Line height: Card, row and block titles that may wrap to two lines</td><td><code>--lineHeightSnug</code></td><td colspan="2"><span data-token="--lineHeightSnug"></span></td></tr>
+          <tr><td>Line height: Body and meta</td><td><code>--lineHeightNormal</code></td><td colspan="2"><span data-token="--lineHeightNormal"></span></td></tr>
+          <tr><td>Line height: Long-form prose (the legal pages)</td><td><code>--lineHeightRelaxed</code></td><td colspan="2"><span data-token="--lineHeightRelaxed"></span></td></tr>
+          <tr><th scope="colgroup" colspan="4">Letter spacing</th></tr>
+          <tr><td>Letter spacing: Titles 20px and up</td><td><code>--letterSpacingTight</code></td><td colspan="2"><span data-token="--letterSpacingTight"></span></td></tr>
+          <tr><td>Letter spacing: Everything else</td><td><code>--letterSpacingNormal</code></td><td colspan="2"><span data-token="--letterSpacingNormal"></span></td></tr>
+          <tr><td>Letter spacing: Small uppercase tags, the docs&#x27; kicker</td><td><code>--letterSpacingWide</code></td><td colspan="2"><span data-token="--letterSpacingWide"></span></td></tr>
+          <tr><td>Letter spacing: Overlines and eyebrows</td><td><code>--letterSpacingWider</code></td><td colspan="2"><span data-token="--letterSpacingWider"></span></td></tr>
+          <tr><th scope="colgroup" colspan="4">Role shorthands</th></tr>
+          <tr><td>Role: Landing hero title (the hero sets line height 1)</td><td><code>--typographyDisplay</code></td><td colspan="2"><span data-token="--typographyDisplay"></span></td></tr>
+          <tr><td>Role: Admin stat figures, error page status</td><td><code>--typographyLargeTitle</code></td><td colspan="2"><span data-token="--typographyLargeTitle"></span></td></tr>
+          <tr><td>Role: Page titles, cover title, auth card title, legal title</td><td><code>--typographyTitle1</code></td><td colspan="2"><span data-token="--typographyTitle1"></span></td></tr>
+          <tr><td>Role: Section, day and dialog titles; empty state title</td><td><code>--typographyTitle2</code></td><td colspan="2"><span data-token="--typographyTitle2"></span></td></tr>
+          <tr><td>Role: Card titles, brand in the top bar, step titles</td><td><code>--typographyTitle3</code></td><td colspan="2"><span data-token="--typographyTitle3"></span></td></tr>
+          <tr><td>Role: Itinerary block and list titles, table caption</td><td><code>--typographySubtitle1</code></td><td colspan="2"><span data-token="--typographySubtitle1"></span></td></tr>
+          <tr><td>Role: Body copy, field values, banners, menu items (at 14px)</td><td><code>--typographyBody1</code></td><td colspan="2"><span data-token="--typographyBody1"></span></td></tr>
+          <tr><td>Role: Well and error summary titles</td><td><code>--typographyBody1Strong</code></td><td colspan="2"><span data-token="--typographyBody1Strong"></span></td></tr>
+          <tr><td>Role: Meta, field labels, card body, dialog subtitle</td><td><code>--typographyBody2</code></td><td colspan="2"><span data-token="--typographyBody2"></span></td></tr>
+          <tr><td>Role: Buttons, nav links, tabs, control labels</td><td><code>--typographyLabel</code></td><td colspan="2"><span data-token="--typographyLabel"></span></td></tr>
+          <tr><td>Role: Hints, photo credits, footers, tooltips</td><td><code>--typographyCaption1</code></td><td colspan="2"><span data-token="--typographyCaption1"></span></td></tr>
+          <tr><td>Role: Chips, table headers, bottom nav labels; the overline below</td><td><code>--typographyCaption1Strong</code></td><td colspan="2"><span data-token="--typographyCaption1Strong"></span></td></tr>
+          <tr><td>Role: Invite codes, activity log times, error codes</td><td><code>--typographyCode</code></td><td colspan="2"><span data-token="--typographyCode"></span></td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section class="ds-section" id="sources"><h2><a href="#sources">Sources and drift</a></h2>
+      <p>Extracted from <a href="../../mocks/styles/tokens.css">styles/tokens.css</a> (<code>--sd-fs-*</code>, <code>--sd-fw-*</code>, <code>--sd-lh-*</code>) and the type rules in <code>styles/app.css</code>, checked on <a href="../../mocks/pages/landing.html">pages/landing</a>, <a href="../../mocks/pages/weekend.html">pages/weekend</a>, <a href="../../mocks/pages/dialogs.html">pages/dialogs</a>, <a href="../../mocks/pages/sign-in.html">pages/sign-in</a>, <a href="../../mocks/pages/admin.html">pages/admin</a> and <a href="../../mocks/pages/legal.html">pages/legal</a>.</p>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Mock</th><th scope="col">System</th><th scope="col">Drift</th></tr></thead>
+        <tbody>
+          <tr><td><code>--sd-fs-xs/sm/base/md/lg/xl/xxl</code> 12 / 13 / 15 / 17 / 20 / 26 / 34px</td><td><code>--fontSizeBase200/300/400/500/600</code>, <code>--fontSizeHero700/800</code>, in rem</td><td>Same values; rem (D24)</td></tr>
+          <tr><td>10px date-tile month; 11px bottom-nav labels, small chips, media credit, photo labels, admin tag</td><td><code>--fontSizeBase200</code> (12px)</td><td>D12</td></tr>
+          <tr><td>A raw 14px used 23 times (buttons, nav links, menu items, switch labels)</td><td>New step <code>--fontSizeBase350</code></td><td>D13</td></tr>
+          <tr><td>18px hero lede, step title, date-tile day; 28px <code>how__title</code>; weight 800 hero title</td><td>17px (<code>Base500</code>), 26px (<code>Hero700</code>), weight 700</td><td>D14</td></tr>
+          <tr><td>Line heights 1.05, 1.15, 1.25, 1.3, 1.45, 1.6</td><td>None 1, Tight 1.2, Snug 1.35, Normal 1.5, Relaxed 1.65</td><td>D14</td></tr>
+          <tr><td>Hero title at 44px with px media queries</td><td><code>--fontSizeHero900</code>, retuned at 380 and 1024px in rem</td><td>D24</td></tr>
+        </tbody>
+      </table></div>
+      <p>New in the system: <code>--letterSpacing*</code> (the mocks wrote em values inline), <code>--lineHeightNone</code> and <code>--lineHeightRelaxed</code>, and the thirteen <code>--typography*</code> role shorthands that match the product's Fluent tokens (ADR-013).</p>
+    </section>
+
+    <footer class="ds-footer"><span>Saturdaze design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/icons.js"></script>
+<script src="../assets/ds.js"></script>
+</body>
+</html>

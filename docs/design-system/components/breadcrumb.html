@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Breadcrumb — Saturdaze design system</title>
+<meta name="description" content="The trail from a deep page back to its ancestors, and the single back link the mocks use instead; it collapses to the parent under 720px.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html"><span class="brand-mark" aria-hidden="true"></span>Saturdaze DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Actions</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+    </ul></details>
+    <details open><summary>Inputs</summary><ul>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/chip-input.html">Chip input</a></li>
+      <li><a href="../components/file-upload.html">File upload</a></li>
+      <li><a href="../components/photo-pick.html">Photo pick</a></li>
+      <li><a href="../components/rating.html">Rating</a></li>
+      <li><a href="../components/vote-row.html">Vote row</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+    </ul></details>
+    <details open><summary>Navigation</summary><ul>
+      <li><a href="../components/top-bar.html">Top bar</a></li>
+      <li><a href="../components/bottom-nav.html">Bottom nav</a></li>
+      <li><a href="../components/sidebar-navigation.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs (segments)</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+      <li><a href="../components/footer.html">Footer</a></li>
+    </ul></details>
+    <details open><summary>Containers and overlays</summary><ul>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/container.html">Container and grid</a></li>
+      <li><a href="../components/page-header.html">Page header</a></li>
+    </ul></details>
+    <details open><summary>Data display</summary><ul>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/activity-feed.html">Activity feed</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/chip.html">Chip</a></li>
+      <li><a href="../components/filter-chip.html">Filter chip</a></li>
+      <li><a href="../components/disc.html">Disc</a></li>
+      <li><a href="../components/media.html">Media</a></li>
+      <li><a href="../components/cover.html">Cover photo</a></li>
+      <li><a href="../components/stat.html">Stat</a></li>
+      <li><a href="../components/itinerary.html">Itinerary</a></li>
+      <li><a href="../components/map.html">Map</a></li>
+    </ul></details>
+    <details open><summary>Feedback</summary><ul>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/alert.html">Alert</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/progress-bar.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Auth and marketing</summary><ul>
+      <li><a href="../components/auth-card.html">Auth card</a></li>
+      <li><a href="../components/hero.html">Hero</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/data-tables-and-lists.html">Tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Component · Navigation</p>
+      <h1>Breadcrumb</h1>
+      <p class="ds-lead">Shows where a page sits and leads back up. Saturdaze is shallow, so most pages need only a single back link ("← Places"); the full trail is for pages three or more levels deep.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA</span><span class="ds-pill ds-pill--warn">Status: core, not in the mocks</span><span class="ds-pill">Angular: none yet (back link: <code>sd-page-header</code> eyebrow)</span><span class="ds-pill">APG Breadcrumb</span></div>
+      <ul class="ds-toc">
+        <li><a href="#overview">Overview</a></li><li><a href="#anatomy">Anatomy</a></li><li><a href="#variants">Variants</a></li><li><a href="#sizes">Sizes</a></li><li><a href="#states">States</a></li><li><a href="#responsive">Responsive</a></li><li><a href="#theming">Theming</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#content">Content</a></li><li><a href="#do-dont">Do and don't</a></li><li><a href="#tokens">Tokens</a></li><li><a href="#code">Code</a></li><li><a href="#sources">Sources</a></li>
+      </ul>
+    </header>
+
+    <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+      <p>There are two ways up, and the depth of the page decides:</p>
+      <ul>
+        <li><b>Back link</b> (<code>.page-header__eyebrow</code>): one link to the parent, above the page title. Use it on every second-level page: a place in Admin ("← Places"), Review submissions ("← Family"). This is what the mocks use.</li>
+        <li><b>Breadcrumb</b> (<code>.breadcrumb</code>): the whole trail, for pages three or more levels below a top-level destination, where knowing the path matters (Admin › Places › Port Credit Memorial Park › Photos). No mock is that deep yet; this is a core component ready for when one is.</li>
+      </ul>
+      <p>Neither replaces primary navigation. Top-level screens (Weekend, Ideas, Past, Family; Photo health, Places) have no back link and no breadcrumb: the <a href="top-bar.html">top bar</a>, <a href="bottom-nav.html">bottom nav</a> or <a href="sidebar-navigation.html">sidebar</a> already says where you are. Sibling views use <a href="tabs.html">tabs</a>. See <a href="../patterns/navigation.html">navigation and page structure</a>.</p>
+    </section>
+
+    <section class="ds-section" id="anatomy"><h2><a href="#anatomy">Anatomy</a></h2>
+      <div class="ds-anatomy">
+        <figure class="ds-anatomy__figure">
+          <nav class="breadcrumb" aria-label="Breadcrumb (anatomy example)">
+            <ol>
+              <li><a href="../../mocks/pages/admin.html">Admin</a></li>
+              <li><a href="../../mocks/pages/admin.places.html">Places</a></li>
+              <li><span aria-current="page">Port Credit Memorial Park</span></li>
+            </ol>
+          </nav>
+          <span class="ds-callout" style="left: max(0.25rem, calc(50% - 9rem)); top: 10%;" aria-hidden="true">1</span>
+          <span class="ds-callout" style="left: max(2rem, calc(50% - 5.25rem)); top: 68%;" aria-hidden="true">2</span>
+          <span class="ds-callout" style="left: min(calc(100% - 1.75rem), calc(50% + 4rem)); top: 10%;" aria-hidden="true">3</span>
+        </figure>
+        <ol class="ds-anatomy__list">
+          <li><div><b>Ancestor link</b><small>13px semibold, <code>--colorNeutralForeground2</code>, underlined in <code>--colorNeutralStrokeAccessible</code>; 24px tall target.</small></div></li>
+          <li><div><b>Separator</b><small>A "/" drawn by CSS (<code>li + li::before</code>) in <code>--colorNeutralForeground3</code>; not part of the link text.</small></div></li>
+          <li><div><b>Current page</b><small>Plain text with <code>aria-current="page"</code> in <code>--colorNeutralForeground1</code>; not a link.</small></div></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="ds-section" id="variants"><h2><a href="#variants">Variants</a></h2>
+      <h3>Back link (the mocks' pattern)</h3>
+      <p>One link to the parent, with a left arrow, as the page header's eyebrow. It is the right choice for every page in the mocks today.</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack ds-example__canvas--canvas">
+          <header class="page-header" style="margin-bottom: 0;">
+            <div class="page-header__text">
+              <a class="page-header__eyebrow" href="../../mocks/pages/admin.places.html"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-arrow_left"/></svg>Places</a>
+              <p class="page-header__title">Port Credit Memorial Park</p>
+              <p class="page-header__subtitle">Activity · 4 photos · 5 weekend covers follow this place</p>
+            </div>
+          </header>
+        </div>
+        <div class="ds-example__caption"><span>admin.place: "← Places" above the place name.</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;header class="page-header"&gt;
+  &lt;div class="page-header__text"&gt;
+    &lt;a class="page-header__eyebrow" href="/places"&gt;&lt;svg class="icon icon--sm" aria-hidden="true"&gt;&lt;use href="#i-arrow_left"/&gt;&lt;/svg&gt;Places&lt;/a&gt;
+    &lt;h1 class="page-header__title"&gt;Port Credit Memorial Park&lt;/h1&gt;
+  &lt;/div&gt;
+&lt;/header&gt;</code></pre></details>
+      </div>
+
+      <h3>Breadcrumb</h3>
+      <p>The full trail for a page three levels deep. Ancestors are links; the current page ends the trail as text.</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack ds-example__canvas--canvas">
+          <nav class="breadcrumb" aria-label="Breadcrumb">
+            <ol>
+              <li><a href="../../mocks/pages/admin.html">Admin</a></li>
+              <li><a href="../../mocks/pages/admin.places.html">Places</a></li>
+              <li><a href="../../mocks/pages/admin.place.html">Port Credit Memorial Park</a></li>
+              <li><span aria-current="page">Photos</span></li>
+            </ol>
+          </nav>
+          <p class="page-header__title">Photos</p>
+        </div>
+        <div class="ds-example__caption"><span>From 720px: the whole trail. Under 720px (resize, or see the phone screenshot): "← Port Credit Memorial Park" only.</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;nav class="breadcrumb" aria-label="Breadcrumb"&gt;
+  &lt;ol&gt;
+    &lt;li&gt;&lt;a href="/"&gt;Admin&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href="/places"&gt;Places&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href="/places/42"&gt;Port Credit Memorial Park&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;span aria-current="page"&gt;Photos&lt;/span&gt;&lt;/li&gt;
+  &lt;/ol&gt;
+&lt;/nav&gt;</code></pre></details>
+      </div>
+      <h3>Which one</h3>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Page depth</th><th scope="col">Use</th><th scope="col">Example</th></tr></thead>
+        <tbody>
+          <tr><td>Top level</td><td>Neither</td><td>Weekend, Ideas, Places</td></tr>
+          <tr><td>Second level</td><td>Back link</td><td>"← Places" on a place; "← Family" on Review submissions</td></tr>
+          <tr><td>Third level or deeper</td><td>Breadcrumb (collapses to a back link on phones)</td><td>Admin › Places › Port Credit Memorial Park › Photos</td></tr>
+          <tr><td>A step in a flow, or a dialog</td><td>Neither; use Cancel or the dialog close</td><td>Add an errand</td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section class="ds-section" id="sizes" data-na="One size: 13px labels with 24px targets, matching the page-header eyebrow."><h2><a href="#sizes">Sizes</a></h2><p class="ds-na">One size: 13px labels with 24px targets, matching the page-header eyebrow.</p></section>
+
+    <section class="ds-section" id="states"><h2><a href="#states">States</a></h2>
+      <p>Hover and focus forced with <code>data-state</code>. The current page has no interactive states.</p>
+      <div class="ds-matrix"><table>
+        <thead><tr><th scope="col">Part</th><th scope="col">Default</th><th scope="col">Hover</th><th scope="col">Focus</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Breadcrumb link</th><td><span class="breadcrumb"><a href="../../mocks/pages/admin.places.html">Places</a></span></td><td><span class="breadcrumb"><a href="../../mocks/pages/admin.places.html" data-state="hover">Places</a></span></td><td><span class="breadcrumb"><a href="../../mocks/pages/admin.places.html" data-state="focus">Places</a></span></td></tr>
+          <tr><th scope="row">Current page</th><td><span class="breadcrumb"><span aria-current="page">Photos</span></span></td><td><span class="text-soft text-sm">Not interactive</span></td><td><span class="text-soft text-sm">Not focusable</span></td></tr>
+          <tr><th scope="row">Back link</th><td><a class="page-header__eyebrow" href="../../mocks/pages/admin.places.html" style="margin: 0;"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-arrow_left"/></svg>Places</a></td><td><a class="page-header__eyebrow" href="../../mocks/pages/admin.places.html" data-state="hover" style="margin: 0;"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-arrow_left"/></svg>Places</a></td><td><a class="page-header__eyebrow" href="../../mocks/pages/admin.places.html" data-state="focus" style="margin: 0;"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-arrow_left"/></svg>Places</a></td></tr>
+        </tbody>
+      </table></div>
+      <h3>Both themes</h3>
+      <div class="ds-themes">
+        <div data-theme="light"><nav class="breadcrumb" aria-label="Breadcrumb, light theme"><ol><li><a href="../../mocks/pages/admin.html">Admin</a></li><li><a href="../../mocks/pages/admin.places.html" data-state="hover">Places</a></li><li><a href="../../mocks/pages/admin.place.html" data-state="focus">Port Credit Memorial Park</a></li><li><span aria-current="page">Photos</span></li></ol></nav></div>
+        <div data-theme="dark"><nav class="breadcrumb" aria-label="Breadcrumb, dark theme"><ol><li><a href="../../mocks/pages/admin.html">Admin</a></li><li><a href="../../mocks/pages/admin.places.html" data-state="hover">Places</a></li><li><a href="../../mocks/pages/admin.place.html" data-state="focus">Port Credit Memorial Park</a></li><li><span aria-current="page">Photos</span></li></ol></nav></div>
+      </div>
+      <ul>
+        <li><b>Hover</b> darkens the label and turns the soft underline to full colour; the back link gains an underline it does not have at rest.</li>
+        <li>No visited, disabled or loading state: every ancestor exists and is reachable.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="responsive"><h2><a href="#responsive">Responsive behaviour</a></h2>
+      <ul>
+        <li><b>From 720px</b> the full trail shows and wraps onto a second line if it must; items never truncate.</li>
+        <li><b>Under 720px</b> every item except the parent hides, and the parent gets a "←" in place of the separator. The trail becomes the back link: one target, one line, the same place the eyebrow sits.</li>
+        <li>The landmark stays a breadcrumb for screen readers at every width, but hidden items are <code>display: none</code>, so on a phone it holds one link. That is intended: the phone layout offers one way up.</li>
+        <li>The mocks hide the Review submissions back link under 720px (<code>hide-lt-720</code>), because the bottom nav's Family tab is the way back there. Do this only when a bottom-nav destination is the parent.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="theming"><h2><a href="#theming">Theming</a></h2>
+      <p>Alias tokens only: <code>--colorNeutralForeground2</code> for links, <code>--colorNeutralStrokeAccessible</code> for their resting underline, <code>--colorNeutralForeground3</code> for separators and <code>--colorNeutralForeground1</code> for the current page and hover. Breadcrumbs are deliberately neutral, not coral: they are wayfinding, not a call to action. No component tokens. In the dark theme the same roles lighten on the umber canvas.</p>
+    </section>
+
+    <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
+      <h3>Role and pattern</h3>
+      <p>The <a href="https://www.w3.org/WAI/ARIA/apg/patterns/breadcrumb/">APG Breadcrumb pattern</a>: a <code>&lt;nav aria-label="Breadcrumb"&gt;</code> landmark around an ordered list, the current page marked <code>aria-current="page"</code>. The back link is an ordinary link inside the page header and needs no landmark.</p>
+      <h3>Keyboard</h3>
+      <table class="ds-table ds-keys"><thead><tr><th scope="col">Key</th><th scope="col">Action</th></tr></thead><tbody>
+        <tr><td><kbd>Tab</kbd> / <kbd>Shift</kbd>+<kbd>Tab</kbd></td><td>Moves through the ancestor links; the current page is skipped.</td></tr>
+        <tr><td><kbd>Enter</kbd></td><td>Follows the link.</td></tr>
+      </tbody></table>
+      <h3>Focus</h3>
+      <p>The shared 2px <code>--colorStrokeFocus2</code> ring with a 2px offset around the link text, with a small radius.</p>
+      <h3>Labelling</h3>
+      <p>The landmark is "Breadcrumb". Link text is the ancestor page's title, so it matches the heading the person lands on. The separators and the phone "←" are drawn with CSS <code>::before</code>; some screen readers read generated content ("slash", "left arrow"). The design-system CSS gives the generated content empty alternative text (<code>content: "/" / ""</code>), with the plain declaration first as a fallback, so it is not announced. The back link's arrow is an <code>aria-hidden</code> SVG, so it is read as "Places, link".</p>
+      <h3>Contrast</h3>
+      <div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0; gap: var(--spacingHorizontalS);">
+        <div class="ds-pair"><span>Link on the page</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground2|--colorNeutralBackground2" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Current page on the page</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground1|--colorNeutralBackground2" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Separator on the page</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground3|--colorNeutralBackground2" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Link underline on the page</span><span class="ds-pair__ratio" data-contrast="--colorNeutralStrokeAccessible|--colorNeutralBackground2" data-min="3"></span></div>
+        <div class="ds-pair"><span>Focus ring on the page</span><span class="ds-pair__ratio" data-contrast="--colorStrokeFocus2|--colorNeutralBackground2" data-min="3"></span></div>
+      </div>
+      <p>Links are distinguished from the current page by their underline as well as their colour (1.4.1).</p>
+      <h3>Motion</h3>
+      <p>None. Hover changes colour without a transition.</p>
+      <h3>Touch</h3>
+      <p>Each link is at least 24px tall (<code>--targetMin</code>), the 2.5.8 minimum, and separated by the 4px gap plus the separator. The back link on phones is the same 24px target; it sits above the title with space around it.</p>
+    </section>
+
+    <section class="ds-section" id="content"><h2><a href="#content">Content</a></h2>
+      <ul>
+        <li>Each item is the page's own title, word for word: "Places", not "All places"; "Port Credit Memorial Park", not "Place details".</li>
+        <li>The back link names the destination, not the direction: "← Places", never "← Back".</li>
+        <li>Start the trail at the app's top level ("Admin"), not at a home icon.</li>
+        <li>Long place names wrap; never shorten a name with an ellipsis, because similar places differ at the end ("Port Credit Memorial Park" and "Port Credit Memorial Arena").</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="do-dont"><h2><a href="#do-dont">Do and don't</a></h2>
+      <div class="ds-dodont">
+        <figure class="ds-do"><div class="ds-example__canvas"><a class="page-header__eyebrow" href="../../mocks/pages/admin.places.html" style="margin: 0;"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-arrow_left"/></svg>Places</a></div><figcaption>A second-level page gets one back link that names its parent (admin.place).</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><nav class="breadcrumb" aria-label="Breadcrumb, don't example"><ol><li><a href="../../mocks/pages/admin.places.html">Places</a></li><li><span aria-current="page">Port Credit Memorial Park</span></li></ol></nav></div><figcaption>A two-item breadcrumb repeats the page title and adds a landmark for one link. Use the back link.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas"><nav class="breadcrumb" aria-label="Breadcrumb, do example"><ol><li><a href="../../mocks/pages/admin.places.html">Places</a></li><li><a href="../../mocks/pages/admin.place.html">Port Credit Memorial Park</a></li><li><span aria-current="page">Photos</span></li></ol></nav></div><figcaption>The current page is text with <code>aria-current="page"</code>, last in the trail.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><a class="page-header__eyebrow" href="../../mocks/pages/admin.places.html" style="margin: 0;"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-arrow_left"/></svg>Back</a></div><figcaption>"Back" does not say where it goes, and it is not the same as the browser's Back.</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="ds-section" id="tokens"><h2><a href="#tokens">Tokens</a></h2>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Part</th><th scope="col">Token</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead>
+        <tbody>
+          <tr><td>Link</td><td><code>--colorNeutralForeground2</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralForeground2" data-swatch></i><span data-token="--colorNeutralForeground2"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralForeground2" data-swatch></i><span data-token="--colorNeutralForeground2"></span></span></td></tr>
+          <tr><td>Link underline</td><td><code>--colorNeutralStrokeAccessible</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralStrokeAccessible" data-swatch></i><span data-token="--colorNeutralStrokeAccessible"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralStrokeAccessible" data-swatch></i><span data-token="--colorNeutralStrokeAccessible"></span></span></td></tr>
+          <tr><td>Current page, hover</td><td><code>--colorNeutralForeground1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralForeground1" data-swatch></i><span data-token="--colorNeutralForeground1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralForeground1" data-swatch></i><span data-token="--colorNeutralForeground1"></span></span></td></tr>
+          <tr><td>Separator</td><td><code>--colorNeutralForeground3</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralForeground3" data-swatch></i><span data-token="--colorNeutralForeground3"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralForeground3" data-swatch></i><span data-token="--colorNeutralForeground3"></span></span></td></tr>
+          <tr><td>Focus ring</td><td><code>--colorStrokeFocus2</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorStrokeFocus2" data-swatch></i><span data-token="--colorStrokeFocus2"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorStrokeFocus2" data-swatch></i><span data-token="--colorStrokeFocus2"></span></span></td></tr>
+          <tr><td>Label</td><td><code>--typographyLabel</code> at <code>--fontSizeBase300</code></td><td colspan="2"><span data-token="--fontSizeBase300"></span></td></tr>
+          <tr><td>Item gap</td><td><code>--spacingHorizontalXS</code></td><td colspan="2"><span data-token="--spacingHorizontalXS"></span></td></tr>
+          <tr><td>Target height</td><td><code>--targetMin</code></td><td colspan="2"><span data-token="--targetMin"></span></td></tr>
+          <tr><td>Focus radius</td><td><code>--borderRadiusSmall</code></td><td colspan="2"><span data-token="--borderRadiusSmall"></span></td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section class="ds-section" id="code"><h2><a href="#code">Code</a></h2>
+      <pre><code>&lt;nav class="breadcrumb" aria-label="Breadcrumb"&gt;
+  &lt;ol&gt;
+    &lt;li&gt;&lt;a href="/places"&gt;Places&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href="/places/42"&gt;Port Credit Memorial Park&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;span aria-current="page"&gt;Photos&lt;/span&gt;&lt;/li&gt;
+  &lt;/ol&gt;
+&lt;/nav&gt;
+&lt;h1 class="page-header__title"&gt;Photos&lt;/h1&gt;</code></pre>
+      <table class="ds-table"><thead><tr><th scope="col">Class / attribute</th><th scope="col">Effect</th></tr></thead><tbody>
+        <tr><td><code>.breadcrumb</code></td><td>On the <code>&lt;nav&gt;</code>; styles its <code>ol</code>, <code>li</code>, <code>a</code> and separators. Under 720px only the parent shows, as "← Parent".</td></tr>
+        <tr><td><code>aria-current="page"</code></td><td>The last item: plain, darker text.</td></tr>
+        <tr><td><code>.page-header__eyebrow</code></td><td>The single back link above a title (with <code>.icon.icon--sm</code> arrow).</td></tr>
+        <tr><td><code>data-state="hover|focus"</code></td><td>Documentation only.</td></tr>
+      </tbody></table>
+    </section>
+
+    <section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>
+      <ul>
+        <li><a href="../../mocks/pages/admin.place.html">pages/admin.place</a>: "← Places", the back link above the place name.</li>
+        <li><a href="../../mocks/pages/review-submissions.html">pages/review-submissions</a>: "← Family", hidden under 720px.</li>
+      </ul>
+      <p>No mock uses a breadcrumb trail: this is a core component, written for the first page three levels deep (likely the Admin photo screens). Drift: D03 focus ring, D24 the 720px collapse in rem. Added during extraction: empty alternative text on the CSS separators so screen readers do not read them.</p>
+    </section>
+
+    <footer class="ds-footer"><span>Saturdaze design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/icons.js"></script>
+<script src="../assets/ds.js"></script>
+</body>
+</html>

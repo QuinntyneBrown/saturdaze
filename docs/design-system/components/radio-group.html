@@ -1,0 +1,415 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Radio group — Saturdaze design system</title>
+<meta name="description" content="Radio groups pick exactly one option: native radios in a fieldset for lists, and the segmented radio for two or three short choices such as Which day.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html"><span class="brand-mark" aria-hidden="true"></span>Saturdaze DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Actions</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+    </ul></details>
+    <details open><summary>Inputs</summary><ul>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/chip-input.html">Chip input</a></li>
+      <li><a href="../components/file-upload.html">File upload</a></li>
+      <li><a href="../components/photo-pick.html">Photo pick</a></li>
+      <li><a href="../components/rating.html">Rating</a></li>
+      <li><a href="../components/vote-row.html">Vote row</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+    </ul></details>
+    <details open><summary>Navigation</summary><ul>
+      <li><a href="../components/top-bar.html">Top bar</a></li>
+      <li><a href="../components/bottom-nav.html">Bottom nav</a></li>
+      <li><a href="../components/sidebar-navigation.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs (segments)</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+      <li><a href="../components/footer.html">Footer</a></li>
+    </ul></details>
+    <details open><summary>Containers and overlays</summary><ul>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/container.html">Container and grid</a></li>
+      <li><a href="../components/page-header.html">Page header</a></li>
+    </ul></details>
+    <details open><summary>Data display</summary><ul>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/activity-feed.html">Activity feed</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/chip.html">Chip</a></li>
+      <li><a href="../components/filter-chip.html">Filter chip</a></li>
+      <li><a href="../components/disc.html">Disc</a></li>
+      <li><a href="../components/media.html">Media</a></li>
+      <li><a href="../components/cover.html">Cover photo</a></li>
+      <li><a href="../components/stat.html">Stat</a></li>
+      <li><a href="../components/itinerary.html">Itinerary</a></li>
+      <li><a href="../components/map.html">Map</a></li>
+    </ul></details>
+    <details open><summary>Feedback</summary><ul>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/alert.html">Alert</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/progress-bar.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Auth and marketing</summary><ul>
+      <li><a href="../components/auth-card.html">Auth card</a></li>
+      <li><a href="../components/hero.html">Hero</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/data-tables-and-lists.html">Tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Component · Inputs</p>
+      <h1>Radio group</h1>
+      <p class="ds-lead">A radio group asks for exactly one answer from a short, visible set: which day an errand goes on, how far the family will drive. Every option is on screen, so nobody has to open a menu to compare them.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA</span><span class="ds-pill">Status: stable</span><span class="ds-pill">Angular: <code>sd-seg-radio</code></span><span class="ds-pill">Native <code>&lt;input type="radio"&gt;</code></span></div>
+      <ul class="ds-toc">
+        <li><a href="#overview">Overview</a></li><li><a href="#anatomy">Anatomy</a></li><li><a href="#variants">Variants</a></li><li><a href="#sizes">Sizes</a></li><li><a href="#states">States</a></li><li><a href="#responsive">Responsive</a></li><li><a href="#theming">Theming</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#content">Content</a></li><li><a href="#do-dont">Do and don't</a></li><li><a href="#tokens">Tokens</a></li><li><a href="#code">Code</a></li><li><a href="#sources">Sources</a></li>
+      </ul>
+    </header>
+
+    <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+      <p>Use a radio group when the person must pick one option and seeing all of them helps the choice. Both forms are real <code>&lt;input type="radio"&gt;</code> elements sharing a <code>name</code>, so the browser handles selection, arrow keys and form submission.</p>
+      <ul>
+        <li><b>Segmented radio</b> (<code>.seg-radio</code>) is the form the mocks use: two or three one-word options in a pill track. "Which day" in Add an errand (D7: Saturday, Sunday, Either), Edit a commitment (D18) and Add an idea to a day (D28).</li>
+        <li><b>Radio list</b> (<code>.choice-group</code> of <code>.check</code> rows) is for options that need more than a word, or a description under each, or more than three options.</li>
+      </ul>
+      <p>Use a <a href="checkbox.html">checkbox</a> when several answers can be true, a <a href="switch.html">switch</a> for a setting that is on or off, a <a href="select.html">select</a> when there are more than about six options, and <a href="tabs.html">segments</a> (<code>.segments</code>) when the control switches what the page shows rather than answering a question in a form.</p>
+    </section>
+
+    <section class="ds-section" id="anatomy"><h2><a href="#anatomy">Anatomy</a></h2>
+      <div class="ds-anatomy">
+        <figure class="ds-anatomy__figure">
+          <div style="position: relative; width: 100%; max-width: 22rem; padding-top: var(--spacingVerticalL);">
+            <div class="field">
+              <span class="field__label" id="an-day-label">Which day</span>
+              <div class="seg-radio seg-radio--3" role="radiogroup" aria-labelledby="an-day-label">
+                <label class="seg-radio__opt"><input type="radio" name="an-day">Saturday</label>
+                <label class="seg-radio__opt"><input type="radio" name="an-day">Sunday</label>
+                <label class="seg-radio__opt"><input type="radio" name="an-day" checked>Either</label>
+              </div>
+            </div>
+            <span class="ds-callout" style="left: 0; top: -0.5rem;" aria-hidden="true">1</span>
+            <span class="ds-callout" style="left: -0.75rem; top: 3.25rem;" aria-hidden="true">2</span>
+            <span class="ds-callout" style="left: 22%; top: 5.25rem;" aria-hidden="true">3</span>
+            <span class="ds-callout" style="left: 80%; top: 5.25rem;" aria-hidden="true">4</span>
+          </div>
+        </figure>
+        <ol class="ds-anatomy__list">
+          <li><div><b>Group label</b><small><code>.field__label</code> with an id, referenced by <code>aria-labelledby</code> (or a <code>&lt;legend&gt;</code> in a fieldset). It names the question.</small></div></li>
+          <li><div><b>Track</b><small><code>.seg-radio</code>: <code>--colorNeutralBackground3</code>, 4px padding, pill radius, equal columns (<code>--3</code> for three).</small></div></li>
+          <li><div><b>Option</b><small><code>.seg-radio__opt</code>, a <code>&lt;label&gt;</code> 36px tall. The real radio fills it at zero opacity, so the whole pill is the target.</small></div></li>
+          <li><div><b>Selected option</b><small>White pill (<code>--colorNeutralBackground1</code>) with <code>--shadow4</code> and the label darkened to <code>--colorNeutralForeground1</code>.</small></div></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="ds-section" id="variants"><h2><a href="#variants">Variants</a></h2>
+      <p>Pick the segmented form when every option is one short word and there are two or three of them. Pick the list when options need a sentence, a description, or there are four to six.</p>
+      <h3>Segmented radio, two and three options</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack" style="max-width: 28rem;">
+          <div class="field">
+            <span class="field__label" id="v-d18-label">Day</span>
+            <div class="seg-radio" role="radiogroup" aria-labelledby="v-d18-label">
+              <label class="seg-radio__opt"><input type="radio" name="v-d18" checked>Saturday</label>
+              <label class="seg-radio__opt"><input type="radio" name="v-d18">Sunday</label>
+            </div>
+          </div>
+          <div class="field">
+            <span class="field__label" id="v-d7-label">Which day</span>
+            <div class="seg-radio seg-radio--3" role="radiogroup" aria-labelledby="v-d7-label">
+              <label class="seg-radio__opt"><input type="radio" name="v-d7">Saturday</label>
+              <label class="seg-radio__opt"><input type="radio" name="v-d7">Sunday</label>
+              <label class="seg-radio__opt"><input type="radio" name="v-d7" checked>Either</label>
+            </div>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>D18 Edit Swim lessons (Day) and D7 Add an errand (Which day). Try the arrow keys.</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;div class="field"&gt;
+  &lt;span class="field__label" id="errand-day-label"&gt;Which day&lt;/span&gt;
+  &lt;div class="seg-radio seg-radio--3" role="radiogroup" aria-labelledby="errand-day-label"&gt;
+    &lt;label class="seg-radio__opt"&gt;&lt;input type="radio" name="errand-day" value="sat"&gt;Saturday&lt;/label&gt;
+    &lt;label class="seg-radio__opt"&gt;&lt;input type="radio" name="errand-day" value="sun"&gt;Sunday&lt;/label&gt;
+    &lt;label class="seg-radio__opt"&gt;&lt;input type="radio" name="errand-day" value="either" checked&gt;Either&lt;/label&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre></details>
+      </div>
+      <h3>Radio list, vertical and in a row</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack">
+          <fieldset class="choice-group">
+            <legend class="choice-group__legend">How far will you drive?</legend>
+            <label class="check"><input class="check__input" type="radio" name="v-drive" value="30"><span class="check__text"><span>Up to 30 minutes</span><span class="check__desc">Port Credit, Oakville and Etobicoke</span></span></label>
+            <label class="check"><input class="check__input" type="radio" name="v-drive" value="45" checked><span class="check__text"><span>Up to 45 minutes</span><span class="check__desc">Adds Terre Bleu, Bronte Creek and the Science Centre</span></span></label>
+            <label class="check"><input class="check__input" type="radio" name="v-drive" value="60"><span class="check__text"><span>Up to an hour</span><span class="check__desc">Adds the Toronto Zoo and Royal Botanical Gardens</span></span></label>
+          </fieldset>
+          <fieldset class="choice-group choice-group--row">
+            <legend class="choice-group__legend">Budget</legend>
+            <label class="check"><input class="check__input" type="radio" name="v-budget" value="free">Free only</label>
+            <label class="check"><input class="check__input" type="radio" name="v-budget" value="low" checked>Low cost</label>
+            <label class="check"><input class="check__input" type="radio" name="v-budget" value="any">Any</label>
+          </fieldset>
+        </div>
+        <div class="ds-example__caption"><span>A list with descriptions (<code>.check__text</code> + <code>.check__desc</code>) and a short row (<code>.choice-group--row</code>). No mock uses a radio list yet.</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;fieldset class="choice-group"&gt;
+  &lt;legend class="choice-group__legend"&gt;How far will you drive?&lt;/legend&gt;
+  &lt;label class="check"&gt;
+    &lt;input class="check__input" type="radio" name="drive" value="45" checked&gt;
+    &lt;span class="check__text"&gt;&lt;span&gt;Up to 45 minutes&lt;/span&gt;&lt;span class="check__desc"&gt;Adds Terre Bleu…&lt;/span&gt;&lt;/span&gt;
+  &lt;/label&gt;
+  …
+&lt;/fieldset&gt;</code></pre></details>
+      </div>
+    </section>
+
+    <section class="ds-section" id="sizes" data-na="One size. The native radio is 18px with the whole label as its target; a segmented option is 36px tall and as wide as its column."><h2><a href="#sizes">Sizes</a></h2><p class="ds-na">One size. The native radio is 18px with the whole label as its target; a segmented option is 36px tall and as wide as its column.</p></section>
+
+    <section class="ds-section" id="states"><h2><a href="#states">States</a></h2>
+      <p>Hover and focus are forced with <code>data-state</code> so they can be reviewed without a mouse. On the radio list, <code>data-state="focus"</code> goes on the input, which is where a real <code>:focus-visible</code> lands; on the segmented radio it goes on the option label, which draws the ring around the pill. Checked, disabled and invalid use the real attributes.</p>
+      <div class="ds-matrix"><table>
+        <thead><tr><th scope="col">Variant</th><th scope="col">Default</th><th scope="col">Checked</th><th scope="col">Hover</th><th scope="col">Focus</th><th scope="col">Disabled</th><th scope="col">Invalid</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Radio</th>
+            <td><label class="check"><input class="check__input" type="radio" name="m-r1">Saturday</label></td>
+            <td><label class="check"><input class="check__input" type="radio" name="m-r2" checked>Saturday</label></td>
+            <td><label class="check" data-state="hover"><input class="check__input" type="radio" name="m-r3">Saturday</label></td>
+            <td><label class="check"><input class="check__input" type="radio" name="m-r4" data-state="focus">Saturday</label></td>
+            <td><label class="check"><input class="check__input" type="radio" name="m-r5" disabled>Saturday</label></td>
+            <td><label class="check"><input class="check__input" type="radio" name="m-r6" aria-invalid="true">Saturday</label></td></tr>
+          <tr><th scope="row">Segmented</th>
+            <td><div class="seg-radio" role="radiogroup" aria-label="Day, default" style="min-width: 9rem;"><label class="seg-radio__opt"><input type="radio" name="m-s1">Sat</label><label class="seg-radio__opt"><input type="radio" name="m-s1">Sun</label></div></td>
+            <td><div class="seg-radio" role="radiogroup" aria-label="Day, checked" style="min-width: 9rem;"><label class="seg-radio__opt"><input type="radio" name="m-s2" checked>Sat</label><label class="seg-radio__opt"><input type="radio" name="m-s2">Sun</label></div></td>
+            <td><div class="seg-radio" role="radiogroup" aria-label="Day, hover" style="min-width: 9rem;"><label class="seg-radio__opt"><input type="radio" name="m-s3" checked>Sat</label><label class="seg-radio__opt" data-state="hover"><input type="radio" name="m-s3">Sun</label></div></td>
+            <td><div class="seg-radio" role="radiogroup" aria-label="Day, focus" style="min-width: 9rem;"><label class="seg-radio__opt" data-state="focus"><input type="radio" name="m-s4" checked>Sat</label><label class="seg-radio__opt"><input type="radio" name="m-s4">Sun</label></div></td>
+            <td><div class="seg-radio" role="radiogroup" aria-label="Day, disabled" style="min-width: 9rem;"><label class="seg-radio__opt"><input type="radio" name="m-s5" checked disabled>Sat</label><label class="seg-radio__opt"><input type="radio" name="m-s5" disabled>Sun</label></div></td>
+            <td><div class="seg-radio" role="radiogroup" aria-label="Day, invalid" aria-invalid="true" style="min-width: 9rem;"><label class="seg-radio__opt"><input type="radio" name="m-s6">Sat</label><label class="seg-radio__opt"><input type="radio" name="m-s6">Sun</label></div></td></tr>
+        </tbody>
+      </table></div>
+      <h3>Invalid group with its message</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack" style="max-width: 28rem;">
+          <div class="field">
+            <span class="field__label" id="inv-day-label">Day <span class="field__req">Required</span></span>
+            <div class="seg-radio" role="radiogroup" aria-labelledby="inv-day-label" aria-describedby="inv-day-err" aria-invalid="true">
+              <label class="seg-radio__opt"><input type="radio" name="inv-day">Saturday</label>
+              <label class="seg-radio__opt"><input type="radio" name="inv-day">Sunday</label>
+            </div>
+            <p class="field__error" id="inv-day-err"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg>Choose the day Piano lesson happens.</p>
+          </div>
+          <fieldset class="choice-group" aria-describedby="inv-drive-err">
+            <legend class="choice-group__legend">How far will you drive?</legend>
+            <label class="check"><input class="check__input" type="radio" name="inv-drive" aria-invalid="true">Up to 30 minutes</label>
+            <label class="check"><input class="check__input" type="radio" name="inv-drive" aria-invalid="true">Up to 45 minutes</label>
+            <p class="field__error" id="inv-drive-err"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg>Choose how far the family will drive.</p>
+          </fieldset>
+        </div>
+        <div class="ds-example__caption"><span>The message carries the error; the red edge on each radio backs it up. The segmented track takes a 2px danger edge.</span></div>
+      </div>
+      <h3>Both themes</h3>
+      <div class="ds-themes">
+        <div data-theme="light"><div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0;">
+          <div class="seg-radio seg-radio--3" role="radiogroup" aria-label="Which day, light theme"><label class="seg-radio__opt"><input type="radio" name="t-l">Saturday</label><label class="seg-radio__opt" data-state="focus"><input type="radio" name="t-l">Sunday</label><label class="seg-radio__opt"><input type="radio" name="t-l" checked>Either</label></div>
+          <fieldset class="choice-group choice-group--row"><legend class="choice-group__legend">Budget</legend><label class="check"><input class="check__input" type="radio" name="t-lb">Free only</label><label class="check"><input class="check__input" type="radio" name="t-lb" checked>Low cost</label><label class="check"><input class="check__input" type="radio" name="t-lb" disabled>Any</label></fieldset>
+        </div></div>
+        <div data-theme="dark"><div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0;">
+          <div class="seg-radio seg-radio--3" role="radiogroup" aria-label="Which day, dark theme"><label class="seg-radio__opt"><input type="radio" name="t-d">Saturday</label><label class="seg-radio__opt" data-state="focus"><input type="radio" name="t-d">Sunday</label><label class="seg-radio__opt"><input type="radio" name="t-d" checked>Either</label></div>
+          <fieldset class="choice-group choice-group--row"><legend class="choice-group__legend">Budget</legend><label class="check"><input class="check__input" type="radio" name="t-db">Free only</label><label class="check"><input class="check__input" type="radio" name="t-db" checked>Low cost</label><label class="check"><input class="check__input" type="radio" name="t-db" disabled>Any</label></fieldset>
+        </div></div>
+      </div>
+      <ul>
+        <li><b>Checked</b> is the only selected state; a group can start with nothing checked when there is no safe default (D18 Add a commitment), and must then say so on submit.</li>
+        <li><b>Disabled</b> uses the native attribute (50% opacity, not focusable). Disable the whole group with <code>&lt;fieldset disabled&gt;</code>; disable one option only when the reason is shown nearby.</li>
+        <li><b>Invalid</b> sets <code>aria-invalid="true"</code> and links the <code>.field__error</code> with <code>aria-describedby</code> on the group.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="responsive"><h2><a href="#responsive">Responsive behaviour</a></h2>
+      <ul>
+        <li>The segmented radio is always full width with equal columns, at every breakpoint. Three options at 360px leave about 95px each: enough for "Saturday", not for two words. If an option needs two words, use the list.</li>
+        <li>A <code>.choice-group--row</code> wraps onto more lines when it runs out of room, with 24px between options. Under 576px prefer the vertical list for anything longer than "Free only".</li>
+        <li>The vertical list does not change with width. Descriptions wrap under their label; the radio stays aligned with the first line.</li>
+        <li>Hover tints apply only under <code>(hover: hover)</code>; touch never leaves a sticky hover.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="theming"><h2><a href="#theming">Theming</a></h2>
+      <p>The native radio is tinted with <code>accent-color: var(--colorStatusSuccessBackground3)</code>, the forest green shared with checkboxes and the switch, and follows the theme's <code>color-scheme</code> for its unchecked ring. The segmented radio reads <code>--colorNeutralBackground3</code> for the track, <code>--colorNeutralBackground1</code> and <code>--shadow4</code> for the selected pill, and <code>--colorNeutralForeground2</code> / <code>--colorNeutralForeground1</code> for the labels.</p>
+      <p>In the dark theme the track is the lighter umber well and the selected pill is the card surface, so the pill sits darker than the track and the shadow barely shows. The label colour change then carries most of the state, which is why the selected pill also carries an accessible stroke. Neither variant has component tokens; re-skin a track by overriding the alias tokens on a wrapping element.</p>
+    </section>
+
+    <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
+      <h3>Role and pattern</h3>
+      <p>Native <code>&lt;input type="radio"&gt;</code> elements with one shared <code>name</code>, which is the <a href="https://www.w3.org/WAI/ARIA/apg/patterns/radio/">APG Radio Group pattern</a> built in. The list sits in a <code>&lt;fieldset&gt;</code> with a <code>&lt;legend&gt;</code>; the segmented radio is a <code>&lt;div role="radiogroup"&gt;</code> labelled by the visible <code>.field__label</code>. Do not build a radio group from buttons; the D13 star rating does, and must manage <code>aria-checked</code> and roving focus by hand (see <a href="rating.html">rating</a>).</p>
+      <h3>Keyboard</h3>
+      <table class="ds-table ds-keys"><thead><tr><th scope="col">Key</th><th scope="col">Action</th></tr></thead><tbody>
+        <tr><td><kbd>Tab</kbd> / <kbd>Shift</kbd>+<kbd>Tab</kbd></td><td>Moves into the group, landing on the checked radio (or the first one when none is checked), and out of the group. The group is one tab stop.</td></tr>
+        <tr><td><kbd>→</kbd> / <kbd>↓</kbd></td><td>Moves to the next option and checks it, wrapping from the last to the first.</td></tr>
+        <tr><td><kbd>←</kbd> / <kbd>↑</kbd></td><td>Moves to the previous option and checks it, wrapping from the first to the last.</td></tr>
+        <tr><td><kbd>Space</kbd></td><td>Checks the focused option if it is not already checked.</td></tr>
+      </tbody></table>
+      <h3>Focus</h3>
+      <p>The shared ring (<code>2px --colorStrokeFocus2</code>, 2px offset) appears on <code>:focus-visible</code>. On the list it rings the 18px radio; on the segmented radio, <code>.seg-radio__opt:has(input:focus-visible)</code> moves the ring to the whole pill so it is not hidden under the zero-opacity input.</p>
+      <h3>Labelling</h3>
+      <p>Each option is a <code>&lt;label&gt;</code> wrapping its input, so the visible text is the name and clicking the text checks it. The group is named by its legend or by <code>aria-labelledby</code> pointing at the question ("Which day"); without it a screen reader announces "Saturday, radio button, 1 of 3" with no question. Descriptions inside <code>.check__desc</code> are part of the label. Errors are linked with <code>aria-describedby</code> on the group.</p>
+      <h3>Contrast</h3>
+      <div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0; gap: var(--spacingHorizontalS);">
+        <div class="ds-pair"><span>Option label on card</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground1|--colorNeutralBackground1" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Unselected segment label on track</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground2|--colorNeutralBackground3" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Selected segment label on pill</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground1|--colorNeutralBackground1" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Checked radio fill on card</span><span class="ds-pair__ratio" data-contrast="--colorStatusSuccessBackground3|--colorNeutralBackground1" data-min="3"></span></div>
+        <div class="ds-pair"><span>Selected pill edge on track</span><span class="ds-pair__ratio" data-contrast="--colorNeutralStrokeAccessible|--colorNeutralBackground3" data-min="3"></span></div>
+        <div class="ds-pair"><span>Invalid edge on card</span><span class="ds-pair__ratio" data-contrast="--colorStatusDangerForeground3|--colorNeutralBackground1" data-min="3"></span></div>
+        <div class="ds-pair"><span>Focus ring on card</span><span class="ds-pair__ratio" data-contrast="--colorStrokeFocus2|--colorNeutralBackground1" data-min="3"></span></div>
+      </div>
+      <p>The selected segment is told apart by its white pill and darker label. The pill against the track is a low-contrast surface change, so the selected pill also takes a 1px <code>--colorNeutralStrokeAccessible</code> edge (1.4.11), the same fix D26 made for pressed filter chips.</p>
+      <h3>Motion</h3>
+      <p>None. The selected pill switches instantly; the label colour transitions over <code>--durationFast</code>, which is zeroed under <code>prefers-reduced-motion</code>.</p>
+      <h3>Touch</h3>
+      <p>The whole label is the target: a segmented option is 36px tall and at least 95px wide at 360px; a list row is at least 24px tall with 12px between rows. The 18px radio alone would be too small, which is why the label must wrap the input.</p>
+    </section>
+
+    <section class="ds-section" id="content"><h2><a href="#content">Content</a></h2>
+      <ul>
+        <li>The group label is the question, in sentence case, no colon: "Which day", "How far will you drive?". Use a question mark only for a full question.</li>
+        <li>Segmented options are one word, nouns or days: "Saturday", "Sunday", "Either". Never "Yes" and "No" in a segment; a yes/no setting is a <a href="switch.html">switch</a>.</li>
+        <li>List options start with the part that differs: "Up to 30 minutes", "Up to 45 minutes". Put examples in the description, not the label.</li>
+        <li>Order options logically (days in order, distances ascending), not by preference. Put the catch-all ("Either", "Any") last.</li>
+        <li>Error messages say what to do: "Choose the day Piano lesson happens." not "Day is required."</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="do-dont"><h2><a href="#do-dont">Do and don't</a></h2>
+      <div class="ds-dodont">
+        <figure class="ds-do"><div class="ds-example__canvas ds-example__canvas--stack"><div class="field"><span class="field__label" id="dd1-label">Which day</span><div class="seg-radio seg-radio--3" role="radiogroup" aria-labelledby="dd1-label"><label class="seg-radio__opt"><input type="radio" name="dd1">Saturday</label><label class="seg-radio__opt"><input type="radio" name="dd1">Sunday</label><label class="seg-radio__opt"><input type="radio" name="dd1" checked>Either</label></div></div></div><figcaption>Name the group with a visible label and <code>aria-labelledby</code>, as D7 does.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas ds-example__canvas--stack"><div class="seg-radio seg-radio--3" role="radiogroup" aria-label="Errand, unlabelled example"><label class="seg-radio__opt"><input type="radio" name="dd2">Saturday</label><label class="seg-radio__opt"><input type="radio" name="dd2">Sunday</label><label class="seg-radio__opt"><input type="radio" name="dd2" checked>Either</label></div></div><figcaption>A track with no question above it. Sighted people guess; screen-reader users hear three days and no question.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas ds-example__canvas--stack"><fieldset class="choice-group"><legend class="choice-group__legend">How far will you drive?</legend><label class="check"><input class="check__input" type="radio" name="dd3">Up to 30 minutes</label><label class="check"><input class="check__input" type="radio" name="dd3" checked>Up to 45 minutes</label><label class="check"><input class="check__input" type="radio" name="dd3">Up to an hour</label></fieldset></div><figcaption>Labels longer than a word go in a radio list.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas ds-example__canvas--stack"><div class="seg-radio seg-radio--3" role="radiogroup" aria-label="Drive time, cramped example"><label class="seg-radio__opt"><input type="radio" name="dd4">Up to 30 min</label><label class="seg-radio__opt"><input type="radio" name="dd4" checked>Up to 45 min</label><label class="seg-radio__opt"><input type="radio" name="dd4">Up to an hour</label></div></div><figcaption>Long labels crammed into segments clip or wrap at 360px. Segments hold one word.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas"><fieldset class="choice-group choice-group--row"><legend class="choice-group__legend">Budget</legend><label class="check"><input class="check__input" type="radio" name="dd5">Free only</label><label class="check"><input class="check__input" type="radio" name="dd5" checked>Low cost</label></fieldset></div><figcaption>Wrap the input in its <code>&lt;label&gt;</code> so the text is a 24px-plus target.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><button class="filter-chip" type="button" aria-pressed="false">Saturday</button><button class="filter-chip" type="button" aria-pressed="true">Sunday</button></div><figcaption>Toggle chips used as a single choice. Two can be pressed at once, and arrow keys do nothing. Use radios.</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="ds-section" id="tokens"><h2><a href="#tokens">Tokens</a></h2>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Part</th><th scope="col">Token</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead>
+        <tbody>
+          <tr><td>Radio accent (checked)</td><td><code>--colorStatusSuccessBackground3</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorStatusSuccessBackground3" data-swatch></i><span data-token="--colorStatusSuccessBackground3"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorStatusSuccessBackground3" data-swatch></i><span data-token="--colorStatusSuccessBackground3"></span></span></td></tr>
+          <tr><td>Option label, list and selected segment</td><td><code>--colorNeutralForeground1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralForeground1" data-swatch></i><span data-token="--colorNeutralForeground1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralForeground1" data-swatch></i><span data-token="--colorNeutralForeground1"></span></span></td></tr>
+          <tr><td>Group label, description, unselected segment</td><td><code>--colorNeutralForeground2</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralForeground2" data-swatch></i><span data-token="--colorNeutralForeground2"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralForeground2" data-swatch></i><span data-token="--colorNeutralForeground2"></span></span></td></tr>
+          <tr><td>Segment track</td><td><code>--colorNeutralBackground3</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralBackground3" data-swatch></i><span data-token="--colorNeutralBackground3"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralBackground3" data-swatch></i><span data-token="--colorNeutralBackground3"></span></span></td></tr>
+          <tr><td>Selected segment pill</td><td><code>--colorNeutralBackground1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralBackground1" data-swatch></i><span data-token="--colorNeutralBackground1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralBackground1" data-swatch></i><span data-token="--colorNeutralBackground1"></span></span></td></tr>
+          <tr><td>Invalid edge</td><td><code>--colorStatusDangerForeground3</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorStatusDangerForeground3" data-swatch></i><span data-token="--colorStatusDangerForeground3"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorStatusDangerForeground3" data-swatch></i><span data-token="--colorStatusDangerForeground3"></span></span></td></tr>
+          <tr><td>Focus ring</td><td><code>--colorStrokeFocus2</code>, <code>--strokeWidthThick</code>, <code>--focusRingOffset</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorStrokeFocus2" data-swatch></i><span data-token="--colorStrokeFocus2"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorStrokeFocus2" data-swatch></i><span data-token="--colorStrokeFocus2"></span></span></td></tr>
+          <tr><td>Selected pill shadow</td><td><code>--shadow4</code></td><td colspan="2"><span data-token="--shadow4"></span></td></tr>
+          <tr><td>Track and pill radius</td><td><code>--borderRadiusCircular</code></td><td colspan="2"><span data-token="--borderRadiusCircular"></span></td></tr>
+          <tr><td>Track padding and gap</td><td><code>--spacingVerticalXS</code>, <code>--spacingHorizontalXS</code></td><td colspan="2"><span data-token="--spacingVerticalXS"></span> / <span data-token="--spacingHorizontalXS"></span></td></tr>
+          <tr><td>List gap, vertical / row</td><td><code>--spacingVerticalM</code> / <code>--spacingHorizontalXL</code></td><td colspan="2"><span data-token="--spacingVerticalM"></span> / <span data-token="--spacingHorizontalXL"></span></td></tr>
+          <tr><td>Radio to label gap</td><td><code>--spacingHorizontalMNudge</code></td><td colspan="2"><span data-token="--spacingHorizontalMNudge"></span></td></tr>
+          <tr><td>Segment label / list label</td><td><code>--typographyLabel</code> / <code>--fontSizeBase350</code></td><td colspan="2"><span data-token="--typographyLabel"></span> / <span data-token="--fontSizeBase350"></span></td></tr>
+          <tr><td>Transition</td><td><code>--durationFast</code>, <code>--curveEasyEase</code></td><td colspan="2"><span data-token="--durationFast"></span> <span data-token="--curveEasyEase"></span></td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section class="ds-section" id="code"><h2><a href="#code">Code</a></h2>
+      <pre><code>&lt;!-- Segmented: two or three one-word options --&gt;
+&lt;div class="field"&gt;
+  &lt;span class="field__label" id="commitment-day-label"&gt;Day&lt;/span&gt;
+  &lt;div class="seg-radio" role="radiogroup" aria-labelledby="commitment-day-label"&gt;
+    &lt;label class="seg-radio__opt"&gt;&lt;input type="radio" name="commitment-day" value="sat" checked&gt;Saturday&lt;/label&gt;
+    &lt;label class="seg-radio__opt"&gt;&lt;input type="radio" name="commitment-day" value="sun"&gt;Sunday&lt;/label&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!-- List: longer labels, descriptions, up to six options --&gt;
+&lt;fieldset class="choice-group" aria-describedby="drive-err"&gt;
+  &lt;legend class="choice-group__legend"&gt;How far will you drive?&lt;/legend&gt;
+  &lt;label class="check"&gt;&lt;input class="check__input" type="radio" name="drive" value="30" aria-invalid="true"&gt;Up to 30 minutes&lt;/label&gt;
+  &lt;label class="check"&gt;&lt;input class="check__input" type="radio" name="drive" value="45" aria-invalid="true"&gt;Up to 45 minutes&lt;/label&gt;
+  &lt;p class="field__error" id="drive-err"&gt;…Choose how far the family will drive.&lt;/p&gt;
+&lt;/fieldset&gt;
+
+&lt;!-- Angular --&gt;
+&lt;sd-seg-radio label="Which day" [options]="dayOptions" formControlName="day" /&gt;
+// dayOptions: SegRadioOption[] = [{ value: 'sat', label: 'Saturday' }, { value: 'sun', label: 'Sunday' }, { value: 'either', label: 'Either' }]</code></pre>
+      <table class="ds-table"><thead><tr><th scope="col">Class / attribute</th><th scope="col">Effect</th></tr></thead><tbody>
+        <tr><td><code>.seg-radio</code></td><td>Pill track, two equal columns. Put <code>role="radiogroup"</code> and <code>aria-labelledby</code> on it.</td></tr>
+        <tr><td><code>.seg-radio--3</code></td><td>Three equal columns.</td></tr>
+        <tr><td><code>.seg-radio__opt</code></td><td>A <code>&lt;label&gt;</code> wrapping one radio; selected when its input is <code>checked</code>.</td></tr>
+        <tr><td><code>.choice-group</code> / <code>.choice-group--row</code></td><td>A <code>&lt;fieldset&gt;</code> stacking options with 12px gaps / wrapping them in a row with 24px gaps.</td></tr>
+        <tr><td><code>.choice-group__legend</code></td><td>The group question, styled like a field label.</td></tr>
+        <tr><td><code>.check</code> + <code>.check__input</code></td><td>One radio row (shared with <a href="checkbox.html">checkbox</a>); add <code>.check__text</code> and <code>.check__desc</code> for a description.</td></tr>
+        <tr><td><code>checked</code> / <code>disabled</code> / <code>aria-invalid="true"</code></td><td>Selected, disabled (or <code>&lt;fieldset disabled&gt;</code> for all), invalid.</td></tr>
+        <tr><td><code>data-state="hover|focus"</code></td><td>Documentation only: on <code>.check</code> or <code>.seg-radio__opt</code> for hover, on the input (list) or the option (segmented) for focus.</td></tr>
+      </tbody></table>
+    </section>
+
+    <section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>
+      <p>Extracted from these mocks:</p>
+      <ul>
+        <li><a href="../../mocks/pages/dialogs.html">pages/dialogs</a>: D7 Add an errand (three-option "Which day"), D18 Edit and Add a commitment (two-option "Day", no default in Add), D28 Add an idea to a day.</li>
+        <li><a href="../../mocks/pages/create-account.html">pages/create-account</a>: the <code>.check</code> row the radio list shares with the checkbox.</li>
+      </ul>
+      <p>Drift fixed during extraction (see the <a href="../README.md">README drift log</a>): D03 focus ring contrast, D05 the unselected segment label on the well, D13 the raw 14px label. The mocks never use a native radio list; the <code>.choice-group</code> examples here are the documented form for when one is needed. The D17 member dialog uses an Age field ("Under 18 counts as a kid") rather than a Parent | Kid choice; if that choice comes back, it is a two-option segmented radio.</p>
+      <p>Rules added to components.css for this page: an accessible stroke around the selected segment pill, an invalid edge for <code>.seg-radio[aria-invalid="true"]</code>, and a real <code>:hover</code> for <code>.check</code> rows to match the <code>data-state</code> twin.</p>
+    </section>
+
+    <footer class="ds-footer"><span>Saturdaze design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/icons.js"></script>
+<script src="../assets/ds.js"></script>
+</body>
+</html>

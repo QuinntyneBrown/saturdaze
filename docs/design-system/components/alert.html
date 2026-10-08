@@ -1,0 +1,399 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Alert — Saturdaze design system</title>
+<meta name="description" content="Banners report what happened and what to do next; wells hold quieter inline notes. Four tones each, and when to use role alert, status or nothing.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html"><span class="brand-mark" aria-hidden="true"></span>Saturdaze DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Actions</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+    </ul></details>
+    <details open><summary>Inputs</summary><ul>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/chip-input.html">Chip input</a></li>
+      <li><a href="../components/file-upload.html">File upload</a></li>
+      <li><a href="../components/photo-pick.html">Photo pick</a></li>
+      <li><a href="../components/rating.html">Rating</a></li>
+      <li><a href="../components/vote-row.html">Vote row</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+    </ul></details>
+    <details open><summary>Navigation</summary><ul>
+      <li><a href="../components/top-bar.html">Top bar</a></li>
+      <li><a href="../components/bottom-nav.html">Bottom nav</a></li>
+      <li><a href="../components/sidebar-navigation.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs (segments)</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+      <li><a href="../components/footer.html">Footer</a></li>
+    </ul></details>
+    <details open><summary>Containers and overlays</summary><ul>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/container.html">Container and grid</a></li>
+      <li><a href="../components/page-header.html">Page header</a></li>
+    </ul></details>
+    <details open><summary>Data display</summary><ul>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/activity-feed.html">Activity feed</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/chip.html">Chip</a></li>
+      <li><a href="../components/filter-chip.html">Filter chip</a></li>
+      <li><a href="../components/disc.html">Disc</a></li>
+      <li><a href="../components/media.html">Media</a></li>
+      <li><a href="../components/cover.html">Cover photo</a></li>
+      <li><a href="../components/stat.html">Stat</a></li>
+      <li><a href="../components/itinerary.html">Itinerary</a></li>
+      <li><a href="../components/map.html">Map</a></li>
+    </ul></details>
+    <details open><summary>Feedback</summary><ul>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/alert.html">Alert</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/progress-bar.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Auth and marketing</summary><ul>
+      <li><a href="../components/auth-card.html">Auth card</a></li>
+      <li><a href="../components/hero.html">Hero</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/data-tables-and-lists.html">Tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Component · Feedback</p>
+      <h1>Alert</h1>
+      <p class="ds-lead">Alerts stay on the page until the situation changes. A banner reports something that happened ("That email and password did not match.") and what to do about it; a well is a quieter note that explains ("Why this: lavender peaks 17 to 24 May").</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA</span><span class="ds-pill">Status: stable</span><span class="ds-pill">Angular: <code>sd-banner</code>, <code>sd-well</code></span></div>
+      <ul class="ds-toc">
+        <li><a href="#overview">Overview</a></li><li><a href="#anatomy">Anatomy</a></li><li><a href="#variants">Variants</a></li><li><a href="#sizes">Sizes</a></li><li><a href="#states">States</a></li><li><a href="#responsive">Responsive</a></li><li><a href="#theming">Theming</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#content">Content</a></li><li><a href="#do-dont">Do and don't</a></li><li><a href="#tokens">Tokens</a></li><li><a href="#code">Code</a></li><li><a href="#sources">Sources</a></li>
+      </ul>
+    </header>
+
+    <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+      <ul>
+        <li><b>Banner</b> (<code>.banner</code>): a bordered, tinted message about the state of a form, a page or the account. Info, success, caution or warn. It can carry a title, actions and a close button. <code>.banner--page</code> runs edge to edge under the top bar for a message about the whole app.</li>
+        <li><b>Well</b> (<code>.well</code>): a borderless tinted note inside content, usually in a dialog: why the planner chose a block, what a lock keeps, what will be lost. Default, accent, primary or warn.</li>
+      </ul>
+      <p>Choose by persistence and urgency. A message that should leave on its own is a <a href="toast.html">toast</a>. A problem with one field is an <a href="inline-message.html">inline message</a> next to that field. A list of form errors is the error summary in <a href="../patterns/forms.html">forms</a>. A banner is for everything between: it stays until the person acts or the situation changes.</p>
+      <h3>Which role</h3>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Use</th><th scope="col">When</th><th scope="col">Saturdaze example</th></tr></thead>
+        <tbody>
+          <tr><td><code>role="alert"</code></td><td>An error or warning that appears in response to something the person just did, and needs attention now.</td><td>"That email and password did not match." after Sign in.</td></tr>
+          <tr><td><code>role="status"</code></td><td>A non-urgent result that appears after an action, or progress that changes while the person waits.</td><td>"Approved · Bronte Creek Maple Magic" after Approve; "Verifying your email".</td></tr>
+          <tr><td>No role</td><td>Anything present when the page or dialog opens. It is read in order with the content around it.</td><td>Every well ("Why this", "Locked", "The short version"); a page banner already showing on load.</td></tr>
+        </tbody>
+      </table></div>
+      <p>The live region must exist before its text changes: render the empty <code>role="alert"</code> container with the form, then fill it. A banner created together with its text is often not announced.</p>
+    </section>
+
+    <section class="ds-section" id="anatomy"><h2><a href="#anatomy">Anatomy</a></h2>
+      <div class="ds-anatomy">
+        <figure class="ds-anatomy__figure">
+          <div class="banner banner--caution" style="width: 100%; max-width: 30rem;">
+            <svg class="icon" aria-hidden="true"><use href="#i-rain"/></svg>
+            <div class="banner__text">
+              <span class="banner__title">Rain moved to Saturday</span>
+              Lavender fields is outdoors from 11:00. Swap it for something indoors, or keep it.
+              <div class="banner__actions"><button class="btn btn--quiet btn--sm" type="button">Swap Lavender fields</button><button class="btn btn--ghost btn--sm" type="button">Keep it</button></div>
+            </div>
+            <button class="btn btn--ghost btn--sm btn--icon banner__close" type="button" aria-label="Dismiss"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <span class="ds-callout" style="left: 4%; top: 22%;" aria-hidden="true">1</span>
+          <span class="ds-callout" style="left: 50%; top: 14%;" aria-hidden="true">2</span>
+          <span class="ds-callout" style="left: 70%; top: 44%;" aria-hidden="true">3</span>
+          <span class="ds-callout" style="left: 58%; top: 70%;" aria-hidden="true">4</span>
+          <span class="ds-callout" style="left: 92%; top: 14%;" aria-hidden="true">5</span>
+          <span class="ds-callout" style="left: 92%; top: 82%;" aria-hidden="true">6</span>
+        </figure>
+        <ol class="ds-anatomy__list">
+          <li><div><b>Icon</b><small>20px in the tone's foreground, top aligned, decorative.</small></div></li>
+          <li><div><b>Title (optional)</b><small><code>.banner__title</code>: semibold, one line, says what happened.</small></div></li>
+          <li><div><b>Text</b><small><code>.banner__text</code>: 14px body, what it means and what to do.</small></div></li>
+          <li><div><b>Actions (optional)</b><small><code>.banner__actions</code>: small buttons, the fix first.</small></div></li>
+          <li><div><b>Close (optional)</b><small><code>.banner__close</code>: ghost icon button in the text colour. Only on banners that are safe to dismiss.</small></div></li>
+          <li><div><b>Container</b><small>Tinted fill, 1px border in the tone, medium radius, 12px × 16px padding.</small></div></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="ds-section" id="variants"><h2><a href="#variants">Variants</a></h2>
+      <h3>Banner tones</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack">
+          <div class="banner banner--info"><svg class="icon" aria-hidden="true"><use href="#i-info"/></svg><span class="banner__text">The weekend plan is drafted on Friday at 6pm. You can plan it now instead.</span></div>
+          <div class="banner banner--success"><svg class="icon" aria-hidden="true"><use href="#i-check_circle"/></svg><span class="banner__text">Approved · Bronte Creek Maple Magic. It shows in Ideas from tomorrow.</span></div>
+          <div class="banner banner--caution"><svg class="icon" aria-hidden="true"><use href="#i-rain"/></svg><span class="banner__text">Rain is now likely on Sunday after 2pm. The Rec Room is indoors, so Sunday still works.</span></div>
+          <div class="banner banner--warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg><span class="banner__text">That email and password did not match.</span></div>
+        </div>
+        <div class="ds-example__caption"><span><code>.banner--info</code> (default), <code>--success</code>, <code>--caution</code>, <code>--warn</code>. The icon changes with the tone, so the meaning never rests on colour.</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;div class="banner banner--warn" role="alert"&gt;
+  &lt;svg class="icon" aria-hidden="true"&gt;&lt;use href="#i-alert"/&gt;&lt;/svg&gt;
+  &lt;span class="banner__text"&gt;That email and password did not match.&lt;/span&gt;
+&lt;/div&gt;</code></pre></details>
+      </div>
+      <h3>Title, actions and close; page banner</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack">
+          <div class="banner banner--warn">
+            <svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg>
+            <div class="banner__text"><span class="banner__title">Your email is not verified yet</span>We sent a link to quinntynebrown@gmail.com. Weekend plans start once it is verified.
+              <div class="banner__actions"><button class="btn btn--quiet btn--sm" type="button">Send it again</button></div>
+            </div>
+          </div>
+          <div class="banner banner--info banner--page">
+            <svg class="icon" aria-hidden="true"><use href="#i-info"/></svg>
+            <span class="banner__text">Saturdaze is read-only for a few minutes while we update. Your plan is safe.</span>
+            <button class="btn btn--ghost btn--sm btn--icon banner__close" type="button" aria-label="Dismiss"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>A warn banner with a title and one action; an info <code>.banner--page</code> that runs edge to edge and can be dismissed.</span></div>
+      </div>
+      <h3>Wells</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack">
+          <div class="well"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg><div><p class="well__title">Why this</p><p class="well__body">Lavender peaks 17 to 24 May, Saturday is the sunny day, and Mae can walk the rows this year.</p></div></div>
+          <div class="well well--accent"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg><div><p class="well__title">Locked</p><p class="well__body">Regenerating the weekend or the day leaves this block exactly where it is.</p></div></div>
+          <div class="well well--primary"><svg class="icon" aria-hidden="true"><use href="#i-calendar"/></svg><div><p class="well__title">Saturday · 15:00 to 17:00</p><p class="well__body">Replaces Quiet time at home. 35 min drive from La Marina, back by 17:35 for dinner.</p></div></div>
+          <div class="well well--warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg><div><p class="well__title">The lavender weekend draft goes away</p><p class="well__body">Locks and family settings stay.</p></div></div>
+        </div>
+        <div class="ds-example__caption"><span><code>.well</code> (explain), <code>--accent</code> (what is kept), <code>--primary</code> (where a new thing will land), <code>--warn</code> (what will be lost, above a danger button).</span></div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="sizes" data-na="One size. Banners and wells fill their container's width and grow with their text."><h2><a href="#sizes">Sizes</a></h2><p class="ds-na">One size. Banners and wells fill their container's width and grow with their text.</p></section>
+
+    <section class="ds-section" id="states"><h2><a href="#states">States</a></h2>
+      <p>Banners and wells are not interactive; their buttons are. Close takes the text colour of its banner, so its hover tint and focus ring are shown per tone.</p>
+      <div class="ds-matrix"><table>
+        <thead><tr><th scope="col">Tone</th><th scope="col">Default</th><th scope="col">Close hover</th><th scope="col">Close focus</th><th scope="col">Action focus</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Info</th>
+            <td><div class="banner banner--info" style="min-width: 15rem;"><svg class="icon" aria-hidden="true"><use href="#i-info"/></svg><span class="banner__text">Plans draft Friday at 6pm.</span><button class="btn btn--ghost btn--sm btn--icon banner__close" type="button" aria-label="Dismiss"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></div></td>
+            <td><div class="banner banner--info" style="min-width: 15rem;"><svg class="icon" aria-hidden="true"><use href="#i-info"/></svg><span class="banner__text">Plans draft Friday at 6pm.</span><button class="btn btn--ghost btn--sm btn--icon banner__close" type="button" aria-label="Dismiss" data-state="hover"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></div></td>
+            <td><div class="banner banner--info" style="min-width: 15rem;"><svg class="icon" aria-hidden="true"><use href="#i-info"/></svg><span class="banner__text">Plans draft Friday at 6pm.</span><button class="btn btn--ghost btn--sm btn--icon banner__close" type="button" aria-label="Dismiss" data-state="focus"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></div></td>
+            <td><div class="banner banner--info" style="min-width: 15rem;"><svg class="icon" aria-hidden="true"><use href="#i-info"/></svg><div class="banner__text">Plans draft Friday at 6pm.<div class="banner__actions"><button class="btn btn--quiet btn--sm" type="button" data-state="focus">Plan it now</button></div></div></div></td>
+          </tr>
+          <tr><th scope="row">Success</th>
+            <td><div class="banner banner--success" style="min-width: 15rem;"><svg class="icon" aria-hidden="true"><use href="#i-check_circle"/></svg><span class="banner__text">Password changed.</span><button class="btn btn--ghost btn--sm btn--icon banner__close" type="button" aria-label="Dismiss"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></div></td>
+            <td><div class="banner banner--success" style="min-width: 15rem;"><svg class="icon" aria-hidden="true"><use href="#i-check_circle"/></svg><span class="banner__text">Password changed.</span><button class="btn btn--ghost btn--sm btn--icon banner__close" type="button" aria-label="Dismiss" data-state="hover"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></div></td>
+            <td><div class="banner banner--success" style="min-width: 15rem;"><svg class="icon" aria-hidden="true"><use href="#i-check_circle"/></svg><span class="banner__text">Password changed.</span><button class="btn btn--ghost btn--sm btn--icon banner__close" type="button" aria-label="Dismiss" data-state="focus"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></div></td>
+            <td><div class="banner banner--success" style="min-width: 15rem;"><svg class="icon" aria-hidden="true"><use href="#i-check_circle"/></svg><div class="banner__text">Password changed.<div class="banner__actions"><button class="btn btn--quiet btn--sm" type="button" data-state="focus">Sign in</button></div></div></div></td>
+          </tr>
+          <tr><th scope="row">Caution</th>
+            <td><div class="banner banner--caution" style="min-width: 15rem;"><svg class="icon" aria-hidden="true"><use href="#i-rain"/></svg><span class="banner__text">Rain likely Sunday.</span><button class="btn btn--ghost btn--sm btn--icon banner__close" type="button" aria-label="Dismiss"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></div></td>
+            <td><div class="banner banner--caution" style="min-width: 15rem;"><svg class="icon" aria-hidden="true"><use href="#i-rain"/></svg><span class="banner__text">Rain likely Sunday.</span><button class="btn btn--ghost btn--sm btn--icon banner__close" type="button" aria-label="Dismiss" data-state="hover"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></div></td>
+            <td><div class="banner banner--caution" style="min-width: 15rem;"><svg class="icon" aria-hidden="true"><use href="#i-rain"/></svg><span class="banner__text">Rain likely Sunday.</span><button class="btn btn--ghost btn--sm btn--icon banner__close" type="button" aria-label="Dismiss" data-state="focus"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></div></td>
+            <td><div class="banner banner--caution" style="min-width: 15rem;"><svg class="icon" aria-hidden="true"><use href="#i-rain"/></svg><div class="banner__text">Rain likely Sunday.<div class="banner__actions"><button class="btn btn--quiet btn--sm" type="button" data-state="focus">Regenerate Sunday</button></div></div></div></td>
+          </tr>
+          <tr><th scope="row">Warn</th>
+            <td><div class="banner banner--warn" style="min-width: 15rem;"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg><span class="banner__text">Could not save.</span></div></td>
+            <td>—</td>
+            <td>—</td>
+            <td><div class="banner banner--warn" style="min-width: 15rem;"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg><div class="banner__text">Could not save.<div class="banner__actions"><button class="btn btn--quiet btn--sm" type="button" data-state="focus">Try again</button></div></div></div></td>
+          </tr>
+        </tbody>
+      </table></div>
+      <p>Warn banners have no close button: they leave when the problem is fixed (the next sign-in attempt, a successful retry).</p>
+      <h3>Both themes</h3>
+      <div class="ds-themes">
+        <div data-theme="light"><div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0;"><div class="banner banner--info"><svg class="icon" aria-hidden="true"><use href="#i-info"/></svg><span class="banner__text">Plans draft Friday at 6pm.</span></div><div class="banner banner--success"><svg class="icon" aria-hidden="true"><use href="#i-check_circle"/></svg><span class="banner__text">Approved · Bronte Creek Maple Magic</span></div><div class="banner banner--caution"><svg class="icon" aria-hidden="true"><use href="#i-rain"/></svg><span class="banner__text">Rain likely Sunday after 2pm.</span></div><div class="banner banner--warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg><span class="banner__text">That email and password did not match.</span></div><div class="well well--accent"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg><div><p class="well__title">Locked</p><p class="well__body">Regenerating leaves this block where it is.</p></div></div></div></div>
+        <div data-theme="dark"><div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0;"><div class="banner banner--info"><svg class="icon" aria-hidden="true"><use href="#i-info"/></svg><span class="banner__text">Plans draft Friday at 6pm.</span></div><div class="banner banner--success"><svg class="icon" aria-hidden="true"><use href="#i-check_circle"/></svg><span class="banner__text">Approved · Bronte Creek Maple Magic</span></div><div class="banner banner--caution"><svg class="icon" aria-hidden="true"><use href="#i-rain"/></svg><span class="banner__text">Rain likely Sunday after 2pm.</span></div><div class="banner banner--warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg><span class="banner__text">That email and password did not match.</span></div><div class="well well--accent"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg><div><p class="well__title">Locked</p><p class="well__body">Regenerating leaves this block where it is.</p></div></div></div></div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="responsive"><h2><a href="#responsive">Responsive behaviour</a></h2>
+      <ul>
+        <li>Banners and wells are full width at every size and grow downward; text wraps, nothing truncates.</li>
+        <li><code>.banner__actions</code> wraps its buttons onto a new line under the text when they do not fit beside each other.</li>
+        <li><code>.banner--page</code> drops its radius and side borders and spans the viewport under the top bar; on phones it sits above the page header, never over the bottom nav.</li>
+        <li>In a dialog under 720px (a bottom sheet) a well stays inside the scrolling body, so the footer buttons remain in reach.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="theming"><h2><a href="#theming">Theming</a></h2>
+      <p>A banner reads <code>--sd-banner-bg</code>, <code>--sd-banner-fg</code> and <code>--sd-banner-edge</code>; a well reads <code>--sd-well-bg</code> and <code>--sd-well-icon</code>. Tones map them to the status ramps (info sky, success forest, warning sun, danger terracotta), which have their own dark-theme steps: deep tints with light text.</p>
+      <pre><code>/* An admin-only "Needs review" banner in the indoor palette */
+.banner--review { --sd-banner-bg: var(--colorPaletteIndoorBackground1); --sd-banner-fg: var(--colorPaletteIndoorForeground1); --sd-banner-edge: var(--colorPaletteIndoorBorderActive); }</code></pre>
+    </section>
+
+    <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
+      <h3>Role and pattern</h3>
+      <p>Errors that appear after an action follow the <a href="https://www.w3.org/WAI/ARIA/apg/patterns/alert/">APG Alert pattern</a> (<code>role="alert"</code>, assertive). Non-urgent results use <code>role="status"</code> (4.1.3). Content present on load has no role. Do not add <code>aria-live="assertive"</code> to <code>role="alert"</code> as the sign-in mock does; the role already implies it.</p>
+      <h3>Keyboard</h3>
+      <table class="ds-table ds-keys"><thead><tr><th scope="col">Key</th><th scope="col">Action</th></tr></thead><tbody>
+        <tr><td><kbd>Tab</kbd></td><td>Reaches the banner's actions, then Dismiss, in reading order.</td></tr>
+        <tr><td><kbd>Enter</kbd> / <kbd>Space</kbd></td><td>Activates the focused button. After Dismiss, focus moves to the next focusable element after the banner's old position.</td></tr>
+      </tbody></table>
+      <h3>Focus</h3>
+      <p>An alert does not take focus. On sign-in the error is announced and focus stays on the Sign in button; the first invalid field carries <code>aria-invalid="true"</code>. When a form has several errors, use the error summary from <a href="../patterns/forms.html">forms</a> and move focus to it.</p>
+      <h3>Labelling</h3>
+      <p>The text is the message; the icon is decorative. A title is plain text inside the banner, not a heading, unless the banner leads a section. Close is "Dismiss".</p>
+      <h3>Contrast</h3>
+      <div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0; gap: var(--spacingHorizontalS);">
+        <div class="ds-pair"><span>Info text</span><span class="ds-pair__ratio" data-contrast="--colorStatusInfoForeground1|--colorStatusInfoBackground1" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Success text</span><span class="ds-pair__ratio" data-contrast="--colorStatusSuccessForeground1|--colorStatusSuccessBackground1" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Caution text</span><span class="ds-pair__ratio" data-contrast="--colorStatusWarningForeground1|--colorStatusWarningBackground1" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Warn text</span><span class="ds-pair__ratio" data-contrast="--colorStatusDangerForeground1|--colorStatusDangerBackground1" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Well title</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground1|--colorNeutralBackground3" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Well body</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground2|--colorNeutralBackground3" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Accent well body</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground2|--colorStatusSuccessBackground1" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Primary well body</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground2|--colorBrandBackground2" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Warn well body</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground2|--colorStatusDangerBackground1" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Accent well icon</span><span class="ds-pair__ratio" data-contrast="--colorStatusSuccessForeground3|--colorStatusSuccessBackground1" data-min="3"></span></div>
+        <div class="ds-pair"><span>Warn well icon</span><span class="ds-pair__ratio" data-contrast="--colorStatusDangerForeground3|--colorStatusDangerBackground1" data-min="3"></span></div>
+      </div>
+      <h3>Motion</h3>
+      <p>Banners appear and leave without animation; a banner that slides in pushes content and is easy to miss. Content below simply moves.</p>
+      <h3>Touch</h3>
+      <p>Dismiss and banner actions are 32px small buttons with 8px between them.</p>
+    </section>
+
+    <section class="ds-section" id="content"><h2><a href="#content">Content</a></h2>
+      <ul>
+        <li>Say what happened in plain words, then what to do: "That email and password did not match." "Rain is now likely on Sunday after 2pm."</li>
+        <li>No blame and no codes. Not "Invalid credentials" or "Error 401".</li>
+        <li>Titles are short statements, no full stop: "Your email is not verified yet".</li>
+        <li>Wells start with their purpose: "Why this", "Locked", "Keeping on Saturday", "5 weekend covers will change".</li>
+        <li>A warn well above a danger button names the loss: "The lavender weekend draft goes away", then what is safe: "Locks and family settings stay."</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="do-dont"><h2><a href="#do-dont">Do and don't</a></h2>
+      <div class="ds-dodont">
+        <figure class="ds-do"><div class="ds-example__canvas"><div class="banner banner--warn" style="flex: 1;"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg><span class="banner__text">That email and password did not match.</span></div></div><figcaption>Use the alert icon for an error.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><div class="banner banner--warn" style="flex: 1;"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg><span class="banner__text">That email and password did not match.</span></div></div><figcaption>The sign-in mock leads with a close (×) glyph, which reads as a dismiss button that does nothing.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas"><div class="well" style="flex: 1;"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg><div><p class="well__title">Why this</p><p class="well__body">Saturday is the sunny day.</p></div></div></div><figcaption>A well that is there when the dialog opens has no live role; it is read with the dialog.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><pre style="margin: 0; flex: 1;"><code>&lt;div class="well" role="alert"&gt;…Why this…</code></pre></div><figcaption><code>role="alert"</code> on static content interrupts the dialog's announcement with something that is not urgent.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas"><div class="banner banner--success" style="flex: 1;"><svg class="icon" aria-hidden="true"><use href="#i-check_circle"/></svg><span class="banner__text">Approved · Bronte Creek Maple Magic</span></div></div><figcaption>Approval result as a success banner with <code>role="status"</code>, replacing the mock's one-off <code>approved-row</code>.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><div class="banner banner--success" style="flex: 1; --sd-banner-fg: var(--colorStatusSuccessForeground3);"><span class="banner__text">Approved</span></div></div><figcaption>Colour alone, with the lighter forest ink below 4.5:1 on its tint (D07).</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="ds-section" id="tokens"><h2><a href="#tokens">Tokens</a></h2>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Part</th><th scope="col">Token</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead>
+        <tbody>
+          <tr><td>Info fill and border</td><td><code>--colorStatusInfoBackground1</code>, <code>--colorStatusInfoBorder1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorStatusInfoBackground1" data-swatch></i><span data-token="--colorStatusInfoBackground1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorStatusInfoBackground1" data-swatch></i><span data-token="--colorStatusInfoBackground1"></span></span></td></tr>
+          <tr><td>Info text</td><td><code>--colorStatusInfoForeground1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorStatusInfoForeground1" data-swatch></i><span data-token="--colorStatusInfoForeground1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorStatusInfoForeground1" data-swatch></i><span data-token="--colorStatusInfoForeground1"></span></span></td></tr>
+          <tr><td>Success fill and border</td><td><code>--colorStatusSuccessBackground1</code>, <code>--colorStatusSuccessBorder1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorStatusSuccessBackground1" data-swatch></i><span data-token="--colorStatusSuccessBackground1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorStatusSuccessBackground1" data-swatch></i><span data-token="--colorStatusSuccessBackground1"></span></span></td></tr>
+          <tr><td>Success text</td><td><code>--colorStatusSuccessForeground1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorStatusSuccessForeground1" data-swatch></i><span data-token="--colorStatusSuccessForeground1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorStatusSuccessForeground1" data-swatch></i><span data-token="--colorStatusSuccessForeground1"></span></span></td></tr>
+          <tr><td>Caution fill and border</td><td><code>--colorStatusWarningBackground1</code>, <code>--colorStatusWarningBorder1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorStatusWarningBackground1" data-swatch></i><span data-token="--colorStatusWarningBackground1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorStatusWarningBackground1" data-swatch></i><span data-token="--colorStatusWarningBackground1"></span></span></td></tr>
+          <tr><td>Caution text</td><td><code>--colorStatusWarningForeground1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorStatusWarningForeground1" data-swatch></i><span data-token="--colorStatusWarningForeground1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorStatusWarningForeground1" data-swatch></i><span data-token="--colorStatusWarningForeground1"></span></span></td></tr>
+          <tr><td>Warn fill and border</td><td><code>--colorStatusDangerBackground1</code>, <code>--colorStatusDangerBorder1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorStatusDangerBackground1" data-swatch></i><span data-token="--colorStatusDangerBackground1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorStatusDangerBackground1" data-swatch></i><span data-token="--colorStatusDangerBackground1"></span></span></td></tr>
+          <tr><td>Warn text</td><td><code>--colorStatusDangerForeground1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorStatusDangerForeground1" data-swatch></i><span data-token="--colorStatusDangerForeground1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorStatusDangerForeground1" data-swatch></i><span data-token="--colorStatusDangerForeground1"></span></span></td></tr>
+          <tr><td>Well fill</td><td><code>--colorNeutralBackground3</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralBackground3" data-swatch></i><span data-token="--colorNeutralBackground3"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralBackground3" data-swatch></i><span data-token="--colorNeutralBackground3"></span></span></td></tr>
+          <tr><td>Primary well fill</td><td><code>--colorBrandBackground2</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorBrandBackground2" data-swatch></i><span data-token="--colorBrandBackground2"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorBrandBackground2" data-swatch></i><span data-token="--colorBrandBackground2"></span></span></td></tr>
+          <tr><td>Well icon, accent / warn</td><td><code>--colorStatusSuccessForeground3</code>, <code>--colorStatusDangerForeground3</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorStatusSuccessForeground3" data-swatch></i><span data-token="--colorStatusSuccessForeground3"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorStatusSuccessForeground3" data-swatch></i><span data-token="--colorStatusSuccessForeground3"></span></span></td></tr>
+          <tr><td>Well body</td><td><code>--colorNeutralForeground2</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralForeground2" data-swatch></i><span data-token="--colorNeutralForeground2"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralForeground2" data-swatch></i><span data-token="--colorNeutralForeground2"></span></span></td></tr>
+          <tr><td>Radius</td><td><code>--borderRadiusMedium</code></td><td colspan="2"><span data-token="--borderRadiusMedium"></span></td></tr>
+          <tr><td>Padding (was 14px, D15)</td><td><code>--spacingVerticalM</code>, <code>--spacingHorizontalL</code></td><td colspan="2"><span data-token="--spacingVerticalM"></span> / <span data-token="--spacingHorizontalL"></span></td></tr>
+          <tr><td>Icon gap</td><td><code>--spacingHorizontalMNudge</code></td><td colspan="2"><span data-token="--spacingHorizontalMNudge"></span></td></tr>
+          <tr><td>Text</td><td><code>--typographyBody1</code> at <code>--fontSizeBase350</code></td><td colspan="2"><span data-token="--typographyBody1"></span> / <span data-token="--fontSizeBase350"></span></td></tr>
+          <tr><td>Well title / body</td><td><code>--typographyBody1Strong</code>, <code>--typographyBody2</code></td><td colspan="2"><span data-token="--typographyBody1Strong"></span> / <span data-token="--typographyBody2"></span></td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section class="ds-section" id="code"><h2><a href="#code">Code</a></h2>
+      <pre><code>&lt;!-- Rendered empty with the form; filled when sign-in fails --&gt;
+&lt;div role="alert"&gt;
+  &lt;div class="banner banner--warn"&gt;
+    &lt;svg class="icon" aria-hidden="true"&gt;&lt;use href="#i-alert"/&gt;&lt;/svg&gt;
+    &lt;span class="banner__text"&gt;That email and password did not match.&lt;/span&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="banner banner--caution"&gt;
+  &lt;svg class="icon" aria-hidden="true"&gt;&lt;use href="#i-rain"/&gt;&lt;/svg&gt;
+  &lt;div class="banner__text"&gt;
+    &lt;span class="banner__title"&gt;Rain moved to Saturday&lt;/span&gt;
+    Lavender fields is outdoors from 11:00.
+    &lt;div class="banner__actions"&gt;&lt;button class="btn btn--quiet btn--sm" type="button"&gt;Swap Lavender fields&lt;/button&gt;&lt;/div&gt;
+  &lt;/div&gt;
+  &lt;button class="btn btn--ghost btn--sm btn--icon banner__close" type="button" aria-label="Dismiss"&gt;…&lt;/button&gt;
+&lt;/div&gt;
+
+&lt;div class="well well--accent"&gt;
+  &lt;svg class="icon" aria-hidden="true"&gt;&lt;use href="#i-lock"/&gt;&lt;/svg&gt;
+  &lt;div&gt;&lt;p class="well__title"&gt;Locked&lt;/p&gt;&lt;p class="well__body"&gt;Regenerating leaves this block where it is.&lt;/p&gt;&lt;/div&gt;
+&lt;/div&gt;</code></pre>
+      <table class="ds-table"><thead><tr><th scope="col">Class / attribute</th><th scope="col">Effect</th></tr></thead><tbody>
+        <tr><td><code>.banner</code> + <code>--info</code> <code>--success</code> <code>--caution</code> <code>--warn</code></td><td>Banner and tone (info is the default).</td></tr>
+        <tr><td><code>.banner__text</code> <code>.banner__title</code> <code>.banner__actions</code> <code>.banner__close</code></td><td>Parts.</td></tr>
+        <tr><td><code>.banner--page</code></td><td>Edge-to-edge app banner.</td></tr>
+        <tr><td><code>.well</code> + <code>--accent</code> <code>--primary</code> <code>--warn</code></td><td>Inline note and tone.</td></tr>
+        <tr><td><code>.well__title</code> <code>.well__body</code></td><td>Note title and body.</td></tr>
+        <tr><td><code>role="alert"</code> / <code>role="status"</code></td><td>Only for messages that appear after the page loads.</td></tr>
+      </tbody></table>
+      <p>Angular: <code>&lt;sd-banner tone="warn" role="alert"&gt;</code>, <code>&lt;sd-well tone="accent" icon="lock" title="Locked"&gt;</code>.</p>
+    </section>
+
+    <section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>
+      <ul>
+        <li><a href="../../mocks/pages/sign-in.html">pages/sign-in</a>: the warn banner for a failed sign-in.</li>
+        <li><a href="../../mocks/pages/review-submissions.html">pages/review-submissions</a>: the <code>approved-row</code> status, documented here as a success banner.</li>
+        <li><a href="../../mocks/pages/dialogs.html">pages/dialogs</a>: every well (Why this, Locked, Keeping, the warn well before Start over, the primary well in Add to Sunday).</li>
+        <li><a href="../../mocks/pages/verify-email.html">pages/verify-email</a>: <code>role="status"</code> on the verifying card.</li>
+        <li><a href="../../mocks/pages/legal.html">pages/legal</a>: "The short version" wells.</li>
+      </ul>
+      <p>Drift fixed: D05 (soft text on wells), D07 (success text on its tint), D15 (14px banner and well padding snapped to 12 × 16px). Found while extracting: the sign-in banner leads with a close glyph and doubles <code>role="alert"</code> with <code>aria-live="assertive"</code>. Not in the mocks: the info and caution tones, titles, actions, close and the page banner.</p>
+    </section>
+
+    <footer class="ds-footer"><span>Saturdaze design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/icons.js"></script>
+<script src="../assets/ds.js"></script>
+</body>
+</html>

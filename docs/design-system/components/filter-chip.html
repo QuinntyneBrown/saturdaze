@@ -1,0 +1,386 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Filter chip — Saturdaze design system</title>
+<meta name="description" content="Filter chips are toggle buttons that narrow a list: neutral and tinted pressed variants, a link form, dividers and a phone scroller.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html"><span class="brand-mark" aria-hidden="true"></span>Saturdaze DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Actions</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+    </ul></details>
+    <details open><summary>Inputs</summary><ul>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/chip-input.html">Chip input</a></li>
+      <li><a href="../components/file-upload.html">File upload</a></li>
+      <li><a href="../components/photo-pick.html">Photo pick</a></li>
+      <li><a href="../components/rating.html">Rating</a></li>
+      <li><a href="../components/vote-row.html">Vote row</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+    </ul></details>
+    <details open><summary>Navigation</summary><ul>
+      <li><a href="../components/top-bar.html">Top bar</a></li>
+      <li><a href="../components/bottom-nav.html">Bottom nav</a></li>
+      <li><a href="../components/sidebar-navigation.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs (segments)</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+      <li><a href="../components/footer.html">Footer</a></li>
+    </ul></details>
+    <details open><summary>Containers and overlays</summary><ul>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/container.html">Container and grid</a></li>
+      <li><a href="../components/page-header.html">Page header</a></li>
+    </ul></details>
+    <details open><summary>Data display</summary><ul>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/activity-feed.html">Activity feed</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/chip.html">Chip</a></li>
+      <li><a href="../components/filter-chip.html">Filter chip</a></li>
+      <li><a href="../components/disc.html">Disc</a></li>
+      <li><a href="../components/media.html">Media</a></li>
+      <li><a href="../components/cover.html">Cover photo</a></li>
+      <li><a href="../components/stat.html">Stat</a></li>
+      <li><a href="../components/itinerary.html">Itinerary</a></li>
+      <li><a href="../components/map.html">Map</a></li>
+    </ul></details>
+    <details open><summary>Feedback</summary><ul>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/alert.html">Alert</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/progress-bar.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Auth and marketing</summary><ul>
+      <li><a href="../components/auth-card.html">Auth card</a></li>
+      <li><a href="../components/hero.html">Hero</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/data-tables-and-lists.html">Tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Component · Data display</p>
+      <h1>Filter chip</h1>
+      <p class="ds-lead">Filter chips narrow a list in place: Outdoor ideas, Favourite weekends, places with no photo. Each chip is a toggle button that says whether it is on.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA</span><span class="ds-pill">Status: stable</span><span class="ds-pill">Angular: <code>sd-filter-chip</code>, <code>sd-filters</code></span><span class="ds-pill">Native <code>&lt;button aria-pressed&gt;</code></span></div>
+      <ul class="ds-toc">
+        <li><a href="#overview">Overview</a></li><li><a href="#anatomy">Anatomy</a></li><li><a href="#variants">Variants</a></li><li><a href="#sizes">Sizes</a></li><li><a href="#states">States</a></li><li><a href="#responsive">Responsive</a></li><li><a href="#theming">Theming</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#content">Content</a></li><li><a href="#do-dont">Do and don't</a></li><li><a href="#tokens">Tokens</a></li><li><a href="#code">Code</a></li><li><a href="#sources">Sources</a></li>
+      </ul>
+    </header>
+
+    <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+      <p>Use filter chips above a list or grid when people narrow it by a few known facets and see the result at once. They live in a <code>.filters</code> row (or a <code>.scroller-x</code> on phones) labelled as a group.</p>
+      <ul>
+        <li><b>Toggle</b> (<code>&lt;button class="filter-chip" aria-pressed&gt;</code>) is the default: Ideas, Past and admin Places. The list updates in place; nothing navigates.</li>
+        <li><b>"All"</b> comes first and is pressed when no other chip is. Pressing it clears the others; pressing any other chip releases "All".</li>
+        <li><b>Link form</b> (<code>&lt;a class="filter-chip" aria-current="page"&gt;</code>) is for filters that change the URL and load a new view, such as "This weekend" and "Next weekend" on Events. Only one is current.</li>
+        <li>Chips within one facet are either-or or additive; say which by grouping them between <code>.filters__divider</code> lines (admin Places: kind | photo problem | primary source).</li>
+      </ul>
+      <p>Use <a href="tabs.html">segments</a> to switch between whole sections (Activities, Food, Events), a <a href="select.html">select</a> for more than about eight options, and a static <a href="chip.html">chip</a> to describe an item.</p>
+    </section>
+
+    <section class="ds-section" id="anatomy"><h2><a href="#anatomy">Anatomy</a></h2>
+      <div class="ds-anatomy">
+        <figure class="ds-anatomy__figure">
+          <button class="filter-chip filter-chip--leaf" type="button" aria-pressed="true" style="transform: scale(1.6);"><svg class="icon" aria-hidden="true"><use href="#i-tree"/></svg>Activities</button>
+          <span class="ds-callout" style="left: 34%; top: 20%;" aria-hidden="true">1</span>
+          <span class="ds-callout" style="left: 54%; top: 20%;" aria-hidden="true">2</span>
+          <span class="ds-callout" style="left: 70%; top: 72%;" aria-hidden="true">3</span>
+        </figure>
+        <ol class="ds-anatomy__list">
+          <li><div><b>Leading icon (optional)</b><small>14px, <code>currentColor</code>, <code>aria-hidden="true"</code>; 6px gap.</small></div></li>
+          <li><div><b>Label</b><small><code>--typographyLabel</code> at 13px (<code>--fontSizeBase300</code>). It is the accessible name.</small></div></li>
+          <li><div><b>Container</b><small>Pill, 32px (<code>--controlHeightSmall</code>), 1px accessible border when off; tone fill plus an ink-coloured border when pressed (drift D26).</small></div></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="ds-section" id="variants"><h2><a href="#variants">Variants</a></h2>
+      <h3>Neutral and tinted</h3>
+      <p>Off, every chip looks the same: transparent with a grey outline. On, a neutral chip fills with ink; a tinted chip fills with its tone, matching the static <a href="chip.html">chip</a> tones of the items it shows (Outdoor in leaf, Restaurants in sun).</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas">
+          <div class="filters" role="group" aria-label="Filters, all pressed">
+            <button class="filter-chip" type="button" aria-pressed="true">All</button>
+            <button class="filter-chip filter-chip--leaf" type="button" aria-pressed="true">Outdoor</button>
+            <button class="filter-chip filter-chip--indoor" type="button" aria-pressed="true">Indoor</button>
+            <button class="filter-chip filter-chip--sky" type="button" aria-pressed="true">Weather-safe</button>
+            <button class="filter-chip filter-chip--sun" type="button" aria-pressed="true">Seasonal</button>
+            <button class="filter-chip filter-chip--accent" type="button" aria-pressed="true">Healthy</button>
+            <button class="filter-chip filter-chip--primary" type="button" aria-pressed="true"><svg class="icon" aria-hidden="true"><use href="#i-heart"/></svg>Favourites</button>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>Pressed: neutral (ink), leaf, indoor, sky, sun, accent, primary.</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;button class="filter-chip" type="button" aria-pressed="true"&gt;All&lt;/button&gt;
+&lt;button class="filter-chip filter-chip--leaf" type="button" aria-pressed="false"&gt;Outdoor&lt;/button&gt;
+&lt;button class="filter-chip filter-chip--primary" type="button" aria-pressed="false"&gt;
+  &lt;svg class="icon" aria-hidden="true"&gt;&lt;use href="#i-heart"/&gt;&lt;/svg&gt;Favourites&lt;/button&gt;</code></pre></details>
+      </div>
+      <h3>Grouped with dividers</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas">
+          <div class="filters" role="group" aria-label="Place filters">
+            <button class="filter-chip" type="button" aria-pressed="true">All kinds</button>
+            <button class="filter-chip filter-chip--leaf" type="button" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-tree"/></svg>Activities</button>
+            <button class="filter-chip filter-chip--sun" type="button" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-fork"/></svg>Restaurants</button>
+            <button class="filter-chip filter-chip--sky" type="button" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-ticket"/></svg>Events</button>
+            <span class="filters__divider" aria-hidden="true"></span>
+            <button class="filter-chip" type="button" aria-pressed="true">No photo</button>
+            <button class="filter-chip" type="button" aria-pressed="false">Blocked URL</button>
+            <button class="filter-chip" type="button" aria-pressed="false">Missing alt text</button>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>Admin Places: the kind (either-or) and photo problems (additive) split by a 20px divider, hidden from assistive tech.</span></div>
+      </div>
+      <h3>Link form</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas">
+          <nav aria-label="Event dates"><div class="filters">
+            <a class="filter-chip" href="#variants" aria-current="page">This weekend</a>
+            <a class="filter-chip" href="#variants">Next weekend</a>
+          </div></nav>
+        </div>
+        <div class="ds-example__caption"><span>Changes the URL; the current one carries <code>aria-current="page"</code> and the ink fill.</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;nav aria-label="Event dates"&gt;&lt;div class="filters"&gt;
+  &lt;a class="filter-chip" href="/ideas/events?when=this" aria-current="page"&gt;This weekend&lt;/a&gt;
+  &lt;a class="filter-chip" href="/ideas/events?when=next"&gt;Next weekend&lt;/a&gt;
+&lt;/div&gt;&lt;/nav&gt;</code></pre></details>
+      </div>
+    </section>
+
+    <section class="ds-section" id="sizes"><h2><a href="#sizes">Sizes</a></h2>
+      <p>One size: 32px tall (<code>--controlHeightSmall</code>), 12px side padding, 13px label. Filter chips sit above content and must not compete with page actions, so they are smaller than a medium button; 32px still clears the 24px target minimum with 8px between chips.</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas">
+          <button class="filter-chip" type="button" aria-pressed="false">Under 30 min · 32px</button>
+          <button class="btn btn--quiet btn--sm" type="button">Small button · 32px</button>
+        </div>
+        <div class="ds-example__caption"><span>Same height as a small button, so a filter row and a "Clear" button line up.</span></div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="states"><h2><a href="#states">States</a></h2>
+      <p>Pointer and focus states are forced with <code>data-state</code>; pressed and disabled use the real <code>aria-pressed</code> and <code>disabled</code> attributes. Hover only changes an unpressed chip (border and label darken); a pressed chip keeps its fill.</p>
+      <div class="ds-matrix"><table>
+        <thead><tr><th scope="col">Variant</th><th scope="col">Default</th><th scope="col">Hover</th><th scope="col">Focus</th><th scope="col">Pressed</th><th scope="col">Pressed, focus</th><th scope="col">Disabled</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Neutral</th><td><button class="filter-chip" type="button" aria-pressed="false">All</button></td><td><button class="filter-chip" type="button" aria-pressed="false" data-state="hover">All</button></td><td><button class="filter-chip" type="button" aria-pressed="false" data-state="focus">All</button></td><td><button class="filter-chip" type="button" aria-pressed="true">All</button></td><td><button class="filter-chip" type="button" aria-pressed="true" data-state="focus">All</button></td><td><button class="filter-chip" type="button" aria-pressed="false" disabled>All</button></td></tr>
+          <tr><th scope="row">Leaf</th><td><button class="filter-chip filter-chip--leaf" type="button" aria-pressed="false">Outdoor</button></td><td><button class="filter-chip filter-chip--leaf" type="button" aria-pressed="false" data-state="hover">Outdoor</button></td><td><button class="filter-chip filter-chip--leaf" type="button" aria-pressed="false" data-state="focus">Outdoor</button></td><td><button class="filter-chip filter-chip--leaf" type="button" aria-pressed="true">Outdoor</button></td><td><button class="filter-chip filter-chip--leaf" type="button" aria-pressed="true" data-state="focus">Outdoor</button></td><td><button class="filter-chip filter-chip--leaf" type="button" aria-pressed="false" disabled>Outdoor</button></td></tr>
+          <tr><th scope="row">Indoor</th><td><button class="filter-chip filter-chip--indoor" type="button" aria-pressed="false">Indoor</button></td><td><button class="filter-chip filter-chip--indoor" type="button" aria-pressed="false" data-state="hover">Indoor</button></td><td><button class="filter-chip filter-chip--indoor" type="button" aria-pressed="false" data-state="focus">Indoor</button></td><td><button class="filter-chip filter-chip--indoor" type="button" aria-pressed="true">Indoor</button></td><td><button class="filter-chip filter-chip--indoor" type="button" aria-pressed="true" data-state="focus">Indoor</button></td><td><button class="filter-chip filter-chip--indoor" type="button" aria-pressed="false" disabled>Indoor</button></td></tr>
+          <tr><th scope="row">Sky</th><td><button class="filter-chip filter-chip--sky" type="button" aria-pressed="false">Weather-safe</button></td><td><button class="filter-chip filter-chip--sky" type="button" aria-pressed="false" data-state="hover">Weather-safe</button></td><td><button class="filter-chip filter-chip--sky" type="button" aria-pressed="false" data-state="focus">Weather-safe</button></td><td><button class="filter-chip filter-chip--sky" type="button" aria-pressed="true">Weather-safe</button></td><td><button class="filter-chip filter-chip--sky" type="button" aria-pressed="true" data-state="focus">Weather-safe</button></td><td><button class="filter-chip filter-chip--sky" type="button" aria-pressed="false" disabled>Weather-safe</button></td></tr>
+          <tr><th scope="row">Sun</th><td><button class="filter-chip filter-chip--sun" type="button" aria-pressed="false">Seasonal</button></td><td><button class="filter-chip filter-chip--sun" type="button" aria-pressed="false" data-state="hover">Seasonal</button></td><td><button class="filter-chip filter-chip--sun" type="button" aria-pressed="false" data-state="focus">Seasonal</button></td><td><button class="filter-chip filter-chip--sun" type="button" aria-pressed="true">Seasonal</button></td><td><button class="filter-chip filter-chip--sun" type="button" aria-pressed="true" data-state="focus">Seasonal</button></td><td><button class="filter-chip filter-chip--sun" type="button" aria-pressed="false" disabled>Seasonal</button></td></tr>
+          <tr><th scope="row">Accent</th><td><button class="filter-chip filter-chip--accent" type="button" aria-pressed="false">Healthy</button></td><td><button class="filter-chip filter-chip--accent" type="button" aria-pressed="false" data-state="hover">Healthy</button></td><td><button class="filter-chip filter-chip--accent" type="button" aria-pressed="false" data-state="focus">Healthy</button></td><td><button class="filter-chip filter-chip--accent" type="button" aria-pressed="true">Healthy</button></td><td><button class="filter-chip filter-chip--accent" type="button" aria-pressed="true" data-state="focus">Healthy</button></td><td><button class="filter-chip filter-chip--accent" type="button" aria-pressed="false" disabled>Healthy</button></td></tr>
+          <tr><th scope="row">Primary</th><td><button class="filter-chip filter-chip--primary" type="button" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-heart"/></svg>Favourites</button></td><td><button class="filter-chip filter-chip--primary" type="button" aria-pressed="false" data-state="hover"><svg class="icon" aria-hidden="true"><use href="#i-heart"/></svg>Favourites</button></td><td><button class="filter-chip filter-chip--primary" type="button" aria-pressed="false" data-state="focus"><svg class="icon" aria-hidden="true"><use href="#i-heart"/></svg>Favourites</button></td><td><button class="filter-chip filter-chip--primary" type="button" aria-pressed="true"><svg class="icon" aria-hidden="true"><use href="#i-heart"/></svg>Favourites</button></td><td><button class="filter-chip filter-chip--primary" type="button" aria-pressed="true" data-state="focus"><svg class="icon" aria-hidden="true"><use href="#i-heart"/></svg>Favourites</button></td><td><button class="filter-chip filter-chip--primary" type="button" aria-pressed="false" disabled><svg class="icon" aria-hidden="true"><use href="#i-heart"/></svg>Favourites</button></td></tr>
+          <tr><th scope="row">Link</th><td><a class="filter-chip" href="#states">Next weekend</a></td><td><a class="filter-chip" href="#states" data-state="hover">Next weekend</a></td><td><a class="filter-chip" href="#states" data-state="focus">Next weekend</a></td><td><a class="filter-chip" href="#states" aria-current="page">This weekend</a></td><td><a class="filter-chip" href="#states" aria-current="page" data-state="focus">This weekend</a></td><td><span class="text-soft">Not used; hide the link</span></td></tr>
+        </tbody>
+      </table></div>
+      <h3>Both themes</h3>
+      <div class="ds-themes">
+        <div data-theme="light"><div class="ds-example__canvas" style="padding: 0;"><button class="filter-chip" type="button" aria-pressed="true">All</button><button class="filter-chip" type="button" aria-pressed="false">Ages 5+</button><button class="filter-chip filter-chip--leaf" type="button" aria-pressed="true">Outdoor</button><button class="filter-chip filter-chip--indoor" type="button" aria-pressed="true">Indoor</button><button class="filter-chip filter-chip--sky" type="button" aria-pressed="true">Weather-safe</button><button class="filter-chip filter-chip--sun" type="button" aria-pressed="true">Seasonal</button><button class="filter-chip" type="button" aria-pressed="false" data-state="focus">Focus</button></div></div>
+        <div data-theme="dark"><div class="ds-example__canvas" style="padding: 0;"><button class="filter-chip" type="button" aria-pressed="true">All</button><button class="filter-chip" type="button" aria-pressed="false">Ages 5+</button><button class="filter-chip filter-chip--leaf" type="button" aria-pressed="true">Outdoor</button><button class="filter-chip filter-chip--indoor" type="button" aria-pressed="true">Indoor</button><button class="filter-chip filter-chip--sky" type="button" aria-pressed="true">Weather-safe</button><button class="filter-chip filter-chip--sun" type="button" aria-pressed="true">Seasonal</button><button class="filter-chip" type="button" aria-pressed="false" data-state="focus">Focus</button></div></div>
+      </div>
+      <ul>
+        <li><b>Pressed</b> fills the chip and, for tinted chips, draws the border in the tone's ink colour, so "on" is not a pale fill alone (drift D26).</li>
+        <li><b>Disabled</b> (50% opacity, not focusable) is for a facet that would return nothing; prefer showing the chip with a zero result and an <a href="empty-state.html">empty state</a>, which explains why.</li>
+        <li><b>Loading</b>: the chip toggles at once; the list below shows its own loading state (<a href="skeleton.html">skeleton</a>). The chip never shows a spinner.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="responsive"><h2><a href="#responsive">Responsive behaviour</a></h2>
+      <ul>
+        <li><b>Under 720px</b> the user-facing filter rows (Ideas, Past) sit in a <code>.scroller-x</code>: one line, scrolling sideways, bleeding to the screen edges with a 16px fade so a cut-off chip hints there is more.</li>
+        <li><b>From 720px</b> the same row wraps (<code>.scroller-x</code> turns into a wrapping row with no bleed or fade).</li>
+        <li>Admin Places uses a wrapping <code>.filters</code> row at every width; admins scan all the facets at once.</li>
+        <li>Labels never truncate. Put "All" first so it is always visible without scrolling.</li>
+      </ul>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack ds-example__canvas--canvas">
+          <div class="ds-frame" style="width: 100%; max-width: 22.5rem; padding: var(--spacingVerticalL) var(--layoutMargin);">
+            <div class="scroller-x" role="group" aria-label="Weekend filters">
+              <button class="filter-chip" type="button" aria-pressed="true">All</button>
+              <button class="filter-chip filter-chip--primary" type="button" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-heart"/></svg>Favourites</button>
+              <button class="filter-chip" type="button" aria-pressed="false">This year</button>
+              <button class="filter-chip filter-chip--sun" type="button" aria-pressed="false" aria-label="5 stars">5★</button>
+            </div>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>Past filters in a 360px frame. Below 720px this row scrolls; on a wider screen it wraps.</span></div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="theming"><h2><a href="#theming">Theming</a></h2>
+      <p>The chip reads two component tokens for its pressed look, <code>--sd-fchip-on-bg</code> and <code>--sd-fchip-on-fg</code>. Neutral maps them to the inverted pair (<code>--colorNeutralBackgroundInverted</code> / <code>--colorNeutralForegroundInverted</code>); each tint maps them to a palette or status pair. The pressed tinted border reuses <code>--sd-fchip-on-fg</code>. The off state reads <code>--colorNeutralStrokeAccessible</code> and <code>--colorNeutralForeground2</code>.</p>
+      <p>To add a tone, map the two component tokens to an existing palette or status pair. The sample below is hypothetical: <code>.filter-chip--example</code> does not exist in components.css; only the tones listed under Variants do.</p>
+      <pre><code>/* HYPOTHETICAL: .filter-chip--example does not exist. Shape of a new tone only. */
+.filter-chip--example { --sd-fchip-on-bg: var(--colorStatusDangerBackground1); --sd-fchip-on-fg: var(--colorStatusDangerForeground1); }</code></pre>
+      <p>In the dark theme the inverted pair flips to a light fill with a dark label, so a pressed neutral chip is the brightest thing in the row in both themes.</p>
+    </section>
+
+    <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
+      <h3>Role and pattern</h3>
+      <p>Each chip is a native <code>&lt;button type="button"&gt;</code> with <code>aria-pressed</code>, the toggle form of the <a href="https://www.w3.org/WAI/ARIA/apg/patterns/button/">APG Button pattern</a>. The row is <code>role="group"</code> with an <code>aria-label</code> ("Filters", or better "Idea filters"). Do not use <code>aria-selected</code> or <code>role="tab"</code>: chips are not tabs and several can be on at once. The link form is a plain <code>&lt;a href&gt;</code> inside a labelled <code>&lt;nav&gt;</code>, with <code>aria-current="page"</code> on the current one.</p>
+      <h3>Keyboard</h3>
+      <table class="ds-table ds-keys"><thead><tr><th scope="col">Key</th><th scope="col">Action</th></tr></thead><tbody>
+        <tr><td><kbd>Tab</kbd> / <kbd>Shift</kbd>+<kbd>Tab</kbd></td><td>Moves through every chip in order (no roving tabindex; rows are short).</td></tr>
+        <tr><td><kbd>Space</kbd> / <kbd>Enter</kbd></td><td>Toggles the chip and updates the list. Focus stays on the chip.</td></tr>
+        <tr><td><kbd>Enter</kbd></td><td>On the link form: follows the link.</td></tr>
+      </tbody></table>
+      <h3>Focus</h3>
+      <p>The shared ring (<code>2px --colorStrokeFocus2</code>, 2px offset) on <code>:focus-visible</code>. In a <code>.scroller-x</code> the browser scrolls the focused chip into view; the scroller's inline padding keeps the ring from being clipped at the edge.</p>
+      <h3>Labelling</h3>
+      <p>The visible label is the name and does not change when pressed; <code>aria-pressed</code> carries the state ("Outdoor, toggle button, pressed"). Symbols get words: the Past "5★" chip needs <code>aria-label="5 stars"</code> or, better, the visible label "5 stars". After the list changes, announce the new count in a polite live region ("6 ideas"), as the <a href="../patterns/data-tables-and-lists.html">tables and lists pattern</a> describes.</p>
+      <h3>Contrast</h3>
+      <div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0; gap: var(--spacingHorizontalS);">
+        <div class="ds-pair"><span>Off label on page</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground2|--colorNeutralBackground2" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Off border on page</span><span class="ds-pair__ratio" data-contrast="--colorNeutralStrokeAccessible|--colorNeutralBackground2" data-min="3"></span></div>
+        <div class="ds-pair"><span>Pressed neutral label on ink</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForegroundInverted|--colorNeutralBackgroundInverted" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Pressed leaf label on leaf fill</span><span class="ds-pair__ratio" data-contrast="--colorPaletteLeafForeground1|--colorPaletteLeafBackground1" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Pressed leaf border on page (drift D26)</span><span class="ds-pair__ratio" data-contrast="--colorPaletteLeafForeground1|--colorNeutralBackground2" data-min="3"></span></div>
+        <div class="ds-pair"><span>Pressed sun label on sun fill</span><span class="ds-pair__ratio" data-contrast="--colorPaletteSunForeground1|--colorPaletteSunBackground1" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Pressed sky border on page</span><span class="ds-pair__ratio" data-contrast="--colorPaletteSkyForeground1|--colorNeutralBackground2" data-min="3"></span></div>
+        <div class="ds-pair"><span>Pressed indoor border on page</span><span class="ds-pair__ratio" data-contrast="--colorPaletteIndoorForeground1|--colorNeutralBackground2" data-min="3"></span></div>
+        <div class="ds-pair"><span>Focus ring on page</span><span class="ds-pair__ratio" data-contrast="--colorStrokeFocus2|--colorNeutralBackground2" data-min="3"></span></div>
+      </div>
+      <h3>Motion</h3>
+      <p>Background, colour and border change over <code>--durationFast</code> (120ms). Under <code>prefers-reduced-motion</code> the duration token is zero and the change is instant. Results are not animated in.</p>
+      <h3>Touch</h3>
+      <p>32px tall with 8px between chips: above the 24px minimum, and the gap stops a thumb hitting two chips at once. The scroller lets people swipe the row without toggling a chip, because a toggle needs a tap, not a drag.</p>
+    </section>
+
+    <section class="ds-section" id="content"><h2><a href="#content">Content</a></h2>
+      <ul>
+        <li>Name the facet, not the action: "Outdoor", "Under 30 min", "No photo". Never "Show outdoor".</li>
+        <li>"All" (or "All kinds" when there are several facets) first.</li>
+        <li>One to three words, sentence case, words over symbols: "5 stars", not "5★".</li>
+        <li>Keep a row to about eight chips; past that, use a <a href="select.html">select</a> or a filter dialog.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="do-dont"><h2><a href="#do-dont">Do and don't</a></h2>
+      <div class="ds-dodont">
+        <figure class="ds-do"><div class="ds-example__canvas"><button class="filter-chip filter-chip--leaf" type="button" aria-pressed="true">Outdoor</button><button class="filter-chip filter-chip--leaf" type="button" aria-pressed="false">Festivals</button></div><figcaption>A pressed tinted chip has a border in its ink colour, so on and off differ by more than a pale fill (drift D26).</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><button class="filter-chip filter-chip--leaf" type="button" aria-pressed="true" style="border-color: var(--colorPaletteLeafBackground1);">Outdoor</button><button class="filter-chip filter-chip--leaf" type="button" aria-pressed="false">Festivals</button></div><figcaption>The mocks' pressed leaf chip: a pale fill alone, with no edge against the page (WCAG 1.4.11).</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas"><button class="filter-chip" type="button" aria-pressed="true">This weekend</button></div><figcaption>State in <code>aria-pressed</code>; the label stays the same.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><button class="filter-chip" type="button" aria-pressed="true">This weekend ✓</button></div><figcaption>A tick added to the label: the name changes on press and a screen reader hears "check mark" as well as "pressed".</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas"><button class="filter-chip filter-chip--sun" type="button" aria-pressed="false">5 stars</button></div><figcaption>Words, so the name reads well aloud.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><button class="filter-chip filter-chip--sun" type="button" aria-pressed="false">5★</button></div><figcaption>Past's "5★" is read as "5 black star".</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="ds-section" id="tokens"><h2><a href="#tokens">Tokens</a></h2>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Part</th><th scope="col">Token</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead>
+        <tbody>
+          <tr><td>Off border</td><td><code>--colorNeutralStrokeAccessible</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralStrokeAccessible" data-swatch></i><span data-token="--colorNeutralStrokeAccessible"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralStrokeAccessible" data-swatch></i><span data-token="--colorNeutralStrokeAccessible"></span></span></td></tr>
+          <tr><td>Off label</td><td><code>--colorNeutralForeground2</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralForeground2" data-swatch></i><span data-token="--colorNeutralForeground2"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralForeground2" data-swatch></i><span data-token="--colorNeutralForeground2"></span></span></td></tr>
+          <tr><td>Hover border and label</td><td><code>--colorNeutralForeground1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralForeground1" data-swatch></i><span data-token="--colorNeutralForeground1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralForeground1" data-swatch></i><span data-token="--colorNeutralForeground1"></span></span></td></tr>
+          <tr><td>Pressed neutral fill</td><td><code>--colorNeutralBackgroundInverted</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralBackgroundInverted" data-swatch></i><span data-token="--colorNeutralBackgroundInverted"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralBackgroundInverted" data-swatch></i><span data-token="--colorNeutralBackgroundInverted"></span></span></td></tr>
+          <tr><td>Pressed neutral label</td><td><code>--colorNeutralForegroundInverted</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralForegroundInverted" data-swatch></i><span data-token="--colorNeutralForegroundInverted"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralForegroundInverted" data-swatch></i><span data-token="--colorNeutralForegroundInverted"></span></span></td></tr>
+          <tr><td>Leaf pressed fill / label and border</td><td><code>--colorPaletteLeafBackground1</code> / <code>--colorPaletteLeafForeground1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorPaletteLeafForeground1" data-swatch></i><span data-token="--colorPaletteLeafForeground1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorPaletteLeafForeground1" data-swatch></i><span data-token="--colorPaletteLeafForeground1"></span></span></td></tr>
+          <tr><td>Indoor pressed fill / label and border</td><td><code>--colorPaletteIndoorBackground1</code> / <code>--colorPaletteIndoorForeground1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorPaletteIndoorForeground1" data-swatch></i><span data-token="--colorPaletteIndoorForeground1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorPaletteIndoorForeground1" data-swatch></i><span data-token="--colorPaletteIndoorForeground1"></span></span></td></tr>
+          <tr><td>Sky pressed fill / label and border</td><td><code>--colorPaletteSkyBackground1</code> / <code>--colorPaletteSkyForeground1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorPaletteSkyForeground1" data-swatch></i><span data-token="--colorPaletteSkyForeground1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorPaletteSkyForeground1" data-swatch></i><span data-token="--colorPaletteSkyForeground1"></span></span></td></tr>
+          <tr><td>Sun pressed fill / label and border</td><td><code>--colorPaletteSunBackground1</code> / <code>--colorPaletteSunForeground1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorPaletteSunForeground1" data-swatch></i><span data-token="--colorPaletteSunForeground1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorPaletteSunForeground1" data-swatch></i><span data-token="--colorPaletteSunForeground1"></span></span></td></tr>
+          <tr><td>Accent pressed fill / label and border</td><td><code>--colorStatusSuccessBackground1</code> / <code>--colorStatusSuccessForeground1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorStatusSuccessForeground1" data-swatch></i><span data-token="--colorStatusSuccessForeground1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorStatusSuccessForeground1" data-swatch></i><span data-token="--colorStatusSuccessForeground1"></span></span></td></tr>
+          <tr><td>Primary pressed fill / label and border</td><td><code>--colorBrandBackground2</code> / <code>--colorBrandForeground1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorBrandForeground1" data-swatch></i><span data-token="--colorBrandForeground1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorBrandForeground1" data-swatch></i><span data-token="--colorBrandForeground1"></span></span></td></tr>
+          <tr><td>Divider</td><td><code>--colorNeutralStroke1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralStroke1" data-swatch></i><span data-token="--colorNeutralStroke1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralStroke1" data-swatch></i><span data-token="--colorNeutralStroke1"></span></span></td></tr>
+          <tr><td>Focus ring</td><td><code>--colorStrokeFocus2</code>, <code>--strokeWidthThick</code>, <code>--focusRingOffset</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorStrokeFocus2" data-swatch></i><span data-token="--colorStrokeFocus2"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorStrokeFocus2" data-swatch></i><span data-token="--colorStrokeFocus2"></span></span></td></tr>
+          <tr><td>Height</td><td><code>--controlHeightSmall</code></td><td colspan="2"><span data-token="--controlHeightSmall"></span></td></tr>
+          <tr><td>Padding / gap between chips</td><td><code>--spacingHorizontalM</code> / <code>--spacingHorizontalS</code></td><td colspan="2"><span data-token="--spacingHorizontalM"></span> / <span data-token="--spacingHorizontalS"></span></td></tr>
+          <tr><td>Label</td><td><code>--typographyLabel</code>, <code>--fontSizeBase300</code></td><td colspan="2"><span data-token="--typographyLabel"></span> / <span data-token="--fontSizeBase300"></span></td></tr>
+          <tr><td>Border width</td><td><code>--strokeWidthThin</code></td><td colspan="2"><span data-token="--strokeWidthThin"></span></td></tr>
+          <tr><td>Radius</td><td><code>--borderRadiusCircular</code></td><td colspan="2"><span data-token="--borderRadiusCircular"></span></td></tr>
+          <tr><td>Transition</td><td><code>--durationFast</code>, <code>--curveEasyEase</code></td><td colspan="2"><span data-token="--durationFast"></span> <span data-token="--curveEasyEase"></span></td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section class="ds-section" id="code"><h2><a href="#code">Code</a></h2>
+      <pre><code>&lt;div class="scroller-x" role="group" aria-label="Idea filters"&gt;
+  &lt;button class="filter-chip" type="button" aria-pressed="true"&gt;All&lt;/button&gt;
+  &lt;button class="filter-chip filter-chip--leaf" type="button" aria-pressed="false"&gt;Outdoor&lt;/button&gt;
+  &lt;button class="filter-chip filter-chip--indoor" type="button" aria-pressed="false"&gt;Indoor&lt;/button&gt;
+  &lt;span class="filters__divider" aria-hidden="true"&gt;&lt;/span&gt;
+  &lt;button class="filter-chip" type="button" aria-pressed="false"&gt;Under 30 min&lt;/button&gt;
+&lt;/div&gt;
+&lt;p class="visually-hidden" role="status"&gt;6 ideas&lt;/p&gt;</code></pre>
+      <table class="ds-table"><thead><tr><th scope="col">Class / attribute</th><th scope="col">Effect</th></tr></thead><tbody>
+        <tr><td><code>.filters</code></td><td>Wrapping row with 8px gaps. Add <code>role="group"</code> and <code>aria-label</code>.</td></tr>
+        <tr><td><code>.scroller-x</code></td><td>One scrolling line under 720px, wrapping row from 720px.</td></tr>
+        <tr><td><code>.filter-chip</code></td><td>Base toggle: outline off, ink fill on.</td></tr>
+        <tr><td><code>.filter-chip--leaf</code> <code>--indoor</code> <code>--sky</code> <code>--sun</code> <code>--accent</code> <code>--primary</code></td><td>Tinted pressed fill with an ink-coloured border.</td></tr>
+        <tr><td><code>.filters__divider</code></td><td>20px vertical rule between facets; <code>aria-hidden="true"</code>.</td></tr>
+        <tr><td><code>aria-pressed="true|false"</code></td><td>Toggle state (button form). Always present, so the chip is announced as a toggle.</td></tr>
+        <tr><td><code>aria-current="page"</code></td><td>Current filter (link form).</td></tr>
+        <tr><td><code>disabled</code></td><td>50% opacity, removed from the tab order.</td></tr>
+        <tr><td><code>data-state="hover|focus"</code></td><td>Documentation only: forces a pointer or focus state.</td></tr>
+      </tbody></table>
+    </section>
+
+    <section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>
+      <ul>
+        <li><a href="../../mocks/pages/ideas.html">pages/ideas</a> and <a href="../../mocks/pages/ideas.food.html">pages/ideas.food</a>: All, Outdoor, Indoor, Under 30 min, Ages 5+, Weather-safe in a <code>.scroller-x</code>.</li>
+        <li><a href="../../mocks/pages/ideas.events.html">pages/ideas.events</a>: This weekend / Next weekend, a divider, then Outdoor, Indoor, Seasonal, Theatre, Festivals.</li>
+        <li><a href="../../mocks/pages/past.html">pages/past</a>: All, Favourites (heart), This year, 5★.</li>
+        <li><a href="../../mocks/pages/admin.places.html">pages/admin.places</a>: three facet groups split by <code>.filters__divider</code>, icons on the kind chips.</li>
+      </ul>
+      <p>Drift applied: drift D06 (off border raised to the accessible stroke), drift D17 (literal white on the pressed chip now <code>--colorNeutralForegroundInverted</code>), drift D26 (pressed tinted chips gain an ink-coloured border). No mock uses the link form with <code>aria-current</code>; it is defined here for Events' "This weekend / Next weekend", which the mock builds as toggles even though they change what week is loaded. No mock shows a disabled filter chip.</p>
+    </section>
+
+    <footer class="ds-footer"><span>Saturdaze design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/icons.js"></script>
+<script src="../assets/ds.js"></script>
+</body>
+</html>

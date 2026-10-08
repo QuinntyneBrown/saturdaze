@@ -1,0 +1,389 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rating — Saturdaze design system</title>
+<meta name="description" content="Rating shows how a past weekend went out of five stars, and lets a family member set it in the How was it? dialog.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html"><span class="brand-mark" aria-hidden="true"></span>Saturdaze DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Actions</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+    </ul></details>
+    <details open><summary>Inputs</summary><ul>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/chip-input.html">Chip input</a></li>
+      <li><a href="../components/file-upload.html">File upload</a></li>
+      <li><a href="../components/photo-pick.html">Photo pick</a></li>
+      <li><a href="../components/rating.html">Rating</a></li>
+      <li><a href="../components/vote-row.html">Vote row</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+    </ul></details>
+    <details open><summary>Navigation</summary><ul>
+      <li><a href="../components/top-bar.html">Top bar</a></li>
+      <li><a href="../components/bottom-nav.html">Bottom nav</a></li>
+      <li><a href="../components/sidebar-navigation.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs (segments)</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+      <li><a href="../components/footer.html">Footer</a></li>
+    </ul></details>
+    <details open><summary>Containers and overlays</summary><ul>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/container.html">Container and grid</a></li>
+      <li><a href="../components/page-header.html">Page header</a></li>
+    </ul></details>
+    <details open><summary>Data display</summary><ul>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/activity-feed.html">Activity feed</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/chip.html">Chip</a></li>
+      <li><a href="../components/filter-chip.html">Filter chip</a></li>
+      <li><a href="../components/disc.html">Disc</a></li>
+      <li><a href="../components/media.html">Media</a></li>
+      <li><a href="../components/cover.html">Cover photo</a></li>
+      <li><a href="../components/stat.html">Stat</a></li>
+      <li><a href="../components/itinerary.html">Itinerary</a></li>
+      <li><a href="../components/map.html">Map</a></li>
+    </ul></details>
+    <details open><summary>Feedback</summary><ul>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/alert.html">Alert</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/progress-bar.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Auth and marketing</summary><ul>
+      <li><a href="../components/auth-card.html">Auth card</a></li>
+      <li><a href="../components/hero.html">Hero</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/data-tables-and-lists.html">Tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Component · Inputs</p>
+      <h1>Rating</h1>
+      <p class="ds-lead">Five stars that say how a past weekend went. On a Past card the stars show the rating and open the "How was it?" dialog; in the dialog they are a radio group that sets it.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA</span><span class="ds-pill">Status: stable</span><span class="ds-pill">Angular: <code>sd-stars</code></span><span class="ds-pill">Radio group of <code>&lt;button&gt;</code></span></div>
+      <ul class="ds-toc">
+        <li><a href="#overview">Overview</a></li><li><a href="#anatomy">Anatomy</a></li><li><a href="#variants">Variants</a></li><li><a href="#sizes">Sizes</a></li><li><a href="#states">States</a></li><li><a href="#responsive">Responsive</a></li><li><a href="#theming">Theming</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#content">Content</a></li><li><a href="#do-dont">Do and don't</a></li><li><a href="#tokens">Tokens</a></li><li><a href="#code">Code</a></li><li><a href="#sources">Sources</a></li>
+      </ul>
+    </header>
+
+    <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+      <p>Use rating only for the family's own verdict on a weekend they have had, from 1 to 5. It is not a review score for places, and it never averages several people. For a quick yes or no from each family member, use the <a href="vote-row.html">vote row</a>.</p>
+      <ul>
+        <li><b>Display trigger</b> (<code>button.stars</code>) sits on each Past card. It shows the current rating with a "4 of 5" label and opens D13 to change it.</li>
+        <li><b>Read only</b> (<code>span.stars</code> with <code>role="img"</code>) shows a rating where it cannot be changed, such as a shared weekend.</li>
+        <li><b>Input</b> (<code>.stars.stars--lg</code>, <code>role="radiogroup"</code>) is the "How was it?" dialog: five large ghost icon buttons, one per score.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="anatomy"><h2><a href="#anatomy">Anatomy</a></h2>
+      <div class="ds-anatomy">
+        <figure class="ds-anatomy__figure">
+          <div style="position: relative; display: inline-block;">
+            <span class="stars stars--lg" role="img" aria-label="Rated 4 of 5, anatomy example"><svg class="icon icon--filled" aria-hidden="true"><use href="#i-star"/></svg><svg class="icon icon--filled" aria-hidden="true"><use href="#i-star"/></svg><svg class="icon icon--filled" aria-hidden="true"><use href="#i-star"/></svg><svg class="icon icon--filled" aria-hidden="true"><use href="#i-star"/></svg><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg><span class="stars__label">4 of 5</span></span>
+            <span class="ds-callout" style="left: 30%; top: -70%;" aria-hidden="true">1</span>
+            <span class="ds-callout" style="left: 70%; top: -70%;" aria-hidden="true">2</span>
+            <span class="ds-callout" style="left: 92%; top: 110%;" aria-hidden="true">3</span>
+            <span class="ds-callout" style="left: 0%; top: 110%;" aria-hidden="true">4</span>
+          </div>
+        </figure>
+        <ol class="ds-anatomy__list">
+          <li><div><b>Filled star</b><small>Solid star in <code>--colorPaletteSunForeground3</code> (<code>.icon--filled</code>, or <code>.is-on</code> on an input button). One per point of the rating.</small></div></li>
+          <li><div><b>Empty star</b><small>Outline star in <code>--colorNeutralStrokeAccessible</code>. Outline versus solid is the cue, not colour alone.</small></div></li>
+          <li><div><b>Value label (optional)</b><small><code>.stars__label</code>: "4 of 5" in <code>--typographyCaption1</code>, 6px after the stars.</small></div></li>
+          <li><div><b>Container</b><small><code>.stars</code>: inline row, 2px between stars, <code>--borderRadiusSmall</code> for the focus ring. A button, a span or a radio group.</small></div></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="ds-section" id="variants"><h2><a href="#variants">Variants</a></h2>
+      <p>Pick by what the person can do with it: open the dialog, nothing, or choose a score.</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas">
+          <button class="stars" type="button" aria-label="Rate this weekend, currently 4 of 5"><svg class="icon icon--filled" aria-hidden="true"><use href="#i-star"/></svg><svg class="icon icon--filled" aria-hidden="true"><use href="#i-star"/></svg><svg class="icon icon--filled" aria-hidden="true"><use href="#i-star"/></svg><svg class="icon icon--filled" aria-hidden="true"><use href="#i-star"/></svg><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg><span class="stars__label">4 of 5</span></button>
+          <span class="stars" role="img" aria-label="Rated 3 of 5"><svg class="icon icon--filled" aria-hidden="true"><use href="#i-star"/></svg><svg class="icon icon--filled" aria-hidden="true"><use href="#i-star"/></svg><svg class="icon icon--filled" aria-hidden="true"><use href="#i-star"/></svg><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg><span class="stars__label">3 of 5</span></span>
+        </div>
+        <div class="ds-example__caption"><span>Display trigger on a Past card (opens D13), and read only.</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;button class="stars" type="button" aria-label="Rate this weekend, currently 4 of 5"&gt;
+  &lt;svg class="icon icon--filled" aria-hidden="true"&gt;&lt;use href="#i-star"/&gt;&lt;/svg&gt; ×4
+  &lt;svg class="icon" aria-hidden="true"&gt;&lt;use href="#i-star"/&gt;&lt;/svg&gt;
+  &lt;span class="stars__label"&gt;4 of 5&lt;/span&gt;
+&lt;/button&gt;
+
+&lt;span class="stars" role="img" aria-label="Rated 3 of 5"&gt;…&lt;/span&gt;</code></pre></details>
+      </div>
+      <h3>Input</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack">
+          <div class="stars stars--lg" role="radiogroup" aria-label="Rating">
+            <button class="btn btn--ghost btn--icon btn--lg is-on" type="button" role="radio" aria-checked="false" tabindex="-1" aria-label="1 star"><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg></button>
+            <button class="btn btn--ghost btn--icon btn--lg is-on" type="button" role="radio" aria-checked="false" tabindex="-1" aria-label="2 stars"><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg></button>
+            <button class="btn btn--ghost btn--icon btn--lg is-on" type="button" role="radio" aria-checked="false" tabindex="-1" aria-label="3 stars"><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg></button>
+            <button class="btn btn--ghost btn--icon btn--lg is-on" type="button" role="radio" aria-checked="true" aria-label="4 stars"><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg></button>
+            <button class="btn btn--ghost btn--icon btn--lg" type="button" role="radio" aria-checked="false" tabindex="-1" aria-label="5 stars"><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg></button>
+          </div>
+          <p class="text-sm text-soft">4 of 5.</p>
+        </div>
+        <div class="ds-example__caption"><span>D13 "How was it?": 4 is chosen, so stars 1 to 4 are filled (<code>.is-on</code>) and only the fourth is <code>aria-checked="true"</code>.</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;div class="stars stars--lg" role="radiogroup" aria-label="Rating"&gt;
+  &lt;button class="btn btn--ghost btn--icon btn--lg is-on" type="button" role="radio"
+          aria-checked="false" tabindex="-1" aria-label="1 star"&gt;…&lt;/button&gt;
+  …
+  &lt;button class="btn btn--ghost btn--icon btn--lg is-on" type="button" role="radio"
+          aria-checked="true" aria-label="4 stars"&gt;…&lt;/button&gt;
+  &lt;button class="btn btn--ghost btn--icon btn--lg" type="button" role="radio"
+          aria-checked="false" tabindex="-1" aria-label="5 stars"&gt;…&lt;/button&gt;
+&lt;/div&gt;</code></pre></details>
+      </div>
+    </section>
+
+    <section class="ds-section" id="sizes"><h2><a href="#sizes">Sizes</a></h2>
+      <p>Two sizes, tied to the variant. Display stars are 18px so a rating fits on a card row. Input stars are 40px inside 48px ghost buttons, because a parent taps them on a phone while the dialog is a bottom sheet.</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas">
+          <span class="stars" role="img" aria-label="Rated 5 of 5, display size"><svg class="icon icon--filled" aria-hidden="true"><use href="#i-star"/></svg><svg class="icon icon--filled" aria-hidden="true"><use href="#i-star"/></svg><svg class="icon icon--filled" aria-hidden="true"><use href="#i-star"/></svg><svg class="icon icon--filled" aria-hidden="true"><use href="#i-star"/></svg><svg class="icon icon--filled" aria-hidden="true"><use href="#i-star"/></svg><span class="stars__label">Display · 18px</span></span>
+          <span class="stars stars--lg" role="img" aria-label="Rated 2 of 5, large size"><svg class="icon icon--filled" aria-hidden="true"><use href="#i-star"/></svg><svg class="icon icon--filled" aria-hidden="true"><use href="#i-star"/></svg><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg><span class="stars__label">Large · 40px</span></span>
+        </div>
+        <div class="ds-example__caption"><span><code>.stars</code> 1.125rem icons; <code>.stars--lg</code> 2.5rem icons in <code>--sd-btn-h: 3rem</code> buttons.</span></div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="states"><h2><a href="#states">States</a></h2>
+      <p>Pointer and focus states are forced with <code>data-state</code>. In the input, "checked" is the chosen star; the stars before it are filled but not checked.</p>
+      <div class="ds-matrix"><table>
+        <thead><tr><th scope="col">Variant</th><th scope="col">Default</th><th scope="col">Hover</th><th scope="col">Focus</th><th scope="col">Checked</th><th scope="col">Disabled</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Display trigger</th>
+            <td><button class="stars" type="button" aria-label="Rate this weekend, currently 3 of 5 (default)"><svg class="icon icon--filled" aria-hidden="true"><use href="#i-star"/></svg><svg class="icon icon--filled" aria-hidden="true"><use href="#i-star"/></svg><svg class="icon icon--filled" aria-hidden="true"><use href="#i-star"/></svg><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg><span class="stars__label">3 of 5</span></button></td>
+            <td><button class="stars" type="button" data-state="hover" aria-label="Rate this weekend, currently 3 of 5 (hover)"><svg class="icon icon--filled" aria-hidden="true"><use href="#i-star"/></svg><svg class="icon icon--filled" aria-hidden="true"><use href="#i-star"/></svg><svg class="icon icon--filled" aria-hidden="true"><use href="#i-star"/></svg><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg><span class="stars__label">3 of 5</span></button></td>
+            <td><button class="stars" type="button" data-state="focus" aria-label="Rate this weekend, currently 3 of 5 (focus)"><svg class="icon icon--filled" aria-hidden="true"><use href="#i-star"/></svg><svg class="icon icon--filled" aria-hidden="true"><use href="#i-star"/></svg><svg class="icon icon--filled" aria-hidden="true"><use href="#i-star"/></svg><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg><span class="stars__label">3 of 5</span></button></td>
+            <td><span class="text-faint">n/a</span></td>
+            <td><button class="stars" type="button" disabled aria-label="Rating, not yet available (disabled)"><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg><span class="stars__label">Not rated</span></button></td>
+          </tr>
+          <tr><th scope="row">Input star</th>
+            <td><span class="stars stars--lg"><button class="btn btn--ghost btn--icon btn--lg" type="button" aria-label="5 stars (default)"><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg></button></span></td>
+            <td><span class="stars stars--lg"><button class="btn btn--ghost btn--icon btn--lg" type="button" data-state="hover" aria-label="5 stars (hover)"><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg></button></span></td>
+            <td><span class="stars stars--lg"><button class="btn btn--ghost btn--icon btn--lg" type="button" data-state="focus" aria-label="5 stars (focus)"><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg></button></span></td>
+            <td><span class="stars stars--lg"><button class="btn btn--ghost btn--icon btn--lg is-on" type="button" aria-label="5 stars (checked)"><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg></button></span></td>
+            <td><span class="stars stars--lg"><button class="btn btn--ghost btn--icon btn--lg" type="button" disabled aria-label="5 stars (disabled)"><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg></button></span></td>
+          </tr>
+        </tbody>
+      </table></div>
+      <h3>In the group</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack">
+          <div class="stars stars--lg" role="radiogroup" aria-label="Rating, nothing chosen">
+            <button class="btn btn--ghost btn--icon btn--lg" type="button" role="radio" aria-checked="false" aria-label="1 star, nothing chosen"><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg></button>
+            <button class="btn btn--ghost btn--icon btn--lg" type="button" role="radio" aria-checked="false" tabindex="-1" aria-label="2 stars, nothing chosen"><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg></button>
+            <button class="btn btn--ghost btn--icon btn--lg" type="button" role="radio" aria-checked="false" tabindex="-1" aria-label="3 stars, nothing chosen"><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg></button>
+            <button class="btn btn--ghost btn--icon btn--lg" type="button" role="radio" aria-checked="false" tabindex="-1" aria-label="4 stars, nothing chosen"><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg></button>
+            <button class="btn btn--ghost btn--icon btn--lg" type="button" role="radio" aria-checked="false" tabindex="-1" aria-label="5 stars, nothing chosen"><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg></button>
+          </div>
+          <div class="stars stars--lg" role="radiogroup" aria-label="Rating, 5 chosen and focused">
+            <button class="btn btn--ghost btn--icon btn--lg is-on" type="button" role="radio" aria-checked="false" tabindex="-1" aria-label="1 star, 5 chosen"><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg></button>
+            <button class="btn btn--ghost btn--icon btn--lg is-on" type="button" role="radio" aria-checked="false" tabindex="-1" aria-label="2 stars, 5 chosen"><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg></button>
+            <button class="btn btn--ghost btn--icon btn--lg is-on" type="button" role="radio" aria-checked="false" tabindex="-1" aria-label="3 stars, 5 chosen"><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg></button>
+            <button class="btn btn--ghost btn--icon btn--lg is-on" type="button" role="radio" aria-checked="false" tabindex="-1" aria-label="4 stars, 5 chosen"><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg></button>
+            <button class="btn btn--ghost btn--icon btn--lg is-on" type="button" role="radio" aria-checked="true" data-state="focus" aria-label="5 stars, 5 chosen"><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg></button>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>Nothing chosen yet (the first star takes focus), and 5 chosen with focus on the checked star.</span></div>
+      </div>
+      <h3>Both themes</h3>
+      <div class="ds-themes">
+        <div data-theme="light"><div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0;">
+          <span class="stars" role="img" aria-label="Rated 4 of 5, light theme"><svg class="icon icon--filled" aria-hidden="true"><use href="#i-star"/></svg><svg class="icon icon--filled" aria-hidden="true"><use href="#i-star"/></svg><svg class="icon icon--filled" aria-hidden="true"><use href="#i-star"/></svg><svg class="icon icon--filled" aria-hidden="true"><use href="#i-star"/></svg><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg><span class="stars__label">4 of 5</span></span>
+          <span class="stars stars--lg" role="img" aria-label="Rated 3 of 5, light theme, large"><svg class="icon icon--filled" aria-hidden="true"><use href="#i-star"/></svg><svg class="icon icon--filled" aria-hidden="true"><use href="#i-star"/></svg><svg class="icon icon--filled" aria-hidden="true"><use href="#i-star"/></svg><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg></span>
+        </div></div>
+        <div data-theme="dark"><div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0;">
+          <span class="stars" role="img" aria-label="Rated 4 of 5, dark theme"><svg class="icon icon--filled" aria-hidden="true"><use href="#i-star"/></svg><svg class="icon icon--filled" aria-hidden="true"><use href="#i-star"/></svg><svg class="icon icon--filled" aria-hidden="true"><use href="#i-star"/></svg><svg class="icon icon--filled" aria-hidden="true"><use href="#i-star"/></svg><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg><span class="stars__label">4 of 5</span></span>
+          <span class="stars stars--lg" role="img" aria-label="Rated 3 of 5, dark theme, large"><svg class="icon icon--filled" aria-hidden="true"><use href="#i-star"/></svg><svg class="icon icon--filled" aria-hidden="true"><use href="#i-star"/></svg><svg class="icon icon--filled" aria-hidden="true"><use href="#i-star"/></svg><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg></span>
+        </div></div>
+      </div>
+      <ul>
+        <li><b>Not rated</b>: a past weekend without a rating shows five empty stars and the label "Not rated" on its trigger. The trigger stays enabled; disabled is only for a weekend that has not ended yet.</li>
+        <li><b>Hover</b> on an input star shows the ghost button tint behind it. It does not preview-fill the stars before it; the fill changes only when a score is chosen.</li>
+        <li><b>Checked</b> fills every star up to the chosen one; the value sentence under the group updates ("4 of 5.").</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="responsive"><h2><a href="#responsive">Responsive behaviour</a></h2>
+      <ul>
+        <li>The input row is 5 × 48px plus gaps, about 250px, so it fits a 360px bottom sheet with room to spare and never wraps.</li>
+        <li>The display trigger keeps its size at every width; on Past cards it sits on its own line under the title.</li>
+        <li>Nothing changes at the 720px dialog breakpoint other than the dialog itself becoming centred.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="theming"><h2><a href="#theming">Theming</a></h2>
+      <p>The stars read <code>--colorPaletteSunForeground3</code> for filled and <code>--colorNeutralStrokeAccessible</code> for empty, the value label <code>--colorNeutralForeground2</code>. Input buttons are ghost buttons and take their hover and focus from the <a href="button.html">button</a> tokens. In the dark theme the sun fill lightens to sun 300 and the empty outline to umber 400, both keeping 3:1 against the dark card.</p>
+      <p>Re-skin by overriding the icon colour inside a scope, never by editing <code>.stars</code>: there is no per-component token yet, so the filled colour is set on <code>.stars .icon--filled</code>.</p>
+    </section>
+
+    <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
+      <h3>Role and pattern</h3>
+      <p>The input follows the <a href="https://www.w3.org/WAI/ARIA/apg/patterns/radio/">APG Radio Group pattern</a>: a <code>role="radiogroup"</code> with a name, five <code>&lt;button role="radio"&gt;</code> with <code>aria-checked</code>, and a roving <code>tabindex</code> so the group is one Tab stop. The display trigger is a plain <a href="button.html">button</a> that opens a dialog. Read-only stars are one <code>role="img"</code> with a text alternative, so the five icons are not read one by one.</p>
+      <h3>Keyboard</h3>
+      <table class="ds-table ds-keys"><thead><tr><th scope="col">Key</th><th scope="col">Action</th></tr></thead><tbody>
+        <tr><td><kbd>Tab</kbd> / <kbd>Shift</kbd>+<kbd>Tab</kbd></td><td>Moves focus into the group, to the checked star (or the first star if none is checked), and out again.</td></tr>
+        <tr><td><kbd>→</kbd> / <kbd>↑</kbd></td><td>Moves focus to the next star and checks it; from 5 it wraps to 1.</td></tr>
+        <tr><td><kbd>←</kbd> / <kbd>↓</kbd></td><td>Moves focus to the previous star and checks it; from 1 it wraps to 5.</td></tr>
+        <tr><td><kbd>Space</kbd></td><td>Checks the focused star if it is not already checked.</td></tr>
+        <tr><td><kbd>Enter</kbd> / <kbd>Space</kbd> on the trigger</td><td>Opens "How was it?"; focus goes to the checked star. Closing returns focus to the trigger.</td></tr>
+      </tbody></table>
+      <h3>Focus</h3>
+      <p>Input stars are buttons and get the shared 2px <code>--colorStrokeFocus2</code> ring with a 2px offset. The display trigger draws the same ring around the stars and label, rounded by <code>--borderRadiusSmall</code>.</p>
+      <h3>Labelling</h3>
+      <p>The group is named "Rating" in the dialog titled "How was it?". Each star is named by its score: "1 star", "2 stars" … "5 stars". The trigger names the action and the current value: "Rate this weekend, currently 4 of 5", or "Rate this weekend, not rated yet". Read-only stars say "Rated 3 of 5".</p>
+      <h3>Contrast</h3>
+      <div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0; gap: var(--spacingHorizontalS);">
+        <div class="ds-pair"><span>Filled star on card</span><span class="ds-pair__ratio" data-contrast="--colorPaletteSunForeground3|--colorNeutralBackground1" data-min="3"></span></div>
+        <div class="ds-pair"><span>Filled star on dialog</span><span class="ds-pair__ratio" data-contrast="--colorPaletteSunForeground3|--colorNeutralBackgroundRaised" data-min="3"></span></div>
+        <div class="ds-pair"><span>Empty star outline on card</span><span class="ds-pair__ratio" data-contrast="--colorNeutralStrokeAccessible|--colorNeutralBackground1" data-min="3"></span></div>
+        <div class="ds-pair"><span>Value label on card</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground2|--colorNeutralBackground1" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Focus ring on dialog</span><span class="ds-pair__ratio" data-contrast="--colorStrokeFocus2|--colorNeutralBackgroundRaised" data-min="3"></span></div>
+      </div>
+      <p>Filled and empty also differ in shape (solid against outline), so the rating reads without colour (1.4.1).</p>
+      <h3>Motion</h3>
+      <p>The ghost button tint transitions over <code>--durationFast</code>, zeroed under <code>prefers-reduced-motion</code>. Stars fill instantly; there is no bounce or sparkle.</p>
+      <h3>Touch</h3>
+      <p>Input stars are 48 × 48px with 2px between them, above the 44px comfortable target. The display trigger is the whole row of stars and label, 18px tall; it sits on its own line on the card with no neighbour within 24px (2.5.8 spacing exception). <code>button.stars</code> pads it to the 24px minimum.</p>
+    </section>
+
+    <section class="ds-section" id="content"><h2><a href="#content">Content</a></h2>
+      <ul>
+        <li>Value labels use "4 of 5", never "4/5" or "80%".</li>
+        <li>The dialog title asks plainly: "How was it?", with the dates and title as the subtitle ("10 – 11 May · Bronte Creek + Rec Room").</li>
+        <li>The sentence under the input restates the choice, with a short word for the top score: "5 of 5, a keeper." Keep it to one line; skip the flourish for other scores.</li>
+        <li>Unrated weekends say "Not rated", not "0 of 5".</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="do-dont"><h2><a href="#do-dont">Do and don't</a></h2>
+      <div class="ds-dodont">
+        <figure class="ds-do"><div class="ds-example__canvas"><span class="stars" role="img" aria-label="Rated 3 of 5, do example"><svg class="icon icon--filled" aria-hidden="true"><use href="#i-star"/></svg><svg class="icon icon--filled" aria-hidden="true"><use href="#i-star"/></svg><svg class="icon icon--filled" aria-hidden="true"><use href="#i-star"/></svg><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg></span></div><figcaption>Filled stars are solid sun 600, empty ones are outlines in the accessible stroke (D09).</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><span class="stars" role="img" aria-label="Rated 3 of 5, don't example"><svg class="icon icon--filled" aria-hidden="true" style="color: var(--colorPaletteSunBackground3);"><use href="#i-star"/></svg><svg class="icon icon--filled" aria-hidden="true" style="color: var(--colorPaletteSunBackground3);"><use href="#i-star"/></svg><svg class="icon icon--filled" aria-hidden="true" style="color: var(--colorPaletteSunBackground3);"><use href="#i-star"/></svg><svg class="icon icon--filled" aria-hidden="true" style="color: var(--colorNeutralForegroundDisabled);"><use href="#i-star"/></svg><svg class="icon icon--filled" aria-hidden="true" style="color: var(--colorNeutralForegroundDisabled);"><use href="#i-star"/></svg></span></div><figcaption>The mocks' pale yellow on solid grey: 1.6:1 and 2.5:1, and every star the same shape.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas"><div class="stars stars--lg" role="radiogroup" aria-label="Rating, do example"><button class="btn btn--ghost btn--icon btn--lg is-on" type="button" role="radio" aria-checked="false" tabindex="-1" aria-label="1 star, do example"><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg></button><button class="btn btn--ghost btn--icon btn--lg is-on" type="button" role="radio" aria-checked="true" aria-label="2 stars, do example"><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg></button><button class="btn btn--ghost btn--icon btn--lg" type="button" role="radio" aria-checked="false" tabindex="-1" aria-label="3 stars, do example"><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg></button></div></div><figcaption>Fill up to the choice; check only the chosen star; one Tab stop.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><div class="stars stars--lg" role="radiogroup" aria-label="Rating, don't example"><button class="btn btn--ghost btn--icon btn--lg" type="button" role="radio" aria-checked="false" aria-label="1 star, don't example"><svg class="icon icon--filled" aria-hidden="true"><use href="#i-star"/></svg></button><button class="btn btn--ghost btn--icon btn--lg" type="button" role="radio" aria-checked="true" aria-label="2 stars, don't example"><svg class="icon icon--filled" aria-hidden="true"><use href="#i-star"/></svg></button><button class="btn btn--ghost btn--icon btn--lg" type="button" role="radio" aria-checked="false" aria-label="3 stars, don't example"><svg class="icon icon--filled" aria-hidden="true"><use href="#i-star"/></svg></button></div></div><figcaption>D13 marks every star <code>.icon--filled</code> and leaves all five in the Tab order: the choice is invisible and the group takes five Tabs.</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="ds-section" id="tokens"><h2><a href="#tokens">Tokens</a></h2>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Part</th><th scope="col">Token</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead>
+        <tbody>
+          <tr><td>Filled star</td><td><code>--colorPaletteSunForeground3</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorPaletteSunForeground3" data-swatch></i><span data-token="--colorPaletteSunForeground3"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorPaletteSunForeground3" data-swatch></i><span data-token="--colorPaletteSunForeground3"></span></span></td></tr>
+          <tr><td>Empty star outline</td><td><code>--colorNeutralStrokeAccessible</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralStrokeAccessible" data-swatch></i><span data-token="--colorNeutralStrokeAccessible"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralStrokeAccessible" data-swatch></i><span data-token="--colorNeutralStrokeAccessible"></span></span></td></tr>
+          <tr><td>Value label</td><td><code>--colorNeutralForeground2</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralForeground2" data-swatch></i><span data-token="--colorNeutralForeground2"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralForeground2" data-swatch></i><span data-token="--colorNeutralForeground2"></span></span></td></tr>
+          <tr><td>Input hover / pressed</td><td><code>--colorSubtleBackgroundHover</code>, <code>--colorSubtleBackgroundPressed</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorSubtleBackgroundHover" data-swatch></i><span data-token="--colorSubtleBackgroundHover"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorSubtleBackgroundHover" data-swatch></i><span data-token="--colorSubtleBackgroundHover"></span></span></td></tr>
+          <tr><td>Focus ring</td><td><code>--colorStrokeFocus2</code>, <code>--strokeWidthThick</code>, <code>--focusRingOffset</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorStrokeFocus2" data-swatch></i><span data-token="--colorStrokeFocus2"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorStrokeFocus2" data-swatch></i><span data-token="--colorStrokeFocus2"></span></span></td></tr>
+          <tr><td>Star gap</td><td><code>--spacingHorizontalXXS</code></td><td colspan="2"><span data-token="--spacingHorizontalXXS"></span></td></tr>
+          <tr><td>Label gap</td><td><code>--spacingHorizontalSNudge</code></td><td colspan="2"><span data-token="--spacingHorizontalSNudge"></span></td></tr>
+          <tr><td>Label type</td><td><code>--typographyCaption1</code></td><td colspan="2"><span data-token="--typographyCaption1"></span></td></tr>
+          <tr><td>Container radius</td><td><code>--borderRadiusSmall</code></td><td colspan="2"><span data-token="--borderRadiusSmall"></span></td></tr>
+          <tr><td>Input button</td><td><code>--controlHeightLarge</code> (overridden to 3rem), <code>--borderRadiusCircular</code></td><td colspan="2"><span data-token="--controlHeightLarge"></span></td></tr>
+          <tr><td>Hover transition</td><td><code>--durationFast</code>, <code>--curveEasyEase</code></td><td colspan="2"><span data-token="--durationFast"></span> <span data-token="--curveEasyEase"></span></td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section class="ds-section" id="code"><h2><a href="#code">Code</a></h2>
+      <pre><code>&lt;!-- Past card: shows the rating, opens D13 --&gt;
+&lt;button class="stars" type="button" aria-label="Rate this weekend, currently 4 of 5"&gt;
+  &lt;svg class="icon icon--filled" aria-hidden="true"&gt;&lt;use href="#i-star"/&gt;&lt;/svg&gt; …
+  &lt;svg class="icon" aria-hidden="true"&gt;&lt;use href="#i-star"/&gt;&lt;/svg&gt;
+  &lt;span class="stars__label"&gt;4 of 5&lt;/span&gt;
+&lt;/button&gt;
+
+&lt;!-- D13 input --&gt;
+&lt;div class="stars stars--lg" role="radiogroup" aria-label="Rating"&gt;
+  &lt;button class="btn btn--ghost btn--icon btn--lg is-on" type="button" role="radio"
+          aria-checked="true" aria-label="1 star"&gt;…&lt;/button&gt;
+  &lt;button class="btn btn--ghost btn--icon btn--lg" type="button" role="radio"
+          aria-checked="false" tabindex="-1" aria-label="2 stars"&gt;…&lt;/button&gt;
+  …
+&lt;/div&gt;
+
+&lt;!-- Angular --&gt;
+&lt;sd-stars [rating]="4" label="4 of 5" /&gt;
+&lt;sd-stars editable size="lg" groupLabel="Rating" [rating]="rating" (ratingChange)="…" /&gt;</code></pre>
+      <table class="ds-table"><thead><tr><th scope="col">Class / attribute</th><th scope="col">Effect</th></tr></thead><tbody>
+        <tr><td><code>.stars</code></td><td>Inline row of 18px stars. On a <code>&lt;button&gt;</code>, a <code>&lt;span role="img"&gt;</code> or a <code>role="radiogroup"</code>.</td></tr>
+        <tr><td><code>.stars--lg</code></td><td>40px stars; child <code>.btn</code> buttons become 48px.</td></tr>
+        <tr><td><code>.icon--filled</code> on an icon</td><td>Display: a filled star.</td></tr>
+        <tr><td><code>.is-on</code> on an input button</td><td>Input: fills that star; set on every star up to the chosen score.</td></tr>
+        <tr><td><code>role="radio"</code> + <code>aria-checked</code></td><td>Exactly one star is <code>true</code>: the chosen score.</td></tr>
+        <tr><td><code>tabindex="-1"</code></td><td>On every star except the checked one (or the first, when none is), for a single Tab stop.</td></tr>
+        <tr><td><code>.stars__label</code></td><td>Visible value, "4 of 5".</td></tr>
+      </tbody></table>
+      <p>The Angular editable stars render <code>.stars__btn</code> buttons rather than ghost <code>.btn</code>s and set the fill on the icon; the static markup above is the reference geometry (ADR-009). Exact inputs and outputs are in Storybook.</p>
+    </section>
+
+    <section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>
+      <p>Extracted from these mocks:</p>
+      <ul>
+        <li><a href="../../mocks/pages/past.html">pages/past</a>: the display trigger on every Past card ("Rate this weekend, currently 5 of 5").</li>
+        <li><a href="../../mocks/pages/dialogs.html#dialog-rate">pages/dialogs D13</a>: "How was it?" with the large radio group and the "5 of 5, a keeper." sentence.</li>
+      </ul>
+      <p>Drift fixed during extraction (see the <a href="../README.md">README drift log</a>): D09 star contrast and shape (filled sun 600 at 3.56:1, empty accessible-stroke outlines instead of grey solids), D03 focus ring contrast. Not fixed in the mocks: D13 gives every star <code>.icon--filled</code>, so the chosen score is not visible, and has no roving <code>tabindex</code>. No mock shows the read-only or "Not rated" forms; they are proposals. <code>button.stars</code> resets the native button fill and adds a 24px target, hover and disabled styles for the display trigger.</p>
+    </section>
+
+    <footer class="ds-footer"><span>Saturdaze design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/icons.js"></script>
+<script src="../assets/ds.js"></script>
+</body>
+</html>

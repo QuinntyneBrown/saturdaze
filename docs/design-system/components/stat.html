@@ -1,0 +1,401 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Stat — Saturdaze design system</title>
+<meta name="description" content="Stat cards answer one admin question with one figure, a share bar and links to the filtered list behind every count.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html"><span class="brand-mark" aria-hidden="true"></span>Saturdaze DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Actions</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+    </ul></details>
+    <details open><summary>Inputs</summary><ul>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/chip-input.html">Chip input</a></li>
+      <li><a href="../components/file-upload.html">File upload</a></li>
+      <li><a href="../components/photo-pick.html">Photo pick</a></li>
+      <li><a href="../components/rating.html">Rating</a></li>
+      <li><a href="../components/vote-row.html">Vote row</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+    </ul></details>
+    <details open><summary>Navigation</summary><ul>
+      <li><a href="../components/top-bar.html">Top bar</a></li>
+      <li><a href="../components/bottom-nav.html">Bottom nav</a></li>
+      <li><a href="../components/sidebar-navigation.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs (segments)</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+      <li><a href="../components/footer.html">Footer</a></li>
+    </ul></details>
+    <details open><summary>Containers and overlays</summary><ul>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/container.html">Container and grid</a></li>
+      <li><a href="../components/page-header.html">Page header</a></li>
+    </ul></details>
+    <details open><summary>Data display</summary><ul>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/activity-feed.html">Activity feed</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/chip.html">Chip</a></li>
+      <li><a href="../components/filter-chip.html">Filter chip</a></li>
+      <li><a href="../components/disc.html">Disc</a></li>
+      <li><a href="../components/media.html">Media</a></li>
+      <li><a href="../components/cover.html">Cover photo</a></li>
+      <li><a href="../components/stat.html">Stat</a></li>
+      <li><a href="../components/itinerary.html">Itinerary</a></li>
+      <li><a href="../components/map.html">Map</a></li>
+    </ul></details>
+    <details open><summary>Feedback</summary><ul>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/alert.html">Alert</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/progress-bar.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Auth and marketing</summary><ul>
+      <li><a href="../components/auth-card.html">Auth card</a></li>
+      <li><a href="../components/hero.html">Hero</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/data-tables-and-lists.html">Tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Component · Data display</p>
+      <h1>Stat</h1>
+      <p class="ds-lead">A stat card answers one admin question with one figure: how many activities, restaurants and upcoming events families can recognise at a glance. The figure leads, the bar shows the share, and every count underneath opens the list behind it.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA</span><span class="ds-pill">Status: stable</span><span class="ds-pill">Angular: <code>sd-stat-card</code></span><span class="ds-pill">Admin only</span></div>
+      <ul class="ds-toc">
+        <li><a href="#overview">Overview</a></li><li><a href="#anatomy">Anatomy</a></li><li><a href="#variants">Variants</a></li><li><a href="#sizes">Sizes</a></li><li><a href="#states">States</a></li><li><a href="#responsive">Responsive</a></li><li><a href="#theming">Theming</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#content">Content</a></li><li><a href="#do-dont">Do and don't</a></li><li><a href="#tokens">Tokens</a></li><li><a href="#code">Code</a></li><li><a href="#sources">Sources</a></li>
+      </ul>
+    </header>
+
+    <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+      <p>Use a stat on an admin dashboard when one number tells the team whether to act. Photo health is the reference: three cards, one per kind of place, each saying how many have a primary photo that shows. Families never see stat cards; their pages speak in plans, not figures.</p>
+      <ul>
+        <li><b>Figure</b> is always "<b>part</b> of whole" (<code>&lt;strong&gt;16&lt;/strong&gt; of 20</code>), never a bare percentage. The whole stays visible so 80% of 5 does not read like 80% of 500.</li>
+        <li><b>Bar</b> repeats the share for a quick scan across cards. Its tone follows the kind of place: leaf for activities, sun for restaurants, sky for events, brand when the stat is not about a kind of place.</li>
+        <li><b>Link list</b> breaks the gap down into reasons. Every row opens the Places list already filtered, so the next step is one click.</li>
+        <li><b>Delta</b> (optional) compares with the last period. It always carries a sign and an arrow as well as colour.</li>
+      </ul>
+      <p>Use a <a href="progress-bar.html">progress bar</a> when the share is moving toward done (an upload, an ingestion run), a <a href="badge.html">badge</a> or <a href="chip.html">chip</a> for a single count inside another component, and a <a href="table.html">table</a> when the team needs to compare more than three figures.</p>
+    </section>
+
+    <section class="ds-section" id="anatomy"><h2><a href="#anatomy">Anatomy</a></h2>
+      <div class="ds-anatomy">
+        <figure class="ds-anatomy__figure">
+          <section class="card card--pad-lg stat" aria-labelledby="an-stat" style="width: 100%; max-width: 20rem;">
+            <h3 class="stat__label" id="an-stat">Activities</h3>
+            <p class="stat__figure"><strong>16</strong> of 20</p>
+            <p class="stat__sub">with a primary photo that shows</p>
+            <div class="stat__bar" role="img" aria-label="80% with a primary photo"><span class="stat__fill stat__fill--leaf" style="--sd-progress: 80%;"></span></div>
+            <ul class="stat__list">
+              <li><a class="stat__link" href="../../mocks/pages/admin.places.html"><span class="chip chip--count">4</span> without a photo</a></li>
+              <li><a class="stat__link" href="../../mocks/pages/admin.places.html"><span class="chip chip--count">2</span> missing alt text</a></li>
+            </ul>
+          </section>
+          <span class="ds-callout" style="left: 16%; top: 18%;" aria-hidden="true">1</span>
+          <span class="ds-callout" style="left: 16%; top: 31%;" aria-hidden="true">2</span>
+          <span class="ds-callout" style="left: 16%; top: 41%;" aria-hidden="true">3</span>
+          <span class="ds-callout" style="left: 16%; top: 48%;" aria-hidden="true">4</span>
+          <span class="ds-callout" style="left: 16%; top: 59%;" aria-hidden="true">5</span>
+          <span class="ds-callout" style="left: 75%; top: 82%;" aria-hidden="true">6</span>
+        </figure>
+        <ol class="ds-anatomy__list">
+          <li><div><b>Label</b><small>The card's heading (<code>&lt;h2&gt;</code> on the dashboard), <code>--typographyBody2</code> semibold, uppercase, wide tracking, <code>--colorNeutralForeground2</code>. Names the card for <code>aria-labelledby</code>.</small></div></li>
+          <li><div><b>Figure</b><small><code>--typographyLargeTitle</code>, tabular numerals. The part is <code>&lt;strong&gt;</code> in <code>--colorNeutralForeground1</code>; "of 20" stays secondary.</small></div></li>
+          <li><div><b>Sub</b><small>What is being counted, one short line, <code>--typographyBody2</code>.</small></div></li>
+          <li><div><b>Bar and fill</b><small>8px track (<code>--colorNeutralBackground3</code> with a 1px <code>--colorNeutralStroke2</code> edge), pill fill in the tone colour, width from <code>--sd-progress</code>. <code>role="img"</code> with the percentage as its name.</small></div></li>
+          <li><div><b>Count link</b><small><code>.stat__link</code> led by a <code>.chip--count</code>, 40px tall, divided by a hairline. Hover turns the text brand.</small></div></li>
+          <li><div><b>Container</b><small>A <a href="card.html">card</a> with <code>.card--pad-lg</code> (20px) and an 8px gap between parts.</small></div></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="ds-section" id="variants"><h2><a href="#variants">Variants</a></h2>
+      <h3>Tone</h3>
+      <p>The tone only colours the bar fill. It identifies the kind of place, so the same tone means the same kind on every admin page.</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--canvas ds-example__canvas--stack">
+          <div class="stat-grid" style="margin-bottom: 0;">
+            <section class="card card--pad-lg stat" aria-labelledby="v-act">
+              <h3 class="stat__label" id="v-act">Activities</h3>
+              <p class="stat__figure"><strong>16</strong> of 20</p>
+              <p class="stat__sub">with a primary photo that shows</p>
+              <div class="stat__bar" role="img" aria-label="80% with a primary photo"><span class="stat__fill stat__fill--leaf" style="--sd-progress: 80%;"></span></div>
+            </section>
+            <section class="card card--pad-lg stat" aria-labelledby="v-res">
+              <h3 class="stat__label" id="v-res">Restaurants</h3>
+              <p class="stat__figure"><strong>11</strong> of 14</p>
+              <p class="stat__sub">with a primary photo that shows</p>
+              <div class="stat__bar" role="img" aria-label="79% with a primary photo"><span class="stat__fill stat__fill--sun" style="--sd-progress: 79%;"></span></div>
+            </section>
+            <section class="card card--pad-lg stat" aria-labelledby="v-evt">
+              <h3 class="stat__label" id="v-evt">Upcoming events</h3>
+              <p class="stat__figure"><strong>5</strong> of 9</p>
+              <p class="stat__sub">with a primary photo that shows</p>
+              <div class="stat__bar" role="img" aria-label="56% with a primary photo"><span class="stat__fill stat__fill--sky" style="--sd-progress: 56%;"></span></div>
+            </section>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span><code>.stat__fill--leaf</code> activities, <code>--sun</code> restaurants, <code>--sky</code> events. One column under 1024px, three from 1024px.</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;div class="stat__bar" role="img" aria-label="80% with a primary photo"&gt;
+  &lt;span class="stat__fill stat__fill--leaf" style="--sd-progress: 80%"&gt;&lt;/span&gt;
+&lt;/div&gt;</code></pre></details>
+      </div>
+      <h3>With a delta, with the brand tone</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--canvas">
+          <section class="card card--pad-lg stat" aria-labelledby="v-rev" style="flex: 1 1 16rem;">
+            <h3 class="stat__label" id="v-rev">Photos reviewed</h3>
+            <p class="stat__figure"><strong>38</strong> of 45</p>
+            <p class="stat__sub">submitted this month</p>
+            <div class="stat__bar" role="img" aria-label="84% reviewed"><span class="stat__fill stat__fill--brand" style="--sd-progress: 84%;"></span></div>
+            <p class="stat__delta stat__delta--up"><span aria-hidden="true">↑</span> +6 since last week</p>
+          </section>
+          <section class="card card--pad-lg stat" aria-labelledby="v-miss" style="flex: 1 1 16rem;">
+            <h3 class="stat__label" id="v-miss">Restaurants</h3>
+            <p class="stat__figure"><strong>11</strong> of 14</p>
+            <p class="stat__sub">with a primary photo that shows</p>
+            <div class="stat__bar" role="img" aria-label="79% with a primary photo"><span class="stat__fill stat__fill--sun" style="--sd-progress: 79%;"></span></div>
+            <p class="stat__delta stat__delta--down"><span aria-hidden="true">↓</span> −2 since last week</p>
+          </section>
+        </div>
+        <div class="ds-example__caption"><span>A delta has a sign, an arrow and a colour; any one of them alone is enough to read it (1.4.1).</span></div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="sizes" data-na="One size. The figure stays --typographyLargeTitle at every width; the stat grid, not the card, adapts."><h2><a href="#sizes">Sizes</a></h2><p class="ds-na">One size. The figure stays --typographyLargeTitle at every width; the stat grid, not the card, adapts.</p></section>
+
+    <section class="ds-section" id="states"><h2><a href="#states">States</a></h2>
+      <p>The card itself is not interactive; its count links are. Pointer and focus states are forced with <code>data-state</code>.</p>
+      <div class="ds-matrix"><table>
+        <thead><tr><th scope="col">Part</th><th scope="col">Default</th><th scope="col">Hover</th><th scope="col">Focus</th><th scope="col">Zero</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Count link</th>
+            <td><ul class="stat__list" style="min-width: 13rem;"><li><a class="stat__link" href="../../mocks/pages/admin.places.html"><span class="chip chip--count">4</span> without a photo</a></li></ul></td>
+            <td><ul class="stat__list" style="min-width: 13rem;"><li><a class="stat__link" href="../../mocks/pages/admin.places.html" data-state="hover"><span class="chip chip--count">4</span> without a photo</a></li></ul></td>
+            <td><ul class="stat__list" style="min-width: 13rem;"><li><a class="stat__link" href="../../mocks/pages/admin.places.html" data-state="focus"><span class="chip chip--count">4</span> without a photo</a></li></ul></td>
+            <td><ul class="stat__list" style="min-width: 13rem;"><li><a class="stat__link" href="../../mocks/pages/admin.places.html"><span class="chip chip--count">0</span> blocked URL</a></li></ul></td>
+          </tr>
+        </tbody>
+      </table></div>
+      <h3>Loading</h3>
+      <p>While the figures load, the card keeps its label and shape and shows <a href="skeleton.html">skeletons</a> for the figure, sub and bar. The card is <code>aria-busy="true"</code> until every figure has arrived, so a screen reader does not read half a dashboard.</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--canvas">
+          <section class="card card--pad-lg stat" aria-labelledby="ld-act" aria-busy="true" style="flex: 1 1 16rem;">
+            <h3 class="stat__label" id="ld-act">Activities</h3>
+            <span class="skeleton skeleton--title" style="height: 2.5rem; width: 40%;"></span>
+            <span class="skeleton skeleton--text"></span>
+            <span class="skeleton skeleton--text" style="height: 0.5rem; width: 100%; border-radius: var(--borderRadiusCircular);"></span>
+            <span class="visually-hidden">Loading photo health for activities</span>
+          </section>
+          <section class="card card--pad-lg stat" aria-labelledby="ld-res" style="flex: 1 1 16rem;">
+            <h3 class="stat__label" id="ld-res">Restaurants</h3>
+            <p class="stat__figure"><strong>11</strong> of 14</p>
+            <p class="stat__sub">with a primary photo that shows</p>
+            <div class="stat__bar" role="img" aria-label="79% with a primary photo"><span class="stat__fill stat__fill--sun" style="--sd-progress: 79%;"></span></div>
+          </section>
+        </div>
+        <div class="ds-example__caption"><span>Loading (left) and loaded (right). The skeleton heights match the figure and bar so nothing jumps.</span></div>
+      </div>
+      <h3>Both themes</h3>
+      <div class="ds-themes">
+        <div data-theme="light"><section class="card card--pad-lg stat" aria-labelledby="th-l"><h3 class="stat__label" id="th-l">Activities</h3><p class="stat__figure"><strong>16</strong> of 20</p><div class="stat__bar" role="img" aria-label="80% with a primary photo"><span class="stat__fill stat__fill--leaf" style="--sd-progress: 80%;"></span></div><p class="stat__delta stat__delta--up"><span aria-hidden="true">↑</span> +3 since last week</p><ul class="stat__list"><li><a class="stat__link" href="../../mocks/pages/admin.places.html" data-state="focus"><span class="chip chip--count">4</span> without a photo</a></li></ul></section></div>
+        <div data-theme="dark"><section class="card card--pad-lg stat" aria-labelledby="th-d"><h3 class="stat__label" id="th-d">Activities</h3><p class="stat__figure"><strong>16</strong> of 20</p><div class="stat__bar" role="img" aria-label="80% with a primary photo"><span class="stat__fill stat__fill--leaf" style="--sd-progress: 80%;"></span></div><p class="stat__delta stat__delta--up"><span aria-hidden="true">↑</span> +3 since last week</p><ul class="stat__list"><li><a class="stat__link" href="../../mocks/pages/admin.places.html" data-state="focus"><span class="chip chip--count">4</span> without a photo</a></li></ul></section></div>
+      </div>
+      <ul>
+        <li><b>Zero</b> rows stay in the list so the three cards line up row for row; the link still opens the filtered list, which then shows its <a href="empty-state.html">empty state</a>.</li>
+        <li><b>Error</b>: if one figure fails to load, that card shows an inline <a href="alert.html">alert</a> ("Could not load restaurants. Try again") in place of the figure; the other cards stay.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="responsive"><h2><a href="#responsive">Responsive behaviour</a></h2>
+      <ul>
+        <li><b>Under 1024px</b> <code>.stat-grid</code> is one column with a 16px gap: each card reads top to bottom on a phone or a narrow admin window.</li>
+        <li><b>From 1024px</b> it is three equal columns with a 24px gap, so the same row of each list sits at the same height across cards.</li>
+        <li>The figure never scales down. If "<b>1,204</b> of 1,380" does not fit a third of the grid, the stat belongs in a table.</li>
+        <li>The sub and link text wrap; the count chip stays at the start of the first line.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="theming"><h2><a href="#theming">Theming</a></h2>
+      <p>The bar and fill share their rules with the <a href="progress-bar.html">progress bar</a>: the fill reads <code>--sd-progress-fill</code> and its width reads <code>--sd-progress</code>. A tone modifier only sets <code>--sd-progress-fill</code>, so a new tone is one line and never touches <code>.stat__fill</code>.</p>
+      <pre><code>/* A new tone for a future "Stays" category */
+.stat__fill--indoor { --sd-progress-fill: var(--colorPaletteIndoorForeground3); }</code></pre>
+      <p>In the dark theme the card is the raised umber surface, the fills switch to the lighter palette steps and the delta colours use their dark-theme foregrounds; all pairs below are checked in both themes.</p>
+    </section>
+
+    <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
+      <h3>Role and pattern</h3>
+      <p>Each card is a <code>&lt;section aria-labelledby&gt;</code> named by its label, so it is a region a screen reader can jump to. The bar is <code>role="img"</code> with the percentage as its name; it is a static measure, not a <a href="progress-bar.html">progressbar</a>. The count links are plain links in a list. No APG widget pattern applies.</p>
+      <h3>Keyboard</h3>
+      <table class="ds-table ds-keys"><thead><tr><th scope="col">Key</th><th scope="col">Action</th></tr></thead><tbody>
+        <tr><td><kbd>Tab</kbd> / <kbd>Shift</kbd>+<kbd>Tab</kbd></td><td>Moves through the count links, card by card, in reading order.</td></tr>
+        <tr><td><kbd>Enter</kbd></td><td>Opens the Places list filtered to that reason.</td></tr>
+      </tbody></table>
+      <h3>Focus</h3>
+      <p>The shared 2px <code>--colorStrokeFocus2</code> ring wraps the whole row, chip included, with the small radius.</p>
+      <h3>Labelling</h3>
+      <p>Leave a space between the count chip and the text (<code>&lt;span class="chip chip--count"&gt;4&lt;/span&gt; without a photo</code>) so the link is named "4 without a photo", not "4without a photo". The same phrase appears on every card; its card heading gives it context (2.4.4). Add the category in visually hidden text if the links are ever listed outside the card.</p>
+      <h3>Contrast</h3>
+      <div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0; gap: var(--spacingHorizontalS);">
+        <div class="ds-pair"><span>Label on card</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground2|--colorNeutralBackground1" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Figure part on card</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground1|--colorNeutralBackground1" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Count chip</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground2|--colorNeutralBackground3" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Link on hover</span><span class="ds-pair__ratio" data-contrast="--colorBrandForeground1|--colorNeutralBackground1" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Delta up</span><span class="ds-pair__ratio" data-contrast="--colorStatusSuccessForeground1|--colorNeutralBackground1" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Delta down</span><span class="ds-pair__ratio" data-contrast="--colorStatusDangerForeground1|--colorNeutralBackground1" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Leaf fill on track</span><span class="ds-pair__ratio" data-contrast="--colorPaletteLeafForeground3|--colorNeutralBackground3" data-min="3"></span></div>
+        <div class="ds-pair"><span>Sun fill on track</span><span class="ds-pair__ratio" data-contrast="--colorPaletteSunForeground3|--colorNeutralBackground3" data-min="3"></span></div>
+        <div class="ds-pair"><span>Sky fill on track</span><span class="ds-pair__ratio" data-contrast="--colorPaletteSkyForeground3|--colorNeutralBackground3" data-min="3"></span></div>
+        <div class="ds-pair"><span>Brand fill on track</span><span class="ds-pair__ratio" data-contrast="--colorBrandStroke1|--colorNeutralBackground3" data-min="3"></span></div>
+      </div>
+      <h3>Motion</h3>
+      <p>The fill grows to its width over <code>--durationNormal</code> when a figure updates. Under <code>prefers-reduced-motion</code> the token is zeroed and the fill jumps to its new width.</p>
+      <h3>Touch</h3>
+      <p>Count links are 40px tall (<code>--controlHeightMedium</code>) and full width, well above the 24px minimum, with a hairline between them.</p>
+    </section>
+
+    <section class="ds-section" id="content"><h2><a href="#content">Content</a></h2>
+      <ul>
+        <li>Label: the kind of thing, plural, two words at most: "Activities", "Upcoming events".</li>
+        <li>Figure: "<b>part</b> of whole". No percentage in the figure; the bar and its name carry it.</li>
+        <li>Sub: what was counted, starting lowercase so it reads on from the figure: "with a primary photo that shows".</li>
+        <li>Link rows: the reason in plain words, singular after the number: "4 without a photo", "1 blocked URL", "2 missing alt text".</li>
+        <li>Delta: sign, number and period: "+6 since last week". Never "up 6" without a period.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="do-dont"><h2><a href="#do-dont">Do and don't</a></h2>
+      <div class="ds-dodont">
+        <figure class="ds-do"><div class="ds-example__canvas"><section class="card card--pad-lg stat" aria-labelledby="dd-1" style="flex: 1;"><h3 class="stat__label" id="dd-1">Activities</h3><p class="stat__figure"><strong>16</strong> of 20</p></section></div><figcaption>Show the part and the whole, so the team can judge how much work is left.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><section class="card card--pad-lg stat" aria-labelledby="dd-2" style="flex: 1;"><h3 class="stat__label" id="dd-2">Activities</h3><p class="stat__figure"><strong>80%</strong></p></section></div><figcaption>A bare percentage hides the size of the problem: 80% of 20 is four places, 80% of 400 is eighty.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas"><p class="stat__delta stat__delta--down"><span aria-hidden="true">↓</span> −2 since last week</p></div><figcaption>Sign, arrow and colour together.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><p class="stat__delta stat__delta--down">2</p></div><figcaption>Colour alone says "worse" only to people who see red (1.4.1).</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas"><div class="stat__bar" role="img" aria-label="56% with a primary photo" style="flex: 1;"><span class="stat__fill stat__fill--sky" style="--sd-progress: 56%;"></span></div></div><figcaption>Set the width with <code>--sd-progress</code> so any share works.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><div class="stat__bar" role="img" aria-label="56% with a primary photo" style="flex: 1;"><span class="stat__fill stat__fill--sky" style="--sd-progress: 60%;"></span></div></div><figcaption>The mock's fixed width classes (<code>stat__fill--p56</code>, <code>--p79</code>, <code>--p80</code>) round to whatever exists and drift from the figure.</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="ds-section" id="tokens"><h2><a href="#tokens">Tokens</a></h2>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Part</th><th scope="col">Token</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead>
+        <tbody>
+          <tr><td>Card surface</td><td><code>--colorNeutralBackground1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralBackground1" data-swatch></i><span data-token="--colorNeutralBackground1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralBackground1" data-swatch></i><span data-token="--colorNeutralBackground1"></span></span></td></tr>
+          <tr><td>Card border, link dividers, track edge</td><td><code>--colorNeutralStroke2</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralStroke2" data-swatch></i><span data-token="--colorNeutralStroke2"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralStroke2" data-swatch></i><span data-token="--colorNeutralStroke2"></span></span></td></tr>
+          <tr><td>Label, sub, "of whole"</td><td><code>--colorNeutralForeground2</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralForeground2" data-swatch></i><span data-token="--colorNeutralForeground2"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralForeground2" data-swatch></i><span data-token="--colorNeutralForeground2"></span></span></td></tr>
+          <tr><td>Figure part</td><td><code>--colorNeutralForeground1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralForeground1" data-swatch></i><span data-token="--colorNeutralForeground1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralForeground1" data-swatch></i><span data-token="--colorNeutralForeground1"></span></span></td></tr>
+          <tr><td>Track, count chip</td><td><code>--colorNeutralBackground3</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralBackground3" data-swatch></i><span data-token="--colorNeutralBackground3"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralBackground3" data-swatch></i><span data-token="--colorNeutralBackground3"></span></span></td></tr>
+          <tr><td>Fill, leaf</td><td><code>--colorPaletteLeafForeground3</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorPaletteLeafForeground3" data-swatch></i><span data-token="--colorPaletteLeafForeground3"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorPaletteLeafForeground3" data-swatch></i><span data-token="--colorPaletteLeafForeground3"></span></span></td></tr>
+          <tr><td>Fill, sun</td><td><code>--colorPaletteSunForeground3</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorPaletteSunForeground3" data-swatch></i><span data-token="--colorPaletteSunForeground3"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorPaletteSunForeground3" data-swatch></i><span data-token="--colorPaletteSunForeground3"></span></span></td></tr>
+          <tr><td>Fill, sky</td><td><code>--colorPaletteSkyForeground3</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorPaletteSkyForeground3" data-swatch></i><span data-token="--colorPaletteSkyForeground3"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorPaletteSkyForeground3" data-swatch></i><span data-token="--colorPaletteSkyForeground3"></span></span></td></tr>
+          <tr><td>Fill, brand</td><td><code>--colorBrandStroke1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorBrandStroke1" data-swatch></i><span data-token="--colorBrandStroke1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorBrandStroke1" data-swatch></i><span data-token="--colorBrandStroke1"></span></span></td></tr>
+          <tr><td>Delta up</td><td><code>--colorStatusSuccessForeground1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorStatusSuccessForeground1" data-swatch></i><span data-token="--colorStatusSuccessForeground1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorStatusSuccessForeground1" data-swatch></i><span data-token="--colorStatusSuccessForeground1"></span></span></td></tr>
+          <tr><td>Delta down</td><td><code>--colorStatusDangerForeground1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorStatusDangerForeground1" data-swatch></i><span data-token="--colorStatusDangerForeground1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorStatusDangerForeground1" data-swatch></i><span data-token="--colorStatusDangerForeground1"></span></span></td></tr>
+          <tr><td>Link hover</td><td><code>--colorBrandForeground1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorBrandForeground1" data-swatch></i><span data-token="--colorBrandForeground1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorBrandForeground1" data-swatch></i><span data-token="--colorBrandForeground1"></span></span></td></tr>
+          <tr><td>Figure</td><td><code>--typographyLargeTitle</code></td><td colspan="2"><span data-token="--typographyLargeTitle"></span></td></tr>
+          <tr><td>Label, sub</td><td><code>--typographyBody2</code></td><td colspan="2"><span data-token="--typographyBody2"></span></td></tr>
+          <tr><td>Delta</td><td><code>--typographyCaption1Strong</code></td><td colspan="2"><span data-token="--typographyCaption1Strong"></span></td></tr>
+          <tr><td>Link row height</td><td><code>--controlHeightMedium</code></td><td colspan="2"><span data-token="--controlHeightMedium"></span></td></tr>
+          <tr><td>Card padding, part gap</td><td><code>--spacingHorizontalXL</code>, <code>--spacingVerticalS</code></td><td colspan="2"><span data-token="--spacingHorizontalXL"></span> / <span data-token="--spacingVerticalS"></span></td></tr>
+          <tr><td>Grid gap under / from 1024px</td><td><code>--spacingVerticalL</code>, <code>--spacingHorizontalXL</code></td><td colspan="2"><span data-token="--spacingVerticalL"></span> / <span data-token="--spacingHorizontalXL"></span></td></tr>
+          <tr><td>Track and fill radius</td><td><code>--borderRadiusCircular</code></td><td colspan="2"><span data-token="--borderRadiusCircular"></span></td></tr>
+          <tr><td>Fill transition</td><td><code>--durationNormal</code></td><td colspan="2"><span data-token="--durationNormal"></span></td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section class="ds-section" id="code"><h2><a href="#code">Code</a></h2>
+      <pre><code>&lt;div class="stat-grid"&gt;
+  &lt;section class="card card--pad-lg stat" aria-labelledby="stat-activities"&gt;
+    &lt;h2 class="stat__label" id="stat-activities"&gt;Activities&lt;/h2&gt;
+    &lt;p class="stat__figure"&gt;&lt;strong&gt;16&lt;/strong&gt; of 20&lt;/p&gt;
+    &lt;p class="stat__sub"&gt;with a primary photo that shows&lt;/p&gt;
+    &lt;div class="stat__bar" role="img" aria-label="80% with a primary photo"&gt;
+      &lt;span class="stat__fill stat__fill--leaf" style="--sd-progress: 80%"&gt;&lt;/span&gt;
+    &lt;/div&gt;
+    &lt;p class="stat__delta stat__delta--up"&gt;&lt;span aria-hidden="true"&gt;↑&lt;/span&gt; +3 since last week&lt;/p&gt;
+    &lt;ul class="stat__list"&gt;
+      &lt;li&gt;&lt;a class="stat__link" href="/admin/places?photo=none"&gt;&lt;span class="chip chip--count"&gt;4&lt;/span&gt; without a photo&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/section&gt;
+&lt;/div&gt;</code></pre>
+      <table class="ds-table"><thead><tr><th scope="col">Class / attribute</th><th scope="col">Effect</th></tr></thead><tbody>
+        <tr><td><code>.stat-grid</code></td><td>One column; three equal columns from 1024px.</td></tr>
+        <tr><td><code>.card.card--pad-lg.stat</code></td><td>The card; <code>.stat</code> sets the 8px part gap.</td></tr>
+        <tr><td><code>.stat__label</code> <code>.stat__figure</code> <code>.stat__sub</code></td><td>Heading, figure (part in <code>&lt;strong&gt;</code>), what was counted.</td></tr>
+        <tr><td><code>.stat__bar</code> + <code>.stat__fill</code></td><td>Track and fill; width from <code>style="--sd-progress: 80%"</code>.</td></tr>
+        <tr><td><code>.stat__fill--leaf</code> <code>--sun</code> <code>--sky</code> <code>--brand</code></td><td>Fill tone.</td></tr>
+        <tr><td><code>.stat__delta--up</code> / <code>--down</code></td><td>Delta colour; add the arrow and sign in the content.</td></tr>
+        <tr><td><code>.stat__list</code> + <code>.stat__link</code></td><td>Breakdown links, each led by a <code>.chip--count</code>.</td></tr>
+        <tr><td><code>aria-busy="true"</code> on the card</td><td>Loading: skeletons inside, read once complete.</td></tr>
+      </tbody></table>
+      <p>Angular: <code>&lt;sd-stat-card label="Activities" [figure]="16" [total]="20" tone="leaf" [links]="links" /&gt;</code>.</p>
+    </section>
+
+    <section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>
+      <ul>
+        <li><a href="../../mocks/pages/admin.html">pages/admin</a> (Photo health): the stat grid, the three cards, their bars and count links.</li>
+        <li><a href="../../mocks/pages/admin.places.html">pages/admin.places</a>: where every count link lands.</li>
+      </ul>
+      <p>Drift fixed: D05 (soft text on wells now <code>--colorNeutralForeground2</code>), D12 (no text under 12px), D24 (the 1024px breakpoint is 64rem). The mock sets bar widths with fixed classes (<code>stat__fill--p56/--p79/--p80</code>); the design system uses <code>--sd-progress</code>. Not in the mocks yet: the delta, the brand tone and the loading and error states.</p>
+    </section>
+
+    <footer class="ds-footer"><span>Saturdaze design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/icons.js"></script>
+<script src="../assets/ds.js"></script>
+</body>
+</html>

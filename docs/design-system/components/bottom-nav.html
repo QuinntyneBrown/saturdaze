@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bottom nav — Saturdaze design system</title>
+<meta name="description" content="The floating phone navigation under 720px: four destinations with icons and labels, the current item, and the ADR-005 rule that keeps it clear of iOS Safari's toolbar and the home indicator.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html"><span class="brand-mark" aria-hidden="true"></span>Saturdaze DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Actions</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+    </ul></details>
+    <details open><summary>Inputs</summary><ul>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/chip-input.html">Chip input</a></li>
+      <li><a href="../components/file-upload.html">File upload</a></li>
+      <li><a href="../components/photo-pick.html">Photo pick</a></li>
+      <li><a href="../components/rating.html">Rating</a></li>
+      <li><a href="../components/vote-row.html">Vote row</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+    </ul></details>
+    <details open><summary>Navigation</summary><ul>
+      <li><a href="../components/top-bar.html">Top bar</a></li>
+      <li><a href="../components/bottom-nav.html">Bottom nav</a></li>
+      <li><a href="../components/sidebar-navigation.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs (segments)</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+      <li><a href="../components/footer.html">Footer</a></li>
+    </ul></details>
+    <details open><summary>Containers and overlays</summary><ul>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/container.html">Container and grid</a></li>
+      <li><a href="../components/page-header.html">Page header</a></li>
+    </ul></details>
+    <details open><summary>Data display</summary><ul>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/activity-feed.html">Activity feed</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/chip.html">Chip</a></li>
+      <li><a href="../components/filter-chip.html">Filter chip</a></li>
+      <li><a href="../components/disc.html">Disc</a></li>
+      <li><a href="../components/media.html">Media</a></li>
+      <li><a href="../components/cover.html">Cover photo</a></li>
+      <li><a href="../components/stat.html">Stat</a></li>
+      <li><a href="../components/itinerary.html">Itinerary</a></li>
+      <li><a href="../components/map.html">Map</a></li>
+    </ul></details>
+    <details open><summary>Feedback</summary><ul>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/alert.html">Alert</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/progress-bar.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Auth and marketing</summary><ul>
+      <li><a href="../components/auth-card.html">Auth card</a></li>
+      <li><a href="../components/hero.html">Hero</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/data-tables-and-lists.html">Tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Component · Navigation</p>
+      <h1>Bottom nav</h1>
+      <p class="ds-lead">On phones the family moves between Weekend, Ideas, Past and Family with a floating bar under the thumb. It stays visible while the page scrolls and clears Safari's toolbar and the home indicator in every state.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA</span><span class="ds-pill">Status: stable</span><span class="ds-pill">Angular: <code>sd-bottom-nav</code></span><span class="ds-pill">ADR-005</span><span class="ds-pill">Under 720px only</span></div>
+      <ul class="ds-toc">
+        <li><a href="#overview">Overview</a></li><li><a href="#anatomy">Anatomy</a></li><li><a href="#variants">Variants</a></li><li><a href="#sizes">Sizes</a></li><li><a href="#states">States</a></li><li><a href="#responsive">Responsive</a></li><li><a href="#theming">Theming</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#content">Content</a></li><li><a href="#do-dont">Do and don't</a></li><li><a href="#tokens">Tokens</a></li><li><a href="#code">Code</a></li><li><a href="#sources">Sources</a></li>
+      </ul>
+    </header>
+
+    <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+      <p>The bottom nav is the phone form of the app's primary navigation. It appears on the five signed-in screens below 720px and carries exactly the four links of the <a href="top-bar.html">top bar</a>, in the same order, with the same labels. From 720px it is hidden and the top bar takes over, so a page never shows both.</p>
+      <ul>
+        <li>Use it only in the app shell (ADR-009). Public pages use the site bar; auth screens have no navigation; Admin has its own <a href="sidebar-navigation.html">sidebar navigation</a> and ADR-005 does not apply there (ADR-014).</li>
+        <li>It is navigation, not a toolbar: every item is a link to a screen. Actions such as "Plan this weekend" belong in the <a href="page-header.html">page header</a>.</li>
+        <li>Switching between views inside one screen (Saturday and Sunday, Activities and Food) uses <a href="tabs.html">tabs</a>, never the bottom nav.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="anatomy"><h2><a href="#anatomy">Anatomy</a></h2>
+      <div class="ds-anatomy">
+        <figure class="ds-anatomy__figure" style="display: block;">
+          <nav class="bottom-nav bottom-nav--static" aria-label="Primary (anatomy example)" style="width: 100%;">
+            <a class="bottom-nav__item" href="../../mocks/pages/weekend.html" aria-current="page"><span class="bottom-nav__icon"><svg class="icon" aria-hidden="true"><use href="#i-home"/></svg></span>Weekend</a>
+            <a class="bottom-nav__item" href="../../mocks/pages/ideas.html"><span class="bottom-nav__icon"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg></span>Ideas</a>
+            <a class="bottom-nav__item" href="../../mocks/pages/past.html"><span class="bottom-nav__icon"><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg></span>Past</a>
+            <a class="bottom-nav__item" href="../../mocks/pages/family.html"><span class="bottom-nav__icon"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg></span>Family</a>
+          </nav>
+          <span class="ds-callout" style="left: calc(50% + min(13.75rem, 50% - 2rem) - 0.75rem); top: 6%;" aria-hidden="true">1</span>
+          <span class="ds-callout" style="left: calc(50% - 0.75 * min(13.75rem, 50% - 2rem) - 0.75rem); top: 6%;" aria-hidden="true">2</span>
+          <span class="ds-callout" style="left: calc(50% - 0.75 * min(13.75rem, 50% - 2rem) - 0.75rem); top: 78%;" aria-hidden="true">3</span>
+          <span class="ds-callout" style="left: calc(50% - 0.25 * min(13.75rem, 50% - 2rem) - 0.75rem); top: 6%;" aria-hidden="true">4</span>
+        </figure>
+        <ol class="ds-anatomy__list">
+          <li><div><b>Bar</b><small>A floating pill, 60px tall (<code>--layoutBottomNavHeight</code>), at most 440px wide, 12px from each side; raised surface, 1px <code>--colorNeutralStroke2</code> edge, <code>--shadow28</code>.</small></div></li>
+          <li><div><b>Icon pill</b><small><code>.bottom-nav__icon</code>: 36 × 24px, holds a 20px outline icon. Tinted only for the current item and on hover.</small></div></li>
+          <li><div><b>Label</b><small>12px semibold (<code>--typographyCaption1Strong</code>), always visible, never truncated. The label is the link's accessible name.</small></div></li>
+          <li><div><b>Item</b><small><code>.bottom-nav__item</code>: a link filling a quarter of the bar, icon over label with a 4px gap; the whole cell is the target.</small></div></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="ds-section" id="variants"><h2><a href="#variants">Variants</a></h2>
+      <p>One variant: four destinations, one current. The examples use <code>.bottom-nav--static</code>, a documentation modifier that puts the bar in the flow and keeps it visible above 720px.</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack ds-example__canvas--canvas">
+          <nav class="bottom-nav bottom-nav--static" aria-label="Primary" style="width: 100%;">
+            <a class="bottom-nav__item" href="../../mocks/pages/weekend.html"><span class="bottom-nav__icon"><svg class="icon" aria-hidden="true"><use href="#i-home"/></svg></span>Weekend</a>
+            <a class="bottom-nav__item" href="../../mocks/pages/ideas.html" aria-current="page"><span class="bottom-nav__icon"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg></span>Ideas</a>
+            <a class="bottom-nav__item" href="../../mocks/pages/past.html"><span class="bottom-nav__icon"><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg></span>Past</a>
+            <a class="bottom-nav__item" href="../../mocks/pages/family.html"><span class="bottom-nav__icon"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg></span>Family</a>
+          </nav>
+        </div>
+        <div class="ds-example__caption"><span>Ideas is current: darker label, coral icon on a coral-tint pill.</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;nav class="bottom-nav" aria-label="Primary"&gt;
+  &lt;a class="bottom-nav__item" href="/weekend"&gt;&lt;span class="bottom-nav__icon"&gt;&lt;svg class="icon" aria-hidden="true"&gt;&lt;use href="#i-home"/&gt;&lt;/svg&gt;&lt;/span&gt;Weekend&lt;/a&gt;
+  &lt;a class="bottom-nav__item" href="/ideas" aria-current="page"&gt;&lt;span class="bottom-nav__icon"&gt;…sparkle…&lt;/span&gt;Ideas&lt;/a&gt;
+  &lt;a class="bottom-nav__item" href="/past"&gt;&lt;span class="bottom-nav__icon"&gt;…star…&lt;/span&gt;Past&lt;/a&gt;
+  &lt;a class="bottom-nav__item" href="/family"&gt;&lt;span class="bottom-nav__icon"&gt;…user…&lt;/span&gt;Family&lt;/a&gt;
+&lt;/nav&gt;</code></pre></details>
+      </div>
+      <h3>The four destinations</h3>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Label and route</th><th scope="col">Icon</th><th scope="col">What it holds</th></tr></thead>
+        <tbody>
+          <tr><td>Weekend<br><code>/weekend</code></td><td><svg class="icon" aria-hidden="true"><use href="#i-home"/></svg><small class="text-soft">home</small></td><td>This weekend's plan: Saturday and Sunday, map, weather.</td></tr>
+          <tr><td>Ideas<br><code>/ideas</code></td><td><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg><small class="text-soft">sparkle</small></td><td>Activities, food and events around Port Credit.</td></tr>
+          <tr><td>Past<br><code>/past</code></td><td><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg><small class="text-soft">star</small></td><td>Earlier weekends, favourites and ratings.</td></tr>
+          <tr><td>Family<br><code>/family</code></td><td><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg><small class="text-soft">user</small></td><td>Members, commitments, account and sign out.</td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section class="ds-section" id="sizes" data-na="One size: 60px tall, up to 440px wide; items share the width equally."><h2><a href="#sizes">Sizes</a></h2><p class="ds-na">One size: 60px tall, up to 440px wide; items share the width equally.</p></section>
+
+    <section class="ds-section" id="states"><h2><a href="#states">States</a></h2>
+      <p>Hover and focus are forced with <code>data-state</code>; current is the real <code>aria-current="page"</code>.</p>
+      <div class="ds-matrix"><table>
+        <thead><tr><th scope="col">Item</th><th scope="col">Default</th><th scope="col">Hover</th><th scope="col">Focus</th><th scope="col">Current</th><th scope="col">Current, focus</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Past</th>
+            <td><a class="bottom-nav__item" href="../../mocks/pages/past.html" style="min-height: var(--layoutBottomNavHeight); padding-inline: var(--spacingHorizontalM);"><span class="bottom-nav__icon"><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg></span>Past</a></td>
+            <td><a class="bottom-nav__item" href="../../mocks/pages/past.html" data-state="hover" style="min-height: var(--layoutBottomNavHeight); padding-inline: var(--spacingHorizontalM);"><span class="bottom-nav__icon"><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg></span>Past</a></td>
+            <td><a class="bottom-nav__item" href="../../mocks/pages/past.html" data-state="focus" style="min-height: var(--layoutBottomNavHeight); padding-inline: var(--spacingHorizontalM);"><span class="bottom-nav__icon"><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg></span>Past</a></td>
+            <td><a class="bottom-nav__item" href="../../mocks/pages/past.html" aria-current="page" style="min-height: var(--layoutBottomNavHeight); padding-inline: var(--spacingHorizontalM);"><span class="bottom-nav__icon"><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg></span>Past</a></td>
+            <td><a class="bottom-nav__item" href="../../mocks/pages/past.html" aria-current="page" data-state="focus" style="min-height: var(--layoutBottomNavHeight); padding-inline: var(--spacingHorizontalM);"><span class="bottom-nav__icon"><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg></span>Past</a></td>
+          </tr>
+        </tbody>
+      </table></div>
+      <h3>Both themes</h3>
+      <div class="ds-themes">
+        <div data-theme="light"><nav class="bottom-nav bottom-nav--static" aria-label="Primary (light theme example)"><a class="bottom-nav__item" href="../../mocks/pages/weekend.html" aria-current="page"><span class="bottom-nav__icon"><svg class="icon" aria-hidden="true"><use href="#i-home"/></svg></span>Weekend</a><a class="bottom-nav__item" href="../../mocks/pages/ideas.html" data-state="hover"><span class="bottom-nav__icon"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg></span>Ideas</a><a class="bottom-nav__item" href="../../mocks/pages/past.html" data-state="focus"><span class="bottom-nav__icon"><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg></span>Past</a><a class="bottom-nav__item" href="../../mocks/pages/family.html"><span class="bottom-nav__icon"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg></span>Family</a></nav></div>
+        <div data-theme="dark"><nav class="bottom-nav bottom-nav--static" aria-label="Primary (dark theme example)"><a class="bottom-nav__item" href="../../mocks/pages/weekend.html" aria-current="page"><span class="bottom-nav__icon"><svg class="icon" aria-hidden="true"><use href="#i-home"/></svg></span>Weekend</a><a class="bottom-nav__item" href="../../mocks/pages/ideas.html" data-state="hover"><span class="bottom-nav__icon"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg></span>Ideas</a><a class="bottom-nav__item" href="../../mocks/pages/past.html" data-state="focus"><span class="bottom-nav__icon"><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg></span>Past</a><a class="bottom-nav__item" href="../../mocks/pages/family.html"><span class="bottom-nav__icon"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg></span>Family</a></nav></div>
+      </div>
+      <ul>
+        <li><b>Current</b> has three cues: the darker label, the coral icon (<code>--colorBrandForeground1</code>, D10) and the tinted pill. Never colour alone.</li>
+        <li><b>Hover</b> tints the icon pill. It only happens on devices that can hover, which at this width is rare (a narrow desktop window).</li>
+        <li>No disabled, loading or badge states. A destination is always reachable; counts live on the page they describe.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="responsive"><h2><a href="#responsive">Responsive behaviour</a></h2>
+      <ul>
+        <li><b>Under 720px</b>: fixed to the bottom of the viewport, 12px in from each side, centred and capped at 440px so it stays a thumb-sized pill on large phones and small tablets.</li>
+        <li><b>From 720px</b>: <code>display: none</code>; the <a href="top-bar.html">top bar</a> shows instead. A landscape phone wider than 720px gets the top bar.</li>
+        <li><b>Page padding</b>: <code>.app-main</code> reserves the nav height, its 12px offset, 24px of breathing room and <code>env(safe-area-inset-bottom)</code> at the bottom, so the last card or button is never hidden behind the nav.</li>
+        <li>At 320px each item is about 74px wide; "Weekend" at 12px still fits without truncating.</li>
+      </ul>
+      <h3>Clearing the iOS chrome (ADR-005)</h3>
+      <p>Two things can cover the bottom of an iPhone screen: Safari's toolbar, which grows and shrinks as the page scrolls, and the home indicator. They overlap rather than stack, so the bar clears whichever is larger, plus a 12px floor:</p>
+      <pre><code>.bottom-nav {
+  /* ADR-005: clear whichever bottom obstruction is present (not additive). */
+  bottom: calc(var(--spacingVerticalM)
+               + max(env(safe-area-inset-bottom, 0px), var(--sd-chrome-bottom, 0px)));
+}</code></pre>
+      <p><code>--sd-chrome-bottom</code> is written by a <code>VisualViewport</code> listener that runs before the app starts (<code>trackBottomChrome()</code> in <code>main.ts</code>; the mocks' <code>app.js</code> does the same). The viewport meta must keep <code>viewport-fit=cover</code>. No CSS unit isolates the bottom chrome, which is why this is JavaScript.</p>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Situation</th><th scope="col">Safe area</th><th scope="col"><code>--sd-chrome-bottom</code></th><th scope="col">Bar sits</th></tr></thead>
+        <tbody>
+          <tr><td>Desktop browser, Android</td><td>0</td><td>0</td><td>12px from the bottom</td></tr>
+          <tr><td>Face ID iPhone, home-screen app</td><td>about 34px</td><td>0</td><td>about 46px</td></tr>
+          <tr><td>iOS Safari, toolbar collapsed</td><td>about 34px</td><td>0 or small</td><td>about 46px</td></tr>
+          <tr><td>iOS Safari, toolbar partly shown</td><td>about 34px</td><td>about 50px</td><td>about 62px</td></tr>
+          <tr><td>iOS Safari, toolbar fully shown</td><td>about 34px</td><td>about 80px</td><td>about 92px</td></tr>
+        </tbody>
+      </table></div>
+      <p class="ds-note">Run <code>e2e/tests/regression/bottom-nav-clearance.spec.ts</code> after any change to the nav, <code>main.ts</code>, the viewport meta or the page frame. A simpler formula needs a verified test on a real iPhone with Safari's toolbar both expanded and collapsed (ADR-005).</p>
+    </section>
+
+    <section class="ds-section" id="theming"><h2><a href="#theming">Theming</a></h2>
+      <p>The bar reads alias tokens only: <code>--colorNeutralBackgroundRaised</code> for the surface, <code>--colorNeutralStroke2</code> for its edge, <code>--shadow28</code> to lift it off the content, <code>--colorNeutralForeground2</code> for labels, and the brand pair <code>--colorBrandBackground2</code> / <code>--colorBrandForeground1</code> for the current icon pill. It has no component tokens; there is nothing to re-skin locally.</p>
+      <p>In the dark theme the raised surface is umber 800 over the umber 900 canvas, so the bar still reads as a layer; the current pill becomes a deep coral tint with a coral 300 icon.</p>
+    </section>
+
+    <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
+      <h3>Role and pattern</h3>
+      <p>A <code>&lt;nav aria-label="Primary"&gt;</code> landmark holding four plain links; the same label as the top bar, because only one of them exists at a time. It is not an ARIA tablist: each item loads a different screen. See <a href="https://www.w3.org/WAI/ARIA/apg/practices/landmark-regions/">APG landmark regions</a>. In the DOM it comes after <code>&lt;main&gt;</code>, so the skip link and reading order reach the page content first; screen reader users jump to it through the landmarks list.</p>
+      <h3>Keyboard</h3>
+      <table class="ds-table ds-keys"><thead><tr><th scope="col">Key</th><th scope="col">Action</th></tr></thead><tbody>
+        <tr><td><kbd>Tab</kbd> / <kbd>Shift</kbd>+<kbd>Tab</kbd></td><td>Moves through the four items after the page content.</td></tr>
+        <tr><td><kbd>Enter</kbd></td><td>Follows the link.</td></tr>
+      </tbody></table>
+      <h3>Focus</h3>
+      <p>The shared 2px <code>--colorStrokeFocus2</code> ring follows the item's pill shape with a 2px offset. Because the bar is fixed over the content, a focused field or button near the bottom of the page could sit behind it (2.4.11 Focus Not Obscured); the <code>.app-main</code> bottom padding and <code>scroll-padding-bottom</code> equal to the same reserve keep focused content above the bar.</p>
+      <h3>Labelling</h3>
+      <p>Labels are always shown; icons are <code>aria-hidden="true"</code>, so each link's name is its label ("Weekend"). The current item carries <code>aria-current="page"</code>.</p>
+      <h3>Contrast</h3>
+      <div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0; gap: var(--spacingHorizontalS);">
+        <div class="ds-pair"><span>Label on the bar</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground2|--colorNeutralBackgroundRaised" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Current label on the bar</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground1|--colorNeutralBackgroundRaised" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Current icon on its pill (D10)</span><span class="ds-pair__ratio" data-contrast="--colorBrandForeground1|--colorBrandBackground2" data-min="3"></span></div>
+        <div class="ds-pair"><span>Icon on the bar</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground2|--colorNeutralBackgroundRaised" data-min="3"></span></div>
+        <div class="ds-pair"><span>Focus ring on the bar</span><span class="ds-pair__ratio" data-contrast="--colorStrokeFocus2|--colorNeutralBackgroundRaised" data-min="3"></span></div>
+      </div>
+      <h3>Motion</h3>
+      <p>Only the icon pill's background transitions (<code>--durationFast</code>). The bar itself never animates on scroll; its only movement is the ADR-005 offset following Safari's toolbar, which is the browser moving, not an animation.</p>
+      <h3>Touch</h3>
+      <p>Each item is at least 74 × 60px at 320px wide, well above the 24px minimum (2.5.8) and the 44px comfortable size. The bar's 12px floor keeps it off the screen edge, where iOS reserves the home gesture.</p>
+    </section>
+
+    <section class="ds-section" id="content"><h2><a href="#content">Content</a></h2>
+      <ul>
+        <li>One word per label, identical to the top bar link and the page title: Weekend, Ideas, Past, Family.</li>
+        <li>Each label has one fixed icon (home, sparkle, star, user). Never swap an icon to show state; the current pill does that.</li>
+        <li>Four items, always. A fifth does not fit a thumb-width cell at 320px and breaks parity with the top bar.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="do-dont"><h2><a href="#do-dont">Do and don't</a></h2>
+      <div class="ds-dodont">
+        <figure class="ds-do"><div class="ds-example__canvas"><a class="bottom-nav__item" href="../../mocks/pages/weekend.html" aria-current="page"><span class="bottom-nav__icon"><svg class="icon" aria-hidden="true"><use href="#i-home"/></svg></span>Weekend</a></div><figcaption>Current icon in <code>--colorBrandForeground1</code> on its tint: 4.97:1 (D10).</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><a class="bottom-nav__item" href="../../mocks/pages/weekend.html" aria-current="page"><span class="bottom-nav__icon" style="color: var(--colorBrandBackgroundStatic);"><svg class="icon" aria-hidden="true"><use href="#i-home"/></svg></span>Weekend</a></div><figcaption>The mock's coral #E07856 icon on the coral tint is 2.6:1, under the 3:1 needed for a state icon (D10).</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas"><a class="bottom-nav__item" href="../../mocks/pages/past.html"><span class="bottom-nav__icon"><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg></span>Past</a></div><figcaption>Labels at 12px (<code>--typographyCaption1Strong</code>), the smallest size in the system (D12).</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><a class="bottom-nav__item" href="../../mocks/pages/past.html" aria-label="Past"><span class="bottom-nav__icon"><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg></span></a></div><figcaption>Icon-only items (or the mock's 11px labels) make a star mean "Past" by guesswork. Keep the label visible and at 12px.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas"><code>max(env(safe-area-inset-bottom), var(--sd-chrome-bottom))</code></div><figcaption>Clear the larger of the two obstructions; they overlap.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><code>env(safe-area-inset-bottom) + (100lvh - 100dvh)</code></div><figcaption>Adding them, or using viewport units, floats the bar far above the toolbar (the rejected attempts in ADR-005).</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="ds-section" id="tokens"><h2><a href="#tokens">Tokens</a></h2>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Part</th><th scope="col">Token</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead>
+        <tbody>
+          <tr><td>Bar surface</td><td><code>--colorNeutralBackgroundRaised</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralBackgroundRaised" data-swatch></i><span data-token="--colorNeutralBackgroundRaised"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralBackgroundRaised" data-swatch></i><span data-token="--colorNeutralBackgroundRaised"></span></span></td></tr>
+          <tr><td>Bar edge</td><td><code>--colorNeutralStroke2</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralStroke2" data-swatch></i><span data-token="--colorNeutralStroke2"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralStroke2" data-swatch></i><span data-token="--colorNeutralStroke2"></span></span></td></tr>
+          <tr><td>Label and icon</td><td><code>--colorNeutralForeground2</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralForeground2" data-swatch></i><span data-token="--colorNeutralForeground2"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralForeground2" data-swatch></i><span data-token="--colorNeutralForeground2"></span></span></td></tr>
+          <tr><td>Current label</td><td><code>--colorNeutralForeground1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralForeground1" data-swatch></i><span data-token="--colorNeutralForeground1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralForeground1" data-swatch></i><span data-token="--colorNeutralForeground1"></span></span></td></tr>
+          <tr><td>Current icon pill</td><td><code>--colorBrandBackground2</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorBrandBackground2" data-swatch></i><span data-token="--colorBrandBackground2"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorBrandBackground2" data-swatch></i><span data-token="--colorBrandBackground2"></span></span></td></tr>
+          <tr><td>Current icon</td><td><code>--colorBrandForeground1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorBrandForeground1" data-swatch></i><span data-token="--colorBrandForeground1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorBrandForeground1" data-swatch></i><span data-token="--colorBrandForeground1"></span></span></td></tr>
+          <tr><td>Hover pill</td><td><code>--colorSubtleBackgroundHover</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorSubtleBackgroundHover" data-swatch></i><span data-token="--colorSubtleBackgroundHover"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorSubtleBackgroundHover" data-swatch></i><span data-token="--colorSubtleBackgroundHover"></span></span></td></tr>
+          <tr><td>Focus ring</td><td><code>--colorStrokeFocus2</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorStrokeFocus2" data-swatch></i><span data-token="--colorStrokeFocus2"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorStrokeFocus2" data-swatch></i><span data-token="--colorStrokeFocus2"></span></span></td></tr>
+          <tr><td>Height</td><td><code>--layoutBottomNavHeight</code></td><td colspan="2"><span data-token="--layoutBottomNavHeight"></span></td></tr>
+          <tr><td>Max width</td><td><code>--layoutNarrowMaxWidth</code></td><td colspan="2"><span data-token="--layoutNarrowMaxWidth"></span></td></tr>
+          <tr><td>Side inset / bottom floor</td><td><code>--spacingHorizontalM</code> / <code>--spacingVerticalM</code></td><td colspan="2"><span data-token="--spacingHorizontalM"></span> / <span data-token="--spacingVerticalM"></span></td></tr>
+          <tr><td>Icon to label gap</td><td><code>--spacingVerticalXS</code></td><td colspan="2"><span data-token="--spacingVerticalXS"></span></td></tr>
+          <tr><td>Label</td><td><code>--typographyCaption1Strong</code></td><td colspan="2"><span data-token="--typographyCaption1Strong"></span></td></tr>
+          <tr><td>Radius</td><td><code>--borderRadiusCircular</code></td><td colspan="2"><span data-token="--borderRadiusCircular"></span></td></tr>
+          <tr><td>Shadow</td><td><code>--shadow28</code></td><td colspan="2"><span data-token="--shadow28"></span></td></tr>
+          <tr><td>Stacking</td><td><code>--zIndexBottomNav</code></td><td colspan="2"><span data-token="--zIndexBottomNav"></span></td></tr>
+          <tr><td>Transition</td><td><code>--durationFast</code>, <code>--curveEasyEase</code></td><td colspan="2"><span data-token="--durationFast"></span></td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section class="ds-section" id="code"><h2><a href="#code">Code</a></h2>
+      <pre><code>&lt;meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"&gt;
+
+&lt;main id="main" class="app-main container"&gt;…&lt;/main&gt;
+&lt;nav class="bottom-nav" aria-label="Primary"&gt;
+  &lt;a class="bottom-nav__item" href="/weekend" aria-current="page"&gt;
+    &lt;span class="bottom-nav__icon"&gt;&lt;svg class="icon" aria-hidden="true"&gt;&lt;use href="#i-home"/&gt;&lt;/svg&gt;&lt;/span&gt;Weekend
+  &lt;/a&gt;
+  …
+&lt;/nav&gt;
+
+&lt;!-- Angular: active comes from route data (nav: 'weekend') --&gt;
+&lt;sd-bottom-nav class="bottom-nav" aria-label="Primary" active="weekend" /&gt;</code></pre>
+      <table class="ds-table"><thead><tr><th scope="col">Class / attribute</th><th scope="col">Effect</th></tr></thead><tbody>
+        <tr><td><code>.bottom-nav</code></td><td>Fixed floating pill, four equal columns; hidden from 720px.</td></tr>
+        <tr><td><code>.bottom-nav__item</code></td><td>Link cell: icon over label.</td></tr>
+        <tr><td><code>.bottom-nav__icon</code></td><td>36 × 24px pill around the icon; tinted when current or hovered.</td></tr>
+        <tr><td><code>aria-current="page"</code></td><td>Current item: darker label, coral icon on a coral tint.</td></tr>
+        <tr><td><code>--sd-chrome-bottom</code></td><td>Set by <code>trackBottomChrome()</code>; the bottom chrome height in CSS pixels (ADR-005).</td></tr>
+        <tr><td><code>.app-main</code></td><td>Reserves space under the content for the nav and the safe area.</td></tr>
+        <tr><td><code>.bottom-nav--static</code></td><td>Documentation only: in the flow and visible at any width.</td></tr>
+        <tr><td><code>data-state="hover|focus"</code></td><td>Documentation only: forces a pointer or focus state.</td></tr>
+      </tbody></table>
+    </section>
+
+    <section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>
+      <ul>
+        <li><a href="../../mocks/pages/_shell.html">pages/_shell</a>: the canonical bottom nav block.</li>
+        <li><a href="../../mocks/pages/weekend.html">pages/weekend</a>, <a href="../../mocks/pages/ideas.html">ideas</a>, <a href="../../mocks/pages/past.html">past</a>, <a href="../../mocks/pages/family.html">family</a>: each item current in turn.</li>
+        <li><code>docs/adr/ADR-005-bottom-nav-device-chrome-clearance.md</code>: the clearance formula, the offsets table and the regression test. ADR-009 (one shell, chosen by route) and ADR-014 (Admin does not use it).</li>
+      </ul>
+      <p>Drift fixed: D10 current icon contrast (coral #E07856 on tint, 2.6:1, now <code>--colorBrandForeground1</code>), D12 the 11px labels (now 12px), D03 focus ring, D24 the 720px switch in rem. Added during extraction (not in the drift log): the real <code>:hover</code> twin of the hover pill, and <code>scroll-padding-bottom</code> equal to the nav's reserve under 720px. Neither the mock nor the product has <code>scroll-padding-bottom</code> for the fixed bar yet.</p>
+    </section>
+
+    <footer class="ds-footer"><span>Saturdaze design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/icons.js"></script>
+<script src="../assets/ds.js"></script>
+</body>
+</html>

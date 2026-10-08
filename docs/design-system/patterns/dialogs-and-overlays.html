@@ -1,0 +1,389 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dialogs and overlays — Saturdaze design system</title>
+<meta name="description" content="When Saturdaze uses a dialog, a bottom sheet, a menu, a tooltip or a page; how overlays stack; where focus goes; confirming before destroying; and success dialogs.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html"><span class="brand-mark" aria-hidden="true"></span>Saturdaze DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Actions</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+    </ul></details>
+    <details open><summary>Inputs</summary><ul>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/chip-input.html">Chip input</a></li>
+      <li><a href="../components/file-upload.html">File upload</a></li>
+      <li><a href="../components/photo-pick.html">Photo pick</a></li>
+      <li><a href="../components/rating.html">Rating</a></li>
+      <li><a href="../components/vote-row.html">Vote row</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+    </ul></details>
+    <details open><summary>Navigation</summary><ul>
+      <li><a href="../components/top-bar.html">Top bar</a></li>
+      <li><a href="../components/bottom-nav.html">Bottom nav</a></li>
+      <li><a href="../components/sidebar-navigation.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs (segments)</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+      <li><a href="../components/footer.html">Footer</a></li>
+    </ul></details>
+    <details open><summary>Containers and overlays</summary><ul>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/container.html">Container and grid</a></li>
+      <li><a href="../components/page-header.html">Page header</a></li>
+    </ul></details>
+    <details open><summary>Data display</summary><ul>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/activity-feed.html">Activity feed</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/chip.html">Chip</a></li>
+      <li><a href="../components/filter-chip.html">Filter chip</a></li>
+      <li><a href="../components/disc.html">Disc</a></li>
+      <li><a href="../components/media.html">Media</a></li>
+      <li><a href="../components/cover.html">Cover photo</a></li>
+      <li><a href="../components/stat.html">Stat</a></li>
+      <li><a href="../components/itinerary.html">Itinerary</a></li>
+      <li><a href="../components/map.html">Map</a></li>
+    </ul></details>
+    <details open><summary>Feedback</summary><ul>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/alert.html">Alert</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/progress-bar.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Auth and marketing</summary><ul>
+      <li><a href="../components/auth-card.html">Auth card</a></li>
+      <li><a href="../components/hero.html">Hero</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/data-tables-and-lists.html">Tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Pattern</p>
+      <h1>Dialogs and overlays</h1>
+      <p class="ds-lead">Overlays keep a parent on the page they were on: a dialog for a short task or a decision, a sheet for the same thing on a phone, a menu for a handful of actions, a tooltip to name an icon. Anything longer gets a page.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA</span><span class="ds-pill">Status: stable</span><span class="ds-pill">Angular CDK Dialog and Overlay</span></div>
+      <ul class="ds-toc">
+        <li><a href="#overview">Overview</a></li><li><a href="#when">When to use</a></li><li><a href="#structure">Structure</a></li><li><a href="#states">States</a></li><li><a href="#responsive">Responsive</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#content">Content</a></li><li><a href="#do-dont">Do and don't</a></li><li><a href="#sources">Sources</a></li>
+      </ul>
+    </header>
+
+    <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+      <p>Every modal surface in Saturdaze is an Angular CDK Dialog; every anchored popover is a CDK Overlay. Nothing hand-rolls a modal, a focus trap or a scrim. One <a href="../components/dialog.html">dialog</a> component serves as a centred modal from 720px and a bottom sheet below it; the markup does not change, CSS does.</p>
+      <ul>
+        <li><b>Dialog</b>: edit one thing (D17 Edit Mae), decide (D3 Regenerate the weekend?), confirm a loss (D21), or read a result (D9, D11).</li>
+        <li><b>Sheet</b>: the same dialog under 720px, rising from the bottom edge where a thumb can reach it.</li>
+        <li><b><a href="../components/menu.html">Menu</a></b>: two to six actions on one trigger, anchored to it (D25 Weekend options, D26 Account).</li>
+        <li><b><a href="../components/tooltip.html">Tooltip</a></b>: the name of an icon-only button, on hover or focus. Never essential, never interactive.</li>
+        <li><b>Page</b>: anything long, multi-step, or worth a URL (sign in, Family, an admin place).</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="when"><h2><a href="#when">When to use</a></h2>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Need</th><th scope="col">Use</th><th scope="col">Not</th></tr></thead>
+        <tbody>
+          <tr><td>Change 1 to 6 fields of one thing</td><td>Dialog with a form</td><td>Inline editing on the page</td></tr>
+          <tr><td>A yes or no that changes the plan</td><td>Dialog: "Regenerate Saturday?"</td><td>A toast with a button</td></tr>
+          <tr><td>Something that cannot be undone</td><td>Confirmation dialog (<code>role="alertdialog"</code>) with a danger button</td><td>A danger button that acts at once</td></tr>
+          <tr><td>A result with details to read</td><td>Success dialog with "Done"</td><td>A toast the parent might miss</td></tr>
+          <tr><td>Several actions behind one button</td><td>Menu from 720px; the same list in a sheet below 720px</td><td>A row of five buttons</td></tr>
+          <tr><td>Name an icon-only button</td><td>Tooltip, plus <code>aria-label</code></td><td>A tooltip that holds the only explanation of something</td></tr>
+          <tr><td>A long or multi-step task, or one people link to</td><td>A page with a back link</td><td>A dialog that scrolls for screens</td></tr>
+          <tr><td>Tell them something happened</td><td><a href="notifications.html">Toast</a> (not modal)</td><td>A dialog for "Saved"</td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section class="ds-section" id="structure"><h2><a href="#structure">Structure</a></h2>
+      <h3>"More" on the Weekend page (D25)</h3>
+      <p>One trigger, two presentations. Under 720px the options open as a sheet titled "Weekend options" with full rows and a description each. From 720px they open as a menu anchored under the button. Same items, same order, same destinations.</p>
+      <div class="ds-grid-2">
+        <div class="ds-example" style="margin: 0;">
+          <div class="ds-example__canvas ds-example__canvas--stack ds-example__canvas--canvas">
+            <div class="dialog dialog--specimen" role="dialog" aria-labelledby="do-d25-title">
+              <div class="dialog__panel">
+                <div class="dialog__header">
+                  <div class="dialog__heading"><p class="dialog__title" id="do-d25-title">Weekend options</p></div>
+                  <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+                </div>
+                <div class="dialog__body">
+                  <ul class="list">
+                    <li><a class="list__item list__item--action" href="../../mocks/pages/dialogs.html#dialog-regenerate"><span class="disc"><svg class="icon" aria-hidden="true"><use href="#i-refresh"/></svg></span><span class="list__text"><span class="list__title">Regenerate the weekend</span><span class="list__sub">Locked blocks stay where they are</span></span></a></li>
+                    <li><a class="list__item list__item--action" href="../../mocks/pages/dialogs.html#dialog-calendar"><span class="disc"><svg class="icon" aria-hidden="true"><use href="#i-calendar"/></svg></span><span class="list__text"><span class="list__title">Add to calendar</span><span class="list__sub">One .ics with both days</span></span></a></li>
+                  </ul>
+                </div>
+                <div class="dialog__actions"><button class="btn btn--quiet" type="button">Close</button></div>
+              </div>
+            </div>
+          </div>
+          <div class="ds-example__caption"><span>Under 720px: a sheet (this specimen follows the page width, so it shows as a modal on wide screens).</span></div>
+        </div>
+        <div class="ds-example" style="margin: 0;">
+          <div class="ds-example__canvas ds-example__canvas--canvas" style="min-height: 14rem; align-items: flex-start; justify-content: flex-end;">
+            <div class="menu-anchor">
+              <button class="btn btn--quiet btn--icon" type="button" aria-label="More options" aria-haspopup="menu" aria-expanded="true" aria-controls="do-d25-menu"><svg class="icon" aria-hidden="true"><use href="#i-more"/></svg></button>
+              <div class="menu" id="do-d25-menu" role="menu" aria-label="Weekend options">
+                <a class="menu__item" role="menuitem" href="../../mocks/pages/dialogs.html#dialog-regenerate"><svg class="icon" aria-hidden="true"><use href="#i-refresh"/></svg>Regenerate the weekend</a>
+                <a class="menu__item" role="menuitem" href="../../mocks/pages/dialogs.html#dialog-calendar"><svg class="icon" aria-hidden="true"><use href="#i-calendar"/></svg>Add to calendar</a>
+              </div>
+            </div>
+          </div>
+          <div class="ds-example__caption"><span>From 720px: menu anchored to the trigger.</span></div>
+        </div>
+      </div>
+      <h3>Confirm before destroying</h3>
+      <p>The entry point is a warn-text button (Remove in D17). It opens a confirmation whose title is the question, whose sub line is the consequence, and whose danger button repeats the verb.</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack ds-example__canvas--canvas">
+          <div class="dialog dialog--specimen" role="alertdialog" aria-labelledby="do-d21-title" aria-describedby="do-d21-sub">
+            <div class="dialog__panel">
+              <div class="dialog__header">
+                <div class="dialog__heading"><p class="dialog__title" id="do-d21-title">Remove Swim lessons?</p><p class="dialog__sub" id="do-d21-sub">Weekends stop planning around it.</p></div>
+                <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+              </div>
+              <div class="dialog__actions">
+                <button class="btn btn--quiet" type="button">Cancel</button>
+                <button class="btn btn--danger" type="button"><svg class="icon" aria-hidden="true"><use href="#i-trash"/></svg>Remove</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>D21. No body, two buttons. Focus starts on Cancel.</span></div>
+      </div>
+      <h3>Success dialogs (D9, D11)</h3>
+      <p>When the system made a choice the parent needs to see (where the errand landed) or something is now waiting on someone else (the event is in the review queue), the form dialog is replaced by a success dialog with one button: "Done".</p>
+      <div class="ds-grid-2">
+        <div class="ds-example" style="margin: 0;">
+          <div class="ds-example__canvas ds-example__canvas--stack ds-example__canvas--canvas">
+            <div class="dialog dialog--specimen" role="dialog" aria-labelledby="do-d9-title">
+              <div class="dialog__panel">
+                <div class="dialog__header">
+                  <div class="dialog__heading"><p class="dialog__title" id="do-d9-title">Added to Sunday at 9:15</p><p class="dialog__sub">It sits around what was already planned.</p></div>
+                  <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+                </div>
+                <div class="dialog__body">
+                  <ul class="list list--card">
+                    <li class="list__item"><span class="disc disc--indoor"><svg class="icon" aria-hidden="true"><use href="#i-bag"/></svg></span><span class="list__text"><span class="list__sub">What</span><span class="list__title">Costco run</span></span></li>
+                    <li class="list__item"><span class="disc"><svg class="icon" aria-hidden="true"><use href="#i-calendar"/></svg></span><span class="list__text"><span class="list__sub">When</span><span class="list__title">Sunday · 9:15 to 10:00</span></span></li>
+                  </ul>
+                </div>
+                <div class="dialog__actions"><button class="btn btn--primary" type="button">Done</button></div>
+              </div>
+            </div>
+          </div>
+          <div class="ds-example__caption"><span>D9 Errand added.</span></div>
+        </div>
+        <div class="ds-example" style="margin: 0;">
+          <div class="ds-example__canvas ds-example__canvas--stack ds-example__canvas--canvas">
+            <div class="dialog dialog--specimen" role="dialog" aria-labelledby="do-d11-title">
+              <div class="dialog__panel">
+                <div class="dialog__header">
+                  <div class="dialog__heading"><p class="dialog__title" id="do-d11-title">Thanks, it is in the queue</p><p class="dialog__sub">Only you can see it until it is approved.</p></div>
+                  <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+                </div>
+                <div class="dialog__body">
+                  <div class="card card--sunk">
+                    <div class="card__head">
+                      <span class="date-tile" aria-hidden="true"><span class="date-tile__m">Jun</span><span class="date-tile__d">20</span></span>
+                      <div class="card__head-text"><p class="card__title">Port Credit Buskerfest</p><p class="card__meta">Lakeshore Rd · Sat 2pm to 9pm</p></div>
+                    </div>
+                    <div class="card__chips"><span class="chip chip--sun">Pending review</span></div>
+                  </div>
+                </div>
+                <div class="dialog__actions"><button class="btn btn--primary" type="button">Done</button></div>
+              </div>
+            </div>
+          </div>
+          <div class="ds-example__caption"><span>D11 Submitted.</span></div>
+        </div>
+      </div>
+      <h3>Tooltip</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas" style="padding-top: var(--spacingVerticalXXXXL); justify-content: center;">
+          <span class="tooltip-anchor">
+            <button class="btn btn--ghost btn--sm btn--icon" type="button" aria-label="Regenerate Saturday" aria-describedby="do-tip"><svg class="icon" aria-hidden="true"><use href="#i-refresh"/></svg></button>
+            <span class="tooltip" id="do-tip" role="tooltip" data-open>Regenerate Saturday</span>
+          </span>
+        </div>
+        <div class="ds-example__caption"><span>The phone day-header button has no visible label, so a tooltip names it on hover and focus (300ms delay). See <a href="../components/tooltip.html">tooltip</a>.</span></div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="states"><h2><a href="#states">States</a></h2>
+      <h3>Stacking</h3>
+      <p>Overlays stack by z-order token, never by an ad hoc number. Popovers sit above dialogs so a select or menu inside a dialog is not hidden; toasts sit above both so "Saved Mae" is visible as the dialog closes.</p>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Layer</th><th scope="col">Token</th><th scope="col">Value</th></tr></thead>
+        <tbody>
+          <tr><td>Sticky day header</td><td><code>--zIndexSticky</code></td><td><span data-token="--zIndexSticky"></span></td></tr>
+          <tr><td>Top bar, admin nav</td><td><code>--zIndexTopBar</code></td><td><span data-token="--zIndexTopBar"></span></td></tr>
+          <tr><td>Bottom nav</td><td><code>--zIndexBottomNav</code></td><td><span data-token="--zIndexBottomNav"></span></td></tr>
+          <tr><td>Dialog and sheet, with scrim</td><td><code>--zIndexDialog</code></td><td><span data-token="--zIndexDialog"></span></td></tr>
+          <tr><td>Menu, select popover</td><td><code>--zIndexPopover</code></td><td><span data-token="--zIndexPopover"></span></td></tr>
+          <tr><td>Toast region</td><td><code>--zIndexToast</code></td><td><span data-token="--zIndexToast"></span></td></tr>
+          <tr><td>Tooltip, skip link</td><td><code>--zIndexTooltip</code></td><td><span data-token="--zIndexTooltip"></span></td></tr>
+        </tbody>
+      </table></div>
+      <ul>
+        <li><b>One dialog at a time</b>, with one exception: a confirmation may open over the dialog that asked for it (D21 over D17). Never three deep.</li>
+        <li><b>Success replaces, it does not stack.</b> D7 closes as D9 opens, so Escape from D9 goes back to the page, not to a stale form.</li>
+        <li><b>Menus close</b> when an item is chosen, before any dialog the item opens.</li>
+      </ul>
+      <h3>Dialog states</h3>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">State</th><th scope="col">Behaviour</th></tr></thead>
+        <tbody>
+          <tr><td>Open</td><td>Scrim (<code>--colorBackgroundOverlay</code>) behind; page scroll locked; panel rises over <code>--durationNormal</code>.</td></tr>
+          <tr><td>Busy</td><td><code>aria-busy="true"</code> on the dialog: body dims, the pressed button spins, Escape and the scrim wait.</td></tr>
+          <tr><td>Error</td><td>Banner or field errors inside the dialog; the dialog stays open with the values kept.</td></tr>
+          <tr><td>Closed</td><td>Focus returns to the trigger; a toast may confirm.</td></tr>
+        </tbody>
+      </table></div>
+      <h3>Both themes</h3>
+      <div class="ds-themes">
+        <div data-theme="light"><div class="menu" role="menu" aria-label="Account (light example)"><p class="menu__header">quinntynebrown@gmail.com</p><a class="menu__item" role="menuitem" href="../../mocks/pages/family.html"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg>Family settings</a><a class="menu__item menu__item--warn" role="menuitem" href="../../mocks/pages/dialogs.html#dialog-signout"><svg class="icon" aria-hidden="true"><use href="#i-sign_out"/></svg>Sign out</a></div></div>
+        <div data-theme="dark"><div class="menu" role="menu" aria-label="Account (dark example)"><p class="menu__header">quinntynebrown@gmail.com</p><a class="menu__item" role="menuitem" href="../../mocks/pages/family.html"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg>Family settings</a><a class="menu__item menu__item--warn" role="menuitem" href="../../mocks/pages/dialogs.html#dialog-signout"><svg class="icon" aria-hidden="true"><use href="#i-sign_out"/></svg>Sign out</a></div></div>
+      </div>
+      <p>D26 Account menu. In the dark theme raised surfaces get lighter as they rise, so the menu reads above the page without a heavier shadow.</p>
+    </section>
+
+    <section class="ds-section" id="responsive"><h2><a href="#responsive">Responsive behaviour</a></h2>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Overlay</th><th scope="col">Under 720px</th><th scope="col">From 720px</th></tr></thead>
+        <tbody>
+          <tr><td>Dialog</td><td>Bottom sheet: full width, top corners rounded, drag handle, at most 88% of the viewport height with the body scrolling; buttons full width, 44px, primary or danger on top; safe-area padding at the bottom</td><td>Centred modal, 30rem (32.5rem for wide forms); buttons in a row, right-aligned, primary last; warn text at the far left</td></tr>
+          <tr><td>"More" options (D25)</td><td>Sheet with list rows and descriptions</td><td>Menu anchored under the trigger, right-aligned</td></tr>
+          <tr><td>Account (D26)</td><td>None: the Family tab covers it</td><td>Menu under the avatar</td></tr>
+          <tr><td>Tooltip</td><td>Not shown on touch; the label must be clear without it</td><td>On hover after 300ms, on focus at once</td></tr>
+        </tbody>
+      </table></div>
+      <p>The sheet's drag handle is decorative: Saturdaze sheets close with the close button, Cancel, the scrim or Escape, not by dragging (2.5.7).</p>
+    </section>
+
+    <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
+      <h3>Role and pattern</h3>
+      <p>Dialogs follow the <a href="https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/">APG Dialog (Modal) pattern</a>: <code>role="dialog"</code> or <code>role="alertdialog"</code>, <code>aria-modal="true"</code>, labelled by the title and described by the sub line. Menus follow the <a href="https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/">Menu Button pattern</a>; tooltips the <a href="https://www.w3.org/WAI/ARIA/apg/patterns/tooltip/">Tooltip pattern</a>. CDK Dialog supplies the focus trap, scroll lock and <code>aria-modal</code>; CDK Overlay positions menus.</p>
+      <h3>Keyboard</h3>
+      <table class="ds-table ds-keys"><thead><tr><th scope="col">Key</th><th scope="col">Action</th></tr></thead><tbody>
+        <tr><td><kbd>Tab</kbd> / <kbd>Shift</kbd>+<kbd>Tab</kbd></td><td>Cycles within the dialog; never reaches the page behind.</td></tr>
+        <tr><td><kbd>Esc</kbd></td><td>Closes the top-most dialog or menu (the same as Cancel); ignored while busy.</td></tr>
+        <tr><td><kbd>Enter</kbd> / <kbd>Space</kbd> / <kbd>Down</kbd></td><td>On a menu trigger: opens the menu with focus on the first item.</td></tr>
+        <tr><td><kbd>Up</kbd> / <kbd>Down</kbd>, <kbd>Home</kbd> / <kbd>End</kbd></td><td>Move between menu items.</td></tr>
+        <tr><td><kbd>Esc</kbd> on a tooltip</td><td>Hides the tooltip without moving focus.</td></tr>
+      </tbody></table>
+      <h3>Focus</h3>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Dialog</th><th scope="col">Focus on open</th><th scope="col">Focus on close</th></tr></thead>
+        <tbody>
+          <tr><td>Form (D7, D17)</td><td>First field</td><td>The trigger</td></tr>
+          <tr><td>Decision (D3, D4)</td><td>The primary action</td><td>The trigger</td></tr>
+          <tr><td>Confirmation (D21, D22)</td><td>Cancel, the least destructive action</td><td>On Cancel, the warn-text trigger; on confirm, the heading of the list the item left</td></tr>
+          <tr><td>Success (D9, D11)</td><td>Done</td><td>The button that opened the original form</td></tr>
+          <tr><td>Sheet list (D25)</td><td>The first row</td><td>The "More" trigger</td></tr>
+        </tbody>
+      </table></div>
+      <h3>Labelling</h3>
+      <p>The title is the accessible name; the sub line is the description. The close button is "Close". Menu triggers carry <code>aria-haspopup="menu"</code> and <code>aria-expanded</code>. A tooltip duplicates the button's <code>aria-label</code>, so it is linked with <code>aria-describedby</code> only when it adds a shortcut.</p>
+      <h3>Contrast</h3>
+      <div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0; gap: var(--spacingHorizontalS);">
+        <div class="ds-pair"><span>Dialog sub line on panel</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground2|--colorNeutralBackgroundRaised" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Menu item on panel</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground1|--colorNeutralBackgroundRaised" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Warn menu item on panel</span><span class="ds-pair__ratio" data-contrast="--colorStatusDangerForeground1|--colorNeutralBackgroundRaised" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Tooltip text</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForegroundInverted|--colorNeutralBackgroundInverted" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Sheet handle on panel</span><span class="ds-pair__ratio" data-contrast="--colorNeutralStrokeAccessible|--colorNeutralBackgroundRaised" data-min="3"></span></div>
+      </div>
+      <h3>Motion</h3>
+      <p>Dialogs, sheets and menus rise 4px and fade in over <code>--durationNormal</code>; under reduced motion they appear at once. Nothing slides across the screen.</p>
+      <h3>Touch</h3>
+      <p>Sheet rows are 56px; menu items 44px; the close button is 32px with clear space around it; footer buttons 44px on phones.</p>
+    </section>
+
+    <section class="ds-section" id="content"><h2><a href="#content">Content</a></h2>
+      <ul>
+        <li><b>Form titles</b> are the action and the object: "Edit Mae", "Add an errand", "Rename this weekend".</li>
+        <li><b>Decision and confirmation titles</b> are a question that names the object: "Regenerate Saturday?", "Remove Mae from the family?". The sub line states the consequence: "Sunday will not change."</li>
+        <li><b>Success titles</b> say what happened, with the specifics: "Added to Sunday at 9:15".</li>
+        <li><b>Buttons</b>: the verb from the title ("Regenerate", "Remove"), Cancel for the safe way out, "Done" to close a success dialog. D22 uses "Stay signed in" because "Cancel sign out" reads badly.</li>
+        <li><b>Menu items</b> are verb phrases without descriptions; the sheet version adds a one-line description.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="do-dont"><h2><a href="#do-dont">Do and don't</a></h2>
+      <div class="ds-dodont">
+        <figure class="ds-do"><div class="ds-example__canvas"><button class="btn btn--quiet" type="button">Cancel</button><button class="btn btn--danger" type="button">Remove</button></div><figcaption>The danger button repeats the verb in the title.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><button class="btn btn--quiet" type="button">No</button><button class="btn btn--primary" type="button">Yes</button></div><figcaption>"Yes" and "No" make the parent re-read the question, and a primary coral button hides the risk.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas ds-example__canvas--stack"><div class="menu" role="menu" aria-label="Weekend options (do example)"><a class="menu__item" role="menuitem" href="../../mocks/pages/dialogs.html#dialog-regenerate"><svg class="icon" aria-hidden="true"><use href="#i-refresh"/></svg>Regenerate the weekend</a><a class="menu__item" role="menuitem" href="../../mocks/pages/dialogs.html#dialog-calendar"><svg class="icon" aria-hidden="true"><use href="#i-calendar"/></svg>Add to calendar</a></div></div><figcaption>A menu item that needs a decision opens its own dialog (Regenerate opens D3).</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas ds-example__canvas--stack"><div class="menu" role="menu" aria-label="Weekend options (don't example)"><button class="menu__item" role="menuitem" type="button"><svg class="icon" aria-hidden="true"><use href="#i-refresh"/></svg>Regenerate the weekend</button><div class="field" style="padding: var(--spacingVerticalS) var(--spacingHorizontalM);"><label class="field__label" for="do-dont-name">New name</label><input class="field__input" id="do-dont-name" type="text" value="Lavender weekend"></div></div></div><figcaption>A form inside a menu: focus handling breaks, and Escape loses the text.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas"><span class="chip chip--primary">D9 replaces D7</span></div><figcaption>A success dialog replaces the form that produced it.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><span class="chip chip--warn">D9 over D7 over the page</span></div><figcaption>Stacking the success over the form: Escape lands back in a form that has already been sent.</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>
+      <ul>
+        <li><a href="../../mocks/pages/dialogs.html#dialog-more">pages/dialogs</a>: every dialog (D1 to D29, AD1 to AD6), D25 sheet and anchored menu, D26 account menu, D9 and D11 success dialogs, D21 and D22 confirmations.</li>
+        <li><a href="../../mocks/pages/weekend.html">pages/weekend</a>: the "More" trigger, day-header icon buttons.</li>
+        <li>Project rules: modals use Angular CDK Dialog and Overlay, never hand-rolled; button-triggered editing always opens a dialog or navigates to a screen.</li>
+      </ul>
+      <p>Drift that applies: D08 danger contrast, D15 dialog gaps snapped to 16px, D17 the scrim's literal rgba is now <code>--colorBackgroundOverlay</code>, D25 the dark theme for raised surfaces. Not in the mocks yet: tooltips, stacked confirmations (D17 links to D21 rather than opening it over itself) and the busy dialog state.</p>
+    </section>
+
+    <footer class="ds-footer"><span>Saturdaze design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/icons.js"></script>
+<script src="../assets/ds.js"></script>
+</body>
+</html>

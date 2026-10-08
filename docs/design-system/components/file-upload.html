@@ -1,0 +1,372 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>File upload — Saturdaze design system</title>
+<meta name="description" content="Choosing a photo to upload: the admin drop zone and the profile photo picker, built on a real file input, with dragging, uploading and failed states.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html"><span class="brand-mark" aria-hidden="true"></span>Saturdaze DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Actions</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+    </ul></details>
+    <details open><summary>Inputs</summary><ul>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/chip-input.html">Chip input</a></li>
+      <li><a href="../components/file-upload.html">File upload</a></li>
+      <li><a href="../components/photo-pick.html">Photo pick</a></li>
+      <li><a href="../components/rating.html">Rating</a></li>
+      <li><a href="../components/vote-row.html">Vote row</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+    </ul></details>
+    <details open><summary>Navigation</summary><ul>
+      <li><a href="../components/top-bar.html">Top bar</a></li>
+      <li><a href="../components/bottom-nav.html">Bottom nav</a></li>
+      <li><a href="../components/sidebar-navigation.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs (segments)</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+      <li><a href="../components/footer.html">Footer</a></li>
+    </ul></details>
+    <details open><summary>Containers and overlays</summary><ul>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/container.html">Container and grid</a></li>
+      <li><a href="../components/page-header.html">Page header</a></li>
+    </ul></details>
+    <details open><summary>Data display</summary><ul>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/activity-feed.html">Activity feed</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/chip.html">Chip</a></li>
+      <li><a href="../components/filter-chip.html">Filter chip</a></li>
+      <li><a href="../components/disc.html">Disc</a></li>
+      <li><a href="../components/media.html">Media</a></li>
+      <li><a href="../components/cover.html">Cover photo</a></li>
+      <li><a href="../components/stat.html">Stat</a></li>
+      <li><a href="../components/itinerary.html">Itinerary</a></li>
+      <li><a href="../components/map.html">Map</a></li>
+    </ul></details>
+    <details open><summary>Feedback</summary><ul>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/alert.html">Alert</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/progress-bar.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Auth and marketing</summary><ul>
+      <li><a href="../components/auth-card.html">Auth card</a></li>
+      <li><a href="../components/hero.html">Hero</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/data-tables-and-lists.html">Tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Component · Inputs</p>
+      <h1>File upload</h1>
+      <p class="ds-lead">File upload lets someone pick a photo from their device: a place photo in Saturdaze Admin, or a profile photo on Family. The native file input is the control; the drop zone around it is an enhancement.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA</span><span class="ds-pill">Status: stable</span><span class="ds-pill">Angular: <code>sd-photo-drop</code></span><span class="ds-pill">Native <code>&lt;input type="file"&gt;</code></span></div>
+      <ul class="ds-toc">
+        <li><a href="#overview">Overview</a></li><li><a href="#anatomy">Anatomy</a></li><li><a href="#variants">Variants</a></li><li><a href="#sizes">Sizes</a></li><li><a href="#states">States</a></li><li><a href="#responsive">Responsive</a></li><li><a href="#theming">Theming</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#content">Content</a></li><li><a href="#do-dont">Do and don't</a></li><li><a href="#tokens">Tokens</a></li><li><a href="#code">Code</a></li><li><a href="#sources">Sources</a></li>
+      </ul>
+    </header>
+
+    <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+      <p>Saturdaze only uploads photos, one at a time. Two forms cover every case in the mocks:</p>
+      <ul>
+        <li><b>Drop zone</b> (<code>.upload-drop</code>): a dashed, full-width target that wraps a real <code>&lt;input type="file"&gt;</code>. Clicking, tapping or pressing Enter opens the device's file chooser; dropping a file on it works too. Used in AD1 Upload a photo.</li>
+        <li><b>Avatar picker</b> (<code>.photo-picker</code>): a 96px preview of the person's avatar beside a quiet "Choose a photo" button that is the file input's label. Used in D27 Profile photo, where the result is a face, not a scene.</li>
+      </ul>
+      <p>Choosing among photos that already exist is a <a href="photo-pick.html">photo pick</a>; its "Your own photo" tile is the same file input in a 4:3 tile. A link to an image on the web is a <a href="text-field.html">text field</a> of type URL (AD2).</p>
+    </section>
+
+    <section class="ds-section" id="anatomy"><h2><a href="#anatomy">Anatomy</a></h2>
+      <div class="ds-anatomy">
+        <figure class="ds-anatomy__figure">
+          <div class="field" style="position: relative; width: 100%; max-width: 20rem;">
+            <label class="photo-pick__opt photo-pick__upload upload-drop"><input type="file" accept="image/jpeg,image/png,image/webp" aria-label="Choose a photo" aria-describedby="an-hint"><svg class="icon" aria-hidden="true"><use href="#i-upload"/></svg>Choose a photo<span class="field__hint" id="an-hint">JPEG, PNG or WebP, up to 10 MB</span></label>
+            <span class="ds-callout" style="left: -2rem; top: -0.5rem;" aria-hidden="true">1</span>
+            <span class="ds-callout" style="left: -2rem; top: 1.6rem;" aria-hidden="true">2</span>
+            <span class="ds-callout" style="left: -2rem; top: 3.1rem;" aria-hidden="true">3</span>
+            <span class="ds-callout" style="left: -2rem; top: 4.6rem;" aria-hidden="true">4</span>
+          </div>
+        </figure>
+        <ol class="ds-anatomy__list">
+          <li><div><b>Drop zone</b><small><code>.upload-drop</code> on the <code>&lt;label&gt;</code>: 1px dashed accessible stroke, medium radius, 120px minimum height, centred content.</small></div></li>
+          <li><div><b>Icon</b><small>20px upload or plus glyph in <code>currentColor</code>, <code>aria-hidden="true"</code>.</small></div></li>
+          <li><div><b>Label</b><small>"Choose a photo", <code>--typographyBody2</code> semibold. It matches the input's accessible name.</small></div></li>
+          <li><div><b>Hint or file summary</b><small><code>.field__hint</code> in regular weight: accepted types and size before a pick, "memorial-park.jpg · 3.1 MB · 1200 × 675" after.</small></div></li>
+        </ol>
+      </div>
+      <p>The file input itself is transparent and covers the whole zone (<code>.photo-pick__opt input</code>), so every click, tap and drop lands on the native control. It is never <code>display: none</code>, which would remove it from the keyboard and the accessibility tree.</p>
+    </section>
+
+    <section class="ds-section" id="variants"><h2><a href="#variants">Variants</a></h2>
+      <h3>Drop zone</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack" style="max-width: 32rem;">
+          <label class="photo-pick__opt photo-pick__upload upload-drop"><input type="file" accept="image/jpeg,image/png,image/webp" aria-label="Choose a photo" aria-describedby="v-drop-hint"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg>Choose a photo<span class="field__hint" id="v-drop-hint">memorial-park.jpg · 3.1 MB · 1200 × 675</span></label>
+          <div class="field">
+            <label class="field__label" for="v-alt">Alt text <span class="field__req">Recommended</span></label>
+            <input class="field__input" id="v-alt" type="text" value="Lawn running down to the lake">
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>AD1 Upload a photo, after a file is chosen: the hint becomes the file summary.</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;label class="photo-pick__opt photo-pick__upload upload-drop"&gt;
+  &lt;input type="file" accept="image/jpeg,image/png,image/webp" aria-label="Choose a photo" aria-describedby="drop-hint"&gt;
+  &lt;svg class="icon" aria-hidden="true"&gt;&lt;use href="#i-plus"/&gt;&lt;/svg&gt;Choose a photo
+  &lt;span class="field__hint" id="drop-hint"&gt;memorial-park.jpg · 3.1 MB · 1200 × 675&lt;/span&gt;
+&lt;/label&gt;</code></pre></details>
+      </div>
+      <h3>Avatar picker</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack" style="max-width: 32rem;">
+          <div class="photo-picker">
+            <span class="avatar avatar--q photo-picker__preview" aria-hidden="true">Q</span>
+            <div class="field photo-picker__field">
+              <label class="btn btn--quiet photo-picker__choose" for="v-avatar-file"><svg class="icon" aria-hidden="true"><use href="#i-edit"/></svg>Choose a photo</label>
+              <input class="visually-hidden" id="v-avatar-file" type="file" accept="image/jpeg,image/png,image/webp" aria-describedby="v-avatar-hint">
+              <p class="field__hint" id="v-avatar-hint">JPG, PNG or WebP, up to 2 MB.</p>
+            </div>
+          </div>
+          <div class="photo-picker">
+            <span class="avatar avatar--q photo-picker__preview" aria-hidden="true"><img class="avatar__img" src="../../mocks/assets/profile-photo.svg" alt=""></span>
+            <div class="field photo-picker__field">
+              <label class="btn btn--quiet photo-picker__choose" for="v-avatar-file2"><svg class="icon" aria-hidden="true"><use href="#i-edit"/></svg>Choose a different photo</label>
+              <input class="visually-hidden" id="v-avatar-file2" type="file" accept="image/jpeg,image/png,image/webp" aria-describedby="v-avatar-hint2">
+              <p class="field__hint" id="v-avatar-hint2">JPG, PNG or WebP, up to 2 MB.</p>
+            </div>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>D27 no photo yet (initial) and D27b photo set. The preview is decorative; the dialog title says whose photo it is.</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;div class="photo-picker"&gt;
+  &lt;span class="avatar avatar--q photo-picker__preview" aria-hidden="true"&gt;Q&lt;/span&gt;
+  &lt;div class="field photo-picker__field"&gt;
+    &lt;label class="btn btn--quiet photo-picker__choose" for="photo-file"&gt;…Choose a photo&lt;/label&gt;
+    &lt;input class="visually-hidden" id="photo-file" type="file" accept="image/jpeg,image/png,image/webp" aria-describedby="photo-hint"&gt;
+    &lt;p class="field__hint" id="photo-hint"&gt;JPG, PNG or WebP, up to 2 MB.&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre></details>
+      </div>
+    </section>
+
+    <section class="ds-section" id="sizes" data-na="One size each. The drop zone fills its container's width with a 120px minimum height; the avatar picker's preview is fixed at 96px and its button is the medium quiet button."><h2><a href="#sizes">Sizes</a></h2><p class="ds-na">One size each. The drop zone fills its container's width with a 120px minimum height; the avatar picker's preview is fixed at 96px and its button is the medium quiet button.</p></section>
+
+    <section class="ds-section" id="states"><h2><a href="#states">States</a></h2>
+      <p>Hover and focus are forced with <code>data-state</code>. In the product the zone shows focus through <code>:focus-within</code> (the input inside is focused), dragging through a <code>data-dragging</code> attribute set by the drag events, and failure with <code>.upload-drop--failed</code> plus <code>aria-invalid="true"</code> on the input.</p>
+      <div class="ds-matrix"><table>
+        <thead><tr><th scope="col">Variant</th><th scope="col">Default</th><th scope="col">Hover</th><th scope="col">Focus</th><th scope="col">Dragging</th><th scope="col">Uploading</th><th scope="col">Failed</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Drop zone</th>
+            <td><label class="photo-pick__opt photo-pick__upload upload-drop" style="min-width: 12rem;"><input type="file" accept="image/jpeg,image/png,image/webp" aria-label="Choose a photo"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg>Choose a photo</label></td>
+            <td><label class="photo-pick__opt photo-pick__upload upload-drop" data-state="hover" style="min-width: 12rem;"><input type="file" accept="image/jpeg,image/png,image/webp" aria-label="Choose a photo"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg>Choose a photo</label></td>
+            <td><label class="photo-pick__opt photo-pick__upload upload-drop" data-state="focus" style="min-width: 12rem;"><input type="file" accept="image/jpeg,image/png,image/webp" aria-label="Choose a photo"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg>Choose a photo</label></td>
+            <td><label class="photo-pick__opt photo-pick__upload upload-drop" data-dragging style="min-width: 12rem;"><input type="file" accept="image/jpeg,image/png,image/webp" aria-label="Choose a photo"><svg class="icon" aria-hidden="true"><use href="#i-upload"/></svg>Drop to upload</label></td>
+            <td><div class="stack stack--sm" style="min-width: 12rem;"><label class="photo-pick__opt photo-pick__upload upload-drop"><input type="file" accept="image/jpeg,image/png,image/webp" aria-label="Choose a photo" disabled><svg class="icon" aria-hidden="true"><use href="#i-image"/></svg>memorial-park.jpg</label><div class="progress"><div class="progress__head"><span id="s-up-label">Uploading</span><span class="progress__value">64%</span></div><div class="progress__bar" role="progressbar" aria-labelledby="s-up-label" aria-valuenow="64" aria-valuemin="0" aria-valuemax="100"><span class="progress__fill" style="--sd-progress: 64%;"></span></div></div></div></td>
+            <td><div class="field" style="min-width: 12rem;"><label class="photo-pick__opt photo-pick__upload upload-drop upload-drop--failed"><input type="file" accept="image/jpeg,image/png,image/webp" aria-label="Choose a photo" aria-invalid="true" aria-describedby="s-fail-err"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg>Choose a photo</label><p class="field__error" id="s-fail-err"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg>memorial-park.tiff is not a JPEG, PNG or WebP.</p></div></td>
+          </tr>
+          <tr><th scope="row">Avatar picker</th>
+            <td><div class="photo-picker" style="min-width: 15rem;"><span class="avatar avatar--q photo-picker__preview" aria-hidden="true">Q</span><div class="field photo-picker__field"><label class="btn btn--quiet photo-picker__choose" for="s-av1">Choose a photo</label><input class="visually-hidden" id="s-av1" type="file" accept="image/jpeg,image/png,image/webp"></div></div></td>
+            <td><div class="photo-picker" style="min-width: 15rem;"><span class="avatar avatar--q photo-picker__preview" aria-hidden="true">Q</span><div class="field photo-picker__field"><label class="btn btn--quiet photo-picker__choose" for="s-av2" data-state="hover">Choose a photo</label><input class="visually-hidden" id="s-av2" type="file" accept="image/jpeg,image/png,image/webp"></div></div></td>
+            <td><div class="photo-picker" style="min-width: 15rem;"><span class="avatar avatar--q photo-picker__preview" aria-hidden="true">Q</span><div class="field photo-picker__field"><label class="btn btn--quiet photo-picker__choose" for="s-av3" data-state="focus">Choose a photo</label><input class="visually-hidden" id="s-av3" type="file" accept="image/jpeg,image/png,image/webp"></div></div></td>
+            <td><span class="text-faint">Not a drop target</span></td>
+            <td><div class="photo-picker" style="min-width: 15rem;"><span class="avatar avatar--q photo-picker__preview" aria-hidden="true"><img class="avatar__img" src="../../mocks/assets/profile-photo.svg" alt=""></span><div class="field photo-picker__field"><label class="btn btn--quiet photo-picker__choose" for="s-av5">Choose a different photo</label><input class="visually-hidden" id="s-av5" type="file" accept="image/jpeg,image/png,image/webp"><p class="field__hint">Uploads on Save, which shows the spinner.</p></div></div></td>
+            <td><div class="photo-picker" style="min-width: 15rem;"><span class="avatar avatar--q photo-picker__preview" aria-hidden="true">Q</span><div class="field photo-picker__field"><label class="btn btn--quiet photo-picker__choose" for="s-av6">Choose a photo</label><input class="visually-hidden" id="s-av6" type="file" accept="image/jpeg,image/png,image/webp" aria-invalid="true" aria-describedby="s-av6-err"><p class="field__error" id="s-av6-err" role="alert">That file is not a JPG, PNG or WebP image.</p></div></div></td>
+          </tr>
+        </tbody>
+      </table></div>
+      <h3>Both themes</h3>
+      <div class="ds-themes">
+        <div data-theme="light"><div class="stack stack--sm"><label class="photo-pick__opt photo-pick__upload upload-drop"><input type="file" accept="image/jpeg,image/png,image/webp" aria-label="Choose a photo, light theme"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg>Choose a photo<span class="field__hint">JPEG, PNG or WebP, up to 10 MB</span></label><label class="photo-pick__opt photo-pick__upload upload-drop" data-dragging><input type="file" accept="image/jpeg,image/png,image/webp" aria-label="Drop to upload, light theme"><svg class="icon" aria-hidden="true"><use href="#i-upload"/></svg>Drop to upload</label></div></div>
+        <div data-theme="dark"><div class="stack stack--sm"><label class="photo-pick__opt photo-pick__upload upload-drop"><input type="file" accept="image/jpeg,image/png,image/webp" aria-label="Choose a photo, dark theme"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg>Choose a photo<span class="field__hint">JPEG, PNG or WebP, up to 10 MB</span></label><label class="photo-pick__opt photo-pick__upload upload-drop" data-dragging><input type="file" accept="image/jpeg,image/png,image/webp" aria-label="Drop to upload, dark theme"><svg class="icon" aria-hidden="true"><use href="#i-upload"/></svg>Drop to upload</label></div></div>
+      </div>
+      <ul>
+        <li><b>Hover</b> (pointer devices only) tints the zone with the subtle hover fill. <b>Dragging</b> a file over the window switches it to the brand tint and brand border and the label to "Drop to upload", so the target is obvious before release.</li>
+        <li><b>Uploading</b> disables the input, names the file in the zone and shows a determinate <a href="progress-bar.html">progress bar</a> under it. The dialog's Save button takes <code>aria-busy="true"</code>; the rest of the dialog stays usable (alt text can be typed meanwhile).</li>
+        <li><b>Failed</b> keeps the zone usable, so the fix is one more pick. The message names the file and the rule it broke, sits under the zone, and is linked with <code>aria-describedby</code>.</li>
+        <li><b>Disabled</b> is not used. If uploads are not allowed (no rights, quota reached), leave the zone out and say why in a <a href="inline-message.html">message</a>.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="responsive"><h2><a href="#responsive">Responsive behaviour</a></h2>
+      <ul>
+        <li>The drop zone is always full width and at least 120px tall. Phones and tablets cannot drag files in, so the label leads with "Choose a photo" at every width and dragging is never mentioned in the copy.</li>
+        <li>The avatar picker is a wrapping row: the 96px preview and the field (at least 180px) sit side by side, and the field drops under the preview when the dialog is narrower than about 300px.</li>
+        <li>On phones the file chooser is the system sheet (camera, photo library, files). <code>accept</code> keeps it to images; do not add <code>capture</code>, which would skip the library.</li>
+        <li>Hover tints apply only under <code>(hover: hover)</code>.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="theming"><h2><a href="#theming">Theming</a></h2>
+      <p>The drop zone has no component tokens; it reads alias tokens directly: <code>--colorNeutralStrokeAccessible</code> for the dashed edge, <code>--colorNeutralForeground2</code> for the label, <code>--colorSubtleBackgroundHover</code> on hover, <code>--colorBrandBackground2</code> and <code>--colorBrandStroke1</code> while dragging, and the danger status set when it fails. The avatar picker reuses the <a href="avatar.html">avatar</a> person tones and a quiet <a href="button.html">button</a>.</p>
+      <p>In the dark theme the zone stays transparent on the raised dialog surface, its dashed edge uses the lighter accessible stroke, and the dragging tint becomes a deep coral with a lighter coral edge. The progress fill and the error colours come from the status ramps, which have dark values of their own.</p>
+    </section>
+
+    <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
+      <h3>Role and pattern</h3>
+      <p>A native <code>&lt;input type="file"&gt;</code>; no ARIA pattern applies and none should be added. The drop zone is its <code>&lt;label&gt;</code>, so the whole zone is a click target for the input. Drag and drop is an extra path for pointer users and never the only one (2.5.7 Dragging Movements).</p>
+      <h3>Keyboard</h3>
+      <table class="ds-table ds-keys"><thead><tr><th scope="col">Key</th><th scope="col">Action</th></tr></thead><tbody>
+        <tr><td><kbd>Tab</kbd> / <kbd>Shift</kbd>+<kbd>Tab</kbd></td><td>Moves focus to and from the file input. One stop per zone or picker.</td></tr>
+        <tr><td><kbd>Enter</kbd> / <kbd>Space</kbd></td><td>Opens the system file chooser.</td></tr>
+        <tr><td><kbd>Esc</kbd></td><td>In the chooser: cancels and returns focus to the input with nothing changed.</td></tr>
+      </tbody></table>
+      <h3>Focus</h3>
+      <p>The input is invisible, so the focus ring is drawn on what people see. The drop zone shows the shared 2px ring through <code>:focus-within</code>. In the avatar picker the input is visually hidden and its label is the button, which needs the same ring when the input has focus (<code>.photo-picker__field:has(input:focus-visible) .photo-picker__choose</code> draws it). After a pick, focus stays on the input.</p>
+      <h3>Labelling</h3>
+      <p>The input's name is the visible label: "Choose a photo" (<code>aria-label</code> on the covered input, or the <code>&lt;label for&gt;</code> button in the picker). Accepted types and the size limit, and later the chosen file summary, are tied to it with <code>aria-describedby</code>. Upload progress has a labelled <code>role="progressbar"</code>; completion and failure are announced through the error's <code>role="alert"</code> or a polite live region ("memorial-park.jpg uploaded").</p>
+      <h3>Contrast</h3>
+      <div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0; gap: var(--spacingHorizontalS);">
+        <div class="ds-pair"><span>Zone label on dialog</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground2|--colorNeutralBackgroundRaised" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Dashed edge on dialog</span><span class="ds-pair__ratio" data-contrast="--colorNeutralStrokeAccessible|--colorNeutralBackgroundRaised" data-min="3"></span></div>
+        <div class="ds-pair"><span>Label while dragging</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground1|--colorBrandBackground2" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Edge while dragging</span><span class="ds-pair__ratio" data-contrast="--colorBrandStroke1|--colorBrandBackground2" data-min="3"></span></div>
+        <div class="ds-pair"><span>Failed label on its tint</span><span class="ds-pair__ratio" data-contrast="--colorStatusDangerForeground1|--colorStatusDangerBackground1" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Error message on dialog</span><span class="ds-pair__ratio" data-contrast="--colorStatusDangerForeground1|--colorNeutralBackgroundRaised" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Progress fill on track</span><span class="ds-pair__ratio" data-contrast="--colorStatusSuccessBackground3|--colorNeutralBackground3" data-min="3"></span></div>
+        <div class="ds-pair"><span>Focus ring on dialog</span><span class="ds-pair__ratio" data-contrast="--colorStrokeFocus2|--colorNeutralBackgroundRaised" data-min="3"></span></div>
+      </div>
+      <h3>Motion</h3>
+      <p>The hover and dragging tints transition over <code>--durationFast</code>; the progress fill grows over <code>--durationNormal</code>. Both are zeroed under <code>prefers-reduced-motion</code>, so the bar jumps between values instead of sliding.</p>
+      <h3>Touch</h3>
+      <p>The whole zone, at least 120px tall and full width, is the target. The avatar picker's button is 40px. Neither needs a drag gesture.</p>
+    </section>
+
+    <section class="ds-section" id="content"><h2><a href="#content">Content</a></h2>
+      <ul>
+        <li>The label is the action: "Choose a photo", "Choose a different photo" once one is set. Not "Browse", "Upload file" or "Drag and drop here".</li>
+        <li>The hint gives the rules in plain words: "JPEG, PNG or WebP, up to 10 MB." Say what happens to the file when it matters: "Location data is removed before it is saved."</li>
+        <li>After a pick, the hint becomes the file summary: name · size · dimensions.</li>
+        <li>Errors name the file and the rule: "memorial-park.tiff is not a JPEG, PNG or WebP.", "beach.jpg is 14 MB. Choose one under 10 MB." Never "Invalid file".</li>
+        <li>While dragging, the label changes to "Drop to upload".</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="do-dont"><h2><a href="#do-dont">Do and don't</a></h2>
+      <div class="ds-dodont">
+        <figure class="ds-do"><div class="ds-example__canvas ds-example__canvas--stack"><label class="photo-pick__opt photo-pick__upload upload-drop"><input type="file" accept="image/jpeg,image/png,image/webp" aria-label="Choose a photo"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg>Choose a photo</label></div><figcaption>Wrap a real file input so keyboard, screen readers and phones all work, and drop is a bonus.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas ds-example__canvas--stack"><div class="upload-drop"><svg class="icon" aria-hidden="true"><use href="#i-upload"/></svg>Drag a photo here</div></div><figcaption>A <code>&lt;div&gt;</code> that only accepts drops. Keyboard and touch users cannot reach it, and the copy describes a gesture phones do not have.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas ds-example__canvas--stack"><div class="field"><label class="photo-pick__opt photo-pick__upload upload-drop upload-drop--failed"><input type="file" accept="image/jpeg,image/png,image/webp" aria-label="Choose a photo" aria-invalid="true" aria-describedby="dd-err"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg>Choose a photo</label><p class="field__error" id="dd-err"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg>beach.jpg is 14 MB. Choose one under 10 MB.</p></div></div><figcaption>Say which file failed and what would work, and keep the zone ready for the next pick.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas ds-example__canvas--stack"><div class="field"><label class="photo-pick__opt photo-pick__upload upload-drop"><input type="file" accept="image/jpeg,image/png,image/webp" aria-label="Choose a photo" disabled><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg>Upload failed</label></div></div><figcaption>A vague "Upload failed" in the zone, with the input disabled. Nobody knows what to change or how to retry.</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="ds-section" id="tokens"><h2><a href="#tokens">Tokens</a></h2>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Part</th><th scope="col">Token</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead>
+        <tbody>
+          <tr><td>Dashed edge</td><td><code>--colorNeutralStrokeAccessible</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralStrokeAccessible" data-swatch></i><span data-token="--colorNeutralStrokeAccessible"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralStrokeAccessible" data-swatch></i><span data-token="--colorNeutralStrokeAccessible"></span></span></td></tr>
+          <tr><td>Label</td><td><code>--colorNeutralForeground2</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralForeground2" data-swatch></i><span data-token="--colorNeutralForeground2"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralForeground2" data-swatch></i><span data-token="--colorNeutralForeground2"></span></span></td></tr>
+          <tr><td>Hover fill</td><td><code>--colorSubtleBackgroundHover</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorSubtleBackgroundHover" data-swatch></i><span data-token="--colorSubtleBackgroundHover"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorSubtleBackgroundHover" data-swatch></i><span data-token="--colorSubtleBackgroundHover"></span></span></td></tr>
+          <tr><td>Dragging fill</td><td><code>--colorBrandBackground2</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorBrandBackground2" data-swatch></i><span data-token="--colorBrandBackground2"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorBrandBackground2" data-swatch></i><span data-token="--colorBrandBackground2"></span></span></td></tr>
+          <tr><td>Dragging edge</td><td><code>--colorBrandStroke1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorBrandStroke1" data-swatch></i><span data-token="--colorBrandStroke1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorBrandStroke1" data-swatch></i><span data-token="--colorBrandStroke1"></span></span></td></tr>
+          <tr><td>Failed fill</td><td><code>--colorStatusDangerBackground1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorStatusDangerBackground1" data-swatch></i><span data-token="--colorStatusDangerBackground1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorStatusDangerBackground1" data-swatch></i><span data-token="--colorStatusDangerBackground1"></span></span></td></tr>
+          <tr><td>Failed edge</td><td><code>--colorStatusDangerForeground3</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorStatusDangerForeground3" data-swatch></i><span data-token="--colorStatusDangerForeground3"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorStatusDangerForeground3" data-swatch></i><span data-token="--colorStatusDangerForeground3"></span></span></td></tr>
+          <tr><td>Failed label and error text</td><td><code>--colorStatusDangerForeground1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorStatusDangerForeground1" data-swatch></i><span data-token="--colorStatusDangerForeground1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorStatusDangerForeground1" data-swatch></i><span data-token="--colorStatusDangerForeground1"></span></span></td></tr>
+          <tr><td>Focus ring</td><td><code>--colorStrokeFocus2</code>, <code>--strokeWidthThick</code>, <code>--focusRingOffset</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorStrokeFocus2" data-swatch></i><span data-token="--colorStrokeFocus2"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorStrokeFocus2" data-swatch></i><span data-token="--colorStrokeFocus2"></span></span></td></tr>
+          <tr><td>Radius</td><td><code>--borderRadiusMedium</code></td><td colspan="2"><span data-token="--borderRadiusMedium"></span></td></tr>
+          <tr><td>Padding / gap</td><td><code>--spacingVerticalL</code> / <code>--spacingVerticalSNudge</code></td><td colspan="2"><span data-token="--spacingVerticalL"></span> / <span data-token="--spacingVerticalSNudge"></span></td></tr>
+          <tr><td>Label type</td><td><code>--typographyBody2</code>, <code>--fontWeightSemibold</code></td><td colspan="2"><span data-token="--typographyBody2"></span></td></tr>
+          <tr><td>Avatar preview size</td><td><code>--sd-avatar-size: 6rem</code>, <code>--fontSizeHero800</code></td><td colspan="2"><span data-token="--fontSizeHero800"></span></td></tr>
+          <tr><td>Transition</td><td><code>--durationFast</code>, <code>--curveEasyEase</code></td><td colspan="2"><span data-token="--durationFast"></span> <span data-token="--curveEasyEase"></span></td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section class="ds-section" id="code"><h2><a href="#code">Code</a></h2>
+      <pre><code>&lt;!-- Drop zone (AD1) --&gt;
+&lt;div class="field"&gt;
+  &lt;label class="photo-pick__opt photo-pick__upload upload-drop"&gt;
+    &lt;input type="file" accept="image/jpeg,image/png,image/webp"
+           aria-label="Choose a photo" aria-describedby="drop-hint"&gt;
+    &lt;svg class="icon" aria-hidden="true"&gt;&lt;use href="#i-plus"/&gt;&lt;/svg&gt;Choose a photo
+    &lt;span class="field__hint" id="drop-hint"&gt;JPEG, PNG or WebP, up to 10 MB&lt;/span&gt;
+  &lt;/label&gt;
+&lt;/div&gt;
+
+&lt;!-- Failed --&gt;
+&lt;label class="photo-pick__opt photo-pick__upload upload-drop upload-drop--failed"&gt;
+  &lt;input type="file" … aria-invalid="true" aria-describedby="drop-err"&gt;…
+&lt;/label&gt;
+&lt;p class="field__error" id="drop-err"&gt;…beach.jpg is 14 MB. Choose one under 10 MB.&lt;/p&gt;
+
+&lt;!-- Angular --&gt;
+&lt;sd-photo-drop label="Choose a photo" [src]="preview" [caption]="summary" (fileChange)="validate($event)"&gt;
+  &lt;svg class="icon" aria-hidden="true"&gt;&lt;use href="#i-plus"/&gt;&lt;/svg&gt;Choose a photo
+&lt;/sd-photo-drop&gt;</code></pre>
+      <table class="ds-table"><thead><tr><th scope="col">Class / attribute</th><th scope="col">Effect</th></tr></thead><tbody>
+        <tr><td><code>.photo-pick__opt.photo-pick__upload.upload-drop</code></td><td>The drop zone as the mocks and <code>sd-photo-drop</code> compose it: the first two classes make the file input a transparent layer over the zone, the last gives the full-width zone styling.</td></tr>
+        <tr><td><code>[data-dragging]</code></td><td>Brand tint and edge while a file is dragged over; set on <code>dragenter</code>, cleared on <code>dragleave</code> and <code>drop</code>.</td></tr>
+        <tr><td><code>.upload-drop--failed</code> + <code>aria-invalid="true"</code></td><td>Danger tint on the zone; the input points at the <code>.field__error</code> with <code>aria-describedby</code>.</td></tr>
+        <tr><td><code>.photo-picker</code>, <code>__preview</code>, <code>__field</code></td><td>Avatar picker: 96px preview beside a wrapping field.</td></tr>
+        <tr><td><code>.photo-picker__choose</code></td><td>The <code>&lt;label for&gt;</code> styled as a quiet button; the input beside it is <code>.visually-hidden</code>, never <code>display: none</code>.</td></tr>
+        <tr><td><code>data-state="hover|focus"</code></td><td>Documentation only.</td></tr>
+      </tbody></table>
+      <p><code>sd-photo-drop</code> emits the chosen <code>File</code>; the consumer validates type and size, then passes back an object URL as <code>src</code> and the summary as <code>caption</code>, and the zone becomes a preview. With <code>tile</code> it renders the 4:3 "Your own photo" option of a <a href="photo-pick.html">photo pick</a> instead.</p>
+    </section>
+
+    <section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>
+      <p>Extracted from:</p>
+      <ul>
+        <li><a href="../../mocks/pages/dialogs.html">pages/dialogs</a>: AD1 Upload a photo (drop zone with file summary); D27 Profile photo with no photo, D27b with a photo set, D27c with an unsupported file; D29 "Your own photo" tile.</li>
+        <li><a href="../../mocks/pages/admin.place.html">pages/admin.place</a>: the Photos section that opens AD1.</li>
+        <li><a href="../../mocks/pages/family.html">pages/family</a>: Add photo and Change photo, which open D27.</li>
+      </ul>
+      <p>Drift fixed during extraction (see the <a href="../README.md">README drift log</a>): D06 the dashed edge uses the accessible stroke instead of the 16% line; D03 the focus ring colour; D04 the hint text colour; D12 the 12px minimum for the summary text. The mocks do not show hovering, dragging, uploading or a failed drop zone, and AD1's input has no visible focus treatment beyond <code>:focus-within</code>; those states are specified here. D27's visually hidden input gave its button no focus ring; the ring is now drawn on the button when the input has focus.</p>
+    </section>
+
+    <footer class="ds-footer"><span>Saturdaze design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/icons.js"></script>
+<script src="../assets/ds.js"></script>
+</body>
+</html>

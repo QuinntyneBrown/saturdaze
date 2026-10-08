@@ -1,0 +1,642 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Itinerary — Saturdaze design system</title>
+<meta name="description" content="The Weekend timeline: a sticky day header, an ordered list of time blocks on a rail, travel legs between stops and a row to add an errand.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html"><span class="brand-mark" aria-hidden="true"></span>Saturdaze DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Actions</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+    </ul></details>
+    <details open><summary>Inputs</summary><ul>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/chip-input.html">Chip input</a></li>
+      <li><a href="../components/file-upload.html">File upload</a></li>
+      <li><a href="../components/photo-pick.html">Photo pick</a></li>
+      <li><a href="../components/rating.html">Rating</a></li>
+      <li><a href="../components/vote-row.html">Vote row</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+    </ul></details>
+    <details open><summary>Navigation</summary><ul>
+      <li><a href="../components/top-bar.html">Top bar</a></li>
+      <li><a href="../components/bottom-nav.html">Bottom nav</a></li>
+      <li><a href="../components/sidebar-navigation.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs (segments)</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+      <li><a href="../components/footer.html">Footer</a></li>
+    </ul></details>
+    <details open><summary>Containers and overlays</summary><ul>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/container.html">Container and grid</a></li>
+      <li><a href="../components/page-header.html">Page header</a></li>
+    </ul></details>
+    <details open><summary>Data display</summary><ul>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/activity-feed.html">Activity feed</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/chip.html">Chip</a></li>
+      <li><a href="../components/filter-chip.html">Filter chip</a></li>
+      <li><a href="../components/disc.html">Disc</a></li>
+      <li><a href="../components/media.html">Media</a></li>
+      <li><a href="../components/cover.html">Cover photo</a></li>
+      <li><a href="../components/stat.html">Stat</a></li>
+      <li><a href="../components/itinerary.html">Itinerary</a></li>
+      <li><a href="../components/map.html">Map</a></li>
+    </ul></details>
+    <details open><summary>Feedback</summary><ul>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/alert.html">Alert</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/progress-bar.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Auth and marketing</summary><ul>
+      <li><a href="../components/auth-card.html">Auth card</a></li>
+      <li><a href="../components/hero.html">Hero</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/data-tables-and-lists.html">Tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Component · Data display</p>
+      <h1>Itinerary</h1>
+      <p class="ds-lead">The itinerary is the heart of the Weekend page: one column per day, read top to bottom like a fridge schedule. Each block says when, how long and what; numbered stops match the map; travel legs say how far the next drive is.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA</span><span class="ds-pill">Status: stable</span><span class="ds-pill">Angular: <code>sd-day</code>, <code>sd-block</code>, <code>sd-leg</code>, <code>sd-ghost-row</code></span><span class="ds-pill">Native <code>&lt;ol&gt;</code></span></div>
+      <ul class="ds-toc">
+        <li><a href="#overview">Overview</a></li><li><a href="#anatomy">Anatomy</a></li><li><a href="#variants">Variants</a></li><li><a href="#sizes">Sizes</a></li><li><a href="#states">States</a></li><li><a href="#responsive">Responsive</a></li><li><a href="#theming">Theming</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#content">Content</a></li><li><a href="#do-dont">Do and don't</a></li><li><a href="#tokens">Tokens</a></li><li><a href="#code">Code</a></li><li><a href="#sources">Sources</a></li>
+      </ul>
+    </header>
+
+    <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+      <p>Use the itinerary to show one planned day in time order. It is made of four parts that only appear together:</p>
+      <ul>
+        <li><b>Day</b> (<code>.day</code>): a section with a sticky header (weather, day name, date and forecast, stop count and driving time, Regenerate and Lock day) and an ordered list.</li>
+        <li><b>Block</b> (<code>.block</code>): one thing the family does. Time and duration on the left, a disc on the rail, the title and one line of why, optional chips and photo, and actions.</li>
+        <li><b>Leg</b> (<code>.leg</code>): the drive between two blocks, dotted on the rail. Legs over 10 minutes carry a Directions link.</li>
+        <li><b>Ghost row</b> (<code>.ghost-row</code>): the dashed "Add an errand" row after the list.</li>
+      </ul>
+      <p>Blocks at home (breakfast, quiet time, bath and books) show an icon disc. Blocks the family drives to are <b>stops</b>, numbered 1, 2, 3 in the same order as the pins on the <a href="map.html">map</a>. For a single place outside a day, use a <a href="card.html">card</a> or a <a href="list.html">list</a> row instead.</p>
+    </section>
+
+    <section class="ds-section" id="anatomy"><h2><a href="#anatomy">Anatomy</a></h2>
+      <div class="ds-anatomy">
+        <figure class="ds-anatomy__figure" style="padding: var(--spacingVerticalXXL) var(--spacingHorizontalL); background: var(--colorNeutralBackground2);">
+          <section class="day" aria-labelledby="an-day" style="width: 100%; max-width: 30rem;">
+            <header class="day__header" style="position: static;">
+              <span class="weather-disc weather-disc--sun" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-sun"/></svg></span>
+              <div class="day__text">
+                <h3 class="day__title" id="an-day">Saturday</h3>
+                <p class="day__meta">17 May · 22° / 14° · 3 stops</p>
+              </div>
+              <div class="day__actions">
+                <button class="btn btn--ghost btn--sm day__btn" type="button" aria-label="Regenerate Saturday"><svg class="icon" aria-hidden="true"><use href="#i-refresh"/></svg><span class="day__btn-label">Regenerate</span></button>
+              </div>
+            </header>
+            <ol class="day__list">
+              <li class="block" data-state="hover">
+                <div class="block__time"><span class="block__clock">11:00</span><span class="block__dur">1h 45m</span></div>
+                <div class="block__rail"><span class="block__disc block__disc--num"><span class="visually-hidden">Stop </span>2</span></div>
+                <div class="block__body">
+                  <div class="block__media-row">
+                    <div>
+                      <h4 class="block__title">Lavender fields</h4>
+                      <p class="block__sub clamp-1">Terre Bleu, Milton · walk the rows</p>
+                    </div>
+                    <img class="block__thumb" src="../../mocks/images/lavender-farm.svg" alt="" width="72" height="54">
+                  </div>
+                  <div class="block__chips"><span class="chip chip--primary">Day highlight</span></div>
+                </div>
+                <div class="block__actions">
+                  <button class="btn btn--ghost btn--sm btn--icon" type="button" aria-label="Swap Lavender fields"><svg class="icon" aria-hidden="true"><use href="#i-swap"/></svg></button>
+                </div>
+                <a class="block__chev" href="../../mocks/pages/dialogs.html#dialog-block" aria-label="Details for Lavender fields"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron_right"/></svg></a>
+              </li>
+              <li class="leg" aria-label="Travel: 40 minutes, 48 kilometres to Lunch at La Marina">
+                <span></span><span class="leg__rail" aria-hidden="true"></span>
+                <p class="leg__text"><svg class="icon" aria-hidden="true"><use href="#i-car"/></svg>40 min · 48 km<a class="leg__link" href="https://maps.example.com/directions/terre-bleu/la-marina" target="_blank" rel="noopener">Directions<span class="visually-hidden"> (opens in a new tab)</span></a></p>
+              </li>
+            </ol>
+          </section>
+          <span class="ds-callout" style="left: 3%; top: 6%;" aria-hidden="true">1</span>
+          <span class="ds-callout" style="left: 3%; top: 44%;" aria-hidden="true">2</span>
+          <span class="ds-callout" style="left: 19%; top: 36%;" aria-hidden="true">3</span>
+          <span class="ds-callout" style="left: 46%; top: 36%;" aria-hidden="true">4</span>
+          <span class="ds-callout" style="left: 70%; top: 36%;" aria-hidden="true">5</span>
+          <span class="ds-callout" style="left: 92%; top: 44%;" aria-hidden="true">6</span>
+          <span class="ds-callout" style="left: 3%; top: 84%;" aria-hidden="true">7</span>
+        </figure>
+        <ol class="ds-anatomy__list">
+          <li><div><b>Day header</b><small>Weather disc, title (<code>--typographyTitle2</code>), meta line, day actions. Sticky on the page surface with a hairline under it.</small></div></li>
+          <li><div><b>Time</b><small>Start time (<code>.block__clock</code>, semibold, tabular) over duration (<code>.block__dur</code>, <code>--colorNeutralForeground3</code>). 3.5rem column, right aligned.</small></div></li>
+          <li><div><b>Rail and disc</b><small>1px rail through a 32px disc. The disc shows an icon, or the stop number in brand. A 4px halo in the surface colour cuts the rail.</small></div></li>
+          <li><div><b>Body</b><small>Title (<code>--typographySubtitle1</code>), one clamped line of why, optional chips.</small></div></li>
+          <li><div><b>Thumbnail (optional)</b><small>72 × 54px photo of the place in a media row; decorative (<code>alt=""</code>), the title names it.</small></div></li>
+          <li><div><b>Actions or chevron</b><small>From 720px: Why this, Swap, Lock as small ghost icon buttons. Under 720px: a chevron link to the block's details.</small></div></li>
+          <li><div><b>Travel leg</b><small>Dotted rail, car icon, minutes and kilometres, Directions link over 10 minutes.</small></div></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="ds-section" id="variants"><h2><a href="#variants">Variants</a></h2>
+      <h3>A full day</h3>
+      <p>Saturday as the Browns see it. Home blocks have icons; stops are numbered; the commitment and the locked block are green; Lavender fields is the active block, matched by the active pin on the map.</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--canvas ds-example__canvas--stack">
+          <section class="day" aria-labelledby="ex-sat" style="max-width: 36rem;">
+            <header class="day__header" style="position: static;">
+              <span class="weather-disc weather-disc--sun" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-sun"/></svg></span>
+              <div class="day__text">
+                <h3 class="day__title" id="ex-sat">Saturday</h3>
+                <p class="day__meta">17 May · 22° / 14° · 3 stops · 1 h 36 min driving</p>
+              </div>
+              <div class="day__actions">
+                <button class="btn btn--ghost btn--sm day__btn" type="button" aria-label="Regenerate Saturday"><svg class="icon" aria-hidden="true"><use href="#i-refresh"/></svg><span class="day__btn-label">Regenerate</span></button>
+                <button class="btn btn--ghost btn--sm day__btn" type="button" aria-label="Lock day: Saturday" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg><span class="day__btn-label">Lock day</span></button>
+              </div>
+            </header>
+            <ol class="day__list">
+              <li class="block">
+                <div class="block__time"><span class="block__clock">8:30</span><span class="block__dur">30m</span></div>
+                <div class="block__rail"><span class="block__disc"><svg class="icon" aria-hidden="true"><use href="#i-home"/></svg></span></div>
+                <div class="block__body">
+                  <h4 class="block__title">Breakfast at home</h4>
+                  <p class="block__sub clamp-1">Cereal day, Eli's choice</p>
+                </div>
+                <a class="block__chev" href="../../mocks/pages/dialogs.html#dialog-block" aria-label="Details for Breakfast at home"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron_right"/></svg></a>
+              </li>
+              <li class="leg" aria-label="Travel: 6 minutes, 3 kilometres to Swim lessons">
+                <span></span><span class="leg__rail" aria-hidden="true"></span>
+                <p class="leg__text"><svg class="icon" aria-hidden="true"><use href="#i-car"/></svg>6 min · 3 km</p>
+              </li>
+              <li class="block block--commitment">
+                <div class="block__time"><span class="block__clock">9:00</span><span class="block__dur">60m</span></div>
+                <div class="block__rail"><span class="block__disc block__disc--num"><span class="visually-hidden">Stop </span>1</span></div>
+                <div class="block__body">
+                  <h4 class="block__title">Swim lessons</h4>
+                  <p class="block__sub clamp-1">Port Credit pool · every Saturday</p>
+                  <div class="block__chips"><span class="chip chip--accent"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg>Commitment</span></div>
+                </div>
+                <a class="block__chev" href="../../mocks/pages/dialogs.html#dialog-block-commitment" aria-label="Details for Swim lessons"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron_right"/></svg></a>
+              </li>
+              <li class="leg" aria-label="Travel: 45 minutes, 52 kilometres to Lavender fields">
+                <span></span><span class="leg__rail" aria-hidden="true"></span>
+                <p class="leg__text"><svg class="icon" aria-hidden="true"><use href="#i-car"/></svg>45 min · 52 km<a class="leg__link" href="https://maps.example.com/directions/port-credit-pool/terre-bleu" target="_blank" rel="noopener">Directions<span class="visually-hidden"> (opens in a new tab)</span></a></p>
+              </li>
+              <li class="block block--active">
+                <div class="block__time"><span class="block__clock">11:00</span><span class="block__dur">1h 45m</span></div>
+                <div class="block__rail"><span class="block__disc block__disc--num"><span class="visually-hidden">Stop </span>2</span></div>
+                <div class="block__body">
+                  <div class="block__media-row">
+                    <div>
+                      <h4 class="block__title">Lavender fields</h4>
+                      <p class="block__sub clamp-1">Terre Bleu, Milton · walk the rows</p>
+                    </div>
+                    <img class="block__thumb" src="../../mocks/images/lavender-farm.svg" alt="" width="72" height="54">
+                  </div>
+                  <div class="block__chips"><span class="chip chip--primary">Day highlight</span></div>
+                </div>
+                <div class="block__actions">
+                  <button class="btn btn--ghost btn--sm btn--icon" type="button" aria-label="Why this: Lavender fields"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg></button>
+                  <button class="btn btn--ghost btn--sm btn--icon" type="button" aria-label="Swap Lavender fields"><svg class="icon" aria-hidden="true"><use href="#i-swap"/></svg></button>
+                  <button class="btn btn--ghost btn--sm btn--icon" type="button" aria-label="Lock Lavender fields" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg></button>
+                </div>
+                <a class="block__chev" href="../../mocks/pages/dialogs.html#dialog-block" aria-label="Details for Lavender fields"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron_right"/></svg></a>
+              </li>
+              <li class="leg" aria-label="Travel: 40 minutes, 48 kilometres to Lunch at La Marina">
+                <span></span><span class="leg__rail" aria-hidden="true"></span>
+                <p class="leg__text"><svg class="icon" aria-hidden="true"><use href="#i-car"/></svg>40 min · 48 km<a class="leg__link" href="https://maps.example.com/directions/terre-bleu/la-marina" target="_blank" rel="noopener">Directions<span class="visually-hidden"> (opens in a new tab)</span></a></p>
+              </li>
+              <li class="block">
+                <div class="block__time"><span class="block__clock">13:30</span><span class="block__dur">75m</span></div>
+                <div class="block__rail"><span class="block__disc block__disc--num"><span class="visually-hidden">Stop </span>3</span></div>
+                <div class="block__body">
+                  <h4 class="block__title">Lunch at La Marina</h4>
+                  <p class="block__sub clamp-1">Patio · 3 of 4 votes</p>
+                </div>
+                <div class="block__actions">
+                  <button class="btn btn--ghost btn--sm btn--icon" type="button" aria-label="Why this: Lunch at La Marina"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg></button>
+                  <button class="btn btn--ghost btn--sm btn--icon" type="button" aria-label="Swap Lunch at La Marina"><svg class="icon" aria-hidden="true"><use href="#i-swap"/></svg></button>
+                  <button class="btn btn--ghost btn--sm btn--icon" type="button" aria-label="Lock Lunch at La Marina" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg></button>
+                </div>
+                <a class="block__chev" href="../../mocks/pages/dialogs.html#dialog-block" aria-label="Details for Lunch at La Marina"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron_right"/></svg></a>
+              </li>
+              <li class="leg" aria-label="Travel: 5 minutes, 2 kilometres home">
+                <span></span><span class="leg__rail" aria-hidden="true"></span>
+                <p class="leg__text"><svg class="icon" aria-hidden="true"><use href="#i-car"/></svg>5 min · 2 km home</p>
+              </li>
+              <li class="block block--locked">
+                <div class="block__time"><span class="block__clock">20:00</span><span class="block__dur">60m</span></div>
+                <div class="block__rail"><span class="block__disc"><svg class="icon" aria-hidden="true"><use href="#i-bed"/></svg></span></div>
+                <div class="block__body">
+                  <h4 class="block__title">Bath and books</h4>
+                  <p class="block__sub clamp-1">Lights out at 9</p>
+                  <div class="block__chips"><span class="chip chip--accent"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg>Locked</span></div>
+                </div>
+                <a class="block__chev" href="../../mocks/pages/dialogs.html#dialog-block-locked" aria-label="Details for Bath and books"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron_right"/></svg></a>
+              </li>
+            </ol>
+            <a class="ghost-row" href="../../mocks/pages/dialogs.html#dialog-errand"><svg class="icon" aria-hidden="true"><use href="#i-bag"/></svg>Add an errand</a>
+          </section>
+        </div>
+        <div class="ds-example__caption"><span>Quiet time and dinner are left out for length, and the header is not sticky inside this frame. Under 720px each block ends in a chevron; from 720px the actions show on hover or focus, and always on touch screens.</span></div>
+      </div>
+
+      <h3>Block kinds</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--canvas ds-example__canvas--stack">
+          <ol class="day__list" style="max-width: 36rem;" aria-label="Block kinds">
+            <li class="block block--errand">
+              <div class="block__time"><span class="block__clock">9:15</span><span class="block__dur">45m</span></div>
+              <div class="block__rail"><span class="block__disc block__disc--num"><span class="visually-hidden">Stop </span>1</span></div>
+              <div class="block__body">
+                <h4 class="block__title">Costco run</h4>
+                <p class="block__sub clamp-1">Paper towels, bread, yogurt</p>
+                <div class="block__chips"><span class="chip chip--indoor">Errand</span></div>
+              </div>
+              <div class="block__actions">
+                <button class="btn btn--ghost btn--sm btn--icon" type="button" aria-label="Mark Costco run done"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg></button>
+              </div>
+              <a class="block__chev" href="../../mocks/pages/dialogs.html#dialog-block" aria-label="Details for Costco run"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron_right"/></svg></a>
+            </li>
+            <li class="block block--errand block--done">
+              <div class="block__time"><span class="block__clock">9:15</span><span class="block__dur">45m</span></div>
+              <div class="block__rail"><span class="block__disc"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg></span></div>
+              <div class="block__body">
+                <h4 class="block__title">Costco run</h4>
+                <p class="block__sub clamp-1">Done · paper towels, bread, yogurt</p>
+              </div>
+              <a class="block__chev" href="../../mocks/pages/dialogs.html#dialog-block" aria-label="Details for Costco run, done"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron_right"/></svg></a>
+            </li>
+            <li class="block block--commitment">
+              <div class="block__time"><span class="block__clock">10:30</span><span class="block__dur">75m</span></div>
+              <div class="block__rail"><span class="block__disc block__disc--num"><span class="visually-hidden">Stop </span>2</span></div>
+              <div class="block__body">
+                <h4 class="block__title">Church</h4>
+                <p class="block__sub clamp-1">Every Sunday · locked in</p>
+                <div class="block__chips"><span class="chip chip--accent"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg>Commitment</span></div>
+              </div>
+              <a class="block__chev" href="../../mocks/pages/dialogs.html#dialog-block-commitment" aria-label="Details for Church"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron_right"/></svg></a>
+            </li>
+            <li class="block block--drive">
+              <div class="block__time"><span class="block__clock">10:30</span><span class="block__dur">45m</span></div>
+              <div class="block__rail"><span class="block__disc"><svg class="icon" aria-hidden="true"><use href="#i-car"/></svg></span></div>
+              <div class="block__body"><h4 class="block__title">Drive to Terre Bleu</h4></div>
+            </li>
+            <li class="block">
+              <div class="block__time"><span class="block__clock">18:30</span><span class="block__dur">open</span></div>
+              <div class="block__rail"><span class="block__disc"><svg class="icon" aria-hidden="true"><use href="#i-bed"/></svg></span></div>
+              <div class="block__body">
+                <h4 class="block__title">Quiet evening</h4>
+                <p class="block__sub clamp-1">Sunday dinner stays open on purpose</p>
+              </div>
+              <a class="block__chev" href="../../mocks/pages/dialogs.html#dialog-block" aria-label="Details for Quiet evening"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron_right"/></svg></a>
+            </li>
+          </ol>
+        </div>
+        <div class="ds-example__caption"><span>Errand (lavender disc and chip), errand done, commitment (green, cannot be swapped), drive (compact row, landing summary only) and an open-ended home block.</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;li class="block block--errand"&gt;…&lt;/li&gt;
+&lt;li class="block block--errand block--done"&gt;…&lt;/li&gt;
+&lt;li class="block block--commitment"&gt;…&lt;/li&gt;
+&lt;li class="block block--locked"&gt;…&lt;/li&gt;
+&lt;li class="block block--drive"&gt;…&lt;/li&gt;
+&lt;li class="block block--active"&gt;…&lt;/li&gt;</code></pre></details>
+      </div>
+
+      <h3>Locked day</h3>
+      <p>Locking a day keeps every block when the weekend is regenerated. The header turns green and the Lock day toggle is pressed.</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--canvas ds-example__canvas--stack">
+          <section class="day day--locked" aria-labelledby="ex-sun" style="max-width: 36rem;">
+            <header class="day__header" style="position: static;">
+              <span class="weather-disc weather-disc--cloud" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-cloud"/></svg></span>
+              <div class="day__text">
+                <h3 class="day__title" id="ex-sun">Sunday</h3>
+                <p class="day__meta">18 May · 18° / 12° · Locked · 4 stops</p>
+              </div>
+              <div class="day__actions">
+                <button class="btn btn--ghost btn--sm day__btn" type="button" aria-label="Lock day: Sunday" aria-pressed="true"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg><span class="day__btn-label">Lock day</span></button>
+              </div>
+            </header>
+          </section>
+        </div>
+        <div class="ds-example__caption"><span><code>.day--locked</code>. Regenerate has nothing to change on a locked day, so it is hidden; "Locked" also appears in the meta line, so the state is not colour alone.</span></div>
+      </div>
+
+      <h3>Legs and the ghost row</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--canvas ds-example__canvas--stack">
+          <ol class="day__list" style="max-width: 36rem;" aria-label="Travel legs">
+            <li class="leg" aria-label="Travel: 8 minutes, 5 kilometres to Costco run">
+              <span></span><span class="leg__rail" aria-hidden="true"></span>
+              <p class="leg__text"><svg class="icon" aria-hidden="true"><use href="#i-car"/></svg>8 min · 5 km</p>
+            </li>
+            <li class="leg" aria-label="Travel: 12 minutes, 9 kilometres to The Rec Room">
+              <span></span><span class="leg__rail" aria-hidden="true"></span>
+              <p class="leg__text"><svg class="icon" aria-hidden="true"><use href="#i-car"/></svg>12 min · 9 km<a class="leg__link" href="https://maps.example.com/directions/symposium-cafe/square-one" target="_blank" rel="noopener">Directions<span class="visually-hidden"> (opens in a new tab)</span></a></p>
+            </li>
+          </ol>
+          <a class="ghost-row" href="../../mocks/pages/dialogs.html#dialog-errand" style="max-width: 36rem;"><svg class="icon" aria-hidden="true"><use href="#i-bag"/></svg>Add an errand</a>
+        </div>
+        <div class="ds-example__caption"><span>Directions appears on legs over 10 minutes. The ghost row sits after the list, never inside it.</span></div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="sizes" data-na="One density. The drive block (.block--drive) is the only compact row, and it is a variant for the landing summary, not a size."><h2><a href="#sizes">Sizes</a></h2><p class="ds-na">One density. The drive block (.block--drive) is the only compact row, and it is a variant for the landing summary, not a size.</p></section>
+
+    <section class="ds-section" id="states"><h2><a href="#states">States</a></h2>
+      <p>Hover tints the row and, from 720px, reveals its actions; focus inside the row reveals them too. In the forced focus column the ring is drawn only on the focused control (Swap, or the chevron under 720px), never around the row, as with real focus inside it.</p>
+      <div class="ds-matrix"><table>
+        <thead><tr><th scope="col">Part</th><th scope="col">Default</th><th scope="col">Hover</th><th scope="col">Focus within</th><th scope="col">Selected / pressed</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Stop</th>
+            <td><ol class="day__list" style="min-width: 19rem;" aria-label="Stop, default"><li class="block"><div class="block__time"><span class="block__clock">13:30</span><span class="block__dur">75m</span></div><div class="block__rail"><span class="block__disc block__disc--num"><span class="visually-hidden">Stop </span>3</span></div><div class="block__body"><h4 class="block__title">Lunch at La Marina</h4><p class="block__sub clamp-1">Patio · 3 of 4 votes</p></div><div class="block__actions"><button class="btn btn--ghost btn--sm btn--icon" type="button" aria-label="Swap Lunch at La Marina"><svg class="icon" aria-hidden="true"><use href="#i-swap"/></svg></button></div><a class="block__chev" href="../../mocks/pages/dialogs.html#dialog-block" aria-label="Details for Lunch at La Marina"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron_right"/></svg></a></li></ol></td>
+            <td><ol class="day__list" style="min-width: 19rem;" aria-label="Stop, hover"><li class="block" data-state="hover"><div class="block__time"><span class="block__clock">13:30</span><span class="block__dur">75m</span></div><div class="block__rail"><span class="block__disc block__disc--num"><span class="visually-hidden">Stop </span>3</span></div><div class="block__body"><h4 class="block__title">Lunch at La Marina</h4><p class="block__sub clamp-1">Patio · 3 of 4 votes</p></div><div class="block__actions"><button class="btn btn--ghost btn--sm btn--icon" type="button" aria-label="Swap Lunch at La Marina"><svg class="icon" aria-hidden="true"><use href="#i-swap"/></svg></button></div><a class="block__chev" href="../../mocks/pages/dialogs.html#dialog-block" aria-label="Details for Lunch at La Marina"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron_right"/></svg></a></li></ol></td>
+            <td><ol class="day__list" style="min-width: 19rem;" aria-label="Stop, focus within"><li class="block" data-state="focus"><div class="block__time"><span class="block__clock">13:30</span><span class="block__dur">75m</span></div><div class="block__rail"><span class="block__disc block__disc--num"><span class="visually-hidden">Stop </span>3</span></div><div class="block__body"><h4 class="block__title">Lunch at La Marina</h4><p class="block__sub clamp-1">Patio · 3 of 4 votes</p></div><div class="block__actions"><button class="btn btn--ghost btn--sm btn--icon" type="button" aria-label="Swap Lunch at La Marina" data-state="focus"><svg class="icon" aria-hidden="true"><use href="#i-swap"/></svg></button></div><a class="block__chev" href="../../mocks/pages/dialogs.html#dialog-block" aria-label="Details for Lunch at La Marina" data-state="focus"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron_right"/></svg></a></li></ol></td>
+            <td><ol class="day__list" style="min-width: 19rem;" aria-label="Stop, selected"><li class="block block--active"><div class="block__time"><span class="block__clock">13:30</span><span class="block__dur">75m</span></div><div class="block__rail"><span class="block__disc block__disc--num"><span class="visually-hidden">Stop </span>3</span></div><div class="block__body"><h4 class="block__title">Lunch at La Marina</h4><p class="block__sub clamp-1">Patio · 3 of 4 votes</p></div><div class="block__actions"><button class="btn btn--ghost btn--sm btn--icon" type="button" aria-label="Swap Lunch at La Marina"><svg class="icon" aria-hidden="true"><use href="#i-swap"/></svg></button></div><a class="block__chev" href="../../mocks/pages/dialogs.html#dialog-block" aria-label="Details for Lunch at La Marina"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron_right"/></svg></a></li></ol></td>
+          </tr>
+          <tr><th scope="row">Commitment</th>
+            <td><ol class="day__list" style="min-width: 19rem;" aria-label="Commitment, default"><li class="block block--commitment"><div class="block__time"><span class="block__clock">9:00</span><span class="block__dur">60m</span></div><div class="block__rail"><span class="block__disc block__disc--num"><span class="visually-hidden">Stop </span>1</span></div><div class="block__body"><h4 class="block__title">Swim lessons</h4><p class="block__sub clamp-1">Port Credit pool</p></div><div class="block__actions"><button class="btn btn--ghost btn--sm btn--icon" type="button" aria-label="About Swim lessons"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg></button></div><a class="block__chev" href="../../mocks/pages/dialogs.html#dialog-block-commitment" aria-label="Details for Swim lessons"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron_right"/></svg></a></li></ol></td>
+            <td><ol class="day__list" style="min-width: 19rem;" aria-label="Commitment, hover"><li class="block block--commitment" data-state="hover"><div class="block__time"><span class="block__clock">9:00</span><span class="block__dur">60m</span></div><div class="block__rail"><span class="block__disc block__disc--num"><span class="visually-hidden">Stop </span>1</span></div><div class="block__body"><h4 class="block__title">Swim lessons</h4><p class="block__sub clamp-1">Port Credit pool</p></div><div class="block__actions"><button class="btn btn--ghost btn--sm btn--icon" type="button" aria-label="About Swim lessons"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg></button></div><a class="block__chev" href="../../mocks/pages/dialogs.html#dialog-block-commitment" aria-label="Details for Swim lessons"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron_right"/></svg></a></li></ol></td>
+            <td><ol class="day__list" style="min-width: 19rem;" aria-label="Commitment, focus within"><li class="block block--commitment" data-state="focus"><div class="block__time"><span class="block__clock">9:00</span><span class="block__dur">60m</span></div><div class="block__rail"><span class="block__disc block__disc--num"><span class="visually-hidden">Stop </span>1</span></div><div class="block__body"><h4 class="block__title">Swim lessons</h4><p class="block__sub clamp-1">Port Credit pool</p></div><div class="block__actions"><button class="btn btn--ghost btn--sm btn--icon" type="button" aria-label="About Swim lessons" data-state="focus"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg></button></div><a class="block__chev" href="../../mocks/pages/dialogs.html#dialog-block-commitment" aria-label="Details for Swim lessons" data-state="focus"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron_right"/></svg></a></li></ol></td>
+            <td><ol class="day__list" style="min-width: 19rem;" aria-label="Commitment, selected"><li class="block block--commitment block--active"><div class="block__time"><span class="block__clock">9:00</span><span class="block__dur">60m</span></div><div class="block__rail"><span class="block__disc block__disc--num"><span class="visually-hidden">Stop </span>1</span></div><div class="block__body"><h4 class="block__title">Swim lessons</h4><p class="block__sub clamp-1">Port Credit pool</p></div><div class="block__actions"><button class="btn btn--ghost btn--sm btn--icon" type="button" aria-label="About Swim lessons"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg></button></div><a class="block__chev" href="../../mocks/pages/dialogs.html#dialog-block-commitment" aria-label="Details for Swim lessons"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron_right"/></svg></a></li></ol></td>
+          </tr>
+          <tr><th scope="row">Ghost row</th>
+            <td><a class="ghost-row" href="../../mocks/pages/dialogs.html#dialog-errand" style="min-width: 14rem; margin: 0;"><svg class="icon" aria-hidden="true"><use href="#i-bag"/></svg>Add an errand</a></td>
+            <td><a class="ghost-row" href="../../mocks/pages/dialogs.html#dialog-errand" data-state="hover" style="min-width: 14rem; margin: 0;"><svg class="icon" aria-hidden="true"><use href="#i-bag"/></svg>Add an errand</a></td>
+            <td><a class="ghost-row" href="../../mocks/pages/dialogs.html#dialog-errand" data-state="focus" style="min-width: 14rem; margin: 0;"><svg class="icon" aria-hidden="true"><use href="#i-bag"/></svg>Add an errand</a></td>
+            <td>—</td>
+          </tr>
+          <tr><th scope="row">Lock day</th>
+            <td><button class="btn btn--ghost btn--sm day__btn" type="button" aria-label="Lock day: Saturday" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg><span class="day__btn-label">Lock day</span></button></td>
+            <td><button class="btn btn--ghost btn--sm day__btn" type="button" aria-label="Lock day: Saturday" aria-pressed="false" data-state="hover"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg><span class="day__btn-label">Lock day</span></button></td>
+            <td><button class="btn btn--ghost btn--sm day__btn" type="button" aria-label="Lock day: Saturday" aria-pressed="false" data-state="focus"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg><span class="day__btn-label">Lock day</span></button></td>
+            <td><button class="btn btn--ghost btn--sm day__btn" type="button" aria-label="Lock day: Saturday" aria-pressed="true"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg><span class="day__btn-label">Lock day</span></button></td>
+          </tr>
+          <tr><th scope="row">Directions</th>
+            <td><a class="leg__link" href="https://maps.example.com/directions/terre-bleu/la-marina" target="_blank" rel="noopener" style="position: relative;">Directions<span class="visually-hidden"> (opens in a new tab)</span></a></td>
+            <td>—</td>
+            <td><a class="leg__link" href="https://maps.example.com/directions/terre-bleu/la-marina" target="_blank" rel="noopener" style="position: relative;" data-state="focus">Directions<span class="visually-hidden"> (opens in a new tab)</span></a></td>
+            <td>—</td>
+          </tr>
+        </tbody>
+      </table></div>
+      <h3>Loading</h3>
+      <p>While the planner works, each day keeps its real header (the forecast is already known) and shows <a href="skeleton.html">skeleton rows</a> shaped like blocks. The list is <code>aria-hidden="true"</code>; a status row above the days says what is happening.</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--canvas ds-example__canvas--stack">
+          <div class="status-row" role="status" style="max-width: 36rem; margin: 0;"><span class="spinner-disc" aria-hidden="true"><span class="spinner"></span><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg></span><span>Working through your locks, the forecast and past weekends.</span></div>
+          <section class="day" aria-labelledby="ld-sat" style="max-width: 36rem;">
+            <header class="day__header" style="position: static;">
+              <span class="weather-disc weather-disc--sun" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-sun"/></svg></span>
+              <div class="day__text"><h3 class="day__title" id="ld-sat">Saturday</h3><p class="day__meta">17 May · 22° / 14° · Light breeze, good for outdoors</p></div>
+            </header>
+            <ol class="day__list" aria-hidden="true">
+              <li class="skeleton-row"><div class="skeleton skeleton--time"></div><div class="skeleton skeleton--disc"></div><div class="skeleton-row__body"><div class="skeleton skeleton--text"></div><div class="skeleton skeleton--text-sm"></div></div></li>
+              <li class="skeleton-row"><div class="skeleton skeleton--time"></div><div class="skeleton skeleton--disc"></div><div class="skeleton-row__body"><div class="skeleton skeleton--text"></div><div class="skeleton skeleton--text-sm"></div></div></li>
+              <li class="skeleton-row"><div class="skeleton skeleton--time"></div><div class="skeleton skeleton--disc"></div><div class="skeleton-row__body"><div class="skeleton skeleton--text"></div><div class="skeleton skeleton--text-sm"></div></div></li>
+            </ol>
+          </section>
+        </div>
+      </div>
+      <h3>Both themes</h3>
+      <div class="ds-themes">
+        <div data-theme="light"><ol class="day__list" aria-label="Light theme blocks"><li class="block block--commitment"><div class="block__time"><span class="block__clock">9:00</span><span class="block__dur">60m</span></div><div class="block__rail"><span class="block__disc block__disc--num"><span class="visually-hidden">Stop </span>1</span></div><div class="block__body"><h4 class="block__title">Swim lessons</h4><p class="block__sub clamp-1">Port Credit pool</p></div></li><li class="leg" aria-label="Travel: 45 minutes, 52 kilometres to Lavender fields"><span></span><span class="leg__rail" aria-hidden="true"></span><p class="leg__text"><svg class="icon" aria-hidden="true"><use href="#i-car"/></svg>45 min · 52 km<a class="leg__link" href="https://maps.example.com/directions/port-credit-pool/terre-bleu" target="_blank" rel="noopener">Directions<span class="visually-hidden"> (opens in a new tab)</span></a></p></li><li class="block block--active"><div class="block__time"><span class="block__clock">11:00</span><span class="block__dur">1h 45m</span></div><div class="block__rail"><span class="block__disc block__disc--num"><span class="visually-hidden">Stop </span>2</span></div><div class="block__body"><h4 class="block__title">Lavender fields</h4><p class="block__sub clamp-1">Terre Bleu, Milton</p></div></li></ol></div>
+        <div data-theme="dark"><ol class="day__list" aria-label="Dark theme blocks"><li class="block block--commitment"><div class="block__time"><span class="block__clock">9:00</span><span class="block__dur">60m</span></div><div class="block__rail"><span class="block__disc block__disc--num"><span class="visually-hidden">Stop </span>1</span></div><div class="block__body"><h4 class="block__title">Swim lessons</h4><p class="block__sub clamp-1">Port Credit pool</p></div></li><li class="leg" aria-label="Travel: 45 minutes, 52 kilometres to Lavender fields"><span></span><span class="leg__rail" aria-hidden="true"></span><p class="leg__text"><svg class="icon" aria-hidden="true"><use href="#i-car"/></svg>45 min · 52 km<a class="leg__link" href="https://maps.example.com/directions/port-credit-pool/terre-bleu" target="_blank" rel="noopener">Directions<span class="visually-hidden"> (opens in a new tab)</span></a></p></li><li class="block block--active"><div class="block__time"><span class="block__clock">11:00</span><span class="block__dur">1h 45m</span></div><div class="block__rail"><span class="block__disc block__disc--num"><span class="visually-hidden">Stop </span>2</span></div><div class="block__body"><h4 class="block__title">Lavender fields</h4><p class="block__sub clamp-1">Terre Bleu, Milton</p></div></li></ol></div>
+      </div>
+      <ul>
+        <li><b>Selected</b> (<code>.block--active</code>) marks the block whose pin is active on the map. It is a tint, so the matching pin also gets its own ring and the block's position is announced by its stop number.</li>
+        <li><b>Done</b> (<code>.block--done</code>) is for errands ticked off during the weekend. The title is struck through and muted, the disc goes grey, and the sub line says "Done" too, so the state never rests on colour alone.</li>
+        <li><b>Locked</b> blocks and <b>commitments</b> show a chip with a lock icon and a word, never the green disc alone.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="responsive"><h2><a href="#responsive">Responsive behaviour</a></h2>
+      <ul>
+        <li><b>Under 720px</b> the day header sticks to the top of the screen. Day buttons are 36px icon-only squares (<code>.day__btn-label</code> hidden), and every block ends in a 32px chevron link to its details dialog; the row actions are not rendered.</li>
+        <li><b>From 720px</b> the header sticks under the 64px top bar (<code>--layoutTopBarHeight</code>) and the day buttons show their labels. Chevrons go; Why this, Swap and Lock appear on hover and on focus inside the row.</li>
+        <li><b>Touch screens from 720px</b> (<code>hover: none</code>, a tablet) always show the actions; there is no hover to reveal them (D21).</li>
+        <li><b>Planner</b>: one day shows at a time behind the Saturday / Sunday <a href="tabs.html">segments</a>. Under 1024px the <a href="map.html">map</a> sits above the day; from 1024px it sits beside it, sticky.</li>
+        <li>Titles wrap; the sub line is clamped to one line (<code>.clamp-1</code>). The time column and rail never shrink, so times always line up.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="theming"><h2><a href="#theming">Theming</a></h2>
+      <p>A block reads three component tokens: <code>--sd-block-disc-bg</code>, <code>--sd-block-disc-fg</code> and <code>--sd-block-halo</code>. Kinds (<code>--commitment</code>, <code>--locked</code>, <code>--errand</code>) set the disc pair; hover and <code>--active</code> set the halo to the tint so the rail still stops cleanly at the disc. The numbered disc overrides the pair with the brand ink.</p>
+      <pre><code>/* An itinerary on a card instead of the page canvas */
+.card .block { --sd-block-halo: var(--colorNeutralBackground1); }
+.card .day__header { background: var(--colorNeutralBackground1); }</code></pre>
+      <p>In the dark theme the rail and hairlines use the warm umber strokes, the stop disc turns light coral with a dark numeral, and the leg link uses the lighter sky step.</p>
+    </section>
+
+    <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
+      <h3>Role and pattern</h3>
+      <p>Each day is a <code>&lt;section aria-labelledby&gt;</code> named by its <code>&lt;h2&gt;</code>; the blocks and legs are items of one <code>&lt;ol&gt;</code>, so order is part of the semantics; each block title is an <code>&lt;h3&gt;</code>, which lets a screen reader jump block to block. The Saturday / Sunday switch follows the <a href="https://www.w3.org/WAI/ARIA/apg/patterns/tabs/">APG Tabs pattern</a>; Lock day and Lock block are toggle buttons (<a href="https://www.w3.org/WAI/ARIA/apg/patterns/button/">APG Button</a>, <code>aria-pressed</code>).</p>
+      <h3>Keyboard</h3>
+      <table class="ds-table ds-keys"><thead><tr><th scope="col">Key</th><th scope="col">Action</th></tr></thead><tbody>
+        <tr><td><kbd>Tab</kbd> / <kbd>Shift</kbd>+<kbd>Tab</kbd></td><td>Regenerate, Lock day, then each block's actions (or chevron under 720px), each leg's Directions link, then Add an errand.</td></tr>
+        <tr><td><kbd>←</kbd> / <kbd>→</kbd></td><td>On the day tabs, moves between Saturday and Sunday.</td></tr>
+        <tr><td><kbd>Enter</kbd> / <kbd>Space</kbd></td><td>Activates the focused action; Space toggles Lock.</td></tr>
+        <tr><td><kbd>Esc</kbd></td><td>Closes a block dialog and returns focus to the control that opened it.</td></tr>
+      </tbody></table>
+      <h3>Focus</h3>
+      <p>Actions are revealed on <code>:focus-within</code>, so tabbing into a row shows them before the focus ring lands on the first one. The ring is drawn on the focused control, not the row. After Swap or Regenerate replaces a block, focus moves to the new block's title (<code>tabindex="-1"</code>), never back to the top of the page.</p>
+      <h3>Labelling</h3>
+      <ul>
+        <li>Stop numbers carry visually hidden text: <code>&lt;span class="visually-hidden"&gt;Stop &lt;/span&gt;2</code>. The mock's <code>aria-label="Stop 2"</code> on a <code>&lt;span&gt;</code> is ignored by most screen readers.</li>
+        <li>Icon actions name the verb and the block: "Swap Lavender fields", "Why this: Lunch at La Marina", "Mark Costco run done". The chevron is "Details for Lavender fields".</li>
+        <li>An <code>aria-label</code> on a labelled day button starts with its visible label (2.5.3): "Lock day: Saturday", not "Lock Saturday".</li>
+        <li>Legs keep the mock's spelled-out <code>aria-label</code> ("Travel: 45 minutes, 52 kilometres to Lavender fields"); Directions says it opens a new tab.</li>
+        <li>The weather disc is decorative; the forecast is in the meta text.</li>
+      </ul>
+      <h3>Contrast</h3>
+      <div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0; gap: var(--spacingHorizontalS);">
+        <div class="ds-pair"><span>Title and clock on page</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground1|--colorNeutralBackground2" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Sub, meta and leg text</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground2|--colorNeutralBackground2" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Duration (D04)</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground3|--colorNeutralBackground2" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Sub on hover / selected row</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground2|--colorNeutralBackground3" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Stop number</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForegroundOnBrand|--colorBrandForeground1" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Directions link</span><span class="ds-pair__ratio" data-contrast="--colorPaletteSkyForeground1|--colorNeutralBackground2" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Locked day meta</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground2|--colorStatusSuccessBackground1" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Commitment disc icon</span><span class="ds-pair__ratio" data-contrast="--colorStatusSuccessForeground1|--colorStatusSuccessBackground1" data-min="3"></span></div>
+        <div class="ds-pair"><span>Errand disc icon</span><span class="ds-pair__ratio" data-contrast="--colorPaletteIndoorForeground1|--colorPaletteIndoorBackground1" data-min="3"></span></div>
+        <div class="ds-pair"><span>Ghost row edge</span><span class="ds-pair__ratio" data-contrast="--colorNeutralStrokeAccessible|--colorNeutralBackground2" data-min="3"></span></div>
+      </div>
+      <h3>Motion</h3>
+      <p>The row tint and the action fade run over <code>--durationFast</code>. Under <code>prefers-reduced-motion</code> both are instant. Nothing in the itinerary moves on its own.</p>
+      <h3>Touch</h3>
+      <p>Row actions are 32px small buttons, the chevron is 32px, day buttons are 36px wide, Directions is at least 24px tall and the ghost row is 44px (<code>--targetComfortable</code>). All clear the 24px minimum (2.5.8).</p>
+    </section>
+
+    <section class="ds-section" id="content"><h2><a href="#content">Content</a></h2>
+      <ul>
+        <li><b>Times</b> are 24-hour without a leading zero ("8:30", "13:30"). <b>Durations</b> in a block are compact: "30m", "75m", "1h 45m", "2h", or "open" for an evening left free.</li>
+        <li><b>Titles</b> name the thing, with the place when it matters: "Swim lessons", "Lavender fields", "Lunch at La Marina".</li>
+        <li><b>Sub lines</b> give the place and one reason, joined by a middle dot: "Terre Bleu, Milton · walk the rows". One line; it is clamped.</li>
+        <li><b>Day meta</b>: date · high / low · stops · driving, in full words: "17 May · 22° / 14° · 3 stops · 1 h 36 min driving".</li>
+        <li><b>Legs</b>: "45 min · 52 km"; the last one says "home". Directions only over 10 minutes.</li>
+        <li><b>Chips</b>: one word, sentence case: "Commitment", "Locked", "Errand", "Day highlight".</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="do-dont"><h2><a href="#do-dont">Do and don't</a></h2>
+      <div class="ds-dodont">
+        <figure class="ds-do"><div class="ds-example__canvas ds-example__canvas--canvas"><ol class="day__list" style="flex: 1;" aria-label="Do: numbered stop"><li class="block"><div class="block__time"><span class="block__clock">13:30</span><span class="block__dur">75m</span></div><div class="block__rail"><span class="block__disc block__disc--num"><span class="visually-hidden">Stop </span>3</span></div><div class="block__body"><h4 class="block__title">Lunch at La Marina</h4></div></li></ol></div><figcaption>Number stops with visually hidden "Stop" text so the number is read as a stop.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas ds-example__canvas--canvas"><pre style="margin: 0; flex: 1;"><code>&lt;span class="block__disc"
+  aria-label="Stop 3"&gt;
+  3
+&lt;/span&gt;</code></pre></div><figcaption><code>aria-label</code> on a plain <code>&lt;span&gt;</code> is not allowed, and most screen readers say only "3".</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas ds-example__canvas--canvas"><ol class="day__list" style="flex: 1;" aria-label="Do: short leg"><li class="leg" aria-label="Travel: 6 minutes, 3 kilometres to Swim lessons"><span></span><span class="leg__rail" aria-hidden="true"></span><p class="leg__text"><svg class="icon" aria-hidden="true"><use href="#i-car"/></svg>6 min · 3 km</p></li></ol></div><figcaption>Leave Directions off short local hops; the family knows the way to the pool.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas ds-example__canvas--canvas"><ol class="day__list" style="flex: 1;" aria-label="Don't: short leg with directions"><li class="leg" aria-label="Travel: 5 minutes, 2 kilometres home"><span></span><span class="leg__rail" aria-hidden="true"></span><p class="leg__text"><svg class="icon" aria-hidden="true"><use href="#i-car"/></svg>5 min · 2 km home<a class="leg__link" href="https://maps.example.com/directions/la-marina/port-credit" target="_blank" rel="noopener">Directions<span class="visually-hidden"> (opens in a new tab)</span></a></p></li></ol></div><figcaption>A Directions link on every leg adds a tab stop per drive and buries the ones that matter.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas ds-example__canvas--canvas"><button class="btn btn--ghost btn--sm day__btn" type="button" aria-label="Lock day: Saturday" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg><span class="day__btn-label">Lock day</span></button></div><figcaption>The accessible name starts with the visible label, so "click Lock day" works with voice control.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas ds-example__canvas--canvas"><button class="btn btn--ghost btn--sm day__btn" type="button" aria-label="Lock Saturday" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg><span class="day__btn-label">Lock day</span></button></div><figcaption>The mock's "Lock Saturday" does not contain "Lock day" (2.5.3 Label in name).</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas ds-example__canvas--canvas"><span class="ds-pill">@media (hover: none) → actions visible</span></div><figcaption>On touch tablets keep row actions visible (D21).</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas ds-example__canvas--canvas"><span class="ds-pill">opacity: 0 until :hover</span></div><figcaption>Actions that only appear on hover never appear on an iPad at 768px.</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="ds-section" id="tokens"><h2><a href="#tokens">Tokens</a></h2>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Part</th><th scope="col">Token</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead>
+        <tbody>
+          <tr><td>Day header surface, block halo</td><td><code>--colorNeutralBackground2</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralBackground2" data-swatch></i><span data-token="--colorNeutralBackground2"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralBackground2" data-swatch></i><span data-token="--colorNeutralBackground2"></span></span></td></tr>
+          <tr><td>Locked day header, commitment and locked disc</td><td><code>--colorStatusSuccessBackground1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorStatusSuccessBackground1" data-swatch></i><span data-token="--colorStatusSuccessBackground1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorStatusSuccessBackground1" data-swatch></i><span data-token="--colorStatusSuccessBackground1"></span></span></td></tr>
+          <tr><td>Commitment and locked disc icon</td><td><code>--colorStatusSuccessForeground1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorStatusSuccessForeground1" data-swatch></i><span data-token="--colorStatusSuccessForeground1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorStatusSuccessForeground1" data-swatch></i><span data-token="--colorStatusSuccessForeground1"></span></span></td></tr>
+          <tr><td>Header and row dividers</td><td><code>--colorNeutralStroke2</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralStroke2" data-swatch></i><span data-token="--colorNeutralStroke2"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralStroke2" data-swatch></i><span data-token="--colorNeutralStroke2"></span></span></td></tr>
+          <tr><td>Rail, leg dots</td><td><code>--colorNeutralStroke1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralStroke1" data-swatch></i><span data-token="--colorNeutralStroke1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralStroke1" data-swatch></i><span data-token="--colorNeutralStroke1"></span></span></td></tr>
+          <tr><td>Title, clock</td><td><code>--colorNeutralForeground1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralForeground1" data-swatch></i><span data-token="--colorNeutralForeground1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralForeground1" data-swatch></i><span data-token="--colorNeutralForeground1"></span></span></td></tr>
+          <tr><td>Sub, meta, leg text, ghost row label</td><td><code>--colorNeutralForeground2</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralForeground2" data-swatch></i><span data-token="--colorNeutralForeground2"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralForeground2" data-swatch></i><span data-token="--colorNeutralForeground2"></span></span></td></tr>
+          <tr><td>Duration, chevron</td><td><code>--colorNeutralForeground3</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralForeground3" data-swatch></i><span data-token="--colorNeutralForeground3"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralForeground3" data-swatch></i><span data-token="--colorNeutralForeground3"></span></span></td></tr>
+          <tr><td>Default disc, hover and selected tint</td><td><code>--colorNeutralBackground3</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralBackground3" data-swatch></i><span data-token="--colorNeutralBackground3"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralBackground3" data-swatch></i><span data-token="--colorNeutralBackground3"></span></span></td></tr>
+          <tr><td>Stop disc</td><td><code>--colorBrandForeground1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorBrandForeground1" data-swatch></i><span data-token="--colorBrandForeground1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorBrandForeground1" data-swatch></i><span data-token="--colorBrandForeground1"></span></span></td></tr>
+          <tr><td>Stop numeral</td><td><code>--colorNeutralForegroundOnBrand</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralForegroundOnBrand" data-swatch></i><span data-token="--colorNeutralForegroundOnBrand"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralForegroundOnBrand" data-swatch></i><span data-token="--colorNeutralForegroundOnBrand"></span></span></td></tr>
+          <tr><td>Errand disc</td><td><code>--colorPaletteIndoorBackground1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorPaletteIndoorBackground1" data-swatch></i><span data-token="--colorPaletteIndoorBackground1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorPaletteIndoorBackground1" data-swatch></i><span data-token="--colorPaletteIndoorBackground1"></span></span></td></tr>
+          <tr><td>Directions link</td><td><code>--colorPaletteSkyForeground1</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorPaletteSkyForeground1" data-swatch></i><span data-token="--colorPaletteSkyForeground1"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorPaletteSkyForeground1" data-swatch></i><span data-token="--colorPaletteSkyForeground1"></span></span></td></tr>
+          <tr><td>Ghost row edge</td><td><code>--colorNeutralStrokeAccessible</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorNeutralStrokeAccessible" data-swatch></i><span data-token="--colorNeutralStrokeAccessible"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorNeutralStrokeAccessible" data-swatch></i><span data-token="--colorNeutralStrokeAccessible"></span></span></td></tr>
+          <tr><td>Ghost row hover</td><td><code>--colorSubtleBackgroundHover</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--colorSubtleBackgroundHover" data-swatch></i><span data-token="--colorSubtleBackgroundHover"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--colorSubtleBackgroundHover" data-swatch></i><span data-token="--colorSubtleBackgroundHover"></span></span></td></tr>
+          <tr><td>Day title / meta</td><td><code>--typographyTitle2</code>, <code>--typographyBody2</code></td><td colspan="2"><span data-token="--typographyTitle2"></span> / <span data-token="--typographyBody2"></span></td></tr>
+          <tr><td>Block title / duration</td><td><code>--typographySubtitle1</code>, <code>--typographyCaption1</code></td><td colspan="2"><span data-token="--typographySubtitle1"></span> / <span data-token="--typographyCaption1"></span></td></tr>
+          <tr><td>Row padding</td><td><code>--spacingVerticalM</code></td><td colspan="2"><span data-token="--spacingVerticalM"></span></td></tr>
+          <tr><td>Sticky offset from 720px</td><td><code>--layoutTopBarHeight</code></td><td colspan="2"><span data-token="--layoutTopBarHeight"></span></td></tr>
+          <tr><td>Ghost row height / Directions min height</td><td><code>--targetComfortable</code>, <code>--targetMin</code></td><td colspan="2"><span data-token="--targetComfortable"></span> / <span data-token="--targetMin"></span></td></tr>
+          <tr><td>Header z-index</td><td><code>--zIndexSticky</code></td><td colspan="2"><span data-token="--zIndexSticky"></span></td></tr>
+          <tr><td>Tint and action fade</td><td><code>--durationFast</code>, <code>--curveEasyEase</code></td><td colspan="2"><span data-token="--durationFast"></span> / <span data-token="--curveEasyEase"></span></td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section class="ds-section" id="code"><h2><a href="#code">Code</a></h2>
+      <pre><code>&lt;section class="day" aria-labelledby="sat-title"&gt;
+  &lt;header class="day__header"&gt;
+    &lt;span class="weather-disc weather-disc--sun" aria-hidden="true"&gt;…&lt;/span&gt;
+    &lt;div class="day__text"&gt;
+      &lt;h2 class="day__title" id="sat-title"&gt;Saturday&lt;/h2&gt;
+      &lt;p class="day__meta"&gt;17 May · 22° / 14° · 3 stops · 1 h 36 min driving&lt;/p&gt;
+    &lt;/div&gt;
+    &lt;div class="day__actions"&gt;
+      &lt;button class="btn btn--ghost btn--sm day__btn" type="button" aria-label="Lock day: Saturday" aria-pressed="false"&gt;
+        &lt;svg class="icon" aria-hidden="true"&gt;&lt;use href="#i-lock"/&gt;&lt;/svg&gt;&lt;span class="day__btn-label"&gt;Lock day&lt;/span&gt;
+      &lt;/button&gt;
+    &lt;/div&gt;
+  &lt;/header&gt;
+  &lt;ol class="day__list"&gt;
+    &lt;li class="block block--commitment"&gt;
+      &lt;div class="block__time"&gt;&lt;span class="block__clock"&gt;9:00&lt;/span&gt;&lt;span class="block__dur"&gt;60m&lt;/span&gt;&lt;/div&gt;
+      &lt;div class="block__rail"&gt;&lt;span class="block__disc block__disc--num"&gt;&lt;span class="visually-hidden"&gt;Stop &lt;/span&gt;1&lt;/span&gt;&lt;/div&gt;
+      &lt;div class="block__body"&gt;
+        &lt;h3 class="block__title"&gt;Swim lessons&lt;/h3&gt;
+        &lt;p class="block__sub clamp-1"&gt;Port Credit pool · every Saturday&lt;/p&gt;
+        &lt;div class="block__chips"&gt;&lt;span class="chip chip--accent"&gt;…Commitment&lt;/span&gt;&lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class="block__actions"&gt;…&lt;/div&gt;
+      &lt;a class="block__chev" href="…" aria-label="Details for Swim lessons"&gt;…&lt;/a&gt;
+    &lt;/li&gt;
+    &lt;li class="leg" aria-label="Travel: 45 minutes, 52 kilometres to Lavender fields"&gt;
+      &lt;span&gt;&lt;/span&gt;&lt;span class="leg__rail" aria-hidden="true"&gt;&lt;/span&gt;
+      &lt;p class="leg__text"&gt;…45 min · 52 km&lt;a class="leg__link" href="…" target="_blank" rel="noopener"&gt;Directions&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+  &lt;/ol&gt;
+  &lt;a class="ghost-row" href="…"&gt;…Add an errand&lt;/a&gt;
+&lt;/section&gt;</code></pre>
+      <table class="ds-table"><thead><tr><th scope="col">Class / attribute</th><th scope="col">Effect</th></tr></thead><tbody>
+        <tr><td><code>.day</code> <code>.day--locked</code></td><td>Day column; locked turns the header green.</td></tr>
+        <tr><td><code>.day__header</code> <code>.day__text</code> <code>.day__title</code> <code>.day__meta</code> <code>.day__actions</code></td><td>Sticky header parts.</td></tr>
+        <tr><td><code>.day__btn</code> + <code>.day__btn-label</code></td><td>Day button: icon-only under 720px, labelled from 720px.</td></tr>
+        <tr><td><code>.day__list</code></td><td>The <code>&lt;ol&gt;</code> of blocks and legs.</td></tr>
+        <tr><td><code>.block</code> and <code>__time</code> <code>__clock</code> <code>__dur</code> <code>__rail</code> <code>__disc</code> <code>__body</code> <code>__title</code> <code>__sub</code> <code>__chips</code> <code>__media-row</code> <code>__thumb</code> <code>__actions</code> <code>__chev</code></td><td>Block parts.</td></tr>
+        <tr><td><code>.block__disc--num</code></td><td>Numbered stop disc in brand ink.</td></tr>
+        <tr><td><code>.block--commitment</code> <code>--locked</code> <code>--errand</code> <code>--drive</code> <code>--done</code> <code>--active</code></td><td>Block kind or state.</td></tr>
+        <tr><td><code>.leg</code> <code>.leg__rail</code> <code>.leg__text</code> <code>.leg__link</code></td><td>Travel leg; the first <code>&lt;span&gt;</code> fills the time column.</td></tr>
+        <tr><td><code>.ghost-row</code></td><td>Dashed add row after the list.</td></tr>
+        <tr><td><code>data-state="hover|focus"</code></td><td>Documentation only.</td></tr>
+      </tbody></table>
+    </section>
+
+    <section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>
+      <ul>
+        <li><a href="../../mocks/pages/weekend.html">pages/weekend</a>: both days, every block kind except drive, legs, Directions, the ghost row.</li>
+        <li><a href="../../mocks/pages/weekend.generating.html">pages/weekend.generating</a>: the loading state with skeleton rows.</li>
+        <li><a href="../../mocks/pages/landing.html">pages/landing</a>: the compact drive block in the product preview.</li>
+        <li><a href="../../mocks/pages/dialogs.html">pages/dialogs</a>: the block, commitment, locked and errand dialogs the rows open.</li>
+      </ul>
+      <p>Drift fixed: D03 focus ring, D04 the duration colour, D21 actions on touch screens, D24 rem breakpoints. Found while extracting, not yet in the drift log: the stop number's <code>aria-label</code> on a <code>&lt;span&gt;</code> (use hidden text), the day button names that do not contain their visible label (2.5.3), and the mock's <code>.block--done</code> at 60% opacity, which dropped the duration and sub below 4.5:1 (replaced here by a muted, struck-through title). The done state and the locked day are not shown in any mock yet.</p>
+    </section>
+
+    <footer class="ds-footer"><span>Saturdaze design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/icons.js"></script>
+<script src="../assets/ds.js"></script>
+</body>
+</html>

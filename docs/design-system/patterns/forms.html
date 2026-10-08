@@ -1,0 +1,457 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Forms — Saturdaze design system</title>
+<meta name="description" content="How Saturdaze lays out, labels, validates and submits forms: single column, labels above, errors on blur, a summary on submit, and editing that always opens a dialog.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html"><span class="brand-mark" aria-hidden="true"></span>Saturdaze DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Actions</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+    </ul></details>
+    <details open><summary>Inputs</summary><ul>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/chip-input.html">Chip input</a></li>
+      <li><a href="../components/file-upload.html">File upload</a></li>
+      <li><a href="../components/photo-pick.html">Photo pick</a></li>
+      <li><a href="../components/rating.html">Rating</a></li>
+      <li><a href="../components/vote-row.html">Vote row</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+    </ul></details>
+    <details open><summary>Navigation</summary><ul>
+      <li><a href="../components/top-bar.html">Top bar</a></li>
+      <li><a href="../components/bottom-nav.html">Bottom nav</a></li>
+      <li><a href="../components/sidebar-navigation.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs (segments)</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+      <li><a href="../components/footer.html">Footer</a></li>
+    </ul></details>
+    <details open><summary>Containers and overlays</summary><ul>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/container.html">Container and grid</a></li>
+      <li><a href="../components/page-header.html">Page header</a></li>
+    </ul></details>
+    <details open><summary>Data display</summary><ul>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/activity-feed.html">Activity feed</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/chip.html">Chip</a></li>
+      <li><a href="../components/filter-chip.html">Filter chip</a></li>
+      <li><a href="../components/disc.html">Disc</a></li>
+      <li><a href="../components/media.html">Media</a></li>
+      <li><a href="../components/cover.html">Cover photo</a></li>
+      <li><a href="../components/stat.html">Stat</a></li>
+      <li><a href="../components/itinerary.html">Itinerary</a></li>
+      <li><a href="../components/map.html">Map</a></li>
+    </ul></details>
+    <details open><summary>Feedback</summary><ul>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/alert.html">Alert</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/progress-bar.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Auth and marketing</summary><ul>
+      <li><a href="../components/auth-card.html">Auth card</a></li>
+      <li><a href="../components/hero.html">Hero</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/data-tables-and-lists.html">Tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Pattern</p>
+      <h1>Forms</h1>
+      <p class="ds-lead">Saturdaze forms are short: a name and an age, an errand and a day, an email and a password. They sit in a dialog or on an auth screen, never inline on a page, and they tell a parent exactly what to fix.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA</span><span class="ds-pill">Status: stable</span><span class="ds-pill">Angular CDK Dialog</span></div>
+      <ul class="ds-toc">
+        <li><a href="#overview">Overview</a></li><li><a href="#when">When to use</a></li><li><a href="#structure">Structure</a></li><li><a href="#states">States</a></li><li><a href="#responsive">Responsive</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#content">Content</a></li><li><a href="#do-dont">Do and don't</a></li><li><a href="#sources">Sources</a></li>
+      </ul>
+    </header>
+
+    <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+      <p>A form is a <a href="../components/form-layout.html">form layout</a> of <a href="../components/form-field.html">form fields</a> with one submit action. The rules that hold across every Saturdaze form:</p>
+      <ul>
+        <li><b>One column.</b> Fields stack in the order a person thinks about them. Two fields share a row only when both are short and belong together (Start and End, Cost and Ages).</li>
+        <li><b>Labels above the input</b>, always visible. Placeholders show an example ("Costco run"), never the label.</li>
+        <li><b>Mark the exception.</b> Most Saturdaze fields are optional, so required fields say "Required" in the label. No asterisks.</li>
+        <li><b>Validate late, re-validate early.</b> Check a field when the person leaves it; once it shows an error, re-check on every keystroke so the error clears the moment it is fixed.</li>
+        <li><b>On submit, summarise.</b> If anything is wrong, show an <a href="#error-summary-example">error summary</a> at the top and move focus to it. Each line links to its field.</li>
+        <li><b>No inline forms in pages.</b> A button that edits something opens a <a href="../components/dialog.html">dialog</a> (Angular CDK Dialog) or navigates to a screen. Family never turns its rows into inputs.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="when"><h2><a href="#when">When to use</a></h2>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Situation</th><th scope="col">Use</th><th scope="col">Example</th></tr></thead>
+        <tbody>
+          <tr><td>Edit or add one thing (2 to 6 fields)</td><td>Form <a href="../components/dialog.html">dialog</a>, wide variant</td><td>D17 Edit Mae, D7 Add an errand, D18 Edit Swim lessons</td></tr>
+          <tr><td>Sign in, create an account, reset a password</td><td>Screen with an <a href="../components/auth-card.html">auth card</a></td><td>Sign in, Create account</td></tr>
+          <tr><td>A single on/off preference</td><td><a href="../components/switch.html">Switch</a> that saves on change, no submit</td><td>Remember me, Friday preview</td></tr>
+          <tr><td>Remove, reject, sign out</td><td>Confirmation <a href="../components/dialog.html">dialog</a> (<code>role="alertdialog"</code>), not a form</td><td>D21 Remove Mae, D22 Sign out</td></tr>
+          <tr><td>Filter or sort a list</td><td>Filter chips and a select; changes apply at once, no submit</td><td>Admin Places toolbar (see <a href="data-tables-and-lists.html">Tables and lists</a>)</td></tr>
+          <tr><td>Long or multi-step task</td><td>A screen of its own with a back link, not a dialog</td><td>None yet; Saturdaze keeps every form short</td></tr>
+        </tbody>
+      </table></div>
+      <p>Saturdaze does not autosave forms. Every dialog form has an explicit Save, so a parent can back out with Cancel or Escape and nothing changes.</p>
+    </section>
+
+    <section class="ds-section" id="structure"><h2><a href="#structure">Structure</a></h2>
+      <p>D17, Edit a family member: header with title and context line, fields in one column, a hint under the field it explains, and a footer with the destructive entry point on the left and Save last.</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack ds-example__canvas--canvas">
+          <div class="dialog dialog--specimen dialog--wide" role="dialog" aria-labelledby="fx-d17-title">
+            <div class="dialog__panel">
+              <div class="dialog__header">
+                <div class="dialog__heading"><p class="dialog__title" id="fx-d17-title">Edit Mae</p><p class="dialog__sub">Ages shape the picks.</p></div>
+                <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+              </div>
+              <div class="dialog__body">
+                <div class="field">
+                  <label class="field__label" for="fx-d17-name">Name <span class="field__req">Required</span></label>
+                  <input class="field__input" id="fx-d17-name" type="text" value="Mae" autocomplete="off">
+                </div>
+                <div class="field">
+                  <label class="field__label" for="fx-d17-age">Age</label>
+                  <input class="field__input" id="fx-d17-age" type="number" value="5" min="0" max="120" aria-describedby="fx-d17-age-hint">
+                  <p class="field__hint" id="fx-d17-age-hint">Kid · under 18 counts as a kid.</p>
+                </div>
+              </div>
+              <div class="dialog__actions">
+                <div class="dialog__actions-left"><button class="btn btn--quiet btn--warn-text" type="button"><svg class="icon" aria-hidden="true"><use href="#i-trash"/></svg>Remove</button></div>
+                <button class="btn btn--quiet" type="button">Cancel</button>
+                <button class="btn btn--primary" type="submit">Save</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>Under 720px the dialog is a bottom sheet with full-width buttons, Save on top. From 720px Save sits last on the right and Remove moves to the far left.</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;div class="dialog dialog--wide" role="dialog" aria-modal="true" aria-labelledby="d17-title"&gt;
+  &lt;div class="dialog__scrim"&gt;&lt;/div&gt;
+  &lt;form class="dialog__panel" novalidate&gt;
+    &lt;div class="dialog__header"&gt;…&lt;h2 class="dialog__title" id="d17-title"&gt;Edit Mae&lt;/h2&gt;…&lt;/div&gt;
+    &lt;div class="dialog__body"&gt;
+      &lt;div class="field"&gt;
+        &lt;label class="field__label" for="d17-name"&gt;Name &lt;span class="field__req"&gt;Required&lt;/span&gt;&lt;/label&gt;
+        &lt;input class="field__input" id="d17-name" type="text" required&gt;
+      &lt;/div&gt;
+      …
+    &lt;/div&gt;
+    &lt;div class="dialog__actions"&gt;
+      &lt;div class="dialog__actions-left"&gt;&lt;button class="btn btn--quiet btn--warn-text" type="button"&gt;Remove&lt;/button&gt;&lt;/div&gt;
+      &lt;button class="btn btn--quiet" type="button"&gt;Cancel&lt;/button&gt;
+      &lt;button class="btn btn--primary" type="submit"&gt;Save&lt;/button&gt;
+    &lt;/div&gt;
+  &lt;/form&gt;
+&lt;/div&gt;</code></pre></details>
+      </div>
+      <h3>Pairs only for short, related fields</h3>
+      <p><code>.field--row</code> puts two fields side by side at every width. Use it only when both values are short and read as one thing.</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack ds-example__canvas--narrow">
+          <div class="field--row">
+            <div class="field"><label class="field__label" for="fx-start">Start</label><input class="field__input" id="fx-start" type="time" value="09:00"></div>
+            <div class="field"><label class="field__label" for="fx-end">End</label><input class="field__input" id="fx-end" type="time" value="10:00"></div>
+          </div>
+          <div class="field">
+            <span class="field__label" id="fx-day-label">Which day</span>
+            <div class="seg-radio seg-radio--3" role="radiogroup" aria-labelledby="fx-day-label">
+              <label class="seg-radio__opt"><input type="radio" name="fx-day">Saturday</label>
+              <label class="seg-radio__opt"><input type="radio" name="fx-day">Sunday</label>
+              <label class="seg-radio__opt"><input type="radio" name="fx-day" checked>Either</label>
+            </div>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>Start and End from D18; Which day from D7. Two or three short options use a segmented radio, more use a <a href="../components/select.html">select</a>.</span></div>
+      </div>
+      <h3>Anatomy of a form</h3>
+      <ol>
+        <li><b>Title</b> names the job and the object: "Edit Mae", "Add an errand". The sub line says why it matters ("Ages shape the picks").</li>
+        <li><b>Error summary</b> (only after a failed submit) sits above the first field.</li>
+        <li><b>Fields</b> in one column, 16px apart (<code>--spacingVerticalL</code>); label, input, then hint or error.</li>
+        <li><b>Actions</b>: Cancel and the submit verb; a destructive entry point (warn text) on the far left when editing an existing thing.</li>
+      </ol>
+    </section>
+
+    <section class="ds-section" id="states"><h2><a href="#states">States</a></h2>
+      <p>A form moves through these states. The field-level states are documented on <a href="../components/text-field.html">text field</a>; this is how they combine.</p>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">State</th><th scope="col">Trigger</th><th scope="col">What the person sees</th></tr></thead>
+        <tbody>
+          <tr><td>Pristine</td><td>Dialog opens</td><td>Values filled in when editing; focus on the first field. Save is enabled.</td></tr>
+          <tr><td>Field invalid</td><td>Leaving a field with a bad value (blur)</td><td>Danger border, <code>aria-invalid="true"</code>, an error line under the field.</td></tr>
+          <tr><td>Fixing</td><td>Typing in a field that shows an error</td><td>Re-checked on every input; the error disappears as soon as the value is valid.</td></tr>
+          <tr><td>Submit blocked</td><td>Save with errors</td><td>Error summary at the top, focus moved to it, every invalid field marked.</td></tr>
+          <tr><td>Submitting</td><td>Save with valid values</td><td>Save shows its spinner (<code>aria-busy</code>), the dialog body dims, Escape and Cancel wait.</td></tr>
+          <tr><td>Server error</td><td>The request fails or is refused</td><td>A <a href="../components/alert.html">banner</a> above the fields says what happened; values are kept.</td></tr>
+          <tr><td>Done</td><td>Request succeeds</td><td>Dialog closes, focus returns to the trigger, a toast confirms ("Saved Mae"), or a success dialog replaces it (D9, D11).</td></tr>
+        </tbody>
+      </table></div>
+      <h3>Field invalid after blur</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack ds-example__canvas--narrow">
+          <div class="field">
+            <label class="field__label" for="fx-blur-name">Name <span class="field__req">Required</span></label>
+            <input class="field__input" id="fx-blur-name" type="text" value="" aria-invalid="true" aria-describedby="fx-blur-name-err">
+            <p class="field__error" id="fx-blur-name-err"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg>Enter a name, even just an initial.</p>
+          </div>
+          <div class="field">
+            <label class="field__label" for="fx-blur-age">Age</label>
+            <input class="field__input" id="fx-blur-age" type="number" value="150" aria-invalid="true" aria-describedby="fx-blur-age-err">
+            <p class="field__error" id="fx-blur-age-err"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg>Enter an age from 0 to 120.</p>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>Error text replaces the hint; colour, icon and words all carry the error.</span></div>
+      </div>
+      <h3 id="error-summary-example">Error summary on submit</h3>
+      <p>Shown after Save when one or more fields are invalid. It takes focus (<code>tabindex="-1"</code>), is announced as an alert, and each link moves focus to its field.</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack ds-example__canvas--canvas">
+          <div class="dialog dialog--specimen dialog--wide" role="dialog" aria-labelledby="fx-d10-title">
+            <div class="dialog__panel">
+              <div class="dialog__header">
+                <div class="dialog__heading"><p class="dialog__title" id="fx-d10-title">Suggest an event</p><p class="dialog__sub">Title and time are all we need. The rest helps families decide.</p></div>
+                <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+              </div>
+              <div class="dialog__body">
+                <div class="error-summary" role="alert" tabindex="-1" aria-labelledby="fx-sum-title">
+                  <p class="error-summary__title" id="fx-sum-title">Two things to fix</p>
+                  <ul>
+                    <li><a href="#fx-d10-name">Enter a title for the event</a></li>
+                    <li><a href="#fx-d10-link">Enter a link that starts with https://</a></li>
+                  </ul>
+                </div>
+                <div class="field">
+                  <label class="field__label" for="fx-d10-name">Title <span class="field__req">Required</span></label>
+                  <input class="field__input" id="fx-d10-name" type="text" value="" aria-invalid="true" aria-describedby="fx-d10-name-err">
+                  <p class="field__error" id="fx-d10-name-err"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg>Enter a title for the event.</p>
+                </div>
+                <div class="field">
+                  <label class="field__label" for="fx-d10-starts">Starts <span class="field__req">Required</span></label>
+                  <input class="field__input" id="fx-d10-starts" type="datetime-local" value="2026-05-18T13:00">
+                </div>
+                <div class="field">
+                  <label class="field__label" for="fx-d10-link">Link</label>
+                  <input class="field__input" id="fx-d10-link" type="url" value="buskerfest.ca" aria-invalid="true" aria-describedby="fx-d10-link-err">
+                  <p class="field__error" id="fx-d10-link-err"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg>Enter a link that starts with https://</p>
+                </div>
+              </div>
+              <div class="dialog__actions">
+                <button class="btn btn--quiet" type="button">Cancel</button>
+                <button class="btn btn--primary" type="submit">Submit</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>D10 after Submit. The summary title counts the problems; the lines match the field errors word for word.</span></div>
+      </div>
+      <h3>Submitting</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack ds-example__canvas--canvas">
+          <div class="dialog dialog--specimen" role="dialog" aria-labelledby="fx-busy-title" aria-busy="true">
+            <div class="dialog__panel">
+              <div class="dialog__header">
+                <div class="dialog__heading"><p class="dialog__title" id="fx-busy-title">Edit Mae</p><p class="dialog__sub">Ages shape the picks.</p></div>
+                <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close" disabled><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+              </div>
+              <div class="dialog__body">
+                <div class="field"><label class="field__label" for="fx-busy-name">Name <span class="field__req">Required</span></label><input class="field__input" id="fx-busy-name" type="text" value="Mae" readonly></div>
+              </div>
+              <div class="dialog__actions">
+                <button class="btn btn--quiet" type="button" disabled>Cancel</button>
+                <button class="btn btn--primary" type="submit" aria-busy="true"><span>Save</span></button>
+              </div>
+              <p class="visually-hidden" role="status">Saving Mae</p>
+            </div>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span><code>aria-busy="true"</code> on the dialog dims the body; the pressed button keeps its width and shows a spinner; "Saving Mae" goes to a status region.</span></div>
+      </div>
+      <h3>Sign in with an error</h3>
+      <p>A credential failure is not a field error: the server cannot say which field is wrong. Show a danger banner above the form, mark both fields invalid, keep the email and clear the password.</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack ds-example__canvas--canvas">
+          <div class="auth-card" style="max-width: 27.5rem; width: 100%; margin-inline: auto;">
+            <div class="auth-card__head">
+              <p class="auth-card__title">Welcome back</p>
+              <p class="auth-card__sub">Sign in to see this weekend.</p>
+            </div>
+            <div class="banner banner--warn" role="alert">
+              <svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg>
+              <span class="banner__text">That email and password did not match. Check both, or reset your password.</span>
+            </div>
+            <form class="auth-card__form" action="#structure">
+              <div class="field">
+                <label class="field__label" for="fx-si-email">Email</label>
+                <input class="field__input" id="fx-si-email" type="email" autocomplete="email" value="quinntynebrown@gmail.com" aria-invalid="true">
+              </div>
+              <div class="field">
+                <label class="field__label" for="fx-si-pass">Password</label>
+                <input class="field__input" id="fx-si-pass" type="password" autocomplete="current-password" value="" aria-invalid="true">
+              </div>
+              <div class="auth-card__row">
+                <label class="toggle"><input class="toggle__input" type="checkbox" role="switch" checked><span class="toggle__track"></span><span class="toggle__label">Remember me</span></label>
+                <a class="link" href="../../mocks/pages/reset-password.html">Forgot password?</a>
+              </div>
+              <button class="btn btn--primary btn--lg btn--block" type="submit">Sign in</button>
+            </form>
+            <p class="auth-card__alt">New here? <a class="link" href="../../mocks/pages/create-account.html">Create an account</a></p>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>From the sign-in mock's error state, with the alert icon in place of the mock's close glyph (an X reads as "dismiss").</span></div>
+      </div>
+      <h3>Destructive confirmation</h3>
+      <p>Remove in D17 never deletes. It opens D21 on top, a <code>role="alertdialog"</code> whose danger button names the verb. Cancel returns to D17 with focus on Remove.</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack ds-example__canvas--canvas">
+          <div class="dialog dialog--specimen" role="alertdialog" aria-labelledby="fx-d21-title" aria-describedby="fx-d21-sub">
+            <div class="dialog__panel">
+              <div class="dialog__header">
+                <div class="dialog__heading"><p class="dialog__title" id="fx-d21-title">Remove Mae from the family?</p><p class="dialog__sub" id="fx-d21-sub">Future weekends will not plan for her.</p></div>
+                <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+              </div>
+              <div class="dialog__actions">
+                <button class="btn btn--quiet" type="button">Cancel</button>
+                <button class="btn btn--danger" type="button"><svg class="icon" aria-hidden="true"><use href="#i-trash"/></svg>Remove</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>See <a href="dialogs-and-overlays.html">Dialogs and overlays</a> for stacking and focus.</span></div>
+      </div>
+      <h3>Both themes</h3>
+      <div class="ds-themes">
+        <div data-theme="light"><div class="field"><label class="field__label" for="fx-th-l">What is it <span class="field__req">Required</span></label><input class="field__input" id="fx-th-l" type="text" value="" aria-invalid="true" aria-describedby="fx-th-l-err"><p class="field__error" id="fx-th-l-err"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg>Say what the errand is.</p></div></div>
+        <div data-theme="dark"><div class="field"><label class="field__label" for="fx-th-d">What is it <span class="field__req">Required</span></label><input class="field__input" id="fx-th-d" type="text" value="" aria-invalid="true" aria-describedby="fx-th-d-err"><p class="field__error" id="fx-th-d-err"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg>Say what the errand is.</p></div></div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="responsive"><h2><a href="#responsive">Responsive behaviour</a></h2>
+      <ul>
+        <li><b>Under 720px</b> a form dialog is a bottom sheet capped at 88% of the viewport height; the body scrolls, the header stays visible at the top of the sheet. Buttons are full width and 44px tall, primary on top.</li>
+        <li><b>From 720px</b> the dialog centres at 30rem (<code>--layoutDialogWidth</code>) or 32.5rem for <code>.dialog--wide</code> forms; buttons sit in one row, right-aligned, primary last.</li>
+        <li>On screens, <code>.form-actions</code> does the same: stacked and full width on phones, a row from 720px.</li>
+        <li><code>.field--row</code> pairs stay side by side at 360px because both fields are short; anything that would truncate at 360px goes back to one column.</li>
+        <li>Inputs are 44px tall at every width and use 16px text, so iOS does not zoom on focus.</li>
+        <li>When the on-screen keyboard opens, the focused field scrolls into view inside the sheet; nothing is pinned over it.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
+      <h3>Role and pattern</h3>
+      <p>A native <code>&lt;form&gt;</code> with <code>novalidate</code> (the browser's bubbles are replaced by our messages), inside a CDK Dialog that follows the <a href="https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/">APG Dialog (Modal) pattern</a>. Confirmations use <code>role="alertdialog"</code>. Two or three choices use a radio group (<a href="https://www.w3.org/WAI/ARIA/apg/patterns/radio/">APG Radio Group</a>).</p>
+      <h3>Keyboard</h3>
+      <table class="ds-table ds-keys"><thead><tr><th scope="col">Key</th><th scope="col">Action</th></tr></thead><tbody>
+        <tr><td><kbd>Tab</kbd> / <kbd>Shift</kbd>+<kbd>Tab</kbd></td><td>Moves through fields, then Remove, Cancel, Save, then the close button; focus stays in the dialog.</td></tr>
+        <tr><td><kbd>Enter</kbd></td><td>In a single-line field, submits the form (same as Save). In a textarea, adds a line.</td></tr>
+        <tr><td><kbd>Arrow</kbd> keys</td><td>Move between options in a segmented radio.</td></tr>
+        <tr><td><kbd>Esc</kbd></td><td>Cancels and closes the dialog, unless it is submitting.</td></tr>
+      </tbody></table>
+      <h3>Focus</h3>
+      <p>On open, focus goes to the first field. After a failed submit, focus goes to the error summary; each summary link moves focus to its input. After a successful submit, the dialog closes and focus returns to the button that opened it. Server errors move focus to the banner only if the person was not already typing.</p>
+      <h3>Labelling</h3>
+      <p>Every input has a visible <code>&lt;label for&gt;</code>; "Required" is part of the label text, so it is announced. Hints and errors are linked with <code>aria-describedby</code>; when the error appears it replaces the hint in that list. Field groups (Which day) use a labelled radiogroup or a <code>&lt;fieldset&gt;</code> with a legend. Name, email and password fields set <code>autocomplete</code> (1.3.5); passwords allow paste and managers (3.3.8).</p>
+      <h3>Contrast</h3>
+      <div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0; gap: var(--spacingHorizontalS);">
+        <div class="ds-pair"><span>Label on dialog</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground2|--colorNeutralBackgroundRaised" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>"Required" and placeholder on input</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground3|--colorNeutralBackground1" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Input border on input fill</span><span class="ds-pair__ratio" data-contrast="--colorNeutralStrokeAccessible|--colorNeutralBackground1" data-min="3"></span></div>
+        <div class="ds-pair"><span>Error text on dialog</span><span class="ds-pair__ratio" data-contrast="--colorStatusDangerForeground1|--colorNeutralBackgroundRaised" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Invalid border on input fill</span><span class="ds-pair__ratio" data-contrast="--colorStatusDangerForeground3|--colorNeutralBackground1" data-min="3"></span></div>
+        <div class="ds-pair"><span>Error summary text on its fill</span><span class="ds-pair__ratio" data-contrast="--colorStatusDangerForeground1|--colorStatusDangerBackground1" data-min="4.5"></span></div>
+      </div>
+      <h3>Motion</h3>
+      <p>Border and ring changes use <code>--durationFast</code>; the dialog rises over <code>--durationNormal</code>. Both are zeroed under reduced motion. The Save spinner keeps turning: it is status, not decoration.</p>
+      <h3>Touch</h3>
+      <p>Inputs and dialog buttons are 44px on phones. The segmented radio options are 36px tall and fill the row. The "Required" tag and hints are text, not targets.</p>
+    </section>
+
+    <section class="ds-section" id="content"><h2><a href="#content">Content</a></h2>
+      <ul>
+        <li><b>Labels</b> are nouns or short questions in sentence case: "Name", "Age", "What is it", "Roughly how long", "Which day". No colons.</li>
+        <li><b>Hints</b> answer the question a parent would ask: "Under 18 counts as a kid.", "Set to the next hour."</li>
+        <li><b>Errors</b> say what to do, not what went wrong: "Enter an age from 0 to 120." Never "Invalid input" or "This field is required".</li>
+        <li><b>Summary title</b> counts the problems: "One thing to fix", "Two things to fix".</li>
+        <li><b>Submit</b> is the verb for the job: "Save", "Add member", "Add to weekend", "Submit", "Sign in". Cancel is always "Cancel".</li>
+        <li>Full rules and the error formula live in <a href="../foundations/content.html">Content</a>; composed examples are in <a href="content-and-tone.html">Content and tone</a>.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="do-dont"><h2><a href="#do-dont">Do and don't</a></h2>
+      <div class="ds-dodont">
+        <figure class="ds-do"><div class="ds-example__canvas"><button class="btn btn--quiet" type="button">Cancel</button><button class="btn btn--primary" type="submit">Add member</button></div><figcaption>Leave the submit enabled; on press, show the summary and say what is missing.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><button class="btn btn--quiet" type="button">Cancel</button><button class="btn btn--primary" type="submit" disabled>Add member</button></div><figcaption>D10 and D17 (add) disable Submit and Add member until the form is valid. A disabled button cannot say why, and it is skipped by Tab.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas"><button class="btn btn--quiet" type="button"><svg class="icon" aria-hidden="true"><use href="#i-edit"/></svg>Edit</button></div><figcaption>On Family, Edit opens the D17 dialog. The page itself stays read-only.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas ds-example__canvas--stack"><div class="field"><label class="field__label" for="fx-dont-inline">Mae</label><div class="field__with-btn"><input class="field__input" id="fx-dont-inline" type="text" value="5"><button class="btn btn--primary" type="button">Save</button></div></div></div><figcaption>A row on the Family page that turns into an input with its own Save. Inline forms are off-pattern in Saturdaze; open a dialog.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas ds-example__canvas--stack"><div class="field"><label class="field__label" for="fx-do-ph">What is it <span class="field__req">Required</span></label><input class="field__input" id="fx-do-ph" type="text" placeholder="Costco run"></div></div><figcaption>A visible label, with the placeholder giving an example.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas ds-example__canvas--stack"><input class="field__input" type="text" placeholder="What is it? *" aria-label="What is it"></div><figcaption>The placeholder as the label: it disappears on the first keystroke, and the asterisk means nothing to a screen reader.</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>
+      <ul>
+        <li><a href="../../mocks/pages/dialogs.html#dialog-member">pages/dialogs</a>: D7 Add an errand, D10 Suggest an event, D17 Edit and Add a family member, D18 commitments, D21 Remove confirm, D27c the file-type error.</li>
+        <li><a href="../../mocks/pages/sign-in.html">pages/sign-in</a>: default and "Wrong email or password" states.</li>
+        <li><a href="../../mocks/pages/create-account.html">pages/create-account</a> and <a href="../../mocks/pages/reset-password.html">pages/reset-password</a>: hints, password strength, consent checkboxes.</li>
+        <li>Project rules: no inline forms in pages; editing opens an Angular CDK Dialog (the <code>dialogs/</code> folder of the family app). Field classes and ARIA state are the e2e locator contract (ADR-009).</li>
+      </ul>
+      <p>Drift that applies: D04 placeholder and "Required" text contrast, D06 input border contrast, D15 dialog and auth-form gaps snapped to 16px, D20 underlined links in "New here? Create an account". Not in the mocks yet: the error summary, field errors on text inputs (only D27c shows one), the submitting state and server-error banners inside dialogs. They are specified here from the system's components.</p>
+    </section>
+
+    <footer class="ds-footer"><span>Saturdaze design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/icons.js"></script>
+<script src="../assets/ds.js"></script>
+</body>
+</html>

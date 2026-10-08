@@ -325,13 +325,13 @@ frontend/projects/
 
 AGENTS.md requires a requirement, a detailed design and a mock before any
 production change, and every slice is delivered with the
-`incremental-implementation` skill and ATDD.
+`implementing-incrementally` skill and ATDD.
 
 1. **Requirements.** Add L1-036 "Catalog photo administration" and L2s for each
-   user story (§6) through the `requirements-engineer` skill.
+   user story (§6) through the `engineering-requirements` skill.
 2. **Detailed designs.** `docs/detailed-designs/administration/` gains
    `manage-place-photos/`, `review-ingested-photos/` and
-   `scaffold-admin-application/` through the `software-design-document` skill.
+   `scaffold-admin-application/` through the `writing-software-design-documents` skill.
 3. **Mocks.** `docs/mocks/pages/admin.*.html` for A1–A7 and AD1–AD6 added to
    the dialogs gallery, using the existing `_shell.html` conventions and
    screenshots at 390 / 820 / 1440.

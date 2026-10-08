@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Spacing — Saturdaze design system</title>
+<meta name="description" content="The 4px spacing scale, Fluent's nudges, inside-versus-between rules, padding by component size and control heights.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html"><span class="brand-mark" aria-hidden="true"></span>Saturdaze DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Actions</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+    </ul></details>
+    <details open><summary>Inputs</summary><ul>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/chip-input.html">Chip input</a></li>
+      <li><a href="../components/file-upload.html">File upload</a></li>
+      <li><a href="../components/photo-pick.html">Photo pick</a></li>
+      <li><a href="../components/rating.html">Rating</a></li>
+      <li><a href="../components/vote-row.html">Vote row</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+    </ul></details>
+    <details open><summary>Navigation</summary><ul>
+      <li><a href="../components/top-bar.html">Top bar</a></li>
+      <li><a href="../components/bottom-nav.html">Bottom nav</a></li>
+      <li><a href="../components/sidebar-navigation.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs (segments)</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+      <li><a href="../components/footer.html">Footer</a></li>
+    </ul></details>
+    <details open><summary>Containers and overlays</summary><ul>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/container.html">Container and grid</a></li>
+      <li><a href="../components/page-header.html">Page header</a></li>
+    </ul></details>
+    <details open><summary>Data display</summary><ul>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/activity-feed.html">Activity feed</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/chip.html">Chip</a></li>
+      <li><a href="../components/filter-chip.html">Filter chip</a></li>
+      <li><a href="../components/disc.html">Disc</a></li>
+      <li><a href="../components/media.html">Media</a></li>
+      <li><a href="../components/cover.html">Cover photo</a></li>
+      <li><a href="../components/stat.html">Stat</a></li>
+      <li><a href="../components/itinerary.html">Itinerary</a></li>
+      <li><a href="../components/map.html">Map</a></li>
+    </ul></details>
+    <details open><summary>Feedback</summary><ul>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/alert.html">Alert</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/progress-bar.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Auth and marketing</summary><ul>
+      <li><a href="../components/auth-card.html">Auth card</a></li>
+      <li><a href="../components/hero.html">Hero</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/data-tables-and-lists.html">Tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Foundation</p>
+      <h1>Spacing</h1>
+      <p class="ds-lead">Spacing groups what belongs together and separates what does not. One 4px scale, a few rules about inside and between, and a table of padding by component size.</p>
+      <div class="ds-meta"><span class="ds-pill">Tokens: <code>--spacing*</code>, <code>--controlHeight*</code></span><span class="ds-pill">4px grid · rem</span></div>
+      <ul class="ds-toc">
+        <li><a href="#overview">Overview</a></li><li><a href="#scale">Scale</a></li><li><a href="#nudges">Nudges</a></li><li><a href="#inside-between">Inside and between</a></li><li><a href="#component-padding">Component padding</a></li><li><a href="#control-heights">Control heights</a></li><li><a href="#usage">Usage</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#tokens">Tokens</a></li><li><a href="#sources">Sources</a></li>
+      </ul>
+    </header>
+
+    <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+      <p>Saturdaze spacing is a 4px grid with thirteen named steps from 0 to 56px, plus three control heights. Most screens use only four of them: 8px between inline items, 12px for compact padding, 16px for cards and gaps, 24px for dialogs and groups.</p>
+      <ul>
+        <li><b>Two sets, one scale:</b> <code>--spacingHorizontal*</code> and <code>--spacingVertical*</code> share values and say which axis a space is on.</li>
+        <li><b>Three nudges</b> (2, 6, 10px) for tight spots inside small components.</li>
+        <li><b>Control heights</b> of 32, 40 and 48px for buttons, filter chips and segments.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="scale"><h2><a href="#scale">The 4px scale</a></h2>
+      <p>Every space is a multiple of 4px, written in rem so it grows with the reader's font size. Fluent's naming is kept: the size steps run <code>XXS</code> to <code>XXXXXL</code>, and each exists twice, as <code>--spacingHorizontal*</code> and <code>--spacingVertical*</code>, with the same values. Use the horizontal token for inline space (left, right, column gaps) and the vertical one for block space (top, bottom, row gaps) so the intent survives a later retune.</p>
+      <div class="ds-example"><div class="ds-example__canvas ds-example__canvas--stack">
+        <div class="ds-scale">
+        <div class="ds-scale__row"><code>None</code><span data-token="--spacingHorizontalNone"></span><span class="ds-scale__bar" style="--size: var(--spacingHorizontalNone);"></span></div>
+        <div class="ds-scale__row"><code>XXS</code><span data-token="--spacingHorizontalXXS"></span><span class="ds-scale__bar" style="--size: var(--spacingHorizontalXXS);"></span></div>
+        <div class="ds-scale__row"><code>XS</code><span data-token="--spacingHorizontalXS"></span><span class="ds-scale__bar" style="--size: var(--spacingHorizontalXS);"></span></div>
+        <div class="ds-scale__row"><code>SNudge</code><span data-token="--spacingHorizontalSNudge"></span><span class="ds-scale__bar" style="--size: var(--spacingHorizontalSNudge);"></span></div>
+        <div class="ds-scale__row"><code>S</code><span data-token="--spacingHorizontalS"></span><span class="ds-scale__bar" style="--size: var(--spacingHorizontalS);"></span></div>
+        <div class="ds-scale__row"><code>MNudge</code><span data-token="--spacingHorizontalMNudge"></span><span class="ds-scale__bar" style="--size: var(--spacingHorizontalMNudge);"></span></div>
+        <div class="ds-scale__row"><code>M</code><span data-token="--spacingHorizontalM"></span><span class="ds-scale__bar" style="--size: var(--spacingHorizontalM);"></span></div>
+        <div class="ds-scale__row"><code>L</code><span data-token="--spacingHorizontalL"></span><span class="ds-scale__bar" style="--size: var(--spacingHorizontalL);"></span></div>
+        <div class="ds-scale__row"><code>XL</code><span data-token="--spacingHorizontalXL"></span><span class="ds-scale__bar" style="--size: var(--spacingHorizontalXL);"></span></div>
+        <div class="ds-scale__row"><code>XXL</code><span data-token="--spacingHorizontalXXL"></span><span class="ds-scale__bar" style="--size: var(--spacingHorizontalXXL);"></span></div>
+        <div class="ds-scale__row"><code>XXXL</code><span data-token="--spacingHorizontalXXXL"></span><span class="ds-scale__bar" style="--size: var(--spacingHorizontalXXXL);"></span></div>
+        <div class="ds-scale__row"><code>XXXXL</code><span data-token="--spacingHorizontalXXXXL"></span><span class="ds-scale__bar" style="--size: var(--spacingHorizontalXXXXL);"></span></div>
+        <div class="ds-scale__row"><code>XXXXXL</code><span data-token="--spacingHorizontalXXXXXL"></span><span class="ds-scale__bar" style="--size: var(--spacingHorizontalXXXXXL);"></span></div>
+        </div>
+      </div><div class="ds-example__caption"><span>The horizontal set; the vertical set has identical values (listed under <a href="#tokens">tokens</a>).</span></div></div>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Step</th><th scope="col">Value</th><th scope="col">Use</th></tr></thead>
+        <tbody>
+          <tr><td><code>None</code></td><td>0</td><td>Nothing</td></tr>
+          <tr><td><code>XXS</code></td><td>2px</td><td>Nudge: between menu items, nav items, rating stars</td></tr>
+          <tr><td><code>XS</code></td><td>4px</td><td>Icon to label, segment track inset</td></tr>
+          <tr><td><code>SNudge</code></td><td>6px</td><td>Nudge: field label to input, small-button and chip gaps, menu padding</td></tr>
+          <tr><td><code>S</code></td><td>8px</td><td>Between inline items, dialog footer buttons</td></tr>
+          <tr><td><code>MNudge</code></td><td>10px</td><td>Nudge: inside a card, chip padding, menu icon gap, well icon gap</td></tr>
+          <tr><td><code>M</code></td><td>12px</td><td>Compact padding: field and small-button sides, well top and bottom</td></tr>
+          <tr><td><code>L</code></td><td>16px</td><td>Default padding: cards, toasts, page margin on phones; gap between cards</td></tr>
+          <tr><td><code>XL</code></td><td>20px</td><td>Roomy card, dialog sheet on phones</td></tr>
+          <tr><td><code>XXL</code></td><td>24px</td><td>Dialog and auth card padding, gap between fields groups</td></tr>
+          <tr><td><code>XXXL</code></td><td>32px</td><td>Auth card from 720px, section gaps, day columns</td></tr>
+          <tr><td><code>XXXXL</code></td><td>40px</td><td>Hero padding, section spacing from 720px</td></tr>
+          <tr><td><code>XXXXXL</code></td><td>56px</td><td>Large hero padding, stacked hero gap</td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section class="ds-section" id="nudges"><h2><a href="#nudges">Nudges</a></h2>
+      <p>Three steps sit off the 4px grid: 2px (<code>XXS</code>), 6px (<code>SNudge</code>) and 10px (<code>MNudge</code>). They come from Fluent and exist for tight, small parts where 4 or 8px is visibly too little or too much. They are allowed <b>inside small components only</b>:</p>
+      <ul>
+        <li><b>2px</b>: between stacked menu items and nav links, between rating stars, the gap above a chip icon.</li>
+        <li><b>6px</b>: a field label to its input, a chip's icon to its label, menu panel padding, the inset of a photo label.</li>
+        <li><b>10px</b>: chip side padding, the gap inside a card (title, meta, chips), a menu item's icon gap and vertical padding, a well's icon gap.</li>
+      </ul>
+      <p>Never use a nudge between components, for page or section spacing, or to fix alignment: if something is 2px out, the component is wrong, not the spacing.</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas">
+          <div class="field" style="width: 100%; max-width: 20rem;"><label class="field__label" for="sp-what">What is it <span class="field__req">Required</span></label><input class="field__input" id="sp-what" type="text" value="Costco run"></div>
+          <div class="cluster"><span class="chip chip--sky"><svg class="icon" aria-hidden="true"><use href="#i-car"/></svg>45 min drive</span><span class="chip chip--indoor">Errand</span></div>
+        </div>
+        <div class="ds-example__caption"><span>6px label to input, 10px chip padding with a 4px icon gap, 8px between chips.</span></div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="inside-between"><h2><a href="#inside-between">Inside and between</a></h2>
+      <p>Space shows what belongs together. Space inside a component is always smaller than the space around it, so a card's title, meta and chips read as one thing and the next card reads as another.</p>
+      <ul>
+        <li><b>Inside a component</b>: 24px or less (<code>XXL</code>), usually 10 to 16px.</li>
+        <li><b>Between components in a stack</b>: 12 to 16px for related items (cards in a list, fields in a form), 24px between groups.</li>
+        <li><b>Between page sections</b>: <code>--layoutSpaceSection</code>, 32px on phones and 40px from 720px. Page bottom and landing bands use <code>--layoutSpacePage</code> (64px). Both are on <a href="layout.html#page-spacing">layout</a>.</li>
+        <li><b>Padding, not margins.</b> Containers own their padding and stacks own their gaps (<code>.stack</code>, <code>.cluster</code>, grid <code>gap</code>). Components do not set outer margins, so they can be placed anywhere.</li>
+      </ul>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--canvas">
+          <div class="stack" style="width: 100%; max-width: 26rem;">
+            <article class="card"><p class="card__title">Lavender fields at Terre Bleu</p><p class="card__meta">Saturday · 11:00 · 45 min drive</p><div class="card__chips"><span class="chip chip--leaf">Outdoor</span><span class="chip chip--sun">Sunny, 24°</span></div></article>
+            <article class="card"><p class="card__title">Lunch at La Marina</p><p class="card__meta">Saturday · 13:30 · 5 min drive</p><div class="card__chips"><span class="chip chip--primary">Kid friendly</span></div></article>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>10px between the parts of a card (<code>MNudge</code>), 16px padding inside it (<code>L</code>), 16px between cards (<code>.stack</code>).</span></div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="component-padding"><h2><a href="#component-padding">Padding by component size</a></h2>
+      <p>Padding grows with the size of the surface: controls are tight, cards are comfortable, dialogs and auth cards are roomy. These are the values in <code>components.css</code>; a new component picks the row closest to its size.</p>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Component</th><th scope="col">Padding</th><th scope="col">Tokens</th></tr></thead>
+        <tbody>
+          <tr><td>Button, small</td><td>0 12px, 32px tall</td><td><code>--spacingHorizontalM</code>, <code>--controlHeightSmall</code></td></tr>
+          <tr><td>Button, medium</td><td>0 16px, 40px tall</td><td><code>--spacingHorizontalL</code>, <code>--controlHeightMedium</code></td></tr>
+          <tr><td>Button, large</td><td>0 24px, 48px tall</td><td><code>--spacingHorizontalXXL</code>, <code>--controlHeightLarge</code></td></tr>
+          <tr><td>Field</td><td>0 12px, 44px tall; label 6px above</td><td><code>--spacingHorizontalM</code>, <code>--targetComfortable</code>, <code>--spacingVerticalSNudge</code></td></tr>
+          <tr><td>Chip</td><td>0 10px, 24px tall; icon gap 4px</td><td><code>--spacingHorizontalMNudge</code>, <code>--targetMin</code>, <code>--spacingHorizontalXS</code></td></tr>
+          <tr><td>Card</td><td>16px; 20px for <code>.card--pad-lg</code>; 10px between parts</td><td><code>--spacingHorizontalL</code>, <code>--spacingHorizontalXL</code>, <code>--spacingVerticalMNudge</code></td></tr>
+          <tr><td>Well and banner</td><td>12px × 16px; 10px icon gap</td><td><code>--spacingVerticalM</code>, <code>--spacingHorizontalL</code>, <code>--spacingHorizontalMNudge</code></td></tr>
+          <tr><td>Dialog</td><td>20px as a phone sheet, 24px as a modal from 720px; 16px between body parts</td><td><code>--spacingHorizontalXL</code>, <code>--spacingHorizontalXXL</code>, <code>--spacingVerticalL</code></td></tr>
+          <tr><td>Auth card</td><td>24px on phones, 32px from 720px; 16px between fields</td><td><code>--spacingVerticalXXL</code>, <code>--spacingVerticalXXXL</code>, <code>--spacingVerticalL</code></td></tr>
+          <tr><td>Menu</td><td>6px panel padding; items 10px × 12px at 44px tall, 2px apart</td><td><code>--spacingVerticalSNudge</code>, <code>--spacingVerticalMNudge</code>, <code>--spacingHorizontalM</code>, <code>--spacingVerticalXXS</code></td></tr>
+          <tr><td>Toast</td><td>16px leading, 8px elsewhere so the close button sits close to the edge; at least 52px tall</td><td><code>--spacingHorizontalL</code>, <code>--spacingHorizontalS</code></td></tr>
+          <tr><td>Empty state</td><td>32px × 24px; 12px between parts</td><td><code>--spacingVerticalXXXL</code>, <code>--spacingHorizontalXXL</code>, <code>--spacingVerticalM</code></td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section class="ds-section" id="control-heights"><h2><a href="#control-heights">Control heights</a></h2>
+      <p>Three control heights keep buttons, filter chips, segments and inputs on a shared rhythm. Medium is the default; fields and phone page actions use the 44px comfortable target instead (<code>--targetComfortable</code>, on <a href="accessibility.html">accessibility</a>).</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas">
+          <button class="btn btn--quiet btn--sm" type="button">Small · 32px</button>
+          <button class="btn btn--quiet" type="button">Medium · 40px</button>
+          <button class="btn btn--quiet btn--lg" type="button">Large · 48px</button>
+          <input class="field__input" type="text" aria-label="Field at 44px" value="Field · 44px" style="max-width: 10rem;">
+        </div>
+        <div class="ds-example__caption"><span>Small for rows, card footers and dialog close buttons; medium everywhere else; large for auth screens and the landing hero.</span></div>
+      </div>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Part</th><th scope="col">Token</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead>
+        <tbody>
+          <tr><td>Small: rows, card footers, filter chips, dialog close</td><td><code>--controlHeightSmall</code></td><td colspan="2"><span data-token="--controlHeightSmall"></span></td></tr>
+          <tr><td>Medium: the default button and nav link</td><td><code>--controlHeightMedium</code></td><td colspan="2"><span data-token="--controlHeightMedium"></span></td></tr>
+          <tr><td>Large: auth and hero actions</td><td><code>--controlHeightLarge</code></td><td colspan="2"><span data-token="--controlHeightLarge"></span></td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section class="ds-section" id="usage"><h2><a href="#usage">Usage</a></h2>
+      <ul>
+        <li><b>Only tokens.</b> No raw px or rem for padding, margin or gap in component CSS. If a value is missing, the design is off-grid, not the scale.</li>
+        <li><b>Smaller inside than between.</b> A component's inner spacing is always less than the gap that separates it from its neighbours.</li>
+        <li><b>Nudges stay small.</b> 2, 6 and 10px only inside small components (chips, menus, fields, cards), never between them.</li>
+        <li><b>Gaps over margins.</b> Lay out siblings with <code>gap</code> on the parent (<code>.stack</code>, <code>.cluster</code>, grids); a component never pushes its neighbours with an outer margin.</li>
+        <li><b>Horizontal for inline, vertical for block.</b> <code>padding: var(--spacingVerticalM) var(--spacingHorizontalL)</code> reads as "12 top and bottom, 16 left and right".</li>
+        <li><b>Optical exceptions are written down.</b> A dialog close button pulls itself 4px into the corner (<code>calc(-1 * var(--spacingVerticalXS))</code>); a locked or selected card trims 1px of padding to absorb its 2px border. Keep such corrections in the component and comment them.</li>
+      </ul>
+      <div class="ds-dodont">
+        <figure class="ds-do"><div class="ds-example__canvas"><div class="well" style="width: 100%;"><svg class="icon" aria-hidden="true"><use href="#i-info"/></svg><div><p class="well__title">Swim lessons are locked in</p><p class="well__body">Every Saturday at 9:00.</p></div></div></div><figcaption>Well padding 12 × 16px from the scale.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><div class="well" style="width: 100%; padding: 0.875rem 1.125rem;"><svg class="icon" aria-hidden="true"><use href="#i-info"/></svg><div><p class="well__title">Swim lessons are locked in</p><p class="well__body">Every Saturday at 9:00.</p></div></div></div><figcaption>The mock's 14px and 18px (D15). Snap to 12 and 16.</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
+      <ul>
+        <li><b>Target spacing (2.5.8).</b> Small 32px buttons and 24px chips keep at least 4px (<code>XS</code>) between neighbours and never sit in a tight cluster of more than one row, so each target keeps its own 24px circle.</li>
+        <li><b>Text spacing (1.4.12).</b> Text containers (cards, wells, banners, dialogs, rows) size by padding rather than fixed heights, so a reader who increases line, letter or word spacing gets taller boxes, not clipped text.</li>
+        <li><b>Zoom.</b> Spacing is in rem; at 200% text size every gap doubles with the text, so proportions hold.</li>
+        <li><b>Proximity is structure for sighted readers only.</b> Groups that space alone implies (a fieldset of related fields, the parts of a card) also get the matching markup: <code>fieldset</code> and <code>legend</code>, a heading, a list.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="tokens"><h2><a href="#tokens">Tokens</a></h2>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Part</th><th scope="col">Token</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead>
+        <tbody>
+          <tr><th scope="colgroup" colspan="4">Horizontal (inline)</th></tr>
+          <tr><td>Nothing</td><td><code>--spacingHorizontalNone</code></td><td colspan="2"><span data-token="--spacingHorizontalNone"></span></td></tr>
+          <tr><td>Nudge: between menu items, nav items, rating stars</td><td><code>--spacingHorizontalXXS</code></td><td colspan="2"><span data-token="--spacingHorizontalXXS"></span></td></tr>
+          <tr><td>Icon to label, segment track inset</td><td><code>--spacingHorizontalXS</code></td><td colspan="2"><span data-token="--spacingHorizontalXS"></span></td></tr>
+          <tr><td>Nudge: field label to input, small-button and chip gaps, menu padding</td><td><code>--spacingHorizontalSNudge</code></td><td colspan="2"><span data-token="--spacingHorizontalSNudge"></span></td></tr>
+          <tr><td>Between inline items, dialog footer buttons</td><td><code>--spacingHorizontalS</code></td><td colspan="2"><span data-token="--spacingHorizontalS"></span></td></tr>
+          <tr><td>Nudge: inside a card, chip padding, menu icon gap, well icon gap</td><td><code>--spacingHorizontalMNudge</code></td><td colspan="2"><span data-token="--spacingHorizontalMNudge"></span></td></tr>
+          <tr><td>Compact padding: field and small-button sides, well top and bottom</td><td><code>--spacingHorizontalM</code></td><td colspan="2"><span data-token="--spacingHorizontalM"></span></td></tr>
+          <tr><td>Default padding: cards, toasts, page margin on phones; gap between cards</td><td><code>--spacingHorizontalL</code></td><td colspan="2"><span data-token="--spacingHorizontalL"></span></td></tr>
+          <tr><td>Roomy card, dialog sheet on phones</td><td><code>--spacingHorizontalXL</code></td><td colspan="2"><span data-token="--spacingHorizontalXL"></span></td></tr>
+          <tr><td>Dialog and auth card padding, gap between fields groups</td><td><code>--spacingHorizontalXXL</code></td><td colspan="2"><span data-token="--spacingHorizontalXXL"></span></td></tr>
+          <tr><td>Auth card from 720px, section gaps, day columns</td><td><code>--spacingHorizontalXXXL</code></td><td colspan="2"><span data-token="--spacingHorizontalXXXL"></span></td></tr>
+          <tr><td>Hero padding, section spacing from 720px</td><td><code>--spacingHorizontalXXXXL</code></td><td colspan="2"><span data-token="--spacingHorizontalXXXXL"></span></td></tr>
+          <tr><td>Large hero padding, stacked hero gap</td><td><code>--spacingHorizontalXXXXXL</code></td><td colspan="2"><span data-token="--spacingHorizontalXXXXXL"></span></td></tr>
+          <tr><th scope="colgroup" colspan="4">Vertical (block)</th></tr>
+          <tr><td>Nothing</td><td><code>--spacingVerticalNone</code></td><td colspan="2"><span data-token="--spacingVerticalNone"></span></td></tr>
+          <tr><td>Nudge: between menu items, nav items, rating stars</td><td><code>--spacingVerticalXXS</code></td><td colspan="2"><span data-token="--spacingVerticalXXS"></span></td></tr>
+          <tr><td>Icon to label, segment track inset</td><td><code>--spacingVerticalXS</code></td><td colspan="2"><span data-token="--spacingVerticalXS"></span></td></tr>
+          <tr><td>Nudge: field label to input, small-button and chip gaps, menu padding</td><td><code>--spacingVerticalSNudge</code></td><td colspan="2"><span data-token="--spacingVerticalSNudge"></span></td></tr>
+          <tr><td>Between inline items, dialog footer buttons</td><td><code>--spacingVerticalS</code></td><td colspan="2"><span data-token="--spacingVerticalS"></span></td></tr>
+          <tr><td>Nudge: inside a card, chip padding, menu icon gap, well icon gap</td><td><code>--spacingVerticalMNudge</code></td><td colspan="2"><span data-token="--spacingVerticalMNudge"></span></td></tr>
+          <tr><td>Compact padding: field and small-button sides, well top and bottom</td><td><code>--spacingVerticalM</code></td><td colspan="2"><span data-token="--spacingVerticalM"></span></td></tr>
+          <tr><td>Default padding: cards, toasts, page margin on phones; gap between cards</td><td><code>--spacingVerticalL</code></td><td colspan="2"><span data-token="--spacingVerticalL"></span></td></tr>
+          <tr><td>Roomy card, dialog sheet on phones</td><td><code>--spacingVerticalXL</code></td><td colspan="2"><span data-token="--spacingVerticalXL"></span></td></tr>
+          <tr><td>Dialog and auth card padding, gap between fields groups</td><td><code>--spacingVerticalXXL</code></td><td colspan="2"><span data-token="--spacingVerticalXXL"></span></td></tr>
+          <tr><td>Auth card from 720px, section gaps, day columns</td><td><code>--spacingVerticalXXXL</code></td><td colspan="2"><span data-token="--spacingVerticalXXXL"></span></td></tr>
+          <tr><td>Hero padding, section spacing from 720px</td><td><code>--spacingVerticalXXXXL</code></td><td colspan="2"><span data-token="--spacingVerticalXXXXL"></span></td></tr>
+          <tr><td>Large hero padding, stacked hero gap</td><td><code>--spacingVerticalXXXXXL</code></td><td colspan="2"><span data-token="--spacingVerticalXXXXXL"></span></td></tr>
+          <tr><th scope="colgroup" colspan="4">Control heights</th></tr>
+          <tr><td>Small</td><td><code>--controlHeightSmall</code></td><td colspan="2"><span data-token="--controlHeightSmall"></span></td></tr>
+          <tr><td>Medium (default)</td><td><code>--controlHeightMedium</code></td><td colspan="2"><span data-token="--controlHeightMedium"></span></td></tr>
+          <tr><td>Large</td><td><code>--controlHeightLarge</code></td><td colspan="2"><span data-token="--controlHeightLarge"></span></td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section class="ds-section" id="sources"><h2><a href="#sources">Sources and drift</a></h2>
+      <p>Extracted from <a href="../../mocks/styles/tokens.css">styles/tokens.css</a> (<code>--sd-s-0</code> to <code>--sd-s-9</code>) and the padding, margin and gap values in <code>styles/app.css</code>, checked on <a href="../../mocks/pages/weekend.html">pages/weekend</a>, <a href="../../mocks/pages/dialogs.html">pages/dialogs</a>, <a href="../../mocks/pages/sign-in.html">pages/sign-in</a> and <a href="../../mocks/pages/family.html">pages/family</a>.</p>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Mock</th><th scope="col">System</th><th scope="col">Drift</th></tr></thead>
+        <tbody>
+          <tr><td><code>--sd-s-1</code> to <code>--sd-s-9</code>: 4, 8, 12, 16, 20, 24, 32, 40, 56px</td><td><code>XS</code>, <code>S</code>, <code>M</code>, <code>L</code>, <code>XL</code>, <code>XXL</code>, <code>XXXL</code>, <code>XXXXL</code>, <code>XXXXXL</code> in rem</td><td>Same values; rem (D24)</td></tr>
+          <tr><td>14px well and banner padding, dialog and auth-form gaps</td><td>12px (<code>M</code>) or 16px (<code>L</code>)</td><td>D15</td></tr>
+          <tr><td>18px auth-card gap</td><td>16px (<code>L</code>)</td><td>D15</td></tr>
+          <tr><td>22px large-button padding</td><td>24px (<code>XXL</code>)</td><td>D15</td></tr>
+          <tr><td>28px auth-card padding</td><td>24px on phones, 32px from 720px</td><td>D15</td></tr>
+          <tr><td>7px, 3px and 15px one-offs</td><td>Nearest step or nudge</td><td>D15</td></tr>
+          <tr><td>Hard-coded 32 / 40 / 48px control heights</td><td><code>--controlHeightSmall/Medium/Large</code></td><td>New tokens</td></tr>
+        </tbody>
+      </table></div>
+      <p>New in the system: the 2, 6 and 10px nudges (Fluent's <code>XXS</code>, <code>SNudge</code>, <code>MNudge</code>) and the split into horizontal and vertical sets.</p>
+    </section>
+
+    <footer class="ds-footer"><span>Saturdaze design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/icons.js"></script>
+<script src="../assets/ds.js"></script>
+</body>
+</html>

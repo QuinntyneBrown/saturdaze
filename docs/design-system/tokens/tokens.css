@@ -1,0 +1,786 @@
+/* ==========================================================================
+   Saturdaze design system: tokens (single source of truth for docs/design-system)
+
+   Names follow the Fluent UI v9 token model the product already uses (ADR-013):
+   custom-property names match frontend/projects/components/src/lib/styles/
+   _tokens.scss wherever the product has the token. Values are harvested from
+   docs/mocks; every value changed to pass WCAG 2.2 AA is in the README drift log.
+
+   Tiers
+     1. Global     --globalColor*            raw ramps; only alias tokens read them
+     2. Alias      --color*, --fontSize*, --spacing*, --borderRadius*, --shadow*,
+                   --duration*, --curve*, --zIndex*, --layout*, --typography*,
+                   --target*, --controlHeight*      role tokens; themes override these
+     3. Component  --sd-<component>-*        declared in assets/components.css
+
+   Themes: light is :root (and any [data-theme="light"] subtree). Dark applies on
+   [data-theme="dark"], or from prefers-color-scheme unless the page forced light.
+   The two dark blocks must stay identical: edit one, copy it into the other.
+   ========================================================================== */
+
+:root {
+
+  /* ---------- Global tier: colour ramps (50 lightest, 950 darkest) ------ */
+  --globalColorWhite: #ffffff;
+  --globalColorBlack: #000000;
+
+  --globalColorCoral50: #fdf4ef;
+  --globalColorCoral100: #fbe7de;   /* mock --sd-primary-soft */
+  --globalColorCoral200: #f6cbb9;
+  --globalColorCoral300: #f59c7c;
+  --globalColorCoral400: #e07856;   /* mock --sd-primary: decorative brand only */
+  --globalColorCoral500: #bf5130;   /* AA brand fill (white 4.74:1) */
+  --globalColorCoral600: #a04b2c;   /* mock --sd-primary-deep */
+  --globalColorCoral700: #8a3e22;
+  --globalColorCoral800: #5c2a19;
+  --globalColorCoral900: #43251a;
+  --globalColorCoral950: #2a160e;
+
+  --globalColorSlate300: #9ca3af;   /* mock --sd-ink-faint: disabled only */
+  --globalColorSlate400: #80868f;
+  --globalColorSlate500: #636a77;
+  --globalColorSlate600: #5b6270;
+  --globalColorSlate900: #1f2937;   /* mock --sd-ink */
+
+  --globalColorCream50: #faf7f2;    /* mock --sd-bg */
+  --globalColorCream100: #f3efe8;   /* mock --sd-surface-2 */
+  --globalColorCream200: #e9e3d9;
+
+  --globalColorUmber50: #f2ede6;
+  --globalColorUmber200: #cdc4b8;
+  --globalColorUmber300: #aea597;
+  --globalColorUmber400: #8f867b;
+  --globalColorUmber600: #6e665d;
+  --globalColorUmber700: #3d362f;
+  --globalColorUmber750: #342e28;
+  --globalColorUmber800: #2a2520;
+  --globalColorUmber850: #201c18;
+  --globalColorUmber900: #161310;
+
+  --globalColorForest100: #deede5;  /* mock --sd-accent-soft */
+  --globalColorForest300: #7cc4a0;
+  --globalColorForest500: #2d7d5f;  /* mock --sd-accent */
+  --globalColorForest600: #256b51;
+  --globalColorForest800: #2f5a45;
+  --globalColorForest900: #1a3629;
+  --globalColorForest950: #0c2219;
+
+  --globalColorLeaf100: #ddeeda;
+  --globalColorLeaf200: #a6d8a0;
+  --globalColorLeaf300: #a9c9a4;    /* mock --sd-leaf */
+  --globalColorLeaf900: #1f3522;
+
+  --globalColorSun100: #fbebc4;
+  --globalColorSun200: #f4cf7a;
+  --globalColorSun300: #f4c969;     /* mock --sd-sun */
+  --globalColorSun600: #b07f14;
+  --globalColorSun700: #8a6212;
+  --globalColorSun800: #6b5320;
+  --globalColorSun900: #3a2d14;
+  --globalColorSun950: #2a1f08;
+
+  --globalColorSky100: #dce9f1;
+  --globalColorSky200: #bfd9e8;     /* mock --sd-sky */
+  --globalColorSky300: #9ccbe4;
+  --globalColorSky700: #2c5f7a;
+  --globalColorSky800: #2e5266;
+  --globalColorSky900: #1b3140;
+  --globalColorSky950: #0e1d26;
+
+  --globalColorLavender100: #eadff4;
+  --globalColorLavender200: #c9b6e0; /* mock --sd-indoor */
+  --globalColorLavender300: #cdb8ee;
+  --globalColorLavender700: #5a3b82;
+  --globalColorLavender900: #2f2545;
+
+  --globalColorTerracotta100: #fadfd6; /* mock --sd-warn-soft */
+  --globalColorTerracotta200: #f2b9a8;
+  --globalColorTerracotta300: #ffa19b;
+  --globalColorTerracotta400: #ff8f8a;
+  --globalColorTerracotta500: #ae2b2b; /* AA danger fill (white 6.60:1), redder than the brand */
+  --globalColorTerracotta600: #8e1f1a;
+  --globalColorTerracotta700: #8f3d27; /* mock --sd-warn-deep */
+  --globalColorTerracotta800: #7a3626;
+  --globalColorTerracotta900: #44201a;
+  --globalColorTerracotta950: #2a0f09;
+
+
+  /* ---------- Typography ------------------------------------------------ */
+  --fontFamilyBase: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --fontFamilyMonospace: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --fontSizeBase200: 0.75rem;     /* 12px  captions, chips, hints */
+  --fontSizeBase300: 0.8125rem;   /* 13px  meta, small buttons */
+  --fontSizeBase350: 0.875rem;    /* 14px  control labels, nav links, menu items */
+  --fontSizeBase400: 0.9375rem;   /* 15px  body */
+  --fontSizeBase500: 1.0625rem;   /* 17px  card titles, brand, lede */
+  --fontSizeBase600: 1.25rem;     /* 20px  section and dialog titles (22px from 1024) */
+  --fontSizeHero700: 1.625rem;    /* 26px  page titles (24 under 380, 30 from 1024) */
+  --fontSizeHero800: 2.125rem;    /* 34px  stat figures (30 under 380, 40 from 1024) */
+  --fontSizeHero900: 2.75rem;     /* 44px  landing display (34 under 380, 56 from 1024) */
+
+  --fontWeightRegular: 400;
+  --fontWeightMedium: 500;
+  --fontWeightSemibold: 600;
+  --fontWeightBold: 700;
+
+  --lineHeightNone: 1;            /* single-line controls: buttons, chips */
+  --lineHeightTight: 1.2;         /* headings */
+  --lineHeightSnug: 1.35;         /* card, row and block titles */
+  --lineHeightNormal: 1.5;        /* body */
+  --lineHeightRelaxed: 1.65;      /* long-form prose (legal) */
+
+  --letterSpacingTight: -0.02em;  /* titles 20px and up */
+  --letterSpacingNormal: 0;
+  --letterSpacingWide: 0.06em;    /* uppercase eyebrows */
+  --letterSpacingWider: 0.12em;   /* uppercase overlines */
+
+  --typographyDisplay: var(--fontWeightBold) var(--fontSizeHero900) / var(--lineHeightTight) var(--fontFamilyBase);
+  --typographyLargeTitle: var(--fontWeightBold) var(--fontSizeHero800) / var(--lineHeightNone) var(--fontFamilyBase);
+  --typographyTitle1: var(--fontWeightBold) var(--fontSizeHero700) / var(--lineHeightTight) var(--fontFamilyBase);
+  --typographyTitle2: var(--fontWeightBold) var(--fontSizeBase600) / var(--lineHeightTight) var(--fontFamilyBase);
+  --typographyTitle3: var(--fontWeightSemibold) var(--fontSizeBase500) / var(--lineHeightSnug) var(--fontFamilyBase);
+  --typographySubtitle1: var(--fontWeightSemibold) var(--fontSizeBase400) / var(--lineHeightSnug) var(--fontFamilyBase);
+  --typographyBody1: var(--fontWeightRegular) var(--fontSizeBase400) / var(--lineHeightNormal) var(--fontFamilyBase);
+  --typographyBody1Strong: var(--fontWeightSemibold) var(--fontSizeBase400) / var(--lineHeightNormal) var(--fontFamilyBase);
+  --typographyBody2: var(--fontWeightRegular) var(--fontSizeBase300) / var(--lineHeightNormal) var(--fontFamilyBase);
+  --typographyLabel: var(--fontWeightSemibold) var(--fontSizeBase350) / var(--lineHeightNone) var(--fontFamilyBase);
+  --typographyCaption1: var(--fontWeightRegular) var(--fontSizeBase200) / var(--lineHeightNormal) var(--fontFamilyBase);
+  --typographyCaption1Strong: var(--fontWeightSemibold) var(--fontSizeBase200) / var(--lineHeightNormal) var(--fontFamilyBase);
+  --typographyCode: var(--fontWeightRegular) var(--fontSizeBase300) / var(--lineHeightNormal) var(--fontFamilyMonospace);
+
+  /* ---------- Spacing (4px grid; Fluent's 2/6/10 nudges kept for tight UI) */
+  --spacingHorizontalNone: 0;
+  --spacingHorizontalXXS: 0.125rem;    /* 2px  */
+  --spacingHorizontalXS: 0.25rem;      /* 4px  icon to label */
+  --spacingHorizontalSNudge: 0.375rem; /* 6px  small-button and chip gaps */
+  --spacingHorizontalS: 0.5rem;        /* 8px  between inline items */
+  --spacingHorizontalMNudge: 0.625rem; /* 10px chip padding, menu icon gap */
+  --spacingHorizontalM: 0.75rem;       /* 12px compact padding */
+  --spacingHorizontalL: 1rem;          /* 16px default padding */
+  --spacingHorizontalXL: 1.25rem;      /* 20px */
+  --spacingHorizontalXXL: 1.5rem;      /* 24px dialog and auth padding */
+  --spacingHorizontalXXXL: 2rem;       /* 32px */
+  --spacingHorizontalXXXXL: 2.5rem;    /* 40px */
+  --spacingHorizontalXXXXXL: 3.5rem;   /* 56px */
+  --spacingVerticalNone: 0;
+  --spacingVerticalXXS: 0.125rem;
+  --spacingVerticalXS: 0.25rem;
+  --spacingVerticalSNudge: 0.375rem;
+  --spacingVerticalS: 0.5rem;
+  --spacingVerticalMNudge: 0.625rem;
+  --spacingVerticalM: 0.75rem;
+  --spacingVerticalL: 1rem;
+  --spacingVerticalXL: 1.25rem;
+  --spacingVerticalXXL: 1.5rem;
+  --spacingVerticalXXXL: 2rem;
+  --spacingVerticalXXXXL: 2.5rem;
+  --spacingVerticalXXXXXL: 3.5rem;
+
+  /* ---------- Layout ----------------------------------------------------- */
+  --layoutBreakpointSm: 23.75rem;   /* 380px  small phones end */
+  --layoutBreakpointMd: 36rem;      /* 576px  label beside value, 3-up photo picks */
+  --layoutBreakpointLg: 45rem;      /* 720px  top bar replaces bottom nav; dialogs centre */
+  --layoutBreakpointXl: 64rem;      /* 1024px day beside map; admin side navigation */
+  --layoutColumns: 4;
+  --layoutGutter: 1rem;             /* 16 / 24 / 32 */
+  --layoutMargin: var(--layoutGutter); /* container padding equals the gutter */
+  --layoutContentMaxWidth: 70rem;   /* 1120px */
+  --layoutStackMaxWidth: 45rem;     /* 720px  single-column screens */
+  --layoutProseMaxWidth: 42.5rem;   /* 680px  legal */
+  --layoutNarrowMaxWidth: 27.5rem;  /* 440px  auth column, bottom nav */
+  --layoutDialogWidth: 30rem;       /* 480px */
+  --layoutDialogWidthWide: 32.5rem; /* 520px */
+  --layoutMeasure: 60ch;
+  --layoutSidebarWidth: 15rem;      /* 240px  admin side navigation */
+  --layoutTopBarHeight: 4rem;       /* 64px */
+  --layoutBottomNavHeight: 3.75rem; /* 60px */
+  --layoutSpaceSection: 2rem;       /* 32 / 40 between page sections */
+  --layoutSpacePage: 4rem;          /* 64px page bottom, landing bands */
+  --layoutSpacePageLarge: 5rem;     /* 80px before the site footer */
+
+  /* ---------- Shape ------------------------------------------------------ */
+  --borderRadiusNone: 0;
+  --borderRadiusSmall: 0.5rem;      /* 8px  thumbnails, focus box of text links */
+  --borderRadiusMedium: 0.75rem;    /* 12px inputs, wells, menu items */
+  --borderRadiusLarge: 1rem;        /* 16px cards, lists, maps */
+  --borderRadiusXLarge: 1.375rem;   /* 22px dialogs, auth card, empty state */
+  --borderRadiusCircular: 999px;    /* buttons, chips, avatars, discs */
+  --strokeWidthThin: 1px;
+  --strokeWidthThick: 2px;
+  --strokeWidthThicker: 3px;
+
+  /* ---------- Motion ----------------------------------------------------- */
+  --durationFast: 120ms;            /* hover, colour, press */
+  --durationNormal: 220ms;          /* reveals, dialog rise, switch, scrolled bar */
+  --durationSpin: 900ms;            /* one spinner turn */
+  --durationShimmer: 1400ms;        /* one skeleton sweep */
+  --curveEasyEase: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --curveLinear: linear;
+
+  /* ---------- Z-order ---------------------------------------------------- */
+  --zIndexBase: 0;
+  --zIndexRaised: 1;                /* timeline disc above its rail */
+  --zIndexSticky: 5;                /* day header */
+  --zIndexTopBar: 20;
+  --zIndexBottomNav: 30;
+  --zIndexDialog: 40;
+  --zIndexPopover: 50;              /* menus may open from inside a dialog */
+  --zIndexToast: 60;
+  --zIndexTooltip: 70;
+
+  /* ---------- Interaction ------------------------------------------------ */
+  --targetMin: 1.5rem;              /* 24px WCAG 2.5.8 minimum */
+  --targetComfortable: 2.75rem;     /* 44px fields, phone page actions, dialog buttons */
+  --controlHeightSmall: 2rem;       /* 32px */
+  --controlHeightMedium: 2.5rem;    /* 40px */
+  --controlHeightLarge: 3rem;       /* 48px */
+  --focusRingOffset: 2px;
+
+  /* ---------- Alias colour (light) ------------------------------------- */
+
+  /* ---------- Neutral backgrounds ----------------------------------------- */
+  --colorNeutralBackground1: var(--globalColorWhite); /* cards, inputs, panels */
+  --colorNeutralBackground2: var(--globalColorCream50); /* page canvas */
+  --colorNeutralBackground3: var(--globalColorCream100); /* wells, chips, segment tracks */
+  --colorNeutralBackgroundRaised: var(--globalColorWhite); /* dialogs, menus, bottom nav */
+  --colorNeutralBackgroundInverted: var(--globalColorSlate900); /* pressed filter chip, tooltip */
+  --colorNeutralBackgroundAlpha: rgba(255, 255, 255, 0.92); /* button floating on a photo */
+  --colorSubtleBackgroundHover: var(--globalColorCream100); /* ghost button, menu item, row hover */
+  --colorSubtleBackgroundPressed: var(--globalColorCream200); /* ghost button, menu item pressed */
+  --colorNeutralStencil1: var(--globalColorCream100); /* skeleton base */
+  --colorNeutralStencil2Alpha: rgba(255, 255, 255, 0.6); /* skeleton shimmer */
+  --colorBackgroundOverlay: rgba(31, 41, 55, 0.4); /* dialog scrim */
+  --colorBackgroundOverlayStrong: rgba(31, 41, 55, 0.72); /* label pill or gradient over a photo */
+
+  /* ---------- Neutral foregrounds ----------------------------------------- */
+  --colorNeutralForeground1: var(--globalColorSlate900); /* body text, titles */
+  --colorNeutralForeground2: var(--globalColorSlate600); /* secondary text, meta */
+  --colorNeutralForeground3: var(--globalColorSlate500); /* placeholders, hints, durations */
+  --colorNeutralForegroundDisabled: var(--globalColorSlate300); /* disabled text (exempt from 1.4.3) */
+  --colorNeutralForegroundInverted: var(--globalColorWhite); /* text on the inverted background */
+  --colorNeutralForegroundOnBrand: var(--globalColorWhite); /* label on the brand fill */
+  --colorNeutralForegroundStaticInverted: var(--globalColorWhite); /* text over photos in either theme */
+
+  /* ---------- Brand ------------------------------------------------------- */
+  --colorBrandBackground: var(--globalColorCoral500); /* primary button fill */
+  --colorBrandBackgroundHover: var(--globalColorCoral600);
+  --colorBrandBackgroundPressed: var(--globalColorCoral700);
+  --colorBrandBackground2: var(--globalColorCoral100); /* brand tint: current nav icon, date tile */
+  --colorBrandBackground2Hover: var(--globalColorCoral200);
+  --colorBrandBackgroundStatic: var(--globalColorCoral400); /* brand mark; decorative, never behind text */
+  --colorBrandForeground1: var(--globalColorCoral600); /* brand text, text buttons, current icon */
+  --colorBrandForeground2: var(--globalColorCoral700); /* brand text hover */
+  --colorBrandForegroundLink: var(--globalColorCoral600); /* links */
+  --colorBrandForegroundLinkHover: var(--globalColorCoral700);
+  --colorBrandStroke1: var(--globalColorCoral500); /* current-page underline, selected edge */
+  --colorBrandStroke2: var(--globalColorCoral100); /* focus halo around a field */
+
+  /* ---------- Strokes and focus ------------------------------------------- */
+  --colorNeutralStroke1: rgba(31, 41, 55, 0.16); /* decorative edges: quiet button, dashed add row */
+  --colorNeutralStroke2: rgba(31, 41, 55, 0.08); /* dividers, card edges (decorative) */
+  --colorNeutralStrokeAccessible: var(--globalColorSlate400); /* input borders, switch track (1.4.11) */
+  --colorStrokeFocus1: var(--globalColorWhite); /* inner focus gap */
+  --colorStrokeFocus2: var(--globalColorCoral600); /* focus ring */
+
+  /* ---------- Status: info ------------------------------------------------ */
+  --colorStatusInfoBackground1: var(--globalColorSky100);
+  --colorStatusInfoForeground1: var(--globalColorSky700);
+  --colorStatusInfoForeground3: var(--globalColorSky700);
+  --colorStatusInfoBorder1: var(--globalColorSky200);
+  --colorStatusInfoBackground3: var(--globalColorSky700);
+  --colorStatusInfoForegroundInverted: var(--globalColorWhite);
+
+  /* ---------- Status: success --------------------------------------------- */
+  --colorStatusSuccessBackground1: var(--globalColorForest100);
+  --colorStatusSuccessForeground1: var(--globalColorForest600);
+  --colorStatusSuccessForeground3: var(--globalColorForest500);
+  --colorStatusSuccessBorder1: var(--globalColorLeaf300);
+  --colorStatusSuccessBackground3: var(--globalColorForest500);
+  --colorStatusSuccessForegroundInverted: var(--globalColorWhite);
+
+  /* ---------- Status: warning --------------------------------------------- */
+  --colorStatusWarningBackground1: var(--globalColorSun100);
+  --colorStatusWarningForeground1: var(--globalColorSun700);
+  --colorStatusWarningForeground3: var(--globalColorSun700);
+  --colorStatusWarningBorder1: var(--globalColorSun300);
+  --colorStatusWarningBackground3: var(--globalColorSun700);
+  --colorStatusWarningForegroundInverted: var(--globalColorWhite);
+
+  /* ---------- Status: danger ---------------------------------------------- */
+  --colorStatusDangerBackground1: var(--globalColorTerracotta100);
+  --colorStatusDangerForeground1: var(--globalColorTerracotta700);
+  --colorStatusDangerForeground3: var(--globalColorTerracotta500);
+  --colorStatusDangerBorder1: var(--globalColorTerracotta200);
+  --colorStatusDangerBackground3: var(--globalColorTerracotta500);
+  --colorStatusDangerForegroundInverted: var(--globalColorWhite);
+  --colorStatusDangerBackground3Hover: var(--globalColorTerracotta600); /* danger button hover */
+
+  /* ---------- Palette: sun ------------------------------------------------ */
+  --colorPaletteSunBackground1: var(--globalColorSun100);
+  --colorPaletteSunBackground3: var(--globalColorSun300);
+  --colorPaletteSunForeground1: var(--globalColorSun700);
+  --colorPaletteSunForeground3: var(--globalColorSun600);
+  --colorPaletteSunBorderActive: var(--globalColorSun300);
+
+  /* ---------- Palette: sky ------------------------------------------------ */
+  --colorPaletteSkyBackground1: var(--globalColorSky100);
+  --colorPaletteSkyBackground3: var(--globalColorSky200);
+  --colorPaletteSkyForeground1: var(--globalColorSky700);
+  --colorPaletteSkyForeground3: var(--globalColorSky700);
+  --colorPaletteSkyBorderActive: var(--globalColorSky200);
+
+  /* ---------- Palette: leaf ----------------------------------------------- */
+  --colorPaletteLeafBackground1: var(--globalColorLeaf100);
+  --colorPaletteLeafBackground3: var(--globalColorLeaf300);
+  --colorPaletteLeafForeground1: var(--globalColorForest600);
+  --colorPaletteLeafForeground3: var(--globalColorForest600);
+  --colorPaletteLeafBorderActive: var(--globalColorLeaf300);
+
+  /* ---------- Palette: indoor --------------------------------------------- */
+  --colorPaletteIndoorBackground1: var(--globalColorLavender100);
+  --colorPaletteIndoorBackground3: var(--globalColorLavender200);
+  --colorPaletteIndoorForeground1: var(--globalColorLavender700);
+  --colorPaletteIndoorForeground3: var(--globalColorLavender700);
+  --colorPaletteIndoorBorderActive: var(--globalColorLavender200);
+
+  /* ---------- Gradients and shadow colours -------------------------------- */
+  --colorBrandBackgroundGradient: radial-gradient(80% 60% at 0% 0%, var(--globalColorCoral100) 0%, transparent 60%), radial-gradient(80% 60% at 100% 0%, var(--globalColorSun100) 0%, transparent 60%); /* warm wash behind hero and first-run empty state */
+  --colorNeutralShadowAmbient: rgba(31, 41, 55, 0.04);
+  --colorNeutralShadowKey: rgba(31, 41, 55, 0.06);
+  --colorNeutralShadowKeyDarker: rgba(31, 41, 55, 0.12);
+
+  /* ---------- Elevation (re-declared per theme so each theme resolves its own shadow colours) ---- */
+  --shadow2: 0 1px 0 var(--colorNeutralStroke2);
+  --shadow4: 0 1px 2px var(--colorNeutralShadowAmbient), 0 2px 6px var(--colorNeutralShadowAmbient);
+  --shadow16: 0 4px 10px var(--colorNeutralShadowKey), 0 10px 24px var(--colorNeutralShadowKey);
+  --shadow28: 0 20px 40px var(--colorNeutralShadowKeyDarker);
+  --shadowFocusRing: 0 0 0 var(--strokeWidthThick) var(--colorStrokeFocus1), 0 0 0 4px var(--colorStrokeFocus2);
+
+  color-scheme: light;
+}
+
+/* A light subtree inside a dark page (side-by-side theme panels). */
+[data-theme="light"] {
+  /* ---------- Neutral backgrounds ----------------------------------------- */
+  --colorNeutralBackground1: var(--globalColorWhite); /* cards, inputs, panels */
+  --colorNeutralBackground2: var(--globalColorCream50); /* page canvas */
+  --colorNeutralBackground3: var(--globalColorCream100); /* wells, chips, segment tracks */
+  --colorNeutralBackgroundRaised: var(--globalColorWhite); /* dialogs, menus, bottom nav */
+  --colorNeutralBackgroundInverted: var(--globalColorSlate900); /* pressed filter chip, tooltip */
+  --colorNeutralBackgroundAlpha: rgba(255, 255, 255, 0.92); /* button floating on a photo */
+  --colorSubtleBackgroundHover: var(--globalColorCream100); /* ghost button, menu item, row hover */
+  --colorSubtleBackgroundPressed: var(--globalColorCream200); /* ghost button, menu item pressed */
+  --colorNeutralStencil1: var(--globalColorCream100); /* skeleton base */
+  --colorNeutralStencil2Alpha: rgba(255, 255, 255, 0.6); /* skeleton shimmer */
+  --colorBackgroundOverlay: rgba(31, 41, 55, 0.4); /* dialog scrim */
+  --colorBackgroundOverlayStrong: rgba(31, 41, 55, 0.72); /* label pill or gradient over a photo */
+
+  /* ---------- Neutral foregrounds ----------------------------------------- */
+  --colorNeutralForeground1: var(--globalColorSlate900); /* body text, titles */
+  --colorNeutralForeground2: var(--globalColorSlate600); /* secondary text, meta */
+  --colorNeutralForeground3: var(--globalColorSlate500); /* placeholders, hints, durations */
+  --colorNeutralForegroundDisabled: var(--globalColorSlate300); /* disabled text (exempt from 1.4.3) */
+  --colorNeutralForegroundInverted: var(--globalColorWhite); /* text on the inverted background */
+  --colorNeutralForegroundOnBrand: var(--globalColorWhite); /* label on the brand fill */
+  --colorNeutralForegroundStaticInverted: var(--globalColorWhite); /* text over photos in either theme */
+
+  /* ---------- Brand ------------------------------------------------------- */
+  --colorBrandBackground: var(--globalColorCoral500); /* primary button fill */
+  --colorBrandBackgroundHover: var(--globalColorCoral600);
+  --colorBrandBackgroundPressed: var(--globalColorCoral700);
+  --colorBrandBackground2: var(--globalColorCoral100); /* brand tint: current nav icon, date tile */
+  --colorBrandBackground2Hover: var(--globalColorCoral200);
+  --colorBrandBackgroundStatic: var(--globalColorCoral400); /* brand mark; decorative, never behind text */
+  --colorBrandForeground1: var(--globalColorCoral600); /* brand text, text buttons, current icon */
+  --colorBrandForeground2: var(--globalColorCoral700); /* brand text hover */
+  --colorBrandForegroundLink: var(--globalColorCoral600); /* links */
+  --colorBrandForegroundLinkHover: var(--globalColorCoral700);
+  --colorBrandStroke1: var(--globalColorCoral500); /* current-page underline, selected edge */
+  --colorBrandStroke2: var(--globalColorCoral100); /* focus halo around a field */
+
+  /* ---------- Strokes and focus ------------------------------------------- */
+  --colorNeutralStroke1: rgba(31, 41, 55, 0.16); /* decorative edges: quiet button, dashed add row */
+  --colorNeutralStroke2: rgba(31, 41, 55, 0.08); /* dividers, card edges (decorative) */
+  --colorNeutralStrokeAccessible: var(--globalColorSlate400); /* input borders, switch track (1.4.11) */
+  --colorStrokeFocus1: var(--globalColorWhite); /* inner focus gap */
+  --colorStrokeFocus2: var(--globalColorCoral600); /* focus ring */
+
+  /* ---------- Status: info ------------------------------------------------ */
+  --colorStatusInfoBackground1: var(--globalColorSky100);
+  --colorStatusInfoForeground1: var(--globalColorSky700);
+  --colorStatusInfoForeground3: var(--globalColorSky700);
+  --colorStatusInfoBorder1: var(--globalColorSky200);
+  --colorStatusInfoBackground3: var(--globalColorSky700);
+  --colorStatusInfoForegroundInverted: var(--globalColorWhite);
+
+  /* ---------- Status: success --------------------------------------------- */
+  --colorStatusSuccessBackground1: var(--globalColorForest100);
+  --colorStatusSuccessForeground1: var(--globalColorForest600);
+  --colorStatusSuccessForeground3: var(--globalColorForest500);
+  --colorStatusSuccessBorder1: var(--globalColorLeaf300);
+  --colorStatusSuccessBackground3: var(--globalColorForest500);
+  --colorStatusSuccessForegroundInverted: var(--globalColorWhite);
+
+  /* ---------- Status: warning --------------------------------------------- */
+  --colorStatusWarningBackground1: var(--globalColorSun100);
+  --colorStatusWarningForeground1: var(--globalColorSun700);
+  --colorStatusWarningForeground3: var(--globalColorSun700);
+  --colorStatusWarningBorder1: var(--globalColorSun300);
+  --colorStatusWarningBackground3: var(--globalColorSun700);
+  --colorStatusWarningForegroundInverted: var(--globalColorWhite);
+
+  /* ---------- Status: danger ---------------------------------------------- */
+  --colorStatusDangerBackground1: var(--globalColorTerracotta100);
+  --colorStatusDangerForeground1: var(--globalColorTerracotta700);
+  --colorStatusDangerForeground3: var(--globalColorTerracotta500);
+  --colorStatusDangerBorder1: var(--globalColorTerracotta200);
+  --colorStatusDangerBackground3: var(--globalColorTerracotta500);
+  --colorStatusDangerForegroundInverted: var(--globalColorWhite);
+  --colorStatusDangerBackground3Hover: var(--globalColorTerracotta600); /* danger button hover */
+
+  /* ---------- Palette: sun ------------------------------------------------ */
+  --colorPaletteSunBackground1: var(--globalColorSun100);
+  --colorPaletteSunBackground3: var(--globalColorSun300);
+  --colorPaletteSunForeground1: var(--globalColorSun700);
+  --colorPaletteSunForeground3: var(--globalColorSun600);
+  --colorPaletteSunBorderActive: var(--globalColorSun300);
+
+  /* ---------- Palette: sky ------------------------------------------------ */
+  --colorPaletteSkyBackground1: var(--globalColorSky100);
+  --colorPaletteSkyBackground3: var(--globalColorSky200);
+  --colorPaletteSkyForeground1: var(--globalColorSky700);
+  --colorPaletteSkyForeground3: var(--globalColorSky700);
+  --colorPaletteSkyBorderActive: var(--globalColorSky200);
+
+  /* ---------- Palette: leaf ----------------------------------------------- */
+  --colorPaletteLeafBackground1: var(--globalColorLeaf100);
+  --colorPaletteLeafBackground3: var(--globalColorLeaf300);
+  --colorPaletteLeafForeground1: var(--globalColorForest600);
+  --colorPaletteLeafForeground3: var(--globalColorForest600);
+  --colorPaletteLeafBorderActive: var(--globalColorLeaf300);
+
+  /* ---------- Palette: indoor --------------------------------------------- */
+  --colorPaletteIndoorBackground1: var(--globalColorLavender100);
+  --colorPaletteIndoorBackground3: var(--globalColorLavender200);
+  --colorPaletteIndoorForeground1: var(--globalColorLavender700);
+  --colorPaletteIndoorForeground3: var(--globalColorLavender700);
+  --colorPaletteIndoorBorderActive: var(--globalColorLavender200);
+
+  /* ---------- Gradients and shadow colours -------------------------------- */
+  --colorBrandBackgroundGradient: radial-gradient(80% 60% at 0% 0%, var(--globalColorCoral100) 0%, transparent 60%), radial-gradient(80% 60% at 100% 0%, var(--globalColorSun100) 0%, transparent 60%); /* warm wash behind hero and first-run empty state */
+  --colorNeutralShadowAmbient: rgba(31, 41, 55, 0.04);
+  --colorNeutralShadowKey: rgba(31, 41, 55, 0.06);
+  --colorNeutralShadowKeyDarker: rgba(31, 41, 55, 0.12);
+
+  /* ---------- Elevation (re-declared per theme so each theme resolves its own shadow colours) ---- */
+  --shadow2: 0 1px 0 var(--colorNeutralStroke2);
+  --shadow4: 0 1px 2px var(--colorNeutralShadowAmbient), 0 2px 6px var(--colorNeutralShadowAmbient);
+  --shadow16: 0 4px 10px var(--colorNeutralShadowKey), 0 10px 24px var(--colorNeutralShadowKey);
+  --shadow28: 0 20px 40px var(--colorNeutralShadowKeyDarker);
+  --shadowFocusRing: 0 0 0 var(--strokeWidthThick) var(--colorStrokeFocus1), 0 0 0 4px var(--colorStrokeFocus2);
+  color-scheme: light;
+}
+
+/* Responsive retunes: columns and gutters grow; display type scales at the ends. */
+@media (max-width: 23.6875rem) {
+  :root {
+    --fontSizeHero700: 1.5rem;
+    --fontSizeHero800: 1.875rem;
+    --fontSizeHero900: 2.125rem;
+  }
+}
+
+@media (min-width: 45rem) {
+  :root {
+    --layoutColumns: 8;
+    --layoutGutter: 1.5rem;
+    --layoutSpaceSection: 2.5rem;
+  }
+}
+
+@media (min-width: 64rem) {
+  :root {
+    --layoutColumns: 12;
+    --layoutGutter: 2rem;
+    --fontSizeBase600: 1.375rem;
+    --fontSizeHero700: 1.875rem;
+    --fontSizeHero800: 2.5rem;
+    --fontSizeHero900: 3.5rem;
+  }
+}
+
+/* ---------- Dark theme ----------------------------------------------------- */
+[data-theme="dark"] {
+  /* ---------- Neutral backgrounds ----------------------------------------- */
+  --colorNeutralBackground1: var(--globalColorUmber850);
+  --colorNeutralBackground2: var(--globalColorUmber900);
+  --colorNeutralBackground3: var(--globalColorUmber750);
+  --colorNeutralBackgroundRaised: var(--globalColorUmber800);
+  --colorNeutralBackgroundInverted: var(--globalColorUmber50);
+  --colorNeutralBackgroundAlpha: rgba(32, 28, 24, 0.9);
+  --colorSubtleBackgroundHover: var(--globalColorUmber750);
+  --colorSubtleBackgroundPressed: var(--globalColorUmber700);
+  --colorNeutralStencil1: var(--globalColorUmber750);
+  --colorNeutralStencil2Alpha: rgba(255, 255, 255, 0.06);
+  --colorBackgroundOverlay: rgba(0, 0, 0, 0.6);
+  --colorBackgroundOverlayStrong: rgba(0, 0, 0, 0.72);
+
+  /* ---------- Neutral foregrounds ----------------------------------------- */
+  --colorNeutralForeground1: var(--globalColorUmber50);
+  --colorNeutralForeground2: var(--globalColorUmber200);
+  --colorNeutralForeground3: var(--globalColorUmber300);
+  --colorNeutralForegroundDisabled: var(--globalColorUmber600);
+  --colorNeutralForegroundInverted: var(--globalColorUmber850);
+  --colorNeutralForegroundOnBrand: var(--globalColorCoral950);
+  --colorNeutralForegroundStaticInverted: var(--globalColorWhite);
+
+  /* ---------- Brand ------------------------------------------------------- */
+  --colorBrandBackground: var(--globalColorCoral300);
+  --colorBrandBackgroundHover: var(--globalColorCoral200);
+  --colorBrandBackgroundPressed: var(--globalColorCoral100);
+  --colorBrandBackground2: var(--globalColorCoral900);
+  --colorBrandBackground2Hover: var(--globalColorCoral800);
+  --colorBrandBackgroundStatic: var(--globalColorCoral400);
+  --colorBrandForeground1: var(--globalColorCoral300);
+  --colorBrandForeground2: var(--globalColorCoral200);
+  --colorBrandForegroundLink: var(--globalColorCoral300);
+  --colorBrandForegroundLinkHover: var(--globalColorCoral200);
+  --colorBrandStroke1: var(--globalColorCoral300);
+  --colorBrandStroke2: var(--globalColorCoral900);
+
+  /* ---------- Strokes and focus ------------------------------------------- */
+  --colorNeutralStroke1: rgba(242, 237, 230, 0.18);
+  --colorNeutralStroke2: rgba(242, 237, 230, 0.1);
+  --colorNeutralStrokeAccessible: var(--globalColorUmber400);
+  --colorStrokeFocus1: var(--globalColorUmber900);
+  --colorStrokeFocus2: var(--globalColorCoral300);
+
+  /* ---------- Status: info ------------------------------------------------ */
+  --colorStatusInfoBackground1: var(--globalColorSky900);
+  --colorStatusInfoForeground1: var(--globalColorSky300);
+  --colorStatusInfoForeground3: var(--globalColorSky300);
+  --colorStatusInfoBorder1: var(--globalColorSky800);
+  --colorStatusInfoBackground3: var(--globalColorSky300);
+  --colorStatusInfoForegroundInverted: var(--globalColorSky950);
+
+  /* ---------- Status: success --------------------------------------------- */
+  --colorStatusSuccessBackground1: var(--globalColorForest900);
+  --colorStatusSuccessForeground1: var(--globalColorForest300);
+  --colorStatusSuccessForeground3: var(--globalColorForest300);
+  --colorStatusSuccessBorder1: var(--globalColorForest800);
+  --colorStatusSuccessBackground3: var(--globalColorForest300);
+  --colorStatusSuccessForegroundInverted: var(--globalColorForest950);
+
+  /* ---------- Status: warning --------------------------------------------- */
+  --colorStatusWarningBackground1: var(--globalColorSun900);
+  --colorStatusWarningForeground1: var(--globalColorSun200);
+  --colorStatusWarningForeground3: var(--globalColorSun200);
+  --colorStatusWarningBorder1: var(--globalColorSun800);
+  --colorStatusWarningBackground3: var(--globalColorSun300);
+  --colorStatusWarningForegroundInverted: var(--globalColorSun950);
+
+  /* ---------- Status: danger ---------------------------------------------- */
+  --colorStatusDangerBackground1: var(--globalColorTerracotta900);
+  --colorStatusDangerForeground1: var(--globalColorTerracotta300);
+  --colorStatusDangerForeground3: var(--globalColorTerracotta300);
+  --colorStatusDangerBorder1: var(--globalColorTerracotta800);
+  --colorStatusDangerBackground3: var(--globalColorTerracotta400);
+  --colorStatusDangerForegroundInverted: var(--globalColorTerracotta950);
+  --colorStatusDangerBackground3Hover: var(--globalColorTerracotta300);
+
+  /* ---------- Palette: sun ------------------------------------------------ */
+  --colorPaletteSunBackground1: var(--globalColorSun900);
+  --colorPaletteSunBackground3: var(--globalColorSun300);
+  --colorPaletteSunForeground1: var(--globalColorSun200);
+  --colorPaletteSunForeground3: var(--globalColorSun300);
+  --colorPaletteSunBorderActive: var(--globalColorSun300);
+
+  /* ---------- Palette: sky ------------------------------------------------ */
+  --colorPaletteSkyBackground1: var(--globalColorSky900);
+  --colorPaletteSkyBackground3: var(--globalColorSky300);
+  --colorPaletteSkyForeground1: var(--globalColorSky300);
+  --colorPaletteSkyForeground3: var(--globalColorSky300);
+  --colorPaletteSkyBorderActive: var(--globalColorSky300);
+
+  /* ---------- Palette: leaf ----------------------------------------------- */
+  --colorPaletteLeafBackground1: var(--globalColorLeaf900);
+  --colorPaletteLeafBackground3: var(--globalColorLeaf200);
+  --colorPaletteLeafForeground1: var(--globalColorLeaf200);
+  --colorPaletteLeafForeground3: var(--globalColorLeaf200);
+  --colorPaletteLeafBorderActive: var(--globalColorLeaf200);
+
+  /* ---------- Palette: indoor --------------------------------------------- */
+  --colorPaletteIndoorBackground1: var(--globalColorLavender900);
+  --colorPaletteIndoorBackground3: var(--globalColorLavender300);
+  --colorPaletteIndoorForeground1: var(--globalColorLavender300);
+  --colorPaletteIndoorForeground3: var(--globalColorLavender300);
+  --colorPaletteIndoorBorderActive: var(--globalColorLavender300);
+
+  /* ---------- Gradients and shadow colours -------------------------------- */
+  --colorBrandBackgroundGradient: radial-gradient(80% 60% at 0% 0%, var(--globalColorCoral900) 0%, transparent 60%), radial-gradient(80% 60% at 100% 0%, var(--globalColorSun900) 0%, transparent 60%);
+  --colorNeutralShadowAmbient: rgba(0, 0, 0, 0.3);
+  --colorNeutralShadowKey: rgba(0, 0, 0, 0.4);
+  --colorNeutralShadowKeyDarker: rgba(0, 0, 0, 0.55);
+
+  /* ---------- Elevation (re-declared per theme so each theme resolves its own shadow colours) ---- */
+  --shadow2: 0 1px 0 var(--colorNeutralStroke2);
+  --shadow4: 0 1px 2px var(--colorNeutralShadowAmbient), 0 2px 6px var(--colorNeutralShadowAmbient);
+  --shadow16: 0 4px 10px var(--colorNeutralShadowKey), 0 10px 24px var(--colorNeutralShadowKey);
+  --shadow28: 0 20px 40px var(--colorNeutralShadowKeyDarker);
+  --shadowFocusRing: 0 0 0 var(--strokeWidthThick) var(--colorStrokeFocus1), 0 0 0 4px var(--colorStrokeFocus2);
+  color-scheme: dark;
+}
+
+/* Follow the OS preference unless the page has explicitly chosen light. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    /* ---------- Neutral backgrounds ----------------------------------------- */
+    --colorNeutralBackground1: var(--globalColorUmber850);
+    --colorNeutralBackground2: var(--globalColorUmber900);
+    --colorNeutralBackground3: var(--globalColorUmber750);
+    --colorNeutralBackgroundRaised: var(--globalColorUmber800);
+    --colorNeutralBackgroundInverted: var(--globalColorUmber50);
+    --colorNeutralBackgroundAlpha: rgba(32, 28, 24, 0.9);
+    --colorSubtleBackgroundHover: var(--globalColorUmber750);
+    --colorSubtleBackgroundPressed: var(--globalColorUmber700);
+    --colorNeutralStencil1: var(--globalColorUmber750);
+    --colorNeutralStencil2Alpha: rgba(255, 255, 255, 0.06);
+    --colorBackgroundOverlay: rgba(0, 0, 0, 0.6);
+    --colorBackgroundOverlayStrong: rgba(0, 0, 0, 0.72);
+
+    /* ---------- Neutral foregrounds ----------------------------------------- */
+    --colorNeutralForeground1: var(--globalColorUmber50);
+    --colorNeutralForeground2: var(--globalColorUmber200);
+    --colorNeutralForeground3: var(--globalColorUmber300);
+    --colorNeutralForegroundDisabled: var(--globalColorUmber600);
+    --colorNeutralForegroundInverted: var(--globalColorUmber850);
+    --colorNeutralForegroundOnBrand: var(--globalColorCoral950);
+    --colorNeutralForegroundStaticInverted: var(--globalColorWhite);
+
+    /* ---------- Brand ------------------------------------------------------- */
+    --colorBrandBackground: var(--globalColorCoral300);
+    --colorBrandBackgroundHover: var(--globalColorCoral200);
+    --colorBrandBackgroundPressed: var(--globalColorCoral100);
+    --colorBrandBackground2: var(--globalColorCoral900);
+    --colorBrandBackground2Hover: var(--globalColorCoral800);
+    --colorBrandBackgroundStatic: var(--globalColorCoral400);
+    --colorBrandForeground1: var(--globalColorCoral300);
+    --colorBrandForeground2: var(--globalColorCoral200);
+    --colorBrandForegroundLink: var(--globalColorCoral300);
+    --colorBrandForegroundLinkHover: var(--globalColorCoral200);
+    --colorBrandStroke1: var(--globalColorCoral300);
+    --colorBrandStroke2: var(--globalColorCoral900);
+
+    /* ---------- Strokes and focus ------------------------------------------- */
+    --colorNeutralStroke1: rgba(242, 237, 230, 0.18);
+    --colorNeutralStroke2: rgba(242, 237, 230, 0.1);
+    --colorNeutralStrokeAccessible: var(--globalColorUmber400);
+    --colorStrokeFocus1: var(--globalColorUmber900);
+    --colorStrokeFocus2: var(--globalColorCoral300);
+
+    /* ---------- Status: info ------------------------------------------------ */
+    --colorStatusInfoBackground1: var(--globalColorSky900);
+    --colorStatusInfoForeground1: var(--globalColorSky300);
+    --colorStatusInfoForeground3: var(--globalColorSky300);
+    --colorStatusInfoBorder1: var(--globalColorSky800);
+    --colorStatusInfoBackground3: var(--globalColorSky300);
+    --colorStatusInfoForegroundInverted: var(--globalColorSky950);
+
+    /* ---------- Status: success --------------------------------------------- */
+    --colorStatusSuccessBackground1: var(--globalColorForest900);
+    --colorStatusSuccessForeground1: var(--globalColorForest300);
+    --colorStatusSuccessForeground3: var(--globalColorForest300);
+    --colorStatusSuccessBorder1: var(--globalColorForest800);
+    --colorStatusSuccessBackground3: var(--globalColorForest300);
+    --colorStatusSuccessForegroundInverted: var(--globalColorForest950);
+
+    /* ---------- Status: warning --------------------------------------------- */
+    --colorStatusWarningBackground1: var(--globalColorSun900);
+    --colorStatusWarningForeground1: var(--globalColorSun200);
+    --colorStatusWarningForeground3: var(--globalColorSun200);
+    --colorStatusWarningBorder1: var(--globalColorSun800);
+    --colorStatusWarningBackground3: var(--globalColorSun300);
+    --colorStatusWarningForegroundInverted: var(--globalColorSun950);
+
+    /* ---------- Status: danger ---------------------------------------------- */
+    --colorStatusDangerBackground1: var(--globalColorTerracotta900);
+    --colorStatusDangerForeground1: var(--globalColorTerracotta300);
+    --colorStatusDangerForeground3: var(--globalColorTerracotta300);
+    --colorStatusDangerBorder1: var(--globalColorTerracotta800);
+    --colorStatusDangerBackground3: var(--globalColorTerracotta400);
+    --colorStatusDangerForegroundInverted: var(--globalColorTerracotta950);
+    --colorStatusDangerBackground3Hover: var(--globalColorTerracotta300);
+
+    /* ---------- Palette: sun ------------------------------------------------ */
+    --colorPaletteSunBackground1: var(--globalColorSun900);
+    --colorPaletteSunBackground3: var(--globalColorSun300);
+    --colorPaletteSunForeground1: var(--globalColorSun200);
+    --colorPaletteSunForeground3: var(--globalColorSun300);
+    --colorPaletteSunBorderActive: var(--globalColorSun300);
+
+    /* ---------- Palette: sky ------------------------------------------------ */
+    --colorPaletteSkyBackground1: var(--globalColorSky900);
+    --colorPaletteSkyBackground3: var(--globalColorSky300);
+    --colorPaletteSkyForeground1: var(--globalColorSky300);
+    --colorPaletteSkyForeground3: var(--globalColorSky300);
+    --colorPaletteSkyBorderActive: var(--globalColorSky300);
+
+    /* ---------- Palette: leaf ----------------------------------------------- */
+    --colorPaletteLeafBackground1: var(--globalColorLeaf900);
+    --colorPaletteLeafBackground3: var(--globalColorLeaf200);
+    --colorPaletteLeafForeground1: var(--globalColorLeaf200);
+    --colorPaletteLeafForeground3: var(--globalColorLeaf200);
+    --colorPaletteLeafBorderActive: var(--globalColorLeaf200);
+
+    /* ---------- Palette: indoor --------------------------------------------- */
+    --colorPaletteIndoorBackground1: var(--globalColorLavender900);
+    --colorPaletteIndoorBackground3: var(--globalColorLavender300);
+    --colorPaletteIndoorForeground1: var(--globalColorLavender300);
+    --colorPaletteIndoorForeground3: var(--globalColorLavender300);
+    --colorPaletteIndoorBorderActive: var(--globalColorLavender300);
+
+    /* ---------- Gradients and shadow colours -------------------------------- */
+    --colorBrandBackgroundGradient: radial-gradient(80% 60% at 0% 0%, var(--globalColorCoral900) 0%, transparent 60%), radial-gradient(80% 60% at 100% 0%, var(--globalColorSun900) 0%, transparent 60%);
+    --colorNeutralShadowAmbient: rgba(0, 0, 0, 0.3);
+    --colorNeutralShadowKey: rgba(0, 0, 0, 0.4);
+    --colorNeutralShadowKeyDarker: rgba(0, 0, 0, 0.55);
+
+    /* ---------- Elevation (re-declared per theme so each theme resolves its own shadow colours) ---- */
+    --shadow2: 0 1px 0 var(--colorNeutralStroke2);
+    --shadow4: 0 1px 2px var(--colorNeutralShadowAmbient), 0 2px 6px var(--colorNeutralShadowAmbient);
+    --shadow16: 0 4px 10px var(--colorNeutralShadowKey), 0 10px 24px var(--colorNeutralShadowKey);
+    --shadow28: 0 20px 40px var(--colorNeutralShadowKeyDarker);
+    --shadowFocusRing: 0 0 0 var(--strokeWidthThick) var(--colorStrokeFocus1), 0 0 0 4px var(--colorStrokeFocus2);
+    color-scheme: dark;
+  }
+}
+
+/* ---------- Preference overrides ------------------------------------------ */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --durationFast: 0.01ms;
+    --durationNormal: 0.01ms;
+    --durationShimmer: 0.01ms;
+    /* --durationSpin is kept: a spinner is a status indicator, not decoration. */
+  }
+}
+
+@media (prefers-contrast: more) {
+  :root {
+    --colorNeutralStroke1: var(--colorNeutralStrokeAccessible);
+    --colorNeutralStroke2: var(--colorNeutralStrokeAccessible);
+    --colorNeutralForeground2: var(--colorNeutralForeground1);
+    --colorNeutralForeground3: var(--colorNeutralForeground2);
+  }
+}
+
+/* Windows High Contrast / forced colours: hand focus and edges to system colours. */
+@media (forced-colors: active) {
+  :root {
+    --colorStrokeFocus2: Highlight;
+    --colorNeutralStroke1: CanvasText;
+    --colorNeutralStroke2: CanvasText;
+    --colorNeutralStrokeAccessible: CanvasText;
+  }
+}
