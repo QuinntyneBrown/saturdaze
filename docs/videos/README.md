@@ -40,6 +40,12 @@ Six videos on Saturdaze Admin, the second web application that curates the catal
 | 16 | [Reviewing ingested photos](16-reviewing-ingested-photos/README.md) | ~5.8 min | The review queue; Keep, Make primary, Reject; rejections that stick; ingestion photo skips; seeding and the lock. |
 | 17 | [The photo activity log](17-the-photo-activity-log/README.md) | ~4.4 min | What every audit entry records; committing it with the change; the Activity log and its filters. |
 
+## Design drift series
+
+| # | Video | Runtime | What you learn |
+| --- | --- | --- | --- |
+| 18 | [Design drift D01: the mock tokens that pointed nowhere](18-mock-tokens-drift-d01/README.md) | ~3.3 min | A mock stylesheet whose header pointed at a deleted catalog; retiring the always-failing check; before and after. |
+
 ## Components series
 
 Fifty-two instructional videos, one per component in `frontend/projects/components/src/lib/`: each codes the component step by step, calls out its best practices (especially signals) and walks through its unit tests. See the [series index](components/README.md).
