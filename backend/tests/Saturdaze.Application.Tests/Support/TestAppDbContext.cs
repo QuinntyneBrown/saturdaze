@@ -28,6 +28,8 @@ internal sealed class TestAppDbContext : DbContext, IAppDbContext
     public DbSet<RejectedPlacePhoto> RejectedPlacePhotos => Set<RejectedPlacePhoto>();
     public DbSet<PhotoAuditEntry> PhotoAuditEntries => Set<PhotoAuditEntry>();
     public DbSet<IngestionRun> IngestionRuns => Set<IngestionRun>();
+    public DbSet<EmailTemplate> EmailTemplates => Set<EmailTemplate>();
+    public DbSet<EmailTemplateRevision> EmailTemplateRevisions => Set<EmailTemplateRevision>();
     public DbSet<Weekend> Weekends => Set<Weekend>();
     public DbSet<ItineraryBlock> ItineraryBlocks => Set<ItineraryBlock>();
     public DbSet<ShoppingErrand> ShoppingErrands => Set<ShoppingErrand>();
