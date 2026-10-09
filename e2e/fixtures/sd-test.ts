@@ -53,6 +53,7 @@ import { AdminHealthPage } from "../pages/admin/admin-health.page.js";
 import { AdminActivityPage } from "../pages/admin/admin-activity.page.js";
 import { AdminSkipsPage } from "../pages/admin/admin-skips.page.js";
 import { AdminEmailTemplatesPage } from "../pages/admin/admin-email-templates.page.js";
+import { AdminEmailTemplatePage } from "../pages/admin/admin-email-template.page.js";
 
 interface Pages {
   weekend: WeekendPage;
@@ -77,6 +78,7 @@ interface Pages {
   adminActivity: AdminActivityPage;
   adminSkips: AdminSkipsPage;
   adminEmails: AdminEmailTemplatesPage;
+  adminEmail: AdminEmailTemplatePage;
 }
 
 export interface GotoOptions {
@@ -164,6 +166,7 @@ export const test = base.extend<SdFixtures>({
       adminActivity: new AdminActivityPage(page),
       adminSkips: new AdminSkipsPage(page),
       adminEmails: new AdminEmailTemplatesPage(page),
+      adminEmail: new AdminEmailTemplatePage(page),
     });
   },
 

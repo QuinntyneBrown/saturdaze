@@ -24,4 +24,19 @@ public sealed class AdminEmailTemplatesController : ControllerBase
     public async Task<ActionResult<IReadOnlyList<EmailTemplateSummaryDto>>> List(
         [FromQuery] string? q, [FromQuery] string? category, [FromQuery] string? status, CancellationToken ct)
         => Ok(await _sender.Send(new ListEmailTemplatesQuery(q, category, status), ct));
+
+    /// <summary>One template with its content and required placeholders (L2-127).</summary>
+    [HttpGet("{id:guid}")]
+    public async Task<ActionResult<EmailTemplateDto>> Get(Guid id, CancellationToken ct)
+        => Ok(await _sender.Send(new GetEmailTemplateQuery(id), ct));
+
+    public record CreateTemplateRequest(string? Key, string? Name, string? Description, string? Category, Guid? DuplicateOf);
+
+    /// <summary>A new draft from the category's starter, or a duplicate of <c>duplicateOf</c> (L2-126).</summary>
+    [HttpPost]
+    public async Task<ActionResult<EmailTemplateDto>> Create([FromBody] CreateTemplateRequest req, CancellationToken ct)
+    {
+        var dto = await _sender.Send(new CreateEmailTemplateCommand(req.Key, req.Name, req.Description, req.Category, req.DuplicateOf), ct);
+        return CreatedAtAction(nameof(Get), new { id = dto.Id }, dto);
+    }
 }

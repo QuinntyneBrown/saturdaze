@@ -12,6 +12,8 @@ import { AdminPage } from "./admin.page.js";
  *                    · .template-row__updated "Updated … UTC by …"
  *   .empty           "No templates match"
  */
+const exactly = (text: string): RegExp => new RegExp(`^\\s*${text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\s*$`);
+
 export class AdminEmailTemplatesPage extends AdminPage {
   constructor(page: Page) {
     super(page);
@@ -25,12 +27,13 @@ export class AdminEmailTemplatesPage extends AdminPage {
     return this.main.locator(".template-row");
   }
 
+  /** The row whose name is exactly `name` ("Copy of …" duplicates are other rows). */
   row(name: string): Locator {
-    return this.rows().filter({ has: this.page.locator(".list__title", { hasText: name }) });
+    return this.rows().filter({ has: this.page.locator(".list__title", { hasText: exactly(name) }) });
   }
 
   rowByKey(key: string): Locator {
-    return this.rows().filter({ has: this.page.locator(".template-row__key", { hasText: key }) });
+    return this.rows().filter({ has: this.page.locator(".template-row__key", { hasText: exactly(key) }) });
   }
 
   rowKey(row: Locator): Locator {
@@ -39,6 +42,11 @@ export class AdminEmailTemplatesPage extends AdminPage {
 
   rowChips(row: Locator): Locator {
     return row.locator(".template-row__chips .chip");
+  }
+
+  /** Each row's category chip text, top to bottom. */
+  rowCategories(): Promise<string[]> {
+    return this.rows().locator(".template-row__chips .chip:first-child").allTextContents();
   }
 
   rowUpdated(row: Locator): Locator {

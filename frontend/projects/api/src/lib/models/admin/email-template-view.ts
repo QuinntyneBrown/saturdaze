@@ -1,6 +1,7 @@
 import { ChipView } from '../chip-view';
 import {
   EmailTemplateCategory,
+  EmailTemplateDto,
   EmailTemplateStatus,
   EmailTemplatesQuery,
 } from './email-template.dto';
@@ -64,4 +65,32 @@ export function toEmailTemplatesParams(query: EmailTemplatesQuery): Record<strin
   if (query.category) params['category'] = query.category;
   if (query.status) params['status'] = query.status;
   return params;
+}
+
+/** A template in the editor (A9): its content plus the header's chips and line. */
+export interface EmailTemplateView extends EmailTemplateDto {
+  readonly categoryLabel: string;
+  /** "account.password-reset · Account · version 4 · updated 2026-10-08 16:40 UTC by admin@saturdaze.app". */
+  readonly meta: string;
+  /** Status and, for a system template, "System". */
+  readonly chips: readonly ChipView[];
+}
+
+/** Lowercase letters and digits in words joined by dots or hyphens (the API's key rule). */
+export const EMAIL_TEMPLATE_KEY_PATTERN = /^[a-z0-9]+(?:[.-][a-z0-9]+)*$/;
+
+/** "Birthday wishes!" → "birthday-wishes": the key AD7 suggests from a name (L2-126 AC5). */
+export function suggestTemplateKey(name: string): string {
+  return name
+    .normalize('NFKD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 100)
+    .replace(/-+$/g, '');
+}
+
+export function categoryLabel(category: EmailTemplateCategory): string {
+  return EMAIL_TEMPLATE_CATEGORIES.find((c) => c.value === category)?.label ?? category;
 }

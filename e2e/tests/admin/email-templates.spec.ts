@@ -38,26 +38,30 @@ test.describe("Admin email templates", () => {
     const a = pages.adminEmails;
     await a.categorySelect().selectOption({ label: "Account" });
     await expect.poll(() => new URL(page.url()).searchParams.get("category")).toBe("Account");
-    await expect(a.rows()).toHaveCount(2);
-    await expect(a.count()).toHaveText("2 templates");
+    await expect(a.row("Verify your email")).toHaveCount(1);
+    await expect(a.row("Reset your password")).toHaveCount(1);
+    await expect.poll(async () => (await a.rowCategories()).every((c) => c.trim() === "Account")).toBe(true);
+    await expect(a.count()).toHaveText(`${await a.rows().count()} templates`);
 
     await a.categorySelect().selectOption({ label: "Marketing" });
     await expect.poll(() => new URL(page.url()).searchParams.get("category")).toBe("Marketing");
-    for (const row of await a.rows().all()) await expect(a.rowChips(row).first()).toHaveText("Marketing");
+    await expect.poll(async () => (await a.rowCategories()).every((c) => c.trim() === "Marketing")).toBe(true);
 
     await page.goto("/email-templates?category=Account&status=Active");
     await a.waitForScreen("emails");
     await expect(a.categorySelect()).toHaveValue("Account");
     await expect(a.statusSelect()).toHaveValue("Active");
-    await expect(a.rows()).toHaveCount(2);
+    await expect(a.row("Reset your password")).toHaveCount(1);
+    await expect.poll(async () => (await a.rowCategories()).every((c) => c.trim() === "Account")).toBe(true);
   });
 
   test("search matches name, key or subject and says when nothing matches", async ({ page, pages }) => {
     // Traces to: L2-125 AC2, AC5
     const a = pages.adminEmails;
     await a.searchInput().fill("password-reset");
-    await expect(a.rows()).toHaveCount(1);
-    await expect(a.rowKey(a.rows().first())).toHaveText("account.password-reset");
+    await expect.poll(() => new URL(page.url()).searchParams.get("q")).toBe("password-reset");
+    await expect(a.rowByKey("account.password-reset")).toHaveCount(1);
+    for (const key of await a.rowKey(a.rows()).allTextContents()) expect(key).toContain("password-reset");
     await expect.poll(() => new URL(page.url()).searchParams.get("q")).toBe("password-reset");
 
     await a.searchInput().fill("zz-no-such-template");

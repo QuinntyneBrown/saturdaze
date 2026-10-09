@@ -55,6 +55,30 @@ export abstract class AdminPage extends BasePage {
     return this.dialog().locator(".well");
   }
 
+  /* ---------- AD7 New email template (A8 "New template", A9 "Duplicate") ---------- */
+
+  /** AD7's fields; a required field's label also reads "Required". */
+  templateNameInput(): Locator {
+    return this.dialog().getByRole("textbox", { name: /^Name\b/ });
+  }
+
+  templateKeyInput(): Locator {
+    return this.dialog().getByRole("textbox", { name: /^Key\b/ });
+  }
+
+  templateCategorySelect(): Locator {
+    return this.dialog().getByLabel("Category", { exact: true });
+  }
+
+  templateDescriptionInput(): Locator {
+    return this.dialog().getByRole("textbox", { name: /^Description\b/ });
+  }
+
+  /** The refusal AD7 shows in place (`template_key_exists`, a field error). */
+  dialogAlert(): Locator {
+    return this.dialog().locator('.banner--warn[role="alert"]');
+  }
+
   /* ---------- Gate (signed in, not an administrator) ---------- */
 
   gate(): Locator {

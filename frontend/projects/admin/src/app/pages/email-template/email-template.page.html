@@ -1,0 +1,56 @@
+@switch (status()) {
+  @case ('loading') {
+    <sd-page-header
+      title="Email template"
+      backHref="/email-templates"
+      backLabel="Email templates"
+    />
+    <sd-status-row icon="mail">Fetching the template.</sd-status-row>
+  }
+  @case ('missing') {
+    <sd-page-header
+      title="Template not found"
+      backHref="/email-templates"
+      backLabel="Email templates"
+    />
+    <sd-empty
+      icon="mail"
+      title="This template does not exist"
+      body="It may have been deleted. Go back to Email templates and pick another."
+    />
+  }
+  @case ('ready') {
+    @let v = view();
+    <sd-page-header
+      [title]="v?.name ?? 'Email template'"
+      [subtitle]="v?.meta ?? ''"
+      backHref="/email-templates"
+      backLabel="Email templates"
+    >
+      @if (v) {
+        <sd-button slot="actions" variant="quiet" (click)="duplicate()">
+          <sd-icon name="copy" />
+          Duplicate
+        </sd-button>
+      }
+    </sd-page-header>
+
+    @if (error()) {
+      <sd-banner class="error" tone="warn" role="alert" icon="close">{{ error() }}</sd-banner>
+    }
+
+    @if (v) {
+      <p class="template-status">
+        @for (chip of v.chips; track chip.label) {
+          <sd-chip [tone]="tone(chip.tone)" size="sm">
+            @if (chip.icon) {
+              <sd-icon [name]="chip.icon" />
+            }
+            {{ chip.label }}
+          </sd-chip>
+        }
+      </p>
+      <div class="email-editor"></div>
+    }
+  }
+}

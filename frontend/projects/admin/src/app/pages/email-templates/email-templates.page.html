@@ -1,7 +1,12 @@
 <sd-page-header
   title="Email templates"
   subtitle="What Saturdaze sends: account emails, notifications, scheduled digests, special occasions and marketing."
-/>
+>
+  <sd-button slot="primary" variant="primary" (click)="newTemplate()">
+    <sd-icon name="plus" />
+    New template
+  </sd-button>
+</sd-page-header>
 
 <sd-toolbar class="toolbar--templates">
   <sd-text-input

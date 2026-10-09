@@ -1,3 +1,4 @@
+import { Dialog } from '@angular/cdk/dialog';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -9,7 +10,7 @@ import {
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { debounceTime, distinctUntilChanged, map } from 'rxjs';
+import { debounceTime, distinctUntilChanged, firstValueFrom, map } from 'rxjs';
 
 import {
   ADMIN_EMAIL_TEMPLATES_SERVICE,
@@ -25,6 +26,7 @@ import {
 } from 'api';
 import {
   Banner,
+  Button,
   Chip,
   Empty,
   Icon,
@@ -38,6 +40,12 @@ import {
   Toolbar,
 } from 'components';
 
+import { DIALOG_OPTIONS } from '../../dialogs/dialog-options';
+import {
+  NewTemplateDialog,
+  NewTemplateDialogData,
+  NewTemplateDialogResult,
+} from '../../dialogs/new-template-dialog/new-template-dialog';
 import { chipTone } from '../../shared/chip-tones';
 
 type Status = 'loading' | 'ready';
@@ -56,7 +64,7 @@ const STATUS_OPTIONS: readonly SelectOption[] = [
  * Email templates (A8) — `docs/mocks/pages/admin.emails.html`: every
  * template as a row with its key, category, status and system chips and
  * its last change. The search and both selects live in the URL query
- * (L2-125).
+ * (L2-125). New template opens AD7 (L2-126).
  */
 @Component({
   selector: 'sd-admin-email-templates',
@@ -64,6 +72,7 @@ const STATUS_OPTIONS: readonly SelectOption[] = [
   imports: [
     ReactiveFormsModule,
     Banner,
+    Button,
     Chip,
     Empty,
     Icon,
@@ -83,6 +92,7 @@ export class EmailTemplatesPage {
   private readonly templates = inject(ADMIN_EMAIL_TEMPLATES_SERVICE);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
+  private readonly dialog = inject(Dialog);
 
   protected readonly status = signal<Status>('loading');
   protected readonly rows = signal<EmailTemplateRow[]>([]);
@@ -123,6 +133,19 @@ export class EmailTemplatesPage {
     this.statusFilter.valueChanges
       .pipe(distinctUntilChanged(), takeUntilDestroyed())
       .subscribe((s) => this.apply({ status: (s || null) as EmailTemplateStatus | null }));
+  }
+
+  /** AD7: a new draft from the category's starter, then its editor (L2-126). */
+  protected async newTemplate(): Promise<void> {
+    const ref = this.dialog.open<NewTemplateDialogResult, NewTemplateDialogData>(
+      NewTemplateDialog,
+      {
+        ...DIALOG_OPTIONS,
+        data: { create: async (request) => (await this.templates.create(request)).id },
+      },
+    );
+    const id = await firstValueFrom(ref.closed);
+    if (id) await this.router.navigate(['/email-templates', id]);
   }
 
   private apply(patch: Partial<EmailTemplatesQuery>): void {

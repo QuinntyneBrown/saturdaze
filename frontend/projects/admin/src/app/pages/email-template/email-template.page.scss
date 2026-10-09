@@ -1,0 +1,18 @@
+// `.template-status`, `.template-note` and `.email-editor` from
+// docs/mocks/styles/app.css (admin: email templates).
+@use '../../../../../components/src/lib/styles/breakpoints' as *;
+
+:host {
+  display: block;
+}
+
+.error {
+  margin-bottom: 16px;
+}
+
+.template-status {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: -8px 0 16px;
+}
