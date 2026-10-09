@@ -58,6 +58,44 @@ export class AdminEmailTemplatePage extends AdminPage {
     return this.form.locator(".email-editor__samples input");
   }
 
+  /* ---------- Preview (sd-email-preview) ---------- */
+
+  get preview(): Locator {
+    return this.main.locator(".email-preview");
+  }
+
+  previewSubject(): Locator {
+    return this.preview.locator(".email-preview__subject");
+  }
+
+  previewPreheader(): Locator {
+    return this.preview.locator(".email-preview__preheader");
+  }
+
+  /** The sandboxed frame holding the rendered HTML. */
+  previewFrame(): Locator {
+    return this.preview.locator("iframe.email-preview__frame");
+  }
+
+  /** The rendered HTML inside the frame. */
+  previewBody(): Locator {
+    return this.previewFrame().contentFrame().locator("body");
+  }
+
+  previewText(): Locator {
+    return this.preview.locator(".email-preview__text");
+  }
+
+  previewOption(name: "Desktop" | "Phone" | "HTML" | "Plain text"): Locator {
+    return this.preview.getByRole("radio", { name, exact: true });
+  }
+
+  previewPlaceholder(name: string): Locator {
+    return this.preview
+      .locator(".email-preview__item")
+      .filter({ has: this.page.locator("code", { hasText: new RegExp(`^${name}$`) }) });
+  }
+
   /** The system-template note above the editor. */
   note(): Locator {
     return this.main.locator(".template-note");

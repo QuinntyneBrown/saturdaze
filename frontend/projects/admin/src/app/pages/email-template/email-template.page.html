@@ -124,6 +124,16 @@
           </fieldset>
           <button type="submit" hidden></button>
         </form>
+        @let p = preview();
+        <sd-email-preview
+          class="email-editor__preview"
+          [subject]="p?.subject ?? ''"
+          [preheader]="p?.preheader ?? ''"
+          [html]="p?.html ?? ''"
+          [text]="p?.text ?? ''"
+          [placeholders]="p?.placeholders ?? []"
+          [error]="previewError()"
+        />
       </div>
     }
   }

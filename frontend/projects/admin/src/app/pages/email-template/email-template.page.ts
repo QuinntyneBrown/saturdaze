@@ -7,20 +7,31 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, FormRecord, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { firstValueFrom, map } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, firstValueFrom, map, switchMap } from 'rxjs';
 
 import {
   ADMIN_EMAIL_TEMPLATES_SERVICE,
   BUILT_IN_PLACEHOLDERS,
   ChipView,
+  EmailPreviewDto,
   EmailTemplateView,
   SaveEmailTemplateRequest,
   templatePlaceholders,
 } from 'api';
-import { Banner, Button, Chip, Empty, Icon, PageHeader, StatusRow, TextInput } from 'components';
+import {
+  Banner,
+  Button,
+  Chip,
+  EmailPreview,
+  Empty,
+  Icon,
+  PageHeader,
+  StatusRow,
+  TextInput,
+} from 'components';
 
 import { DIALOG_OPTIONS } from '../../dialogs/dialog-options';
 import {
@@ -45,7 +56,9 @@ const UNSAVED: ChipView = { tone: 'sun', label: 'Unsaved changes' };
  * description, subject, preheader, HTML and plain-text bodies, and a
  * sample value for each placeholder the content uses (built-ins excepted).
  * "Save changes" stays disabled until something changed; a stale copy
- * says so and offers a reload (L2-127). Duplicate opens AD7 (L2-126).
+ * says so and offers a reload (L2-127). Beside the form, `sd-email-preview`
+ * renders the unsaved content 300 ms after the last edit (L2-128).
+ * Duplicate opens AD7 (L2-126).
  */
 @Component({
   selector: 'sd-admin-email-template',
@@ -55,6 +68,7 @@ const UNSAVED: ChipView = { tone: 'sun', label: 'Unsaved changes' };
     Banner,
     Button,
     Chip,
+    EmailPreview,
     Empty,
     Icon,
     PageHeader,
@@ -80,6 +94,8 @@ export class EmailTemplatePage {
   protected readonly error = signal('');
   protected readonly stale = signal(false);
   protected readonly saving = signal(false);
+  protected readonly preview = signal<EmailPreviewDto | null>(null);
+  protected readonly previewError = signal('');
   protected readonly tone = chipTone;
 
   protected readonly form = new FormGroup({
@@ -150,6 +166,32 @@ export class EmailTemplatePage {
       const id = this.id();
       if (id) void this.load(id);
     });
+    // The preview follows the content, 300 ms after the last edit; a refusal keeps the last render.
+    toObservable(this.content)
+      .pipe(
+        filter(() => this.view() !== null),
+        map((c) => ({
+          subject: c.subject,
+          preheader: c.preheader,
+          htmlBody: c.htmlBody,
+          textBody: c.textBody,
+          sampleData: c.sampleData,
+        })),
+        distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b)),
+        debounceTime(300),
+        switchMap(async (request) => {
+          try {
+            return { preview: await this.templates.preview(request), error: '' };
+          } catch (err) {
+            return { preview: null, error: templateErrorMessage(err) };
+          }
+        }),
+        takeUntilDestroyed(),
+      )
+      .subscribe(({ preview, error }) => {
+        if (preview) this.preview.set(preview);
+        this.previewError.set(error);
+      });
     // Each placeholder the content starts using gets a sample field; values already typed stay.
     effect(() => {
       const samples = this.form.controls.samples;

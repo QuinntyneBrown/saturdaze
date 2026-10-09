@@ -1,0 +1,141 @@
+// `.email-preview` from docs/mocks/styles/app.css — the host is the panel.
+
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+  padding: 16px;
+  background: var(--colorNeutralBackground1);
+  border: 1px solid var(--colorNeutralStroke2);
+  border-radius: var(--borderRadiusXLarge);
+}
+
+.email-preview__bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+}
+
+.email-preview__switch {
+  flex: 1 1 180px;
+  max-width: 260px;
+}
+
+.email-preview__inbox {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid var(--colorNeutralStroke2);
+  border-radius: var(--borderRadiusLarge);
+}
+
+.email-preview__lines {
+  min-width: 0;
+}
+
+.email-preview__subject {
+  font-weight: var(--fontWeightBold);
+  color: var(--colorNeutralForeground1);
+  overflow-wrap: anywhere;
+}
+
+.email-preview__preheader {
+  font-size: var(--fontSizeBase300);
+  color: var(--colorNeutralForeground2);
+  overflow-wrap: anywhere;
+}
+
+.email-preview__error {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  font-size: var(--fontSizeBase300);
+  color: var(--colorStatusDangerForeground1);
+}
+
+.email-preview__stage {
+  display: flex;
+  justify-content: center;
+  padding: 12px;
+  border-radius: var(--borderRadiusLarge);
+  background: var(--colorNeutralBackground3);
+  overflow: hidden;
+}
+
+.email-preview__frame {
+  display: block;
+  width: 100%;
+  max-width: 600px;
+  height: 480px;
+  border: 1px solid var(--colorNeutralStroke2);
+  border-radius: var(--borderRadiusMedium);
+  // The email decides its own colours; the frame's canvas is white like a mail client's.
+  background: #fff;
+}
+
+.email-preview__frame--phone {
+  max-width: 375px;
+}
+
+.email-preview__text {
+  width: 100%;
+  max-width: 600px;
+  min-height: 240px;
+  margin: 0;
+  padding: 16px;
+  border: 1px solid var(--colorNeutralStroke2);
+  border-radius: var(--borderRadiusMedium);
+  background: var(--colorNeutralBackground1);
+  font-family: var(--fontFamilyMonospace);
+  font-size: var(--fontSizeBase300);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.email-preview__heading {
+  font-size: var(--fontSizeBase300);
+  font-weight: var(--fontWeightSemibold);
+  color: var(--colorNeutralForeground2);
+}
+
+.email-preview__list {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.email-preview__item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 2px 8px;
+  padding: 8px 0;
+  border-top: 1px solid var(--colorNeutralStroke2);
+  font-size: var(--fontSizeBase300);
+
+  code {
+    font-weight: var(--fontWeightSemibold);
+    overflow-wrap: anywhere;
+  }
+
+  sd-chip {
+    grid-column: 2;
+    grid-row: 1 / 3;
+    align-self: start;
+  }
+}
+
+.email-preview__value {
+  grid-column: 1;
+  color: var(--colorNeutralForeground2);
+  overflow-wrap: anywhere;
+}
+
+.email-preview__empty {
+  font-size: var(--fontSizeBase300);
+  color: var(--colorNeutralForeground3);
+}

@@ -1,0 +1,60 @@
+<div class="email-preview__bar">
+  <sd-seg-radio
+    class="email-preview__switch"
+    label="Width"
+    [options]="widths"
+    [formControl]="width"
+  />
+  <sd-seg-radio
+    class="email-preview__switch"
+    label="Format"
+    [options]="formats"
+    [formControl]="format"
+  />
+</div>
+<div class="email-preview__inbox">
+  <sd-disc icon="mail" tone="primary" />
+  <div class="email-preview__lines">
+    <p class="email-preview__subject">{{ subject() }}</p>
+    <p class="email-preview__preheader">{{ preheader() }}</p>
+  </div>
+</div>
+@if (error()) {
+  <p class="email-preview__error" role="status">
+    <sd-icon name="close" [size]="14" />
+    {{ error() }}
+  </p>
+}
+<div class="email-preview__stage">
+  @if (formatValue() === 'text') {
+    <pre class="email-preview__text">{{ text() }}</pre>
+  } @else {
+    <iframe
+      class="email-preview__frame"
+      [class.email-preview__frame--phone]="widthValue() === 'phone'"
+      title="Email preview"
+      sandbox=""
+      referrerpolicy="no-referrer"
+      [srcdoc]="srcdoc()"
+    ></iframe>
+  }
+</div>
+<div class="email-preview__placeholders">
+  <h3 class="email-preview__heading">Placeholders</h3>
+  @if (placeholders().length) {
+    <ul class="email-preview__list">
+      @for (p of placeholders(); track p.name) {
+        <li
+          class="email-preview__item"
+          [class.email-preview__item--missing]="p.source === 'missing'"
+        >
+          <code>{{ p.name }}</code>
+          <span class="email-preview__value">{{ p.value || '—' }}</span>
+          <sd-chip [tone]="source(p).tone" size="sm">{{ source(p).label }}</sd-chip>
+        </li>
+      }
+    </ul>
+  } @else {
+    <p class="email-preview__empty">The content uses no placeholders.</p>
+  }
+</div>

@@ -1,0 +1,5 @@
+What a recipient would see, for the Saturdaze Admin email template editor (L2-128). `sd-email-preview` carries `.email-preview` from `docs/mocks/pages/admin.email.html`: a **Width** switch (Desktop 600 px, Phone 375 px), a **Format** switch (HTML, Plain text), the subject and preheader as an inbox line, the rendered body, and the placeholders the content used with where each value came from — **Sample**, **Built-in** or **No sample value**.
+
+The HTML renders in an `<iframe sandbox>` with neither `allow-scripts` nor `allow-same-origin`, and the frame's document carries a Content-Security-Policy that blocks scripts and every fetch but HTTPS images and fonts. The component trusts its `html` input only to the extent of handing it to that sandbox: it never inserts the markup into the page itself.
+
+Inputs: `subject`, `preheader`, `html` and `text` (already rendered, values HTML-encoded by the server's renderer), `placeholders` (`EmailPreviewPlaceholder[]`) and `error` (why the preview could not refresh; the last render stays).

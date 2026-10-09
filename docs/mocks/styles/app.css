@@ -1075,8 +1075,8 @@
   }
   /* sd-email-preview: inbox line, sandboxed frame at 600 or 375 px, placeholders */
   .email-preview { display: flex; flex-direction: column; gap: 12px; padding: 16px; min-width: 0; }
-  .email-preview__bar { display: flex; flex-wrap: wrap; gap: 8px; }
-  .email-preview__bar .seg-radio { flex: 1 1 180px; max-width: 260px; }
+  .email-preview__bar { display: flex; flex-wrap: wrap; gap: 8px 12px; }
+  .email-preview__switch { flex: 1 1 180px; max-width: 260px; }
   .email-preview__inbox { display: flex; align-items: center; gap: 12px; padding: 12px; border: 1px solid var(--sd-line); border-radius: var(--sd-r-md); min-width: 0; }
   .email-preview__lines { min-width: 0; }
   .email-preview__subject { font-weight: var(--sd-fw-bold); overflow-wrap: anywhere; }

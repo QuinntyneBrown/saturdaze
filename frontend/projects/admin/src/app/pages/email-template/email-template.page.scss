@@ -60,3 +60,15 @@
   font-size: var(--fontSizeBase200);
   color: var(--colorNeutralForeground3);
 }
+
+// The preview sits beside the form only where both fit at a readable width (1200px, the mock).
+@media (min-width: 1200px) {
+  .email-editor {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .email-editor__preview {
+    position: sticky;
+    top: 24px;
+  }
+}

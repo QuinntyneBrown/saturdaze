@@ -28,6 +28,7 @@ public static class DependencyInjection
         services.AddScoped<InvitationResolver>();
         services.AddScoped<Admin.Photos.PhotoAuditWriter>();
         services.AddScoped<Admin.EmailTemplates.EmailTemplateRevisionWriter>();
+        services.AddSingleton<Admin.EmailTemplates.EmailTemplateRenderer>();
         services.AddScoped<WeekendForecastService>();
         services.AddScoped<PlannerInputLoader>();
         services.AddScoped<IPlacePhotoReader, PlacePhotoReader>();

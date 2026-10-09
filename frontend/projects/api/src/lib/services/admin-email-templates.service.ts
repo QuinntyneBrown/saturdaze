@@ -6,10 +6,12 @@ import { API_BASE_URL } from '../api/api-base-url';
 import {
   CreateEmailTemplateRequest,
   EmailTemplateCategory,
+  EmailPreviewDto,
   EmailTemplateDto,
   EmailTemplateStatus,
   EmailTemplateSummaryDto,
   EmailTemplatesQuery,
+  PreviewEmailTemplateRequest,
   SaveEmailTemplateRequest,
 } from '../models/admin/email-template.dto';
 import {
@@ -105,6 +107,10 @@ export class AdminEmailTemplatesService implements IAdminEmailTemplatesService {
       this.http.put<EmailTemplateDto>(`${this.url}/${encodeURIComponent(id)}`, request),
     );
     return toEmailTemplateView(dto);
+  }
+
+  preview(request: PreviewEmailTemplateRequest): Promise<EmailPreviewDto> {
+    return firstValueFrom(this.http.post<EmailPreviewDto>(`${this.url}/preview`, request));
   }
 
   private get url(): string {

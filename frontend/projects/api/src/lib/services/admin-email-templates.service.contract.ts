@@ -2,7 +2,9 @@ import { InjectionToken } from '@angular/core';
 
 import {
   CreateEmailTemplateRequest,
+  EmailPreviewDto,
   EmailTemplatesQuery,
+  PreviewEmailTemplateRequest,
   SaveEmailTemplateRequest,
 } from '../models/admin/email-template.dto';
 import { EmailTemplateRow, EmailTemplateView } from '../models/admin/email-template-view';
@@ -20,6 +22,8 @@ export interface IAdminEmailTemplatesService {
   create(request: CreateEmailTemplateRequest): Promise<EmailTemplateView>;
   /** `PUT /api/admin/email-templates/{id}`: saves the content; rejects with `template_stale` and other refusals (L2-127). */
   save(id: string, request: SaveEmailTemplateRequest): Promise<EmailTemplateView>;
+  /** `POST /api/admin/email-templates/preview`: renders unsaved content with sample data (L2-128). */
+  preview(request: PreviewEmailTemplateRequest): Promise<EmailPreviewDto>;
 }
 
 export const ADMIN_EMAIL_TEMPLATES_SERVICE = new InjectionToken<IAdminEmailTemplatesService>(

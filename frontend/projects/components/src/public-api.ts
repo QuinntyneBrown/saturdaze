@@ -80,6 +80,7 @@ export * from './lib/auth-card/auth-card';
 export * from './lib/admin-nav/admin-nav';
 export * from './lib/admin-gate/admin-gate';
 export * from './lib/photo-tile/photo-tile';
+export * from './lib/email-preview/email-preview';
 export * from './lib/slot-preview/slot-preview';
 export * from './lib/stat-card/stat-card';
 export * from './lib/place-row/place-row';

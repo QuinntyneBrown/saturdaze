@@ -53,4 +53,13 @@ public sealed class AdminEmailTemplatesController : ControllerBase
     public async Task<ActionResult<EmailTemplateDto>> Save(Guid id, [FromBody] SaveTemplateRequest req, CancellationToken ct)
         => Ok(await _sender.Send(new SaveEmailTemplateCommand(
             id, req.Name, req.Description, req.Subject, req.Preheader, req.HtmlBody, req.TextBody, req.SampleData, req.Version), ct));
+
+    public record PreviewRequest(
+        string? Subject, string? Preheader, string? HtmlBody, string? TextBody, Dictionary<string, string>? SampleData);
+
+    /// <summary>Renders unsaved content with sample data; nothing is saved (L2-128).</summary>
+    [HttpPost("preview")]
+    [RequestSizeLimit(ContentRequestLimit)]
+    public async Task<ActionResult<EmailPreviewDto>> Preview([FromBody] PreviewRequest req, CancellationToken ct)
+        => Ok(await _sender.Send(new PreviewEmailTemplateQuery(req.Subject, req.Preheader, req.HtmlBody, req.TextBody, req.SampleData), ct));
 }

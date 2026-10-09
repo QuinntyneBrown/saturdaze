@@ -9,6 +9,7 @@ export * as Card from './Card';
 export * as Checkbox from './Checkbox';
 export * as Chip from './Chip';
 export * as DateTile from './DateTile';
+export * as EmailPreview from './EmailPreview';
 export * as Day from './Day';
 export * as EventCard from './EventCard';
 export * as FilterChip from './FilterChip';

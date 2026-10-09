@@ -102,13 +102,19 @@ If it wasn&#x27;t you, ignore this email.
     </form>
     <section class="email-preview card" aria-label="Preview">
       <div class="email-preview__bar">
-        <div class="seg-radio" role="radiogroup" aria-label="Preview width">
-          <label class="seg-radio__opt"><input type="radio" name="ep-width" checked>Desktop</label>
-          <label class="seg-radio__opt"><input type="radio" name="ep-width">Phone</label>
+        <div class="field email-preview__switch">
+          <span class="field__label" id="ep-width-label">Width</span>
+          <div class="seg-radio" role="radiogroup" aria-labelledby="ep-width-label">
+            <label class="seg-radio__opt"><input type="radio" name="ep-width" checked>Desktop</label>
+            <label class="seg-radio__opt"><input type="radio" name="ep-width">Phone</label>
+          </div>
         </div>
-        <div class="seg-radio" role="radiogroup" aria-label="Preview format">
-          <label class="seg-radio__opt"><input type="radio" name="ep-format" checked>HTML</label>
-          <label class="seg-radio__opt"><input type="radio" name="ep-format">Plain text</label>
+        <div class="field email-preview__switch">
+          <span class="field__label" id="ep-format-label">Format</span>
+          <div class="seg-radio" role="radiogroup" aria-labelledby="ep-format-label">
+            <label class="seg-radio__opt"><input type="radio" name="ep-format" checked>HTML</label>
+            <label class="seg-radio__opt"><input type="radio" name="ep-format">Plain text</label>
+          </div>
         </div>
       </div>
       <div class="email-preview__inbox">

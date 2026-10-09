@@ -6,6 +6,8 @@ export const scenarioIterations = {
   Block: 250,
   Card: 500,
   Day: 100,
+  // Each copy is a sandboxed iframe with its own document.
+  EmailPreview: 50,
   EventCard: 250,
   ListItem: 500,
   PhotoPick: 250,

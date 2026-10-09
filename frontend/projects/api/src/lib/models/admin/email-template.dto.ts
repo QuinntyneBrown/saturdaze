@@ -79,3 +79,25 @@ export interface SaveEmailTemplateRequest {
   readonly sampleData: Readonly<Record<string, string>>;
   readonly version: number;
 }
+
+/** `POST /api/admin/email-templates/preview` (L2-128): unsaved content to render. */
+export type PreviewEmailTemplateRequest = Omit<
+  SaveEmailTemplateRequest,
+  'name' | 'description' | 'version'
+>;
+
+/** One placeholder the preview filled, and where its value came from. */
+export interface EmailPlaceholderDto {
+  readonly name: string;
+  readonly value: string;
+  readonly source: 'sample' | 'builtin' | 'missing';
+}
+
+/** The rendered preview (L2-128). */
+export interface EmailPreviewDto {
+  readonly subject: string;
+  readonly preheader: string;
+  readonly html: string;
+  readonly text: string;
+  readonly placeholders: readonly EmailPlaceholderDto[];
+}
