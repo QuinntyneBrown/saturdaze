@@ -1,0 +1,52 @@
+@startuml
+title UML sequence behaviour - Create or duplicate a template
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+actor "Administrator" as actor
+box "Frontend - Saturdaze Admin Angular application" #E0F2FE
+ participant "EmailTemplatesPage (A8)\nor EmailTemplatePage (A9)" as page
+ participant "NewTemplateDialog (AD7)" as dialog
+end box
+box "Frontend - api library" #DBEAFE
+ participant "AdminEmailTemplatesService" as client
+end box
+box "Backend - Saturdaze API" #D1FADF
+ participant "AdminEmailTemplatesController" as controller
+end box
+box "Backend - Saturdaze Application" #ECFDF3
+ participant "CreateEmailTemplateCommandHandler" as handler
+ participant "EmailTemplateCatalog" as catalog
+ participant "EmailTemplateRevisionWriter" as revisions
+end box
+box "Backend - Saturdaze Infrastructure" #FFF4E5
+ database "AppDbContext\nSQL Server" as db
+end box
+actor -> page : New template, or Duplicate on A9
+page -> dialog : open (category fixed when duplicating)
+actor -> dialog : name "Birthday wishes"
+dialog --> actor : key suggestion birthday-wishes (L2-126 AC5)
+actor -> dialog : Create template
+dialog -> client : create({ key, name, description, category, duplicateOf? })
+client -> controller : POST /api/admin/email-templates
+controller -> handler : CreateEmailTemplateCommand (validated: key pattern, name, category)
+handler -> db : key exists?
+alt key exists
+  handler --> controller : ConflictException template_key_exists
+  controller --> dialog : 409 (L2-126 AC4)
+else new key
+  alt duplicateOf
+    handler -> db : load the source template (L2-126 AC3)
+  else starter
+    handler -> catalog : Starter(category) (L2-126 AC2)
+  end
+  handler -> handler : Status = Draft, Version = 1, IsSystem = false
+  handler -> revisions : Write(template, Create) (L2-130)
+  handler -> db : SaveChangesAsync
+  controller --> client : 201 EmailTemplateDto
+  dialog --> page : created id
+  page -> page : navigate to /email-templates/{id} (A9)
+end
+@enduml

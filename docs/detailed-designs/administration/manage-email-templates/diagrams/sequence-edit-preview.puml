@@ -1,0 +1,57 @@
+@startuml
+title UML sequence behaviour - Edit, preview and save a template
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+actor "Administrator" as actor
+box "Frontend - Saturdaze Admin Angular application" #E0F2FE
+ participant "EmailTemplatePage (A9)" as page
+end box
+box "Frontend - components library" #E0F2FE
+ participant "sd-email-preview" as preview
+end box
+box "Frontend - api library" #DBEAFE
+ participant "AdminEmailTemplatesService" as client
+end box
+box "Backend - Saturdaze API" #D1FADF
+ participant "AdminEmailTemplatesController" as controller
+end box
+box "Backend - Saturdaze Application" #ECFDF3
+ participant "PreviewEmailTemplateQueryHandler" as previewHandler
+ participant "SaveEmailTemplateCommandHandler" as saveHandler
+ participant "EmailTemplateRules" as rules
+ participant "EmailTemplateRenderer" as renderer
+ participant "EmailTemplateRevisionWriter" as revisions
+end box
+box "Backend - Saturdaze Infrastructure" #FFF4E5
+ database "AppDbContext\nSQL Server" as db
+end box
+actor -> page : edits subject or body
+page -> page : debounce 300 ms
+page -> client : preview(content, sampleData)
+client -> controller : POST /api/admin/email-templates/preview
+controller -> previewHandler : PreviewEmailTemplateQuery
+previewHandler -> rules : Check(content) unsafe_html, invalid_placeholder (L2-128)
+previewHandler -> renderer : Render(content, sampleData + built-ins)
+renderer --> previewHandler : values HTML-encoded in html (L2-128 AC2)
+controller --> client : 200 EmailPreviewDto
+page -> preview : subject, preheader, html, text, placeholders
+preview --> actor : iframe sandbox srcdoc at 600 or 375 px (L2-128 AC5)
+actor -> page : Save changes
+page -> client : save(id, content, version)
+client -> controller : PUT /api/admin/email-templates/{id}
+controller -> saveHandler : SaveEmailTemplateCommand
+saveHandler -> db : load the template
+alt version differs
+  saveHandler --> controller : ConflictException template_stale
+  controller --> page : 409, offer reload (L2-127 AC2)
+else current
+  saveHandler -> rules : Check(content, required placeholders) (L2-127 AC3-AC5)
+  saveHandler -> saveHandler : Version + 1, UpdatedAt (UTC), UpdatedByEmail
+  saveHandler -> revisions : Write(template, Edit) (L2-130)
+  saveHandler -> db : SaveChangesAsync (Version is a concurrency token)
+  controller --> page : 200 EmailTemplateDto (L2-127 AC1)
+end
+@enduml

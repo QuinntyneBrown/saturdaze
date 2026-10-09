@@ -1,0 +1,105 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure - Manage email templates
+
+enum EmailTemplateCategory {
+  Account
+  Notification
+  Scheduled
+  SpecialOccasion
+  Marketing
+}
+enum EmailTemplateStatus {
+  Draft
+  Active
+  Archived
+}
+enum EmailTemplateRevisionAction {
+  Create
+  Edit
+  Status
+}
+class EmailTemplate {
+  +Guid Id
+  +string Key
+  +string Name
+  +string Description
+  +EmailTemplateCategory Category
+  +EmailTemplateStatus Status
+  +string Subject
+  +string Preheader
+  +string HtmlBody
+  +string TextBody
+  +string SampleData
+  +bool IsSystem
+  +int Version
+  +DateTimeOffset CreatedAt
+  +string CreatedByEmail
+  +DateTimeOffset UpdatedAt
+  +string UpdatedByEmail
+}
+class EmailTemplateRevision {
+  +Guid Id
+  +Guid TemplateId
+  +int Version
+  +EmailTemplateRevisionAction Action
+  +EmailTemplateStatus Status
+  +string Name
+  +string Subject
+  +string Preheader
+  +string HtmlBody
+  +string TextBody
+  +string SampleData
+  +DateTimeOffset OccurredAt
+  +Guid? AdminUserId
+  +string AdminEmail
+}
+class EmailTemplateCatalog <<static>> {
+  +{static} RequiredPlaceholders(key, category): IReadOnlyList<string>
+  +{static} Starter(category): EmailTemplateContent
+  +{static} BuiltIns(appUrl, year): IReadOnlyDictionary<string, string>
+}
+class EmailTemplateRules <<static>> {
+  +{static} Placeholders(text): IReadOnlyList<string>
+  +{static} Check(content, required): void
+}
+class EmailTemplateRenderer {
+  +Render(content, sampleData): EmailPreviewDto
+}
+class EmailTemplateRevisionWriter {
+  +Write(template, action): void
+}
+class EmailTemplateDto {
+  +Guid id
+  +string key
+  +string category
+  +string status
+  +int version
+  +string[] requiredPlaceholders
+}
+class EmailPreviewDto {
+  +string subject
+  +string preheader
+  +string html
+  +string text
+  +EmailPlaceholderDto[] placeholders
+}
+EmailTemplate --> EmailTemplateCategory
+EmailTemplate --> EmailTemplateStatus
+EmailTemplate "1" *-- "many" EmailTemplateRevision : history
+EmailTemplateRevision --> EmailTemplateRevisionAction
+EmailTemplateRenderer ..> EmailTemplateRules : finds placeholders
+EmailTemplateRenderer ..> EmailTemplateCatalog : built-in samples
+EmailTemplateRules ..> EmailTemplateCatalog : required placeholders
+EmailTemplateRevisionWriter ..> EmailTemplateRevision : creates
+EmailTemplateDto ..> EmailTemplate : projects
+@enduml

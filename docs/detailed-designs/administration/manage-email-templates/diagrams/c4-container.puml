@@ -1,0 +1,17 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers - Manage email templates
+
+Person(admin, "Administrator", "Saturdaze account with the Admin role")
+System_Boundary(saturdaze, "Saturdaze") {
+  Container(adminweb, "Saturdaze Admin", "Angular", "Email templates list, editor with live preview, dialogs")
+  Container(api, "Saturdaze API", "ASP.NET Core", "/api/admin/email-templates* behind the Admin policy")
+  Container(cli, "saturdaze CLI", ".NET", "seed creates missing system templates")
+  ContainerDb(db, "Saturdaze database", "SQL Server", "EmailTemplates, EmailTemplateRevisions")
+}
+Rel(admin, adminweb, "Uses", "HTTPS")
+Rel(adminweb, api, "Lists, creates, saves, previews, changes status, deletes", "JSON/HTTPS")
+Rel(api, db, "Reads and writes templates and revisions", "EF Core")
+Rel(cli, db, "Inserts system templates when missing", "EF Core")
+@enduml

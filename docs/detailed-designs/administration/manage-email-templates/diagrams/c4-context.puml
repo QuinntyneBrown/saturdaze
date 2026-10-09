@@ -1,0 +1,13 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context - Manage email templates
+
+Person(admin, "Administrator", "Writes, previews, versions and retires email templates")
+Person(family, "Family member", "Receives account, notification and marketing emails")
+System(saturdaze, "Saturdaze", "Family weekend planning platform")
+System_Ext(mail, "Email provider", "Not yet chosen (drift audit G01); a later sender looks templates up by key")
+Rel(admin, saturdaze, "Manages templates using", "HTTPS")
+Rel(saturdaze, mail, "Will hand rendered active templates to", "Later capability")
+Rel(mail, family, "Delivers email to", "SMTP")
+@enduml

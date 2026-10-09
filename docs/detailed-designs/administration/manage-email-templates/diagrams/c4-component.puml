@@ -1,0 +1,32 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components - Manage email templates
+
+Container_Boundary(adminweb, "Saturdaze Admin and libraries") {
+  Component(pages, "EmailTemplatesPage (A8), EmailTemplatePage (A9)", "Angular pages", "Depend on ADMIN_EMAIL_TEMPLATES_SERVICE")
+  Component(dialogs, "NewTemplateDialog (AD7), DeleteTemplateDialog (AD8), TemplateHistoryDialog (AD9)", "CDK dialogs", "Create, duplicate, delete, load a revision")
+  Component(svc, "AdminEmailTemplatesService", "api library", "HTTP implementation behind a token")
+  Component(ui, "sd-email-preview, sd-admin-nav, sd-list-item, sd-chip", "components library", "Sandboxed preview frame, navigation, rows")
+}
+Container_Boundary(api, "Saturdaze API and Application") {
+  Component(ctrl, "AdminEmailTemplatesController", "ASP.NET Core, Authorize(Policy = Admin)", "api/admin/email-templates routes")
+  Component(handlers, "Admin/EmailTemplates handlers", "MediatR", "List, get, create, save, preview, status, delete, revisions")
+  Component(rules, "EmailTemplateRules", "Application service", "Placeholder syntax, unsafe HTML, required placeholders")
+  Component(renderer, "EmailTemplateRenderer", "Application service", "Replaces placeholders; HTML-encodes values")
+  Component(catalog, "EmailTemplateCatalog", "Application service", "System keys, required placeholders, starters, built-ins")
+  Component(revisions, "EmailTemplateRevisionWriter", "Application service", "Writes a revision per change")
+  ComponentDb(db, "AppDbContext", "EF Core", "EmailTemplates, EmailTemplateRevisions")
+}
+Rel(pages, dialogs, "Opens")
+Rel(pages, ui, "Renders")
+Rel(pages, svc, "Calls through the token")
+Rel(dialogs, svc, "Calls through the token")
+Rel(svc, ctrl, "HTTP", "JSON")
+Rel(ctrl, handlers, "Sends commands and queries")
+Rel(handlers, rules, "Validates content")
+Rel(handlers, renderer, "Renders previews")
+Rel(handlers, catalog, "Reads starters and required placeholders")
+Rel(handlers, revisions, "Records")
+Rel(handlers, db, "Reads and writes")
+@enduml
