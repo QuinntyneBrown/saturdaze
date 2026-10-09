@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 21 Slides</title>
+<link rel="stylesheet" href="../assets/slides.css">
+</head>
+<body data-video-number="21" data-video-title="Inviting a family member" data-parts="Introduction|Invite to sign in|What the server creates|A link to share|What it refuses|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Saturdaze family members · Video 21</div>
+  <h1>Inviting a family member</h1>
+  <p class="lead">The invite, the single-use link, and why the owner shares it</p>
+</section>
+
+<section id="questions" data-part="0" data-cue="You will see what the owner fills in">
+  <h2>Four questions</h2>
+  <div class="question">What does the owner fill in?</div>
+  <div class="question">What does the server create and store?</div>
+  <div class="question">Why a link to share, not an email?</div>
+  <div class="question">What does it refuse?</div>
+</section>
+
+<section id="choice" data-part="1" data-cue="The add member dialog asks: will they sign in?">
+  <h2>“Invite to sign in” changes three things</h2>
+  <div class="cols three">
+    <div class="card"><h3>Email</h3><p class="small">A required field appears</p></div>
+    <div class="card"><h3>Hint</h3><p class="small">“They'll choose their own password from the invite link.”</p></div>
+    <div class="card"><h3>Send invite</h3><p class="small">With a mail icon; disabled until there is an email</p></div>
+  </div>
+  <p class="small muted"><span class="file">frontend/projects/saturdaze/src/app/dialogs/family-member-dialog/</span> · mock: <span class="file">docs/mocks/pages/dialogs.html#dialog-member-invite</span></p>
+</section>
+
+<section id="request" data-part="1" data-cue="The dialog checks the address the same way">
+  <h2>Same endpoint, one more field</h2>
+  <pre class="code" data-lang="json" data-mark="1">POST /api/family/members
+{ "name": "Jordan", "age": 37, "email": "jordan.rivera@example.com" }</pre>
+  <p class="lead">The email is the only difference between adding a child and inviting a person.</p>
+</section>
+
+<section id="two-rows" data-part="2" data-cue="The server runs the owner check first">
+  <h2>One save, two rows</h2>
+  <div class="flow">
+    <div class="node"><b>Owner check</b><span class="small muted">403 owner_only</span></div>
+    <div class="arrow">→</div>
+    <div class="node"><b>FamilyMember</b><span class="small muted">name, age</span></div>
+    <div class="arrow">+</div>
+    <div class="node accent"><b>FamilyInvitation</b><span class="small muted">for that member</span></div>
+  </div>
+</section>
+
+<section id="entity" data-part="2" data-cue="The invitation records the family">
+  <h2><code>FamilyInvitation</code></h2>
+  <pre class="code" data-lang="cs" data-mark="8,11,12">public class FamilyInvitation
+{
+    public Guid Id { get; set; }
+    public Guid FamilyId { get; set; }
+    public Guid FamilyMemberId { get; set; }
+    public string Email { get; set; } = string.Empty;
+    public string NormalizedEmail { get; set; } = string.Empty;
+    public string TokenHash { get; set; } = string.Empty;
+    public Guid InvitedByUserId { get; set; }
+    public DateTimeOffset CreatedAtUtc { get; set; }
+    public DateTimeOffset ExpiresAtUtc { get; set; }
+    public DateTimeOffset? AcceptedAtUtc { get; set; }
+}</pre>
+  <p class="small muted"><span class="file">backend/src/Saturdaze.Domain/Entities/FamilyInvitation.cs</span> · 7 days · <code>AcceptedAtUtc</code> set = used</p>
+</section>
+
+<section id="token" data-part="2" data-cue="The token is made by the same two helpers">
+  <h2>Drafted like a reset link</h2>
+  <pre class="code tight" data-lang="cs" data-mark="2,10,13">var now = _clock.UtcNow;
+var raw = _tokens.CreateRawRefreshToken();
+var invitation = new FamilyInvitation
+{
+    Id = Guid.NewGuid(),
+    FamilyId = family.Id,
+    FamilyMemberId = member.Id,
+    Email = email,
+    NormalizedEmail = normalized,
+    TokenHash = _tokens.HashRefreshToken(raw),
+    InvitedByUserId = _user.UserId ?? Guid.Empty,
+    CreatedAtUtc = now,
+    ExpiresAtUtc = now.Add(InvitationLifetime),
+};</pre>
+  <p class="small muted"><span class="file">backend/src/Saturdaze.Application/Families/AddFamilyMemberCommand.cs</span> · 32 random bytes; only the SHA-256 is stored (video 18)</p>
+</section>
+
+<section id="cascade" data-part="2" data-cue="The invitation is tied to its member with a cascading foreign key.">
+  <h2>The invitation goes with its member</h2>
+  <pre class="code" data-lang="cs">b.HasOne&lt;FamilyMember&gt;().WithMany()
+    .HasForeignKey(x =&gt; x.FamilyMemberId).OnDelete(DeleteBehavior.Cascade);</pre>
+  <p class="small muted"><span class="file">backend/src/Saturdaze.Infrastructure/Persistence/Configurations/FamilyInvitationConfiguration.cs</span> · removing the member revokes the invite (video 23)</p>
+</section>
+
+<section id="no-email" data-part="3" data-cue="Here is the part that may surprise you.">
+  <h2>No email provider, so the owner shares the link</h2>
+  <ul>
+    <li>As of October 2026, nothing can be emailed (drift audit gap <code>G01</code>)</li>
+    <li>The invite link comes back to the owner who created it</li>
+    <li>They send it however the family talks: a text, a chat, a note on the fridge</li>
+  </ul>
+</section>
+
+<section id="url" data-part="3" data-cue="The handler builds a relative path">
+  <h2>Relative in the handler, absolute in the controller</h2>
+  <pre class="code tight" data-lang="cs" data-mark="4,6">var result = await _sender.Send(command, ct);
+if (result.Invite is { } invite)
+{
+    var appOrigin = (config["Saturdaze:Share:AppOrigin"]
+        ?? $"{Request.Scheme}://{Request.Host}").TrimEnd('/');
+    result = result with { Invite = invite with { Url = appOrigin + invite.Url } };
+}
+return StatusCode(StatusCodes.Status201Created, result);</pre>
+  <pre class="code tight" data-lang="json">"invite": { "email": "jordan.rivera@example.com", "token": "…",
+            "url": "http://localhost:4200/accept-invite?token=…", "expiresAtUtc": "…" }</pre>
+  <p class="small muted"><span class="file">backend/src/Saturdaze.Api/Controllers/FamilyController.cs</span></p>
+</section>
+
+<section id="safe" data-part="3" data-cue="Is it safe to give the owner the raw token in every environment?">
+  <h2>Safe to hand back, shown once</h2>
+  <div class="cols">
+    <div class="card"><h3>Why it's safe</h3><p>The owner may already add this person; the link adds no power (ADR-016 §3)</p></div>
+    <div class="card"><h3>The cost</h3><p>Only the hash is stored, so the link can't be shown again. Lost it? Remove and invite again.</p></div>
+  </div>
+</section>
+
+<section id="invite-clip" data-part="3" data-cue="In the recording, Alex invites Jordan" data-clip="clips/invite.mp4" data-clip-delay="1">
+  <aside class="clip-notes">
+    <h3>Invite Jordan, 37</h3>
+    <ul>
+      <li>Email appears; Send invite waits for it</li>
+      <li>D30: “Invite ready for Jordan”</li>
+      <li>Copy link → “Copied”</li>
+      <li>Row: “Invite sent to …”</li>
+    </ul>
+  </aside>
+</section>
+
+<section id="refusals" data-part="4" data-cue="Two refusals are specific to invites">
+  <h2>Two 409 conflicts</h2>
+  <pre class="code tight" data-lang="cs" data-mark="2,3,6">var normalized = email.ToLowerInvariant();
+if (await _db.Users.AnyAsync(u =&gt; u.NormalizedEmail == normalized, ct))
+    throw new ConflictException("email_in_use", "That email already signs in to Saturdaze.");
+if (await _db.FamilyInvitations.AnyAsync(
+        i =&gt; i.FamilyId == family.Id &amp;&amp; i.NormalizedEmail == normalized &amp;&amp; i.AcceptedAtUtc == null, ct))
+    throw new ConflictException("already_invited", "That email already has an invite to this family.");</pre>
+  <div class="cols">
+    <div class="card"><h3><code>email_in_use</code></h3><p class="small">Moving an existing account and its weekends is out of scope (ADR-016)</p></div>
+    <div class="card"><h3><code>already_invited</code></h3><p class="small">One outstanding invite per address per family</p></div>
+  </div>
+</section>
+
+<section id="malformed" data-part="4" data-cue="A malformed address never gets that far.">
+  <h2>Malformed: 400 before any of that</h2>
+  <pre class="code" data-lang="cs">RuleFor(x =&gt; x.Email!).EmailAddress().MaximumLength(256)
+    .When(x =&gt; !string.IsNullOrWhiteSpace(x.Email));</pre>
+  <p class="small muted"><span class="file">AddFamilyMemberCommandValidator</span> in <span class="file">AddFamilyMemberCommand.cs</span> · the error names the email field</p>
+</section>
+
+<section id="refusals-clip" data-part="4" data-cue="In the recording, Alex first tries to invite an address" data-clip="clips/refusals.mp4" data-clip-delay="1">
+  <aside class="clip-notes">
+    <h3>Refused, nothing added</h3>
+    <ul>
+      <li>An address with an account: “That email already signs in to Saturdaze.”</li>
+      <li>Jordan again: “That email already has an invite to this family.”</li>
+    </ul>
+  </aside>
+</section>
+
+<section id="recap" data-part="5" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div>An email is the whole difference between a child and an invite.</div>
+    <div>Single use, 7 days, stored only as a hash.</div>
+    <div>No email provider yet: the owner gets the link to share, once.</div>
+    <div>Removing the member removes the invitation.</div>
+    <div>Already signs in, or already invited: <code>409</code>.</div>
+  </div>
+  <p class="small muted">Next: 22 · Joining from an invite link · Index: <span class="file">docs/videos/README.md</span></p>
+</section>
+
+<script src="../assets/slides.js"></script>
+</body>
+</html>

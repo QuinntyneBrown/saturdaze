@@ -335,5 +335,22 @@
   "L2-005": "L two, double oh five",
   "G01": "G, oh one",
   "AuthTokenDeliveryDto": "Auth Token Delivery D T O",
-  "devToken": "dev token"
+  "devToken": "dev token",
+  "ADR-016": "A D R sixteen",
+  "L1-037": "L one, oh three seven",
+  "PUT": "put",
+  "OwnerUserId": "owner user I D",
+  "FamilyOwnership": "Family Ownership",
+  "owner_only": "owner only",
+  "FamilyInvitation": "Family Invitation",
+  "AcceptedAtUtc": "accepted at U T C",
+  "Saturdaze:Share:AppOrigin": "Saturdays, Share, App Origin",
+  "email_in_use": "email in use",
+  "already_invited": "already invited",
+  "InvitationResolver": "Invitation Resolver",
+  "L2-008": "L two, double oh eight",
+  "CurrentUserFamilyAccessor": "Current User Family Accessor",
+  "L2-124": "L two, one twenty-four",
+  "L2-129": "L two, one twenty-nine",
+  "D21": "D twenty-one"
 }

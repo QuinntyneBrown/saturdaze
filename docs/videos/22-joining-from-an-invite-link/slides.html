@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 22 Slides</title>
+<link rel="stylesheet" href="../assets/slides.css">
+</head>
+<body data-video-number="22" data-video-title="Joining from an invite link" data-parts="Introduction|Opening the link|Choosing a password|No longer works|Signing in|The member view|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Saturdaze family members · Video 22</div>
+  <h1>Joining from an invite link</h1>
+  <p class="lead">The invitee's side: their own password, their own sign-in, and the member view</p>
+</section>
+
+<section id="journey" data-part="0" data-cue="Jordan opens the link on a phone">
+  <h2>Jordan's journey</h2>
+  <div class="flow">
+    <div class="node accent"><b>Open the link</b><span class="small muted">/accept-invite?token=…</span></div>
+    <div class="arrow">→</div>
+    <div class="node"><b>Choose a password</b><span class="small muted">joins signed in</span></div>
+    <div class="arrow">→</div>
+    <div class="node"><b>Sign in later</b><span class="small muted">own email, own password</span></div>
+    <div class="arrow">→</div>
+    <div class="node"><b>Member view</b><span class="small muted">who's in, read-only</span></div>
+  </div>
+</section>
+
+<section id="route" data-part="1" data-cue="The link points at the accept invite page">
+  <h2>No guard on <code>/accept-invite</code></h2>
+  <pre class="code" data-lang="ts">{
+  path: 'accept-invite',
+  data: { shell: 'bare', page: 'accept-invite' },
+  loadComponent: () =&gt;
+    import('./pages/accept-invite/accept-invite.page').then((m) =&gt; m.AcceptInvitePage),
+},</pre>
+  <p class="small muted"><span class="file">frontend/projects/saturdaze/src/app/app.routes.ts</span> · like <code>/verify-email</code>: reached from a message, signed in or not</p>
+</section>
+
+<section id="endpoints" data-part="1" data-cue="The page reads the token from the query string">
+  <h2>Two new anonymous endpoints</h2>
+  <div class="cols">
+    <div class="card"><h3><code>POST /api/auth/invitation</code></h3><p class="small"><code>{ token }</code> → family name, invited email, invited by</p></div>
+    <div class="card"><h3><code>POST /api/auth/accept-invitation</code></h3><p class="small"><code>{ token, password }</code> → <code>201</code> with a token pair</p></div>
+  </div>
+  <p class="small muted">The invitee has no account yet · the anonymous list in L2-008 grew by exactly these two</p>
+</section>
+
+<section id="resolver" data-part="1" data-cue="On the server, a small service called">
+  <h2><code>InvitationResolver</code></h2>
+  <pre class="code tight" data-lang="cs" data-mark="3,5,7">public async Task&lt;FamilyInvitation&gt; ResolveAsync(string token, CancellationToken ct)
+{
+    var hash = _tokens.HashRefreshToken(token ?? string.Empty);
+    var invitation = await _db.FamilyInvitations.FirstOrDefaultAsync(i =&gt; i.TokenHash == hash, ct);
+    if (invitation is null || invitation.AcceptedAtUtc is not null)
+        throw new AuthFlowException(400, "token_invalid", "This invite no longer works.");
+    if (invitation.ExpiresAtUtc &lt;= _clock.UtcNow)
+        throw new AuthFlowException(400, "token_expired", "This invite has expired.");
+    return invitation;
+}</pre>
+  <p class="small muted"><span class="file">backend/src/Saturdaze.Application/Auth/InvitationResolver.cs</span> · a removed member's invitation is gone, so it is <code>token_invalid</code></p>
+</section>
+
+<section id="join-card" data-part="2" data-cue="A usable invite shows the join card.">
+  <h2>The join card</h2>
+  <ul>
+    <li><b>Join The Riveras on Saturdaze</b></li>
+    <li>“alex.rivera@example.com invited you. Choose a password to sign in with your own account.”</li>
+    <li>Email: read-only — the invite is for that address</li>
+    <li>Password with the strength meter, then Confirm password</li>
+  </ul>
+  <p class="small muted"><span class="file">frontend/projects/saturdaze/src/app/pages/accept-invite/</span> · mock: <span class="file">docs/mocks/pages/accept-invite.html#state-join</span></p>
+</section>
+
+<section id="accept-checks" data-part="2" data-cue="Joining posts the token and the password">
+  <h2>Checked again on accept</h2>
+  <div class="cols three">
+    <div class="card"><h3>Resolve again</h3><p class="small">A link used in another tab fails cleanly</p></div>
+    <div class="card"><h3><code>weak_password</code></h3><p class="small">Under 8 characters; the invite stays usable</p></div>
+    <div class="card"><h3><code>email_in_use</code></h3><p class="small">The address gained an account meanwhile</p></div>
+  </div>
+</section>
+
+<section id="accept-save" data-part="2" data-cue="Then it does four things in one save.">
+  <h2>Four things, one save</h2>
+  <pre class="code tight" data-lang="cs" data-mark="5,7,11,12,14">var user = new User
+{
+    Email = invitation.Email,
+    PasswordHash = _hasher.Hash(request.Password!),
+    FamilyId = invitation.FamilyId,
+    // Only the invited address could have received the link.
+    EmailVerifiedUtc = now,
+    // … Id, NormalizedEmail, Role, CreatedAtUtc, UpdatedAtUtc
+};
+_db.Users.Add(user);
+member.UserId = user.Id;
+invitation.AcceptedAtUtc = now;
+
+var issued = _issuer.Issue(user);</pre>
+  <p class="small muted"><span class="file">backend/src/Saturdaze.Application/Auth/AcceptInvitationCommand.cs</span> (abridged) · <code>201</code>, stored like a sign-up</p>
+</section>
+
+<section id="accept-clip" data-part="2" data-cue="Here it is on a phone." data-clip="clips/accept.mp4" data-clip-delay="1">
+  <video class="clip phone"></video>
+  <aside class="clip-notes">
+    <h3>Jordan joins, at 390 px</h3>
+    <ul>
+      <li>The family and the inviter, named</li>
+      <li>Email filled in, read-only</li>
+      <li>Password twice → Join the family</li>
+      <li>Straight onto the Riveras' weekend</li>
+    </ul>
+  </aside>
+</section>
+
+<section id="invalid" data-part="3" data-cue="Every unusable link ends in the same place.">
+  <h2>“This invite no longer works”</h2>
+  <div class="cols three">
+    <div class="card"><h3>Used</h3><p class="small"><code>AcceptedAtUtc</code> set</p></div>
+    <div class="card"><h3>Removed</h3><p class="small">The member, and so the invitation, is gone</p></div>
+    <div class="card"><h3>Expired</h3><p class="small">More than 7 days old</p></div>
+  </div>
+  <p class="lead">One state for all three, with a Sign in button for someone who already joined.</p>
+</section>
+
+<section id="invalid-clip" data-part="3" data-cue="That is what the recording shows." data-clip="clips/invalid.mp4">
+  <video class="clip phone"></video>
+  <aside class="clip-notes">
+    <h3>The same link, again</h3>
+    <ul>
+      <li>Already accepted → <code>token_invalid</code></li>
+      <li>“Ask whoever invited you for a new link.”</li>
+    </ul>
+  </aside>
+</section>
+
+<section id="ordinary" data-part="4" data-cue="From now on Jordan is an ordinary account.">
+  <h2>An ordinary account from here on</h2>
+  <ul>
+    <li>Sign in, remember me, forgot password, sign out: unchanged</li>
+    <li>The access token carries Jordan's own ID and the family's ID</li>
+    <li>Family-scoped endpoints find the Riveras through <code>Users.FamilyId</code></li>
+  </ul>
+</section>
+
+<section id="signin-clip" data-part="4" data-cue="In the recording, Jordan signs in with their own email" data-clip="clips/sign-in.mp4">
+  <aside class="clip-notes">
+    <h3>/sign-in as Jordan</h3>
+    <ul>
+      <li>Jordan's email, Jordan's password</li>
+      <li>The Riveras' weekend</li>
+    </ul>
+  </aside>
+</section>
+
+<section id="member-view" data-part="5" data-cue="The family page asks the server whether you are the owner.">
+  <h2>Not the owner: three changes</h2>
+  <pre class="code" data-lang="ts" data-mark="3,4">protected readonly membersSubtitle = computed(() =&gt; {
+  const view = this.view();
+  if (view.isOwner) return 'Ages shape the picks. Tap a person to edit.';
+  return `Ages shape the picks. Only ${view.ownerEmail ?? 'the owner'} can change who's in.`;
+});</pre>
+  <div class="cols three">
+    <div class="card"><h3>Subtitle</h3><p class="small">Names the owner</p></div>
+    <div class="card"><h3>Rows</h3><p class="small">No chevron; tapping does nothing</p></div>
+    <div class="card"><h3>Add row</h3><p class="small">Gone</p></div>
+  </div>
+  <p class="small muted"><span class="file">frontend/projects/saturdaze/src/app/pages/family/family.page.ts</span> · mock: <span class="file">docs/mocks/pages/family.member.html</span></p>
+</section>
+
+<section id="put-guard" data-part="5" data-cue="Everything else on the page still works for Jordan.">
+  <h2>The server holds the line</h2>
+  <pre class="code tight" data-lang="cs">// Only the owner changes who's in (L2-129 #1); everyone saves the rest.
+if (family is not null &amp;&amp; !_ownership.IsOwner(family)
+    &amp;&amp; MembersChange(family.Members, request.Members))
+    throw new ForbiddenException("owner_only", "Only the family's owner can change who's in.");</pre>
+  <div class="cols">
+    <div class="card"><h3>Members changed</h3><p class="small">Added, removed, renamed or re-aged → <code>403 owner_only</code></p></div>
+    <div class="card"><h3>Members unchanged</h3><p class="small">Home, likes, preferences, commitments save → <code>200</code></p></div>
+  </div>
+  <p class="small muted"><span class="file">backend/src/Saturdaze.Application/Families/SaveFamilyProfileCommandHandler.cs</span></p>
+</section>
+
+<section id="member-clip" data-part="5" data-cue="In the recording, Jordan's family page names Alex" data-clip="clips/member-view.mp4" data-clip-delay="1">
+  <aside class="clip-notes">
+    <h3>/family as Jordan</h3>
+    <ul>
+      <li>“Only alex.rivera@… can change who's in”</li>
+      <li>“Signs in as jordan.rivera@…”</li>
+      <li>Tapping Mae does nothing</li>
+      <li>Account card: Jordan's own sign-in</li>
+    </ul>
+  </aside>
+</section>
+
+<section id="recap" data-part="6" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div>No guard on <code>/accept-invite</code>; two anonymous endpoints: preview and accept.</div>
+    <div>Accepting creates a verified account in the family and signs it in.</div>
+    <div>Used, removed, expired: “This invite no longer works”.</div>
+    <div>Afterwards, a member signs in like anyone else.</div>
+    <div>Non-owners see who's in read-only; member-list changes get <code>403</code>.</div>
+  </div>
+  <p class="small muted">Next: 23 · Removing a family member · Index: <span class="file">docs/videos/README.md</span></p>
+</section>
+
+<script src="../assets/slides.js"></script>
+</body>
+</html>
