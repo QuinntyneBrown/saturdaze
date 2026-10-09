@@ -14,7 +14,7 @@ Container_Boundary(api, "Saturdaze API and Application") {
   Component(handlers, "Admin/EmailTemplates handlers", "MediatR", "List, get, create, save, preview, status, delete, revisions")
   Component(rules, "EmailTemplateRules", "Application service", "Placeholder syntax, unsafe HTML, required placeholders")
   Component(renderer, "EmailTemplateRenderer", "Application service", "Replaces placeholders; HTML-encodes values")
-  Component(catalog, "EmailTemplateCatalog", "Application service", "System keys, required placeholders, starters, built-ins")
+  Component(catalog, "EmailTemplateCatalog, EmailTemplateStarters", "Application services", "System keys, required placeholders, starter content")
   Component(revisions, "EmailTemplateRevisionWriter", "Application service", "Writes a revision per change")
   ComponentDb(db, "AppDbContext", "EF Core", "EmailTemplates, EmailTemplateRevisions")
 }

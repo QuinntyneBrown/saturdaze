@@ -64,16 +64,22 @@ class EmailTemplateRevision {
   +string AdminEmail
 }
 class EmailTemplateCatalog <<static>> {
-  +{static} RequiredPlaceholders(key, category): IReadOnlyList<string>
-  +{static} Starter(category): EmailTemplateContent
-  +{static} BuiltIns(appUrl, year): IReadOnlyDictionary<string, string>
+  +{static} RequiredPlaceholders(key, isSystem, category): IReadOnlyList<string>
+  +{static} TryParseCategory(value, out category): bool
+  +{static} TryParseStatus(value, out status): bool
+}
+class EmailTemplateStarters <<static>> {
+  +{static} For(category): EmailTemplateContent
 }
 class EmailTemplateRules <<static>> {
   +{static} Placeholders(text): IReadOnlyList<string>
-  +{static} Check(content, required): void
+  +{static} CheckPlaceholders(texts): void
+  +{static} CheckHtml(html): void
+  +{static} CheckRequired(required, html, text): void
 }
 class EmailTemplateRenderer {
-  +Render(content, sampleData): EmailPreviewDto
+  +BuiltIns(): IReadOnlyDictionary<string, string>
+  +Render(subject, preheader, html, text, sampleData): EmailPreviewDto
 }
 class EmailTemplateRevisionWriter {
   +Write(template, action): void
@@ -97,9 +103,8 @@ EmailTemplate --> EmailTemplateCategory
 EmailTemplate --> EmailTemplateStatus
 EmailTemplate "1" *-- "many" EmailTemplateRevision : history
 EmailTemplateRevision --> EmailTemplateRevisionAction
-EmailTemplateRenderer ..> EmailTemplateRules : finds placeholders
-EmailTemplateRenderer ..> EmailTemplateCatalog : built-in samples
 EmailTemplateRules ..> EmailTemplateCatalog : required placeholders
+EmailTemplateStarters ..> EmailTemplateCategory : one per
 EmailTemplateRevisionWriter ..> EmailTemplateRevision : creates
 EmailTemplateDto ..> EmailTemplate : projects
 @enduml
