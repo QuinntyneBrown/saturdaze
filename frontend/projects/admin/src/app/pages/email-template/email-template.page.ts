@@ -8,19 +8,19 @@ import {
   signal,
 } from '@angular/core';
 import { takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
-import { FormControl, FormGroup, FormRecord, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { debounceTime, distinctUntilChanged, filter, firstValueFrom, map, switchMap } from 'rxjs';
 
 import {
   ADMIN_EMAIL_TEMPLATES_SERVICE,
-  BUILT_IN_PLACEHOLDERS,
   ChipView,
   EmailPreviewDto,
   EmailTemplateStatus,
   EmailTemplateView,
+  formatSampleData,
+  parseSampleData,
   SaveEmailTemplateRequest,
-  templatePlaceholders,
 } from 'api';
 import {
   Banner,
@@ -60,6 +60,8 @@ type Content = Omit<SaveEmailTemplateRequest, 'version'>;
 
 const UNSAVED: ChipView = { tone: 'sun', label: 'Unsaved changes' };
 
+export const SAMPLE_DATA_INVALID = 'Sample data must be a JSON object';
+
 /** The status action each status offers (L2-129 AC5); a system template offers none. */
 const STATUS_ACTION: Record<
   EmailTemplateStatus,
@@ -74,9 +76,10 @@ const STATUS_ACTION: Record<
  * Email template editor (A9) — `docs/mocks/pages/admin.email.html`: the
  * header (name, key, category, version, last change, status and system
  * chips, actions), the system-template note, and the content form: name,
- * description, subject, preheader, HTML and plain-text bodies, and a
- * sample value for each placeholder the content uses (built-ins excepted).
- * "Save changes" stays disabled until something changed; a stale copy
+ * description, subject, preheader, HTML and plain-text bodies written in
+ * Liquid, and the sample data as one JSON object (ADR-016). "Save changes"
+ * stays disabled until something changed and while the sample data is not
+ * a JSON object, which also holds back the preview; a stale copy
  * says so and offers a reload (L2-127). Beside the form, `sd-email-preview`
  * renders the unsaved content 300 ms after the last edit (L2-128).
  * Activate, Archive and Restore as draft follow the status; Delete opens
@@ -129,32 +132,27 @@ export class EmailTemplatePage {
     preheader: new FormControl('', { nonNullable: true }),
     htmlBody: new FormControl('', { nonNullable: true }),
     textBody: new FormControl('', { nonNullable: true }),
-    samples: new FormRecord<FormControl<string>>({}),
+    sampleData: new FormControl('{}', { nonNullable: true }),
   });
 
   private readonly value = toSignal(this.form.valueChanges, { initialValue: this.form.value });
   /** The content as last loaded or saved; the form is dirty when it differs. */
   private readonly baseline = signal('');
 
-  /** Placeholders the content uses that need a sample value (built-ins have their own). */
-  protected readonly samplePlaceholders = computed(() => {
-    const v = this.value();
-    return templatePlaceholders(
-      v.subject ?? '',
-      v.preheader ?? '',
-      v.htmlBody ?? '',
-      v.textBody ?? '',
-    ).filter((name) => !BUILT_IN_PLACEHOLDERS.includes(name));
-  });
+  protected readonly htmlHint =
+    'Liquid: {{ variable }}, {% if %}, {% for %} and filters. No scripts, frames, forms, on… event attributes or the raw filter.';
+  protected readonly sampleHint =
+    'A JSON object: each top-level name is a Liquid variable; values can be text, numbers, true or false, lists or objects. Built-ins (appName, appUrl, recipientName, recipientEmail, unsubscribeUrl, currentYear) have their own.';
+
+  /** The sample data text parsed, or null while it is not a JSON object (L2-127 AC8). */
+  private readonly sampleData = computed(() => parseSampleData(this.value().sampleData ?? ''));
+  protected readonly sampleDataError = computed(() =>
+    this.sampleData() ? '' : SAMPLE_DATA_INVALID,
+  );
 
   protected readonly content = computed<Content>(() => {
     const v = this.value();
-    const samples = (v.samples ?? {}) as Record<string, string>;
-    const sampleData: Record<string, string> = {};
-    for (const name of this.samplePlaceholders()) {
-      const value = (samples[name] ?? '').trim();
-      if (value) sampleData[name] = value;
-    }
+    const sampleData = this.sampleData() ?? {};
     return {
       name: (v.name ?? '').trim(),
       description: (v.description ?? '').trim(),
@@ -166,8 +164,13 @@ export class EmailTemplatePage {
     };
   });
 
-  protected readonly dirty = computed(() => JSON.stringify(this.content()) !== this.baseline());
-  protected readonly canSave = computed(() => this.dirty() && !this.saving());
+  /** Text that is not a JSON object is always a change: what was loaded or saved was an object. */
+  protected readonly dirty = computed(
+    () => JSON.stringify(this.content()) !== this.baseline() || this.sampleDataError() !== '',
+  );
+  protected readonly canSave = computed(
+    () => this.dirty() && !this.saving() && !this.sampleDataError(),
+  );
 
   protected readonly chips = computed(() => {
     const chips = [...(this.view()?.chips ?? [])];
@@ -199,9 +202,10 @@ export class EmailTemplatePage {
       if (id) void this.load(id);
     });
     // The preview follows the content, 300 ms after the last edit; a refusal keeps the last render.
+    // Nothing is sent while the sample data is not a JSON object.
     toObservable(this.content)
       .pipe(
-        filter(() => this.view() !== null),
+        filter(() => this.view() !== null && !this.sampleDataError()),
         map((c) => ({
           subject: c.subject,
           preheader: c.preheader,
@@ -224,16 +228,6 @@ export class EmailTemplatePage {
         if (preview) this.preview.set(preview);
         this.previewError.set(error);
       });
-    // Each placeholder the content starts using gets a sample field; values already typed stay.
-    effect(() => {
-      const samples = this.form.controls.samples;
-      const known = this.view()?.sampleData ?? {};
-      for (const name of this.samplePlaceholders()) {
-        if (!samples.contains(name)) {
-          samples.addControl(name, new FormControl(known[name] ?? '', { nonNullable: true }));
-        }
-      }
-    });
   }
 
   /** Saves the content at the version it was loaded at (L2-127). */
@@ -318,17 +312,13 @@ export class EmailTemplatePage {
     );
     const revision = await firstValueFrom(ref.closed);
     if (!revision) return;
-    const samples = this.form.controls.samples;
-    for (const [name, value] of Object.entries(revision.sampleData)) {
-      if (samples.contains(name)) samples.controls[name]!.setValue(value);
-      else samples.addControl(name, new FormControl(value, { nonNullable: true }));
-    }
     this.form.patchValue({
       name: revision.name,
       subject: revision.subject,
       preheader: revision.preheader,
       htmlBody: revision.htmlBody,
       textBody: revision.textBody,
+      sampleData: formatSampleData(revision.sampleData),
     });
   }
 
@@ -353,12 +343,6 @@ export class EmailTemplatePage {
   /** Puts a template in the header and the form, and makes it the clean baseline. */
   private show(template: EmailTemplateView): void {
     this.view.set(template);
-    const samples = this.form.controls.samples;
-    for (const name of Object.keys(samples.controls))
-      samples.removeControl(name, { emitEvent: false });
-    for (const [name, value] of Object.entries(template.sampleData)) {
-      samples.addControl(name, new FormControl(value, { nonNullable: true }), { emitEvent: false });
-    }
     this.form.patchValue({
       name: template.name,
       description: template.description,
@@ -366,6 +350,7 @@ export class EmailTemplatePage {
       preheader: template.preheader,
       htmlBody: template.htmlBody,
       textBody: template.textBody,
+      sampleData: formatSampleData(template.sampleData),
     });
     this.baseline.set(JSON.stringify(this.content()));
   }

@@ -1,5 +1,6 @@
 import { ChipView } from '../chip-view';
 import {
+  EmailSampleData,
   EmailTemplateCategory,
   EmailTemplateDto,
   EmailTemplateStatus,
@@ -95,29 +96,25 @@ export function categoryLabel(category: EmailTemplateCategory): string {
   return EMAIL_TEMPLATE_CATEGORIES.find((c) => c.value === category)?.label ?? category;
 }
 
-/** Placeholders every template may use without sample data (L2-128); the preview fills them. */
-export const BUILT_IN_PLACEHOLDERS: readonly string[] = [
-  'appName',
-  'appUrl',
-  'recipientName',
-  'recipientEmail',
-  'unsubscribeUrl',
-  'currentYear',
-];
-
-const PLACEHOLDER = /\{\{(.*?)\}\}/gs;
-const PLACEHOLDER_NAME = /^[A-Za-z][A-Za-z0-9_]*(?:\.[A-Za-z][A-Za-z0-9_]*)*$/;
-
-/** The distinct, well-formed placeholder names in the texts, in order of first use (the API's rule). */
-export function templatePlaceholders(...texts: readonly string[]): string[] {
-  const names: string[] = [];
-  for (const text of texts) {
-    for (const match of text.matchAll(PLACEHOLDER)) {
-      const name = (match[1] ?? '').trim();
-      if (PLACEHOLDER_NAME.test(name) && !names.includes(name)) names.push(name);
-    }
+/**
+ * Reads the editor's sample data text (L2-127 AC8): the parsed JSON object, or
+ * `null` when the text is not a JSON object. Blank text is an empty object.
+ */
+export function parseSampleData(text: string): EmailSampleData | null {
+  if (!text.trim()) return {};
+  try {
+    const value: unknown = JSON.parse(text);
+    return value !== null && typeof value === 'object' && !Array.isArray(value)
+      ? (value as EmailSampleData)
+      : null;
+  } catch {
+    return null;
   }
-  return names;
+}
+
+/** Sample data as the editor shows it: indented JSON. */
+export function formatSampleData(data: EmailSampleData): string {
+  return JSON.stringify(data, null, 2);
 }
 
 /** One row of the History dialog (AD9). */

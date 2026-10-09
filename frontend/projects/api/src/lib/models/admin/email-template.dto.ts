@@ -46,7 +46,7 @@ export interface EmailTemplateDto {
   readonly preheader: string;
   readonly htmlBody: string;
   readonly textBody: string;
-  readonly sampleData: Readonly<Record<string, string>>;
+  readonly sampleData: EmailSampleData;
   /** Placeholders both bodies keep (a system template's link, a marketing unsubscribe). */
   readonly requiredPlaceholders: readonly string[];
   readonly version: number;
@@ -57,6 +57,12 @@ export interface EmailTemplateDto {
   readonly updatedAt: string;
   readonly updatedByEmail: string;
 }
+
+/**
+ * Sample data (L2-124, L2-131): a JSON object whose top-level names are Liquid
+ * variables and whose values are any JSON — text, numbers, booleans, lists or objects.
+ */
+export type EmailSampleData = Readonly<Record<string, unknown>>;
 
 /** `POST /api/admin/email-templates` (L2-126). */
 export interface CreateEmailTemplateRequest {
@@ -76,7 +82,7 @@ export interface SaveEmailTemplateRequest {
   readonly preheader: string;
   readonly htmlBody: string;
   readonly textBody: string;
-  readonly sampleData: Readonly<Record<string, string>>;
+  readonly sampleData: EmailSampleData;
   readonly version: number;
 }
 
@@ -119,5 +125,5 @@ export interface EmailTemplateRevisionDto extends EmailTemplateRevisionSummaryDt
   readonly preheader: string;
   readonly htmlBody: string;
   readonly textBody: string;
-  readonly sampleData: Readonly<Record<string, string>>;
+  readonly sampleData: EmailSampleData;
 }

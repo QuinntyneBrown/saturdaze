@@ -11,16 +11,17 @@ const MESSAGES: Record<string, string> = {
   template_key_exists: TEMPLATE_KEY_EXISTS,
   template_stale: TEMPLATE_STALE,
   unsafe_html:
-    "Scripts, frames, forms and on… event attributes aren't allowed in an email. Remove them and save again.",
-  invalid_placeholder:
-    'A placeholder is malformed. Write it as {{name}}: letters, digits and underscores, parts joined by dots.',
+    "Scripts, frames, forms, on… event attributes and the raw filter aren't allowed in an email. Remove them and save again.",
   system_template: 'A system template stays active and cannot be deleted.',
 };
+
+/** Refusals whose server message is the explanation: it names the field, variable or position. */
+const DETAILED = ['missing_placeholder', 'invalid_template'];
 
 /** The server's reason for a refused template change, in words; a field error's own message when there is one. */
 export function templateErrorMessage(err: unknown): string {
   const code = errorCode(err);
-  if (code === 'missing_placeholder' && err instanceof HttpErrorResponse) {
+  if (code && DETAILED.includes(code) && err instanceof HttpErrorResponse) {
     const detail = (err.error as { detail?: unknown } | null)?.detail;
     if (typeof detail === 'string' && detail) return detail;
   }

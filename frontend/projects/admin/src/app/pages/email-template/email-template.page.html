@@ -119,9 +119,7 @@
             multiline
             code
             [rows]="16"
-            hint="No scripts, frames, forms or on… event attributes. Use {{
-              '{{'
-            }}placeholder{{ '}}' }} for values."
+            [hint]="htmlHint"
             required
           />
           <sd-text-input
@@ -133,18 +131,17 @@
             [rows]="10"
             required
           />
-          <fieldset class="email-editor__samples" formGroupName="samples">
-            <legend class="email-editor__legend">Sample data</legend>
-            <p class="email-editor__hint">
-              Values the preview uses. Built-ins (appName, appUrl, recipientName, recipientEmail,
-              unsubscribeUrl, currentYear) have their own.
-            </p>
-            @for (name of samplePlaceholders(); track name) {
-              <sd-text-input [label]="name" [name]="'sample-' + name" [formControlName]="name" />
-            } @empty {
-              <p class="email-editor__hint">The content uses only built-in placeholders.</p>
-            }
-          </fieldset>
+          <sd-text-input
+            class="email-editor__samples"
+            label="Sample data"
+            name="sampleData"
+            formControlName="sampleData"
+            multiline
+            code
+            [rows]="8"
+            [hint]="sampleHint"
+            [error]="sampleDataError()"
+          />
           <button type="submit" hidden></button>
         </form>
         @let p = preview();

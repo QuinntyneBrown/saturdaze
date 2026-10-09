@@ -1,6 +1,6 @@
 // Acceptance Test
 // Traces to: L2-128
-// Description: A9's preview renders unsaved edits with sample values in a sandboxed frame, at desktop and phone widths and as plain text, and flags placeholders without a sample.
+// Description: A9's preview renders unsaved Liquid edits with sample data in a sandboxed frame, at desktop and phone widths and as plain text, and flags placeholders without a sample.
 import { test, expect } from "../../fixtures/sd-test.js";
 import { createTemplate } from "../../fixtures/email-templates.js";
 
@@ -18,11 +18,11 @@ test.describe("Admin email template preview", () => {
     await a.field("Subject").fill("Hello {{recipientName}}");
     await expect(a.previewSubject()).toHaveText("Hello Alex", { timeout: 1_000 });
     await a.field("Preheader").fill("Plans for {{weekendDates}}");
-    await a.sampleField("weekendDates").fill("11 and 12 October");
+    await a.fillSampleData({ weekendDates: "11 and 12 October" });
     await expect(a.previewPreheader()).toHaveText("Plans for 11 and 12 October", { timeout: 1_000 });
 
     await a.field("HTML body").fill("<h1>Hi {{recipientName}}</h1><p>{{note}}</p>");
-    await a.sampleField("note").fill("<b>bold</b>");
+    await a.fillSampleData({ weekendDates: "11 and 12 October", note: "<b>bold</b>" });
     await expect(a.previewBody()).toContainText("Hi Alex", { timeout: 1_000 });
     await expect(a.previewBody()).toContainText("<b>bold</b>");
     await expect(a.previewBody().locator("b")).toHaveCount(0);
@@ -57,8 +57,21 @@ test.describe("Admin email template preview", () => {
     await a.field("Subject").fill("Your code {{giftCode}} from {{appName}}");
     await expect(a.previewPlaceholder("giftCode")).toContainText("No sample value");
     await expect(a.previewPlaceholder("appName")).toContainText("Built-in");
-    await a.sampleField("giftCode").fill("SPRING-25");
+    await a.fillSampleData({ giftCode: "SPRING-25" });
     await expect(a.previewPlaceholder("giftCode")).toContainText("Sample");
     await expect(a.previewSubject()).toHaveText("Your code SPRING-25 from Saturdaze");
+  });
+
+  test("conditions, loops and filters render from JSON sample data", async ({ pages }) => {
+    // Traces to: L2-128 AC7
+    const a = pages.adminEmail;
+    await a.field("HTML body").fill(
+      "{% if vip %}<b>VIP</b>{% endif %}<ul>{% for idea in ideas %}<li>{{ idea.name | upcase }}</li>{% endfor %}</ul>",
+    );
+    await a.fillSampleData({ vip: true, ideas: [{ name: "Kite day" }, { name: "Pier walk" }] });
+    await expect(a.previewElements("b")).toHaveText("VIP", { timeout: 1_000 });
+    await expect(a.previewElements("li")).toHaveText(["KITE DAY", "PIER WALK"]);
+    await expect(a.previewPlaceholder("ideas")).toContainText("Sample");
+    await expect(a.previewPlaceholder("idea")).toHaveCount(0);
   });
 });

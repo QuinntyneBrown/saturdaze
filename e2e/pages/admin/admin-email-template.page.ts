@@ -10,7 +10,7 @@ import { control } from "../base.page.js";
  *                      [Save changes] [History] [Duplicate] [Activate | Archive | Restore as draft] [Delete]
  *   .template-note     the system-template note
  *   .email-editor      .email-editor__form (Name, Description, Subject, Preheader, HTML body,
- *                      Plain-text body, Sample data fields) · .email-preview (sd-email-preview)
+ *                      Plain-text body, Sample data JSON) · .email-preview (sd-email-preview)
  */
 export class AdminEmailTemplatePage extends AdminPage {
   constructor(page: Page) {
@@ -49,13 +49,32 @@ export class AdminEmailTemplatePage extends AdminPage {
     return this.form.getByRole("textbox", { name: new RegExp(`^${label}\\b`) });
   }
 
-  /** The sample value field for one placeholder, labelled with its name. */
-  sampleField(placeholder: string): Locator {
-    return this.form.locator(".email-editor__samples").getByLabel(placeholder, { exact: true });
+  /** The sample data field: one JSON object whose top-level names are Liquid variables. */
+  sampleData(): Locator {
+    return this.form.getByRole("textbox", { name: /^Sample data\b/ });
   }
 
-  sampleFields(): Locator {
-    return this.form.locator(".email-editor__samples input");
+  /** Replaces the sample data with `data` written as JSON. */
+  async fillSampleData(data: Record<string, unknown>): Promise<void> {
+    await this.sampleData().fill(JSON.stringify(data, null, 2));
+  }
+
+  /** The sample data as the field holds it, parsed. */
+  async sampleDataValue(): Promise<unknown> {
+    return JSON.parse(await this.sampleData().inputValue());
+  }
+
+  sampleDataError(): Locator {
+    return this.form.locator(".email-editor__samples .field__error");
+  }
+
+  /** Counts preview requests from now on, so a test can show that none was sent. */
+  countPreviewRequests(): () => number {
+    let count = 0;
+    this.page.on("request", (req) => {
+      if (req.method() === "POST" && req.url().endsWith("/api/admin/email-templates/preview")) count++;
+    });
+    return () => count;
   }
 
   /* ---------- Preview (sd-email-preview) ---------- */
@@ -80,6 +99,11 @@ export class AdminEmailTemplatePage extends AdminPage {
   /** The rendered HTML inside the frame. */
   previewBody(): Locator {
     return this.previewFrame().contentFrame().locator("body");
+  }
+
+  /** Elements of one kind in the rendered HTML, to show markup the template produced. */
+  previewElements(tag: "b" | "li"): Locator {
+    return this.previewBody().locator(tag);
   }
 
   previewText(): Locator {
