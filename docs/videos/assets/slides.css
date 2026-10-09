@@ -803,3 +803,68 @@ body > section.clip-slide {
   width: 720px;
   font-size: 34px;
 }
+
+/* ------------------------------------------------------------ design diagrams (video 22) */
+
+/* <figure class="diagram"><img src="…/diagrams/x.png" alt="…"></figure>: a rendered design
+   diagram in a white frame, placed like a recording. --fx, --fy, --fw and --fh (set inline per
+   slide) position the frame; --view crops the image to a region in its own pixels,
+   inset(top right bottom left), and the region is scaled to fit the frame. */
+figure.diagram {
+  position: absolute;
+  left: var(--fx, 56px);
+  top: var(--fy, 100px);
+  width: var(--fw, 1408px);
+  height: var(--fh, 792px);
+  margin: 0;
+  padding: 16px;
+  background: #fff;
+  box-shadow: 0 0 0 1px var(--stroke), 0 18px 48px rgba(31, 41, 55, 0.18);
+}
+
+figure.diagram > img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-view-box: var(--view, none);
+}
+
+/* Notes beside or under a diagram; --nx, --ny and --nw place them. */
+.diagram-notes {
+  position: absolute;
+  left: var(--nx, 1500px);
+  top: var(--ny, 108px);
+  width: var(--nw, 372px);
+  font-size: 30px;
+  line-height: 1.35;
+}
+
+.diagram-notes h3 {
+  font-size: 38px;
+  line-height: 1.15;
+  color: var(--coral-ink);
+  margin-bottom: 18px;
+}
+
+.diagram-notes ul {
+  padding-left: 0.9em;
+}
+
+.diagram-notes li {
+  margin: 0 0 12px;
+}
+
+.diagram-notes code {
+  font-size: 0.78em;
+  padding: 1px 6px;
+}
+
+/* Wide notes beside a narrow (portrait) diagram. */
+.diagram-notes.wide {
+  font-size: 36px;
+}
+
+.diagram-notes.wide h2 {
+  margin-bottom: 24px;
+}

@@ -1,0 +1,388 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 22 Slides</title>
+<link rel="stylesheet" href="../assets/slides.css">
+</head>
+<body data-video-number="22" data-video-title="Email template administration: the detailed design" data-parts="Introduction|Purpose and scope|Context|Containers|Components|Data model|Create|Edit and preview|Lifecycle|Liquid profile|Inert HTML|Traceability|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Email templates series · Video 22</div>
+  <h1>Email template administration: the detailed design</h1>
+  <p class="lead">C4 views, data model, sequences, rules and traceability</p>
+</section>
+
+<section id="agenda" data-part="0" data-cue="In October 2026 the design was revised">
+  <h2>In this video</h2>
+  <ol class="steps">
+    <li>Purpose, terms and scope</li>
+    <li>C4: context, containers, components</li>
+    <li>The data model</li>
+    <li>Three sequences: create, edit and preview, lifecycle</li>
+    <li>The rules: Liquid profile, inert HTML, required placeholders</li>
+    <li>Requirements traceability</li>
+  </ol>
+  <p class="small muted">Revised 2026-10-09: Liquid rendered with Fluid (ADR-016) · source of truth: <span class="file">docs/detailed-designs/administration/manage-email-templates/README.md</span></p>
+</section>
+
+<section id="purpose" data-part="1" data-cue="Saturdaze already drafts two account emails">
+  <h2>One managed home for every email</h2>
+  <div class="cols three">
+    <div class="card"><h3>Today</h3><p>The API drafts verification and reset emails; their wording lives in no editable place, and no provider sends them (G01, video 18).</p></div>
+    <div class="card forest"><h3>This feature</h3><p>Administrators write, preview, version and retire templates in Saturdaze Admin.</p></div>
+    <div class="card sky"><h3>Later</h3><p>A sender looks an <b>Active</b> template up by its <b>key</b>.</p></div>
+  </div>
+</section>
+
+<section id="terms" data-part="1" data-cue="A few terms carry the design.">
+  <h2>The terms</h2>
+  <table class="grid small">
+    <tr><th>Term</th><th>Meaning</th></tr>
+    <tr><td>email template</td><td>Subject, preheader, HTML body and plain-text body</td></tr>
+    <tr><td>key</td><td>Unique, immutable: <code>account.password-reset</code></td></tr>
+    <tr><td>category</td><td>Account · Notification · Scheduled · SpecialOccasion · Marketing; fixed at creation</td></tr>
+    <tr><td>status</td><td>Draft · Active · Archived</td></tr>
+    <tr><td>placeholder</td><td>Top-level Liquid variable read from outside, e.g. <code>recipientName</code></td></tr>
+    <tr><td>sample data</td><td>JSON object of placeholder values for the preview</td></tr>
+    <tr><td>built-ins</td><td><code>appName</code> <code>appUrl</code> <code>recipientName</code> <code>recipientEmail</code> <code>unsubscribeUrl</code> <code>currentYear</code></td></tr>
+    <tr><td>system template</td><td><code>account.verify-email</code>, <code>account.password-reset</code></td></tr>
+    <tr><td>revision</td><td>Immutable snapshot on every create, save and status change</td></tr>
+  </table>
+</section>
+
+<section id="scope" data-part="1" data-cue="Sending, scheduling, audiences and localisation are out of scope">
+  <h2>Out of scope</h2>
+  <div class="cols">
+    <div class="card"><h3>Later capabilities</h3><p>Sending · scheduling · audience selection · unsubscribe handling · localisation</p></div>
+    <div class="card forest"><h3>No family data</h3><p>Templates hold content, not recipients; the preview renders sample values only.</p></div>
+  </div>
+</section>
+
+<section id="context" data-part="2" data-cue="In the context view, an administrator manages templates in Saturdaze.">
+  <figure class="diagram" style="--fx: 140px; --fw: 360px; --view: inset(0 0 118px 0)">
+    <img src="../../detailed-designs/administration/manage-email-templates/diagrams/c4-context.png" alt="C4 system context for managing email templates">
+  </figure>
+  <aside class="diagram-notes wide" style="--nx: 600px; --ny: 150px; --nw: 1180px">
+    <h2>System context</h2>
+    <ul>
+      <li>Administrator → Saturdaze: manages templates, HTTPS</li>
+      <li>Saturdaze → Email provider: <i>later capability</i></li>
+      <li>Provider not yet chosen (drift audit G01)</li>
+      <li>Provider → Family member: SMTP</li>
+    </ul>
+    <p class="small muted"><span class="file">diagrams/c4-context.puml</span></p>
+  </aside>
+</section>
+
+<section id="containers" data-part="3" data-cue="One level down are four containers.">
+  <figure class="diagram" style="--fx: 140px; --fw: 480px; --view: inset(0 0 160px 0)">
+    <img src="../../detailed-designs/administration/manage-email-templates/diagrams/c4-container.png" alt="C4 container view for managing email templates">
+  </figure>
+  <aside class="diagram-notes wide" style="--nx: 700px; --ny: 150px; --nw: 1100px">
+    <h2>Four containers</h2>
+    <ul>
+      <li><b>Saturdaze Admin</b> (Angular): list, editor with live preview, dialogs</li>
+      <li><b>Saturdaze API</b>: <code>/api/admin/email-templates*</code> behind the <code>Admin</code> policy</li>
+      <li><b>SQL Server</b>: <code>EmailTemplates</code>, <code>EmailTemplateRevisions</code></li>
+      <li><b>saturdaze CLI</b>: <code>seed</code> inserts missing system templates, never overwrites</li>
+    </ul>
+    <p class="small muted">Migration <code>AddEmailTemplates</code> applies through <code>saturdaze migrate</code></p>
+  </aside>
+</section>
+
+<section id="components-front" data-part="4" data-cue="The component view has two halves.">
+  <figure class="diagram" style="--fw: 830px; --view: inset(36px 270px 1090px 385px)">
+    <img src="../../detailed-designs/administration/manage-email-templates/diagrams/c4-component.png" alt="C4 component view, Saturdaze Admin and libraries">
+  </figure>
+  <aside class="diagram-notes wide" style="--nx: 960px; --ny: 130px; --nw: 900px">
+    <h2>Front end</h2>
+    <ul>
+      <li>Pages: <code>EmailTemplatesPage</code> (A8), <code>EmailTemplatePage</code> (A9)</li>
+      <li>CDK dialogs: AD7 new, AD8 delete, AD9 history</li>
+      <li><code>AdminEmailTemplatesService</code> behind <code>ADMIN_EMAIL_TEMPLATES_SERVICE</code></li>
+      <li><code>sd-email-preview</code>: the sandboxed preview frame</li>
+    </ul>
+  </aside>
+</section>
+
+<section id="handlers" data-part="4" data-cue="On the back end, a thin controller sends MediatR requests">
+  <h2>Nine routes, nine handlers</h2>
+  <table class="grid small">
+    <tr><th>Route under <code>/api/admin/email-templates</code></th><th>Handler</th></tr>
+    <tr><td><code>GET ?q=&amp;category=&amp;status=</code></td><td><code>ListEmailTemplatesQueryHandler</code></td></tr>
+    <tr><td><code>GET /{id}</code></td><td><code>GetEmailTemplateQueryHandler</code></td></tr>
+    <tr><td><code>POST</code></td><td><code>CreateEmailTemplateCommandHandler</code></td></tr>
+    <tr><td><code>PUT /{id}</code></td><td><code>SaveEmailTemplateCommandHandler</code></td></tr>
+    <tr><td><code>POST /preview</code></td><td><code>PreviewEmailTemplateQueryHandler</code></td></tr>
+    <tr><td><code>POST /{id}/status</code></td><td><code>ChangeEmailTemplateStatusCommandHandler</code></td></tr>
+    <tr><td><code>DELETE /{id}</code></td><td><code>DeleteEmailTemplateCommandHandler</code></td></tr>
+    <tr><td><code>GET /{id}/revisions</code></td><td><code>ListEmailTemplateRevisionsQueryHandler</code></td></tr>
+    <tr><td><code>GET /{id}/revisions/{version}</code></td><td><code>GetEmailTemplateRevisionQueryHandler</code></td></tr>
+  </table>
+  <p class="small muted"><code>AdminEmailTemplatesController</code> · <code>[Authorize(Policy = "Admin")]</code> · handlers in <span class="file">Saturdaze.Application/Admin/EmailTemplates/</span></p>
+</section>
+
+<section id="components-back" data-part="4" data-cue="EmailTemplateLiquid parses Liquid and enforces the profile.">
+  <figure class="diagram" style="--fw: 1300px; --view: inset(770px 0 195px 0)">
+    <img src="../../detailed-designs/administration/manage-email-templates/diagrams/c4-component.png" alt="C4 component view, Saturdaze API and Application">
+  </figure>
+  <aside class="diagram-notes" style="--nx: 1400px; --nw: 470px">
+    <h3>Application services</h3>
+    <ul>
+      <li><code>EmailTemplateLiquid</code>: Fluid, the profile</li>
+      <li><code>EmailTemplateRules</code>: deny-list, required placeholders</li>
+      <li><code>EmailTemplateRenderer</code>: preview now, sender later</li>
+      <li><code>EmailTemplateCatalog</code>, <code>EmailTemplateStarters</code></li>
+      <li><code>EmailTemplateRevisionWriter</code></li>
+    </ul>
+  </aside>
+</section>
+
+<section id="entity" data-part="5" data-cue="The class view starts with the entity">
+  <figure class="diagram" style="--fx: 140px; --fw: 540px; --view: inset(262px 1610px 0 0)">
+    <img src="../../detailed-designs/administration/manage-email-templates/diagrams/class-structure.png" alt="Class diagram: EmailTemplate, EmailTemplateRevision and their enums">
+  </figure>
+  <aside class="diagram-notes wide" style="--nx: 740px; --ny: 130px; --nw: 1100px">
+    <h2>A template and its revisions</h2>
+    <ul>
+      <li><code>Version</code>: starts at 1, +1 on every change, the concurrency token</li>
+      <li>One template, many revisions: <code>EmailTemplateRevision</code></li>
+      <li>Action: <code>Create</code> · <code>Edit</code> · <code>Status</code>; time in UTC</li>
+      <li><code>AdminUserId</code> is null for the seeder</li>
+      <li>Written, never updated; deleted with the template</li>
+    </ul>
+  </aside>
+</section>
+
+<section id="persistence" data-part="5" data-cue="In the database, the key is unique">
+  <h2>Persistence: migration <code>AddEmailTemplates</code></h2>
+  <div class="cols">
+    <div class="card"><h3>EmailTemplates</h3>
+      <ul class="small">
+        <li>Unique index on <code>Key</code></li>
+        <li>Index on <code>(Category, Status)</code></li>
+        <li>Enums stored as strings</li>
+        <li>Bodies <code>nvarchar(max)</code>, validated to 100 000 and 50 000 characters</li>
+      </ul>
+    </div>
+    <div class="card sky"><h3>EmailTemplateRevisions</h3>
+      <ul class="small">
+        <li>Unique index on <code>(TemplateId, Version)</code></li>
+        <li>Cascading foreign key to the template</li>
+      </ul>
+    </div>
+  </div>
+  <p class="small muted"><code>EmailTemplateSeeder</code> (<span class="file">Saturdaze.Cli/Seed</span>, <code>email-templates.json</code>): inserts a missing system template as Active, version 1, with a version 1 revision</p>
+</section>
+
+<section id="seq-create" data-part="6" data-cue="The first sequence creates a template.">
+  <figure class="diagram" style="--fy: 96px; --fw: 1808px; --fh: 640px; --view: inset(0 0 114px 0)">
+    <img src="../../detailed-designs/administration/manage-email-templates/diagrams/sequence-create.png" alt="Sequence: create or duplicate a template">
+  </figure>
+  <aside class="diagram-notes" style="--nx: 56px; --ny: 770px; --nw: 1808px">
+    <p><b>Create or duplicate</b> · New template (A8) or Duplicate (A9) → AD7 → <code>POST /api/admin/email-templates</code> · <code>L2-126</code>, <code>L2-130</code></p>
+  </aside>
+</section>
+
+<section id="create-rules" data-part="6" data-cue="An existing key gets 409">
+  <h2>Create: one check, two sources</h2>
+  <p class="small muted">Validated first: key pattern, name, category (400 naming the field)</p>
+  <div class="cols">
+    <div class="card bad"><h3>Key exists</h3><p>409 <code>template_key_exists</code></p></div>
+    <div class="card good"><h3>New key</h3>
+      <ul class="small">
+        <li>Content from <code>duplicateOf</code> or <code>EmailTemplateStarters.For(category)</code></li>
+        <li><code>Draft</code>, version 1, <code>IsSystem = false</code></li>
+        <li><code>Write(template, Create)</code>, one <code>SaveChangesAsync</code></li>
+        <li>201 <code>EmailTemplateDto</code> → the editor opens</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="seq-edit" data-part="7" data-cue="The second sequence has two halves.">
+  <figure class="diagram" style="--fy: 96px; --fw: 1808px; --fh: 640px; --view: inset(0 0 116px 0)">
+    <img src="../../detailed-designs/administration/manage-email-templates/diagrams/sequence-edit-preview.png" alt="Sequence: edit, preview and save a template">
+  </figure>
+  <aside class="diagram-notes" style="--nx: 56px; --ny: 770px; --nw: 1808px">
+    <p><b>Preview</b> (top) · debounce 300 ms → <code>EmailTemplateLiquid</code> checks → <code>CheckHtml</code> → <code>EmailTemplateRenderer</code>: sample data over built-ins, <code>HtmlEncoder</code>, <code>MaxSteps</code> 10 000 · nothing saved</p>
+    <p><b>Save</b> (bottom) · version check, then the same checks plus required placeholders · <code>L2-127</code>, <code>L2-128</code>, <code>L2-130</code></p>
+  </aside>
+</section>
+
+
+<section id="save" data-part="7" data-cue="Then the save.">
+  <h2>Save: optimistic concurrency</h2>
+  <p class="small muted"><code>PUT /api/admin/email-templates/{id}</code> with the content and the <code>version</code> the editor loaded</p>
+  <div class="cols">
+    <div class="card bad"><h3>Version differs</h3><p>409 <code>template_stale</code>; the editor says someone else changed the template and offers to reload</p></div>
+    <div class="card good"><h3>Version current</h3>
+      <ul class="small">
+        <li>Liquid and HTML checks, then <code>CheckRequired</code></li>
+        <li><code>Version</code> + 1, <code>UpdatedAt</code> (UTC), <code>UpdatedByEmail</code></li>
+        <li><code>Write(template, Edit)</code>, one <code>SaveChangesAsync</code></li>
+      </ul>
+    </div>
+  </div>
+  <p class="small muted"><code>Version</code> is the EF Core concurrency token: <code>EmailTemplateConcurrency</code> turns a lost race into <code>template_stale</code></p>
+</section>
+
+<section id="seq-lifecycle" data-part="8" data-cue="The third sequence covers the rest.">
+  <figure class="diagram" style="--fy: 96px; --fw: 1808px; --fh: 700px; --view: inset(0 0 112px 0)">
+    <img src="../../detailed-designs/administration/manage-email-templates/diagrams/sequence-lifecycle-history.png" alt="Sequence: change status, delete and restore a revision">
+  </figure>
+  <aside class="diagram-notes" style="--nx: 56px; --ny: 820px; --nw: 1808px">
+    <p><b>Status</b> <code>POST …/{id}/status { status, version }</code> · system template stays Active, else 400 <code>system_template</code> · stale → 409 · <code>L2-129</code>, <code>L2-130</code></p>
+  </aside>
+</section>
+
+<section id="history" data-part="8" data-cue="History lists the revisions newest first.">
+  <h2>History never rewrites the past</h2>
+  <div class="flow">
+    <div class="node"><b>v1 Create</b>v2 Edit · v3 Status</div>
+    <div class="arrow">→</div>
+    <div class="node"><b>Load v1 into editor</b>in the form, unsaved</div>
+    <div class="arrow">→</div>
+    <div class="node accent"><b>Save changes</b>v4, with v1's content</div>
+  </div>
+  <p class="small muted"><code>GET …/{id}/revisions</code> newest first · <code>GET …/{id}/revisions/{version}</code> full content · History dialog (AD9)</p>
+</section>
+
+<section id="delete" data-part="8" data-cue="Delete asks for confirmation">
+  <h2>Delete: the history goes too</h2>
+  <ul>
+    <li>AD8 names the template; Delete template confirms</li>
+    <li><code>DELETE /api/admin/email-templates/{id}</code> → 204, back to A8</li>
+    <li>Revisions removed by the cascading foreign key</li>
+    <li>System template → 400 <code>system_template</code></li>
+    <li>A log line keeps the key and the administrator id</li>
+  </ul>
+</section>
+
+<section id="adr" data-part="9" data-cue="Now the rules.">
+  <h2>ADR-016: Liquid, rendered with Fluid</h2>
+  <div class="cols">
+    <div class="card"><h3>Why Liquid</h3><p class="small">Widely known (Shopify, Jekyll, many email platforms), designed for untrusted authors, and plain <code>{{name}}</code> placeholders are already valid Liquid.</p></div>
+    <div class="card sky"><h3>What it adds</h3>
+      <ul class="small">
+        <li><code>{{ name }}</code> outputs a value</li>
+        <li><code>{%&nbsp;if&nbsp;%}</code> and <code>{%&nbsp;for&nbsp;%}</code>: conditions and loops</li>
+        <li>Filters such as <code>upcase</code> or <code>date</code></li>
+      </ul>
+    </div>
+  </div>
+  <p class="small muted"><code>Fluid.Core</code>, pinned in <code>Directory.Packages.props</code> (ADR-004) · <span class="file">docs/adr/ADR-016-liquid-email-templates.md</span></p>
+</section>
+
+<section id="profile" data-part="9" data-cue="The design restricts it.">
+  <h2>The restricted profile (L2-131)</h2>
+  <table class="grid small">
+    <tr><th>Rule</th><th>Refused example</th><th>Code</th></tr>
+    <tr><td>Standard tags and Fluid's standard filters</td><td><code>{{ note | shout }}</code></td><td><code>invalid_template</code></td></tr>
+    <tr><td>No <code>include</code> or <code>render</code></td><td><code>{% include 'footer' %}</code></td><td><code>invalid_template</code></td></tr>
+    <tr><td>No <code>raw</code> in the HTML body</td><td><code>{{ note | raw }}</code></td><td><code>unsafe_html</code></td></tr>
+    <tr><td>At most 10 000 steps</td><td><code>{% for i in (1..100000) %}{{ i }}{% endfor %}</code></td><td><code>invalid_template</code></td></tr>
+    <tr><td>Field, line and column named</td><td><code>Hi {{ first name }}</code></td><td><code>invalid_template</code></td></tr>
+    <tr><td>Sample data: JSON object, at most 100 names, 20 000 characters</td><td>Any other shape</td><td>400 on <code>sampleData</code></td></tr>
+  </table>
+</section>
+
+<section id="layers" data-part="10" data-cue="Liquid controls substitution, not the markup an administrator types">
+  <h2>Three layers keep HTML inert</h2>
+  <div class="cols three">
+    <div class="card"><h3>1 · Deny-list</h3>
+      <ul class="small">
+        <li><code>&lt;script&gt;</code> <code>&lt;iframe&gt;</code> <code>&lt;object&gt;</code> <code>&lt;embed&gt;</code> <code>&lt;form&gt;</code> <code>&lt;base&gt;</code></li>
+        <li><code>on…=</code> attributes</li>
+        <li><code>javascript:</code> <code>vbscript:</code> <code>data:text/html</code></li>
+      </ul>
+      <p class="small muted"><code>EmailTemplateRules</code></p>
+    </div>
+    <div class="card sky"><h3>2 · Encoding</h3><p class="small">HTML body rendered with <code>HtmlEncoder.Default</code>; subject, preheader and text body with <code>NullEncoder</code></p></div>
+    <div class="card forest"><h3>3 · Sandbox</h3>
+      <ul class="small">
+        <li><code>&lt;iframe sandbox&gt;</code></li>
+        <li>No <code>allow-scripts</code></li>
+        <li>No <code>allow-same-origin</code></li>
+        <li>CSP: only HTTPS images and fonts</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="required" data-part="10" data-cue="Required placeholders protect the reason a template exists">
+  <h2>Required placeholders</h2>
+  <table class="grid">
+    <tr><th>Template</th><th>Must use</th></tr>
+    <tr><td><code>account.verify-email</code></td><td><code>verificationLink</code></td></tr>
+    <tr><td><code>account.password-reset</code></td><td><code>resetLink</code></td></tr>
+    <tr><td>Every Marketing template</td><td><code>unsubscribeUrl</code></td></tr>
+  </table>
+  <p class="small">Found by walking the parsed template, so <code>{{ resetLink | escape }}</code> counts · either body without it → 400 <code>missing_placeholder</code></p>
+</section>
+
+<section id="codes" data-part="10" data-cue="Six error codes, listed here">
+  <h2>Six error codes</h2>
+  <table class="grid small">
+    <tr><th>Code</th><th>Status</th><th>When</th></tr>
+    <tr><td><code>template_key_exists</code></td><td>409</td><td>Create with a key that exists</td></tr>
+    <tr><td><code>template_stale</code></td><td>409</td><td>Save or status change with an old version</td></tr>
+    <tr><td><code>invalid_template</code></td><td>400</td><td>Liquid syntax, unknown filter, <code>include</code>/<code>render</code>, too many steps</td></tr>
+    <tr><td><code>unsafe_html</code></td><td>400</td><td>Deny-listed HTML, or <code>raw</code> in the HTML body</td></tr>
+    <tr><td><code>missing_placeholder</code></td><td>400</td><td>A required variable no longer used</td></tr>
+    <tr><td><code>system_template</code></td><td>400</td><td>Any status but Active, or delete, on a system template</td></tr>
+  </table>
+</section>
+
+<section id="trace" data-part="11" data-cue="Everything traces to one capability">
+  <h2>L1-037, refined by L2-124 to L2-131</h2>
+  <table class="grid small">
+    <tr><th>L2</th><th>Also refines</th><th>Covers</th></tr>
+    <tr><td><code>L2-124</code></td><td>L1-017 CLI</td><td>Store templates, seed the system templates</td></tr>
+    <tr><td><code>L2-125</code></td><td>L1-011 responsive</td><td>List and find (A8)</td></tr>
+    <tr><td><code>L2-126</code></td><td>—</td><td>Create and duplicate (AD7)</td></tr>
+    <tr><td><code>L2-127</code></td><td>L1-012 security</td><td>Edit safely (A9)</td></tr>
+    <tr><td><code>L2-128</code></td><td>L1-012, L1-014 accessibility</td><td>Preview with sample data</td></tr>
+    <tr><td><code>L2-129</code></td><td>—</td><td>Activate, archive, restore, delete (AD8)</td></tr>
+    <tr><td><code>L2-130</code></td><td>L1-015 observability</td><td>Revision history (AD9)</td></tr>
+    <tr><td><code>L2-131</code></td><td>L1-012 security</td><td>Write templates in Liquid</td></tr>
+  </table>
+</section>
+
+<section id="tests" data-part="11" data-cue="The sequence diagrams carry these IDs on their arrows">
+  <h2>From criteria to tests</h2>
+  <ul class="small">
+    <li>Arrows cite criteria: <i>409, offer reload (L2-127 AC2)</i></li>
+    <li>API integration tests: <span class="file">Saturdaze.Api.Tests/Admin/EmailTemplates/</span></li>
+    <li>Seeder: <span class="file">Saturdaze.Cli.Tests</span>, insert-only</li>
+    <li>Playwright: <span class="file">e2e/tests/admin/email-templates.spec.ts</span></li>
+    <li>… and <span class="file">email-template-{create,edit,preview,lifecycle,history}.spec.ts</span></li>
+    <li>Page objects: <span class="file">e2e/pages/admin/admin-email-templates.page.ts</span> <span class="file">admin-email-template.page.ts</span></li>
+  </ul>
+</section>
+
+<section id="recap" data-part="12" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div>One home for every email; a sender finds an Active template by key.</div>
+    <div><code>Version</code> is the concurrency token: stale means <code>template_stale</code>.</div>
+    <div>Every create, save and status change writes a revision.</div>
+    <div>Restricted Liquid, a deny-list, encoding and a sandbox keep HTML inert.</div>
+  </div>
+</section>
+
+<section id="next" data-part="12" data-cue="ADR sixteen also records that video twenty">
+  <h2>Where to read more</h2>
+  <ul>
+    <li><span class="file">docs/detailed-designs/administration/manage-email-templates/</span></li>
+    <li><span class="file">docs/adr/ADR-016-liquid-email-templates.md</span></li>
+    <li><code>L1-037</code> in <span class="file">docs/specs/L1.md</span> · <code>L2-124</code> to <code>L2-131</code> in <span class="file">docs/specs/L2.md</span></li>
+  </ul>
+  <p class="small muted">Video 20 shows the earlier placeholder syntax; ADR-016 says it should be re-recorded.</p>
+</section>
+
+<script src="../assets/slides.js"></script>
+</body>
+</html>

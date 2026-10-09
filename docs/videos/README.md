@@ -65,13 +65,14 @@ Four videos on family member sign-in (L1-037, ADR-016): the account that creates
 
 ## Email templates series
 
-Three videos on email template administration in Saturdaze Admin (L1-037, L2-124 to L2-130): the templates Saturdaze sends, written, previewed, versioned and retired by administrators. Each mixes screen recordings of the real app, made against the email demo data (`tools/video-record/email-demo`), with the code behind each screen. Watch in order; video 18 sets the scene.
+Videos on email template administration in Saturdaze Admin (L1-037, L2-124 to L2-131): the templates Saturdaze sends, written, previewed, versioned and retired by administrators. Videos 19 to 21 mix screen recordings of the real app, made against the email demo data (`tools/video-record/email-demo`), with the code behind each screen; video 22 explains the detailed design behind them, as revised for Liquid templates (ADR-016). Watch in order; video 18 sets the scene.
 
 | # | Video | Runtime | What you learn |
 | --- | --- | --- | --- |
 | 19 | [Email templates: the catalog and new templates](19-email-templates-catalog-and-new/README.md) | ~6.7 min | What a template is (key, category, status, version); the seeded system templates; the Email templates screen; New template, starters and Duplicate. |
 | 20 | [Editing and previewing email templates](20-editing-and-previewing-email-templates/README.md) | ~8.2 min | The editor and its version; placeholders, built-ins and sample data; the live preview and its renderer; keeping template HTML inert; required placeholders; stale saves. |
 | 21 | [Email template lifecycle and history](21-email-template-lifecycle-and-history/README.md) | ~6.1 min | Draft, Active, Archived; why system templates stay active; Delete; the revision history and loading an old version; what a future sender needs. |
+| 22 | [Email template administration: the detailed design](22-email-template-design/README.md) | ~9.1 min | The design behind 19-21, revised for Liquid (ADR-016): C4 context, container and component views; the data model; the create, edit-and-preview and lifecycle sequences; the Liquid profile, inert HTML, required placeholders and `template_stale`; traceability to L1-037 and L2-124 to L2-131. |
 
 ## Components series
 
