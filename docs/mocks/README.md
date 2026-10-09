@@ -34,8 +34,8 @@ screenshots/          committed <slug>.<viewport>.png captures (390 / 820 / 1440
 | Review submissions (admin) | `review-submissions.html`, `review-submissions.empty.html` |
 | Auth | `sign-in.html` (2 states), `create-account.html`, `reset-password.html` (5 states), `verify-email.html` (3 states), `accept-invite.html` (2 states) |
 | Public | `landing.html`, `legal.html` (Terms + Privacy) |
-| Admin (Saturdaze Admin, ADR-014; bare shell with its own side navigation from 1024px) | `admin.sign-in.html` (2 states), `admin.html` (Photo health), `admin.places.html`, `admin.place.html`, `admin.reviews.html`, `admin.ingestion-skips.html`, `admin.activity.html` |
-| Dialogs gallery | `dialogs.html` (D1–D30 and admin AD1–AD6 rendered inline) |
+| Admin (Saturdaze Admin, ADR-014; bare shell with its own side navigation from 1024px) | `admin.sign-in.html` (2 states), `admin.html` (Photo health), `admin.places.html`, `admin.place.html`, `admin.reviews.html`, `admin.ingestion-skips.html`, `admin.activity.html`, `admin.emails.html` (Email templates), `admin.email.html` (editor and preview; L2-124 → L2-130) |
+| Dialogs gallery | `dialogs.html` (D1–D30 and admin AD1–AD9 rendered inline) |
 
 ## Photos and maps (Wanderlog layout study)
 

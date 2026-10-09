@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<!-- @shell:head -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Email templates — Saturdaze Admin</title>
+<link rel="stylesheet" href="../styles/tokens.css">
+<link rel="stylesheet" href="../styles/app.css">
+<!-- @/shell:head -->
+</head>
+<body data-page="admin" data-shell="bare" data-screen="emails">
+<div class="admin">
+  <nav class="admin-nav" aria-label="Admin">
+    <a class="admin-nav__brand" href="./admin.html"><span class="brand-mark" aria-hidden="true"></span><span class="admin-nav__brand-text">Saturdaze</span><span class="admin-nav__tag">Admin</span></a>
+    <div class="admin-nav__links">
+      <a class="admin-nav__link" data-nav="health" href="./admin.html"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg>Photo health</a>
+      <a class="admin-nav__link" data-nav="places" href="./admin.places.html"><svg class="icon" aria-hidden="true"><use href="#i-map"/></svg>Places</a>
+      <a class="admin-nav__link" data-nav="reviews" href="./admin.reviews.html"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Review queue</a>
+      <a class="admin-nav__link" data-nav="skips" href="./admin.ingestion-skips.html"><svg class="icon" aria-hidden="true"><use href="#i-refresh"/></svg>Ingestion skips</a>
+      <a class="admin-nav__link" data-nav="activity" href="./admin.activity.html"><svg class="icon" aria-hidden="true"><use href="#i-calendar"/></svg>Activity log</a>
+      <a class="admin-nav__link" data-nav="emails" href="./admin.emails.html" aria-current="page"><svg class="icon" aria-hidden="true"><use href="#i-mail"/></svg>Email templates</a>
+    </div>
+    <div class="admin-nav__account">
+      <span class="avatar avatar--sm avatar--q" aria-hidden="true">A</span>
+      <span class="admin-nav__email">admin@saturdaze.app</span>
+      <a class="btn btn--ghost btn--sm" href="./admin.sign-in.html"><svg class="icon" aria-hidden="true"><use href="#i-sign_out"/></svg>Sign out</a>
+    </div>
+  </nav>
+  <main class="admin-main container" id="main">
+  <header class="page-header">
+    <div class="page-header__text">
+      <h1 class="page-header__title">Email templates</h1>
+      <p class="page-header__subtitle">What Saturdaze sends: account emails, notifications, scheduled digests, special occasions and marketing.</p>
+    </div>
+    <div class="page-header__actions">
+      <a class="btn btn--primary" href="./dialogs.html#dialog-admin-new-template"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg>New template</a>
+    </div>
+  </header>
+  <div class="toolbar toolbar--templates">
+    <div class="field toolbar__search">
+      <label class="field__label" for="et-q">Search</label>
+      <input class="field__input" id="et-q" type="search" placeholder="Name, key or subject">
+    </div>
+    <div class="field toolbar__sort">
+      <label class="field__label" for="et-category">Category</label>
+      <select class="field__input" id="et-category"><option selected>All categories</option><option>Account</option><option>Notification</option><option>Scheduled</option><option>Special occasion</option><option>Marketing</option></select>
+    </div>
+    <div class="field toolbar__sort">
+      <label class="field__label" for="et-status">Status</label>
+      <select class="field__input" id="et-status"><option selected>All statuses</option><option>Draft</option><option>Active</option><option>Archived</option></select>
+    </div>
+  </div>
+  <p class="toolbar__count" role="status">6 templates</p>
+  <div class="list list--card template-list">
+      <a class="list__item list__item--action template-row" href="./admin.email.html"><span class="template-row__icon" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-mail"/></svg></span><span class="list__text"><span class="list__title">Birthday wishes</span><span class="list__sub template-row__key">occasion.birthday</span><span class="template-row__chips"><span class="chip chip--sun">Special occasion</span><span class="chip">Draft</span></span><span class="template-row__updated">Updated 2026-10-09 09:12 UTC by curator@saturdaze.app</span></span><span class="list__trail"><svg class="icon" aria-hidden="true"><use href="#i-chevron_right"/></svg></span></a>
+      <a class="list__item list__item--action template-row" href="./admin.email.html"><span class="template-row__icon" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-mail"/></svg></span><span class="list__text"><span class="list__title">Reset your password</span><span class="list__sub template-row__key">account.password-reset</span><span class="template-row__chips"><span class="chip chip--primary">Account</span><span class="chip chip--accent">Active</span><span class="chip"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg>System</span></span><span class="template-row__updated">Updated 2026-10-08 16:40 UTC by admin@saturdaze.app</span></span><span class="list__trail"><svg class="icon" aria-hidden="true"><use href="#i-chevron_right"/></svg></span></a>
+      <a class="list__item list__item--action template-row" href="./admin.email.html"><span class="template-row__icon" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-mail"/></svg></span><span class="list__text"><span class="list__title">Spring sale</span><span class="list__sub template-row__key">promo.spring-sale</span><span class="template-row__chips"><span class="chip chip--indoor">Marketing</span><span class="chip chip--warn">Archived</span></span><span class="template-row__updated">Updated 2026-10-02 11:05 UTC by admin@saturdaze.app</span></span><span class="list__trail"><svg class="icon" aria-hidden="true"><use href="#i-chevron_right"/></svg></span></a>
+      <a class="list__item list__item--action template-row" href="./admin.email.html"><span class="template-row__icon" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-mail"/></svg></span><span class="list__text"><span class="list__title">Verify your email</span><span class="list__sub template-row__key">account.verify-email</span><span class="template-row__chips"><span class="chip chip--primary">Account</span><span class="chip chip--accent">Active</span><span class="chip"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg>System</span></span><span class="template-row__updated">Updated 2026-10-07 08:00 UTC by Saturdaze</span></span><span class="list__trail"><svg class="icon" aria-hidden="true"><use href="#i-chevron_right"/></svg></span></a>
+      <a class="list__item list__item--action template-row" href="./admin.email.html"><span class="template-row__icon" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-mail"/></svg></span><span class="list__text"><span class="list__title">Weekend plan is ready</span><span class="list__sub template-row__key">notify.weekend-ready</span><span class="template-row__chips"><span class="chip chip--sky">Notification</span><span class="chip chip--accent">Active</span></span><span class="template-row__updated">Updated 2026-10-05 14:22 UTC by curator@saturdaze.app</span></span><span class="list__trail"><svg class="icon" aria-hidden="true"><use href="#i-chevron_right"/></svg></span></a>
+      <a class="list__item list__item--action template-row" href="./admin.email.html"><span class="template-row__icon" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-mail"/></svg></span><span class="list__text"><span class="list__title">Your weekly plan</span><span class="list__sub template-row__key">schedule.weekly-digest</span><span class="template-row__chips"><span class="chip chip--leaf">Scheduled</span><span class="chip">Draft</span></span><span class="template-row__updated">Updated 2026-10-04 10:30 UTC by curator@saturdaze.app</span></span><span class="list__trail"><svg class="icon" aria-hidden="true"><use href="#i-chevron_right"/></svg></span></a>
+  </div>
+  <section class="section" id="state-empty">
+    <div class="empty">
+      <span class="disc disc--xl" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-mail"/></svg></span>
+      <h2 class="empty__title">No templates match</h2>
+      <p class="empty__body">Clear the search or choose another category or status.</p>
+    </div>
+  </section>
+  </main>
+</div>
+<script src="../app.js"></script>
+</body>
+</html>

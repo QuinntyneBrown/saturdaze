@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+<!-- @shell:head -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Email template — Saturdaze Admin</title>
+<link rel="stylesheet" href="../styles/tokens.css">
+<link rel="stylesheet" href="../styles/app.css">
+<!-- @/shell:head -->
+</head>
+<body data-page="admin" data-shell="bare" data-screen="email">
+<div class="admin">
+  <nav class="admin-nav" aria-label="Admin">
+    <a class="admin-nav__brand" href="./admin.html"><span class="brand-mark" aria-hidden="true"></span><span class="admin-nav__brand-text">Saturdaze</span><span class="admin-nav__tag">Admin</span></a>
+    <div class="admin-nav__links">
+      <a class="admin-nav__link" data-nav="health" href="./admin.html"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg>Photo health</a>
+      <a class="admin-nav__link" data-nav="places" href="./admin.places.html"><svg class="icon" aria-hidden="true"><use href="#i-map"/></svg>Places</a>
+      <a class="admin-nav__link" data-nav="reviews" href="./admin.reviews.html"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Review queue</a>
+      <a class="admin-nav__link" data-nav="skips" href="./admin.ingestion-skips.html"><svg class="icon" aria-hidden="true"><use href="#i-refresh"/></svg>Ingestion skips</a>
+      <a class="admin-nav__link" data-nav="activity" href="./admin.activity.html"><svg class="icon" aria-hidden="true"><use href="#i-calendar"/></svg>Activity log</a>
+      <a class="admin-nav__link" data-nav="emails" href="./admin.emails.html" aria-current="page"><svg class="icon" aria-hidden="true"><use href="#i-mail"/></svg>Email templates</a>
+    </div>
+    <div class="admin-nav__account">
+      <span class="avatar avatar--sm avatar--q" aria-hidden="true">A</span>
+      <span class="admin-nav__email">admin@saturdaze.app</span>
+      <a class="btn btn--ghost btn--sm" href="./admin.sign-in.html"><svg class="icon" aria-hidden="true"><use href="#i-sign_out"/></svg>Sign out</a>
+    </div>
+  </nav>
+  <main class="admin-main container" id="main">
+  <header class="page-header">
+    <div class="page-header__text">
+      <a class="page-header__eyebrow" href="./admin.emails.html"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-arrow_left"/></svg>Email templates</a>
+      <h1 class="page-header__title">Reset your password</h1>
+      <p class="page-header__subtitle">account.password-reset · Account · version 4 · updated 2026-10-08 16:40 UTC by admin@saturdaze.app</p>
+      <p class="template-status"><span class="chip chip--accent">Active</span><span class="chip"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg>System</span><span class="chip chip--sun template-status__dirty">Unsaved changes</span></p>
+    </div>
+    <div class="page-header__actions">
+      <button class="btn btn--primary" type="button"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Save changes</button>
+      <a class="btn btn--quiet" href="./dialogs.html#dialog-admin-template-history"><svg class="icon" aria-hidden="true"><use href="#i-refresh"/></svg>History</a>
+      <a class="btn btn--quiet" href="./dialogs.html#dialog-admin-new-template"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg>Duplicate</a>
+    </div>
+  </header>
+  <div class="banner banner--info template-note" role="note"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg><span>A system template: Saturdaze sends it for password resets. It stays active, and both bodies keep <code>{{resetLink}}</code>.</span></div>
+  <div class="email-editor">
+    <form class="email-editor__form card" aria-label="Template content">
+      <div class="field">
+        <label class="field__label" for="ed-name">Name <span class="field__req">Required</span></label>
+        <input class="field__input" id="ed-name" type="text" value="Reset your password">
+      </div>
+      <div class="field">
+        <label class="field__label" for="ed-description">Description</label>
+        <textarea class="field__input" id="ed-description" rows="2">Sent when someone asks to reset a forgotten password.</textarea>
+      </div>
+      <div class="field">
+        <label class="field__label" for="ed-subject">Subject <span class="field__req">Required</span></label>
+        <input class="field__input" id="ed-subject" type="text" value="Reset your {{appName}} password">
+      </div>
+      <div class="field">
+        <label class="field__label" for="ed-preheader">Preheader</label>
+        <input class="field__input" id="ed-preheader" type="text" value="The link works for {{expiresIn}}.">
+        <span class="field__hint">The line inboxes show after the subject.</span>
+      </div>
+      <div class="field">
+        <label class="field__label" for="ed-html">HTML body <span class="field__req">Required</span></label>
+        <textarea class="field__input email-editor__code" id="ed-html" rows="16" spellcheck="false">&lt;table role=&quot;presentation&quot; width=&quot;100%&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;&gt;
+  &lt;tr&gt;&lt;td style=&quot;padding:24px;font-family:Arial,sans-serif;color:#1f2933&quot;&gt;
+    &lt;h1 style=&quot;font-size:22px&quot;&gt;Reset your password&lt;/h1&gt;
+    &lt;p&gt;Hi {{recipientName}},&lt;/p&gt;
+    &lt;p&gt;Someone asked to reset the password for {{recipientEmail}}. The link works for {{expiresIn}}.&lt;/p&gt;
+    &lt;p&gt;&lt;a href=&quot;{{resetLink}}&quot; style=&quot;background:#c2410c;color:#fff;padding:12px 20px;border-radius:999px;text-decoration:none&quot;&gt;Choose a new password&lt;/a&gt;&lt;/p&gt;
+    &lt;p&gt;If it wasn&#x27;t you, ignore this email.&lt;/p&gt;
+    &lt;p style=&quot;color:#6b7280;font-size:12px&quot;&gt;{{appName}} · {{currentYear}}&lt;/p&gt;
+  &lt;/td&gt;&lt;/tr&gt;
+&lt;/table&gt;</textarea>
+        <span class="field__hint">No scripts, frames, forms or on… event attributes. Use {{placeholder}} for values.</span>
+      </div>
+      <div class="field">
+        <label class="field__label" for="ed-text">Plain-text body <span class="field__req">Required</span></label>
+        <textarea class="field__input email-editor__code" id="ed-text" rows="10" spellcheck="false">Hi {{recipientName}},
+
+Someone asked to reset the password for {{recipientEmail}}. Open this link within {{expiresIn}} to choose a new password:
+
+{{resetLink}}
+
+If it wasn&#x27;t you, ignore this email.
+
+{{appName}}</textarea>
+      </div>
+      <fieldset class="email-editor__samples">
+        <legend class="field__label">Sample data</legend>
+        <p class="field__hint">Values the preview uses. Built-ins (appName, appUrl, recipientName, recipientEmail, unsubscribeUrl, currentYear) have their own.</p>
+        <div class="field">
+          <label class="field__label" for="ed-sample-resetLink">resetLink</label>
+          <input class="field__input" id="ed-sample-resetLink" type="text" value="https://app.saturdaze.app/reset-password?token=sample">
+        </div>
+        <div class="field">
+          <label class="field__label" for="ed-sample-expiresIn">expiresIn</label>
+          <input class="field__input" id="ed-sample-expiresIn" type="text" value="60 minutes">
+        </div>
+      </fieldset>
+    </form>
+    <section class="email-preview card" aria-label="Preview">
+      <div class="email-preview__bar">
+        <div class="seg-radio" role="radiogroup" aria-label="Preview width">
+          <label class="seg-radio__opt"><input type="radio" name="ep-width" checked>Desktop</label>
+          <label class="seg-radio__opt"><input type="radio" name="ep-width">Phone</label>
+        </div>
+        <div class="seg-radio" role="radiogroup" aria-label="Preview format">
+          <label class="seg-radio__opt"><input type="radio" name="ep-format" checked>HTML</label>
+          <label class="seg-radio__opt"><input type="radio" name="ep-format">Plain text</label>
+        </div>
+      </div>
+      <div class="email-preview__inbox">
+        <span class="disc disc--primary" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-mail"/></svg></span>
+        <div class="email-preview__lines">
+          <p class="email-preview__subject">Reset your Saturdaze password</p>
+          <p class="email-preview__preheader">The link works for 60 minutes.</p>
+        </div>
+      </div>
+      <div class="email-preview__stage">
+        <iframe class="email-preview__frame" title="Email preview" sandbox="" srcdoc="&lt;!doctype html&gt;&lt;html&gt;&lt;body style=&quot;margin:0;background:#fffaf5&quot;&gt;&lt;table role=&quot;presentation&quot; width=&quot;100%&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;&gt;&lt;tr&gt;&lt;td style=&quot;padding:24px;font-family:Arial,sans-serif;color:#1f2933&quot;&gt;&lt;h1 style=&quot;font-size:22px&quot;&gt;Reset your password&lt;/h1&gt;&lt;p&gt;Hi Alex,&lt;/p&gt;&lt;p&gt;Someone asked to reset the password for alex@example.com. The link works for 60 minutes.&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://app.saturdaze.app/reset-password?token=sample&quot; style=&quot;background:#c2410c;color:#fff;padding:12px 20px;border-radius:999px;text-decoration:none&quot;&gt;Choose a new password&lt;/a&gt;&lt;/p&gt;&lt;p&gt;If it wasn&#x27;t you, ignore this email.&lt;/p&gt;&lt;p style=&quot;color:#6b7280;font-size:12px&quot;&gt;Saturdaze · 2026&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/body&gt;&lt;/html&gt;"></iframe>
+      </div>
+      <div class="email-preview__placeholders">
+        <h3 class="email-preview__heading">Placeholders</h3>
+        <ul class="email-preview__list">
+          <li class="email-preview__item"><code>recipientName</code><span>Alex</span><span class="chip">Built-in</span></li>
+          <li class="email-preview__item"><code>recipientEmail</code><span>alex@example.com</span><span class="chip">Built-in</span></li>
+          <li class="email-preview__item"><code>expiresIn</code><span>60 minutes</span><span class="chip chip--accent">Sample</span></li>
+          <li class="email-preview__item"><code>resetLink</code><span>https://app.saturdaze.app/reset-password?token=sample</span><span class="chip chip--accent">Sample</span></li>
+          <li class="email-preview__item"><code>appName</code><span>Saturdaze</span><span class="chip">Built-in</span></li>
+          <li class="email-preview__item email-preview__item--missing"><code>giftCode</code><span>—</span><span class="chip chip--warn">No sample value</span></li>
+        </ul>
+      </div>
+    </section>
+  </div>
+  <section class="section" id="state-draft">
+    <div class="section-header"><div class="section-header__text"><h2 class="section-header__title">Other states</h2><p class="section-header__sub">The header actions change with the status. System templates never offer Archive or Delete.</p></div></div>
+    <div class="template-states">
+      <div class="card template-state"><p class="template-status"><span class="chip">Draft</span></p><div class="template-state__actions"><button class="btn btn--primary btn--sm" type="button"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Save changes</button><button class="btn btn--quiet btn--sm" type="button"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg>Activate</button><a class="btn btn--ghost btn--sm" href="./dialogs.html#dialog-admin-delete-template"><svg class="icon" aria-hidden="true"><use href="#i-trash"/></svg>Delete</a></div></div>
+      <div class="card template-state" id="state-active"><p class="template-status"><span class="chip chip--accent">Active</span></p><div class="template-state__actions"><button class="btn btn--primary btn--sm" type="button"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Save changes</button><button class="btn btn--quiet btn--sm" type="button"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg>Archive</button><a class="btn btn--ghost btn--sm" href="./dialogs.html#dialog-admin-delete-template"><svg class="icon" aria-hidden="true"><use href="#i-trash"/></svg>Delete</a></div></div>
+      <div class="card template-state" id="state-archived"><p class="template-status"><span class="chip chip--warn">Archived</span></p><div class="template-state__actions"><button class="btn btn--quiet btn--sm" type="button"><svg class="icon" aria-hidden="true"><use href="#i-unlock"/></svg>Restore as draft</button><a class="btn btn--ghost btn--sm" href="./dialogs.html#dialog-admin-delete-template"><svg class="icon" aria-hidden="true"><use href="#i-trash"/></svg>Delete</a></div></div>
+      <div class="card template-state" id="state-error"><div class="banner banner--warn" role="alert"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg><span>Scripts, frames, forms and on… event attributes aren't allowed in an email.</span></div><div class="banner banner--warn" role="alert"><svg class="icon" aria-hidden="true"><use href="#i-refresh"/></svg><span>Someone else changed this template. <button class="btn btn--quiet btn--sm" type="button">Reload</button></span></div></div>
+    </div>
+  </section>
+  </main>
+</div>
+<script src="../app.js"></script>
+</body>
+</html>

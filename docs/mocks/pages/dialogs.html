@@ -1255,6 +1255,88 @@
       </div>
     </section>
 
+    <section class="specimen" id="dialog-admin-new-template">
+      <span class="specimen__label">AD7 · Admin · New email template (also Duplicate)</span>
+      <div class="dialog dialog--specimen" role="dialog" aria-modal="true" aria-labelledby="ad7-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="ad7-title">New email template</h2><p class="dialog__sub">It starts as a draft with starter content for its category. Duplicate opens this dialog with "Copy of …" and the category fixed.</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="dialog__body">
+            <div class="field">
+              <label class="field__label" for="ad7-name">Name <span class="field__req">Required</span></label>
+              <input class="field__input" id="ad7-name" type="text" value="Birthday wishes">
+            </div>
+            <div class="field">
+              <label class="field__label" for="ad7-key">Key <span class="field__req">Required</span></label>
+              <input class="field__input" id="ad7-key" type="text" value="birthday-wishes" spellcheck="false">
+              <span class="field__hint">Senders find the template by this key. Lowercase words joined by dots or hyphens; it cannot change later.</span>
+            </div>
+            <div class="field">
+              <label class="field__label" for="ad7-category">Category</label>
+              <select class="field__input" id="ad7-category"><option>Account</option><option>Notification</option><option>Scheduled</option><option selected>Special occasion</option><option>Marketing</option></select>
+              <span class="field__hint">Marketing templates always carry an unsubscribe link.</span>
+            </div>
+            <div class="field">
+              <label class="field__label" for="ad7-description">Description <span class="field__req">Optional</span></label>
+              <textarea class="field__input" id="ad7-description" rows="2" placeholder="When Saturdaze sends it, and to whom."></textarea>
+            </div>
+            <div class="banner banner--warn" role="alert"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg><span>A template already uses this key. Choose another.</span></div>
+          </div>
+          <div class="dialog__actions">
+            <button class="btn btn--quiet" type="button">Cancel</button>
+            <button class="btn btn--primary" type="button"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg>Create template</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="specimen" id="dialog-admin-delete-template">
+      <span class="specimen__label">AD8 · Admin · Delete email template</span>
+      <div class="dialog dialog--specimen" role="alertdialog" aria-modal="true" aria-labelledby="ad8-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="ad8-title">Delete "Spring sale"?</h2><p class="dialog__sub">promo.spring-sale and its 6 versions are deleted. This cannot be undone.</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="dialog__body">
+            <div class="well well--warn">
+              <svg class="icon" aria-hidden="true"><use href="#i-trash"/></svg>
+              <div><p class="well__title">Archive keeps it instead</p><p class="well__body">An archived template stays readable and can be restored as a draft.</p></div>
+            </div>
+          </div>
+          <div class="dialog__actions">
+            <button class="btn btn--quiet" type="button">Cancel</button>
+            <button class="btn btn--danger" type="button"><svg class="icon" aria-hidden="true"><use href="#i-trash"/></svg>Delete template</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="specimen" id="dialog-admin-template-history">
+      <span class="specimen__label">AD9 · Admin · Template history</span>
+      <div class="dialog dialog--specimen dialog--wide" role="dialog" aria-modal="true" aria-labelledby="ad9-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="ad9-title">History</h2><p class="dialog__sub">Reset your password · every create, save and status change. Loading a version puts it in the editor; saving makes it the next version.</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="dialog__body">
+            <ol class="revision-list">
+                <li class="revision"><div class="revision__text"><span class="revision__meta">v4 · Edit · 2026-10-08 16:40 UTC · admin@saturdaze.app</span><span class="revision__subject">Reset your {{appName}} password</span></div><button class="btn btn--quiet btn--sm" type="button" aria-label="Load version 4 into the editor">Load into editor</button></li>
+                <li class="revision"><div class="revision__text"><span class="revision__meta">v3 · Edit · 2026-10-08 16:12 UTC · curator@saturdaze.app</span><span class="revision__subject">Reset your password</span></div><button class="btn btn--quiet btn--sm" type="button" aria-label="Load version 3 into the editor">Load into editor</button></li>
+                <li class="revision"><div class="revision__text"><span class="revision__meta">v2 · Edit · 2026-10-07 10:03 UTC · admin@saturdaze.app</span><span class="revision__subject">Your password reset link</span></div><button class="btn btn--quiet btn--sm" type="button" aria-label="Load version 2 into the editor">Load into editor</button></li>
+                <li class="revision"><div class="revision__text"><span class="revision__meta">v1 · Create · 2026-10-07 08:00 UTC · Saturdaze</span><span class="revision__subject">Reset your password</span></div><button class="btn btn--quiet btn--sm" type="button" aria-label="Load version 1 into the editor">Load into editor</button></li>
+            </ol>
+          </div>
+          <div class="dialog__actions">
+            <button class="btn btn--quiet" type="button">Close</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
   </div>
 </main>
 <!-- @shell:bottomnav -->
