@@ -61,6 +61,7 @@ public static class CliHostFactory
                 services.AddSingleton<IJsonSeeder, FamilySeeder>();
                 services.AddSingleton<IJsonSeeder, UserSeeder>();
                 services.AddSingleton<IJsonSeeder, EventSubmissionSeeder>();
+                services.AddSingleton<IJsonSeeder, EmailTemplateSeeder>();
                 services.AddScoped<SeedCommandHandler>();
                 services.AddScoped<MigrateCommandHandler>();
                 services.AddScoped<ResetCommandHandler>();

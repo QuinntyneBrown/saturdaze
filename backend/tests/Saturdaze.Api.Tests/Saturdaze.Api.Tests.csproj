@@ -27,5 +27,9 @@
     <None Update="SeedData\*.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <!-- The system email templates come from the CLI's bundled seed (L2-124). -->
+    <None Include="..\..\src\Saturdaze.Cli\Seed\Data\email-templates.json" Link="SeedData\email-templates.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>

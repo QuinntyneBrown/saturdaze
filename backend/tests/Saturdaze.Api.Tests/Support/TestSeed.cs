@@ -15,7 +15,8 @@ internal static class TestSeed
         new ActivitySeeder(),
         new RestaurantSeeder(),
         new LocalEventSeeder(new SystemDateTimeProvider()),
-        new FamilySeeder()
+        new FamilySeeder(),
+        new EmailTemplateSeeder(new SystemDateTimeProvider())
     };
 
     private sealed class FixedPath : ISeedPathResolver

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Saturdaze.Infrastructure.Persistence;
 
@@ -11,9 +12,11 @@ using Saturdaze.Infrastructure.Persistence;
 namespace Saturdaze.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20261009003219_AddEmailTemplates")]
+    partial class AddEmailTemplates
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -396,66 +399,12 @@ namespace Saturdaze.Infrastructure.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<Guid?>("OwnerUserId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<bool>("TryNewEnabled")
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
 
                     b.ToTable("Families", (string)null);
-                });
-
-            modelBuilder.Entity("Saturdaze.Domain.Entities.FamilyInvitation", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTimeOffset?>("AcceptedAtUtc")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<DateTimeOffset>("CreatedAtUtc")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<DateTimeOffset>("ExpiresAtUtc")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<Guid>("FamilyId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("FamilyMemberId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("InvitedByUserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("NormalizedEmail")
-                        .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<string>("TokenHash")
-                        .IsRequired()
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("FamilyMemberId");
-
-                    b.HasIndex("TokenHash")
-                        .IsUnique();
-
-                    b.HasIndex("FamilyId", "NormalizedEmail");
-
-                    b.ToTable("FamilyInvitations", (string)null);
                 });
 
             modelBuilder.Entity("Saturdaze.Domain.Entities.FamilyMember", b =>
@@ -475,14 +424,7 @@ namespace Saturdaze.Infrastructure.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<Guid?>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("UserId")
-                        .IsUnique()
-                        .HasFilter("[UserId] IS NOT NULL");
 
                     b.HasIndex("FamilyId", "Name")
                         .IsUnique();
@@ -1283,15 +1225,6 @@ namespace Saturdaze.Infrastructure.Migrations
                         });
 
                     b.Navigation("HomeCoordinates");
-                });
-
-            modelBuilder.Entity("Saturdaze.Domain.Entities.FamilyInvitation", b =>
-                {
-                    b.HasOne("Saturdaze.Domain.Entities.FamilyMember", null)
-                        .WithMany()
-                        .HasForeignKey("FamilyMemberId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Saturdaze.Domain.Entities.FamilyMember", b =>

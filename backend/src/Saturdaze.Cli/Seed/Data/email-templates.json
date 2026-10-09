@@ -1,0 +1,30 @@
+[
+  {
+    "key": "account.verify-email",
+    "name": "Verify your email",
+    "category": "Account",
+    "description": "Sent after sign-up and when someone asks to resend the verification link. The link works for 24 hours.",
+    "subject": "Confirm your email for {{appName}}",
+    "preheader": "One tap to confirm {{recipientEmail}}. The link works for {{expiresIn}}.",
+    "htmlBody": "<table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"background:#fffaf5\">\n  <tr>\n    <td style=\"padding:32px 24px;font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:1.5;color:#1f2933\">\n      <h1 style=\"margin:0 0 16px;font-size:22px\">Confirm your email</h1>\n      <p style=\"margin:0 0 16px\">Hi {{recipientName}},</p>\n      <p style=\"margin:0 0 16px\">Confirm that {{recipientEmail}} is yours so {{appName}} can send your weekend plans. The link works for {{expiresIn}}.</p>\n      <p style=\"margin:0 0 24px\"><a href=\"{{verificationLink}}\" style=\"display:inline-block;background:#c2410c;color:#ffffff;padding:12px 20px;border-radius:999px;text-decoration:none;font-weight:bold\">Confirm my email</a></p>\n      <p style=\"margin:0 0 16px;font-size:14px;color:#52606d\">If the button does not work, paste this address into your browser: {{verificationLink}}</p>\n      <p style=\"margin:0;font-size:12px;color:#7b8794\">{{appName}} · {{currentYear}}</p>\n    </td>\n  </tr>\n</table>",
+    "textBody": "Hi {{recipientName}},\n\nConfirm that {{recipientEmail}} is yours so {{appName}} can send your weekend plans. Open this link within {{expiresIn}}:\n\n{{verificationLink}}\n\nIf you did not create an account, ignore this email.\n\n{{appName}}",
+    "sampleData": {
+      "verificationLink": "https://app.saturdaze.app/verify-email?token=sample",
+      "expiresIn": "24 hours"
+    }
+  },
+  {
+    "key": "account.password-reset",
+    "name": "Reset your password",
+    "category": "Account",
+    "description": "Sent when someone asks to reset a forgotten password. The link works for 60 minutes and once only.",
+    "subject": "Reset your {{appName}} password",
+    "preheader": "The link works for {{expiresIn}}.",
+    "htmlBody": "<table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"background:#fffaf5\">\n  <tr>\n    <td style=\"padding:32px 24px;font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:1.5;color:#1f2933\">\n      <h1 style=\"margin:0 0 16px;font-size:22px\">Reset your password</h1>\n      <p style=\"margin:0 0 16px\">Hi {{recipientName}},</p>\n      <p style=\"margin:0 0 16px\">Someone asked to reset the password for {{recipientEmail}}. The link works for {{expiresIn}}, once.</p>\n      <p style=\"margin:0 0 16px\">If it was not you, ignore this email and your password stays the same.</p>\n      <p style=\"margin:0 0 24px\"><a href=\"{{resetLink}}\" style=\"display:inline-block;background:#c2410c;color:#ffffff;padding:12px 20px;border-radius:999px;text-decoration:none;font-weight:bold\">Choose a new password</a></p>\n      <p style=\"margin:0 0 16px;font-size:14px;color:#52606d\">If the button does not work, paste this address into your browser: {{resetLink}}</p>\n      <p style=\"margin:0;font-size:12px;color:#7b8794\">{{appName}} · {{currentYear}}</p>\n    </td>\n  </tr>\n</table>",
+    "textBody": "Hi {{recipientName}},\n\nSomeone asked to reset the password for {{recipientEmail}}. Open this link within {{expiresIn}} to choose a new password:\n\n{{resetLink}}\n\nIf it was not you, ignore this email and your password stays the same.\n\n{{appName}}",
+    "sampleData": {
+      "resetLink": "https://app.saturdaze.app/reset-password?token=sample",
+      "expiresIn": "60 minutes"
+    }
+  }
+]
