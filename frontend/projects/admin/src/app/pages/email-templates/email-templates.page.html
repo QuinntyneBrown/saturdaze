@@ -1,0 +1,66 @@
+<sd-page-header
+  title="Email templates"
+  subtitle="What Saturdaze sends: account emails, notifications, scheduled digests, special occasions and marketing."
+/>
+
+<sd-toolbar class="toolbar--templates">
+  <sd-text-input
+    class="toolbar__search"
+    label="Search"
+    type="search"
+    name="q"
+    placeholder="Name, key or subject"
+    [formControl]="search"
+  />
+  <sd-select
+    class="toolbar__sort"
+    label="Category"
+    name="category"
+    [options]="categoryOptions"
+    [formControl]="category"
+  />
+  <sd-select
+    class="toolbar__sort"
+    label="Status"
+    name="status"
+    [options]="statusOptions"
+    [formControl]="statusFilter"
+  />
+</sd-toolbar>
+
+@if (error()) {
+  <sd-banner class="error" tone="warn" role="alert" icon="close">{{ error() }}</sd-banner>
+}
+
+@if (status() === 'loading') {
+  <sd-status-row icon="mail">Fetching the templates.</sd-status-row>
+} @else if (rows().length) {
+  <p class="toolbar__count" role="status">{{ countText() }}</p>
+  <sd-list card class="template-list">
+    @for (row of rows(); track row.id) {
+      <sd-list-item class="template-row" [title]="row.name" [href]="row.href" chevron>
+        <span slot="leading" class="template-row__icon" aria-hidden="true">
+          <sd-icon name="mail" [size]="18" />
+        </span>
+        <span class="list__sub template-row__key">{{ row.key }}</span>
+        <span class="template-row__chips">
+          @for (chip of row.chips; track chip.label) {
+            <sd-chip [tone]="tone(chip.tone)" size="sm">
+              @if (chip.icon) {
+                <sd-icon [name]="chip.icon" />
+              }
+              {{ chip.label }}
+            </sd-chip>
+          }
+        </span>
+        <span class="template-row__updated">{{ row.updated }}</span>
+      </sd-list-item>
+    }
+  </sd-list>
+} @else if (!error()) {
+  <sd-empty
+    icon="mail"
+    title="No templates match"
+    body="Clear the search or choose another category or status."
+  />
+}

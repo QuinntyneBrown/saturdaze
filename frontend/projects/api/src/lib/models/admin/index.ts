@@ -12,3 +12,5 @@ export * from './photo-tile-view';
 export * from './place-photos-view';
 export * from './place-row';
 export * from './review-item-view';
+export * from './email-template.dto';
+export * from './email-template-view';

@@ -9,7 +9,7 @@ import { ADMIN_NAV_ITEMS, AdminNavKey } from '../shared/admin-nav-key';
 /**
  * Saturdaze Admin's chrome (ADR-014). Mirrors `.admin-nav` in
  * docs/mocks/pages/admin.*.html: a vertical side navigation from 1024px
- * (brand, the five destinations with icons, the account block at the
+ * (brand, the destinations with icons, the account block at the
  * bottom) and a sticky bar below it (brand mark, the links in a horizontal
  * scroller, the avatar). Rendered once by the admin app shell; `active`
  * comes from route data and marks the link with `aria-current="page"`.

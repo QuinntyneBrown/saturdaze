@@ -9,12 +9,14 @@ import { provideRouter } from '@angular/router';
 
 import {
   ADMIN_AUDIT_SERVICE,
+  ADMIN_EMAIL_TEMPLATES_SERVICE,
   ADMIN_PHOTOS_SERVICE,
   ADMIN_PLACES_SERVICE,
   API_BASE_URL,
   AUTH_ROUTES,
   AUTH_SERVICE,
   AdminAuditService,
+  AdminEmailTemplatesService,
   AdminPhotosService,
   AdminPlacesService,
   AuthService,
@@ -45,6 +47,7 @@ export const appConfig: ApplicationConfig = {
     { provide: ADMIN_PLACES_SERVICE, useExisting: AdminPlacesService },
     { provide: ADMIN_PHOTOS_SERVICE, useExisting: AdminPhotosService },
     { provide: ADMIN_AUDIT_SERVICE, useExisting: AdminAuditService },
+    { provide: ADMIN_EMAIL_TEMPLATES_SERVICE, useExisting: AdminEmailTemplatesService },
 
     { provide: AUTH_SERVICE, useExisting: AuthService },
     { provide: SESSION_STORE, useExisting: SessionStore },

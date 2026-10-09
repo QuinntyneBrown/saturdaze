@@ -55,6 +55,13 @@ export const routes: Routes = [
       import('./pages/activity-log/activity-log.page').then((m) => m.ActivityLogPage),
   },
   {
+    path: 'email-templates',
+    data: { nav: 'emails', screen: 'emails' },
+    canActivate: [requireAuth],
+    loadComponent: () =>
+      import('./pages/email-templates/email-templates.page').then((m) => m.EmailTemplatesPage),
+  },
+  {
     path: '',
     pathMatch: 'full',
     data: { nav: 'health', screen: 'health' },

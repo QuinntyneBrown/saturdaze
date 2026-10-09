@@ -1,0 +1,57 @@
+// `.toolbar--templates`, `.template-row__*` and `.toolbar__count` from
+// docs/mocks/styles/app.css (admin: email templates); the rows are
+// `sd-list-item` with projected key, chips and last change.
+@use '../../../../../components/src/lib/styles/breakpoints' as *;
+
+:host {
+  display: block;
+}
+
+.error {
+  margin-bottom: 16px;
+}
+
+.toolbar__count {
+  font-size: var(--fontSizeBase300);
+  color: var(--colorNeutralForeground2);
+  margin: 12px 0;
+}
+
+.template-row__icon {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  flex: none;
+  border-radius: var(--borderRadiusLarge);
+  background: var(--colorBrandBackground2);
+  color: var(--colorBrandForeground2);
+}
+
+.template-row__key {
+  display: block;
+  font-family: var(--fontFamilyMonospace);
+  font-size: var(--fontSizeBase200);
+  overflow-wrap: anywhere;
+}
+
+.template-row__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 6px;
+}
+
+.template-row__updated {
+  display: block;
+  margin-top: 4px;
+  font-size: var(--fontSizeBase200);
+  color: var(--colorNeutralForeground3);
+  overflow-wrap: anywhere;
+}
+
+@include respond-to(tablet) {
+  .toolbar--templates {
+    grid-template-columns: minmax(0, 1fr) 200px 200px;
+  }
+}

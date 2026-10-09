@@ -3,7 +3,7 @@
 ### Layout
 
 - Render it once, in the admin app shell, as the first child of the `.admin` grid; the routed screen is the second column from 1024px.
-- Keep the five destinations fixed; a new admin area is a new entry in `ADMIN_NAV_ITEMS`, not an ad-hoc link.
+- Keep the destinations fixed; a new admin area is a new entry in `ADMIN_NAV_ITEMS`, not an ad-hoc link.
 
 ### Content
 

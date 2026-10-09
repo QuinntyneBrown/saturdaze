@@ -2,7 +2,7 @@ import { Locator, Page } from "@playwright/test";
 import { BasePage, control } from "../base.page.js";
 import { PageSlug } from "../../fixtures/routes.js";
 
-export type AdminNavKey = "health" | "places" | "reviews" | "skips" | "activity";
+export type AdminNavKey = "health" | "places" | "reviews" | "skips" | "activity" | "emails";
 
 /**
  * Chrome shared by every Saturdaze Admin screen — pages/admin.*.html
@@ -10,7 +10,7 @@ export type AdminNavKey = "health" | "places" | "reviews" | "skips" | "activity"
  * itself in `data-screen`.
  *
  *   .admin-nav              side navigation ≥1024, a bar below
- *     .admin-nav__link[data-nav]  Photo health · Places · Review queue · Ingestion skips · Activity log
+ *     .admin-nav__link[data-nav]  Photo health · Places · Review queue · Ingestion skips · Activity log · Email templates
  *     .admin-nav__account   avatar · email · Sign out
  *   .admin-gate             the "can't use Saturdaze Admin" card for a non-admin (sign out only)
  */

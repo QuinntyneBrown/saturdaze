@@ -10,7 +10,7 @@ export const Default: StoryObj<AdminNav> = {
   argTypes: {
     active: {
       control: 'select',
-      options: [null, 'health', 'places', 'reviews', 'skips', 'activity'],
+      options: [null, 'health', 'places', 'reviews', 'skips', 'activity', 'emails'],
     },
     signOut: { action: 'signOut' },
   },

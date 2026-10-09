@@ -93,6 +93,9 @@ export const ROUTES = {
   adminReviews:      { app: "/reviews",                        mock: "/pages/admin.reviews.html",        guard: "admin", page: "admin" },
   adminSkips:        { app: "/ingestion-skips",                mock: "/pages/admin.ingestion-skips.html", guard: "admin", page: "admin" },
   adminActivity:     { app: "/activity",                       mock: "/pages/admin.activity.html",       guard: "admin", page: "admin" },
+  adminEmails:       { app: "/email-templates",                mock: "/pages/admin.emails.html",         guard: "admin", page: "admin" },
+  /** App-only: the template is created or picked per test. */
+  adminEmail:        { app: "/email-templates/{id}",           mock: "/pages/admin.email.html",          guard: "admin", page: "admin" },
   /** App-only: the place is picked per test from the Places list. */
   adminPlace:        { app: "/places/{kind}/{id}",              mock: "/pages/admin.place.html",          guard: "admin", page: "admin" },
 } as const satisfies Record<string, RouteEntry>;
