@@ -67,3 +67,15 @@ export interface CreateEmailTemplateRequest {
   /** Copy this template's content instead of the category's starter. */
   readonly duplicateOf?: string;
 }
+
+/** `PUT /api/admin/email-templates/{id}` (L2-127): the content and the version it was loaded at. */
+export interface SaveEmailTemplateRequest {
+  readonly name: string;
+  readonly description: string;
+  readonly subject: string;
+  readonly preheader: string;
+  readonly htmlBody: string;
+  readonly textBody: string;
+  readonly sampleData: Readonly<Record<string, string>>;
+  readonly version: number;
+}

@@ -1,5 +1,6 @@
 import { Locator, Page } from "@playwright/test";
 import { AdminPage } from "./admin.page.js";
+import { control } from "../base.page.js";
 
 /**
  * Email template editor (A9) — pages/admin.email.html.
@@ -31,5 +32,43 @@ export class AdminEmailTemplatePage extends AdminPage {
 
   action(name: string): Locator {
     return this.headerAction(name);
+  }
+
+  saveButton(): Locator {
+    return this.action("Save changes");
+  }
+
+  /* ---------- Editor form ---------- */
+
+  get form(): Locator {
+    return this.main.locator(".email-editor__form");
+  }
+
+  /** A content field by its label; a required field's label also reads "Required". */
+  field(label: "Name" | "Description" | "Subject" | "Preheader" | "HTML body" | "Plain-text body"): Locator {
+    return this.form.getByRole("textbox", { name: new RegExp(`^${label}\\b`) });
+  }
+
+  /** The sample value field for one placeholder, labelled with its name. */
+  sampleField(placeholder: string): Locator {
+    return this.form.locator(".email-editor__samples").getByLabel(placeholder, { exact: true });
+  }
+
+  sampleFields(): Locator {
+    return this.form.locator(".email-editor__samples input");
+  }
+
+  /** The system-template note above the editor. */
+  note(): Locator {
+    return this.main.locator(".template-note");
+  }
+
+  /** The refusal or failure of the last action. */
+  alert(): Locator {
+    return this.main.locator('.banner--warn[role="alert"]');
+  }
+
+  reloadButton(): Locator {
+    return control(this.alert(), "Reload");
   }
 }

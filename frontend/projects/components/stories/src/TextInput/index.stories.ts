@@ -13,6 +13,7 @@ export { Hint } from './TextInputHint.stories';
 export { Invalid } from './TextInputInvalid.stories';
 export { Type } from './TextInputType.stories';
 export { Multiline } from './TextInputMultiline.stories';
+export { Code } from './TextInputCode.stories';
 export { ReadonlyAndDisabled } from './TextInputReadonlyDisabled.stories';
 export { ReactiveForms } from './TextInputReactiveForms.stories';
 

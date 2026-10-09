@@ -10,6 +10,7 @@ import {
   EmailTemplateStatus,
   EmailTemplateSummaryDto,
   EmailTemplatesQuery,
+  SaveEmailTemplateRequest,
 } from '../models/admin/email-template.dto';
 import {
   EmailTemplateRow,
@@ -96,6 +97,13 @@ export class AdminEmailTemplatesService implements IAdminEmailTemplatesService {
 
   async create(request: CreateEmailTemplateRequest): Promise<EmailTemplateView> {
     const dto = await firstValueFrom(this.http.post<EmailTemplateDto>(this.url, request));
+    return toEmailTemplateView(dto);
+  }
+
+  async save(id: string, request: SaveEmailTemplateRequest): Promise<EmailTemplateView> {
+    const dto = await firstValueFrom(
+      this.http.put<EmailTemplateDto>(`${this.url}/${encodeURIComponent(id)}`, request),
+    );
     return toEmailTemplateView(dto);
   }
 

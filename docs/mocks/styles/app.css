@@ -553,6 +553,7 @@
   textarea.field__input { height: auto; min-height: 96px; padding: 10px 12px; resize: vertical; line-height: 1.45; }
   select.field__input { appearance: none; padding-right: 36px; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M6 9l6 6 6-6'/></svg>"); background-repeat: no-repeat; background-position: right 12px center; background-size: 16px; }
   .field__hint { font-size: var(--sd-fs-xs); color: var(--sd-ink-soft); }
+  .field__input--code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 13px; line-height: 1.5; white-space: pre; overflow-x: auto; }
   .field__error { font-size: var(--sd-fs-xs); color: var(--sd-warn-deep); display: inline-flex; align-items: center; gap: 4px; }
   .field--row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
   .field__with-btn { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; align-items: center; }
@@ -1063,7 +1064,6 @@
   body[data-page="admin"] .template-note code { overflow-wrap: anywhere; }
   body[data-page="admin"] .email-editor { display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; align-items: start; }
   body[data-page="admin"] .email-editor__form { display: flex; flex-direction: column; gap: 14px; padding: 16px; min-width: 0; }
-  body[data-page="admin"] .email-editor__code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 13px; line-height: 1.5; white-space: pre; overflow-x: auto; }
   body[data-page="admin"] .email-editor__samples { display: flex; flex-direction: column; gap: 12px; padding: 12px 0 0; border: 0; border-top: 1px solid var(--sd-line); min-width: 0; }
   body[data-page="admin"] .template-states { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; }
   body[data-page="admin"] .template-state { display: flex; flex-direction: column; gap: 10px; padding: 12px; }

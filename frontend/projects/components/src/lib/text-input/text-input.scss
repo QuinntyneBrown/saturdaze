@@ -80,3 +80,12 @@ textarea.field__input {
   font-size: var(--fontSizeBase200);
   color: var(--colorStatusDangerForeground1);
 }
+
+// `.field__input--code` — source text such as an email body (docs/mocks: admin.email.html).
+.field__input--code {
+  font-family: var(--fontFamilyMonospace);
+  font-size: var(--fontSizeBase300);
+  line-height: 1.5;
+  white-space: pre;
+  overflow-x: auto;
+}

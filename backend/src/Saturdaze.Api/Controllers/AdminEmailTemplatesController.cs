@@ -39,4 +39,18 @@ public sealed class AdminEmailTemplatesController : ControllerBase
         var dto = await _sender.Send(new CreateEmailTemplateCommand(req.Key, req.Name, req.Description, req.Category, req.DuplicateOf), ct);
         return CreatedAtAction(nameof(Get), new { id = dto.Id }, dto);
     }
+
+    /// <summary>The largest body a save or preview accepts: the 100 000 + 50 000 character bodies and sample data, as UTF-8 JSON.</summary>
+    private const long ContentRequestLimit = 1024 * 1024;
+
+    public record SaveTemplateRequest(
+        string? Name, string? Description, string? Subject, string? Preheader,
+        string? HtmlBody, string? TextBody, Dictionary<string, string>? SampleData, int Version);
+
+    /// <summary>Saves the content when <c>version</c> is current (L2-127).</summary>
+    [HttpPut("{id:guid}")]
+    [RequestSizeLimit(ContentRequestLimit)]
+    public async Task<ActionResult<EmailTemplateDto>> Save(Guid id, [FromBody] SaveTemplateRequest req, CancellationToken ct)
+        => Ok(await _sender.Send(new SaveEmailTemplateCommand(
+            id, req.Name, req.Description, req.Subject, req.Preheader, req.HtmlBody, req.TextBody, req.SampleData, req.Version), ct));
 }

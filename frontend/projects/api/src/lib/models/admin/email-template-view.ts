@@ -94,3 +94,28 @@ export function suggestTemplateKey(name: string): string {
 export function categoryLabel(category: EmailTemplateCategory): string {
   return EMAIL_TEMPLATE_CATEGORIES.find((c) => c.value === category)?.label ?? category;
 }
+
+/** Placeholders every template may use without sample data (L2-128); the preview fills them. */
+export const BUILT_IN_PLACEHOLDERS: readonly string[] = [
+  'appName',
+  'appUrl',
+  'recipientName',
+  'recipientEmail',
+  'unsubscribeUrl',
+  'currentYear',
+];
+
+const PLACEHOLDER = /\{\{(.*?)\}\}/gs;
+const PLACEHOLDER_NAME = /^[A-Za-z][A-Za-z0-9_]*(?:\.[A-Za-z][A-Za-z0-9_]*)*$/;
+
+/** The distinct, well-formed placeholder names in the texts, in order of first use (the API's rule). */
+export function templatePlaceholders(...texts: readonly string[]): string[] {
+  const names: string[] = [];
+  for (const text of texts) {
+    for (const match of text.matchAll(PLACEHOLDER)) {
+      const name = (match[1] ?? '').trim();
+      if (PLACEHOLDER_NAME.test(name) && !names.includes(name)) names.push(name);
+    }
+  }
+  return names;
+}

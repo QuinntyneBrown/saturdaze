@@ -9,6 +9,8 @@
 @if (multiline()) {
   <textarea
     class="field__input"
+    [class.field__input--code]="code()"
+    [attr.spellcheck]="code() ? 'false' : null"
     [id]="id"
     [rows]="rows()"
     [value]="internalValue()"
@@ -25,6 +27,8 @@
 } @else {
   <input
     class="field__input"
+    [class.field__input--code]="code()"
+    [attr.spellcheck]="code() ? 'false' : null"
     [id]="id"
     [attr.type]="type()"
     [value]="internalValue()"

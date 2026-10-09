@@ -15,7 +15,7 @@ import { Icon } from '../icon/icon';
 /**
  * Labelled text field. Mirrors `.field` in docs/mocks-v2/styles/app.css:
  * label (with an optional "Required" marker), the input or a textarea
- * (`multiline`), a hint, and an error line that also sets `aria-invalid`.
+ * (`multiline`, monospace with `code`), a hint, and an error line that also sets `aria-invalid`.
  *
  * Reactive Forms / ngModel: implements `ControlValueAccessor`. The static
  * `value` input seeds the state; a later `writeValue` overrides it.
@@ -53,6 +53,8 @@ export class TextInput implements ControlValueAccessor {
   /** Mark invalid without an inline message (a form-level error banner). */
   readonly invalid = input(false, { transform: booleanAttribute });
   readonly multiline = input(false, { transform: booleanAttribute });
+  /** Source text (an email's HTML or plain-text body): monospace, no wrapping, no spellcheck. */
+  readonly code = input(false, { transform: booleanAttribute });
   readonly rows = input<number>(3);
   readonly readonly = input(false, { transform: booleanAttribute });
   // Forwarded to the inner control so password managers and autofill

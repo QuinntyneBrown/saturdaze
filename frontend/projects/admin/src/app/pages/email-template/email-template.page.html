@@ -28,6 +28,12 @@
       backLabel="Email templates"
     >
       @if (v) {
+        <sd-button slot="primary" variant="primary" [disabled]="!canSave()" (click)="save()">
+          <sd-icon name="check" />
+          Save changes
+        </sd-button>
+      }
+      @if (v) {
         <sd-button slot="actions" variant="quiet" (click)="duplicate()">
           <sd-icon name="copy" />
           Duplicate
@@ -35,13 +41,19 @@
       }
     </sd-page-header>
 
+    @if (stale()) {
+      <sd-banner class="error" tone="warn" role="alert" icon="refresh">
+        Someone else changed this template.
+        <sd-button variant="quiet" size="sm" (click)="reload()">Reload</sd-button>
+      </sd-banner>
+    }
     @if (error()) {
       <sd-banner class="error" tone="warn" role="alert" icon="close">{{ error() }}</sd-banner>
     }
 
     @if (v) {
       <p class="template-status">
-        @for (chip of v.chips; track chip.label) {
+        @for (chip of chips(); track chip.label) {
           <sd-chip [tone]="tone(chip.tone)" size="sm">
             @if (chip.icon) {
               <sd-icon [name]="chip.icon" />
@@ -50,7 +62,69 @@
           </sd-chip>
         }
       </p>
-      <div class="email-editor"></div>
+      @if (note()) {
+        <sd-banner class="template-note" tone="info" role="status" icon="lock">{{
+          note()
+        }}</sd-banner>
+      }
+      <div class="email-editor">
+        <form
+          class="email-editor__form"
+          aria-label="Template content"
+          [formGroup]="form"
+          (ngSubmit)="save()"
+        >
+          <sd-text-input label="Name" name="name" formControlName="name" required />
+          <sd-text-input
+            label="Description"
+            name="description"
+            formControlName="description"
+            multiline
+            [rows]="2"
+          />
+          <sd-text-input label="Subject" name="subject" formControlName="subject" required />
+          <sd-text-input
+            label="Preheader"
+            name="preheader"
+            formControlName="preheader"
+            hint="The line inboxes show after the subject."
+          />
+          <sd-text-input
+            label="HTML body"
+            name="htmlBody"
+            formControlName="htmlBody"
+            multiline
+            code
+            [rows]="16"
+            hint="No scripts, frames, forms or on… event attributes. Use {{
+              '{{'
+            }}placeholder{{ '}}' }} for values."
+            required
+          />
+          <sd-text-input
+            label="Plain-text body"
+            name="textBody"
+            formControlName="textBody"
+            multiline
+            code
+            [rows]="10"
+            required
+          />
+          <fieldset class="email-editor__samples" formGroupName="samples">
+            <legend class="email-editor__legend">Sample data</legend>
+            <p class="email-editor__hint">
+              Values the preview uses. Built-ins (appName, appUrl, recipientName, recipientEmail,
+              unsubscribeUrl, currentYear) have their own.
+            </p>
+            @for (name of samplePlaceholders(); track name) {
+              <sd-text-input [label]="name" [name]="'sample-' + name" [formControlName]="name" />
+            } @empty {
+              <p class="email-editor__hint">The content uses only built-in placeholders.</p>
+            }
+          </fieldset>
+          <button type="submit" hidden></button>
+        </form>
+      </div>
     }
   }
 }

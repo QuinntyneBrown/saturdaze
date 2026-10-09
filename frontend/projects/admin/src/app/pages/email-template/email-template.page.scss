@@ -1,4 +1,4 @@
-// `.template-status`, `.template-note` and `.email-editor` from
+// `.template-status`, `.template-note`, `.email-editor` and its parts from
 // docs/mocks/styles/app.css (admin: email templates).
 @use '../../../../../components/src/lib/styles/breakpoints' as *;
 
@@ -15,4 +15,48 @@
   flex-wrap: wrap;
   gap: 6px;
   margin: -8px 0 16px;
+}
+
+.template-note {
+  margin-bottom: 16px;
+}
+
+.email-editor {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 20px;
+  align-items: start;
+}
+
+.email-editor__form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+  padding: 16px;
+  background: var(--colorNeutralBackground1);
+  border: 1px solid var(--colorNeutralStroke2);
+  border-radius: var(--borderRadiusXLarge);
+}
+
+.email-editor__samples {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+  margin: 0;
+  padding: 12px 0 0;
+  border: 0;
+  border-top: 1px solid var(--colorNeutralStroke2);
+}
+
+.email-editor__legend {
+  font-size: var(--fontSizeBase300);
+  font-weight: var(--fontWeightMedium);
+  color: var(--colorNeutralForeground2);
+}
+
+.email-editor__hint {
+  font-size: var(--fontSizeBase200);
+  color: var(--colorNeutralForeground3);
 }

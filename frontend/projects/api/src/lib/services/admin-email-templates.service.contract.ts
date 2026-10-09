@@ -3,6 +3,7 @@ import { InjectionToken } from '@angular/core';
 import {
   CreateEmailTemplateRequest,
   EmailTemplatesQuery,
+  SaveEmailTemplateRequest,
 } from '../models/admin/email-template.dto';
 import { EmailTemplateRow, EmailTemplateView } from '../models/admin/email-template-view';
 
@@ -17,6 +18,8 @@ export interface IAdminEmailTemplatesService {
   get(id: string): Promise<EmailTemplateView>;
   /** `POST /api/admin/email-templates`: a new draft; rejects with the server's error (L2-126). */
   create(request: CreateEmailTemplateRequest): Promise<EmailTemplateView>;
+  /** `PUT /api/admin/email-templates/{id}`: saves the content; rejects with `template_stale` and other refusals (L2-127). */
+  save(id: string, request: SaveEmailTemplateRequest): Promise<EmailTemplateView>;
 }
 
 export const ADMIN_EMAIL_TEMPLATES_SERVICE = new InjectionToken<IAdminEmailTemplatesService>(
