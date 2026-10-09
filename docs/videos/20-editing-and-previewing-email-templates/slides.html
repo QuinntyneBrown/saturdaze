@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 20 Slides</title>
+<link rel="stylesheet" href="../assets/slides.css">
+</head>
+<body data-video-number="20" data-video-title="Editing and previewing email templates" data-parts="Introduction|The editor|Placeholders|The preview|Rendering|Keeping HTML inert|Required placeholders|Two administrators|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Email templates series · Video 20</div>
+  <h1>Editing and previewing email templates</h1>
+  <p class="lead">The editor, placeholders and sample data, the live preview, safe HTML and stale saves</p>
+</section>
+
+<section id="agenda" data-part="0" data-cue="how placeholders get sample values">
+  <h2>In this video</h2>
+  <ol class="steps">
+    <li>Edit and save, with the version</li>
+    <li>Placeholders and sample data</li>
+    <li>The live preview and how it renders</li>
+    <li>Keeping template HTML inert</li>
+    <li>Two administrators, one template</li>
+  </ol>
+</section>
+
+<section id="editor" data-part="1" data-cue="Open a template and the editor shows its header first" data-clip="clips/editor.mp4" data-clip-delay="14">
+  <aside class="clip-notes">
+    <h3>The editor (A9)</h3>
+    <ul>
+      <li>Key · category · version · last change (UTC)</li>
+      <li>Save only when something changed</li>
+      <li>Unsaved changes chip</li>
+      <li>A new placeholder gets a sample field</li>
+      <li>Save: version + 1</li>
+    </ul>
+  </aside>
+</section>
+
+<section id="syntax" data-part="2" data-cue="A placeholder is a name in double curly braces.">
+  <h2>What counts as a placeholder</h2>
+  <div class="cols">
+    <div class="card">
+      <h3>Accepted</h3>
+      <ul>
+        <li><code>{{recipientName}}</code></li>
+        <li><code>{{ recipientName }}</code></li>
+        <li><code>{{family.first_child}}</code></li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Refused: <code>invalid_placeholder</code></h3>
+      <ul>
+        <li><code>{{ first name }}</code></li>
+        <li><code>{{}}</code> · <code>{{1st}}</code></li>
+        <li><code>{{recipientName}</code> · <code>{{{recipientName}}}</code></li>
+      </ul>
+    </div>
+  </div>
+  <p class="small muted">Name: <code>^[A-Za-z][A-Za-z0-9_]*(?:\.[A-Za-z][A-Za-z0-9_]*)*$</code> · <span class="file">EmailTemplateRules.cs</span></p>
+</section>
+
+<section id="builtins" data-part="2" data-cue="Six placeholders are built in">
+  <h2>Six built-ins</h2>
+  <table class="grid">
+    <tr><th>Placeholder</th><th>Preview sample</th></tr>
+    <tr><td><code>{{appName}}</code></td><td>Saturdaze</td></tr>
+    <tr><td><code>{{appUrl}}</code></td><td><code>Saturdaze:Email:AppUrl</code>, else <code>Saturdaze:Share:AppOrigin</code></td></tr>
+    <tr><td><code>{{recipientName}}</code></td><td>Alex</td></tr>
+    <tr><td><code>{{recipientEmail}}</code></td><td>alex@example.com</td></tr>
+    <tr><td><code>{{unsubscribeUrl}}</code></td><td><code>{appUrl}/unsubscribe?token=sample</code></td></tr>
+    <tr><td><code>{{currentYear}}</code></td><td>this year (UTC)</td></tr>
+  </table>
+</section>
+
+<section id="samples" data-part="2" data-cue="Every other placeholder the content uses gets a sample field.">
+  <h2>Sample data</h2>
+  <ul>
+    <li>One field per placeholder the content uses, built-ins excepted</li>
+    <li>Saved with the template: at most 100 names, values up to 2 000 characters</li>
+    <li>Blank values are not saved</li>
+    <li>A sample for a placeholder no longer used is dropped</li>
+  </ul>
+</section>
+
+<section id="preview" data-part="3" data-cue="The preview sits beside the form from twelve hundred pixels" data-clip="clips/preview.mp4" data-clip-delay="16">
+  <aside class="clip-notes">
+    <h3>sd-email-preview</h3>
+    <ul>
+      <li>About 300 ms after typing stops; nothing saved</li>
+      <li>Inbox line: subject and preheader</li>
+      <li>Desktop 600 px · Phone 375 px</li>
+      <li>Plain text</li>
+      <li>Sample · Built-in · No sample value</li>
+    </ul>
+  </aside>
+</section>
+
+<section id="renderer" data-part="4" data-cue="The renderer lives in the application layer">
+  <h2>Sample, else built-in, else empty</h2>
+  <pre class="code tight" data-lang="cs" data-mark="3-7,13-15">
+(string Value, string Source) Resolve(string name)
+{
+    if (samples.TryGetValue(name, out var sample) &amp;&amp; !string.IsNullOrEmpty(sample))
+        return (sample, Sample);
+    if (builtIns.TryGetValue(name, out var builtIn))
+        return (builtIn, BuiltIn);
+    return (string.Empty, Missing);
+}
+string Fill(string? text, bool html) =&gt; Placeholder().Replace(text ?? string.Empty, m =&gt;
+{
+    var name = m.Groups[1].Value;
+    var (value, source) = Resolve(name);
+    if (used.All(p =&gt; p.Name != name))
+        used.Add(new EmailPlaceholderDto(name, value, source));
+    return html ? WebUtility.HtmlEncode(value) : value;
+});
+</pre>
+  <p class="small muted"><span class="file">EmailTemplateRenderer.cs</span> · <code>POST /api/admin/email-templates/preview</code></p>
+</section>
+
+<section id="encoding" data-part="4" data-cue="One detail matters for safety.">
+  <h2>Values are encoded into HTML only</h2>
+  <div class="cols three">
+    <div class="card"><h3>Sample</h3><p><code>note = &lt;b&gt;bold&lt;/b&gt;</code></p></div>
+    <div class="card"><h3>HTML body</h3><p><code>&lt;p&gt;&amp;lt;b&amp;gt;bold&amp;lt;/b&amp;gt;&lt;/p&gt;</code></p><p class="small">shows the characters; no &lt;b&gt; element</p></div>
+    <div class="card"><h3>Text body</h3><p><code>Note: &lt;b&gt;bold&lt;/b&gt;</code></p><p class="small">as written</p></div>
+  </div>
+</section>
+
+<section id="layers" data-part="5" data-cue="Template HTML is written by administrators">
+  <h2>Two layers</h2>
+  <div class="flow">
+    <div class="node accent"><b>1 · Checked</b>on every save and preview: <code>unsafe_html</code></div>
+    <div class="arrow">→</div>
+    <div class="node"><b>2 · Sandboxed</b>iframe without scripts or same origin, plus a CSP</div>
+  </div>
+</section>
+
+<section id="check" data-part="5" data-cue="The first is a check on every save and every preview.">
+  <h2>Inside every tag</h2>
+  <pre class="code tight" data-lang="cs" data-mark="7-11">
+foreach (Match tag in Tag().Matches(html))
+{
+    var value = tag.Value;
+    if (value.StartsWith("&lt;!--", StringComparison.Ordinal)) continue;
+    var compact = Whitespace().Replace(WebUtility.HtmlDecode(value), string.Empty)
+                              .ToLowerInvariant();
+    if (ForbiddenElement().IsMatch(value)   // script iframe frame object embed form base …
+        || EventAttribute().IsMatch(value)  // onerror=, onclick=, …
+        || compact.Contains("javascript:")
+        || compact.Contains("vbscript:")
+        || compact.Contains("data:text/html"))
+        throw new BadRequestException("unsafe_html", "Scripts, frames, forms and …");
+}
+</pre>
+  <p class="small muted"><span class="file">EmailTemplateRules.CheckHtml</span> (comments added) · text between tags is not inspected</p>
+</section>
+
+<section id="refused" data-part="5" data-cue="Here a draft's subject first gets a malformed placeholder" data-clip="clips/refused.mp4">
+  <aside class="clip-notes">
+    <h3>Refused, twice</h3>
+    <ul>
+      <li>Malformed placeholder: the preview pauses with the reason</li>
+      <li>The last good render stays</li>
+      <li>An error handler: preview and Save refuse it</li>
+    </ul>
+  </aside>
+</section>
+
+<section id="sandbox" data-part="5" data-cue="The second layer is the preview frame itself.">
+  <h2>The frame cannot run anything</h2>
+  <pre class="code tight" data-lang="xml" data-mark="3,8-9">
+&lt;iframe
+  class="email-preview__frame"
+  sandbox=""
+  referrerpolicy="no-referrer"
+  [srcdoc]="srcdoc()"&gt;&lt;/iframe&gt;
+
+&lt;meta http-equiv="Content-Security-Policy"
+      content="default-src 'none'; img-src https: data:;
+               style-src 'unsafe-inline'; font-src https:"&gt;
+</pre>
+  <p class="small muted"><span class="file">frontend/projects/components/src/lib/email-preview/</span> · no <code>allow-scripts</code>, no <code>allow-same-origin</code></p>
+</section>
+
+<section id="required" data-part="6" data-cue="Some placeholders are not optional." data-clip="clips/required.mp4" data-clip-delay="6">
+  <aside class="clip-notes">
+    <h3><code>missing_placeholder</code></h3>
+    <ul>
+      <li>System: <code>{{verificationLink}}</code> or <code>{{resetLink}}</code></li>
+      <li>Marketing: <code>{{unsubscribeUrl}}</code></li>
+      <li>In both bodies</li>
+    </ul>
+  </aside>
+</section>
+
+<section id="concurrency" data-part="7" data-cue="The version number protects against lost work.">
+  <h2>Optimistic concurrency on Version</h2>
+  <pre class="code tight" data-lang="cs" data-mark="3,7,12">
+public static void EnsureCurrent(EmailTemplate template, int version)
+{
+    if (template.Version != version) throw Stale();   // 409 template_stale
+}
+
+// EmailTemplateConfiguration: the version is also the database's concurrency token
+b.Property(x =&gt; x.Version).IsConcurrencyToken();
+
+public static async Task SaveAsync(IAppDbContext db, CancellationToken ct)
+{
+    try { await db.SaveChangesAsync(ct); }
+    catch (DbUpdateConcurrencyException) { throw Stale(); }
+}
+</pre>
+  <p class="small muted"><span class="file">SaveEmailTemplateCommand.cs</span> (<code>EmailTemplateConcurrency</code>, reflowed) · <span class="file">EmailTemplateConfiguration.cs</span></p>
+</section>
+
+<section id="stale" data-part="7" data-cue="In the recording, the second curator saves the holiday greeting" data-clip="clips/stale.mp4">
+  <aside class="clip-notes">
+    <h3>Someone else saved first</h3>
+    <ul>
+      <li>Version 1 loaded; version 2 stored</li>
+      <li>The save is refused; nothing changes</li>
+      <li>Reload shows their version</li>
+    </ul>
+  </aside>
+</section>
+
+<section id="recap" data-part="8" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div>Save only when changed; every save is version + 1, with who and when.</div>
+    <div>Six built-ins; every other placeholder gets a sample.</div>
+    <div>Live preview: desktop, phone, plain text; missing samples flagged.</div>
+    <div>HTML-encoded values, refused scripts, a sandboxed frame.</div>
+    <div>System link and marketing unsubscribe stay in both bodies.</div>
+    <div>A stale save is refused; Reload shows the newer version.</div>
+  </div>
+  <p class="small muted">Next: video 21, lifecycle and history</p>
+</section>
+
+<script src="../assets/slides.js"></script>
+</body>
+</html>
