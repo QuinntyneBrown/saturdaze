@@ -18,7 +18,8 @@
 // Frames come from the Chrome DevTools screencast (crisper than Playwright's own video), and
 // each one is held until the next arrives, so the MP4 runs in real time at 30 fps.
 // SD_DEMO_RESET, when set, is a shell command run once before recording (restore demo data).
-// Needs Playwright from e2e/node_modules and ffmpeg (FFMPEG_PATH override).
+// Needs Playwright from e2e/node_modules (CHROME_PATH: a Chromium other than Playwright's download)
+// and ffmpeg (FFMPEG_PATH override).
 import { execFileSync, execSync } from 'node:child_process';
 import { existsSync, mkdirSync, rmSync, writeFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
@@ -181,7 +182,8 @@ async function main() {
     console.log(`reset: ${process.env.SD_DEMO_RESET}`);
     execSync(process.env.SD_DEMO_RESET, { stdio: 'inherit' });
   }
-  const browser = await chromium.launch();
+  // CHROME_PATH (as for tools/video-build) uses an installed Chromium instead of Playwright's download.
+  const browser = await chromium.launch(process.env.CHROME_PATH ? { executablePath: process.env.CHROME_PATH } : {});
   try {
     for (const [name, fn] of Object.entries(clips)) {
       if (only && !only.includes(name)) continue;

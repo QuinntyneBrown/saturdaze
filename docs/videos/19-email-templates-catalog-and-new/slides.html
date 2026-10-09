@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 19 Slides</title>
+<link rel="stylesheet" href="../assets/slides.css">
+</head>
+<body data-video-number="19" data-video-title="Email templates: the catalog and new templates" data-parts="Introduction|What a template is|System templates|The list|Creating|Duplicating|Under the hood|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Email templates series · Video 19</div>
+  <h1>Email templates: the catalog and new templates</h1>
+  <p class="lead">What a template is, the system templates, the list, New template and Duplicate</p>
+</section>
+
+<section id="coming" data-part="0" data-cue="More email is coming, too">
+  <h2>One home for every email</h2>
+  <div class="cols three">
+    <div class="card"><h3>Account</h3><p class="small">Verify your email, reset your password: drafted today (video 18).</p></div>
+    <div class="card"><h3>Notification</h3><p class="small">Your weekend plan is ready.</p></div>
+    <div class="card"><h3>Scheduled</h3><p class="small">Friday's weekend digest.</p></div>
+    <div class="card"><h3>Special occasion</h3><p class="small">Birthdays and holidays.</p></div>
+    <div class="card"><h3>Marketing</h3><p class="small">Campaigns, always with an unsubscribe link.</p></div>
+    <div class="card"><h3>Not yet</h3><p class="small">Sending, scheduling and audiences are later capabilities.</p></div>
+  </div>
+</section>
+
+<section id="parts" data-part="1" data-cue="An email template is named, categorised email content.">
+  <h2>Four pieces of content</h2>
+  <ul>
+    <li><b>Subject</b> and <b>preheader</b>: the inbox line</li>
+    <li><b>HTML body</b> and <b>plain-text body</b></li>
+    <li>Placeholders in all four: <code>{{recipientName}}</code>, <code>{{resetLink}}</code></li>
+    <li>A sender fills them in at send time; the preview uses sample data</li>
+  </ul>
+</section>
+
+<section id="entity" data-part="1" data-cue="Three properties decide how a template is used.">
+  <h2>Key, category, status</h2>
+  <pre class="code tight" data-lang="cs" data-mark="3,5,6,13">
+public class EmailTemplate
+{
+    public string Key { get; set; } = string.Empty;          // account.password-reset
+    public string Name { get; set; } = string.Empty;
+    public EmailTemplateCategory Category { get; set; }      // fixed at creation
+    public EmailTemplateStatus Status { get; set; }          // Draft · Active · Archived
+    public string Subject { get; set; } = string.Empty;
+    public string Preheader { get; set; } = string.Empty;
+    public string HtmlBody { get; set; } = string.Empty;
+    public string TextBody { get; set; } = string.Empty;
+    public string SampleData { get; set; } = "{}";
+    public bool IsSystem { get; set; }
+    public int Version { get; set; }                         // +1 on every change
+}
+</pre>
+  <p class="small muted"><span class="file">backend/src/Saturdaze.Domain/Entities/EmailTemplate.cs</span> (abridged; comments added) · key: <code>^[a-z0-9]+(?:[.-][a-z0-9]+)*$</code>, at most 100 characters</p>
+</section>
+
+<section id="system" data-part="2" data-cue="Two templates exist before anyone signs in.">
+  <h2>Seeded, never overwritten</h2>
+  <pre class="code tight" data-lang="cs" data-mark="3-4,9-11">
+var key = record.Key.Trim();
+if (db.EmailTemplates.Local.Any(t =&gt; t.Key == key)
+    || await db.EmailTemplates.AnyAsync(t =&gt; t.Key == key, ct))
+    continue;
+
+db.EmailTemplates.Add(new EmailTemplate
+{
+    Key = key,
+    Status = EmailTemplateStatus.Active,
+    IsSystem = true,
+    Version = 1,
+    CreatedByEmail = Author,   // "Saturdaze"
+});
+</pre>
+  <p class="small muted"><span class="file">backend/src/Saturdaze.Cli/Seed/EmailTemplateSeeder.cs</span> (abridged) · data: <span class="file">Seed/Data/email-templates.json</span></p>
+</section>
+
+<section id="system-rules" data-part="2" data-cue="The seeder only ever inserts.">
+  <h2>What a system template keeps</h2>
+  <table class="grid">
+    <tr><th>Key</th><th>Must keep</th><th>Link lasts</th></tr>
+    <tr><td><code>account.verify-email</code></td><td><code>{{verificationLink}}</code> in both bodies</td><td>24 hours</td></tr>
+    <tr><td><code>account.password-reset</code></td><td><code>{{resetLink}}</code> in both bodies</td><td>60 minutes</td></tr>
+  </table>
+  <ul>
+    <li>Editable: wording, subject, sample data</li>
+    <li>Never archived, never deleted: it stays Active</li>
+  </ul>
+</section>
+
+<section id="list" data-part="3" data-cue="Email templates is the sixth entry in the admin navigation." data-clip="clips/list.mp4" data-clip-delay="8">
+  <aside class="clip-notes">
+    <h3>Email templates (A8)</h3>
+    <ul>
+      <li>Name, key, category, status, System</li>
+      <li>Last change: UTC time and who</li>
+      <li>Category and Status live in the URL</li>
+      <li>Search: name, key or subject</li>
+    </ul>
+  </aside>
+</section>
+
+<section id="new" data-part="4" data-cue="New template opens a dialog." data-clip="clips/new.mp4" data-clip-delay="1">
+  <aside class="clip-notes">
+    <h3>New template (AD7)</h3>
+    <ul>
+      <li>The key follows the name until you edit it</li>
+      <li>Category and description</li>
+      <li>Opens the editor: Draft, version 1</li>
+      <li>Starter content for the category</li>
+    </ul>
+  </aside>
+</section>
+
+<section id="starters" data-part="4" data-cue="The marketing starter goes one step further">
+  <h2>Starter subjects</h2>
+  <table class="grid">
+    <tr><th>Category</th><th>Starter subject</th><th>Sample data</th></tr>
+    <tr><td>Account</td><td><code>A note about your {{appName}} account</code></td><td>none</td></tr>
+    <tr><td>Notification</td><td><code>{{headline}}</code></td><td>headline, message</td></tr>
+    <tr><td>Scheduled</td><td><code>Your weekend with {{appName}}</code></td><td>weekendDates</td></tr>
+    <tr><td>Special occasion</td><td><code>Happy {{occasion}} from {{appName}}</code></td><td>occasion</td></tr>
+    <tr><td>Marketing</td><td><code>Something new on {{appName}}</code> + <code>{{unsubscribeUrl}}</code></td><td>none</td></tr>
+  </table>
+  <p class="small muted"><span class="file">backend/src/Saturdaze.Application/Admin/EmailTemplates/EmailTemplateStarters.cs</span></p>
+</section>
+
+<section id="taken" data-part="4" data-cue="A key is unique, and the server is the judge." data-clip="clips/taken.mp4" data-clip-delay="1">
+  <aside class="clip-notes">
+    <h3>A taken key</h3>
+    <ul>
+      <li>409 <code>template_key_exists</code></li>
+      <li>The reason shows in the dialog</li>
+      <li>A malformed key is caught under the field</li>
+    </ul>
+  </aside>
+</section>
+
+<section id="duplicate" data-part="5" data-cue="Duplicate starts from a template you already like." data-clip="clips/duplicate.mp4" data-clip-delay="1">
+  <aside class="clip-notes">
+    <h3>Duplicate</h3>
+    <ul>
+      <li>Copy of …, category locked</li>
+      <li>Subject, preheader, bodies, sample data</li>
+      <li>New draft, version 1, not a system template</li>
+    </ul>
+  </aside>
+</section>
+
+<section id="api" data-part="6" data-cue="Two endpoints serve this screen">
+  <h2>List and create</h2>
+  <pre class="code tight" data-lang="cs" data-mark="3-4,8,10,14">
+var key = request.Key!.Trim();
+if (await _db.EmailTemplates.AnyAsync(t =&gt; t.Key == key, ct))
+    throw new ConflictException("template_key_exists",
+        "A template already uses this key. Choose another.");
+
+EmailTemplateContent content;
+if (request.DuplicateOf is { } sourceId)
+    content = /* the source's subject, preheader, bodies, sample data */;
+else
+    content = EmailTemplateStarters.For(category);
+
+var template = new EmailTemplate { /* … */ Status = EmailTemplateStatus.Draft,
+                                   IsSystem = false, Version = 1 };
+_revisions.Write(template, EmailTemplateRevisionAction.Create);
+</pre>
+  <p class="small muted"><code>GET /api/admin/email-templates?q=&amp;category=&amp;status=</code> · <code>POST /api/admin/email-templates</code> · <span class="file">CreateEmailTemplateCommand.cs</span> (abridged)</p>
+</section>
+
+<section id="recap" data-part="7" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div>Subject, preheader, HTML and text, with <code>{{placeholders}}</code>.</div>
+    <div>Key and category are fixed; senders will look up by key.</div>
+    <div>System templates: seeded, never overwritten, archived or deleted.</div>
+    <div>New template starts from category content; marketing keeps unsubscribe.</div>
+    <div>Duplicate copies content into an ordinary draft.</div>
+  </div>
+  <p class="small muted">Next: video 20, editing and previewing · Design: <span class="file">docs/detailed-designs/administration/manage-email-templates/</span></p>
+</section>
+
+<script src="../assets/slides.js"></script>
+</body>
+</html>
