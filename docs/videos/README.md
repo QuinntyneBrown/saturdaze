@@ -46,6 +46,12 @@ Six videos on Saturdaze Admin, the second web application that curates the catal
 | --- | --- | --- | --- |
 | 18 | [How account emails are drafted](18-how-account-emails-are-drafted/README.md) | ~7.1 min | Verification and reset links as built: random tokens stored as SHA-256 hashes, single use via `ConsumedAtUtc`, no account leak, `DevDelivery` and `devToken`; no email provider yet (G01). |
 
+## Design drift series
+
+| # | Video | Runtime | What you learn |
+| --- | --- | --- | --- |
+| 19 | [Design drift D01: the mock tokens that pointed nowhere](19-mock-tokens-drift-d01/README.md) | ~3.3 min | A mock stylesheet whose header pointed at a deleted catalog; retiring the always-failing check; before and after. |
+
 ## Components series
 
 Fifty-two instructional videos, one per component in `frontend/projects/components/src/lib/`: each codes the component step by step, calls out its best practices (especially signals) and walks through its unit tests. See the [series index](components/README.md).

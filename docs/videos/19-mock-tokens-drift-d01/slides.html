@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 19 Slides</title>
+<link rel="stylesheet" href="../assets/slides.css">
+</head>
+<body data-video-number="19" data-video-title="Design drift D01" data-parts="Introduction|What drifted|Why it matters|The fix|Before and after|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Design drift · Video 19</div>
+  <h1>D01: the mock tokens that pointed nowhere</h1>
+  <p class="lead">A header, a deleted folder and a check that could never pass</p>
+</section>
+
+<section id="drift" data-part="1" data-cue="The mocks in `docs/mocks` have their own stylesheet">
+  <h2>What drifted</h2>
+  <pre class="code" data-lang="css" data-mark="1">/* VERBATIM COPY of design-system/assets/tokens.css (source sha 024b14f).
+   Do not edit here. Re-copy from the design system when it changes;
+   docs/mocks-v2/.check.mjs fails if this file drifts from the source.
+   v2-only layout tokens live in styles/app.css (@layer base). */</pre>
+</section>
+
+<section id="why" data-part="2" data-cue="This is not an accessibility bug">
+  <h2>Why it matters</h2>
+  <ul>
+    <li>Not a WCAG failure: a design-system hygiene rule</li>
+    <li>A guard that always fails gets ignored</li>
+    <li>Real findings hide in the noise</li>
+    <li>The header sends readers to a missing file</li>
+  </ul>
+</section>
+
+<section id="header" data-part="3" data-cue="Three edits.">
+  <h2>1 · Own the header</h2>
+  <pre class="code" data-lang="css" data-mark="1,2">/* Saturdaze mock design tokens. The mocks own this file; the extracted
+   reference is docs/design-system/tokens/tokens.css (ADR-013).
+   v2-only layout tokens live in styles/app.css (@layer base). */</pre>
+</section>
+
+<section id="check" data-part="3" data-cue="Second, section two of the checker">
+  <h2>2 · Retire the byte comparison</h2>
+  <pre class="code" data-lang="ts" data-mark="1,2">section("2. styles/tokens.css exists");
+if (readText(F.tokens) === null) finding(F.tokens, 0, "missing");</pre>
+  <p class="small">About forty lines removed from <code>docs/mocks/.check.mjs</code>.</p>
+</section>
+
+<section id="docs" data-part="3" data-cue="Third, the mocks readme">
+  <h2>3 · Docs and drift log</h2>
+  <ul>
+    <li><code>docs/mocks/README.md</code> describes the new check</li>
+    <li>D01 row deleted from <code>docs/design-system/README.md</code></li>
+    <li>Mocks gate: 0 findings</li>
+  </ul>
+</section>
+
+<section id="before" data-part="4" data-cue="Here is the landing mock served from the commit before the fix" data-clip="clips/before.mp4" data-clip-delay="2">
+  <aside class="clip-notes">
+    <h3>Before</h3>
+    <ul>
+      <li>Landing mock, commit before the fix</li>
+      <li><code>.check.mjs</code>: 1 finding</li>
+    </ul>
+  </aside>
+</section>
+
+<section id="after" data-part="4" data-cue="The Angular app never shipped the pattern" data-clip="clips/after.mp4" data-clip-delay="2">
+  <aside class="clip-notes">
+    <h3>After</h3>
+    <ul>
+      <li>Same pixels: no token value changed</li>
+      <li><code>.check.mjs</code>: 0 findings</li>
+      <li>No Angular change, no baseline moves</li>
+    </ul>
+  </aside>
+</section>
+
+<section id="recap" data-part="5" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <ul>
+      <li>A header must not point at a file that does not exist</li>
+      <li>A check that can never pass is worse than none</li>
+      <li>Fix the source of the claim, then delete the drift record</li>
+    </ul>
+  </div>
+</section>
+
+<script src="../assets/slides.js"></script>
+</body>
+</html>

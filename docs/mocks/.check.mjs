@@ -11,8 +11,7 @@
 //      @shell:head / @shell:topbar / @shell:bottomnav regions match the
 //      canonical copy in pages/_shell.html (bare pages: head only, and no
 //      .topbar / .bottom-nav markup at all)
-//   2. styles/tokens.css = provenance comment + verbatim
-//      design-system/assets/tokens.css
+//   2. styles/tokens.css exists
 //   3. no <style> tags or style="" attributes (page CSS lives in app.css)
 //   4. index.html tiles <-> pages/*.html (non-underscore) is a bijection
 //   5. <use href="#i-…"> names are keys of ICONS in app.js; every relative
@@ -33,7 +32,6 @@ const F = {
   appJs: join(ROOT, "app.js"),
   appCss: join(ROOT, "styles", "app.css"),
   tokens: join(ROOT, "styles", "tokens.css"),
-  tokensSrc: resolve(REPO, "design-system", "assets", "tokens.css"),
   shell: join(PAGES_DIR, "_shell.html"),
 };
 const ADR005_RULE = "max(env(safe-area-inset-bottom, 0px), var(--sd-chrome-bottom, 0px))";
@@ -223,37 +221,8 @@ for (const p of pages) {
 
 // ---------------------------------------------------------------- 2. tokens
 
-section("2. styles/tokens.css is a verbatim copy of design-system/assets/tokens.css");
-const tokens = readText(F.tokens);
-const tokensSrc = readText(F.tokensSrc);
-if (tokens === null) finding(F.tokens, 0, "missing");
-if (tokensSrc === null) finding(F.tokensSrc, 0, "missing (source of truth)");
-if (tokens !== null) {
-  const t = tokens.replace(/\r\n?/g, "\n");
-  const header = /^\s*\/\*[\s\S]*?\*\//.exec(t);
-  if (!header) finding(F.tokens, 1, "must start with a provenance comment block (/* … */)");
-  else {
-    const sha = /sha ([0-9a-f]{7,})/i.exec(header[0]);
-    if (sha) info(`provenance header claims sha ${sha[1]}`);
-    else finding(F.tokens, 1, "provenance header names no source sha (expected 'sha <hex>')");
-    if (tokensSrc !== null) {
-      let rest = t.slice(header.index + header[0].length);
-      rest = rest.replace(/^[ \t]*\n/, ""); // remainder of the comment's own line
-      rest = rest.replace(/^[ \t]*\n/, ""); // one optional blank line
-      const headerLines = t.slice(0, t.length - rest.length).split("\n").length - 1;
-      const got = rest.replace(/\n+$/, "");
-      const want = tokensSrc.replace(/\r\n?/g, "\n").replace(/\n+$/, "");
-      if (got !== want) {
-        const d = firstDiff(got, want);
-        finding(
-          F.tokens,
-          headerLines + d.line,
-          `drifts from ${rel(F.tokensSrc)} (source line ${d.line}): expected ${show(d.expected)}, got ${show(d.got)}`,
-        );
-      }
-    }
-  }
-}
+section("2. styles/tokens.css exists");
+if (readText(F.tokens) === null) finding(F.tokens, 0, "missing");
 
 // ---------------------------------------------------------------- 3. no inline CSS
 
