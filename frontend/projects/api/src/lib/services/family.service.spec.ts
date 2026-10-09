@@ -18,11 +18,13 @@ function family(overrides: Partial<FamilyDto> = {}): FamilyDto {
     budgetEnabled: false,
     tryNewEnabled: true,
     fridayPreviewEnabled: false,
+    isOwner: true,
+    ownerEmail: 'quinn@example.com',
     members: [
-      { id: 'm3', name: 'Mae', age: 5 },
-      { id: 'm1', name: 'Quinn', age: 38 },
-      { id: 'm4', name: 'Eli', age: 9 },
-      { id: 'm2', name: 'Sara', age: 36 },
+      { id: 'm3', name: 'Mae', age: 5, access: 'None', email: null },
+      { id: 'm1', name: 'Quinn', age: 38, access: 'None', email: null },
+      { id: 'm4', name: 'Eli', age: 9, access: 'None', email: null },
+      { id: 'm2', name: 'Sara', age: 36, access: 'None', email: null },
     ],
     commitments: [
       {
@@ -114,6 +116,8 @@ describe('FamilyService', () => {
         tone: 'primary',
         age: 38,
         role: 'Parent',
+        access: 'None',
+        email: null,
         subtitle: 'Parent · 38',
       },
       {
@@ -123,6 +127,8 @@ describe('FamilyService', () => {
         tone: 'leaf',
         age: 36,
         role: 'Parent',
+        access: 'None',
+        email: null,
         subtitle: 'Parent · 36',
       },
       {
@@ -132,6 +138,8 @@ describe('FamilyService', () => {
         tone: 'sky',
         age: 9,
         role: 'Kid',
+        access: 'None',
+        email: null,
         subtitle: 'Kid · 9',
       },
       {
@@ -141,6 +149,8 @@ describe('FamilyService', () => {
         tone: 'sun',
         age: 5,
         role: 'Kid',
+        access: 'None',
+        email: null,
         subtitle: 'Kid · 5',
       },
     ]);
@@ -327,5 +337,51 @@ describe('FamilyService', () => {
       .flush({ message: 'nope' }, { status: 500, statusText: 'Server Error' });
     await expect(promise).rejects.toBeTruthy();
     expect(service.getFamily()().headline).toBe('The Browns');
+  });
+
+  it('POSTs a member without sign-in, then reloads the family (L2-125)', async () => {
+    await flushLoad();
+    const promise = service.addMember({ name: ' Mae ', age: 5, email: null });
+    const req = httpMock.expectOne(`${FAMILY}/members`);
+    expect(req.request.method).toBe('POST');
+    expect(req.request.body).toEqual({ name: 'Mae', age: 5, email: null });
+    req.flush({
+      member: { id: 'm5', name: 'Mae', age: 5, access: 'None', email: null },
+      invite: null,
+    });
+    await Promise.resolve();
+    httpMock.expectOne(FAMILY).flush(family());
+    await expect(promise).resolves.toBeNull();
+  });
+
+  it('POSTs an invited member and returns the invite to share (L2-126)', async () => {
+    await flushLoad();
+    const invite = {
+      email: 'jordan@example.com',
+      token: 't0k3n',
+      url: 'http://localhost:4200/accept-invite?token=t0k3n',
+      expiresAtUtc: '2026-10-16T00:00:00Z',
+    };
+    const promise = service.addMember({ name: 'Jordan', age: 37, email: ' jordan@example.com ' });
+    const req = httpMock.expectOne(`${FAMILY}/members`);
+    expect(req.request.body).toEqual({ name: 'Jordan', age: 37, email: 'jordan@example.com' });
+    req.flush({
+      member: { id: 'm6', name: 'Jordan', age: 37, access: 'Invited', email: invite.email },
+      invite,
+    });
+    await Promise.resolve();
+    httpMock.expectOne(FAMILY).flush(family());
+    await expect(promise).resolves.toEqual(invite);
+  });
+
+  it('DELETEs a member by id, then reloads the family (L2-128)', async () => {
+    await flushLoad();
+    const promise = service.removeMember('m3');
+    const req = httpMock.expectOne(`${FAMILY}/members/m3`);
+    expect(req.request.method).toBe('DELETE');
+    req.flush(null, { status: 204, statusText: 'No Content' });
+    await Promise.resolve();
+    httpMock.expectOne(FAMILY).flush(family());
+    await expect(promise).resolves.toBeUndefined();
   });
 });

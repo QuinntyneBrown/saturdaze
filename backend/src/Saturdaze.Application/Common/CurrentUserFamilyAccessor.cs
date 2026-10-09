@@ -6,9 +6,10 @@ using Saturdaze.Application.Exceptions;
 namespace Saturdaze.Application.Common;
 
 /// <summary>
-/// Resolves the caller's family: the <c>family_id</c> JWT claim first, then
-/// <c>Users.FamilyId</c> (covers tokens minted before the family existed).
-/// Scoped, so one lookup per request is shared by nested MediatR sends.
+/// Resolves the caller's family from <c>Users.FamilyId</c>. The <c>family_id</c>
+/// claim is not trusted: a removed member's account is deleted, and their
+/// still-unexpired access token shall stop reaching the family (L2-128 #3,
+/// ADR-016). Scoped, so one lookup per request is shared by nested MediatR sends.
 /// </summary>
 public sealed class CurrentUserFamilyAccessor : ICurrentFamilyAccessor
 {
@@ -29,11 +30,13 @@ public sealed class CurrentUserFamilyAccessor : ICurrentFamilyAccessor
         if (!_user.IsAuthenticated || _user.UserId is not { } userId)
             throw new InvalidCredentialsException("unauthenticated", "Sign in to continue.");
 
-        var familyId = _user.FamilyId
-            ?? await _db.Users.AsNoTracking()
-                .Where(u => u.Id == userId)
-                .Select(u => u.FamilyId)
-                .FirstOrDefaultAsync(cancellationToken)
+        var account = await _db.Users.AsNoTracking()
+            .Where(u => u.Id == userId)
+            .Select(u => new { u.FamilyId })
+            .FirstOrDefaultAsync(cancellationToken)
+            ?? throw new InvalidCredentialsException("unauthenticated", "Sign in to continue.");
+
+        var familyId = account.FamilyId
             ?? throw new NotFoundException("No family has been configured for this account yet.");
 
         _cached = familyId;

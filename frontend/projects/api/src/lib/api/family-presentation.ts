@@ -1,5 +1,5 @@
 import { DayOfWeek } from '../models/day-of-week';
-import { MemberRole } from '../models/member-row';
+import { MemberAccess, MemberRole } from '../models/member-row';
 import { hhmm, timeRange } from './format';
 
 /**
@@ -29,9 +29,18 @@ export function memberRole(age: number): MemberRole {
   return age >= ADULT_AGE ? 'Parent' : 'Kid';
 }
 
-/** "Parent · 38" / "Kid · 9". */
-export function memberSubtitle(member: Pick<MemberLike, 'age'>): string {
-  return `${memberRole(member.age)} · ${member.age}`;
+/** "Parent · 38" / "Kid · 9" / "Parent · 36 · Invite sent to sara@example.com" (L2-126). */
+export function memberSubtitle(
+  member: Pick<MemberLike, 'age'> & {
+    readonly access?: MemberAccess;
+    readonly email?: string | null;
+  },
+): string {
+  const base = `${memberRole(member.age)} · ${member.age}`;
+  if (!member.email) return base;
+  if (member.access === 'Invited') return `${base} · Invite sent to ${member.email}`;
+  if (member.access === 'Account') return `${base} · Signs in as ${member.email}`;
+  return base;
 }
 
 /** "Saturdays" / "Wednesdays". */

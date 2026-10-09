@@ -11,6 +11,7 @@ import { LoginRequest } from '../models/login-request';
 import { LogoutRequest } from '../models/logout-request';
 import { RefreshRequest } from '../models/refresh-request';
 import { ResetPasswordRequest } from '../models/reset-password-request';
+import { AcceptInvitationRequest, Invitation } from '../models/invitation';
 import { ResendVerificationRequest } from '../models/resend-verification-request';
 import { SignupRequest } from '../models/signup-request';
 import { User } from '../models/user';
@@ -273,6 +274,41 @@ export class AuthService implements IAuthService {
   async resetPassword(req: ResetPasswordRequest): Promise<void> {
     try {
       await firstValueFrom(this.http.post<void>(`${this.baseUrl}/api/auth/reset-password`, req));
+    } catch (e) {
+      rethrowAsAuthError(e);
+    }
+  }
+
+  /**
+   * Preview Invitation.
+   *
+   * @param {string} token - The invite token
+   *
+   * @returns {Promise<Invitation>} The result of the operation
+   */
+  async previewInvitation(token: string): Promise<Invitation> {
+    try {
+      return await firstValueFrom(
+        this.http.post<Invitation>(`${this.baseUrl}/api/auth/invitation`, { token }),
+      );
+    } catch (e) {
+      rethrowAsAuthError(e);
+    }
+  }
+
+  /**
+   * Accept Invitation.
+   *
+   * @param {AcceptInvitationRequest} req - The req
+   *
+   * @returns {Promise<} The result of the operation
+   */
+  async acceptInvitation(req: AcceptInvitationRequest): Promise<{ token: AuthToken; user: User }> {
+    try {
+      const dto = await firstValueFrom(
+        this.http.post<AuthSuccessDto>(`${this.baseUrl}/api/auth/accept-invitation`, req),
+      );
+      return { token: mapToken(dto.token), user: this.toUser(dto.user) };
     } catch (e) {
       rethrowAsAuthError(e);
     }

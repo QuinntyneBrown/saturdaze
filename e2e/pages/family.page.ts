@@ -1,4 +1,4 @@
-import { Locator, Page } from "@playwright/test";
+import { Locator, Page, Request } from "@playwright/test";
 import { BasePage, control } from "./base.page.js";
 import { PageSlug } from "../fixtures/routes.js";
 
@@ -15,6 +15,9 @@ import { PageSlug } from "../fixtures/routes.js";
  *     Admin (.admin-only)   "Review submissions" row + count chip — Admin role only
  *     Account               .account-card (avatar · email · "Signed in since …" · [Add photo | Change photo] · [Sign out])
  *
+ *   D17b sign-in choice     "Will they sign in?" radios (No sign-in | Invite to sign in) · Email when inviting (L2-125, L2-126)
+ *   D30 Invite link dialog  .copy-field__value (the accept-invite link) · [Done]
+ *
  *   D27 Profile photo dialog  .photo-picker (.photo-picker__preview avatar · input[type=file] · hint / .field__error)
  *                             actions: [Remove photo] (photo set only) · Cancel · Save
  */
@@ -27,6 +30,12 @@ export class FamilyPage extends BasePage {
 
   protected readyAnchor(): Locator {
     return this.page.locator(".family-grid .section-header__title");
+  }
+
+  /** Loads /family in this page's browser context (for a second signed-in person). */
+  async open(): Promise<void> {
+    await this.page.goto("/family");
+    await this.waitForReady();
   }
 
   get grid(): Locator {
@@ -57,6 +66,65 @@ export class FamilyPage extends BasePage {
 
   addMemberRow(): Locator {
     return control(this.membersSection(), "Add a family member");
+  }
+
+  membersSubtitle(): Locator {
+    return this.membersSection().locator(".section-header__sub");
+  }
+
+  /** Rows that open the member dialog — only the owner's are actionable (L2-124 #4). */
+  actionableMemberRows(): Locator {
+    return this.membersSection().locator(".list__item--action");
+  }
+
+  /* ---------- Member sign-in (L1-037) ---------- */
+
+  signInChoice(option: "No sign-in" | "Invite to sign in"): Locator {
+    return this.dialog().getByRole("radio", { name: option, exact: true });
+  }
+
+  /** Fills D17b and submits it; resolves with the `POST /api/family/members` body sent. */
+  async addMember(member: { name: string; age: number; inviteEmail?: string }): Promise<Record<string, unknown>> {
+    await this.addMemberRow().click();
+    await this.dialogField("Name").fill(member.name);
+    await this.dialogField("Age").fill(String(member.age));
+    if (member.inviteEmail) {
+      await this.signInChoice("Invite to sign in").check();
+      await this.dialogField("Email").fill(member.inviteEmail);
+    }
+    const posted = this.page.waitForRequest(
+      (r) => r.url().endsWith("/api/family/members") && r.method() === "POST",
+    );
+    await this.dialogAction(member.inviteEmail ? "Send invite" : "Add member").click();
+    return (await posted).postDataJSON() as Record<string, unknown>;
+  }
+
+  /** The accept-invite link shown in D30. */
+  inviteLink(): Locator {
+    return this.dialog().locator(".copy-field__value");
+  }
+
+  /** Opens D17 for the member and chooses Remove, leaving D21 open. */
+  async startRemoving(name: string): Promise<void> {
+    await this.memberRow(name).click();
+    await this.dialogAction("Remove").click();
+  }
+
+  /** Confirms D21; resolves with the `DELETE /api/family/members/{id}` URLs sent. */
+  async confirmRemoval(): Promise<string[]> {
+    const deletes: string[] = [];
+    const listener = (r: Request) => {
+      if (r.method() === "DELETE" && /\/api\/family\/members\//.test(r.url())) deletes.push(r.url());
+    };
+    this.page.on("request", listener);
+    const done = this.page.waitForResponse(
+      (r) => r.request().method() === "DELETE" && /\/api\/family\/members\//.test(r.url()),
+    );
+    await this.dialogAction("Remove").click();
+    await done;
+    await this.dialog().waitFor({ state: "detached" });
+    this.page.off("request", listener);
+    return deletes;
   }
 
   /* ---------- Commitments ---------- */

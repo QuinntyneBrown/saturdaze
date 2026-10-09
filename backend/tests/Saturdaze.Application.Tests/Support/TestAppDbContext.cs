@@ -15,6 +15,7 @@ internal sealed class TestAppDbContext : DbContext, IAppDbContext
 
     public DbSet<Family> Families => Set<Family>();
     public DbSet<FamilyMember> FamilyMembers => Set<FamilyMember>();
+    public DbSet<FamilyInvitation> FamilyInvitations => Set<FamilyInvitation>();
     public DbSet<Commitment> Commitments => Set<Commitment>();
     public DbSet<Preference> Preferences => Set<Preference>();
     public DbSet<Activity> Activities => Set<Activity>();

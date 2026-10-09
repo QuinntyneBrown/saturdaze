@@ -30,6 +30,14 @@ export interface FamilyView {
     readonly hint: 'Weather and drive times start here';
   };
   /**
+   * Is Owner — the viewer changes who's in (L2-124).
+   */
+  readonly isOwner: boolean;
+  /**
+   * Owner Email — named to members who are not the owner.
+   */
+  readonly ownerEmail: string | null;
+  /**
    * Members — oldest first.
    */
   readonly members: readonly MemberRow[];

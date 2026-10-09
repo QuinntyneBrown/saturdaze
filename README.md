@@ -36,6 +36,10 @@ reference.
   budget preferences, likes, and dislikes.
 - Authentication flows for sign-up, login, verification, password reset, and
   sign-out.
+- Family member sign-in: the account that creates a family owns it, invites
+  members by a shareable link so each signs in with their own password, adds
+  members such as young children who never sign in, and removes members,
+  which ends their access (ADR-016).
 - Weather-aware planning through the Open-Meteo integration, with test fakes
   and neutral fallback behavior.
 - AI-driven catalog ingestion: fresh local events, activities, and restaurants

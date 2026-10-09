@@ -12,5 +12,6 @@ public class FamilyMemberConfiguration : IEntityTypeConfiguration<FamilyMember>
         b.HasKey(x => x.Id);
         b.Property(x => x.Name).HasMaxLength(100).IsRequired();
         b.HasIndex(x => new { x.FamilyId, x.Name }).IsUnique();
+        b.HasIndex(x => x.UserId).IsUnique().HasFilter("[UserId] IS NOT NULL");
     }
 }

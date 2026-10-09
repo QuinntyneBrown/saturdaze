@@ -1,3 +1,5 @@
+import { MemberAccess } from './member-row';
+
 /**
  * Server-side shape of `GET /api/family`. Mirrors `Saturdaze.Application
  * .Contracts.FamilyProfileDto` plus the nested member / commitment /
@@ -29,9 +31,23 @@ export interface FamilyDto {
    */
   readonly fridayPreviewEnabled: boolean;
   /**
-   * Members.
+   * Is Owner — the caller owns the family and changes who's in (L2-124).
    */
-  readonly members: readonly { id: string; name: string; age: number }[];
+  readonly isOwner: boolean;
+  /**
+   * Owner Email — `null` for a family no account has created.
+   */
+  readonly ownerEmail: string | null;
+  /**
+   * Members — `email` is the invited or signed-in address, `null` for `None`.
+   */
+  readonly members: readonly {
+    id: string;
+    name: string;
+    age: number;
+    access: MemberAccess;
+    email: string | null;
+  }[];
   /**
    * Commitments.
    */

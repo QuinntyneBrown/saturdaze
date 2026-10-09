@@ -14,7 +14,7 @@ test.describe("Dialogs gallery", () => {
     await settle();
   });
 
-  test("renders exactly the thirty specimens with their ids", async ({ pages }) => {
+  test("renders exactly the gallery specimens with their ids", async ({ pages }) => {
     const d = pages.dialogs;
     await expect(d.pageTitle()).toHaveText("Dialogs");
     await expect(d.specimens()).toHaveCount(DIALOG_SLUGS.length);
@@ -71,13 +71,18 @@ test.describe("Dialogs gallery", () => {
       ["remix", "Remix this weekend?"],
       ["member", "Edit Mae"],
       ["member-add", "Add a family member"],
+      ["member-invite", "Add a family member"],
+      ["member-account", "Edit Sara"],
       ["commitment", "Edit Swim lessons"],
       ["commitment-add", "Add a commitment"],
       ["home", "Home location"],
       ["likes", "Likes and dislikes"],
       ["remove", "Remove Mae from the family?"],
+      ["remove-invited", "Remove Grandma Jo from the family?"],
+      ["remove-account", "Remove Sara from the family?"],
       ["remove-commitment", "Remove Swim lessons?"],
       ["signout", "Sign out?"],
+      ["invite-link", "Invite ready for Grandma Jo"],
       ["approve", "Approve Port Credit Buskerfest?"],
       ["reject", "Reject this suggestion?"],
       ["more", "Weekend options"],
@@ -91,10 +96,12 @@ test.describe("Dialogs gallery", () => {
     const d = pages.dialogs;
     await expect(d.action("repeat", "Replace draft")).toHaveClass(/btn--danger/);
     await expect(d.action("remove", "Remove")).toHaveClass(/btn--danger/);
+    await expect(d.action("remove-invited", "Remove")).toHaveClass(/btn--danger/);
+    await expect(d.action("remove-account", "Remove")).toHaveClass(/btn--danger/);
     await expect(d.action("remove-commitment", "Remove")).toHaveClass(/btn--danger/);
     await expect(d.action("signout", "Sign out")).toHaveClass(/btn--danger/);
     await expect(d.action("reject", "Reject")).toHaveClass(/btn--danger/);
-    await expect(d.gallery.locator(".btn--danger")).toHaveCount(5);
+    await expect(d.gallery.locator(".btn--danger")).toHaveCount(7);
   });
 
   test("form dialogs disable the primary until required fields are valid", async ({ pages }) => {

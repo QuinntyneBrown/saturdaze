@@ -1,0 +1,35 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — Manage family members
+
+Container_Boundary(web, "Saturdaze web application") {
+  Component(page, "FamilyPage", "Angular component", "Shows who's in, with owner-only actions")
+  Component(dialogs, "FamilyMemberDialog / InviteLinkDialog / ConfirmDialog", "Angular component", "D17, D17b, D30 and D21")
+  Component(accept, "AcceptInvitePage", "Angular component", "Join form and unusable-link state")
+  Component(family, "FamilyService", "Angular service", "FAMILY_SERVICE: load, saveProfile, addMember, removeMember")
+  Component(session, "SessionStore / AuthService", "Angular service", "SESSION_STORE: previewInvitation, acceptInvitation")
+}
+Container_Boundary(api, "Saturdaze API") {
+  Component(familyCtl, "FamilyController", "ASP.NET Core", "GET/PUT /api/family, POST /api/family/members, DELETE /api/family/members/{id}")
+  Component(authCtl, "AuthController", "ASP.NET Core", "Anonymous invitation and accept-invitation actions")
+  Component(handlers, "AddFamilyMemberCommandHandler / RemoveFamilyMemberCommandHandler / SaveFamilyProfileCommandHandler", "Application handler", "Member list changes")
+  Component(invites, "GetInvitationQueryHandler / AcceptInvitationCommandHandler", "Application handler", "Validates the token and creates the member account")
+  Component(owner, "FamilyOwnership", "Application service", "Owner check; 403 owner_only")
+  Component(accessor, "CurrentUserFamilyAccessor", "Application service", "Resolves the caller's family from Users.FamilyId")
+  Component(issuer, "RefreshTokenIssuer", "Application service", "Issues the token pair")
+  ComponentDb(db, "AppDbContext", "EF Core", "Families.OwnerUserId, FamilyMembers.UserId, FamilyInvitations, Users")
+}
+Rel(page, dialogs, "Opens", "CDK Dialog")
+Rel(page, family, "addMember / removeMember / saveProfile")
+Rel(accept, session, "previewInvitation / acceptInvitation")
+Rel(family, familyCtl, "HTTPS", "bearer")
+Rel(session, authCtl, "HTTPS", "anonymous")
+Rel(familyCtl, handlers, "Dispatches command")
+Rel(authCtl, invites, "Dispatches request")
+Rel(handlers, owner, "Ensures owner")
+Rel(owner, accessor, "Resolves family")
+Rel(invites, issuer, "Signs the new member in")
+Rel(handlers, db, "Reads and writes")
+Rel(invites, db, "Reads and writes")
+@enduml

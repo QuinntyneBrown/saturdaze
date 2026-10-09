@@ -48,9 +48,12 @@ public sealed class UserSeeder : IJsonSeeder
             {
                 // Every account owns a family (same invariant as registration).
                 family ??= NewFamily(db, record.FamilyHomeLocation);
+                var userId = Guid.NewGuid();
+                // The first seeded account in a household owns it (L2-124).
+                family.OwnerUserId ??= userId;
                 db.Users.Add(new User
                 {
-                    Id = Guid.NewGuid(),
+                    Id = userId,
                     Email = email,
                     NormalizedEmail = normalized,
                     PasswordHash = _hasher.Hash(record.Password),
@@ -67,6 +70,7 @@ public sealed class UserSeeder : IJsonSeeder
                 existing.PasswordHash = _hasher.Hash(record.Password);
                 existing.Role = record.Role ?? existing.Role;
                 existing.FamilyId = family?.Id ?? existing.FamilyId ?? NewFamily(db, null).Id;
+                if (family is not null) family.OwnerUserId ??= existing.Id;
                 existing.EmailVerifiedUtc = record.EmailVerified
                     ? existing.EmailVerifiedUtc ?? now
                     : existing.EmailVerifiedUtc;

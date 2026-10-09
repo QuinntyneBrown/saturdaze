@@ -30,12 +30,12 @@ screenshots/          committed <slug>.<viewport>.png captures (390 / 820 / 1440
 | Weekend (cover photo, one day beside its map) | `weekend.html`, `weekend.empty.html`, `weekend.generating.html` |
 | Ideas (photo-led activities · food · events) | `ideas.html`, `ideas.food.html`, `ideas.events.html` |
 | Past weekends (cover photo per weekend) | `past.html`, `past.empty.html` |
-| Family | `family.html` |
+| Family | `family.html`, `family.members.html` (owner: who signs in), `family.member.html` (member view) |
 | Review submissions (admin) | `review-submissions.html`, `review-submissions.empty.html` |
-| Auth | `sign-in.html` (2 states), `create-account.html`, `reset-password.html` (5 states), `verify-email.html` (3 states) |
+| Auth | `sign-in.html` (2 states), `create-account.html`, `reset-password.html` (5 states), `verify-email.html` (3 states), `accept-invite.html` (2 states) |
 | Public | `landing.html`, `legal.html` (Terms + Privacy) |
 | Admin (Saturdaze Admin, ADR-014; bare shell with its own side navigation from 1024px) | `admin.sign-in.html` (2 states), `admin.html` (Photo health), `admin.places.html`, `admin.place.html`, `admin.reviews.html`, `admin.ingestion-skips.html`, `admin.activity.html` |
-| Dialogs gallery | `dialogs.html` (D1–D29 and admin AD1–AD6 rendered inline) |
+| Dialogs gallery | `dialogs.html` (D1–D30 and admin AD1–AD6 rendered inline) |
 
 ## Photos and maps (Wanderlog layout study)
 

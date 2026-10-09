@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 23 Slides</title>
+<link rel="stylesheet" href="../assets/slides.css">
+</head>
+<body data-video-number="23" data-video-title="Removing a family member" data-parts="Introduction|What the owner is told|What the server removes|Access ends now|The profile save|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Saturdaze family members · Video 23</div>
+  <h1>Removing a family member</h1>
+  <p class="lead">What the owner is told, what the server deletes, and why access ends at once</p>
+</section>
+
+<section id="three" data-part="0" data-cue="The owner can remove any member">
+  <h2>Three kinds of removal</h2>
+  <div class="cols three">
+    <div class="card"><h3>A child</h3><p class="small">Never signed in: stop planning for them</p></div>
+    <div class="card"><h3>An unused invite</h3><p class="small">The link must stop working</p></div>
+    <div class="card"><h3>Someone who signs in</h3><p class="small">Their access must end — now, even in an open tab</p></div>
+  </div>
+</section>
+
+<section id="dialog" data-part="1" data-cue="Removal starts in the edit member dialog">
+  <h2>D17 says how they sign in</h2>
+  <ul>
+    <li>“Invite sent to theo.rivera@example.com”</li>
+    <li>“Signs in as rosa.rivera@example.com”</li>
+    <li>Remove, on the left, opens the confirmation (D21)</li>
+  </ul>
+  <p class="small muted">Mocks: <span class="file">docs/mocks/pages/dialogs.html#dialog-member-account</span>, <span class="file">#dialog-remove-invited</span>, <span class="file">#dialog-remove-account</span></p>
+</section>
+
+<section id="d21" data-part="1" data-cue="The confirmation says what removal will do">
+  <h2>D21 names the consequence</h2>
+  <pre class="code" data-lang="ts" data-mark="2,3,4,5,6">function removalConsequence(member: MemberRow): string {
+  if (member.access === 'Account')
+    return `${member.name} will be signed out and will no longer be able to sign in.`;
+  if (member.access === 'Invited' &amp;&amp; member.email)
+    return `The invite sent to ${member.email} will stop working.`;
+  return 'Future weekends will not plan for them.';
+}</pre>
+  <p class="small muted"><span class="file">frontend/projects/saturdaze/src/app/pages/family/family.page.ts</span></p>
+</section>
+
+<section id="delete-call" data-part="1" data-cue="Confirming calls delete on the family member's endpoint">
+  <h2>One call per removal</h2>
+  <pre class="code" data-lang="sh">DELETE /api/family/members/{id}</pre>
+  <p class="lead">No longer a whole-profile save with the member left out.</p>
+</section>
+
+<section id="handler" data-part="2" data-cue="The handler starts with the same owner check">
+  <h2>The handler</h2>
+  <pre class="code tight" data-lang="cs" data-mark="1,2,7,8,10,11,14">var family = await _ownership.EnsureOwnerAsync(ct);
+var member = family.Members.SingleOrDefault(m =&gt; m.Id == request.Id)
+    ?? throw new NotFoundException(nameof(FamilyMember), request.Id);
+
+if (member.UserId is { } userId)
+{
+    if (userId == family.OwnerUserId)
+        throw new ConflictException("cannot_remove_owner", "The family's owner can't be removed.");
+
+    var account = await _db.Users.SingleOrDefaultAsync(u =&gt; u.Id == userId, ct);
+    if (account is not null) _db.Users.Remove(account);
+}
+
+_db.FamilyMembers.Remove(member);
+await _db.SaveChangesAsync(ct);</pre>
+  <p class="small muted"><span class="file">backend/src/Saturdaze.Application/Families/RemoveFamilyMemberCommand.cs</span> (body of <code>Handle</code>) · <code>403</code> not owner · <code>404</code> not in your family</p>
+</section>
+
+<section id="cascades" data-part="2" data-cue="A member without an account is simply deleted.">
+  <h2>What goes with them</h2>
+  <div class="flow">
+    <div class="node accent"><b>FamilyMember</b><span class="small muted">deleted</span></div>
+    <div class="arrow">→</div>
+    <div class="node"><b>FamilyInvitation</b><span class="small muted">cascade</span></div>
+  </div>
+  <div class="flow">
+    <div class="node accent"><b>User</b><span class="small muted">deleted, if they sign in</span></div>
+    <div class="arrow">→</div>
+    <div class="node"><b>RefreshTokens</b><span class="small muted">cascade</span></div>
+    <div class="node"><b>Verify · reset tokens</b><span class="small muted">cascade</span></div>
+    <div class="node"><b>UserAvatar</b><span class="small muted">cascade</span></div>
+  </div>
+</section>
+
+<section id="why-delete" data-part="2" data-cue="Why delete, and not just detach the account from the family?">
+  <h2>Delete, don't detach</h2>
+  <div class="cols">
+    <div class="card"><h3>Detach</h3><p>A login with no family, which would quietly create a new family on its first profile save</p></div>
+    <div class="card"><h3>Delete</h3><p>The account only existed because the owner invited it in (ADR-016 §4)</p></div>
+  </div>
+</section>
+
+<section id="owner-guard" data-part="2" data-cue="One member is never removable">
+  <h2>The responses</h2>
+  <div class="cols three">
+    <div class="card"><h3>204</h3><p class="small">Removed; the app reloads the family</p></div>
+    <div class="card"><h3>409</h3><p class="small"><code>cannot_remove_owner</code></p></div>
+    <div class="card"><h3>403 · 404</h3><p class="small">Not the owner · not in your family</p></div>
+  </div>
+</section>
+
+<section id="invited-clip" data-part="2" data-cue="Here is the owner removing Theo" data-clip="clips/remove-invited.mp4" data-clip-delay="1">
+  <aside class="clip-notes">
+    <h3>Remove Theo (invited)</h3>
+    <ul>
+      <li>“Invite sent to theo.rivera@…”</li>
+      <li>D21: “The invite sent to … will stop working.”</li>
+      <li>Row and invitation gone</li>
+    </ul>
+  </aside>
+</section>
+
+<section id="account-clip" data-part="2" data-cue="Now Rosa, who signs in." data-clip="clips/remove-account.mp4">
+  <aside class="clip-notes">
+    <h3>Remove Rosa (signs in)</h3>
+    <ul>
+      <li>“Signs in as rosa.rivera@…”</li>
+      <li>D21: “Rosa will be signed out and will no longer be able to sign in.”</li>
+      <li>Row and account gone</li>
+    </ul>
+  </aside>
+</section>
+
+<section id="stale" data-part="3" data-cue="Deleting the account ends the refresh tokens">
+  <h2>The fifteen-minute gap</h2>
+  <div class="cols">
+    <div class="card"><h3>Refresh token</h3><p>Deleted with the account: no new access tokens</p></div>
+    <div class="card"><h3>Access token</h3><p>Signed, valid for 15 minutes, carries <code>family_id</code></p></div>
+  </div>
+  <p class="lead">ADR-008 used the claim first, so a removed member's open tab could keep reading the family.</p>
+</section>
+
+<section id="accessor" data-part="3" data-cue="So the lookup changed.">
+  <h2>The family comes from the user's row</h2>
+  <pre class="code" data-lang="cs" data-mark="1,5">var account = await _db.Users.AsNoTracking()
+    .Where(u =&gt; u.Id == userId)
+    .Select(u =&gt; new { u.FamilyId })
+    .FirstOrDefaultAsync(cancellationToken)
+    ?? throw new InvalidCredentialsException("unauthenticated", "Sign in to continue.");
+
+var familyId = account.FamilyId
+    ?? throw new NotFoundException("No family has been configured for this account yet.");</pre>
+  <p class="small muted"><span class="file">backend/src/Saturdaze.Application/Common/CurrentUserFamilyAccessor.cs</span> · once per request scope · ADR-016 §5 supersedes ADR-008 §2</p>
+</section>
+
+<section id="client" data-part="3" data-cue="The app already knew what to do with a four oh one.">
+  <h2>401 → one refresh → sign in</h2>
+  <div class="flow">
+    <div class="node"><b>Request</b><span class="small muted">401: no such user</span></div>
+    <div class="arrow">→</div>
+    <div class="node"><b>Refresh</b><span class="small muted">401: token deleted</span></div>
+    <div class="arrow">→</div>
+    <div class="node accent"><b>/sign-in</b><span class="small muted">session cleared</span></div>
+  </div>
+  <p class="small muted"><span class="file">frontend/projects/api/src/lib/auth/auth.interceptor.ts</span> — unchanged</p>
+</section>
+
+<section id="signed-out-clip" data-part="3" data-cue="In the recording, Jordan is on the family page" data-clip="clips/signed-out.mp4" data-clip-delay="5">
+  <aside class="clip-notes">
+    <h3>Jordan's open tab</h3>
+    <ul>
+      <li>Alex removes Jordan from another device</li>
+      <li>Jordan clicks Weekend → sign in</li>
+      <li>Old password: “That email and password did not match.”</li>
+    </ul>
+  </aside>
+</section>
+
+<section id="save-guard" data-part="4" data-cue="There is one more way a member could leave the list">
+  <h2>The whole-profile save can't drop them</h2>
+  <pre class="code tight" data-lang="cs" data-mark="2,3">var dropped = existing.Where(m =&gt; !matched.Contains(m.Id)).ToList();
+if (dropped.Any(m =&gt; withAccess.Contains(m.Id)))
+    throw new ConflictException("member_has_access",
+        "Remove a member who is invited or signs in from the family page.");</pre>
+  <ul>
+    <li>Leaving out an invited member, or one who signs in → <code>409 member_has_access</code></li>
+    <li>They leave through <code>DELETE</code>, which revokes their access with them</li>
+    <li>Members without access can still be dropped by the save</li>
+  </ul>
+  <p class="small muted"><span class="file">backend/src/Saturdaze.Application/Families/SaveFamilyProfileCommandHandler.cs</span> · L2-129</p>
+</section>
+
+<section id="recap" data-part="5" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div>D21 states the access consequence before the owner confirms.</div>
+    <div>Removal deletes the invitation, or the account and its sessions.</div>
+    <div>The family is read from the user's row each request: a removed member's tab gets 401 at once.</div>
+    <div>The owner can't be removed; the profile save can't drop a member with access.</div>
+  </div>
+  <p class="small muted">Series: 20 · 21 · 22 · 23 · Requirements L2-124 to L2-129 · <span class="file">docs/adr/ADR-016-family-ownership-and-member-sign-in.md</span></p>
+</section>
+
+<script src="../assets/slides.js"></script>
+</body>
+</html>

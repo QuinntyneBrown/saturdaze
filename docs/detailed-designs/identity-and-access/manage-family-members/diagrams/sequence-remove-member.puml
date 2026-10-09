@@ -1,0 +1,44 @@
+@startuml
+title UML sequence behaviour — Remove a member
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+actor "Family owner" as actor
+box "Frontend — Saturdaze Angular application" #E0F2FE
+ participant "FamilyPage\nFamilyMemberDialog (D17)\nConfirmDialog (D21)" as page
+ participant "FamilyService" as client
+end box
+box "Backend — Saturdaze API" #D1FADF
+ participant "FamilyController" as controller
+end box
+box "Backend — Saturdaze Application and Domain" #ECFDF3
+ participant "RemoveFamilyMemberCommandHandler\nFamilyOwnership" as handler
+end box
+box "Backend — Saturdaze Infrastructure" #FFF4E5
+ database "AppDbContext\nSQL Server" as db
+end box
+actor -> page : Tap member, Remove
+page -> actor : D21 names the access consequence
+actor -> page : Remove
+page -> client : removeMember(id)
+client -> controller : DELETE /api/family/members/{id} (bearer)
+controller -> handler : RemoveFamilyMemberCommand
+alt caller is not the owner
+  controller --> client : 403 owner_only (L2-128 AC4)
+else member not in caller's family
+  controller --> client : 404 (L2-128 AC5)
+else member is the owner's own account
+  controller --> client : 409 cannot_remove_owner (L2-128 AC6)
+else removable
+  handler -> db : Delete FamilyMember (FamilyInvitation cascades)
+  opt member has an account
+    handler -> db : Delete User (RefreshTokens, reset and verify tokens, avatar cascade)
+  end
+  controller --> client : 204 (L2-128 AC1-3)
+  client -> controller : GET /api/family
+  controller --> client : 200 FamilyProfileDto
+  page --> actor : Row removed
+end
+@enduml

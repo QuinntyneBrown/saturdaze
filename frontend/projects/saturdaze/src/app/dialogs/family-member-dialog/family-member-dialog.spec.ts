@@ -48,7 +48,12 @@ describe('FamilyMemberDialog', () => {
     fixture.detectChanges();
     expect(primary().disabled).toBe(false);
     component['submit']();
-    expect(dialogRef.close).toHaveBeenCalledWith({ kind: 'save', name: 'Theo', age: 3 });
+    expect(dialogRef.close).toHaveBeenCalledWith({
+      kind: 'save',
+      name: 'Theo',
+      age: 3,
+      email: null,
+    });
   });
 
   it('edits a member: prefilled, Save label, Remove on the left', async () => {
@@ -88,7 +93,12 @@ describe('FamilyMemberDialog', () => {
 
     component['age'].set('0');
     component['submit']();
-    expect(dialogRef.close).toHaveBeenCalledWith({ kind: 'save', name: 'Theo', age: 0 });
+    expect(dialogRef.close).toHaveBeenCalledWith({
+      kind: 'save',
+      name: 'Theo',
+      age: 0,
+      email: null,
+    });
   });
 
   it('rejects a name someone else already has (case-insensitive), but allows keeping your own', async () => {
@@ -100,7 +110,12 @@ describe('FamilyMemberDialog', () => {
 
     component['name'].set('MAE');
     component['submit']();
-    expect(dialogRef.close).toHaveBeenCalledWith({ kind: 'save', name: 'MAE', age: 5 });
+    expect(dialogRef.close).toHaveBeenCalledWith({
+      kind: 'save',
+      name: 'MAE',
+      age: 5,
+      email: null,
+    });
   });
 
   it('hints at the role the age implies', async () => {
@@ -112,6 +127,51 @@ describe('FamilyMemberDialog', () => {
     expect(component['ageHint']()).toBe('Parent · 18 and over.');
     fixture.detectChanges();
     expect(hintOf('memberAge')).toBe('Parent · 18 and over.');
+  });
+
+  it('defaults to No sign-in when adding (L2-125)', async () => {
+    await mount({ mode: 'add', existingNames: [] });
+    expect(component['signIn']()).toBe('none');
+    expect(host.querySelector('input[name="memberEmail"]')).toBeNull();
+    expect(host.textContent).toContain('No invite is sent. Good for young children.');
+  });
+
+  it('invites to sign in: email required, Send invite, the email in the result (L2-126)', async () => {
+    await mount({ mode: 'add', existingNames: [] });
+    component['name'].set('Jordan');
+    component['age'].set('37');
+    component['signIn'].set('invite');
+    fixture.detectChanges();
+    expect(field('memberEmail')).not.toBeNull();
+    expect(primary().textContent?.trim()).toBe('Send invite');
+    expect(primary().disabled).toBe(true);
+
+    component['email'].set('not-an-email');
+    component['submit']();
+    fixture.detectChanges();
+    expect(errorOf('memberEmail')).toBe('Enter an email address like name@example.com.');
+    expect(dialogRef.close).not.toHaveBeenCalled();
+
+    component['email'].set(' jordan@example.com ');
+    component['submit']();
+    expect(dialogRef.close).toHaveBeenCalledWith({
+      kind: 'save',
+      name: 'Jordan',
+      age: 37,
+      email: 'jordan@example.com',
+    });
+  });
+
+  it('names how a member signs in when editing, and offers no sign-in choice (L2-124)', async () => {
+    await mount({
+      mode: 'edit',
+      initial: { name: 'Sara', age: 36 },
+      existingNames: MEMBER_NAMES,
+      access: 'Account',
+      email: 'sara@example.com',
+    });
+    expect(host.textContent).toContain('Signs in as sara@example.com');
+    expect(host.querySelector('sd-seg-radio')).toBeNull();
   });
 
   it('closes with nothing on cancel', async () => {

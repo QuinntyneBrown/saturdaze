@@ -6,6 +6,7 @@ import { AuthToken, isTokenExpiring } from '../models/auth-token';
 import { ForgotPasswordRequest } from '../models/forgot-password-request';
 import { LoginRequest } from '../models/login-request';
 import { ResetPasswordRequest } from '../models/reset-password-request';
+import { AcceptInvitationRequest, Invitation } from '../models/invitation';
 import { ResendVerificationRequest } from '../models/resend-verification-request';
 import { SignupRequest } from '../models/signup-request';
 import { User } from '../models/user';
@@ -277,6 +278,42 @@ export class SessionStore implements ISessionStore {
       await this.auth.resetPassword(req);
     } catch (e) {
       const err = asAuthError(e, 'token_invalid');
+      this._error.set(err);
+      throw err;
+    }
+  }
+
+  /**
+   * Preview Invitation.
+   *
+   * @param {string} token - The invite token
+   *
+   * @returns {Promise<Invitation>} The result of the operation
+   */
+  async previewInvitation(token: string): Promise<Invitation> {
+    try {
+      return await this.auth.previewInvitation(token);
+    } catch (e) {
+      throw asAuthError(e, 'token_invalid');
+    }
+  }
+
+  /**
+   * Accept Invitation — persisted like a sign-up (remembered).
+   *
+   * @param {AcceptInvitationRequest} req - The req
+   *
+   * @returns {Promise<void>} The result of the operation
+   */
+  async acceptInvitation(req: AcceptInvitationRequest): Promise<void> {
+    this._error.set(null);
+    try {
+      const { token, user } = await this.auth.acceptInvitation(req);
+      this.persist(token, true);
+      this._token.set(token);
+      this._user.set(user);
+    } catch (e) {
+      const err = asAuthError(e);
       this._error.set(err);
       throw err;
     }

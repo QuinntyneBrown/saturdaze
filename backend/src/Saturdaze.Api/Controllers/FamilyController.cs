@@ -22,4 +22,32 @@ public sealed class FamilyController : ControllerBase
         [FromBody] SaveFamilyProfileCommand command,
         CancellationToken ct)
         => Ok(await _sender.Send(command, ct));
+
+    /// <summary>
+    /// The owner adds a member who will not sign in (L2-125), or invites them
+    /// to sign in when an email is given (L2-126). The invite link is returned
+    /// to the owner, who shares it (ADR-016).
+    /// </summary>
+    [HttpPost("members")]
+    public async Task<ActionResult<AddFamilyMemberResultDto>> AddMember(
+        [FromBody] AddFamilyMemberCommand command,
+        [FromServices] IConfiguration config,
+        CancellationToken ct)
+    {
+        var result = await _sender.Send(command, ct);
+        if (result.Invite is { } invite)
+        {
+            var appOrigin = (config["Saturdaze:Share:AppOrigin"] ?? $"{Request.Scheme}://{Request.Host}").TrimEnd('/');
+            result = result with { Invite = invite with { Url = appOrigin + invite.Url } };
+        }
+        return StatusCode(StatusCodes.Status201Created, result);
+    }
+
+    /// <summary>The owner removes a member, revoking any invite or sign-in they have (L2-128).</summary>
+    [HttpDelete("members/{id:guid}")]
+    public async Task<IActionResult> RemoveMember(Guid id, CancellationToken ct)
+    {
+        await _sender.Send(new RemoveFamilyMemberCommand(id), ct);
+        return NoContent();
+    }
 }

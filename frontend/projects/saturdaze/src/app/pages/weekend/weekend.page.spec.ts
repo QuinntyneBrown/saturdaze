@@ -96,6 +96,8 @@ const FAMILY_LOADING: FamilyView = {
   headline: 'Your family',
   subtitle: '',
   home: { location: '', hint: 'Weather and drive times start here' },
+  isOwner: false,
+  ownerEmail: null,
   members: [],
   commitments: [],
   likes: [],

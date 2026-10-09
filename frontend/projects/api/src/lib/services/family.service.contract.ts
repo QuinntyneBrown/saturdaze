@@ -105,6 +105,22 @@ export interface EditableFamilyProfile {
 /**
  * I Family Service.
  */
+/** A member the owner adds: `email` invites them to sign in (L2-125, L2-126). */
+export interface NewFamilyMember {
+  readonly name: string;
+  readonly age: number;
+  readonly email: string | null;
+}
+
+/** The invitation the owner shares with an invited member (L2-126). */
+export interface FamilyInvite {
+  readonly email: string;
+  readonly token: string;
+  /** The accept-invite link. */
+  readonly url: string;
+  readonly expiresAtUtc: string;
+}
+
 export interface IFamilyService {
   /**
    * Get Family — the read-only projection for the Family page.
@@ -132,6 +148,22 @@ export interface IFamilyService {
    * @returns {Promise<void>} The result of the operation
    */
   saveProfile(profile: EditableFamilyProfile): Promise<void>;
+  /**
+   * Add Member — `POST /api/family/members`, then reload. Owner only.
+   *
+   * @param {NewFamilyMember} member - The member
+   *
+   * @returns {Promise<FamilyInvite | null>} The invite to share, or `null` when they will not sign in
+   */
+  addMember(member: NewFamilyMember): Promise<FamilyInvite | null>;
+  /**
+   * Remove Member — `DELETE /api/family/members/{id}`, then reload. Owner only.
+   *
+   * @param {string} id - The member id
+   *
+   * @returns {Promise<void>} The result of the operation
+   */
+  removeMember(id: string): Promise<void>;
 }
 
 export const FAMILY_SERVICE = new InjectionToken<IFamilyService>('FAMILY_SERVICE');

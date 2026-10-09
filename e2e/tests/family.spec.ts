@@ -71,7 +71,8 @@ test.describe("Family", () => {
     await expect(f.rowSubtitle(f.memberRow("Mae"))).toHaveText("Kid · 5");
   });
 
-  test("adding then removing a member round-trips through D17b and D21", async ({ page, pages }) => {
+  test("adding then removing a member round-trips through D17b and D21", async ({ pages }) => {
+    // Traces to: L2-010 #3, L2-125 #5, L2-128 #7
     const f = pages.family;
     const name = `Guest${Date.now().toString(36)}`;
 
@@ -85,14 +86,11 @@ test.describe("Family", () => {
     await expect(f.memberRows()).toHaveCount(5);
     await expect(f.rowSubtitle(f.memberRow(name))).toHaveText("Parent · 40");
 
-    await f.memberRow(name).click();
-    await f.dialogAction("Remove").click();
+    await f.startRemoving(name);
     await expect(f.dialog()).toHaveAttribute("role", "alertdialog");
     await expect(f.dialogTitle()).toHaveText(`Remove ${name} from the family?`);
-    const saved = page.waitForResponse((r) => r.url().endsWith("/api/family") && r.request().method() === "PUT");
-    await f.dialogAction("Remove").click();
-    expect((await saved).ok()).toBeTruthy();
-    await expect(f.dialog()).toHaveCount(0);
+    await expect(f.dialogSubtitle()).toHaveText("Future weekends will not plan for them.");
+    expect(await f.confirmRemoval()).toHaveLength(1);
     await expect(f.memberRows()).toHaveCount(4);
   });
 

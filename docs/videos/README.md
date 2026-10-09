@@ -52,6 +52,17 @@ Six videos on Saturdaze Admin, the second web application that curates the catal
 | --- | --- | --- | --- |
 | 19 | [Design drift D01: the mock tokens that pointed nowhere](19-mock-tokens-drift-d01/README.md) | ~3.3 min | A mock stylesheet whose header pointed at a deleted catalog; retiring the always-failing check; before and after. |
 
+## Family members series
+
+Four videos on family member sign-in (L1-037, ADR-016): the account that creates a family owns it, invites members who sign in with their own credentials, adds members such as young children who never sign in, and removes members, which ends their access. Each mixes screen recordings of the family app, made against the Rivera family (`tools/video-record/family-demo`), with the code behind each step. Watch in order.
+
+| # | Video | Runtime | What you learn |
+| --- | --- | --- | --- |
+| 20 | [Who owns a family, and who's in](20-who-owns-a-family/README.md) | ~5.7 min | `OwnerUserId` and its backfill; None, Invited and Account; the owner-only 403; adding a child who never signs in. |
+| 21 | [Inviting a family member](21-inviting-a-family-member/README.md) | ~5.5 min | "Invite to sign in"; the hashed, single-use, 7-day `FamilyInvitation`; why the owner shares the link (no email provider); `email_in_use` and `already_invited`. |
+| 22 | [Joining from an invite link](22-joining-from-an-invite-link/README.md) | ~6.2 min | `/accept-invite` and its two anonymous endpoints; the verified account it creates; unusable links; the read-only member view and its server guard. |
+| 23 | [Removing a family member](23-removing-a-family-member/README.md) | ~6.3 min | D21's three consequences; what `DELETE` cascades; delete, not detach; the per-request family lookup that ends an open tab's access; `member_has_access`. |
+
 ## Components series
 
 Fifty-two instructional videos, one per component in `frontend/projects/components/src/lib/`: each codes the component step by step, calls out its best practices (especially signals) and walks through its unit tests. See the [series index](components/README.md).
@@ -96,4 +107,4 @@ SD_DEMO_RESET="node tools/video-record/admin-demo/reset.mjs" \
   node tools/video-record/record-clips.mjs docs/videos/14-managing-a-places-photos   # all clips, or add name,name
 ```
 
-The admin series records against a separate demo database and image host; see `tools/video-record/admin-demo/README.md`.
+The admin series records against a separate demo database and image host; see `tools/video-record/admin-demo/README.md`. The family members series records against a freshly reset database of its own; see `tools/video-record/family-demo/README.md`.

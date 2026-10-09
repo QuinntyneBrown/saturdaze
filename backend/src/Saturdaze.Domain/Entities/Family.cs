@@ -9,6 +9,13 @@ public class Family
     /// <summary>Display name, e.g. "The Browns". Optional; captured at signup.</summary>
     public string? Name { get; set; }
 
+    /// <summary>
+    /// The account that created the family; only it changes who's in (L2-124).
+    /// Null for a family no account has created (seed data), which any of its
+    /// accounts may manage (ADR-016).
+    /// </summary>
+    public Guid? OwnerUserId { get; set; }
+
     public string HomeLocation { get; set; } = string.Empty;
 
     /// <summary>Coordinates of home (L2-099); falls back to HomeLocationOptions when null.</summary>

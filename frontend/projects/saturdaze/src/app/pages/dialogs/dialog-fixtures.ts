@@ -221,5 +221,21 @@ export const ACCOUNT_ITEMS: readonly MenuItem[] = [
 ];
 
 export const MEMBER_NAMES = ['Quinn', 'Sara', 'Eli', 'Mae'];
+
+export const REMOVE_INVITED_MEMBER: ConfirmDialogData = {
+  title: 'Remove Grandma Jo from the family?',
+  body: 'The invite sent to jo@example.com will stop working.',
+  confirmLabel: 'Remove',
+  danger: true,
+  icon: 'trash',
+};
+
+export const REMOVE_ACCOUNT_MEMBER: ConfirmDialogData = {
+  title: 'Remove Sara from the family?',
+  body: 'Sara will be signed out and will no longer be able to sign in.',
+  confirmLabel: 'Remove',
+  danger: true,
+  icon: 'trash',
+};
 export const LIKES = ['Parks', 'Short hikes', 'Zoo', 'Rec Room', 'Lavender', 'Live theatre'];
 export const DISLIKES = ['Camping', 'Drives over 60 min'];

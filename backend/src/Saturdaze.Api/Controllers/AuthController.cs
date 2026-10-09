@@ -28,6 +28,8 @@ public class AuthController : ControllerBase
     public record ResendVerificationRequest(string Email);
     public record RefreshRequest(string RefreshToken);
     public record LogoutRequest(string RefreshToken);
+    public record InvitationRequest(string Token);
+    public record AcceptInvitationRequest(string Token, string Password);
 
     [HttpPost("register")]
     [AllowAnonymous]
@@ -99,6 +101,21 @@ public class AuthController : ControllerBase
     {
         var dto = await _mediator.Send(new ResendVerificationCommand(req.Email), ct);
         return Accepted(DevDelivery(dto));
+    }
+
+    /// <summary>What an invite link is for, before the invitee chooses a password (L2-127).</summary>
+    [HttpPost("invitation")]
+    [AllowAnonymous]
+    public async Task<ActionResult<InvitationDto>> Invitation([FromBody] InvitationRequest req, CancellationToken ct)
+        => Ok(await _mediator.Send(new GetInvitationQuery(req.Token), ct));
+
+    /// <summary>Creates the invited member's account and signs them in (L2-127).</summary>
+    [HttpPost("accept-invitation")]
+    [AllowAnonymous]
+    public async Task<ActionResult<AuthSuccessDto>> AcceptInvitation([FromBody] AcceptInvitationRequest req, CancellationToken ct)
+    {
+        var dto = await _mediator.Send(new AcceptInvitationCommand(req.Token, req.Password), ct);
+        return CreatedAtAction(nameof(Me), null, dto);
     }
 
     [HttpGet("me")]

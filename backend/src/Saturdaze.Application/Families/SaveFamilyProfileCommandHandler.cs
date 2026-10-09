@@ -15,17 +15,23 @@ public sealed class SaveFamilyProfileCommandHandler : IRequestHandler<SaveFamily
     private readonly ICurrentFamilyAccessor _current;
     private readonly ICurrentUserAccessor _user;
     private readonly IDateTimeProvider _clock;
+    private readonly FamilyProfileReader _reader;
+    private readonly FamilyOwnership _ownership;
 
     public SaveFamilyProfileCommandHandler(
         IAppDbContext db,
         ICurrentFamilyAccessor current,
         ICurrentUserAccessor user,
-        IDateTimeProvider clock)
+        IDateTimeProvider clock,
+        FamilyProfileReader reader,
+        FamilyOwnership ownership)
     {
         _db = db;
         _current = current;
         _user = user;
         _clock = clock;
+        _reader = reader;
+        _ownership = ownership;
     }
 
     public async Task<FamilyProfileDto> Handle(SaveFamilyProfileCommand request, CancellationToken cancellationToken)
@@ -50,6 +56,10 @@ public sealed class SaveFamilyProfileCommandHandler : IRequestHandler<SaveFamily
                 .SingleOrDefaultAsync(f => f.Id == id, cancellationToken)
             : null;
 
+        // Only the owner changes who's in (L2-129 #1); everyone saves the rest.
+        if (family is not null && !_ownership.IsOwner(family) && MembersChange(family.Members, request.Members))
+            throw new ForbiddenException("owner_only", "Only the family's owner can change who's in.");
+
         if (family is null)
         {
             var userId = _user.UserId
@@ -57,7 +67,7 @@ public sealed class SaveFamilyProfileCommandHandler : IRequestHandler<SaveFamily
             var owner = await _db.Users.SingleOrDefaultAsync(u => u.Id == userId, cancellationToken)
                 ?? throw new InvalidCredentialsException("unauthenticated", "Sign in to continue.");
 
-            family = new Family { Id = Guid.NewGuid() };
+            family = new Family { Id = Guid.NewGuid(), OwnerUserId = owner.Id };
             _db.Families.Add(family);
             owner.FamilyId = family.Id;
             owner.UpdatedAtUtc = _clock.UtcNow;
@@ -69,7 +79,8 @@ public sealed class SaveFamilyProfileCommandHandler : IRequestHandler<SaveFamily
         if (request.TryNewEnabled is { } tryNew) family.TryNewEnabled = tryNew;
         if (request.FridayPreviewEnabled is { } friday) family.FridayPreviewEnabled = friday;
 
-        SyncMembers(family, request.Members);
+        var withAccess = await MembersWithAccessAsync(family, cancellationToken);
+        SyncMembers(family, request.Members, withAccess);
         SyncCommitments(family, request.Commitments);
         SyncPreferences(family, request.Preferences);
 
@@ -78,20 +89,31 @@ public sealed class SaveFamilyProfileCommandHandler : IRequestHandler<SaveFamily
         // Re-read so the response reflects exactly what was persisted, without
         // depending on the family accessor having seen a family that was created
         // a moment ago.
-        var saved = await _db.Families
-            .AsNoTracking()
-            .Include(f => f.Members)
-            .Include(f => f.Commitments)
-            .Include(f => f.Preferences)
-            .SingleAsync(f => f.Id == family.Id, cancellationToken);
-        return FamilyProfileMapper.ToDto(saved);
+        return (await _reader.ReadAsync(family.Id, cancellationToken))!;
     }
 
     // NOTE: each sync snapshots the existing rows first. EF fixes up the
     // navigation as soon as a new child is Added, so iterating the live
     // collection during the removal pass would delete the rows just added.
 
-    private void SyncMembers(Family family, IReadOnlyList<SaveMemberInput> inputs)
+    private static bool MembersChange(IEnumerable<FamilyMember> existing, IReadOnlyList<SaveMemberInput> requested)
+    {
+        static IEnumerable<string> Keys(IEnumerable<(string Name, int Age)> members) =>
+            members.Select(m => $"{m.Name.Trim().ToLowerInvariant()}|{m.Age}").Order(StringComparer.Ordinal);
+        return !Keys(existing.Select(m => (m.Name, m.Age))).SequenceEqual(Keys(requested.Select(m => (m.Name, m.Age))));
+    }
+
+    /// <summary>Members who are invited or sign in; removing them goes through DELETE (L2-129 #3).</summary>
+    private async Task<HashSet<Guid>> MembersWithAccessAsync(Family family, CancellationToken ct)
+    {
+        var invited = await _db.FamilyInvitations
+            .Where(i => i.FamilyId == family.Id && i.AcceptedAtUtc == null)
+            .Select(i => i.FamilyMemberId)
+            .ToListAsync(ct);
+        return family.Members.Where(m => m.UserId is not null).Select(m => m.Id).Concat(invited).ToHashSet();
+    }
+
+    private void SyncMembers(Family family, IReadOnlyList<SaveMemberInput> inputs, IReadOnlySet<Guid> withAccess)
     {
         var existing = family.Members.ToList();
         var byId = existing.ToDictionary(m => m.Id);
@@ -123,7 +145,11 @@ public sealed class SaveFamilyProfileCommandHandler : IRequestHandler<SaveFamily
             member.Age = input.Age;
         }
 
-        foreach (var member in existing.Where(m => !matched.Contains(m.Id)))
+        var dropped = existing.Where(m => !matched.Contains(m.Id)).ToList();
+        if (dropped.Any(m => withAccess.Contains(m.Id)))
+            throw new ConflictException("member_has_access", "Remove a member who is invited or signs in from the family page.");
+
+        foreach (var member in dropped)
             _db.FamilyMembers.Remove(member);
     }
 

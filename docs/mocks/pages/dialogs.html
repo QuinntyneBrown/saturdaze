@@ -502,10 +502,86 @@
               <input class="field__input" id="d17b-age" type="number" placeholder="7" min="0" max="120">
               <p class="field__hint">Under 18 counts as a kid.</p>
             </div>
+            <div class="field">
+              <span class="field__label" id="d17b-signin-label">Will they sign in?</span>
+              <div class="seg-radio" role="radiogroup" aria-labelledby="d17b-signin-label">
+                <label class="seg-radio__opt"><input type="radio" name="d17b-signin" checked>No sign-in</label>
+                <label class="seg-radio__opt"><input type="radio" name="d17b-signin">Invite to sign in</label>
+              </div>
+              <p class="field__hint">No invite is sent. Good for young children.</p>
+            </div>
           </div>
           <div class="dialog__actions">
             <button class="btn btn--quiet" type="button">Cancel</button>
             <button class="btn btn--primary" type="button" disabled>Add member</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="specimen" id="dialog-member-invite">
+      <span class="specimen__label">D17 · Add a family member · invite to sign in</span>
+      <div class="dialog dialog--specimen dialog--wide" role="dialog" aria-modal="true" aria-labelledby="d17c-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="d17c-title">Add a family member</h2><p class="dialog__sub">Ages shape the picks.</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="dialog__body">
+            <div class="field">
+              <label class="field__label" for="d17c-name">Name <span class="field__req">Required</span></label>
+              <input class="field__input" id="d17c-name" type="text" value="Grandma Jo">
+            </div>
+            <div class="field">
+              <label class="field__label" for="d17c-age">Age</label>
+              <input class="field__input" id="d17c-age" type="number" value="68" min="0" max="120">
+              <p class="field__hint">Parent · 18 and over counts as a parent.</p>
+            </div>
+            <div class="field">
+              <span class="field__label" id="d17c-signin-label">Will they sign in?</span>
+              <div class="seg-radio" role="radiogroup" aria-labelledby="d17c-signin-label">
+                <label class="seg-radio__opt"><input type="radio" name="d17c-signin">No sign-in</label>
+                <label class="seg-radio__opt"><input type="radio" name="d17c-signin" checked>Invite to sign in</label>
+              </div>
+              <p class="field__hint">They'll choose their own password from the invite link.</p>
+            </div>
+            <div class="field">
+              <label class="field__label" for="d17c-email">Email <span class="field__req">Required</span></label>
+              <input class="field__input" id="d17c-email" type="email" value="jo@example.com" autocomplete="off">
+            </div>
+          </div>
+          <div class="dialog__actions">
+            <button class="btn btn--quiet" type="button">Cancel</button>
+            <a class="btn btn--primary" href="#dialog-invite-link"><svg class="icon" aria-hidden="true"><use href="#i-mail"/></svg>Send invite</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="specimen" id="dialog-member-account">
+      <span class="specimen__label">D17 · Edit a family member · signs in</span>
+      <div class="dialog dialog--specimen dialog--wide" role="dialog" aria-modal="true" aria-labelledby="d17d-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="d17d-title">Edit Sara</h2><p class="dialog__sub">Ages shape the picks.</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="dialog__body">
+            <div class="field">
+              <label class="field__label" for="d17d-name">Name <span class="field__req">Required</span></label>
+              <input class="field__input" id="d17d-name" type="text" value="Sara">
+            </div>
+            <div class="field">
+              <label class="field__label" for="d17d-age">Age</label>
+              <input class="field__input" id="d17d-age" type="number" value="36" min="0" max="120">
+              <p class="field__hint">Parent · 18 and over counts as a parent.</p>
+            </div>
+            <p class="text-xs text-soft">Signs in as sara@example.com</p>
+          </div>
+          <div class="dialog__actions">
+            <div class="dialog__actions-left"><a class="btn btn--quiet btn--warn-text" href="#dialog-remove-account"><svg class="icon" aria-hidden="true"><use href="#i-trash"/></svg>Remove</a></div>
+            <button class="btn btn--quiet" type="button">Cancel</button>
+            <button class="btn btn--primary" type="button">Save</button>
           </div>
         </div>
       </div>
@@ -666,6 +742,38 @@
       </div>
     </section>
 
+    <section class="specimen" id="dialog-remove-invited">
+      <span class="specimen__label">D21 · Remove confirm · invited member</span>
+      <div class="dialog dialog--specimen" role="alertdialog" aria-modal="true" aria-labelledby="d21c-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="d21c-title">Remove Grandma Jo from the family?</h2><p class="dialog__sub">The invite sent to jo@example.com will stop working.</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="dialog__actions">
+            <button class="btn btn--quiet" type="button">Cancel</button>
+            <button class="btn btn--danger" type="button"><svg class="icon" aria-hidden="true"><use href="#i-trash"/></svg>Remove</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="specimen" id="dialog-remove-account">
+      <span class="specimen__label">D21 · Remove confirm · member who signs in</span>
+      <div class="dialog dialog--specimen" role="alertdialog" aria-modal="true" aria-labelledby="d21d-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="d21d-title">Remove Sara from the family?</h2><p class="dialog__sub">Sara will be signed out and will no longer be able to sign in.</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="dialog__actions">
+            <button class="btn btn--quiet" type="button">Cancel</button>
+            <button class="btn btn--danger" type="button"><svg class="icon" aria-hidden="true"><use href="#i-trash"/></svg>Remove</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <section class="specimen" id="dialog-remove-commitment">
       <span class="specimen__label">D21 · Remove confirm · commitment</span>
       <div class="dialog dialog--specimen" role="alertdialog" aria-modal="true" aria-labelledby="d21b-title">
@@ -784,6 +892,28 @@
       <div class="cluster">
         <a class="avatar avatar--q avatar--btn avatar--photo" href="#dialog-account" aria-label="Account menu"><img class="avatar__img" src="../assets/profile-photo.svg" alt=""></a>
         <span class="avatar avatar--lg avatar--q avatar--photo" aria-hidden="true"><img class="avatar__img" src="../assets/profile-photo.svg" alt=""></span>
+      </div>
+    </section>
+
+    <section class="specimen" id="dialog-invite-link">
+      <span class="specimen__label">D30 · Invite link</span>
+      <div class="dialog dialog--specimen" role="dialog" aria-modal="true" aria-labelledby="d30-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="d30-title">Invite ready for Grandma Jo</h2><p class="dialog__sub">Send this link to jo@example.com. It works once.</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="dialog__body">
+            <div class="copy-field">
+              <span class="copy-field__value">saturdaze.app/accept-invite?token=Q2F0ZXJwaWxsYXI</span>
+              <button class="btn btn--quiet" type="button" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg>Copy link</button>
+            </div>
+            <p class="text-xs text-soft">Expires in 7 days · they choose their own password</p>
+          </div>
+          <div class="dialog__actions">
+            <a class="btn btn--primary" href="./family.members.html">Done</a>
+          </div>
+        </div>
       </div>
     </section>
 

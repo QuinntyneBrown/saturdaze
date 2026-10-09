@@ -32,6 +32,7 @@ export type PageSlug =
   | "create-account"
   | "reset-password"
   | "verify-email"
+  | "accept-invite"
   | "landing"
   | "legal"
   | "shared-weekend"
@@ -72,6 +73,8 @@ export const ROUTES = {
   verifyVerifying:   { app: "/verify-email?state=verifying",   mock: "/pages/verify-email.html#state-verifying", page: "verify-email" },
   verifyVerified:    { app: "/verify-email?state=verified",    mock: "/pages/verify-email.html#state-verified",  page: "verify-email" },
   verifyExpired:     { app: "/verify-email?state=expired",     mock: "/pages/verify-email.html#state-expired",   page: "verify-email" },
+  acceptInviteJoin:  { app: "/accept-invite?state=join",       mock: "/pages/accept-invite.html#state-join",     page: "accept-invite" },
+  acceptInviteInvalid: { app: "/accept-invite?state=invalid",  mock: "/pages/accept-invite.html#state-invalid",  page: "accept-invite" },
 
   // ---- public (site shell: sitebar at every width) ----
   landing:           { app: "/",                               mock: "/pages/landing.html",          page: "landing" },

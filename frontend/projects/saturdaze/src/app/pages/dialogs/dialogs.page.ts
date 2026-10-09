@@ -15,6 +15,7 @@ import { ErrandAddedDialog } from '../../dialogs/errand-added-dialog/errand-adde
 import { EventSubmittedDialog } from '../../dialogs/event-submitted-dialog/event-submitted-dialog';
 import { FamilyMemberDialog } from '../../dialogs/family-member-dialog/family-member-dialog';
 import { HomeLocationDialog } from '../../dialogs/home-location-dialog/home-location-dialog';
+import { InviteLinkDialog } from '../../dialogs/invite-link-dialog/invite-link-dialog';
 import { LikesDialog } from '../../dialogs/likes-dialog/likes-dialog';
 import { LockRestaurantDialog } from '../../dialogs/lock-restaurant-dialog/lock-restaurant-dialog';
 import { MenuDialog } from '../../dialogs/menu-dialog/menu-dialog';
@@ -176,6 +177,26 @@ const SPECIMENS: readonly Specimen[] = [
   },
   {
     kind: 'dialog',
+    slug: 'member-invite',
+    label: 'D17 · Add a family member · invite to sign in',
+    component: FamilyMemberDialog,
+    data: { mode: 'add', existingNames: FIX.MEMBER_NAMES, signIn: 'invite' },
+  },
+  {
+    kind: 'dialog',
+    slug: 'member-account',
+    label: 'D17 · Edit a family member · signs in',
+    component: FamilyMemberDialog,
+    data: {
+      mode: 'edit',
+      initial: { name: 'Sara', age: 36 },
+      existingNames: FIX.MEMBER_NAMES,
+      access: 'Account',
+      email: 'sara@example.com',
+    },
+  },
+  {
+    kind: 'dialog',
     slug: 'commitment',
     label: 'D18 · Edit a commitment',
     component: CommitmentDialog,
@@ -215,6 +236,20 @@ const SPECIMENS: readonly Specimen[] = [
   },
   {
     kind: 'dialog',
+    slug: 'remove-invited',
+    label: 'D21 · Remove confirm · invited member',
+    component: ConfirmDialog,
+    data: FIX.REMOVE_INVITED_MEMBER,
+  },
+  {
+    kind: 'dialog',
+    slug: 'remove-account',
+    label: 'D21 · Remove confirm · member who signs in',
+    component: ConfirmDialog,
+    data: FIX.REMOVE_ACCOUNT_MEMBER,
+  },
+  {
+    kind: 'dialog',
     slug: 'remove-commitment',
     label: 'D21 · Remove confirm · commitment',
     component: ConfirmDialog,
@@ -226,6 +261,17 @@ const SPECIMENS: readonly Specimen[] = [
     label: 'D22 · Sign out',
     component: ConfirmDialog,
     data: FIX.SIGN_OUT,
+  },
+  {
+    kind: 'dialog',
+    slug: 'invite-link',
+    label: 'D30 · Invite link',
+    component: InviteLinkDialog,
+    data: {
+      name: 'Grandma Jo',
+      email: 'jo@example.com',
+      url: 'saturdaze.app/accept-invite?token=Q2F0ZXJwaWxsYXI',
+    },
   },
   {
     kind: 'dialog',

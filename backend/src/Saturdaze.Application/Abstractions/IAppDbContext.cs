@@ -7,6 +7,7 @@ public interface IAppDbContext
 {
     DbSet<Family> Families { get; }
     DbSet<FamilyMember> FamilyMembers { get; }
+    DbSet<FamilyInvitation> FamilyInvitations { get; }
     DbSet<Commitment> Commitments { get; }
     DbSet<Preference> Preferences { get; }
     DbSet<Activity> Activities { get; }

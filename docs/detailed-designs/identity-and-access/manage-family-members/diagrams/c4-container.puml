@@ -1,0 +1,18 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers — Manage family members
+
+Person(owner, "Family owner", "Created the account; decides who is in the family")
+Person(member, "Invited family member", "Signs in with their own email and password")
+System_Boundary(saturdaze, "Saturdaze") {
+  Container(web, "Saturdaze web application", "Angular", "Family page, member dialogs and the accept-invite page")
+  Container(api, "Saturdaze API", "ASP.NET Core", "Owner-only member endpoints and anonymous invitation endpoints")
+  ContainerDb(db, "Saturdaze database", "SQL Server", "Families, FamilyMembers, FamilyInvitations and Users")
+}
+Rel(owner, web, "Uses", "HTTPS")
+Rel(member, web, "Opens the invite link in", "HTTPS")
+Rel(web, api, "POST and DELETE /api/family/members; PUT /api/family", "JSON/HTTPS, bearer")
+Rel(web, api, "POST /api/auth/invitation and /api/auth/accept-invitation", "JSON/HTTPS, anonymous")
+Rel(api, db, "Reads and writes", "EF Core")
+@enduml

@@ -36,10 +36,21 @@ internal static class SignedInClient
         string AccessToken,
         string RefreshToken);
 
-    public static async Task<Session> CreateAsync(
+    public static Task<Session> CreateAsync(
         SaturdazeApiFactory factory,
         FamilyMode family = FamilyMode.Seeded,
         UserRole role = UserRole.User)
+        => CreateAsync(factory, family, role, joinFamilyId: null);
+
+    /// <summary>A second account in an existing family, which it does not own (L2-124).</summary>
+    public static Task<Session> JoinAsync(SaturdazeApiFactory factory, Guid familyId)
+        => CreateAsync(factory, FamilyMode.Own, UserRole.User, familyId);
+
+    private static async Task<Session> CreateAsync(
+        SaturdazeApiFactory factory,
+        FamilyMode family,
+        UserRole role,
+        Guid? joinFamilyId)
     {
         var anon = factory.CreateClient();
         var email = $"user-{Guid.NewGuid():N}@example.com";
@@ -52,7 +63,7 @@ internal static class SignedInClient
         {
             var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
             var user = await db.Users.SingleAsync(u => u.NormalizedEmail == email.ToLowerInvariant());
-            user.FamilyId = family switch
+            user.FamilyId = joinFamilyId ?? family switch
             {
                 FamilyMode.Seeded => (await db.Families.SingleAsync(f => f.HomeLocation == SeededFamilyHomeLocation)).Id,
                 FamilyMode.None => null,

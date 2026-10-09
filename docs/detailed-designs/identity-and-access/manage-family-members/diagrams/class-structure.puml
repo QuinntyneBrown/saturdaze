@@ -1,0 +1,87 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — Manage family members
+
+package "Frontend" {
+  class FamilyPage {
+    #isOwner: Signal<boolean>
+    #addMember(): Promise<void>
+    #editMember(member: MemberRow): Promise<void>
+  }
+  class AcceptInvitePage {
+    #state: Signal<'loading' | 'join' | 'invalid'>
+    #submit(): Promise<void>
+  }
+  interface IFamilyService {
+    +addMember(input: NewFamilyMember): Promise<FamilyInvite | null>
+    +removeMember(id: string): Promise<void>
+  }
+  class MemberRow <<model>> {
+    +access: MemberAccess
+    +email: string | null
+  }
+  class FamilyView <<model>> {
+    +isOwner: boolean
+    +ownerEmail: string | null
+  }
+}
+
+package "Backend" {
+  class FamilyController {
+    +AddMember(cmd): Task<AddFamilyMemberResultDto>
+    +RemoveMember(id: Guid): Task<IActionResult>
+  }
+  class AuthController {
+    +Invitation(req): Task<InvitationDto>
+    +AcceptInvitation(req): Task<AuthSuccessDto>
+  }
+  class FamilyOwnership {
+    +EnsureOwnerAsync(ct): Task<Family>
+    +IsOwner(family: Family): bool
+  }
+  class Family {
+    +Guid? OwnerUserId
+  }
+  class FamilyMember {
+    +Guid? UserId
+  }
+  class FamilyInvitation {
+    +Guid Id
+    +Guid FamilyId
+    +Guid FamilyMemberId
+    +string Email
+    +string NormalizedEmail
+    +string TokenHash
+    +Guid InvitedByUserId
+    +DateTimeOffset CreatedAtUtc
+    +DateTimeOffset ExpiresAtUtc
+    +DateTimeOffset? AcceptedAtUtc
+  }
+  class User {
+    +Guid? FamilyId
+  }
+  enum MemberAccess {
+    None
+    Invited
+    Account
+  }
+}
+
+FamilyPage ..> IFamilyService : uses
+FamilyView *-- "0..*" MemberRow
+FamilyController ..> FamilyOwnership : via handlers
+Family "1" *-- "0..*" FamilyMember
+FamilyMember "1" *-- "0..1" FamilyInvitation : cascade delete
+FamilyMember "0..1" --> "0..1" User : UserId
+Family ..> User : OwnerUserId
+AuthController ..> FamilyInvitation : via handlers
+@enduml

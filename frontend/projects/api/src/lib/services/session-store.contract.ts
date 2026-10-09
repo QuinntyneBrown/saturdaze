@@ -5,6 +5,7 @@ import { AuthToken } from '../models/auth-token';
 import { ForgotPasswordRequest } from '../models/forgot-password-request';
 import { LoginRequest } from '../models/login-request';
 import { ResetPasswordRequest } from '../models/reset-password-request';
+import { AcceptInvitationRequest, Invitation } from '../models/invitation';
 import { ResendVerificationRequest } from '../models/resend-verification-request';
 import { SignupRequest } from '../models/signup-request';
 import { User } from '../models/user';
@@ -105,6 +106,24 @@ export interface ISessionStore {
    * @returns {Promise<void>} The result of the operation
    */
   resetPassword(req: ResetPasswordRequest): Promise<void>;
+  /**
+   * Preview Invitation — what the invite link is for (L2-127). Rejects with
+   * `token_invalid` / `token_expired`; `error` is not set.
+   *
+   * @param {string} token - The invite token
+   *
+   * @returns {Promise<Invitation>} The result of the operation
+   */
+  previewInvitation(token: string): Promise<Invitation>;
+  /**
+   * Accept Invitation — creates the invitee's own account and signs them in,
+   * persisted like a sign-up (L2-127).
+   *
+   * @param {AcceptInvitationRequest} req - The req
+   *
+   * @returns {Promise<void>} The result of the operation
+   */
+  acceptInvitation(req: AcceptInvitationRequest): Promise<void>;
   /**
    * Verify Email.
    *

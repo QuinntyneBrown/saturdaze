@@ -52,6 +52,7 @@ export * from './lib/models/login-request';
 export * from './lib/models/logout-request';
 export * from './lib/models/refresh-request';
 export * from './lib/models/reset-password-request';
+export * from './lib/models/invitation';
 export * from './lib/models/resend-verification-request';
 export * from './lib/models/signup-request';
 export * from './lib/models/user';
