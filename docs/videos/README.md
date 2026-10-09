@@ -40,11 +40,17 @@ Six videos on Saturdaze Admin, the second web application that curates the catal
 | 16 | [Reviewing ingested photos](16-reviewing-ingested-photos/README.md) | ~5.8 min | The review queue; Keep, Make primary, Reject; rejections that stick; ingestion photo skips; seeding and the lock. |
 | 17 | [The photo activity log](17-the-photo-activity-log/README.md) | ~4.4 min | What every audit entry records; committing it with the change; the Activity log and its filters. |
 
+## Accounts
+
+| # | Video | Runtime | What you learn |
+| --- | --- | --- | --- |
+| 18 | [How account emails are drafted](18-how-account-emails-are-drafted/README.md) | ~7.1 min | Verification and reset links as built: random tokens stored as SHA-256 hashes, single use via `ConsumedAtUtc`, no account leak, `DevDelivery` and `devToken`; no email provider yet (G01). |
+
 ## Design drift series
 
 | # | Video | Runtime | What you learn |
 | --- | --- | --- | --- |
-| 18 | [Design drift D01: the mock tokens that pointed nowhere](18-mock-tokens-drift-d01/README.md) | ~3.3 min | A mock stylesheet whose header pointed at a deleted catalog; retiring the always-failing check; before and after. |
+| 19 | [Design drift D01: the mock tokens that pointed nowhere](19-mock-tokens-drift-d01/README.md) | ~3.3 min | A mock stylesheet whose header pointed at a deleted catalog; retiring the always-failing check; before and after. |
 
 ## Components series
 

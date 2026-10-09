@@ -1,4 +1,4 @@
-# 18 · Design drift D01: the mock tokens that pointed nowhere
+# 19 · Design drift D01: the mock tokens that pointed nowhere
 
 Every design system has a place where it and the product quietly disagree. This short video covers the first drift in the Saturdaze drift log, D01: a mock stylesheet whose header pointed at a folder that no longer exists. We look at what drifted, why it matters, the fix in code, and the screen before and after. Recorded as of October 2026.
 

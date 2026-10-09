@@ -1,4 +1,4 @@
-// Screen recordings for video 18 (tools/video-record/record-clips.mjs). The landing mock is
+// Screen recordings for video 19 (tools/video-record/record-clips.mjs). The landing mock is
 // served twice: the commit before the D01 fix on :4401 and the fix on :4402
 // (python3 -m http.server in each docs/mocks copy).
 export const config = {
