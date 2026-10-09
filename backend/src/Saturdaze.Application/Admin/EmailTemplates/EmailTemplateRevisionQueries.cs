@@ -21,7 +21,7 @@ public sealed record EmailTemplateRevisionDto(
     string Preheader,
     string HtmlBody,
     string TextBody,
-    IReadOnlyDictionary<string, string> SampleData,
+    System.Text.Json.JsonElement SampleData,
     DateTimeOffset OccurredAt,
     string AdminEmail);
 

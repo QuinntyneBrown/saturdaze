@@ -1,3 +1,4 @@
+using System.Text.Json;
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -20,7 +21,7 @@ public sealed record SaveEmailTemplateCommand(
     string? Preheader,
     string? HtmlBody,
     string? TextBody,
-    IReadOnlyDictionary<string, string>? SampleData,
+    JsonElement? SampleData,
     int Version) : IRequest<EmailTemplateDto>;
 
 /// <summary>The field limits shared by a save and a preview (L2-124).</summary>
@@ -31,7 +32,7 @@ public static class EmailTemplateLimits
     public const int HtmlBody = 100_000;
     public const int TextBody = 50_000;
     public const int SampleEntries = 100;
-    public const int SampleValue = 2_000;
+    public const int SampleData = 20_000;
 }
 
 public sealed class SaveEmailTemplateCommandValidator : AbstractValidator<SaveEmailTemplateCommand>
@@ -55,14 +56,24 @@ public sealed class SaveEmailTemplateCommandValidator : AbstractValidator<SaveEm
     }
 }
 
-/// <summary>Sample data is at most 100 placeholder names, each with a value of at most 2 000 characters.</summary>
+/// <summary>
+/// Sample data is a JSON object of at most 100 top-level names, each a Liquid identifier, that
+/// serialises to at most 20 000 characters (L2-131 AC6).
+/// </summary>
 public static class SampleDataRules
 {
-    public const string Message = "Sample data holds at most 100 placeholder names with values of at most 2 000 characters.";
+    public const string Message =
+        "Sample data must be a JSON object of at most 100 names (letters, digits, _ and -, starting with a letter or _) and 20 000 characters.";
 
-    public static bool Valid(IReadOnlyDictionary<string, string>? values)
-        => values is null || (values.Count <= EmailTemplateLimits.SampleEntries && values.All(kv =>
-            EmailTemplateRules.IsPlaceholderName(kv.Key) && (kv.Value?.Length ?? 0) <= EmailTemplateLimits.SampleValue));
+    public static bool Valid(JsonElement? data)
+    {
+        if (data is not { } value || value.ValueKind is JsonValueKind.Null or JsonValueKind.Undefined) return true;
+        if (value.ValueKind != JsonValueKind.Object) return false;
+        var names = value.EnumerateObject().Select(p => p.Name).ToList();
+        return names.Count <= EmailTemplateLimits.SampleEntries
+            && names.All(EmailTemplateRules.IsVariableName)
+            && JsonSerializer.Serialize(value).Length <= EmailTemplateLimits.SampleData;
+    }
 }
 
 public sealed class SaveEmailTemplateCommandHandler : IRequestHandler<SaveEmailTemplateCommand, EmailTemplateDto>
@@ -82,9 +93,8 @@ public sealed class SaveEmailTemplateCommandHandler : IRequestHandler<SaveEmailT
             ?? throw new NotFoundException(nameof(EmailTemplate), request.Id);
         EmailTemplateConcurrency.EnsureCurrent(template, request.Version);
 
-        EmailTemplateRules.CheckPlaceholders(request.Subject, request.Preheader, request.HtmlBody, request.TextBody);
-        EmailTemplateRules.CheckHtml(request.HtmlBody);
-        EmailTemplateRules.CheckRequired(EmailTemplateCatalog.RequiredPlaceholders(template), request.HtmlBody, request.TextBody);
+        var (html, text) = EmailTemplateRules.CheckContent(request.Subject, request.Preheader, request.HtmlBody, request.TextBody);
+        EmailTemplateRules.CheckRequired(EmailTemplateCatalog.RequiredPlaceholders(template), html, text);
 
         template.Name = request.Name!.Trim();
         template.Description = request.Description?.Trim() ?? string.Empty;

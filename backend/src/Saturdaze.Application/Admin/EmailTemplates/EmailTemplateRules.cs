@@ -4,23 +4,20 @@ using Saturdaze.Application.Exceptions;
 namespace Saturdaze.Application.Admin.EmailTemplates;
 
 /// <summary>
-/// The checks every template's key and content pass (L2-126, L2-127, L2-128). Placeholders are
-/// <c>{{name}}</c> with optional spaces inside the braces; a name is letters, digits and
-/// underscores in dot-separated parts, each starting with a letter.
+/// The checks every template's key and content pass (L2-126, L2-127, L2-128). Content is Liquid
+/// (ADR-016), checked through <see cref="EmailTemplateLiquid"/>; this class adds the HTML deny-list
+/// and the required variables.
 /// </summary>
 public static partial class EmailTemplateRules
 {
     /// <summary>Lowercase letters and digits in words joined by dots or hyphens.</summary>
     public const string KeyPattern = "^[a-z0-9]+(?:[.-][a-z0-9]+)*$";
 
-    /// <summary>A placeholder name: <c>recipientName</c>, <c>family.first_child</c>.</summary>
-    public const string PlaceholderNamePattern = "^[A-Za-z][A-Za-z0-9_]*(?:\\.[A-Za-z][A-Za-z0-9_]*)*$";
+    /// <summary>A Liquid identifier, usable as a top-level sample data name: <c>recipientName</c>, <c>first_child</c>.</summary>
+    public const string VariableNamePattern = "^[A-Za-z_][A-Za-z0-9_-]*$";
 
-    [GeneratedRegex(@"\{\{(.*?)\}\}", RegexOptions.Singleline)]
-    private static partial Regex Braces();
-
-    [GeneratedRegex(PlaceholderNamePattern)]
-    private static partial Regex PlaceholderName();
+    [GeneratedRegex(VariableNamePattern)]
+    private static partial Regex VariableName();
 
     [GeneratedRegex(@"<[^>]*>", RegexOptions.Singleline)]
     private static partial Regex Tag();
@@ -34,39 +31,21 @@ public static partial class EmailTemplateRules
     [GeneratedRegex(@"[\s\u0000-\u001f]+")]
     private static partial Regex Whitespace();
 
-    public static bool IsPlaceholderName(string name) => PlaceholderName().IsMatch(name);
+    public static bool IsVariableName(string name) => VariableName().IsMatch(name);
 
-    /// <summary>The distinct placeholder names in <paramref name="text"/>, in order of first use; malformed ones are skipped.</summary>
-    public static IReadOnlyList<string> Placeholders(string? text)
+    /// <summary>
+    /// Checks the four fields as a save or preview does: valid Liquid under ADR-016's profile, then
+    /// the HTML deny-list. Returns what each body reads, for <see cref="CheckRequired"/>.
+    /// </summary>
+    public static (LiquidAnalysis Html, LiquidAnalysis Text) CheckContent(
+        string? subject, string? preheader, string? htmlBody, string? textBody)
     {
-        var names = new List<string>();
-        if (string.IsNullOrEmpty(text)) return names;
-        foreach (Match m in Braces().Matches(text))
-        {
-            var name = m.Groups[1].Value.Trim();
-            if (IsPlaceholderName(name) && !names.Contains(name)) names.Add(name);
-        }
-        return names;
-    }
-
-    /// <summary>Refuses a malformed placeholder in any field with <c>invalid_placeholder</c> (L2-127 AC4).</summary>
-    public static void CheckPlaceholders(params string?[] texts)
-    {
-        foreach (var text in texts)
-        {
-            if (string.IsNullOrEmpty(text)) continue;
-            var rest = text;
-            foreach (Match m in Braces().Matches(text))
-            {
-                var inner = m.Groups[1].Value;
-                if (inner.StartsWith('{') || !IsPlaceholderName(inner.Trim()))
-                    throw InvalidPlaceholder(m.Value);
-            }
-            // Braces left over once every {{…}} is removed are an unclosed or stray placeholder.
-            rest = Braces().Replace(rest, string.Empty);
-            if (rest.Contains("{{") || rest.Contains("}}"))
-                throw InvalidPlaceholder(rest.Contains("{{") ? "{{" : "}}");
-        }
+        EmailTemplateLiquid.Check(EmailTemplateLiquid.Subject, subject);
+        EmailTemplateLiquid.Check(EmailTemplateLiquid.Preheader, preheader);
+        var html = EmailTemplateLiquid.Check(EmailTemplateLiquid.HtmlBody, htmlBody, html: true).Analysis;
+        var text = EmailTemplateLiquid.Check(EmailTemplateLiquid.TextBody, textBody).Analysis;
+        CheckHtml(htmlBody);
+        return (html, text);
     }
 
     /// <summary>
@@ -94,20 +73,14 @@ public static partial class EmailTemplateRules
         }
     }
 
-    /// <summary>Refuses a body that dropped a required placeholder with <c>missing_placeholder</c> (L2-127 AC5).</summary>
-    public static void CheckRequired(IReadOnlyList<string> required, string? htmlBody, string? textBody)
+    /// <summary>Refuses a body that no longer reads a required variable with <c>missing_placeholder</c> (L2-127 AC5).</summary>
+    public static void CheckRequired(IReadOnlyList<string> required, LiquidAnalysis html, LiquidAnalysis text)
     {
-        if (required.Count == 0) return;
-        var html = Placeholders(htmlBody);
-        var text = Placeholders(textBody);
         foreach (var name in required)
         {
-            if (!html.Contains(name) || !text.Contains(name))
+            if (!html.Variables.Contains(name) || !text.Variables.Contains(name))
                 throw new BadRequestException("missing_placeholder",
-                    $"The HTML body and the plain-text body both need {{{{{name}}}}}.");
+                    $"The HTML body and the plain-text body both need to use {name}, for example {{{{ {name} }}}}.");
         }
     }
-
-    private static BadRequestException InvalidPlaceholder(string found) => new("invalid_placeholder",
-        $"\"{found}\" is not a placeholder. Write {{{{name}}}}: letters, digits and underscores, parts joined by dots.");
 }

@@ -1,3 +1,4 @@
+using System.Text.Json;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -45,7 +46,7 @@ public sealed class AdminEmailTemplatesController : ControllerBase
 
     public record SaveTemplateRequest(
         string? Name, string? Description, string? Subject, string? Preheader,
-        string? HtmlBody, string? TextBody, Dictionary<string, string>? SampleData, int Version);
+        string? HtmlBody, string? TextBody, JsonElement? SampleData, int Version);
 
     /// <summary>Saves the content when <c>version</c> is current (L2-127).</summary>
     [HttpPut("{id:guid}")]
@@ -55,7 +56,7 @@ public sealed class AdminEmailTemplatesController : ControllerBase
             id, req.Name, req.Description, req.Subject, req.Preheader, req.HtmlBody, req.TextBody, req.SampleData, req.Version), ct));
 
     public record PreviewRequest(
-        string? Subject, string? Preheader, string? HtmlBody, string? TextBody, Dictionary<string, string>? SampleData);
+        string? Subject, string? Preheader, string? HtmlBody, string? TextBody, JsonElement? SampleData);
 
     /// <summary>Renders unsaved content with sample data; nothing is saved (L2-128).</summary>
     [HttpPost("preview")]

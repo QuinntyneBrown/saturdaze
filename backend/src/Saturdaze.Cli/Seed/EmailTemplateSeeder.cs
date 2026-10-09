@@ -1,5 +1,6 @@
 using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
+using Saturdaze.Application.Admin.EmailTemplates;
 using Saturdaze.Application.Common;
 using Saturdaze.Domain.Entities;
 using Saturdaze.Domain.Enums;
@@ -49,7 +50,7 @@ public sealed class EmailTemplateSeeder : IJsonSeeder
                 Preheader = record.Preheader ?? string.Empty,
                 HtmlBody = record.HtmlBody ?? string.Empty,
                 TextBody = record.TextBody ?? string.Empty,
-                SampleData = JsonSerializer.Serialize(record.SampleData ?? new Dictionary<string, string>()),
+                SampleData = SampleValues.Write(record.SampleData),
                 IsSystem = true,
                 Version = 1,
                 CreatedAt = now,
@@ -88,5 +89,5 @@ public sealed class EmailTemplateSeeder : IJsonSeeder
         string? Preheader,
         string? HtmlBody,
         string? TextBody,
-        Dictionary<string, string>? SampleData);
+        JsonElement? SampleData);
 }

@@ -1,3 +1,4 @@
+using System.Text.Json;
 using FluentValidation;
 using MediatR;
 
@@ -9,7 +10,7 @@ public sealed record PreviewEmailTemplateQuery(
     string? Preheader,
     string? HtmlBody,
     string? TextBody,
-    IReadOnlyDictionary<string, string>? SampleData) : IRequest<EmailPreviewDto>;
+    JsonElement? SampleData) : IRequest<EmailPreviewDto>;
 
 public sealed class PreviewEmailTemplateQueryValidator : AbstractValidator<PreviewEmailTemplateQuery>
 {
@@ -32,8 +33,7 @@ public sealed class PreviewEmailTemplateQueryHandler : IRequestHandler<PreviewEm
     public Task<EmailPreviewDto> Handle(PreviewEmailTemplateQuery request, CancellationToken ct)
     {
         // The same refusals as a save, so the preview never shows what cannot be saved (L2-128).
-        EmailTemplateRules.CheckPlaceholders(request.Subject, request.Preheader, request.HtmlBody, request.TextBody);
-        EmailTemplateRules.CheckHtml(request.HtmlBody);
+        EmailTemplateRules.CheckContent(request.Subject, request.Preheader, request.HtmlBody, request.TextBody);
         return Task.FromResult(_renderer.Render(
             request.Subject, request.Preheader, request.HtmlBody, request.TextBody, request.SampleData));
     }

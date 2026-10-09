@@ -1,6 +1,6 @@
 // Acceptance Test
 // Traces to: L2-127
-// Description: PUT /api/admin/email-templates/{id} saves content with a version check and refuses unsafe HTML, malformed placeholders and dropped required placeholders.
+// Description: PUT /api/admin/email-templates/{id} saves content with a version check and refuses unsafe HTML, invalid Liquid and dropped required variables.
 using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
@@ -29,7 +29,7 @@ public class EmailTemplateSaveTests : IClassFixture<SaturdazeApiFactory>
             ["preheader"] = t.GetProperty("preheader").GetString(),
             ["htmlBody"] = t.GetProperty("htmlBody").GetString(),
             ["textBody"] = t.GetProperty("textBody").GetString(),
-            ["sampleData"] = JsonSerializer.Deserialize<Dictionary<string, string>>(t.GetProperty("sampleData").GetRawText()),
+            ["sampleData"] = t.GetProperty("sampleData").Clone(),
             ["version"] = t.GetProperty("version").GetInt32(),
         };
         change?.Invoke(body);
@@ -120,19 +120,21 @@ public class EmailTemplateSaveTests : IClassFixture<SaturdazeApiFactory>
     }
 
     [Theory]
-    [InlineData("subject", "Hi {{ first name }}")]
-    [InlineData("subject", "Hi {{}}")]
-    [InlineData("textBody", "Hi {{recipientName}")]
-    [InlineData("htmlBody", "<p>{{{recipientName}}}</p>")]
-    [InlineData("preheader", "{{1st}}")]
-    public async Task A_malformed_placeholder_is_400_invalid_placeholder(string field, string value)
+    [InlineData("subject", "Subject", "Hi {{ first name }}")]
+    [InlineData("subject", "Subject", "Hi {{}}")]
+    [InlineData("textBody", "Plain-text body", "Hi {{recipientName}")]
+    [InlineData("htmlBody", "HTML body", "<p>{% if %}</p>")]
+    [InlineData("preheader", "Preheader", "{% for %}")]
+    public async Task Invalid_liquid_is_400_invalid_template_naming_the_field_and_position(string field, string label, string value)
     {
-        // Traces to: L2-127 AC4
+        // Traces to: L2-127 AC4, L2-131 AC1
         var admin = await Admin();
         var t = await EmailTemplateApi.CreateOk(admin.Client);
         var res = await Put(admin.Client, t, Body(t, b => b[field] = value));
         res.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-        (await Code(res)).Should().Be("invalid_placeholder");
+        var problem = JsonDocument.Parse(await res.Content.ReadAsStringAsync()).RootElement;
+        problem.GetProperty("code").GetString().Should().Be("invalid_template");
+        problem.GetProperty("detail").GetString().Should().StartWith(label + ":").And.MatchRegex(@"\(\d+:\d+\)");
     }
 
     [Fact]
@@ -147,7 +149,29 @@ public class EmailTemplateSaveTests : IClassFixture<SaturdazeApiFactory>
         res.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         (await Code(res)).Should().Be("missing_placeholder");
         JsonDocument.Parse(await res.Content.ReadAsStringAsync()).RootElement.GetProperty("detail").GetString()
-            .Should().Contain("{{resetLink}}");
+            .Should().Contain("resetLink");
+    }
+
+    [Fact]
+    public async Task A_required_variable_used_through_a_filter_counts()
+    {
+        // Traces to: L2-127 AC5
+        var admin = await Admin();
+        var t = await EmailTemplateApi.Get(admin.Client, await EmailTemplateApi.IdOf(admin.Client, "account.password-reset"));
+        var res = await Put(admin.Client, t, Body(t, b =>
+        {
+            b["htmlBody"] = "<p><a href=\"{{ resetLink | escape }}\">Reset</a></p>";
+            b["textBody"] = "Reset: {{ resetLink }}";
+        }));
+        res.StatusCode.Should().Be(HttpStatusCode.OK, await res.Content.ReadAsStringAsync());
+
+        // Put the seeded content back for the other tests.
+        var saved = JsonDocument.Parse(await res.Content.ReadAsStringAsync()).RootElement;
+        (await Put(admin.Client, saved, Body(saved, b =>
+        {
+            b["htmlBody"] = t.GetProperty("htmlBody").GetString();
+            b["textBody"] = t.GetProperty("textBody").GetString();
+        }))).StatusCode.Should().Be(HttpStatusCode.OK);
     }
 
     [Fact]

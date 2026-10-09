@@ -33,7 +33,7 @@ public sealed record EmailTemplateDto(
     string Preheader,
     string HtmlBody,
     string TextBody,
-    IReadOnlyDictionary<string, string> SampleData,
+    JsonElement SampleData,
     IReadOnlyList<string> RequiredPlaceholders,
     int Version,
     DateTimeOffset CreatedAt,
@@ -47,22 +47,28 @@ public sealed record EmailTemplateDto(
         EmailTemplateCatalog.RequiredPlaceholders(t), t.Version, t.CreatedAt, t.CreatedByEmail, t.UpdatedAt, t.UpdatedByEmail);
 }
 
-/// <summary>Reads and writes the <c>SampleData</c> JSON object (placeholder name → sample value).</summary>
+/// <summary>Reads and writes the stored <c>SampleData</c> JSON object (Liquid variable → any JSON value, L2-124).</summary>
 public static class SampleValues
 {
-    public static IReadOnlyDictionary<string, string> Read(string? json)
+    public static JsonElement Empty => Of(new Dictionary<string, string>());
+
+    public static JsonElement Of(IReadOnlyDictionary<string, string> values) => JsonSerializer.SerializeToElement(values);
+
+    /// <summary>The stored object; anything that is not a JSON object reads as <c>{}</c>.</summary>
+    public static JsonElement Read(string? json)
     {
-        if (string.IsNullOrWhiteSpace(json)) return new Dictionary<string, string>();
+        if (string.IsNullOrWhiteSpace(json)) return Empty;
         try
         {
-            return JsonSerializer.Deserialize<Dictionary<string, string>>(json) ?? new Dictionary<string, string>();
+            using var doc = JsonDocument.Parse(json);
+            return doc.RootElement.ValueKind == JsonValueKind.Object ? doc.RootElement.Clone() : Empty;
         }
         catch (JsonException)
         {
-            return new Dictionary<string, string>();
+            return Empty;
         }
     }
 
-    public static string Write(IReadOnlyDictionary<string, string>? values)
-        => JsonSerializer.Serialize(values ?? new Dictionary<string, string>());
+    public static string Write(JsonElement? value)
+        => value is { ValueKind: JsonValueKind.Object } data ? JsonSerializer.Serialize(data) : "{}";
 }

@@ -1,6 +1,6 @@
 // Acceptance Test
 // Traces to: L2-128
-// Description: POST /api/admin/email-templates/preview renders unsaved content with sample, built-in or empty values, HTML-encoding values in the HTML body.
+// Description: POST /api/admin/email-templates/preview renders unsaved Liquid content with sample, built-in or empty values, HTML-encoding values in the HTML body.
 using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
@@ -19,8 +19,8 @@ public class EmailTemplatePreviewTests : IClassFixture<SaturdazeApiFactory>
 
     private static object Content(
         string subject = "Hello", string preheader = "", string html = "<p>Hi</p>", string text = "Hi",
-        Dictionary<string, string>? samples = null)
-        => new { subject, preheader, htmlBody = html, textBody = text, sampleData = samples ?? new Dictionary<string, string>() };
+        Dictionary<string, object>? samples = null)
+        => new { subject, preheader, htmlBody = html, textBody = text, sampleData = samples ?? new Dictionary<string, object>() };
 
     private async Task<JsonElement> PreviewOk(object content)
     {
@@ -80,7 +80,7 @@ public class EmailTemplatePreviewTests : IClassFixture<SaturdazeApiFactory>
     }
 
     [Fact]
-    public async Task Unsafe_html_and_malformed_placeholders_are_refused_as_on_save()
+    public async Task Unsafe_html_and_invalid_liquid_are_refused_as_on_save()
     {
         // Traces to: L2-128
         var admin = await SignedInClient.CreateAsync(_factory, role: UserRole.Admin);
@@ -90,7 +90,27 @@ public class EmailTemplatePreviewTests : IClassFixture<SaturdazeApiFactory>
 
         var malformed = await admin.Client.PostAsJsonAsync(Route, Content(subject: "{{ first name }}"));
         malformed.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-        JsonDocument.Parse(await malformed.Content.ReadAsStringAsync()).RootElement.GetProperty("code").GetString().Should().Be("invalid_placeholder");
+        JsonDocument.Parse(await malformed.Content.ReadAsStringAsync()).RootElement.GetProperty("code").GetString().Should().Be("invalid_template");
+    }
+
+    [Fact]
+    public async Task Conditions_loops_and_filters_render_and_loop_variables_are_not_placeholders()
+    {
+        // Traces to: L2-128 AC7
+        var p = await PreviewOk(Content(
+            html: "{% if vip %}<b>VIP</b>{% endif %}<ul>{% for idea in ideas %}<li>{{ idea.name | upcase }}</li>{% endfor %}</ul>",
+            samples: new()
+            {
+                ["vip"] = true,
+                ["ideas"] = new[] { new { name = "Kite day" }, new { name = "Pier walk" } },
+            }));
+        var html = p.GetProperty("html").GetString()!;
+        html.Should().Contain("<b>VIP</b>").And.Contain("<li>KITE DAY</li>").And.Contain("<li>PIER WALK</li>");
+        p.GetProperty("placeholders").EnumerateArray().Select(x => x.GetProperty("name").GetString())
+            .Should().Equal("vip", "ideas");
+        Placeholder(p, "vip").GetProperty("value").GetString().Should().Be("true");
+        Placeholder(p, "ideas").GetProperty("source").GetString().Should().Be("sample");
+        JsonDocument.Parse(Placeholder(p, "ideas").GetProperty("value").GetString()!).RootElement.GetArrayLength().Should().Be(2);
     }
 
     [Fact]

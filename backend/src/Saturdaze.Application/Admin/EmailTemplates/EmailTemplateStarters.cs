@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Saturdaze.Domain.Enums;
 
 namespace Saturdaze.Application.Admin.EmailTemplates;
@@ -8,7 +9,7 @@ public sealed record EmailTemplateContent(
     string Preheader,
     string HtmlBody,
     string TextBody,
-    IReadOnlyDictionary<string, string> SampleData);
+    JsonElement SampleData);
 
 /// <summary>
 /// One starter per category (L2-126): a greeting, a message, a call to action and a footer
@@ -76,6 +77,6 @@ public static class EmailTemplateStarters
 """;
         var text = $"Hi {{{{recipientName}}}},\n\n{message}\n\n{action}: {{{{appUrl}}}}\n\n{{{{appName}}}}"
             + (unsubscribe ? "\n\nUnsubscribe: {{unsubscribeUrl}}" : string.Empty);
-        return new EmailTemplateContent(subject, preheader, html, text, samples ?? new Dictionary<string, string>());
+        return new EmailTemplateContent(subject, preheader, html, text, SampleValues.Of(samples ?? new Dictionary<string, string>()));
     }
 }

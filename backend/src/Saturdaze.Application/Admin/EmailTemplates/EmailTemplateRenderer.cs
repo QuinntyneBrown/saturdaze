@@ -1,5 +1,7 @@
-using System.Net;
-using System.Text.RegularExpressions;
+using System.Globalization;
+using System.Text.Encodings.Web;
+using System.Text.Json;
+using Fluid;
 using Microsoft.Extensions.Options;
 using Saturdaze.Application.Common;
 
@@ -23,19 +25,17 @@ public sealed record EmailPreviewDto(
     IReadOnlyList<EmailPlaceholderDto> Placeholders);
 
 /// <summary>
-/// Renders template content (L2-128): each <c>{{name}}</c> takes its sample value, else its
-/// built-in value, else an empty string. Values substituted into the HTML body are HTML-encoded;
-/// subject, preheader and text body take them as written. No database access, so a sender can
+/// Renders template content as Liquid (L2-128, ADR-016). The context holds the built-in samples
+/// with the sample data over them; a variable with neither renders empty. The HTML body is
+/// rendered with <see cref="HtmlEncoder.Default"/>, so every value written into it is encoded; the
+/// subject, preheader and text body take values as written. No database access, so a sender can
 /// reuse it with real values in place of the samples.
 /// </summary>
-public sealed partial class EmailTemplateRenderer
+public sealed class EmailTemplateRenderer
 {
     public const string Sample = "sample";
     public const string BuiltIn = "builtin";
     public const string Missing = "missing";
-
-    [GeneratedRegex(@"\{\{\s*([A-Za-z][A-Za-z0-9_]*(?:\.[A-Za-z][A-Za-z0-9_]*)*)\s*\}\}")]
-    private static partial Regex Placeholder();
 
     private readonly EmailPreviewOptions _options;
     private readonly IDateTimeProvider _clock;
@@ -57,36 +57,75 @@ public sealed partial class EmailTemplateRenderer
             ["recipientName"] = "Alex",
             ["recipientEmail"] = "alex@example.com",
             ["unsubscribeUrl"] = $"{appUrl}/unsubscribe?token=sample",
-            ["currentYear"] = _clock.UtcNow.ToUniversalTime().Year.ToString(System.Globalization.CultureInfo.InvariantCulture),
+            ["currentYear"] = _clock.UtcNow.ToUniversalTime().Year.ToString(CultureInfo.InvariantCulture),
         };
     }
 
     public EmailPreviewDto Render(
-        string? subject, string? preheader, string? htmlBody, string? textBody, IReadOnlyDictionary<string, string>? sampleData)
+        string? subject, string? preheader, string? htmlBody, string? textBody, JsonElement? sampleData)
     {
         var builtIns = BuiltIns();
-        var samples = sampleData ?? new Dictionary<string, string>();
-        var used = new List<EmailPlaceholderDto>();
+        var samples = sampleData is { ValueKind: JsonValueKind.Object } data
+            ? data.EnumerateObject().Where(p => !IsBlank(p.Value)).GroupBy(p => p.Name).ToDictionary(g => g.Key, g => g.Last().Value)
+            : new Dictionary<string, JsonElement>();
 
-        (string Value, string Source) Resolve(string name)
+        var context = new TemplateContext(EmailTemplateLiquid.Options);
+        foreach (var (name, value) in builtIns) context.SetValue(name, value);
+        foreach (var (name, value) in samples) context.SetValue(name, ToLiquid(value));
+
+        var used = new List<EmailPlaceholderDto>();
+        string Fill(string field, string? text, TextEncoder encoder)
         {
-            if (samples.TryGetValue(name, out var sample) && !string.IsNullOrEmpty(sample)) return (sample, Sample);
-            if (builtIns.TryGetValue(name, out var builtIn)) return (builtIn, BuiltIn);
-            return (string.Empty, Missing);
+            var template = EmailTemplateLiquid.Parse(field, text);
+            foreach (var name in EmailTemplateLiquid.Analyse(template).Variables)
+            {
+                if (used.Any(p => p.Name == name)) continue;
+                used.Add(samples.TryGetValue(name, out var sample) ? new(name, Describe(sample), Sample)
+                    : builtIns.TryGetValue(name, out var builtIn) ? new(name, builtIn, BuiltIn)
+                    : new(name, string.Empty, Missing));
+            }
+            try
+            {
+                return template.Render(context, encoder);
+            }
+            catch (InvalidOperationException)
+            {
+                // Fluid stops a render that runs past MaxSteps (or MaxRecursion) this way.
+                throw EmailTemplateLiquid.TooManySteps(field);
+            }
         }
 
-        string Fill(string? text, bool html) => Placeholder().Replace(text ?? string.Empty, m =>
-        {
-            var name = m.Groups[1].Value;
-            var (value, source) = Resolve(name);
-            if (used.All(p => p.Name != name)) used.Add(new EmailPlaceholderDto(name, value, source));
-            return html ? WebUtility.HtmlEncode(value) : value;
-        });
-
-        var renderedSubject = Fill(subject, html: false);
-        var renderedPreheader = Fill(preheader, html: false);
-        var renderedHtml = Fill(htmlBody, html: true);
-        var renderedText = Fill(textBody, html: false);
+        var renderedSubject = Fill(EmailTemplateLiquid.Subject, subject, NullEncoder.Default);
+        var renderedPreheader = Fill(EmailTemplateLiquid.Preheader, preheader, NullEncoder.Default);
+        var renderedHtml = Fill(EmailTemplateLiquid.HtmlBody, htmlBody, HtmlEncoder.Default);
+        var renderedText = Fill(EmailTemplateLiquid.TextBody, textBody, NullEncoder.Default);
         return new EmailPreviewDto(renderedSubject, renderedPreheader, renderedHtml, renderedText, used);
     }
+
+    /// <summary>A sample of null or empty text falls back to the built-in, as an empty field did before.</summary>
+    private static bool IsBlank(JsonElement value)
+        => value.ValueKind is JsonValueKind.Null or JsonValueKind.Undefined
+           || (value.ValueKind == JsonValueKind.String && value.GetString()!.Length == 0);
+
+    /// <summary>The placeholder list's value: text as written, anything else as JSON.</summary>
+    private static string Describe(JsonElement value) => value.ValueKind switch
+    {
+        JsonValueKind.String => value.GetString()!,
+        JsonValueKind.True => "true",
+        JsonValueKind.False => "false",
+        _ => value.GetRawText(),
+    };
+
+    /// <summary>JSON as the dictionaries, lists and primitives Fluid reads members and items from.</summary>
+    private static object? ToLiquid(JsonElement value) => value.ValueKind switch
+    {
+        JsonValueKind.Object => value.EnumerateObject()
+            .GroupBy(p => p.Name).ToDictionary(g => g.Key, g => ToLiquid(g.Last().Value)),
+        JsonValueKind.Array => value.EnumerateArray().Select(ToLiquid).ToList(),
+        JsonValueKind.String => value.GetString(),
+        JsonValueKind.Number => value.TryGetDecimal(out var number) ? number : value.GetDouble(),
+        JsonValueKind.True => true,
+        JsonValueKind.False => false,
+        _ => null,
+    };
 }
