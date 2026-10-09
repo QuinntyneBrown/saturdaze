@@ -71,11 +71,21 @@ class EmailTemplateCatalog <<static>> {
 class EmailTemplateStarters <<static>> {
   +{static} For(category): EmailTemplateContent
 }
+class EmailTemplateLiquid {
+  -FluidParser parser
+  +TemplateOptions Options
+  +Parse(field, text): IFluidTemplate
+  +Analyse(template): LiquidAnalysis
+  +Check(field, text, html): LiquidAnalysis
+}
+class LiquidAnalysis {
+  +IReadOnlyList<string> Variables
+  +IReadOnlyList<string> Filters
+  +bool Includes
+}
 class EmailTemplateRules <<static>> {
-  +{static} Placeholders(text): IReadOnlyList<string>
-  +{static} CheckPlaceholders(texts): void
   +{static} CheckHtml(html): void
-  +{static} CheckRequired(required, html, text): void
+  +{static} CheckRequired(required, htmlVariables, textVariables): void
 }
 class EmailTemplateRenderer {
   +BuiltIns(): IReadOnlyDictionary<string, string>
@@ -104,6 +114,8 @@ EmailTemplate --> EmailTemplateStatus
 EmailTemplate "1" *-- "many" EmailTemplateRevision : history
 EmailTemplateRevision --> EmailTemplateRevisionAction
 EmailTemplateRules ..> EmailTemplateCatalog : required placeholders
+EmailTemplateLiquid ..> LiquidAnalysis : returns
+EmailTemplateRenderer ..> EmailTemplateLiquid : parses and renders (Fluid)
 EmailTemplateStarters ..> EmailTemplateCategory : one per
 EmailTemplateRevisionWriter ..> EmailTemplateRevision : creates
 EmailTemplateDto ..> EmailTemplate : projects

@@ -73,7 +73,7 @@
     &lt;p style=&quot;color:#6b7280;font-size:12px&quot;&gt;{{appName}} · {{currentYear}}&lt;/p&gt;
   &lt;/td&gt;&lt;/tr&gt;
 &lt;/table&gt;</textarea>
-        <span class="field__hint">No scripts, frames, forms or on… event attributes. Use {{placeholder}} for values.</span>
+        <span class="field__hint">Liquid: {{ variable }}, {% if %}, {% for %} and filters. No scripts, frames, forms, on… event attributes or the raw filter.</span>
       </div>
       <div class="field">
         <label class="field__label" for="ed-text">Plain-text body <span class="field__req">Required</span></label>
@@ -87,18 +87,14 @@ If it wasn&#x27;t you, ignore this email.
 
 {{appName}}</textarea>
       </div>
-      <fieldset class="email-editor__samples">
-        <legend class="field__label">Sample data</legend>
-        <p class="field__hint">Values the preview uses. Built-ins (appName, appUrl, recipientName, recipientEmail, unsubscribeUrl, currentYear) have their own.</p>
-        <div class="field">
-          <label class="field__label" for="ed-sample-resetLink">resetLink</label>
-          <input class="field__input" id="ed-sample-resetLink" type="text" value="https://app.saturdaze.app/reset-password?token=sample">
-        </div>
-        <div class="field">
-          <label class="field__label" for="ed-sample-expiresIn">expiresIn</label>
-          <input class="field__input" id="ed-sample-expiresIn" type="text" value="60 minutes">
-        </div>
-      </fieldset>
+      <div class="field email-editor__samples">
+        <label class="field__label" for="ed-samples">Sample data</label>
+        <textarea class="field__input field__input--code" id="ed-samples" rows="6" spellcheck="false" aria-describedby="ed-samples-hint">{
+  &quot;resetLink&quot;: &quot;https://app.saturdaze.app/reset-password?token=sample&quot;,
+  &quot;expiresIn&quot;: &quot;60 minutes&quot;
+}</textarea>
+        <span class="field__hint" id="ed-samples-hint">A JSON object: each top-level name is a Liquid variable; values can be text, numbers, true or false, lists or objects. Built-ins (appName, appUrl, recipientName, recipientEmail, unsubscribeUrl, currentYear) have their own.</span>
+      </div>
     </form>
     <section class="email-preview card" aria-label="Preview">
       <div class="email-preview__bar">
@@ -146,7 +142,7 @@ If it wasn&#x27;t you, ignore this email.
       <div class="card template-state"><p class="template-status"><span class="chip">Draft</span></p><div class="template-state__actions"><button class="btn btn--primary btn--sm" type="button"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Save changes</button><button class="btn btn--quiet btn--sm" type="button"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg>Activate</button><a class="btn btn--ghost btn--sm" href="./dialogs.html#dialog-admin-delete-template"><svg class="icon" aria-hidden="true"><use href="#i-trash"/></svg>Delete</a></div></div>
       <div class="card template-state" id="state-active"><p class="template-status"><span class="chip chip--accent">Active</span></p><div class="template-state__actions"><button class="btn btn--primary btn--sm" type="button"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Save changes</button><button class="btn btn--quiet btn--sm" type="button"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg>Archive</button><a class="btn btn--ghost btn--sm" href="./dialogs.html#dialog-admin-delete-template"><svg class="icon" aria-hidden="true"><use href="#i-trash"/></svg>Delete</a></div></div>
       <div class="card template-state" id="state-archived"><p class="template-status"><span class="chip chip--warn">Archived</span></p><div class="template-state__actions"><button class="btn btn--quiet btn--sm" type="button"><svg class="icon" aria-hidden="true"><use href="#i-unlock"/></svg>Restore as draft</button><a class="btn btn--ghost btn--sm" href="./dialogs.html#dialog-admin-delete-template"><svg class="icon" aria-hidden="true"><use href="#i-trash"/></svg>Delete</a></div></div>
-      <div class="card template-state" id="state-error"><div class="banner banner--warn" role="alert"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg><span>Scripts, frames, forms and on… event attributes aren't allowed in an email.</span></div><div class="banner banner--warn" role="alert"><svg class="icon" aria-hidden="true"><use href="#i-refresh"/></svg><span>Someone else changed this template. <button class="btn btn--quiet btn--sm" type="button">Reload</button></span></div></div>
+      <div class="card template-state" id="state-error"><div class="banner banner--warn" role="alert"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg><span>Scripts, frames, forms and on… event attributes aren't allowed in an email.</span></div><div class="banner banner--warn" role="alert"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg><span>Subject: End of tag '}}' was expected at (1:12)</span></div><div class="field"><label class="field__label" for="ed-samples-bad">Sample data</label><textarea class="field__input field__input--code" id="ed-samples-bad" rows="2" spellcheck="false" aria-invalid="true" aria-describedby="ed-samples-bad-error">{ "resetLink": </textarea><span class="field__error" id="ed-samples-bad-error"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg>Sample data must be a JSON object</span></div><div class="banner banner--warn" role="alert"><svg class="icon" aria-hidden="true"><use href="#i-refresh"/></svg><span>Someone else changed this template. <button class="btn btn--quiet btn--sm" type="button">Reload</button></span></div></div>
     </div>
   </section>
   </main>
