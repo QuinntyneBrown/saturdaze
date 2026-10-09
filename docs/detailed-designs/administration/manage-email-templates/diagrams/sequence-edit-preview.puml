@@ -34,14 +34,14 @@ page -> page : debounce 300 ms
 page -> client : preview(content, sampleData)
 client -> controller : POST /api/admin/email-templates/preview
 controller -> previewHandler : PreviewEmailTemplateQuery
-previewHandler -> liquid : Check each field: syntax, filters, include, raw (L2-131)
-previewHandler -> rules : CheckHtml: unsafe_html (L2-128)
+previewHandler -> liquid : Check each field: syntax, filters, include, raw (L2-137)
+previewHandler -> rules : CheckHtml: unsafe_html (L2-134)
 previewHandler -> renderer : Render(content, sampleData JSON + built-ins)
 renderer -> liquid : Fluid render, HtmlEncoder for the HTML body, MaxSteps 10 000
-renderer --> previewHandler : html, text, placeholders read from outside (L2-128 AC2, AC7)
+renderer --> previewHandler : html, text, placeholders read from outside (L2-134 AC2, AC7)
 controller --> client : 200 EmailPreviewDto
 page -> preview : subject, preheader, html, text, placeholders
-preview --> actor : iframe sandbox srcdoc at 600 or 375 px (L2-128 AC5)
+preview --> actor : iframe sandbox srcdoc at 600 or 375 px (L2-134 AC5)
 actor -> page : Save changes
 page -> client : save(id, content, version)
 client -> controller : PUT /api/admin/email-templates/{id}
@@ -49,13 +49,13 @@ controller -> saveHandler : SaveEmailTemplateCommand
 saveHandler -> db : load the template
 alt version differs
   saveHandler --> controller : ConflictException template_stale
-  controller --> page : 409, offer reload (L2-127 AC2)
+  controller --> page : 409, offer reload (L2-133 AC2)
 else current
   saveHandler -> liquid : Check each field (invalid_template, unsafe_html for raw)
-  saveHandler -> rules : CheckHtml, CheckRequired on the variables each body reads (L2-127 AC3-AC5)
+  saveHandler -> rules : CheckHtml, CheckRequired on the variables each body reads (L2-133 AC3-AC5)
   saveHandler -> saveHandler : Version + 1, UpdatedAt (UTC), UpdatedByEmail
-  saveHandler -> revisions : Write(template, Edit) (L2-130)
+  saveHandler -> revisions : Write(template, Edit) (L2-136)
   saveHandler -> db : SaveChangesAsync (Version is a concurrency token)
-  controller --> page : 200 EmailTemplateDto (L2-127 AC1)
+  controller --> page : 200 EmailTemplateDto (L2-133 AC1)
 end
 @enduml

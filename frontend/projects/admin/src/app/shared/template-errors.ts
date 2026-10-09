@@ -6,7 +6,7 @@ export const TEMPLATE_KEY_EXISTS = 'A template already uses this key. Choose ano
 export const TEMPLATE_STALE = 'Someone else changed this template.';
 export const TEMPLATE_FAILED = 'That did not go through. Try again in a moment.';
 
-/** What each API refusal of a template change means to the administrator (L2-126 → L2-129). */
+/** What each API refusal of a template change means to the administrator (L2-132 → L2-135). */
 const MESSAGES: Record<string, string> = {
   template_key_exists: TEMPLATE_KEY_EXISTS,
   template_stale: TEMPLATE_STALE,

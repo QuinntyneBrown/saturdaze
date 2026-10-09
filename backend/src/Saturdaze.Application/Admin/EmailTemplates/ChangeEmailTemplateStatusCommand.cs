@@ -8,7 +8,7 @@ using Saturdaze.Domain.Enums;
 
 namespace Saturdaze.Application.Admin.EmailTemplates;
 
-/// <summary>Moves a template to <c>Active</c>, <c>Archived</c> or <c>Draft</c> at the loaded version (L2-129).</summary>
+/// <summary>Moves a template to <c>Active</c>, <c>Archived</c> or <c>Draft</c> at the loaded version (L2-135).</summary>
 public sealed record ChangeEmailTemplateStatusCommand(Guid Id, string? Status, int Version) : IRequest<EmailTemplateDto>;
 
 public sealed class ChangeEmailTemplateStatusCommandValidator : AbstractValidator<ChangeEmailTemplateStatusCommand>

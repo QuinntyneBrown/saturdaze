@@ -1,6 +1,6 @@
-# 20 · Editing and previewing email templates
+# 25 · Editing and previewing email templates
 
-Video nineteen created templates. This one opens the editor. You will see how the content is edited and saved, how placeholders get sample values, how the live preview renders exactly what a sender would, the rules that keep administrator-written HTML from ever running script, and what happens when two administrators edit the same template at once. Recorded against the email demo data, as of October 2026.
+Video twenty-four created templates. This one opens the editor. You will see how the content is edited and saved, how placeholders get sample values, how the live preview renders exactly what a sender would, the rules that keep administrator-written HTML from ever running script, and what happens when two administrators edit the same template at once. Recorded against the email demo data, as of October 2026.
 
 ## The editor
 
@@ -59,4 +59,4 @@ Things to remember.
 - System templates keep their link and marketing templates keep unsubscribe, in both bodies.
 - A stale save is refused, and Reload shows the newer version.
 
-Next, video twenty-one covers the lifecycle: activating, archiving, restoring and deleting templates, and the revision history behind every change.
+Next, video twenty-six covers the lifecycle: activating, archiving, restoring and deleting templates, and the revision history behind every change.

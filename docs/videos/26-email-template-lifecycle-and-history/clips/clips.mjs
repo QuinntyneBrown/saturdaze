@@ -1,4 +1,4 @@
-// Screen recordings for video 21 (tools/video-record/record-clips.mjs). Runs against
+// Screen recordings for video 26 (tools/video-record/record-clips.mjs). Runs against
 // Saturdaze Admin and the API with the email template demo data (tools/video-record/email-demo).
 // Record after a reset: the clips change statuses, delete a template and save a revision.
 import { idOf, token } from '../../../../tools/video-record/email-demo/demo-env.mjs';
@@ -28,7 +28,7 @@ const action = (t, name) => header(t).getByRole('button', { name, exact: true })
 const dialog = (t) => t.page.locator('[role="dialog"], [role="alertdialog"]');
 
 export const clips = {
-  /** Draft → Active → Archived → Draft, each a new version (L2-129 AC5). */
+  /** Draft → Active → Archived → Draft, each a new version (L2-135 AC5). */
   async lifecycle(t) {
     await t.wait(1000);
     await t.hover(t.page.locator('.template-status'), 1800);
@@ -49,7 +49,7 @@ export const clips = {
     await t.hover(t.page.locator('.page-header__subtitle'), 2200);
   },
 
-  /** A system template offers neither Archive nor Delete (L2-129 AC6). */
+  /** A system template offers neither Archive nor Delete (L2-135 AC6). */
   async system(t) {
     await t.wait(1000);
     await t.hover(t.page.locator('.template-status'), 1800);
@@ -59,7 +59,7 @@ export const clips = {
     await t.hover(t.page.locator('.template-note'), 2800);
   },
 
-  /** Delete confirms in AD8, then returns to the list (L2-129 AC7). */
+  /** Delete confirms in AD8, then returns to the list (L2-135 AC7). */
   async delete(t) {
     await t.wait(1000);
     await t.hover(t.page.locator('.template-status'), 1600);
@@ -76,7 +76,7 @@ export const clips = {
     await t.hover(t.page.locator('.template-list'), 2400);
   },
 
-  /** History lists every revision; an old one loads into the editor unsaved (L2-130). */
+  /** History lists every revision; an old one loads into the editor unsaved (L2-136). */
   async history(t) {
     await t.wait(1000);
     await t.hover(t.page.locator('.page-header__subtitle'), 1600);

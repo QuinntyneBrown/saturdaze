@@ -7,11 +7,11 @@ using Saturdaze.Domain.Enums;
 
 namespace Saturdaze.Application.Admin.EmailTemplates;
 
-/// <summary>One row of the History dialog (L2-130).</summary>
+/// <summary>One row of the History dialog (L2-136).</summary>
 public sealed record EmailTemplateRevisionSummaryDto(
     int Version, string Action, string Status, string Subject, DateTimeOffset OccurredAt, string AdminEmail);
 
-/// <summary>A revision's full content, to load into the editor (L2-130 AC4).</summary>
+/// <summary>A revision's full content, to load into the editor (L2-136 AC4).</summary>
 public sealed record EmailTemplateRevisionDto(
     int Version,
     string Action,
@@ -25,10 +25,10 @@ public sealed record EmailTemplateRevisionDto(
     DateTimeOffset OccurredAt,
     string AdminEmail);
 
-/// <summary>A template's revisions, newest first (L2-130).</summary>
+/// <summary>A template's revisions, newest first (L2-136).</summary>
 public sealed record ListEmailTemplateRevisionsQuery(Guid TemplateId) : IRequest<IReadOnlyList<EmailTemplateRevisionSummaryDto>>;
 
-/// <summary>One revision of a template (L2-130).</summary>
+/// <summary>One revision of a template (L2-136).</summary>
 public sealed record GetEmailTemplateRevisionQuery(Guid TemplateId, int Version) : IRequest<EmailTemplateRevisionDto>;
 
 public sealed class ListEmailTemplateRevisionsQueryHandler

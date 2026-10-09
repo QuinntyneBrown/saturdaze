@@ -64,7 +64,7 @@ const STATUS_OPTIONS: readonly SelectOption[] = [
  * Email templates (A8) — `docs/mocks/pages/admin.emails.html`: every
  * template as a row with its key, category, status and system chips and
  * its last change. The search and both selects live in the URL query
- * (L2-125). New template opens AD7 (L2-126).
+ * (L2-131). New template opens AD7 (L2-132).
  */
 @Component({
   selector: 'sd-admin-email-templates',
@@ -135,7 +135,7 @@ export class EmailTemplatesPage {
       .subscribe((s) => this.apply({ status: (s || null) as EmailTemplateStatus | null }));
   }
 
-  /** AD7: a new draft from the category's starter, then its editor (L2-126). */
+  /** AD7: a new draft from the category's starter, then its editor (L2-132). */
   protected async newTemplate(): Promise<void> {
     const ref = this.dialog.open<NewTemplateDialogResult, NewTemplateDialogData>(
       NewTemplateDialog,

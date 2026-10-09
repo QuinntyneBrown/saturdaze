@@ -1,5 +1,5 @@
 // Acceptance Test
-// Traces to: L2-125
+// Traces to: L2-131
 // Description: GET /api/admin/email-templates lists templates for administrators only, filtered by category, status and search.
 using System.Net;
 using System.Text.Json;
@@ -51,7 +51,7 @@ public class EmailTemplateListTests : IClassFixture<SaturdazeApiFactory>, IAsync
     [Fact]
     public async Task Anonymous_is_401_and_non_admin_is_403()
     {
-        // Traces to: L2-125 AC1
+        // Traces to: L2-131 AC1
         var anon = await _factory.CreateClient().GetAsync("/api/admin/email-templates");
         anon.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
 
@@ -63,7 +63,7 @@ public class EmailTemplateListTests : IClassFixture<SaturdazeApiFactory>, IAsync
     [Fact]
     public async Task Lists_every_template_by_name_with_its_summary()
     {
-        // Traces to: L2-125
+        // Traces to: L2-131
         var admin = await SignedInClient.CreateAsync(_factory, role: UserRole.Admin);
         var res = await admin.Client.GetAsync("/api/admin/email-templates");
         var body = await res.Content.ReadAsStringAsync();
@@ -86,7 +86,7 @@ public class EmailTemplateListTests : IClassFixture<SaturdazeApiFactory>, IAsync
     [Fact]
     public async Task Filters_by_category_status_and_search()
     {
-        // Traces to: L2-125 AC2
+        // Traces to: L2-131 AC2
         var admin = await SignedInClient.CreateAsync(_factory, role: UserRole.Admin);
 
         var account = Items(await admin.Client.GetStringAsync("/api/admin/email-templates?category=Account"));
@@ -111,7 +111,7 @@ public class EmailTemplateListTests : IClassFixture<SaturdazeApiFactory>, IAsync
     [InlineData("status=Published")]
     public async Task Unknown_category_or_status_is_400(string query)
     {
-        // Traces to: L2-125 AC3
+        // Traces to: L2-131 AC3
         var admin = await SignedInClient.CreateAsync(_factory, role: UserRole.Admin);
         var res = await admin.Client.GetAsync($"/api/admin/email-templates?{query}");
         res.StatusCode.Should().Be(HttpStatusCode.BadRequest);

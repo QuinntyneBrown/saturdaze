@@ -3,7 +3,7 @@ using Saturdaze.Domain.Entities;
 
 namespace Saturdaze.Application.Admin.EmailTemplates;
 
-/// <summary>One row of the Email templates screen (L2-125).</summary>
+/// <summary>One row of the Email templates screen (L2-131).</summary>
 public sealed record EmailTemplateSummaryDto(
     Guid Id,
     string Key,
@@ -20,7 +20,7 @@ public sealed record EmailTemplateSummaryDto(
         t.Id, t.Key, t.Name, t.Category.ToString(), t.Status.ToString(), t.IsSystem, t.Subject, t.Version, t.UpdatedAt, t.UpdatedByEmail);
 }
 
-/// <summary>A template with its content, for the editor (L2-127).</summary>
+/// <summary>A template with its content, for the editor (L2-133).</summary>
 public sealed record EmailTemplateDto(
     Guid Id,
     string Key,
@@ -47,7 +47,7 @@ public sealed record EmailTemplateDto(
         EmailTemplateCatalog.RequiredPlaceholders(t), t.Version, t.CreatedAt, t.CreatedByEmail, t.UpdatedAt, t.UpdatedByEmail);
 }
 
-/// <summary>Reads and writes the stored <c>SampleData</c> JSON object (Liquid variable → any JSON value, L2-124).</summary>
+/// <summary>Reads and writes the stored <c>SampleData</c> JSON object (Liquid variable → any JSON value, L2-130).</summary>
 public static class SampleValues
 {
     public static JsonElement Empty => Of(new Dictionary<string, string>());

@@ -1,4 +1,4 @@
-// Screen recordings for video 20 (tools/video-record/record-clips.mjs). Runs against
+// Screen recordings for video 25 (tools/video-record/record-clips.mjs). Runs against
 // Saturdaze Admin and the API with the email template demo data (tools/video-record/email-demo).
 // Record after a reset: `editor` saves a template and `stale` saves one behind the editor's back.
 import { CURATOR, idOf, save, token } from '../../../../tools/video-record/email-demo/demo-env.mjs';
@@ -48,7 +48,7 @@ async function retype(t, locator, text, delay = 45) {
 }
 
 export const clips = {
-  /** The editor: header, form, sample data, Save only when something changed (L2-127). */
+  /** The editor: header, form, sample data, Save only when something changed (L2-133). */
   async editor(t) {
     await t.wait(1200);
     await t.hover(t.page.locator('.page-header__subtitle'), 2200);
@@ -73,7 +73,7 @@ export const clips = {
     await t.hover(t.page.locator('.page-header__subtitle'), 2600);
   },
 
-  /** The preview: inbox line, desktop and phone widths, plain text, placeholder sources (L2-128). */
+  /** The preview: inbox line, desktop and phone widths, plain text, placeholder sources (L2-134). */
   async preview(t) {
     await t.wait(1000);
     await t.hover(preview(t).locator('.email-preview__inbox'), 2000);
@@ -95,7 +95,7 @@ export const clips = {
     await t.hover(preview(t).locator('.email-preview__item', { hasText: 'giftCode' }), 3000);
   },
 
-  /** A malformed placeholder and a script are refused, in the preview and on save (L2-127, L2-128). */
+  /** A malformed placeholder and a script are refused, in the preview and on save (L2-133, L2-134). */
   async refused(t) {
     await t.wait(1000);
     await retype(t, field(t, 'Subject'), 'Hi {{ first name }}', 70);
@@ -113,7 +113,7 @@ export const clips = {
     await t.hover(t.page.locator('[role="alert"]').first(), 3200);
   },
 
-  /** A system template keeps its link in both bodies (L2-127 AC5). */
+  /** A system template keeps its link in both bodies (L2-133 AC5). */
   async required(t) {
     await t.wait(1000);
     await t.hover(t.page.locator('.template-note'), 3000);
@@ -129,7 +129,7 @@ export const clips = {
     await t.hover(t.page.locator('[role="alert"]').first(), 3400);
   },
 
-  /** Someone else saved first: the save is refused and Reload brings their version (L2-127 AC2). */
+  /** Someone else saved first: the save is refused and Reload brings their version (L2-133 AC2). */
   async stale(t) {
     await t.wait(1000);
     await t.hover(t.page.locator('.page-header__subtitle'), 2000);

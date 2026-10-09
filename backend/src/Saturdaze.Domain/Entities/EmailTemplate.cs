@@ -3,7 +3,7 @@ using Saturdaze.Domain.Enums;
 namespace Saturdaze.Domain.Entities;
 
 /// <summary>
-/// Named, categorized email content an administrator manages from Saturdaze Admin (L2-124):
+/// Named, categorized email content an administrator manages from Saturdaze Admin (L2-130):
 /// a subject, preheader, HTML body and plain-text body written with <c>{{placeholders}}</c>.
 /// A later sender finds an active template by its <see cref="Key"/>. <see cref="Version"/>
 /// starts at 1, increases on every change and is the optimistic concurrency token.

@@ -15,7 +15,7 @@ export type DeleteTemplateDialogResult = 'delete';
 /**
  * AD8 — Delete email template (docs/mocks/pages/dialogs.html#dialog-admin-delete-template).
  * Names the template and its history, and points at Archive as the way to
- * keep it (L2-129 AC7). Confirming closes with `delete`; the page sends it.
+ * keep it (L2-135 AC7). Confirming closes with `delete`; the page sends it.
  */
 @Component({
   selector: 'sd-admin-delete-template-dialog',

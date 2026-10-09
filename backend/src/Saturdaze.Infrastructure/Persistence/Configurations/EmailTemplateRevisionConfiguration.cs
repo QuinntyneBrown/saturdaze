@@ -21,7 +21,7 @@ public class EmailTemplateRevisionConfiguration : IEntityTypeConfiguration<Email
         b.Property(x => x.AdminEmail).HasMaxLength(256).IsRequired();
         b.HasIndex(x => new { x.TemplateId, x.Version }).IsUnique()
             .HasDatabaseName("IX_EmailTemplateRevisions_Template_Version");
-        // A template's history goes with it (L2-129).
+        // A template's history goes with it (L2-135).
         b.HasOne<EmailTemplate>().WithMany().HasForeignKey(x => x.TemplateId).OnDelete(DeleteBehavior.Cascade);
     }
 }

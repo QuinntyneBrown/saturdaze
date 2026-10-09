@@ -4,7 +4,7 @@ using MediatR;
 
 namespace Saturdaze.Application.Admin.EmailTemplates;
 
-/// <summary>Renders unsaved content with sample data, without touching the database (L2-128).</summary>
+/// <summary>Renders unsaved content with sample data, without touching the database (L2-134).</summary>
 public sealed record PreviewEmailTemplateQuery(
     string? Subject,
     string? Preheader,
@@ -32,7 +32,7 @@ public sealed class PreviewEmailTemplateQueryHandler : IRequestHandler<PreviewEm
 
     public Task<EmailPreviewDto> Handle(PreviewEmailTemplateQuery request, CancellationToken ct)
     {
-        // The same refusals as a save, so the preview never shows what cannot be saved (L2-128).
+        // The same refusals as a save, so the preview never shows what cannot be saved (L2-134).
         EmailTemplateRules.CheckContent(request.Subject, request.Preheader, request.HtmlBody, request.TextBody);
         return Task.FromResult(_renderer.Render(
             request.Subject, request.Preheader, request.HtmlBody, request.TextBody, request.SampleData));

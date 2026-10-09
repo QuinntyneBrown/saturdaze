@@ -10,7 +10,7 @@ using Saturdaze.Domain.Enums;
 namespace Saturdaze.Application.Admin.EmailTemplates;
 
 /// <summary>
-/// Saves a template's content (L2-127). <paramref name="Version"/> is the version the editor
+/// Saves a template's content (L2-133). <paramref name="Version"/> is the version the editor
 /// loaded; key, category, status and the system flag never change here.
 /// </summary>
 public sealed record SaveEmailTemplateCommand(
@@ -24,7 +24,7 @@ public sealed record SaveEmailTemplateCommand(
     JsonElement? SampleData,
     int Version) : IRequest<EmailTemplateDto>;
 
-/// <summary>The field limits shared by a save and a preview (L2-124).</summary>
+/// <summary>The field limits shared by a save and a preview (L2-130).</summary>
 public static class EmailTemplateLimits
 {
     public const int Subject = 200;
@@ -58,7 +58,7 @@ public sealed class SaveEmailTemplateCommandValidator : AbstractValidator<SaveEm
 
 /// <summary>
 /// Sample data is a JSON object of at most 100 top-level names, each a Liquid identifier, that
-/// serialises to at most 20 000 characters (L2-131 AC6).
+/// serialises to at most 20 000 characters (L2-137 AC6).
 /// </summary>
 public static class SampleDataRules
 {
@@ -111,7 +111,7 @@ public sealed class SaveEmailTemplateCommandHandler : IRequestHandler<SaveEmailT
     }
 }
 
-/// <summary>Optimistic concurrency on <see cref="EmailTemplate.Version"/> (L2-127 AC2, L2-129).</summary>
+/// <summary>Optimistic concurrency on <see cref="EmailTemplate.Version"/> (L2-133 AC2, L2-135).</summary>
 public static class EmailTemplateConcurrency
 {
     public static ConflictException Stale() => new("template_stale",

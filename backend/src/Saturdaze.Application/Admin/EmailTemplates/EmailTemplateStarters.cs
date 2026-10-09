@@ -3,7 +3,7 @@ using Saturdaze.Domain.Enums;
 
 namespace Saturdaze.Application.Admin.EmailTemplates;
 
-/// <summary>The content a new template starts with (L2-126).</summary>
+/// <summary>The content a new template starts with (L2-132).</summary>
 public sealed record EmailTemplateContent(
     string Subject,
     string Preheader,
@@ -12,9 +12,9 @@ public sealed record EmailTemplateContent(
     JsonElement SampleData);
 
 /// <summary>
-/// One starter per category (L2-126): a greeting, a message, a call to action and a footer
+/// One starter per category (L2-132): a greeting, a message, a call to action and a footer
 /// written with built-in placeholders. The marketing starter carries <c>{{unsubscribeUrl}}</c>
-/// in both bodies (L2-126 AC2).
+/// in both bodies (L2-132 AC2).
 /// </summary>
 public static class EmailTemplateStarters
 {

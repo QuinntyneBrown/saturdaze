@@ -1,5 +1,5 @@
 // Acceptance Test
-// Traces to: L2-126
+// Traces to: L2-132
 // Description: AD7 creates a draft from A8 with a key suggested from the name, refuses a taken key, and duplicates a template from A9.
 import { test, expect } from "../../fixtures/sd-test.js";
 
@@ -7,7 +7,7 @@ const stamp = () => Date.now().toString(36);
 
 test.describe("Admin new email template", () => {
   test("New template suggests the key from the name and opens the new draft's editor", async ({ page, goto, pages }) => {
-    // Traces to: L2-126 AC1, AC5
+    // Traces to: L2-132 AC1, AC5
     await goto("adminEmails");
     const list = pages.adminEmails;
     await list.waitForScreen("emails");
@@ -31,7 +31,7 @@ test.describe("Admin new email template", () => {
   });
 
   test("a key that is taken is refused in the dialog", async ({ goto, pages }) => {
-    // Traces to: L2-126 AC4
+    // Traces to: L2-132 AC4
     await goto("adminEmails");
     const list = pages.adminEmails;
     await list.waitForScreen("emails");
@@ -44,7 +44,7 @@ test.describe("Admin new email template", () => {
   });
 
   test("Duplicate copies a template into a new draft with the category fixed", async ({ page, goto, pages }) => {
-    // Traces to: L2-126 AC3, AC5
+    // Traces to: L2-132 AC3, AC5
     await goto("adminEmails");
     const list = pages.adminEmails;
     await list.waitForScreen("emails");

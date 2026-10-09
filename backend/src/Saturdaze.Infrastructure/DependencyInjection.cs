@@ -36,7 +36,7 @@ public static class DependencyInjection
         services.Configure<HomeLocationOptions>(configuration.GetSection(HomeLocationOptions.SectionName));
         services.Configure<Saturdaze.Application.Photos.ImageOptions>(
             configuration.GetSection(Saturdaze.Application.Photos.ImageOptions.SectionName));
-        // The preview's built-in appUrl (L2-128): Saturdaze:Email:AppUrl, else the share link origin.
+        // The preview's built-in appUrl (L2-134): Saturdaze:Email:AppUrl, else the share link origin.
         services.Configure<Saturdaze.Application.Admin.EmailTemplates.EmailPreviewOptions>(o =>
         {
             var url = configuration["Saturdaze:Email:AppUrl"] ?? configuration["Saturdaze:Share:AppOrigin"];

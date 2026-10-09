@@ -4,7 +4,7 @@ using Saturdaze.Domain.Enums;
 namespace Saturdaze.Application.Admin.EmailTemplates;
 
 /// <summary>
-/// The fixed knowledge about email templates (L2-124, L2-126, L2-127): which keys are system
+/// The fixed knowledge about email templates (L2-130, L2-132, L2-133): which keys are system
 /// templates and the placeholder each must keep, the placeholder every marketing template keeps,
 /// and the wire names of categories and statuses.
 /// </summary>

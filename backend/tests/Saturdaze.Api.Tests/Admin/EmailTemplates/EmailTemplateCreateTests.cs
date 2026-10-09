@@ -1,5 +1,5 @@
 // Acceptance Test
-// Traces to: L2-126, L2-127 AC6
+// Traces to: L2-132, L2-133 AC6
 // Description: POST /api/admin/email-templates creates a draft from the category's starter or from a duplicated template, and GET returns it.
 using System.Net;
 using System.Text.Json;
@@ -20,7 +20,7 @@ public class EmailTemplateCreateTests : IClassFixture<SaturdazeApiFactory>
     [Fact]
     public async Task Creates_a_draft_at_version_1_with_starter_content()
     {
-        // Traces to: L2-126 AC1
+        // Traces to: L2-132 AC1
         var admin = await Admin();
         var res = await EmailTemplateApi.Create(admin.Client,
             new { key = "notify.weekend-ready", name = "Weekend ready", description = "When a plan is ready", category = "Notification" });
@@ -50,7 +50,7 @@ public class EmailTemplateCreateTests : IClassFixture<SaturdazeApiFactory>
     [Fact]
     public async Task A_marketing_starter_carries_the_unsubscribe_link_in_both_bodies()
     {
-        // Traces to: L2-126 AC2
+        // Traces to: L2-132 AC2
         var admin = await Admin();
         var t = await EmailTemplateApi.CreateOk(admin.Client, category: "Marketing");
         t.GetProperty("htmlBody").GetString().Should().Contain("{{unsubscribeUrl}}");
@@ -61,7 +61,7 @@ public class EmailTemplateCreateTests : IClassFixture<SaturdazeApiFactory>
     [Fact]
     public async Task Duplicating_copies_the_content_into_a_new_non_system_draft()
     {
-        // Traces to: L2-126 AC3
+        // Traces to: L2-132 AC3
         var admin = await Admin();
         var sourceId = await EmailTemplateApi.IdOf(admin.Client, "account.verify-email");
         var source = await EmailTemplateApi.Get(admin.Client, sourceId);
@@ -85,7 +85,7 @@ public class EmailTemplateCreateTests : IClassFixture<SaturdazeApiFactory>
     [Fact]
     public async Task An_existing_key_is_409_template_key_exists()
     {
-        // Traces to: L2-126 AC4
+        // Traces to: L2-132 AC4
         var admin = await Admin();
         var res = await EmailTemplateApi.Create(admin.Client,
             new { key = "account.password-reset", name = "Another reset", category = "Account" });
@@ -101,7 +101,7 @@ public class EmailTemplateCreateTests : IClassFixture<SaturdazeApiFactory>
     public async Task A_malformed_key_empty_name_or_unknown_category_is_400_naming_the_field(
         string key, string name, string category, string field)
     {
-        // Traces to: L2-126 AC4
+        // Traces to: L2-132 AC4
         var admin = await Admin();
         var res = await EmailTemplateApi.Create(admin.Client, new { key, name, category });
         res.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -112,7 +112,7 @@ public class EmailTemplateCreateTests : IClassFixture<SaturdazeApiFactory>
     [Fact]
     public async Task Duplicating_an_unknown_template_is_404_and_an_unknown_id_is_404()
     {
-        // Traces to: L2-126, L2-127 AC6
+        // Traces to: L2-132, L2-133 AC6
         var admin = await Admin();
         var res = await EmailTemplateApi.Create(admin.Client,
             new { key = "dup.unknown", name = "Dup", category = "Notification", duplicateOf = Guid.NewGuid() });
@@ -125,7 +125,7 @@ public class EmailTemplateCreateTests : IClassFixture<SaturdazeApiFactory>
     [Fact]
     public async Task Creating_requires_an_administrator()
     {
-        // Traces to: L2-125 AC1
+        // Traces to: L2-131 AC1
         var user = await SignedInClient.CreateAsync(_factory);
         var res = await EmailTemplateApi.Create(user.Client, new { key = "x.y", name = "X", category = "Notification" });
         res.StatusCode.Should().Be(HttpStatusCode.Forbidden);

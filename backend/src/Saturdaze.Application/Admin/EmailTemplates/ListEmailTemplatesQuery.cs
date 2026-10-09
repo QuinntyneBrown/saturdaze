@@ -5,7 +5,7 @@ using Saturdaze.Application.Abstractions;
 
 namespace Saturdaze.Application.Admin.EmailTemplates;
 
-/// <summary>Every email template ordered by name (L2-125): optionally one category or status, and a search over name, key and subject.</summary>
+/// <summary>Every email template ordered by name (L2-131): optionally one category or status, and a search over name, key and subject.</summary>
 public sealed record ListEmailTemplatesQuery(string? Q = null, string? Category = null, string? Status = null)
     : IRequest<IReadOnlyList<EmailTemplateSummaryDto>>;
 

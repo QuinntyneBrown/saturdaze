@@ -4,7 +4,7 @@ namespace Saturdaze.Domain.Entities;
 
 /// <summary>
 /// An immutable snapshot of an <see cref="EmailTemplate"/> written on every create, save and
-/// status change (L2-130). Deleted with its template.
+/// status change (L2-136). Deleted with its template.
 /// </summary>
 public class EmailTemplateRevision
 {

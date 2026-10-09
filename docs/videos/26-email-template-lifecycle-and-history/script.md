@@ -1,6 +1,6 @@
-# 21 · Email template lifecycle and history
+# 26 · Email template lifecycle and history
 
-This is the last of three videos on email templates. Video nineteen created templates and video twenty edited them. This one follows a template through its life: activating it, archiving it, restoring it, and deleting it, and the revision history that records every one of those changes. It ends with what a future sender needs from all this. Recorded against the email demo data, as of October 2026.
+This is the last of three videos on email templates. Video twenty-four created templates and video twenty-five edited them. This one follows a template through its life: activating it, archiving it, restoring it, and deleting it, and the revision history that records every one of those changes. It ends with what a future sender needs from all this. Recorded against the email demo data, as of October 2026.
 
 ## Draft, active, archived
 

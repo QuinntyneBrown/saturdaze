@@ -62,7 +62,7 @@ const UNSAVED: ChipView = { tone: 'sun', label: 'Unsaved changes' };
 
 export const SAMPLE_DATA_INVALID = 'Sample data must be a JSON object';
 
-/** The status action each status offers (L2-129 AC5); a system template offers none. */
+/** The status action each status offers (L2-135 AC5); a system template offers none. */
 const STATUS_ACTION: Record<
   EmailTemplateStatus,
   { readonly label: string; readonly icon: string; readonly to: EmailTemplateStatus }
@@ -77,15 +77,15 @@ const STATUS_ACTION: Record<
  * header (name, key, category, version, last change, status and system
  * chips, actions), the system-template note, and the content form: name,
  * description, subject, preheader, HTML and plain-text bodies written in
- * Liquid, and the sample data as one JSON object (ADR-016). "Save changes"
+ * Liquid, and the sample data as one JSON object (ADR-017). "Save changes"
  * stays disabled until something changed and while the sample data is not
  * a JSON object, which also holds back the preview; a stale copy
- * says so and offers a reload (L2-127). Beside the form, `sd-email-preview`
- * renders the unsaved content 300 ms after the last edit (L2-128).
+ * says so and offers a reload (L2-133). Beside the form, `sd-email-preview`
+ * renders the unsaved content 300 ms after the last edit (L2-134).
  * Activate, Archive and Restore as draft follow the status; Delete opens
- * AD8; a system template offers neither (L2-129). History opens AD9 and
- * puts a loaded revision in the form, unsaved (L2-130). Duplicate opens
- * AD7 (L2-126).
+ * AD8; a system template offers neither (L2-135). History opens AD9 and
+ * puts a loaded revision in the form, unsaved (L2-136). Duplicate opens
+ * AD7 (L2-132).
  */
 @Component({
   selector: 'sd-admin-email-template',
@@ -144,7 +144,7 @@ export class EmailTemplatePage {
   protected readonly sampleHint =
     'A JSON object: each top-level name is a Liquid variable; values can be text, numbers, true or false, lists or objects. Built-ins (appName, appUrl, recipientName, recipientEmail, unsubscribeUrl, currentYear) have their own.';
 
-  /** The sample data text parsed, or null while it is not a JSON object (L2-127 AC8). */
+  /** The sample data text parsed, or null while it is not a JSON object (L2-133 AC8). */
   private readonly sampleData = computed(() => parseSampleData(this.value().sampleData ?? ''));
   protected readonly sampleDataError = computed(() =>
     this.sampleData() ? '' : SAMPLE_DATA_INVALID,
@@ -178,7 +178,7 @@ export class EmailTemplatePage {
     return chips;
   });
 
-  /** Activate, Archive or Restore as draft; none for a system template (L2-129 AC6). */
+  /** Activate, Archive or Restore as draft; none for a system template (L2-135 AC6). */
   protected readonly statusAction = computed(() => {
     const v = this.view();
     return v && !v.isSystem ? STATUS_ACTION[v.status] : null;
@@ -230,7 +230,7 @@ export class EmailTemplatePage {
       });
   }
 
-  /** Saves the content at the version it was loaded at (L2-127). */
+  /** Saves the content at the version it was loaded at (L2-133). */
   protected async save(): Promise<void> {
     const v = this.view();
     if (!v || !this.canSave()) return;
@@ -267,7 +267,7 @@ export class EmailTemplatePage {
     }
   }
 
-  /** AD8, then the delete and back to the list (L2-129 AC7). */
+  /** AD8, then the delete and back to the list (L2-135 AC7). */
   protected async remove(): Promise<void> {
     const v = this.view();
     if (!v || v.isSystem) return;
@@ -295,7 +295,7 @@ export class EmailTemplatePage {
     if (id) await this.load(id);
   }
 
-  /** AD9: the history; a loaded revision goes into the form unsaved (L2-130 AC4). */
+  /** AD9: the history; a loaded revision goes into the form unsaved (L2-136 AC4). */
   protected async history(): Promise<void> {
     const v = this.view();
     if (!v) return;
@@ -322,7 +322,7 @@ export class EmailTemplatePage {
     });
   }
 
-  /** AD7 in duplicate mode: a new draft with this template's content (L2-126 AC3). */
+  /** AD7 in duplicate mode: a new draft with this template's content (L2-132 AC3). */
   protected async duplicate(): Promise<void> {
     const v = this.view();
     if (!v) return;

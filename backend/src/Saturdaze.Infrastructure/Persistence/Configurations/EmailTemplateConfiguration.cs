@@ -17,13 +17,13 @@ public class EmailTemplateConfiguration : IEntityTypeConfiguration<EmailTemplate
         b.Property(x => x.Status).HasConversion<string>().HasMaxLength(16);
         b.Property(x => x.Subject).HasMaxLength(200).IsRequired();
         b.Property(x => x.Preheader).HasMaxLength(200).IsRequired();
-        // Bounded by validation (L2-124): 100 000 and 50 000 characters.
+        // Bounded by validation (L2-130): 100 000 and 50 000 characters.
         b.Property(x => x.HtmlBody).IsRequired();
         b.Property(x => x.TextBody).IsRequired();
         b.Property(x => x.SampleData).IsRequired();
         b.Property(x => x.CreatedByEmail).HasMaxLength(256).IsRequired();
         b.Property(x => x.UpdatedByEmail).HasMaxLength(256).IsRequired();
-        // Concurrent saves never overwrite each other (L2-127 AC2).
+        // Concurrent saves never overwrite each other (L2-133 AC2).
         b.Property(x => x.Version).IsConcurrencyToken();
         b.HasIndex(x => x.Key).IsUnique().HasDatabaseName("IX_EmailTemplates_Key");
         b.HasIndex(x => new { x.Category, x.Status }).HasDatabaseName("IX_EmailTemplates_Category_Status");

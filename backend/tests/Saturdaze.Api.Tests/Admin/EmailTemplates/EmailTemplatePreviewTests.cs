@@ -1,5 +1,5 @@
 // Acceptance Test
-// Traces to: L2-128
+// Traces to: L2-134
 // Description: POST /api/admin/email-templates/preview renders unsaved Liquid content with sample, built-in or empty values, HTML-encoding values in the HTML body.
 using System.Net;
 using System.Net.Http.Json;
@@ -37,7 +37,7 @@ public class EmailTemplatePreviewTests : IClassFixture<SaturdazeApiFactory>
     [Fact]
     public async Task A_sample_value_fills_its_placeholder()
     {
-        // Traces to: L2-128 AC1
+        // Traces to: L2-134 AC1
         var p = await PreviewOk(Content(subject: "Hi {{recipientName}}", samples: new() { ["recipientName"] = "Sam" }));
         p.GetProperty("subject").GetString().Should().Be("Hi Sam");
         Placeholder(p, "recipientName").GetProperty("value").GetString().Should().Be("Sam");
@@ -47,7 +47,7 @@ public class EmailTemplatePreviewTests : IClassFixture<SaturdazeApiFactory>
     [Fact]
     public async Task Values_are_html_encoded_in_the_html_body_only()
     {
-        // Traces to: L2-128 AC2
+        // Traces to: L2-134 AC2
         var p = await PreviewOk(Content(html: "<p>{{note}}</p>", text: "Note: {{ note }}", samples: new() { ["note"] = "<b>bold</b>" }));
         var html = p.GetProperty("html").GetString()!;
         html.Should().Contain("&lt;b&gt;bold&lt;/b&gt;");
@@ -58,7 +58,7 @@ public class EmailTemplatePreviewTests : IClassFixture<SaturdazeApiFactory>
     [Fact]
     public async Task Built_ins_fill_in_and_unknown_placeholders_render_empty()
     {
-        // Traces to: L2-128 AC3
+        // Traces to: L2-134 AC3
         var p = await PreviewOk(Content(
             subject: "{{appName}} {{giftCode}}",
             preheader: "For {{recipientEmail}}",
@@ -82,7 +82,7 @@ public class EmailTemplatePreviewTests : IClassFixture<SaturdazeApiFactory>
     [Fact]
     public async Task Unsafe_html_and_invalid_liquid_are_refused_as_on_save()
     {
-        // Traces to: L2-128
+        // Traces to: L2-134
         var admin = await SignedInClient.CreateAsync(_factory, role: UserRole.Admin);
         var unsafeHtml = await admin.Client.PostAsJsonAsync(Route, Content(html: "<img src=x onerror=alert(1)>"));
         unsafeHtml.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -96,7 +96,7 @@ public class EmailTemplatePreviewTests : IClassFixture<SaturdazeApiFactory>
     [Fact]
     public async Task Conditions_loops_and_filters_render_and_loop_variables_are_not_placeholders()
     {
-        // Traces to: L2-128 AC7
+        // Traces to: L2-134 AC7
         var p = await PreviewOk(Content(
             html: "{% if vip %}<b>VIP</b>{% endif %}<ul>{% for idea in ideas %}<li>{{ idea.name | upcase }}</li>{% endfor %}</ul>",
             samples: new()
@@ -116,7 +116,7 @@ public class EmailTemplatePreviewTests : IClassFixture<SaturdazeApiFactory>
     [Fact]
     public async Task Previewing_requires_an_administrator()
     {
-        // Traces to: L2-125 AC1
+        // Traces to: L2-131 AC1
         (await _factory.CreateClient().PostAsJsonAsync(Route, Content())).StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         var user = await SignedInClient.CreateAsync(_factory);
         (await user.Client.PostAsJsonAsync(Route, Content())).StatusCode.Should().Be(HttpStatusCode.Forbidden);

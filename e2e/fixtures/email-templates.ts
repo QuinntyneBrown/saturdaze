@@ -1,5 +1,5 @@
 /**
- * Email template set-up for the admin specs (L1-037): a fresh template per
+ * Email template set-up for the admin specs (L1-038): a fresh template per
  * test through the API, so specs never depend on what earlier runs left
  * behind, and an out-of-band save to make the editor's copy stale.
  */

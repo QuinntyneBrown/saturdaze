@@ -1,5 +1,5 @@
 // Acceptance Test
-// Traces to: L2-130
+// Traces to: L2-136
 // Description: AD9 lists a template's revisions newest first, and loading an older one puts it in the editor unsaved so saving makes it the next version.
 import { test, expect } from "../../fixtures/sd-test.js";
 import { createTemplate, saveSubjectOutOfBand } from "../../fixtures/email-templates.js";
@@ -7,7 +7,7 @@ import { SEEDED_ADMIN } from "../../fixtures/auth.js";
 
 test.describe("Admin email template history", () => {
   test("History lists the revisions and loads an old one into the editor", async ({ page, request, signInAsAdmin, pages }) => {
-    // Traces to: L2-130 AC1, AC4
+    // Traces to: L2-136 AC1, AC4
     const admin = (await signInAsAdmin())!;
     const t = await createTemplate(request, admin);
     await saveSubjectOutOfBand(request, admin, t.id, "Second subject");

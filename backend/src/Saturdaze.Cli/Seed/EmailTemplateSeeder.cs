@@ -9,7 +9,7 @@ using Saturdaze.Infrastructure.Persistence;
 namespace Saturdaze.Cli.Seed;
 
 /// <summary>
-/// Creates the system email templates (L2-124) from <c>email-templates.json</c>: each key that is
+/// Creates the system email templates (L2-130) from <c>email-templates.json</c>: each key that is
 /// missing becomes an <c>Active</c> system template at version 1 with its first revision. A template
 /// that exists is never changed, so an administrator's edits survive every <c>saturdaze seed</c>.
 /// </summary>

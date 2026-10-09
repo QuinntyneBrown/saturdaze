@@ -1,12 +1,12 @@
-# 20 · Editing and previewing email templates
+# 25 · Editing and previewing email templates
 
-> **Runtime:** ~8.2 min · **Audience:** administrators and developers of Saturdaze Admin · **Prerequisites:** video 19
+> **Runtime:** ~8.2 min · **Audience:** administrators and developers of Saturdaze Admin · **Prerequisites:** video 24
 
-**Video:** [20-editing-and-previewing-email-templates.mp4](20-editing-and-previewing-email-templates.mp4) · [Slides](slides.html) · **Audio:** [20-editing-and-previewing-email-templates.mp3](20-editing-and-previewing-email-templates.mp3) · [Transcript](script.md) · [Clips](clips/clips.mjs)
+**Video:** [25-editing-and-previewing-email-templates.mp4](25-editing-and-previewing-email-templates.mp4) · [Slides](slides.html) · **Audio:** [25-editing-and-previewing-email-templates.mp3](25-editing-and-previewing-email-templates.mp3) · [Transcript](script.md) · [Clips](clips/clips.mjs)
 
 ## Why this video exists
 
-The editor (A9) is where template content is written, and the preview is where an administrator sees exactly what a sender would send. This video covers saving with the version check (L2-127), placeholders and sample data, the live preview and its renderer (L2-128), the two layers that keep administrator-written HTML inert, the placeholders a template must keep, and the stale-save flow.
+The editor (A9) is where template content is written, and the preview is where an administrator sees exactly what a sender would send. This video covers saving with the version check (L2-133), placeholders and sample data, the live preview and its renderer (L2-134), the two layers that keep administrator-written HTML inert, the placeholders a template must keep, and the stale-save flow.
 
 ## Learning objectives
 
@@ -58,7 +58,7 @@ By the end, the viewer can:
 ```sh
 export SD_EMAIL_DEMO_CONNECTION="…;Database=SaturdazeEmailDemo;…"
 export SD_DEMO_RESET="node tools/video-record/email-demo/reset.mjs"
-node tools/video-record/record-clips.mjs docs/videos/20-editing-and-previewing-email-templates
+node tools/video-record/record-clips.mjs docs/videos/25-editing-and-previewing-email-templates
 # `stale` saves the holiday greeting as jo.curator@saturdaze.app mid-clip through the admin API.
 ```
 
@@ -70,5 +70,5 @@ node tools/video-record/record-clips.mjs docs/videos/20-editing-and-previewing-e
 
 ## References
 
-- `docs/specs/L2.md` (L2-127, L2-128); `docs/detailed-designs/administration/manage-email-templates/README.md`
+- `docs/specs/L2.md` (L2-133, L2-134); `docs/detailed-designs/administration/manage-email-templates/README.md`
 - MDN: [`<iframe sandbox>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe#sandbox), [Content-Security-Policy](https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP)

@@ -5,7 +5,7 @@ using Saturdaze.Application.Exceptions;
 
 namespace Saturdaze.Application.Admin.EmailTemplates;
 
-/// <summary>What a parsed template reads and uses (L2-128, L2-131).</summary>
+/// <summary>What a parsed template reads and uses (L2-134, L2-137).</summary>
 /// <param name="Variables">Top-level variables read from outside the template, in order of first use.</param>
 /// <param name="Filters">Distinct filter names, in order of first use.</param>
 /// <param name="Includes">Whether the template uses <c>include</c> or <c>render</c>.</param>
@@ -13,7 +13,7 @@ public sealed record LiquidAnalysis(IReadOnlyList<string> Variables, IReadOnlyLi
 
 /// <summary>
 /// Parses, checks and renders template fields as Liquid with Fluid under the restricted profile of
-/// ADR-016: Fluid's standard filters only, no <c>include</c> or <c>render</c>, no <c>raw</c> in the
+/// ADR-017: Fluid's standard filters only, no <c>include</c> or <c>render</c>, no <c>raw</c> in the
 /// HTML body and at most 10 000 steps per render. Every refusal names the field.
 /// </summary>
 public static class EmailTemplateLiquid
@@ -34,7 +34,7 @@ public static class EmailTemplateLiquid
         FileProvider = new NullFileProvider(),
     };
 
-    /// <summary>Parses <paramref name="text"/>, refusing invalid Liquid with <c>invalid_template</c> (L2-131 AC1).</summary>
+    /// <summary>Parses <paramref name="text"/>, refusing invalid Liquid with <c>invalid_template</c> (L2-137 AC1).</summary>
     public static IFluidTemplate Parse(string field, string? text)
     {
         if (Parser.TryParse(text ?? string.Empty, out var template, out var error)) return template;
@@ -54,7 +54,7 @@ public static class EmailTemplateLiquid
 
     /// <summary>
     /// Parses and analyses one field: an unknown filter or an <c>include</c>/<c>render</c> is
-    /// <c>invalid_template</c> (L2-131 AC2, AC3); <c>raw</c> in the HTML body is <c>unsafe_html</c> (AC4).
+    /// <c>invalid_template</c> (L2-137 AC2, AC3); <c>raw</c> in the HTML body is <c>unsafe_html</c> (AC4).
     /// </summary>
     public static (IFluidTemplate Template, LiquidAnalysis Analysis) Check(string field, string? text, bool html = false)
     {
@@ -73,7 +73,7 @@ public static class EmailTemplateLiquid
         return (template, analysis);
     }
 
-    /// <summary>A render that ran past <see cref="MaxSteps"/> (L2-131 AC5).</summary>
+    /// <summary>A render that ran past <see cref="MaxSteps"/> (L2-137 AC5).</summary>
     public static BadRequestException TooManySteps(string field)
         => Invalid(field, $"The template takes too many steps to render (at most {MaxSteps:N0}).");
 

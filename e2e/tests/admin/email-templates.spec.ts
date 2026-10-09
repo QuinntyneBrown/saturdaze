@@ -1,10 +1,10 @@
 // Acceptance Test
-// Traces to: L2-125
+// Traces to: L2-131
 // Description: the Email templates screen lists templates with their chips, filters by category and search, and keeps the filters in the URL.
 import { test, expect } from "../../fixtures/sd-test.js";
 
 /**
- * Email templates (A8, L2-125). The seed always carries the two system
+ * Email templates (A8, L2-131). The seed always carries the two system
  * templates, so they anchor the assertions; other tests may add drafts.
  */
 
@@ -15,7 +15,7 @@ test.describe("Admin email templates", () => {
   });
 
   test("lists the system templates with their category, status and system chips", async ({ pages }) => {
-    // Traces to: L2-125 AC4
+    // Traces to: L2-131 AC4
     const a = pages.adminEmails;
     await expect(a.pageTitle()).toHaveText("Email templates");
     await expect(a.activeAdminNavLink()).toHaveAttribute("data-nav", "emails");
@@ -34,7 +34,7 @@ test.describe("Admin email templates", () => {
   });
 
   test("the category filter narrows the list and lives in the URL", async ({ page, pages }) => {
-    // Traces to: L2-125 AC5
+    // Traces to: L2-131 AC5
     const a = pages.adminEmails;
     await a.categorySelect().selectOption({ label: "Account" });
     await expect.poll(() => new URL(page.url()).searchParams.get("category")).toBe("Account");
@@ -56,7 +56,7 @@ test.describe("Admin email templates", () => {
   });
 
   test("search matches name, key or subject and says when nothing matches", async ({ page, pages }) => {
-    // Traces to: L2-125 AC2, AC5
+    // Traces to: L2-131 AC2, AC5
     const a = pages.adminEmails;
     await a.searchInput().fill("password-reset");
     await expect.poll(() => new URL(page.url()).searchParams.get("q")).toBe("password-reset");
@@ -70,7 +70,7 @@ test.describe("Admin email templates", () => {
   });
 
   test("rows stack at 390px without horizontal scroll", async ({ page, pages }) => {
-    // Traces to: L2-125 AC6
+    // Traces to: L2-131 AC6
     await page.setViewportSize({ width: 390, height: 844 });
     const a = pages.adminEmails;
     await expect(a.row("Verify your email")).toBeVisible();

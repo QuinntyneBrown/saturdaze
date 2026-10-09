@@ -6,7 +6,7 @@ using Saturdaze.Domain.Entities;
 
 namespace Saturdaze.Application.Admin.EmailTemplates;
 
-/// <summary>One template with its content and required placeholders, for the editor (L2-127).</summary>
+/// <summary>One template with its content and required placeholders, for the editor (L2-133).</summary>
 public sealed record GetEmailTemplateQuery(Guid Id) : IRequest<EmailTemplateDto>;
 
 public sealed class GetEmailTemplateQueryHandler : IRequestHandler<GetEmailTemplateQuery, EmailTemplateDto>

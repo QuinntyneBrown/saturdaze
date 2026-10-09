@@ -21,7 +21,7 @@ export type TemplateHistoryDialogResult = EmailTemplateRevisionDto;
  * AD9 — Template history (docs/mocks/pages/dialogs.html#dialog-admin-template-history).
  * Every create, save and status change, newest first; "Load into editor"
  * closes with that revision's content so the page can put it in the form
- * unsaved — saving makes it the next version (L2-130 AC4).
+ * unsaved — saving makes it the next version (L2-136 AC4).
  */
 @Component({
   selector: 'sd-admin-template-history-dialog',

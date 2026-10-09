@@ -1,6 +1,6 @@
-# 22 · Email template administration: the detailed design
+# 27 · Email template administration: the detailed design
 
-Videos nineteen to twenty-one showed the email template screens. This one explains the detailed design behind them, view by view, from the C4 diagrams to the requirements. In October 2026 the design was revised to write templates in Liquid, rendered with Fluid. Where the code is still catching up, the design document is the source of truth.
+Videos twenty-four to twenty-six showed the email template screens. This one explains the detailed design behind them, view by view, from the C4 diagrams to the requirements. In October 2026 the design was revised to write templates in Liquid, rendered with Fluid. Where the code is still catching up, the design document is the source of truth.
 
 ## Purpose and scope
 
@@ -52,7 +52,7 @@ Delete asks for confirmation, then removes the template and, by cascade, its rev
 
 ## The Liquid profile
 
-Now the rules. ADR sixteen chose Liquid, rendered with the Fluid library. It is widely known, built for untrusted authors, and the existing double-brace placeholders are already valid Liquid.
+Now the rules. ADR seventeen chose Liquid, rendered with the Fluid library. It is widely known, built for untrusted authors, and the existing double-brace placeholders are already valid Liquid.
 
 The design restricts it. Only standard tags and Fluid's standard filters, and an unknown filter is refused rather than silently ignored. No include or render, so a template is self-contained. No raw in the HTML body, because raw would undo the encoding. At most ten thousand steps per render, so a runaway loop fails fast. Every refusal names the field, and syntax errors give the line and column. Sample data is capped at one hundred names and twenty thousand characters.
 
@@ -66,7 +66,7 @@ Six error codes, listed here, cover the business rules, and the editor shows eac
 
 ## Requirements traceability
 
-Everything traces to one capability, L one oh thirty-seven, email template administration, refined by eight requirements, L two one twenty-four to one thirty-one, one per part of the feature, the newest being Liquid.
+Everything traces to one capability, L one oh thirty-eight, email template administration, refined by eight requirements, L two one thirty to one thirty-seven, one per part of the feature, the newest being Liquid.
 
 The sequence diagrams carry these IDs on their arrows, down to acceptance criteria. And the tests close the loop: API integration tests for every endpoint and the Liquid profile, command-line tests for the seeder, and Playwright specs through two page objects.
 
@@ -79,4 +79,4 @@ Things to remember.
 - Every create, save and status change writes an immutable revision.
 - Restricted Liquid, a deny-list, encoding and a sandboxed frame keep templates inert.
 
-ADR sixteen also records that video twenty, which shows the earlier placeholder syntax, should be re-recorded.
+ADR seventeen also records that video twenty-five, which shows the earlier placeholder syntax, should be re-recorded.

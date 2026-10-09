@@ -28,20 +28,20 @@ actor -> page : Activate / Archive / Restore as draft
 page -> client : setStatus(id, status, version)
 client -> controller : POST /api/admin/email-templates/{id}/status
 controller -> handlers : ChangeEmailTemplateStatusCommand
-handlers -> handlers : system template stays Active, else system_template (L2-129 AC2)
+handlers -> handlers : system template stays Active, else system_template (L2-135 AC2)
 handlers -> revisions : Write(template, Status)
 handlers -> db : SaveChangesAsync
-controller --> page : 200, status chip and actions change (L2-129 AC5)
+controller --> page : 200, status chip and actions change (L2-135 AC5)
 actor -> page : History
 page -> history : open
 history -> client : revisions(id)
 client -> controller : GET /api/admin/email-templates/{id}/revisions
-controller --> history : newest first (L2-130 AC1)
+controller --> history : newest first (L2-136 AC1)
 actor -> history : Load into editor on v1
 history -> client : revision(id, 1)
 client -> controller : GET .../revisions/1
-controller --> history : full content (L2-130 AC2)
-history --> page : content placed in the form, unsaved (L2-130 AC4)
+controller --> history : full content (L2-136 AC2)
+history --> page : content placed in the form, unsaved (L2-136 AC4)
 actor -> page : Delete
 page -> remove : open, names the template
 actor -> remove : Delete template
@@ -50,5 +50,5 @@ page -> client : delete(id)
 client -> controller : DELETE /api/admin/email-templates/{id}
 controller -> handlers : DeleteEmailTemplateCommand (system_template refused)
 handlers -> db : remove the template and its revisions
-controller --> page : 204, navigate to A8 (L2-129 AC7)
+controller --> page : 204, navigate to A8 (L2-135 AC7)
 @enduml

@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Video 22 Slides</title>
+<title>Video 27 Slides</title>
 <link rel="stylesheet" href="../assets/slides.css">
 </head>
-<body data-video-number="22" data-video-title="Email template administration: the detailed design" data-parts="Introduction|Purpose and scope|Context|Containers|Components|Data model|Create|Edit and preview|Lifecycle|Liquid profile|Inert HTML|Traceability|Recap">
+<body data-video-number="27" data-video-title="Email template administration: the detailed design" data-parts="Introduction|Purpose and scope|Context|Containers|Components|Data model|Create|Edit and preview|Lifecycle|Liquid profile|Inert HTML|Traceability|Recap">
 
 <section id="title" data-part="0">
-  <div class="kicker">Email templates series · Video 22</div>
+  <div class="kicker">Email templates series · Video 27</div>
   <h1>Email template administration: the detailed design</h1>
   <p class="lead">C4 views, data model, sequences, rules and traceability</p>
 </section>
@@ -24,7 +24,7 @@
     <li>The rules: Liquid profile, inert HTML, required placeholders</li>
     <li>Requirements traceability</li>
   </ol>
-  <p class="small muted">Revised 2026-10-09: Liquid rendered with Fluid (ADR-016) · source of truth: <span class="file">docs/detailed-designs/administration/manage-email-templates/README.md</span></p>
+  <p class="small muted">Revised 2026-10-09: Liquid rendered with Fluid (ADR-017) · source of truth: <span class="file">docs/detailed-designs/administration/manage-email-templates/README.md</span></p>
 </section>
 
 <section id="purpose" data-part="1" data-cue="Saturdaze already drafts two account emails">
@@ -182,7 +182,7 @@
     <img src="../../detailed-designs/administration/manage-email-templates/diagrams/sequence-create.png" alt="Sequence: create or duplicate a template">
   </figure>
   <aside class="diagram-notes" style="--nx: 56px; --ny: 770px; --nw: 1808px">
-    <p><b>Create or duplicate</b> · New template (A8) or Duplicate (A9) → AD7 → <code>POST /api/admin/email-templates</code> · <code>L2-126</code>, <code>L2-130</code></p>
+    <p><b>Create or duplicate</b> · New template (A8) or Duplicate (A9) → AD7 → <code>POST /api/admin/email-templates</code> · <code>L2-132</code>, <code>L2-136</code></p>
   </aside>
 </section>
 
@@ -208,7 +208,7 @@
   </figure>
   <aside class="diagram-notes" style="--nx: 56px; --ny: 770px; --nw: 1808px">
     <p><b>Preview</b> (top) · debounce 300 ms → <code>EmailTemplateLiquid</code> checks → <code>CheckHtml</code> → <code>EmailTemplateRenderer</code>: sample data over built-ins, <code>HtmlEncoder</code>, <code>MaxSteps</code> 10 000 · nothing saved</p>
-    <p><b>Save</b> (bottom) · version check, then the same checks plus required placeholders · <code>L2-127</code>, <code>L2-128</code>, <code>L2-130</code></p>
+    <p><b>Save</b> (bottom) · version check, then the same checks plus required placeholders · <code>L2-133</code>, <code>L2-134</code>, <code>L2-136</code></p>
   </aside>
 </section>
 
@@ -234,7 +234,7 @@
     <img src="../../detailed-designs/administration/manage-email-templates/diagrams/sequence-lifecycle-history.png" alt="Sequence: change status, delete and restore a revision">
   </figure>
   <aside class="diagram-notes" style="--nx: 56px; --ny: 820px; --nw: 1808px">
-    <p><b>Status</b> <code>POST …/{id}/status { status, version }</code> · system template stays Active, else 400 <code>system_template</code> · stale → 409 · <code>L2-129</code>, <code>L2-130</code></p>
+    <p><b>Status</b> <code>POST …/{id}/status { status, version }</code> · system template stays Active, else 400 <code>system_template</code> · stale → 409 · <code>L2-135</code>, <code>L2-136</code></p>
   </aside>
 </section>
 
@@ -262,7 +262,7 @@
 </section>
 
 <section id="adr" data-part="9" data-cue="Now the rules.">
-  <h2>ADR-016: Liquid, rendered with Fluid</h2>
+  <h2>ADR-017: Liquid, rendered with Fluid</h2>
   <div class="cols">
     <div class="card"><h3>Why Liquid</h3><p class="small">Widely known (Shopify, Jekyll, many email platforms), designed for untrusted authors, and plain <code>{{name}}</code> placeholders are already valid Liquid.</p></div>
     <div class="card sky"><h3>What it adds</h3>
@@ -273,11 +273,11 @@
       </ul>
     </div>
   </div>
-  <p class="small muted"><code>Fluid.Core</code>, pinned in <code>Directory.Packages.props</code> (ADR-004) · <span class="file">docs/adr/ADR-016-liquid-email-templates.md</span></p>
+  <p class="small muted"><code>Fluid.Core</code>, pinned in <code>Directory.Packages.props</code> (ADR-004) · <span class="file">docs/adr/ADR-017-liquid-email-templates.md</span></p>
 </section>
 
 <section id="profile" data-part="9" data-cue="The design restricts it.">
-  <h2>The restricted profile (L2-131)</h2>
+  <h2>The restricted profile (L2-137)</h2>
   <table class="grid small">
     <tr><th>Rule</th><th>Refused example</th><th>Code</th></tr>
     <tr><td>Standard tags and Fluid's standard filters</td><td><code>{{ note | shout }}</code></td><td><code>invalid_template</code></td></tr>
@@ -337,24 +337,24 @@
 </section>
 
 <section id="trace" data-part="11" data-cue="Everything traces to one capability">
-  <h2>L1-037, refined by L2-124 to L2-131</h2>
+  <h2>L1-038, refined by L2-130 to L2-137</h2>
   <table class="grid small">
     <tr><th>L2</th><th>Also refines</th><th>Covers</th></tr>
-    <tr><td><code>L2-124</code></td><td>L1-017 CLI</td><td>Store templates, seed the system templates</td></tr>
-    <tr><td><code>L2-125</code></td><td>L1-011 responsive</td><td>List and find (A8)</td></tr>
-    <tr><td><code>L2-126</code></td><td>—</td><td>Create and duplicate (AD7)</td></tr>
-    <tr><td><code>L2-127</code></td><td>L1-012 security</td><td>Edit safely (A9)</td></tr>
-    <tr><td><code>L2-128</code></td><td>L1-012, L1-014 accessibility</td><td>Preview with sample data</td></tr>
-    <tr><td><code>L2-129</code></td><td>—</td><td>Activate, archive, restore, delete (AD8)</td></tr>
-    <tr><td><code>L2-130</code></td><td>L1-015 observability</td><td>Revision history (AD9)</td></tr>
-    <tr><td><code>L2-131</code></td><td>L1-012 security</td><td>Write templates in Liquid</td></tr>
+    <tr><td><code>L2-130</code></td><td>L1-017 CLI</td><td>Store templates, seed the system templates</td></tr>
+    <tr><td><code>L2-131</code></td><td>L1-011 responsive</td><td>List and find (A8)</td></tr>
+    <tr><td><code>L2-132</code></td><td>—</td><td>Create and duplicate (AD7)</td></tr>
+    <tr><td><code>L2-133</code></td><td>L1-012 security</td><td>Edit safely (A9)</td></tr>
+    <tr><td><code>L2-134</code></td><td>L1-012, L1-014 accessibility</td><td>Preview with sample data</td></tr>
+    <tr><td><code>L2-135</code></td><td>—</td><td>Activate, archive, restore, delete (AD8)</td></tr>
+    <tr><td><code>L2-136</code></td><td>L1-015 observability</td><td>Revision history (AD9)</td></tr>
+    <tr><td><code>L2-137</code></td><td>L1-012 security</td><td>Write templates in Liquid</td></tr>
   </table>
 </section>
 
 <section id="tests" data-part="11" data-cue="The sequence diagrams carry these IDs on their arrows">
   <h2>From criteria to tests</h2>
   <ul class="small">
-    <li>Arrows cite criteria: <i>409, offer reload (L2-127 AC2)</i></li>
+    <li>Arrows cite criteria: <i>409, offer reload (L2-133 AC2)</i></li>
     <li>API integration tests: <span class="file">Saturdaze.Api.Tests/Admin/EmailTemplates/</span></li>
     <li>Seeder: <span class="file">Saturdaze.Cli.Tests</span>, insert-only</li>
     <li>Playwright: <span class="file">e2e/tests/admin/email-templates.spec.ts</span></li>
@@ -373,14 +373,14 @@
   </div>
 </section>
 
-<section id="next" data-part="12" data-cue="ADR sixteen also records that video twenty">
+<section id="next" data-part="12" data-cue="ADR seventeen also records that video twenty-five">
   <h2>Where to read more</h2>
   <ul>
     <li><span class="file">docs/detailed-designs/administration/manage-email-templates/</span></li>
-    <li><span class="file">docs/adr/ADR-016-liquid-email-templates.md</span></li>
-    <li><code>L1-037</code> in <span class="file">docs/specs/L1.md</span> · <code>L2-124</code> to <code>L2-131</code> in <span class="file">docs/specs/L2.md</span></li>
+    <li><span class="file">docs/adr/ADR-017-liquid-email-templates.md</span></li>
+    <li><code>L1-038</code> in <span class="file">docs/specs/L1.md</span> · <code>L2-130</code> to <code>L2-137</code> in <span class="file">docs/specs/L2.md</span></li>
   </ul>
-  <p class="small muted">Video 20 shows the earlier placeholder syntax; ADR-016 says it should be re-recorded.</p>
+  <p class="small muted">Video 25 shows the earlier placeholder syntax; ADR-017 says it should be re-recorded.</p>
 </section>
 
 <script src="../assets/slides.js"></script>

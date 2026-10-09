@@ -8,7 +8,7 @@ namespace Saturdaze.Application.Admin.EmailTemplates;
 
 /// <summary>
 /// The one place that stamps a template change and writes its <see cref="EmailTemplateRevision"/>
-/// (L2-130): the administrator from the current request, the UTC time and a snapshot of the
+/// (L2-136): the administrator from the current request, the UTC time and a snapshot of the
 /// content at the template's (already incremented) version. The handler's save persists both.
 /// </summary>
 public sealed class EmailTemplateRevisionWriter

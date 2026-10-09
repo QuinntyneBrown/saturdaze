@@ -1,12 +1,12 @@
 // Acceptance Test
-// Traces to: L2-127
+// Traces to: L2-133
 // Description: A9 edits a template's content, keeps Save disabled until something changed, shows refusals, and offers a reload when someone else saved first.
 import { test, expect } from "../../fixtures/sd-test.js";
 import { createTemplate, saveSubjectOutOfBand } from "../../fixtures/email-templates.js";
 
 test.describe("Admin email template editor", () => {
   test("saving a changed subject bumps the version and disables Save again", async ({ page, request, signInAsAdmin, pages }) => {
-    // Traces to: L2-127 AC1, AC7
+    // Traces to: L2-133 AC1, AC7
     const admin = (await signInAsAdmin())!;
     const t = await createTemplate(request, admin);
     await page.goto(`/email-templates/${t.id}`);
@@ -29,7 +29,7 @@ test.describe("Admin email template editor", () => {
   });
 
   test("a script in the HTML body is refused with an explanation", async ({ page, request, signInAsAdmin, pages }) => {
-    // Traces to: L2-127 AC3, AC7
+    // Traces to: L2-133 AC3, AC7
     const admin = (await signInAsAdmin())!;
     const t = await createTemplate(request, admin);
     await page.goto(`/email-templates/${t.id}`);
@@ -44,7 +44,7 @@ test.describe("Admin email template editor", () => {
   });
 
   test("a stale copy says someone else changed the template and reloads theirs", async ({ page, request, signInAsAdmin, pages }) => {
-    // Traces to: L2-127 AC2, AC7
+    // Traces to: L2-133 AC2, AC7
     const admin = (await signInAsAdmin())!;
     const t = await createTemplate(request, admin);
     await page.goto(`/email-templates/${t.id}`);
@@ -63,7 +63,7 @@ test.describe("Admin email template editor", () => {
   });
 
   test("sample data is one JSON object saved with the template", async ({ page, request, signInAsAdmin, pages }) => {
-    // Traces to: L2-127 AC7, L2-124
+    // Traces to: L2-133 AC7, L2-130
     const admin = (await signInAsAdmin())!;
     const t = await createTemplate(request, admin);
     await page.goto(`/email-templates/${t.id}`);
@@ -81,7 +81,7 @@ test.describe("Admin email template editor", () => {
   });
 
   test("sample data that is not a JSON object is flagged and nothing is sent", async ({ page, request, signInAsAdmin, pages }) => {
-    // Traces to: L2-127 AC8
+    // Traces to: L2-133 AC8
     const admin = (await signInAsAdmin())!;
     const t = await createTemplate(request, admin);
     await page.goto(`/email-templates/${t.id}`);
@@ -107,7 +107,7 @@ test.describe("Admin email template editor", () => {
   });
 
   test("invalid Liquid is refused naming the field and position", async ({ page, request, signInAsAdmin, pages }) => {
-    // Traces to: L2-127 AC4, L2-131 AC1
+    // Traces to: L2-133 AC4, L2-137 AC1
     const admin = (await signInAsAdmin())!;
     const t = await createTemplate(request, admin);
     await page.goto(`/email-templates/${t.id}`);
@@ -121,7 +121,7 @@ test.describe("Admin email template editor", () => {
   });
 
   test("a system template explains why it stays active and keeps its link", async ({ goto, pages }) => {
-    // Traces to: L2-127 AC5
+    // Traces to: L2-133 AC5
     await goto("adminEmails");
     const list = pages.adminEmails;
     await list.waitForScreen("emails");

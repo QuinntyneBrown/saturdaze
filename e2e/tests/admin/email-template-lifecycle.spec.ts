@@ -1,12 +1,12 @@
 // Acceptance Test
-// Traces to: L2-129
+// Traces to: L2-135
 // Description: A9 activates, archives and restores a template, never offers Archive or Delete on a system template, and deletes through AD8.
 import { test, expect } from "../../fixtures/sd-test.js";
 import { createTemplate } from "../../fixtures/email-templates.js";
 
 test.describe("Admin email template lifecycle", () => {
   test("a draft is activated, archived and restored as a draft", async ({ page, request, signInAsAdmin, pages }) => {
-    // Traces to: L2-129 AC1, AC3, AC5
+    // Traces to: L2-135 AC1, AC3, AC5
     const admin = (await signInAsAdmin())!;
     const t = await createTemplate(request, admin);
     await page.goto(`/email-templates/${t.id}`);
@@ -31,7 +31,7 @@ test.describe("Admin email template lifecycle", () => {
   });
 
   test("a system template offers neither Archive nor Delete", async ({ goto, pages }) => {
-    // Traces to: L2-129 AC6
+    // Traces to: L2-135 AC6
     await goto("adminEmails");
     const list = pages.adminEmails;
     await list.waitForScreen("emails");
@@ -46,7 +46,7 @@ test.describe("Admin email template lifecycle", () => {
   });
 
   test("Delete confirms in AD8, sends one request and returns to the list", async ({ page, request, signInAsAdmin, pages }) => {
-    // Traces to: L2-129 AC4, AC7
+    // Traces to: L2-135 AC4, AC7
     const admin = (await signInAsAdmin())!;
     const t = await createTemplate(request, admin, { name: `Delete me ${Date.now().toString(36)}` });
     await page.goto(`/email-templates/${t.id}`);

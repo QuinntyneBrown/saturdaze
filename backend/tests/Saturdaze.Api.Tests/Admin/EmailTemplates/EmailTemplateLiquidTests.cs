@@ -1,5 +1,5 @@
 // Acceptance Test
-// Traces to: L2-131
+// Traces to: L2-137
 // Description: Templates are Liquid rendered with Fluid under a restricted profile: no unknown filters, no include or render, no raw in the HTML body, a step limit, and JSON object sample data.
 using System.Net;
 using System.Net.Http.Json;
@@ -39,7 +39,7 @@ public class EmailTemplateLiquidTests : IClassFixture<SaturdazeApiFactory>
     [Fact]
     public async Task A_syntax_error_names_the_field_line_and_column()
     {
-        // Traces to: L2-131 AC1
+        // Traces to: L2-137 AC1
         var problem = await Problem(await Preview(Content(subject: "Hi {{ first name }}")), "invalid_template");
         problem.GetProperty("detail").GetString().Should().StartWith("Subject:").And.MatchRegex(@"\(1:\d+\)");
     }
@@ -47,7 +47,7 @@ public class EmailTemplateLiquidTests : IClassFixture<SaturdazeApiFactory>
     [Fact]
     public async Task An_unknown_filter_is_refused_by_name()
     {
-        // Traces to: L2-131 AC2
+        // Traces to: L2-137 AC2
         var problem = await Problem(await Preview(Content(html: "<p>{{ note | shout }}</p>")), "invalid_template");
         problem.GetProperty("detail").GetString().Should().StartWith("HTML body:").And.Contain("shout");
     }
@@ -57,14 +57,14 @@ public class EmailTemplateLiquidTests : IClassFixture<SaturdazeApiFactory>
     [InlineData("{% render 'footer' %}")]
     public async Task Include_and_render_are_refused(string body)
     {
-        // Traces to: L2-131 AC3
+        // Traces to: L2-137 AC3
         await Problem(await Preview(Content(text: body)), "invalid_template");
     }
 
     [Fact]
     public async Task Raw_is_refused_in_the_html_body_and_allowed_in_the_text_body()
     {
-        // Traces to: L2-131 AC4
+        // Traces to: L2-137 AC4
         await Problem(await Preview(Content(html: "<p>{{ note | raw }}</p>")), "unsafe_html");
 
         var res = await Preview(Content(text: "{{ note | raw }}", samples: new Dictionary<string, object> { ["note"] = "<b>x</b>" }));
@@ -76,7 +76,7 @@ public class EmailTemplateLiquidTests : IClassFixture<SaturdazeApiFactory>
     [Fact]
     public async Task A_template_that_takes_too_many_steps_is_refused()
     {
-        // Traces to: L2-131 AC5
+        // Traces to: L2-137 AC5
         var problem = await Problem(await Preview(Content(text: "{% for i in (1..100000) %}{{ i }}{% endfor %}")), "invalid_template");
         problem.GetProperty("detail").GetString().Should().StartWith("Plain-text body:").And.Contain("too many steps");
     }
@@ -94,7 +94,7 @@ public class EmailTemplateLiquidTests : IClassFixture<SaturdazeApiFactory>
     [MemberData(nameof(BadSampleData))]
     public async Task Sample_data_must_be_a_small_object_of_liquid_names(string sampleData)
     {
-        // Traces to: L2-131 AC6
+        // Traces to: L2-137 AC6
         var admin = await SignedInClient.CreateAsync(_factory, role: UserRole.Admin);
         var json = $$"""{ "subject": "Hi", "preheader": "", "htmlBody": "<p>Hi</p>", "textBody": "Hi", "sampleData": {{sampleData}} }""";
         var res = await admin.Client.PostAsync(Route, new StringContent(json, System.Text.Encoding.UTF8, "application/json"));
@@ -108,7 +108,7 @@ public class EmailTemplateLiquidTests : IClassFixture<SaturdazeApiFactory>
     [InlineData("account.password-reset", "resetLink")]
     public async Task The_seeded_system_templates_render_unchanged(string key, string link)
     {
-        // Traces to: L2-131 AC7
+        // Traces to: L2-137 AC7
         var admin = await SignedInClient.CreateAsync(_factory, role: UserRole.Admin);
         var t = await EmailTemplateApi.Get(admin.Client, await EmailTemplateApi.IdOf(admin.Client, key));
         var sample = t.GetProperty("sampleData").GetProperty(link).GetString()!;

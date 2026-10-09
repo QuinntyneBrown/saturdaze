@@ -80,7 +80,7 @@ export interface EmailTemplateView extends EmailTemplateDto {
 /** Lowercase letters and digits in words joined by dots or hyphens (the API's key rule). */
 export const EMAIL_TEMPLATE_KEY_PATTERN = /^[a-z0-9]+(?:[.-][a-z0-9]+)*$/;
 
-/** "Birthday wishes!" → "birthday-wishes": the key AD7 suggests from a name (L2-126 AC5). */
+/** "Birthday wishes!" → "birthday-wishes": the key AD7 suggests from a name (L2-132 AC5). */
 export function suggestTemplateKey(name: string): string {
   return name
     .normalize('NFKD')
@@ -97,7 +97,7 @@ export function categoryLabel(category: EmailTemplateCategory): string {
 }
 
 /**
- * Reads the editor's sample data text (L2-127 AC8): the parsed JSON object, or
+ * Reads the editor's sample data text (L2-133 AC8): the parsed JSON object, or
  * `null` when the text is not a JSON object. Blank text is an empty object.
  */
 export function parseSampleData(text: string): EmailSampleData | null {

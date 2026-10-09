@@ -1,4 +1,4 @@
-// Screen recordings for video 19 (tools/video-record/record-clips.mjs). Runs against
+// Screen recordings for video 24 (tools/video-record/record-clips.mjs). Runs against
 // Saturdaze Admin and the API with the email template demo data (tools/video-record/email-demo).
 // Record after a reset: the clips create templates.
 export const config = {
@@ -32,7 +32,7 @@ async function select(t, label, option) {
 }
 
 export const clips = {
-  /** The Email templates screen: rows, chips, filters and search (L2-125). */
+  /** The Email templates screen: rows, chips, filters and search (L2-131). */
   async list(t) {
     await t.wait(900);
     await t.click(t.page.locator('.admin-nav__link[data-nav="emails"]'));
@@ -54,7 +54,7 @@ export const clips = {
     await t.wait(2800);
   },
 
-  /** New template: the key follows the name; a draft opens with starter content (L2-126). */
+  /** New template: the key follows the name; a draft opens with starter content (L2-132). */
   async new(t) {
     await t.wait(1500);
     await t.click(t.page.getByRole('button', { name: 'New template' }));
@@ -80,7 +80,7 @@ export const clips = {
     await t.wait(2600);
   },
 
-  /** A key that is taken is refused in the dialog (L2-126 AC4). */
+  /** A key that is taken is refused in the dialog (L2-132 AC4). */
   async taken(t) {
     await t.wait(1200);
     await t.click(t.page.getByRole('button', { name: 'New template' }));
@@ -99,7 +99,7 @@ export const clips = {
     await t.hover(dialog(t).locator('[role="alert"]'), 3200);
   },
 
-  /** Duplicate: a new draft with the content, the category fixed, no system flag (L2-126 AC3). */
+  /** Duplicate: a new draft with the content, the category fixed, no system flag (L2-132 AC3). */
   async duplicate(t) {
     await t.wait(1200);
     await t.click(row(t, 'Verify your email').locator('a.list__item'));

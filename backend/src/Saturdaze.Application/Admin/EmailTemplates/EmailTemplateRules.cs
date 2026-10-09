@@ -4,8 +4,8 @@ using Saturdaze.Application.Exceptions;
 namespace Saturdaze.Application.Admin.EmailTemplates;
 
 /// <summary>
-/// The checks every template's key and content pass (L2-126, L2-127, L2-128). Content is Liquid
-/// (ADR-016), checked through <see cref="EmailTemplateLiquid"/>; this class adds the HTML deny-list
+/// The checks every template's key and content pass (L2-132, L2-133, L2-134). Content is Liquid
+/// (ADR-017), checked through <see cref="EmailTemplateLiquid"/>; this class adds the HTML deny-list
 /// and the required variables.
 /// </summary>
 public static partial class EmailTemplateRules
@@ -34,7 +34,7 @@ public static partial class EmailTemplateRules
     public static bool IsVariableName(string name) => VariableName().IsMatch(name);
 
     /// <summary>
-    /// Checks the four fields as a save or preview does: valid Liquid under ADR-016's profile, then
+    /// Checks the four fields as a save or preview does: valid Liquid under ADR-017's profile, then
     /// the HTML deny-list. Returns what each body reads, for <see cref="CheckRequired"/>.
     /// </summary>
     public static (LiquidAnalysis Html, LiquidAnalysis Text) CheckContent(
@@ -49,7 +49,7 @@ public static partial class EmailTemplateRules
     }
 
     /// <summary>
-    /// Refuses HTML that could run script or post data (L2-127 AC3): forbidden elements, an
+    /// Refuses HTML that could run script or post data (L2-133 AC3): forbidden elements, an
     /// <c>on…=</c> event attribute, or a <c>javascript:</c>, <c>vbscript:</c> or <c>data:text/html</c>
     /// address inside a tag. Text between tags is not inspected.
     /// </summary>
@@ -73,7 +73,7 @@ public static partial class EmailTemplateRules
         }
     }
 
-    /// <summary>Refuses a body that no longer reads a required variable with <c>missing_placeholder</c> (L2-127 AC5).</summary>
+    /// <summary>Refuses a body that no longer reads a required variable with <c>missing_placeholder</c> (L2-133 AC5).</summary>
     public static void CheckRequired(IReadOnlyList<string> required, LiquidAnalysis html, LiquidAnalysis text)
     {
         foreach (var name in required)

@@ -7,8 +7,8 @@ using Saturdaze.Application.Admin.EmailTemplates;
 namespace Saturdaze.Api.Controllers;
 
 /// <summary>
-/// Saturdaze Admin's email template endpoints (L1-037). Every action requires the Admin
-/// policy on top of the authenticated fallback (L2-125 AC1); business rules live in the
+/// Saturdaze Admin's email template endpoints (L1-038). Every action requires the Admin
+/// policy on top of the authenticated fallback (L2-131 AC1); business rules live in the
 /// <c>Admin/EmailTemplates</c> handlers.
 /// </summary>
 [ApiController]
@@ -20,20 +20,20 @@ public sealed class AdminEmailTemplatesController : ControllerBase
 
     public AdminEmailTemplatesController(ISender sender) => _sender = sender;
 
-    /// <summary>Every template ordered by name, filtered by category, status and a search (L2-125).</summary>
+    /// <summary>Every template ordered by name, filtered by category, status and a search (L2-131).</summary>
     [HttpGet]
     public async Task<ActionResult<IReadOnlyList<EmailTemplateSummaryDto>>> List(
         [FromQuery] string? q, [FromQuery] string? category, [FromQuery] string? status, CancellationToken ct)
         => Ok(await _sender.Send(new ListEmailTemplatesQuery(q, category, status), ct));
 
-    /// <summary>One template with its content and required placeholders (L2-127).</summary>
+    /// <summary>One template with its content and required placeholders (L2-133).</summary>
     [HttpGet("{id:guid}")]
     public async Task<ActionResult<EmailTemplateDto>> Get(Guid id, CancellationToken ct)
         => Ok(await _sender.Send(new GetEmailTemplateQuery(id), ct));
 
     public record CreateTemplateRequest(string? Key, string? Name, string? Description, string? Category, Guid? DuplicateOf);
 
-    /// <summary>A new draft from the category's starter, or a duplicate of <c>duplicateOf</c> (L2-126).</summary>
+    /// <summary>A new draft from the category's starter, or a duplicate of <c>duplicateOf</c> (L2-132).</summary>
     [HttpPost]
     public async Task<ActionResult<EmailTemplateDto>> Create([FromBody] CreateTemplateRequest req, CancellationToken ct)
     {
@@ -48,7 +48,7 @@ public sealed class AdminEmailTemplatesController : ControllerBase
         string? Name, string? Description, string? Subject, string? Preheader,
         string? HtmlBody, string? TextBody, JsonElement? SampleData, int Version);
 
-    /// <summary>Saves the content when <c>version</c> is current (L2-127).</summary>
+    /// <summary>Saves the content when <c>version</c> is current (L2-133).</summary>
     [HttpPut("{id:guid}")]
     [RequestSizeLimit(ContentRequestLimit)]
     public async Task<ActionResult<EmailTemplateDto>> Save(Guid id, [FromBody] SaveTemplateRequest req, CancellationToken ct)
@@ -58,7 +58,7 @@ public sealed class AdminEmailTemplatesController : ControllerBase
     public record PreviewRequest(
         string? Subject, string? Preheader, string? HtmlBody, string? TextBody, JsonElement? SampleData);
 
-    /// <summary>Renders unsaved content with sample data; nothing is saved (L2-128).</summary>
+    /// <summary>Renders unsaved content with sample data; nothing is saved (L2-134).</summary>
     [HttpPost("preview")]
     [RequestSizeLimit(ContentRequestLimit)]
     public async Task<ActionResult<EmailPreviewDto>> Preview([FromBody] PreviewRequest req, CancellationToken ct)
@@ -66,12 +66,12 @@ public sealed class AdminEmailTemplatesController : ControllerBase
 
     public record StatusRequest(string? Status, int Version);
 
-    /// <summary>Activates, archives or restores a template as a draft; a system template stays active (L2-129).</summary>
+    /// <summary>Activates, archives or restores a template as a draft; a system template stays active (L2-135).</summary>
     [HttpPost("{id:guid}/status")]
     public async Task<ActionResult<EmailTemplateDto>> SetStatus(Guid id, [FromBody] StatusRequest req, CancellationToken ct)
         => Ok(await _sender.Send(new ChangeEmailTemplateStatusCommand(id, req.Status, req.Version), ct));
 
-    /// <summary>Deletes a non-system template and its revisions (L2-129).</summary>
+    /// <summary>Deletes a non-system template and its revisions (L2-135).</summary>
     [HttpDelete("{id:guid}")]
     public async Task<IActionResult> Delete(Guid id, CancellationToken ct)
     {
@@ -79,12 +79,12 @@ public sealed class AdminEmailTemplatesController : ControllerBase
         return NoContent();
     }
 
-    /// <summary>The template's revisions, newest first (L2-130).</summary>
+    /// <summary>The template's revisions, newest first (L2-136).</summary>
     [HttpGet("{id:guid}/revisions")]
     public async Task<ActionResult<IReadOnlyList<EmailTemplateRevisionSummaryDto>>> Revisions(Guid id, CancellationToken ct)
         => Ok(await _sender.Send(new ListEmailTemplateRevisionsQuery(id), ct));
 
-    /// <summary>One revision's full content, to load into the editor (L2-130).</summary>
+    /// <summary>One revision's full content, to load into the editor (L2-136).</summary>
     [HttpGet("{id:guid}/revisions/{version:int}")]
     public async Task<ActionResult<EmailTemplateRevisionDto>> Revision(Guid id, int version, CancellationToken ct)
         => Ok(await _sender.Send(new GetEmailTemplateRevisionQuery(id, version), ct));

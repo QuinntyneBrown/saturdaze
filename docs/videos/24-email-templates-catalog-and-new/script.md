@@ -1,4 +1,4 @@
-# 19 · Email templates: the catalog and new templates
+# 24 · Email templates: the catalog and new templates
 
 Video eighteen ended on a gap: Saturdaze drafts account emails, but the wording lives in no place an administrator can see or change. More email is coming, too: scheduled weekend digests, notifications, birthday and holiday greetings, and marketing. This video is the first of three on email templates in Saturdaze Admin. It covers what a template is, the two system templates the platform ships with, the Email templates screen, and how a new template is created or duplicated. Recorded against the email demo data, as of October 2026. One honest note first: templates are ready, but nothing sends them yet. A sender is a later capability.
 
@@ -8,7 +8,7 @@ An email template is named, categorised email content. It has a subject, a prehe
 
 Three properties decide how a template is used. The key is how a sender finds it, such as `account.password-reset`. It is lowercase words joined by dots or hyphens, at most a hundred characters, unique, and it never changes after creation. The category says what the template is for: account, notification, scheduled, special occasion, or marketing. It is fixed at creation too. And the status is the lifecycle: draft while it is being written, active when senders may use it, archived when it is retired but kept.
 
-Every template also carries sample data for the preview, a system flag, and a version number that starts at one and goes up with every change. That number does two jobs, which video twenty covers: it orders the history, and it stops two administrators from overwriting each other.
+Every template also carries sample data for the preview, a system flag, and a version number that starts at one and goes up with every change. That number does two jobs, which video twenty-five covers: it orders the history, and it stops two administrators from overwriting each other.
 
 ## The system templates
 
@@ -48,4 +48,4 @@ Things to remember.
 - New template suggests the key from the name and starts from content suited to the category; marketing always carries an unsubscribe link.
 - Duplicate copies the content into a new, ordinary draft.
 
-Next, video twenty opens the editor: placeholders and sample data, the live preview, the rules that keep the HTML safe, and what happens when two administrators edit at once.
+Next, video twenty-five opens the editor: placeholders and sample data, the live preview, the rules that keep the HTML safe, and what happens when two administrators edit at once.

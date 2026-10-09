@@ -1,12 +1,12 @@
-# 21 · Email template lifecycle and history
+# 26 · Email template lifecycle and history
 
-> **Runtime:** ~6.1 min · **Audience:** administrators and developers of Saturdaze Admin · **Prerequisites:** videos 19 and 20
+> **Runtime:** ~6.1 min · **Audience:** administrators and developers of Saturdaze Admin · **Prerequisites:** videos 24 and 25
 
-**Video:** [21-email-template-lifecycle-and-history.mp4](21-email-template-lifecycle-and-history.mp4) · [Slides](slides.html) · **Audio:** [21-email-template-lifecycle-and-history.mp3](21-email-template-lifecycle-and-history.mp3) · [Transcript](script.md) · [Clips](clips/clips.mjs)
+**Video:** [26-email-template-lifecycle-and-history.mp4](26-email-template-lifecycle-and-history.mp4) · [Slides](slides.html) · **Audio:** [26-email-template-lifecycle-and-history.mp3](26-email-template-lifecycle-and-history.mp3) · [Transcript](script.md) · [Clips](clips/clips.mjs)
 
 ## Why this video exists
 
-A template moves from draft to active to archived, can be deleted, and keeps a revision for every change (L2-129, L2-130). This last video of the series shows those flows in A9, AD8 and AD9, the rules the API enforces for system templates, and the contract a future sender will rely on.
+A template moves from draft to active to archived, can be deleted, and keeps a revision for every change (L2-135, L2-136). This last video of the series shows those flows in A9, AD8 and AD9, the rules the API enforces for system templates, and the contract a future sender will rely on.
 
 ## Learning objectives
 
@@ -56,7 +56,7 @@ By the end, the viewer can:
 ```sh
 export SD_EMAIL_DEMO_CONNECTION="…;Database=SaturdazeEmailDemo;…"
 export SD_DEMO_RESET="node tools/video-record/email-demo/reset.mjs"
-node tools/video-record/record-clips.mjs docs/videos/21-email-template-lifecycle-and-history
+node tools/video-record/record-clips.mjs docs/videos/26-email-template-lifecycle-and-history
 ```
 
 ## Pitfalls
@@ -67,5 +67,5 @@ node tools/video-record/record-clips.mjs docs/videos/21-email-template-lifecycle
 
 ## References
 
-- `docs/specs/L2.md` (L2-129, L2-130); `docs/detailed-designs/administration/manage-email-templates/README.md`
+- `docs/specs/L2.md` (L2-135, L2-136); `docs/detailed-designs/administration/manage-email-templates/README.md`
 - Mocks: `docs/mocks/pages/admin.email.html`, `docs/mocks/pages/dialogs.html#dialog-admin-delete-template`, `#dialog-admin-template-history`

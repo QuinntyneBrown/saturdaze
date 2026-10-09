@@ -1,5 +1,5 @@
 // Acceptance Test
-// Traces to: L2-130
+// Traces to: L2-136
 // Description: every create, save and status change writes a revision; the history lists them newest first and returns one revision's content.
 using System.Net;
 using System.Net.Http.Json;
@@ -37,7 +37,7 @@ public class EmailTemplateRevisionTests : IClassFixture<SaturdazeApiFactory>
     [Fact]
     public async Task Create_two_saves_and_an_activation_list_four_revisions_newest_first()
     {
-        // Traces to: L2-130 AC1, AC2
+        // Traces to: L2-136 AC1, AC2
         var admin = await SignedInClient.CreateAsync(_factory, role: UserRole.Admin);
         var t = await EmailTemplateApi.CreateOk(admin.Client);
         var id = t.GetProperty("id").GetGuid();
@@ -70,7 +70,7 @@ public class EmailTemplateRevisionTests : IClassFixture<SaturdazeApiFactory>
     [Fact]
     public async Task The_seeded_first_revision_names_the_seeder()
     {
-        // Traces to: L2-130
+        // Traces to: L2-136
         var admin = await SignedInClient.CreateAsync(_factory, role: UserRole.Admin);
         var id = await EmailTemplateApi.IdOf(admin.Client, "account.password-reset");
         var rows = JsonDocument.Parse(await admin.Client.GetStringAsync($"{EmailTemplateApi.Route}/{id}/revisions")).RootElement
@@ -83,7 +83,7 @@ public class EmailTemplateRevisionTests : IClassFixture<SaturdazeApiFactory>
     [Fact]
     public async Task An_unknown_version_or_template_is_404()
     {
-        // Traces to: L2-130 AC3
+        // Traces to: L2-136 AC3
         var admin = await SignedInClient.CreateAsync(_factory, role: UserRole.Admin);
         var id = (await EmailTemplateApi.CreateOk(admin.Client)).GetProperty("id").GetGuid();
         (await admin.Client.GetAsync($"{EmailTemplateApi.Route}/{id}/revisions/9")).StatusCode.Should().Be(HttpStatusCode.NotFound);

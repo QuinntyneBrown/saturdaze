@@ -31,7 +31,7 @@ export type NewTemplateDialogResult = string;
 /**
  * AD7 — New email template (docs/mocks/pages/dialogs.html#dialog-admin-new-template),
  * also the Duplicate flow from A9. Name, key, category and description; the
- * key follows the name until it is edited (L2-126 AC5). A taken key or a
+ * key follows the name until it is edited (L2-132 AC5). A taken key or a
  * field error shows in place and keeps the dialog open (AC4).
  */
 @Component({

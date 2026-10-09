@@ -1,12 +1,12 @@
-# 19 · Email templates: the catalog and new templates
+# 24 · Email templates: the catalog and new templates
 
 > **Runtime:** ~6.7 min · **Audience:** administrators and developers of Saturdaze Admin · **Prerequisites:** video 12 (the admin app); video 18 helps (account emails)
 
-**Video:** [19-email-templates-catalog-and-new.mp4](19-email-templates-catalog-and-new.mp4) · [Slides](slides.html) · **Audio:** [19-email-templates-catalog-and-new.mp3](19-email-templates-catalog-and-new.mp3) · [Transcript](script.md) · [Clips](clips/clips.mjs)
+**Video:** [24-email-templates-catalog-and-new.mp4](24-email-templates-catalog-and-new.mp4) · [Slides](slides.html) · **Audio:** [24-email-templates-catalog-and-new.mp3](24-email-templates-catalog-and-new.mp3) · [Transcript](script.md) · [Clips](clips/clips.mjs)
 
 ## Why this video exists
 
-Saturdaze Admin now manages the email templates Saturdaze sends (L1-037). This first video of three explains what a template is, the two system templates `saturdaze seed` creates (L2-124), the Email templates screen (A8, L2-125), and creating or duplicating a template through AD7 (L2-126).
+Saturdaze Admin now manages the email templates Saturdaze sends (L1-038). This first video of three explains what a template is, the two system templates `saturdaze seed` creates (L2-130), the Email templates screen (A8, L2-131), and creating or duplicating a template through AD7 (L2-132).
 
 ## Learning objectives
 
@@ -56,7 +56,7 @@ By the end, the viewer can:
 # A separate demo database; the API under recording must use the same one.
 export SD_EMAIL_DEMO_CONNECTION="Server=(localdb)\\MSSQLLocalDB;Database=SaturdazeEmailDemo;Trusted_Connection=True;TrustServerCertificate=True"
 export SD_DEMO_RESET="node tools/video-record/email-demo/reset.mjs"
-node tools/video-record/record-clips.mjs docs/videos/19-email-templates-catalog-and-new
+node tools/video-record/record-clips.mjs docs/videos/24-email-templates-catalog-and-new
 ```
 
 See `tools/video-record/email-demo/README.md` for starting the API against the demo database.
@@ -69,5 +69,5 @@ See `tools/video-record/email-demo/README.md` for starting the API against the d
 
 ## References
 
-- `docs/specs/L2.md` (L2-124 to L2-126); `docs/detailed-designs/administration/manage-email-templates/README.md`
+- `docs/specs/L2.md` (L2-130 to L2-132); `docs/detailed-designs/administration/manage-email-templates/README.md`
 - Mocks: `docs/mocks/pages/admin.emails.html`, `docs/mocks/pages/dialogs.html#dialog-admin-new-template`

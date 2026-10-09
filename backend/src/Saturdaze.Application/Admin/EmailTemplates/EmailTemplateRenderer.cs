@@ -13,10 +13,10 @@ public sealed class EmailPreviewOptions
     public string AppUrl { get; set; } = "https://saturdaze.app";
 }
 
-/// <summary>One placeholder of a rendered preview: its value and where it came from (L2-128).</summary>
+/// <summary>One placeholder of a rendered preview: its value and where it came from (L2-134).</summary>
 public sealed record EmailPlaceholderDto(string Name, string Value, string Source);
 
-/// <summary>A template rendered with sample data (L2-128).</summary>
+/// <summary>A template rendered with sample data (L2-134).</summary>
 public sealed record EmailPreviewDto(
     string Subject,
     string Preheader,
@@ -25,7 +25,7 @@ public sealed record EmailPreviewDto(
     IReadOnlyList<EmailPlaceholderDto> Placeholders);
 
 /// <summary>
-/// Renders template content as Liquid (L2-128, ADR-016). The context holds the built-in samples
+/// Renders template content as Liquid (L2-134, ADR-017). The context holds the built-in samples
 /// with the sample data over them; a variable with neither renders empty. The HTML body is
 /// rendered with <see cref="HtmlEncoder.Default"/>, so every value written into it is encoded; the
 /// subject, preheader and text body take values as written. No database access, so a sender can

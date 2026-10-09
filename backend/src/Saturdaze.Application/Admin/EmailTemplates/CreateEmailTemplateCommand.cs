@@ -8,7 +8,7 @@ using Saturdaze.Domain.Enums;
 
 namespace Saturdaze.Application.Admin.EmailTemplates;
 
-/// <summary>Creates a draft from the category's starter, or from <paramref name="DuplicateOf"/>'s content (L2-126).</summary>
+/// <summary>Creates a draft from the category's starter, or from <paramref name="DuplicateOf"/>'s content (L2-132).</summary>
 public sealed record CreateEmailTemplateCommand(
     string? Key, string? Name, string? Description, string? Category, Guid? DuplicateOf = null) : IRequest<EmailTemplateDto>;
 

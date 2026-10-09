@@ -4,7 +4,7 @@ The data the email template videos (`docs/videos/19-…` to `21-…`) are record
 
 | Piece | What it is |
 |-------|-----------|
-| `SaturdazeEmailDemo` | `saturdaze reset` with the bundled seed, plus a second administrator (`jo.curator@saturdaze.app`), so it carries the two system templates (L2-124). |
+| `SaturdazeEmailDemo` | `saturdaze reset` with the bundled seed, plus a second administrator (`jo.curator@saturdaze.app`), so it carries the two system templates (L2-130). |
 | `reset.mjs` | Rebuilds the database, then stages a morning of template work through the real admin API as two administrators: `notify.weekend-ready` (written, revised by the second curator, activated), `schedule.weekly-digest` and `occasion.holidays` (drafts), and `promo.spring-sale` (activated, then archived). Every revision is genuine. |
 | `demo-env.mjs` | The API address, the two administrators and small API helpers the clips reuse (`token`, `call`, `idOf`, `save`, `setStatus`). |
 
@@ -33,7 +33,7 @@ export SD_DEMO_RESET="node tools/video-record/email-demo/reset.mjs"
 export SD_ADMIN_URL="http://localhost:4300"
 # Optional: an installed Chromium instead of Playwright's download.
 export CHROME_PATH=/path/to/chromium
-node tools/video-record/record-clips.mjs docs/videos/19-email-templates-catalog-and-new
+node tools/video-record/record-clips.mjs docs/videos/24-email-templates-catalog-and-new
 ```
 
 Then build the video as usual (`tools/video-audio`, `tools/video-build`; see `docs/videos/README.md`). Revision times and "updated" lines show the time of the recording, in UTC.

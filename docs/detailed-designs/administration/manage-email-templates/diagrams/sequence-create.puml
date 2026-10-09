@@ -27,7 +27,7 @@ end box
 actor -> page : New template, or Duplicate on A9
 page -> dialog : open (category fixed when duplicating)
 actor -> dialog : name "Birthday wishes"
-dialog --> actor : key suggestion birthday-wishes (L2-126 AC5)
+dialog --> actor : key suggestion birthday-wishes (L2-132 AC5)
 actor -> dialog : Create template
 dialog -> client : create({ key, name, description, category, duplicateOf? })
 client -> controller : POST /api/admin/email-templates
@@ -35,15 +35,15 @@ controller -> handler : CreateEmailTemplateCommand (validated: key pattern, name
 handler -> db : key exists?
 alt key exists
   handler --> controller : ConflictException template_key_exists
-  controller --> dialog : 409 (L2-126 AC4)
+  controller --> dialog : 409 (L2-132 AC4)
 else new key
   alt duplicateOf
-    handler -> db : load the source template (L2-126 AC3)
+    handler -> db : load the source template (L2-132 AC3)
   else starter
-    handler -> catalog : EmailTemplateStarters.For(category) (L2-126 AC2)
+    handler -> catalog : EmailTemplateStarters.For(category) (L2-132 AC2)
   end
   handler -> handler : Status = Draft, Version = 1, IsSystem = false
-  handler -> revisions : Write(template, Create) (L2-130)
+  handler -> revisions : Write(template, Create) (L2-136)
   handler -> db : SaveChangesAsync
   controller --> client : 201 EmailTemplateDto
   dialog --> page : created id

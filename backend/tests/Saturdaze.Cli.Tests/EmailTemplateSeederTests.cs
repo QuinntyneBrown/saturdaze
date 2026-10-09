@@ -1,5 +1,5 @@
 // Acceptance Test
-// Traces to: L2-124
+// Traces to: L2-130
 // Description: saturdaze seed creates the two system email templates when missing and never overwrites one that exists.
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
@@ -25,7 +25,7 @@ public class EmailTemplateSeederTests
     [Fact]
     public async Task Seed_creates_the_system_templates_active_at_version_1()
     {
-        // Traces to: L2-124 AC1
+        // Traces to: L2-130 AC1
         using var db = TestDb.Create();
 
         await CreateSut().SeedAsync(db, Bundled(), default);
@@ -53,7 +53,7 @@ public class EmailTemplateSeederTests
     [Fact]
     public async Task Seed_keeps_an_administrators_edit()
     {
-        // Traces to: L2-124 AC2
+        // Traces to: L2-130 AC2
         using var db = TestDb.Create();
         await CreateSut().SeedAsync(db, Bundled(), default);
         await db.SaveChangesAsync();
@@ -74,7 +74,7 @@ public class EmailTemplateSeederTests
     [Fact]
     public async Task Seeding_twice_leaves_one_template_per_key()
     {
-        // Traces to: L2-124 AC3
+        // Traces to: L2-130 AC3
         using var db = TestDb.Create();
         await CreateSut().SeedAsync(db, Bundled(), default);
         await db.SaveChangesAsync();

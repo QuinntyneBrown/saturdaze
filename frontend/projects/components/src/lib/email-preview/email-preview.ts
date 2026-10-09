@@ -32,7 +32,7 @@ const SOURCE: Record<EmailPreviewPlaceholder['source'], { tone: ChipTone; label:
 };
 
 /**
- * What a recipient would see (L2-128). Mirrors `.email-preview` in
+ * What a recipient would see (L2-134). Mirrors `.email-preview` in
  * docs/mocks/pages/admin.email.html: the subject and preheader as an inbox
  * line, the rendered HTML in an `<iframe sandbox>` that allows neither
  * scripts nor same-origin access (600 px wide on Desktop, 375 px on Phone),

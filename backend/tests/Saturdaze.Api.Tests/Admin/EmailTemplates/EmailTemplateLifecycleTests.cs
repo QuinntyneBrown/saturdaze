@@ -1,5 +1,5 @@
 // Acceptance Test
-// Traces to: L2-129
+// Traces to: L2-135
 // Description: POST .../status moves a template between Draft, Active and Archived with a version check; system templates stay active and cannot be deleted; DELETE removes a non-system template.
 using System.Net;
 using System.Net.Http.Json;
@@ -30,7 +30,7 @@ public class EmailTemplateLifecycleTests : IClassFixture<SaturdazeApiFactory>
     [Fact]
     public async Task Activating_a_draft_increments_its_version()
     {
-        // Traces to: L2-129 AC1
+        // Traces to: L2-135 AC1
         var admin = await Admin();
         var t = await EmailTemplateApi.CreateOk(admin.Client);
         var id = t.GetProperty("id").GetGuid();
@@ -46,7 +46,7 @@ public class EmailTemplateLifecycleTests : IClassFixture<SaturdazeApiFactory>
     [Fact]
     public async Task A_system_template_stays_active_and_cannot_be_deleted()
     {
-        // Traces to: L2-129 AC2
+        // Traces to: L2-135 AC2
         var admin = await Admin();
         var id = await EmailTemplateApi.IdOf(admin.Client, "account.verify-email");
         var version = (await EmailTemplateApi.Get(admin.Client, id)).GetProperty("version").GetInt32();
@@ -68,7 +68,7 @@ public class EmailTemplateLifecycleTests : IClassFixture<SaturdazeApiFactory>
     [Fact]
     public async Task An_archived_template_can_be_restored_as_a_draft()
     {
-        // Traces to: L2-129 AC3
+        // Traces to: L2-135 AC3
         var admin = await Admin();
         var id = (await EmailTemplateApi.CreateOk(admin.Client)).GetProperty("id").GetGuid();
         (await SetStatus(admin.Client, id, "Active", 1)).StatusCode.Should().Be(HttpStatusCode.OK);
@@ -82,7 +82,7 @@ public class EmailTemplateLifecycleTests : IClassFixture<SaturdazeApiFactory>
     [Fact]
     public async Task A_stale_version_or_unknown_status_is_refused()
     {
-        // Traces to: L2-129
+        // Traces to: L2-135
         var admin = await Admin();
         var id = (await EmailTemplateApi.CreateOk(admin.Client)).GetProperty("id").GetGuid();
 
@@ -98,7 +98,7 @@ public class EmailTemplateLifecycleTests : IClassFixture<SaturdazeApiFactory>
     [Fact]
     public async Task Deleting_removes_the_template_and_its_revisions()
     {
-        // Traces to: L2-129 AC4
+        // Traces to: L2-135 AC4
         var admin = await Admin();
         var id = (await EmailTemplateApi.CreateOk(admin.Client)).GetProperty("id").GetGuid();
 
@@ -115,7 +115,7 @@ public class EmailTemplateLifecycleTests : IClassFixture<SaturdazeApiFactory>
     [Fact]
     public async Task Status_changes_and_deletes_require_an_administrator()
     {
-        // Traces to: L2-125 AC1
+        // Traces to: L2-131 AC1
         var admin = await Admin();
         var id = (await EmailTemplateApi.CreateOk(admin.Client)).GetProperty("id").GetGuid();
         var user = await SignedInClient.CreateAsync(_factory);

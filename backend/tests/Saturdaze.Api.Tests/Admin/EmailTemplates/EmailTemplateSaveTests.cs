@@ -1,5 +1,5 @@
 // Acceptance Test
-// Traces to: L2-127
+// Traces to: L2-133
 // Description: PUT /api/admin/email-templates/{id} saves content with a version check and refuses unsafe HTML, invalid Liquid and dropped required variables.
 using System.Net;
 using System.Net.Http.Json;
@@ -45,7 +45,7 @@ public class EmailTemplateSaveTests : IClassFixture<SaturdazeApiFactory>
     [Fact]
     public async Task Saving_increments_the_version_and_records_who_and_when()
     {
-        // Traces to: L2-127 AC1
+        // Traces to: L2-133 AC1
         var admin = await Admin();
         var t = await EmailTemplateApi.CreateOk(admin.Client);
         var res = await Put(admin.Client, t, Body(t, b =>
@@ -75,7 +75,7 @@ public class EmailTemplateSaveTests : IClassFixture<SaturdazeApiFactory>
     [Fact]
     public async Task A_stale_version_is_409_template_stale_and_changes_nothing()
     {
-        // Traces to: L2-127 AC2
+        // Traces to: L2-133 AC2
         var admin = await Admin();
         var t = await EmailTemplateApi.CreateOk(admin.Client);
         (await Put(admin.Client, t, Body(t, b => b["subject"] = "First"))).StatusCode.Should().Be(HttpStatusCode.OK);
@@ -100,7 +100,7 @@ public class EmailTemplateSaveTests : IClassFixture<SaturdazeApiFactory>
     [InlineData("<a href=\"data:text/html;base64,PHNjcmlwdD4=\">Open</a>")]
     public async Task Unsafe_html_is_400_unsafe_html(string html)
     {
-        // Traces to: L2-127 AC3
+        // Traces to: L2-133 AC3
         var admin = await Admin();
         var t = await EmailTemplateApi.CreateOk(admin.Client);
         var res = await Put(admin.Client, t, Body(t, b => b["htmlBody"] = html));
@@ -111,7 +111,7 @@ public class EmailTemplateSaveTests : IClassFixture<SaturdazeApiFactory>
     [Fact]
     public async Task Ordinary_text_that_mentions_on_or_javascript_is_allowed()
     {
-        // Traces to: L2-127 AC3
+        // Traces to: L2-133 AC3
         var admin = await Admin();
         var t = await EmailTemplateApi.CreateOk(admin.Client);
         var res = await Put(admin.Client, t, Body(t, b =>
@@ -127,7 +127,7 @@ public class EmailTemplateSaveTests : IClassFixture<SaturdazeApiFactory>
     [InlineData("preheader", "Preheader", "{% for %}")]
     public async Task Invalid_liquid_is_400_invalid_template_naming_the_field_and_position(string field, string label, string value)
     {
-        // Traces to: L2-127 AC4, L2-131 AC1
+        // Traces to: L2-133 AC4, L2-137 AC1
         var admin = await Admin();
         var t = await EmailTemplateApi.CreateOk(admin.Client);
         var res = await Put(admin.Client, t, Body(t, b => b[field] = value));
@@ -140,7 +140,7 @@ public class EmailTemplateSaveTests : IClassFixture<SaturdazeApiFactory>
     [Fact]
     public async Task A_system_template_keeps_its_link_in_both_bodies()
     {
-        // Traces to: L2-127 AC5
+        // Traces to: L2-133 AC5
         var admin = await Admin();
         var t = await EmailTemplateApi.Get(admin.Client, await EmailTemplateApi.IdOf(admin.Client, "account.password-reset"));
         t.GetProperty("requiredPlaceholders").EnumerateArray().Select(p => p.GetString()).Should().Equal("resetLink");
@@ -155,7 +155,7 @@ public class EmailTemplateSaveTests : IClassFixture<SaturdazeApiFactory>
     [Fact]
     public async Task A_required_variable_used_through_a_filter_counts()
     {
-        // Traces to: L2-127 AC5
+        // Traces to: L2-133 AC5
         var admin = await Admin();
         var t = await EmailTemplateApi.Get(admin.Client, await EmailTemplateApi.IdOf(admin.Client, "account.password-reset"));
         var res = await Put(admin.Client, t, Body(t, b =>
@@ -177,7 +177,7 @@ public class EmailTemplateSaveTests : IClassFixture<SaturdazeApiFactory>
     [Fact]
     public async Task A_marketing_template_keeps_its_unsubscribe_link()
     {
-        // Traces to: L2-127 AC5
+        // Traces to: L2-133 AC5
         var admin = await Admin();
         var t = await EmailTemplateApi.CreateOk(admin.Client, category: "Marketing");
         var res = await Put(admin.Client, t, Body(t, b => b["htmlBody"] = "<p>Big news</p>"));
@@ -188,7 +188,7 @@ public class EmailTemplateSaveTests : IClassFixture<SaturdazeApiFactory>
     [Fact]
     public async Task An_unknown_id_is_404_and_an_overlong_subject_is_a_field_error()
     {
-        // Traces to: L2-127 AC6
+        // Traces to: L2-133 AC6
         var admin = await Admin();
         var t = await EmailTemplateApi.CreateOk(admin.Client);
         var missing = await admin.Client.PutAsJsonAsync($"{EmailTemplateApi.Route}/{Guid.NewGuid()}", Body(t));

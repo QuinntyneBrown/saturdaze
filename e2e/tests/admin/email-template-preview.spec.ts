@@ -1,5 +1,5 @@
 // Acceptance Test
-// Traces to: L2-128
+// Traces to: L2-134
 // Description: A9's preview renders unsaved Liquid edits with sample data in a sandboxed frame, at desktop and phone widths and as plain text, and flags placeholders without a sample.
 import { test, expect } from "../../fixtures/sd-test.js";
 import { createTemplate } from "../../fixtures/email-templates.js";
@@ -13,7 +13,7 @@ test.describe("Admin email template preview", () => {
   });
 
   test("edits show in the preview within a second, without a save", async ({ pages }) => {
-    // Traces to: L2-128 AC1, AC4
+    // Traces to: L2-134 AC1, AC4
     const a = pages.adminEmail;
     await a.field("Subject").fill("Hello {{recipientName}}");
     await expect(a.previewSubject()).toHaveText("Hello Alex", { timeout: 1_000 });
@@ -30,7 +30,7 @@ test.describe("Admin email template preview", () => {
   });
 
   test("the frame is sandboxed, switches to phone width and to plain text", async ({ pages }) => {
-    // Traces to: L2-128 AC5
+    // Traces to: L2-134 AC5
     const a = pages.adminEmail;
     const sandbox = await a.previewFrame().getAttribute("sandbox");
     expect(sandbox).not.toBeNull();
@@ -52,7 +52,7 @@ test.describe("Admin email template preview", () => {
   });
 
   test("a placeholder with no sample value is flagged", async ({ pages }) => {
-    // Traces to: L2-128 AC3, AC6
+    // Traces to: L2-134 AC3, AC6
     const a = pages.adminEmail;
     await a.field("Subject").fill("Your code {{giftCode}} from {{appName}}");
     await expect(a.previewPlaceholder("giftCode")).toContainText("No sample value");
@@ -63,7 +63,7 @@ test.describe("Admin email template preview", () => {
   });
 
   test("conditions, loops and filters render from JSON sample data", async ({ pages }) => {
-    // Traces to: L2-128 AC7
+    // Traces to: L2-134 AC7
     const a = pages.adminEmail;
     await a.field("HTML body").fill(
       "{% if vip %}<b>VIP</b>{% endif %}<ul>{% for idea in ideas %}<li>{{ idea.name | upcase }}</li>{% endfor %}</ul>",

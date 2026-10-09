@@ -8,7 +8,7 @@ using Saturdaze.Domain.Entities;
 
 namespace Saturdaze.Application.Admin.EmailTemplates;
 
-/// <summary>Deletes a non-system template and, by cascade, its revisions (L2-129).</summary>
+/// <summary>Deletes a non-system template and, by cascade, its revisions (L2-135).</summary>
 public sealed record DeleteEmailTemplateCommand(Guid Id) : IRequest;
 
 public sealed class DeleteEmailTemplateCommandHandler : IRequestHandler<DeleteEmailTemplateCommand>
