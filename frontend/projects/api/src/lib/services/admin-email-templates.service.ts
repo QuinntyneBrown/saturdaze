@@ -113,6 +113,24 @@ export class AdminEmailTemplatesService implements IAdminEmailTemplatesService {
     return firstValueFrom(this.http.post<EmailPreviewDto>(`${this.url}/preview`, request));
   }
 
+  async setStatus(
+    id: string,
+    status: EmailTemplateStatus,
+    version: number,
+  ): Promise<EmailTemplateView> {
+    const dto = await firstValueFrom(
+      this.http.post<EmailTemplateDto>(`${this.url}/${encodeURIComponent(id)}/status`, {
+        status,
+        version,
+      }),
+    );
+    return toEmailTemplateView(dto);
+  }
+
+  async remove(id: string): Promise<void> {
+    await firstValueFrom(this.http.delete<void>(`${this.url}/${encodeURIComponent(id)}`));
+  }
+
   private get url(): string {
     return `${this.baseUrl}/api/admin/email-templates`;
   }

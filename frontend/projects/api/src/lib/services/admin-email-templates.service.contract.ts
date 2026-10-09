@@ -3,6 +3,7 @@ import { InjectionToken } from '@angular/core';
 import {
   CreateEmailTemplateRequest,
   EmailPreviewDto,
+  EmailTemplateStatus,
   EmailTemplatesQuery,
   PreviewEmailTemplateRequest,
   SaveEmailTemplateRequest,
@@ -24,6 +25,10 @@ export interface IAdminEmailTemplatesService {
   save(id: string, request: SaveEmailTemplateRequest): Promise<EmailTemplateView>;
   /** `POST /api/admin/email-templates/preview`: renders unsaved content with sample data (L2-128). */
   preview(request: PreviewEmailTemplateRequest): Promise<EmailPreviewDto>;
+  /** `POST /api/admin/email-templates/{id}/status`: activate, archive or restore as a draft (L2-129). */
+  setStatus(id: string, status: EmailTemplateStatus, version: number): Promise<EmailTemplateView>;
+  /** `DELETE /api/admin/email-templates/{id}`: a non-system template and its history (L2-129). */
+  remove(id: string): Promise<void>;
 }
 
 export const ADMIN_EMAIL_TEMPLATES_SERVICE = new InjectionToken<IAdminEmailTemplatesService>(

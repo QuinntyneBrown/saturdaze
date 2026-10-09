@@ -62,4 +62,19 @@ public sealed class AdminEmailTemplatesController : ControllerBase
     [RequestSizeLimit(ContentRequestLimit)]
     public async Task<ActionResult<EmailPreviewDto>> Preview([FromBody] PreviewRequest req, CancellationToken ct)
         => Ok(await _sender.Send(new PreviewEmailTemplateQuery(req.Subject, req.Preheader, req.HtmlBody, req.TextBody, req.SampleData), ct));
+
+    public record StatusRequest(string? Status, int Version);
+
+    /// <summary>Activates, archives or restores a template as a draft; a system template stays active (L2-129).</summary>
+    [HttpPost("{id:guid}/status")]
+    public async Task<ActionResult<EmailTemplateDto>> SetStatus(Guid id, [FromBody] StatusRequest req, CancellationToken ct)
+        => Ok(await _sender.Send(new ChangeEmailTemplateStatusCommand(id, req.Status, req.Version), ct));
+
+    /// <summary>Deletes a non-system template and its revisions (L2-129).</summary>
+    [HttpDelete("{id:guid}")]
+    public async Task<IActionResult> Delete(Guid id, CancellationToken ct)
+    {
+        await _sender.Send(new DeleteEmailTemplateCommand(id), ct);
+        return NoContent();
+    }
 }

@@ -1,0 +1,10 @@
+<sd-dialog [title]="title" [subtitle]="subtitle">
+  <sd-well tone="warn" icon="trash" title="Archive keeps it instead">
+    An archived template stays readable and can be restored as a draft.
+  </sd-well>
+  <sd-button slot="actions" variant="quiet" type="button" (click)="cancel()">Cancel</sd-button>
+  <sd-button slot="actions" variant="danger" type="button" (click)="confirm()">
+    <sd-icon name="trash" />
+    Delete template
+  </sd-button>
+</sd-dialog>

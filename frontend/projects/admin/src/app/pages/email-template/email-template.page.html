@@ -33,10 +33,27 @@
           Save changes
         </sd-button>
       }
+      @if (statusAction(); as action) {
+        <sd-button
+          slot="actions"
+          variant="quiet"
+          [disabled]="busy()"
+          (click)="changeStatus(action.to)"
+        >
+          <sd-icon [name]="action.icon" />
+          {{ action.label }}
+        </sd-button>
+      }
       @if (v) {
         <sd-button slot="actions" variant="quiet" (click)="duplicate()">
           <sd-icon name="copy" />
           Duplicate
+        </sd-button>
+      }
+      @if (v && !v.isSystem) {
+        <sd-button slot="actions" variant="ghost" (click)="remove()">
+          <sd-icon name="trash" />
+          Delete
         </sd-button>
       }
     </sd-page-header>

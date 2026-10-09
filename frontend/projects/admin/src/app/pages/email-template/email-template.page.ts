@@ -17,6 +17,7 @@ import {
   BUILT_IN_PLACEHOLDERS,
   ChipView,
   EmailPreviewDto,
+  EmailTemplateStatus,
   EmailTemplateView,
   SaveEmailTemplateRequest,
   templatePlaceholders,
@@ -33,6 +34,11 @@ import {
   TextInput,
 } from 'components';
 
+import {
+  DeleteTemplateDialog,
+  DeleteTemplateDialogData,
+  DeleteTemplateDialogResult,
+} from '../../dialogs/delete-template-dialog/delete-template-dialog';
 import { DIALOG_OPTIONS } from '../../dialogs/dialog-options';
 import {
   NewTemplateDialog,
@@ -49,6 +55,16 @@ type Content = Omit<SaveEmailTemplateRequest, 'version'>;
 
 const UNSAVED: ChipView = { tone: 'sun', label: 'Unsaved changes' };
 
+/** The status action each status offers (L2-129 AC5); a system template offers none. */
+const STATUS_ACTION: Record<
+  EmailTemplateStatus,
+  { readonly label: string; readonly icon: string; readonly to: EmailTemplateStatus }
+> = {
+  Draft: { label: 'Activate', icon: 'sparkle', to: 'Active' },
+  Active: { label: 'Archive', icon: 'lock', to: 'Archived' },
+  Archived: { label: 'Restore as draft', icon: 'unlock', to: 'Draft' },
+};
+
 /**
  * Email template editor (A9) — `docs/mocks/pages/admin.email.html`: the
  * header (name, key, category, version, last change, status and system
@@ -58,7 +74,9 @@ const UNSAVED: ChipView = { tone: 'sun', label: 'Unsaved changes' };
  * "Save changes" stays disabled until something changed; a stale copy
  * says so and offers a reload (L2-127). Beside the form, `sd-email-preview`
  * renders the unsaved content 300 ms after the last edit (L2-128).
- * Duplicate opens AD7 (L2-126).
+ * Activate, Archive and Restore as draft follow the status; Delete opens
+ * AD8; a system template offers neither (L2-129). Duplicate opens AD7
+ * (L2-126).
  */
 @Component({
   selector: 'sd-admin-email-template',
@@ -151,6 +169,14 @@ export class EmailTemplatePage {
     return chips;
   });
 
+  /** Activate, Archive or Restore as draft; none for a system template (L2-129 AC6). */
+  protected readonly statusAction = computed(() => {
+    const v = this.view();
+    return v && !v.isSystem ? STATUS_ACTION[v.status] : null;
+  });
+
+  protected readonly busy = signal(false);
+
   /** Why a template keeps certain placeholders (a system link, a marketing unsubscribe). */
   protected readonly note = computed(() => {
     const v = this.view();
@@ -218,6 +244,48 @@ export class EmailTemplatePage {
       else this.error.set(templateErrorMessage(err));
     } finally {
       this.saving.set(false);
+    }
+  }
+
+  /**
+   * Moves the saved template to its next status. The form keeps any unsaved edits: a status
+   * change does not touch the content, so the baseline stays as it was.
+   */
+  protected async changeStatus(to: EmailTemplateStatus): Promise<void> {
+    const v = this.view();
+    if (!v || this.busy()) return;
+    this.busy.set(true);
+    this.error.set('');
+    this.stale.set(false);
+    try {
+      this.view.set(await this.templates.setStatus(v.id, to, v.version));
+    } catch (err) {
+      if (errorCode(err) === 'template_stale') this.stale.set(true);
+      else this.error.set(templateErrorMessage(err));
+    } finally {
+      this.busy.set(false);
+    }
+  }
+
+  /** AD8, then the delete and back to the list (L2-129 AC7). */
+  protected async remove(): Promise<void> {
+    const v = this.view();
+    if (!v || v.isSystem) return;
+    const ref = this.dialog.open<DeleteTemplateDialogResult, DeleteTemplateDialogData>(
+      DeleteTemplateDialog,
+      {
+        ...DIALOG_OPTIONS,
+        role: 'alertdialog',
+        data: { name: v.name, key: v.key, versions: v.version },
+      },
+    );
+    if ((await firstValueFrom(ref.closed)) !== 'delete') return;
+    this.error.set('');
+    try {
+      await this.templates.remove(v.id);
+      await this.router.navigateByUrl('/email-templates');
+    } catch (err) {
+      this.error.set(templateErrorMessage(err));
     }
   }
 
