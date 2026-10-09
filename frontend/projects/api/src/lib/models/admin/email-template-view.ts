@@ -119,3 +119,12 @@ export function templatePlaceholders(...texts: readonly string[]): string[] {
   }
   return names;
 }
+
+/** One row of the History dialog (AD9). */
+export interface EmailRevisionRow {
+  readonly version: number;
+  /** "v2 · Edit · 2026-10-08 16:40 UTC · admin@saturdaze.app". */
+  readonly meta: string;
+  readonly subject: string;
+  readonly datetime: string;
+}

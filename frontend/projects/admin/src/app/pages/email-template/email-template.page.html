@@ -33,6 +33,12 @@
           Save changes
         </sd-button>
       }
+      @if (v) {
+        <sd-button slot="actions" variant="quiet" (click)="history()">
+          <sd-icon name="refresh" />
+          History
+        </sd-button>
+      }
       @if (statusAction(); as action) {
         <sd-button
           slot="actions"

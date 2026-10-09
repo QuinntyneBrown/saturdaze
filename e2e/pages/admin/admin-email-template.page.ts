@@ -96,6 +96,24 @@ export class AdminEmailTemplatePage extends AdminPage {
       .filter({ has: this.page.locator("code", { hasText: new RegExp(`^${name}$`) }) });
   }
 
+  /* ---------- AD9 History ---------- */
+
+  revisions(): Locator {
+    return this.dialog().locator(".revision");
+  }
+
+  revisionMeta(revision: Locator): Locator {
+    return revision.locator(".revision__meta");
+  }
+
+  revisionSubject(revision: Locator): Locator {
+    return revision.locator(".revision__subject");
+  }
+
+  loadRevisionButton(version: number): Locator {
+    return this.dialog().getByRole("button", { name: `Load version ${version} into the editor`, exact: true });
+  }
+
   /** The system-template note above the editor. */
   note(): Locator {
     return this.main.locator(".template-note");

@@ -1,0 +1,41 @@
+// `.revision-list` and `.revision` from docs/mocks/styles/app.css (AD9).
+
+:host {
+  display: block;
+}
+
+.revision-list {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.revision {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-top: 1px solid var(--colorNeutralStroke2);
+}
+
+.revision__text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.revision__meta {
+  font-size: var(--fontSizeBase200);
+  color: var(--colorNeutralForeground2);
+  overflow-wrap: anywhere;
+}
+
+.revision__subject {
+  font-size: var(--fontSizeBase300);
+  font-weight: var(--fontWeightSemibold);
+  overflow-wrap: anywhere;
+}

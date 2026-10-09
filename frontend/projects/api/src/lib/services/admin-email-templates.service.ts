@@ -8,6 +8,8 @@ import {
   EmailTemplateCategory,
   EmailPreviewDto,
   EmailTemplateDto,
+  EmailTemplateRevisionDto,
+  EmailTemplateRevisionSummaryDto,
   EmailTemplateStatus,
   EmailTemplateSummaryDto,
   EmailTemplatesQuery,
@@ -15,6 +17,7 @@ import {
   SaveEmailTemplateRequest,
 } from '../models/admin/email-template.dto';
 import {
+  EmailRevisionRow,
   EmailTemplateRow,
   EmailTemplateView,
   categoryLabel,
@@ -74,6 +77,22 @@ export function toEmailTemplateView(dto: EmailTemplateDto): EmailTemplateView {
   };
 }
 
+const REVISION_ACTION: Record<EmailTemplateRevisionSummaryDto['action'], string> = {
+  create: 'Create',
+  edit: 'Edit',
+  status: 'Status',
+};
+
+export function toEmailRevisionRow(dto: EmailTemplateRevisionSummaryDto): EmailRevisionRow {
+  const action = REVISION_ACTION[dto.action] ?? dto.action;
+  return {
+    version: dto.version,
+    meta: `v${dto.version} · ${action} · ${utcStamp(dto.occurredAt)} · ${dto.adminEmail}`,
+    subject: dto.subject,
+    datetime: dto.occurredAt,
+  };
+}
+
 /** HTTP implementation of `IAdminEmailTemplatesService`. */
 @Injectable({ providedIn: 'root' })
 export class AdminEmailTemplatesService implements IAdminEmailTemplatesService {
@@ -129,6 +148,23 @@ export class AdminEmailTemplatesService implements IAdminEmailTemplatesService {
 
   async remove(id: string): Promise<void> {
     await firstValueFrom(this.http.delete<void>(`${this.url}/${encodeURIComponent(id)}`));
+  }
+
+  async revisions(id: string): Promise<EmailRevisionRow[]> {
+    const rows = await firstValueFrom(
+      this.http.get<EmailTemplateRevisionSummaryDto[]>(
+        `${this.url}/${encodeURIComponent(id)}/revisions`,
+      ),
+    );
+    return rows.map(toEmailRevisionRow);
+  }
+
+  revision(id: string, version: number): Promise<EmailTemplateRevisionDto> {
+    return firstValueFrom(
+      this.http.get<EmailTemplateRevisionDto>(
+        `${this.url}/${encodeURIComponent(id)}/revisions/${version}`,
+      ),
+    );
   }
 
   private get url(): string {

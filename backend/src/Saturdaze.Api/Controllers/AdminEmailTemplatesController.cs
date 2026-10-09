@@ -77,4 +77,14 @@ public sealed class AdminEmailTemplatesController : ControllerBase
         await _sender.Send(new DeleteEmailTemplateCommand(id), ct);
         return NoContent();
     }
+
+    /// <summary>The template's revisions, newest first (L2-130).</summary>
+    [HttpGet("{id:guid}/revisions")]
+    public async Task<ActionResult<IReadOnlyList<EmailTemplateRevisionSummaryDto>>> Revisions(Guid id, CancellationToken ct)
+        => Ok(await _sender.Send(new ListEmailTemplateRevisionsQuery(id), ct));
+
+    /// <summary>One revision's full content, to load into the editor (L2-130).</summary>
+    [HttpGet("{id:guid}/revisions/{version:int}")]
+    public async Task<ActionResult<EmailTemplateRevisionDto>> Revision(Guid id, int version, CancellationToken ct)
+        => Ok(await _sender.Send(new GetEmailTemplateRevisionQuery(id, version), ct));
 }

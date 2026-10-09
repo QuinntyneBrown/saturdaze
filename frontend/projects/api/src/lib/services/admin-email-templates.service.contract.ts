@@ -3,12 +3,17 @@ import { InjectionToken } from '@angular/core';
 import {
   CreateEmailTemplateRequest,
   EmailPreviewDto,
+  EmailTemplateRevisionDto,
   EmailTemplateStatus,
   EmailTemplatesQuery,
   PreviewEmailTemplateRequest,
   SaveEmailTemplateRequest,
 } from '../models/admin/email-template.dto';
-import { EmailTemplateRow, EmailTemplateView } from '../models/admin/email-template-view';
+import {
+  EmailRevisionRow,
+  EmailTemplateRow,
+  EmailTemplateView,
+} from '../models/admin/email-template-view';
 
 /**
  * Contract for Saturdaze Admin's email templates (L1-037). Admin pages
@@ -29,6 +34,10 @@ export interface IAdminEmailTemplatesService {
   setStatus(id: string, status: EmailTemplateStatus, version: number): Promise<EmailTemplateView>;
   /** `DELETE /api/admin/email-templates/{id}`: a non-system template and its history (L2-129). */
   remove(id: string): Promise<void>;
+  /** `GET /api/admin/email-templates/{id}/revisions`: the history, newest first (L2-130). */
+  revisions(id: string): Promise<EmailRevisionRow[]>;
+  /** `GET /api/admin/email-templates/{id}/revisions/{version}`: one revision's content (L2-130). */
+  revision(id: string, version: number): Promise<EmailTemplateRevisionDto>;
 }
 
 export const ADMIN_EMAIL_TEMPLATES_SERVICE = new InjectionToken<IAdminEmailTemplatesService>(

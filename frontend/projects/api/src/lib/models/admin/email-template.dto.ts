@@ -101,3 +101,23 @@ export interface EmailPreviewDto {
   readonly text: string;
   readonly placeholders: readonly EmailPlaceholderDto[];
 }
+
+/** `GET /api/admin/email-templates/{id}/revisions` (L2-130): one row of the history. */
+export interface EmailTemplateRevisionSummaryDto {
+  readonly version: number;
+  readonly action: 'create' | 'edit' | 'status';
+  readonly status: EmailTemplateStatus;
+  readonly subject: string;
+  /** UTC. */
+  readonly occurredAt: string;
+  readonly adminEmail: string;
+}
+
+/** `GET /api/admin/email-templates/{id}/revisions/{version}` (L2-130): a revision's content. */
+export interface EmailTemplateRevisionDto extends EmailTemplateRevisionSummaryDto {
+  readonly name: string;
+  readonly preheader: string;
+  readonly htmlBody: string;
+  readonly textBody: string;
+  readonly sampleData: Readonly<Record<string, string>>;
+}

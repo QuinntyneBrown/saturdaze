@@ -41,6 +41,11 @@ import {
 } from '../../dialogs/delete-template-dialog/delete-template-dialog';
 import { DIALOG_OPTIONS } from '../../dialogs/dialog-options';
 import {
+  TemplateHistoryDialog,
+  TemplateHistoryDialogData,
+  TemplateHistoryDialogResult,
+} from '../../dialogs/template-history-dialog/template-history-dialog';
+import {
   NewTemplateDialog,
   NewTemplateDialogData,
   NewTemplateDialogResult,
@@ -75,8 +80,9 @@ const STATUS_ACTION: Record<
  * says so and offers a reload (L2-127). Beside the form, `sd-email-preview`
  * renders the unsaved content 300 ms after the last edit (L2-128).
  * Activate, Archive and Restore as draft follow the status; Delete opens
- * AD8; a system template offers neither (L2-129). Duplicate opens AD7
- * (L2-126).
+ * AD8; a system template offers neither (L2-129). History opens AD9 and
+ * puts a loaded revision in the form, unsaved (L2-130). Duplicate opens
+ * AD7 (L2-126).
  */
 @Component({
   selector: 'sd-admin-email-template',
@@ -293,6 +299,37 @@ export class EmailTemplatePage {
   protected async reload(): Promise<void> {
     const id = this.id();
     if (id) await this.load(id);
+  }
+
+  /** AD9: the history; a loaded revision goes into the form unsaved (L2-130 AC4). */
+  protected async history(): Promise<void> {
+    const v = this.view();
+    if (!v) return;
+    const ref = this.dialog.open<TemplateHistoryDialogResult, TemplateHistoryDialogData>(
+      TemplateHistoryDialog,
+      {
+        ...DIALOG_OPTIONS,
+        data: {
+          templateName: v.name,
+          list: () => this.templates.revisions(v.id),
+          load: (version) => this.templates.revision(v.id, version),
+        },
+      },
+    );
+    const revision = await firstValueFrom(ref.closed);
+    if (!revision) return;
+    const samples = this.form.controls.samples;
+    for (const [name, value] of Object.entries(revision.sampleData)) {
+      if (samples.contains(name)) samples.controls[name]!.setValue(value);
+      else samples.addControl(name, new FormControl(value, { nonNullable: true }));
+    }
+    this.form.patchValue({
+      name: revision.name,
+      subject: revision.subject,
+      preheader: revision.preheader,
+      htmlBody: revision.htmlBody,
+      textBody: revision.textBody,
+    });
   }
 
   /** AD7 in duplicate mode: a new draft with this template's content (L2-126 AC3). */

@@ -1,0 +1,30 @@
+<sd-dialog wide title="History" [subtitle]="subtitle">
+  @if (error()) {
+    <sd-banner tone="warn" role="alert" icon="close">{{ error() }}</sd-banner>
+  }
+  @if (rows(); as rows) {
+    <ol class="revision-list">
+      @for (row of rows; track row.version) {
+        <li class="revision">
+          <div class="revision__text">
+            <span class="revision__meta">{{ row.meta }}</span>
+            <span class="revision__subject">{{ row.subject }}</span>
+          </div>
+          <sd-button
+            variant="quiet"
+            size="sm"
+            type="button"
+            [label]="'Load version ' + row.version + ' into the editor'"
+            [disabled]="loading() !== null"
+            (click)="loadVersion(row.version)"
+          >
+            Load into editor
+          </sd-button>
+        </li>
+      }
+    </ol>
+  } @else {
+    <sd-status-row icon="refresh">Fetching the history.</sd-status-row>
+  }
+  <sd-button slot="actions" variant="quiet" type="button" (click)="close()">Close</sd-button>
+</sd-dialog>
