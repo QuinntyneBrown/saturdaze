@@ -17,6 +17,7 @@ import {
 import { CommitmentDialog } from '../../dialogs/commitment-dialog/commitment-dialog';
 import { ConfirmDialog } from '../../dialogs/confirm-dialog/confirm-dialog';
 import { FamilyMemberDialog } from '../../dialogs/family-member-dialog/family-member-dialog';
+import { InviteLinkDialog } from '../../dialogs/invite-link-dialog/invite-link-dialog';
 import { HomeLocationDialog } from '../../dialogs/home-location-dialog/home-location-dialog';
 import { LikesDialog } from '../../dialogs/likes-dialog/likes-dialog';
 import { SUBMISSION } from '../dialogs/dialog-fixtures';
@@ -27,6 +28,8 @@ const VIEW: FamilyView = {
   headline: 'The Browns',
   subtitle: 'Port Credit. Every weekend is planned around this.',
   home: { location: 'Port Credit, Mississauga', hint: 'Weather and drive times start here' },
+  isOwner: true,
+  ownerEmail: 'quinn@example.com',
   members: [
     {
       id: 'm-quinn',
@@ -35,6 +38,8 @@ const VIEW: FamilyView = {
       tone: 'primary',
       age: 38,
       role: 'Parent',
+      access: 'None',
+      email: null,
       subtitle: 'Parent · 38',
     },
     {
@@ -44,6 +49,8 @@ const VIEW: FamilyView = {
       tone: 'sun',
       age: 5,
       role: 'Kid',
+      access: 'None',
+      email: null,
       subtitle: 'Kid · 5',
     },
   ],
@@ -160,6 +167,8 @@ describe('FamilyPage', () => {
       getEditableProfile: () => editable,
       load: vi.fn(async () => undefined),
       saveProfile: vi.fn(async () => undefined),
+      addMember: vi.fn(async () => null),
+      removeMember: vi.fn(async () => undefined),
     };
     pending = signal<any[]>([]);
     submissions = { pending: () => pending, loadPending: vi.fn(async () => undefined) };
@@ -226,19 +235,52 @@ describe('FamilyPage', () => {
     expect(component['accountSubtitle']()).toBe('Email not verified yet');
   });
 
-  it('adds a member through D17 and saves the whole profile', async () => {
+  it('adds a member through D17b with one POST, not the whole-profile save (L2-010 #3, L2-125)', async () => {
     await mount();
-    dialog.open.mockReturnValueOnce({ closed: of({ kind: 'save', name: 'Eli', age: 9 }) });
+    dialog.open.mockReturnValueOnce({
+      closed: of({ kind: 'save', name: 'Eli', age: 9, email: null }),
+    });
     (section("Who's in").querySelector('sd-ghost-row button') as HTMLButtonElement).click();
     await settle();
     expect(dialog.open).toHaveBeenCalledWith(
       FamilyMemberDialog,
       expect.objectContaining({ data: { mode: 'add', existingNames: ['Quinn', 'Mae'] } }),
     );
-    expect(saved().members).toEqual([...PROFILE.members, { name: 'Eli', age: 9 }]);
+    expect(familyService.addMember).toHaveBeenCalledWith({ name: 'Eli', age: 9, email: null });
+    expect(familyService.saveProfile).not.toHaveBeenCalled();
+    expect(dialog.open.mock.calls.some((c) => c[0] === InviteLinkDialog)).toBe(false);
   });
 
-  it('edits a member, or removes them after D21', async () => {
+  it('shows the invite link in D30 after inviting a member (L2-126)', async () => {
+    await mount();
+    familyService.addMember.mockResolvedValueOnce({
+      email: 'jordan@example.com',
+      token: 't0k3n',
+      url: 'http://localhost:4200/accept-invite?token=t0k3n',
+      expiresAtUtc: '2026-10-16T00:00:00Z',
+    });
+    dialog.open.mockReturnValueOnce({
+      closed: of({ kind: 'save', name: 'Jordan', age: 37, email: 'jordan@example.com' }),
+    });
+    await component['addMember']();
+    expect(familyService.addMember).toHaveBeenCalledWith({
+      name: 'Jordan',
+      age: 37,
+      email: 'jordan@example.com',
+    });
+    expect(dialog.open).toHaveBeenCalledWith(
+      InviteLinkDialog,
+      expect.objectContaining({
+        data: {
+          name: 'Jordan',
+          email: 'jordan@example.com',
+          url: 'http://localhost:4200/accept-invite?token=t0k3n',
+        },
+      }),
+    );
+  });
+
+  it('edits a member through the profile save, and removes them with DELETE after D21 (L2-128)', async () => {
     await mount();
     dialog.open.mockReturnValueOnce({ closed: of({ kind: 'save', name: 'Mae', age: 6 }) });
     (section("Who's in").querySelectorAll('sd-list-item button')[1] as HTMLButtonElement).click();
@@ -246,7 +288,13 @@ describe('FamilyPage', () => {
     expect(dialog.open).toHaveBeenCalledWith(
       FamilyMemberDialog,
       expect.objectContaining({
-        data: { mode: 'edit', initial: { name: 'Mae', age: 5 }, existingNames: ['Quinn', 'Mae'] },
+        data: {
+          mode: 'edit',
+          initial: { name: 'Mae', age: 5 },
+          existingNames: ['Quinn', 'Mae'],
+          access: 'None',
+          email: null,
+        },
       }),
     );
     expect(saved().members).toEqual([
@@ -254,23 +302,56 @@ describe('FamilyPage', () => {
       { id: 'm-mae', name: 'Mae', age: 6 },
     ]);
 
+    familyService.saveProfile.mockClear();
     dialog.open
       .mockReturnValueOnce({ closed: of({ kind: 'remove' }) })
       .mockReturnValueOnce({ closed: of('confirm') });
     await component['editMember'](VIEW.members[1]!);
     expect(confirmData()).toMatchObject({
       title: 'Remove Mae from the family?',
+      body: 'Future weekends will not plan for them.',
       danger: true,
       confirmLabel: 'Remove',
     });
-    expect(saved().members).toEqual([{ id: 'm-quinn', name: 'Quinn', age: 38 }]);
+    expect(familyService.removeMember).toHaveBeenCalledWith('m-mae');
+    expect(familyService.saveProfile).not.toHaveBeenCalled();
 
-    familyService.saveProfile.mockClear();
+    familyService.removeMember.mockClear();
     dialog.open
       .mockReturnValueOnce({ closed: of({ kind: 'remove' }) })
       .mockReturnValueOnce({ closed: of(undefined) });
     await component['editMember'](VIEW.members[1]!);
-    expect(familyService.saveProfile).not.toHaveBeenCalled();
+    expect(familyService.removeMember).not.toHaveBeenCalled();
+  });
+
+  it('says in D21 what removal does to an invited member and to one who signs in (L2-128)', async () => {
+    await mount();
+    const mae = VIEW.members[1]!;
+    dialog.open
+      .mockReturnValueOnce({ closed: of({ kind: 'remove' }) })
+      .mockReturnValueOnce({ closed: of(undefined) });
+    await component['editMember']({ ...mae, access: 'Invited', email: 'mae@example.com' });
+    expect(confirmData().body).toBe('The invite sent to mae@example.com will stop working.');
+
+    dialog.open.mockClear();
+    dialog.open
+      .mockReturnValueOnce({ closed: of({ kind: 'remove' }) })
+      .mockReturnValueOnce({ closed: of(undefined) });
+    await component['editMember']({ ...mae, access: 'Account', email: 'mae@example.com' });
+    expect(confirmData().body).toBe(
+      'Mae will be signed out and will no longer be able to sign in.',
+    );
+  });
+
+  it("shows who's in read-only to a member who is not the owner (L2-124 #4)", async () => {
+    view.set({ ...VIEW, isOwner: false, ownerEmail: 'alex@example.com' });
+    await mount();
+    const members = section("Who's in");
+    expect(members.querySelector('.section-header__sub')?.textContent?.trim()).toBe(
+      "Ages shape the picks. Only alex@example.com can change who's in.",
+    );
+    expect(members.querySelector('sd-ghost-row')).toBeNull();
+    expect(members.querySelectorAll('sd-list-item button').length).toBe(0);
   });
 
   it('adds and edits commitments through D18, passing the siblings for the duplicate check', async () => {

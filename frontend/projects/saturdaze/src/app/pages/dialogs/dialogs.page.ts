@@ -178,7 +178,7 @@ const SPECIMENS: readonly Specimen[] = [
   {
     kind: 'dialog',
     slug: 'member-invite',
-    label: 'D17b · Add a family member · invite to sign in',
+    label: 'D17 · Add a family member · invite to sign in',
     component: FamilyMemberDialog,
     data: { mode: 'add', existingNames: FIX.MEMBER_NAMES, signIn: 'invite' },
   },

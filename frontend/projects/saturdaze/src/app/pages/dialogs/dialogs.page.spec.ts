@@ -29,7 +29,7 @@ describe('DialogsPage', () => {
 
   it('renders the page header and every specimen in the mock order', () => {
     expect(host.querySelector('.page-header__title')?.textContent?.trim()).toBe('Dialogs');
-    expect(specimens().length).toBe(30);
+    expect(specimens().length).toBe(35);
     expect(specimens().map((s) => s.id)).toEqual([
       'dialog-block',
       'dialog-block-locked',
@@ -49,13 +49,18 @@ describe('DialogsPage', () => {
       'dialog-remix',
       'dialog-member',
       'dialog-member-add',
+      'dialog-member-invite',
+      'dialog-member-account',
       'dialog-commitment',
       'dialog-commitment-add',
       'dialog-home',
       'dialog-likes',
       'dialog-remove',
+      'dialog-remove-invited',
+      'dialog-remove-account',
       'dialog-remove-commitment',
       'dialog-signout',
+      'dialog-invite-link',
       'dialog-approve',
       'dialog-reject',
       'dialog-more',
@@ -66,7 +71,7 @@ describe('DialogsPage', () => {
 
   it('renders each dialog specimen statically inside the sd-dialog shell', () => {
     const dialogs = specimens().filter((s) => !s.classList.contains('specimen--menu'));
-    expect(dialogs.length).toBe(28);
+    expect(dialogs.length).toBe(33);
     for (const section of dialogs) {
       const shell = section.querySelector('sd-dialog');
       expect(shell, section.id).not.toBeNull();
@@ -102,6 +107,6 @@ describe('DialogsPage', () => {
     ).click();
     (host.querySelector('#dialog-share .dialog__close button') as HTMLButtonElement).click();
     fixture.detectChanges();
-    expect(specimens().length).toBe(30);
+    expect(specimens().length).toBe(35);
   });
 });
