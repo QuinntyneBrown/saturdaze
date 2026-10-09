@@ -63,6 +63,16 @@ Four videos on family member sign-in (L1-037, ADR-016): the account that creates
 | 22 | [Joining from an invite link](22-joining-from-an-invite-link/README.md) | ~6.2 min | `/accept-invite` and its two anonymous endpoints; the verified account it creates; unusable links; the read-only member view and its server guard. |
 | 23 | [Removing a family member](23-removing-a-family-member/README.md) | ~6.3 min | D21's three consequences; what `DELETE` cascades; delete, not detach; the per-request family lookup that ends an open tab's access; `member_has_access`. |
 
+## Email templates series
+
+Three videos on email template administration in Saturdaze Admin (L1-037, L2-124 to L2-130): the templates Saturdaze sends, written, previewed, versioned and retired by administrators. Each mixes screen recordings of the real app, made against the email demo data (`tools/video-record/email-demo`), with the code behind each screen. Watch in order; video 18 sets the scene.
+
+| # | Video | Runtime | What you learn |
+| --- | --- | --- | --- |
+| 19 | [Email templates: the catalog and new templates](19-email-templates-catalog-and-new/README.md) | ~6.7 min | What a template is (key, category, status, version); the seeded system templates; the Email templates screen; New template, starters and Duplicate. |
+| 20 | [Editing and previewing email templates](20-editing-and-previewing-email-templates/README.md) | ~8.2 min | The editor and its version; placeholders, built-ins and sample data; the live preview and its renderer; keeping template HTML inert; required placeholders; stale saves. |
+| 21 | [Email template lifecycle and history](21-email-template-lifecycle-and-history/README.md) | ~6.1 min | Draft, Active, Archived; why system templates stay active; Delete; the revision history and loading an old version; what a future sender needs. |
+
 ## Components series
 
 Fifty-two instructional videos, one per component in `frontend/projects/components/src/lib/`: each codes the component step by step, calls out its best practices (especially signals) and walks through its unit tests. See the [series index](components/README.md).
@@ -107,4 +117,4 @@ SD_DEMO_RESET="node tools/video-record/admin-demo/reset.mjs" \
   node tools/video-record/record-clips.mjs docs/videos/14-managing-a-places-photos   # all clips, or add name,name
 ```
 
-The admin series records against a separate demo database and image host; see `tools/video-record/admin-demo/README.md`. The family members series records against a freshly reset database of its own; see `tools/video-record/family-demo/README.md`.
+The admin series records against a separate demo database and image host; see `tools/video-record/admin-demo/README.md`. The family members series records against a freshly reset database of its own; see `tools/video-record/family-demo/README.md`. The email templates series has its own cross-platform demo data; see `tools/video-record/email-demo/README.md`. `CHROME_PATH` points the recorder at an installed Chromium instead of Playwright's download.

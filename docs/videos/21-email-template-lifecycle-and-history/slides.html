@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 21 Slides</title>
+<link rel="stylesheet" href="../assets/slides.css">
+</head>
+<body data-video-number="21" data-video-title="Email template lifecycle and history" data-parts="Introduction|Draft, active, archived|System templates|Deleting|Revision history|What a sender needs|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Email templates series · Video 21</div>
+  <h1>Email template lifecycle and history</h1>
+  <p class="lead">Activate, archive, restore, delete, and the revision behind every change</p>
+</section>
+
+<section id="agenda" data-part="0" data-cue="This one follows a template through its life">
+  <h2>In this video</h2>
+  <ol class="steps">
+    <li>Activate, archive and restore</li>
+    <li>Why system templates stay active</li>
+    <li>Deleting, and what goes with it</li>
+    <li>The revision history</li>
+    <li>What a future sender needs</li>
+  </ol>
+</section>
+
+<section id="statuses" data-part="1" data-cue="A template is in one of three statuses.">
+  <h2>Three statuses, one action each</h2>
+  <div class="flow">
+    <div class="node"><b>Draft</b>being written · offers <i>Activate</i></div>
+    <div class="arrow">→</div>
+    <div class="node accent"><b>Active</b>senders may use it · offers <i>Archive</i></div>
+    <div class="arrow">→</div>
+    <div class="node"><b>Archived</b>retired, readable · offers <i>Restore as draft</i></div>
+  </div>
+</section>
+
+<section id="lifecycle" data-part="1" data-cue="In the recording, the holiday greeting starts as a draft at version one." data-clip="clips/lifecycle.mp4" data-clip-delay="2">
+  <aside class="clip-notes">
+    <h3>Every change is a version</h3>
+    <ul>
+      <li>Draft, version 1</li>
+      <li>Activate: version 2</li>
+      <li>Archive: version 3</li>
+      <li>Restore as draft: version 4</li>
+    </ul>
+  </aside>
+</section>
+
+<section id="status-code" data-part="1" data-cue="Behind the buttons is one endpoint">
+  <h2>One endpoint, three rules</h2>
+  <pre class="code tight" data-lang="cs" data-mark="1-2,3,4,8">
+if (template.IsSystem &amp;&amp; status != EmailTemplateStatus.Active)
+    throw SystemTemplate();                                  // 400 system_template
+EmailTemplateConcurrency.EnsureCurrent(template, request.Version);   // 409 template_stale
+if (template.Status == status) return EmailTemplateDto.From(template); // nothing written
+
+template.Status = status;
+template.Version++;
+_revisions.Write(template, EmailTemplateRevisionAction.Status);
+await EmailTemplateConcurrency.SaveAsync(_db, ct);
+</pre>
+  <p class="small muted"><code>POST /api/admin/email-templates/{id}/status</code> <code>{ status, version }</code> · <span class="file">ChangeEmailTemplateStatusCommand.cs</span> (comments added)</p>
+</section>
+
+<section id="system" data-part="2" data-cue="The two system templates are the exception." data-clip="clips/system.mp4" data-clip-delay="12">
+  <aside class="clip-notes">
+    <h3>Always active</h3>
+    <ul>
+      <li>Save changes, History, Duplicate</li>
+      <li>No Archive, no Delete</li>
+      <li>The API refuses both: <code>system_template</code></li>
+    </ul>
+  </aside>
+</section>
+
+<section id="delete" data-part="3" data-cue="Archive is usually the right way to retire a template" data-clip="clips/delete.mp4" data-clip-delay="6">
+  <aside class="clip-notes">
+    <h3>Delete (AD8)</h3>
+    <ul>
+      <li>Names the template, its key and versions</li>
+      <li>Cannot be undone; Archive keeps it</li>
+      <li>One DELETE, back to the list</li>
+    </ul>
+  </aside>
+</section>
+
+<section id="delete-code" data-part="3" data-cue="On the server, the delete removes the template">
+  <h2>The history goes too, so the log keeps the record</h2>
+  <pre class="code tight" data-lang="cs" data-mark="1,3-4,6-7">
+if (template.IsSystem) throw ChangeEmailTemplateStatusCommandHandler.SystemTemplate();
+
+_db.EmailTemplates.Remove(template);      // revisions: ON DELETE CASCADE
+await _db.SaveChangesAsync(ct);
+// The revisions go with the template, so the log is the record of the deletion.
+_logger.LogInformation("Email template {Key} ({TemplateId}) deleted by administrator {AdminId}",
+    template.Key, template.Id, _user.UserId);
+</pre>
+  <p class="small muted"><code>DELETE /api/admin/email-templates/{id}</code> → 204 · <span class="file">DeleteEmailTemplateCommand.cs</span></p>
+</section>
+
+<section id="revision" data-part="4" data-cue="Every create, save and status change writes an email template revision.">
+  <h2>A snapshot per version</h2>
+  <pre class="code tight" data-lang="cs" data-mark="4-6,10-12">
+_db.EmailTemplateRevisions.Add(new EmailTemplateRevision
+{
+    TemplateId = template.Id,
+    Version = template.Version,
+    Action = action,                // Create · Edit · Status
+    Status = template.Status,
+    Name = template.Name, Subject = template.Subject, Preheader = template.Preheader,
+    HtmlBody = template.HtmlBody, TextBody = template.TextBody,
+    SampleData = template.SampleData,
+    OccurredAt = now,               // UTC
+    AdminUserId = adminId,
+    AdminEmail = email,
+});
+</pre>
+  <p class="small muted"><span class="file">EmailTemplateRevisionWriter.cs</span> · unique <code>(TemplateId, Version)</code></p>
+</section>
+
+<section id="history" data-part="4" data-cue="History in the editor lists the revisions newest first." data-clip="clips/history.mp4" data-clip-delay="12">
+  <aside class="clip-notes">
+    <h3>History (AD9)</h3>
+    <ul>
+      <li>v4 Status · v3 Edit · v2 Edit · v1 Create</li>
+      <li>Load into editor: unsaved</li>
+      <li>Save: version 5 with version 1's content</li>
+      <li>The past is never rewritten</li>
+    </ul>
+  </aside>
+</section>
+
+<section id="endpoints" data-part="4" data-cue="Two endpoints serve the dialog">
+  <h2>The whole API</h2>
+  <table class="grid">
+    <tr><th>Route under <code>/api/admin/email-templates</code></th><th>Does</th><th>Video</th></tr>
+    <tr><td><code>GET /</code> · <code>POST /</code></td><td>List · create or duplicate</td><td>19</td></tr>
+    <tr><td><code>GET /{id}</code> · <code>PUT /{id}</code></td><td>Read · save at a version</td><td>20</td></tr>
+    <tr><td><code>POST /preview</code></td><td>Render unsaved content</td><td>20</td></tr>
+    <tr><td><code>POST /{id}/status</code> · <code>DELETE /{id}</code></td><td>Status · delete</td><td>21</td></tr>
+    <tr><td><code>GET /{id}/revisions</code> · <code>GET /{id}/revisions/{version}</code></td><td>History · one revision</td><td>21</td></tr>
+  </table>
+  <p class="small muted">All behind <code>[Authorize(Policy = "Admin")]</code> · <span class="file">AdminEmailTemplatesController.cs</span></p>
+</section>
+
+<section id="sender" data-part="5" data-cue="Nothing sends these templates yet.">
+  <h2>The contract for a sender</h2>
+  <ol class="steps">
+    <li>Find the template by <b>key</b></li>
+    <li>Use it only if its status is <b>Active</b></li>
+    <li>Render it with <code>EmailTemplateRenderer</code>, real values instead of samples</li>
+    <li>Account flows fill <code>{{verificationLink}}</code> and <code>{{resetLink}}</code></li>
+  </ol>
+  <p class="small muted">No email provider yet: drift audit gap G01 (video 18)</p>
+</section>
+
+<section id="later" data-part="5" data-cue="Scheduling, choosing an audience">
+  <h2>Later capabilities</h2>
+  <div class="cols">
+    <div class="card"><h3>Scheduling</h3><p class="small">Friday digests, birthdays on the day.</p></div>
+    <div class="card"><h3>Audiences</h3><p class="small">Who receives a notification or a campaign.</p></div>
+    <div class="card"><h3>Unsubscribe handling</h3><p class="small">What <code>{{unsubscribeUrl}}</code> leads to.</p></div>
+    <div class="card"><h3>Localisation</h3><p class="small">One template, several languages.</p></div>
+  </div>
+  <p class="small muted">Each starts with a requirement, a design and a mock.</p>
+</section>
+
+<section id="recap" data-part="6" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div>Draft · Active · Archived; one action each; each change a new version.</div>
+    <div>System templates stay active and cannot be deleted.</div>
+    <div>Delete removes the history too; Archive keeps both.</div>
+    <div>Every change is a revision; loading one saves as the next version.</div>
+    <div>A sender finds an Active template by key and uses the preview's renderer.</div>
+  </div>
+  <p class="small muted">Design: <span class="file">docs/detailed-designs/administration/manage-email-templates/</span></p>
+</section>
+
+<script src="../assets/slides.js"></script>
+</body>
+</html>
