@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 18 Slides</title>
+<link rel="stylesheet" href="../assets/slides.css">
+</head>
+<body data-video-number="18" data-video-title="How account emails are drafted" data-parts="Introduction|Drafting a token|Verification|Password reset|Delivery|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Saturdaze accounts · Video 18</div>
+  <h1>How account emails are drafted</h1>
+  <p class="lead">Verification and password reset, as built: what the server drafts, stores and sends</p>
+</section>
+
+<section id="questions" data-part="0" data-cue="This video follows what happens behind those two screens">
+  <h2>Behind “Check your email”</h2>
+  <div class="question">What does the server draft?</div>
+  <div class="question">What does it store?</div>
+  <div class="question">What actually leaves it?</div>
+</section>
+
+<section id="answer" data-part="0" data-cue="The honest answer first.">
+  <h2>A link is drafted. No email is sent.</h2>
+  <pre class="code" data-lang="cs" data-mark="2">/// &lt;summary&gt;
+/// There is no email provider yet, so Development and the test host hand the
+/// reset / verification token back in the response. Any other environment
+/// (Staging, Production) returns an empty body.
+/// &lt;/summary&gt;</pre>
+  <p class="small muted"><span class="file">backend/src/Saturdaze.Api/Controllers/AuthController.cs</span> · as of October 2026 · drift audit gap <code>G01</code></p>
+</section>
+
+<section id="token" data-part="1" data-cue="Every account email is built around one thing">
+  <h2>Thirty-two random bytes, hashed</h2>
+  <pre class="code" data-lang="cs" data-mark="3,4,9,10">public string CreateRawRefreshToken()
+{
+    var buf = RandomNumberGenerator.GetBytes(32);
+    return Base64UrlEncoder.Encode(buf);
+}
+
+public string HashRefreshToken(string raw)
+{
+    var hash = SHA256.HashData(Encoding.UTF8.GetBytes(raw));
+    return Convert.ToHexString(hash).ToLowerInvariant();
+}</pre>
+  <p class="small muted"><span class="file">backend/src/Saturdaze.Infrastructure/Authentication/JwtTokenService.cs</span> · the same helpers make refresh tokens</p>
+</section>
+
+<section id="split" data-part="1" data-cue="The raw token is what would go into the email.">
+  <h2>The link carries the token; the database keeps the hash</h2>
+  <div class="flow">
+    <div class="node accent"><b>raw token</b><span class="small muted">Base64Url · in the link</span></div>
+    <div class="arrow">→</div>
+    <div class="node"><b>SHA-256</b><span class="small muted">lowercase hex</span></div>
+    <div class="arrow">→</div>
+    <div class="node"><b>TokenHash</b><span class="small muted">the only copy stored</span></div>
+  </div>
+  <p class="lead">A database reader sees hashes, never working links. A returning link is hashed and looked up.</p>
+</section>
+
+<section id="entity" data-part="1" data-cue="Both kinds of token share one shape.">
+  <h2>One shape, two tokens</h2>
+  <pre class="code" data-lang="cs" data-mark="8">public class EmailVerificationToken
+{
+    public Guid Id { get; set; }
+    public Guid UserId { get; set; }
+    public string TokenHash { get; set; } = string.Empty;
+    public DateTimeOffset ExpiresAtUtc { get; set; }
+    public DateTimeOffset CreatedAtUtc { get; set; }
+    public DateTimeOffset? ConsumedAtUtc { get; set; }
+}</pre>
+  <p class="small muted"><span class="file">backend/src/Saturdaze.Domain/Entities/EmailVerificationToken.cs</span> · <code>PasswordResetToken</code> is identical · <code>ConsumedAtUtc</code> set = link dead</p>
+</section>
+
+<section id="envelope" data-part="1" data-cue="When a handler is done, it returns an">
+  <h2>The envelope nobody posts</h2>
+  <pre class="code" data-lang="cs">public record AuthTokenDeliveryDto(
+    string? Email,
+    string? Token,
+    DateTimeOffset? ExpiresAtUtc
+);</pre>
+  <div class="cols three">
+    <div class="card"><h3>Email</h3><p class="small">Who it is addressed to</p></div>
+    <div class="card"><h3>Token</h3><p class="small">The raw value for the link</p></div>
+    <div class="card"><h3>ExpiresAtUtc</h3><p class="small">When the link dies</p></div>
+  </div>
+  <p class="small muted"><span class="file">backend/src/Saturdaze.Application/Contracts/AuthTokenDeliveryDto.cs</span></p>
+</section>
+
+<section id="register" data-part="2" data-cue="When you create an account, the register handler">
+  <h2>Register drafts a link, then drops it</h2>
+  <pre class="code tight" data-lang="cs" data-mark="1,7,13">var verifyRaw = _jwt.CreateRawRefreshToken();
+_db.EmailVerificationTokens.Add(new EmailVerificationToken
+{
+    Id = Guid.NewGuid(),
+    UserId = user.Id,
+    TokenHash = _jwt.HashRefreshToken(verifyRaw),
+    ExpiresAtUtc = now.AddHours(24),
+    CreatedAtUtc = now,
+});
+
+await _db.SaveChangesAsync(ct);
+
+return _issuer.ToSuccess(user, issued.Raw);</pre>
+  <p class="small muted"><span class="file">backend/src/Saturdaze.Application/Auth/RegisterUserCommandHandler.cs</span> · returns sign-in tokens, never <code>verifyRaw</code> · sign-in is not gated on verification</p>
+</section>
+
+<section id="resend" data-part="2" data-cue="Resend is where a usable link comes from.">
+  <h2>Resend: kill the old links, draft a fresh one</h2>
+  <pre class="code tight" data-lang="cs" data-mark="3,4,11,14">var normalized = request.Email.Trim().ToLowerInvariant();
+var user = await _db.Users.FirstOrDefaultAsync(u =&gt; u.NormalizedEmail == normalized, ct);
+if (user is null || user.EmailVerifiedUtc is not null)
+    return new AuthTokenDeliveryDto(user?.Email, null, null);
+
+var now = _clock.UtcNow;
+foreach (var existing in await _db.EmailVerificationTokens
+    .Where(t =&gt; t.UserId == user.Id &amp;&amp; t.ConsumedAtUtc == null &amp;&amp; t.ExpiresAtUtc &gt; now)
+    .ToListAsync(ct))
+{
+    existing.ConsumedAtUtc = now;
+}
+
+var raw = _tokens.CreateRawRefreshToken();
+var expires = now.AddHours(24);</pre>
+  <p class="small muted"><span class="file">backend/src/Saturdaze.Application/Auth/ResendVerificationCommandHandler.cs</span> (abridged)</p>
+</section>
+
+<section id="verify" data-part="2" data-cue="When the link is opened, the verify handler">
+  <h2>Verify: hash, look up, consume</h2>
+  <pre class="code tight" data-lang="cs" data-mark="1,2,5,7,13,14">var hash = _tokens.HashRefreshToken(request.Token);
+var token = await _db.EmailVerificationTokens.FirstOrDefaultAsync(t =&gt; t.TokenHash == hash, ct)
+    ?? throw new AuthFlowException(400, "token_invalid", "Verification link is invalid.");
+
+if (token.ConsumedAtUtc is not null)
+    throw new AuthFlowException(400, "token_invalid", "Verification link has already been used.");
+if (token.ExpiresAtUtc &lt;= now)
+    throw new AuthFlowException(400, "token_expired", "Verification link has expired.");
+
+var user = await _db.Users.FirstOrDefaultAsync(u =&gt; u.Id == token.UserId, ct)
+    ?? throw new AuthFlowException(400, "token_invalid", "Verification link is invalid.");
+
+token.ConsumedAtUtc = now;
+user.EmailVerifiedUtc ??= now;</pre>
+  <p class="small muted"><span class="file">backend/src/Saturdaze.Application/Auth/VerifyEmailCommandHandler.cs</span> (abridged)</p>
+</section>
+
+<section id="verify-clip" data-part="2" data-cue="Here is the page doing that, with a throwaway account." data-clip="clips/verify.mp4" data-clip-delay="3">
+  <aside class="clip-notes">
+    <h3>/verify-email</h3>
+    <ul>
+      <li>No token: “Check your email”</li>
+      <li>Address masked to first and last letter</li>
+      <li>Resend once, then a minute’s rest (client-side)</li>
+      <li><code>?token=…</code>: “You are verified”</li>
+    </ul>
+  </aside>
+</section>
+
+<section id="forgot" data-part="3" data-cue="Forgot password follows the same recipe">
+  <h2>Forgot password: same recipe, two differences</h2>
+  <pre class="code tight" data-lang="cs" data-mark="3,7">var normalized = request.Email.Trim().ToLowerInvariant();
+var user = await _db.Users.FirstOrDefaultAsync(u =&gt; u.NormalizedEmail == normalized, ct);
+if (user is null) return new AuthTokenDeliveryDto(null, null, null);
+
+var now = _clock.UtcNow;
+var raw = _tokens.CreateRawRefreshToken();
+var expires = now.AddMinutes(60);
+
+// … consume every live reset token, add the new PasswordResetToken …
+
+await _db.SaveChangesAsync(ct);
+return new AuthTokenDeliveryDto(user.Email, raw, expires);</pre>
+  <p class="small muted"><span class="file">backend/src/Saturdaze.Application/Auth/ForgotPasswordCommandHandler.cs</span> (abridged) · unknown or known: the same <code>202 Accepted</code> (L2-004)</p>
+</section>
+
+<section id="reset-clip" data-part="3" data-cue="In the recording, we ask for a reset link" data-clip="clips/reset.mp4" data-clip-delay="2">
+  <aside class="clip-notes">
+    <h3>/reset-password</h3>
+    <ul>
+      <li>Request: the sent card shows either way</li>
+      <li><code>?token=…</code>: choose a new password (8+)</li>
+      <li>Reset revokes every other session (L2-005, ADR-007)</li>
+      <li>Same link again: “This link has expired”</li>
+    </ul>
+  </aside>
+</section>
+
+<section id="drift" data-part="3" data-cue="Notice a drift while you are here.">
+  <h2>Thirty minutes on screen, sixty in code</h2>
+  <div class="cols">
+    <div class="card">
+      <h3>The screen</h3>
+      <p>“The link works for 30 minutes.”</p>
+      <p class="small muted"><span class="file">reset-password.page.html</span> · sent and expired cards</p>
+    </div>
+    <div class="card">
+      <h3>The code</h3>
+      <p><code>now.AddMinutes(60)</code></p>
+      <p class="small muted"><span class="file">ForgotPasswordCommandHandler.cs</span></p>
+    </div>
+  </div>
+  <p class="lead">Changing either one is a behaviour change: requirement first, not a quiet fix.</p>
+</section>
+
+<section id="dev-delivery" data-part="4" data-cue="So where does the envelope go?">
+  <h2>DevDelivery: the inbox is the response body</h2>
+  <pre class="code" data-lang="cs" data-mark="3,4,5">private object DevDelivery(AuthTokenDeliveryDto dto)
+{
+    var exposeTokens = _env.IsDevelopment() || _env.IsEnvironment("Testing");
+    if (!exposeTokens) return new { };
+    return new { dto.Email, dto.Token, dto.ExpiresAtUtc };
+}</pre>
+  <p class="small muted"><span class="file">backend/src/Saturdaze.Api/Controllers/AuthController.cs</span> · used by <code>POST /api/auth/forgot-password</code> and <code>/resend-verification</code></p>
+</section>
+
+<section id="dev-token" data-part="4" data-cue="That is also how the tests read your inbox.">
+  <h2>How the tests read the inbox</h2>
+  <pre class="code tight" data-lang="ts" data-mark="6,8,9">export async function devToken(
+  request: APIRequestContext,
+  path: "/api/auth/forgot-password" | "/api/auth/resend-verification",
+  email: string,
+): Promise&lt;string&gt; {
+  const res = await request.post(`${API_URL}${path}`, { data: { email } });
+  if (!res.ok()) throw new Error(`${path} failed: ${res.status()} ${await res.text()}`);
+  const body = (await res.json()) as { token?: string | null };
+  if (!body.token) throw new Error(`${path} returned no token — is the API running as Development?`);
+  return body.token;
+}</pre>
+  <p class="small muted"><span class="file">e2e/fixtures/auth.ts</span> · the API tests read the same body in <span class="file">AuthControllerTests.cs</span></p>
+</section>
+
+<section id="gap" data-part="4" data-cue="The drift audit records this as gap">
+  <h2>Gap G01, and where a sender would plug in</h2>
+  <div class="flow">
+    <div class="node"><b>handler</b><span class="small muted">drafts the token</span></div>
+    <div class="arrow">→</div>
+    <div class="node"><b>AuthTokenDeliveryDto</b><span class="small muted">the envelope</span></div>
+    <div class="arrow">→</div>
+    <div class="node accent"><b>sender</b><span class="small muted">not built yet</span></div>
+    <div class="arrow">→</div>
+    <div class="node"><b>inbox</b><span class="small muted">link + message</span></div>
+  </div>
+  <p class="lead">Requirement, design and mock first; then the controller stops handing tokens back.</p>
+  <p class="small muted"><span class="file">docs/detailed-design-drift-audit.md</span> · G01: L1-001, L2-004, L2-006</p>
+</section>
+
+<section id="recap" data-part="5" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div>32 random bytes per link; the database keeps only the SHA-256 hash.</div>
+    <div><code>ConsumedAtUtc</code> is the single-use switch; a new link kills the old one.</div>
+    <div>Verification: 24 hours. Reset: 60 minutes in code, 30 on screen.</div>
+    <div>Forgot password never reveals whether an account exists.</div>
+    <div>No email is sent yet; outside Development the link goes nowhere.</div>
+  </div>
+  <p class="small muted">Designs: <span class="file">docs/detailed-designs/identity-and-access/</span> · Index: <span class="file">docs/videos/README.md</span></p>
+</section>
+
+<script src="../assets/slides.js"></script>
+</body>
+</html>
