@@ -202,6 +202,7 @@ export interface LayoutTokens {
   layoutGutter: string;
   layoutTopBarHeight: string;
   layoutBottomNavHeight: string;
+  layoutSpacePage: string;
 }
 
 /** The z ladder for sticky regions and shell chrome; the CDK overlay keeps its own 1000. */

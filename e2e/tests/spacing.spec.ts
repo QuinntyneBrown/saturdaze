@@ -49,3 +49,21 @@ test.describe("Spacing on the grid", () => {
     expect(await l.gap(l.footer)).toBe("6px 12px");
   });
 });
+
+/**
+ * Landing hero padding on the spacing scale (drift D16): 40 × 24px on phones,
+ * 56 × 40px from 720px and 64 × 56px (`--layoutSpacePage`) from 1024px.
+ */
+test.describe("Landing hero padding on the scale", () => {
+  test("Given the landing page, when a person reads the hero, then it pads on the spacing scale at every width", async ({
+    goto,
+    pages,
+  }, testInfo) => {
+    await goto("landing", { anonymous: true });
+    const l = pages.landing;
+    await l.waitForReady();
+
+    const expected = { mobile: "40px 24px", tablet: "56px 40px", desktop: "64px 56px" }[testInfo.project.name];
+    expect(await l.padding(l.hero)).toBe(expected);
+  });
+});
