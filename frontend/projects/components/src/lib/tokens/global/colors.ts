@@ -38,7 +38,7 @@ export const forest: ColorVariants = {
 /** Terracotta — a gentle warning, not an alarming one. */
 export const terracotta: ColorVariants = {
   shade40: '#8f3d27',
-  primary: '#c45a3f',
+  primary: '#ae2b2b', // brick-red danger fill: white 6.60:1 (WCAG 1.4.3), redder than the brand coral
   tint50: '#fadfd6',
 };
 
