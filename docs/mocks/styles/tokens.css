@@ -26,6 +26,7 @@
 
   --sd-accent:       #2D7D5F;   /* forest green — "locked", confirmed */
   --sd-accent-soft:  #DEEDE5;
+  --sd-accent-ink:   #256B51;   /* forest text on its tint: 5.25:1 (WCAG 1.4.3); --sd-accent stays the fill */
 
   --sd-warn:         #C45A3F;   /* gentle warning, not alarming */
   --sd-warn-soft:    #FADFD6;

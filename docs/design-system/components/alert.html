@@ -316,7 +316,7 @@
         <figure class="ds-do"><div class="ds-example__canvas"><div class="well" style="flex: 1;"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg><div><p class="well__title">Why this</p><p class="well__body">Saturday is the sunny day.</p></div></div></div><figcaption>A well that is there when the dialog opens has no live role; it is read with the dialog.</figcaption></figure>
         <figure class="ds-dont"><div class="ds-example__canvas"><pre style="margin: 0; flex: 1;"><code>&lt;div class="well" role="alert"&gt;…Why this…</code></pre></div><figcaption><code>role="alert"</code> on static content interrupts the dialog's announcement with something that is not urgent.</figcaption></figure>
         <figure class="ds-do"><div class="ds-example__canvas"><div class="banner banner--success" style="flex: 1;"><svg class="icon" aria-hidden="true"><use href="#i-check_circle"/></svg><span class="banner__text">Approved · Bronte Creek Maple Magic</span></div></div><figcaption>Approval result as a success banner with <code>role="status"</code>, replacing the mock's one-off <code>approved-row</code>.</figcaption></figure>
-        <figure class="ds-dont"><div class="ds-example__canvas"><div class="banner banner--success" style="flex: 1; --sd-banner-fg: var(--colorStatusSuccessForeground3);"><span class="banner__text">Approved</span></div></div><figcaption>Colour alone, with the lighter forest ink below 4.5:1 on its tint (D07).</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><div class="banner banner--success" style="flex: 1; --sd-banner-fg: var(--colorStatusSuccessForeground3);"><span class="banner__text">Approved</span></div></div><figcaption>Colour alone, with the lighter forest ink below 4.5:1 on its tint.</figcaption></figure>
       </div>
     </section>
 
@@ -387,7 +387,7 @@
         <li><a href="../../mocks/pages/verify-email.html">pages/verify-email</a>: <code>role="status"</code> on the verifying card.</li>
         <li><a href="../../mocks/pages/legal.html">pages/legal</a>: "The short version" wells.</li>
       </ul>
-      <p>Drift fixed: D07 (success text on its tint), D15 (14px banner and well padding snapped to 12 × 16px). Found while extracting: the sign-in banner leads with a close glyph and doubles <code>role="alert"</code> with <code>aria-live="assertive"</code>. Not in the mocks: the info and caution tones, titles, actions, close and the page banner.</p>
+      <p>Drift fixed: D15 (14px banner and well padding snapped to 12 × 16px). Found while extracting: the sign-in banner leads with a close glyph and doubles <code>role="alert"</code> with <code>aria-live="assertive"</code>. Not in the mocks: the info and caution tones, titles, actions, close and the page banner.</p>
     </section>
 
     <footer class="ds-footer"><span>Saturdaze design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>

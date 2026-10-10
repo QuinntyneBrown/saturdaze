@@ -60,7 +60,7 @@
   --globalColorForest100: #deede5;  /* mock --sd-accent-soft */
   --globalColorForest300: #7cc4a0;
   --globalColorForest500: #2d7d5f;  /* mock --sd-accent */
-  --globalColorForest600: #256b51;
+  --globalColorForest600: #256b51;  /* mock --sd-accent-ink, --sd-leaf-ink */
   --globalColorForest800: #2f5a45;
   --globalColorForest900: #1a3629;
   --globalColorForest950: #0c2219;

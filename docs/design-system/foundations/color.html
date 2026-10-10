@@ -124,7 +124,7 @@
       <ul>
         <li><b>Two tiers.</b> Primitive ramps (<code>--globalColor*</code>) hold raw values. Alias roles (<code>--color*</code>, Fluent UI v9 names per ADR-013) give them a job and are the only colour tokens components read.</li>
         <li><b>Themes swap roles.</b> Light lives on <code>:root</code>; dark re-points the same roles at different primitives. No component knows which theme it is in.</li>
-        <li><b>Accessible by construction.</b> All 98 foreground and background pairs the components use pass WCAG 2.2 AA in both themes; the mock values that did not were changed and logged (D07 to D10).</li>
+        <li><b>Accessible by construction.</b> All 98 foreground and background pairs the components use pass WCAG 2.2 AA in both themes; the mock values that did not were changed and logged (D08 to D10).</li>
       </ul>
     </section>
 
@@ -143,7 +143,7 @@
       <p>Dark-theme neutrals: canvas 900, surface 850, raised 800, wells 750; text 50, 200 and 300.</p>
       <div class="ds-ramp" role="img" aria-label="Umber ramp, steps 50, 200, 300, 400, 600, 700, 750, 800, 850, 900"><span style="--swatch: var(--globalColorUmber50);" data-step="50"></span><span style="--swatch: var(--globalColorUmber200);" data-step="200"></span><span style="--swatch: var(--globalColorUmber300);" data-step="300"></span><span style="--swatch: var(--globalColorUmber400);" data-step="400"></span><span style="--swatch: var(--globalColorUmber600);" data-step="600"></span><span style="--swatch: var(--globalColorUmber700);" data-step="700"></span><span style="--swatch: var(--globalColorUmber750);" data-step="750"></span><span style="--swatch: var(--globalColorUmber800);" data-step="800"></span><span style="--swatch: var(--globalColorUmber850);" data-step="850"></span><span style="--swatch: var(--globalColorUmber900);" data-step="900"></span></div>
       <h3>Forest</h3>
-      <p>Success and locked. 500 is the solid fill the mock used; 600 is text on the tint (D07).</p>
+      <p>Success and locked. 500 is the solid fill the mock used; 600 is text on the tint, and the mocks' <code>--sd-accent-ink</code>.</p>
       <div class="ds-ramp" role="img" aria-label="Forest ramp, steps 100, 300, 500, 600, 800, 900, 950"><span style="--swatch: var(--globalColorForest100);" data-step="100"></span><span style="--swatch: var(--globalColorForest300);" data-step="300"></span><span style="--swatch: var(--globalColorForest500);" data-step="500"></span><span style="--swatch: var(--globalColorForest600);" data-step="600"></span><span style="--swatch: var(--globalColorForest800);" data-step="800"></span><span style="--swatch: var(--globalColorForest900);" data-step="900"></span><span style="--swatch: var(--globalColorForest950);" data-step="950"></span></div>
       <h3>Leaf</h3>
       <p>Outdoor palette and map land. 300 is the mock leaf chip.</p>
@@ -656,7 +656,7 @@
           <tr><td><code>--globalColorForest100</code></td><td><span class="ds-swatch-cell"><i data-token="--globalColorForest100" data-swatch></i><span data-token="--globalColorForest100"></span></span></td><td>Mock <code>--sd-accent-soft</code></td></tr>
           <tr><td><code>--globalColorForest300</code></td><td><span class="ds-swatch-cell"><i data-token="--globalColorForest300" data-swatch></i><span data-token="--globalColorForest300"></span></span></td><td></td></tr>
           <tr><td><code>--globalColorForest500</code></td><td><span class="ds-swatch-cell"><i data-token="--globalColorForest500" data-swatch></i><span data-token="--globalColorForest500"></span></span></td><td>Mock <code>--sd-accent</code></td></tr>
-          <tr><td><code>--globalColorForest600</code></td><td><span class="ds-swatch-cell"><i data-token="--globalColorForest600" data-swatch></i><span data-token="--globalColorForest600"></span></span></td><td></td></tr>
+          <tr><td><code>--globalColorForest600</code></td><td><span class="ds-swatch-cell"><i data-token="--globalColorForest600" data-swatch></i><span data-token="--globalColorForest600"></span></span></td><td>Mock <code>--sd-accent-ink</code>, <code>--sd-leaf-ink</code>: text on the forest and leaf tints</td></tr>
           <tr><td><code>--globalColorForest800</code></td><td><span class="ds-swatch-cell"><i data-token="--globalColorForest800" data-swatch></i><span data-token="--globalColorForest800"></span></span></td><td></td></tr>
           <tr><td><code>--globalColorForest900</code></td><td><span class="ds-swatch-cell"><i data-token="--globalColorForest900" data-swatch></i><span data-token="--globalColorForest900"></span></span></td><td></td></tr>
           <tr><td><code>--globalColorForest950</code></td><td><span class="ds-swatch-cell"><i data-token="--globalColorForest950" data-swatch></i><span data-token="--globalColorForest950"></span></span></td><td></td></tr>
@@ -708,7 +708,7 @@
           <tr><td><code>--sd-ink-faint</code> #636A77 for hints, durations, footers; <code>--sd-ink-disabled</code> #9CA3AF never on live text</td><td><code>--colorNeutralForeground3</code> (slate 500, #636A77, 4.75:1 on wells); <code>--colorNeutralForegroundDisabled</code></td><td>None</td></tr>
           <tr><td><code>--sd-ink-soft</code> #5B6270 for secondary text, chips and segments</td><td><code>--colorNeutralForeground2</code> (slate 600, #5B6270, 5.35:1 on wells)</td><td>None</td></tr>
           <tr><td><code>--sd-line-control</code> #80868F on fields, the switch track and control edges</td><td><code>--colorNeutralStrokeAccessible</code> (slate 400, #80868F, 3.67:1 on white); the 16% <code>--sd-line-strong</code> stays decorative as <code>--colorNeutralStroke1</code></td><td>None</td></tr>
-          <tr><td><code>--sd-accent</code> #2D7D5F as text on its tint</td><td><code>--colorStatusSuccessForeground1</code>, <code>--colorPaletteLeafForeground1</code> (forest 600, #256B51); #2D7D5F stays the solid <code>--colorStatusSuccessBackground3</code></td><td>D07: 4.11:1 to 5.25:1</td></tr>
+          <tr><td><code>--sd-accent-ink</code> / <code>--sd-leaf-ink</code> #256B51 for text on the forest and leaf tints; <code>--sd-accent</code> #2D7D5F as the solid fill</td><td><code>--colorStatusSuccessForeground1</code>, <code>--colorPaletteLeafForeground1</code> (forest 600, #256B51, 5.25:1 on its tint); <code>--colorStatusSuccessBackground3</code> (forest 500)</td><td>None</td></tr>
           <tr><td><code>--sd-warn</code> #C45A3F as the danger fill</td><td><code>--colorStatusDangerBackground3</code> (terracotta 500, #AE2B2B)</td><td>D08: 4.30:1 to 6.60:1, and distinct from the brand</td></tr>
           <tr><td><code>--sd-sun</code> #F4C969 filled stars, <code>--sd-ink-disabled</code> empty stars</td><td><code>--colorPaletteSunForeground3</code> (sun 600, #B07F14); empty stars use <code>--colorNeutralStrokeAccessible</code></td><td>D09: 1.57:1 to 3.56:1</td></tr>
           <tr><td>Bottom nav current icon #E07856 on the coral tint</td><td><code>--colorBrandForeground1</code> (coral 600)</td><td>D10: 2.6:1 to 4.97:1</td></tr>

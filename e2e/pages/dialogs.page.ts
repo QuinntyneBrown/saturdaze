@@ -115,6 +115,11 @@ export class DialogsPage extends BasePage {
     return control(this.panel(slug).locator(".dialog__actions"), name);
   }
 
+  /** The chip in the specimen's panel that reads `label`. */
+  chip(slug: DialogSlug, label: string): Locator {
+    return this.panel(slug).locator(".chip").filter({ hasText: label });
+  }
+
   menuItems(slug: DialogSlug): Locator {
     return this.panel(slug).getByRole("menuitem");
   }
