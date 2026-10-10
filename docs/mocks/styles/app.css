@@ -43,13 +43,13 @@
     --sd-z-nav: 30;
     --sd-z-dialog: 40;
     /* focus */
-    --sd-focus-ring: 2px solid var(--sd-primary);
+    --sd-focus-ring: 2px solid var(--sd-primary-deep);  /* 5.56:1 on the canvas, 5.18:1 on wells (WCAG 1.4.11, 2.4.7) */
     /* tone pairs (mirrors frontend/projects/components/src/lib/styles/_tokens.scss) */
     --sd-sun-soft: #FBEBC4;   --sd-sun-ink: #8A6212;
     --sd-sky-soft: #DCE9F1;   --sd-sky-ink: #2C5F7A;
     --sd-leaf-soft: #DDEEDA;  --sd-leaf-ink: #2D7D5F;
     --sd-indoor-soft: #EADFF4; --sd-indoor-ink: #5A3B82;
-    --sd-primary-deep: #A04B2C;  /* coral text that passes AA on primary-soft */
+    --sd-primary-deep: #A04B2C;  /* coral text that passes AA on primary-soft; the focus ring */
     --sd-warn-deep: #8F3D27;
     /* person tones */
     --sd-person-q-bg: var(--sd-primary-soft); --sd-person-q-ink: var(--sd-primary-deep);
