@@ -348,7 +348,7 @@
       <p>The Angular app does not read this folder. Its tokens live in <code style="overflow-wrap: anywhere;">frontend/projects/components/src/lib/tokens/</code> as a typed Fluent-style theme (<code>global/</code> ramps, <code>alias/</code> roles, <code>createLightTheme(brand)</code>), and <code>npm run tokens</code> generates <code>styles/_tokens.scss</code> and <code>tokens.ts</code> from it (ADR-013).</p>
       <ul>
         <li><b>Same names.</b> Wherever the product has a token, this system uses its exact custom-property name, so a rule copied from here works there.</li>
-        <li><b>Different values where AA required it.</b> The product inherited the mock values; this system changed the ones that failed (faint and soft text, accessible strokes, danger fill: D05 to D08). Carrying a fix over means changing the TypeScript theme and regenerating, never editing <code>_tokens.scss</code>.</li>
+        <li><b>Different values where AA required it.</b> The product inherited the mock values; this system changed the ones that failed (accessible strokes, danger fill: D06 to D08). Carrying a fix over means changing the TypeScript theme and regenerating, never editing <code>_tokens.scss</code>.</li>
         <li><b>Light only.</b> The product ships the light theme (D25). A dark theme there would be a <code>createDarkTheme(brand)</code> beside <code>createLightTheme</code>, using the role mapping on this page.</li>
         <li><b>Runtime themes.</b> The product's <code>[sdThemeProvider]</code> directive writes a partial theme onto its host as custom properties, which is the same mechanism as the harbour example above.</li>
       </ul>
@@ -378,7 +378,7 @@
         <li><code style="overflow-wrap: anywhere;">docs/adr/ADR-013-fluent-design-tokens.md</code> and <code style="overflow-wrap: anywhere;">frontend/projects/components/src/lib/tokens/</code>.</li>
         <li><a href="../../mocks/pages/weekend.html">pages/weekend</a> (cards, banners, the map) and <a href="../../mocks/pages/ideas.html">pages/ideas</a> for the composed examples.</li>
       </ul>
-      <p>Drift fixed or explained here: D17 (literal colours), D18 (map fills), D25 (no dark theme), D26 (pressed chips in forced colours), and D05 to D08 for the values that differ from the product.</p>
+      <p>Drift fixed or explained here: D17 (literal colours), D18 (map fills), D25 (no dark theme), D26 (pressed chips in forced colours), and D06 to D08 for the values that differ from the product.</p>
     </section>
 
     <footer class="ds-footer"><span>Saturdaze design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>
