@@ -125,7 +125,6 @@ and up) are proposals for the product's TypeScript theme.
 
 | ID | Mock | Issue | Resolution |
 |---|---|---|---|
-| D17 | `app.css` | Literal colours: `#fff` on danger, ink chip, pressed filter chip, switch thumb and map pins; rgba() in skeleton shimmer, scrim, credit, cover gradient and cover edit button. | Every one is a token, so a dark theme is possible. |
 | D18 | `weekend.html` | The map SVG carries 21 inline hex fills (no dark theme, no tokens). | `.map__land`, `.map__water`, `.map__road`, `.map__route`, `.map__pin` classes on tokens. |
 | D19 | `app.css` | `.option` and `.option--simple` rules match no markup. | Dropped. |
 | D20 | auth pages, `auth-card__alt` | `.link` is coral with no underline inside sentences ("No account? Create one"); colour alone separates it from the text (1.4.1). | `.link` is underlined; hover thickens the underline. |

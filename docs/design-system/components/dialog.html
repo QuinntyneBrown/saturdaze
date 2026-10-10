@@ -400,7 +400,7 @@
     </section>
 
     <section class="ds-section" id="theming"><h2><a href="#theming">Theming</a></h2>
-      <p>The panel reads <code>--colorNeutralBackgroundRaised</code>, the highest surface in both themes: white in light, the lightest umber in dark, so the dialog rises above the cards behind the scrim. The scrim is <code>--colorBackgroundOverlay</code>, deeper in dark so the panel still separates. Width is themable through <code>--layoutDialogWidth</code> and <code>--layoutDialogWidthWide</code>; nothing in a dialog uses a raw colour, including the scrim that was rgba() in the mocks (D17).</p>
+      <p>The panel reads <code>--colorNeutralBackgroundRaised</code>, the highest surface in both themes: white in light, the lightest umber in dark, so the dialog rises above the cards behind the scrim. The scrim is <code>--colorBackgroundOverlay</code>, deeper in dark so the panel still separates. Width is themable through <code>--layoutDialogWidth</code> and <code>--layoutDialogWidthWide</code>; nothing in a dialog uses a raw colour, including the scrim.</p>
     </section>
 
     <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
@@ -509,7 +509,7 @@ this.dialog.open(MemberDialog, { data: member, ...DIALOG_OPTIONS });</code></pre
 
     <section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>
       <p>Extracted from <a href="../../mocks/pages/dialogs.html">pages/dialogs</a> (39 specimens): D1 block details and its locked and commitment variants, D3 and D4 regenerate, D9 errand added, D11 submitted, D17 edit and add a family member, D21 remove confirmations, D22 sign out, D23 approve, D25 the More sheet, D28 add an idea to a day, AD1 to AD6 admin photo dialogs. Triggers live on <a href="../../mocks/pages/weekend.html">pages/weekend</a>, <a href="../../mocks/pages/family.html">pages/family</a>, <a href="../../mocks/pages/ideas.html">pages/ideas</a> and <a href="../../mocks/pages/past.html">pages/past</a>.</p>
-      <p>Drift fixed: D17 the rgba() scrim and literal <code>#fff</code> on danger. The busy state, the invalid and failed states, and <code>role="alertdialog"</code> on every destructive confirmation (the mocks set it on D21 and D22 but not on D24 or AD5) are documented here first. Added in extraction: <code>.dialog--sheet-only</code>, the documentation twin of <code>.dialog--modal-only</code>.</p>
+      <p>The busy state, the invalid and failed states, and <code>role="alertdialog"</code> on every destructive confirmation (the mocks set it on D21 and D22 but not on D24 or AD5) are documented here first. Added in extraction: <code>.dialog--sheet-only</code>, the documentation twin of <code>.dialog--modal-only</code>.</p>
     </section>
 
     <footer class="ds-footer"><span>Saturdaze design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>
