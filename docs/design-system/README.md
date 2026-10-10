@@ -74,7 +74,7 @@ differ, the difference is in the drift log below for the product to adopt delibe
 | [Cover photo](components/cover.html) | Data display | photo, title block, change photo, credit | hover, focus (edit) | weekend, past, dialogs D29 |
 | [Stat](components/stat.html) | Data display | figure, bar, delta, link list | loading | admin |
 | [Itinerary](components/itinerary.html) | Data display | day header, blocks (commitment, locked, errand, drive, done, active), legs, add row | hover, focus within, active | weekend, weekend.empty |
-| [Map](components/map.html) | Data display | route sketch, pins, legend, planner | active pin | weekend (D18) |
+| [Map](components/map.html) | Data display | route sketch, pins, legend, planner | active pin | weekend |
 | [Toast](components/toast.html) | Feedback | info, success, caution, warn; with action; stacked | leaving | none (core) |
 | [Alert](components/alert.html) | Feedback | banner in four tones, page banner, wells | dismissible | sign-in, review, dialogs, verify-email |
 | [Inline message](components/inline-message.html) | Feedback | hint, error, success | none | auth pages, dialogs |
@@ -125,7 +125,6 @@ and up) are proposals for the product's TypeScript theme.
 
 | ID | Mock | Issue | Resolution |
 |---|---|---|---|
-| D18 | `weekend.html` | The map SVG carries 21 inline hex fills (no dark theme, no tokens). | `.map__land`, `.map__water`, `.map__road`, `.map__route`, `.map__pin` classes on tokens. |
 | D19 | `app.css` | `.option` and `.option--simple` rules match no markup. | Dropped. |
 | D20 | auth pages, `auth-card__alt` | `.link` is coral with no underline inside sentences ("No account? Create one"); colour alone separates it from the text (1.4.1). | `.link` is underlined; hover thickens the underline. |
 | D21 | `weekend.html` | Block actions are hidden until hover or focus-within, so touch tablets at 720px or wider never see them. | `@media (hover: none)` keeps them visible. |

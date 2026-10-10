@@ -216,7 +216,7 @@
             <p class="map__legend"><span>4 stops · 51 min · 36 km</span><span class="map__attr">Illustrative. Production: © OpenStreetMap contributors</span></p>
           </div>
         </div>
-        <div class="ds-example__caption"><span>Saturday with Lavender fields selected (stop 2), and Sunday with nothing selected. Every fill and stroke comes from a class; the SVG has no colour attributes (D18).</span></div>
+        <div class="ds-example__caption"><span>Saturday with Lavender fields selected (stop 2), and Sunday with nothing selected. Every fill and stroke comes from a class; the SVG has no colour attributes.</span></div>
       </div>
 
       <h3>Planner: the day beside its map</h3>
@@ -368,7 +368,7 @@
     <section class="ds-section" id="do-dont"><h2><a href="#do-dont">Do and don't</a></h2>
       <div class="ds-dodont">
         <figure class="ds-do"><div class="ds-example__canvas"><pre style="margin: 0; flex: 1;"><code>&lt;path class="map__water" d="…"/&gt;</code></pre></div><figcaption>Draw with classes, so the dark theme and production colours follow the tokens.</figcaption></figure>
-        <figure class="ds-dont"><div class="ds-example__canvas"><pre style="margin: 0; flex: 1;"><code>&lt;path d="…" fill="#BFD9E8"/&gt;</code></pre></div><figcaption>The mock's 21 inline hex fills cannot change with a theme (D18).</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><pre style="margin: 0; flex: 1;"><code>&lt;path d="…" fill="#BFD9E8"/&gt;</code></pre></div><figcaption>Inline hex fills cannot change with a theme.</figcaption></figure>
         <figure class="ds-do"><div class="ds-example__canvas"><svg class="map" viewBox="0 0 120 40" width="120" height="40" aria-hidden="true"><rect class="map__land" width="120" height="40"/><g class="map__pin"><circle cx="20" cy="20" r="12"/><text class="map__pin-num" x="20" y="20">1</text></g><g class="map__pin"><circle cx="60" cy="20" r="12"/><text class="map__pin-num" x="60" y="20">2</text></g><g class="map__pin"><circle cx="100" cy="20" r="12"/><text class="map__pin-num" x="100" y="20">3</text></g></svg></div><figcaption>Number pins exactly as the stops in the list.</figcaption></figure>
         <figure class="ds-dont"><div class="ds-example__canvas"><svg class="map" viewBox="0 0 120 40" width="120" height="40" aria-hidden="true"><rect class="map__land" width="120" height="40"/><g class="map__pin"><circle cx="20" cy="20" r="8"/></g><g class="map__pin"><circle cx="60" cy="20" r="8"/></g><g class="map__pin"><circle cx="100" cy="20" r="8"/></g></svg></div><figcaption>Unnumbered pins make the reader match places by guessing.</figcaption></figure>
         <figure class="ds-do"><div class="ds-example__canvas"><span class="ds-pill">Stops listed in the day beside the map</span></div><figcaption>Keep the list as the equivalent, and describe the route in the SVG's label.</figcaption></figure>
@@ -434,7 +434,7 @@
       <ul>
         <li><a href="../../mocks/pages/weekend.html">pages/weekend</a>: the Saturday and Sunday maps, the planner and its toolbar.</li>
       </ul>
-      <p>Drift fixed: D18 (21 inline hex fills replaced by <code>.map__*</code> classes on tokens), D24 (the 1024px breakpoint in rem). Added during extraction: <code>.map__home-glyph</code> for the house icon, and a water colour mixed from the sky ink and the surface so the lake works in both themes. Not in the mocks: production tiles (docs/specs L2-100), the full map behind Open map, and the loading and unavailable states.</p>
+      <p>Drift fixed: D24 (the 1024px breakpoint in rem). Added during extraction: <code>.map__home-glyph</code> for the house icon, and a water colour mixed from the sky ink and the surface so the lake works in both themes. Not in the mocks: production tiles (docs/specs L2-100), the full map behind Open map, and the loading and unavailable states.</p>
     </section>
 
     <footer class="ds-footer"><span>Saturdaze design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>
