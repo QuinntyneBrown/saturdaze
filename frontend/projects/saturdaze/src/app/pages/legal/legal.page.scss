@@ -25,7 +25,7 @@
 
 .prose p {
   font-size: var(--fontSizeBase400);
-  line-height: 1.65;
+  line-height: var(--lineHeightRelaxed);
   color: var(--colorNeutralForeground1);
   margin-bottom: 12px;
 }

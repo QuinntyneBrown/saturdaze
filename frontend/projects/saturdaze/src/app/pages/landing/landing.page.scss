@@ -40,16 +40,16 @@
 
 .hero__title {
   font-size: 44px;
-  font-weight: 800;
+  font-weight: var(--fontWeightBold);
   letter-spacing: -0.03em;
-  line-height: 1.05;
+  line-height: var(--lineHeightNone);
 }
 
 .hero__lede {
-  font-size: 18px;
+  font-size: var(--fontSizeBase500);
   color: var(--colorNeutralForeground2);
   max-width: 540px;
-  line-height: 1.5;
+  line-height: var(--lineHeightNormal);
 }
 
 .hero__cta {
@@ -91,7 +91,7 @@
 }
 
 .how__title {
-  font-size: 28px;
+  font-size: var(--fontSizeHero700);
   letter-spacing: -0.02em;
 }
 
@@ -127,7 +127,7 @@
 }
 
 .step__title {
-  font-size: 18px;
+  font-size: var(--fontSizeBase500);
   font-weight: var(--fontWeightBold);
 }
 

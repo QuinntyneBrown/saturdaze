@@ -86,7 +86,7 @@
   font-size: var(--fontSizeBase600);
   font-weight: var(--fontWeightBold);
   letter-spacing: -0.02em;
-  line-height: 1.15;
+  line-height: var(--lineHeightTight);
 }
 
 .cover__sub {

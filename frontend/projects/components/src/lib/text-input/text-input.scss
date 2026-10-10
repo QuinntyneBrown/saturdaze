@@ -65,7 +65,7 @@ textarea.field__input {
   min-height: 96px;
   padding: 10px 12px;
   resize: vertical;
-  line-height: 1.45;
+  line-height: var(--lineHeightNormal);
 }
 
 .field__hint {

@@ -73,8 +73,16 @@ export class LandingPage extends BasePage {
     return this.main.locator(".how");
   }
 
+  howTitle(): Locator {
+    return this.how.locator(".how__title");
+  }
+
   steps(): Locator {
     return this.main.locator(".steps .step");
+  }
+
+  stepTitles(): Locator {
+    return this.steps().locator(".step__title");
   }
 
   get footer(): Locator {
