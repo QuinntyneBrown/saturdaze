@@ -35,13 +35,13 @@
 }
 
 .auth-card__sub {
-  font-size: 14px;
+  font-size: var(--fontSizeBase350);
   color: var(--colorNeutralForeground2);
 }
 
 .auth-card__alt {
   text-align: center;
-  font-size: 14px;
+  font-size: var(--fontSizeBase350);
   color: var(--colorNeutralForeground2);
 }
 

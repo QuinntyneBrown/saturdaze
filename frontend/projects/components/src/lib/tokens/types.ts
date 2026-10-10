@@ -108,6 +108,7 @@ export interface FontFamilyTokens {
 export interface FontSizeTokens {
   fontSizeBase200: string;
   fontSizeBase300: string;
+  fontSizeBase350: string;
   fontSizeBase400: string;
   fontSizeBase500: string;
   fontSizeBase600: string;

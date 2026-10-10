@@ -15,10 +15,11 @@ export const fontFamilies: FontFamilyTokens = {
   fontFamilyMonospace: 'ui-monospace, SFMono-Regular, Menlo, Consolas, monospace',
 };
 
-/** A seven-step scale; `themes/responsive.ts` retunes the display sizes per breakpoint. */
+/** An eight-step scale (350 is the 14px control-label step); `themes/responsive.ts` retunes the display sizes per breakpoint. */
 export const fontSizes: FontSizeTokens = {
   fontSizeBase200: '12px',
   fontSizeBase300: '13px',
+  fontSizeBase350: '14px',
   fontSizeBase400: '15px',
   fontSizeBase500: '17px',
   fontSizeBase600: '20px',

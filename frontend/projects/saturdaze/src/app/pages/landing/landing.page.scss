@@ -66,7 +66,7 @@
 }
 
 .hero__alt {
-  font-size: 14px;
+  font-size: var(--fontSizeBase350);
   color: var(--colorNeutralForeground2);
 }
 
@@ -132,7 +132,7 @@
 }
 
 .step__body {
-  font-size: 14px;
+  font-size: var(--fontSizeBase350);
   color: var(--colorNeutralForeground2);
 }
 

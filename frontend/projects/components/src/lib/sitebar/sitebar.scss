@@ -61,7 +61,7 @@
 }
 
 .sitebar__link {
-  font-size: 14px;
+  font-size: var(--fontSizeBase350);
   font-weight: var(--fontWeightSemibold);
   color: var(--colorNeutralForeground2);
   padding: 8px 12px;

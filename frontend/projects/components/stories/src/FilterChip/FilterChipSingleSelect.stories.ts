@@ -15,7 +15,7 @@ export const SingleSelect: StoryObj<FilterChip> = {
               <sd-filter-chip [pressed]="day() === d" (pressedChange)="day.set(d)">{{ d }}</sd-filter-chip>
             }
           </div>
-          <p style="font-size: 14px">Showing events for <strong>{{ day() }}</strong>.</p>
+          <p style="font-size: var(--fontSizeBase350)">Showing events for <strong>{{ day() }}</strong>.</p>
         </div>
       `,
     };

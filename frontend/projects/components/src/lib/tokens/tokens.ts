@@ -14,6 +14,7 @@ export const tokens: Record<keyof Theme, string> = {
   borderRadiusCircular: 'var(--borderRadiusCircular)',
   fontSizeBase200: 'var(--fontSizeBase200)',
   fontSizeBase300: 'var(--fontSizeBase300)',
+  fontSizeBase350: 'var(--fontSizeBase350)',
   fontSizeBase400: 'var(--fontSizeBase400)',
   fontSizeBase500: 'var(--fontSizeBase500)',
   fontSizeBase600: 'var(--fontSizeBase600)',
