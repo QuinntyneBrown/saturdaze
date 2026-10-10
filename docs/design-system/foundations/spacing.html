@@ -256,7 +256,7 @@
       </ul>
       <div class="ds-dodont">
         <figure class="ds-do"><div class="ds-example__canvas"><div class="well" style="width: 100%;"><svg class="icon" aria-hidden="true"><use href="#i-info"/></svg><div><p class="well__title">Swim lessons are locked in</p><p class="well__body">Every Saturday at 9:00.</p></div></div></div><figcaption>Well padding 12 × 16px from the scale.</figcaption></figure>
-        <figure class="ds-dont"><div class="ds-example__canvas"><div class="well" style="width: 100%; padding: 0.875rem 1.125rem;"><svg class="icon" aria-hidden="true"><use href="#i-info"/></svg><div><p class="well__title">Swim lessons are locked in</p><p class="well__body">Every Saturday at 9:00.</p></div></div></div><figcaption>The mock's 14px and 18px (D15). Snap to 12 and 16.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><div class="well" style="width: 100%; padding: 0.875rem 1.125rem;"><svg class="icon" aria-hidden="true"><use href="#i-info"/></svg><div><p class="well__title">Swim lessons are locked in</p><p class="well__body">Every Saturday at 9:00.</p></div></div></div><figcaption>14px and 18px are off the 4px scale. Snap to 12 and 16.</figcaption></figure>
       </div>
     </section>
 
@@ -315,11 +315,6 @@
         <thead><tr><th scope="col">Mock</th><th scope="col">System</th><th scope="col">Drift</th></tr></thead>
         <tbody>
           <tr><td><code>--sd-s-1</code> to <code>--sd-s-9</code>: 4, 8, 12, 16, 20, 24, 32, 40, 56px</td><td><code>XS</code>, <code>S</code>, <code>M</code>, <code>L</code>, <code>XL</code>, <code>XXL</code>, <code>XXXL</code>, <code>XXXXL</code>, <code>XXXXXL</code> in rem</td><td>Same values; rem (D24)</td></tr>
-          <tr><td>14px well and banner padding, dialog and auth-form gaps</td><td>12px (<code>M</code>) or 16px (<code>L</code>)</td><td>D15</td></tr>
-          <tr><td>18px auth-card gap</td><td>16px (<code>L</code>)</td><td>D15</td></tr>
-          <tr><td>22px large-button padding</td><td>24px (<code>XXL</code>)</td><td>D15</td></tr>
-          <tr><td>28px auth-card padding</td><td>24px on phones, 32px from 720px</td><td>D15</td></tr>
-          <tr><td>7px, 3px and 15px one-offs</td><td>Nearest step or nudge</td><td>D15</td></tr>
           <tr><td>Hard-coded 32 / 40 / 48px control heights</td><td><code>--controlHeightSmall/Medium/Large</code></td><td>New tokens</td></tr>
         </tbody>
       </table></div>
