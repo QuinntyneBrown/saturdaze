@@ -27,11 +27,13 @@ export const fontSizes: FontSizeTokens = {
   fontSizeHero800: '34px',
 };
 
-/** Unitless ratios, so one line height serves every size. */
+/** Unitless ratios, so one line height serves every size; Relaxed is for long-form prose. */
 export const lineHeights: LineHeightTokens = {
+  lineHeightNone: '1',
   lineHeightTight: '1.2',
   lineHeightSnug: '1.35',
   lineHeightNormal: '1.5',
+  lineHeightRelaxed: '1.65',
 };
 
 export const fontWeights: FontWeightTokens = {

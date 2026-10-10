@@ -117,9 +117,11 @@ export interface FontSizeTokens {
 }
 
 export interface LineHeightTokens {
+  lineHeightNone: string;
   lineHeightTight: string;
   lineHeightSnug: string;
   lineHeightNormal: string;
+  lineHeightRelaxed: string;
 }
 
 export interface FontWeightTokens {
