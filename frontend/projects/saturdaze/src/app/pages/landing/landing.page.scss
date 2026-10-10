@@ -10,7 +10,7 @@
 .hero {
   position: relative;
   overflow: hidden;
-  padding: 40px 24px;
+  padding: var(--spacingVerticalXXXXL) var(--spacingHorizontalXXL);
   background: var(--colorBrandBackgroundGradient), var(--colorNeutralBackground1);
   border: 1px solid var(--colorNeutralStroke2);
   border-radius: var(--borderRadiusXLarge);
@@ -163,7 +163,7 @@
 
 @include respond-to(tablet) {
   .hero {
-    padding: 56px 40px;
+    padding: var(--spacingVerticalXXXXXL) var(--spacingHorizontalXXXXL);
   }
 
   .steps {
@@ -174,7 +174,7 @@
 
 @include respond-to(desktop) {
   .hero {
-    padding: 72px 56px;
+    padding: var(--layoutSpacePage) var(--spacingHorizontalXXXXXL);
   }
 
   .hero__grid {
