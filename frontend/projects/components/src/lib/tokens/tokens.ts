@@ -78,6 +78,7 @@ export const tokens: Record<keyof Theme, string> = {
   colorBrandForeground2: 'var(--colorBrandForeground2)',
   colorBrandBackground: 'var(--colorBrandBackground)',
   colorBrandBackgroundHover: 'var(--colorBrandBackgroundHover)',
+  colorBrandBackgroundStatic: 'var(--colorBrandBackgroundStatic)',
   colorBrandBackground2: 'var(--colorBrandBackground2)',
   colorBrandBackgroundGradient: 'var(--colorBrandBackgroundGradient)',
   colorBrandStroke1: 'var(--colorBrandStroke1)',

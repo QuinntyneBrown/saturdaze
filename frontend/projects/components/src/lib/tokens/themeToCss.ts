@@ -1,6 +1,6 @@
 import type { PartialTheme, ThemeOverride } from './types';
 
-/** `{ colorBrandBackground: '#e07856' }` → `{ '--colorBrandBackground': '#e07856' }`. */
+/** `{ colorBrandBackground: '#bf5130' }` → `{ '--colorBrandBackground': '#bf5130' }`. */
 export function themeToCssVariables(theme: PartialTheme): Record<string, string> {
   const vars: Record<string, string> = {};
   for (const [key, value] of Object.entries(theme)) {

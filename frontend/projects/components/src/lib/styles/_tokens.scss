@@ -83,8 +83,9 @@
   --colorStrokeFocus2: #e07856;
   --colorBrandForeground1: #e07856;
   --colorBrandForeground2: #a04b2c;
-  --colorBrandBackground: #e07856;
-  --colorBrandBackgroundHover: color-mix(in srgb, #e07856 94%, #000);
+  --colorBrandBackground: #bf5130;
+  --colorBrandBackgroundHover: color-mix(in srgb, #bf5130 94%, #000);
+  --colorBrandBackgroundStatic: #e07856;
   --colorBrandBackground2: #fbe7de;
   --colorBrandBackgroundGradient:
     radial-gradient(80% 60% at 0% 0%, #fbe7de 0%, transparent 60%),

@@ -16,17 +16,19 @@ describe('design tokens', () => {
 
   it('derives brand roles from the ramp', () => {
     const theme = createLightTheme(brandSaturdaze);
-    expect(theme.colorBrandBackground).toBe('#e07856');
+    expect(theme.colorBrandBackground).toBe('#bf5130');
+    expect(theme.colorBrandBackgroundStatic).toBe('#e07856');
     expect(theme.colorBrandForeground2).toBe('#a04b2c');
     expect(theme.colorBrandBackground2).toBe('#fbe7de');
-    expect(theme.colorStrokeFocus2).toBe(brandSaturdaze[80]);
+    expect(theme.colorStrokeFocus2).toBe(brandSaturdaze[90]);
   });
 
   it('re-brands every brand role from a new ramp', () => {
-    const ramp = { ...brandSaturdaze, 70: '#003366', 80: '#0066cc', 160: '#e6f0fa' };
+    const ramp = { ...brandSaturdaze, 70: '#003366', 80: '#0066cc', 90: '#3385d6', 160: '#e6f0fa' };
     const theme = createLightTheme(ramp);
     expect(theme.colorBrandBackground).toBe('#0066cc');
-    expect(theme.colorBrandStroke1).toBe('#0066cc');
+    expect(theme.colorBrandBackgroundStatic).toBe('#3385d6');
+    expect(theme.colorBrandStroke1).toBe('#3385d6');
     expect(theme.colorBrandForeground2).toBe('#003366');
     expect(theme.colorBrandBackground2).toBe('#e6f0fa');
     expect(theme.colorNeutralForeground1).toBe(saturdazeLightTheme.colorNeutralForeground1);

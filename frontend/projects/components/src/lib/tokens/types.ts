@@ -63,6 +63,7 @@ export interface ColorTokens {
   colorBrandForeground2: string;
   colorBrandBackground: string;
   colorBrandBackgroundHover: string;
+  colorBrandBackgroundStatic: string;
   colorBrandBackground2: string;
   colorBrandBackgroundGradient: string;
   colorBrandStroke1: string;
