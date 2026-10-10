@@ -298,7 +298,7 @@
                 border-color var(--sd-dur-fast) var(--sd-ease), transform var(--sd-dur-fast) var(--sd-ease),
                 box-shadow var(--sd-dur-fast) var(--sd-ease);
   }
-  .btn--primary { background: var(--sd-primary); color: var(--sd-primary-ink); box-shadow: var(--sd-shadow-1); }
+  .btn--primary { background: var(--sd-primary-fill); color: var(--sd-primary-ink); box-shadow: var(--sd-shadow-1); }
   .btn--quiet { background: var(--sd-surface); border-color: var(--sd-line-strong); color: var(--sd-ink); }
   .btn--ghost { color: var(--sd-ink-soft); }
   .btn--danger { background: var(--sd-warn); color: #fff; }
@@ -880,7 +880,7 @@
 
   /* ---- hover states (pointer devices only) ---- */
   @media (hover: hover) {
-    .btn--primary:hover { background: color-mix(in srgb, var(--sd-primary) 94%, #000); transform: translateY(-1px); box-shadow: var(--sd-shadow-2); }
+    .btn--primary:hover { background: color-mix(in srgb, var(--sd-primary-fill) 94%, #000); transform: translateY(-1px); box-shadow: var(--sd-shadow-2); }
     .btn--quiet:hover { background: var(--sd-surface-2); transform: translateY(-1px); }
     .btn--ghost:hover { background: var(--sd-surface-2); color: var(--sd-ink); }
     .btn--danger:hover { background: color-mix(in srgb, var(--sd-warn) 94%, #000); transform: translateY(-1px); }

@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 24 Slides</title>
+<link rel="stylesheet" href="../assets/slides.css">
+</head>
+<body data-video-number="24" data-video-title="Design drift D02" data-parts="Introduction|What drifted|Why it matters|The fix|Before and after|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Design drift · Video 24</div>
+  <h1>D02: a primary button you could not read</h1>
+  <p class="lead">White on coral #E07856 was 3.00:1; the fill is now #BF5130 at 4.74:1</p>
+</section>
+
+<section id="drift" data-part="1" data-cue="The mocks drew the primary button with">
+  <h2>What drifted</h2>
+  <pre class="code" data-lang="css" data-mark="1">  --sd-primary:      #E07856;   /* warm coral — the "Plan This Weekend" CTA */
+  --sd-primary-ink:  #FFFFFF;</pre>
+  <ul>
+    <li>Mocks: <code>.btn--primary</code> on <code>--sd-primary</code></li>
+    <li>Product: <code>--colorBrandBackground: #e07856</code></li>
+    <li>Design system: logged as D02, fixed on its own side</li>
+  </ul>
+</section>
+
+<section id="why" data-part="2" data-cue="The rule is WCAG success criterion">
+  <h2>Why it matters: WCAG 1.4.3 (AA)</h2>
+  <div class="cols">
+    <div class="card"><h3>Before</h3><p>White on #E07856</p><p class="lead">3.00:1</p><p class="small">Fails for 14px text (needs 4.5:1)</p></div>
+    <div class="card"><h3>After</h3><p>White on #BF5130</p><p class="lead">4.74:1</p><p class="small">Passes AA</p></div>
+  </div>
+</section>
+
+<section id="keep" data-part="2" data-cue="The new coral gives the white label">
+  <h2>The brand coral stays</h2>
+  <ul>
+    <li>#E07856 keeps the brand mark</li>
+    <li>Current-page underline, focus ring, coral icons</li>
+    <li>Rule: nothing is ever written on it</li>
+  </ul>
+</section>
+
+<section id="mocks" data-part="3" data-cue="Start with the mocks, because the mocks are the design.">
+  <h2>1 · The mocks</h2>
+  <pre class="code tight" data-lang="css" data-mark="1,2,4">--sd-primary:      #E07856;   /* brand mark, underlines, accents; never behind text */
+--sd-primary-fill: #BF5130;   /* the CTA fill: white label 4.74:1 (WCAG 1.4.3) */
+
+.btn--primary { background: var(--sd-primary-fill); color: var(--sd-primary-ink); }</pre>
+  <p class="small"><code>docs/mocks/styles/tokens.css</code> and <code>app.css</code> (excerpt); BEM classes unchanged.</p>
+</section>
+
+<section id="tokens" data-part="3" data-cue="In the product, token values change in the TypeScript theme">
+  <h2>2 · The TypeScript theme</h2>
+  <pre class="code tight" data-lang="ts" data-mark="2,3,8,10,11">// global/brandColors.ts
+80: `#bf5130`,
+90: `#e07856`,
+// alias/lightColor.ts
+colorStrokeFocus2: brand[90],
+colorBrandForeground1: brand[90],
+colorBrandForeground2: brand[70],
+colorBrandBackground: brand[80], // white label passes AA
+colorBrandBackgroundHover: `color-mix(in srgb, ${brand[80]} 94%, #000)`,
+colorBrandBackgroundStatic: brand[90], // the brand mark
+colorBrandStroke1: brand[90],</pre>
+  <p class="small"><code>npm run tokens</code> regenerates <code>_tokens.scss</code> and <code>tokens.ts</code>.</p>
+</section>
+
+<section id="components" data-part="3" data-cue="Four components drew the brand mark with the button token">
+  <h2>3 · Components read tokens by role</h2>
+  <pre class="code tight" data-lang="css" data-mark="4">background:
+  radial-gradient(120% 120% at 20% 0%, var(--colorBrandBackground2) 0%, transparent 60%),
+  radial-gradient(120% 120% at 100% 100%, var(--colorPaletteSunBackground1) 0%, transparent 60%),
+  var(--colorBrandBackgroundStatic);</pre>
+  <ul>
+    <li>Brand mark: top bar, site bar, auth shell, admin nav</li>
+    <li>Underline and stat bar: <code>colorBrandStroke1</code></li>
+    <li>Token unit test first, failing, then green</li>
+  </ul>
+</section>
+
+<section id="baselines" data-part="3" data-cue="Finally, the Playwright visual baselines">
+  <h2>4 · Baselines and the drift log</h2>
+  <ul>
+    <li>Baselines re-captured from the mocks (ADR-010, Chromium)</li>
+    <li>Only screenshots with a primary button updated</li>
+    <li>D02 row removed from <code>docs/design-system/README.md</code></li>
+    <li>D02 citations removed from the design-system pages</li>
+  </ul>
+</section>
+
+<section id="before" data-part="4" data-cue="Here is the production build from the commit before the fix." data-clip="clips/before.mp4" data-clip-delay="1">
+  <aside class="clip-notes">
+    <h3>Before</h3>
+    <ul>
+      <li>Fill #E07856</li>
+      <li>White label 3.00:1</li>
+    </ul>
+  </aside>
+</section>
+
+<section id="after" data-part="4" data-cue="And here is the fix." data-clip="clips/after.mp4" data-clip-delay="1">
+  <aside class="clip-notes">
+    <h3>After</h3>
+    <ul>
+      <li>Fill #BF5130</li>
+      <li>White label 4.74:1</li>
+      <li>Brand mark unchanged</li>
+    </ul>
+  </aside>
+</section>
+
+<section id="recap" data-part="5" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <ul>
+      <li>White on the brand fill needs 4.5:1</li>
+      <li>Change the TypeScript theme, then regenerate</li>
+      <li>Keep the brand colour where nothing is written on it</li>
+      <li>Mocks first, affected baselines only, then delete the drift record</li>
+    </ul>
+  </div>
+</section>
+
+<script src="../assets/slides.js"></script>
+</body>
+</html>

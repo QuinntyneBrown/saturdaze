@@ -125,7 +125,6 @@ and up) are proposals for the product's TypeScript theme.
 
 | ID | Mock | Issue | Resolution |
 |---|---|---|---|
-| D02 | every page, `.btn--primary` | White label on `--sd-primary` #E07856 is 3.00:1, below 4.5:1 for 14px text (1.4.3). | `--colorBrandBackground` #BF5130 (4.74:1). #E07856 survives as `--colorBrandBackgroundStatic` for the brand mark only. |
 | D03 | every page, focus | Focus ring `2px solid --sd-primary` is 2.81:1 on the cream canvas (1.4.11, 2.4.7). | `--colorStrokeFocus2` #A04B2C (5.56:1 on canvas, 5.18:1 on wells). |
 | D04 | fields, timeline, footers | `--sd-ink-faint` #9CA3AF used for text (placeholders, `field__req`, `block__dur`, `empty__note`, `auth__foot`, `site-footer`, `hero__note`, `list__trail`) is 2.38 to 2.54:1. | `--colorNeutralForeground3` #636A77 (4.75:1 on wells). #9CA3AF is kept for disabled text only. |
 | D05 | chips, wells, segments | `--sd-ink-soft` #6B7280 on `--sd-surface-2` is 4.22:1. | `--colorNeutralForeground2` #5B6270 (5.35:1 on wells, 6.13:1 on white). |

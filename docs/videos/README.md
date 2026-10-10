@@ -51,6 +51,7 @@ Six videos on Saturdaze Admin, the second web application that curates the catal
 | # | Video | Runtime | What you learn |
 | --- | --- | --- | --- |
 | 19 | [Design drift D01: the mock tokens that pointed nowhere](19-mock-tokens-drift-d01/README.md) | ~3.3 min | A mock stylesheet whose header pointed at a deleted catalog; retiring the always-failing check; before and after. |
+| 24 | [Design drift D02: a primary button you could not read](24-primary-button-contrast-d02/README.md) | ~4.5 min | White on coral #E07856 at 3.00:1 (WCAG 1.4.3); the #BF5130 fill in the mocks, the TypeScript theme and the components; the static brand coral; before and after in the app. |
 
 ## Family members series
 

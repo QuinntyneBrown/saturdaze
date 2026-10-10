@@ -17,7 +17,8 @@
   --sd-line:        rgba(31, 41, 55, 0.08);
   --sd-line-strong: rgba(31, 41, 55, 0.16);
 
-  --sd-primary:      #E07856;   /* warm coral — the "Plan This Weekend" CTA */
+  --sd-primary:      #E07856;   /* warm coral — brand mark, underlines, accents; never behind text */
+  --sd-primary-fill: #BF5130;   /* the "Plan This Weekend" CTA fill: white label 4.74:1 (WCAG 1.4.3) */
   --sd-primary-ink:  #FFFFFF;
   --sd-primary-soft: #FBE7DE;
 
