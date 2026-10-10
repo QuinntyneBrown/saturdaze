@@ -1,15 +1,34 @@
-# Saturdaze
+<p align="center">
+  <img src="docs/assets/saturdaze-mark.svg" alt="Saturdaze logo" width="96" height="96">
+</p>
 
-Saturdaze is a full-stack family weekend planner. It turns household
-preferences, recurring commitments, kid-friendly activities, restaurant picks,
-local events, errands, and weather into a weekend plan that is ready to use.
+<h1 align="center">Saturdaze</h1>
 
-[Overview](#overview) · [Features](#features) · [Quick-start](#quick-start) ·
-[Architecture](#architecture) · [Development](#development) ·
-[Testing](#testing) · [Documentation](#documentation) ·
-[Contributing](CONTRIBUTING.md) · [Security](SECURITY.md) ·
-[Support](SUPPORT.md) · [Code of Conduct](CODE_OF_CONDUCT.md) ·
-[License](LICENSE)
+<p align="center">
+  <strong>Family weekends, planned.</strong><br>
+  A full-stack weekend planner that turns household preferences, recurring
+  commitments, local activities and events, errands, and weather into a weekend
+  plan that is ready to use.
+</p>
+
+<p align="center">
+  <a href="https://github.com/QuinntyneBrown/saturdaze/actions/workflows/ci.yml"><img src="https://github.com/QuinntyneBrown/saturdaze/actions/workflows/ci.yml/badge.svg?branch=main" alt="CI"></a>
+  <a href="https://github.com/QuinntyneBrown/saturdaze/actions/workflows/deploy.yml"><img src="https://github.com/QuinntyneBrown/saturdaze/actions/workflows/deploy.yml/badge.svg?branch=main" alt="Deploy"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT License"></a>
+  <img src="https://img.shields.io/badge/.NET-10.0-512BD4.svg" alt=".NET 10">
+  <img src="https://img.shields.io/badge/Angular-21-DD0031.svg" alt="Angular 21">
+  <img src="https://img.shields.io/badge/Playwright-e2e-2EAD33.svg" alt="Playwright">
+</p>
+
+<p align="center">
+  <a href="#overview">Overview</a> ·
+  <a href="#getting-started">Getting started</a> ·
+  <a href="#architecture">Architecture</a> ·
+  <a href="#development">Development</a> ·
+  <a href="#testing">Testing</a> ·
+  <a href="#documentation">Documentation</a> ·
+  <a href="CONTRIBUTING.md">Contributing</a>
+</p>
 
 ---
 
@@ -47,12 +66,22 @@ reference.
   with every pass recorded in an `IngestionRun` audit row. Triggered on-demand
   via `saturdaze ingest` or on a cron schedule by the `Saturdaze.Worker` service.
   See [Ingestion triggers](backend/deploy/webjobs/ingest/README.md) for scheduling options.
-- Static HTML design under `docs/mocks-v2/` — the source of truth for the
+- Static HTML design under `docs/mocks/` — the source of truth for the
   Angular implementation and the visual regression baselines (ADR-009, ADR-010).
 - Local CLI for database migration, seeding, reset, and catalog ingestion.
 - One-command fresh stack script for local verification.
 
-## Quick Start
+## Getting started
+
+### Prerequisites
+
+- .NET SDK `10.0.101` or a compatible feature-band SDK, as pinned by
+  `backend/global.json`
+- SQL Server LocalDB or SQL Server Express
+- Node.js and npm; the frontend workspace declares `npm@10.9.4`
+- PowerShell for the fresh-stack script
+
+### Quick start
 
 The fastest way to run the current application from a clean database is the
 fresh-stack script:
@@ -75,15 +104,7 @@ frontend prefers `http://127.0.0.1:4200/` and moves to the next free port when
 4200 is busy; if you pass `-FrontendPort` explicitly and that port is taken,
 the script stops instead of guessing.
 
-### Prerequisites
-
-- .NET SDK `10.0.101` or a compatible feature-band SDK, as pinned by
-  `backend/global.json`
-- SQL Server LocalDB or SQL Server Express
-- Node.js and npm; the frontend workspace declares `npm@10.9.4`
-- PowerShell for the fresh-stack script
-
-## Manual Setup
+### Manual setup
 
 Install dependencies:
 
@@ -124,7 +145,7 @@ cd frontend
 npm start
 ```
 
-Run the mock reference app:
+Run the design reference (static mocks):
 
 ```powershell
 cd e2e
@@ -147,8 +168,9 @@ Then open `http://localhost:5173/`.
 | Admin app | `frontend/projects/admin` | Saturdaze Admin: catalog photo management on its own host (`npm run start:admin`, ADR-014) |
 | API library | `frontend/projects/api` | Client-side models and services for backend integration |
 | Component library | `frontend/projects/components` | Standalone Angular UI components aligned with the mock system |
+| Perf test | `frontend/projects/perf-test` | Component render-cost scenarios profiled from `e2e/perf-test` (ADR-014) |
 | E2E suite | `e2e` | Playwright behavior and visual tests |
-| Design reference | `docs/mocks-v2` | Static HTML/CSS design, screenshots, and its own lint/verify scripts (`.check.mjs`, `.verify.mjs`) |
+| Design reference | `docs/mocks` | Static HTML/CSS design, screenshots, and its own lint/verify scripts (`.check.mjs`, `.verify.mjs`) |
 | Design system | `frontend/projects/components/stories` | Storybook docsite for the component library — concepts, theme tokens, component docs and patterns (`npm run storybook`; deployed by `deploy-storybook.yml`, ADR-012) |
 
 ## Development
@@ -209,19 +231,16 @@ Development conventions:
 
 ## Documentation
 
-- [Backend guide](backend/README.md)
-- [User guide](docs/user-guide/README.md)
-- [Level 1 specification](docs/specs/L1.md)
-- [Level 2 specification](docs/specs/L2.md)
-- [Requirements (L1/L2)](docs/specs/)
-- [Detailed feature designs](docs/detailed-designs/)
-- [Architecture decision records](docs/adr/)
-- [User guide](docs/user-guide/)
-- [Design (mocks-v2)](docs/mocks-v2/index.html) and its [README](docs/mocks-v2/README.md)
-- [Responsive audit (2026-08-27)](docs/responsive-audit-2026-08-27.md)
-- [Dead-code findings and removal plan](docs/dead-code-removal-plan.md)
-- [Button/link audit (2026-05-17, resolved)](docs/button-link-audit-2026-05-17.md)
-- [Sign-out plan](docs/sign-out-plan.md)
+| Topic | Location |
+| --- | --- |
+| Backend guide | [backend/README.md](backend/README.md) |
+| Requirements | [Level 1](docs/specs/L1.md) and [Level 2](docs/specs/L2.md) specifications in [docs/specs](docs/specs/) |
+| Detailed designs | [docs/detailed-designs](docs/detailed-designs/) |
+| Architecture decisions | [docs/adr](docs/adr/) |
+| Design reference | [docs/mocks](docs/mocks/index.html) and its [README](docs/mocks/README.md) |
+| Extracted design system | [docs/design-system](docs/design-system/README.md) |
+| Catalog ingestion triggers | [backend/deploy/webjobs/ingest](backend/deploy/webjobs/ingest/README.md) |
+| Perf test | [frontend/projects/perf-test](frontend/projects/perf-test/README.md) |
 
 ## Deployment
 
