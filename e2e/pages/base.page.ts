@@ -118,6 +118,15 @@ export abstract class BasePage {
     return target.evaluate((el) => getComputedStyle(el).outlineColor);
   }
 
+  /** The border colour a field shows while it has keyboard focus (fields draw no outline). */
+  async focusBorderColor(target: Locator): Promise<string> {
+    await this.tabTo(target);
+    return target.evaluate(async (el) => {
+      await Promise.all(el.getAnimations().map((a) => a.finished)); // let the border transition settle
+      return getComputedStyle(el).borderTopColor;
+    });
+  }
+
   /* ---------- Page header ---------- */
 
   get pageHeader(): Locator {
