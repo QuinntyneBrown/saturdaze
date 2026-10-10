@@ -125,7 +125,6 @@ and up) are proposals for the product's TypeScript theme.
 
 | ID | Mock | Issue | Resolution |
 |---|---|---|---|
-| D04 | fields, timeline, footers | `--sd-ink-faint` #9CA3AF used for text (placeholders, `field__req`, `block__dur`, `empty__note`, `auth__foot`, `site-footer`, `hero__note`, `list__trail`) is 2.38 to 2.54:1. | `--colorNeutralForeground3` #636A77 (4.75:1 on wells). #9CA3AF is kept for disabled text only. |
 | D05 | chips, wells, segments | `--sd-ink-soft` #6B7280 on `--sd-surface-2` is 4.22:1. | `--colorNeutralForeground2` #5B6270 (5.35:1 on wells, 6.13:1 on white). |
 | D06 | fields, switch, quiet button | Input borders and the off switch track use `--sd-line-strong` (16% ink), 1.36:1 (1.4.11). | `--colorNeutralStrokeAccessible` #80868F (3.67:1 on white, 3.20:1 on wells). |
 | D07 | `chip--accent`, `chip--leaf`, approved row | Forest #2D7D5F text on its own tint is 4.11 to 4.12:1. | `--colorStatusSuccessForeground1` / `--colorPaletteLeafForeground1` #256B51 (5.25:1). #2D7D5F stays as the solid fill. |
