@@ -144,7 +144,7 @@
         <ol class="ds-anatomy__list">
           <li><div><b>Container</b><small>Circle (<code>--borderRadiusCircular</code>) sized by <code>--sd-disc-size</code>, filled with the tone's Background1 tint.</small></div></li>
           <li><div><b>Icon</b><small>20px stroke icon in the tone's Foreground1 (26px in <code>--xl</code>), <code>aria-hidden="true"</code>.</small></div></li>
-          <li><div><b>Month</b><small><code>.date-tile__m</code>: 12px bold uppercase, wide tracking (was 10px, drift D12).</small></div></li>
+          <li><div><b>Month</b><small><code>.date-tile__m</code>: 12px bold uppercase, wide tracking.</small></div></li>
           <li><div><b>Day</b><small><code>.date-tile__d</code>: 17px bold. The tile is a 44px rounded square in the brand tint.</small></div></li>
         </ol>
       </div>
@@ -291,8 +291,8 @@
       <div class="ds-dodont">
         <figure class="ds-do"><div class="ds-example__canvas"><span class="cluster"><span class="weather-disc weather-disc--sun" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-sun"/></svg></span><span>Saturday · 22° / 14°</span></span></div><figcaption>Write the forecast beside the weather disc and hide the disc from assistive tech.</figcaption></figure>
         <figure class="ds-dont"><div class="ds-example__canvas"><span class="weather-disc weather-disc--rain"><svg class="icon" aria-hidden="true"><use href="#i-rain"/></svg></span></div><figcaption>A lone weather disc with no text and no name: colour and shape are the only signal (1.1.1, 1.4.1).</figcaption></figure>
-        <figure class="ds-do"><div class="ds-example__canvas"><span class="date-tile" aria-hidden="true"><span class="date-tile__m">Jun</span><span class="date-tile__d">20</span></span></div><figcaption>12px month on the date tile, the minimum readable size (drift D12).</figcaption></figure>
-        <figure class="ds-dont"><div class="ds-example__canvas"><span class="date-tile" aria-hidden="true"><span class="date-tile__m" style="font-size: 0.625rem;">Jun</span><span class="date-tile__d">20</span></span></div><figcaption>The mocks' 10px month: below the 12px floor and hard to read on the tint.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas"><span class="date-tile" aria-hidden="true"><span class="date-tile__m">Jun</span><span class="date-tile__d">20</span></span></div><figcaption>12px month on the date tile, the minimum readable size.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><span class="date-tile" aria-hidden="true"><span class="date-tile__m" style="font-size: 0.625rem;">Jun</span><span class="date-tile__d">20</span></span></div><figcaption>A 10px month: below the 12px floor and hard to read on the tint.</figcaption></figure>
         <figure class="ds-do"><div class="ds-example__canvas"><span class="disc disc--indoor" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-bag"/></svg></span><span>Costco run</span></div><figcaption>Indoor tone for an errand, the same tone its chip uses.</figcaption></figure>
         <figure class="ds-dont"><div class="ds-example__canvas"><span class="disc disc--warn" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-bag"/></svg></span><span>Costco run</span></div><figcaption>Warn tone on an ordinary errand reads as an error. Keep warn for expired links and failures.</figcaption></figure>
       </div>
@@ -353,7 +353,7 @@
         <li><a href="../../mocks/pages/dialogs.html">pages/dialogs</a>: dialog D6 (Add to calendar, primary), dialog D9 (Errand added, indoor), dialog D12 (Lock it in, large sun), dialog D25 (More, neutral).</li>
         <li><a href="../../mocks/pages/review-submissions.html">pages/review-submissions</a> and <a href="../../mocks/pages/ideas.events.html">pages/ideas.events</a>: date tiles.</li>
       </ul>
-      <p>Drift fixed during extraction (see the <a href="../README.md">README drift log</a>): drift D12 (10px date-tile month raised to 12px), drift D14 (18px date-tile day snapped to 17px), drift D17 (literal colours replaced by tokens). Not shown in the mocks yet: <code>.weather-disc--rain</code> (it reuses the sky tint with <code>#i-rain</code>) and <code>.disc--surface</code>; no mock uses a meaningful (labelled) disc.</p>
+      <p>Drift fixed during extraction (see the <a href="../README.md">README drift log</a>): drift D14 (18px date-tile day snapped to 17px), drift D17 (literal colours replaced by tokens). Not shown in the mocks yet: <code>.weather-disc--rain</code> (it reuses the sky tint with <code>#i-rain</code>) and <code>.disc--surface</code>; no mock uses a meaningful (labelled) disc.</p>
     </section>
 
     <footer class="ds-footer"><span>Saturdaze design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>

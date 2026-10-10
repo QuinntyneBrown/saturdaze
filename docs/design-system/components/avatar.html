@@ -144,7 +144,7 @@
         </figure>
         <ol class="ds-anatomy__list">
           <li><div><b>Container</b><small>Circle (<code>--borderRadiusCircular</code>) sized by <code>--sd-avatar-size</code>, filled with the person's tint; clips the photo.</small></div></li>
-          <li><div><b>Initial</b><small>One capital letter, bold, in the tone's foreground. 12px at the two small sizes (drift D12), 13px default, 14px large.</small></div></li>
+          <li><div><b>Initial</b><small>One capital letter, bold, in the tone's foreground. 12px at the two small sizes, 13px default, 14px large.</small></div></li>
           <li><div><b>Photo (optional)</b><small><code>.avatar__img</code>, <code>object-fit: cover</code>, fills the circle. The tint shows while it loads and if it fails.</small></div></li>
         </ol>
       </div>
@@ -300,7 +300,7 @@
         <figure class="ds-do"><div class="ds-example__canvas"><span class="avatar avatar--lg avatar--q" aria-hidden="true">Q</span><span class="avatar avatar--lg avatar--s" aria-hidden="true">S</span><span class="avatar avatar--lg avatar--e" aria-hidden="true">E</span><span class="avatar avatar--lg avatar--m" aria-hidden="true">M</span></div><figcaption>One tone per member, kept on every page, in the order they joined.</figcaption></figure>
         <figure class="ds-dont"><div class="ds-example__canvas"><span class="avatar avatar--lg avatar--q" aria-hidden="true">E</span><span class="avatar avatar--lg avatar--q" aria-hidden="true">M</span></div><figcaption>Two kids in the same coral, or Mae switching tone between Family and the vote row. The family loses the at-a-glance match.</figcaption></figure>
         <figure class="ds-do"><div class="ds-example__canvas"><span class="avatar avatar--sm avatar--q" aria-hidden="true">Q</span><span class="text-sm">12px initial at 24px</span></div><figcaption>The smallest initial is 12px (<code>--fontSizeBase200</code>).</figcaption></figure>
-        <figure class="ds-dont"><div class="ds-example__canvas"><span class="avatar avatar--sm avatar--q" aria-hidden="true" style="font-size: 0.6875rem;">Q</span><span class="text-sm">11px in the mocks</span></div><figcaption>The mocks' small avatar used 11px text, below the 12px floor (drift D12).</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><span class="avatar avatar--sm avatar--q" aria-hidden="true" style="font-size: 0.6875rem;">Q</span><span class="text-sm">11px</span></div><figcaption>An 11px initial is below the 12px floor.</figcaption></figure>
       </div>
     </section>
 
@@ -358,7 +358,7 @@
         <li><a href="../../mocks/pages/dialogs.html">pages/dialogs</a>: dialog D27 profile photo (96px preview, with and without a photo), D27d the top-bar and account-card avatars showing the photo, D26 the account menu.</li>
         <li><a href="../../mocks/pages/admin.activity.html">pages/admin.*</a>: the small avatar beside the admin email in the admin nav.</li>
       </ul>
-      <p>Drift fixed: D12 (11px initial on the small avatar, now 12px). The mocks add an <code>avatar--photo</code> class that no rule styles; <code>.avatar__img</code> alone is enough. <code>.avatar--indoor</code> (a fifth member's tone) matches Angular <code>sd-avatar</code>'s <code>indoor</code> tone; no mock family has a fifth member. The avatar group appears in no mock yet.</p>
+      <p>The mocks add an <code>avatar--photo</code> class that no rule styles; <code>.avatar__img</code> alone is enough. <code>.avatar--indoor</code> (a fifth member's tone) matches Angular <code>sd-avatar</code>'s <code>indoor</code> tone; no mock family has a fifth member. The avatar group appears in no mock yet.</p>
     </section>
 
     <footer class="ds-footer"><span>Saturdaze design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>

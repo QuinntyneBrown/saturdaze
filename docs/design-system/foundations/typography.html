@@ -160,7 +160,7 @@
     <section class="ds-section" id="scale"><h2><a href="#scale">Size scale</a></h2>
       <p>Nine steps from 12 to 44px, named on Fluent's Base and Hero ramps. Every size is in rem, so the whole scale follows the reader's browser font size and zoom. The live value next to each name is the one in force at your current window width.</p>
       <div class="ds-example">
-        <div class="ds-specimen"><div class="ds-specimen__meta"><code>--fontSizeBase200</code><br><span data-token="--fontSizeBase200"></span> · 12px<br>Captions, chips, hints: the smallest text allowed (D12)</div><p style="font-size: var(--fontSizeBase200); line-height: var(--lineHeightTight); font-weight: var(--fontWeightSemibold);">Saturday at Terre Bleu</p></div>
+        <div class="ds-specimen"><div class="ds-specimen__meta"><code>--fontSizeBase200</code><br><span data-token="--fontSizeBase200"></span> · 12px<br>Captions, chips, hints: the smallest text allowed</div><p style="font-size: var(--fontSizeBase200); line-height: var(--lineHeightTight); font-weight: var(--fontWeightSemibold);">Saturday at Terre Bleu</p></div>
         <div class="ds-specimen"><div class="ds-specimen__meta"><code>--fontSizeBase300</code><br><span data-token="--fontSizeBase300"></span> · 13px<br>Meta, small buttons, field labels</div><p style="font-size: var(--fontSizeBase300); line-height: var(--lineHeightTight); font-weight: var(--fontWeightSemibold);">Saturday at Terre Bleu</p></div>
         <div class="ds-specimen"><div class="ds-specimen__meta"><code>--fontSizeBase350</code><br><span data-token="--fontSizeBase350"></span> · 14px<br>Control labels, nav links, menu items, banners (D13)</div><p style="font-size: var(--fontSizeBase350); line-height: var(--lineHeightTight); font-weight: var(--fontWeightSemibold);">Saturday at Terre Bleu</p></div>
         <div class="ds-specimen"><div class="ds-specimen__meta"><code>--fontSizeBase400</code><br><span data-token="--fontSizeBase400"></span> · 15px<br>Body</div><p style="font-size: var(--fontSizeBase400); line-height: var(--lineHeightTight); font-weight: var(--fontWeightSemibold);">Saturday at Terre Bleu</p></div>
@@ -232,7 +232,7 @@
       <ul>
         <li><b>Inter runs large.</b> Its tall x-height makes 15px read like 16px in most other faces, and the planner's dense rows (time, title, place, chips) fit a 360px phone without wrapping every title.</li>
         <li><b>It is rem, not px.</b> 0.9375rem follows the reader's browser setting: someone who sets 20px as their default gets 18.75px body text, and zoom scales everything (1.4.4).</li>
-        <li><b>Nothing below 12px.</b> The 10 and 11px labels in the mocks were raised to 12px (D12), so the bottom of the scale is still comfortable.</li>
+        <li><b>Nothing below 12px.</b> Every label is at least 12px, so the bottom of the scale is still comfortable.</li>
         <li><b>Line height 1.5</b> gives body text the spacing 1.4.12 expects without any extra rule.</li>
       </ul>
       <p>One trade-off to watch: iOS Safari zooms the page when a field whose text is under 16px gets focus. Fields use Body1 (15px), so if that zoom becomes a complaint in testing, fields are the first place to move to 16px.</p>
@@ -250,7 +250,7 @@
       </ul>
       <div class="ds-dodont">
         <figure class="ds-do"><div class="ds-example__canvas"><p style="font: var(--typographyCaption1Strong); letter-spacing: var(--letterSpacingWider); text-transform: uppercase; color: var(--colorNeutralForeground2);">17 – 18 May</p></div><figcaption>A short uppercase overline with wider tracking, above a title.</figcaption></figure>
-        <figure class="ds-dont"><div class="ds-example__canvas"><p style="font-size: 0.625rem; text-transform: uppercase; font-weight: var(--fontWeightBold);">May</p></div><figcaption>The mock's 10px date-tile month (D12). Nothing goes below 12px.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><p style="font-size: 0.625rem; text-transform: uppercase; font-weight: var(--fontWeightBold);">May</p></div><figcaption>A 10px date-tile month. Nothing goes below 12px.</figcaption></figure>
         <figure class="ds-do"><div class="ds-example__canvas"><p style="font: var(--typographyTitle2); letter-spacing: var(--letterSpacingTight);">Add a commitment</p></div><figcaption>A dialog title from the role, sentence case.</figcaption></figure>
         <figure class="ds-dont"><div class="ds-example__canvas"><p style="font-size: 1.75rem; font-weight: 800; line-height: 1.05;">How It Works</p></div><figcaption>Off-scale 28px at weight 800 and line height 1.05, in title case (D14). Use Title1 or Title2.</figcaption></figure>
       </div>
@@ -260,7 +260,7 @@
       <ul>
         <li><b>Resize text (1.4.4).</b> Every size, breakpoint and line length is in rem or ch, so 200% browser text size or zoom enlarges text and moves the layout to its phone form instead of clipping.</li>
         <li><b>Text spacing (1.4.12).</b> Body uses line height 1.5; text containers size with padding rather than fixed heights, so reader overrides of line, letter and word spacing do not clip content. Single-line controls (buttons, chips) never wrap their labels; keep those labels short.</li>
-        <li><b>Minimum size.</b> 12px is the floor for any text, including chips, credits and photo labels (D12).</li>
+        <li><b>Minimum size.</b> 12px is the floor for any text, including chips, credits and photo labels.</li>
         <li><b>Contrast</b> is a property of colour, not size: all text meets 4.5:1 regardless of weight, so no text relies on the large-text exception. See <a href="color.html#accessibility">colour contrast</a>.</li>
         <li><b>Headings are real headings.</b> The role sets the look; the element (<code>h1</code> to <code>h3</code>) sets the outline. One <code>h1</code> per page.</li>
         <li><b>Uppercase is visual.</b> Write overlines in sentence case in the markup and uppercase them in CSS, so screen readers do not spell them out letter by letter.</li>
@@ -325,7 +325,6 @@
         <thead><tr><th scope="col">Mock</th><th scope="col">System</th><th scope="col">Drift</th></tr></thead>
         <tbody>
           <tr><td><code>--sd-fs-xs/sm/base/md/lg/xl/xxl</code> 12 / 13 / 15 / 17 / 20 / 26 / 34px</td><td><code>--fontSizeBase200/300/400/500/600</code>, <code>--fontSizeHero700/800</code>, in rem</td><td>Same values; rem (D24)</td></tr>
-          <tr><td>10px date-tile month; 11px bottom-nav labels, small chips, media credit, photo labels, admin tag</td><td><code>--fontSizeBase200</code> (12px)</td><td>D12</td></tr>
           <tr><td>A raw 14px used 23 times (buttons, nav links, menu items, switch labels)</td><td>New step <code>--fontSizeBase350</code></td><td>D13</td></tr>
           <tr><td>18px hero lede, step title, date-tile day; 28px <code>how__title</code>; weight 800 hero title</td><td>17px (<code>Base500</code>), 26px (<code>Hero700</code>), weight 700</td><td>D14</td></tr>
           <tr><td>Line heights 1.05, 1.15, 1.25, 1.3, 1.45, 1.6</td><td>None 1, Tight 1.2, Snug 1.35, Normal 1.5, Relaxed 1.65</td><td>D14</td></tr>
