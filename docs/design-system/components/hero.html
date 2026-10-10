@@ -151,7 +151,7 @@
         <ol class="ds-anatomy__list">
           <li><div><b>Container</b><small><code>.hero</code>: <code>--colorBrandBackgroundGradient</code> over the card surface, <code>--borderRadiusXLarge</code>, padding 40 / 56 / 64px (D16).</small></div></li>
           <li><div><b>Eyebrow</b><small><code>.hero__eyebrow</code>: uppercase caption, wide tracking, <code>--colorNeutralForeground2</code>.</small></div></li>
-          <li><div><b>Title</b><small><code>.hero__title</code>: the page's <code>h1</code>, <code>--typographyDisplay</code> (700 weight, D14), line height 1, balanced wrap.</small></div></li>
+          <li><div><b>Title</b><small><code>.hero__title</code>: the page's <code>h1</code>, <code>--typographyDisplay</code> (700 weight), line height 1, balanced wrap.</small></div></li>
           <li><div><b>Lede</b><small><code>.hero__lede</code>: 17px (<code>--fontSizeBase500</code>), 540px max, one or two sentences.</small></div></li>
           <li><div><b>Call to action</b><small><code>.hero__cta</code>: one large primary link-button and a <code>.hero__note</code> beside it.</small></div></li>
           <li><div><b>Note</b><small><code>.hero__note</code>: the reassurance that removes the last doubt ("Free during the beta.").</small></div></li>
@@ -346,8 +346,8 @@
 
     <section class="ds-section" id="do-dont"><h2><a href="#do-dont">Do and don't</a></h2>
       <div class="ds-dodont">
-        <figure class="ds-do"><div class="ds-example__canvas"><p class="hero__title" style="font-size: var(--fontSizeHero700);">Two days.<br>Already planned.</p></div><figcaption>700 weight on the display size, line height 1 (D14).</figcaption></figure>
-        <figure class="ds-dont"><div class="ds-example__canvas"><p class="hero__title" style="font-size: var(--fontSizeHero700); font-weight: 800; line-height: 1.05;">Two days.<br>Already planned.</p></div><figcaption>The mock's 800 weight and 1.05 line height are off the scale: weights stop at Bold (700) and line heights snap to None, Tight, Snug, Normal and Relaxed.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas"><p class="hero__title" style="font-size: var(--fontSizeHero700);">Two days.<br>Already planned.</p></div><figcaption>700 weight on the display size, line height 1.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><p class="hero__title" style="font-size: var(--fontSizeHero700); font-weight: 800; line-height: 1.05;">Two days.<br>Already planned.</p></div><figcaption>An 800 weight and a 1.05 line height are off the scale: weights stop at Bold (700) and line heights snap to None, Tight, Snug, Normal and Relaxed.</figcaption></figure>
         <figure class="ds-do"><div class="ds-example__canvas"><div class="hero__cta"><a class="btn btn--primary btn--lg" href="../../mocks/pages/create-account.html">Create your account</a><span class="hero__note">Free during the beta.</span></div></div><figcaption>One action, with a note that answers the obvious question.</figcaption></figure>
         <figure class="ds-dont"><div class="ds-example__canvas"><div class="hero__cta"><a class="btn btn--primary btn--lg" href="../../mocks/pages/create-account.html">Get started</a><a class="btn btn--primary btn--lg" href="../../mocks/pages/landing.html">Watch the video</a></div></div><figcaption>Two primary actions split attention. "Sign in" belongs in <code>.hero__alt</code>, everything else further down.</figcaption></figure>
       </div>
@@ -402,7 +402,7 @@
       <ul>
         <li><a href="../../mocks/pages/landing.html">pages/landing</a>: the hero, the browser frame with a <code>foreignObject</code> Weekend preview, the How it works steps and the site footer.</li>
       </ul>
-      <p>Drift fixed during extraction (see the <a href="../README.md">README drift log</a>): D14 the 800-weight title, 18px lede and step title, 28px <code>how__title</code> and off-scale line heights; D16 the 72px hero padding (now 64px, <code>--layoutSpacePage</code>). The mock draws the preview inside an SVG <code>foreignObject</code>; this page composes it from block markup so it themes. The hero without a preview is a core variant; no mock shows it.</p>
+      <p>Drift fixed during extraction (see the <a href="../README.md">README drift log</a>): D16 the 72px hero padding (now 64px, <code>--layoutSpacePage</code>). The mock draws the preview inside an SVG <code>foreignObject</code>; this page composes it from block markup so it themes. The hero without a preview is a core variant; no mock shows it.</p>
     </section>
 
     <footer class="ds-footer"><span>Saturdaze design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>
