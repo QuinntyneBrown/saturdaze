@@ -30,7 +30,7 @@ export const slateAlpha = {
 
 /** Forest green — "locked", confirmed. */
 export const forest: ColorVariants = {
-  shade40: '#2d7d5f',
+  shade40: '#256b51', // text on its tint: 5.25:1 (WCAG 1.4.3); #2d7d5f stays the solid fill
   primary: '#2d7d5f',
   tint50: '#deede5',
 };
@@ -58,7 +58,7 @@ export const sky: ColorVariants = {
 
 /** Outdoor chip. */
 export const leaf: ColorVariants = {
-  shade40: '#2d7d5f',
+  shade40: '#256b51', // forest text on the leaf tint: 5.25:1 (WCAG 1.4.3)
   primary: '#a9c9a4',
   tint50: '#ddeeda',
 };

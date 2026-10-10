@@ -31,6 +31,12 @@ describe('design tokens', () => {
     expect(saturdazeLightTheme.colorNeutralForeground2).toBe('#5b6270');
   });
 
+  it('draws text on the forest and leaf tints in a forest that passes AA', () => {
+    expect(saturdazeLightTheme.colorStatusSuccessForeground1).toBe('#256b51');
+    expect(saturdazeLightTheme.colorPaletteLeafForeground1).toBe('#256b51');
+    expect(saturdazeLightTheme.colorStatusSuccessBackground3).toBe('#2d7d5f');
+  });
+
   it('draws control edges in a slate that passes 1.4.11 on wells', () => {
     expect(saturdazeLightTheme.colorNeutralStrokeAccessible).toBe('#80868f');
   });
