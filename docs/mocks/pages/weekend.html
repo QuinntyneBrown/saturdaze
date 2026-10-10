@@ -182,20 +182,20 @@
     <aside class="planner__map" aria-label="Saturday map">
       <div class="map">
         <svg class="map__svg" viewBox="0 0 400 300" role="img" aria-label="Map of Saturday's route: home in Port Credit, 1 Swim lessons, 2 Lavender fields at Terre Bleu in Milton, 3 Lunch at La Marina, then home. Stop 2 is highlighted.">
-          <rect width="400" height="300" fill="#EEF0E6"/>
-          <path d="M0 262 C90 250 170 268 250 256 S360 244 400 250 V300 H0Z" fill="#BFD9E8"/>
-          <path d="M40 0 L230 255" stroke="#FFFFFF" stroke-width="7"/><path d="M40 0 L230 255" stroke="#D9D2C2" stroke-width="1"/>
-          <path d="M0 210 C120 220 260 205 400 180" stroke="#FFFFFF" stroke-width="7" fill="none"/>
-          <path d="M150 0 C170 80 200 150 300 300" stroke="#FFFFFF" stroke-width="4" fill="none"/>
-          <path d="M248 238 L268 214 L92 66 L218 248 L248 238" fill="none" stroke="#A04B2C" stroke-width="3" stroke-dasharray="6 5" stroke-linecap="round" stroke-linejoin="round"/>
+          <rect class="map__land" width="400" height="300"/>
+          <path class="map__water" d="M0 262 C90 250 170 268 250 256 S360 244 400 250 V300 H0Z"/>
+          <path class="map__road" d="M40 0 L230 255"/><path class="map__road-edge" d="M40 0 L230 255"/>
+          <path class="map__road" d="M0 210 C120 220 260 205 400 180"/>
+          <path class="map__road" d="M150 0 C170 80 200 150 300 300"/>
+          <path class="map__route" d="M248 238 L268 214 L92 66 L218 248 L248 238"/>
           <text class="map__label" x="60" y="40">Milton</text>
           <text class="map__label" x="290" y="150">Mississauga</text>
           <text class="map__label" x="280" y="246">Port Credit</text>
           <text class="map__label" x="150" y="288">Lake Ontario</text>
-          <g class="map__pin"><circle cx="248" cy="238" r="11" fill="#1F2937"/><path d="M243 239 l5 -5 l5 5 v5 h-10Z" fill="#FFFFFF"/></g>
-          <g class="map__pin"><circle cx="268" cy="214" r="12" fill="#A04B2C"/><text class="map__pin-num" x="268" y="214">1</text></g>
-          <g class="map__pin map__pin--active"><circle cx="92" cy="66" r="15" fill="#A04B2C"/><text class="map__pin-num" x="92" y="66">2</text></g>
-          <g class="map__pin"><circle cx="218" cy="248" r="12" fill="#A04B2C"/><text class="map__pin-num" x="218" y="248">3</text></g>
+          <g><circle class="map__home" cx="248" cy="238" r="11"/><path class="map__home-glyph" d="M243 239 l5 -5 l5 5 v5 h-10Z"/></g>
+          <g class="map__pin"><circle cx="268" cy="214" r="12"/><text class="map__pin-num" x="268" y="214">1</text></g>
+          <g class="map__pin map__pin--active"><circle cx="92" cy="66" r="15"/><text class="map__pin-num" x="92" y="66">2</text></g>
+          <g class="map__pin"><circle cx="218" cy="248" r="12"/><text class="map__pin-num" x="218" y="248">3</text></g>
         </svg>
         <a class="btn btn--quiet btn--sm map__expand" href="./weekend.html#sat-panel"><svg class="icon" aria-hidden="true"><use href="#i-map"/></svg>Open map</a>
         <p class="map__legend">
@@ -350,21 +350,21 @@
     <aside class="planner__map" aria-label="Sunday map">
       <div class="map">
         <svg class="map__svg" viewBox="0 0 400 300" role="img" aria-label="Map of Sunday's route: home in Port Credit, 1 Costco run, 2 Church, 3 Lunch at Symposium Café, 4 The Rec Room at Square One, then home.">
-          <rect width="400" height="300" fill="#EEF0E6"/>
-          <path d="M0 262 C90 250 170 268 250 256 S360 244 400 250 V300 H0Z" fill="#BFD9E8"/>
-          <path d="M40 0 L230 255" stroke="#FFFFFF" stroke-width="7"/><path d="M40 0 L230 255" stroke="#D9D2C2" stroke-width="1"/>
-          <path d="M0 210 C120 220 260 205 400 180" stroke="#FFFFFF" stroke-width="7" fill="none"/>
-          <path d="M150 0 C170 80 200 150 300 300" stroke="#FFFFFF" stroke-width="4" fill="none"/>
-          <path d="M248 238 L330 196 L284 176 L344 138 L300 104 L248 238" fill="none" stroke="#A04B2C" stroke-width="3" stroke-dasharray="6 5" stroke-linecap="round" stroke-linejoin="round"/>
+          <rect class="map__land" width="400" height="300"/>
+          <path class="map__water" d="M0 262 C90 250 170 268 250 256 S360 244 400 250 V300 H0Z"/>
+          <path class="map__road" d="M40 0 L230 255"/><path class="map__road-edge" d="M40 0 L230 255"/>
+          <path class="map__road" d="M0 210 C120 220 260 205 400 180"/>
+          <path class="map__road" d="M150 0 C170 80 200 150 300 300"/>
+          <path class="map__route" d="M248 238 L330 196 L284 176 L344 138 L300 104 L248 238"/>
           <text class="map__label" x="60" y="40">Milton</text>
           <text class="map__label" x="210" y="80">Square One</text>
           <text class="map__label" x="290" y="246">Port Credit</text>
           <text class="map__label" x="150" y="288">Lake Ontario</text>
-          <g class="map__pin"><circle cx="248" cy="238" r="11" fill="#1F2937"/><path d="M243 239 l5 -5 l5 5 v5 h-10Z" fill="#FFFFFF"/></g>
-          <g class="map__pin"><circle cx="330" cy="196" r="12" fill="#A04B2C"/><text class="map__pin-num" x="330" y="196">1</text></g>
-          <g class="map__pin"><circle cx="284" cy="176" r="12" fill="#A04B2C"/><text class="map__pin-num" x="284" y="176">2</text></g>
-          <g class="map__pin"><circle cx="344" cy="138" r="12" fill="#A04B2C"/><text class="map__pin-num" x="344" y="138">3</text></g>
-          <g class="map__pin"><circle cx="300" cy="104" r="12" fill="#A04B2C"/><text class="map__pin-num" x="300" y="104">4</text></g>
+          <g><circle class="map__home" cx="248" cy="238" r="11"/><path class="map__home-glyph" d="M243 239 l5 -5 l5 5 v5 h-10Z"/></g>
+          <g class="map__pin"><circle cx="330" cy="196" r="12"/><text class="map__pin-num" x="330" y="196">1</text></g>
+          <g class="map__pin"><circle cx="284" cy="176" r="12"/><text class="map__pin-num" x="284" y="176">2</text></g>
+          <g class="map__pin"><circle cx="344" cy="138" r="12"/><text class="map__pin-num" x="344" y="138">3</text></g>
+          <g class="map__pin"><circle cx="300" cy="104" r="12"/><text class="map__pin-num" x="300" y="104">4</text></g>
         </svg>
         <a class="btn btn--quiet btn--sm map__expand" href="./weekend.html#sun-panel"><svg class="icon" aria-hidden="true"><use href="#i-map"/></svg>Open map</a>
         <p class="map__legend">

@@ -845,9 +845,26 @@
   }
 
   /* ---- map (illustrative; production renders tiles) ---- */
-  .map { position: relative; overflow: hidden; border: 1px solid var(--sd-line); border-radius: var(--sd-r-lg); background: var(--sd-surface); }
+  .map {
+    position: relative; overflow: hidden; border: 1px solid var(--sd-line); border-radius: var(--sd-r-lg); background: var(--sd-surface);
+    /* map palette by role: no fill or stroke lives in the SVG markup */
+    --sd-map-land: var(--sd-leaf-soft);
+    --sd-map-water: color-mix(in srgb, var(--sd-sky-ink) 28%, var(--sd-surface));
+    --sd-map-road: var(--sd-surface);
+    --sd-map-road-edge: var(--sd-line-strong);
+    --sd-map-route: var(--sd-primary-deep);
+    --sd-map-pin: var(--sd-primary-deep);
+  }
   .map__svg { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; }
+  .map__land { fill: var(--sd-map-land); }
+  .map__water { fill: var(--sd-map-water); }
+  .map__road { fill: none; stroke: var(--sd-map-road); stroke-width: 7; }
+  .map__road-edge { fill: none; stroke: var(--sd-map-road-edge); stroke-width: 1; }
+  .map__route { fill: none; stroke: var(--sd-map-route); stroke-width: 3; stroke-dasharray: 6 5; stroke-linecap: round; stroke-linejoin: round; }
+  .map__home { fill: var(--sd-ink); }
+  .map__home-glyph { fill: var(--sd-surface); }
   .map__pin { cursor: pointer; }
+  .map__pin circle { fill: var(--sd-map-pin); stroke: var(--sd-surface); stroke-width: 2; }
   .map__pin-num { font: 700 13px var(--sd-font-sans); fill: var(--sd-primary-ink); text-anchor: middle; dominant-baseline: central; }
   .map__pin--active circle { stroke: var(--sd-ink); stroke-width: 3; }
   .map__label { font: 600 12px var(--sd-font-sans); fill: var(--sd-ink); }
