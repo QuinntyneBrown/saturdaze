@@ -5,7 +5,7 @@ import type { BrandVariants, ColorTokens } from '../types';
 export const generateColorTokens = (brand: BrandVariants): ColorTokens => ({
   colorNeutralForeground1: slate[17], // body ink
   colorNeutralForeground2: slate[46], // secondary text, metadata
-  colorNeutralForeground3: slate[65], // hints, placeholders, disabled
+  colorNeutralForeground3: slate[43], // hints, placeholders, durations, footers: 4.75:1 on wells
   colorNeutralForegroundOnBrand: white,
 
   colorNeutralBackground1: white, // cards, dialogs, inputs
@@ -16,7 +16,7 @@ export const generateColorTokens = (brand: BrandVariants): ColorTokens => ({
 
   colorNeutralStroke1: slateAlpha[16],
   colorNeutralStroke2: slateAlpha[8],
-  colorNeutralStrokeAccessible: slate[65], // grab handles, dashed affordances
+  colorNeutralStrokeAccessible: slate[65], // grab handles, dashed affordances, empty stars; never text
   colorStrokeFocus2: brand[70], // 5.56:1 on the canvas, 5.18:1 on wells (WCAG 1.4.11)
 
   colorBrandForeground1: brand[90],

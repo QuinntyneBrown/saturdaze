@@ -127,6 +127,18 @@ export abstract class BasePage {
     });
   }
 
+  /* ---------- Text colour ---------- */
+
+  /** The colour `target`'s text is drawn in. */
+  async textColor(target: Locator): Promise<string> {
+    return target.evaluate((el) => getComputedStyle(el).color);
+  }
+
+  /** The colour a field's placeholder text is drawn in. */
+  async placeholderColor(field: Locator): Promise<string> {
+    return field.evaluate((el) => getComputedStyle(el, "::placeholder").color);
+  }
+
   /* ---------- Page header ---------- */
 
   get pageHeader(): Locator {

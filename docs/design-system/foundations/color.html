@@ -124,7 +124,7 @@
       <ul>
         <li><b>Two tiers.</b> Primitive ramps (<code>--globalColor*</code>) hold raw values. Alias roles (<code>--color*</code>, Fluent UI v9 names per ADR-013) give them a job and are the only colour tokens components read.</li>
         <li><b>Themes swap roles.</b> Light lives on <code>:root</code>; dark re-points the same roles at different primitives. No component knows which theme it is in.</li>
-        <li><b>Accessible by construction.</b> All 98 foreground and background pairs the components use pass WCAG 2.2 AA in both themes; the mock values that did not were changed and logged (D04 to D10).</li>
+        <li><b>Accessible by construction.</b> All 98 foreground and background pairs the components use pass WCAG 2.2 AA in both themes; the mock values that did not were changed and logged (D05 to D10).</li>
       </ul>
     </section>
 
@@ -371,7 +371,7 @@
       <ul>
         <li><b>Read colour by role, never by primitive or hex.</b> Text uses a <code>Foreground</code> token, fills a <code>Background</code> token, borders a <code>Stroke</code> token. A <code>--globalColor*</code> or a hex value in component CSS is a bug.</li>
         <li><b>One coral fill per view.</b> The primary button is the only solid coral; the tint (<code>--colorBrandBackground2</code>) marks where you are. <code>--colorBrandBackgroundStatic</code>, the mock coral, is for the brand mark and never sits behind text.</li>
-        <li><b>Three text strengths, in order.</b> <code>Foreground1</code> for content, <code>Foreground2</code> for meta and labels, <code>Foreground3</code> for hints and placeholders. Nothing fainter than <code>Foreground3</code> carries text (D04); <code>ForegroundDisabled</code> is only for disabled controls.</li>
+        <li><b>Three text strengths, in order.</b> <code>Foreground1</code> for content, <code>Foreground2</code> for meta and labels, <code>Foreground3</code> for hints and placeholders. Nothing fainter than <code>Foreground3</code> carries text; <code>ForegroundDisabled</code> is only for disabled controls.</li>
         <li><b>Decorative or accessible stroke.</b> Card edges and dividers use <code>Stroke1</code>/<code>Stroke2</code>; anything a person must see to use a control (input border, quiet button, switch track, dashed add row) uses <code>StrokeAccessible</code> (D06, D28).</li>
         <li><b>Status means status, palette means category.</b> Sun, sky, leaf and indoor tag activities, weather and people; they never say "succeeded" or "failed". Locked uses success forest because it is a confirmed state.</li>
         <li><b>Never colour alone.</b> Links are underlined (D20), pressed tinted chips gain an edge (D26), the rating star changes shape as well as colour (D09), status banners carry an icon and a title.</li>
@@ -380,7 +380,7 @@
       </ul>
       <div class="ds-dodont">
         <figure class="ds-do"><div class="ds-example__canvas"><button class="btn btn--primary" type="button">Plan this weekend</button></div><figcaption>The brand fill <code>--colorBrandBackground</code> with its on-brand label: 4.74:1 in light.</figcaption></figure>
-        <figure class="ds-dont"><div class="ds-example__canvas"><span style="color: var(--colorNeutralForegroundDisabled);">Every Saturday · locked in</span></div><figcaption>Disabled grey for live text, as the mock's <code>--sd-ink-faint</code> did (2.4:1, D04). Use <code>Foreground3</code>.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><span style="color: var(--colorNeutralForegroundDisabled);">Every Saturday · locked in</span></div><figcaption>Disabled grey for live text (2.4:1). Use <code>Foreground3</code>.</figcaption></figure>
         <figure class="ds-do"><div class="ds-example__canvas"><span class="chip chip--accent"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg>Commitment</span><span class="chip chip--leaf">Outdoor</span></div><figcaption>Success for a confirmed state, a palette tint for a category.</figcaption></figure>
         <figure class="ds-dont"><div class="ds-example__canvas"><span class="chip chip--warn">Outdoor</span></div><figcaption>A status colour used as a category tag. Danger red on "Outdoor" reads as a problem.</figcaption></figure>
       </div>
@@ -635,9 +635,9 @@
           <tr><td><code>--globalColorCoral800</code></td><td><span class="ds-swatch-cell"><i data-token="--globalColorCoral800" data-swatch></i><span data-token="--globalColorCoral800"></span></span></td><td></td></tr>
           <tr><td><code>--globalColorCoral900</code></td><td><span class="ds-swatch-cell"><i data-token="--globalColorCoral900" data-swatch></i><span data-token="--globalColorCoral900"></span></span></td><td></td></tr>
           <tr><td><code>--globalColorCoral950</code></td><td><span class="ds-swatch-cell"><i data-token="--globalColorCoral950" data-swatch></i><span data-token="--globalColorCoral950"></span></span></td><td></td></tr>
-          <tr><td><code>--globalColorSlate300</code></td><td><span class="ds-swatch-cell"><i data-token="--globalColorSlate300" data-swatch></i><span data-token="--globalColorSlate300"></span></span></td><td>Mock <code>--sd-ink-faint</code>: disabled only</td></tr>
+          <tr><td><code>--globalColorSlate300</code></td><td><span class="ds-swatch-cell"><i data-token="--globalColorSlate300" data-swatch></i><span data-token="--globalColorSlate300"></span></span></td><td>Mock <code>--sd-ink-disabled</code>: disabled only</td></tr>
           <tr><td><code>--globalColorSlate400</code></td><td><span class="ds-swatch-cell"><i data-token="--globalColorSlate400" data-swatch></i><span data-token="--globalColorSlate400"></span></span></td><td></td></tr>
-          <tr><td><code>--globalColorSlate500</code></td><td><span class="ds-swatch-cell"><i data-token="--globalColorSlate500" data-swatch></i><span data-token="--globalColorSlate500"></span></span></td><td></td></tr>
+          <tr><td><code>--globalColorSlate500</code></td><td><span class="ds-swatch-cell"><i data-token="--globalColorSlate500" data-swatch></i><span data-token="--globalColorSlate500"></span></span></td><td>Mock <code>--sd-ink-faint</code>: hints, placeholders, durations</td></tr>
           <tr><td><code>--globalColorSlate600</code></td><td><span class="ds-swatch-cell"><i data-token="--globalColorSlate600" data-swatch></i><span data-token="--globalColorSlate600"></span></span></td><td></td></tr>
           <tr><td><code>--globalColorSlate900</code></td><td><span class="ds-swatch-cell"><i data-token="--globalColorSlate900" data-swatch></i><span data-token="--globalColorSlate900"></span></span></td><td>Mock <code>--sd-ink</code></td></tr>
           <tr><td><code>--globalColorCream50</code></td><td><span class="ds-swatch-cell"><i data-token="--globalColorCream50" data-swatch></i><span data-token="--globalColorCream50"></span></span></td><td>Mock <code>--sd-bg</code></td></tr>
@@ -705,12 +705,12 @@
         <tbody>
           <tr><td><code>--sd-primary-fill</code> #BF5130 behind white text; <code>--sd-primary</code> #E07856 on the brand mark</td><td><code>--colorBrandBackground</code> (coral 500, #BF5130, 4.74:1); <code>--colorBrandBackgroundStatic</code> (coral 400)</td><td>None</td></tr>
           <tr><td>Focus ring <code>2px solid --sd-primary-deep</code> #A04B2C</td><td><code>--colorStrokeFocus2</code> (coral 600, #A04B2C, 5.56:1 on the canvas)</td><td>None</td></tr>
-          <tr><td><code>--sd-ink-faint</code> #9CA3AF for hints, durations, footers</td><td><code>--colorNeutralForeground3</code> (slate 500, #636A77); #9CA3AF kept as <code>--colorNeutralForegroundDisabled</code></td><td>D04: 2.4:1 to 4.75:1 on wells</td></tr>
+          <tr><td><code>--sd-ink-faint</code> #636A77 for hints, durations, footers; <code>--sd-ink-disabled</code> #9CA3AF never on live text</td><td><code>--colorNeutralForeground3</code> (slate 500, #636A77, 4.75:1 on wells); <code>--colorNeutralForegroundDisabled</code></td><td>None</td></tr>
           <tr><td><code>--sd-ink-soft</code> #6B7280 on wells</td><td><code>--colorNeutralForeground2</code> (slate 600, #5B6270)</td><td>D05: 4.22:1 to 5.35:1</td></tr>
           <tr><td><code>--sd-line-strong</code> (16% ink) on inputs and the switch</td><td><code>--colorNeutralStrokeAccessible</code> (slate 400, #80868F); 16% kept as decorative <code>--colorNeutralStroke1</code></td><td>D06: 1.36:1 to 3.67:1</td></tr>
           <tr><td><code>--sd-accent</code> #2D7D5F as text on its tint</td><td><code>--colorStatusSuccessForeground1</code>, <code>--colorPaletteLeafForeground1</code> (forest 600, #256B51); #2D7D5F stays the solid <code>--colorStatusSuccessBackground3</code></td><td>D07: 4.11:1 to 5.25:1</td></tr>
           <tr><td><code>--sd-warn</code> #C45A3F as the danger fill</td><td><code>--colorStatusDangerBackground3</code> (terracotta 500, #AE2B2B)</td><td>D08: 4.30:1 to 6.60:1, and distinct from the brand</td></tr>
-          <tr><td><code>--sd-sun</code> #F4C969 filled stars, <code>--sd-ink-faint</code> empty stars</td><td><code>--colorPaletteSunForeground3</code> (sun 600, #B07F14); empty stars use <code>--colorNeutralStrokeAccessible</code></td><td>D09: 1.57:1 to 3.56:1</td></tr>
+          <tr><td><code>--sd-sun</code> #F4C969 filled stars, <code>--sd-ink-disabled</code> empty stars</td><td><code>--colorPaletteSunForeground3</code> (sun 600, #B07F14); empty stars use <code>--colorNeutralStrokeAccessible</code></td><td>D09: 1.57:1 to 3.56:1</td></tr>
           <tr><td>Bottom nav current icon #E07856 on the coral tint</td><td><code>--colorBrandForeground1</code> (coral 600)</td><td>D10: 2.6:1 to 4.97:1</td></tr>
           <tr><td>Unchanged roles</td><td><code>--sd-bg</code> → <code>Background2</code>; <code>--sd-surface</code> → <code>Background1</code>; <code>--sd-surface-2</code> → <code>Background3</code>; <code>--sd-ink</code> → <code>Foreground1</code>; <code>--sd-line</code> → <code>Stroke2</code>; <code>--sd-primary-soft</code> → <code>BrandBackground2</code>; <code>--sd-primary-deep</code> → <code>BrandForeground1</code>; <code>--sd-accent-soft</code> → <code>StatusSuccessBackground1</code>; <code>--sd-warn-soft</code>, <code>--sd-warn-deep</code> → <code>StatusDangerBackground1</code>, <code>StatusDangerForeground1</code>; <code>--sd-*-soft</code> / <code>--sd-*-ink</code> → <code>Palette*Background1</code> / <code>Palette*Foreground1</code></td><td>Same values, Fluent names (ADR-013)</td></tr>
         </tbody>

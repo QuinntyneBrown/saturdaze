@@ -373,7 +373,7 @@
         <li><a href="../../mocks/pages/admin.places.html">pages/admin.places</a>: place rows with thumbnails and flags.</li>
         <li><a href="../../mocks/pages/review-submissions.html">pages/review-submissions</a>: the review queue is cards, not a list, because each item carries its own Approve and Reject.</li>
       </ul>
-      <p>Drift fixed: D04 the <code>list__trail</code> grey (2.4:1, now <code>--colorNeutralForeground3</code>), D05 second-line contrast, D13 the raw 14px. Fixed in extraction: action rows sit inside <code>&lt;li&gt;</code>, so the mocks' <code>.list__item:last-child</code> rule stripped every row's hairline on Family, D25 and admin Places; <code>.list &gt; li:not(:last-child) &gt; .list__item</code> restores it. Open: the admin Places list is a <code>&lt;div&gt;</code> of links (should be <code>&lt;ul&gt;</code>); <code>.list__item--selected</code> is in the CSS but unused by the mocks. Card rows now draw an inset focus ring.</p>
+      <p>Drift fixed: D05 second-line contrast, D13 the raw 14px. Fixed in extraction: action rows sit inside <code>&lt;li&gt;</code>, so the mocks' <code>.list__item:last-child</code> rule stripped every row's hairline on Family, D25 and admin Places; <code>.list &gt; li:not(:last-child) &gt; .list__item</code> restores it. Open: the admin Places list is a <code>&lt;div&gt;</code> of links (should be <code>&lt;ul&gt;</code>); <code>.list__item--selected</code> is in the CSS but unused by the mocks. Card rows now draw an inset focus ring.</p>
     </section>
 
     <footer class="ds-footer"><span>Saturdaze design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>

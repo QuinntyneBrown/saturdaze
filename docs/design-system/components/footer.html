@@ -233,7 +233,7 @@
       <p>Link text is the destination: "Terms", "Privacy", "Sign in", "Back to Saturdaze". The middle dots in the auth footer are <code>aria-hidden="true"</code>, so a screen reader does not read "dot" between links.</p>
       <h3>Contrast</h3>
       <div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0; gap: var(--spacingHorizontalS);">
-        <div class="ds-pair"><span>Footer text and links on the page (D04)</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground3|--colorNeutralBackground2" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Footer text and links on the page</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground3|--colorNeutralBackground2" data-min="4.5"></span></div>
         <div class="ds-pair"><span>Hovered link on the page</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground1|--colorNeutralBackground2" data-min="4.5"></span></div>
         <div class="ds-pair"><span>Link underline on the page</span><span class="ds-pair__ratio" data-contrast="--colorNeutralStrokeAccessible|--colorNeutralBackground2" data-min="3"></span></div>
         <div class="ds-pair"><span>Focus ring on the page</span><span class="ds-pair__ratio" data-contrast="--colorStrokeFocus2|--colorNeutralBackground2" data-min="3"></span></div>
@@ -258,8 +258,8 @@
       <div class="ds-dodont">
         <figure class="ds-do"><div class="ds-example__canvas"><code>&lt;/main&gt;&lt;footer class="site-footer"&gt;</code></div><figcaption>Put the site footer after <code>&lt;main&gt;</code> so it is the contentinfo landmark.</figcaption></figure>
         <figure class="ds-dont"><div class="ds-example__canvas"><code>&lt;footer class="site-footer"&gt;…&lt;/footer&gt;&lt;/main&gt;</code></div><figcaption>The mocks put it inside <code>&lt;main&gt;</code> (landing, legal), where it is not a landmark.</figcaption></figure>
-        <figure class="ds-do"><div class="ds-example__canvas"><p class="auth__foot"><a class="link--soft" href="../../mocks/pages/legal.html#terms-title">Terms</a><span aria-hidden="true">·</span><a class="link--soft" href="../../mocks/pages/legal.html#privacy-title">Privacy</a></p></div><figcaption>Footer text in <code>--colorNeutralForeground3</code>: 4.75:1 on the canvas (D04).</figcaption></figure>
-        <figure class="ds-dont"><div class="ds-example__canvas"><p class="auth__foot" style="color: var(--colorNeutralForegroundDisabled);"><a class="link--soft" href="../../mocks/pages/legal.html#terms-title">Terms</a><span aria-hidden="true">·</span><a class="link--soft" href="../../mocks/pages/legal.html#privacy-title">Privacy</a></p></div><figcaption>The mocks' faint grey #9CA3AF is 2.4:1; it is now reserved for disabled text (D04).</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas"><p class="auth__foot"><a class="link--soft" href="../../mocks/pages/legal.html#terms-title">Terms</a><span aria-hidden="true">·</span><a class="link--soft" href="../../mocks/pages/legal.html#privacy-title">Privacy</a></p></div><figcaption>Footer text in <code>--colorNeutralForeground3</code>: 4.75:1 on the canvas.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><p class="auth__foot" style="color: var(--colorNeutralForegroundDisabled);"><a class="link--soft" href="../../mocks/pages/legal.html#terms-title">Terms</a><span aria-hidden="true">·</span><a class="link--soft" href="../../mocks/pages/legal.html#privacy-title">Privacy</a></p></div><figcaption>The disabled grey #9CA3AF is 2.4:1; it is reserved for disabled text.</figcaption></figure>
       </div>
     </section>
 
@@ -298,7 +298,7 @@
         <li><a href="../../mocks/pages/landing.html">pages/landing</a> and <a href="../../mocks/pages/legal.html">pages/legal</a>: <code>.site-footer</code> with "Saturdaze", Terms, Privacy, Sign in.</li>
         <li><a href="../../mocks/pages/sign-in.html">pages/sign-in</a>, <a href="../../mocks/pages/create-account.html">create-account</a>, <a href="../../mocks/pages/reset-password.html">reset-password</a>, <a href="../../mocks/pages/verify-email.html">verify-email</a>, <a href="../../mocks/pages/admin.sign-in.html">admin.sign-in</a>: <code>.auth__foot</code>.</li>
       </ul>
-      <p>Drift fixed: D04 the faint #9CA3AF footer text (2.4:1, now <code>--colorNeutralForeground3</code>), D15 the 14px item gap (now 12px). Changed from the mocks: the product line reads "© 2026 Saturdaze" rather than "Saturdaze", and the site footer moves outside <code>&lt;main&gt;</code> to become a landmark (the mocks place it inside).</p>
+      <p>Drift fixed: D15 the 14px item gap (now 12px). Changed from the mocks: the product line reads "© 2026 Saturdaze" rather than "Saturdaze", and the site footer moves outside <code>&lt;main&gt;</code> to become a landmark (the mocks place it inside).</p>
     </section>
 
     <footer class="ds-footer"><span>Saturdaze design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>
