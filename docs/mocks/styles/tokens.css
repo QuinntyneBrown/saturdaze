@@ -14,10 +14,10 @@
   --sd-ink:         #1F2937;
   --sd-ink-soft:    #5B6270;   /* secondary text, chips, segments: 5.35:1 on wells, 6.13:1 on white (WCAG 1.4.3) */
   --sd-ink-faint:   #636A77;   /* hints, placeholders, durations, footers: 4.75:1 on wells (WCAG 1.4.3) */
-  --sd-ink-disabled: #9CA3AF;  /* disabled text, grab handles, empty stars; never live text */
+  --sd-ink-disabled: #9CA3AF;  /* disabled text, grab handles; never live text */
   --sd-line:        rgba(31, 41, 55, 0.08);
   --sd-line-strong: rgba(31, 41, 55, 0.16); /* decorative edges: 1.36:1, too faint for controls */
-  --sd-line-control: #80868F;  /* field borders, the off switch track, resting filter chips and vote buttons, dashed add and upload edges: 3.67:1 on white, 3.20:1 on wells (WCAG 1.4.11) */
+  --sd-line-control: #80868F;  /* field borders, the off switch track, resting filter chips and vote buttons, dashed add and upload edges, empty rating stars: 3.67:1 on white, 3.20:1 on wells (WCAG 1.4.11) */
 
   --sd-primary:      #E07856;   /* warm coral — brand mark, underlines, accents; never behind text */
   --sd-primary-fill: #BF5130;   /* the "Plan This Weekend" CTA fill: white label 4.74:1 (WCAG 1.4.3) */
@@ -32,6 +32,7 @@
   --sd-warn-soft:    #FADFD6;
 
   --sd-sun:          #F4C969;   /* sunny chip / weather */
+  --sd-sun-deep:     #B07F14;   /* filled rating stars: 3.56:1 on white (WCAG 1.4.11) */
   --sd-sky:          #BFD9E8;   /* cool weather chip */
   --sd-leaf:         #A9C9A4;   /* outdoor chip */
   --sd-indoor:       #C9B6E0;   /* indoor chip */

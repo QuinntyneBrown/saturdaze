@@ -10,7 +10,7 @@ import {
 import { Icon } from '../icon/icon';
 
 /**
- * Five stars. Mirrors `.stars` in docs/mocks-v2/styles/app.css.
+ * Five stars. Mirrors `.stars` in docs/mocks/styles/app.css.
  *
  * Display mode renders filled stars up to `rating` plus an optional caption
  * ("5 of 5"). `editable` renders five `role="radio"` buttons inside a

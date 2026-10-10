@@ -41,6 +41,11 @@ describe('design tokens', () => {
     expect(saturdazeLightTheme.colorStatusDangerBackground3).toBe('#ae2b2b');
   });
 
+  it('fills rating stars in a sun that passes 1.4.11 on white', () => {
+    expect(saturdazeLightTheme.colorPaletteSunForeground3).toBe('#b07f14');
+    expect(saturdazeLightTheme.colorPaletteSunBackground3).toBe('#f4c969');
+  });
+
   it('draws control edges in a slate that passes 1.4.11 on wells', () => {
     expect(saturdazeLightTheme.colorNeutralStrokeAccessible).toBe('#80868f');
   });

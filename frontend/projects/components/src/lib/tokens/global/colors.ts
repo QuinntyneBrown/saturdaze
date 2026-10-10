@@ -45,6 +45,7 @@ export const terracotta: ColorVariants = {
 /** Sunny chip / weather. */
 export const sun: ColorVariants = {
   shade40: '#8a6212',
+  shade20: '#b07f14', // filled rating star: 3.56:1 on white (WCAG 1.4.11)
   primary: '#f4c969',
   tint50: '#fbebc4',
 };

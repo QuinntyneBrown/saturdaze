@@ -12,7 +12,7 @@ function roles<T extends string>(prefix: T, color: ColorVariants) {
     [`${prefix}Background1`]: color.tint50,
     [`${prefix}Background3`]: color.primary,
     [`${prefix}Foreground1`]: color.shade40,
-    [`${prefix}Foreground3`]: color.primary,
+    [`${prefix}Foreground3`]: color.shade20 ?? color.primary,
     [`${prefix}Border1`]: color.tint50,
     [`${prefix}BorderActive`]: color.primary,
   };

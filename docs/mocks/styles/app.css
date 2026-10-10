@@ -579,8 +579,8 @@
 
   /* ---- stars (rating display) ---- */
   .stars { display: inline-flex; align-items: center; gap: 2px; border-radius: var(--sd-r-sm); }
-  .stars .icon { width: 18px; height: 18px; color: var(--sd-ink-disabled); }
-  .stars .icon--filled { color: var(--sd-sun); }
+  .stars .icon { width: 18px; height: 18px; color: var(--sd-line-control); }
+  .stars .icon--filled { color: var(--sd-sun-deep); }
   .stars__label { margin-left: 6px; font-size: var(--sd-fs-xs); color: var(--sd-ink-soft); }
   .stars--lg .icon { width: 40px; height: 40px; }
 
