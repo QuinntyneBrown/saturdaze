@@ -14,6 +14,7 @@ export const slate = {
   17: '#1f2937',
   40: '#5b6270', // secondary text: 5.35:1 on wells, 6.13:1 on white (WCAG 1.4.3)
   43: '#636a77', // hint text: 4.75:1 on wells (WCAG 1.4.3)
+  53: '#80868f', // control edges: 3.67:1 on white, 3.20:1 on wells (WCAG 1.4.11)
   65: '#9ca3af',
 } as const;
 

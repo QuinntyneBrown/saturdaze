@@ -23,15 +23,36 @@ export class SignInPage extends AuthCardPage {
   }
 
   rememberToggle(state?: string): Locator {
-    return this.card(state).getByRole("switch", { name: "Remember me", exact: true });
+    return this.card(state).getByRole("switch", {
+      name: "Remember me",
+      exact: true,
+    });
+  }
+
+  /** The visible track of the "Remember me" switch (the input itself is visually hidden). */
+  rememberTrack(state?: string): Locator {
+    return this.card(state)
+      .locator(".toggle", {
+        has: this.page.getByRole("switch", {
+          name: "Remember me",
+          exact: true,
+        }),
+      })
+      .locator(".toggle__track");
   }
 
   forgotPasswordLink(state?: string): Locator {
-    return this.card(state).getByRole("link", { name: "Forgot password?", exact: true });
+    return this.card(state).getByRole("link", {
+      name: "Forgot password?",
+      exact: true,
+    });
   }
 
   signInButton(state?: string): Locator {
-    return this.card(state).getByRole("button", { name: "Sign in", exact: true });
+    return this.card(state).getByRole("button", {
+      name: "Sign in",
+      exact: true,
+    });
   }
 
   createAccountLink(state?: string): Locator {

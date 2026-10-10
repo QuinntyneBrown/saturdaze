@@ -6,6 +6,7 @@ export const generateColorTokens = (brand: BrandVariants): ColorTokens => ({
   colorNeutralForeground1: slate[17], // body ink
   colorNeutralForeground2: slate[40], // secondary text, metadata, chips, segments: 5.35:1 on wells
   colorNeutralForeground3: slate[43], // hints, placeholders, durations, footers: 4.75:1 on wells
+  colorNeutralForegroundDisabled: slate[65], // grab handles, window dots, empty stars; never live text
   colorNeutralForegroundOnBrand: white,
 
   colorNeutralBackground1: white, // cards, dialogs, inputs
@@ -16,7 +17,7 @@ export const generateColorTokens = (brand: BrandVariants): ColorTokens => ({
 
   colorNeutralStroke1: slateAlpha[16],
   colorNeutralStroke2: slateAlpha[8],
-  colorNeutralStrokeAccessible: slate[65], // grab handles, dashed affordances, empty stars; never text
+  colorNeutralStrokeAccessible: slate[53], // field borders, the off switch track, chip and dashed edges: 3.20:1 on wells
   colorStrokeFocus2: brand[70], // 5.56:1 on the canvas, 5.18:1 on wells (WCAG 1.4.11)
 
   colorBrandForeground1: brand[90],
