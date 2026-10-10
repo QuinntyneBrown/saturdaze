@@ -101,6 +101,23 @@ export abstract class BasePage {
     return this.accountMenuButton().locator("img.avatar__img");
   }
 
+  /* ---------- Keyboard focus ---------- */
+
+  /** Presses Tab, as a keyboard user would, until `target` has focus. */
+  async tabTo(target: Locator, maxTabs = 40): Promise<void> {
+    for (let i = 0; i < maxTabs; i++) {
+      await this.page.keyboard.press("Tab");
+      if (await target.evaluate((el) => el === document.activeElement)) return;
+    }
+    throw new Error(`Tab never reached ${target}`);
+  }
+
+  /** The colour of the ring `target` draws while it has keyboard focus. */
+  async focusRingColor(target: Locator): Promise<string> {
+    await this.tabTo(target);
+    return target.evaluate((el) => getComputedStyle(el).outlineColor);
+  }
+
   /* ---------- Page header ---------- */
 
   get pageHeader(): Locator {

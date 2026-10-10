@@ -17,7 +17,7 @@ export const generateColorTokens = (brand: BrandVariants): ColorTokens => ({
   colorNeutralStroke1: slateAlpha[16],
   colorNeutralStroke2: slateAlpha[8],
   colorNeutralStrokeAccessible: slate[65], // grab handles, dashed affordances
-  colorStrokeFocus2: brand[90],
+  colorStrokeFocus2: brand[70], // 5.56:1 on the canvas, 5.18:1 on wells (WCAG 1.4.11)
 
   colorBrandForeground1: brand[90],
   colorBrandForeground2: brand[70], // coral text that passes AA on colorBrandBackground2
