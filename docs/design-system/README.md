@@ -125,7 +125,6 @@ and up) are proposals for the product's TypeScript theme.
 
 | ID | Mock | Issue | Resolution |
 |---|---|---|---|
-| D19 | `app.css` | `.option` and `.option--simple` rules match no markup. | Dropped. |
 | D20 | auth pages, `auth-card__alt` | `.link` is coral with no underline inside sentences ("No account? Create one"); colour alone separates it from the text (1.4.1). | `.link` is underlined; hover thickens the underline. |
 | D21 | `weekend.html` | Block actions are hidden until hover or focus-within, so touch tablets at 720px or wider never see them. | `@media (hover: none)` keeps them visible. |
 | D22 | every page | No skip link (2.4.1). | `skip-link` component; every page should start with it. |
