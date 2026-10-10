@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128" role="img" aria-label="Saturdaze">
+  <!-- The app's .brand-mark (frontend/projects/components/src/lib/top-bar/top-bar.scss) as a vector -->
+  <defs>
+    <radialGradient id="glow-coral" cx="0.2" cy="0" r="1.2">
+      <stop offset="0" stop-color="#FBE7DE"/>
+      <stop offset="0.6" stop-color="#FBE7DE" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glow-sun" cx="1" cy="1" r="1.2">
+      <stop offset="0" stop-color="#FBEBC4"/>
+      <stop offset="0.6" stop-color="#FBEBC4" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="128" height="128" rx="39.4" fill="#E07856"/>
+  <rect width="128" height="128" rx="39.4" fill="url(#glow-coral)"/>
+  <rect width="128" height="128" rx="39.4" fill="url(#glow-sun)"/>
+  <rect x="2.5" y="2.5" width="123" height="123" rx="37" fill="none" stroke="#1F2937" stroke-opacity="0.06" stroke-width="5"/>
+</svg>
