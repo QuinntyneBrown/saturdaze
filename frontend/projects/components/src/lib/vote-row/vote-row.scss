@@ -38,7 +38,7 @@
   height: 28px;
   border-radius: 50%;
   color: var(--colorNeutralForeground2);
-  border: 1px solid var(--colorNeutralStroke2);
+  border: 1px solid var(--colorNeutralStrokeAccessible);
   background: var(--colorNeutralBackground1);
   transition:
     background var(--durationFast) var(--curveEasyEase),
@@ -65,6 +65,5 @@
 @media (hover: hover) {
   .vote-row__btn:not([aria-pressed='true']):hover {
     color: var(--colorNeutralForeground1);
-    border-color: var(--colorNeutralStroke1);
   }
 }
