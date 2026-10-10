@@ -124,7 +124,7 @@
       <ul>
         <li><b>Two tiers.</b> Primitive ramps (<code>--globalColor*</code>) hold raw values. Alias roles (<code>--color*</code>, Fluent UI v9 names per ADR-013) give them a job and are the only colour tokens components read.</li>
         <li><b>Themes swap roles.</b> Light lives on <code>:root</code>; dark re-points the same roles at different primitives. No component knows which theme it is in.</li>
-        <li><b>Accessible by construction.</b> All 98 foreground and background pairs the components use pass WCAG 2.2 AA in both themes; the mock values that did not were changed and logged (D10).</li>
+        <li><b>Accessible by construction.</b> All 98 foreground and background pairs the components use pass WCAG 2.2 AA in both themes; the mock values that did not were changed in the mocks too.</li>
       </ul>
     </section>
 
@@ -711,7 +711,7 @@
           <tr><td><code>--sd-accent-ink</code> / <code>--sd-leaf-ink</code> #256B51 for text on the forest and leaf tints; <code>--sd-accent</code> #2D7D5F as the solid fill</td><td><code>--colorStatusSuccessForeground1</code>, <code>--colorPaletteLeafForeground1</code> (forest 600, #256B51, 5.25:1 on its tint); <code>--colorStatusSuccessBackground3</code> (forest 500)</td><td>None</td></tr>
           <tr><td><code>--sd-warn</code> #AE2B2B as the danger fill, the invalid border and the weak strength segment</td><td><code>--colorStatusDangerBackground3</code>, <code>--colorStatusDangerForeground3</code> (terracotta 500, #AE2B2B, white 6.60:1, distinct from the brand)</td><td>None</td></tr>
           <tr><td><code>--sd-sun-deep</code> #B07F14 filled stars, <code>--sd-line-control</code> empty star outlines</td><td><code>--colorPaletteSunForeground3</code> (sun 600, #B07F14, 3.56:1 on white); empty stars use <code>--colorNeutralStrokeAccessible</code></td><td>None</td></tr>
-          <tr><td>Bottom nav current icon #E07856 on the coral tint</td><td><code>--colorBrandForeground1</code> (coral 600)</td><td>D10: 2.6:1 to 4.97:1</td></tr>
+          <tr><td><code>--sd-primary-deep</code> #A04B2C for the bottom nav current icon on the coral tint</td><td><code>--colorBrandForeground1</code> (coral 600, 4.97:1 on its tint)</td><td>None</td></tr>
           <tr><td>Unchanged roles</td><td><code>--sd-bg</code> → <code>Background2</code>; <code>--sd-surface</code> → <code>Background1</code>; <code>--sd-surface-2</code> → <code>Background3</code>; <code>--sd-ink</code> → <code>Foreground1</code>; <code>--sd-line</code> → <code>Stroke2</code>; <code>--sd-primary-soft</code> → <code>BrandBackground2</code>; <code>--sd-primary-deep</code> → <code>BrandForeground1</code>; <code>--sd-accent-soft</code> → <code>StatusSuccessBackground1</code>; <code>--sd-warn-soft</code>, <code>--sd-warn-deep</code> → <code>StatusDangerBackground1</code>, <code>StatusDangerForeground1</code>; <code>--sd-*-soft</code> / <code>--sd-*-ink</code> → <code>Palette*Background1</code> / <code>Palette*Foreground1</code></td><td>Same values, Fluent names (ADR-013)</td></tr>
         </tbody>
       </table></div>
