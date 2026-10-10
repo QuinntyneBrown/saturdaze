@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Saturdaze mocks v2 — the only stylesheet besides the verbatim tokens.css.
+   Saturdaze mocks v2 — the only stylesheet besides tokens.css (mock-owned).
 
    Cascade layers give deterministic order regardless of specificity:
      reset → base → shell → layout → components → pages → utilities
