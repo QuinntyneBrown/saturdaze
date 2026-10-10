@@ -164,6 +164,11 @@ export abstract class BasePage {
     });
   }
 
+  /** The computed font size of `target`'s text, e.g. `12px`. */
+  async fontSize(target: Locator): Promise<string> {
+    return target.evaluate((el) => getComputedStyle(el).fontSize);
+  }
+
   /** The colour `target` is filled with. */
   async fillColor(target: Locator): Promise<string> {
     return target.evaluate((el) => getComputedStyle(el).backgroundColor);
