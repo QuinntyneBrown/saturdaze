@@ -124,7 +124,7 @@
       <ul>
         <li><b>Two tiers.</b> Primitive ramps (<code>--globalColor*</code>) hold raw values. Alias roles (<code>--color*</code>, Fluent UI v9 names per ADR-013) give them a job and are the only colour tokens components read.</li>
         <li><b>Themes swap roles.</b> Light lives on <code>:root</code>; dark re-points the same roles at different primitives. No component knows which theme it is in.</li>
-        <li><b>Accessible by construction.</b> All 98 foreground and background pairs the components use pass WCAG 2.2 AA in both themes; the mock values that did not were changed and logged (D03 to D10).</li>
+        <li><b>Accessible by construction.</b> All 98 foreground and background pairs the components use pass WCAG 2.2 AA in both themes; the mock values that did not were changed and logged (D04 to D10).</li>
       </ul>
     </section>
 
@@ -704,7 +704,7 @@
         <thead><tr><th scope="col">Mock</th><th scope="col">System role</th><th scope="col">Drift</th></tr></thead>
         <tbody>
           <tr><td><code>--sd-primary-fill</code> #BF5130 behind white text; <code>--sd-primary</code> #E07856 on the brand mark</td><td><code>--colorBrandBackground</code> (coral 500, #BF5130, 4.74:1); <code>--colorBrandBackgroundStatic</code> (coral 400)</td><td>None</td></tr>
-          <tr><td>Focus ring <code>2px solid --sd-primary</code></td><td><code>--colorStrokeFocus2</code> (coral 600, #A04B2C)</td><td>D03: 2.81:1 to 5.56:1 on the canvas</td></tr>
+          <tr><td>Focus ring <code>2px solid --sd-primary-deep</code> #A04B2C</td><td><code>--colorStrokeFocus2</code> (coral 600, #A04B2C, 5.56:1 on the canvas)</td><td>None</td></tr>
           <tr><td><code>--sd-ink-faint</code> #9CA3AF for hints, durations, footers</td><td><code>--colorNeutralForeground3</code> (slate 500, #636A77); #9CA3AF kept as <code>--colorNeutralForegroundDisabled</code></td><td>D04: 2.4:1 to 4.75:1 on wells</td></tr>
           <tr><td><code>--sd-ink-soft</code> #6B7280 on wells</td><td><code>--colorNeutralForeground2</code> (slate 600, #5B6270)</td><td>D05: 4.22:1 to 5.35:1</td></tr>
           <tr><td><code>--sd-line-strong</code> (16% ink) on inputs and the switch</td><td><code>--colorNeutralStrokeAccessible</code> (slate 400, #80868F); 16% kept as decorative <code>--colorNeutralStroke1</code></td><td>D06: 1.36:1 to 3.67:1</td></tr>

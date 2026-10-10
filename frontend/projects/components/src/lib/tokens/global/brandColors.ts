@@ -2,9 +2,10 @@ import type { BrandVariants } from '../types';
 
 /**
  * The Saturdaze coral ramp. 80 is the primary button fill (`#bf5130`, white
- * label 4.74:1), 90 the brand coral (`#e07856`: the brand mark, underlines,
- * focus and coral icons, never behind text), 70 the coral text that passes AA
- * on 160, and 160 the soft coral fill. The other steps are interpolated.
+ * label 4.74:1), 90 the brand coral (`#e07856`: the brand mark, underlines
+ * and coral icons, never behind text), 70 the deep coral (`#a04b2c`) for the
+ * focus ring (5.56:1 on the canvas) and the coral text that passes AA on 160,
+ * and 160 the soft coral fill. The other steps are interpolated.
  */
 export const brandSaturdaze: BrandVariants = {
   10: `#1c0d07`,

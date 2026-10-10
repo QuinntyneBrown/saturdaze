@@ -125,7 +125,6 @@ and up) are proposals for the product's TypeScript theme.
 
 | ID | Mock | Issue | Resolution |
 |---|---|---|---|
-| D03 | every page, focus | Focus ring `2px solid --sd-primary` is 2.81:1 on the cream canvas (1.4.11, 2.4.7). | `--colorStrokeFocus2` #A04B2C (5.56:1 on canvas, 5.18:1 on wells). |
 | D04 | fields, timeline, footers | `--sd-ink-faint` #9CA3AF used for text (placeholders, `field__req`, `block__dur`, `empty__note`, `auth__foot`, `site-footer`, `hero__note`, `list__trail`) is 2.38 to 2.54:1. | `--colorNeutralForeground3` #636A77 (4.75:1 on wells). #9CA3AF is kept for disabled text only. |
 | D05 | chips, wells, segments | `--sd-ink-soft` #6B7280 on `--sd-surface-2` is 4.22:1. | `--colorNeutralForeground2` #5B6270 (5.35:1 on wells, 6.13:1 on white). |
 | D06 | fields, switch, quiet button | Input borders and the off switch track use `--sd-line-strong` (16% ink), 1.36:1 (1.4.11). | `--colorNeutralStrokeAccessible` #80868F (3.67:1 on white, 3.20:1 on wells). |

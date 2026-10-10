@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 25 Slides</title>
+<link rel="stylesheet" href="../assets/slides.css">
+</head>
+<body data-video-number="25" data-video-title="Design drift D03" data-parts="Introduction|What drifted|Why it matters|The fix|Before and after|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Design drift · Video 25</div>
+  <h1>D03: a focus ring you could barely see</h1>
+  <p class="lead">Coral #E07856 was 2.81:1 on the cream canvas; the ring is now #A04B2C at 5.56:1</p>
+</section>
+
+<section id="drift" data-part="1" data-cue="The mocks draw every keyboard focus ring with one token">
+  <h2>What drifted</h2>
+  <pre class="code" data-lang="css" data-mark="1">--sd-focus-ring: 2px solid var(--sd-primary);
+.field__input:focus-visible { outline: none; border-color: var(--sd-primary); ... }</pre>
+  <ul>
+    <li>Mocks: every ring and focused field border on <code>--sd-primary</code> #E07856</li>
+    <li>Product: <code>--colorStrokeFocus2: #e07856</code></li>
+    <li>Design system: logged as D03, fixed on its own side</li>
+  </ul>
+</section>
+
+<section id="why" data-part="2" data-cue="Two WCAG success criteria apply.">
+  <h2>Why it matters: WCAG 1.4.11 and 2.4.7 (AA)</h2>
+  <div class="cols">
+    <div class="card"><h3>Before</h3><p>#E07856 on cream #FAF7F2</p><p class="lead">2.81:1</p><p class="small">Fails 1.4.11 (needs 3:1)</p></div>
+    <div class="card"><h3>After</h3><p>#A04B2C on cream #FAF7F2</p><p class="lead">5.56:1</p><p class="small">5.18:1 on wells; passes AA</p></div>
+  </div>
+</section>
+
+<section id="same" data-part="2" data-cue="The deeper coral reaches five point five six to one">
+  <h2>No new colour</h2>
+  <ul>
+    <li>#A04B2C is brand ramp step 70</li>
+    <li>Already the coral text on the soft tint (<code>colorBrandForeground2</code>)</li>
+    <li>The brand coral #E07856 keeps the mark, underlines and icons</li>
+  </ul>
+</section>
+
+<section id="mocks" data-part="3" data-cue="Start with the mocks, because the mocks are the design.">
+  <h2>1 · The mocks</h2>
+  <pre class="code tight" data-lang="css" data-mark="1,3,4">--sd-focus-ring: 2px solid var(--sd-primary-deep);  /* 5.56:1 on the canvas, 5.18:1 on wells */
+--sd-primary-deep: #A04B2C;  /* coral text that passes AA on primary-soft; the focus ring */
+.field__input:focus-visible { outline: none; border-color: var(--sd-primary-deep); ... }
+.chip-input:focus-within { border-color: var(--sd-primary-deep); ... }</pre>
+  <p class="small"><code>docs/mocks/styles/app.css</code> (excerpt); BEM classes unchanged.</p>
+</section>
+
+<section id="tokens" data-part="3" data-cue="In the product, token values change in the TypeScript theme">
+  <h2>2 · The TypeScript theme</h2>
+  <pre class="code tight" data-lang="ts" data-mark="2">// alias/lightColor.ts
+colorStrokeFocus2: brand[70], // 5.56:1 on the canvas, 5.18:1 on wells (WCAG 1.4.11)
+
+colorBrandForeground1: brand[90],
+colorBrandForeground2: brand[70], // coral text that passes AA on colorBrandBackground2
+colorBrandStroke1: brand[90],</pre>
+  <p class="small"><code>npm run tokens</code> regenerates <code>_tokens.scss</code>: <code>--colorStrokeFocus2: #a04b2c;</code></p>
+</section>
+
+<section id="components" data-part="3" data-cue="Every component that draws a focus ring already read">
+  <h2>3 · Components read the focus role</h2>
+  <pre class="code tight" data-lang="css" data-mark="2">.stat__link:focus-visible {
+  outline: 2px solid var(--colorStrokeFocus2);
+  outline-offset: 2px;
+}</pre>
+  <ul>
+    <li>Stat card link, admin review queue link: off the brand stroke</li>
+    <li>Text input, select, chip input: focus border on the same role</li>
+  </ul>
+</section>
+
+<section id="test" data-part="3" data-cue="The acceptance test came first.">
+  <h2>4 · Test first, then the drift log</h2>
+  <pre class="code tight" data-lang="ts">test("... when a person tabs to a link, then its ring is the AA focus coral", async ({ pages }) => {
+  const s = pages.signIn;
+  expect(await s.focusRingColor(s.forgotPasswordLink())).toBe(AA_FOCUS_CORAL);
+});</pre>
+  <ul>
+    <li>Failed with rgb(224, 120, 86), passes with rgb(160, 75, 44)</li>
+    <li>No baseline shows focus: none changed (ADR-010)</li>
+    <li>D03 removed from the drift log and its citations</li>
+  </ul>
+</section>
+
+<section id="before" data-part="4" data-cue="Here is the production build from the commit before the fix" data-clip="clips/before.mp4" data-clip-delay="1">
+  <aside class="clip-notes">
+    <h3>Before</h3>
+    <ul>
+      <li>Ring #E07856</li>
+      <li>2.81:1 on the canvas</li>
+    </ul>
+  </aside>
+</section>
+
+<section id="after" data-part="4" data-cue="And here is the fix, the same keystrokes." data-clip="clips/after.mp4" data-clip-delay="1">
+  <aside class="clip-notes">
+    <h3>After</h3>
+    <ul>
+      <li>Ring #A04B2C</li>
+      <li>5.56:1 on the canvas</li>
+      <li>Brand mark and fill unchanged</li>
+    </ul>
+  </aside>
+</section>
+
+<section id="recap" data-part="5" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <ul>
+      <li>A focus ring needs 3:1 against what it sits on</li>
+      <li><code>colorStrokeFocus2</code> draws every focus ring</li>
+      <li>Change the TypeScript theme, then regenerate</li>
+      <li>Mocks first, failing test, then delete the drift record</li>
+    </ul>
+  </div>
+</section>
+
+<script src="../assets/slides.js"></script>
+</body>
+</html>

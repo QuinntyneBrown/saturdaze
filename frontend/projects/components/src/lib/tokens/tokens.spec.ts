@@ -20,7 +20,7 @@ describe('design tokens', () => {
     expect(theme.colorBrandBackgroundStatic).toBe('#e07856');
     expect(theme.colorBrandForeground2).toBe('#a04b2c');
     expect(theme.colorBrandBackground2).toBe('#fbe7de');
-    expect(theme.colorStrokeFocus2).toBe(brandSaturdaze[90]);
+    expect(theme.colorStrokeFocus2).toBe('#a04b2c');
   });
 
   it('re-brands every brand role from a new ramp', () => {
@@ -30,6 +30,7 @@ describe('design tokens', () => {
     expect(theme.colorBrandBackgroundStatic).toBe('#3385d6');
     expect(theme.colorBrandStroke1).toBe('#3385d6');
     expect(theme.colorBrandForeground2).toBe('#003366');
+    expect(theme.colorStrokeFocus2).toBe('#003366');
     expect(theme.colorBrandBackground2).toBe('#e6f0fa');
     expect(theme.colorNeutralForeground1).toBe(saturdazeLightTheme.colorNeutralForeground1);
   });
