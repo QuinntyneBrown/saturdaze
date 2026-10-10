@@ -173,7 +173,7 @@
     </section>
 
     <section class="ds-section" id="weights"><h2><a href="#weights">Weights</a></h2>
-      <p>Four weights. The mock hero title at 800 was snapped to 700 (D14): Inter's 800 is heavier than anything else on the page and pulled attention from the call to action.</p>
+      <p>Four weights; nothing is set at 800: Inter's 800 is heavier than anything else on the page and pulled attention from the call to action.</p>
       <div class="ds-example">
         <div class="ds-specimen"><div class="ds-specimen__meta"><code>--fontWeightRegular</code><br><span data-token="--fontWeightRegular"></span><br>Body, meta, captions</div><p style="font-size: var(--fontSizeBase500); font-weight: var(--fontWeightRegular);">Lunch at La Marina</p></div>
         <div class="ds-specimen"><div class="ds-specimen__meta"><code>--fontWeightMedium</code><br><span data-token="--fontWeightMedium"></span><br>Field labels, menu items, list emphasis, Directions links</div><p style="font-size: var(--fontSizeBase500); font-weight: var(--fontWeightMedium);">Lunch at La Marina</p></div>
@@ -183,7 +183,7 @@
     </section>
 
     <section class="ds-section" id="line-heights"><h2><a href="#line-heights">Line heights</a></h2>
-      <p>Five unitless line heights. The mocks used nine (1.05 to 1.6); they were snapped to these (D14). Unitless values scale with the font size, so a retuned heading keeps its proportion.</p>
+      <p>Five unitless line heights, and nothing in between. Unitless values scale with the font size, so a retuned heading keeps its proportion.</p>
       <div class="ds-example">
         <div class="ds-specimen"><div class="ds-specimen__meta"><code>--lineHeightNone</code><br><span data-token="--lineHeightNone"></span><br>Single-line controls: buttons, chips, tags, bottom nav labels</div><p style="font-size: var(--fontSizeBase400); line-height: var(--lineHeightNone); max-width: 22rem;">Pancakes at home, then the Costco run for paper towels, bread and yogurt before church at 10:30.</p></div>
         <div class="ds-specimen"><div class="ds-specimen__meta"><code>--lineHeightTight</code><br><span data-token="--lineHeightTight"></span><br>Headings</div><p style="font-size: var(--fontSizeBase400); line-height: var(--lineHeightTight); max-width: 22rem;">Pancakes at home, then the Costco run for paper towels, bread and yogurt before church at 10:30.</p></div>
@@ -252,7 +252,7 @@
         <figure class="ds-do"><div class="ds-example__canvas"><p style="font: var(--typographyCaption1Strong); letter-spacing: var(--letterSpacingWider); text-transform: uppercase; color: var(--colorNeutralForeground2);">17 – 18 May</p></div><figcaption>A short uppercase overline with wider tracking, above a title.</figcaption></figure>
         <figure class="ds-dont"><div class="ds-example__canvas"><p style="font-size: 0.625rem; text-transform: uppercase; font-weight: var(--fontWeightBold);">May</p></div><figcaption>A 10px date-tile month. Nothing goes below 12px.</figcaption></figure>
         <figure class="ds-do"><div class="ds-example__canvas"><p style="font: var(--typographyTitle2); letter-spacing: var(--letterSpacingTight);">Add a commitment</p></div><figcaption>A dialog title from the role, sentence case.</figcaption></figure>
-        <figure class="ds-dont"><div class="ds-example__canvas"><p style="font-size: 1.75rem; font-weight: 800; line-height: 1.05;">How It Works</p></div><figcaption>Off-scale 28px at weight 800 and line height 1.05, in title case (D14). Use Title1 or Title2.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><p style="font-size: 1.75rem; font-weight: 800; line-height: 1.05;">How It Works</p></div><figcaption>Off-scale 28px at weight 800 and line height 1.05, in title case. Use Title1 or Title2.</figcaption></figure>
       </div>
     </section>
 
@@ -325,12 +325,11 @@
         <thead><tr><th scope="col">Mock</th><th scope="col">System</th><th scope="col">Drift</th></tr></thead>
         <tbody>
           <tr><td><code>--sd-fs-xs/sm/ui/base/md/lg/xl/xxl</code> 12 / 13 / 14 / 15 / 17 / 20 / 26 / 34px</td><td><code>--fontSizeBase200/300/350/400/500/600</code>, <code>--fontSizeHero700/800</code>, in rem</td><td>Same values; rem (D24)</td></tr>
-          <tr><td>18px hero lede, step title, date-tile day; 28px <code>how__title</code>; weight 800 hero title</td><td>17px (<code>Base500</code>), 26px (<code>Hero700</code>), weight 700</td><td>D14</td></tr>
-          <tr><td>Line heights 1.05, 1.15, 1.25, 1.3, 1.45, 1.6</td><td>None 1, Tight 1.2, Snug 1.35, Normal 1.5, Relaxed 1.65</td><td>D14</td></tr>
+          <tr><td><code>--sd-lh-none/tight/snug/base/relaxed</code> 1 / 1.2 / 1.35 / 1.5 / 1.65</td><td><code>--lineHeightNone/Tight/Snug/Normal/Relaxed</code></td><td>Same values</td></tr>
           <tr><td>Hero title at 44px with px media queries</td><td><code>--fontSizeHero900</code>, retuned at 380 and 1024px in rem</td><td>D24</td></tr>
         </tbody>
       </table></div>
-      <p>New in the system: <code>--letterSpacing*</code> (the mocks wrote em values inline), <code>--lineHeightNone</code> and <code>--lineHeightRelaxed</code>, and the thirteen <code>--typography*</code> role shorthands that match the product's Fluent tokens (ADR-013).</p>
+      <p>New in the system: <code>--letterSpacing*</code> (the mocks wrote em values inline) and the thirteen <code>--typography*</code> role shorthands that match the product's Fluent tokens (ADR-013).</p>
     </section>
 
     <footer class="ds-footer"><span>Saturdaze design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>

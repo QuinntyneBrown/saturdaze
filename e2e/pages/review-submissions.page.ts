@@ -61,6 +61,11 @@ export class ReviewSubmissionsPage extends BasePage {
     return this.dateTile(card).locator(".date-tile__m");
   }
 
+  /** The day of the month below the month in the card's date tile. */
+  dateTileDay(card: Locator): Locator {
+    return this.dateTile(card).locator(".date-tile__d");
+  }
+
   details(card: Locator): Locator {
     return card.locator(".details");
   }

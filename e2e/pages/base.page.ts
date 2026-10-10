@@ -169,6 +169,19 @@ export abstract class BasePage {
     return target.evaluate((el) => getComputedStyle(el).fontSize);
   }
 
+  /** The computed font weight of `target`'s text, e.g. `700`. */
+  async fontWeight(target: Locator): Promise<string> {
+    return target.evaluate((el) => getComputedStyle(el).fontWeight);
+  }
+
+  /** `target`'s line height as a ratio of its font size, e.g. `1.2`. */
+  async lineHeightRatio(target: Locator): Promise<number> {
+    return target.evaluate((el) => {
+      const style = getComputedStyle(el);
+      return Math.round((parseFloat(style.lineHeight) / parseFloat(style.fontSize)) * 100) / 100;
+    });
+  }
+
   /** The colour `target` is filled with. */
   async fillColor(target: Locator): Promise<string> {
     return target.evaluate((el) => getComputedStyle(el).backgroundColor);

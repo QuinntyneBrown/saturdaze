@@ -41,7 +41,7 @@
   font-size: var(--fontSizeHero700);
   font-weight: var(--fontWeightBold);
   letter-spacing: -0.02em;
-  line-height: 1.15;
+  line-height: var(--lineHeightTight);
 }
 
 .page-header__subtitle {

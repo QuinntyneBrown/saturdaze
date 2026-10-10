@@ -51,9 +51,11 @@
   --sd-fs-xl:   26px;
   --sd-fs-xxl:  34px;
 
+  --sd-lh-none:  1;
   --sd-lh-tight: 1.2;
   --sd-lh-snug:  1.35;
   --sd-lh-base:  1.5;
+  --sd-lh-relaxed: 1.65;  /* long-form prose */
 
   --sd-fw-regular: 400;
   --sd-fw-medium:  500;
