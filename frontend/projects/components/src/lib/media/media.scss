@@ -2,7 +2,7 @@
 // credit chip, or the tinted fallback tile.
 
 :host {
-  --sd-media-credit-bg: color-mix(in srgb, var(--colorNeutralForeground1) 78%, transparent);
+  --sd-media-credit-bg: var(--colorBackgroundOverlayStrong);
 
   position: relative;
   display: block;

@@ -26,6 +26,7 @@ export const slateAlpha = {
   12: 'rgba(31, 41, 55, 0.12)',
   16: 'rgba(31, 41, 55, 0.16)',
   40: 'rgba(31, 41, 55, 0.4)',
+  72: 'rgba(31, 41, 55, 0.72)',
 } as const;
 
 /** Forest green — "locked", confirmed. */

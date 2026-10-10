@@ -71,6 +71,7 @@ export const tokens: Record<keyof Theme, string> = {
   colorNeutralBackground3: 'var(--colorNeutralBackground3)',
   colorNeutralBackgroundInverted: 'var(--colorNeutralBackgroundInverted)',
   colorBackgroundOverlay: 'var(--colorBackgroundOverlay)',
+  colorBackgroundOverlayStrong: 'var(--colorBackgroundOverlayStrong)',
   colorNeutralStroke1: 'var(--colorNeutralStroke1)',
   colorNeutralStroke2: 'var(--colorNeutralStroke2)',
   colorNeutralStrokeAccessible: 'var(--colorNeutralStrokeAccessible)',

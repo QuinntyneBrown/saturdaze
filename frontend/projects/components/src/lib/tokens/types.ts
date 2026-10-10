@@ -56,6 +56,7 @@ export interface ColorTokens {
   colorNeutralBackground3: string;
   colorNeutralBackgroundInverted: string;
   colorBackgroundOverlay: string;
+  colorBackgroundOverlayStrong: string;
 
   colorNeutralStroke1: string;
   colorNeutralStroke2: string;

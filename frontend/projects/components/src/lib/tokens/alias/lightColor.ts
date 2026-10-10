@@ -14,6 +14,7 @@ export const generateColorTokens = (brand: BrandVariants): ColorTokens => ({
   colorNeutralBackground3: sand, // recessed wells, locked blocks
   colorNeutralBackgroundInverted: slate[17], // selected filter chip, tooltips
   colorBackgroundOverlay: slateAlpha[40], // the CDK dialog backdrop
+  colorBackgroundOverlayStrong: slateAlpha[72], // pill behind 12px white text over a photo (WCAG 1.4.3)
 
   colorNeutralStroke1: slateAlpha[16],
   colorNeutralStroke2: slateAlpha[8],
