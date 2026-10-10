@@ -302,7 +302,7 @@
       <p>The tablist or nav needs a name that says what is being chosen: "Day", "Idea type", "Document". Tab labels are the visible text; a count is read with it ("Events 8"). Panels are named by their tab.</p>
       <h3>Contrast</h3>
       <div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0; gap: var(--spacingHorizontalS);">
-        <div class="ds-pair"><span>Tab label on the track (D05)</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground2|--colorNeutralBackground3" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Tab label on the track</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground2|--colorNeutralBackground3" data-min="4.5"></span></div>
         <div class="ds-pair"><span>Selected label on its pill</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground1|--colorNeutralBackground1" data-min="4.5"></span></div>
         <div class="ds-pair"><span>Count in a selected tab</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground2|--colorNeutralBackground1" data-min="4.5"></span></div>
         <div class="ds-pair"><span>Selected-pill edge on the track</span><span class="ds-pair__ratio" data-contrast="--colorNeutralStrokeAccessible|--colorNeutralBackground3" data-min="3"></span></div>
@@ -385,7 +385,7 @@ tablist.addEventListener('keydown', (e) =&gt; {
         <li><a href="../../mocks/pages/ideas.html">pages/ideas</a>, <a href="../../mocks/pages/ideas.food.html">ideas.food</a>, <a href="../../mocks/pages/ideas.events.html">ideas.events</a>: the Idea type page switch.</li>
         <li><a href="../../mocks/pages/legal.html">pages/legal</a>: the Terms / Privacy switch (<code>.doc-switch</code>), on URL fragments.</li>
       </ul>
-      <p>Drift fixed: D05 tab labels (<code>--sd-ink-soft</code> on the track was 4.22:1, now <code>--colorNeutralForeground2</code>), D24 the 720px width cap in rem. Not in the drift log: the Weekend mock's tablist has no roving tabindex and no arrow-key handling (<code>app.js</code> handles clicks only); the Angular <code>sd-segments</code> has both but not <kbd>Home</kbd> / <kbd>End</kbd>. The mocks' selected pill was only a small luminance step from the track; the design system adds a 1px accessible edge. <code>.segments__count</code> is not used by any mock yet.</p>
+      <p>Drift fixed: D24 the 720px width cap in rem. Not in the drift log: the Weekend mock's tablist has no roving tabindex and no arrow-key handling (<code>app.js</code> handles clicks only); the Angular <code>sd-segments</code> has both but not <kbd>Home</kbd> / <kbd>End</kbd>. The mocks' selected pill was only a small luminance step from the track; the design system adds a 1px accessible edge. <code>.segments__count</code> is not used by any mock yet.</p>
     </section>
 
     <footer class="ds-footer"><span>Saturdaze design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>

@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 27 Slides</title>
+<link rel="stylesheet" href="../assets/slides.css">
+</head>
+<body data-video-number="27" data-video-title="Design drift D05" data-parts="Introduction|What drifted|Why it matters|The fix|Before and after|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Design drift · Video 27</div>
+  <h1>D05: soft text on wells</h1>
+  <p class="lead">Grey #6B7280 was 4.22:1 on wells; secondary text is now #5B6270 at 5.35:1</p>
+</section>
+
+<section id="drift" data-part="1" data-cue="The mocks define three ink strengths.">
+  <h2>What drifted</h2>
+  <pre class="code" data-lang="css" data-mark="2">--sd-ink:         #1F2937;
+--sd-ink-soft:    #6B7280;
+--sd-ink-faint:   #636A77;</pre>
+  <ul>
+    <li>Mocks: chips, well bodies, resting segments, subtitles, labels, metadata</li>
+    <li>Product: <code>--colorNeutralForeground2: #6b7280</code></li>
+    <li>Design system: logged as D05, fixed on its own side</li>
+  </ul>
+</section>
+
+<section id="why" data-part="2" data-cue="The success criterion is WCAG one point four point three">
+  <h2>Why it matters: WCAG 1.4.3 (AA)</h2>
+  <div class="cols">
+    <div class="card"><h3>Before</h3><p>#6B7280</p><p class="lead">4.83 / 4.52 / 4.22:1</p><p class="small">White / canvas / wells; fails 4.5:1 on wells</p></div>
+    <div class="card"><h3>After</h3><p>#5B6270</p><p class="lead">6.13 / 5.74 / 5.35:1</p><p class="small">White / canvas / wells; passes AA everywhere</p></div>
+  </div>
+</section>
+
+<section id="order" data-part="2" data-cue="The new slate reaches five point three five to one on the wells">
+  <h2>Three text strengths, in order</h2>
+  <ul>
+    <li><code>Foreground1</code> #1F2937: content</li>
+    <li><code>Foreground2</code> #5B6270: labels, metadata, chips, segments</li>
+    <li><code>Foreground3</code> #636A77: hints, placeholders, durations, footers (D04)</li>
+  </ul>
+</section>
+
+<section id="mocks" data-part="3" data-cue="Start with the mocks, because the mocks are the design.">
+  <h2>1 · The mocks</h2>
+  <pre class="code tight" data-lang="css" data-mark="1">--sd-ink-soft:    #5B6270;   /* secondary text, chips, segments: 5.35:1 on wells, 6.13:1 on white (WCAG 1.4.3) */
+--sd-ink-faint:   #636A77;   /* hints, placeholders, durations, footers: 4.75:1 on wells (WCAG 1.4.3) */
+
+select.field__input { ... stroke='%235B6270' ... }</pre>
+  <p class="small"><code>docs/mocks/styles/tokens.css</code> and <code>app.css</code> (excerpt); BEM classes unchanged.</p>
+</section>
+
+<section id="tokens" data-part="3" data-cue="In the product, token values change in the TypeScript theme">
+  <h2>2 · The TypeScript theme</h2>
+  <pre class="code tight" data-lang="ts" data-mark="4,10">// global/colors.ts
+export const slate = {
+  17: '#1f2937',
+  40: '#5b6270', // secondary text: 5.35:1 on wells, 6.13:1 on white (WCAG 1.4.3)
+  43: '#636a77', // hint text: 4.75:1 on wells (WCAG 1.4.3)
+  65: '#9ca3af',
+} as const;
+
+// alias/lightColor.ts
+colorNeutralForeground2: slate[40], // secondary text, metadata, chips, segments: 5.35:1 on wells</pre>
+  <p class="small"><code>npm run tokens</code> regenerates <code>_tokens.scss</code>: <code>--colorNeutralForeground2: #5b6270;</code></p>
+</section>
+
+<section id="test" data-part="3" data-cue="The acceptance test came first.">
+  <h2>3 · Test first, baselines, then the drift log</h2>
+  <pre class="code tight" data-lang="ts">test("... then it is the AA soft slate", async ({ goto, pages }) =&gt; {
+  await goto("legal");
+  await pages.legal.waitForReady();
+  const l = pages.legal;
+  expect(await l.textColor(l.docTab("Privacy"))).toBe(SOFT_SLATE);
+});</pre>
+  <ul>
+    <li>Failed with rgb(107, 114, 128), passes with rgb(91, 98, 112)</li>
+    <li>Only the snapshots whose mock capture changed re-captured (ADR-010)</li>
+    <li>D05 removed from the drift log and its citations</li>
+  </ul>
+</section>
+
+<section id="before" data-part="4" data-cue="Here is the production build from the commit before the fix" data-clip="clips/before.mp4" data-clip-delay="1">
+  <aside class="clip-notes">
+    <h3>Before</h3>
+    <ul>
+      <li>Secondary text #6B7280</li>
+      <li>4.22:1 on wells</li>
+    </ul>
+  </aside>
+</section>
+
+<section id="after" data-part="4" data-cue="And here is the fix, the same pages in the same order." data-clip="clips/after.mp4" data-clip-delay="1">
+  <aside class="clip-notes">
+    <h3>After</h3>
+    <ul>
+      <li>Secondary text #5B6270</li>
+      <li>5.35:1 on wells</li>
+      <li>Brand and layout unchanged</li>
+    </ul>
+  </aside>
+</section>
+
+<section id="recap" data-part="5" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <ul>
+      <li>Text on a well needs 4.5:1, like text on white</li>
+      <li><code>colorNeutralForeground2</code> is secondary text, #5B6270</li>
+      <li>Change the TypeScript theme, then regenerate</li>
+      <li>Mocks first, failing test, then delete the drift record</li>
+    </ul>
+  </div>
+</section>
+
+<script src="../assets/slides.js"></script>
+</body>
+</html>

@@ -124,7 +124,7 @@
       <ul>
         <li><b>Two tiers.</b> Primitive ramps (<code>--globalColor*</code>) hold raw values. Alias roles (<code>--color*</code>, Fluent UI v9 names per ADR-013) give them a job and are the only colour tokens components read.</li>
         <li><b>Themes swap roles.</b> Light lives on <code>:root</code>; dark re-points the same roles at different primitives. No component knows which theme it is in.</li>
-        <li><b>Accessible by construction.</b> All 98 foreground and background pairs the components use pass WCAG 2.2 AA in both themes; the mock values that did not were changed and logged (D05 to D10).</li>
+        <li><b>Accessible by construction.</b> All 98 foreground and background pairs the components use pass WCAG 2.2 AA in both themes; the mock values that did not were changed and logged (D06 to D10).</li>
       </ul>
     </section>
 
@@ -638,7 +638,7 @@
           <tr><td><code>--globalColorSlate300</code></td><td><span class="ds-swatch-cell"><i data-token="--globalColorSlate300" data-swatch></i><span data-token="--globalColorSlate300"></span></span></td><td>Mock <code>--sd-ink-disabled</code>: disabled only</td></tr>
           <tr><td><code>--globalColorSlate400</code></td><td><span class="ds-swatch-cell"><i data-token="--globalColorSlate400" data-swatch></i><span data-token="--globalColorSlate400"></span></span></td><td></td></tr>
           <tr><td><code>--globalColorSlate500</code></td><td><span class="ds-swatch-cell"><i data-token="--globalColorSlate500" data-swatch></i><span data-token="--globalColorSlate500"></span></span></td><td>Mock <code>--sd-ink-faint</code>: hints, placeholders, durations</td></tr>
-          <tr><td><code>--globalColorSlate600</code></td><td><span class="ds-swatch-cell"><i data-token="--globalColorSlate600" data-swatch></i><span data-token="--globalColorSlate600"></span></span></td><td></td></tr>
+          <tr><td><code>--globalColorSlate600</code></td><td><span class="ds-swatch-cell"><i data-token="--globalColorSlate600" data-swatch></i><span data-token="--globalColorSlate600"></span></span></td><td>Mock <code>--sd-ink-soft</code>: secondary text, labels, chips</td></tr>
           <tr><td><code>--globalColorSlate900</code></td><td><span class="ds-swatch-cell"><i data-token="--globalColorSlate900" data-swatch></i><span data-token="--globalColorSlate900"></span></span></td><td>Mock <code>--sd-ink</code></td></tr>
           <tr><td><code>--globalColorCream50</code></td><td><span class="ds-swatch-cell"><i data-token="--globalColorCream50" data-swatch></i><span data-token="--globalColorCream50"></span></span></td><td>Mock <code>--sd-bg</code></td></tr>
           <tr><td><code>--globalColorCream100</code></td><td><span class="ds-swatch-cell"><i data-token="--globalColorCream100" data-swatch></i><span data-token="--globalColorCream100"></span></span></td><td>Mock <code>--sd-surface-2</code></td></tr>
@@ -706,7 +706,7 @@
           <tr><td><code>--sd-primary-fill</code> #BF5130 behind white text; <code>--sd-primary</code> #E07856 on the brand mark</td><td><code>--colorBrandBackground</code> (coral 500, #BF5130, 4.74:1); <code>--colorBrandBackgroundStatic</code> (coral 400)</td><td>None</td></tr>
           <tr><td>Focus ring <code>2px solid --sd-primary-deep</code> #A04B2C</td><td><code>--colorStrokeFocus2</code> (coral 600, #A04B2C, 5.56:1 on the canvas)</td><td>None</td></tr>
           <tr><td><code>--sd-ink-faint</code> #636A77 for hints, durations, footers; <code>--sd-ink-disabled</code> #9CA3AF never on live text</td><td><code>--colorNeutralForeground3</code> (slate 500, #636A77, 4.75:1 on wells); <code>--colorNeutralForegroundDisabled</code></td><td>None</td></tr>
-          <tr><td><code>--sd-ink-soft</code> #6B7280 on wells</td><td><code>--colorNeutralForeground2</code> (slate 600, #5B6270)</td><td>D05: 4.22:1 to 5.35:1</td></tr>
+          <tr><td><code>--sd-ink-soft</code> #5B6270 for secondary text, chips and segments</td><td><code>--colorNeutralForeground2</code> (slate 600, #5B6270, 5.35:1 on wells)</td><td>None</td></tr>
           <tr><td><code>--sd-line-strong</code> (16% ink) on inputs and the switch</td><td><code>--colorNeutralStrokeAccessible</code> (slate 400, #80868F); 16% kept as decorative <code>--colorNeutralStroke1</code></td><td>D06: 1.36:1 to 3.67:1</td></tr>
           <tr><td><code>--sd-accent</code> #2D7D5F as text on its tint</td><td><code>--colorStatusSuccessForeground1</code>, <code>--colorPaletteLeafForeground1</code> (forest 600, #256B51); #2D7D5F stays the solid <code>--colorStatusSuccessBackground3</code></td><td>D07: 4.11:1 to 5.25:1</td></tr>
           <tr><td><code>--sd-warn</code> #C45A3F as the danger fill</td><td><code>--colorStatusDangerBackground3</code> (terracotta 500, #AE2B2B)</td><td>D08: 4.30:1 to 6.60:1, and distinct from the brand</td></tr>
