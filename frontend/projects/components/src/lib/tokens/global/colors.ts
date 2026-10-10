@@ -12,6 +12,7 @@ export const sand = '#f3efe8';
 /** Slate ink, keyed by HSL lightness like Fluent's `grey[14]`. */
 export const slate = {
   17: '#1f2937',
+  43: '#636a77', // hint text: 4.75:1 on wells (WCAG 1.4.3)
   46: '#6b7280',
   65: '#9ca3af',
 } as const;

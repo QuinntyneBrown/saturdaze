@@ -40,6 +40,10 @@ export class LandingPage extends BasePage {
     return this.hero.locator(".hero__title");
   }
 
+  heroNote(): Locator {
+    return this.hero.locator(".hero__note");
+  }
+
   heroCta(): Locator {
     return this.hero.locator(".hero__cta").getByRole("link", { name: "Create your account", exact: true });
   }

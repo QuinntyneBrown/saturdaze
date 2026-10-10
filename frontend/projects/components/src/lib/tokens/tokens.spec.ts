@@ -23,6 +23,10 @@ describe('design tokens', () => {
     expect(theme.colorStrokeFocus2).toBe('#a04b2c');
   });
 
+  it('draws hint text in a slate that passes AA on wells', () => {
+    expect(saturdazeLightTheme.colorNeutralForeground3).toBe('#636a77');
+  });
+
   it('re-brands every brand role from a new ramp', () => {
     const ramp = { ...brandSaturdaze, 70: '#003366', 80: '#0066cc', 90: '#3385d6', 160: '#e6f0fa' };
     const theme = createLightTheme(ramp);
