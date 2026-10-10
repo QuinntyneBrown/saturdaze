@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 28 Slides</title>
+<link rel="stylesheet" href="../assets/slides.css">
+</head>
+<body data-video-number="28" data-video-title="Design drift D06" data-parts="Introduction|What drifted|Why it matters|The fix|Before and after|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Design drift · Video 28</div>
+  <h1>D06: control edges</h1>
+  <p class="lead">Field borders and the off switch track were 1.36:1; controls now use #80868F at 3.20:1 or more</p>
+</section>
+
+<section id="drift" data-part="1" data-cue="The mocks have two line tokens.">
+  <h2>What drifted</h2>
+  <pre class="code" data-lang="css" data-mark="2">--sd-line:        rgba(31, 41, 55, 0.08);
+--sd-line-strong: rgba(31, 41, 55, 0.16);</pre>
+  <ul>
+    <li>Mocks: field borders, the chip input, the off switch track</li>
+    <li>Product: the same controls read <code>colorNeutralStroke1</code>, 16% ink</li>
+    <li>Design system: <code>colorNeutralStrokeAccessible</code>, logged as D06</li>
+  </ul>
+</section>
+
+<section id="why" data-part="2" data-cue="The success criterion is WCAG one point four point eleven">
+  <h2>Why it matters: WCAG 1.4.11 (AA)</h2>
+  <div class="cols">
+    <div class="card"><h3>Before</h3><p>16% ink</p><p class="lead">1.36 / 1.36 / 1.36:1</p><p class="small">White / canvas / wells; fails 3:1 everywhere</p></div>
+    <div class="card"><h3>After</h3><p>#80868F</p><p class="lead">3.67 / 3.43 / 3.20:1</p><p class="small">White / canvas / wells; passes 3:1 everywhere</p></div>
+  </div>
+</section>
+
+<section id="which" data-part="2" data-cue="The same rule covers other edges a person has to find.">
+  <h2>Control edge or decoration?</h2>
+  <div class="cols">
+    <div class="card"><h3>Accessible stroke</h3><ul><li>Fields, chip input, select</li><li>Off switch track</li><li>Off filter chips, unpressed votes</li><li>Dashed add rows, upload tiles</li></ul></div>
+    <div class="card"><h3>Stays decorative</h3><ul><li>Card edges and hovers</li><li>Filter group divider</li><li>Quiet button: D28, its own fix</li></ul></div>
+  </div>
+</section>
+
+<section id="mocks" data-part="3" data-cue="Start with the mocks, because the mocks are the design.">
+  <h2>1 · The mocks</h2>
+  <pre class="code tight" data-lang="css" data-mark="2,4,5">--sd-line-strong: rgba(31, 41, 55, 0.16); /* decorative edges: 1.36:1 */
+--sd-line-control: #80868F;  /* controls: 3.20:1 on wells (1.4.11) */
+
+.field__input { ... border: 1px solid var(--sd-line-control); ... }
+.toggle__track { ... background: var(--sd-line-control); ... }</pre>
+  <p class="small"><code>docs/mocks/styles/tokens.css</code> and <code>app.css</code> (excerpt); BEM classes unchanged.</p>
+</section>
+
+<section id="tokens" data-part="3" data-cue="In the product, token values change in the TypeScript theme">
+  <h2>2 · The TypeScript theme</h2>
+  <pre class="code tight" data-lang="ts" data-mark="5,10,11">// global/colors.ts
+export const slate = {
+  ...
+  43: '#636a77', // hint text: 4.75:1 on wells (WCAG 1.4.3)
+  53: '#80868f', // control edges: 3.20:1 on wells (WCAG 1.4.11)
+  65: '#9ca3af',
+} as const;
+
+// alias/lightColor.ts
+colorNeutralForegroundDisabled: slate[65], // grab handles, window dots, empty stars
+colorNeutralStrokeAccessible: slate[53], // field borders, the off switch track, ...</pre>
+  <p class="small">Components read the role: <code>border: 1px solid var(--colorNeutralStrokeAccessible);</code></p>
+</section>
+
+<section id="test" data-part="3" data-cue="The acceptance test came first.">
+  <h2>3 · Test first, baselines, then the drift log</h2>
+  <pre class="code tight" data-lang="ts">test("... turns Remember me off, then its track is the accessible stroke", async ({ pages }) =&gt; {
+  ...
+  await s.rememberToggle().click();
+  await expect(s.rememberToggle()).not.toBeChecked();
+  await s.settleTransitions(s.rememberTrack());
+  expect(await s.fillColor(s.rememberTrack())).toBe(ACCESSIBLE_STROKE);
+});</pre>
+  <ul>
+    <li>Failed with rgba(31, 41, 55, 0.16), passes with rgb(128, 134, 143)</li>
+    <li>Only the snapshots whose mock capture changed re-captured (ADR-010)</li>
+    <li>D06 removed from the drift log and its citations</li>
+  </ul>
+</section>
+
+<section id="before" data-part="4" data-cue="Here is the production build from the commit before the fix" data-clip="clips/before.mp4" data-clip-delay="1">
+  <aside class="clip-notes">
+    <h3>Before</h3>
+    <ul>
+      <li>Field borders and off track: 16% ink</li>
+      <li>1.36:1</li>
+    </ul>
+  </aside>
+</section>
+
+<section id="after" data-part="4" data-cue="And here is the fix, the same pages in the same order." data-clip="clips/after.mp4" data-clip-delay="1">
+  <aside class="clip-notes">
+    <h3>After</h3>
+    <ul>
+      <li>Field borders and off track #80868F</li>
+      <li>3.67:1 on white</li>
+      <li>Labels and layout unchanged</li>
+    </ul>
+  </aside>
+</section>
+
+<section id="recap" data-part="5" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <ul>
+      <li>Control edges need 3:1, WCAG 1.4.11</li>
+      <li><code>colorNeutralStrokeAccessible</code> is #80868F, 3.20:1 on wells</li>
+      <li>Decorative lines stay faint</li>
+      <li>Mocks first, failing test, then delete the drift record</li>
+    </ul>
+  </div>
+</section>
+
+<script src="../assets/slides.js"></script>
+</body>
+</html>
