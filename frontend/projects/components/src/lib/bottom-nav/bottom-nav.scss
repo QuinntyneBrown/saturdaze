@@ -64,7 +64,7 @@
 
 .bottom-nav__item[aria-current='page'] .bottom-nav__icon {
   background: var(--colorBrandBackground2);
-  color: var(--colorBrandForeground1);
+  color: var(--colorBrandForeground2); // 4.97:1 on the pill (WCAG 1.4.11)
 }
 
 @include respond-to(tablet) {

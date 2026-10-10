@@ -78,6 +78,13 @@ export abstract class BasePage {
     return this.bottomNav.locator(`.bottom-nav__item[data-nav="${key}"]`);
   }
 
+  /** The icon pill of the bottom-nav item carrying `aria-current="page"`. */
+  currentBottomNavIcon(): Locator {
+    return this.bottomNav.locator(
+      '.bottom-nav__item[aria-current="page"] .bottom-nav__icon',
+    );
+  }
+
   /** The nav link for `key` in whichever chrome the current viewport shows. */
   navLink(key: NavKey): Locator {
     return this.page
@@ -331,11 +338,9 @@ export abstract class BasePage {
     return overlay
       .getByRole("menuitem", { name, exact: true })
       .or(
-        overlay
-          .locator(".list__item")
-          .filter({
-            has: this.page.locator(".list__title", { hasText: name }),
-          }),
+        overlay.locator(".list__item").filter({
+          has: this.page.locator(".list__title", { hasText: name }),
+        }),
       )
       .filter({ visible: true });
   }

@@ -125,7 +125,6 @@ and up) are proposals for the product's TypeScript theme.
 
 | ID | Mock | Issue | Resolution |
 |---|---|---|---|
-| D10 | `bottom-nav` | Current tab icon coral #E07856 on coral tint is 2.6:1. | `--colorBrandForeground1` #A04B2C (4.97:1). |
 | D11 | `media__credit`, `photo-pick__name` | 11px white text on a 55 to 60% ink pill over unknown photos. | `--colorBackgroundOverlayStrong` (72%) and 12px. |
 | D12 | many | Text below 12px: 10px date-tile month; 11px bottom-nav labels, `chip--sm`, media credit, photo labels, browser-frame URL, admin tag, small avatar. | Minimum 12px (`--fontSizeBase200`). |
 | D13 | `app.css` | A raw 14px is used 23 times outside the type scale (buttons, nav links, menu items, switch labels). | New step `--fontSizeBase350` (14px). |

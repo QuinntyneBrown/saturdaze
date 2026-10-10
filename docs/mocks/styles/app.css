@@ -155,7 +155,7 @@
   }
   .bottom-nav__icon { display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 24px; border-radius: var(--sd-r-pill); }
   .bottom-nav__item[aria-current="page"] { color: var(--sd-ink); }
-  .bottom-nav__item[aria-current="page"] .bottom-nav__icon { background: var(--sd-primary-soft); color: var(--sd-primary); }
+  .bottom-nav__item[aria-current="page"] .bottom-nav__icon { background: var(--sd-primary-soft); color: var(--sd-primary-deep); }
 
   .app-main {
     padding-top: calc(16px + env(safe-area-inset-top, 0px));
