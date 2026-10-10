@@ -67,7 +67,7 @@
 }
 .btn--lg {
   height: var(--sd-btn-h, 48px);
-  padding: 0 22px;
+  padding: 0 var(--spacingHorizontalXXL);
   font-size: 15px;
 }
 .btn--block {

@@ -5,7 +5,7 @@
 .form {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: var(--spacingVerticalL);
 }
 
 .row-2 {

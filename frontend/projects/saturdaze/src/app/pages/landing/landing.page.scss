@@ -145,7 +145,7 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 6px 14px;
+  gap: var(--spacingVerticalSNudge) var(--spacingHorizontalM);
 }
 
 .sd-link--soft {

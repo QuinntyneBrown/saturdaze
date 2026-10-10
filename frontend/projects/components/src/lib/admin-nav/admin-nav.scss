@@ -152,7 +152,7 @@
     height: 100svh;
     flex-direction: column;
     align-items: stretch;
-    gap: 28px;
+    gap: var(--spacingVerticalXXL);
     padding: 24px 16px;
     border-bottom: 0;
     border-right: 1px solid var(--colorNeutralStroke2);
