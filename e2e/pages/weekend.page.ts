@@ -263,6 +263,11 @@ export class WeekendPage extends BasePage {
     return this.dialog().getByRole("radio", { name, exact: true });
   }
 
+  /** D29: the name pill over a stop's photo tile. */
+  coverPhotoName(name: string): Locator {
+    return this.dialog().locator(".photo-pick__name", { hasText: name });
+  }
+
   coverPhotoOptions(): Locator {
     return this.dialog().getByRole("radio");
   }

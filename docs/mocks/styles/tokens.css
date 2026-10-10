@@ -17,6 +17,7 @@
   --sd-ink-disabled: #9CA3AF;  /* disabled text, grab handles; never live text */
   --sd-line:        rgba(31, 41, 55, 0.08);
   --sd-line-strong: rgba(31, 41, 55, 0.16); /* decorative edges: 1.36:1, too faint for controls */
+  --sd-overlay-strong: rgba(31, 41, 55, 0.72); /* pill behind white text over a photo (credits, photo-pick names): keeps 12px text above 4.5:1 over any photo (WCAG 1.4.3) */
   --sd-line-control: #80868F;  /* field borders, the off switch track, resting filter chips and vote buttons, dashed add and upload edges, empty rating stars: 3.67:1 on white, 3.20:1 on wells (WCAG 1.4.11) */
 
   --sd-primary:      #E07856;   /* warm coral — brand mark, underlines, accents; never behind text */

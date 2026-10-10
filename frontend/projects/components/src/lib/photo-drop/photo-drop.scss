@@ -68,7 +68,7 @@
   padding: 1px 6px;
   overflow: hidden;
   border-radius: var(--borderRadiusCircular);
-  background: color-mix(in srgb, var(--colorNeutralForeground1) 78%, transparent);
+  background: var(--colorBackgroundOverlayStrong);
   color: var(--colorNeutralForegroundOnBrand);
   font-size: var(--fontSizeBase200);
   font-weight: var(--fontWeightRegular);

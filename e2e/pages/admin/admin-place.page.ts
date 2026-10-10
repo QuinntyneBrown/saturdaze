@@ -38,6 +38,11 @@ export class AdminPlacePage extends AdminPage {
     return this.preview(/Idea card/).locator(".card--media");
   }
 
+  /** The name pill over the 4:3 photo-pick tile in the thumbnail preview. */
+  previewPickName(): Locator {
+    return this.preview(/Thumbnail/).locator(".photo-pick__name");
+  }
+
   previewCover(): Locator {
     return this.preview(/cover/).locator(".cover");
   }
