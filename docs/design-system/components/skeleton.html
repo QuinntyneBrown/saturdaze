@@ -248,7 +248,7 @@
     </section>
 
     <section class="ds-section" id="theming"><h2><a href="#theming">Theming</a></h2>
-      <p>The base is <code>--colorNeutralStencil1</code> (cream 100 in light, a warm umber in dark) and the sweep is <code>--colorNeutralStencil2Alpha</code>, a translucent highlight that is stronger in light (60%) than in dark (6%), so the shimmer is visible without glowing. Both used to be literal rgba() values in the mocks (D17). Shapes keep the radius of what they replace: <code>--borderRadiusSmall</code> for lines, circular for discs, <code>--borderRadiusMedium</code> for photos.</p>
+      <p>The base is <code>--colorNeutralStencil1</code> (cream 100 in light, a warm umber in dark) and the sweep is <code>--colorNeutralStencil2Alpha</code>, a translucent highlight that is stronger in light (60%) than in dark (6%), so the shimmer is visible without glowing. Shapes keep the radius of what they replace: <code>--borderRadiusSmall</code> for lines, circular for discs, <code>--borderRadiusMedium</code> for photos.</p>
     </section>
 
     <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
@@ -340,7 +340,7 @@
         <li><a href="../../mocks/pages/weekend.generating.html">pages/weekend.generating</a>: six <code>.skeleton-row</code>s per day under real day headers, <code>aria-busy="true"</code> on <code>&lt;main&gt;</code>, lists <code>aria-hidden</code>.</li>
         <li><a href="../../mocks/pages/ideas.html">pages/ideas</a>: the card layout the composed card mirrors.</li>
       </ul>
-      <p>Drift fixed during extraction (see the <a href="../README.md">README drift log</a>): D17 the rgba() shimmer is now <code>--colorNeutralStencil2Alpha</code> with a dark value; D29 the shimmer stops under reduced motion while the spinner beside it keeps turning. The composed card and <code>--title</code> / <code>--rect</code> shapes are core additions; no mock shows them yet.</p>
+      <p>Drift fixed during extraction (see the <a href="../README.md">README drift log</a>): D29 the shimmer stops under reduced motion while the spinner beside it keeps turning. The composed card and <code>--title</code> / <code>--rect</code> shapes are core additions; no mock shows them yet.</p>
     </section>
 
     <footer class="ds-footer"><span>Saturdaze design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>

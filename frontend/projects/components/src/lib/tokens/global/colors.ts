@@ -29,6 +29,11 @@ export const slateAlpha = {
   72: 'rgba(31, 41, 55, 0.72)',
 } as const;
 
+/** White at fixed alphas — highlights over fills. */
+export const whiteAlpha = {
+  60: 'rgba(255, 255, 255, 0.6)',
+} as const;
+
 /** Forest green — "locked", confirmed. */
 export const forest: ColorVariants = {
   shade40: '#256b51', // text on its tint: 5.25:1 (WCAG 1.4.3); #2d7d5f stays the solid fill

@@ -47,7 +47,7 @@
 }
 .btn--danger {
   background: var(--colorStatusDangerBackground3);
-  color: #fff;
+  color: var(--colorStatusDangerForegroundInverted);
 }
 .btn--text {
   height: auto;

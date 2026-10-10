@@ -33,7 +33,7 @@
 .filter-chip[aria-pressed='true'] {
   background: var(--colorNeutralBackgroundInverted);
   border-color: var(--colorNeutralBackgroundInverted);
-  color: #fff;
+  color: var(--colorNeutralForegroundInverted);
 }
 
 .filter-chip--leaf[aria-pressed='true'] {

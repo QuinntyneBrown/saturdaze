@@ -364,7 +364,7 @@
       </ul>
       <div class="ds-dodont">
         <figure class="ds-do"><div class="ds-example__canvas"><code>.map__route { stroke: var(--sd-map-route); }</code></div><figcaption>Colour through a role token, so dark and brand themes reach it.</figcaption></figure>
-        <figure class="ds-dont"><div class="ds-example__canvas"><code>&lt;path fill="#A9C9A4"/&gt;</code></div><figcaption>The mock map's 21 inline hex fills could never go dark (D18). The same goes for the literal <code>#fff</code> on danger buttons and switch thumbs (D17).</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><code>&lt;path fill="#A9C9A4"/&gt;</code></div><figcaption>The mock map's 21 inline hex fills could never go dark (D18). The same goes for a literal <code>#fff</code> on a button label or a switch thumb.</figcaption></figure>
         <figure class="ds-do"><div class="ds-example__canvas"><button class="btn btn--primary" type="button">Plan this weekend</button></div><figcaption>The primary button reads <code>--colorBrandBackground</code>: coral 500 in light, coral 300 with a dark label in dark.</figcaption></figure>
         <figure class="ds-dont"><div class="ds-example__canvas"><code>[data-theme="dark"] .btn--primary { … }</code></div><figcaption>A per-theme component override. If dark needs a different value, it belongs in the dark block of <code>tokens.css</code>.</figcaption></figure>
       </div>
@@ -378,7 +378,7 @@
         <li><code style="overflow-wrap: anywhere;">docs/adr/ADR-013-fluent-design-tokens.md</code> and <code style="overflow-wrap: anywhere;">frontend/projects/components/src/lib/tokens/</code>.</li>
         <li><a href="../../mocks/pages/weekend.html">pages/weekend</a> (cards, banners, the map) and <a href="../../mocks/pages/ideas.html">pages/ideas</a> for the composed examples.</li>
       </ul>
-      <p>Drift fixed or explained here: D17 (literal colours), D18 (map fills), D25 (no dark theme) and D26 (pressed chips in forced colours).</p>
+      <p>Drift fixed or explained here: D18 (map fills), D25 (no dark theme) and D26 (pressed chips in forced colours).</p>
     </section>
 
     <footer class="ds-footer"><span>Saturdaze design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>

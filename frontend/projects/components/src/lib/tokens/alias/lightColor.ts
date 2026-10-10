@@ -1,4 +1,4 @@
-import { cream, sand, slate, slateAlpha, sun, white } from '../global/colors';
+import { cream, sand, slate, slateAlpha, sun, white, whiteAlpha } from '../global/colors';
 import type { BrandVariants, ColorTokens } from '../types';
 
 /** Neutral and brand alias tokens for the light theme, generated from a brand ramp. */
@@ -8,6 +8,8 @@ export const generateColorTokens = (brand: BrandVariants): ColorTokens => ({
   colorNeutralForeground3: slate[43], // hints, placeholders, durations, footers: 4.75:1 on wells
   colorNeutralForegroundDisabled: slate[65], // grab handles, window dots, empty stars; never live text
   colorNeutralForegroundOnBrand: white,
+  colorNeutralForegroundInverted: white, // text on the inverted fill: ink chip, pressed filter chip
+  colorNeutralForegroundStaticInverted: white, // text over a photo or its scrim, in any theme
 
   colorNeutralBackground1: white, // cards, dialogs, inputs
   colorNeutralBackground2: cream, // the page
@@ -15,6 +17,7 @@ export const generateColorTokens = (brand: BrandVariants): ColorTokens => ({
   colorNeutralBackgroundInverted: slate[17], // selected filter chip, tooltips
   colorBackgroundOverlay: slateAlpha[40], // the CDK dialog backdrop
   colorBackgroundOverlayStrong: slateAlpha[72], // pill behind 12px white text over a photo (WCAG 1.4.3)
+  colorNeutralStencil2Alpha: whiteAlpha[60], // the skeleton's moving highlight
 
   colorNeutralStroke1: slateAlpha[16],
   colorNeutralStroke2: slateAlpha[8],

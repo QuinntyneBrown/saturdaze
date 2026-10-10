@@ -17,6 +17,7 @@
   --sd-ink-disabled: #9CA3AF;  /* disabled text, grab handles; never live text */
   --sd-line:        rgba(31, 41, 55, 0.08);
   --sd-line-strong: rgba(31, 41, 55, 0.16); /* decorative edges: 1.36:1, too faint for controls */
+  --sd-overlay:      rgba(31, 41, 55, 0.4);  /* dialog scrim */
   --sd-overlay-strong: rgba(31, 41, 55, 0.72); /* pill behind white text over a photo (credits, photo-pick names): keeps 12px text above 4.5:1 over any photo (WCAG 1.4.3) */
   --sd-line-control: #80868F;  /* field borders, the off switch track, resting filter chips and vote buttons, dashed add and upload edges, empty rating stars: 3.67:1 on white, 3.20:1 on wells (WCAG 1.4.11) */
 
@@ -24,6 +25,12 @@
   --sd-primary-fill: #BF5130;   /* the "Plan This Weekend" CTA fill: white label 4.74:1 (WCAG 1.4.3) */
   --sd-primary-ink:  #FFFFFF;
   --sd-primary-soft: #FBE7DE;
+
+  --sd-on-ink:       #FFFFFF;   /* text on an ink fill: the ink chip, a pressed filter chip */
+  --sd-on-warn:      #FFFFFF;   /* label on the danger fill */
+  --sd-on-photo:     #FFFFFF;   /* text over a photo or its scrim, in any theme */
+  --sd-surface-alpha: rgba(255, 255, 255, 0.92); /* a button floating on a photo */
+  --sd-shimmer:      rgba(255, 255, 255, 0.6);   /* the skeleton's moving highlight */
 
   --sd-accent:       #2D7D5F;   /* forest green — "locked", confirmed */
   --sd-accent-soft:  #DEEDE5;

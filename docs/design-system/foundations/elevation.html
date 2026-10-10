@@ -283,11 +283,11 @@
       <div class="ds-table-wrap"><table class="ds-table">
         <thead><tr><th scope="col">Mock</th><th scope="col">System</th><th scope="col">Drift</th></tr></thead>
         <tbody>
-          <tr><td><code>--sd-shadow-1</code>, <code>-2</code>, <code>-3</code></td><td><code>--shadow4</code>, <code>--shadow16</code>, <code>--shadow28</code></td><td>Same geometry; colours are tokens (D17)</td></tr>
+          <tr><td><code>--sd-shadow-1</code>, <code>-2</code>, <code>-3</code></td><td><code>--shadow4</code>, <code>--shadow16</code>, <code>--shadow28</code></td><td>Same geometry; colours are tokens</td></tr>
           <tr><td>Scrolled top bar: a 1px line</td><td><code>--shadow2</code></td><td>New token</td></tr>
           <tr><td><code>--sd-z-sticky</code> 5, <code>--sd-z-topbar</code> 20, <code>--sd-z-nav</code> 30, <code>--sd-z-dialog</code> 40</td><td><code>--zIndexSticky</code>, <code>--zIndexTopBar</code>, <code>--zIndexBottomNav</code>, <code>--zIndexDialog</code></td><td>Same values</td></tr>
           <tr><td>No layer for menus, toasts or tooltips</td><td><code>--zIndexPopover</code> 50, <code>--zIndexToast</code> 60, <code>--zIndexTooltip</code> 70; <code>--zIndexBase</code> 0 and <code>--zIndexRaised</code> 1</td><td>New tokens</td></tr>
-          <tr><td>Light-only <code>rgba(31, 41, 55, …)</code> shadow colours</td><td><code>--colorNeutralShadowAmbient/Key/KeyDarker</code> with dark values</td><td>D17, D25</td></tr>
+          <tr><td>Light-only <code>rgba(31, 41, 55, …)</code> shadow colours</td><td><code>--colorNeutralShadowAmbient/Key/KeyDarker</code> with dark values</td><td>D25</td></tr>
         </tbody>
       </table></div>
       <div class="ds-note">Token note: <code>--shadow*</code> are declared in every theme block of <code>tokens.css</code>, not only on <code>:root</code>, because a shadow resolves its colour where it is declared. That is what lets a <code>[data-theme="dark"]</code> panel inside a light page show dark shadows.</div>
