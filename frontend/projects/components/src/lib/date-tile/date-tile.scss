@@ -15,7 +15,7 @@
 }
 
 .date-tile__m {
-  font-size: 10px;
+  font-size: var(--fontSizeBase200);
   font-weight: var(--fontWeightBold);
   text-transform: uppercase;
   letter-spacing: 0.06em;

@@ -56,6 +56,11 @@ export class ReviewSubmissionsPage extends BasePage {
     return card.locator(".date-tile");
   }
 
+  /** The month abbreviation above the day in the card's date tile. */
+  dateTileMonth(card: Locator): Locator {
+    return this.dateTile(card).locator(".date-tile__m");
+  }
+
   details(card: Locator): Locator {
     return card.locator(".details");
   }
@@ -66,6 +71,11 @@ export class ReviewSubmissionsPage extends BasePage {
 
   submitter(card: Locator): Locator {
     return card.locator(".submitter");
+  }
+
+  /** The small avatar beside the submitter's email. */
+  submitterAvatar(card: Locator): Locator {
+    return this.submitter(card).locator(".avatar");
   }
 
   approveButton(card: Locator): Locator {
