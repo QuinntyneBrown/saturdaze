@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 26 Slides</title>
+<link rel="stylesheet" href="../assets/slides.css">
+</head>
+<body data-video-number="26" data-video-title="Design drift D04" data-parts="Introduction|What drifted|Why it matters|The fix|Before and after|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Design drift · Video 26</div>
+  <h1>D04: hint text too faint to read</h1>
+  <p class="lead">Grey #9CA3AF was 2.38 to 2.54:1; hint text is now #636A77 at 4.75:1 on wells</p>
+</section>
+
+<section id="drift" data-part="1" data-cue="The mocks define three ink strengths.">
+  <h2>What drifted</h2>
+  <pre class="code" data-lang="css" data-mark="3">--sd-ink:         #1F2937;
+--sd-ink-soft:    #6B7280;
+--sd-ink-faint:   #9CA3AF;</pre>
+  <ul>
+    <li>Mocks: placeholders, <code>field__req</code>, <code>block__dur</code>, <code>empty__note</code>, <code>auth__foot</code>, <code>site-footer</code>, <code>hero__note</code>, <code>list__trail</code></li>
+    <li>Product: <code>--colorNeutralForeground3: #9ca3af</code></li>
+    <li>Design system: logged as D04, fixed on its own side</li>
+  </ul>
+</section>
+
+<section id="why" data-part="2" data-cue="The success criterion is WCAG one point four point three">
+  <h2>Why it matters: WCAG 1.4.3 (AA)</h2>
+  <div class="cols">
+    <div class="card"><h3>Before</h3><p>#9CA3AF</p><p class="lead">2.54 / 2.38 / 2.22:1</p><p class="small">White / canvas / wells; fails 4.5:1</p></div>
+    <div class="card"><h3>After</h3><p>#636A77</p><p class="lead">5.44 / 5.09 / 4.75:1</p><p class="small">White / canvas / wells; passes AA</p></div>
+  </div>
+</section>
+
+<section id="order" data-part="2" data-cue="The new slate reaches four point seven five to one on the wells">
+  <h2>Where hint text sits</h2>
+  <ul>
+    <li><code>Foreground1</code> #1F2937: content</li>
+    <li><code>Foreground2</code> #6B7280: labels and metadata (D05 darkens it next)</li>
+    <li><code>Foreground3</code> #636A77: hints, placeholders, durations, footers</li>
+    <li>#9CA3AF: disabled things only, never live text</li>
+  </ul>
+</section>
+
+<section id="mocks" data-part="3" data-cue="Start with the mocks, because the mocks are the design.">
+  <h2>1 · The mocks</h2>
+  <pre class="code tight" data-lang="css" data-mark="1,2">--sd-ink-faint:   #636A77;   /* hints, placeholders, durations, footers: 4.75:1 on wells (WCAG 1.4.3) */
+--sd-ink-disabled: #9CA3AF;  /* disabled text, grab handles, empty stars; never live text */
+
+.stars .icon { width: 18px; height: 18px; color: var(--sd-ink-disabled); }
+.vote-row__btn { ... color: var(--sd-ink-soft); ... }</pre>
+  <p class="small"><code>docs/mocks/styles/tokens.css</code> and <code>app.css</code> (excerpt); BEM classes unchanged.</p>
+</section>
+
+<section id="tokens" data-part="3" data-cue="In the product, token values change in the TypeScript theme">
+  <h2>2 · The TypeScript theme</h2>
+  <pre class="code tight" data-lang="ts" data-mark="3,9">// global/colors.ts
+export const slate = {
+  43: '#636a77', // hint text: 4.75:1 on wells (WCAG 1.4.3)
+  ...
+};
+
+// alias/lightColor.ts
+colorNeutralForeground2: slate[46], // secondary text, metadata
+colorNeutralForeground3: slate[43], // hints, placeholders, durations, footers: 4.75:1 on wells
+colorNeutralStrokeAccessible: slate[65], // grab handles, dashed affordances, empty stars; never text</pre>
+  <p class="small"><code>npm run tokens</code> regenerates <code>_tokens.scss</code>: <code>--colorNeutralForeground3: #636a77;</code></p>
+</section>
+
+<section id="components" data-part="3" data-cue="Two components read the hint role for things that are not text.">
+  <h2>3 · Non-text readers move off the hint role</h2>
+  <pre class="code tight" data-lang="css">/* stars.scss */
+sd-icon { color: var(--colorNeutralStrokeAccessible); }
+
+/* vote-row.scss */
+.vote-row__btn { ... color: var(--colorNeutralForeground2); ... }</pre>
+  <ul>
+    <li>Empty stars keep #9CA3AF</li>
+    <li>Resting vote icon on the soft ink, as the design system draws it</li>
+  </ul>
+</section>
+
+<section id="test" data-part="3" data-cue="The acceptance test came first.">
+  <h2>4 · Test first, baselines, then the drift log</h2>
+  <pre class="code tight" data-lang="ts">test("... when a person reads the footer, then its text is the AA hint slate", async ({ goto, pages }) =&gt; {
+  await goto("signIn");
+  await pages.signIn.waitForReady();
+  const s = pages.signIn;
+  expect(await s.textColor(s.foot())).toBe(HINT_SLATE);
+});</pre>
+  <ul>
+    <li>Failed with rgb(156, 163, 175), passes with rgb(99, 106, 119)</li>
+    <li>Only the snapshots that show hint text re-captured (ADR-010)</li>
+    <li>D04 removed from the drift log and its citations</li>
+  </ul>
+</section>
+
+<section id="before" data-part="4" data-cue="Here is the production build from the commit before the fix" data-clip="clips/before.mp4" data-clip-delay="1">
+  <aside class="clip-notes">
+    <h3>Before</h3>
+    <ul>
+      <li>Hints #9CA3AF</li>
+      <li>2.38:1 on the canvas</li>
+    </ul>
+  </aside>
+</section>
+
+<section id="after" data-part="4" data-cue="And here is the fix, the same pages in the same order." data-clip="clips/after.mp4" data-clip-delay="1">
+  <aside class="clip-notes">
+    <h3>After</h3>
+    <ul>
+      <li>Hints #636A77</li>
+      <li>5.09:1 on the canvas</li>
+      <li>Brand and layout unchanged</li>
+    </ul>
+  </aside>
+</section>
+
+<section id="recap" data-part="5" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <ul>
+      <li>Placeholders, notes and footers are text: 4.5:1</li>
+      <li><code>colorNeutralForeground3</code> is hint text, #636A77</li>
+      <li>Change the TypeScript theme, then regenerate</li>
+      <li>Mocks first, failing test, then delete the drift record</li>
+    </ul>
+  </div>
+</section>
+
+<script src="../assets/slides.js"></script>
+</body>
+</html>
