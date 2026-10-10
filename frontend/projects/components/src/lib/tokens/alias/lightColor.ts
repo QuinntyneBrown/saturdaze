@@ -4,7 +4,7 @@ import type { BrandVariants, ColorTokens } from '../types';
 /** Neutral and brand alias tokens for the light theme, generated from a brand ramp. */
 export const generateColorTokens = (brand: BrandVariants): ColorTokens => ({
   colorNeutralForeground1: slate[17], // body ink
-  colorNeutralForeground2: slate[46], // secondary text, metadata
+  colorNeutralForeground2: slate[40], // secondary text, metadata, chips, segments: 5.35:1 on wells
   colorNeutralForeground3: slate[43], // hints, placeholders, durations, footers: 4.75:1 on wells
   colorNeutralForegroundOnBrand: white,
 

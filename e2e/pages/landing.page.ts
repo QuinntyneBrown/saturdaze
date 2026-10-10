@@ -40,6 +40,10 @@ export class LandingPage extends BasePage {
     return this.hero.locator(".hero__title");
   }
 
+  heroLede(): Locator {
+    return this.hero.locator(".hero__lede");
+  }
+
   heroNote(): Locator {
     return this.hero.locator(".hero__note");
   }
