@@ -124,7 +124,7 @@
       <ul>
         <li><b>Two tiers.</b> Primitive ramps (<code>--globalColor*</code>) hold raw values. Alias roles (<code>--color*</code>, Fluent UI v9 names per ADR-013) give them a job and are the only colour tokens components read.</li>
         <li><b>Themes swap roles.</b> Light lives on <code>:root</code>; dark re-points the same roles at different primitives. No component knows which theme it is in.</li>
-        <li><b>Accessible by construction.</b> All 98 foreground and background pairs the components use pass WCAG 2.2 AA in both themes; the mock values that did not were changed and logged (D02 to D10).</li>
+        <li><b>Accessible by construction.</b> All 98 foreground and background pairs the components use pass WCAG 2.2 AA in both themes; the mock values that did not were changed and logged (D03 to D10).</li>
       </ul>
     </section>
 
@@ -370,7 +370,7 @@
     <section class="ds-section" id="usage"><h2><a href="#usage">Usage</a></h2>
       <ul>
         <li><b>Read colour by role, never by primitive or hex.</b> Text uses a <code>Foreground</code> token, fills a <code>Background</code> token, borders a <code>Stroke</code> token. A <code>--globalColor*</code> or a hex value in component CSS is a bug.</li>
-        <li><b>One coral fill per view.</b> The primary button is the only solid coral; the tint (<code>--colorBrandBackground2</code>) marks where you are. <code>--colorBrandBackgroundStatic</code>, the mock coral, is for the brand mark and never sits behind text (D02).</li>
+        <li><b>One coral fill per view.</b> The primary button is the only solid coral; the tint (<code>--colorBrandBackground2</code>) marks where you are. <code>--colorBrandBackgroundStatic</code>, the mock coral, is for the brand mark and never sits behind text.</li>
         <li><b>Three text strengths, in order.</b> <code>Foreground1</code> for content, <code>Foreground2</code> for meta and labels, <code>Foreground3</code> for hints and placeholders. Nothing fainter than <code>Foreground3</code> carries text (D04); <code>ForegroundDisabled</code> is only for disabled controls.</li>
         <li><b>Decorative or accessible stroke.</b> Card edges and dividers use <code>Stroke1</code>/<code>Stroke2</code>; anything a person must see to use a control (input border, quiet button, switch track, dashed add row) uses <code>StrokeAccessible</code> (D06, D28).</li>
         <li><b>Status means status, palette means category.</b> Sun, sky, leaf and indoor tag activities, weather and people; they never say "succeeded" or "failed". Locked uses success forest because it is a confirmed state.</li>
@@ -703,7 +703,7 @@
       <div class="ds-table-wrap"><table class="ds-table">
         <thead><tr><th scope="col">Mock</th><th scope="col">System role</th><th scope="col">Drift</th></tr></thead>
         <tbody>
-          <tr><td><code>--sd-primary</code> #E07856 behind white text</td><td><code>--colorBrandBackground</code> (coral 500, #BF5130); #E07856 kept as <code>--colorBrandBackgroundStatic</code> for the brand mark</td><td>D02: 3.00:1 to 4.74:1</td></tr>
+          <tr><td><code>--sd-primary-fill</code> #BF5130 behind white text; <code>--sd-primary</code> #E07856 on the brand mark</td><td><code>--colorBrandBackground</code> (coral 500, #BF5130, 4.74:1); <code>--colorBrandBackgroundStatic</code> (coral 400)</td><td>None</td></tr>
           <tr><td>Focus ring <code>2px solid --sd-primary</code></td><td><code>--colorStrokeFocus2</code> (coral 600, #A04B2C)</td><td>D03: 2.81:1 to 5.56:1 on the canvas</td></tr>
           <tr><td><code>--sd-ink-faint</code> #9CA3AF for hints, durations, footers</td><td><code>--colorNeutralForeground3</code> (slate 500, #636A77); #9CA3AF kept as <code>--colorNeutralForegroundDisabled</code></td><td>D04: 2.4:1 to 4.75:1 on wells</td></tr>
           <tr><td><code>--sd-ink-soft</code> #6B7280 on wells</td><td><code>--colorNeutralForeground2</code> (slate 600, #5B6270)</td><td>D05: 4.22:1 to 5.35:1</td></tr>
