@@ -125,7 +125,6 @@ and up) are proposals for the product's TypeScript theme.
 
 | ID | Mock | Issue | Resolution |
 |---|---|---|---|
-| D16 | `landing.html` | Hero padding 72px at desktop is off the spacing scale. | `--layoutSpacePage` (64px). |
 | D17 | `app.css` | Literal colours: `#fff` on danger, ink chip, pressed filter chip, switch thumb and map pins; rgba() in skeleton shimmer, scrim, credit, cover gradient and cover edit button. | Every one is a token, so a dark theme is possible. |
 | D18 | `weekend.html` | The map SVG carries 21 inline hex fills (no dark theme, no tokens). | `.map__land`, `.map__water`, `.map__road`, `.map__route`, `.map__pin` classes on tokens. |
 | D19 | `app.css` | `.option` and `.option--simple` rules match no markup. | Dropped. |
