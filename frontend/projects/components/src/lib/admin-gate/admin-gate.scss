@@ -10,7 +10,7 @@
 }
 
 .auth-card__sub {
-  font-size: 14px;
+  font-size: var(--fontSizeBase350);
   color: var(--colorNeutralForeground2);
 }
 
@@ -21,7 +21,7 @@
   padding: 6px 12px;
   border-radius: var(--borderRadiusCircular);
   background: var(--colorNeutralBackground3);
-  font-size: 14px;
+  font-size: var(--fontSizeBase350);
   font-weight: var(--fontWeightMedium);
   overflow-wrap: anywhere;
 }

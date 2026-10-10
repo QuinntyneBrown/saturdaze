@@ -29,7 +29,7 @@
 :host(.avatar--xl) {
   width: 36px;
   height: 36px;
-  font-size: 14px;
+  font-size: var(--fontSizeBase350);
 }
 
 :host(.avatar--q) {

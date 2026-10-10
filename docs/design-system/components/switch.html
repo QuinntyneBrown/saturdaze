@@ -347,7 +347,7 @@
         <li><a href="../../mocks/pages/sign-in.html">pages/sign-in</a> and <a href="../../mocks/pages/admin.sign-in.html">pages/admin.sign-in</a>: "Remember me" with a visible label, in <code>.auth-card__row</code> beside "Forgot password?", including the wrong-password state.</li>
         <li><a href="../../mocks/pages/family.html">pages/family</a>: the Preferences list (Budget matters, Try something new each weekend, Friday preview email) with the name in the list row and a visually hidden label in the switch.</li>
       </ul>
-      <p>Drift fixed during extraction (see the <a href="../README.md">README drift log</a>): D17 the literal <code>#fff</code> thumb, now a token; D13 the raw 14px label. The <code>.toggle--end</code> settings row is the recommended replacement for the Family list's hidden-label pattern; the mocks do not use it yet.</p>
+      <p>Drift fixed during extraction (see the <a href="../README.md">README drift log</a>): D17 the literal <code>#fff</code> thumb, now a token. The <code>.toggle--end</code> settings row is the recommended replacement for the Family list's hidden-label pattern; the mocks do not use it yet.</p>
       <p>Rules added to components.css for this page: the surface-coloured thumb, <code>position: relative</code> on <code>.toggle</code> (keeps the visually hidden input inside its label), and no shared ring on <code>.toggle[data-state="focus"]</code> so the forced focus state rings only the track.</p>
     </section>
 

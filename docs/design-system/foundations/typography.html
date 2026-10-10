@@ -162,7 +162,7 @@
       <div class="ds-example">
         <div class="ds-specimen"><div class="ds-specimen__meta"><code>--fontSizeBase200</code><br><span data-token="--fontSizeBase200"></span> · 12px<br>Captions, chips, hints: the smallest text allowed</div><p style="font-size: var(--fontSizeBase200); line-height: var(--lineHeightTight); font-weight: var(--fontWeightSemibold);">Saturday at Terre Bleu</p></div>
         <div class="ds-specimen"><div class="ds-specimen__meta"><code>--fontSizeBase300</code><br><span data-token="--fontSizeBase300"></span> · 13px<br>Meta, small buttons, field labels</div><p style="font-size: var(--fontSizeBase300); line-height: var(--lineHeightTight); font-weight: var(--fontWeightSemibold);">Saturday at Terre Bleu</p></div>
-        <div class="ds-specimen"><div class="ds-specimen__meta"><code>--fontSizeBase350</code><br><span data-token="--fontSizeBase350"></span> · 14px<br>Control labels, nav links, menu items, banners (D13)</div><p style="font-size: var(--fontSizeBase350); line-height: var(--lineHeightTight); font-weight: var(--fontWeightSemibold);">Saturday at Terre Bleu</p></div>
+        <div class="ds-specimen"><div class="ds-specimen__meta"><code>--fontSizeBase350</code><br><span data-token="--fontSizeBase350"></span> · 14px<br>Control labels, nav links, menu items, banners</div><p style="font-size: var(--fontSizeBase350); line-height: var(--lineHeightTight); font-weight: var(--fontWeightSemibold);">Saturday at Terre Bleu</p></div>
         <div class="ds-specimen"><div class="ds-specimen__meta"><code>--fontSizeBase400</code><br><span data-token="--fontSizeBase400"></span> · 15px<br>Body</div><p style="font-size: var(--fontSizeBase400); line-height: var(--lineHeightTight); font-weight: var(--fontWeightSemibold);">Saturday at Terre Bleu</p></div>
         <div class="ds-specimen"><div class="ds-specimen__meta"><code>--fontSizeBase500</code><br><span data-token="--fontSizeBase500"></span> · 17px<br>Card titles, brand, lede</div><p style="font-size: var(--fontSizeBase500); line-height: var(--lineHeightTight); font-weight: var(--fontWeightSemibold);">Saturday at Terre Bleu</p></div>
         <div class="ds-specimen"><div class="ds-specimen__meta"><code>--fontSizeBase600</code><br><span data-token="--fontSizeBase600"></span> · 20px<br>Section and dialog titles (22px from 1024)</div><p style="font-size: var(--fontSizeBase600); line-height: var(--lineHeightTight); font-weight: var(--fontWeightSemibold);">Saturday at Terre Bleu</p></div>
@@ -278,7 +278,7 @@
           <tr><th scope="colgroup" colspan="4">Sizes</th></tr>
           <tr><td>Size 12px: Captions, chips, hints</td><td><code>--fontSizeBase200</code></td><td colspan="2"><span data-token="--fontSizeBase200"></span></td></tr>
           <tr><td>Size 13px: Meta, small buttons, field labels</td><td><code>--fontSizeBase300</code></td><td colspan="2"><span data-token="--fontSizeBase300"></span></td></tr>
-          <tr><td>Size 14px: Control labels, nav links, menu items, banners (D13)</td><td><code>--fontSizeBase350</code></td><td colspan="2"><span data-token="--fontSizeBase350"></span></td></tr>
+          <tr><td>Size 14px: Control labels, nav links, menu items, banners</td><td><code>--fontSizeBase350</code></td><td colspan="2"><span data-token="--fontSizeBase350"></span></td></tr>
           <tr><td>Size 15px: Body</td><td><code>--fontSizeBase400</code></td><td colspan="2"><span data-token="--fontSizeBase400"></span></td></tr>
           <tr><td>Size 17px: Card titles, brand, lede</td><td><code>--fontSizeBase500</code></td><td colspan="2"><span data-token="--fontSizeBase500"></span></td></tr>
           <tr><td>Size 20px: Section and dialog titles (22px from 1024)</td><td><code>--fontSizeBase600</code></td><td colspan="2"><span data-token="--fontSizeBase600"></span></td></tr>
@@ -324,8 +324,7 @@
       <div class="ds-table-wrap"><table class="ds-table">
         <thead><tr><th scope="col">Mock</th><th scope="col">System</th><th scope="col">Drift</th></tr></thead>
         <tbody>
-          <tr><td><code>--sd-fs-xs/sm/base/md/lg/xl/xxl</code> 12 / 13 / 15 / 17 / 20 / 26 / 34px</td><td><code>--fontSizeBase200/300/400/500/600</code>, <code>--fontSizeHero700/800</code>, in rem</td><td>Same values; rem (D24)</td></tr>
-          <tr><td>A raw 14px used 23 times (buttons, nav links, menu items, switch labels)</td><td>New step <code>--fontSizeBase350</code></td><td>D13</td></tr>
+          <tr><td><code>--sd-fs-xs/sm/ui/base/md/lg/xl/xxl</code> 12 / 13 / 14 / 15 / 17 / 20 / 26 / 34px</td><td><code>--fontSizeBase200/300/350/400/500/600</code>, <code>--fontSizeHero700/800</code>, in rem</td><td>Same values; rem (D24)</td></tr>
           <tr><td>18px hero lede, step title, date-tile day; 28px <code>how__title</code>; weight 800 hero title</td><td>17px (<code>Base500</code>), 26px (<code>Hero700</code>), weight 700</td><td>D14</td></tr>
           <tr><td>Line heights 1.05, 1.15, 1.25, 1.3, 1.45, 1.6</td><td>None 1, Tight 1.2, Snug 1.35, Normal 1.5, Relaxed 1.65</td><td>D14</td></tr>
           <tr><td>Hero title at 44px with px media queries</td><td><code>--fontSizeHero900</code>, retuned at 380 and 1024px in rem</td><td>D24</td></tr>

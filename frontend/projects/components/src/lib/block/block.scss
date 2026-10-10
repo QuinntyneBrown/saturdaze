@@ -155,7 +155,7 @@
 }
 
 :host(.block--drive) .block__title {
-  font-size: 14px;
+  font-size: var(--fontSizeBase350);
   font-weight: var(--fontWeightMedium);
   color: var(--colorNeutralForeground2);
 }

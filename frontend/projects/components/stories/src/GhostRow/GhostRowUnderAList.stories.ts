@@ -14,7 +14,7 @@ export const UnderAList: StoryObj<GhostRow> = {
       },
       template: `
         <div style="max-width: 420px">
-          <ul style="display: grid; gap: 8px; list-style: none; padding: 0; margin: 0; font-size: 14px">
+          <ul style="display: grid; gap: 8px; list-style: none; padding: 0; margin: 0; font-size: var(--fontSizeBase350)">
             @for (errand of errands(); track $index) {
               <li style="padding: 10px 12px; border-radius: 12px; background: var(--colorNeutralBackground3)">{{ errand }}</li>
             }

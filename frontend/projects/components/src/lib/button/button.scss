@@ -14,7 +14,7 @@
   height: var(--sd-btn-h, 40px);
   padding: 0 16px;
   border-radius: var(--borderRadiusCircular);
-  font-size: 14px;
+  font-size: var(--fontSizeBase350);
   font-weight: var(--fontWeightSemibold);
   line-height: 1;
   white-space: nowrap;

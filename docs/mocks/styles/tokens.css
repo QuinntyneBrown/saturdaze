@@ -44,6 +44,7 @@
 
   --sd-fs-xs:   12px;
   --sd-fs-sm:   13px;
+  --sd-fs-ui:   14px;   /* control labels, nav links, menu items, banners */
   --sd-fs-base: 15px;
   --sd-fs-md:   17px;
   --sd-fs-lg:   20px;
