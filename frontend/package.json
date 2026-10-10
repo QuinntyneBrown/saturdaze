@@ -17,7 +17,8 @@
     "format:check": "prettier --check .",
     "tokens": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/generate-tokens.mjs",
     "tokens:check": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/generate-tokens.mjs --check",
-    "prepare": "cd .. && husky frontend/.husky"
+    "prepare": "cd .. && husky frontend/.husky",
+    "release:components:version": "node scripts/next-components-version.mjs"
   },
   "private": true,
   "packageManager": "npm@10.9.4",
