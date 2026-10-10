@@ -125,7 +125,6 @@ and up) are proposals for the product's TypeScript theme.
 
 | ID | Mock | Issue | Resolution |
 |---|---|---|---|
-| D08 | dialogs D21, D24, AD5 | `.btn--danger` white on `--sd-warn` #C45A3F is 4.30:1, and too close to the new brand fill. | `--colorStatusDangerBackground3` #AE2B2B (6.60:1), a brick red that reads differently from the brand coral in both themes. |
 | D09 | `dialogs.html` D13, `past.html` | Rating stars: filled #F4C969 is 1.57:1, empty #9CA3AF is 2.54:1 on white; D13 is an input. | Filled `--colorPaletteSunForeground3` #B07F14 (3.56:1), empty `--colorNeutralStrokeAccessible`; filled vs outline shape also differs. |
 | D10 | `bottom-nav` | Current tab icon coral #E07856 on coral tint is 2.6:1. | `--colorBrandForeground1` #A04B2C (4.97:1). |
 | D11 | `media__credit`, `photo-pick__name` | 11px white text on a 55 to 60% ink pill over unknown photos. | `--colorBackgroundOverlayStrong` (72%) and 12px. |

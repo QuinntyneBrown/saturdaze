@@ -37,6 +37,10 @@ describe('design tokens', () => {
     expect(saturdazeLightTheme.colorStatusSuccessBackground3).toBe('#2d7d5f');
   });
 
+  it('fills danger in a brick red that passes AA under a white label', () => {
+    expect(saturdazeLightTheme.colorStatusDangerBackground3).toBe('#ae2b2b');
+  });
+
   it('draws control edges in a slate that passes 1.4.11 on wells', () => {
     expect(saturdazeLightTheme.colorNeutralStrokeAccessible).toBe('#80868f');
   });
