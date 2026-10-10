@@ -55,6 +55,7 @@ Six videos on Saturdaze Admin, the second web application that curates the catal
 | 25 | [Design drift D03: a focus ring you could barely see](25-focus-ring-contrast-d03/README.md) | ~5 min | The #E07856 focus ring at 2.81:1 on the canvas (WCAG 1.4.11, 2.4.7); `colorStrokeFocus2` #A04B2C in the mocks, the TypeScript theme and the components; a failing Playwright test first; tabbing through sign-in before and after. |
 | 26 | [Design drift D04: hint text too faint to read](26-hint-text-contrast-d04/README.md) | ~6 min | Hint text in #9CA3AF at 2.38 to 2.54:1 (WCAG 1.4.3); `colorNeutralForeground3` #636A77 in the mocks, the TypeScript theme and the components, #9CA3AF kept for disabled things; a failing Playwright test first; create account, sign-in and landing before and after. |
 | 27 | [Design drift D05: soft text on wells](27-soft-text-contrast-d05/README.md) | ~5.5 min | Secondary text in #6B7280 at 4.22:1 on wells (WCAG 1.4.3); `colorNeutralForeground2` #5B6270 in the mocks and the TypeScript theme; a failing Playwright test first; legal, sign-in and landing before and after. |
+| 28 | [Design drift D06: control edges](28-control-edge-contrast-d06/README.md) | ~6.5 min | Field borders and the off switch track in 16% ink at 1.36:1 (WCAG 1.4.11); `colorNeutralStrokeAccessible` #80868F in the mocks, the TypeScript theme and the components; a failing Playwright test first; sign-in and create account before and after. |
 
 ## Family members series
 

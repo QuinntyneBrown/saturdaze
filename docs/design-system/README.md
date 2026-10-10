@@ -125,7 +125,6 @@ and up) are proposals for the product's TypeScript theme.
 
 | ID | Mock | Issue | Resolution |
 |---|---|---|---|
-| D06 | fields, switch, quiet button | Input borders and the off switch track use `--sd-line-strong` (16% ink), 1.36:1 (1.4.11). | `--colorNeutralStrokeAccessible` #80868F (3.67:1 on white, 3.20:1 on wells). |
 | D07 | `chip--accent`, `chip--leaf`, approved row | Forest #2D7D5F text on its own tint is 4.11 to 4.12:1. | `--colorStatusSuccessForeground1` / `--colorPaletteLeafForeground1` #256B51 (5.25:1). #2D7D5F stays as the solid fill. |
 | D08 | dialogs D21, D24, AD5 | `.btn--danger` white on `--sd-warn` #C45A3F is 4.30:1, and too close to the new brand fill. | `--colorStatusDangerBackground3` #AE2B2B (6.60:1), a brick red that reads differently from the brand coral in both themes. |
 | D09 | `dialogs.html` D13, `past.html` | Rating stars: filled #F4C969 is 1.57:1, empty #9CA3AF is 2.54:1 on white; D13 is an input. | Filled `--colorPaletteSunForeground3` #B07F14 (3.56:1), empty `--colorNeutralStrokeAccessible`; filled vs outline shape also differs. |

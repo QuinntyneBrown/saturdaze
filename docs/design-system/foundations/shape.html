@@ -226,7 +226,7 @@
     <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
       <ul>
         <li><b>Shape never carries state alone.</b> A selected or locked card changes border colour and width and also says so in text or a chip; a pressed filter chip changes fill, text colour and edge (D26).</li>
-        <li><b>Edges that matter pass 3:1.</b> Input borders, the quiet button, the switch track and the dashed add rows use the accessible stroke (1.4.11, D06, D28); 1px card edges are decorative.</li>
+        <li><b>Edges that matter pass 3:1.</b> Input borders, the quiet button, the switch track and the dashed add rows use the accessible stroke (1.4.11; the quiet button: D28); 1px card edges are decorative.</li>
         <li><b>Focus is 2px</b> with a 2px offset, so it sits outside rounded corners and never overlaps content; the 3px field halo is extra, on top of the 2px focus border.</li>
         <li><b>Forced colours</b> keep borders and outlines (as system colours) but drop fills and shadows, so every control that relies on a border keeps its outline there.</li>
         <li><b>Round corners do not shrink targets.</b> Hit areas are the full box, including corners; a 24px pill still has a 24px target.</li>
@@ -259,7 +259,7 @@
         <tbody>
           <tr><td><code>--sd-r-sm/md/lg/xl/pill</code> 8 / 12 / 16 / 22 / 999px</td><td><code>--borderRadiusSmall/Medium/Large/XLarge/Circular</code></td><td>Same values; rem except the pill</td></tr>
           <tr><td>Raw 1, 2 and 3px borders and box-shadow rings</td><td><code>--strokeWidthThin/Thick/Thicker</code></td><td>New tokens</td></tr>
-          <tr><td>Input and quiet-button edges at 16% ink</td><td>Same width, <code>--colorNeutralStrokeAccessible</code></td><td>D06, D28</td></tr>
+          <tr><td>Quiet-button edges at 16% ink</td><td>Same width, <code>--colorNeutralStrokeAccessible</code></td><td>D28</td></tr>
           <tr><td>Pressed tinted filter chips with a pale fill only</td><td>Fill plus a 1px edge in the chip's text colour</td><td>D26</td></tr>
           <tr><td>Chip remove button 16 × 16px</td><td>24px hit area via <code>::before</code>; the glyph stays 16px</td><td>D27</td></tr>
         </tbody>

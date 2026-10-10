@@ -35,8 +35,13 @@ export abstract class BasePage {
    * attribute in the mocks) and then for the page's own anchor element.
    */
   async waitForReady(slug: PageSlug = this.slug): Promise<void> {
-    await this.page.waitForSelector(`body[data-page="${slug}"]`, { state: "attached", timeout: 10_000 });
-    await this.readyAnchor().first().waitFor({ state: "attached", timeout: 10_000 });
+    await this.page.waitForSelector(`body[data-page="${slug}"]`, {
+      state: "attached",
+      timeout: 10_000,
+    });
+    await this.readyAnchor()
+      .first()
+      .waitFor({ state: "attached", timeout: 10_000 });
   }
 
   /* ---------- Shell ---------- */
@@ -76,19 +81,25 @@ export abstract class BasePage {
   /** The nav link for `key` in whichever chrome the current viewport shows. */
   navLink(key: NavKey): Locator {
     return this.page
-      .locator(`.topbar__link[data-nav="${key}"], .bottom-nav__item[data-nav="${key}"]`)
+      .locator(
+        `.topbar__link[data-nav="${key}"], .bottom-nav__item[data-nav="${key}"]`,
+      )
       .filter({ visible: true });
   }
 
   /** The single visible nav link carrying `aria-current="page"`. */
   activeNavLink(): Locator {
     return this.page
-      .locator('.topbar__link[aria-current="page"], .bottom-nav__item[aria-current="page"]')
+      .locator(
+        '.topbar__link[aria-current="page"], .bottom-nav__item[aria-current="page"]',
+      )
       .filter({ visible: true });
   }
 
   brandLink(): Locator {
-    return this.page.locator(".topbar__brand, .sitebar__brand").filter({ visible: true });
+    return this.page
+      .locator(".topbar__brand, .sitebar__brand")
+      .filter({ visible: true });
   }
 
   /** Top-bar avatar button (≥720). Opens the account menu (D26). */
@@ -132,6 +143,23 @@ export abstract class BasePage {
   /** The colour `target`'s text is drawn in. */
   async textColor(target: Locator): Promise<string> {
     return target.evaluate((el) => getComputedStyle(el).color);
+  }
+
+  /** The colour of `target`'s resting edge (top border). */
+  async borderColor(target: Locator): Promise<string> {
+    return target.evaluate((el) => getComputedStyle(el).borderTopColor);
+  }
+
+  /** Wait for `target`'s running CSS transitions to finish. */
+  async settleTransitions(target: Locator): Promise<void> {
+    await target.evaluate(async (el) => {
+      await Promise.all(el.getAnimations().map((a) => a.finished));
+    });
+  }
+
+  /** The colour `target` is filled with. */
+  async fillColor(target: Locator): Promise<string> {
+    return target.evaluate((el) => getComputedStyle(el).backgroundColor);
   }
 
   /** The colour a field's placeholder text is drawn in. */
@@ -194,7 +222,9 @@ export abstract class BasePage {
   }
 
   filterChip(name: string): Locator {
-    return this.filters.getByRole("button", { name, exact: true }).and(this.page.locator(".filter-chip"));
+    return this.filters
+      .getByRole("button", { name, exact: true })
+      .and(this.page.locator(".filter-chip"));
   }
 
   pressedFilterChips(): Locator {
@@ -232,7 +262,9 @@ export abstract class BasePage {
   /** The open CDK dialog / alert dialog panel. */
   dialog(): Locator {
     return this.page
-      .locator('.cdk-overlay-container [role="dialog"], .cdk-overlay-container [role="alertdialog"]')
+      .locator(
+        '.cdk-overlay-container [role="dialog"], .cdk-overlay-container [role="alertdialog"]',
+      )
       .filter({ visible: true });
   }
 
@@ -261,12 +293,16 @@ export abstract class BasePage {
   /** A dialog field by its label; a required field's label also reads "Required". */
   dialogField(label: string): Locator {
     const escaped = label.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-    return this.dialog().getByLabel(new RegExp(`^\\s*${escaped}(\\s+Required)?\\s*$`));
+    return this.dialog().getByLabel(
+      new RegExp(`^\\s*${escaped}(\\s+Required)?\\s*$`),
+    );
   }
 
   /** Anchored menu (≥720): `.menu[role="menu"]` in the overlay. */
   menu(): Locator {
-    return this.page.locator('.cdk-overlay-container .menu[role="menu"]').filter({ visible: true });
+    return this.page
+      .locator('.cdk-overlay-container .menu[role="menu"]')
+      .filter({ visible: true });
   }
 
   /**
@@ -278,7 +314,13 @@ export abstract class BasePage {
     const overlay = this.page.locator(".cdk-overlay-container");
     return overlay
       .getByRole("menuitem", { name, exact: true })
-      .or(overlay.locator(".list__item").filter({ has: this.page.locator(".list__title", { hasText: name }) }))
+      .or(
+        overlay
+          .locator(".list__item")
+          .filter({
+            has: this.page.locator(".list__title", { hasText: name }),
+          }),
+      )
       .filter({ visible: true });
   }
 }

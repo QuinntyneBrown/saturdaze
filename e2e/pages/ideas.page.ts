@@ -52,7 +52,9 @@ export class IdeasPage extends BasePage {
   }
 
   card(title: string, section?: Locator): Locator {
-    return this.cards(section).filter({ has: this.page.locator(".card__title", { hasText: title }) });
+    return this.cards(section).filter({
+      has: this.page.locator(".card__title", { hasText: title }),
+    });
   }
 
   cardTitle(card: Locator): Locator {
@@ -90,12 +92,16 @@ export class IdeasPage extends BasePage {
 
   /** Cards whose photo frame holds a loaded image. */
   cardsWithPhoto(section?: Locator): Locator {
-    return this.mediaCards(section).filter({ has: this.page.locator(".card__media img.media__img") });
+    return this.mediaCards(section).filter({
+      has: this.page.locator(".card__media img.media__img"),
+    });
   }
 
   /** Cards whose photo frame is the tinted fallback tile. */
   cardsWithFallback(section?: Locator): Locator {
-    return this.mediaCards(section).filter({ has: this.page.locator(".card__media.media--fallback") });
+    return this.mediaCards(section).filter({
+      has: this.page.locator(".card__media.media--fallback"),
+    });
   }
 
   cardMedia(card: Locator): Locator {
@@ -120,10 +126,14 @@ export class IdeasPage extends BasePage {
     return this.main
       .locator(".sd-grid-cards")
       .first()
-      .evaluate((el) => getComputedStyle(el).gridTemplateColumns.split(" ").filter(Boolean).length);
+      .evaluate(
+        (el) =>
+          getComputedStyle(el).gridTemplateColumns.split(" ").filter(Boolean)
+            .length,
+      );
   }
 
-    /* ---------- Add to day (L2-107) ---------- */
+  /* ---------- Add to day (L2-107) ---------- */
 
   /** The card's "Add to day" action (its accessible name starts with the visible label). */
   addToDayButton(card: Locator): Locator {
@@ -157,7 +167,7 @@ export class IdeasPage extends BasePage {
     return this.section(title);
   }
 
-    /* ---------- Food ---------- */
+  /* ---------- Food ---------- */
 
   lunchSection(): Locator {
     return this.section("Lunch");
@@ -173,17 +183,23 @@ export class IdeasPage extends BasePage {
 
   /** Plain food cards: not the spanning top pick, not locked, not dimmed. */
   regularCards(section?: Locator): Locator {
-    return (section ?? this.main).locator(".sd-grid-cards .card:not(.card--span):not(.card--locked):not(.card--dimmed)");
+    return (section ?? this.main).locator(
+      ".sd-grid-cards .card:not(.card--span):not(.card--locked):not(.card--dimmed)",
+    );
   }
 
   /** Event cards that carry an external "Details" link. */
   cardsWithDetails(section?: Locator): Locator {
-    return this.cards(section).filter({ has: this.page.getByRole("link", { name: "Details", exact: true }) });
+    return this.cards(section).filter({
+      has: this.page.getByRole("link", { name: "Details", exact: true }),
+    });
   }
 
   /** Event cards without a URL (no footer at all). */
   cardsWithoutDetails(section?: Locator): Locator {
-    return this.cards(section).filter({ hasNot: this.page.getByRole("link", { name: "Details", exact: true }) });
+    return this.cards(section).filter({
+      hasNot: this.page.getByRole("link", { name: "Details", exact: true }),
+    });
   }
 
   lockedCard(section?: Locator): Locator {
@@ -200,7 +216,14 @@ export class IdeasPage extends BasePage {
 
   /** `<name> votes yes|no` — `aria-pressed` reflects the current vote. */
   voteButton(card: Locator, member: string, choice: "yes" | "no"): Locator {
-    return card.locator(`.vote-row__btn[aria-label="${member} votes ${choice}"]`);
+    return card.locator(
+      `.vote-row__btn[aria-label="${member} votes ${choice}"]`,
+    );
+  }
+
+  /** A vote button no one has pressed yet. */
+  restingVoteButton(card: Locator): Locator {
+    return card.locator('.vote-row__btn[aria-pressed="false"]').first();
   }
 
   seeMenuLink(card: Locator): Locator {

@@ -8,7 +8,7 @@
 }
 
 sd-icon {
-  color: var(--colorNeutralStrokeAccessible);
+  color: var(--colorNeutralForegroundDisabled);
 }
 
 sd-icon.icon--filled {
@@ -28,7 +28,7 @@ sd-icon.icon--filled {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  color: var(--colorNeutralStrokeAccessible);
+  color: var(--colorNeutralForegroundDisabled);
 }
 
 .stars__btn sd-icon.icon--filled {

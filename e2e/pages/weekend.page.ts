@@ -66,7 +66,9 @@ export class WeekendPage extends BasePage {
   }
 
   day(name: DayName): Locator {
-    return this.days().filter({ has: this.page.locator(".day__title", { hasText: name }) });
+    return this.days().filter({
+      has: this.page.locator(".day__title", { hasText: name }),
+    });
   }
 
   dayHeader(name: DayName): Locator {
@@ -91,7 +93,9 @@ export class WeekendPage extends BasePage {
 
   /** "Lock Saturday" (aria-pressed=false) / "Unlock Saturday" (aria-pressed=true). */
   lockDayButton(name: DayName): Locator {
-    return this.day(name).getByRole("button", { name: new RegExp(`^(Lock|Unlock) ${name}$`) });
+    return this.day(name).getByRole("button", {
+      name: new RegExp(`^(Lock|Unlock) ${name}$`),
+    });
   }
 
   ghostRow(name: DayName): Locator {
@@ -109,15 +113,19 @@ export class WeekendPage extends BasePage {
   }
 
   block(title: string, name?: DayName): Locator {
-    return this.blocks(name).filter({ has: this.page.locator(".block__title", { hasText: title }) });
+    return this.blocks(name).filter({
+      has: this.page.locator(".block__title", { hasText: title }),
+    });
   }
 
   /** The block titled `title` on `name` that starts at `clock` ("9:00"). */
   blockAt(title: string, name: DayName, clock: string): Locator {
-    return this.block(title, name).filter({ has: this.page.locator(".block__clock", { hasText: clock }) });
+    return this.block(title, name).filter({
+      has: this.page.locator(".block__clock", { hasText: clock }),
+    });
   }
 
-    blockTitle(block: Locator): Locator {
+  blockTitle(block: Locator): Locator {
     return block.locator(".block__title");
   }
 
@@ -144,7 +152,9 @@ export class WeekendPage extends BasePage {
 
   /** "Why this: <title>" (planner blocks) or "About <title>" (commitments). */
   whyButton(title: string, name?: DayName): Locator {
-    return this.block(title, name).locator(`[aria-label="Why this: ${title}"], [aria-label="About ${title}"]`);
+    return this.block(title, name).locator(
+      `[aria-label="Why this: ${title}"], [aria-label="About ${title}"]`,
+    );
   }
 
   swapButton(title: string, name?: DayName): Locator {
@@ -153,7 +163,9 @@ export class WeekendPage extends BasePage {
 
   /** "Lock <title>" (aria-pressed=false) / "Unlock <title>" (aria-pressed=true). */
   lockButton(title: string, name?: DayName): Locator {
-    return this.block(title, name).locator(`[aria-label="Lock ${title}"], [aria-label="Unlock ${title}"]`);
+    return this.block(title, name).locator(
+      `[aria-label="Lock ${title}"], [aria-label="Unlock ${title}"]`,
+    );
   }
 
   doneButton(title: string, name?: DayName): Locator {
@@ -161,7 +173,9 @@ export class WeekendPage extends BasePage {
   }
 
   commitmentBlocks(name?: DayName): Locator {
-    return (name ? this.day(name) : this.grid).locator(".block.block--commitment");
+    return (name ? this.day(name) : this.grid).locator(
+      ".block.block--commitment",
+    );
   }
 
   lockedBlocks(name?: DayName): Locator {
@@ -178,7 +192,9 @@ export class WeekendPage extends BasePage {
 
   /** Planner blocks the user can act on (everything but drives). */
   actionableBlocks(name?: DayName): Locator {
-    return (name ? this.day(name) : this.grid).locator(".block:not(.block--drive):not(.block--commitment)");
+    return (name ? this.day(name) : this.grid).locator(
+      ".block:not(.block--drive):not(.block--commitment)",
+    );
   }
 
   /* ---------- Header: the cover in the ready state, the page header otherwise ---------- */
@@ -192,11 +208,15 @@ export class WeekendPage extends BasePage {
   }
 
   override headerAction(name: string): Locator {
-    return control(this.pageActions(), name).or(control(this.coverActions(), name));
+    return control(this.pageActions(), name).or(
+      control(this.coverActions(), name),
+    );
   }
 
   override moreButton(): Locator {
-    return this.pageHeader.locator(".page-header__more").or(control(this.coverActions(), "More options"));
+    return this.pageHeader
+      .locator(".page-header__more")
+      .or(control(this.coverActions(), "More options"));
   }
 
   /* ---------- Cover (L2-108) ---------- */
@@ -252,8 +272,15 @@ export class WeekendPage extends BasePage {
     return this.dialog().getByLabel("Upload your own photo", { exact: true });
   }
 
+  /** D29: the dashed "Your own photo" tile around the file input. */
+  ownPhotoTile(): Locator {
+    return this.dialog().locator(".photo-pick__upload");
+  }
+
   /** Choose a family photo from disk, or an in-memory file, in D29. */
-  async chooseOwnPhoto(file: string | { name: string; mimeType: string; buffer: Buffer }): Promise<void> {
+  async chooseOwnPhoto(
+    file: string | { name: string; mimeType: string; buffer: Buffer },
+  ): Promise<void> {
     await this.ownPhotoInput().setInputFiles(file);
   }
 
@@ -265,11 +292,13 @@ export class WeekendPage extends BasePage {
   /** True once the cover photo has been fetched and decoded. */
   async coverImageLoaded(): Promise<boolean> {
     return this.coverImage().evaluate(
-      (img) => (img as HTMLImageElement).complete && (img as HTMLImageElement).naturalWidth > 0,
+      (img) =>
+        (img as HTMLImageElement).complete &&
+        (img as HTMLImageElement).naturalWidth > 0,
     );
   }
 
-    /* ---------- Day tabs (L2-104, L2-105) ---------- */
+  /* ---------- Day tabs (L2-104, L2-105) ---------- */
 
   dayTab(name: DayName): Locator {
     return this.main.getByRole("tab", { name, exact: true });
@@ -284,7 +313,11 @@ export class WeekendPage extends BasePage {
   async plannerColumnCount(): Promise<number> {
     return this.grid
       .filter({ visible: true })
-      .evaluate((el) => getComputedStyle(el).gridTemplateColumns.split(" ").filter(Boolean).length);
+      .evaluate(
+        (el) =>
+          getComputedStyle(el).gridTemplateColumns.split(" ").filter(Boolean)
+            .length,
+      );
   }
 
   /** The visible day's timeline list. */
@@ -303,7 +336,11 @@ export class WeekendPage extends BasePage {
   stopBlock(n: number): Locator {
     return this.timeline()
       .locator(".block")
-      .filter({ has: this.page.locator(".block__disc--num", { hasText: new RegExp(`^${n}$`) }) });
+      .filter({
+        has: this.page.locator(".block__disc--num", {
+          hasText: new RegExp(`^${n}$`),
+        }),
+      });
   }
 
   legs(): Locator {
@@ -335,7 +372,9 @@ export class WeekendPage extends BasePage {
   }
 
   mapPin(name: DayName, n: number): Locator {
-    return this.dayMap(name).getByRole("button", { name: new RegExp(`^Stop ${n}: `) });
+    return this.dayMap(name).getByRole("button", {
+      name: new RegExp(`^Stop ${n}: `),
+    });
   }
 
   homePin(name: DayName): Locator {
