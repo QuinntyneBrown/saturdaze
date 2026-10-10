@@ -19,7 +19,9 @@ test.describe("Forest text contrast", () => {
     pages,
   }) => {
     const d = pages.dialogs;
-    expect(await d.textColor(d.chip("lock-in", "Wife-approved"))).toBe(FOREST_INK);
+    expect(await d.textColor(d.chip("lock-in", "Wife-approved"))).toBe(
+      FOREST_INK,
+    );
   });
 
   test("Given a food pick, when a person reads its leaf vote chip, then it is the AA forest ink", async ({
