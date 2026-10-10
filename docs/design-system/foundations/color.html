@@ -374,7 +374,7 @@
         <li><b>Three text strengths, in order.</b> <code>Foreground1</code> for content, <code>Foreground2</code> for meta and labels, <code>Foreground3</code> for hints and placeholders. Nothing fainter than <code>Foreground3</code> carries text; <code>ForegroundDisabled</code> is only for disabled controls.</li>
         <li><b>Decorative or accessible stroke.</b> Card edges and dividers use <code>Stroke1</code>/<code>Stroke2</code>; anything a person must see to use a control (input border, quiet button, switch track, dashed add row) uses <code>StrokeAccessible</code> (the quiet button: D28).</li>
         <li><b>Status means status, palette means category.</b> Sun, sky, leaf and indoor tag activities, weather and people; they never say "succeeded" or "failed". Locked uses success forest because it is a confirmed state.</li>
-        <li><b>Never colour alone.</b> Links are underlined (D20), pressed tinted chips gain an edge (D26), the rating star changes shape as well as colour, status banners carry an icon and a title.</li>
+        <li><b>Never colour alone.</b> Links are underlined, pressed tinted chips gain an edge (D26), the rating star changes shape as well as colour, status banners carry an icon and a title.</li>
         <li><b>Over photos</b> use <code>--colorNeutralForegroundStaticInverted</code> on <code>--colorBackgroundOverlayStrong</code> at 12px or larger.</li>
         <li><b>A new pairing is a new contract.</b> If a component puts a foreground on a background that is not in the table below, add it to <code>contrast-pairs.json</code> and run the check before shipping.</li>
       </ul>
@@ -716,7 +716,7 @@
           <tr><td>Unchanged roles</td><td><code>--sd-bg</code> → <code>Background2</code>; <code>--sd-surface</code> → <code>Background1</code>; <code>--sd-surface-2</code> → <code>Background3</code>; <code>--sd-ink</code> → <code>Foreground1</code>; <code>--sd-line</code> → <code>Stroke2</code>; <code>--sd-primary-soft</code> → <code>BrandBackground2</code>; <code>--sd-primary-deep</code> → <code>BrandForeground1</code>; <code>--sd-accent-soft</code> → <code>StatusSuccessBackground1</code>; <code>--sd-warn-soft</code>, <code>--sd-warn-deep</code> → <code>StatusDangerBackground1</code>, <code>StatusDangerForeground1</code>; <code>--sd-*-soft</code> / <code>--sd-*-ink</code> → <code>Palette*Background1</code> / <code>Palette*Foreground1</code></td><td>Same values, Fluent names (ADR-013)</td></tr>
         </tbody>
       </table></div>
-      <p>Also from the drift log: D20 (underlined links), D25 (the dark theme is new and is a proposal; the product ships light only) and D26 (pressed tinted chips gain an edge).</p>
+      <p>Also from the drift log: D25 (the dark theme is new and is a proposal; the product ships light only) and D26 (pressed tinted chips gain an edge).</p>
     </section>
 
     <footer class="ds-footer"><span>Saturdaze design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>
