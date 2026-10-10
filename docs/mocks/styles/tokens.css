@@ -12,7 +12,7 @@
   --sd-surface:     #FFFFFF;
   --sd-surface-2:   #F3EFE8;   /* recessed wells, locked blocks */
   --sd-ink:         #1F2937;
-  --sd-ink-soft:    #6B7280;
+  --sd-ink-soft:    #5B6270;   /* secondary text, chips, segments: 5.35:1 on wells, 6.13:1 on white (WCAG 1.4.3) */
   --sd-ink-faint:   #636A77;   /* hints, placeholders, durations, footers: 4.75:1 on wells (WCAG 1.4.3) */
   --sd-ink-disabled: #9CA3AF;  /* disabled text, grab handles, empty stars; never live text */
   --sd-line:        rgba(31, 41, 55, 0.08);
