@@ -763,7 +763,7 @@
   @media (max-width: 379px) { .hero__title { font-size: 34px; } }
   @media (min-width: 720px) { .hero { padding: 56px 40px; } }
   @media (min-width: 1024px) {
-    .hero { padding: 72px 56px; }
+    .hero { padding: 64px 56px; }
     .hero__grid { grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 56px; }
     .hero__title { font-size: 56px; }
   }
