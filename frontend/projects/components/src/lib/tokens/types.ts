@@ -50,6 +50,8 @@ export interface ColorTokens {
   colorNeutralForeground3: string;
   colorNeutralForegroundDisabled: string;
   colorNeutralForegroundOnBrand: string;
+  colorNeutralForegroundInverted: string;
+  colorNeutralForegroundStaticInverted: string;
 
   colorNeutralBackground1: string;
   colorNeutralBackground2: string;
@@ -57,6 +59,7 @@ export interface ColorTokens {
   colorNeutralBackgroundInverted: string;
   colorBackgroundOverlay: string;
   colorBackgroundOverlayStrong: string;
+  colorNeutralStencil2Alpha: string;
 
   colorNeutralStroke1: string;
   colorNeutralStroke2: string;
@@ -98,7 +101,11 @@ export type ColorPaletteTokens = Record<`colorPalette${PaletteName}${PaletteRole
 /** Feedback states: success is "locked / confirmed", danger is the gentle warning. */
 export type StatusName = 'Success' | 'Danger';
 
-export type ColorStatusTokens = Record<`colorStatus${StatusName}${PaletteRoles}`, string>;
+/** Status fills also carry the label colour drawn on their solid `Background3`. */
+export type ColorStatusTokens = Record<
+  `colorStatus${StatusName}${PaletteRoles | 'ForegroundInverted'}`,
+  string
+>;
 
 export interface FontFamilyTokens {
   fontFamilyBase: string;

@@ -58,7 +58,7 @@
   overflow: hidden;
   border-radius: var(--borderRadiusCircular);
   background: var(--colorBackgroundOverlayStrong);
-  color: var(--colorNeutralForegroundOnBrand);
+  color: var(--colorNeutralForegroundStaticInverted);
   font-size: var(--fontSizeBase200);
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -71,7 +71,7 @@
   inset: auto 0 0 0;
   padding: 48px 16px 16px;
   background: linear-gradient(to top, var(--sd-cover-scrim) 55%, transparent);
-  color: var(--colorNeutralForegroundOnBrand);
+  color: var(--colorNeutralForegroundStaticInverted);
 }
 
 .cover__eyebrow {

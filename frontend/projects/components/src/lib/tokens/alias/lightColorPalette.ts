@@ -1,4 +1,4 @@
-import { forest, indoor, leaf, sky, sun, terracotta } from '../global/colors';
+import { forest, indoor, leaf, sky, sun, terracotta, white } from '../global/colors';
 import type {
   ColorPaletteTokens,
   ColorStatusTokens,
@@ -38,5 +38,8 @@ export const colorPaletteTokens = Object.assign(
 /** Success is "locked / confirmed"; danger is the gentle warning. */
 export const colorStatusTokens = Object.assign(
   {},
-  ...Object.entries(statuses).map(([name, color]) => roles(`colorStatus${name}`, color)),
+  ...Object.entries(statuses).map(([name, color]) => ({
+    ...roles(`colorStatus${name}`, color),
+    [`colorStatus${name}ForegroundInverted`]: white, // label on the solid status fill
+  })),
 ) as ColorStatusTokens;

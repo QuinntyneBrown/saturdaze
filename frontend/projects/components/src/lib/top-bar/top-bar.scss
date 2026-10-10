@@ -54,7 +54,7 @@
     radial-gradient(120% 120% at 20% 0%, var(--colorBrandBackground2) 0%, transparent 60%),
     radial-gradient(120% 120% at 100% 100%, var(--colorPaletteSunBackground1) 0%, transparent 60%),
     var(--colorBrandBackgroundStatic);
-  box-shadow: inset 0 0 0 1px rgba(31, 41, 55, 0.06);
+  box-shadow: inset 0 0 0 var(--strokeWidthThin) var(--colorNeutralStroke2);
 }
 
 .topbar__nav {

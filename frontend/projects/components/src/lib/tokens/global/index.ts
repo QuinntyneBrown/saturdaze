@@ -11,6 +11,7 @@ export {
   sun,
   terracotta,
   white,
+  whiteAlpha,
 } from './colors';
 export { borderRadius } from './borderRadius';
 export { curves } from './curves';

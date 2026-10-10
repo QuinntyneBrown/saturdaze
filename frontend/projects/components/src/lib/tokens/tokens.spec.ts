@@ -46,6 +46,13 @@ describe('design tokens', () => {
     expect(saturdazeLightTheme.colorPaletteSunBackground3).toBe('#f4c969');
   });
 
+  it('names every colour that used to be a literal, so a dark theme can retune it', () => {
+    expect(saturdazeLightTheme.colorNeutralForegroundInverted).toBe('#ffffff');
+    expect(saturdazeLightTheme.colorNeutralForegroundStaticInverted).toBe('#ffffff');
+    expect(saturdazeLightTheme.colorStatusDangerForegroundInverted).toBe('#ffffff');
+    expect(saturdazeLightTheme.colorNeutralStencil2Alpha).toBe('rgba(255, 255, 255, 0.6)');
+  });
+
   it('draws control edges in a slate that passes 1.4.11 on wells', () => {
     expect(saturdazeLightTheme.colorNeutralStrokeAccessible).toBe('#80868f');
   });

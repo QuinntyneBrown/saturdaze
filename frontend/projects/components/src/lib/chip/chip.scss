@@ -56,7 +56,7 @@
 }
 :host(.chip--ink) {
   background: var(--colorNeutralBackgroundInverted);
-  color: #fff;
+  color: var(--colorNeutralForegroundInverted);
 }
 :host(.chip--count) {
   min-width: 24px;
