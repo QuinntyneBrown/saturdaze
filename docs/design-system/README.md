@@ -125,7 +125,6 @@ and up) are proposals for the product's TypeScript theme.
 
 | ID | Mock | Issue | Resolution |
 |---|---|---|---|
-| D11 | `media__credit`, `photo-pick__name` | 11px white text on a 55 to 60% ink pill over unknown photos. | `--colorBackgroundOverlayStrong` (72%) and 12px. |
 | D12 | many | Text below 12px: 10px date-tile month; 11px bottom-nav labels, `chip--sm`, media credit, photo labels, browser-frame URL, admin tag, small avatar. | Minimum 12px (`--fontSizeBase200`). |
 | D13 | `app.css` | A raw 14px is used 23 times outside the type scale (buttons, nav links, menu items, switch labels). | New step `--fontSizeBase350` (14px). |
 | D14 | landing, date tile, step, page header | Off-scale type: 18px (hero lede, step title, date-tile day), 28px (`how__title`), weight 800 (hero title); line heights 1.05, 1.15, 1.25, 1.3, 1.45, 1.6. | 17px, 26px, weight 700; line heights snapped to None 1 / Tight 1.2 / Snug 1.35 / Normal 1.5 / Relaxed 1.65. |

@@ -141,7 +141,7 @@
         <ol class="ds-anatomy__list">
           <li><div><b>Frame</b><small><code>aspect-ratio</code> 16 / 9 (or 4 / 3), <code>--borderRadiusMedium</code>, <code>overflow: hidden</code>, neutral well behind the photo while it loads.</small></div></li>
           <li><div><b>Photo</b><small><code>.media__img</code>: fills the frame with <code>object-fit: cover</code>; always has <code>width</code>, <code>height</code> and <code>alt</code>.</small></div></li>
-          <li><div><b>Credit (optional)</b><small><code>.media__credit</code>: 12px caption on a 72% dark pill at the bottom right (drift D11).</small></div></li>
+          <li><div><b>Credit (optional)</b><small><code>.media__credit</code>: 12px caption on a 72% dark pill at the bottom right.</small></div></li>
         </ol>
       </div>
     </section>
@@ -256,7 +256,7 @@
         <div class="ds-pair"><span>Indoor fallback label</span><span class="ds-pair__ratio" data-contrast="--colorPaletteIndoorForeground1|--colorPaletteIndoorBackground1" data-min="4.5"></span></div>
         <div class="ds-pair"><span>Focus ring on the page</span><span class="ds-pair__ratio" data-contrast="--colorStrokeFocus2|--colorNeutralBackground2" data-min="3"></span></div>
       </div>
-      <p>The credit pill is measured as if over pure white, the worst case; the 72% overlay keeps the text above 4.5:1 over any photo (drift D11 raised it from the mocks' 55 to 60%).</p>
+      <p>The credit pill is measured as if over pure white, the worst case; the 72% overlay keeps the text above 4.5:1 over any photo.</p>
       <h3>Motion</h3>
       <p>None. Photos do not fade in; the card lift on hover belongs to the card and stops under <code>prefers-reduced-motion</code>.</p>
       <h3>Touch</h3>
@@ -275,7 +275,7 @@
     <section class="ds-section" id="do-dont"><h2><a href="#do-dont">Do and don't</a></h2>
       <div class="ds-dodont">
         <figure class="ds-do"><div class="ds-example__canvas"><div class="media" style="width: min(100%, 14rem);"><img class="media__img" src="../../mocks/images/toronto-zoo.svg" alt="A polar bear beside its pool" width="800" height="500"><span class="media__credit">From Toronto Zoo</span></div></div><figcaption>Credit on the 72% pill at 12px, readable over a bright photo.</figcaption></figure>
-        <figure class="ds-dont"><div class="ds-example__canvas"><div class="media" style="width: min(100%, 14rem);"><img class="media__img" src="../../mocks/images/toronto-zoo.svg" alt="A polar bear beside its pool" width="800" height="500"><span class="media__credit" style="background: var(--colorBackgroundOverlay); font-size: 0.6875rem;">From Toronto Zoo</span></div></div><figcaption>The mocks' 11px credit on a lighter scrim disappears over pale sky (drift D11).</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><div class="media" style="width: min(100%, 14rem);"><img class="media__img" src="../../mocks/images/toronto-zoo.svg" alt="A polar bear beside its pool" width="800" height="500"><span class="media__credit" style="background: var(--colorBackgroundOverlay); font-size: 0.6875rem;">From Toronto Zoo</span></div></div><figcaption>An 11px credit on a lighter scrim disappears over pale sky.</figcaption></figure>
         <figure class="ds-do"><div class="ds-example__canvas"><span class="media media--4x3 media--fallback media--leaf" style="width: 9rem;"><svg class="icon" aria-hidden="true"><use href="#i-tree"/></svg>Activity</span></div><figcaption>No photo yet: a tinted tile in the place's tone, so the grid stays even.</figcaption></figure>
         <figure class="ds-dont"><div class="ds-example__canvas"><span class="media media--4x3" style="width: 9rem;" role="img" aria-label="Empty photo frame"></span></div><figcaption>An empty grey frame looks broken and says nothing about the place.</figcaption></figure>
         <figure class="ds-do"><div class="ds-example__canvas"><span class="text-soft">alt="Rows of lavender running to the horizon"</span></div><figcaption>Alt text describes what is in the photo.</figcaption></figure>
@@ -337,7 +337,7 @@
         <li><a href="../../mocks/pages/admin.reviews.html">pages/admin.reviews</a> and <a href="../../mocks/pages/admin.place.html">pages/admin.place</a>: 4:3 candidate photos, "Photo · Port Credit BIA" and "Photo · Jo Doe".</li>
         <li><a href="../../mocks/pages/dialogs.html">pages/dialogs</a>: dialogs AD3 to AD6 (admin photo dialogs) and dialog D29 (Cover photo), which the link tile opens.</li>
       </ul>
-      <p>Drift fixed during extraction (see the <a href="../README.md">README drift log</a>): drift D11 (credit raised to 12px on a 72% overlay), drift D12 (no text under 12px), drift D17 (the rgba() credit background is now a token). The images in <code>docs/mocks/images/</code> are illustrated placeholders and must not ship. The mocks do not show the loading or failed-image states; they are specified here.</p>
+      <p>Drift fixed during extraction (see the <a href="../README.md">README drift log</a>): drift D12 (no text under 12px), drift D17 (the rgba() credit background is now a token). The images in <code>docs/mocks/images/</code> are illustrated placeholders and must not ship. The mocks do not show the loading or failed-image states; they are specified here.</p>
     </section>
 
     <footer class="ds-footer"><span>Saturdaze design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>
