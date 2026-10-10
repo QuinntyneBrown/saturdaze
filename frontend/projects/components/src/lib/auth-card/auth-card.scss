@@ -5,8 +5,8 @@
 :host {
   display: flex;
   flex-direction: column;
-  gap: 18px;
-  padding: 28px 24px;
+  gap: var(--spacingVerticalL);
+  padding: var(--spacingVerticalXXL);
   background: var(--colorNeutralBackground1);
   border: 1px solid var(--colorNeutralStroke2);
   border-radius: var(--borderRadiusXLarge);
@@ -51,6 +51,6 @@
 
 @include respond-to(tablet) {
   :host {
-    padding: 32px;
+    padding: var(--spacingVerticalXXXL);
   }
 }

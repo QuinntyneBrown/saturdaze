@@ -65,6 +65,11 @@ export abstract class AuthCardPage extends BasePage {
     return this.card(state).locator("form.auth-card__form");
   }
 
+  /** The card's form, whichever class it carries (the app's sign-in form has none of the mock's). */
+  cardForm(state?: string): Locator {
+    return this.card(state).locator("form");
+  }
+
   field(label: string, state?: string): Locator {
     return this.card(state).getByLabel(label, { exact: true });
   }

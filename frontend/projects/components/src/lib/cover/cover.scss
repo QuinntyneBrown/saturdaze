@@ -51,7 +51,7 @@
 
 .media__credit {
   position: absolute;
-  top: 14px;
+  top: var(--spacingVerticalM);
   left: 12px;
   max-width: calc(100% - 140px);
   padding: 1px 6px;

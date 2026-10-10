@@ -19,7 +19,7 @@
   overflow: auto;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: var(--spacingVerticalL);
   padding: 20px;
   padding-bottom: calc(20px + env(safe-area-inset-bottom, 0px));
   background: var(--colorNeutralBackground1);
@@ -73,7 +73,7 @@
 .dialog__body {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: var(--spacingVerticalL);
 }
 
 .dialog__body:not(:has(*)) {

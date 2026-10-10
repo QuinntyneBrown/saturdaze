@@ -24,10 +24,10 @@
 }
 :host(.card--locked) {
   border: 2px solid var(--colorStatusSuccessBorderActive);
-  padding: 15px;
+  padding: calc(var(--spacingHorizontalL) - 1px); // 16px less the extra 1px of border
 }
 :host(.card--locked.card--pad-lg) {
-  padding: 19px;
+  padding: calc(var(--spacingHorizontalXL) - 1px);
 }
 :host(.card--dimmed) {
   opacity: 0.6;

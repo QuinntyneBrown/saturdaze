@@ -5,7 +5,7 @@
   grid-template-columns: 56px 32px minmax(0, 1fr);
   column-gap: 12px;
   align-items: start;
-  padding: 14px 0;
+  padding: var(--spacingVerticalM) 0;
   border-bottom: 1px solid var(--colorNeutralStroke2);
 }
 

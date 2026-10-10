@@ -3,8 +3,8 @@
 :host {
   display: flex;
   align-items: center;
-  gap: 14px;
-  padding: 14px 16px;
+  gap: var(--spacingHorizontalL);
+  padding: var(--spacingVerticalM) var(--spacingHorizontalL);
   background: var(--colorNeutralBackground1);
   border: 1px solid var(--colorNeutralStroke2);
   border-radius: var(--borderRadiusLarge);

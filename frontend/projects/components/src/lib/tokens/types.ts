@@ -131,11 +131,14 @@ export interface FontWeightTokens {
   fontWeightBold: string;
 }
 
-/** The 4px spacing ramp, shared by both axes. */
+/** The 4px spacing ramp, shared by both axes, plus Fluent's 2, 6 and 10px nudges. */
 export interface SpacingTokens {
   none: string;
+  xxs: string;
   xs: string;
+  sNudge: string;
   s: string;
+  mNudge: string;
   m: string;
   l: string;
   xl: string;
@@ -145,7 +148,20 @@ export interface SpacingTokens {
   xxxxxl: string;
 }
 
-type SpacingSuffix = 'None' | 'XS' | 'S' | 'M' | 'L' | 'XL' | 'XXL' | 'XXXL' | 'XXXXL' | 'XXXXXL';
+type SpacingSuffix =
+  | 'None'
+  | 'XXS'
+  | 'XS'
+  | 'SNudge'
+  | 'S'
+  | 'MNudge'
+  | 'M'
+  | 'L'
+  | 'XL'
+  | 'XXL'
+  | 'XXXL'
+  | 'XXXXL'
+  | 'XXXXXL';
 
 export type HorizontalSpacingTokens = Record<`spacingHorizontal${SpacingSuffix}`, string>;
 export type VerticalSpacingTokens = Record<`spacingVertical${SpacingSuffix}`, string>;

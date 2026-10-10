@@ -94,7 +94,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 6px 16px;
-  padding: 10px 14px;
+  padding: var(--spacingVerticalMNudge) var(--spacingHorizontalM);
   border-top: 1px solid var(--colorNeutralStroke2);
   font-size: var(--fontSizeBase200);
   color: var(--colorNeutralForeground2);

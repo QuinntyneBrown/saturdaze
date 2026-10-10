@@ -182,6 +182,24 @@ export abstract class BasePage {
     });
   }
 
+  /** `target`'s computed padding, e.g. `12px 16px` (top, right, bottom, left collapsed as CSS does). */
+  async padding(target: Locator): Promise<string> {
+    return target.evaluate((el) => {
+      const s = getComputedStyle(el);
+      const [t, r, b, l] = [s.paddingTop, s.paddingRight, s.paddingBottom, s.paddingLeft];
+      if (t === b && r === l) return t === r ? t : `${t} ${r}`;
+      return `${t} ${r} ${b} ${l}`;
+    });
+  }
+
+  /** `target`'s computed flex/grid gap as `row column`, e.g. `6px 12px`. */
+  async gap(target: Locator): Promise<string> {
+    return target.evaluate((el) => {
+      const s = getComputedStyle(el);
+      return s.rowGap === s.columnGap ? s.rowGap : `${s.rowGap} ${s.columnGap}`;
+    });
+  }
+
   /** The colour `target` is filled with. */
   async fillColor(target: Locator): Promise<string> {
     return target.evaluate((el) => getComputedStyle(el).backgroundColor);
@@ -319,6 +337,16 @@ export abstract class BasePage {
 
   dialogBody(): Locator {
     return this.dialog().locator(".dialog__body");
+  }
+
+  /** The drawn dialog panel inside the CDK container. */
+  dialogPanel(): Locator {
+    return this.dialog().locator(".dialog__panel");
+  }
+
+  /** The form a dialog lays its fields out in. */
+  dialogForm(): Locator {
+    return this.dialog().locator("form");
   }
 
   /** Footer action by accessible name ("Cancel", "Regenerate", "Save"…). */
