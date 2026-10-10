@@ -60,6 +60,11 @@ export class LandingPage extends BasePage {
     return this.hero.locator(".hero__preview");
   }
 
+  /** The address-bar URL in the preview's browser frame. */
+  previewUrl(): Locator {
+    return this.heroPreview().locator(".browser-frame__url");
+  }
+
   previewBlocks(): Locator {
     return this.heroPreview().locator(".block");
   }

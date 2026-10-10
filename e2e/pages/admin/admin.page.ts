@@ -42,6 +42,16 @@ export abstract class AdminPage extends BasePage {
     return this.adminNav.locator('.admin-nav__link[aria-current="page"]');
   }
 
+  /** The "Admin" tag beside the brand. */
+  adminNavTag(): Locator {
+    return this.adminNav.locator(".admin-nav__tag");
+  }
+
+  /** The small avatar beside the signed-in curator's email. */
+  adminNavAvatar(): Locator {
+    return this.adminNav.locator(".admin-nav__account .avatar");
+  }
+
   adminNavEmail(): Locator {
     return this.adminNav.locator(".admin-nav__email");
   }

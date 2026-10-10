@@ -41,7 +41,7 @@
   justify-content: center;
   gap: 4px;
   min-width: 0;
-  font-size: 11px;
+  font-size: var(--fontSizeBase200);
   font-weight: var(--fontWeightSemibold);
   color: var(--colorNeutralForeground2);
   white-space: nowrap;
