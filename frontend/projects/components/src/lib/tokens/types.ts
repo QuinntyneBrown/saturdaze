@@ -37,6 +37,8 @@ export interface BrandVariants {
 /** The shades a global palette defines (Fluent's `ColorVariants`, trimmed). */
 export interface ColorVariants {
   shade40: string;
+  /** Solid glyphs that need 3:1 on white (WCAG 1.4.11); Foreground3 falls back to `primary`. */
+  shade20?: string;
   primary: string;
   tint50: string;
 }

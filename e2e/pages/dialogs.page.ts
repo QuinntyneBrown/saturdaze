@@ -120,6 +120,19 @@ export class DialogsPage extends BasePage {
     return this.panel(slug).locator(".chip").filter({ hasText: label });
   }
 
+  /** The rating specimen's star radio for `n` ("1 star", "3 stars"). */
+  ratingStar(n: number): Locator {
+    return this.panel("rate").getByRole("radio", {
+      name: n === 1 ? "1 star" : `${n} stars`,
+      exact: true,
+    });
+  }
+
+  /** Pick `n` stars in the rating specimen. */
+  async rate(n: number): Promise<void> {
+    await this.ratingStar(n).click();
+  }
+
   menuItems(slug: DialogSlug): Locator {
     return this.panel(slug).getByRole("menuitem");
   }

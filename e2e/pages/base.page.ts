@@ -162,6 +162,22 @@ export abstract class BasePage {
     return target.evaluate((el) => getComputedStyle(el).backgroundColor);
   }
 
+  /** The colour an icon's solid glyph is painted with (`none` for an outline). */
+  async glyphFill(icon: Locator): Promise<string> {
+    return icon
+      .locator("svg")
+      .first()
+      .evaluate((el) => getComputedStyle(el).fill);
+  }
+
+  /** The colour an icon's outline glyph is stroked with (`none` for a solid). */
+  async glyphStroke(icon: Locator): Promise<string> {
+    return icon
+      .locator("svg")
+      .first()
+      .evaluate((el) => getComputedStyle(el).stroke);
+  }
+
   /** The colour a field's placeholder text is drawn in. */
   async placeholderColor(field: Locator): Promise<string> {
     return field.evaluate((el) => getComputedStyle(el, "::placeholder").color);
