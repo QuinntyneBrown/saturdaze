@@ -7,6 +7,7 @@ export const layout: LayoutTokens = {
   layoutGutter: '16px',
   layoutTopBarHeight: '64px', // ≥720px sticky top bar
   layoutBottomNavHeight: '60px', // <720px floating bottom nav
+  layoutSpacePage: '64px', // ≥1024px landing hero block padding
 };
 
 export const zIndexes: ZIndexTokens = {

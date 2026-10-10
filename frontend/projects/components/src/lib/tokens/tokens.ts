@@ -67,6 +67,7 @@ export const tokens: Record<keyof Theme, string> = {
   layoutGutter: 'var(--layoutGutter)',
   layoutTopBarHeight: 'var(--layoutTopBarHeight)',
   layoutBottomNavHeight: 'var(--layoutBottomNavHeight)',
+  layoutSpacePage: 'var(--layoutSpacePage)',
   zIndexSticky: 'var(--zIndexSticky)',
   zIndexTopBar: 'var(--zIndexTopBar)',
   zIndexBottomNav: 'var(--zIndexBottomNav)',
