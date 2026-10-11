@@ -140,3 +140,67 @@
     --sd-fs-xl: 1.5rem;
   }
 }
+
+/* Dark theme — follows the reader's system setting (prefers-color-scheme).
+   Built from roles, not inverted from light (docs/design-system foundations
+   /theming): warm umber surfaces that lighten as they rise (page, then cards,
+   then dialogs and bars), lighter coral fills with dark labels, and each tone
+   pair flipped to a deep tint with a light ink. Values are the design
+   system's dark theme (docs/design-system/tokens/tokens.css). This block is
+   unlayered, so it also overrides the tone pairs app.css declares in
+   @layer base. Text over a photo (--sd-on-photo) stays white in both themes. */
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+
+    --sd-bg:           #161310;   /* page: the deepest umber */
+    --sd-surface:      #201C18;   /* cards, inputs */
+    --sd-bg-elev:      #2A2520;   /* dialogs, menus, bars: lighter as they rise */
+    --sd-surface-2:    #342E28;   /* recessed wells, locked blocks */
+    --sd-ink:          #F2EDE6;
+    --sd-ink-soft:     #CDC4B8;
+    --sd-ink-faint:    #AEA597;
+    --sd-ink-disabled: #6E665D;
+    --sd-line:         rgba(242, 237, 230, 0.1);
+    --sd-line-strong:  rgba(242, 237, 230, 0.18);
+    --sd-overlay:      rgba(0, 0, 0, 0.6);
+    --sd-overlay-strong: rgba(0, 0, 0, 0.72);
+    --sd-line-control: #8F867B;
+
+    --sd-primary:      #F59C7C;   /* lighter coral for marks and underlines on umber */
+    --sd-primary-fill: #F59C7C;   /* the CTA fill, with a dark label */
+    --sd-primary-ink:  #2A160E;
+    --sd-primary-soft: #43251A;
+
+    --sd-on-ink:       #201C18;   /* text on the light inverted fill */
+    --sd-on-warn:      #2A0F09;
+    --sd-surface-alpha: rgba(32, 28, 24, 0.9);
+    --sd-shimmer:      rgba(255, 255, 255, 0.06);
+
+    --sd-accent:       #7CC4A0;
+    --sd-accent-soft:  #1A3629;
+    --sd-accent-ink:   #7CC4A0;
+
+    --sd-warn:         #FF8F8A;
+    --sd-warn-soft:    #44201A;
+    --sd-warn-deep:    #FFA19B;
+
+    --sd-sun-deep:     #F4C969;
+    --sd-sky:          #9CCBE4;
+    --sd-leaf:         #A6D8A0;
+    --sd-indoor:       #CDB8EE;
+
+    --sd-sun-soft: #3A2D14;    --sd-sun-ink: #F4CF7A;
+    --sd-sky-soft: #1B3140;    --sd-sky-ink: #9CCBE4;
+    --sd-leaf-soft: #1F3522;   --sd-leaf-ink: #A6D8A0;
+    --sd-indoor-soft: #2F2545; --sd-indoor-ink: #CDB8EE;
+    --sd-primary-deep: #F6CBB9;  /* coral text on primary-soft */
+    --sd-focus-ring: 2px solid #F59C7C;
+
+    --sd-shadow-1: 0 1px 2px rgba(0, 0, 0, 0.3),
+                   0 2px 6px rgba(0, 0, 0, 0.3);
+    --sd-shadow-2: 0 4px 10px rgba(0, 0, 0, 0.4),
+                   0 10px 24px rgba(0, 0, 0, 0.4);
+    --sd-shadow-3: 0 20px 40px rgba(0, 0, 0, 0.55);
+  }
+}

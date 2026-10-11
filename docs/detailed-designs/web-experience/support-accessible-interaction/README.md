@@ -20,6 +20,8 @@ The feature crosses the application and platform boundaries needed to deliver it
 - **`Routed page templates`** — Feature templates that provide descriptive labels and image alternatives.
 - **`SkipLink`** — `sd-skip-link`, the first element both app shells render (`app.html` in the family app for the app, site and bare shells, and in Admin for the sign-in screen and every screen behind the admin navigation; the non-admin gate has no `<main>` and no navigation to skip, so it has none). It is the design system's `.skip-link`: off screen at rest, 16px from the top left on `:focus-visible`, above every bar. Because both apps use `<base href="/">`, a bare `href="#main"` would resolve to `/#main` and leave the route, so the component handles the click: it cancels the navigation, gives the target `<main id="main">` `tabindex="-1"` and focuses it (the browser scrolls it into view, and the global `scroll-padding-top` keeps it clear of the sticky bar). The programmatically focused `main` draws no outline (L2-036 AC4 and AC5, drift D22).
 
+- **`Dark theme`** — `createDarkTheme(brand)` in `components/src/lib/tokens/utils/` builds a second theme from the same roles as `createLightTheme` (Fluent's `webDarkTheme` model): the colour and shadow tokens only, from the umber ramp and the dark tone tints in `global/colors.ts`, using the design system's dark values. `scripts/generate-tokens.mjs` writes the tokens that differ from light into `_tokens.scss` under `@media (prefers-color-scheme: dark) { :root { … } }`, after the light `:root` and its responsive retunes, and `_global.scss` declares `color-scheme: light dark` so native controls and scrollbars follow. Components already read tokens by role, so no component knows which theme is active; the only component changes are role corrections that light hid: the photo-pick name pills read `colorNeutralForegroundStaticInverted` (text over a photo) instead of `colorNeutralForegroundOnBrand`, and the cover scrim reads `colorBackgroundOverlayStrong` instead of a mix of `colorNeutralForeground1`, which turns light in dark. There is no in-app switch: the theme follows the system setting (L2-130, drift D25).
+
 Automated structural checks do not establish complete keyboard or WCAG contrast conformance. The obligations below remain subject to dedicated accessibility verification.
 
 ## Requirements
@@ -31,6 +33,7 @@ The following L2 requirements refine the cited L1 capabilities. Implementation g
 | `L2-036` | `L1-014` | Every button, link, form control, and dialog action shall be reachable via Tab order and operable with Enter/Space, and the visible focus indicator shall meet WCAG 2.1 AA contrast. |
 | `L2-037` | `L1-014` | Icon-only buttons shall carry `aria-label`, form fields shall have associated labels, and images carrying meaning shall have descriptive `alt` text. |
 | `L2-038` | `L1-014` | All text, including chip labels and disabled controls used to convey state, shall meet a 4.5:1 contrast ratio against its background (3:1 for large text ≥18 pt or 14 pt bold). |
+| `L2-130` | `L1-011`, `L1-014` | Every page shall follow the reader's colour scheme: the dark theme, built from the same roles as light, when the system prefers dark; the light theme otherwise. |
 
 ## Diagrams
 
