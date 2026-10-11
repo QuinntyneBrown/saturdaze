@@ -141,7 +141,7 @@
         <ol class="ds-anatomy__list">
           <li><div><b>Leading icon (optional)</b><small>14px, <code>currentColor</code>, <code>aria-hidden="true"</code>; 6px gap.</small></div></li>
           <li><div><b>Label</b><small><code>--typographyLabel</code> at 13px (<code>--fontSizeBase300</code>). It is the accessible name.</small></div></li>
-          <li><div><b>Container</b><small>Pill, 32px (<code>--controlHeightSmall</code>), 1px accessible border when off; tone fill plus an ink-coloured border when pressed (drift D26).</small></div></li>
+          <li><div><b>Container</b><small>Pill, 32px (<code>--controlHeightSmall</code>), 1px accessible border when off; tone fill plus an ink-coloured border when pressed.</small></div></li>
         </ol>
       </div>
     </section>
@@ -231,7 +231,7 @@
         <div data-theme="dark"><div class="ds-example__canvas" style="padding: 0;"><button class="filter-chip" type="button" aria-pressed="true">All</button><button class="filter-chip" type="button" aria-pressed="false">Ages 5+</button><button class="filter-chip filter-chip--leaf" type="button" aria-pressed="true">Outdoor</button><button class="filter-chip filter-chip--indoor" type="button" aria-pressed="true">Indoor</button><button class="filter-chip filter-chip--sky" type="button" aria-pressed="true">Weather-safe</button><button class="filter-chip filter-chip--sun" type="button" aria-pressed="true">Seasonal</button><button class="filter-chip" type="button" aria-pressed="false" data-state="focus">Focus</button></div></div>
       </div>
       <ul>
-        <li><b>Pressed</b> fills the chip and, for tinted chips, draws the border in the tone's ink colour, so "on" is not a pale fill alone (drift D26).</li>
+        <li><b>Pressed</b> fills the chip and, for tinted chips, draws the border in the tone's ink colour, so "on" is not a pale fill alone.</li>
         <li><b>Disabled</b> (50% opacity, not focusable) is for a facet that would return nothing; prefer showing the chip with a zero result and an <a href="empty-state.html">empty state</a>, which explains why.</li>
         <li><b>Loading</b>: the chip toggles at once; the list below shows its own loading state (<a href="skeleton.html">skeleton</a>). The chip never shows a spinner.</li>
       </ul>
@@ -286,7 +286,7 @@
         <div class="ds-pair"><span>Off border on page</span><span class="ds-pair__ratio" data-contrast="--colorNeutralStrokeAccessible|--colorNeutralBackground2" data-min="3"></span></div>
         <div class="ds-pair"><span>Pressed neutral label on ink</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForegroundInverted|--colorNeutralBackgroundInverted" data-min="4.5"></span></div>
         <div class="ds-pair"><span>Pressed leaf label on leaf fill</span><span class="ds-pair__ratio" data-contrast="--colorPaletteLeafForeground1|--colorPaletteLeafBackground1" data-min="4.5"></span></div>
-        <div class="ds-pair"><span>Pressed leaf border on page (drift D26)</span><span class="ds-pair__ratio" data-contrast="--colorPaletteLeafForeground1|--colorNeutralBackground2" data-min="3"></span></div>
+        <div class="ds-pair"><span>Pressed leaf border on page</span><span class="ds-pair__ratio" data-contrast="--colorPaletteLeafForeground1|--colorNeutralBackground2" data-min="3"></span></div>
         <div class="ds-pair"><span>Pressed sun label on sun fill</span><span class="ds-pair__ratio" data-contrast="--colorPaletteSunForeground1|--colorPaletteSunBackground1" data-min="4.5"></span></div>
         <div class="ds-pair"><span>Pressed sky border on page</span><span class="ds-pair__ratio" data-contrast="--colorPaletteSkyForeground1|--colorNeutralBackground2" data-min="3"></span></div>
         <div class="ds-pair"><span>Pressed indoor border on page</span><span class="ds-pair__ratio" data-contrast="--colorPaletteIndoorForeground1|--colorNeutralBackground2" data-min="3"></span></div>
@@ -309,7 +309,7 @@
 
     <section class="ds-section" id="do-dont"><h2><a href="#do-dont">Do and don't</a></h2>
       <div class="ds-dodont">
-        <figure class="ds-do"><div class="ds-example__canvas"><button class="filter-chip filter-chip--leaf" type="button" aria-pressed="true">Outdoor</button><button class="filter-chip filter-chip--leaf" type="button" aria-pressed="false">Festivals</button></div><figcaption>A pressed tinted chip has a border in its ink colour, so on and off differ by more than a pale fill (drift D26).</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas"><button class="filter-chip filter-chip--leaf" type="button" aria-pressed="true">Outdoor</button><button class="filter-chip filter-chip--leaf" type="button" aria-pressed="false">Festivals</button></div><figcaption>A pressed tinted chip has a border in its ink colour, so on and off differ by more than a pale fill.</figcaption></figure>
         <figure class="ds-dont"><div class="ds-example__canvas"><button class="filter-chip filter-chip--leaf" type="button" aria-pressed="true" style="border-color: var(--colorPaletteLeafBackground1);">Outdoor</button><button class="filter-chip filter-chip--leaf" type="button" aria-pressed="false">Festivals</button></div><figcaption>The mocks' pressed leaf chip: a pale fill alone, with no edge against the page (WCAG 1.4.11).</figcaption></figure>
         <figure class="ds-do"><div class="ds-example__canvas"><button class="filter-chip" type="button" aria-pressed="true">This weekend</button></div><figcaption>State in <code>aria-pressed</code>; the label stays the same.</figcaption></figure>
         <figure class="ds-dont"><div class="ds-example__canvas"><button class="filter-chip" type="button" aria-pressed="true">This weekend ✓</button></div><figcaption>A tick added to the label: the name changes on press and a screen reader hears "check mark" as well as "pressed".</figcaption></figure>
@@ -374,7 +374,7 @@
         <li><a href="../../mocks/pages/past.html">pages/past</a>: All, Favourites (heart), This year, 5★.</li>
         <li><a href="../../mocks/pages/admin.places.html">pages/admin.places</a>: three facet groups split by <code>.filters__divider</code>, icons on the kind chips.</li>
       </ul>
-      <p>Drift applied: drift D26 (pressed tinted chips gain an ink-coloured border). No mock uses the link form with <code>aria-current</code>; it is defined here for Events' "This weekend / Next weekend", which the mock builds as toggles even though they change what week is loaded. No mock shows a disabled filter chip.</p>
+      <p>No mock uses the link form with <code>aria-current</code>; it is defined here for Events' "This weekend / Next weekend", which the mock builds as toggles even though they change what week is loaded. No mock shows a disabled filter chip.</p>
     </section>
 
     <footer class="ds-footer"><span>Saturdaze design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>

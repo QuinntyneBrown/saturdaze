@@ -1,4 +1,5 @@
-// `.filter-chip` from docs/mocks-v2/styles/app.css.
+// `.filter-chip` from docs/mocks-v2/styles/app.css. Pressed tinted chips draw
+// their edge in the tone's ink so "on" is never a pale fill alone (1.4.11).
 
 :host {
   display: contents;
@@ -38,32 +39,32 @@
 
 .filter-chip--leaf[aria-pressed='true'] {
   background: var(--colorPaletteLeafBackground1);
-  border-color: var(--colorPaletteLeafBorder1);
+  border-color: var(--colorPaletteLeafForeground1);
   color: var(--colorPaletteLeafForeground1);
 }
 .filter-chip--indoor[aria-pressed='true'] {
   background: var(--colorPaletteIndoorBackground1);
-  border-color: var(--colorPaletteIndoorBorder1);
+  border-color: var(--colorPaletteIndoorForeground1);
   color: var(--colorPaletteIndoorForeground1);
 }
 .filter-chip--sky[aria-pressed='true'] {
   background: var(--colorPaletteSkyBackground1);
-  border-color: var(--colorPaletteSkyBorder1);
+  border-color: var(--colorPaletteSkyForeground1);
   color: var(--colorPaletteSkyForeground1);
 }
 .filter-chip--sun[aria-pressed='true'] {
   background: var(--colorPaletteSunBackground1);
-  border-color: var(--colorPaletteSunBorder1);
+  border-color: var(--colorPaletteSunForeground1);
   color: var(--colorPaletteSunForeground1);
 }
 .filter-chip--accent[aria-pressed='true'] {
   background: var(--colorStatusSuccessBackground1);
-  border-color: var(--colorStatusSuccessBorder1);
+  border-color: var(--colorStatusSuccessForeground1);
   color: var(--colorStatusSuccessForeground1);
 }
 .filter-chip--primary[aria-pressed='true'] {
   background: var(--colorBrandBackground2);
-  border-color: var(--colorBrandStroke2);
+  border-color: var(--colorBrandForeground2);
   color: var(--colorBrandForeground2);
 }
 
