@@ -11,7 +11,7 @@ import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from '@angular/ro
 import { filter, map, startWith } from 'rxjs';
 
 import { SESSION_STORE } from 'api';
-import { BottomNav, NavKey, Sitebar, TopBar } from 'components';
+import { BottomNav, NavKey, Sitebar, SkipLink, TopBar } from 'components';
 
 import { MenuOpener } from './shell/menu-opener';
 import { signOutWith } from './shared/sign-out';
@@ -50,7 +50,7 @@ const DEFAULT_SHELL: ShellData = { shell: 'app', nav: null, page: '', cta: false
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, TopBar, BottomNav, Sitebar],
+  imports: [RouterOutlet, SkipLink, TopBar, BottomNav, Sitebar],
   templateUrl: './app.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

@@ -1,6 +1,7 @@
 @if (loading()) {
   <div class="sd-app-loading" aria-hidden="true"></div>
 } @else {
+  <sd-skip-link />
   @if (shell() === 'app') {
     <sd-top-bar
       [active]="nav()"

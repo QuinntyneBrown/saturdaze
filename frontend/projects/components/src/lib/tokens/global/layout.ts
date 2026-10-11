@@ -14,4 +14,5 @@ export const zIndexes: ZIndexTokens = {
   zIndexSticky: '5',
   zIndexTopBar: '20',
   zIndexBottomNav: '30',
+  zIndexTooltip: '70', // the skip link: above the bars, the bottom nav and any dialog
 };

@@ -68,6 +68,7 @@ export * from './lib/past-card/past-card';
 export * from './lib/vote-row/vote-row';
 
 // shell
+export * from './lib/skip-link/skip-link';
 export * from './lib/top-bar/top-bar';
 export * from './lib/bottom-nav/bottom-nav';
 export * from './lib/sitebar/sitebar';

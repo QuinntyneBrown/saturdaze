@@ -1,0 +1,3 @@
+"Skip to content" (WCAG 2.4.1 Bypass Blocks). `sd-skip-link` renders the `.skip-link` from `docs/mocks/styles/app.css`: the first focusable element on every page, off screen at rest and shown 16px from the top left on `:focus-visible`, above the top bar, the bottom nav and any dialog.
+
+Activating it moves focus to the element whose id is `target` (`main` by default). Both apps use `<base href="/">`, where a bare `href="#main"` would resolve to `/#main` and leave the route, so the component handles the click: it gives the target `tabindex="-1"` and focuses it, which also scrolls it into view clear of the sticky bar.

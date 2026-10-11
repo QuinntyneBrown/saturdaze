@@ -53,7 +53,7 @@ differ, the difference is in the drift log below for the product to adopt delibe
 | [Tabs (segments)](components/tabs.html) | Navigation | tablist, page switch, narrow, counts | selected, current, hover, focus, disabled | weekend, ideas, legal |
 | [Breadcrumb](components/breadcrumb.html) | Navigation | trail, collapsed back link | current, hover, focus | admin.place (back link) |
 | [Pagination](components/pagination.html) | Navigation | previous/next with count, toolbar | disabled ends, focus | admin.places, admin.activity |
-| [Skip link](components/skip-link.html) | Navigation | one | focused | none (D22) |
+| [Skip link](components/skip-link.html) | Navigation | one | focused | every page (`_shell`, auth, site and admin pages) |
 | [Footer](components/footer.html) | Navigation | site footer, auth footer | link hover, focus | landing, legal, auth pages |
 | [Card](components/card.html) | Containers and overlays | default, pad-lg, sunk, locked, selected, dimmed, muted, media, interactive | hover, focus within, selected, locked | ideas, past, family, review, admin |
 | [Dialog](components/dialog.html) | Containers and overlays | default, confirm, destructive, form, success, wide, sheet | busy, invalid | dialogs D1 to D29, AD1 to AD6 |
@@ -125,7 +125,6 @@ and up) are proposals for the product's TypeScript theme.
 
 | ID | Mock | Issue | Resolution |
 |---|---|---|---|
-| D22 | every page | No skip link (2.4.1). | `skip-link` component; every page should start with it. |
 | D23 | `admin.activity.html` | Tabular data (time, who, place, action, change) rendered as a div grid with no column headers. | `table` component for wide screens; `activity-feed` documents the stacked phone layout. |
 | D24 | `app.css` | Breakpoints and type in px (379/576/719/720/1024; 12 to 56px), so they ignore the user's font size (1.4.4). | rem: 23.75 / 36 / 45 / 64rem; type tokens in rem. |
 | D25 | all | No dark theme in the mocks or the product. | Dark theme built from roles (warm umber surfaces that lighten as they rise; lighter coral with dark labels). A proposal for the product, which ships light only. |

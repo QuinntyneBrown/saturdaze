@@ -118,6 +118,11 @@ small {
   outline: var(--strokeWidthThick) solid var(--colorStrokeFocus2);
   outline-offset: 2px;
 }
+// `<main>` takes focus only from the skip link (sd-skip-link); the page moving
+// is the cue, so it draws no ring around the whole content.
+main:focus-visible {
+  outline: none;
+}
 ::selection {
   background: var(--colorBrandBackground2);
 }
