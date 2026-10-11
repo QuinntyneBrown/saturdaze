@@ -742,7 +742,8 @@
   .auth-card__row { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
   .auth-card__alt { text-align: center; font-size: var(--sd-fs-ui); color: var(--sd-ink-soft); }
   .auth__foot { text-align: center; font-size: var(--sd-fs-xs); color: var(--sd-ink-faint); display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 12px; }
-  .link { color: var(--sd-primary-deep); font-weight: var(--sd-fw-semibold); border-radius: var(--sd-r-sm); }
+  .link { color: var(--sd-primary-deep); font-weight: var(--sd-fw-semibold); border-radius: var(--sd-r-sm); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+  @media (hover: hover) { .link:hover { text-decoration-thickness: 2px; } }
   .link--soft { color: inherit; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: var(--sd-line-strong); font-weight: var(--sd-fw-regular); }
   .email-chip { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: var(--sd-r-pill); background: var(--sd-surface-2); font-size: var(--sd-fs-ui); font-weight: var(--sd-fw-medium); overflow-wrap: anywhere; }
   @media (min-width: 720px) { .auth-card { padding: 32px; } }

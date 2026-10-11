@@ -152,6 +152,20 @@ export abstract class BasePage {
     return target.evaluate((el) => getComputedStyle(el).color);
   }
 
+  /** `target`'s text underline as `<line> <thickness>`, e.g. `underline 1px` or `none auto`. */
+  async underline(target: Locator): Promise<string> {
+    return target.evaluate((el) => {
+      const s = getComputedStyle(el);
+      return `${s.textDecorationLine} ${s.textDecorationThickness}`;
+    });
+  }
+
+  /** `target`'s text underline (as `underline()`) while the pointer rests on it. */
+  async hoverUnderline(target: Locator): Promise<string> {
+    await target.hover();
+    return this.underline(target);
+  }
+
   /** The colour of `target`'s resting edge (top border). */
   async borderColor(target: Locator): Promise<string> {
     return target.evaluate((el) => getComputedStyle(el).borderTopColor);

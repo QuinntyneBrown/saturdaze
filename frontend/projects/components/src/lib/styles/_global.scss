@@ -388,6 +388,15 @@ app-root {
   color: var(--colorBrandForeground2);
   font-weight: var(--fontWeightSemibold);
   border-radius: var(--borderRadiusSmall);
+  // Underlined so a link inside a sentence never relies on colour alone (WCAG 1.4.1).
+  text-decoration: underline;
+  text-decoration-thickness: var(--strokeWidthThin);
+  text-underline-offset: 3px;
+}
+@media (hover: hover) {
+  .sd-link:hover {
+    text-decoration-thickness: var(--strokeWidthThick);
+  }
 }
 .sd-link--soft {
   color: inherit;
