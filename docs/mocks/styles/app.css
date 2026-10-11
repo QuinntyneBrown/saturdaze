@@ -71,7 +71,6 @@
     background: var(--sd-bg);
     color: var(--sd-ink);
     font-family: var(--sd-font-sans);
-    font-size: var(--sd-fs-base);
     line-height: var(--sd-lh-base);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -81,7 +80,9 @@
   /* clip, never hidden: hidden creates a scroll container and breaks sticky.
      Full-bleed scrollers (.scroller-x) hang past the gutter by design. */
   html, body { overflow-x: clip; }
-  body { min-height: 100vh; min-height: 100svh; background: var(--sd-bg); }
+  /* Body text size goes on body, not html: html keeps the reader's text size,
+     so 1rem is whatever they set in the browser (WCAG 1.4.4). */
+  body { min-height: 100vh; min-height: 100svh; background: var(--sd-bg); font-size: var(--sd-fs-base); }
 
   h1, h2, h3, h4 { line-height: var(--sd-lh-tight); font-weight: var(--sd-fw-bold); overflow-wrap: anywhere; }
   p { overflow-wrap: anywhere; }
