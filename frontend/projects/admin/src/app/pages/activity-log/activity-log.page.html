@@ -30,7 +30,7 @@
   }
   @case ('ready') {
     @if (view().rows.length) {
-      <sd-list card class="audit-list">
+      <sd-list card class="audit-list" aria-label="Photo changes">
         @for (row of view().rows; track row.id) {
           <div class="audit-row" role="listitem">
             <time class="audit-row__time" [attr.datetime]="row.datetime">{{ row.time }}</time>
@@ -41,6 +41,39 @@
           </div>
         }
       </sd-list>
+      <div class="table-wrap" role="region" aria-labelledby="al-caption" tabindex="0">
+        <table class="table audit-table">
+          <caption id="al-caption" class="sd-visually-hidden">
+            Photo changes, newest first
+          </caption>
+          <thead>
+            <tr>
+              <th scope="col">Time</th>
+              <th scope="col">Who</th>
+              <th scope="col">Place</th>
+              <th scope="col">Action</th>
+              <th scope="col">Change</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (row of view().rows; track row.id) {
+              <tr class="audit-row">
+                <td>
+                  <time class="audit-row__time" [attr.datetime]="row.datetime">{{ row.time }}</time>
+                </td>
+                <td class="audit-row__who">{{ row.who }}</td>
+                <td>
+                  <a class="audit-row__place" [href]="row.placeHref">{{ row.placeName }}</a>
+                </td>
+                <td>
+                  <sd-chip [tone]="chipTone(row.action.tone)">{{ row.action.label }}</sd-chip>
+                </td>
+                <td class="audit-row__change">{{ row.change }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
       <sd-pager
         [page]="view().page"
         [pageSize]="view().pageSize"

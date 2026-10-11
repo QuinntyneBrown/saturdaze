@@ -66,6 +66,8 @@ Pages in `projects/admin/src/app/pages/`: `PhotoHealthPage` (A2), `PlacesPage` (
 
 New `components` members with story folders (ADR-012): `sd-stat-card` (`StatCard`: a figure, label and link list for A2), `sd-photo-tile` (`PhotoTile`: `sd-media` at 4:3 with source badge, primary marker, review-state and health chips, licence, attribution, size and an actions slot) and `sd-slot-preview` (`SlotPreview`: renders a `CardMedia` in the idea-card 16:9, 4:3 thumbnail and cover slots at the widths A4 previews). The Places list uses `sd-list` and `sd-list-item` with an `sd-media` thumbnail.
 
+`ActivityLogPage` renders the same rows twice and shows one copy by width (L2-122 AC5): under 720 px the `.audit-list` activity feed in `sd-list card`, from 720 px a native `<table class="table audit-table">` inside a focusable `.table-wrap` region named by a visually hidden caption, with `<th scope="col">` headers Time, Who, Place, Action and Change. Each `<tr class="audit-row">` keeps the feed's `audit-row__*` element classes, and `display: none` keeps the hidden copy out of the accessibility tree.
+
 Health chips use existing `sd-chip` tones: `warn` for `no-photo` and `blocked-url`, `sun` for `unreviewed`, `indoor` for `missing-alt`.
 
 ### Tests

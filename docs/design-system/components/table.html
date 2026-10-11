@@ -127,7 +127,7 @@
         <li>Use the <a href="activity-feed.html">activity feed</a> for the same records as this table at phone width, where five columns do not fit.</li>
         <li>Product screens are for families, not spreadsheets. Tables belong to Saturdaze Admin; the family app has none.</li>
       </ul>
-      <p>No mock uses a <code>&lt;table&gt;</code> yet. The admin activity log (<a href="../../mocks/pages/admin.activity.html">admin.activity</a>) is tabular data drawn as a div grid with no column headers (drift D23); the examples below are that log rebuilt as a table with its real columns.</p>
+      <p>The admin activity log (<a href="../../mocks/pages/admin.activity.html">admin.activity</a>) is a table from 720px; the examples below are that log with its real columns.</p>
     </section>
 
     <section class="ds-section" id="anatomy"><h2><a href="#anatomy">Anatomy</a></h2>
@@ -176,7 +176,7 @@
             </table>
           </div>
         </div>
-        <div class="ds-example__caption"><span>The admin activity log with its five real columns (drift D23). Time is <code>.mono</code> inside <code>&lt;time datetime&gt;</code>; the action chip's text carries the meaning, not its tone.</span></div>
+        <div class="ds-example__caption"><span>The admin activity log with its five real columns. Time is <code>.mono</code> inside <code>&lt;time datetime&gt;</code>; the action chip's text carries the meaning, not its tone.</span></div>
         <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;div class="table-wrap" role="region" aria-labelledby="log-cap" tabindex="0"&gt;
   &lt;table class="table"&gt;
     &lt;caption id="log-cap"&gt;Activity log · every photo change&lt;/caption&gt;
@@ -338,7 +338,7 @@
 
     <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
       <h3>Role and pattern</h3>
-      <p>Native <code>&lt;table&gt;</code> with <code>&lt;caption&gt;</code>, <code>&lt;thead&gt;</code> and <code>&lt;th scope="col"&gt;</code>; the identifying cell of each row is <code>&lt;th scope="row"&gt;</code>. This is the <a href="https://www.w3.org/WAI/ARIA/apg/patterns/table/">APG Table pattern</a>; sorting follows its <a href="https://www.w3.org/WAI/ARIA/apg/patterns/table/examples/sortable-table/">sortable table example</a>: a <code>&lt;button&gt;</code> in the header and <code>aria-sort</code> on the <code>&lt;th&gt;</code>. Never build a table from divs (drift D23): the column headers are what make each cell understandable.</p>
+      <p>Native <code>&lt;table&gt;</code> with <code>&lt;caption&gt;</code>, <code>&lt;thead&gt;</code> and <code>&lt;th scope="col"&gt;</code>; the identifying cell of each row is <code>&lt;th scope="row"&gt;</code>. This is the <a href="https://www.w3.org/WAI/ARIA/apg/patterns/table/">APG Table pattern</a>; sorting follows its <a href="https://www.w3.org/WAI/ARIA/apg/patterns/table/examples/sortable-table/">sortable table example</a>: a <code>&lt;button&gt;</code> in the header and <code>aria-sort</code> on the <code>&lt;th&gt;</code>. Never build a table from divs: the column headers are what make each cell understandable.</p>
       <p>Selection lives in the row checkbox. <code>aria-selected</code> is announced only inside an ARIA grid; if a table needs arrow-key navigation between cells, make it an <a href="https://www.w3.org/WAI/ARIA/apg/patterns/grid/">APG Grid</a> instead. No admin screen needs that yet.</p>
       <h3>Keyboard</h3>
       <table class="ds-table ds-keys"><thead><tr><th scope="col">Key</th><th scope="col">Action</th></tr></thead><tbody>
@@ -382,7 +382,7 @@
     <section class="ds-section" id="do-dont"><h2><a href="#do-dont">Do and don't</a></h2>
       <div class="ds-dodont">
         <figure class="ds-do"><div class="ds-example__canvas" style="display: block;"><div class="table-wrap"><table class="table table--dense"><caption class="visually-hidden">Photo changes</caption><thead><tr><th scope="col">Time</th><th scope="col">Place</th></tr></thead><tbody><tr><td class="mono"><time datetime="2026-10-06T13:41Z">13:41 UTC</time></td><td>Harbour Grill</td></tr></tbody></table></div></div><figcaption>Tabular records in a real table with column headers, so "13:41" is announced as a Time.</figcaption></figure>
-        <figure class="ds-dont"><div class="ds-example__canvas"><div class="audit-row" style="width: 100%;"><span class="audit-row__time">13:41 UTC</span><span class="audit-row__who">Harbour Grill</span></div></div><figcaption>The mock's div grid at desktop width: five columns with no headers, so nothing tells a screen reader which value is which (drift D23).</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><div class="audit-row" style="width: 100%;"><span class="audit-row__time">13:41 UTC</span><span class="audit-row__who">Harbour Grill</span></div></div><figcaption>A div grid at desktop width: five columns with no headers, so nothing tells a screen reader which value is which.</figcaption></figure>
         <figure class="ds-do"><div class="ds-example__canvas" style="display: block;"><div class="table-wrap" role="region" aria-label="Places (scrolls sideways)" tabindex="0"><table class="table table--dense"><caption class="visually-hidden">Places</caption><thead><tr><th scope="col">Place</th><th scope="col">Kind</th><th scope="col" class="num">Photos</th></tr></thead><tbody><tr><td>Snug Harbour</td><td>Restaurant</td><td class="num">0</td></tr></tbody></table></div></div><figcaption>Let the wrapper scroll and make it a focusable, named region.</figcaption></figure>
         <figure class="ds-dont"><div class="ds-example__canvas"><p style="margin: 0;">Table squeezed to 360px with every column at 40px, or a page that scrolls sideways.</p></div><figcaption>At phone width switch to the activity feed instead of crushing five columns.</figcaption></figure>
         <figure class="ds-do"><div class="ds-example__canvas" style="display: block;"><div class="table-wrap"><table class="table table--dense"><caption class="visually-hidden">Action</caption><thead><tr><th scope="col">Action</th></tr></thead><tbody><tr><td><span class="chip chip--warn">Remove</span></td></tr></tbody></table></div></div><figcaption>The chip's word says what happened; the tone only helps scanning.</figcaption></figure>
@@ -446,11 +446,11 @@
 
     <section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>
       <ul>
-        <li><a href="../../mocks/pages/admin.activity.html">pages/admin.activity</a>: the activity log, five records with time, who, place, action and change, drawn as an <code>&lt;ol class="audit-list"&gt;</code> div grid.</li>
+        <li><a href="../../mocks/pages/admin.activity.html">pages/admin.activity</a>: the activity log, five records with time, who, place, action and change, as a <code>.table</code> from 720px and an <code>&lt;ol class="audit-list"&gt;</code> feed below.</li>
         <li><a href="../../mocks/pages/admin.places.html">pages/admin.places</a>: the place names, kinds, photo counts and health flags used in the selectable example (the mock shows them as a list).</li>
       </ul>
-      <p>Drift fixed: D23, the activity log's tabular data with no column headers. Health chips use <code>chip--caution</code> for "Unreviewed" where the mock uses sun (see <a href="badge.html">badge</a>).</p>
-      <p>Not in the mocks yet: no mock uses a <code>&lt;table&gt;</code>. Sorting, selection, the dense size, the sticky header, loading and empty states are specified here from the core component catalogue and have no mock; the activity log's Angular screen has no table component either.</p>
+      <p>Health chips use <code>chip--caution</code> for "Unreviewed" where the mock uses sun (see <a href="badge.html">badge</a>).</p>
+      <p>Not in the mocks yet: sorting, selection, the dense size, loading and empty states are specified here from the core component catalogue and have no mock. The activity log's Angular screen renders the native table in its page; there is no shared table component.</p>
     </section>
 
     <footer class="ds-footer"><span>Saturdaze design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>

@@ -1,6 +1,6 @@
 @use '../../../../../components/src/lib/styles/breakpoints' as *;
 
-// `.audit-list`, `.audit-row` from docs/mocks/styles/app.css (admin); the
+// `.audit-list`, `.audit-row`, `.table-wrap`, `.table` from docs/mocks/styles/app.css (admin); the
 // toolbar, list surface and pager are `sd-toolbar`, `sd-list card` and `sd-pager`.
 
 :host {
@@ -11,11 +11,14 @@
   margin-bottom: 16px;
 }
 
+// Under 720px the log is the stacked activity feed; from 720px the same rows
+// are a native table with column headers (L2-122 AC5). `display: none` keeps
+// the hidden copy out of the accessibility tree.
 .audit-list {
   margin-top: 16px;
 }
 
-.audit-row {
+.audit-list .audit-row {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   gap: 4px 12px;
@@ -24,7 +27,7 @@
   font-size: var(--fontSizeBase300);
 }
 
-.audit-row:last-child {
+.audit-list .audit-row:last-child {
   border-bottom: 0;
 }
 
@@ -32,6 +35,7 @@
   font-family: var(--fontFamilyMonospace);
   font-size: var(--fontSizeBase200);
   color: var(--colorNeutralForeground2);
+  white-space: nowrap;
 }
 
 .audit-row__who {
@@ -40,7 +44,6 @@
 }
 
 .audit-row__place {
-  grid-column: 1;
   border-radius: var(--borderRadiusMedium);
   font-weight: var(--fontWeightSemibold);
   color: var(--colorBrandForeground1);
@@ -51,7 +54,11 @@
   text-decoration: underline;
 }
 
-.audit-row sd-chip {
+.audit-list .audit-row__place {
+  grid-column: 1;
+}
+
+.audit-list .audit-row sd-chip {
   grid-column: 2;
   grid-row: 1 / 3;
   align-self: start;
@@ -59,22 +66,70 @@
 }
 
 .audit-row__change {
-  grid-column: 1 / -1;
   color: var(--colorNeutralForeground1);
   overflow-wrap: anywhere;
 }
 
-@include respond-to(desktop) {
-  .audit-row {
-    grid-template-columns: 150px 200px minmax(0, 1fr) 96px minmax(0, 1.4fr);
-    align-items: center;
+.audit-list .audit-row__change {
+  grid-column: 1 / -1;
+}
+
+.table-wrap {
+  display: none;
+  margin-top: 16px;
+  overflow-x: auto;
+  border: 1px solid var(--colorNeutralStroke2);
+  border-radius: var(--borderRadiusLarge);
+  background: var(--colorNeutralBackground1);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--fontSizeBase350);
+}
+
+.table th,
+.table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--colorNeutralStroke2);
+  text-align: left;
+  vertical-align: top;
+}
+
+.table thead th {
+  position: sticky;
+  top: 0;
+  background: var(--colorNeutralBackground3);
+  font-size: var(--fontSizeBase200);
+  font-weight: var(--fontWeightSemibold);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--colorNeutralForeground2);
+  white-space: nowrap;
+}
+
+.table .audit-row__who {
+  overflow-wrap: normal;
+  white-space: nowrap;
+}
+
+.table tbody tr:last-child > * {
+  border-bottom: 0;
+}
+
+@media (hover: hover) {
+  .table tbody tr:hover {
+    background: var(--colorNeutralBackground3);
+  }
+}
+
+@include respond-to(tablet) {
+  .audit-list {
+    display: none;
   }
 
-  .audit-row__place,
-  .audit-row sd-chip,
-  .audit-row__change {
-    grid-column: auto;
-    grid-row: auto;
-    justify-self: start;
+  .table-wrap {
+    display: block;
   }
 }
