@@ -206,6 +206,14 @@
   }
 }
 
+// A touch tablet has no hover to reveal the actions, so they stay visible
+// (L2-028 AC4).
+@media (hover: none) and (min-width: 720px) {
+  .block__actions {
+    opacity: 1;
+  }
+}
+
 // A numbered stop (L2-103 AC4): the deep brand tone, not the brand fill (3:1),
 // so the white number and the disc against the page both clear 4.5:1.
 .block__disc--num {

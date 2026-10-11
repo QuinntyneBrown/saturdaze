@@ -487,6 +487,10 @@
     .block:hover .block__actions { opacity: 1; }
     .block:hover .block__disc { box-shadow: 0 0 0 4px var(--sd-surface-2); }
   }
+  /* No hover on touch tablets: keep block actions visible (D21). */
+  @media (hover: none) and (min-width: 720px) {
+    .block__actions { opacity: 1; }
+  }
 
   /* ---- ghost row (dashed add affordance) ---- */
   .ghost-row {

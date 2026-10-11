@@ -190,6 +190,26 @@ export class WeekendPage extends BasePage {
     return (name ? this.day(name) : this.grid).locator(".block.block--drive");
   }
 
+  /**
+   * Whether `block`'s actions (Why this / Swap / Lock) can be seen right now:
+   * laid out and fully opaque, once any fade has finished.
+   */
+  async blockActionsShowing(block: Locator): Promise<boolean> {
+    const actions = block.locator(".block__actions");
+    if (!(await actions.isVisible())) return false;
+    await this.settleTransitions(actions);
+    return actions.evaluate((el) => getComputedStyle(el).opacity === "1");
+  }
+
+  async hoverBlock(block: Locator): Promise<void> {
+    await block.hover();
+  }
+
+  /** Rest the pointer away from the timeline so no block is hovered. */
+  async movePointerAway(): Promise<void> {
+    await this.page.mouse.move(0, 0);
+  }
+
   /** Planner blocks the user can act on (everything but drives). */
   actionableBlocks(name?: DayName): Locator {
     return (name ? this.day(name) : this.grid).locator(
