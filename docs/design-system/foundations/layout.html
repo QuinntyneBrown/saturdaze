@@ -130,7 +130,7 @@
     </section>
 
     <section class="ds-section" id="breakpoints"><h2><a href="#breakpoints">Breakpoints</a></h2>
-      <p>Saturdaze is designed at 360px first and adds layout as space allows: every rule is a <code>min-width</code> query except the two small-phone retunes. The breakpoints are in rem (D24), so a reader with a larger default font reaches the phone layout sooner instead of getting cramped text in a desktop layout.</p>
+      <p>Saturdaze is designed at 360px first and adds layout as space allows: every rule is a <code>min-width</code> query except the two small-phone retunes. The breakpoints are in rem, so a reader with a larger default font reaches the phone layout sooner instead of getting cramped text in a desktop layout.</p>
       <div class="ds-table-wrap"><table class="ds-table">
         <thead><tr><th scope="col">Token</th><th scope="col">Value</th><th scope="col">What changes at and above it</th></tr></thead>
         <tbody>
@@ -286,7 +286,7 @@
     <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
       <ul>
         <li><b>Reflow (1.4.10).</b> Every page works at 320px CSS width (a 1280px window at 400% zoom) without two-dimensional scrolling. Tables are the exception the criterion allows, and they scroll inside their own wrapper.</li>
-        <li><b>Resize text (1.4.4).</b> Breakpoints in rem mean that enlarging the browser's text size moves the page to a narrower layout before anything overlaps (D24).</li>
+        <li><b>Resize text (1.4.4).</b> Breakpoints in rem mean that enlarging the browser's text size moves the page to a narrower layout before anything overlaps.</li>
         <li><b>Orientation (1.3.4).</b> No layout is locked to portrait or landscape; a phone on its side gets the 720px layout if it is wide enough.</li>
         <li><b>Focus not obscured (2.4.11).</b> The sticky top bar and floating bottom nav must not cover the focused element. The mocks set <code>scroll-padding-top</code> to the top bar height plus 16px; the app should do the same with <code>--layoutTopBarHeight</code>, and add <code>scroll-padding-bottom</code> for <code>--layoutBottomNavHeight</code> on phones, which the mocks do not yet.</li>
         <li><b>Landmarks.</b> Each template has one <code>header</code> (top bar), one <code>nav</code> per navigation (labelled), one <code>main</code>, and a <code>footer</code> where there is one; the bottom nav and the top bar are the same <code>nav</code> landmark at different widths.</li>
@@ -327,7 +327,7 @@
       <div class="ds-table-wrap"><table class="ds-table">
         <thead><tr><th scope="col">Mock</th><th scope="col">System</th><th scope="col">Drift</th></tr></thead>
         <tbody>
-          <tr><td>Breakpoints 379, 576, 719/720, 1024px</td><td><code>--layoutBreakpointSm/Md/Lg/Xl</code> at 23.75, 36, 45, 64rem</td><td>D24</td></tr>
+          <tr><td>Breakpoints 23.75, 36, 45, 64rem (379, 576, 720, 1024px at the default text size)</td><td><code>--layoutBreakpointSm/Md/Lg/Xl</code> at 23.75, 36, 45, 64rem</td><td>Same values</td></tr>
           <tr><td><code>--sd-content-max-w</code> 1120px, <code>--sd-stack-max-w</code> 720px, <code>--sd-app-max-w</code> 440px</td><td><code>--layoutContentMaxWidth</code>, <code>--layoutStackMaxWidth</code>, <code>--layoutNarrowMaxWidth</code></td><td>Same values in rem</td></tr>
           <tr><td><code>--sd-gutter</code> 16px at every width</td><td><code>--layoutGutter</code> 16 / 24 / 32px with <code>--layoutColumns</code> 4 / 8 / 12</td><td>New responsive grid</td></tr>
           <tr><td><code>--sd-topbar-h</code> 64px, <code>--sd-bottom-nav-h</code> 60px</td><td><code>--layoutTopBarHeight</code>, <code>--layoutBottomNavHeight</code></td><td>Same values</td></tr>

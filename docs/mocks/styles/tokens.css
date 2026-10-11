@@ -49,14 +49,16 @@
   --sd-font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
                   Roboto, "Helvetica Neue", Arial, sans-serif;
 
-  --sd-fs-xs:   12px;
-  --sd-fs-sm:   13px;
-  --sd-fs-ui:   14px;   /* control labels, nav links, menu items, banners */
-  --sd-fs-base: 15px;
-  --sd-fs-md:   17px;
-  --sd-fs-lg:   20px;
-  --sd-fs-xl:   26px;
-  --sd-fs-xxl:  34px;
+  /* Type sizes in rem, so they grow with the reader's text size (WCAG 1.4.4):
+     12 / 13 / 14 / 15 / 17 / 20 / 26 / 34px at the default 16px. */
+  --sd-fs-xs:   0.75rem;
+  --sd-fs-sm:   0.8125rem;
+  --sd-fs-ui:   0.875rem;   /* control labels, nav links, menu items, banners */
+  --sd-fs-base: 0.9375rem;
+  --sd-fs-md:   1.0625rem;
+  --sd-fs-lg:   1.25rem;
+  --sd-fs-xl:   1.625rem;
+  --sd-fs-xxl:  2.125rem;
 
   --sd-lh-none:  1;
   --sd-lh-tight: 1.2;
@@ -106,34 +108,35 @@
   --sd-nav-h: 64px;
   --sd-top-h: 56px;
 
-  /* Breakpoints — referenced inline as media queries.
-     - mobile: < 720px (default / current design)
-     - tablet: 720-1023px  (nav becomes icon rail)
-     - desktop: >= 1024px  (nav becomes labelled sidebar; split-view activates) */
-  --sd-bp-tablet: 720px;
-  --sd-bp-desktop: 1024px;
+  /* Breakpoints — referenced inline as media queries, in rem so they follow
+     the reader's text size (WCAG 1.4.4); px at the default 16px.
+     - mobile: < 45rem (720px) (default / current design)
+     - tablet: 45-64rem (720-1023px)  (nav becomes icon rail)
+     - desktop: >= 64rem (1024px)  (nav becomes labelled sidebar; split-view activates) */
+  --sd-bp-tablet: 45rem;
+  --sd-bp-desktop: 64rem;
 
   /* Rail widths */
   --sd-rail-w-tablet: 72px;
   --sd-rail-w-desktop: 220px;
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 64rem) {
   :root {
     --sd-app-pad-x: 32px;
-    --sd-fs-xxl: 40px;
-    --sd-fs-xl: 30px;
-    --sd-fs-lg: 22px;
+    --sd-fs-xxl: 2.5rem;
+    --sd-fs-xl: 1.875rem;
+    --sd-fs-lg: 1.375rem;
   }
 }
 
 /* xsmall retune — same token-swap idiom as the desktop block above.
    320-379px phones (iPhone SE class) get tighter gutters and display
    type one step down so headings breathe instead of cramping. */
-@media (max-width: 379px) {
+@media (max-width: 23.6875rem) {
   :root {
     --sd-app-pad-x: 16px;
-    --sd-fs-xxl: 30px;
-    --sd-fs-xl: 24px;
+    --sd-fs-xxl: 1.875rem;
+    --sd-fs-xl: 1.5rem;
   }
 }

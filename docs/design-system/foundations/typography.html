@@ -224,7 +224,7 @@
           <tr><td><code>--fontSizeHero900</code></td><td>34px</td><td>44px</td><td>56px</td><td>Landing display</td></tr>
         </tbody>
       </table></div>
-      <p>The breakpoints are in rem (D24), so a reader who sets a larger default font reaches the smaller layout and the smaller hero sizes sooner, which is the point: the text they asked for still fits.</p>
+      <p>The breakpoints are in rem, so a reader who sets a larger default font reaches the smaller layout and the smaller hero sizes sooner, which is the point: the text they asked for still fits.</p>
     </section>
 
     <section class="ds-section" id="body-size"><h2><a href="#body-size">Why body is 15px</a></h2>
@@ -324,9 +324,9 @@
       <div class="ds-table-wrap"><table class="ds-table">
         <thead><tr><th scope="col">Mock</th><th scope="col">System</th><th scope="col">Drift</th></tr></thead>
         <tbody>
-          <tr><td><code>--sd-fs-xs/sm/ui/base/md/lg/xl/xxl</code> 12 / 13 / 14 / 15 / 17 / 20 / 26 / 34px</td><td><code>--fontSizeBase200/300/350/400/500/600</code>, <code>--fontSizeHero700/800</code>, in rem</td><td>Same values; rem (D24)</td></tr>
+          <tr><td><code>--sd-fs-xs/sm/ui/base/md/lg/xl/xxl</code> 12 / 13 / 14 / 15 / 17 / 20 / 26 / 34px, in rem</td><td><code>--fontSizeBase200/300/350/400/500/600</code>, <code>--fontSizeHero700/800</code>, in rem</td><td>Same values</td></tr>
           <tr><td><code>--sd-lh-none/tight/snug/base/relaxed</code> 1 / 1.2 / 1.35 / 1.5 / 1.65</td><td><code>--lineHeightNone/Tight/Snug/Normal/Relaxed</code></td><td>Same values</td></tr>
-          <tr><td>Hero title at 44px with px media queries</td><td><code>--fontSizeHero900</code>, retuned at 380 and 1024px in rem</td><td>D24</td></tr>
+          <tr><td>Hero title at 2.75rem (44px), retuned at 380 and 1024px in rem</td><td><code>--fontSizeHero900</code>, retuned at 380 and 1024px in rem</td><td>Same values</td></tr>
         </tbody>
       </table></div>
       <p>New in the system: <code>--letterSpacing*</code> (the mocks wrote em values inline) and the thirteen <code>--typography*</code> role shorthands that match the product's Fluent tokens (ADR-013).</p>
