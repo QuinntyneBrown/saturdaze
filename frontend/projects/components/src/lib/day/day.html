@@ -30,7 +30,7 @@
         variant="ghost"
         size="sm"
         btnClass="day__btn"
-        [label]="(locked() ? 'Unlock ' : 'Lock ') + dayTitle()"
+        [label]="(locked() ? 'Unlock day: ' : 'Lock day: ') + dayTitle()"
         [pressed]="locked()"
         [disabled]="busy()"
         (click)="lockToggle.emit(!locked())"

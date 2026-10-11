@@ -100,6 +100,7 @@ test.describe("Weekend", () => {
 
   test("locking a day toggles the day button and the locked modifier", async ({ page, pages }) => {
     const w = pages.weekend;
+    await w.selectDay("Sunday");
     const btn = w.lockDayButton("Sunday");
     const before = await btn.getAttribute("aria-pressed");
 
@@ -109,10 +110,36 @@ test.describe("Weekend", () => {
 
     const after = before === "true" ? "false" : "true";
     await expect(btn).toHaveAttribute("aria-pressed", after);
-    await expect(btn).toHaveAttribute("aria-label", after === "true" ? "Unlock Sunday" : "Lock Sunday");
+    await expect(btn).toHaveAccessibleName(after === "true" ? "Unlock day: Sunday" : "Lock day: Sunday");
     if (after === "true") await expect(w.day("Sunday")).toHaveClass(/day--locked/);
     else await expect(w.day("Sunday")).not.toHaveClass(/day--locked/);
 
+    await btn.click();
+    await expect(btn).toHaveAttribute("aria-pressed", before!);
+  });
+
+  test("Given a day header, when the day is locked and unlocked, then the lock toggle's accessible name starts with its visible label and names the day (L2-085 AC3, D33)", async ({
+    page,
+    pages,
+  }) => {
+    const w = pages.weekend;
+    await w.selectDay("Sunday");
+    const btn = w.lockDayButton("Sunday");
+    const before = await btn.getAttribute("aria-pressed");
+    const labelFor = (pressed: string | null) => (pressed === "true" ? "Unlock day" : "Lock day");
+
+    await expect(w.lockDayButtonLabel("Sunday")).toHaveText(labelFor(before));
+    await expect(btn).toHaveAccessibleName(`${labelFor(before)}: Sunday`);
+
+    const saved = page.waitForResponse((r) => /\/api\/weekends\/[^/]+\/days\/[^/]+\/lock/.test(r.url()));
+    await btn.click();
+    expect((await saved).ok()).toBeTruthy();
+    const after = before === "true" ? "false" : "true";
+    await expect(btn).toHaveAttribute("aria-pressed", after);
+    await expect(w.lockDayButtonLabel("Sunday")).toHaveText(labelFor(after));
+    await expect(btn).toHaveAccessibleName(`${labelFor(after)}: Sunday`);
+
+    // restore
     await btn.click();
     await expect(btn).toHaveAttribute("aria-pressed", before!);
   });

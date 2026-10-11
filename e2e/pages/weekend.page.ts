@@ -11,7 +11,7 @@ import { PageSlug } from "../fixtures/routes.js";
  *   .planner#<day>-panel[role=tabpanel]
  *     .day (selected day)
  *       .day__header  weather disc · .day__title · .day__meta · .day__actions
- *                     ("Regenerate Saturday", "Lock Saturday"/"Unlock Saturday")
+ *                     ("Regenerate Saturday", "Lock day: Saturday"/"Unlock day: Saturday")
  *       ol.day__list > li.block (+ --commitment --locked --drive --errand --done)
  *          .block__time (.block__clock .block__dur) · .block__rail · .block__body
  *          (.block__title .block__sub .block__chips) · .block__actions
@@ -96,11 +96,18 @@ export class WeekendPage extends BasePage {
     return control(this.day(name), `Regenerate ${name}`);
   }
 
-  /** "Lock Saturday" (aria-pressed=false) / "Unlock Saturday" (aria-pressed=true). */
+  /**
+   * The day header's lock toggle, found by its pressed state rather than its
+   * name: "Lock day: Saturday" (aria-pressed=false) / "Unlock day: Saturday"
+   * (aria-pressed=true), L2-085 AC3.
+   */
   lockDayButton(name: DayName): Locator {
-    return this.day(name).getByRole("button", {
-      name: new RegExp(`^(Lock|Unlock) ${name}$`),
-    });
+    return this.dayHeader(name).locator(".day__actions button[aria-pressed]");
+  }
+
+  /** The lock toggle's visible label: "Lock day" / "Unlock day". */
+  lockDayButtonLabel(name: DayName): Locator {
+    return this.lockDayButton(name).locator(".day__btn-label");
   }
 
   ghostRow(name: DayName): Locator {

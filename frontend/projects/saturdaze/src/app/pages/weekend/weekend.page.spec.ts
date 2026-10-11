@@ -415,9 +415,9 @@ describe('WeekendPage', () => {
     });
     expect(weekend.regenerateDay).toHaveBeenCalledWith('Saturday');
 
-    button('Lock Saturday').click();
+    button('Lock day: Saturday').click();
     showDay('Sunday');
-    button('Unlock Sunday').click();
+    button('Unlock day: Sunday').click();
     await settle();
     expect(weekend.lockDay).toHaveBeenNthCalledWith(1, 'Saturday', true);
     expect(weekend.lockDay).toHaveBeenNthCalledWith(2, 'Sunday', false);
@@ -486,14 +486,14 @@ describe('WeekendPage', () => {
     const consoleError = vi.spyOn(console, 'error').mockImplementation(() => undefined);
     await mountReady();
     weekend.lockDay.mockRejectedValueOnce(new Error('500'));
-    button('Lock Saturday').click();
+    button('Lock day: Saturday').click();
     await settle();
     fixture.detectChanges();
     expect(host.querySelector('sd-banner.error')?.textContent?.trim()).toBe(
       'Something did not go through. Try again in a moment.',
     );
 
-    button('Lock Saturday').click();
+    button('Lock day: Saturday').click();
     await settle();
     fixture.detectChanges();
     expect(host.querySelector('sd-banner.error')).toBeNull();

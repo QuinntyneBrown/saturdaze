@@ -18,6 +18,8 @@ The slice combines block-level lock and swap endpoints with weekend regeneration
 
 `LockWeekendDayCommandHandler` sets all selected-day locks while retaining commitment locks. No client alternatives-list endpoint exists.
 
+`sd-day` renders the day header's lock toggle as a pressed-state `sd-button` whose visible label is "Lock day" or "Unlock day". Its `aria-label` starts with that label and appends the day title after a colon, "Lock day: Saturday" or "Unlock day: Saturday", so the accessible name contains the visible label (L2-085 AC3, WCAG 2.5.3). The Regenerate button already follows the rule ("Regenerate Saturday").
+
 Ordinary locked blocks retain identity during regeneration. Commitments are reconstructed from the profile, so the strict preservation claims in L2-011 and L2-016 are not fully implemented.
 
 ## Requirements
