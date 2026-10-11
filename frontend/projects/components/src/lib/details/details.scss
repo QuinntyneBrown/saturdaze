@@ -30,7 +30,7 @@
   overflow-wrap: anywhere;
 }
 
-@media (min-width: 576px) {
+@media (min-width: 36rem) {
   :host {
     grid-template-columns: 96px minmax(0, 1fr);
     column-gap: 12px;

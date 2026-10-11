@@ -7,7 +7,7 @@ export const FAMILY_STYLES = [
   `.account-card__text { flex: 1; min-width: 0; }`,
   `.account-card__title { font-weight: var(--fontWeightSemibold); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }`,
   `.account-card__sub { font-size: var(--fontSizeBase300); color: var(--colorNeutralForeground2); margin-top: 2px; }`,
-  `@media (min-width: 1024px) { .family-grid { grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 40px; } }`,
+  `@media (min-width: 64rem) { .family-grid { grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 40px; } }`,
 ];
 
 export const FAMILY_PAGE = `

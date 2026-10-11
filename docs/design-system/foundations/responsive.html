@@ -123,7 +123,7 @@
       <ul>
         <li><b>Mobile first.</b> Base styles are the phone layout. <code>min-width</code> queries add space, columns and labels as the screen grows.</li>
         <li><b>The same product at every width.</b> A tablet sees the same actions as a phone, laid out differently. Nothing is only on desktop.</li>
-        <li><b>Breakpoints in rem</b> (23.75, 36, 45 and 64rem), so a person who has raised their browser's text size gets the layout that fits their text, not their pixels (D24).</li>
+        <li><b>Breakpoints in rem</b> (23.75, 36, 45 and 64rem), so a person who has raised their browser's text size gets the layout that fits their text, not their pixels.</li>
         <li><b>Layout follows tokens.</b> Columns, gutters and margins change in <code>tokens.css</code> at each breakpoint; components read <code>--layoutGutter</code> and <code>--layoutMargin</code> rather than writing their own numbers.</li>
         <li><b>Type is fixed, not fluid.</b> Sizes come from the scale and change only at the ends (under 380px and from 1024px), so zoom always works.</li>
       </ul>
@@ -262,7 +262,7 @@
     <section class="ds-section" id="usage"><h2><a href="#usage">Usage</a></h2>
       <div class="ds-dodont">
         <figure class="ds-do"><div class="ds-example__canvas"><code>@media (min-width: 45rem) { … }</code></div><figcaption>One of the four breakpoints, in rem, adding to the phone layout.</figcaption></figure>
-        <figure class="ds-dont"><div class="ds-example__canvas"><code>@media (max-width: 719px) { … }</code></div><figcaption>A pixel breakpoint ignores the text-size setting (D24), and building down from desktop leaves phones with the leftovers.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><code>@media (max-width: 719px) { … }</code></div><figcaption>A pixel breakpoint ignores the text-size setting, and building down from desktop leaves phones with the leftovers.</figcaption></figure>
         <figure class="ds-do"><div class="ds-example__canvas"><button class="btn btn--ghost btn--sm btn--icon" type="button" aria-label="Swap Lavender fields"><svg class="icon" aria-hidden="true"><use href="#i-swap"/></svg></button><button class="btn btn--ghost btn--sm btn--icon" type="button" aria-label="Lock Lavender fields"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg></button></div><figcaption>Block actions that stay visible on touch screens.</figcaption></figure>
         <figure class="ds-dont"><div class="ds-example__canvas"><span class="ds-pill">.block__actions { opacity: 0 } .block:hover .block__actions { opacity: 1 }</span></div><figcaption>Hover-only actions an iPad cannot reach.</figcaption></figure>
       </div>
@@ -279,7 +279,7 @@
         <li><a href="../../mocks/pages/admin.html">pages/admin</a> and <a href="../../mocks/pages/admin.activity.html">pages/admin.activity</a>: admin navigation, stat grid, activity rows.</li>
         <li><code style="overflow-wrap: anywhere;">docs/adr/ADR-005-bottom-nav-device-chrome-clearance.md</code> and <code>ADR-009-v2-responsive-shell.md</code>.</li>
       </ul>
-      <p>Drift fixed: D24 (pixel breakpoints). The breadcrumb and toast behaviours are for core components no mock shows yet.</p>
+      <p>The breadcrumb and toast behaviours are for core components no mock shows yet.</p>
     </section>
 
     <footer class="ds-footer"><span>Saturdaze design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>

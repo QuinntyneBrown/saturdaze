@@ -72,7 +72,6 @@ html {
   background: var(--colorNeutralBackground2);
   color: var(--colorNeutralForeground1);
   font-family: var(--fontFamilyBase);
-  font-size: var(--fontSizeBase400);
   line-height: var(--lineHeightNormal);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -90,10 +89,13 @@ html,
 body {
   overflow-x: clip;
 }
+// Body text size goes on body, not html: html keeps the reader's text size,
+// so 1rem is whatever they set in the browser (WCAG 1.4.4).
 body {
   min-height: 100vh;
   min-height: 100svh;
   background: var(--colorNeutralBackground2);
+  font-size: var(--fontSizeBase400);
 }
 
 h1,
@@ -429,7 +431,7 @@ app-root {
   margin-bottom: 24px;
 }
 
-@media (max-width: 719px) {
+@media (max-width: 44.9375rem) {
   .sd-hide-lt-720 {
     display: none !important;
   }

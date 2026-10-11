@@ -9,7 +9,7 @@
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-weight: var(--fontWeightBold);
   line-height: 1;
   background: var(--colorNeutralBackground3);
@@ -24,7 +24,7 @@
 :host(.avatar--md) {
   width: 28px;
   height: 28px;
-  font-size: 12px;
+  font-size: 0.75rem;
 }
 :host(.avatar--xl) {
   width: 36px;

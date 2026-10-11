@@ -24,6 +24,8 @@ The 2026-10-06 Weekend mock replaces the two-day `.sd-grid-days` layout with a o
 
 From 720 px a weekend block (`sd-block`) swaps its chevron for inline actions. On a pointer that hovers, the actions stay transparent until the block is hovered or holds focus. On a device with no hover (`@media (hover: none)`, a touch tablet), nothing can reveal them, so `block.scss` keeps them at full opacity, as the mock's `app.css` does (L2-028 AC4, drift D21).
 
+The breakpoints and the type scale are in rem, so they follow the text size a reader sets in the browser (WCAG 1.4.4, drift D24). Media queries cannot read custom properties, so `_breakpoints.scss` holds them as `$bp-xsmall-max` 23.6875rem, `$bp-tablet` 45rem and `$bp-desktop` 64rem (379, 720 and 1024 px at the default 16 px), the 36rem (576 px) queries are written inline, `themes/responsive.ts` retunes tokens under the same rem queries, and `MenuOpener` asks `BreakpointObserver` for `(min-width: 45rem)`. The `fontSize*` tokens in `global/fonts.ts`, their retunes and the few literal component sizes are rem (`0.75rem` for 12 px and so on), and the 15 px body size is set on `body`, not `html`, so the root keeps the reader's size and `1rem` resolves to it. At the default text size every width and size is the pixel value it was; a reader at 20 px on an 820 px window (41rem) gets the phone layout with the bottom navigation, and every token-sized text grows by the same 125 %. The mocks' `tokens.css` and `app.css` use the same rem values (L2-028 AC5).
+
 ## Requirements
 
 The following L2 requirements refine the cited L1 capabilities. Implementation gaps stated in Description do not waive these obligations.

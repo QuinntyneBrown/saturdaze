@@ -30,7 +30,7 @@ export class MenuOpener {
   private readonly breakpoints = inject(BreakpointObserver);
 
   async open(anchor: HTMLElement, options: MenuOptions): Promise<MenuItem | undefined> {
-    if (!this.breakpoints.isMatched('(min-width: 720px)')) {
+    if (!this.breakpoints.isMatched('(min-width: 45rem)')) {
       const ref = this.dialog.open<MenuItem | undefined, MenuDialogData>(MenuDialog, {
         data: { title: options.title, items: options.items },
         autoFocus: 'first-tabbable',

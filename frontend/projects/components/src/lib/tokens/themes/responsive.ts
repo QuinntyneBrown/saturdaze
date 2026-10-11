@@ -8,25 +8,25 @@ import type { ThemeOverride } from '../types';
  */
 export const responsiveOverrides: ThemeOverride[] = [
   {
-    media: '(min-width: 720px)',
+    media: '(min-width: 45rem)',
     tokens: { layoutGutter: '24px' },
   },
   {
-    media: '(min-width: 1024px)',
+    media: '(min-width: 64rem)',
     tokens: {
       layoutGutter: '32px',
-      fontSizeHero800: '40px',
-      fontSizeHero700: '30px',
-      fontSizeBase600: '22px',
+      fontSizeHero800: '2.5rem',
+      fontSizeHero700: '1.875rem',
+      fontSizeBase600: '1.375rem',
     },
   },
   {
     // 320-379px phones (iPhone SE class) get display type one step down so
     // headings breathe instead of cramping.
-    media: '(max-width: 379px)',
+    media: '(max-width: 23.6875rem)',
     tokens: {
-      fontSizeHero800: '30px',
-      fontSizeHero700: '24px',
+      fontSizeHero800: '1.875rem',
+      fontSizeHero700: '1.5rem',
     },
   },
 ];

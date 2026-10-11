@@ -190,7 +190,7 @@
   }
 }
 
-@media (hover: hover) and (min-width: 720px) {
+@media (hover: hover) and (min-width: 45rem) {
   :host(:hover) {
     background: var(--colorNeutralBackground3);
     box-shadow: 0 0 0 8px var(--colorNeutralBackground3);
@@ -208,7 +208,7 @@
 
 // A touch tablet has no hover to reveal the actions, so they stay visible
 // (L2-028 AC4).
-@media (hover: none) and (min-width: 720px) {
+@media (hover: none) and (min-width: 45rem) {
   .block__actions {
     opacity: 1;
   }

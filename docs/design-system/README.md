@@ -125,7 +125,6 @@ and up) are proposals for the product's TypeScript theme.
 
 | ID | Mock | Issue | Resolution |
 |---|---|---|---|
-| D24 | `app.css` | Breakpoints and type in px (379/576/719/720/1024; 12 to 56px), so they ignore the user's font size (1.4.4). | rem: 23.75 / 36 / 45 / 64rem; type tokens in rem. |
 | D25 | all | No dark theme in the mocks or the product. | Dark theme built from roles (warm umber surfaces that lighten as they rise; lighter coral with dark labels). A proposal for the product, which ships light only. |
 | D26 | `filter-chip--*` | Tinted pressed chips (leaf, sky, sun, indoor) differ from unpressed ones only by a pale fill (1.4.11). | Pressed tinted chips also take a border in their ink colour. |
 | D27 | `chip__x` | The remove button is 16 × 16px, under the 24px target minimum (2.5.8). | 24px hit area via `::before`; the visible glyph stays 16px. |

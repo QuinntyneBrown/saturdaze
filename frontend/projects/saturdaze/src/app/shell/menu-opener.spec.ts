@@ -41,7 +41,7 @@ describe('MenuOpener', () => {
   it('opens a bottom sheet below 720px and resolves with the chosen item', async () => {
     const opener = TestBed.inject(MenuOpener);
     const picked = await opener.open(anchor, { title: 'Weekend options', items: ITEMS });
-    expect(breakpoints.isMatched).toHaveBeenCalledWith('(min-width: 720px)');
+    expect(breakpoints.isMatched).toHaveBeenCalledWith('(min-width: 45rem)');
     expect(dialog.open).toHaveBeenCalledWith(
       MenuDialog,
       expect.objectContaining({
