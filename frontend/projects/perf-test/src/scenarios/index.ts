@@ -19,6 +19,7 @@ export * as PhotoDrop from './PhotoDrop';
 export * as PhotoPick from './PhotoPick';
 export * as PhotoPickOption from './PhotoPickOption';
 export * as PlaceRow from './PlaceRow';
+export * as SkipLink from './SkipLink';
 export * as Spinner from './Spinner';
 export * as Stars from './Stars';
 export * as TextInput from './TextInput';

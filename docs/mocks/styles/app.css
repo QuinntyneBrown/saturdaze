@@ -109,7 +109,7 @@
     position: absolute; left: var(--sd-s-4); top: -100px; z-index: var(--sd-z-skip);
     display: inline-flex; align-items: center; min-height: 44px; padding: 0 var(--sd-s-4);
     font-size: var(--sd-fs-ui); font-weight: var(--sd-fw-semibold); color: var(--sd-ink); text-decoration: none;
-    background: var(--sd-surface); border-radius: var(--sd-r-sm); box-shadow: var(--sd-shadow-3);
+    background: var(--sd-surface); border-radius: var(--sd-r-md); box-shadow: var(--sd-shadow-3);
   }
   .skip-link:focus-visible { top: var(--sd-s-4); }
 

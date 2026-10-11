@@ -71,6 +71,7 @@ export const tokens: Record<keyof Theme, string> = {
   zIndexSticky: 'var(--zIndexSticky)',
   zIndexTopBar: 'var(--zIndexTopBar)',
   zIndexBottomNav: 'var(--zIndexBottomNav)',
+  zIndexTooltip: 'var(--zIndexTooltip)',
   colorNeutralForeground1: 'var(--colorNeutralForeground1)',
   colorNeutralForeground2: 'var(--colorNeutralForeground2)',
   colorNeutralForeground3: 'var(--colorNeutralForeground3)',

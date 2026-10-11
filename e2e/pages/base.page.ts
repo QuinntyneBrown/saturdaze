@@ -119,6 +119,78 @@ export abstract class BasePage {
     return this.accountMenuButton().locator("img.avatar__img");
   }
 
+  /* ---------- Skip link (L2-036 AC4, AC5) ---------- */
+
+  /** The "Skip to content" link every page starts with (WCAG 2.4.1). */
+  skipLink(): Locator {
+    return this.page.locator(".skip-link");
+  }
+
+  /** Moves focus back to the top of the document, as a fresh page load leaves it. */
+  async resetFocusToTop(): Promise<void> {
+    await this.page.evaluate(() => {
+      (document.activeElement as HTMLElement | null)?.blur();
+      window.getSelection()?.removeAllRanges();
+    });
+  }
+
+  /** Presses Tab once from the top of the document; returns the focused element's accessible text. */
+  async firstTabStop(): Promise<string> {
+    await this.resetFocusToTop();
+    await this.page.keyboard.press("Tab");
+    return this.page.evaluate(() => {
+      const el = document.activeElement as HTMLElement | null;
+      return (el?.getAttribute("aria-label") ?? el?.textContent ?? "").trim();
+    });
+  }
+
+  /** Whether `target` lies inside the viewport (not parked off screen). */
+  async isOnScreen(target: Locator): Promise<boolean> {
+    const box = await target.boundingBox();
+    const size = this.page.viewportSize();
+    if (!box || !size) return false;
+    return (
+      box.y + box.height > 0 &&
+      box.x + box.width > 0 &&
+      box.y < size.height &&
+      box.x < size.width
+    );
+  }
+
+  /** Tabs to the skip link and activates it with Enter, as a keyboard user would. */
+  async skipToContent(): Promise<void> {
+    const focused = await this.skipLink().evaluate(
+      (el) => el === document.activeElement,
+    );
+    if (!focused) await this.firstTabStop();
+    await this.page.keyboard.press("Enter");
+  }
+
+  /** Whether keyboard focus is on `<main id="main">`. */
+  async focusIsOnMain(): Promise<boolean> {
+    return this.main.evaluate((el) => el === document.activeElement);
+  }
+
+  /** Whether keyboard focus sits inside `<main id="main">` (on it or a control in it). */
+  async focusIsInMain(): Promise<boolean> {
+    return this.main.evaluate((el) => el.contains(document.activeElement));
+  }
+
+  /** The outline style `<main>` draws while it holds focus. */
+  async mainOutlineStyle(): Promise<string> {
+    return this.main.evaluate((el) => getComputedStyle(el).outlineStyle);
+  }
+
+  /** The current path, e.g. `/weekend`. */
+  currentPath(): string {
+    return new URL(this.page.url()).pathname;
+  }
+
+  /** Presses Tab once more. */
+  async pressTab(): Promise<void> {
+    await this.page.keyboard.press("Tab");
+  }
+
   /* ---------- Keyboard focus ---------- */
 
   /** Presses Tab, as a keyboard user would, until `target` has focus. */
@@ -192,7 +264,11 @@ export abstract class BasePage {
   async lineHeightRatio(target: Locator): Promise<number> {
     return target.evaluate((el) => {
       const style = getComputedStyle(el);
-      return Math.round((parseFloat(style.lineHeight) / parseFloat(style.fontSize)) * 100) / 100;
+      return (
+        Math.round(
+          (parseFloat(style.lineHeight) / parseFloat(style.fontSize)) * 100,
+        ) / 100
+      );
     });
   }
 
@@ -200,7 +276,12 @@ export abstract class BasePage {
   async padding(target: Locator): Promise<string> {
     return target.evaluate((el) => {
       const s = getComputedStyle(el);
-      const [t, r, b, l] = [s.paddingTop, s.paddingRight, s.paddingBottom, s.paddingLeft];
+      const [t, r, b, l] = [
+        s.paddingTop,
+        s.paddingRight,
+        s.paddingBottom,
+        s.paddingLeft,
+      ];
       if (t === b && r === l) return t === r ? t : `${t} ${r}`;
       return `${t} ${r} ${b} ${l}`;
     });

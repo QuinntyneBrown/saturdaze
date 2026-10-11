@@ -1,0 +1,24 @@
+// `.skip-link` from docs/mocks/styles/app.css. Never `display: none` at rest:
+// that would take it out of the tab order.
+
+.skip-link {
+  position: absolute;
+  left: var(--spacingHorizontalL);
+  top: -100px;
+  z-index: var(--zIndexTooltip);
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 var(--spacingHorizontalL);
+  font-size: var(--fontSizeBase350);
+  font-weight: var(--fontWeightSemibold);
+  color: var(--colorNeutralForeground1);
+  text-decoration: none;
+  background: var(--colorNeutralBackground1);
+  border-radius: var(--borderRadiusMedium);
+  box-shadow: var(--shadow28);
+}
+
+.skip-link:focus-visible {
+  top: var(--spacingVerticalL);
+}

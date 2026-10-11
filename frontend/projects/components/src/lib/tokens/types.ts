@@ -217,6 +217,7 @@ export interface ZIndexTokens {
   zIndexSticky: string;
   zIndexTopBar: string;
   zIndexBottomNav: string;
+  zIndexTooltip: string;
 }
 
 export type Theme = ColorTokens &
