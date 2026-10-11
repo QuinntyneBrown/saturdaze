@@ -63,8 +63,8 @@ differ, the difference is in the drift log below for the product to adopt delibe
 | [Page header](components/page-header.html) | Containers and overlays | title, back link, subtitle, actions, more; section header | none | weekend, ideas, family, admin |
 | [List](components/list.html) | Data display | plain, card list, action rows, place rows | hover, focus, selected | family, review, admin, dialogs |
 | [Description list](components/description-list.html) | Data display | label beside value, stacked, links, faint | none | review, admin.place, dialogs |
-| [Table](components/table.html) | Data display | default, dense, sortable, selectable | row hover, selected, sorted, loading, empty | admin.activity (D23) |
-| [Activity feed](components/activity-feed.html) | Data display | stacked rows, five columns from 1024 | none | admin.activity |
+| [Table](components/table.html) | Data display | default, dense, sortable, selectable | row hover, selected, sorted, loading, empty | admin.activity |
+| [Activity feed](components/activity-feed.html) | Data display | stacked rows under 720px | none | admin.activity |
 | [Avatar](components/avatar.html) | Data display | initials in four tones, photo, button, group; sm/md/default/lg/xl | hover (button), focus | family, top bar, dialogs D27 |
 | [Badge](components/badge.html) | Data display | count, status tones, tag | none | admin nav, review, filters |
 | [Chip](components/chip.html) | Data display | ten tones, small, with icon, removable, email chip | remove hover, focus | weekend, ideas |
@@ -125,7 +125,6 @@ and up) are proposals for the product's TypeScript theme.
 
 | ID | Mock | Issue | Resolution |
 |---|---|---|---|
-| D23 | `admin.activity.html` | Tabular data (time, who, place, action, change) rendered as a div grid with no column headers. | `table` component for wide screens; `activity-feed` documents the stacked phone layout. |
 | D24 | `app.css` | Breakpoints and type in px (379/576/719/720/1024; 12 to 56px), so they ignore the user's font size (1.4.4). | rem: 23.75 / 36 / 45 / 64rem; type tokens in rem. |
 | D25 | all | No dark theme in the mocks or the product. | Dark theme built from roles (warm umber surfaces that lighten as they rise; lighter coral with dark labels). A proposal for the product, which ships light only. |
 | D26 | `filter-chip--*` | Tinted pressed chips (leaf, sky, sun, indoor) differ from unpressed ones only by a pale fill (1.4.11). | Pressed tinted chips also take a border in their ink colour. |

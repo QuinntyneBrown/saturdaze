@@ -122,7 +122,7 @@
     <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
       <p>Use the activity feed for a time-ordered record of changes that people read top to bottom: the admin activity log of every photo change. Each row is one event and every value in it reads on its own ("admin@saturdaze.app", "Removed rec-room-old.jpg"), so it works without column headers at phone width.</p>
       <ul>
-        <li>From 720px, prefer the <a href="table.html">table</a> for the same records: column headers let the reader compare times or people down the page. The mock keeps the feed at every width and lines it up in five columns from 1024px; that grid has no headers (drift D23).</li>
+        <li>From 720px, prefer the <a href="table.html">table</a> for the same records: column headers let the reader compare times or people down the page. The mock shows the feed under 720px and the table from 720px.</li>
         <li>Use a <a href="list.html">list</a> when each row is a thing to open rather than an event that happened.</li>
         <li>Use a <a href="toast.html">toast</a> or <a href="alert.html">alert</a> to tell someone about a change as it happens; the feed is the history.</li>
       </ul>
@@ -204,7 +204,7 @@
             <button class="btn btn--quiet btn--sm" type="button" disabled>Next<svg class="icon" aria-hidden="true"><use href="#i-arrow_right"/></svg></button>
           </div>
         </div>
-        <div class="ds-example__caption"><span>The mock's five records. Resize the window: stacked under 1024px, one line per record from 1024px. The <a href="pagination.html">pager</a> sits under the list.</span></div>
+        <div class="ds-example__caption"><span>The mock's five records. Every record stacks the same way at any width; a page shows the feed only under 720px. The <a href="pagination.html">pager</a> sits under the list.</span></div>
         <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;ol class="audit-list list list--card" aria-labelledby="log-title"&gt;
   &lt;li class="audit-row"&gt;
     &lt;time class="audit-row__time" datetime="2026-10-06T14:02Z"&gt;2026-10-06 14:02 UTC&lt;/time&gt;
@@ -262,8 +262,8 @@
 
     <section class="ds-section" id="responsive"><h2><a href="#responsive">Responsive behaviour</a></h2>
       <ul>
-        <li><b>Under 1024px</b> each row is a two-column grid: time, who and the place stack in the left column, the action chip sits top right, and the change takes the full width underneath.</li>
-        <li><b>From 1024px</b> (mock behaviour) the row becomes one line of five columns: 9.5rem time, 12.5rem who, flexible place, 6rem action, wider change. These columns have no headers, so the design system renders a <a href="table.html">table</a> from 720px instead (<code>.hide-gte-720</code> on the feed, <code>.hide-lt-720</code> on the table). Keep the five-column grid only where the e2e locators still depend on it.</li>
+        <li><b>Under 720px</b> each row is a two-column grid: time, who and the place stack in the left column, the action chip sits top right, and the change takes the full width underneath.</li>
+        <li><b>From 720px</b> the same records render as a <a href="table.html">table</a> with column headers (<code>.hide-gte-720</code> on the feed, <code>.hide-lt-720</code> on the table). Never spread the feed into unlabelled columns.</li>
         <li>Long emails and file names break anywhere (<code>overflow-wrap: anywhere</code>) rather than widening the page at 360px.</li>
       </ul>
     </section>
@@ -316,7 +316,7 @@
         <figure class="ds-do"><div class="ds-example__canvas" style="display: block;"><ol class="audit-list list list--card" aria-label="Do example" style="margin: 0;"><li class="audit-row"><time class="audit-row__time" datetime="2026-10-06T11:20Z">2026-10-06 11:20 UTC</time><span class="audit-row__who">curator@saturdaze.app</span><span class="chip chip--sun">Review</span><span class="audit-row__change">Rejected harbourfest-2024.jpg · Wrong year</span></li></ol></div><figcaption>Absolute time with its zone, inside <code>&lt;time datetime&gt;</code>; the change says what and why.</figcaption></figure>
         <figure class="ds-dont"><div class="ds-example__canvas" style="display: block;"><ol class="audit-list list list--card" aria-label="Don't example" style="margin: 0;"><li class="audit-row"><span class="audit-row__time">2 hours ago</span><span class="audit-row__who">curator</span><span class="chip chip--sun">Review</span><span class="audit-row__change">Rejected</span></li></ol></div><figcaption>Relative time in a plain span, a short name and a bare verb: nobody can tell later which photo or when.</figcaption></figure>
         <figure class="ds-do"><div class="ds-example__canvas"><p style="margin: 0;">Feed under 720px, <a href="table.html">table</a> from 720px.</p></div><figcaption>Give wide screens real column headers.</figcaption></figure>
-        <figure class="ds-dont"><div class="ds-example__canvas"><p style="margin: 0;">The same feed spread into five unlabelled columns at 1280px.</p></div><figcaption>A grid that looks like a table but has no headers (drift D23).</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><p style="margin: 0;">The same feed spread into five unlabelled columns at 1280px.</p></div><figcaption>A grid that looks like a table but has no headers.</figcaption></figure>
       </div>
     </section>
 
@@ -353,7 +353,7 @@
 &lt;div class="table-wrap hide-lt-720" …&gt;…the same records as a table…&lt;/div&gt;</code></pre>
       <table class="ds-table"><thead><tr><th scope="col">Class / attribute</th><th scope="col">Effect</th></tr></thead><tbody>
         <tr><td><code>.audit-list</code></td><td>The <code>&lt;ol&gt;</code>; pair with <code>.list.list--card</code> for the card frame.</td></tr>
-        <tr><td><code>.audit-row</code></td><td>One event: two-column stack under 1024px, five columns from 1024px.</td></tr>
+        <tr><td><code>.audit-row</code></td><td>One event: time, who and place on the left, the action chip top right, the change underneath.</td></tr>
         <tr><td><code>.audit-row__time</code></td><td>On a <code>&lt;time datetime&gt;</code>; monospace 12px.</td></tr>
         <tr><td><code>.audit-row__who</code></td><td>Account; breaks anywhere.</td></tr>
         <tr><td><code>.audit-row__place</code></td><td>On an <code>&lt;a&gt;</code>: underlined link to the place.</td></tr>
@@ -367,8 +367,8 @@
       <ul>
         <li><a href="../../mocks/pages/admin.activity.html">pages/admin.activity</a>: the log of five photo changes, the Place and Administrator filters above it, and the pager below.</li>
       </ul>
-      <p>Drift: D23 (the five-column grid with no headers); this page keeps the stacked rows and sends wide screens to the <a href="table.html">table</a>. The time stays at 12px, not smaller.</p>
-      <p>Not in the mocks: loading and empty states for the log, and the switch to a table from 720px.</p>
+      <p>This page keeps the stacked rows and sends wide screens to the <a href="table.html">table</a>. The time stays at 12px, not smaller.</p>
+      <p>Not in the mocks: loading and empty states for the log.</p>
     </section>
 
     <footer class="ds-footer"><span>Saturdaze design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>

@@ -38,7 +38,7 @@
     <div class="field toolbar__sort"><label class="field__label" for="al-place">Place</label><select class="field__input" id="al-place"><option selected>All places</option><option>Port Credit Memorial Park</option><option>Harbour Grill</option></select></div>
     <div class="field toolbar__sort"><label class="field__label" for="al-admin">Administrator</label><select class="field__input" id="al-admin"><option selected>Everyone</option><option>admin@saturdaze.app</option><option>curator@saturdaze.app</option></select></div>
   </div>
-  <ol class="audit-list list list--card">
+  <ol class="audit-list list list--card hide-gte-720" aria-label="Photo changes">
       <li class="audit-row">
         <time class="audit-row__time" datetime="2026-10-06T14:02Z">2026-10-06 14:02 UTC</time>
         <span class="audit-row__who">admin@saturdaze.app</span>
@@ -75,6 +75,49 @@
         <span class="audit-row__change">Removed rec-room-old.jpg · next primary: none</span>
       </li>
   </ol>
+  <div class="table-wrap hide-lt-720" role="region" aria-labelledby="al-caption" tabindex="0">
+    <table class="table audit-table">
+      <caption id="al-caption" class="visually-hidden">Photo changes, newest first</caption>
+      <thead><tr><th scope="col">Time</th><th scope="col">Who</th><th scope="col">Place</th><th scope="col">Action</th><th scope="col">Change</th></tr></thead>
+      <tbody>
+        <tr class="audit-row">
+          <td><time class="audit-row__time" datetime="2026-10-06T14:02Z">2026-10-06 14:02 UTC</time></td>
+          <td class="audit-row__who">admin@saturdaze.app</td>
+          <td><a class="audit-row__place" href="./admin.place.html">Port Credit Memorial Park</a></td>
+          <td><span class="chip chip--primary">Primary</span></td>
+          <td class="audit-row__change">memorial-park-side.jpg → memorial-park.jpg</td>
+        </tr>
+        <tr class="audit-row">
+          <td><time class="audit-row__time" datetime="2026-10-06T13:58Z">2026-10-06 13:58 UTC</time></td>
+          <td class="audit-row__who">admin@saturdaze.app</td>
+          <td><a class="audit-row__place" href="./admin.place.html">Port Credit Memorial Park</a></td>
+          <td><span class="chip chip--accent">Upload</span></td>
+          <td class="audit-row__change">Added memorial-park.jpg · 1200 × 675 · 412 KB</td>
+        </tr>
+        <tr class="audit-row">
+          <td><time class="audit-row__time" datetime="2026-10-06T13:41Z">2026-10-06 13:41 UTC</time></td>
+          <td class="audit-row__who">curator@saturdaze.app</td>
+          <td><a class="audit-row__place" href="./admin.place.html">Harbour Grill</a></td>
+          <td><span class="chip chip--sky">Edit</span></td>
+          <td class="audit-row__change">Alt text: — → Patio tables by the water</td>
+        </tr>
+        <tr class="audit-row">
+          <td><time class="audit-row__time" datetime="2026-10-06T11:20Z">2026-10-06 11:20 UTC</time></td>
+          <td class="audit-row__who">curator@saturdaze.app</td>
+          <td><a class="audit-row__place" href="./admin.place.html">Port Credit Harbour Festival</a></td>
+          <td><span class="chip chip--sun">Review</span></td>
+          <td class="audit-row__change">Rejected harbourfest-2024.jpg · Wrong year</td>
+        </tr>
+        <tr class="audit-row">
+          <td><time class="audit-row__time" datetime="2026-10-05T16:05Z">2026-10-05 16:05 UTC</time></td>
+          <td class="audit-row__who">admin@saturdaze.app</td>
+          <td><a class="audit-row__place" href="./admin.place.html">Rec Room Mississauga</a></td>
+          <td><span class="chip chip--warn">Remove</span></td>
+          <td class="audit-row__change">Removed rec-room-old.jpg · next primary: none</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
   <div class="pager">
     <span class="pager__text">1 to 5 of 5</span>
     <button class="btn btn--quiet btn--sm" type="button" disabled><svg class="icon" aria-hidden="true"><use href="#i-arrow_left"/></svg>Previous</button>
