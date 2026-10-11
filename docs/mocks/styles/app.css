@@ -1089,6 +1089,7 @@
   body[data-page="admin"] .table thead th { position: sticky; top: 0; background: var(--sd-surface-2); font-size: var(--sd-fs-xs); font-weight: var(--sd-fw-semibold); text-transform: uppercase; letter-spacing: 0.06em; color: var(--sd-ink-soft); white-space: nowrap; }
   body[data-page="admin"] .table tbody tr:last-child > * { border-bottom: 0; }
   @media (hover: hover) { body[data-page="admin"] .table tbody tr:hover { background: var(--sd-surface-2); } }
+  body[data-page="admin"] .audit-table .audit-row__who { overflow-wrap: normal; white-space: nowrap; }
   body[data-page="admin"] .audit-table .audit-row__change { color: var(--sd-ink); overflow-wrap: anywhere; }
   /* admin dialogs (AD1 to AD6 in the gallery) */
   .upload-drop { aspect-ratio: auto; min-height: 120px; gap: 6px; text-align: center; padding: 16px; }
