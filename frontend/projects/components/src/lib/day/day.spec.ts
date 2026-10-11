@@ -75,7 +75,7 @@ describe('Day', () => {
       'Regenerate',
     );
     expect(regenerateBtn().querySelector('sd-icon')?.getAttribute('name')).toBe('refresh');
-    expect(lockBtn().getAttribute('aria-label')).toBe('Lock Saturday');
+    expect(lockBtn().getAttribute('aria-label')).toBe('Lock day: Saturday');
     expect(lockBtn().getAttribute('aria-pressed')).toBe('false');
     expect(lockBtn().querySelector('.day__btn-label')?.textContent?.trim()).toBe('Lock day');
     expect(glyph(lockBtn().querySelector('sd-icon'))).toContain('M8 11V8a4 4 0 0 1 8 0v3');
@@ -88,7 +88,7 @@ describe('Day', () => {
     const chip = host.querySelector('sd-chip.day__chip') as HTMLElement;
     expect(chip.textContent?.trim()).toBe('Day locked');
     expect(chip.classList.contains('chip--accent')).toBe(true);
-    expect(lockBtn().getAttribute('aria-label')).toBe('Unlock Saturday');
+    expect(lockBtn().getAttribute('aria-label')).toBe('Unlock day: Saturday');
     expect(lockBtn().getAttribute('aria-pressed')).toBe('true');
     expect(lockBtn().querySelector('.day__btn-label')?.textContent?.trim()).toBe('Unlock day');
     expect(glyph(lockBtn().querySelector('sd-icon'))).toContain('M8 11V8a4 4 0 0 1 7.5-2');

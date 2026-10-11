@@ -15,5 +15,5 @@
 ### Accessibility
 
 - The day is a region labelled by its `h2`; blocks inside use `h3`.
-- The day buttons are named "Regenerate Saturday" / "Lock Saturday" and the lock mirrors `aria-pressed`, so screen-reader users know which day and what state.
+- The day buttons are named "Regenerate Saturday" / "Lock day: Saturday" (each name starts with its visible label, WCAG 2.5.3) and the lock mirrors `aria-pressed`, so screen-reader users know which day and what state.
 - Set `busy` while a regenerate or lock request is in flight so the buttons can't be pressed twice.
