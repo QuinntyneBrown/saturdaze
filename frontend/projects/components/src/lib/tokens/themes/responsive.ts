@@ -15,9 +15,9 @@ export const responsiveOverrides: ThemeOverride[] = [
     media: '(min-width: 64rem)',
     tokens: {
       layoutGutter: '32px',
-      fontSizeHero800: '40px',
-      fontSizeHero700: '30px',
-      fontSizeBase600: '22px',
+      fontSizeHero800: '2.5rem',
+      fontSizeHero700: '1.875rem',
+      fontSizeBase600: '1.375rem',
     },
   },
   {
@@ -25,8 +25,8 @@ export const responsiveOverrides: ThemeOverride[] = [
     // headings breathe instead of cramping.
     media: '(max-width: 23.6875rem)',
     tokens: {
-      fontSizeHero800: '30px',
-      fontSizeHero700: '24px',
+      fontSizeHero800: '1.875rem',
+      fontSizeHero700: '1.5rem',
     },
   },
 ];

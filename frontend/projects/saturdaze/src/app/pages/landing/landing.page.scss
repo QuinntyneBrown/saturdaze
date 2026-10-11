@@ -39,7 +39,7 @@
 }
 
 .hero__title {
-  font-size: 44px;
+  font-size: 2.75rem;
   font-weight: var(--fontWeightBold);
   letter-spacing: -0.03em;
   line-height: var(--lineHeightNone);
@@ -157,7 +157,7 @@
 
 @include respond-to(xsmall) {
   .hero__title {
-    font-size: 34px;
+    font-size: 2.125rem;
   }
 }
 
@@ -183,6 +183,6 @@
   }
 
   .hero__title {
-    font-size: 56px;
+    font-size: 3.5rem;
   }
 }

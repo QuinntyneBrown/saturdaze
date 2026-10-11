@@ -28,4 +28,15 @@ test.describe("The reader's text size", () => {
     await expect(f.bottomNav).toBeVisible();
     await expect(f.topbar).toBeHidden();
   });
+
+  test("Given text set to 20px, when the family page opens, then the 26px page title grows to 32.5px", async ({
+    goto,
+    pages,
+  }) => {
+    await goto("family");
+    const f = pages.family;
+    await f.waitForReady();
+
+    expect(await f.fontSize(f.pageTitle())).toBe("32.5px");
+  });
 });

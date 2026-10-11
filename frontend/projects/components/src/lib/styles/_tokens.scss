@@ -17,14 +17,14 @@
   --borderRadiusLarge: 16px;
   --borderRadiusXLarge: 22px;
   --borderRadiusCircular: 999px;
-  --fontSizeBase200: 12px;
-  --fontSizeBase300: 13px;
-  --fontSizeBase350: 14px;
-  --fontSizeBase400: 15px;
-  --fontSizeBase500: 17px;
-  --fontSizeBase600: 20px;
-  --fontSizeHero700: 26px;
-  --fontSizeHero800: 34px;
+  --fontSizeBase200: 0.75rem;
+  --fontSizeBase300: 0.8125rem;
+  --fontSizeBase350: 0.875rem;
+  --fontSizeBase400: 0.9375rem;
+  --fontSizeBase500: 1.0625rem;
+  --fontSizeBase600: 1.25rem;
+  --fontSizeHero700: 1.625rem;
+  --fontSizeHero800: 2.125rem;
   --lineHeightNone: 1;
   --lineHeightTight: 1.2;
   --lineHeightSnug: 1.35;
@@ -163,15 +163,15 @@
 @media (min-width: 64rem) {
   :root {
     --layoutGutter: 32px;
-    --fontSizeHero800: 40px;
-    --fontSizeHero700: 30px;
-    --fontSizeBase600: 22px;
+    --fontSizeHero800: 2.5rem;
+    --fontSizeHero700: 1.875rem;
+    --fontSizeBase600: 1.375rem;
   }
 }
 
 @media (max-width: 23.6875rem) {
   :root {
-    --fontSizeHero800: 30px;
-    --fontSizeHero700: 24px;
+    --fontSizeHero800: 1.875rem;
+    --fontSizeHero700: 1.5rem;
   }
 }

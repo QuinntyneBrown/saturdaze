@@ -62,13 +62,13 @@
 .btn--sm {
   height: var(--sd-btn-h, 32px);
   padding: 0 12px;
-  font-size: 13px;
+  font-size: 0.8125rem;
   gap: 6px;
 }
 .btn--lg {
   height: var(--sd-btn-h, 48px);
   padding: 0 var(--spacingHorizontalXXL);
-  font-size: 15px;
+  font-size: 0.9375rem;
 }
 .btn--block {
   width: 100%;
