@@ -95,10 +95,6 @@
     outline-offset: 2px;
   }
   ::selection { background: var(--sd-primary-soft); }
-
-  @media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
-  }
 }
 
 /* --------------------------------------------------------------------------
@@ -637,7 +633,7 @@
 
   /* ---- skeleton + spinner ---- */
   .skeleton { position: relative; overflow: hidden; background: var(--sd-surface-2); border-radius: var(--sd-r-sm); }
-  .skeleton::after { content: ""; position: absolute; inset: 0; transform: translateX(-100%); background: linear-gradient(90deg, transparent, var(--sd-shimmer), transparent); animation: sd-shimmer 1.4s var(--sd-ease) infinite; }
+  .skeleton::after { content: ""; position: absolute; inset: 0; transform: translateX(-100%); background: linear-gradient(90deg, transparent, var(--sd-shimmer), transparent); animation: sd-shimmer var(--sd-dur-shimmer) var(--sd-ease) infinite; }
   .skeleton--text { height: 12px; width: 60%; }
   .skeleton--text-sm { height: 10px; width: 40%; }
   .skeleton--disc { width: 32px; height: 32px; border-radius: 50%; }
@@ -647,7 +643,7 @@
   @keyframes sd-shimmer { to { transform: translateX(100%); } }
   @media (prefers-reduced-motion: reduce) { .skeleton::after { animation: none; } }
 
-  .spinner { width: 40px; height: 40px; border-radius: 50%; border: 3px solid var(--sd-line-strong); border-top-color: var(--sd-primary); animation: sd-spin 0.9s linear infinite; flex: none; }
+  .spinner { width: 40px; height: 40px; border-radius: 50%; border: 3px solid var(--sd-line-strong); border-top-color: var(--sd-primary); animation: sd-spin var(--sd-dur-spin) linear infinite; flex: none; }
   .spinner--sm { width: 20px; height: 20px; border-width: 2px; }
   .spinner-disc { position: relative; width: 40px; height: 40px; flex: none; display: inline-flex; align-items: center; justify-content: center; color: var(--sd-primary-deep); }
   .spinner-disc .spinner { position: absolute; inset: 0; }

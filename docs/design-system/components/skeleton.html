@@ -232,7 +232,7 @@
       </div>
       <ul>
         <li><b>Loading</b>: the stencil sweeps left to right every <code>--durationShimmer</code> (1.4s). The region has <code>aria-busy="true"</code>; a <a href="spinner.html">status row</a> says what is happening.</li>
-        <li><b>Reduced motion</b>: the sweep stops and the shapes stay as flat stencils. The status row's spinner keeps turning, so the page still looks alive (D29).</li>
+        <li><b>Reduced motion</b>: the sweep stops and the shapes stay as flat stencils. The status row's spinner keeps turning, so the page still looks alive.</li>
         <li><b>Loaded</b>: swap the whole region at once and remove <code>aria-busy</code>. Do not reveal rows one by one; it reads as flicker and announces piecemeal.</li>
         <li><b>Nothing came back</b>: replace the skeleton with an <a href="empty-state.html">empty state</a>. <b>Failed</b>: replace it with an <a href="alert.html">alert</a> and a retry, never a skeleton that spins forever.</li>
       </ul>
@@ -340,7 +340,7 @@
         <li><a href="../../mocks/pages/weekend.generating.html">pages/weekend.generating</a>: six <code>.skeleton-row</code>s per day under real day headers, <code>aria-busy="true"</code> on <code>&lt;main&gt;</code>, lists <code>aria-hidden</code>.</li>
         <li><a href="../../mocks/pages/ideas.html">pages/ideas</a>: the card layout the composed card mirrors.</li>
       </ul>
-      <p>Drift fixed during extraction (see the <a href="../README.md">README drift log</a>): D29 the shimmer stops under reduced motion while the spinner beside it keeps turning. The composed card and <code>--title</code> / <code>--rect</code> shapes are core additions; no mock shows them yet.</p>
+      <p>The composed card and <code>--title</code> / <code>--rect</code> shapes are core additions; no mock shows them yet.</p>
     </section>
 
     <footer class="ds-footer"><span>Saturdaze design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>
