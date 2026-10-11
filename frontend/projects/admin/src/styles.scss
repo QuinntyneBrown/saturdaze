@@ -30,7 +30,7 @@ sd-admin-root {
   padding: 24px var(--layoutGutter) 64px;
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 64rem) {
   .admin {
     display: grid;
     grid-template-columns: 240px minmax(0, 1fr);
@@ -59,7 +59,7 @@ sd-admin-root {
   justify-content: center !important;
 }
 
-@media (min-width: 720px) {
+@media (min-width: 45rem) {
   .sd-dialog-panel {
     max-width: 568px;
     padding: 24px;

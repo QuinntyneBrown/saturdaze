@@ -18,7 +18,7 @@
   gap: 8px;
 }
 
-@media (min-width: 576px) {
+@media (min-width: 36rem) {
   .photo-pick {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }

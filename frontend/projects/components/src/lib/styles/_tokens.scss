@@ -154,13 +154,13 @@
   --shadow28: 0 20px 40px rgba(31, 41, 55, 0.12);
 }
 
-@media (min-width: 720px) {
+@media (min-width: 45rem) {
   :root {
     --layoutGutter: 24px;
   }
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 64rem) {
   :root {
     --layoutGutter: 32px;
     --fontSizeHero800: 40px;
@@ -169,7 +169,7 @@
   }
 }
 
-@media (max-width: 379px) {
+@media (max-width: 23.6875rem) {
   :root {
     --fontSizeHero800: 30px;
     --fontSizeHero700: 24px;

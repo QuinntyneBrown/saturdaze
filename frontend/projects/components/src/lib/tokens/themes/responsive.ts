@@ -8,11 +8,11 @@ import type { ThemeOverride } from '../types';
  */
 export const responsiveOverrides: ThemeOverride[] = [
   {
-    media: '(min-width: 720px)',
+    media: '(min-width: 45rem)',
     tokens: { layoutGutter: '24px' },
   },
   {
-    media: '(min-width: 1024px)',
+    media: '(min-width: 64rem)',
     tokens: {
       layoutGutter: '32px',
       fontSizeHero800: '40px',
@@ -23,7 +23,7 @@ export const responsiveOverrides: ThemeOverride[] = [
   {
     // 320-379px phones (iPhone SE class) get display type one step down so
     // headings breathe instead of cramping.
-    media: '(max-width: 379px)',
+    media: '(max-width: 23.6875rem)',
     tokens: {
       fontSizeHero800: '30px',
       fontSizeHero700: '24px',

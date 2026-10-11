@@ -251,6 +251,17 @@ export abstract class BasePage {
     });
   }
 
+  /**
+   * Sets the browser's default text size (Chromium's font-size setting), the
+   * size `1rem` resolves to in styles and in media queries. 16px is the
+   * browser default; a reader who wants larger text raises it.
+   */
+  async setBrowserTextSize(px: number): Promise<void> {
+    const cdp = await this.page.context().newCDPSession(this.page);
+    await cdp.send("Page.enable");
+    await cdp.send("Page.setFontSizes", { fontSizes: { standard: px } });
+  }
+
   /** The computed font size of `target`'s text, e.g. `12px`. */
   async fontSize(target: Locator): Promise<string> {
     return target.evaluate((el) => getComputedStyle(el).fontSize);
