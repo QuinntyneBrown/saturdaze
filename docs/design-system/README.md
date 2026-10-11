@@ -125,7 +125,6 @@ and up) are proposals for the product's TypeScript theme.
 
 | ID | Mock | Issue | Resolution |
 |---|---|---|---|
-| D27 | `chip__x` | The remove button is 16 × 16px, under the 24px target minimum (2.5.8). | 24px hit area via `::before`; the visible glyph stays 16px. |
 | D28 | `.btn--quiet` | Quiet buttons use the 16% decorative stroke (1.36:1), so the edge disappears on cream. | `--colorNeutralStrokeAccessible` border. |
 | D29 | `app.css` reduced motion | Every animation is cut to 0.001ms, which also freezes the loading spinner. | Durations are zeroed in tokens; the spinner keeps turning (status), shimmer and transitions stop. |
 | D30 | `frontend/.../tooltip/tooltip-panel.scss` | Not a mock: the product tooltip still reads `--sd-*` tokens after the ADR-013 migration. | Noted for the product; the design-system tooltip matches its geometry on Fluent tokens. |

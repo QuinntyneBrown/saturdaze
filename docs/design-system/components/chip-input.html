@@ -285,7 +285,7 @@
       <h3>Motion</h3>
       <p>Chips appear and disappear without animation. The container's border and halo transition over <code>--durationFast</code>, zeroed under <code>prefers-reduced-motion</code>.</p>
       <h3>Touch</h3>
-      <p>The remove glyph is 16px but its <code>::before</code> extends the hit area to 24 × 24px (drift D27), clearing the 2.5.8 minimum. Neighbouring chips sit 6px apart, so the enlarged hit areas do not overlap the next chip's text. The container is 44px tall, so tapping anywhere on the empty part of the row is easy; tapping between chips focuses the input.</p>
+      <p>The remove glyph is 16px but its <code>::before</code> extends the hit area to 24 × 24px, clearing the 2.5.8 minimum. Neighbouring chips sit 6px apart, so the enlarged hit areas do not overlap the next chip's text. The container is 44px tall, so tapping anywhere on the empty part of the row is easy; tapping between chips focuses the input.</p>
     </section>
 
     <section class="ds-section" id="content"><h2><a href="#content">Content</a></h2>
@@ -301,8 +301,8 @@
       <div class="ds-dodont">
         <figure class="ds-do"><div class="ds-example__canvas"><span class="chip chip--leaf">Short hikes<button class="chip__x" type="button" aria-label="Remove Short hikes"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></span></div><figcaption>Label each remove button with its value, "Remove Short hikes", so a list of six buttons is not six "Remove"s.</figcaption></figure>
         <figure class="ds-dont"><div class="ds-example__canvas"><span class="chip chip--leaf">Short hikes<button class="chip__x" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></span></div><figcaption>A remove button named "Close" or "×". Screen-reader users cannot tell which chip it removes.</figcaption></figure>
-        <figure class="ds-do"><div class="ds-example__canvas"><span class="chip chip--warn">Camping<button class="chip__x" type="button" aria-label="Remove Camping"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></span></div><figcaption>Keep the 24px hit area around the 16px glyph (<code>.chip__x::before</code>, drift D27).</figcaption></figure>
-        <figure class="ds-dont"><div class="ds-example__canvas"><span class="chip chip--sm chip--warn">Camping<button class="chip__x" type="button" aria-label="Remove Camping" style="width: 0.75rem; height: 0.75rem;"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></span></div><figcaption>Shrinking the chip or the remove target to fit more tags. The mock's 16 × 16px button was already under the 24px minimum.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas"><span class="chip chip--warn">Camping<button class="chip__x" type="button" aria-label="Remove Camping"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></span></div><figcaption>Keep the 24px hit area around the 16px glyph (<code>.chip__x::before</code>).</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><span class="chip chip--sm chip--warn">Camping<button class="chip__x" type="button" aria-label="Remove Camping" style="width: 0.75rem; height: 0.75rem;"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></span></div><figcaption>Shrinking the chip or the remove target to fit more tags. A 16 × 16px target is under the 24px minimum.</figcaption></figure>
         <figure class="ds-do"><div class="ds-example__canvas"><div class="field" style="width: 100%;"><label class="field__label" for="dd-ok">Likes</label><div class="chip-input"><input class="chip-input__field" id="dd-ok" type="text" placeholder="Add one, press Enter"></div></div></div><figcaption>A visible label above the control; the placeholder only reminds people of the key.</figcaption></figure>
         <figure class="ds-dont"><div class="ds-example__canvas"><div class="chip-input" style="width: 100%;"><input class="chip-input__field" id="dd-bad" type="text" aria-label="Likes" placeholder="Likes (press Enter)"></div></div><figcaption>The placeholder as the label. It disappears with the first chip and the placeholder grey is too faint to carry meaning.</figcaption></figure>
       </div>
@@ -364,7 +364,7 @@
         <li><a href="../../mocks/pages/dialogs.html">pages/dialogs</a>: D20 Likes and dislikes, the only chip input in the mocks (likes in leaf, dislikes in warn).</li>
         <li><a href="../../mocks/pages/family.html">pages/family</a>: the Preferences section that opens D20.</li>
       </ul>
-      <p>Drift fixed during extraction (see the <a href="../README.md">README drift log</a>): D27 the 16px remove button now has a 24px hit area. The mocks do not show the duplicate error, the live-region announcements or suggestions; those are specified here and not yet drawn.</p>
+      <p>The mocks do not show the duplicate error, the live-region announcements or suggestions; those are specified here and not yet drawn.</p>
     </section>
 
     <footer class="ds-footer"><span>Saturdaze design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>
