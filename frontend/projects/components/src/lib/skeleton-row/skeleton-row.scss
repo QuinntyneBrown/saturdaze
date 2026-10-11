@@ -22,7 +22,7 @@
   inset: 0;
   transform: translateX(-100%);
   background: linear-gradient(90deg, transparent, var(--colorNeutralStencil2Alpha), transparent);
-  animation: sd-shimmer 1.4s var(--curveEasyEase) infinite;
+  animation: sd-shimmer var(--durationShimmer) var(--curveEasyEase) infinite;
 }
 
 .skeleton--time {

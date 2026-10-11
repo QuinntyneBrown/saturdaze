@@ -206,7 +206,7 @@
           <tr><td>Progress fill</td><td><a href="../components/progress-bar.html">Progress bar</a>, admin stat bars</td><td>width</td><td>Normal, easy ease</td><td>Jumps to the value</td></tr>
           <tr><td>Tooltip</td><td><a href="../components/tooltip.html">Tooltip</a></td><td>opacity, after a 300ms hover delay</td><td>Fast, easy ease</td><td>Appears after the delay, no fade</td></tr>
           <tr><td>Skeleton shimmer</td><td><a href="../components/skeleton.html">Skeleton</a> while a weekend or list loads</td><td>highlight sweeps left to right</td><td>Shimmer (1400ms), easy ease, loops</td><td>Stops; the grey placeholder stays</td></tr>
-          <tr><td>Spinner</td><td><a href="../components/spinner.html">Spinner</a>, loading button, "Sketching Saturday and Sunday"</td><td>rotation</td><td>Spin (900ms), linear, loops</td><td>Keeps turning (status, D29)</td></tr>
+          <tr><td>Spinner</td><td><a href="../components/spinner.html">Spinner</a>, loading button, "Sketching Saturday and Sunday"</td><td>rotation</td><td>Spin (900ms), linear, loops</td><td>Keeps turning (status)</td></tr>
           <tr><td>Indeterminate progress</td><td>Progress bar without a value</td><td>40% segment slides across</td><td>Shimmer (1400ms), easy ease, loops</td><td>Stops</td></tr>
         </tbody>
       </table></div>
@@ -254,7 +254,7 @@
 }</code></pre>
       <p>The values in the tables on this page are live, so with reduced motion on they read 0.01ms. 0.01ms rather than 0 keeps <code>transitionend</code> and <code>animationend</code> events firing for any script that waits on them.</p>
       <h3>What this fixes</h3>
-      <p>The mocks cut every animation to 0.001ms under reduced motion, which also froze the spinner on "Sketching Saturday and Sunday" (drift D29). Zeroing the tokens instead lets each kind of motion decide: decoration stops, status continues.</p>
+      <p>A blanket rule that cuts every animation to 0.001ms would also freeze the spinner on "Sketching Saturday and Sunday". Zeroing the tokens instead lets each kind of motion decide: decoration stops, status continues.</p>
       <h3>Other rules</h3>
       <ul class="ds-checklist">
         <li><span>Nothing flashes more than three times a second (2.3.1). No component flashes at all.</span></li>
@@ -289,7 +289,7 @@
         <li><a href="../../mocks/pages/family.html">pages/family</a>: the "Friday preview email" and "Budget matters" switches.</li>
         <li><a href="../../mocks/pages/landing.html">pages/landing</a>: site bar fill on scroll.</li>
       </ul>
-      <p>Drift fixed: D29 (reduced motion froze the spinner). The toast and tooltip timings are core-component additions; no mock shows them yet.</p>
+      <p>The toast and tooltip timings are core-component additions; no mock shows them yet.</p>
     </section>
 
     <footer class="ds-footer"><span>Saturdaze design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>

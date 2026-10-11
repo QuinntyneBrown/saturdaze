@@ -22,6 +22,8 @@ The feature crosses the application and platform boundaries needed to deliver it
 
 - **`Dark theme`** — `createDarkTheme(brand)` in `components/src/lib/tokens/utils/` builds a second theme from the same roles as `createLightTheme` (Fluent's `webDarkTheme` model): the colour and shadow tokens only, from the umber ramp and the dark tone tints in `global/colors.ts`, using the design system's dark values. `scripts/generate-tokens.mjs` writes the tokens that differ from light into `_tokens.scss` under `@media (prefers-color-scheme: dark) { :root { … } }`, after the light `:root` and its responsive retunes, and `_global.scss` declares `color-scheme: light dark` so native controls and scrollbars follow. Components already read tokens by role, so no component knows which theme is active; the only component changes are role corrections that light hid: the photo-pick name pills read `colorNeutralForegroundStaticInverted` (text over a photo) instead of `colorNeutralForegroundOnBrand`, and the cover scrim reads `colorBackgroundOverlayStrong` instead of a mix of `colorNeutralForeground1`, which turns light in dark. There is no in-app switch: the theme follows the system setting (L2-130, drift D25).
 
+- **`Reduced motion`** — `durations.ts` in `components/src/lib/tokens/global/` gains `durationShimmer` (1400ms, one skeleton sweep) and `durationSpin` (900ms, one spinner turn); `sd-skeleton-row` and `sd-spinner` read them instead of literal times. `themes/reducedMotion.ts` exports `reducedMotionOverride`, which `scripts/generate-tokens.mjs` writes into `_tokens.scss` under `@media (prefers-reduced-motion: reduce) { :root { … } }`: `durationFast`, `durationNormal` and `durationShimmer` drop to 0.01ms (not 0, so `transitionend` and `animationend` still fire) and `durationSpin` is left alone. `_global.scss` no longer cuts every animation and transition to 0.001ms with `!important`, which had frozen the spinner on "Working through your locks"; each kind of motion now decides through its token: transitions and the shimmer stop, the spinner keeps turning because it reports status. The skeleton and tooltip still drop their animation under reduced motion (L2-131, drift D29).
+
 Automated structural checks do not establish complete keyboard or WCAG contrast conformance. The obligations below remain subject to dedicated accessibility verification.
 
 ## Requirements
@@ -34,6 +36,7 @@ The following L2 requirements refine the cited L1 capabilities. Implementation g
 | `L2-037` | `L1-014` | Icon-only buttons shall carry `aria-label`, form fields shall have associated labels, and images carrying meaning shall have descriptive `alt` text. |
 | `L2-038` | `L1-014` | All text, including chip labels and disabled controls used to convey state, shall meet a 4.5:1 contrast ratio against its background (3:1 for large text ≥18 pt or 14 pt bold). |
 | `L2-130` | `L1-011`, `L1-014` | Every page shall follow the reader's colour scheme: the dark theme, built from the same roles as light, when the system prefers dark; the light theme otherwise. |
+| `L2-131` | `L1-014` | Under reduced motion, decorative motion (transitions, the dialog rise, the skeleton shimmer) shall stop while loading spinners keep turning. |
 
 ## Diagrams
 

@@ -264,7 +264,7 @@
         <div class="ds-pair"><span>Status text on card</span><span class="ds-pair__ratio" data-contrast="--colorNeutralForeground2|--colorNeutralBackground1" data-min="4.5"></span></div>
       </div>
       <h3>Motion</h3>
-      <p>Under <code>prefers-reduced-motion</code>, transitions and skeleton shimmer stop, but <code>--durationSpin</code> is deliberately kept, so the spinner keeps turning (D29). A frozen ring reads as "stuck", which is worse than motion; one slow, linear turn is not a vestibular trigger. Nothing else on the page should move while a spinner is showing.</p>
+      <p>Under <code>prefers-reduced-motion</code>, transitions and skeleton shimmer stop, but <code>--durationSpin</code> is deliberately kept, so the spinner keeps turning. A frozen ring reads as "stuck", which is worse than motion; one slow, linear turn is not a vestibular trigger. Nothing else on the page should move while a spinner is showing.</p>
       <h3>Touch</h3>
       <p>Not interactive, so no target size applies. A spinner never sits on top of a control and never blocks taps on the rest of the page.</p>
     </section>
@@ -284,8 +284,8 @@
         <figure class="ds-dont"><div class="ds-example__canvas" style="justify-content: center;"><span class="spinner" aria-hidden="true"></span></div><figcaption>A bare ring in the middle of the page. Screen readers hear nothing and sighted people do not know what they are waiting for.</figcaption></figure>
         <figure class="ds-do"><div class="ds-example__canvas"><button class="btn btn--primary" type="button" aria-busy="true"><span>Save</span></button></div><figcaption>Show the wait on the button that started it; the rest of the dialog stays readable.</figcaption></figure>
         <figure class="ds-dont"><div class="ds-example__canvas ds-example__canvas--stack"><span class="spinner" aria-hidden="true" style="align-self: center;"></span><p class="text-soft text-sm text-center">The whole Edit block dialog replaced by a spinner while Save runs.</p></div><figcaption>Hiding the form behind a spinner loses the person's place and their input if it fails.</figcaption></figure>
-        <figure class="ds-do"><div class="ds-example__canvas"><span role="status"><span class="spinner" aria-hidden="true"></span><span class="visually-hidden">Loading</span></span><span class="text-soft text-sm">Keeps turning under reduced motion.</span></div><figcaption>The spinner keeps <code>--durationSpin</code> under reduced motion (D29).</figcaption></figure>
-        <figure class="ds-dont"><div class="ds-example__canvas"><span class="text-soft text-sm">The mocks' blanket <code>animation-duration: 0.001ms</code> rule.</span></div><figcaption>Cutting every animation to zero freezes the spinner, so the page looks broken while it works.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas"><span role="status"><span class="spinner" aria-hidden="true"></span><span class="visually-hidden">Loading</span></span><span class="text-soft text-sm">Keeps turning under reduced motion.</span></div><figcaption>The spinner keeps <code>--durationSpin</code> under reduced motion.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><span class="text-soft text-sm">A blanket <code>animation-duration: 0.001ms !important</code> rule.</span></div><figcaption>Cutting every animation to zero freezes the spinner, so the page looks broken while it works.</figcaption></figure>
       </div>
     </section>
 
@@ -343,7 +343,7 @@
         <li><a href="../../mocks/pages/verify-email.html">pages/verify-email</a>: "Verifying your email" card with the mail spinner disc in a <code>role="status"</code> card.</li>
         <li><a href="../../mocks/pages/dialogs.html">pages/dialogs</a>: busy Save buttons (spinner on the button).</li>
       </ul>
-      <p>Drift fixed during extraction (see the <a href="../README.md">README drift log</a>): D29 the reduced-motion rule that froze the spinner. Inline status and the small and medium sizes are core additions; no mock shows them yet.</p>
+      <p>Inline status and the small and medium sizes are core additions; no mock shows them yet.</p>
     </section>
 
     <footer class="ds-footer"><span>Saturdaze design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>

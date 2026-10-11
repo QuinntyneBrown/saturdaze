@@ -101,6 +101,8 @@
   --sd-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
   --sd-dur-fast: 120ms;
   --sd-dur-base: 220ms;
+  --sd-dur-shimmer: 1400ms;    /* one skeleton sweep */
+  --sd-dur-spin: 900ms;         /* one spinner turn */
 
   /* Layout */
   --sd-app-max-w: 440px;        /* mobile-first canvas */
@@ -202,5 +204,18 @@
     --sd-shadow-2: 0 4px 10px rgba(0, 0, 0, 0.4),
                    0 10px 24px rgba(0, 0, 0, 0.4);
     --sd-shadow-3: 0 20px 40px rgba(0, 0, 0, 0.55);
+  }
+}
+
+/* Reduced motion: zero the durations, not the whole animation system.
+   Transitions, the dialog rise and the skeleton sweep become instant;
+   --sd-dur-spin is kept, because a spinner reports status and a frozen
+   one reads as a hung app. 0.01ms (not 0) keeps transitionend and
+   animationend firing for scripts that wait on them. */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --sd-dur-fast: 0.01ms;
+    --sd-dur-base: 0.01ms;
+    --sd-dur-shimmer: 0.01ms;
   }
 }

@@ -22,7 +22,7 @@
   border-radius: 50%;
   border: 3px solid var(--colorNeutralStroke1);
   border-top-color: var(--colorBrandStroke1);
-  animation: sd-spin 0.9s linear infinite;
+  animation: sd-spin var(--durationSpin) linear infinite;
 }
 
 :host(.spinner--sm) .spinner {

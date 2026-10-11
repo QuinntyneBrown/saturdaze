@@ -267,6 +267,51 @@ export abstract class BasePage {
     await this.page.emulateMedia({ colorScheme: scheme });
   }
 
+  /** Emulates a reader whose system asks for reduced motion (`prefers-reduced-motion`). */
+  async preferReducedMotion(): Promise<void> {
+    await this.page.emulateMedia({ reducedMotion: "reduce" });
+  }
+
+  /**
+   * The CSS animations running on `target` and its descendants (pseudo
+   * elements included): name, play state, one iteration's length in ms and
+   * the iteration count (`Infinity` for a loop). Names drop Angular's scope.
+   */
+  async animations(
+    target: Locator,
+  ): Promise<
+    { name: string; playState: string; duration: number; iterations: number }[]
+  > {
+    return target.evaluate((el) =>
+      el.getAnimations({ subtree: true }).map((a) => {
+        const timing = a.effect?.getComputedTiming();
+        return {
+          // Angular scopes component keyframes as `_ngcontent-<id>_<name>`.
+          name: ((a as CSSAnimation).animationName ?? "").replace(
+            /^_ngcontent-[^_]*_/,
+            "",
+          ),
+          playState: a.playState,
+          duration: Number(timing?.duration ?? 0),
+          iterations: Number(timing?.iterations ?? 0),
+        };
+      }),
+    );
+  }
+
+  /** The longest of `target`'s computed transition durations, in ms. */
+  async longestTransition(target: Locator): Promise<number> {
+    return target.evaluate((el) =>
+      Math.max(
+        ...getComputedStyle(el)
+          .transitionDuration.split(",")
+          .map((d) =>
+            d.trim().endsWith("ms") ? parseFloat(d) : parseFloat(d) * 1000,
+          ),
+      ),
+    );
+  }
+
   /** The page canvas colour behind every screen, e.g. `rgb(250, 247, 242)`. */
   async pageBackground(): Promise<string> {
     return this.body.evaluate((el) => getComputedStyle(el).backgroundColor);

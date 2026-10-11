@@ -68,6 +68,8 @@
   --spacingVerticalXXXXXL: 56px;
   --durationFast: 120ms;
   --durationNormal: 220ms;
+  --durationShimmer: 1400ms;
+  --durationSpin: 900ms;
   --curveEasyEase: cubic-bezier(0.2, 0.7, 0.2, 1);
   --layoutContentMaxWidth: 1120px;
   --layoutStackMaxWidth: 720px;
@@ -247,5 +249,13 @@
     --shadow4: 0 1px 2px rgba(0, 0, 0, 0.3), 0 2px 6px rgba(0, 0, 0, 0.3);
     --shadow16: 0 4px 10px rgba(0, 0, 0, 0.4), 0 10px 24px rgba(0, 0, 0, 0.4);
     --shadow28: 0 20px 40px rgba(0, 0, 0, 0.55);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --durationFast: 0.01ms;
+    --durationNormal: 0.01ms;
+    --durationShimmer: 0.01ms;
   }
 }
