@@ -57,8 +57,8 @@ describe('Details', () => {
     expect(link.getAttribute('href')).toBe('https://example.com');
     expect(link.getAttribute('target')).toBe('_blank');
     expect(link.getAttribute('rel')).toBe('noopener');
-    expect(link.textContent?.trim()).toBe('example.com');
-    expect(link.querySelector('sd-icon')?.getAttribute('name')).toBe('arrow_right');
+    expect(link.textContent?.replace(/\s+/g, ' ').trim()).toBe('example.com (opens in a new tab)');
+    expect(link.querySelector('sd-icon')?.getAttribute('name')).toBe('external');
   });
 
   it('ignores an href without a value', () => {

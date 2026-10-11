@@ -75,12 +75,12 @@ export class IdeasPage extends BasePage {
 
   /** Activities: external map link. */
   mapLink(card: Locator): Locator {
-    return card.getByRole("link", { name: "Map", exact: true });
+    return card.getByRole("link", { name: /^Map/ });
   }
 
   /** Events: external details link. */
   detailsLink(card: Locator): Locator {
-    return card.getByRole("link", { name: "Details", exact: true });
+    return card.getByRole("link", { name: /^Details/ });
   }
 
   /* ---------- Photos (L2-106, L2-101) ---------- */
@@ -191,14 +191,14 @@ export class IdeasPage extends BasePage {
   /** Event cards that carry an external "Details" link. */
   cardsWithDetails(section?: Locator): Locator {
     return this.cards(section).filter({
-      has: this.page.getByRole("link", { name: "Details", exact: true }),
+      has: this.page.getByRole("link", { name: /^Details/ }),
     });
   }
 
   /** Event cards without a URL (no footer at all). */
   cardsWithoutDetails(section?: Locator): Locator {
     return this.cards(section).filter({
-      hasNot: this.page.getByRole("link", { name: "Details", exact: true }),
+      hasNot: this.page.getByRole("link", { name: /^Details/ }),
     });
   }
 
@@ -227,7 +227,7 @@ export class IdeasPage extends BasePage {
   }
 
   seeMenuLink(card: Locator): Locator {
-    return card.getByRole("link", { name: "See menu", exact: true });
+    return card.getByRole("link", { name: /^See menu/ });
   }
 
   lockItInButton(card: Locator): Locator {

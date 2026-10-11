@@ -16,7 +16,7 @@
     [attr.href]="href()"
     [attr.target]="target() || null"
     [attr.rel]="rel()"
-    [attr.aria-label]="label() || null"
+    [attr.aria-label]="anchorLabel()"
     [attr.aria-pressed]="pressed() === null ? null : pressed()"
     [sdTooltip]="tooltipText()"
     [sdTooltipRelationship]="tooltipRelationship()"
@@ -24,6 +24,9 @@
     (click)="onAnchorClick($event)"
   >
     <ng-container *ngTemplateOutlet="content" />
+    @if (opensNewTab()) {
+      <span class="sd-visually-hidden">{{ newTabNote }}</span>
+    }
   </a>
 } @else {
   <button

@@ -36,7 +36,7 @@ test.describe("Weekend — map and travel legs", () => {
     await expect(w.driveBlocks()).toHaveCount(0);
     await expect(w.legs().first()).toBeVisible();
     for (const leg of await w.legs().all()) {
-      await expect(w.legText(leg)).toHaveText(/^\s*\d+ min · [\d.]+ km( home)?( Directions)?\s*$/);
+      await expect(w.legText(leg)).toHaveText(/^\s*\d+ min · [\d.]+ km( home)?( Directions \(opens in a new tab\))?\s*$/);
       await expect(leg).toHaveAttribute("aria-label", /^Travel: \d+ minutes, [\d.]+ kilometres (to .+|home)$/);
     }
   });

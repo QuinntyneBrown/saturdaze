@@ -9,7 +9,7 @@ import {
 import { NgTemplateOutlet } from '@angular/common';
 import { Router } from '@angular/router';
 
-import { navigateInApp } from '../shared/in-app-link';
+import { NEW_TAB_NOTE, navigateInApp } from '../shared/in-app-link';
 import { Tooltip, TooltipRelationship } from '../tooltip/tooltip';
 
 /**
@@ -84,7 +84,16 @@ export class Button {
     this.icon() ? 'label' : 'description',
   );
 
-  protected readonly rel = computed(() => (this.target() === '_blank' ? 'noopener' : null));
+  /** A link to `target="_blank"` says so to assistive technology (L2-133). */
+  protected readonly opensNewTab = computed(() => this.target() === '_blank');
+  protected readonly newTabNote = NEW_TAB_NOTE;
+
+  /** An `aria-label` replaces the content, so it carries the new-tab note itself. */
+  protected readonly anchorLabel = computed(() =>
+    this.label() ? this.label() + (this.opensNewTab() ? NEW_TAB_NOTE : '') : null,
+  );
+
+  protected readonly rel = computed(() => (this.opensNewTab() ? 'noopener' : null));
 
   protected onAnchorClick(event: MouseEvent): void {
     if (this.disabled()) {

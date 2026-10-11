@@ -78,7 +78,7 @@ describe('ActivityCard', () => {
     fixture.componentRef.setInput('mapUrl', 'https://maps.example/jdp');
     fixture.detectChanges();
     const link = host.querySelector('.card__footer a.btn') as HTMLAnchorElement;
-    expect(link.textContent?.trim()).toBe('Map');
+    expect(link.textContent?.replace(/\s+/g, ' ').trim()).toBe('Map (opens in a new tab)');
     expect(link.querySelector('sd-icon')?.getAttribute('name')).toBe('map');
   });
 

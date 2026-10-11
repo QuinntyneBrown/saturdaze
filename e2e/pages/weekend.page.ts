@@ -405,6 +405,11 @@ export class WeekendPage extends BasePage {
     return leg.getByRole("link", { name: "Directions" });
   }
 
+  /** Every Directions link in the visible day's timeline. */
+  directionsLinks(): Locator {
+    return this.legs().getByRole("link", { name: /^Directions/ });
+  }
+
   /** Minutes of each leg in the visible day, read from "N min · N km". */
   async legMinutes(): Promise<number[]> {
     const texts = await this.legs().locator(".leg__text").allTextContents();

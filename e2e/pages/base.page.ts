@@ -570,4 +570,11 @@ export abstract class BasePage {
     await this.settleTransitions(bubble);
     return bubble;
   }
+
+  /* ---------- New-tab links ---------- */
+
+  /** The external icon (an arrow leaving a box) drawn inside `link`. */
+  externalIcon(link: Locator): Locator {
+    return link.locator('svg.icon:has(path[d="M20 4l-9 9"]), svg.icon:has(use[href="#i-external"])');
+  }
 }
