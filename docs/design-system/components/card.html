@@ -373,7 +373,7 @@
         <li><b>Grids</b>: <code>.grid-cards</code> is one column on phones, two from 720px and three from 1024px; <code>.grid-cards--2</code> stops at two (Food's dinner picks). A <code>.card--span</code> card takes the full row (the Top pick on Food).</li>
         <li><b>Media</b> stays 16:9 at every width and bleeds to the card's edges; photos never crop faces at the top because <code>object-fit: cover</code> centres them.</li>
         <li><b>Footers</b> wrap; on a 360px phone two small buttons fit one row. <code>.card__footer--2up</code> keeps two equal columns at every width. Footers sit at the bottom so a row of cards lines its buttons up.</li>
-        <li><b>Actions are always visible.</b> Nothing on a card appears only on hover; touch tablets at 720px and wider have no hover (the lesson of D21).</li>
+        <li><b>Actions are always visible.</b> Nothing on a card appears only on hover; touch tablets at 720px and wider have no hover.</li>
         <li>Titles wrap; bodies clamp to two lines with <code>.clamp-2</code>; meta lines wrap rather than truncate.</li>
       </ul>
     </section>
@@ -431,7 +431,7 @@
         <figure class="ds-do"><div class="ds-example__canvas"><div class="card card--locked" style="width: 100%;"><div class="card__head"><div class="card__head-text"><p class="card__title">Jack Astor's</p></div><span class="chip chip--accent"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg>Locked for dinner</span></div></div></div><figcaption>Say "Locked" in a chip; the green border repeats it.</figcaption></figure>
         <figure class="ds-dont"><div class="ds-example__canvas"><div class="card card--locked" style="width: 100%;"><p class="card__title">Jack Astor's</p><p class="card__meta">Casual · Kids' menu</p></div></div><figcaption>A border colour alone fails 1.4.1 and means nothing to a screen reader.</figcaption></figure>
         <figure class="ds-do"><div class="ds-example__canvas"><div class="card" style="width: 100%;"><p class="card__title">Royal Botanical Gardens</p><div class="card__footer"><button class="btn btn--primary btn--sm" type="button">Add to day</button></div></div></div><figcaption>Footer actions always show, on every device.</figcaption></figure>
-        <figure class="ds-dont"><div class="ds-example__canvas"><div class="card" style="width: 100%;"><p class="card__title">Royal Botanical Gardens</p><p class="card__meta">Actions appear on hover</p></div></div><figcaption>Hover-only actions vanish on touch tablets (the D21 block-actions bug).</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><div class="card" style="width: 100%;"><p class="card__title">Royal Botanical Gardens</p><p class="card__meta">Actions appear on hover</p></div></div><figcaption>Hover-only actions vanish on touch tablets .</figcaption></figure>
       </div>
     </section>
 
@@ -504,7 +504,7 @@
         <li><a href="../../mocks/pages/dialogs.html">pages/dialogs</a>: sunk recaps in D11 and D23.</li>
         <li><a href="../../mocks/pages/admin.html">pages/admin</a> and <a href="../../mocks/pages/admin.place.html">pages/admin.place</a>: stat cards and photo tiles.</li>
       </ul>
-      <p>Drift fixed: D21 hover-only actions. <code>.card--selected</code> and <code>.card--interactive</code> exist in the mocks' CSS but no mock uses them yet. Added in extraction: the focus ring round an interactive card when its stretched link has focus.</p>
+      <p><code>.card--selected</code> and <code>.card--interactive</code> exist in the mocks' CSS but no mock uses them yet. Added in extraction: the focus ring round an interactive card when its stretched link has focus.</p>
     </section>
 
     <footer class="ds-footer"><span>Saturdaze design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>

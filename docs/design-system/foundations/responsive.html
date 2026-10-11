@@ -152,7 +152,7 @@
           <tr><td><a href="../components/page-header.html">Page header</a> actions</td><td>Two-column grid of 44px buttons below the title; the primary takes the whole first row.</td><td>720px</td><td>One row of 40px buttons beside the title, primary first.</td></tr>
           <tr><td><a href="../components/dialog.html">Dialog</a></td><td>Bottom sheet with a grabber, full-width 44px buttons, primary or danger on top, bottom safe-area padding.</td><td>720px</td><td>Centred modal (480px, wide 520px), buttons right-aligned in a row, warn-text action far left.</td></tr>
           <tr><td>Day header buttons</td><td>Icon-only 36px buttons with <code>aria-label</code> (Regenerate, Lock day).</td><td>720px</td><td>Icon and visible label; the header sticks under the top bar.</td></tr>
-          <tr><td>Timeline block actions</td><td>Hidden; a chevron opens the block's details sheet.</td><td>720px</td><td>Swap and Lock appear on hover or keyboard focus with a pointer; always visible on touch screens (D21).</td></tr>
+          <tr><td>Timeline block actions</td><td>Hidden; a chevron opens the block's details sheet.</td><td>720px</td><td>Swap and Lock appear on hover or keyboard focus with a pointer; always visible on touch screens.</td></tr>
           <tr><td>Horizontal scrollers (<code>.scroller-x</code>)</td><td>One row that scrolls sideways, edges faded, bleeding to the screen edge.</td><td>720px</td><td>Wraps onto as many rows as it needs.</td></tr>
           <tr><td><a href="../components/card.html">Card</a> grid (<code>.grid-cards</code>)</td><td>1 column.</td><td>720px / 1024px</td><td>2 columns, then 3.</td></tr>
           <tr><td>Planner (Weekend)</td><td>Map above the day, both full width.</td><td>1024px</td><td>Day and map side by side; the map sticks below the top bar.</td></tr>
@@ -220,7 +220,7 @@
     <section class="ds-section" id="touch"><h2><a href="#touch">Touch and pointer</a></h2>
       <ul>
         <li><b>Hover only where hover exists.</b> Every <code>:hover</code> rule sits inside <code>@media (hover: hover)</code>, so a tap on a phone never leaves a button tinted or a card lifted. Documentation forces the same look with <code>data-state="hover"</code>.</li>
-        <li><b>Nothing hides behind hover.</b> Anything revealed on hover is also revealed on <code>:focus-within</code> for keyboards, and stays visible under <code>(hover: none)</code> for touch. The timeline's Swap and Lock buttons were hover-only in the mock, so an iPad at 820px could not reach them (D21).</li>
+        <li><b>Nothing hides behind hover.</b> Anything revealed on hover is also revealed on <code>:focus-within</code> for keyboards, and stays visible under <code>(hover: none)</code> for touch. The timeline's Swap and Lock buttons follow this, so an iPad at 820px can reach them.</li>
         <li><b>Targets do not grow with <code>pointer: coarse</code>.</b> They are already at least 24px everywhere (<code>--targetMin</code>) and 44px for phone page actions, dialog buttons and form fields (<code>--targetComfortable</code>). See <a href="accessibility.html#targets">Accessibility</a>.</li>
         <li><b>No gestures without buttons.</b> There is no swipe-to-delete or drag-to-reorder; every action has a visible control.</li>
         <li><b>Thumb reach.</b> On phones the primary action goes where the thumb is: full width at the top of the page actions, at the top of a sheet's button stack, and the navigation at the bottom.</li>
@@ -264,7 +264,7 @@
         <figure class="ds-do"><div class="ds-example__canvas"><code>@media (min-width: 45rem) { … }</code></div><figcaption>One of the four breakpoints, in rem, adding to the phone layout.</figcaption></figure>
         <figure class="ds-dont"><div class="ds-example__canvas"><code>@media (max-width: 719px) { … }</code></div><figcaption>A pixel breakpoint ignores the text-size setting (D24), and building down from desktop leaves phones with the leftovers.</figcaption></figure>
         <figure class="ds-do"><div class="ds-example__canvas"><button class="btn btn--ghost btn--sm btn--icon" type="button" aria-label="Swap Lavender fields"><svg class="icon" aria-hidden="true"><use href="#i-swap"/></svg></button><button class="btn btn--ghost btn--sm btn--icon" type="button" aria-label="Lock Lavender fields"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg></button></div><figcaption>Block actions that stay visible on touch screens.</figcaption></figure>
-        <figure class="ds-dont"><div class="ds-example__canvas"><span class="ds-pill">.block__actions { opacity: 0 } .block:hover .block__actions { opacity: 1 }</span></div><figcaption>Hover-only actions an iPad cannot reach (D21).</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><span class="ds-pill">.block__actions { opacity: 0 } .block:hover .block__actions { opacity: 1 }</span></div><figcaption>Hover-only actions an iPad cannot reach.</figcaption></figure>
       </div>
     </section>
 
@@ -279,7 +279,7 @@
         <li><a href="../../mocks/pages/admin.html">pages/admin</a> and <a href="../../mocks/pages/admin.activity.html">pages/admin.activity</a>: admin navigation, stat grid, activity rows.</li>
         <li><code style="overflow-wrap: anywhere;">docs/adr/ADR-005-bottom-nav-device-chrome-clearance.md</code> and <code>ADR-009-v2-responsive-shell.md</code>.</li>
       </ul>
-      <p>Drift fixed: D21 (hover-only block actions), D23 (activity log as a div grid), D24 (pixel breakpoints). The breadcrumb and toast behaviours are for core components no mock shows yet.</p>
+      <p>Drift fixed: D23 (activity log as a div grid), D24 (pixel breakpoints). The breadcrumb and toast behaviours are for core components no mock shows yet.</p>
     </section>
 
     <footer class="ds-footer"><span>Saturdaze design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>

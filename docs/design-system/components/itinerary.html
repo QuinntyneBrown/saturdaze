@@ -466,7 +466,7 @@
       <ul>
         <li><b>Under 720px</b> the day header sticks to the top of the screen. Day buttons are 36px icon-only squares (<code>.day__btn-label</code> hidden), and every block ends in a 32px chevron link to its details dialog; the row actions are not rendered.</li>
         <li><b>From 720px</b> the header sticks under the 64px top bar (<code>--layoutTopBarHeight</code>) and the day buttons show their labels. Chevrons go; Why this, Swap and Lock appear on hover and on focus inside the row.</li>
-        <li><b>Touch screens from 720px</b> (<code>hover: none</code>, a tablet) always show the actions; there is no hover to reveal them (D21).</li>
+        <li><b>Touch screens from 720px</b> (<code>hover: none</code>, a tablet) always show the actions; there is no hover to reveal them.</li>
         <li><b>Planner</b>: one day shows at a time behind the Saturday / Sunday <a href="tabs.html">segments</a>. Under 1024px the <a href="map.html">map</a> sits above the day; from 1024px it sits beside it, sticky.</li>
         <li>Titles wrap; the sub line is clamped to one line (<code>.clamp-1</code>). The time column and rail never shrink, so times always line up.</li>
       </ul>
@@ -541,7 +541,7 @@
         <figure class="ds-dont"><div class="ds-example__canvas ds-example__canvas--canvas"><ol class="day__list" style="flex: 1;" aria-label="Don't: short leg with directions"><li class="leg" aria-label="Travel: 5 minutes, 2 kilometres home"><span></span><span class="leg__rail" aria-hidden="true"></span><p class="leg__text"><svg class="icon" aria-hidden="true"><use href="#i-car"/></svg>5 min · 2 km home<a class="leg__link" href="https://maps.example.com/directions/la-marina/port-credit" target="_blank" rel="noopener">Directions<span class="visually-hidden"> (opens in a new tab)</span></a></p></li></ol></div><figcaption>A Directions link on every leg adds a tab stop per drive and buries the ones that matter.</figcaption></figure>
         <figure class="ds-do"><div class="ds-example__canvas ds-example__canvas--canvas"><button class="btn btn--ghost btn--sm day__btn" type="button" aria-label="Lock day: Saturday" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg><span class="day__btn-label">Lock day</span></button></div><figcaption>The accessible name starts with the visible label, so "click Lock day" works with voice control.</figcaption></figure>
         <figure class="ds-dont"><div class="ds-example__canvas ds-example__canvas--canvas"><button class="btn btn--ghost btn--sm day__btn" type="button" aria-label="Lock Saturday" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg><span class="day__btn-label">Lock day</span></button></div><figcaption>The mock's "Lock Saturday" does not contain "Lock day" (2.5.3 Label in name).</figcaption></figure>
-        <figure class="ds-do"><div class="ds-example__canvas ds-example__canvas--canvas"><span class="ds-pill">@media (hover: none) → actions visible</span></div><figcaption>On touch tablets keep row actions visible (D21).</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas ds-example__canvas--canvas"><span class="ds-pill">@media (hover: none) → actions visible</span></div><figcaption>On touch tablets keep row actions visible.</figcaption></figure>
         <figure class="ds-dont"><div class="ds-example__canvas ds-example__canvas--canvas"><span class="ds-pill">opacity: 0 until :hover</span></div><figcaption>Actions that only appear on hover never appear on an iPad at 768px.</figcaption></figure>
       </div>
     </section>
@@ -630,7 +630,7 @@
         <li><a href="../../mocks/pages/landing.html">pages/landing</a>: the compact drive block in the product preview.</li>
         <li><a href="../../mocks/pages/dialogs.html">pages/dialogs</a>: the block, commitment, locked and errand dialogs the rows open.</li>
       </ul>
-      <p>Drift fixed: D21 actions on touch screens, D24 rem breakpoints. Found while extracting, not yet in the drift log: the stop number's <code>aria-label</code> on a <code>&lt;span&gt;</code> (use hidden text), the day button names that do not contain their visible label (2.5.3), and the mock's <code>.block--done</code> at 60% opacity, which dropped the duration and sub below 4.5:1 (replaced here by a muted, struck-through title). The done state and the locked day are not shown in any mock yet.</p>
+      <p>Drift fixed: D24 rem breakpoints. Found while extracting, not yet in the drift log: the stop number's <code>aria-label</code> on a <code>&lt;span&gt;</code> (use hidden text), the day button names that do not contain their visible label (2.5.3), and the mock's <code>.block--done</code> at 60% opacity, which dropped the duration and sub below 4.5:1 (replaced here by a muted, struck-through title). The done state and the locked day are not shown in any mock yet.</p>
     </section>
 
     <footer class="ds-footer"><span>Saturdaze design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>

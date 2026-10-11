@@ -298,7 +298,6 @@
       <div class="ds-table-wrap"><table class="ds-table">
         <thead><tr><th scope="col">ID</th><th scope="col">SC</th><th scope="col">In the mocks</th><th scope="col">In the system</th></tr></thead>
         <tbody>
-          <tr><td>D21</td><td>2.1.1, 2.5.8</td><td>Timeline Swap and Lock only on hover, so touch tablets never see them.</td><td>Visible on <code>:focus-within</code> and always under <code>(hover: none)</code>.</td></tr>
           <tr><td>D22</td><td>2.4.1</td><td>No skip link on any page.</td><td>A <a href="../components/skip-link.html">skip link</a> first on every page.</td></tr>
           <tr><td>D23</td><td>1.3.1</td><td>The activity log is a table drawn as a div grid with no headers.</td><td>A real <a href="../components/table.html">table</a> on wide screens; the <a href="../components/activity-feed.html">activity feed</a> on phones.</td></tr>
           <tr><td>D26</td><td>1.4.11</td><td>Tinted pressed filter chips differ from unpressed ones only by a pale fill.</td><td>Pressed tinted chips also take a border in their ink colour.</td></tr>
@@ -364,12 +363,12 @@
     <section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>
       <ul>
         <li><a href="../../mocks/pages/sign-in.html">pages/sign-in</a> and <a href="../../mocks/pages/create-account.html">pages/create-account</a>: underlined links in sentences and auth fields.</li>
-        <li><a href="../../mocks/pages/weekend.html">pages/weekend</a>: hover-only block actions (D21), bottom nav.</li>
+        <li><a href="../../mocks/pages/weekend.html">pages/weekend</a>: block actions that stay visible on touch, bottom nav.</li>
         <li><a href="../../mocks/pages/dialogs.html">pages/dialogs</a>: confirmations (D3, D21, D22, D24), rating, field errors.</li>
         <li><a href="../../mocks/pages/admin.activity.html">pages/admin.activity</a>: the div-grid table (D23).</li>
         <li><a href="../../mocks/pages/admin.place.html">pages/admin.place</a>: the alt text hint and photo credits.</li>
       </ul>
-      <p>Drift fixed: D21 to D23, D26 and D27, plus D24 and D29 as related fixes. No mock shows a skip link, toast or table yet.</p>
+      <p>Drift fixed: D22, D23, D26 and D27, plus D24 and D29 as related fixes. No mock shows a skip link, toast or table yet.</p>
     </section>
 
     <footer class="ds-footer"><span>Saturdaze design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>

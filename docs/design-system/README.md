@@ -125,7 +125,6 @@ and up) are proposals for the product's TypeScript theme.
 
 | ID | Mock | Issue | Resolution |
 |---|---|---|---|
-| D21 | `weekend.html` | Block actions are hidden until hover or focus-within, so touch tablets at 720px or wider never see them. | `@media (hover: none)` keeps them visible. |
 | D22 | every page | No skip link (2.4.1). | `skip-link` component; every page should start with it. |
 | D23 | `admin.activity.html` | Tabular data (time, who, place, action, change) rendered as a div grid with no column headers. | `table` component for wide screens; `activity-feed` documents the stacked phone layout. |
 | D24 | `app.css` | Breakpoints and type in px (379/576/719/720/1024; 12 to 56px), so they ignore the user's font size (1.4.4). | rem: 23.75 / 36 / 45 / 64rem; type tokens in rem. |

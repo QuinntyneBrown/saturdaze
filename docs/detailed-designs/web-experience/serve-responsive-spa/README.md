@@ -22,6 +22,8 @@ Legacy paths such as `/login`, `/profile`, `/saved`, and `/itinerary` redirect t
 
 The 2026-10-06 Weekend mock replaces the two-day `.sd-grid-days` layout with a one-day `.planner` grid: one column with the map above the timeline below 1024 px, timeline and sticky map side by side from 1024 px. `weekend-planning/map-itinerary-and-travel-legs` designs it, and L2-028 AC2 and AC3 are revised to match.
 
+From 720 px a weekend block (`sd-block`) swaps its chevron for inline actions. On a pointer that hovers, the actions stay transparent until the block is hovered or holds focus. On a device with no hover (`@media (hover: none)`, a touch tablet), nothing can reveal them, so `block.scss` keeps them at full opacity, as the mock's `app.css` does (L2-028 AC4, drift D21).
+
 ## Requirements
 
 The following L2 requirements refine the cited L1 capabilities. Implementation gaps stated in Description do not waive these obligations.
