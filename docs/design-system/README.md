@@ -125,7 +125,6 @@ and up) are proposals for the product's TypeScript theme.
 
 | ID | Mock | Issue | Resolution |
 |---|---|---|---|
-| D30 | `frontend/.../tooltip/tooltip-panel.scss` | Not a mock: the product tooltip still reads `--sd-*` tokens after the ADR-013 migration. | Noted for the product; the design-system tooltip matches its geometry on Fluent tokens. |
 | D31 | `legal.html`, `review-submissions.html`, `admin.place.html` | External links open in a new tab without saying so (3.2.5 advisory, 2.4.4). | External icon plus visually hidden "(opens in a new tab)"; see `link`. |
 | D32 | `weekend.html` | Four "Directions" links with identical text on one page (2.4.4). | Visible "Directions" plus visually hidden destination ("to Terre Bleu"). |
 | D33 | `weekend.html` day header | The "Lock day" button is named "Lock Saturday", so its accessible name does not contain its visible label (2.5.3, level A). | "Lock day: Saturday" (visible label first). |

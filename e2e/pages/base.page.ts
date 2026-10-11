@@ -552,4 +552,22 @@ export abstract class BasePage {
       )
       .filter({ visible: true });
   }
+
+  /* ---------- Tooltips (CDK overlay; app only) ---------- */
+
+  /** The tooltip bubble showing in the overlay. */
+  tooltip(): Locator {
+    return this.page
+      .locator('.cdk-overlay-container .tooltip[role="tooltip"]')
+      .filter({ visible: true });
+  }
+
+  /** Rests the pointer on `target` until its tooltip has shown and finished fading in. */
+  async hoverForTooltip(target: Locator): Promise<Locator> {
+    await target.hover();
+    const bubble = this.tooltip();
+    await bubble.waitFor({ state: "visible" });
+    await this.settleTransitions(bubble);
+    return bubble;
+  }
 }

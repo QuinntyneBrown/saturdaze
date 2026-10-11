@@ -24,6 +24,8 @@ The feature crosses the application and platform boundaries needed to deliver it
 
 - **`Reduced motion`** — `durations.ts` in `components/src/lib/tokens/global/` gains `durationShimmer` (1400ms, one skeleton sweep) and `durationSpin` (900ms, one spinner turn); `sd-skeleton-row` and `sd-spinner` read them instead of literal times. `themes/reducedMotion.ts` exports `reducedMotionOverride`, which `scripts/generate-tokens.mjs` writes into `_tokens.scss` under `@media (prefers-reduced-motion: reduce) { :root { … } }`: `durationFast`, `durationNormal` and `durationShimmer` drop to 0.01ms (not 0, so `transitionend` and `animationend` still fire) and `durationSpin` is left alone. `_global.scss` no longer cuts every animation and transition to 0.001ms with `!important`, which had frozen the spinner on "Working through your locks"; each kind of motion now decides through its token: transitions and the shimmer stop, the spinner keeps turning because it reports status. The skeleton and tooltip still drop their animation under reduced motion (L2-131, drift D29).
 
+- **`Tooltip bubble`** — `sd-tooltip` (the panel `[sdTooltip]` renders into its CDK Overlay) reads Fluent tokens by role, matching the design system's `.tooltip`: `colorNeutralBackgroundInverted` behind `colorNeutralForegroundInverted`, `spacingVerticalXS` / `spacingHorizontalS` padding, `borderRadiusSmall`, `shadow16`, `fontFamilyBase` at `fontSizeBase200` in `fontWeightMedium` with `lineHeightSnug`, and a `durationFast` / `curveEasyEase` fade. It had still read `--sd-*` names that ADR-013 retired, which no longer resolve, so the bubble rendered with no fill. Because the inverted pair has dark values, the bubble flips to cream on dark text in the dark theme with no component change (L2-132, drift D30).
+
 Automated structural checks do not establish complete keyboard or WCAG contrast conformance. The obligations below remain subject to dedicated accessibility verification.
 
 ## Requirements
@@ -37,6 +39,7 @@ The following L2 requirements refine the cited L1 capabilities. Implementation g
 | `L2-038` | `L1-014` | All text, including chip labels and disabled controls used to convey state, shall meet a 4.5:1 contrast ratio against its background (3:1 for large text ≥18 pt or 14 pt bold). |
 | `L2-130` | `L1-011`, `L1-014` | Every page shall follow the reader's colour scheme: the dark theme, built from the same roles as light, when the system prefers dark; the light theme otherwise. |
 | `L2-131` | `L1-014` | Under reduced motion, decorative motion (transitions, the dialog rise, the skeleton shimmer) shall stop while loading spinners keep turning. |
+| `L2-132` | `L1-011`, `L1-014` | A tooltip shall show as an opaque inverted bubble (dark on light, light on dark) whose text meets 4.5:1 on its fill. |
 
 ## Diagrams
 
