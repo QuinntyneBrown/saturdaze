@@ -146,6 +146,7 @@ export abstract class BasePage {
 
   /** Whether `target` lies inside the viewport (not parked off screen). */
   async isOnScreen(target: Locator): Promise<boolean> {
+    if ((await target.count()) === 0) return false;
     const box = await target.boundingBox();
     const size = this.page.viewportSize();
     if (!box || !size) return false;

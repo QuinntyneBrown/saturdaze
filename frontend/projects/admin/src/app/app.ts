@@ -11,7 +11,7 @@ import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from '@angular/ro
 import { filter, map, startWith } from 'rxjs';
 
 import { SESSION_STORE } from 'api';
-import { AdminGate, AdminNav, AdminNavKey } from 'components';
+import { AdminGate, AdminNav, AdminNavKey, SkipLink } from 'components';
 
 import { environment } from '../environments/environment';
 
@@ -40,7 +40,7 @@ const DEFAULT_SHELL: ShellData = { bare: false, nav: null, screen: '' };
 @Component({
   selector: 'sd-admin-root',
   standalone: true,
-  imports: [RouterOutlet, AdminNav, AdminGate],
+  imports: [RouterOutlet, SkipLink, AdminNav, AdminGate],
   templateUrl: './app.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

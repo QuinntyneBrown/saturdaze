@@ -28,9 +28,9 @@ export class SkipLink {
   private readonly document = inject(DOCUMENT);
 
   protected skip(event: Event): void {
+    event.preventDefault(); // never follow the href: it resolves against <base href>
     const target = this.document.getElementById(this.target());
     if (!target) return;
-    event.preventDefault();
     if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1');
     target.focus();
   }
