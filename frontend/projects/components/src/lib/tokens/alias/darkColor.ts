@@ -16,7 +16,7 @@ import type { BrandVariants, ColorTokens } from '../types';
  * fill is a lighter coral with a dark label.
  */
 export const generateDarkColorTokens = (brand: BrandVariants): ColorTokens => ({
-  colorNeutralForeground1: umber[50], // body ink: 16.4:1 on the page
+  colorNeutralForeground1: umber[50], // body ink: 15.9:1 on the page
   colorNeutralForeground2: umber[200],
   colorNeutralForeground3: umber[300],
   colorNeutralForegroundDisabled: umber[600],

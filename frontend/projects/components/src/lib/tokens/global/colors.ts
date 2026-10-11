@@ -84,8 +84,8 @@ export const indoor: ColorVariants = {
 /** Warm umber neutrals: surfaces that lighten as they rise, and the light inks on them. */
 export const umber = {
   50: '#f2ede6', // body ink; the inverted fill
-  200: '#cdc4b8', // secondary text: 9.4:1 on the page
-  300: '#aea597', // hints: 5.4:1 on wells
+  200: '#cdc4b8', // secondary text: 10.7:1 on the page
+  300: '#aea597', // hints: 5.5:1 on wells
   400: '#8f867b', // control edges: 3.7:1 on wells (WCAG 1.4.11)
   600: '#6e665d', // disabled; never live text
   750: '#342e28', // recessed wells, locked blocks
@@ -117,7 +117,7 @@ export const whiteAlphaFaint = 'rgba(255, 255, 255, 0.06)';
  */
 export const coralDark = {
   200: '#f6cbb9', // brand text and the fill's hover
-  300: '#f59c7c', // the primary fill, the focus ring: 950 label 9.3:1
+  300: '#f59c7c', // the primary fill, the focus ring: 950 label 8.1:1
   900: '#43251a', // the soft brand fill
   950: '#2a160e', // the label on the fill
 } as const;
