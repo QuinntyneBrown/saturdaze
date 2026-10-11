@@ -125,7 +125,6 @@ and up) are proposals for the product's TypeScript theme.
 
 | ID | Mock | Issue | Resolution |
 |---|---|---|---|
-| D31 | `legal.html`, `review-submissions.html`, `admin.place.html` | External links open in a new tab without saying so (3.2.5 advisory, 2.4.4). | External icon plus visually hidden "(opens in a new tab)"; see `link`. |
 | D32 | `weekend.html` | Four "Directions" links with identical text on one page (2.4.4). | Visible "Directions" plus visually hidden destination ("to Terre Bleu"). |
 | D33 | `weekend.html` day header | The "Lock day" button is named "Lock Saturday", so its accessible name does not contain its visible label (2.5.3, level A). | "Lock day: Saturday" (visible label first). |
 | D34 | `weekend.html`, `dialogs.html`, admin pages | Two clocks: the timeline uses 24-hour times (18:30), dialog subtitles use 12-hour with no am/pm ("11:00 to 1:00"); ranges are written three ways and admin timestamps two ways. | One format, documented on the content foundation page. |

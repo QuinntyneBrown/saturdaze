@@ -26,6 +26,8 @@ The feature crosses the application and platform boundaries needed to deliver it
 
 - **`Tooltip bubble`** — `sd-tooltip` (the panel `[sdTooltip]` renders into its CDK Overlay) reads Fluent tokens by role, matching the design system's `.tooltip`: `colorNeutralBackgroundInverted` behind `colorNeutralForegroundInverted`, `spacingVerticalXS` / `spacingHorizontalS` padding, `borderRadiusSmall`, `shadow16`, `fontFamilyBase` at `fontSizeBase200` in `fontWeightMedium` with `lineHeightSnug`, and a `durationFast` / `curveEasyEase` fade. It had still read `--sd-*` names that ADR-013 retired, which no longer resolve, so the bubble rendered with no fill. Because the inverted pair has dark values, the bubble flips to cream on dark text in the dark theme with no component change (L2-132, drift D30).
 
+- **`New-tab links`** — `sd-button` with `target="_blank"` appends visually hidden text " (opens in a new tab)" (the global `.sd-visually-hidden` utility) after its projected content, or to its `label` when one names it, and sets `rel="noopener"`; so the cards' Map, See menu and Details and the calendar dialog's Download .ics announce the new tab without each consumer repeating it. `sd-details` and `sd-leg` render the same hidden text in their own anchors, and the day map's OpenStreetMap credit carries it too. `sd-icon` gains `external` (the design system's arrow leaving a box), which replaces `arrow_right` after a submission's Link in `sd-details` and after an event card's Details (L2-133, drift D31).
+
 Automated structural checks do not establish complete keyboard or WCAG contrast conformance. The obligations below remain subject to dedicated accessibility verification.
 
 ## Requirements
@@ -40,6 +42,7 @@ The following L2 requirements refine the cited L1 capabilities. Implementation g
 | `L2-130` | `L1-011`, `L1-014` | Every page shall follow the reader's colour scheme: the dark theme, built from the same roles as light, when the system prefers dark; the light theme otherwise. |
 | `L2-131` | `L1-014` | Under reduced motion, decorative motion (transitions, the dialog rise, the skeleton shimmer) shall stop while loading spinners keep turning. |
 | `L2-132` | `L1-011`, `L1-014` | A tooltip shall show as an opaque inverted bubble (dark on light, light on dark) whose text meets 4.5:1 on its fill. |
+| `L2-133` | `L1-014` | Every link that opens a new tab shall say so in its accessible name ("(opens in a new tab)"), and address and Details links shall show the external icon. |
 
 ## Diagrams
 
