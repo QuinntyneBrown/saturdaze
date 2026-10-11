@@ -254,7 +254,7 @@
           <span class="vote-row__choice"><button class="vote-row__btn vote-row__btn--up" type="button" aria-label="Eli votes yes" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-thumbs_up"/></svg></button><button class="vote-row__btn vote-row__btn--down" type="button" aria-label="Eli votes no" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-thumbs_down"/></svg></button></span>
           <button class="ghost-row" type="button" style="width: auto;"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg>Add an errand</button>
         </div>
-        <div class="ds-example__caption"><span>The chip's remove glyph is 16px but its hit area is 24px (D27); vote buttons are 28px with 4px between; the ghost row is 44px.</span></div>
+        <div class="ds-example__caption"><span>The chip's remove glyph is 16px but its hit area is 24px; vote buttons are 28px with 4px between; the ghost row is 44px.</span></div>
       </div>
       <div class="ds-table-wrap"><table class="ds-table">
         <thead><tr><th scope="col">Token</th><th scope="col">Value</th><th scope="col">Where</th></tr></thead>
@@ -294,13 +294,7 @@
     </section>
 
     <section class="ds-section" id="drift"><h2><a href="#drift">Fixed from the mocks</a></h2>
-      <p>The mocks were the starting point, not the standard. These are the accessibility failures found while extracting them and how the system resolves each. The full drift log is in the <a href="../README.md">README</a>.</p>
-      <div class="ds-table-wrap"><table class="ds-table">
-        <thead><tr><th scope="col">ID</th><th scope="col">SC</th><th scope="col">In the mocks</th><th scope="col">In the system</th></tr></thead>
-        <tbody>
-          <tr><td>D27</td><td>2.5.8</td><td>The chip remove button is 16 × 16px.</td><td>24px hit area; the glyph stays 16px.</td></tr>
-        </tbody>
-      </table></div>
+      <p>The mocks were the starting point, not the standard. The accessibility failures found while extracting them are now fixed in the mocks and the product; any that remain are in the <a href="../README.md">README drift log</a>.</p>
       <p>Related, not strictly AA: reduced motion that no longer freezes spinners (D29).</p>
     </section>
 
@@ -365,7 +359,7 @@
         <li><a href="../../mocks/pages/admin.activity.html">pages/admin.activity</a>: the activity log, a table with column headers from 720px and a feed below.</li>
         <li><a href="../../mocks/pages/admin.place.html">pages/admin.place</a>: the alt text hint and photo credits.</li>
       </ul>
-      <p>Drift fixed: D27, plus D29 as a related fix. Every mock now starts with the skip link; no mock shows a toast yet.</p>
+      <p>Drift fixed: D29, a related fix. Every mock now starts with the skip link; no mock shows a toast yet.</p>
     </section>
 
     <footer class="ds-footer"><span>Saturdaze design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>

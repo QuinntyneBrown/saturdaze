@@ -714,7 +714,8 @@
   .chip-input:focus-within { border-color: var(--sd-primary-deep); box-shadow: 0 0 0 3px var(--sd-primary-soft); }
   .chip-input__field { flex: 1 1 120px; min-width: 0; height: 28px; border: 0; background: transparent; font-size: var(--sd-fs-ui); outline: none; }
   .chip-input__field::placeholder { color: var(--sd-ink-faint); }
-  .chip__x { display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px; margin: 0 -4px 0 2px; border-radius: 50%; color: inherit; opacity: 0.7; }
+  .chip__x { display: inline-flex; align-items: center; justify-content: center; position: relative; width: 16px; height: 16px; margin: 0 -4px 0 2px; border-radius: 50%; color: inherit; opacity: 0.7; }
+  .chip__x::before { content: ""; position: absolute; inset: -4px; } /* 24px hit area around the 16px glyph (WCAG 2.5.8) */
   .chip__x .icon { width: 10px; height: 10px; stroke-width: 2.5; }
 
   /* segmented radio (Parent | Kid) */

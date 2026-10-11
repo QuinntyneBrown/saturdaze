@@ -177,6 +177,29 @@ export class FamilyPage extends BasePage {
     return this.likesSection().locator(".chip.chip--warn");
   }
 
+  /** A value's chip in the open Likes and dislikes dialog. */
+  dialogChip(value: string): Locator {
+    return this.dialog().locator(".chip").filter({ hasText: value });
+  }
+
+  /** Types a value into one of the dialog's chip inputs and adds it as a chip. */
+  async addDialogChip(field: "Likes" | "Dislikes", value: string): Promise<void> {
+    const input = this.dialogField(field);
+    await input.fill(value);
+    await input.press("Enter");
+  }
+
+  /**
+   * Taps `px` above the top edge of a chip's visible remove glyph, centred
+   * on it — inside a 24px target around the 16px glyph, outside the glyph.
+   */
+  async tapJustAboveRemoveGlyph(value: string, px: number): Promise<void> {
+    const glyph = this.dialog().getByRole("button", { name: `Remove ${value}`, exact: true });
+    const box = await glyph.boundingBox();
+    if (!box) throw new Error(`No remove button for ${value}`);
+    await this.page.mouse.click(box.x + box.width / 2, box.y - px);
+  }
+
   /* ---------- Preferences ---------- */
 
   preferencesSection(): Locator {

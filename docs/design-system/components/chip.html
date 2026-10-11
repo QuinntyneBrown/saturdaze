@@ -151,7 +151,7 @@
         <ol class="ds-anatomy__list">
           <li><div><b>Leading icon (optional)</b><small>13px, stroke 2, <code>currentColor</code>, <code>aria-hidden="true"</code>; 4px gap.</small></div></li>
           <li><div><b>Label</b><small><code>--typographyCaption1Strong</code> (12px semibold), one line, never truncated.</small></div></li>
-          <li><div><b>Remove button (chip input only)</b><small><code>.chip__x</code>: 16px glyph, 24px hit area through <code>::before</code> (drift D27), <code>aria-label="Remove Parks"</code>.</small></div></li>
+          <li><div><b>Remove button (chip input only)</b><small><code>.chip__x</code>: 16px glyph, 24px hit area through <code>::before</code>, <code>aria-label="Remove Parks"</code>.</small></div></li>
           <li><div><b>Container</b><small>Pill, 24px tall (<code>--targetMin</code>), 10px side padding, fill and label colour from the tone.</small></div></li>
         </ol>
       </div>
@@ -307,7 +307,7 @@
       <h3>Motion</h3>
       <p>None on the chip. The remove button's hover tint is instant. Removing a chip does not animate it out, so focus never lands on something that is leaving.</p>
       <h3>Touch</h3>
-      <p>Static chips are not targets. The remove glyph is 16px, but <code>.chip__x::before</code> extends the hit area to 24 × 24px (WCAG 2.5.8, drift D27). Chips in a chip input sit 6px apart, so neighbouring hit areas do not overlap the next chip's label by more than its padding.</p>
+      <p>Static chips are not targets. The remove glyph is 16px, but <code>.chip__x::before</code> extends the hit area to 24 × 24px (WCAG 2.5.8). Chips in a chip input sit 6px apart, so neighbouring hit areas do not overlap the next chip's label by more than its padding.</p>
     </section>
 
     <section class="ds-section" id="content"><h2><a href="#content">Content</a></h2>
@@ -325,7 +325,7 @@
         <figure class="ds-dont"><div class="ds-example__canvas"><span class="chip chip--sun">Outdoor</span><span class="chip chip--primary">Theatre</span></div><figcaption>Tones chosen for variety. Sun means weather and primary means a highlight, so the card now says the wrong thing.</figcaption></figure>
         <figure class="ds-do"><div class="ds-example__canvas"><span class="chip chip--sky"><svg class="icon" aria-hidden="true"><use href="#i-car"/></svg>45 min drive</span></div><figcaption>The words say "drive"; the car icon repeats it.</figcaption></figure>
         <figure class="ds-dont"><div class="ds-example__canvas"><span class="chip chip--sky"><svg class="icon" aria-hidden="true"><use href="#i-car"/></svg>45 min</span></div><figcaption>Most Ideas cards in the mocks: only the hidden icon says it is a drive, so a screen reader hears "45 min" of what?</figcaption></figure>
-        <figure class="ds-do"><div class="ds-example__canvas"><span class="chip chip--warn">Camping<button class="chip__x" type="button" aria-label="Remove Camping (example)"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></span></div><figcaption>The remove button names the chip and has a 24px hit area (drift D27).</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas"><span class="chip chip--warn">Camping<button class="chip__x" type="button" aria-label="Remove Camping (example)"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></span></div><figcaption>The remove button names the chip and has a 24px hit area.</figcaption></figure>
         <figure class="ds-dont"><div class="ds-example__canvas"><button class="chip chip--leaf" type="button">Outdoor</button></div><figcaption>A chip used as a toggle. It has no pressed state or focus style; use a <a href="filter-chip.html">filter chip</a>.</figcaption></figure>
       </div>
     </section>
@@ -387,7 +387,7 @@
         <li><a href="../../mocks/pages/dialogs.html">pages/dialogs</a>: removable chips in dialog D20 Likes and dislikes.</li>
         <li><a href="../../mocks/pages/admin.sign-in.html">pages/admin.sign-in</a> and <a href="../../mocks/pages/reset-password.html">pages/reset-password</a>: <code>.email-chip</code>.</li>
       </ul>
-      <p>Drift applied: drift D27 (24px remove hit area). Not yet in the mocks: the ink tone, weather chips with sun and rain icons, and drive-time chips that say "drive" in words (only some mocks do).</p>
+      <p>Not yet in the mocks: the ink tone, weather chips with sun and rain icons, and drive-time chips that say "drive" in words (only some mocks do).</p>
     </section>
 
     <footer class="ds-footer"><span>Saturdaze design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>
