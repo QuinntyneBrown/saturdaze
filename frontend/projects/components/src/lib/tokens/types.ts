@@ -208,6 +208,8 @@ export interface ShadowTokens {
 export interface DurationTokens {
   durationFast: string;
   durationNormal: string;
+  durationShimmer: string;
+  durationSpin: string;
 }
 
 export interface CurveTokens {

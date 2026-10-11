@@ -3,7 +3,8 @@
 // of the workspace consumes —
 //
 //   src/lib/styles/_tokens.scss   the `:root` custom properties (+ responsive retunes and
-//                                 the dark theme under prefers-color-scheme: dark)
+//                                 the dark theme under prefers-color-scheme: dark and the
+//                                 zeroed durations under prefers-reduced-motion: reduce)
 //   src/lib/tokens/tokens.ts      the typed `tokens` object (`var(--name)` per key)
 //
 // Usage (from frontend/):  npm run tokens          regenerate
@@ -29,7 +30,7 @@ registerHooks({
 const lib = resolve(dirname(fileURLToPath(import.meta.url)), '../projects/components/src/lib');
 const load = (path) => import(pathToFileURL(resolve(lib, path)).href);
 
-const { saturdazeLightTheme, responsiveOverrides, darkSchemeOverride } =
+const { saturdazeLightTheme, responsiveOverrides, darkSchemeOverride, reducedMotionOverride } =
   await load('tokens/themes/index.ts');
 const { themeToCss } = await load('tokens/themeToCss.ts');
 
@@ -50,7 +51,11 @@ const scss = `${banner('//')}
 // Breakpoints live SCSS-side in \`_breakpoints.scss\` (\`$bp-tablet\` /
 // \`$bp-desktop\` + the \`respond-to()\` mixin).
 
-${themeToCss(saturdazeLightTheme, [...responsiveOverrides, darkSchemeOverride])}
+${themeToCss(saturdazeLightTheme, [
+  ...responsiveOverrides,
+  darkSchemeOverride,
+  reducedMotionOverride,
+])}
 `;
 
 const ts = `${banner('//')}

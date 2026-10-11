@@ -61,6 +61,8 @@ export const tokens: Record<keyof Theme, string> = {
   spacingVerticalXXXXXL: 'var(--spacingVerticalXXXXXL)',
   durationFast: 'var(--durationFast)',
   durationNormal: 'var(--durationNormal)',
+  durationShimmer: 'var(--durationShimmer)',
+  durationSpin: 'var(--durationSpin)',
   curveEasyEase: 'var(--curveEasyEase)',
   layoutContentMaxWidth: 'var(--layoutContentMaxWidth)',
   layoutStackMaxWidth: 'var(--layoutStackMaxWidth)',

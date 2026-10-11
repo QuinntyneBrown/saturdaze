@@ -45,6 +45,11 @@ export class WeekendPage extends BasePage {
     await expect(this.days()).toHaveCount(1, { timeout: 30_000 });
   }
 
+  /** The spinner in the generating status row. */
+  statusSpinner(): Locator {
+    return this.statusRow().locator(".spinner");
+  }
+
   /* ---------- Header actions ---------- */
 
   shareButton(): Locator {

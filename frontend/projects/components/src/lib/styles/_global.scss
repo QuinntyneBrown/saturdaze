@@ -134,15 +134,8 @@ main:focus-visible {
   background: var(--colorBrandBackground2);
 }
 
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.001ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.001ms !important;
-  }
-}
+// Reduced motion lives in the duration tokens (`reducedMotionOverride`,
+// L2-131): transitions and the shimmer stop, the spinner keeps turning.
 
 // `<app-root>` is the SPA's single root. `display: contents` makes it
 // invisible for layout so the shell's header / main / nav are effectively

@@ -1,5 +1,6 @@
 export {
   darkSchemeOverride,
+  reducedMotionOverride,
   saturdazeDarkTheme,
   saturdazeLightTheme,
   responsiveOverrides,

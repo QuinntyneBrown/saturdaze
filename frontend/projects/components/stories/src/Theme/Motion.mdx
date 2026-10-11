@@ -8,8 +8,10 @@ import { byPrefix } from './components/tokens';
 # Motion
 
 Motion is brief and useful: `durationFast` for hover and press feedback, `durationNormal` for state changes such as a
-day locking or a dialog opening. Everything eases with `curveEasyEase`. Under `prefers-reduced-motion: reduce` the global
-stylesheet collapses every animation and transition to near zero.
+day locking or a dialog opening, `durationShimmer` for one skeleton sweep and `durationSpin` for one spinner turn.
+Everything eases with `curveEasyEase` except the spinner, which turns linearly. Under `prefers-reduced-motion: reduce`
+the theme drops `durationFast`, `durationNormal` and `durationShimmer` to 0.01ms, so transitions and the shimmer stop,
+but keeps `durationSpin`: a spinner reports status, and a frozen one reads as a hung app.
 
 Hover a row to see the duration.
 
