@@ -11,7 +11,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 /**
  * Single source of truth for iconography.
  *
- * Mirrors the sprite injected by `docs/mocks-v2/app.js`: the same 40 stroke
+ * Mirrors the sprite injected by `docs/mocks-v2/app.js`: the same 41 stroke
  * glyphs, inline, no network calls. `stroke: currentColor` means an
  * `<sd-icon>` recolours with its parent; `filled` swaps to a solid glyph
  * (stars, favourite hearts).
@@ -40,6 +40,7 @@ const ICONS: Record<string, string> = {
   trash: `<path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M6 6l1 15h10l1-15"/><path d="M10 11v6M14 11v6"/>`,
   arrow_left: `<path d="M15 6l-6 6 6 6"/>`,
   arrow_right: `<path d="M9 6l6 6-6 6"/>`,
+  external: `<path d="M14 4h6v6"/><path d="M20 4l-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/>`,
   chevron_right: `<path d="M9 6l6 6-6 6"/>`,
   more: `<circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/>`,
   bag: `<path d="M5 8h14l-1 12H6L5 8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/>`,

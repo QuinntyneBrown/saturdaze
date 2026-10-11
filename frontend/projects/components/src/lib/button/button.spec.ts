@@ -140,7 +140,7 @@ describe('Button', () => {
     expect(a.getAttribute('href')).toBe('https://maps.example/x');
     expect(a.getAttribute('target')).toBe('_blank');
     expect(a.getAttribute('rel')).toBe('noopener');
-    expect(a.getAttribute('aria-label')).toBe('Map');
+    expect(a.getAttribute('aria-label')).toBe('Map (opens in a new tab)');
     expect(a.getAttribute('aria-pressed')).toBe('true');
     expect(a.hasAttribute('aria-disabled')).toBe(false);
   });

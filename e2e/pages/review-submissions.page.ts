@@ -74,6 +74,11 @@ export class ReviewSubmissionsPage extends BasePage {
     return card.locator(".details__label", { hasText: label }).locator("xpath=following-sibling::dd[1]");
   }
 
+  /** The submitted event's address, a link that opens a new tab. */
+  submittedLink(card: Locator): Locator {
+    return this.detail(card, "Link").getByRole("link");
+  }
+
   submitter(card: Locator): Locator {
     return card.locator(".submitter");
   }

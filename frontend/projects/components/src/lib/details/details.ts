@@ -5,7 +5,8 @@ import { Icon } from '../icon/icon';
 /**
  * Label / value pairs (a submission's Location, Cost, Ages, Link, Notes).
  * Mirrors `.details` in docs/mocks-v2/styles/app.css. A null value renders
- * "Not given" in faint ink; `href` renders the value as an external link.
+ * "Not given" in faint ink; `href` renders the value as an external link
+ * that opens a new tab and says so (external icon, hidden note; L2-133).
  */
 
 export interface DetailItem {

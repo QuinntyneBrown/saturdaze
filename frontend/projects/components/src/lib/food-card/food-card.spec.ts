@@ -66,7 +66,7 @@ describe('FoodCard', () => {
     fixture.componentRef.setInput('menuUrl', 'https://pizzanova.example/menu');
     fixture.detectChanges();
     const link = host.querySelector('.card__footer a.btn--quiet') as HTMLAnchorElement;
-    expect(link.textContent?.trim()).toBe('See menu');
+    expect(link.textContent?.replace(/\s+/g, ' ').trim()).toBe('See menu (opens in a new tab)');
   });
 
   it('marks the top pick with a spanning card and a primary chip', () => {

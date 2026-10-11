@@ -4,6 +4,8 @@
   <sd-icon name="car" [size]="13" />
   {{ label() }}
   @if (directionsUrl()) {
-    <a class="leg__link" [href]="directionsUrl()" target="_blank" rel="noopener">Directions</a>
+    <a class="leg__link" [href]="directionsUrl()" target="_blank" rel="noopener"
+      >Directions<span class="sd-visually-hidden"> (opens in a new tab)</span></a
+    >
   }
 </p>

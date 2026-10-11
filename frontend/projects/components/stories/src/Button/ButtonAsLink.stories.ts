@@ -15,7 +15,7 @@ export const AsLink: StoryObj<Button> = {
     docs: {
       description: {
         story:
-          'With `href` the button renders an `<a>`. In-app paths route through the Angular router; `target="_blank"` adds `rel="noopener"`.',
+          'With `href` the button renders an `<a>`. In-app paths route through the Angular router; `target="_blank"` adds `rel="noopener"` and visually hidden "(opens in a new tab)", so screen readers hear that it leaves for a new tab (L2-133).',
       },
     },
   },

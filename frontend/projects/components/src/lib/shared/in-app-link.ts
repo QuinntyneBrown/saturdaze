@@ -26,3 +26,6 @@ export function navigateInApp(router: Router, event: MouseEvent, href: string): 
   event.preventDefault();
   void router.navigateByUrl(href);
 }
+
+/** Visually hidden text after a link that opens a new tab (L2-133, WCAG 2.4.4). */
+export const NEW_TAB_NOTE = ' (opens in a new tab)';

@@ -174,7 +174,7 @@ test.describe("Weekend", () => {
     await w.addToCalendarButton().click();
     await expect(w.dialogTitle()).toHaveText("Add to your calendar");
     await expect(w.dialogBody().locator(".list__title")).toContainText(/\.ics$/);
-    await expect(w.dialogAction("Download .ics")).toBeVisible();
+    await expect(w.dialogAction(/^Download .ics/)).toBeVisible();
     await w.dialogAction("Cancel").click();
     await expect(w.dialog()).toHaveCount(0);
   });

@@ -14,4 +14,4 @@
 ### Accessibility
 
 - The host is not a native `<dl>`; keep each label short and unique so the pairs read clearly in order.
-- External links open in a new tab and show a trailing arrow; don't use `href` for in-app paths.
+- External links open in a new tab, show the trailing external icon and say "(opens in a new tab)" to screen readers; don't use `href` for in-app paths.

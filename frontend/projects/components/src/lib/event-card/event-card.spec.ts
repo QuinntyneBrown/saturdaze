@@ -59,13 +59,16 @@ describe('EventCard', () => {
     expect(link.getAttribute('target')).toBe('_blank');
     expect(link.getAttribute('rel')).toBe('noopener');
     expect(link.classList.contains('btn--quiet')).toBe(true);
-    expect(link.lastElementChild?.tagName.toLowerCase()).toBe('sd-icon');
-    expect(link.lastElementChild?.querySelector('svg')?.innerHTML).toContain('M9 6l6 6-6 6');
+    const icon = link.querySelector('sd-icon');
+    expect(icon?.getAttribute('name')).toBe('external');
+    expect(icon?.querySelector('svg')?.innerHTML).toContain('M20 4l-9 9');
   });
   it('labels the Details link with its text', () => {
     fixture.componentRef.setInput('url', 'https://buskerfest.example');
     fixture.detectChanges();
-    expect(footerLink()?.textContent?.trim()).toBe('Details');
+    expect(footerLink()?.textContent?.replace(/\s+/g, ' ').trim()).toBe(
+      'Details (opens in a new tab)',
+    );
   });
 
   it('mutes a pending suggestion and hides its Details link', () => {

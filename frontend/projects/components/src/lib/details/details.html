@@ -4,7 +4,8 @@
     <dd class="details__value">
       <a class="details__link" [attr.href]="item.href" target="_blank" rel="noopener">
         {{ item.value }}
-        <sd-icon name="arrow_right" [size]="12" [stroke]="2" />
+        <sd-icon name="external" [size]="12" [stroke]="2" />
+        <span class="sd-visually-hidden"> (opens in a new tab)</span>
       </a>
     </dd>
   } @else if (item.value) {
