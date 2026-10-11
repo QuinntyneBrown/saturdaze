@@ -126,7 +126,7 @@
         <li>Never put links, buttons or rich text inside. If it needs a control, it is a <a href="menu.html">menu</a> or a dialog.</li>
         <li>Touch screens have no hover, so tooltips never show on touch. Anything a phone user needs must be visible without one.</li>
       </ul>
-      <p class="ds-note">No mock uses a tooltip; the button page names it as the companion of icon-only buttons. The product ships it as the <code>[sdTooltip]</code> directive on a CDK Overlay. This page documents its geometry on Fluent tokens (drift D30).</p>
+      <p class="ds-note">No mock uses a tooltip; the button page names it as the companion of icon-only buttons. The product ships it as the <code>[sdTooltip]</code> directive on a CDK Overlay. Its bubble reads the same Fluent tokens as this page.</p>
     </section>
 
     <section class="ds-section" id="anatomy"><h2><a href="#anatomy">Anatomy</a></h2>
@@ -241,7 +241,7 @@
     </section>
 
     <section class="ds-section" id="theming"><h2><a href="#theming">Theming</a></h2>
-      <p>The bubble is the inverse of the surface: <code>--colorNeutralBackgroundInverted</code> behind <code>--colorNeutralForegroundInverted</code>. In light that is near-black slate with white text; in dark it flips to a light cream bubble with dark text, so it always reads over any card or photo. The product's <code>tooltip-panel.scss</code> still reads the retired <code>--sd-ink</code> and <code>--sd-bg-elev</code> tokens (D30); moving it to these two Fluent tokens gives it the dark theme for free.</p>
+      <p>The bubble is the inverse of the surface: <code>--colorNeutralBackgroundInverted</code> behind <code>--colorNeutralForegroundInverted</code>. In light that is near-black slate with white text; in dark it flips to a light cream bubble with dark text, so it always reads over any card or photo. The product's <code>tooltip-panel.scss</code> reads the same two tokens, so it takes the dark theme with no extra rule.</p>
     </section>
 
     <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
@@ -328,7 +328,7 @@
 
     <section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>
       <p>No mock uses a tooltip yet; it is a core component. The icon-only buttons that would carry one are on <a href="../../mocks/pages/weekend.html">pages/weekend</a> (More, day header and block actions) and <a href="../../mocks/pages/past.html">pages/past</a> (favourite). The behaviour comes from the product directive in <code>frontend/projects/components/src/lib/tooltip/</code>.</p>
-      <p>Drift: D30 (the product bubble still reads <code>--sd-*</code> tokens). Open: the product waits 400ms before showing on hover; this CSS waits 300ms. Pick one and align both.</p>
+      <p>Open: the product waits 400ms before showing on hover; this CSS waits 300ms. Pick one and align both.</p>
     </section>
 
     <footer class="ds-footer"><span>Saturdaze design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>

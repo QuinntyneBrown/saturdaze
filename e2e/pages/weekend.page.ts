@@ -166,6 +166,11 @@ export class WeekendPage extends BasePage {
     return this.block(title, name).locator(`[aria-label="Swap ${title}"]`);
   }
 
+  /** The Swap action of the first block the user can act on in `name`. */
+  firstSwapButton(name: DayName): Locator {
+    return this.actionableBlocks(name).first().locator('[aria-label^="Swap "]');
+  }
+
   /** "Lock <title>" (aria-pressed=false) / "Unlock <title>" (aria-pressed=true). */
   lockButton(title: string, name?: DayName): Locator {
     return this.block(title, name).locator(
