@@ -169,7 +169,7 @@
           <ol class="day__list">
             <li class="leg" aria-label="Travel: 45 minutes, 52 kilometres to Lavender fields">
               <span></span><span class="leg__rail" aria-hidden="true"></span>
-              <p class="leg__text"><svg class="icon" aria-hidden="true"><use href="#i-car"/></svg>45 min · 52 km<a class="leg__link" href="https://maps.example.com/directions/port-credit-pool/terre-bleu" target="_blank" rel="noopener">Directions<span class="visually-hidden"> to Lavender fields at Terre Bleu (opens in a new tab)</span></a></p>
+              <p class="leg__text"><svg class="icon" aria-hidden="true"><use href="#i-car"/></svg>45 min · 52 km<a class="leg__link" href="https://maps.example.com/directions/port-credit-pool/terre-bleu" target="_blank" rel="noopener">Directions<span class="visually-hidden"> to Lavender fields (opens in a new tab)</span></a></p>
             </li>
           </ol>
         </div>
@@ -179,7 +179,7 @@
   &lt;span class="visually-hidden"&gt; (opens in a new tab)&lt;/span&gt;
 &lt;/a&gt;
 &lt;a class="leg__link" href="https://maps.example.com/directions/…" target="_blank" rel="noopener"&gt;
-  Directions&lt;span class="visually-hidden"&gt; to Lavender fields at Terre Bleu (opens in a new tab)&lt;/span&gt;
+  Directions&lt;span class="visually-hidden"&gt; to Lavender fields (opens in a new tab)&lt;/span&gt;
 &lt;/a&gt;</code></pre></details>
       </div>
       <h3>External links</h3>
@@ -248,7 +248,7 @@
       <h3>Focus</h3>
       <p>The shared ring (2px <code>--colorStrokeFocus2</code>, 2px offset) on <code>:focus-visible</code>, drawn around the link's small radius. On a wrapped inline link the ring follows each line box.</p>
       <h3>Labelling</h3>
-      <p>The link text is the accessible name and must make sense alone (2.4.4): "Create an account", not "click here". Repeated short links add visually hidden context: each "Directions" on the Weekend page names its destination ("Directions to Lavender fields at Terre Bleu"). Links that open a new tab end with visually hidden "(opens in a new tab)" and show the external icon.</p>
+      <p>The link text is the accessible name and must make sense alone (2.4.4): "Create an account", not "click here". Repeated short links add visually hidden context: each "Directions" on the Weekend page names its destination ("Directions to Lavender fields"). Links that open a new tab end with visually hidden "(opens in a new tab)" and show the external icon.</p>
       <h3>Contrast</h3>
       <div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0; gap: var(--spacingHorizontalS);">
         <div class="ds-pair"><span>Link on card</span><span class="ds-pair__ratio" data-contrast="--colorBrandForegroundLink|--colorNeutralBackground1" data-min="4.5"></span></div>
@@ -279,7 +279,7 @@
       <div class="ds-dodont">
         <figure class="ds-do"><div class="ds-example__canvas"><p class="auth-card__alt">No account? <a class="link" href="../../mocks/pages/create-account.html">Create one</a></p></div><figcaption>Underline links inside sentences so they stand out without colour.</figcaption></figure>
         <figure class="ds-dont"><div class="ds-example__canvas"><p class="auth-card__alt">No account? <a class="link" href="../../mocks/pages/create-account.html" style="text-decoration: none;">Create one</a></p></div><figcaption>Coral text with no underline: colour alone marks it as a link, which fails 1.4.1 for people who cannot tell the hues apart.</figcaption></figure>
-        <figure class="ds-do"><div class="ds-example__canvas"><p class="leg__text">45 min · 52 km<a class="leg__link" href="https://maps.example.com/directions/port-credit-pool/terre-bleu" target="_blank" rel="noopener">Directions<span class="visually-hidden"> to Lavender fields at Terre Bleu (opens in a new tab)</span></a></p></div><figcaption>Give each repeated "Directions" its destination and the new-tab warning in visually hidden text.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas"><p class="leg__text">45 min · 52 km<a class="leg__link" href="https://maps.example.com/directions/port-credit-pool/terre-bleu" target="_blank" rel="noopener">Directions<span class="visually-hidden"> to Lavender fields (opens in a new tab)</span></a></p></div><figcaption>Give each repeated "Directions" its destination and the new-tab warning in visually hidden text.</figcaption></figure>
         <figure class="ds-dont"><div class="ds-example__canvas"><p class="leg__text">45 min · 52 km<a class="leg__link" href="https://maps.example.com/directions/port-credit-pool/terre-bleu" target="_blank" rel="noopener">Directions</a></p></div><figcaption>Four identical "Directions" links on one Weekend page: a screen-reader link list cannot tell them apart.</figcaption></figure>
         <figure class="ds-do"><div class="ds-example__canvas"><button class="btn btn--quiet" type="button"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg>Copy</button></div><figcaption>Copying the share link changes something, so it is a button (D5).</figcaption></figure>
         <figure class="ds-dont"><div class="ds-example__canvas"><a class="link" href="#do-dont">Copy link</a></div><figcaption>A link with <code>href="#"</code> and a click handler: Space does not activate it and it is announced as navigation.</figcaption></figure>
@@ -330,7 +330,7 @@
         <li><a href="../../mocks/pages/review-submissions.html">pages/review-submissions</a>: <code>.details__link</code>.</li>
         <li><a href="../../mocks/pages/weekend.html">pages/weekend</a>: <code>.leg__link</code> Directions.</li>
       </ul>
-      <p>Not yet in the mocks: <code>.link--icon</code> and destination text on repeated Directions links. The external icon and the "(opens in a new tab)" announcement are on the mocks' new-tab links.</p>
+      <p>Not yet in the mocks: <code>.link--icon</code>. Repeated Directions links carry their destination as visually hidden text. The external icon and the "(opens in a new tab)" announcement are on the mocks' new-tab links.</p>
     </section>
 
     <footer class="ds-footer"><span>Saturdaze design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>
