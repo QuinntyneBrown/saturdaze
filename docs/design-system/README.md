@@ -125,7 +125,6 @@ and up) are proposals for the product's TypeScript theme.
 
 | ID | Mock | Issue | Resolution |
 |---|---|---|---|
-| D26 | `filter-chip--*` | Tinted pressed chips (leaf, sky, sun, indoor) differ from unpressed ones only by a pale fill (1.4.11). | Pressed tinted chips also take a border in their ink colour. |
 | D27 | `chip__x` | The remove button is 16 × 16px, under the 24px target minimum (2.5.8). | 24px hit area via `::before`; the visible glyph stays 16px. |
 | D28 | `.btn--quiet` | Quiet buttons use the 16% decorative stroke (1.36:1), so the edge disappears on cream. | `--colorNeutralStrokeAccessible` border. |
 | D29 | `app.css` reduced motion | Every animation is cut to 0.001ms, which also freezes the loading spinner. | Durations are zeroed in tokens; the spinner keeps turning (status), shimmer and transitions stop. |

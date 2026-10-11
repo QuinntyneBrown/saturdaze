@@ -360,12 +360,12 @@
   }
   .filter-chip .icon { width: 14px; height: 14px; }
   .filter-chip[aria-pressed="true"], .filter-chip[aria-current] { background: var(--sd-ink); border-color: var(--sd-ink); color: var(--sd-on-ink); }
-  .filter-chip--leaf[aria-pressed="true"] { background: var(--sd-leaf-soft); border-color: var(--sd-leaf-soft); color: var(--sd-leaf-ink); }
-  .filter-chip--indoor[aria-pressed="true"] { background: var(--sd-indoor-soft); border-color: var(--sd-indoor-soft); color: var(--sd-indoor-ink); }
-  .filter-chip--sky[aria-pressed="true"] { background: var(--sd-sky-soft); border-color: var(--sd-sky-soft); color: var(--sd-sky-ink); }
-  .filter-chip--sun[aria-pressed="true"] { background: var(--sd-sun-soft); border-color: var(--sd-sun-soft); color: var(--sd-sun-ink); }
-  .filter-chip--accent[aria-pressed="true"] { background: var(--sd-accent-soft); border-color: var(--sd-accent-soft); color: var(--sd-accent-ink); }
-  .filter-chip--primary[aria-pressed="true"] { background: var(--sd-primary-soft); border-color: var(--sd-primary-soft); color: var(--sd-primary-deep); }
+  .filter-chip--leaf[aria-pressed="true"] { background: var(--sd-leaf-soft); border-color: var(--sd-leaf-ink); color: var(--sd-leaf-ink); }
+  .filter-chip--indoor[aria-pressed="true"] { background: var(--sd-indoor-soft); border-color: var(--sd-indoor-ink); color: var(--sd-indoor-ink); }
+  .filter-chip--sky[aria-pressed="true"] { background: var(--sd-sky-soft); border-color: var(--sd-sky-ink); color: var(--sd-sky-ink); }
+  .filter-chip--sun[aria-pressed="true"] { background: var(--sd-sun-soft); border-color: var(--sd-sun-ink); color: var(--sd-sun-ink); }
+  .filter-chip--accent[aria-pressed="true"] { background: var(--sd-accent-soft); border-color: var(--sd-accent-ink); color: var(--sd-accent-ink); }
+  .filter-chip--primary[aria-pressed="true"] { background: var(--sd-primary-soft); border-color: var(--sd-primary-deep); color: var(--sd-primary-deep); }
   .filter-chip[disabled] { opacity: 0.5; }
 
   /* ---- segments ---- */
