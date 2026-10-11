@@ -43,6 +43,18 @@ export interface ColorVariants {
   tint50: string;
 }
 
+/**
+ * A palette's shades on the dark theme: `tint` is the deep fill, `ink` the
+ * light text that passes AA on it, `primary` the solid fill and `onPrimary`
+ * the label drawn on that fill (status colours only).
+ */
+export interface DarkColorVariants {
+  tint: string;
+  ink: string;
+  primary: string;
+  onPrimary?: string;
+}
+
 /** Neutral foreground, background and stroke tokens plus brand roles. */
 export interface ColorTokens {
   colorNeutralForeground1: string;

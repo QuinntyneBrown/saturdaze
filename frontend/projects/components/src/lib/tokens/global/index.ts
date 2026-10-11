@@ -1,6 +1,17 @@
 export { brandSaturdaze } from './brandColors';
 export {
+  blackAlpha,
+  coralDark,
   cream,
+  forestDark,
+  indoorDark,
+  leafDark,
+  skyDark,
+  sunDark,
+  terracottaDark,
+  umber,
+  umberAlpha,
+  whiteAlphaFaint,
   forest,
   indoor,
   leaf,

@@ -68,6 +68,11 @@ legend {
 }
 
 // ---------------------------------------------------------------- base
+// The tokens carry a dark theme under prefers-color-scheme: dark (L2-130);
+// native controls and scrollbars follow the same setting.
+:root {
+  color-scheme: light dark;
+}
 html {
   background: var(--colorNeutralBackground2);
   color: var(--colorNeutralForeground1);

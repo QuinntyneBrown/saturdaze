@@ -175,3 +175,77 @@
     --fontSizeHero700: 1.5rem;
   }
 }
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --colorNeutralForeground1: #f2ede6;
+    --colorNeutralForeground2: #cdc4b8;
+    --colorNeutralForeground3: #aea597;
+    --colorNeutralForegroundDisabled: #6e665d;
+    --colorNeutralForegroundOnBrand: #2a160e;
+    --colorNeutralForegroundInverted: #201c18;
+    --colorNeutralBackground1: #201c18;
+    --colorNeutralBackground2: #161310;
+    --colorNeutralBackground3: #342e28;
+    --colorNeutralBackgroundInverted: #f2ede6;
+    --colorBackgroundOverlay: rgba(0, 0, 0, 0.6);
+    --colorBackgroundOverlayStrong: rgba(0, 0, 0, 0.72);
+    --colorNeutralStencil2Alpha: rgba(255, 255, 255, 0.06);
+    --colorNeutralStroke1: rgba(242, 237, 230, 0.18);
+    --colorNeutralStroke2: rgba(242, 237, 230, 0.1);
+    --colorNeutralStrokeAccessible: #8f867b;
+    --colorStrokeFocus2: #f59c7c;
+    --colorBrandForeground1: #f59c7c;
+    --colorBrandForeground2: #f6cbb9;
+    --colorBrandBackground: #f59c7c;
+    --colorBrandBackgroundHover: #f6cbb9;
+    --colorBrandBackground2: #43251a;
+    --colorBrandBackgroundGradient:
+      radial-gradient(80% 60% at 0% 0%, #43251a 0%, transparent 60%),
+      radial-gradient(80% 60% at 100% 0%, #3a2d14 0%, transparent 60%);
+    --colorBrandStroke1: #f59c7c;
+    --colorBrandStroke2: #43251a;
+    --colorNeutralShadowAmbient: rgba(0, 0, 0, 0.3);
+    --colorNeutralShadowKey: rgba(0, 0, 0, 0.4);
+    --colorNeutralShadowKeyDarker: rgba(0, 0, 0, 0.55);
+    --colorPaletteSunBackground1: #3a2d14;
+    --colorPaletteSunForeground1: #f4cf7a;
+    --colorPaletteSunForeground3: #f4c969;
+    --colorPaletteSunBorder1: #3a2d14;
+    --colorPaletteSkyBackground1: #1b3140;
+    --colorPaletteSkyBackground3: #9ccbe4;
+    --colorPaletteSkyForeground1: #9ccbe4;
+    --colorPaletteSkyForeground3: #9ccbe4;
+    --colorPaletteSkyBorder1: #1b3140;
+    --colorPaletteSkyBorderActive: #9ccbe4;
+    --colorPaletteLeafBackground1: #1f3522;
+    --colorPaletteLeafBackground3: #a6d8a0;
+    --colorPaletteLeafForeground1: #a6d8a0;
+    --colorPaletteLeafForeground3: #a6d8a0;
+    --colorPaletteLeafBorder1: #1f3522;
+    --colorPaletteLeafBorderActive: #a6d8a0;
+    --colorPaletteIndoorBackground1: #2f2545;
+    --colorPaletteIndoorBackground3: #cdb8ee;
+    --colorPaletteIndoorForeground1: #cdb8ee;
+    --colorPaletteIndoorForeground3: #cdb8ee;
+    --colorPaletteIndoorBorder1: #2f2545;
+    --colorPaletteIndoorBorderActive: #cdb8ee;
+    --colorStatusSuccessBackground1: #1a3629;
+    --colorStatusSuccessBackground3: #7cc4a0;
+    --colorStatusSuccessForeground1: #7cc4a0;
+    --colorStatusSuccessForeground3: #7cc4a0;
+    --colorStatusSuccessBorder1: #1a3629;
+    --colorStatusSuccessBorderActive: #7cc4a0;
+    --colorStatusSuccessForegroundInverted: #0c2219;
+    --colorStatusDangerBackground1: #44201a;
+    --colorStatusDangerBackground3: #ff8f8a;
+    --colorStatusDangerForeground1: #ffa19b;
+    --colorStatusDangerForeground3: #ff8f8a;
+    --colorStatusDangerBorder1: #44201a;
+    --colorStatusDangerBorderActive: #ff8f8a;
+    --colorStatusDangerForegroundInverted: #2a0f09;
+    --shadow4: 0 1px 2px rgba(0, 0, 0, 0.3), 0 2px 6px rgba(0, 0, 0, 0.3);
+    --shadow16: 0 4px 10px rgba(0, 0, 0, 0.4), 0 10px 24px rgba(0, 0, 0, 0.4);
+    --shadow28: 0 20px 40px rgba(0, 0, 0, 0.55);
+  }
+}
