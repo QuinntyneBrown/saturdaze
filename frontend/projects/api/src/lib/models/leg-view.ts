@@ -8,5 +8,7 @@ export interface LegView {
   readonly label: string;
   /** "Travel: 45 minutes, 52 kilometres to Lavender fields". */
   readonly ariaLabel: string;
+  /** Where the leg ends: "to Lavender fields", or "home" (L2-102 AC7). */
+  readonly destination: string;
   readonly directionsUrl: string | null;
 }

@@ -223,11 +223,13 @@ function isAtHome(b: ItineraryBlockDto): boolean {
 function toLegView(minutes: number, distanceKm: number, to: ItineraryBlockDto): LegView {
   const km = distanceKm < 10 ? Math.round(distanceKm * 10) / 10 : Math.round(distanceKm);
   const home = isAtHome(to);
+  const destination = home ? 'home' : `to ${to.title}`;
   return {
     minutes,
     km,
     label: `${minutes} min · ${km} km${home ? ' home' : ''}`,
-    ariaLabel: `Travel: ${minutes} minutes, ${km} kilometres ${home ? 'home' : `to ${to.title}`}`,
+    ariaLabel: `Travel: ${minutes} minutes, ${km} kilometres ${destination}`,
+    destination,
     directionsUrl: to.legBefore?.directionsUrl ?? null,
   };
 }

@@ -36,7 +36,7 @@ test.describe("Weekend — map and travel legs", () => {
     await expect(w.driveBlocks()).toHaveCount(0);
     await expect(w.legs().first()).toBeVisible();
     for (const leg of await w.legs().all()) {
-      await expect(w.legText(leg)).toHaveText(/^\s*\d+ min · [\d.]+ km( home)?( Directions \(opens in a new tab\))?\s*$/);
+      await expect(w.legText(leg)).toHaveText(/^\s*\d+ min · [\d.]+ km( home)?( Directions (to .+|home) \(opens in a new tab\))?\s*$/);
       await expect(leg).toHaveAttribute("aria-label", /^Travel: \d+ minutes, [\d.]+ kilometres (to .+|home)$/);
     }
   });
@@ -55,6 +55,23 @@ test.describe("Weekend — map and travel legs", () => {
         await expect(w.directionsLink(leg)).toHaveCount(0);
       }
     }
+  });
+
+  test("each Directions link names where its leg ends, so no two share a name", async ({ pages }) => {
+    // Traces to: L2-102 AC7 (drift D32; WCAG 2.4.4)
+    const w = pages.weekend;
+    const names: string[] = [];
+    for (const day of ["Saturday", "Sunday"] as const) {
+      await w.selectDay(day);
+      for (const leg of await w.legs().all()) {
+        if ((await w.directionsLink(leg).count()) === 0) continue;
+        const name = `Directions ${await w.legDestination(leg)} (opens in a new tab)`;
+        await expect(w.directionsLink(leg)).toHaveAccessibleName(name);
+        names.push(`${day}: ${name}`);
+      }
+    }
+    expect(names.length).toBeGreaterThan(0);
+    expect(new Set(names).size).toBe(names.length);
   });
 
   test("the day meta counts stops and totals the driving", async ({ pages }) => {

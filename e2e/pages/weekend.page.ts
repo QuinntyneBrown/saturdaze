@@ -405,6 +405,12 @@ export class WeekendPage extends BasePage {
     return leg.getByRole("link", { name: "Directions" });
   }
 
+  /** Where a leg ends, from its accessible name: "to Lavender fields" or "home". */
+  async legDestination(leg: Locator): Promise<string> {
+    const label = (await leg.getAttribute("aria-label")) ?? "";
+    return label.replace(/^Travel: \d+ minutes, [\d.]+ kilometres /, "");
+  }
+
   /** Every Directions link in the visible day's timeline. */
   directionsLinks(): Locator {
     return this.legs().getByRole("link", { name: /^Directions/ });

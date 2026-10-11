@@ -51,7 +51,7 @@ test.describe("Links that open a new tab say so", () => {
     const w = pages.weekend;
     await goto("weekend");
     await w.waitForPlan();
-    await expect(w.directionsLinks().first()).toHaveAccessibleName(`Directions ${NEW_TAB}`);
+    await expect(w.directionsLinks().first()).toHaveAccessibleName(/^Directions (to .+|home) \(opens in a new tab\)$/);
   });
 
   test("Given the review queue, when an admin reaches a submission's link, then it says it opens a new tab and shows the external icon", async ({
