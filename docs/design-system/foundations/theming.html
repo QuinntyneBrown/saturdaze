@@ -113,7 +113,7 @@
       <p class="ds-kicker">Foundation</p>
       <h1>Theming</h1>
       <p class="ds-lead">A theme is a set of values for the alias tokens, nothing more. Components read roles such as "brand fill" and "card surface", so the same markup works in light, in dark, at higher contrast and under a different brand without a single component rule changing.</p>
-      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA in both themes</span><span class="ds-pill">Light ships; dark is a proposal (D25)</span><span class="ds-pill">No tokens owned</span></div>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA in both themes</span><span class="ds-pill">Light and dark both ship</span><span class="ds-pill">No tokens owned</span></div>
       <ul class="ds-toc">
         <li><a href="#overview">Overview</a></li><li><a href="#how-themes-work">How themes work</a></li><li><a href="#tiers">Token tiers</a></li><li><a href="#dark-theme">The dark theme</a></li><li><a href="#compare">Light and dark</a></li><li><a href="#brand-theme">Brand themes</a></li><li><a href="#preferences">Contrast and forced colours</a></li><li><a href="#tokens-json">tokens.json</a></li><li><a href="#product">The product theme</a></li><li><a href="#usage">Usage</a></li><li><a href="#tokens">Tokens</a></li><li><a href="#sources">Sources</a></li>
       </ul>
@@ -122,8 +122,8 @@
     <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
       <p>Saturdaze's tokens follow the Fluent UI v9 model the product adopted in ADR-013. There is one stylesheet, <code>tokens/tokens.css</code>, and every page, component and export reads it. Theming happens in one tier only, the alias tier:</p>
       <ul>
-        <li><b>Light</b> is the default, on <code>:root</code>. It is what the product ships today.</li>
-        <li><b>Dark</b> is built from the same roles, not inverted from light. The mocks and the product have no dark theme (D25); this one is a worked proposal that passes AA everywhere this site shows a pair.</li>
+        <li><b>Light</b> is the default, on <code>:root</code>. It is what the product shows unless the reader's system prefers dark.</li>
+        <li><b>Dark</b> is built from the same roles, not inverted from light. The mocks and the product ship it under <code>@media (prefers-color-scheme: dark)</code>; it passes AA everywhere this site shows a pair.</li>
         <li><b>Preferences</b> (more contrast, forced colours, reduced motion) adjust a handful of alias tokens on top of whichever theme is active.</li>
       </ul>
       <p>Use the toggle at the top of the navigation (or press <kbd>t</kbd>) to switch this whole site between themes. Your choice is remembered on this device.</p>
@@ -348,8 +348,8 @@
       <p>The Angular app does not read this folder. Its tokens live in <code style="overflow-wrap: anywhere;">frontend/projects/components/src/lib/tokens/</code> as a typed Fluent-style theme (<code>global/</code> ramps, <code>alias/</code> roles, <code>createLightTheme(brand)</code>), and <code>npm run tokens</code> generates <code>styles/_tokens.scss</code> and <code>tokens.ts</code> from it (ADR-013).</p>
       <ul>
         <li><b>Same names.</b> Wherever the product has a token, this system uses its exact custom-property name, so a rule copied from here works there.</li>
-        <li><b>Same values.</b> The product and the mocks carry this system's AA fixes, so every light value here matches <code>_tokens.scss</code>. Carrying a future fix over means changing the TypeScript theme and regenerating, never editing <code>_tokens.scss</code>.</li>
-        <li><b>Light only.</b> The product ships the light theme (D25). A dark theme there would be a <code>createDarkTheme(brand)</code> beside <code>createLightTheme</code>, using the role mapping on this page.</li>
+        <li><b>Same values.</b> The product and the mocks carry this system's AA fixes, so every light and dark value here matches <code>_tokens.scss</code>. Carrying a future fix over means changing the TypeScript theme and regenerating, never editing <code>_tokens.scss</code>.</li>
+        <li><b>Both themes.</b> The product's dark theme is <code>createDarkTheme(brand)</code> beside <code>createLightTheme</code>, using the role mapping on this page; <code>npm run tokens</code> writes the tokens that differ from light under <code>@media (prefers-color-scheme: dark)</code>. There is no in-app switch: the theme follows the system setting.</li>
         <li><b>Runtime themes.</b> The product's <code>[sdThemeProvider]</code> directive writes a partial theme onto its host as custom properties, which is the same mechanism as the harbour example above.</li>
       </ul>
     </section>
@@ -378,7 +378,7 @@
         <li><code style="overflow-wrap: anywhere;">docs/adr/ADR-013-fluent-design-tokens.md</code> and <code style="overflow-wrap: anywhere;">frontend/projects/components/src/lib/tokens/</code>.</li>
         <li><a href="../../mocks/pages/weekend.html">pages/weekend</a> (cards, banners, the map) and <a href="../../mocks/pages/ideas.html">pages/ideas</a> for the composed examples.</li>
       </ul>
-      <p>Drift fixed or explained here: D25 (no dark theme) and D26 (pressed chips in forced colours).</p>
+      <p>Drift fixed or explained here: D26 (pressed chips in forced colours).</p>
     </section>
 
     <footer class="ds-footer"><span>Saturdaze design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>

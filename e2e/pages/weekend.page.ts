@@ -265,6 +265,16 @@ export class WeekendPage extends BasePage {
     return this.cover().locator(".cover__sub");
   }
 
+  /** The colour at the dark end of the scrim under the cover's title. */
+  async coverScrimColour(): Promise<string> {
+    return this.cover()
+      .locator(".cover__body")
+      .evaluate((el) => {
+        const image = getComputedStyle(el).backgroundImage;
+        return image.match(/(rgba?|color)\([^)]*\)/)?.[0] ?? image;
+      });
+  }
+
   coverCredit(): Locator {
     return this.cover().locator(".media__credit");
   }
@@ -300,6 +310,11 @@ export class WeekendPage extends BasePage {
   /** D29: the dashed "Your own photo" tile around the file input. */
   ownPhotoTile(): Locator {
     return this.dialog().locator(".photo-pick__upload");
+  }
+
+  /** D29: the "Your photo" name pill over an uploaded photo's preview. */
+  ownPhotoName(): Locator {
+    return this.ownPhotoTile().locator(".photo-pick__name");
   }
 
   /** Choose a family photo from disk, or an in-memory file, in D29. */

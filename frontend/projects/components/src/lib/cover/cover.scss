@@ -3,7 +3,8 @@
 // `.cover` from docs/mocks/styles/app.css: 16:9 on phones, 21:8 from 720px.
 
 :host {
-  --sd-cover-scrim: color-mix(in srgb, var(--colorNeutralForeground1) 78%, transparent);
+  // The photo scrim: dark in both themes, so the white title reads over any photo.
+  --sd-cover-scrim: var(--colorBackgroundOverlayStrong);
 
   position: relative;
   display: block;

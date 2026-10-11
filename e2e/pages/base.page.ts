@@ -262,6 +262,16 @@ export abstract class BasePage {
     await cdp.send("Page.setFontSizes", { fontSizes: { standard: px } });
   }
 
+  /** Emulates the reader's system colour scheme (`prefers-color-scheme`). */
+  async preferColorScheme(scheme: "light" | "dark"): Promise<void> {
+    await this.page.emulateMedia({ colorScheme: scheme });
+  }
+
+  /** The page canvas colour behind every screen, e.g. `rgb(250, 247, 242)`. */
+  async pageBackground(): Promise<string> {
+    return this.body.evaluate((el) => getComputedStyle(el).backgroundColor);
+  }
+
   /** The computed font size of `target`'s text, e.g. `12px`. */
   async fontSize(target: Locator): Promise<string> {
     return target.evaluate((el) => getComputedStyle(el).fontSize);
