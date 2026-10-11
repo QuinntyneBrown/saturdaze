@@ -42,6 +42,7 @@
     --sd-z-topbar: 20;
     --sd-z-nav: 30;
     --sd-z-dialog: 40;
+    --sd-z-skip: 50;      /* the skip link, above the bars and any dialog */
     /* focus */
     --sd-focus-ring: 2px solid var(--sd-primary-deep);  /* 5.56:1 on the canvas, 5.18:1 on wells (WCAG 1.4.11, 2.4.7) */
     /* tone pairs (mirrors frontend/projects/components/src/lib/styles/_tokens.scss) */
@@ -101,6 +102,17 @@
    shell — top bar (≥720), bottom nav (<720), main
    -------------------------------------------------------------------------- */
 @layer shell {
+  /* skip link (WCAG 2.4.1): first in <body>, off screen until focused, then
+     16px from the top left, above every bar. Never display:none — that would
+     take it out of the tab order. */
+  .skip-link {
+    position: absolute; left: var(--sd-s-4); top: -100px; z-index: var(--sd-z-skip);
+    display: inline-flex; align-items: center; min-height: 44px; padding: 0 var(--sd-s-4);
+    font-size: var(--sd-fs-ui); font-weight: var(--sd-fw-semibold); color: var(--sd-ink); text-decoration: none;
+    background: var(--sd-surface); border-radius: var(--sd-r-sm); box-shadow: var(--sd-shadow-3);
+  }
+  .skip-link:focus-visible { top: var(--sd-s-4); }
+
   .brand-mark {
     width: 26px; height: 26px; border-radius: 8px; flex: none;
     background:

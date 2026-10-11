@@ -113,7 +113,7 @@
       <p class="ds-kicker">Component · Navigation</p>
       <h1>Skip link</h1>
       <p class="ds-lead">A keyboard user should not have to tab through the brand and four navigation links on every page. The skip link is the first thing Tab reaches; it appears, and Enter jumps straight to the page content.</p>
-      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA · 2.4.1</span><span class="ds-pill ds-pill--warn">Status: core, not in the mocks (D22)</span><span class="ds-pill">Angular: none yet</span></div>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA · 2.4.1</span><span class="ds-pill">Status: core</span><span class="ds-pill">Angular: <code>sd-skip-link</code></span></div>
       <ul class="ds-toc">
         <li><a href="#overview">Overview</a></li><li><a href="#anatomy">Anatomy</a></li><li><a href="#variants">Variants</a></li><li><a href="#sizes">Sizes</a></li><li><a href="#states">States</a></li><li><a href="#responsive">Responsive</a></li><li><a href="#theming">Theming</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#content">Content</a></li><li><a href="#do-dont">Do and don't</a></li><li><a href="#tokens">Tokens</a></li><li><a href="#code">Code</a></li><li><a href="#sources">Sources</a></li>
       </ul>
@@ -121,7 +121,7 @@
 
     <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
       <p>Every page in the family app, the public site and Admin starts with <code>&lt;a class="skip-link" href="#main"&gt;Skip to content&lt;/a&gt;</code> as the first element in <code>&lt;body&gt;</code>, and every page's <code>&lt;main&gt;</code> has <code>id="main"</code> (the mocks already give it that id). It satisfies WCAG 2.4.1 Bypass Blocks.</p>
-      <p>No mock has one yet (drift D22). This page shows it as it should ship. Try it here: reload, then press <kbd>Tab</kbd> once; the real skip link appears at the top left of this page.</p>
+      <p>Every mock starts with it, and both Angular apps render <code>sd-skip-link</code> first in every shell. Try it here: reload, then press <kbd>Tab</kbd> once; the real skip link appears at the top left of this page.</p>
       <ul>
         <li>One skip link per page, to the main content. Saturdaze pages are short enough that "skip to navigation" or "skip to filters" links are not needed.</li>
         <li>Auth screens have no navigation before <code>&lt;main&gt;</code>; they still carry the skip link so every page behaves the same and the first Tab is predictable.</li>
@@ -248,7 +248,7 @@
     <section class="ds-section" id="do-dont"><h2><a href="#do-dont">Do and don't</a></h2>
       <div class="ds-dodont">
         <figure class="ds-do"><div class="ds-example__canvas"><code>&lt;body&gt;&lt;a class="skip-link" href="#main"&gt;</code></div><figcaption>Make it the first focusable element in the body, before the top bar.</figcaption></figure>
-        <figure class="ds-dont"><div class="ds-example__canvas"><code>&lt;header class="topbar"&gt;…&lt;/header&gt;&lt;a class="skip-link"&gt;</code></div><figcaption>After the bar it skips nothing. Every mock today has no skip link at all (D22).</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><code>&lt;header class="topbar"&gt;…&lt;/header&gt;&lt;a class="skip-link"&gt;</code></div><figcaption>After the bar it skips nothing.</figcaption></figure>
         <figure class="ds-do"><div class="ds-example__canvas"><a class="skip-link" href="#main" data-state="focus">Skip to content</a></div><figcaption>Off screen at rest, fully visible on focus.</figcaption></figure>
         <figure class="ds-dont"><div class="ds-example__canvas"><code>.skip-link { display: none; }</code></div><figcaption><code>display: none</code> (or <code>visibility: hidden</code>) removes it from the tab order, so it can never be used.</figcaption></figure>
       </div>
@@ -292,7 +292,7 @@ skipToMain(e: Event) { e.preventDefault(); this.main().nativeElement.focus(); } 
     </section>
 
     <section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>
-      <p>No mock has a skip link (drift D22: "No skip link (2.4.1)"); every mock's <code>&lt;main&gt;</code> already has <code>id="main"</code>, so adding the link is one line per page. The scroll clearance for the sticky bar comes from <a href="../../mocks/styles/app.css">styles/app.css</a> (<code>scroll-padding-top: calc(var(--sd-topbar-h) + 16px)</code>). The design-system docs themselves use the same component on every page. The product has no skip link either; the <code>&lt;base href&gt;</code> fragment problem above is the thing to watch when adding it.</p>
+      <p>Every mock starts with <code>&lt;a class="skip-link" href="#main"&gt;Skip to content&lt;/a&gt;</code>, the first line in <code>&lt;body&gt;</code>, and every mock's <code>&lt;main&gt;</code> has <code>id="main"</code>; the mocks' <code>.skip-link</code> rule is in <code>styles/app.css</code>. The scroll clearance for the sticky bar comes from <a href="../../mocks/styles/app.css">styles/app.css</a> (<code>scroll-padding-top: calc(var(--sd-topbar-h) + 16px)</code>). The design-system docs themselves use the same component on every page. In the product, <code>sd-skip-link</code> (components library) is the first element of the family app's and Admin's <code>app.html</code>; it handles the click to get round the <code>&lt;base href&gt;</code> fragment problem above.</p>
     </section>
 
     <footer class="ds-footer"><span>Saturdaze design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>
