@@ -277,9 +277,9 @@
   --colorBrandStroke2: var(--globalColorCoral100); /* focus halo around a field */
 
   /* ---------- Strokes and focus ------------------------------------------- */
-  --colorNeutralStroke1: rgba(31, 41, 55, 0.16); /* decorative edges: quiet button, dashed add row */
+  --colorNeutralStroke1: rgba(31, 41, 55, 0.16); /* decorative edges: hovered cards, timeline rails */
   --colorNeutralStroke2: rgba(31, 41, 55, 0.08); /* dividers, card edges (decorative) */
-  --colorNeutralStrokeAccessible: var(--globalColorSlate400); /* input borders, switch track (1.4.11) */
+  --colorNeutralStrokeAccessible: var(--globalColorSlate400); /* input borders, quiet button, switch track (1.4.11) */
   --colorStrokeFocus1: var(--globalColorWhite); /* inner focus gap */
   --colorStrokeFocus2: var(--globalColorCoral600); /* focus ring */
 
@@ -400,9 +400,9 @@
   --colorBrandStroke2: var(--globalColorCoral100); /* focus halo around a field */
 
   /* ---------- Strokes and focus ------------------------------------------- */
-  --colorNeutralStroke1: rgba(31, 41, 55, 0.16); /* decorative edges: quiet button, dashed add row */
+  --colorNeutralStroke1: rgba(31, 41, 55, 0.16); /* decorative edges: hovered cards, timeline rails */
   --colorNeutralStroke2: rgba(31, 41, 55, 0.08); /* dividers, card edges (decorative) */
-  --colorNeutralStrokeAccessible: var(--globalColorSlate400); /* input borders, switch track (1.4.11) */
+  --colorNeutralStrokeAccessible: var(--globalColorSlate400); /* input borders, quiet button, switch track (1.4.11) */
   --colorStrokeFocus1: var(--globalColorWhite); /* inner focus gap */
   --colorStrokeFocus2: var(--globalColorCoral600); /* focus ring */
 

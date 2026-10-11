@@ -314,7 +314,7 @@
                 box-shadow var(--sd-dur-fast) var(--sd-ease);
   }
   .btn--primary { background: var(--sd-primary-fill); color: var(--sd-primary-ink); box-shadow: var(--sd-shadow-1); }
-  .btn--quiet { background: var(--sd-surface); border-color: var(--sd-line-strong); color: var(--sd-ink); }
+  .btn--quiet { background: var(--sd-surface); border-color: var(--sd-line-control); color: var(--sd-ink); }
   .btn--ghost { color: var(--sd-ink-soft); }
   .btn--danger { background: var(--sd-warn); color: var(--sd-on-warn); }
   .btn--warn-text { color: var(--sd-warn-deep); }

@@ -5,7 +5,8 @@ import { stubWeekendCover } from "../fixtures/weekend-cover.js";
  * Control edge contrast (drift D06, WCAG 1.4.11). Text field borders, the off
  * switch track, resting filter chips and vote buttons, and the dashed add and
  * upload edges read `--colorNeutralStrokeAccessible`, slate #80868F: 3.67:1
- * on white and 3.20:1 on wells. The old 16% ink line was 1.36:1.
+ * on white and 3.20:1 on wells. The old 16% ink line was 1.36:1. Quiet
+ * buttons draw the same edge (drift D28), so Cancel stays visible on cream.
  */
 
 const ACCESSIBLE_STROKE = "rgb(128, 134, 143)"; // #80868F
@@ -82,5 +83,18 @@ test.describe("Control edge contrast", () => {
     await w.waitForPlan();
     await w.changePhotoButton().click();
     expect(await w.borderColor(w.ownPhotoTile())).toBe(ACCESSIBLE_STROKE);
+  });
+
+  test("Given the likes editor, when a person looks for Cancel, then the quiet button's edge is the accessible stroke", async ({
+    goto,
+    pages,
+  }) => {
+    await goto("family");
+    await pages.family.waitForReady();
+    const f = pages.family;
+    await f.editLikesButton().click();
+    expect(await f.borderColor(f.dialogAction("Cancel"))).toBe(
+      ACCESSIBLE_STROKE,
+    );
   });
 });

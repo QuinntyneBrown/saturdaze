@@ -125,7 +125,6 @@ and up) are proposals for the product's TypeScript theme.
 
 | ID | Mock | Issue | Resolution |
 |---|---|---|---|
-| D28 | `.btn--quiet` | Quiet buttons use the 16% decorative stroke (1.36:1), so the edge disappears on cream. | `--colorNeutralStrokeAccessible` border. |
 | D29 | `app.css` reduced motion | Every animation is cut to 0.001ms, which also freezes the loading spinner. | Durations are zeroed in tokens; the spinner keeps turning (status), shimmer and transitions stop. |
 | D30 | `frontend/.../tooltip/tooltip-panel.scss` | Not a mock: the product tooltip still reads `--sd-*` tokens after the ADR-013 migration. | Noted for the product; the design-system tooltip matches its geometry on Fluent tokens. |
 | D31 | `legal.html`, `review-submissions.html`, `admin.place.html` | External links open in a new tab without saying so (3.2.5 advisory, 2.4.4). | External icon plus visually hidden "(opens in a new tab)"; see `link`. |
