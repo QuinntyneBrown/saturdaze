@@ -125,7 +125,6 @@ and up) are proposals for the product's TypeScript theme.
 
 | ID | Mock | Issue | Resolution |
 |---|---|---|---|
-| D40 | `weekend.html` | Numbered stop discs carry `aria-label="Stop 2"` on a `<span>`, which assistive technology ignores. | Visually hidden "Stop " text before the number. |
 | D41 | `app.css` lists | `.list__item:last-child { border-bottom: 0 }` matches every action row (each is the last child of its `<li>`), so Family, D25 and admin Places lose all row dividers. | Divider set on `.list > li:not(:last-child) > .list__item`. |
 | D42 | landing, legal, admin pages | Landmarks: the site footer sits inside `<main>`, the pager is a plain `<div>`, admin Places is a `<div>` of links, and the account avatar is a link to the dialog gallery rather than a menu button. | `footer`, `nav aria-label="Pagination"`, `ul`, and a `button aria-haspopup="menu"` in the component pages. |
 | D43 | `weekend.html` | The Saturday/Sunday tabs respond to clicks only: no arrow keys, no roving tabindex. | APG Tabs keyboard model on the tabs page. |

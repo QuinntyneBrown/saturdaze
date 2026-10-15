@@ -494,7 +494,7 @@
       <p>Actions are revealed on <code>:focus-within</code>, so tabbing into a row shows them before the focus ring lands on the first one. The ring is drawn on the focused control, not the row. After Swap or Regenerate replaces a block, focus moves to the new block's title (<code>tabindex="-1"</code>), never back to the top of the page.</p>
       <h3>Labelling</h3>
       <ul>
-        <li>Stop numbers carry visually hidden text: <code>&lt;span class="visually-hidden"&gt;Stop &lt;/span&gt;2</code>. The mock's <code>aria-label="Stop 2"</code> on a <code>&lt;span&gt;</code> is ignored by most screen readers.</li>
+        <li>Stop numbers carry visually hidden text: <code>&lt;span class="visually-hidden"&gt;Stop &lt;/span&gt;2</code>, because an <code>aria-label</code> on a <code>&lt;span&gt;</code> is ignored by most screen readers.</li>
         <li>Icon actions name the verb and the block: "Swap Lavender fields", "Why this: Lunch at La Marina", "Mark Costco run done". The chevron is "Details for Lavender fields".</li>
         <li>An <code>aria-label</code> on a labelled day button starts with its visible label (2.5.3): "Lock day: Saturday", not "Lock Saturday".</li>
         <li>Legs keep the mock's spelled-out <code>aria-label</code> ("Travel: 45 minutes, 52 kilometres to Lavender fields"); Directions keeps its short visible label and adds the destination as visually hidden text ("Directions to Lavender fields (opens in a new tab)", or "Directions home"), so the links on a day never share a name (2.4.4).</li>
