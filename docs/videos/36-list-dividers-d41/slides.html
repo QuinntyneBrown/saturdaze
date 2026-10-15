@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 36 Slides</title>
+<link rel="stylesheet" href="../assets/slides.css">
+</head>
+<body data-video-number="36" data-video-title="Design drift D41" data-parts="Introduction|What drifted|Why it matters|The fix|Before and after|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Design drift · Video 36</div>
+  <h1>D41: the dividers that disappeared</h1>
+  <p class="lead">A last-child rule stripped every row's hairline in the mocks</p>
+</section>
+
+<section id="drift" data-part="1" data-cue="In the mocks, a list row is the class">
+  <h2>What drifted</h2>
+  <pre class="code tight" data-lang="html" data-mark="1,2">&lt;ul class="list"&gt;
+  &lt;li&gt;&lt;a class="list__item"&gt;Quinn&lt;/a&gt;&lt;/li&gt;   &lt;!-- last child of its own li --&gt;
+  &lt;li&gt;&lt;a class="list__item"&gt;Sara&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+.list__item:last-child { border-bottom: 0; }  /* matches every row */</pre>
+</section>
+
+<section id="why" data-part="2" data-cue="There is no WCAG criterion for a hairline">
+  <h2>Why it matters</h2>
+  <ul>
+    <li>Rows run together; the card stops showing where one tap target ends</li>
+    <li>The design system had already fixed this in extraction; the mocks were out of step</li>
+  </ul>
+</section>
+
+<section id="fix" data-part="3" data-cue="This is a one-rule change in the stylesheet">
+  <h2>The one-rule fix</h2>
+  <pre class="code tight" data-lang="css" data-mark="2">.list__item:last-child { border-bottom: 0; }
+.list &gt; li:not(:last-child) &gt; .list__item { border-bottom: 1px solid var(--sd-line); }</pre>
+  <ul>
+    <li><code>docs/mocks/styles/app.css</code>; no new behaviour, so no acceptance test</li>
+    <li><code>sd-list-item</code> in the app was already right (host <code>:last-child</code>)</li>
+    <li>Design-system list note reworded; D41 removed from the drift log</li>
+  </ul>
+</section>
+
+<section id="before" data-part="4" data-cue="Here is the build from before the fix." data-clip="clips/before.mp4" data-clip-delay="1">
+  <aside class="clip-notes">
+    <h3>Before · Family mock</h3>
+    <ul><li>No line between the four people</li></ul>
+  </aside>
+</section>
+
+<section id="after" data-part="4" data-cue="And here is the fix." data-clip="clips/after.mp4" data-clip-delay="1">
+  <aside class="clip-notes">
+    <h3>After · Family mock</h3>
+    <ul><li>A hairline under every row but the last</li></ul>
+  </aside>
+</section>
+
+<section id="recap" data-part="5" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <ul>
+      <li>A last-child rule on a row inside its own <code>li</code> matches every row</li>
+      <li>Divider on <code>.list &gt; li:not(:last-child) &gt; .list__item</code></li>
+      <li>The product component was right; the mock drifted</li>
+      <li>Fix the mock, then delete the drift record</li>
+    </ul>
+  </div>
+</section>
+
+<script src="../assets/slides.js"></script>
+</body>
+</html>
