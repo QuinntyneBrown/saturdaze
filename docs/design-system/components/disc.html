@@ -123,7 +123,7 @@
       <p>Three related markers share this page. None of them is a control: a disc sits inside a row, card or heading that is the control (or is plain content), and the text beside it carries the meaning.</p>
       <ul>
         <li><b>Disc</b> (<code>.disc</code>) is the leading icon of a <a href="list.html">list</a> row ("Swim lessons", "Port Credit, Mississauga"), a <a href="card.html">card</a> head (La Marina in dialog D12) or the hero icon of an <a href="empty-state.html">empty state</a> and an <a href="auth-card.html">auth card</a> ("Check your email").</li>
-        <li><b>Weather disc</b> (<code>.weather-disc</code>) leads each day header on Weekend with the forecast: sun for Saturday, cloud for Sunday. The temperature is always written beside it.</li>
+        <li><b>Weather disc</b> (<code>.weather-disc</code>) leads each day header on Weekend with the forecast: sun for Saturday, cloud for Sunday. The forecast word and the temperature are always written beside it, in the day's meta line, because the disc is decorative.</li>
         <li><b>Date tile</b> (<code>.date-tile</code>) shows the month and day of an event on Ideas → Events and on Review submissions. The full date is always in the card meta.</li>
       </ul>
       <p>Use an <a href="avatar.html">avatar</a> for a person, a <a href="media.html">media</a> frame or its fallback tile for a place's photo, and a <a href="chip.html">chip</a> when the marker needs a word. A disc never becomes a button on its own; if it must act, use an icon-only <a href="button.html">button</a>.</p>
@@ -249,7 +249,7 @@
       <h3>Role and pattern</h3>
       <p>No ARIA pattern applies: discs are images, not widgets. Choose one of two treatments:</p>
       <ul>
-        <li><b>Decorative</b> (almost always): the text beside says the same thing, so the disc is <code>aria-hidden="true"</code>. Every mock use is decorative: the lock beside "Swim lessons", the sun beside "17 May · 22° / 14°", the date tile beside "Sat 20 Jun".</li>
+        <li><b>Decorative</b> (almost always): the text beside says the same thing, so the disc is <code>aria-hidden="true"</code>. Every mock use is decorative: the lock beside "Swim lessons", the sun beside "17 May · Sunny · 22° / 14°", the date tile beside "Sat 20 Jun".</li>
         <li><b>Meaningful</b> (rare): when the disc is the only carrier, give the wrapper <code>role="img"</code> and an <code>aria-label</code> ("Sunny, 22 degrees"). Prefer adding visible text instead.</li>
       </ul>
       <h3>Keyboard</h3>
@@ -325,7 +325,7 @@
 
 &lt;!-- Weather disc, forecast written beside it --&gt;
 &lt;span class="weather-disc weather-disc--sun" aria-hidden="true"&gt;&lt;svg class="icon" aria-hidden="true"&gt;&lt;use href="#i-sun"/&gt;&lt;/svg&gt;&lt;/span&gt;
-&lt;p class="day__meta"&gt;17 May · 22° / 14° · 3 stops&lt;/p&gt;
+&lt;p class="day__meta"&gt;17 May · Sunny · 22° / 14° · 3 stops&lt;/p&gt;
 
 &lt;!-- Meaningful: the disc is the only carrier --&gt;
 &lt;span class="weather-disc weather-disc--rain" role="img" aria-label="Rain, 14 degrees"&gt;&lt;svg class="icon" aria-hidden="true"&gt;&lt;use href="#i-rain"/&gt;&lt;/svg&gt;&lt;/span&gt;

@@ -125,7 +125,6 @@ and up) are proposals for the product's TypeScript theme.
 
 | ID | Mock | Issue | Resolution |
 |---|---|---|---|
-| D36 | `weekend.html` | Saturday's forecast exists only in an `aria-hidden` sun disc; the meta text never says "sunny" (1.1.1, 1.4.1). | Weather word in the day meta text. |
 | D37 | admin mocks, sprite | `star` means both "rating" and "Make primary"; `arrow_right` and `chevron_right` draw the same glyph. | One meaning per icon (iconography page); a distinct primary-photo treatment is an open decision. |
 | D38 | `sign-in.html`, field errors | The error banner and field errors use the close (×) glyph as a status icon, and the banner adds `aria-live="assertive"` on top of `role="alert"`. | `alert` icon; `role="alert"` alone. |
 | D39 | `admin.sign-in.html` | Sign out on the admin gate is a danger button, though nothing is destroyed. | Quiet warn-text button, as on Family. |
