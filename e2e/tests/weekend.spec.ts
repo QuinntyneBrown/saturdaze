@@ -36,6 +36,14 @@ test.describe("Weekend", () => {
     }
   });
 
+  // Traces to: L2-036 (WCAG 2.4.3)
+  test("while generating, the primary action comes first in the DOM so Tab matches the phone layout", async ({ goto, pages }) => {
+    await goto("weekendGenerating");
+    const w = pages.weekend;
+    await w.waitForReady();
+    expect(await w.headerActionNames()).toEqual(["Share", "Add to calendar"]);
+  });
+
   // Traces to: L2-139 AC1-AC3
   test("the day tabs follow the APG keyboard model", async ({ page, pages }) => {
     const w = pages.weekend;

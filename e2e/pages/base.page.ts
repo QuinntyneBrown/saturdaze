@@ -406,6 +406,13 @@ export abstract class BasePage {
     return this.pageHeader.locator(".page-header__actions");
   }
 
+  /** The header actions' accessible names in DOM order, which is Tab order (WCAG 2.4.3). */
+  async headerActionNames(): Promise<string[]> {
+    return this.pageActions()
+      .getByRole("button")
+      .evaluateAll((els) => els.map((el) => (el.getAttribute("aria-label") ?? el.textContent ?? "").trim()));
+  }
+
   /** Header action by accessible name ("Share", "Add to calendar", "Suggest an event"). */
   headerAction(name: string): Locator {
     return control(this.pageActions(), name);
