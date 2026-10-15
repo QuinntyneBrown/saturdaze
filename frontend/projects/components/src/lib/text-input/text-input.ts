@@ -79,8 +79,9 @@ export class TextInput implements ControlValueAccessor {
 
   protected readonly describedBy = computed(() => {
     const ids: string[] = [];
+    // The template renders the error in place of the hint, so list only what is in the page (L2-140).
     if (this.error()) ids.push(this.errorId);
-    if (this.hint()) ids.push(this.hintId);
+    else if (this.hint()) ids.push(this.hintId);
     return ids.length ? ids.join(' ') : null;
   });
 

@@ -518,6 +518,15 @@ export abstract class BasePage {
     return this.dialog().locator("form");
   }
 
+  /** The ids in a field's `aria-describedby` that name no element in the page (there should be none). */
+  async describedByIdsMissing(field: Locator): Promise<string[]> {
+    return field.evaluate((el) =>
+      (el.getAttribute("aria-describedby") ?? "")
+        .split(/\s+/)
+        .filter((id) => id && !document.getElementById(id)),
+    );
+  }
+
   /** The error summary a form dialog shows after a failed submit (L2-134). */
   dialogErrorSummary(): Locator {
     return this.dialog().locator(".error-summary");

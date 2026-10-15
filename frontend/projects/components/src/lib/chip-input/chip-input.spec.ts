@@ -87,15 +87,31 @@ describe('ChipInput', () => {
     expect(onChange).toHaveBeenLastCalledWith(['Parks', 'Pizza', 'Bikes', 'Museum']);
   });
 
-  it('ignores blanks and case-insensitive duplicates', () => {
+  it('ignores blanks', () => {
     type('   ');
     key('Enter');
+    fixture.detectChanges();
+    expect(chipText()).toEqual(['Parks', 'Pizza']);
+    expect(onChange).not.toHaveBeenCalled();
+    expect(host.querySelector('.field__error')).toBeNull();
+  });
+
+  it('refuses a case-insensitive duplicate with a message and keeps the text (L2-140)', () => {
     type('pizza');
     key('Enter');
     fixture.detectChanges();
     expect(chipText()).toEqual(['Parks', 'Pizza']);
     expect(onChange).not.toHaveBeenCalled();
-    expect(field().value).toBe('');
+    expect(field().value).toBe('pizza');
+    expect(field().getAttribute('aria-invalid')).toBe('true');
+    const error = host.querySelector('.field__error') as HTMLElement;
+    expect(error.textContent?.trim()).toBe('pizza is already in the list.');
+    expect(field().getAttribute('aria-describedby')).toBe(error.id);
+
+    type('pizzas');
+    fixture.detectChanges();
+    expect(host.querySelector('.field__error')).toBeNull();
+    expect(field().hasAttribute('aria-invalid')).toBe(false);
   });
 
   it('removes the last value on Backspace when the draft is empty', () => {
