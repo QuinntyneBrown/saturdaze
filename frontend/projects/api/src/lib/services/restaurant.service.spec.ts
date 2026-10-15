@@ -204,7 +204,7 @@ describe('RestaurantService', () => {
   it('describes each section from the weekend meal block, else close to home', async () => {
     await flushLoad();
     const [lunch, dinner] = service.list()().sections;
-    expect(lunch!.subtitle).toBe('Near Lavender fields · 1:00 to 2:15pm');
+    expect(lunch!.subtitle).toBe('Near Lavender fields · 1:00pm to 2:15pm');
     expect(dinner!.subtitle).toBe('Close to home');
     service.setFilters({ day: 'Sunday' });
     expect(service.list()().sections[0]!.subtitle).toBe('Close to home');

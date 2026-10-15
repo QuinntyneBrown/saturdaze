@@ -29,7 +29,7 @@ function tileFor(dateIso: string): DateTile {
 }
 
 /**
- * "Sat 20 Jun · 2:00 to 9:00pm" — or "Sat 20 Jun · 2:00pm" without an end,
+ * "Sat 20 Jun · 2:00pm to 9:00pm" — or "Sat 20 Jun · 2:00pm" without an end,
  * and both dates when the event ends on another day.
  */
 export function submissionWhen(dto: EventSubmissionDto): string {

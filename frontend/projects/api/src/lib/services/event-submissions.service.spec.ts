@@ -111,7 +111,7 @@ describe('EventSubmissionsService', () => {
       state: 'pending',
       title: 'Port Credit Buskerfest',
       tile: { day: '20', mon: 'Jun' },
-      when: 'Sat 20 Jun · 2:00 to 9:00pm',
+      when: 'Sat 20 Jun · 2:00pm to 9:00pm',
       location: 'Memorial Park, Lakeshore Rd',
       cost: 'Free',
       ages: 'All ages',

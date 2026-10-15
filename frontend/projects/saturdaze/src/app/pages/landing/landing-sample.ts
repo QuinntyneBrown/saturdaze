@@ -35,7 +35,7 @@ export const LANDING_SAMPLE: readonly SampleDay[] = [
     weather: 'sun',
     blocks: [
       {
-        time: '9:00',
+        time: '9:00am',
         duration: '60m',
         icon: 'bike',
         title: 'Swim lessons',
@@ -43,9 +43,9 @@ export const LANDING_SAMPLE: readonly SampleDay[] = [
         commitment: true,
         chips: [{ tone: 'accent', icon: 'lock', label: 'Commitment' }],
       },
-      { time: '10:30', duration: '45m', icon: 'car', title: 'Drive to Terre Bleu', drive: true },
+      { time: '10:30am', duration: '45m', icon: 'car', title: 'Drive to Terre Bleu', drive: true },
       {
-        time: '11:00',
+        time: '11:00am',
         duration: '2h',
         icon: 'tree',
         title: 'Lavender fields',
@@ -63,14 +63,14 @@ export const LANDING_SAMPLE: readonly SampleDay[] = [
     weather: 'cloud',
     blocks: [
       {
-        time: '8:30',
+        time: '8:30am',
         duration: '45m',
         icon: 'home',
         title: 'Pancakes at home',
         subtitle: 'Mae flips, Eli pours',
       },
       {
-        time: '9:15',
+        time: '9:15am',
         duration: '45m',
         icon: 'bag',
         title: 'Costco run',
@@ -79,7 +79,7 @@ export const LANDING_SAMPLE: readonly SampleDay[] = [
         chips: [{ tone: 'indoor', label: 'Errand' }],
       },
       {
-        time: '10:30',
+        time: '10:30am',
         duration: '75m',
         icon: 'pin',
         title: 'Church',

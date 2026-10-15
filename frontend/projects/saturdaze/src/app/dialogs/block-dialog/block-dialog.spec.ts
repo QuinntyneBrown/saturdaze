@@ -36,7 +36,9 @@ describe('BlockDialog', () => {
   it('renders an activity block with the drive chip in the subtitle and Swap / Lock actions', async () => {
     await mount(BLOCK);
     expect(text(host.querySelector('.dialog__title'))).toBe('Terre Bleu Lavender Farm');
-    expect(text(host.querySelector('.dialog__sub'))).toBe('Saturday 11:00 to 1:00 · 45 min drive');
+    expect(text(host.querySelector('.dialog__sub'))).toBe(
+      'Saturday 11:00am to 1:00pm · 45 min drive',
+    );
     expect(wells()).toEqual(['Why this']);
     expect(text(host.querySelector('sd-well'))).toContain('Lavender peaks 17 to 24 May');
     expect(actions()).toEqual(['Swap for something else', 'Lock this block']);
@@ -57,7 +59,7 @@ describe('BlockDialog', () => {
   it('explains a locked block and offers Unlock', async () => {
     await mount(BLOCK_LOCKED);
     expect(text(host.querySelector('.dialog__sub'))).toBe(
-      'Saturday 8:00 to 9:00pm · Lights out at 9',
+      'Saturday 8:00pm to 9:00pm · Lights out at 9',
     );
     expect(wells()).toEqual(['Locked', 'Why this']);
     expect(actions()).toContain('Unlock');
@@ -96,7 +98,7 @@ describe('BlockDialog', () => {
 
   it('falls back to a generic "why" when the planner gave no reason', async () => {
     await mount({ ...BLOCK, reason: null, subtitle: null, chips: [] });
-    expect(text(host.querySelector('.dialog__sub'))).toBe('Saturday 11:00 to 1:00');
+    expect(text(host.querySelector('.dialog__sub'))).toBe('Saturday 11:00am to 1:00pm');
     expect(text(host.querySelector('sd-well'))).toContain(
       'Part of the weekend the planner drafted.',
     );

@@ -34,16 +34,16 @@ describe('family-presentation', () => {
     expect(commitmentDayLabel('Saturday')).toBe('Saturdays');
     expect(
       commitmentSubtitle({ dayOfWeek: 'Saturday', startTime: '09:00:00', endTime: '10:00' }),
-    ).toBe('Saturdays · 9:00 to 10:00');
+    ).toBe('Saturdays · 9:00am to 10:00am');
     expect(commitmentSubtitle({ dayOfWeek: 'Sunday', startTime: '10:30', endTime: '11:45' })).toBe(
-      'Sundays · 10:30 to 11:45',
+      'Sundays · 10:30am to 11:45am',
     );
     expect(
       commitmentSubtitle({ dayOfWeek: 'Saturday', startTime: '17:00', endTime: '18:00' }),
-    ).toBe('Saturdays · 5:00 to 6:00pm');
+    ).toBe('Saturdays · 5:00pm to 6:00pm');
     expect(
       commitmentSubtitle({ dayOfWeek: 'Wednesday', startTime: '18:00', endTime: '19:00' }),
-    ).toBe('Wednesdays · 6:00 to 7:00pm');
+    ).toBe('Wednesdays · 6:00pm to 7:00pm');
   });
 
   it('picks an icon by title', () => {
@@ -80,7 +80,7 @@ describe('family-presentation', () => {
         { title: 'Church', dayOfWeek: 'Sunday', startTime: '10:30:00', endTime: '11:45:00' },
         { title: 'Workout', dayOfWeek: 'Saturday', startTime: '17:00', endTime: '18:00' },
       ]),
-    ).toBe('Swim lessons Sat 9:00 · Church Sun 10:30 · Workout Sat 17:00');
+    ).toBe('Swim lessons Sat 9:00am · Church Sun 10:30am · Workout Sat 5:00pm');
     expect(commitmentsSummary([])).toBe('Add swim, church or anything fixed');
   });
 

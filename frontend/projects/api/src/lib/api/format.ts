@@ -77,12 +77,6 @@ export function timeAgo(iso: string, now: number = Date.now()): string {
   return `${days} day${days === 1 ? '' : 's'} ago`;
 }
 
-/** Backend `TimeOnly` ("HH:mm:ss") → "H:mm" (24-hour, no leading zero). */
-export function hhmm(timeOnly: string): string {
-  const [h, m] = timeOnly.split(':');
-  return `${Number(h)}:${m ?? '00'}`;
-}
-
 /** "HH:mm[:ss]" → "5:00" on a 12-hour clock, without a suffix. */
 export function hhmm12(timeOnly: string): string {
   const [h, m] = timeOnly.split(':');
@@ -106,17 +100,9 @@ export function minutesBetween(start: string, end: string): number {
   return toMinutes(end) - toMinutes(start);
 }
 
-/**
- * A 12-hour range. The suffix is written once, and only when it is needed:
- * "9:00 to 10:00" before noon, "5:00 to 6:00pm" after it, and
- * "10:00am to 2:00pm" when the range crosses noon.
- */
+/** A 12-hour range with am or pm on both ends: "9:00am to 10:00am", "11:00am to 1:00pm". */
 export function timeRange(start: string, end: string): string {
-  const startPm = toMinutes(start) >= 12 * 60;
-  const endPm = toMinutes(end) >= 12 * 60;
-  if (startPm) return `${hhmm12(start)} to ${hhmm12(end)}pm`;
-  if (endPm) return `${hhmm12(start)}am to ${hhmm12(end)}pm`;
-  return `${hhmm12(start)} to ${hhmm12(end)}`;
+  return `${clock12(start)} to ${clock12(end)}`;
 }
 
 /** 45 → "45m", 90 → "1h 30m", 120 → "2h". */

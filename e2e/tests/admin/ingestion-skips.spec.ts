@@ -48,7 +48,7 @@ test.describe("Admin ingestion photo skips", () => {
     await expect(a.runs()).toHaveCount(2);
 
     const events = a.run("Events");
-    await expect(a.runMeta(events)).toHaveText("6 Oct 2026, 04:12 UTC · 2 photo skips");
+    await expect(a.runMeta(events)).toHaveText("6 Oct 2026, 4:12am UTC · 2 photo skips");
     await expect(a.runStatus(events)).toHaveText("Succeeded");
     await expect(a.skips(events)).toHaveCount(2);
     const first = a.skips(events).first();

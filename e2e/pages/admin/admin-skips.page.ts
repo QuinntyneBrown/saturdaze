@@ -5,7 +5,7 @@ import { AdminPage } from "./admin.page.js";
  * Ingestion photo skips (A6) — pages/admin.ingestion-skips.html.
  *
  *   .page-header  "Ingestion photo skips"
- *   .queue        .card[aria-label="Events run 6 Oct 2026, 04:12 UTC · …"]
+ *   .queue        .card[aria-label="Events run 6 Oct 2026, 4:12am UTC · …"]
  *                 .card__title · .card__meta · .chip (status)
  *                 .skip-list .skip  .skip__place (a, or span.skip__place--none) · .skip__reason · .skip__url
  */

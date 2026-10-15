@@ -4,8 +4,8 @@ import { test, expect, isPhone } from "../fixtures/sd-test.js";
  * Weekend behaviour against the seeded Brown family (API on :5100).
  *
  * The planner output is non-deterministic, so assertions target structure
- * and the seeded anchors (Swim lessons Sat 9:00, Church Sun 10:30, Workout
- * window Sat 17:00) rather than specific planner picks.
+ * and the seeded anchors (Swim lessons Sat 9:00am, Church Sun 10:30am, Workout
+ * window Sat 5:00pm) rather than specific planner picks.
  */
 
 test.describe("Weekend", () => {
@@ -40,7 +40,7 @@ test.describe("Weekend", () => {
     const w = pages.weekend;
     const swim = w.block("Swim lessons", "Saturday");
     await expect(swim).toHaveClass(/block--commitment/);
-    await expect(w.blockClock(swim)).toHaveText("9:00");
+    await expect(w.blockClock(swim)).toHaveText("9:00am");
     await expect(w.blockChips(swim).first()).toContainText("Commitment");
     await expect(w.whyButton("Swim lessons", "Saturday")).toHaveAttribute("aria-label", "About Swim lessons");
     await expect(w.swapButton("Swim lessons", "Saturday")).toHaveCount(0);
@@ -48,7 +48,7 @@ test.describe("Weekend", () => {
 
     const church = w.block("Church", "Sunday");
     await expect(church).toHaveClass(/block--commitment/);
-    await expect(w.blockClock(church)).toHaveText("10:30");
+    await expect(w.blockClock(church)).toHaveText("10:30am");
   });
 
   test("planner blocks carry Why this / Swap / Lock actions; drives carry none", async ({ pages }) => {

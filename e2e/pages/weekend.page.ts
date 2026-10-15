@@ -130,7 +130,7 @@ export class WeekendPage extends BasePage {
     });
   }
 
-  /** The block titled `title` on `name` that starts at `clock` ("9:00"). */
+  /** The block titled `title` on `name` that starts at `clock` ("9:00am"). */
   blockAt(title: string, name: DayName, clock: string): Locator {
     return this.block(title, name).filter({
       has: this.page.locator(".block__clock", { hasText: clock }),

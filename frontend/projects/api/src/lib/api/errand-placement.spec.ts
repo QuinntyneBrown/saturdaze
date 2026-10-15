@@ -25,8 +25,8 @@ describe('placementFor', () => {
     expect(placementFor(before, after, 'Milk run')).toEqual({
       description: 'Milk run',
       day: 'Sunday',
-      time: '9:15',
-      endTime: '10:00',
+      time: '9:15am',
+      endTime: '10:00am',
       blockId: 'e2',
     });
   });

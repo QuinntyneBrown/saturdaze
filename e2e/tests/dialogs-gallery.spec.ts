@@ -61,7 +61,7 @@ test.describe("Dialogs gallery", () => {
       ["share", "Share this weekend"],
       ["calendar", "Add to your calendar"],
       ["errand", "Add an errand"],
-      ["errand-added", "Added to Sunday at 9:15"],
+      ["errand-added", "Added to Sunday at 9:15am"],
       ["suggest", "Suggest an event"],
       ["submitted", "Thanks, it is in the queue"],
       ["lock-in", "Lock La Marina for Saturday lunch?"],

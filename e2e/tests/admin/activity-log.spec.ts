@@ -34,7 +34,7 @@ test.describe("Admin activity log", () => {
     await expect(log.pageTitle()).toHaveText("Activity log");
     const row = log.rows().first();
     await expect(log.rowWho(row)).toHaveText(SEEDED_ADMIN.email);
-    await expect(log.rowTime(row)).toHaveText(/^\d{4}-\d{2}-\d{2} \d{2}:\d{2} UTC$/);
+    await expect(log.rowTime(row)).toHaveText(/^\d{1,2} [A-Z][a-z]{2} \d{4}, \d{1,2}:\d{2}(am|pm) UTC$/);
     await expect(log.rowPlace(row)).toHaveText(PLACE);
     await expect(log.rowPlace(row)).toHaveAttribute("href", /\/places\/Activity\//);
     await expect(log.rowAction(row)).toHaveText("Upload");

@@ -27,7 +27,7 @@ export const InCard: StoryObj<Details> = {
           <strong>Port Credit Buskerfest</strong>
           <sd-chip tone="sun">Pending</sd-chip>
         </div>
-        <span class="sd-text-sm sd-text-soft">Sat 20 Jun · 2:00 to 9:00pm</span>
+        <span class="sd-text-sm sd-text-soft">Sat 20 Jun · 2:00pm to 9:00pm</span>
         <sd-details [items]="items" />
         <div class="sd-cluster sd-cluster--end">
           <sd-button variant="quiet"><sd-icon name="close" />Reject</sd-button>

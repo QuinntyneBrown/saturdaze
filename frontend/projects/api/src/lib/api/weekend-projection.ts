@@ -13,7 +13,14 @@ import { WeatherForecastDto } from '../models/weather-forecast.dto';
 import { WeekendDay } from '../models/weekend-day';
 import { WeekendDto } from '../models/weekend.dto';
 import { WeekendStatus, WeekendView } from '../models/weekend-view';
-import { capitalise, formatDuration, hhmm, minutesBetween, timeRange, toMinutes } from './format';
+import {
+  capitalise,
+  clock12,
+  formatDuration,
+  minutesBetween,
+  timeRange,
+  toMinutes,
+} from './format';
 import { forecastFor, roundOrDash, weatherAdjective, weatherIcon, weatherNote } from './weather';
 import { toMedia } from './media';
 import { formatDayDate, weekendDayIso } from './weekend-dates';
@@ -192,7 +199,8 @@ export function toBlockRow(
     day: b.day,
     kind: b.kind,
     refId: b.refId,
-    time: hhmm(b.startTime),
+    time: clock12(b.startTime),
+    startMinutes: toMinutes(b.startTime),
     timeRange: timeRange(b.startTime, b.endTime),
     duration: formatDuration(durationMinutes),
     durationMinutes,
@@ -285,7 +293,7 @@ export function blockIcon(kind: BlockKind, title: string): string {
 export function dayKeeping(blocks: readonly ItineraryBlockDto[]): string[] {
   return blocks
     .filter((b) => b.kind !== 'Drive' && (b.kind === 'Commitment' || b.isLocked))
-    .map((b) => `${b.title} ${hhmm(b.startTime)}`);
+    .map((b) => `${b.title} ${clock12(b.startTime)}`);
 }
 
 /** Sort by the planner's order, then by start time. */
