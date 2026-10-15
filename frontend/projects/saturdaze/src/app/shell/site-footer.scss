@@ -1,6 +1,7 @@
 // `.site-footer` from docs/mocks/styles/app.css. The footer sits after <main>, so the
 // host takes the reading width and gutter that `.sd-frame--site` gives the page above
-// it; the margins add up to the gap the footer had when it was inside <main>.
+// it; its 16px top margin plus the frame's 64px bottom padding (tablet and up) add up to
+// the 80px gap the footer had when it was inside <main>.
 
 :host {
   display: block;
@@ -12,7 +13,7 @@
 }
 
 .site-footer {
-  margin-top: 40px;
+  margin-top: 16px;
   text-align: center;
   font-size: var(--fontSizeBase200);
   color: var(--colorNeutralForeground3);

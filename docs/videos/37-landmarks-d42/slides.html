@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 37 Slides</title>
+<link rel="stylesheet" href="../assets/slides.css">
+</head>
+<body data-video-number="37" data-video-title="Design drift D42" data-parts="Introduction|What drifted|Why it matters|The fix|Before and after|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Design drift · Video 37</div>
+  <h1>D42: landmarks that say what they are</h1>
+  <p class="lead">Footer, pager, list and account button, named for assistive technology</p>
+</section>
+
+<section id="drift" data-part="1" data-cue="There were four gaps.">
+  <h2>What drifted</h2>
+  <div class="cols">
+    <div class="card"><h3>Footer</h3><p class="small">Inside <code>&lt;main&gt;</code>: generic, not <code>contentinfo</code></p></div>
+    <div class="card"><h3>Pager</h3><p class="small">A <code>&lt;div&gt;</code> in the mocks; labelled "Pages" in the app</p></div>
+    <div class="card"><h3>Places list</h3><p class="small">A <code>&lt;div&gt;</code> of links in the mock</p></div>
+    <div class="card"><h3>Avatar</h3><p class="small">A link in the mock; no <code>aria-haspopup</code> in the app</p></div>
+  </div>
+</section>
+
+<section id="why" data-part="2" data-cue="The criteria are WCAG one point three point one">
+  <h2>Why it matters</h2>
+  <ul>
+    <li>WCAG 1.3.1 info and relationships; 4.1.2 name, role, value</li>
+    <li>Landmarks are how screen reader users skip around; a footer inside main is not one</li>
+    <li>A button that opens a menu should say so; nothing changes visually</li>
+  </ul>
+</section>
+
+<section id="req" data-part="3" data-cue="This changes what assistive technology reads, so the requirement came first.">
+  <h2>1 · Requirement, then mocks</h2>
+  <div class="card"><h3>L2-138</h3><p>Footer = <code>contentinfo</code> outside <code>main</code>. Pager = <code>navigation</code> "Pagination". Lists are lists. Avatar = button with <code>aria-haspopup="menu"</code>.</p></div>
+  <p class="small">Mocks: footers after <code>&lt;/main&gt;</code>, admin Places as <code>&lt;ul&gt;</code>, pagers as <code>&lt;nav&gt;</code>, avatar as <code>&lt;button&gt;</code> on 15 pages</p>
+</section>
+
+<section id="app" data-part="3" data-cue="In the app there are three changes.">
+  <h2>2 · Three changes in the app</h2>
+  <pre class="code tight" data-lang="html" data-mark="1,5">&lt;/main&gt;
+@if (shell() === 'site' &amp;&amp; siteFooter()) { &lt;app-site-footer /&gt; }
+
+readonly label = input('Pagination');           // was 'Pages'
+
+&lt;button class="avatar-btn" aria-label="Account menu" aria-haspopup="menu"&gt;</pre>
+  <ul>
+    <li>Landing and legal set <code>footer: true</code> in their route data</li>
+  </ul>
+</section>
+
+<section id="test" data-part="3" data-cue="Four acceptance tests came first">
+  <h2>3 · Test first</h2>
+  <pre class="code tight" data-lang="ts">await expect(l.footerLandmark).toBeVisible();      // getByRole("contentinfo")
+await expect(l.footerInMain).toHaveCount(0);
+await expect(a.pagerLandmark()).toBeVisible();     // navigation "Pagination"
+await expect(w.accountMenuButton()).toHaveAttribute("aria-haspopup", "menu");</pre>
+  <ul>
+    <li>All four red, then green; footer links moved to a unit test</li>
+    <li>D42 removed from the drift log</li>
+  </ul>
+</section>
+
+<section id="before-footer" data-part="4" data-cue="Here is the build from before the fix." data-clip="clips/before-footer.mp4" data-clip-delay="1">
+  <aside class="clip-notes">
+    <h3>Before · Landing</h3>
+    <ul><li>Footer links inside the main content</li><li>No contentinfo</li></ul>
+  </aside>
+</section>
+
+<section id="before-pager" data-part="4" data-cue="Now Admin Places." data-clip="clips/before-pager.mp4" data-clip-delay="1">
+  <aside class="clip-notes">
+    <h3>Before · Admin Places</h3>
+    <ul><li>navigation "Pages"</li></ul>
+  </aside>
+</section>
+
+<section id="after-footer" data-part="4" data-cue="And here is the fix." data-clip="clips/after-footer.mp4" data-clip-delay="1">
+  <aside class="clip-notes">
+    <h3>After · Landing</h3>
+    <ul><li>A top-level contentinfo landmark</li></ul>
+  </aside>
+</section>
+
+<section id="after-pager" data-part="4" data-cue="And on Admin Places the navigation is called Pagination." data-clip="clips/after-pager.mp4" data-clip-delay="1">
+  <aside class="clip-notes">
+    <h3>After · Admin Places</h3>
+    <ul><li>navigation "Pagination"</li></ul>
+  </aside>
+</section>
+
+<section id="recap" data-part="5" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <ul>
+      <li>A footer is <code>contentinfo</code> only outside <code>main</code></li>
+      <li>A pager is a <code>navigation</code> named Pagination</li>
+      <li><code>aria-haspopup="menu"</code> on a menu button</li>
+      <li>Requirement and mock first, failing tests, then delete the drift record</li>
+    </ul>
+  </div>
+</section>
+
+<script src="../assets/slides.js"></script>
+</body>
+</html>
