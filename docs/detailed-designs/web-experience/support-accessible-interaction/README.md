@@ -34,6 +34,8 @@ The feature crosses the application and platform boundaries needed to deliver it
 
 - **`Landmarks and menu buttons`** — the app shell renders a `SiteFooter` (`app/shell/site-footer.ts`) after `<main>` when a route sets `data.footer`, so the landing and legal footers are `contentinfo` landmarks instead of generic footers inside `<main>`; `sd-pager` is a `navigation` named "Pagination" by default; `sd-list` and `sd-list-item` carry `role="list"` and `listitem`; the top bar's account button sets `aria-haspopup="menu"` (L2-138).
 
+- **`Admin nav, field descriptions and duplicate chips`** — `sd-admin-nav`'s host takes `role="navigation"` with its `aria-label`; `sd-text-input`'s `aria-describedby` lists the error id when an error shows and the hint id only when the hint is rendered; `sd-chip-input` keeps the draft on a duplicate, sets `aria-invalid` and renders a `.field__error` "{value} is already in {label}." tied to the input with `aria-describedby`, clearing it when the draft changes or a chip is removed; `sd-skip-link` already focuses the target and prevents the `<base href>` navigation (L2-140).
+
 Automated structural checks do not establish complete keyboard or WCAG contrast conformance. The obligations below remain subject to dedicated accessibility verification.
 
 ## Requirements
@@ -52,6 +54,7 @@ The following L2 requirements refine the cited L1 capabilities. Implementation g
 | `L2-134` | `L1-014` | A form dialog's primary action stays enabled and names the action; activating it with problems shows a focused error summary whose lines link to the invalid fields. |
 | `L2-136` | `L1-014` | An error banner and a field error use the alert icon, and an error banner is announced by `role="alert"` alone, with no `aria-live`. |
 | `L2-138` | `L1-014` | The site footer is a contentinfo landmark outside main, the pager a navigation named Pagination, lists are lists, and the account avatar a button with aria-haspopup=menu. |
+| `L2-140` | `L1-014` | The admin navigation is a landmark named Admin, a field's aria-describedby lists only elements in the page, a duplicate chip is refused with a message instead of dropped silently, and the skip link stays on the page. |
 
 ## Diagrams
 
