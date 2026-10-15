@@ -1,0 +1,8 @@
+<p class="error-summary__title">{{ title() }}</p>
+<ul>
+  @for (problem of problems(); track problem.id) {
+    <li>
+      <a href="#" (click)="follow($event, problem.id)">{{ problem.message }}</a>
+    </li>
+  }
+</ul>

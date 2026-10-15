@@ -104,9 +104,9 @@ test.describe("Dialogs gallery", () => {
     await expect(d.gallery.locator(".btn--danger")).toHaveCount(7);
   });
 
-  test("form dialogs disable the primary until required fields are valid", async ({ pages }) => {
+  test("form dialogs keep the primary enabled and name the action", async ({ pages }) => {
     const d = pages.dialogs;
-    await expect(d.action("suggest", "Submit")).toBeDisabled();
+    await expect(d.action("suggest", "Send suggestion")).toBeEnabled();
     await expect(d.action("errand", "Add to weekend")).toBeEnabled();
     await expect(d.panel("errand").getByRole("radio", { name: "Either" })).toBeChecked();
   });
