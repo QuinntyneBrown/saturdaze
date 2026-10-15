@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 31 Slides</title>
+<link rel="stylesheet" href="../assets/slides.css">
+</head>
+<body data-video-number="31" data-video-title="Design drift D36" data-parts="Introduction|What drifted|Why it matters|The fix|Before and after|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Design drift · Video 31</div>
+  <h1>D36: the forecast, in words</h1>
+  <p class="lead">The weather disc is decorative; the day meta line now says Sunny, Cloudy, Rain, Snow, Warm or Cold</p>
+</section>
+
+<section id="drift" data-part="1" data-cue="A day header has a weather disc">
+  <h2>What drifted</h2>
+  <div class="cols">
+    <div class="card"><h3>Before</h3><p class="lead">17 May · 22° / 14° · 3 stops · 1 h 36 min driving</p><p class="small">The sun disc is <code>aria-hidden</code>; no word says "sunny"</p></div>
+    <div class="card"><h3>Design system</h3><p class="lead">17 May · Sunny · 22° / 14° · …</p><p class="small">A weather word in the day meta line</p></div>
+  </div>
+</section>
+
+<section id="why" data-part="2" data-cue="The relevant criteria are WCAG one point one point one">
+  <h2>Why it matters</h2>
+  <ul>
+    <li>WCAG 1.1.1 non-text content: an icon cannot be the only carrier</li>
+    <li>WCAG 1.4.1 use of colour: shape and colour are not enough</li>
+    <li>The fix costs one short word in a line that already exists</li>
+  </ul>
+</section>
+
+<section id="req" data-part="3" data-cue="This is a change in what the page says, so the requirement came first.">
+  <h2>1 · Requirement, then mocks</h2>
+  <div class="card"><h3>L2-135</h3><p>A day header writes the forecast as one word before the temperatures: Sunny, Cloudy, Rain, Snow, Warm or Cold. No forecast, no word and no temperatures.</p></div>
+  <p class="small"><code>docs/specs/L2.md</code> · weekend, landing and generating mocks · design-system examples</p>
+</section>
+
+<section id="code" data-part="3" data-cue="In the app, the change is one line in the weekend projection.">
+  <h2>2 · weekend-projection.ts</h2>
+  <pre class="code tight" data-lang="ts" data-mark="3">const parts = [dateLabel];
+if (w &amp;&amp; !w.unavailable &amp;&amp; w.highCelsius != null &amp;&amp; w.lowCelsius != null) {
+  parts.push(weatherWordCapitalised(w));
+  parts.push(`${Math.round(w.highCelsius)}° / ${Math.round(w.lowCelsius)}°`);
+}</pre>
+  <p class="small">The helper already existed in <code>weather.ts</code>; it was just not used here.</p>
+</section>
+
+<section id="test" data-part="3" data-cue="The acceptance test is a Playwright test through the weekend page object.">
+  <h2>3 · Test first</h2>
+  <pre class="code tight" data-lang="ts">await w.selectDay(day);
+await expect(w.dayMeta(day)).toHaveText(
+  /^\d{1,2} [A-Z][a-z]{2} · (Sunny|Cloudy|Rain|Snow|Warm|Cold) · -?\d+° \/ -?\d+° · \d+ stops? · .+ driving$/,
+);</pre>
+  <ul>
+    <li>Failed: the page showed "10° / 2°" with no word</li>
+    <li>Unit spec for the header meta updated first, red then green</li>
+    <li>D36 removed from the drift log</li>
+  </ul>
+</section>
+
+<section id="before" data-part="4" data-cue="Here is the build from before the fix." data-clip="clips/before.mp4" data-clip-delay="1">
+  <aside class="clip-notes">
+    <h3>Before</h3>
+    <ul><li>Date, temperatures, stops</li><li>No weather word</li></ul>
+  </aside>
+</section>
+
+<section id="after" data-part="4" data-cue="And here is the fix." data-clip="clips/after.mp4" data-clip-delay="1">
+  <aside class="clip-notes">
+    <h3>After</h3>
+    <ul><li>Date · Sunny · temperatures</li><li>Read by a screen reader</li></ul>
+  </aside>
+</section>
+
+<section id="recap" data-part="5" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <ul>
+      <li>A decorative icon cannot be the only forecast</li>
+      <li>Weather word first in the day meta line</li>
+      <li>Reuse <code>weatherWordCapitalised</code></li>
+      <li>Requirement and mock, failing test, then delete the drift record</li>
+    </ul>
+  </div>
+</section>
+
+<script src="../assets/slides.js"></script>
+</body>
+</html>
