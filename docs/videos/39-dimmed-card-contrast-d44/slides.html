@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 39 Slides</title>
+<link rel="stylesheet" href="../assets/slides.css">
+</head>
+<body data-video-number="39" data-video-title="Design drift D44" data-parts="Introduction|What drifted|Why it matters|The fix|Before and after|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Design drift · Video 39</div>
+  <h1>D44: stepping back without fading out</h1>
+  <p class="lead">Dimmed, muted and done states stop using opacity, so the text stays above 4.5:1</p>
+</section>
+
+<section id="drift" data-part="1" data-cue="Three states faded things out with opacity.">
+  <h2>What drifted</h2>
+  <div class="cols">
+    <div class="card"><h3>.card--dimmed</h3><p class="lead">opacity 0.6</p><p class="small">A pick that stepped back</p></div>
+    <div class="card"><h3>.card--muted</h3><p class="lead">opacity 0.85</p><p class="small">Content only you can see yet</p></div>
+    <div class="card"><h3>.block--done</h3><p class="lead">opacity 0.6</p><p class="small">A finished stop</p></div>
+  </div>
+</section>
+
+<section id="why" data-part="2" data-cue="The success criterion is WCAG one point four point three">
+  <h2>Why it matters: WCAG 1.4.3 (AA)</h2>
+  <div class="cols">
+    <div class="card"><h3>Before</h3><p class="lead">≈ 2.5 : 1 / ≈ 4.4 : 1</p><p class="small">Dimmed / muted meta text; needs 4.5 : 1</p></div>
+    <div class="card"><h3>After</h3><p class="lead">5.35 : 1</p><p class="small">Secondary ink on the sunk surface</p></div>
+  </div>
+</section>
+
+<section id="rule" data-part="3" data-cue="The new rule is that stepping back never fades the text.">
+  <h2>1 · The rule</h2>
+  <div class="cols">
+    <div class="card"><h3>Dimmed</h3><ul><li>Sunk surface</li><li>Secondary-ink title</li><li>Photo at 60%</li></ul></div>
+    <div class="card"><h3>Muted</h3><ul><li>Full colour</li><li>Dashed accessible edge</li></ul></div>
+    <div class="card"><h3>Done</h3><ul><li>Neutral disc</li><li>Struck-through title</li></ul></div>
+  </div>
+</section>
+
+<section id="code" data-part="3" data-cue="The same change lands in three places">
+  <h2>2 · Three places</h2>
+  <pre class="code tight" data-lang="scss" data-mark="2,3,4,5">// food-card.scss
+:host(.card--dimmed) {
+  background: var(--colorNeutralBackground3);
+  border-color: transparent;
+}
+:host(.card--dimmed) .card__title { color: var(--colorNeutralForeground2); }
+:host(.card--dimmed) .card__media { opacity: 0.6; }   // a photo, not text</pre>
+  <p class="small">Mocks' <code>app.css</code> · design system <code>components.css</code> · app: card, food-card, event-card, block</p>
+</section>
+
+<section id="test" data-part="3" data-cue="The acceptance test came first.">
+  <h2>3 · Test first</h2>
+  <pre class="code tight" data-lang="ts">await lockDinnerPick(request, await apiLogin(request, SEEDED_USER), "Saturday");
+await goto("ideasFood");
+await expect(dimmed).toHaveCSS("opacity", "1");          // was "0.6"
+expect(contrast(meta, surface)).toBeGreaterThanOrEqual(4.5);</pre>
+  <ul>
+    <li>Failed with <code>opacity: 0.6</code>, passes now</li>
+    <li>Design-system card page updated; D44 removed from the drift log</li>
+  </ul>
+</section>
+
+<section id="before" data-part="4" data-cue="Here is the build from before the fix." data-clip="clips/before.mp4" data-clip-delay="1">
+  <aside class="clip-notes">
+    <h3>Before</h3>
+    <ul><li>Opacity 0.6</li><li>Meta text 2.63 : 1</li></ul>
+  </aside>
+</section>
+
+<section id="after" data-part="4" data-cue="And here is the fix." data-clip="clips/after.mp4" data-clip-delay="1">
+  <aside class="clip-notes">
+    <h3>After</h3>
+    <ul><li>Opacity 1</li><li>Meta text 5.35 : 1</li></ul>
+  </aside>
+</section>
+
+<section id="recap" data-part="5" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <ul>
+      <li>Opacity fades text and surface together</li>
+      <li>Sunk surface, secondary ink, faded photo; or a dashed edge</li>
+      <li>Measured: 2.63 → 5.35 : 1</li>
+      <li>Mock and design system first, failing test, then delete the drift record</li>
+    </ul>
+  </div>
+</section>
+
+<script src="../assets/slides.js"></script>
+</body>
+</html>

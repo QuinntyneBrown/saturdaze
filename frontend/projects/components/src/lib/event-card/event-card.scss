@@ -6,6 +6,8 @@
   @include card-host;
 }
 
+// Content only you can see yet: a dashed edge instead of fading the text (WCAG 1.4.3, L2-038).
 :host(.card--muted) {
-  opacity: 0.85;
+  border-style: dashed;
+  border-color: var(--colorNeutralStrokeAccessible);
 }

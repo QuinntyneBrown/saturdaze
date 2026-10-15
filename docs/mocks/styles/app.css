@@ -415,8 +415,12 @@
   .card--pad-lg { padding: 20px; }
   .card--sunk { background: var(--sd-surface-2); border-color: transparent; }
   .card--locked { border: 2px solid var(--sd-accent); padding: calc(var(--sd-s-4) - 1px); } /* 16px less the extra 1px of border */
-  .card--dimmed { opacity: 0.6; }
-  .card--muted { opacity: 0.85; }
+  /* A pick that stepped back: a sunk surface, secondary-ink title and a faded photo. Text keeps its colour (opacity would take the meta below 4.5:1, WCAG 1.4.3). */
+  .card--dimmed { background: var(--sd-surface-2); border-color: transparent; }
+  .card--dimmed .card__title { color: var(--sd-ink-soft); }
+  .card--dimmed .media { opacity: 0.6; }
+  /* Content only you can see yet: a dashed control-stroke edge instead of fading the text. */
+  .card--muted { border-style: dashed; border-color: var(--sd-line-control); }
   .card--span { grid-column: 1 / -1; }
   .card__head { display: flex; align-items: flex-start; gap: 12px; }
   .card__head-text { min-width: 0; flex: 1; }
@@ -487,8 +491,10 @@
   .block--drive .block__disc { width: 24px; height: 24px; margin: 0; }
   .block--drive .block__disc .icon { width: 13px; height: 13px; }
   .block--drive .block__chev, .block--drive .block__actions { display: none; }
-  .block--done { opacity: 0.6; }
   .block--errand .block__disc { background: var(--sd-indoor-soft); color: var(--sd-indoor-ink); }
+  /* Done: muted by colour and a strikethrough, not by opacity (1.4.3). */
+  .block--done .block__disc { background: var(--sd-surface-2); color: var(--sd-ink-faint); }
+  .block--done .block__title { color: var(--sd-ink-soft); text-decoration: line-through; text-decoration-thickness: 1px; }
   @media (min-width: 45rem) {
     .block__chev { display: none; }
     .block__actions { display: inline-flex; opacity: 0; transition: opacity var(--sd-dur-fast) var(--sd-ease); }

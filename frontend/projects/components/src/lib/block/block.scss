@@ -140,8 +140,16 @@
   color: var(--colorPaletteIndoorForeground1);
 }
 
-:host(.block--done) {
-  opacity: 0.6;
+// Done: muted by colour and a strikethrough, not by opacity (WCAG 1.4.3, L2-038).
+:host(.block--done) .block__disc {
+  background: var(--colorNeutralBackground3);
+  color: var(--colorNeutralForeground3);
+}
+
+:host(.block--done) .block__title {
+  color: var(--colorNeutralForeground2);
+  text-decoration: line-through;
+  text-decoration-thickness: var(--strokeWidthThin);
 }
 
 :host(.block--drive) {

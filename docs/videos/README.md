@@ -66,6 +66,7 @@ Six videos on Saturdaze Admin, the second web application that curates the catal
 | 36 | [Design drift D41: the dividers that disappeared](36-list-dividers-d41/README.md) | ~2.9 min | A `:last-child` rule stripped every action row's hairline in the mocks; the divider moves to `.list > li:not(:last-child) > .list__item`. |
 | 37 | [Design drift D42: landmarks that say what they are](37-landmarks-d42/README.md) | ~4.5 min | The footer is a `contentinfo` landmark outside `main`, the pager a `navigation` named Pagination, lists are lists, and the account avatar a button with `aria-haspopup="menu"` (L2-138). |
 | 38 | [Design drift D43: the day tabs, by keyboard](38-day-tabs-keyboard-d43/README.md) | ~3.8 min | The Weekend day tabs follow the APG Tabs keyboard model: one Tab stop, arrows with wrap, Home and End (L2-139, WCAG 2.1.1, 4.1.2). |
+| 39 | [Design drift D44: stepping back without fading out](39-dimmed-card-contrast-d44/README.md) | ~4 min | Dimmed, muted and done states stop using opacity (meta text 2.63:1 to 5.35:1; WCAG 1.4.3): a sunk surface, secondary ink and a dashed edge. |
 
 ## Family members series
 

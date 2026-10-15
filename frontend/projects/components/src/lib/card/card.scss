@@ -29,11 +29,16 @@
 :host(.card--locked.card--pad-lg) {
   padding: calc(var(--spacingHorizontalXL) - 1px);
 }
+// A pick that stepped back, and content only you can see yet: neither fades the text,
+// because opacity would take the meta below 4.5:1 (WCAG 1.4.3, L2-038).
 :host(.card--dimmed) {
-  opacity: 0.6;
+  background: var(--colorNeutralBackground3);
+  border-color: transparent;
+  color: var(--colorNeutralForeground2);
 }
 :host(.card--muted) {
-  opacity: 0.85;
+  border-style: dashed;
+  border-color: var(--colorNeutralStrokeAccessible);
 }
 :host(.card--span) {
   grid-column: 1 / -1;

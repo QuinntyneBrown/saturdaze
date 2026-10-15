@@ -1,4 +1,6 @@
 import { test, expect } from "../fixtures/sd-test.js";
+import { apiLogin, lockDinnerPick, SEEDED_USER } from "../fixtures/auth.js";
+import { contrast } from "../fixtures/colour.js";
 
 /**
  * Ideas · Food — day / slot / extra filters, the family vote row, See menu,
@@ -124,5 +126,18 @@ test.describe("Ideas — Food", () => {
     expect(siblings).toBe((await i.cards(section).count()) - 1);
     await expect(i.dimmedCards(section).first().locator(".vote-row__btn").first()).toBeDisabled();
     await expect(i.lockItInButton(i.lockedCard(section))).toHaveCount(0);
+  });
+  // Traces to: L2-038 (WCAG 1.4.3)
+  test("a stepped-back pick keeps its meta text readable: no opacity, 4.5:1 on its surface", async ({ goto, pages, request }) => {
+    // Locking a Saturday dinner dims its siblings; v2 has no unlock, so the lock is idempotent here.
+    await lockDinnerPick(request, await apiLogin(request, SEEDED_USER), "Saturday");
+    await goto("ideasFood");
+    const i = pages.ideas;
+    await i.waitForReady();
+    const dimmed = i.dimmedCards(i.dinnerSection()).first();
+    await expect(dimmed).toHaveCSS("opacity", "1");
+    const meta = await i.cardMeta(dimmed).evaluate((el) => getComputedStyle(el).color);
+    const surface = await dimmed.evaluate((el) => getComputedStyle(el).backgroundColor);
+    expect(contrast(meta, surface)).toBeGreaterThanOrEqual(4.5);
   });
 });
