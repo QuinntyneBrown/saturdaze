@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 32 Slides</title>
+<link rel="stylesheet" href="../assets/slides.css">
+</head>
+<body data-video-number="32" data-video-title="Design drift D37" data-parts="Introduction|What drifted|Why it matters|The fix|Before and after|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Design drift · Video 32</div>
+  <h1>D37: one icon, one meaning</h1>
+  <p class="lead">True arrows, and a bookmark for the primary photo, so the star only means a rating</p>
+</section>
+
+<section id="drift" data-part="1" data-cue="Two pairs of icons were tangled.">
+  <h2>What drifted</h2>
+  <div class="cols">
+    <div class="card"><h3>star</h3><p class="lead">Rating <b>and</b> Make primary</p><p class="small">Past tab and rating stars in the family app; Make primary and the Primary chip in Admin</p></div>
+    <div class="card"><h3>arrow_right · chevron_right</h3><p class="lead">The same glyph</p><p class="small"><code>M9 6l6 6-6 6</code> for both, and for arrow_left</p></div>
+  </div>
+</section>
+
+<section id="why" data-part="2" data-cue="There is no single WCAG criterion here">
+  <h2>Why it matters</h2>
+  <ul>
+    <li>Close to WCAG 3.2.4 consistent identification: same job, same look; different job, different look</li>
+    <li>A shape that sometimes means "rate" and sometimes "promote" makes people stop and check</li>
+    <li>A redraw of one icon should not change every row that shares it</li>
+  </ul>
+</section>
+
+<section id="defs" data-part="3" data-cue="Icons are defined in three places">
+  <h2>1 · The icon definitions</h2>
+  <pre class="code tight" data-lang="ts" data-mark="1,2,4">arrow_left:  `&lt;path d="M19 12H5"/&gt;&lt;path d="M11 6l-6 6 6 6"/&gt;`,
+arrow_right: `&lt;path d="M5 12h14"/&gt;&lt;path d="M13 6l6 6-6 6"/&gt;`,
+chevron_right: `&lt;path d="M9 6l6 6-6 6"/&gt;`,
+bookmark: `&lt;path d="M7 4h10a1 1 0 0 1 1 1v15l-6-4-6 4V5a1 1 0 0 1 1-1z"/&gt;`,</pre>
+  <p class="small"><code>docs/mocks/app.js</code> · <code>docs/design-system/assets/icons.js</code> · <code>components/src/lib/icon/icon.ts</code></p>
+</section>
+
+<section id="uses" data-part="3" data-cue="For the primary photo, there is a new icon, bookmark">
+  <h2>2 · Where the bookmark goes</h2>
+  <div class="cols">
+    <div class="card"><h3>Bookmark</h3><ul><li>Make primary button (Place photos, Review queue)</li><li>Well in the Make primary dialog</li><li>Primary chip on a photo tile</li></ul></div>
+    <div class="card"><h3>Star keeps</h3><ul><li>Rating stars</li><li>The Past tab</li></ul></div>
+  </div>
+</section>
+
+<section id="docs" data-part="3" data-cue="The unit test that lists the sprite grows by one">
+  <h2>3 · Tests and the drift record</h2>
+  <ul>
+    <li>Visual change, no new behaviour, so no new acceptance test</li>
+    <li>Sprite list test: 41 → 42 icons, includes <code>bookmark</code></li>
+    <li>Iconography page: bookmark added, arrow captions, "two meanings" note removed</li>
+    <li>D37 removed from the drift log</li>
+  </ul>
+</section>
+
+<section id="before-arrow" data-part="4" data-cue="Here is the build from before the fix." data-clip="clips/before-arrow.mp4" data-clip-delay="1">
+  <aside class="clip-notes">
+    <h3>Before · Photo health</h3>
+    <ul><li>All places ends in a bare chevron</li></ul>
+  </aside>
+</section>
+
+<section id="before-primary" data-part="4" data-cue="On the Place photos screen for Bronte Creek, the Primary chip" data-clip="clips/before-primary.mp4" data-clip-delay="1">
+  <aside class="clip-notes">
+    <h3>Before · Place photos</h3>
+    <ul><li>Primary chip: a star</li><li>Make primary: a star</li></ul>
+  </aside>
+</section>
+
+<section id="after-arrow" data-part="4" data-cue="And here is the fix." data-clip="clips/after-arrow.mp4" data-clip-delay="1">
+  <aside class="clip-notes">
+    <h3>After · Photo health</h3>
+    <ul><li>All places ends in a proper arrow</li></ul>
+  </aside>
+</section>
+
+<section id="after-primary" data-part="4" data-cue="On Place photos, the Primary chip and the Make primary button carry the new bookmark" data-clip="clips/after-primary.mp4" data-clip-delay="1">
+  <aside class="clip-notes">
+    <h3>After · Place photos</h3>
+    <ul><li>Primary chip and Make primary: a bookmark</li><li>The star is left to ratings</li></ul>
+  </aside>
+</section>
+
+<section id="recap" data-part="5" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <ul>
+      <li>One icon, one meaning: add an icon rather than reuse one</li>
+      <li>Arrows have a shaft; chevrons are bare</li>
+      <li>Bookmark = primary photo; star = rating</li>
+      <li>Change all three definitions together, then delete the drift record</li>
+    </ul>
+  </div>
+</section>
+
+<script src="../assets/slides.js"></script>
+</body>
+</html>

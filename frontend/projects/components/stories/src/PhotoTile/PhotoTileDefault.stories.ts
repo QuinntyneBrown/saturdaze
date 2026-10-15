@@ -9,7 +9,7 @@ export const Default: StoryObj<PhotoTile> = {
     media: SAMPLE_PHOTO,
     primary: true,
     badges: [
-      { tone: 'primary', icon: 'star', label: 'Primary' },
+      { tone: 'primary', icon: 'bookmark', label: 'Primary' },
       { tone: 'accent', label: 'Curated' },
       { tone: 'accent', icon: 'check', label: 'Reviewed' },
     ],
