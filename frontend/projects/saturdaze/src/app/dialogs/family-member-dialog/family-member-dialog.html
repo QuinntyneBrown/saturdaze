@@ -1,16 +1,21 @@
 <sd-dialog [title]="title" subtitle="Ages shape the picks." wide>
   <form class="form" (submit)="submit($event)">
+    @if (problems().length) {
+      <sd-error-summary [problems]="problems()" (problemSelected)="focusField($event)" />
+    }
     <sd-text-input
+      #nameField
       label="Name"
       name="memberName"
       required
       autocomplete="off"
       placeholder="First name"
-      [error]="error() && !name().trim() ? error() : ''"
+      [error]="nameError()"
       [ngModel]="name()"
-      (ngModelChange)="name.set($event); error.set('')"
+      (ngModelChange)="name.set($event)"
     />
     <sd-text-input
+      #ageField
       label="Age"
       name="memberAge"
       type="number"
@@ -18,9 +23,9 @@
       [max]="120"
       placeholder="7"
       [hint]="ageHint()"
-      [error]="error() && name().trim() ? error() : ''"
+      [error]="ageError()"
       [ngModel]="age()"
-      (ngModelChange)="age.set($event); error.set('')"
+      (ngModelChange)="age.set($event)"
     />
     @if (isEdit) {
       @if (accessHint) {
@@ -33,12 +38,13 @@
           name="memberSignIn"
           [options]="signInOptions"
           [ngModel]="signIn()"
-          (ngModelChange)="signIn.set($event); error.set('')"
+          (ngModelChange)="signIn.set($event)"
         />
         <p class="sd-text-xs sd-text-soft">{{ signInHint() }}</p>
       </div>
       @if (inviting()) {
         <sd-text-input
+          #emailField
           label="Email"
           name="memberEmail"
           type="email"
@@ -47,7 +53,7 @@
           placeholder="name@example.com"
           [error]="emailError()"
           [ngModel]="email()"
-          (ngModelChange)="email.set($event); emailError.set('')"
+          (ngModelChange)="email.set($event)"
         />
       }
     }
@@ -65,7 +71,7 @@
     slot="actions"
     variant="primary"
     type="button"
-    [disabled]="!canSubmit()"
+    [disabled]="isEdit && !canSubmit()"
     (click)="submit()"
   >
     @if (inviting()) {

@@ -35,13 +35,13 @@ describe('FamilyMemberDialog', () => {
   const hintOf = (name: string): string | undefined =>
     field(name).querySelector('.field__hint')?.textContent?.trim();
 
-  it('adds a member: empty fields, no Remove, primary disabled until both are filled', async () => {
+  it('adds a member: empty fields, no Remove, the primary stays enabled (L2-134)', async () => {
     await mount({ mode: 'add', existingNames: MEMBER_NAMES });
     expect(host.querySelector('.dialog__title')?.textContent?.trim()).toBe('Add a family member');
     expect(host.querySelector('.dialog__sub')?.textContent?.trim()).toBe('Ages shape the picks.');
     expect(primary().textContent?.trim()).toBe('Add member');
     expect(host.querySelector('sd-button[slot="actions-left"]')).toBeNull();
-    expect(primary().disabled).toBe(true);
+    expect(primary().disabled).toBe(false);
 
     component['name'].set('Theo');
     component['age'].set('3');
@@ -66,13 +66,42 @@ describe('FamilyMemberDialog', () => {
     expect(dialogRef.close).toHaveBeenCalledWith({ kind: 'remove' });
   });
 
+  it('shows an error summary instead of closing, and drops each line as its field is fixed (L2-134)', async () => {
+    await mount({ mode: 'add', existingNames: [] });
+    expect(host.querySelector('sd-error-summary')).toBeNull();
+    component['submit']();
+    fixture.detectChanges();
+    const summary = host.querySelector('sd-error-summary');
+    expect(summary?.querySelector('.error-summary__title')?.textContent?.trim()).toBe(
+      'Two things to fix',
+    );
+    expect(
+      Array.from(summary?.querySelectorAll('a') ?? []).map((a) => a.textContent?.trim()),
+    ).toEqual(['Enter a name', 'Enter an age between 0 and 120']);
+    expect(dialogRef.close).not.toHaveBeenCalled();
+
+    component['name'].set('Theo');
+    fixture.detectChanges();
+    expect(summary?.querySelector('.error-summary__title')?.textContent?.trim()).toBe(
+      'One thing to fix',
+    );
+  });
+
+  it('keeps Save disabled while editing until the name and age are filled', async () => {
+    await mount({ mode: 'edit', initial: { name: 'Mae', age: 5 }, existingNames: MEMBER_NAMES });
+    expect(primary().disabled).toBe(false);
+    component['name'].set('');
+    fixture.detectChanges();
+    expect(primary().disabled).toBe(true);
+  });
+
   it('requires a name', async () => {
     await mount({ mode: 'add', existingNames: [] });
     component['name'].set('   ');
     component['age'].set('7');
     component['submit']();
     fixture.detectChanges();
-    expect(component['error']()).toBe('Enter a name.');
+    expect(component['nameError']()).toBe('Enter a name.');
     expect(errorOf('memberName')).toBe('Enter a name.');
     expect(errorOf('memberAge')).toBeUndefined();
     expect(dialogRef.close).not.toHaveBeenCalled();
@@ -84,7 +113,7 @@ describe('FamilyMemberDialog', () => {
     for (const bad of ['5.5', '-1', '121', 'abc']) {
       component['age'].set(bad);
       component['submit']();
-      expect(component['error']()).toBe('Enter an age between 0 and 120.');
+      expect(component['ageError']()).toBe('Enter an age between 0 and 120.');
     }
     fixture.detectChanges();
     expect(errorOf('memberAge')).toBe('Enter an age between 0 and 120.');
@@ -105,7 +134,7 @@ describe('FamilyMemberDialog', () => {
     await mount({ mode: 'edit', initial: { name: 'Mae', age: 5 }, existingNames: MEMBER_NAMES });
     component['name'].set('quinn');
     component['submit']();
-    expect(component['error']()).toBe('Someone in the family already has that name.');
+    expect(component['nameError']()).toBe('Someone in the family already has that name.');
     expect(dialogRef.close).not.toHaveBeenCalled();
 
     component['name'].set('MAE');
@@ -144,7 +173,7 @@ describe('FamilyMemberDialog', () => {
     fixture.detectChanges();
     expect(field('memberEmail')).not.toBeNull();
     expect(primary().textContent?.trim()).toBe('Send invite');
-    expect(primary().disabled).toBe(true);
+    expect(primary().disabled).toBe(false);
 
     component['email'].set('not-an-email');
     component['submit']();
