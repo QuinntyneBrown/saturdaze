@@ -1,8 +1,8 @@
-# 33 · The plan, in plain words
+# 34 · The plan, in plain words
 
 > **Runtime:** ~9:06 · **Audience:** the founder's family and friends, early partners, and anyone who asks how a free weekend planner makes money · **Prerequisites:** none
 
-**Video:** [33-the-plan-in-plain-words.mp4](33-the-plan-in-plain-words.mp4) · [Slides](slides.html) · **Audio:** [33-the-plan-in-plain-words.mp3](33-the-plan-in-plain-words.mp3) · [Transcript](script.md)
+**Video:** [34-the-plan-in-plain-words.mp4](34-the-plan-in-plain-words.mp4) · [Slides](slides.html) · **Audio:** [34-the-plan-in-plain-words.mp3](34-the-plan-in-plain-words.mp3) · [Transcript](script.md)
 
 ## Why this video exists
 
@@ -64,11 +64,11 @@ of 2029 revenue, not a count.
 ## Demo commands
 
 ```sh
-node tools/video-audio/generate-audio.mjs docs/videos/33-the-plan-in-plain-words --dry-run
-node tools/video-audio/generate-audio.mjs docs/videos/33-the-plan-in-plain-words
-node tools/video-build/build-video.mjs docs/videos/33-the-plan-in-plain-words --check
-node tools/video-build/build-video.mjs docs/videos/33-the-plan-in-plain-words --slides-only
-node tools/video-build/build-video.mjs docs/videos/33-the-plan-in-plain-words
+node tools/video-audio/generate-audio.mjs docs/videos/34-the-plan-in-plain-words --dry-run
+node tools/video-audio/generate-audio.mjs docs/videos/34-the-plan-in-plain-words
+node tools/video-build/build-video.mjs docs/videos/34-the-plan-in-plain-words --check
+node tools/video-build/build-video.mjs docs/videos/34-the-plan-in-plain-words --slides-only
+node tools/video-build/build-video.mjs docs/videos/34-the-plan-in-plain-words
 ```
 
 The Edge read-aloud service refused connections from the build machine (HTTP
@@ -80,7 +80,7 @@ paragraph on stdin and writes the WAV named by `-f`.
 ```sh
 python -m pip install kokoro-onnx soundfile   # plus kokoro-v1.0.onnx and voices-v1.0.bin
 PYTHONPATH=path/to/shim KOKORO_DIR=path/to/model PIPER_MODEL=af_heart PYTHON=python \
-  node tools/video-audio/generate-audio.mjs docs/videos/33-the-plan-in-plain-words --engine piper
+  node tools/video-audio/generate-audio.mjs docs/videos/34-the-plan-in-plain-words --engine piper
 ```
 
 The default Edge voice works just as well once the service answers.
