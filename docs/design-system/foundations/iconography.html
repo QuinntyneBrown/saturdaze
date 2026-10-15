@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Iconography — Saturdaze design system</title>
-<meta name="description" content="The Saturdaze icon set: 50 line icons on a 24-unit grid, six sizes, one meaning each, and the rules for labelling them.">
+<meta name="description" content="The Saturdaze icon set: 51 line icons on a 24-unit grid, six sizes, one meaning each, and the rules for labelling them.">
 <link rel="stylesheet" href="../tokens/tokens.css">
 <link rel="stylesheet" href="../assets/components.css">
 <link rel="stylesheet" href="../assets/ds.css">
@@ -113,7 +113,7 @@
       <p class="ds-kicker">Foundation</p>
       <h1>Iconography</h1>
       <p class="ds-lead">Icons in Saturdaze are thin, rounded line drawings that sit beside words. They help a parent scan a weekend (drive, food, outdoors, locked) and they never stand in for a label nobody can read.</p>
-      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA</span><span class="ds-pill">50 icons</span><span class="ds-pill">Sprite: <code>assets/icons.js</code></span><span class="ds-pill">No tokens owned</span></div>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA</span><span class="ds-pill">51 icons</span><span class="ds-pill">Sprite: <code>assets/icons.js</code></span><span class="ds-pill">No tokens owned</span></div>
       <ul class="ds-toc">
         <li><a href="#overview">Overview</a></li><li><a href="#style">Style</a></li><li><a href="#sizes">Sizes</a></li><li><a href="#set">The set</a></li><li><a href="#filled">Filled</a></li><li><a href="#weather">Weather</a></li><li><a href="#brand-mark">Brand mark</a></li><li><a href="#usage">Usage</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#tokens">Tokens</a></li><li><a href="#sources">Sources</a></li>
       </ul>
@@ -193,12 +193,13 @@
         <figure><svg class="icon" aria-hidden="true"><use href="#i-calendar"/></svg><figcaption><code>calendar</code><br>Dates; add to calendar</figcaption></figure>
         <figure><svg class="icon" aria-hidden="true"><use href="#i-heart"/></svg><figcaption><code>heart</code><br>Favourite and likes</figcaption></figure>
         <figure><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg><figcaption><code>star</code><br>Rating: the Past tab</figcaption></figure>
+        <figure><svg class="icon" aria-hidden="true"><use href="#i-bookmark"/></svg><figcaption><code>bookmark</code><br>The primary photo: the Primary chip and Make primary</figcaption></figure>
         <figure><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg><figcaption><code>user</code><br>Family and account</figcaption></figure>
         <figure><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg><figcaption><code>plus</code><br>Add</figcaption></figure>
         <figure><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg><figcaption><code>close</code><br>Close or dismiss</figcaption></figure>
-        <figure><svg class="icon" aria-hidden="true"><use href="#i-arrow_left"/></svg><figcaption><code>arrow_left</code><br>Back; previous</figcaption></figure>
-        <figure><svg class="icon" aria-hidden="true"><use href="#i-arrow_right"/></svg><figcaption><code>arrow_right</code><br>Next; go to</figcaption></figure>
-        <figure><svg class="icon" aria-hidden="true"><use href="#i-chevron_right"/></svg><figcaption><code>chevron_right</code><br>Row opens its details</figcaption></figure>
+        <figure><svg class="icon" aria-hidden="true"><use href="#i-arrow_left"/></svg><figcaption><code>arrow_left</code><br>Back; previous (an arrow, with a shaft)</figcaption></figure>
+        <figure><svg class="icon" aria-hidden="true"><use href="#i-arrow_right"/></svg><figcaption><code>arrow_right</code><br>Next; go to (an arrow, with a shaft)</figcaption></figure>
+        <figure><svg class="icon" aria-hidden="true"><use href="#i-chevron_right"/></svg><figcaption><code>chevron_right</code><br>Row opens its details (a bare chevron)</figcaption></figure>
         <figure><svg class="icon" aria-hidden="true"><use href="#i-more"/></svg><figcaption><code>more</code><br>More options menu</figcaption></figure>
         <figure><svg class="icon" aria-hidden="true"><use href="#i-bag"/></svg><figcaption><code>bag</code><br>Errand or shopping</figcaption></figure>
         <figure><svg class="icon" aria-hidden="true"><use href="#i-ticket"/></svg><figcaption><code>ticket</code><br>Events</figcaption></figure>
@@ -229,7 +230,6 @@
         <figure><svg class="icon" aria-hidden="true"><use href="#i-upload"/></svg><figcaption><code>upload</code> <span class="tag">Added</span><br>Upload a file</figcaption></figure>
         <figure><svg class="icon" aria-hidden="true"><use href="#i-image"/></svg><figcaption><code>image</code> <span class="tag">Added</span><br>Photo, or no photo yet</figcaption></figure>
       </div>
-      <div class="ds-note"><b>Two meanings to untangle.</b> <code>arrow_right</code> and <code>chevron_right</code> (and <code>arrow_left</code>) draw the same chevron; keep them apart by meaning, so a later redraw of the arrows does not change every row. The admin mocks also use <code>star</code> for "Make primary" photo, a second job for the rating icon; give that action its own icon or the <code>check</code> it already sits beside.</div>
     </section>
 
     <section class="ds-section" id="filled"><h2><a href="#filled">Filled</a></h2>
@@ -313,7 +313,7 @@
         <li><a href="../../mocks/pages/weekend.html">pages/weekend</a>: weather discs, block discs, travel legs, bottom nav.</li>
         <li><a href="../../mocks/pages/dialogs.html">pages/dialogs</a>: rating stars (D13), close buttons, menu icons.</li>
         <li><a href="../../mocks/pages/past.html">pages/past</a>: favourite toggle and votes.</li>
-        <li><a href="../../mocks/pages/admin.place.html">pages/admin.place</a>: the "Make primary" star.</li>
+        <li><a href="../../mocks/pages/admin.place.html">pages/admin.place</a>: the "Make primary" bookmark.</li>
       </ul>
       <p>The 10 added icons are not in any mock yet.</p>
     </section>

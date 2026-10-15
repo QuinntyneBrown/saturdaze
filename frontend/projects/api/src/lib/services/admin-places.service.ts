@@ -71,7 +71,7 @@ export function toPlaceRow(dto: AdminPlaceDto): PlaceRow {
 /** The badges of a photo tile, in the order a curator decides on them. */
 export function tileBadges(dto: AdminPhotoDto): ChipView[] {
   const badges: ChipView[] = [];
-  if (dto.isPrimary) badges.push({ tone: 'primary', icon: 'star', label: 'Primary' });
+  if (dto.isPrimary) badges.push({ tone: 'primary', icon: 'bookmark', label: 'Primary' });
   if (dto.blocked) badges.push({ tone: 'warn', icon: 'close', label: 'Blocked URL' });
   badges.push(
     dto.source === 'Provider'

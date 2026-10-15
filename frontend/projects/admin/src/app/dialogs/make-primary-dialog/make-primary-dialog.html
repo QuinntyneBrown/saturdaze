@@ -7,10 +7,10 @@
     tone="indoor"
     eager
   />
-  <sd-well icon="star" tone="primary" [title]="warning()">{{ warningBody() }}</sd-well>
+  <sd-well icon="bookmark" tone="primary" [title]="warning()">{{ warningBody() }}</sd-well>
   <sd-button slot="actions" variant="quiet" type="button" (click)="cancel()">Cancel</sd-button>
   <sd-button slot="actions" variant="primary" type="button" (click)="confirm()">
-    <sd-icon name="star" />
+    <sd-icon name="bookmark" />
     Make primary
   </sd-button>
 </sd-dialog>
