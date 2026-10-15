@@ -5,7 +5,7 @@
       You are signed in as <span class="email-chip">{{ email() }}</span
       >, which is not an administrator account. Nothing from the catalog was loaded.
     </p>
-    <sd-button variant="danger" size="lg" full (click)="signOut.emit()">
+    <sd-button variant="quiet" warnText size="lg" full (click)="signOut.emit()">
       <sd-icon name="sign_out" />
       Sign out
     </sd-button>

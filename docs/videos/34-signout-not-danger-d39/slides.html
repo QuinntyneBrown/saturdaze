@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 34 Slides</title>
+<link rel="stylesheet" href="../assets/slides.css">
+</head>
+<body data-video-number="34" data-video-title="Design drift D39" data-parts="Introduction|What drifted|Why it matters|The fix|Before and after|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Design drift · Video 34</div>
+  <h1>D39: signing out is not dangerous</h1>
+  <p class="lead">The admin gate's Sign out becomes a quiet warn-text button, as on Family</p>
+</section>
+
+<section id="drift" data-part="1" data-cue="When someone who is not an administrator signs in to Saturdaze Admin">
+  <h2>What drifted</h2>
+  <div class="cols">
+    <div class="card"><h3>Admin gate</h3><p class="lead">Danger button</p><p class="small"><code>btn--danger btn--lg btn--block</code>: solid brick red</p></div>
+    <div class="card"><h3>Family page</h3><p class="lead">Quiet warn-text</p><p class="small"><code>btn--quiet btn--warn-text</code>: the same action, calm</p></div>
+  </div>
+</section>
+
+<section id="why" data-part="2" data-cue="Red is a promise.">
+  <h2>Why it matters</h2>
+  <ul>
+    <li>Danger is reserved for confirming a destructive action in a dialog</li>
+    <li>Signing out destroys nothing: sign back in and it is all there</li>
+    <li>Same action, same look across the apps (cf. WCAG 3.2.4 consistent identification)</li>
+  </ul>
+</section>
+
+<section id="mock" data-part="3" data-cue="In the admin gate mock, the Sign out button drops the danger class">
+  <h2>1 · The mock</h2>
+  <pre class="code tight" data-lang="html" data-mark="1,2">&lt;!-- before --&gt; &lt;button class="btn btn--danger btn--lg btn--block"&gt;
+&lt;!-- after  --&gt; &lt;button class="btn btn--quiet btn--warn-text btn--lg btn--block"&gt;</pre>
+  <p class="small"><code>docs/mocks/pages/admin.sign-in.html</code></p>
+</section>
+
+<section id="component" data-part="3" data-cue="In the app, the admin gate component renders its button as">
+  <h2>2 · The component</h2>
+  <pre class="code tight" data-lang="html" data-mark="1,2">&lt;sd-button variant="danger" size="lg" full (click)="signOut.emit()"&gt;
+&lt;sd-button variant="quiet" warnText size="lg" full (click)="signOut.emit()"&gt;</pre>
+  <ul>
+    <li><code>admin-gate.html</code>; story description updated</li>
+    <li>No new behaviour, so no new acceptance test; the Admin e2e finds the button by name</li>
+    <li>D39 removed from the drift log; auth-card page note and do/don't reworded</li>
+  </ul>
+</section>
+
+<section id="before" data-part="4" data-cue="Here is the build from before the fix." data-clip="clips/before.mp4" data-clip-delay="1">
+  <aside class="clip-notes">
+    <h3>Before</h3>
+    <ul><li>Sign out: a large, solid red button</li></ul>
+  </aside>
+</section>
+
+<section id="after" data-part="4" data-cue="And here is the fix." data-clip="clips/after.mp4" data-clip-delay="1">
+  <aside class="clip-notes">
+    <h3>After</h3>
+    <ul><li>Quiet, outlined, warm text</li><li>Same style as Family</li></ul>
+  </aside>
+</section>
+
+<section id="recap" data-part="5" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <ul>
+      <li>Danger confirms destruction; signing out destroys nothing</li>
+      <li>Same action, same look: the gate matches Family</li>
+      <li><code>quiet</code> + <code>warnText</code></li>
+      <li>Mock first, then the component, then delete the drift record</li>
+    </ul>
+  </div>
+</section>
+
+<script src="../assets/slides.js"></script>
+</body>
+</html>
