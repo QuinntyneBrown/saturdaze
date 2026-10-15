@@ -57,6 +57,7 @@ Six videos on Saturdaze Admin, the second web application that curates the catal
 | 27 | [Design drift D05: soft text on wells](27-soft-text-contrast-d05/README.md) | ~5.5 min | Secondary text in #6B7280 at 4.22:1 on wells (WCAG 1.4.3); `colorNeutralForeground2` #5B6270 in the mocks and the TypeScript theme; a failing Playwright test first; legal, sign-in and landing before and after. |
 | 28 | [Design drift D06: control edges](28-control-edge-contrast-d06/README.md) | ~6.5 min | Field borders and the off switch track in 16% ink at 1.36:1 (WCAG 1.4.11); `colorNeutralStrokeAccessible` #80868F in the mocks, the TypeScript theme and the components; a failing Playwright test first; sign-in and create account before and after. |
 | 29 | [Design drift D34: one clock](29-time-format-d34/README.md) | ~4.5 min | Two clocks and three range styles become one: a 12-hour clock with am or pm every time; `BlockRow.startMinutes` so code never parses display text. |
+| 30 | [Design drift D35: a button that tells you what is missing](30-submit-stays-enabled-d35/README.md) | ~4.3 min | Suggest an event and Add member stay enabled; a failed press shows a focused error summary (L2-134, WCAG 3.3.1, 3.3.3, 4.1.3); `sd-error-summary`. |
 
 ## Family members series
 
