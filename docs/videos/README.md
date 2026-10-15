@@ -63,6 +63,7 @@ Six videos on Saturdaze Admin, the second web application that curates the catal
 | 33 | [Design drift D38: errors that say warning, once](33-error-alert-icon-d38/README.md) | ~3.8 min | Error banners and field errors use the alert icon instead of the close glyph, and are announced by `role="alert"` alone (L2-136, WCAG 4.1.3). |
 | 34 | [Design drift D39: signing out is not dangerous](34-signout-not-danger-d39/README.md) | ~3.2 min | The admin gate's Sign out becomes a quiet warn-text button, as on Family; danger is reserved for confirming destruction. |
 | 35 | [Design drift D40: a stop that says "Stop"](35-stop-disc-name-d40/README.md) | ~3.5 min | Numbered stop discs read "Stop N" through visually hidden text instead of an `aria-label` on a `<span>` (L2-137, WCAG 1.3.1, 4.1.2). |
+| 36 | [Design drift D41: the dividers that disappeared](36-list-dividers-d41/README.md) | ~2.9 min | A `:last-child` rule stripped every action row's hairline in the mocks; the divider moves to `.list > li:not(:last-child) > .list__item`. |
 
 ## Family members series
 
