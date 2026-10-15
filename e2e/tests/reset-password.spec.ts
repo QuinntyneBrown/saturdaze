@@ -37,6 +37,33 @@ test.describe("Reset password — request", () => {
   });
 });
 
+test.describe("Reset password — link lifetime", () => {
+  // Traces to: L2-005 AC5, AC6
+  test("the sent and expired states state the same duration the server enforces", async ({ goto, page, pages, request }) => {
+    const account = await registerThrowaway(request, "reset");
+    // The server's own expiry: outside Production the API returns the delivery it would email.
+    const issued = await request.post(`${API_URL}/api/auth/forgot-password`, { data: { email: account.email } });
+    const { expiresAtUtc } = (await issued.json()) as { expiresAtUtc: string };
+    const minutes = Math.round((Date.parse(expiresAtUtc) - Date.now()) / 60_000);
+
+    await goto("resetRequest");
+    const r = pages.resetPassword;
+    await r.waitForReady();
+    await r.emailInput().fill(account.email);
+    await r.sendLinkButton().click();
+    await expect(r.cardTitle()).toHaveText("Check your email");
+    await expect(r.cardSubtitle()).toHaveText(`The link works for ${minutes} minutes.`);
+
+    await page.goto("/reset-password?token=not-a-real-token");
+    await r.waitForReady();
+    await r.newPasswordInput().fill("Brand-new-pass-1");
+    await r.confirmPasswordInput().fill("Brand-new-pass-1");
+    await r.savePasswordButton().click();
+    await expect(r.cardTitle()).toHaveText("This link has expired");
+    await expect(r.cardSubtitle()).toHaveText(`Reset links last ${minutes} minutes. Ask for a fresh one.`);
+  });
+});
+
 test.describe("Reset password — new password", () => {
   test("a valid token sets a new password and the 'done' state signs in", async ({ page, pages, request }) => {
     const account = await registerThrowaway(request, "reset");
