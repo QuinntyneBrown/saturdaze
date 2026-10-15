@@ -62,6 +62,7 @@ Six videos on Saturdaze Admin, the second web application that curates the catal
 | 32 | [Design drift D37: one icon, one meaning](32-icon-meanings-d37/README.md) | ~3.8 min | Arrows gain a shaft and a new `bookmark` marks the primary photo, so the star only means a rating. |
 | 33 | [Design drift D38: errors that say warning, once](33-error-alert-icon-d38/README.md) | ~3.8 min | Error banners and field errors use the alert icon instead of the close glyph, and are announced by `role="alert"` alone (L2-136, WCAG 4.1.3). |
 | 34 | [Design drift D39: signing out is not dangerous](34-signout-not-danger-d39/README.md) | ~3.2 min | The admin gate's Sign out becomes a quiet warn-text button, as on Family; danger is reserved for confirming destruction. |
+| 35 | [Design drift D40: a stop that says "Stop"](35-stop-disc-name-d40/README.md) | ~3.5 min | Numbered stop discs read "Stop N" through visually hidden text instead of an `aria-label` on a `<span>` (L2-137, WCAG 1.3.1, 4.1.2). |
 
 ## Family members series
 

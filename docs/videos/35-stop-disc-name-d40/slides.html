@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 35 Slides</title>
+<link rel="stylesheet" href="../assets/slides.css">
+</head>
+<body data-video-number="35" data-video-title="Design drift D40" data-parts="Introduction|What drifted|Why it matters|The fix|Before and after|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Design drift · Video 35</div>
+  <h1>D40: a stop that says "Stop"</h1>
+  <p class="lead">Visually hidden "Stop " before the number instead of an <code>aria-label</code> on a <code>&lt;span&gt;</code></p>
+</section>
+
+<section id="drift" data-part="1" data-cue="Each stop on a day gets a numbered disc">
+  <h2>What drifted</h2>
+  <pre class="code tight" data-lang="html" data-mark="1">&lt;span class="block__disc block__disc--num" aria-label="Stop 2"&gt;2&lt;/span&gt;</pre>
+  <ul>
+    <li>A span has no role; most screen readers ignore its <code>aria-label</code></li>
+    <li>Heard: just "2". The word "Stop" was lost</li>
+  </ul>
+</section>
+
+<section id="why" data-part="2" data-cue="The success criteria are WCAG one point three point one">
+  <h2>Why it matters</h2>
+  <ul>
+    <li>WCAG 1.3.1 info and relationships; 4.1.2 name, role, value</li>
+    <li>A name that assistive technology ignores is not a name</li>
+    <li>Text is read, searchable and robust; the disc looks the same</li>
+  </ul>
+</section>
+
+<section id="req" data-part="3" data-cue="This changes what assistive technology reads, so the requirement came first.">
+  <h2>1 · Requirement, then mock</h2>
+  <div class="card"><h3>L2-137</h3><p>A numbered stop disc carries its meaning as text: a visually hidden "Stop " before the visible number. No <code>aria-label</code> on a non-interactive element.</p></div>
+  <pre class="code tight" data-lang="html" data-mark="1">&lt;span class="block__disc block__disc--num"&gt;&lt;span class="visually-hidden"&gt;Stop &lt;/span&gt;2&lt;/span&gt;</pre>
+</section>
+
+<section id="component" data-part="3" data-cue="In the app, the block component's template drops the">
+  <h2>2 · sd-block</h2>
+  <pre class="code tight" data-lang="html" data-mark="2">&lt;span class="block__disc block__disc--num"
+  &gt;&lt;span class="sd-visually-hidden"&gt;Stop &lt;/span&gt;{{ stopNumber() }}&lt;/span
+&gt;</pre>
+  <p class="small"><code>frontend/projects/components/src/lib/block/block.html</code></p>
+</section>
+
+<section id="test" data-part="3" data-cue="The acceptance test came first.">
+  <h2>3 · Test first</h2>
+  <pre class="code tight" data-lang="ts">const first = w.stopDiscs().first();
+await expect(first).toHaveText("Stop 1");   // was "1"
+await expect(first).not.toHaveAttribute("aria-label", /.*/);</pre>
+  <ul>
+    <li><code>stopBlock(n)</code> now matches "Stop n"</li>
+    <li>D40 removed from the drift log</li>
+  </ul>
+</section>
+
+<section id="before" data-part="4" data-cue="Here is the build from before the fix." data-clip="clips/before.mp4" data-clip-delay="1">
+  <aside class="clip-notes">
+    <h3>Before</h3>
+    <ul><li>Accessibility tree: "… 2h 30m 1"</li><li>The aria-label is ignored</li></ul>
+  </aside>
+</section>
+
+<section id="after" data-part="4" data-cue="And here is the fix." data-clip="clips/after.mp4" data-clip-delay="1">
+  <aside class="clip-notes">
+    <h3>After</h3>
+    <ul><li>Accessibility tree: "… 2h 30m Stop 1"</li><li>The page looks identical</li></ul>
+  </aside>
+</section>
+
+<section id="recap" data-part="5" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <ul>
+      <li>An <code>aria-label</code> on a plain span is usually ignored</li>
+      <li>Hidden "Stop " before the number: same look, real name</li>
+      <li>Find stops in tests by "Stop 2"</li>
+      <li>Requirement and mock first, failing test, then delete the drift record</li>
+    </ul>
+  </div>
+</section>
+
+<script src="../assets/slides.js"></script>
+</body>
+</html>

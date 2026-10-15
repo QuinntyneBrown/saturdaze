@@ -83,12 +83,20 @@ test.describe("Weekend — map and travel legs", () => {
     await expect(w.dayMeta("Saturday")).toContainText(`${drivingLabel(total)} driving`);
   });
 
+  // Traces to: L2-137 AC1
+  test("a stop disc reads 'Stop N' as text, not through an aria-label on a span", async ({ pages }) => {
+    const w = pages.weekend;
+    const first = w.stopDiscs().first();
+    await expect(first).toHaveText("Stop 1");
+    await expect(first).not.toHaveAttribute("aria-label", /.*/);
+  });
+
   test("stops are numbered in order and pinned on the map with home and attribution", async ({ pages }) => {
     // Traces to: L2-103 AC1, AC3
     const w = pages.weekend;
     const discs = await w.stopDiscs().allTextContents();
     expect(discs.length).toBeGreaterThan(0);
-    expect(discs.map((d) => d.trim())).toEqual(discs.map((_, i) => String(i + 1)));
+    expect(discs.map((d) => d.trim())).toEqual(discs.map((_, i) => `Stop ${i + 1}`));
 
     await expect(w.mapPins("Saturday")).toHaveCount(discs.length);
     for (let n = 1; n <= discs.length; n++) {
