@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 41 Slides</title>
+<link rel="stylesheet" href="../assets/slides.css">
+</head>
+<body data-video-number="41" data-video-title="Design drift D46" data-parts="Introduction|What drifted|Why it matters|The fix|Before and after|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Design drift · Video 41</div>
+  <h1>D46: a selected tab you can actually see</h1>
+  <p class="lead">A 1px accessible edge on the selected segment: 1.15 : 1 becomes a 3.20 : 1 edge</p>
+</section>
+
+<section id="drift" data-part="1" data-cue="Saturdaze has two of these controls.">
+  <h2>What drifted</h2>
+  <div class="cols">
+    <div class="card"><h3>segments</h3><p class="small">Weekend day tabs: Saturday | Sunday</p></div>
+    <div class="card"><h3>seg-radio</h3><p class="small">Dialog choices, e.g. "Will they sign in?"</p></div>
+  </div>
+  <ul><li>White pill on a cream track, separated only by a soft shadow</li></ul>
+</section>
+
+<section id="why" data-part="2" data-cue="The success criterion is WCAG one point four point eleven">
+  <h2>Why it matters: WCAG 1.4.11 (AA)</h2>
+  <div class="cols">
+    <div class="card"><h3>Before</h3><p class="lead">1.15 : 1</p><p class="small">Pill fill vs track; no edge</p></div>
+    <div class="card"><h3>After</h3><p class="lead">3.20 : 1</p><p class="small">1px edge in <code>--colorNeutralStrokeAccessible</code></p></div>
+  </div>
+</section>
+
+<section id="code" data-part="3" data-cue="The fix is the same one pixel line in three places.">
+  <h2>1 · The edge, in three places</h2>
+  <pre class="code tight" data-lang="scss" data-mark="2,3">.segments__tab[aria-selected='true'] {
+  box-shadow:
+    var(--shadow4),
+    inset 0 0 0 var(--strokeWidthThin) var(--colorNeutralStrokeAccessible);
+}</pre>
+  <p class="small"><code>segments.scss</code> · <code>seg-radio.scss</code> · mocks' <code>app.css</code> (with <code>--sd-line-control</code>)</p>
+</section>
+
+<section id="test" data-part="3" data-cue="The acceptance test came first.">
+  <h2>2 · Test first</h2>
+  <pre class="code tight" data-lang="ts">const shadow = await selected.evaluate((el) =&gt; getComputedStyle(el).boxShadow);
+const edge = INSET_EDGE.exec(shadow)?.[1];       // 1px inset colour
+expect(contrast(edge!, trackColour)).toBeGreaterThanOrEqual(3);</pre>
+  <ul>
+    <li>Weekend day tabs and the Add a family member choice</li>
+    <li>Failed with no inset edge; passes now. D46 removed from the drift log</li>
+  </ul>
+</section>
+
+<section id="before" data-part="4" data-cue="Here is the build from before the fix." data-clip="clips/before.mp4" data-clip-delay="1">
+  <aside class="clip-notes">
+    <h3>Before</h3>
+    <ul><li>Pill fill vs track: 1.15 : 1</li><li>No edge</li></ul>
+  </aside>
+</section>
+
+<section id="after" data-part="4" data-cue="And here is the fix." data-clip="clips/after.mp4" data-clip-delay="1">
+  <aside class="clip-notes">
+    <h3>After</h3>
+    <ul><li>1px edge on the track: 3.20 : 1</li><li>Fill unchanged</li></ul>
+  </aside>
+</section>
+
+<section id="recap" data-part="5" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <ul>
+      <li>A shadow and a small luminance step do not show state</li>
+      <li>1px inset accessible-stroke edge: 3.20 : 1</li>
+      <li>Same line in the mocks, the design system and both components</li>
+      <li>Failing test first, then delete the drift record</li>
+    </ul>
+  </div>
+</section>
+
+<script src="../assets/slides.js"></script>
+</body>
+</html>
