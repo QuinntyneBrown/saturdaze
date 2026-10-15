@@ -389,13 +389,13 @@ export class WeekendPage extends BasePage {
     return this.timeline().locator(".block__disc--num");
   }
 
-  /** The block whose disc reads `n`. */
+  /** The block whose disc reads "Stop `n`" (the hidden "Stop " text plus the number). */
   stopBlock(n: number): Locator {
     return this.timeline()
       .locator(".block")
       .filter({
         has: this.page.locator(".block__disc--num", {
-          hasText: new RegExp(`^${n}$`),
+          hasText: new RegExp(`^Stop ${n}$`),
         }),
       });
   }

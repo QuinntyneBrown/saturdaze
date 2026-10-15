@@ -6,9 +6,9 @@
 </div>
 <div class="block__rail">
   @if (stopNumber() !== null) {
-    <span class="block__disc block__disc--num" [attr.aria-label]="'Stop ' + stopNumber()">{{
-      stopNumber()
-    }}</span>
+    <span class="block__disc block__disc--num"
+      ><span class="sd-visually-hidden">Stop </span>{{ stopNumber() }}</span
+    >
   } @else {
     <span class="block__disc"><sd-icon [name]="icon()" [size]="drive() ? 13 : 16" /></span>
   }
