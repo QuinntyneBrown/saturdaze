@@ -32,6 +32,8 @@ The feature crosses the application and platform boundaries needed to deliver it
 
 - **`Error banner and field error`** — `sd-banner` takes `role` (`alert` for errors, `status` otherwise) and sets no `aria-live`; `alert` and `status` already imply their live regions, so a second declaration is removed. Error banners pass `icon="alert"` and `sd-text-input`'s error line draws the `alert` icon, never `close` (L2-136).
 
+- **`Landmarks and menu buttons`** — the app shell renders a `SiteFooter` (`app/shell/site-footer.ts`) after `<main>` when a route sets `data.footer`, so the landing and legal footers are `contentinfo` landmarks instead of generic footers inside `<main>`; `sd-pager` is a `navigation` named "Pagination" by default; `sd-list` and `sd-list-item` carry `role="list"` and `listitem`; the top bar's account button sets `aria-haspopup="menu"` (L2-138).
+
 Automated structural checks do not establish complete keyboard or WCAG contrast conformance. The obligations below remain subject to dedicated accessibility verification.
 
 ## Requirements
@@ -49,6 +51,7 @@ The following L2 requirements refine the cited L1 capabilities. Implementation g
 | `L2-133` | `L1-014` | Every link that opens a new tab shall say so in its accessible name ("(opens in a new tab)"), and address and Details links shall show the external icon. |
 | `L2-134` | `L1-014` | A form dialog's primary action stays enabled and names the action; activating it with problems shows a focused error summary whose lines link to the invalid fields. |
 | `L2-136` | `L1-014` | An error banner and a field error use the alert icon, and an error banner is announced by `role="alert"` alone, with no `aria-live`. |
+| `L2-138` | `L1-014` | The site footer is a contentinfo landmark outside main, the pager a navigation named Pagination, lists are lists, and the account avatar a button with aria-haspopup=menu. |
 
 ## Diagrams
 
