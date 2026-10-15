@@ -364,7 +364,7 @@
         <li><b>Focus within</b>: the focused control draws the shared ring. On an interactive card the ring belongs around the card, because the whole card is the hit area: <code>.card--interactive:has(.card__stretch:focus-visible)</code> draws it there and drops the link's own ring, so there is only one.</li>
         <li><b>Selected</b>: 2px <code>--colorBrandStroke1</code> border. The control that chose it carries the state (<code>aria-pressed="true"</code>, a checked radio or <code>aria-current</code>); the border only echoes it.</li>
         <li><b>Locked</b>: 2px <code>--colorStatusSuccessBackground3</code> border plus a "Locked" chip.</li>
-        <li><b>Dimmed</b> (60% opacity) for picks that stepped back; their actions are disabled. <b>Muted</b> (85%) for content only you can see yet. Opacity costs contrast: dimmed meta text falls to about 2.5:1 and muted to about 4.4:1, both under 4.5:1. Until the product fades only the media and chips, say the reason at full contrast outside the faded text (the chip, the section heading, or a body line on a muted card), and never fade a card twice.</li>
+        <li><b>Dimmed</b> for picks that stepped back: a sunk surface, a secondary-ink title and a photo at 60% opacity; their actions are disabled. <b>Muted</b> for content only you can see yet: a dashed edge. Neither fades the text, because opacity costs contrast (dimmed meta text fell to about 2.5:1 and muted to about 4.4:1, both under 4.5:1); the meta keeps <code>--colorNeutralForeground2</code>, 5.35:1 on the sunk surface. Say the reason in a chip or a body line, and never dim a card twice.</li>
       </ul>
     </section>
 
@@ -482,7 +482,7 @@
         <tr><td><code>.card--pad-lg</code></td><td>24px padding.</td></tr>
         <tr><td><code>.card--sunk</code></td><td>Well surface, no border; for recaps inside another surface.</td></tr>
         <tr><td><code>.card--locked</code> <code>.card--selected</code></td><td>2px success or brand border; pair with words.</td></tr>
-        <tr><td><code>.card--dimmed</code> <code>.card--muted</code></td><td>60% / 85% opacity; pair with a reason or a status chip.</td></tr>
+        <tr><td><code>.card--dimmed</code> <code>.card--muted</code></td><td>Sunk surface and faded photo / dashed edge; text keeps its colour. Pair with a reason or a status chip.</td></tr>
         <tr><td><code>.card--span</code></td><td>Spans every column of the grid.</td></tr>
         <tr><td><code>.card--interactive</code> + <code>.card__stretch</code></td><td>Hover lift; the link's <code>::after</code> covers the card.</td></tr>
         <tr><td><code>.card__head</code> <code>.card__head-text</code> <code>.card__title</code> <code>.card__meta</code></td><td>Head row; a trailing <code>.chip</code> is pushed right.</td></tr>

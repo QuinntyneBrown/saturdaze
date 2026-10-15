@@ -125,7 +125,6 @@ and up) are proposals for the product's TypeScript theme.
 
 | ID | Mock | Issue | Resolution |
 |---|---|---|---|
-| D44 | `.card--dimmed`, `.card--muted`, `.block--done` | Opacity takes meta text below 4.5:1 (about 2.5:1 dimmed, 4.4:1 muted). | `.block--done` now mutes with colour and a strikethrough; dimmed and muted cards are an open item on the card page. |
 | D45 | `weekend.generating.html` | The primary page action comes last in the DOM, so on phones focus order differs from the visual order (2.4.3). | Primary first in the DOM, as the Angular `sd-page-header` already does. |
 | D46 | `segments`, `seg-radio` | The selected segment differs from the track only by a small luminance step (1.4.11). | 1px `--colorNeutralStrokeAccessible` inner edge on the selected segment. |
 | D47 | product (not a mock) | `sd-admin-nav` puts `aria-label="Admin"` on a host without a role (no landmark); `sd-text-input` hides the hint during an error but keeps it in `aria-describedby`; `sd-chip-input` drops duplicates silently; a bare `href="#main"` skip link resolves against `<base href="/">` and leaves the page. | Noted on the sidebar-navigation, inline-message, chip-input and skip-link pages for the product backlog. |

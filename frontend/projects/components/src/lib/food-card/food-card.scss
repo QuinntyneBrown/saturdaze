@@ -15,6 +15,17 @@
   padding: calc(var(--spacingHorizontalL) - 1px); // 16px less the extra 1px of border
 }
 
+// Stepped back: a sunk surface, secondary-ink title and a faded photo; the text keeps its
+// colour so the meta stays above 4.5:1 (WCAG 1.4.3, L2-038).
 :host(.card--dimmed) {
+  background: var(--colorNeutralBackground3);
+  border-color: transparent;
+}
+
+:host(.card--dimmed) .card__title {
+  color: var(--colorNeutralForeground2);
+}
+
+:host(.card--dimmed) .card__media {
   opacity: 0.6;
 }

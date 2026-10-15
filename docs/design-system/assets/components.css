@@ -383,8 +383,10 @@ a.page-header__eyebrow[data-state="hover"] { color: var(--colorNeutralForeground
 .card--sunk { background: var(--colorNeutralBackground3); border-color: transparent; }
 .card--locked { border: var(--strokeWidthThick) solid var(--colorStatusSuccessBackground3); padding: calc(var(--spacingHorizontalL) - 1px); }
 .card--selected { border: var(--strokeWidthThick) solid var(--colorBrandStroke1); padding: calc(var(--spacingHorizontalL) - 1px); }
-.card--dimmed { opacity: 0.6; }
-.card--muted { opacity: 0.85; }
+.card--dimmed { background: var(--colorNeutralBackground3); border-color: transparent; }
+.card--dimmed .card__title { color: var(--colorNeutralForeground2); }
+.card--dimmed .media { opacity: 0.6; }
+.card--muted { border-style: dashed; border-color: var(--colorNeutralStrokeAccessible); }
 .card--span { grid-column: 1 / -1; }
 .card--interactive { position: relative; }
 .card--interactive[data-state="hover"] { border-color: var(--colorNeutralStroke1); box-shadow: var(--shadow16); transform: translateY(-2px); }
