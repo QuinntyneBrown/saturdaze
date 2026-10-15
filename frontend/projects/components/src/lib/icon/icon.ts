@@ -34,6 +34,8 @@ const ICONS: Record<string, string> = {
   heart: `<path d="M12 21s-7-4.5-9-9a5 5 0 0 1 9-3 5 5 0 0 1 9 3c-2 4.5-9 9-9 9z"/>`,
   star: `<path d="M12 3l2.7 5.7 6.3.9-4.5 4.4 1 6.3L12 17.8 6.5 20.3l1-6.3L3 9.6l6.3-.9L12 3z"/>`,
   bookmark: `<path d="M7 4h10a1 1 0 0 1 1 1v15l-6-4-6 4V5a1 1 0 0 1 1-1z"/>`,
+
+  alert: `<path d="M12 4l9 16H3L12 4z"/><path d="M12 10v4M12 17h.01"/>`,
   user: `<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>`,
   plus: `<path d="M12 5v14M5 12h14"/>`,
   close: `<path d="M6 6l12 12M18 6L6 18"/>`,

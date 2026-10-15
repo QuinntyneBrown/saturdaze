@@ -45,7 +45,7 @@
 }
 @if (error()) {
   <p class="field__error" [id]="errorId">
-    <sd-icon name="close" [size]="12" [stroke]="2" />
+    <sd-icon name="alert" [size]="12" [stroke]="2" />
     {{ error() }}
   </p>
 } @else if (hint()) {

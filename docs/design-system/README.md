@@ -125,7 +125,6 @@ and up) are proposals for the product's TypeScript theme.
 
 | ID | Mock | Issue | Resolution |
 |---|---|---|---|
-| D38 | `sign-in.html`, field errors | The error banner and field errors use the close (×) glyph as a status icon, and the banner adds `aria-live="assertive"` on top of `role="alert"`. | `alert` icon; `role="alert"` alone. |
 | D39 | `admin.sign-in.html` | Sign out on the admin gate is a danger button, though nothing is destroyed. | Quiet warn-text button, as on Family. |
 | D40 | `weekend.html` | Numbered stop discs carry `aria-label="Stop 2"` on a `<span>`, which assistive technology ignores. | Visually hidden "Stop " text before the number. |
 | D41 | `app.css` lists | `.list__item:last-child { border-bottom: 0 }` matches every action row (each is the last child of its `<li>`), so Family, D25 and admin Places lose all row dividers. | Divider set on `.list > li:not(:last-child) > .list__item`. |

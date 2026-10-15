@@ -60,6 +60,7 @@ Six videos on Saturdaze Admin, the second web application that curates the catal
 | 30 | [Design drift D35: a button that tells you what is missing](30-submit-stays-enabled-d35/README.md) | ~4.3 min | Suggest an event and Add member stay enabled; a failed press shows a focused error summary (L2-134, WCAG 3.3.1, 3.3.3, 4.1.3); `sd-error-summary`. |
 | 31 | [Design drift D36: the forecast, in words](31-forecast-word-d36/README.md) | ~4.1 min | The day meta line names the weather ("17 May · Sunny · 22° / 14° · …") so the `aria-hidden` weather disc is not the only forecast (L2-135, WCAG 1.1.1, 1.4.1). |
 | 32 | [Design drift D37: one icon, one meaning](32-icon-meanings-d37/README.md) | ~3.8 min | Arrows gain a shaft and a new `bookmark` marks the primary photo, so the star only means a rating. |
+| 33 | [Design drift D38: errors that say warning, once](33-error-alert-icon-d38/README.md) | ~3.8 min | Error banners and field errors use the alert icon instead of the close glyph, and are announced by `role="alert"` alone (L2-136, WCAG 4.1.3). |
 
 ## Family members series
 

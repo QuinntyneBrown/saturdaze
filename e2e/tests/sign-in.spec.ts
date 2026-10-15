@@ -70,6 +70,15 @@ test.describe("Sign in", () => {
     expect(new URL(page.url()).pathname).toBe("/sign-in");
   });
 
+  // Traces to: L2-136 AC1
+  test("wrong password announces through role=alert alone, marked with the alert icon", async ({ pages }) => {
+    const s = pages.signIn;
+    await s.signIn(SEEDED_USER.email, "not-the-password");
+    await expect(s.errorBanner()).toHaveText(/did not match/);
+    await expect(s.errorBanner()).not.toHaveAttribute("aria-live", /.*/);
+    await expect(s.errorBannerIcon()).toHaveCount(1);
+  });
+
   test("a sign-in error does not leak onto /create-account", async ({ page, pages }) => {
     const s = pages.signIn;
     await s.signIn(SEEDED_USER.email, "not-the-password");

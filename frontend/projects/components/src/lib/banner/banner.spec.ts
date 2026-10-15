@@ -29,7 +29,7 @@ describe('Banner', () => {
     expect(host.classList.contains('banner')).toBe(true);
     expect(host.classList.contains('banner--info')).toBe(true);
     expect(host.getAttribute('role')).toBe('status');
-    expect(host.getAttribute('aria-live')).toBe('polite');
+    expect(host.getAttribute('aria-live')).toBeNull();
     expect(host.querySelector('sd-icon')).toBeNull();
     expect(host.querySelector('.banner__text')).not.toBeNull();
   });
@@ -43,11 +43,11 @@ describe('Banner', () => {
     expect(host.classList.contains('banner--warn')).toBe(false);
   });
 
-  it('becomes an assertive alert for errors', () => {
+  it('becomes an alert for errors, announced by its role alone', () => {
     fixture.componentRef.setInput('role', 'alert');
     fixture.detectChanges();
     expect(host.getAttribute('role')).toBe('alert');
-    expect(host.getAttribute('aria-live')).toBe('assertive');
+    expect(host.getAttribute('aria-live')).toBeNull();
   });
 
   it('renders a leading glyph only when an icon is given', () => {

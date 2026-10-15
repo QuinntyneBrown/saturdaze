@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 33 Slides</title>
+<link rel="stylesheet" href="../assets/slides.css">
+</head>
+<body data-video-number="33" data-video-title="Design drift D38" data-parts="Introduction|What drifted|Why it matters|The fix|Before and after|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Design drift · Video 33</div>
+  <h1>D38: errors that say warning, once</h1>
+  <p class="lead">The alert icon instead of the close glyph, and <code>role="alert"</code> without <code>aria-live</code></p>
+</section>
+
+<section id="drift" data-part="1" data-cue="Two things were off.">
+  <h2>What drifted</h2>
+  <div class="cols">
+    <div class="card"><h3>The icon</h3><p class="lead">× on an error</p><p class="small">The close glyph means dismiss; banners and field errors used it as a status icon</p></div>
+    <div class="card"><h3>The announcement</h3><p class="lead">role + aria-live</p><p class="small"><code>role="alert" aria-live="assertive"</code>: the role already is an assertive live region</p></div>
+  </div>
+</section>
+
+<section id="why" data-part="2" data-cue="The first problem is meaning.">
+  <h2>Why it matters</h2>
+  <ul>
+    <li>One icon, one meaning: a cross only ever says close</li>
+    <li>WCAG 4.1.3 status messages: announced without moving focus; <code>role="alert"</code> does this alone</li>
+    <li>A second declaration adds nothing and risks a double announcement</li>
+  </ul>
+</section>
+
+<section id="req" data-part="3" data-cue="This changes accessibility semantics, so the requirement came first.">
+  <h2>1 · Requirement, then mock</h2>
+  <div class="card"><h3>L2-136</h3><p>An error banner and a field error use the <b>alert</b> icon, never <b>close</b>. An error banner is announced by <code>role="alert"</code> alone, with no <code>aria-live</code>.</p></div>
+  <p class="small"><code>docs/specs/L2.md</code> · sign-in and dialogs mocks · the alert icon in the mocks' sprite</p>
+</section>
+
+<section id="code" data-part="3" data-cue="In the app, four changes.">
+  <h2>2 · Four changes in the app</h2>
+  <pre class="code tight" data-lang="ts" data-mark="3,6">host: {
+  class: 'banner',
+  // removed: '[attr.aria-live]': 'role() === "alert" ? "assertive" : "polite"',
+  '[attr.role]': 'role()',
+},
+&lt;sd-banner tone="warn" role="alert" icon="alert"&gt;…&lt;/sd-banner&gt;</pre>
+  <ul>
+    <li>Icon set gains <code>alert</code>; text input error line draws it</li>
+    <li>20 template files: <code>icon="close"</code> → <code>icon="alert"</code> on error banners</li>
+  </ul>
+</section>
+
+<section id="test" data-part="3" data-cue="The acceptance test came first.">
+  <h2>3 · Test first</h2>
+  <pre class="code tight" data-lang="ts">await s.signIn(SEEDED_USER.email, "not-the-password");
+await expect(s.errorBanner()).not.toHaveAttribute("aria-live", /.*/);
+await expect(s.errorBannerIcon()).toHaveCount(1); // the alert glyph</pre>
+  <ul>
+    <li>Failed with <code>aria-live="assertive"</code>, passes now</li>
+    <li>Banner, icon and text-input specs updated; D38 removed from the drift log</li>
+  </ul>
+</section>
+
+<section id="before" data-part="4" data-cue="Here is the build from before the fix." data-clip="clips/before.mp4" data-clip-delay="1">
+  <aside class="clip-notes">
+    <h3>Before</h3>
+    <ul><li>Wrong password</li><li>The banner is marked with a cross</li></ul>
+  </aside>
+</section>
+
+<section id="after" data-part="4" data-cue="And here is the fix." data-clip="clips/after.mp4" data-clip-delay="1">
+  <aside class="clip-notes">
+    <h3>After</h3>
+    <ul><li>The banner is marked with a warning triangle</li><li>Announced by <code>role="alert"</code> alone</li></ul>
+  </aside>
+</section>
+
+<section id="recap" data-part="5" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <ul>
+      <li>A cross means dismiss; errors get the alert icon</li>
+      <li><code>role="alert"</code> is already assertive: no <code>aria-live</code></li>
+      <li>Status banners keep <code>role="status"</code></li>
+      <li>Requirement and mock first, failing test, then delete the drift record</li>
+    </ul>
+  </div>
+</section>
+
+<script src="../assets/slides.js"></script>
+</body>
+</html>
