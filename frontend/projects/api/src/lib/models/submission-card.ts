@@ -23,7 +23,7 @@ export interface SubmissionCard {
    */
   readonly tile: DateTile;
   /**
-   * When — "Sat 20 Jun · 2:00 to 9:00pm".
+   * When — "Sat 20 Jun · 2:00pm to 9:00pm".
    */
   readonly when: string;
   /**

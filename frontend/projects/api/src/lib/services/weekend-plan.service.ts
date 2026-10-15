@@ -16,7 +16,7 @@ import { CoverSelection } from '../models/cover-view';
 import { IdeaPlacementDto } from '../models/idea-placement.dto';
 import { IdeaPlacementView } from '../models/idea-placement-view';
 import { IdeaRequest } from '../models/idea-request';
-import { hhmm } from '../api/format';
+import { timeRange } from '../api/format';
 
 /**
  * Weekend Share Dto — `POST /api/weekends/{id}/share`.
@@ -392,7 +392,7 @@ function placementView(dto: IdeaPlacementDto): IdeaPlacementView {
   const replaced = dto.replacedBlockTitles;
   return {
     fits: true,
-    title: `${dto.day} · ${hhmm(dto.startTime)} to ${hhmm(dto.endTime)}`,
+    title: `${dto.day} · ${timeRange(dto.startTime, dto.endTime)}`,
     body: replaced.length
       ? `Replaces ${replaced.join(', ')}.`
       : 'Fits into free time; nothing else moves.',

@@ -166,7 +166,7 @@ describe('FamilyService', () => {
         dayLabel: 'Saturdays',
         startTime: '09:00',
         endTime: '10:00',
-        subtitle: 'Saturdays · 9:00 to 10:00',
+        subtitle: 'Saturdays · 9:00am to 10:00am',
         icon: 'lock',
       },
       {
@@ -176,7 +176,7 @@ describe('FamilyService', () => {
         dayLabel: 'Sundays',
         startTime: '10:30',
         endTime: '11:45',
-        subtitle: 'Sundays · 10:30 to 11:45',
+        subtitle: 'Sundays · 10:30am to 11:45am',
         icon: 'lock',
       },
       {
@@ -186,7 +186,7 @@ describe('FamilyService', () => {
         dayLabel: 'Saturdays',
         startTime: '17:00',
         endTime: '18:00',
-        subtitle: 'Saturdays · 5:00 to 6:00pm',
+        subtitle: 'Saturdays · 5:00pm to 6:00pm',
         icon: 'lock',
       },
     ]);
@@ -238,7 +238,7 @@ describe('FamilyService', () => {
       {
         icon: 'lock',
         title: '3 commitments',
-        subtitle: 'Swim lessons Sat 9:00 · Church Sun 10:30 · Workout window Sat 17:00',
+        subtitle: 'Swim lessons Sat 9:00am · Church Sun 10:30am · Workout window Sat 5:00pm',
         href: '/family',
       },
       {

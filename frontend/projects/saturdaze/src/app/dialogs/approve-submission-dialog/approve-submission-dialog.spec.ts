@@ -35,7 +35,7 @@ describe('ApproveSubmissionDialog', () => {
       'It becomes visible to every family nearby.',
     );
     expect(host.querySelector('.card__title')?.textContent?.trim()).toBe(
-      'Sat 20 Jun · 2:00 to 9:00pm',
+      'Sat 20 Jun · 2:00pm to 9:00pm',
     );
     expect(host.querySelector('.card__meta')?.textContent?.trim()).toBe(
       'Memorial Park · Free · All ages · sent by quinntynebrown@gmail.com',

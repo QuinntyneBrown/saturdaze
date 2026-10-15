@@ -1,7 +1,7 @@
 import { ErrandPlacement } from '../models/errand-placement';
 import { ItineraryBlockDto } from '../models/itinerary-block.dto';
 import { WeekendDto } from '../models/weekend.dto';
-import { hhmm } from './format';
+import { clock12 } from './format';
 
 /**
  * Where the errand just added landed. The add endpoint returns the whole
@@ -20,8 +20,8 @@ export function placementFor(
   return {
     description,
     day: block.day,
-    time: hhmm(block.startTime),
-    endTime: hhmm(block.endTime),
+    time: clock12(block.startTime),
+    endTime: clock12(block.endTime),
     blockId: block.id,
   };
 }

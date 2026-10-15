@@ -38,7 +38,7 @@ test.describe("Admin activity log table", () => {
 
     await expect(log.logTable()).toBeVisible();
     await expect(log.columnHeaders()).toHaveText(["Time", "Who", "Place", "Action", "Change"]);
-    await expect(await log.cellUnder("Time", 0)).toHaveText(/^\d{4}-\d{2}-\d{2} \d{2}:\d{2} UTC$/);
+    await expect(await log.cellUnder("Time", 0)).toHaveText(/^\d{1,2} [A-Z][a-z]{2} \d{4}, \d{1,2}:\d{2}(am|pm) UTC$/);
     await expect(await log.cellUnder("Who", 0)).toHaveText(SEEDED_ADMIN.email);
     await expect(await log.cellUnder("Place", 0)).toHaveText(PLACE);
     await expect(await log.cellUnder("Action", 0)).toHaveText("Upload");

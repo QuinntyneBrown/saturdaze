@@ -22,7 +22,7 @@ describe('admin audit view mapping', () => {
   });
 
   it('stamps the UTC time and names files without their path', () => {
-    expect(utcStamp('2026-10-06T14:02:00+00:00')).toBe('2026-10-06 14:02 UTC');
+    expect(utcStamp('2026-10-06T14:02:00+00:00')).toBe('6 Oct 2026, 2:02pm UTC');
     expect(fileName('https://images.example.com/a/memorial-park.jpg?x=1')).toBe(
       'memorial-park.jpg',
     );
@@ -104,7 +104,7 @@ describe('admin audit view mapping', () => {
         },
       ],
     });
-    expect(view.meta).toBe('6 Oct 2026, 04:12 UTC · 2 photo skips');
+    expect(view.meta).toBe('6 Oct 2026, 4:12am UTC · 2 photo skips');
     expect(view.status.label).toBe('Succeeded');
     expect(view.skips[0].placeHref).toBe('/places/LocalEvent/e1');
     expect(view.skips[1].placeHref).toBeNull();

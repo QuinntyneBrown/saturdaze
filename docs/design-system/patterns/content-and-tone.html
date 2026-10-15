@@ -139,7 +139,7 @@
           <tr><td>Button</td><td>Verb + object, two or three words</td><td>"Plan this weekend", "Add to weekend", "Lock it in"</td></tr>
           <tr><td>Form dialog title</td><td>Action + object</td><td>"Edit Mae", "Add an errand"</td></tr>
           <tr><td>Confirmation</td><td>Question naming the object + consequence + verb button</td><td>"Remove Mae from the family?" · "Future weekends will not plan for her." · Remove</td></tr>
-          <tr><td>Success</td><td>What happened, with the specifics</td><td>"Added to Sunday at 9:15"</td></tr>
+          <tr><td>Success</td><td>What happened, with the specifics</td><td>"Added to Sunday at 9:15am"</td></tr>
           <tr><td>Error</td><td>What did not happen + how to fix it, no blame</td><td>"That email and password did not match."</td></tr>
           <tr><td>Empty state</td><td>The state + why + one next step</td><td>"Nothing here yet" · "Plan this weekend and it shows up here on Monday, ready to rate."</td></tr>
           <tr><td>Loading</td><td>What the system is doing + how long</td><td>"Working through your locks, the forecast and past weekends." · "Usually four to six seconds."</td></tr>
@@ -160,7 +160,7 @@
               <div class="dialog__body">
                 <div class="well well--accent">
                   <svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg>
-                  <div><p class="well__title">Keeping on Saturday</p><p class="well__body">Swim 9:00 · Workout 5:00 · Bath and books 8:00</p></div>
+                  <div><p class="well__title">Keeping on Saturday</p><p class="well__body">Swim 9:00am · Workout 5:00pm · Bath and books 8:00pm</p></div>
                 </div>
               </div>
               <div class="dialog__actions">
@@ -187,12 +187,12 @@
             </header>
             <ol class="day__list">
               <li class="block block--commitment">
-                <div class="block__time"><span class="block__clock">9:00</span><span class="block__dur">1h</span></div>
+                <div class="block__time"><span class="block__clock">9:00am</span><span class="block__dur">1h</span></div>
                 <div class="block__rail"><span class="block__disc"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg></span></div>
                 <div class="block__body"><p class="block__title">Swim lessons</p><p class="block__sub">Every Saturday · locked in</p></div>
               </li>
               <li class="block">
-                <div class="block__time"><span class="block__clock">11:00</span><span class="block__dur">2h</span></div>
+                <div class="block__time"><span class="block__clock">11:00am</span><span class="block__dur">2h</span></div>
                 <div class="block__rail"><span class="block__disc block__disc--num">1</span></div>
                 <div class="block__body"><p class="block__title">Lavender fields at Terre Bleu</p><p class="block__sub">Terre Bleu, Milton · walk the rows</p><div class="block__chips"><span class="chip chip--sky"><svg class="icon" aria-hidden="true"><use href="#i-car"/></svg>45 min drive</span><span class="chip chip--leaf">Outdoor</span></div></div>
               </li>
@@ -229,7 +229,7 @@
           <tr><td>Form</td><td>"Add an errand" · "It gets fitted around what is already planned on that day." · What is it / Roughly how long / Which day · "Add to weekend"</td></tr>
           <tr><td>Field error</td><td>"Say what the errand is."</td></tr>
           <tr><td>Busy</td><td>Button spinner; status "Finding a time for Costco run"</td></tr>
-          <tr><td>Success</td><td>"Added to Sunday at 9:15" · "It sits around what was already planned." · Done</td></tr>
+          <tr><td>Success</td><td>"Added to Sunday at 9:15am" · "It sits around what was already planned." · Done</td></tr>
           <tr><td>No room</td><td>"Sunday is full" · "Try Saturday, or a shorter errand." (banner in the dialog)</td></tr>
           <tr><td>Removed</td><td>Toast: "Removed Costco run from Sunday" · Undo</td></tr>
           <tr><td>Failed</td><td>Toast: "Could not add Costco run. Check your connection." · Try again</td></tr>
@@ -237,8 +237,8 @@
       </table></div>
       <h3>Both themes</h3>
       <div class="ds-themes">
-        <div data-theme="light"><div class="well well--accent"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg><div><p class="well__title">Keeping</p><p class="well__body">Swim 9:00 · Church 10:30 · Workout 5:00</p></div></div></div>
-        <div data-theme="dark"><div class="well well--accent"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg><div><p class="well__title">Keeping</p><p class="well__body">Swim 9:00 · Church 10:30 · Workout 5:00</p></div></div></div>
+        <div data-theme="light"><div class="well well--accent"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg><div><p class="well__title">Keeping</p><p class="well__body">Swim 9:00am · Church 10:30am · Workout 5:00pm</p></div></div></div>
+        <div data-theme="dark"><div class="well well--accent"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg><div><p class="well__title">Keeping</p><p class="well__body">Swim 9:00am · Church 10:30am · Workout 5:00pm</p></div></div></div>
       </div>
     </section>
 
@@ -286,18 +286,18 @@
         <tbody>
           <tr><td>Date</td><td>17 May · Sat 20 Jun · 10 – 11 May (year only when it is not this year)</td><td>May 17th, 05/17, Saturday, June 20th</td></tr>
           <tr><td>Weekend range</td><td>17 – 18 May (spaced en dash)</td><td>17-18 May, May 17 to May 18</td></tr>
-          <tr><td>Timeline clock</td><td>9:00 · 11:30 (the day gives the half)</td><td>09:00 AM</td></tr>
-          <tr><td>Time range in text</td><td>2 to 9pm · 10am to 2pm · Saturday 9:00 to 10:00</td><td>2:00 PM – 9:00 PM</td></tr>
+          <tr><td>Timeline clock</td><td>9:00am · 11:30am (am or pm every time)</td><td>09:00 AM, 9:00, 17:00</td></tr>
+          <tr><td>Time range in text</td><td>2:00pm to 9:00pm · 10:00am to 2:00pm · Saturday 9:00am to 10:00am</td><td>2:00 PM – 9:00 PM, 2 to 9pm, 2:00 to 9:00pm</td></tr>
           <tr><td>Duration</td><td>45 min · 1 h 36 min; compact on the timeline: 30m, 2h</td><td>45 minutes long, 1.6 hrs</td></tr>
           <tr><td>Drive</td><td>45 min drive (time, not distance)</td><td>38 km</td></tr>
           <tr><td>Weather</td><td>22° / 14° (high / low, Celsius, no C)</td><td>22°C - 14°C</td></tr>
           <tr><td>People</td><td>Eli 9 · Mae 5 · 2 parents</td><td>Eli (age 9)</td></tr>
           <tr><td>Counts</td><td>Digits in labels: 3 stops, 8 places; words for rough numbers in sentences: four to six seconds</td><td>Three stops, 4-6 secs</td></tr>
-          <tr><td>Admin timestamps</td><td>2026-10-06 14:02 UTC</td><td>Oct 6, 2:02 PM</td></tr>
+          <tr><td>Admin timestamps</td><td>6 Oct 2026, 2:02pm UTC</td><td>2026-10-06 14:02 UTC, Oct 6, 2:02 PM</td></tr>
           <tr><td>File size</td><td>10 MB · 412 KB</td><td>10mb</td></tr>
         </tbody>
       </table></div>
-      <p>The middle dot (<code>·</code>) separates facts in meta lines; it has a space either side. The mocks still mix "2:00 to 9:00pm" and "2pm to 9pm"; use the second.</p>
+      <p>The middle dot (<code>·</code>) separates facts in meta lines; it has a space either side. Write "2:00pm to 9:00pm", with am or pm on both ends.</p>
       <h3>Error and confirmation formulas</h3>
       <ul>
         <li><b>Error</b>: [what did not happen or is wrong] + [how to fix it]. "That file is not a JPG, PNG or WebP image." "Enter an age from 0 to 120." No "Error:", no codes in the message, no "you failed to".</li>
@@ -324,7 +324,7 @@
         <li><a href="../../mocks/pages/weekend.empty.html">pages/weekend.empty</a>, <a href="../../mocks/pages/past.empty.html">pages/past.empty</a>, <a href="../../mocks/pages/sign-in.html">pages/sign-in</a>: empty and error copy.</li>
         <li><a href="../../mocks/pages/admin.activity.html">pages/admin.activity</a>: admin timestamps.</li>
       </ul>
-      <p>Meta and chips keep the 12px minimum. Inconsistencies found in the mocks' copy: time ranges written three ways ("2:00 to 9:00pm", "2pm to 9pm", "10:00am to 2:00pm") and two admin timestamp formats ("6 Oct 2026, 04:10 UTC" on ingestion skips, "2026-10-06 14:02 UTC" on the activity log). This page picks one of each.</p>
+      <p>Meta and chips keep the 12px minimum. Times follow one rule: a 12-hour clock with am or pm every time, ranges as "2:00pm to 9:00pm", admin timestamps as "6 Oct 2026, 2:02pm UTC".</p>
     </section>
 
     <footer class="ds-footer"><span>Saturdaze design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>

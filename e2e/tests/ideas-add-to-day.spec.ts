@@ -29,10 +29,10 @@ test.describe("Ideas — Add to day", () => {
     // Traces to: L2-107 AC2
     const i = pages.ideas;
     await i.addToDayButton(i.cards().first()).click();
-    await expect(i.addToDayPreviewTitle()).toHaveText(/^Saturday · \d{1,2}:\d{2} to \d{1,2}:\d{2}$/);
+    await expect(i.addToDayPreviewTitle()).toHaveText(/^Saturday · \d{1,2}:\d{2}(am|pm) to \d{1,2}:\d{2}(am|pm)$/);
 
     await i.addToDayDayOption("Sunday").check();
-    await expect(i.addToDayPreviewTitle()).toHaveText(/^Sunday · \d{1,2}:\d{2} to \d{1,2}:\d{2}$/);
+    await expect(i.addToDayPreviewTitle()).toHaveText(/^Sunday · \d{1,2}:\d{2}(am|pm) to \d{1,2}:\d{2}(am|pm)$/);
     await expect(i.addToDayConfirm()).toHaveText(/Add to Sunday/);
   });
 
@@ -45,7 +45,7 @@ test.describe("Ideas — Add to day", () => {
     await i.addToDayDayOption("Sunday").check();
     await expect(i.addToDayPreviewTitle()).toHaveText(/^Sunday · /);
     const preview = (await i.addToDayPreviewTitle().textContent())!.trim();
-    const start = /· (\d{1,2}:\d{2}) to/.exec(preview)![1];
+    const start = /· (\d{1,2}:\d{2}(?:am|pm)) to/.exec(preview)![1];
 
     await i.addToDayConfirm().click();
     await expect(i.dialog()).toHaveCount(0);

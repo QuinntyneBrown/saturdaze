@@ -3,7 +3,7 @@ import { ChipView } from '../chip-view';
 /** One `.audit-row` on the admin Activity log (A7). */
 export interface AuditRow {
   readonly id: string;
-  /** "2026-10-06 14:02 UTC". */
+  /** "6 Oct 2026, 2:02pm UTC". */
   readonly time: string;
   /** The ISO instant for `<time datetime>`. */
   readonly datetime: string;
@@ -30,7 +30,7 @@ export interface IngestionRunSkipsView {
   readonly runId: string;
   /** "Events". */
   readonly type: string;
-  /** "6 Oct 2026, 04:12 UTC · 2 photo skips". */
+  /** "6 Oct 2026, 4:12am UTC · 2 photo skips". */
   readonly meta: string;
   readonly status: ChipView;
   readonly skips: readonly {

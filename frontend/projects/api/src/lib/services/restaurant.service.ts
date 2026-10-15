@@ -4,7 +4,7 @@ import { firstValueFrom } from 'rxjs';
 
 import { toMedia } from '../api/media';
 import { API_BASE_URL } from '../api/api-base-url';
-import { initialOf, toMinutes } from '../api/format';
+import { initialOf } from '../api/format';
 import { addDaysIso, upcomingSaturdayIso } from '../api/weekend-dates';
 import { BlockRow } from '../models/block-row';
 import { ChipView } from '../models/chip-view';
@@ -137,7 +137,7 @@ function rankPicks(rows: readonly RestaurantDto[]): RestaurantDto[] {
 
 /** Which meal a Meal block on the timeline stands for. */
 function slotOf(block: BlockRow): MealSlot | null {
-  const start = toMinutes(block.time);
+  const start = block.startMinutes;
   if (start >= LUNCH_FROM && start < LUNCH_UNTIL) return 'Lunch';
   if (start >= LUNCH_UNTIL) return 'Dinner';
   return null;

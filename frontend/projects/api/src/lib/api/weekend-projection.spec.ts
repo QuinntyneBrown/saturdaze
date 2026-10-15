@@ -103,14 +103,14 @@ describe('weekend-projection', () => {
     });
 
     it('lists what a regenerate keeps: commitments and locked blocks, never drives', () => {
-      expect(projectDay(weekendDto(), 'Saturday').keeping).toEqual(['Swim lessons 9:00']);
-      expect(projectDay(weekendDto(), 'Sunday').keeping).toEqual(['The Rec Room 13:30']);
+      expect(projectDay(weekendDto(), 'Saturday').keeping).toEqual(['Swim lessons 9:00am']);
+      expect(projectDay(weekendDto(), 'Sunday').keeping).toEqual(['The Rec Room 1:30pm']);
       expect(
         dayKeeping([
           block({ kind: 'Drive', isLocked: true }),
           block({ id: 'x', title: 'Zoo', isLocked: true, startTime: '10:00:00' }),
         ]),
-      ).toEqual(['Zoo 10:00']);
+      ).toEqual(['Zoo 10:00am']);
     });
 
     it('is locked only when every lockable block is locked', () => {
@@ -143,13 +143,13 @@ describe('weekend-projection', () => {
 
     it('formats time, range and duration the way the rail shows them', () => {
       expect(row('b1')).toMatchObject({
-        time: '11:00',
+        time: '11:00am',
         timeRange: '11:00am to 1:00pm',
         duration: '2h',
         durationMinutes: 120,
       });
       expect(row('m1').duration).toBe('75m');
-      expect(row('c1').time).toBe('9:00');
+      expect(row('c1').time).toBe('9:00am');
     });
 
     it('marks the first activity as the day highlight with the primary chip', () => {

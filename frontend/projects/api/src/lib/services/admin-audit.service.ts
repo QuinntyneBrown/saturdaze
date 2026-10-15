@@ -2,6 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 
+import { clock12 } from '../api/format';
 import { API_BASE_URL } from '../api/api-base-url';
 import { AuditPageView, AuditRow, IngestionRunSkipsView } from '../models/admin/audit-row';
 import { IngestionPhotoSkipsDto } from '../models/admin/ingestion-skips.dto';
@@ -62,22 +63,20 @@ function text(v: unknown): string {
   return typeof v === 'string' && v.trim() ? v : '—';
 }
 
-/** "2026-10-06T14:02:00+00:00" → "2026-10-06 14:02 UTC". */
+/** "2026-10-06T14:02:00+00:00" → "6 Oct 2026, 2:02pm UTC". */
 export function utcStamp(iso: string): string {
-  const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return '';
-  const p = (n: number) => String(n).padStart(2, '0');
-  return `${d.getUTCFullYear()}-${p(d.getUTCMonth() + 1)}-${p(d.getUTCDate())} ${p(d.getUTCHours())}:${p(d.getUTCMinutes())} UTC`;
+  return utcWhen(iso);
 }
 
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
-/** "2026-10-06T04:12:00+00:00" → "6 Oct 2026, 04:12 UTC". */
+/** "2026-10-06T04:12:00+00:00" → "6 Oct 2026, 4:12am UTC". */
 export function utcWhen(iso: string): string {
   const d = new Date(iso);
   if (Number.isNaN(d.getTime())) return '';
   const p = (n: number) => String(n).padStart(2, '0');
-  return `${d.getUTCDate()} ${MONTHS[d.getUTCMonth()]} ${d.getUTCFullYear()}, ${p(d.getUTCHours())}:${p(d.getUTCMinutes())} UTC`;
+  const time = clock12(`${p(d.getUTCHours())}:${p(d.getUTCMinutes())}`);
+  return `${d.getUTCDate()} ${MONTHS[d.getUTCMonth()]} ${d.getUTCFullYear()}, ${time} UTC`;
 }
 
 /** The one-line "what changed" of an entry, as the mock words each action (L2-122 AC4). */

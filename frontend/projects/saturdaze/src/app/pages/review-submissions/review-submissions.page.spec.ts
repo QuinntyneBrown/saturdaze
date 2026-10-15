@@ -118,7 +118,7 @@ describe('ReviewSubmissionsPage', () => {
     ]);
     const first = cards()[0]!;
     expect(first.querySelector('.card__meta')?.textContent?.trim()).toBe(
-      'Sat 20 Jun · 2:00 to 9:00pm',
+      'Sat 20 Jun · 2:00pm to 9:00pm',
     );
     expect(first.querySelector('sd-chip')?.textContent?.trim()).toBe('Pending');
     // The avatar is drawn from the submitter's email: its initial, uppercased.

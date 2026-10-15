@@ -33,9 +33,9 @@ test.describe("Family", () => {
   test("commitments list the three anchors with day and window", async ({ pages }) => {
     const f = pages.family;
     await expect(f.commitmentRows()).toHaveCount(3);
-    await expect(f.rowSubtitle(f.commitmentRow("Swim lessons"))).toHaveText("Saturdays · 9:00 to 10:00");
-    await expect(f.rowSubtitle(f.commitmentRow("Church"))).toHaveText("Sundays · 10:30 to 11:45");
-    await expect(f.rowSubtitle(f.commitmentRow("Workout window"))).toHaveText("Saturdays · 5:00 to 6:00pm");
+    await expect(f.rowSubtitle(f.commitmentRow("Swim lessons"))).toHaveText("Saturdays · 9:00am to 10:00am");
+    await expect(f.rowSubtitle(f.commitmentRow("Church"))).toHaveText("Sundays · 10:30am to 11:45am");
+    await expect(f.rowSubtitle(f.commitmentRow("Workout window"))).toHaveText("Saturdays · 5:00pm to 6:00pm");
     await expect(f.addCommitmentRow()).toBeVisible();
   });
 
@@ -122,7 +122,7 @@ test.describe("Family", () => {
     await f.dialogAction("Add commitment").click();
     expect((await saved).ok()).toBeTruthy();
     await expect(f.commitmentRows()).toHaveCount(4);
-    await expect(f.rowSubtitle(f.commitmentRow(name))).toHaveText("Sundays · 3:00 to 4:00pm");
+    await expect(f.rowSubtitle(f.commitmentRow(name))).toHaveText("Sundays · 3:00pm to 4:00pm");
 
     await f.commitmentRow(name).click();
     await f.dialogAction("Remove").click();

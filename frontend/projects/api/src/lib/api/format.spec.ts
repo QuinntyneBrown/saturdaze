@@ -6,7 +6,6 @@ import {
   formatDuration,
   formatMinutes,
   formatWhen,
-  hhmm,
   hhmm12,
   initialOf,
   minutesBetween,
@@ -53,9 +52,7 @@ describe('format', () => {
     expect(timeAgo('nope', now)).toBe('');
   });
 
-  it('formats backend TimeOnly values on the 24-hour clock', () => {
-    expect(hhmm('09:05:00')).toBe('9:05');
-    expect(hhmm('13:30:00')).toBe('13:30');
+  it('converts backend TimeOnly values to minutes', () => {
     expect(toMinutes('01:30:00')).toBe(90);
     expect(minutesBetween('09:00:00', '10:15:00')).toBe(75);
   });
@@ -70,12 +67,11 @@ describe('format', () => {
     expect(clock12('12:00')).toBe('12:00pm');
   });
 
-  it('writes a 12-hour range with the suffix only where it is needed', () => {
-    expect(timeRange('09:00:00', '10:00:00')).toBe('9:00 to 10:00');
-    expect(timeRange('17:00', '18:00')).toBe('5:00 to 6:00pm');
-    expect(timeRange('14:00', '21:00')).toBe('2:00 to 9:00pm');
-    expect(timeRange('12:00', '13:30')).toBe('12:00 to 1:30pm');
-    expect(timeRange('10:00', '14:00')).toBe('10:00am to 2:00pm');
+  it('writes every range with am or pm on both ends', () => {
+    expect(timeRange('09:00:00', '10:00:00')).toBe('9:00am to 10:00am');
+    expect(timeRange('17:00', '18:00')).toBe('5:00pm to 6:00pm');
+    expect(timeRange('14:00', '21:00')).toBe('2:00pm to 9:00pm');
+    expect(timeRange('12:00', '13:30')).toBe('12:00pm to 1:30pm');
     expect(timeRange('11:00', '13:00')).toBe('11:00am to 1:00pm');
   });
 

@@ -149,7 +149,7 @@ export class IdeasPage extends BasePage {
     return this.dialogField("When");
   }
 
-  /** The placement preview: "Saturday · 15:00 to 17:00", then what it replaces. */
+  /** The placement preview: "Saturday · 3:00pm to 5:00pm", then what it replaces. */
   addToDayPreview(): Locator {
     return this.dialog().locator(".well");
   }

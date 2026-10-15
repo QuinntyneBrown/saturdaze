@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 29 Slides</title>
+<link rel="stylesheet" href="../assets/slides.css">
+</head>
+<body data-video-number="29" data-video-title="Design drift D34" data-parts="Introduction|What drifted|Why it matters|The fix|Before and after|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Design drift · Video 29</div>
+  <h1>D34: one clock</h1>
+  <p class="lead">Two clocks and three range styles become one: 12-hour, am or pm every time</p>
+</section>
+
+<section id="drift" data-part="1" data-cue="The timeline used a twenty four hour clock.">
+  <h2>What drifted</h2>
+  <div class="cols">
+    <div class="card"><h3>Timeline</h3><p>18:15 · 20:00 · 13:30</p><p class="small">24-hour, no am or pm</p></div>
+    <div class="card"><h3>Dialogs</h3><p>11:00 to 1:00 · 8:00 to 9:00pm</p><p class="small">12-hour, suffix missing or on one end</p></div>
+    <div class="card"><h3>Admin</h3><p>2026-10-06 14:02 UTC · 6 Oct 2026, 04:12 UTC</p><p class="small">Two formats</p></div>
+  </div>
+</section>
+
+<section id="why" data-part="2" data-cue="There is no single WCAG criterion for this">
+  <h2>Why it matters</h2>
+  <ul>
+    <li>"11:00 to 1:00" could be eleven at night</li>
+    <li>Two clocks on one screen make people convert</li>
+    <li>Screen readers read the missing suffix as ambiguously as it looks</li>
+  </ul>
+</section>
+
+<section id="rule" data-part="3" data-cue="The rule is one sentence.">
+  <h2>The rule</h2>
+  <div class="cols">
+    <div class="card"><h3>A time</h3><p class="lead">9:15am · 6:30pm</p></div>
+    <div class="card"><h3>A range</h3><p class="lead">11:00am to 1:00pm</p></div>
+    <div class="card"><h3>Admin</h3><p class="lead">6 Oct 2026, 2:02pm UTC</p></div>
+  </div>
+</section>
+
+<section id="format" data-part="3" data-cue="In the product, the work is in the api library">
+  <h2>1 · format.ts</h2>
+  <pre class="code tight" data-lang="ts" data-mark="1,2,3">/** A 12-hour range with am or pm on both ends: "9:00am to 10:00am", "11:00am to 1:00pm". */
+export function timeRange(start: string, end: string): string {
+  return `${clock12(start)} to ${clock12(end)}`;
+}</pre>
+  <p class="small"><code>hhmm</code> is removed; the timeline clock, Keeping notes, errand placement and admin stamps call <code>clock12</code>.</p>
+</section>
+
+<section id="minutes" data-part="3" data-cue="One thing nearly broke.">
+  <h2>2 · Compare minutes, not text</h2>
+  <pre class="code tight" data-lang="ts" data-mark="2,8">function slotOf(block: BlockRow): MealSlot | null {
+  const start = block.startMinutes;
+  if (start &gt;= LUNCH_FROM &amp;&amp; start &lt; LUNCH_UNTIL) return 'Lunch';
+  ...
+}
+// BlockRow
+readonly time: string;          // "9:00am", for people
+readonly startMinutes: number;  // 540, for code</pre>
+  <p class="small">Before: <code>toMinutes(block.time)</code> parsed the clock text, and "1:00pm" broke the lunch subtitle.</p>
+</section>
+
+<section id="test" data-part="3" data-cue="The acceptance test came first.">
+  <h2>3 · Test first, mocks, then the drift log</h2>
+  <pre class="code tight" data-lang="ts">await expect(w.blockClock(swim)).toHaveText("9:00am");   // was "9:00"
+await expect(w.blockClock(church)).toHaveText("10:30am"); // was "10:30"</pre>
+  <ul>
+    <li>Red for the right reason, then green</li>
+    <li>Same change in the weekend, landing, dialogs, family, ideas, review and admin mocks</li>
+    <li>D34 removed from the drift log; the content page states the rule</li>
+  </ul>
+</section>
+
+<section id="before" data-part="4" data-cue="Here is the production build from the commit before the fix" data-clip="clips/before.mp4" data-clip-delay="1">
+  <aside class="clip-notes">
+    <h3>Before</h3>
+    <ul>
+      <li>Clock column: 9:00, 10:30, 11:00</li>
+      <li>No am or pm</li>
+    </ul>
+  </aside>
+</section>
+
+<section id="after" data-part="4" data-cue="And here is the fix, the same page." data-clip="clips/after.mp4" data-clip-delay="1">
+  <aside class="clip-notes">
+    <h3>After</h3>
+    <ul>
+      <li>9:00am, 10:30am, 11:00am</li>
+      <li>Layout unchanged</li>
+    </ul>
+  </aside>
+</section>
+
+<section id="recap" data-part="5" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <ul>
+      <li>One clock: 12-hour, lowercase am or pm</li>
+      <li>Ranges: am or pm on both ends</li>
+      <li>Code compares <code>startMinutes</code>, never display text</li>
+      <li>Mocks first, failing test, then delete the drift record</li>
+    </ul>
+  </div>
+</section>
+
+<script src="../assets/slides.js"></script>
+</body>
+</html>

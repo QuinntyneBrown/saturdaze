@@ -1,6 +1,6 @@
 import { DayOfWeek } from '../models/day-of-week';
 import { MemberAccess, MemberRole } from '../models/member-row';
-import { hhmm, timeRange } from './format';
+import { clock12, timeRange } from './format';
 
 /**
  * Presentation helpers for family members and commitments, shared by the
@@ -93,7 +93,7 @@ export function membersSummary(members: readonly MemberLike[]): string {
 export function commitmentsSummary(commitments: readonly CommitmentLike[]): string {
   if (commitments.length === 0) return 'Add swim, church or anything fixed';
   return commitments
-    .map((c) => `${c.title} ${c.dayOfWeek.slice(0, 3)} ${hhmm(c.startTime)}`)
+    .map((c) => `${c.title} ${c.dayOfWeek.slice(0, 3)} ${clock12(c.startTime)}`)
     .join(' · ');
 }
 
