@@ -228,7 +228,7 @@
               <div class="auth-card__head auth-card__head--center">
                 <span class="disc disc--xl disc--primary auth-card__disc" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-mail"/></svg></span>
                 <h3 class="auth-card__title" id="m-sent">Check your email</h3>
-                <p class="auth-card__sub">The link works for 30 minutes.</p>
+                <p class="auth-card__sub">The link works for 60 minutes.</p>
                 <span class="email-chip mt-2"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-mail"/></svg>q••••••••n@example.com</span>
               </div>
               <button class="btn btn--quiet btn--lg btn--block" type="button"><svg class="icon" aria-hidden="true"><use href="#i-refresh"/></svg>Resend</button>
@@ -312,7 +312,7 @@
               <p class="auth-card__alt"><a class="link" href="../../mocks/pages/sign-in.html">Back to sign in</a></p>
             </section>
             <section class="auth-card" aria-labelledby="rp2">
-              <div class="auth-card__head auth-card__head--center"><span class="disc disc--xl disc--primary auth-card__disc" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-mail"/></svg></span><h3 class="auth-card__title" id="rp2">Check your email</h3><p class="auth-card__sub">The link works for 30 minutes.</p><span class="email-chip mt-2"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-mail"/></svg>q••••••••n@example.com</span></div>
+              <div class="auth-card__head auth-card__head--center"><span class="disc disc--xl disc--primary auth-card__disc" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-mail"/></svg></span><h3 class="auth-card__title" id="rp2">Check your email</h3><p class="auth-card__sub">The link works for 60 minutes.</p><span class="email-chip mt-2"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-mail"/></svg>q••••••••n@example.com</span></div>
               <button class="btn btn--quiet btn--lg btn--block" type="button"><svg class="icon" aria-hidden="true"><use href="#i-refresh"/></svg>Resend</button>
             </section>
             <section class="auth-card" aria-labelledby="rp3">
@@ -329,7 +329,7 @@
               <a class="btn btn--primary btn--lg btn--block" href="../../mocks/pages/sign-in.html">Sign in</a>
             </section>
             <section class="auth-card" aria-labelledby="rp5">
-              <div class="auth-card__head auth-card__head--center"><span class="disc disc--xl disc--warn auth-card__disc" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-key"/></svg></span><h3 class="auth-card__title" id="rp5">This link has expired</h3><p class="auth-card__sub">Reset links last 30 minutes. Ask for a fresh one.</p></div>
+              <div class="auth-card__head auth-card__head--center"><span class="disc disc--xl disc--warn auth-card__disc" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-key"/></svg></span><h3 class="auth-card__title" id="rp5">This link has expired</h3><p class="auth-card__sub">Reset links last 60 minutes. Ask for a fresh one.</p></div>
               <a class="btn btn--primary btn--lg btn--block" href="../../mocks/pages/reset-password.html">Send a new link</a>
               <a class="btn btn--quiet btn--lg btn--block" href="../../mocks/pages/sign-in.html">Back to sign in</a>
             </section>
@@ -423,7 +423,7 @@
     <section class="ds-section" id="content"><h2><a href="#content">Content</a></h2>
       <ul>
         <li>Titles are short and warm: "Welcome back", "Start planning weekends", "Check your email", "You are verified".</li>
-        <li>The subtitle says what this step does or how long a link lasts: "Sign in to see this weekend.", "The link works for 30 minutes."</li>
+        <li>The subtitle says what this step does or how long a link lasts: "Sign in to see this weekend.", "The link works for 60 minutes."</li>
         <li>Errors do not reveal which part was wrong: "That email and password did not match."</li>
         <li>Mask addresses on signed-out screens (<code>q••••••••n@example.com</code>); show the full address only to a signed-in person (the admin gate).</li>
         <li>The alternative route is a question and a link: "New here? Create an account", "Already have one? Sign in".</li>
@@ -470,7 +470,7 @@
       &lt;div class="auth-card__head auth-card__head--center"&gt;
         &lt;span class="disc disc--xl disc--primary auth-card__disc" aria-hidden="true"&gt;…mail…&lt;/span&gt;
         &lt;h1 class="auth-card__title" id="rp-title"&gt;Check your email&lt;/h1&gt;
-        &lt;p class="auth-card__sub"&gt;The link works for 30 minutes.&lt;/p&gt;
+        &lt;p class="auth-card__sub"&gt;The link works for 60 minutes.&lt;/p&gt;
         &lt;span class="email-chip mt-2"&gt;…q••••••••n@example.com&lt;/span&gt;
       &lt;/div&gt;
       &lt;button class="btn btn--quiet btn--lg btn--block" type="button"&gt;…Resend&lt;/button&gt;
@@ -481,7 +481,7 @@
 
 &lt;!-- Angular --&gt;
 &lt;sd-auth-shell stack&gt;
-  &lt;sd-auth-card title="Check your email" subtitle="The link works for 30 minutes." center&gt;…&lt;/sd-auth-card&gt;
+  &lt;sd-auth-card title="Check your email" subtitle="The link works for 60 minutes." center&gt;…&lt;/sd-auth-card&gt;
 &lt;/sd-auth-shell&gt;</code></pre>
       <table class="ds-table"><thead><tr><th scope="col">Class</th><th scope="col">Effect</th></tr></thead><tbody>
         <tr><td><code>.auth</code> <code>.auth--stack</code> <code>.auth--inline</code></td><td>Centred full-height layout; pinned to the top; no minimum height.</td></tr>

@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 43 Slides</title>
+<link rel="stylesheet" href="../assets/slides.css">
+</head>
+<body data-video-number="43" data-video-title="Reset link lifetime" data-parts="Introduction|The mismatch|Why it matters|The fix|On the real screen|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Issue 88 · Video 43</div>
+  <h1>Reset links: say what the server does</h1>
+  <p class="lead">The screens said 30 minutes; the server allowed 60. Now both say 60.</p>
+</section>
+
+<section id="mismatch" data-part="1" data-cue="When someone asks for a reset link">
+  <h2>What the screens promised, and what the server did</h2>
+  <div class="cols">
+    <div class="card"><h3>Screens and mock</h3><p class="lead">30 minutes</p><p class="small">"The link works for 30 minutes." · "Reset links last 30 minutes."</p></div>
+    <div class="card"><h3>Server and design</h3><p class="lead">60 minutes</p><p class="small"><code>now.AddMinutes(60)</code> in <code>ForgotPasswordCommandHandler</code></p></div>
+  </div>
+  <p class="small">L2-005 said nothing about expiry.</p>
+</section>
+
+<section id="why" data-part="2" data-cue="It is a trust problem and a security problem in one.">
+  <h2>Why a mismatch on a security link matters</h2>
+  <ul>
+    <li>People give up, or ask again, while the link still works</li>
+    <li>The real window is twice what anyone was told</li>
+    <li>A control needs one number shared by users and reviewers</li>
+  </ul>
+</section>
+
+<section id="decision" data-part="3" data-cue="The fix needs a decision first.">
+  <h2>1 · Decide, then write it down</h2>
+  <div class="cols">
+    <div class="card"><h3>60 minutes (chosen)</h3><p class="small">Copy only. People get more time than they were told; token handling is unchanged.</p></div>
+    <div class="card"><h3>30 minutes</h3><p class="small">Changes the handler and the design; a tighter window.</p></div>
+  </div>
+  <p class="small">L2-005 AC5: accepted at T+59, rejected (<code>token_expired</code>) at T+61 · AC6: the screens state the same duration</p>
+</section>
+
+<section id="backend" data-part="3" data-cue="Then the tests, before any production code.">
+  <h2>2 · Back end: pin the window</h2>
+  <pre class="code tight" data-lang="cs">_factory.Clock.TimeOfDay = TimeSpan.FromMinutes(59);   // accepted
+_factory.Clock.TimeOfDay = TimeSpan.FromMinutes(61);   // 400 token_expired
+delivery.ExpiresAtUtc.Should().Be(_factory.Clock.UtcNow.AddMinutes(60));</pre>
+  <ul>
+    <li><code>PasswordResetExpiryTests</code>: 3 passed (the server was already right)</li>
+    <li>The fake clock gained a time of day</li>
+  </ul>
+</section>
+
+<section id="frontend" data-part="3" data-cue="On the front end, a Playwright test">
+  <h2>3 · Front end: tie the copy to the server</h2>
+  <pre class="code tight" data-lang="ts">const minutes = Math.round((Date.parse(expiresAtUtc) - Date.now()) / 60_000);
+await expect(r.cardSubtitle()).toHaveText(`The link works for ${minutes} minutes.`);
+await expect(r.cardSubtitle()).toHaveText(`Reset links last ${minutes} minutes. Ask for a fresh one.`);</pre>
+  <ul>
+    <li>Failed: the page said 30, the server's number was 60</li>
+    <li>Copy: page (2), mock (2), design system, story</li>
+  </ul>
+</section>
+
+<section id="before" data-part="4" data-cue="Here is the build from before the fix." data-clip="clips/before.mp4" data-clip-delay="1">
+  <aside class="clip-notes">
+    <h3>Before</h3>
+    <ul><li>Page: 30 minutes</li><li>Server: 60 minutes</li><li>They disagree</li></ul>
+  </aside>
+</section>
+
+<section id="after" data-part="4" data-cue="And here is the fix." data-clip="clips/after.mp4" data-clip-delay="1">
+  <aside class="clip-notes">
+    <h3>After</h3>
+    <ul><li>Page: 60 minutes</li><li>Server: 60 minutes</li><li>They agree</li></ul>
+  </aside>
+</section>
+
+<section id="clock" data-part="4" data-cue="You cannot wait an hour on camera to watch a link expire">
+  <h2>Accepted inside, rejected past the window</h2>
+  <div class="cols">
+    <div class="card"><h3>T + 59 min</h3><p class="lead">200 OK</p><p class="small">Reset accepted</p></div>
+    <div class="card"><h3>T + 61 min</h3><p class="lead">400</p><p class="small"><code>token_expired</code></p></div>
+  </div>
+  <p class="small">The back-end tests move the clock; the screen shows the number.</p>
+</section>
+
+<section id="recap" data-part="5" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <ul>
+      <li>One number: requirement, handler and copy</li>
+      <li>Decide it first, write it into the requirement</li>
+      <li>Pin it with a clock test; tie the copy to the server's response</li>
+      <li>Fix the copy when the copy was wrong</li>
+    </ul>
+  </div>
+</section>
+
+<script src="../assets/slides.js"></script>
+</body>
+</html>
