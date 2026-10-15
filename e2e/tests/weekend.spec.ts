@@ -36,6 +36,36 @@ test.describe("Weekend", () => {
     }
   });
 
+  // Traces to: L2-139 AC1-AC3
+  test("the day tabs follow the APG keyboard model", async ({ page, pages }) => {
+    const w = pages.weekend;
+    const saturday = w.dayTab("Saturday");
+    const sunday = w.dayTab("Sunday");
+
+    await expect(saturday).toHaveAttribute("tabindex", "0");
+    await expect(sunday).toHaveAttribute("tabindex", "-1");
+
+    await saturday.focus();
+    await page.keyboard.press("ArrowRight");
+    await expect(sunday).toBeFocused();
+    await expect(sunday).toHaveAttribute("aria-selected", "true");
+    await expect(sunday).toHaveAttribute("tabindex", "0");
+    await expect(saturday).toHaveAttribute("tabindex", "-1");
+    await expect(w.dayTitle("Sunday")).toBeVisible();
+
+    await page.keyboard.press("ArrowRight");
+    await expect(saturday).toBeFocused();
+    await expect(saturday).toHaveAttribute("aria-selected", "true");
+
+    await page.keyboard.press("End");
+    await expect(sunday).toBeFocused();
+    await expect(sunday).toHaveAttribute("aria-selected", "true");
+
+    await page.keyboard.press("Home");
+    await expect(saturday).toBeFocused();
+    await expect(saturday).toHaveAttribute("aria-selected", "true");
+  });
+
   // Traces to: L2-135 AC1-AC3
   test("each day's meta line names the forecast before the temperatures", async ({ pages }) => {
     const w = pages.weekend;
