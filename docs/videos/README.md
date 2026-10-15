@@ -70,6 +70,7 @@ Six videos on Saturdaze Admin, the second web application that curates the catal
 | 40 | [Design drift D45: focus that follows what you see](40-primary-first-order-d45/README.md) | ~3.5 min | The generating Weekend mock puts the primary action first in the DOM, as `sd-page-header` does, so Tab matches the phone layout (WCAG 2.4.3). |
 | 41 | [Design drift D46: a selected tab you can actually see](41-selected-segment-edge-d46/README.md) | ~3.3 min | The selected segment of `segments` and `seg-radio` gets a 1px accessible-stroke inset edge (fill 1.15:1 on the track before, edge 3.20:1 after; WCAG 1.4.11). |
 | 42 | [Design drift D47: four small gaps in the product](42-a11y-gaps-d47/README.md) | ~4.7 min | Admin nav is a landmark named Admin, a field's `aria-describedby` lists only elements in the page, a duplicate chip is refused with a message, and the skip link is confirmed correct (L2-140). |
+| 43 | [Reset links: say what the server does](43-reset-link-lifetime-88/README.md) | ~4.5 min | The reset screens now say 60 minutes, as the server enforces; L2-005 gains AC5 and AC6, with clock tests at T+59 and T+61 minutes (issue 88). |
 
 ## Family members series
 
