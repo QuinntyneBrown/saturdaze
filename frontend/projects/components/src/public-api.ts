@@ -53,6 +53,7 @@ export * from './lib/pager/pager';
 export * from './lib/details/details';
 export * from './lib/empty/empty';
 export * from './lib/dialog/dialog';
+export * from './lib/error-summary/error-summary';
 export * from './lib/menu/menu';
 export * from './lib/tooltip/tooltip';
 

@@ -78,7 +78,7 @@ test.describe("Family", () => {
 
     await f.addMemberRow().click();
     await expect(f.dialogTitle()).toHaveText("Add a family member");
-    await expect(f.dialogAction("Add member")).toBeDisabled();
+    await expect(f.dialogAction("Add member")).toBeEnabled();
     await f.dialogField("Name").fill(name);
     await f.dialogField("Age").fill("40");
     await f.dialogAction("Add member").click();
@@ -92,6 +92,22 @@ test.describe("Family", () => {
     await expect(f.dialogSubtitle()).toHaveText("Future weekends will not plan for them.");
     expect(await f.confirmRemoval()).toHaveLength(1);
     await expect(f.memberRows()).toHaveCount(4);
+  });
+
+  // Traces to: L2-134 AC4
+  test("adding a member with no name shows a focused error summary instead of closing", async ({ pages }) => {
+    const f = pages.family;
+    await f.addMemberRow().click();
+    await f.dialogAction("Add member").click();
+    await expect(f.dialogTitle()).toHaveText("Add a family member");
+    await expect(f.dialogErrorSummary()).toBeFocused();
+    await expect(f.dialogErrorSummary()).toContainText("Two things to fix");
+    await expect(f.dialogField("Name")).toHaveAttribute("aria-invalid", "true");
+
+    await f.dialogErrorLink("Enter a name").click();
+    await expect(f.dialogField("Name")).toBeFocused();
+    await f.dialogField("Name").fill("Guest");
+    await expect(f.dialogErrorSummary()).toContainText("One thing to fix");
   });
 
   test("editing a commitment opens D18 with Name, Day radio and Start/End", async ({ pages }) => {

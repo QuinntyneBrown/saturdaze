@@ -1,11 +1,22 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Injector,
+  afterNextRender,
+  computed,
+  inject,
+  signal,
+  viewChild,
+} from '@angular/core';
 import { AbstractControl, FormsModule } from '@angular/forms';
 
 import { MemberAccess } from 'api';
 import {
   Button,
   Dialog as DialogShell,
+  ErrorSummary,
+  ErrorSummaryProblem,
   Icon,
   SegRadio,
   SegRadioOption,
@@ -47,12 +58,13 @@ const SIGN_IN_OPTIONS: readonly SegRadioOption[] = [
  * the age). Adding (D17b) also asks "Will they sign in?": "No sign-in" by
  * default (L2-125), or "Invite to sign in" with an email (L2-126). Edit mode
  * names how the member signs in and offers Remove on the left; the page runs
- * the D21 confirmation.
+ * the D21 confirmation. When adding, the action stays enabled: pressing it
+ * with a gap shows an error summary instead (L2-134).
  */
 @Component({
   selector: 'app-family-member-dialog',
   standalone: true,
-  imports: [Button, DialogShell, FormsModule, Icon, SegRadio, TextInput],
+  imports: [Button, DialogShell, ErrorSummary, FormsModule, Icon, SegRadio, TextInput],
   templateUrl: './family-member-dialog.html',
   styleUrl: './family-member-dialog.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -60,6 +72,11 @@ const SIGN_IN_OPTIONS: readonly SegRadioOption[] = [
 export class FamilyMemberDialog {
   private readonly dialogRef = inject<DialogRef<FamilyMemberDialogResult>>(DialogRef);
   protected readonly data = inject<FamilyMemberDialogData>(DIALOG_DATA);
+  private readonly injector = inject(Injector);
+  private readonly summary = viewChild(ErrorSummary);
+  private readonly nameField = viewChild<TextInput>('nameField');
+  private readonly ageField = viewChild<TextInput>('ageField');
+  private readonly emailField = viewChild<TextInput>('emailField');
 
   protected readonly isEdit = this.data.mode === 'edit';
   protected readonly title = this.isEdit
@@ -76,7 +93,6 @@ export class FamilyMemberDialog {
   protected readonly name = signal(this.data.initial?.name ?? '');
   protected readonly signIn = signal<SignIn>(this.data.signIn ?? 'none');
   protected readonly email = signal('');
-  protected readonly emailError = signal('');
   protected readonly inviting = computed(() => !this.isEdit && this.signIn() === 'invite');
   protected readonly submitLabel = computed(() =>
     this.isEdit ? 'Save' : this.inviting() ? 'Send invite' : 'Add member',
@@ -87,7 +103,8 @@ export class FamilyMemberDialog {
       : 'No invite is sent. Good for young children.',
   );
   protected readonly age = signal<string>(this.data.initial ? String(this.data.initial.age) : '');
-  protected readonly error = signal('');
+  /** Set by the first press of the action; from then on the summary tracks the fields. */
+  private readonly attempted = signal(false);
 
   protected readonly ageHint = computed(() => {
     const age = Number(this.age());
@@ -102,6 +119,55 @@ export class FamilyMemberDialog {
       (!this.inviting() || this.email().trim().length > 0),
   );
 
+  /** What is wrong, once a press was tried; each line leaves as its field is fixed. */
+  protected readonly problems = computed<ErrorSummaryProblem[]>(() => {
+    if (!this.attempted()) return [];
+    const found: ErrorSummaryProblem[] = [];
+    const name = this.name().trim();
+    const age = Number(this.age());
+    if (!name) {
+      found.push({ id: 'name', message: 'Enter a name' });
+    } else {
+      const lower = name.toLowerCase();
+      const originalLower = this.data.initial?.name.toLowerCase() ?? null;
+      const collides = this.data.existingNames.some(
+        (n) => n.toLowerCase() === lower && n.toLowerCase() !== originalLower,
+      );
+      if (collides)
+        found.push({ id: 'name', message: 'Someone in the family already has that name' });
+    }
+    if (!this.age().trim()) {
+      found.push({ id: 'age', message: 'Enter an age between 0 and 120' });
+    } else if (!Number.isInteger(age) || age < 0 || age > 120) {
+      found.push({ id: 'age', message: 'Enter an age between 0 and 120' });
+    }
+    if (this.inviting()) {
+      const email = this.email().trim();
+      if (!email || trimmedEmail({ value: email } as AbstractControl<string>)) {
+        found.push({ id: 'email', message: 'Enter an email address like name@example.com' });
+      }
+    }
+    return found;
+  });
+
+  protected readonly nameError = computed(() => this.errorFor('name'));
+  protected readonly ageError = computed(() => this.errorFor('age'));
+  protected readonly emailError = computed(() => this.errorFor('email'));
+
+  private errorFor(id: string): string {
+    const problem = this.problems().find((p) => p.id === id);
+    return problem ? `${problem.message}.` : '';
+  }
+
+  protected focusField(id: string): void {
+    (id === 'name'
+      ? this.nameField()
+      : id === 'age'
+        ? this.ageField()
+        : this.emailField()
+    )?.focus();
+  }
+
   protected cancel(): void {
     this.dialogRef.close();
   }
@@ -112,31 +178,17 @@ export class FamilyMemberDialog {
 
   protected submit(event?: Event): void {
     event?.preventDefault();
-    const name = this.name().trim();
-    const age = Number(this.age());
-
-    if (!name) {
-      this.error.set('Enter a name.');
-      return;
-    }
-    if (!Number.isInteger(age) || age < 0 || age > 120) {
-      this.error.set('Enter an age between 0 and 120.');
-      return;
-    }
-    const lower = name.toLowerCase();
-    const originalLower = this.data.initial?.name.toLowerCase() ?? null;
-    const collides = this.data.existingNames.some(
-      (n) => n.toLowerCase() === lower && n.toLowerCase() !== originalLower,
-    );
-    if (collides) {
-      this.error.set('Someone in the family already has that name.');
+    this.attempted.set(true);
+    if (this.problems().length > 0) {
+      afterNextRender(() => this.summary()?.focus(), { injector: this.injector });
       return;
     }
     const email = this.inviting() ? this.email().trim() : null;
-    if (email !== null && trimmedEmail({ value: email } as AbstractControl<string>)) {
-      this.emailError.set('Enter an email address like name@example.com.');
-      return;
-    }
-    this.dialogRef.close({ kind: 'save', name, age, email });
+    this.dialogRef.close({
+      kind: 'save',
+      name: this.name().trim(),
+      age: Number(this.age()),
+      email,
+    });
   }
 }

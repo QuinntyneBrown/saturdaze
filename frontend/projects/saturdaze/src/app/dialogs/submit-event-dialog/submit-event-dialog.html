@@ -4,16 +4,22 @@
   wide
 >
   <form class="form" (submit)="submit($event)">
+    @if (problems().length) {
+      <sd-error-summary [problems]="problems()" (problemSelected)="focusField($event)" />
+    }
     <sd-text-input
+      #titleField
       label="Title"
       name="title"
       required
       autocomplete="off"
       placeholder="Port Credit Buskerfest"
+      [error]="titleError()"
       [ngModel]="title()"
       (ngModelChange)="title.set($event)"
     />
     <sd-text-input
+      #startsField
       label="Starts"
       name="startsAtLocal"
       type="datetime-local"
@@ -79,9 +85,9 @@
     slot="actions"
     variant="primary"
     type="button"
-    [disabled]="!canSubmit()"
+    [disabled]="submitting()"
     (click)="submit()"
   >
-    Submit
+    Send suggestion
   </sd-button>
 </sd-dialog>

@@ -77,24 +77,22 @@ test.describe("Ideas — Events", () => {
     await expect(i.section("Saturday")).toBeVisible();
   });
 
-  test("Suggest an event: Submit is gated on title + start, then D11 and the pending card appear", async ({ page, pages }) => {
+  test("Suggest an event: Send suggestion, then D11 and the pending card appear", async ({ page, pages }) => {
     const i = pages.ideas;
     const title = `Buskerfest e2e ${Date.now().toString(36)}`;
 
     await i.suggestEventButton().click();
     await expect(i.dialogTitle()).toHaveText("Suggest an event");
     await expect(i.dialogField("Title")).toBeFocused();
-    await expect(i.dialogAction("Submit")).toBeDisabled();
 
     await i.dialogField("Title").fill(title);
     await expect(i.dialogField("Starts")).not.toHaveValue("");
-    await expect(i.dialogAction("Submit")).toBeEnabled();
     await i.dialogField("Location").fill("Memorial Park, Lakeshore Rd");
     await i.dialogField("Cost").fill("Free");
     await i.dialogField("Ages").fill("All ages");
 
     const submitted = page.waitForResponse((r) => r.url().endsWith("/api/events/submissions") && r.request().method() === "POST");
-    await i.dialogAction("Submit").click();
+    await i.dialogAction("Send suggestion").click();
     expect((await submitted).status()).toBeLessThan(300);
 
     await expect(i.dialogTitle()).toHaveText("Thanks, it is in the queue");
@@ -108,6 +106,32 @@ test.describe("Ideas — Events", () => {
     const card = i.card(title, mine);
     await expect(card).toHaveClass(/card--muted/);
     await expect(i.cardChips(card).first()).toHaveText("Pending review");
+  });
+
+  // Traces to: L2-134 AC1-AC3
+  test("Suggest an event: with no title the action stays enabled and a press shows a focused error summary", async ({ page, pages }) => {
+    const i = pages.ideas;
+    let sent = false;
+    await page.route(/\/api\/events\/submissions$/, (route) => {
+      sent = true;
+      return route.abort();
+    });
+
+    await i.suggestEventButton().click();
+    await expect(i.dialogAction("Send suggestion")).toBeEnabled();
+
+    await i.dialogAction("Send suggestion").click();
+    await expect(i.dialogTitle()).toHaveText("Suggest an event");
+    await expect(i.dialogErrorSummary()).toBeFocused();
+    await expect(i.dialogErrorSummary()).toContainText("One thing to fix");
+    await expect(i.dialogField("Title")).toHaveAttribute("aria-invalid", "true");
+    expect(sent).toBe(false);
+
+    await i.dialogErrorLink("Enter a title for the event").click();
+    await expect(i.dialogField("Title")).toBeFocused();
+
+    await i.dialogField("Title").fill("Buskerfest");
+    await expect(i.dialogErrorSummary()).toHaveCount(0);
   });
 
   test("Cancel closes D10 without submitting", async ({ pages }) => {

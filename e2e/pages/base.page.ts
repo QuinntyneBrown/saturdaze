@@ -511,6 +511,16 @@ export abstract class BasePage {
     return this.dialog().locator("form");
   }
 
+  /** The error summary a form dialog shows after a failed submit (L2-134). */
+  dialogErrorSummary(): Locator {
+    return this.dialog().locator(".error-summary");
+  }
+
+  /** One line of the error summary, by its message. */
+  dialogErrorLink(message: string | RegExp): Locator {
+    return this.dialogErrorSummary().getByRole("link", { name: message });
+  }
+
   /** Footer action by accessible name ("Cancel", "Regenerate", "Save"…). */
   dialogAction(name: string | RegExp): Locator {
     return control(this.dialog().locator(".dialog__actions"), name);

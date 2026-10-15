@@ -10,6 +10,7 @@ export * as Checkbox from './Checkbox';
 export * as Chip from './Chip';
 export * as DateTile from './DateTile';
 export * as Day from './Day';
+export * as ErrorSummary from './ErrorSummary';
 export * as EventCard from './EventCard';
 export * as FilterChip from './FilterChip';
 export * as Icon from './Icon';

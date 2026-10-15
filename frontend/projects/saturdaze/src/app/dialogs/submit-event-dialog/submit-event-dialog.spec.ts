@@ -49,13 +49,13 @@ describe('SubmitEventDialog', () => {
       'Link',
     ]);
     expect(component['startsAtLocal']()).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:00$/);
-    expect(primary().disabled).toBe(true);
+    expect(primary().disabled).toBe(false);
+    expect(primary().textContent?.trim()).toBe('Send suggestion');
   });
 
-  it('enables submit once there is a title, and flags a missing start time', () => {
+  it('flags a missing start time inline', () => {
     component['title'].set('Port Credit Buskerfest');
     fixture.detectChanges();
-    expect(primary().disabled).toBe(false);
 
     component['startsAtLocal'].set('');
     fixture.detectChanges();
@@ -64,7 +64,6 @@ describe('SubmitEventDialog', () => {
     expect(starts?.querySelector('.field__error')?.textContent?.trim()).toBe(
       'Pick a start date and time.',
     );
-    expect(primary().disabled).toBe(true);
   });
 
   it('submits trimmed values with blanks as null and closes with the created submission', async () => {
@@ -96,9 +95,19 @@ describe('SubmitEventDialog', () => {
     consoleError.mockRestore();
   });
 
-  it('does nothing on submit while invalid, and closes with nothing on cancel', async () => {
+  it('shows an error summary instead of submitting while invalid, and closes with nothing on cancel', async () => {
+    expect(host.querySelector('sd-error-summary')).toBeNull();
     await component['submit']();
+    fixture.detectChanges();
     expect(submissions.submit).not.toHaveBeenCalled();
+    const summary = host.querySelector('sd-error-summary');
+    expect(summary?.querySelector('.error-summary__title')?.textContent?.trim()).toBe(
+      'One thing to fix',
+    );
+    expect(summary?.querySelector('a')?.textContent?.trim()).toBe('Enter a title for the event');
+    component['title'].set('Buskerfest');
+    fixture.detectChanges();
+    expect(host.querySelector('sd-error-summary')).toBeNull();
     component['cancel']();
     expect(dialogRef.close).toHaveBeenCalledWith();
   });

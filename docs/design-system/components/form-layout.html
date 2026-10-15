@@ -481,7 +481,7 @@
         </div>
       </div>
       <ul>
-        <li><b>Ready</b>: Save is enabled from the start. The mocks disable it until required fields are filled (D10 Submit, D17 Add member, D18 Add commitment, D27 Save); here it stays enabled and a press with gaps shows the error summary instead, because a disabled button cannot say what is missing.</li>
+        <li><b>Ready</b>: Save is enabled from the start. The mocks of D18 Add commitment and D27 Save still disable it until required fields are filled; D10 Send suggestion and D17 Add member stay enabled, and so does it here; a press with gaps shows the error summary instead, because a disabled button cannot say what is missing.</li>
         <li><b>Invalid</b>: validate on submit, not on the first blur of an empty field. Once a field shows an error, re-check it as the person types and clear the message as soon as it is fixed. Update the summary on the next submit.</li>
         <li><b>Submitting</b>: <code>aria-busy="true"</code> on the submit button only. Fields stay readable; a dialog may also set <code>aria-busy="true"</code> on <code>.dialog</code>, which dims its body and blocks edits.</li>
         <li><b>Failed</b>: a <code>.banner--warn</code> with <code>role="alert"</code> above the form; keep what was typed except passwords.</li>

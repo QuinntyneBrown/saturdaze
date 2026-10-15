@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 30 Slides</title>
+<link rel="stylesheet" href="../assets/slides.css">
+</head>
+<body data-video-number="30" data-video-title="Design drift D35" data-parts="Introduction|What drifted|Why it matters|The fix|Before and after|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Design drift · Video 30</div>
+  <h1>D35: a button that tells you what is missing</h1>
+  <p class="lead">Submit stays enabled, shows an error summary, and names the action</p>
+</section>
+
+<section id="drift" data-part="1" data-cue="Two dialogs disabled their main button until the form was valid.">
+  <h2>What drifted</h2>
+  <div class="cols">
+    <div class="card"><h3>D10 · Suggest an event</h3><p class="lead">Submit</p><p class="small">Greyed out until a title and a start time are filled in</p></div>
+    <div class="card"><h3>D17 · Add a family member</h3><p class="lead">Add member</p><p class="small">Greyed out until a name and an age are filled in</p></div>
+  </div>
+</section>
+
+<section id="why" data-part="2" data-cue="A disabled button is skipped by the Tab key">
+  <h2>Why it matters</h2>
+  <ul>
+    <li>Skipped by Tab: a keyboard user never learns what is missing</li>
+    <li>WCAG 3.3.1 error identification, 3.3.3 error suggestion, 4.1.3 status messages</li>
+    <li>"Submit" says nothing about the job: <b>Send suggestion</b></li>
+  </ul>
+</section>
+
+<section id="req" data-part="3" data-cue="This is a behaviour change, so the requirement came first.">
+  <h2>1 · Requirement, then mock</h2>
+  <div class="card"><h3>L2-134</h3><p>The primary action stays enabled. Pressing it with a gap keeps the dialog open and shows an alert: <b>One thing to fix</b>, a link per problem, focus moves to it.</p></div>
+  <p class="small"><code>docs/specs/L2.md</code> · <code>docs/mocks/styles/app.css</code> gets <code>.error-summary</code>; D10 and D17 specimens show enabled buttons</p>
+</section>
+
+<section id="component" data-part="3" data-cue="In the app there is a new component">
+  <h2>2 · sd-error-summary</h2>
+  <pre class="code tight" data-lang="html" data-mark="1,2">&lt;sd-error-summary
+  [problems]="problems()" (problemSelected)="focusField($event)" /&gt;
+&lt;!-- host: role="alert" tabindex="-1"; focus() on a failed press --&gt;</pre>
+  <p class="small">With a story, a perf scenario and <code>TextInput.focus()</code> so a line can send focus to its field.</p>
+</section>
+
+<section id="dialog" data-part="3" data-cue="In each dialog, one signal records that a press was attempted.">
+  <h2>3 · Derive the problems</h2>
+  <pre class="code tight" data-lang="ts" data-mark="2,5,9">protected readonly problems = computed(() =&gt; {
+  if (!this.attempted()) return [];
+  const found: ErrorSummaryProblem[] = [];
+  if (this.title().trim().length === 0) {
+    found.push({ id: 'title', message: 'Enter a title for the event' });
+  }
+  ...
+  return found;
+});
+// submit(): attempted.set(true); if (problems().length) focus the summary</pre>
+  <ul>
+    <li>Lines leave as fields are fixed; no extra bookkeeping</li>
+    <li>Edit mode keeps its Save gating; its drift records are separate</li>
+  </ul>
+</section>
+
+<section id="before-suggest" data-part="4" data-cue="Here is the build from before the fix." data-clip="clips/before-suggest.mp4" data-clip-delay="1">
+  <aside class="clip-notes">
+    <h3>Before · D10</h3>
+    <ul><li>Submit is greyed out</li><li>Nothing says why</li></ul>
+  </aside>
+</section>
+
+<section id="before-member" data-part="4" data-cue="In Add a family member, Add member is greyed out the same way." data-clip="clips/before-member.mp4" data-clip-delay="1">
+  <aside class="clip-notes">
+    <h3>Before · D17</h3>
+    <ul><li>Add member is greyed out</li></ul>
+  </aside>
+</section>
+
+<section id="after-suggest" data-part="4" data-cue="And here is the fix." data-clip="clips/after-suggest.mp4" data-clip-delay="1">
+  <aside class="clip-notes">
+    <h3>After · D10</h3>
+    <ul><li>Send suggestion is enabled</li><li>One thing to fix, linked to Title</li></ul>
+  </aside>
+</section>
+
+<section id="after-member" data-part="4" data-cue="In Add a family member, pressing Add member lists the name and the age." data-clip="clips/after-member.mp4" data-clip-delay="1">
+  <aside class="clip-notes">
+    <h3>After · D17</h3>
+    <ul><li>Two things to fix</li><li>Name and age, each linked</li></ul>
+  </aside>
+</section>
+
+<section id="recap" data-part="5" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <ul>
+      <li>A disabled primary action cannot say what is missing</li>
+      <li>Failed press: summary, focus on it, links to fields</li>
+      <li>Derive problems from field values</li>
+      <li>Name the action: Send suggestion, Add member</li>
+    </ul>
+  </div>
+</section>
+
+<script src="../assets/slides.js"></script>
+</body>
+</html>

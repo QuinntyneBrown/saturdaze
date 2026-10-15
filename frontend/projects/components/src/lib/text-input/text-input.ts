@@ -2,8 +2,10 @@ import {
   ChangeDetectionStrategy,
   Component,
   booleanAttribute,
+  ElementRef,
   computed,
   forwardRef,
+  inject,
   input,
   linkedSignal,
   signal,
@@ -63,6 +65,8 @@ export class TextInput implements ControlValueAccessor {
   readonly max = input<string | number | null>(null);
   readonly step = input<string | number | null>(null);
 
+  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
+
   protected readonly id = `sd-field-${nextFieldId++}`;
   protected readonly hintId = `${this.id}-hint`;
   protected readonly errorId = `${this.id}-error`;
@@ -82,6 +86,11 @@ export class TextInput implements ControlValueAccessor {
 
   private onChange: (value: string) => void = () => {};
   private onTouched: () => void = () => {};
+
+  /** Move focus to the inner control (an error summary's link targets this). */
+  focus(): void {
+    this.host.nativeElement.querySelector<HTMLElement>('input, textarea')?.focus();
+  }
 
   protected handleInput(event: Event): void {
     const v = (event.target as HTMLInputElement | HTMLTextAreaElement).value;
