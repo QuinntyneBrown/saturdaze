@@ -1,4 +1,4 @@
-# 33 · The plan, in plain words
+# 34 · The plan, in plain words
 
 Imagine a helper who knows your family. It knows hockey is at nine on Saturday, the baby naps at one, and nobody wants to drive for ninety minutes. It knows it might rain on Sunday. You tap one button, and it hands you a whole weekend that fits. That helper is Saturdaze. And planning is free.
 

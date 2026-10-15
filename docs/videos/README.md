@@ -77,7 +77,7 @@ Four videos on family member sign-in (L1-037, ADR-016): the account that creates
 
 | # | Video | Runtime | What you learn |
 | --- | --- | --- | --- |
-| 33 | [The plan, in plain words](33-the-plan-in-plain-words/README.md) | ~9.1 min | The business plan explained simply: grown-up likes, the five jars, 2027 to 2029, the $2.0M seed, the never list and the risks; then what changes if the seed never comes. |
+| 34 | [The plan, in plain words](34-the-plan-in-plain-words/README.md) | ~9.1 min | The business plan explained simply: grown-up likes, the five jars, 2027 to 2029, the $2.0M seed, the never list and the risks; then what changes if the seed never comes. |
 
 ## Components series
 
