@@ -30,7 +30,7 @@ export class Pager {
   /** The text when there is nothing to page ("No places"). */
   readonly emptyText = input('Nothing to show');
   /** The landmark's accessible name. */
-  readonly label = input('Pages');
+  readonly label = input('Pagination');
   readonly pageChange = output<number>();
 
   protected readonly text = computed(() => {

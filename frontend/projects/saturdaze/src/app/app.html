@@ -26,6 +26,9 @@
   >
     <router-outlet />
   </main>
+  @if (shell() === 'site' && siteFooter()) {
+    <app-site-footer />
+  }
   @if (shell() === 'app') {
     <sd-bottom-nav [active]="nav()" />
   }

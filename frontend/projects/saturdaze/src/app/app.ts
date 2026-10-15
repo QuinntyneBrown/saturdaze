@@ -14,6 +14,7 @@ import { SESSION_STORE } from 'api';
 import { BottomNav, NavKey, Sitebar, SkipLink, TopBar } from 'components';
 
 import { MenuOpener } from './shell/menu-opener';
+import { SiteFooter } from './shell/site-footer';
 import { signOutWith } from './shared/sign-out';
 
 /**
@@ -43,14 +44,15 @@ interface ShellData {
   readonly nav: NavKey | null;
   readonly page: string;
   readonly cta: boolean;
+  readonly footer: boolean;
 }
 
-const DEFAULT_SHELL: ShellData = { shell: 'app', nav: null, page: '', cta: false };
+const DEFAULT_SHELL: ShellData = { shell: 'app', nav: null, page: '', cta: false, footer: false };
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, SkipLink, TopBar, BottomNav, Sitebar],
+  imports: [RouterOutlet, SiteFooter, SkipLink, TopBar, BottomNav, Sitebar],
   templateUrl: './app.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -73,6 +75,7 @@ export class App {
   protected readonly shell = computed(() => this.shellData().shell);
   protected readonly nav = computed(() => this.shellData().nav);
   protected readonly siteCta = computed(() => this.shellData().cta);
+  protected readonly siteFooter = computed(() => this.shellData().footer);
   protected readonly email = computed(() => this.session.user()?.email ?? '');
   protected readonly avatarUrl = computed(() => this.session.user()?.avatarUrl ?? null);
   protected readonly loading = this.session.loading;
@@ -116,6 +119,7 @@ export class App {
       nav: typeof nav === 'string' ? (nav as NavKey) : null,
       page: typeof page === 'string' ? page : '',
       cta: merged['cta'] === true,
+      footer: merged['footer'] === true,
     };
   }
 }

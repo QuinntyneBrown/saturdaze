@@ -1,0 +1,31 @@
+// `.site-footer` from docs/mocks/styles/app.css. The footer sits after <main>, so the
+// host takes the reading width and gutter that `.sd-frame--site` gives the page above
+// it; its 16px top margin plus the frame's 64px bottom padding (tablet and up) add up to
+// the 80px gap the footer had when it was inside <main>.
+
+:host {
+  display: block;
+  width: 100%;
+  max-width: var(--layoutContentMaxWidth);
+  margin-inline: auto;
+  padding-inline: var(--layoutGutter);
+  padding-bottom: 80px;
+}
+
+.site-footer {
+  margin-top: 16px;
+  text-align: center;
+  font-size: var(--fontSizeBase200);
+  color: var(--colorNeutralForeground3);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--spacingVerticalSNudge) var(--spacingHorizontalM);
+}
+
+.sd-link--soft {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: var(--colorNeutralStroke1);
+}

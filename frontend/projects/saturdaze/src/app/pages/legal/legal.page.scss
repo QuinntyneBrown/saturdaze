@@ -68,24 +68,6 @@
   color: var(--colorNeutralForeground2);
 }
 
-.site-footer {
-  margin-top: 80px;
-  text-align: center;
-  font-size: var(--fontSizeBase200);
-  color: var(--colorNeutralForeground3);
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: var(--spacingVerticalSNudge) var(--spacingHorizontalM);
-}
-
-.sd-link--soft {
-  color: inherit;
-  text-decoration: underline;
-  text-underline-offset: 3px;
-  text-decoration-color: var(--colorNeutralStroke1);
-}
-
 @media (hover: hover) {
   .prose__toc a:hover {
     color: var(--colorNeutralForeground1);

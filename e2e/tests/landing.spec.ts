@@ -49,6 +49,13 @@ test.describe("Landing", () => {
     await page.waitForURL(/sign-in/);
   });
 
+  // Traces to: L2-138 AC1
+  test("the footer is the page's contentinfo landmark, outside main", async ({ pages }) => {
+    const l = pages.landing;
+    await expect(l.footerLandmark).toBeVisible();
+    await expect(l.footerInMain).toHaveCount(0);
+  });
+
   test("the footer links to Terms, Privacy and Sign in", async ({ pages }) => {
     const l = pages.landing;
     await expect(l.footerLink("Terms")).toHaveAttribute("href", /legal/);

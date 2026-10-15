@@ -84,6 +84,11 @@ test.describe("Account menu (top bar, ≥720)", () => {
     await pages.weekend.waitForReady();
   });
 
+  // Traces to: L2-138 AC4
+  test("the avatar button announces that it opens a menu", async ({ pages }) => {
+    await expect(pages.weekend.accountMenuButton()).toHaveAttribute("aria-haspopup", "menu");
+  });
+
   test("the avatar button opens a menu with the email, Family settings and Sign out", async ({ pages }) => {
     const w = pages.weekend;
     await expect(w.accountMenuButton()).toHaveText(/^[A-Z]$/);

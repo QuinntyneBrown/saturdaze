@@ -61,6 +61,11 @@ test.describe("Admin places", () => {
     expect(lower).toEqual([...lower].sort());
   });
 
+  // Traces to: L2-138 AC3
+  test("the pager is a navigation landmark named Pagination", async ({ pages }) => {
+    await expect(pages.adminPlaces.pagerLandmark()).toBeVisible();
+  });
+
   test("the pager reports the page and disables both ends on one page", async ({ pages }) => {
     // Traces to: L2-113 AC4
     const a = pages.adminPlaces;

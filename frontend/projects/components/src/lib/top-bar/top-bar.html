@@ -14,7 +14,13 @@
     }
   </nav>
   <div class="topbar__actions">
-    <button class="avatar-btn" type="button" aria-label="Account menu" (click)="onAccount($event)">
+    <button
+      class="avatar-btn"
+      type="button"
+      aria-label="Account menu"
+      aria-haspopup="menu"
+      (click)="onAccount($event)"
+    >
       <sd-avatar [name]="initial()" [src]="avatarSrc()" tone="primary" />
     </button>
   </div>
