@@ -23,6 +23,8 @@ import { ADMIN_NAV_ITEMS, AdminNavKey } from '../shared/admin-nav-key';
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class: 'admin-nav',
+    // A bare aria-label on a host with no role names nothing; the role makes it a landmark (L2-140).
+    role: 'navigation',
     'aria-label': 'Admin',
     '[attr.active]': 'active()',
   },

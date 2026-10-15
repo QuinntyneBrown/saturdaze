@@ -34,6 +34,11 @@ export abstract class AdminPage extends BasePage {
     return this.page.locator(".admin-nav");
   }
 
+  /** The admin navigation as assistive technology sees it: a navigation landmark named "Admin". */
+  navLandmark(): Locator {
+    return this.page.getByRole("navigation", { name: "Admin" });
+  }
+
   adminNavLink(key: AdminNavKey): Locator {
     return this.adminNav.locator(`.admin-nav__link[data-nav="${key}"]`);
   }

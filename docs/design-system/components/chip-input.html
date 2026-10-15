@@ -355,7 +355,7 @@
         <tr><td><code>aria-describedby</code></td><td>On the input, pointing at the hint and any <code>.field__error</code>.</td></tr>
         <tr><td><code>data-state="focus"</code> / <code>data-state="hover"</code></td><td>Documentation only: forces the container's focus, or the remove button's hover or focus.</td></tr>
       </tbody></table>
-      <p>The Angular component is a form control over <code>string[]</code>. It commits on <kbd>Enter</kbd>, <kbd>,</kbd> and blur, removes the last value on <kbd>Backspace</kbd> in an empty input, and renders each value as <code>sd-chip</code> with <code>removable</code> and <code>removeLabel</code> set to "Remove" plus the value. It trims values and drops case-insensitive duplicates silently; the duplicate message above is not built yet.</p>
+      <p>The Angular component is a form control over <code>string[]</code>. It commits on <kbd>Enter</kbd>, <kbd>,</kbd> and blur, removes the last value on <kbd>Backspace</kbd> in an empty input, and renders each value as <code>sd-chip</code> with <code>removable</code> and <code>removeLabel</code> set to "Remove" plus the value. It trims values and refuses case-insensitive duplicates with "{value} is already in {label}.": the text stays in the field, the field is <code>aria-invalid</code>, and the message clears when the text changes or a chip is removed. The cross-list conflict message ("Parks is in Likes. Remove it there first.") and the live-region announcements are not built yet.</p>
     </section>
 
     <section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>

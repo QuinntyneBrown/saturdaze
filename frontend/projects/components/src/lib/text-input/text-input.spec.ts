@@ -62,9 +62,8 @@ describe('TextInput', () => {
     expect(error.querySelector('svg path')?.getAttribute('d')).toBe('M12 4l9 16H3L12 4z');
     expect(host.querySelector('.field__hint')).toBeNull();
     expect(control().getAttribute('aria-invalid')).toBe('true');
-    expect(control().getAttribute('aria-describedby')).toBe(
-      `${control().id}-error ${control().id}-hint`,
-    );
+    // Only what is in the page: the hint is not rendered while the error shows (L2-140).
+    expect(control().getAttribute('aria-describedby')).toBe(`${control().id}-error`);
   });
 
   it('forwards type, placeholder, autocomplete, name and numeric bounds', () => {

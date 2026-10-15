@@ -108,6 +108,15 @@ test.describe("Ideas — Events", () => {
     await expect(i.cardChips(card).first()).toHaveText("Pending review");
   });
 
+  // Traces to: L2-140 AC2
+  test("a field that swaps its hint for an error describes itself only with elements in the page", async ({ pages }) => {
+    const i = pages.ideas;
+    await i.suggestEventButton().click();
+    await i.dialogField("Starts").fill("");
+    await expect(i.dialogField("Starts")).toHaveAttribute("aria-invalid", "true");
+    expect(await i.describedByIdsMissing(i.dialogField("Starts"))).toEqual([]);
+  });
+
   // Traces to: L2-134 AC1-AC3
   test("Suggest an event: with no title the action stays enabled and a press shows a focused error summary", async ({ page, pages }) => {
     const i = pages.ideas;

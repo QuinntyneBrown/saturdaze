@@ -110,6 +110,23 @@ test.describe("Family", () => {
     await expect(f.dialogErrorSummary()).toContainText("One thing to fix");
   });
 
+  // Traces to: L2-140 AC3, AC4
+  test("adding a like that is already there is refused with a message, not dropped silently", async ({ pages }) => {
+    const f = pages.family;
+    await f.editLikesButton().click();
+    const chipsBefore = await f.dialog().locator(".chip-input .chip").count();
+    const existing = (await f.dialog().locator(".chip-input .chip").first().innerText()).trim();
+
+    await f.addDialogChip("Likes", existing.toLowerCase());
+    await expect(f.dialogChipError("Likes")).toHaveText(`${existing.toLowerCase()} is already in Likes.`);
+    await expect(f.dialogField("Likes")).toHaveValue(existing.toLowerCase());
+    await expect(f.dialogField("Likes")).toHaveAttribute("aria-invalid", "true");
+    await expect(f.dialog().locator(".chip-input .chip")).toHaveCount(chipsBefore);
+
+    await f.dialogField("Likes").fill("");
+    await expect(f.dialogChipError("Likes")).toHaveCount(0);
+  });
+
   test("editing a commitment opens D18 with Name, Day radio and Start/End", async ({ pages }) => {
     const f = pages.family;
     await f.commitmentRow("Swim lessons").click();

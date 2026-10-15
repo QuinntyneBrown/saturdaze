@@ -13,9 +13,17 @@
     type="text"
     [value]="draft()"
     [attr.placeholder]="placeholder()"
+    [attr.aria-invalid]="error() ? 'true' : null"
+    [attr.aria-describedby]="error() ? errorId : null"
     [disabled]="disabled()"
     (input)="onDraft($event)"
     (keydown)="onKey($event)"
     (blur)="commit()"
   />
 </div>
+@if (error()) {
+  <p class="field__error" [id]="errorId">
+    <sd-icon name="alert" [size]="12" [stroke]="2" />
+    {{ error() }}
+  </p>
+}

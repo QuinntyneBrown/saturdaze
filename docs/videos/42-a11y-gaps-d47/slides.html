@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 42 Slides</title>
+<link rel="stylesheet" href="../assets/slides.css">
+</head>
+<body data-video-number="42" data-video-title="Design drift D47" data-parts="Introduction|What drifted|Why it matters|The fix|Before and after|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Design drift · Video 42</div>
+  <h1>D47: four small gaps in the product</h1>
+  <p class="lead">Admin landmark, field descriptions, duplicate chips and the skip link</p>
+</section>
+
+<section id="drift" data-part="1" data-cue="First, the admin navigation.">
+  <h2>What drifted</h2>
+  <div class="cols">
+    <div class="card"><h3>sd-admin-nav</h3><p class="small"><code>aria-label="Admin"</code> on a host with no role: no landmark</p></div>
+    <div class="card"><h3>sd-text-input</h3><p class="small">Hint hidden during an error, but still in <code>aria-describedby</code></p></div>
+    <div class="card"><h3>sd-chip-input</h3><p class="small">A duplicate is dropped silently</p></div>
+    <div class="card"><h3>Skip link</h3><p class="small">Bare <code>href="#main"</code> vs <code>&lt;base href="/"&gt;</code></p></div>
+  </div>
+</section>
+
+<section id="why" data-part="2" data-cue="The criteria are WCAG one point three point one">
+  <h2>Why it matters</h2>
+  <ul>
+    <li>WCAG 1.3.1 info and relationships; 3.3.1 error identification; 4.1.2 name, role, value</li>
+    <li>A role-less landmark is invisible; a missing described-by target is noise; silent loss looks like a bug</li>
+    <li>The skip link was already correct: it prevents the navigation and focuses main</li>
+  </ul>
+</section>
+
+<section id="req" data-part="3" data-cue="This changes what assistive technology reads">
+  <h2>1 · Requirement L2-140</h2>
+  <div class="card"><ul><li>Admin navigation: a <code>navigation</code> landmark named Admin</li><li><code>aria-describedby</code> lists only ids in the page</li><li>A duplicate chip stays, invalid, with "{value} is already in {label}."</li><li>The skip link stays on the page</li></ul></div>
+</section>
+
+<section id="code" data-part="3" data-cue="In the app there are three changes.">
+  <h2>2 · Three changes</h2>
+  <pre class="code tight" data-lang="ts" data-mark="2,5,9">// admin-nav.ts
+role: 'navigation', 'aria-label': 'Admin',
+// text-input.ts
+if (this.error()) ids.push(this.errorId);
+else if (this.hint()) ids.push(this.hintId);
+// chip-input.ts
+if (exists) {
+  this.error.set(`${v} is already in ${this.label() || 'the list'}.`);
+  return;                      // the draft stays in the field
+}</pre>
+</section>
+
+<section id="test" data-part="3" data-cue="Three acceptance tests came first">
+  <h2>3 · Test first</h2>
+  <pre class="code tight" data-lang="ts">await expect(a.navLandmark()).toBeVisible();                 // navigation "Admin"
+expect(await i.describedByIdsMissing(starts)).toEqual([]);
+await expect(f.dialogChipError("Likes")).toHaveText("parks is already in Likes.");</pre>
+  <ul>
+    <li>All three red, then green; two old specs updated; D47 removed from the drift log</li>
+  </ul>
+</section>
+
+<section id="before-app" data-part="4" data-cue="Here is the build from before the fix." data-clip="clips/before-app.mp4" data-clip-delay="1">
+  <aside class="clip-notes">
+    <h3>Before · family app</h3>
+    <ul><li>Duplicate like: text vanishes, no message</li><li>Starts: describedby names a missing hint</li></ul>
+  </aside>
+</section>
+
+<section id="before-admin" data-part="4" data-cue="Now Saturdaze Admin." data-clip="clips/before-admin.mp4" data-clip-delay="1">
+  <aside class="clip-notes">
+    <h3>Before · Admin</h3>
+    <ul><li>Links at the top level; no landmark</li></ul>
+  </aside>
+</section>
+
+<section id="after-app" data-part="4" data-cue="And here is the fix." data-clip="clips/after-app.mp4" data-clip-delay="1">
+  <aside class="clip-notes">
+    <h3>After · family app</h3>
+    <ul><li>Text stays, invalid, "lavender is already in Likes."</li><li>Starts: only the error, in the page</li></ul>
+  </aside>
+</section>
+
+<section id="after-admin" data-part="4" data-cue="In Saturdaze Admin the links now sit under a navigation called Admin, so a screen reader" data-clip="clips/after-admin.mp4" data-clip-delay="1">
+  <aside class="clip-notes">
+    <h3>After · Admin</h3>
+    <ul><li>navigation "Admin"</li></ul>
+  </aside>
+</section>
+
+<section id="recap" data-part="5" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <ul>
+      <li>A landmark needs a role as well as a name</li>
+      <li>Describe a field only with elements that exist</li>
+      <li>Never drop input silently: keep it and say why</li>
+      <li>Requirement first, failing tests, then delete the drift record</li>
+    </ul>
+  </div>
+</section>
+
+<script src="../assets/slides.js"></script>
+</body>
+</html>

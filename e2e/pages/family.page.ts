@@ -192,6 +192,14 @@ export class FamilyPage extends BasePage {
     return this.dialog().locator(".chip").filter({ hasText: value });
   }
 
+  /** The error line under one of the dialog's chip inputs. */
+  dialogChipError(field: "Likes" | "Dislikes"): Locator {
+    return this.dialog()
+      .locator("sd-chip-input")
+      .filter({ has: this.page.locator(".field__label", { hasText: field }) })
+      .locator(".field__error");
+  }
+
   /** Types a value into one of the dialog's chip inputs and adds it as a chip. */
   async addDialogChip(field: "Likes" | "Dislikes", value: string): Promise<void> {
     const input = this.dialogField(field);
