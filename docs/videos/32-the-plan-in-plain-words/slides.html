@@ -1,0 +1,549 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 32 Slides</title>
+<link rel="stylesheet" href="../assets/slides.css">
+</head>
+<body data-video-number="32" data-video-title="The plan, in plain words" data-parts="Introduction|The problem|Grown-up likes|Five jars|Year by year|The seed|The road|Never list|The risks|No seed?|Recap">
+
+<!-- Pictures are inline SVG drawn with the slide palette in ../assets/slides.css.
+     Every figure is from docs/business-plan/README.md, except the "our own thinking" card. -->
+
+<template id="jars"><div style="display:grid;grid-template-columns:repeat(5,1fr);gap:24px;align-items:start"><div class="item" style="display:grid;justify-items:center;gap:6px;text-align:center"><svg width="180" height="216" viewBox="0 0 200 240" aria-hidden="true"><rect x="56" y="8" width="88" height="26" rx="8" fill="var(--ink-3)"/><path d="M64 34 h72 v14 q44 10 44 52 v100 q0 32 -32 32 h-96 q-32 0 -32 -32 v-100 q0 -42 44 -52 z" fill="var(--coral-soft)" stroke="var(--coral)" stroke-width="6"/><rect x="70" y="96" width="60" height="60" rx="14" fill="var(--coral)"/><path d="M100 108 v36 M82 126 h36" stroke="#fff" stroke-width="10" stroke-linecap="round"/><ellipse cx="76" cy="214" rx="15" ry="7" fill="#e9b949" stroke="var(--coral-ink)" stroke-width="2"/><ellipse cx="100" cy="214" rx="15" ry="7" fill="#e9b949" stroke="var(--coral-ink)" stroke-width="2"/><ellipse cx="124" cy="214" rx="15" ry="7" fill="#e9b949" stroke="var(--coral-ink)" stroke-width="2"/></svg><strong style="font-size:38px">Saturdaze Plus</strong><span class="tag">Families</span><span class="muted" style="font-size:27px">$6.99 a month<br>or $59.99 a year</span></div><div class="item" style="display:grid;justify-items:center;gap:6px;text-align:center"><svg width="180" height="216" viewBox="0 0 200 240" aria-hidden="true"><rect x="56" y="8" width="88" height="26" rx="8" fill="var(--ink-3)"/><path d="M64 34 h72 v14 q44 10 44 52 v100 q0 32 -32 32 h-96 q-32 0 -32 -32 v-100 q0 -42 44 -52 z" fill="var(--coral-soft)" stroke="var(--coral)" stroke-width="6"/><path d="M58 104 h84 v18 a8 8 0 0 0 0 16 v18 h-84 v-18 a8 8 0 0 0 0 -16 z" fill="var(--card)" stroke="var(--ink)" stroke-width="5" stroke-linejoin="round"/><line x1="112" y1="108" x2="112" y2="152" stroke="var(--ink)" stroke-width="4" stroke-dasharray="6 5"/><ellipse cx="52" cy="214" rx="15" ry="7" fill="#e9b949" stroke="var(--coral-ink)" stroke-width="2"/><ellipse cx="76" cy="214" rx="15" ry="7" fill="#e9b949" stroke="var(--coral-ink)" stroke-width="2"/><ellipse cx="100" cy="214" rx="15" ry="7" fill="#e9b949" stroke="var(--coral-ink)" stroke-width="2"/><ellipse cx="124" cy="214" rx="15" ry="7" fill="#e9b949" stroke="var(--coral-ink)" stroke-width="2"/><ellipse cx="148" cy="214" rx="15" ry="7" fill="#e9b949" stroke="var(--coral-ink)" stroke-width="2"/></svg><strong style="font-size:38px">Bookings</strong><span class="tag forest">Businesses</span><span class="muted" style="font-size:27px">About $3<br>a booking</span></div><div class="item" style="display:grid;justify-items:center;gap:6px;text-align:center"><svg width="180" height="216" viewBox="0 0 200 240" aria-hidden="true"><rect x="56" y="8" width="88" height="26" rx="8" fill="var(--ink-3)"/><path d="M64 34 h72 v14 q44 10 44 52 v100 q0 32 -32 32 h-96 q-32 0 -32 -32 v-100 q0 -42 44 -52 z" fill="var(--coral-soft)" stroke="var(--coral)" stroke-width="6"/><path d="M100 96 L108.2 118.7 L132.3 119.5 L113.3 134.3 L120 157.5 L100 144 L80 157.5 L86.7 134.3 L67.7 119.5 L91.8 118.7 Z" fill="var(--coral)" stroke="var(--coral-ink)" stroke-width="3" stroke-linejoin="round"/><ellipse cx="52" cy="214" rx="15" ry="7" fill="#e9b949" stroke="var(--coral-ink)" stroke-width="2"/><ellipse cx="76" cy="214" rx="15" ry="7" fill="#e9b949" stroke="var(--coral-ink)" stroke-width="2"/><ellipse cx="100" cy="214" rx="15" ry="7" fill="#e9b949" stroke="var(--coral-ink)" stroke-width="2"/><ellipse cx="124" cy="214" rx="15" ry="7" fill="#e9b949" stroke="var(--coral-ink)" stroke-width="2"/><ellipse cx="148" cy="214" rx="15" ry="7" fill="#e9b949" stroke="var(--coral-ink)" stroke-width="2"/></svg><strong style="font-size:38px">Featured spots</strong><span class="tag forest">Businesses</span><span class="muted" style="font-size:27px">$200 to $300<br>a month</span></div><div class="item" style="display:grid;justify-items:center;gap:6px;text-align:center"><svg width="180" height="216" viewBox="0 0 200 240" aria-hidden="true"><rect x="56" y="8" width="88" height="26" rx="8" fill="var(--ink-3)"/><path d="M64 34 h72 v14 q44 10 44 52 v100 q0 32 -32 32 h-96 q-32 0 -32 -32 v-100 q0 -42 44 -52 z" fill="var(--coral-soft)" stroke="var(--coral)" stroke-width="6"/><path d="M100 98 q-24 0 -26 26 v18 l-10 12 h72 l-10 -12 v-18 q-2 -26 -26 -26 z" fill="var(--sun-soft)" stroke="var(--ink)" stroke-width="5" stroke-linejoin="round"/><circle cx="100" cy="162" r="7" fill="var(--ink)"/><ellipse cx="88" cy="214" rx="15" ry="7" fill="#e9b949" stroke="var(--coral-ink)" stroke-width="2"/><ellipse cx="112" cy="214" rx="15" ry="7" fill="#e9b949" stroke="var(--coral-ink)" stroke-width="2"/></svg><strong style="font-size:38px">Fan Reach</strong><span class="tag forest">Businesses</span><span class="muted" style="font-size:27px">$100 to $125<br>a month</span></div><div class="item" style="display:grid;justify-items:center;gap:6px;text-align:center"><svg width="180" height="216" viewBox="0 0 200 240" aria-hidden="true"><rect x="56" y="8" width="88" height="26" rx="8" fill="var(--ink-3)"/><path d="M64 34 h72 v14 q44 10 44 52 v100 q0 32 -32 32 h-96 q-32 0 -32 -32 v-100 q0 -42 44 -52 z" fill="var(--coral-soft)" stroke="var(--coral)" stroke-width="6"/><rect x="64" y="136" width="18" height="30" rx="3" fill="var(--sky-ink)"/><rect x="91" y="116" width="18" height="50" rx="3" fill="var(--sky-ink)"/><rect x="118" y="100" width="18" height="66" rx="3" fill="var(--sky-ink)"/><line x1="58" y1="168" x2="142" y2="168" stroke="var(--ink)" stroke-width="4"/><ellipse cx="100" cy="214" rx="15" ry="7" fill="#e9b949" stroke="var(--coral-ink)" stroke-width="2"/></svg><strong style="font-size:38px">Local Insights</strong><span class="tag forest">Businesses</span><span class="muted" style="font-size:27px">$500 to $750<br>a month</span></div></div><p class="muted small" style="text-align:center">Coins: each jar's rough share of 2029 revenue · planning stays free</p></template>
+
+<template id="years"><div style="display:flex;gap:40px;justify-content:center;align-items:center;font-size:28px"><span><i style="display:inline-block;width:26px;height:26px;border-radius:6px;background:var(--coral);vertical-align:-3px"></i> Families (Plus)</span><span><i style="display:inline-block;width:26px;height:26px;border-radius:6px;background:var(--forest);vertical-align:-3px"></i> Bookings and featured spots</span><span><i style="display:inline-block;width:26px;height:26px;border-radius:6px;background:var(--sky-ink);vertical-align:-3px"></i> Built on grown-up likes</span></div><div style="display:grid;grid-template-columns:repeat(3,340px);gap:90px;justify-content:center"><div class="item" style="display:grid;justify-items:center;gap:4px"><svg width="300" height="500" viewBox="0 0 300 500" aria-hidden="true"><rect x="60" y="470.5" width="180" height="7" fill="var(--forest)"/><rect x="60" y="477.5" width="180" height="2.5" fill="var(--coral)"/><text x="150" y="452" text-anchor="middle" font-size="46" font-weight="800" fill="var(--ink)">$124k</text><line x1="20" y1="480" x2="280" y2="480" stroke="var(--ink)" stroke-width="4"/></svg><strong style="font-size:36px">2027 · Toronto</strong><span class="muted" style="font-size:26px">25,000 families</span></div><div class="item" style="display:grid;justify-items:center;gap:4px"><svg width="300" height="500" viewBox="0 0 300 500" aria-hidden="true"><rect x="60" y="383.2" width="180" height="13.7" fill="var(--sky-ink)"/><rect x="60" y="396.9" width="180" height="65" fill="var(--forest)"/><rect x="60" y="461.9" width="180" height="18.1" fill="var(--coral)"/><text x="150" y="365" text-anchor="middle" font-size="46" font-weight="800" fill="var(--ink)">$1.27M</text><line x1="20" y1="480" x2="280" y2="480" stroke="var(--ink)" stroke-width="4"/></svg><strong style="font-size:36px">2028 · Canada</strong><span class="muted" style="font-size:26px">120,000 families</span></div><div class="item" style="display:grid;justify-items:center;gap:4px"><svg width="300" height="500" viewBox="0 0 300 500" aria-hidden="true"><rect x="60" y="80" width="180" height="73" fill="var(--sky-ink)"/><rect x="60" y="153" width="180" height="254.7" fill="var(--forest)"/><rect x="60" y="407.7" width="180" height="72.3" fill="var(--coral)"/><text x="150" y="62" text-anchor="middle" font-size="46" font-weight="800" fill="var(--ink)">$5.26M</text><line x1="20" y1="480" x2="280" y2="480" stroke="var(--ink)" stroke-width="4"/></svg><strong style="font-size:36px">2029 · + US cities</strong><span class="muted" style="font-size:26px">400,000 families</span></div></div></template>
+
+<template id="risks"><div class="cols" style="gap:30px 40px"><div class="item card"><h3>Few families pay</h3><p>Plus is one jar of five. In 2029 the business jars bring in 82%.</p></div><div class="item card"><h3>Places wait for an audience</h3><p>Listings are free to claim. In the first year, prices follow results.</p></div><div class="item card"><h3>A privacy slip</h3><p>The never list. A yes from each grown-up, for each use.</p></div><div class="item card"><h3>Big platforms move in</h3><p>Depth: commitments, every grown-up's taste, local partners.</p></div></div></template>
+
+<template id="ledger"><div style="display:grid;grid-template-columns:1fr 1fr;gap:26px 40px;align-items:start"><div class="item card good" style="grid-column:1;grid-row:1;font-size:31px"><h3 style="color:var(--forest)">What you keep</h3><ul><li>The planner, built and running</li><li>Toronto listings, already stocked</li><li>A computer helper that searches the web</li></ul></div><div class="item card" style="grid-column:1;grid-row:2;font-size:31px;border-color:var(--sky-ink)"><h3 style="color:var(--sky-ink)">What you'd change <span class="tag sky" style="font-size:22px">our own thinking</span></h3><ul><li>One city</li><li>Featured spots and partner referral programs first</li><li>Fan Reach and Insights wait for families</li><li>Grow by invites, schools and daycares</li></ul></div><div style="grid-column:2;grid-row:1 / span 2;display:grid;gap:26px"><div class="item card bad" style="font-size:31px"><h3>Time</h3><p>400,000 families by 2029 slips by years</p></div><div class="item card bad" style="font-size:31px"><h3>The window</h3><p>Big platforms could add family planning first</p></div><div class="item card bad" style="font-size:31px"><h3>The founder</h3><p>Growth waits on one person's hours</p></div></div></div></template>
+
+<section id="title" data-part="0">
+  <div class="kicker">Saturdaze · Video 32</div>
+  <h1>The plan, in plain words</h1>
+  <p class="lead">How a free weekend planner pays its way, and what happens if the seed money never comes</p>
+  <p class="muted small">As of October 2026 · from <span class="file">docs/business-plan/README.md</span></p>
+</section>
+
+<section id="helper" data-part="0" data-cue="It knows it might rain on Sunday">
+  <div style="display:grid;grid-template-columns:auto 1fr;gap:90px;align-items:center">
+    <svg width="380" height="700" viewBox="0 0 380 700" aria-hidden="true">
+      <rect x="10" y="10" width="360" height="680" rx="52" fill="var(--ink)"/>
+      <rect x="28" y="40" width="324" height="620" rx="34" fill="var(--page)"/>
+      <rect x="140" y="52" width="100" height="14" rx="7" fill="var(--ink)"/>
+      <text x="52" y="112" font-size="30" font-weight="800" fill="var(--ink)">This weekend</text>
+      <text x="52" y="160" font-size="22" font-weight="700" fill="var(--coral-ink)">SATURDAY</text>
+      <circle cx="318" cy="152" r="16" fill="#e9b949"/>
+      <rect x="52" y="176" width="276" height="62" rx="14" fill="var(--sky-soft)"/><text x="70" y="216" font-size="24" fill="var(--sky-ink)"><tspan font-weight="700">9:00</tspan>  Hockey 🔒</text>
+      <rect x="52" y="248" width="276" height="62" rx="14" fill="var(--forest-soft)"/><text x="70" y="288" font-size="24" fill="var(--forest)"><tspan font-weight="700">10:30</tspan>  The zoo</text>
+      <rect x="52" y="320" width="276" height="62" rx="14" fill="var(--indoor-soft)"/><text x="70" y="360" font-size="24" fill="var(--indoor-ink)"><tspan font-weight="700">1:00</tspan>  Nap at home</text>
+      <rect x="52" y="392" width="276" height="62" rx="14" fill="var(--coral-soft)"/><text x="70" y="432" font-size="24" fill="var(--coral-ink)"><tspan font-weight="700">5:30</tspan>  Dinner nearby</text>
+      <text x="52" y="500" font-size="22" font-weight="700" fill="var(--coral-ink)">SUNDAY</text>
+      <path d="M296 498 a14 14 0 0 1 27 -5 a11 11 0 0 1 4 21 h-30 a9 9 0 0 1 -1 -16 z" fill="var(--ink-3)"/>
+      <path d="M302 522 l-4 10 M314 522 l-4 10" stroke="var(--sky-ink)" stroke-width="4" stroke-linecap="round"/>
+      <rect x="52" y="516" width="236" height="62" rx="14" fill="var(--indoor-soft)"/><text x="70" y="556" font-size="24" fill="var(--indoor-ink)"><tspan font-weight="700">10:00</tspan>  Indoor fun</text>
+      <rect x="52" y="596" width="276" height="44" rx="22" fill="var(--coral)"/><text x="190" y="626" text-anchor="middle" font-size="22" font-weight="700" fill="#fff">Plan my weekend</text>
+    </svg>
+    <div style="display:grid;gap:30px">
+      <h2>One tap, a whole weekend that fits</h2>
+      <ul>
+        <li>Hockey at nine, the nap at one</li>
+        <li>No ninety-minute drives</li>
+        <li>Rain on Sunday? Plan indoors</li>
+      </ul>
+      <p class="quote" style="font-size:50px">And planning is free.</p>
+    </div>
+  </div>
+</section>
+
+<section id="question" data-part="0" data-cue="So how does a free planner pay the bills">
+  <p class="question">How does a free planner pay the bills?</p>
+  <p class="lead" style="margin-left:112px">Then one what-if: the two million dollar seed never comes.</p>
+</section>
+
+<section id="scattered" data-part="1" data-cue="The problem">
+  <h2>The pieces are everywhere</h2>
+  <svg width="1640" height="540" viewBox="0 0 1640 540" aria-hidden="true">
+    <g transform="rotate(-5 300 270)">
+      <rect x="120" y="90" width="360" height="300" rx="22" fill="var(--card)" stroke="var(--stroke)" stroke-width="3"/>
+      <rect x="120" y="90" width="360" height="50" rx="22" fill="var(--sky-soft)"/><rect x="120" y="118" width="360" height="22" fill="var(--sky-soft)"/>
+      <circle cx="150" cy="115" r="8" fill="var(--sky-ink)"/><circle cx="176" cy="115" r="8" fill="var(--sky-ink)"/>
+      <rect x="220" y="170" width="160" height="140" rx="12" fill="var(--page)" stroke="var(--ink)" stroke-width="5"/><line x1="220" y1="205" x2="380" y2="205" stroke="var(--ink)" stroke-width="5"/>
+      <text x="300" y="282" text-anchor="middle" font-size="64" font-weight="800" fill="var(--coral)">17</text>
+      <text x="300" y="360" text-anchor="middle" font-size="34" font-weight="700" fill="var(--ink)">Events</text>
+    </g>
+    <g transform="rotate(4 820 250)">
+      <rect x="640" y="70" width="360" height="300" rx="22" fill="var(--card)" stroke="var(--stroke)" stroke-width="3"/>
+      <rect x="640" y="70" width="360" height="50" rx="22" fill="var(--coral-soft)"/><rect x="640" y="98" width="360" height="22" fill="var(--coral-soft)"/>
+      <circle cx="670" cy="95" r="8" fill="var(--coral)"/><circle cx="696" cy="95" r="8" fill="var(--coral)"/>
+      <circle cx="820" cy="215" r="62" fill="var(--page)" stroke="var(--ink)" stroke-width="5"/>
+      <path d="M770 160 v110 M760 160 v34 q0 12 10 12 q10 0 10 -12 v-34" stroke="var(--ink)" stroke-width="5" fill="none" stroke-linecap="round"/>
+      <path d="M872 160 q-22 20 -10 60 v50" stroke="var(--ink)" stroke-width="5" fill="none" stroke-linecap="round"/>
+      <text x="820" y="340" text-anchor="middle" font-size="34" font-weight="700" fill="var(--ink)">Restaurants</text>
+    </g>
+    <g transform="rotate(-3 1340 290)">
+      <rect x="1160" y="110" width="360" height="300" rx="22" fill="var(--card)" stroke="var(--stroke)" stroke-width="3"/>
+      <rect x="1160" y="110" width="360" height="50" rx="22" fill="var(--sun-soft)"/><rect x="1160" y="138" width="360" height="22" fill="var(--sun-soft)"/>
+      <circle cx="1190" cy="135" r="8" fill="#e9b949"/><circle cx="1216" cy="135" r="8" fill="#e9b949"/>
+      <circle cx="1310" cy="230" r="40" fill="#e9b949"/>
+      <path d="M1320 290 a30 30 0 0 1 58 -10 a24 24 0 0 1 8 46 h-66 a20 20 0 0 1 0 -36 z" fill="var(--ink-3)"/>
+      <text x="1340" y="385" text-anchor="middle" font-size="34" font-weight="700" fill="var(--ink)">Weather</text>
+    </g>
+    <text x="560" y="480" text-anchor="middle" font-size="90" font-weight="800" fill="var(--coral)">+</text>
+    <text x="1090" y="480" text-anchor="middle" font-size="90" font-weight="800" fill="var(--coral)">+</text>
+  </svg>
+</section>
+
+<section id="personal" data-part="1" data-cue="And the puzzle is personal">
+  <h2>And the puzzle is personal</h2>
+  <div class="cols four">
+    <div class="card center" style="display:grid;justify-items:center;gap:14px">
+      <svg width="150" height="150" viewBox="0 0 150 150" aria-hidden="true"><circle cx="75" cy="75" r="62" fill="var(--sky-soft)" stroke="var(--sky-ink)" stroke-width="7"/><path d="M75 75 V36 M75 75 L104 92" stroke="var(--ink)" stroke-width="8" stroke-linecap="round"/></svg>
+      <h3 style="margin:0">Practice at nine</h3><span class="muted" style="font-size:28px">Fixed times first</span>
+    </div>
+    <div class="card center" style="display:grid;justify-items:center;gap:14px">
+      <svg width="150" height="150" viewBox="0 0 150 150" aria-hidden="true"><path d="M98 22 a56 56 0 1 0 34 92 a46 46 0 0 1 -34 -92 z" fill="var(--indoor-soft)" stroke="var(--indoor-ink)" stroke-width="7" stroke-linejoin="round"/><text x="96" y="80" font-size="30" font-weight="800" fill="var(--indoor-ink)">z</text><text x="112" y="58" font-size="22" font-weight="800" fill="var(--indoor-ink)">z</text></svg>
+      <h3 style="margin:0">Naps and car seats</h3><span class="muted" style="font-size:28px">Not too far, not too long</span>
+    </div>
+    <div class="card center" style="display:grid;justify-items:center;gap:14px">
+      <svg width="150" height="150" viewBox="0 0 150 150" aria-hidden="true"><path d="M48 108 l-30 -28 a17 17 0 0 1 30 -22 a17 17 0 0 1 30 22 z" fill="var(--coral)"/><path d="M104 120 l-30 -28 a17 17 0 0 1 30 -22 a17 17 0 0 1 30 22 z" fill="var(--forest)"/></svg>
+      <h3 style="margin:0">Two tastes</h3><span class="muted" style="font-size:28px">So dinner is just "closest"</span>
+    </div>
+    <div class="card center" style="display:grid;justify-items:center;gap:14px">
+      <svg width="150" height="150" viewBox="0 0 150 150" aria-hidden="true"><circle cx="75" cy="75" r="62" fill="var(--well)" stroke="var(--ink-3)" stroke-width="7"/><text x="75" y="104" text-anchor="middle" font-size="86" font-weight="800" fill="var(--ink-2)">?</text></svg>
+      <h3 style="margin:0">Nothing remembers</h3><span class="muted" style="font-size:28px">Loved the zoo? Hated the escape room?</span>
+    </div>
+  </div>
+</section>
+
+<section id="solution" data-part="1" data-cue="So families spend hours">
+  <h2>Saturdaze puts the pieces in one place</h2>
+  <div class="flow" style="margin-top:30px">
+    <div class="node"><b>Local events, places and restaurants</b>kept fresh</div>
+    <div class="arrow">+</div>
+    <div class="node"><b>The family's commitments</b>hockey, naps, errands</div>
+    <div class="arrow">+</div>
+    <div class="node"><b>The forecast</b>sun or rain</div>
+    <div class="arrow">→</div>
+    <div class="node accent"><b>A weekend that fits</b>built for you</div>
+  </div>
+</section>
+
+<section id="market" data-part="1" data-cue="There are about forty million families">
+  <h2>Who it's for</h2>
+  <div style="display:grid;grid-template-columns:600px 1fr;gap:80px;align-items:center">
+    <svg width="600" height="600" viewBox="0 0 600 600" aria-hidden="true">
+      <circle cx="300" cy="300" r="280" fill="var(--sky-soft)" stroke="var(--sky-ink)" stroke-width="5"/>
+      <circle cx="300" cy="426" r="154" fill="var(--forest-soft)" stroke="var(--forest)" stroke-width="5"/>
+      <circle cx="300" cy="535" r="44" fill="var(--coral)"/>
+    </svg>
+    <div style="display:grid;gap:44px">
+      <div><strong style="font-size:84px;color:var(--sky-ink)">39.6M</strong><br><span style="font-size:36px">families with children, Canada and the US</span></div>
+      <div><strong style="font-size:84px;color:var(--forest)">12M</strong><br><span style="font-size:36px">in big cities with lots to do</span></div>
+      <div><strong style="font-size:84px;color:var(--coral-ink)">1M</strong><br><span style="font-size:36px">in the Greater Toronto Area, first</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="likes" data-part="2" data-cue="Today, likes belong to the whole family">
+  <h2>Every grown-up gets their own likes</h2>
+  <div style="display:grid;grid-template-columns:1fr 120px 1.6fr;align-items:center;gap:20px">
+    <div class="card" style="font-size:32px">
+      <h3 class="muted" style="color:var(--ink-2)">Today: one family list</h3>
+      <p>♥ the zoo · ♥ parks<br>✗ long drives</p>
+    </div>
+    <div class="big-arrow">→</div>
+    <div class="cols" style="gap:30px">
+      <div class="card" style="display:grid;justify-items:center;gap:10px;font-size:30px">
+        <svg width="110" height="110" viewBox="0 0 110 110" aria-hidden="true"><circle cx="55" cy="36" r="24" fill="var(--coral)"/><path d="M12 106 q0 -46 43 -46 q43 0 43 46 z" fill="var(--coral)"/></svg>
+        <strong>Sam</strong>
+        <span>♥ the museum<br>♥ Thai food<br>✗ escape rooms</span>
+      </div>
+      <div class="card" style="display:grid;justify-items:center;gap:10px;font-size:30px">
+        <svg width="110" height="110" viewBox="0 0 110 110" aria-hidden="true"><circle cx="55" cy="36" r="24" fill="var(--forest)"/><path d="M12 106 q0 -46 43 -46 q43 0 43 46 z" fill="var(--forest)"/></svg>
+        <strong>Alex</strong>
+        <span>♥ the museum<br>♥ live music<br>♥ hiking</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="fair" data-part="2" data-cue="Then the planner can be fair">
+  <h2>Then the planner can be fair</h2>
+  <div class="cols" style="gap:30px 40px">
+    <div class="card good"><h3 style="color:var(--forest)">Both like it</h3><p>It comes first</p></div>
+    <div class="card"><h3>Tastes split</h3><p>It takes turns: <em>"Sam's pick this week"</em></p></div>
+    <div class="card sky"><h3>Kids are at a party</h3><p>A coffee both parents like</p></div>
+    <div class="card bad"><h3>Anyone says no</h3><p>That place is gone</p></div>
+  </div>
+</section>
+
+<section id="kids" data-part="2" data-cue="Kids keep the simple profile">
+  <div style="display:grid;grid-template-columns:auto 1fr;gap:80px;align-items:center">
+    <svg width="360" height="400" viewBox="0 0 360 400" aria-hidden="true">
+      <circle cx="160" cy="110" r="62" fill="#e9b949"/>
+      <path d="M50 330 q0 -130 110 -130 q110 0 110 130 z" fill="#e9b949"/>
+      <rect x="230" y="250" width="110" height="90" rx="16" fill="var(--forest)"/>
+      <path d="M252 250 v-26 a33 33 0 0 1 66 0 v26" fill="none" stroke="var(--forest)" stroke-width="14"/>
+      <circle cx="285" cy="290" r="11" fill="#fff"/><rect x="280" y="292" width="10" height="26" rx="4" fill="#fff"/>
+    </svg>
+    <div style="display:grid;gap:26px">
+      <h2>Kids keep it simple</h2>
+      <p class="lead">The age-based profile they have today.</p>
+      <p class="quote" style="font-size:46px">What kids like plans the family's weekend, and nothing else.</p>
+      <p class="muted small">Never used for offers, alerts or insights.</p>
+    </div>
+  </div>
+</section>
+
+<section id="jars" data-part="3" data-cue="Think of the money as five jars" data-template="jars">
+  <h2>Five jars</h2>
+</section>
+
+<section id="jar-plus" data-part="3" data-cue="The first jar is Saturdaze Plus" data-template="jars" data-highlight="1">
+  <h2>Jar 1 · Saturdaze Plus</h2>
+</section>
+
+<section id="jar-bookings" data-part="3" data-cue="The second jar is bookings" data-template="jars" data-highlight="2">
+  <h2>Jar 2 · Bookings</h2>
+</section>
+
+<section id="jar-featured" data-part="3" data-cue="The third jar is featured spots" data-template="jars" data-highlight="3">
+  <h2>Jar 3 · Featured spots</h2>
+</section>
+
+<section id="jar-fan-reach" data-part="3" data-cue="The fourth jar is Fan Reach" data-template="jars" data-highlight="4">
+  <h2>Jar 4 · Fan Reach</h2>
+</section>
+
+<section id="jar-insights" data-part="3" data-cue="The fifth jar is Local Insights" data-template="jars" data-highlight="5">
+  <h2>Jar 5 · Local Insights</h2>
+</section>
+
+<section id="cycle" data-part="3" data-cue="The jars feed each other">
+  <h2>The jars feed each other</h2>
+  <svg width="1640" height="600" viewBox="0 0 1640 600" aria-hidden="true">
+    <defs><marker id="head" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="var(--coral)"/></marker></defs>
+    <g font-size="36" font-weight="700" text-anchor="middle">
+      <rect x="660" y="20" width="320" height="96" rx="48" fill="var(--coral-soft)" stroke="var(--coral)" stroke-width="4"/><text x="820" y="80" fill="var(--coral-ink)">Free plans</text>
+      <rect x="1180" y="252" width="340" height="96" rx="48" fill="var(--card)" stroke="var(--stroke)" stroke-width="4"/><text x="1350" y="312" fill="var(--ink)">bring families</text>
+      <rect x="640" y="484" width="360" height="96" rx="48" fill="var(--sky-soft)" stroke="var(--sky-ink)" stroke-width="4"/><text x="820" y="544" fill="var(--sky-ink)">who leave likes</text>
+      <rect x="100" y="252" width="420" height="96" rx="48" fill="var(--forest-soft)" stroke="var(--forest)" stroke-width="4"/><text x="310" y="312" fill="var(--forest)">so businesses pay</text>
+    </g>
+    <g fill="none" stroke="var(--coral)" stroke-width="7" marker-end="url(#head)">
+      <path d="M990 70 Q1300 80 1340 238"/>
+      <path d="M1340 362 Q1300 530 1012 534"/>
+      <path d="M628 534 Q330 530 300 362"/>
+      <path d="M300 238 Q330 80 646 70"/>
+    </g>
+    <text x="820" y="292" text-anchor="middle" font-size="34" fill="var(--ink-2)">and that money keeps</text>
+    <text x="820" y="336" text-anchor="middle" font-size="34" fill="var(--ink-2)">planning free and listings fresh</text>
+  </svg>
+</section>
+
+<section id="year-1" data-part="4" data-cue="Year by year" data-template="years" data-show="1">
+  <h2>Year by year</h2>
+</section>
+
+<section id="year-2" data-part="4" data-cue="In twenty twenty-eight, it grows" data-template="years" data-show="2">
+  <h2>Year by year</h2>
+</section>
+
+<section id="year-3" data-part="4" data-cue="In twenty twenty-nine, it reaches" data-template="years" data-show="3">
+  <h2>Year by year</h2>
+</section>
+
+<section id="split" data-part="4" data-cue="Here's the surprise">
+  <h2>2029: businesses pay more than four dollars in five</h2>
+  <div style="display:grid;grid-template-columns:289fr 1311fr;gap:0;font-size:32px;font-weight:700;margin-top:20px">
+    <div style="border-bottom:5px solid var(--coral);padding:0 0 10px;color:var(--coral-ink)">Families · 18%</div>
+    <div style="border-bottom:5px solid var(--forest);padding:0 0 10px 16px;color:var(--forest)">Businesses · 82%</div>
+  </div>
+  <div style="display:grid;grid-template-columns:289fr 526fr 493fr 183fr 109fr;height:150px;border-radius:18px;overflow:hidden;gap:4px">
+    <div style="background:var(--coral)"></div>
+    <div style="background:var(--forest)"></div>
+    <div style="background:var(--forest);opacity:.8"></div>
+    <div style="background:var(--sky-ink)"></div>
+    <div style="background:var(--sky-ink);opacity:.75"></div>
+  </div>
+  <div style="display:grid;grid-template-columns:289fr 526fr 493fr 183fr 109fr;gap:4px;font-size:27px;line-height:1.25">
+    <div><strong>Plus</strong><br>$950k</div>
+    <div><strong>Bookings</strong><br>$1.73M</div>
+    <div><strong>Featured spots</strong><br>$1.62M</div>
+    <div><strong>Fan Reach</strong><br>$600k</div>
+    <div><strong>Insights</strong><br>$360k</div>
+  </div>
+  <p class="muted small" style="margin-top:16px">Blue: lines that exist only because grown-ups have their own likes · $960k together</p>
+</section>
+
+<section id="careful" data-part="4" data-cue="And the careful version of the plan">
+  <h2>The careful version</h2>
+  <p class="lead">If half as many families pay and book</p>
+  <div style="display:grid;grid-template-columns:260px 1fr;gap:34px 30px;align-items:center;font-size:36px;margin-top:20px">
+    <strong>The plan</strong>
+    <div style="display:flex;align-items:center;gap:24px"><div style="width:1240px;height:110px;border-radius:14px;background:var(--forest)"></div></div>
+    <span></span><strong style="font-size:56px;margin-top:-20px">$5.26M in 2029</strong>
+    <strong>Careful</strong>
+    <div style="display:flex;align-items:center;gap:24px"><div style="width:920px;height:110px;border-radius:14px;background:var(--ink-3)"></div></div>
+    <span></span><strong style="font-size:56px;margin-top:-20px">about $3.9M</strong>
+  </div>
+</section>
+
+<section id="spend" data-part="5" data-cue="Spending and the seed">
+  <h2>Money in, money out</h2>
+  <div style="display:flex;gap:40px;font-size:28px"><span><i style="display:inline-block;width:26px;height:26px;border-radius:6px;background:var(--forest);vertical-align:-3px"></i> Money in</span><span><i style="display:inline-block;width:26px;height:26px;border-radius:6px;background:var(--coral);vertical-align:-3px"></i> Money out, mostly people</span></div>
+  <svg width="1640" height="560" viewBox="0 0 1640 560" aria-hidden="true">
+    <g font-size="30" font-weight="700" text-anchor="middle" fill="var(--ink)">
+      <rect x="160" y="411" width="110" height="9" fill="var(--forest)"/><text x="215" y="399">$124k</text>
+      <rect x="290" y="358" width="110" height="62" fill="var(--coral)"/><text x="345" y="346">$860k</text>
+      <rect x="710" y="328.3" width="110" height="91.7" fill="var(--forest)"/><text x="765" y="316">$1.27M</text>
+      <rect x="840" y="277" width="110" height="143" fill="var(--coral)"/><text x="895" y="265">$1.98M</text>
+      <rect x="1260" y="40" width="110" height="380" fill="var(--forest)"/><text x="1315" y="30">$5.26M</text>
+      <rect x="1390" y="129.6" width="110" height="290.4" fill="var(--coral)"/><text x="1445" y="118">$4.02M</text>
+    </g>
+    <line x1="100" y1="420" x2="1560" y2="420" stroke="var(--ink)" stroke-width="4"/>
+    <g text-anchor="middle">
+      <text x="280" y="468" font-size="38" font-weight="800" fill="var(--ink)">2027</text><text x="280" y="512" font-size="30" fill="var(--coral-ink)" font-weight="700">−$736k</text><text x="280" y="550" font-size="26" fill="var(--ink-2)">team of 4</text>
+      <text x="830" y="468" font-size="38" font-weight="800" fill="var(--ink)">2028</text><text x="830" y="512" font-size="30" fill="var(--coral-ink)" font-weight="700">−$702k</text><text x="830" y="550" font-size="26" fill="var(--ink-2)">team of 8</text>
+      <text x="1380" y="468" font-size="38" font-weight="800" fill="var(--ink)">2029</text><text x="1380" y="512" font-size="30" fill="var(--forest)" font-weight="700">+$1.24M profit</text><text x="1380" y="550" font-size="26" fill="var(--ink-2)">team of 15</text>
+    </g>
+  </svg>
+</section>
+
+<section id="seed" data-part="5" data-cue="That's why the plan asks for a seed">
+  <h2>A $2.0M seed</h2>
+  <div style="font-size:30px;font-weight:700;color:var(--ink-2)">What it covers</div>
+  <div style="display:grid;grid-template-columns:72fr 28fr;height:110px;border-radius:16px;overflow:hidden;gap:4px;font-size:30px;font-weight:700">
+    <div style="background:var(--coral);color:#fff;display:flex;align-items:center;padding-left:28px">Two losing years · $1.44M</div>
+    <div style="background:var(--sun-soft);display:flex;align-items:center;padding-left:24px">About 6 months spare</div>
+  </div>
+  <div style="font-size:30px;font-weight:700;color:var(--ink-2);margin-top:24px">Where it goes</div>
+  <div style="display:grid;grid-template-columns:55fr 25fr 10fr 10fr;height:110px;border-radius:16px;overflow:hidden;gap:4px;font-size:30px;font-weight:700;color:#fff">
+    <div style="background:var(--forest);display:flex;align-items:center;padding-left:28px">Build the product · 55%</div>
+    <div style="background:var(--sky-ink);display:flex;align-items:center;padding-left:24px">Find families · 25%</div>
+    <div style="background:var(--indoor-ink);display:flex;align-items:center;justify-content:center">10%</div>
+    <div style="background:var(--ink-2);display:flex;align-items:center;justify-content:center">10%</div>
+  </div>
+  <div style="display:grid;grid-template-columns:55fr 25fr 10fr 10fr;gap:4px;font-size:26px;color:var(--ink-2)">
+    <span>$1.10M</span><span>$500k</span><span>Venue partners</span><span>Privacy and the law</span>
+  </div>
+</section>
+
+<section id="launch" data-part="6" data-cue="The road">
+  <div style="display:grid;grid-template-columns:auto 1fr;gap:90px;align-items:center">
+    <svg width="400" height="420" viewBox="0 0 400 420" aria-hidden="true">
+      <rect x="20" y="40" width="360" height="360" rx="30" fill="var(--card)" stroke="var(--ink)" stroke-width="8"/>
+      <path d="M20 70 a30 30 0 0 1 30 -30 h300 a30 30 0 0 1 30 30 v70 h-360 z" fill="var(--coral)"/>
+      <rect x="100" y="12" width="22" height="60" rx="10" fill="var(--ink)"/><rect x="278" y="12" width="22" height="60" rx="10" fill="var(--ink)"/>
+      <text x="200" y="122" text-anchor="middle" font-size="48" font-weight="800" fill="#fff">APRIL</text>
+      <text x="200" y="300" text-anchor="middle" font-size="120" font-weight="800" fill="var(--ink)">2027</text>
+    </svg>
+    <div style="display:grid;gap:24px">
+      <div class="kicker">Everything points at one date</div>
+      <h1 style="font-size:96px">The public launch</h1>
+      <p class="lead">In the Greater Toronto Area</p>
+    </div>
+  </div>
+</section>
+
+<section id="timeline" data-part="6" data-cue="The seed closes in December">
+  <h2>The road</h2>
+  <svg width="1640" height="590" viewBox="0 0 1640 590" aria-hidden="true">
+    <g stroke="var(--stroke)" stroke-width="2"><line x1="546" y1="36" x2="546" y2="580"/><line x1="859" y1="36" x2="859" y2="580"/><line x1="1172" y1="36" x2="1172" y2="580"/></g>
+    <g font-size="28" font-weight="800" fill="var(--ink-2)"><text x="556" y="28">2027</text><text x="869" y="28">2028</text><text x="1182" y="28">2029</text></g>
+    <line x1="624" y1="250" x2="624" y2="580" stroke="var(--coral)" stroke-width="4" stroke-dasharray="10 8"/>
+    <g font-size="31" fill="var(--ink)">
+      <text x="0" y="76">Seed closes</text>
+      <text x="0" y="130">Featured spots pilot</text>
+      <text x="0" y="184">Grown-up likes</text>
+      <text x="0" y="238" font-weight="800" fill="var(--coral-ink)">Public launch, Toronto</text>
+      <text x="0" y="292">Saturdaze Plus</text>
+      <text x="0" y="346">iPhone and Android apps</text>
+      <text x="0" y="400">Fan Reach, Local Insights</text>
+      <text x="0" y="454">Ontario + 3 Canadian cities</text>
+      <text x="0" y="508">Breaks even, month by month</text>
+      <text x="0" y="562">First US cities</text>
+    </g>
+    <g fill="var(--ink-3)">
+      <path d="M520 54 l14 14 l-14 14 l-14 -14 z"/>
+      <path d="M546 108 l14 14 l-14 14 l-14 -14 z"/>
+      <rect x="546" y="164" width="52" height="28" rx="14" fill="var(--sky-soft)" stroke="var(--sky-ink)" stroke-width="3"/>
+      <path d="M624 212 l18 18 l-18 18 l-18 -18 z" fill="var(--coral)"/>
+      <path d="M676 270 l14 14 l-14 14 l-14 -14 z"/>
+      <rect x="702" y="326" width="104" height="28" rx="14" fill="var(--well)" stroke="var(--ink-3)" stroke-width="3"/>
+      <path d="M859 378 l14 14 l-14 14 l-14 -14 z" fill="var(--sky-ink)"/>
+      <rect x="911" y="434" width="156" height="28" rx="14" fill="var(--well)" stroke="var(--ink-3)" stroke-width="3"/>
+      <path d="M1224 486 l14 14 l-14 14 l-14 -14 z" fill="var(--forest)"/>
+      <rect x="1250" y="542" width="130" height="28" rx="14" fill="var(--well)" stroke="var(--ink-3)" stroke-width="3"/>
+    </g>
+    <g font-size="25" fill="var(--ink-2)">
+      <text x="546" y="77">Dec 2026</text>
+      <text x="572" y="131">Jan 2027</text>
+      <text x="610" y="187">Jan to Mar 2027</text>
+      <text x="654" y="240" font-weight="800" fill="var(--coral-ink)">Apr 2027</text>
+      <text x="702" y="293">Jun 2027</text>
+      <text x="818" y="349">Jul to Nov 2027</text>
+      <text x="885" y="401">Jan 2028</text>
+      <text x="1079" y="457">Mar to Sep 2028</text>
+      <text x="1250" y="509">Mar 2029</text>
+      <text x="1392" y="565">Apr to Sep 2029</text>
+    </g>
+  </svg>
+</section>
+
+<section id="targets" data-part="6" data-cue="By the end of the first year">
+  <h2>By the end of 2027</h2>
+  <div class="cols three">
+    <div class="card center" style="display:grid;gap:10px;padding:44px 30px"><strong style="font-size:92px;color:var(--coral-ink);line-height:1">25,000</strong><span>families signed up</span></div>
+    <div class="card center" style="display:grid;gap:10px;padding:44px 30px"><strong style="font-size:92px;color:var(--sky-ink);line-height:1">4 in 10</strong><span>with two grown-ups signed in</span></div>
+    <div class="card center" style="display:grid;gap:10px;padding:44px 30px"><strong style="font-size:92px;color:var(--forest);line-height:1">~20</strong><span>local places paying, on average</span></div>
+  </div>
+</section>
+
+<section id="never" data-part="7" data-cue="The never list">
+  <h2>The never list</h2>
+  <div class="cols three">
+    <div class="card" style="display:grid;justify-items:center;gap:16px;text-align:center">
+      <svg width="140" height="140" viewBox="0 0 140 140" aria-hidden="true"><path d="M70 106 l-34 -32 a19 19 0 0 1 34 -25 a19 19 0 0 1 34 25 z" fill="var(--coral-soft)" stroke="var(--coral)" stroke-width="5"/><circle cx="70" cy="70" r="62" fill="none" stroke="#c45a3f" stroke-width="9"/><line x1="26" y1="26" x2="114" y2="114" stroke="#c45a3f" stroke-width="9"/></svg>
+      <h3 style="margin:0">Never sell a person's likes</h3>
+      <span style="font-size:30px">Businesses see big totals, or reach people who said yes</span>
+    </div>
+    <div class="card" style="display:grid;justify-items:center;gap:16px;text-align:center">
+      <svg width="140" height="140" viewBox="0 0 140 140" aria-hidden="true"><circle cx="70" cy="50" r="18" fill="#e9b949"/><path d="M40 108 q0 -38 30 -38 q30 0 30 38 z" fill="#e9b949"/><circle cx="70" cy="70" r="62" fill="none" stroke="#c45a3f" stroke-width="9"/><line x1="26" y1="26" x2="114" y2="114" stroke="#c45a3f" stroke-width="9"/></svg>
+      <h3 style="margin:0">Never use children's data</h3>
+      <span style="font-size:30px">for offers, alerts or insights</span>
+    </div>
+    <div class="card" style="display:grid;justify-items:center;gap:16px;text-align:center">
+      <svg width="140" height="140" viewBox="0 0 140 140" aria-hidden="true"><text x="70" y="94" text-anchor="middle" font-size="72" font-weight="800" fill="var(--forest)">$</text><circle cx="70" cy="70" r="62" fill="none" stroke="#c45a3f" stroke-width="9"/><line x1="26" y1="26" x2="114" y2="114" stroke="#c45a3f" stroke-width="9"/></svg>
+      <h3 style="margin:0">Paid never beats a no</h3>
+      <span style="font-size:30px">or the family's limits</span>
+    </div>
+  </div>
+</section>
+
+<section id="control" data-part="7" data-cue="Each grown-up sees every like">
+  <div style="display:grid;grid-template-columns:auto 1fr;gap:90px;align-items:center">
+    <svg width="380" height="680" viewBox="0 0 380 680" aria-hidden="true">
+      <rect x="10" y="10" width="360" height="660" rx="52" fill="var(--ink)"/>
+      <rect x="28" y="40" width="324" height="600" rx="34" fill="var(--page)"/>
+      <text x="52" y="110" font-size="30" font-weight="800" fill="var(--ink)">My likes</text>
+      <g font-size="24" fill="var(--ink)">
+        <text x="52" y="160">♥ the museum</text><text x="52" y="198">♥ Thai food</text><text x="52" y="236">✗ escape rooms</text>
+      </g>
+      <line x1="52" y1="262" x2="328" y2="262" stroke="var(--stroke)" stroke-width="3"/>
+      <text x="52" y="306" font-size="26" font-weight="800" fill="var(--ink)">My yes and no</text>
+      <g font-size="22" fill="var(--ink)">
+        <text x="52" y="356">Planning</text><text x="52" y="380" fill="var(--ink-2)" font-size="18">always on</text>
+        <rect x="262" y="338" width="66" height="36" rx="18" fill="var(--forest)"/><circle cx="310" cy="356" r="14" fill="#fff"/>
+        <text x="52" y="432">Fan Reach alerts</text><text x="52" y="456" fill="var(--ink-2)" font-size="18">off until I say yes</text>
+        <rect x="262" y="414" width="66" height="36" rx="18" fill="var(--ink-3)"/><circle cx="280" cy="432" r="14" fill="#fff"/>
+        <text x="52" y="508">Local Insights</text><text x="52" y="532" fill="var(--ink-2)" font-size="18">big groups only</text>
+        <rect x="262" y="490" width="66" height="36" rx="18" fill="var(--forest)"/><circle cx="310" cy="508" r="14" fill="#fff"/>
+      </g>
+      <rect x="52" y="566" width="130" height="46" rx="23" fill="var(--card)" stroke="var(--ink)" stroke-width="3"/><text x="117" y="597" text-anchor="middle" font-size="22" font-weight="700" fill="var(--ink)">Download</text>
+      <rect x="198" y="566" width="130" height="46" rx="23" fill="var(--coral-soft)" stroke="var(--coral-ink)" stroke-width="3"/><text x="263" y="597" text-anchor="middle" font-size="22" font-weight="700" fill="var(--coral-ink)">Delete</text>
+    </svg>
+    <div style="display:grid;gap:28px">
+      <h2>Every like, every yes, one screen</h2>
+      <ul>
+        <li>Each grown-up sees all of it</li>
+        <li>Fan Reach is off until they say yes</li>
+        <li>Download it or delete it, any time</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="risk-1" data-part="8" data-cue="The biggest risks" data-template="risks" data-show="1">
+  <h2>The biggest risks</h2>
+</section>
+
+<section id="risk-2" data-part="8" data-cue="The second risk is" data-template="risks" data-show="2">
+  <h2>The biggest risks</h2>
+</section>
+
+<section id="risk-3" data-part="8" data-cue="The third is trust" data-template="risks" data-show="3">
+  <h2>The biggest risks</h2>
+</section>
+
+<section id="risk-4" data-part="8" data-cue="And big platforms could add" data-template="risks" data-show="4">
+  <h2>The biggest risks</h2>
+</section>
+
+<section id="what-if" data-part="9" data-cue="What if the seed never comes?">
+  <div style="display:grid;grid-template-columns:auto 1fr;gap:90px;align-items:center">
+    <svg width="400" height="400" viewBox="0 0 400 400" aria-hidden="true">
+      <circle cx="200" cy="200" r="170" fill="#e9b949" stroke="var(--coral-ink)" stroke-width="10"/>
+      <circle cx="200" cy="200" r="132" fill="none" stroke="var(--coral-ink)" stroke-width="5" stroke-dasharray="10 10"/>
+      <line x1="60" y1="340" x2="340" y2="60" stroke="var(--ink)" stroke-width="18" stroke-linecap="round" opacity="0.8"/>
+      <text x="200" y="232" text-anchor="middle" font-size="96" font-weight="800" fill="var(--coral-ink)" stroke="#e9b949" stroke-width="12" paint-order="stroke">$2.0M</text>
+    </svg>
+    <div style="display:grid;gap:26px">
+      <div class="kicker">The what-if</div>
+      <h1 style="font-size:96px">What if the seed never comes?</h1>
+      <p class="lead">The plan doesn't need a second round of money. It does need the first.</p>
+    </div>
+  </div>
+</section>
+
+<section id="gap" data-part="9" data-cue="First, the gap">
+  <h2>First, the gap</h2>
+  <p class="lead">2027, in the plan</p>
+  <div style="display:grid;grid-template-columns:220px 1fr;gap:30px;align-items:center;font-size:36px;margin-top:10px">
+    <strong>Money in</strong><div style="display:flex;align-items:center;gap:24px"><div style="width:190px;height:110px;border-radius:14px;background:var(--forest)"></div><strong>$124k</strong></div>
+    <strong>Money out</strong><div style="display:flex;align-items:center;gap:24px"><div style="width:1310px;height:110px;border-radius:14px;background:var(--coral)"></div><strong>$860k</strong></div>
+  </div>
+  <p class="quote" style="font-size:46px;margin-top:20px">Income covers about one seventh. No seed: no team of four, no big push, no big April launch.</p>
+</section>
+
+<section id="keep" data-part="9" data-cue="What you keep" data-template="ledger" data-show="1">
+  <h2>Without the seed</h2>
+</section>
+
+<section id="change" data-part="9" data-cue="What you'd change" data-template="ledger" data-show="2">
+  <h2>Without the seed</h2>
+</section>
+
+<section id="cost-time" data-part="9" data-cue="What it costs" data-template="ledger" data-show="3">
+  <h2>Without the seed</h2>
+</section>
+
+<section id="cost-window" data-part="9" data-cue="Second, the window" data-template="ledger" data-show="4">
+  <h2>Without the seed</h2>
+</section>
+
+<section id="cost-founder" data-part="9" data-cue="Third, the founder" data-template="ledger" data-show="5">
+  <h2>Without the seed</h2>
+</section>
+
+<section id="verdict" data-part="9" data-cue="So here's the verdict">
+  <h2>The verdict</h2>
+  <ol class="steps">
+    <li>Keep raising, but don't wait for it</li>
+    <li>Launch small in Toronto either way</li>
+    <li>Measure what the plan measures: sign-ups, second grown-ups, paying, booking</li>
+    <li>Plan-like numbers make the case for the seed. If not, learn it cheaply</li>
+  </ol>
+</section>
+
+<section id="recap" data-part="10" data-cue="Things to remember">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <div>A weekend plan from commitments, tastes and weather, free</div>
+    <div>Every grown-up gets their own likes</div>
+    <div>Five jars: Plus, bookings, featured, Fan Reach, Insights</div>
+    <div>Businesses pay most; nobody's likes are sold</div>
+    <div style="grid-column:1 / span 2">A $2.0M seed reaches profit in 2029. Without it, start small and let the numbers make the case</div>
+  </div>
+</section>
+
+<section id="end" data-part="10" data-cue="Next time: grown-up likes">
+  <div class="kicker">Next time</div>
+  <h1>Grown-up likes</h1>
+  <p class="lead">From this plan to a requirement, a design and a mock</p>
+</section>
+
+<script src="../assets/slides.js"></script>
+</body>
+</html>

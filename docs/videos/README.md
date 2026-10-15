@@ -72,6 +72,12 @@ Four videos on family member sign-in (L1-037, ADR-016): the account that creates
 | 22 | [Joining from an invite link](22-joining-from-an-invite-link/README.md) | ~6.2 min | `/accept-invite` and its two anonymous endpoints; the verified account it creates; unusable links; the read-only member view and its server guard. |
 | 23 | [Removing a family member](23-removing-a-family-member/README.md) | ~6.3 min | D21's three consequences; what `DELETE` cascades; delete, not detach; the per-request family lookup that ends an open tab's access; `member_has_access`. |
 
+## The business
+
+| # | Video | Runtime | What you learn |
+| --- | --- | --- | --- |
+| 32 | [The plan, in plain words](32-the-plan-in-plain-words/README.md) | ~9.1 min | The business plan explained simply: grown-up likes, the five jars, 2027 to 2029, the $2.0M seed, the never list and the risks; then what changes if the seed never comes. |
+
 ## Components series
 
 Fifty-two instructional videos, one per component in `frontend/projects/components/src/lib/`: each codes the component step by step, calls out its best practices (especially signals) and walks through its unit tests. See the [series index](components/README.md).
