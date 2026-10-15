@@ -9,7 +9,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
  *
  * With `mode="tabs"` the track is an ARIA tablist instead (the Weekend day
  * switch, L2-104): buttons with `aria-selected` and `aria-controls` naming each
- * tab's `panel`, arrow keys moving between them, and `selected` two-way bound.
+ * tab's `panel`, arrow keys (wrapping) and Home/End moving between them, and `selected` two-way bound.
  */
 
 export interface SegmentTab {
@@ -56,13 +56,25 @@ export class Segments {
     return `${tab.panel ?? tab.label}-tab`;
   }
 
-  /** Arrow keys move the selection along the track and focus follows it. */
+  /**
+   * APG Tabs keys (L2-139): arrows move along the track and wrap, Home and End
+   * jump to the first and last tab; selection and focus follow.
+   */
   protected onKeydown(event: KeyboardEvent, index: number): void {
-    const step = event.key === 'ArrowRight' ? 1 : event.key === 'ArrowLeft' ? -1 : 0;
-    if (!step) return;
-    event.preventDefault();
     const tabs = this.tabs();
-    const next = tabs[(index + step + tabs.length) % tabs.length];
+    const target =
+      event.key === 'ArrowRight'
+        ? index + 1
+        : event.key === 'ArrowLeft'
+          ? index - 1
+          : event.key === 'Home'
+            ? 0
+            : event.key === 'End'
+              ? tabs.length - 1
+              : null;
+    if (target === null) return;
+    event.preventDefault();
+    const next = tabs[(target + tabs.length) % tabs.length];
     if (!next) return;
     this.selected.set(next.label);
     const host = (event.currentTarget as HTMLElement).parentElement;

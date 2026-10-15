@@ -126,16 +126,25 @@
   function trackDayTabs() {
     var tabs = document.querySelectorAll('.planner__toolbar [role="tab"]');
     if (!tabs.length) return;
-    var select = function (tab) {
+    var select = function (tab, focus) {
       for (var i = 0; i < tabs.length; i++) {
         var on = tabs[i] === tab;
         tabs[i].setAttribute("aria-selected", on ? "true" : "false");
+        tabs[i].setAttribute("tabindex", on ? "0" : "-1");
         var panel = document.getElementById(tabs[i].getAttribute("aria-controls"));
         if (panel) panel.hidden = !on;
       }
+      if (focus) tab.focus();
     };
     for (var i = 0; i < tabs.length; i++) {
       tabs[i].addEventListener("click", function (e) { select(e.currentTarget); });
+      tabs[i].addEventListener("keydown", function (e) {
+        var at = Array.prototype.indexOf.call(tabs, e.currentTarget);
+        var to = { ArrowRight: at + 1, ArrowLeft: at - 1, Home: 0, End: tabs.length - 1 }[e.key];
+        if (to === undefined) return;
+        e.preventDefault();
+        select(tabs[(to + tabs.length) % tabs.length], true);
+      });
     }
     if (location.hash === "#sun-panel") select(document.getElementById("sun-tab"));
   }

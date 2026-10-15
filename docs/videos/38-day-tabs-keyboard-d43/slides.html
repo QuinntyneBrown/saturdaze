@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 38 Slides</title>
+<link rel="stylesheet" href="../assets/slides.css">
+</head>
+<body data-video-number="38" data-video-title="Design drift D43" data-parts="Introduction|What drifted|Why it matters|The fix|Before and after|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Design drift · Video 38</div>
+  <h1>D43: the day tabs, by keyboard</h1>
+  <p class="lead">The APG Tabs keyboard model: one Tab stop, arrows with wrap, Home and End</p>
+</section>
+
+<section id="drift" data-part="1" data-cue="The mock's tabs responded to clicks only.">
+  <h2>What drifted</h2>
+  <div class="cols">
+    <div class="card"><h3>The mock</h3><p class="small">Clicks only; no arrow keys; every tab in the Tab order</p></div>
+    <div class="card"><h3>The app</h3><p class="small">Roving <code>tabindex</code> and ← →, but no <kbd>Home</kbd> / <kbd>End</kbd></p></div>
+  </div>
+</section>
+
+<section id="why" data-part="2" data-cue="The criteria are WCAG two point one point one">
+  <h2>Why it matters</h2>
+  <ul>
+    <li>WCAG 2.1.1 keyboard; 4.1.2 name, role, value</li>
+    <li>A tablist is one Tab stop; arrows move inside it; Home and End jump to the ends</li>
+    <li>Weekend shows one day at a time, so the tabs have to work</li>
+  </ul>
+</section>
+
+<section id="req" data-part="3" data-cue="This changes how the tabs behave, so the requirement came first.">
+  <h2>1 · Requirement, then mock</h2>
+  <div class="card"><h3>L2-139</h3><p>Only the selected tab is in the Tab order. <kbd>←</kbd> <kbd>→</kbd> select and focus (wrapping); <kbd>Home</kbd> / <kbd>End</kbd> select and focus the first and last tab.</p></div>
+  <p class="small"><code>docs/mocks/app.js</code>: <code>tabindex</code> 0 / -1 and a <code>keydown</code> handler</p>
+</section>
+
+<section id="code" data-part="3" data-cue="In the app, the segments component already did the arrows">
+  <h2>2 · sd-segments</h2>
+  <pre class="code tight" data-lang="ts" data-mark="4,5,6">const target =
+  event.key === 'ArrowRight' ? index + 1
+  : event.key === 'ArrowLeft' ? index - 1
+  : event.key === 'Home' ? 0
+  : event.key === 'End' ? tabs.length - 1
+  : null;
+if (target === null) return;
+const next = tabs[(target + tabs.length) % tabs.length];</pre>
+</section>
+
+<section id="test" data-part="3" data-cue="The acceptance test came first.">
+  <h2>3 · Test first</h2>
+  <pre class="code tight" data-lang="ts">await saturday.focus();
+await page.keyboard.press("ArrowRight");  // Sunday selected + focused
+await page.keyboard.press("ArrowRight");  // wraps to Saturday
+await page.keyboard.press("End");         // failed here: key did nothing
+await page.keyboard.press("Home");</pre>
+  <ul>
+    <li>Also asserts <code>tabindex</code> 0 / -1 and <code>aria-selected</code></li>
+    <li>D43 removed from the drift log</li>
+  </ul>
+</section>
+
+<section id="before" data-part="4" data-cue="Here is the build from before the fix." data-clip="clips/before.mp4" data-clip-delay="1">
+  <aside class="clip-notes">
+    <h3>Before</h3>
+    <ul><li>→ selects Sunday</li><li>Home and End: the page scrolls instead</li></ul>
+  </aside>
+</section>
+
+<section id="after" data-part="4" data-cue="And here is the fix." data-clip="clips/after.mp4" data-clip-delay="1">
+  <aside class="clip-notes">
+    <h3>After</h3>
+    <ul><li>→ Sunday, Home → Saturday, End → Sunday</li><li>Focus ring follows</li></ul>
+  </aside>
+</section>
+
+<section id="recap" data-part="5" data-cue="Things to remember.">
+  <h2>Things to remember</h2>
+  <div class="recap">
+    <ul>
+      <li>A tablist is one Tab stop; arrows move inside it</li>
+      <li>Home and End jump to the ends; arrows wrap</li>
+      <li>Selection and focus move together</li>
+      <li>Requirement and mock first, failing test, then delete the drift record</li>
+    </ul>
+  </div>
+</section>
+
+<script src="../assets/slides.js"></script>
+</body>
+</html>

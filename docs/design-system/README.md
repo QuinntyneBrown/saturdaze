@@ -125,7 +125,6 @@ and up) are proposals for the product's TypeScript theme.
 
 | ID | Mock | Issue | Resolution |
 |---|---|---|---|
-| D43 | `weekend.html` | The Saturday/Sunday tabs respond to clicks only: no arrow keys, no roving tabindex. | APG Tabs keyboard model on the tabs page. |
 | D44 | `.card--dimmed`, `.card--muted`, `.block--done` | Opacity takes meta text below 4.5:1 (about 2.5:1 dimmed, 4.4:1 muted). | `.block--done` now mutes with colour and a strikethrough; dimmed and muted cards are an open item on the card page. |
 | D45 | `weekend.generating.html` | The primary page action comes last in the DOM, so on phones focus order differs from the visual order (2.4.3). | Primary first in the DOM, as the Angular `sd-page-header` already does. |
 | D46 | `segments`, `seg-radio` | The selected segment differs from the track only by a small luminance step (1.4.11). | 1px `--colorNeutralStrokeAccessible` inner edge on the selected segment. |
