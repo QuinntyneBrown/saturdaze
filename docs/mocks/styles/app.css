@@ -527,6 +527,8 @@
     transition: background var(--sd-dur-fast) var(--sd-ease);
   }
   .list__item:last-child { border-bottom: 0; }
+  /* Action rows sit inside <li>, so each is its own last child: the rule above would strip every divider. */
+  .list > li:not(:last-child) > .list__item { border-bottom: 1px solid var(--sd-line); }
   .list__text { min-width: 0; }
   .list__title { display: block; font-size: var(--sd-fs-base); font-weight: var(--sd-fw-semibold); line-height: var(--sd-lh-snug); overflow-wrap: anywhere; }
   .list__sub { display: block; font-size: var(--sd-fs-sm); color: var(--sd-ink-soft); margin-top: 2px; overflow-wrap: anywhere; }

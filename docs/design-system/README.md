@@ -125,7 +125,6 @@ and up) are proposals for the product's TypeScript theme.
 
 | ID | Mock | Issue | Resolution |
 |---|---|---|---|
-| D41 | `app.css` lists | `.list__item:last-child { border-bottom: 0 }` matches every action row (each is the last child of its `<li>`), so Family, D25 and admin Places lose all row dividers. | Divider set on `.list > li:not(:last-child) > .list__item`. |
 | D42 | landing, legal, admin pages | Landmarks: the site footer sits inside `<main>`, the pager is a plain `<div>`, admin Places is a `<div>` of links, and the account avatar is a link to the dialog gallery rather than a menu button. | `footer`, `nav aria-label="Pagination"`, `ul`, and a `button aria-haspopup="menu"` in the component pages. |
 | D43 | `weekend.html` | The Saturday/Sunday tabs respond to clicks only: no arrow keys, no roving tabindex. | APG Tabs keyboard model on the tabs page. |
 | D44 | `.card--dimmed`, `.card--muted`, `.block--done` | Opacity takes meta text below 4.5:1 (about 2.5:1 dimmed, 4.4:1 muted). | `.block--done` now mutes with colour and a strikethrough; dimmed and muted cards are an open item on the card page. |
