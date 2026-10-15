@@ -288,12 +288,12 @@
               </div>
               <div class="dialog__actions">
                 <button class="btn btn--quiet" type="button">Cancel</button>
-                <button class="btn btn--primary" type="submit">Submit</button>
+                <button class="btn btn--primary" type="submit">Send suggestion</button>
               </div>
             </div>
           </div>
         </div>
-        <div class="ds-example__caption"><span>D10 after Submit. The summary title counts the problems; the lines match the field errors word for word.</span></div>
+        <div class="ds-example__caption"><span>D10 after Send suggestion. The summary title counts the problems; the lines match the field errors word for word.</span></div>
       </div>
       <h3>Submitting</h3>
       <div class="ds-example">
@@ -422,7 +422,7 @@
         <li><b>Hints</b> answer the question a parent would ask: "Under 18 counts as a kid.", "Set to the next hour."</li>
         <li><b>Errors</b> say what to do, not what went wrong: "Enter an age from 0 to 120." Never "Invalid input" or "This field is required".</li>
         <li><b>Summary title</b> counts the problems: "One thing to fix", "Two things to fix".</li>
-        <li><b>Submit</b> is the verb for the job: "Save", "Add member", "Add to weekend", "Submit", "Sign in". Cancel is always "Cancel".</li>
+        <li><b>Submit</b> is the verb for the job: "Save", "Add member", "Add to weekend", "Send suggestion", "Sign in". Cancel is always "Cancel".</li>
         <li>Full rules and the error formula live in <a href="../foundations/content.html">Content</a>; composed examples are in <a href="content-and-tone.html">Content and tone</a>.</li>
       </ul>
     </section>
@@ -430,7 +430,7 @@
     <section class="ds-section" id="do-dont"><h2><a href="#do-dont">Do and don't</a></h2>
       <div class="ds-dodont">
         <figure class="ds-do"><div class="ds-example__canvas"><button class="btn btn--quiet" type="button">Cancel</button><button class="btn btn--primary" type="submit">Add member</button></div><figcaption>Leave the submit enabled; on press, show the summary and say what is missing.</figcaption></figure>
-        <figure class="ds-dont"><div class="ds-example__canvas"><button class="btn btn--quiet" type="button">Cancel</button><button class="btn btn--primary" type="submit" disabled>Add member</button></div><figcaption>D10 and D17 (add) disable Submit and Add member until the form is valid. A disabled button cannot say why, and it is skipped by Tab.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><button class="btn btn--quiet" type="button">Cancel</button><button class="btn btn--primary" type="submit" disabled>Add member</button></div><figcaption>A primary action disabled until the form is valid. A disabled button cannot say why, and it is skipped by Tab.</figcaption></figure>
         <figure class="ds-do"><div class="ds-example__canvas"><button class="btn btn--quiet" type="button"><svg class="icon" aria-hidden="true"><use href="#i-edit"/></svg>Edit</button></div><figcaption>On Family, Edit opens the D17 dialog. The page itself stays read-only.</figcaption></figure>
         <figure class="ds-dont"><div class="ds-example__canvas ds-example__canvas--stack"><div class="field"><label class="field__label" for="fx-dont-inline">Mae</label><div class="field__with-btn"><input class="field__input" id="fx-dont-inline" type="text" value="5"><button class="btn btn--primary" type="button">Save</button></div></div></div><figcaption>A row on the Family page that turns into an input with its own Save. Inline forms are off-pattern in Saturdaze; open a dialog.</figcaption></figure>
         <figure class="ds-do"><div class="ds-example__canvas ds-example__canvas--stack"><div class="field"><label class="field__label" for="fx-do-ph">What is it <span class="field__req">Required</span></label><input class="field__input" id="fx-do-ph" type="text" placeholder="Costco run"></div></div><figcaption>A visible label, with the placeholder giving an example.</figcaption></figure>

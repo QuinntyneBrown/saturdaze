@@ -28,6 +28,8 @@ The feature crosses the application and platform boundaries needed to deliver it
 
 - **`New-tab links`** — `sd-button` with `target="_blank"` appends visually hidden text " (opens in a new tab)" (the global `.sd-visually-hidden` utility) after its projected content, or to its `label` when one names it, and sets `rel="noopener"`; so the cards' Map, See menu and Details and the calendar dialog's Download .ics announce the new tab without each consumer repeating it. `sd-details` and `sd-leg` render the same hidden text in their own anchors, and the day map's OpenStreetMap credit carries it too. `sd-icon` gains `external` (the design system's arrow leaving a box), which replaces `arrow_right` after a submission's Link in `sd-details` and after an event card's Details (L2-133, drift D31).
 
+- **`Error summary`** — `sd-error-summary` (`components/src/lib/error-summary/`), the design system's `.error-summary`: an alert panel (`role="alert"`, `tabindex="-1"`) with a title and a list of links, one per problem; it takes `problems` (`{ id, message }[]`) and focuses itself when it appears. Form dialogs (`SubmitEventDialog`, `FamilyMemberDialog`) keep their primary action enabled; the click handler builds the problem list, sets `error` on the invalid `sd-text-input`s, and shows the summary instead of submitting. A link's click focuses the field by id; editing a field removes its problem. (L2-134)
+
 Automated structural checks do not establish complete keyboard or WCAG contrast conformance. The obligations below remain subject to dedicated accessibility verification.
 
 ## Requirements
@@ -43,6 +45,7 @@ The following L2 requirements refine the cited L1 capabilities. Implementation g
 | `L2-131` | `L1-014` | Under reduced motion, decorative motion (transitions, the dialog rise, the skeleton shimmer) shall stop while loading spinners keep turning. |
 | `L2-132` | `L1-011`, `L1-014` | A tooltip shall show as an opaque inverted bubble (dark on light, light on dark) whose text meets 4.5:1 on its fill. |
 | `L2-133` | `L1-014` | Every link that opens a new tab shall say so in its accessible name ("(opens in a new tab)"), and address and Details links shall show the external icon. |
+| `L2-134` | `L1-014` | A form dialog's primary action stays enabled and names the action; activating it with problems shows a focused error summary whose lines link to the invalid fields. |
 
 ## Diagrams
 

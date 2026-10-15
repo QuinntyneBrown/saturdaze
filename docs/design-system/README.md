@@ -125,7 +125,6 @@ and up) are proposals for the product's TypeScript theme.
 
 | ID | Mock | Issue | Resolution |
 |---|---|---|---|
-| D35 | `dialogs.html` D10, D17 (add) | Submit is disabled until the form is valid, and D10's button is a generic "Submit". | Submit stays enabled and shows the error summary; labels name the action ("Send suggestion"). |
 | D36 | `weekend.html` | Saturday's forecast exists only in an `aria-hidden` sun disc; the meta text never says "sunny" (1.1.1, 1.4.1). | Weather word in the day meta text. |
 | D37 | admin mocks, sprite | `star` means both "rating" and "Make primary"; `arrow_right` and `chevron_right` draw the same glyph. | One meaning per icon (iconography page); a distinct primary-photo treatment is an open decision. |
 | D38 | `sign-in.html`, field errors | The error banner and field errors use the close (×) glyph as a status icon, and the banner adds `aria-live="assertive"` on top of `role="alert"`. | `alert` icon; `role="alert"` alone. |
