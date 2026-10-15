@@ -14,7 +14,7 @@ The request path always presents the same response for registered and unregister
 
 `SessionStore` and `AuthService` call the request and reset endpoints. The page presents sent state even when the request fails, preventing account-existence feedback in that UI.
 
-`ForgotPasswordCommandHandler` invalidates earlier reset credentials and stores a hashed token expiring after 60 minutes. `AuthController.DevDelivery()` exposes delivery data only in Development and Testing; other environments return an empty accepted response.
+`ForgotPasswordCommandHandler` invalidates earlier reset credentials and stores a hashed token expiring after 60 minutes. The sent and expired states quote that figure ("The link works for 60 minutes.", "Reset links last 60 minutes. Ask for a fresh one."), so the copy and the handler change together (L2-005 AC5, AC6). `AuthController.DevDelivery()` exposes delivery data only in Development and Testing; other environments return an empty accepted response.
 
 `ResetPasswordCommandHandler` consumes a valid token, updates the password hash, revokes active refresh tokens, and returns a newly issued session. The current browser reset method ignores that session and displays done.
 
