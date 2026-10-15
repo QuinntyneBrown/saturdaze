@@ -357,6 +357,11 @@ export class WeekendPage extends BasePage {
 
   /* ---------- Day tabs (L2-104, L2-105) ---------- */
 
+  /** The Saturday | Sunday track the day tabs sit in. */
+  dayTabTrack(): Locator {
+    return this.main.getByRole("tablist");
+  }
+
   dayTab(name: DayName): Locator {
     return this.main.getByRole("tab", { name, exact: true });
   }
