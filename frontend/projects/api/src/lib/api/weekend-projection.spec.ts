@@ -86,7 +86,7 @@ describe('weekend-projection', () => {
       const sat = projectDay(weekendDto(), 'Saturday');
       expect(sat.dateIso).toBe('2026-05-16');
       expect(sat.dateLabel).toBe('16 May');
-      expect(sat.meta).toBe('16 May · 22° / 14° · Light breeze, good for outdoors');
+      expect(sat.meta).toBe('16 May · Sunny · 22° / 14° · Light breeze, good for outdoors');
       expect(sat.weather).toEqual({
         day: 'Saturday',
         icon: 'sun',

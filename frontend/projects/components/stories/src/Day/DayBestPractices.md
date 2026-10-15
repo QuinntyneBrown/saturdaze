@@ -8,7 +8,7 @@
 
 ### Content
 
-- The title is the day name; put the date, high / low and a plain-language forecast in `meta`: "17 May · 22° / 14° · Light breeze, good for outdoors".
+- The title is the day name; put the date, high / low and a plain-language forecast in `meta`: "17 May · Sunny · 22° / 14° · Light breeze, good for outdoors".
 - Set `weather` from the forecast so the disc agrees with the meta line; leave it `null` when there's no forecast yet.
 - Keep "Add an errand" as the only footer; anything else belongs in the page header.
 

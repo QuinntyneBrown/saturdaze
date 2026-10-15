@@ -21,7 +21,14 @@ import {
   timeRange,
   toMinutes,
 } from './format';
-import { forecastFor, roundOrDash, weatherAdjective, weatherIcon, weatherNote } from './weather';
+import {
+  forecastFor,
+  roundOrDash,
+  weatherAdjective,
+  weatherIcon,
+  weatherNote,
+  weatherWordCapitalised,
+} from './weather';
 import { toMedia } from './media';
 import { formatDayDate, weekendDayIso } from './weekend-dates';
 
@@ -371,8 +378,9 @@ function toWeatherDay(day: WeekendDay, w: WeatherForecastDto | null): WeatherDay
 }
 
 /**
- * "17 May · 22° / 14° · 3 stops · 1 h 36 min driving" (L2-102 AC5); a day with
- * no stops keeps the weather note: "17 May · 22° / 14° · Light breeze, good for outdoors".
+ * "17 May · Sunny · 22° / 14° · 3 stops · 1 h 36 min driving" (L2-102 AC5, L2-135); a day with
+ * no stops keeps the weather note: "17 May · Sunny · 22° / 14° · Light breeze, good for outdoors".
+ * The weather disc is decorative, so the forecast word carries the meaning.
  */
 function dayMeta(
   dateLabel: string,
@@ -382,6 +390,7 @@ function dayMeta(
 ): string {
   const parts = [dateLabel];
   if (w && !w.unavailable && w.highCelsius != null && w.lowCelsius != null) {
+    parts.push(weatherWordCapitalised(w));
     parts.push(`${Math.round(w.highCelsius)}° / ${Math.round(w.lowCelsius)}°`);
   }
   if (stops > 0) {

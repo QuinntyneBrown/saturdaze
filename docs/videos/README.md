@@ -58,6 +58,7 @@ Six videos on Saturdaze Admin, the second web application that curates the catal
 | 28 | [Design drift D06: control edges](28-control-edge-contrast-d06/README.md) | ~6.5 min | Field borders and the off switch track in 16% ink at 1.36:1 (WCAG 1.4.11); `colorNeutralStrokeAccessible` #80868F in the mocks, the TypeScript theme and the components; a failing Playwright test first; sign-in and create account before and after. |
 | 29 | [Design drift D34: one clock](29-time-format-d34/README.md) | ~4.5 min | Two clocks and three range styles become one: a 12-hour clock with am or pm every time; `BlockRow.startMinutes` so code never parses display text. |
 | 30 | [Design drift D35: a button that tells you what is missing](30-submit-stays-enabled-d35/README.md) | ~4.3 min | Suggest an event and Add member stay enabled; a failed press shows a focused error summary (L2-134, WCAG 3.3.1, 3.3.3, 4.1.3); `sd-error-summary`. |
+| 31 | [Design drift D36: the forecast, in words](31-forecast-word-d36/README.md) | ~4.1 min | The day meta line names the weather ("17 May · Sunny · 22° / 14° · …") so the `aria-hidden` weather disc is not the only forecast (L2-135, WCAG 1.1.1, 1.4.1). |
 
 ## Family members series
 

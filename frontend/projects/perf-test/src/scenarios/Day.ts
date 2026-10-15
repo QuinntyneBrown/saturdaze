@@ -9,7 +9,7 @@ import { Block, Chip, Day, GhostRow, Icon } from 'components';
   template: `
     <sd-day
       title="Saturday"
-      meta="17 May · 22° / 14° · Light breeze, good for outdoors"
+      meta="17 May · Sunny · 22° / 14° · Light breeze, good for outdoors"
       weather="sun"
     >
       <sd-block

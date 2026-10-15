@@ -25,7 +25,7 @@ export interface DayView {
    */
   readonly weather: WeatherDay;
   /**
-   * Meta — "17 May · 22° / 14° · Light breeze, good for outdoors".
+   * Meta — "17 May · Sunny · 22° / 14° · Light breeze, good for outdoors".
    */
   readonly meta: string;
   /**
