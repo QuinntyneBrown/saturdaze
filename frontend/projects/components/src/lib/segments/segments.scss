@@ -41,7 +41,11 @@ button.segments__tab {
 .segments__tab[aria-selected='true'] {
   background: var(--colorNeutralBackground1);
   color: var(--colorNeutralForeground1);
-  box-shadow: var(--shadow4);
+  // The pill is only a small luminance step from the track, so it also draws a 1px accessible
+  // edge (WCAG 1.4.11).
+  box-shadow:
+    var(--shadow4),
+    inset 0 0 0 var(--strokeWidthThin) var(--colorNeutralStrokeAccessible);
 }
 
 @media (hover: hover) {

@@ -79,6 +79,16 @@ export class FamilyPage extends BasePage {
 
   /* ---------- Member sign-in (L1-037) ---------- */
 
+  /** The track of the "Will they sign in?" segmented choice in D17b. */
+  signInTrack(): Locator {
+    return this.dialog().getByRole("radiogroup");
+  }
+
+  /** The chosen option of that choice (the segment that carries the selected edge). */
+  selectedSignInOption(): Locator {
+    return this.signInTrack().locator(".seg-radio__opt").filter({ has: this.page.locator("input:checked") });
+  }
+
   signInChoice(option: "No sign-in" | "Invite to sign in"): Locator {
     return this.dialog().getByRole("radio", { name: option, exact: true });
   }
