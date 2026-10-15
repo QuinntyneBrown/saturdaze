@@ -5,7 +5,7 @@ import type { Day } from 'components';
 export const Default: StoryObj<Day & { title: string }> = {
   args: {
     title: 'Saturday',
-    meta: '17 May · 22° / 14° · Light breeze, good for outdoors',
+    meta: '17 May · Sunny · 22° / 14° · Light breeze, good for outdoors',
     weather: 'sun',
     locked: false,
     actions: true,

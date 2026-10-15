@@ -204,14 +204,14 @@ export interface DayFixture {
 
 export const SATURDAY_DAY: DayFixture = {
   title: 'Saturday',
-  meta: '17 May · 22° / 14° · Light breeze, good for outdoors',
+  meta: '17 May · Sunny · 22° / 14° · Light breeze, good for outdoors',
   weather: 'sun',
   blocks: SATURDAY,
 };
 
 export const SUNDAY_DAY: DayFixture = {
   title: 'Sunday',
-  meta: '18 May · 18° / 12° · Cloudy by 2pm, indoor afternoon',
+  meta: '18 May · Cloudy · 18° / 12° · Cloudy by 2pm, indoor afternoon',
   weather: 'cloud',
   blocks: SUNDAY,
 };

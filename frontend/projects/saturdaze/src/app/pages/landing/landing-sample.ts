@@ -31,7 +31,7 @@ export interface SampleDay {
 export const LANDING_SAMPLE: readonly SampleDay[] = [
   {
     title: 'Saturday',
-    meta: '17 May · 22° / 14° · Light breeze',
+    meta: '17 May · Sunny · 22° / 14° · Light breeze',
     weather: 'sun',
     blocks: [
       {
@@ -59,7 +59,7 @@ export const LANDING_SAMPLE: readonly SampleDay[] = [
   },
   {
     title: 'Sunday',
-    meta: '18 May · 18° / 12° · Cloudy by 2pm',
+    meta: '18 May · Cloudy · 18° / 12° · Cloudy by 2pm',
     weather: 'cloud',
     blocks: [
       {

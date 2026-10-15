@@ -6,7 +6,7 @@ export const Weekend: StoryObj<Day> = {
   render: () => ({
     template: `
       <div class="sd-grid-days">
-        <sd-day title="Saturday" meta="17 May · 22° / 14° · Light breeze, good for outdoors" weather="sun">
+        <sd-day title="Saturday" meta="17 May · Sunny · 22° / 14° · Light breeze, good for outdoors" weather="sun">
           <sd-block time="8:30" duration="30m" icon="home" title="Breakfast at home" subtitle="Cereal day, Eli's choice" />
           <sd-block commitment time="9:00" duration="60m" icon="bike" title="Swim lessons" subtitle="Every Saturday · locked in">
             <sd-chip slot="chips" tone="accent"><sd-icon name="lock" [size]="13" [stroke]="2" />Commitment</sd-chip>
@@ -17,7 +17,7 @@ export const Weekend: StoryObj<Day> = {
           </sd-block>
           <sd-ghost-row slot="footer" icon="bag">Add an errand</sd-ghost-row>
         </sd-day>
-        <sd-day title="Sunday" meta="18 May · 18° / 12° · Cloudy by 2pm, indoor afternoon" weather="cloud">
+        <sd-day title="Sunday" meta="18 May · Cloudy · 18° / 12° · Cloudy by 2pm, indoor afternoon" weather="cloud">
           <sd-block time="8:30" duration="45m" icon="home" title="Pancakes at home" subtitle="Mae flips, Eli pours" />
           <sd-block errand time="9:30" duration="45m" icon="bag" title="Costco run" subtitle="Paper towels, bread, yogurt">
             <sd-chip slot="chips" tone="indoor">Errand</sd-chip>

@@ -5,7 +5,7 @@ import type { Day } from 'components';
 export const ReadOnly: StoryObj<Day> = {
   render: () => ({
     template: `
-      <sd-day style="max-width: 560px" title="Saturday" meta="17 May · 22° / 14°" weather="sun" [actions]="false">
+      <sd-day style="max-width: 560px" title="Saturday" meta="17 May · Sunny · 22° / 14°" weather="sun" [actions]="false">
         <sd-block readonly time="9:00" duration="60m" icon="bike" title="Swim lessons" subtitle="Every Saturday" />
         <sd-block readonly time="11:00" duration="2h" icon="tree" title="Lavender fields" subtitle="Terre Bleu, Milton">
           <sd-chip slot="chips" tone="primary">Day highlight</sd-chip>

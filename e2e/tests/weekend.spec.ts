@@ -36,6 +36,17 @@ test.describe("Weekend", () => {
     }
   });
 
+  // Traces to: L2-135 AC1-AC3
+  test("each day's meta line names the forecast before the temperatures", async ({ pages }) => {
+    const w = pages.weekend;
+    for (const day of ["Saturday", "Sunday"] as const) {
+      await w.selectDay(day);
+      await expect(w.dayMeta(day)).toHaveText(
+        /^\d{1,2} [A-Z][a-z]{2} · (Sunny|Cloudy|Rain|Snow|Warm|Cold) · -?\d+° \/ -?\d+° · \d+ stops? · .+ driving$/,
+      );
+    }
+  });
+
   test("seeded commitments appear as locked commitment blocks at their times", async ({ pages }) => {
     const w = pages.weekend;
     const swim = w.block("Swim lessons", "Saturday");

@@ -26,7 +26,7 @@ export const Locked: StoryObj<Day> = {
         <sd-day
           style="max-width: 560px"
           title="Sunday"
-          meta="18 May · 18° / 12° · Cloudy by 2pm, indoor afternoon"
+          meta="18 May · Cloudy · 18° / 12° · Cloudy by 2pm, indoor afternoon"
           weather="cloud"
           [locked]="locked()"
           [busy]="busy()"
