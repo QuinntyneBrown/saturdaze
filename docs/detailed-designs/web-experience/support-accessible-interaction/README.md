@@ -30,6 +30,8 @@ The feature crosses the application and platform boundaries needed to deliver it
 
 - **`Error summary`** — `sd-error-summary` (`components/src/lib/error-summary/`), the design system's `.error-summary`: an alert panel (`role="alert"`, `tabindex="-1"`) with a title and a list of links, one per problem; it takes `problems` (`{ id, message }[]`) and focuses itself when it appears. Form dialogs (`SubmitEventDialog`, `FamilyMemberDialog`) keep their primary action enabled; the click handler builds the problem list, sets `error` on the invalid `sd-text-input`s, and shows the summary instead of submitting. A link's click focuses the field by id; editing a field removes its problem. (L2-134)
 
+- **`Error banner and field error`** — `sd-banner` takes `role` (`alert` for errors, `status` otherwise) and sets no `aria-live`; `alert` and `status` already imply their live regions, so a second declaration is removed. Error banners pass `icon="alert"` and `sd-text-input`'s error line draws the `alert` icon, never `close` (L2-136).
+
 Automated structural checks do not establish complete keyboard or WCAG contrast conformance. The obligations below remain subject to dedicated accessibility verification.
 
 ## Requirements
@@ -46,6 +48,7 @@ The following L2 requirements refine the cited L1 capabilities. Implementation g
 | `L2-132` | `L1-011`, `L1-014` | A tooltip shall show as an opaque inverted bubble (dark on light, light on dark) whose text meets 4.5:1 on its fill. |
 | `L2-133` | `L1-014` | Every link that opens a new tab shall say so in its accessible name ("(opens in a new tab)"), and address and Details links shall show the external icon. |
 | `L2-134` | `L1-014` | A form dialog's primary action stays enabled and names the action; activating it with problems shows a focused error summary whose lines link to the invalid fields. |
+| `L2-136` | `L1-014` | An error banner and a field error use the alert icon, and an error banner is announced by `role="alert"` alone, with no `aria-live`. |
 
 ## Diagrams
 
