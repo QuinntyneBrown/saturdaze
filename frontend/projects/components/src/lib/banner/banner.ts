@@ -5,7 +5,8 @@ import { Icon } from '../icon/icon';
 /**
  * Inline message strip (form errors, read-only notices, save failures).
  * Mirrors `.banner` in docs/mocks-v2/styles/app.css. `role="alert"` for
- * errors, `status` (the default) for the rest.
+ * errors, `status` (the default) for the rest; each implies its own live region,
+ * so no `aria-live` is set.
  */
 
 export type BannerTone = 'info' | 'warn' | 'success';
@@ -23,7 +24,6 @@ export type BannerTone = 'info' | 'warn' | 'success';
     '[class.banner--warn]': 'tone() === "warn"',
     '[class.banner--success]': 'tone() === "success"',
     '[attr.role]': 'role()',
-    '[attr.aria-live]': 'role() === "alert" ? "assertive" : "polite"',
   },
 })
 export class Banner {

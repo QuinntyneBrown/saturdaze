@@ -7,7 +7,7 @@
       <sd-auth-card [title]="title()" [subtitle]="subtitle()" center>
         <sd-disc slot="disc" icon="home" tone="accent" size="xl" />
         @if (error()) {
-          <sd-banner tone="warn" role="alert" icon="close">{{ error() }}</sd-banner>
+          <sd-banner tone="warn" role="alert" icon="alert">{{ error() }}</sd-banner>
         }
         <form class="form" [formGroup]="form" (ngSubmit)="join()">
           <sd-text-input

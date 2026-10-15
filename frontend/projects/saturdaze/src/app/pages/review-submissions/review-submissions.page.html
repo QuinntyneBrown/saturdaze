@@ -7,7 +7,7 @@
   />
 
   @if (error()) {
-    <sd-banner class="error" tone="warn" role="alert" icon="close">{{ error() }}</sd-banner>
+    <sd-banner class="error" tone="warn" role="alert" icon="alert">{{ error() }}</sd-banner>
   }
 
   @switch (status()) {

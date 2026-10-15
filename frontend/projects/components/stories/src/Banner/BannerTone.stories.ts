@@ -8,7 +8,7 @@ export const Tone: StoryObj<Banner> = {
       <div style="display: grid; gap: 12px; max-width: 420px">
         <sd-banner tone="info" icon="share">This weekend was shared with you and is read-only.</sd-banner>
         <sd-banner tone="success" icon="check">Saved. Saturday is locked in.</sd-banner>
-        <sd-banner tone="warn" icon="close" role="alert">We couldn't save your changes. Check your connection and try again.</sd-banner>
+        <sd-banner tone="warn" icon="alert" role="alert">We couldn't save your changes. Check your connection and try again.</sd-banner>
       </div>
     `,
   }),

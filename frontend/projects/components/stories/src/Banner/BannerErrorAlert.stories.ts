@@ -16,7 +16,7 @@ export const ErrorAlert: StoryObj<Banner> = {
       template: `
         <div style="display: grid; gap: 12px; max-width: 420px; justify-items: start">
           @if (error()) {
-            <sd-banner tone="warn" role="alert" icon="close">{{ error() }}</sd-banner>
+            <sd-banner tone="warn" role="alert" icon="alert">{{ error() }}</sd-banner>
           }
           <div style="display: flex; gap: 8px">
             <sd-button (click)="signIn()">Sign in</sd-button>

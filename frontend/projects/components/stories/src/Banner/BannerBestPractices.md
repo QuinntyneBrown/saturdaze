@@ -8,7 +8,7 @@
 ### Content
 
 - Say what happened and what to do next in one or two sentences: "That email and password don't match. Try again or reset your password."
-- `warn` with `icon="close"` for errors, `success` with `icon="check"` for confirmations, `info` for neutral notices (a shared, read-only weekend).
+- `warn` with `icon="alert"` for errors, `success` with `icon="check"` for confirmations, `info` for neutral notices (a shared, read-only weekend).
 - Don't use a banner to explain a planner choice — that's `sd-well`.
 
 ### Accessibility

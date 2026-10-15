@@ -58,6 +58,8 @@ describe('TextInput', () => {
     const error = host.querySelector('.field__error') as HTMLElement;
     expect(error.textContent).toContain('Enter a valid email');
     expect(error.id).toBe(`${control().id}-error`);
+    // The alert glyph (a warning triangle), never the close glyph (L2-136 AC2).
+    expect(error.querySelector('svg path')?.getAttribute('d')).toBe('M12 4l9 16H3L12 4z');
     expect(host.querySelector('.field__hint')).toBeNull();
     expect(control().getAttribute('aria-invalid')).toBe('true');
     expect(control().getAttribute('aria-describedby')).toBe(

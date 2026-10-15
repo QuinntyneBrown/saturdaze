@@ -4,7 +4,7 @@
   subtitle="HTTPS on an allowed origin only. The image is fetched once to check its type and size."
 >
   @if (error()) {
-    <sd-banner tone="warn" role="alert" icon="close">{{ error() }}</sd-banner>
+    <sd-banner tone="warn" role="alert" icon="alert">{{ error() }}</sd-banner>
   }
   <form class="form" [formGroup]="form" (ngSubmit)="save()">
     <sd-text-input

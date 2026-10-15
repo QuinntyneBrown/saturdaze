@@ -1,7 +1,7 @@
 <sd-auth-shell>
   <sd-auth-card title="Start planning weekends" subtitle="It takes a minute.">
     @if (bannerError()) {
-      <sd-banner tone="warn" role="alert" icon="close">{{ bannerError() }}</sd-banner>
+      <sd-banner tone="warn" role="alert" icon="alert">{{ bannerError() }}</sd-banner>
     }
     <form class="form" [formGroup]="form" (ngSubmit)="submit()">
       <sd-text-input

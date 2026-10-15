@@ -14,7 +14,7 @@
     <span class="hint">for {{ data.placeName }}</span>
   </sd-photo-drop>
   @if (error()) {
-    <sd-banner tone="warn" role="alert" icon="close">{{ error() }}</sd-banner>
+    <sd-banner tone="warn" role="alert" icon="alert">{{ error() }}</sd-banner>
   }
   <form class="form" [formGroup]="form" (ngSubmit)="save()">
     <sd-text-input

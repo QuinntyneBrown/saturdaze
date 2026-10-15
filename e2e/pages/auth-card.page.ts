@@ -83,6 +83,11 @@ export abstract class AuthCardPage extends BasePage {
     return this.card(state).locator('.banner--warn[role="alert"]');
   }
 
+  /** The alert glyph (a warning triangle) inside the error banner, if it shows one. */
+  errorBannerIcon(state?: string): Locator {
+    return this.errorBanner(state).locator('sd-icon path[d^="M12 4l9 16H3"]');
+  }
+
   emailChip(state?: string): Locator {
     return this.card(state).locator(".email-chip");
   }

@@ -24,7 +24,7 @@ describe('Icon', () => {
   });
 
   it('exposes the sprite names', () => {
-    expect(ICON_NAMES.length).toBe(42);
+    expect(ICON_NAMES.length).toBe(43);
     for (const name of [
       'sparkle',
       'home',
