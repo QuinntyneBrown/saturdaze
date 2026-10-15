@@ -95,13 +95,11 @@ describe('LegalPage', () => {
     );
   });
 
-  it('offers both documents as segments and a site footer', async () => {
+  it('offers both documents as segments', async () => {
     await mount(null);
     const tabs = Array.from(host.querySelectorAll('sd-segments a'));
     expect(tabs.map((t) => t.textContent?.trim())).toEqual(['Terms', 'Privacy']);
     expect(tabs[1]?.getAttribute('href')).toBe('/legal#privacy');
-    const footer = Array.from(host.querySelectorAll('footer a')).map((a) => a.textContent?.trim());
-    expect(footer).toEqual(['Terms', 'Privacy', 'Sign in']);
   });
 
   it('clears the body marker on destroy', async () => {

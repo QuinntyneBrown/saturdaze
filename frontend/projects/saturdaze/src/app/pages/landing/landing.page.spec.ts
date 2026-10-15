@@ -71,14 +71,4 @@ describe('LandingPage', () => {
       'Get a weekend every Friday',
     ]);
   });
-
-  it('closes with the site footer links', () => {
-    const links = Array.from(host.querySelectorAll('footer.site-footer a'));
-    expect(links.map((a) => a.textContent?.trim())).toEqual(['Terms', 'Privacy', 'Sign in']);
-    expect(links.map((a) => a.getAttribute('href'))).toEqual([
-      '/legal',
-      '/legal#privacy',
-      '/sign-in',
-    ]);
-  });
 });

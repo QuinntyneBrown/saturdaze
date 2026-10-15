@@ -69,6 +69,11 @@ export class AdminPlacesPage extends AdminPage {
     return this.main.locator(".toolbar__count");
   }
 
+  /** The pager as a navigation landmark named "Pagination" (L2-138). */
+  pagerLandmark(): Locator {
+    return this.main.getByRole("navigation", { name: "Pagination" });
+  }
+
   pager(): Locator {
     return this.main.locator(".pager");
   }

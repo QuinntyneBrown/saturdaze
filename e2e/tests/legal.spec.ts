@@ -47,6 +47,15 @@ test.describe("Legal", () => {
     await expect(l.activeDocTab()).toHaveText("Terms");
   });
 
+  // Traces to: L2-138 AC2
+  test("the footer is the page's contentinfo landmark, outside main", async ({ goto, pages }) => {
+    await goto("legal");
+    const l = pages.legal;
+    await l.waitForReady();
+    await expect(l.footerLandmark).toBeVisible();
+    await expect(l.footerInMain).toHaveCount(0);
+  });
+
   test("footer links cross-link the two documents and sign-in", async ({ goto, pages }) => {
     await goto("legal");
     const l = pages.legal;

@@ -31,7 +31,7 @@ export const routes: Routes = [
   {
     path: '',
     pathMatch: 'full',
-    data: { shell: 'site', cta: true, page: 'landing' },
+    data: { shell: 'site', cta: true, footer: true, page: 'landing' },
     canActivate: [requireAnonymous],
     loadComponent: () => import('./pages/landing/landing.page').then((m) => m.LandingPage),
   },
@@ -69,7 +69,7 @@ export const routes: Routes = [
   },
   {
     path: 'legal',
-    data: { shell: 'site', page: 'legal' },
+    data: { shell: 'site', footer: true, page: 'legal' },
     loadComponent: () => import('./pages/legal/legal.page').then((m) => m.LegalPage),
   },
   {

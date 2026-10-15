@@ -86,7 +86,17 @@ export class LandingPage extends BasePage {
   }
 
   get footer(): Locator {
-    return this.main.locator(".site-footer");
+    return this.page.locator(".site-footer");
+  }
+
+  /** The footer as assistive technology sees it: the page's contentinfo landmark. */
+  get footerLandmark(): Locator {
+    return this.page.getByRole("contentinfo");
+  }
+
+  /** Any footer nested inside the main landmark (there should be none). */
+  get footerInMain(): Locator {
+    return this.main.locator("footer");
   }
 
   footerLink(name: "Terms" | "Privacy" | "Sign in"): Locator {
