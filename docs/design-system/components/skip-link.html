@@ -120,7 +120,7 @@
     </header>
 
     <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
-      <p>Every page in the family app, the public site and Admin starts with <code>&lt;a class="skip-link" href="#main"&gt;Skip to content&lt;/a&gt;</code> as the first element in <code>&lt;body&gt;</code>, and every page's <code>&lt;main&gt;</code> has <code>id="main"</code> (the mocks already give it that id). It satisfies WCAG 2.4.1 Bypass Blocks.</p>
+      <p>Every static mock starts with <code>&lt;a class="skip-link" href="#main"&gt;Skip to content&lt;/a&gt;</code> as the first element in <code>&lt;body&gt;</code>; each Angular app renders <code>sd-skip-link</code> first in its shell. Every page's <code>&lt;main&gt;</code> has <code>id="main"</code>. It satisfies WCAG 2.4.1 Bypass Blocks.</p>
       <p>Every mock starts with it, and both Angular apps render <code>sd-skip-link</code> first in every shell. Try it here: reload, then press <kbd>Tab</kbd> once; the real skip link appears at the top left of this page.</p>
       <ul>
         <li>One skip link per page, to the main content. Saturdaze pages are short enough that "skip to navigation" or "skip to filters" links are not needed.</li>
@@ -223,7 +223,7 @@
         <tr><td><kbd>Tab</kbd> again</td><td>Ignores it and continues to the brand and navigation.</td></tr>
       </tbody></table>
       <h3>Focus</h3>
-      <p>Modern browsers move the sequential focus starting point to the target of a fragment link, so <code>&lt;main&gt;</code> does not need <code>tabindex</code>. In the Angular app the link must work despite <code>&lt;base href="/"&gt;</code>: a bare <code>href="#main"</code> resolves to <code>/#main</code> and leaves the page. Either build the href from the current URL or handle the click by focusing <code>main</code> (with <code>tabindex="-1"</code> on it) and calling <code>preventDefault()</code>. After a route change, keep focus management separate: the skip link is not a substitute for moving focus to the new page's heading.</p>
+      <p>Modern browsers move the sequential focus starting point to the target of a fragment link, so <code>&lt;main&gt;</code> does not need <code>tabindex</code> for a native same-page link. In the Angular app, a bare <code>href="#main"</code> resolves against <code>&lt;base href="/"&gt;</code> to <code>/#main</code> and loses the route. <code>sd-skip-link</code> builds its href from the current pathname and query plus the target fragment; its click handler prevents navigation, gives <code>main</code> <code>tabindex="-1"</code>, and focuses it. The href still points to the same route when script handling is unavailable. After a route change, keep focus management separate: the skip link is not a substitute for moving focus to the new page's heading.</p>
       <h3>Labelling</h3>
       <p>The text is the name: "Skip to content". It is not hidden from screen readers; they announce it first, which is useful.</p>
       <h3>Contrast</h3>
@@ -282,17 +282,24 @@
 html { scroll-padding-top: calc(var(--layoutTopBarHeight) + var(--spacingVerticalL)); }
 
 &lt;!-- Angular, with &lt;base href="/"&gt; --&gt;
-&lt;a class="skip-link" href="#main" (click)="skipToMain($event)"&gt;Skip to content&lt;/a&gt;
-skipToMain(e: Event) { e.preventDefault(); this.main().nativeElement.focus(); }  // main has tabindex="-1"</code></pre>
+&lt;a class="skip-link" [attr.href]="href" (click)="skip($event)"&gt;Skip to content&lt;/a&gt;
+href = `${location.pathname}${location.search}#${target}`;
+skip(e: Event) {
+  e.preventDefault();
+  const main = document.getElementById(target);
+  if (!main) return;
+  if (!main.hasAttribute("tabindex")) main.setAttribute("tabindex", "-1");
+  main.focus();
+}</code></pre>
       <table class="ds-table"><thead><tr><th scope="col">Class / attribute</th><th scope="col">Effect</th></tr></thead><tbody>
         <tr><td><code>.skip-link</code></td><td>Off screen at rest; 16px from the top and left on <code>:focus-visible</code>.</td></tr>
-        <tr><td><code>href="#main"</code> + <code>&lt;main id="main"&gt;</code></td><td>The target.</td></tr>
+        <tr><td>Current pathname + query + <code>#main</code></td><td>The route-preserving Angular target; static mocks use <code>href="#main"</code>.</td></tr>
         <tr><td><code>data-state="focus"</code></td><td>Documentation only: shows the focused link in the flow.</td></tr>
       </tbody></table>
     </section>
 
     <section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>
-      <p>Every mock starts with <code>&lt;a class="skip-link" href="#main"&gt;Skip to content&lt;/a&gt;</code>, the first line in <code>&lt;body&gt;</code>, and every mock's <code>&lt;main&gt;</code> has <code>id="main"</code>; the mocks' <code>.skip-link</code> rule is in <code>styles/app.css</code>. The scroll clearance for the sticky bar comes from <a href="../../mocks/styles/app.css">styles/app.css</a> (<code>scroll-padding-top: calc(var(--sd-topbar-h) + 16px)</code>). The design-system docs themselves use the same component on every page. In the product, <code>sd-skip-link</code> (components library) is the first element of the family app's and Admin's <code>app.html</code>; it handles the click to get round the <code>&lt;base href&gt;</code> fragment problem above.</p>
+      <p>Every mock starts with <code>&lt;a class="skip-link" href="#main"&gt;Skip to content&lt;/a&gt;</code>, the first line in <code>&lt;body&gt;</code>, and every mock's <code>&lt;main&gt;</code> has <code>id="main"</code>; the mocks' <code>.skip-link</code> rule is in <code>styles/app.css</code>. The scroll clearance for the sticky bar comes from <a href="../../mocks/styles/app.css">styles/app.css</a> (<code>scroll-padding-top: calc(var(--sd-topbar-h) + 16px)</code>). The design-system docs themselves use a same-page fragment link. In the product, <code>sd-skip-link</code> (components library) is the first element of the family app's and Admin's <code>app.html</code>; it retains the current route and query in its href and focuses the target when activated.</p>
     </section>
 
     <footer class="ds-footer"><span>Saturdaze design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>

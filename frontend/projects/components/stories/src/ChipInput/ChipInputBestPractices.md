@@ -15,3 +15,5 @@
 
 - Pass `label`; it names the text input.
 - Each chip's remove button is labelled "Remove {value}", so a screen reader user knows which tag goes.
+- Pair related lists with `otherValues` and `otherLabel` so a tag cannot be both liked and disliked.
+- Keep the visible polite status associated with the input; it explains duplicates and announces successful changes.

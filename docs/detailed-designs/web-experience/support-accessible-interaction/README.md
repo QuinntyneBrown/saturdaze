@@ -14,11 +14,13 @@ The feature crosses the application and platform boundaries needed to deliver it
 
 - **`Button`** — Shared Angular controls with native button semantics and icon-only labelling.
 - **`TextInput`** — Shared Angular form control that associates visible labels and validation text.
+- **`ChipInput`** — Shared Angular form control for likes and dislikes. It rejects duplicates within a list and conflicts with the paired list without dropping the entered draft; visible polite status text names the value and the list, and announces successful additions and removals.
 - **`Dialog`** — Presentational panel inside the Angular CDK dialog container; CDK owns focus trapping and restoration.
 - **`FilterChip and Toggle`** — Shared interactive controls with keyboard and state semantics.
 - **`_tokens.scss and _global.scss`** — Shared color and focus styles used by component SCSS. `_tokens.scss` is generated from the Fluent UI v9 TypeScript theme in `components/src/lib/tokens/` (ADR-013); `_global.scss` applies the shared `:focus-visible` outline.
 - **`Routed page templates`** — Feature templates that provide descriptive labels and image alternatives.
-- **`SkipLink`** — `sd-skip-link`, the first element both app shells render (`app.html` in the family app for the app, site and bare shells, and in Admin for the sign-in screen and every screen behind the admin navigation; the non-admin gate has no `<main>` and no navigation to skip, so it has none). It is the design system's `.skip-link`: off screen at rest, 16px from the top left on `:focus-visible`, above every bar. Because both apps use `<base href="/">`, a bare `href="#main"` would resolve to `/#main` and leave the route, so the component handles the click: it cancels the navigation, gives the target `<main id="main">` `tabindex="-1"` and focuses it (the browser scrolls it into view, and the global `scroll-padding-top` keeps it clear of the sticky bar). The programmatically focused `main` draws no outline (L2-036 AC4 and AC5, drift D22).
+- **`SkipLink`** — `sd-skip-link`, the first element both app shells render (`app.html` in the family app for the app, site and bare shells, and in Admin for the sign-in screen and every screen behind the admin navigation; the non-admin gate has no `<main>` and no navigation to skip, so it has none). It is the design system's `.skip-link`: off screen at rest, 16px from the top left on `:focus-visible`, above every bar. Because both apps use `<base href="/">`, the component builds its `href` from the current path and query string before the target fragment, and updates it after client-side navigation. The click handler still cancels navigation, gives the target `<main id="main">` `tabindex="-1"` and focuses it (the browser scrolls it into view, and the global `scroll-padding-top` keeps it clear of the sticky bar). The programmatically focused `main` draws no outline (L2-036 AC4 and AC5, drift D22; L2-141).
+- **`AdminNav`** — `sd-admin-nav` is a named `navigation` landmark ("Admin") at both the narrow sticky-bar and wide sidebar breakpoints. The static mock uses a native `<nav aria-label="Admin">`.
 
 - **`Dark theme`** — `createDarkTheme(brand)` in `components/src/lib/tokens/utils/` builds a second theme from the same roles as `createLightTheme` (Fluent's `webDarkTheme` model): the colour and shadow tokens only, from the umber ramp and the dark tone tints in `global/colors.ts`, using the design system's dark values. `scripts/generate-tokens.mjs` writes the tokens that differ from light into `_tokens.scss` under `@media (prefers-color-scheme: dark) { :root { … } }`, after the light `:root` and its responsive retunes, and `_global.scss` declares `color-scheme: light dark` so native controls and scrollbars follow. Components already read tokens by role, so no component knows which theme is active; the only component changes are role corrections that light hid: the photo-pick name pills read `colorNeutralForegroundStaticInverted` (text over a photo) instead of `colorNeutralForegroundOnBrand`, and the cover scrim reads `colorBackgroundOverlayStrong` instead of a mix of `colorNeutralForeground1`, which turns light in dark. There is no in-app switch: the theme follows the system setting (L2-130, drift D25).
 
@@ -38,6 +40,11 @@ The feature crosses the application and platform boundaries needed to deliver it
 
 Automated structural checks do not establish complete keyboard or WCAG contrast conformance. The obligations below remain subject to dedicated accessibility verification.
 
+## Follow-up accessibility behavior (L2-141)
+
+- **Paired preference inputs:** trim before comparing case-insensitively. Reject a value already in the opposite list with "{value} is in {other list}. Remove it there first." Keep the draft, mark the input invalid, and associate the visible error with it. A polite status announces successful additions and removals.
+- **Skip destination:** compute the anchor's `href` from the current path and query string plus the target fragment, and refresh it after each Angular `NavigationEnd`. Keep the click handler's focus behavior and cancellation, so activating the link focuses the main landmark without changing the URL.
+
 ## Requirements
 
 The following L2 requirements refine the cited L1 capabilities. Implementation gaps stated in Description do not waive these obligations.
@@ -55,6 +62,7 @@ The following L2 requirements refine the cited L1 capabilities. Implementation g
 | `L2-136` | `L1-014` | An error banner and a field error use the alert icon, and an error banner is announced by `role="alert"` alone, with no `aria-live`. |
 | `L2-138` | `L1-014` | The site footer is a contentinfo landmark outside main, the pager a navigation named Pagination, lists are lists, and the account avatar a button with aria-haspopup=menu. |
 | `L2-140` | `L1-014` | The admin navigation is a landmark named Admin, a field's aria-describedby lists only elements in the page, a duplicate chip is refused with a message instead of dropped silently, and the skip link stays on the page. |
+| `L2-141` | `L1-014` | Paired Likes and Dislikes values cannot conflict silently, chip changes are announced, and skip-link destinations follow the current route and query. |
 
 ## Diagrams
 
