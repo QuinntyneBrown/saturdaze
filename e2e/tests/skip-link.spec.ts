@@ -15,6 +15,17 @@ test.describe("Skip link in the app shell", () => {
     await pages.ideas.waitForReady();
   });
 
+  test("Given the app shell navigates to another route, when the link is read, then its destination follows the new route", async ({
+    pages,
+  }) => {
+    // Acceptance Test — Traces to: L2-141 AC3
+    await pages.ideas.navLink("family").click();
+    await pages.family.waitForReady();
+
+    const destination = new URL(await pages.family.skipLinkHref());
+    expect(`${destination.pathname}${destination.search}${destination.hash}`).toBe("/family#main");
+  });
+
   test("Given a signed-in page, when the user presses Tab once, then the skip link is focused and visible", async ({
     pages,
   }) => {
@@ -42,6 +53,25 @@ test.describe("Skip link in the app shell", () => {
 });
 
 test.describe("Skip link on a bare (auth) page", () => {
+  test("Given the sign-in route has a query string, when the page renders, then the resolved skip destination retains the route and query", async ({
+    page,
+    goto,
+    pages,
+  }) => {
+    // Acceptance Test — Traces to: L2-141 AC4
+    await goto("signInError");
+    await pages.signIn.waitForReady();
+
+    const destination = new URL(await pages.signIn.skipLinkHref());
+    expect(`${destination.pathname}${destination.search}${destination.hash}`).toBe(
+      "/sign-in?state=error#main",
+    );
+    const currentUrl = page.url();
+    await pages.signIn.skipToContent();
+    expect(page.url()).toBe(currentUrl);
+    expect(await pages.signIn.focusIsOnMain()).toBe(true);
+  });
+
   test("Given the sign-in screen, when the user presses Tab once and then Enter, then the skip link shows and focus moves to the main content", async ({
     goto,
     pages,

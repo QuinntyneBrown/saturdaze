@@ -7,12 +7,16 @@
     <sd-chip-input
       label="Likes"
       tone="leaf"
+      [otherValues]="dislikes()"
+      otherLabel="Dislikes"
       [ngModel]="likes()"
       (ngModelChange)="likes.set($event)"
     />
     <sd-chip-input
       label="Dislikes"
       tone="warn"
+      [otherValues]="likes()"
+      otherLabel="Likes"
       [ngModel]="dislikes()"
       (ngModelChange)="dislikes.set($event)"
     />
