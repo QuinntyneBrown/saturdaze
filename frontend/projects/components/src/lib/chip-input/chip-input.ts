@@ -33,23 +33,24 @@ let nextChipInputId = 0;
 })
 export class ChipInput implements ControlValueAccessor {
   readonly label = input<string>('');
+  readonly otherValues = input<readonly string[]>([]);
+  readonly otherLabel = input<string>('');
   readonly tone = input<ChipTone>('leaf');
   readonly placeholder = input<string>('Add one, press Enter');
 
   protected readonly id = `sd-chip-input-${nextChipInputId++}`;
+  protected readonly statusId = `${this.id}-status`;
   protected readonly values = signal<readonly string[]>([]);
   protected readonly draft = signal<string>('');
+  protected readonly status = signal('');
+  protected readonly statusTone = signal<'error' | 'success'>('success');
   protected readonly disabled = signal<boolean>(false);
-  protected readonly errorId = `${this.id}-error`;
-  /** "Parks is already in Likes."; empty when there is nothing to say. */
-  protected readonly error = signal<string>('');
-
   private onChange: (value: string[]) => void = () => {};
   private onTouched: () => void = () => {};
 
   protected onDraft(event: Event): void {
     this.draft.set((event.target as HTMLInputElement).value);
-    this.error.set('');
+    this.status.set('');
   }
 
   protected onKey(event: KeyboardEvent): void {
@@ -64,21 +65,30 @@ export class ChipInput implements ControlValueAccessor {
   protected commit(): void {
     const v = this.draft().trim();
     if (!v) return;
-    const exists = this.values().some((x) => x.toLowerCase() === v.toLowerCase());
+    const exists = this.values().find((x) => x.toLowerCase() === v.toLowerCase());
     if (exists) {
-      // Keep the text so it can be fixed, and say why it was not added.
-      this.error.set(`${v} is already in ${this.label() || 'the list'}.`);
+      this.statusTone.set('error');
+      this.status.set(`${v} is already in ${this.label() || 'the list'}.`);
+      return;
+    }
+    const conflict = this.otherValues().find((x) => x.toLowerCase() === v.toLowerCase());
+    if (conflict) {
+      this.statusTone.set('error');
+      this.status.set(`${conflict} is in ${this.otherLabel()}. Remove it there first.`);
       return;
     }
     this.set([...this.values(), v]);
     this.draft.set('');
-    this.error.set('');
+    this.statusTone.set('success');
+    this.status.set(`${v} added to ${this.label()}.`);
   }
 
   protected removeAt(index: number): void {
     if (this.disabled()) return;
-    this.error.set('');
+    const removed = this.values()[index];
     this.set(this.values().filter((_, i) => i !== index));
+    this.statusTone.set('success');
+    this.status.set(`${removed} removed.`);
   }
 
   private set(next: readonly string[]): void {

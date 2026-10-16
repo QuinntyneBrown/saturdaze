@@ -42,6 +42,40 @@ test.describe("Family members who sign in", () => {
     await expect(f.rowSubtitle(f.memberRow("Mae"))).toHaveText("Kid · 5");
   });
 
+  test("a field error describes only the visible error and restores its hint when cleared", async ({
+    page,
+    pages,
+  }) => {
+    // Acceptance Test — Traces to: L2-140 AC2
+    const f = pages.family;
+    await f.addMemberRow().click();
+    await f.dialogField("Name").fill("Mae");
+    const age = f.dialogField("Age");
+    await age.fill("121");
+    await f.dialogAction("Add member").click();
+
+    const error = f.dialogFieldError();
+    await expect(error).toHaveText("Enter an age between 0 and 120.");
+    await expect(f.dialogFieldHint()).toHaveCount(0);
+    await expect(age).toHaveAttribute("aria-describedby", (await error.getAttribute("id"))!);
+    for (const width of [390, 1440]) {
+      await page.setViewportSize({ width, height: 900 });
+      await expect(age).toBeVisible();
+      await expect(error).toBeVisible();
+      expect(await f.hasHorizontalOverflow()).toBe(false);
+    }
+
+    await age.fill("12");
+    const hint = f.dialogFieldHint();
+    await expect(hint).toBeVisible();
+    await expect(age).toHaveAttribute("aria-describedby", (await hint.getAttribute("id"))!);
+    for (const width of [390, 1440]) {
+      await page.setViewportSize({ width, height: 900 });
+      await expect(hint).toBeVisible();
+      expect(await f.hasHorizontalOverflow()).toBe(false);
+    }
+  });
+
   test("the owner invites a member and shares the link from D30", async ({ pages }) => {
     // Traces to: L2-126 #6
     const f = pages.family;

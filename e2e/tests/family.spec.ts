@@ -198,6 +198,61 @@ test.describe("Family", () => {
     await expect(f.likeChips()).toHaveCount(before);
   });
 
+  test("chip inputs retain and explain duplicates in either list", async ({ page, pages }) => {
+    // Acceptance Test — Traces to: L2-141 AC1
+    const f = pages.family;
+    const like = `Parks ${Date.now().toString(36)}`;
+    await f.editLikesButton().click();
+    await f.addDialogChip("Likes", like);
+    await f.addDialogChip("Likes", ` ${like.toLowerCase()} `);
+
+    await expect(f.dialogChip(like)).toHaveCount(1);
+    await expect(f.dialogField("Likes")).toHaveValue(` ${like.toLowerCase()} `);
+    const likeStatus = f.chipInputStatus("Likes");
+    await expect(likeStatus).toBeVisible();
+    await expect(likeStatus).toHaveAttribute("aria-live", "polite");
+    await expect(likeStatus).toHaveText(`${like.toLowerCase()} is already in Likes.`);
+
+    await f.addDialogChip("Dislikes", like);
+    await expect(f.dialogChip(like)).toHaveCount(1);
+    await expect(f.dialogField("Dislikes")).toHaveValue(like);
+    const dislikeStatus = f.chipInputStatus("Dislikes");
+    await expect(dislikeStatus).toBeVisible();
+    await expect(dislikeStatus).toHaveAttribute("aria-live", "polite");
+    await expect(dislikeStatus).toHaveText(`${like} is in Likes. Remove it there first.`);
+    for (const width of [390, 1440]) {
+      await page.setViewportSize({ width, height: 900 });
+      await expect(f.dialogField("Likes")).toBeVisible();
+      await expect(f.dialogField("Dislikes")).toBeVisible();
+      await expect(likeStatus).toBeVisible();
+      await expect(dislikeStatus).toBeVisible();
+      expect(await f.hasHorizontalOverflow()).toBe(false);
+    }
+    await f.dialogAction("Cancel").click();
+  });
+
+  test("chip inputs announce successful additions and removals", async ({ page, pages }) => {
+    // Acceptance Test — Traces to: L2-141 AC2
+    const f = pages.family;
+    const like = `Zoo ${Date.now().toString(36)}`;
+    await f.editLikesButton().click();
+    await f.addDialogChip("Likes", like);
+    const status = f.chipInputStatus("Likes");
+    await expect(status).toBeVisible();
+    await expect(status).toHaveAttribute("aria-live", "polite");
+    await expect(status).toHaveText(`${like} added to Likes.`);
+
+    await f.dialog().getByRole("button", { name: `Remove ${like}`, exact: true }).click();
+    await expect(status).toHaveText(`${like} removed.`);
+    for (const width of [390, 1440]) {
+      await page.setViewportSize({ width, height: 900 });
+      await expect(f.dialogField("Likes")).toBeVisible();
+      await expect(status).toBeVisible();
+      expect(await f.hasHorizontalOverflow()).toBe(false);
+    }
+    await f.dialogAction("Cancel").click();
+  });
+
   test("a preference toggle saves immediately and survives a reload", async ({ page, pages }) => {
     const f = pages.family;
     const toggle = f.toggle("Budget matters");

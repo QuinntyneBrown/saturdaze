@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 30 Slides</title>
+<link rel="stylesheet" href="../assets/slides.css">
+</head>
+<body data-video-number="30" data-video-title="Product accessibility" data-parts="Introduction|The four gaps|Make information perceivable|Keep chip edits clear|Preserve skip-link context|Before and after|Prove the behavior|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Product · Video 30</div>
+  <h1>Expose state. Preserve focus.</h1>
+  <p class="lead">Four accessibility fixes, one real before-and-after interaction</p>
+</section>
+
+<section id="gaps" data-part="1" data-cue="Four small gaps share one property: they make essential state invisible to assistive technology.">
+  <h2>Four gaps, one principle</h2>
+  <div class="cols">
+    <div class="card"><h3>Navigation</h3><p>Admin lacks a named landmark</p></div>
+    <div class="card"><h3>Descriptions</h3><p>Hidden hint can be announced with a visible error</p></div>
+    <div class="card"><h3>Preferences</h3><p>Duplicate tags vanish or contradict each other</p></div>
+    <div class="card"><h3>Skip link</h3><p>Destination loses the current route and query</p></div>
+  </div>
+</section>
+
+<section id="landmark" data-part="2" data-cue="Start with the Admin shell.">
+  <h2>Expose what is visible</h2>
+  <div class="cols">
+    <pre class="code" data-lang="ts" data-mark="3,4">host: {
+  class: 'admin-nav',
+  role: 'navigation',
+  'aria-label': 'Admin',
+  '[attr.active]': 'active()',
+}</pre>
+    <pre class="code tight" data-lang="ts" data-mark="2,3,4">protected readonly describedBy = computed(() =&gt; {
+  if (this.error()) return this.errorId;
+  return this.hint() ? this.hintId : null;
+});</pre>
+  </div>
+  <p class="small">Named landmark · visible error first · otherwise the visible hint</p>
+</section>
+
+<section id="chips" data-part="3" data-cue="The chip editor trims a draft, then compares without case:">
+  <h2>Reject conflicts without losing input</h2>
+  <pre class="code tight" data-lang="ts" data-mark="1,2,3,4,5,6,7,8,9,10,11">const v = this.draft().trim();
+const exists = this.values().find((x) =&gt; x.toLowerCase() === v.toLowerCase());
+if (exists) {
+  this.statusTone.set('error');
+  this.status.set(`${v} is already in ${this.label() || 'the list'}.`);
+  return;
+}
+const conflict = this.otherValues().find((x) =&gt; x.toLowerCase() === v.toLowerCase());
+if (conflict) {
+  this.statusTone.set('error');
+  this.status.set(`${conflict} is in ${this.otherLabel()}. Remove it there first.`);
+  return;
+}</pre>
+  <p class="small">Compare both lists · retain rejected input · announce add and remove outcomes</p>
+</section>
+
+<section id="skip-link" data-part="4" data-cue="Skip links are route-aware, but still do not navigate.">
+  <h2>Keep route context, move focus</h2>
+  <pre class="code tight" data-lang="ts" data-mark="1,3,4,8,11,12">protected readonly href = computed(() =&gt; `${this.currentRoute()}#${this.target()}`);
+
+this.router?.events.pipe(takeUntilDestroyed()).subscribe((event) =&gt; {
+  if (event instanceof NavigationEnd) this.currentRoute.set(this.routeFromLocation());
+});
+
+protected skip(event: Event): void {
+  event.preventDefault();
+  const target = this.document.getElementById(this.target());
+  if (!target) return;
+  if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1');
+  target.focus();
+}</pre>
+  <p class="lead">/sign-in?state=error#main</p>
+  <p class="small">Same page · same query · focus lands on main</p>
+</section>
+
+<section id="before" data-part="5" data-cue="Here is the baseline, a fresh build from origin/main." data-clip="clips/before.mp4" data-clip-delay="1">
+  <aside class="clip-notes">
+    <h3>Baseline · origin/main at recording time</h3>
+    <ul>
+      <li>Duplicate in Likes disappears silently</li>
+      <li>Same tag can be added to Dislikes</li>
+      <li>No conflict message</li>
+    </ul>
+  </aside>
+</section>
+
+<section id="after" data-part="5" data-cue="Now the fixed build shows the intended behavior:" data-clip="clips/after.mp4" data-clip-delay="1">
+  <aside class="clip-notes">
+    <h3>Fixed build</h3>
+    <ul>
+      <li>Both rejected drafts remain visible</li>
+      <li>Each field explains the conflict</li>
+      <li>Polite status announcement</li>
+    </ul>
+  </aside>
+</section>
+
+<section id="tests" data-part="6" data-cue="The acceptance tests make those outcomes repeatable.">
+  <h2>Verify what a person can perceive or do</h2>
+  <div class="steps">
+    <div class="card"><h3>Admin</h3><p>Named landmark at 390px and 1440px; no horizontal overflow</p></div>
+    <div class="card"><h3>Family</h3><p>Duplicate draft and status remain available</p></div>
+    <div class="card"><h3>Skip link</h3><p>Path, query, and focus survive navigation</p></div>
+  </div>
+  <p class="small">Acceptance coverage: Admin, Family, text-field descriptions, and skip-link behavior</p>
+</section>
+
+<section id="recap" data-part="7" data-cue="Keep four rules in mind.">
+  <h2>Four rules</h2>
+  <div class="recap">
+    <ul>
+      <li>Name landmarks</li>
+      <li>Reference visible field guidance</li>
+      <li>Keep and explain rejected input</li>
+      <li>Preserve the route and move focus</li>
+    </ul>
+  </div>
+</section>
+
+<script src="../assets/slides.js"></script>
+</body>
+</html>

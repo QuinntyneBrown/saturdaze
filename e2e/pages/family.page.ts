@@ -93,6 +93,14 @@ export class FamilyPage extends BasePage {
     return this.dialog().getByRole("radio", { name: option, exact: true });
   }
 
+  dialogFieldHint(): Locator {
+    return this.dialog().locator(".field__hint");
+  }
+
+  dialogFieldError(): Locator {
+    return this.dialog().locator(".field__error");
+  }
+
   /** Fills D17b and submits it; resolves with the `POST /api/family/members` body sent. */
   async addMember(member: { name: string; age: number; inviteEmail?: string }): Promise<Record<string, unknown>> {
     await this.addMemberRow().click();
@@ -198,6 +206,12 @@ export class FamilyPage extends BasePage {
       .locator("sd-chip-input")
       .filter({ has: this.page.locator(".field__label", { hasText: field }) })
       .locator(".field__error");
+  }
+
+  chipInputStatus(field: "Likes" | "Dislikes"): Locator {
+    return this.dialogField(field)
+      .locator("xpath=ancestor::sd-chip-input")
+      .getByRole("status");
   }
 
   /** Types a value into one of the dialog's chip inputs and adds it as a chip. */

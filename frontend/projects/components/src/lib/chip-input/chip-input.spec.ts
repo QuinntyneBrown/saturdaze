@@ -97,6 +97,8 @@ describe('ChipInput', () => {
   });
 
   it('refuses a case-insensitive duplicate with a message and keeps the text (L2-140)', () => {
+    fixture.componentRef.setInput('label', 'Likes');
+    fixture.detectChanges();
     type('pizza');
     key('Enter');
     fixture.detectChanges();
@@ -105,13 +107,33 @@ describe('ChipInput', () => {
     expect(field().value).toBe('pizza');
     expect(field().getAttribute('aria-invalid')).toBe('true');
     const error = host.querySelector('.field__error') as HTMLElement;
-    expect(error.textContent?.trim()).toBe('pizza is already in the list.');
+    expect(error.textContent?.trim()).toBe('pizza is already in Likes.');
     expect(field().getAttribute('aria-describedby')).toBe(error.id);
+    expect(error.getAttribute('role')).toBe('status');
+    expect(error.getAttribute('aria-live')).toBe('polite');
 
     type('pizzas');
     fixture.detectChanges();
     expect(host.querySelector('.field__error')).toBeNull();
     expect(field().hasAttribute('aria-invalid')).toBe(false);
+  });
+
+  it('keeps and announces a value that conflicts with the paired list', () => {
+    fixture.componentRef.setInput('label', 'Dislikes');
+    fixture.componentRef.setInput('otherValues', ['Parks']);
+    fixture.componentRef.setInput('otherLabel', 'Likes');
+    component.writeValue(['Camping']);
+    fixture.detectChanges();
+    type(' Parks ');
+    key('Enter');
+    fixture.detectChanges();
+    expect(chipText()).toEqual(['Camping']);
+    expect(field().value).toBe(' Parks ');
+    expect(field().getAttribute('aria-invalid')).toBe('true');
+    const status = host.querySelector('[role="status"]') as HTMLElement;
+    expect(status.textContent?.trim()).toBe('Parks is in Likes. Remove it there first.');
+    expect(status.classList.contains('field__error')).toBe(true);
+    expect(field().getAttribute('aria-describedby')).toBe(status.id);
   });
 
   it('removes the last value on Backspace when the draft is empty', () => {
@@ -131,6 +153,19 @@ describe('ChipInput', () => {
     fixture.detectChanges();
     expect(chipText()).toEqual(['Pizza']);
     expect(onChange).toHaveBeenLastCalledWith(['Pizza']);
+  });
+
+  it('announces successful additions and removals', () => {
+    fixture.componentRef.setInput('label', 'Likes');
+    fixture.detectChanges();
+    type('Zoo');
+    key('Enter');
+    fixture.detectChanges();
+    const status = host.querySelector('[role="status"]') as HTMLElement;
+    expect(status.textContent?.trim()).toBe('Zoo added to Likes.');
+    (chips()[2]?.querySelector('.chip__x') as HTMLElement).click();
+    fixture.detectChanges();
+    expect(status.textContent?.trim()).toBe('Zoo removed.');
   });
 
   it('disables the input and ignores removals from the form', () => {
