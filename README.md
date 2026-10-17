@@ -256,6 +256,11 @@ The workflow:
   migrations (ADR-014). The job needs the `SWA_ADMIN_DEPLOYMENT_TOKEN` secret;
   until it is set the job reports that it was skipped instead of failing.
 
+`.github/workflows/publish-components.yml` publishes the components library to
+npm as `@saturdaze/components` on every push to `main` that changes it, with the
+version bump taken from conventional-commit messages (ADR-016). It publishes
+through npm trusted publishing, so it needs no secret.
+
 Deployment requires the relevant Azure publish profile, Static Web Apps tokens,
 and database connection string secrets to be configured in GitHub Actions.
 

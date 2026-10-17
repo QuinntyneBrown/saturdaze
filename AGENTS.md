@@ -57,6 +57,7 @@ Workspace has four projects under `frontend/projects/`:
 - Use Angular CDK Dialog/Overlay for modal behavior; don't hand-roll modals.
 - Every component has a story folder `frontend/projects/components/stories/src/<Name>/`: `index.stories.ts` (meta + re-exports; the only file Storybook globs), one `<Name><Story>.stories.ts` per example (`Default` first), and `<Name>Description.md` + `<Name>BestPractices.md` (ADR-012). Run `npm run build-storybook` from `frontend/` after changing a component's API; CI builds it on every PR.
 - New components also get a perf-test scenario in `frontend/projects/perf-test/src/scenarios/` (ADR-014); see that project's README for running it.
+- **The library is published to npm as `@saturdaze/components` (ADR-016).** Every push to `main` touching `projects/components/{src,package.json,ng-package.json,README.md}` releases; the commit messages since the last `components-v*` tag set the bump (`feat:` minor, `!`/`BREAKING CHANGE:` major, else patch). Never commit a version; the source `package.json` stays `0.0.0`.
 
 ### Bottom-nav iOS chrome handling
 

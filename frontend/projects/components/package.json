@@ -1,9 +1,42 @@
 {
-  "name": "components",
-  "version": "0.0.1",
+  "name": "@saturdaze/components",
+  "version": "0.0.0",
+  "description": "Saturdaze design system: standalone Angular components on Fluent UI v9 design tokens.",
+  "keywords": [
+    "angular",
+    "components",
+    "design-system",
+    "fluent",
+    "design-tokens",
+    "saturdaze"
+  ],
+  "license": "MIT",
+  "author": "Quinntyne Brown",
+  "homepage": "https://github.com/QuinntyneBrown/saturdaze/tree/main/frontend/projects/components#readme",
+  "bugs": {
+    "url": "https://github.com/QuinntyneBrown/saturdaze/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/QuinntyneBrown/saturdaze.git",
+    "directory": "frontend/projects/components"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "exports": {
+    "./styles": {
+      "sass": "./styles/index.scss"
+    }
+  },
   "peerDependencies": {
+    "@angular/cdk": "^21.2.0",
     "@angular/common": "^21.2.0",
-    "@angular/core": "^21.2.0"
+    "@angular/core": "^21.2.0",
+    "@angular/forms": "^21.2.0",
+    "@angular/platform-browser": "^21.2.0",
+    "@angular/router": "^21.2.0"
   },
   "dependencies": {
     "tslib": "^2.3.0"
