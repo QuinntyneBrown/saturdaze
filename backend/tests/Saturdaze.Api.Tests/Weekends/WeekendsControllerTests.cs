@@ -45,6 +45,26 @@ public class WeekendsControllerTests : IClassFixture<SaturdazeApiFactory>, IAsyn
     }
 
     [Fact]
+    public async Task Plan_with_an_empty_profile_still_builds_a_bare_weekend()
+    {
+        // Traces to: L2-012 #3
+        // Given a family with no members, commitments or preferences
+        var session = await SignedInClient.CreateAsync(_factory, FamilyMode.Own);
+
+        // When a weekend is planned
+        var response = await session.Client.PostAsJsonAsync("/api/weekends/plan",
+            new { WeekendOf = new DateOnly(2026, 8, 1).ToString("yyyy-MM-dd") });
+        var body = await response.Content.ReadAsStringAsync();
+
+        // Then it succeeds with the blocks the system can build on its own
+        response.StatusCode.Should().Be(HttpStatusCode.OK, body);
+        var days = JsonDocument.Parse(body).RootElement.GetProperty("blocks").EnumerateArray()
+            .Select(b => b.GetProperty("day").GetString())
+            .Distinct();
+        days.Should().BeEquivalentTo("Saturday", "Sunday");
+    }
+
+    [Fact]
     public async Task Plan_is_idempotent_per_family_and_date()
     {
         var first = await _client.PostAsJsonAsync("/api/weekends/plan", new { WeekendOf = TestSaturday.ToString("yyyy-MM-dd") });
