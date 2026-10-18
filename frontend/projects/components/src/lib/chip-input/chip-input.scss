@@ -47,8 +47,13 @@
   color: var(--colorNeutralForeground3);
 }
 
-// Duplicate and conflict messages sit under the box, like a text field's error (L2-140).
-.field__error {
+.chip-input__status {
+  margin: 0;
+  font-size: var(--fontSizeBase200);
+  color: var(--colorNeutralForeground2);
+}
+
+.chip-input__status--error {
   display: inline-flex;
   align-items: center;
   gap: 4px;

@@ -352,5 +352,12 @@
   "CurrentUserFamilyAccessor": "Current User Family Accessor",
   "L2-124": "L two, one twenty-four",
   "L2-129": "L two, one twenty-nine",
-  "D21": "D twenty-one"
+  "D21": "D twenty-one",
+  "L2-135": "L two, one thirty-five",
+  "aria-describedby": "aria described by",
+  "aria-live": "aria live",
+  "NavigationEnd": "navigation end",
+  "otherValues": "other values",
+  "otherLabel": "other label",
+  "#main": "hash main"
 }

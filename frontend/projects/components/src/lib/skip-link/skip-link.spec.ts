@@ -22,7 +22,9 @@ describe('SkipLink', () => {
     const main = host.querySelector('main') as HTMLElement;
 
     expect(link.textContent?.trim()).toBe('Skip to content');
-    expect(link.getAttribute('href')).toBe('#main');
+    expect(link.getAttribute('href')).toBe(
+      `${document.location.pathname}${document.location.search}#main`,
+    );
 
     const click = new MouseEvent('click', { bubbles: true, cancelable: true });
     link.dispatchEvent(click);

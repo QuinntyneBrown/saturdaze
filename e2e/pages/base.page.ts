@@ -126,6 +126,10 @@ export abstract class BasePage {
     return this.page.locator(".skip-link");
   }
 
+  skipLinkHref(): Promise<string> {
+    return this.skipLink().evaluate((el) => (el as HTMLAnchorElement).href);
+  }
+
   /** Moves focus back to the top of the document, as a fresh page load leaves it. */
   async resetFocusToTop(): Promise<void> {
     await this.page.evaluate(() => {
@@ -180,6 +184,12 @@ export abstract class BasePage {
   /** The outline style `<main>` draws while it holds focus. */
   async mainOutlineStyle(): Promise<string> {
     return this.main.evaluate((el) => getComputedStyle(el).outlineStyle);
+  }
+
+  async hasHorizontalOverflow(): Promise<boolean> {
+    return this.page.evaluate(
+      () => document.documentElement.scrollWidth > document.documentElement.clientWidth,
+    );
   }
 
   /** The current path, e.g. `/weekend`. */

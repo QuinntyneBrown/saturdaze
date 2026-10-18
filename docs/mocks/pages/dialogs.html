@@ -707,16 +707,18 @@
                 <span class="chip chip--leaf">Rec Room<button class="chip__x" type="button" aria-label="Remove Rec Room"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></span>
                 <span class="chip chip--leaf">Lavender<button class="chip__x" type="button" aria-label="Remove Lavender"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></span>
                 <span class="chip chip--leaf">Live theatre<button class="chip__x" type="button" aria-label="Remove Live theatre"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></span>
-                <input class="chip-input__field" id="d20-likes" type="text" placeholder="Add one, press Enter">
+                <input class="chip-input__field" id="d20-likes" type="text" value="Parks" aria-describedby="d20-likes-duplicate" placeholder="Add one, press Enter">
               </div>
+              <p class="field__error" id="d20-likes-duplicate" role="status" aria-live="polite"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg>Parks is already in Likes.</p>
             </div>
             <div class="field">
               <label class="field__label" for="d20-dislikes">Dislikes</label>
               <div class="chip-input">
                 <span class="chip chip--warn">Camping<button class="chip__x" type="button" aria-label="Remove Camping"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></span>
                 <span class="chip chip--warn">Drives over 60 min<button class="chip__x" type="button" aria-label="Remove Drives over 60 min"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></span>
-                <input class="chip-input__field" id="d20-dislikes" type="text" placeholder="Add one, press Enter">
+                <input class="chip-input__field" id="d20-dislikes" type="text" value="Parks" aria-describedby="d20-dislikes-conflict" placeholder="Add one, press Enter">
               </div>
+              <p class="field__error" id="d20-dislikes-conflict" role="status" aria-live="polite"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg>Parks is in Likes. Remove it there first.</p>
             </div>
           </div>
           <div class="dialog__actions">

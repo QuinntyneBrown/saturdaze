@@ -46,6 +46,12 @@ Six videos on Saturdaze Admin, the second web application that curates the catal
 | --- | --- | --- | --- |
 | 18 | [How account emails are drafted](18-how-account-emails-are-drafted/README.md) | ~7.1 min | Verification and reset links as built: random tokens stored as SHA-256 hashes, single use via `ConsumedAtUtc`, no account leak, `DevDelivery` and `devToken`; no email provider yet (G01). |
 
+## Product accessibility
+
+| # | Video | Runtime | What you learn |
+| --- | --- | --- | --- |
+| 30 | [Product accessibility: expose state and preserve focus](30-product-accessibility/README.md) | ~4.9 min | Follow-up accessibility behavior: paired-list chip feedback, route-aware skip links; real before/after recording and acceptance tests (L2-141; original fixes merged in #143). |
+
 ## Design drift series
 
 | # | Video | Runtime | What you learn |

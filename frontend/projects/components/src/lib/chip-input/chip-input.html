@@ -13,17 +13,26 @@
     type="text"
     [value]="draft()"
     [attr.placeholder]="placeholder()"
-    [attr.aria-invalid]="error() ? 'true' : null"
-    [attr.aria-describedby]="error() ? errorId : null"
+    [attr.aria-invalid]="statusTone() === 'error' && status() ? 'true' : null"
+    [attr.aria-describedby]="status() ? statusId : null"
     [disabled]="disabled()"
     (input)="onDraft($event)"
     (keydown)="onKey($event)"
     (blur)="commit()"
   />
 </div>
-@if (error()) {
-  <p class="field__error" [id]="errorId">
-    <sd-icon name="alert" [size]="12" [stroke]="2" />
-    {{ error() }}
+@if (status()) {
+  <p
+    class="chip-input__status"
+    [class.chip-input__status--error]="statusTone() === 'error'"
+    [class.field__error]="statusTone() === 'error'"
+    [id]="statusId"
+    role="status"
+    aria-live="polite"
+  >
+    @if (statusTone() === 'error') {
+      <sd-icon name="alert" [size]="12" [stroke]="2" />
+    }
+    {{ status() }}
   </p>
 }
