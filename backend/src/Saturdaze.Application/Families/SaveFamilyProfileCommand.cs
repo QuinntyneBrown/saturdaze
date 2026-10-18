@@ -5,15 +5,17 @@ using Saturdaze.Domain.Enums;
 namespace Saturdaze.Application.Families;
 
 /// <summary>
-/// Full-replace of the editable profile. The three optional scalars leave
-/// the stored value untouched when omitted so older clients keep working.
+/// Full or partial save of the editable profile (L2-010). Every part is
+/// optional: an omitted scalar keeps its stored value and an omitted
+/// collection is left as it is, while a supplied collection replaces the
+/// stored one. A first-time save must supply the home location.
 /// </summary>
 public sealed record SaveFamilyProfileCommand(
-    string HomeLocation,
-    bool BudgetEnabled,
-    IReadOnlyList<SaveMemberInput> Members,
-    IReadOnlyList<SaveCommitmentInput> Commitments,
-    IReadOnlyList<SavePreferenceInput> Preferences,
+    string? HomeLocation = null,
+    bool? BudgetEnabled = null,
+    IReadOnlyList<SaveMemberInput>? Members = null,
+    IReadOnlyList<SaveCommitmentInput>? Commitments = null,
+    IReadOnlyList<SavePreferenceInput>? Preferences = null,
     string? Name = null,
     bool? TryNewEnabled = null,
     bool? FridayPreviewEnabled = null) : IRequest<FamilyProfileDto>;

@@ -111,6 +111,53 @@ public class FamilyControllerTests : IClassFixture<SaturdazeApiFactory>
     }
 
     [Fact]
+    public async Task Put_with_a_partial_profile_keeps_everything_it_omits()
+    {
+        // Traces to: L2-010 (full or partial profile)
+        // Given a family with a home, members, a commitment and a preference
+        var session = await SignedInClient.CreateAsync(_factory, FamilyMode.Own);
+        var full = await session.Client.PutAsJsonAsync("/api/family", new
+        {
+            HomeLocation = "Clarkson",
+            BudgetEnabled = false,
+            Members = new[] { new { Name = "Ada", Age = 6 }, new { Name = "Ben", Age = 9 } },
+            Commitments = new[]
+            {
+                new { Title = "Swim", DayOfWeek = "Saturday", StartTime = "09:00:00", EndTime = "10:00:00" }
+            },
+            Preferences = new[] { new { Kind = "Like", Value = "outdoors" } }
+        });
+        full.StatusCode.Should().Be(HttpStatusCode.OK, await full.Content.ReadAsStringAsync());
+
+        // When only the budget toggle is sent
+        var partial = await session.Client.PutAsJsonAsync("/api/family", new { BudgetEnabled = true });
+        var body = await partial.Content.ReadAsStringAsync();
+
+        // Then the toggle changes and everything omitted stays as it was
+        partial.StatusCode.Should().Be(HttpStatusCode.OK, body);
+        var payload = JsonDocument.Parse(body).RootElement;
+        payload.GetProperty("budgetEnabled").GetBoolean().Should().BeTrue();
+        payload.GetProperty("homeLocation").GetString().Should().Be("Clarkson");
+        payload.GetProperty("members").EnumerateArray().Select(m => m.GetProperty("name").GetString())
+            .Should().BeEquivalentTo("Ada", "Ben");
+        payload.GetProperty("commitments").EnumerateArray().Select(c => c.GetProperty("title").GetString())
+            .Should().BeEquivalentTo("Swim");
+        payload.GetProperty("preferences").EnumerateArray().Select(p => p.GetProperty("value").GetString())
+            .Should().BeEquivalentTo("outdoors");
+    }
+
+    [Fact]
+    public async Task Put_first_time_without_a_home_location_returns_400()
+    {
+        // Traces to: L2-010 #4
+        var session = await SignedInClient.CreateAsync(_factory, FamilyMode.None);
+
+        var put = await session.Client.PutAsJsonAsync("/api/family", new { BudgetEnabled = true });
+
+        put.StatusCode.Should().Be(HttpStatusCode.BadRequest, await put.Content.ReadAsStringAsync());
+    }
+
+    [Fact]
     public async Task Put_first_time_creates_and_links_family()
     {
         var session = await SignedInClient.CreateAsync(_factory, FamilyMode.None);
@@ -209,10 +256,17 @@ public class FamilyControllerTests : IClassFixture<SaturdazeApiFactory>
     }
 
     [Fact]
-    public async Task Put_missing_collections_returns_400_not_500()
+    public async Task Put_with_only_scalars_keeps_the_collections()
     {
+        // Traces to: L2-010 (partial profile): omitted collections are left alone, not emptied.
         var session = await SignedInClient.CreateAsync(_factory);
-        var response = await session.Client.PutAsJsonAsync("/api/family", new { HomeLocation = "Port Credit", BudgetEnabled = false });
-        response.StatusCode.Should().Be(HttpStatusCode.BadRequest, await response.Content.ReadAsStringAsync());
+        var response = await session.Client.PutAsJsonAsync("/api/family",
+            new { HomeLocation = SignedInClient.SeededFamilyHomeLocation, BudgetEnabled = false });
+        var body = await response.Content.ReadAsStringAsync();
+        response.StatusCode.Should().Be(HttpStatusCode.OK, body);
+        var payload = JsonDocument.Parse(body).RootElement;
+        payload.GetProperty("members").GetArrayLength().Should().BeGreaterThan(0);
+        payload.GetProperty("commitments").GetArrayLength().Should().BeGreaterThan(0);
+        payload.GetProperty("preferences").GetArrayLength().Should().BeGreaterThan(0);
     }
 }

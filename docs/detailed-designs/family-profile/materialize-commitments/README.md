@@ -18,7 +18,7 @@ Saturdaze is a web application that plans personalized family weekends. Recurrin
 
 `LockBlockCommandHandler` returns 409 `commitment_locked` when asked to unlock a commitment. `LockWeekendDayCommandHandler` also preserves commitment locks.
 
-Regeneration reconstructs commitment blocks from the current family profile. Their database IDs can change, and edited profile times can replace prior times. The stronger identity/content-preservation wording in L2-011 and L2-016 remains an explicit implementation discrepancy.
+Regeneration carries existing commitment blocks over as locked blocks, so their IDs and time windows survive (L2-011 AC2, L2-016 AC1). `BuildFixedBlocks()` materializes a profile commitment only when no carried-over commitment block on that day has the same title or an overlapping window; a commitment edited in the profile therefore takes effect on newly generated weekends, while an already planned weekend keeps the block it had.
 
 ## Requirements
 

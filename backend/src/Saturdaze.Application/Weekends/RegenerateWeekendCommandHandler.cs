@@ -40,11 +40,10 @@ public sealed class RegenerateWeekendCommandHandler : IRequestHandler<Regenerate
             .SingleOrDefaultAsync(w => w.Id == request.WeekendId && w.FamilyId == familyId, cancellationToken)
             ?? throw new NotFoundException(nameof(Weekend), request.WeekendId);
 
-        // Commitments are re-materialised from the family profile every time,
-        // so they are never carried over as "locked" here (L2-011 AC2).
-        var lockedBlocks = weekend.Blocks
-            .Where(b => b.IsLocked && b.Kind != BlockKind.Commitment)
-            .ToList();
+        // Every locked block stays in place by ID and content, commitments
+        // included (L2-011 AC2, L2-016 AC1). The planner only materialises a
+        // profile commitment that has no block here yet.
+        var lockedBlocks = weekend.Blocks.Where(b => b.IsLocked).ToList();
 
         var ctx = await _loader.LoadAsync(familyId, weekend.WeekendOf, cancellationToken);
 

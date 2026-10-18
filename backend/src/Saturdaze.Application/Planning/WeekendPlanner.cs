@@ -119,6 +119,8 @@ public sealed class WeekendPlanner : IWeekendPlanner
         var list = new List<ItineraryBlock>();
         foreach (var c in commitments)
         {
+            // A commitment already on the weekend keeps its block (L2-011 AC2).
+            if (locked.Any(l => l.Kind == BlockKind.Commitment && Represents(l, c))) continue;
             list.Add(new ItineraryBlock
             {
                 Id = Guid.NewGuid(),
@@ -149,6 +151,10 @@ public sealed class WeekendPlanner : IWeekendPlanner
         }
         return list.OrderBy(b => b.StartTime).ToList();
     }
+
+    private static bool Represents(ItineraryBlock block, Commitment commitment) =>
+        string.Equals(block.Title, commitment.Title, StringComparison.OrdinalIgnoreCase)
+        || Overlaps(block.StartTime, block.EndTime, commitment.StartTime, commitment.EndTime);
 
     private static void EnsureNoOverlap(IReadOnlyList<ItineraryBlock> blocks)
     {

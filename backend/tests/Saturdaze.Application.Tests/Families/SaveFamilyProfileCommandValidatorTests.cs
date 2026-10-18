@@ -27,6 +27,13 @@ public class SaveFamilyProfileCommandValidatorTests
     }
 
     [Fact]
+    public void Omitted_parts_are_not_validated()
+    {
+        // L2-010: a partial profile only validates what it carries.
+        _v.TestValidate(new SaveFamilyProfileCommand(BudgetEnabled: true)).IsValid.Should().BeTrue();
+    }
+
+    [Fact]
     public void Empty_home_location_fails()
     {
         var cmd = Valid() with { HomeLocation = "" };

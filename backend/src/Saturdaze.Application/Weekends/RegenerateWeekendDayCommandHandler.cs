@@ -41,9 +41,9 @@ public sealed class RegenerateWeekendDayCommandHandler
             ?? throw new NotFoundException(nameof(Weekend), request.WeekendId);
 
         // The other day is fixed wholesale; on the requested day only locked
-        // blocks survive. Commitments come back from the profile either way.
+        // blocks survive, commitments among them (L2-085, L2-011 AC2).
         var fixedBlocks = weekend.Blocks
-            .Where(b => (b.Day != request.Day || b.IsLocked) && b.Kind != BlockKind.Commitment)
+            .Where(b => b.Day != request.Day || b.IsLocked)
             .ToList();
 
         var ctx = await _loader.LoadAsync(familyId, weekend.WeekendOf, cancellationToken);
