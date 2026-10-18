@@ -1,8 +1,8 @@
-# 30 · Product accessibility: expose state and preserve focus
+# 44 · Product accessibility: expose state and preserve focus
 
 > **Runtime:** ~4.9 min · **Audience:** Saturdaze contributors · **Prerequisites:** familiarity with the Angular app and the Family page
 
-**Video:** [30-product-accessibility.mp4](30-product-accessibility.mp4) · [Slides](slides.html) · **Audio:** [30-product-accessibility.mp3](30-product-accessibility.mp3) · [Transcript](script.md) · [Clips](clips/clips.mjs)
+**Video:** [44-product-accessibility.mp4](44-product-accessibility.mp4) · [Slides](slides.html) · **Audio:** [44-product-accessibility.mp3](44-product-accessibility.mp3) · [Transcript](script.md) · [Clips](clips/clips.mjs)
 
 ## Why this video exists
 
@@ -69,13 +69,13 @@ ln -s "$PWD/frontend/node_modules" /tmp/saturdaze-85-before/frontend/node_module
 # Fixed app terminal
 (cd frontend && npm start -- --host 0.0.0.0 --port 4202)
 
-node tools/video-record/record-clips.mjs docs/videos/30-product-accessibility
-node tools/video-audio/generate-audio.mjs docs/videos/30-product-accessibility --dry-run
-node tools/video-audio/generate-audio.mjs docs/videos/30-product-accessibility --spoken
-node tools/video-audio/generate-audio.mjs docs/videos/30-product-accessibility
-node tools/video-build/build-video.mjs docs/videos/30-product-accessibility --check
-node tools/video-build/build-video.mjs docs/videos/30-product-accessibility --slides-only
-node tools/video-build/build-video.mjs docs/videos/30-product-accessibility
+node tools/video-record/record-clips.mjs docs/videos/44-product-accessibility
+node tools/video-audio/generate-audio.mjs docs/videos/44-product-accessibility --dry-run
+node tools/video-audio/generate-audio.mjs docs/videos/44-product-accessibility --spoken
+node tools/video-audio/generate-audio.mjs docs/videos/44-product-accessibility
+node tools/video-build/build-video.mjs docs/videos/44-product-accessibility --check
+node tools/video-build/build-video.mjs docs/videos/44-product-accessibility --slides-only
+node tools/video-build/build-video.mjs docs/videos/44-product-accessibility
 ```
 
 ## Pitfalls

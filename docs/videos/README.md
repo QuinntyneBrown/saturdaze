@@ -50,7 +50,7 @@ Six videos on Saturdaze Admin, the second web application that curates the catal
 
 | # | Video | Runtime | What you learn |
 | --- | --- | --- | --- |
-| 30 | [Product accessibility: expose state and preserve focus](30-product-accessibility/README.md) | ~4.9 min | Follow-up accessibility behavior: paired-list chip feedback, route-aware skip links; real before/after recording and acceptance tests (L2-141; original fixes merged in #143). |
+| 44 | [Product accessibility: expose state and preserve focus](44-product-accessibility/README.md) | ~4.9 min | Follow-up accessibility behavior: paired-list chip feedback, route-aware skip links; real before/after recording and acceptance tests (L2-141; original fixes merged in #143). |
 
 ## Design drift series
 

@@ -1,4 +1,4 @@
-# 30 · Product accessibility: expose state and preserve focus
+# 44 · Product accessibility: expose state and preserve focus
 
 Issue eighty-five follows four small accessibility gaps through the Saturdaze product. The goal is not a screen-reader checklist. It is to make the interface expose the state it already shows or implies, and to keep keyboard focus on the page a person is using.
 
