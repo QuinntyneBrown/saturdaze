@@ -157,6 +157,63 @@ public class WeekendFlowTests : IClassFixture<SaturdazeApiFactory>, IAsyncLifeti
         (await ReadAsync(swap)).GetProperty("code").GetString().Should().Be("block_locked");
     }
 
+    [Fact]
+    public async Task Regenerate_keeps_every_commitment_block_in_place()
+    {
+        // Traces to: L2-011 #2, L2-016 #1, #2
+        // Given a planned weekend whose profile commitments became locked blocks
+        var planResp = await _client.PostAsJsonAsync("/api/weekends/plan",
+            new { WeekendOf = TestSaturday.AddDays(28).ToString("yyyy-MM-dd") });
+        planResp.EnsureSuccessStatusCode();
+        var planned = await ReadAsync(planResp);
+        var weekendId = planned.GetProperty("id").GetGuid();
+        var commitments = CommitmentBlocks(planned);
+        commitments.Should().NotBeEmpty("the seeded family has commitments");
+
+        // When the whole weekend is regenerated
+        var regenResp = await _client.PostAsync($"/api/weekends/{weekendId}/regenerate", content: null);
+        regenResp.EnsureSuccessStatusCode();
+        var regenerated = await ReadAsync(regenResp);
+
+        // Then every commitment block is still there, same ID, same time, still locked
+        regenerated.GetProperty("regenerateCount").GetInt32().Should().Be(1);
+        CommitmentBlocks(regenerated).Should().BeEquivalentTo(commitments);
+    }
+
+    [Fact]
+    public async Task Regenerate_day_keeps_that_days_commitment_blocks_in_place()
+    {
+        // Traces to: L2-085 #2, L2-011 #2
+        var planResp = await _client.PostAsJsonAsync("/api/weekends/plan",
+            new { WeekendOf = TestSaturday.AddDays(35).ToString("yyyy-MM-dd") });
+        planResp.EnsureSuccessStatusCode();
+        var planned = await ReadAsync(planResp);
+        var weekendId = planned.GetProperty("id").GetGuid();
+        var commitments = CommitmentBlocks(planned);
+        commitments.Should().Contain(c => c.Day == "Saturday");
+
+        var regenResp = await _client.PostAsync($"/api/weekends/{weekendId}/days/saturday/regenerate", content: null);
+        regenResp.EnsureSuccessStatusCode();
+        var regenerated = await ReadAsync(regenResp);
+
+        CommitmentBlocks(regenerated).Should().BeEquivalentTo(commitments);
+    }
+
+    private static List<CommitmentBlock> CommitmentBlocks(JsonElement weekend) =>
+        weekend.GetProperty("blocks").EnumerateArray()
+            .Where(b => b.GetProperty("kind").GetString() == "Commitment")
+            .Select(b => new CommitmentBlock(
+                b.GetProperty("id").GetGuid(),
+                b.GetProperty("day").GetString()!,
+                b.GetProperty("title").GetString()!,
+                b.GetProperty("startTime").GetString()!,
+                b.GetProperty("endTime").GetString()!,
+                b.GetProperty("isLocked").GetBoolean()))
+            .OrderBy(c => c.Day).ThenBy(c => c.StartTime)
+            .ToList();
+
+    private sealed record CommitmentBlock(Guid Id, string Day, string Title, string StartTime, string EndTime, bool IsLocked);
+
     private static async Task<JsonElement> ReadAsync(HttpResponseMessage resp)
         => JsonDocument.Parse(await resp.Content.ReadAsStringAsync()).RootElement;
 

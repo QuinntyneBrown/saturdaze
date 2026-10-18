@@ -39,6 +39,34 @@ public class WeekendPlannerTests
     }
 
     [Fact]
+    public void Existing_commitment_block_is_kept_and_only_new_profile_commitments_are_added()
+    {
+        // L2-011 AC2 / L2-016 AC1: a commitment block carried over from the
+        // weekend keeps its ID and time even when the profile moved the
+        // commitment, while a commitment added to the profile since still
+        // gets a block.
+        var keptId = Guid.NewGuid();
+        var inputs = Baseline()
+            .Commitment(DayOfWeek.Saturday, new TimeOnly(10, 0), new TimeOnly(11, 0), "Swim")
+            .Commitment(DayOfWeek.Saturday, new TimeOnly(15, 0), new TimeOnly(16, 0), "Piano")
+            .LockedBlock(new ItineraryBlock
+            {
+                Id = keptId, Day = DayOfWeekend.Saturday, Kind = BlockKind.Commitment, Title = "Swim",
+                StartTime = new TimeOnly(9, 30), EndTime = new TimeOnly(10, 30), IsLocked = true
+            })
+            .Activity("Park", drive: 5, duration: 90, weatherTags: new[] { "sunny", "warm" })
+            .Build();
+
+        var blocks = new WeekendPlanner().Plan(inputs);
+
+        var swims = blocks.Where(b => b.Kind == BlockKind.Commitment && b.Title == "Swim").ToList();
+        swims.Should().ContainSingle().Which.Id.Should().Be(keptId);
+        swims.Single().StartTime.Should().Be(new TimeOnly(9, 30));
+        blocks.Should().Contain(b => b.Kind == BlockKind.Commitment && b.Title == "Piano"
+            && b.IsLocked && b.StartTime == new TimeOnly(15, 0));
+    }
+
+    [Fact]
     public void Overlapping_commitments_raise_conflict()
     {
         var inputs = Baseline()
