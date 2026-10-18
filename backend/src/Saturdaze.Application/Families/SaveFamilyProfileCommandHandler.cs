@@ -57,11 +57,15 @@ public sealed class SaveFamilyProfileCommandHandler : IRequestHandler<SaveFamily
             : null;
 
         // Only the owner changes who's in (L2-129 #1); everyone saves the rest.
-        if (family is not null && !_ownership.IsOwner(family) && MembersChange(family.Members, request.Members))
+        if (family is not null && request.Members is not null
+            && !_ownership.IsOwner(family) && MembersChange(family.Members, request.Members))
             throw new ForbiddenException("owner_only", "Only the family's owner can change who's in.");
 
         if (family is null)
         {
+            if (string.IsNullOrWhiteSpace(request.HomeLocation))
+                throw new ValidationException(nameof(request.HomeLocation), "A home location is needed to set up the family.");
+
             var userId = _user.UserId
                 ?? throw new InvalidCredentialsException("unauthenticated", "Sign in to continue.");
             var owner = await _db.Users.SingleOrDefaultAsync(u => u.Id == userId, cancellationToken)
@@ -73,16 +77,20 @@ public sealed class SaveFamilyProfileCommandHandler : IRequestHandler<SaveFamily
             owner.UpdatedAtUtc = _clock.UtcNow;
         }
 
-        family.HomeLocation = request.HomeLocation;
-        family.BudgetEnabled = request.BudgetEnabled;
+        // Partial profile (L2-010): only what the request carries changes.
+        if (request.HomeLocation is not null) family.HomeLocation = request.HomeLocation;
+        if (request.BudgetEnabled is { } budget) family.BudgetEnabled = budget;
         if (request.Name is not null) family.Name = string.IsNullOrWhiteSpace(request.Name) ? null : request.Name.Trim();
         if (request.TryNewEnabled is { } tryNew) family.TryNewEnabled = tryNew;
         if (request.FridayPreviewEnabled is { } friday) family.FridayPreviewEnabled = friday;
 
-        var withAccess = await MembersWithAccessAsync(family, cancellationToken);
-        SyncMembers(family, request.Members, withAccess);
-        SyncCommitments(family, request.Commitments);
-        SyncPreferences(family, request.Preferences);
+        if (request.Members is not null)
+        {
+            var withAccess = await MembersWithAccessAsync(family, cancellationToken);
+            SyncMembers(family, request.Members, withAccess);
+        }
+        if (request.Commitments is not null) SyncCommitments(family, request.Commitments);
+        if (request.Preferences is not null) SyncPreferences(family, request.Preferences);
 
         await _db.SaveChangesAsync(cancellationToken);
 
