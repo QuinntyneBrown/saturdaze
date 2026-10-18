@@ -88,16 +88,23 @@ public sealed class SwapBlockCommandHandler : IRequestHandler<SwapBlockCommand, 
         var newBlocks = _planner.BuildActivityBlocks(
             pick, target.Day, window.start, window.end, dayForecast, tryNew: false);
 
-        // Remove the target and the adjacent drive blocks; add new replacements.
+        // The block keeps its ID and takes the new activity (L2-015 AC1); only
+        // the drive blocks around it are replaced.
+        var replacement = newBlocks.Single(b => b.Kind == BlockKind.Activity);
+        target.StartTime = replacement.StartTime;
+        target.EndTime = replacement.EndTime;
+        target.Title = replacement.Title;
+        target.RefId = replacement.RefId;
+        target.Reason = "swap pick: " + replacement.Reason;
+        target.Stop = replacement.Stop?.Copy();
+
         foreach (var old in adjacentDrives)
         {
             weekend.Blocks.Remove(old);
             _db.ItineraryBlocks.Remove(old);
         }
-        weekend.Blocks.Remove(target);
-        _db.ItineraryBlocks.Remove(target);
         var nextSort = weekend.Blocks.Where(b => b.Day == target.Day).Max(b => (int?)b.SortOrder) ?? 0;
-        foreach (var nb in newBlocks)
+        foreach (var nb in newBlocks.Where(b => b.Kind == BlockKind.Drive))
         {
             _db.ItineraryBlocks.Add(new ItineraryBlock
             {

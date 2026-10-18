@@ -112,6 +112,33 @@ public class WeekendFlowTests : IClassFixture<SaturdazeApiFactory>, IAsyncLifeti
     }
 
     [Fact]
+    public async Task Swap_keeps_the_block_id_and_changes_its_activity()
+    {
+        // Traces to: L2-015 #1
+        // Given an Activity block referencing activity A
+        var planResp = await _client.PostAsJsonAsync("/api/weekends/plan",
+            new { WeekendOf = TestSaturday.AddDays(21).ToString("yyyy-MM-dd") });
+        planResp.EnsureSuccessStatusCode();
+        var planned = await ReadAsync(planResp);
+        var activity = planned.GetProperty("blocks").EnumerateArray()
+            .First(b => b.GetProperty("kind").GetString() == "Activity");
+        var blockId = activity.GetProperty("id").GetGuid();
+        var activityA = activity.GetProperty("refId").GetGuid();
+
+        // When the block is swapped with A rejected
+        var swap = await _client.PostAsJsonAsync($"/api/blocks/{blockId}/swap", new SwapBody(new[] { activityA }));
+        swap.StatusCode.Should().Be(HttpStatusCode.OK, await swap.Content.ReadAsStringAsync());
+
+        // Then the same block ID is still on the weekend, now referencing a different activity
+        var blocks = (await ReadAsync(swap)).GetProperty("blocks").EnumerateArray().ToList();
+        var swapped = blocks.SingleOrDefault(b => b.GetProperty("id").GetGuid() == blockId);
+        swapped.ValueKind.Should().Be(JsonValueKind.Object, "the swapped block keeps its ID");
+        swapped.GetProperty("kind").GetString().Should().Be("Activity");
+        swapped.GetProperty("refId").GetGuid().Should().NotBe(activityA);
+        swapped.GetProperty("isLocked").GetBoolean().Should().BeFalse();
+    }
+
+    [Fact]
     public async Task Swap_on_a_locked_block_returns_409_block_locked()
     {
         // Traces to: L2-015 #2
