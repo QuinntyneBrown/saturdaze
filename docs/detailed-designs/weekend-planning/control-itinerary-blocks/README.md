@@ -12,15 +12,15 @@ The slice combines block-level lock and swap endpoints with weekend regeneration
 
 `WeekendPage` and `BlockDialog` expose locking, server-selected swaps, and regeneration through `WeekendPlanService`. The API returns the refreshed parent WeekendDto after changes.
 
-`LockBlockCommandHandler` sets lock state after checking family ownership. Commitments cannot be unlocked. `SwapBlockCommandHandler` selects another fitting activity and honors supplied rejected IDs, activities already on the weekend, and the current activity. Locked blocks return 409 `block_locked`, non-activity blocks return 409 `block_not_swappable`, and no alternatives yield an annotated 200 no-op. A successful swap replaces the target and its adjacent drive blocks with new blocks under new IDs, so the same-block-ID expectation in L2-015 is not met.
+`LockBlockCommandHandler` sets lock state after checking family ownership. Commitments cannot be unlocked. `SwapBlockCommandHandler` selects another fitting activity and honors supplied rejected IDs, activities already on the weekend, and the current activity. Locked blocks return 409 `block_locked`, non-activity blocks return 409 `block_not_swappable`, and no alternatives yield an annotated 200 no-op. A successful swap updates the target block in place, so it keeps its ID and takes the new activity's reference, title, times and stop (L2-015 AC1); only the adjacent drive blocks are replaced with new ones.
 
-`RegenerateWeekendCommandHandler` and `RegenerateWeekendDayCommandHandler` load common inputs through `PlannerInputLoader` and invoke `IWeekendPlanner.Plan()`. Both increment `RegenerateCount`. Day regeneration leaves the other day in persistence untouched.
+`RegenerateWeekendCommandHandler` and `RegenerateWeekendDayCommandHandler` load common inputs through `PlannerInputLoader` and invoke `IWeekendPlanner.Plan()`. Both increment `RegenerateCount`. Both carry every locked block over by ID and content, commitment blocks included; the planner materializes a profile commitment only when no carried-over commitment block on that day already represents it (same title, or an overlapping window). Day regeneration leaves the other day in persistence untouched.
 
 `LockWeekendDayCommandHandler` sets all selected-day locks while retaining commitment locks. No client alternatives-list endpoint exists.
 
 `sd-day` renders the day header's lock toggle as a pressed-state `sd-button` whose visible label is "Lock day" or "Unlock day". Its `aria-label` starts with that label and appends the day title after a colon, "Lock day: Saturday" or "Unlock day: Saturday", so the accessible name contains the visible label (L2-085 AC3, WCAG 2.5.3). The Regenerate button already follows the rule ("Regenerate Saturday").
 
-Ordinary locked blocks retain identity during regeneration. Commitments are reconstructed from the profile, so the strict preservation claims in L2-011 and L2-016 are not fully implemented.
+Locked blocks, commitments among them, retain identity, time and content during regeneration (L2-011 AC2, L2-016 AC1). A commitment added to the profile after the weekend was planned gains a block on the next regeneration; a commitment removed from the profile keeps its locked block until the user unlocks the day or the weekend is regenerated from scratch through Repeat or Remix.
 
 ## Requirements
 

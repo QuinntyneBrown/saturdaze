@@ -2,5 +2,5 @@
 
 | Design | Effort | Complete |
 |---|---|---|
-| manage-family-profile | 5 days | 90% |
-| materialize-commitments | 2 days | 80% |
+| manage-family-profile | 5 days | 100% |
+| materialize-commitments | 2 days | 100% |

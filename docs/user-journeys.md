@@ -4,9 +4,9 @@ Ordered by value added to the product, highest first. Estimates are days for an 
 
 | Journey | Description | Estimate (days) | Complete |
 |---------|-------------|-----------------|----------|
-| Plan the current weekend | Generate a Saturday and Sunday itinerary from family preferences | 8 | 95% |
-| Manage family profile | Edit home, members, commitments, likes, and preferences | 5 | 85% |
-| Control itinerary blocks | Lock, swap, and regenerate blocks without moving locked ones | 5 | 85% |
+| Plan the current weekend | Generate a Saturday and Sunday itinerary from family preferences | 8 | 100% |
+| Manage family profile | Edit home, members, commitments, likes, and preferences | 5 | 100% |
+| Control itinerary blocks | Lock, swap, and regenerate blocks without moving locked ones | 5 | 100% |
 | Discover activities | Browse weather-aware activity ideas with filters | 4 | 90% |
 | Add an idea to a day | Add any idea to Saturday or Sunday with preview | 3 | 100% |
 | Ingest catalogs | Discover and upsert places on demand or on schedule | 6 | 90% |

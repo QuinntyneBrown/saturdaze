@@ -14,9 +14,9 @@ The profile page loads one aggregate for the authenticated family. Dialogs edit 
 
 `SaveFamilyProfileCommandHandler` resolves ownership through `CurrentUserFamilyAccessor`. It can attach a new family to an authenticated account lacking one, then synchronizes member, commitment, and preference collections.
 
-Members match by supplied ID or name; commitments match by ID or title/day. Missing collection entries are removed. Preferences match by kind and case-insensitive value. Optional scalar settings retain their existing value when omitted where supported; collection synchronization is replacement, not a general PATCH contract.
+`PUT /api/family` accepts a full or partial profile (L2-010). Every part of `SaveFamilyProfileCommand` is optional: an omitted scalar keeps its stored value and an omitted collection is left as it is. A supplied collection replaces the stored one: members match by supplied ID or name, commitments match by ID or title/day, preferences match by kind and case-insensitive value, and entries missing from the supplied collection are removed. A first-time save, which creates the family, must supply the home location.
 
-`SaveFamilyProfileCommandValidator` runs in the MediatR `ValidationBehavior`. It rejects an empty home location, duplicate member names, ages outside 0-120, commitments whose start is not before their end, overlapping same-day commitments, and duplicate preferences; the API returns 400 and persists nothing.
+`SaveFamilyProfileCommandValidator` runs in the MediatR `ValidationBehavior` and validates only the parts the request carries. It rejects an empty home location, duplicate member names, ages outside 0-120, commitments whose start is not before their end, overlapping same-day commitments, and duplicate preferences; the API returns 400 and persists nothing.
 
 The response is reread from persistence through `FamilyProfileMapper`. Name, home text, budget, novelty, and Friday-preview preferences are stored. The current planner consumes novelty; budget and Friday-preview delivery are not implemented downstream.
 
