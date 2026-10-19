@@ -231,6 +231,7 @@ public sealed class CatalogUpserter
             entity.WifeApproved = PayloadReader.GetBoolOrDefault(p, "wifeApproved");
             entity.DriveMinutes = PayloadReader.GetIntOrDefault(p, "driveMinutes");
             entity.Notes = Truncate(PayloadReader.GetStringOrEmpty(p, "notes"), 500);
+            entity.HasPatio = PayloadReader.GetBoolOrDefault(p, "patio");
             entity.Geo = GeoLocation.Merge(entity.Geo, PayloadReader.GetGeo(p));
             await AddPhotosAsync(PlaceKind.Restaurant, entity.Id, name, p, ct);
         }

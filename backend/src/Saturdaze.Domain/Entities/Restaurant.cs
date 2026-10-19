@@ -10,6 +10,9 @@ public class Restaurant
     public string Style { get; set; } = string.Empty;
     public MealSlot Slot { get; set; }
     public bool WifeApproved { get; set; }
+
+    /// <summary>Has a patio (L2-147).</summary>
+    public bool HasPatio { get; set; }
     public string Notes { get; set; } = string.Empty;
     public int DriveMinutes { get; set; }
     public GeoLocation? Geo { get; set; }

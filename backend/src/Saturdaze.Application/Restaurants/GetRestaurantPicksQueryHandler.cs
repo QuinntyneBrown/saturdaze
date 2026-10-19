@@ -32,6 +32,7 @@ public sealed class GetRestaurantPicksQueryHandler
 
         var query = _db.Restaurants.AsNoTracking().Where(r => r.Slot == request.Slot);
         if (request.WifeApprovedOnly) query = query.Where(r => r.WifeApproved);
+        if (request.PatioOnly) query = query.Where(r => r.HasPatio);
 
         var restaurants = await query.ToListAsync(cancellationToken);
         var restaurantIds = restaurants.Select(r => r.Id).ToArray();

@@ -28,6 +28,7 @@ const SUBTITLE = 'Places to eat near what you are already doing.';
 const CLOSE_TO_HOME = 'Close to home';
 const WIFE_APPROVED = 'Wife-approved';
 const QUICK = 'Under 15 min';
+const PATIO = 'Patio';
 const QUICK_MINUTES = 15;
 
 const DAYS: readonly WeekendDay[] = ['Saturday', 'Sunday'];
@@ -42,6 +43,7 @@ export const DEFAULT_FOOD_FILTERS: FoodFilters = {
   slot: null,
   wifeApproved: false,
   quick: false,
+  patio: false,
 };
 
 type ListKey = `${WeekendDay}:${MealSlot}`;
@@ -108,6 +110,7 @@ function toCard(
   const dimmed = ctx.lockedId !== null && !locked;
   const chips: ChipView[] = [];
   if (dto.wifeApproved) chips.push({ tone: 'accent', icon: 'heart', label: WIFE_APPROVED });
+  if (dto.hasPatio) chips.push({ tone: 'leaf', label: PATIO });
   chips.push({ tone: 'sky', icon: 'car', label: `${dto.driveMinutes} min` });
   return {
     id: dto.id,
@@ -176,6 +179,7 @@ function buildSection(
   let pool = rankPicks(rows);
   if (filters.wifeApproved) pool = pool.filter((r) => r.wifeApproved);
   if (filters.quick) pool = pool.filter((r) => r.driveMinutes < QUICK_MINUTES);
+  if (filters.patio) pool = pool.filter((r) => r.hasPatio);
   const lockedId = pool.find((r) => r.locked)?.id ?? null;
   return {
     title: slot,
@@ -224,6 +228,7 @@ export class RestaurantService implements IRestaurantService {
     const extraChips: FilterChip[] = [
       { label: WIFE_APPROVED, tone: 'accent', icon: 'heart', active: filters.wifeApproved },
       { label: QUICK, tone: 'default', active: filters.quick },
+      { label: PATIO, tone: 'leaf', active: filters.patio },
     ];
 
     return {

@@ -27,6 +27,10 @@ export interface RestaurantDto {
    */
   readonly wifeApproved: boolean;
   /**
+   * Has a patio (L2-147).
+   */
+  readonly hasPatio?: boolean;
+  /**
    * Drive Minutes.
    */
   readonly driveMinutes: number;

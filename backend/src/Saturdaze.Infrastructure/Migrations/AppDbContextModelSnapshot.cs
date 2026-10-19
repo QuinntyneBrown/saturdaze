@@ -747,6 +747,9 @@ namespace Saturdaze.Infrastructure.Migrations
                     b.Property<int>("DriveMinutes")
                         .HasColumnType("int");
 
+                    b.Property<bool>("HasPatio")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(160)

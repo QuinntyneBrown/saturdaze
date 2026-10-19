@@ -18,7 +18,7 @@ Saturdaze is a web application that plans personalized family weekends. Restaura
 
 `LockRestaurantDialog` confirms a day/slot choice. `LockRestaurantCommandHandler` upserts one `RestaurantLock` per family/day/slot and updates or creates the current weekend's locked meal block when a current plan exists. The UI has no restaurant-unlock action.
 
-Patio filtering required by L1-006 has no corresponding DTO field or filter. Voting currently accepts a supplied voter name without checking membership; the design does not imply stronger per-member authorization.
+`Restaurant.HasPatio` comes from seed data and from ingestion, whose restaurants prompt asks for `patio`; `GET /api/restaurants?patioOnly=true` narrows to it, and the Food segment adds a "Patio" filter chip after "Under 15 min" and a Patio chip on picks that have one (L2-147). D12 uses the mock's `card__head`, `card__title`, `card__meta` and `card__chips` classes. Voting currently accepts a supplied voter name without checking membership; the design does not imply stronger per-member authorization.
 
 Restaurant cards lead with the restaurant's photo since the 2026-10-06 mock (`docs/mocks/pages/ideas.food.html`); `discovery/store-place-location-and-imagery` designs the photo data. "Lock it in" stays the way to place a restaurant; restaurant cards carry no "Add to day" action (L2-107).
 
@@ -29,6 +29,7 @@ The following L2 requirements refine the cited L1 capabilities. Implementation g
 | L2 ID | Refines (L1) | Requirement |
 |-------|--------------|-------------|
 | `L2-019` | `L1-006` | `GET /api/restaurants` shall require a `day` and `slot` parameter, optionally narrow by `nearActivityId`, and default `wifeApprovedOnly=true`. |
+| `L2-147` | `L1-006` | Every restaurant shall record whether it has a patio, from seed data and from catalog ingestion. `GET /api/restaurants` shall accept `patioOnly=true`. The Food segment of `/ideas` shall offer a "Patio" filter chip after "Wife-approved" and "Under 15 min", and show a "Patio" chip on each pick that has one. |
 
 ## Diagrams
 

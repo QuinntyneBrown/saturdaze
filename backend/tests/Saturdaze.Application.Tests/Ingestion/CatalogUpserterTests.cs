@@ -12,6 +12,25 @@ public class CatalogUpserterTests
     private static readonly IngestionResultParser Parser = new();
 
     [Fact]
+    public async Task Records_whether_an_ingested_restaurant_has_a_patio()
+    {
+        // Traces to: L2-147 AC2
+        await using var app = TestApp.Create();
+        var sut = new CatalogUpserter(app.Db);
+        var items = Parser.Parse("""
+            [
+              {"name":"Snug Harbour","style":"Seafood","slot":"Dinner","wifeApproved":true,"driveMinutes":4,"notes":"Lakeside.","patio":true},
+              {"name":"Spice Lounge","style":"Indian","slot":"Dinner","wifeApproved":true,"driveMinutes":7,"notes":"Butter chicken."}
+            ]
+            """, IngestionType.Restaurants).Items;
+
+        await sut.UpsertAsync(items, IngestionType.Restaurants, default);
+
+        (await app.Db.Restaurants.SingleAsync(r => r.Name == "Snug Harbour")).HasPatio.Should().BeTrue();
+        (await app.Db.Restaurants.SingleAsync(r => r.Name == "Spice Lounge")).HasPatio.Should().BeFalse();
+    }
+
+    [Fact]
     public async Task Records_whether_an_ingested_event_is_indoor()
     {
         // Traces to: L2-146 AC2

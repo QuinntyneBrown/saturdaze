@@ -61,10 +61,10 @@ public static class IngestionPrompts
                 $"{preamble}\n\nFind family-friendly restaurants. \"slot\" is \"Lunch\" or \"Dinner\". " +
                 $"\"wifeApproved\" is true for relaxed, quality, not-too-loud places a discerning adult " +
                 $"would happily return to (as opposed to purely kid-driven chains). \"notes\" is a short " +
-                $"reason it earns its place.\n\n" +
+                $"reason it earns its place. \"patio\" is true when it has outdoor seating.\n\n" +
                 $"{output}\n" +
                 "[{\"name\": string, \"style\": string, \"slot\": \"Lunch\"|\"Dinner\", " +
-                "\"wifeApproved\": boolean, \"driveMinutes\": integer, \"notes\": string, " +
+                "\"wifeApproved\": boolean, \"driveMinutes\": integer, \"notes\": string, \"patio\": boolean, " +
                 "\"latitude\": number, \"longitude\": number, \"address\": string}]",
 
             _ => throw new ArgumentOutOfRangeException(nameof(type), type, "Unsupported ingestion type.")

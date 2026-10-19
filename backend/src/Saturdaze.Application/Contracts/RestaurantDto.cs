@@ -14,6 +14,7 @@ public sealed record RestaurantDto(
     IReadOnlyList<RestaurantVoteDto> Votes,
     bool Locked,
     LocationDto? Location,
-    PlacePhotoDto? Photo = null);
+    PlacePhotoDto? Photo = null,
+    bool HasPatio = false);
 
 public sealed record RestaurantVoteDto(string VoterName, string Vote);

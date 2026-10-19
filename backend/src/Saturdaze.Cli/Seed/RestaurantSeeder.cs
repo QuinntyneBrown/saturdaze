@@ -41,6 +41,7 @@ public sealed class RestaurantSeeder : IJsonSeeder
             entity.Style = seed.Style ?? string.Empty;
             entity.WifeApproved = seed.WifeApproved;
             entity.Notes = seed.Notes ?? string.Empty;
+            entity.HasPatio = seed.Patio;
             entity.DriveMinutes = seed.DriveMinutes;
             entity.Geo = GeoLocation.Merge(entity.Geo, GeoLocation.From(seed.Latitude, seed.Longitude, seed.Address));
             SeedPhotos.Apply(db, PlaceKind.Restaurant, entity.Id, seed.Photos);
@@ -59,6 +60,7 @@ public sealed class RestaurantSeeder : IJsonSeeder
         bool WifeApproved,
         int DriveMinutes,
         string? Notes,
+        bool Patio = false,
         decimal? Latitude = null,
         decimal? Longitude = null,
         string? Address = null,

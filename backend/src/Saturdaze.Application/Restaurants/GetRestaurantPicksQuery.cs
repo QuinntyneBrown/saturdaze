@@ -9,4 +9,5 @@ public sealed record GetRestaurantPicksQuery(
     MealSlot Slot,
     Guid? NearActivityId = null,
     bool WifeApprovedOnly = true,
-    int Take = 10) : IRequest<IReadOnlyList<RestaurantDto>>;
+    int Take = 10,
+    bool PatioOnly = false) : IRequest<IReadOnlyList<RestaurantDto>>;

@@ -146,7 +146,7 @@ describe('RestaurantService', () => {
     expect(view.sections[1]!.picks).toHaveLength(2);
   });
 
-  it('starts on Saturday with no slot narrowed and both toggles off', async () => {
+  it('starts on Saturday with no slot narrowed and every toggle off', async () => {
     await flushLoad();
     const view = service.list()();
     expect(DEFAULT_FOOD_FILTERS).toEqual({
@@ -154,13 +154,14 @@ describe('RestaurantService', () => {
       slot: null,
       wifeApproved: false,
       quick: false,
+      patio: false,
     });
     expect(view.dayChips.map((c) => [c.label, c.active])).toEqual([
       ['Saturday', true],
       ['Sunday', false],
     ]);
     expect(view.slotChips.map((c) => c.active)).toEqual([false, false]);
-    expect(view.extraChips.map((c) => c.label)).toEqual(['Wife-approved', 'Under 15 min']);
+    expect(view.extraChips.map((c) => c.label)).toEqual(['Wife-approved', 'Under 15 min', 'Patio']);
     expect(view.extraChips[0]).toMatchObject({ tone: 'accent', icon: 'heart', active: false });
   });
 

@@ -27,12 +27,26 @@ test.describe("Ideas — Food", () => {
     await expect(i.filters.locator(".filters__divider")).toHaveCount(2);
   });
 
-  test("dropped v1 affordances are gone: no Refresh picks, no Patio chip, no Unlock", async ({ pages }) => {
+  test("dropped v1 affordances are gone: no Refresh picks, no Unlock", async ({ pages }) => {
     const i = pages.ideas;
     await expect(i.pageActions().getByRole("button", { name: "Refresh picks" })).toHaveCount(0);
-    await expect(i.filters.getByRole("button", { name: "Patio", exact: true })).toHaveCount(0);
-    await expect(i.main.locator(".filter-chip", { hasText: "Patio" })).toHaveCount(0);
     await expect(i.main.getByRole("button", { name: "Unlock", exact: true })).toHaveCount(0);
+  });
+
+  // Traces to: L2-147 AC3
+  test("Patio keeps only picks with a patio, and pressing it again shows them all", async ({ pages }) => {
+    const i = pages.ideas;
+    const all = await i.cards().count();
+    await i.filterChip("Patio").click();
+    await expect(i.filterChip("Patio")).toHaveAttribute("aria-pressed", "true");
+    const patios = i.cards();
+    await expect(patios.first()).toBeVisible();
+    for (const card of await patios.all()) {
+      await expect(i.cardChips(card).filter({ hasText: /^\s*Patio\s*$/ })).toHaveCount(1);
+    }
+    await i.filterChip("Patio").click();
+    await expect(i.filterChip("Patio")).toHaveAttribute("aria-pressed", "false");
+    await expect(i.cards()).toHaveCount(all);
   });
 
   test("day and slot chips are exclusive within their group; extras toggle freely", async ({ pages }) => {

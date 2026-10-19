@@ -68,6 +68,7 @@ export class IdeasFoodPage {
 
   protected setExtra(chip: FilterChipView): void {
     if (chip.label === 'Wife-approved') this.service.setFilters({ wifeApproved: !chip.active });
+    else if (chip.label === 'Patio') this.service.setFilters({ patio: !chip.active });
     else this.service.setFilters({ quick: !chip.active });
   }
 

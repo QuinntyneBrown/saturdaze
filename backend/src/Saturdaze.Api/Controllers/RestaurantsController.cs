@@ -21,10 +21,11 @@ public sealed class RestaurantsController : ControllerBase
         [FromQuery] Guid? nearActivityId,
         [FromQuery] bool wifeApprovedOnly = true,
         [FromQuery] int take = 10,
+        [FromQuery] bool patioOnly = false,
         CancellationToken ct = default)
     {
         var result = await _sender.Send(
-            new GetRestaurantPicksQuery(day, slot, nearActivityId, wifeApprovedOnly, take),
+            new GetRestaurantPicksQuery(day, slot, nearActivityId, wifeApprovedOnly, take, patioOnly),
             ct);
         return Ok(result);
     }
