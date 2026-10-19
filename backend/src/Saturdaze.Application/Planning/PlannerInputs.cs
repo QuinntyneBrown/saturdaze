@@ -19,4 +19,5 @@ public sealed record PlannerInputs(
     bool TryNew,
     int Seed);
 
-public sealed record HistoricalActivity(DateOnly WeekendOf, Guid ActivityId);
+/// <summary>An activity from an earlier weekend, with that weekend's rating (L2-027 AC3).</summary>
+public sealed record HistoricalActivity(DateOnly WeekendOf, Guid ActivityId, int? Rating = null);

@@ -12,6 +12,9 @@ namespace Saturdaze.Application.Planning;
 /// </summary>
 public sealed class WeekendPlanner : IWeekendPlanner
 {
+    /// <summary>The rating at or below which a weekend's activities are skipped (matches the /past strip).</summary>
+    private const int SkipRatingCeiling = 2;
+
     public IReadOnlyList<ItineraryBlock> Plan(PlannerInputs inputs)
     {
         var rng = new SeededRandomSource(inputs.Seed);
@@ -201,10 +204,18 @@ public sealed class WeekendPlanner : IWeekendPlanner
             .Select(p => p.Value)
             .ToList();
 
+        // "Skipping next time" (L2-027 AC3): an activity from a weekend the family
+        // rated 2★ or lower is not planned again.
+        var skipped = inputs.History
+            .Where(h => h.Rating is <= SkipRatingCeiling)
+            .Select(h => h.ActivityId)
+            .ToHashSet();
+
         var results = new List<(Activity, int)>();
         foreach (var act in inputs.Activities)
         {
             if (alreadyPicked.Contains(act.Id)) continue;
+            if (skipped.Contains(act.Id)) continue;
             if (act.TypicalDurationMinutes > minutes) continue;
             // Both drives plus a minimum stay must fit, otherwise the drive-clamp
             // in BuildActivityWithDrives would produce an activity that ends
