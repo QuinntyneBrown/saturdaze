@@ -148,6 +148,11 @@ test.describe("Past weekends", () => {
     test.skip((await p.cards().count()) === 0, "no history for this family yet");
     await p.remixButton(p.cards().first()).click();
     await expect(p.dialogTitle()).toHaveText("Remix this weekend?");
+    // Traces to: L2-084 AC5 — the stops it remixes, each marked New or Keep.
+    await expect(p.remixPreviewRows().first()).toBeVisible();
+    for (const row of await p.remixPreviewRows().all()) {
+      await expect(p.remixPreviewChip(row)).toHaveText(/^\s*(New|Keep)\s*$/);
+    }
     const remixed = page.waitForResponse((r) => /\/api\/weekends\/[^/]+\/remix/.test(r.url()));
     await p.dialogAction("Remix").click();
     expect((await remixed).ok()).toBeTruthy();

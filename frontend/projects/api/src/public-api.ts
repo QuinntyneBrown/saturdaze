@@ -24,6 +24,7 @@ export * from './lib/api/errand-placement';
 export * from './lib/api/family-presentation';
 export * from './lib/api/format';
 export * from './lib/api/history-filters';
+export * from './lib/api/remix-preview';
 export * from './lib/api/weather';
 export * from './lib/api/weekend-dates';
 export * from './lib/api/weekend-projection';

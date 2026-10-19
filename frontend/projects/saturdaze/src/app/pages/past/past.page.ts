@@ -33,6 +33,11 @@ import {
   RenameWeekendDialogData,
   RenameWeekendDialogResult,
 } from '../../dialogs/rename-weekend-dialog/rename-weekend-dialog';
+import {
+  RemixDialog,
+  RemixDialogData,
+  RemixDialogResult,
+} from '../../dialogs/remix-dialog/remix-dialog';
 import { chipTone, filterTone } from '../../shared/chip-tones';
 import { devState } from '../../shared/dev-state';
 
@@ -165,18 +170,18 @@ export class PastPage {
   }
 
   protected async remix(card: PastWeekendCard): Promise<void> {
-    const ok = await confirmWith(this.dialog, {
-      title: 'Remix this weekend?',
-      body: 'Same shape, new places.',
-      well: {
-        icon: 'sparkle',
-        title: 'What changes',
-        body: 'The same rhythm with new picks. Commitments and locked blocks stay.',
-      },
-      confirmLabel: 'Remix',
-      icon: 'sparkle',
+    let rows: RemixDialogData['rows'] = [];
+    try {
+      rows = await this.saved.remixPreview(card.id);
+    } catch (err) {
+      // The remix still works without its preview.
+      console.error('PastPage could not load the remix preview', err);
+    }
+    const ref = this.dialog.open<RemixDialogResult, RemixDialogData>(RemixDialog, {
+      ...DIALOG_OPTIONS,
+      data: { rows },
     });
-    if (!ok) return;
+    if ((await firstValueFrom(ref.closed)) !== 'remix') return;
     await this.run(async () => {
       await this.weekend.remixSaved(card.id);
       await this.router.navigateByUrl('/weekend');

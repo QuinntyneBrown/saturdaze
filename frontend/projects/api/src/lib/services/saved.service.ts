@@ -11,6 +11,7 @@ import {
   pastFilterChips,
   skippingChips,
 } from '../api/history-filters';
+import { RemixPreviewRow, remixPreviewRows } from '../api/remix-preview';
 import { formatWeekendEyebrow } from '../api/weekend-dates';
 import { projectWeekend, toCoverView, withApiOrigin } from '../api/weekend-projection';
 import { CoverChoice, CoverSelection } from '../models/cover-view';
@@ -180,6 +181,13 @@ export class SavedService implements ISavedService {
     if (!oldest) return;
     const older = await this.fetchPage(oldest);
     this._rows.set([...rows, ...older.filter((r) => !rows.some((have) => have.id === r.id))]);
+  }
+
+  async remixPreview(id: string): Promise<RemixPreviewRow[]> {
+    const dto = await firstValueFrom(
+      this.http.get<WeekendDto>(`${this.baseUrl}/api/weekends/${id}`),
+    );
+    return remixPreviewRows(dto?.blocks ?? []);
   }
 
   /** `GET /api/weekends/history`, one page, recording the total it reports. */

@@ -1,5 +1,6 @@
 import { InjectionToken, Signal } from '@angular/core';
 
+import { RemixPreviewRow } from '../api/remix-preview';
 import { CoverChoice, CoverSelection } from '../models/cover-view';
 import { PastView } from '../models/past-view';
 
@@ -27,6 +28,15 @@ export interface ISavedService {
    * @returns {Promise<void>} The result of the operation
    */
   loadMore(): Promise<void>;
+  /**
+   * Remix Preview — the saved weekend's stops for D16, marked Keep or New
+   * (L2-084 AC5). `GET /api/weekends/{id}`.
+   *
+   * @param {string} id - The saved weekend
+   *
+   * @returns {Promise<RemixPreviewRow[]>} The rows to preview
+   */
+  remixPreview(id: string): Promise<RemixPreviewRow[]>;
   /**
    * Set Filter — by chip label: All · Favourites · This year · 5★.
    *
