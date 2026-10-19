@@ -103,7 +103,7 @@ describe('VerifyEmailPage', () => {
     await mount({ token: 'tok' });
     expect(session.verifyEmail).toHaveBeenCalledWith({ token: 'tok' });
     expect(title()).toBe('Verifying your email');
-    expect(host.querySelector('[role="status"]')?.textContent?.trim()).toBe('Verifying your email');
+    expect(host.querySelector('[role="status"]')?.textContent).toContain('Verifying your email');
 
     resolve();
     await settle();
@@ -123,7 +123,7 @@ describe('VerifyEmailPage', () => {
     expect(component['error']()).toBeNull();
   });
 
-  it('shows the expired card for a dead token and can resend when the email is known', async () => {
+  it('shows the expired card for a dead token and resends into the sent card when the email is known', async () => {
     session.verifyEmail.mockRejectedValueOnce({ code: 'token_expired', message: 'Expired.' });
     await mount({ token: 'old', email: 'quinn@example.com' });
     await settle();
@@ -139,8 +139,7 @@ describe('VerifyEmailPage', () => {
     fixture.detectChanges();
     expect(session.resendVerification).toHaveBeenCalledWith({ email: 'quinn@example.com' });
     expect(component['resent']()).toBe(true);
-    expect(resend.textContent).toContain('Sent');
-    expect(resend.disabled).toBe(true);
+    expect(title()).toBe('Check your email');
   });
 
   it('cannot resend without an address', async () => {

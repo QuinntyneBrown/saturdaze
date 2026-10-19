@@ -40,6 +40,21 @@ export class PastPage extends BasePage {
     return this.main.locator(".sd-grid-cards .card");
   }
 
+  /** D16's preview of the saved weekend's stops (L2-084 AC5). */
+  remixPreviewRows(): Locator {
+    return this.dialog().locator(".list__item");
+  }
+
+  /** The "New" / "Keep" chip on a D16 preview row. */
+  remixPreviewChip(row: Locator): Locator {
+    return row.locator(".chip");
+  }
+
+  /** Loads the next page of history (L2-025 AC6); gone once every weekend shows. */
+  showOlderButton(): Locator {
+    return this.main.locator(".more-row").getByRole("button", { name: "Show older weekends" });
+  }
+
   card(title: string): Locator {
     return this.cards().filter({ has: this.page.locator(".card__title", { hasText: title }) });
   }

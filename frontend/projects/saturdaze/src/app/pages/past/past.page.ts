@@ -33,6 +33,11 @@ import {
   RenameWeekendDialogData,
   RenameWeekendDialogResult,
 } from '../../dialogs/rename-weekend-dialog/rename-weekend-dialog';
+import {
+  RemixDialog,
+  RemixDialogData,
+  RemixDialogResult,
+} from '../../dialogs/remix-dialog/remix-dialog';
 import { chipTone, filterTone } from '../../shared/chip-tones';
 import { devState } from '../../shared/dev-state';
 
@@ -85,6 +90,11 @@ export class PastPage {
     if (this.dev !== 'empty') void this.run(() => this.saved.load());
   }
 
+  /** "Show older weekends" — the next page of history (L2-025 AC6). */
+  protected loadMore(): Promise<void> {
+    return this.run(() => this.saved.loadMore());
+  }
+
   protected setFilter(label: string): void {
     this.saved.setFilter(label);
   }
@@ -98,12 +108,15 @@ export class PastPage {
       RenameWeekendDialog,
       {
         ...DIALOG_OPTIONS,
-        data: { eyebrow: card.eyebrow, title: card.customTitle },
+        // D14 opens on the title the card shows, as in the mock.
+        data: { eyebrow: card.eyebrow, title: card.customTitle ?? card.title },
       },
     );
     const result = await firstValueFrom(ref.closed);
     if (!result) return;
-    await this.run(() => this.saved.rename(card.id, result.title));
+    // Saving the generated title as shown keeps it generated, not frozen as custom.
+    const title = !card.customTitle && result.title === card.title ? null : result.title;
+    await this.run(() => this.saved.rename(card.id, title));
   }
 
   protected async rate(card: PastWeekendCard): Promise<void> {
@@ -159,18 +172,18 @@ export class PastPage {
   }
 
   protected async remix(card: PastWeekendCard): Promise<void> {
-    const ok = await confirmWith(this.dialog, {
-      title: 'Remix this weekend?',
-      body: 'Same shape, new places.',
-      well: {
-        icon: 'sparkle',
-        title: 'What changes',
-        body: 'The same rhythm with new picks. Commitments and locked blocks stay.',
-      },
-      confirmLabel: 'Remix',
-      icon: 'sparkle',
+    let rows: RemixDialogData['rows'] = [];
+    try {
+      rows = await this.saved.remixPreview(card.id);
+    } catch (err) {
+      // The remix still works without its preview.
+      console.error('PastPage could not load the remix preview', err);
+    }
+    const ref = this.dialog.open<RemixDialogResult, RemixDialogData>(RemixDialog, {
+      ...DIALOG_OPTIONS,
+      data: { rows },
     });
-    if (!ok) return;
+    if ((await firstValueFrom(ref.closed)) !== 'remix') return;
     await this.run(async () => {
       await this.weekend.remixSaved(card.id);
       await this.router.navigateByUrl('/weekend');

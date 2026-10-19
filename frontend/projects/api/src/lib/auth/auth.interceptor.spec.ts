@@ -22,6 +22,7 @@ describe('authInterceptor', () => {
   let session: {
     token: ReturnType<typeof vi.fn>;
     loading: ReturnType<typeof vi.fn>;
+    isAuthenticated: ReturnType<typeof vi.fn>;
     refreshSession: ReturnType<typeof vi.fn>;
     logout: ReturnType<typeof vi.fn>;
   };
@@ -30,6 +31,7 @@ describe('authInterceptor', () => {
     session = {
       token: vi.fn(() => tokenExpiringIn(15 * 60_000)),
       loading: vi.fn(() => false),
+      isAuthenticated: vi.fn(() => false),
       refreshSession: vi.fn(() => Promise.resolve(false)),
       logout: vi.fn(() => Promise.resolve()),
     };
@@ -123,6 +125,19 @@ describe('authInterceptor', () => {
     expect(error).toBeTruthy();
     expect(navigateSpy).toHaveBeenCalledTimes(1);
     expect(String(navigateSpy.mock.calls[0]?.[0])).toMatch(/^\/sign-in\?returnUrl=/);
+  });
+
+  it('keeps the person on the page when a refresh fails but the session survives', async () => {
+    // L2-144: no network or a server error leaves the store signed in.
+    session.isAuthenticated = vi.fn(() => true);
+    let error: unknown;
+    httpClient.get('/api/data').subscribe({ error: (e) => (error = e) });
+
+    httpMock.expectOne('/api/data').flush(null, { status: 401, statusText: 'Unauthorized' });
+    await flushPromises();
+
+    expect(error).toBeTruthy();
+    expect(navigateSpy).not.toHaveBeenCalled();
   });
 
   it('does not navigate while the session is still rehydrating', async () => {

@@ -4,6 +4,7 @@ using Saturdaze.Application.Abstractions;
 using Saturdaze.Application.Authentication;
 using Saturdaze.Application.Common;
 using Saturdaze.Application.Contracts;
+using Saturdaze.Application.Email;
 using Saturdaze.Application.Exceptions;
 using Saturdaze.Domain.Entities;
 using Saturdaze.Domain.Enums;
@@ -17,23 +18,30 @@ public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, A
     private readonly IJwtTokenService _jwt;
     private readonly IDateTimeProvider _clock;
     private readonly RefreshTokenIssuer _issuer;
+    private readonly IEmailOutbox _outbox;
+    private readonly AccountEmails _emails;
 
     public RegisterUserCommandHandler(
         IAppDbContext db,
         IPasswordHasher hasher,
         IJwtTokenService jwt,
         IDateTimeProvider clock,
-        RefreshTokenIssuer issuer)
+        RefreshTokenIssuer issuer,
+        IEmailOutbox outbox,
+        AccountEmails emails)
     {
         _db = db;
         _hasher = hasher;
         _jwt = jwt;
         _clock = clock;
         _issuer = issuer;
+        _outbox = outbox;
+        _emails = emails;
     }
 
     public async Task<AuthSuccessDto> Handle(RegisterUserCommand request, CancellationToken ct)
     {
+        PasswordPolicy.Enforce(request.Password);
         var normalized = request.Email.Trim().ToLowerInvariant();
         if (await _db.Users.AnyAsync(u => u.NormalizedEmail == normalized, ct))
         {
@@ -83,6 +91,7 @@ public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, A
         });
 
         await _db.SaveChangesAsync(ct);
+        _outbox.Enqueue(_emails.Verification(user.Email, verifyRaw));
 
         return _issuer.ToSuccess(user, issued.Raw);
     }

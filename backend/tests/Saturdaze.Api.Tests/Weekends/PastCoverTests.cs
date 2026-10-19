@@ -28,7 +28,7 @@ public class PastCoverTests : IClassFixture<SaturdazeApiFactory>
     private async Task<(HttpClient Client, Guid WeekendId, JsonElement Weekend)> PlanAsync()
     {
         var client = (await SignedInClient.CreateAsync(_factory, FamilyMode.Own)).Client;
-        var res = await client.PostAsJsonAsync("/api/weekends/plan", new { WeekendOf = "2026-05-16" });
+        var res = await client.PostAsJsonAsync("/api/weekends/plan", new { WeekendOf = "2026-05-09" }); // a past weekend, so history lists it (L2-025)
         res.EnsureSuccessStatusCode();
         var weekend = JsonDocument.Parse(await res.Content.ReadAsStringAsync()).RootElement.Clone();
         return (client, weekend.GetProperty("id").GetGuid(), weekend);

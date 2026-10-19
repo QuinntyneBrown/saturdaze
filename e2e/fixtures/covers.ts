@@ -13,10 +13,11 @@ export async function uploadCover(request: APIRequestContext, session: TestSessi
 }
 
 /** Plan the weekend of `weekendOf` (`YYYY-MM-DD`, a Saturday) so Past has more than one card. */
-export async function planWeekend(request: APIRequestContext, session: TestSession, weekendOf: string): Promise<void> {
+export async function planWeekend(request: APIRequestContext, session: TestSession, weekendOf: string): Promise<string> {
   const res = await request.post(`${API_URL}/api/weekends/plan`, {
     headers: { Authorization: `Bearer ${session.accessToken}` },
     data: { weekendOf },
   });
   if (!res.ok()) throw new Error(`POST /api/weekends/plan failed: ${res.status()} ${await res.text()}`);
+  return ((await res.json()) as { id: string }).id;
 }

@@ -243,9 +243,12 @@ export class ActivityService implements IActivityService {
     const weekendOf = upcomingSaturdayIso();
     try {
       const [rows, tryNew, weather] = await Promise.all([
-        firstValueFrom(this.http.get<ActivityDto[]>(`${this.baseUrl}/api/activities`)),
+        // Picked for the family: every idea fits its youngest and oldest child (L2-145).
         firstValueFrom(
-          this.http.get<ActivityDto[]>(`${this.baseUrl}/api/activities?tryNew=true`),
+          this.http.get<ActivityDto[]>(`${this.baseUrl}/api/activities?forFamily=true`),
+        ),
+        firstValueFrom(
+          this.http.get<ActivityDto[]>(`${this.baseUrl}/api/activities?forFamily=true&tryNew=true`),
         ).catch(() => [] as ActivityDto[]),
         firstValueFrom(
           this.http.get<WeatherForecastDto[]>(`${this.baseUrl}/api/weather?weekendOf=${weekendOf}`),

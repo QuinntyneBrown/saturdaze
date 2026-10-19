@@ -163,7 +163,7 @@ sheet, export-as-text, day options sheet, day totals, heads-up cards, quick-acti
 
 Adapted to the API as it is (no backend changes): swap is server-chosen
 (D2 retired); the errand dialog asks What / How long / Which day and the planner picks
-the slot (D8 retired, no detour figure); no Unlock, Refresh picks or Patio on Food;
+the slot (D8 retired, no detour figure); no Unlock or Refresh picks on Food (Patio came back as a filter chip and card chip with L2-147);
 members are name + age (role derived from age, no notes); commitments are one day each
 with no place; the verify-email page gains a "Check your email" state for the moment
 right after creating an account.

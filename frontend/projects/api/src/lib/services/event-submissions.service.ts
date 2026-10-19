@@ -151,6 +151,14 @@ export class EventSubmissionsService implements IEventSubmissionsService {
     this._mine.set(rows ?? []);
   }
 
+  async dismiss(id: string): Promise<void> {
+    await firstValueFrom(
+      this.http.post<void>(`${this.baseUrl}/api/events/submissions/${id}/dismiss`, {}),
+    );
+    const now = new Date().toISOString();
+    this._mine.update((rows) => rows.map((r) => (r.id === id ? { ...r, dismissedAtUtc: now } : r)));
+  }
+
   /**
    * Load Pending — resets the queue and forgets this session's approvals.
    *

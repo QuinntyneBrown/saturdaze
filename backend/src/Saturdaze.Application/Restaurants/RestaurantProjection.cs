@@ -23,6 +23,7 @@ internal static class RestaurantProjection
             votes,
             locked,
             LocationDto.From(restaurant.Geo),
-            photo);
+            photo,
+            restaurant.HasPatio);
     }
 }

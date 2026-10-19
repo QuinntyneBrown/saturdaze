@@ -89,9 +89,9 @@ public sealed class PlannerInputLoader
         var history = await _db.ItineraryBlocks.AsNoTracking()
             .Where(b => b.RefId != null && b.Kind == BlockKind.Activity)
             .Join(_db.Weekends, b => b.WeekendId, w => w.Id,
-                (b, w) => new { w.WeekendOf, ActivityId = b.RefId!.Value, w.FamilyId })
+                (b, w) => new { w.WeekendOf, ActivityId = b.RefId!.Value, w.FamilyId, w.Rating })
             .Where(x => x.FamilyId == familyId && x.WeekendOf < weekendOf)
-            .Select(x => new HistoricalActivity(x.WeekendOf, x.ActivityId))
+            .Select(x => new HistoricalActivity(x.WeekendOf, x.ActivityId, x.Rating))
             .ToListAsync(ct);
 
         var home = family.HomeCoordinates?.Copy() ?? new GeoLocation

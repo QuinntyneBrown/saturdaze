@@ -23,5 +23,6 @@ internal static class EventSubmissionMapper
             submitterEmail,
             s.SubmittedAtUtc,
             s.ReviewedAtUtc,
-            s.RejectionReason);
+            s.RejectionReason,
+            s.SubmitterDismissedAtUtc);
 }

@@ -1,7 +1,7 @@
 import { inject } from '@angular/core';
 import { Router, Routes } from '@angular/router';
 
-import { requireAdmin, requireAnonymous, requireAuth } from 'api';
+import { requireAdmin, requireAnonymous, requireAnonymousUnlessToken, requireAuth } from 'api';
 
 import { environment } from '../environments/environment';
 
@@ -51,7 +51,7 @@ export const routes: Routes = [
   {
     path: 'reset-password',
     data: { shell: 'bare', page: 'reset-password' },
-    canActivate: [requireAnonymous],
+    canActivate: [requireAnonymousUnlessToken],
     loadComponent: () =>
       import('./pages/reset-password/reset-password.page').then((m) => m.ResetPasswordPage),
   },

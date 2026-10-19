@@ -32,7 +32,8 @@
         </div>
         <div class="field">
           <label class="field__label" for="ca-pass">Password</label>
-          <input class="field__input" id="ca-pass" type="password" autocomplete="new-password" value="lavender-17" aria-describedby="ca-strength">
+          <input class="field__input" id="ca-pass" type="password" autocomplete="new-password" value="lavender-17" aria-describedby="ca-rules ca-strength">
+          <ul class="rules" id="ca-rules" aria-label="Password rules"><li class="rules__item rules__item--met"><span class="rules__mark" aria-hidden="true"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-check"/></svg></span>8 or more characters<span class="visually-hidden">: met</span></li><li class="rules__item rules__item--met"><span class="rules__mark" aria-hidden="true"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-check"/></svg></span>A number or symbol<span class="visually-hidden">: met</span></li></ul>
           <div class="strength strength--ok" id="ca-strength" aria-live="polite">
             <div class="strength__bar" aria-hidden="true"><span class="strength__seg"></span><span class="strength__seg"></span><span class="strength__seg"></span></div>
             <span class="strength__label">OK · eight characters or more. Add a capital letter to make it strong.</span>

@@ -79,7 +79,11 @@ export class IdeasPage {
   });
 
   protected async suggest(): Promise<void> {
-    const ref = this.dialog.open<SubmitEventDialogResult>(SubmitEventDialog, DIALOG_OPTIONS);
+    // D10 opens on its Title field, not the close button.
+    const ref = this.dialog.open<SubmitEventDialogResult>(SubmitEventDialog, {
+      ...DIALOG_OPTIONS,
+      autoFocus: 'input[name="title"]',
+    });
     const submission = await firstValueFrom(ref.closed);
     if (!submission) return;
     this.dialog.open<void, EventSubmittedDialogData>(EventSubmittedDialog, {

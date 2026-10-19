@@ -39,6 +39,10 @@ export interface LocalEventDto {
    */
   readonly category: string;
   /**
+   * Indoor (true) or outdoor (false); absent while unknown (L2-146).
+   */
+  readonly indoor?: boolean | null;
+  /**
    * Location (L2-099); null until the place is backfilled.
    */
   readonly location?: LocationDto | null;

@@ -179,11 +179,6 @@ describe('AuthService', () => {
       '/api/auth/resend-verification',
       () => service.resendVerification({ email: 'quinn@example.com' }),
     ],
-    [
-      'resetPassword',
-      '/api/auth/reset-password',
-      () => service.resetPassword({ token: 't', password: 'p' }),
-    ],
     ['verifyEmail', '/api/auth/verify-email', () => service.verifyEmail({ token: 't' })],
   ] as const)('%s', (_name, path, call) => {
     it(`POSTs ${path}`, async () => {
@@ -198,6 +193,27 @@ describe('AuthService', () => {
       const promise = call();
       httpMock
         .expectOne(`${BASE}${path}`)
+        .flush(
+          { code: 'token_invalid', message: 'bad' },
+          { status: 400, statusText: 'Bad Request' },
+        );
+      await expect(promise).rejects.toEqual({ code: 'token_invalid', message: 'bad' });
+    });
+  });
+
+  describe('resetPassword', () => {
+    it('POSTs /api/auth/reset-password and resolves to the account it reset', async () => {
+      const promise = service.resetPassword({ token: 't', password: 'p' });
+      const req = httpMock.expectOne(`${BASE}/api/auth/reset-password`);
+      expect(req.request.method).toBe('POST');
+      req.flush(SUCCESS);
+      await expect(promise).resolves.toEqual(SUCCESS.user);
+    });
+
+    it('rejects on an error response', async () => {
+      const promise = service.resetPassword({ token: 't', password: 'p' });
+      httpMock
+        .expectOne(`${BASE}/api/auth/reset-password`)
         .flush(
           { code: 'token_invalid', message: 'bad' },
           { status: 400, statusText: 'Bad Request' },

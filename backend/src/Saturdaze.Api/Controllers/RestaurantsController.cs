@@ -1,6 +1,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Saturdaze.Application.Contracts;
+using Saturdaze.Application.Exceptions;
 using Saturdaze.Application.Restaurants;
 using Saturdaze.Domain.Enums;
 
@@ -16,15 +17,19 @@ public sealed class RestaurantsController : ControllerBase
 
     [HttpGet]
     public async Task<ActionResult<IReadOnlyList<RestaurantDto>>> Get(
-        [FromQuery] DateOnly day,
-        [FromQuery] MealSlot slot,
+        [FromQuery] DateOnly? day,
+        [FromQuery] MealSlot? slot,
         [FromQuery] Guid? nearActivityId,
         [FromQuery] bool wifeApprovedOnly = true,
         [FromQuery] int take = 10,
+        [FromQuery] bool patioOnly = false,
         CancellationToken ct = default)
     {
+        // L2-019 AC1: both are required and a missing one is named.
+        if (day is null) throw new ValidationException("day", "Pick a day.");
+        if (slot is null) throw new ValidationException("slot", "Pick a meal slot.");
         var result = await _sender.Send(
-            new GetRestaurantPicksQuery(day, slot, nearActivityId, wifeApprovedOnly, take),
+            new GetRestaurantPicksQuery(day.Value, slot.Value, nearActivityId, wifeApprovedOnly, take, patioOnly),
             ct);
         return Ok(result);
     }
@@ -34,7 +39,7 @@ public sealed class RestaurantsController : ControllerBase
         Guid id,
         [FromBody] VoteRestaurantRequest body,
         CancellationToken ct)
-        => Ok(await _sender.Send(new VoteRestaurantCommand(id, body.VoterName, body.Vote), ct));
+        => Ok(await _sender.Send(new VoteRestaurantCommand(id, body.VoterName, body.Vote, body.Day, body.Slot), ct));
 
     [HttpPost("{id:guid}/lock")]
     public async Task<ActionResult<RestaurantDto>> Lock(
@@ -44,5 +49,6 @@ public sealed class RestaurantsController : ControllerBase
         => Ok(await _sender.Send(new LockRestaurantCommand(id, body.Day, body.Slot), ct));
 }
 
-public sealed record VoteRestaurantRequest(string VoterName, string Vote);
+/// <summary><c>Day</c> and <c>Slot</c> say where the vote was cast, for its lock state (L2-148 AC3).</summary>
+public sealed record VoteRestaurantRequest(string VoterName, string Vote, DayOfWeekend? Day = null, MealSlot? Slot = null);
 public sealed record LockRestaurantRequest(DayOfWeekend Day, MealSlot Slot);

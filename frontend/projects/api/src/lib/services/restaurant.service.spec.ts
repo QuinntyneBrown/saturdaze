@@ -110,7 +110,9 @@ describe('RestaurantService', () => {
   const sunday = addDaysIso(saturday, 1);
 
   const url = (day: string, slot: string) =>
-    `${BASE}/api/restaurants?day=${day}&slot=${slot}&wifeApprovedOnly=false&take=10`;
+    `${BASE}/api/restaurants?day=${day}&slot=${slot}&wifeApprovedOnly=false&take=10` +
+    // Saturday lunch follows "Lavender fields" (a1) in the weekend fixture (L2-019 AC3).
+    (day === saturday && slot === 'Lunch' ? '&nearActivityId=a1' : '');
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -129,11 +131,15 @@ describe('RestaurantService', () => {
 
   afterEach(() => httpMock.verify());
 
+  /** The API's order: closest first (to the meal's activity, or to home). */
+  const closest = (rows: RestaurantDto[]): RestaurantDto[] =>
+    [...rows].sort((a, b) => a.driveMinutes - b.driveMinutes);
+
   async function flushLoad(): Promise<void> {
-    httpMock.expectOne(url(saturday, 'Lunch')).flush(SAT_LUNCH);
-    httpMock.expectOne(url(saturday, 'Dinner')).flush(SAT_DINNER);
-    httpMock.expectOne(url(sunday, 'Lunch')).flush(SUN_LUNCH);
-    httpMock.expectOne(url(sunday, 'Dinner')).flush(SUN_DINNER);
+    httpMock.expectOne(url(saturday, 'Lunch')).flush(closest(SAT_LUNCH));
+    httpMock.expectOne(url(saturday, 'Dinner')).flush(closest(SAT_DINNER));
+    httpMock.expectOne(url(sunday, 'Lunch')).flush(closest(SUN_LUNCH));
+    httpMock.expectOne(url(sunday, 'Dinner')).flush(closest(SUN_DINNER));
     await settle();
   }
 
@@ -146,7 +152,7 @@ describe('RestaurantService', () => {
     expect(view.sections[1]!.picks).toHaveLength(2);
   });
 
-  it('starts on Saturday with no slot narrowed and both toggles off', async () => {
+  it('starts on Saturday with no slot narrowed and every toggle off', async () => {
     await flushLoad();
     const view = service.list()();
     expect(DEFAULT_FOOD_FILTERS).toEqual({
@@ -154,13 +160,14 @@ describe('RestaurantService', () => {
       slot: null,
       wifeApproved: false,
       quick: false,
+      patio: false,
     });
     expect(view.dayChips.map((c) => [c.label, c.active])).toEqual([
       ['Saturday', true],
       ['Sunday', false],
     ]);
     expect(view.slotChips.map((c) => c.active)).toEqual([false, false]);
-    expect(view.extraChips.map((c) => c.label)).toEqual(['Wife-approved', 'Under 15 min']);
+    expect(view.extraChips.map((c) => c.label)).toEqual(['Wife-approved', 'Under 15 min', 'Patio']);
     expect(view.extraChips[0]).toMatchObject({ tone: 'accent', icon: 'heart', active: false });
   });
 

@@ -16,7 +16,7 @@ Saturdaze is a web application that plans personalized family weekends. Moderati
 
 `ApproveSubmissionCommandHandler` creates `LocalEvent`, stamps reviewer and publication identifiers, and accepts optional drive minutes from 0 to 600. Repeated approval returns the existing result; a previously rejected submission returns 409. An unknown submission ID returns 404.
 
-`RejectSubmissionCommandHandler` records Rejected status and the optional trimmed reason. Repeated rejection is idempotent; rejecting an approved submission returns 409.
+`RejectSubmissionCommandHandler` records Rejected status and the optional trimmed reason, then queues `SuggestionEmails.NotAdded` to the submitter on `IEmailOutbox`, naming the event and the reason, so D24's "The reason is shown to the person who sent it" holds (L2-149). Repeated rejection is idempotent; rejecting an approved submission returns 409.
 
 Approval returns 409 `event_already_published` when an event with the same name, start date, and location already exists. This check matches the `LocalEvents` unique key on name, start date, and location.
 
@@ -27,6 +27,7 @@ The following L2 requirements refine the cited L1 capabilities. Implementation g
 | L2 ID | Refines (L1) | Requirement |
 |-------|--------------|-------------|
 | `L2-050` | `L1-018` | Users with the `admin` role shall have access to `/review-submissions` listing all pending submissions. Approving a submission shall move its `status` to `Approved` and copy it into the public events catalogue; rejecting shall move its `status` to `Rejected` and record an optional `rejectionReason`. Non-admins shall receive 403 when calling the moderation endpoints. |
+| `L2-149` | `L1-018` | When an administrator rejects a family's event suggestion, the submitter shall be told twice over: by email, naming the event and the reason when one was given, and in the Events segment, where the suggestion stays under "Your suggestion" as a muted card with a "Not added" chip and the reason until the submitter dismisses it. Dismissing shall be remembered, and only the submitter can dismiss their suggestion. |
 
 ## Diagrams
 

@@ -14,9 +14,9 @@ Saturdaze is a web application that plans personalized family weekends. Email ve
 
 `AuthController` dispatches `VerifyEmailCommand`; `VerifyEmailCommandHandler` validates `EmailVerificationToken`, consumes it, and sets `User.EmailVerifiedUtc`. The client defensively treats `email_already_verified` as success, but the current verify handler does not emit it: reused tokens return `token_invalid`, and valid unconsumed tokens preserve an existing verification timestamp.
 
-The verified state links to `/family` and `/weekend`. `resend()` calls the resend-verification endpoint and applies a 60-second browser cooldown.
+The verifying card is itself the polite status region (`role="status"`, `aria-live="polite"`), as in the mock (L2-006 AC6). The verified state links to `/family` and `/weekend`. `resend()` calls the resend-verification endpoint and applies a 60-second browser cooldown; resending from the expired state moves the page to the sent state, because a fresh link is on its way (L2-006 AC5).
 
-Verification delivery remains unimplemented. Development and Testing expose delivery metadata through `AuthController`; production does not send mail.
+Registration and resend enqueue a verification email on `IEmailOutbox`; `EmailDispatchService` sends it after the response through SMTP, or writes it to the pickup directory when no SMTP host is configured. Resend consumes earlier unexpired tokens, so only the newest link verifies (L2-142). Development and Testing also return the resend token through `AuthController` for automated tests.
 
 ## Requirements
 
@@ -25,6 +25,7 @@ The following L2 requirements refine the cited L1 capabilities. Implementation g
 | L2 ID | Refines (L1) | Requirement |
 |-------|--------------|-------------|
 | `L2-006` | `L1-001` | The system shall accept a verification token, mark the corresponding user as verified, and surface either a success or error state on `/verify-email`. |
+| `L2-142` | `L1-001` | The system shall email the account holder the link for every account token it issues: a verification link at registration and on resend, and a reset link on a forgot-password request. Mail shall be sent after the request is answered, so a response never waits on delivery and a delivery failure never fails the request. |
 
 ## Diagrams
 

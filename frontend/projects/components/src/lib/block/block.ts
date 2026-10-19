@@ -46,7 +46,7 @@ export class Block {
   readonly drive = input(false, { transform: booleanAttribute });
   readonly errand = input(false, { transform: booleanAttribute });
   readonly done = input(false, { transform: booleanAttribute });
-  /** Hide the phone chevron (read-only shared view). */
+  /** Hide the actions and the phone chevron (read-only shared view). */
   readonly readonly = input(false, { transform: booleanAttribute });
   /** The phone chevron / row tap. */
   readonly details = output<void>();

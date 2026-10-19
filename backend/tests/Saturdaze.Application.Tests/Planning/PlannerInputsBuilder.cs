@@ -71,9 +71,9 @@ internal sealed class PlannerInputsBuilder
         return this;
     }
 
-    public PlannerInputsBuilder HistoricalActivityWeeksAgo(Guid activityId, int weeksBack)
+    public PlannerInputsBuilder HistoricalActivityWeeksAgo(Guid activityId, int weeksBack, int? rating = null)
     {
-        _history.Add(new HistoricalActivity(_weekendOf.AddDays(-7 * weeksBack), activityId));
+        _history.Add(new HistoricalActivity(_weekendOf.AddDays(-7 * weeksBack), activityId, rating));
         return this;
     }
 

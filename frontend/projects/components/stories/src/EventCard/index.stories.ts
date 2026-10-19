@@ -9,6 +9,7 @@ import bestPracticesMd from './EventCardBestPractices.md';
 export { Default } from './EventCardDefault.stories';
 export { TileDate } from './EventCardTileDate.stories';
 export { Pending } from './EventCardPending.stories';
+export { NotAdded } from './EventCardNotAdded.stories';
 
 export default {
   title: 'Components/Event Card',

@@ -21,4 +21,8 @@ export interface FoodFilters {
    * Quick — under 15 minutes away.
    */
   readonly quick: boolean;
+  /**
+   * "Patio" — only picks with a patio (L2-147).
+   */
+  readonly patio: boolean;
 }

@@ -28,6 +28,7 @@ const SUBTITLE = 'Places to eat near what you are already doing.';
 const CLOSE_TO_HOME = 'Close to home';
 const WIFE_APPROVED = 'Wife-approved';
 const QUICK = 'Under 15 min';
+const PATIO = 'Patio';
 const QUICK_MINUTES = 15;
 
 const DAYS: readonly WeekendDay[] = ['Saturday', 'Sunday'];
@@ -42,6 +43,7 @@ export const DEFAULT_FOOD_FILTERS: FoodFilters = {
   slot: null,
   wifeApproved: false,
   quick: false,
+  patio: false,
 };
 
 type ListKey = `${WeekendDay}:${MealSlot}`;
@@ -108,6 +110,7 @@ function toCard(
   const dimmed = ctx.lockedId !== null && !locked;
   const chips: ChipView[] = [];
   if (dto.wifeApproved) chips.push({ tone: 'accent', icon: 'heart', label: WIFE_APPROVED });
+  if (dto.hasPatio) chips.push({ tone: 'leaf', label: PATIO });
   chips.push({ tone: 'sky', icon: 'car', label: `${dto.driveMinutes} min` });
   return {
     id: dto.id,
@@ -125,14 +128,20 @@ function toCard(
   };
 }
 
-/** Locked first, then approved, then closest. */
+/**
+ * Locked first, then approved, then in the API's order: closest to the
+ * meal's activity, or to home when there is none (L2-019 AC3).
+ */
 function rankPicks(rows: readonly RestaurantDto[]): RestaurantDto[] {
-  return [...rows].sort(
-    (a, b) =>
-      Number(b.locked ?? false) - Number(a.locked ?? false) ||
-      Number(b.wifeApproved) - Number(a.wifeApproved) ||
-      a.driveMinutes - b.driveMinutes,
-  );
+  return rows
+    .map((r, i) => ({ r, i }))
+    .sort(
+      (a, b) =>
+        Number(b.r.locked ?? false) - Number(a.r.locked ?? false) ||
+        Number(b.r.wifeApproved) - Number(a.r.wifeApproved) ||
+        a.i - b.i,
+    )
+    .map(({ r }) => r);
 }
 
 /** Which meal a Meal block on the timeline stands for. */
@@ -143,19 +152,30 @@ function slotOf(block: BlockRow): MealSlot | null {
   return null;
 }
 
+/** The weekend's meal block for the day and slot, and the activity before it. */
+function mealContext(
+  weekend: WeekendView,
+  day: WeekendDay,
+  slot: MealSlot,
+): { meal: BlockRow; activity: BlockRow | undefined } | null {
+  const rows = weekend.days.find((d) => d.day === day)?.blocks ?? [];
+  const index = rows.findIndex((b) => b.kind === 'Meal' && slotOf(b) === slot);
+  if (index === -1) return null;
+  const activity = rows
+    .slice(0, index)
+    .reverse()
+    .find((b) => b.kind === 'Activity');
+  return { meal: rows[index]!, activity };
+}
+
 /**
  * "Near Terre Bleu · 12:00 to 1:30pm" when the weekend already has a meal
  * block for the day and slot, else "Close to home".
  */
 function sectionSubtitle(weekend: WeekendView, day: WeekendDay, slot: MealSlot): string {
-  const rows = weekend.days.find((d) => d.day === day)?.blocks ?? [];
-  const index = rows.findIndex((b) => b.kind === 'Meal' && slotOf(b) === slot);
-  if (index === -1) return CLOSE_TO_HOME;
-  const meal = rows[index]!;
-  const activity = rows
-    .slice(0, index)
-    .reverse()
-    .find((b) => b.kind === 'Activity');
+  const context = mealContext(weekend, day, slot);
+  if (!context) return CLOSE_TO_HOME;
+  const { meal, activity } = context;
   return activity
     ? `Near ${activity.title} · ${meal.timeRange}`
     : `${CLOSE_TO_HOME} · ${meal.timeRange}`;
@@ -176,6 +196,7 @@ function buildSection(
   let pool = rankPicks(rows);
   if (filters.wifeApproved) pool = pool.filter((r) => r.wifeApproved);
   if (filters.quick) pool = pool.filter((r) => r.driveMinutes < QUICK_MINUTES);
+  if (filters.patio) pool = pool.filter((r) => r.hasPatio);
   const lockedId = pool.find((r) => r.locked)?.id ?? null;
   return {
     title: slot,
@@ -224,6 +245,7 @@ export class RestaurantService implements IRestaurantService {
     const extraChips: FilterChip[] = [
       { label: WIFE_APPROVED, tone: 'accent', icon: 'heart', active: filters.wifeApproved },
       { label: QUICK, tone: 'default', active: filters.quick },
+      { label: PATIO, tone: 'leaf', active: filters.patio },
     ];
 
     return {
@@ -275,8 +297,16 @@ export class RestaurantService implements IRestaurantService {
     }
     const saturday = upcomingSaturdayIso();
     const sunday = addDaysIso(saturday, 1);
+    const plan = this.weekend.getWeekend()();
+    // Each meal's picks rank by closeness to the activity planned before it (L2-019 AC3).
+    const near = (day: WeekendDay, slot: MealSlot): string | null =>
+      mealContext(plan, day, slot)?.activity?.refId ?? null;
     const fetch = (dayIso: string, slot: MealSlot): Promise<readonly RestaurantDto[]> =>
-      firstValueFrom(this.http.get<RestaurantDto[]>(this.picksUrl(dayIso, slot)))
+      firstValueFrom(
+        this.http.get<RestaurantDto[]>(
+          this.picksUrl(dayIso, slot, near(dayIso === saturday ? 'Saturday' : 'Sunday', slot)),
+        ),
+      )
         .then((rows) => rows ?? [])
         .catch((err: unknown) => {
           console.error(`RestaurantService.load failed for ${dayIso} ${slot}`, err);
@@ -350,8 +380,9 @@ export class RestaurantService implements IRestaurantService {
     }
   }
 
-  private picksUrl(dayIso: string, slot: MealSlot): string {
-    return `${this.baseUrl}/api/restaurants?day=${dayIso}&slot=${slot}&wifeApprovedOnly=false&take=10`;
+  private picksUrl(dayIso: string, slot: MealSlot, nearActivityId: string | null): string {
+    const near = nearActivityId ? `&nearActivityId=${nearActivityId}` : '';
+    return `${this.baseUrl}/api/restaurants?day=${dayIso}&slot=${slot}&wifeApprovedOnly=false&take=10${near}`;
   }
 
   private replaceRestaurant(dto: RestaurantDto): void {
@@ -361,7 +392,8 @@ export class RestaurantService implements IRestaurantService {
         for (const slot of SLOTS) {
           const key = keyOf(day, slot);
           next[key] = lists[key].map((r) =>
-            r.id === dto.id ? { ...dto, locked: dto.locked ?? r.locked } : r,
+            // A vote never moves a lock: each day and slot keeps its own (L2-148 AC3).
+            r.id === dto.id ? { ...dto, locked: r.locked } : r,
           );
         }
       }

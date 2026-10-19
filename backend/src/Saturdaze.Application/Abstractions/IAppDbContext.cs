@@ -28,6 +28,16 @@ public interface IAppDbContext
     DbSet<RefreshToken> RefreshTokens { get; }
     DbSet<PasswordResetToken> PasswordResetTokens { get; }
     DbSet<EmailVerificationToken> EmailVerificationTokens { get; }
+    DbSet<WeekendShare> WeekendShares { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
+
+    /// <summary>Forgets every pending change, e.g. after a failed save, so the next save starts clean.</summary>
+    void DiscardChanges();
+
+    /// <summary>
+    /// Holds a database-wide exclusive lock on <paramref name="resource"/> until the
+    /// result is disposed, so concurrent processes take turns (L2-080 AC7).
+    /// </summary>
+    Task<IAsyncDisposable> AcquireLockAsync(string resource, CancellationToken cancellationToken = default);
 }

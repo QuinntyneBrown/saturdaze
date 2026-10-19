@@ -72,5 +72,13 @@
         }
       </div>
     }
+    @if (view().hasMore) {
+      <div class="more-row">
+        <sd-button variant="quiet" type="button" (click)="loadMore()">
+          <sd-icon name="calendar" />
+          Show older weekends
+        </sd-button>
+      </div>
+    }
   }
 }

@@ -22,8 +22,12 @@ public sealed class CatalogUpserter
 
     public CatalogUpserter(IAppDbContext db) => _db = db;
 
+    /// <param name="commit">
+    /// False leaves the changes pending, so the runner can commit them together
+    /// with the closed audit row in one save (L2-080 AC4).
+    /// </param>
     public async Task<UpsertResult> UpsertAsync(
-        IReadOnlyList<IngestionItem> items, IngestionType type, CancellationToken cancellationToken)
+        IReadOnlyList<IngestionItem> items, IngestionType type, CancellationToken cancellationToken, bool commit = true)
     {
         if (items.Count == 0) return UpsertResult.Empty;
 
@@ -36,7 +40,7 @@ public sealed class CatalogUpserter
             _ => UpsertResult.Empty
         };
 
-        await _db.SaveChangesAsync(cancellationToken);
+        if (commit) await _db.SaveChangesAsync(cancellationToken);
         return result with { SkipReasons = _skips.ToList() };
     }
 
@@ -135,6 +139,8 @@ public sealed class CatalogUpserter
             entity.DriveMinutes = PayloadReader.GetIntOrDefault(p, "driveMinutes");
             entity.Url = Truncate(PayloadReader.GetStringOrEmpty(p, "url"), 500);
             entity.Category = Truncate(PayloadReader.GetStringOrEmpty(p, "category"), 80);
+            // A row without the flag keeps what is known (L2-146 AC2).
+            if (PayloadReader.TryGetBool(p, "indoor", out var indoor)) entity.Indoor = indoor;
             entity.Geo = GeoLocation.Merge(entity.Geo, PayloadReader.GetGeo(p));
             await AddPhotosAsync(PlaceKind.LocalEvent, entity.Id, name, p, ct);
         }
@@ -229,6 +235,7 @@ public sealed class CatalogUpserter
             entity.WifeApproved = PayloadReader.GetBoolOrDefault(p, "wifeApproved");
             entity.DriveMinutes = PayloadReader.GetIntOrDefault(p, "driveMinutes");
             entity.Notes = Truncate(PayloadReader.GetStringOrEmpty(p, "notes"), 500);
+            entity.HasPatio = PayloadReader.GetBoolOrDefault(p, "patio");
             entity.Geo = GeoLocation.Merge(entity.Geo, PayloadReader.GetGeo(p));
             await AddPhotosAsync(PlaceKind.Restaurant, entity.Id, name, p, ct);
         }

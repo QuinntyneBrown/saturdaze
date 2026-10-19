@@ -31,8 +31,8 @@ describe('LockRestaurantDialog', () => {
     expect(host.querySelector('.dialog__sub')?.textContent?.trim()).toBe(
       'It goes on the timeline and other picks step back.',
     );
-    expect(host.querySelector('.head__title')?.textContent?.trim()).toBe('La Marina');
-    expect(host.querySelector('.head__meta')?.textContent?.trim()).toBe(FOOD_CARD.meta);
+    expect(host.querySelector('.card__title')?.textContent?.trim()).toBe('La Marina');
+    expect(host.querySelector('.card__meta')?.textContent?.trim()).toBe(FOOD_CARD.meta);
   });
 
   it('renders the card chips with their tones', () => {

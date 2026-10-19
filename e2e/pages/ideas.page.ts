@@ -57,6 +57,14 @@ export class IdeasPage extends BasePage {
     });
   }
 
+  /** Event cards outside the family's own "Your suggestion" section, which no filter narrows. */
+  eventCards(): Locator {
+    return this.main
+      .locator(".section")
+      .filter({ hasNot: this.page.locator(".section-header__title", { hasText: "Your suggestion" }) })
+      .locator(".sd-grid-cards .card");
+  }
+
   cardTitle(card: Locator): Locator {
     return card.locator(".card__title");
   }
@@ -246,6 +254,20 @@ export class IdeasPage extends BasePage {
 
   pendingCards(): Locator {
     return this.main.locator(".card.card--muted");
+  }
+
+  /** A rejected suggestion's card under "Your suggestion" (L2-149). */
+  notAddedCard(title: string): Locator {
+    return this.card(title, this.yourSuggestionSection());
+  }
+
+  /** The card's one-line note: why a suggestion was not added. */
+  cardNote(card: Locator): Locator {
+    return card.locator(".card__note");
+  }
+
+  dismissButton(card: Locator): Locator {
+    return card.getByRole("button", { name: /^Dismiss/ });
   }
 
   dateTile(card: Locator): Locator {

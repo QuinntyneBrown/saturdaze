@@ -1,4 +1,6 @@
-import { StrengthLevel } from 'components';
+import { AbstractControl, ValidationErrors } from '@angular/forms';
+
+import { PasswordRule, StrengthLevel } from 'components';
 
 export interface PasswordStrength {
   readonly level: StrengthLevel | null;
@@ -18,4 +20,20 @@ export function passwordStrength(password: string): PasswordStrength {
     level: 'ok',
     label: 'OK · eight characters or more. Add a capital letter to make it strong.',
   };
+}
+
+/**
+ * The rules the API enforces on every new password (L2-143): 8 or more
+ * characters including a number or symbol (any non-letter).
+ */
+export function passwordRules(password: string): PasswordRule[] {
+  return [
+    { label: '8 or more characters', met: password.length >= 8 },
+    { label: 'A number or symbol', met: /[^\p{L}]/u.test(password) },
+  ];
+}
+
+/** Form validator twin of {@link passwordRules}: `{ passwordRules: true }` until every rule is met. */
+export function meetsPasswordRules(control: AbstractControl<string>): ValidationErrors | null {
+  return passwordRules(control.value ?? '').every((r) => r.met) ? null : { passwordRules: true };
 }

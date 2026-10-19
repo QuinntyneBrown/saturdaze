@@ -224,9 +224,18 @@ describe('SessionStore', () => {
       expect(localStorage.getItem(TOKEN_KEY)).toBeNull();
     });
 
-    it('clears the session when me() rejects', async () => {
+    it('keeps the stored session when me() fails without a refused token (L2-144)', async () => {
       persist(localStorage, tokenExpiringIn(900_000), 'local');
       auth.me = vi.fn(() => Promise.reject({ code: 'invalid_credentials', message: 'x' }));
+      await service.rehydrate();
+      expect(service.loading()).toBe(false);
+      expect(service.user()).toBeNull();
+      expect(localStorage.getItem(TOKEN_KEY)).not.toBeNull();
+    });
+
+    it('clears the session when the token is refused', async () => {
+      persist(localStorage, tokenExpiringIn(900_000), 'local');
+      auth.me = vi.fn(() => Promise.reject({ code: 'token_expired', message: 'x' }));
       await service.rehydrate();
       expect(service.loading()).toBe(false);
       expect(service.token()).toBeNull();

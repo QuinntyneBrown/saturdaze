@@ -204,7 +204,7 @@ public class WeekendsControllerTests : IClassFixture<SaturdazeApiFactory>, IAsyn
         JsonDocument.Parse(await shared.Content.ReadAsStringAsync()).RootElement
             .GetProperty("id").GetGuid().Should().Be(weekendId);
 
-        var calendar = await anonymous.GetAsync($"/api/weekends/{weekendId}/calendar.ics");
+        var calendar = await anonymous.GetAsync($"/api/weekends/shared/{shareBody.GetProperty("token").GetString()}/calendar.ics");
         calendar.EnsureSuccessStatusCode();
         var ics = await calendar.Content.ReadAsStringAsync();
         ics.Should().Contain("BEGIN:VCALENDAR").And.Contain("BEGIN:VEVENT");

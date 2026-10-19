@@ -130,7 +130,7 @@ describe('IdeasPage', () => {
     expect(dialog.open).toHaveBeenNthCalledWith(
       1,
       SubmitEventDialog,
-      expect.objectContaining({ panelClass: 'sd-dialog-panel', autoFocus: 'first-tabbable' }),
+      expect.objectContaining({ panelClass: 'sd-dialog-panel', autoFocus: 'input[name="title"]' }),
     );
     expect(dialog.open).toHaveBeenNthCalledWith(
       2,

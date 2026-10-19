@@ -22,3 +22,10 @@
   font-size: var(--fontSizeBase300);
   color: var(--colorNeutralForeground2);
 }
+
+// `.more-row` — the load-more row under a paged list (L2-025 AC6).
+.more-row {
+  display: flex;
+  justify-content: center;
+  margin-top: 24px;
+}

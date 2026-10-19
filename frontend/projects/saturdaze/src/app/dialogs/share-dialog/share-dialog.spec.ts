@@ -8,16 +8,18 @@ describe('ShareDialog', () => {
   let fixture: ComponentFixture<ShareDialog>;
   let host: HTMLElement;
   let dialogRef: { close: ReturnType<typeof vi.fn> };
+  let stopSharing: ReturnType<typeof vi.fn>;
 
   beforeEach(async () => {
     dialogRef = { close: vi.fn() };
+    stopSharing = vi.fn(async () => undefined);
     await TestBed.configureTestingModule({
       imports: [ShareDialog],
       providers: [
         { provide: DialogRef, useValue: dialogRef },
         {
           provide: DIALOG_DATA,
-          useValue: { shareUrl: 'https://saturdaze.app/sample-weekend?share=abc123' },
+          useValue: { shareUrl: 'https://saturdaze.app/sample-weekend?share=abc123', stopSharing },
         },
       ],
     }).compileComponents();
@@ -42,7 +44,24 @@ describe('ShareDialog', () => {
   });
 
   it('closes on Done', () => {
-    (host.querySelector('sd-button[slot="actions"] button') as HTMLButtonElement).click();
+    (
+      host.querySelector('sd-button[slot="actions"] button.btn--primary') as HTMLButtonElement
+    ).click();
     expect(dialogRef.close).toHaveBeenCalledWith();
+    expect(stopSharing).not.toHaveBeenCalled();
+  });
+
+  it('stops sharing, then closes (L2-086 AC6)', async () => {
+    await fixture.componentInstance['stop']();
+    expect(stopSharing).toHaveBeenCalledTimes(1);
+    expect(dialogRef.close).toHaveBeenCalledTimes(1);
+  });
+
+  it('stays open with a warning when stopping fails', async () => {
+    stopSharing.mockRejectedValueOnce(new Error('offline'));
+    await fixture.componentInstance['stop']();
+    fixture.detectChanges();
+    expect(host.querySelector('sd-banner')?.textContent).toContain('Could not stop sharing');
+    expect(dialogRef.close).not.toHaveBeenCalled();
   });
 });

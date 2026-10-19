@@ -4,14 +4,15 @@ import { planWeekend, uploadCover } from "../fixtures/covers.js";
 import { addDaysIso } from "../fixtures/dates.js";
 import { FAMILY_PHOTO } from "../fixtures/weekend-cover.js";
 
-/** Past cards lead with the weekend's cover (L2-110). */
+/** Past cards lead with the weekend's cover (L2-110). History lists past weekends only (L2-025 AC4). */
 
 test.describe("Past weekends — covers", () => {
   test("a weekend with the family's photo leads with it, labelled 'Your photo'", async ({ page, pages, request, signIn }) => {
     // Traces to: L2-110 AC1
     const session = (await signIn(await registerThrowaway(request, "cover")))!;
-    const weekend = await ensureCurrentWeekend(request, session);
-    await uploadCover(request, session, weekend.id);
+    const current = await ensureCurrentWeekend(request, session);
+    const lastWeekend = await planWeekend(request, session, addDaysIso(current.weekendOf, -7));
+    await uploadCover(request, session, lastWeekend);
 
     await page.goto("/past");
     const p = pages.past;
@@ -25,7 +26,8 @@ test.describe("Past weekends — covers", () => {
   test("a weekend without a cover offers 'Add a photo', which opens the cover dialog", async ({ page, pages, request, signIn }) => {
     // Traces to: L2-110 AC2
     const session = (await signIn(await registerThrowaway(request, "nocover")))!;
-    await ensureCurrentWeekend(request, session);
+    const current = await ensureCurrentWeekend(request, session);
+    await planWeekend(request, session, addDaysIso(current.weekendOf, -7));
 
     await page.goto("/past");
     const p = pages.past;
@@ -49,6 +51,7 @@ test.describe("Past weekends — covers", () => {
     const current = await ensureCurrentWeekend(request, session);
     await planWeekend(request, session, addDaysIso(current.weekendOf, -7));
     await planWeekend(request, session, addDaysIso(current.weekendOf, -14));
+    await planWeekend(request, session, addDaysIso(current.weekendOf, -21));
     await page.goto("/past");
     const p = pages.past;
     await p.waitForReady();

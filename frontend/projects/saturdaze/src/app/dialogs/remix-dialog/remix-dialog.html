@@ -1,0 +1,18 @@
+<sd-dialog title="Remix this weekend?" subtitle="Same shape, new places.">
+  @if (rows.length) {
+    <sd-list card>
+      @for (row of rows; track $index) {
+        <sd-list-item [title]="row.title" [subtitle]="row.when" subtitleFirst>
+          <sd-chip slot="trailing" [tone]="row.keep ? 'accent' : 'primary'">
+            {{ row.keep ? 'Keep' : 'New' }}
+          </sd-chip>
+        </sd-list-item>
+      }
+    </sd-list>
+  }
+  <sd-button slot="actions" variant="quiet" type="button" (click)="cancel()">Cancel</sd-button>
+  <sd-button slot="actions" variant="primary" type="button" (click)="remix()">
+    <sd-icon name="sparkle" />
+    Remix
+  </sd-button>
+</sd-dialog>

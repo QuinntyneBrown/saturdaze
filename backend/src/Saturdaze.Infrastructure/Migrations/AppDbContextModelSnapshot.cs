@@ -199,6 +199,9 @@ namespace Saturdaze.Infrastructure.Migrations
                     b.Property<Guid>("SubmittedByUserId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<DateTimeOffset?>("SubmitterDismissedAtUtc")
+                        .HasColumnType("datetimeoffset");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(200)
@@ -446,6 +449,9 @@ namespace Saturdaze.Infrastructure.Migrations
 
                     b.Property<DateOnly>("EndsOn")
                         .HasColumnType("date");
+
+                    b.Property<bool?>("Indoor")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Location")
                         .IsRequired()
@@ -744,6 +750,9 @@ namespace Saturdaze.Infrastructure.Migrations
                     b.Property<int>("DriveMinutes")
                         .HasColumnType("int");
 
+                    b.Property<bool>("HasPatio")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(160)
@@ -994,6 +1003,39 @@ namespace Saturdaze.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("Weekends", (string)null);
+                });
+
+            modelBuilder.Entity("Saturdaze.Domain.Entities.WeekendShare", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset>("CreatedAtUtc")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset>("ExpiresAtUtc")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset?>("RevokedAtUtc")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("TokenHash")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<Guid>("WeekendId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TokenHash")
+                        .IsUnique();
+
+                    b.HasIndex("WeekendId");
+
+                    b.ToTable("WeekendShares", (string)null);
                 });
 
             modelBuilder.Entity("Saturdaze.Domain.Entities.Activity", b =>
@@ -1337,6 +1379,15 @@ namespace Saturdaze.Infrastructure.Migrations
                         });
 
                     b.Navigation("Home");
+                });
+
+            modelBuilder.Entity("Saturdaze.Domain.Entities.WeekendShare", b =>
+                {
+                    b.HasOne("Saturdaze.Domain.Entities.Weekend", null)
+                        .WithMany()
+                        .HasForeignKey("WeekendId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Saturdaze.Domain.Entities.Family", b =>

@@ -1,4 +1,5 @@
 import { test, expect } from "../fixtures/sd-test.js";
+import { registerThrowaway, saveFamilyMembers } from "../fixtures/auth.js";
 
 /**
  * Ideas · Activities — segments, filter chips (client-side), the three
@@ -95,5 +96,23 @@ test.describe("Ideas — Activities", () => {
     await i.segmentTab("Activities").click();
     await page.waitForURL(/\/ideas$/);
     await expect(i.activeSegment()).toHaveText("Activities");
+  });
+});
+
+test.describe("Ideas — Activities for the family", () => {
+  // Traces to: L2-145 AC3
+  test("a three-year-old's family sees no activity for ages 4 and up", async ({ page, pages, request, signIn }) => {
+    const session = (await signIn(await registerThrowaway(request, "ideas-age")))!;
+    await saveFamilyMembers(request, session, [
+      { name: "Quinn", age: 41 },
+      { name: "Ada", age: 3 },
+    ]);
+    await page.goto("/ideas");
+    const i = pages.ideas;
+    await i.waitForReady();
+
+    await expect(i.card("Terre Bleu Lavender Farm").first()).toBeVisible();
+    await expect(i.card("Ontario Science Centre")).toHaveCount(0);
+    await expect(i.card("Bronte Creek Provincial Park")).toHaveCount(0);
   });
 });

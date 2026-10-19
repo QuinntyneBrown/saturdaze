@@ -1,14 +1,14 @@
 <sd-dialog [title]="title" subtitle="It goes on the timeline and other picks step back.">
   <sd-card variant="sunk">
-    <div class="head">
+    <div class="card__head">
       <sd-disc icon="fork" tone="sun" size="lg" />
-      <div class="head__text">
-        <p class="head__title">{{ data.card.name }}</p>
-        <p class="head__meta">{{ data.card.meta }}</p>
+      <div class="card__head-text">
+        <p class="card__title">{{ data.card.name }}</p>
+        <p class="card__meta">{{ data.card.meta }}</p>
       </div>
     </div>
     @if (data.card.chips.length) {
-      <div class="chips">
+      <div class="card__chips">
         @for (chip of data.card.chips; track chip.label) {
           <sd-chip [tone]="chipTone(chip.tone)">
             @if (chip.icon) {

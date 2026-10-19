@@ -16,7 +16,7 @@ Saturdaze is a web application that plans personalized family weekends. Local-ev
 
 `GetLocalEventsQueryHandler` returns events overlapping Friday through Sunday and events starting within 14 days after Sunday. It filters the stored drive estimate and orders by start date, drive minutes, and name.
 
-`EventsService` places a multi-day event on the first weekend day it touches, adds coming-soon entries, omits empty sections, and prepends owned pending submissions. Next-weekend filtering uses the following Saturday and Sunday. `LocalEvent` has a category, not a separate indoor flag; the distinct indoor/outdoor filtering obligation in L1-007 remains an implementation gap.
+`EventsService` places a multi-day event on the first weekend day it touches, adds coming-soon entries, omits empty sections, and prepends owned pending submissions. Next weekend is grouped like this one, into dated Saturday and Sunday sections over the following weekend. `LocalEvent.Indoor` records whether an event is indoor or outdoor (null while unknown); seed data and ingestion set it, and `GET /api/events?indoor=` filters on it (L2-146). The filter row offers Outdoor and Indoor before the category chips, each card adds an Outdoor or Indoor chip after its category, and the Festival category's chip reads "Festivals". The family's own pending suggestion stays first while a chip is pressed.
 
 Event cards lead with the event's photo since the 2026-10-06 mock (`docs/mocks/pages/ideas.events.html`), and cards dated this weekend offer "Add to day". `discovery/store-place-location-and-imagery` and `discovery/add-idea-to-day` design those changes; grouping and queries in this design are unchanged.
 
@@ -27,6 +27,7 @@ The following L2 requirements refine the cited L1 capabilities. Implementation g
 | L2 ID | Refines (L1) | Requirement |
 |-------|--------------|-------------|
 | `L2-020` | `L1-007` | `GET /api/events` shall accept `weekendOf` and `maxDriveMinutes` (default 120). It shall return events overlapping Friday through Sunday, plus events starting within 14 days after Sunday, within the requested drive bound. |
+| `L2-146` | `L1-007` | Every local event shall record whether it is indoor or outdoor, from seed data and from catalog ingestion. `GET /api/events` shall accept `indoor=true\|false`. The Events segment of `/ideas` shall offer "Outdoor" and "Indoor" filter chips before the category chips, show an "Outdoor" or "Indoor" chip on each event card whose setting is known, and label the Festival category chip "Festivals", as in the mock. |
 
 ## Diagrams
 

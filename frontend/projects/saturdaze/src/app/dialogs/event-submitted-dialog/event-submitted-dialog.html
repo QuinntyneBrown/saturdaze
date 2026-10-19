@@ -1,10 +1,10 @@
 <sd-dialog title="Thanks, it is in the queue" subtitle="Only you can see it until it is approved.">
   <sd-card variant="sunk">
-    <div class="summary">
+    <div class="card__head">
       <sd-date-tile [date]="data.submission.startsAtLocal" />
-      <div class="summary__text">
-        <p class="summary__title">{{ data.submission.title }}</p>
-        <p class="summary__meta">{{ meta() }}</p>
+      <div class="card__head-text">
+        <p class="card__title">{{ data.submission.title }}</p>
+        <p class="card__meta">{{ meta() }}</p>
       </div>
       <sd-chip tone="sun">Pending review</sd-chip>
     </div>

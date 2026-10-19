@@ -9,8 +9,21 @@
   </div>
 </div>
 <div class="card__chips"><ng-content select="[slot=chips]" /></div>
-@if ((url() && !muted()) || addable()) {
+@if (note()) {
+  <p class="card__note">{{ note() }}</p>
+}
+@if ((url() && !muted()) || addable() || dismissable()) {
   <div class="card__footer">
+    @if (dismissable()) {
+      <sd-button
+        variant="quiet"
+        size="sm"
+        type="button"
+        [label]="'Dismiss: ' + cardTitle()"
+        (click)="dismiss.emit()"
+        >Dismiss</sd-button
+      >
+    }
     @if (url() && !muted()) {
       <sd-button variant="quiet" size="sm" [href]="url()" target="_blank">
         Details

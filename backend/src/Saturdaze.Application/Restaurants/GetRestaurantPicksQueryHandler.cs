@@ -4,6 +4,7 @@ using Saturdaze.Application.Abstractions;
 using Saturdaze.Application.Common;
 using Saturdaze.Application.Contracts;
 using Saturdaze.Application.Photos;
+using Saturdaze.Application.Travel;
 using Saturdaze.Domain.Enums;
 
 namespace Saturdaze.Application.Restaurants;
@@ -32,6 +33,7 @@ public sealed class GetRestaurantPicksQueryHandler
 
         var query = _db.Restaurants.AsNoTracking().Where(r => r.Slot == request.Slot);
         if (request.WifeApprovedOnly) query = query.Where(r => r.WifeApproved);
+        if (request.PatioOnly) query = query.Where(r => r.HasPatio);
 
         var restaurants = await query.ToListAsync(cancellationToken);
         var restaurantIds = restaurants.Select(r => r.Id).ToArray();
@@ -45,18 +47,20 @@ public sealed class GetRestaurantPicksQueryHandler
             .Select(l => l.RestaurantId)
             .ToListAsync(cancellationToken);
 
-        int? activityDrive = null;
-        if (request.NearActivityId is { } id)
-        {
-            activityDrive = await _db.Activities
-                .Where(a => a.Id == id)
-                .Select(a => (int?)a.DriveMinutes)
-                .SingleOrDefaultAsync(cancellationToken);
-        }
+        var activity = request.NearActivityId is { } id
+            ? await _db.Activities.AsNoTracking().SingleOrDefaultAsync(a => a.Id == id, cancellationToken)
+            : null;
 
-        IEnumerable<Domain.Entities.Restaurant> ordered = activityDrive is { } drive
-            ? restaurants.OrderBy(r => Math.Abs(r.DriveMinutes - drive)).ThenBy(r => r.Name)
-            : restaurants.OrderBy(r => r.DriveMinutes).ThenBy(r => r.Name);
+        // Near an activity (L2-019 AC3): by straight-line distance from it when both
+        // places are mapped; otherwise by how close the drive times from home are.
+        IEnumerable<Domain.Entities.Restaurant> ordered = activity is null
+            ? restaurants.OrderBy(r => r.DriveMinutes).ThenBy(r => r.Name)
+            : restaurants
+                .OrderBy(r => r.Geo is null || activity.Geo is null ? 1 : 0)
+                .ThenBy(r => r.Geo is { } geo && activity.Geo is { } at
+                    ? TravelEstimator.DistanceKm(at, geo)
+                    : Math.Abs(r.DriveMinutes - activity.DriveMinutes))
+                .ThenBy(r => r.Name);
 
         var page = ordered.Take(request.Take).ToList();
         var photos = _photos is null

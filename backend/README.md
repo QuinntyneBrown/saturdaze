@@ -43,6 +43,8 @@ dotnet run --project backend/src/Saturdaze.Api
 
 Swagger UI is served at `/swagger` in every environment (the Angular frontend uses the spec to generate its client).
 
+Account email (verification and reset links, L2-142) is sent after each response by a hosted dispatcher. With `Saturdaze:Email:SmtpHost` empty, as in Development, each message is written as an `.eml` file to `Saturdaze:Email:PickupDirectory` (default `App_Data/mail`); set `Saturdaze__Email__SmtpHost`, `__SmtpUsername` and `__SmtpPassword` to send over SMTP. Links point at `Saturdaze:Email:AppOrigin`, falling back to `Saturdaze:Share:AppOrigin`.
+
 ## Test the whole stack
 
 ```powershell

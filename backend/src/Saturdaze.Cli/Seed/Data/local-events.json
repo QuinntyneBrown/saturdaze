@@ -7,11 +7,12 @@
       "longitude": -79.9611,
       "address": "2501 Dublin Line, Milton, ON",
       "startsOn": "2026-05-16",
-      "endsOn":   "2026-05-16",
+      "endsOn": "2026-05-16",
       "location": "Milton",
       "driveMinutes": 45,
       "url": "https://terrebleu.ca",
-      "category": "Seasonal"
+      "category": "Seasonal",
+      "indoor": false
     },
     {
       "name": "Cirque Mechanics — Pedal Punk",
@@ -19,11 +20,12 @@
       "longitude": -79.642,
       "address": "4141 Living Arts Dr, Mississauga, ON",
       "startsOn": "2026-05-16",
-      "endsOn":   "2026-05-16",
+      "endsOn": "2026-05-16",
       "location": "Living Arts Centre",
       "driveMinutes": 5,
       "url": "https://livingartscentre.ca",
-      "category": "Circus"
+      "category": "Circus",
+      "indoor": true
     },
     {
       "name": "Spring Tulip Festival",
@@ -31,11 +33,12 @@
       "longitude": -79.8763,
       "address": "680 Plains Rd W, Burlington, ON",
       "startsOn": "2026-05-16",
-      "endsOn":   "2026-05-17",
+      "endsOn": "2026-05-17",
       "location": "Royal Botanical Gardens",
       "driveMinutes": 35,
       "url": "https://rbg.ca",
-      "category": "Festival"
+      "category": "Festival",
+      "indoor": false
     },
     {
       "name": "Mississauga Symphony — Kids Concert",
@@ -43,11 +46,12 @@
       "longitude": -79.642,
       "address": "4141 Living Arts Dr, Mississauga, ON",
       "startsOn": "2026-05-17",
-      "endsOn":   "2026-05-17",
+      "endsOn": "2026-05-17",
       "location": "Living Arts Centre",
       "driveMinutes": 5,
       "url": "https://mississaugasymphony.ca",
-      "category": "Theatre"
+      "category": "Theatre",
+      "indoor": true
     },
     {
       "name": "Port Credit Farmer's Market",
@@ -55,11 +59,12 @@
       "longitude": -79.5866,
       "address": "Lakeshore Rd E, Mississauga, ON",
       "startsOn": "2026-05-17",
-      "endsOn":   "2026-05-17",
+      "endsOn": "2026-05-17",
       "location": "Lakeshore Rd",
       "driveMinutes": 2,
       "url": "https://portcreditbia.com/market",
-      "category": "Local"
+      "category": "Local",
+      "indoor": false
     },
     {
       "name": "Strawberry-picking opens",
@@ -67,11 +72,12 @@
       "longitude": -79.212,
       "address": "8100 Steeles Ave E, Markham, ON",
       "startsOn": "2026-05-23",
-      "endsOn":   "2026-05-23",
+      "endsOn": "2026-05-23",
       "location": "Whittamore's Farm",
       "driveMinutes": 40,
       "url": "https://whittamoresfarm.com",
-      "category": "Seasonal"
+      "category": "Seasonal",
+      "indoor": false
     },
     {
       "name": "Pumpkin patch — early access",
@@ -79,11 +85,12 @@
       "longitude": -79.835,
       "address": "13682 Heart Lake Rd, Caledon, ON",
       "startsOn": "2026-09-12",
-      "endsOn":   "2026-09-12",
+      "endsOn": "2026-09-12",
       "location": "Downey's Farm",
       "driveMinutes": 35,
       "url": "https://downeysfarm.com",
-      "category": "Save for later"
+      "category": "Save for later",
+      "indoor": false
     }
   ]
 }

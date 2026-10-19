@@ -173,6 +173,30 @@ public class WeekendPlannerTests
     }
 
     [Fact]
+    public void An_activity_from_a_weekend_rated_two_stars_or_lower_is_not_picked_again()
+    {
+        // Traces to: L2-027 AC3
+        var builder = new PlannerInputsBuilder()
+            .WeekendOf(Sat)
+            .Members(("Q", 41))
+            .Forecast(Sat, false, "sunny")
+            .Forecast(Sun, false, "sunny");
+        builder.Activity("Arcade", indoor: false, drive: 5, duration: 90, weatherTags: new[] { "sunny" });
+        var skippedId = builder.LastActivityId();
+        builder.Activity("Bronte Creek", indoor: false, drive: 5, duration: 90, weatherTags: new[] { "sunny" });
+        var likedId = builder.LastActivityId();
+        builder
+            .Restaurant("R", MealSlot.Lunch, drive: 5)
+            .HistoricalActivityWeeksAgo(skippedId, 10, rating: 2) // outside the recency window
+            .HistoricalActivityWeeksAgo(likedId, 10, rating: 5);
+
+        var blocks = new WeekendPlanner().Plan(builder.Build());
+
+        blocks.Should().Contain(b => b.Title == "Bronte Creek");
+        blocks.Should().NotContain(b => b.Title == "Arcade");
+    }
+
+    [Fact]
     public void TryNew_boosts_unused_activity_against_otherwise_equal_used_one()
     {
         var builder = new PlannerInputsBuilder()

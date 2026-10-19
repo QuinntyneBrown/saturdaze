@@ -10,15 +10,15 @@ Angular guards and `authInterceptor` protect navigation and attach access tokens
 
 ## Description
 
-`authInterceptor` attaches the current bearer except on credential-issuance endpoints. It refreshes near-expiry tokens, retries an eligible 401 once, and redirects to `/sign-in` when recovery fails.
+`authInterceptor` attaches the current bearer except on credential-issuance endpoints. It refreshes near-expiry tokens, retries an eligible 401 once, and redirects to `/sign-in` only when the refresh token was refused and the session cleared; a refresh lost to the network leaves the person on the page (L2-144).
 
-`requireAuth` and `requireAdmin` control browser navigation. `Program.cs` applies fallback API authorization; explicit `[AllowAnonymous]` attributes identify public auth, weather, shared-weekend, and calendar endpoints. Non-production Swagger middleware runs before authentication and is outside that policy.
+`requireAuth` and `requireAdmin` control browser navigation. `Program.cs` applies fallback API authorization; explicit `[AllowAnonymous]` attributes identify public auth, weather, shared-weekend, and shared-calendar endpoints. Non-production Swagger middleware runs before authentication and is outside that policy.
 
 `CurrentUserFamilyAccessor` resolves the authenticated account's family. Family-owned handlers filter by that ID and return 404 for another family's resource.
 
 `JwtBearerPostConfigure` configures signature validation, `Pbkdf2PasswordHasher` creates salted hashes, and `JwtTokenService` signs access tokens and hashes refresh material. `RefreshTokenCommandHandler` rotates refresh credentials with creator IP and replacement linkage.
 
-`IAppDbContext` exposes EF Core sets; application queries use LINQ or parameter binding. Public share tokens encode a weekend GUID without expiry or revocation. `GetSharedWeekendQueryHandler` returns the full `WeekendDto`, including notes and errands; public-data minimization remains a security gap.
+`IAppDbContext` exposes EF Core sets; application queries use LINQ or parameter binding. Public share tokens are random 32-byte values stored only as SHA-256 hashes in `WeekendShares`, valid for 7 days and revocable by the owner; the anonymous shared response is the reduced `SharedWeekendDto`, and the owner's calendar export requires a bearer (L2-086 AC5–AC9).
 
 ## Requirements
 
@@ -26,7 +26,7 @@ The following L2 requirements refine the cited L1 capabilities. Implementation g
 
 | L2 ID | Refines (L1) | Requirement |
 |-------|--------------|-------------|
-| `L2-008` | `L1-001`, `L1-012` | Every endpoint except `POST /api/auth/register\|login\|refresh\|logout\|forgot-password\|reset-password\|verify-email\|resend-verification`, `GET /api/weather` (no PII), `GET /api/weekends/shared/{token}` and `GET /api/weekends/{id}/calendar.ics` (capability URLs that browsers and calendar clients fetch without a bearer) shall reject requests that lack a valid `Authorization: Bearer <jwt>` header. `GET /api/activities\|/api/restaurants\|/api/events` are personalized per family (votes, locks, novelty history) and therefore require a bearer too (ADR-008). Enforcement is a global fallback authorization policy; anonymous routes opt out explicitly. |
+| `L2-008` | `L1-001`, `L1-012` | Every endpoint except `POST /api/auth/register\|login\|refresh\|logout\|forgot-password\|reset-password\|verify-email\|resend-verification`, `GET /api/weather` (no PII), `GET /api/weekends/shared/{token}` and `GET /api/weekends/shared/{token}/calendar.ics` (capability URLs that browsers and calendar clients fetch without a bearer) shall reject requests that lack a valid `Authorization: Bearer <jwt>` header. `GET /api/activities\|/api/restaurants\|/api/events` are personalized per family (votes, locks, novelty history) and therefore require a bearer too (ADR-008). Enforcement is a global fallback authorization policy; anonymous routes opt out explicitly. |
 | `L2-029` | `L1-012` | Plaintext passwords shall never be written to the database, and the password hash format shall use PBKDF2 with at least 100,000 iterations and a per-user random salt. |
 | `L2-030` | `L1-012` | The JWT signing key shall be read from the `SATURDAZE_JWT_SIGNING_KEY` environment variable in production and never embedded as a real value in source control. |
 | `L2-031` | `L1-012` | In production, the API shall accept cross-origin requests only from the explicit list configured in `Cors:AllowedOrigins`. Wildcard origins shall be rejected. |

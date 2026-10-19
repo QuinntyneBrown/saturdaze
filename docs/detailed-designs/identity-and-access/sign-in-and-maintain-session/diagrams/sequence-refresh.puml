@@ -25,7 +25,8 @@ caller -> store : refreshSession()
 alt exchange already in flight in this tab
  store --> caller : Same Promise<boolean>
 else new refresh attempt
- store -> store : Check for newer persisted unexpired pair
+ store -> store : L2-144 wait for the browser-wide lock "sd.auth.refresh"
+ store -> store : Check for a newer persisted pair another tab stored
  alt reusable persisted pair exists
  store -> store : Adopt token and storage tier
  store --> caller : true
@@ -38,8 +39,12 @@ else new refresh attempt
  alt missing, revoked, or expired token
  handler --> controller : 401 refresh_token_invalid / revoked / expired
  controller --> client : Error
- client --> store : Reject
+ client --> store : Reject token_expired
  store -> store : Clear session
+ store --> caller : false
+ else no network or server error
+ client --> store : Reject
+ store -> store : L2-144 keep session for the next attempt
  store --> caller : false
  else valid token
  handler -> issuer : Issue replacement pair
@@ -55,7 +60,7 @@ else new refresh attempt
  end
 end
 note over store
-Any exchange failure clears the session, including network failure.
-Cross-tab storage adoption is not a distributed refresh lock.
+The lock is released when the exchange settles, so a waiting tab
+re-reads storage and adopts the pair this tab persisted.
 end note
 @enduml

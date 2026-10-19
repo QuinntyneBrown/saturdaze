@@ -88,14 +88,17 @@ const SPECIMENS: readonly Specimen[] = [
     slug: 'share',
     label: 'D5 · Share',
     component: ShareDialog,
-    data: { shareUrl: 'saturdaze.app/s/may17-browns' },
+    data: { shareUrl: 'saturdaze.app/s/may17-browns', stopSharing: () => Promise.resolve() },
   },
   {
     kind: 'dialog',
     slug: 'calendar',
     label: 'D6 · Add to calendar',
     component: CalendarDialog,
-    data: { calendar: { icsUrl: '#', fileName: 'weekend-17-may.ics', eventCount: 10 } },
+    data: {
+      calendar: { icsUrl: '#', fileName: 'weekend-17-may.ics', eventCount: 10 },
+      download: () => Promise.resolve(new Blob([], { type: 'text/calendar' })),
+    },
   },
   { kind: 'dialog', slug: 'errand', label: 'D7 · Add an errand', component: AddErrandDialog },
   {

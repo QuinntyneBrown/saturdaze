@@ -12,5 +12,8 @@ public class LocalEvent
     public int DriveMinutes { get; set; }
     public string Url { get; set; } = string.Empty;
     public string Category { get; set; } = string.Empty;
+
+    /// <summary>Indoor (true) or outdoor (false); null while unknown (L2-146).</summary>
+    public bool? Indoor { get; set; }
     public GeoLocation? Geo { get; set; }
 }

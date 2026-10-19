@@ -19,4 +19,5 @@ public sealed record EventSubmissionDto(
     string? SubmittedByEmail,
     DateTimeOffset SubmittedAtUtc,
     DateTimeOffset? ReviewedAtUtc,
-    string? RejectionReason);
+    string? RejectionReason,
+    DateTimeOffset? DismissedAtUtc = null);

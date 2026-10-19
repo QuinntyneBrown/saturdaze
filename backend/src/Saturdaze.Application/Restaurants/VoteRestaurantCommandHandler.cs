@@ -47,7 +47,14 @@ public sealed class VoteRestaurantCommandHandler : IRequestHandler<VoteRestauran
             ?? throw new NotFoundException(nameof(Restaurant), request.RestaurantId);
 
         var familyId = await _current.GetCurrentFamilyIdAsync(cancellationToken);
-        var voter = request.VoterName.Trim();
+        // Only the family votes, under the member's own name (L2-148 AC1, AC2).
+        var named = request.VoterName.Trim();
+        var members = await _db.FamilyMembers
+            .Where(m => m.FamilyId == familyId)
+            .Select(m => m.Name)
+            .ToListAsync(cancellationToken);
+        var voter = members.FirstOrDefault(m => string.Equals(m.Trim(), named, StringComparison.OrdinalIgnoreCase))?.Trim()
+            ?? throw new ValidationException("voterName", $"{named} is not in the family.");
         var existing = await _db.RestaurantVotes
             .SingleOrDefaultAsync(v =>
                 v.FamilyId == familyId &&
@@ -76,8 +83,12 @@ public sealed class VoteRestaurantCommandHandler : IRequestHandler<VoteRestauran
             .OrderBy(v => v.VoterName)
             .Select(v => new RestaurantVoteDto(v.VoterName, v.Vote))
             .ToListAsync(cancellationToken);
-        var locked = await _db.RestaurantLocks.AsNoTracking()
-            .AnyAsync(l => l.FamilyId == familyId && l.RestaurantId == restaurant.Id, cancellationToken);
+        // The lock for the day and slot the vote came from, when it says (L2-148 AC3).
+        var locks = _db.RestaurantLocks.AsNoTracking()
+            .Where(l => l.FamilyId == familyId && l.RestaurantId == restaurant.Id);
+        if (request.Day is { } day) locks = locks.Where(l => l.Day == day);
+        if (request.Slot is { } slot) locks = locks.Where(l => l.Slot == slot);
+        var locked = await locks.AnyAsync(cancellationToken);
 
         var photo = _photos is null
             ? null

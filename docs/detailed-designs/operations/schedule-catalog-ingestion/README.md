@@ -18,7 +18,7 @@ Each pass parses Types, opens a fresh scope, resolves `IngestionRunner`, and awa
 
 `backend/deploy/webjobs/ingest/run.sh` invokes an installed `saturdaze` command, or a CLI DLL selected by `SATURDAZE_CLI_DLL`, with `ingest --type all`. It exits with an error when neither executable is available. `settings.job` supplies the external trigger schedule. The Worker Dockerfile and WebJob files are deployment artifacts in source, not evidence of a running Azure job.
 
-There is no distributed lease across worker replicas, and run-once failures do not select a non-zero process exit code. A scheduler can therefore observe process completion despite failed catalog types. Cancellation can leave ingestion audit rows open. These limitations remain explicit pending implementation changes.
+Replicas coordinate through the runner's per-type database lock, so two passes never both slip past the daily budget (L2-080 AC7). A run-once pass sets the process exit code to 1 when any type is recorded as Failed, or when the pass throws, via `IngestionRunner.ExitCodeFor`, so a scheduler sees the failure (L2-083 AC3). Cancellation closes the open audit row as Failed (L2-080 AC5).
 
 Source anchors are [worker host](/backend/src/Saturdaze.Worker), [cron parser](/backend/src/Saturdaze.Application/Scheduling/CronSchedule.cs), [WebJob wrapper](/backend/deploy/webjobs/ingest), and [current deployment workflow](/.github/workflows/deploy.yml).
 

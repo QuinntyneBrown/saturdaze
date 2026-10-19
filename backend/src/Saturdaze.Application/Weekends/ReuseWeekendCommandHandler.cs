@@ -54,6 +54,9 @@ public sealed class ReuseWeekendCommandHandler : IRequestHandler<ReuseWeekendCom
             .Include(w => w.Errands)
             .SingleOrDefaultAsync(w => w.FamilyId == familyId && w.WeekendOf == currentDate, cancellationToken);
 
+        // The current weekend's locked blocks, commitments included, stay put
+        // (L2-084 AC4): the confirmations promise "Locks ... stay".
+        var keptLocks = new List<ItineraryBlock>();
         if (target is null)
         {
             target = new Weekend
@@ -66,7 +69,8 @@ public sealed class ReuseWeekendCommandHandler : IRequestHandler<ReuseWeekendCom
         }
         else
         {
-            foreach (var block in target.Blocks.ToList())
+            keptLocks = target.Blocks.Where(b => b.IsLocked).ToList();
+            foreach (var block in target.Blocks.Where(b => !b.IsLocked).ToList())
             {
                 target.Blocks.Remove(block);
                 _db.ItineraryBlocks.Remove(block);
@@ -85,7 +89,7 @@ public sealed class ReuseWeekendCommandHandler : IRequestHandler<ReuseWeekendCom
         target.Rating = null;
         target.RegenerateCount = request.Remix ? source.RegenerateCount + 1 : source.RegenerateCount;
 
-        foreach (var block in sourceBlocks)
+        foreach (var block in sourceBlocks.Where(b => !keptLocks.Any(k => Overlaps(k, b))))
         {
             _db.ItineraryBlocks.Add(new ItineraryBlock
             {
@@ -126,4 +130,8 @@ public sealed class ReuseWeekendCommandHandler : IRequestHandler<ReuseWeekendCom
         var forecast = await _forecast.GetAsync(target.WeekendOf, cancellationToken);
         return WeekendMapper.ToDto(target, forecast);
     }
+
+    /// <summary>A copied block that shares time on the same day with a kept lock gives way to it.</summary>
+    private static bool Overlaps(ItineraryBlock kept, ItineraryBlock copied) =>
+        kept.Day == copied.Day && copied.StartTime < kept.EndTime && copied.EndTime > kept.StartTime;
 }

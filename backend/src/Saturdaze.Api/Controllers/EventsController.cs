@@ -17,9 +17,10 @@ public sealed class EventsController : ControllerBase
     public async Task<ActionResult<IReadOnlyList<LocalEventDto>>> Get(
         [FromQuery] DateOnly weekendOf,
         [FromQuery] int maxDriveMinutes = 120,
+        [FromQuery] bool? indoor = null,
         CancellationToken ct = default)
     {
-        var result = await _sender.Send(new GetLocalEventsQuery(weekendOf, maxDriveMinutes), ct);
+        var result = await _sender.Send(new GetLocalEventsQuery(weekendOf, maxDriveMinutes, indoor), ct);
         return Ok(result);
     }
 }

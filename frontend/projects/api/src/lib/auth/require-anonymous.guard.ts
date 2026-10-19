@@ -19,3 +19,11 @@ export const requireAnonymous: CanActivateFn = () => {
   if (!session.isAuthenticated()) return true;
   return router.createUrlTree([routes.home]);
 };
+
+/**
+ * `requireAnonymous`, except an emailed reset link (`?token=`) opens even in
+ * a signed-in browser: the link proves ownership, and the reset then signs
+ * that browser out of the account (L2-005 AC7).
+ */
+export const requireAnonymousUnlessToken: CanActivateFn = (route, state) =>
+  route.queryParamMap.has('token') || requireAnonymous(route, state);

@@ -4,9 +4,22 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Router, RouterLink } from '@angular/router';
 
 import { AuthError, SESSION_STORE } from 'api';
-import { AuthCard, AuthShell, Banner, Button, Checkbox, Strength, TextInput } from 'components';
+import {
+  AuthCard,
+  AuthShell,
+  Banner,
+  Button,
+  Checkbox,
+  PasswordRules,
+  Strength,
+  TextInput,
+} from 'components';
 
-import { passwordStrength } from '../../shared/password-strength';
+import {
+  meetsPasswordRules,
+  passwordRules,
+  passwordStrength,
+} from '../../shared/password-strength';
 import { trimmedEmail } from '../../shared/trimmed-email.validator';
 
 /**
@@ -28,6 +41,7 @@ import { trimmedEmail } from '../../shared/trimmed-email.validator';
     Banner,
     Button,
     Checkbox,
+    PasswordRules,
     Strength,
     TextInput,
   ],
@@ -50,7 +64,7 @@ export class CreateAccountPage {
     }),
     password: new FormControl('', {
       nonNullable: true,
-      validators: [Validators.required, Validators.minLength(8)],
+      validators: [Validators.required, meetsPasswordRules],
     }),
     terms: new FormControl(false, { nonNullable: true, validators: [Validators.requiredTrue] }),
     fridayPreview: new FormControl(true, { nonNullable: true }),
@@ -64,6 +78,7 @@ export class CreateAccountPage {
   });
 
   protected readonly strength = computed(() => passwordStrength(this.password()));
+  protected readonly rules = computed(() => passwordRules(this.password()));
   protected readonly canSubmit = computed(
     () => this.formStatus() === 'VALID' && !this.submitting(),
   );

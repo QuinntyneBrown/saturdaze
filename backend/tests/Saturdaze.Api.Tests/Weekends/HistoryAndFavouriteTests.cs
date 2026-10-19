@@ -31,8 +31,9 @@ public class HistoryAndFavouriteTests : IClassFixture<SaturdazeApiFactory>, IAsy
     [Fact]
     public async Task History_returns_planned_weekends_descending_by_date()
     {
-        var d1 = new DateOnly(2026, 5, 16);
-        var d2 = new DateOnly(2026, 5, 23);
+        // Past weekends: the clock's current weekend is 2026-05-16 (L2-025).
+        var d1 = new DateOnly(2026, 5, 2);
+        var d2 = new DateOnly(2026, 5, 9);
         (await _client.PostAsJsonAsync("/api/weekends/plan", new { WeekendOf = d1.ToString("yyyy-MM-dd") }))
             .EnsureSuccessStatusCode();
         (await _client.PostAsJsonAsync("/api/weekends/plan", new { WeekendOf = d2.ToString("yyyy-MM-dd") }))
@@ -44,7 +45,7 @@ public class HistoryAndFavouriteTests : IClassFixture<SaturdazeApiFactory>, IAsy
             .EnumerateArray()
             .Select(e => e.GetProperty("weekendOf").GetString())
             .ToArray();
-        dates.Should().Contain("2026-05-16").And.Contain("2026-05-23");
+        dates.Should().Contain("2026-05-02").And.Contain("2026-05-09");
         // Strictly descending.
         dates.Should().BeInDescendingOrder();
     }
@@ -61,7 +62,7 @@ public class HistoryAndFavouriteTests : IClassFixture<SaturdazeApiFactory>, IAsy
     public async Task Rating_and_title_persist_and_surface_in_history()
     {
         // Traces to: L2-026, L1-010
-        var d = new DateOnly(2026, 6, 13);
+        var d = new DateOnly(2026, 4, 11);
         var created = await _client.PostAsJsonAsync("/api/weekends/plan", new { WeekendOf = d.ToString("yyyy-MM-dd") });
         created.EnsureSuccessStatusCode();
         var id = JsonDocument.Parse(await created.Content.ReadAsStringAsync()).RootElement.GetProperty("id").GetGuid();
@@ -86,6 +87,47 @@ public class HistoryAndFavouriteTests : IClassFixture<SaturdazeApiFactory>, IAsy
         cleared.EnsureSuccessStatusCode();
         JsonDocument.Parse(await cleared.Content.ReadAsStringAsync()).RootElement.GetProperty("rating").ValueKind.Should().Be(JsonValueKind.Null);
     }
+
+    [Fact]
+    public async Task History_leaves_out_the_current_and_later_weekends_and_counts_the_past_ones()
+    {
+        // Traces to: L2-025 AC4
+        var family = (await SignedInClient.CreateAsync(_factory, FamilyMode.Own)).Client;
+        foreach (var date in new[] { "2026-05-02", "2026-05-09", "2026-05-16", "2026-05-23" })
+            (await family.PostAsJsonAsync("/api/weekends/plan", new { WeekendOf = date })).EnsureSuccessStatusCode();
+
+        var resp = await family.GetAsync("/api/weekends/history");
+        resp.EnsureSuccessStatusCode();
+
+        Dates(await resp.Content.ReadAsStringAsync()).Should().Equal("2026-05-09", "2026-05-02");
+        resp.Headers.GetValues("X-Total-Count").Single().Should().Be("2");
+    }
+
+    [Fact]
+    public async Task History_continues_before_the_oldest_weekend_received()
+    {
+        // Traces to: L2-025 AC5
+        var family = (await SignedInClient.CreateAsync(_factory, FamilyMode.Own)).Client;
+        foreach (var date in new[] { "2026-04-11", "2026-04-18", "2026-04-25", "2026-05-02", "2026-05-09" })
+            (await family.PostAsJsonAsync("/api/weekends/plan", new { WeekendOf = date })).EnsureSuccessStatusCode();
+
+        async Task<string[]> Page(string query)
+        {
+            var resp = await family.GetAsync("/api/weekends/history" + query);
+            resp.EnsureSuccessStatusCode();
+            resp.Headers.GetValues("X-Total-Count").Single().Should().Be("5");
+            return Dates(await resp.Content.ReadAsStringAsync());
+        }
+
+        (await Page("?take=2")).Should().Equal("2026-05-09", "2026-05-02");
+        (await Page("?take=2&before=2026-05-02")).Should().Equal("2026-04-25", "2026-04-18");
+        (await Page("?take=2&before=2026-04-18")).Should().Equal("2026-04-11");
+    }
+
+    private static string[] Dates(string json) =>
+        JsonDocument.Parse(json).RootElement.EnumerateArray()
+            .Select(e => e.GetProperty("weekendOf").GetString()!)
+            .ToArray();
 
     [Fact]
     public async Task Favourite_toggles_persisted_state()

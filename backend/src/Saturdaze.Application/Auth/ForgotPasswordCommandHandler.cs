@@ -4,6 +4,7 @@ using Saturdaze.Application.Abstractions;
 using Saturdaze.Application.Authentication;
 using Saturdaze.Application.Common;
 using Saturdaze.Application.Contracts;
+using Saturdaze.Application.Email;
 using Saturdaze.Domain.Entities;
 
 namespace Saturdaze.Application.Auth;
@@ -13,12 +14,16 @@ public class ForgotPasswordCommandHandler : IRequestHandler<ForgotPasswordComman
     private readonly IAppDbContext _db;
     private readonly IJwtTokenService _tokens;
     private readonly IDateTimeProvider _clock;
+    private readonly IEmailOutbox _outbox;
+    private readonly AccountEmails _emails;
 
-    public ForgotPasswordCommandHandler(IAppDbContext db, IJwtTokenService tokens, IDateTimeProvider clock)
+    public ForgotPasswordCommandHandler(IAppDbContext db, IJwtTokenService tokens, IDateTimeProvider clock, IEmailOutbox outbox, AccountEmails emails)
     {
         _db = db;
         _tokens = tokens;
         _clock = clock;
+        _outbox = outbox;
+        _emails = emails;
     }
 
     public async Task<AuthTokenDeliveryDto> Handle(ForgotPasswordCommand request, CancellationToken ct)
@@ -48,6 +53,7 @@ public class ForgotPasswordCommandHandler : IRequestHandler<ForgotPasswordComman
         });
 
         await _db.SaveChangesAsync(ct);
+        _outbox.Enqueue(_emails.PasswordReset(user.Email, raw));
         return new AuthTokenDeliveryDto(user.Email, raw, expires);
     }
 }

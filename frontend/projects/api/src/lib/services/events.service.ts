@@ -8,7 +8,6 @@ import {
   addDaysIso,
   formatDayDate,
   formatEventDate,
-  formatWeekendEyebrow,
   monthAbbr,
   parseIsoDate,
   upcomingSaturdayIso,
@@ -35,6 +34,9 @@ const SUBTITLE = `What is on within ${EVENTS_DRIVE_WINDOW} minutes of home.`;
 const SUBTITLE_MINE = 'Only you can see it until it is approved';
 const SUBTITLE_SOON = 'Worth a note in the calendar';
 const PENDING_REVIEW = 'Pending review';
+const NOT_ADDED = 'Not added';
+/** Matches the email's wording when an admin gives no reason (L2-149 AC5). */
+const NO_REASON = 'No reason was given.';
 
 /** Category chips in display order; anything else sorts after, A→Z. */
 const CATEGORY_TONES: readonly { label: string; tone: ChipTone }[] = [
@@ -44,6 +46,33 @@ const CATEGORY_TONES: readonly { label: string; tone: ChipTone }[] = [
   { label: 'Theatre', tone: 'indoor' },
   { label: 'Festival', tone: 'leaf' },
 ];
+
+/** The setting chips (L2-146), offered before the category chips. */
+const SETTINGS = ['Outdoor', 'Indoor'] as const;
+
+/** Category chips read in the plural where the mock does: "Festivals". */
+const CATEGORY_CHIP_LABELS: Readonly<Record<string, string>> = { Festival: 'Festivals' };
+
+/** The filter chip's label for a category. */
+export function categoryChipLabel(category: string): string {
+  return CATEGORY_CHIP_LABELS[category] ?? category;
+}
+
+/** "Outdoor" / "Indoor" for an event whose setting is known. */
+function settingOf(dto: LocalEventDto): (typeof SETTINGS)[number] | null {
+  if (dto.indoor === true) return 'Indoor';
+  if (dto.indoor === false) return 'Outdoor';
+  // Older rows carried the setting as their category.
+  return (SETTINGS as readonly string[]).includes(dto.category)
+    ? (dto.category as (typeof SETTINGS)[number])
+    : null;
+}
+
+/** Does the event match the pressed chip: a setting, or a category by its chip label? */
+function matchesChip(dto: LocalEventDto, label: string): boolean {
+  if ((SETTINGS as readonly string[]).includes(label)) return settingOf(dto) === label;
+  return categoryChipLabel(dto.category) === label;
+}
 
 /** The tone for a category chip; unknown categories are neutral. */
 export function categoryTone(category: string): ChipTone {
@@ -72,6 +101,9 @@ function metaFor(dto: LocalEventDto): string {
 function toCard(dto: LocalEventDto, addable = false): EventCard {
   const chips: ChipView[] = [];
   if (dto.category) chips.push({ tone: categoryTone(dto.category), label: dto.category });
+  const setting = settingOf(dto);
+  if (setting && setting !== dto.category)
+    chips.push({ tone: categoryTone(setting), label: setting });
   chips.push({ tone: 'sky', icon: 'car', label: `${dto.driveMinutes} min` });
   return {
     id: dto.id,
@@ -102,6 +134,20 @@ function toPendingCard(dto: EventSubmissionDto): EventCard {
     pending: true,
     media: null,
     addable: false,
+  };
+}
+
+/**
+ * To Rejected Card — a suggestion that was not added, with the reason, until
+ * the submitter dismisses it (L2-149).
+ */
+function toRejectedCard(dto: EventSubmissionDto): EventCard {
+  return {
+    ...toPendingCard(dto),
+    chips: [{ tone: 'warn', label: NOT_ADDED }],
+    url: null,
+    note: dto.rejectionReason?.trim() || NO_REASON,
+    dismissable: true,
   };
 }
 
@@ -138,32 +184,48 @@ function thisWeekendSections(weekendOf: string, dtos: readonly LocalEventDto[]):
   ];
 }
 
-/** Everything touching the following Saturday or Sunday. */
+/**
+ * The following weekend, grouped like this one: Saturday, then Sunday, each
+ * dated. A two-day event shows on the first day it touches.
+ */
 function nextWeekendSections(weekendOf: string, dtos: readonly LocalEventDto[]): EventSection[] {
   const sat = addDaysIso(weekendOf, 7);
   const sun = addDaysIso(weekendOf, 8);
-  const events = dtos.filter((e) => overlaps(e, sat) || overlaps(e, sun));
+  const saturday = dtos.filter((e) => overlaps(e, sat));
+  const seen = new Set(saturday.map((e) => e.id));
+  const sunday = dtos.filter((e) => !seen.has(e.id) && overlaps(e, sun));
   return [
-    {
-      title: 'Next weekend',
-      subtitle: formatWeekendEyebrow(sat),
-      events: events.map((e) => toCard(e)),
-    },
+    { title: 'Saturday', subtitle: formatDayDate(sat), events: saturday.map((e) => toCard(e)) },
+    { title: 'Sunday', subtitle: formatDayDate(sun), events: sunday.map((e) => toCard(e)) },
   ];
 }
 
 /**
- * Category Chips — one per category present, ranked by the known order
- * then A→Z; none active means "all".
+ * Category Chips — Outdoor and Indoor first when any event has that setting
+ * (L2-146), then one per category present, ranked by the known order then
+ * A→Z; none active means "all".
  */
 function categoryChips(dtos: readonly LocalEventDto[], active: string | null): FilterChip[] {
-  const categories = Array.from(new Set(dtos.map((e) => e.category).filter((c) => !!c)));
+  const settings = SETTINGS.filter((s) => dtos.some((e) => settingOf(e) === s));
+  const categories = Array.from(
+    new Set(
+      dtos
+        .map((e) => e.category)
+        .filter((c) => !!c && !(SETTINGS as readonly string[]).includes(c)),
+    ),
+  );
   const rank = (c: string) => {
     const i = CATEGORY_TONES.findIndex((t) => t.label === c);
     return i === -1 ? CATEGORY_TONES.length : i;
   };
   categories.sort((a, b) => rank(a) - rank(b) || a.localeCompare(b));
-  return categories.map((c) => ({ label: c, tone: categoryTone(c), active: c === active }));
+  return [
+    ...settings.map((s) => ({ label: s, tone: categoryTone(s), active: s === active })),
+    ...categories.map((c) => {
+      const label = categoryChipLabel(c);
+      return { label, tone: categoryTone(c), active: label === active };
+    }),
+  ];
 }
 
 @Injectable({ providedIn: 'root' })
@@ -182,18 +244,18 @@ export class EventsService implements IEventsService {
     const weekendOf = this._weekendOf();
     const window = this._window();
     const category = this._category();
-    const narrowed = category ? rows.filter((e) => e.category === category) : rows;
+    const narrowed = category ? rows.filter((e) => matchesChip(e, category)) : rows;
 
-    const pending = this.submissions
-      .mine()()
-      .filter((s) => s.status === 'Pending');
+    const own = this.submissions.mine()();
+    const pending = own.filter((s) => s.status === 'Pending');
+    const notAdded = own.filter((s) => s.status === 'Rejected' && !s.dismissedAtUtc);
     const mine: EventSection[] =
-      pending.length > 0
+      pending.length + notAdded.length > 0
         ? [
             {
               title: 'Your suggestion',
               subtitle: SUBTITLE_MINE,
-              events: pending.map(toPendingCard),
+              events: [...pending.map(toPendingCard), ...notAdded.map(toRejectedCard)],
             },
           ]
         : [];
