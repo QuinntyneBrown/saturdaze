@@ -16,7 +16,7 @@ Saturdaze is a web application that plans personalized family weekends. Activity
 
 `ActivitiesController` dispatches `GetActivitySuggestionsQuery`. The handler applies supplied age, indoor, drive, weather, and count filters. Results are ordered by drive minutes, then name. Novelty excludes activities from the caller family's last four weekends through `ICurrentFamilyAccessor`, implemented by `CurrentUserFamilyAccessor`.
 
-`Activity` stores catalog attributes; browser services own card mapping and section grouping. Cards open map links. Family-age and drive limits are not automatically supplied by the current browser load; complete family personalization remains a gap under L1-005.
+`Activity` stores catalog attributes; browser services own card mapping and section grouping. Cards open map links. `ActivityService.load()` asks for `GET /api/activities?forFamily=true` (and the same with `tryNew=true`): `GetActivitySuggestionsQueryHandler` reads the caller family's members under 18 and keeps only activities whose age range covers both the youngest and the oldest child; a family without children gets the whole catalogue (L2-145). Drive time stays a visible fact and a filter chip rather than a hard limit, as in the mock, which lists a 55-minute drive.
 
 Activity cards lead with the place's photo and offer "Add to day" since the 2026-10-06 mock (`docs/mocks/pages/ideas.html`). `discovery/store-place-location-and-imagery` designs the photo data and `sd-media`; `discovery/add-idea-to-day` designs the photo-led card and the placement dialog. Section building and filters in this design are unchanged.
 
@@ -28,6 +28,7 @@ The following L2 requirements refine the cited L1 capabilities. Implementation g
 |-------|--------------|-------------|
 | `L2-017` | `L1-005` | `GET /api/activities` shall accept query filters (`indoor`, `maxDriveMinutes`, `minAge`, `maxAge`, `weather`, `tryNew`, `take`) and return activities whose attributes satisfy every supplied filter. |
 | `L2-018` | `L1-005` | The `/ideas` page shall render three labelled sections in order: weather-fit picks for the current forecast, "If the weather turns" fallbacks, and "Try something new" novelty picks. |
+| `L2-145` | `L1-005`, `L1-002` | The activity ideas on `/ideas`, the "Try something new" picks included, shall be picked for the family: when the family profile lists children (members under 18), every activity shown shall welcome both the youngest and the oldest child. `GET /api/activities?forFamily=true` shall apply that age window from the caller's profile; a family without children shall see the whole catalogue. |
 
 ## Diagrams
 

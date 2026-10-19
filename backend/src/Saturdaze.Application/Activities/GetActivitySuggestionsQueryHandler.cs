@@ -14,6 +14,9 @@ public sealed class GetActivitySuggestionsQueryHandler
     /// <summary>Activities used in the last N weekends are excluded when TryNew = true.</summary>
     public const int RecentWeekendWindow = 4;
 
+    /// <summary>Members this age or older are parents, not children (matches the Family page).</summary>
+    public const int AdultAge = 18;
+
     private readonly IAppDbContext _db;
     private readonly ICurrentFamilyAccessor _current;
     private readonly IPlacePhotoReader? _photos;
@@ -40,6 +43,22 @@ public sealed class GetActivitySuggestionsQueryHandler
         // out below (or start above) that bound (L2-017 AC2).
         if (request.MinAge is { } minAge) query = query.Where(a => a.MinAge <= minAge && a.MaxAge >= minAge);
         if (request.MaxAge is { } maxAge) query = query.Where(a => a.MaxAge >= maxAge && a.MinAge <= maxAge);
+
+        // Ideas for the family welcome its youngest and oldest child (L2-145).
+        if (request.ForFamily)
+        {
+            var familyId = await _current.GetCurrentFamilyIdAsync(cancellationToken);
+            var kidAges = await _db.FamilyMembers
+                .Where(m => m.FamilyId == familyId && m.Age < AdultAge)
+                .Select(m => m.Age)
+                .ToListAsync(cancellationToken);
+            if (kidAges.Count > 0)
+            {
+                var youngest = kidAges.Min();
+                var oldest = kidAges.Max();
+                query = query.Where(a => a.MinAge <= youngest && a.MaxAge >= oldest);
+            }
+        }
 
         var activities = await query.ToListAsync(cancellationToken);
 

@@ -10,4 +10,5 @@ public sealed record GetActivitySuggestionsQuery(
     int? MaxAge = null,
     string? Weather = null,
     bool TryNew = false,
-    int Take = 50) : IRequest<IReadOnlyList<ActivityDto>>;
+    int Take = 50,
+    bool ForFamily = false) : IRequest<IReadOnlyList<ActivityDto>>;

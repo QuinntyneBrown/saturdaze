@@ -266,3 +266,16 @@ export async function devToken(
   if (!body.token) throw new Error(`${path} returned no token — is the API running as Development?`);
   return body.token;
 }
+
+/** Replaces the family's members through `PUT /api/family` (a partial profile, L2-010). */
+export async function saveFamilyMembers(
+  request: APIRequestContext,
+  session: TestSession,
+  members: ReadonlyArray<{ name: string; age: number }>,
+): Promise<void> {
+  const res = await request.put(`${API_URL}/api/family`, {
+    headers: { Authorization: `Bearer ${session.accessToken}` },
+    data: { members },
+  });
+  if (!res.ok()) throw new Error(`PUT /api/family failed: ${res.status()} ${await res.text()}`);
+}

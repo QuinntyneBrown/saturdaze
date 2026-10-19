@@ -106,8 +106,8 @@ describe('ActivityService', () => {
 
   /** Answer the constructor's three GETs. */
   async function flushLoad(weather: WeatherForecastDto[] = []): Promise<void> {
-    httpMock.expectOne(`${BASE}/api/activities`).flush(CATALOGUE);
-    httpMock.expectOne(`${BASE}/api/activities?tryNew=true`).flush(TRY_NEW);
+    httpMock.expectOne(`${BASE}/api/activities?forFamily=true`).flush(CATALOGUE);
+    httpMock.expectOne(`${BASE}/api/activities?forFamily=true&tryNew=true`).flush(TRY_NEW);
     httpMock.expectOne(`${BASE}/api/weather?weekendOf=${saturday}`).flush(weather);
     await settle();
   }
@@ -225,8 +225,10 @@ describe('ActivityService', () => {
     await flushLoad();
     vi.spyOn(console, 'error').mockImplementation(() => undefined);
     const reload = service.load();
-    httpMock.expectOne(`${BASE}/api/activities`).flush(null, { status: 500, statusText: 'Boom' });
-    httpMock.expectOne(`${BASE}/api/activities?tryNew=true`).flush([]);
+    httpMock
+      .expectOne(`${BASE}/api/activities?forFamily=true`)
+      .flush(null, { status: 500, statusText: 'Boom' });
+    httpMock.expectOne(`${BASE}/api/activities?forFamily=true&tryNew=true`).flush([]);
     httpMock.expectOne(`${BASE}/api/weather?weekendOf=${saturday}`).flush([]);
     await reload;
     expect(

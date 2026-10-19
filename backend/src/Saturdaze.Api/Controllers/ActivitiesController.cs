@@ -22,10 +22,11 @@ public sealed class ActivitiesController : ControllerBase
         [FromQuery] string? weather,
         [FromQuery] bool tryNew = false,
         [FromQuery] int take = 50,
+        [FromQuery] bool forFamily = false,
         CancellationToken ct = default)
     {
         var result = await _sender.Send(
-            new GetActivitySuggestionsQuery(indoor, maxDriveMinutes, minAge, maxAge, weather, tryNew, take),
+            new GetActivitySuggestionsQuery(indoor, maxDriveMinutes, minAge, maxAge, weather, tryNew, take, forFamily),
             ct);
         return Ok(result);
     }
