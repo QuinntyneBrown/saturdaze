@@ -10,7 +10,7 @@ Angular guards and `authInterceptor` protect navigation and attach access tokens
 
 ## Description
 
-`authInterceptor` attaches the current bearer except on credential-issuance endpoints. It refreshes near-expiry tokens, retries an eligible 401 once, and redirects to `/sign-in` when recovery fails.
+`authInterceptor` attaches the current bearer except on credential-issuance endpoints. It refreshes near-expiry tokens, retries an eligible 401 once, and redirects to `/sign-in` only when the refresh token was refused and the session cleared; a refresh lost to the network leaves the person on the page (L2-144).
 
 `requireAuth` and `requireAdmin` control browser navigation. `Program.cs` applies fallback API authorization; explicit `[AllowAnonymous]` attributes identify public auth, weather, shared-weekend, and shared-calendar endpoints. Non-production Swagger middleware runs before authentication and is outside that policy.
 

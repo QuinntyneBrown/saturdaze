@@ -2,7 +2,7 @@
 
 | Design | Effort | Complete |
 |---|---|---|
-| browse-saved-weekends | 4 days | 80% |
+| browse-saved-weekends | 4 days | 100% |
 | choose-weekend-cover-photo | 7 days | 90% |
 | control-itinerary-blocks | 3 days | 100% |
 | generate-current-weekend | 5 days | 100% |
