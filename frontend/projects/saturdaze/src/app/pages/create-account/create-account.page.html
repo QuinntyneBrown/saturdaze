@@ -26,10 +26,10 @@
           type="password"
           name="password"
           autocomplete="new-password"
-          hint="Eight characters or more."
           formControlName="password"
           [error]="passwordError()"
         />
+        <sd-password-rules [rules]="rules()" />
         @if (strength().level) {
           <sd-strength [level]="strength().level" [label]="strength().label" />
         }

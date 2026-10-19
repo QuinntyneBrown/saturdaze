@@ -11,11 +11,25 @@ import {
 import { ActivatedRoute, RouterLink } from '@angular/router';
 
 import { AuthError, SESSION_STORE } from 'api';
-import { AuthCard, AuthShell, Banner, Button, Disc, Icon, Strength, TextInput } from 'components';
+import {
+  AuthCard,
+  AuthShell,
+  Banner,
+  Button,
+  Disc,
+  Icon,
+  PasswordRules,
+  Strength,
+  TextInput,
+} from 'components';
 
 import { devState } from '../../shared/dev-state';
 import { maskEmail } from '../../shared/mask-email';
-import { passwordStrength } from '../../shared/password-strength';
+import {
+  meetsPasswordRules,
+  passwordRules,
+  passwordStrength,
+} from '../../shared/password-strength';
 import { trimmedEmail } from '../../shared/trimmed-email.validator';
 
 /**
@@ -47,6 +61,7 @@ const STATES: readonly ResetState[] = ['request', 'sent', 'new', 'done', 'expire
     Button,
     Disc,
     Icon,
+    PasswordRules,
     Strength,
     TextInput,
   ],
@@ -78,7 +93,7 @@ export class ResetPasswordPage {
     {
       password: new FormControl('', {
         nonNullable: true,
-        validators: [Validators.required, Validators.minLength(8)],
+        validators: [Validators.required, meetsPasswordRules],
       }),
       confirm: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
     },
@@ -89,6 +104,21 @@ export class ResetPasswordPage {
     initialValue: '',
   });
   protected readonly strength = computed(() => passwordStrength(this.newPassword()));
+  protected readonly rules = computed(() => passwordRules(this.newPassword()));
+  private readonly newFormStatus = toSignal(this.newForm.statusChanges, {
+    initialValue: this.newForm.status,
+  });
+  private readonly newFormValue = toSignal(this.newForm.valueChanges, {
+    initialValue: this.newForm.value,
+  });
+  /** L2-005 AC3: a mismatched confirmation names itself and blocks the save. */
+  protected readonly mismatch = computed(() => {
+    const { password, confirm } = this.newFormValue();
+    return !!password && !!confirm && password !== confirm;
+  });
+  protected readonly canSave = computed(
+    () => this.newFormStatus() === 'VALID' && !this.submitting(),
+  );
 
   private initialState(): ResetState {
     const dev = devState(this.route);

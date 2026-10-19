@@ -63,9 +63,9 @@ describe('CreateAccountPage', () => {
       'Email',
       'Password',
     ]);
-    expect(fields[2]?.querySelector('.field__hint')?.textContent?.trim()).toBe(
-      'Eight characters or more.',
-    );
+    expect(
+      Array.from(host.querySelectorAll('.rules__item')).map((r) => r.textContent?.trim()),
+    ).toEqual(['8 or more characters: not yet met', 'A number or symbol: not yet met']);
     const boxes = Array.from(host.querySelectorAll('sd-checkbox'));
     expect(boxes.length).toBe(2);
     expect(boxes[0]?.querySelector('input')?.getAttribute('aria-required')).toBe('true');

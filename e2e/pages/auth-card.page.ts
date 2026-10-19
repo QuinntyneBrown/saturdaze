@@ -100,6 +100,16 @@ export abstract class AuthCardPage extends BasePage {
     return this.strength(state).locator(".strength__label");
   }
 
+  /** The password rule checklist (`.rules`, L2-143). */
+  passwordRules(state?: string): Locator {
+    return this.card(state).getByRole("list", { name: "Password rules" });
+  }
+
+  /** One rule in the checklist; carries `rules__item--met` once satisfied. */
+  passwordRule(rule: "8 or more characters" | "A number or symbol", state?: string): Locator {
+    return this.passwordRules(state).locator(".rules__item").filter({ hasText: rule });
+  }
+
   /** A card button or link by accessible name. */
   action(name: string, state?: string): Locator {
     return control(this.card(state), name);

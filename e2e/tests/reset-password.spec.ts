@@ -93,6 +93,24 @@ test.describe("Reset password — new password", () => {
     expect(newLogin.status()).toBe(200);
   });
 
+  // Traces to: L2-143 AC3, AC4
+  test("the rule checklist marks each password rule as it is met", async ({ page, pages }) => {
+    await page.goto("/reset-password?token=anything");
+    const r = pages.resetPassword;
+    await r.waitForReady();
+    await r.newPasswordInput().fill("abc");
+    await expect(r.passwordRule("8 or more characters")).not.toHaveClass(/rules__item--met/);
+    await expect(r.passwordRule("A number or symbol")).not.toHaveClass(/rules__item--met/);
+    await r.newPasswordInput().fill("abcdefgh");
+    await expect(r.passwordRule("8 or more characters")).toHaveClass(/rules__item--met/);
+    await expect(r.passwordRule("A number or symbol")).not.toHaveClass(/rules__item--met/);
+    await r.confirmPasswordInput().fill("abcdefgh");
+    await expect(r.savePasswordButton()).toBeDisabled();
+    await r.newPasswordInput().fill("abcdefg1");
+    await expect(r.passwordRule("8 or more characters")).toHaveClass(/rules__item--met/);
+    await expect(r.passwordRule("A number or symbol")).toHaveClass(/rules__item--met/);
+  });
+
   test("passwords that do not match block the save", async ({ page, pages }) => {
     await page.goto("/reset-password?token=anything");
     const r = pages.resetPassword;

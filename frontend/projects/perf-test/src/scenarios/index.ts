@@ -16,6 +16,7 @@ export * as FilterChip from './FilterChip';
 export * as Icon from './Icon';
 export * as ListItem from './ListItem';
 export * as Pager from './Pager';
+export * as PasswordRules from './PasswordRules';
 export * as PhotoDrop from './PhotoDrop';
 export * as PhotoPick from './PhotoPick';
 export * as PhotoPickOption from './PhotoPickOption';

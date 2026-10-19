@@ -14,7 +14,7 @@ The signup flow collects credentials and a family name; the API treats family na
 
 `AuthController.Register()` dispatches `RegisterUserCommand` and returns 201 with `AuthSuccessDto`. `RegisterUserCommandHandler` checks normalized email uniqueness, creates `User` and `Family`, adds a 24-hour `EmailVerificationToken`, and issues credentials through `RefreshTokenIssuer`.
 
-`Pbkdf2PasswordHasher` stores salted password hashes. `SessionStore` persists registration credentials in local storage and sets the current user.
+`PasswordPolicy` refuses a password without 8 characters including a number or symbol with `weak_password`, and the form shows the same two rules as an `sd-password-rules` checklist (L2-143). `Pbkdf2PasswordHasher` stores salted password hashes. `SessionStore` persists registration credentials in local storage and sets the current user.
 
 After saving, the handler enqueues a verification email built by `AccountEmails` on `IEmailOutbox`. `EmailDispatchService`, a hosted service, delivers it after the response through `IEmailSender`: `SmtpEmailSender` when `Saturdaze:Email:SmtpHost` is set, otherwise `PickupDirectoryEmailSender`, which writes `.eml` files. The link is `{AppOrigin}/verify-email?token=…`, with the origin taken from `Saturdaze:Email:AppOrigin` or `Saturdaze:Share:AppOrigin`. A delivery failure is logged by subject only and never fails registration (L2-142).
 
@@ -26,6 +26,7 @@ The following L2 requirements refine the cited L1 capabilities. Implementation g
 |-------|--------------|-------------|
 | `L2-001` | `L1-001` | The system shall accept a signup payload (email, password, optional family name, optional home location), create a `User` row, create an empty `Family` row owned by that user, issue an access token + refresh token, and return both with the user record. |
 | `L2-142` | `L1-001` | The system shall email the account holder the link for every account token it issues: a verification link at registration and on resend, and a reset link on a forgot-password request. Mail shall be sent after the request is answered, so a response never waits on delivery and a delivery failure never fails the request. |
+| `L2-143` | `L1-001` | The system shall accept a new password only when it is at least 8 characters long and contains at least one number or symbol (any character that is not a letter). The rule shall apply at registration, password reset and invitation acceptance, each rejecting a weaker password with `weak_password`. The registration form and the reset screen's new-password state shall show the two rules as a checklist, "8 or more characters" and "A number or symbol", that marks each rule met or not yet met as the user types. |
 
 ## Diagrams
 

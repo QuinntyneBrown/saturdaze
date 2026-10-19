@@ -48,6 +48,18 @@ test.describe("Create account", () => {
     await expect(c.strengthLabel()).toContainText(/Strong/);
   });
 
+  // Traces to: L2-143 AC3, AC4
+  test("the rule checklist marks each password rule as it is met", async ({ pages }) => {
+    const c = pages.createAccount;
+    await c.passwordInput().fill("abc");
+    await expect(c.passwordRule("8 or more characters")).not.toHaveClass(/rules__item--met/);
+    await expect(c.passwordRule("A number or symbol")).not.toHaveClass(/rules__item--met/);
+    await expect(c.passwordRule("A number or symbol")).toContainText("not yet met");
+    await c.passwordInput().fill("abcdefg1");
+    await expect(c.passwordRule("8 or more characters")).toHaveClass(/rules__item--met/);
+    await expect(c.passwordRule("A number or symbol")).toHaveClass(/rules__item--met/);
+  });
+
   test("the terms checkbox gates the primary", async ({ pages }) => {
     const c = pages.createAccount;
     await c.fill(fresh());
@@ -85,12 +97,14 @@ test.describe("Create account", () => {
     const registered = page.waitForResponse((r) => r.url().endsWith("/api/auth/register"));
     await c.createButton().click();
     expect((await registered).status()).toBeGreaterThanOrEqual(400);
-    await expect(c.errorBanner()).toBeVisible();
+    // The conflict belongs to the email, so it sits on that field rather than a banner.
+    await expect(c.fieldError()).toContainText("already has an account");
     await expect(c.emailInput()).toHaveAttribute("aria-invalid", "true");
     expect(new URL(page.url()).pathname).toBe("/create-account");
   });
 
-  test("'Skip to this weekend' after sign-up opens the first-run weekend", async ({ page, pages }) => {
+  // Traces to: L2-006 AC3, L2-013 AC1 — the current weekend is drafted on first visit.
+  test("'Skip to this weekend' after sign-up opens the newly drafted weekend", async ({ page, pages }) => {
     const c = pages.createAccount;
     await c.fill(fresh());
     await c.termsCheckbox().check();
@@ -99,6 +113,6 @@ test.describe("Create account", () => {
     await pages.verifyEmail.skipToWeekendLink().click();
     await page.waitForURL("**/weekend");
     await pages.weekend.waitForReady();
-    await expect(pages.weekend.pageTitle()).toHaveText("Your first weekend");
+    await expect(pages.weekend.pageTitle()).toHaveText("This weekend");
   });
 });

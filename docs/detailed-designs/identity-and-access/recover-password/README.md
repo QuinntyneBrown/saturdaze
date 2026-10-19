@@ -18,7 +18,7 @@ The request path always presents the same response for registered and unregister
 
 `ResetPasswordCommandHandler` consumes a valid token, updates the password hash, revokes active refresh tokens, and returns a newly issued session. The current browser reset method ignores that session and displays done.
 
-Only eight-character minimum length is enforced; the stronger composition checklist in L2-005 remains a gap. Confirmation is checked in the browser, not a separate API field.
+`PasswordPolicy` enforces the one password rule (8 or more characters including a number or symbol) and returns `weak_password` before the token is consumed (L2-143). The new-password state shows `sd-password-rules` above `sd-strength`, fed by `passwordRules()` from `shared/password-strength.ts`; the same function backs the form validator, so Save stays disabled until both rules are met and the confirmation matches. A mismatched confirmation shows "Passwords do not match." on that field (L2-005 AC3). Confirmation is checked in the browser, not a separate API field.
 
 ## Requirements
 
@@ -29,6 +29,7 @@ The following L2 requirements refine the cited L1 capabilities. Implementation g
 | `L2-004` | `L1-001` | A signed-out user shall be able to request a password-reset link by entering their email. The system shall not reveal whether the email is registered. |
 | `L2-005` | `L1-001` | The system shall accept a reset token plus a new password and confirmation, validate the token, enforce password complexity, and rotate any existing refresh tokens for that user on success. |
 | `L2-142` | `L1-001` | The system shall email the account holder the link for every account token it issues: a verification link at registration and on resend, and a reset link on a forgot-password request. Mail shall be sent after the request is answered, so a response never waits on delivery and a delivery failure never fails the request. |
+| `L2-143` | `L1-001` | The system shall accept a new password only when it is at least 8 characters long and contains at least one number or symbol (any character that is not a letter). The rule shall apply at registration, password reset and invitation acceptance, each rejecting a weaker password with `weak_password`. The registration form and the reset screen's new-password state shall show the two rules as a checklist, "8 or more characters" and "A number or symbol", that marks each rule met or not yet met as the user types. |
 
 ## Diagrams
 
