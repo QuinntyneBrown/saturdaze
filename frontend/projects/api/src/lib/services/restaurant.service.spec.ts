@@ -110,7 +110,9 @@ describe('RestaurantService', () => {
   const sunday = addDaysIso(saturday, 1);
 
   const url = (day: string, slot: string) =>
-    `${BASE}/api/restaurants?day=${day}&slot=${slot}&wifeApprovedOnly=false&take=10`;
+    `${BASE}/api/restaurants?day=${day}&slot=${slot}&wifeApprovedOnly=false&take=10` +
+    // Saturday lunch follows "Lavender fields" (a1) in the weekend fixture (L2-019 AC3).
+    (day === saturday && slot === 'Lunch' ? '&nearActivityId=a1' : '');
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -129,11 +131,15 @@ describe('RestaurantService', () => {
 
   afterEach(() => httpMock.verify());
 
+  /** The API's order: closest first (to the meal's activity, or to home). */
+  const closest = (rows: RestaurantDto[]): RestaurantDto[] =>
+    [...rows].sort((a, b) => a.driveMinutes - b.driveMinutes);
+
   async function flushLoad(): Promise<void> {
-    httpMock.expectOne(url(saturday, 'Lunch')).flush(SAT_LUNCH);
-    httpMock.expectOne(url(saturday, 'Dinner')).flush(SAT_DINNER);
-    httpMock.expectOne(url(sunday, 'Lunch')).flush(SUN_LUNCH);
-    httpMock.expectOne(url(sunday, 'Dinner')).flush(SUN_DINNER);
+    httpMock.expectOne(url(saturday, 'Lunch')).flush(closest(SAT_LUNCH));
+    httpMock.expectOne(url(saturday, 'Dinner')).flush(closest(SAT_DINNER));
+    httpMock.expectOne(url(sunday, 'Lunch')).flush(closest(SUN_LUNCH));
+    httpMock.expectOne(url(sunday, 'Dinner')).flush(closest(SUN_DINNER));
     await settle();
   }
 
