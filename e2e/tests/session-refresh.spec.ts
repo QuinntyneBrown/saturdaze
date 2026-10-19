@@ -1,5 +1,6 @@
 import { test, expect } from "../fixtures/sd-test.js";
-import { SEEDED_USER } from "../fixtures/auth.js";
+import { SEEDED_USER, apiLogin, seedContextSession } from "../fixtures/auth.js";
+import { WeekendPage } from "../pages/weekend.page.js";
 
 /**
  * Silent refresh (ADR-007). The `signIn` fixture seeds the persisted session
@@ -99,5 +100,84 @@ test.describe("Session refresh", () => {
     const stored = await persisted(page, "session");
     expect(stored?.value.split(".")).toHaveLength(3);
     expect(await page.evaluate(() => sessionStorage.getItem("sd.auth.storage"))).toBe("session");
+  });
+});
+
+test.describe("Session refresh — recoverable failures (L2-144)", () => {
+  // Traces to: L2-144 AC1, AC2
+  test("a refresh lost to the network keeps the person signed in, and the next one succeeds", async ({
+    page,
+    goto,
+    signIn,
+    pages,
+  }) => {
+    await signIn(SEEDED_USER);
+    await page.clock.install();
+    await goto("weekend");
+    await pages.weekend.waitForReady();
+
+    await page.route("**/api/auth/refresh", (route) => route.abort("internetdisconnected"));
+    const failed = page.waitForEvent("requestfailed", (r) => r.url().endsWith("/api/auth/refresh"));
+    // Within a minute of the access token's 15-minute expiry: the next call refreshes first.
+    await page.clock.fastForward("14:30");
+    await pages.weekend.navLink("past").click();
+    await failed;
+    await pages.past.waitForReady();
+    expect(new URL(page.url()).pathname).toBe("/past");
+    expect(await persisted(page)).not.toBeNull();
+
+    await page.unroute("**/api/auth/refresh");
+    const refreshed = page.waitForResponse((r) => r.url().endsWith("/api/auth/refresh"));
+    await pages.past.navLink("weekend").click();
+    expect((await refreshed).status()).toBe(200);
+    await pages.weekend.waitForReady();
+    expect(new URL(page.url()).pathname).toBe("/weekend");
+  });
+
+  // Traces to: L2-144 AC3
+  test("a reload during a server error keeps the stored session for the next reload", async ({
+    page,
+    goto,
+    signIn,
+    pages,
+  }) => {
+    const session = await signIn(SEEDED_USER, { expiresUtc: PAST });
+    await page.route("**/api/auth/refresh", (route) => route.fulfill({ status: 503, body: "" }));
+    const failed = page.waitForResponse((r) => r.url().endsWith("/api/auth/refresh"));
+    await goto("weekend");
+    expect((await failed).status()).toBe(503);
+    await expect.poll(async () => (await persisted(page))?.refreshToken).toBe(session!.refreshToken);
+
+    await page.unroute("**/api/auth/refresh");
+    const refreshed = page.waitForResponse((r) => r.url().endsWith("/api/auth/refresh"));
+    await page.goto("/weekend");
+    expect((await refreshed).status()).toBe(200);
+    await pages.weekend.waitForReady();
+    expect(new URL(page.url()).pathname).toBe("/weekend");
+  });
+
+  // Traces to: L2-144 AC5
+  test("two tabs that need a refresh at once send one refresh and both stay signed in", async ({
+    page,
+    request,
+    pages,
+  }) => {
+    const context = page.context();
+    await seedContextSession(context, await apiLogin(request, SEEDED_USER), { expiresUtc: PAST });
+    let refreshes = 0;
+    await context.route("**/api/auth/refresh", async (route) => {
+      refreshes += 1;
+      // Hold the exchange so the second tab asks while the first is still refreshing.
+      await new Promise((resolve) => setTimeout(resolve, 1_500));
+      await route.continue();
+    });
+    const second = await context.newPage();
+
+    await Promise.all([page.goto("/weekend"), second.goto("/weekend")]);
+    await pages.weekend.waitForReady();
+    await new WeekendPage(second).waitForReady();
+    expect(new URL(page.url()).pathname).toBe("/weekend");
+    expect(new URL(second.url()).pathname).toBe("/weekend");
+    expect(refreshes).toBe(1);
   });
 });

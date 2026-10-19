@@ -18,7 +18,7 @@ Credential failures return 401 `invalid_credentials`. Successful login stores `s
 
 `RefreshTokenCommandHandler` revokes the presented token and links it to its replacement. `authInterceptor` retries an eligible 401 once and excludes token exchange and logout from refresh loops.
 
-Any refresh failure currently clears the session, including transient network failures. Cross-tab adoption can reuse an already-persisted replacement but does not provide a distributed lock.
+Only a refused refresh token (401, surfaced as `token_expired`) clears the session. A refresh lost to the network or a server error keeps the stored session and returns `false`; the interceptor then fails that one request without bouncing a still-signed-in person to `/sign-in`, and a reload retries (L2-144). `performRefresh()` runs under the Web Locks API lock `sd.auth.refresh`, so tabs sharing a remembered session refresh one at a time: a waiting tab re-reads storage, adopts the pair the other tab persisted, and loads the user if it was rehydrating (L2-144 AC5).
 
 ## Requirements
 
@@ -29,6 +29,7 @@ The following L2 requirements refine the cited L1 capabilities. Implementation g
 | `L2-002` | `L1-001` | The system shall authenticate a user by `Email` + `Password`, issue a fresh access token + refresh token on every successful login, and return a generic 401 error on any credential failure (without distinguishing "no such user" from "wrong password"). |
 | `L2-007` | `L1-001` | The login form's "remember me" toggle shall select between durable persistence (`localStorage`) and session-only persistence (`sessionStorage`) for the access and refresh tokens. |
 | `L2-033` | `L1-012` | Every issued refresh token shall record `CreatedAtUtc`, `ExpiresAtUtc` (14 days), `CreatedByIp` (when available), and on use at `POST /api/auth/refresh` shall be revoked and replaced by a new token, with the presented row\'s `ReplacedByTokenId` pointing to the replacement. |
+| `L2-144` | `L1-001` | The browser shall end a session only when the API refuses its refresh token (401). A refresh that fails for any other reason, such as no network or a server error, shall keep the session, so the next request or reload tries again. Tabs of one browser sharing a remembered session shall refresh one at a time: a tab that needs a refresh while another tab is refreshing shall wait and adopt the pair the other tab received, instead of presenting the refresh token that tab just spent. |
 
 ## Diagrams
 

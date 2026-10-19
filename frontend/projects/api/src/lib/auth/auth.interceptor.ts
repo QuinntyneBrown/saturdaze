@@ -79,8 +79,9 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
         return from(session.refreshSession()).pipe(
           switchMap((refreshed) => {
             if (refreshed) return next(withBearer(req, true));
-            // The store has already cleared itself.
-            bounceToLogin();
+            // A refused refresh token has already cleared the store; a refresh
+            // lost to the network keeps the person signed in (L2-144).
+            if (!session.isAuthenticated()) bounceToLogin();
             return throwError(() => err);
           }),
         );

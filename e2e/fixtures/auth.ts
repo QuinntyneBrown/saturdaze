@@ -1,4 +1,4 @@
-import { APIRequestContext, Page } from "@playwright/test";
+import { APIRequestContext, BrowserContext, Page } from "@playwright/test";
 import { addDaysIso, upcomingSaturdayIso } from "./dates.js";
 
 /**
@@ -117,6 +117,25 @@ export async function seedSession(page: Page, session: TestSession, opts: SeedOp
     },
     { payload, tier },
   );
+}
+
+/**
+ * `seedSession` for every tab of a browser context (L2-144 AC5). The sentinel
+ * lives in localStorage, which the tabs share, so a tab opened after another
+ * has rotated the pair does not write the spent pair back.
+ */
+export async function seedContextSession(context: BrowserContext, session: TestSession, opts: SeedOptions = {}): Promise<void> {
+  const payload = {
+    value: opts.accessToken ?? session.accessToken,
+    expiresUtc: opts.expiresUtc ?? session.expiresUtc,
+    refreshToken: opts.refreshToken ?? session.refreshToken,
+  };
+  await context.addInitScript((payload) => {
+    if (localStorage.getItem("sd.e2e.seeded") === payload.value) return;
+    localStorage.setItem("sd.auth.token", JSON.stringify(payload));
+    localStorage.setItem("sd.auth.storage", "local");
+    localStorage.setItem("sd.e2e.seeded", payload.value);
+  }, payload);
 }
 
 export interface CurrentWeekend {

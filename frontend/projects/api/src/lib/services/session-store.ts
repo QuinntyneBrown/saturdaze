@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable, Signal, computed, inject, signal } from '@angular/core';
 
 import { AuthError } from '../models/auth-error';
@@ -51,6 +52,21 @@ function asAuthError(value: unknown, fallback: AuthErrorCode = 'invalid_credenti
  * Stored Token: the JSON shape under `sd.auth.token`. `refreshToken` is
  * optional on read so a pair persisted before refresh support still loads.
  */
+/**
+ * Serialises refreshes across this browser's tabs with the Web Locks API
+ * (L2-144 AC5); where it is missing, the in-tab single-flight still applies.
+ */
+function withRefreshLock<T>(work: () => Promise<T>): Promise<T> {
+  const locks = (globalThis.navigator as Navigator | undefined)?.locks;
+  return locks ? (locks.request('sd.auth.refresh', work) as Promise<T>) : work();
+}
+
+/** A rejection the server meant: the stored credentials are no longer valid. */
+function isUnauthorized(e: unknown): boolean {
+  if (e instanceof HttpErrorResponse) return e.status === 401;
+  return isAuthError(e) && e.code === 'token_expired';
+}
+
 interface StoredToken {
   /**
    * Value.
@@ -193,23 +209,28 @@ export class SessionStore implements ISessionStore {
    *
    * @returns {Promise<boolean>} The result of the operation
    */
-  private async performRefresh(): Promise<boolean> {
+  private performRefresh(): Promise<boolean> {
+    return withRefreshLock(() => this.refreshUnderLock());
+  }
+
+  /**
+   * Refresh Under Lock. Runs while this tab holds the browser-wide refresh
+   * lock, so the pair it reads is the newest any tab has stored (L2-144 AC5).
+   *
+   * @returns {Promise<boolean>} The result of the operation
+   */
+  private async refreshUnderLock(): Promise<boolean> {
     // Another tab may already have rotated the pair; adopt it rather than
     // presenting a refresh token the server has just revoked.
     const persisted = this.readPersisted();
     const current = this._token();
-    if (
-      persisted &&
-      current &&
-      persisted.token.value !== current.value &&
-      !isTokenExpiring(persisted.token, REFRESH_SKEW_MS)
-    ) {
+    if (persisted && current && persisted.token.value !== current.value) {
       this._token.set(persisted.token);
       this.tier = persisted.tier;
-      return true;
+      if (!isTokenExpiring(persisted.token, REFRESH_SKEW_MS)) return true;
     }
 
-    const refreshToken = current?.refreshToken || persisted?.token.refreshToken;
+    const refreshToken = this._token()?.refreshToken || persisted?.token.refreshToken;
     if (!refreshToken) {
       this.clearSession();
       return false;
@@ -221,10 +242,10 @@ export class SessionStore implements ISessionStore {
       this._token.set(token);
       this._user.set(user);
       return true;
-    } catch {
-      // v1: any refresh failure ends the session. A transient network
-      // error therefore costs a sign-in; distinguishing it is future work.
-      this.clearSession();
+    } catch (e) {
+      // Only a refused refresh token (401 → token_expired) ends the session.
+      // No network or a server error keeps it for the next attempt (L2-144).
+      if (asAuthError(e).code === 'token_expired') this.clearSession();
       return false;
     }
   }
@@ -392,14 +413,16 @@ export class SessionStore implements ISessionStore {
     this._token.set(stored.token);
     try {
       if (isTokenExpiring(stored.token, REFRESH_SKEW_MS)) {
-        // Sets `user` on success; clears the session on failure.
-        await this.refreshSession();
+        // Sets `user` on success; a refused token clears the session, while a
+        // failure the API can recover from keeps it for the next load (L2-144).
+        // Adopting a pair another tab stored leaves the user to load (L2-144 AC5).
+        if ((await this.refreshSession()) && !this._user()) this._user.set(await this.auth.me());
       } else {
         // A 401 here is retried once by the interceptor after a refresh.
         this._user.set(await this.auth.me());
       }
-    } catch {
-      this.clearSession();
+    } catch (e) {
+      if (isUnauthorized(e)) this.clearSession();
     } finally {
       this.finishRehydrate();
     }
