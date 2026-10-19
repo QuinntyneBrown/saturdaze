@@ -4,8 +4,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Http.Resilience;
 using Saturdaze.Application.Abstractions;
 using Saturdaze.Application.Authentication;
+using Saturdaze.Application.Email;
 using Saturdaze.Application.Weather;
 using Saturdaze.Infrastructure.Authentication;
+using Saturdaze.Infrastructure.Email;
 using Saturdaze.Infrastructure.Persistence;
 using Saturdaze.Infrastructure.Weather;
 
@@ -65,6 +67,22 @@ public static class DependencyInjection
 
         services.AddSingleton<IPasswordHasher, Pbkdf2PasswordHasher>();
         services.AddSingleton<IJwtTokenService, JwtTokenService>();
+
+        // Account mail (L2-142): handlers enqueue, a hosted dispatcher sends after the
+        // response. SMTP when a host is configured, otherwise .eml files on disk.
+        services.Configure<EmailOptions>(o =>
+        {
+            configuration.GetSection(EmailOptions.SectionName).Bind(o);
+            if (string.IsNullOrWhiteSpace(o.AppOrigin)) o.AppOrigin = configuration["Saturdaze:Share:AppOrigin"];
+        });
+        services.AddSingleton<EmailOutbox>();
+        services.AddSingleton<IEmailOutbox>(sp => sp.GetRequiredService<EmailOutbox>());
+        services.AddHostedService<EmailDispatchService>();
+        if (string.IsNullOrWhiteSpace(configuration[$"{EmailOptions.SectionName}:SmtpHost"]))
+            services.AddSingleton<IEmailSender, PickupDirectoryEmailSender>();
+        else
+            services.AddSingleton<IEmailSender, SmtpEmailSender>();
+        services.AddSingleton<AccountEmails>();
 
         var weatherBaseUrl = configuration["Saturdaze:Weather:BaseUrl"]
             ?? "https://api.open-meteo.com/v1/";

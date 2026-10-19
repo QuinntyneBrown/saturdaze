@@ -4,6 +4,7 @@ using Saturdaze.Application.Abstractions;
 using Saturdaze.Application.Authentication;
 using Saturdaze.Application.Common;
 using Saturdaze.Application.Contracts;
+using Saturdaze.Application.Email;
 using Saturdaze.Domain.Entities;
 
 namespace Saturdaze.Application.Auth;
@@ -13,12 +14,16 @@ public class ResendVerificationCommandHandler : IRequestHandler<ResendVerificati
     private readonly IAppDbContext _db;
     private readonly IJwtTokenService _tokens;
     private readonly IDateTimeProvider _clock;
+    private readonly IEmailOutbox _outbox;
+    private readonly AccountEmails _emails;
 
-    public ResendVerificationCommandHandler(IAppDbContext db, IJwtTokenService tokens, IDateTimeProvider clock)
+    public ResendVerificationCommandHandler(IAppDbContext db, IJwtTokenService tokens, IDateTimeProvider clock, IEmailOutbox outbox, AccountEmails emails)
     {
         _db = db;
         _tokens = tokens;
         _clock = clock;
+        _outbox = outbox;
+        _emails = emails;
     }
 
     public async Task<AuthTokenDeliveryDto> Handle(ResendVerificationCommand request, CancellationToken ct)
@@ -48,6 +53,7 @@ public class ResendVerificationCommandHandler : IRequestHandler<ResendVerificati
         });
 
         await _db.SaveChangesAsync(ct);
+        _outbox.Enqueue(_emails.Verification(user.Email, raw));
         return new AuthTokenDeliveryDto(user.Email, raw, expires);
     }
 }

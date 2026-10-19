@@ -18,6 +18,7 @@ box "Backend - Saturdaze Application and Domain" #ECFDF3
 end box
 box "Backend - Saturdaze Infrastructure" #FFF4E5
  database "AppDbContext\nSQL Server" as db
+ participant "EmailOutbox\nEmailDispatchService" as mail
 end box
 actor -> page : Submit accepted terms and credentials
 page -> client : signUp(SignupRequest)
@@ -33,10 +34,12 @@ else valid new account
 handler -> handler : L2-001 hash password; create User, Family, verification token and refresh state
 handler -> db : Save account records
 db --> handler : Saved
+handler -> mail : L2-142 enqueue verification email
 handler --> controller : AuthSuccessDto
 controller --> client : 201 Created
 client -> client : Persist pair in localStorage
 client --> page : Current user
 page --> actor : /verify-email
+mail ->> mail : After the response, send via SMTP or pickup directory
 end
 @enduml
