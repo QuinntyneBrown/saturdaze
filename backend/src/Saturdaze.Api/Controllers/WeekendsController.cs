@@ -166,10 +166,18 @@ public sealed class WeekendsController : ControllerBase
         return File(bytes, "text/calendar; charset=utf-8", $"saturdaze-{weekend.WeekendOf:yyyy-MM-dd}.ics");
     }
 
+    /// <summary>
+    /// A page of past weekends, newest first; <c>before</c> continues the list and
+    /// <c>X-Total-Count</c> counts every past weekend (L2-025).
+    /// </summary>
     [HttpGet("history")]
     public async Task<ActionResult<IReadOnlyList<WeekendSummaryDto>>> History(
-        [FromQuery] int take = 20, CancellationToken ct = default)
-        => Ok(await _sender.Send(new GetWeekendHistoryQuery(take), ct));
+        [FromQuery] int take = 20, [FromQuery] DateOnly? before = null, CancellationToken ct = default)
+    {
+        var page = await _sender.Send(new GetWeekendHistoryQuery(take, before), ct);
+        Response.Headers["X-Total-Count"] = page.TotalCount.ToString(System.Globalization.CultureInfo.InvariantCulture);
+        return Ok(page.Items);
+    }
 
     [HttpPut("{id:guid}/favourite")]
     public async Task<ActionResult<WeekendDto>> Favourite(

@@ -36,7 +36,12 @@
     {{ cardTitle() }}
   </button>
 </h3>
-<button class="card__rate" type="button" [attr.aria-label]="rateLabel()" (click)="rate.emit()">
+<button
+  class="card__rate stars"
+  type="button"
+  [attr.aria-label]="rateLabel()"
+  (click)="rate.emit()"
+>
   <sd-stars [rating]="rating() ?? 0" [label]="ratingLabel()" />
 </button>
 @if (highlights()) {

@@ -15,11 +15,18 @@ export interface ISavedService {
    */
   list(): Signal<PastView>;
   /**
-   * Load — `GET /api/weekends/history?take=50`.
+   * Load — the first page of `GET /api/weekends/history` (L2-025).
    *
    * @returns {Promise<void>} The result of the operation
    */
   load(): Promise<void>;
+  /**
+   * Load More — appends the next page of history, older than the oldest
+   * weekend loaded (L2-025 AC6).
+   *
+   * @returns {Promise<void>} The result of the operation
+   */
+  loadMore(): Promise<void>;
   /**
    * Set Filter — by chip label: All · Favourites · This year · 5★.
    *

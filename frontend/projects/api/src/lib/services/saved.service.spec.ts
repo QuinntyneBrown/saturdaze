@@ -8,7 +8,7 @@ import { settle, weekendDto } from '../testing/weekend-fixture';
 import { SavedService, pastSubtitle, toPastCard } from './saved.service';
 
 const BASE = 'http://localhost:3000';
-const HISTORY = `${BASE}/api/weekends/history?take=50`;
+const HISTORY = `${BASE}/api/weekends/history?take=12`;
 const YEAR = new Date().getFullYear();
 
 function row(overrides: Partial<WeekendSummaryDto> = {}): WeekendSummaryDto {
@@ -69,7 +69,7 @@ describe('SavedService', () => {
     await settle();
   }
 
-  it('asks for fifty weekends and is loading until they arrive', async () => {
+  it('asks for a page of twelve weekends and is loading until they arrive', async () => {
     expect(service.list()().status).toBe('loading');
     expect(
       service
@@ -232,6 +232,33 @@ describe('SavedService', () => {
       title: 'Bronte Creek + Rec Room',
       customTitle: null,
     });
+  });
+
+  it('counts every past weekend from X-Total-Count and appends older pages (L2-025)', async () => {
+    httpMock.expectOne(HISTORY).flush(ROWS, { headers: { 'X-Total-Count': '5' } });
+    await settle();
+    expect(service.list()().subtitle).toBe(
+      'Five weekends so far. Repeat what worked, remix the rest.',
+    );
+    expect(service.list()().hasMore).toBe(true);
+
+    const more = service.loadMore();
+    httpMock
+      .expectOne(`${HISTORY}&before=${YEAR - 1}-12-27`)
+      .flush(
+        [
+          row({ id: 'w4', weekendOf: `${YEAR - 1}-12-20` }),
+          row({ id: 'w5', weekendOf: `${YEAR - 1}-12-13` }),
+        ],
+        { headers: { 'X-Total-Count': '5' } },
+      );
+    await more;
+    expect(
+      service
+        .list()()
+        .weekends.map((w) => w.id),
+    ).toEqual(['w1', 'w2', 'w3', 'w4', 'w5']);
+    expect(service.list()().hasMore).toBe(false);
   });
 
   it('shows the empty state when the history call fails', async () => {

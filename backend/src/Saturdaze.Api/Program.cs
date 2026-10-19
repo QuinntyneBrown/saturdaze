@@ -57,6 +57,8 @@ try
     {
         opt.AddDefaultPolicy(p =>
         {
+            // The history page count (L2-025) travels in a header browsers hide by default.
+            p.WithExposedHeaders("X-Total-Count");
             if (corsOrigins.Length == 0)
             {
                 p.SetIsOriginAllowed(_ => builder.Environment.IsDevelopment())

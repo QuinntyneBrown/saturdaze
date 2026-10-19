@@ -31,4 +31,6 @@ export interface PastView {
    * Filter Empty — copy for an active filter with no matches, else `null`.
    */
   readonly filterEmpty: string | null;
+  /** More past weekends than are loaded: "Show older weekends" (L2-025 AC6). */
+  readonly hasMore: boolean;
 }

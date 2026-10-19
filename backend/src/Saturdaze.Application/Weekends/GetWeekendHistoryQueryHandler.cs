@@ -9,27 +9,36 @@ using Saturdaze.Domain.Enums;
 namespace Saturdaze.Application.Weekends;
 
 public sealed class GetWeekendHistoryQueryHandler
-    : IRequestHandler<GetWeekendHistoryQuery, IReadOnlyList<WeekendSummaryDto>>
+    : IRequestHandler<GetWeekendHistoryQuery, WeekendHistoryPage>
 {
     private readonly IAppDbContext _db;
     private readonly ICurrentFamilyAccessor _current;
     private readonly WeekendEnrichment _enrichment;
+    private readonly IDateTimeProvider _clock;
 
-    public GetWeekendHistoryQueryHandler(IAppDbContext db, ICurrentFamilyAccessor current, WeekendEnrichment enrichment)
+    public GetWeekendHistoryQueryHandler(
+        IAppDbContext db, ICurrentFamilyAccessor current, WeekendEnrichment enrichment, IDateTimeProvider clock)
     {
         _db = db;
         _current = current;
         _enrichment = enrichment;
+        _clock = clock;
     }
 
-    public async Task<IReadOnlyList<WeekendSummaryDto>> Handle(
+    public async Task<WeekendHistoryPage> Handle(
         GetWeekendHistoryQuery request,
         CancellationToken cancellationToken)
     {
         var familyId = await _current.GetCurrentFamilyIdAsync(cancellationToken);
 
-        var weekends = await _db.Weekends.AsNoTracking()
-            .Where(w => w.FamilyId == familyId)
+        // Past means before the current weekend, which /weekend still owns (L2-025 AC4).
+        var currentWeekend = GetCurrentWeekendQueryHandler.ResolveUpcomingSaturday(_clock.Today);
+        var past = _db.Weekends.AsNoTracking()
+            .Where(w => w.FamilyId == familyId && w.WeekendOf < currentWeekend);
+        var total = await past.CountAsync(cancellationToken);
+        if (request.Before is { } before) past = past.Where(w => w.WeekendOf < before);
+
+        var weekends = await past
             .OrderByDescending(w => w.WeekendOf)
             .Take(request.Take)
             .Select(w => new
@@ -65,6 +74,6 @@ public sealed class GetWeekendHistoryQueryHandler
                 w.Title, w.Rating, cover));
         }
 
-        return summaries;
+        return new WeekendHistoryPage(summaries, total);
     }
 }

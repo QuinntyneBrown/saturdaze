@@ -596,6 +596,9 @@
   .strength--strong .strength__seg { background: var(--sd-accent); }
   .strength__label { font-size: var(--sd-fs-xs); color: var(--sd-ink-soft); }
 
+  /* ---- load-more row under a paged list (L2-025) ---- */
+  .more-row { display: flex; justify-content: center; margin-top: 24px; }
+
   /* ---- password rules checklist (L2-143) ---- */
   .rules { display: flex; flex-wrap: wrap; gap: 4px 16px; margin: 0; padding: 0; list-style: none; }
   .rules__item { display: inline-flex; align-items: center; gap: 6px; font-size: var(--sd-fs-xs); color: var(--sd-ink-soft); }

@@ -1,5 +1,7 @@
 import { test, expect } from "../fixtures/sd-test.js";
-import { ensureCurrentWeekend, registerThrowaway } from "../fixtures/auth.js";
+import { apiLogin, ensureCurrentWeekend, registerThrowaway } from "../fixtures/auth.js";
+import { planWeekend } from "../fixtures/covers.js";
+import { addDaysIso } from "../fixtures/dates.js";
 
 /**
  * Past weekends — history cards with favourite / rename (D14) / rate (D13),
@@ -9,9 +11,12 @@ import { ensureCurrentWeekend, registerThrowaway } from "../fixtures/auth.js";
 
 test.describe("Past weekends", () => {
   test.beforeEach(async ({ goto, pages, request, signIn }) => {
-    // history?take=50 needs at least the current weekend to exist
+    // History lists past weekends only (L2-025 AC4): make sure last weekend exists.
     const session = await signIn();
-    if (session) await ensureCurrentWeekend(request, session);
+    if (session) {
+      const current = await ensureCurrentWeekend(request, session);
+      await planWeekend(request, session, addDaysIso(current.weekendOf, -7));
+    }
     await goto("past");
     await pages.past.waitForReady();
   });
@@ -34,8 +39,9 @@ test.describe("Past weekends", () => {
     await expect(p.cardEyebrow(card)).toContainText(/\d{4}/);
     await expect(p.favouriteButton(card)).toHaveAttribute("aria-pressed", /true|false/);
     await expect(p.renameButton(card)).toHaveAttribute("aria-label", /^Rename: /);
-    await expect(p.starsButton(card)).toHaveAttribute("aria-label", /^Rate this weekend, currently [0-5] of 5$/);
-    await expect(p.starsLabel(card)).toHaveText(/[0-5] of 5/);
+    // An unrated weekend reads "Rate this weekend" / "Rate it".
+    await expect(p.starsButton(card)).toHaveAttribute("aria-label", /^Rate this weekend(, currently [1-5] of 5)?$/);
+    await expect(p.starsLabel(card)).toHaveText(/^([1-5] of 5|Rate it)$/);
     await expect(p.remixButton(card)).toBeVisible();
     await expect(p.repeatButton(card)).toBeVisible();
   });
@@ -94,19 +100,21 @@ test.describe("Past weekends", () => {
     const p = pages.past;
     test.skip((await p.cards().count()) === 0, "no history for this family yet");
     const card = p.cards().first();
+    // Picking the current rating again clears it, so choose a different one: reruns share the database.
+    const target = (await p.starsLabel(card).textContent())?.trim() === "4 of 5" ? 3 : 4;
 
     await p.starsButton(card).click();
     await expect(p.dialogTitle()).toHaveText("How was it?");
     const stars = p.dialog().getByRole("radiogroup", { name: "Rating" });
     await expect(stars.getByRole("radio")).toHaveCount(5);
-    await stars.getByRole("radio", { name: "4 stars" }).click();
-    await expect(stars.getByRole("radio", { name: "4 stars" })).toHaveAttribute("aria-checked", "true");
+    await stars.getByRole("radio", { name: `${target} stars` }).click();
+    await expect(stars.getByRole("radio", { name: `${target} stars` })).toHaveAttribute("aria-checked", "true");
 
     const saved = page.waitForResponse((r) => /\/api\/weekends\/[^/]+\/rating/.test(r.url()));
     await p.dialogAction("Save").click();
     expect((await saved).ok()).toBeTruthy();
-    await expect(p.starsButton(p.cards().first())).toHaveAttribute("aria-label", "Rate this weekend, currently 4 of 5");
-    await expect(p.starsLabel(p.cards().first())).toHaveText("4 of 5");
+    await expect(p.starsButton(p.cards().first())).toHaveAttribute("aria-label", `Rate this weekend, currently ${target} of 5`);
+    await expect(p.starsLabel(p.cards().first())).toHaveText(`${target} of 5`);
   });
 
   test("'5★' filter keeps only five-star weekends", async ({ pages }) => {
@@ -189,5 +197,27 @@ test.describe("Past weekends — empty", () => {
     await expect(p.cards()).toHaveCount(0);
     await p.goToWeekendButton().click();
     await page.waitForURL("**/weekend");
+  });
+});
+
+test.describe("Past weekends — paging", () => {
+  // Traces to: L2-025 AC6, AC7
+  test("a long history loads a page at a time and counts every past weekend", async ({ page, pages, request, signIn }) => {
+    const account = await registerThrowaway(request, "past-pages");
+    const owner = await apiLogin(request, account);
+    const current = await ensureCurrentWeekend(request, owner);
+    for (let week = 1; week <= 13; week++) {
+      await planWeekend(request, owner, addDaysIso(current.weekendOf, -7 * week));
+    }
+    await signIn(account);
+    await page.goto("/past");
+    const p = pages.past;
+    await p.waitForReady();
+
+    await expect(p.pageSubtitle()).toHaveText(/^(Thirteen|13) weekends so far/);
+    await expect(p.cards()).toHaveCount(12);
+    await p.showOlderButton().click();
+    await expect(p.cards()).toHaveCount(13);
+    await expect(p.showOlderButton()).toHaveCount(0);
   });
 });

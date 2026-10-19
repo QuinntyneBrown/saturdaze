@@ -88,7 +88,7 @@ public class WeekendOwnershipTests : IClassFixture<SaturdazeApiFactory>
     {
         var a = await SignedInClient.CreateAsync(_factory, FamilyMode.Own);
         var b = await SignedInClient.CreateAsync(_factory, FamilyMode.Own);
-        var saturday = new DateOnly(2026, 8, 15).ToString("yyyy-MM-dd");
+        var saturday = new DateOnly(2026, 4, 25).ToString("yyyy-MM-dd"); // past, so history lists it
 
         var aId = (await ReadAsync(await a.Client.PostAsJsonAsync("/api/weekends/plan", new { WeekendOf = saturday }))).GetProperty("id").GetGuid();
         var bId = (await ReadAsync(await b.Client.PostAsJsonAsync("/api/weekends/plan", new { WeekendOf = saturday }))).GetProperty("id").GetGuid();

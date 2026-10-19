@@ -85,6 +85,11 @@ export class PastPage {
     if (this.dev !== 'empty') void this.run(() => this.saved.load());
   }
 
+  /** "Show older weekends" — the next page of history (L2-025 AC6). */
+  protected loadMore(): Promise<void> {
+    return this.run(() => this.saved.loadMore());
+  }
+
   protected setFilter(label: string): void {
     this.saved.setFilter(label);
   }
@@ -98,7 +103,8 @@ export class PastPage {
       RenameWeekendDialog,
       {
         ...DIALOG_OPTIONS,
-        data: { eyebrow: card.eyebrow, title: card.customTitle },
+        // D14 opens on the title the card shows, as in the mock.
+        data: { eyebrow: card.eyebrow, title: card.customTitle ?? card.title },
       },
     );
     const result = await firstValueFrom(ref.closed);

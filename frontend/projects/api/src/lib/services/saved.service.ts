@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable, Signal, computed, inject, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 
@@ -20,7 +20,8 @@ import { WeekendDto } from '../models/weekend.dto';
 import { WeekendSummaryDto } from '../models/weekend-summary.dto';
 import { ISavedService } from './saved.service.contract';
 
-const HISTORY_TAKE = 50;
+/** One page of history (L2-025): four rows of three cards. */
+const HISTORY_PAGE = 12;
 const SUBTITLE_EMPTY = 'Your first weekend lands here once Sunday is over.';
 const SUBTITLE_LOADING = 'Pulling your weekends.';
 const RATE_IT = 'Rate it';
@@ -79,6 +80,8 @@ export class SavedService implements ISavedService {
 
   private readonly _rows = signal<readonly WeekendSummaryDto[]>([]);
   private readonly _loaded = signal(false);
+  /** Every past weekend the family has, from `X-Total-Count` (L2-025 AC7). */
+  private readonly _total = signal(0);
   private readonly _filter = signal<string>(PAST_FILTER_ALL);
 
   private readonly _view = computed<PastView>(() => {
@@ -94,6 +97,7 @@ export class SavedService implements ISavedService {
         weekends: [],
         skipping: [],
         filterEmpty: null,
+        hasMore: false,
       };
     }
     if (rows.length === 0) {
@@ -104,6 +108,7 @@ export class SavedService implements ISavedService {
         weekends: [],
         skipping: [],
         filterEmpty: null,
+        hasMore: false,
       };
     }
 
@@ -115,11 +120,12 @@ export class SavedService implements ISavedService {
 
     return {
       status: 'ready',
-      subtitle: pastSubtitle(rows.length),
+      subtitle: pastSubtitle(Math.max(this._total(), rows.length)),
       filters,
       weekends,
       skipping: skippingChips(rows),
       filterEmpty: weekends.length === 0 ? filterEmptyCopy(filter) : null,
+      hasMore: this._total() > rows.length,
     };
   });
 
@@ -155,18 +161,39 @@ export class SavedService implements ISavedService {
    */
   async load(): Promise<void> {
     try {
-      const rows = await firstValueFrom(
-        this.http.get<WeekendSummaryDto[]>(
-          `${this.baseUrl}/api/weekends/history?take=${HISTORY_TAKE}`,
-        ),
-      );
-      this._rows.set((rows ?? []).map((r) => withApiOrigin(r, this.baseUrl)));
+      this._rows.set(await this.fetchPage());
     } catch (err) {
       console.error('SavedService.load failed', err);
       this._rows.set([]);
+      this._total.set(0);
     } finally {
       this._loaded.set(true);
     }
+  }
+
+  async loadMore(): Promise<void> {
+    const rows = this._rows();
+    const oldest = rows.reduce<string | null>(
+      (min, r) => (min === null || r.weekendOf < min ? r.weekendOf : min),
+      null,
+    );
+    if (!oldest) return;
+    const older = await this.fetchPage(oldest);
+    this._rows.set([...rows, ...older.filter((r) => !rows.some((have) => have.id === r.id))]);
+  }
+
+  /** `GET /api/weekends/history`, one page, recording the total it reports. */
+  private async fetchPage(before?: string): Promise<WeekendSummaryDto[]> {
+    const query = `take=${HISTORY_PAGE}` + (before ? `&before=${before}` : '');
+    const res: HttpResponse<WeekendSummaryDto[]> = await firstValueFrom(
+      this.http.get<WeekendSummaryDto[]>(`${this.baseUrl}/api/weekends/history?${query}`, {
+        observe: 'response',
+      }),
+    );
+    const rows = (res.body ?? []).map((r) => withApiOrigin(r, this.baseUrl));
+    const total = Number(res.headers.get('X-Total-Count'));
+    this._total.set(Number.isFinite(total) && total > 0 ? total : rows.length);
+    return rows;
   }
 
   /**

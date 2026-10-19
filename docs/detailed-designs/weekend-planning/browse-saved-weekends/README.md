@@ -10,11 +10,11 @@ Saturdaze is a web application that plans personalized family weekends. Saved-we
 
 ## Description
 
-`PastPage` at `/past` reads `SavedService.list(): Signal<PastView>` through `SAVED_SERVICE`. The service requests up to 50 summaries and filters favourites, year, and five-star ratings locally.
+`PastPage` at `/past` reads `SavedService.list(): Signal<PastView>` through `SAVED_SERVICE`. The service requests history a page of 12 at a time, keeps the family's total from the `X-Total-Count` header for the subtitle, and shows "Show older weekends" while more past weekends exist; `loadMore()` asks for the page `before` the oldest weekend loaded (L2-025 AC6, AC7). Favourites, year and five-star filters apply locally to the loaded weekends.
 
-`GetWeekendHistoryQueryHandler` filters by family, orders by WeekendOf descending, and projects title, rating, favourite state, and activity highlights. `GetWeekendHistoryQueryValidator` accepts a take from 1 to 100; other values return 400. The query has no cursor or offset, and it currently includes the current and future weekends.
+`GetWeekendHistoryQueryHandler` filters by family, orders by WeekendOf descending, and projects title, rating, favourite state, and activity highlights. `GetWeekendHistoryQueryValidator` accepts a take from 1 to 100; other values return 400. It keeps only past weekends, those before `GetCurrentWeekendQueryHandler.ResolveUpcomingSaturday(today)`, counts them for `X-Total-Count`, and continues after `before` when given (L2-025 AC4, AC5). CORS exposes `X-Total-Count` to the browser.
 
-`RatingDialog` and `RenameWeekendDialog` collect edits; favourite actions send the selected boolean. `RateWeekendCommandHandler`, `RenameWeekendCommandHandler`, and `MarkFavouriteCommandHandler` persist them after ownership checks.
+`RatingDialog` and `RenameWeekendDialog` collect edits; the rename dialog opens on the title the card shows, as in mock D14; favourite actions send the selected boolean. `RateWeekendCommandHandler`, `RenameWeekendCommandHandler`, and `MarkFavouriteCommandHandler` persist them after ownership checks.
 
 `PastPage` confirms Repeat and Remix before calling `WeekendPlanService.repeatSaved()` or `remixSaved()` and navigating to `/weekend`. `ReuseWeekendCommandHandler` replaces the current draft, or creates one for the upcoming Saturday, with copied source blocks and errands using new IDs. Repeat copies source locks; Remix subsequently regenerates unlocked content.
 
