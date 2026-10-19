@@ -53,6 +53,7 @@ public sealed class LocalEventSeeder : IJsonSeeder
             entity.DriveMinutes = seed.DriveMinutes;
             entity.Url = seed.Url ?? string.Empty;
             entity.Category = seed.Category ?? string.Empty;
+            entity.Indoor = seed.Indoor;
             entity.Geo = GeoLocation.Merge(entity.Geo, GeoLocation.From(seed.Latitude, seed.Longitude, seed.Address));
             SeedPhotos.Apply(db, PlaceKind.LocalEvent, entity.Id, seed.Photos);
             written++;
@@ -99,6 +100,7 @@ public sealed class LocalEventSeeder : IJsonSeeder
         int DriveMinutes,
         string? Url,
         string? Category,
+        bool? Indoor = null,
         decimal? Latitude = null,
         decimal? Longitude = null,
         string? Address = null,

@@ -30,10 +30,14 @@ public sealed class GetLocalEventsQueryHandler
         var sun = request.WeekendOf.AddDays(1);
         var comingSoonUntil = sun.AddDays(ComingSoonDays);
 
-        var rows = await _db.LocalEvents.AsNoTracking()
+        var query = _db.LocalEvents.AsNoTracking()
             .Where(e => e.DriveMinutes <= request.MaxDriveMinutes
                         && ((e.StartsOn <= sun && e.EndsOn >= fri)
-                            || (e.StartsOn > sun && e.StartsOn <= comingSoonUntil)))
+                            || (e.StartsOn > sun && e.StartsOn <= comingSoonUntil)));
+        // Indoor or outdoor (L2-146); an event whose setting is unknown matches neither.
+        if (request.Indoor is { } indoor) query = query.Where(e => e.Indoor == indoor);
+
+        var rows = await query
             .OrderBy(e => e.StartsOn).ThenBy(e => e.DriveMinutes).ThenBy(e => e.Name)
             .ToListAsync(cancellationToken);
 
@@ -46,7 +50,8 @@ public sealed class GetLocalEventsQueryHandler
             .Select(e => new LocalEventDto(
                 e.Id, e.Name, e.StartsOn, e.EndsOn, e.Location, e.DriveMinutes, e.Url, e.Category,
                 LocationDto.From(e.Geo),
-                photos.GetValueOrDefault(e.Id)))
+                photos.GetValueOrDefault(e.Id),
+                e.Indoor))
             .ToList();
     }
 }

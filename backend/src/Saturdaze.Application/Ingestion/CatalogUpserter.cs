@@ -135,6 +135,8 @@ public sealed class CatalogUpserter
             entity.DriveMinutes = PayloadReader.GetIntOrDefault(p, "driveMinutes");
             entity.Url = Truncate(PayloadReader.GetStringOrEmpty(p, "url"), 500);
             entity.Category = Truncate(PayloadReader.GetStringOrEmpty(p, "category"), 80);
+            // A row without the flag keeps what is known (L2-146 AC2).
+            if (PayloadReader.TryGetBool(p, "indoor", out var indoor)) entity.Indoor = indoor;
             entity.Geo = GeoLocation.Merge(entity.Geo, PayloadReader.GetGeo(p));
             await AddPhotosAsync(PlaceKind.LocalEvent, entity.Id, name, p, ct);
         }

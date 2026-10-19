@@ -184,7 +184,7 @@ describe('EventsService', () => {
       'Indoor',
       'Seasonal',
       'Theatre',
-      'Festival',
+      'Festivals',
       'Local',
     ]);
     expect(view.categoryChips.every((c) => !c.active)).toBe(true);
@@ -209,8 +209,9 @@ describe('EventsService', () => {
       ['This weekend', false],
       ['Next weekend', true],
     ]);
+    // Grouped like this weekend: dated Saturday and Sunday, empty days left out.
     expect(view.sections).toHaveLength(1);
-    expect(view.sections[0]).toMatchObject({ title: 'Next weekend', subtitle: '23 – 24 May 2026' });
+    expect(view.sections[0]).toMatchObject({ title: 'Saturday', subtitle: '23 May' });
     expect(view.sections[0]!.events.map((e) => e.id)).toEqual(['ev7']);
   });
 

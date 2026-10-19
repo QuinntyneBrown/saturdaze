@@ -10,4 +10,5 @@ public sealed record LocalEventDto(
     string Url,
     string Category,
     LocationDto? Location,
-    PlacePhotoDto? Photo = null);
+    PlacePhotoDto? Photo = null,
+    bool? Indoor = null);

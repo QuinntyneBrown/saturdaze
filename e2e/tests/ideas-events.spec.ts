@@ -25,6 +25,31 @@ test.describe("Ideas — Events", () => {
     }
   });
 
+  // Traces to: L2-146 AC3
+  test("Outdoor and Indoor keep only events in that setting", async ({ pages }) => {
+    const i = pages.ideas;
+    for (const setting of ["Outdoor", "Indoor"] as const) {
+      await i.filterChip(setting).click();
+      await expect(i.filterChip(setting)).toHaveAttribute("aria-pressed", "true");
+      const cards = i.eventCards();
+      await expect(cards.first()).toBeVisible();
+      for (const card of await cards.all()) {
+        await expect(i.cardChips(card).filter({ hasText: new RegExp(`^\\s*${setting}\\s*$`) })).toHaveCount(1);
+      }
+    }
+  });
+
+  // Traces to: L2-146 AC4
+  test("the Festival category reads Festivals on its chip and Festival on its cards", async ({ pages }) => {
+    const i = pages.ideas;
+    await i.filterChip("Festivals").click();
+    const cards = i.eventCards();
+    await expect(cards.first()).toBeVisible();
+    for (const card of await cards.all()) {
+      await expect(i.cardChips(card).filter({ hasText: /^\s*Festival\s*$/ })).toHaveCount(1);
+    }
+  });
+
   test("Saturday and Sunday sections are dated to the upcoming weekend", async ({ pages }) => {
     const i = pages.ideas;
     const sat = upcomingSaturdayIso();
@@ -58,7 +83,7 @@ test.describe("Ideas — Events", () => {
     const all = await i.cards().count();
     await i.filterChip("Theatre").click();
     await expect(i.filterChip("Theatre")).toHaveAttribute("aria-pressed", "true");
-    const theatre = i.cards();
+    const theatre = i.eventCards();
     expect(await theatre.count()).toBeLessThanOrEqual(all);
     const n = await theatre.count();
     for (let k = 0; k < n; k++) {

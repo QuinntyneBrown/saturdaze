@@ -57,6 +57,14 @@ export class IdeasPage extends BasePage {
     });
   }
 
+  /** Event cards outside the family's own "Your suggestion" section, which no filter narrows. */
+  eventCards(): Locator {
+    return this.main
+      .locator(".section")
+      .filter({ hasNot: this.page.locator(".section-header__title", { hasText: "Your suggestion" }) })
+      .locator(".sd-grid-cards .card");
+  }
+
   cardTitle(card: Locator): Locator {
     return card.locator(".card__title");
   }

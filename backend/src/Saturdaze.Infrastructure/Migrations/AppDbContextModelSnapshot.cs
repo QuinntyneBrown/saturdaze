@@ -447,6 +447,9 @@ namespace Saturdaze.Infrastructure.Migrations
                     b.Property<DateOnly>("EndsOn")
                         .HasColumnType("date");
 
+                    b.Property<bool?>("Indoor")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Location")
                         .IsRequired()
                         .HasMaxLength(200)

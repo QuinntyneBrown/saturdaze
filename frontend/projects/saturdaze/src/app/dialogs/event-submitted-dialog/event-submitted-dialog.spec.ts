@@ -42,10 +42,8 @@ describe('EventSubmittedDialog', () => {
     expect(host.querySelector('.dialog__sub')?.textContent?.trim()).toBe(
       'Only you can see it until it is approved.',
     );
-    expect(host.querySelector('.summary__title')?.textContent?.trim()).toBe(
-      'Port Credit Buskerfest',
-    );
-    expect(host.querySelector('.summary__meta')?.textContent?.trim()).toBe(
+    expect(host.querySelector('.card__title')?.textContent?.trim()).toBe('Port Credit Buskerfest');
+    expect(host.querySelector('.card__meta')?.textContent?.trim()).toBe(
       'Memorial Park, Lakeshore Rd · Sat 20 Jun',
     );
     expect(host.querySelector('sd-date-tile .date-tile__m')?.textContent?.trim()).toBe('Jun');
@@ -57,12 +55,12 @@ describe('EventSubmittedDialog', () => {
 
   it('drops the location from the meta line when there is none', async () => {
     await mount({ ...DATE_ONLY, location: null });
-    expect(host.querySelector('.summary__meta')?.textContent?.trim()).toBe('Sat 20 Jun');
+    expect(host.querySelector('.card__meta')?.textContent?.trim()).toBe('Sat 20 Jun');
   });
 
   it('formats the date from a local datetime start (real API data)', async () => {
     await mount(SUBMISSION);
-    expect(host.querySelector('.summary__meta')?.textContent?.trim()).toBe(
+    expect(host.querySelector('.card__meta')?.textContent?.trim()).toBe(
       'Memorial Park, Lakeshore Rd · Sat 20 Jun',
     );
   });

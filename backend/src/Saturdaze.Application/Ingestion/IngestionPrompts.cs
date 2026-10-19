@@ -38,11 +38,12 @@ public static class IngestionPrompts
             IngestionType.Events =>
                 $"{preamble}\n\nFind time-bounded events (festivals, markets, theatre, seasonal openings, " +
                 $"community days) happening on or near the weekend of {weekend} and the following weekend " +
-                $"of {nextWeekend}. Avoid adults-only events and ticketed concerts over $50 per adult.\n\n" +
+                $"of {nextWeekend}. Avoid adults-only events and ticketed concerts over $50 per adult. " +
+                $"Set \"indoor\" true when the event happens indoors.\n\n" +
                 $"{output}\n" +
                 "[{\"name\": string, \"startsOn\": \"YYYY-MM-DD\", \"endsOn\": \"YYYY-MM-DD\", " +
                 "\"location\": string, \"driveMinutes\": integer, \"url\": string, \"category\": string, " +
-                "\"latitude\": number, \"longitude\": number, \"address\": string}]",
+                "\"indoor\": boolean, \"latitude\": number, \"longitude\": number, \"address\": string}]",
 
             IngestionType.Activities =>
                 $"{preamble}\n\nFind mostly-evergreen places to spend an afternoon (parks, trails, " +

@@ -12,6 +12,27 @@ public class CatalogUpserterTests
     private static readonly IngestionResultParser Parser = new();
 
     [Fact]
+    public async Task Records_whether_an_ingested_event_is_indoor()
+    {
+        // Traces to: L2-146 AC2
+        await using var app = TestApp.Create();
+        var sut = new CatalogUpserter(app.Db);
+        var items = Parser.Parse("""
+            [
+              {"name":"Kids Concert","startsOn":"2026-05-16","endsOn":"2026-05-16","location":"Living Arts Centre","driveMinutes":5,"category":"Theatre","indoor":true},
+              {"name":"Farmers Market","startsOn":"2026-05-17","endsOn":"2026-05-17","location":"Lakeshore","driveMinutes":2,"category":"Local","indoor":false},
+              {"name":"Street Fair","startsOn":"2026-05-17","endsOn":"2026-05-17","location":"Main St","driveMinutes":4,"category":"Local"}
+            ]
+            """, IngestionType.Events).Items;
+
+        await sut.UpsertAsync(items, IngestionType.Events, default);
+
+        (await app.Db.LocalEvents.SingleAsync(e => e.Name == "Kids Concert")).Indoor.Should().BeTrue();
+        (await app.Db.LocalEvents.SingleAsync(e => e.Name == "Farmers Market")).Indoor.Should().BeFalse();
+        (await app.Db.LocalEvents.SingleAsync(e => e.Name == "Street Fair")).Indoor.Should().BeNull();
+    }
+
+    [Fact]
     public async Task Inserts_new_events()
     {
         await using var app = TestApp.Create();
