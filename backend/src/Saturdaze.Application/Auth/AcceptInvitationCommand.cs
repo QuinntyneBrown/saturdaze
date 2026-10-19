@@ -38,8 +38,7 @@ public sealed class AcceptInvitationCommandHandler : IRequestHandler<AcceptInvit
     public async Task<AuthSuccessDto> Handle(AcceptInvitationCommand request, CancellationToken ct)
     {
         var invitation = await _resolver.ResolveAsync(request.Token, ct);
-        if ((request.Password ?? string.Empty).Length < 8)
-            throw new AuthFlowException(400, "weak_password", "Password must be at least 8 characters.");
+        PasswordPolicy.Enforce(request.Password);
         if (await _db.Users.AnyAsync(u => u.NormalizedEmail == invitation.NormalizedEmail, ct))
             throw new ConflictException("email_in_use", "An account with that email already exists.");
 

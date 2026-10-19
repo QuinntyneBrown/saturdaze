@@ -41,6 +41,7 @@ public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, A
 
     public async Task<AuthSuccessDto> Handle(RegisterUserCommand request, CancellationToken ct)
     {
+        PasswordPolicy.Enforce(request.Password);
         var normalized = request.Email.Trim().ToLowerInvariant();
         if (await _db.Users.AnyAsync(u => u.NormalizedEmail == normalized, ct))
         {

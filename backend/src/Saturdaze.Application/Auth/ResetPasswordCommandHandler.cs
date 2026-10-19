@@ -32,8 +32,7 @@ public class ResetPasswordCommandHandler : IRequestHandler<ResetPasswordCommand,
 
     public async Task<AuthSuccessDto> Handle(ResetPasswordCommand request, CancellationToken ct)
     {
-        if (request.Password.Length < 8)
-            throw new AuthFlowException(400, "weak_password", "Password must be at least 8 characters.");
+        PasswordPolicy.Enforce(request.Password);
 
         var now = _clock.UtcNow;
         var hash = _jwt.HashRefreshToken(request.Token);
