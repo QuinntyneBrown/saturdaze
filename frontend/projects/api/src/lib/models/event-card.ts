@@ -43,4 +43,12 @@ export interface EventCard {
    * Addable — dated within the current weekend, so it can be added to a day (L2-107).
    */
   readonly addable: boolean;
+  /**
+   * Note — why a suggestion was not added (L2-149).
+   */
+  readonly note?: string | null;
+  /**
+   * Dismissable — the submitter can put a "Not added" card away (L2-149).
+   */
+  readonly dismissable?: boolean;
 }

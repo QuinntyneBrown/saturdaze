@@ -23,5 +23,8 @@ public class EventSubmission
     public Guid? ReviewedByUserId { get; set; }
     public DateTimeOffset? ReviewedAtUtc { get; set; }
     public string? RejectionReason { get; set; }
+
+    /// <summary>When the submitter dismissed the "Not added" card for a rejection (L2-149).</summary>
+    public DateTimeOffset? SubmitterDismissedAtUtc { get; set; }
     public Guid? PublishedEventId { get; set; }
 }

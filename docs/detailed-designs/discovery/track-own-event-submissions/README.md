@@ -16,7 +16,7 @@ Saturdaze is a web application that plans personalized family weekends. Submissi
 
 `EventSubmittedDialog` is an in-place acknowledgement opened by `IdeasPage`, not a routed confirmation screen. Returning from it leaves the contributor on `/ideas/events`.
 
-Approval or rejection removes a record from the pending presentation after reload. A rejection-notification delivery mechanism is absent; the notification obligation in L1-018 remains an implementation gap.
+Approval removes a record from the pending presentation after reload. A rejected suggestion stays under "Your suggestion" as a muted card with a "Not added" chip and the reason (or "No reason was given.") until the submitter presses Dismiss; `POST /api/events/submissions/{id}/dismiss` stores `SubmitterDismissedAtUtc` and answers 404 for anyone but the submitter, and `/mine` returns it as `dismissedAtUtc` (L2-149).
 
 ## Requirements
 
@@ -25,6 +25,7 @@ The following L2 requirements refine the cited L1 capabilities. Implementation g
 | L2 ID | Refines (L1) | Requirement |
 |-------|--------------|-------------|
 | `L2-049` | `L1-018` | `GET /api/events/submissions/mine` shall return the caller's own submissions in any status (`Pending`, `Approved`, `Rejected`). The events feed at `/ideas/events` shall render a "Pending review" badge on cards drawn from the caller's own pending submissions so they understand the event isn't yet public. |
+| `L2-149` | `L1-018` | When an administrator rejects a family's event suggestion, the submitter shall be told twice over: by email, naming the event and the reason when one was given, and in the Events segment, where the suggestion stays under "Your suggestion" as a muted card with a "Not added" chip and the reason until the submitter dismisses it. Dismissing shall be remembered, and only the submitter can dismiss their suggestion. |
 
 ## Diagrams
 

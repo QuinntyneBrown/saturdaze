@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 
 import {
   EVENTS_SERVICE,
+  EVENT_SUBMISSIONS_SERVICE,
   EventCard as EventCardView,
   EventsWindow,
   FilterChip as FilterChipView,
@@ -28,6 +29,7 @@ import { chipTone, filterTone } from '../../shared/chip-tones';
 })
 export class IdeasEventsPage {
   private readonly service = inject(EVENTS_SERVICE);
+  private readonly submissions = inject(EVENT_SUBMISSIONS_SERVICE);
   private readonly dialog = inject(Dialog);
 
   protected readonly view = this.service.list();
@@ -44,6 +46,11 @@ export class IdeasEventsPage {
 
   protected setCategory(chip: FilterChipView): void {
     this.service.setCategory(chip.active ? null : chip.label);
+  }
+
+  /** Puts a "Not added" card away for good (L2-149). */
+  protected dismiss(event: EventCardView): Promise<void> {
+    return this.submissions.dismiss(event.id);
   }
 
   protected addToDay(event: EventCardView): Promise<unknown> {

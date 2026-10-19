@@ -596,6 +596,9 @@
   .strength--strong .strength__seg { background: var(--sd-accent); }
   .strength__label { font-size: var(--sd-fs-xs); color: var(--sd-ink-soft); }
 
+  /* ---- a card's one-line note, e.g. why a suggestion was not added (L2-149) ---- */
+  .card__note { margin: 0; font-size: var(--sd-fs-sm); color: var(--sd-ink-soft); }
+
   /* ---- load-more row under a paged list (L2-025) ---- */
   .more-row { display: flex; justify-content: center; margin-top: 24px; }
 

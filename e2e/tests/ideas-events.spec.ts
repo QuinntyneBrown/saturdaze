@@ -1,11 +1,41 @@
 import { test, expect } from "../fixtures/sd-test.js";
 import { dateTile, upcomingSaturdayIso } from "../fixtures/dates.js";
+import { apiLogin, registerThrowaway, rejectEventSubmission, submitEventSubmission } from "../fixtures/auth.js";
 
 /**
  * Ideas · Events — window / category filters, the Saturday / Sunday /
  * Coming soon sections, Details links, and Suggest an event (D10 → D11 →
  * "Your suggestion" pending card).
  */
+
+test.describe("Ideas — Events: a suggestion that was not added", () => {
+  // Traces to: L2-149 AC2, AC3
+  test("shows the reason until the submitter dismisses it, for good", async ({ page, pages, request, signIn }) => {
+    const account = await registerThrowaway(request, "not-added");
+    const session = await apiLogin(request, account);
+    const title = `Lakeshore Ribfest ${Date.now().toString(36)}`;
+    const { id } = await submitEventSubmission(request, session, title);
+    await rejectEventSubmission(request, id, "Already listed as Port Credit Ribfest.");
+
+    await signIn(account);
+    await page.goto("/ideas/events");
+    const i = pages.ideas;
+    await i.waitForReady();
+    const card = i.notAddedCard(title);
+    await expect(card).toHaveClass(/card--muted/);
+    await expect(i.cardChips(card).first()).toHaveText("Not added");
+    await expect(i.cardNote(card)).toHaveText("Already listed as Port Credit Ribfest.");
+
+    const dismissed = page.waitForResponse((r) => r.url().endsWith(`/api/events/submissions/${id}/dismiss`));
+    await i.dismissButton(card).click();
+    expect((await dismissed).status()).toBe(204);
+    await expect(card).toHaveCount(0);
+
+    await page.reload();
+    await i.waitForReady();
+    await expect(i.notAddedCard(title)).toHaveCount(0);
+  });
+});
 
 test.describe("Ideas — Events", () => {
   test.beforeEach(async ({ goto, pages }) => {

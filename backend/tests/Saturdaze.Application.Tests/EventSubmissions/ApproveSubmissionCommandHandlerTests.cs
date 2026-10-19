@@ -51,7 +51,7 @@ public class ApproveSubmissionCommandHandlerTests
         var submission = SeedPending(app);
         var admin = new StubCurrentUserAccessor { UserId = Guid.NewGuid(), Role = UserRole.Admin };
 
-        var rejectHandler = new RejectSubmissionCommandHandler(app.Db, admin, new StubDateTimeProvider());
+        var rejectHandler = new RejectSubmissionCommandHandler(app.Db, admin, new StubDateTimeProvider(), new NullOutbox());
         var rejected = await rejectHandler.Handle(
             new RejectSubmissionCommand(submission.Id, "duplicate of seeded event"), default);
 
@@ -157,4 +157,10 @@ public class ApproveSubmissionCommandHandlerTests
         app.Db.SaveChanges();
         return submission;
     }
+}
+
+/// <summary>Drops mail; these tests look at submission state, not delivery.</summary>
+file sealed class NullOutbox : Saturdaze.Application.Email.IEmailOutbox
+{
+    public void Enqueue(Saturdaze.Application.Email.EmailMessage message) { }
 }

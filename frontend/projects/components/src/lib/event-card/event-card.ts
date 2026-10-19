@@ -40,4 +40,9 @@ export class EventCard {
   readonly addable = input(false, { transform: booleanAttribute });
   /** "Add to day" was pressed. */
   readonly addToDay = output<void>();
+  /** A one-line note under the chips: why a suggestion was not added (L2-149). */
+  readonly note = input<string>('');
+  /** Offers "Dismiss" so the family can put a "Not added" card away (L2-149). */
+  readonly dismissable = input(false, { transform: booleanAttribute });
+  readonly dismiss = output<void>();
 }

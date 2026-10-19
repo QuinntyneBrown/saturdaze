@@ -77,6 +77,14 @@ public sealed class EventSubmissionsController : ControllerBase
         return Ok(await _sender.Send(new ApproveSubmissionCommand(id, req?.DriveMinutes, req?.Latitude, req?.Longitude, req?.Address), ct));
     }
 
+    /// <summary>The submitter dismisses the "Not added" card (L2-149 AC3).</summary>
+    [HttpPost("{id:guid}/dismiss")]
+    public async Task<IActionResult> Dismiss(Guid id, CancellationToken ct)
+    {
+        await _sender.Send(new DismissSubmissionCommand(id), ct);
+        return NoContent();
+    }
+
     [HttpPost("{id:guid}/reject")]
     [Authorize(Policy = "Admin")]
     public async Task<ActionResult<EventSubmissionDto>> Reject(

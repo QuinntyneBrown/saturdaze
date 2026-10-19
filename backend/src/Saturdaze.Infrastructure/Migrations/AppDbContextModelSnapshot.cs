@@ -199,6 +199,9 @@ namespace Saturdaze.Infrastructure.Migrations
                     b.Property<Guid>("SubmittedByUserId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<DateTimeOffset?>("SubmitterDismissedAtUtc")
+                        .HasColumnType("datetimeoffset");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(200)

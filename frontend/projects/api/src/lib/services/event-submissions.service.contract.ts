@@ -31,6 +31,15 @@ export interface IEventSubmissionsService {
    */
   loadMine(): Promise<void>;
   /**
+   * Dismiss — puts away the "Not added" card for the caller's own suggestion
+   * (`POST /api/events/submissions/{id}/dismiss`, L2-149).
+   *
+   * @param {string} id - The suggestion
+   *
+   * @returns {Promise<void>} The result of the operation
+   */
+  dismiss(id: string): Promise<void>;
+  /**
    * Load Pending.
    *
    * @returns {Promise<void>} The result of the operation

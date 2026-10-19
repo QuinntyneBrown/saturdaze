@@ -34,6 +34,9 @@ const SUBTITLE = `What is on within ${EVENTS_DRIVE_WINDOW} minutes of home.`;
 const SUBTITLE_MINE = 'Only you can see it until it is approved';
 const SUBTITLE_SOON = 'Worth a note in the calendar';
 const PENDING_REVIEW = 'Pending review';
+const NOT_ADDED = 'Not added';
+/** Matches the email's wording when an admin gives no reason (L2-149 AC5). */
+const NO_REASON = 'No reason was given.';
 
 /** Category chips in display order; anything else sorts after, A→Z. */
 const CATEGORY_TONES: readonly { label: string; tone: ChipTone }[] = [
@@ -134,6 +137,20 @@ function toPendingCard(dto: EventSubmissionDto): EventCard {
   };
 }
 
+/**
+ * To Rejected Card — a suggestion that was not added, with the reason, until
+ * the submitter dismisses it (L2-149).
+ */
+function toRejectedCard(dto: EventSubmissionDto): EventCard {
+  return {
+    ...toPendingCard(dto),
+    chips: [{ tone: 'warn', label: NOT_ADDED }],
+    url: null,
+    note: dto.rejectionReason?.trim() || NO_REASON,
+    dismissable: true,
+  };
+}
+
 /** True when the event runs on `iso` (multi-day events overlap). */
 function overlaps(e: LocalEventDto, iso: string): boolean {
   const end = e.endsOn || e.startsOn;
@@ -229,16 +246,16 @@ export class EventsService implements IEventsService {
     const category = this._category();
     const narrowed = category ? rows.filter((e) => matchesChip(e, category)) : rows;
 
-    const pending = this.submissions
-      .mine()()
-      .filter((s) => s.status === 'Pending');
+    const own = this.submissions.mine()();
+    const pending = own.filter((s) => s.status === 'Pending');
+    const notAdded = own.filter((s) => s.status === 'Rejected' && !s.dismissedAtUtc);
     const mine: EventSection[] =
-      pending.length > 0
+      pending.length + notAdded.length > 0
         ? [
             {
               title: 'Your suggestion',
               subtitle: SUBTITLE_MINE,
-              events: pending.map(toPendingCard),
+              events: [...pending.map(toPendingCard), ...notAdded.map(toRejectedCard)],
             },
           ]
         : [];

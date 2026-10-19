@@ -3,7 +3,7 @@ import { signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 
-import { EVENTS_SERVICE, IdeasEventsView } from 'api';
+import { EVENTS_SERVICE, EVENT_SUBMISSIONS_SERVICE, IdeasEventsView } from 'api';
 
 import { IdeasEventsPage } from './ideas-events.page';
 
@@ -79,7 +79,11 @@ describe('IdeasEventsPage', () => {
     };
     await TestBed.configureTestingModule({
       imports: [IdeasEventsPage],
-      providers: [provideRouter([]), { provide: EVENTS_SERVICE, useValue: service }],
+      providers: [
+        provideRouter([]),
+        { provide: EVENTS_SERVICE, useValue: service },
+        { provide: EVENT_SUBMISSIONS_SERVICE, useValue: { dismiss: vi.fn(async () => undefined) } },
+      ],
     }).compileComponents();
     fixture = TestBed.createComponent(IdeasEventsPage);
     fixture.detectChanges();

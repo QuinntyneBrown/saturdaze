@@ -279,3 +279,17 @@ export async function saveFamilyMembers(
   });
   if (!res.ok()) throw new Error(`PUT /api/family failed: ${res.status()} ${await res.text()}`);
 }
+
+/** Rejects a suggestion as the seeded admin (`POST /api/events/submissions/{id}/reject`). */
+export async function rejectEventSubmission(
+  request: APIRequestContext,
+  id: string,
+  reason: string | null,
+): Promise<void> {
+  const admin = await apiLogin(request, SEEDED_ADMIN);
+  const res = await request.post(`${API_URL}/api/events/submissions/${id}/reject`, {
+    headers: { Authorization: `Bearer ${admin.accessToken}` },
+    data: { reason },
+  });
+  if (!res.ok()) throw new Error(`POST reject failed: ${res.status()} ${await res.text()}`);
+}

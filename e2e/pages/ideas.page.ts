@@ -256,6 +256,20 @@ export class IdeasPage extends BasePage {
     return this.main.locator(".card.card--muted");
   }
 
+  /** A rejected suggestion's card under "Your suggestion" (L2-149). */
+  notAddedCard(title: string): Locator {
+    return this.card(title, this.yourSuggestionSection());
+  }
+
+  /** The card's one-line note: why a suggestion was not added. */
+  cardNote(card: Locator): Locator {
+    return card.locator(".card__note");
+  }
+
+  dismissButton(card: Locator): Locator {
+    return card.getByRole("button", { name: /^Dismiss/ });
+  }
+
   dateTile(card: Locator): Locator {
     return card.locator(".date-tile");
   }

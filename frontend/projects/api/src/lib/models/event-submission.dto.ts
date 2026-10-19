@@ -65,4 +65,8 @@ export interface EventSubmissionDto {
    * Rejection Reason.
    */
   readonly rejectionReason: string | null;
+  /**
+   * When the submitter dismissed the "Not added" card (L2-149).
+   */
+  readonly dismissedAtUtc?: string | null;
 }

@@ -4,6 +4,7 @@ using Saturdaze.Application.Abstractions;
 using Saturdaze.Application.Authentication;
 using Saturdaze.Application.Common;
 using Saturdaze.Application.Contracts;
+using Saturdaze.Application.Email;
 using Saturdaze.Application.Exceptions;
 using Saturdaze.Domain.Entities;
 using Saturdaze.Domain.Enums;
@@ -16,15 +17,18 @@ public sealed class RejectSubmissionCommandHandler
     private readonly IAppDbContext _db;
     private readonly ICurrentUserAccessor _current;
     private readonly IDateTimeProvider _clock;
+    private readonly IEmailOutbox _outbox;
 
     public RejectSubmissionCommandHandler(
         IAppDbContext db,
         ICurrentUserAccessor current,
-        IDateTimeProvider clock)
+        IDateTimeProvider clock,
+        IEmailOutbox outbox)
     {
         _db = db;
         _current = current;
         _clock = clock;
+        _outbox = outbox;
     }
 
     public async Task<EventSubmissionDto> Handle(RejectSubmissionCommand request, CancellationToken ct)
@@ -56,6 +60,9 @@ public sealed class RejectSubmissionCommandHandler
         submission.RejectionReason = string.IsNullOrWhiteSpace(request.Reason) ? null : request.Reason.Trim();
 
         await _db.SaveChangesAsync(ct);
+        // The submitter hears why, by email as well as on their card (L2-149).
+        if (!string.IsNullOrWhiteSpace(email))
+            _outbox.Enqueue(SuggestionEmails.NotAdded(email, submission.Title, submission.RejectionReason));
 
         return EventSubmissionMapper.ToDto(submission, email);
     }
