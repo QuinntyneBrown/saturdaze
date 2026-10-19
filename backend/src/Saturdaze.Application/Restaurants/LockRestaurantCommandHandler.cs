@@ -99,14 +99,21 @@ public sealed class LockRestaurantCommandHandler : IRequestHandler<LockRestauran
 
         if (meal is null)
         {
+            // Start at the slot's usual time, or after whatever locked block or
+            // commitment sits there: locks never overlap (L2-148 AC4, L1-004).
+            var start = slot == MealSlot.Lunch ? PlannerTimes.LunchWindowStart : PlannerTimes.DinnerWindowStart;
+            foreach (var held in weekend.Blocks.Where(b => b.Day == day && b.IsLocked).OrderBy(b => b.StartTime))
+            {
+                if (held.StartTime < start.AddMinutes(PlannerTimes.MealMinutes) && held.EndTime > start)
+                    start = held.EndTime;
+            }
             meal = new ItineraryBlock
             {
                 Id = Guid.NewGuid(),
                 WeekendId = weekend.Id,
                 Day = day,
-                StartTime = slot == MealSlot.Lunch ? PlannerTimes.LunchWindowStart : PlannerTimes.DinnerWindowStart,
-                EndTime = (slot == MealSlot.Lunch ? PlannerTimes.LunchWindowStart : PlannerTimes.DinnerWindowStart)
-                    .AddMinutes(PlannerTimes.MealMinutes),
+                StartTime = start,
+                EndTime = start.AddMinutes(PlannerTimes.MealMinutes),
                 Kind = BlockKind.Meal,
                 SortOrder = (weekend.Blocks.Where(b => b.Day == day).Max(b => (int?)b.SortOrder) ?? 0) + 1
             };
