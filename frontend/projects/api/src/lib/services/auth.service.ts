@@ -271,9 +271,12 @@ export class AuthService implements IAuthService {
    *
    * @returns {Promise<void>} The result of the operation
    */
-  async resetPassword(req: ResetPasswordRequest): Promise<void> {
+  async resetPassword(req: ResetPasswordRequest): Promise<User> {
     try {
-      await firstValueFrom(this.http.post<void>(`${this.baseUrl}/api/auth/reset-password`, req));
+      const dto = await firstValueFrom(
+        this.http.post<AuthSuccessDto>(`${this.baseUrl}/api/auth/reset-password`, req),
+      );
+      return this.toUser(dto.user);
     } catch (e) {
       rethrowAsAuthError(e);
     }

@@ -76,9 +76,9 @@ export interface IAuthService {
    *
    * @param {ResetPasswordRequest} req - The req
    *
-   * @returns {Promise<void>} The result of the operation
+   * @returns {Promise<User>} The account whose password was reset
    */
-  resetPassword(req: ResetPasswordRequest): Promise<void>;
+  resetPassword(req: ResetPasswordRequest): Promise<User>;
   /**
    * Preview Invitation — `POST /api/auth/invitation` (L2-127).
    *

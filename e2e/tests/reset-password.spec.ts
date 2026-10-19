@@ -111,6 +111,24 @@ test.describe("Reset password — new password", () => {
     await expect(r.passwordRule("A number or symbol")).toHaveClass(/rules__item--met/);
   });
 
+  // Traces to: L2-005 AC7
+  test("a reset signs this browser out of the account it resets", async ({ page, pages, request, signIn }) => {
+    const account = await registerThrowaway(request, "reset");
+    await signIn(account);
+    const token = await devToken(request, "/api/auth/forgot-password", account.email);
+
+    await page.goto(`/reset-password?token=${encodeURIComponent(token)}`);
+    const r = pages.resetPassword;
+    await r.waitForReady();
+    await r.newPasswordInput().fill("Brand-new-pass-1");
+    await r.confirmPasswordInput().fill("Brand-new-pass-1");
+    await r.savePasswordButton().click();
+    await expect(r.cardTitle()).toHaveText("Password updated");
+
+    await page.goto("/weekend");
+    await page.waitForURL("**/sign-in**");
+  });
+
   test("passwords that do not match block the save", async ({ page, pages }) => {
     await page.goto("/reset-password?token=anything");
     const r = pages.resetPassword;

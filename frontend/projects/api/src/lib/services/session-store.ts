@@ -275,7 +275,11 @@ export class SessionStore implements ISessionStore {
   async resetPassword(req: ResetPasswordRequest): Promise<void> {
     this._error.set(null);
     try {
-      await this.auth.resetPassword(req);
+      const account = await this.auth.resetPassword(req);
+      // The reset revoked every refresh token for that account, so a session
+      // this browser holds for it is dead: drop it rather than wait for the
+      // next refresh to fail (L2-005 AC7).
+      if (account && this._user()?.id === account.id) this.clearSession();
     } catch (e) {
       const err = asAuthError(e, 'token_invalid');
       this._error.set(err);

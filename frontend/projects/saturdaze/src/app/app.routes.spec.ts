@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { Route, Router, UrlTree, provideRouter } from '@angular/router';
 
-import { requireAdmin, requireAnonymous, requireAuth } from 'api';
+import { requireAdmin, requireAnonymous, requireAnonymousUnlessToken, requireAuth } from 'api';
 
 import { routes } from './app.routes';
 
@@ -57,9 +57,11 @@ describe('app.routes', () => {
   });
 
   it('keeps signed-in users off the public entry pages, and verify-email open to everyone', () => {
-    for (const path of ['', 'sign-in', 'create-account', 'reset-password']) {
+    for (const path of ['', 'sign-in', 'create-account']) {
       expect(find(path)?.canActivate, path).toEqual([requireAnonymous]);
     }
+    // An emailed reset link opens in a signed-in browser too (L2-005 AC7).
+    expect(find('reset-password')?.canActivate).toEqual([requireAnonymousUnlessToken]);
     for (const path of ['verify-email', 'legal', 'sample-weekend']) {
       expect(find(path)?.canActivate, path).toBeUndefined();
     }
