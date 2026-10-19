@@ -78,6 +78,8 @@ export class VerifyEmailPage {
     this.busy.set(true);
     try {
       await this.session.resendVerification({ email: this.email() });
+      // A fresh link is on its way, so the expired card no longer applies (L2-006 AC5).
+      this.state.set('sent');
       this.resent.set(true);
       setTimeout(() => this.resent.set(false), 60_000);
     } catch (e) {

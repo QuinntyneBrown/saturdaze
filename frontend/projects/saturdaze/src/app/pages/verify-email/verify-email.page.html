@@ -18,11 +18,14 @@
       </sd-auth-card>
     }
     @case ('verifying') {
-      <sd-auth-card title="Verifying your email" subtitle="One moment." center>
+      <sd-auth-card
+        title="Verifying your email"
+        subtitle="One moment."
+        center
+        role="status"
+        aria-live="polite"
+      >
         <sd-spinner slot="disc" icon="mail" />
-        <span class="sd-visually-hidden" role="status" aria-live="polite"
-          >Verifying your email</span
-        >
       </sd-auth-card>
     }
     @case ('verified') {

@@ -65,13 +65,15 @@ test.describe("Verify email", () => {
     await expect(pages.verifyEmail.cardTitle()).toHaveText("This link has expired");
   });
 
-  test("no token at all shows the 'expired' state rather than spinning", async ({ page, pages }) => {
+  // Traces to: L2-006 AC4
+  test("no token at all shows 'Check your email' rather than spinning", async ({ page, pages }) => {
     await page.goto("/verify-email");
     await pages.verifyEmail.waitForReady();
-    await expect(pages.verifyEmail.cardTitle()).toHaveText("This link has expired");
+    await expect(pages.verifyEmail.cardTitle()).toHaveText("Check your email");
     await expect(pages.verifyEmail.statusCard()).toHaveCount(0);
   });
 
+  // Traces to: L2-006 AC5
   test("Resend from the expired state re-issues a link for a signed-in user", async ({ page, pages, request, signIn }) => {
     const account = await registerThrowaway(request, "verify");
     await signIn(account);
