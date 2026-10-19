@@ -33,6 +33,35 @@ public class AppDbContext : DbContext, IAppDbContext
     public DbSet<EmailVerificationToken> EmailVerificationTokens => Set<EmailVerificationToken>();
     public DbSet<WeekendShare> WeekendShares => Set<WeekendShare>();
 
+    public void DiscardChanges() => ChangeTracker.Clear();
+
+    public async Task<IAsyncDisposable> AcquireLockAsync(string resource, CancellationToken cancellationToken = default)
+    {
+        if (!Database.IsSqlServer()) return NoLock.Instance;
+        // A session-owned app lock lives as long as the connection, so keep it open until release.
+        await Database.OpenConnectionAsync(cancellationToken);
+        await Database.ExecuteSqlInterpolatedAsync(
+            $"EXEC sp_getapplock @Resource = {resource}, @LockMode = 'Exclusive', @LockOwner = 'Session', @LockTimeout = -1",
+            cancellationToken);
+        return new SessionLock(this, resource);
+    }
+
+    private sealed class SessionLock(AppDbContext db, string resource) : IAsyncDisposable
+    {
+        public async ValueTask DisposeAsync()
+        {
+            await db.Database.ExecuteSqlInterpolatedAsync(
+                $"EXEC sp_releaseapplock @Resource = {resource}, @LockOwner = 'Session'");
+            await db.Database.CloseConnectionAsync();
+        }
+    }
+
+    private sealed class NoLock : IAsyncDisposable
+    {
+        public static readonly NoLock Instance = new();
+        public ValueTask DisposeAsync() => ValueTask.CompletedTask;
+    }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);

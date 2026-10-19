@@ -45,11 +45,14 @@ public sealed class IngestionWorker : BackgroundService
             return;
         }
 
+        var exitCode = 0;
         if (_options.RunOnStartup || _options.RunOnceThenExit)
-            await RunIngestionAsync(stoppingToken);
+            exitCode = await RunIngestionAsync(stoppingToken);
 
         if (_options.RunOnceThenExit)
         {
+            // A scheduler sees a failed pass through the exit code (L2-083 AC3).
+            Environment.ExitCode = exitCode;
             _logger.LogInformation("RunOnceThenExit set; ingestion pass complete, stopping host.");
             _lifetime.StopApplication();
             return;
@@ -97,7 +100,8 @@ public sealed class IngestionWorker : BackgroundService
         }
     }
 
-    private async Task RunIngestionAsync(CancellationToken ct)
+    /// <returns>The exit code a run-once host should report: 1 when any type failed.</returns>
+    private async Task<int> RunIngestionAsync(CancellationToken ct)
     {
         try
         {
@@ -120,15 +124,18 @@ public sealed class IngestionWorker : BackgroundService
                 _logger.LogWarning("Ingestion pass completed with {Failed} failed type(s).", failed);
             else
                 _logger.LogInformation("Ingestion pass completed cleanly.");
+            return IngestionRunner.ExitCodeFor(runs);
         }
         catch (OperationCanceledException) when (ct.IsCancellationRequested)
         {
             // Host is shutting down; nothing to do.
+            return 0;
         }
         catch (Exception ex)
         {
             // Never let one bad pass kill the worker; the next tick will retry.
             _logger.LogError(ex, "Ingestion pass threw before it could record an audit row.");
+            return 1;
         }
     }
 

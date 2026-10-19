@@ -38,6 +38,27 @@ internal sealed class TestAppDbContext : DbContext, IAppDbContext
     public DbSet<EmailVerificationToken> EmailVerificationTokens => Set<EmailVerificationToken>();
     public DbSet<WeekendShare> WeekendShares => Set<WeekendShare>();
 
+    /// <summary>When set, the save with this 1-based number throws, as a failed commit would.</summary>
+    public int? FailOnSave { get; set; }
+    public int Saves { get; private set; }
+
+    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        Saves++;
+        if (FailOnSave == Saves) throw new DbUpdateException("Simulated save failure.");
+        return base.SaveChangesAsync(cancellationToken);
+    }
+
+    public void DiscardChanges() => ChangeTracker.Clear();
+
+    public Task<IAsyncDisposable> AcquireLockAsync(string resource, CancellationToken cancellationToken = default)
+        => Task.FromResult<IAsyncDisposable>(new NoLock());
+
+    private sealed class NoLock : IAsyncDisposable
+    {
+        public ValueTask DisposeAsync() => ValueTask.CompletedTask;
+    }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Owned<GeoLocation>();

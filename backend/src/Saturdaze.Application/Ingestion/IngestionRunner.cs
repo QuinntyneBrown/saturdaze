@@ -20,6 +20,9 @@ namespace Saturdaze.Application.Ingestion;
 /// </summary>
 public sealed class IngestionRunner
 {
+    /// <summary>What a run records when the provider gave nothing to work with (L2-080 AC6).</summary>
+    public const string NoUsableItems = "The provider returned no usable items.";
+
     private const int ErrorMessageMaxLength = 2000;
 
     private readonly IWebSearchClient _client;
@@ -85,21 +88,26 @@ public sealed class IngestionRunner
             Status = IngestionStatus.Running
         };
 
-        if (!dryRun && await ExceedsDailyBudgetAsync(type, ct))
-        {
-            run.Status = IngestionStatus.Failed;
-            run.ErrorMessage = $"Daily run budget of {_options.MaxRunsPerDayPerType} reached for {type}; skipping to avoid runaway API spend.";
-            run.FinishedUtc = _clock.UtcNow;
-            _db.IngestionRuns.Add(run);
-            await _db.SaveChangesAsync(ct);
-            _logger.LogWarning("{Message}", run.ErrorMessage);
-            return run;
-        }
-
         if (!dryRun)
         {
-            _db.IngestionRuns.Add(run);
-            await _db.SaveChangesAsync(ct); // persist the open row before the long call
+            // Count and open under one lock so concurrent passes and replicas
+            // take turns against the daily budget (L2-080 AC7).
+            await using (await _db.AcquireLockAsync($"saturdaze-ingestion-{type}", ct))
+            {
+                if (await ExceedsDailyBudgetAsync(type, ct))
+                {
+                    run.Status = IngestionStatus.Failed;
+                    run.ErrorMessage = $"Daily run budget of {_options.MaxRunsPerDayPerType} reached for {type}; skipping to avoid runaway API spend.";
+                    run.FinishedUtc = _clock.UtcNow;
+                    _db.IngestionRuns.Add(run);
+                    await _db.SaveChangesAsync(ct);
+                    _logger.LogWarning("{Message}", run.ErrorMessage);
+                    return run;
+                }
+
+                _db.IngestionRuns.Add(run);
+                await _db.SaveChangesAsync(ct); // persist the open row before the long call
+            }
         }
 
         try
@@ -118,7 +126,14 @@ public sealed class IngestionRunner
             var parsed = _parser.Parse(search.RawText, type);
             run.ItemsConsidered = parsed.Considered;
 
-            if (dryRun)
+            if (parsed.Considered == 0)
+            {
+                // Nothing to judge is not a success (L2-080 AC6).
+                run.Status = IngestionStatus.Failed;
+                run.ErrorMessage = NoUsableItems;
+                _logger.LogWarning("{Type}: {Message}", type, NoUsableItems);
+            }
+            else if (dryRun)
             {
                 run.ItemsRejected = parsed.Rejected;
                 run.Status = parsed.Rejected > 0 ? IngestionStatus.PartialSuccess : IngestionStatus.Succeeded;
@@ -128,7 +143,7 @@ public sealed class IngestionRunner
             }
             else
             {
-                var upsert = await _upserter.UpsertAsync(parsed.Items, type, ct);
+                var upsert = await _upserter.UpsertAsync(parsed.Items, type, ct, commit: false);
                 run.ItemsUpserted = upsert.Upserted;
                 run.ItemsRejected = parsed.Rejected + upsert.Rejected;
                 if (upsert.SkipReasons.Count > 0)
@@ -144,7 +159,13 @@ public sealed class IngestionRunner
 
             run.FinishedUtc = _clock.UtcNow;
         }
-        catch (Exception ex) when (ex is not OperationCanceledException)
+        catch (OperationCanceledException) when (ct.IsCancellationRequested)
+        {
+            // Close the row before stopping, so it is not left Running (L2-080 AC5).
+            if (!dryRun) await RecordFailureAsync(run, "Cancelled.");
+            throw;
+        }
+        catch (Exception ex)
         {
             run.Status = IngestionStatus.Failed;
             run.ErrorMessage = Truncate(ex.Message, ErrorMessageMaxLength);
@@ -153,10 +174,40 @@ public sealed class IngestionRunner
         }
 
         if (!dryRun)
-            await _db.SaveChangesAsync(ct); // close the row
+        {
+            try
+            {
+                // The catalog changes and the closed row commit together (L2-080 AC4).
+                await _db.SaveChangesAsync(ct);
+            }
+            catch (Exception ex) when (ex is not OperationCanceledException)
+            {
+                _logger.LogError(ex, "Ingestion for {Type} could not be saved.", type);
+                await RecordFailureAsync(run, Truncate(ex.Message, ErrorMessageMaxLength));
+            }
+        }
 
         return run;
     }
+
+    /// <summary>
+    /// Drops whatever the type left pending and stores the run as Failed on its
+    /// own, so a bad save neither half-commits nor stops the next type.
+    /// </summary>
+    private async Task RecordFailureAsync(IngestionRun run, string message)
+    {
+        _db.DiscardChanges();
+        run.Status = IngestionStatus.Failed;
+        run.ErrorMessage = message;
+        run.FinishedUtc = _clock.UtcNow;
+        run.ItemsUpserted = 0;
+        _db.IngestionRuns.Update(run);
+        await _db.SaveChangesAsync(CancellationToken.None);
+    }
+
+    /// <summary>The process exit code for a run-once pass (L2-083 AC3).</summary>
+    public static int ExitCodeFor(IEnumerable<IngestionRun> runs)
+        => runs.Any(r => r.Status == IngestionStatus.Failed) ? 1 : 0;
 
     private async Task<bool> ExceedsDailyBudgetAsync(IngestionType type, CancellationToken ct)
     {
