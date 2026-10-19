@@ -20,7 +20,9 @@
   }
   <div class="block__chips"><ng-content select="[slot=chips]" /></div>
 </div>
-<div class="block__actions"><ng-content select="[slot=actions]" /></div>
+@if (!readonly()) {
+  <div class="block__actions"><ng-content select="[slot=actions]" /></div>
+}
 @if (!drive() && !readonly()) {
   <button
     class="block__chev"

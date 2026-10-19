@@ -200,7 +200,7 @@ export class WeekendPage {
       const shareUrl = await this.weekendService.createShareLink();
       this.dialog.open<void, ShareDialogData>(ShareDialog, {
         ...DIALOG_OPTIONS,
-        data: { shareUrl },
+        data: { shareUrl, stopSharing: () => this.weekendService.stopSharing() },
       });
     });
   }
@@ -209,7 +209,7 @@ export class WeekendPage {
     const calendar = this.weekendService.calendarExport();
     this.dialog.open<void, CalendarDialogData>(CalendarDialog, {
       ...DIALOG_OPTIONS,
-      data: { calendar },
+      data: { calendar, download: () => this.weekendService.calendarFile() },
     });
   }
 

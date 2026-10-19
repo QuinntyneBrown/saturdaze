@@ -9,6 +9,7 @@ import { PastView, PastWeekendCard, SAVED_SERVICE, WEEKEND_PLAN_SERVICE } from '
 
 import { ConfirmDialog } from '../../dialogs/confirm-dialog/confirm-dialog';
 import { RatingDialog } from '../../dialogs/rating-dialog/rating-dialog';
+import { RemixDialog } from '../../dialogs/remix-dialog/remix-dialog';
 import { RenameWeekendDialog } from '../../dialogs/rename-weekend-dialog/rename-weekend-dialog';
 import { PastPage } from './past.page';
 
@@ -45,6 +46,7 @@ const LOADING: PastView = {
   weekends: [],
   skipping: [],
   filterEmpty: null,
+  hasMore: false,
 };
 
 const READY: PastView = {
@@ -59,6 +61,7 @@ const READY: PastView = {
   weekends: [LAVENDER, RAINY],
   skipping: [{ tone: 'warn', icon: 'close', label: 'The Rec Room · rated 2★ on 6 Apr' }],
   filterEmpty: null,
+  hasMore: false,
 };
 
 /** Flush every pending microtask (the app is zoneless, so whenStable cannot see mocked promises). */
@@ -122,6 +125,10 @@ describe('PastPage', () => {
       setFavourite: vi.fn(async () => undefined),
       rate: vi.fn(async () => undefined),
       rename: vi.fn(async () => undefined),
+      loadMore: vi.fn(async () => undefined),
+      remixPreview: vi.fn(async () => [
+        { when: 'Saturday morning', title: 'Royal Botanical Gardens', keep: false },
+      ]),
     };
     weekend = {
       repeatSaved: vi.fn(async () => undefined),
@@ -235,9 +242,16 @@ describe('PastPage', () => {
     await settle();
     expect(dialog.open).toHaveBeenCalledWith(
       RenameWeekendDialog,
-      expect.objectContaining({ data: { eyebrow: '9 – 10 May 2026', title: null } }),
+      expect.objectContaining({
+        data: { eyebrow: '9 – 10 May 2026', title: 'Bronte Creek + Rec Room' },
+      }),
     );
     expect(saved.rename).toHaveBeenCalledWith('w1', 'Lavender weekend');
+
+    // Saving the generated title unchanged keeps it generated.
+    dialog.open.mockReturnValueOnce({ closed: of({ title: 'Bronte Creek + Rec Room' }) });
+    await component['rename'](LAVENDER);
+    expect(saved.rename).toHaveBeenLastCalledWith('w1', null);
 
     dialog.open.mockReturnValueOnce({ closed: of({ title: null }) });
     await component['rename'](RAINY);
@@ -248,7 +262,7 @@ describe('PastPage', () => {
     expect(saved.rename).toHaveBeenLastCalledWith('w2', null);
 
     await component['rename'](RAINY);
-    expect(saved.rename).toHaveBeenCalledTimes(2);
+    expect(saved.rename).toHaveBeenCalledTimes(3);
   });
 
   it('rates through D13', async () => {
@@ -284,17 +298,16 @@ describe('PastPage', () => {
     expect(navigate).toHaveBeenCalledWith('/weekend');
   });
 
-  it('remixes after its confirmation, and stays put when dismissed', async () => {
+  it('remixes after previewing the stops in D16, and stays put when dismissed', async () => {
     await mount();
     await component['remix'](LAVENDER);
-    expect(confirmData()).toMatchObject({
-      title: 'Remix this weekend?',
-      confirmLabel: 'Remix',
-      icon: 'sparkle',
+    expect(saved.remixPreview).toHaveBeenCalledWith('w1');
+    expect(dialog.open.mock.calls.find((c) => c[0] === RemixDialog)?.[1].data).toEqual({
+      rows: [{ when: 'Saturday morning', title: 'Royal Botanical Gardens', keep: false }],
     });
     expect(weekend.remixSaved).not.toHaveBeenCalled();
 
-    dialog.open.mockReturnValueOnce({ closed: of('confirm') });
+    dialog.open.mockReturnValueOnce({ closed: of('remix') });
     (
       cards()[1]!.querySelector(
         '.card__footer sd-button[variant="quiet"] button',

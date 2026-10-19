@@ -341,7 +341,10 @@ describe('WeekendPage', () => {
     expect(dialog.open).toHaveBeenCalledWith(
       ShareDialog,
       expect.objectContaining({
-        data: { shareUrl: 'https://saturdaze.app/sample-weekend?share=abc' },
+        data: {
+          shareUrl: 'https://saturdaze.app/sample-weekend?share=abc',
+          stopSharing: expect.any(Function),
+        },
       }),
     );
 
@@ -356,6 +359,7 @@ describe('WeekendPage', () => {
             fileName: 'weekend-16-may.ics',
             eventCount: 8,
           },
+          download: expect.any(Function),
         },
       }),
     );

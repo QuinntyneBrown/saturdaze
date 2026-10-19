@@ -9,6 +9,7 @@ describe('CalendarDialog', () => {
   let fixture: ComponentFixture<CalendarDialog>;
   let host: HTMLElement;
   let dialogRef: { close: ReturnType<typeof vi.fn> };
+  let download: ReturnType<typeof vi.fn>;
 
   const calendar = {
     icsUrl: 'http://localhost:5100/api/weekends/w1/calendar.ics',
@@ -18,12 +19,13 @@ describe('CalendarDialog', () => {
 
   beforeEach(async () => {
     dialogRef = { close: vi.fn() };
+    download = vi.fn(async () => new Blob(['BEGIN:VCALENDAR'], { type: 'text/calendar' }));
     await TestBed.configureTestingModule({
       imports: [CalendarDialog],
       providers: [
         provideRouter([]),
         { provide: DialogRef, useValue: dialogRef },
-        { provide: DIALOG_DATA, useValue: { calendar } },
+        { provide: DIALOG_DATA, useValue: { calendar, download } },
       ],
     }).compileComponents();
     fixture = TestBed.createComponent(CalendarDialog);
@@ -44,22 +46,38 @@ describe('CalendarDialog', () => {
     );
   });
 
-  it('downloads through a plain link to the API', () => {
-    const link = host.querySelector(
-      'sd-button[slot="actions"] a.btn--primary',
-    ) as HTMLAnchorElement;
-    expect(link.getAttribute('href')).toBe(calendar.icsUrl);
-    expect(link.getAttribute('target')).toBe('_blank');
-    expect(link.getAttribute('rel')).toBe('noopener');
-    expect(link.querySelector('sd-icon svg')).not.toBeNull();
-    // The label "Download .ics" is not asserted: sd-button drops the default
-    // text of its <a> branch (see the TODO in components/button.spec.ts).
+  it('fetches the signed-in calendar file, saves it under the shown name and closes', async () => {
+    const created = vi.spyOn(URL, 'createObjectURL').mockReturnValue('blob:calendar');
+    const click = vi
+      .spyOn(HTMLAnchorElement.prototype, 'click')
+      .mockImplementation(() => undefined);
+    const button = host.querySelector(
+      'sd-button[slot="actions"] button.btn--primary',
+    ) as HTMLButtonElement;
+    expect(button.textContent).toContain('Download .ics');
+
+    await fixture.componentInstance['download']();
+
+    expect(download).toHaveBeenCalledTimes(1);
+    expect(created).toHaveBeenCalledTimes(1);
+    const link = click.mock.contexts[0] as HTMLAnchorElement;
+    expect(link.download).toBe('weekend-17-may.ics');
+    expect(dialogRef.close).toHaveBeenCalledTimes(1);
+    vi.restoreAllMocks();
   });
 
-  it('closes on cancel and after the download click', () => {
+  it('stays open with a warning when the file cannot be fetched', async () => {
+    download.mockRejectedValueOnce(new Error('offline'));
+    await fixture.componentInstance['download']();
+    fixture.detectChanges();
+    expect(host.querySelector('sd-banner')?.textContent).toContain(
+      'Could not get the calendar file',
+    );
+    expect(dialogRef.close).not.toHaveBeenCalled();
+  });
+
+  it('closes on cancel', () => {
     fixture.componentInstance['cancel']();
     expect(dialogRef.close).toHaveBeenCalledTimes(1);
-    fixture.componentInstance['downloaded']();
-    expect(dialogRef.close).toHaveBeenCalledTimes(2);
   });
 });

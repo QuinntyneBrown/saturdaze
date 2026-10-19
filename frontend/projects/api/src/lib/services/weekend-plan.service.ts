@@ -144,6 +144,20 @@ export class WeekendPlanService implements IWeekendPlanService {
     }
   }
 
+  async stopSharing(id?: string): Promise<void> {
+    const target = this.targetId(id);
+    await firstValueFrom(this.http.delete<void>(`${this.baseUrl}/api/weekends/${target}/share`));
+  }
+
+  async calendarFile(id?: string): Promise<Blob> {
+    const target = this.targetId(id);
+    return firstValueFrom(
+      this.http.get(`${this.baseUrl}/api/weekends/${target}/calendar.ics`, {
+        responseType: 'blob',
+      }),
+    );
+  }
+
   /**
    * Calendar Export.
    *

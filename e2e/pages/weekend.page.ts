@@ -55,6 +55,11 @@ export class WeekendPage extends BasePage {
   shareButton(): Locator {
     return this.headerAction("Share");
   }
+  /** D5's read-only link (`.copy-field__value`). */
+  shareLink(): Locator {
+    return this.dialogBody().locator(".copy-field__value");
+  }
+
 
   addToCalendarButton(): Locator {
     return this.headerAction("Add to calendar");

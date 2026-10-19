@@ -1,4 +1,5 @@
 import { test, expect, isPhone } from "../fixtures/sd-test.js";
+import { API_URL } from "../fixtures/auth.js";
 
 /**
  * Weekend behaviour against the seeded Brown family (API on :5100).
@@ -240,8 +241,34 @@ test.describe("Weekend", () => {
 
     await expect(w.dialogTitle()).toHaveText("Share this weekend");
     await expect(w.dialogBody().locator(".copy-field__value")).toContainText(/\/s\/[\w-]+$/);
-    await expect(w.dialogBody().getByRole("button", { name: "Copy", exact: true })).toHaveAttribute("aria-pressed", "false");
+    await expect(w.dialogBody().getByRole("button", { name: "Copy link", exact: true })).toHaveAttribute("aria-pressed", "false");
     await w.dialogAction("Done").click();
+    await expect(w.dialog()).toHaveCount(0);
+  });
+
+  // Traces to: L2-086 AC6
+  test("Stop sharing in D5 retires the link it showed", async ({ page, pages, request }) => {
+    const w = pages.weekend;
+    await w.shareButton().click();
+    await expect(w.dialogTitle()).toHaveText("Share this weekend");
+    const token = (await w.shareLink().textContent())!.trim().split("/s/")[1];
+    expect((await request.get(`${API_URL}/api/weekends/shared/${token}`)).status()).toBe(200);
+
+    const stopped = page.waitForResponse((r) => /\/api\/weekends\/[^/]+\/share$/.test(r.url()) && r.request().method() === "DELETE");
+    await w.dialogAction("Stop sharing").click();
+    expect((await stopped).status()).toBe(204);
+    await expect(w.dialog()).toHaveCount(0);
+    expect((await request.get(`${API_URL}/api/weekends/shared/${token}`)).status()).toBe(404);
+  });
+
+  // Traces to: L2-086 AC9 — the family's own calendar is a signed-in download.
+  test("Download .ics in D6 saves the weekend's calendar file", async ({ page, pages }) => {
+    const w = pages.weekend;
+    await w.addToCalendarButton().click();
+    await expect(w.dialogTitle()).toHaveText("Add to your calendar");
+    const download = page.waitForEvent("download");
+    await w.dialogAction(/^Download .ics/).click();
+    expect((await download).suggestedFilename()).toMatch(/\.ics$/);
     await expect(w.dialog()).toHaveCount(0);
   });
 

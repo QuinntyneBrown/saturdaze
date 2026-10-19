@@ -117,14 +117,24 @@ public sealed class WeekendsController : ControllerBase
         return Ok(await _sender.Send(new AddIdeaToWeekendCommand(id, kind, body.IdeaId, day, timing), ct));
     }
 
-    /// <summary>Only the owning family can mint a share link (scoped query).</summary>
+    /// <summary>
+    /// Only the owning family can mint a share link: a random token, stored as a hash,
+    /// that works for 7 days (L2-086 AC5).
+    /// </summary>
     [HttpPost("{id:guid}/share")]
     public async Task<ActionResult<WeekendShareDto>> Share(Guid id, CancellationToken ct)
     {
-        _ = await _sender.Send(new GetWeekendByIdQuery(id), ct);
-        var token = WeekendControllerHelpers.EncodeToken(id);
+        var link = await _sender.Send(new ShareWeekendCommand(id), ct);
         // The link is the API's preview page so link previews show the cover (L2-110 AC3).
-        return Ok(new WeekendShareDto($"{ApiOrigin}/s/{token}", token));
+        return Ok(new WeekendShareDto($"{ApiOrigin}/s/{link.Token}", link.Token, link.ExpiresAtUtc));
+    }
+
+    /// <summary>"Stop sharing": every link to the weekend stops working (L2-086 AC6).</summary>
+    [HttpDelete("{id:guid}/share")]
+    public async Task<IActionResult> StopSharing(Guid id, CancellationToken ct)
+    {
+        await _sender.Send(new StopSharingWeekendCommand(id), ct);
+        return NoContent();
     }
 
     /// <summary>
@@ -137,7 +147,7 @@ public sealed class WeekendsController : ControllerBase
     public async Task<ContentResult> SharePreview(
         string token, [FromServices] IConfiguration config, CancellationToken ct)
     {
-        var weekend = await _sender.Send(new GetSharedWeekendQuery(WeekendControllerHelpers.DecodeToken(token)), ct);
+        var weekend = await _sender.Send(new GetSharedWeekendQuery(token), ct);
         var appOrigin = (config["Saturdaze:Share:AppOrigin"] ?? ApiOrigin).TrimEnd('/');
         var target = $"{appOrigin}/sample-weekend?share={Uri.EscapeDataString(token)}";
         var image = weekend.Cover?.Url is { } url && url.StartsWith('/') ? $"{ApiOrigin}{url}" : weekend.Cover?.Url;
@@ -147,24 +157,37 @@ public sealed class WeekendsController : ControllerBase
 
     private string ApiOrigin => $"{Request.Scheme}://{Request.Host}";
 
-    /// <summary>Public read-only view behind a share link.</summary>
+    /// <summary>Public read-only view behind a share link, minus what only the family sees (L2-086 AC7).</summary>
     [HttpGet("shared/{token}")]
     [AllowAnonymous]
-    public async Task<ActionResult<WeekendDto>> Shared(string token, CancellationToken ct)
-        => Ok(await _sender.Send(new GetSharedWeekendQuery(WeekendControllerHelpers.DecodeToken(token)), ct));
+    public async Task<ActionResult<SharedWeekendDto>> Shared(string token, CancellationToken ct)
+        => Ok(SharedWeekendDto.From(await _sender.Send(new GetSharedWeekendQuery(token), ct)));
 
     /// <summary>
-    /// Calendar subscription feed. Anonymous by necessity: the browser, webcal:
-    /// and Google Calendar fetch this as a bare URL and cannot attach a bearer.
+    /// Calendar feed behind a share link. Anonymous by necessity: webcal: and Google
+    /// Calendar fetch it as a bare URL and cannot attach a bearer (L2-086 AC9).
     /// </summary>
-    [HttpGet("{id:guid}/calendar.ics")]
+    [HttpGet("shared/{token}/calendar.ics")]
     [AllowAnonymous]
+    public async Task<IActionResult> SharedCalendar(string token, CancellationToken ct)
+    {
+        var weekend = SharedWeekendDto.From(await _sender.Send(new GetSharedWeekendQuery(token), ct));
+        return CalendarFile(weekend.WeekendOf,
+            weekend.Blocks.Select(b => new IcsEvent(b.Id, b.Day, b.StartTime, b.EndTime, b.Title)));
+    }
+
+    /// <summary>The family's own calendar download; signed in and family-scoped (L2-086 AC9).</summary>
+    [HttpGet("{id:guid}/calendar.ics")]
     public async Task<IActionResult> Calendar(Guid id, CancellationToken ct)
     {
-        var weekend = await _sender.Send(new GetSharedWeekendQuery(id), ct);
-        var bytes = Encoding.UTF8.GetBytes(WeekendControllerHelpers.ToIcs(weekend));
-        return File(bytes, "text/calendar; charset=utf-8", $"saturdaze-{weekend.WeekendOf:yyyy-MM-dd}.ics");
+        var weekend = await _sender.Send(new GetWeekendByIdQuery(id), ct);
+        return CalendarFile(weekend.WeekendOf,
+            weekend.Blocks.Select(b => new IcsEvent(b.Id, b.Day, b.StartTime, b.EndTime, b.Title)));
     }
+
+    private FileContentResult CalendarFile(DateOnly weekendOf, IEnumerable<IcsEvent> events)
+        => File(Encoding.UTF8.GetBytes(WeekendControllerHelpers.ToIcs(weekendOf, events)),
+            "text/calendar; charset=utf-8", $"saturdaze-{weekendOf:yyyy-MM-dd}.ics");
 
     /// <summary>
     /// A page of past weekends, newest first; <c>before</c> continues the list and
@@ -260,24 +283,8 @@ file static class WeekendControllerHelpers
         return sb.ToString();
     }
 
-    public static string EncodeToken(Guid id)
-        => Convert.ToBase64String(id.ToByteArray()).TrimEnd('=').Replace('+', '-').Replace('/', '_');
-
-    public static Guid DecodeToken(string token)
-    {
-        try
-        {
-            var padded = token.Replace('-', '+').Replace('_', '/');
-            padded = padded.PadRight(padded.Length + (4 - padded.Length % 4) % 4, '=');
-            return new Guid(Convert.FromBase64String(padded));
-        }
-        catch (Exception ex) when (ex is FormatException or ArgumentException)
-        {
-            throw new NotFoundException("Share link is not valid.");
-        }
-    }
-
-    public static string ToIcs(WeekendDto weekend)
+    /// <summary>One VEVENT per block; titles only, no reasons (L2-086 AC9).</summary>
+    public static string ToIcs(DateOnly weekendOf, IEnumerable<IcsEvent> events)
     {
         var sb = new StringBuilder();
         sb.AppendLine("BEGIN:VCALENDAR");
@@ -285,17 +292,15 @@ file static class WeekendControllerHelpers
         sb.AppendLine("PRODID:-//Saturdaze//Weekend Plan//EN");
         sb.AppendLine("CALSCALE:GREGORIAN");
 
-        foreach (var block in weekend.Blocks.OrderBy(b => b.Day).ThenBy(b => b.StartTime))
+        foreach (var block in events.OrderBy(b => b.Day).ThenBy(b => b.StartTime))
         {
-            var date = block.Day == DayOfWeekend.Saturday ? weekend.WeekendOf : weekend.WeekendOf.AddDays(1);
+            var date = block.Day == DayOfWeekend.Saturday ? weekendOf : weekendOf.AddDays(1);
             sb.AppendLine("BEGIN:VEVENT");
             sb.AppendLine($"UID:{block.Id}@saturdaze");
             sb.AppendLine($"DTSTAMP:{DateTimeOffset.UtcNow:yyyyMMddTHHmmssZ}");
             sb.AppendLine($"DTSTART:{FormatIcsDateTime(date, block.StartTime)}");
             sb.AppendLine($"DTEND:{FormatIcsDateTime(date, block.EndTime)}");
             sb.AppendLine($"SUMMARY:{EscapeIcs(block.Title)}");
-            if (!string.IsNullOrWhiteSpace(block.Reason))
-                sb.AppendLine($"DESCRIPTION:{EscapeIcs(block.Reason)}");
             sb.AppendLine("END:VEVENT");
         }
 
@@ -313,6 +318,9 @@ file static class WeekendControllerHelpers
             .Replace("\r\n", "\\n")
             .Replace("\n", "\\n");
 }
+
+/// <summary>A calendar event built from an itinerary block.</summary>
+public sealed record IcsEvent(Guid Id, DayOfWeekend Day, TimeOnly StartTime, TimeOnly EndTime, string Title);
 
 /// <summary>Body of the ideas endpoints: <c>{ ideaKind, ideaId, day, timing }</c>.</summary>
 public sealed record IdeaRequest(string IdeaKind, Guid IdeaId, string Day, string? Timing);

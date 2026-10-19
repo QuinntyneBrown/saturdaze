@@ -114,7 +114,9 @@ export class PastPage {
     );
     const result = await firstValueFrom(ref.closed);
     if (!result) return;
-    await this.run(() => this.saved.rename(card.id, result.title));
+    // Saving the generated title as shown keeps it generated, not frozen as custom.
+    const title = !card.customTitle && result.title === card.title ? null : result.title;
+    await this.run(() => this.saved.rename(card.id, title));
   }
 
   protected async rate(card: PastWeekendCard): Promise<void> {

@@ -62,6 +62,24 @@ export interface IWeekendPlanService {
    */
   createShareLink(id?: string): Promise<string>;
   /**
+   * Stop Sharing — `DELETE /api/weekends/{id}/share`: every link to the weekend
+   * stops working (L2-086 AC6).
+   *
+   * @param {string} id - The weekend id (defaults to the current one)
+   *
+   * @returns {Promise<void>} The result of the operation
+   */
+  stopSharing(id?: string): Promise<void>;
+  /**
+   * Calendar File — the signed-in `GET /api/weekends/{id}/calendar.ics` as a
+   * file to save (L2-086 AC9).
+   *
+   * @param {string} id - The weekend id (defaults to the current one)
+   *
+   * @returns {Promise<Blob>} The .ics file
+   */
+  calendarFile(id?: string): Promise<Blob>;
+  /**
    * Calendar Export — the ICS link for the "Add to calendar" dialog.
    *
    * @param {string} id - The weekend id (defaults to the current one)

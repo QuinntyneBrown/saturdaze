@@ -105,7 +105,7 @@ public class WeekendOwnershipTests : IClassFixture<SaturdazeApiFactory>
     }
 
     [Fact]
-    public async Task Direct_weekend_read_requires_a_bearer_but_share_and_calendar_do_not()
+    public async Task Direct_weekend_read_and_calendar_require_a_bearer_but_the_share_link_does_not()
     {
         var owner = await SignedInClient.CreateAsync(_factory);
         var saturday = new DateOnly(2026, 8, 22).ToString("yyyy-MM-dd");
@@ -117,7 +117,8 @@ public class WeekendOwnershipTests : IClassFixture<SaturdazeApiFactory>
         var anonymous = _factory.CreateClient();
         (await anonymous.GetAsync($"/api/weekends/{weekendId}")).StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         (await anonymous.GetAsync($"/api/weekends/shared/{token}")).StatusCode.Should().Be(HttpStatusCode.OK);
-        (await anonymous.GetAsync($"/api/weekends/{weekendId}/calendar.ics")).StatusCode.Should().Be(HttpStatusCode.OK);
+        (await anonymous.GetAsync($"/api/weekends/{weekendId}/calendar.ics")).StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+        (await anonymous.GetAsync($"/api/weekends/shared/{token}/calendar.ics")).StatusCode.Should().Be(HttpStatusCode.OK);
     }
 
     private static async Task<JsonElement> ReadAsync(HttpResponseMessage resp)

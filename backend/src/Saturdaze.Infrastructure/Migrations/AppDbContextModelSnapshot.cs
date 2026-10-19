@@ -996,6 +996,39 @@ namespace Saturdaze.Infrastructure.Migrations
                     b.ToTable("Weekends", (string)null);
                 });
 
+            modelBuilder.Entity("Saturdaze.Domain.Entities.WeekendShare", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset>("CreatedAtUtc")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset>("ExpiresAtUtc")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset?>("RevokedAtUtc")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("TokenHash")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<Guid>("WeekendId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TokenHash")
+                        .IsUnique();
+
+                    b.HasIndex("WeekendId");
+
+                    b.ToTable("WeekendShares", (string)null);
+                });
+
             modelBuilder.Entity("Saturdaze.Domain.Entities.Activity", b =>
                 {
                     b.OwnsOne("Saturdaze.Domain.ValueObjects.GeoLocation", "Geo", b1 =>
@@ -1337,6 +1370,15 @@ namespace Saturdaze.Infrastructure.Migrations
                         });
 
                     b.Navigation("Home");
+                });
+
+            modelBuilder.Entity("Saturdaze.Domain.Entities.WeekendShare", b =>
+                {
+                    b.HasOne("Saturdaze.Domain.Entities.Weekend", null)
+                        .WithMany()
+                        .HasForeignKey("WeekendId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Saturdaze.Domain.Entities.Family", b =>

@@ -31,6 +31,7 @@ public class AppDbContext : DbContext, IAppDbContext
     public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
     public DbSet<PasswordResetToken> PasswordResetTokens => Set<PasswordResetToken>();
     public DbSet<EmailVerificationToken> EmailVerificationTokens => Set<EmailVerificationToken>();
+    public DbSet<WeekendShare> WeekendShares => Set<WeekendShare>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

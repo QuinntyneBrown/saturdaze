@@ -1,3 +1,4 @@
 namespace Saturdaze.Application.Contracts;
 
-public sealed record WeekendShareDto(string ShareUrl, string Token);
+/// <summary>A new share link; <paramref name="Token"/> is shown once (L2-086).</summary>
+public sealed record WeekendShareDto(string ShareUrl, string Token, DateTimeOffset? ExpiresAtUtc = null);
