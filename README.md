@@ -244,26 +244,55 @@ Development conventions:
 
 ## Deployment
 
-The repository includes a GitHub Actions workflow at
-`.github/workflows/deploy.yml`.
+Every push to `main` runs `.github/workflows/deploy.yml` (ADR-017):
 
-The workflow:
+1. **Test gates** — the backend suite on LocalDB and the frontend unit tests and
+   production builds.
+2. **Provision** — `eng/infra/main.bicep` converges `saturdaze-rg`: a Linux B1
+   App Service plan and the API Web App, Azure SQL Basic, three Static Web Apps
+   (family app, admin, design system), the Microsoft Foundry account with the
+   Claude deployment (ADR-011), Log Analytics + Application Insights, and a
+   monthly budget. Missing resources are created; existing ones are left alone.
+3. **API + ingestion WebJob** — publishes the API and `Saturdaze.Cli` (as a
+   scheduled WebJob under `App_Data/jobs/triggered/ingest`) into one zip and
+   deploys it.
+4. **Migrations** — `saturdaze migrate` from the runner, through a SQL firewall
+   rule that exists only for the length of the job.
+5. **Static Web Apps** — the family app and Saturdaze Admin (ADR-014), with
+   deployment tokens read from Azure at run time rather than stored in GitHub.
+6. **Smoke test** — the API answers and both SPAs serve a deep route (L2-042).
 
-- publishes and deploys the ASP.NET Core API to Azure App Service;
-- applies EF migrations through `Saturdaze.Cli`;
-- builds the Angular app and deploys it to Azure Static Web Apps;
-- builds Saturdaze Admin and deploys it to its own Static Web App after the
-  migrations (ADR-014). The job needs the `SWA_ADMIN_DEPLOYMENT_TOKEN` secret;
-  until it is set the job reports that it was skipped instead of failing.
+The design system deploys from `deploy-storybook.yml` on changes to the
+components library.
 
-Deployment requires the relevant Azure publish profile, Static Web Apps tokens,
-and database connection string secrets to be configured in GitHub Actions.
+### First-time setup
 
-The API only answers browsers from the origins in `Cors:AllowedOrigins`, so
-the admin host must be listed next to the family app's (for example
-`Cors__AllowedOrigins__1` in the Web App's settings). Curated photo uploads
-are served from the API itself (ADR-015): set `Saturdaze:CuratedPhotos:PublicOrigin`
-to the API's public origin and list that origin in `Saturdaze:Images:AllowedOrigins`.
+```pwsh
+az login
+pwsh ./eng/Bootstrap-Azure.ps1 -OrganizationName "<legal name>" -BudgetAlertEmail you@example.com
+```
+
+The script creates the OpenID Connect app registration GitHub Actions signs in
+with, resolves the application secrets (keeping any already live in Azure so
+nobody is signed out), stores them as GitHub secrets and variables (with `gh`)
+and in the gitignored `.deploy/azure.env`, shows a what-if, and runs the first
+deployment.
+
+GitHub Actions needs these **secrets**: `AZURE_CLIENT_ID`, `AZURE_TENANT_ID`,
+`AZURE_SUBSCRIPTION_ID`, `SQL_ADMIN_LOGIN`, `SQL_ADMIN_PASSWORD`,
+`SATURDAZE_JWT_SIGNING_KEY`, `SATURDAZE_PHOTOS_SIGNING_KEY`; and these
+**variables**: `FOUNDRY_ORGANIZATION_NAME`, `FOUNDRY_COUNTRY_CODE`,
+`APP_CUSTOM_DOMAIN`, `BUDGET_ALERT_EMAIL`.
+
+### Configuration
+
+Every API setting is written by the template — the connection string, the
+signing keys, `Cors:AllowedOrigins` (both Static Web Apps plus the custom
+domain), `Saturdaze:CuratedPhotos:PublicOrigin` and
+`Saturdaze:Images:AllowedOrigins` (ADR-015), and the Claude-on-Foundry
+settings with `ANTHROPIC_FOUNDRY_API_KEY` read straight from the Foundry
+account. Change them in `eng/infra/main.bicep`, not in the portal. Tiers live
+in `eng/infra/main.bicepparam`.
 
 ## Contributing
 
