@@ -49,6 +49,7 @@ export * from './lib/models/auth-error';
 export * from './lib/models/auth-error-code';
 export * from './lib/models/auth-token';
 export * from './lib/models/forgot-password-request';
+export * from './lib/models/google-login-request';
 export * from './lib/models/login-request';
 export * from './lib/models/logout-request';
 export * from './lib/models/refresh-request';
@@ -95,6 +96,7 @@ export * from './lib/services/weekend-plan.service';
 // Auth plumbing shared by the family app and Saturdaze Admin (ADR-014)
 export * from './lib/auth/auth-routes';
 export * from './lib/auth/auth.interceptor';
+export * from './lib/auth/google-identity';
 export * from './lib/auth/require-auth.guard';
 export * from './lib/auth/require-anonymous.guard';
 export * from './lib/auth/require-admin.guard';

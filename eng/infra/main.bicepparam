@@ -28,6 +28,10 @@ param appCustomDomain = readEnvironmentVariable('APP_CUSTOM_DOMAIN', '')
 param marketingCustomDomain = readEnvironmentVariable('MARKETING_CUSTOM_DOMAIN', '')
 param marketingApexDomain = readEnvironmentVariable('MARKETING_APEX_DOMAIN', '')
 
+// "Continue with Google" (ADR-019): the OAuth client id, once one exists in
+// Google Cloud with app.saturdaze.ca as an authorised origin.
+param googleClientId = readEnvironmentVariable('GOOGLE_CLIENT_ID', '')
+
 // Secrets — never committed.
 param sqlAdminLogin = readEnvironmentVariable('SQL_ADMIN_LOGIN')
 param sqlAdminPassword = readEnvironmentVariable('SQL_ADMIN_PASSWORD')

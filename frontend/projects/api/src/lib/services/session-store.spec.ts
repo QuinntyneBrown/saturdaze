@@ -35,6 +35,7 @@ describe('SessionStore', () => {
   let auth: {
     signUp: ReturnType<typeof vi.fn>;
     login: ReturnType<typeof vi.fn>;
+    loginWithGoogle: ReturnType<typeof vi.fn>;
     refresh: ReturnType<typeof vi.fn>;
     logout: ReturnType<typeof vi.fn>;
     forgotPassword: ReturnType<typeof vi.fn>;
@@ -51,6 +52,9 @@ describe('SessionStore', () => {
     auth = {
       signUp: vi.fn(() => Promise.resolve({ token: tokenExpiringIn(900_000), user: USER })),
       login: vi.fn(() => Promise.resolve({ token: tokenExpiringIn(900_000), user: USER })),
+      loginWithGoogle: vi.fn(() =>
+        Promise.resolve({ token: tokenExpiringIn(900_000), user: USER }),
+      ),
       refresh: vi.fn(() =>
         Promise.resolve({ token: tokenExpiringIn(900_000, 'access-2', 'refresh-2'), user: USER }),
       ),
@@ -116,6 +120,40 @@ describe('SessionStore', () => {
       });
       expect(service.error()?.code).toBe('invalid_credentials');
       expect(service.isAuthenticated()).toBe(false);
+    });
+  });
+
+  // Traces to: L2-158 AC2, AC3, AC5
+  describe('loginWithGoogle', () => {
+    it('posts the credential and persists like a remembered login', async () => {
+      await service.loginWithGoogle('google-credential', true);
+      expect(auth.loginWithGoogle).toHaveBeenCalledWith({ credential: 'google-credential' });
+      expect(storedToken(localStorage)?.refreshToken).toBe('refresh-1');
+      expect(localStorage.getItem(STORAGE_FLAG_KEY)).toBe('local');
+      expect(sessionStorage.getItem(TOKEN_KEY)).toBeNull();
+      expect(service.user()).toEqual(USER);
+      expect(service.rememberedEmail()).toBe('quinn@example.com');
+    });
+
+    it('keeps the session in sessionStorage when remember is off', async () => {
+      await service.loginWithGoogle('google-credential', false);
+      expect(storedToken(sessionStorage)?.value).toBe('access-1');
+      expect(localStorage.getItem(TOKEN_KEY)).toBeNull();
+      expect(service.rememberedEmail()).toBeNull();
+    });
+
+    it('maps a refused credential onto the error signal, stores nothing and rethrows', async () => {
+      auth.loginWithGoogle = vi.fn(() =>
+        Promise.reject({ code: 'email_unverified', message: 'verify first' }),
+      );
+      await expect(service.loginWithGoogle('google-credential', true)).rejects.toEqual({
+        code: 'email_unverified',
+        message: 'verify first',
+      });
+      expect(service.error()?.code).toBe('email_unverified');
+      expect(service.isAuthenticated()).toBe(false);
+      expect(localStorage.getItem(TOKEN_KEY)).toBeNull();
+      expect(sessionStorage.getItem(TOKEN_KEY)).toBeNull();
     });
   });
 

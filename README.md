@@ -54,7 +54,8 @@ reference.
 - Family profile management for household members, recurring commitments,
   budget preferences, likes, and dislikes.
 - Authentication flows for sign-up, login, verification, password reset, and
-  sign-out.
+  sign-out, plus "Continue with Google", which creates the account on first use
+  (ADR-019).
 - Family member sign-in: the account that creates a family owns it, invites
   members by a shareable link so each signs in with their own password, adds
   members such as young children who never sign in, and removes members,
@@ -149,6 +150,22 @@ Run the Angular app:
 cd frontend
 npm start
 ```
+
+#### Sign in with Google (optional)
+
+"Continue with Google" needs an OAuth client id from
+[Google Cloud](https://console.cloud.google.com/apis/credentials) (type **Web
+application**, authorised JavaScript origin `http://localhost:4200`; no redirect
+URI and no client secret, ADR-019). Put the same id in two places:
+
+- `frontend/projects/saturdaze/src/environments/environment.ts` →
+  `googleClientId` (the dev file ships a placeholder that renders the button but
+  cannot complete a sign-in);
+- the API: `$env:Saturdaze__Google__ClientId = "<id>"` or
+  `Saturdaze:Google:ClientId` in `appsettings.Development.json`.
+
+With the API's id empty, `POST /api/auth/google` answers `503
+google_not_configured`; with the app's id empty, the button is not rendered.
 
 Run the design reference (static mocks):
 
@@ -307,7 +324,10 @@ GitHub Actions needs these **secrets**: `AZURE_CLIENT_ID`, `AZURE_TENANT_ID`,
 `SATURDAZE_JWT_SIGNING_KEY`, `SATURDAZE_PHOTOS_SIGNING_KEY`; and these
 **variables**: `FOUNDRY_ORGANIZATION_NAME`, `FOUNDRY_COUNTRY_CODE`,
 `APP_CUSTOM_DOMAIN`, `MARKETING_CUSTOM_DOMAIN`, `MARKETING_APEX_DOMAIN`,
-`MARKETING_SWA_SKU` (optional), `BUDGET_ALERT_EMAIL`.
+`MARKETING_SWA_SKU` (optional), `BUDGET_ALERT_EMAIL`, `GOOGLE_CLIENT_ID`
+(optional: the production OAuth client id for "Continue with Google", whose
+authorised origin is `https://app.saturdaze.ca`; set the same id as
+`googleClientId` in `environment.prod.ts`, ADR-019).
 
 ### Configuration
 

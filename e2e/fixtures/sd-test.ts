@@ -31,6 +31,8 @@ import {
   TestSession,
 } from "./auth.js";
 
+import { installFakeGoogleIdentity } from "./google-identity.js";
+
 import { WeekendPage } from "../pages/weekend.page.js";
 import { IdeasPage } from "../pages/ideas.page.js";
 import { PastPage } from "../pages/past.page.js";
@@ -110,6 +112,14 @@ export function isPhone(testInfo: TestInfo): boolean {
 }
 
 export const test = base.extend<SdFixtures>({
+  // Google Identity Services is replaced before any page script runs, so no
+  // spec downloads Google's button script and the sign-in page gets a
+  // clickable stand-in (L2-158, ADR-019).
+  page: async ({ page }, use) => {
+    await installFakeGoogleIdentity(page);
+    await use(page);
+  },
+
   signIn: async ({ page, request }, use) => {
     let active: TestSession | null = null;
     await use(async (creds = SEEDED_USER, seed) => {

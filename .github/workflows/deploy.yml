@@ -180,6 +180,7 @@ jobs:
           MARKETING_APEX_DOMAIN: ${{ vars.MARKETING_APEX_DOMAIN }}
           MARKETING_SWA_SKU: ${{ vars.MARKETING_SWA_SKU || 'Free' }}
           BUDGET_ALERT_EMAIL: ${{ vars.BUDGET_ALERT_EMAIL }}
+          GOOGLE_CLIENT_ID: ${{ vars.GOOGLE_CLIENT_ID }}
         run: |
           for v in SQL_ADMIN_LOGIN SQL_ADMIN_PASSWORD SATURDAZE_JWT_SIGNING_KEY SATURDAZE_PHOTOS_SIGNING_KEY FOUNDRY_ORGANIZATION_NAME; do
             if [ -z "${!v}" ]; then

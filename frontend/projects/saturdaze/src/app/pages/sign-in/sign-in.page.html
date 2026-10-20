@@ -10,7 +10,7 @@
         name="email"
         autocomplete="email"
         formControlName="email"
-        [invalid]="!!errorMessage() || (form.controls.email.invalid && form.controls.email.touched)"
+        [invalid]="fieldsInvalid() || (form.controls.email.invalid && form.controls.email.touched)"
       />
       <sd-text-input
         label="Password"
@@ -19,7 +19,7 @@
         autocomplete="current-password"
         formControlName="password"
         [invalid]="
-          !!errorMessage() || (form.controls.password.invalid && form.controls.password.touched)
+          fieldsInvalid() || (form.controls.password.invalid && form.controls.password.touched)
         "
       />
       <div class="row">
@@ -30,6 +30,12 @@
         >Sign in</sd-button
       >
     </form>
+    @if (showGoogle()) {
+      <div class="auth-card__or" role="separator" aria-label="or"><span>or</span></div>
+    }
+    @if (showGoogle()) {
+      <div class="google-btn" #googleHost></div>
+    }
     <span slot="alt"
       >New here? <a class="sd-link" routerLink="/create-account">Create an account</a></span
     >

@@ -2,6 +2,7 @@ import { InjectionToken } from '@angular/core';
 
 import { AuthToken } from '../models/auth-token';
 import { ForgotPasswordRequest } from '../models/forgot-password-request';
+import { GoogleLoginRequest } from '../models/google-login-request';
 import { LoginRequest } from '../models/login-request';
 import { LogoutRequest } from '../models/logout-request';
 import { RefreshRequest } from '../models/refresh-request';
@@ -37,6 +38,15 @@ export interface IAuthService {
    * @returns {Promise<{ token: AuthToken; user: User }>} The result of the operation
    */
   login(req: LoginRequest): Promise<{ token: AuthToken; user: User }>;
+  /**
+   * Sign in with a Google credential — `POST /api/auth/google`; creates the
+   * account on first use (L2-157).
+   *
+   * @param {GoogleLoginRequest} req - The req
+   *
+   * @returns {Promise<{ token: AuthToken; user: User }>} The result of the operation
+   */
+  loginWithGoogle(req: GoogleLoginRequest): Promise<{ token: AuthToken; user: User }>;
   /**
    * Exchange a refresh token for a new access + refresh pair. Rejects with
    * `AuthError { code: 'token_expired' }` when the server answers 401
