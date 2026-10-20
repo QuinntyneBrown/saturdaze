@@ -19,6 +19,7 @@ class EmailMessage {
 }
 
 class EmailContent {
+  +string Subject
   +string Eyebrow
   +string Title
   +IReadOnlyList<string> Paragraphs
@@ -49,6 +50,7 @@ class EmailSample {
 class EmailLayout {
   {static} +Render(content): string
   {static} +Text(content): string
+  {static} +Message(to, content): EmailMessage
 }
 
 class InvitationEmails {
@@ -61,7 +63,7 @@ class AccountEmails {
 }
 
 class SuggestionEmails {
-  {static} +NotAdded(to, title, reason, appOrigin): EmailMessage
+  +NotAdded(to, title, reason): EmailMessage
 }
 
 class EmailMime {

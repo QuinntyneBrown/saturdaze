@@ -48,6 +48,22 @@ public class RejectionNoticeTests : IClassFixture<SaturdazeApiFactory>
     }
 
     [Fact]
+    public async Task A_rejection_notice_is_HTML_on_brand_and_opens_Ideas()
+    {
+        // Traces to: L2-162 #3
+        var (submitter, id, title) = await SubmitAsync();
+
+        await RejectAsync(id, "Looks like a <private> event & not open to every family.");
+
+        var notice = await NoticeFor(submitter.Email);
+        notice.HtmlBody.Should().NotBeNull();
+        notice.HtmlBody.Should().Contain(title.Replace("&", "&amp;")).And.Contain("Open Ideas")
+            .And.Contain("href=\"https://app.example.com/ideas/events\"").And.Contain("#bf5130")
+            .And.Contain("Looks like a &lt;private&gt; event &amp; not open to every family.");
+        notice.Body.Should().Contain("Looks like a <private> event & not open to every family.");
+    }
+
+    [Fact]
     public async Task A_rejection_emails_the_submitter_the_event_and_the_reason()
     {
         // Traces to: L2-149 AC1

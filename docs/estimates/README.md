@@ -1,6 +1,6 @@
 # Estimates
 
-- Overall effort: 176 days
+- Overall effort: 179 days
 - Complete: 93%
 
 | Subsystem | Effort | Complete |
@@ -11,7 +11,7 @@
 | [weekend-planning](weekend-planning.md) | 29 days | 93% |
 | [discovery](discovery.md) | 44 days | 95% |
 | [administration](administration.md) | 32 days | 95% |
-| [operations](operations.md) | 10 days | 59% |
+| [operations](operations.md) | 13 days | 68% |
 | [web-experience](web-experience.md) | 11 days | 84% |
 | [design-system](design-system.md) | 7 days | 100% |
 

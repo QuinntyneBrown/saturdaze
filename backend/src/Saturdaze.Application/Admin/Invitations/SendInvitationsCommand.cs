@@ -119,12 +119,13 @@ public sealed class SendInvitationsCommandHandler : IRequestHandler<SendInvitati
 
         var urls = rows.ToDictionary(r => r.Row.Id, r => JoinLink(r.Token));
         var dtos = await _mapper.ToDtosAsync(rows.Select(r => r.Row).ToList(), urls, ct);
+        var sample = await SampleAsync(dtos[0].SampleWeekend, ct);
 
         // Mail leaves after the rows are committed, off the request path (L2-142).
         foreach (var (row, token) in rows)
         {
             var dto = dtos.Single(d => d.Id == row.Id);
-            _outbox.Enqueue(_emails.Invitation(row.Email, token, dto.InvitedByEmail, dto.SampleWeekend, message));
+            _outbox.Enqueue(_emails.Invitation(row.Email, token, dto.InvitedByEmail, sample, message));
         }
 
         return new SendInvitationsResultDto(dtos);
@@ -132,4 +133,22 @@ public sealed class SendInvitationsCommandHandler : IRequestHandler<SendInvitati
 
     /// <summary>Relative: the API makes it absolute against the app's origin.</summary>
     public static string JoinLink(string token) => $"/join?token={Uri.EscapeDataString(token)}";
+
+    /// <summary>The sample card of the email: the family, the dates and each day's first activity (L2-162 AC2).</summary>
+    private async Task<InvitationSample?> SampleAsync(SampleWeekendSummaryDto? summary, CancellationToken ct)
+    {
+        if (summary is null) return null;
+        var weekendId = await _db.Prospects.AsNoTracking()
+            .Where(p => p.Id == summary.ProspectId).Select(p => p.WeekendId).FirstAsync(ct);
+        var activities = await _db.ItineraryBlocks.AsNoTracking()
+            .Where(b => b.WeekendId == weekendId && b.Kind == Domain.Enums.BlockKind.Activity)
+            .OrderBy(b => b.SortOrder)
+            .Select(b => new { b.Day, b.Title })
+            .ToListAsync(ct);
+        return new InvitationSample(
+            summary.FamilyName,
+            summary.WeekendOf,
+            activities.FirstOrDefault(a => a.Day == Domain.Enums.DayOfWeekend.Saturday)?.Title,
+            activities.FirstOrDefault(a => a.Day == Domain.Enums.DayOfWeekend.Sunday)?.Title);
+    }
 }

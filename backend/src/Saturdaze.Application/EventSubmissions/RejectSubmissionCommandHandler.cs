@@ -18,17 +18,20 @@ public sealed class RejectSubmissionCommandHandler
     private readonly ICurrentUserAccessor _current;
     private readonly IDateTimeProvider _clock;
     private readonly IEmailOutbox _outbox;
+    private readonly SuggestionEmails _emails;
 
     public RejectSubmissionCommandHandler(
         IAppDbContext db,
         ICurrentUserAccessor current,
         IDateTimeProvider clock,
-        IEmailOutbox outbox)
+        IEmailOutbox outbox,
+        SuggestionEmails emails)
     {
         _db = db;
         _current = current;
         _clock = clock;
         _outbox = outbox;
+        _emails = emails;
     }
 
     public async Task<EventSubmissionDto> Handle(RejectSubmissionCommand request, CancellationToken ct)
@@ -62,7 +65,7 @@ public sealed class RejectSubmissionCommandHandler
         await _db.SaveChangesAsync(ct);
         // The submitter hears why, by email as well as on their card (L2-149).
         if (!string.IsNullOrWhiteSpace(email))
-            _outbox.Enqueue(SuggestionEmails.NotAdded(email, submission.Title, submission.RejectionReason));
+            _outbox.Enqueue(_emails.NotAdded(email, submission.Title, submission.RejectionReason));
 
         return EventSubmissionMapper.ToDto(submission, email);
     }

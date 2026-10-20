@@ -43,6 +43,31 @@ public class AccountEmailTests : IClassFixture<SaturdazeApiFactory>
         verify.StatusCode.Should().Be(HttpStatusCode.OK);
     }
 
+
+    [Fact]
+    public async Task Account_emails_are_HTML_on_brand_with_their_links_as_buttons()
+    {
+        // Traces to: L2-162 #3
+        var client = _factory.CreateClient();
+        var email = NewEmail("mail-html");
+        await client.PostAsJsonAsync("/api/auth/register", new RegisterRequest(email, "password123"));
+        var verification = (await _factory.Mail.WaitForAsync(email))[0];
+
+        verification.HtmlBody.Should().NotBeNull();
+        verification.HtmlBody.Should().Contain("<title>Confirm your email for Saturdaze</title>");
+        verification.HtmlBody.Should().Contain("Confirm my email").And.Contain("#bf5130");
+        verification.HtmlBody.Should().Contain("href=\"" + $"{AppOrigin}/verify-email?token=");
+        verification.Body.Should().Contain($"{AppOrigin}/verify-email?token=");
+
+        await client.PostAsJsonAsync("/api/auth/forgot-password", new ForgotPasswordRequest(email));
+        var mail = await _factory.Mail.WaitForAsync(email, count: 2);
+        var reset = mail.Should().ContainSingle(m => m.Body.Contains("/reset-password?token=")).Subject;
+
+        reset.HtmlBody.Should().Contain("Choose a new password").And.Contain("The link works for 60 minutes.");
+        reset.HtmlBody.Should().Contain("href=\"" + $"{AppOrigin}/reset-password?token=");
+        reset.Body.Should().Contain("The link works for 60 minutes.");
+    }
+
     [Fact]
     public async Task Resending_verification_emails_a_fresh_link_and_retires_the_previous_one()
     {

@@ -51,6 +51,53 @@ public class AdminInvitationsTests : IClassFixture<SaturdazeApiFactory>
         }
     }
 
+
+    [Fact]
+    public async Task The_invitation_email_is_HTML_on_brand_with_a_plain_text_twin()
+    {
+        // Traces to: L2-162 #1, #2
+        var admin = await SignedInClient.CreateAsync(_factory, role: UserRole.Admin);
+        var prospect = await Prospects.CreateAsync(admin.Client, Prospects.Riveras(_factory.Clock.Today));
+        var saturday = Prospects.Blocks(prospect).First(b => b.GetProperty("day").GetString() == "Saturday" && b.GetProperty("kind").GetString() == "Activity").GetProperty("title").GetString();
+        var sunday = Prospects.Blocks(prospect).First(b => b.GetProperty("day").GetString() == "Sunday" && b.GetProperty("kind").GetString() == "Activity").GetProperty("title").GetString();
+        var email = PlatformInvites.NewEmail("html");
+        var invitation = (await PlatformInvites.SendAsync(admin.Client, prospect.GetProperty("id").GetGuid(), "Hi Ana & family, have a look.", email)).Single();
+        var url = invitation.GetProperty("url").GetString()!;
+
+        var mail = (await _factory.Mail.WaitForAsync(email)).Should().ContainSingle().Subject;
+
+        mail.Subject.Should().Be("A weekend planned for The Riveras on Saturdaze");
+        var html = mail.HtmlBody.Should().NotBeNull().And.Subject!;
+        html.Should().Contain("<title>A weekend planned for The Riveras on Saturdaze</title>");
+        html.Should().Contain($"href=\"{html_encode(url)}\"").And.Contain("Create your account");
+        html.Should().Contain("#bf5130").And.Contain("#1f2937").And.Contain("#faf7f2");
+        html.Should().Contain("The Riveras · Sat 16 May – Sun 17 May");
+        html.Should().Contain(saturday).And.Contain(sunday);
+        html.Should().Contain("Hi Ana &amp; family, have a look.").And.NotContain("Hi Ana & family");
+        html.Should().NotContainEquivalentOf("<script").And.NotContainEquivalentOf("<link").And.NotContainEquivalentOf("<img");
+
+        mail.Body.Should().Contain(url).And.Contain("The Riveras").And.Contain("Sat 16 May – Sun 17 May")
+            .And.Contain("Hi Ana & family, have a look.").And.Contain("The link works for 14 days.");
+
+        static string html_encode(string s) => s.Replace("&", "&amp;");
+    }
+
+    [Fact]
+    public async Task A_plain_invitation_email_is_HTML_on_brand_too()
+    {
+        // Traces to: L2-162 #1
+        var admin = await SignedInClient.CreateAsync(_factory, role: UserRole.Admin);
+        var email = PlatformInvites.NewEmail("html-plain");
+        var invitation = await PlatformInvites.SendOneAsync(admin.Client, email);
+
+        var mail = (await _factory.Mail.WaitForAsync(email)).Should().ContainSingle().Subject;
+
+        mail.HtmlBody.Should().Contain("<title>You&#39;re invited to Saturdaze</title>")
+            .And.Contain(invitation.GetProperty("url").GetString()!.Replace("&", "&amp;"))
+            .And.Contain("Create your account").And.Contain("#bf5130");
+        mail.Body.Should().Contain(invitation.GetProperty("url").GetString());
+    }
+
     [Fact]
     public async Task An_address_that_already_signs_in_refuses_the_whole_batch()
     {
