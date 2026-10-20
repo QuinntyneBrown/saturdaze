@@ -36,7 +36,7 @@ router -> router : Run route guards after session rehydration
 alt signed-out visitor on a requireAuth route
   router --> user : Redirect to /sign-in?returnUrl=/weekend
 else unmatched path
-  router --> user : Wildcard ** redirects to /
+  router --> user : Wildcard ** redirects to /weekend
 else guard passes
   router -> assets : Request lazy route chunk (L2-035)
   assets --> router : Page JavaScript

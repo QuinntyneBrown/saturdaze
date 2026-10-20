@@ -12,11 +12,11 @@ Saturdaze combines an Angular web application, an ASP.NET Core API, SQL Server p
 
 `app.routes.ts` lazily loads rendered pages and defines legacy redirects. `App` merges route data along the active path and selects app, site, or bare chrome.
 
-The app shell serves Weekend, Ideas, Past, Family, and Review submissions. Site chrome serves landing, legal, and shared-weekend pages; authentication uses bare chrome. `requireAnonymous`, `requireAuth`, and `requireAdmin` enforce route access.
+The app shell serves Weekend, Ideas, Past, Family, and Review submissions. Site chrome serves the legal and shared-weekend pages (the landing page moved to the marketing site, [serve-marketing-site](../serve-marketing-site/README.md)); authentication uses bare chrome. `requireAnonymous`, `requireAuth`, and `requireAdmin` enforce route access.
 
 Below 720 px, app routes use bottom navigation; from 720 px they use the top bar. The weekend's `.sd-grid-days` stacks days below 1024 px and sets two day columns from 1024 px. `_breakpoints.scss`, `_global.scss`, and component/page SCSS preserve the BEM class contract with `docs/mocks`.
 
-Legacy paths such as `/login`, `/profile`, `/saved`, and `/itinerary` redirect to `/sign-in`, `/family`, `/past`, and `/weekend`. The `**` wildcard redirects any unmatched path to `/`. The `/dialogs` gallery route and the dev state overrides exist only when `environment.galleryRoutes` is enabled; the production environment disables it.
+Legacy paths such as `/login`, `/profile`, `/saved`, and `/itinerary` redirect to `/sign-in`, `/family`, `/past`, and `/weekend`. `/` and the `**` wildcard redirect to `/weekend`, where `requireAuth` sends an anonymous visitor on to sign-in (L2-155). The `/dialogs` gallery route and the dev state overrides exist only when `environment.galleryRoutes` is enabled; the production environment disables it.
 
 `staticwebapp.config.json` provides deep-route fallback. ADR-010 defines visual tiers, masks, and mock-derived baselines; rendering bounds remain 320 through 1920 px.
 
@@ -32,8 +32,8 @@ The following L2 requirements refine the cited L1 capabilities. Implementation g
 
 | L2 ID | Refines (L1) | Requirement |
 |-------|--------------|-------------|
-| `L2-028` | `L1-011` | Every routed page (`/`, `/weekend`, `/ideas`, `/ideas/food`, `/ideas/events`, `/past`, `/family`, `/review-submissions`, `/legal`, `/sample-weekend`, all auth pages) shall render usably at viewport widths 320 px, 390 px, 820 px, 1440 px, and 1920 px. (Revised 2026-09-02 with the v2 design, [ADR-009](/docs/adr/ADR-009-v2-responsive-shell.md): the v1 split view is gone; the shell is a top bar from 720 px and a bottom nav below it.) |
-| `L2-035` | `L1-013` | Every rendered route component, including the landing page, shall be lazy-loaded via `loadComponent`, so the initial bundle excludes those pages' code. |
+| `L2-028` | `L1-011` | Every routed page (`/weekend`, `/ideas`, `/ideas/food`, `/ideas/events`, `/past`, `/family`, `/review-submissions`, `/legal`, `/sample-weekend`, all auth pages) shall render usably at viewport widths 320 px, 390 px, 820 px, 1440 px, and 1920 px. (Revised 2026-09-02 with the v2 design, [ADR-009](/docs/adr/ADR-009-v2-responsive-shell.md): the v1 split view is gone; the shell is a top bar from 720 px and a bottom nav below it.) |
+| `L2-035` | `L1-013` | Every rendered route component shall be lazy-loaded via `loadComponent`, so the initial bundle excludes those pages' code. |
 | `L2-042` | `L1-011`, `L1-016` | Refreshing any client-side route (e.g., `/sign-in`, `/weekend`, `/ideas/events`) on the Static Web App shall return the SPA shell, not a 404. |
 
 ## Diagrams

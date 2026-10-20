@@ -1,0 +1,19 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context - Serve the marketing site
+
+Person(visitor, "Visitor", "A family hearing about Saturdaze for the first time")
+Person(user, "Family member", "Plans weekends in the app")
+System(marketing, "Saturdaze marketing site", "Static page at www.saturdaze.ca")
+System(app, "Saturdaze app", "Angular app at app.saturdaze.ca and its API")
+System_Ext(dns, "Namecheap DNS", "Holds the saturdaze.ca records")
+System_Ext(swa, "Azure Static Web Apps", "Hosts both sites and issues their certificates")
+Rel(visitor, marketing, "Reads, watches the video, follows a call to action", "HTTPS")
+Rel(marketing, app, "Links to sign-in and create-account on")
+Rel(user, app, "Signs in and plans weekends with", "HTTPS")
+Rel(app, marketing, "Links its wordmark back to")
+Rel(visitor, dns, "Resolves www, app and the apex through")
+Rel(swa, marketing, "Serves")
+Rel(swa, app, "Serves")
+@enduml

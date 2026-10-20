@@ -19,7 +19,7 @@ The first design (`docs/mocks`, now deleted) was a phone app drawn inside a 440p
 | shell | chrome | routes |
 | --- | --- | --- |
 | `app` (default) | `sd-top-bar` from 720px, `sd-bottom-nav` below it | weekend, ideas, past, family, review-submissions |
-| `site` | `sd-sitebar` (brand, Sign in, optional CTA) | landing, legal, shared weekend, dialogs gallery |
+| `site` | `sd-sitebar` (brand, Sign in, optional CTA) | legal, shared weekend, dialogs gallery (landing until 2026-10-20, ADR-018) |
 | `bare` | none | sign-in, create-account, reset-password, verify-email |
 
 Route data is merged along `pathFromRoot`, so the Ideas children inherit `nav: 'ideas'`. The shell writes `body[data-shell]` and `body[data-page]`, which the mocks also carry, so the e2e harness can wait for a page the same way against both.
@@ -36,7 +36,7 @@ The mock's classes and ARIA state are the whole contract. Components do not refl
 
 ### 3. Per-component encapsulated SCSS, copied from the mock stylesheet
 
-Each component's SCSS is the matching block of `app.css` with `:host` / `:host(.modifier)` substitutions. Global SCSS holds only the reset, tokens and `sd-`-prefixed layout utilities (`.sd-frame`, `.sd-narrow`, `.sd-grid-days`, `.sd-grid-cards`, `.sd-vdivider` …). Single-use blocks (landing hero and steps, legal prose, the family grid, the review queue, the past strip, the dialogs gallery) live in the page that uses them. The production budget stays at 6kB warn / 10kB error per component style.
+Each component's SCSS is the matching block of `app.css` with `:host` / `:host(.modifier)` substitutions. Global SCSS holds only the reset, tokens and `sd-`-prefixed layout utilities (`.sd-frame`, `.sd-narrow`, `.sd-grid-days`, `.sd-grid-cards`, `.sd-vdivider` …). Single-use blocks (landing hero and steps until ADR-018 moved them to the marketing site, legal prose, the family grid, the review queue, the past strip, the dialogs gallery) live in the page that uses them. The production budget stays at 6kB warn / 10kB error per component style.
 
 Two component-authoring rules came out of the port and are worth keeping:
 

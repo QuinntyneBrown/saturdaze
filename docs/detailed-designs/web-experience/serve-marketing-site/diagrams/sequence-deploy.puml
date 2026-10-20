@@ -1,0 +1,23 @@
+@startuml
+title UML sequence behaviour - A push to main deploys the marketing site
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam defaultFontName Arial
+actor "Maintainer" as dev
+participant "deploy.yml" as wf
+participant "Azure Resource Manager" as arm
+participant "sd-www-<suffix>" as www
+participant "sd-web-<suffix>" as web
+dev -> wf : push to main
+wf -> wf : test-backend, test-frontend
+wf -> arm : infra: main.bicep (marketingSwa, custom domains)
+arm --> wf : outputs marketingSwaName, marketingSwaHostName
+wf -> web : web: upload frontend/dist/saturdaze/browser
+wf -> arm : marketing-web: az staticwebapp secrets list
+arm --> wf : deployment token
+wf -> www : static-web-apps-deploy upload marketing/
+wf -> www : smoke: GET / contains "Two days", has Content-Security-Policy
+alt apex bound
+  wf -> www : smoke: GET https://saturdaze.ca/ answers 301 to www
+end
+@enduml
