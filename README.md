@@ -59,6 +59,11 @@ reference.
   members by a shareable link so each signs in with their own password, adds
   members such as young children who never sign in, and removes members,
   which ends their access (ADR-016).
+- Platform invitations from Saturdaze Admin: an administrator invites one or
+  more email addresses, can describe a prospective family first and generate
+  and shape a sample weekend for it, and the invitee opens one link that
+  shows that weekend and creates their account, which then owns the family
+  and its plan (ADR-019).
 - Weather-aware planning through the Open-Meteo integration, with test fakes
   and neutral fallback behavior.
 - AI-driven catalog ingestion: fresh local events, activities, and restaurants
