@@ -12,15 +12,22 @@
 // Needs the manifest written by tools/video-audio (run it first), Chrome/Chromium (EDGE_PATH
 // or CHROME_PATH override; Playwright's bundled Chromium is found automatically) and ffmpeg
 // with libx264 and libass (FFMPEG_PATH override).
-import { execFileSync } from 'node:child_process';
-import { existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
-import { basename, dirname, join, resolve } from 'node:path';
-import { fileURLToPath, pathToFileURL } from 'node:url';
+import { execFileSync } from "node:child_process";
+import {
+  existsSync,
+  mkdirSync,
+  readFileSync,
+  readdirSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
+import { basename, dirname, join, resolve } from "node:path";
+import { fileURLToPath, pathToFileURL } from "node:url";
 
 const here = dirname(fileURLToPath(import.meta.url));
-const repo = resolve(here, '../..');
-const ffmpeg = process.env.FFMPEG_PATH ?? 'ffmpeg';
-const ffprobe = process.env.FFPROBE_PATH ?? 'ffprobe';
+const repo = resolve(here, "../..");
+const ffmpeg = process.env.FFMPEG_PATH ?? "ffmpeg";
+const ffprobe = process.env.FFPROBE_PATH ?? "ffprobe";
 const MAX_CLIP_RATE = 1.6;
 const MIN_SLIDE = 4;
 const MAX_SLIDE = 90;
@@ -29,39 +36,42 @@ function findBrowser() {
   const override = process.env.EDGE_PATH ?? process.env.CHROME_PATH;
   if (override) return override;
   const candidates = [
-    '/usr/bin/microsoft-edge',
-    '/usr/bin/google-chrome',
-    '/usr/bin/chromium',
-    '/usr/bin/chromium-browser',
-    '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
-    'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe',
+    "/usr/bin/microsoft-edge",
+    "/usr/bin/google-chrome",
+    "/usr/bin/chromium",
+    "/usr/bin/chromium-browser",
+    "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+    "C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe",
   ];
   // Playwright's browsers: prefer headless_shell, whose viewport is exactly --window-size
   // (new-headless Chrome reserves window chrome and leaves a strip under the page).
-  const pw = process.env.PLAYWRIGHT_BROWSERS_PATH ?? '/opt/pw-browsers';
+  const pw = process.env.PLAYWRIGHT_BROWSERS_PATH ?? "/opt/pw-browsers";
   if (existsSync(pw)) {
-    for (const d of readdirSync(pw).filter((d) => /^chromium_headless_shell-\d+$/.test(d))) {
-      candidates.unshift(join(pw, d, 'chrome-linux', 'headless_shell'));
+    for (const d of readdirSync(pw).filter((d) =>
+      /^chromium_headless_shell-\d+$/.test(d),
+    )) {
+      candidates.unshift(join(pw, d, "chrome-linux", "headless_shell"));
     }
     for (const d of readdirSync(pw).filter((d) => /^chromium-\d+$/.test(d))) {
-      candidates.push(join(pw, d, 'chrome-linux', 'chrome'));
+      candidates.push(join(pw, d, "chrome-linux", "chrome"));
     }
   }
   const found = candidates.find((c) => existsSync(c));
-  if (!found) throw new Error('No Chrome/Edge found; set EDGE_PATH or CHROME_PATH');
+  if (!found)
+    throw new Error("No Chrome/Edge found; set EDGE_PATH or CHROME_PATH");
   return found;
 }
 
 const norm = (s) =>
   s
-    .replace(/`/g, '')
-    .replace(/\*\*|__/g, '')
-    .replace(/&amp;/g, '&')
-    .replace(/&lt;/g, '<')
-    .replace(/&gt;/g, '>')
+    .replace(/`/g, "")
+    .replace(/\*\*|__/g, "")
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
     .replace(/&#39;|&apos;/g, "'")
     .replace(/&quot;/g, '"')
-    .replace(/\s+/g, ' ')
+    .replace(/\s+/g, " ")
     .trim()
     .toLowerCase();
 
@@ -71,11 +81,11 @@ function parseSlides(html) {
     const attr = (name) => m[1].match(new RegExp(`${name}="([^"]*)"`))?.[1];
     return {
       index: i,
-      id: attr('id') ?? `slide-${i + 1}`,
-      cue: attr('data-cue'),
-      part: Number(attr('data-part') ?? 0),
-      clip: attr('data-clip'),
-      clipDelay: Number(attr('data-clip-delay') ?? 0),
+      id: attr("id") ?? `slide-${i + 1}`,
+      cue: attr("data-cue"),
+      part: Number(attr("data-part") ?? 0),
+      clip: attr("data-clip"),
+      clipDelay: Number(attr("data-clip-delay") ?? 0),
     };
   });
 }
@@ -97,49 +107,68 @@ function resolveCues(slides, manifest) {
     const cue = norm(s.cue);
     const hits = [];
     for (const sec of manifest.sections) {
-      if (norm(sec.title) === cue) hits.push({ t: sec.start, where: `## ${sec.title}` });
+      if (norm(sec.title) === cue)
+        hits.push({ t: sec.start, where: `## ${sec.title}` });
       for (const b of sec.blocks) {
         const text = norm(b.text);
         let at = text.indexOf(cue);
         while (at !== -1) {
-          const before = text.slice(0, at).split(' ').filter(Boolean).length;
-          const total = text.split(' ').length;
-          hits.push({ t: b.start + ((b.end - b.start) * before) / total, where: text.slice(0, 50) });
+          const before = text.slice(0, at).split(" ").filter(Boolean).length;
+          const total = text.split(" ").length;
+          hits.push({
+            t: b.start + ((b.end - b.start) * before) / total,
+            where: text.slice(0, 50),
+          });
           at = text.indexOf(cue, at + 1);
         }
       }
     }
-    if (hits.length === 0) errors.push(`slide ${s.index + 1} (#${s.id}): cue not found in script: "${s.cue}"`);
-    else if (hits.length > 1) errors.push(`slide ${s.index + 1} (#${s.id}): cue is not unique (${hits.length} matches): "${s.cue}"`);
+    if (hits.length === 0)
+      errors.push(
+        `slide ${s.index + 1} (#${s.id}): cue not found in script: "${s.cue}"`,
+      );
+    else if (hits.length > 1)
+      errors.push(
+        `slide ${s.index + 1} (#${s.id}): cue is not unique (${hits.length} matches): "${s.cue}"`,
+      );
     else {
       s.start = Math.max(0, hits[0].t - 0.15);
-      if (s.start <= last) errors.push(`slide ${s.index + 1} (#${s.id}): cue is out of narration order`);
+      if (s.start <= last)
+        errors.push(
+          `slide ${s.index + 1} (#${s.id}): cue is out of narration order`,
+        );
       last = s.start;
     }
   }
-  slides.forEach((s, i) => (s.end = i + 1 < slides.length ? slides[i + 1].start : manifest.duration));
+  slides.forEach(
+    (s, i) =>
+      (s.end = i + 1 < slides.length ? slides[i + 1].start : manifest.duration),
+  );
   return errors;
 }
 
 const ts = (t) => {
   const h = Math.floor(t / 3600);
   const m = Math.floor((t % 3600) / 60);
-  const s = (t % 60).toFixed(2).padStart(5, '0');
-  return `${h}:${String(m).padStart(2, '0')}:${s}`;
+  const s = (t % 60).toFixed(2).padStart(5, "0");
+  return `${h}:${String(m).padStart(2, "0")}:${s}`;
 };
-const mmss = (t) => `${String(Math.floor(t / 60)).padStart(2, '0')}:${String(Math.floor(t % 60)).padStart(2, '0')}`;
+const mmss = (t) =>
+  `${String(Math.floor(t / 60)).padStart(2, "0")}:${String(Math.floor(t % 60)).padStart(2, "0")}`;
 
 /** Paragraph → caption lines of at most ~84 characters, timed by character share. */
 function captionEvents(manifest) {
   const events = [];
   for (const sec of manifest.sections) {
     for (const b of sec.blocks) {
-      const sentences = b.caption.match(/[^.!?]+[.!?]+["')\]]*|[^.!?]+$/g) ?? [b.caption];
+      // A sentence ends at . ! or ? followed by a space, so "www.saturdaze.ca" and
+      // `Saturdaze.Api` stay whole.
+      const sentences = b.caption.split(/(?<=[.!?]["')\]]?)\s+/);
       const chunks = [];
       for (let s of sentences.map((x) => x.trim()).filter(Boolean)) {
         while (s.length > 84) {
-          let cut = s.lastIndexOf(' ', 84);
-          const comma = s.lastIndexOf(', ', 84);
+          let cut = s.lastIndexOf(" ", 84);
+          const comma = s.lastIndexOf(", ", 84);
           if (comma > 40) cut = comma + 1;
           chunks.push(s.slice(0, cut).trim());
           s = s.slice(cut).trim();
@@ -150,7 +179,11 @@ function captionEvents(manifest) {
       let t = b.start;
       for (const c of chunks) {
         const d = ((b.end - b.start) * c.length) / total;
-        events.push({ start: t, end: t + d, text: (b.speaker ? `${b.speaker}: ` : '') + c });
+        events.push({
+          start: t,
+          end: t + d,
+          text: (b.speaker ? `${b.speaker}: ` : "") + c,
+        });
         t += d;
       }
     }
@@ -159,7 +192,8 @@ function captionEvents(manifest) {
 }
 
 function writeAss(events, file) {
-  const esc = (s) => s.replace(/\\/g, '\\\\').replace(/\{/g, '\\{').replace(/\}/g, '\\}');
+  const esc = (s) =>
+    s.replace(/\\/g, "\\\\").replace(/\{/g, "\\{").replace(/\}/g, "\\}");
   const header = `[Script Info]
 ScriptType: v4.00+
 PlayResX: 1920
@@ -174,30 +208,67 @@ Style: Default,DejaVu Sans,40,&H00FFFFFF,&H00FFFFFF,&H50291F1F,&H50291F1F,0,0,0,
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 `;
-  writeFileSync(file, header + events.map((e) => `Dialogue: 0,${ts(e.start)},${ts(e.end)},Default,,0,0,0,,${esc(e.text)}`).join('\n') + '\n');
+  writeFileSync(
+    file,
+    header +
+      events
+        .map(
+          (e) =>
+            `Dialogue: 0,${ts(e.start)},${ts(e.end)},Default,,0,0,0,,${esc(e.text)}`,
+        )
+        .join("\n") +
+      "\n",
+  );
 }
 
 function writeSrt(events, file) {
-  const t = (x) => ts(x).replace(/^(\d):/, '0$1:').replace('.', ',') + '0';
-  writeFileSync(file, events.map((e, i) => `${i + 1}\n${t(e.start)} --> ${t(e.end)}\n${e.text}\n`).join('\n'));
+  const t = (x) =>
+    ts(x)
+      .replace(/^(\d):/, "0$1:")
+      .replace(".", ",") + "0";
+  writeFileSync(
+    file,
+    events
+      .map((e, i) => `${i + 1}\n${t(e.start)} --> ${t(e.end)}\n${e.text}\n`)
+      .join("\n"),
+  );
 }
 
 /** Lays out every slide at 1920x1080 in one headless pass; returns overflow problems and clip boxes. */
 function auditSlides(slidesFile) {
   const browser = findBrowser();
-  const dom = execFileSync(browser, [
-    ...(basename(browser) === 'headless_shell' ? [] : ['--headless=new']),
-    '--no-sandbox', '--disable-gpu', '--hide-scrollbars', '--force-device-scale-factor=1',
-    '--window-size=1920,1080', '--virtual-time-budget=3000', '--dump-dom',
-    `${pathToFileURL(slidesFile).href}?render=1&audit=1`,
-  ], { stdio: ['ignore', 'pipe', 'ignore'], maxBuffer: 64 * 1024 * 1024 }).toString();
+  const dom = execFileSync(
+    browser,
+    [
+      ...(basename(browser) === "headless_shell" ? [] : ["--headless=new"]),
+      "--no-sandbox",
+      "--disable-gpu",
+      "--hide-scrollbars",
+      "--force-device-scale-factor=1",
+      "--window-size=1920,1080",
+      "--virtual-time-budget=3000",
+      "--dump-dom",
+      `${pathToFileURL(slidesFile).href}?render=1&audit=1`,
+    ],
+    { stdio: ["ignore", "pipe", "ignore"], maxBuffer: 64 * 1024 * 1024 },
+  ).toString();
   const read = (name) => {
     const m = dom.match(new RegExp(`${name}="([^"]*)"`));
-    return m && JSON.parse(m[1].replace(/&quot;/g, '"').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>'));
+    return (
+      m &&
+      JSON.parse(
+        m[1]
+          .replace(/&quot;/g, '"')
+          .replace(/&amp;/g, "&")
+          .replace(/&lt;/g, "<")
+          .replace(/&gt;/g, ">"),
+      )
+    );
   };
-  const problems = read('data-audit');
-  if (!problems) throw new Error('slide audit did not run (no data-audit on <body>)');
-  return { problems, clips: read('data-clips') ?? [] };
+  const problems = read("data-audit");
+  if (!problems)
+    throw new Error("slide audit did not run (no data-audit on <body>)");
+  return { problems, clips: read("data-clips") ?? [] };
 }
 
 function renderSlides(slidesFile, slides, outDir) {
@@ -206,79 +277,118 @@ function renderSlides(slidesFile, slides, outDir) {
   mkdirSync(outDir, { recursive: true });
   const url = pathToFileURL(slidesFile).href;
   for (const s of slides) {
-    const png = join(outDir, `${String(s.index + 1).padStart(3, '0')}.png`);
-    execFileSync(browser, [
-      ...(basename(browser) === 'headless_shell' ? [] : ['--headless=new']),
-      '--no-sandbox',
-      '--disable-gpu',
-      '--hide-scrollbars',
-      '--force-device-scale-factor=1',
-      '--window-size=1920,1080',
-      '--virtual-time-budget=2000',
-      `--screenshot=${png}`,
-      `${url}?render=1&slide=${s.index + 1}`,
-    ], { stdio: 'ignore' });
-    if (!existsSync(png)) throw new Error(`screenshot failed for slide ${s.index + 1}`);
+    const png = join(outDir, `${String(s.index + 1).padStart(3, "0")}.png`);
+    execFileSync(
+      browser,
+      [
+        ...(basename(browser) === "headless_shell" ? [] : ["--headless=new"]),
+        "--no-sandbox",
+        "--disable-gpu",
+        "--hide-scrollbars",
+        "--force-device-scale-factor=1",
+        "--window-size=1920,1080",
+        "--virtual-time-budget=2000",
+        `--screenshot=${png}`,
+        `${url}?render=1&slide=${s.index + 1}`,
+      ],
+      { stdio: "ignore" },
+    );
+    if (!existsSync(png))
+      throw new Error(`screenshot failed for slide ${s.index + 1}`);
     s.png = png;
-    process.stdout.write('.');
+    process.stdout.write(".");
   }
-  process.stdout.write('\n');
+  process.stdout.write("\n");
 }
 
 function main() {
   const args = process.argv.slice(2);
-  const folder = resolve(args.find((a) => !a.startsWith('--')) ?? '');
+  const folder = resolve(args.find((a) => !a.startsWith("--")) ?? "");
   const name = basename(folder);
-  const cache = join(repo, '.cache', name);
-  const manifestFile = join(cache, 'manifest.json');
-  if (!existsSync(manifestFile)) throw new Error(`${manifestFile} missing — run tools/video-audio first`);
-  const manifest = JSON.parse(readFileSync(manifestFile, 'utf8'));
-  const slidesFile = join(folder, 'slides.html');
-  const slides = parseSlides(readFileSync(slidesFile, 'utf8'));
+  const cache = join(repo, ".cache", name);
+  const manifestFile = join(cache, "manifest.json");
+  if (!existsSync(manifestFile))
+    throw new Error(`${manifestFile} missing — run tools/video-audio first`);
+  const manifest = JSON.parse(readFileSync(manifestFile, "utf8"));
+  const slidesFile = join(folder, "slides.html");
+  const slides = parseSlides(readFileSync(slidesFile, "utf8"));
 
   const errors = resolveCues(slides, manifest);
-  if (errors.length) throw new Error(errors.join('\n'));
+  if (errors.length) throw new Error(errors.join("\n"));
   const warnings = [];
-  console.log(`${manifest.title} — ${slides.length} slides, ${mmss(manifest.duration)}`);
+  console.log(
+    `${manifest.title} — ${slides.length} slides, ${mmss(manifest.duration)}`,
+  );
   for (const s of slides) {
     const d = s.end - s.start;
-    const flag = d < MIN_SLIDE ? '  << short' : d > MAX_SLIDE ? '  >> long' : '';
-    if (flag) warnings.push(`slide ${s.index + 1} (#${s.id}) is ${d.toFixed(1)} s`);
-    console.log(`  ${String(s.index + 1).padStart(2)}  ${mmss(s.start)}  ${d.toFixed(1).padStart(5)} s  #${s.id}${flag}`);
+    const flag =
+      d < MIN_SLIDE ? "  << short" : d > MAX_SLIDE ? "  >> long" : "";
+    if (flag)
+      warnings.push(`slide ${s.index + 1} (#${s.id}) is ${d.toFixed(1)} s`);
+    console.log(
+      `  ${String(s.index + 1).padStart(2)}  ${mmss(s.start)}  ${d.toFixed(1).padStart(5)} s  #${s.id}${flag}`,
+    );
   }
   const audit = auditSlides(slidesFile);
   for (const p of audit.problems) {
-    warnings.push(`slide ${p.slide} (#${p.id}): ${p.issue} ${JSON.stringify(p.el ?? '')} ${JSON.stringify(p.bottom ?? p.over ?? p.height)}`);
+    warnings.push(
+      `slide ${p.slide} (#${p.id}): ${p.issue} ${JSON.stringify(p.el ?? "")} ${JSON.stringify(p.bottom ?? p.over ?? p.height)}`,
+    );
   }
   for (const s of slides.filter((x) => x.clip)) {
     s.clipFile = resolve(folder, s.clip);
     s.box = audit.clips.find((c) => c.slide === s.index + 1);
-    if (!existsSync(s.clipFile)) throw new Error(`slide ${s.index + 1} (#${s.id}): ${s.clip} not found — run tools/video-record`);
-    if (!s.box) throw new Error(`slide ${s.index + 1} (#${s.id}): no .clip box measured`);
-    const length = Number(execFileSync(ffprobe, ['-v', 'error', '-show_entries', 'format=duration', '-of', 'csv=p=0', s.clipFile]).toString());
+    if (!existsSync(s.clipFile))
+      throw new Error(
+        `slide ${s.index + 1} (#${s.id}): ${s.clip} not found — run tools/video-record`,
+      );
+    if (!s.box)
+      throw new Error(`slide ${s.index + 1} (#${s.id}): no .clip box measured`);
+    const length = Number(
+      execFileSync(ffprobe, [
+        "-v",
+        "error",
+        "-show_entries",
+        "format=duration",
+        "-of",
+        "csv=p=0",
+        s.clipFile,
+      ]).toString(),
+    );
     const room = s.end - s.start - s.clipDelay;
     s.rate = length > room ? length / room : 1;
     s.pad = Math.max(0, room - length / s.rate) + 1;
-    const fit = s.rate > 1 ? `x${s.rate.toFixed(2)} speed` : `holds its last frame ${(room - length).toFixed(1)} s`;
-    console.log(`  clip #${s.id}: ${length.toFixed(1)} s in ${room.toFixed(1)} s, ${fit}`);
-    if (s.rate > MAX_CLIP_RATE) warnings.push(`slide ${s.index + 1} (#${s.id}) plays its clip at x${s.rate.toFixed(2)}; give it more narration`);
+    const fit =
+      s.rate > 1
+        ? `x${s.rate.toFixed(2)} speed`
+        : `holds its last frame ${(room - length).toFixed(1)} s`;
+    console.log(
+      `  clip #${s.id}: ${length.toFixed(1)} s in ${room.toFixed(1)} s, ${fit}`,
+    );
+    if (s.rate > MAX_CLIP_RATE)
+      warnings.push(
+        `slide ${s.index + 1} (#${s.id}) plays its clip at x${s.rate.toFixed(2)}; give it more narration`,
+      );
   }
-  if (warnings.length) console.warn(`warnings:\n  ${warnings.join('\n  ')}`);
-  if (args.includes('--check')) return;
+  if (warnings.length) console.warn(`warnings:\n  ${warnings.join("\n  ")}`);
+  if (args.includes("--check")) return;
 
-  renderSlides(slidesFile, slides, join(cache, 'slides'));
+  renderSlides(slidesFile, slides, join(cache, "slides"));
   console.log(`rendered ${slides.length} PNGs to .cache/${name}/slides/`);
-  if (args.includes('--slides-only')) return;
+  if (args.includes("--slides-only")) return;
 
   const events = captionEvents(manifest);
-  const ass = join(cache, 'captions.ass');
+  const ass = join(cache, "captions.ass");
   writeAss(events, ass);
-  writeSrt(events, join(cache, 'captions.srt'));
+  writeSrt(events, join(cache, "captions.srt"));
 
-  const list = join(cache, 'slides.txt');
-  const lines = slides.flatMap((s) => [`file '${s.png}'`, `duration ${(s.end - s.start).toFixed(3)}`]);
+  const list = join(cache, "slides.txt");
+  const lines = slides.flatMap((s) => [
+    `file '${s.png}'`,
+    `duration ${(s.end - s.start).toFixed(3)}`,
+  ]);
   lines.push(`file '${slides.at(-1).png}'`); // concat demuxer: repeat the last frame
-  writeFileSync(list, lines.join('\n'));
+  writeFileSync(list, lines.join("\n"));
   const mp3 = join(folder, `${name}.mp3`);
   const mp4 = join(folder, `${name}.mp4`);
   // Two passes, because the concat demuxer yields one frame per slide. Expanding a
@@ -286,19 +396,42 @@ function main() {
   // uncompressed 1080p frames ahead of the caption renderer and gets ffmpeg killed for
   // memory. Pass 1 duplicates frames at the encoder (bounded), pass 2 burns captions
   // while streaming that constant-frame-rate video.
-  const stills = join(cache, 'slides.mp4');
-  execFileSync(ffmpeg, [
-    '-y', '-v', 'error',
-    '-f', 'concat', '-safe', '0', '-i', list,
-    '-r', '30', '-fps_mode', 'cfr',
-    '-c:v', 'libx264', '-preset', 'veryfast', '-tune', 'stillimage', '-crf', '12', '-pix_fmt', 'yuv420p',
-    stills,
-  ], { stdio: 'inherit' });
+  const stills = join(cache, "slides.mp4");
+  execFileSync(
+    ffmpeg,
+    [
+      "-y",
+      "-v",
+      "error",
+      "-f",
+      "concat",
+      "-safe",
+      "0",
+      "-i",
+      list,
+      "-r",
+      "30",
+      "-fps_mode",
+      "cfr",
+      "-c:v",
+      "libx264",
+      "-preset",
+      "veryfast",
+      "-tune",
+      "stillimage",
+      "-crf",
+      "12",
+      "-pix_fmt",
+      "yuv420p",
+      stills,
+    ],
+    { stdio: "inherit" },
+  );
   // Recordings are overlaid in this pass, each delayed to its slide's start, so the stills
   // stay a constant-frame-rate stream and only the clip slides carry motion.
   const clips = slides.filter((s) => s.clip);
   const graph = [];
-  let last = '0:v';
+  let last = "0:v";
   clips.forEach((s, i) => {
     const { x, y, w, h } = s.box;
     graph.push(
@@ -311,19 +444,41 @@ function main() {
   });
   // Relative to cwd: an absolute Windows path (C:\…) breaks the filter's option parsing.
   graph.push(`[${last}]ass=${basename(ass)},format=yuv420p[out]`);
-  execFileSync(ffmpeg, [
-    '-y', '-v', 'error',
-    '-i', stills,
-    '-i', mp3,
-    ...clips.flatMap((s) => ['-i', s.clipFile]),
-    '-filter_complex', graph.join(';'),
-    '-map', '[out]', '-map', '1:a',
-    '-c:v', 'libx264', '-preset', 'medium', ...(clips.length ? ['-crf', '22'] : ['-tune', 'stillimage', '-crf', '26']),
-    '-c:a', 'aac', '-b:a', '96k',
-    '-movflags', '+faststart',
-    '-shortest',
-    mp4,
-  ], { stdio: 'inherit', cwd: cache });
+  execFileSync(
+    ffmpeg,
+    [
+      "-y",
+      "-v",
+      "error",
+      "-i",
+      stills,
+      "-i",
+      mp3,
+      ...clips.flatMap((s) => ["-i", s.clipFile]),
+      "-filter_complex",
+      graph.join(";"),
+      "-map",
+      "[out]",
+      "-map",
+      "1:a",
+      "-c:v",
+      "libx264",
+      "-preset",
+      "medium",
+      ...(clips.length
+        ? ["-crf", "22"]
+        : ["-tune", "stillimage", "-crf", "26"]),
+      "-c:a",
+      "aac",
+      "-b:a",
+      "96k",
+      "-movflags",
+      "+faststart",
+      "-shortest",
+      mp4,
+    ],
+    { stdio: "inherit", cwd: cache },
+  );
   console.log(`wrote ${mp4}`);
 }
 

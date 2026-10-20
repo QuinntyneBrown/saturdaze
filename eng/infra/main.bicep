@@ -7,7 +7,8 @@
 //
 //   App Service plan   Linux Basic B1 (1 core, 1.75 GB)     ≈ US$13/month
 //   Azure SQL          Basic (5 DTU, 2 GB, 7-day PITR)      ≈ US$5/month
-//   Static Web Apps    Free ×3 (app, admin, design system)  US$0 (Standard = +US$9 each)
+//   Static Web Apps    Free ×4 (app, admin, design system,  US$0 (Standard = +US$9 each)
+//                      marketing site, ADR-018)
 //   Log Analytics +    pay-as-you-go, first 5 GB/month free, capped at 0.5 GB/day
 //   App Insights
 //   Microsoft Foundry  Claude on Global Standard, billed per token (ADR-011)
@@ -37,6 +38,7 @@ param sqlDatabaseName string = 'saturdaze'
 param webSwaName string = 'sd-web-${suffix}'
 param adminSwaName string = 'sd-admin-${suffix}'
 param designSwaName string = 'sd-design-${suffix}'
+param marketingSwaName string = 'sd-www-${suffix}'
 param foundryAccountName string = 'sd-ai-${suffix}'
 param logAnalyticsName string = 'sd-logs-${suffix}'
 param appInsightsName string = 'sd-insights-${suffix}'
@@ -58,13 +60,23 @@ param sqlMaxSizeBytes int = 2147483648
 @allowed(['Free', 'Standard'])
 param swaSkuName string = 'Free'
 
+@description('Tier of the marketing site alone (ADR-018). A subscription holds only so many Free Static Web Apps; Standard (US$9/month) lifts that limit for this one app.')
+@allowed(['Free', 'Standard'])
+param marketingSwaSkuName string = swaSkuName
+
 @description('Daily Log Analytics ingestion cap in GB, so a log storm cannot run up the bill.')
 param logDailyCapGb string = '0.5'
 
 // ───────────────────────────── app config ─────────────────────────────
 
-@description('Custom domain for the family app (e.g. saturdaze.app). Blank skips the binding; the domain must already validate in DNS.')
+@description('Custom domain for the family app (e.g. app.saturdaze.ca). Blank skips the binding; the domain must already validate in DNS.')
 param appCustomDomain string = ''
+
+@description('Custom domain for the static marketing site (e.g. www.saturdaze.ca, ADR-018). Blank skips the binding.')
+param marketingCustomDomain string = ''
+
+@description('Apex domain bound to the marketing site beside it (e.g. saturdaze.ca), so it can redirect to www. Blank skips the binding.')
+param marketingApexDomain string = ''
 
 @description('Extra browser origins the API should accept, in addition to the three Static Web Apps and the custom domain.')
 param extraCorsOrigins array = []
@@ -383,6 +395,36 @@ resource designSwa 'Microsoft.Web/staticSites@2024-04-01' = {
   properties: swaProperties
 }
 
+// The static marketing site (ADR-018): marketing/ uploaded as-is, no build. It
+// never calls the API, so it adds nothing to CORS.
+resource marketingSwa 'Microsoft.Web/staticSites@2024-04-01' = {
+  name: marketingSwaName
+  location: swaLocation
+  tags: union(tags, { role: 'marketing-site' })
+  sku: { name: marketingSwaSkuName, tier: marketingSwaSkuName }
+  properties: swaProperties
+}
+
+resource marketingSwaDomain 'Microsoft.Web/staticSites/customDomains@2024-04-01' = if (!empty(marketingCustomDomain)) {
+  parent: marketingSwa
+  name: marketingCustomDomain
+  properties: {
+    validationMethod: 'dns-txt-token'
+  }
+}
+
+// The apex binds after www: one hostname operation at a time per site. Making
+// www the default domain (portal, Custom domains → Set default) is what turns
+// a request to the apex into a redirect to www; ADR-018 describes the fallback.
+resource marketingSwaApex 'Microsoft.Web/staticSites/customDomains@2024-04-01' = if (!empty(marketingApexDomain)) {
+  parent: marketingSwa
+  name: marketingApexDomain
+  dependsOn: [marketingSwaDomain]
+  properties: {
+    validationMethod: 'dns-txt-token'
+  }
+}
+
 // ───────────────────────────── budget ─────────────────────────────
 
 resource budget 'Microsoft.Consumption/budgets@2023-11-01' = if (!empty(alertEmail)) {
@@ -422,6 +464,9 @@ output adminSwaName string = adminSwa.name
 output adminSwaHostName string = adminSwa.properties.defaultHostname
 output designSwaName string = designSwa.name
 output designSwaHostName string = designSwa.properties.defaultHostname
+output marketingSwaName string = marketingSwa.name
+output marketingSwaHostName string = marketingSwa.properties.defaultHostname
+output marketingOrigin string = empty(marketingCustomDomain) ? 'https://${marketingSwa.properties.defaultHostname}' : 'https://${marketingCustomDomain}'
 output sqlServerFqdn string = sqlServer.properties.fullyQualifiedDomainName
 output sqlDatabaseName string = sqlDatabase.name
 output foundryAccountName string = foundry.outputs.accountName

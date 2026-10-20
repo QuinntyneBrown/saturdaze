@@ -6,7 +6,7 @@ import type { AdminNav } from 'components';
 export const Bar: StoryObj<AdminNav> = {
   args: {
     active: 'reviews',
-    email: 'admin@saturdaze.app',
+    email: 'admin@saturdaze.ca',
   },
   render: (args) => ({
     props: args,

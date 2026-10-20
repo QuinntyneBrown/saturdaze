@@ -24,7 +24,7 @@ const DAY_WEATHER: readonly DayWeather[] = ['sun', 'cloud', 'rain', 'snow'];
 /**
  * A shared weekend — `/sample-weekend?share=<token>` (the URL the API
  * builds). Read-only days with no actions, under the site bar so a visitor
- * can create their own account. No token → the landing page.
+ * can create their own account. No token → the app root, which leads to sign-in or the weekend.
  */
 @Component({
   selector: 'app-shared-weekend',

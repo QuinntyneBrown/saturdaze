@@ -1,0 +1,20 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers - Serve the marketing site
+
+Person(visitor, "Visitor")
+System_Boundary(azure, "saturdaze-rg (eng/infra/main.bicep)") {
+  Container(www, "sd-www-<suffix>", "Static Web App", "marketing/: index.html, assets, staticwebapp.config.json headers; www.saturdaze.ca and the apex")
+  Container(web, "sd-web-<suffix>", "Static Web App", "Angular family app with SPA fallback; app.saturdaze.ca")
+  Container(admin, "sd-admin-<suffix>", "Static Web App", "Angular admin app")
+  Container(api, "sd-api-<suffix>", "App Service, ASP.NET Core", "REST API; builds e-mail and share links on Share:AppOrigin")
+  ContainerDb(sql, "Azure SQL", "SQL Server", "Families, weekends, users")
+}
+Rel(visitor, www, "GET /", "HTTPS")
+Rel(www, web, "Calls to action link to", "HTTPS")
+Rel(web, www, "Wordmark links to", "HTTPS")
+Rel(web, api, "Calls", "HTTPS, CORS")
+Rel(admin, api, "Calls", "HTTPS, CORS")
+Rel(api, sql, "Reads and writes", "TDS")
+@enduml

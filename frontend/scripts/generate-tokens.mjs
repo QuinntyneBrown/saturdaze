@@ -1,14 +1,16 @@
 // Token pipeline: renders the TypeScript theme in
-// projects/components/src/lib/tokens/ into the two generated files the rest
-// of the workspace consumes —
+// projects/components/src/lib/tokens/ into the three generated files the rest
+// of the repository consumes —
 //
 //   src/lib/styles/_tokens.scss   the `:root` custom properties (+ responsive retunes and
 //                                 the dark theme under prefers-color-scheme: dark and the
 //                                 zeroed durations under prefers-reduced-motion: reduce)
 //   src/lib/tokens/tokens.ts      the typed `tokens` object (`var(--name)` per key)
+//   ../marketing/assets/tokens.css  the same custom properties as plain CSS for the
+//                                 static marketing site, which has no build (ADR-018)
 //
 // Usage (from frontend/):  npm run tokens          regenerate
-//                          npm run tokens:check    fail if either file is stale (CI)
+//                          npm run tokens:check    fail if any file is stale (CI)
 //
 // Node strips the token sources' TypeScript types natively; the resolve hook
 // only adds the `.ts` extension Angular-style imports leave off.
@@ -27,7 +29,9 @@ registerHooks({
   },
 });
 
-const lib = resolve(dirname(fileURLToPath(import.meta.url)), '../projects/components/src/lib');
+const here = dirname(fileURLToPath(import.meta.url));
+const lib = resolve(here, '../projects/components/src/lib');
+const marketingTokens = resolve(here, '../../marketing/assets/tokens.css');
 const load = (path) => import(pathToFileURL(resolve(lib, path)).href);
 
 const { saturdazeLightTheme, responsiveOverrides, darkSchemeOverride, reducedMotionOverride } =
@@ -41,6 +45,12 @@ const banner = (comment) =>
     `${comment} Change the TypeScript theme and regenerate (ADR-013).`,
   ].join('\n');
 
+const themeCss = themeToCss(saturdazeLightTheme, [
+  ...responsiveOverrides,
+  darkSchemeOverride,
+  reducedMotionOverride,
+]);
+
 const scss = `${banner('//')}
 //
 // Components consume these as CSS custom properties (\`var(--colorNeutralForeground1)\`
@@ -51,11 +61,19 @@ const scss = `${banner('//')}
 // Breakpoints live SCSS-side in \`_breakpoints.scss\` (\`$bp-tablet\` /
 // \`$bp-desktop\` + the \`respond-to()\` mixin).
 
-${themeToCss(saturdazeLightTheme, [
-  ...responsiveOverrides,
-  darkSchemeOverride,
-  reducedMotionOverride,
-])}
+${themeCss}
+`;
+
+const css = `/*
+${banner(' *')}
+ *
+ * The static marketing site (marketing/, ADR-018) reads these by role, exactly
+ * as the components do: var(--colorBrandBackground) for a fill,
+ * var(--colorNeutralForeground2) for soft text. Never copy a hex value into
+ * saturdaze.css.
+ */
+
+${themeCss}
 `;
 
 const ts = `${banner('//')}
@@ -73,8 +91,11 @@ ${Object.keys(saturdazeLightTheme)
 const outputs = [
   [resolve(lib, 'styles/_tokens.scss'), scss],
   [resolve(lib, 'tokens/tokens.ts'), ts],
+  [marketingTokens, css],
 ];
 
+// Format each output with the Prettier config that applies to it (frontend/ or
+// marketing/, which mirrors it), so --check and CI's prettier --check agree.
 const check = process.argv.includes('--check');
 let stale = false;
 for (const [file, source] of outputs) {

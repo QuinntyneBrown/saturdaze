@@ -1,0 +1,22 @@
+@startuml
+title UML sequence behaviour - A request to the bare domain
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam defaultFontName Arial
+actor "Visitor" as v
+participant "Namecheap DNS" as dns
+box "Azure Static Web Apps - sd-www" #E0F2FE
+  participant "Custom domains\n(www default, apex)" as host
+  participant "marketing/ files" as files
+end box
+v -> dns : Resolve saturdaze.ca
+dns --> v : ALIAS to the sd-www default host
+v -> host : GET https://saturdaze.ca/
+host --> v : 301 Location: https://www.saturdaze.ca/ (L2-156 AC3)
+v -> host : GET https://www.saturdaze.ca/
+host -> files : index.html
+files --> host : page
+host --> v : 200 with CSP and security headers (L2-154)
+v -> host : GET /assets/video/meet-saturdaze.mp4 (on Play)
+host --> v : video/mp4
+@enduml

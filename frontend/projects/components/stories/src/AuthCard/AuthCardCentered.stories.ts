@@ -6,7 +6,7 @@ export const Centered: StoryObj<AuthCard> = {
   render: () => ({
     template: `
       <div class="sd-grid-2" style="max-width: 920px">
-        <sd-auth-card title="Check your email" subtitle="We sent a link to quinn@saturdaze.app. It lasts 24 hours." center>
+        <sd-auth-card title="Check your email" subtitle="We sent a link to quinn@saturdaze.ca. It lasts 24 hours." center>
           <sd-disc slot="disc" icon="mail" tone="primary" size="xl" />
           <sd-button variant="quiet" size="lg" full><sd-icon name="refresh" />Resend</sd-button>
           <sd-button variant="ghost" size="lg" full href="/weekend">Skip to this weekend</sd-button>

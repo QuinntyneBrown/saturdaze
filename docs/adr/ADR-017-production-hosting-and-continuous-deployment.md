@@ -72,7 +72,7 @@ The ask is production-grade hosting at the lowest cost that still is production-
 - First time: `pwsh ./eng/Bootstrap-Azure.ps1 -OrganizationName "<legal name>" -BudgetAlertEmail <you>`. It creates the OIDC app registration, writes `.deploy/azure.env`, pushes the GitHub secrets and variables with `gh` when available, shows a what-if and deploys.
 - Afterwards: push to `main`. The run summary lists every host name and the CORS origins.
 - Change a tier: edit `eng/infra/main.bicepparam` (`apiSkuName`, `sqlSkuName`, `swaSkuName`) and push.
-- Bind the domain: set the `APP_CUSTOM_DOMAIN` repository variable to `saturdaze.app` after its TXT record exists.
+- Bind the domain: set the `APP_CUSTOM_DOMAIN` repository variable to `app.saturdaze.ca` after its TXT record exists. (2026-10-20: `saturdaze.app` was never bound; ADR-018 moves the app to `app.saturdaze.ca` and adds a fourth Static Web App for `www.saturdaze.ca`.)
 - Run ingestion now: Web App → WebJobs → `ingest` → Run, or `saturdaze ingest --type all` locally with the key from `.deploy/azure.env`.
 - Tear down to save money: `az group delete -n saturdaze-rg`, then `az cognitiveservices account purge` for the Foundry account (ADR-011). The next push rebuilds everything except the data.
 

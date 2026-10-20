@@ -32,7 +32,7 @@ By the end, the viewer can:
 
 | File | What to show |
 | --- | --- |
-| `frontend/projects/saturdaze/src/app/pages/landing/landing.page.html` | `<sd-browser-frame url="saturdaze.app/weekend">`. |
+| `frontend/projects/saturdaze/src/app/pages/landing/landing.page.html` | `<sd-browser-frame url="app.saturdaze.ca/weekend">`. |
 | `frontend/projects/components/src/lib/browser-frame/browser-frame.ts` | Host style bindings, `inject()`, inputs, `hostWidth`, `scale`, constructor. |
 | `frontend/projects/components/src/lib/browser-frame/browser-frame.html` | Bar, view, scale slot. |
 | `frontend/projects/components/src/lib/browser-frame/browser-frame.scss` | `calc()` height and `transform: scale()` from custom properties. |

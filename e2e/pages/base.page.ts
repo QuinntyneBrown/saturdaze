@@ -60,7 +60,7 @@ export abstract class BasePage {
     return this.page.locator(".bottom-nav");
   }
 
-  /** Public pages (landing, legal, shared weekend): shown at every width. */
+  /** Public pages (legal, shared weekend): shown at every width. */
   get sitebar(): Locator {
     return this.page.locator(".sitebar");
   }

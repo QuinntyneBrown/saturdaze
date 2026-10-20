@@ -16,7 +16,7 @@
 
 <section id="where" data-part="0" data-cue="The landing page uses it for its hero">
   <h2>Where it lives</h2>
-  <pre class="code" data-lang="html" data-file="saturdaze/src/app/pages/landing/landing.page.html">&lt;sd-browser-frame url="saturdaze.app/weekend"&gt;
+  <pre class="code" data-lang="html" data-file="saturdaze/src/app/pages/landing/landing.page.html">&lt;sd-browser-frame url="app.saturdaze.ca/weekend"&gt;
   … sd-day + sd-block miniature of the Weekend screen …
 &lt;/sd-browser-frame&gt;</pre>
   <div class="flow">
@@ -63,7 +63,7 @@
   private readonly host = inject&lt;ElementRef&lt;HTMLElement&gt;&gt;(ElementRef);
   private readonly destroyRef = inject(DestroyRef);
 
-  readonly url = input&lt;string&gt;('saturdaze.app/weekend');
+  readonly url = input&lt;string&gt;('app.saturdaze.ca/weekend');
   readonly frameWidth = input&lt;number&gt;(720);
   readonly frameHeight = input&lt;number&gt;(300);</pre>
   <p class="muted small">Passed as plain attributes? Add <code>transform: numberAttribute</code>.</p>

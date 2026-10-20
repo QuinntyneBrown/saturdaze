@@ -45,13 +45,6 @@ test.describe("Visual: shell", () => {
     await expect(pages.family.bottomNav).toHaveScreenshot("shell.bottom-nav.family.png");
   });
 
-  test("site bar on the landing page", async ({ goto, pages, settle }) => {
-    await goto("landing");
-    await pages.landing.waitForReady();
-    await settle();
-    await expect(pages.landing.sitebar).toHaveScreenshot("shell.sitebar.landing.png");
-  });
-
   test("site bar on the legal page (no account CTA)", async ({ goto, pages, settle }) => {
     await goto("legal");
     await pages.legal.waitForReady();

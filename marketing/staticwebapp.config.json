@@ -1,0 +1,35 @@
+{
+  "globalHeaders": {
+    "Content-Security-Policy": "default-src 'self'; base-uri 'self'; connect-src 'self'; font-src 'self'; form-action 'self'; frame-ancestors 'none'; img-src 'self' data:; object-src 'none'; script-src 'self'; style-src 'self'",
+    "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
+    "X-Content-Type-Options": "nosniff",
+    "Referrer-Policy": "strict-origin-when-cross-origin",
+    "Permissions-Policy": "camera=(), geolocation=(), microphone=()"
+  },
+  "routes": [
+    {
+      "route": "/sign-in",
+      "redirect": "https://app.saturdaze.ca/sign-in",
+      "statusCode": 301
+    },
+    {
+      "route": "/create-account",
+      "redirect": "https://app.saturdaze.ca/create-account",
+      "statusCode": 301
+    },
+    {
+      "route": "/legal",
+      "redirect": "https://app.saturdaze.ca/legal",
+      "statusCode": 301
+    },
+    {
+      "route": "/weekend",
+      "redirect": "https://app.saturdaze.ca/weekend",
+      "statusCode": 301
+    }
+  ],
+  "mimeTypes": {
+    ".mp4": "video/mp4",
+    ".xml": "application/xml"
+  }
+}

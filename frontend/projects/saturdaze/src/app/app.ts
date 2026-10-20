@@ -15,6 +15,7 @@ import { BottomNav, NavKey, Sitebar, SkipLink, TopBar } from 'components';
 
 import { MenuOpener } from './shell/menu-opener';
 import { SiteFooter } from './shell/site-footer';
+import { environment } from '../environments/environment';
 import { signOutWith } from './shared/sign-out';
 
 /**
@@ -75,6 +76,8 @@ export class App {
   protected readonly shell = computed(() => this.shellData().shell);
   protected readonly nav = computed(() => this.shellData().nav);
   protected readonly siteCta = computed(() => this.shellData().cta);
+  /** The marketing site the site bar's wordmark leads to (ADR-018). */
+  protected readonly siteUrl = environment.siteUrl;
   protected readonly siteFooter = computed(() => this.shellData().footer);
   protected readonly email = computed(() => this.session.user()?.email ?? '');
   protected readonly avatarUrl = computed(() => this.session.user()?.avatarUrl ?? null);

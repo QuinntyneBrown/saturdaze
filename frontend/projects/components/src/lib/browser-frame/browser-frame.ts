@@ -35,7 +35,7 @@ export class BrowserFrame {
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly destroyRef = inject(DestroyRef);
 
-  readonly url = input<string>('saturdaze.app/weekend');
+  readonly url = input<string>('app.saturdaze.ca/weekend');
   readonly frameWidth = input<number>(720);
   readonly frameHeight = input<number>(300);
 

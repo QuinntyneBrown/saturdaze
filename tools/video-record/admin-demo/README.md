@@ -4,7 +4,7 @@ The data and services the Saturdaze Admin videos (`docs/videos/12-â€¦` to `17-â€
 
 | Piece | What it is |
 |-------|-----------|
-| `SaturdazeDemo` | The bundled seed (`saturdaze reset`) plus `stage.mjs`: eight curated uploads by two administrators (`admin@saturdaze.app`, `jo.curator@saturdaze.app`), four unreviewed provider photos, one blocked `http://` primary, weekends whose covers follow Bronte Creek (5) and Snug Harbour (3), and one earlier ingestion run with photo skips. |
+| `SaturdazeDemo` | The bundled seed (`saturdaze reset`) plus `stage.mjs`: eight curated uploads by two administrators (`admin@saturdaze.ca`, `jo.curator@saturdaze.ca`), four unreviewed provider photos, one blocked `http://` primary, weekends whose covers follow Bronte Creek (5) and Snug Harbour (3), and one earlier ingestion run with photo skips. |
 | API | `start-api.ps1`: HTTP on `:5100` for the apps, HTTPS on `:5101` for curated photos. Both `https://localhost:5101` (the curated store's public origin, ADR-015) and `https://localhost:5443` are on the image allow-list. |
 | Stand-in provider CDN | `start-image-host.ps1`: serves the demo photos at `https://localhost:5443/provider/` with the trusted ASP.NET Core development certificate. |
 | Photos | `download-photos.py`: fourteen CC0, public-domain and Creative Commons photos of the seeded places from Wikimedia Commons; `credits.json` beside them records each author, licence and source page. |

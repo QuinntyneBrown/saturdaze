@@ -74,6 +74,12 @@ jobs:
         working-directory: frontend
         run: npm run format:check
 
+      # The static marketing site (ADR-018) sits outside frontend/, so neither
+      # format:check nor the pre-commit hook sees it.
+      - name: Format check, marketing site (Prettier)
+        working-directory: frontend
+        run: npx prettier --check ../marketing
+
       - name: Lint (angular-eslint)
         working-directory: frontend
         run: npm run lint

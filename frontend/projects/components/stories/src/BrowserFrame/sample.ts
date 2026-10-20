@@ -1,4 +1,4 @@
-/** The landing hero's miniature weekend (`landing-sample.ts` in the app). */
+/** The retired landing hero's miniature weekend (formerly `landing-sample.ts` in the app). */
 export const MINI_WEEKEND_TEMPLATE = `
   <div class="mini">
     <sd-day title="Saturday" meta="17 May · Sunny · 22° / 14°" weather="sun" [actions]="false">
@@ -25,7 +25,7 @@ export const MINI_WEEKEND_TEMPLATE = `
   </div>
 `;
 
-/** `.mini` from the landing page stylesheet. */
+/** `.mini` from the retired landing page stylesheet. */
 export const MINI_WEEKEND_STYLES = [
   `.mini { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }`,
   `.mini ::ng-deep .day__header { position: static; padding-top: 4px; }`,

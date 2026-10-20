@@ -10,7 +10,7 @@
       (accountClick)="openAccountMenu($event)"
     />
   } @else if (shell() === 'site') {
-    <sd-sitebar [cta]="siteCta()" />
+    <sd-sitebar [cta]="siteCta()" [homeHref]="siteUrl" />
   }
   <!--
     One outlet, always mounted. Toggling classes (rather than switching

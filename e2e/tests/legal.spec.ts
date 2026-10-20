@@ -1,4 +1,5 @@
 import { test, expect } from "../fixtures/sd-test.js";
+import { MARKETING_SITE_URL } from "../fixtures/routes.js";
 
 /**
  * Legal — Terms (default) and Privacy on one template; the `#privacy`
@@ -21,6 +22,13 @@ test.describe("Legal", () => {
     await expect(l.proseTitle("terms")).toHaveText("Terms of Service");
     await expect(l.proseUpdated("terms")).toContainText(/Last updated/);
     await expect(l.toc("terms")).toHaveCount(6);
+  });
+
+  // Traces to: L2-155 AC3
+  test("the site bar's wordmark opens the marketing site", async ({ goto, pages }) => {
+    await goto("legal");
+    await pages.legal.waitForReady();
+    await expect(pages.legal.brandLink()).toHaveAttribute("href", MARKETING_SITE_URL);
   });
 
   test("#privacy shows the Privacy Policy", async ({ goto, pages }) => {

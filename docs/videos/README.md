@@ -103,6 +103,25 @@ Fifty-two instructional videos, one per component in `frontend/projects/componen
 
 Fourteen videos, one per Vitest feature the frontend specs use: the Angular unit-test builder setup, structure and `describe.each`, matchers and asymmetric matchers, async assertions, `vi.fn` and mock programming, call assertions, `vi.spyOn` and restoring, fake timers with `vi.advanceTimersByTime`, and `vi.setSystemTime`. See the [series index](vitest/README.md).
 
+## The product
+
+The one-minute brand video, served on the marketing site at www.saturdaze.ca (ADR-018).
+
+| # | Video | Runtime | What you learn |
+| --- | --- | --- | --- |
+| 44 | [Meet Saturdaze](44-meet-saturdaze/README.md) | ~1.3 min | What Saturdaze does for a family's weekend, recorded from the real app. |
+
+### Voices
+
+Every video uses the free Edge voices (the generator's default engine), except the brand video, which uses the voice of Shelfie's brand video.
+
+| | Edge (free) | Azure Speech (paid) |
+| --- | --- | --- |
+| Used by | 01 to 43 and the component videos | 44, Meet Saturdaze |
+| Voice | `en-US-AndrewMultilingualNeural` (`EDGE_VOICE`) | `en-US-JennyNeural`, `cheerful` style, rate `-5%` (`AZURE_VOICE`, `AZURE_STYLE`, `AZURE_RATE`; `AZURE_STYLE=` for no style) |
+| Command | `node tools/video-audio/generate-audio.mjs docs/videos/NN-name` | `node tools/video-audio/generate-audio.mjs docs/videos/NN-name --engine azure` |
+| Setup | `python3 -m pip install edge-tts` | `export AZURE_SPEECH_REGION=canadacentral AZURE_SPEECH_KEY=$(az cognitiveservices account keys list -n shelfie-speech -g shelfie-prod --query key1 -o tsv)` after `az login`: the Speech resource (SpeechServices, S0) Shelfie's video was narrated with |
+
 ## Building a video
 
 Tooling lives in `tools/` (Node 22, no npm dependencies) and needs ffmpeg (libx264 + libass), Chrome/Chromium, and Python with the free `edge-tts` package (`python -m pip install edge-tts`; `PYTHON` overrides the interpreter, default `python3`).

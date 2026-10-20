@@ -8,7 +8,7 @@ import type { NavKey } from 'components';
 export function appShell(active: NavKey | null, content: string): string {
   const nav = active ? ` active="${active}"` : '';
   return `
-    <sd-top-bar${nav} email="quinn@saturdaze.app" />
+    <sd-top-bar${nav} email="quinn@saturdaze.ca" />
     <main id="main" class="sd-frame">${content}</main>
     <sd-bottom-nav${nav} />
   `;

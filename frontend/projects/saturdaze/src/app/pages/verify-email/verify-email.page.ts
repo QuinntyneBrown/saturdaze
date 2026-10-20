@@ -7,6 +7,8 @@ import { AuthCard, AuthShell, Button, Disc, Icon, Spinner } from 'components';
 import { devState } from '../../shared/dev-state';
 import { maskEmail } from '../../shared/mask-email';
 
+import { environment } from '../../../environments/environment';
+
 /**
  * Verify email — `docs/mocks-v2/pages/verify-email.html`, one page with
  * four states: "check your email" (right after creating an account, no
@@ -27,6 +29,8 @@ const STATES: readonly VerifyState[] = ['sent', 'verifying', 'verified', 'expire
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VerifyEmailPage {
+  /** Where the brand and "Back to Saturdaze" lead: the marketing site (ADR-018). */
+  protected readonly siteUrl = environment.siteUrl;
   private readonly session = inject(SESSION_STORE);
   private readonly route = inject(ActivatedRoute);
 

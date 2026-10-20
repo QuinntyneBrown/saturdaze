@@ -1,0 +1,80 @@
+/* Brand decks (the marketing video, 44-meet-saturdaze): loaded after slides.css. No header
+   strip or progress bar; the slides look like the marketing site (marketing/assets/saturdaze.css)
+   at video size, and each screen recording sits centred under a short heading. */
+
+.chrome,
+.progress {
+  display: none;
+}
+
+em {
+  font-style: normal;
+  color: var(--coral-ink);
+}
+
+body > section {
+  align-items: center;
+  text-align: center;
+}
+
+body > section#title,
+body > section#outro {
+  padding: 120px 140px 210px;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 24px;
+  font-size: 64px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.brand-mark {
+  width: 88px;
+  height: 88px;
+  border-radius: 26px;
+  flex: none;
+  background:
+    radial-gradient(120% 120% at 20% 0%, var(--coral-soft) 0%, transparent 60%),
+    radial-gradient(120% 120% at 100% 100%, var(--sun-soft) 0%, transparent 60%),
+    var(--coral);
+  box-shadow: inset 0 0 0 2px var(--stroke);
+}
+
+.display {
+  font-size: 128px;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-weight: 700;
+}
+
+.lead {
+  max-width: 1200px;
+  font-size: 44px;
+  color: var(--ink-2);
+}
+
+.url {
+  font-size: 44px;
+  font-weight: 600;
+  color: var(--coral-ink);
+}
+
+/* Screen recordings: the heading above, the clip centred below it (tools/video-build overlays
+   the MP4 exactly over .clip, so the box stays 16:9 and square-cornered). */
+body > section.clip-slide h2 {
+  position: absolute;
+  top: 22px;
+  left: 0;
+  right: 0;
+  margin: 0;
+  font-size: 52px;
+  letter-spacing: -0.02em;
+}
+
+body > section.clip-slide .clip {
+  left: 256px;
+  top: 96px;
+}

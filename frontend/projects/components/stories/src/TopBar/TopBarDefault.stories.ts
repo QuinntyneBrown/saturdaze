@@ -5,7 +5,7 @@ import type { TopBar } from 'components';
 export const Default: StoryObj<TopBar> = {
   args: {
     active: 'weekend',
-    email: 'quinn@saturdaze.app',
+    email: 'quinn@saturdaze.ca',
   },
   argTypes: {
     active: { control: 'select', options: [null, 'weekend', 'ideas', 'past', 'family'] },

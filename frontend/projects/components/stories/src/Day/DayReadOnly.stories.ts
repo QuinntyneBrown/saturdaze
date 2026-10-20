@@ -18,7 +18,7 @@ export const ReadOnly: StoryObj<Day> = {
     docs: {
       description: {
         story:
-          'The shared weekend and the landing preview: `actions` off on the day and `readonly` on each block, so nothing can be changed.',
+          'The shared weekend: `actions` off on the day and `readonly` on each block, so nothing can be changed.',
       },
     },
   },

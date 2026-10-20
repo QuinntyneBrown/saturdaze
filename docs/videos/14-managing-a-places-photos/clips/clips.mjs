@@ -7,7 +7,7 @@ export const config = {
   viewport: { width: 1408, height: 792 },
 };
 
-const signedIn = (t) => t.signIn('admin@saturdaze.app');
+const signedIn = (t) => t.signIn('admin@saturdaze.ca');
 export const setup = { place: signedIn, tiles: signedIn, 'make-primary': signedIn, edit: signedIn, remove: signedIn };
 
 const tile = (t, text) => t.page.locator('sd-photo-tile', { hasText: text });

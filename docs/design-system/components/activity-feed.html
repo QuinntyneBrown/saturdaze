@@ -105,6 +105,7 @@
       <li><a href="../patterns/data-tables-and-lists.html">Tables and lists</a></li>
       <li><a href="../patterns/notifications.html">Notifications</a></li>
       <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+      <li><a href="../patterns/marketing-page.html">Marketing page</a></li>
     </ul></details>
   </nav>
 
@@ -120,7 +121,7 @@
     </header>
 
     <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
-      <p>Use the activity feed for a time-ordered record of changes that people read top to bottom: the admin activity log of every photo change. Each row is one event and every value in it reads on its own ("admin@saturdaze.app", "Removed rec-room-old.jpg"), so it works without column headers at phone width.</p>
+      <p>Use the activity feed for a time-ordered record of changes that people read top to bottom: the admin activity log of every photo change. Each row is one event and every value in it reads on its own ("admin@saturdaze.ca", "Removed rec-room-old.jpg"), so it works without column headers at phone width.</p>
       <ul>
         <li>From 720px, prefer the <a href="table.html">table</a> for the same records: column headers let the reader compare times or people down the page. The mock shows the feed under 720px and the table from 720px.</li>
         <li>Use a <a href="list.html">list</a> when each row is a thing to open rather than an event that happened.</li>
@@ -134,7 +135,7 @@
           <ol class="audit-list list list--card" aria-label="Anatomy example" style="margin: 0; max-width: 22rem;">
             <li class="audit-row" style="grid-template-columns: minmax(0, 1fr) auto; align-items: start;">
               <time class="audit-row__time" datetime="2026-10-06T13:41Z">2026-10-06 13:41 UTC</time>
-              <span class="audit-row__who">curator@saturdaze.app</span>
+              <span class="audit-row__who">curator@saturdaze.ca</span>
               <a class="audit-row__place" href="../../mocks/pages/admin.place.html" style="grid-column: 1; justify-self: start;">Harbour Grill</a>
               <span class="chip chip--sky" style="grid-column: 2; grid-row: 1 / 3; justify-self: end;">Edit</span>
               <span class="audit-row__change" style="grid-column: 1 / -1;">Alt text: — → Patio tables by the water</span>
@@ -164,35 +165,35 @@
           <ol class="audit-list list list--card" aria-labelledby="feed-title" style="margin: 0;">
             <li class="audit-row">
               <time class="audit-row__time" datetime="2026-10-06T14:02Z">2026-10-06 14:02 UTC</time>
-              <span class="audit-row__who">admin@saturdaze.app</span>
+              <span class="audit-row__who">admin@saturdaze.ca</span>
               <a class="audit-row__place" href="../../mocks/pages/admin.place.html">Port Credit Memorial Park</a>
               <span class="chip chip--primary">Primary</span>
               <span class="audit-row__change">memorial-park-side.jpg → memorial-park.jpg</span>
             </li>
             <li class="audit-row">
               <time class="audit-row__time" datetime="2026-10-06T13:58Z">2026-10-06 13:58 UTC</time>
-              <span class="audit-row__who">admin@saturdaze.app</span>
+              <span class="audit-row__who">admin@saturdaze.ca</span>
               <a class="audit-row__place" href="../../mocks/pages/admin.place.html">Port Credit Memorial Park</a>
               <span class="chip chip--accent">Upload</span>
               <span class="audit-row__change">Added memorial-park.jpg · 1200 × 675 · 412 KB</span>
             </li>
             <li class="audit-row">
               <time class="audit-row__time" datetime="2026-10-06T13:41Z">2026-10-06 13:41 UTC</time>
-              <span class="audit-row__who">curator@saturdaze.app</span>
+              <span class="audit-row__who">curator@saturdaze.ca</span>
               <a class="audit-row__place" href="../../mocks/pages/admin.place.html">Harbour Grill</a>
               <span class="chip chip--sky">Edit</span>
               <span class="audit-row__change">Alt text: — → Patio tables by the water</span>
             </li>
             <li class="audit-row">
               <time class="audit-row__time" datetime="2026-10-06T11:20Z">2026-10-06 11:20 UTC</time>
-              <span class="audit-row__who">curator@saturdaze.app</span>
+              <span class="audit-row__who">curator@saturdaze.ca</span>
               <a class="audit-row__place" href="../../mocks/pages/admin.place.html">Port Credit Harbour Festival</a>
               <span class="chip chip--sun">Review</span>
               <span class="audit-row__change">Rejected harbourfest-2024.jpg · Wrong year</span>
             </li>
             <li class="audit-row">
               <time class="audit-row__time" datetime="2026-10-05T16:05Z">2026-10-05 16:05 UTC</time>
-              <span class="audit-row__who">admin@saturdaze.app</span>
+              <span class="audit-row__who">admin@saturdaze.ca</span>
               <a class="audit-row__place" href="../../mocks/pages/admin.place.html">Rec Room Mississauga</a>
               <span class="chip chip--warn">Remove</span>
               <span class="audit-row__change">Removed rec-room-old.jpg · next primary: none</span>
@@ -208,7 +209,7 @@
         <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;ol class="audit-list list list--card" aria-labelledby="log-title"&gt;
   &lt;li class="audit-row"&gt;
     &lt;time class="audit-row__time" datetime="2026-10-06T14:02Z"&gt;2026-10-06 14:02 UTC&lt;/time&gt;
-    &lt;span class="audit-row__who"&gt;admin@saturdaze.app&lt;/span&gt;
+    &lt;span class="audit-row__who"&gt;admin@saturdaze.ca&lt;/span&gt;
     &lt;a class="audit-row__place" href="/admin/places/memorial-park"&gt;Port Credit Memorial Park&lt;/a&gt;
     &lt;span class="chip chip--primary"&gt;Primary&lt;/span&gt;
     &lt;span class="audit-row__change"&gt;memorial-park-side.jpg → memorial-park.jpg&lt;/span&gt;
@@ -255,8 +256,8 @@
 
       <h3>Both themes</h3>
       <div class="ds-themes" style="grid-template-columns: minmax(0, 1fr);">
-        <div data-theme="light"><ol class="audit-list list list--card" aria-label="Light theme example" style="margin: 0;"><li class="audit-row"><time class="audit-row__time" datetime="2026-10-06T13:41Z">2026-10-06 13:41 UTC</time><span class="audit-row__who">curator@saturdaze.app</span><a class="audit-row__place" href="../../mocks/pages/admin.place.html">Harbour Grill</a><span class="chip chip--sky">Edit</span><span class="audit-row__change">Alt text: — → Patio tables by the water</span></li></ol></div>
-        <div data-theme="dark"><ol class="audit-list list list--card" aria-label="Dark theme example" style="margin: 0;"><li class="audit-row"><time class="audit-row__time" datetime="2026-10-06T13:41Z">2026-10-06 13:41 UTC</time><span class="audit-row__who">curator@saturdaze.app</span><a class="audit-row__place" href="../../mocks/pages/admin.place.html">Harbour Grill</a><span class="chip chip--sky">Edit</span><span class="audit-row__change">Alt text: — → Patio tables by the water</span></li></ol></div>
+        <div data-theme="light"><ol class="audit-list list list--card" aria-label="Light theme example" style="margin: 0;"><li class="audit-row"><time class="audit-row__time" datetime="2026-10-06T13:41Z">2026-10-06 13:41 UTC</time><span class="audit-row__who">curator@saturdaze.ca</span><a class="audit-row__place" href="../../mocks/pages/admin.place.html">Harbour Grill</a><span class="chip chip--sky">Edit</span><span class="audit-row__change">Alt text: — → Patio tables by the water</span></li></ol></div>
+        <div data-theme="dark"><ol class="audit-list list list--card" aria-label="Dark theme example" style="margin: 0;"><li class="audit-row"><time class="audit-row__time" datetime="2026-10-06T13:41Z">2026-10-06 13:41 UTC</time><span class="audit-row__who">curator@saturdaze.ca</span><a class="audit-row__place" href="../../mocks/pages/admin.place.html">Harbour Grill</a><span class="chip chip--sky">Edit</span><span class="audit-row__change">Alt text: — → Patio tables by the water</span></li></ol></div>
       </div>
     </section>
 
@@ -313,7 +314,7 @@
 
     <section class="ds-section" id="do-dont"><h2><a href="#do-dont">Do and don't</a></h2>
       <div class="ds-dodont" style="grid-template-columns: minmax(0, 1fr);">
-        <figure class="ds-do"><div class="ds-example__canvas" style="display: block;"><ol class="audit-list list list--card" aria-label="Do example" style="margin: 0;"><li class="audit-row"><time class="audit-row__time" datetime="2026-10-06T11:20Z">2026-10-06 11:20 UTC</time><span class="audit-row__who">curator@saturdaze.app</span><span class="chip chip--sun">Review</span><span class="audit-row__change">Rejected harbourfest-2024.jpg · Wrong year</span></li></ol></div><figcaption>Absolute time with its zone, inside <code>&lt;time datetime&gt;</code>; the change says what and why.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas" style="display: block;"><ol class="audit-list list list--card" aria-label="Do example" style="margin: 0;"><li class="audit-row"><time class="audit-row__time" datetime="2026-10-06T11:20Z">2026-10-06 11:20 UTC</time><span class="audit-row__who">curator@saturdaze.ca</span><span class="chip chip--sun">Review</span><span class="audit-row__change">Rejected harbourfest-2024.jpg · Wrong year</span></li></ol></div><figcaption>Absolute time with its zone, inside <code>&lt;time datetime&gt;</code>; the change says what and why.</figcaption></figure>
         <figure class="ds-dont"><div class="ds-example__canvas" style="display: block;"><ol class="audit-list list list--card" aria-label="Don't example" style="margin: 0;"><li class="audit-row"><span class="audit-row__time">2 hours ago</span><span class="audit-row__who">curator</span><span class="chip chip--sun">Review</span><span class="audit-row__change">Rejected</span></li></ol></div><figcaption>Relative time in a plain span, a short name and a bare verb: nobody can tell later which photo or when.</figcaption></figure>
         <figure class="ds-do"><div class="ds-example__canvas"><p style="margin: 0;">Feed under 720px, <a href="table.html">table</a> from 720px.</p></div><figcaption>Give wide screens real column headers.</figcaption></figure>
         <figure class="ds-dont"><div class="ds-example__canvas"><p style="margin: 0;">The same feed spread into five unlabelled columns at 1280px.</p></div><figcaption>A grid that looks like a table but has no headers.</figcaption></figure>
@@ -344,7 +345,7 @@
 &lt;ol class="audit-list list list--card hide-gte-720" aria-labelledby="log-title"&gt;
   &lt;li class="audit-row"&gt;
     &lt;time class="audit-row__time" datetime="2026-10-05T16:05Z"&gt;2026-10-05 16:05 UTC&lt;/time&gt;
-    &lt;span class="audit-row__who"&gt;admin@saturdaze.app&lt;/span&gt;
+    &lt;span class="audit-row__who"&gt;admin@saturdaze.ca&lt;/span&gt;
     &lt;a class="audit-row__place" href="/admin/places/rec-room"&gt;Rec Room Mississauga&lt;/a&gt;
     &lt;span class="chip chip--warn"&gt;Remove&lt;/span&gt;
     &lt;span class="audit-row__change"&gt;Removed rec-room-old.jpg · next primary: none&lt;/span&gt;

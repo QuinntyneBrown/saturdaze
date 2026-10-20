@@ -88,17 +88,17 @@ test.describe("Skip link on a bare (auth) page", () => {
 });
 
 test.describe("Skip link on a public (site) page", () => {
-  test("Given the landing page, when the user presses Tab once and then Enter, then focus skips the site bar to the main content", async ({
+  test("Given the legal page, when the user presses Tab once and then Enter, then focus skips the site bar to the main content", async ({
     goto,
     pages,
   }) => {
-    const l = pages.landing;
-    await goto("landing", { anonymous: true });
+    const l = pages.legal;
+    await goto("legal", { anonymous: true });
     await l.waitForReady();
 
     expect(await l.firstTabStop()).toBe(SKIP);
     await l.skipToContent();
-    expect(l.currentPath()).toBe("/");
+    expect(l.currentPath()).toBe("/legal");
     expect(await l.focusIsOnMain()).toBe(true);
   });
 });

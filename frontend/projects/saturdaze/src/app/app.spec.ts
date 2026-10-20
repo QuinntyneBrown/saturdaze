@@ -8,6 +8,7 @@ import { SESSION_STORE } from 'api';
 
 import { App } from './app';
 import { MenuOpener } from './shell/menu-opener';
+import { environment } from '../environments/environment';
 
 /** Flush every pending microtask (the app is zoneless, so whenStable cannot see mocked promises). */
 const settle = (): Promise<void> => new Promise((resolve) => setTimeout(resolve, 0));
@@ -44,10 +45,9 @@ describe('App', () => {
       providers: [
         provideRouter([
           {
-            path: '',
-            pathMatch: 'full',
+            path: 'sample-weekend',
             children: [],
-            data: { shell: 'site', cta: true, page: 'landing' },
+            data: { shell: 'site', cta: true, page: 'shared-weekend' },
           },
           { path: 'sign-in', children: [], data: { shell: 'bare', page: 'sign-in' } },
           { path: 'legal', children: [], data: { shell: 'site', page: 'legal' } },
@@ -104,7 +104,7 @@ describe('App', () => {
   });
 
   it('switches to the site bar (with the CTA) for public pages', async () => {
-    await go('/');
+    await go('/sample-weekend');
     expect(host.querySelector('sd-top-bar')).toBeNull();
     expect(host.querySelector('sd-bottom-nav')).toBeNull();
     const sitebar = host.querySelector('sd-sitebar');
@@ -114,12 +114,18 @@ describe('App', () => {
     );
     expect(host.querySelector('main')?.classList.contains('sd-frame--site')).toBe(true);
     expect(document.body.dataset['shell']).toBe('site');
-    expect(document.body.dataset['page']).toBe('landing');
+    expect(document.body.dataset['page']).toBe('shared-weekend');
 
     await go('/legal');
     expect(host.querySelector('sd-sitebar')?.classList.contains('sitebar--cta')).toBe(false);
     expect(host.querySelector('sd-sitebar a.btn--primary')).toBeNull();
     expect(document.body.dataset['page']).toBe('legal');
+  });
+
+  it("points the site bar's wordmark at the marketing site (L2-155)", async () => {
+    await go('/legal');
+    const brand = host.querySelector('sd-sitebar a.sitebar__brand') as HTMLAnchorElement;
+    expect(brand.getAttribute('href')).toBe(environment.siteUrl);
   });
 
   it('goes bare for auth pages', async () => {

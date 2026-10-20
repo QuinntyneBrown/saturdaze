@@ -6,7 +6,7 @@ export const HostDirective: StoryObj<Scrolled> = {
   render: () => ({
     props: { rows: Array.from({ length: 16 }, (_, i) => i + 1) },
     template: `
-      <sd-top-bar active="weekend" email="quinn@saturdaze.app" />
+      <sd-top-bar active="weekend" email="quinn@saturdaze.ca" />
       <main class="sd-frame">
         <div class="sd-stack">
           @for (row of rows; track row) {

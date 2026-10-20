@@ -43,7 +43,7 @@ async function landing(t, base, title) {
 }
 
 async function pager(t, base, title) {
-  await t.signIn('admin@saturdaze.app');
+  await t.signIn('admin@saturdaze.ca');
   await t.go(`${base}/places`);
   await t.page.locator('.pager').waitFor();
   await t.page.locator('.pager').scrollIntoViewIfNeeded();

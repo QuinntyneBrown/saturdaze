@@ -80,7 +80,7 @@ const DOCS: readonly LegalDoc[] = [
       {
         id: 'contact',
         title: '6. Contact',
-        paragraphs: ['Questions about these terms? Email support@saturdaze.app.'],
+        paragraphs: ['Questions about these terms? Email support@saturdaze.ca.'],
       },
     ],
   },
@@ -127,7 +127,7 @@ const DOCS: readonly LegalDoc[] = [
       {
         id: 'contact',
         title: '6. Contact',
-        paragraphs: ['Privacy questions go to privacy@saturdaze.app.'],
+        paragraphs: ['Privacy questions go to privacy@saturdaze.ca.'],
       },
     ],
   },

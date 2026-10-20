@@ -74,7 +74,8 @@ export const PAGES = [
   { url: "/pages/verify-email.html",   shell: "bare", expects: { selector: "#state-verified .auth-card__title", text: "You are verified" } },
 
   // Public
-  { url: "/pages/landing.html", shell: "bare", expects: { selector: ".hero__title", text: "Already planned" }, cols: { ".hero__grid": { 390: 1, 820: 1, 1440: 2 }, ".steps": { 390: 1, 820: 3, 1440: 3 } } },
+  { url: "/pages/marketing.html",           shell: "bare", expects: { selector: ".hero__title", text: "Already planned" }, cols: { ".hero__grid": { 390: 1, 820: 1, 1440: 2 }, ".steps": { 390: 1, 820: 3, 1440: 3 }, ".feature-grid": { 390: 1, 820: 2, 1440: 4 } } },
+  { url: "/pages/marketing.menu-open.html", shell: "bare", expects: { selector: ".menu-button", text: "" } },
   { url: "/pages/legal.html",   shell: "bare", expects: { selector: ".prose__title", text: "Terms of Service" } },
 
   // Admin (bare shell: its own side navigation from 1024px, a bar below; ADR-014)

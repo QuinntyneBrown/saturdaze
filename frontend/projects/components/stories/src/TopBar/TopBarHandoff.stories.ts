@@ -6,7 +6,7 @@ export const Handoff: StoryObj<TopBar> = {
   name: 'Below 720px',
   render: () => ({
     template: `
-      <sd-top-bar active="weekend" email="quinn@saturdaze.app" />
+      <sd-top-bar active="weekend" email="quinn@saturdaze.ca" />
       <main class="sd-frame">
         <p class="sd-text-soft">Below 720px the top bar is hidden and the floating bottom nav carries the same four destinations.</p>
       </main>

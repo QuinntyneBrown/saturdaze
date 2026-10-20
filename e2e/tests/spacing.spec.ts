@@ -37,33 +37,15 @@ test.describe("Spacing on the grid", () => {
     expect(await f.gap(f.dialogForm())).toBe("16px");
   });
 
-  test("Given the landing page, when a person reads the call to action and the footer, then the large button pads 24px and the footer links sit 12px apart", async ({
+  test("Given the legal page, when a person reads the footer, then its links sit 12px apart", async ({
     goto,
     pages,
   }) => {
-    await goto("landing", { anonymous: true });
-    const l = pages.landing;
+    await goto("legal", { anonymous: true });
+    const l = pages.legal;
     await l.waitForReady();
 
-    expect(await l.padding(l.heroCta())).toBe("0px 24px");
     expect(await l.gap(l.footer)).toBe("6px 12px");
   });
 });
 
-/**
- * Landing hero padding on the spacing scale (drift D16): 40 × 24px on phones,
- * 56 × 40px from 720px and 64 × 56px (`--layoutSpacePage`) from 1024px.
- */
-test.describe("Landing hero padding on the scale", () => {
-  test("Given the landing page, when a person reads the hero, then it pads on the spacing scale at every width", async ({
-    goto,
-    pages,
-  }, testInfo) => {
-    await goto("landing", { anonymous: true });
-    const l = pages.landing;
-    await l.waitForReady();
-
-    const expected = { mobile: "40px 24px", tablet: "56px 40px", desktop: "64px 56px" }[testInfo.project.name];
-    expect(await l.padding(l.hero)).toBe(expected);
-  });
-});

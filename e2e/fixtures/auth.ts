@@ -24,7 +24,7 @@ export const SEEDED_USER = {
 } as const;
 
 export const SEEDED_ADMIN = {
-  email: process.env.SD_E2E_ADMIN_EMAIL ?? "admin@saturdaze.app",
+  email: process.env.SD_E2E_ADMIN_EMAIL ?? "admin@saturdaze.ca",
   password: process.env.SD_E2E_ADMIN_PASSWORD ?? "password123",
 } as const;
 

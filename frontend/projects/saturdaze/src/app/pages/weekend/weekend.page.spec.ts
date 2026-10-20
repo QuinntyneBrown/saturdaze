@@ -198,7 +198,7 @@ describe('WeekendPage', () => {
       plan: vi.fn(async () => weekendSig.set(READY)),
       regenerate: vi.fn(async () => undefined),
       regenerateDay: vi.fn(async () => undefined),
-      createShareLink: vi.fn(async () => 'https://saturdaze.app/sample-weekend?share=abc'),
+      createShareLink: vi.fn(async () => 'https://app.saturdaze.ca/sample-weekend?share=abc'),
       calendarExport: vi.fn(() => ({
         icsUrl: 'http://api/calendar.ics',
         fileName: 'weekend-16-may.ics',
@@ -342,7 +342,7 @@ describe('WeekendPage', () => {
       ShareDialog,
       expect.objectContaining({
         data: {
-          shareUrl: 'https://saturdaze.app/sample-weekend?share=abc',
+          shareUrl: 'https://app.saturdaze.ca/sample-weekend?share=abc',
           stopSharing: expect.any(Function),
         },
       }),

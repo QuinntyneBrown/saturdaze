@@ -55,7 +55,7 @@ node tools/video-record/record-clips.mjs docs/videos/32-icon-meanings-d37
 ## Pitfalls
 
 - Define an icon in all three places (mocks, design system, components) or they drift apart again.
-- Clips sign in as `admin@saturdaze.app` against the dev database; Bronte Creek must have two photos.
+- Clips sign in as `admin@saturdaze.ca` against the dev database; Bronte Creek must have two photos.
 
 ## References
 

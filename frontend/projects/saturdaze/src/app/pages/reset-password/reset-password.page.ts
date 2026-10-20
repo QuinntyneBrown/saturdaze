@@ -32,6 +32,8 @@ import {
 } from '../../shared/password-strength';
 import { trimmedEmail } from '../../shared/trimmed-email.validator';
 
+import { environment } from '../../../environments/environment';
+
 /**
  * Reset password — `docs/mocks-v2/pages/reset-password.html`, one page with
  * five states: request a link → check your email → choose a new password
@@ -70,6 +72,8 @@ const STATES: readonly ResetState[] = ['request', 'sent', 'new', 'done', 'expire
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ResetPasswordPage {
+  /** Where the brand and "Back to Saturdaze" lead: the marketing site (ADR-018). */
+  protected readonly siteUrl = environment.siteUrl;
   private readonly session = inject(SESSION_STORE);
   private readonly route = inject(ActivatedRoute);
 

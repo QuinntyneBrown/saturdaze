@@ -88,7 +88,7 @@ const SPECIMENS: readonly Specimen[] = [
     slug: 'share',
     label: 'D5 · Share',
     component: ShareDialog,
-    data: { shareUrl: 'saturdaze.app/s/may17-browns', stopSharing: () => Promise.resolve() },
+    data: { shareUrl: 'app.saturdaze.ca/s/may17-browns', stopSharing: () => Promise.resolve() },
   },
   {
     kind: 'dialog',
@@ -273,7 +273,7 @@ const SPECIMENS: readonly Specimen[] = [
     data: {
       name: 'Grandma Jo',
       email: 'jo@example.com',
-      url: 'saturdaze.app/accept-invite?token=Q2F0ZXJwaWxsYXI',
+      url: 'app.saturdaze.ca/accept-invite?token=Q2F0ZXJwaWxsYXI',
     },
   },
   {

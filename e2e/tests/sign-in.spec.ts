@@ -1,5 +1,6 @@
 import { test, expect } from "../fixtures/sd-test.js";
 import { SEEDED_USER } from "../fixtures/auth.js";
+import { MARKETING_SITE_URL } from "../fixtures/routes.js";
 
 /**
  * Sign in — the form drives the real API. Sessions persist to localStorage
@@ -96,6 +97,12 @@ test.describe("Sign in", () => {
     await s.submit();
     await expect(s.passwordInput()).toHaveAttribute("aria-invalid", "true");
     expect(new URL(page.url()).pathname).toBe("/sign-in");
+  });
+
+  // Traces to: L2-155 AC3
+  test("the brand and Back to Saturdaze open the marketing site", async ({ pages }) => {
+    await expect(pages.signIn.brand()).toHaveAttribute("href", MARKETING_SITE_URL);
+    await expect(pages.signIn.footLink("Back to Saturdaze")).toHaveAttribute("href", MARKETING_SITE_URL);
   });
 
   test("the links go where they say", async ({ page, pages }) => {

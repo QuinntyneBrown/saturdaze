@@ -5,7 +5,7 @@ import type { TopBar } from 'components';
 export const Photo: StoryObj<TopBar> = {
   args: {
     active: 'family',
-    email: 'quinn@saturdaze.app',
+    email: 'quinn@saturdaze.ca',
     avatarSrc: 'profile-photo.svg',
   },
   render: (args) => ({

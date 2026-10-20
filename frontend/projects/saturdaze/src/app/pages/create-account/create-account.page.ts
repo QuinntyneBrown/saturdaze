@@ -22,6 +22,8 @@ import {
 } from '../../shared/password-strength';
 import { trimmedEmail } from '../../shared/trimmed-email.validator';
 
+import { environment } from '../../../environments/environment';
+
 /**
  * Create account — `docs/mocks-v2/pages/create-account.html`.
  *
@@ -50,6 +52,8 @@ import { trimmedEmail } from '../../shared/trimmed-email.validator';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CreateAccountPage {
+  /** Where the brand and "Back to Saturdaze" lead: the marketing site (ADR-018). */
+  protected readonly siteUrl = environment.siteUrl;
   private readonly session = inject(SESSION_STORE);
   private readonly router = inject(Router);
 

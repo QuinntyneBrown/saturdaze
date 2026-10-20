@@ -7,7 +7,7 @@ export const ShareLink: StoryObj = {
   render: () => ({
     template: specimen(`
       <sd-dialog static title="Share this weekend" subtitle="Anyone with the link can view it. Nobody can edit.">
-        <sd-copy-field value="saturdaze.app/s/may17-browns" />
+        <sd-copy-field value="app.saturdaze.ca/s/may17-browns" />
         <p class="sd-text-xs sd-text-soft">Read-only · expires in 7 days</p>
         <sd-button slot="actions" variant="primary">Done</sd-button>
       </sd-dialog>

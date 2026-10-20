@@ -105,14 +105,15 @@
       <li><a href="../patterns/data-tables-and-lists.html">Tables and lists</a></li>
       <li><a href="../patterns/notifications.html">Notifications</a></li>
       <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+      <li><a href="../patterns/marketing-page.html">Marketing page</a></li>
     </ul></details>
   </nav>
 
   <main id="main" class="ds-main">
     <header class="ds-header">
-      <p class="ds-kicker">Component · Auth and marketing</p>
+      <p class="ds-kicker">Retired · Component · Auth and marketing</p>
       <h1>Hero</h1>
-      <p class="ds-lead">The hero is the first thing a parent sees on saturdaze.app: what Saturdaze does in five words, one sentence of how, one button to start, and a picture of a real Saturday. The three steps below it answer "what do I have to do?".</p>
+      <p class="ds-lead"><strong>Retired 2026-10-20:</strong> the in-app landing page moved to the static marketing site (ADR-018); its hero now follows the <a href="../patterns/marketing-page.html">Marketing page</a> pattern. This page records the old component. The hero was the first thing a parent saw: what Saturdaze does in five words, one sentence of how, one button to start, and a picture of a real Saturday. The three steps below it answer "what do I have to do?".</p>
       <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA</span><span class="ds-pill">Status: stable</span><span class="ds-pill">Angular: <code>sd-browser-frame</code> (the hero itself is page markup)</span><span class="ds-pill">Landing only</span></div>
       <ul class="ds-toc">
         <li><a href="#overview">Overview</a></li><li><a href="#anatomy">Anatomy</a></li><li><a href="#variants">Variants</a></li><li><a href="#sizes">Sizes</a></li><li><a href="#states">States</a></li><li><a href="#responsive">Responsive</a></li><li><a href="#theming">Theming</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#content">Content</a></li><li><a href="#do-dont">Do and don't</a></li><li><a href="#tokens">Tokens</a></li><li><a href="#code">Code</a></li><li><a href="#sources">Sources</a></li>
@@ -179,7 +180,7 @@
               </div>
               <div class="hero__preview" aria-hidden="true">
                 <div class="browser-frame">
-                  <div class="browser-frame__bar"><span class="browser-frame__dot"></span><span class="browser-frame__dot"></span><span class="browser-frame__dot"></span><span class="browser-frame__url">saturdaze.app/weekend</span></div>
+                  <div class="browser-frame__bar"><span class="browser-frame__dot"></span><span class="browser-frame__dot"></span><span class="browser-frame__dot"></span><span class="browser-frame__url">app.saturdaze.ca/weekend</span></div>
                   <div class="browser-frame__view" style="padding: 0 var(--spacingHorizontalL) var(--spacingVerticalS);">
                     <div class="day">
                       <div class="day__header" style="position: static; background: transparent;">
@@ -198,7 +199,7 @@
             </div>
           </section>
         </div>
-        <div class="ds-example__caption"><span>From <a href="../../mocks/pages/landing.html">landing</a>. Two columns from 1024px; the preview stacks under the copy below that.</span></div>
+        <div class="ds-example__caption"><span>From <a href="../../mocks/pages/marketing.html">landing</a>. Two columns from 1024px; the preview stacks under the copy below that.</span></div>
         <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;section class="hero" aria-labelledby="hero-title"&gt;
   &lt;div class="hero__grid"&gt;
     &lt;div class="hero__copy"&gt;
@@ -213,7 +214,7 @@
     &lt;/div&gt;
     &lt;div class="hero__preview" aria-hidden="true"&gt;
       &lt;div class="browser-frame"&gt;
-        &lt;div class="browser-frame__bar"&gt;&lt;span class="browser-frame__dot"&gt;&lt;/span&gt;×3 &lt;span class="browser-frame__url"&gt;saturdaze.app/weekend&lt;/span&gt;&lt;/div&gt;
+        &lt;div class="browser-frame__bar"&gt;&lt;span class="browser-frame__dot"&gt;&lt;/span&gt;×3 &lt;span class="browser-frame__url"&gt;app.saturdaze.ca/weekend&lt;/span&gt;&lt;/div&gt;
         &lt;div class="browser-frame__view"&gt;…a scaled Weekend preview…&lt;/div&gt;
       &lt;/div&gt;
     &lt;/div&gt;
@@ -349,7 +350,7 @@
         <figure class="ds-do"><div class="ds-example__canvas"><p class="hero__title" style="font-size: var(--fontSizeHero700);">Two days.<br>Already planned.</p></div><figcaption>700 weight on the display size, line height 1.</figcaption></figure>
         <figure class="ds-dont"><div class="ds-example__canvas"><p class="hero__title" style="font-size: var(--fontSizeHero700); font-weight: 800; line-height: 1.05;">Two days.<br>Already planned.</p></div><figcaption>An 800 weight and a 1.05 line height are off the scale: weights stop at Bold (700) and line heights snap to None, Tight, Snug, Normal and Relaxed.</figcaption></figure>
         <figure class="ds-do"><div class="ds-example__canvas"><div class="hero__cta"><a class="btn btn--primary btn--lg" href="../../mocks/pages/create-account.html">Create your account</a><span class="hero__note">Free during the beta.</span></div></div><figcaption>One action, with a note that answers the obvious question.</figcaption></figure>
-        <figure class="ds-dont"><div class="ds-example__canvas"><div class="hero__cta"><a class="btn btn--primary btn--lg" href="../../mocks/pages/create-account.html">Get started</a><a class="btn btn--primary btn--lg" href="../../mocks/pages/landing.html">Watch the video</a></div></div><figcaption>Two primary actions split attention. "Sign in" belongs in <code>.hero__alt</code>, everything else further down.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><div class="hero__cta"><a class="btn btn--primary btn--lg" href="../../mocks/pages/create-account.html">Get started</a><a class="btn btn--primary btn--lg" href="../../mocks/pages/marketing.html">Watch the video</a></div></div><figcaption>Two primary actions split attention. "Sign in" belongs in <code>.hero__alt</code>, everything else further down.</figcaption></figure>
       </div>
     </section>
 
@@ -387,7 +388,7 @@
 &lt;/section&gt;
 
 &lt;!-- Angular: the preview frame --&gt;
-&lt;sd-browser-frame url="saturdaze.app/weekend" [frameWidth]="720" [frameHeight]="300"&gt;…&lt;/sd-browser-frame&gt;</code></pre>
+&lt;sd-browser-frame url="app.saturdaze.ca/weekend" [frameWidth]="720" [frameHeight]="300"&gt;…&lt;/sd-browser-frame&gt;</code></pre>
       <table class="ds-table"><thead><tr><th scope="col">Class</th><th scope="col">Effect</th></tr></thead><tbody>
         <tr><td><code>.hero</code></td><td>Warm card with responsive padding.</td></tr>
         <tr><td><code>.hero__grid</code> <code>__copy</code> <code>__preview</code></td><td>One column; two (1.05fr / 1fr) from 1024px.</td></tr>
@@ -400,7 +401,7 @@
 
     <section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>
       <ul>
-        <li><a href="../../mocks/pages/landing.html">pages/landing</a>: the hero, the browser frame with a <code>foreignObject</code> Weekend preview, the How it works steps and the site footer.</li>
+        <li><a href="../../mocks/pages/marketing.html">pages/marketing</a>: the hero, the browser frame with a <code>foreignObject</code> Weekend preview, the How it works steps and the site footer.</li>
       </ul>
       <p>The mock draws the preview inside an SVG <code>foreignObject</code>; this page composes it from block markup so it themes. The hero without a preview is a core variant; no mock shows it.</p>
     </section>

@@ -1,4 +1,4 @@
-<sd-auth-shell>
+<sd-auth-shell [homeHref]="siteUrl">
   @switch (state()) {
     @case ('loading') {
       <sd-status-row icon="mail">Opening your invite.</sd-status-row>

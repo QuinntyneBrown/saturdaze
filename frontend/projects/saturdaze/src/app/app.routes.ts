@@ -13,8 +13,9 @@ import { environment } from '../environments/environment';
  * primary destination, `page` the `<body data-page>` slug, `cta` the site
  * bar's sign-up button. Children inherit their parent's data.
  *
- * - `/` is the landing page for signed-out visitors; signed-in visitors are
- *   bounced to `/weekend` by `requireAnonymous`.
+ * - `/` and unknown paths go to `/weekend`; `requireAuth` sends a signed-out
+ *   visitor on to `/sign-in?returnUrl=%2Fweekend`. The landing page moved to
+ *   the static marketing site at www.saturdaze.ca (ADR-018, L2-155).
  * - `/verify-email` deliberately has no guard — signed-in *and* signed-out
  *   users reach it from an email link (and right after creating an account).
  * - `/accept-invite?token=<token>` has no guard either: whoever opens an
@@ -28,13 +29,7 @@ import { environment } from '../environments/environment';
  */
 export const routes: Routes = [
   // ---------------------------------------------------------------- public
-  {
-    path: '',
-    pathMatch: 'full',
-    data: { shell: 'site', cta: true, footer: true, page: 'landing' },
-    canActivate: [requireAnonymous],
-    loadComponent: () => import('./pages/landing/landing.page').then((m) => m.LandingPage),
-  },
+  { path: '', pathMatch: 'full', redirectTo: '/weekend' },
   {
     path: 'sign-in',
     data: { shell: 'bare', page: 'sign-in' },
@@ -169,5 +164,5 @@ export const routes: Routes = [
     pathMatch: 'full',
     redirectTo: () => inject(Router).createUrlTree(['/legal'], { fragment: 'privacy' }),
   },
-  { path: '**', redirectTo: '' },
+  { path: '**', redirectTo: '/weekend' },
 ];

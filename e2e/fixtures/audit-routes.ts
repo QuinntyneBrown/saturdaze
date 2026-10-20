@@ -2,12 +2,12 @@ import { isBaseline, MOCKED_ROUTES, RouteKey } from "./routes.js";
 
 /**
  * Screen inventory for the responsive audit and the no-horizontal-overflow
- * regression guard, split by guard type (11 + 11).
+ * regression guard, split by guard type (11 + 10).
  *
  * The auth pages stack all their states on one mock file, so the state
  * keys below dedupe to the same capture in mock mode but exercise distinct
  * cards in the app. `sharedWeekend` has no mock: `auditable()` drops it in
- * baseline mode (21 routes) and keeps it against the app (22 routes), where
+ * baseline mode (20 routes) and keeps it against the app (21 routes), where
  * the `goto` fixture mints the share link.
  */
 
@@ -28,7 +28,6 @@ export const AUTHED_ROUTES: RouteKey[] = [
 
 /** Public + `requireAnonymous` routes — need a clean session. */
 export const ANON_ROUTES: RouteKey[] = [
-  "landing",
   "signIn",
   "createAccount",
   "resetRequest",

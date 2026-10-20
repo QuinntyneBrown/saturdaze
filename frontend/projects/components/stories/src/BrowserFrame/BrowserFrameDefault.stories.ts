@@ -6,7 +6,7 @@ import { MINI_WEEKEND_STYLES, MINI_WEEKEND_TEMPLATE } from './sample';
 
 export const Default: StoryObj<BrowserFrame> = {
   args: {
-    url: 'saturdaze.app/weekend',
+    url: 'app.saturdaze.ca/weekend',
     frameWidth: 720,
     frameHeight: 300,
   },

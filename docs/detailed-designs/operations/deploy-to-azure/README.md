@@ -14,6 +14,8 @@ Saturdaze combines an Angular web application, an ASP.NET Core API, SQL Server p
 
 When `api_exists=true`, `api` publishes and deploys the API. `migrate` depends on successful API deployment, and `web` depends on migration plus frontend gates before uploading the existing Angular artifact through `Azure/static-web-apps-deploy` with the `SWA_DEPLOYMENT_TOKEN` secret. The artifact includes `staticwebapp.config.json` from `frontend/projects/saturdaze/public`, which supplies the SPA navigation fallback.
 
+A `marketing-web` job uploads the static `marketing/` folder to a fourth Static Web App, `sd-www-<suffix>`, with no build step and no fallback; `smoke` then loads the page and checks its headline and Content-Security-Policy (L2-156, ADR-018, [serve-marketing-site](../../web-experience/serve-marketing-site/README.md)).
+
 When the API Web App is absent, preflight emits a warning and summary, and the API/migration/web chain is skipped. Azure login failures fail preflight. The current probe treats every non-zero `az webapp show` result as an absent resource; authorization and transient probe errors can therefore also skip delivery. This classification is an implementation gap.
 
 `.github/workflows/ci.yml` runs validation on pull requests and non-main pushes. `eng/Start-FreshStack.ps1` is local tooling, not part of this hosted deployment.

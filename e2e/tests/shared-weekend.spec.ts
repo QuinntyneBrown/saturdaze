@@ -54,8 +54,9 @@ test.describe("Shared weekend — bad links", () => {
     await expect(pages.sharedWeekend.days()).toHaveCount(0);
   });
 
-  test("no token redirects to the landing page", async ({ page }) => {
+  // Traces to: L2-155 AC4
+  test("no token sends an anonymous visitor to sign-in", async ({ page }) => {
     await page.goto("/sample-weekend");
-    await page.waitForURL((url) => url.pathname === "/");
+    await page.waitForURL((url) => url.pathname === "/sign-in");
   });
 });

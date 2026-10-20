@@ -13,7 +13,7 @@ export const clips = {
   async 'deep-link'(t) {
     await t.go('/places');
     await t.wait(1600);
-    await t.type(t.page.getByLabel('Email'), 'admin@saturdaze.app');
+    await t.type(t.page.getByLabel('Email'), 'admin@saturdaze.ca');
     await t.type(t.page.getByLabel('Password'), 'password123', 40);
     await t.wait(400);
     await t.click(t.page.getByRole('button', { name: 'Sign in' }));
@@ -74,6 +74,6 @@ export const clips = {
 };
 
 export const setup = {
-  tour: (t) => t.signIn('admin@saturdaze.app'),
-  narrow: (t) => t.signIn('admin@saturdaze.app'),
+  tour: (t) => t.signIn('admin@saturdaze.ca'),
+  narrow: (t) => t.signIn('admin@saturdaze.ca'),
 };

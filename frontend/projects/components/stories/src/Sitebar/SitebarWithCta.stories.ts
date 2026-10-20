@@ -9,8 +9,7 @@ export const WithCta: StoryObj<Sitebar> = {
   parameters: {
     docs: {
       description: {
-        story:
-          '`cta` adds the small primary "Create your account" button (landing, shared weekend).',
+        story: '`cta` adds the small primary "Create your account" button (the shared weekend).',
       },
     },
   },

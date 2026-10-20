@@ -11,7 +11,7 @@ export const config = {
   viewport: { width: 1408, height: 792 },
 };
 
-const ADMIN = 'admin@saturdaze.app';
+const ADMIN = 'admin@saturdaze.ca';
 const BRONTE = '58703286-ed42-4f2c-99e4-b6e48d1c110f';
 
 const zoom = (t) => t.page.evaluate(() => (document.documentElement.style.zoom = '1.4'));

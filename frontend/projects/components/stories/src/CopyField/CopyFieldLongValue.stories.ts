@@ -6,7 +6,7 @@ export const LongValue: StoryObj<CopyField> = {
   render: () => ({
     template: `
       <div style="max-width: 320px; display: grid; gap: 8px">
-        <sd-copy-field value="https://saturdaze.app/sample-weekend?share=7f3c9a2e-4b1d-4e8a-9c55-0d2f6a1b3e77" />
+        <sd-copy-field value="https://app.saturdaze.ca/sample-weekend?share=7f3c9a2e-4b1d-4e8a-9c55-0d2f6a1b3e77" />
         <p class="sd-text-xs sd-text-soft">Read-only · expires in 7 days</p>
       </div>
     `,

@@ -5,7 +5,7 @@ import type { AdminNav } from 'components';
 export const Default: StoryObj<AdminNav> = {
   args: {
     active: 'places',
-    email: 'admin@saturdaze.app',
+    email: 'admin@saturdaze.ca',
   },
   argTypes: {
     active: {

@@ -13,8 +13,8 @@ const item = (t, name) => t.page.locator('article.review-item', { hasText: name 
 const dialog = (t) => t.page.locator('[role="dialog"]');
 
 export const setup = {
-  queue: (t) => t.signIn('admin@saturdaze.app'),
-  reject: (t) => t.signIn('admin@saturdaze.app'),
+  queue: (t) => t.signIn('admin@saturdaze.ca'),
+  reject: (t) => t.signIn('admin@saturdaze.ca'),
   skips: async (t) => {
     // What ingestion's next restaurants pass writes when it meets the rejected address
     // again (CatalogUpserter). Only a live Claude run would produce it, so it is staged.
@@ -25,7 +25,7 @@ export const setup = {
         'Snug Harbour: photo https://media.example.org/snug-patio.jpg skipped, missing attribution or licence',
       ],
     });
-    await t.signIn('admin@saturdaze.app');
+    await t.signIn('admin@saturdaze.ca');
   },
 };
 

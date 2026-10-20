@@ -21,7 +21,7 @@ describe('CopyField', () => {
 
     await TestBed.configureTestingModule({ imports: [CopyField] }).compileComponents();
     fixture = TestBed.createComponent(CopyField);
-    fixture.componentRef.setInput('value', 'https://saturdaze.app/s/abc123');
+    fixture.componentRef.setInput('value', 'https://app.saturdaze.ca/s/abc123');
     fixture.detectChanges();
     host = fixture.nativeElement as HTMLElement;
   });
@@ -34,7 +34,7 @@ describe('CopyField', () => {
     expect(fixture.componentInstance).toBeTruthy();
     expect(host.classList.contains('copy-field')).toBe(true);
     expect(host.querySelector('.copy-field__value')?.textContent?.trim()).toBe(
-      'https://saturdaze.app/s/abc123',
+      'https://app.saturdaze.ca/s/abc123',
     );
     expect(button().classList.contains('btn--quiet')).toBe(true);
     expect(button().getAttribute('aria-label')).toBe('Copy link');
@@ -50,8 +50,8 @@ describe('CopyField', () => {
     button().click();
     await flush();
 
-    expect(writeText).toHaveBeenCalledWith('https://saturdaze.app/s/abc123');
-    expect(spy).toHaveBeenCalledWith('https://saturdaze.app/s/abc123');
+    expect(writeText).toHaveBeenCalledWith('https://app.saturdaze.ca/s/abc123');
+    expect(spy).toHaveBeenCalledWith('https://app.saturdaze.ca/s/abc123');
   });
 
   it('flips to a pressed "Copied" state and reverts after two seconds', async () => {
@@ -86,7 +86,7 @@ describe('CopyField', () => {
     expect(spy).toHaveBeenCalledTimes(1);
     expect(button().textContent?.trim()).toBe('Copied');
     expect(host.querySelector('.copy-field__value')?.textContent?.trim()).toBe(
-      'https://saturdaze.app/s/abc123',
+      'https://app.saturdaze.ca/s/abc123',
     );
   });
 });

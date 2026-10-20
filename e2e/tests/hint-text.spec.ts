@@ -30,14 +30,13 @@ test.describe("Hint text contrast", () => {
     expect(await c.placeholderColor(c.familyNameInput())).toBe(HINT_SLATE);
   });
 
-  test("Given the landing page, when a person reads the hero note and the footer, then both are the AA hint slate", async ({
+  test("Given the legal page, when a person reads the footer, then it is the AA hint slate", async ({
     goto,
     pages,
   }) => {
-    await goto("landing");
-    await pages.landing.waitForReady();
-    const l = pages.landing;
-    expect(await l.textColor(l.heroNote())).toBe(HINT_SLATE);
+    await goto("legal");
+    await pages.legal.waitForReady();
+    const l = pages.legal;
     expect(await l.textColor(l.footer)).toBe(HINT_SLATE);
   });
 });

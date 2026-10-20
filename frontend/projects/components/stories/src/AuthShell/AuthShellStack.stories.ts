@@ -6,7 +6,7 @@ export const Stack: StoryObj<AuthShell> = {
   render: () => ({
     template: `
       <sd-auth-shell stack>
-        <sd-auth-card title="Check your email" subtitle="We sent a link to quinn@saturdaze.app." center>
+        <sd-auth-card title="Check your email" subtitle="We sent a link to quinn@saturdaze.ca." center>
           <sd-disc slot="disc" icon="mail" tone="primary" size="xl" />
           <sd-button variant="quiet" size="lg" full><sd-icon name="refresh" />Resend</sd-button>
         </sd-auth-card>
