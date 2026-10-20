@@ -8,7 +8,7 @@ export const ActiveDestination: StoryObj<TopBar> = {
     template: `
       <div style="display: grid; gap: 8px; padding-block: 8px">
         @for (key of keys; track $index) {
-          <div><sd-top-bar [active]="key" email="quinn@saturdaze.app" /></div>
+          <div><sd-top-bar [active]="key" email="quinn@saturdaze.ca" /></div>
         }
       </div>
     `,

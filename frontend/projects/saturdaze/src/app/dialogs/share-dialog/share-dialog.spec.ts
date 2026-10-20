@@ -19,7 +19,10 @@ describe('ShareDialog', () => {
         { provide: DialogRef, useValue: dialogRef },
         {
           provide: DIALOG_DATA,
-          useValue: { shareUrl: 'https://saturdaze.app/sample-weekend?share=abc123', stopSharing },
+          useValue: {
+            shareUrl: 'https://app.saturdaze.ca/sample-weekend?share=abc123',
+            stopSharing,
+          },
         },
       ],
     }).compileComponents();
@@ -35,7 +38,7 @@ describe('ShareDialog', () => {
     );
     const copy = host.querySelector('sd-copy-field');
     expect(copy?.querySelector('.copy-field__value')?.textContent?.trim()).toBe(
-      'https://saturdaze.app/sample-weekend?share=abc123',
+      'https://app.saturdaze.ca/sample-weekend?share=abc123',
     );
     expect(copy?.querySelector('button[aria-label="Copy link"]')).not.toBeNull();
     expect(host.querySelector('p.sd-text-xs')?.textContent?.trim()).toBe(

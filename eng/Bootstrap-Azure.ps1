@@ -32,7 +32,7 @@
     instead of looking one up by display name.
 
 .PARAMETER CustomDomain
-    Family-app domain to bind to the Static Web App, e.g. saturdaze.app. Leave
+    Family-app domain to bind to the Static Web App, e.g. app.saturdaze.ca. Leave
     blank until its DNS TXT validation record exists.
 
 .PARAMETER BudgetAlertEmail
@@ -282,5 +282,5 @@ Write-Host "  1. Push to main — deploy.yml ships the API, WebJob, migrations a
 Write-Host "  2. If the API host above differs from the one in frontend/projects/*/src/environments/environment.prod.ts, update it."
 Write-Host "  3. Retire the old SATURDAZE_CONNECTION and SWA_*_DEPLOYMENT_TOKEN secrets; the workflow no longer reads them."
 if (-not $CustomDomain) {
-    Write-Host "  4. When saturdaze.app's DNS points at the family app's Static Web App, re-run with -CustomDomain saturdaze.app."
+    Write-Host "  4. When app.saturdaze.ca's DNS points at the family app's Static Web App, re-run with -CustomDomain app.saturdaze.ca."
 }

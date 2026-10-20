@@ -6,7 +6,7 @@ export const Scrolled: StoryObj<TopBar> = {
   render: () => ({
     props: { rows: Array.from({ length: 24 }, (_, i) => i + 1) },
     template: `
-      <sd-top-bar active="ideas" email="quinn@saturdaze.app" />
+      <sd-top-bar active="ideas" email="quinn@saturdaze.ca" />
       <main class="sd-frame">
         <p class="sd-text-soft sd-mb-4">Scroll this frame: the bar picks up its blurred backdrop and hairline once the window leaves the top.</p>
         <div class="sd-stack">

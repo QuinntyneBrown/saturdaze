@@ -61,7 +61,7 @@ async function app(t, base, label) {
 }
 
 async function admin(t, base, label) {
-  await t.signIn('admin@saturdaze.app');
+  await t.signIn('admin@saturdaze.ca');
   await t.go(`${base}/places`);
   await t.page.locator('.admin-nav').waitFor();
   const tree = (await t.page.locator('body').ariaSnapshot()).split('\n').slice(0, 9).join('\n');

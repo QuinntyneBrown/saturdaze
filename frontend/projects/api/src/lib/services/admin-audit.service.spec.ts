@@ -11,7 +11,7 @@ describe('admin audit view mapping', () => {
     id: 'e',
     occurredAt: '2026-10-06T14:02:00+00:00',
     adminId: 'a',
-    adminEmail: 'admin@saturdaze.app',
+    adminEmail: 'admin@saturdaze.ca',
     kind: 'Activity',
     placeId: 'p',
     placeName: 'Port Credit Memorial Park',

@@ -11,7 +11,7 @@ export const Fields: StoryObj<Toolbar> = {
       ],
       admins: [
         { value: 'all', label: 'Everyone' },
-        { value: 'jo', label: 'jo.curator@saturdaze.app' },
+        { value: 'jo', label: 'jo.curator@saturdaze.ca' },
       ],
     },
     template: `

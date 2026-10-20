@@ -31,13 +31,13 @@ describe('BrowserFrame', () => {
 
   it('shows the url in the bar', () => {
     expect(host.querySelector('.browser-frame__url')?.textContent?.trim()).toBe(
-      'saturdaze.app/weekend',
+      'app.saturdaze.ca/weekend',
     );
 
-    fixture.componentRef.setInput('url', 'saturdaze.app/past');
+    fixture.componentRef.setInput('url', 'app.saturdaze.ca/past');
     fixture.detectChanges();
     expect(host.querySelector('.browser-frame__url')?.textContent?.trim()).toBe(
-      'saturdaze.app/past',
+      'app.saturdaze.ca/past',
     );
   });
 

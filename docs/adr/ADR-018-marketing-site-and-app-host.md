@@ -42,7 +42,7 @@ The only page that tells a family what Saturdaze is lives inside the Angular app
 - Rolling the marketing page back is a revert of `marketing/`; it never touches the app.
 
 ### Negative
-- Production's existing administrator row is `admin@saturdaze.app`. The seeder matches by e-mail, so before the first deploy with the renamed seed the row is renamed once: `UPDATE Users SET Email = 'admin@saturdaze.ca', NormalizedEmail = 'ADMIN@SATURDAZE.CA' WHERE Email = 'admin@saturdaze.app'` (adjust to the columns the `Users` table holds). Without it the seeder adds a second administrator.
+- The seed administrator is now `admin@saturdaze.ca`. Deploys do not run the seeder, so production keeps its existing `admin@saturdaze.app` row, which still signs in. If the seeder is ever pointed at production, rename that row first so it does not add a second administrator: `UPDATE Users SET Email = 'admin@saturdaze.ca', NormalizedEmail = 'admin@saturdaze.ca' WHERE NormalizedEmail = 'admin@saturdaze.app'` (the seeder matches on the lower-cased `NormalizedEmail`).
 - The MP4 is committed twice (in `docs/videos/44-meet-saturdaze/` and `marketing/assets/video/`), a few megabytes each.
 - `marketing/` is outside `frontend/`, so the husky hook does not format it; CI runs Prettier on it explicitly.
 

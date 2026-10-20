@@ -48,13 +48,13 @@ function provider(kind, placeId, key, { primary, reviewed = false, url, alt, att
 // A second administrator, so the activity log has two people to filter by.
 const reg = await fetch(`${API}/api/auth/register`, {
   method: 'POST', headers: { 'content-type': 'application/json' },
-  body: JSON.stringify({ email: 'jo.curator@saturdaze.app', password: 'password123', familyName: 'Curators', homeLocation: 'Port Credit, Mississauga, ON' }),
+  body: JSON.stringify({ email: 'jo.curator@saturdaze.ca', password: 'password123', familyName: 'Curators', homeLocation: 'Port Credit, Mississauga, ON' }),
 });
 if (!reg.ok && reg.status !== 409) throw new Error(`register: ${reg.status} ${await reg.text()}`);
-sql(`UPDATE Users SET Role = 1, EmailVerifiedUtc = SYSDATETIMEOFFSET() WHERE Email = 'jo.curator@saturdaze.app'`);
+sql(`UPDATE Users SET Role = 1, EmailVerifiedUtc = SYSDATETIMEOFFSET() WHERE Email = 'jo.curator@saturdaze.ca'`);
 
-const admin = await login('admin@saturdaze.app');
-const jo = await login('jo.curator@saturdaze.app');
+const admin = await login('admin@saturdaze.ca');
+const jo = await login('jo.curator@saturdaze.ca');
 
 await upload(admin, 'Activity', A('Bronte Creek'), 'bronte-meadow', 'Wildflower meadow under a wide sky at Bronte Creek', 'CC0');
 await upload(admin, 'Activity', A('Bronte Creek'), 'bronte-trail', 'Boardwalk trail through the trees', 'CC0');

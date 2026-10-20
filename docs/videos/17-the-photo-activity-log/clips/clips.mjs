@@ -38,8 +38,8 @@ async function place(bearer, q) {
 }
 
 async function morningOfChanges() {
-  const admin = await token('admin@saturdaze.app');
-  const jo = await token('jo.curator@saturdaze.app');
+  const admin = await token('admin@saturdaze.ca');
+  const jo = await token('jo.curator@saturdaze.ca');
   const bronte = await place(admin, 'bronte');
   const trail = bronte.photos.find((p) => p.alt.startsWith('Boardwalk'));
   await call(admin, 'POST', `/api/admin/photos/${trail.id}/primary`);
@@ -65,9 +65,9 @@ async function morningOfChanges() {
 export const setup = {
   log: async (t) => {
     await morningOfChanges();
-    await t.signIn('admin@saturdaze.app');
+    await t.signIn('admin@saturdaze.ca');
   },
-  filters: (t) => t.signIn('admin@saturdaze.app'),
+  filters: (t) => t.signIn('admin@saturdaze.ca'),
 };
 
 export const clips = {
@@ -99,7 +99,7 @@ export const clips = {
     await t.page.getByLabel('Place').selectOption({ label: 'All places' });
     await t.moveTo(t.page.getByLabel('Administrator'));
     await t.wait(600);
-    await t.page.getByLabel('Administrator').selectOption({ label: 'jo.curator@saturdaze.app' });
+    await t.page.getByLabel('Administrator').selectOption({ label: 'jo.curator@saturdaze.ca' });
     await t.page.waitForLoadState('networkidle');
     await t.wait(3200);
     await t.click(t.page.locator('.audit-row__place', { hasText: 'La Marina' }).first());

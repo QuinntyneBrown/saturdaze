@@ -81,9 +81,9 @@ export const FAMILY_PAGE = `
 
       <sd-section title="Account">
         <sd-card variant="sunk" class="account-card">
-          <sd-avatar name="quinn@saturdaze.app" tone="primary" size="lg" />
+          <sd-avatar name="quinn@saturdaze.ca" tone="primary" size="lg" />
           <div class="account-card__text">
-            <p class="account-card__title">quinn@saturdaze.app</p>
+            <p class="account-card__title">quinn@saturdaze.ca</p>
             <p class="account-card__sub">Signed in since May 2026</p>
           </div>
           <sd-button variant="quiet" warnText><sd-icon name="sign_out" />Sign out</sd-button>

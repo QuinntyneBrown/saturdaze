@@ -9,7 +9,7 @@ public sealed class EmailOptions
 {
     public const string SectionName = "Saturdaze:Email";
 
-    public string From { get; set; } = "Saturdaze <no-reply@saturdaze.app>";
+    public string From { get; set; } = "Saturdaze <no-reply@saturdaze.ca>";
 
     /// <summary>Where links in mail point. Falls back to <c>Saturdaze:Share:AppOrigin</c>.</summary>
     public string? AppOrigin { get; set; }

@@ -7,7 +7,7 @@ export const config = {
 };
 
 const chip = (t, name) => t.page.locator('sd-filter-chip button', { hasText: name });
-const signedIn = (t) => t.signIn('admin@saturdaze.app');
+const signedIn = (t) => t.signIn('admin@saturdaze.ca');
 export const setup = { health: signedIn, 'worst-first': signedIn, 'drill-down': signedIn, search: signedIn, filters: signedIn };
 
 export const clips = {

@@ -63,7 +63,7 @@ param logDailyCapGb string = '0.5'
 
 // ───────────────────────────── app config ─────────────────────────────
 
-@description('Custom domain for the family app (e.g. saturdaze.app). Blank skips the binding; the domain must already validate in DNS.')
+@description('Custom domain for the family app (e.g. app.saturdaze.ca). Blank skips the binding; the domain must already validate in DNS.')
 param appCustomDomain string = ''
 
 @description('Extra browser origins the API should accept, in addition to the three Static Web Apps and the custom domain.')

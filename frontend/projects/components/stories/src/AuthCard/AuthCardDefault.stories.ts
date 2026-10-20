@@ -14,7 +14,7 @@ export const Default: StoryObj<AuthCard & { title: string }> = {
       <div style="max-width: 440px">
         <sd-auth-card [title]="title" [subtitle]="subtitle" [center]="center">
           <form class="sd-stack" style="--gap: 14px" (submit)="$event.preventDefault()">
-            <sd-text-input label="Email" type="email" name="email" autocomplete="email" value="quinn@saturdaze.app" />
+            <sd-text-input label="Email" type="email" name="email" autocomplete="email" value="quinn@saturdaze.ca" />
             <sd-text-input label="Password" type="password" name="password" autocomplete="current-password" />
             <div class="sd-cluster sd-cluster--between">
               <sd-toggle label="Remember me" checked />

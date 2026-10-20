@@ -139,7 +139,7 @@
     writeText = vi.fn&lt;(text: string) =&gt; Promise&lt;void&gt;&gt;().mockResolvedValue(undefined);
     Object.defineProperty(navigator, 'clipboard', { value: { writeText }, configurable: true });
     /* … TestBed … */
-    fixture.componentRef.setInput('value', 'https://saturdaze.app/s/abc123');
+    fixture.componentRef.setInput('value', 'https://app.saturdaze.ca/s/abc123');
     fixture.detectChanges();
   });</pre>
 </section>

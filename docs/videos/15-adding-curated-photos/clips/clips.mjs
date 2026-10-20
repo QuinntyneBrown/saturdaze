@@ -14,7 +14,7 @@ export const config = {
 const photos = resolve(process.env.SD_DEMO_PHOTOS ?? '.cache/admin-demo/www/provider');
 const imageHost = process.env.SD_DEMO_IMAGE_HOST ?? 'https://localhost:5443';
 
-const signedIn = (t) => t.signIn('admin@saturdaze.app');
+const signedIn = (t) => t.signIn('admin@saturdaze.ca');
 export const setup = { upload: signedIn, refused: signedIn, url: signedIn };
 
 const dialog = (t) => t.page.locator('[role="dialog"]');

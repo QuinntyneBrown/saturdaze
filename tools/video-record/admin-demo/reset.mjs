@@ -15,7 +15,7 @@ cpSync(join(state, 'catalog-photos.staged'), join(state, 'catalog-photos'), { re
 for (let i = 0; i < 5; i++) {
   const res = await fetch(`${API}/api/auth/login`, {
     method: 'POST', headers: { 'content-type': 'application/json' },
-    body: JSON.stringify({ email: 'admin@saturdaze.app', password: 'password123' }),
+    body: JSON.stringify({ email: 'admin@saturdaze.ca', password: 'password123' }),
   }).catch(() => null);
   if (res?.ok) break;
   await new Promise((done) => setTimeout(done, 1000));

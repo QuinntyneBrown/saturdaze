@@ -8,7 +8,7 @@ export const SignInError: StoryObj = {
         <sd-auth-card title="Welcome back" subtitle="Sign in to see this weekend.">
           <sd-banner tone="warn" role="alert" icon="alert">That email and password did not match.</sd-banner>
           <form class="sd-stack" style="--gap: 14px" (submit)="$event.preventDefault()">
-            <sd-text-input label="Email" type="email" name="email" autocomplete="email" value="quinn@saturdaze.app" invalid />
+            <sd-text-input label="Email" type="email" name="email" autocomplete="email" value="quinn@saturdaze.ca" invalid />
             <sd-text-input label="Password" type="password" name="password" autocomplete="current-password" invalid />
             <div class="sd-cluster sd-cluster--between">
               <sd-toggle label="Remember me" checked />

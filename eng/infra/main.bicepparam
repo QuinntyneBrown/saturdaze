@@ -16,7 +16,7 @@ param apiSkuName = 'B1'
 param sqlSkuName = 'Basic'
 param swaSkuName = 'Free'
 
-// Set to 'saturdaze.app' once the DNS TXT validation record is in place; the
+// Set to 'app.saturdaze.ca' once the DNS TXT validation record is in place; the
 // deployment binds the domain to the family app's Static Web App.
 param appCustomDomain = readEnvironmentVariable('APP_CUSTOM_DOMAIN', '')
 
