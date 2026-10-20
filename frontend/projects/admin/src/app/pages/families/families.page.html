@@ -1,0 +1,62 @@
+<sd-page-header
+  title="Families"
+  subtitle="Every family on Saturdaze, who signs in for it, and whether this weekend is planned. Open one to see and change its plan."
+/>
+
+<sd-toolbar>
+  <sd-text-input
+    class="toolbar__search"
+    label="Search"
+    type="search"
+    name="q"
+    placeholder="Family name, home or email"
+    [formControl]="search"
+  />
+</sd-toolbar>
+
+@if (error()) {
+  <sd-banner class="error" tone="warn" role="alert" icon="alert">{{ error() }}</sd-banner>
+}
+
+@switch (view().status) {
+  @case ('loading') {
+    <sd-status-row icon="user">Fetching the families.</sd-status-row>
+  }
+  @case ('empty') {
+    <sd-empty icon="user" title="No families match" body="Search for something else." />
+  }
+  @case ('ready') {
+    <p class="toolbar__count" role="status">{{ countText() }}</p>
+    <sd-list card class="family-list">
+      @for (row of view().rows; track row.id) {
+        <sd-list-item
+          class="family-row"
+          [title]="row.name"
+          [subtitle]="row.meta"
+          [href]="row.href"
+          chevron
+        >
+          <sd-avatar slot="leading" [name]="row.name" tone="primary" size="sm" />
+          <span class="family-row__accounts">{{ row.accounts }}</span>
+          <span class="family-row__flags">
+            @for (chip of row.flags; track chip.label) {
+              <sd-chip [tone]="chipTone(chip.tone)">
+                @if (chip.icon) {
+                  <sd-icon [name]="chip.icon" [size]="13" [stroke]="2" />
+                }
+                {{ chip.label }}
+              </sd-chip>
+            }
+          </span>
+        </sd-list-item>
+      }
+    </sd-list>
+    <sd-pager
+      [page]="view().page"
+      [pageSize]="view().pageSize"
+      [total]="view().total"
+      emptyText="No families"
+      (pageChange)="goToPage($event)"
+    />
+  }
+}

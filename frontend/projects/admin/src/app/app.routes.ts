@@ -21,6 +21,12 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/sign-in/sign-in.page').then((m) => m.SignInPage),
   },
   {
+    path: 'families',
+    data: { nav: 'families', screen: 'families' },
+    canActivate: [requireAuth],
+    loadComponent: () => import('./pages/families/families.page').then((m) => m.FamiliesPage),
+  },
+  {
     path: 'places',
     data: { nav: 'places', screen: 'places' },
     canActivate: [requireAuth],

@@ -1,0 +1,31 @@
+// `.family-list`, `.family-row` from docs/mocks/styles/app.css (admin); the toolbar,
+// list surface and pager are `sd-toolbar`, `sd-list card` and `sd-pager`.
+
+:host {
+  display: block;
+}
+
+.error {
+  margin-bottom: 16px;
+}
+
+.toolbar__count {
+  margin: 12px 0;
+  font-size: var(--fontSizeBase200);
+  color: var(--colorNeutralForeground2);
+}
+
+.family-row__accounts {
+  display: block;
+  margin-top: 2px;
+  font-size: var(--fontSizeBase200);
+  color: var(--colorNeutralForeground2);
+  overflow-wrap: anywhere;
+}
+
+.family-row__flags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 6px;
+}

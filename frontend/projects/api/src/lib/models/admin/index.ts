@@ -1,8 +1,12 @@
 export * from './audit-row';
+export * from './admin-families-query';
+export * from './admin-family.dto';
 export * from './admin-photo.dto';
 export * from './admin-place.dto';
 export * from './admin-places-query';
 export * from './admin-places-view';
+export * from './family-row';
+export * from './family-weekend-view';
 export * from './health-view';
 export * from './ingestion-skips.dto';
 export * from './photo-audit.dto';
@@ -12,3 +16,4 @@ export * from './photo-tile-view';
 export * from './place-photos-view';
 export * from './place-row';
 export * from './review-item-view';
+export * from './weekend-change.dto';

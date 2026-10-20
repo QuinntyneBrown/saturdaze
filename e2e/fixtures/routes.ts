@@ -93,6 +93,9 @@ export const ROUTES = {
   // ---- Saturdaze Admin (its own app on :4300; the `admin` Playwright project) ----
   adminSignIn:       { app: "/sign-in",                        mock: "/pages/admin.sign-in.html",        page: "admin" },
   adminHome:         { app: "/",                               mock: "/pages/admin.html",                guard: "admin", page: "admin" },
+  adminFamilies:     { app: "/families",                       mock: "/pages/admin.families.html",       guard: "admin", page: "admin" },
+  /** App-only: the family is picked per test from the Families list. */
+  adminFamily:       { app: "/families/{id}",                  mock: "/pages/admin.family.html",         guard: "admin", page: "admin" },
   adminPlaces:       { app: "/places",                         mock: "/pages/admin.places.html",         guard: "admin", page: "admin" },
   adminReviews:      { app: "/reviews",                        mock: "/pages/admin.reviews.html",        guard: "admin", page: "admin" },
   adminSkips:        { app: "/ingestion-skips",                mock: "/pages/admin.ingestion-skips.html", guard: "admin", page: "admin" },
