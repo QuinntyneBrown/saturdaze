@@ -122,6 +122,21 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/past/past.page').then((m) => m.PastPage),
   },
   {
+    // The onboarding wizard a new account lands in (L2-157, L2-158): one
+    // route per step, bare shell, signed-in only. The page itself sends an
+    // unknown step back to `home`.
+    path: 'welcome',
+    data: { shell: 'bare', page: 'welcome' },
+    canActivate: [requireAuth],
+    children: [
+      { path: '', pathMatch: 'full', redirectTo: 'home' },
+      {
+        path: ':step',
+        loadComponent: () => import('./pages/welcome/welcome.page').then((m) => m.WelcomePage),
+      },
+    ],
+  },
+  {
     path: 'family',
     data: { nav: 'family', page: 'family' },
     canActivate: [requireAuth],

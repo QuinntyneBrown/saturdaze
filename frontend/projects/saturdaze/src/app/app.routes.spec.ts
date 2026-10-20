@@ -38,6 +38,15 @@ describe('app.routes', () => {
     }
   });
 
+  it('serves the onboarding wizard one step per route in the bare shell (L2-158)', () => {
+    const welcome = find('welcome')!;
+    expect(welcome.data).toEqual({ shell: 'bare', page: 'welcome' });
+    expect(welcome.children?.map((c) => c.path)).toEqual(['', ':step']);
+    expect(welcome.children?.[0]?.redirectTo).toBe('home');
+    expect(welcome.children?.[0]?.pathMatch).toBe('full');
+    expect(welcome.children?.[1]?.loadComponent).toBeTypeOf('function');
+  });
+
   it('nests the three Ideas segments under /ideas with their subtitles', () => {
     const ideas = find('ideas')!;
     expect(ideas.children?.map((c) => c.path)).toEqual(['', 'food', 'events']);
@@ -49,7 +58,7 @@ describe('app.routes', () => {
   });
 
   it('guards the signed-in surfaces with requireAuth', () => {
-    for (const path of ['weekend', 'ideas', 'past', 'family']) {
+    for (const path of ['weekend', 'ideas', 'past', 'family', 'welcome']) {
       expect(find(path)?.canActivate, path).toEqual([requireAuth]);
     }
     expect(find('review-submissions')?.canActivate).toEqual([requireAuth, requireAdmin]);

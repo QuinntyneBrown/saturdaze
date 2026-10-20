@@ -1,0 +1,75 @@
+<sd-auth-shell [homeHref]="siteUrl">
+  @if (step() !== 'done') {
+    <sd-stepper [step]="stepNumber()" [count]="stepCount" />
+  }
+  @switch (step()) {
+    @case ('home') {
+      <sd-auth-card title="Where's home?" subtitle="Weather and drive times start here.">
+        @if (error()) {
+          <sd-banner tone="warn" role="alert" icon="alert">{{ error() }}</sd-banner>
+        }
+        <form class="form" (submit)="submit($event)">
+          <sd-text-input
+            label="Neighbourhood or address"
+            name="homeLocation"
+            required
+            autocomplete="street-address"
+            placeholder="Port Credit, Mississauga"
+            [ngModel]="home()"
+            (ngModelChange)="home.set($event)"
+          />
+          <ng-container *ngTemplateOutlet="nav; context: { canContinue: canContinueHome() }" />
+        </form>
+      </sd-auth-card>
+    }
+    @case ('family') {
+      <sd-auth-card title="Who's in?" subtitle="Ages shape the picks. Tap a person to edit.">
+        <form class="form" (submit)="submit($event)">
+          <ng-container *ngTemplateOutlet="nav; context: { canContinue: true }" />
+        </form>
+      </sd-auth-card>
+    }
+    @case ('likes') {
+      <sd-auth-card
+        title="What does your family like?"
+        subtitle="Liked tags get a boost. Disliked ones are left out."
+      >
+        <form class="form" (submit)="submit($event)">
+          <ng-container *ngTemplateOutlet="nav; context: { canContinue: true }" />
+        </form>
+      </sd-auth-card>
+    }
+    @case ('preferences') {
+      <sd-auth-card title="A few preferences" subtitle="Change these any time on Family.">
+        <form class="form" (submit)="submit($event)">
+          <ng-container *ngTemplateOutlet="nav; context: { canContinue: true }" />
+        </form>
+      </sd-auth-card>
+    }
+    @case ('done') {
+      <sd-auth-card title="You're set" center>
+        <sd-button variant="primary" size="lg" full href="/weekend">
+          <sd-icon name="sparkle" />
+          Plan this weekend
+        </sd-button>
+      </sd-auth-card>
+    }
+  }
+</sd-auth-shell>
+
+<!-- Continue, then Back (from step 2) and Skip for now on one row. -->
+<ng-template #nav let-canContinue="canContinue">
+  <sd-button variant="primary" size="lg" full type="submit" [disabled]="!canContinue || saving()">
+    Continue
+    <sd-icon name="arrow_right" />
+  </sd-button>
+  <div class="nav" [class.nav--end]="isFirst()">
+    @if (!isFirst()) {
+      <sd-button variant="ghost" type="button" (click)="back()">
+        <sd-icon name="arrow_left" />
+        Back
+      </sd-button>
+    }
+    <sd-button variant="ghost" type="button" (click)="skip()">Skip for now</sd-button>
+  </div>
+</ng-template>

@@ -44,6 +44,7 @@ import { ResetPasswordPage } from "../pages/reset-password.page.js";
 import { VerifyEmailPage } from "../pages/verify-email.page.js";
 import { AcceptInvitePage } from "../pages/accept-invite.page.js";
 import { JoinPage } from "../pages/join.page.js";
+import { WelcomePage } from "../pages/welcome.page.js";
 import { LegalPage } from "../pages/legal.page.js";
 import { MarketingPage } from "../pages/marketing.page.js";
 import { DialogsPage } from "../pages/dialogs.page.js";
@@ -71,6 +72,7 @@ interface Pages {
   verifyEmail: VerifyEmailPage;
   acceptInvite: AcceptInvitePage;
   join: JoinPage;
+  welcome: WelcomePage;
   legal: LegalPage;
   marketing: MarketingPage;
   dialogs: DialogsPage;
@@ -176,6 +178,7 @@ export const test = base.extend<SdFixtures>({
       verifyEmail: new VerifyEmailPage(page),
       acceptInvite: new AcceptInvitePage(page),
       join: new JoinPage(page),
+      welcome: new WelcomePage(page),
       legal: new LegalPage(page),
       marketing: new MarketingPage(page),
       dialogs: new DialogsPage(page),

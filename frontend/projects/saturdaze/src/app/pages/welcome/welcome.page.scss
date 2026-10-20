@@ -1,0 +1,24 @@
+// The wizard's steps reuse the auth card; `.nav` is the Back / Skip row
+// under Continue (mock welcome.html, `.auth-card__row`).
+
+:host {
+  display: block;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacingVerticalL);
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.nav--end {
+  justify-content: flex-end;
+}
