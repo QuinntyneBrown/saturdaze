@@ -1,5 +1,12 @@
 name: Deploy to Azure
 
+# Every push to main: test gates → infrastructure (Bicep, idempotent) → API +
+# ingestion WebJob → EF migrations → the three Static Web Apps (ADR-017, L2-041).
+#
+# Azure access is OpenID Connect (azure/login with a federated credential), so
+# the only long-lived secrets are the ones the app itself needs. Static Web App
+# deployment tokens are read from Azure at run time, never stored in GitHub.
+
 on:
   push:
     branches: [main]
@@ -11,7 +18,8 @@ permissions:
 
 env:
   AZURE_RESOURCE_GROUP: saturdaze-rg
-  AZURE_WEBAPP_NAME: sd-api-uofnt2
+  AZURE_LOCATION: canadacentral
+  INFRA_DEPLOYMENT_NAME: saturdaze-infra
   DOTNET_VERSION: '10.0.101'
   DOTNET_NOLOGO: 'true'
   DOTNET_CLI_TELEMETRY_OPTOUT: 'true'
@@ -19,6 +27,7 @@ env:
   NODE_VERSION: '22'
   API_PROJECT: backend/src/Saturdaze.Api/Saturdaze.Api.csproj
   CLI_PROJECT: backend/src/Saturdaze.Cli/Saturdaze.Cli.csproj
+  WEBJOB_SOURCE: backend/deploy/webjobs/ingest
   ANGULAR_DIST: frontend/dist/saturdaze/browser
   ADMIN_DIST: frontend/dist/admin/browser
 
@@ -114,16 +123,28 @@ jobs:
           if-no-files-found: error
           retention-days: 1
 
-  # The API Web App is torn down between active periods to save cost. Rather
-  # than fail every push with ResourceNotFound, check for it once and skip the
-  # deploy chain (api → migrate → web) with a visible summary when it is gone.
-  preflight:
-    name: Check Azure target
+  # Converges saturdaze-rg on eng/infra/main.bicep: plan, API, SQL, the three
+  # Static Web Apps, Claude on Foundry, monitoring and the budget. Creating
+  # what is missing and leaving the rest alone, so a torn-down stack comes
+  # back on the next push instead of being skipped.
+  infra:
+    name: Provision Azure (Bicep)
     runs-on: ubuntu-latest
     needs: [test-backend, test-frontend]
     outputs:
-      api_exists: ${{ steps.probe.outputs.api_exists }}
+      api_name: ${{ steps.deploy.outputs.api_name }}
+      api_origin: ${{ steps.deploy.outputs.api_origin }}
+      web_swa: ${{ steps.deploy.outputs.web_swa }}
+      web_host: ${{ steps.deploy.outputs.web_host }}
+      admin_swa: ${{ steps.deploy.outputs.admin_swa }}
+      admin_host: ${{ steps.deploy.outputs.admin_host }}
+      design_swa: ${{ steps.deploy.outputs.design_swa }}
+      sql_fqdn: ${{ steps.deploy.outputs.sql_fqdn }}
+      sql_db: ${{ steps.deploy.outputs.sql_db }}
+      foundry_url: ${{ steps.deploy.outputs.foundry_url }}
     steps:
+      - uses: actions/checkout@v4
+
       - name: Azure login
         uses: azure/login@v2
         with:
@@ -131,34 +152,74 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      - name: Probe for the API Web App
-        id: probe
+      - name: Ensure resource group
         run: |
-          if az webapp show \
-               --resource-group "${{ env.AZURE_RESOURCE_GROUP }}" \
-               --name "${{ env.AZURE_WEBAPP_NAME }}" \
-               --query name -o tsv >/dev/null 2>&1; then
-            echo "api_exists=true" >> "$GITHUB_OUTPUT"
-            echo "API Web App ${{ env.AZURE_WEBAPP_NAME }} found; deploying." >> "$GITHUB_STEP_SUMMARY"
-          else
-            echo "api_exists=false" >> "$GITHUB_OUTPUT"
-            {
-              echo "## Deploy skipped"
-              echo
-              echo "The API Web App \`${{ env.AZURE_WEBAPP_NAME }}\` does not exist in \`${{ env.AZURE_RESOURCE_GROUP }}\`,"
-              echo "so the API, migration and SPA deploy jobs were skipped. The test gates above still ran."
-              echo
-              echo "To deploy again: recreate the App Service plan + Web App (and the \`saturdaze\` SQL database"
-              echo "on \`sd-sql-uofnt2\`), make sure \`SATURDAZE_CONNECTION\` points at it, then re-run this workflow."
-            } >> "$GITHUB_STEP_SUMMARY"
-            echo "::warning::API Web App ${{ env.AZURE_WEBAPP_NAME }} not found in ${{ env.AZURE_RESOURCE_GROUP }}; deploy jobs skipped."
-          fi
+          az group create \
+            --name "$AZURE_RESOURCE_GROUP" \
+            --location "$AZURE_LOCATION" \
+            --tags app=saturdaze managedBy=bicep \
+            --output none
+
+      - name: Deploy eng/infra/main.bicep
+        id: deploy
+        env:
+          # main.bicepparam reads these with readEnvironmentVariable().
+          SQL_ADMIN_LOGIN: ${{ secrets.SQL_ADMIN_LOGIN }}
+          SQL_ADMIN_PASSWORD: ${{ secrets.SQL_ADMIN_PASSWORD }}
+          SATURDAZE_JWT_SIGNING_KEY: ${{ secrets.SATURDAZE_JWT_SIGNING_KEY }}
+          SATURDAZE_PHOTOS_SIGNING_KEY: ${{ secrets.SATURDAZE_PHOTOS_SIGNING_KEY }}
+          FOUNDRY_ORGANIZATION_NAME: ${{ vars.FOUNDRY_ORGANIZATION_NAME }}
+          FOUNDRY_COUNTRY_CODE: ${{ vars.FOUNDRY_COUNTRY_CODE || 'CA' }}
+          APP_CUSTOM_DOMAIN: ${{ vars.APP_CUSTOM_DOMAIN }}
+          BUDGET_ALERT_EMAIL: ${{ vars.BUDGET_ALERT_EMAIL }}
+        run: |
+          for v in SQL_ADMIN_LOGIN SQL_ADMIN_PASSWORD SATURDAZE_JWT_SIGNING_KEY SATURDAZE_PHOTOS_SIGNING_KEY FOUNDRY_ORGANIZATION_NAME; do
+            if [ -z "${!v}" ]; then
+              echo "::error::Missing $v. Run eng/Bootstrap-Azure.ps1 once, or set it under Settings → Secrets and variables → Actions."
+              exit 1
+            fi
+          done
+
+          outputs="$(az deployment group create \
+            --resource-group "$AZURE_RESOURCE_GROUP" \
+            --name "$INFRA_DEPLOYMENT_NAME" \
+            --template-file eng/infra/main.bicep \
+            --parameters eng/infra/main.bicepparam \
+            --query properties.outputs \
+            --output json)"
+
+          out() { jq -r --arg k "$1" '.[$k].value' <<<"$outputs"; }
+          {
+            echo "api_name=$(out apiName)"
+            echo "api_origin=$(out apiOrigin)"
+            echo "web_swa=$(out webSwaName)"
+            echo "web_host=$(out webSwaHostName)"
+            echo "admin_swa=$(out adminSwaName)"
+            echo "admin_host=$(out adminSwaHostName)"
+            echo "design_swa=$(out designSwaName)"
+            echo "sql_fqdn=$(out sqlServerFqdn)"
+            echo "sql_db=$(out sqlDatabaseName)"
+            echo "foundry_url=$(out foundryBaseUrl)"
+          } >> "$GITHUB_OUTPUT"
+
+          {
+            echo "## Azure resources"
+            echo
+            echo "| Resource | Value |"
+            echo "|---|---|"
+            echo "| API | $(out apiOrigin) |"
+            echo "| Family app | https://$(out webSwaHostName) |"
+            echo "| Admin app | https://$(out adminSwaHostName) |"
+            echo "| Design system | https://$(out designSwaHostName) |"
+            echo "| SQL | $(out sqlServerFqdn) / $(out sqlDatabaseName) |"
+            echo "| Claude (Foundry) | $(out foundryBaseUrl) → \`$(out claudeDeploymentName)\` |"
+            echo "| CORS origins | $(jq -r '.corsOrigins.value | join(", ")' <<<"$outputs") |"
+          } >> "$GITHUB_STEP_SUMMARY"
 
   api:
-    name: Build & deploy API
+    name: Build & deploy API + ingestion WebJob
     runs-on: ubuntu-latest
-    needs: [preflight]
-    if: needs.preflight.outputs.api_exists == 'true'
+    needs: [infra]
     steps:
       - uses: actions/checkout@v4
 
@@ -167,16 +228,23 @@ jobs:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
       - name: Publish API
+        run: dotnet publish "$API_PROJECT" -c Release -o ./publish --nologo
+
+      # The catalog-ingestion CLI rides along as a scheduled, triggered WebJob
+      # (backend/deploy/webjobs/ingest/README.md, option 3): same plan, no extra
+      # resource. App Service picks up App_Data/jobs/triggered/<name>/run.sh and
+      # the cron in settings.job; the API's app settings supply the Foundry key
+      # and the connection string.
+      - name: Publish ingestion WebJob
         run: |
-          dotnet publish "${{ env.API_PROJECT }}" \
-            -c Release \
-            -o ./publish \
-            --nologo
+          job=./publish/App_Data/jobs/triggered/ingest
+          dotnet publish "$CLI_PROJECT" -c Release -o "$job/cli" --nologo
+          cp "$WEBJOB_SOURCE/run.sh" "$WEBJOB_SOURCE/settings.job" "$job/"
+          chmod +x "$job/run.sh"
+          ls -la "$job"
 
       - name: Zip publish output
-        run: |
-          cd publish
-          zip -r ../api.zip .
+        run: cd publish && zip -qr ../api.zip .
 
       - name: Azure login
         uses: azure/login@v2
@@ -185,19 +253,24 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
+      # --clean keeps wwwroot identical to the zip; uploads live under /home/data
+      # (see main.bicep) so they survive it.
       - name: Deploy to Azure Web App
         run: |
           az webapp deploy \
-            --resource-group "${{ env.AZURE_RESOURCE_GROUP }}" \
-            --name "${{ env.AZURE_WEBAPP_NAME }}" \
+            --resource-group "$AZURE_RESOURCE_GROUP" \
+            --name "${{ needs.infra.outputs.api_name }}" \
             --src-path api.zip \
             --type zip \
-            --async false
+            --clean true \
+            --restart true \
+            --async false \
+            --output none
 
   migrate:
     name: Apply EF migrations
     runs-on: ubuntu-latest
-    needs: api
+    needs: [infra, api]
     steps:
       - uses: actions/checkout@v4
 
@@ -205,17 +278,55 @@ jobs:
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
+      - name: Azure login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      # The server only admits Azure services and this runner, for the length
+      # of this job. The rule is named after the run so a stale one is obvious.
+      - name: Open the SQL firewall for this runner
+        id: firewall
+        run: |
+          ip="$(curl -fsS https://api.ipify.org)"
+          server="${{ needs.infra.outputs.sql_fqdn }}"
+          server="${server%%.*}"
+          echo "server=$server" >> "$GITHUB_OUTPUT"
+          az sql server firewall-rule create \
+            --resource-group "$AZURE_RESOURCE_GROUP" \
+            --server "$server" \
+            --name "gha-${{ github.run_id }}" \
+            --start-ip-address "$ip" \
+            --end-ip-address "$ip" \
+            --output none
+
       - name: saturdaze migrate
         env:
-          CONN: ${{ secrets.SATURDAZE_CONNECTION }}
+          SQL_FQDN: ${{ needs.infra.outputs.sql_fqdn }}
+          SQL_DB: ${{ needs.infra.outputs.sql_db }}
+          SQL_ADMIN_LOGIN: ${{ secrets.SQL_ADMIN_LOGIN }}
+          SQL_ADMIN_PASSWORD: ${{ secrets.SQL_ADMIN_PASSWORD }}
         run: |
-          dotnet run --project "${{ env.CLI_PROJECT }}" -- migrate --connection "$CONN"
+          conn="Server=tcp:${SQL_FQDN},1433;Initial Catalog=${SQL_DB};User ID=${SQL_ADMIN_LOGIN};Password=${SQL_ADMIN_PASSWORD};Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
+          echo "::add-mask::$conn"
+          dotnet run --project "$CLI_PROJECT" -c Release -- migrate --connection "$conn"
+
+      - name: Close the SQL firewall
+        if: always() && steps.firewall.outputs.server != ''
+        run: |
+          az sql server firewall-rule delete \
+            --resource-group "$AZURE_RESOURCE_GROUP" \
+            --server "${{ steps.firewall.outputs.server }}" \
+            --name "gha-${{ github.run_id }}" \
+            --output none
 
   web:
     name: Deploy frontend (SWA)
     runs-on: ubuntu-latest
     # Spec order (L2-041): API, then migrations, then the SPA that talks to them.
-    needs: [test-frontend, migrate]
+    needs: [infra, test-frontend, migrate]
     steps:
       - name: Download Angular bundle
         uses: actions/download-artifact@v4
@@ -223,53 +334,90 @@ jobs:
           name: angular-dist
           path: ${{ env.ANGULAR_DIST }}
 
+      - name: Azure login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Read the deployment token
+        id: token
+        run: |
+          token="$(az staticwebapp secrets list \
+            --resource-group "$AZURE_RESOURCE_GROUP" \
+            --name "${{ needs.infra.outputs.web_swa }}" \
+            --query properties.apiKey --output tsv)"
+          echo "::add-mask::$token"
+          echo "value=$token" >> "$GITHUB_OUTPUT"
+
       - name: Deploy to Azure Static Web Apps
         uses: Azure/static-web-apps-deploy@v1
         with:
-          azure_static_web_apps_api_token: ${{ secrets.SWA_DEPLOYMENT_TOKEN }}
+          azure_static_web_apps_api_token: ${{ steps.token.outputs.value }}
           action: upload
           app_location: ${{ env.ANGULAR_DIST }}
           skip_app_build: true
+          skip_api_build: true
 
   admin-web:
     name: Deploy admin (SWA)
     runs-on: ubuntu-latest
-    # L2-123 AC4: after the migrations, like the family app, with its own token.
-    needs: [test-frontend, migrate]
-    env:
-      SWA_ADMIN_DEPLOYMENT_TOKEN: ${{ secrets.SWA_ADMIN_DEPLOYMENT_TOKEN }}
+    # L2-123 AC4: after the migrations, like the family app, on its own host (ADR-014).
+    needs: [infra, test-frontend, migrate]
     steps:
-      # The admin Static Web App and its token are provisioned separately
-      # (ADR-014). Until they exist, say so instead of failing the deploy.
-      - name: Check for the admin deployment token
-        id: token
-        run: |
-          if [ -n "$SWA_ADMIN_DEPLOYMENT_TOKEN" ]; then
-            echo "present=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "present=false" >> "$GITHUB_OUTPUT"
-            {
-              echo "## Admin deploy skipped"
-              echo
-              echo "The \`SWA_ADMIN_DEPLOYMENT_TOKEN\` secret is not set, so the admin Static Web App was not deployed."
-              echo "Create the admin Static Web App, add its deployment token as that secret, and list the admin"
-              echo "origin in the API's \`Cors:AllowedOrigins\`; then re-run this workflow."
-            } >> "$GITHUB_STEP_SUMMARY"
-            echo "::warning::SWA_ADMIN_DEPLOYMENT_TOKEN is not set; the admin deploy was skipped."
-          fi
-
       - name: Download admin bundle
-        if: steps.token.outputs.present == 'true'
         uses: actions/download-artifact@v4
         with:
           name: admin-dist
           path: ${{ env.ADMIN_DIST }}
 
+      - name: Azure login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Read the deployment token
+        id: token
+        run: |
+          token="$(az staticwebapp secrets list \
+            --resource-group "$AZURE_RESOURCE_GROUP" \
+            --name "${{ needs.infra.outputs.admin_swa }}" \
+            --query properties.apiKey --output tsv)"
+          echo "::add-mask::$token"
+          echo "value=$token" >> "$GITHUB_OUTPUT"
+
       - name: Deploy to Azure Static Web Apps
-        if: steps.token.outputs.present == 'true'
         uses: Azure/static-web-apps-deploy@v1
         with:
-          azure_static_web_apps_api_token: ${{ secrets.SWA_ADMIN_DEPLOYMENT_TOKEN }}
+          azure_static_web_apps_api_token: ${{ steps.token.outputs.value }}
           action: upload
           app_location: ${{ env.ADMIN_DIST }}
           skip_app_build: true
+          skip_api_build: true
+
+  # Proves the stack answers after a deploy: the API is up and the SPA shell
+  # serves a deep route (L2-042).
+  smoke:
+    name: Smoke test
+    runs-on: ubuntu-latest
+    needs: [infra, web, admin-web]
+    steps:
+      - name: API answers
+        run: |
+          # Swagger is off in Production and every endpoint needs a bearer, so
+          # a 401 from an authenticated route is the healthy answer here.
+          code="$(curl -s -o /dev/null -w '%{http_code}' --retry 5 --retry-delay 10 --retry-all-errors \
+            "${{ needs.infra.outputs.api_origin }}/api/weekends")"
+          echo "GET /api/weekends → $code"
+          case "$code" in 200|401) ;; *) echo "::error::API returned $code"; exit 1;; esac
+
+      - name: SPA deep route serves the shell
+        run: |
+          for host in "${{ needs.infra.outputs.web_host }}" "${{ needs.infra.outputs.admin_host }}"; do
+            body="$(curl -fsS --retry 5 --retry-delay 10 --retry-all-errors "https://$host/sign-in")"
+            grep -qE '<(app-root|sd-admin-root)' <<<"$body" || { echo "::error::https://$host/sign-in did not serve the SPA shell"; exit 1; }
+            echo "https://$host/sign-in → OK"
+          done
