@@ -39,6 +39,18 @@ export interface IAdminPhotosService {
   ): Promise<AdminPhotoDto>;
 
   /**
+   * `POST /api/admin/places/{kind}/{id}/photos/suggestion` (L2-159): a photo suggestion the
+   * administrator picked, with the details they confirmed. Rejects with the server's error
+   * (404 `suggestion_not_found`, field errors).
+   */
+  addFromSuggestion(
+    kind: string,
+    placeId: string,
+    suggestionId: string,
+    details: PhotoDetails,
+  ): Promise<AdminPhotoDto>;
+
+  /**
    * `DELETE /api/admin/photos/{photoId}?nextPrimaryId=` (L2-119). Removing the primary needs
    * `nextPrimaryId`: a sibling's id, or `'none'` to leave the place without a photo.
    */

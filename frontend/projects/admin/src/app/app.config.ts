@@ -18,6 +18,8 @@ import {
   AdminPhotosService,
   AdminPlacesService,
   AuthService,
+  PHOTO_SUGGESTIONS_SERVICE,
+  PhotoSuggestionsService,
   SESSION_STORE,
   SessionStore,
   authInterceptor,
@@ -45,6 +47,7 @@ export const appConfig: ApplicationConfig = {
     { provide: ADMIN_PLACES_SERVICE, useExisting: AdminPlacesService },
     { provide: ADMIN_PHOTOS_SERVICE, useExisting: AdminPhotosService },
     { provide: ADMIN_AUDIT_SERVICE, useExisting: AdminAuditService },
+    { provide: PHOTO_SUGGESTIONS_SERVICE, useExisting: PhotoSuggestionsService },
 
     { provide: AUTH_SERVICE, useExisting: AuthService },
     { provide: SESSION_STORE, useExisting: SessionStore },

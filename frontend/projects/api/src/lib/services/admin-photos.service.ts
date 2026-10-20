@@ -71,6 +71,20 @@ export class AdminPhotosService implements IAdminPhotosService {
     );
   }
 
+  addFromSuggestion(
+    kind: string,
+    placeId: string,
+    suggestionId: string,
+    details: PhotoDetails,
+  ): Promise<AdminPhotoDto> {
+    return firstValueFrom(
+      this.http.post<AdminPhotoDto>(`${this.placePhotosUrl(kind, placeId)}/suggestion`, {
+        suggestionId,
+        ...details,
+      }),
+    );
+  }
+
   async remove(photoId: string, nextPrimaryId: string | null): Promise<void> {
     const params = nextPrimaryId ? new HttpParams().set('nextPrimaryId', nextPrimaryId) : undefined;
     await firstValueFrom(this.http.delete<void>(this.photoUrl(photoId), { params }));

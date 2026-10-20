@@ -11,7 +11,13 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 import { firstValueFrom, map } from 'rxjs';
 
-import { ADMIN_PHOTOS_SERVICE, ADMIN_PLACES_SERVICE, PhotoTileView, PlacePhotosView } from 'api';
+import {
+  ADMIN_PHOTOS_SERVICE,
+  ADMIN_PLACES_SERVICE,
+  PHOTO_SUGGESTIONS_SERVICE,
+  PhotoTileView,
+  PlacePhotosView,
+} from 'api';
 import {
   Banner,
   Button,
@@ -47,6 +53,11 @@ import {
   RemovePhotoDialogResult,
 } from '../../dialogs/remove-photo-dialog/remove-photo-dialog';
 import {
+  SuggestPhotosDialog,
+  SuggestPhotosDialogData,
+  SuggestPhotosDialogResult,
+} from '../../dialogs/suggest-photos-dialog/suggest-photos-dialog';
+import {
   UploadPhotoDialog,
   UploadPhotoDialogData,
   UploadPhotoDialogResult,
@@ -72,6 +83,7 @@ type Status = 'loading' | 'ready' | 'missing';
 export class PlacePhotosPage {
   private readonly places = inject(ADMIN_PLACES_SERVICE);
   private readonly photos = inject(ADMIN_PHOTOS_SERVICE);
+  private readonly suggestions = inject(PHOTO_SUGGESTIONS_SERVICE);
   private readonly dialog = inject(Dialog);
   private readonly route = inject(ActivatedRoute);
 
@@ -147,6 +159,28 @@ export class PlacePhotosPage {
           placeName: v.name,
           add: async (url, details) => {
             await this.photos.addFromUrl(v.kind, v.id, url, details);
+          },
+        },
+      },
+    );
+    if ((await firstValueFrom(ref.closed)) !== 'added') return;
+    await this.run(async () => undefined);
+  }
+
+  /** AD7: photos Claude found on the web, kept like an upload (L2-159). */
+  protected async suggest(): Promise<void> {
+    const v = this.view();
+    if (!v) return;
+    const ref = this.dialog.open<SuggestPhotosDialogResult, SuggestPhotosDialogData>(
+      SuggestPhotosDialog,
+      {
+        ...DIALOG_OPTIONS,
+        data: {
+          placeName: v.name,
+          suggest: (query) =>
+            this.suggestions.find({ target: 'place', kind: v.kind, placeId: v.id, query }),
+          add: async (suggestionId, details) => {
+            await this.photos.addFromSuggestion(v.kind, v.id, suggestionId, details);
           },
         },
       },

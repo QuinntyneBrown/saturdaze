@@ -1,0 +1,25 @@
+// The search and tiles are `sd-photo-suggestions`; the fields mirror AD1.
+
+:host {
+  display: block;
+}
+
+.hint {
+  margin: 12px 0 0;
+  font-size: var(--fontSizeBase200);
+  color: var(--colorNeutralForeground2);
+}
+
+.link {
+  color: var(--colorBrandForeground1);
+  font-weight: var(--fontWeightSemibold);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacingVerticalL);
+  margin-top: 12px;
+}

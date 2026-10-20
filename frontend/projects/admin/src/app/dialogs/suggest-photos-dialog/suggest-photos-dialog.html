@@ -1,0 +1,63 @@
+<sd-dialog
+  wide
+  title="Suggested photos"
+  subtitle="Claude searches the web for licensed photos of this place. The one you pick is fetched, cleaned and stored like an upload."
+>
+  @if (error()) {
+    <sd-banner tone="warn" role="alert" icon="alert">{{ error() }}</sd-banner>
+  }
+  <sd-photo-suggestions
+    label="Search"
+    buttonLabel="Find photos"
+    name="suggested-photo"
+    groupLabel="Suggested photos"
+    [query]="data.placeName"
+    [minQuery]="3"
+    [state]="state()"
+    [error]="suggestError()"
+    [suggestions]="tiles()"
+    [selected]="selected()"
+    (find)="suggest($event)"
+    (picked)="pick($event)"
+  />
+  @if (picked(); as p) {
+    <p class="hint">
+      Picked:
+      <a class="link" [href]="p.sourceUrl" target="_blank" rel="noopener"
+        >Source page <sd-icon name="external" [size]="12"
+      /></a>
+      · attribution and licence are filled in from the suggestion; check them before saving.
+    </p>
+  }
+  <form class="form" [formGroup]="form" (ngSubmit)="save()">
+    <sd-text-input
+      label="Alt text"
+      name="alt"
+      formControlName="alt"
+      hint='What a person who cannot see the photo should know. Families see "Photo of the place" when it is empty.'
+    />
+    <sd-text-input label="Attribution" name="attribution" formControlName="attribution" required />
+    <sd-select label="Licence" name="licence" [options]="licences" formControlName="licence" />
+    @if (isOther()) {
+      <sd-text-input
+        label="Licence text"
+        name="licenceText"
+        formControlName="licenceText"
+        placeholder="Who allows this photo, and under what terms"
+        required
+      />
+    }
+    <button type="submit" hidden></button>
+  </form>
+  <sd-button slot="actions" variant="quiet" type="button" (click)="cancel()">Cancel</sd-button>
+  <sd-button
+    slot="actions"
+    variant="primary"
+    type="button"
+    [disabled]="!canSave()"
+    (click)="save()"
+  >
+    <sd-icon name="check" />
+    Save photo
+  </sd-button>
+</sd-dialog>

@@ -22,6 +22,10 @@
         <sd-icon name="pin" />
         Add from URL
       </sd-button>
+      <sd-button slot="actions" variant="quiet" (click)="suggest()">
+        <sd-icon name="sparkle" />
+        Suggest photos
+      </sd-button>
     </sd-page-header>
 
     @if (error()) {
