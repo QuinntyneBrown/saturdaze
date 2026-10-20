@@ -1,0 +1,91 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+}
+html,
+body {
+  width: 1200px;
+  height: 630px;
+  overflow: hidden;
+}
+body {
+  font-family: var(--fontFamilyBase);
+  color: var(--colorNeutralForeground1);
+  background: var(--colorNeutralBackground2);
+  -webkit-font-smoothing: antialiased;
+}
+.card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 48px;
+  width: 1200px;
+  height: 630px;
+  padding: 0 0 0 80px;
+  background:
+    var(--colorBrandBackgroundGradient), var(--colorNeutralBackground2);
+  overflow: hidden;
+}
+.card__copy {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.card__brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 28px;
+  font-weight: var(--fontWeightBold);
+}
+.brand-mark {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background:
+    radial-gradient(
+      120% 120% at 20% 0%,
+      var(--colorBrandBackground2) 0%,
+      transparent 60%
+    ),
+    radial-gradient(
+      120% 120% at 100% 100%,
+      var(--colorPaletteSunBackground1) 0%,
+      transparent 60%
+    ),
+    var(--colorBrandBackgroundStatic);
+}
+h1 {
+  font-size: 76px;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-weight: var(--fontWeightBold);
+}
+.card__lede {
+  max-width: 520px;
+  font-size: 26px;
+  line-height: 1.35;
+  color: var(--colorNeutralForeground2);
+}
+.card__url {
+  font-size: 22px;
+  font-weight: var(--fontWeightSemibold);
+  color: var(--colorBrandForeground2);
+}
+.card__shot {
+  align-self: flex-start;
+  width: 380px;
+  margin-top: 60px;
+  margin-right: 70px;
+  padding: 10px;
+  border-radius: 44px;
+  background: var(--colorNeutralForeground1);
+  box-shadow: var(--shadow28);
+  rotate: 4deg;
+}
+.card__shot img {
+  display: block;
+  width: 100%;
+  border-radius: 34px;
+}
