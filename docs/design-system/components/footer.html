@@ -105,6 +105,7 @@
       <li><a href="../patterns/data-tables-and-lists.html">Tables and lists</a></li>
       <li><a href="../patterns/notifications.html">Notifications</a></li>
       <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+      <li><a href="../patterns/marketing-page.html">Marketing page</a></li>
     </ul></details>
   </nav>
 
@@ -121,7 +122,7 @@
 
     <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
       <ul>
-        <li><b>Site footer</b> (<code>.site-footer</code>) ends the public pages, the ones with the <a href="top-bar.html">site bar</a>: landing, legal, a shared weekend. It names the product and links Terms, Privacy and Sign in.</li>
+        <li><b>Site footer</b> (<code>.site-footer</code>) ends the public pages, the ones with the <a href="top-bar.html">site bar</a>: legal and a shared weekend. The marketing site has its own footer (<a href="../patterns/marketing-page.html">Marketing page</a>). It names the product and links Terms, Privacy and Sign in.</li>
         <li><b>Auth footer</b> (<code>.auth__foot</code>) sits under the <a href="auth-card.html">auth card</a> on sign in, create account, reset password and verify email: Terms, Privacy and "Back to Saturdaze".</li>
         <li>The signed-in app has no footer: the bottom nav occupies the end of the screen on phones. No signed-in mock links to Terms or Privacy yet; the Family page is the natural place. Admin has none either; its sign-in page uses the auth footer.</li>
       </ul>
@@ -174,7 +175,7 @@
       <p>Under the auth card. The middle dots are decorative and hidden from screen readers. It is a paragraph inside <code>&lt;main&gt;</code>, not a landmark: these pages are one card and nothing else.</p>
       <div class="ds-example">
         <div class="ds-example__canvas ds-example__canvas--stack ds-example__canvas--canvas">
-          <p class="auth__foot"><a class="link--soft" href="../../mocks/pages/legal.html#terms-title">Terms</a><span aria-hidden="true">·</span><a class="link--soft" href="../../mocks/pages/legal.html#privacy-title">Privacy</a><span aria-hidden="true">·</span><a class="link--soft" href="../../mocks/pages/landing.html">Back to Saturdaze</a></p>
+          <p class="auth__foot"><a class="link--soft" href="../../mocks/pages/legal.html#terms-title">Terms</a><span aria-hidden="true">·</span><a class="link--soft" href="../../mocks/pages/legal.html#privacy-title">Privacy</a><span aria-hidden="true">·</span><a class="link--soft" href="../../mocks/pages/marketing.html">Back to Saturdaze</a></p>
         </div>
         <div class="ds-example__caption"><span>Sign in, create account, reset password, verify email.</span></div>
         <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;p class="auth__foot"&gt;
@@ -193,7 +194,7 @@
         <thead><tr><th scope="col">Footer</th><th scope="col">Default</th><th scope="col">Hover</th><th scope="col">Focus</th></tr></thead>
         <tbody>
           <tr><th scope="row">Site footer link</th><td><span class="site-footer" style="margin: 0; padding: 0;"><a class="link--soft" href="../../mocks/pages/legal.html#privacy-title">Privacy</a></span></td><td><span class="site-footer" style="margin: 0; padding: 0;"><a class="link--soft" href="../../mocks/pages/legal.html#privacy-title" data-state="hover">Privacy</a></span></td><td><span class="site-footer" style="margin: 0; padding: 0;"><a class="link--soft" href="../../mocks/pages/legal.html#privacy-title" data-state="focus">Privacy</a></span></td></tr>
-          <tr><th scope="row">Auth footer link</th><td><span class="auth__foot"><a class="link--soft" href="../../mocks/pages/landing.html">Back to Saturdaze</a></span></td><td><span class="auth__foot"><a class="link--soft" href="../../mocks/pages/landing.html" data-state="hover">Back to Saturdaze</a></span></td><td><span class="auth__foot"><a class="link--soft" href="../../mocks/pages/landing.html" data-state="focus">Back to Saturdaze</a></span></td></tr>
+          <tr><th scope="row">Auth footer link</th><td><span class="auth__foot"><a class="link--soft" href="../../mocks/pages/marketing.html">Back to Saturdaze</a></span></td><td><span class="auth__foot"><a class="link--soft" href="../../mocks/pages/marketing.html" data-state="hover">Back to Saturdaze</a></span></td><td><span class="auth__foot"><a class="link--soft" href="../../mocks/pages/marketing.html" data-state="focus">Back to Saturdaze</a></span></td></tr>
         </tbody>
       </table></div>
       <h3>Both themes</h3>
@@ -211,7 +212,7 @@
       <ul>
         <li>The row is centred and wraps; at 320px the site footer's four items still fit on one or two lines.</li>
         <li>The site footer keeps <code>--layoutSpacePageLarge</code> (80px) above it at every width, so it never reads as part of the last section, and <code>--spacingVerticalXXXXL</code> (40px) below so the last link is not at the screen edge or under the iOS home indicator.</li>
-        <li>Under 380px the landing site bar hides "Sign in" (the hero repeats it); other public pages keep it in the bar. The footer's "Sign in" is the constant one; keep it.</li>
+        <li>Under 380px a site bar with the call to action hides "Sign in"; other public pages keep it in the bar. The footer's "Sign in" is the constant one; keep it.</li>
       </ul>
     </section>
 
@@ -248,7 +249,7 @@
     <section class="ds-section" id="content"><h2><a href="#content">Content</a></h2>
       <ul>
         <li>Site footer: "© 2026 Saturdaze", Terms, Privacy, Sign in. In that order.</li>
-        <li>Auth footer: Terms, Privacy, "Back to Saturdaze" (the landing page).</li>
+        <li>Auth footer: Terms, Privacy, "Back to Saturdaze" (the marketing site, www.saturdaze.ca).</li>
         <li>"Terms" and "Privacy", not "Terms of Service" and "Privacy Policy": the page titles are long, the links do not need to be.</li>
         <li>No social links, newsletter sign-up or sitemap. Saturdaze has five screens.</li>
       </ul>
@@ -282,7 +283,7 @@
       <pre><code>&lt;body&gt;
   &lt;a class="skip-link" href="#main"&gt;Skip to content&lt;/a&gt;
   &lt;header class="sitebar"&gt;…&lt;/header&gt;
-  &lt;main id="main" class="landing container"&gt;…&lt;/main&gt;
+  &lt;main id="main" class="legal container"&gt;…&lt;/main&gt;
   &lt;footer class="site-footer container"&gt;…&lt;/footer&gt;
 &lt;/body&gt;</code></pre>
       <table class="ds-table"><thead><tr><th scope="col">Class / attribute</th><th scope="col">Effect</th></tr></thead><tbody>
@@ -295,7 +296,7 @@
 
     <section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>
       <ul>
-        <li><a href="../../mocks/pages/landing.html">pages/landing</a> and <a href="../../mocks/pages/legal.html">pages/legal</a>: <code>.site-footer</code> with "Saturdaze", Terms, Privacy, Sign in.</li>
+        <li><a href="../../mocks/pages/legal.html">pages/legal</a>: <code>.site-footer</code> with "Saturdaze", Terms, Privacy, Sign in.</li>
         <li><a href="../../mocks/pages/sign-in.html">pages/sign-in</a>, <a href="../../mocks/pages/create-account.html">create-account</a>, <a href="../../mocks/pages/reset-password.html">reset-password</a>, <a href="../../mocks/pages/verify-email.html">verify-email</a>, <a href="../../mocks/pages/admin.sign-in.html">admin.sign-in</a>: <code>.auth__foot</code>.</li>
       </ul>
       <p>Changed from the mocks: the product line reads "© 2026 Saturdaze" rather than "Saturdaze", and the site footer moves outside <code>&lt;main&gt;</code> to become a landmark (the mocks place it inside).</p>

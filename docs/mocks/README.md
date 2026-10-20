@@ -33,7 +33,7 @@ screenshots/          committed <slug>.<viewport>.png captures (390 / 820 / 1440
 | Family | `family.html`, `family.members.html` (owner: who signs in), `family.member.html` (member view) |
 | Review submissions (admin) | `review-submissions.html`, `review-submissions.empty.html` |
 | Auth | `sign-in.html` (2 states), `create-account.html`, `reset-password.html` (5 states), `verify-email.html` (3 states), `accept-invite.html` (2 states) |
-| Public | `landing.html`, `legal.html` (Terms + Privacy) |
+| Public | `marketing.html`, `marketing.menu-open.html` (the static site at www.saturdaze.ca, ADR-018), `legal.html` (Terms + Privacy) |
 | Admin (Saturdaze Admin, ADR-014; bare shell with its own side navigation from 1024px) | `admin.sign-in.html` (2 states), `admin.html` (Photo health), `admin.places.html`, `admin.place.html`, `admin.reviews.html`, `admin.ingestion-skips.html`, `admin.activity.html` |
 | Dialogs gallery | `dialogs.html` (D1–D30 and admin AD1–AD6 rendered inline) |
 
@@ -147,7 +147,7 @@ focus ring, tone pairs) live at the top of `app.css` in `@layer base`.
 | `saved.html` | `past.html`, `past.empty.html` |
 | `profile.html` | `family.html` |
 | `admin.events.html` | `review-submissions.html`, `review-submissions.empty.html` |
-| `splash.html` | `landing.html` |
+| `splash.html` | `landing.html`, then `marketing.html` (ADR-018) |
 | `sample-weekend.html` | **dropped** (user decision) |
 | `login.html` | `sign-in.html` |
 | `signup.html` | `create-account.html` |

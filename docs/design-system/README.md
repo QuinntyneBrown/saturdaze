@@ -47,14 +47,14 @@ differ, the difference is in the drift log below for the product to adopt delibe
 | [Rating](components/rating.html) | Inputs | display, input | checked, focus, hover | past, dialogs D13 |
 | [Vote row](components/vote-row.html) | Inputs | up/down per member | pressed, hover, focus, disabled | ideas, past |
 | [Form layout](components/form-layout.html) | Inputs | single column, pairs, dialog form, actions, error summary | submitting, invalid | auth pages, dialogs |
-| [Top bar](components/top-bar.html) | Navigation | app top bar, public site bar | scrolled, current | _shell, weekend, landing |
+| [Top bar](components/top-bar.html) | Navigation | app top bar, public site bar | scrolled, current | _shell, weekend, legal |
 | [Bottom nav](components/bottom-nav.html) | Navigation | four destinations | current, hover, focus | _shell and app pages |
 | [Sidebar navigation](components/sidebar-navigation.html) | Navigation | admin bar, admin sidebar, counts | current, hover, focus | admin pages |
 | [Tabs (segments)](components/tabs.html) | Navigation | tablist, page switch, narrow, counts | selected, current, hover, focus, disabled | weekend, ideas, legal |
 | [Breadcrumb](components/breadcrumb.html) | Navigation | trail, collapsed back link | current, hover, focus | admin.place (back link) |
 | [Pagination](components/pagination.html) | Navigation | previous/next with count, toolbar | disabled ends, focus | admin.places, admin.activity |
 | [Skip link](components/skip-link.html) | Navigation | one | focused | every page (`_shell`, auth, site and admin pages) |
-| [Footer](components/footer.html) | Navigation | site footer, auth footer | link hover, focus | landing, legal, auth pages |
+| [Footer](components/footer.html) | Navigation | site footer, auth footer | link hover, focus | legal, auth pages |
 | [Card](components/card.html) | Containers and overlays | default, pad-lg, sunk, locked, selected, dimmed, muted, media, interactive | hover, focus within, selected, locked | ideas, past, family, review, admin |
 | [Dialog](components/dialog.html) | Containers and overlays | default, confirm, destructive, form, success, wide, sheet | busy, invalid | dialogs D1 to D29, AD1 to AD6 |
 | [Tooltip](components/tooltip.html) | Containers and overlays | above, below, with shortcut | visible | none (product sd-tooltip) |
@@ -84,7 +84,7 @@ differ, the difference is in the drift log below for the product to adopt delibe
 | [Empty state](components/empty-state.html) | Feedback | default, warm first run, compact | none | weekend.empty, past.empty, review-submissions.empty |
 | [Error page](components/error-page.html) | Feedback | 404, 403, 500 with reference, offline | none | none (core) |
 | [Auth card](components/auth-card.html) | Auth and marketing | sign in, create account, reset (5 states), verify (3 states), admin sign in | error, sent, expired | auth pages, admin.sign-in |
-| [Hero](components/hero.html) | Auth and marketing | hero with browser frame, steps | none | landing |
+| [Hero](components/hero.html) | Auth and marketing | hero with browser frame, steps | none | retired with the in-app landing page; see the [Marketing page](patterns/marketing-page.html) pattern |
 
 ## Patterns
 
@@ -98,6 +98,7 @@ differ, the difference is in the drift log below for the product to adopt delibe
 | [Tables and lists](patterns/data-tables-and-lists.html) | Rows vs cards vs table, filtering, sorting, paging, responsive strategy. |
 | [Notifications](patterns/notifications.html) | Toast vs banner vs well; priority; auto-dismiss rules; live regions. |
 | [Content and tone](patterns/content-and-tone.html) | Voice and formulas applied in composed UI. |
+| [Marketing page](patterns/marketing-page.html) | The static page at www.saturdaze.ca: structure, responsive menu, CSP constraints (ADR-018). |
 
 ## Tokens
 
