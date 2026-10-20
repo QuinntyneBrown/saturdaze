@@ -359,5 +359,8 @@
   "NavigationEnd": "navigation end",
   "otherValues": "other values",
   "otherLabel": "other label",
-  "#main": "hash main"
+  "#main": "hash main",
+  "saturdaze.ca": "Saturdays dot C A",
+  "www.saturdaze.ca": "W W W dot Saturdays dot C A",
+  "app.saturdaze.ca": "app dot Saturdays dot C A"
 }

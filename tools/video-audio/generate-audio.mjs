@@ -6,8 +6,8 @@
 //   node tools/video-audio/generate-audio.mjs docs/videos/01-x             synthesize the MP3
 //   node tools/video-audio/generate-audio.mjs --say "`_tokens.scss`"        pronunciation test (WAV)
 //
-// Engines (--engine edge|piper, default edge). Both synthesize one clip per paragraph, so the
-// timing manifest is built from measured clip durations, never estimated:
+// Engines (--engine edge|piper|azure, default edge). Each synthesizes one clip per paragraph, so
+// the timing manifest is built from measured clip durations, never estimated:
 //   edge   Free Microsoft Edge read-aloud voices via the `edge-tts` Python package
 //          (`python -m pip install edge-tts`). Needs internet access; no key or subscription.
 //          PYTHON overrides the interpreter (default python3), EDGE_VOICE / EDGE_VOICE_2 the
@@ -16,6 +16,11 @@
 //   piper  Offline neural TTS (`pip install piper-tts`). Needs PIPER_MODEL pointing at a voice
 //          .onnx (e.g. en_US-ryan-high.onnx); PIPER_MODEL_2 optionally voices `**Name:**`
 //          paragraphs.
+//   azure  Azure Speech, the paid service behind the brand video (ADR-018) and Shelfie's.
+//          Needs AZURE_SPEECH_KEY and AZURE_SPEECH_REGION (see docs/videos/README.md).
+//          AZURE_VOICE (default en-US-JennyNeural), AZURE_STYLE (default cheerful; empty for
+//          none), AZURE_RATE (default -5%) and AZURE_VOICE_2 (second speaker, default
+//          en-US-GuyNeural) shape it.
 //
 // Writes <folder>/<folder-name>.mp3 and the timing manifest
 // .cache/<folder-name>/manifest.json that tools/video-build syncs slides and captions to.
@@ -32,6 +37,10 @@ const SECTION_GAP = 0.8; // and between sections
 const EDGE_VOICE = process.env.EDGE_VOICE ?? 'en-US-AndrewMultilingualNeural';
 const EDGE_VOICE_2 = process.env.EDGE_VOICE_2 ?? 'en-US-AvaMultilingualNeural';
 const python = process.env.PYTHON ?? 'python3';
+const AZURE_VOICE = process.env.AZURE_VOICE ?? 'en-US-JennyNeural';
+const AZURE_VOICE_2 = process.env.AZURE_VOICE_2 ?? 'en-US-GuyNeural';
+const AZURE_STYLE = process.env.AZURE_STYLE ?? 'cheerful';
+const AZURE_RATE = process.env.AZURE_RATE ?? '-5%';
 
 const ffmpeg = process.env.FFMPEG_PATH ?? 'ffmpeg';
 const ffprobe = process.env.FFPROBE_PATH ?? 'ffprobe';
@@ -201,8 +210,58 @@ function edgeSay(text, speaker, out, attempts = 4) {
   throw new Error(`edge-tts failed after ${attempts} attempts: ${last}`);
 }
 
+const xml = (t) => t.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;');
+
+/** The SSML Azure Speech reads: the voice, its speaking style and the rate. */
+export function azureSsml(text, voice = AZURE_VOICE, style = AZURE_STYLE, rate = AZURE_RATE) {
+  const speech = `<prosody rate="${rate}">${xml(text)}</prosody>`;
+  return (
+    `<speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="https://www.w3.org/2001/mstts" xml:lang="en-US">` +
+    `<voice name="${voice}">${style ? `<mstts:express-as style="${style}">${speech}</mstts:express-as>` : speech}</voice></speak>`
+  );
+}
+
+/**
+ * One paragraph through the Azure Speech REST API, as 24 kHz mono PCM. Retries with backoff
+ * on throttling (429) and server errors; anything else fails at once with the service's message.
+ */
+async function azureSay(text, speaker, out, attempts = 4) {
+  const { AZURE_SPEECH_KEY: key, AZURE_SPEECH_REGION: region } = process.env;
+  const voice = speaker ? AZURE_VOICE_2 : AZURE_VOICE;
+  let last = '';
+  for (let i = 0; i < attempts; i++) {
+    const response = await fetch(`https://${region}.tts.speech.microsoft.com/cognitiveservices/v1`, {
+      method: 'POST',
+      headers: {
+        'Ocp-Apim-Subscription-Key': key,
+        'Content-Type': 'application/ssml+xml',
+        'X-Microsoft-OutputFormat': 'riff-24khz-16bit-mono-pcm',
+        'User-Agent': 'saturdaze-video',
+      },
+      body: azureSsml(text, voice),
+    });
+    if (response.ok) {
+      writeFileSync(out, Buffer.from(await response.arrayBuffer()));
+      return normalise(out);
+    }
+    last = `${response.status}: ${await response.text()}`;
+    if (response.status !== 429 && response.status < 500) break;
+    await new Promise((r) => setTimeout(r, 1000 * 2 ** (i + 1)));
+  }
+  throw new Error(`Azure Speech ${last}`);
+}
+
 const engines = {
   edge: { say: edgeSay, voice: () => EDGE_VOICE, ready: () => {} },
+  azure: {
+    say: azureSay,
+    voice: () => `${AZURE_VOICE} (${AZURE_STYLE || 'no style'}, ${AZURE_RATE})`,
+    ready: () => {
+      if (!process.env.AZURE_SPEECH_KEY || !process.env.AZURE_SPEECH_REGION) {
+        throw new Error('Set AZURE_SPEECH_KEY and AZURE_SPEECH_REGION (see docs/videos/README.md)');
+      }
+    },
+  },
   piper: {
     say: piperSay,
     voice: () => basename(process.env.PIPER_MODEL ?? ''),
@@ -219,7 +278,7 @@ async function main() {
   const flag = (name) => args.includes(name);
   const opt = (name) => (args.includes(name) ? args[args.indexOf(name) + 1] : undefined);
   const engine = opt('--engine') ?? 'edge';
-  if (!engines[engine]) throw new Error(`unknown engine "${engine}" (use --engine edge|piper)`);
+  if (!engines[engine]) throw new Error(`unknown engine "${engine}" (use --engine edge|piper|azure)`);
   const { say, ready } = engines[engine];
 
   if (flag('--say')) {
@@ -229,7 +288,7 @@ async function main() {
     const out = resolve(opt('--out') ?? 'pronunciation-test.wav');
     mkdirSync(dirname(out), { recursive: true });
     mkdirSync(join(repo, '.cache', 'say'), { recursive: true });
-    const clip = say(text, null, join(repo, '.cache', 'say', 'say.wav'));
+    const clip = await say(text, null, join(repo, '.cache', 'say', 'say.wav'));
     execFileSync(ffmpeg, ['-y', '-v', 'error', '-i', clip, out]);
     console.log(`wrote ${out}`);
     return;
@@ -283,7 +342,7 @@ async function main() {
         t += b.pause;
         continue;
       }
-      const wav = say(spoken(b.text), b.speaker, join(cache, 'audio', `p${String(k++).padStart(3, '0')}.wav`));
+      const wav = await say(spoken(b.text), b.speaker, join(cache, 'audio', `p${String(k++).padStart(3, '0')}.wav`));
       const d = probeDuration(wav);
       sec.blocks.push({ start: t, end: t + d, speaker: b.speaker, text: b.text, caption: caption(b.text) });
       clips.push(wav, gapFile(PARAGRAPH_GAP));
