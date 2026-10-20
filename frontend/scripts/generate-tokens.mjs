@@ -94,15 +94,13 @@ const outputs = [
   [marketingTokens, css],
 ];
 
-// Format every output with the workspace's Prettier config, including the one
-// outside frontend/, so --check compares like with like.
-const prettierConfig = await prettier.resolveConfig(resolve(lib, 'styles/_tokens.scss'));
-
+// Format each output with the Prettier config that applies to it (frontend/ or
+// marketing/, which mirrors it), so --check and CI's prettier --check agree.
 const check = process.argv.includes('--check');
 let stale = false;
 for (const [file, source] of outputs) {
   const content = await prettier.format(source, {
-    ...prettierConfig,
+    ...(await prettier.resolveConfig(file)),
     filepath: file,
   });
   let current = '';
