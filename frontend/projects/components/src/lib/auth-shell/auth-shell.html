@@ -1,5 +1,5 @@
 <div class="auth__col">
-  <a class="auth__brand" routerLink="/"
+  <a class="auth__brand" [attr.href]="homeHref()"
     ><span class="brand-mark" aria-hidden="true"></span>Saturdaze</a
   >
   <ng-content />
@@ -8,6 +8,6 @@
     <span aria-hidden="true">·</span>
     <a class="sd-link--soft" routerLink="/legal" fragment="privacy">Privacy</a>
     <span aria-hidden="true">·</span>
-    <a class="sd-link--soft" routerLink="/">Back to Saturdaze</a>
+    <a class="sd-link--soft" [attr.href]="homeHref()">Back to Saturdaze</a>
   </p>
 </div>

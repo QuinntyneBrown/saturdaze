@@ -8,6 +8,8 @@ import { AuthCard, AuthShell, Banner, Button, TextInput, Toggle } from 'componen
 import { devState } from '../../shared/dev-state';
 import { trimmedEmail } from '../../shared/trimmed-email.validator';
 
+import { environment } from '../../../environments/environment';
+
 /**
  * Sign in — `docs/mocks-v2/pages/sign-in.html`.
  *
@@ -33,6 +35,8 @@ import { trimmedEmail } from '../../shared/trimmed-email.validator';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SignInPage {
+  /** Where the brand and "Back to Saturdaze" lead: the marketing site (ADR-018). */
+  protected readonly siteUrl = environment.siteUrl;
   private readonly session = inject(SESSION_STORE);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);

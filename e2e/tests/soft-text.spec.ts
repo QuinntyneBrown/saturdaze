@@ -28,14 +28,4 @@ test.describe("Secondary text contrast", () => {
     const s = pages.signIn;
     expect(await s.textColor(s.cardSubtitle())).toBe(SOFT_SLATE);
   });
-
-  test("Given the landing page, when a person reads the hero lede, then it is the AA soft slate", async ({
-    goto,
-    pages,
-  }) => {
-    await goto("landing");
-    await pages.landing.waitForReady();
-    const l = pages.landing;
-    expect(await l.textColor(l.heroLede())).toBe(SOFT_SLATE);
-  });
 });

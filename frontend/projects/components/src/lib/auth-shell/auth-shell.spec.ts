@@ -53,6 +53,14 @@ describe('AuthShell', () => {
     expect(dots.length).toBe(2);
   });
 
+  it('links the brand and Back to Saturdaze to homeHref when given, such as the marketing site', () => {
+    fixture.componentRef.setInput('homeHref', 'https://www.saturdaze.ca/');
+    fixture.detectChanges();
+    const brand = host.querySelector('a.auth__brand') as HTMLAnchorElement;
+    expect(brand.getAttribute('href')).toBe('https://www.saturdaze.ca/');
+    expect(footLinks()[2]!.getAttribute('href')).toBe('https://www.saturdaze.ca/');
+  });
+
   it('top-aligns stacked cards', () => {
     fixture.componentRef.setInput('stack', true);
     fixture.detectChanges();

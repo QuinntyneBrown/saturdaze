@@ -11,34 +11,6 @@ import { test, expect } from "../fixtures/sd-test.js";
 const BASE_500 = "17px";
 
 test.describe("Type scale", () => {
-  test("Given the landing page, when a person reads the hero, then the title is bold at line height 1 and the lede is 17px", async ({
-    goto,
-    pages,
-  }) => {
-    await goto("landing", { anonymous: true });
-    const l = pages.landing;
-    await l.waitForReady();
-
-    expect(await l.fontWeight(l.heroTitle())).toBe("700");
-    expect(await l.lineHeightRatio(l.heroTitle())).toBe(1);
-    expect(await l.fontSize(l.heroLede())).toBe(BASE_500);
-  });
-
-  test("Given the landing page, when a person reads how it works, then the title is page-title size and each step title is 17px", async ({
-    goto,
-    pages,
-  }, testInfo) => {
-    await goto("landing", { anonymous: true });
-    const l = pages.landing;
-    await l.waitForReady();
-
-    const pageTitleSize = testInfo.project.name === "desktop" ? "30px" : "26px";
-    expect(await l.fontSize(l.howTitle())).toBe(pageTitleSize);
-    for (const title of await l.stepTitles().all()) {
-      expect(await l.fontSize(title)).toBe(BASE_500);
-    }
-  });
-
   test("Given a suggestion waiting for review, when a person reads it, then the date tile day is 17px and the title sets tight", async ({
     goto,
     pages,

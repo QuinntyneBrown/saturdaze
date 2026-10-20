@@ -3,8 +3,9 @@ import { test, expect, isPhone } from "../fixtures/sd-test.js";
 /**
  * Minimum text size (drift D12). No text is set below 12px
  * (`--fontSizeBase200`): the bottom-nav labels, the date tile's month, the
- * small avatar's initials and the landing preview's browser-frame URL were
- * 10 or 11px, too small to read comfortably on a phone.
+ * small avatar's initials and the marketing hero's browser-frame URL (now
+ * checked in tests/marketing/marketing-design.spec.ts) were 10 or 11px, too
+ * small to read comfortably on a phone.
  */
 
 const MIN_TEXT = "12px";
@@ -34,16 +35,5 @@ test.describe("Minimum text size", () => {
 
     expect(await r.fontSize(r.dateTileMonth(card))).toBe(MIN_TEXT);
     expect(await r.fontSize(r.submitterAvatar(card))).toBe(MIN_TEXT);
-  });
-
-  test("Given the landing page, when a person reads the preview's browser URL, then it is 12px", async ({
-    goto,
-    pages,
-  }) => {
-    await goto("landing", { anonymous: true });
-    const l = pages.landing;
-    await l.waitForReady();
-
-    expect(await l.fontSize(l.previewUrl())).toBe(MIN_TEXT);
   });
 });

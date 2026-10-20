@@ -4,7 +4,7 @@
 
 - Saturday and Sunday sit side by side in `sd-grid-days` from tablet up and stack on phones; don't put anything between them.
 - Only `sd-block` (or `sd-skeleton-row` while loading) goes in the default slot — the list is `role="list"` and each block is its listitem.
-- Turn `actions` off wherever the plan can't be changed: the landing preview, the shared read-only weekend, and while generating.
+- Turn `actions` off wherever the plan can't be changed: the shared read-only weekend, and while generating.
 
 ### Content
 

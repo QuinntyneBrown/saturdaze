@@ -1,4 +1,4 @@
-<sd-auth-shell>
+<sd-auth-shell [homeHref]="siteUrl">
   <sd-auth-card title="Welcome back" subtitle="Sign in to see this weekend.">
     @if (errorMessage()) {
       <sd-banner tone="warn" role="alert" icon="alert">{{ errorMessage() }}</sd-banner>

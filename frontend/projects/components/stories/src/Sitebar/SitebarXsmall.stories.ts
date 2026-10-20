@@ -12,7 +12,7 @@ export const Xsmall: StoryObj<Sitebar> = {
     docs: {
       description: {
         story:
-          'Below 380px with `cta`, "Sign in" hides so the wordmark and button fit; the landing hero repeats the sign-in link.',
+          'Below 380px with `cta`, "Sign in" hides so the wordmark and button fit; the page repeats the sign-in link.',
       },
     },
   },

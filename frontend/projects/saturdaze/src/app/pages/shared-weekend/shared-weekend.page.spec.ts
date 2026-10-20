@@ -108,7 +108,7 @@ describe('SharedWeekendPage', () => {
       day.querySelector('.weather-disc')?.classList.contains(`disc--${t}`),
     ) ?? null;
 
-  it('bounces to the landing page when there is no share token', async () => {
+  it('bounces to the app root (and so to sign-in or the weekend) when there is no share token', async () => {
     await mount({});
     expect(router.navigateByUrl).toHaveBeenCalledWith('/');
     expect(shared.load).not.toHaveBeenCalled();

@@ -40,6 +40,23 @@ export class MarketingPage extends BasePage {
     return this.page.locator(".hero");
   }
 
+  heroTitle(): Locator {
+    return this.hero.locator(".hero__title");
+  }
+
+  heroLede(): Locator {
+    return this.hero.locator(".hero__lede");
+  }
+
+  /** The address-bar URL in the hero's browser frame. */
+  previewUrl(): Locator {
+    return this.hero.locator(".browser-frame__url");
+  }
+
+  howTitle(): Locator {
+    return this.page.locator("#how h2");
+  }
+
   heroCreateAccount(): Locator {
     return this.hero.getByRole("link", { name: "Create your account" });
   }

@@ -25,6 +25,8 @@ import {
 import { devState } from '../../shared/dev-state';
 import { passwordStrength } from '../../shared/password-strength';
 
+import { environment } from '../../../environments/environment';
+
 /**
  * Accept invite — `docs/mocks/pages/accept-invite.html` (L2-127). The owner
  * shares `/accept-invite?token=…`; the page previews the invitation, then
@@ -68,6 +70,8 @@ function matchPassword(c: AbstractControl): ValidationErrors | null {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AcceptInvitePage {
+  /** Where the brand and "Back to Saturdaze" lead: the marketing site (ADR-018). */
+  protected readonly siteUrl = environment.siteUrl;
   private readonly session = inject(SESSION_STORE);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);

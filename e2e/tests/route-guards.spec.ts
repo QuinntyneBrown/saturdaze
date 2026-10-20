@@ -36,6 +36,32 @@ test.describe("requireAuth", () => {
   });
 });
 
+// Traces to: L2-155 AC1, AC2 — the landing page left the app for the marketing site.
+test.describe("the app's root", () => {
+  test("Given an anonymous visitor, when they open /, then they land on sign-in with /weekend to return to", async ({ page, settle }) => {
+    await page.goto("/");
+    await settle();
+    const url = new URL(page.url());
+    expect(url.pathname).toBe("/sign-in");
+    expect(url.searchParams.get("returnUrl")).toBe("/weekend");
+  });
+
+  test("Given a signed-in user, when they open /, then they land on their weekend", async ({ page, signIn }) => {
+    await signIn();
+    await page.goto("/");
+    await page.waitForURL("**/weekend", { timeout: 8_000 });
+    expect(new URL(page.url()).pathname).toBe("/weekend");
+  });
+
+  test("Given an unknown path, when an anonymous visitor opens it, then they land on sign-in with /weekend to return to", async ({ page, settle }) => {
+    await page.goto("/does-not-exist");
+    await settle();
+    const url = new URL(page.url());
+    expect(url.pathname).toBe("/sign-in");
+    expect(url.searchParams.get("returnUrl")).toBe("/weekend");
+  });
+});
+
 test.describe("requireAdmin", () => {
   test("signed-in non-admin /review-submissions → /weekend", async ({ page, goto }) => {
     await goto("reviewSubmissions", { as: "user" });
@@ -51,7 +77,7 @@ test.describe("requireAdmin", () => {
 });
 
 test.describe("requireAnonymous", () => {
-  for (const key of ["landing", "signIn", "createAccount", "resetRequest"] as const) {
+  for (const key of ["signIn", "createAccount", "resetRequest"] as const) {
     test(`authed user hitting ${key} → /weekend`, async ({ page, goto }) => {
       await goto(key, { as: "user" });
       await page.waitForURL("**/weekend", { timeout: 8_000 });
@@ -116,11 +142,5 @@ test.describe("v1 → v2 redirects", () => {
     await page.waitForURL(/\/legal#privacy$/);
     await pages.legal.waitForReady();
     await expect(pages.legal.body).toHaveAttribute("data-doc", "privacy");
-  });
-
-  test("unknown paths fall back to the landing page", async ({ page, settle }) => {
-    await page.goto("/does-not-exist");
-    await settle();
-    expect(["/", "/sign-in"]).toContain(new URL(page.url()).pathname);
   });
 });

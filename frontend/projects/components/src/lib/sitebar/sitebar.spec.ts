@@ -18,7 +18,7 @@ describe('Sitebar', () => {
     host = fixture.nativeElement as HTMLElement;
   });
 
-  it('creates the public bar with the wordmark linking to the landing page', () => {
+  it('creates the public bar with the wordmark linking to the app root by default', () => {
     expect(fixture.componentInstance).toBeTruthy();
     expect(host.classList.contains('sitebar')).toBe(true);
     const brand = host.querySelector('.sitebar__inner a.sitebar__brand') as HTMLAnchorElement;
@@ -26,6 +26,13 @@ describe('Sitebar', () => {
     expect(brand.textContent?.trim()).toBe('Saturdaze');
     expect(brand.querySelector('.brand-mark')?.getAttribute('aria-hidden')).toBe('true');
     expect(host.hasAttribute('data-scrolled')).toBe(false);
+  });
+
+  it('links the wordmark to homeHref when given, such as the marketing site', () => {
+    fixture.componentRef.setInput('homeHref', 'https://www.saturdaze.ca/');
+    fixture.detectChanges();
+    const brand = host.querySelector('a.sitebar__brand') as HTMLAnchorElement;
+    expect(brand.getAttribute('href')).toBe('https://www.saturdaze.ca/');
   });
 
   it('offers Sign in and no CTA by default', () => {

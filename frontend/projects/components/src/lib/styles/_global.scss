@@ -172,7 +172,7 @@ app-root {
   display: block;
 }
 
-// Bare pages (auth) own their whole viewport; site pages (landing, legal,
+// Bare pages (auth) own their whole viewport; site pages (legal,
 // shared) keep the reading width without the app's nav clearance.
 .sd-frame--bare {
   max-width: none;

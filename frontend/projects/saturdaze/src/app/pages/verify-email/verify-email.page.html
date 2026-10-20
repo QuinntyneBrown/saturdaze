@@ -1,4 +1,4 @@
-<sd-auth-shell>
+<sd-auth-shell [homeHref]="siteUrl">
   @switch (state()) {
     @case ('sent') {
       <sd-auth-card title="Check your email" [subtitle]="sentSubtitle()" center>

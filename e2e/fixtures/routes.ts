@@ -33,7 +33,6 @@ export type PageSlug =
   | "reset-password"
   | "verify-email"
   | "accept-invite"
-  | "landing"
   | "marketing"
   | "legal"
   | "shared-weekend"
@@ -78,7 +77,6 @@ export const ROUTES = {
   acceptInviteInvalid: { app: "/accept-invite?state=invalid",  mock: "/pages/accept-invite.html#state-invalid",  page: "accept-invite" },
 
   // ---- public (site shell: sitebar at every width) ----
-  landing:           { app: "/",                               mock: "/pages/landing.html",          page: "landing" },
   legal:             { app: "/legal",                          mock: "/pages/legal.html",            page: "legal" },
   legalPrivacy:      { app: "/legal#privacy",                  mock: "/pages/legal.html#privacy",    page: "legal" },
   /** App-only. `goto` plans a weekend, mints a share link and substitutes `{token}`. */
@@ -106,6 +104,12 @@ export const ROUTES = {
 export type RouteKey = keyof typeof ROUTES;
 
 export const isBaseline = (): boolean => process.env.SD_BASELINE === "1";
+
+/**
+ * Where the family app's wordmark and "Back to Saturdaze" lead: the marketing
+ * site, `environment.siteUrl` in the dev build (ADR-018, L2-155).
+ */
+export const MARKETING_SITE_URL = "http://localhost:4500/";
 
 /** Keys that have a mock page (everything but the share link). */
 export const MOCKED_ROUTES = (Object.keys(ROUTES) as RouteKey[]).filter(

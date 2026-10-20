@@ -21,7 +21,6 @@ describe('app.routes', () => {
 
   it('registers every v2 page', () => {
     const pages = [
-      '',
       'sign-in',
       'create-account',
       'reset-password',
@@ -57,7 +56,7 @@ describe('app.routes', () => {
   });
 
   it('keeps signed-in users off the public entry pages, and verify-email open to everyone', () => {
-    for (const path of ['', 'sign-in', 'create-account']) {
+    for (const path of ['sign-in', 'create-account']) {
       expect(find(path)?.canActivate, path).toEqual([requireAnonymous]);
     }
     // An emailed reset link opens in a signed-in browser too (L2-005 AC7).
@@ -68,12 +67,6 @@ describe('app.routes', () => {
   });
 
   it('carries the shell data the app chrome reads', () => {
-    expect(find('')?.data).toEqual({
-      shell: 'site',
-      cta: true,
-      footer: true,
-      page: 'landing',
-    });
     expect(find('sample-weekend')?.data).toEqual({
       shell: 'site',
       cta: true,
@@ -132,10 +125,15 @@ describe('app.routes', () => {
     expect(TestBed.inject(Router).serializeUrl(tree)).toBe('/legal#privacy');
   });
 
-  it('sends unknown paths to the landing page, as the last route', () => {
+  it('sends the root to the weekend, since the landing page moved to the marketing site (L2-155)', () => {
+    expect(find('')).toMatchObject({ pathMatch: 'full', redirectTo: '/weekend' });
+    expect(find('')?.loadComponent).toBeUndefined();
+  });
+
+  it('sends unknown paths to the weekend, as the last route', () => {
     const last = routes[routes.length - 1]!;
     expect(last.path).toBe('**');
-    expect(last.redirectTo).toBe('');
+    expect(last.redirectTo).toBe('/weekend');
   });
 
   it('lazy-loads real components', async () => {
