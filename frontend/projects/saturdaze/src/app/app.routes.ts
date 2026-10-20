@@ -63,6 +63,11 @@ export const routes: Routes = [
       import('./pages/accept-invite/accept-invite.page').then((m) => m.AcceptInvitePage),
   },
   {
+    path: 'join',
+    data: { shell: 'site', page: 'join' },
+    loadComponent: () => import('./pages/join/join.page').then((m) => m.JoinPage),
+  },
+  {
     path: 'legal',
     data: { shell: 'site', footer: true, page: 'legal' },
     loadComponent: () => import('./pages/legal/legal.page').then((m) => m.LegalPage),

@@ -35,7 +35,7 @@ export class SharedWeekendService implements ISharedWeekendService {
  * The share link carries only what a viewer needs (L2-086 AC7); the family-only
  * fields the projection reads get their empty values.
  */
-function asWeekendDto(dto: SharedWeekendDto): WeekendDto {
+export function asWeekendDto(dto: SharedWeekendDto): WeekendDto {
   return {
     ...dto,
     isFavourite: false,

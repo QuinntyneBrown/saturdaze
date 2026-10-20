@@ -1,0 +1,74 @@
+/* Join (an admin invite, L2-161): the sample weekend beside the create-account card, as in the mock. */
+:host {
+  display: block;
+  padding-top: 16px;
+  padding-bottom: 40px;
+}
+
+.join__hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+  margin-bottom: 32px;
+}
+
+.join__intro {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+
+.join__eyebrow {
+  font-size: var(--fontSizeBase200);
+  font-weight: var(--fontWeightSemibold);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--colorBrandForeground1);
+  margin: 0;
+}
+
+.join__title {
+  font-size: var(--fontSizeHero800);
+  font-weight: var(--fontWeightBold);
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  margin: 0;
+}
+
+.join__sub {
+  font-size: var(--fontSizeBase300);
+  color: var(--colorNeutralForeground2);
+  max-width: 60ch;
+  margin: 0;
+}
+
+.join__card {
+  width: 100%;
+  max-width: 440px;
+}
+
+.join__narrow {
+  max-width: 440px;
+  margin-inline: auto;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacingVerticalL);
+}
+
+.password {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+@media (min-width: 64rem) {
+  .join__hero {
+    grid-template-columns: minmax(0, 1fr) 440px;
+    gap: 40px;
+  }
+}

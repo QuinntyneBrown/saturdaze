@@ -6,6 +6,7 @@ import { ForgotPasswordRequest } from '../models/forgot-password-request';
 import { LoginRequest } from '../models/login-request';
 import { ResetPasswordRequest } from '../models/reset-password-request';
 import { AcceptInvitationRequest, Invitation } from '../models/invitation';
+import { AcceptJoinRequest, JoinPreview } from '../models/join';
 import { ResendVerificationRequest } from '../models/resend-verification-request';
 import { SignupRequest } from '../models/signup-request';
 import { User } from '../models/user';
@@ -124,6 +125,24 @@ export interface ISessionStore {
    * @returns {Promise<void>} The result of the operation
    */
   acceptInvitation(req: AcceptInvitationRequest): Promise<void>;
+  /**
+   * Preview Join — what an administrator's invite link is for (L2-161). Rejects
+   * with `token_invalid` / `token_expired`; `error` is not set.
+   *
+   * @param {string} token - The join token
+   *
+   * @returns {Promise<JoinPreview>} The result of the operation
+   */
+  previewJoin(token: string): Promise<JoinPreview>;
+  /**
+   * Accept Join — creates the invitee's account and signs them in, persisted
+   * like a sign-up (L2-161).
+   *
+   * @param {AcceptJoinRequest} req - The req
+   *
+   * @returns {Promise<void>} The result of the operation
+   */
+  acceptJoin(req: AcceptJoinRequest): Promise<void>;
   /**
    * Verify Email.
    *

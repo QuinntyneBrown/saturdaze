@@ -12,6 +12,7 @@ import { LogoutRequest } from '../models/logout-request';
 import { RefreshRequest } from '../models/refresh-request';
 import { ResetPasswordRequest } from '../models/reset-password-request';
 import { AcceptInvitationRequest, Invitation } from '../models/invitation';
+import { AcceptJoinRequest, JoinPreview } from '../models/join';
 import { ResendVerificationRequest } from '../models/resend-verification-request';
 import { SignupRequest } from '../models/signup-request';
 import { User } from '../models/user';
@@ -310,6 +311,41 @@ export class AuthService implements IAuthService {
     try {
       const dto = await firstValueFrom(
         this.http.post<AuthSuccessDto>(`${this.baseUrl}/api/auth/accept-invitation`, req),
+      );
+      return { token: mapToken(dto.token), user: this.toUser(dto.user) };
+    } catch (e) {
+      rethrowAsAuthError(e);
+    }
+  }
+
+  /**
+   * Preview Join — `POST /api/auth/join` (L2-161).
+   *
+   * @param {string} token - The join token
+   *
+   * @returns {Promise<JoinPreview>} The result of the operation
+   */
+  async previewJoin(token: string): Promise<JoinPreview> {
+    try {
+      return await firstValueFrom(
+        this.http.post<JoinPreview>(`${this.baseUrl}/api/auth/join`, { token }),
+      );
+    } catch (e) {
+      rethrowAsAuthError(e);
+    }
+  }
+
+  /**
+   * Accept Join — `POST /api/auth/join/accept` (L2-161).
+   *
+   * @param {AcceptJoinRequest} req - The req
+   *
+   * @returns {Promise<} The result of the operation
+   */
+  async acceptJoin(req: AcceptJoinRequest): Promise<{ token: AuthToken; user: User }> {
+    try {
+      const dto = await firstValueFrom(
+        this.http.post<AuthSuccessDto>(`${this.baseUrl}/api/auth/join/accept`, req),
       );
       return { token: mapToken(dto.token), user: this.toUser(dto.user) };
     } catch (e) {
