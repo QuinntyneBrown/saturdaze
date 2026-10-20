@@ -37,6 +37,7 @@ internal sealed class TestAppDbContext : DbContext, IAppDbContext
     public DbSet<PasswordResetToken> PasswordResetTokens => Set<PasswordResetToken>();
     public DbSet<EmailVerificationToken> EmailVerificationTokens => Set<EmailVerificationToken>();
     public DbSet<WeekendShare> WeekendShares => Set<WeekendShare>();
+    public DbSet<WeekendAuditEntry> WeekendAuditEntries => Set<WeekendAuditEntry>();
 
     /// <summary>When set, the save with this 1-based number throws, as a failed commit would.</summary>
     public int? FailOnSave { get; set; }

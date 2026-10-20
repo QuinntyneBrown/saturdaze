@@ -1005,6 +1005,63 @@ namespace Saturdaze.Infrastructure.Migrations
                     b.ToTable("Weekends", (string)null);
                 });
 
+            modelBuilder.Entity("Saturdaze.Domain.Entities.WeekendAuditEntry", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Action")
+                        .HasColumnType("int");
+
+                    b.Property<string>("AdminEmail")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<Guid>("AdminUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("After")
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<string>("Before")
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<Guid?>("BlockId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int?>("Day")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("FamilyId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset>("OccurredAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<long>("Sequence")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Sequence"));
+
+                    b.Property<Guid>("WeekendId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateOnly>("WeekendOf")
+                        .HasColumnType("date");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FamilyId", "Sequence")
+                        .HasDatabaseName("IX_WeekendAuditEntries_Family");
+
+                    b.ToTable("WeekendAuditEntries", (string)null);
+                });
+
             modelBuilder.Entity("Saturdaze.Domain.Entities.WeekendShare", b =>
                 {
                     b.Property<Guid>("Id")
