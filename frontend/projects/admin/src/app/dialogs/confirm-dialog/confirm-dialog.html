@@ -1,0 +1,18 @@
+<sd-dialog [title]="data.title" [subtitle]="data.body ?? ''">
+  @if (data.well; as well) {
+    <sd-well
+      [icon]="well.icon ?? 'sparkle'"
+      [tone]="well.tone ?? 'default'"
+      [title]="well.title ?? ''"
+    >
+      {{ well.body }}
+    </sd-well>
+  }
+  <sd-button slot="actions" variant="quiet" type="button" (click)="cancel()">Cancel</sd-button>
+  <sd-button slot="actions" variant="primary" type="button" (click)="confirm()">
+    @if (data.icon) {
+      <sd-icon [name]="data.icon" />
+    }
+    {{ data.confirmLabel ?? 'Confirm' }}
+  </sd-button>
+</sd-dialog>

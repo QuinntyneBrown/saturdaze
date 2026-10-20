@@ -1,9 +1,16 @@
-<sd-page-header
-  [title]="title()"
-  [subtitle]="subtitle()"
-  backHref="/families"
-  backLabel="Families"
-/>
+<sd-page-header [title]="title()" [subtitle]="subtitle()" backHref="/families" backLabel="Families">
+  @if (status() === 'ready' || status() === 'generating') {
+    <sd-button
+      slot="primary"
+      variant="primary"
+      [disabled]="!actionsEnabled()"
+      (click)="regenerateWeekend()"
+    >
+      <sd-icon name="refresh" />
+      Regenerate weekend
+    </sd-button>
+  }
+</sd-page-header>
 
 @if (error()) {
   <sd-banner class="error" tone="warn" role="alert" icon="alert">{{ error() }}</sd-banner>
@@ -70,40 +77,88 @@
             [meta]="day.meta"
             [weather]="dayWeather(day)"
             [locked]="day.locked"
-            [actions]="false"
+            [busy]="busy() === day.day"
+            (regenerate)="regenerateDay(day)"
+            (lockToggle)="lockDay(day, $event)"
           >
-            @for (block of day.blocks; track block.id) {
-              @if (block.leg) {
-                <sd-leg
-                  [label]="block.leg.label"
-                  [ariaLabel]="block.leg.ariaLabel"
-                  [destination]="block.leg.destination"
-                  [directionsUrl]="block.leg.directionsUrl ?? ''"
-                />
+            @if (busy() === day.day) {
+              @for (i of skeleton; track i) {
+                <sd-skeleton-row />
               }
-              <sd-block
-                [stopNumber]="block.stopNumber"
-                [time]="block.time"
-                [duration]="block.duration"
-                [icon]="block.icon"
-                [title]="block.title"
-                [subtitle]="block.subtitle ?? ''"
-                [commitment]="block.commitment"
-                [locked]="block.locked"
-                [drive]="block.drive"
-                [errand]="block.errand"
-                [done]="block.done"
-                readonly
-              >
-                @for (chip of block.chips; track chip.label) {
-                  <sd-chip slot="chips" [tone]="chipTone(chip.tone)">
-                    @if (chip.icon) {
-                      <sd-icon [name]="chip.icon" [size]="13" [stroke]="2" />
-                    }
-                    {{ chip.label }}
-                  </sd-chip>
+            } @else {
+              @for (block of day.blocks; track block.id) {
+                @if (block.leg) {
+                  <sd-leg
+                    [label]="block.leg.label"
+                    [ariaLabel]="block.leg.ariaLabel"
+                    [destination]="block.leg.destination"
+                    [directionsUrl]="block.leg.directionsUrl ?? ''"
+                  />
                 }
-              </sd-block>
+                <sd-block
+                  [stopNumber]="block.stopNumber"
+                  [time]="block.time"
+                  [duration]="block.duration"
+                  [icon]="block.icon"
+                  [title]="block.title"
+                  [subtitle]="block.subtitle ?? ''"
+                  [commitment]="block.commitment"
+                  [locked]="block.locked"
+                  [drive]="block.drive"
+                  [errand]="block.errand"
+                  [done]="block.done"
+                  (details)="blockDetails(block)"
+                >
+                  @for (chip of block.chips; track chip.label) {
+                    <sd-chip slot="chips" [tone]="chipTone(chip.tone)">
+                      @if (chip.icon) {
+                        <sd-icon [name]="chip.icon" [size]="13" [stroke]="2" />
+                      }
+                      {{ chip.label }}
+                    </sd-chip>
+                  }
+                  @if (!block.drive) {
+                    <sd-button
+                      slot="actions"
+                      variant="ghost"
+                      size="sm"
+                      icon
+                      [label]="whyLabel(block)"
+                      [tooltip]="block.commitment ? 'About this' : 'Why this pick?'"
+                      (click)="blockDetails(block)"
+                    >
+                      <sd-icon name="sparkle" />
+                    </sd-button>
+                  }
+                  @if (block.swappable) {
+                    <sd-button
+                      slot="actions"
+                      variant="ghost"
+                      size="sm"
+                      icon
+                      [label]="'Swap ' + block.title"
+                      tooltip="Swap for something else"
+                      (click)="swapBlock(block)"
+                    >
+                      <sd-icon name="swap" />
+                    </sd-button>
+                  }
+                  @if (block.lockable) {
+                    <sd-button
+                      slot="actions"
+                      variant="ghost"
+                      size="sm"
+                      icon
+                      [label]="(block.locked ? 'Unlock ' : 'Lock ') + block.title"
+                      [tooltip]="block.locked ? 'Unlock' : 'Lock in place'"
+                      [pressed]="block.locked"
+                      (click)="lockBlock(block)"
+                    >
+                      <sd-icon [name]="block.locked ? 'unlock' : 'lock'" />
+                    </sd-button>
+                  }
+                </sd-block>
+              }
             }
           </sd-day>
         </div>
@@ -113,6 +168,31 @@
 }
 
 @if (status() !== 'notFound') {
+  <sd-section
+    class="changes"
+    title="Changes"
+    subtitle="Every change an administrator made to this family's weekends, newest first. The family's own changes are not listed."
+  >
+    @if (changes(); as rows) {
+      @if (rows.length) {
+        <sd-list card class="audit-list" aria-label="Administrator changes">
+          @for (row of rows; track row.id) {
+            <div class="audit-row" role="listitem">
+              <time class="audit-row__time" [attr.datetime]="row.datetime">{{ row.time }}</time>
+              <span class="audit-row__who">{{ row.who }}</span>
+              <sd-chip [tone]="chipTone(row.action.tone)">{{ row.action.label }}</sd-chip>
+              <span class="audit-row__change">{{ row.summary }}</span>
+            </div>
+          }
+        </sd-list>
+      } @else {
+        <sd-status-row icon="clock">No changes yet</sd-status-row>
+      }
+    } @else {
+      <sd-skeleton-row />
+    }
+  </sd-section>
+
   <sd-section
     class="past-weekends"
     title="Past weekends"
