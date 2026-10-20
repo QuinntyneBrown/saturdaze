@@ -35,7 +35,7 @@ screenshots/          committed <slug>.<viewport>.png captures (390 / 820 / 1440
 | Auth | `sign-in.html` (2 states), `create-account.html`, `reset-password.html` (5 states), `verify-email.html` (3 states), `accept-invite.html` (2 states) |
 | Public | `marketing.html`, `marketing.menu-open.html` (the static site at www.saturdaze.ca, ADR-018), `legal.html` (Terms + Privacy) |
 | Admin (Saturdaze Admin, ADR-014; bare shell with its own side navigation from 1024px) | `admin.sign-in.html` (2 states), `admin.html` (Photo health), `admin.places.html`, `admin.place.html`, `admin.reviews.html`, `admin.ingestion-skips.html`, `admin.activity.html` |
-| Dialogs gallery | `dialogs.html` (D1–D30 and admin AD1–AD6 rendered inline) |
+| Dialogs gallery | `dialogs.html` (D1–D30 with their variants, and admin AD1–AD7, rendered inline) |
 
 ## Photos and maps (Wanderlog layout study)
 

@@ -900,6 +900,46 @@
       </div>
     </section>
 
+    <section class="specimen" id="dialog-photo-suggest">
+      <span class="specimen__label">D27e · Profile photo · AI suggestions (L2-160)</span>
+      <div class="dialog dialog--specimen" role="dialog" aria-modal="true" aria-labelledby="d27e-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="d27e-title">Profile photo</h2><p class="dialog__sub">It replaces your initial in the top bar and on Family.</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="dialog__body">
+            <div class="photo-picker">
+              <span class="avatar avatar--q avatar--photo photo-picker__preview" aria-hidden="true"><img class="avatar__img" src="../images/lavender-farm.svg" alt=""></span>
+              <div class="field photo-picker__field">
+                <label class="btn btn--quiet photo-picker__choose" for="d27e-title-file"><svg class="icon" aria-hidden="true"><use href="#i-edit"/></svg>Choose a photo</label>
+                <input class="visually-hidden" id="d27e-title-file" type="file" accept="image/jpeg,image/png,image/webp">
+                <p class="field__hint">JPG, PNG or WebP, up to 2 MB.</p>
+              </div>
+            </div>
+            <div class="photo-suggest">
+              <form class="photo-suggest__search" role="search" aria-label="Find a photo">
+                <div class="field photo-suggest__field">
+                  <label class="field__label" for="d27e-query">Find a photo</label>
+                  <input class="field__input" id="d27e-query" type="search" value="sunflower field">
+                </div>
+                <button class="btn btn--quiet photo-suggest__go" type="submit"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg>Find photos</button>
+              </form>
+              <p class="photo-suggest__status" role="status">2 photos found on the web.</p>
+              <div class="photo-pick" role="radiogroup" aria-label="Suggested photos">
+                <label class="photo-pick__opt"><input type="radio" name="d27e-photo" checked aria-label="Sunflowers at noon · Unsplash"><img src="../images/lavender-farm.svg" alt="" width="800" height="500"><span class="photo-pick__name">Unsplash</span></label>
+                <label class="photo-pick__opt"><input type="radio" name="d27e-photo" aria-label="Sunflower close-up · Pexels"><img src="../images/lavender-farm.svg" alt="" width="800" height="500"><span class="photo-pick__name">Pexels</span></label>
+              </div>
+            </div>
+          </div>
+          <div class="dialog__actions">
+            <button class="btn btn--quiet" type="button">Cancel</button>
+            <button class="btn btn--primary" type="button">Save</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <section class="specimen" id="dialog-invite-link">
       <span class="specimen__label">D30 · Invite link</span>
       <div class="dialog dialog--specimen" role="dialog" aria-modal="true" aria-labelledby="d30-title">
@@ -1087,6 +1127,45 @@
       </div>
     </section>
 
+    <section class="specimen" id="dialog-cover-photo-suggest">
+      <span class="specimen__label">D29b · Weekend cover photo · AI suggestions (L2-158)</span>
+      <div class="dialog dialog--specimen dialog--wide" role="dialog" aria-modal="true" aria-labelledby="d29b-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="d29b-title">Cover photo</h2><p class="dialog__sub">Shown on this weekend, in Past, and on the link you share.</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="dialog__body">
+            <div class="photo-pick" role="radiogroup" aria-label="Choose a cover photo">
+              <label class="photo-pick__opt"><input type="radio" name="d29b-photo" aria-label="Lavender fields"><img src="../images/lavender-farm.svg" alt="" width="800" height="500"><span class="photo-pick__name">Lavender fields</span></label>
+              <label class="photo-pick__opt"><input type="radio" name="d29b-photo" aria-label="La Marina"><img src="../images/la-marina.svg" alt="" width="800" height="500"><span class="photo-pick__name">La Marina</span></label>
+              <label class="photo-pick__opt photo-pick__upload"><input type="file" accept="image/jpeg,image/png,image/webp" aria-label="Upload your own photo"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg>Your own photo</label>
+            </div>
+            <div class="photo-suggest">
+              <form class="photo-suggest__search" role="search" aria-label="Suggest photos">
+                <div class="field photo-suggest__field">
+                  <label class="field__label" for="d29b-query">Suggest photos <span class="field__req">Optional</span></label>
+                  <input class="field__input" id="d29b-query" type="search" placeholder="Lavender fields at golden hour">
+                </div>
+                <button class="btn btn--quiet photo-suggest__go" type="submit"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg>Suggest photos</button>
+              </form>
+              <p class="photo-suggest__status" role="status">2 photos found on the web. Each one is cleaned and stored by Saturdaze; the credit stays with it.</p>
+              <h3 class="photo-suggest__title" id="d29b-web">From the web</h3>
+              <div class="photo-pick" role="radiogroup" aria-labelledby="d29b-web">
+                <label class="photo-pick__opt"><input type="radio" name="d29b-photo" checked aria-label="Terre Bleu Lavender Farm · Wikimedia Commons"><img src="../images/lavender-farm.svg" alt="" width="800" height="500"><span class="photo-pick__name">Wikimedia Commons</span></label>
+                <label class="photo-pick__opt"><input type="radio" name="d29b-photo" aria-label="Lavender rows at dusk · Terre Bleu"><img src="../images/lavender-farm.svg" alt="" width="800" height="500"><span class="photo-pick__name">Terre Bleu</span></label>
+              </div>
+            </div>
+            <p class="field__hint">JPEG, PNG or WebP, up to 10 MB. Location data is removed before it is saved. Only your family and people you share the weekend with can see it.</p>
+          </div>
+          <div class="dialog__actions">
+            <button class="btn btn--quiet" type="button">Cancel</button>
+            <button class="btn btn--primary" type="button"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Use this photo</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- ============================== ADMIN (Saturdaze Admin, ADR-014) ============================== -->
 
     <section class="specimen" id="dialog-admin-upload">
@@ -1151,6 +1230,51 @@
           <div class="dialog__actions">
             <button class="btn btn--quiet" type="button">Cancel</button>
             <button class="btn btn--primary" type="button" disabled><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Save photo</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="specimen" id="dialog-admin-suggest">
+      <span class="specimen__label">AD7 · Admin · Suggested photos (L2-159)</span>
+      <div class="dialog dialog--specimen dialog--wide" role="dialog" aria-modal="true" aria-labelledby="ad7-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="ad7-title">Suggested photos</h2><p class="dialog__sub">Claude searches the web for licensed photos of this place. The one you pick is fetched, cleaned and stored like an upload.</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="dialog__body">
+            <div class="photo-suggest">
+              <form class="photo-suggest__search" role="search" aria-label="Find photos">
+                <div class="field photo-suggest__field">
+                  <label class="field__label" for="ad7-query">Search</label>
+                  <input class="field__input" id="ad7-query" type="search" value="Port Credit Memorial Park">
+                </div>
+                <button class="btn btn--quiet photo-suggest__go" type="submit"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg>Find photos</button>
+              </form>
+              <p class="photo-suggest__status" role="status">2 photos found on the web.</p>
+              <div class="photo-pick" role="radiogroup" aria-label="Suggested photos">
+                <label class="photo-pick__opt"><input type="radio" name="ad7-photo" checked aria-label="Lawn running down to the lake · City of Mississauga"><img src="../images/la-marina.svg" alt="" width="800" height="500"><span class="photo-pick__name">City of Mississauga</span></label>
+                <label class="photo-pick__opt"><input type="radio" name="ad7-photo" aria-label="Memorial Park bandshell · Wikimedia Commons"><img src="../images/rec-room.svg" alt="" width="800" height="500"><span class="photo-pick__name">Wikimedia Commons</span></label>
+              </div>
+              <p class="field__hint">Picked: <a class="link" href="#dialog-admin-suggest" target="_blank" rel="noopener">Source page<svg class="icon icon--xs" aria-hidden="true"><use href="#i-external"/></svg></a> · attribution and licence are filled in from the suggestion; check them before saving.</p>
+            </div>
+            <div class="field">
+              <label class="field__label" for="ad7-alt">Alt text <span class="field__req">Recommended</span></label>
+              <input class="field__input" id="ad7-alt" type="text" value="Lawn running down to the lake">
+            </div>
+            <div class="field">
+              <label class="field__label" for="ad7-attr">Attribution</label>
+              <input class="field__input" id="ad7-attr" type="text" value="Photo · City of Mississauga">
+            </div>
+            <div class="field">
+              <label class="field__label" for="ad7-licence">Licence</label>
+              <select class="field__input" id="ad7-licence"><option>Saturdaze owned</option><option selected>CC BY 4.0</option><option>CC BY-SA 4.0</option><option>CC0</option><option>Provider terms</option><option>Other</option></select>
+            </div>
+          </div>
+          <div class="dialog__actions">
+            <button class="btn btn--quiet" type="button">Cancel</button>
+            <button class="btn btn--primary" type="button"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Save photo</button>
           </div>
         </div>
       </div>

@@ -1,0 +1,27 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers - Suggest photos with AI
+
+Person(family, "Family member", "Weekend cover, profile photo")
+Person(admin, "Administrator", "Curated place photos")
+System_Boundary(sd, "Saturdaze") {
+  Container(spa, "Saturdaze web application", "Angular", "D29 and D27 with sd-photo-suggestions")
+  Container(adminapp, "Saturdaze Admin", "Angular", "AD7 Suggested photos dialog")
+  Container(api, "Saturdaze API", "ASP.NET Core", "Find and use handlers, fetcher, sanitizer, in-memory suggestion store, signed previews")
+  ContainerDb(db, "Saturdaze database", "SQL Server", "Weekend.CoverUploadCredit, PlacePhotos, UserAvatars, PhotoAuditEntries")
+  Container(stores, "Photo stores", "File system or Blob", "Private covers and public curated photos")
+}
+System_Ext(claude, "Claude on Microsoft Foundry", "web_search_20250305")
+System_Ext(hosts, "Public image hosts", "HTTPS")
+Rel(family, spa, "Uses", "HTTPS")
+Rel(admin, adminapp, "Uses", "HTTPS")
+Rel(spa, api, "POST /api/photo-suggestions; POST cover/suggestion; POST me/avatar/suggestion", "JSON/HTTPS")
+Rel(adminapp, api, "POST /api/photo-suggestions; POST photos/suggestion", "JSON/HTTPS")
+Rel(spa, api, "GET /api/photo-suggestions/{id}?exp&sig", "signed preview")
+Rel(adminapp, api, "GET /api/photo-suggestions/{id}?exp&sig", "signed preview")
+Rel(api, claude, "v1/messages with web_search", "HTTPS")
+Rel(api, hosts, "Fetches candidate images", "HTTPS")
+Rel(api, db, "Reads and writes", "EF Core")
+Rel(api, stores, "Puts the chosen photo", "ports")
+@enduml

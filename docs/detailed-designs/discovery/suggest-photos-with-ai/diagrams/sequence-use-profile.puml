@@ -1,0 +1,46 @@
+@startuml
+title UML sequence behaviour - Use a suggestion as the profile photo
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+actor "Account holder" as actor
+box "Frontend - Saturdaze Angular application" #E0F2FE
+ participant "FamilyPage" as page
+ participant "ProfilePhotoDialog (D27)" as dialog
+ participant "SessionStore / AuthService" as client
+end box
+box "Backend - Saturdaze API" #D1FADF
+ participant "AuthController" as controller
+end box
+box "Backend - Saturdaze Application and Domain" #ECFDF3
+ participant "UseSuggestedAvatarCommandHandler" as use
+ participant "SetAvatarCommandHandler" as setavatar
+end box
+box "Backend - Saturdaze Infrastructure" #FFF4E5
+ participant "MemoryPhotoSuggestionStore" as store
+ participant "SkiaImageSanitizer" as sanitizer
+ database "AppDbContext\nSQL Server" as db
+end box
+actor -> dialog : Type a description; Find photos; pick a tile
+dialog -> dialog : Preview the tile in the avatar; enable Save
+actor -> dialog : Save
+dialog --> page : { kind: suggestion, suggestionId }
+page -> client : useSuggestedAvatar(suggestionId)
+client -> controller : POST /api/auth/me/avatar/suggestion
+controller -> use : UseSuggestedAvatarCommand
+use -> store : Take(suggestionId, userId)
+alt unknown, expired or another user's suggestion
+ use --> controller : 404 suggestion_not_found (L2-160 AC2)
+else live
+ use -> sanitizer : Sanitize(bytes, maxEdge 512)
+ use -> setavatar : SetAvatarCommand(bytes)
+ setavatar -> db : UserAvatar bytes; new AvatarToken; save
+ setavatar --> use : UserDto with a new avatarUrl (L2-160 AC1)
+end
+use --> controller : UserDto
+controller --> client : 200
+client --> page : session.user updated
+page --> actor : Account card and top-bar avatars show the photo (L2-160 AC3)
+@enduml

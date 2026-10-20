@@ -1,0 +1,16 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context - Suggest photos with AI
+
+Person(family, "Family member", "Changes a weekend cover or a profile photo")
+Person(admin, "Administrator", "Curates place photos in Saturdaze Admin")
+System(saturdaze, "Saturdaze", "Plans personalized family weekends")
+System_Ext(claude, "Claude on Microsoft Foundry", "Messages API with the web_search tool (ADR-011)")
+System_Ext(hosts, "Public image hosts", "Wikimedia Commons, venue sites, photo libraries")
+
+Rel(family, saturdaze, "Asks for and picks photo suggestions in", "HTTPS")
+Rel(admin, saturdaze, "Asks for and keeps curated suggestions in", "HTTPS")
+Rel(saturdaze, claude, "Sends one research request per search", "HTTPS, x-api-key")
+Rel(saturdaze, hosts, "Fetches each candidate image once", "HTTPS, public addresses only")
+@enduml

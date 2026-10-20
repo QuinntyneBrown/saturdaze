@@ -1,0 +1,151 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure - Suggest photos with AI
+
+enum PhotoSuggestionTarget {
+  WeekendCover
+  Place
+  Profile
+}
+class FindPhotoSuggestionsCommand {
+  +PhotoSuggestionTarget Target
+  +Guid? WeekendId
+  +PlaceKind? Kind
+  +Guid? PlaceId
+  +string? Query
+}
+class FindPhotoSuggestionsCommandHandler {
+  +Handle(command): Task<PhotoSuggestionsDto>
+}
+class PhotoSuggestionPrompt <<static>> {
+  +SystemPrompt(maxCandidates): string
+  +UserPrompt(context, query, home): string
+}
+class PhotoSuggestionCandidateParser <<static>> {
+  +Parse(rawText): IReadOnlyList<PhotoSuggestionCandidate>
+}
+class PhotoSuggestionCandidate <<record>> {
+  +string ImageUrl
+  +string Title
+  +string SourceName
+  +string SourceUrl
+  +string Attribution
+  +string Licence
+}
+class PhotoSuggestion <<record>> {
+  +string Id
+  +Guid UserId
+  +byte[] Content
+  +int Width
+  +int Height
+  +string Title
+  +string SourceName
+  +string SourceUrl
+  +string Attribution
+  +string Licence
+}
+interface IPhotoSuggestionStore {
+  +Add(suggestion): void
+  +Get(id): PhotoSuggestion?
+  +Take(id, userId): PhotoSuggestion?
+}
+interface IPhotoSuggestionQuota {
+  +TryTake(userId): bool
+}
+interface IPublicImageFetcher {
+  +FetchAsync(url, ct): Task<byte[]?>
+}
+interface IWebSearchClient {
+  +SearchAsync(system, user, ct): Task<WebSearchResult>
+}
+interface IImageSanitizer {
+  +Sanitize(content): SanitizedImage?
+  +Sanitize(content, maxEdge): SanitizedImage?
+}
+interface IPhotoUrlSigner {
+  +SignedUrl(key, lifetime): string
+  +SignedUrl(key, lifetime, basePath): string
+  +IsValid(key, exp, sig): bool
+}
+class PhotoSuggestionOptions {
+  +int MaxCandidates = 6
+  +int LifetimeMinutes = 15
+  +int SearchesPerHour = 20
+  +int MaxSearches = 5
+}
+class PhotoSuggestionsDto <<record>> {
+  +IReadOnlyList<PhotoSuggestionDto> Suggestions
+}
+class PhotoSuggestionDto <<record>> {
+  +string Id
+  +string PreviewUrl
+  +int Width
+  +int Height
+  +string Title
+  +string SourceName
+  +string SourceUrl
+  +string Attribution
+  +string Licence
+}
+class UseSuggestedCoverCommand {
+  +Guid WeekendId
+  +string SuggestionId
+}
+class UseSuggestedCuratedPhotoCommand {
+  +PlaceKind Kind
+  +Guid PlaceId
+  +string SuggestionId
+  +string? Alt
+  +string? Attribution
+  +string? Licence
+}
+class UseSuggestedAvatarCommand {
+  +string SuggestionId
+}
+class UploadWeekendCoverCommand {
+  +Guid WeekendId
+  +byte[] Content
+  +string? Credit
+}
+class UploadCuratedPhotoCommand {
+  +byte[] Content
+  +string? SourceUrl
+}
+class SetAvatarCommand {
+  +byte[] Data
+}
+class Weekend {
+  +CoverSource CoverSource
+  +string? CoverUploadKey
+  +string? CoverUploadCredit
+}
+
+FindPhotoSuggestionsCommandHandler ..> FindPhotoSuggestionsCommand : handles
+FindPhotoSuggestionsCommand --> PhotoSuggestionTarget
+FindPhotoSuggestionsCommandHandler ..> PhotoSuggestionPrompt
+FindPhotoSuggestionsCommandHandler ..> PhotoSuggestionCandidateParser
+PhotoSuggestionCandidateParser ..> PhotoSuggestionCandidate : produces
+FindPhotoSuggestionsCommandHandler --> IWebSearchClient
+FindPhotoSuggestionsCommandHandler --> IPublicImageFetcher
+FindPhotoSuggestionsCommandHandler --> IImageSanitizer
+FindPhotoSuggestionsCommandHandler --> IPhotoSuggestionStore
+FindPhotoSuggestionsCommandHandler --> IPhotoSuggestionQuota
+FindPhotoSuggestionsCommandHandler --> IPhotoUrlSigner
+FindPhotoSuggestionsCommandHandler --> PhotoSuggestionOptions
+FindPhotoSuggestionsCommandHandler ..> PhotoSuggestionsDto : returns
+PhotoSuggestionsDto "1" *-- "*" PhotoSuggestionDto
+IPhotoSuggestionStore o-- PhotoSuggestion
+UseSuggestedCoverCommand ..> UploadWeekendCoverCommand : delegates
+UseSuggestedCuratedPhotoCommand ..> UploadCuratedPhotoCommand : delegates
+UseSuggestedAvatarCommand ..> SetAvatarCommand : delegates
+UploadWeekendCoverCommand ..> Weekend : sets credit
+@enduml

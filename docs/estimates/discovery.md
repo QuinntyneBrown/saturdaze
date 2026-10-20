@@ -10,4 +10,5 @@
 | pick-restaurants | 5 days | 100% |
 | store-place-location-and-imagery | 7 days | 80% |
 | submit-community-events | 4 days | 100% |
+| suggest-photos-with-ai | 9 days | 0% |
 | track-own-event-submissions | 3 days | 100% |

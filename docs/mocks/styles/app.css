@@ -907,6 +907,14 @@
   .photo-pick__upload { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; border: 1px dashed var(--sd-line-control); color: var(--sd-ink-soft); font-size: var(--sd-fs-sm); font-weight: var(--sd-fw-semibold); }
   @media (min-width: 36rem) { .photo-pick { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 
+  /* ---- photo suggestions (AI, L1-038): a search row, a status line, then a second photo-pick grid ---- */
+  .photo-suggest { display: flex; flex-direction: column; gap: 10px; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--sd-line); }
+  .photo-suggest__search { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 8px 12px; }
+  .photo-suggest__field { flex: 1 1 200px; }
+  .photo-suggest__go { flex: none; }
+  .photo-suggest__status { display: flex; align-items: center; gap: 8px; margin: 0; font-size: var(--sd-fs-sm); color: var(--sd-ink-soft); }
+  .photo-suggest__title { margin: 2px 0 0; font-size: var(--sd-fs-sm); font-weight: var(--sd-fw-semibold); color: var(--sd-ink-soft); }
+
   /* ---- hover states (pointer devices only) ---- */
   @media (hover: hover) {
     .btn--primary:hover { background: color-mix(in srgb, var(--sd-primary-fill) 94%, #000); transform: translateY(-1px); box-shadow: var(--sd-shadow-2); }

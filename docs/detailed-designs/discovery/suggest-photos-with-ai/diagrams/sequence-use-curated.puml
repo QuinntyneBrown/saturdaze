@@ -1,0 +1,53 @@
+@startuml
+title UML sequence behaviour - Add a suggestion as a curated photo
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+actor "Administrator" as actor
+box "Frontend - Saturdaze Admin Angular application" #E0F2FE
+ participant "PlacePhotosPage" as page
+ participant "SuggestPhotosDialog (AD7)" as dialog
+ participant "AdminPhotosService" as client
+end box
+box "Backend - Saturdaze API" #D1FADF
+ participant "AdminPhotosController" as controller
+end box
+box "Backend - Saturdaze Application and Domain" #ECFDF3
+ participant "UseSuggestedCuratedPhotoCommandHandler" as use
+ participant "UploadCuratedPhotoCommandHandler" as upload
+ participant "PhotoAuditWriter" as audit
+end box
+box "Backend - Saturdaze Infrastructure" #FFF4E5
+ participant "MemoryPhotoSuggestionStore" as store
+ participant "FileSystemCuratedPhotoStore" as curated
+ database "AppDbContext\nSQL Server" as db
+end box
+actor -> page : Suggest photos
+page -> dialog : Open with the place name as the query
+actor -> dialog : Find photos; pick a tile
+dialog -> dialog : Fill alt, attribution and licence from the suggestion
+actor -> dialog : Check the fields; Save photo
+dialog -> client : addFromSuggestion(kind, placeId, suggestionId, details)
+client -> controller : POST /api/admin/places/{kind}/{id}/photos/suggestion
+controller -> use : UseSuggestedCuratedPhotoCommand
+alt attribution or licence empty
+ use --> controller : 400 naming the field (L2-159 AC2)
+else fields present
+ use -> store : Take(suggestionId, userId)
+ alt unknown, expired or another administrator's suggestion
+  use --> controller : 404 suggestion_not_found (L2-159 AC2)
+ else live
+  use -> upload : UploadCuratedPhotoCommand(bytes, alt, attribution, licence, sourceUrl)
+  upload -> curated : PutAsync(cleaned bytes)
+  upload -> db : PlacePhoto Curated, Reviewed, AdminLocked, StorageKey; promote when the rule says so
+  upload -> audit : Write Upload with sourceUrl in the After snapshot (L2-159 AC4)
+ end
+end
+use --> controller : AdminPhotoDto
+controller --> client : 201 (L2-159 AC1)
+client --> dialog : added
+dialog --> page : Reload the place's photos
+page --> actor : New tile, primary when the place had none
+@enduml

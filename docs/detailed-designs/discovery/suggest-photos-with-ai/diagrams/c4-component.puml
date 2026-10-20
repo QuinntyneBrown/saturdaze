@@ -1,0 +1,39 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components - Suggest photos with AI
+
+Container_Boundary(web, "Saturdaze and Saturdaze Admin web applications") {
+  Component(dialogs, "CoverPhotoDialog, ProfilePhotoDialog, SuggestPhotosDialog", "CDK dialogs", "Own the service calls; close with a suggestion id")
+  Component(suggest, "sd-photo-suggestions", "components library", "Search row, status line, tiles")
+  Component(client, "PhotoSuggestionsService and the use methods", "api library", "POST /api/photo-suggestions; anchors previewUrl")
+}
+Container_Boundary(api, "Saturdaze API and Application") {
+  Component(ctrl, "PhotoSuggestionsController", "ASP.NET Core", "POST find; anonymous signed GET preview")
+  Component(usectrl, "Weekends, AdminPhotos and Auth controllers", "ASP.NET Core", "POST .../suggestion")
+  Component(find, "FindPhotoSuggestionsCommandHandler", "MediatR", "Authorize, quota, research, parse, fetch, clean, store")
+  Component(prompt, "PhotoSuggestionPrompt and CandidateParser", "Application", "Builds the request; reads the JSON array")
+  Component(use, "UseSuggestedCover / CuratedPhoto / Avatar handlers", "MediatR", "Resolve the suggestion; delegate to the upload command")
+  Component(uploads, "UploadWeekendCover, UploadCuratedPhoto, SetAvatar handlers", "MediatR", "Existing storage paths")
+  Component(search, "IWebSearchClient / ClaudeWebSearchClient", "Port / Infrastructure", "Claude on Foundry")
+  Component(fetcher, "IPublicImageFetcher / HttpPublicImageFetcher", "Port / Infrastructure", "HTTPS, public addresses, 10 s, 10 MB")
+  Component(sanitizer, "IImageSanitizer / SkiaImageSanitizer", "Port / Infrastructure", "Verify by content; re-encode; scale")
+  Component(store, "IPhotoSuggestionStore and IPhotoSuggestionQuota", "Port / Infrastructure", "IMemoryCache, 15 min; 20 per hour")
+  Component(signer, "IPhotoUrlSigner", "Port / Infrastructure", "Signs preview URLs")
+}
+Rel(dialogs, suggest, "Renders")
+Rel(dialogs, client, "Calls")
+Rel(client, ctrl, "POST", "HTTPS")
+Rel(client, usectrl, "POST", "HTTPS")
+Rel(ctrl, find, "Dispatches")
+Rel(find, prompt, "Builds and parses")
+Rel(find, search, "SearchAsync")
+Rel(find, fetcher, "FetchAsync per candidate")
+Rel(find, sanitizer, "Sanitize")
+Rel(find, store, "TryTake; Add")
+Rel(find, signer, "SignedUrl")
+Rel(ctrl, store, "Get for preview")
+Rel(usectrl, use, "Dispatches")
+Rel(use, store, "Take(id, user)")
+Rel(use, uploads, "Sends the upload command")
+@enduml

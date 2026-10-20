@@ -1,0 +1,78 @@
+@startuml
+title UML sequence behaviour - Find photo suggestions
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+actor "Family member or administrator" as actor
+box "Frontend - Saturdaze or Saturdaze Admin Angular application" #E0F2FE
+ participant "Dialog\nsd-photo-suggestions" as dialog
+ participant "PhotoSuggestionsService" as client
+end box
+box "Backend - Saturdaze API" #D1FADF
+ participant "PhotoSuggestionsController" as controller
+end box
+box "Backend - Saturdaze Application and Domain" #ECFDF3
+ participant "FindPhotoSuggestionsCommandHandler" as handler
+ participant "Prompt / CandidateParser" as parser
+end box
+box "Backend - Saturdaze Infrastructure" #FFF4E5
+ participant "MemoryPhotoSuggestionQuota\nMemoryPhotoSuggestionStore" as store
+ participant "ClaudeWebSearchClient" as claude
+ participant "HttpPublicImageFetcher" as fetcher
+ participant "SkiaImageSanitizer" as sanitizer
+ participant "HmacPhotoUrlSigner" as signer
+end box
+actor -> dialog : Suggest photos (optional query)
+dialog -> dialog : status "Finding photos..." (live region)
+dialog -> client : find({ target, weekendId | kind + placeId | query })
+client -> controller : POST /api/photo-suggestions
+controller -> handler : FindPhotoSuggestionsCommand
+alt weekendCover and the weekend is another family's
+ handler --> controller : 404 (L2-157 AC4)
+else place and caller is not an administrator
+ handler --> controller : 403 admin_only (L2-157 AC4)
+else authorized
+ handler -> store : TryTake(userId)
+ alt 20 searches in the past hour
+  handler --> controller : 429 suggestion_limit (L2-157 AC7)
+ else within quota
+  handler -> parser : Build system and user prompts from the context
+  handler -> claude : SearchAsync(system, user)
+  alt endpoint unconfigured or Claude fails
+   handler --> controller : 503 suggestions_unavailable (L2-157 AC6)
+  else answer received
+   handler -> parser : Parse JSON array; drop entries without imageUrl or attribution
+   loop each candidate, at most MaxCandidates
+    handler -> fetcher : FetchAsync(imageUrl)
+    alt not HTTPS, host not public, redirect, over 10 s or 10 MB
+     fetcher --> handler : null, candidate dropped (L2-157 AC2)
+    else bytes
+     handler -> sanitizer : Sanitize(bytes)
+     alt not JPEG, PNG or WebP
+      sanitizer --> handler : null, candidate dropped
+     else image
+      handler -> store : Add(PhotoSuggestion bound to userId, 15 min)
+      handler -> signer : SignedUrl("suggestion:" + id, 15 min, "/api/photo-suggestions")
+     end
+    end
+   end
+   handler -> handler : Log target, counts, tokens, searches (L2-157 AC8)
+   handler --> controller : PhotoSuggestionsDto
+  end
+ end
+end
+controller --> client : 200 { suggestions }
+client --> dialog : previews anchored to the API origin
+dialog --> actor : "From the web" tiles, or "No photos found."
+actor -> dialog : Looks at a tile
+dialog -> controller : GET /api/photo-suggestions/{id}?exp&sig (anonymous)
+alt signature invalid or expired
+ controller --> dialog : 403 (L2-157 AC3)
+else unknown id
+ controller --> dialog : 404
+else live
+ controller --> dialog : 200 image/jpeg, private, nosniff
+end
+@enduml

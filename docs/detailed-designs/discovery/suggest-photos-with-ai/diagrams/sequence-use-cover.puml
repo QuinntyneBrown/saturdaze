@@ -1,0 +1,52 @@
+@startuml
+title UML sequence behaviour - Use a suggestion as the weekend cover
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+actor "Family member" as actor
+box "Frontend - Saturdaze Angular application" #E0F2FE
+ participant "WeekendPage or PastPage" as page
+ participant "CoverPhotoDialog" as dialog
+ participant "WeekendPlanService / SavedService" as client
+end box
+box "Backend - Saturdaze API" #D1FADF
+ participant "WeekendsController" as controller
+end box
+box "Backend - Saturdaze Application and Domain" #ECFDF3
+ participant "UseSuggestedCoverCommandHandler" as use
+ participant "UploadWeekendCoverCommandHandler" as upload
+ participant "WeekendEnrichment" as enrich
+end box
+box "Backend - Saturdaze Infrastructure" #FFF4E5
+ participant "MemoryPhotoSuggestionStore" as store
+ participant "FileSystemPhotoStore" as photos
+ database "AppDbContext\nSQL Server" as db
+end box
+actor -> dialog : Pick a "From the web" tile, Use this photo
+dialog --> page : { source: suggestion, suggestionId }
+page -> client : useSuggestedCover(suggestionId)
+client -> controller : POST /api/weekends/{id}/cover/suggestion
+controller -> use : UseSuggestedCoverCommand
+use -> store : Take(suggestionId, userId)
+alt unknown, expired or another user's suggestion
+ use --> controller : 404 suggestion_not_found (L2-158 AC2)
+else live
+ use -> upload : UploadWeekendCoverCommand(weekendId, bytes, credit = attribution)
+ upload -> db : Load caller-family weekend
+ alt not owned
+  upload --> controller : 404 (L2-158 AC3)
+ else owned
+  upload -> photos : PutAsync(cleaned bytes)
+  upload -> db : CoverSource = Upload; CoverUploadKey; CoverUploadCredit; save
+  upload -> upload : Log weekend id and size only
+ end
+end
+use --> controller : WeekendDto
+controller -> enrich : Resolve the cover
+enrich --> controller : CoverDto label "From the web", attribution = credit (L2-158 AC1)
+controller --> client : 200
+client --> page : WeekendView.cover updated
+page --> actor : Cover shows the photo with its credit
+@enduml
