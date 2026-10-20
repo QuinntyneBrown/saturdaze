@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="en">
+<head>
+<!-- @shell:head -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Join Saturdaze — Saturdaze</title>
+<link rel="stylesheet" href="../styles/tokens.css">
+<link rel="stylesheet" href="../styles/app.css">
+<!-- @/shell:head -->
+</head>
+<body data-page="join" data-shell="bare">
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="sitebar">
+  <div class="container sitebar__inner">
+    <a class="sitebar__brand" href="./marketing.html"><span class="brand-mark" aria-hidden="true"></span>Saturdaze</a>
+    <div class="sitebar__actions">
+      <a class="sitebar__link" href="./sign-in.html">Sign in</a>
+    </div>
+  </div>
+</header>
+<main class="join container" id="main">
+
+  <!-- 1 · With a sample weekend -->
+  <section class="specimen" id="state-sample" aria-labelledby="jn-title-1">
+    <span class="specimen__label">1 · With a sample weekend</span>
+    <div class="join__hero">
+      <div class="join__intro">
+        <p class="join__eyebrow">A weekend planned for you</p>
+        <h1 class="join__title" id="jn-title-1">A weekend planned for The Riveras</h1>
+        <p class="join__sub">admin@saturdaze.ca invited you to Saturdaze. Here is Saturday and Sunday 24 to 25 October, drafted around Dani, Mateo, the forecast and the drive from Port Credit. Create your account and this plan is yours to keep, swap and share.</p>
+        <div class="well well--primary">
+          <svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg>
+          <div><p class="well__title">Every weekend, planned</p><p class="well__body">Saturdaze drafts Saturday and Sunday around your family, your commitments and the weather. Lock what you love, swap what you don't.</p></div>
+        </div>
+      </div>
+      <div class="auth-card join__card">
+        <div class="auth-card__head">
+          <h2 class="auth-card__title">Create your account</h2>
+          <p class="auth-card__sub">Choose a password to sign in with. Your email is already confirmed by this link.</p>
+        </div>
+        <form class="auth-card__form" action="./weekend.html">
+          <div class="field">
+            <label class="field__label" for="jn-email">Email</label>
+            <input class="field__input" id="jn-email" type="email" value="ana@example.com" readonly>
+          </div>
+          <div class="field">
+            <label class="field__label" for="jn-password">Password</label>
+            <input class="field__input" id="jn-password" type="password" autocomplete="new-password" value="Riverwood-24-Oct" aria-describedby="jn-strength">
+            <div class="strength strength--strong" id="jn-strength" aria-live="polite">
+              <div class="strength__bar" aria-hidden="true"><span class="strength__seg"></span><span class="strength__seg"></span><span class="strength__seg"></span></div>
+              <span class="strength__label">Strong.</span>
+            </div>
+          </div>
+          <div class="field">
+            <label class="field__label" for="jn-confirm">Confirm password</label>
+            <input class="field__input" id="jn-confirm" type="password" autocomplete="new-password" value="Riverwood-24-Oct">
+          </div>
+          <button class="btn btn--primary btn--lg btn--block" type="submit"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg>Create my account</button>
+        </form>
+        <p class="auth-card__alt">Already have a sign-in? <a href="./sign-in.html">Sign in</a></p>
+      </div>
+    </div>
+    <div class="grid-days join__days">
+      <section class="day" aria-labelledby="jn-sat-title">
+        <header class="day__header">
+          <span class="weather-disc weather-disc--sun" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-sun"/></svg></span>
+          <div class="day__text">
+            <h2 class="day__title" id="jn-sat-title">Saturday</h2>
+            <p class="day__meta">24 Oct · Sunny · 14° / 6° · 2 stops · 50 min driving</p>
+          </div>
+        </header>
+        <ol class="day__list">
+          <li class="block">
+            <div class="block__time"><span class="block__clock">8:30am</span><span class="block__dur">45m</span></div>
+            <div class="block__rail"><span class="block__disc"><svg class="icon" aria-hidden="true"><use href="#i-home"/></svg></span></div>
+            <div class="block__body"><h3 class="block__title">Breakfast at home</h3><p class="block__sub clamp-1">Slow start</p></div>
+          </li>
+          <li class="block block--drive">
+            <div class="block__time"><span class="block__clock">9:30am</span><span class="block__dur">25m</span></div>
+            <div class="block__rail"><span class="block__disc"><svg class="icon" aria-hidden="true"><use href="#i-car"/></svg></span></div>
+            <div class="block__body"><h3 class="block__title">Drive to Riverwood Conservancy</h3></div>
+          </li>
+          <li class="block">
+            <div class="block__time"><span class="block__clock">10:00am</span><span class="block__dur">2h</span></div>
+            <div class="block__rail"><span class="block__disc block__disc--num"><span class="visually-hidden">Stop </span>1</span></div>
+            <div class="block__body">
+              <h3 class="block__title">Riverwood Conservancy</h3>
+              <p class="block__sub clamp-1">Mississauga · trails along the Credit River</p>
+              <div class="block__chips"><span class="chip chip--primary">Day highlight</span><span class="chip chip--leaf">Outdoor</span></div>
+            </div>
+          </li>
+          <li class="block">
+            <div class="block__time"><span class="block__clock">12:15pm</span><span class="block__dur">1h 15m</span></div>
+            <div class="block__rail"><span class="block__disc block__disc--num"><span class="visually-hidden">Stop </span>2</span></div>
+            <div class="block__body"><h3 class="block__title">Lunch at Snug Harbour</h3><p class="block__sub clamp-1">Port Credit · patio over the harbour</p></div>
+          </li>
+          <li class="block block--drive">
+            <div class="block__time"><span class="block__clock">1:30pm</span><span class="block__dur">25m</span></div>
+            <div class="block__rail"><span class="block__disc"><svg class="icon" aria-hidden="true"><use href="#i-car"/></svg></span></div>
+            <div class="block__body"><h3 class="block__title">Drive home</h3></div>
+          </li>
+          <li class="block">
+            <div class="block__time"><span class="block__clock">2:00pm</span><span class="block__dur">3h</span></div>
+            <div class="block__rail"><span class="block__disc"><svg class="icon" aria-hidden="true"><use href="#i-bed"/></svg></span></div>
+            <div class="block__body"><h3 class="block__title">Downtime</h3><p class="block__sub clamp-1">Nap, garden, nothing planned</p></div>
+          </li>
+          <li class="block">
+            <div class="block__time"><span class="block__clock">5:30pm</span><span class="block__dur">1h</span></div>
+            <div class="block__rail"><span class="block__disc"><svg class="icon" aria-hidden="true"><use href="#i-home"/></svg></span></div>
+            <div class="block__body"><h3 class="block__title">Dinner at home</h3><p class="block__sub clamp-1">Early night before Sunday</p></div>
+          </li>
+        </ol>
+      </section>
+      <section class="day" aria-labelledby="jn-sun-title">
+        <header class="day__header">
+          <span class="weather-disc weather-disc--rain" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-rain"/></svg></span>
+          <div class="day__text">
+            <h2 class="day__title" id="jn-sun-title">Sunday</h2>
+            <p class="day__meta">25 Oct · Showers · 11° / 5° · 2 stops · 1 h 20 min driving</p>
+          </div>
+        </header>
+        <ol class="day__list">
+          <li class="block">
+            <div class="block__time"><span class="block__clock">9:00am</span><span class="block__dur">45m</span></div>
+            <div class="block__rail"><span class="block__disc"><svg class="icon" aria-hidden="true"><use href="#i-home"/></svg></span></div>
+            <div class="block__body"><h3 class="block__title">Breakfast at home</h3><p class="block__sub clamp-1">Pancakes</p></div>
+          </li>
+          <li class="block block--drive">
+            <div class="block__time"><span class="block__clock">10:00am</span><span class="block__dur">40m</span></div>
+            <div class="block__rail"><span class="block__disc"><svg class="icon" aria-hidden="true"><use href="#i-car"/></svg></span></div>
+            <div class="block__body"><h3 class="block__title">Drive to Rec Room Mississauga</h3></div>
+          </li>
+          <li class="block">
+            <div class="block__time"><span class="block__clock">10:40am</span><span class="block__dur">2h</span></div>
+            <div class="block__rail"><span class="block__disc block__disc--num"><span class="visually-hidden">Stop </span>1</span></div>
+            <div class="block__body">
+              <h3 class="block__title">Rec Room Mississauga</h3>
+              <p class="block__sub clamp-1">Arcade and games · rainy-day pick</p>
+              <div class="block__chips"><span class="chip chip--primary">Day highlight</span><span class="chip chip--indoor">Indoor</span></div>
+            </div>
+          </li>
+          <li class="block">
+            <div class="block__time"><span class="block__clock">1:00pm</span><span class="block__dur">1h 15m</span></div>
+            <div class="block__rail"><span class="block__disc block__disc--num"><span class="visually-hidden">Stop </span>2</span></div>
+            <div class="block__body"><h3 class="block__title">Lunch at La Marina</h3><p class="block__sub clamp-1">Port Credit · kids' menu</p></div>
+          </li>
+          <li class="block block--drive">
+            <div class="block__time"><span class="block__clock">2:15pm</span><span class="block__dur">40m</span></div>
+            <div class="block__rail"><span class="block__disc"><svg class="icon" aria-hidden="true"><use href="#i-car"/></svg></span></div>
+            <div class="block__body"><h3 class="block__title">Drive home</h3></div>
+          </li>
+          <li class="block">
+            <div class="block__time"><span class="block__clock">3:00pm</span><span class="block__dur">2h 30m</span></div>
+            <div class="block__rail"><span class="block__disc"><svg class="icon" aria-hidden="true"><use href="#i-bed"/></svg></span></div>
+            <div class="block__body"><h3 class="block__title">Downtime</h3><p class="block__sub clamp-1">Board games while it rains</p></div>
+          </li>
+          <li class="block">
+            <div class="block__time"><span class="block__clock">5:30pm</span><span class="block__dur">1h</span></div>
+            <div class="block__rail"><span class="block__disc"><svg class="icon" aria-hidden="true"><use href="#i-home"/></svg></span></div>
+            <div class="block__body"><h3 class="block__title">Dinner at home</h3><p class="block__sub clamp-1">Ready for Monday</p></div>
+          </li>
+        </ol>
+      </section>
+    </div>
+  </section>
+
+  <!-- 2 · Without a sample weekend -->
+  <section class="specimen join__narrow" id="state-plain" aria-labelledby="jn-title-2">
+    <span class="specimen__label">2 · Without a sample weekend</span>
+    <div class="auth-card">
+      <div class="auth-card__head auth-card__head--center">
+        <span class="disc disc--xl disc--primary auth-card__disc" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg></span>
+        <h2 class="auth-card__title" id="jn-title-2">Join Saturdaze</h2>
+        <p class="auth-card__sub">admin@saturdaze.ca invited you. Choose a password to sign in with; your email is already confirmed by this link.</p>
+      </div>
+      <form class="auth-card__form" action="./weekend.html">
+        <div class="field">
+          <label class="field__label" for="jn2-email">Email</label>
+          <input class="field__input" id="jn2-email" type="email" value="priya@example.com" readonly>
+        </div>
+        <div class="field">
+          <label class="field__label" for="jn2-password">Password</label>
+          <input class="field__input" id="jn2-password" type="password" autocomplete="new-password" value="">
+        </div>
+        <div class="field">
+          <label class="field__label" for="jn2-confirm">Confirm password</label>
+          <input class="field__input" id="jn2-confirm" type="password" autocomplete="new-password" value="">
+        </div>
+        <button class="btn btn--primary btn--lg btn--block" type="submit">Join Saturdaze</button>
+      </form>
+      <p class="auth-card__alt">Already have a sign-in? <a href="./sign-in.html">Sign in</a></p>
+    </div>
+  </section>
+
+  <!-- 3 · Invalid -->
+  <section class="specimen join__narrow" id="state-invalid" aria-labelledby="jn-title-3">
+    <span class="specimen__label">3 · Invite no longer works</span>
+    <div class="auth-card">
+      <div class="auth-card__head auth-card__head--center">
+        <span class="disc disc--xl disc--warn auth-card__disc" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-mail"/></svg></span>
+        <h2 class="auth-card__title" id="jn-title-3">This invite no longer works</h2>
+        <p class="auth-card__sub">It was used, revoked or is more than 14 days old. Ask whoever invited you for a new link.</p>
+      </div>
+      <a class="btn btn--quiet btn--lg btn--block" href="./sign-in.html">Sign in</a>
+    </div>
+  </section>
+
+  <p class="auth__foot"><a class="link--soft" href="./legal.html">Terms</a><span aria-hidden="true">·</span><a class="link--soft" href="./legal.html#privacy">Privacy</a></p>
+</main>
+<script src="../app.js"></script>
+</body>
+</html>

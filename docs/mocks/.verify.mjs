@@ -71,6 +71,7 @@ export const PAGES = [
   { url: "/pages/create-account.html", shell: "bare", expects: { selector: ".auth-card__title", text: "Start planning weekends" } },
   { url: "/pages/reset-password.html", shell: "bare", expects: { selector: "#state-expired .auth-card__title", text: "This link has expired" } },
   { url: "/pages/accept-invite.html",  shell: "bare", expects: { selector: "#state-invalid .auth-card__title", text: "This invite no longer works" } },
+  { url: "/pages/join.html",           shell: "bare", expects: { selector: "#state-sample .join__title", text: "A weekend planned for The Riveras" }, cols: { ".join__days": { 390: 1, 820: 1, 1440: 2 }, ".join__hero": { 390: 1, 820: 1, 1440: 2 } } },
   { url: "/pages/verify-email.html",   shell: "bare", expects: { selector: "#state-verified .auth-card__title", text: "You are verified" } },
 
   // Public
@@ -86,6 +87,9 @@ export const PAGES = [
   { url: "/pages/admin.reviews.html",        shell: "bare", expects: { selector: ".review-item .card__title", text: "Harbour Grill" } },
   { url: "/pages/admin.ingestion-skips.html", shell: "bare", expects: { selector: ".skip__reason", text: "previously rejected" } },
   { url: "/pages/admin.activity.html",       shell: "bare", expects: { selector: ".audit-row__change", text: "memorial-park.jpg" } },
+  { url: "/pages/admin.invitations.html",    shell: "bare", expects: { selector: ".invite-list .list__title", text: "ana@example.com" } },
+  { url: "/pages/admin.sample.new.html",     shell: "bare", expects: { selector: ".page-header__title", text: "New sample weekend" } },
+  { url: "/pages/admin.sample.html",         shell: "bare", expects: { selector: ".page-header__title", text: "sample weekend" }, cols: { ".sample-days": { 390: 1, 820: 1, 1440: 2 } } },
 
   // Dialogs gallery
   { url: "/pages/dialogs.html", nav: null, expects: { selector: "#dialog-block .dialog__title", text: "Terre Bleu Lavender Farm" } },

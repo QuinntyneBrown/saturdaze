@@ -1,0 +1,88 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure - Invite families to Saturdaze
+
+class PlatformInvitation {
+  +Guid Id
+  +string Email
+  +string NormalizedEmail
+  +string TokenHash
+  +Guid? ProspectId
+  +string? Message
+  +Guid InvitedByUserId
+  +DateTimeOffset CreatedAtUtc
+  +DateTimeOffset ExpiresAtUtc
+  +DateTimeOffset? AcceptedAtUtc
+  +Guid? AcceptedUserId
+  +DateTimeOffset? RevokedAtUtc
+}
+
+enum PlatformInvitationStatus {
+  Pending
+  Accepted
+  Expired
+  Revoked
+  {static} Of(invitation, now)
+}
+
+class SendInvitationsCommand {
+  +IReadOnlyList<string> Emails
+  +Guid? ProspectId
+  +string? Message
+}
+
+class SendInvitationsCommandHandler {
+  {static} +TimeSpan Lifetime = 14 days
+  +Handle(command): Task<SendInvitationsResultDto>
+}
+
+class ListInvitationsQueryHandler {
+  +Handle(query): Task<IReadOnlyList<PlatformInvitationDto>>
+}
+
+class RevokeInvitationCommandHandler {
+  +Handle(command): Task
+}
+
+class InvitationEmails {
+  +Invitation(to, token, invitedBy, familyName, weekendOf, message): EmailMessage
+}
+
+class PlatformInvitationDto {
+  +Guid Id
+  +string Email
+  +PlatformInvitationStatus Status
+  +SampleWeekendSummaryDto? SampleWeekend
+  +string? InvitedByEmail
+  +string? Message
+  +DateTimeOffset CreatedAtUtc
+  +DateTimeOffset ExpiresAtUtc
+  +DateTimeOffset? AcceptedAtUtc
+  +string? Url
+}
+
+class SampleWeekendSummaryDto {
+  +Guid ProspectId
+  +string FamilyName
+  +DateOnly WeekendOf
+}
+
+SendInvitationsCommandHandler ..> SendInvitationsCommand : handles
+SendInvitationsCommandHandler --> PlatformInvitation : creates
+SendInvitationsCommandHandler ..> InvitationEmails : builds mail with
+SendInvitationsCommandHandler ..> PlatformInvitationDto : returns
+ListInvitationsQueryHandler --> PlatformInvitation : reads
+ListInvitationsQueryHandler ..> PlatformInvitationStatus : derives
+RevokeInvitationCommandHandler --> PlatformInvitation : sets RevokedAtUtc
+PlatformInvitationDto --> PlatformInvitationStatus
+PlatformInvitationDto --> SampleWeekendSummaryDto
+@enduml

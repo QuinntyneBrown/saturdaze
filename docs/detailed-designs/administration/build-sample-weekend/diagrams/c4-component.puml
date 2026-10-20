@@ -1,0 +1,37 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components - Build a sample weekend
+
+Container_Boundary(adminweb, "Saturdaze Admin") {
+  Component(newpage, "SampleNewPage (A9)", "Angular page", "Family name, home, members, likes, weekend")
+  Component(samplepage, "SamplePage (A10)", "Angular page", "Two sd-day sections with Swap and Lock")
+  Component(service, "AdminInvitationsService", "api library", "createProspect(), prospect(), regenerate(), swapBlock(), lockBlock()")
+}
+Container_Boundary(api, "Saturdaze API") {
+  Component(ctrl, "AdminProspectsController", "ASP.NET Core controller", "api/admin/prospects, Admin policy")
+  Component(create, "CreateProspectCommandHandler", "MediatR handler", "Family rows, planner, Weekend, Prospect")
+  Component(get, "GetProspectQueryHandler", "MediatR handler", "Prospect with its weekend")
+  Component(shape, "Regenerate / Swap / Lock prospect handlers", "MediatR handlers", "Find the prospect's weekend, delegate")
+  Component(replanner, "WeekendReplanner", "Application service", "Regenerate keeping locked blocks (shared with the family path)")
+  Component(swapper, "BlockSwapper", "Application service", "Next best pick for a block (shared with the family path)")
+  Component(loader, "PlannerInputLoader", "Application service", "Family, catalogs, forecast, history")
+  Component(planner, "WeekendPlanner", "Application service", "Deterministic rule-based planner")
+  ComponentDb(db, "Saturdaze database", "SQL Server", "Prospects, Families, Weekends")
+}
+Rel(newpage, service, "createProspect()")
+Rel(samplepage, service, "prospect(), regenerate(), swapBlock(), lockBlock()")
+Rel(service, ctrl, "JSON over HTTPS with bearer")
+Rel(ctrl, create, "CreateProspectCommand")
+Rel(ctrl, get, "GetProspectQuery")
+Rel(ctrl, shape, "Regenerate / Swap / Lock commands")
+Rel(create, loader, "LoadAsync(familyId, weekendOf)")
+Rel(create, planner, "Plan(inputs)")
+Rel(shape, replanner, "RegenerateAsync(weekend, familyId)")
+Rel(shape, swapper, "SwapAsync(weekend, block, familyId)")
+Rel(replanner, planner, "Plan(inputs)")
+Rel(swapper, planner, "PickActivityForGap, BuildActivityBlocks")
+Rel(create, db, "Inserts", "EF Core")
+Rel(get, db, "Reads", "EF Core")
+Rel(shape, db, "Reads and writes", "EF Core")
+@enduml

@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+<!-- @shell:head -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>New sample weekend — Saturdaze Admin</title>
+<link rel="stylesheet" href="../styles/tokens.css">
+<link rel="stylesheet" href="../styles/app.css">
+<!-- @/shell:head -->
+</head>
+<body data-page="admin" data-shell="bare" data-screen="sample-new">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="admin">
+  <nav class="admin-nav" aria-label="Admin">
+    <a class="admin-nav__brand" href="./admin.html"><span class="brand-mark" aria-hidden="true"></span><span class="admin-nav__brand-text">Saturdaze</span><span class="admin-nav__tag">Admin</span></a>
+    <div class="admin-nav__links">
+      <a class="admin-nav__link" data-nav="health" href="./admin.html"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg>Photo health</a>
+      <a class="admin-nav__link" data-nav="places" href="./admin.places.html"><svg class="icon" aria-hidden="true"><use href="#i-map"/></svg>Places</a>
+      <a class="admin-nav__link" data-nav="reviews" href="./admin.reviews.html"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Review queue</a>
+      <a class="admin-nav__link" data-nav="skips" href="./admin.ingestion-skips.html"><svg class="icon" aria-hidden="true"><use href="#i-refresh"/></svg>Ingestion skips</a>
+      <a class="admin-nav__link" data-nav="activity" href="./admin.activity.html"><svg class="icon" aria-hidden="true"><use href="#i-calendar"/></svg>Activity log</a>
+      <a class="admin-nav__link" data-nav="invitations" href="./admin.invitations.html" aria-current="page"><svg class="icon" aria-hidden="true"><use href="#i-mail"/></svg>Invitations</a>
+    </div>
+    <div class="admin-nav__account">
+      <span class="avatar avatar--sm avatar--q" aria-hidden="true">A</span>
+      <span class="admin-nav__email">admin@saturdaze.ca</span>
+      <a class="btn btn--ghost btn--sm" href="./admin.sign-in.html"><svg class="icon" aria-hidden="true"><use href="#i-sign_out"/></svg>Sign out</a>
+    </div>
+  </nav>
+  <main class="admin-main container" id="main">
+  <header class="page-header">
+    <div class="page-header__text">
+      <h1 class="page-header__title">New sample weekend</h1>
+      <p class="page-header__subtitle">Describe the family the way they would on their own profile. The planner drafts Saturday and Sunday from it.</p>
+    </div>
+  </header>
+  <form class="card card--pad-lg sample-form" action="./admin.sample.html">
+    <div class="field">
+      <label class="field__label" for="sn-name">Family name</label>
+      <input class="field__input" id="sn-name" type="text" value="The Riveras" placeholder="The Riveras">
+    </div>
+    <div class="field">
+      <label class="field__label" for="sn-home">Home</label>
+      <input class="field__input" id="sn-home" type="text" value="Port Credit, Mississauga, ON" placeholder="Neighbourhood, city">
+      <p class="field__hint">Drives and travel legs start here.</p>
+    </div>
+    <fieldset class="field members-field">
+      <legend class="field__label">Members</legend>
+      <p class="field__hint" id="sn-members-hint">Ages shape the picks. Under 18 counts as a kid.</p>
+      <div class="member-rows" aria-describedby="sn-members-hint">
+        <div class="member-row">
+          <div class="field"><label class="field__label" for="sn-m1-name">Name</label><input class="field__input" id="sn-m1-name" type="text" value="Dani"></div>
+          <div class="field"><label class="field__label" for="sn-m1-age">Age</label><input class="field__input" id="sn-m1-age" type="number" min="0" max="120" value="38"></div>
+          <button class="btn btn--ghost btn--icon member-row__remove" type="button" aria-label="Remove Dani"><svg class="icon" aria-hidden="true"><use href="#i-trash"/></svg></button>
+        </div>
+        <div class="member-row">
+          <div class="field"><label class="field__label" for="sn-m2-name">Name</label><input class="field__input" id="sn-m2-name" type="text" value="Mateo"></div>
+          <div class="field"><label class="field__label" for="sn-m2-age">Age</label><input class="field__input" id="sn-m2-age" type="number" min="0" max="120" value="7"></div>
+          <button class="btn btn--ghost btn--icon member-row__remove" type="button" aria-label="Remove Mateo"><svg class="icon" aria-hidden="true"><use href="#i-trash"/></svg></button>
+        </div>
+      </div>
+      <button class="ghost-row" type="button"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg>Add a member</button>
+    </fieldset>
+    <div class="field">
+      <label class="field__label" for="sn-likes">Likes <span class="field__req">Optional</span></label>
+      <div class="chip-input">
+        <span class="chip chip--leaf">Parks<button class="chip__x" type="button" aria-label="Remove Parks"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></span>
+        <span class="chip chip--leaf">Short hikes<button class="chip__x" type="button" aria-label="Remove Short hikes"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></span>
+        <input class="chip-input__field" id="sn-likes" type="text" placeholder="Add one, press Enter">
+      </div>
+    </div>
+    <div class="field">
+      <label class="field__label" for="sn-weekend">Weekend</label>
+      <select class="field__input" id="sn-weekend"><option selected>Sat 24 – Sun 25 Oct (this weekend)</option><option>Sat 31 Oct – Sun 1 Nov</option><option>Sat 7 – Sun 8 Nov</option><option>Sat 14 – Sun 15 Nov</option></select>
+      <p class="field__hint">The forecast and local events for that weekend shape the plan.</p>
+    </div>
+    <div class="form-actions">
+      <a class="btn btn--quiet" href="./admin.invitations.html">Cancel</a>
+      <button class="btn btn--primary" type="submit"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg>Generate weekend</button>
+    </div>
+  </form>
+  </main>
+</div>
+<script src="../app.js"></script>
+</body>
+</html>

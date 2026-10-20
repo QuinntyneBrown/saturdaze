@@ -1,0 +1,17 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers - Build a sample weekend
+
+Person(admin, "Administrator", "Signed in with the Admin role")
+System_Boundary(saturdaze, "Saturdaze") {
+  Container(adminweb, "Saturdaze Admin", "Angular", "New sample weekend (A9) and Sample weekend (A10)")
+  Container(api, "Saturdaze API", "ASP.NET Core", "Prospect handlers, planner, forecast service")
+  ContainerDb(db, "Saturdaze database", "SQL Server", "Prospects, Families, FamilyMembers, Preferences, Weekends, ItineraryBlocks")
+}
+System_Ext(weather, "Open-Meteo", "Forecast API")
+Rel(admin, adminweb, "Uses", "HTTPS")
+Rel(adminweb, api, "/api/admin/prospects", "JSON/HTTPS")
+Rel(api, db, "Reads and writes", "EF Core")
+Rel(api, weather, "Forecast for weekendOf", "HTTPS")
+@enduml

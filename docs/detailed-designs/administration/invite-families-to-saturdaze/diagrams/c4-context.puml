@@ -1,0 +1,15 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context - Invite families to Saturdaze
+
+Person(admin, "Administrator", "Invites prospective families from Saturdaze Admin")
+Person(invitee, "Invited person", "Receives the join link by email")
+System(saturdaze, "Saturdaze", "Family weekend planner: admin application, family application and API")
+System_Ext(mail, "Mail server", "SMTP relay for no-reply@saturdaze.ca")
+
+Rel(admin, saturdaze, "Sends, lists and revokes invitations", "HTTPS")
+Rel(saturdaze, mail, "Delivers the invitation email after the response", "SMTP")
+Rel(mail, invitee, "Email with the join link")
+Rel(invitee, saturdaze, "Opens /join?token=...", "HTTPS")
+@enduml

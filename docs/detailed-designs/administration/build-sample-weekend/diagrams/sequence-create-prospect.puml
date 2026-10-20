@@ -1,0 +1,49 @@
+@startuml
+title UML sequence behaviour - Create a prospect
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+actor "Administrator" as actor
+box "Frontend - Saturdaze Admin Angular application" #E0F2FE
+  participant "SampleNewPage (A9)" as page
+  participant "AdminInvitationsService" as service
+  participant "SamplePage (A10)" as sample
+end box
+box "Backend - Saturdaze API application" #D1FADF
+  participant "AdminProspectsController" as controller
+end box
+box "Backend - Saturdaze Application and Domain" #ECFDF3
+  participant "CreateProspectCommandHandler" as handler
+  participant "PlannerInputLoader" as loader
+  participant "WeekendPlanner" as planner
+end box
+box "Backend - Saturdaze Infrastructure" #FFF4E5
+  database "Saturdaze database" as db
+  participant "Open-Meteo client" as weather
+end box
+actor -> page : family name, home, members, likes, weekend
+actor -> page : Generate weekend
+page -> page : at least one member (L2-159 AC7)
+page -> service : createProspect(request)
+service -> controller : POST /api/admin/prospects (bearer)
+controller -> controller : Admin policy (L2-159 AC3)
+controller -> handler : CreateProspectCommand
+handler -> handler : validate: Saturday, 1..8 members, ages 0..120 (L2-159 AC2)
+handler -> db : insert Family (no owner), members, likes
+handler -> loader : LoadAsync(familyId, weekendOf)
+loader -> db : family, catalogs, history
+loader -> weather : forecast(weekendOf)
+weather --> loader : forecast
+loader --> handler : PlannerContext
+handler -> planner : Plan(inputs, seed = weekendOf.DayNumber)
+planner --> handler : blocks for Saturday and Sunday
+handler -> db : insert Weekend, Prospect; save once
+db --> handler : committed
+handler --> controller : ProspectDto with WeekendDto (L2-159 AC1)
+controller --> service : 201
+service --> page : prospect
+page -> sample : navigate /invitations/samples/{id}
+sample --> actor : Saturday and Sunday with blocks (L2-159 AC6)
+@enduml

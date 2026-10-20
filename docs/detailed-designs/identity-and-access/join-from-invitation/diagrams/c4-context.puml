@@ -1,0 +1,10 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context - Join from an invitation
+
+Person(invitee, "Invited person", "Opens the join link from the email")
+System(saturdaze, "Saturdaze", "Family weekend planner")
+
+Rel(invitee, saturdaze, "Previews the sample weekend, creates the account", "HTTPS")
+@enduml

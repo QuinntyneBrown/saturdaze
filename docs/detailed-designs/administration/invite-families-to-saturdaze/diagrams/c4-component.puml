@@ -1,0 +1,35 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components - Invite families to Saturdaze
+
+Container_Boundary(adminweb, "Saturdaze Admin") {
+  Component(page, "InvitationsPage", "Angular page", "Sample weekends and invites lists")
+  Component(invite, "InviteDialog (AD7)", "CDK Dialog", "Addresses, sample weekend, message")
+  Component(revoke, "RevokeInviteDialog (AD8)", "CDK Dialog", "Confirms a revoke")
+  Component(service, "AdminInvitationsService", "api library", "list(), send(), revoke()")
+}
+Container_Boundary(api, "Saturdaze API") {
+  Component(ctrl, "AdminInvitationsController", "ASP.NET Core controller", "api/admin/invitations, Admin policy")
+  Component(send, "SendInvitationsCommandHandler", "MediatR handler", "Validates the batch, hashes tokens, queues mail")
+  Component(list, "ListInvitationsQueryHandler", "MediatR handler", "Rows newest first with derived status")
+  Component(revokeh, "RevokeInvitationCommandHandler", "MediatR handler", "Sets RevokedAtUtc")
+  Component(emails, "InvitationEmails", "Email builder", "Subject and body with the join link")
+  Component(outbox, "IEmailOutbox", "Outbox", "Delivers after the response")
+  ComponentDb(db, "Saturdaze database", "SQL Server", "PlatformInvitations")
+}
+Rel(page, invite, "Opens")
+Rel(page, revoke, "Opens")
+Rel(invite, service, "send()")
+Rel(revoke, service, "revoke()")
+Rel(page, service, "list()")
+Rel(service, ctrl, "JSON over HTTPS with bearer")
+Rel(ctrl, send, "Sends SendInvitationsCommand")
+Rel(ctrl, list, "Sends ListInvitationsQuery")
+Rel(ctrl, revokeh, "Sends RevokeInvitationCommand")
+Rel(send, emails, "Builds one message per address")
+Rel(send, outbox, "Enqueues")
+Rel(send, db, "Inserts rows", "EF Core")
+Rel(list, db, "Reads", "EF Core")
+Rel(revokeh, db, "Updates", "EF Core")
+@enduml

@@ -1,0 +1,29 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components - Join from an invitation
+
+Container_Boundary(web, "Saturdaze app") {
+  Component(page, "JoinPage", "Angular page", "sample, plain or invalid state; create-account card")
+  Component(session, "SessionStore", "api library", "previewJoin(), acceptJoin(); stores the token pair")
+  Component(auth, "AuthService", "api library", "HTTP calls")
+}
+Container_Boundary(api, "Saturdaze API") {
+  Component(ctrl, "AuthController", "ASP.NET Core controller", "join and join/accept, AllowAnonymous")
+  Component(resolver, "PlatformInvitationResolver", "Application service", "token_invalid / token_expired")
+  Component(preview, "GetJoinPreviewQueryHandler", "MediatR handler", "Email, inviter, family name, SharedWeekendDto")
+  Component(accept, "AcceptPlatformInvitationCommandHandler", "MediatR handler", "Verified user, claim or join, consume, sign in")
+  Component(issuer, "RefreshTokenIssuer", "Application service", "Token pair")
+  ComponentDb(db, "Saturdaze database", "SQL Server", "Invitations, prospects, families, users")
+}
+Rel(page, session, "previewJoin(), acceptJoin()")
+Rel(session, auth, "HTTP")
+Rel(auth, ctrl, "JSON over HTTPS")
+Rel(ctrl, preview, "GetJoinPreviewQuery")
+Rel(ctrl, accept, "AcceptPlatformInvitationCommand")
+Rel(preview, resolver, "ResolveAsync(token)")
+Rel(accept, resolver, "ResolveAsync(token)")
+Rel(accept, issuer, "Issue(user)")
+Rel(preview, db, "Reads", "EF Core")
+Rel(accept, db, "Writes", "EF Core")
+@enduml

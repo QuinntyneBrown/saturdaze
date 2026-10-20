@@ -1,0 +1,64 @@
+@startuml
+title UML sequence behaviour - Open the link and join
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+actor "Invited person" as actor
+box "Frontend - Saturdaze Angular application" #E0F2FE
+  participant "JoinPage" as page
+  participant "SessionStore" as session
+end box
+box "Backend - Saturdaze API application" #D1FADF
+  participant "AuthController" as controller
+end box
+box "Backend - Saturdaze Application and Domain" #ECFDF3
+  participant "PlatformInvitationResolver" as resolver
+  participant "GetJoinPreviewQueryHandler" as preview
+  participant "AcceptPlatformInvitationCommandHandler" as accept
+  participant "RefreshTokenIssuer" as issuer
+end box
+box "Backend - Saturdaze Infrastructure" #FFF4E5
+  database "Saturdaze database" as db
+end box
+actor -> page : open /join?token=...
+page -> session : previewJoin(token)
+session -> controller : POST /api/auth/join
+controller -> preview : GetJoinPreviewQuery
+preview -> resolver : ResolveAsync(token)
+resolver -> db : invitation by token hash
+alt missing, accepted, revoked or expired
+  resolver --> controller : AuthFlowException token_invalid / token_expired (L2-161 AC6)
+  controller --> session : 400
+  session --> page : invalid state "This invite no longer works"
+else usable
+  preview -> db : prospect weekend with blocks (when any)
+  preview --> controller : JoinPreviewDto with SharedWeekendDto sample (L2-161 AC1, AC2)
+  controller --> session : 200
+  session --> page : sample or plain state
+  page --> actor : "A weekend planned for {familyName}", two read-only days, the card (L2-161 AC7)
+  actor -> page : password twice, Create my account
+  page -> session : acceptJoin({token, password})
+  session -> controller : POST /api/auth/join/accept
+  controller -> accept : AcceptPlatformInvitationCommand
+  accept -> resolver : ResolveAsync(token)
+  accept -> accept : PasswordPolicy (weak_password keeps the invitation usable)
+  accept -> db : insert verified User
+  alt prospect not yet claimed
+    accept -> db : Family.OwnerUserId = user, User.FamilyId = prospect.FamilyId, Prospect claimed (L2-161 AC3)
+  else prospect already claimed
+    accept -> db : User.FamilyId = prospect.FamilyId, no ownership (L2-161 AC5)
+  else no prospect
+    accept -> db : new empty Family owned by the user (L2-161 AC4)
+  end
+  accept -> db : invitation AcceptedAtUtc, AcceptedUserId
+  accept -> issuer : Issue(user)
+  accept -> db : save once
+  accept --> controller : AuthSuccessDto
+  controller --> session : 201 tokens + user
+  session -> session : store token pair and user
+  session --> page : signed in
+  page --> actor : navigate to /weekend
+end
+@enduml

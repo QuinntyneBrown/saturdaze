@@ -1,0 +1,106 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure - Build a sample weekend
+
+class Prospect {
+  +Guid Id
+  +Guid FamilyId
+  +Guid WeekendId
+  +Guid CreatedByUserId
+  +DateTimeOffset CreatedAtUtc
+  +Guid? ClaimedByUserId
+  +DateTimeOffset? ClaimedAtUtc
+}
+
+class Family {
+  +Guid Id
+  +string? Name
+  +Guid? OwnerUserId
+  +string HomeLocation
+  +List<FamilyMember> Members
+  +List<Preference> Preferences
+}
+
+class Weekend {
+  +Guid Id
+  +Guid FamilyId
+  +DateOnly WeekendOf
+  +int RegenerateCount
+  +List<ItineraryBlock> Blocks
+}
+
+enum ProspectStatus {
+  Draft
+  Invited
+  Claimed
+  {static} Of(prospect, invitationCount)
+}
+
+class CreateProspectCommand {
+  +string FamilyName
+  +string? HomeLocation
+  +IReadOnlyList<ProspectMemberDto> Members
+  +IReadOnlyList<string>? Likes
+  +DateOnly? WeekendOf
+}
+
+class CreateProspectCommandHandler {
+  +Handle(command): Task<ProspectDto>
+}
+
+class RegenerateProspectWeekendCommand {
+  +Guid ProspectId
+}
+
+class SwapProspectBlockCommand {
+  +Guid ProspectId
+  +Guid BlockId
+}
+
+class LockProspectBlockCommand {
+  +Guid ProspectId
+  +Guid BlockId
+  +bool Locked
+}
+
+class WeekendReplanner {
+  +RegenerateAsync(weekend, familyId): Task<WeekendDto>
+}
+
+class BlockSwapper {
+  +SwapAsync(weekend, target, familyId, rejected): Task<WeekendDto>
+}
+
+class ProspectDto {
+  +Guid Id
+  +string FamilyName
+  +string HomeLocation
+  +IReadOnlyList<ProspectMemberDto> Members
+  +IReadOnlyList<string> Likes
+  +DateOnly WeekendOf
+  +Guid WeekendId
+  +ProspectStatus Status
+  +int InvitationCount
+  +WeekendDto? Weekend
+}
+
+Prospect "1" --> "1" Family : describes
+Prospect "1" --> "1" Weekend : sample
+Family "1" *-- "*" Weekend
+CreateProspectCommandHandler ..> CreateProspectCommand : handles
+CreateProspectCommandHandler --> Prospect : creates
+CreateProspectCommandHandler ..> ProspectDto : returns
+RegenerateProspectWeekendCommand ..> WeekendReplanner : handled through
+SwapProspectBlockCommand ..> BlockSwapper : handled through
+LockProspectBlockCommand ..> Weekend : sets IsLocked on a block
+ProspectDto --> ProspectStatus
+@enduml

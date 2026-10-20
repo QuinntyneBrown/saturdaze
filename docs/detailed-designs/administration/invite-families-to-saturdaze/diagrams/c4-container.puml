@@ -1,0 +1,20 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers - Invite families to Saturdaze
+
+Person(admin, "Administrator", "Signed in with the Admin role")
+Person(invitee, "Invited person", "Opens the join link")
+System_Boundary(saturdaze, "Saturdaze") {
+  Container(adminweb, "Saturdaze Admin", "Angular", "Invitations screen, AD7 and AD8")
+  Container(web, "Saturdaze app", "Angular", "The /join page the link opens")
+  Container(api, "Saturdaze API", "ASP.NET Core", "Admin policy, invitation handlers, email outbox")
+  ContainerDb(db, "Saturdaze database", "SQL Server", "PlatformInvitations, Prospects, Users")
+}
+System_Ext(mail, "Mail server", "SMTP")
+Rel(admin, adminweb, "Uses", "HTTPS")
+Rel(adminweb, api, "POST, GET, DELETE /api/admin/invitations", "JSON/HTTPS")
+Rel(api, db, "Reads and writes", "EF Core")
+Rel(api, mail, "Sends queued mail", "SMTP")
+Rel(invitee, web, "Opens /join?token=...", "HTTPS")
+@enduml

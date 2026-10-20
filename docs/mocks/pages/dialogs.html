@@ -1260,6 +1260,58 @@
       </div>
     </section>
 
+    <section class="specimen" id="dialog-admin-invite">
+      <span class="specimen__label">AD7 · Admin · Invite families to Saturdaze</span>
+      <div class="dialog dialog--specimen dialog--wide" role="dialog" aria-modal="true" aria-labelledby="ad7-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="ad7-title">Invite families to Saturdaze</h2><p class="dialog__sub">One address per family. Each gets its own single-use link that works for 14 days.</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="dialog__body">
+            <div class="field">
+              <label class="field__label" for="ad7-emails">Emails</label>
+              <div class="chip-input">
+                <span class="chip chip--sky">ana@example.com<button class="chip__x" type="button" aria-label="Remove ana@example.com"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></span>
+                <span class="chip chip--sky">ben@example.com<button class="chip__x" type="button" aria-label="Remove ben@example.com"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></span>
+                <input class="chip-input__field" id="ad7-emails" type="email" placeholder="name@example.com, press Enter">
+              </div>
+              <p class="field__hint">Up to 20 at a time. An address that already signs in is refused before anything is sent.</p>
+            </div>
+            <div class="field">
+              <label class="field__label" for="ad7-sample">Sample weekend <span class="field__req">Optional</span></label>
+              <select class="field__input" id="ad7-sample"><option>None · they start from an empty family</option><option selected>The Riveras · Sat 24 Oct</option><option>The Nguyens · Sat 31 Oct</option></select>
+              <p class="field__hint">The first person to accept owns the family; anyone else invited with it joins as a member.</p>
+            </div>
+            <div class="field">
+              <label class="field__label" for="ad7-message">Message <span class="field__req">Optional</span></label>
+              <textarea class="field__input" id="ad7-message" rows="3" placeholder="A line from you, included in the email.">Hi Ana, we planned this weekend from what you told us at the fair. Have a look.</textarea>
+            </div>
+          </div>
+          <div class="dialog__actions">
+            <button class="btn btn--quiet" type="button">Cancel</button>
+            <button class="btn btn--primary" type="button"><svg class="icon" aria-hidden="true"><use href="#i-mail"/></svg>Send invites</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="specimen" id="dialog-admin-revoke">
+      <span class="specimen__label">AD8 · Admin · Revoke an invite</span>
+      <div class="dialog dialog--specimen" role="dialog" aria-modal="true" aria-labelledby="ad8-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="ad8-title">Revoke this invite?</h2><p class="dialog__sub">ana@example.com's link stops working right away. You can invite them again later.</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="dialog__actions">
+            <button class="btn btn--quiet" type="button">Cancel</button>
+            <button class="btn btn--danger" type="button"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg>Revoke</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
   </div>
 </main>
 <!-- @shell:bottomnav -->
