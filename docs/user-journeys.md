@@ -15,7 +15,7 @@ Ordered by value added to the product, highest first. Estimates are days for an 
 | Pick restaurants | Filter restaurant picks, vote, and lock one in | 4 | 100% |
 | Create account | Register a family account and land on the weekend | 3 | 100% |
 | Sign in and stay signed in | Sign in, remember session, refresh tokens silently | 3 | 100% |
-| Sign in with Google | Continue with a Google account; the first sign-in creates the account | 4 | 0% |
+| Sign in with Google | Continue with a Google account; the first sign-in creates the account | 4 | 100% |
 | Map the itinerary | View numbered stops, travel legs, and per-day map | 5 | 100% |
 | Browse past weekends | Filter, favourite, rate, rename, repeat, or remix past weekends | 5 | 100% |
 | Invite and manage family members | Owner invites, adds, and removes members sharing the family | 5 | 100% |

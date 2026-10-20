@@ -9,6 +9,6 @@
 | register-family-account | 3 days | 100% |
 | secure-authenticated-requests | 4 days | 90% |
 | sign-in-and-maintain-session | 4 days | 100% |
-| sign-in-with-google | 4 days | 0% |
+| sign-in-with-google | 4 days | 100% |
 | sign-out | 2 days | 100% |
 | verify-email | 2 days | 100% |
