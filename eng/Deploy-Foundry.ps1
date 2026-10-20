@@ -4,6 +4,10 @@
     ingestion calls, then store its key in .deploy\azure.env.
 
 .DESCRIPTION
+    Standalone deployment of the Foundry pieces only. In production the same
+    template is a module of eng\infra\main.bicep, which deploy.yml applies on every
+    push to main (ADR-017); use this script for a local-only Claude setup.
+
     Deploys eng\foundry\claude.bicep into the resource group (an AIServices
     account in eastus2 plus a Global Standard claude-sonnet-5 deployment, the
     Azure-hosted version 2). Re-running is safe: the deployment converges on the
