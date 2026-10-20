@@ -66,6 +66,13 @@ reference.
   with every pass recorded in an `IngestionRun` audit row. Triggered on-demand
   via `saturdaze ingest` or on a cron schedule by the `Saturdaze.Worker` service.
   See [Ingestion triggers](backend/deploy/webjobs/ingest/README.md) for scheduling options.
+- AI photo suggestions: wherever a photo can be changed (the weekend cover, the
+  profile photo, a place's curated photos), Claude on Foundry researches the web
+  for licensed photos, the API fetches and cleans each one and serves the
+  previews itself, and a chosen photo is stored like an upload with its credit
+  (ADR-019). The API reads the same `Saturdaze:Ingestion:Claude` settings and
+  `ANTHROPIC_FOUNDRY_API_KEY` as ingestion; without them the dialogs report that
+  suggestions are unavailable and the device upload still works.
 - Static HTML design under `docs/mocks/` — the source of truth for the
   Angular implementation and the visual regression baselines (ADR-009, ADR-010).
 - Local CLI for database migration, seeding, reset, and catalog ingestion.
