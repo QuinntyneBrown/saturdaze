@@ -21,12 +21,14 @@ import {
   Banner,
   Button,
   ChipInput,
+  Disc,
   GhostRow,
   Icon,
   List,
   ListItem,
   Stepper,
   TextInput,
+  Toggle,
 } from 'components';
 
 import { DIALOG_OPTIONS, confirmWith } from '../../dialogs/confirm-dialog/confirm-dialog';
@@ -39,6 +41,8 @@ import {
   InviteLinkDialog,
   InviteLinkDialogData,
 } from '../../dialogs/invite-link-dialog/invite-link-dialog';
+
+import { maskEmail } from '../../shared/mask-email';
 
 import { environment } from '../../../environments/environment';
 
@@ -104,12 +108,14 @@ function isWizardStep(value: string | null): value is WizardStep {
     Banner,
     Button,
     ChipInput,
+    Disc,
     GhostRow,
     Icon,
     List,
     ListItem,
     Stepper,
     TextInput,
+    Toggle,
   ],
   templateUrl: './welcome.page.html',
   styleUrl: './welcome.page.scss',
@@ -144,6 +150,20 @@ export class WelcomePage {
   protected readonly canContinueHome = computed(() => this.home().trim().length > 0);
   protected readonly likes = signal<string[]>([]);
   protected readonly dislikes = signal<string[]>([]);
+  protected readonly budget = signal(false);
+  protected readonly tryNew = signal(false);
+  protected readonly fridayPreview = signal(true);
+
+  /** The done step's line: the family, then the verification reminder while unverified (L2-163). */
+  protected readonly doneSubtitle = computed(() => {
+    const view = this.view();
+    const named = view.status === 'ready' && view.headline !== 'Your family';
+    const family = named ? `the ${view.headline.replace(/^the\s+/i, '')}` : 'your family';
+    const first = `Your first weekend is drafted around ${family}.`;
+    const user = this.session.user();
+    if (!user || user.emailVerifiedUtc) return first;
+    return `${first} We sent a verification link to ${maskEmail(user.email)}. It works for 24 hours.`;
+  });
 
   protected readonly saving = signal(false);
   protected readonly error = signal('');
@@ -170,6 +190,9 @@ export class WelcomePage {
     this.home.set(profile.homeLocation);
     this.likes.set(profile.preferences.filter((p) => p.kind === 'Like').map((p) => p.value));
     this.dislikes.set(profile.preferences.filter((p) => p.kind === 'Dislike').map((p) => p.value));
+    this.budget.set(profile.budgetEnabled);
+    this.tryNew.set(profile.tryNewEnabled);
+    this.fridayPreview.set(profile.fridayPreviewEnabled);
   }
 
   // ---- navigation -----------------------------------------------------
@@ -194,6 +217,17 @@ export class WelcomePage {
               ...this.likes().map((value) => ({ kind: 'Like' as const, value })),
               ...this.dislikes().map((value) => ({ kind: 'Dislike' as const, value })),
             ],
+          })))
+        )
+          return;
+        break;
+      case 'preferences':
+        if (
+          !(await this.save((p) => ({
+            ...p,
+            budgetEnabled: this.budget(),
+            tryNewEnabled: this.tryNew(),
+            fridayPreviewEnabled: this.fridayPreview(),
           })))
         )
           return;

@@ -352,4 +352,59 @@ describe('WelcomePage', () => {
       expect(navigate).toHaveBeenCalledWith(['/welcome', 'preferences']);
     });
   });
+
+  describe('preferences (L2-162)', () => {
+    it('seeds the three switches from the stored flags', async () => {
+      editable.set({ ...PROFILE, budgetEnabled: true, fridayPreviewEnabled: false });
+      await mount('preferences');
+      expect(stepperLabel()).toBe('Step 4 of 4');
+      expect(host.querySelectorAll('sd-toggle').length).toBe(3);
+      expect(component['budget']()).toBe(true);
+      expect(component['tryNew']()).toBe(false);
+      expect(component['fridayPreview']()).toBe(false);
+    });
+
+    it('saves the switches and opens the done step', async () => {
+      await mount('preferences');
+      component['budget'].set(true);
+      component['tryNew'].set(true);
+      await component['continueStep']();
+      expect(saved()).toMatchObject({
+        budgetEnabled: true,
+        tryNewEnabled: true,
+        fridayPreviewEnabled: true,
+      });
+      expect(navigate).toHaveBeenCalledWith(['/welcome', 'done']);
+    });
+  });
+
+  describe("you're set (L2-163)", () => {
+    const subtitle = (): string | undefined =>
+      host.querySelector('.auth-card__sub')?.textContent?.trim();
+    const hrefs = (): string[] =>
+      Array.from(host.querySelectorAll('a.btn')).map((a) => a.getAttribute('href') ?? '');
+
+    it('names the family and the masked email while unverified, with both links', async () => {
+      await mount('done');
+      expect(host.querySelector('sd-stepper')).toBeNull();
+      expect(title()).toBe("You're set");
+      expect(subtitle()).toBe(
+        'Your first weekend is drafted around the Browns. We sent a verification link to q••••••••••••n@gmail.com. It works for 24 hours.',
+      );
+      expect(hrefs()).toEqual(['/weekend', '/family']);
+    });
+
+    it('drops the reminder once the email is verified', async () => {
+      session.user.set({ ...USER, emailVerifiedUtc: '2026-10-20T12:00:00Z' });
+      await mount('done');
+      expect(subtitle()).toBe('Your first weekend is drafted around the Browns.');
+    });
+
+    it('says "your family" when the family has no name', async () => {
+      view.set({ ...VIEW, headline: 'Your family' });
+      session.user.set({ ...USER, emailVerifiedUtc: '2026-10-20T12:00:00Z' });
+      await mount('done');
+      expect(subtitle()).toBe('Your first weekend is drafted around your family.');
+    });
+  });
 });

@@ -231,3 +231,168 @@ test.describe("Welcome — who's in (L2-160)", () => {
     expect(requests).toEqual([]);
   });
 });
+
+test.describe("Welcome — likes and dislikes (L2-161)", () => {
+  let api: FakeApi;
+
+  test.beforeEach(async ({ page, pages }) => {
+    api = await installFakeApi(page);
+    await pages.welcome.open("likes");
+  });
+
+  // Traces to: L2-161 AC1
+  test("offers the two tag editors from D20", async ({ pages }) => {
+    const w = pages.welcome;
+    await expect(w.stepperLabel()).toHaveText("Step 3 of 4");
+    await expect(w.cardTitle()).toHaveText("What does your family like?");
+    await expect(w.cardSubtitle()).toHaveText("Liked tags get a boost. Disliked ones are left out.");
+    await expect(w.chipInput("Likes")).toHaveClass(/chip-input__field/);
+    await expect(w.chipInput("Dislikes")).toHaveClass(/chip-input__field/);
+  });
+
+  // Traces to: L2-161 AC2
+  test("Continue saves the tags as Like and Dislike preferences", async ({ page, pages }) => {
+    const w = pages.welcome;
+    await w.addChip("Likes", "Parks");
+    await w.addChip("Likes", "Zoo");
+    await w.addChip("Dislikes", "Camping");
+    const saved = w.nextProfileSave();
+    await w.continueButton().click();
+    expect((await saved)["preferences"]).toEqual([
+      { kind: "Like", value: "Parks" },
+      { kind: "Like", value: "Zoo" },
+      { kind: "Dislike", value: "Camping" },
+    ]);
+    await page.waitForURL("**/welcome/preferences");
+    expect(api.family.preferences.map((p) => `${p.kind}:${p.value}`)).toEqual(["Like:Parks", "Like:Zoo", "Dislike:Camping"]);
+  });
+
+  // Traces to: L2-161 AC3
+  test("a like cannot also be a dislike", async ({ page, pages }) => {
+    const w = pages.welcome;
+    await w.addChip("Likes", "Parks");
+    await w.addChip("Dislikes", "Parks");
+    await expect(w.chipInputError("Dislikes")).toHaveText("Parks is in Likes. Remove it there first.");
+    await expect(w.chipInput("Dislikes")).toHaveValue("Parks");
+    expect(new URL(page.url()).pathname).toBe("/welcome/likes");
+    expect(api.family.preferences).toEqual([]);
+  });
+
+  // Traces to: L2-161 AC4
+  test("Continue with nothing added still saves and moves on", async ({ page, pages }) => {
+    const w = pages.welcome;
+    const saved = w.nextProfileSave();
+    await w.continueButton().click();
+    expect((await saved)["preferences"]).toEqual([]);
+    await page.waitForURL("**/welcome/preferences");
+  });
+
+  test("tags already saved are prefilled", async ({ page, pages }) => {
+    await page.unroute("**/api/**");
+    await installFakeApi(page, {
+      family: {
+        ...freshFamily(),
+        preferences: [
+          { id: "p1", kind: "Like", value: "Parks" },
+          { id: "p2", kind: "Dislike", value: "Camping" },
+        ],
+      },
+    });
+    const w = pages.welcome;
+    await w.open("likes");
+    await expect(w.card().locator(".chip.chip--leaf")).toHaveText(["Parks"]);
+    await expect(w.card().locator(".chip.chip--warn")).toHaveText(["Camping"]);
+  });
+});
+
+test.describe("Welcome — preferences (L2-162)", () => {
+  let api: FakeApi;
+
+  test.beforeEach(async ({ page, pages }) => {
+    api = await installFakeApi(page);
+    await pages.welcome.open("preferences");
+  });
+
+  // Traces to: L2-162 AC1
+  test("shows the three switches at the family's current values", async ({ pages }) => {
+    const w = pages.welcome;
+    await expect(w.stepperLabel()).toHaveText("Step 4 of 4");
+    await expect(w.cardTitle()).toHaveText("A few preferences");
+    await expect(w.cardSubtitle()).toHaveText("Change these any time on Family.");
+    await expect(w.toggle("Budget matters")).not.toBeChecked();
+    await expect(w.toggle("Try something new each weekend")).not.toBeChecked();
+    await expect(w.toggle("Friday preview email")).toBeChecked();
+  });
+
+  // Traces to: L2-162 AC2
+  test("Continue saves the switches and opens the done step", async ({ page, pages }) => {
+    const w = pages.welcome;
+    await w.toggle("Budget matters").check();
+    await w.toggle("Try something new each weekend").check();
+    const saved = w.nextProfileSave();
+    await w.continueButton().click();
+    const body = await saved;
+    expect(body["budgetEnabled"]).toBe(true);
+    expect(body["tryNewEnabled"]).toBe(true);
+    expect(body["fridayPreviewEnabled"]).toBe(true);
+    await page.waitForURL("**/welcome/done");
+    expect(api.family.budgetEnabled).toBe(true);
+    expect(api.family.tryNewEnabled).toBe(true);
+  });
+
+  // Traces to: L2-162 AC3
+  test("Skip for now opens the done step without a request", async ({ page, pages }) => {
+    const w = pages.welcome;
+    const requests: string[] = [];
+    page.on("request", (r) => {
+      if (r.url().includes("/api/family")) requests.push(r.method());
+    });
+    await w.toggle("Budget matters").check();
+    await w.skipButton().click();
+    await page.waitForURL("**/welcome/done");
+    expect(requests).toEqual([]);
+    expect(api.family.budgetEnabled).toBe(false);
+  });
+});
+
+test.describe("Welcome — you're set (L2-163)", () => {
+  // Traces to: L2-163 AC1, AC2
+  test("names the masked email, offers the weekend and the family", async ({ page, pages }) => {
+    await installFakeApi(page);
+    const w = pages.welcome;
+    await w.open("done");
+    await expect(w.stepper()).toHaveCount(0);
+    await expect(w.cardTitle()).toHaveText("You're set");
+    await expect(w.cardSubtitle()).toHaveText(
+      "Your first weekend is drafted around the Browns. We sent a verification link to q••••••••••••n@gmail.com. It works for 24 hours.",
+    );
+    await expect(w.planWeekendLink()).toHaveAttribute("href", /\/weekend$/);
+    await expect(w.reviewFamilyLink()).toHaveAttribute("href", /\/family$/);
+    await w.reviewFamilyLink().click();
+    await page.waitForURL("**/family");
+
+    await w.open("done");
+    await w.planWeekendLink().click();
+    await page.waitForURL("**/weekend");
+  });
+
+  // Traces to: L2-163 AC3
+  test("a verified account is not asked to verify", async ({ page, pages }) => {
+    await installFakeApi(page, {
+      user: { id: "u-new", email: "quinntynebrown@gmail.com", role: "User", emailVerifiedUtc: "2026-10-20T12:00:00Z", avatarUrl: null },
+    });
+    const w = pages.welcome;
+    await w.open("done");
+    await expect(w.cardSubtitle()).toHaveText("Your first weekend is drafted around the Browns.");
+  });
+
+  test("an unnamed family is just 'your family'", async ({ page, pages }) => {
+    await installFakeApi(page, {
+      family: { ...freshFamily(), name: null },
+      user: { id: "u-new", email: "quinntynebrown@gmail.com", role: "User", emailVerifiedUtc: "2026-10-20T12:00:00Z", avatarUrl: null },
+    });
+    const w = pages.welcome;
+    await w.open("done");
+    await expect(w.cardSubtitle()).toHaveText("Your first weekend is drafted around your family.");
+  });
+});
