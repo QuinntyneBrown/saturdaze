@@ -307,6 +307,29 @@ export class FamilyPage extends BasePage {
     return this.dialog().locator(".photo-picker__preview");
   }
 
+  /* ---------- D27 suggestions (L2-160) ---------- */
+
+  /** D27's "Find a photo" description field. */
+  suggestionQueryInput(): Locator {
+    return this.dialog().locator(".photo-suggest").getByRole("searchbox");
+  }
+
+  findPhotosButton(): Locator {
+    return control(this.dialog().locator(".photo-suggest"), "Find photos");
+  }
+
+  suggestionStatus(): Locator {
+    return this.dialog().locator(".photo-suggest__status");
+  }
+
+  suggestionOptions(): Locator {
+    return this.dialog().locator(".photo-suggest").getByRole("radio");
+  }
+
+  suggestionOption(name: string | RegExp): Locator {
+    return this.dialog().locator(".photo-suggest").getByRole("radio", { name });
+  }
+
   photoError(): Locator {
     return this.dialog().locator(".field__error");
   }

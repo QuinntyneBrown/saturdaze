@@ -124,6 +124,15 @@ export interface IAuthService {
    * @returns {Promise<User>} The updated user
    */
   removeAvatar(): Promise<User>;
+  /**
+   * Sets the profile photo from a photo suggestion (`POST /api/auth/me/avatar/suggestion`,
+   * L2-160). Rejects with the `AuthError` (404 `suggestion_not_found`).
+   *
+   * @param {string} suggestionId - The id a photo search returned
+   *
+   * @returns {Promise<User>} The updated user
+   */
+  useSuggestedAvatar(suggestionId: string): Promise<User>;
 }
 
 export const AUTH_SERVICE = new InjectionToken<IAuthService>('AUTH_SERVICE');

@@ -379,6 +379,18 @@ export class AuthService implements IAuthService {
     }
   }
 
+  async useSuggestedAvatar(suggestionId: string): Promise<User> {
+    try {
+      return this.toUser(
+        await firstValueFrom(
+          this.http.post<User>(`${this.baseUrl}/api/auth/me/avatar/suggestion`, { suggestionId }),
+        ),
+      );
+    } catch (e) {
+      rethrowAsAuthError(e);
+    }
+  }
+
   /** The API returns `avatarUrl` relative to itself; `<img>` needs it absolute. */
   private toUser(dto: User): User {
     const avatarUrl = dto.avatarUrl ? `${this.baseUrl}${dto.avatarUrl}` : null;

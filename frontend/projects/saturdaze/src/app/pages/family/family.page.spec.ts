@@ -6,10 +6,11 @@ import { Router, provideRouter } from '@angular/router';
 import { of } from 'rxjs';
 
 import {
-  EVENT_SUBMISSIONS_SERVICE,
   EditableFamilyProfile,
+  EVENT_SUBMISSIONS_SERVICE,
   FAMILY_SERVICE,
   FamilyView,
+  PHOTO_SUGGESTIONS_SERVICE,
   SESSION_STORE,
   User,
 } from 'api';
@@ -148,6 +149,7 @@ describe('FamilyPage', () => {
         { provide: FAMILY_SERVICE, useValue: familyService },
         { provide: EVENT_SUBMISSIONS_SERVICE, useValue: submissions },
         { provide: SESSION_STORE, useValue: session },
+        { provide: PHOTO_SUGGESTIONS_SERVICE, useValue: { find: async () => [] } },
         { provide: Dialog, useValue: dialog },
       ],
     }).compileComponents();

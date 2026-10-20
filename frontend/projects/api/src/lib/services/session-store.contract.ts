@@ -148,6 +148,15 @@ export interface ISessionStore {
    */
   removeAvatar(): Promise<void>;
   /**
+   * Sets the profile photo from a photo suggestion and publishes the updated
+   * `user` (L2-160). Rejects with the `AuthError`; `error` is not set.
+   *
+   * @param {string} suggestionId - The id a photo search returned
+   *
+   * @returns {Promise<void>} The result of the operation
+   */
+  useSuggestedAvatar(suggestionId: string): Promise<void>;
+  /**
    * Rehydrate.
    *
    * @returns {Promise<void>} The result of the operation

@@ -387,6 +387,17 @@ export class SessionStore implements ISessionStore {
   }
 
   /**
+   * Use Suggested Avatar.
+   *
+   * @param {string} suggestionId - The id a photo search returned
+   *
+   * @returns {Promise<void>} The result of the operation
+   */
+  async useSuggestedAvatar(suggestionId: string): Promise<void> {
+    this._user.set(await this.auth.useSuggestedAvatar(suggestionId));
+  }
+
+  /**
    * Rehydrate.
    *
    * @returns {Promise<void>} The result of the operation

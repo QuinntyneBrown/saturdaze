@@ -27,6 +27,20 @@
       }
     </div>
   </div>
+  <sd-photo-suggestions
+    label="Find a photo"
+    buttonLabel="Find photos"
+    placeholder="sunflower field"
+    name="profile-photo"
+    groupLabel="Suggested photos"
+    [minQuery]="3"
+    [state]="suggestState()"
+    [error]="suggestError()"
+    [suggestions]="suggestionTiles()"
+    [selected]="selectedSuggestion()"
+    (find)="suggest($event)"
+    (picked)="pickSuggestion($event)"
+  />
 
   @if (data.currentUrl) {
     <sd-button slot="actions-left" variant="quiet" warnText type="button" (click)="remove()">

@@ -6,11 +6,12 @@ import { firstValueFrom } from 'rxjs';
 
 import {
   CommitmentRow,
-  EVENT_SUBMISSIONS_SERVICE,
   EditableFamilyProfile,
+  EVENT_SUBMISSIONS_SERVICE,
   FAMILY_SERVICE,
   FamilyInvite,
   MemberRow,
+  PHOTO_SUGGESTIONS_SERVICE,
   PreferenceKey,
   SESSION_STORE,
   WeekendDay,
@@ -142,6 +143,7 @@ export class FamilyPage {
   private readonly familyService = inject(FAMILY_SERVICE);
   private readonly submissions = inject(EVENT_SUBMISSIONS_SERVICE);
   private readonly session = inject(SESSION_STORE);
+  private readonly suggestions = inject(PHOTO_SUGGESTIONS_SERVICE);
   private readonly dialog = inject(Dialog);
   private readonly router = inject(Router);
 
@@ -340,7 +342,14 @@ export class FamilyPage {
     if (!user) return;
     const ref = this.dialog.open<ProfilePhotoDialogResult, ProfilePhotoDialogData>(
       ProfilePhotoDialog,
-      { ...DIALOG_OPTIONS, data: { name: user.email, currentUrl: user.avatarUrl } },
+      {
+        ...DIALOG_OPTIONS,
+        data: {
+          name: user.email,
+          currentUrl: user.avatarUrl,
+          suggest: (query) => this.suggestions.find({ target: 'profile', query }),
+        },
+      },
     );
     const result = await firstValueFrom(ref.closed);
     if (!result) return;
@@ -348,7 +357,9 @@ export class FamilyPage {
     try {
       await (result.kind === 'save'
         ? this.session.uploadAvatar(result.file)
-        : this.session.removeAvatar());
+        : result.kind === 'suggestion'
+          ? this.session.useSuggestedAvatar(result.suggestionId)
+          : this.session.removeAvatar());
     } catch (err) {
       const message = (err as { message?: string } | null)?.message;
       this.error.set(message ?? 'That did not save. Try again in a moment.');
