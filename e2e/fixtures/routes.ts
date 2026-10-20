@@ -33,6 +33,7 @@ export type PageSlug =
   | "reset-password"
   | "verify-email"
   | "accept-invite"
+  | "join"
   | "marketing"
   | "legal"
   | "shared-weekend"
@@ -75,6 +76,11 @@ export const ROUTES = {
   verifyExpired:     { app: "/verify-email?state=expired",     mock: "/pages/verify-email.html#state-expired",   page: "verify-email" },
   acceptInviteJoin:  { app: "/accept-invite?state=join",       mock: "/pages/accept-invite.html#state-join",     page: "accept-invite" },
   acceptInviteInvalid: { app: "/accept-invite?state=invalid",  mock: "/pages/accept-invite.html#state-invalid",  page: "accept-invite" },
+  /** An admin invite (L2-161): the three mock states, and the app-only live link `goto` mints per test. */
+  joinSample:        { app: "/join?state=sample",              mock: "/pages/join.html#state-sample",            page: "join" },
+  joinPlain:         { app: "/join?state=plain",               mock: "/pages/join.html#state-plain",             page: "join" },
+  joinInvalid:       { app: "/join?state=invalid",             mock: "/pages/join.html#state-invalid",           page: "join" },
+  join:              { app: "/join?token={token}",                                                               page: "join" },
 
   // ---- public (site shell: sitebar at every width) ----
   legal:             { app: "/legal",                          mock: "/pages/legal.html",            page: "legal" },
@@ -99,6 +105,10 @@ export const ROUTES = {
   adminActivity:     { app: "/activity",                       mock: "/pages/admin.activity.html",       guard: "admin", page: "admin" },
   /** App-only: the place is picked per test from the Places list. */
   adminPlace:        { app: "/places/{kind}/{id}",              mock: "/pages/admin.place.html",          guard: "admin", page: "admin" },
+  adminInvitations:  { app: "/invitations",                    mock: "/pages/admin.invitations.html",    guard: "admin", page: "admin" },
+  adminSampleNew:    { app: "/invitations/samples/new",        mock: "/pages/admin.sample.new.html",     guard: "admin", page: "admin" },
+  /** App-only: the prospect is created per test through the API. */
+  adminSample:       { app: "/invitations/samples/{id}",       mock: "/pages/admin.sample.html",         guard: "admin", page: "admin" },
 } as const satisfies Record<string, RouteEntry>;
 
 export type RouteKey = keyof typeof ROUTES;

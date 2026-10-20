@@ -1,0 +1,10 @@
+<sd-dialog
+  title="Revoke this invite?"
+  [subtitle]="data.email + '’s link stops working right away. You can invite them again later.'"
+>
+  <sd-button slot="actions" variant="quiet" type="button" (click)="cancel()">Cancel</sd-button>
+  <sd-button slot="actions" variant="danger" type="button" (click)="revoke()">
+    <sd-icon name="close" />
+    Revoke
+  </sd-button>
+</sd-dialog>

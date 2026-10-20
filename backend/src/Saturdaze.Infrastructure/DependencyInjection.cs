@@ -83,6 +83,7 @@ public static class DependencyInjection
         else
             services.AddSingleton<IEmailSender, SmtpEmailSender>();
         services.AddSingleton<AccountEmails>();
+        services.AddSingleton<InvitationEmails>();
 
         var weatherBaseUrl = configuration["Saturdaze:Weather:BaseUrl"]
             ?? "https://api.open-meteo.com/v1/";

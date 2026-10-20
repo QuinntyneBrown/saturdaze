@@ -641,6 +641,66 @@ namespace Saturdaze.Infrastructure.Migrations
                     b.ToTable("PlacePhotos", (string)null);
                 });
 
+            modelBuilder.Entity("Saturdaze.Domain.Entities.PlatformInvitation", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset?>("AcceptedAtUtc")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<Guid?>("AcceptedUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset>("CreatedAtUtc")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<DateTimeOffset>("ExpiresAtUtc")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<Guid>("InvitedByUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Message")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("NormalizedEmail")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<Guid?>("ProspectId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset?>("RevokedAtUtc")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("TokenHash")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedAtUtc");
+
+                    b.HasIndex("NormalizedEmail");
+
+                    b.HasIndex("ProspectId");
+
+                    b.HasIndex("TokenHash")
+                        .IsUnique();
+
+                    b.ToTable("PlatformInvitations", (string)null);
+                });
+
             modelBuilder.Entity("Saturdaze.Domain.Entities.Preference", b =>
                 {
                     b.Property<Guid>("Id")
@@ -664,6 +724,43 @@ namespace Saturdaze.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("Preferences", (string)null);
+                });
+
+            modelBuilder.Entity("Saturdaze.Domain.Entities.Prospect", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset?>("ClaimedAtUtc")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<Guid?>("ClaimedByUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset>("CreatedAtUtc")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<Guid>("CreatedByUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("FamilyId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("WeekendId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedAtUtc");
+
+                    b.HasIndex("FamilyId")
+                        .IsUnique();
+
+                    b.HasIndex("WeekendId")
+                        .IsUnique();
+
+                    b.ToTable("Prospects", (string)null);
                 });
 
             modelBuilder.Entity("Saturdaze.Domain.Entities.RefreshToken", b =>
@@ -1259,12 +1356,35 @@ namespace Saturdaze.Infrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Saturdaze.Domain.Entities.PlatformInvitation", b =>
+                {
+                    b.HasOne("Saturdaze.Domain.Entities.Prospect", null)
+                        .WithMany()
+                        .HasForeignKey("ProspectId")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
             modelBuilder.Entity("Saturdaze.Domain.Entities.Preference", b =>
                 {
                     b.HasOne("Saturdaze.Domain.Entities.Family", null)
                         .WithMany("Preferences")
                         .HasForeignKey("FamilyId")
                         .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Saturdaze.Domain.Entities.Prospect", b =>
+                {
+                    b.HasOne("Saturdaze.Domain.Entities.Family", null)
+                        .WithMany()
+                        .HasForeignKey("FamilyId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Saturdaze.Domain.Entities.Weekend", null)
+                        .WithMany()
+                        .HasForeignKey("WeekendId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 

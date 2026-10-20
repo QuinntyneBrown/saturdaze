@@ -293,3 +293,61 @@ export async function rejectEventSubmission(
   });
   if (!res.ok()) throw new Error(`POST reject failed: ${res.status()} ${await res.text()}`);
 }
+
+/* ---------- Platform invitations and prospects (L1-038) ---------- */
+
+/** A fresh address for an invite, so re-runs never collide with an earlier one. */
+export function uniqueEmail(prefix = "invite"): string {
+  return `${prefix}-${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}@example.com`;
+}
+
+export interface SentInvitation {
+  readonly id: string;
+  readonly email: string;
+  readonly status: string;
+  readonly url: string;
+}
+
+/** `POST /api/admin/invitations` as the signed-in administrator (L2-157). */
+export async function sendInvitations(
+  request: APIRequestContext,
+  admin: TestSession,
+  emails: readonly string[],
+  prospectId?: string,
+): Promise<SentInvitation[]> {
+  const res = await request.post(`${API_URL}/api/admin/invitations`, {
+    headers: { Authorization: `Bearer ${admin.accessToken}` },
+    data: { emails, prospectId: prospectId ?? null },
+  });
+  if (!res.ok()) throw new Error(`POST /api/admin/invitations failed: ${res.status()} ${await res.text()}`);
+  return ((await res.json()) as { invitations: SentInvitation[] }).invitations;
+}
+
+export interface CreatedProspect {
+  readonly id: string;
+  readonly familyName: string;
+  readonly weekendOf: string;
+  readonly weekend: { id: string; blocks: { id: string; kind: string; title: string; isLocked: boolean }[] };
+}
+
+/** `POST /api/admin/prospects` as the signed-in administrator (L2-159). */
+export async function createProspect(
+  request: APIRequestContext,
+  admin: TestSession,
+  familyName = "The Riveras",
+): Promise<CreatedProspect> {
+  const res = await request.post(`${API_URL}/api/admin/prospects`, {
+    headers: { Authorization: `Bearer ${admin.accessToken}` },
+    data: {
+      familyName,
+      homeLocation: "Lakeview, Mississauga, ON",
+      members: [
+        { name: "Dani", age: 38 },
+        { name: "Mateo", age: 7 },
+      ],
+      likes: ["parks"],
+    },
+  });
+  if (!res.ok()) throw new Error(`POST /api/admin/prospects failed: ${res.status()} ${await res.text()}`);
+  return (await res.json()) as CreatedProspect;
+}
