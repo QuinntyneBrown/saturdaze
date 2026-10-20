@@ -38,7 +38,9 @@ export class AdminInvitationsPage extends AdminPage {
   }
 
   sampleRow(familyName: string): Locator {
-    return this.sampleRows().filter({ has: this.page.locator(".list__title", { hasText: familyName }) });
+    return this.sampleRows().filter({
+      has: this.page.locator(".list__title", { hasText: familyName }),
+    });
   }
 
   sampleRowStatus(row: Locator): Locator {
@@ -52,7 +54,9 @@ export class AdminInvitationsPage extends AdminPage {
   }
 
   inviteRow(email: string): Locator {
-    return this.inviteRows().filter({ has: this.page.locator(".list__title", { hasText: email }) });
+    return this.inviteRows().filter({
+      has: this.page.locator(".list__title", { hasText: email }),
+    });
   }
 
   inviteRowStatus(row: Locator): Locator {
@@ -111,7 +115,10 @@ export class AdminInvitationsPage extends AdminPage {
   }
 
   sendInvitesButton(): Locator {
-    return this.inviteDialog().getByRole("button", { name: "Send invites", exact: true });
+    return this.inviteDialog().getByRole("button", {
+      name: "Send invites",
+      exact: true,
+    });
   }
 
   inviteDialogError(): Locator {
@@ -125,6 +132,9 @@ export class AdminInvitationsPage extends AdminPage {
   }
 
   confirmRevokeButton(): Locator {
-    return this.revokeDialog().getByRole("button", { name: "Revoke", exact: true });
+    return this.revokeDialog().getByRole("button", {
+      name: "Revoke",
+      exact: true,
+    });
   }
 }

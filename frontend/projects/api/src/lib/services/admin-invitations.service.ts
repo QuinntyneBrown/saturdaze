@@ -4,7 +4,7 @@ import { firstValueFrom } from 'rxjs';
 
 import { API_BASE_URL } from '../api/api-base-url';
 import { timeAgo } from '../api/format';
-import { formatWeekendSpan, parseIsoDate } from '../api/weekend-dates';
+import { formatWeekendSpan, monthAbbr, parseIsoDate } from '../api/weekend-dates';
 import { projectWeekend } from '../api/weekend-projection';
 import { InvitationRow, ProspectRow } from '../models/admin/invitation-row';
 import {
@@ -23,7 +23,7 @@ const DAY_MS = 24 * 60 * 60 * 1000;
 /** "Sat 24 Oct": the Saturday as the mock's AD7 option and sample line write it. */
 export function formatSaturday(saturdayIso: string): string {
   const d = parseIsoDate(saturdayIso);
-  return d.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' });
+  return `Sat ${d.getUTCDate()} ${monthAbbr(d)}`;
 }
 
 /** Whole days left until `expiresIso`, never below zero; 14 right after sending (L2-157 AC9). */

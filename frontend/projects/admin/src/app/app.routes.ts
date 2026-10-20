@@ -55,6 +55,18 @@ export const routes: Routes = [
       import('./pages/activity-log/activity-log.page').then((m) => m.ActivityLogPage),
   },
   {
+    path: 'invitations/samples/new',
+    data: { nav: 'invitations', screen: 'sample-new' },
+    canActivate: [requireAuth],
+    loadComponent: () => import('./pages/sample-new/sample-new.page').then((m) => m.SampleNewPage),
+  },
+  {
+    path: 'invitations/samples/:id',
+    data: { nav: 'invitations', screen: 'sample' },
+    canActivate: [requireAuth],
+    loadComponent: () => import('./pages/sample/sample.page').then((m) => m.SamplePage),
+  },
+  {
     path: 'invitations',
     data: { nav: 'invitations', screen: 'invitations' },
     canActivate: [requireAuth],

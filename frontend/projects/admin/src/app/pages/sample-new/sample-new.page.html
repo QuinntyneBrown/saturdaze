@@ -1,0 +1,74 @@
+<sd-page-header
+  title="New sample weekend"
+  subtitle="Describe the family the way they would on their own profile. The planner drafts Saturday and Sunday from it."
+  backHref="/invitations"
+  backLabel="Invitations"
+/>
+
+<sd-card padding="lg">
+  <form class="sample-form" [formGroup]="form" (ngSubmit)="generate()">
+    @if (error()) {
+      <sd-banner tone="warn" role="alert" icon="alert">{{ error() }}</sd-banner>
+    }
+    <sd-text-input
+      label="Family name"
+      name="familyName"
+      formControlName="familyName"
+      placeholder="The Riveras"
+    />
+    <sd-text-input
+      label="Home"
+      name="homeLocation"
+      formControlName="homeLocation"
+      placeholder="Neighbourhood, city"
+      hint="Drives and travel legs start here."
+    />
+    <fieldset class="field members-field" formArrayName="members">
+      <legend class="field__label">Members</legend>
+      <p class="field__hint">Ages shape the picks. Under 18 counts as a kid.</p>
+      <div class="member-rows">
+        @for (member of members.controls; track member; let i = $index) {
+          <div class="member-row" [formGroupName]="i">
+            <sd-text-input label="Name" name="name" formControlName="name" />
+            <sd-text-input
+              label="Age"
+              name="age"
+              type="number"
+              [min]="0"
+              [max]="120"
+              formControlName="age"
+            />
+            <sd-button
+              class="member-row__remove"
+              variant="ghost"
+              icon
+              [label]="memberLabel(i)"
+              (click)="removeMember(i)"
+            >
+              <sd-icon name="trash" />
+            </sd-button>
+          </div>
+        }
+      </div>
+      @if (canAdd()) {
+        <sd-ghost-row icon="plus" (pressed)="addMember()">Add a member</sd-ghost-row>
+      }
+    </fieldset>
+    <sd-chip-input label="Likes" tone="leaf" formControlName="likes" />
+    <sd-select
+      label="Weekend"
+      name="weekendOf"
+      [options]="weekends"
+      formControlName="weekendOf"
+      hint="The forecast and local events for that weekend shape the plan."
+    />
+    <div class="form-actions">
+      <sd-button variant="quiet" href="/invitations">Cancel</sd-button>
+      <sd-button variant="primary" type="button" [disabled]="generating()" (click)="generate()">
+        <sd-icon name="sparkle" />
+        Generate weekend
+      </sd-button>
+    </div>
+    <button type="submit" hidden></button>
+  </form>
+</sd-card>

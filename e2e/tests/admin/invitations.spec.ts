@@ -1,6 +1,11 @@
 import { Request } from "@playwright/test";
 import { test, expect } from "../../fixtures/sd-test.js";
-import { apiLogin, SEEDED_ADMIN, sendInvitations, uniqueEmail } from "../../fixtures/auth.js";
+import {
+  apiLogin,
+  SEEDED_ADMIN,
+  sendInvitations,
+  uniqueEmail,
+} from "../../fixtures/auth.js";
 
 /**
  * Invitations (A8): an administrator invites families to Saturdaze (L2-157)
@@ -20,20 +25,27 @@ test.describe("Admin invitations", () => {
   }) => {
     // Traces to: L2-158 AC4
     const a = pages.adminInvitations;
-    await expect(a.adminNavLink("invitations")).toHaveAttribute("aria-current", "page");
+    await expect(a.adminNavLink("invitations")).toHaveAttribute(
+      "aria-current",
+      "page",
+    );
     for (const width of [390, 820, 1440]) {
       await page.setViewportSize({ width, height: 900 });
       expect(await a.hasHorizontalOverflow(), `${width}px`).toBe(false);
     }
   });
 
-  test("sending to two addresses lists both as Invite sent", async ({ page, pages }) => {
+  test("sending to two addresses lists both as Invite sent", async ({
+    page,
+    pages,
+  }) => {
     // Traces to: L2-157 AC9
     const a = pages.adminInvitations;
     const [ana, ben] = [uniqueEmail("ana"), uniqueEmail("ben")];
     const posts: Request[] = [];
     page.on("request", (r) => {
-      if (r.method() === "POST" && r.url().endsWith("/api/admin/invitations")) posts.push(r);
+      if (r.method() === "POST" && r.url().endsWith("/api/admin/invitations"))
+        posts.push(r);
     });
 
     await a.inviteFamiliesButton().click();
@@ -44,9 +56,15 @@ test.describe("Admin invitations", () => {
 
     await expect(a.inviteDialog()).toHaveCount(0);
     expect(posts).toHaveLength(1);
-    expect((posts[0].postDataJSON() as { emails: string[] }).emails).toEqual([ana, ben]);
+    expect((posts[0].postDataJSON() as { emails: string[] }).emails).toEqual([
+      ana,
+      ben,
+    ]);
 
-    const topTwo = await a.inviteRows().locator(".list__title").allTextContents();
+    const topTwo = await a
+      .inviteRows()
+      .locator(".list__title")
+      .allTextContents();
     expect(topTwo.slice(0, 2).sort()).toEqual([ana, ben].sort());
     for (const email of [ana, ben]) {
       const row = a.inviteRow(email);
@@ -61,25 +79,38 @@ test.describe("Admin invitations", () => {
     const a = pages.adminInvitations;
     let posts = 0;
     page.on("request", (r) => {
-      if (r.method() === "POST" && r.url().endsWith("/api/admin/invitations")) posts++;
+      if (r.method() === "POST" && r.url().endsWith("/api/admin/invitations"))
+        posts++;
     });
 
     await a.inviteFamiliesButton().click();
     await a.sendInvitesButton().click();
 
-    await expect(a.inviteDialogError()).toContainText("Enter at least one email address");
+    await expect(a.inviteDialogError()).toContainText(
+      "Enter at least one email address",
+    );
     await expect(a.inviteDialog()).toBeVisible();
     expect(posts).toBe(0);
   });
 
-  test("revoking a pending invite through the confirmation", async ({ page, pages, request }) => {
+  test("revoking a pending invite through the confirmation", async ({
+    page,
+    pages,
+    request,
+  }) => {
     // Traces to: L2-158 AC5
     const a = pages.adminInvitations;
     const admin = await apiLogin(request, SEEDED_ADMIN);
-    const [sent] = await sendInvitations(request, admin, [uniqueEmail("revoke")]);
+    const [sent] = await sendInvitations(request, admin, [
+      uniqueEmail("revoke"),
+    ]);
     const deletes: Request[] = [];
     page.on("request", (r) => {
-      if (r.method() === "DELETE" && r.url().includes("/api/admin/invitations/")) deletes.push(r);
+      if (
+        r.method() === "DELETE" &&
+        r.url().includes("/api/admin/invitations/")
+      )
+        deletes.push(r);
     });
     await page.reload();
     await a.waitForScreen("invitations");
@@ -96,11 +127,18 @@ test.describe("Admin invitations", () => {
     await expect(a.revokeButton(row)).toHaveCount(0);
   });
 
-  test("with nothing sent the screen offers the first invite", async ({ page, pages }) => {
+  test("with nothing sent the screen offers the first invite", async ({
+    page,
+    pages,
+  }) => {
     // Traces to: L2-158 AC6
     const a = pages.adminInvitations;
-    await page.route("**/api/admin/invitations", (route) => route.fulfill({ json: [] }));
-    await page.route("**/api/admin/prospects", (route) => route.fulfill({ json: [] }));
+    await page.route("**/api/admin/invitations", (route) =>
+      route.fulfill({ json: [] }),
+    );
+    await page.route("**/api/admin/prospects", (route) =>
+      route.fulfill({ json: [] }),
+    );
     await page.reload();
     await a.waitForScreen("invitations");
 

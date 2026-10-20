@@ -1,0 +1,138 @@
+<sd-page-header
+  [title]="title()"
+  [subtitle]="subtitle()"
+  backHref="/invitations"
+  backLabel="Invitations"
+>
+  @if (status() === 'ready') {
+    <sd-button slot="actions" variant="quiet" [disabled]="regenerating()" (click)="regenerate()">
+      <sd-icon name="refresh" />
+      Regenerate
+    </sd-button>
+  }
+  @if (status() === 'ready') {
+    <sd-button slot="actions" variant="quiet" href="/invitations/samples/new">
+      <sd-icon name="edit" />
+      Edit family
+    </sd-button>
+  }
+  @if (status() === 'ready') {
+    <sd-button slot="primary" variant="primary" (click)="sendInvite()">
+      <sd-icon name="mail" />
+      Send invite
+    </sd-button>
+  }
+</sd-page-header>
+
+@if (error()) {
+  <sd-banner class="error" tone="warn" role="alert" icon="alert">{{ error() }}</sd-banner>
+}
+
+@switch (status()) {
+  @case ('loading') {
+    <div class="sd-grid-days sample-days" aria-busy="true">
+      @for (day of days; track day) {
+        <sd-day [title]="day" [actions]="false">
+          @for (i of skeleton; track i) {
+            <sd-skeleton-row />
+          }
+        </sd-day>
+      }
+    </div>
+  }
+  @case ('missing') {
+    <sd-empty
+      icon="mail"
+      tone="warn"
+      title="No sample weekend here"
+      body="It may have been removed. Go back to Invitations to pick another."
+    >
+      <sd-button slot="cta" variant="quiet" href="/invitations">Back to Invitations</sd-button>
+    </sd-empty>
+  }
+  @case ('ready') {
+    @if (view(); as v) {
+      <div class="sample-meta">
+        <sd-chip [tone]="chipTone(v.row.status.tone)">
+          @if (v.row.status.icon) {
+            <sd-icon [name]="v.row.status.icon" [size]="13" [stroke]="2" />
+          }
+          {{ v.row.status.label }}
+        </sd-chip>
+        @if (lockedCount() > 0) {
+          <sd-chip tone="accent">
+            <sd-icon name="lock" [size]="13" [stroke]="2" />
+            {{ lockedLabel() }}
+          </sd-chip>
+        }
+        <span class="sample-meta__note">Locked blocks stay when the weekend is regenerated.</span>
+      </div>
+    }
+    @if (weekend(); as plan) {
+      <div class="sd-grid-days sample-days" [attr.aria-busy]="regenerating() ? 'true' : null">
+        @for (day of plan.days; track day.day) {
+          <sd-day
+            [title]="day.day"
+            [meta]="day.meta"
+            [weather]="dayWeather(day)"
+            [locked]="day.locked"
+            [actions]="false"
+          >
+            @for (block of day.blocks; track block.id) {
+              <sd-block
+                [time]="block.time"
+                [duration]="block.duration"
+                [icon]="block.icon"
+                [title]="block.title"
+                [subtitle]="block.subtitle ?? ''"
+                [commitment]="block.commitment"
+                [locked]="block.locked"
+                [drive]="block.drive"
+                [errand]="block.errand"
+                [stopNumber]="block.stopNumber"
+              >
+                @for (chip of block.chips; track chip.label) {
+                  <sd-chip slot="chips" [tone]="chipTone(chip.tone)">
+                    @if (chip.icon) {
+                      <sd-icon [name]="chip.icon" [size]="13" [stroke]="2" />
+                    }
+                    {{ chip.label }}
+                  </sd-chip>
+                }
+                @if (block.swappable) {
+                  <sd-button
+                    slot="actions"
+                    variant="ghost"
+                    size="sm"
+                    icon
+                    [label]="'Swap ' + block.title"
+                    tooltip="Swap for something else"
+                    [disabled]="isBusy(block)"
+                    (click)="swap(block)"
+                  >
+                    <sd-icon name="swap" />
+                  </sd-button>
+                }
+                @if (block.lockable) {
+                  <sd-button
+                    slot="actions"
+                    variant="ghost"
+                    size="sm"
+                    icon
+                    [label]="(block.locked ? 'Unlock ' : 'Lock ') + block.title"
+                    [tooltip]="block.locked ? 'Unlock' : 'Lock — keep when regenerating'"
+                    [pressed]="block.locked"
+                    [disabled]="isBusy(block)"
+                    (click)="lock(block)"
+                  >
+                    <sd-icon [name]="block.locked ? 'unlock' : 'lock'" />
+                  </sd-button>
+                }
+              </sd-block>
+            }
+          </sd-day>
+        }
+      </div>
+    }
+  }
+}
