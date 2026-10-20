@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Saturdaze.Application.Abstractions;
 using Saturdaze.Application.Authentication;
 using Saturdaze.Application.Exceptions;
+using Saturdaze.Domain.Enums;
 
 namespace Saturdaze.Application.Common;
 
@@ -15,16 +16,22 @@ public sealed class CurrentUserFamilyAccessor : ICurrentFamilyAccessor
 {
     private readonly ICurrentUserAccessor _user;
     private readonly IAppDbContext _db;
+    private readonly AdminFamilyScope _scope;
     private Guid? _cached;
 
-    public CurrentUserFamilyAccessor(ICurrentUserAccessor user, IAppDbContext db)
+    public CurrentUserFamilyAccessor(ICurrentUserAccessor user, IAppDbContext db, AdminFamilyScope scope)
     {
         _user = user;
         _db = db;
+        _scope = scope;
     }
 
     public async Task<Guid> GetCurrentFamilyIdAsync(CancellationToken cancellationToken = default)
     {
+        // An administrator acting on another family (ADR-019, L2-158): the family named in
+        // the admin route, checked before the cache so nested sends all see the same family.
+        if (_scope.FamilyId is { } scoped && _user.Role == UserRole.Admin) return scoped;
+
         if (_cached is { } cached) return cached;
 
         if (!_user.IsAuthenticated || _user.UserId is not { } userId)

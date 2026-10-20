@@ -22,6 +22,7 @@ public static class DependencyInjection
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(Covers.WeekendEnrichmentBehavior<,>));
         services.AddScoped<ICurrentFamilyAccessor, CurrentUserFamilyAccessor>();
+        services.AddScoped<AdminFamilyScope>();
         services.AddScoped<RefreshTokenIssuer>();
         services.AddScoped<Families.FamilyProfileReader>();
         services.AddScoped<Families.FamilyOwnership>();

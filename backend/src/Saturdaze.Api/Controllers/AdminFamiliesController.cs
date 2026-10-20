@@ -2,6 +2,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Saturdaze.Application.Admin.Families;
+using Saturdaze.Application.Contracts;
 
 namespace Saturdaze.Api.Controllers;
 
@@ -23,4 +24,29 @@ public sealed class AdminFamiliesController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<AdminFamilyPageDto>> List([FromQuery] string? q, [FromQuery] int page, CancellationToken ct)
         => Ok(await _sender.Send(new ListAdminFamiliesQuery(q, page < 1 ? 1 : page), ct));
+
+    /// <summary>One family with its members and commitments (L2-159).</summary>
+    [HttpGet("{familyId:guid}")]
+    public async Task<ActionResult<AdminFamilyDetailDto>> Get(Guid familyId, CancellationToken ct)
+        => Ok(await _sender.Send(new GetAdminFamilyQuery(familyId), ct));
+
+    /// <summary>The family's upcoming weekend as the family sees it; 404 <c>weekend_not_planned</c> when none (L2-159 AC1).</summary>
+    [HttpGet("{familyId:guid}/weekends/current")]
+    public async Task<ActionResult<WeekendDto>> CurrentWeekend(Guid familyId, CancellationToken ct)
+        => Ok(await _sender.Send(new GetAdminFamilyWeekendQuery(familyId), ct));
+
+    /// <summary>Plans the family's upcoming Saturday; idempotent (L2-159 AC2, ADR-003).</summary>
+    [HttpPost("{familyId:guid}/weekends/plan")]
+    public async Task<ActionResult<WeekendDto>> Plan(Guid familyId, CancellationToken ct)
+        => Ok(await _sender.Send(new PlanAdminFamilyWeekendCommand(familyId), ct));
+
+    /// <summary>The family's past weekends, newest first (L2-159 AC6).</summary>
+    [HttpGet("{familyId:guid}/weekends/history")]
+    public async Task<ActionResult<IReadOnlyList<WeekendSummaryDto>>> History(
+        Guid familyId, [FromQuery] int take = 20, CancellationToken ct = default)
+    {
+        var page = await _sender.Send(new GetAdminFamilyHistoryQuery(familyId, take), ct);
+        Response.Headers["X-Total-Count"] = page.TotalCount.ToString(System.Globalization.CultureInfo.InvariantCulture);
+        return Ok(page.Items);
+    }
 }
