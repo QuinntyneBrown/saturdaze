@@ -1,0 +1,10 @@
+<span class="stepper__label">{{ label() }}</span>
+<span class="stepper__track" aria-hidden="true">
+  @for (n of segments(); track n) {
+    <span
+      class="stepper__seg"
+      [class.stepper__seg--done]="n < step()"
+      [class.stepper__seg--current]="n === step()"
+    ></span>
+  }
+</span>
