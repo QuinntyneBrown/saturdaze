@@ -242,6 +242,11 @@ if ($ghReady) {
         if ($LASTEXITCODE -ne 0) { throw "gh secret set $k failed." }
     }
     foreach ($k in $variables.Keys) {
+        if ("$($variables[$k])" -eq '') {
+            # GitHub rejects an empty value; absent reads as '' in the workflow.
+            & gh variable delete $k --repo $GitHubRepo 2>&1 | Out-Null
+            continue
+        }
         & gh variable set $k --repo $GitHubRepo --body "$($variables[$k])"
         if ($LASTEXITCODE -ne 0) { throw "gh variable set $k failed." }
     }
