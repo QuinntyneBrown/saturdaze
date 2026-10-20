@@ -43,6 +43,7 @@ import { VerifyEmailPage } from "../pages/verify-email.page.js";
 import { AcceptInvitePage } from "../pages/accept-invite.page.js";
 import { LandingPage } from "../pages/landing.page.js";
 import { LegalPage } from "../pages/legal.page.js";
+import { MarketingPage } from "../pages/marketing.page.js";
 import { DialogsPage } from "../pages/dialogs.page.js";
 import { SharedWeekendPage } from "../pages/shared-weekend.page.js";
 import { AdminSignInPage } from "../pages/admin/admin-sign-in.page.js";
@@ -66,6 +67,7 @@ interface Pages {
   acceptInvite: AcceptInvitePage;
   landing: LandingPage;
   legal: LegalPage;
+  marketing: MarketingPage;
   dialogs: DialogsPage;
   sharedWeekend: SharedWeekendPage;
   adminSignIn: AdminSignInPage;
@@ -152,6 +154,7 @@ export const test = base.extend<SdFixtures>({
       acceptInvite: new AcceptInvitePage(page),
       landing: new LandingPage(page),
       legal: new LegalPage(page),
+      marketing: new MarketingPage(page),
       dialogs: new DialogsPage(page),
       sharedWeekend: new SharedWeekendPage(page),
       adminSignIn: new AdminSignInPage(page),

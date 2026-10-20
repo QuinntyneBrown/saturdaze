@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Saturdaze">
+  <defs>
+    <radialGradient id="soft" cx="20%" cy="0%" r="120%">
+      <stop offset="0" stop-color="#fbe7de"/>
+      <stop offset="0.6" stop-color="#fbe7de" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="sun" cx="100%" cy="100%" r="120%">
+      <stop offset="0" stop-color="#fbebc4"/>
+      <stop offset="0.6" stop-color="#fbebc4" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="64" height="64" rx="20" fill="#e07856"/>
+  <rect width="64" height="64" rx="20" fill="url(#sun)"/>
+  <rect width="64" height="64" rx="20" fill="url(#soft)"/>
+</svg>

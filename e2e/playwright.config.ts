@@ -14,11 +14,16 @@ import { defineConfig, devices } from "@playwright/test";
  *     `Saturdaze__CuratedPhotos__PublicOrigin=https://images.example.com` and
  *     `Saturdaze__Images__AllowedOrigins__0=https://images.example.com`.
  *
- *   - The v2 mocks (docs/mocks-v2) are served on http://localhost:5173 by
+ *   - The marketing site (marketing/, ADR-018) is served on
+ *     http://localhost:4500 by fixtures/marketing-server.mjs with the headers
+ *     from its staticwebapp.config.json, for the `marketing` project. It needs
+ *     neither the Angular app nor the API.
+ *
+ *   - The v2 mocks (docs/mocks) are served on http://localhost:5173 by
  *     `http-server` when SD_BASELINE=1. Visual baselines are captured from
  *     them once with `npm run baseline` and committed. Subsequent runs
  *     compare the Angular implementation against those baselines
- *     pixel-by-pixel. (`docs/mocks-v2/.verify.mjs` self-serves on :5180, so
+ *     pixel-by-pixel. (`docs/mocks/.verify.mjs` self-serves on :5180, so
  *     the two never collide.)
  *
  * Snapshot path convention: tests under `tests/visual/` use
@@ -41,8 +46,29 @@ const VIEWPORTS = {
 
 const isBaselineCapture = process.env.SD_BASELINE === "1";
 
+/** `npm run test:marketing` sets this so only the static site's server starts. */
+const marketingOnly = process.env.SD_MARKETING_ONLY === "1";
+
+/** The static marketing site (ADR-018), served with its production headers. */
+const marketingServer = {
+  command: "node fixtures/marketing-server.mjs ../marketing 4500",
+  port: 4500,
+  reuseExistingServer: !process.env.CI,
+  timeout: 30_000,
+  cwd: __dirname,
+};
+
 /** Specs under tests/admin/ run only in the `admin` project (the admin app on :4300). */
 const ADMIN_SPECS = /tests[\\/]admin[\\/]/;
+
+/** The marketing site's specs run only in the `marketing` project (the static site on :4500). */
+const MARKETING_SPECS = [
+  /tests[\\/]marketing[\\/]/,
+  /tests[\\/]visual[\\/]marketing\.visual\.spec\.ts$/,
+];
+
+/** Specs the three viewport projects skip. */
+const OTHER_APP_SPECS = [ADMIN_SPECS, ...MARKETING_SPECS];
 
 export default defineConfig({
   testDir: "./tests",
@@ -75,44 +101,46 @@ export default defineConfig({
   },
   webServer: isBaselineCapture
     ? {
-        command:
-          "npx http-server ../docs/mocks-v2 -p 5173 -c-1 --cors --silent",
+        command: "npx http-server ../docs/mocks -p 5173 -c-1 --cors --silent",
         url: "http://localhost:5173/index.html",
         reuseExistingServer: !process.env.CI,
         timeout: 30_000,
         cwd: __dirname,
       }
-    : [
-        {
-          command: "npm run start -- --port 4200",
-          url: "http://localhost:4200",
-          reuseExistingServer: !process.env.CI,
-          timeout: 180_000,
-          cwd: `${__dirname}/../frontend`,
-        },
-        // Saturdaze Admin (ADR-014): a second app in the workspace on its own port.
-        {
-          command: "npm run start:admin -- --port 4300",
-          url: "http://localhost:4300",
-          reuseExistingServer: !process.env.CI,
-          timeout: 180_000,
-          cwd: `${__dirname}/../frontend`,
-        },
-      ],
+    : marketingOnly
+      ? marketingServer
+      : [
+          {
+            command: "npm run start -- --port 4200",
+            url: "http://localhost:4200",
+            reuseExistingServer: !process.env.CI,
+            timeout: 180_000,
+            cwd: `${__dirname}/../frontend`,
+          },
+          // Saturdaze Admin (ADR-014): a second app in the workspace on its own port.
+          {
+            command: "npm run start:admin -- --port 4300",
+            url: "http://localhost:4300",
+            reuseExistingServer: !process.env.CI,
+            timeout: 180_000,
+            cwd: `${__dirname}/../frontend`,
+          },
+          marketingServer,
+        ],
   projects: [
     {
       name: "mobile",
-      testIgnore: ADMIN_SPECS,
+      testIgnore: OTHER_APP_SPECS,
       use: { ...devices["Desktop Chrome"], viewport: VIEWPORTS.mobile },
     },
     {
       name: "tablet",
-      testIgnore: ADMIN_SPECS,
+      testIgnore: OTHER_APP_SPECS,
       use: { ...devices["Desktop Chrome"], viewport: VIEWPORTS.tablet },
     },
     {
       name: "desktop",
-      testIgnore: ADMIN_SPECS,
+      testIgnore: OTHER_APP_SPECS,
       use: { ...devices["Desktop Chrome"], viewport: VIEWPORTS.desktop },
     },
     // Saturdaze Admin: Chromium only, desktop-first (curators work on laptops);
@@ -123,7 +151,21 @@ export default defineConfig({
       use: {
         ...devices["Desktop Chrome"],
         viewport: VIEWPORTS.desktop,
-        baseURL: isBaselineCapture ? "http://localhost:5173" : "http://localhost:4300",
+        baseURL: isBaselineCapture
+          ? "http://localhost:5173"
+          : "http://localhost:4300",
+      },
+    },
+    // The marketing site (ADR-018): one project; specs set their own viewports.
+    {
+      name: "marketing",
+      testMatch: MARKETING_SPECS,
+      use: {
+        ...devices["Desktop Chrome"],
+        viewport: VIEWPORTS.desktop,
+        baseURL: isBaselineCapture
+          ? "http://localhost:5173"
+          : "http://localhost:4500",
       },
     },
   ],

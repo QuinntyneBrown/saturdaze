@@ -212,9 +212,9 @@ em { font-style: normal; color: var(--mk-coral-deep); }
 .bento { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; }
 @media (min-width: 45rem) { .bento { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (min-width: 64rem) { .bento { grid-template-columns: repeat(3, minmax(0, 1fr)); } .bento__wide { grid-column: span 2; } }
-.card { padding: 24px; background: var(--sd-surface); border: 1px solid var(--sd-line); border-radius: var(--sd-r-xl); box-shadow: var(--sd-shadow-1); }
-.card h3 { font-size: var(--sd-fs-md); }
-.card p { margin-top: 6px; color: var(--sd-ink-soft); }
+.perk { padding: 24px; background: var(--sd-surface); border: 1px solid var(--sd-line); border-radius: var(--sd-r-xl); box-shadow: var(--sd-shadow-1); }
+.perk h3 { font-size: var(--sd-fs-md); }
+.perk p { margin-top: 6px; color: var(--sd-ink-soft); }
 .card-icon { display: grid; place-items: center; width: 44px; height: 44px; margin-bottom: 16px; border-radius: var(--sd-r-md); background: var(--tint, var(--sd-surface-2)); color: var(--sd-ink); }
 .card-icon .icon { width: 22px; height: 22px; }
 
@@ -233,7 +233,7 @@ em { font-style: normal; color: var(--mk-coral-deep); }
 .final-cta .hero__cta { justify-content: center; margin-top: 24px; }
 
 /* ---- footer ---- */
-.site-footer { padding-block: 40px; border-top: 1px solid var(--sd-line); background: var(--sd-surface); font-size: var(--sd-fs-sm); color: var(--sd-ink-soft); }
+.site-footer { margin: 0; padding-block: 40px; border-top: 1px solid var(--sd-line); background: var(--sd-surface); font-size: var(--sd-fs-sm); color: var(--sd-ink-soft); }
 .footer-grid { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 24px; }
 .footer-links { display: flex; flex-wrap: wrap; gap: 4px 16px; }
 .footer-links a { color: inherit; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: var(--sd-line-strong); border-radius: var(--sd-r-sm); }
