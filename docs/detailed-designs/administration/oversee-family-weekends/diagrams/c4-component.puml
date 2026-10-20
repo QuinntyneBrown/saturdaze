@@ -1,0 +1,41 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components - Oversee family weekends
+
+Container_Boundary(adminweb, "Saturdaze Admin and libraries") {
+  Component(families, "FamiliesPage (A8)", "Angular page", "Search, rows, pager")
+  Component(weekend, "FamilyWeekendPage (A9)", "Angular page", "Day tabs, blocks, Changes, Past weekends")
+  Component(regen, "RegenerateDialog (AD7)", "CDK dialog", "Confirms with what is kept")
+  Component(details, "BlockDetailsDialog (AD8)", "CDK dialog", "Why this, Swap, Lock")
+  Component(svc, "AdminFamiliesService", "api library", "list(), weekend(), plan(), swapBlock(), changes()")
+  Component(nav, "sd-admin-nav", "components library", "Families destination")
+}
+Container_Boundary(api, "Saturdaze API and Application") {
+  Component(ctrl, "AdminFamiliesController", "ASP.NET Core, Authorize(Policy = Admin)", "/api/admin/families/*")
+  Component(scope, "AdminFamilyScope", "Scoped service", "Enters the family named in the route; 404 when unknown")
+  Component(accessor, "CurrentUserFamilyAccessor", "ICurrentFamilyAccessor", "Returns the scoped family for an administrator")
+  Component(list, "ListAdminFamiliesQueryHandler", "MediatR", "Families with accounts and the upcoming weekend")
+  Component(adminHandlers, "Admin weekend handlers", "MediatR", "Enter the scope, send the family's command, record the change")
+  Component(familyHandlers, "Weekend handlers", "MediatR", "Generate, Regenerate, RegenerateDay, LockDay, LockBlock, Swap (unchanged)")
+  Component(writer, "WeekendAuditWriter", "Application service", "Creates WeekendAuditEntry rows")
+  Component(entry, "WeekendAuditEntry", "Domain entity", "Who, when, weekend, action, before, after")
+  ComponentDb(db, "AppDbContext", "EF Core", "Families, Weekends, WeekendAuditEntries")
+}
+Rel(families, svc, "Calls")
+Rel(weekend, svc, "Calls")
+Rel(weekend, regen, "Opens")
+Rel(weekend, details, "Opens")
+Rel(svc, ctrl, "HTTP", "JSON")
+Rel(ctrl, list, "Sends")
+Rel(ctrl, adminHandlers, "Sends")
+Rel(adminHandlers, scope, "EnterAsync(familyId)")
+Rel(accessor, scope, "Reads FamilyId")
+Rel(adminHandlers, familyHandlers, "Sends the family's command")
+Rel(familyHandlers, accessor, "GetCurrentFamilyIdAsync")
+Rel(adminHandlers, writer, "Write(action, before, after)")
+Rel(writer, entry, "Creates")
+Rel(familyHandlers, db, "Reads and writes weekends")
+Rel(list, db, "Reads families, users, weekends")
+Rel(writer, db, "Adds entries")
+@enduml

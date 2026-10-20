@@ -1,0 +1,14 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context - Oversee family weekends
+
+Person(admin, "Administrator", "Sees every family and changes a family's weekend plan from Saturdaze Admin")
+Person(family, "Family member", "Sees and changes the family's own weekend")
+System(saturdaze, "Saturdaze", "Family weekend planner: family app, Saturdaze Admin and the API")
+System_Ext(weather, "Open-Meteo", "Weekend forecast")
+
+Rel(admin, saturdaze, "Lists families, views and changes a family's weekend", "HTTPS")
+Rel(family, saturdaze, "Plans and adjusts the weekend", "HTTPS")
+Rel(saturdaze, weather, "Reads the forecast for each weekend", "HTTPS")
+@enduml

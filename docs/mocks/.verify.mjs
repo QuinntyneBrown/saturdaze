@@ -81,6 +81,8 @@ export const PAGES = [
   // Admin (bare shell: its own side navigation from 1024px, a bar below; ADR-014)
   { url: "/pages/admin.sign-in.html",        shell: "bare", expects: { selector: "#state-gate .auth-card__title", text: "can't use Saturdaze Admin" } },
   { url: "/pages/admin.html",                shell: "bare", expects: { selector: ".page-header__title", text: "Photo health" }, cols: { ".stat-grid": { 390: 1, 820: 1, 1440: 3 } } },
+  { url: "/pages/admin.families.html",       shell: "bare", expects: { selector: ".family-list .list__title", text: "The Browns" } },
+  { url: "/pages/admin.family.html",         shell: "bare", expects: { selector: ".page-header__title", text: "The Browns" }, cols: { ".planner": { 390: 1, 820: 1, 1440: 1 } } },
   { url: "/pages/admin.places.html",         shell: "bare", expects: { selector: ".place-list .list__title", text: "Riverwood" } },
   { url: "/pages/admin.place.html",          shell: "bare", expects: { selector: ".page-header__title", text: "Port Credit Memorial Park" }, cols: { ".photo-grid": { 390: 1, 820: 2, 1440: 3 } } },
   { url: "/pages/admin.reviews.html",        shell: "bare", expects: { selector: ".review-item .card__title", text: "Harbour Grill" } },

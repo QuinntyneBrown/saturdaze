@@ -1,0 +1,22 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers - Oversee family weekends
+
+Person(admin, "Administrator", "Signs in with a Saturdaze account whose role is Admin")
+Person(family, "Family member", "Signs in to the family app")
+System_Boundary(saturdaze, "Saturdaze") {
+  Container(adminweb, "Saturdaze Admin", "Angular", "Families (A8) and Family weekend (A9) screens")
+  Container(familyweb, "Family app", "Angular", "Weekend screen")
+  Container(api, "Saturdaze API", "ASP.NET Core", "/api/admin/families/* enters a family's scope, then the weekend handlers run for that family")
+  ContainerDb(db, "Saturdaze database", "SQL Server", "Families, Users, Weekends, ItineraryBlocks, WeekendAuditEntries")
+}
+System_Ext(weather, "Open-Meteo", "Weekend forecast")
+
+Rel(admin, adminweb, "Uses", "HTTPS")
+Rel(family, familyweb, "Uses", "HTTPS")
+Rel(adminweb, api, "Calls /api/admin/families/*", "JSON/HTTPS, bearer")
+Rel(familyweb, api, "Calls /api/weekends/*", "JSON/HTTPS, bearer")
+Rel(api, db, "Reads and writes", "EF Core")
+Rel(api, weather, "Reads forecasts", "HTTPS")
+@enduml

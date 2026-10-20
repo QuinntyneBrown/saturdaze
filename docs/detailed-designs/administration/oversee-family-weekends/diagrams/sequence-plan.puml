@@ -1,0 +1,51 @@
+@startuml
+title UML sequence behaviour - Open a family whose weekend is not planned
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+actor "Administrator" as actor
+box "Frontend - Saturdaze Admin Angular application" #E0F2FE
+ participant "FamilyWeekendPage (A9)" as page
+end box
+box "Frontend - api library" #DBEAFE
+ participant "AdminFamiliesService" as client
+end box
+box "Backend - Saturdaze API" #D1FADF
+ participant "AdminFamiliesController" as controller
+end box
+box "Backend - Saturdaze Application and Domain" #ECFDF3
+ participant "GetAdminFamilyWeekendQueryHandler" as read
+ participant "PlanAdminFamilyWeekendCommandHandler" as plan
+ participant "GenerateWeekendCommandHandler" as generate
+ participant "WeekendAuditWriter" as audit
+end box
+box "Backend - Saturdaze Infrastructure" #FFF4E5
+ database "AppDbContext\nSQL Server" as db
+end box
+actor -> page : open /families/{id}
+page -> client : weekend(familyId)
+client -> controller : GET /api/admin/families/{familyId}/weekends/current
+controller -> read : GetAdminFamilyWeekendQuery
+read -> db : upcoming Weekend of the family
+db --> read : none
+read --> controller : NotFound weekend_not_planned (L2-159 AC1)
+controller --> client : 404
+client --> page : empty view
+page --> actor : "Nothing is drafted for the Browns yet" · Plan this weekend
+actor -> page : Plan this weekend
+page -> client : plan(familyId)
+client -> controller : POST /api/admin/families/{familyId}/weekends/plan
+controller -> plan : PlanAdminFamilyWeekendCommand
+plan -> generate : GenerateWeekendCommand(upcoming Saturday)
+generate -> db : existing weekend? (ADR-003)
+generate -> db : plan and save blocks
+generate --> plan : WeekendDto
+plan -> audit : Write(Plan, after block count) (L2-161)
+plan -> db : SaveChangesAsync
+plan --> controller : WeekendDto
+controller --> client : 200 (L2-159 AC2)
+client --> page : FamilyWeekendView
+page --> actor : Saturday timeline
+@enduml

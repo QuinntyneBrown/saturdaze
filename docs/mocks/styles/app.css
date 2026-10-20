@@ -1087,7 +1087,15 @@
   @media (hover: hover) { body[data-page="admin"] .table tbody tr:hover { background: var(--sd-surface-2); } }
   body[data-page="admin"] .audit-table .audit-row__who { overflow-wrap: normal; white-space: nowrap; }
   body[data-page="admin"] .audit-table .audit-row__change { color: var(--sd-ink); overflow-wrap: anywhere; }
-  /* admin dialogs (AD1 to AD6 in the gallery) */
+  /* admin: families (A8) and one family's weekend (A9), L2-157 → L2-161 */
+  body[data-page="admin"] .family-row .disc { flex: none; font-weight: var(--sd-fw-bold); }
+  body[data-page="admin"] .family-row__accounts { display: block; margin-top: 2px; font-size: var(--sd-fs-sm); color: var(--sd-ink-soft); overflow-wrap: anywhere; }
+  body[data-page="admin"] .family-row__flags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
+  body[data-page="admin"] .family-weekend .planner { grid-template-columns: minmax(0, 1fr); max-width: 760px; }
+  body[data-page="admin"] .family-weekend .audit-list { margin-top: 0; }
+  body[data-page="admin"] .family-weekend .audit-row__change { grid-column: 1 / -1; color: var(--sd-ink); }
+  body[data-page="admin"] .family-weekend .past-weekends .list__item { align-items: center; }
+  /* admin dialogs (AD1 to AD8 in the gallery) */
   .upload-drop { aspect-ratio: auto; min-height: 120px; gap: 6px; text-align: center; padding: 16px; }
   .upload-drop .field__hint { font-weight: var(--sd-fw-regular); }
   .photo-edit__media { max-width: 240px; }

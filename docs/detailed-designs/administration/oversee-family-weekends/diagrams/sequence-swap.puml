@@ -1,0 +1,55 @@
+@startuml
+title UML sequence behaviour - Swap a block on a family's weekend
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+actor "Administrator" as actor
+actor "Family member" as member
+box "Frontend - Saturdaze Admin Angular application" #E0F2FE
+ participant "FamilyWeekendPage (A9)" as page
+end box
+box "Frontend - api library" #DBEAFE
+ participant "AdminFamiliesService" as client
+end box
+box "Backend - Saturdaze API" #D1FADF
+ participant "AdminFamiliesController" as controller
+end box
+box "Backend - Saturdaze Application and Domain" #ECFDF3
+ participant "SwapAdminFamilyBlockCommandHandler" as handler
+ participant "AdminFamilyScope" as scope
+ participant "SwapBlockCommandHandler" as swap
+ participant "WeekendAuditWriter" as audit
+end box
+box "Backend - Saturdaze Infrastructure" #FFF4E5
+ database "AppDbContext\nSQL Server" as db
+end box
+actor -> page : Swap on a block row
+page -> client : swapBlock(familyId, blockId)
+client -> controller : POST /api/admin/families/{familyId}/blocks/{blockId}/swap
+controller -> controller : Admin policy (L2-111)
+controller -> handler : SwapAdminFamilyBlockCommand
+handler -> scope : EnterAsync(familyId)
+scope -> db : family exists?
+alt unknown family
+ scope --> controller : NotFound (L2-158 AC2)
+end
+handler -> db : block title before
+handler -> swap : SwapBlockCommand(blockId)
+swap -> scope : family id through CurrentUserFamilyAccessor (L2-158)
+swap -> db : weekend of the scoped family owning the block
+alt block locked or not an activity
+ swap --> controller : Conflict block_locked / block_not_swappable (L2-160 AC4)
+end
+swap -> db : replace the pick, SaveChangesAsync
+swap --> handler : WeekendDto
+handler -> audit : Write(Swap, before title, after title) (L2-161 AC1)
+handler -> db : SaveChangesAsync
+handler --> controller : WeekendDto (enriched with photos and cover)
+controller --> client : 200
+client --> page : FamilyWeekendView
+page --> actor : row shows the new pick; Changes lists the swap
+member -> db : GET /api/weekends/current
+db --> member : the changed weekend (L2-160 AC2)
+@enduml

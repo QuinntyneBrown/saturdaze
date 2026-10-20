@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="en">
+<head>
+<!-- @shell:head -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The Browns — Saturdaze Admin</title>
+<link rel="stylesheet" href="../styles/tokens.css">
+<link rel="stylesheet" href="../styles/app.css">
+<!-- @/shell:head -->
+</head>
+<body data-page="admin" data-shell="bare" data-screen="family">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="admin">
+  <nav class="admin-nav" aria-label="Admin">
+    <a class="admin-nav__brand" href="./admin.html"><span class="brand-mark" aria-hidden="true"></span><span class="admin-nav__brand-text">Saturdaze</span><span class="admin-nav__tag">Admin</span></a>
+    <div class="admin-nav__links">
+      <a class="admin-nav__link" data-nav="health" href="./admin.html"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg>Photo health</a>
+      <a class="admin-nav__link" data-nav="families" href="./admin.families.html" aria-current="page"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg>Families</a>
+      <a class="admin-nav__link" data-nav="places" href="./admin.places.html"><svg class="icon" aria-hidden="true"><use href="#i-map"/></svg>Places</a>
+      <a class="admin-nav__link" data-nav="reviews" href="./admin.reviews.html"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Review queue</a>
+      <a class="admin-nav__link" data-nav="skips" href="./admin.ingestion-skips.html"><svg class="icon" aria-hidden="true"><use href="#i-refresh"/></svg>Ingestion skips</a>
+      <a class="admin-nav__link" data-nav="activity" href="./admin.activity.html"><svg class="icon" aria-hidden="true"><use href="#i-calendar"/></svg>Activity log</a>
+    </div>
+    <div class="admin-nav__account">
+      <span class="avatar avatar--sm avatar--q" aria-hidden="true">A</span>
+      <span class="admin-nav__email">admin@saturdaze.ca</span>
+      <a class="btn btn--ghost btn--sm" href="./admin.sign-in.html"><svg class="icon" aria-hidden="true"><use href="#i-sign_out"/></svg>Sign out</a>
+    </div>
+  </nav>
+  <main class="admin-main container family-weekend" id="main">
+  <!-- docs/specs L2-159 → L2-161: one family's upcoming weekend with the family's own controls, its past weekends and every administrator change. -->
+  <header class="page-header">
+    <div class="page-header__text">
+      <a class="page-header__eyebrow" href="./admin.families.html"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-arrow_left"/></svg>Families</a>
+      <h1 class="page-header__title">The Browns</h1>
+      <p class="page-header__subtitle">Port Credit, Mississauga, ON · 4 members · 2 accounts · Weekend of 17 – 18 May</p>
+    </div>
+    <div class="page-header__actions">
+      <a class="btn btn--primary" href="./dialogs.html#dialog-admin-regenerate"><svg class="icon" aria-hidden="true"><use href="#i-refresh"/></svg>Regenerate weekend</a>
+    </div>
+  </header>
+
+  <div class="planner__toolbar">
+    <div class="segments segments--narrow" role="tablist" aria-label="Day">
+      <button class="segments__tab" type="button" role="tab" aria-selected="true" tabindex="0" aria-controls="sat-panel" id="sat-tab">Saturday</button>
+      <button class="segments__tab" type="button" role="tab" aria-selected="false" tabindex="-1" aria-controls="sun-panel" id="sun-tab">Sunday</button>
+    </div>
+  </div>
+
+  <div class="planner" id="sat-panel" role="tabpanel" aria-labelledby="sat-tab" data-day-panel>
+    <section class="day" aria-labelledby="sat-title">
+      <header class="day__header">
+        <span class="weather-disc weather-disc--sun" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-sun"/></svg></span>
+        <div class="day__text">
+          <h2 class="day__title" id="sat-title">Saturday</h2>
+          <p class="day__meta">17 May · Sunny · 22° / 14° · 3 stops · 1 h 36 min driving</p>
+        </div>
+        <div class="day__actions">
+          <a class="btn btn--ghost btn--sm day__btn" href="./dialogs.html#dialog-admin-regenerate" aria-label="Regenerate Saturday"><svg class="icon" aria-hidden="true"><use href="#i-refresh"/></svg><span class="day__btn-label">Regenerate</span></a>
+          <button class="btn btn--ghost btn--sm day__btn" type="button" aria-label="Lock day: Saturday" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg><span class="day__btn-label">Lock day</span></button>
+        </div>
+      </header>
+      <ol class="day__list">
+        <li class="block">
+          <div class="block__time"><span class="block__clock">8:30am</span><span class="block__dur">30m</span></div>
+          <div class="block__rail"><span class="block__disc"><svg class="icon" aria-hidden="true"><use href="#i-home"/></svg></span></div>
+          <div class="block__body">
+            <h3 class="block__title">Breakfast at home</h3>
+            <p class="block__sub clamp-1">Cereal day, Eli's choice</p>
+          </div>
+          <div class="block__actions">
+            <a class="btn btn--ghost btn--sm btn--icon" href="./dialogs.html#dialog-admin-block" aria-label="Why this: Breakfast at home"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg></a>
+            <button class="btn btn--ghost btn--sm btn--icon" type="button" aria-label="Lock Breakfast at home" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg></button>
+          </div>
+          <a class="block__chev" href="./dialogs.html#dialog-admin-block" aria-label="Details for Breakfast at home"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron_right"/></svg></a>
+        </li>
+        <li class="block block--commitment">
+          <div class="block__time"><span class="block__clock">9:00am</span><span class="block__dur">60m</span></div>
+          <div class="block__rail"><span class="block__disc block__disc--num"><span class="visually-hidden">Stop </span>1</span></div>
+          <div class="block__body">
+            <h3 class="block__title">Swim lessons</h3>
+            <p class="block__sub clamp-1">Port Credit pool · every Saturday</p>
+            <div class="block__chips"><span class="chip chip--accent"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg>Commitment</span></div>
+          </div>
+          <a class="block__chev" href="./dialogs.html#dialog-admin-block" aria-label="Details for Swim lessons"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron_right"/></svg></a>
+        </li>
+        <li class="leg" aria-label="Travel: 45 minutes, 52 kilometres to Lavender fields">
+          <span></span><span class="leg__rail" aria-hidden="true"></span>
+          <p class="leg__text"><svg class="icon" aria-hidden="true"><use href="#i-car"/></svg>45 min · 52 km<a class="leg__link" href="https://maps.example.com/directions/port-credit-pool/terre-bleu" target="_blank" rel="noopener">Directions<span class="visually-hidden"> to Lavender fields (opens in a new tab)</span></a></p>
+        </li>
+        <li class="block block--locked">
+          <div class="block__time"><span class="block__clock">11:00am</span><span class="block__dur">1h 45m</span></div>
+          <div class="block__rail"><span class="block__disc block__disc--num"><span class="visually-hidden">Stop </span>2</span></div>
+          <div class="block__body">
+            <div class="block__media-row">
+              <div>
+                <h3 class="block__title">Lavender fields</h3>
+                <p class="block__sub clamp-1">Terre Bleu, Milton · walk the rows</p>
+              </div>
+              <img class="block__thumb" src="../images/lavender-farm.svg" alt="" width="72" height="54">
+            </div>
+            <div class="block__chips"><span class="chip chip--primary">Day highlight</span><span class="chip chip--accent"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg>Locked</span></div>
+          </div>
+          <div class="block__actions">
+            <a class="btn btn--ghost btn--sm btn--icon" href="./dialogs.html#dialog-admin-block" aria-label="Why this: Lavender fields"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg></a>
+            <button class="btn btn--ghost btn--sm btn--icon" type="button" aria-label="Unlock Lavender fields" aria-pressed="true"><svg class="icon" aria-hidden="true"><use href="#i-unlock"/></svg></button>
+          </div>
+          <a class="block__chev" href="./dialogs.html#dialog-admin-block" aria-label="Details for Lavender fields"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron_right"/></svg></a>
+        </li>
+        <li class="leg" aria-label="Travel: 40 minutes, 48 kilometres to Lunch at La Marina">
+          <span></span><span class="leg__rail" aria-hidden="true"></span>
+          <p class="leg__text"><svg class="icon" aria-hidden="true"><use href="#i-car"/></svg>40 min · 48 km<a class="leg__link" href="https://maps.example.com/directions/terre-bleu/la-marina" target="_blank" rel="noopener">Directions<span class="visually-hidden"> to Lunch at La Marina (opens in a new tab)</span></a></p>
+        </li>
+        <li class="block">
+          <div class="block__time"><span class="block__clock">1:30pm</span><span class="block__dur">75m</span></div>
+          <div class="block__rail"><span class="block__disc block__disc--num"><span class="visually-hidden">Stop </span>3</span></div>
+          <div class="block__body">
+            <h3 class="block__title">Lunch at La Marina</h3>
+            <p class="block__sub clamp-1">Patio by the water · kids menu</p>
+          </div>
+          <div class="block__actions">
+            <a class="btn btn--ghost btn--sm btn--icon" href="./dialogs.html#dialog-admin-block" aria-label="Why this: Lunch at La Marina"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg></a>
+            <a class="btn btn--ghost btn--sm btn--icon" href="./dialogs.html#dialog-admin-block" aria-label="Swap Lunch at La Marina"><svg class="icon" aria-hidden="true"><use href="#i-swap"/></svg></a>
+            <button class="btn btn--ghost btn--sm btn--icon" type="button" aria-label="Lock Lunch at La Marina" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg></button>
+          </div>
+          <a class="block__chev" href="./dialogs.html#dialog-admin-block" aria-label="Details for Lunch at La Marina"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron_right"/></svg></a>
+        </li>
+        <li class="block">
+          <div class="block__time"><span class="block__clock">5:00pm</span><span class="block__dur">60m</span></div>
+          <div class="block__rail"><span class="block__disc"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg></span></div>
+          <div class="block__body">
+            <h3 class="block__title">Bike the waterfront trail</h3>
+            <p class="block__sub clamp-1">Lakefront Promenade · 25 min away</p>
+          </div>
+          <div class="block__actions">
+            <a class="btn btn--ghost btn--sm btn--icon" href="./dialogs.html#dialog-admin-block" aria-label="Why this: Bike the waterfront trail"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg></a>
+            <a class="btn btn--ghost btn--sm btn--icon" href="./dialogs.html#dialog-admin-block" aria-label="Swap Bike the waterfront trail"><svg class="icon" aria-hidden="true"><use href="#i-swap"/></svg></a>
+            <button class="btn btn--ghost btn--sm btn--icon" type="button" aria-label="Lock Bike the waterfront trail" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg></button>
+          </div>
+          <a class="block__chev" href="./dialogs.html#dialog-admin-block" aria-label="Details for Bike the waterfront trail"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron_right"/></svg></a>
+        </li>
+      </ol>
+    </section>
+  </div>
+
+  <div class="planner" id="sun-panel" role="tabpanel" aria-labelledby="sun-tab" data-day-panel hidden>
+    <section class="day" aria-labelledby="sun-title">
+      <header class="day__header">
+        <span class="weather-disc weather-disc--cloud" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-cloud"/></svg></span>
+        <div class="day__text">
+          <h2 class="day__title" id="sun-title">Sunday</h2>
+          <p class="day__meta">18 May · Cloudy · 18° / 12° · 2 stops · 40 min driving</p>
+        </div>
+        <div class="day__actions">
+          <a class="btn btn--ghost btn--sm day__btn" href="./dialogs.html#dialog-admin-regenerate" aria-label="Regenerate Sunday"><svg class="icon" aria-hidden="true"><use href="#i-refresh"/></svg><span class="day__btn-label">Regenerate</span></a>
+          <button class="btn btn--ghost btn--sm day__btn" type="button" aria-label="Lock day: Sunday" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg><span class="day__btn-label">Lock day</span></button>
+        </div>
+      </header>
+      <ol class="day__list">
+        <li class="block block--commitment">
+          <div class="block__time"><span class="block__clock">10:30am</span><span class="block__dur">90m</span></div>
+          <div class="block__rail"><span class="block__disc block__disc--num"><span class="visually-hidden">Stop </span>1</span></div>
+          <div class="block__body">
+            <h3 class="block__title">Church</h3>
+            <p class="block__sub clamp-1">St. Mary's · every Sunday</p>
+            <div class="block__chips"><span class="chip chip--accent"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg>Commitment</span></div>
+          </div>
+          <a class="block__chev" href="./dialogs.html#dialog-admin-block" aria-label="Details for Church"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron_right"/></svg></a>
+        </li>
+        <li class="block">
+          <div class="block__time"><span class="block__clock">1:00pm</span><span class="block__dur">2h</span></div>
+          <div class="block__rail"><span class="block__disc block__disc--num"><span class="visually-hidden">Stop </span>2</span></div>
+          <div class="block__body">
+            <h3 class="block__title">Rec Room Mississauga</h3>
+            <p class="block__sub clamp-1">Arcade and ping pong · rainy-day pick</p>
+            <div class="block__chips"><span class="chip chip--indoor">Indoor</span></div>
+          </div>
+          <div class="block__actions">
+            <a class="btn btn--ghost btn--sm btn--icon" href="./dialogs.html#dialog-admin-block" aria-label="Why this: Rec Room Mississauga"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg></a>
+            <a class="btn btn--ghost btn--sm btn--icon" href="./dialogs.html#dialog-admin-block" aria-label="Swap Rec Room Mississauga"><svg class="icon" aria-hidden="true"><use href="#i-swap"/></svg></a>
+            <button class="btn btn--ghost btn--sm btn--icon" type="button" aria-label="Lock Rec Room Mississauga" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg></button>
+          </div>
+          <a class="block__chev" href="./dialogs.html#dialog-admin-block" aria-label="Details for Rec Room Mississauga"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron_right"/></svg></a>
+        </li>
+      </ol>
+    </section>
+  </div>
+
+  <section class="section mt-6 changes" aria-labelledby="changes-title">
+    <div class="section-header">
+      <div class="section-header__text">
+        <h2 class="section-header__title" id="changes-title">Changes</h2>
+        <p class="section-header__sub">Every change an administrator made to this family's weekends, newest first. The family's own changes are not listed.</p>
+      </div>
+    </div>
+    <ol class="audit-list list list--card" aria-label="Administrator changes">
+      <li class="audit-row">
+        <time class="audit-row__time" datetime="2026-05-15T14:02Z">15 May 2026, 2:02pm UTC</time>
+        <span class="audit-row__who">admin@saturdaze.ca</span>
+        <span class="chip chip--sky">Swap</span>
+        <span class="audit-row__change">Saturday · Bronte Creek → Lavender fields</span>
+      </li>
+      <li class="audit-row">
+        <time class="audit-row__time" datetime="2026-05-15T14:03Z">15 May 2026, 2:03pm UTC</time>
+        <span class="audit-row__who">admin@saturdaze.ca</span>
+        <span class="chip chip--accent">Lock</span>
+        <span class="audit-row__change">Saturday · Locked Lavender fields</span>
+      </li>
+      <li class="audit-row">
+        <time class="audit-row__time" datetime="2026-05-14T09:41Z">14 May 2026, 9:41am UTC</time>
+        <span class="audit-row__who">curator@saturdaze.ca</span>
+        <span class="chip chip--primary">Regenerate</span>
+        <span class="audit-row__change">Sunday · Regenerated · 5 → 6 blocks</span>
+      </li>
+    </ol>
+  </section>
+
+  <section class="section mt-6 past-weekends" aria-labelledby="past-title">
+    <div class="section-header">
+      <div class="section-header__text">
+        <h2 class="section-header__title" id="past-title">Past weekends</h2>
+        <p class="section-header__sub">What the family did before, newest first. Read-only.</p>
+      </div>
+    </div>
+    <ul class="list list--card">
+      <li class="list__item">
+        <span class="disc disc--accent" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg></span>
+        <span class="list__text"><span class="list__title">10 – 11 May · Bronte Creek + Rec Room</span><span class="list__sub">Bronte Creek Provincial Park · Rec Room Mississauga · 5 of 5</span></span>
+      </li>
+      <li class="list__item">
+        <span class="disc" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-calendar"/></svg></span>
+        <span class="list__text"><span class="list__title">3 – 4 May</span><span class="list__sub">Riverwood Conservancy · Port Credit Memorial Park</span></span>
+      </li>
+    </ul>
+  </section>
+  </main>
+</div>
+<script src="../app.js"></script>
+</body>
+</html>

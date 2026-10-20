@@ -1,0 +1,114 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure - Oversee family weekends
+
+enum WeekendAuditAction {
+  Plan = 1
+  Regenerate = 2
+  RegenerateDay = 3
+  LockDay = 4
+  UnlockDay = 5
+  LockBlock = 6
+  UnlockBlock = 7
+  Swap = 8
+}
+
+class WeekendAuditEntry {
+  +Guid Id
+  +long Sequence
+  +DateTimeOffset OccurredAt
+  +Guid AdminUserId
+  +string AdminEmail
+  +Guid FamilyId
+  +Guid WeekendId
+  +DateOnly WeekendOf
+  +WeekendAuditAction Action
+  +DayOfWeekend? Day
+  +Guid? BlockId
+  +string? Before
+  +string? After
+}
+
+class AdminFamilyScope {
+  +Guid? FamilyId
+  +EnterAsync(familyId: Guid, ct): Task
+}
+
+class CurrentUserFamilyAccessor {
+  +GetCurrentFamilyIdAsync(ct): Task<Guid>
+}
+
+interface ICurrentFamilyAccessor {
+  +GetCurrentFamilyIdAsync(ct): Task<Guid>
+}
+
+class WeekendAuditWriter {
+  +Write(familyId, weekend, action, day, blockId, before, after): void
+}
+
+class SwapAdminFamilyBlockCommand {
+  +Guid FamilyId
+  +Guid BlockId
+  +IReadOnlyList<Guid>? RejectedActivityIds
+}
+
+class SwapAdminFamilyBlockCommandHandler {
+  +Handle(command, ct): Task<WeekendDto>
+}
+
+class SwapBlockCommandHandler {
+  +Handle(command, ct): Task<WeekendDto>
+}
+
+class AdminFamilyDto {
+  +Guid Id
+  +string Name
+  +string HomeLocation
+  +int MemberCount
+  +IReadOnlyList<string> Accounts
+  +string? OwnerEmail
+  +AdminWeekendSummaryDto? Upcoming
+}
+
+class AdminWeekendSummaryDto {
+  +Guid Id
+  +DateOnly WeekendOf
+  +string? Title
+  +int BlockCount
+  +int LockedCount
+  +int RegenerateCount
+}
+
+class WeekendChangeDto {
+  +Guid Id
+  +DateTimeOffset OccurredAt
+  +Guid AdminId
+  +string AdminEmail
+  +Guid WeekendId
+  +DateOnly WeekendOf
+  +string Action
+  +string? Day
+  +Guid? BlockId
+  +string Summary
+}
+
+ICurrentFamilyAccessor <|.. CurrentUserFamilyAccessor
+CurrentUserFamilyAccessor --> AdminFamilyScope : reads FamilyId
+SwapAdminFamilyBlockCommandHandler ..> SwapAdminFamilyBlockCommand : handles
+SwapAdminFamilyBlockCommandHandler --> AdminFamilyScope : enters
+SwapAdminFamilyBlockCommandHandler ..> SwapBlockCommandHandler : sends SwapBlockCommand
+SwapAdminFamilyBlockCommandHandler --> WeekendAuditWriter : records
+WeekendAuditWriter ..> WeekendAuditEntry : creates
+WeekendAuditEntry --> WeekendAuditAction : has
+AdminFamilyDto "1" --> "0..1" AdminWeekendSummaryDto : upcoming
+WeekendChangeDto ..> WeekendAuditEntry : projects
+@enduml
