@@ -313,4 +313,43 @@ describe('WelcomePage', () => {
       expect(familyService.removeMember).not.toHaveBeenCalled();
     });
   });
+
+  describe('likes and dislikes (L2-161)', () => {
+    it('seeds the two editors from the stored preferences', async () => {
+      editable.set({
+        ...PROFILE,
+        preferences: [
+          { kind: 'Like', value: 'Parks' },
+          { kind: 'Dislike', value: 'Camping' },
+          { kind: 'Like', value: 'Zoo' },
+        ],
+      });
+      await mount('likes');
+      expect(stepperLabel()).toBe('Step 3 of 4');
+      expect(title()).toBe('What does your family like?');
+      expect(host.querySelectorAll('sd-chip-input').length).toBe(2);
+      expect(component['likes']()).toEqual(['Parks', 'Zoo']);
+      expect(component['dislikes']()).toEqual(['Camping']);
+    });
+
+    it('saves likes then dislikes as preferences and moves on', async () => {
+      await mount('likes');
+      component['likes'].set(['Parks', 'Zoo']);
+      component['dislikes'].set(['Camping']);
+      await component['continueStep']();
+      expect(saved().preferences).toEqual([
+        { kind: 'Like', value: 'Parks' },
+        { kind: 'Like', value: 'Zoo' },
+        { kind: 'Dislike', value: 'Camping' },
+      ]);
+      expect(navigate).toHaveBeenCalledWith(['/welcome', 'preferences']);
+    });
+
+    it('saves an empty list when nothing was added', async () => {
+      await mount('likes');
+      await component['continueStep']();
+      expect(saved().preferences).toEqual([]);
+      expect(navigate).toHaveBeenCalledWith(['/welcome', 'preferences']);
+    });
+  });
 });

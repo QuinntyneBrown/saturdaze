@@ -20,6 +20,7 @@ import {
   Avatar,
   Banner,
   Button,
+  ChipInput,
   GhostRow,
   Icon,
   List,
@@ -102,6 +103,7 @@ function isWizardStep(value: string | null): value is WizardStep {
     Avatar,
     Banner,
     Button,
+    ChipInput,
     GhostRow,
     Icon,
     List,
@@ -140,6 +142,8 @@ export class WelcomePage {
 
   protected readonly home = signal('');
   protected readonly canContinueHome = computed(() => this.home().trim().length > 0);
+  protected readonly likes = signal<string[]>([]);
+  protected readonly dislikes = signal<string[]>([]);
 
   protected readonly saving = signal(false);
   protected readonly error = signal('');
@@ -164,6 +168,8 @@ export class WelcomePage {
 
   private seedFrom(profile: EditableFamilyProfile): void {
     this.home.set(profile.homeLocation);
+    this.likes.set(profile.preferences.filter((p) => p.kind === 'Like').map((p) => p.value));
+    this.dislikes.set(profile.preferences.filter((p) => p.kind === 'Dislike').map((p) => p.value));
   }
 
   // ---- navigation -----------------------------------------------------
@@ -179,6 +185,18 @@ export class WelcomePage {
       case 'home':
         if (!this.canContinueHome()) return;
         if (!(await this.save((p) => ({ ...p, homeLocation: this.home().trim() })))) return;
+        break;
+      case 'likes':
+        if (
+          !(await this.save((p) => ({
+            ...p,
+            preferences: [
+              ...this.likes().map((value) => ({ kind: 'Like' as const, value })),
+              ...this.dislikes().map((value) => ({ kind: 'Dislike' as const, value })),
+            ],
+          })))
+        )
+          return;
         break;
       default:
         break;

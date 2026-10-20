@@ -53,7 +53,28 @@
         title="What does your family like?"
         subtitle="Liked tags get a boost. Disliked ones are left out."
       >
+        @if (error()) {
+          <sd-banner tone="warn" role="alert" icon="alert">{{ error() }}</sd-banner>
+        }
         <form class="form" (submit)="submit($event)">
+          <sd-chip-input
+            label="Likes"
+            name="likes"
+            tone="leaf"
+            [otherValues]="dislikes()"
+            otherLabel="Dislikes"
+            [ngModel]="likes()"
+            (ngModelChange)="likes.set($event)"
+          />
+          <sd-chip-input
+            label="Dislikes"
+            name="dislikes"
+            tone="warn"
+            [otherValues]="likes()"
+            otherLabel="Likes"
+            [ngModel]="dislikes()"
+            (ngModelChange)="dislikes.set($event)"
+          />
           <ng-container *ngTemplateOutlet="nav; context: { canContinue: true }" />
         </form>
       </sd-auth-card>
