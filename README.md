@@ -164,7 +164,8 @@ Then open `http://localhost:5173/`.
 | Infrastructure | `backend/src/Saturdaze.Infrastructure` | EF Core, SQL Server persistence, migrations, weather client, Claude web-search ingestion client, auth services |
 | CLI | `backend/src/Saturdaze.Cli` | Database migration, seed, reset, and `ingest` commands |
 | Worker | `backend/src/Saturdaze.Worker` | Cron-scheduled .NET Worker Service that runs catalog ingestion |
-| Angular app | `frontend/projects/saturdaze` | Routed user-facing application |
+| Marketing site | `marketing` | Static page at www.saturdaze.ca: plain HTML, CSS and JS with no build ([README](marketing/README.md), ADR-018) |
+| Angular app | `frontend/projects/saturdaze` | Routed user-facing application at app.saturdaze.ca |
 | Admin app | `frontend/projects/admin` | Saturdaze Admin: catalog photo management on its own host (`npm run start:admin`, ADR-014) |
 | API library | `frontend/projects/api` | Client-side models and services for backend integration |
 | Component library | `frontend/projects/components` | Standalone Angular UI components aligned with the mock system |
@@ -223,7 +224,8 @@ Development conventions:
 | Storybook contract and browser tests | Build Storybook, then `npm run test:storybook` from `e2e/` | Public component documentation coverage, every indexed example and docs page, and form interaction in Chromium |
 | Frontend lint | `npm run lint` from `frontend/` | angular-eslint over TypeScript and templates |
 | Frontend format | `npm run format:check` from `frontend/` | Prettier formatting check |
-| Design tokens | `npm run tokens:check` from `frontend/` | Generated `_tokens.scss` / `tokens.ts` match the TypeScript theme (ADR-013) |
+| Design tokens | `npm run tokens:check` from `frontend/` | Generated `_tokens.scss` / `tokens.ts` / `marketing/assets/tokens.css` match the TypeScript theme (ADR-013) |
+| Marketing site | `npm run test:marketing` from `e2e/` | The static site under its production headers on :4500: sections, links, video, menu, metadata, CSP and parity with its mock (ADR-018) |
 | Playwright behavior | `npm run test:behavior` from `e2e/` | End-to-end behavior tests |
 | Playwright visual | `npm run test:visual` from `e2e/` | Visual comparisons against baselines |
 | Baseline update | `npm run baseline` from `e2e/` | Refresh visual snapshots from the mock app |
@@ -249,8 +251,8 @@ Every push to `main` runs `.github/workflows/deploy.yml` (ADR-017):
 1. **Test gates** — the backend suite on LocalDB and the frontend unit tests and
    production builds.
 2. **Provision** — `eng/infra/main.bicep` converges `saturdaze-rg`: a Linux B1
-   App Service plan and the API Web App, Azure SQL Basic, three Static Web Apps
-   (family app, admin, design system), the Microsoft Foundry account with the
+   App Service plan and the API Web App, Azure SQL Basic, four Static Web Apps
+   (family app, admin, design system, marketing site), the Microsoft Foundry account with the
    Claude deployment (ADR-011), Log Analytics + Application Insights, and a
    monthly budget. Missing resources are created; existing ones are left alone.
 3. **API + ingestion WebJob** — publishes the API and `Saturdaze.Cli` (as a
@@ -259,8 +261,25 @@ Every push to `main` runs `.github/workflows/deploy.yml` (ADR-017):
 4. **Migrations** — `saturdaze migrate` from the runner, through a SQL firewall
    rule that exists only for the length of the job.
 5. **Static Web Apps** — the family app and Saturdaze Admin (ADR-014), with
-   deployment tokens read from Azure at run time rather than stored in GitHub.
-6. **Smoke test** — the API answers and both SPAs serve a deep route (L2-042).
+   deployment tokens read from Azure at run time rather than stored in GitHub,
+   and `marketing/` as committed to the marketing site (ADR-018).
+6. **Smoke test** — the API answers, both SPAs serve a deep route (L2-042),
+   and the marketing site serves its page with its security headers (L2-156).
+
+### Domains (ADR-018)
+
+| Host | Serves |
+| --- | --- |
+| `www.saturdaze.ca` | The static marketing site (`sd-www-<suffix>`) |
+| `saturdaze.ca` | Redirects to `www` (the apex is bound to the marketing site, with `www` as its default domain) |
+| `app.saturdaze.ca` | The family app (`sd-web-<suffix>`) |
+
+DNS is at Namecheap: `CNAME app` and `CNAME www` to each app's default host,
+`ALIAS @` to the marketing app's default host, and the `_dnsauth` TXT records
+Static Web Apps asks for. Set the repository variables `APP_CUSTOM_DOMAIN`,
+`MARKETING_CUSTOM_DOMAIN` and `MARKETING_APEX_DOMAIN` once those validate.
+When the subscription has no Free Static Web App slot left, set
+`MARKETING_SWA_SKU=Standard`.
 
 The design system deploys from `deploy-storybook.yml` on changes to the
 components library.
@@ -282,7 +301,8 @@ GitHub Actions needs these **secrets**: `AZURE_CLIENT_ID`, `AZURE_TENANT_ID`,
 `AZURE_SUBSCRIPTION_ID`, `SQL_ADMIN_LOGIN`, `SQL_ADMIN_PASSWORD`,
 `SATURDAZE_JWT_SIGNING_KEY`, `SATURDAZE_PHOTOS_SIGNING_KEY`; and these
 **variables**: `FOUNDRY_ORGANIZATION_NAME`, `FOUNDRY_COUNTRY_CODE`,
-`APP_CUSTOM_DOMAIN`, `BUDGET_ALERT_EMAIL`.
+`APP_CUSTOM_DOMAIN`, `MARKETING_CUSTOM_DOMAIN`, `MARKETING_APEX_DOMAIN`,
+`MARKETING_SWA_SKU` (optional), `BUDGET_ALERT_EMAIL`.
 
 ### Configuration
 

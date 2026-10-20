@@ -1,7 +1,8 @@
 name: Deploy to Azure
 
 # Every push to main: test gates → infrastructure (Bicep, idempotent) → API +
-# ingestion WebJob → EF migrations → the three Static Web Apps (ADR-017, L2-041).
+# ingestion WebJob → EF migrations → the Static Web Apps (ADR-017, L2-041), and
+# the static marketing site at www.saturdaze.ca (ADR-018, L2-156).
 #
 # Azure access is OpenID Connect (azure/login with a federated credential), so
 # the only long-lived secrets are the ones the app itself needs. Static Web App
@@ -30,6 +31,7 @@ env:
   WEBJOB_SOURCE: backend/deploy/webjobs/ingest
   ANGULAR_DIST: frontend/dist/saturdaze/browser
   ADMIN_DIST: frontend/dist/admin/browser
+  MARKETING_DIR: marketing
 
 concurrency:
   group: deploy-${{ github.ref }}
@@ -139,6 +141,9 @@ jobs:
       admin_swa: ${{ steps.deploy.outputs.admin_swa }}
       admin_host: ${{ steps.deploy.outputs.admin_host }}
       design_swa: ${{ steps.deploy.outputs.design_swa }}
+      marketing_swa: ${{ steps.deploy.outputs.marketing_swa }}
+      marketing_host: ${{ steps.deploy.outputs.marketing_host }}
+      marketing_origin: ${{ steps.deploy.outputs.marketing_origin }}
       sql_fqdn: ${{ steps.deploy.outputs.sql_fqdn }}
       sql_db: ${{ steps.deploy.outputs.sql_db }}
       foundry_url: ${{ steps.deploy.outputs.foundry_url }}
@@ -171,6 +176,9 @@ jobs:
           FOUNDRY_ORGANIZATION_NAME: ${{ vars.FOUNDRY_ORGANIZATION_NAME }}
           FOUNDRY_COUNTRY_CODE: ${{ vars.FOUNDRY_COUNTRY_CODE || 'CA' }}
           APP_CUSTOM_DOMAIN: ${{ vars.APP_CUSTOM_DOMAIN }}
+          MARKETING_CUSTOM_DOMAIN: ${{ vars.MARKETING_CUSTOM_DOMAIN }}
+          MARKETING_APEX_DOMAIN: ${{ vars.MARKETING_APEX_DOMAIN }}
+          MARKETING_SWA_SKU: ${{ vars.MARKETING_SWA_SKU || 'Free' }}
           BUDGET_ALERT_EMAIL: ${{ vars.BUDGET_ALERT_EMAIL }}
         run: |
           for v in SQL_ADMIN_LOGIN SQL_ADMIN_PASSWORD SATURDAZE_JWT_SIGNING_KEY SATURDAZE_PHOTOS_SIGNING_KEY FOUNDRY_ORGANIZATION_NAME; do
@@ -197,6 +205,9 @@ jobs:
             echo "admin_swa=$(out adminSwaName)"
             echo "admin_host=$(out adminSwaHostName)"
             echo "design_swa=$(out designSwaName)"
+            echo "marketing_swa=$(out marketingSwaName)"
+            echo "marketing_host=$(out marketingSwaHostName)"
+            echo "marketing_origin=$(out marketingOrigin)"
             echo "sql_fqdn=$(out sqlServerFqdn)"
             echo "sql_db=$(out sqlDatabaseName)"
             echo "foundry_url=$(out foundryBaseUrl)"
@@ -211,6 +222,7 @@ jobs:
             echo "| Family app | https://$(out webSwaHostName) |"
             echo "| Admin app | https://$(out adminSwaHostName) |"
             echo "| Design system | https://$(out designSwaHostName) |"
+            echo "| Marketing site | $(out marketingOrigin) (https://$(out marketingSwaHostName)) |"
             echo "| SQL | $(out sqlServerFqdn) / $(out sqlDatabaseName) |"
             echo "| Claude (Foundry) | $(out foundryBaseUrl) → \`$(out claudeDeploymentName)\` |"
             echo "| CORS origins | $(jq -r '.corsOrigins.value | join(", ")' <<<"$outputs") |"
@@ -398,12 +410,48 @@ jobs:
           skip_app_build: true
           skip_api_build: true
 
-  # Proves the stack answers after a deploy: the API is up and the SPA shell
-  # serves a deep route (L2-042).
+  # The static marketing site (ADR-018, L2-156): marketing/ as committed, no
+  # build. Its staticwebapp.config.json carries the security headers.
+  marketing-web:
+    name: Deploy marketing site (SWA)
+    runs-on: ubuntu-latest
+    needs: [infra]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Azure login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Read the deployment token
+        id: token
+        run: |
+          token="$(az staticwebapp secrets list \
+            --resource-group "$AZURE_RESOURCE_GROUP" \
+            --name "${{ needs.infra.outputs.marketing_swa }}" \
+            --query properties.apiKey --output tsv)"
+          echo "::add-mask::$token"
+          echo "value=$token" >> "$GITHUB_OUTPUT"
+
+      - name: Deploy to Azure Static Web Apps
+        uses: Azure/static-web-apps-deploy@v1
+        with:
+          azure_static_web_apps_api_token: ${{ steps.token.outputs.value }}
+          action: upload
+          app_location: ${{ env.MARKETING_DIR }}
+          skip_app_build: true
+          skip_api_build: true
+
+  # Proves the stack answers after a deploy: the API is up, the SPA shell
+  # serves a deep route (L2-042) and the marketing site serves its page with
+  # its security headers (L2-156).
   smoke:
     name: Smoke test
     runs-on: ubuntu-latest
-    needs: [infra, web, admin-web]
+    needs: [infra, web, admin-web, marketing-web]
     steps:
       - name: API answers
         run: |
@@ -421,3 +469,18 @@ jobs:
             grep -qE '<(app-root|sd-admin-root)' <<<"$body" || { echo "::error::https://$host/sign-in did not serve the SPA shell"; exit 1; }
             echo "https://$host/sign-in → OK"
           done
+
+      - name: Marketing site serves its page and headers
+        run: |
+          url="https://${{ needs.infra.outputs.marketing_host }}/"
+          body="$(curl -fsS --retry 5 --retry-delay 10 --retry-all-errors "$url")"
+          grep -q 'Two days' <<<"$body" || { echo "::error::$url did not serve the marketing page"; exit 1; }
+          curl -fsSI "$url" | grep -qi '^content-security-policy:' || { echo "::error::$url has no Content-Security-Policy"; exit 1; }
+          echo "$url → OK"
+
+      - name: Bare domain redirects to www
+        if: ${{ vars.MARKETING_APEX_DOMAIN != '' && vars.MARKETING_CUSTOM_DOMAIN != '' }}
+        run: |
+          location="$(curl -sSI --retry 5 --retry-delay 10 "https://${{ vars.MARKETING_APEX_DOMAIN }}/" | tr -d '\r' | awk 'tolower($1) == "location:" { print $2 }')"
+          echo "https://${{ vars.MARKETING_APEX_DOMAIN }}/ → $location"
+          [ "$location" = "https://${{ vars.MARKETING_CUSTOM_DOMAIN }}/" ] || { echo "::error::the apex does not redirect to https://${{ vars.MARKETING_CUSTOM_DOMAIN }}/ (ADR-018: set www as the default domain, or use the registrar's redirect)"; exit 1; }

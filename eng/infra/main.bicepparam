@@ -15,10 +15,18 @@ param foundryLocation = 'eastus2'
 param apiSkuName = 'B1'
 param sqlSkuName = 'Basic'
 param swaSkuName = 'Free'
+// The marketing site's own tier (ADR-018): 'Standard' when the subscription has
+// no Free Static Web App slot left.
+param marketingSwaSkuName = readEnvironmentVariable('MARKETING_SWA_SKU', 'Free')
 
 // Set to 'app.saturdaze.ca' once the DNS TXT validation record is in place; the
 // deployment binds the domain to the family app's Static Web App.
 param appCustomDomain = readEnvironmentVariable('APP_CUSTOM_DOMAIN', '')
+
+// The static marketing site (ADR-018): 'www.saturdaze.ca' and the apex
+// 'saturdaze.ca', each once its TXT validation record is in place.
+param marketingCustomDomain = readEnvironmentVariable('MARKETING_CUSTOM_DOMAIN', '')
+param marketingApexDomain = readEnvironmentVariable('MARKETING_APEX_DOMAIN', '')
 
 // Secrets — never committed.
 param sqlAdminLogin = readEnvironmentVariable('SQL_ADMIN_LOGIN')

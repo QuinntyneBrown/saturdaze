@@ -47,6 +47,7 @@ The only page that tells a family what Saturdaze is lives inside the Angular app
 - `marketing/` is outside `frontend/`, so the husky hook does not format it; CI runs Prettier on it explicitly.
 
 ### Risks
+- **Free-tier quota.** On 2026-10-20 the subscription already held eleven Free Static Web Apps across other projects, and a what-if of this template failed with `InvalidSkuName: This subscription has too many static sites with SKU: Free` for both `sd-admin-<suffix>` (ADR-014, not yet created) and `sd-www-<suffix>`. Either delete Free Static Web Apps that are no longer used, or set the repository variable `MARKETING_SWA_SKU=Standard` (US$9/month for this app alone; `swaSkuName` moves all of them).
 - **Apex redirect.** Static Web Apps documents binding an apex domain (TXT validation plus an ALIAS record, which Namecheap supports) but not an automatic redirect to `www`. The plan binds the apex to `sd-www-<suffix>` and makes `www.saturdaze.ca` the default domain in the portal, then checks `curl -sI https://saturdaze.ca/` for a 301 to `https://www.saturdaze.ca/`. If that does not hold, leave `MARKETING_APEX_DOMAIN` blank and use Namecheap's URL redirect record for `@`.
 
 ## Implementation Notes

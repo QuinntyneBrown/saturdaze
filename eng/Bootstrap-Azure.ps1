@@ -35,6 +35,14 @@
     Family-app domain to bind to the Static Web App, e.g. app.saturdaze.ca. Leave
     blank until its DNS TXT validation record exists.
 
+.PARAMETER MarketingDomain
+    Marketing-site domain to bind to its Static Web App, e.g. www.saturdaze.ca
+    (ADR-018). Leave blank until its DNS TXT validation record exists.
+
+.PARAMETER MarketingApexDomain
+    Apex domain to bind beside it, e.g. saturdaze.ca, so it redirects to www.
+    Leave blank to use the registrar's redirect instead (ADR-018).
+
 .PARAMETER BudgetAlertEmail
     Where the monthly budget alerts go. Blank disables the budget.
 
@@ -55,6 +63,8 @@ param(
     [string]$AppRegistrationName = "saturdaze-github-actions",
     [string]$ClientId,
     [string]$CustomDomain = "",
+    [string]$MarketingDomain = "",
+    [string]$MarketingApexDomain = "",
     [string]$BudgetAlertEmail = "",
     [string]$SqlAdminLogin = "saturdaze_admin",
     [switch]$SkipGitHub,
@@ -207,6 +217,8 @@ $variables = [ordered]@{
     FOUNDRY_ORGANIZATION_NAME = $OrganizationName
     FOUNDRY_COUNTRY_CODE      = $CountryCode
     APP_CUSTOM_DOMAIN         = $CustomDomain
+    MARKETING_CUSTOM_DOMAIN   = $MarketingDomain
+    MARKETING_APEX_DOMAIN     = $MarketingApexDomain
     BUDGET_ALERT_EMAIL        = $BudgetAlertEmail
 }
 
@@ -274,13 +286,17 @@ Write-Host "  API:            $($outputs.apiOrigin.value)"
 Write-Host "  Family app:     https://$($outputs.webSwaHostName.value)"
 Write-Host "  Admin app:      https://$($outputs.adminSwaHostName.value)"
 Write-Host "  Design system:  https://$($outputs.designSwaHostName.value)"
+Write-Host "  Marketing site: https://$($outputs.marketingSwaHostName.value)"
 Write-Host "  SQL:            $($outputs.sqlServerFqdn.value) / $($outputs.sqlDatabaseName.value)"
 Write-Host "  Claude:         $($outputs.foundryBaseUrl.value) -> $($outputs.claudeDeploymentName.value)"
 Write-Host ""
 Write-Host "Next:"
-Write-Host "  1. Push to main — deploy.yml ships the API, WebJob, migrations and the three SPAs."
+Write-Host "  1. Push to main — deploy.yml ships the API, WebJob, migrations, the SPAs and the marketing site."
 Write-Host "  2. If the API host above differs from the one in frontend/projects/*/src/environments/environment.prod.ts, update it."
 Write-Host "  3. Retire the old SATURDAZE_CONNECTION and SWA_*_DEPLOYMENT_TOKEN secrets; the workflow no longer reads them."
 if (-not $CustomDomain) {
     Write-Host "  4. When app.saturdaze.ca's DNS points at the family app's Static Web App, re-run with -CustomDomain app.saturdaze.ca."
+}
+if (-not $MarketingDomain) {
+    Write-Host "  5. When www.saturdaze.ca (and the apex) point at the marketing Static Web App, re-run with -MarketingDomain www.saturdaze.ca -MarketingApexDomain saturdaze.ca (ADR-018)."
 }
