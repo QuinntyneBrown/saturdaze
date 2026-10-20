@@ -1,0 +1,11 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context - Onboard a new family
+
+Person(actor, "New family organizer", "Has just created a Saturdaze account")
+System(saturdaze, "Saturdaze", "Family weekend planning platform")
+System_Ext(mail, "Email provider", "Delivers the verification link sent at registration")
+Rel(actor, saturdaze, "Sets the family up one step at a time using", "HTTPS")
+Rel(saturdaze, mail, "Sends the verification email through", "SMTP")
+@enduml

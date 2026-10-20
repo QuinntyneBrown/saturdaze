@@ -10,7 +10,7 @@ The signup flow collects credentials and a family name; the API treats family na
 
 ## Description
 
-`CreateAccountPage` at `/create-account` validates credentials and terms acknowledgement and calls `SessionStore.signUp()`. It also sends the Friday-preview preference and then opens `/verify-email`.
+`CreateAccountPage` at `/create-account` validates credentials and terms acknowledgement and calls `SessionStore.signUp()`. It also sends the Friday-preview preference and then opens `/welcome/home`, the first step of the onboarding wizard (`family-profile/onboard-new-family`, L2-157).
 
 `AuthController.Register()` dispatches `RegisterUserCommand` and returns 201 with `AuthSuccessDto`. `RegisterUserCommandHandler` checks normalized email uniqueness, creates `User` and `Family`, adds a 24-hour `EmailVerificationToken`, and issues credentials through `RefreshTokenIssuer`.
 

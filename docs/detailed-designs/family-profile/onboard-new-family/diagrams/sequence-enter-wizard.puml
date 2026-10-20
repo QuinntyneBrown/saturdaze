@@ -1,0 +1,43 @@
+@startuml
+title UML sequence behaviour - Enter the wizard after creating an account
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+actor "User" as actor
+box "Frontend - Saturdaze Angular application" #E0F2FE
+ participant "CreateAccountPage" as create
+ participant "SessionStore" as session
+ participant "Router\nrequireAuth" as router
+ participant "WelcomePage" as page
+ participant "FamilyService" as client
+end box
+box "Backend - Saturdaze API" #D1FADF
+ participant "AuthController\nFamilyController" as controller
+end box
+box "Backend - Saturdaze Infrastructure" #FFF4E5
+ database "AppDbContext\nSQL Server" as db
+end box
+actor -> create : Submit the sign-up form
+create -> session : signUp(SignupRequest)
+session -> controller : POST /api/auth/register
+controller -> db : Create User and Family; queue verification email
+db --> controller : Saved
+controller --> session : 201 token pair and user
+session -> session : Persist the pair
+session --> create : Signed in
+create -> router : L2-157 navigate /welcome/home
+router -> router : requireAuth sees the session
+router -> page : Activate with :step = home
+page -> client : load()
+client -> controller : GET /api/family
+controller -> db : Read the family
+db --> controller : Aggregate
+controller --> client : 200 profile
+client --> page : getFamily(), getEditableProfile()
+page --> actor : L2-158 Step 1 of 4, "Where's home?"
+alt signed-out visitor opens /welcome/home
+ router --> actor : /sign-in?returnUrl=%2Fwelcome%2Fhome
+end
+@enduml

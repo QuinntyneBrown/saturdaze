@@ -1,0 +1,32 @@
+@startuml
+title UML sequence behaviour - Finish and open the first weekend
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+actor "User" as actor
+box "Frontend - Saturdaze Angular application" #E0F2FE
+ participant "WelcomePage" as page
+ participant "SessionStore" as session
+ participant "Router" as router
+ participant "WeekendPage" as weekend
+end box
+box "Backend - Saturdaze API" #D1FADF
+ participant "WeekendsController" as controller
+end box
+actor -> page : Reach /welcome/done
+page -> session : user()
+session --> page : email, emailVerifiedUtc
+page --> actor : L2-163 "You're set", masked email when unverified
+actor -> page : Tap "Plan this weekend"
+page -> router : Navigate /weekend
+router -> weekend : Activate
+weekend -> controller : GET /api/weekends/current
+controller --> weekend : L2-013 the current weekend, drafted on first call
+weekend --> actor : This weekend
+alt Tap "Review your family"
+ page -> router : Navigate /family
+ router --> actor : Family
+end
+@enduml

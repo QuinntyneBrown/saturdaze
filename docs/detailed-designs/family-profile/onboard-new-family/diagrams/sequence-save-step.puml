@@ -1,0 +1,47 @@
+@startuml
+title UML sequence behaviour - Continue, skip or go back on a step
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+actor "User" as actor
+box "Frontend - Saturdaze Angular application" #E0F2FE
+ participant "WelcomePage" as page
+ participant "FamilyService" as client
+ participant "Router" as router
+end box
+box "Backend - Saturdaze API" #D1FADF
+ participant "FamilyController" as controller
+end box
+box "Backend - Saturdaze Application and Domain" #ECFDF3
+ participant "SaveFamilyProfileCommandHandler" as handler
+end box
+box "Backend - Saturdaze Infrastructure" #FFF4E5
+ database "AppDbContext\nSQL Server" as db
+end box
+actor -> page : Answer the step (home, likes and dislikes, or switches)
+alt Continue
+ page -> page : Merge the answer into the editable profile
+ page -> client : saveProfile(profile)
+ client -> controller : PUT /api/family
+ controller -> handler : SaveFamilyProfileCommand
+ handler -> db : L2-159, L2-161, L2-162 replace home, preferences or switches
+ db --> handler : Saved and reread
+ handler --> controller : FamilyProfileDto
+ controller --> client : 200 profile
+ client --> page : Updated signals
+ page -> router : Navigate to the next step
+ router --> actor : L2-158 next step, stepper advanced
+else Save fails
+ controller --> client : 4xx or 5xx
+ client --> page : Rejected promise
+ page --> actor : "That did not save. Try again in a moment."; step stays open
+else Skip for now
+ page -> router : Navigate to the next step without saving
+ router --> actor : Next step
+else Back
+ page -> router : Navigate to the previous step
+ router --> actor : Previous step
+end
+@enduml
