@@ -1,0 +1,15 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers - Send branded email
+
+Person(family, "Account holder or invitee", "Mail client")
+System_Boundary(saturdaze, "Saturdaze") {
+  Container(api, "Saturdaze API", "ASP.NET Core", "Builds the content, renders the layout, queues and sends")
+  Container(pickup, "Pickup directory", "File system", ".eml files in Development and Testing")
+}
+System_Ext(mail, "Mail server", "SMTP")
+Rel(api, mail, "multipart/alternative", "SMTP")
+Rel(api, pickup, "multipart/alternative", ".eml")
+Rel(mail, family, "Delivers")
+@enduml

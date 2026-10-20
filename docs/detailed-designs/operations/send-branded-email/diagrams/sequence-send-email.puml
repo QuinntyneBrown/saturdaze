@@ -1,0 +1,32 @@
+@startuml
+title UML sequence behaviour - Send a branded invitation email
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+box "Backend - Saturdaze Application and Domain" #ECFDF3
+  participant "SendInvitationsCommandHandler" as handler
+  participant "InvitationEmails" as builder
+  participant "EmailLayout" as layout
+end box
+box "Backend - Saturdaze Infrastructure" #FFF4E5
+  participant "EmailOutbox / EmailDispatchService" as outbox
+  participant "EmailMime" as mime
+  participant "SmtpEmailSender" as sender
+  database "Mail server" as smtp
+end box
+handler -> handler : save invitations, load sample highlights
+handler -> builder : Invitation(to, token, invitedBy, sample, message)
+builder -> builder : EmailContent (encoded values: L2-162 AC6)
+builder -> layout : Render(content)
+layout --> builder : HTML part (brand tokens, inline styles: L2-162 AC1, AC5)
+builder -> layout : Text(content)
+layout --> builder : plain-text twin
+builder --> handler : EmailMessage(to, subject, text, html)
+handler -> outbox : Enqueue
+outbox -> sender : SendAsync (after the response: L2-142)
+sender -> mime : From(from, message)
+mime --> sender : multipart/alternative, text/plain then text/html (L2-162 AC4)
+sender -> smtp : SMTP
+@enduml

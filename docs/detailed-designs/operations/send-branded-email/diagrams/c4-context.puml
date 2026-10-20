@@ -1,0 +1,12 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context - Send branded email
+
+Person(family, "Account holder or invitee", "Reads the email in a mail client")
+System(saturdaze, "Saturdaze", "Family weekend planner")
+System_Ext(mail, "Mail server", "SMTP relay for no-reply@saturdaze.ca")
+
+Rel(saturdaze, mail, "Sends multipart/alternative mail", "SMTP")
+Rel(mail, family, "Delivers the HTML part, or its plain-text twin")
+@enduml

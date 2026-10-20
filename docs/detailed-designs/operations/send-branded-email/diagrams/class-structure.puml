@@ -1,0 +1,80 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure - Send branded email
+
+class EmailMessage {
+  +string To
+  +string Subject
+  +string Body
+  +string? HtmlBody
+}
+
+class EmailContent {
+  +string Eyebrow
+  +string Title
+  +IReadOnlyList<string> Paragraphs
+  +EmailCta Cta
+  +EmailNote? Note
+  +EmailSample? Sample
+  +string? Small
+  +string Footer
+}
+
+class EmailCta {
+  +string Label
+  +string Url
+}
+
+class EmailNote {
+  +string Title
+  +string Body
+}
+
+class EmailSample {
+  +string FamilyName
+  +string Dates
+  +string? SaturdayHighlight
+  +string? SundayHighlight
+}
+
+class EmailLayout {
+  {static} +Render(content): string
+  {static} +Text(content): string
+}
+
+class InvitationEmails {
+  +Invitation(to, token, invitedBy, sample, message): EmailMessage
+}
+
+class AccountEmails {
+  +Verification(to, token): EmailMessage
+  +PasswordReset(to, token): EmailMessage
+}
+
+class SuggestionEmails {
+  {static} +NotAdded(to, title, reason, appOrigin): EmailMessage
+}
+
+class EmailMime {
+  {static} +From(from, message): MimeMessage
+}
+
+EmailContent *-- EmailCta
+EmailContent o-- EmailNote
+EmailContent o-- EmailSample
+EmailLayout ..> EmailContent : renders
+InvitationEmails ..> EmailLayout
+AccountEmails ..> EmailLayout
+SuggestionEmails ..> EmailLayout
+InvitationEmails ..> EmailMessage : returns
+EmailMime ..> EmailMessage : text and html parts
+@enduml

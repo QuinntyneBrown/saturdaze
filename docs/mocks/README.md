@@ -36,6 +36,7 @@ screenshots/          committed <slug>.<viewport>.png captures (390 / 820 / 1440
 | Public | `marketing.html`, `marketing.menu-open.html` (the static site at www.saturdaze.ca, ADR-018), `legal.html` (Terms + Privacy) |
 | Admin (Saturdaze Admin, ADR-014; bare shell with its own side navigation from 1024px) | `admin.sign-in.html` (2 states), `admin.html` (Photo health), `admin.places.html`, `admin.place.html`, `admin.reviews.html`, `admin.ingestion-skips.html`, `admin.activity.html`, `admin.invitations.html`, `admin.sample.new.html`, `admin.sample.html` (sample weekends and platform invitations, L1-038) |
 | Dialogs gallery | `dialogs.html` (D1–D30 and admin AD1–AD8 rendered inline) |
+| Emails (L2-162) | `emails/_layout.html` (the template), `emails/invitation.html`, `emails/invitation-plain.html`, `emails/verify-email.html`, `emails/reset-password.html`, `emails/suggestion-not-added.html` — standalone, table-based, inline styles only (mail clients load no stylesheet); the token values they inline are listed in the template |
 
 ## Photos and maps (Wanderlog layout study)
 
