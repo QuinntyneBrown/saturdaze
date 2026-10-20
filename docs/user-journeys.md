@@ -13,7 +13,8 @@ Ordered by value added to the product, highest first. Estimates are days for an 
 | View weekend weather | See Saturday and Sunday forecasts for home location | 2 | 100% |
 | Discover local events | Browse weekend and upcoming events by category | 3 | 100% |
 | Pick restaurants | Filter restaurant picks, vote, and lock one in | 4 | 100% |
-| Create account | Register a family account and land on the weekend | 3 | 100% |
+| Create account | Register a family account and land on the onboarding wizard | 3 | 100% |
+| Set up the family after sign-up | Answer home, who's in, likes and preferences one step at a time, skipping any | 5 | 100% |
 | Sign in and stay signed in | Sign in, remember session, refresh tokens silently | 3 | 100% |
 | Sign in with Google | Continue with a Google account; the first sign-in creates the account | 4 | 100% |
 | Map the itinerary | View numbered stops, travel legs, and per-day map | 5 | 100% |

@@ -4,8 +4,8 @@ import { SEEDED_USER } from "../fixtures/auth.js";
 /**
  * Create account — family name, email, password with a live strength
  * meter, a terms checkbox that gates the primary, and the Friday preview
- * opt-in. Success registers through the API and lands on the verify-email
- * "sent" state.
+ * opt-in. Success registers through the API and lands on the first step
+ * of the onboarding wizard, /welcome/home (L2-157).
  */
 
 const fresh = () => ({
@@ -71,7 +71,8 @@ test.describe("Create account", () => {
     await expect(c.createButton()).toBeDisabled();
   });
 
-  test("a valid form registers and lands on verify-email in the 'sent' state", async ({ page, pages }) => {
+  // Traces to: L2-157 AC1
+  test("a valid form registers and lands on the wizard's home step, signed in", async ({ page, pages }) => {
     const c = pages.createAccount;
     const account = fresh();
     await c.fill(account);
@@ -81,15 +82,14 @@ test.describe("Create account", () => {
     await c.createButton().click();
     expect((await registered).ok()).toBeTruthy();
 
-    await page.waitForURL("**/verify-email**");
-    await pages.verifyEmail.waitForReady();
-    await expect(pages.verifyEmail.cardTitle()).toHaveText("Check your email");
-    await expect(pages.verifyEmail.cardSubtitle()).toContainText(/verification link/);
-    await expect(pages.verifyEmail.resendButton()).toBeVisible();
-    await expect(pages.verifyEmail.skipToWeekendLink()).toBeVisible();
+    await page.waitForURL("**/welcome/home");
+    await pages.welcome.waitForReady();
+    await expect(pages.welcome.stepperLabel()).toHaveText("Step 1 of 4");
+    await expect(pages.welcome.cardTitle()).toHaveText("Where's home?");
     expect(await page.evaluate(() => localStorage.getItem("sd.auth.token"))).toBeTruthy();
   });
 
+  // Traces to: L2-157 AC2
   test("an email that is already registered shows an error and stays put", async ({ page, pages }) => {
     const c = pages.createAccount;
     await c.fill({ ...fresh(), email: SEEDED_USER.email });
@@ -103,14 +103,20 @@ test.describe("Create account", () => {
     expect(new URL(page.url()).pathname).toBe("/create-account");
   });
 
-  // Traces to: L2-006 AC3, L2-013 AC1 — the current weekend is drafted on first visit.
-  test("'Skip to this weekend' after sign-up opens the newly drafted weekend", async ({ page, pages }) => {
+  // Traces to: L2-157 AC1, L2-163 AC2, L2-013 AC1 — the current weekend is drafted on first visit.
+  test("skipping every wizard step after sign-up opens the newly drafted weekend", async ({ page, pages }) => {
     const c = pages.createAccount;
     await c.fill(fresh());
     await c.termsCheckbox().check();
     await c.createButton().click();
-    await page.waitForURL("**/verify-email**");
-    await pages.verifyEmail.skipToWeekendLink().click();
+    await page.waitForURL("**/welcome/home");
+    const w = pages.welcome;
+    for (const next of ["family", "likes", "preferences", "done"]) {
+      await w.skipButton().click();
+      await page.waitForURL(`**/welcome/${next}`);
+    }
+    await expect(w.cardTitle()).toHaveText("You're set");
+    await w.planWeekendLink().click();
     await page.waitForURL("**/weekend");
     await pages.weekend.waitForReady();
     await expect(pages.weekend.pageTitle()).toHaveText("This weekend");

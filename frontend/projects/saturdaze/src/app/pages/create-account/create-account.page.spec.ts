@@ -106,7 +106,7 @@ describe('CreateAccountPage', () => {
     expect(component['form'].controls.email.touched).toBe(true);
   });
 
-  it('creates the account with trimmed values and moves to verify-email', async () => {
+  it('creates the account with trimmed values and opens the onboarding wizard (L2-157)', async () => {
     component['form'].setValue(VALID);
     await component['submit']();
     expect(session.signUp).toHaveBeenCalledWith({
@@ -116,9 +116,7 @@ describe('CreateAccountPage', () => {
       fridayPreview: true,
       homeLocation: null,
     });
-    expect(navigate).toHaveBeenCalledWith(['/verify-email'], {
-      queryParams: { email: 'quinn@example.com' },
-    });
+    expect(navigate).toHaveBeenCalledWith(['/welcome', 'home']);
     expect(component['submitting']()).toBe(false);
   });
 
