@@ -24,7 +24,26 @@
     }
     @case ('family') {
       <sd-auth-card title="Who's in?" subtitle="Ages shape the picks. Tap a person to edit.">
+        @if (error()) {
+          <sd-banner tone="warn" role="alert" icon="alert">{{ error() }}</sd-banner>
+        }
         <form class="form" (submit)="submit($event)">
+          @if (view().members.length) {
+            <sd-list card>
+              @for (member of view().members; track member.id) {
+                <sd-list-item
+                  action
+                  chevron
+                  [title]="member.name"
+                  [subtitle]="member.subtitle"
+                  (pressed)="editMember(member)"
+                >
+                  <sd-avatar slot="leading" [name]="member.name" [tone]="member.tone" size="lg" />
+                </sd-list-item>
+              }
+            </sd-list>
+          }
+          <sd-ghost-row icon="plus" (pressed)="addMember()">Add a family member</sd-ghost-row>
           <ng-container *ngTemplateOutlet="nav; context: { canContinue: true }" />
         </form>
       </sd-auth-card>

@@ -142,3 +142,92 @@ test.describe("Welcome — where's home (L2-159)", () => {
     await expect(w.stepperLabel()).toHaveText("Step 1 of 4");
   });
 });
+
+test.describe("Welcome — who's in (L2-160)", () => {
+  let api: FakeApi;
+
+  test.beforeEach(async ({ page, pages }) => {
+    api = await installFakeApi(page);
+    await pages.welcome.open("family");
+  });
+
+  // Traces to: L2-160 AC1
+  test("starts empty with the add row and no members", async ({ pages }) => {
+    const w = pages.welcome;
+    await expect(w.stepperLabel()).toHaveText("Step 2 of 4");
+    await expect(w.cardTitle()).toHaveText("Who's in?");
+    await expect(w.cardSubtitle()).toContainText("Ages shape the picks.");
+    await expect(w.memberRows()).toHaveCount(0);
+    await expect(w.addMemberRow()).toBeVisible();
+    await expect(w.continueButton()).toBeEnabled();
+  });
+
+  // Traces to: L2-160 AC2
+  test("adds a member who will not sign in through D17b", async ({ pages }) => {
+    const w = pages.welcome;
+    await w.addMemberRow().click();
+    await expect(w.dialogTitle()).toHaveText("Add a family member");
+    await expect(w.signInChoice("No sign-in")).toBeChecked();
+    await w.dialogAction("Cancel").click();
+
+    const sent = await w.addMember({ name: "Mae", age: 5 });
+    expect(sent).toEqual({ name: "Mae", age: 5, email: null });
+    await expect(w.dialog()).toHaveCount(0);
+    await expect(w.memberRows()).toHaveCount(1);
+    await expect(w.rowSubtitle(w.memberRow("Mae"))).toHaveText("Kid · 5");
+    expect(api.family.members.map((m) => m.name)).toEqual(["Mae"]);
+  });
+
+  // Traces to: L2-160 AC3
+  test("invites a member and shows the link in D30", async ({ pages }) => {
+    const w = pages.welcome;
+    const sent = await w.addMember({ name: "Sara", age: 36, inviteEmail: "sara@example.com" });
+    expect(sent).toEqual({ name: "Sara", age: 36, email: "sara@example.com" });
+    await expect(w.dialogTitle()).toHaveText("Invite ready for Sara");
+    await expect(w.inviteLink()).toContainText("/accept-invite?token=");
+    await w.dialogAction("Done").click();
+    await expect(w.dialog()).toHaveCount(0);
+    await expect(w.rowSubtitle(w.memberRow("Sara"))).toHaveText("Parent · 36 · Invite sent to sara@example.com");
+  });
+
+  // Traces to: L2-160 AC4
+  test("a tapped member can be re-aged through D17 or removed through D21", async ({ page, pages }) => {
+    const w = pages.welcome;
+    await w.addMember({ name: "Eli", age: 9 });
+    await expect(w.rowSubtitle(w.memberRow("Eli"))).toHaveText("Kid · 9");
+
+    await w.memberRow("Eli").click();
+    await expect(w.dialogTitle()).toHaveText("Edit Eli");
+    await w.dialogField("Age").fill("10");
+    const saved = w.nextProfileSave();
+    await w.dialogAction("Save").click();
+    const members = (await saved)["members"] as Array<{ name: string; age: number }>;
+    expect(members).toEqual([{ id: expect.any(String), name: "Eli", age: 10 }]);
+    await expect(w.rowSubtitle(w.memberRow("Eli"))).toHaveText("Kid · 10");
+
+    await w.memberRow("Eli").click();
+    await w.dialogAction("Remove").click();
+    await expect(w.dialogTitle()).toHaveText("Remove Eli from the family?");
+    const deleted = page.waitForRequest((r) => r.method() === "DELETE" && /\/api\/family\/members\//.test(r.url()));
+    await w.dialogAction("Remove").click();
+    await deleted;
+    await expect(w.dialog()).toHaveCount(0);
+    await expect(w.memberRow("Eli")).toHaveCount(0);
+    expect(api.family.members).toEqual([]);
+  });
+
+  // Traces to: L2-160 AC5
+  test("Continue moves on without another family request", async ({ page, pages }) => {
+    const w = pages.welcome;
+    await w.addMember({ name: "Mae", age: 5 });
+    await expect(w.memberRows()).toHaveCount(1);
+    const requests: string[] = [];
+    page.on("request", (r) => {
+      if (r.url().includes("/api/family")) requests.push(`${r.method()} ${new URL(r.url()).pathname}`);
+    });
+    await w.continueButton().click();
+    await page.waitForURL("**/welcome/likes");
+    await expect(w.stepperLabel()).toHaveText("Step 3 of 4");
+    expect(requests).toEqual([]);
+  });
+});
