@@ -4,6 +4,6 @@
 |---|---|---|
 | manage-database-with-cli | 4 days | 70% |
 | manage-place-photos | 7 days | 100% |
-| oversee-family-weekends | 9 days | 0% |
+| oversee-family-weekends | 9 days | 100% |
 | review-ingested-photos | 5 days | 100% |
 | scaffold-admin-application | 5 days | 90% |
