@@ -1,0 +1,81 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure - Sign in with Google
+
+class SignInPage {
+  +submit(): Promise<void>
+  -onGoogleCredential(credential: string): Promise<void>
+  -completeSignIn(signIn: () => Promise<void>): Promise<void>
+}
+interface IGoogleIdentity {
+  +enabled: boolean
+  +renderButton(host: HTMLElement, onCredential: (credential: string) => void): Promise<void>
+}
+class GoogleIdentityService {
+  -clientId: string
+  -load(): Promise<GoogleAccountsId>
+}
+class SessionStore {
+  +login(req: LoginRequest, remember: boolean): Promise<void>
+  +loginWithGoogle(credential: string, remember: boolean): Promise<void>
+}
+class AuthService {
+  +loginWithGoogle(req: GoogleLoginRequest): Promise<{token, user}>
+}
+class SignInWithGoogleCommand {
+  +string Credential
+}
+class SignInWithGoogleCommandHandler {
+  +Handle(command: SignInWithGoogleCommand): Task<AuthSuccessDto>
+}
+interface IGoogleIdTokenVerifier {
+  +IsConfigured: bool
+  +VerifyAsync(idToken: string): Task<GoogleIdentity?>
+}
+class GoogleIdentity <<record>> {
+  +string Subject
+  +string Email
+  +bool EmailVerified
+}
+class GoogleIdTokenVerifier {
+  -GetSigningKeysAsync(refresh: bool): Task<IEnumerable<SecurityKey>>
+}
+class GoogleOptions {
+  +string ClientId
+}
+class User {
+  +string Email
+  +string PasswordHash
+  +string? GoogleSubject
+  +DateTimeOffset? EmailVerifiedUtc
+}
+class Family {
+  +Guid? OwnerUserId
+}
+class RefreshTokenIssuer {
+  +Issue(user: User): IssuedRefreshToken
+  +ToSuccess(user: User, raw: string): AuthSuccessDto
+}
+SignInPage --> IGoogleIdentity : renders button through
+GoogleIdentityService ..|> IGoogleIdentity
+SignInPage --> SessionStore : calls
+SessionStore --> AuthService : calls
+AuthService ..> SignInWithGoogleCommand : maps to
+SignInWithGoogleCommandHandler ..> SignInWithGoogleCommand : handles
+SignInWithGoogleCommandHandler --> IGoogleIdTokenVerifier : verifies with
+GoogleIdTokenVerifier ..|> IGoogleIdTokenVerifier
+GoogleIdTokenVerifier --> GoogleOptions : reads
+IGoogleIdTokenVerifier ..> GoogleIdentity : returns
+SignInWithGoogleCommandHandler --> User : finds, links or creates
+SignInWithGoogleCommandHandler --> Family : creates
+SignInWithGoogleCommandHandler --> RefreshTokenIssuer : issues through
+@enduml

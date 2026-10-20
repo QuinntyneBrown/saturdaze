@@ -1,0 +1,42 @@
+@startuml
+title Behaviour - Verify a Google ID token (L2-157 AC10)
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+box "Backend - Saturdaze Application" #ECFDF3
+ participant "SignInWithGoogleCommandHandler" as handler
+end box
+box "Backend - Saturdaze Infrastructure" #FFF4E5
+ participant "GoogleIdTokenVerifier" as verifier
+ participant "IMemoryCache" as cache
+ participant "IHttpClientFactory" as http
+end box
+participant "Google JWKS endpoint" as jwks
+handler -> verifier : VerifyAsync(idToken)
+alt Saturdaze:Google:ClientId is empty
+verifier --> handler : IsConfigured = false (handler answers 503 google_not_configured)
+else configured
+verifier -> cache : Signing keys
+alt cache miss or stale
+verifier -> http : GET /oauth2/v3/certs
+http -> jwks : HTTPS
+jwks --> http : JWKS document, Cache-Control max-age
+http --> verifier : Keys
+verifier -> cache : Store for max-age (1 hour when absent)
+end
+cache --> verifier : Keys
+verifier -> verifier : Validate signature, issuers, audience = client id, lifetime (5 min skew)
+alt key id unknown
+verifier -> http : GET /oauth2/v3/certs (one refresh)
+http --> verifier : Keys
+verifier -> verifier : Validate once more
+end
+alt valid
+verifier --> handler : GoogleIdentity(sub, email, email_verified)
+else invalid
+verifier --> handler : null
+end
+end
+@enduml

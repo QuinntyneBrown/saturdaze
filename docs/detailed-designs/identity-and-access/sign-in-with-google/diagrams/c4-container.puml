@@ -1,0 +1,19 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers - Sign in with Google
+
+Person(actor, "Account holder", "Signs in with a Google account")
+System_Boundary(saturdaze, "Saturdaze") {
+  Container(web, "Saturdaze web application", "Angular", "Renders Google's button and posts the credential")
+  Container(api, "Saturdaze API", "ASP.NET Core", "Verifies the credential and issues the token pair")
+  ContainerDb(db, "Saturdaze database", "SQL Server", "Stores users, families and refresh tokens")
+}
+System_Ext(gis, "Google Identity Services", "accounts.google.com", "Signs the person in and returns an ID token")
+System_Ext(jwks, "Google JWKS endpoint", "www.googleapis.com/oauth2/v3/certs", "Publishes Google's signing keys")
+Rel(actor, web, "Uses", "HTTPS")
+Rel(web, gis, "Loads the button script; receives the credential", "HTTPS")
+Rel(web, api, "POST /api/auth/google", "JSON/HTTPS")
+Rel(api, jwks, "Fetches and caches signing keys", "HTTPS")
+Rel(api, db, "Reads and writes users, families and refresh tokens", "EF Core")
+@enduml

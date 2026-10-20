@@ -1,0 +1,13 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context - Sign in with Google
+
+Person(actor, "Account holder", "Signs in with a Google account")
+System(saturdaze, "Saturdaze", "Family weekend planning platform")
+System_Ext(google, "Google Identity Services", "Authenticates the person and issues a signed ID token")
+
+Rel(actor, saturdaze, "Signs in with Google using", "HTTPS")
+Rel(actor, google, "Chooses a Google account in", "HTTPS")
+Rel(saturdaze, google, "Reads published signing keys from", "HTTPS, JWKS")
+@enduml
