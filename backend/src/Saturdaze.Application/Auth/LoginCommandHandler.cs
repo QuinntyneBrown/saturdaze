@@ -24,10 +24,12 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, AuthSuccessDto>
     {
         var normalized = request.Email.Trim().ToLowerInvariant();
         var user = await _db.Users.FirstOrDefaultAsync(u => u.NormalizedEmail == normalized, ct);
-        if (user is null || !_hasher.Verify(user.PasswordHash, request.Password))
+        // An account created through Google has no password until a reset sets
+        // one (ADR-019); it fails like any other wrong pair.
+        if (user is null || user.PasswordHash.Length == 0 || !_hasher.Verify(user.PasswordHash, request.Password))
         {
-            // Same exception in both branches so the response never leaks
-            // whether the email exists.
+            // Same exception in every branch so the response never leaks
+            // whether the email exists or how the account signs in.
             throw new InvalidCredentialsException();
         }
 

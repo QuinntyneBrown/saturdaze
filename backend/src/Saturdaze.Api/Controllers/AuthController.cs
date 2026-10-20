@@ -22,6 +22,7 @@ public class AuthController : ControllerBase
 
     public record RegisterRequest(string Email, string Password, string? FamilyName, string? HomeLocation, bool? FridayPreview = null);
     public record LoginRequest(string Email, string Password);
+    public record GoogleRequest(string Credential);
     public record ForgotPasswordRequest(string Email);
     public record ResetPasswordRequest(string Token, string? NewPassword, string? Password);
     public record VerifyEmailRequest(string Token);
@@ -47,6 +48,17 @@ public class AuthController : ControllerBase
     public async Task<ActionResult<AuthSuccessDto>> Login([FromBody] LoginRequest req, CancellationToken ct)
     {
         var dto = await _mediator.Send(new LoginCommand(req.Email, req.Password), ct);
+        return Ok(dto);
+    }
+
+    /// <summary>
+    /// Sign in with a Google ID token; creates the account on first use (L2-157, ADR-019).
+    /// </summary>
+    [HttpPost("google")]
+    [AllowAnonymous]
+    public async Task<ActionResult<AuthSuccessDto>> Google([FromBody] GoogleRequest req, CancellationToken ct)
+    {
+        var dto = await _mediator.Send(new SignInWithGoogleCommand(req.Credential), ct);
         return Ok(dto);
     }
 

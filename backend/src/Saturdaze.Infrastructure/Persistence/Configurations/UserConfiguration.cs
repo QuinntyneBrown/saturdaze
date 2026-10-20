@@ -16,5 +16,7 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         b.Property(x => x.PasswordHash).HasMaxLength(512).IsRequired();
         b.Property(x => x.Role).HasConversion<int>();
         b.HasIndex(x => x.AvatarToken).IsUnique().HasFilter("[AvatarToken] IS NOT NULL");
+        b.Property(x => x.GoogleSubject).HasMaxLength(64);
+        b.HasIndex(x => x.GoogleSubject).IsUnique().HasFilter("[GoogleSubject] IS NOT NULL");
     }
 }
