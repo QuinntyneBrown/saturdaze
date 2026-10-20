@@ -44,5 +44,11 @@ public class Weekend
     public int? CoverUploadWidth { get; set; }
 
     public int? CoverUploadHeight { get; set; }
+
+    /// <summary>
+    /// The attribution of an upload that came from a web suggestion (L2-158); null for a photo
+    /// from the family's device, which stays "Your photo".
+    /// </summary>
+    public string? CoverUploadCredit { get; set; }
     public List<ShoppingErrand> Errands { get; set; } = new();
 }

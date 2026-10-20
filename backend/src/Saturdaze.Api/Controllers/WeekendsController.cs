@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Saturdaze.Application.Contracts;
 using Saturdaze.Application.Covers;
+using Saturdaze.Application.PhotoSuggestions;
 using Saturdaze.Application.Exceptions;
 using Saturdaze.Application.Ideas;
 using Saturdaze.Application.Photos;
@@ -92,6 +93,11 @@ public sealed class WeekendsController : ControllerBase
         await file.CopyToAsync(buffer, ct);
         return Ok(await _sender.Send(new UploadWeekendCoverCommand(id, buffer.ToArray()), ct));
     }
+
+    /// <summary>A photo suggestion as the cover (L2-158): stored as an upload, credited "From the web".</summary>
+    [HttpPost("{id:guid}/cover/suggestion")]
+    public async Task<ActionResult<WeekendDto>> UseSuggestedCover(Guid id, [FromBody] SuggestionRequest body, CancellationToken ct)
+        => Ok(await _sender.Send(new UseSuggestedCoverCommand(id, body.SuggestionId), ct));
 
     private const long UploadRequestLimit = 12 * 1024 * 1024;
     private const long MultipartOverhead = 64 * 1024;
@@ -327,3 +333,6 @@ public sealed record IdeaRequest(string IdeaKind, Guid IdeaId, string Day, strin
 
 /// <summary>Body of <c>PUT /api/weekends/{id}/cover</c>: <c>{ source: "default" | "stop", placeId }</c>.</summary>
 public sealed record CoverRequest(string? Source, Guid? PlaceId);
+
+/// <summary>Body of the <c>.../suggestion</c> routes: the id a photo search returned (L2-158, L2-160).</summary>
+public sealed record SuggestionRequest(string? SuggestionId);

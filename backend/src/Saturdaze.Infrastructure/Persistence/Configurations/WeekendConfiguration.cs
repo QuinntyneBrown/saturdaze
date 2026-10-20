@@ -12,6 +12,7 @@ public class WeekendConfiguration : IEntityTypeConfiguration<Weekend>
         b.HasKey(x => x.Id);
         b.OwnsGeo(x => x.Home, "Home");
         b.Property(x => x.CoverUploadKey).HasMaxLength(100);
+        b.Property(x => x.CoverUploadCredit).HasMaxLength(300);
         b.Property(x => x.Notes).HasMaxLength(2000);
         b.Property(x => x.Title).HasMaxLength(120);
         b.Property(x => x.Rating);

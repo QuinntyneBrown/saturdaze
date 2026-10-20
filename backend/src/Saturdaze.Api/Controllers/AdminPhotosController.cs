@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Saturdaze.Application.Admin.Photos;
 using Saturdaze.Application.Exceptions;
 using Saturdaze.Application.Photos;
+using Saturdaze.Application.PhotoSuggestions;
 using Saturdaze.Domain.Enums;
 
 namespace Saturdaze.Api.Controllers;
@@ -82,6 +83,18 @@ public sealed class AdminPhotosController : ControllerBase
     {
         var placeKind = ParseKind(kind);
         var dto = await _sender.Send(new AddPhotoFromUrlCommand(placeKind, id, req.Url, req.Alt, req.Attribution, req.Licence), ct);
+        return CreatedAtAction(nameof(PlacePhotos), new { kind = placeKind.ToString(), id }, dto);
+    }
+
+    public record UseSuggestionRequest(string? SuggestionId, string? Alt, string? Attribution, string? Licence);
+
+    /// <summary>A photo suggestion as a curated photo (L2-159): stored exactly as an upload, with the source page in the audit.</summary>
+    [HttpPost("places/{kind}/{id:guid}/photos/suggestion")]
+    public async Task<ActionResult<AdminPhotoDto>> UseSuggestion(string kind, Guid id, [FromBody] UseSuggestionRequest req, CancellationToken ct)
+    {
+        var placeKind = ParseKind(kind);
+        var dto = await _sender.Send(new UseSuggestedCuratedPhotoCommand(
+            placeKind, id, req.SuggestionId, req.Alt, req.Attribution, req.Licence), ct);
         return CreatedAtAction(nameof(PlacePhotos), new { kind = placeKind.ToString(), id }, dto);
     }
 

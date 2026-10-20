@@ -52,7 +52,7 @@ public sealed class WeekendEnrichment
     {
         var choice = await _db.Weekends.AsNoTracking()
             .Where(w => w.Id == weekendId)
-            .Select(w => new { w.CoverSource, w.CoverPlaceId, w.CoverUploadKey, w.CoverUploadWidth, w.CoverUploadHeight })
+            .Select(w => new { w.CoverSource, w.CoverPlaceId, w.CoverUploadKey, w.CoverUploadWidth, w.CoverUploadHeight, w.CoverUploadCredit })
             .FirstOrDefaultAsync(ct);
 
         if (choice is { CoverSource: CoverSource.Upload, CoverUploadKey: { } key })
@@ -60,13 +60,15 @@ public sealed class WeekendEnrichment
             var lifetime = shared
                 ? TimeSpan.FromDays(_options.ShareUrlDays)
                 : TimeSpan.FromMinutes(_options.FamilyUrlMinutes);
+            // L2-158: a suggestion keeps its credit and is labelled "From the web"; a device upload stays "Your photo".
+            var credit = choice.CoverUploadCredit;
             return new CoverDto(
                 _signer.SignedUrl(key, lifetime),
                 choice.CoverUploadWidth ?? 0,
                 choice.CoverUploadHeight ?? 0,
-                "The family's photo of this weekend",
-                "Your photo",
-                "Your photo",
+                credit is null ? "The family's photo of this weekend" : "A photo of this weekend from the web",
+                credit ?? "Your photo",
+                credit is null ? "Your photo" : "From the web",
                 "upload",
                 null);
         }

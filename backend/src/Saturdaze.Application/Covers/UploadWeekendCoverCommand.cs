@@ -13,8 +13,12 @@ using Saturdaze.Domain.Enums;
 
 namespace Saturdaze.Application.Covers;
 
-/// <summary>A family's own photo for the weekend's cover (L2-109). Never carries the file name.</summary>
-public sealed record UploadWeekendCoverCommand(Guid WeekendId, byte[] Content) : IRequest<WeekendDto>;
+/// <summary>
+/// A family's own photo for the weekend's cover (L2-109). Never carries the file name.
+/// <paramref name="Credit"/> is the attribution of a photo that came from a web suggestion
+/// (L2-158); null for a photo from the family's device.
+/// </summary>
+public sealed record UploadWeekendCoverCommand(Guid WeekendId, byte[] Content, string? Credit = null) : IRequest<WeekendDto>;
 
 public sealed class UploadWeekendCoverCommandHandler : IRequestHandler<UploadWeekendCoverCommand, WeekendDto>
 {
@@ -59,6 +63,7 @@ public sealed class UploadWeekendCoverCommandHandler : IRequestHandler<UploadWee
         weekend.CoverUploadKey = key;
         weekend.CoverUploadWidth = image.Width;
         weekend.CoverUploadHeight = image.Height;
+        weekend.CoverUploadCredit = string.IsNullOrWhiteSpace(request.Credit) ? null : request.Credit.Trim();
         weekend.CoverPlaceId = null;
         weekend.CoverPlaceKind = null;
         await _db.SaveChangesAsync(ct);

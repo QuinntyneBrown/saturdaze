@@ -13,7 +13,9 @@ public sealed class SkiaImageSanitizer : IImageSanitizer
     public const int MaxEdge = 2400;
     public const int Quality = 85;
 
-    public SanitizedImage? Sanitize(byte[] content)
+    public SanitizedImage? Sanitize(byte[] content) => Sanitize(content, MaxEdge);
+
+    public SanitizedImage? Sanitize(byte[] content, int maxEdge)
     {
         if (!IsSupported(content)) return null;
 
@@ -23,7 +25,7 @@ public sealed class SkiaImageSanitizer : IImageSanitizer
         if (decoded is null) return null;
 
         using var oriented = Orient(decoded, codec.EncodedOrigin);
-        using var sized = Fit(oriented);
+        using var sized = Fit(oriented, maxEdge);
         using var image = SKImage.FromBitmap(sized);
         using var data = image.Encode(SKEncodedImageFormat.Jpeg, Quality);
         return new SanitizedImage(data.ToArray(), sized.Width, sized.Height, "image/jpeg");
@@ -58,11 +60,11 @@ public sealed class SkiaImageSanitizer : IImageSanitizer
         return result;
     }
 
-    private static SKBitmap Fit(SKBitmap source)
+    private static SKBitmap Fit(SKBitmap source, int maxEdge)
     {
         var longest = Math.Max(source.Width, source.Height);
-        if (longest <= MaxEdge) return source.Copy();
-        var scale = (float)MaxEdge / longest;
+        if (longest <= maxEdge) return source.Copy();
+        var scale = (float)maxEdge / longest;
         var info = new SKImageInfo((int)(source.Width * scale), (int)(source.Height * scale));
         return source.Resize(info, new SKSamplingOptions(SKFilterMode.Linear, SKMipmapMode.Linear));
     }

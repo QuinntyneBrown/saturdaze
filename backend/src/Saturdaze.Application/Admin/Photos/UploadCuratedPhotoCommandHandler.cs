@@ -66,7 +66,7 @@ public sealed class UploadCuratedPhotoCommandHandler : IRequestHandler<UploadCur
         siblings.Add(photo);
         // L2-122 AC3: the audit names the size and address, never the file name or content.
         _audit.Write(request.Kind, request.PlaceId, photo.Id, PhotoAuditAction.Upload, null,
-            new { url = photo.Url, bytes = image.Content.Length, width = photo.Width, height = photo.Height, alt = photo.AltText, attribution = photo.Attribution, licence = photo.License, primary = promote });
+            new { url = photo.Url, bytes = image.Content.Length, width = photo.Width, height = photo.Height, alt = photo.AltText, attribution = photo.Attribution, licence = photo.License, primary = promote, sourceUrl = request.SourceUrl });
         if (promote) await PrimaryPhotoWriter.MarkPrimaryAsync(_db, siblings, photo.Id, ct);
         else await _db.SaveChangesAsync(ct);
 

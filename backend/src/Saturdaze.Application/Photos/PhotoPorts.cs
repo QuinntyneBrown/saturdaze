@@ -35,6 +35,9 @@ public interface IImageSanitizer
 {
     /// <summary>The cleaned image, or null when the bytes are not a JPEG, PNG or WebP (AC2).</summary>
     SanitizedImage? Sanitize(byte[] content);
+
+    /// <summary>The cleaned image with its long edge capped at <paramref name="maxEdge"/> pixels (L2-160).</summary>
+    SanitizedImage? Sanitize(byte[] content, int maxEdge);
 }
 
 /// <summary>Upload and signed-URL settings, bound from <c>Saturdaze:Photos</c>.</summary>

@@ -963,6 +963,10 @@ namespace Saturdaze.Infrastructure.Migrations
                     b.Property<int>("CoverSource")
                         .HasColumnType("int");
 
+                    b.Property<string>("CoverUploadCredit")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
                     b.Property<int?>("CoverUploadHeight")
                         .HasColumnType("int");
 

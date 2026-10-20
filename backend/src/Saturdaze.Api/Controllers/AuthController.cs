@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Saturdaze.Application.Auth;
 using Saturdaze.Application.Avatars;
+using Saturdaze.Application.PhotoSuggestions;
 using Saturdaze.Application.Contracts;
 
 namespace Saturdaze.Api.Controllers;
@@ -135,6 +136,12 @@ public class AuthController : ControllerBase
         if (file is not null) await file.CopyToAsync(buffer, ct);
         return Ok(await _mediator.Send(new SetAvatarCommand(buffer.ToArray()), ct));
     }
+
+    /// <summary>A photo suggestion, scaled to 512 px, as the profile photo (L2-160).</summary>
+    [HttpPost("me/avatar/suggestion")]
+    [Authorize]
+    public async Task<ActionResult<UserDto>> UseSuggestedAvatar([FromBody] SuggestionRequest body, CancellationToken ct)
+        => Ok(await _mediator.Send(new UseSuggestedAvatarCommand(body.SuggestionId), ct));
 
     /// <summary>Removes the profile photo; idempotent (L2-087).</summary>
     [HttpDelete("me/avatar")]
