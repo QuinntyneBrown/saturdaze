@@ -28,10 +28,7 @@ public static class IngestionServiceCollectionExtensions
         // The prompt needs the family's home location; bind the same section the API uses.
         services.Configure<HomeLocationOptions>(configuration.GetSection(HomeLocationOptions.SectionName));
 
-        services.AddOptions<ClaudeWebSearchOptions>()
-            .Bind(configuration.GetSection(ClaudeWebSearchOptions.SectionName))
-            // Secret comes from the environment in production (never the repo).
-            .PostConfigure(o => o.ApiKey = ClaudeWebSearchOptions.ResolveApiKey(o, Environment.GetEnvironmentVariable));
+        services.AddClaudeWebSearch(configuration);
 
         services.TryAddSingleton<IDateTimeProvider, SystemDateTimeProvider>();
         services.TryAddScoped<IAppDbContext>(sp => sp.GetRequiredService<AppDbContext>());
@@ -39,6 +36,21 @@ public static class IngestionServiceCollectionExtensions
         services.AddScoped<IngestionResultParser>();
         services.AddScoped<CatalogUpserter>();
         services.AddScoped<IngestionRunner>();
+
+        return services;
+    }
+
+    /// <summary>
+    /// The Claude Messages client alone (ADR-011): bound options, the key from the environment and the
+    /// named HttpClient. Ingestion and photo suggestions (L2-157) share it, so the API host registers
+    /// it through <c>AddInfrastructure</c> without the rest of the pipeline.
+    /// </summary>
+    public static IServiceCollection AddClaudeWebSearch(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddOptions<ClaudeWebSearchOptions>()
+            .Bind(configuration.GetSection(ClaudeWebSearchOptions.SectionName))
+            // Secret comes from the environment in production (never the repo).
+            .PostConfigure(o => o.ApiKey = ClaudeWebSearchOptions.ResolveApiKey(o, Environment.GetEnvironmentVariable));
 
         services
             .AddHttpClient<IWebSearchClient, ClaudeWebSearchClient>(ClaudeWebSearchClient.HttpClientName, (sp, http) =>

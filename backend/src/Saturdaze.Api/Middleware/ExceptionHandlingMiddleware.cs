@@ -42,7 +42,15 @@ public sealed class ExceptionHandlingMiddleware
         }
         catch (NotFoundException ex)
         {
-            await WriteAsync(context, StatusCodes.Status404NotFound, "Not found", ex.Message);
+            await WriteAsync(context, StatusCodes.Status404NotFound, "Not found", ex.Message, code: ex.Code);
+        }
+        catch (TooManyRequestsException ex)
+        {
+            await WriteAsync(context, StatusCodes.Status429TooManyRequests, "Too many requests", ex.Message, code: ex.Code);
+        }
+        catch (ServiceUnavailableException ex)
+        {
+            await WriteAsync(context, StatusCodes.Status503ServiceUnavailable, "Service unavailable", ex.Message, code: ex.Code);
         }
         catch (ConflictException ex)
         {

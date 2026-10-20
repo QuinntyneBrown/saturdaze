@@ -20,6 +20,9 @@ public interface IPhotoUrlSigner
     /// <summary>A URL valid for <paramref name="lifetime"/> from now.</summary>
     string SignedUrl(string key, TimeSpan lifetime);
 
+    /// <summary>The same signature under another route, e.g. <c>/api/photo-suggestions</c> (L2-157 AC3).</summary>
+    string SignedUrl(string key, TimeSpan lifetime, string basePath);
+
     /// <summary>True when the signature matches and the URL has not expired.</summary>
     bool IsValid(string key, long expiresUnixSeconds, string signature);
 }

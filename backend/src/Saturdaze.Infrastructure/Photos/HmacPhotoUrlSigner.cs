@@ -24,10 +24,14 @@ public sealed class HmacPhotoUrlSigner : IPhotoUrlSigner
         _clock = clock;
     }
 
-    public string SignedUrl(string key, TimeSpan lifetime)
+    public string SignedUrl(string key, TimeSpan lifetime) => SignedUrl(key, lifetime, "/api/photos");
+
+    public string SignedUrl(string key, TimeSpan lifetime, string basePath)
     {
         var expires = _clock.UtcNow.Add(lifetime).ToUnixTimeSeconds();
-        return $"/api/photos/{Uri.EscapeDataString(key)}?exp={expires}&sig={Sign(key, expires)}";
+        // A prefixed key ("suggestion:{id}") signs under its own route; the path only carries the id.
+        var segment = key[(key.IndexOf(':') + 1)..];
+        return $"{basePath.TrimEnd('/')}/{Uri.EscapeDataString(segment)}?exp={expires}&sig={Sign(key, expires)}";
     }
 
     public bool IsValid(string key, long expiresUnixSeconds, string signature)

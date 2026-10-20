@@ -31,6 +31,8 @@ public sealed class SaturdazeApiFactory : WebApplicationFactory<Program>, IAsync
     public CapturingLogSink Logs { get; } = new();
     public FakeRemoteImageFetcher Images { get; } = new();
     public CapturingEmailSender Mail { get; } = new();
+    public FakePhotoSuggestionSearch Search { get; } = new();
+    public FakePublicImageFetcher PublicImages { get; } = new();
 
     /// <summary>Where uploaded covers go for this fixture (deleted on disposal).</summary>
     public string PhotoDirectory { get; } = Path.Combine(Path.GetTempPath(), "saturdaze-photos-" + Guid.NewGuid().ToString("N"));
@@ -74,6 +76,10 @@ public sealed class SaturdazeApiFactory : WebApplicationFactory<Program>, IAsync
             services.RemoveAll<Saturdaze.Application.Photos.IRemoteImageFetcher>();
             services.AddSingleton<Saturdaze.Application.Photos.IRemoteImageFetcher>(Images);
             services.RemoveAll<Saturdaze.Application.Email.IEmailSender>();
+            services.RemoveAll<Saturdaze.Application.Ingestion.IWebSearchClient>();
+            services.AddSingleton<Saturdaze.Application.Ingestion.IWebSearchClient>(Search);
+            services.RemoveAll<Saturdaze.Application.Photos.IPublicImageFetcher>();
+            services.AddSingleton<Saturdaze.Application.Photos.IPublicImageFetcher>(PublicImages);
             services.AddSingleton<Saturdaze.Application.Email.IEmailSender>(Mail);
         });
     }

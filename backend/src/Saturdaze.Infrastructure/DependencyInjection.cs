@@ -8,6 +8,7 @@ using Saturdaze.Application.Email;
 using Saturdaze.Application.Weather;
 using Saturdaze.Infrastructure.Authentication;
 using Saturdaze.Infrastructure.Email;
+using Saturdaze.Infrastructure.Ingestion;
 using Saturdaze.Infrastructure.Persistence;
 using Saturdaze.Infrastructure.Weather;
 
@@ -53,6 +54,13 @@ public static class DependencyInjection
             http.MaxResponseContentBufferSize = Photos.HttpRemoteImageFetcher.MaxBytes;
         });
         services.AddSingleton<Saturdaze.Application.Photos.IRemoteImageFetcher, Photos.HttpRemoteImageFetcher>();
+        // Photo suggestions (L2-157, ADR-019): Claude research, open-web fetches, 15-minute previews.
+        services.AddClaudeWebSearch(configuration);
+        services.Configure<Saturdaze.Application.PhotoSuggestions.PhotoSuggestionOptions>(
+            configuration.GetSection(Saturdaze.Application.PhotoSuggestions.PhotoSuggestionOptions.SectionName));
+        services.AddSingleton<Saturdaze.Application.Photos.IPublicImageFetcher, Photos.HttpPublicImageFetcher>();
+        services.AddSingleton<Saturdaze.Application.PhotoSuggestions.IPhotoSuggestionStore, PhotoSuggestions.MemoryPhotoSuggestionStore>();
+        services.AddSingleton<Saturdaze.Application.PhotoSuggestions.IPhotoSuggestionQuota, PhotoSuggestions.MemoryPhotoSuggestionQuota>();
         services.Configure<Application.Common.TimeOptions>(configuration.GetSection(Application.Common.TimeOptions.SectionName));
 
         // Auth. Signing key resolution: env var first (production), config
