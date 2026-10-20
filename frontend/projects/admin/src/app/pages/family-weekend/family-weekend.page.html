@@ -1,0 +1,141 @@
+<sd-page-header
+  [title]="title()"
+  [subtitle]="subtitle()"
+  backHref="/families"
+  backLabel="Families"
+/>
+
+@if (error()) {
+  <sd-banner class="error" tone="warn" role="alert" icon="alert">{{ error() }}</sd-banner>
+}
+
+@switch (status()) {
+  @case ('notFound') {
+    <sd-empty
+      icon="user"
+      title="No such family"
+      body="It may have been removed. Go back to Families."
+    />
+  }
+  @case ('loading') {
+    <sd-status-row class="status" icon="sparkle">Opening this family's weekend.</sd-status-row>
+  }
+  @case ('generating') {
+    <sd-status-row class="status" icon="sparkle" busy
+      >Sketching Saturday and Sunday for {{ title() }}.</sd-status-row
+    >
+    <div class="planner">
+      <sd-day title="Saturday" [actions]="false">
+        @for (i of skeleton; track i) {
+          <sd-skeleton-row />
+        }
+      </sd-day>
+    </div>
+  }
+  @case ('empty') {
+    <sd-empty
+      icon="sparkle"
+      tone="primary"
+      warm
+      [title]="emptyTitle()"
+      body="Plan it now and the family sees the draft at once; they can still change every block."
+    >
+      <sd-button slot="cta" variant="primary" size="lg" (click)="plan()">
+        <sd-icon name="sparkle" />
+        Plan this weekend
+      </sd-button>
+    </sd-empty>
+  }
+  @case ('ready') {
+    <div class="planner__toolbar">
+      <sd-segments
+        mode="tabs"
+        narrow
+        label="Day"
+        [tabs]="dayTabs"
+        [selected]="selectedDay()"
+        (selectedChange)="selectDay($event)"
+      />
+    </div>
+    @for (day of weekend().days; track day.day) {
+      @if (day.day === selectedDay()) {
+        <div
+          class="planner"
+          role="tabpanel"
+          [id]="panelId(day.day)"
+          [attr.aria-labelledby]="panelId(day.day) + '-tab'"
+        >
+          <sd-day
+            [title]="day.day"
+            [meta]="day.meta"
+            [weather]="dayWeather(day)"
+            [locked]="day.locked"
+            [actions]="false"
+          >
+            @for (block of day.blocks; track block.id) {
+              @if (block.leg) {
+                <sd-leg
+                  [label]="block.leg.label"
+                  [ariaLabel]="block.leg.ariaLabel"
+                  [destination]="block.leg.destination"
+                  [directionsUrl]="block.leg.directionsUrl ?? ''"
+                />
+              }
+              <sd-block
+                [stopNumber]="block.stopNumber"
+                [time]="block.time"
+                [duration]="block.duration"
+                [icon]="block.icon"
+                [title]="block.title"
+                [subtitle]="block.subtitle ?? ''"
+                [commitment]="block.commitment"
+                [locked]="block.locked"
+                [drive]="block.drive"
+                [errand]="block.errand"
+                [done]="block.done"
+                readonly
+              >
+                @for (chip of block.chips; track chip.label) {
+                  <sd-chip slot="chips" [tone]="chipTone(chip.tone)">
+                    @if (chip.icon) {
+                      <sd-icon [name]="chip.icon" [size]="13" [stroke]="2" />
+                    }
+                    {{ chip.label }}
+                  </sd-chip>
+                }
+              </sd-block>
+            }
+          </sd-day>
+        </div>
+      }
+    }
+  }
+}
+
+@if (status() !== 'notFound') {
+  <sd-section
+    class="past-weekends"
+    title="Past weekends"
+    subtitle="What the family did before, newest first. Read-only."
+  >
+    @if (past(); as rows) {
+      @if (rows.length) {
+        <sd-list card>
+          @for (row of rows; track row.id) {
+            <sd-list-item [title]="row.title" [subtitle]="row.subtitle">
+              <sd-disc
+                slot="leading"
+                [icon]="row.icon"
+                [tone]="row.favourite ? 'accent' : 'default'"
+              />
+            </sd-list-item>
+          }
+        </sd-list>
+      } @else {
+        <sd-status-row icon="calendar">No past weekends yet</sd-status-row>
+      }
+    } @else {
+      <sd-skeleton-row />
+    }
+  </sd-section>
+}

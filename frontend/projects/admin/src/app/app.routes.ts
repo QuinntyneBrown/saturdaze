@@ -27,6 +27,13 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/families/families.page').then((m) => m.FamiliesPage),
   },
   {
+    path: 'families/:id',
+    data: { nav: 'families', screen: 'family' },
+    canActivate: [requireAuth],
+    loadComponent: () =>
+      import('./pages/family-weekend/family-weekend.page').then((m) => m.FamilyWeekendPage),
+  },
+  {
     path: 'places',
     data: { nav: 'places', screen: 'places' },
     canActivate: [requireAuth],
