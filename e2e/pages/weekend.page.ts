@@ -351,6 +351,41 @@ export class WeekendPage extends BasePage {
     return this.dialog().getByRole("alert");
   }
 
+  /* ---------- D29 suggestions (L2-158) ---------- */
+
+  /** The "Suggest photos" button of the search row. */
+  suggestPhotosButton(): Locator {
+    return control(this.dialog().locator(".photo-suggest"), "Suggest photos");
+  }
+
+  /** The optional refinement field next to it. */
+  suggestionQueryInput(): Locator {
+    return this.dialog().locator(".photo-suggest").getByRole("searchbox");
+  }
+
+  /** The live status line: "Finding photos…", "{n} photos found on the web." or the empty message. */
+  suggestionStatus(): Locator {
+    return this.dialog().locator(".photo-suggest__status");
+  }
+
+  suggestionsHeading(): Locator {
+    return this.dialog().locator(".photo-suggest__title");
+  }
+
+  /** One radio per suggestion, named "{title} · {source}". */
+  suggestionOptions(): Locator {
+    return this.dialog().locator(".photo-suggest").getByRole("radio");
+  }
+
+  suggestionOption(name: string | RegExp): Locator {
+    return this.dialog().locator(".photo-suggest").getByRole("radio", { name });
+  }
+
+  /** The source-name pill over each suggestion tile. */
+  suggestionCaptions(): Locator {
+    return this.dialog().locator(".photo-suggest .photo-pick__name");
+  }
+
   /** True once the cover photo has been fetched and decoded. */
   async coverImageLoaded(): Promise<boolean> {
     return this.coverImage().evaluate(

@@ -356,6 +356,16 @@ export class WeekendPlanService implements IWeekendPlanService {
     );
   }
 
+  async useSuggestedCover(suggestionId: string): Promise<void> {
+    await this.send(
+      'useSuggestedCover',
+      this.http.post<WeekendDto>(
+        `${this.baseUrl}/api/weekends/${this.targetId()}/cover/suggestion`,
+        { suggestionId },
+      ),
+    );
+  }
+
   /** The current weekend's id, loading it when nothing is cached yet. */
   private async currentId(): Promise<string> {
     if (!this._dto()) await this.loadCurrent();

@@ -180,6 +180,17 @@ export interface IWeekendPlanService {
    */
   uploadCover(file: Blob): Promise<void>;
   /**
+   * Use Suggested Cover — `POST /api/weekends/{id}/cover/suggestion` with a
+   * suggestion the family picked (L2-158); the weekend view updates in
+   * place. Rejects with the server's `HttpErrorResponse` (404
+   * `suggestion_not_found`).
+   *
+   * @param {string} suggestionId - The id a photo search returned
+   *
+   * @returns {Promise<void>} The result of the operation
+   */
+  useSuggestedCover(suggestionId: string): Promise<void>;
+  /**
    * Remix Saved — `POST /api/weekends/{id}/remix`; the result becomes the
    * current weekend.
    *

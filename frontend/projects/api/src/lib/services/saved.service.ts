@@ -264,6 +264,15 @@ export class SavedService implements ISavedService {
     this.patch(id, { cover: withApiOrigin(dto, this.baseUrl).cover ?? null });
   }
 
+  async useSuggestedCover(id: string, suggestionId: string): Promise<void> {
+    const dto = await firstValueFrom(
+      this.http.post<WeekendDto>(`${this.baseUrl}/api/weekends/${id}/cover/suggestion`, {
+        suggestionId,
+      }),
+    );
+    this.patch(id, { cover: withApiOrigin(dto, this.baseUrl).cover ?? null });
+  }
+
   private patch(id: string, changes: Partial<WeekendSummaryDto>): void {
     this._rows.update((rows) => rows.map((r) => (r.id === id ? { ...r, ...changes } : r)));
   }

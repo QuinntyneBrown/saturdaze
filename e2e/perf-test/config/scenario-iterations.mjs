@@ -9,6 +9,7 @@ export const scenarioIterations = {
   EventCard: 250,
   ListItem: 500,
   PhotoPick: 250,
+  PhotoSuggestions: 250,
   PlaceRow: 500,
   TextInput: 500,
   Toolbar: 500,

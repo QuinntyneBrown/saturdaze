@@ -1,0 +1,52 @@
+// `.photo-suggest` from docs/mocks/styles/app.css: a search row, a status line
+// and a second `.photo-pick` grid under a small heading.
+
+:host {
+  display: block;
+}
+
+.photo-suggest {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: var(--strokeWidthThin) solid var(--colorNeutralStroke2);
+}
+
+.photo-suggest__search {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 8px 12px;
+}
+
+.photo-suggest__field {
+  flex: 1 1 200px;
+  min-width: 0;
+}
+
+.photo-suggest__go {
+  flex: none;
+}
+
+.photo-suggest__status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  min-height: 1.25em;
+  font-size: var(--fontSizeBase200);
+  color: var(--colorNeutralForeground2);
+}
+
+.photo-suggest__title {
+  margin: 2px 0 0;
+  font-size: var(--fontSizeBase200);
+  font-weight: var(--fontWeightSemibold);
+  color: var(--colorNeutralForeground2);
+}
+
+sd-banner {
+  display: block;
+}

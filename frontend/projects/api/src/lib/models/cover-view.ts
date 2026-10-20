@@ -17,7 +17,8 @@ export interface CoverChoice {
   readonly media: MediaView;
 }
 
-/** What D29 sends back: the default rule, or a stop's photo. */
+/** What D29 sends back: the default rule, a stop's photo, or a web suggestion (L2-158). */
 export type CoverSelection =
   | { readonly source: 'default' }
-  | { readonly source: 'stop'; readonly placeId: string };
+  | { readonly source: 'stop'; readonly placeId: string }
+  | { readonly source: 'suggestion'; readonly suggestionId: string };

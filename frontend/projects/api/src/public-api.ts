@@ -40,6 +40,7 @@ export * from './lib/models/ideas';
 export * from './lib/models/past';
 export * from './lib/models/review';
 export * from './lib/models/weekend';
+export * from './lib/models/photo-suggestion-view';
 
 // Saturdaze Admin models (ADR-014)
 export * from './lib/models/admin/index';
@@ -68,6 +69,7 @@ export * from './lib/services/auth.service.contract';
 export * from './lib/services/events.service.contract';
 export * from './lib/services/event-submissions.service.contract';
 export * from './lib/services/family.service.contract';
+export * from './lib/services/photo-suggestions.service.contract';
 export * from './lib/services/restaurant.service.contract';
 export * from './lib/services/saved.service.contract';
 export * from './lib/services/session-store.contract';
@@ -83,6 +85,7 @@ export * from './lib/services/auth.service';
 export * from './lib/services/events.service';
 export * from './lib/services/event-submissions.service';
 export * from './lib/services/family.service';
+export * from './lib/services/photo-suggestions.service';
 export * from './lib/services/restaurant.service';
 export * from './lib/services/saved.service';
 export * from './lib/services/session-store';

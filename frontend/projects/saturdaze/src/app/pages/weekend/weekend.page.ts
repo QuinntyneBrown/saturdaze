@@ -7,9 +7,10 @@ import {
   BlockRow,
   DayView,
   FAMILY_SERVICE,
+  PHOTO_SUGGESTIONS_SERVICE,
+  upcomingSaturdayIso,
   WEEKEND_PLAN_SERVICE,
   WeekendDay,
-  upcomingSaturdayIso,
 } from 'api';
 import {
   Banner,
@@ -107,6 +108,7 @@ const DAYS: readonly WeekendDay[] = ['Saturday', 'Sunday'];
 })
 export class WeekendPage {
   private readonly weekendService = inject(WEEKEND_PLAN_SERVICE);
+  private readonly suggestions = inject(PHOTO_SUGGESTIONS_SERVICE);
   private readonly familyService = inject(FAMILY_SERVICE);
   private readonly dialog = inject(Dialog);
   private readonly menu = inject(MenuOpener);
@@ -356,11 +358,17 @@ export class WeekendPage {
         choices: view.coverChoices,
         currentPlaceId: view.cover?.placeId ?? null,
         upload: (file) => this.weekendService.uploadCover(file),
+        suggest: (query) =>
+          this.suggestions.find({ target: 'weekendCover', weekendId: view.id ?? '', query }),
       },
     });
     const selection = await firstValueFrom(ref.closed);
     if (!selection || selection.source === 'uploaded') return;
-    await this.run(() => this.weekendService.setCover(selection));
+    await this.run(() =>
+      selection.source === 'suggestion'
+        ? this.weekendService.useSuggestedCover(selection.suggestionId)
+        : this.weekendService.setCover(selection),
+    );
   }
 
   protected selectDay(label: string | null): void {

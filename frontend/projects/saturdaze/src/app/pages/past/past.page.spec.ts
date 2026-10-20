@@ -5,7 +5,13 @@ import { Dialog } from '@angular/cdk/dialog';
 import { ActivatedRoute, Router, convertToParamMap, provideRouter } from '@angular/router';
 import { of } from 'rxjs';
 
-import { PastView, PastWeekendCard, SAVED_SERVICE, WEEKEND_PLAN_SERVICE } from 'api';
+import {
+  PastView,
+  PastWeekendCard,
+  PHOTO_SUGGESTIONS_SERVICE,
+  SAVED_SERVICE,
+  WEEKEND_PLAN_SERVICE,
+} from 'api';
 
 import { ConfirmDialog } from '../../dialogs/confirm-dialog/confirm-dialog';
 import { RatingDialog } from '../../dialogs/rating-dialog/rating-dialog';
@@ -85,6 +91,7 @@ describe('PastPage', () => {
         provideRouter([{ path: '**', children: [] }]),
         { provide: SAVED_SERVICE, useValue: saved },
         { provide: WEEKEND_PLAN_SERVICE, useValue: weekend },
+        { provide: PHOTO_SUGGESTIONS_SERVICE, useValue: { find: async () => [] } },
         { provide: Dialog, useValue: dialog },
         {
           provide: ActivatedRoute,

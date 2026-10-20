@@ -1,0 +1,50 @@
+<div class="photo-suggest">
+  <form
+    class="photo-suggest__search"
+    role="search"
+    [attr.aria-label]="label()"
+    (submit)="submit($event)"
+  >
+    <sd-text-input
+      class="photo-suggest__field"
+      type="search"
+      name="query"
+      [label]="label()"
+      [placeholder]="placeholder()"
+      [hint]="minQuery() === 0 ? 'Optional' : ''"
+      [ngModel]="text()"
+      (ngModelChange)="text.set($event)"
+    />
+    <sd-button class="photo-suggest__go" variant="quiet" type="submit" [disabled]="!canSearch()">
+      <sd-icon name="sparkle" />
+      {{ buttonLabel() }}
+    </sd-button>
+  </form>
+  <p class="photo-suggest__status" role="status" aria-live="polite">
+    @if (state() === 'loading') {
+      <sd-spinner size="sm" />
+    }
+    {{ status() }}
+  </p>
+  @if (state() === 'error') {
+    <sd-banner tone="warn" role="alert" icon="alert">{{ error() }}</sd-banner>
+  }
+  @if (suggestions().length) {
+    @if (heading()) {
+      <h3 class="photo-suggest__title">{{ heading() }}</h3>
+    }
+    <sd-photo-pick [label]="groupLabel()">
+      @for (tile of suggestions(); track tile.id) {
+        <sd-photo-pick-option
+          [name]="name()"
+          [value]="tile.id"
+          [checked]="selected() === tile.id"
+          [label]="tile.label"
+          [caption]="tile.caption"
+          [src]="tile.src"
+          (picked)="picked.emit($event)"
+        />
+      }
+    </sd-photo-pick>
+  }
+</div>

@@ -98,11 +98,16 @@ function coverView(dto: WeekendDto): CoverView | null {
   return toCoverView(dto.cover);
 }
 
-/** A cover DTO as card media; the label is the credit (L2-108, L2-110 AC1). */
+/**
+ * A cover DTO as card media; the label is the credit (L2-108, L2-110 AC1),
+ * except that a web suggestion kept as the cover shows its attribution
+ * ("Photo · …") rather than its "From the web" label (L2-158).
+ */
 export function toCoverView(c: CoverDto | null | undefined): CoverView | null {
   if (!c) return null;
+  const credit = c.source === 'upload' && c.attribution !== c.label ? c.attribution : c.label;
   return {
-    media: { src: c.url, alt: c.alt, width: c.width, height: c.height, credit: c.label },
+    media: { src: c.url, alt: c.alt, width: c.width, height: c.height, credit },
     source: c.source,
     placeId: c.placeId,
   };

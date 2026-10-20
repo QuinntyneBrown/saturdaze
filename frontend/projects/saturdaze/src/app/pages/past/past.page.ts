@@ -3,7 +3,12 @@ import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@a
 import { ActivatedRoute, Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 
-import { PastWeekendCard, SAVED_SERVICE, WEEKEND_PLAN_SERVICE } from 'api';
+import {
+  PastWeekendCard,
+  PHOTO_SUGGESTIONS_SERVICE,
+  SAVED_SERVICE,
+  WEEKEND_PLAN_SERVICE,
+} from 'api';
 import {
   Banner,
   Button,
@@ -68,6 +73,7 @@ import { devState } from '../../shared/dev-state';
 export class PastPage {
   private readonly saved = inject(SAVED_SERVICE);
   private readonly weekend = inject(WEEKEND_PLAN_SERVICE);
+  private readonly suggestions = inject(PHOTO_SUGGESTIONS_SERVICE);
   private readonly dialog = inject(Dialog);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
@@ -144,11 +150,17 @@ export class PastPage {
         choices,
         currentPlaceId: null,
         upload: (file) => this.saved.uploadCover(card.id, file),
+        suggest: (query) =>
+          this.suggestions.find({ target: 'weekendCover', weekendId: card.id, query }),
       },
     });
     const selection = await firstValueFrom(ref.closed);
     if (!selection || selection.source === 'uploaded') return;
-    await this.run(() => this.saved.setCover(card.id, selection));
+    await this.run(() =>
+      selection.source === 'suggestion'
+        ? this.saved.useSuggestedCover(card.id, selection.suggestionId)
+        : this.saved.setCover(card.id, selection),
+    );
   }
 
   protected async repeat(card: PastWeekendCard): Promise<void> {

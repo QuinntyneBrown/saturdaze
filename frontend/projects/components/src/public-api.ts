@@ -41,6 +41,7 @@ export * from './lib/toggle/toggle';
 export * from './lib/photo-pick/photo-pick';
 export * from './lib/photo-pick-option/photo-pick-option';
 export * from './lib/photo-drop/photo-drop';
+export * from './lib/photo-suggestions/photo-suggestions';
 
 // structure
 export * from './lib/card/card';

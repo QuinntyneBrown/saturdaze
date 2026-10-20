@@ -89,6 +89,16 @@ export interface ISavedService {
    * @returns {Promise<void>} The result of the operation
    */
   uploadCover(id: string, file: Blob): Promise<void>;
+  /**
+   * Use Suggested Cover — `POST /api/weekends/{id}/cover/suggestion` with a
+   * suggestion the family picked (L2-158); the card updates in place.
+   *
+   * @param {string} id - The saved weekend id
+   * @param {string} suggestionId - The id a photo search returned
+   *
+   * @returns {Promise<void>} The result of the operation
+   */
+  useSuggestedCover(id: string, suggestionId: string): Promise<void>;
 }
 
 export const SAVED_SERVICE = new InjectionToken<ISavedService>('SAVED_SERVICE');

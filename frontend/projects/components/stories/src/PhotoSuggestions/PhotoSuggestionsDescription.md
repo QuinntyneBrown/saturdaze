@@ -1,0 +1,3 @@
+AI photo suggestions for a dialog that changes a photo. `sd-photo-suggestions` carries `.photo-suggest` from `docs/mocks/styles/app.css`: a search row (the field and a quiet button with the sparkle icon), a live status line, and a second `.photo-pick` grid of suggestion tiles under a small heading.
+
+It is presentational. The hosting dialog runs the search through `IPhotoSuggestionsService`, feeds `state` (`idle`, `loading`, `done`, `error`) and `suggestions` back in, and listens to `find` and `picked`. The weekend cover (D29b), the profile photo (D27e) and Saturdaze Admin's Suggested photos dialog (AD7) all use it.

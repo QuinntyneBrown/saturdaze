@@ -5,7 +5,14 @@ import { Dialog } from '@angular/cdk/dialog';
 import { ActivatedRoute, convertToParamMap, provideRouter } from '@angular/router';
 import { of } from 'rxjs';
 
-import { BlockRow, FAMILY_SERVICE, FamilyView, WEEKEND_PLAN_SERVICE, WeekendView } from 'api';
+import {
+  BlockRow,
+  FAMILY_SERVICE,
+  FamilyView,
+  PHOTO_SUGGESTIONS_SERVICE,
+  WEEKEND_PLAN_SERVICE,
+  WeekendView,
+} from 'api';
 
 import { AddErrandDialog } from '../../dialogs/add-errand-dialog/add-errand-dialog';
 import { BlockDialog } from '../../dialogs/block-dialog/block-dialog';
@@ -148,6 +155,7 @@ describe('WeekendPage', () => {
       providers: [
         provideRouter([]),
         { provide: WEEKEND_PLAN_SERVICE, useValue: weekend },
+        { provide: PHOTO_SUGGESTIONS_SERVICE, useValue: { find: async () => [] } },
         { provide: FAMILY_SERVICE, useValue: family },
         { provide: Dialog, useValue: dialog },
         { provide: MenuOpener, useValue: menu },

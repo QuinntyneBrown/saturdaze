@@ -30,6 +30,20 @@
   @if (!data.choices.length) {
     <p class="empty">None of this weekend's stops has a photo yet.</p>
   }
+  <sd-photo-suggestions
+    label="Suggest photos"
+    buttonLabel="Suggest photos"
+    placeholder="Lavender fields at golden hour"
+    name="cover-photo"
+    heading="From the web"
+    groupLabel="Photos from the web"
+    [state]="suggestState()"
+    [error]="suggestError()"
+    [suggestions]="suggestionTiles()"
+    [selected]="selected()"
+    (find)="suggest($event)"
+    (picked)="selected.set($event)"
+  />
   <p class="hint">
     JPEG, PNG or WebP, up to 10 MB. Location data is removed before it is saved. Only your family
     and people you share the weekend with can see it.
