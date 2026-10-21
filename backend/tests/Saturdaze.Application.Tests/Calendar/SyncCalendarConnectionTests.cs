@@ -12,7 +12,7 @@ namespace Saturdaze.Application.Tests.Calendar;
 
 /// <summary>
 /// A change to the plan that arrives while a calendar write is running is not
-/// lost to the write's own save, even in the same instant (L2-175: the calendar
+/// lost to the write's own save, even in the same instant (L2-176: the calendar
 /// follows every change).
 /// </summary>
 public class SyncCalendarConnectionTests

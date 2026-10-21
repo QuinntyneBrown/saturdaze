@@ -1,5 +1,5 @@
 @startuml
-title Behaviour - Write the weekend to Google Calendar (L2-175, L2-177)
+title Behaviour - Write the weekend to Google Calendar (L2-176, L2-178)
 skinparam backgroundColor #FFFFFF
 skinparam shadowing false
 skinparam roundcorner 12
@@ -29,7 +29,7 @@ controller -> behavior : Send(IChangesItinerary command)
 behavior -> handler : next()
 handler -> db : Save the plan
 handler --> behavior : Result
-behavior -> db : L2-175 SyncRequestCount++ on the family's connected connections
+behavior -> db : L2-176 SyncRequestCount++ on the family's connected connections
 behavior -> service : ICalendarSyncSignal.Notify()
 behavior --> controller : Result
 controller --> page : 200 (never waits on Google)
@@ -43,9 +43,9 @@ client -> google : Calendar API v3 on the primary calendar
 alt success
 sync -> db : Save links; SyncedRequestCount = count at start; LastSyncedUtc = now; FailedAttempts = 0
 else GoogleCalendarUnavailableException
-sync -> db : L2-175 FailedAttempts++; NextAttemptUtc = now + min(2^n, 60) minutes
+sync -> db : L2-176 FailedAttempts++; NextAttemptUtc = now + min(2^n, 60) minutes
 else GoogleCalendarGrantRevokedException
-sync -> db : L2-177 Status = NeedsReconnect
+sync -> db : L2-178 Status = NeedsReconnect
 end
 end
 @enduml

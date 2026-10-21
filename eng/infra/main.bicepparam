@@ -50,7 +50,7 @@ param sqlAdminPassword = readEnvironmentVariable('SQL_ADMIN_PASSWORD')
 param jwtSigningKey = readEnvironmentVariable('SATURDAZE_JWT_SIGNING_KEY')
 param photosSigningKey = readEnvironmentVariable('SATURDAZE_PHOTOS_SIGNING_KEY')
 
-// Google Calendar sync (ADR-021): the web OAuth client's secret. Optional — blank
+// Google Calendar sync (ADR-022): the web OAuth client's secret. Optional — blank
 // keeps calendar sync off while sign-in with Google and the subscription link work.
 param googleClientSecret = readEnvironmentVariable('GOOGLE_CLIENT_SECRET', '')
 

@@ -141,7 +141,7 @@ describe('weekend-projection', () => {
     const day = projectDay(weekendDto(), 'Saturday');
     const row = (id: string) => day.blocks.find((b) => b.id === id)!;
 
-    it('marks a commitment that came from a connected calendar (L2-176 AC6)', () => {
+    it('marks a commitment that came from a connected calendar (L2-177 AC6)', () => {
       const r = toBlockRow(
         block({
           kind: 'Commitment',

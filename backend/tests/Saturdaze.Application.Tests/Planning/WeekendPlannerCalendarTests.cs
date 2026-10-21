@@ -8,7 +8,7 @@ namespace Saturdaze.Application.Tests.Planning;
 
 /// <summary>
 /// Events from a connected calendar join the planner's fixed blocks after the
-/// profile commitments and the carried-over locked blocks (L2-176).
+/// profile commitments and the carried-over locked blocks (L2-177).
 /// </summary>
 public class WeekendPlannerCalendarTests
 {
@@ -41,7 +41,7 @@ public class WeekendPlannerCalendarTests
     [Fact]
     public void A_calendar_event_becomes_a_locked_commitment_block_from_the_calendar()
     {
-        // Traces to: L2-176 AC1
+        // Traces to: L2-177 AC1
         var blocks = new WeekendPlanner().Plan(Baseline()
             .CalendarEvent(DayOfWeekend.Saturday, new TimeOnly(15, 0), new TimeOnly(17, 0), "Ava's birthday party")
             .Build());
@@ -58,7 +58,7 @@ public class WeekendPlannerCalendarTests
     [Fact]
     public void An_event_overlapping_a_profile_commitment_is_left_out_and_one_that_only_touches_it_is_kept()
     {
-        // Traces to: L2-176 AC3
+        // Traces to: L2-177 AC3
         var blocks = new WeekendPlanner().Plan(Baseline()
             .Commitment(DayOfWeek.Sunday, new TimeOnly(10, 30), new TimeOnly(11, 45), "Church")
             .CalendarEvent(DayOfWeekend.Sunday, new TimeOnly(10, 0), new TimeOnly(10, 30), "Coffee with Sam")
@@ -73,7 +73,7 @@ public class WeekendPlannerCalendarTests
     [Fact]
     public void Events_are_clipped_to_the_planner_day_and_dropped_when_nothing_is_left()
     {
-        // Traces to: L2-176 AC4
+        // Traces to: L2-177 AC4
         var blocks = new WeekendPlanner().Plan(Baseline()
             .CalendarEvent(DayOfWeekend.Saturday, new TimeOnly(7, 0), new TimeOnly(10, 0), "Early hockey")
             .CalendarEvent(DayOfWeekend.Saturday, new TimeOnly(22, 0), new TimeOnly(23, 0), "Late show")
@@ -87,7 +87,7 @@ public class WeekendPlannerCalendarTests
     [Fact]
     public void A_clipped_event_that_overlaps_a_profile_commitment_is_left_out()
     {
-        // Traces to: L2-176 AC4
+        // Traces to: L2-177 AC4
         var blocks = new WeekendPlanner().Plan(Baseline()
             .Commitment(DayOfWeek.Saturday, new TimeOnly(9, 0), new TimeOnly(10, 0), "Swim")
             .CalendarEvent(DayOfWeekend.Saturday, new TimeOnly(7, 0), new TimeOnly(10, 0), "Early hockey")
@@ -100,7 +100,7 @@ public class WeekendPlannerCalendarTests
     [Fact]
     public void A_carried_over_locked_block_wins_and_the_earlier_of_two_overlapping_events_wins()
     {
-        // Traces to: L2-176 (fixed blocks never overlap)
+        // Traces to: L2-177 (fixed blocks never overlap)
         var blocks = new WeekendPlanner().Plan(Baseline()
             .LockedBlock(new ItineraryBlock
             {

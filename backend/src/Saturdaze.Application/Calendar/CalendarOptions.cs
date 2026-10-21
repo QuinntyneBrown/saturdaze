@@ -1,6 +1,6 @@
 namespace Saturdaze.Application.Calendar;
 
-/// <summary>Calendar sync settings (ADR-021).</summary>
+/// <summary>Calendar sync settings (ADR-022).</summary>
 public sealed class CalendarOptions
 {
     public const string SectionName = "Saturdaze:Calendar";
@@ -8,7 +8,7 @@ public sealed class CalendarOptions
     /// <summary>Where the app runs; Google returns the browser to <see cref="RedirectUri"/> on it. Defaults to <c>Saturdaze:Share:AppOrigin</c>.</summary>
     public string? AppOrigin { get; set; }
 
-    /// <summary>The time zone the weekend's local times are in (L2-175).</summary>
+    /// <summary>The time zone the weekend's local times are in (L2-176).</summary>
     public string TimeZone { get; set; } = "America/Toronto";
 
     /// <summary>How often the sync service looks for due work without a signal.</summary>

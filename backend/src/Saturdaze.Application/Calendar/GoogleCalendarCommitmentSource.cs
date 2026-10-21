@@ -7,10 +7,10 @@ using Saturdaze.Domain.Enums;
 
 namespace Saturdaze.Application.Calendar;
 
-/// <summary>The weekend's events from a family's connected calendars, as planner commitments (L2-176).</summary>
+/// <summary>The weekend's events from a family's connected calendars, as planner commitments (L2-177).</summary>
 public interface ICalendarCommitmentSource
 {
-    /// <summary>Never throws for a calendar that fails; that calendar contributes nothing (L2-177).</summary>
+    /// <summary>Never throws for a calendar that fails; that calendar contributes nothing (L2-178).</summary>
     Task<IReadOnlyList<CalendarCommitment>> GetAsync(Guid familyId, DateOnly weekendOf, CancellationToken ct);
 }
 
@@ -18,11 +18,11 @@ public interface ICalendarCommitmentSource
 /// Reads Saturday 00:00 to Monday 00:00 (local) from every connected account in
 /// the family that plans around its calendar, within one 5-second budget, and
 /// keeps timed events the person has not declined, marked free or cancelled and
-/// that Saturdaze did not write, split by day (L2-176, L2-177).
+/// that Saturdaze did not write, split by day (L2-177, L2-178).
 /// </summary>
 public sealed class GoogleCalendarCommitmentSource : ICalendarCommitmentSource
 {
-    /// <summary>The longest a read may hold up planning (L2-177).</summary>
+    /// <summary>The longest a read may hold up planning (L2-178).</summary>
     public static readonly TimeSpan Budget = TimeSpan.FromSeconds(5);
     private const int MaxTitleLength = 160;
 

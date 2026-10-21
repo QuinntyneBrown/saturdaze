@@ -83,7 +83,7 @@ public static class DependencyInjection
         });
         services.AddSingleton<IGoogleIdTokenVerifier, GoogleIdTokenVerifier>();
 
-        // Calendar sync (ADR-021): the authorization code grant, refresh tokens
+        // Calendar sync (ADR-022): the authorization code grant, refresh tokens
         // encrypted with Data Protection, and the Calendar API.
         services.Configure<CalendarOptions>(o =>
         {

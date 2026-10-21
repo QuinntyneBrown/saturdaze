@@ -18,7 +18,7 @@ public class ItineraryBlock
     public int SortOrder { get; set; }
 
     /// <summary>
-    /// A commitment that came from an event in a connected calendar (L2-176):
+    /// A commitment that came from an event in a connected calendar (L2-177):
     /// never written back to a calendar, titled "Busy" on a share link.
     /// </summary>
     public bool FromCalendar { get; set; }

@@ -3,8 +3,8 @@ import { stubCalendarApi } from "../fixtures/calendar-api.js";
 import { stubCalendarBlock } from "../fixtures/weekend-data.js";
 
 /**
- * The weekend page with a connected Google Calendar (L2-175 AC7). The
- * calendar settings are stood in for (ADR-021, decision 7); the weekend and
+ * The weekend page with a connected Google Calendar (L2-176 AC7). The
+ * calendar settings are stood in for (ADR-022, decision 7); the weekend and
  * its download are the real API's.
  */
 
@@ -16,7 +16,7 @@ const CONNECTED = {
 };
 
 test.describe("Weekend with a connected calendar", () => {
-  // Traces to: L2-175 AC7
+  // Traces to: L2-176 AC7
   test("Given Google Calendar connected, when Add to calendar opens, then D6 says the calendar already has the weekend", async ({ page, goto, pages }) => {
     await stubCalendarApi(page, { google: CONNECTED });
     await goto("weekend");
@@ -30,7 +30,7 @@ test.describe("Weekend with a connected calendar", () => {
     await expect(w.dialogAction("Download .ics")).toBeVisible();
   });
 
-  // Traces to: L2-175 AC7, L2-086
+  // Traces to: L2-176 AC7, L2-086
   test("Given no connection, D6 is the plain download", async ({ page, goto, pages }) => {
     await stubCalendarApi(page, { google: null });
     await goto("weekend");
@@ -43,7 +43,7 @@ test.describe("Weekend with a connected calendar", () => {
     await expect(w.dialogBanner()).toHaveCount(0);
   });
 
-  // Traces to: L2-176 AC6
+  // Traces to: L2-177 AC6
   test("Given an event from the connected calendar on Saturday, the block shows the Commitment and Calendar chips and where it came from", async ({ page, goto, pages }) => {
     await stubCalendarApi(page, { google: CONNECTED });
     await stubCalendarBlock(page, "Saturday", "Ava's birthday party");

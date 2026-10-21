@@ -1,5 +1,5 @@
 // Acceptance Test
-// Traces to: L2-178 AC1-AC7, L2-180 AC4, L2-008
+// Traces to: L2-179 AC1-AC7, L2-181 AC4, L2-008
 // Description: A family's private subscription link serves its current weekend to any calendar app.
 
 using System.Net;
@@ -50,7 +50,7 @@ public class CalendarFeedTests : IClassFixture<SaturdazeApiFactory>
     [Fact]
     public async Task Creating_a_link_returns_an_https_and_a_webcal_url_and_stores_only_the_hash()
     {
-        // Traces to: L2-178 AC1
+        // Traces to: L2-179 AC1
         var session = await SignedInClient.CreateAsync(_factory, FamilyMode.Own);
 
         var feed = await CreateFeedAsync(session.Client);
@@ -71,7 +71,7 @@ public class CalendarFeedTests : IClassFixture<SaturdazeApiFactory>
     [Fact]
     public async Task The_link_serves_the_current_weekend_without_a_bearer()
     {
-        // Traces to: L2-178 AC2, L2-008
+        // Traces to: L2-179 AC2, L2-008
         var session = await SignedInClient.CreateAsync(_factory, FamilyMode.Seeded);
         var weekend = await Read(await session.Client.PostAsJsonAsync("/api/weekends/plan", new { WeekendOf = "2026-05-16" }));
         var feed = await CreateFeedAsync(session.Client);
@@ -99,7 +99,7 @@ public class CalendarFeedTests : IClassFixture<SaturdazeApiFactory>
     [Fact]
     public async Task A_family_without_a_current_weekend_gets_an_empty_calendar()
     {
-        // Traces to: L2-178 AC3
+        // Traces to: L2-179 AC3
         var session = await SignedInClient.CreateAsync(_factory, FamilyMode.Own);
         var feed = await CreateFeedAsync(session.Client);
 
@@ -114,7 +114,7 @@ public class CalendarFeedTests : IClassFixture<SaturdazeApiFactory>
     [Fact]
     public async Task A_new_link_replaces_the_old_one()
     {
-        // Traces to: L2-178 AC4
+        // Traces to: L2-179 AC4
         var session = await SignedInClient.CreateAsync(_factory, FamilyMode.Own);
         var first = await CreateFeedAsync(session.Client);
         var second = await CreateFeedAsync(session.Client);
@@ -128,7 +128,7 @@ public class CalendarFeedTests : IClassFixture<SaturdazeApiFactory>
     [Fact]
     public async Task Stopping_the_link_retires_it_and_the_settings_say_so()
     {
-        // Traces to: L2-178 AC5
+        // Traces to: L2-179 AC5
         var session = await SignedInClient.CreateAsync(_factory, FamilyMode.Own);
         var feed = await CreateFeedAsync(session.Client);
         var settings = await Read(await session.Client.GetAsync("/api/calendar"));
@@ -145,7 +145,7 @@ public class CalendarFeedTests : IClassFixture<SaturdazeApiFactory>
     [Fact]
     public async Task Another_family_cannot_stop_the_link_and_the_link_serves_only_its_own_family()
     {
-        // Traces to: L2-178 AC6, L2-180 AC4
+        // Traces to: L2-179 AC6, L2-181 AC4
         var first = await SignedInClient.CreateAsync(_factory, FamilyMode.Seeded);
         var weekend = await Read(await first.Client.PostAsJsonAsync("/api/weekends/plan", new { WeekendOf = "2026-05-16" }));
         var feed = await CreateFeedAsync(first.Client);
@@ -167,7 +167,7 @@ public class CalendarFeedTests : IClassFixture<SaturdazeApiFactory>
     [Fact]
     public async Task Fetching_the_link_never_writes_its_token_to_the_logs()
     {
-        // Traces to: L2-177 AC5, L2-180
+        // Traces to: L2-178 AC5, L2-181
         var session = await SignedInClient.CreateAsync(_factory, FamilyMode.Own);
         var feed = await CreateFeedAsync(session.Client);
 
@@ -180,7 +180,7 @@ public class CalendarFeedTests : IClassFixture<SaturdazeApiFactory>
     [Fact]
     public async Task An_unknown_token_is_not_found()
     {
-        // Traces to: L2-178 AC7
+        // Traces to: L2-179 AC7
         var response = await _factory.CreateClient().GetAsync("/api/calendar/feed/not-a-real-token-at-all-000000.ics");
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
@@ -188,7 +188,7 @@ public class CalendarFeedTests : IClassFixture<SaturdazeApiFactory>
     [Fact]
     public async Task Managing_the_link_needs_a_bearer()
     {
-        // Traces to: L2-172 AC8, L2-008
+        // Traces to: L2-173 AC8, L2-008
         var anonymous = _factory.CreateClient();
         (await anonymous.GetAsync("/api/calendar")).StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         (await anonymous.PostAsync("/api/calendar/feed", content: null)).StatusCode.Should().Be(HttpStatusCode.Unauthorized);

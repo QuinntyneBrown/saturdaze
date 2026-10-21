@@ -2,7 +2,7 @@ namespace Saturdaze.Application.Calendar;
 
 /// <summary>
 /// Encrypts Google refresh tokens at rest and signs the OAuth <c>state</c>
-/// (ADR-021, decisions 1 and 3).
+/// (ADR-022, decisions 1 and 3).
 /// </summary>
 public interface ICalendarTokenProtector
 {

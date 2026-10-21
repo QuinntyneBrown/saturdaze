@@ -157,7 +157,7 @@ export const SIGN_OUT: ConfirmDialogData = {
   icon: 'sign_out',
 };
 
-/** D32 — disconnect Google Calendar (L2-174). */
+/** D32 — disconnect Google Calendar (L2-175). */
 export const DISCONNECT_GOOGLE_CALENDAR: ConfirmDialogData = {
   title: 'Disconnect Google Calendar?',
   body: 'Saturdaze stops writing and reading it. Events already there stay.',
@@ -167,7 +167,7 @@ export const DISCONNECT_GOOGLE_CALENDAR: ConfirmDialogData = {
   icon: 'close',
 };
 
-/** D34 — stop the subscription link (L2-179). */
+/** D34 — stop the subscription link (L2-180). */
 export const STOP_CALENDAR_FEED: ConfirmDialogData = {
   title: 'Stop the subscription link?',
   body: 'Calendars subscribed to it stop getting this weekend.',

@@ -12,12 +12,12 @@ using Saturdaze.Domain.Enums;
 
 namespace Saturdaze.Application.Calendar;
 
-/// <summary>Brings one connected calendar in line with the family's current weekend (L2-175).</summary>
+/// <summary>Brings one connected calendar in line with the family's current weekend (L2-176).</summary>
 public sealed record SyncCalendarConnectionCommand(Guid ConnectionId) : IRequest;
 
 public sealed class SyncCalendarConnectionCommandHandler : IRequestHandler<SyncCalendarConnectionCommand>
 {
-    /// <summary>The longest wait between retries (L2-175: 1, 2, 4 … up to 60 minutes).</summary>
+    /// <summary>The longest wait between retries (L2-176: 1, 2, 4 … up to 60 minutes).</summary>
     public static readonly TimeSpan MaxBackoff = TimeSpan.FromMinutes(60);
 
     private readonly IAppDbContext _db;

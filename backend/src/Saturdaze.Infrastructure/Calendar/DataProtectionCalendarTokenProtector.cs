@@ -5,7 +5,7 @@ using Saturdaze.Application.Calendar;
 namespace Saturdaze.Infrastructure.Calendar;
 
 /// <summary>
-/// ASP.NET Core Data Protection for calendar sync (ADR-021, decision 3): one
+/// ASP.NET Core Data Protection for calendar sync (ADR-022, decision 3): one
 /// purpose encrypts refresh tokens at rest, another signs the OAuth state.
 /// </summary>
 public sealed class DataProtectionCalendarTokenProtector : ICalendarTokenProtector

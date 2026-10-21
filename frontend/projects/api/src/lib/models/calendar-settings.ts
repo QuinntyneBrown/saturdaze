@@ -1,6 +1,6 @@
 /**
  * Calendar Feed Status — whether the family has a subscription link. The link
- * itself is shown once, when it is created, and never again (L2-178).
+ * itself is shown once, when it is created, and never again (L2-179).
  */
 export interface CalendarFeedStatus {
   /**
@@ -14,7 +14,7 @@ export interface CalendarFeedStatus {
 }
 
 /**
- * Google Calendar Connection — the caller's own connection (L2-172). Never
+ * Google Calendar Connection — the caller's own connection (L2-173). Never
  * carries the token.
  */
 export interface GoogleCalendarConnection {
@@ -23,7 +23,7 @@ export interface GoogleCalendarConnection {
    */
   readonly email: string;
   /**
-   * Status — `needs_reconnect` once Google refuses the grant (L2-177).
+   * Status — `needs_reconnect` once Google refuses the grant (L2-178).
    */
   readonly status: 'connected' | 'needs_reconnect';
   /**
@@ -38,7 +38,7 @@ export interface GoogleCalendarConnection {
 
 /**
  * Calendar Settings — `GET /api/calendar`: what the Family page's Calendar
- * section draws (L2-173, L2-179).
+ * section draws (L2-174, L2-180).
  */
 export interface CalendarSettings {
   /**

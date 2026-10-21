@@ -110,7 +110,7 @@ public sealed class PlannerInputLoader
             Address = _home.Name,
         };
 
-        // Weekend events from the family's connected calendars join the fixed blocks (L2-176).
+        // Weekend events from the family's connected calendars join the fixed blocks (L2-177).
         var calendar = await _calendar.GetAsync(familyId, weekendOf, ct);
 
         return new PlannerContext(family, weekendOf, activities, restaurants, events, forecast, history, home, calendar);

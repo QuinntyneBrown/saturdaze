@@ -1,5 +1,5 @@
 // Acceptance Test
-// Traces to: L2-176 AC1, AC2, AC4, AC5, AC7, L2-177 AC1, AC2, AC5, L2-180 AC2
+// Traces to: L2-177 AC1, AC2, AC4, AC5, AC7, L2-178 AC1, AC2, AC5, L2-181 AC2
 // Description: Timed events on the upcoming weekend in a connected calendar become locked commitment blocks.
 
 using System.Diagnostics;
@@ -70,7 +70,7 @@ public class CalendarCommitmentTests : IClassFixture<SaturdazeApiFactory>, IDisp
     [Fact]
     public async Task A_weekend_event_becomes_a_locked_commitment_block_nothing_overlaps()
     {
-        // Traces to: L2-176 AC1
+        // Traces to: L2-177 AC1
         var (session, email) = await ConnectedMemberAsync();
         _factory.GoogleCalendar.AddOwnEvent(email, Timed("Ava's birthday party", 16, 15, 17));
 
@@ -90,7 +90,7 @@ public class CalendarCommitmentTests : IClassFixture<SaturdazeApiFactory>, IDisp
     [Fact]
     public async Task All_day_declined_free_cancelled_and_saturdaze_events_are_left_out()
     {
-        // Traces to: L2-176 AC2
+        // Traces to: L2-177 AC2
         var (session, email) = await ConnectedMemberAsync();
         var calendar = _factory.GoogleCalendar;
         calendar.AddOwnEvent(email, new GoogleCalendarEvent("all-day", "Long weekend", new DateTimeOffset(2026, 5, 16, 0, 0, 0, Edt),
@@ -108,7 +108,7 @@ public class CalendarCommitmentTests : IClassFixture<SaturdazeApiFactory>, IDisp
     [Fact]
     public async Task An_event_over_midnight_is_split_by_day_and_clipped_to_the_planner_day()
     {
-        // Traces to: L2-176 AC4
+        // Traces to: L2-177 AC4
         var (session, email) = await ConnectedMemberAsync();
         _factory.GoogleCalendar.AddOwnEvent(email, Timed("Cottage overnight", 16, 20, 10, endDay: 17));
 
@@ -124,7 +124,7 @@ public class CalendarCommitmentTests : IClassFixture<SaturdazeApiFactory>, IDisp
     [Fact]
     public async Task With_plan_around_my_calendar_off_no_event_becomes_a_block()
     {
-        // Traces to: L2-176 AC5
+        // Traces to: L2-177 AC5
         var (session, email) = await ConnectedMemberAsync();
         _factory.GoogleCalendar.AddOwnEvent(email, Timed("Ava's birthday party", 16, 15, 17));
         await Read(await session.Client.PutAsJsonAsync("/api/calendar/google", new { ReadCommitments = false }));
@@ -137,7 +137,7 @@ public class CalendarCommitmentTests : IClassFixture<SaturdazeApiFactory>, IDisp
     [Fact]
     public async Task A_calendar_block_cannot_be_unlocked_and_a_share_link_titles_it_busy()
     {
-        // Traces to: L2-176 AC7, L2-011
+        // Traces to: L2-177 AC7, L2-011
         var (session, email) = await ConnectedMemberAsync();
         _factory.GoogleCalendar.AddOwnEvent(email, Timed("Therapy", 17, 13, 14));
         var weekend = await PlanAsync(session.Client);
@@ -156,7 +156,7 @@ public class CalendarCommitmentTests : IClassFixture<SaturdazeApiFactory>, IDisp
     [Fact]
     public async Task A_calendar_block_is_not_written_back_to_the_calendar()
     {
-        // Traces to: L2-175 (never a calendar-sourced block)
+        // Traces to: L2-176 (never a calendar-sourced block)
         var (session, email) = await ConnectedMemberAsync();
         _factory.GoogleCalendar.AddOwnEvent(email, Timed("Ava's birthday party", 16, 15, 17));
 
@@ -172,7 +172,7 @@ public class CalendarCommitmentTests : IClassFixture<SaturdazeApiFactory>, IDisp
     [Fact]
     public async Task A_refused_grant_on_the_read_still_plans_and_marks_the_connection()
     {
-        // Traces to: L2-177 AC1
+        // Traces to: L2-178 AC1
         var (session, email) = await ConnectedMemberAsync();
         _factory.GoogleCalendar.AddOwnEvent(email, Timed("Ava's birthday party", 16, 15, 17));
         _factory.GoogleCalendar.RevokeInGoogle(email);
@@ -188,7 +188,7 @@ public class CalendarCommitmentTests : IClassFixture<SaturdazeApiFactory>, IDisp
     [Fact]
     public async Task A_slow_google_is_given_up_on_and_the_weekend_is_planned_without_it()
     {
-        // Traces to: L2-177 AC2
+        // Traces to: L2-178 AC2
         var (session, email) = await ConnectedMemberAsync();
         _factory.GoogleCalendar.AddOwnEvent(email, Timed("Ava's birthday party", 16, 15, 17));
         _factory.GoogleCalendar.ListDelay = TimeSpan.FromSeconds(30);
@@ -204,7 +204,7 @@ public class CalendarCommitmentTests : IClassFixture<SaturdazeApiFactory>, IDisp
     [Fact]
     public async Task Planning_one_family_never_reads_another_familys_calendar()
     {
-        // Traces to: L2-180 AC2
+        // Traces to: L2-181 AC2
         var (_, email) = await ConnectedMemberAsync();
         var other = await SignedInClient.CreateAsync(_factory, FamilyMode.Own);
         var reads = _factory.GoogleCalendar.Calls.Count(c => c.Call == "list" && c.Email == email);
@@ -217,7 +217,7 @@ public class CalendarCommitmentTests : IClassFixture<SaturdazeApiFactory>, IDisp
     [Fact]
     public async Task Calendar_titles_never_reach_the_logs()
     {
-        // Traces to: L2-177 AC5
+        // Traces to: L2-178 AC5
         var (session, email) = await ConnectedMemberAsync();
         var title = $"Private appointment {Guid.NewGuid():N}";
         _factory.GoogleCalendar.AddOwnEvent(email, Timed(title, 17, 13, 14));

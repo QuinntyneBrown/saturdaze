@@ -30,7 +30,7 @@ screenshots/          committed <slug>.<viewport>.png captures (390 / 820 / 1440
 | Weekend (cover photo, one day beside its map) | `weekend.html`, `weekend.empty.html`, `weekend.generating.html` |
 | Ideas (photo-led activities · food · events) | `ideas.html`, `ideas.food.html`, `ideas.events.html` |
 | Past weekends (cover photo per weekend) | `past.html`, `past.empty.html` |
-| Family | `family.html`, `family.members.html` (owner: who signs in), `family.member.html` (member view), `family.calendar.html` (Calendar section states: not connected, Google not configured, Google connected, subscription link on, sync error, consent denied; L2-172 → L2-179) |
+| Family | `family.html`, `family.members.html` (owner: who signs in), `family.member.html` (member view), `family.calendar.html` (Calendar section states: not connected, Google not configured, Google connected, subscription link on, sync error, consent denied; L2-173 → L2-180) |
 | Review submissions (admin) | `review-submissions.html`, `review-submissions.empty.html` |
 | Auth | `sign-in.html` (2 states, each with "Continue with Google", L2-164), `create-account.html`, `welcome.html` (the onboarding wizard, 5 states), `reset-password.html` (5 states), `verify-email.html` (3 states), `accept-invite.html` (2 states), `join.html` (3 states: an admin invite with its sample weekend, without one, no longer works) |
 | Public | `marketing.html`, `marketing.menu-open.html` (the static site at www.saturdaze.ca, ADR-018), `legal.html` (Terms + Privacy) |

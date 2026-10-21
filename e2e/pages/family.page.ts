@@ -13,7 +13,7 @@ import { PageSlug } from "../fixtures/routes.js";
  *     Likes and dislikes    [Edit] · .cluster > .chip--leaf (likes) / .chip--warn (dislikes)
  *     Preferences           li.list__item + label.toggle > input.toggle__input[role=switch]
  *     Calendar              Google connected: "Google Calendar" (email · synced …) [Disconnect] + switch "Plan around my calendar"; needs reconnect: .banner[role=alert] + [Reconnect];
- *                           not connected: "Connect Google Calendar" · "Subscribe from another calendar"; link on: "Subscription link is on" [Stop] + ghost "Get a new link" (L2-173, L2-179)
+ *                           not connected: "Connect Google Calendar" · "Subscribe from another calendar"; link on: "Subscription link is on" [Stop] + ghost "Get a new link" (L2-174, L2-180)
  *     Admin (.admin-only)   "Review submissions" row + count chip — Admin role only
  *     Account               .account-card (avatar · email · "Signed in since …" · [Add photo | Change photo] · [Sign out])
  *
@@ -250,7 +250,7 @@ export class FamilyPage extends BasePage {
     return this.preferencesSection().getByRole("switch", { name, exact: true });
   }
 
-  /* ---------- Calendar (L2-173, L2-179) ---------- */
+  /* ---------- Calendar (L2-174, L2-180) ---------- */
 
   calendarSection(): Locator {
     return this.section("Calendar");

@@ -44,7 +44,7 @@ export const DIALOG_SLUGS = [
   "remove-commitment",
   "signout",
   "invite-link",
-  // calendar (L2-173, L2-174, L2-179)
+  // calendar (L2-174, L2-175, L2-180)
   "calendar-connect",
   "calendar-disconnect",
   "calendar-feed",

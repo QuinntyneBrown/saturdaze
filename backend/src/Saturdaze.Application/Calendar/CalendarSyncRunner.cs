@@ -7,7 +7,7 @@ using Saturdaze.Domain.Enums;
 
 namespace Saturdaze.Application.Calendar;
 
-/// <summary>Syncs every connection whose write is pending and due (ADR-021, decision 4).</summary>
+/// <summary>Syncs every connection whose write is pending and due (ADR-022, decision 4).</summary>
 public sealed class CalendarSyncRunner
 {
     private readonly IAppDbContext _db;

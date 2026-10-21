@@ -87,7 +87,7 @@ param marketingApexDomain string = ''
 param googleClientId string = ''
 
 @secure()
-@description('OAuth client secret for Google Calendar sync (Saturdaze:Google:ClientSecret, ADR-021). Blank turns calendar sync off: the API answers 503 google_calendar_not_configured and the family app hides the Google row.')
+@description('OAuth client secret for Google Calendar sync (Saturdaze:Google:ClientSecret, ADR-022). Blank turns calendar sync off: the API answers 503 google_calendar_not_configured and the family app hides the Google row.')
 param googleClientSecret string = ''
 
 @description('Extra browser origins the API should accept, in addition to the three Static Web Apps and the custom domains.')
@@ -388,7 +388,7 @@ resource apiSettings 'Microsoft.Web/sites/config@2024-04-01' = {
       // Sign in with Google (ADR-019): the ID token's audience; public, not a secret.
       Saturdaze__Google__ClientId: googleClientId
 
-      // Google Calendar sync (ADR-021): the code exchange's secret, and the Data
+      // Google Calendar sync (ADR-022): the code exchange's secret, and the Data
       // Protection key ring that encrypts refresh tokens, on the persistent share.
       Saturdaze__Google__ClientSecret: googleClientSecret
       Saturdaze__Calendar__KeyDirectory: '/home/data/keys'

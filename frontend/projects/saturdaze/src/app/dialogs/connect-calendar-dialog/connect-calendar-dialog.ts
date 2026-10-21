@@ -10,7 +10,7 @@ export interface ConnectCalendarDialogData {
 
 /**
  * D31 — "Connect Google Calendar": what Saturdaze writes and reads, before
- * Google's own consent screen (L2-173). "Continue to Google" sends the browser
+ * Google's own consent screen (L2-174). "Continue to Google" sends the browser
  * to Google; a failure to start keeps the dialog open with D31b's banner.
  */
 @Component({

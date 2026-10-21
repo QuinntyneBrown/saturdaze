@@ -23,7 +23,7 @@ public sealed record PlannerInputs(
 
 /// <summary>
 /// A timed event from a connected calendar on one weekend day, in local time
-/// (L2-176); <see cref="WeekendPlanner"/> plans around it like a commitment.
+/// (L2-177); <see cref="WeekendPlanner"/> plans around it like a commitment.
 /// </summary>
 public sealed record CalendarCommitment(DayOfWeekend Day, TimeOnly Start, TimeOnly End, string Title);
 

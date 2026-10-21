@@ -1,5 +1,5 @@
 @startuml
-title Behaviour - Subscription link (L2-178, L2-179)
+title Behaviour - Subscription link (L2-179, L2-180)
 skinparam backgroundColor #FFFFFF
 skinparam shadowing false
 skinparam roundcorner 12

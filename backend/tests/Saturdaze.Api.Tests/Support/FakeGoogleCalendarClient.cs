@@ -4,7 +4,7 @@ using Saturdaze.Application.Calendar;
 namespace Saturdaze.Api.Tests.Support;
 
 /// <summary>
-/// Stands in for Google's OAuth endpoints and Calendar API (ADR-021): codes map
+/// Stands in for Google's OAuth endpoints and Calendar API (ADR-022): codes map
 /// to grants, and every revocation is recorded. Unmapped codes are refused, as
 /// Google refuses a code it did not issue.
 /// </summary>
@@ -19,12 +19,12 @@ public sealed class FakeGoogleCalendarClient : IGoogleCalendarClient
     /// <summary>When set, every call to Google fails as an outage would.</summary>
     public bool Unavailable { get; set; }
 
-    /// <summary>When set, revocation fails (L2-174 AC2).</summary>
+    /// <summary>When set, revocation fails (L2-175 AC2).</summary>
     public bool RevokeFails { get; set; }
 
     public ConcurrentQueue<string> Revoked { get; } = new();
 
-    /// <summary>Refresh tokens Google now refuses with <c>invalid_grant</c> (L2-177).</summary>
+    /// <summary>Refresh tokens Google now refuses with <c>invalid_grant</c> (L2-178).</summary>
     public ConcurrentDictionary<string, bool> RevokedGrants { get; } = new(StringComparer.Ordinal);
 
     /// <summary>Each account's primary calendar, by refresh token: event id → event.</summary>
@@ -38,19 +38,19 @@ public sealed class FakeGoogleCalendarClient : IGoogleCalendarClient
 
     public sealed record FakeEvent(string Id, GoogleCalendarEventWrite Event, int Version);
 
-    /// <summary>Events the person keeps in their calendar, by refresh token (the read direction, L2-176).</summary>
+    /// <summary>Events the person keeps in their calendar, by refresh token (the read direction, L2-177).</summary>
     private readonly ConcurrentDictionary<string, ConcurrentQueue<GoogleCalendarEvent>> _ownEvents = new(StringComparer.Ordinal);
 
     /// <summary>
     /// Accounts whose next insert reaches the calendar but loses its answer, as a
-    /// timeout after Google has written the event would (L2-175 AC4). Per account,
+    /// timeout after Google has written the event would (L2-176 AC4). Per account,
     /// so another test's pending write never takes it.
     /// </summary>
     private readonly ConcurrentDictionary<string, bool> _loseNextInsertAnswer = new(StringComparer.OrdinalIgnoreCase);
 
     public void LoseNextInsertAnswer(string email) => _loseNextInsertAnswer[email] = true;
 
-    /// <summary>How long a list call takes, to stand in for a slow Google (L2-177 AC2).</summary>
+    /// <summary>How long a list call takes, to stand in for a slow Google (L2-178 AC2).</summary>
     public TimeSpan ListDelay { get; set; } = TimeSpan.Zero;
 
     /// <summary>The redirect URIs codes were exchanged with.</summary>

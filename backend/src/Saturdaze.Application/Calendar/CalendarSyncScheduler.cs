@@ -13,7 +13,7 @@ public interface ICalendarSyncSignal
 
 /// <summary>
 /// Marks every connected calendar in a family as pending and wakes the sync
-/// service (ADR-021, decision 4). A family without connections costs one query.
+/// service (ADR-022, decision 4). A family without connections costs one query.
 /// </summary>
 public sealed class CalendarSyncScheduler
 {

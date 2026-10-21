@@ -58,7 +58,7 @@ reference.
   (ADR-019).
 - Optional calendar sync from the Family page: connect Google Calendar to keep
   the weekend in it and plan around the events already there, or subscribe any
-  other calendar app to a private, read-only link (ADR-021).
+  other calendar app to a private, read-only link (ADR-022).
 - Family member sign-in: the account that creates a family owns it, invites
   members by a shareable link so each signs in with their own password, adds
   members such as young children who never sign in, and removes members,
@@ -176,7 +176,7 @@ app's id empty, the button is not rendered.
 
 #### Calendar sync (optional)
 
-The Family page's **Calendar** section (L1-040, ADR-021) offers two things:
+The Family page's **Calendar** section (L1-040, ADR-022) offers two things:
 
 - **Subscribe from another calendar** works everywhere with no setup: it mints
   a private `webcal://…/api/calendar/feed/{token}.ics` link that Apple

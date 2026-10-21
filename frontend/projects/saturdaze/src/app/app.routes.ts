@@ -137,7 +137,7 @@ export const routes: Routes = [
     ],
   },
   {
-    // Google's consent screen returns here (ADR-021); it finishes and goes to /family.
+    // Google's consent screen returns here (ADR-022); it finishes and goes to /family.
     path: 'family/calendar/google',
     data: { nav: 'family', page: 'family' },
     canActivate: [requireAuth],

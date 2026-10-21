@@ -192,10 +192,10 @@ export class FamilyPage {
     return `Signed in since ${MONTHS[d.getMonth()]} ${d.getFullYear()}`;
   });
 
-  /** The Calendar section (L2-173, L2-179); null until `GET /api/calendar` answers. */
+  /** The Calendar section (L2-174, L2-180); null until `GET /api/calendar` answers. */
   protected readonly calendar = signal<CalendarSettings | null>(null);
   protected readonly google = computed(() => this.calendar()?.google ?? null);
-  /** Back from Google without a connection (L2-173 AC5). */
+  /** Back from Google without a connection (L2-174 AC5). */
   protected readonly calendarDenied = signal(
     inject(ActivatedRoute).snapshot.queryParamMap.get('calendar') === 'denied',
   );
@@ -382,7 +382,7 @@ export class FamilyPage {
     }));
   }
 
-  // ---- calendar (L2-173, L2-179) ----------------------------------------
+  // ---- calendar (L2-174, L2-180) ----------------------------------------
 
   /** D31, then Google's consent screen; Google returns to `/family/calendar/google`. */
   protected async connectGoogle(): Promise<void> {
@@ -399,7 +399,7 @@ export class FamilyPage {
     await firstValueFrom(ref.closed);
   }
 
-  /** D32, then `DELETE /api/calendar/google`; written events stay (L2-174). */
+  /** D32, then `DELETE /api/calendar/google`; written events stay (L2-175). */
   protected async disconnectGoogle(): Promise<void> {
     const ok = await confirmWith(this.dialog, {
       title: 'Disconnect Google Calendar?',

@@ -30,8 +30,8 @@ export function drivingLabel(minutes: number): string {
 
 /**
  * Rewrites the weekend responses so the first commitment on `day` reads as an
- * event from a connected calendar (L2-176): the API can only plan one with a
- * real Google grant, which no spec holds (ADR-021, decision 7).
+ * event from a connected calendar (L2-177): the API can only plan one with a
+ * real Google grant, which no spec holds (ADR-022, decision 7).
  */
 export async function stubCalendarBlock(page: Page, day: "Saturday" | "Sunday", title: string): Promise<void> {
   await page.route(/\/api\/weekends\/(current|plan)(\?|$)/, async (route) => {

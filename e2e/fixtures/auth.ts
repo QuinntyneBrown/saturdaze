@@ -229,7 +229,7 @@ export async function shareWeekend(
 
 /**
  * Stops the session's family subscription link, if any
- * (`DELETE /api/calendar/feed`, L2-178), so a spec starts from the
+ * (`DELETE /api/calendar/feed`, L2-179), so a spec starts from the
  * not-subscribed state.
  */
 export async function stopCalendarFeed(

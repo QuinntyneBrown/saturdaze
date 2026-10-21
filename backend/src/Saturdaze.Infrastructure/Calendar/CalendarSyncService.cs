@@ -8,7 +8,7 @@ namespace Saturdaze.Infrastructure.Calendar;
 
 /// <summary>
 /// Writes changed weekends to connected Google Calendars off the request path
-/// (ADR-021, decision 4), beside <c>EmailDispatchService</c>. It wakes on
+/// (ADR-022, decision 4), beside <c>EmailDispatchService</c>. It wakes on
 /// <see cref="CalendarSyncSignal"/> or every <see cref="CalendarOptions.PollSeconds"/>,
 /// so a retry that comes due, or work left by a restart, is picked up.
 /// </summary>

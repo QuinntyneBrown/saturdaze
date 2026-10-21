@@ -5,7 +5,7 @@ using Serilog.Events;
 namespace Saturdaze.Api.Logging;
 
 /// <summary>
-/// Keeps subscription link tokens out of the logs (L2-177, L2-180): calendar
+/// Keeps subscription link tokens out of the logs (L2-178, L2-181): calendar
 /// applications fetch <c>/api/calendar/feed/{token}.ics</c> on a schedule, and
 /// ASP.NET Core logs the request path with every event of the request.
 /// </summary>

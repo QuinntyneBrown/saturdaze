@@ -1,6 +1,6 @@
 namespace Saturdaze.Application.Calendar;
 
-/// <summary>Google's consent URL for calendar sync (L2-172): offline access, the calendar events scope only.</summary>
+/// <summary>Google's consent URL for calendar sync (L2-173): offline access, the calendar events scope only.</summary>
 public static class GoogleCalendarAuthorization
 {
     public const string Endpoint = "https://accounts.google.com/o/oauth2/v2/auth";

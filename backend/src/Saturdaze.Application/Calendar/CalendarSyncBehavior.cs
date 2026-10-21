@@ -6,8 +6,8 @@ namespace Saturdaze.Application.Calendar;
 
 /// <summary>
 /// After a command that changes the current weekend succeeds, schedules a write
-/// to the family's connected calendars (L2-175). Scheduling never fails the
-/// family's request (L2-177).
+/// to the family's connected calendars (L2-176). Scheduling never fails the
+/// family's request (L2-178).
 /// </summary>
 public sealed class CalendarSyncBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : notnull

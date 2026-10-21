@@ -7,16 +7,16 @@ using Saturdaze.Domain.Enums;
 
 namespace Saturdaze.Application.Calendar;
 
-/// <summary>The Calendar section's state for the caller (L2-172, L2-178).</summary>
+/// <summary>The Calendar section's state for the caller (L2-173, L2-179).</summary>
 public sealed record GetCalendarSettingsQuery : IRequest<CalendarSettingsDto>;
 
 public sealed record CalendarSettingsDto(bool GoogleConfigured, GoogleCalendarConnectionDto? Google, CalendarFeedStatusDto Feed);
 
-/// <summary>The caller's own connection; never the token (L2-180).</summary>
+/// <summary>The caller's own connection; never the token (L2-181).</summary>
 public sealed record GoogleCalendarConnectionDto(
     string Email, string Status, bool ReadCommitments, DateTimeOffset? LastSyncedUtc);
 
-/// <summary>Whether the family has a link; the link itself is never shown again (L2-178).</summary>
+/// <summary>Whether the family has a link; the link itself is never shown again (L2-179).</summary>
 public sealed record CalendarFeedStatusDto(bool Active, DateTimeOffset? CreatedUtc);
 
 public sealed class GetCalendarSettingsQueryHandler : IRequestHandler<GetCalendarSettingsQuery, CalendarSettingsDto>

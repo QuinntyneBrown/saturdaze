@@ -155,7 +155,7 @@ public sealed class WeekendPlanner : IWeekendPlanner
         }
 
         // Calendar events go last, so profile commitments and locked blocks win
-        // and fixed blocks never overlap (L2-176).
+        // and fixed blocks never overlap (L2-177).
         var calendar = (inputs.CalendarCommitments ?? Array.Empty<CalendarCommitment>())
             .Where(c => c.Day == day)
             .Select(c => (c, start: Max(c.Start, PlannerTimes.DayStart), end: Min(c.End, PlannerTimes.DayEnd)))

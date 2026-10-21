@@ -2,7 +2,7 @@ namespace Saturdaze.Application.Calendar;
 
 /// <summary>
 /// Google's OAuth 2.0 endpoints and Calendar API as calendar sync needs them
-/// (ADR-021). Calls fail with <see cref="GoogleCalendarCodeRejectedException"/>,
+/// (ADR-022). Calls fail with <see cref="GoogleCalendarCodeRejectedException"/>,
 /// <see cref="GoogleCalendarGrantRevokedException"/> or
 /// <see cref="GoogleCalendarUnavailableException"/>.
 /// </summary>
@@ -22,7 +22,7 @@ public interface IGoogleCalendarClient
 
     /// <summary>
     /// The primary calendar's events between two instants, recurring events expanded
-    /// (L2-176). All-day events come back with <see cref="GoogleCalendarEvent.AllDay"/> set.
+    /// (L2-177). All-day events come back with <see cref="GoogleCalendarEvent.AllDay"/> set.
     /// </summary>
     Task<IReadOnlyList<GoogleCalendarEvent>> ListEventsAsync(
         string refreshToken, DateTimeOffset from, DateTimeOffset to, CancellationToken ct);
@@ -41,7 +41,7 @@ public interface IGoogleCalendarClient
 }
 
 /// <summary>
-/// One block as a Google event (L2-175): local start and end in <see cref="TimeZone"/>,
+/// One block as a Google event (L2-176): local start and end in <see cref="TimeZone"/>,
 /// and the block id as a private extended property so the read direction skips it.
 /// <see cref="EventId"/> is chosen by Saturdaze, one per connection and block, so a
 /// write retried after a lost answer finds the event instead of duplicating it.
@@ -77,7 +77,7 @@ public sealed class GoogleCalendarUnavailableException : Exception
     public GoogleCalendarUnavailableException(string message, Exception? inner = null) : base(message, inner) { }
 }
 
-/// <summary>One event as the read direction sees it (L2-176).</summary>
+/// <summary>One event as the read direction sees it (L2-177).</summary>
 public sealed record GoogleCalendarEvent(
     string Id,
     string? Summary,

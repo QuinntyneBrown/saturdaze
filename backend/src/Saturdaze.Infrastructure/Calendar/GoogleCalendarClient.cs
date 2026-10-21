@@ -10,7 +10,7 @@ namespace Saturdaze.Infrastructure.Calendar;
 
 /// <summary>
 /// Google's OAuth 2.0 token and revocation endpoints and the Calendar API v3
-/// (ADR-021). Access tokens are refreshed from the stored refresh token and
+/// (ADR-022). Access tokens are refreshed from the stored refresh token and
 /// cached in memory for their lifetime less a minute; they are never stored.
 /// </summary>
 public sealed class GoogleCalendarClient : IGoogleCalendarClient
@@ -185,7 +185,7 @@ public sealed class GoogleCalendarClient : IGoogleCalendarClient
         }
     }
 
-    /// <summary>The Calendar API's event resource for one block (L2-175).</summary>
+    /// <summary>The Calendar API's event resource for one block (L2-176).</summary>
     private static object Body(GoogleCalendarEventWrite write, bool withId = false)
     {
         var body = new Dictionary<string, object?>

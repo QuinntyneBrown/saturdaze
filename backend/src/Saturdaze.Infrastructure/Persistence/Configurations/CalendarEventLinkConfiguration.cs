@@ -13,7 +13,7 @@ public class CalendarEventLinkConfiguration : IEntityTypeConfiguration<CalendarE
         b.Property(x => x.EventId).HasMaxLength(1024).IsRequired();
         b.Property(x => x.Fingerprint).HasMaxLength(64).IsRequired();
         b.HasIndex(x => new { x.ConnectionId, x.WeekendId, x.BlockId }).IsUnique();
-        // Disconnecting forgets every event written through the connection (L2-174).
+        // Disconnecting forgets every event written through the connection (L2-175).
         b.HasOne<CalendarConnection>().WithMany().HasForeignKey(x => x.ConnectionId).OnDelete(DeleteBehavior.Cascade);
     }
 }

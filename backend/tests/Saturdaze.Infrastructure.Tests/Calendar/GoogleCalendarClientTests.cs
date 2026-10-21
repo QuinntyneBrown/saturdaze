@@ -1,7 +1,7 @@
 // Acceptance Test
-// Traces to: L2-172 AC1, AC2, AC4, L2-174 AC1, L2-177
+// Traces to: L2-173 AC1, AC2, AC4, L2-175 AC1, L2-178
 // Description: The Google client builds the consent URL, exchanges codes and revokes grants against Google's
-// endpoints, and maps Google's errors, without the network (ADR-021, decision 7).
+// endpoints, and maps Google's errors, without the network (ADR-022, decision 7).
 
 using System.Net;
 using System.Text;
@@ -115,7 +115,7 @@ public class GoogleCalendarClientTests
     [Fact]
     public async Task An_insert_refreshes_the_access_token_and_posts_the_event_with_its_block_marker()
     {
-        // Traces to: L2-175 AC1
+        // Traces to: L2-176 AC1
         _google.Respond(HttpStatusCode.OK, new { access_token = "at-1", expires_in = 3600 });
         _google.Respond(HttpStatusCode.OK, new { id = "ev-1" });
 
@@ -141,7 +141,7 @@ public class GoogleCalendarClientTests
     [Fact]
     public async Task An_insert_whose_id_google_already_has_rewrites_that_event()
     {
-        // Traces to: L2-175 AC4, AC5
+        // Traces to: L2-176 AC4, AC5
         _google.Respond(HttpStatusCode.OK, new { access_token = "at", expires_in = 3600 });
         _google.Respond(HttpStatusCode.Conflict, new { error = new { code = 409, message = "duplicate" } });
         _google.Respond(HttpStatusCode.OK, new { id = "sd0123456789abcdef", status = "confirmed" });
@@ -157,7 +157,7 @@ public class GoogleCalendarClientTests
     [Fact]
     public async Task An_update_of_an_event_deleted_in_google_reports_it_gone_and_a_delete_of_one_is_done()
     {
-        // Traces to: L2-175 AC5
+        // Traces to: L2-176 AC5
         var client = Client();
         _google.Respond(HttpStatusCode.OK, new { access_token = "at", expires_in = 3600 });
         _google.Respond(HttpStatusCode.NotFound, new { });
@@ -179,7 +179,7 @@ public class GoogleCalendarClientTests
     [Fact]
     public async Task A_refused_refresh_token_is_a_revoked_grant_and_a_server_error_an_outage()
     {
-        // Traces to: L2-177 AC1
+        // Traces to: L2-178 AC1
         _google.Respond(HttpStatusCode.BadRequest, new { error = "invalid_grant" });
         await FluentActions.Awaiting(() => Client().InsertEventAsync("rt", Swim, CancellationToken.None))
             .Should().ThrowAsync<GoogleCalendarGrantRevokedException>();
@@ -193,7 +193,7 @@ public class GoogleCalendarClientTests
     [Fact]
     public async Task A_list_reads_every_page_and_marks_all_day_declined_free_cancelled_and_saturdaze_events()
     {
-        // Traces to: L2-176 AC2
+        // Traces to: L2-177 AC2
         _google.Respond(HttpStatusCode.OK, new { access_token = "at", expires_in = 3600 });
         _google.Respond(HttpStatusCode.OK, new
         {
