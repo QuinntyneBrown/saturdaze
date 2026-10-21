@@ -20,11 +20,11 @@ The goal is speed without losing coverage: every test keeps its assertions, and 
 ## Decision
 
 1. **SQLite in memory for API and Infrastructure tests.** Each `SaturdazeApiFactory` (and each Infrastructure persistence fixture) owns a named shared-cache in-memory SQLite database (`Data Source=saturdaze-<guid>;Mode=Memory;Cache=Shared`). The fixture holds one connection open for its lifetime so the database lives exactly as long as the fixture; every `DbContext` the API creates opens its own connection to the same name, so concurrent requests behave as they do against a server. The schema comes from the EF model (`EnsureCreated`), not from the migrations. SQLite enforces what the tests rely on: foreign keys and cascades, unique indexes, and the filtered unique indexes, which SQLite creates as partial indexes from the same `HasFilter` text.
-2. **The provider's gaps are closed in the model, not in the tests.** When the provider is SQLite, `AppDbContext` stores `DateTimeOffset` values through EF's `DateTimeOffsetToBinaryConverter` (all values are UTC, so the encoded order is the time order and comparisons and `ORDER BY` translate), and `PhotoAuditEntries.Sequence` is filled by an insert trigger from the row id, the SQLite counterpart of the identity column. The SQL Server model is untouched.
+2. **The provider's gaps are closed in the model, not in the tests.** When the provider is SQLite, and only then, `AppDbContext` stores `DateTimeOffset` values through EF's `DateTimeOffsetToBinaryConverter` (all values are UTC, so the encoded order is the time order and comparisons and `ORDER BY` translate), gives text columns the `NOCASE` collation so lookups and unique indexes compare case-insensitively as SQL Server's default collation does, and defaults `PhotoAuditEntries.Sequence` to 0 for an insert trigger (created with the schema by `EnsureSqliteSchemaAsync`) that sets it from the row id, the SQLite counterpart of the identity column. The SQL Server model, and so the migrations, are untouched; the CLI's existing `--provider Sqlite` gets the same model without a change.
 3. **SQL Server-only tests become opt-in, and the migrations stay covered.** The migration-upgrade round trip and the two `sp_getapplock` tests prove behaviour that only exists on SQL Server, so they move behind `[SqlServerFact]`, which carries `[Trait("Category", "SqlServer")]` and skips unless `SATURDAZE_TEST_SQLSERVER` is set (to a server connection string, or to `localdb` for the LocalDB pipe of ADR-001). The default `dotnet test` and CI report them as skipped. Because the API fixtures no longer run `MigrateAsync`, a new test checks with `Database.HasPendingModelChanges()` against the SQL Server model that the committed migrations cover the model; it needs no connection. The remaining round-trip tests (unique names, unique weekend per family and date, cascades, value conversions) run on SQLite by default.
 4. **No process-local lock.** `AcquireLockAsync` keeps returning `NoLock` on SQLite. The only tests that prove mutual exclusion are the `sp_getapplock` tests, and a process-local lock under them would prove a stand-in, not the lock production uses; the runner's use of the lock is covered by the Application tests' `TestAppDbContext`.
 5. **The API can run on SQLite for Playwright, and only outside Production.** `Saturdaze:Database:Provider` selects `SqlServer` (the default when unset) or `Sqlite`, in `DependencyInjection.AddInfrastructure`; the connection string comes from the usual places. Under `Sqlite` the API creates the schema from the model on startup (`EnsureCreated`, a no-op when it exists); SQL Server still never migrates on startup. `Program.cs` refuses to start with `Sqlite` when the environment is `Production`, and the setting is in no `appsettings` file or Bicep template, so it cannot be turned on by accident. `eng/Start-E2eApi.ps1` deletes and recreates a SQLite file under `.run/`, starts the API on :5100 against it, and seeds it with the existing seeder (`saturdaze seed --provider Sqlite`), so the accounts and catalog `e2e/fixtures/auth.ts` expects exist as they do after a LocalDB reseed.
-6. **API test collections stay serial for now.** Measured below: see *Measurements*. ADR-002's cause (the static `Log.Logger` in `Program.cs`) is only worth removing if the serial suite is still the slowest CI job after the provider change.
+6. **ADR-002's root cause is fixed; API test collections stay serial.** With SQLite a fixture's host starts so quickly that the previous host's `Log.CloseAndFlush()` (the `finally` in `Program.cs`) ran after the next host had taken over the static logger, and that host's captured log went silent: two logging tests failed even in a serial run. `UseSerilog(..., preserveStaticLogger: true)` gives each host its own logger and leaves the static one to the bootstrap path, which is the fix ADR-002 named; production logging (configuration, sinks, request logging) is unchanged. With it, the API suite also passes with collections in parallel (18 s against 55 s serial, locally), but the serial suite is no longer the slowest CI job (see *Measurements*), so `xunit.runner.json` stays as it is; turning parallelism on later is a one-line change.
 7. **The backend CI job runs on `ubuntu-24.04`** like the other jobs, with no LocalDB step, in both `ci.yml` and `deploy.yml`. `eng/Test-Backend.ps1` still builds once and runs the four assemblies side by side; each SQLite database is private to its fixture.
 
 ## Options Considered
@@ -54,6 +54,8 @@ The goal is speed without losing coverage: every test keeps its assertions, and 
 ### Negative
 - The migrations no longer run in the default suite. `HasPendingModelChanges` catches a model change without a migration, but not a migration that fails on a real server; the opt-in SQL Server tests and the deploy's `saturdaze migrate` are the remaining checks.
 - Three tests are skipped by default.
+- `Saturdaze.Infrastructure` references `Microsoft.EntityFrameworkCore.Sqlite`, so the API publish carries the SQLite native library it does not use in production.
+- The required status check on `main` was named after the old job, `Backend tests (LocalDB)`; the branch protection rule has to require `Backend tests` instead when this lands.
 
 ### Risks
 - A query SQLite translates and SQL Server does not (or the reverse) would pass the suite and fail in production. The handlers use plain LINQ; anything provider-specific should be covered by an opt-in `[SqlServerFact]`.
@@ -61,10 +63,12 @@ The goal is speed without losing coverage: every test keeps its assertions, and 
 
 ## Measurements
 
-| | Backend CI job |
-| --- | --- |
-| Before (run 39534228786, `windows-latest`, LocalDB) | 7 min 31 s |
-| After (this PR, `ubuntu-24.04`, SQLite) | _to be filled from the PR's CI run_ |
+| | Backend CI job | API tests (local, serial) | Infrastructure tests (local) | `eng/Test-Backend.ps1` (local) |
+| --- | --- | --- | --- | --- |
+| Before (run 39534228786, `windows-latest`, LocalDB) | 7 min 31 s | 5 min 10 s | 47 s | 5 min 44 s |
+| After (run 39538537181, `ubuntu-24.04`, SQLite) | 2 min 40 s | 55 s | 1 s | 1 min 11 s |
+
+The backend job is no longer the slowest: on the same run the design-system job took 3 min 47 s and the frontend job 2 min 6 s. Local times are from one Windows machine, Debug for the first run and Release for the script.
 
 ## References
 
