@@ -308,6 +308,17 @@ const SPECIMENS: readonly Specimen[] = [
   },
   {
     kind: 'dialog',
+    slug: 'calendar-synced',
+    label: 'D6b · Add to calendar · Google Calendar connected',
+    component: CalendarDialog,
+    data: {
+      calendar: { icsUrl: '#', fileName: 'weekend-17-may.ics', eventCount: 10 },
+      download: () => Promise.resolve(new Blob([], { type: 'text/calendar' })),
+      googleSynced: true,
+    },
+  },
+  {
+    kind: 'dialog',
     slug: 'approve',
     label: 'D23 · Approve a submission',
     component: ApproveSubmissionDialog,

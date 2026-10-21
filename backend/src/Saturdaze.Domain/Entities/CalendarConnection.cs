@@ -18,4 +18,13 @@ public class CalendarConnection
     public CalendarConnectionStatus Status { get; set; } = CalendarConnectionStatus.Connected;
     public DateTimeOffset CreatedUtc { get; set; }
     public DateTimeOffset? LastSyncedUtc { get; set; }
+
+    /// <summary>When the plan last changed without being written yet; null when the calendar is up to date (L2-168).</summary>
+    public DateTimeOffset? SyncRequestedUtc { get; set; }
+
+    /// <summary>When the next write may be tried; pushed back after a failure.</summary>
+    public DateTimeOffset? NextAttemptUtc { get; set; }
+
+    /// <summary>Writes that failed in a row; sets the back-off.</summary>
+    public int FailedAttempts { get; set; }
 }

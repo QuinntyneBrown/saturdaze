@@ -39,6 +39,7 @@ internal sealed class TestAppDbContext : DbContext, IAppDbContext
     public DbSet<WeekendShare> WeekendShares => Set<WeekendShare>();
     public DbSet<CalendarFeed> CalendarFeeds => Set<CalendarFeed>();
     public DbSet<CalendarConnection> CalendarConnections => Set<CalendarConnection>();
+    public DbSet<CalendarEventLink> CalendarEventLinks => Set<CalendarEventLink>();
     public DbSet<PlatformInvitation> PlatformInvitations => Set<PlatformInvitation>();
     public DbSet<Prospect> Prospects => Set<Prospect>();
 

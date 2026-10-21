@@ -63,6 +63,8 @@ public sealed class SaturdazeApiFactory : WebApplicationFactory<Program>, IAsync
                 ["Saturdaze:CuratedPhotos:Directory"] = CuratedPhotoDirectory,
                 ["Saturdaze:CuratedPhotos:PublicOrigin"] = CuratedPublicOrigin,
                 ["Saturdaze:Share:AppOrigin"] = "https://app.example.com",
+                // The calendar sync service polls every second so retries come due inside a test.
+                ["Saturdaze:Calendar:PollSeconds"] = "1",
             });
         });
         builder.ConfigureTestServices(services =>

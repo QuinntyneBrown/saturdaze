@@ -299,11 +299,6 @@ export class FamilyPage extends BasePage {
     return this.calendarSection().locator(".banner");
   }
 
-  /** The warn banner inside the open connect dialog (D31's error state). */
-  dialogBanner(): Locator {
-    return this.dialog().locator(".banner");
-  }
-
   /** The return route Google sends the browser back to (stood in for by the spec). */
   async returnFromGoogle(query: string): Promise<void> {
     await this.page.goto(`/family/calendar/google?${query}`);

@@ -31,6 +31,7 @@ public interface IAppDbContext
     DbSet<WeekendShare> WeekendShares { get; }
     DbSet<CalendarFeed> CalendarFeeds { get; }
     DbSet<CalendarConnection> CalendarConnections { get; }
+    DbSet<CalendarEventLink> CalendarEventLinks { get; }
     DbSet<PlatformInvitation> PlatformInvitations { get; }
     DbSet<Prospect> Prospects { get; }
 

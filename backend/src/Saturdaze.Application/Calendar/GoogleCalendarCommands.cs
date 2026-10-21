@@ -92,6 +92,7 @@ public sealed class ConnectGoogleCalendarCommandHandler : IRequestHandler<Connec
     private readonly IDateTimeProvider _clock;
     private readonly CalendarOptions _options;
     private readonly ISender _sender;
+    private readonly ICalendarSyncSignal _signal;
     private readonly ILogger<ConnectGoogleCalendarCommandHandler> _logger;
 
     public ConnectGoogleCalendarCommandHandler(
@@ -102,8 +103,10 @@ public sealed class ConnectGoogleCalendarCommandHandler : IRequestHandler<Connec
         IDateTimeProvider clock,
         IOptions<CalendarOptions> options,
         ISender sender,
+        ICalendarSyncSignal signal,
         ILogger<ConnectGoogleCalendarCommandHandler> logger)
     {
+        _signal = signal;
         _db = db;
         _google = google;
         _protector = protector;
@@ -148,9 +151,14 @@ public sealed class ConnectGoogleCalendarCommandHandler : IRequestHandler<Connec
             connection = new CalendarConnection { Id = Guid.NewGuid(), UserId = userId, CreatedUtc = _clock.UtcNow };
             _db.CalendarConnections.Add(connection);
         }
-        else if (_protector.Unprotect(connection.ProtectedRefreshToken) is { } previous)
+        else
         {
-            await RevokeQuietlyAsync(previous, ct);
+            if (_protector.Unprotect(connection.ProtectedRefreshToken) is { } previous)
+                await RevokeQuietlyAsync(previous, ct);
+            // Events written to another Google account are not this calendar's to update.
+            if (connection.GoogleSubject != grant.Subject)
+                _db.CalendarEventLinks.RemoveRange(
+                    await _db.CalendarEventLinks.Where(l => l.ConnectionId == connection.Id).ToListAsync(ct));
         }
 
         connection.GoogleSubject = grant.Subject;
@@ -159,7 +167,12 @@ public sealed class ConnectGoogleCalendarCommandHandler : IRequestHandler<Connec
         connection.Status = CalendarConnectionStatus.Connected;
         connection.ReadCommitments = true;
         connection.LastSyncedUtc = null;
+        // Write the current weekend straight away (L2-170 AC4).
+        connection.SyncRequestedUtc = _clock.UtcNow;
+        connection.NextAttemptUtc = _clock.UtcNow;
+        connection.FailedAttempts = 0;
         await _db.SaveChangesAsync(ct);
+        _signal.Notify();
 
         return await _sender.Send(new GetCalendarSettingsQuery(), ct);
     }

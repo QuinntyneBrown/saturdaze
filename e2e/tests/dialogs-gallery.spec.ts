@@ -87,6 +87,7 @@ test.describe("Dialogs gallery", () => {
       ["calendar-disconnect", "Disconnect Google Calendar?"],
       ["calendar-feed", "Subscribe from another calendar"],
       ["calendar-feed-stop", "Stop the subscription link?"],
+      ["calendar-synced", "Add to your calendar"],
       ["approve", "Approve Port Credit Buskerfest?"],
       ["reject", "Reject this suggestion?"],
       ["more", "Weekend options"],

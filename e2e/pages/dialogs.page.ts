@@ -49,6 +49,7 @@ export const DIALOG_SLUGS = [
   "calendar-disconnect",
   "calendar-feed",
   "calendar-feed-stop",
+  "calendar-synced",
   // admin
   "approve",
   "reject",

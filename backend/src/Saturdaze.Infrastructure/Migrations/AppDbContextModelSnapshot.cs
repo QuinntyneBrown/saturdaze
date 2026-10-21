@@ -89,12 +89,18 @@ namespace Saturdaze.Infrastructure.Migrations
                         .HasMaxLength(320)
                         .HasColumnType("nvarchar(320)");
 
+                    b.Property<int>("FailedAttempts")
+                        .HasColumnType("int");
+
                     b.Property<string>("GoogleSubject")
                         .IsRequired()
                         .HasMaxLength(64)
                         .HasColumnType("nvarchar(64)");
 
                     b.Property<DateTimeOffset?>("LastSyncedUtc")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset?>("NextAttemptUtc")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("ProtectedRefreshToken")
@@ -107,15 +113,53 @@ namespace Saturdaze.Infrastructure.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
+                    b.Property<DateTimeOffset?>("SyncRequestedUtc")
+                        .HasColumnType("datetimeoffset");
+
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("SyncRequestedUtc");
+
                     b.HasIndex("UserId")
                         .IsUnique();
 
                     b.ToTable("CalendarConnections", (string)null);
+                });
+
+            modelBuilder.Entity("Saturdaze.Domain.Entities.CalendarEventLink", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("BlockId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ConnectionId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("EventId")
+                        .IsRequired()
+                        .HasMaxLength(1024)
+                        .HasColumnType("nvarchar(1024)");
+
+                    b.Property<string>("Fingerprint")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
+
+                    b.Property<Guid>("WeekendId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ConnectionId", "WeekendId", "BlockId")
+                        .IsUnique();
+
+                    b.ToTable("CalendarEventLinks", (string)null);
                 });
 
             modelBuilder.Entity("Saturdaze.Domain.Entities.CalendarFeed", b =>
@@ -1253,6 +1297,15 @@ namespace Saturdaze.Infrastructure.Migrations
                     b.HasOne("Saturdaze.Domain.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Saturdaze.Domain.Entities.CalendarEventLink", b =>
+                {
+                    b.HasOne("Saturdaze.Domain.Entities.CalendarConnection", null)
+                        .WithMany()
+                        .HasForeignKey("ConnectionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

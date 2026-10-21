@@ -77,6 +77,71 @@ public sealed class GoogleCalendarClient : IGoogleCalendarClient
             throw new GoogleCalendarUnavailableException($"Revocation answered {(int)response.StatusCode}");
     }
 
+    public async Task<string> InsertEventAsync(string refreshToken, GoogleCalendarEventWrite write, CancellationToken ct)
+    {
+        using var response = await CalendarAsync(refreshToken, HttpMethod.Post, CalendarApi, Body(write), ct);
+        var body = await ReadJsonAsync(response, ct);
+        if (!response.IsSuccessStatusCode)
+            throw new GoogleCalendarUnavailableException($"Insert answered {(int)response.StatusCode}");
+        return String(body, "id") ?? throw new GoogleCalendarUnavailableException("No event id");
+    }
+
+    public async Task<bool> UpdateEventAsync(
+        string refreshToken, string eventId, GoogleCalendarEventWrite write, CancellationToken ct)
+    {
+        using var response = await CalendarAsync(
+            refreshToken, HttpMethod.Put, $"{CalendarApi}/{Uri.EscapeDataString(eventId)}", Body(write), ct);
+        if (response.StatusCode is HttpStatusCode.NotFound or HttpStatusCode.Gone) return false;
+        if (!response.IsSuccessStatusCode)
+            throw new GoogleCalendarUnavailableException($"Update answered {(int)response.StatusCode}");
+        // An event deleted in Google stays as "cancelled" for a while and still updates; treat it as gone.
+        return String(await ReadJsonAsync(response, ct), "status") != "cancelled";
+    }
+
+    public async Task DeleteEventAsync(string refreshToken, string eventId, CancellationToken ct)
+    {
+        using var response = await CalendarAsync(
+            refreshToken, HttpMethod.Delete, $"{CalendarApi}/{Uri.EscapeDataString(eventId)}", null, ct);
+        if (!response.IsSuccessStatusCode
+            && response.StatusCode is not (HttpStatusCode.NotFound or HttpStatusCode.Gone))
+            throw new GoogleCalendarUnavailableException($"Delete answered {(int)response.StatusCode}");
+    }
+
+    /// <summary>A Calendar API call with a fresh bearer; a 401 refreshes it once.</summary>
+    private async Task<HttpResponseMessage> CalendarAsync(
+        string refreshToken, HttpMethod method, string url, object? body, CancellationToken ct)
+    {
+        for (var attempt = 0; ; attempt++)
+        {
+            var request = new HttpRequestMessage(method, url);
+            request.Headers.Authorization = new("Bearer", await AccessTokenAsync(refreshToken, ct));
+            if (body is not null)
+                request.Content = new StringContent(JsonSerializer.Serialize(body), Encoding.UTF8, "application/json");
+            var response = await SendAsync(request, ct);
+            if (response.StatusCode != HttpStatusCode.Unauthorized || attempt > 0) return response;
+            response.Dispose();
+            _cache.Remove(CacheKey(refreshToken));
+        }
+    }
+
+    /// <summary>The Calendar API's event resource for one block (L2-168).</summary>
+    private static object Body(GoogleCalendarEventWrite write) => new Dictionary<string, object?>
+    {
+        ["summary"] = write.Summary,
+        ["description"] = write.Description,
+        ["location"] = write.Location,
+        ["start"] = new { dateTime = write.Start.ToString("yyyy-MM-dd'T'HH:mm:ss"), timeZone = write.TimeZone },
+        ["end"] = new { dateTime = write.End.ToString("yyyy-MM-dd'T'HH:mm:ss"), timeZone = write.TimeZone },
+        ["status"] = "confirmed",
+        ["extendedProperties"] = new
+        {
+            @private = new Dictionary<string, string> { [SaturdazeBlockProperty] = write.BlockId.ToString() },
+        },
+    };
+
+    /// <summary>The private extended property that marks an event Saturdaze wrote.</summary>
+    public const string SaturdazeBlockProperty = "saturdazeBlock";
+
     /// <summary>A bearer for the Calendar API, refreshed when the cached one is gone.</summary>
     internal async Task<string> AccessTokenAsync(string refreshToken, CancellationToken ct)
     {

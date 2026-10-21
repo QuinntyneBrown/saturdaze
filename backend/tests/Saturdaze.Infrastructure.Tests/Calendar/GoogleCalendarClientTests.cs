@@ -108,6 +108,71 @@ public class GoogleCalendarClientTests
             .Should().ThrowAsync<GoogleCalendarUnavailableException>();
     }
 
+    private static readonly GoogleCalendarEventWrite Swim = new(
+        Guid.Parse("11111111-2222-3333-4444-555555555555"), "Swim lessons", "Part of This weekend. Planned with Saturdaze.",
+        "Port Credit Pool", new DateTime(2026, 5, 16, 9, 0, 0), new DateTime(2026, 5, 16, 10, 0, 0), "America/Toronto");
+
+    [Fact]
+    public async Task An_insert_refreshes_the_access_token_and_posts_the_event_with_its_block_marker()
+    {
+        // Traces to: L2-168 AC1
+        _google.Respond(HttpStatusCode.OK, new { access_token = "at-1", expires_in = 3600 });
+        _google.Respond(HttpStatusCode.OK, new { id = "ev-1" });
+
+        var id = await Client().InsertEventAsync("rt", Swim, CancellationToken.None);
+
+        id.Should().Be("ev-1");
+        _google.Requests[0].Body.Should().Contain("grant_type=refresh_token").And.Contain("refresh_token=rt");
+        var insert = _google.Requests[1];
+        insert.Method.Should().Be("POST");
+        insert.Url.Should().Be("https://www.googleapis.com/calendar/v3/calendars/primary/events");
+        insert.Authorization.Should().Be("Bearer at-1");
+        var body = JsonDocument.Parse(insert.Body).RootElement;
+        body.GetProperty("summary").GetString().Should().Be("Swim lessons");
+        body.GetProperty("location").GetString().Should().Be("Port Credit Pool");
+        body.GetProperty("start").GetProperty("dateTime").GetString().Should().Be("2026-05-16T09:00:00");
+        body.GetProperty("start").GetProperty("timeZone").GetString().Should().Be("America/Toronto");
+        body.GetProperty("end").GetProperty("dateTime").GetString().Should().Be("2026-05-16T10:00:00");
+        body.GetProperty("extendedProperties").GetProperty("private").GetProperty("saturdazeBlock").GetString()
+            .Should().Be("11111111-2222-3333-4444-555555555555");
+    }
+
+    [Fact]
+    public async Task An_update_of_an_event_deleted_in_google_reports_it_gone_and_a_delete_of_one_is_done()
+    {
+        // Traces to: L2-168 AC5
+        var client = Client();
+        _google.Respond(HttpStatusCode.OK, new { access_token = "at", expires_in = 3600 });
+        _google.Respond(HttpStatusCode.NotFound, new { });
+        (await client.UpdateEventAsync("rt", "ev-1", Swim, CancellationToken.None)).Should().BeFalse();
+
+        _google.Respond(HttpStatusCode.OK, new { id = "ev-1", status = "cancelled" });
+        (await client.UpdateEventAsync("rt", "ev-1", Swim, CancellationToken.None)).Should().BeFalse();
+
+        _google.Respond(HttpStatusCode.OK, new { id = "ev-1", status = "confirmed" });
+        (await client.UpdateEventAsync("rt", "ev-1", Swim, CancellationToken.None)).Should().BeTrue();
+        _google.Requests.Last().Method.Should().Be("PUT");
+        _google.Requests.Last().Url.Should().EndWith("/events/ev-1");
+
+        _google.Respond(HttpStatusCode.Gone, new { });
+        await client.DeleteEventAsync("rt", "ev-1", CancellationToken.None);
+        _google.Requests.Last().Method.Should().Be("DELETE");
+    }
+
+    [Fact]
+    public async Task A_refused_refresh_token_is_a_revoked_grant_and_a_server_error_an_outage()
+    {
+        // Traces to: L2-170 AC1
+        _google.Respond(HttpStatusCode.BadRequest, new { error = "invalid_grant" });
+        await FluentActions.Awaiting(() => Client().InsertEventAsync("rt", Swim, CancellationToken.None))
+            .Should().ThrowAsync<GoogleCalendarGrantRevokedException>();
+
+        _google.Respond(HttpStatusCode.OK, new { access_token = "at", expires_in = 3600 });
+        _google.Respond(HttpStatusCode.InternalServerError, new { });
+        await FluentActions.Awaiting(() => Client().InsertEventAsync("rt", Swim, CancellationToken.None))
+            .Should().ThrowAsync<GoogleCalendarUnavailableException>();
+    }
+
     internal sealed class SingleClientFactory : IHttpClientFactory
     {
         private readonly HttpMessageHandler _handler;

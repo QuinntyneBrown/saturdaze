@@ -2,6 +2,11 @@
   @if (error()) {
     <sd-banner tone="warn" role="alert" icon="alert">{{ error() }}</sd-banner>
   }
+  @if (googleSynced) {
+    <sd-banner tone="success" icon="check"
+      >Your Google Calendar already has this weekend and keeps up with changes.</sd-banner
+    >
+  }
   <sd-list card>
     <sd-list-item [title]="calendar.fileName" [subtitle]="summary">
       <sd-disc slot="leading" icon="calendar" tone="primary" />

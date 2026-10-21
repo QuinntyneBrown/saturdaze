@@ -21,6 +21,9 @@ public static class DependencyInjection
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(Covers.WeekendEnrichmentBehavior<,>));
+        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(Calendar.CalendarSyncBehavior<,>));
+        services.AddScoped<Calendar.CalendarSyncScheduler>();
+        services.AddScoped<Calendar.CalendarSyncRunner>();
         services.AddScoped<ICurrentFamilyAccessor, CurrentUserFamilyAccessor>();
         services.AddScoped<RefreshTokenIssuer>();
         services.AddScoped<Families.FamilyProfileReader>();

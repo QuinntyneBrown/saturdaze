@@ -547,6 +547,11 @@ export abstract class BasePage {
     return this.dialogErrorSummary().getByRole("link", { name: message });
   }
 
+  /** A banner inside the open dialog (D31's error state, D6b's synced note). */
+  dialogBanner(): Locator {
+    return this.dialog().locator(".banner");
+  }
+
   /** Footer action by accessible name ("Cancel", "Regenerate", "Save"…). */
   dialogAction(name: string | RegExp): Locator {
     return control(this.dialog().locator(".dialog__actions"), name);

@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 
 import {
+  CALENDAR_SERVICE,
   BlockRow,
   DayView,
   FAMILY_SERVICE,
@@ -108,6 +109,7 @@ const DAYS: readonly WeekendDay[] = ['Saturday', 'Sunday'];
 export class WeekendPage {
   private readonly weekendService = inject(WEEKEND_PLAN_SERVICE);
   private readonly familyService = inject(FAMILY_SERVICE);
+  private readonly calendarService = inject(CALENDAR_SERVICE);
   private readonly dialog = inject(Dialog);
   private readonly menu = inject(MenuOpener);
   private readonly route = inject(ActivatedRoute);
@@ -205,11 +207,15 @@ export class WeekendPage {
     });
   }
 
-  protected calendar(): void {
+  protected async calendar(): Promise<void> {
     const calendar = this.weekendService.calendarExport();
+    const googleSynced = await this.calendarService
+      .settings()
+      .then((s) => s.google?.status === 'connected')
+      .catch(() => false);
     this.dialog.open<void, CalendarDialogData>(CalendarDialog, {
       ...DIALOG_OPTIONS,
-      data: { calendar, download: () => this.weekendService.calendarFile() },
+      data: { calendar, download: () => this.weekendService.calendarFile(), googleSynced },
     });
   }
 

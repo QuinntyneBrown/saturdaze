@@ -1,6 +1,7 @@
 using MediatR;
 using Saturdaze.Application.Contracts;
 using Saturdaze.Domain.Enums;
+using Saturdaze.Application.Calendar;
 
 namespace Saturdaze.Application.Ideas;
 
@@ -33,4 +34,4 @@ public sealed record AddIdeaToWeekendCommand(
     IdeaKind IdeaKind,
     Guid IdeaId,
     DayOfWeekend Day,
-    IdeaTiming Timing) : IRequest<WeekendDto>;
+    IdeaTiming Timing) : IRequest<WeekendDto>, IChangesItinerary;

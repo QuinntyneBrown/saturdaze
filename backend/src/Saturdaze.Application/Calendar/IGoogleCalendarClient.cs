@@ -19,7 +19,29 @@ public interface IGoogleCalendarClient
 
     /// <summary>Revokes a refresh token at Google.</summary>
     Task RevokeAsync(string refreshToken, CancellationToken ct);
+
+    /// <summary>Adds an event to the account's primary calendar; returns the id Google assigned.</summary>
+    Task<string> InsertEventAsync(string refreshToken, GoogleCalendarEventWrite write, CancellationToken ct);
+
+    /// <summary>Replaces an event; false when the person deleted it in Google (404/410).</summary>
+    Task<bool> UpdateEventAsync(string refreshToken, string eventId, GoogleCalendarEventWrite write, CancellationToken ct);
+
+    /// <summary>Deletes an event; one already gone counts as deleted.</summary>
+    Task DeleteEventAsync(string refreshToken, string eventId, CancellationToken ct);
 }
+
+/// <summary>
+/// One block as a Google event (L2-168): local start and end in <see cref="TimeZone"/>,
+/// and the block id as a private extended property so the read direction skips it.
+/// </summary>
+public sealed record GoogleCalendarEventWrite(
+    Guid BlockId,
+    string Summary,
+    string Description,
+    string? Location,
+    DateTime Start,
+    DateTime End,
+    string TimeZone);
 
 /// <summary>What a code exchange yields: the Google account and its refresh token.</summary>
 public sealed record GoogleCalendarGrant(string Subject, string Email, string RefreshToken, bool HasCalendarScope);

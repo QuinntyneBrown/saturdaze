@@ -100,6 +100,9 @@ public static class DependencyInjection
             http.Timeout = TimeSpan.FromSeconds(10);
         });
         services.AddSingleton<IGoogleCalendarClient, GoogleCalendarClient>();
+        services.AddSingleton<CalendarSyncSignal>();
+        services.AddSingleton<ICalendarSyncSignal>(sp => sp.GetRequiredService<CalendarSyncSignal>());
+        services.AddHostedService<CalendarSyncService>();
 
         // Account mail (L2-142): handlers enqueue, a hosted dispatcher sends after the
         // response. SMTP when a host is configured, otherwise .eml files on disk.

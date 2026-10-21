@@ -5,7 +5,14 @@ import { Dialog } from '@angular/cdk/dialog';
 import { ActivatedRoute, convertToParamMap, provideRouter } from '@angular/router';
 import { of } from 'rxjs';
 
-import { BlockRow, FAMILY_SERVICE, FamilyView, WEEKEND_PLAN_SERVICE, WeekendView } from 'api';
+import {
+  BlockRow,
+  CALENDAR_SERVICE,
+  FAMILY_SERVICE,
+  FamilyView,
+  WEEKEND_PLAN_SERVICE,
+  WeekendView,
+} from 'api';
 
 import { AddErrandDialog } from '../../dialogs/add-errand-dialog/add-errand-dialog';
 import { BlockDialog } from '../../dialogs/block-dialog/block-dialog';
@@ -139,6 +146,7 @@ describe('WeekendPage', () => {
   let weekend: any;
   let family: any;
   let dialog: { open: ReturnType<typeof vi.fn> };
+  let calendarService: { settings: ReturnType<typeof vi.fn> };
   let menu: { open: ReturnType<typeof vi.fn>; dialog: unknown };
 
   async function mount(query: Record<string, string> = {}): Promise<void> {
@@ -149,6 +157,7 @@ describe('WeekendPage', () => {
         provideRouter([]),
         { provide: WEEKEND_PLAN_SERVICE, useValue: weekend },
         { provide: FAMILY_SERVICE, useValue: family },
+        { provide: CALENDAR_SERVICE, useValue: calendarService },
         { provide: Dialog, useValue: dialog },
         { provide: MenuOpener, useValue: menu },
         {
@@ -190,6 +199,13 @@ describe('WeekendPage', () => {
   }
 
   beforeEach(() => {
+    calendarService = {
+      settings: vi.fn(async () => ({
+        googleConfigured: false,
+        google: null,
+        feed: { active: false, createdUtc: null },
+      })),
+    };
     weekendSig = signal<WeekendView>(LOADING);
     familySig = signal<FamilyView>(FAMILY_LOADING);
     weekend = {
@@ -349,6 +365,7 @@ describe('WeekendPage', () => {
     );
 
     coverAction('sd-button[variant="quiet"]:not([label])').click();
+    await settle();
     expect(weekend.calendarExport).toHaveBeenCalledTimes(1);
     expect(dialog.open).toHaveBeenLastCalledWith(
       CalendarDialog,
@@ -360,8 +377,24 @@ describe('WeekendPage', () => {
             eventCount: 8,
           },
           download: expect.any(Function),
+          googleSynced: false,
         },
       }),
+    );
+  });
+
+  it('tells D6 when the Google Calendar already has the weekend (L2-168 AC7)', async () => {
+    calendarService.settings.mockResolvedValueOnce({
+      googleConfigured: true,
+      google: { email: 'a@b.c', status: 'connected', readCommitments: true, lastSyncedUtc: null },
+      feed: { active: false, createdUtc: null },
+    });
+    await mountReady();
+    coverAction('sd-button[variant="quiet"]:not([label])').click();
+    await settle();
+    expect(dialog.open).toHaveBeenLastCalledWith(
+      CalendarDialog,
+      expect.objectContaining({ data: expect.objectContaining({ googleSynced: true }) }),
     );
   });
 
