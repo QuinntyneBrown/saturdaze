@@ -4,7 +4,7 @@ import { stubCalendarBlock } from "../fixtures/weekend-data.js";
 
 /**
  * The weekend page with a connected Google Calendar (L2-175 AC7). The
- * calendar settings are stood in for (ADR-020, decision 7); the weekend and
+ * calendar settings are stood in for (ADR-021, decision 7); the weekend and
  * its download are the real API's.
  */
 

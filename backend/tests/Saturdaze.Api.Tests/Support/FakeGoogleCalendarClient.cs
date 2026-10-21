@@ -4,7 +4,7 @@ using Saturdaze.Application.Calendar;
 namespace Saturdaze.Api.Tests.Support;
 
 /// <summary>
-/// Stands in for Google's OAuth endpoints and Calendar API (ADR-020): codes map
+/// Stands in for Google's OAuth endpoints and Calendar API (ADR-021): codes map
 /// to grants, and every revocation is recorded. Unmapped codes are refused, as
 /// Google refuses a code it did not issue.
 /// </summary>
@@ -40,6 +40,15 @@ public sealed class FakeGoogleCalendarClient : IGoogleCalendarClient
 
     /// <summary>Events the person keeps in their calendar, by refresh token (the read direction, L2-176).</summary>
     private readonly ConcurrentDictionary<string, ConcurrentQueue<GoogleCalendarEvent>> _ownEvents = new(StringComparer.Ordinal);
+
+    /// <summary>
+    /// Accounts whose next insert reaches the calendar but loses its answer, as a
+    /// timeout after Google has written the event would (L2-175 AC4). Per account,
+    /// so another test's pending write never takes it.
+    /// </summary>
+    private readonly ConcurrentDictionary<string, bool> _loseNextInsertAnswer = new(StringComparer.OrdinalIgnoreCase);
+
+    public void LoseNextInsertAnswer(string email) => _loseNextInsertAnswer[email] = true;
 
     /// <summary>How long a list call takes, to stand in for a slow Google (L2-177 AC2).</summary>
     public TimeSpan ListDelay { get; set; } = TimeSpan.Zero;
@@ -118,8 +127,15 @@ public sealed class FakeGoogleCalendarClient : IGoogleCalendarClient
 
     public Task<string> InsertEventAsync(string refreshToken, GoogleCalendarEventWrite write, CancellationToken ct)
     {
-        var id = $"ev{Guid.NewGuid():N}";
-        Calendar(refreshToken, "insert")[id] = new FakeEvent(id, write, 1);
+        // Google refuses a second event with an id it knows; the client then rewrites it.
+        var id = write.EventId;
+        var calendar = Calendar(refreshToken, "insert");
+        calendar[id] = calendar.TryGetValue(id, out var existing)
+            ? existing with { Event = write, Version = existing.Version + 1 }
+            : new FakeEvent(id, write, 1);
+        var email = _tokensByEmail.FirstOrDefault(kv => kv.Value == refreshToken).Key;
+        if (email is not null && _loseNextInsertAnswer.TryRemove(email, out _))
+            throw new GoogleCalendarUnavailableException("timed out after Google wrote the event");
         return Task.FromResult(id);
     }
 

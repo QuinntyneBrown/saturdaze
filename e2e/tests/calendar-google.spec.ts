@@ -4,7 +4,7 @@ import { FAKE_CODE, FAKE_STATE, stubCalendarApi } from "../fixtures/calendar-api
 /**
  * Connect Google Calendar from Family (L2-173, L2-174). The calendar
  * endpoints and Google's consent screen are stood in for by
- * `fixtures/calendar-api.ts` (ADR-020, decision 7); `CalendarConnectTests`
+ * `fixtures/calendar-api.ts` (ADR-021, decision 7); `CalendarConnectTests`
  * cover the API. Everything in the browser runs for real: the section's
  * states, D31, the return route and D32.
  */

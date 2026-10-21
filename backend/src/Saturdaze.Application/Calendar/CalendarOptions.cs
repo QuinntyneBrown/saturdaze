@@ -1,6 +1,6 @@
 namespace Saturdaze.Application.Calendar;
 
-/// <summary>Calendar sync settings (ADR-020).</summary>
+/// <summary>Calendar sync settings (ADR-021).</summary>
 public sealed class CalendarOptions
 {
     public const string SectionName = "Saturdaze:Calendar";

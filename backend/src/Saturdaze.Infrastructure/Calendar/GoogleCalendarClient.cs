@@ -10,7 +10,7 @@ namespace Saturdaze.Infrastructure.Calendar;
 
 /// <summary>
 /// Google's OAuth 2.0 token and revocation endpoints and the Calendar API v3
-/// (ADR-020). Access tokens are refreshed from the stored refresh token and
+/// (ADR-021). Access tokens are refreshed from the stored refresh token and
 /// cached in memory for their lifetime less a minute; they are never stored.
 /// </summary>
 public sealed class GoogleCalendarClient : IGoogleCalendarClient
@@ -131,11 +131,20 @@ public sealed class GoogleCalendarClient : IGoogleCalendarClient
 
     public async Task<string> InsertEventAsync(string refreshToken, GoogleCalendarEventWrite write, CancellationToken ct)
     {
-        using var response = await CalendarAsync(refreshToken, HttpMethod.Post, CalendarApi, Body(write), ct);
-        var body = await ReadJsonAsync(response, ct);
+        using var response = await CalendarAsync(refreshToken, HttpMethod.Post, CalendarApi, Body(write, withId: true), ct);
+        if (response.StatusCode == HttpStatusCode.Conflict)
+        {
+            // The id exists: an earlier insert whose answer was lost, or an event the
+            // person deleted (Google keeps it as cancelled). Rewrite it in place.
+            using var update = await CalendarAsync(refreshToken, HttpMethod.Put,
+                $"{CalendarApi}/{Uri.EscapeDataString(write.EventId)}", Body(write), ct);
+            if (!update.IsSuccessStatusCode)
+                throw new GoogleCalendarUnavailableException($"Update after conflict answered {(int)update.StatusCode}");
+            return write.EventId;
+        }
         if (!response.IsSuccessStatusCode)
             throw new GoogleCalendarUnavailableException($"Insert answered {(int)response.StatusCode}");
-        return String(body, "id") ?? throw new GoogleCalendarUnavailableException("No event id");
+        return String(await ReadJsonAsync(response, ct), "id") ?? write.EventId;
     }
 
     public async Task<bool> UpdateEventAsync(
@@ -177,8 +186,10 @@ public sealed class GoogleCalendarClient : IGoogleCalendarClient
     }
 
     /// <summary>The Calendar API's event resource for one block (L2-175).</summary>
-    private static object Body(GoogleCalendarEventWrite write) => new Dictionary<string, object?>
+    private static object Body(GoogleCalendarEventWrite write, bool withId = false)
     {
+        var body = new Dictionary<string, object?>
+        {
         ["summary"] = write.Summary,
         ["description"] = write.Description,
         ["location"] = write.Location,
@@ -189,7 +200,10 @@ public sealed class GoogleCalendarClient : IGoogleCalendarClient
         {
             @private = new Dictionary<string, string> { [SaturdazeBlockProperty] = write.BlockId.ToString() },
         },
-    };
+        };
+        if (withId) body["id"] = write.EventId;
+        return body;
+    }
 
     /// <summary>The private extended property that marks an event Saturdaze wrote.</summary>
     public const string SaturdazeBlockProperty = "saturdazeBlock";

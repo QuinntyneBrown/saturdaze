@@ -6,7 +6,7 @@ using Saturdaze.Application.Calendar;
 
 namespace Saturdaze.Api.Controllers;
 
-/// <summary>Calendar sync (L1-040, ADR-020): the Calendar section on Family and the subscription link.</summary>
+/// <summary>Calendar sync (L1-040, ADR-021): the Calendar section on Family and the subscription link.</summary>
 [ApiController]
 [Route("api/calendar")]
 public sealed class CalendarController : ControllerBase

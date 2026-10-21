@@ -1,7 +1,7 @@
 // Acceptance Test
 // Traces to: L2-172 AC1, AC2, AC4, L2-174 AC1, L2-177
 // Description: The Google client builds the consent URL, exchanges codes and revokes grants against Google's
-// endpoints, and maps Google's errors, without the network (ADR-020, decision 7).
+// endpoints, and maps Google's errors, without the network (ADR-021, decision 7).
 
 using System.Net;
 using System.Text;
@@ -109,7 +109,7 @@ public class GoogleCalendarClientTests
     }
 
     private static readonly GoogleCalendarEventWrite Swim = new(
-        Guid.Parse("11111111-2222-3333-4444-555555555555"), "Swim lessons", "Part of This weekend. Planned with Saturdaze.",
+        "sd0123456789abcdef", Guid.Parse("11111111-2222-3333-4444-555555555555"), "Swim lessons", "Part of This weekend. Planned with Saturdaze.",
         "Port Credit Pool", new DateTime(2026, 5, 16, 9, 0, 0), new DateTime(2026, 5, 16, 10, 0, 0), "America/Toronto");
 
     [Fact]
@@ -128,6 +128,7 @@ public class GoogleCalendarClientTests
         insert.Url.Should().Be("https://www.googleapis.com/calendar/v3/calendars/primary/events");
         insert.Authorization.Should().Be("Bearer at-1");
         var body = JsonDocument.Parse(insert.Body).RootElement;
+        body.GetProperty("id").GetString().Should().Be("sd0123456789abcdef");
         body.GetProperty("summary").GetString().Should().Be("Swim lessons");
         body.GetProperty("location").GetString().Should().Be("Port Credit Pool");
         body.GetProperty("start").GetProperty("dateTime").GetString().Should().Be("2026-05-16T09:00:00");
@@ -135,6 +136,22 @@ public class GoogleCalendarClientTests
         body.GetProperty("end").GetProperty("dateTime").GetString().Should().Be("2026-05-16T10:00:00");
         body.GetProperty("extendedProperties").GetProperty("private").GetProperty("saturdazeBlock").GetString()
             .Should().Be("11111111-2222-3333-4444-555555555555");
+    }
+
+    [Fact]
+    public async Task An_insert_whose_id_google_already_has_rewrites_that_event()
+    {
+        // Traces to: L2-175 AC4, AC5
+        _google.Respond(HttpStatusCode.OK, new { access_token = "at", expires_in = 3600 });
+        _google.Respond(HttpStatusCode.Conflict, new { error = new { code = 409, message = "duplicate" } });
+        _google.Respond(HttpStatusCode.OK, new { id = "sd0123456789abcdef", status = "confirmed" });
+
+        var id = await Client().InsertEventAsync("rt", Swim, CancellationToken.None);
+
+        id.Should().Be("sd0123456789abcdef");
+        _google.Requests[2].Method.Should().Be("PUT");
+        _google.Requests[2].Url.Should().EndWith("/events/sd0123456789abcdef");
+        JsonDocument.Parse(_google.Requests[2].Body).RootElement.GetProperty("status").GetString().Should().Be("confirmed");
     }
 
     [Fact]

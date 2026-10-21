@@ -29,23 +29,23 @@ controller -> behavior : Send(IChangesItinerary command)
 behavior -> handler : next()
 handler -> db : Save the plan
 handler --> behavior : Result
-behavior -> db : L2-175 SyncRequestedUtc on the family's connected connections
+behavior -> db : L2-175 SyncRequestCount++ on the family's connected connections
 behavior -> service : ICalendarSyncSignal.Notify()
 behavior --> controller : Result
 controller --> page : 200 (never waits on Google)
 service -> sync : RunDueAsync() on the signal or every PollSeconds
-sync -> db : Pending, connected connections with NextAttemptUtc due
+sync -> db : Connected, SyncRequestCount > SyncedRequestCount, NextAttemptUtc due
 loop each due connection
 sync -> db : Current weekend's blocks; this weekend's CalendarEventLinks
 sync -> sync : Desired events = CalendarEventSelection; fingerprint each
 sync -> client : Insert new, update changed (insert again on 404/410), delete gone
 client -> google : Calendar API v3 on the primary calendar
 alt success
-sync -> db : Save links; clear SyncRequestedUtc; LastSyncedUtc = now; FailedAttempts = 0
+sync -> db : Save links; SyncedRequestCount = count at start; LastSyncedUtc = now; FailedAttempts = 0
 else GoogleCalendarUnavailableException
 sync -> db : L2-175 FailedAttempts++; NextAttemptUtc = now + min(2^n, 60) minutes
 else GoogleCalendarGrantRevokedException
-sync -> db : L2-177 Status = NeedsReconnect; clear SyncRequestedUtc
+sync -> db : L2-177 Status = NeedsReconnect
 end
 end
 @enduml

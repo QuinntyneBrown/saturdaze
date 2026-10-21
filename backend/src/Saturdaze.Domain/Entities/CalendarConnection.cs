@@ -4,7 +4,7 @@ namespace Saturdaze.Domain.Entities;
 
 /// <summary>
 /// One account's grant to the primary calendar of a Google account (L2-172).
-/// The refresh token is stored only encrypted (ADR-020); the family is the
+/// The refresh token is stored only encrypted (ADR-021); the family is the
 /// account's own, so the connection follows the account.
 /// </summary>
 public class CalendarConnection
@@ -19,8 +19,19 @@ public class CalendarConnection
     public DateTimeOffset CreatedUtc { get; set; }
     public DateTimeOffset? LastSyncedUtc { get; set; }
 
-    /// <summary>When the plan last changed without being written yet; null when the calendar is up to date (L2-175).</summary>
+    /// <summary>When a write was last asked for (L2-175).</summary>
     public DateTimeOffset? SyncRequestedUtc { get; set; }
+
+    /// <summary>
+    /// Counts the writes asked of this calendar; only <c>CalendarSyncScheduler</c> and
+    /// connecting raise it. The calendar is pending while it is ahead of
+    /// <see cref="SyncedRequestCount"/>, which only the sync handler sets, so a change
+    /// that arrives during a write is never lost to the write's own save.
+    /// </summary>
+    public int SyncRequestCount { get; set; }
+
+    /// <summary>The <see cref="SyncRequestCount"/> the last finished write started from.</summary>
+    public int SyncedRequestCount { get; set; }
 
     /// <summary>When the next write may be tried; pushed back after a failure.</summary>
     public DateTimeOffset? NextAttemptUtc { get; set; }

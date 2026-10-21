@@ -113,18 +113,24 @@ namespace Saturdaze.Infrastructure.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
+                    b.Property<int>("SyncRequestCount")
+                        .HasColumnType("int");
+
                     b.Property<DateTimeOffset?>("SyncRequestedUtc")
                         .HasColumnType("datetimeoffset");
+
+                    b.Property<int>("SyncedRequestCount")
+                        .HasColumnType("int");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SyncRequestedUtc");
-
                     b.HasIndex("UserId")
                         .IsUnique();
+
+                    b.HasIndex("Status", "SyncRequestCount", "SyncedRequestCount");
 
                     b.ToTable("CalendarConnections", (string)null);
                 });

@@ -13,7 +13,7 @@ public interface ICalendarSyncSignal
 
 /// <summary>
 /// Marks every connected calendar in a family as pending and wakes the sync
-/// service (ADR-020, decision 4). A family without connections costs one query.
+/// service (ADR-021, decision 4). A family without connections costs one query.
 /// </summary>
 public sealed class CalendarSyncScheduler
 {
@@ -40,6 +40,7 @@ public sealed class CalendarSyncScheduler
         foreach (var connection in connections)
         {
             connection.SyncRequestedUtc = now;
+            connection.SyncRequestCount++;
             // A change made while a write is backing off goes out with the retry, not before it.
             if (connection.FailedAttempts == 0) connection.NextAttemptUtc = now;
         }

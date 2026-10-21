@@ -47,28 +47,25 @@ public sealed class SyncCalendarConnectionCommandHandler : IRequestHandler<SyncC
     {
         var connection = await _db.CalendarConnections.FirstOrDefaultAsync(c => c.Id == request.ConnectionId, ct);
         if (connection is null || connection.Status != CalendarConnectionStatus.Connected) return;
-        var requestedAt = connection.SyncRequestedUtc;
+        var requestCount = connection.SyncRequestCount;
 
         try
         {
             var refreshToken = _protector.Unprotect(connection.ProtectedRefreshToken)
                 ?? throw new GoogleCalendarGrantRevokedException();
             await ReconcileAsync(connection, refreshToken, ct);
-            await _db.SaveChangesAsync(ct);
-
-            // A change that arrived while this pass ran stays pending for the next one.
-            var latest = await _db.CalendarConnections.AsNoTracking()
-                .Where(c => c.Id == connection.Id).Select(c => c.SyncRequestedUtc).FirstOrDefaultAsync(ct);
-            connection.SyncRequestedUtc = latest > requestedAt ? latest : null;
+            // Only the count this pass started from is marked written; a change that
+            // arrived meanwhile raised SyncRequestCount and stays pending.
+            connection.SyncedRequestCount = requestCount;
             connection.LastSyncedUtc = _clock.UtcNow;
             connection.FailedAttempts = 0;
-            connection.NextAttemptUtc = connection.SyncRequestedUtc is null ? null : _clock.UtcNow;
+            connection.NextAttemptUtc = null;
         }
         catch (GoogleCalendarGrantRevokedException)
         {
             _logger.LogWarning("Calendar connection {ConnectionId} needs reconnecting", connection.Id);
             connection.Status = CalendarConnectionStatus.NeedsReconnect;
-            connection.SyncRequestedUtc = null;
+            connection.SyncedRequestCount = requestCount;
             connection.NextAttemptUtc = null;
         }
         catch (GoogleCalendarUnavailableException ex)
@@ -94,7 +91,7 @@ public sealed class SyncCalendarConnectionCommandHandler : IRequestHandler<SyncC
         var desired = weekend.Blocks
             .Where(CalendarEventSelection.Includes)
             .OrderBy(b => b.Day).ThenBy(b => b.StartTime)
-            .Select(b => Write(weekend, b))
+            .Select(b => Write(connection.Id, weekend, b))
             .ToList();
         var links = await _db.CalendarEventLinks
             .Where(l => l.ConnectionId == connection.Id && l.WeekendId == weekend.Id)
@@ -135,11 +132,20 @@ public sealed class SyncCalendarConnectionCommandHandler : IRequestHandler<SyncC
         }
     }
 
-    private GoogleCalendarEventWrite Write(Weekend weekend, ItineraryBlock block)
+    /// <summary>
+    /// A Google event id (base32hex, lowercase hex is a subset) that is the same for
+    /// one connection and block every time it is computed.
+    /// </summary>
+    public static string EventIdFor(Guid connectionId, Guid blockId)
+        => "sd" + Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes($"{connectionId:N}:{blockId:N}")))
+            .ToLowerInvariant()[..40];
+
+    private GoogleCalendarEventWrite Write(Guid connectionId, Weekend weekend, ItineraryBlock block)
     {
         var date = block.Day == DayOfWeekend.Saturday ? weekend.WeekendOf : weekend.WeekendOf.AddDays(1);
         var title = string.IsNullOrWhiteSpace(weekend.Title) ? "This weekend" : weekend.Title.Trim();
         return new GoogleCalendarEventWrite(
+            EventIdFor(connectionId, block.Id),
             block.Id,
             block.Title,
             $"Part of {title}. Planned with Saturdaze.",

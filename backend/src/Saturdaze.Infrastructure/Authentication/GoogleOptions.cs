@@ -1,7 +1,7 @@
 namespace Saturdaze.Infrastructure.Authentication;
 
 /// <summary>
-/// Sign in with Google (ADR-019) and Google Calendar sync (ADR-020). Empty
+/// Sign in with Google (ADR-019) and Google Calendar sync (ADR-021). Empty
 /// <see cref="ClientId"/> turns both off; empty <see cref="ClientSecret"/> turns
 /// calendar sync off.
 /// </summary>

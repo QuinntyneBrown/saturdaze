@@ -54,7 +54,7 @@
     The web OAuth client id for "Continue with Google" (ADR-019). Public.
 
 .PARAMETER GoogleClientSecret
-    That client's secret, for Google Calendar sync (ADR-020). Blank keeps the
+    That client's secret, for Google Calendar sync (ADR-021). Blank keeps the
     secret already deployed, or calendar sync off when there is none.
 
 .PARAMETER Force
@@ -226,7 +226,7 @@ $secrets = [ordered]@{
     SQL_ADMIN_PASSWORD           = Resolve-Secret 'SQL_ADMIN_PASSWORD' $null { New-SqlPassword }
     SATURDAZE_JWT_SIGNING_KEY    = Resolve-Secret 'SATURDAZE_JWT_SIGNING_KEY' $liveSettings['SATURDAZE_JWT_SIGNING_KEY'] { New-Secret 48 }
     SATURDAZE_PHOTOS_SIGNING_KEY = Resolve-Secret 'SATURDAZE_PHOTOS_SIGNING_KEY' $liveSettings['Saturdaze__Photos__SigningKey'] { New-Secret 48 }
-    # Google Calendar sync (ADR-020): optional; the one already deployed is kept.
+    # Google Calendar sync (ADR-021): optional; the one already deployed is kept.
     GOOGLE_CLIENT_SECRET         = if ($GoogleClientSecret) { $GoogleClientSecret } else { "$($liveSettings['Saturdaze__Google__ClientSecret'])" }
 }
 $variables = [ordered]@{

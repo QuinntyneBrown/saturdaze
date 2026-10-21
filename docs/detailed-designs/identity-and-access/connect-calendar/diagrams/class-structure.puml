@@ -76,6 +76,8 @@ class CalendarConnection {
   +CalendarConnectionStatus Status
   +DateTimeOffset? LastSyncedUtc
   +DateTimeOffset? SyncRequestedUtc
+  +int SyncRequestCount
+  +int SyncedRequestCount
   +DateTimeOffset? NextAttemptUtc
   +int FailedAttempts
 }

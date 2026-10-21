@@ -169,6 +169,7 @@ public sealed class ConnectGoogleCalendarCommandHandler : IRequestHandler<Connec
         connection.LastSyncedUtc = null;
         // Write the current weekend straight away (L2-177 AC4).
         connection.SyncRequestedUtc = _clock.UtcNow;
+        connection.SyncRequestCount++;
         connection.NextAttemptUtc = _clock.UtcNow;
         connection.FailedAttempts = 0;
         await _db.SaveChangesAsync(ct);

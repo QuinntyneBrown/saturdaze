@@ -74,7 +74,6 @@ public sealed class GoogleCalendarCommitmentSource : ICalendarCommitmentSource
             catch (GoogleCalendarGrantRevokedException)
             {
                 connection.Status = CalendarConnectionStatus.NeedsReconnect;
-                connection.SyncRequestedUtc = null;
                 revoked = true;
                 _logger.LogWarning("Calendar connection {ConnectionId} needs reconnecting", connection.Id);
             }

@@ -169,6 +169,23 @@ public class CalendarWriteTests : IClassFixture<SaturdazeApiFactory>, IDisposabl
     }
 
     [Fact]
+    public async Task A_write_whose_answer_was_lost_is_retried_without_a_duplicate_event()
+    {
+        // Traces to: L2-175 AC4
+        var (session, email) = await ConnectedMemberAsync();
+        _factory.GoogleCalendar.LoseNextInsertAnswer(email);
+
+        var weekend = await PlanAsync(session.Client);
+        await Task.Delay(1500);
+        _factory.Clock.TimeOfDay += TimeSpan.FromMinutes(2);
+
+        var events = await _factory.GoogleCalendar.WaitForEventsAsync(email, e => Matches(e, weekend));
+        await Task.Delay(1500);
+        events = _factory.GoogleCalendar.EventsOf(email);
+        Matches(events, weekend).Should().BeTrue("the retry finds the event Google already wrote instead of adding a second");
+    }
+
+    [Fact]
     public async Task An_event_deleted_in_google_is_written_again_on_the_next_change()
     {
         // Traces to: L2-175 AC5

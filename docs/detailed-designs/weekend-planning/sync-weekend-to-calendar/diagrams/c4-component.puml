@@ -19,7 +19,7 @@ Container_Boundary(api, "Saturdaze API") {
 System_Ext(google, "Google", "OAuth 2.0 and Calendar API")
 Rel(controllers, behavior, "Send(IChangesItinerary command)")
 Rel(behavior, scheduler, "RequestAsync()")
-Rel(scheduler, db, "Sets SyncRequestedUtc")
+Rel(scheduler, db, "Raises SyncRequestCount")
 Rel(scheduler, service, "ICalendarSyncSignal.Notify()")
 Rel(service, runner, "RunDueAsync()")
 Rel(runner, sync, "Send(SyncCalendarConnectionCommand)")

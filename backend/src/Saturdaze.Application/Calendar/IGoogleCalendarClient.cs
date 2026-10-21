@@ -2,7 +2,7 @@ namespace Saturdaze.Application.Calendar;
 
 /// <summary>
 /// Google's OAuth 2.0 endpoints and Calendar API as calendar sync needs them
-/// (ADR-020). Calls fail with <see cref="GoogleCalendarCodeRejectedException"/>,
+/// (ADR-021). Calls fail with <see cref="GoogleCalendarCodeRejectedException"/>,
 /// <see cref="GoogleCalendarGrantRevokedException"/> or
 /// <see cref="GoogleCalendarUnavailableException"/>.
 /// </summary>
@@ -27,7 +27,10 @@ public interface IGoogleCalendarClient
     Task<IReadOnlyList<GoogleCalendarEvent>> ListEventsAsync(
         string refreshToken, DateTimeOffset from, DateTimeOffset to, CancellationToken ct);
 
-    /// <summary>Adds an event to the account's primary calendar; returns the id Google assigned.</summary>
+    /// <summary>
+    /// Adds the event under <see cref="GoogleCalendarEventWrite.EventId"/>, or rewrites the
+    /// event that already has that id, so a retry never adds a second one; returns the id.
+    /// </summary>
     Task<string> InsertEventAsync(string refreshToken, GoogleCalendarEventWrite write, CancellationToken ct);
 
     /// <summary>Replaces an event; false when the person deleted it in Google (404/410).</summary>
@@ -40,8 +43,11 @@ public interface IGoogleCalendarClient
 /// <summary>
 /// One block as a Google event (L2-175): local start and end in <see cref="TimeZone"/>,
 /// and the block id as a private extended property so the read direction skips it.
+/// <see cref="EventId"/> is chosen by Saturdaze, one per connection and block, so a
+/// write retried after a lost answer finds the event instead of duplicating it.
 /// </summary>
 public sealed record GoogleCalendarEventWrite(
+    string EventId,
     Guid BlockId,
     string Summary,
     string Description,
