@@ -5,6 +5,8 @@ import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 
 import {
+  CALENDAR_SERVICE,
+  CalendarSettings,
   CommitmentRow,
   EVENT_SUBMISSIONS_SERVICE,
   EditableFamilyProfile,
@@ -32,6 +34,11 @@ import {
   Toggle,
 } from 'components';
 
+import {
+  CalendarFeedDialog,
+  CalendarFeedDialogData,
+  CalendarFeedDialogResult,
+} from '../../dialogs/calendar-feed-dialog/calendar-feed-dialog';
 import {
   CommitmentDialog,
   CommitmentDialogData,
@@ -144,6 +151,7 @@ export class FamilyPage {
   private readonly session = inject(SESSION_STORE);
   private readonly dialog = inject(Dialog);
   private readonly router = inject(Router);
+  private readonly calendarService = inject(CALENDAR_SERVICE);
 
   protected readonly view = this.familyService.getFamily();
   private readonly editable = this.familyService.getEditableProfile();
@@ -168,8 +176,19 @@ export class FamilyPage {
     return `Signed in since ${MONTHS[d.getMonth()]} ${d.getFullYear()}`;
   });
 
+  /** The Calendar section (L2-166, L2-172); null until `GET /api/calendar` answers. */
+  protected readonly calendar = signal<CalendarSettings | null>(null);
+  protected readonly feedActive = computed(() => this.calendar()?.feed.active ?? false);
+  protected readonly feedSubtitle = computed(() => {
+    const created = this.calendar()?.feed.createdUtc;
+    const d = created ? new Date(created) : null;
+    const when = d ? `Created ${d.getDate()} ${MONTHS[d.getMonth()]}. ` : '';
+    return `${when}Calendar apps refresh it on their own.`;
+  });
+
   constructor() {
     void this.run(() => this.familyService.load());
+    void this.loadCalendar();
     if (this.isAdmin()) void this.submissions.loadPending().catch(() => undefined);
   }
 
@@ -331,6 +350,51 @@ export class FamilyPage {
       tryNewEnabled: key === 'tryNew' ? checked : p.tryNewEnabled,
       fridayPreviewEnabled: key === 'fridayPreview' ? checked : p.fridayPreviewEnabled,
     }));
+  }
+
+  // ---- calendar (L2-166, L2-172) ----------------------------------------
+
+  /** Creates (or replaces) the subscription link and shows it once in D33. */
+  protected async subscribe(): Promise<void> {
+    this.error.set('');
+    let webcalUrl: string;
+    try {
+      webcalUrl = (await this.calendarService.createFeed()).webcalUrl;
+    } catch {
+      this.error.set('The link was not created. Try again in a moment.');
+      return;
+    }
+    void this.loadCalendar();
+    const ref = this.dialog.open<CalendarFeedDialogResult, CalendarFeedDialogData>(
+      CalendarFeedDialog,
+      { ...DIALOG_OPTIONS, data: { webcalUrl } },
+    );
+    if ((await firstValueFrom(ref.closed)) === 'stop') await this.stopFeed();
+  }
+
+  /** D34, then `DELETE /api/calendar/feed`. */
+  protected async stopFeed(): Promise<void> {
+    const ok = await confirmWith(this.dialog, {
+      title: 'Stop the subscription link?',
+      body: 'Calendars subscribed to it stop getting this weekend.',
+      cancelLabel: 'Keep it',
+      confirmLabel: 'Stop the link',
+      danger: true,
+      icon: 'close',
+    });
+    if (!ok) return;
+    await this.run(async () => {
+      await this.calendarService.stopFeed();
+      await this.loadCalendar();
+    });
+  }
+
+  private async loadCalendar(): Promise<void> {
+    try {
+      this.calendar.set(await this.calendarService.settings());
+    } catch {
+      // The section keeps its last state; nothing else on the page depends on it.
+    }
   }
 
   // ---- account --------------------------------------------------------

@@ -28,9 +28,11 @@ import {
   SAVED_SERVICE,
   SESSION_STORE,
   SHARED_WEEKEND_SERVICE,
+  CALENDAR_SERVICE,
   SavedService,
   SessionStore,
   SharedWeekendService,
+  CalendarService,
   WEEKEND_PLAN_SERVICE,
   WeekendPlanService,
 } from 'api';
@@ -61,6 +63,7 @@ export const appConfig: ApplicationConfig = {
     { provide: RESTAURANT_SERVICE, useExisting: RestaurantService },
     { provide: SAVED_SERVICE, useExisting: SavedService },
     { provide: SHARED_WEEKEND_SERVICE, useExisting: SharedWeekendService },
+    { provide: CALENDAR_SERVICE, useExisting: CalendarService },
     { provide: WEEKEND_PLAN_SERVICE, useExisting: WeekendPlanService },
 
     // Auth — bound to the real HTTP `AuthService`. `SessionStore` owns the

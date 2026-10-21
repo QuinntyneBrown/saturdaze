@@ -1,0 +1,16 @@
+<sd-dialog
+  title="Subscribe from another calendar"
+  subtitle="Copy it now. For your privacy it is not shown again."
+>
+  <sd-copy-field [value]="data.webcalUrl" />
+  <sd-list card>
+    @for (step of steps; track step.app) {
+      <sd-list-item [title]="step.app" [subtitle]="step.how" />
+    }
+  </sd-list>
+  <p class="sd-text-xs sd-text-soft">
+    Read-only · this weekend's plan · anyone with the link can see it
+  </p>
+  <sd-button slot="actions" variant="quiet" type="button" (click)="stop()">Stop the link</sd-button>
+  <sd-button slot="actions" variant="primary" type="button" (click)="done()">Done</sd-button>
+</sd-dialog>

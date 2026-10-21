@@ -228,6 +228,22 @@ export async function shareWeekend(
 }
 
 /**
+ * Stops the session's family subscription link, if any
+ * (`DELETE /api/calendar/feed`, L2-171), so a spec starts from the
+ * not-subscribed state.
+ */
+export async function stopCalendarFeed(
+  request: APIRequestContext,
+  session: TestSession,
+): Promise<void> {
+  const res = await request.delete(`${API_URL}/api/calendar/feed`, {
+    headers: { Authorization: `Bearer ${session.accessToken}` },
+  });
+  if (res.status() !== 204)
+    throw new Error(`DELETE /api/calendar/feed failed: ${res.status()} ${await res.text()}`);
+}
+
+/**
  * Suggests an event as `session`'s user (`POST /api/events/submissions`,
  * body = SubmitEventCommand). Review specs and the review visual spec use
  * it so the seeded queue is never drained; the admin then approves or

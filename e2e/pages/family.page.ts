@@ -12,11 +12,15 @@ import { PageSlug } from "../fixtures/routes.js";
  *     Home                  [Edit] · li.list__item (home location)
  *     Likes and dislikes    [Edit] · .cluster > .chip--leaf (likes) / .chip--warn (dislikes)
  *     Preferences           li.list__item + label.toggle > input.toggle__input[role=switch]
+ *     Calendar              not connected: "Connect Google Calendar" · "Subscribe from another calendar"; link on: "Subscription link is on" [Stop] + ghost "Get a new link" (L2-166, L2-172)
  *     Admin (.admin-only)   "Review submissions" row + count chip — Admin role only
  *     Account               .account-card (avatar · email · "Signed in since …" · [Add photo | Change photo] · [Sign out])
  *
  *   D17b sign-in choice     "Will they sign in?" radios (No sign-in | Invite to sign in) · Email when inviting (L2-125, L2-126)
  *   D30 Invite link dialog  .copy-field__value (the accept-invite link) · [Done]
+ *
+ *   D33 Subscription link   .copy-field__value (webcal URL) · [Copy link] · per-app steps · [Stop the link] · [Done]
+ *   D34 Stop the link       [Keep it] · [Stop the link]
  *
  *   D27 Profile photo dialog  .photo-picker (.photo-picker__preview avatar · input[type=file] · hint / .field__error)
  *                             actions: [Remove photo] (photo set only) · Cancel · Save
@@ -241,6 +245,68 @@ export class FamilyPage extends BasePage {
   /** `role="switch"` input named by its visually-hidden label. */
   toggle(name: "Budget matters" | "Try something new each weekend" | "Friday preview email"): Locator {
     return this.preferencesSection().getByRole("switch", { name, exact: true });
+  }
+
+  /* ---------- Calendar (L2-166, L2-172) ---------- */
+
+  calendarSection(): Locator {
+    return this.section("Calendar");
+  }
+
+  /** A row of the Calendar section by its title ("Subscribe from another calendar", "Google Calendar"…). */
+  calendarRow(title: string): Locator {
+    return this.calendarSection()
+      .locator(".list__item")
+      .filter({ has: this.page.locator(".list__title", { hasText: title }) });
+  }
+
+  calendarRows(): Locator {
+    return this.calendarSection().locator(".list__item");
+  }
+
+  subscribeRow(): Locator {
+    return this.calendarRow("Subscribe from another calendar");
+  }
+
+  feedOnRow(): Locator {
+    return this.calendarRow("Subscription link is on");
+  }
+
+  stopFeedButton(): Locator {
+    return control(this.feedOnRow(), "Stop");
+  }
+
+  newFeedLinkRow(): Locator {
+    return control(this.calendarSection(), "Get a new link");
+  }
+
+  /** The subscription URL D33 shows once. */
+  feedUrl(): Locator {
+    return this.dialog().locator(".copy-field__value");
+  }
+
+  copyFeedButton(): Locator {
+    return this.dialog().getByRole("button", { name: /Copy link|Copied/ });
+  }
+
+  /** Opens D33 from a row and waits for the link `POST /api/calendar/feed` minted. */
+  async createFeedFrom(trigger: Locator): Promise<void> {
+    const minted = this.page.waitForResponse(
+      (r) => r.url().endsWith("/api/calendar/feed") && r.request().method() === "POST",
+    );
+    await trigger.click();
+    await minted;
+    await this.feedUrl().waitFor();
+  }
+
+  /** Confirms D34; resolves once `DELETE /api/calendar/feed` has answered. */
+  async confirmStopFeed(): Promise<void> {
+    const stopped = this.page.waitForResponse(
+      (r) => r.url().endsWith("/api/calendar/feed") && r.request().method() === "DELETE",
+    );
+    await this.dialogAction("Stop the link").click();
+    await stopped;
+    await this.dialog().waitFor({ state: "detached" });
   }
 
   /* ---------- Admin ---------- */

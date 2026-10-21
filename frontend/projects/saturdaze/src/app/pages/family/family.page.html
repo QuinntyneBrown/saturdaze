@@ -105,6 +105,35 @@
         </sd-list>
       </sd-section>
 
+      <sd-section
+        title="Calendar"
+        subtitle="Keep this weekend in the calendar you already use. Off until you connect one."
+      >
+        <sd-list card>
+          @if (feedActive()) {
+            <sd-list-item title="Subscription link is on" [subtitle]="feedSubtitle()">
+              <sd-disc slot="leading" icon="share" tone="accent" />
+              <sd-button slot="trailing" variant="quiet" size="sm" warnText (click)="stopFeed()"
+                >Stop</sd-button
+              >
+            </sd-list-item>
+          } @else {
+            <sd-list-item
+              action
+              chevron
+              title="Subscribe from another calendar"
+              subtitle="Apple, Outlook or any app that takes a link"
+              (pressed)="subscribe()"
+            >
+              <sd-disc slot="leading" icon="share" />
+            </sd-list-item>
+          }
+        </sd-list>
+        @if (feedActive()) {
+          <sd-ghost-row icon="refresh" (pressed)="subscribe()">Get a new link</sd-ghost-row>
+        }
+      </sd-section>
+
       @if (isAdmin()) {
         <sd-section class="admin-only" title="Admin">
           <sd-list card>

@@ -18,6 +18,7 @@ const MASKS: Partial<Record<DialogSlug, string[]>> = {
   rate: [".dialog__sub"],
   rename: [".dialog__sub"],
   share: [".copy-field__value"],
+  "calendar-feed": [".copy-field__value"],
   calendar: [".dialog__sub", ".list__title", ".list__sub"],
 };
 

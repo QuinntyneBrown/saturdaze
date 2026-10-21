@@ -1,3 +1,4 @@
+export type { CalendarFeedLink, CalendarFeedStatus, CalendarSettings } from './calendar-settings';
 export type { CommitmentRow } from './commitment-row';
 export type { DayOfWeek } from './day-of-week';
 export type { FamilyMemberTone } from './family-member-tone';

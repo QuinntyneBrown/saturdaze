@@ -29,7 +29,7 @@ describe('DialogsPage', () => {
 
   it('renders the page header and every specimen in the mock order', () => {
     expect(host.querySelector('.page-header__title')?.textContent?.trim()).toBe('Dialogs');
-    expect(specimens().length).toBe(35);
+    expect(specimens().length).toBe(37);
     expect(specimens().map((s) => s.id)).toEqual([
       'dialog-block',
       'dialog-block-locked',
@@ -61,6 +61,8 @@ describe('DialogsPage', () => {
       'dialog-remove-commitment',
       'dialog-signout',
       'dialog-invite-link',
+      'dialog-calendar-feed',
+      'dialog-calendar-feed-stop',
       'dialog-approve',
       'dialog-reject',
       'dialog-more',
@@ -71,7 +73,7 @@ describe('DialogsPage', () => {
 
   it('renders each dialog specimen statically inside the sd-dialog shell', () => {
     const dialogs = specimens().filter((s) => !s.classList.contains('specimen--menu'));
-    expect(dialogs.length).toBe(33);
+    expect(dialogs.length).toBe(35);
     for (const section of dialogs) {
       const shell = section.querySelector('sd-dialog');
       expect(shell, section.id).not.toBeNull();
@@ -107,6 +109,6 @@ describe('DialogsPage', () => {
     ).click();
     (host.querySelector('#dialog-share .dialog__close button') as HTMLButtonElement).click();
     fixture.detectChanges();
-    expect(specimens().length).toBe(35);
+    expect(specimens().length).toBe(37);
   });
 });

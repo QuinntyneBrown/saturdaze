@@ -157,6 +157,16 @@ export const SIGN_OUT: ConfirmDialogData = {
   icon: 'sign_out',
 };
 
+/** D34 — stop the subscription link (L2-172). */
+export const STOP_CALENDAR_FEED: ConfirmDialogData = {
+  title: 'Stop the subscription link?',
+  body: 'Calendars subscribed to it stop getting this weekend.',
+  cancelLabel: 'Keep it',
+  confirmLabel: 'Stop the link',
+  danger: true,
+  icon: 'close',
+};
+
 export const SUBMISSION: EventSubmissionDto = {
   id: 's-buskerfest',
   title: 'Port Credit Buskerfest',
