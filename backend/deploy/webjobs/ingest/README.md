@@ -32,7 +32,10 @@ process runs one pass and exits.
 `settings.job` and ships the folder as `App_Data/jobs/triggered/ingest/` in the
 API zip on every push to `main`; `eng/infra/main.bicep` supplies the Foundry
 key and connection string as Web App settings and keeps Always On enabled so
-the schedule fires. Nothing below needs doing by hand.
+the schedule fires. The Web App is Linux, where WebJobs run only when the app
+setting `WEBSITE_SKIP_RUNNING_KUDUAGENT` is `false`; the template sets it, and
+the `api` job fails when the deployed app does not list the job (L2-041 AC5).
+Nothing below needs doing by hand.
 
 The zero-extra-infrastructure option from the design doc: a triggered WebJob
 co-located with the API, defined by `settings.job` (the cron) and `run.sh`
