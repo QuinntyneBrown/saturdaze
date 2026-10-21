@@ -1,5 +1,5 @@
 @startuml
-title Behaviour - Connect and disconnect Google Calendar (L2-165, L2-166, L2-167)
+title Behaviour - Connect and disconnect Google Calendar (L2-172, L2-173, L2-174)
 skinparam backgroundColor #FFFFFF
 skinparam shadowing false
 skinparam roundcorner 12
@@ -33,7 +33,7 @@ controller --> page : D31 error "Google didn't answer"
 else configured
 handler -> protector : CreateState(userId, now + 10 min)
 handler -> client : AuthorizationUrl(state, {AppOrigin}/family/calendar/google)
-handler --> page : L2-165 authorizationUrl
+handler --> page : L2-172 authorizationUrl
 page -> google : Navigate (scopes openid email calendar.events, offline, consent)
 actor -> google : Allow or cancel
 alt consent denied

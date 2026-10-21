@@ -1,7 +1,7 @@
 import { Page, Request } from "@playwright/test";
 
 /**
- * Stands in for the calendar endpoints and Google's consent screen (L2-166,
+ * Stands in for the calendar endpoints and Google's consent screen (L2-173,
  * ADR-020): no spec can hold a Google grant, and `CalendarConnectTests`
  * cover the API's own rules. `POST /api/calendar/google/authorize` answers
  * with a URL on the app's own `/family/calendar/google`, so "Continue to

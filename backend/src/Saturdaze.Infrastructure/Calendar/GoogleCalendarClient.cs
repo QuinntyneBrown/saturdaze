@@ -176,7 +176,7 @@ public sealed class GoogleCalendarClient : IGoogleCalendarClient
         }
     }
 
-    /// <summary>The Calendar API's event resource for one block (L2-168).</summary>
+    /// <summary>The Calendar API's event resource for one block (L2-175).</summary>
     private static object Body(GoogleCalendarEventWrite write) => new Dictionary<string, object?>
     {
         ["summary"] = write.Summary,

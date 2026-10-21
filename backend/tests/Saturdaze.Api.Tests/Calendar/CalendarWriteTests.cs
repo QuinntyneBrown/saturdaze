@@ -1,5 +1,5 @@
 // Acceptance Test
-// Traces to: L2-168 AC1-AC6, L2-167 AC3, L2-170 AC1, AC3, AC4
+// Traces to: L2-175 AC1-AC6, L2-174 AC3, L2-177 AC1, AC3, AC4
 // Description: While a member's Google Calendar is connected, the family's current weekend is kept in it.
 
 using System.Net;
@@ -58,7 +58,7 @@ public class CalendarWriteTests : IClassFixture<SaturdazeApiFactory>, IDisposabl
     private static async Task<JsonElement> PlanAsync(HttpClient client)
         => await Read(await client.PostAsJsonAsync("/api/weekends/plan", new { WeekendOf }));
 
-    /// <summary>The blocks of a weekend that become events: everything but drives and downtime (L2-168).</summary>
+    /// <summary>The blocks of a weekend that become events: everything but drives and downtime (L2-175).</summary>
     private static List<JsonElement> Written(JsonElement weekend) =>
         weekend.GetProperty("blocks").EnumerateArray()
             .Where(b => b.GetProperty("kind").GetString() is not ("Drive" or "Downtime")
@@ -78,7 +78,7 @@ public class CalendarWriteTests : IClassFixture<SaturdazeApiFactory>, IDisposabl
     [Fact]
     public async Task Generating_the_weekend_writes_one_event_per_block_except_drives_and_downtime()
     {
-        // Traces to: L2-168 AC1
+        // Traces to: L2-175 AC1
         var (session, email) = await ConnectedMemberAsync();
 
         var weekend = await PlanAsync(session.Client);
@@ -100,7 +100,7 @@ public class CalendarWriteTests : IClassFixture<SaturdazeApiFactory>, IDisposabl
     [Fact]
     public async Task Regenerating_replaces_the_events_of_replanned_blocks_and_leaves_locked_ones_alone()
     {
-        // Traces to: L2-168 AC2
+        // Traces to: L2-175 AC2
         var (session, email) = await ConnectedMemberAsync();
         var first = await PlanAsync(session.Client);
         var before = await _factory.GoogleCalendar.WaitForEventsAsync(email, e => Matches(e, first));
@@ -120,7 +120,7 @@ public class CalendarWriteTests : IClassFixture<SaturdazeApiFactory>, IDisposabl
     [Fact]
     public async Task Renaming_adding_an_errand_and_swapping_are_followed_in_the_calendar()
     {
-        // Traces to: L2-168 AC3
+        // Traces to: L2-175 AC3
         var (session, email) = await ConnectedMemberAsync();
         var weekend = await PlanAsync(session.Client);
         var id = weekend.GetProperty("id").GetGuid();
@@ -151,7 +151,7 @@ public class CalendarWriteTests : IClassFixture<SaturdazeApiFactory>, IDisposabl
     [Fact]
     public async Task A_google_outage_never_fails_the_request_and_the_write_is_retried()
     {
-        // Traces to: L2-168 AC4
+        // Traces to: L2-175 AC4
         var (session, email) = await ConnectedMemberAsync();
         _factory.GoogleCalendar.Unavailable = true;
 
@@ -171,7 +171,7 @@ public class CalendarWriteTests : IClassFixture<SaturdazeApiFactory>, IDisposabl
     [Fact]
     public async Task An_event_deleted_in_google_is_written_again_on_the_next_change()
     {
-        // Traces to: L2-168 AC5
+        // Traces to: L2-175 AC5
         var (session, email) = await ConnectedMemberAsync();
         var weekend = await PlanAsync(session.Client);
         var events = await _factory.GoogleCalendar.WaitForEventsAsync(email, e => Matches(e, weekend));
@@ -188,7 +188,7 @@ public class CalendarWriteTests : IClassFixture<SaturdazeApiFactory>, IDisposabl
     [Fact]
     public async Task A_member_who_is_not_connected_causes_no_calls_to_google()
     {
-        // Traces to: L2-168 AC6, L2-167 AC3
+        // Traces to: L2-175 AC6, L2-174 AC3
         var (session, email) = await ConnectedMemberAsync();
         (await session.Client.DeleteAsync("/api/calendar/google")).StatusCode.Should().Be(HttpStatusCode.NoContent);
         var callsBefore = _factory.GoogleCalendar.CallsFor(email);
@@ -203,7 +203,7 @@ public class CalendarWriteTests : IClassFixture<SaturdazeApiFactory>, IDisposabl
     [Fact]
     public async Task A_refused_grant_marks_the_connection_for_reconnecting_and_stops_writing_until_then()
     {
-        // Traces to: L2-170 AC1, AC3, AC4
+        // Traces to: L2-177 AC1, AC3, AC4
         var (session, email) = await ConnectedMemberAsync();
         _factory.GoogleCalendar.RevokeInGoogle(email);
 

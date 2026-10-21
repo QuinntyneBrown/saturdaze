@@ -4,7 +4,7 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Button, CopyField, Dialog as DialogShell, List, ListItem } from 'components';
 
 export interface CalendarFeedDialogData {
-  /** The `webcal://` link, shown only here (L2-171). */
+  /** The `webcal://` link, shown only here (L2-178). */
   readonly webcalUrl: string;
 }
 
@@ -21,7 +21,7 @@ const STEPS = [
 /**
  * D33 — "Subscribe from another calendar": the family's new subscription link
  * in a copy field, once, with the steps for Apple Calendar, Outlook and
- * Google Calendar (L2-172).
+ * Google Calendar (L2-179).
  */
 @Component({
   selector: 'app-calendar-feed-dialog',

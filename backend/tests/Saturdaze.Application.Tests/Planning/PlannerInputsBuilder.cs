@@ -80,7 +80,7 @@ internal sealed class PlannerInputsBuilder
 
     public PlannerInputsBuilder LockedBlock(ItineraryBlock block) { _locked.Add(block); return this; }
 
-    /// <summary>A timed event from a connected calendar (L2-169).</summary>
+    /// <summary>A timed event from a connected calendar (L2-176).</summary>
     public PlannerInputsBuilder CalendarEvent(DayOfWeekend day, TimeOnly start, TimeOnly end, string title)
     {
         _calendar.Add(new CalendarCommitment(day, start, end, title));

@@ -22,7 +22,7 @@ public interface IGoogleCalendarClient
 
     /// <summary>
     /// The primary calendar's events between two instants, recurring events expanded
-    /// (L2-169). All-day events come back with <see cref="GoogleCalendarEvent.AllDay"/> set.
+    /// (L2-176). All-day events come back with <see cref="GoogleCalendarEvent.AllDay"/> set.
     /// </summary>
     Task<IReadOnlyList<GoogleCalendarEvent>> ListEventsAsync(
         string refreshToken, DateTimeOffset from, DateTimeOffset to, CancellationToken ct);
@@ -38,7 +38,7 @@ public interface IGoogleCalendarClient
 }
 
 /// <summary>
-/// One block as a Google event (L2-168): local start and end in <see cref="TimeZone"/>,
+/// One block as a Google event (L2-175): local start and end in <see cref="TimeZone"/>,
 /// and the block id as a private extended property so the read direction skips it.
 /// </summary>
 public sealed record GoogleCalendarEventWrite(
@@ -71,7 +71,7 @@ public sealed class GoogleCalendarUnavailableException : Exception
     public GoogleCalendarUnavailableException(string message, Exception? inner = null) : base(message, inner) { }
 }
 
-/// <summary>One event as the read direction sees it (L2-169).</summary>
+/// <summary>One event as the read direction sees it (L2-176).</summary>
 public sealed record GoogleCalendarEvent(
     string Id,
     string? Summary,

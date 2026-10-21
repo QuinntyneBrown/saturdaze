@@ -5,7 +5,7 @@ namespace Saturdaze.Api.Controllers;
 
 /// <summary>
 /// Writes itinerary blocks as an iCalendar file: the family's export and the
-/// share link's calendar (L2-086), and the subscription link (L2-171).
+/// share link's calendar (L2-086), and the subscription link (L2-178).
 /// </summary>
 internal static class IcsWriter
 {

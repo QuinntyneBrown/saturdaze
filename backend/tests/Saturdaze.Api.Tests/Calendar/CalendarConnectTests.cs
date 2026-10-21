@@ -1,5 +1,5 @@
 // Acceptance Test
-// Traces to: L2-165 AC1-AC8, L2-167 AC1, AC2, AC4, AC5, L2-173 AC1, AC3, AC5
+// Traces to: L2-172 AC1-AC8, L2-174 AC1, AC2, AC4, AC5, L2-180 AC1, AC3, AC5
 // Description: A family member connects the primary calendar of a Google account and disconnects it again.
 
 using System.Net;
@@ -72,7 +72,7 @@ public class CalendarConnectTests : IClassFixture<SaturdazeApiFactory>, IDisposa
     [Fact]
     public async Task Authorize_returns_googles_consent_url_with_offline_access_and_only_the_calendar_events_scope()
     {
-        // Traces to: L2-165 AC1
+        // Traces to: L2-172 AC1
         var session = await SignedInClient.CreateAsync(_factory, FamilyMode.Own);
 
         var body = await Read(await session.Client.PostAsync("/api/calendar/google/authorize", content: null));
@@ -92,7 +92,7 @@ public class CalendarConnectTests : IClassFixture<SaturdazeApiFactory>, IDisposa
     [Fact]
     public async Task Connecting_stores_the_grant_encrypted_and_reports_the_connection()
     {
-        // Traces to: L2-165 AC2, L2-173 AC3
+        // Traces to: L2-172 AC2, L2-180 AC3
         var session = await SignedInClient.CreateAsync(_factory, FamilyMode.Own);
         var state = await AuthorizeAsync(session.Client);
         var code = _factory.GoogleCalendar.IssueCode("cal@example.com");
@@ -118,7 +118,7 @@ public class CalendarConnectTests : IClassFixture<SaturdazeApiFactory>, IDisposa
     [Fact]
     public async Task A_state_from_another_member_an_old_state_or_a_tampered_state_is_refused()
     {
-        // Traces to: L2-165 AC3
+        // Traces to: L2-172 AC3
         var first = await SignedInClient.CreateAsync(_factory, FamilyMode.Own);
         var second = await SignedInClient.CreateAsync(_factory, FamilyMode.Own);
         var firstState = await AuthorizeAsync(first.Client);
@@ -143,7 +143,7 @@ public class CalendarConnectTests : IClassFixture<SaturdazeApiFactory>, IDisposa
     [Fact]
     public async Task A_refused_code_a_grant_without_the_calendar_scope_and_an_outage_store_nothing()
     {
-        // Traces to: L2-165 AC4
+        // Traces to: L2-172 AC4
         var session = await SignedInClient.CreateAsync(_factory, FamilyMode.Own);
 
         var refused = await ConnectAsync(session.Client, "not-a-code-google-issued", await AuthorizeAsync(session.Client));
@@ -170,7 +170,7 @@ public class CalendarConnectTests : IClassFixture<SaturdazeApiFactory>, IDisposa
     [Fact]
     public async Task Without_a_client_secret_the_calendar_endpoints_answer_not_configured()
     {
-        // Traces to: L2-165 AC5
+        // Traces to: L2-172 AC5
         var session = await SignedInClient.CreateAsync(_factory, FamilyMode.Own);
         _factory.GoogleCalendar.IsConfigured = false;
 
@@ -189,7 +189,7 @@ public class CalendarConnectTests : IClassFixture<SaturdazeApiFactory>, IDisposa
     [Fact]
     public async Task Connecting_again_revokes_the_earlier_grant_and_names_the_new_account()
     {
-        // Traces to: L2-165 AC6
+        // Traces to: L2-172 AC6
         var session = await SignedInClient.CreateAsync(_factory, FamilyMode.Own);
         var firstCode = _factory.GoogleCalendar.IssueCode("first@example.com");
         var firstToken = _factory.GoogleCalendar.RefreshTokenFor(firstCode);
@@ -204,7 +204,7 @@ public class CalendarConnectTests : IClassFixture<SaturdazeApiFactory>, IDisposa
     [Fact]
     public async Task The_calendar_account_may_differ_from_the_google_sign_in_account()
     {
-        // Traces to: L2-165 AC7
+        // Traces to: L2-172 AC7
         var signIn = _factory.Google.Issue("sign-in-sub-" + Guid.NewGuid().ToString("N"), $"a-{Guid.NewGuid():N}@gmail.com");
         var login = await Read(await _factory.CreateClient().PostAsJsonAsync("/api/auth/google", new { Credential = signIn }));
         var client = _factory.CreateClient();
@@ -225,7 +225,7 @@ public class CalendarConnectTests : IClassFixture<SaturdazeApiFactory>, IDisposa
     [Fact]
     public async Task The_calendar_endpoints_need_a_bearer()
     {
-        // Traces to: L2-165 AC8
+        // Traces to: L2-172 AC8
         var anonymous = _factory.CreateClient();
         (await anonymous.PostAsync("/api/calendar/google/authorize", content: null)).StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         (await anonymous.PostAsJsonAsync("/api/calendar/google/connect", new { Code = "c", State = "s" })).StatusCode.Should().Be(HttpStatusCode.Unauthorized);
@@ -236,7 +236,7 @@ public class CalendarConnectTests : IClassFixture<SaturdazeApiFactory>, IDisposa
     [Fact]
     public async Task The_plan_around_my_calendar_switch_saves()
     {
-        // Traces to: L2-166 AC6 (API)
+        // Traces to: L2-173 AC6 (API)
         var session = await SignedInClient.CreateAsync(_factory, FamilyMode.Own);
         await ConnectedAsync(session.Client, "cal@example.com");
 
@@ -249,7 +249,7 @@ public class CalendarConnectTests : IClassFixture<SaturdazeApiFactory>, IDisposa
     [Fact]
     public async Task Disconnecting_revokes_the_grant_and_forgets_the_connection()
     {
-        // Traces to: L2-167 AC1
+        // Traces to: L2-174 AC1
         var session = await SignedInClient.CreateAsync(_factory, FamilyMode.Own);
         var code = _factory.GoogleCalendar.IssueCode("cal@example.com");
         var token = _factory.GoogleCalendar.RefreshTokenFor(code);
@@ -265,7 +265,7 @@ public class CalendarConnectTests : IClassFixture<SaturdazeApiFactory>, IDisposa
     [Fact]
     public async Task Disconnecting_still_forgets_the_connection_when_google_cannot_revoke()
     {
-        // Traces to: L2-167 AC2
+        // Traces to: L2-174 AC2
         var session = await SignedInClient.CreateAsync(_factory, FamilyMode.Own);
         await ConnectedAsync(session.Client, "cal@example.com");
         _factory.GoogleCalendar.RevokeFails = true;
@@ -278,7 +278,7 @@ public class CalendarConnectTests : IClassFixture<SaturdazeApiFactory>, IDisposa
     [Fact]
     public async Task Each_member_sees_and_disconnects_only_their_own_connection()
     {
-        // Traces to: L2-167 AC4, L2-173 AC1
+        // Traces to: L2-174 AC4, L2-180 AC1
         var owner = await SignedInClient.CreateAsync(_factory, FamilyMode.Own);
         var member = await SignedInClient.JoinAsync(_factory, owner.FamilyId!.Value);
         await ConnectedAsync(owner.Client, "owner@example.com");
@@ -293,7 +293,7 @@ public class CalendarConnectTests : IClassFixture<SaturdazeApiFactory>, IDisposa
     [Fact]
     public async Task Disconnecting_without_a_connection_is_fine()
     {
-        // Traces to: L2-167 AC5
+        // Traces to: L2-174 AC5
         var session = await SignedInClient.CreateAsync(_factory, FamilyMode.Own);
         (await session.Client.DeleteAsync("/api/calendar/google")).StatusCode.Should().Be(HttpStatusCode.NoContent);
     }
@@ -301,7 +301,7 @@ public class CalendarConnectTests : IClassFixture<SaturdazeApiFactory>, IDisposa
     [Fact]
     public async Task A_removed_member_loses_their_connection()
     {
-        // Traces to: L2-173 AC5
+        // Traces to: L2-180 AC5
         var owner = await SignedInClient.CreateAsync(_factory, FamilyMode.Own);
         var member = await SignedInClient.JoinAsync(_factory, owner.FamilyId!.Value);
         await ConnectedAsync(member.Client, "member@example.com");

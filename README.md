@@ -176,7 +176,7 @@ app's id empty, the button is not rendered.
 
 #### Calendar sync (optional)
 
-The Family page's **Calendar** section (L1-039, ADR-020) offers two things:
+The Family page's **Calendar** section (L1-040, ADR-020) offers two things:
 
 - **Subscribe from another calendar** works everywhere with no setup: it mints
   a private `webcal://…/api/calendar/feed/{token}.ics` link that Apple

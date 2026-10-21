@@ -1,5 +1,5 @@
 @startuml
-title Behaviour - Weekend events become commitments (L2-169, L2-170)
+title Behaviour - Weekend events become commitments (L2-176, L2-177)
 skinparam backgroundColor #FFFFFF
 skinparam shadowing false
 skinparam roundcorner 12
@@ -33,12 +33,12 @@ loop each connection (5 s budget in total)
 source -> client : ListEventsAsync(Saturday 00:00, Monday 00:00 local)
 client -> google : events.list(primary, singleEvents=true)
 alt events
-source -> source : L2-169 drop all-day, cancelled, declined, free and Saturdaze events
+source -> source : L2-176 drop all-day, cancelled, declined, free and Saturdaze events
 source -> source : Split by day in local time; title or "Busy"
 else invalid_grant
-source -> db : L2-170 Status = NeedsReconnect
+source -> db : L2-177 Status = NeedsReconnect
 else outage or timeout
-source -> source : L2-170 contribute nothing
+source -> source : L2-177 contribute nothing
 end
 end
 source --> loader : CalendarCommitment list

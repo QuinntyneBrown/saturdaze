@@ -3,7 +3,7 @@ using Saturdaze.Domain.Enums;
 namespace Saturdaze.Domain.Entities;
 
 /// <summary>
-/// One account's grant to the primary calendar of a Google account (L2-165).
+/// One account's grant to the primary calendar of a Google account (L2-172).
 /// The refresh token is stored only encrypted (ADR-020); the family is the
 /// account's own, so the connection follows the account.
 /// </summary>
@@ -19,7 +19,7 @@ public class CalendarConnection
     public DateTimeOffset CreatedUtc { get; set; }
     public DateTimeOffset? LastSyncedUtc { get; set; }
 
-    /// <summary>When the plan last changed without being written yet; null when the calendar is up to date (L2-168).</summary>
+    /// <summary>When the plan last changed without being written yet; null when the calendar is up to date (L2-175).</summary>
     public DateTimeOffset? SyncRequestedUtc { get; set; }
 
     /// <summary>When the next write may be tried; pushed back after a failure.</summary>

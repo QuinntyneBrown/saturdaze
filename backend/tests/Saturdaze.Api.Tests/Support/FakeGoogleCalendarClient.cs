@@ -19,12 +19,12 @@ public sealed class FakeGoogleCalendarClient : IGoogleCalendarClient
     /// <summary>When set, every call to Google fails as an outage would.</summary>
     public bool Unavailable { get; set; }
 
-    /// <summary>When set, revocation fails (L2-167 AC2).</summary>
+    /// <summary>When set, revocation fails (L2-174 AC2).</summary>
     public bool RevokeFails { get; set; }
 
     public ConcurrentQueue<string> Revoked { get; } = new();
 
-    /// <summary>Refresh tokens Google now refuses with <c>invalid_grant</c> (L2-170).</summary>
+    /// <summary>Refresh tokens Google now refuses with <c>invalid_grant</c> (L2-177).</summary>
     public ConcurrentDictionary<string, bool> RevokedGrants { get; } = new(StringComparer.Ordinal);
 
     /// <summary>Each account's primary calendar, by refresh token: event id → event.</summary>
@@ -38,10 +38,10 @@ public sealed class FakeGoogleCalendarClient : IGoogleCalendarClient
 
     public sealed record FakeEvent(string Id, GoogleCalendarEventWrite Event, int Version);
 
-    /// <summary>Events the person keeps in their calendar, by refresh token (the read direction, L2-169).</summary>
+    /// <summary>Events the person keeps in their calendar, by refresh token (the read direction, L2-176).</summary>
     private readonly ConcurrentDictionary<string, ConcurrentQueue<GoogleCalendarEvent>> _ownEvents = new(StringComparer.Ordinal);
 
-    /// <summary>How long a list call takes, to stand in for a slow Google (L2-170 AC2).</summary>
+    /// <summary>How long a list call takes, to stand in for a slow Google (L2-177 AC2).</summary>
     public TimeSpan ListDelay { get; set; } = TimeSpan.Zero;
 
     /// <summary>The redirect URIs codes were exchanged with.</summary>

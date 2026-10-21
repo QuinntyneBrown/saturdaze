@@ -25,7 +25,7 @@ public sealed record SharedWeekendDto(
         weekend.Blocks
             .Where(b => b.Kind != BlockKind.Errand)
             .Select(b => new SharedBlockDto(
-                // A personal calendar event's title stays with the family (L2-169 AC7).
+                // A personal calendar event's title stays with the family (L2-176 AC7).
                 b.Id, b.Day, b.StartTime, b.EndTime, b.Kind, b.FromCalendar ? "Busy" : b.Title, b.RefId, b.IsLocked, b.SortOrder,
                 b.StopNumber, b.Stop, b.LegBefore is { } leg ? leg with { DirectionsUrl = null } : null, b.Photo))
             .ToList(),

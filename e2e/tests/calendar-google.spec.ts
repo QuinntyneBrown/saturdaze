@@ -2,7 +2,7 @@ import { test, expect } from "../fixtures/sd-test.js";
 import { FAKE_CODE, FAKE_STATE, stubCalendarApi } from "../fixtures/calendar-api.js";
 
 /**
- * Connect Google Calendar from Family (L2-166, L2-167). The calendar
+ * Connect Google Calendar from Family (L2-173, L2-174). The calendar
  * endpoints and Google's consent screen are stood in for by
  * `fixtures/calendar-api.ts` (ADR-020, decision 7); `CalendarConnectTests`
  * cover the API. Everything in the browser runs for real: the section's
@@ -17,7 +17,7 @@ const CONNECTED = {
 };
 
 test.describe("Connect Google Calendar", () => {
-  // Traces to: L2-166 AC1
+  // Traces to: L2-173 AC1
   test("Given Google configured and nothing connected, the section offers both ways and no switch", async ({ page, goto, pages }) => {
     await stubCalendarApi(page);
     await goto("family");
@@ -29,7 +29,7 @@ test.describe("Connect Google Calendar", () => {
     await expect(f.readCommitmentsToggle()).toHaveCount(0);
   });
 
-  // Traces to: L2-166 AC2
+  // Traces to: L2-173 AC2
   test("Given Google not configured, only the subscription link is offered", async ({ page, goto, pages }) => {
     await stubCalendarApi(page, { googleConfigured: false });
     await goto("family");
@@ -40,7 +40,7 @@ test.describe("Connect Google Calendar", () => {
     await expect(f.connectGoogleRow()).toHaveCount(0);
   });
 
-  // Traces to: L2-166 AC3, AC4
+  // Traces to: L2-173 AC3, AC4
   test("Given the connect dialog, when the member continues and Google sends them back, then the section shows the connection", async ({ page, goto, pages }) => {
     const stub = await stubCalendarApi(page);
     await goto("family");
@@ -65,7 +65,7 @@ test.describe("Connect Google Calendar", () => {
     await expect(f.connectGoogleRow()).toHaveCount(0);
   });
 
-  // Traces to: L2-166 AC5
+  // Traces to: L2-173 AC5
   test("Given Google sends the member back without permission, then nothing is connected and the note says so", async ({ page, goto, pages }) => {
     const stub = await stubCalendarApi(page, { consent: "deny" });
     await goto("family");
@@ -82,7 +82,7 @@ test.describe("Connect Google Calendar", () => {
     expect(stub.sent("POST", "/api/calendar/google/connect")).toEqual([]);
   });
 
-  // Traces to: L2-166 AC5
+  // Traces to: L2-173 AC5
   test("Given Google refuses the code, then the member lands on Family with the same note", async ({ page, pages, signIn }) => {
     await stubCalendarApi(page, { connectError: { status: 400, code: "google_calendar_code_invalid" } });
     const f = pages.family;
@@ -94,7 +94,7 @@ test.describe("Connect Google Calendar", () => {
     await expect(f.calendarBanner()).toHaveText("Google Calendar wasn't connected. Nothing was shared.");
   });
 
-  // Traces to: L2-166 AC6
+  // Traces to: L2-173 AC6
   test("Given a connection, when the member turns Plan around my calendar off, then it saves and stays off", async ({ page, goto, pages }) => {
     const stub = await stubCalendarApi(page, { google: CONNECTED });
     await goto("family");
@@ -109,7 +109,7 @@ test.describe("Connect Google Calendar", () => {
     await expect(f.readCommitmentsToggle()).not.toBeChecked();
   });
 
-  // Traces to: L2-166 AC7
+  // Traces to: L2-173 AC7
   test("Given a connection that needs reconnecting, the alert shows and Reconnect opens the connect dialog", async ({ page, goto, pages }) => {
     await stubCalendarApi(page, { google: { ...CONNECTED, status: "needs_reconnect" } });
     await goto("family");
@@ -124,7 +124,7 @@ test.describe("Connect Google Calendar", () => {
     await expect(f.dialogTitle()).toHaveText("Connect Google Calendar");
   });
 
-  // Traces to: L2-166 AC8
+  // Traces to: L2-173 AC8
   test("Given starting the connection fails, the dialog stays open with Google's error", async ({ page, goto, pages }) => {
     await stubCalendarApi(page, { authorizeFails: 503 });
     await goto("family");
@@ -139,7 +139,7 @@ test.describe("Connect Google Calendar", () => {
     await expect(page).toHaveURL(/\/family$/);
   });
 
-  // Traces to: L2-167 AC6
+  // Traces to: L2-174 AC6
   test("Given a connection, when the member disconnects and confirms, then the section offers to connect again", async ({ page, goto, pages }) => {
     const stub = await stubCalendarApi(page, { google: CONNECTED });
     await goto("family");

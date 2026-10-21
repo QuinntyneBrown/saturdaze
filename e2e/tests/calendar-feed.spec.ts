@@ -2,7 +2,7 @@ import { test, expect } from "../fixtures/sd-test.js";
 import { API_URL, apiLogin, SEEDED_USER, stopCalendarFeed } from "../fixtures/auth.js";
 
 /**
- * The family's private subscription link (L2-172, L2-171): created from the
+ * The family's private subscription link (L2-179, L2-178): created from the
  * Calendar section on Family, shown once in D33 with Copy, and stopped
  * through D34. Runs against the real API.
  */
@@ -14,7 +14,7 @@ test.describe("Calendar subscription link", () => {
     await pages.family.waitForReady();
   });
 
-  // Traces to: L2-172 AC1, L2-166 AC1
+  // Traces to: L2-179 AC1, L2-173 AC1
   test("Given no link, when the member subscribes, then D33 shows a webcal URL once and the section says the link is on", async ({ pages, request }) => {
     const f = pages.family;
     await expect(f.subscribeRow()).toBeVisible();
@@ -35,7 +35,7 @@ test.describe("Calendar subscription link", () => {
     await expect(f.subscribeRow()).toHaveCount(0);
   });
 
-  // Traces to: L2-172 AC2
+  // Traces to: L2-179 AC2
   test("Given D33, when the member copies the link, then the clipboard holds it and the button is pressed", async ({ page, pages }) => {
     const f = pages.family;
     await page.context().grantPermissions(["clipboard-read", "clipboard-write"]);
@@ -48,7 +48,7 @@ test.describe("Calendar subscription link", () => {
     expect(copied).toBe((await f.feedUrl().textContent())!.trim());
   });
 
-  // Traces to: L2-172 AC3
+  // Traces to: L2-179 AC3
   test("Given a link, when the page reloads, then the section says the link is on and shows no URL", async ({ page, pages }) => {
     const f = pages.family;
     await f.createFeedFrom(f.subscribeRow());
@@ -62,7 +62,7 @@ test.describe("Calendar subscription link", () => {
     await expect(f.calendarSection()).not.toContainText("/api/calendar/feed/");
   });
 
-  // Traces to: L2-172 AC4
+  // Traces to: L2-179 AC4
   test("Given a link, when the member stops it and confirms, then the section offers to subscribe again and the URL is gone", async ({ pages, request }) => {
     const f = pages.family;
     await f.createFeedFrom(f.subscribeRow());
@@ -79,7 +79,7 @@ test.describe("Calendar subscription link", () => {
     expect((await request.get(url)).status()).toBe(404);
   });
 
-  // Traces to: L2-172 AC5
+  // Traces to: L2-179 AC5
   test("Given a link, when the member asks for a new one, then D33 shows a different URL", async ({ pages }) => {
     const f = pages.family;
     await f.createFeedFrom(f.subscribeRow());
@@ -92,7 +92,7 @@ test.describe("Calendar subscription link", () => {
     expect(second).not.toBe(first);
   });
 
-  // Traces to: L2-172 AC4
+  // Traces to: L2-179 AC4
   test("Given D33, when the member chooses Stop the link and confirms, then the link is stopped", async ({ pages }) => {
     const f = pages.family;
     await f.createFeedFrom(f.subscribeRow());

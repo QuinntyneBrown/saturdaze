@@ -1,7 +1,7 @@
 namespace Saturdaze.Domain.Entities;
 
 /// <summary>
-/// A family's private subscription link (L2-171). Only the hash of its random
+/// A family's private subscription link (L2-178). Only the hash of its random
 /// token is stored; creating a new link replaces this one.
 /// </summary>
 public class CalendarFeed

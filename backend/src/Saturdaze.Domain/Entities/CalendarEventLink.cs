@@ -1,7 +1,7 @@
 namespace Saturdaze.Domain.Entities;
 
 /// <summary>
-/// The Google event written for one block through one connection (L2-168), so
+/// The Google event written for one block through one connection (L2-175), so
 /// later writes update or delete that same event. <see cref="Fingerprint"/> is a
 /// hash of what was written; an unchanged block is not written again.
 /// </summary>

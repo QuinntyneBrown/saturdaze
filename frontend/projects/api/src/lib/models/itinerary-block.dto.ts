@@ -49,7 +49,7 @@ export interface ItineraryBlockDto {
    */
   readonly sortOrder: number;
   /**
-   * From Calendar — a commitment from an event in a connected calendar (L2-169).
+   * From Calendar — a commitment from an event in a connected calendar (L2-176).
    */
   readonly fromCalendar?: boolean;
   /**

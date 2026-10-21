@@ -6,7 +6,7 @@ using Saturdaze.Application.Calendar;
 
 namespace Saturdaze.Api.Controllers;
 
-/// <summary>Calendar sync (L1-039, ADR-020): the Calendar section on Family and the subscription link.</summary>
+/// <summary>Calendar sync (L1-040, ADR-020): the Calendar section on Family and the subscription link.</summary>
 [ApiController]
 [Route("api/calendar")]
 public sealed class CalendarController : ControllerBase
@@ -19,12 +19,12 @@ public sealed class CalendarController : ControllerBase
     public async Task<ActionResult<CalendarSettingsDto>> Get(CancellationToken ct)
         => Ok(await _sender.Send(new GetCalendarSettingsQuery(), ct));
 
-    /// <summary>Google's consent URL for connecting the caller's calendar (L2-165).</summary>
+    /// <summary>Google's consent URL for connecting the caller's calendar (L2-172).</summary>
     [HttpPost("google/authorize")]
     public async Task<ActionResult<GoogleCalendarAuthorizationDto>> AuthorizeGoogle(CancellationToken ct)
         => Ok(await _sender.Send(new AuthorizeGoogleCalendarCommand(), ct));
 
-    /// <summary>The code and state Google returned to <c>/family/calendar/google</c> (L2-165).</summary>
+    /// <summary>The code and state Google returned to <c>/family/calendar/google</c> (L2-172).</summary>
     [HttpPost("google/connect")]
     public async Task<ActionResult<CalendarSettingsDto>> ConnectGoogle(
         [FromBody] ConnectGoogleCalendarCommand command, CancellationToken ct)
@@ -35,7 +35,7 @@ public sealed class CalendarController : ControllerBase
         [FromBody] UpdateGoogleCalendarCommand command, CancellationToken ct)
         => Ok(await _sender.Send(command, ct));
 
-    /// <summary>Revokes and forgets the caller's grant; written events stay (L2-167).</summary>
+    /// <summary>Revokes and forgets the caller's grant; written events stay (L2-174).</summary>
     [HttpDelete("google")]
     public async Task<IActionResult> DisconnectGoogle(CancellationToken ct)
     {
@@ -43,7 +43,7 @@ public sealed class CalendarController : ControllerBase
         return NoContent();
     }
 
-    /// <summary>Mints the family's subscription link; the URL is returned only here (L2-171).</summary>
+    /// <summary>Mints the family's subscription link; the URL is returned only here (L2-178).</summary>
     [HttpPost("feed")]
     public async Task<ActionResult<CalendarFeedLinkDto>> CreateFeed(CancellationToken ct)
     {
@@ -62,7 +62,7 @@ public sealed class CalendarController : ControllerBase
 
     /// <summary>
     /// The subscription link. Anonymous by necessity: calendar applications fetch it
-    /// as a bare URL and cannot attach a bearer (L2-008, L2-171).
+    /// as a bare URL and cannot attach a bearer (L2-008, L2-178).
     /// </summary>
     [HttpGet("feed/{token}.ics")]
     [AllowAnonymous]

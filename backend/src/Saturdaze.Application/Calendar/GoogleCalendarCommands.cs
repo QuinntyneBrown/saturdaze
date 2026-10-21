@@ -12,18 +12,18 @@ using Saturdaze.Domain.Enums;
 
 namespace Saturdaze.Application.Calendar;
 
-/// <summary>Starts connecting Google Calendar: Google's consent URL with a state bound to the caller (L2-165).</summary>
+/// <summary>Starts connecting Google Calendar: Google's consent URL with a state bound to the caller (L2-172).</summary>
 public sealed record AuthorizeGoogleCalendarCommand : IRequest<GoogleCalendarAuthorizationDto>;
 
 public sealed record GoogleCalendarAuthorizationDto(string AuthorizationUrl);
 
-/// <summary>Finishes connecting: exchanges the code Google returned to the app (L2-165).</summary>
+/// <summary>Finishes connecting: exchanges the code Google returned to the app (L2-172).</summary>
 public sealed record ConnectGoogleCalendarCommand(string? Code, string? State) : IRequest<CalendarSettingsDto>;
 
-/// <summary>Turns "plan around my calendar" on or off (L2-166).</summary>
+/// <summary>Turns "plan around my calendar" on or off (L2-173).</summary>
 public sealed record UpdateGoogleCalendarCommand(bool ReadCommitments) : IRequest<CalendarSettingsDto>;
 
-/// <summary>Revokes the grant and forgets the connection; written events stay (L2-167).</summary>
+/// <summary>Revokes the grant and forgets the connection; written events stay (L2-174).</summary>
 public sealed record DisconnectGoogleCalendarCommand : IRequest;
 
 internal static class GoogleCalendarErrors
@@ -167,7 +167,7 @@ public sealed class ConnectGoogleCalendarCommandHandler : IRequestHandler<Connec
         connection.Status = CalendarConnectionStatus.Connected;
         connection.ReadCommitments = true;
         connection.LastSyncedUtc = null;
-        // Write the current weekend straight away (L2-170 AC4).
+        // Write the current weekend straight away (L2-177 AC4).
         connection.SyncRequestedUtc = _clock.UtcNow;
         connection.NextAttemptUtc = _clock.UtcNow;
         connection.FailedAttempts = 0;
@@ -250,7 +250,7 @@ public sealed class DisconnectGoogleCalendarCommandHandler : IRequestHandler<Dis
             }
             catch (Exception ex) when (ex is GoogleCalendarUnavailableException or GoogleCalendarGrantRevokedException)
             {
-                // Forgetting the grant matters more than Google confirming it (L2-167 AC2).
+                // Forgetting the grant matters more than Google confirming it (L2-174 AC2).
                 _logger.LogWarning("Google Calendar revocation failed for connection {ConnectionId}: {Error}",
                     connection.Id, ex.GetType().Name);
             }

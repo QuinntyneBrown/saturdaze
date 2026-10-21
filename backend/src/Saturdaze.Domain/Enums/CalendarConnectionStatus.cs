@@ -4,6 +4,6 @@ namespace Saturdaze.Domain.Enums;
 public enum CalendarConnectionStatus
 {
     Connected = 1,
-    /// <summary>Google reported the grant expired or revoked (L2-170).</summary>
+    /// <summary>Google reported the grant expired or revoked (L2-177).</summary>
     NeedsReconnect = 2
 }

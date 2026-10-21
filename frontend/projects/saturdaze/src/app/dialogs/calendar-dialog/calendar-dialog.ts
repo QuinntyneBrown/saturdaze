@@ -9,7 +9,7 @@ export interface CalendarDialogData {
   readonly calendar: CalendarExport;
   /** The signed-in calendar file (L2-086 AC9); a bare link would carry no bearer. */
   readonly download: () => Promise<Blob>;
-  /** The caller's Google Calendar is connected and already has the weekend (D6b, L2-168). */
+  /** The caller's Google Calendar is connected and already has the weekend (D6b, L2-175). */
   readonly googleSynced?: boolean;
 }
 

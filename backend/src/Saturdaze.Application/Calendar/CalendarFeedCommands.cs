@@ -9,13 +9,13 @@ using Saturdaze.Domain.Entities;
 
 namespace Saturdaze.Application.Calendar;
 
-/// <summary>Mints the family's subscription link, replacing any earlier one (L2-171).</summary>
+/// <summary>Mints the family's subscription link, replacing any earlier one (L2-178).</summary>
 public sealed record CreateCalendarFeedCommand : IRequest<CalendarFeedToken>;
 
 /// <summary>The raw token, returned once; only its hash is stored.</summary>
 public sealed record CalendarFeedToken(string Token, DateTimeOffset CreatedUtc);
 
-/// <summary>Stops the family's subscription link (L2-171 AC5).</summary>
+/// <summary>Stops the family's subscription link (L2-178 AC5).</summary>
 public sealed record StopCalendarFeedCommand : IRequest;
 
 /// <summary>What a subscription link serves: the family's current weekend, or nothing yet.</summary>
@@ -98,7 +98,7 @@ public sealed class GetCalendarFeedQueryHandler : IRequestHandler<GetCalendarFee
         var feed = await _db.CalendarFeeds.AsNoTracking().FirstOrDefaultAsync(f => f.TokenHash == hash, ct)
             ?? throw new NotFoundException(nameof(CalendarFeed), request.Token);
 
-        // The feed never plans a weekend; it serves the one the family has (L2-171 AC3).
+        // The feed never plans a weekend; it serves the one the family has (L2-178 AC3).
         var weekendOf = GetCurrentWeekendQueryHandler.ResolveUpcomingSaturday(_clock.Today);
         var weekend = await _db.Weekends.AsNoTracking()
             .Include(w => w.Blocks)

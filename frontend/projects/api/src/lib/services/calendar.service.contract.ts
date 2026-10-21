@@ -3,7 +3,7 @@ import { InjectionToken } from '@angular/core';
 import { CalendarFeedLink, CalendarSettings } from '../models/calendar-settings';
 
 /**
- * I Calendar Service — calendar sync (L1-039): the Calendar section on Family
+ * I Calendar Service — calendar sync (L1-040): the Calendar section on Family
  * and its subscription link.
  */
 export interface ICalendarService {

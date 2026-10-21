@@ -383,7 +383,7 @@ describe('WeekendPage', () => {
     );
   });
 
-  it('tells D6 when the Google Calendar already has the weekend (L2-168 AC7)', async () => {
+  it('tells D6 when the Google Calendar already has the weekend (L2-175 AC7)', async () => {
     calendarService.settings.mockResolvedValueOnce({
       googleConfigured: true,
       google: { email: 'a@b.c', status: 'connected', readCommitments: true, lastSyncedUtc: null },
