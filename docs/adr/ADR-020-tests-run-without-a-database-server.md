@@ -66,9 +66,9 @@ The goal is speed without losing coverage: every test keeps its assertions, and 
 | | Backend CI job | API tests (local, serial) | Infrastructure tests (local) | `eng/Test-Backend.ps1` (local) |
 | --- | --- | --- | --- | --- |
 | Before (run 39534228786, `windows-latest`, LocalDB) | 7 min 31 s | 5 min 10 s | 47 s | 5 min 44 s |
-| After (run 39538537181, `ubuntu-24.04`, SQLite) | 2 min 40 s | 55 s | 1 s | 1 min 11 s |
+| After (PR #161, run 39547313020, `ubuntu-24.04`, SQLite) | 3 min 2 s | 55 s | 1 s | 1 min 11 s |
 
-The backend job is no longer the slowest: on the same run the design-system job took 3 min 47 s and the frontend job 2 min 6 s. Local times are from one Windows machine, Debug for the first run and Release for the script.
+An earlier push run of the same change (39538537181) took 2 min 40 s. The backend job is no longer the slowest: on the PR run the design-system job took 5 min 46 s and the frontend job 2 min 29 s. Local times are from one Windows machine, Debug for the first run and Release for the script.
 
 ## References
 
