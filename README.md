@@ -298,11 +298,13 @@ Every push to `main` runs `.github/workflows/deploy.yml` (ADR-017):
 | `www.saturdaze.ca` | The static marketing site (`sd-www-<suffix>`) |
 | `saturdaze.ca` | Redirects to `www` (the apex is bound to the marketing site, with `www` as its default domain) |
 | `app.saturdaze.ca` | The family app (`sd-web-<suffix>`) |
+| `admin.saturdaze.ca` | Saturdaze Admin (`sd-admin-<suffix>`, ADR-014) |
 
-DNS is at Namecheap: `CNAME app` and `CNAME www` to each app's default host,
-`ALIAS @` to the marketing app's default host, and the `_dnsauth` TXT records
-Static Web Apps asks for. Set the repository variables `APP_CUSTOM_DOMAIN`,
-`MARKETING_CUSTOM_DOMAIN` and `MARKETING_APEX_DOMAIN` once those validate.
+DNS is at Namecheap: `CNAME app`, `CNAME admin` and `CNAME www` to each app's
+default host, `ALIAS @` to the marketing app's default host, and the `_dnsauth`
+TXT records Static Web Apps asks for. Set the repository variables
+`APP_CUSTOM_DOMAIN`, `ADMIN_CUSTOM_DOMAIN`, `MARKETING_CUSTOM_DOMAIN` and
+`MARKETING_APEX_DOMAIN` once those validate.
 When the subscription has no Free Static Web App slot left, set
 `MARKETING_SWA_SKU=Standard`.
 
@@ -326,8 +328,8 @@ GitHub Actions needs these **secrets**: `AZURE_CLIENT_ID`, `AZURE_TENANT_ID`,
 `AZURE_SUBSCRIPTION_ID`, `SQL_ADMIN_LOGIN`, `SQL_ADMIN_PASSWORD`,
 `SATURDAZE_JWT_SIGNING_KEY`, `SATURDAZE_PHOTOS_SIGNING_KEY`; and these
 **variables**: `FOUNDRY_ORGANIZATION_NAME`, `FOUNDRY_COUNTRY_CODE`,
-`APP_CUSTOM_DOMAIN`, `MARKETING_CUSTOM_DOMAIN`, `MARKETING_APEX_DOMAIN`,
-`MARKETING_SWA_SKU` (optional), `BUDGET_ALERT_EMAIL`, `GOOGLE_CLIENT_ID`
+`APP_CUSTOM_DOMAIN`, `ADMIN_CUSTOM_DOMAIN`, `MARKETING_CUSTOM_DOMAIN`,
+`MARKETING_APEX_DOMAIN`, `MARKETING_SWA_SKU` (optional), `BUDGET_ALERT_EMAIL`, `GOOGLE_CLIENT_ID`
 (optional: the production OAuth client id for "Continue with Google", whose
 authorised origin is `https://app.saturdaze.ca`; set the same id as
 `googleClientId` in `environment.prod.ts`, ADR-019).
@@ -336,7 +338,7 @@ authorised origin is `https://app.saturdaze.ca`; set the same id as
 
 Every API setting is written by the template — the connection string, the
 signing keys, `Cors:AllowedOrigins` (both Static Web Apps plus the custom
-domain), `Saturdaze:CuratedPhotos:PublicOrigin` and
+domains), `Saturdaze:CuratedPhotos:PublicOrigin` and
 `Saturdaze:Images:AllowedOrigins` (ADR-015), and the Claude-on-Foundry
 settings with `ANTHROPIC_FOUNDRY_API_KEY` read straight from the Foundry
 account. Change them in `eng/infra/main.bicep`, not in the portal. Tiers live

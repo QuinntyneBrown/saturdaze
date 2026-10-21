@@ -72,6 +72,9 @@ param logDailyCapGb string = '0.5'
 @description('Custom domain for the family app (e.g. app.saturdaze.ca). Blank skips the binding; the domain must already validate in DNS.')
 param appCustomDomain string = ''
 
+@description('Custom domain for the admin app (e.g. admin.saturdaze.ca, ADR-014). Blank skips the binding; the domain must already validate in DNS.')
+param adminCustomDomain string = ''
+
 @description('Custom domain for the static marketing site (e.g. www.saturdaze.ca, ADR-018). Blank skips the binding.')
 param marketingCustomDomain string = ''
 
@@ -81,7 +84,7 @@ param marketingApexDomain string = ''
 @description('OAuth client id for "Continue with Google" (Saturdaze:Google:ClientId, ADR-019). The same id is compiled into the family app; blank answers 503 google_not_configured.')
 param googleClientId string = ''
 
-@description('Extra browser origins the API should accept, in addition to the three Static Web Apps and the custom domain.')
+@description('Extra browser origins the API should accept, in addition to the three Static Web Apps and the custom domains.')
 param extraCorsOrigins array = []
 
 @secure()
@@ -141,7 +144,11 @@ var adminOrigin = 'https://${adminSwa.properties.defaultHostname}'
 var appOrigin = empty(appCustomDomain) ? webOrigin : 'https://${appCustomDomain}'
 
 var corsOrigins = union(
-  concat([webOrigin, adminOrigin], empty(appCustomDomain) ? [] : ['https://${appCustomDomain}']),
+  concat(
+    [webOrigin, adminOrigin],
+    empty(appCustomDomain) ? [] : ['https://${appCustomDomain}'],
+    empty(adminCustomDomain) ? [] : ['https://${adminCustomDomain}']
+  ),
   extraCorsOrigins
 )
 
@@ -391,6 +398,14 @@ resource adminSwa 'Microsoft.Web/staticSites@2024-04-01' = {
   tags: union(tags, { role: 'admin-app' })
   sku: { name: swaSkuName, tier: swaSkuName }
   properties: swaProperties
+}
+
+resource adminSwaDomain 'Microsoft.Web/staticSites/customDomains@2024-04-01' = if (!empty(adminCustomDomain)) {
+  parent: adminSwa
+  name: adminCustomDomain
+  properties: {
+    validationMethod: 'dns-txt-token'
+  }
 }
 
 resource designSwa 'Microsoft.Web/staticSites@2024-04-01' = {

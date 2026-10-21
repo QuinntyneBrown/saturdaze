@@ -35,6 +35,10 @@
     Family-app domain to bind to the Static Web App, e.g. app.saturdaze.ca. Leave
     blank until its DNS TXT validation record exists.
 
+.PARAMETER AdminDomain
+    Admin-app domain to bind to its Static Web App, e.g. admin.saturdaze.ca
+    (ADR-014). Leave blank until its DNS TXT validation record exists.
+
 .PARAMETER MarketingDomain
     Marketing-site domain to bind to its Static Web App, e.g. www.saturdaze.ca
     (ADR-018). Leave blank until its DNS TXT validation record exists.
@@ -63,6 +67,7 @@ param(
     [string]$AppRegistrationName = "saturdaze-github-actions",
     [string]$ClientId,
     [string]$CustomDomain = "",
+    [string]$AdminDomain = "",
     [string]$MarketingDomain = "",
     [string]$MarketingApexDomain = "",
     [string]$BudgetAlertEmail = "",
@@ -218,6 +223,7 @@ $variables = [ordered]@{
     FOUNDRY_ORGANIZATION_NAME = $OrganizationName
     FOUNDRY_COUNTRY_CODE      = $CountryCode
     APP_CUSTOM_DOMAIN         = $CustomDomain
+    ADMIN_CUSTOM_DOMAIN       = $AdminDomain
     MARKETING_CUSTOM_DOMAIN   = $MarketingDomain
     MARKETING_APEX_DOMAIN     = $MarketingApexDomain
     BUDGET_ALERT_EMAIL        = $BudgetAlertEmail
@@ -306,4 +312,7 @@ if (-not $CustomDomain) {
 }
 if (-not $MarketingDomain) {
     Write-Host "  5. When www.saturdaze.ca (and the apex) point at the marketing Static Web App, re-run with -MarketingDomain www.saturdaze.ca -MarketingApexDomain saturdaze.ca (ADR-018)."
+}
+if (-not $AdminDomain) {
+    Write-Host "  6. When admin.saturdaze.ca's DNS points at the admin Static Web App, re-run with -AdminDomain admin.saturdaze.ca (ADR-014)."
 }

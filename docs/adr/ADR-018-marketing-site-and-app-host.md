@@ -52,7 +52,7 @@ The only page that tells a family what Saturdaze is lives inside the Angular app
 
 ## Implementation Notes
 
-- Repository variables: `APP_CUSTOM_DOMAIN=app.saturdaze.ca`, `MARKETING_CUSTOM_DOMAIN=www.saturdaze.ca`, `MARKETING_APEX_DOMAIN=saturdaze.ca`.
-- Namecheap records for `saturdaze.ca`: `CNAME app` → the family Static Web App's default host; `CNAME www` → the marketing Static Web App's default host; `ALIAS @` → the marketing default host; TXT `_dnsauth.app`, `_dnsauth.www` and `_dnsauth` with the tokens from `az staticwebapp hostname show -n <swa> -g saturdaze-rg --hostname <host> --query validationToken -o tsv`.
+- Repository variables: `APP_CUSTOM_DOMAIN=app.saturdaze.ca`, `MARKETING_CUSTOM_DOMAIN=www.saturdaze.ca`, `MARKETING_APEX_DOMAIN=saturdaze.ca`, and `ADMIN_CUSTOM_DOMAIN=admin.saturdaze.ca` for Saturdaze Admin (ADR-014), bound through `adminCustomDomain` the same way.
+- Namecheap records for `saturdaze.ca`: `CNAME app` → the family Static Web App's default host; `CNAME admin` → the admin Static Web App's default host; `CNAME www` → the marketing Static Web App's default host; `ALIAS @` → the marketing default host; TXT `_dnsauth.app`, `_dnsauth.admin`, `_dnsauth.www` and `_dnsauth` with the tokens from `az staticwebapp hostname show -n <swa> -g saturdaze-rg --hostname <host> --query validationToken -o tsv`.
 - Local preview: `node e2e/fixtures/marketing-server.mjs ../marketing 4500` from `e2e/` serves the page with the production headers on `http://localhost:4500`, the dev `siteUrl`.
 - Narration: `export SPEECH_REGION=canadacentral SPEECH_KEY=…` then `node tools/video-audio/generate-audio.mjs docs/videos/44-meet-saturdaze --engine azure`.
