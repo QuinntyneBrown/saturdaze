@@ -57,6 +57,7 @@ export const PAGES = [
   { url: "/pages/past.html",               nav: "past",    expects: { selector: ".card--media .media__credit", text: "Your photo" },         cols: { ".grid-cards": { 390: 1, 820: 2, 1440: 3 } } },
   { url: "/pages/family.html",             nav: "family",  expects: { selector: ".page-header__title", text: "The Browns" },                 cols: { ".family-grid": { 390: 1, 820: 1, 1440: 2 } } },
   { url: "/pages/family.members.html",     nav: "family",  expects: { selector: "#s-members", text: "Who's in" },                            cols: { ".family-grid": { 390: 1, 820: 1, 1440: 2 } } },
+  { url: "/pages/family.calendar.html",    nav: "family",  expects: { selector: "#state-error .banner", text: "Reconnect" } },
   { url: "/pages/family.member.html",      nav: "family",  expects: { selector: "#s-members", text: "Who's in" },                            cols: { ".family-grid": { 390: 1, 820: 1, 1440: 2 } } },
   { url: "/pages/review-submissions.html", nav: "family",  expects: { selector: ".page-header__title", text: "Review submissions" } },
 

@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en">
+<head>
+<!-- @shell:head -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Calendar states — Saturdaze</title>
+<link rel="stylesheet" href="../styles/tokens.css">
+<link rel="stylesheet" href="../styles/app.css">
+<!-- @/shell:head -->
+</head>
+<body data-page="family" data-shell="app">
+<a class="skip-link" href="#main">Skip to content</a>
+<!-- @shell:topbar -->
+<header class="topbar">
+  <div class="container topbar__inner">
+    <a class="topbar__brand" href="./weekend.html"><span class="brand-mark" aria-hidden="true"></span>Saturdaze</a>
+    <nav class="topbar__nav" aria-label="Primary">
+      <a class="topbar__link" data-nav="weekend" href="./weekend.html">Weekend</a>
+      <a class="topbar__link" data-nav="ideas" href="./ideas.html">Ideas</a>
+      <a class="topbar__link" data-nav="past" href="./past.html">Past</a>
+      <a class="topbar__link" data-nav="family" href="./family.html" aria-current="page">Family</a>
+    </nav>
+    <div class="topbar__actions">
+      <button class="avatar avatar--q avatar--btn" type="button" aria-haspopup="menu" aria-label="Account menu">Q</button>
+    </div>
+  </div>
+</header>
+<!-- @/shell:topbar -->
+<main class="app-main container container--stack" id="main">
+  <header class="page-header">
+    <div class="page-header__text">
+      <h1 class="page-header__title">Calendar</h1>
+      <p class="page-header__subtitle">Every state of the Family page's Calendar section (L2-165 → L2-172). Under prefers-color-scheme: dark the same roles give the dark theme (L2-130).</p>
+    </div>
+  </header>
+
+  <!-- 1. Not connected: the default; family.html draws the same section in place. -->
+  <section class="specimen" id="state-off">
+    <span class="specimen__label">Not connected (default)</span>
+    <section class="section" aria-labelledby="c1-title">
+      <div class="section-header">
+        <div class="section-header__text">
+          <h2 class="section-header__title" id="c1-title">Calendar</h2>
+          <p class="section-header__sub">Keep this weekend in the calendar you already use. Off until you connect one.</p>
+        </div>
+      </div>
+      <ul class="list list--card">
+        <li><a class="list__item list__item--action" href="./dialogs.html#dialog-calendar-connect">
+          <span class="disc disc--primary"><svg class="icon" aria-hidden="true"><use href="#i-calendar"/></svg></span>
+          <span class="list__text"><span class="list__title">Connect Google Calendar</span><span class="list__sub">The plan goes in. Weekend events come back as commitments.</span></span>
+          <span class="list__trail"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron_right"/></svg></span>
+        </a></li>
+        <li><a class="list__item list__item--action" href="./dialogs.html#dialog-calendar-feed">
+          <span class="disc"><svg class="icon" aria-hidden="true"><use href="#i-share"/></svg></span>
+          <span class="list__text"><span class="list__title">Subscribe from another calendar</span><span class="list__sub">Apple, Outlook or any app that takes a link</span></span>
+          <span class="list__trail"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron_right"/></svg></span>
+        </a></li>
+      </ul>
+    </section>
+  </section>
+
+  <!-- 2. Not connected, no Google client configured: the Google row is not rendered (L2-166). -->
+  <section class="specimen" id="state-feed-only">
+    <span class="specimen__label">Google not configured on this deployment</span>
+    <section class="section" aria-labelledby="c2-title">
+      <div class="section-header">
+        <div class="section-header__text">
+          <h2 class="section-header__title" id="c2-title">Calendar</h2>
+          <p class="section-header__sub">Keep this weekend in the calendar you already use. Off until you connect one.</p>
+        </div>
+      </div>
+      <ul class="list list--card">
+        <li><a class="list__item list__item--action" href="./dialogs.html#dialog-calendar-feed">
+          <span class="disc"><svg class="icon" aria-hidden="true"><use href="#i-share"/></svg></span>
+          <span class="list__text"><span class="list__title">Subscribe from another calendar</span><span class="list__sub">Apple, Outlook or any app that takes a link</span></span>
+          <span class="list__trail"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron_right"/></svg></span>
+        </a></li>
+      </ul>
+    </section>
+  </section>
+
+  <!-- 3. Google connected: the account, the last sync, the commitments toggle, Disconnect. -->
+  <section class="specimen" id="state-google">
+    <span class="specimen__label">Google Calendar connected</span>
+    <section class="section" aria-labelledby="c3-title">
+      <div class="section-header">
+        <div class="section-header__text">
+          <h2 class="section-header__title" id="c3-title">Calendar</h2>
+          <p class="section-header__sub">Keep this weekend in the calendar you already use. Off until you connect one.</p>
+        </div>
+      </div>
+      <ul class="list list--card">
+        <li class="list__item">
+          <span class="disc disc--primary"><svg class="icon" aria-hidden="true"><use href="#i-calendar"/></svg></span>
+          <span class="list__text"><span class="list__title">Google Calendar</span><span class="list__sub">quinn.brown@gmail.com · synced 2 minutes ago</span></span>
+          <span class="list__trail"><a class="btn btn--quiet btn--sm btn--warn-text" href="./dialogs.html#dialog-calendar-disconnect">Disconnect</a></span>
+        </li>
+        <li class="list__item">
+          <span class="list__text"><span class="list__title">Plan around my calendar</span><span class="list__sub">Weekend events count as commitments</span></span>
+          <label class="toggle"><input class="toggle__input" type="checkbox" role="switch" checked><span class="toggle__track"></span><span class="visually-hidden">Plan around my calendar</span></label>
+        </li>
+        <li><a class="list__item list__item--action" href="./dialogs.html#dialog-calendar-feed">
+          <span class="disc"><svg class="icon" aria-hidden="true"><use href="#i-share"/></svg></span>
+          <span class="list__text"><span class="list__title">Subscribe from another calendar</span><span class="list__sub">Apple, Outlook or any app that takes a link</span></span>
+          <span class="list__trail"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron_right"/></svg></span>
+        </a></li>
+      </ul>
+    </section>
+  </section>
+
+  <!-- 4. Subscription feed active: the URL is never shown again (L2-171); Stop or replace it. -->
+  <section class="specimen" id="state-feed">
+    <span class="specimen__label">Subscription link active</span>
+    <section class="section" aria-labelledby="c4-title">
+      <div class="section-header">
+        <div class="section-header__text">
+          <h2 class="section-header__title" id="c4-title">Calendar</h2>
+          <p class="section-header__sub">Keep this weekend in the calendar you already use. Off until you connect one.</p>
+        </div>
+      </div>
+      <ul class="list list--card">
+        <li><a class="list__item list__item--action" href="./dialogs.html#dialog-calendar-connect">
+          <span class="disc disc--primary"><svg class="icon" aria-hidden="true"><use href="#i-calendar"/></svg></span>
+          <span class="list__text"><span class="list__title">Connect Google Calendar</span><span class="list__sub">The plan goes in. Weekend events come back as commitments.</span></span>
+          <span class="list__trail"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron_right"/></svg></span>
+        </a></li>
+        <li class="list__item">
+          <span class="disc disc--accent"><svg class="icon" aria-hidden="true"><use href="#i-share"/></svg></span>
+          <span class="list__text"><span class="list__title">Subscription link is on</span><span class="list__sub">Created 20 October. Calendar apps refresh it on their own.</span></span>
+          <span class="list__trail"><a class="btn btn--quiet btn--sm btn--warn-text" href="./dialogs.html#dialog-calendar-feed-stop">Stop</a></span>
+        </li>
+      </ul>
+      <a class="ghost-row" href="./dialogs.html#dialog-calendar-feed"><svg class="icon" aria-hidden="true"><use href="#i-refresh"/></svg>Get a new link</a>
+    </section>
+  </section>
+
+  <!-- 5. Sync error: the grant expired or was revoked at Google (L2-170). Planning still works. -->
+  <section class="specimen" id="state-error">
+    <span class="specimen__label">Google stopped answering · Reconnect</span>
+    <section class="section" aria-labelledby="c5-title">
+      <div class="section-header">
+        <div class="section-header__text">
+          <h2 class="section-header__title" id="c5-title">Calendar</h2>
+          <p class="section-header__sub">Keep this weekend in the calendar you already use. Off until you connect one.</p>
+        </div>
+      </div>
+      <div class="banner banner--warn" role="alert">
+        <svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg>
+        <span>Google Calendar stopped accepting updates. Reconnect to keep this weekend in sync.</span>
+      </div>
+      <ul class="list list--card">
+        <li class="list__item">
+          <span class="disc disc--warn"><svg class="icon" aria-hidden="true"><use href="#i-calendar"/></svg></span>
+          <span class="list__text"><span class="list__title">Google Calendar</span><span class="list__sub">quinn.brown@gmail.com · last synced 19 October</span></span>
+          <span class="list__trail"><a class="btn btn--primary btn--sm" href="./dialogs.html#dialog-calendar-connect">Reconnect</a></span>
+        </li>
+        <li class="list__item">
+          <span class="list__text"><span class="list__title">Plan around my calendar</span><span class="list__sub">Weekend events count as commitments</span></span>
+          <label class="toggle"><input class="toggle__input" type="checkbox" role="switch" checked><span class="toggle__track"></span><span class="visually-hidden">Plan around my calendar</span></label>
+        </li>
+      </ul>
+      <a class="btn btn--quiet btn--warn-text" href="./dialogs.html#dialog-calendar-disconnect">Disconnect</a>
+    </section>
+  </section>
+
+  <!-- 6. Consent denied: back from Google without a grant (L2-165). -->
+  <section class="specimen" id="state-denied">
+    <span class="specimen__label">Back from Google without permission</span>
+    <section class="section" aria-labelledby="c6-title">
+      <div class="section-header">
+        <div class="section-header__text">
+          <h2 class="section-header__title" id="c6-title">Calendar</h2>
+          <p class="section-header__sub">Keep this weekend in the calendar you already use. Off until you connect one.</p>
+        </div>
+      </div>
+      <div class="banner banner--info" role="status">
+        <svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg>
+        <span>Google Calendar wasn't connected. Nothing was shared.</span>
+      </div>
+      <ul class="list list--card">
+        <li><a class="list__item list__item--action" href="./dialogs.html#dialog-calendar-connect">
+          <span class="disc disc--primary"><svg class="icon" aria-hidden="true"><use href="#i-calendar"/></svg></span>
+          <span class="list__text"><span class="list__title">Connect Google Calendar</span><span class="list__sub">The plan goes in. Weekend events come back as commitments.</span></span>
+          <span class="list__trail"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron_right"/></svg></span>
+        </a></li>
+        <li><a class="list__item list__item--action" href="./dialogs.html#dialog-calendar-feed">
+          <span class="disc"><svg class="icon" aria-hidden="true"><use href="#i-share"/></svg></span>
+          <span class="list__text"><span class="list__title">Subscribe from another calendar</span><span class="list__sub">Apple, Outlook or any app that takes a link</span></span>
+          <span class="list__trail"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron_right"/></svg></span>
+        </a></li>
+      </ul>
+    </section>
+  </section>
+</main>
+<!-- @shell:bottomnav -->
+<nav class="bottom-nav" aria-label="Primary">
+  <a class="bottom-nav__item" data-nav="weekend" href="./weekend.html"><span class="bottom-nav__icon"><svg class="icon" aria-hidden="true"><use href="#i-home"/></svg></span>Weekend</a>
+  <a class="bottom-nav__item" data-nav="ideas" href="./ideas.html"><span class="bottom-nav__icon"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg></span>Ideas</a>
+  <a class="bottom-nav__item" data-nav="past" href="./past.html"><span class="bottom-nav__icon"><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg></span>Past</a>
+  <a class="bottom-nav__item" data-nav="family" href="./family.html" aria-current="page"><span class="bottom-nav__icon"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg></span>Family</a>
+</nav>
+<!-- @/shell:bottomnav -->
+<script src="../app.js"></script>
+</body>
+</html>
