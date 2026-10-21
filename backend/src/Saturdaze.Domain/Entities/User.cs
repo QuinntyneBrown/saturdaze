@@ -19,4 +19,10 @@ public class User
     /// rotated on every upload, null when no photo is set (L2-087).
     /// </summary>
     public Guid? AvatarToken { get; set; }
+
+    /// <summary>
+    /// Google account id (<c>sub</c>) this account signs in with, or null when it
+    /// never signed in with Google (L2-163, ADR-019).
+    /// </summary>
+    public string? GoogleSubject { get; set; }
 }

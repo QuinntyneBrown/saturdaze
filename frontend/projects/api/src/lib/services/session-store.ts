@@ -174,6 +174,29 @@ export class SessionStore implements ISessionStore {
   }
 
   /**
+   * Login With Google.
+   *
+   * @param {string} credential - The Google ID token
+   * @param {boolean} remember - The remember
+   *
+   * @returns {Promise<void>} The result of the operation
+   */
+  async loginWithGoogle(credential: string, remember: boolean): Promise<void> {
+    this._error.set(null);
+    try {
+      const { token, user } = await this.auth.loginWithGoogle({ credential });
+      this.persist(token, remember);
+      this.persistRememberedEmail(remember ? user.email : null);
+      this._token.set(token);
+      this._user.set(user);
+    } catch (e) {
+      const err = asAuthError(e);
+      this._error.set(err);
+      throw err;
+    }
+  }
+
+  /**
    * Logout. The revocation call runs *before* the local clear so the
    * interceptor can still attach the bearer; it is best-effort, so an
    * offline device signs out locally regardless.

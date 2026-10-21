@@ -68,6 +68,15 @@ public static class DependencyInjection
         services.AddSingleton<IPasswordHasher, Pbkdf2PasswordHasher>();
         services.AddSingleton<IJwtTokenService, JwtTokenService>();
 
+        // Sign in with Google (ADR-019): the credential is verified offline
+        // against Google's published keys; the only setting is the client id.
+        services.Configure<GoogleOptions>(configuration.GetSection(GoogleOptions.SectionName));
+        services.AddHttpClient(GoogleIdTokenVerifier.HttpClientName, http =>
+        {
+            http.Timeout = TimeSpan.FromSeconds(10);
+        });
+        services.AddSingleton<IGoogleIdTokenVerifier, GoogleIdTokenVerifier>();
+
         // Account mail (L2-142): handlers enqueue, a hosted dispatcher sends after the
         // response. SMTP when a host is configured, otherwise .eml files on disk.
         services.Configure<EmailOptions>(o =>

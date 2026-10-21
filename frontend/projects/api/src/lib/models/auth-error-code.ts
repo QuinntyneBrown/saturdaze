@@ -11,4 +11,8 @@ export type AuthErrorCode =
   | 'token_invalid'
   | 'email_already_verified'
   | 'rate_limited'
-  | 'invalid_photo';
+  | 'invalid_photo'
+  | 'google_token_invalid'
+  | 'google_email_unverified'
+  | 'google_not_configured'
+  | 'email_unverified';

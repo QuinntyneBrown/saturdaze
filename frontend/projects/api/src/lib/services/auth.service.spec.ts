@@ -109,6 +109,31 @@ describe('AuthService', () => {
     });
   });
 
+  describe('loginWithGoogle', () => {
+    it('POSTs the credential to /api/auth/google and maps the token pair', async () => {
+      const promise = service.loginWithGoogle({ credential: 'google-credential' });
+      const req = httpMock.expectOne(`${BASE}/api/auth/google`);
+      expect(req.request.method).toBe('POST');
+      expect(req.request.body).toEqual({ credential: 'google-credential' });
+      req.flush(SUCCESS);
+
+      const result = await promise;
+      expect(result.token.refreshToken).toBe('refresh-1');
+      expect(result.user).toEqual(SUCCESS.user);
+    });
+
+    it('rethrows the backend AuthError body', async () => {
+      const promise = service.loginWithGoogle({ credential: 'google-credential' });
+      httpMock
+        .expectOne(`${BASE}/api/auth/google`)
+        .flush(
+          { code: 'google_token_invalid', message: 'no' },
+          { status: 401, statusText: 'Unauthorized' },
+        );
+      await expect(promise).rejects.toEqual({ code: 'google_token_invalid', message: 'no' });
+    });
+  });
+
   describe('refresh', () => {
     it('POSTs /api/auth/refresh with the refresh token and maps the new pair', async () => {
       const promise = service.refresh({ refreshToken: 'refresh-1' });

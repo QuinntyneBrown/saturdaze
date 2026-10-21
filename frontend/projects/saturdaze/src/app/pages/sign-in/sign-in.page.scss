@@ -15,3 +15,28 @@
   gap: 12px;
   flex-wrap: wrap;
 }
+
+// `.auth-card__or` from docs/mocks-v2/styles/app.css: a rule on either side of "or".
+.auth-card__or {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: var(--fontSizeBase350);
+  color: var(--colorNeutralForeground2);
+
+  &::before,
+  &::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--colorNeutralStroke1);
+  }
+}
+
+// Google Identity Services draws its own 40 px button in here (L2-164, ADR-019);
+// the slot keeps the mock's height so the card never jumps while it loads.
+.google-btn {
+  display: flex;
+  justify-content: center;
+  min-height: 40px;
+}

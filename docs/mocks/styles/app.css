@@ -786,6 +786,21 @@
   .auth-card__form { display: flex; flex-direction: column; gap: 16px; }
   .auth-card__row { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
   .auth-card__alt { text-align: center; font-size: var(--sd-fs-ui); color: var(--sd-ink-soft); }
+  .auth-card__or { display: flex; align-items: center; gap: 12px; font-size: var(--sd-fs-ui); color: var(--sd-ink-soft); }
+  .auth-card__or::before, .auth-card__or::after { content: ""; flex: 1; height: 1px; background: var(--sd-line-strong); }
+  /* "Continue with Google" (L2-164). The app renders Google's own button in this slot
+     (Google Identity Services, ADR-019); this stand-in draws it to Google's branding
+     guidelines, so it keeps Google's colours and Roboto instead of the design tokens.
+     Light: the "outline" theme; dark: the "filled_black" theme. */
+  .btn--google {
+    width: 100%; height: 40px; padding: 0 12px; gap: 10px; border-radius: 4px;
+    background: #FFFFFF; border-color: #747775; color: #1F1F1F;
+    font-family: "Roboto", var(--sd-font-sans); font-size: 14px; font-weight: 500; letter-spacing: 0.25px;
+  }
+  .btn__google-mark { width: 20px; height: 20px; flex: none; }
+  @media (prefers-color-scheme: dark) {
+    .btn--google { background: #131314; border-color: #8E918F; color: #E3E3E3; }
+  }
   .auth__foot { text-align: center; font-size: var(--sd-fs-xs); color: var(--sd-ink-faint); display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 12px; }
   .link { color: var(--sd-primary-deep); font-weight: var(--sd-fw-semibold); border-radius: var(--sd-r-sm); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
   @media (hover: hover) { .link:hover { text-decoration-thickness: 2px; } }
@@ -914,6 +929,8 @@
     .btn--ghost:hover { background: var(--sd-surface-2); color: var(--sd-ink); }
     .btn--danger:hover { background: color-mix(in srgb, var(--sd-warn) 94%, #000); transform: translateY(-1px); }
     .btn--text:hover { text-decoration: underline; text-underline-offset: 3px; }
+    .btn--google:hover { background: #F2F2F2; transform: none; }
+    @media (prefers-color-scheme: dark) { .btn--google:hover { background: #1E1F20; } }
     .topbar__link:hover, .sitebar__link:hover { background: var(--sd-surface-2); color: var(--sd-ink); }
     .avatar--btn:hover { box-shadow: 0 0 0 3px var(--sd-primary-soft); }
     .filter-chip:not([aria-pressed="true"]):hover { border-color: var(--sd-ink-faint); color: var(--sd-ink); }
@@ -1092,7 +1109,7 @@
   .upload-drop .field__hint { font-weight: var(--sd-fw-regular); }
   .photo-edit__media { max-width: 240px; }
 
-  /* admin: invitations (A8, L2-157, L2-158) */
+  /* admin: invitations (A8, L2-163, L2-164) */
   body[data-page="admin"] .sample-list .disc, body[data-page="admin"] .invite-list .disc { flex: none; }
   body[data-page="admin"] .invite-row { align-items: flex-start; }
   body[data-page="admin"] .invite-row .disc { margin-top: 2px; }

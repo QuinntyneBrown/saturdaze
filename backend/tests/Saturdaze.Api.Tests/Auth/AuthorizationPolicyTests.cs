@@ -1,5 +1,6 @@
 // Traces to: L2-008
 using System.Net;
+using System.Net.Http.Json;
 using FluentAssertions;
 using Saturdaze.Api.Tests.Support;
 using Xunit;
@@ -31,6 +32,14 @@ public class AuthorizationPolicyTests : IClassFixture<SaturdazeApiFactory>
         using var request = new HttpRequestMessage(new HttpMethod(method), url);
         var response = await client.SendAsync(request);
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized, $"{method} {url}");
+    }
+
+    [Fact]
+    public async Task Google_sign_in_is_anonymous()
+    {
+        // Validation, not the fallback policy, answers an empty credential.
+        var response = await _factory.CreateClient().PostAsJsonAsync("/api/auth/google", new { credential = "" });
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
 
     [Fact]

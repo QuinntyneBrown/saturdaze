@@ -20,6 +20,9 @@ import {
   EventsService,
   FAMILY_SERVICE,
   FamilyService,
+  GOOGLE_CLIENT_ID,
+  GOOGLE_IDENTITY,
+  GoogleIdentityService,
   RESTAURANT_SERVICE,
   RestaurantService,
   SAVED_SERVICE,
@@ -64,5 +67,9 @@ export const appConfig: ApplicationConfig = {
     // persistence + error-mapping; pages depend only on `SESSION_STORE`.
     { provide: AUTH_SERVICE, useExisting: AuthService },
     { provide: SESSION_STORE, useExisting: SessionStore },
+    // "Continue with Google" (L2-164): Google's button script, off when the
+    // environment carries no client id.
+    { provide: GOOGLE_CLIENT_ID, useValue: environment.googleClientId },
+    { provide: GOOGLE_IDENTITY, useExisting: GoogleIdentityService },
   ],
 };

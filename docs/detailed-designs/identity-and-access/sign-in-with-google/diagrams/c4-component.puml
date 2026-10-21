@@ -1,0 +1,30 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components - Sign in with Google
+
+Container_Boundary(web, "Saturdaze web application") {
+  Component(page, "SignInPage", "Angular component", "Hosts Google's button; shares the return-URL rule with the password path")
+  Component(gsi, "GoogleIdentityService", "Angular service (api library)", "Loads Google Identity Services once and renders the button")
+  Component(store, "SessionStore and AuthService", "Angular services (api library)", "loginWithGoogle(); persists the pair per Remember me")
+}
+Container_Boundary(api, "Saturdaze API") {
+  Component(controller, "AuthController", "ASP.NET Core", "POST /api/auth/google (anonymous)")
+  Component(handler, "SignInWithGoogleCommandHandler", "Application handler", "Maps the Google identity onto an account")
+  Component(verifier, "GoogleIdTokenVerifier", "Infrastructure service", "Validates signature, issuer, audience and expiry against cached JWKS")
+  Component(issuer, "RefreshTokenIssuer", "Application service", "Mints the refresh token and AuthSuccessDto")
+  Component(entity, "User and Family", "Domain state", "GoogleSubject links the account to its Google identity")
+  ComponentDb(db, "AppDbContext", "EF Core", "Stores users, families and refresh tokens")
+}
+System_Ext(google, "Google", "Identity Services and JWKS")
+Rel(page, gsi, "renderButton(host, onCredential)")
+Rel(gsi, google, "Loads gsi/client; receives the credential", "HTTPS")
+Rel(page, store, "loginWithGoogle(credential, remember)")
+Rel(store, controller, "POST /api/auth/google", "JSON/HTTPS")
+Rel(controller, handler, "Dispatches SignInWithGoogleCommand")
+Rel(handler, verifier, "VerifyAsync(credential)")
+Rel(verifier, google, "Fetches signing keys", "HTTPS")
+Rel(handler, entity, "Finds, links or creates")
+Rel(handler, issuer, "Issue(user)")
+Rel(handler, db, "Reads and writes", "EF Core")
+@enduml

@@ -995,6 +995,10 @@ namespace Saturdaze.Infrastructure.Migrations
                     b.Property<Guid?>("FamilyId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("GoogleSubject")
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
+
                     b.Property<string>("NormalizedEmail")
                         .IsRequired()
                         .HasMaxLength(256)
@@ -1016,6 +1020,10 @@ namespace Saturdaze.Infrastructure.Migrations
                     b.HasIndex("AvatarToken")
                         .IsUnique()
                         .HasFilter("[AvatarToken] IS NOT NULL");
+
+                    b.HasIndex("GoogleSubject")
+                        .IsUnique()
+                        .HasFilter("[GoogleSubject] IS NOT NULL");
 
                     b.HasIndex("NormalizedEmail")
                         .IsUnique();

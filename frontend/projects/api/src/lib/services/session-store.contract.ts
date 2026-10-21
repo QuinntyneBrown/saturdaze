@@ -69,6 +69,16 @@ export interface ISessionStore {
    */
   login(req: LoginRequest, remember: boolean): Promise<void>;
   /**
+   * Sign in with the credential Google Identity Services handed back;
+   * persisted like `login` (L2-164).
+   *
+   * @param {string} credential - The Google ID token
+   * @param {boolean} remember - The remember
+   *
+   * @returns {Promise<void>} The result of the operation
+   */
+  loginWithGoogle(credential: string, remember: boolean): Promise<void>;
+  /**
    * Sign out: best-effort server-side revocation of the refresh token,
    * then clears every persisted credential. Always resolves.
    *

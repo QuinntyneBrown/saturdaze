@@ -7,6 +7,7 @@ import { AuthError } from '../models/auth-error';
 import { AuthErrorCode } from '../models/auth-error-code';
 import { AuthToken } from '../models/auth-token';
 import { ForgotPasswordRequest } from '../models/forgot-password-request';
+import { GoogleLoginRequest } from '../models/google-login-request';
 import { LoginRequest } from '../models/login-request';
 import { LogoutRequest } from '../models/logout-request';
 import { RefreshRequest } from '../models/refresh-request';
@@ -189,6 +190,24 @@ export class AuthService implements IAuthService {
     try {
       const dto = await firstValueFrom(
         this.http.post<AuthSuccessDto>(`${this.baseUrl}/api/auth/login`, req),
+      );
+      return { token: mapToken(dto.token), user: this.toUser(dto.user) };
+    } catch (e) {
+      rethrowAsAuthError(e);
+    }
+  }
+
+  /**
+   * Login With Google.
+   *
+   * @param {GoogleLoginRequest} req - The req
+   *
+   * @returns {Promise<} The result of the operation
+   */
+  async loginWithGoogle(req: GoogleLoginRequest): Promise<{ token: AuthToken; user: User }> {
+    try {
+      const dto = await firstValueFrom(
+        this.http.post<AuthSuccessDto>(`${this.baseUrl}/api/auth/google`, req),
       );
       return { token: mapToken(dto.token), user: this.toUser(dto.user) };
     } catch (e) {

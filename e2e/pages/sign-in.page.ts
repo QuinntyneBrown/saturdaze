@@ -59,6 +59,25 @@ export class SignInPage extends AuthCardPage {
     return this.altLink("Create an account", state);
   }
 
+  /** The "or" rule between the password form and the Google button (L2-164). */
+  orDivider(state?: string): Locator {
+    return this.card(state).getByRole("separator", { name: "or", exact: true });
+  }
+
+  /**
+   * "Continue with Google": the mock's `.btn--google` stand-in, or, in the
+   * app, the button Google Identity Services (or the e2e fake) renders
+   * into the `.google-btn` host.
+   */
+  googleButton(state?: string): Locator {
+    return this.card(state).getByRole("button", { name: "Continue with Google", exact: true });
+  }
+
+  /** The `.google-btn` host element the app reserves for Google's button. */
+  googleHost(state?: string): Locator {
+    return this.card(state).locator(".google-btn");
+  }
+
   async fillCredentials(email: string, password: string): Promise<void> {
     await this.emailInput().fill(email);
     await this.passwordInput().fill(password);

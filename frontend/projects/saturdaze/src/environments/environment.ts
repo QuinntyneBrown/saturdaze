@@ -14,4 +14,12 @@ export const environment = {
   apiBaseUrl: 'http://localhost:5100',
   siteUrl: 'http://localhost:4500/',
   galleryRoutes: true,
+  /**
+   * OAuth client id for "Continue with Google" (L2-164, ADR-019); empty
+   * hides the button. This is the Saturdaze web client from the Saturdaze
+   * project in console.cloud.google.com; http://localhost:4200 is one of
+   * its authorised origins, so a real sign-in works locally when the API
+   * has the same id as `Saturdaze:Google:ClientId`.
+   */
+  googleClientId: '103934248516-lq6nd8k79v6dmg1pe48asd3q09cjptpo.apps.googleusercontent.com',
 };

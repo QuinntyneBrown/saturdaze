@@ -66,6 +66,7 @@ param(
     [string]$MarketingDomain = "",
     [string]$MarketingApexDomain = "",
     [string]$BudgetAlertEmail = "",
+    [string]$GoogleClientId = "",
     [string]$SqlAdminLogin = "saturdaze_admin",
     [switch]$SkipGitHub,
     [switch]$SkipDeploy,
@@ -220,6 +221,7 @@ $variables = [ordered]@{
     MARKETING_CUSTOM_DOMAIN   = $MarketingDomain
     MARKETING_APEX_DOMAIN     = $MarketingApexDomain
     BUDGET_ALERT_EMAIL        = $BudgetAlertEmail
+    GOOGLE_CLIENT_ID          = $GoogleClientId
 }
 
 foreach ($k in $secrets.Keys) { $env_[$k] = $secrets[$k] }

@@ -78,6 +78,9 @@ param marketingCustomDomain string = ''
 @description('Apex domain bound to the marketing site beside it (e.g. saturdaze.ca), so it can redirect to www. Blank skips the binding.')
 param marketingApexDomain string = ''
 
+@description('OAuth client id for "Continue with Google" (Saturdaze:Google:ClientId, ADR-019). The same id is compiled into the family app; blank answers 503 google_not_configured.')
+param googleClientId string = ''
+
 @description('Extra browser origins the API should accept, in addition to the three Static Web Apps and the custom domain.')
 param extraCorsOrigins array = []
 
@@ -317,6 +320,9 @@ resource apiSettings 'Microsoft.Web/sites/config@2024-04-01' = {
       Saturdaze__CuratedPhotos__PublicOrigin: apiOrigin
       Saturdaze__Images__AllowedOrigins__0: apiOrigin
       Saturdaze__Share__AppOrigin: appOrigin
+
+      // Sign in with Google (ADR-019): the ID token's audience; public, not a secret.
+      Saturdaze__Google__ClientId: googleClientId
 
       // Catalog ingestion through Claude on Foundry (ADR-011). The key comes
       // straight from the account, so a rotation is one re-deploy away.
