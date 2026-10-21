@@ -11,7 +11,7 @@ skinparam class {
 }
 title Class structure - Connect a calendar
 
-interface CalendarServiceContract {
+interface ICalendarService {
   +settings(): Promise<CalendarSettings>
   +authorizeGoogle(): Promise<string>
   +connectGoogle(code: string, state: string): Promise<CalendarSettings>
@@ -22,7 +22,7 @@ interface CalendarServiceContract {
 }
 class CalendarService
 class FamilyPage {
-  +connectGoogle(): void
+  +connectGoogle(): Promise<void>
   +disconnectGoogle(): Promise<void>
   +setReadCommitments(on: boolean): Promise<void>
   +subscribe(): Promise<void>
@@ -69,7 +69,6 @@ interface ICalendarTokenProtector {
 }
 class CalendarConnection {
   +Guid UserId
-  +Guid FamilyId
   +string GoogleSubject
   +string Email
   +string ProtectedRefreshToken
@@ -89,10 +88,10 @@ enum CalendarConnectionStatus {
   Connected
   NeedsReconnect
 }
-CalendarService ..|> CalendarServiceContract
-FamilyPage --> CalendarServiceContract : injects CALENDAR_SERVICE
-GoogleCalendarCallbackPage --> CalendarServiceContract : injects CALENDAR_SERVICE
-CalendarServiceContract ..> CalendarController : HTTP
+CalendarService ..|> ICalendarService
+FamilyPage --> ICalendarService : injects CALENDAR_SERVICE
+GoogleCalendarCallbackPage --> ICalendarService : injects CALENDAR_SERVICE
+ICalendarService ..> CalendarController : HTTP
 CalendarController ..> ConnectGoogleCalendarCommandHandler : dispatches
 CalendarController ..> CreateCalendarFeedCommandHandler : dispatches
 ConnectGoogleCalendarCommandHandler --> IGoogleCalendarClient : exchanges through

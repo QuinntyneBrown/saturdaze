@@ -8,4 +8,4 @@
 | generate-current-weekend | 5 days | 100% |
 | manage-shopping-errands | 3 days | 80% |
 | map-itinerary-and-travel-legs | 7 days | 90% |
-| sync-weekend-to-calendar | 7 days | 0% |
+| sync-weekend-to-calendar | 7 days | 90% |

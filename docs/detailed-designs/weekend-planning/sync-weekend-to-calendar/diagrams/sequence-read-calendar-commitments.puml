@@ -34,7 +34,7 @@ source -> client : ListEventsAsync(Saturday 00:00, Monday 00:00 local)
 client -> google : events.list(primary, singleEvents=true)
 alt events
 source -> source : L2-169 drop all-day, cancelled, declined, free and Saturdaze events
-source -> source : Split by day; clip to 9:00-21:00; title or "Busy"
+source -> source : Split by day in local time; title or "Busy"
 else invalid_grant
 source -> db : L2-170 Status = NeedsReconnect
 else outage or timeout
@@ -45,7 +45,7 @@ source --> loader : CalendarCommitment list
 loader --> handler : PlannerContext
 handler -> planner : Plan(inputs with CalendarCommitments)
 planner -> planner : BuildFixedBlocks(): profile commitments, locked blocks
-planner -> planner : Calendar commitments not overlapping a placed block; locked, FromCalendar
+planner -> planner : Clip calendar commitments to 9:00-21:00; place those not overlapping a placed block; locked, FromCalendar
 planner --> handler : Blocks
 handler -> db : Save weekend (FromCalendar persisted)
 handler --> page : WeekendDto (block.fromCalendar)

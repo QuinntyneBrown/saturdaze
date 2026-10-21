@@ -24,7 +24,9 @@ class CalendarSyncScheduler {
 }
 interface ICalendarSyncSignal {
   +Notify(): void
-  +WaitAsync(timeout: TimeSpan): Task
+}
+class CalendarSyncSignal {
+  +WaitAsync(timeout: TimeSpan): Task<bool>
 }
 class CalendarSyncRunner {
   +RunDueAsync(): Task
@@ -78,6 +80,7 @@ class PlannerInputs {
 }
 class WeekendPlanner {
   -BuildFixedBlocks(inputs, day): List<ItineraryBlock>
+  -clips calendar commitments to DayStart..DayEnd
 }
 class ItineraryBlock {
   +BlockKind Kind
@@ -85,6 +88,8 @@ class ItineraryBlock {
   +bool FromCalendar
 }
 class CalendarOptions {
+  +string? AppOrigin
+  +string RedirectUri
   +string TimeZone
   +int PollSeconds
   +string? KeyDirectory
@@ -96,6 +101,7 @@ AddShoppingErrandCommand ..|> IChangesItinerary
 CalendarSyncBehavior ..> IChangesItinerary : acts on
 CalendarSyncBehavior --> CalendarSyncScheduler
 CalendarSyncScheduler --> ICalendarSyncSignal
+CalendarSyncSignal ..|> ICalendarSyncSignal
 CalendarSyncRunner --> SyncCalendarConnectionCommandHandler : sends command to
 SyncCalendarConnectionCommandHandler --> CalendarEventSelection
 SyncCalendarConnectionCommandHandler --> CalendarEventLink : reconciles

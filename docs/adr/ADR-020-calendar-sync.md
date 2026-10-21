@@ -51,7 +51,9 @@ ADR-019 chose Google Identity Services ID tokens for sign-in precisely because t
 
 ## Consequences
 
-- New tables `CalendarConnections`, `CalendarEventLinks` and `CalendarFeeds`, and the column `ItineraryBlocks.FromCalendar` (migration `AddCalendarSync`).
+- New tables `CalendarFeeds` (migration `AddCalendarFeeds`), `CalendarConnections` (`AddCalendarConnections`) and `CalendarEventLinks` with the connections' sync columns (`AddCalendarSync`), and the column `ItineraryBlocks.FromCalendar` (`AddItineraryBlockFromCalendar`). Apply them with `saturdaze migrate`.
+- Infrastructure takes the `Microsoft.AspNetCore.DataProtection` package rather than the ASP.NET Core shared framework, because `Saturdaze.Worker` runs on the plain .NET runtime image. It brings `System.Security.Cryptography.Xml`, whose central pin moves to 10.0.13 (GHSA-r955-8q5j-3h83).
+- The subscription link's token is part of a URL that ASP.NET Core logs with every event of a request; `CalendarFeedTokenRedactor`, a Serilog enricher in the API, rewrites it before any sink sees it (L2-170).
 - Google Cloud needs a manual change outside the repo: the Calendar API enabled, the `calendar.events` scope on the consent screen, the redirect URI `https://app.saturdaze.ca/family/calendar/google` (and `http://localhost:4200/family/calendar/google` for development) on the web client, and its secret stored as `GOOGLE_CLIENT_SECRET`. `README.md` lists the steps. Until then the Google option is hidden.
 - `calendar.events` is a sensitive scope; Google shows an "unverified app" warning to anyone outside the test users until the consent screen passes verification.
 - Events already written stay in the person's calendar after a disconnect, because the grant is revoked first and nothing can delete them afterwards. A future requirement could delete them before revoking.
