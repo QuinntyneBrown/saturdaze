@@ -2,6 +2,7 @@
 
 | Design | Effort | Complete |
 |---|---|---|
+| connect-calendar | 6 days | 0% |
 | join-from-invitation | 4 days | 100% |
 | manage-family-members | 7 days | 100% |
 | manage-profile-photo | 4 days | 100% |
