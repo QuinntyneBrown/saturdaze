@@ -24,12 +24,16 @@ try
 {
     var builder = WebApplication.CreateBuilder(args);
 
+    // The host owns its logger rather than reconfiguring the static bootstrap one, so a
+    // host shutting down (and the CloseAndFlush below) never closes another host's
+    // logger when the tests start several in one process (ADR-002, ADR-020).
     builder.Host.UseSerilog((ctx, services, cfg) => cfg
         .ReadFrom.Configuration(ctx.Configuration)
         .ReadFrom.Services(services)
         .Enrich.FromLogContext()
         .WriteTo.Console()
-        .WriteTo.File("logs/saturdaze-.log", rollingInterval: RollingInterval.Day));
+        .WriteTo.File("logs/saturdaze-.log", rollingInterval: RollingInterval.Day),
+        preserveStaticLogger: true);
 
     builder.Services.AddApplication();
     builder.Services.AddInfrastructure(builder.Configuration);
