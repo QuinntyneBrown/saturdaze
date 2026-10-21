@@ -1,39 +1,28 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
-using Microsoft.Data.SqlClient;
 using Microsoft.Data.Sqlite;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Saturdaze.Infrastructure.Persistence;
-using Saturdaze.Infrastructure.Tests.Support;
 using Xunit;
 
 namespace Saturdaze.Api.Tests.Support;
 
 /// <summary>
-/// Boots the API in-process against a per-fixture LocalDB database.
-/// Applies migrations on first construction and drops the database on disposal.
+/// Boots the API in-process against a per-fixture in-memory SQLite database (ADR-020).
+/// The API creates the schema on startup; the database goes when the fixture is disposed.
 /// </summary>
-public class SaturdazeApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
+public sealed class SaturdazeApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
 {
     public string DatabaseName { get; } = $"Saturdaze_Api_{Guid.NewGuid():N}";
-    public string ConnectionString { get; }
 
-    private readonly bool _sqlite;
+    /// <summary>A named shared-cache database: every DbContext the API opens reaches the same one.</summary>
+    public string ConnectionString => $"Data Source={DatabaseName};Mode=Memory;Cache=Shared";
+
+    /// <summary>An in-memory SQLite database lives as long as one connection to it is open.</summary>
     private SqliteConnection? _keepAlive;
-
-    public SaturdazeApiFactory() : this(sqlite: false) { }
-
-    protected SaturdazeApiFactory(bool sqlite)
-    {
-        _sqlite = sqlite;
-        ConnectionString = sqlite
-            ? $"Data Source={DatabaseName};Mode=Memory;Cache=Shared"
-            : LocalDbConnection.For(DatabaseName);
-    }
 
     public FakeWeatherClient Weather { get; } = new();
     public FakeDateTimeProvider Clock { get; } = new(new DateOnly(2026, 5, 16));
@@ -59,7 +48,7 @@ public class SaturdazeApiFactory : WebApplicationFactory<Program>, IAsyncLifetim
             cfg.AddInMemoryCollection(new Dictionary<string, string?>
             {
                 ["ConnectionStrings:Saturdaze"] = ConnectionString,
-                [Saturdaze.Infrastructure.DependencyInjection.DatabaseProviderKey] = _sqlite ? "Sqlite" : "SqlServer",
+                [Saturdaze.Infrastructure.DependencyInjection.DatabaseProviderKey] = "Sqlite",
                 ["Saturdaze:HomeLocation:Name"] = "Port Credit",
                 ["Saturdaze:HomeLocation:Latitude"] = "43.5547",
                 ["Saturdaze:HomeLocation:Longitude"] = "-79.5816",
@@ -93,57 +82,18 @@ public class SaturdazeApiFactory : WebApplicationFactory<Program>, IAsyncLifetim
 
     public async Task InitializeAsync()
     {
-        if (_sqlite)
-        {
-            // The in-memory database lives as long as one connection to it is open (ADR-020);
-            // the API creates the schema on startup.
-            _keepAlive = new SqliteConnection(ConnectionString);
-            await _keepAlive.OpenAsync();
-            await using var scope = Services.CreateAsyncScope();
-            await TestSeed.SeedAsync(scope.ServiceProvider.GetRequiredService<AppDbContext>());
-            return;
-        }
-        var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>()
-            .UseSqlServer(ConnectionString,
-                sql => sql.MigrationsAssembly(typeof(AppDbContext).Assembly.GetName().Name));
-        await using var ctx = new AppDbContext(optionsBuilder.Options);
-        await ctx.Database.MigrateAsync();
-        // Seed for tests that need a family / catalog. Pipeline tests will tolerate the extra data.
-        await TestSeed.SeedAsync(ctx);
-        // Force lazy WebApplicationFactory build so configuration is honored before tests.
-        _ = Services;
+        _keepAlive = new SqliteConnection(ConnectionString);
+        await _keepAlive.OpenAsync();
+        // Building the host creates the schema; then seed for tests that need a family / catalog.
+        // Pipeline tests will tolerate the extra data.
+        await using var scope = Services.CreateAsyncScope();
+        await TestSeed.SeedAsync(scope.ServiceProvider.GetRequiredService<AppDbContext>());
     }
 
     async Task IAsyncLifetime.DisposeAsync()
     {
         if (Directory.Exists(PhotoDirectory)) Directory.Delete(PhotoDirectory, recursive: true);
-        if (_keepAlive is not null)
-        {
-            await base.DisposeAsync();
-            await _keepAlive.DisposeAsync();
-            return;
-        }
-        try
-        {
-            await using var conn = new SqlConnection(LocalDbConnection.For("master"));
-            await conn.OpenAsync();
-            await using var cmd = conn.CreateCommand();
-            cmd.CommandText = $@"
-                IF DB_ID('{DatabaseName}') IS NOT NULL
-                BEGIN
-                    ALTER DATABASE [{DatabaseName}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
-                    DROP DATABASE [{DatabaseName}];
-                END";
-            await cmd.ExecuteNonQueryAsync();
-        }
-        catch
-        {
-            // best-effort cleanup
-        }
-        SqlConnection.ClearAllPools();
         await base.DisposeAsync();
+        if (_keepAlive is not null) await _keepAlive.DisposeAsync();
     }
 }
-
-/// <summary>Slice 1 of ADR-020: the factory on SQLite, for the classes moved so far.</summary>
-public sealed class SqliteSaturdazeApiFactory() : SaturdazeApiFactory(sqlite: true);
