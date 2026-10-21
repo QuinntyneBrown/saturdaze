@@ -11,7 +11,7 @@ using Saturdaze.Domain.Enums;
 namespace Saturdaze.Application.Auth;
 
 /// <summary>
-/// Sign in with Google (L2-157, ADR-019). Resolves the account in this order:
+/// Sign in with Google (L2-163, ADR-019). Resolves the account in this order:
 /// the one already linked to the Google subject; the one with the same email
 /// when its address is verified (linked on the way through); otherwise a new
 /// verified, password-less account owning a new family, as registration does.

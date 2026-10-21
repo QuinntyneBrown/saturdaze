@@ -1,7 +1,7 @@
 import { BrowserContext, Page } from "@playwright/test";
 
 /**
- * Stand-in for Google Identity Services (L2-158, ADR-019 decision 7).
+ * Stand-in for Google Identity Services (L2-164, ADR-019 decision 7).
  *
  * The app loads `https://accounts.google.com/gsi/client` only when
  * `window.google.accounts.id` is absent, so installing this object before

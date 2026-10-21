@@ -123,7 +123,7 @@ describe('SessionStore', () => {
     });
   });
 
-  // Traces to: L2-158 AC2, AC3, AC5
+  // Traces to: L2-164 AC2, AC3, AC5
   describe('loginWithGoogle', () => {
     it('posts the credential and persists like a remembered login', async () => {
       await service.loginWithGoogle('google-credential', true);

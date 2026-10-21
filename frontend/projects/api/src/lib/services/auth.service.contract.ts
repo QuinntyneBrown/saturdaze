@@ -40,7 +40,7 @@ export interface IAuthService {
   login(req: LoginRequest): Promise<{ token: AuthToken; user: User }>;
   /**
    * Sign in with a Google credential — `POST /api/auth/google`; creates the
-   * account on first use (L2-157).
+   * account on first use (L2-163).
    *
    * @param {GoogleLoginRequest} req - The req
    *

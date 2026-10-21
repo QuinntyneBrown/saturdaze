@@ -28,7 +28,7 @@ import { environment } from '../../../environments/environment';
  *
  * Below the form, an "or" divider and Google's own button (Google Identity
  * Services, rendered into `.google-btn`) offer "Continue with Google"
- * (L2-158). The credential goes through `SessionStore.loginWithGoogle()`
+ * (L2-164). The credential goes through `SessionStore.loginWithGoogle()`
  * with the same remember choice and return URL; a refused credential shows
  * the banner without marking the password fields.
  */
@@ -131,7 +131,7 @@ export class SignInPage {
     );
   }
 
-  /** Google handed back a credential (L2-158): the remember toggle still decides persistence. */
+  /** Google handed back a credential (L2-164): the remember toggle still decides persistence. */
   private async signInWithGoogle(credential: string): Promise<void> {
     if (this.submitting()) return;
     this.localError.set(null);

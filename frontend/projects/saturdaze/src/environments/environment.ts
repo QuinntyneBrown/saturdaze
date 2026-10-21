@@ -15,7 +15,7 @@ export const environment = {
   siteUrl: 'http://localhost:4500/',
   galleryRoutes: true,
   /**
-   * OAuth client id for "Continue with Google" (L2-158, ADR-019); empty
+   * OAuth client id for "Continue with Google" (L2-164, ADR-019); empty
    * hides the button. The dev id is a placeholder: Google's button renders
    * but a real sign-in needs a client from console.cloud.google.com whose
    * authorised origin is http://localhost:4200, set here and as

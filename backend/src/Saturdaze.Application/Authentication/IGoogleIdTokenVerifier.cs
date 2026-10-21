@@ -1,6 +1,6 @@
 namespace Saturdaze.Application.Authentication;
 
-/// <summary>What a verified Google ID token says about the person (L2-157).</summary>
+/// <summary>What a verified Google ID token says about the person (L2-163).</summary>
 /// <param name="Subject">Google's stable account id (<c>sub</c>).</param>
 /// <param name="Email">The account's email address.</param>
 /// <param name="EmailVerified">Whether Google has verified that address.</param>

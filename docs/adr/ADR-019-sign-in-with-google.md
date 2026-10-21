@@ -4,7 +4,7 @@
 **Date:** 2026-10-20
 **Category:** identity-and-access
 **Deciders:** Quinntyne Brown
-**Implements:** [L2-157](../specs/L2.md#l2-157-sign-in-with-google-creates-or-signs-in-the-account), [L2-158](../specs/L2.md#l2-158-the-sign-in-screen-offers-continue-with-google).
+**Implements:** [L2-163](../specs/L2.md#l2-163-sign-in-with-google-creates-or-signs-in-the-account), [L2-164](../specs/L2.md#l2-164-the-sign-in-screen-offers-continue-with-google).
 **Related:** [ADR-007](ADR-007-refresh-token-session-lifecycle.md) (token issue), [ADR-008](ADR-008-per-user-family-scoping-and-auth-fallback.md) (anonymous surface), [ADR-010](ADR-010-visual-parity-policy.md) (visual parity), [ADR-016](ADR-016-family-ownership-and-member-sign-in.md) (invitations).
 
 ## Context

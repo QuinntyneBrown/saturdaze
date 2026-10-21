@@ -59,7 +59,7 @@ export class SignInPage extends AuthCardPage {
     return this.altLink("Create an account", state);
   }
 
-  /** The "or" rule between the password form and the Google button (L2-158). */
+  /** The "or" rule between the password form and the Google button (L2-164). */
   orDivider(state?: string): Locator {
     return this.card(state).getByRole("separator", { name: "or", exact: true });
   }

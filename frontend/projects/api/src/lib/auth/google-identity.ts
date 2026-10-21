@@ -2,7 +2,7 @@ import { Injectable, InjectionToken, inject } from '@angular/core';
 
 /**
  * Google Identity Services, the script behind "Continue with Google"
- * (L2-158, ADR-019). The page owns a host element; this service loads the
+ * (L2-164, ADR-019). The page owns a host element; this service loads the
  * script once, renders Google's own button into the host, and hands back
  * each credential (signed ID token) Google returns. `POST /api/auth/google`
  * then verifies it.

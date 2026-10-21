@@ -22,7 +22,7 @@ public class User
 
     /// <summary>
     /// Google account id (<c>sub</c>) this account signs in with, or null when it
-    /// never signed in with Google (L2-157, ADR-019).
+    /// never signed in with Google (L2-163, ADR-019).
     /// </summary>
     public string? GoogleSubject { get; set; }
 }

@@ -70,7 +70,7 @@ export interface ISessionStore {
   login(req: LoginRequest, remember: boolean): Promise<void>;
   /**
    * Sign in with the credential Google Identity Services handed back;
-   * persisted like `login` (L2-158).
+   * persisted like `login` (L2-164).
    *
    * @param {string} credential - The Google ID token
    * @param {boolean} remember - The remember

@@ -52,7 +52,7 @@ public class AuthController : ControllerBase
     }
 
     /// <summary>
-    /// Sign in with a Google ID token; creates the account on first use (L2-157, ADR-019).
+    /// Sign in with a Google ID token; creates the account on first use (L2-163, ADR-019).
     /// </summary>
     [HttpPost("google")]
     [AllowAnonymous]

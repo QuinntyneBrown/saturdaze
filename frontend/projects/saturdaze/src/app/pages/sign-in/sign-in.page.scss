@@ -33,7 +33,7 @@
   }
 }
 
-// Google Identity Services draws its own 40 px button in here (L2-158, ADR-019);
+// Google Identity Services draws its own 40 px button in here (L2-164, ADR-019);
 // the slot keeps the mock's height so the card never jumps while it loads.
 .google-btn {
   display: flex;

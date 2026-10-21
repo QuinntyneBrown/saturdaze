@@ -178,7 +178,7 @@ describe('SignInPage', () => {
     expect(component['errorMessage']()).toBe('Could not sign you in. Try again in a moment.');
   });
 
-  // Traces to: L2-158 AC1, AC7
+  // Traces to: L2-164 AC1, AC7
   describe('Continue with Google', () => {
     const divider = (): Element | null => host.querySelector('[role="separator"]');
     const googleHost = (): HTMLElement | null => host.querySelector('.google-btn');

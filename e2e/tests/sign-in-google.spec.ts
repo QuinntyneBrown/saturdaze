@@ -1,11 +1,11 @@
-// Traces to: L2-158
+// Traces to: L2-164
 import { Route } from "@playwright/test";
 import { test, expect } from "../fixtures/sd-test.js";
 import { apiLogin, registerThrowaway } from "../fixtures/auth.js";
 import { E2E_GOOGLE_CREDENTIAL } from "../fixtures/google-identity.js";
 
 /**
- * Sign in with Google — the browser half (L2-158). Google Identity Services
+ * Sign in with Google — the browser half (L2-164). Google Identity Services
  * is the fixture's fake (`fixtures/google-identity.ts`); `POST /api/auth/google`
  * is answered from a route stub, because no spec can obtain a real Google
  * credential, and the API's own rules are covered by `GoogleSignInTests`.
@@ -48,7 +48,7 @@ test.describe("Sign in with Google", () => {
     await pages.signIn.waitForReady();
   });
 
-  // Traces to: L2-158 AC1, AC8
+  // Traces to: L2-164 AC1, AC8
   test("the divider and Google's button sit between Sign in and New here, spanning the card", async ({ page, pages }) => {
     const s = pages.signIn;
     await expect(s.orDivider()).toBeVisible();
@@ -69,14 +69,14 @@ test.describe("Sign in with Google", () => {
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
   });
 
-  // Traces to: L2-158 AC1
+  // Traces to: L2-164 AC1
   test("still fits at 320 px", async ({ page, pages }) => {
     await page.setViewportSize({ width: 320, height: 640 });
     await expect(pages.signIn.googleButton()).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
   });
 
-  // Traces to: L2-158 AC8
+  // Traces to: L2-164 AC8
   test("the button is reachable from the keyboard", async ({ page, pages }) => {
     const s = pages.signIn;
     await s.signInButton().focus();
@@ -84,7 +84,7 @@ test.describe("Sign in with Google", () => {
     await expect(s.googleButton()).toBeFocused();
   });
 
-  // Traces to: L2-158 AC2
+  // Traces to: L2-164 AC2
   test("a credential the API accepts lands on /weekend with a remembered session", async ({ page, pages, request }) => {
     const pair = await realPair(request);
     let body: unknown = null;
@@ -107,7 +107,7 @@ test.describe("Sign in with Google", () => {
     expect(new URL(page.url()).pathname).toBe("/weekend");
   });
 
-  // Traces to: L2-158 AC3
+  // Traces to: L2-164 AC3
   test("remember me off keeps a Google session in sessionStorage", async ({ page, pages, request }) => {
     const pair = await realPair(request);
     await page.route(GOOGLE_ROUTE, (route) =>
@@ -123,7 +123,7 @@ test.describe("Sign in with Google", () => {
     expect(await page.evaluate(() => sessionStorage.getItem("sd.auth.token"))).toBeTruthy();
   });
 
-  // Traces to: L2-158 AC4
+  // Traces to: L2-164 AC4
   test("honours a same-origin returnUrl", async ({ page, pages, request }) => {
     const pair = await realPair(request);
     await page.goto("/sign-in?returnUrl=%2Fpast");
@@ -138,7 +138,7 @@ test.describe("Sign in with Google", () => {
     await pages.past.waitForReady();
   });
 
-  // Traces to: L2-158 AC5
+  // Traces to: L2-164 AC5
   test("an unverified existing account is told to sign in with its password first", async ({ page, pages }) => {
     const s = pages.signIn;
     await page.route(GOOGLE_ROUTE, authError(409, "email_unverified"));
@@ -156,7 +156,7 @@ test.describe("Sign in with Google", () => {
     await expect(s.passwordInput()).not.toHaveAttribute("aria-invalid", "true");
   });
 
-  // Traces to: L2-158 AC6
+  // Traces to: L2-164 AC6
   test("a refused credential asks to try again", async ({ page, pages }) => {
     const s = pages.signIn;
     await page.route(GOOGLE_ROUTE, authError(401, "google_token_invalid"));

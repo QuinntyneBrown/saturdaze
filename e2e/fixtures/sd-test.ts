@@ -114,7 +114,7 @@ export function isPhone(testInfo: TestInfo): boolean {
 export const test = base.extend<SdFixtures>({
   // Google Identity Services is replaced before any page script runs, so no
   // spec downloads Google's button script and the sign-in page gets a
-  // clickable stand-in (L2-158, ADR-019).
+  // clickable stand-in (L2-164, ADR-019).
   page: async ({ page }, use) => {
     await installFakeGoogleIdentity(page);
     await use(page);

@@ -1,5 +1,5 @@
 @startuml
-title Behaviour - Sign in with Google (L2-157, L2-158)
+title Behaviour - Sign in with Google (L2-163, L2-164)
 skinparam backgroundColor #FFFFFF
 skinparam shadowing false
 skinparam roundcorner 12
@@ -25,7 +25,7 @@ end box
 page -> gsi : renderButton(host, onCredential)
 gsi -> google : Load gsi/client once; initialize(client id); renderButton
 actor -> google : Choose a Google account
-google --> page : L2-158 credential (signed ID token)
+google --> page : L2-164 credential (signed ID token)
 page -> client : loginWithGoogle(credential, remember)
 client -> controller : POST /api/auth/google (anonymous)
 controller -> handler : Validate and dispatch SignInWithGoogleCommand
@@ -44,7 +44,7 @@ handler --> controller : 409 email_unverified
 controller --> client : Error
 client --> page : Banner "Sign in with your password to verify it first"
 else linked, verified-email match, or new
-handler -> handler : L2-157 link GoogleSubject, or create User + Family (verified, no password)
+handler -> handler : L2-163 link GoogleSubject, or create User + Family (verified, no password)
 handler -> handler : Issue access and refresh credentials
 handler -> db : Save user, family and RefreshToken
 db --> handler : Saved
