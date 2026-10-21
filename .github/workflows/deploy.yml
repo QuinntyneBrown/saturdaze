@@ -179,8 +179,6 @@ jobs:
           EMAIL_SMTP_CLIENT_ID: ${{ vars.EMAIL_SMTP_CLIENT_ID }}
           EMAIL_SMTP_PRINCIPAL_ID: ${{ vars.EMAIL_SMTP_PRINCIPAL_ID }}
           EMAIL_SMTP_CLIENT_SECRET: ${{ secrets.EMAIL_SMTP_CLIENT_SECRET }}
-          # Google Calendar sync (ADR-020); optional, blank keeps it off.
-          # Google Calendar sync (ADR-021); optional, blank keeps it off.
           # Google Calendar sync (ADR-022); optional, blank keeps it off.
           GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
         run: |
