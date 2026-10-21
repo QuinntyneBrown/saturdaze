@@ -37,7 +37,9 @@ Non-obvious rules:
 
 ### Tests
 
-API tests run sequentially because of shared logger state (ADR-002). Follow the existing test-project patterns when adding coverage.
+Tests never need a database server (ADR-020): API and Infrastructure tests run on a per-fixture in-memory SQLite database, and Application and CLI tests on EF Core InMemory. Tests of SQL Server-only behaviour use `[SqlServerFact]` with `[Trait("Category", "SqlServer")]` and are skipped unless `SATURDAZE_TEST_SQLSERVER` is set. API tests still run sequentially (ADR-002). Follow the existing test-project patterns when adding coverage.
+
+Playwright runs against the API started by `eng/Start-E2eApi.ps1` (SQLite, seeded; no LocalDB).
 
 ## Frontend architecture
 

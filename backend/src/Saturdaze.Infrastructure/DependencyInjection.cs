@@ -28,7 +28,10 @@ public static class DependencyInjection
                 ?? cfg["Saturdaze:ConnectionString"]
                 ?? throw new InvalidOperationException(
                     "No connection string. Set SATURDAZE_CONNECTION, ConnectionStrings:Saturdaze, or Saturdaze:ConnectionString.");
-            opt.UseSqlServer(cs, sql => sql.MigrationsAssembly(typeof(AppDbContext).Assembly.GetName().Name));
+            if (UsesSqlite(cfg))
+                opt.UseSqlite(cs);
+            else
+                opt.UseSqlServer(cs, sql => sql.MigrationsAssembly(typeof(AppDbContext).Assembly.GetName().Name));
         });
 
         services.AddScoped<IAppDbContext>(sp => sp.GetRequiredService<AppDbContext>());
@@ -107,5 +110,42 @@ public static class DependencyInjection
             .AddStandardResilienceHandler();
 
         return services;
+    }
+
+    /// <summary>The configuration key that selects the database provider (ADR-020).</summary>
+    public const string DatabaseProviderKey = "Saturdaze:Database:Provider";
+
+    /// <summary>
+    /// True when <see cref="DatabaseProviderKey"/> selects SQLite, the provider the API
+    /// tests and the e2e API run on (ADR-020). SQL Server, when unset, is the only
+    /// provider for development and production; any other value is a configuration error.
+    /// </summary>
+    public static bool UsesSqlite(IConfiguration configuration)
+    {
+        var provider = configuration[DatabaseProviderKey];
+        if (string.IsNullOrWhiteSpace(provider) || provider.Equals("SqlServer", StringComparison.OrdinalIgnoreCase))
+            return false;
+        if (provider.Equals("Sqlite", StringComparison.OrdinalIgnoreCase))
+            return true;
+        throw new InvalidOperationException($"Unknown {DatabaseProviderKey} '{provider}'. Use SqlServer or Sqlite.");
+    }
+
+    /// <summary>
+    /// Creates the SQLite schema from the model when it does not exist yet. The migrations
+    /// are SQL Server's, so SQLite gets the model's tables plus the one thing the model
+    /// cannot express: an insert trigger that numbers photo audit entries like SQL
+    /// Server's identity column (ADR-020).
+    /// </summary>
+    public static async Task EnsureSqliteSchemaAsync(this AppDbContext db, CancellationToken cancellationToken = default)
+    {
+        if (!await db.Database.EnsureCreatedAsync(cancellationToken)) return;
+        await db.Database.ExecuteSqlRawAsync(
+            """
+            CREATE TRIGGER "PhotoAuditEntries_Sequence" AFTER INSERT ON "PhotoAuditEntries"
+            BEGIN
+                UPDATE "PhotoAuditEntries" SET "Sequence" = NEW.rowid WHERE rowid = NEW.rowid;
+            END
+            """,
+            cancellationToken);
     }
 }

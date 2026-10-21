@@ -6,9 +6,10 @@
 .DESCRIPTION
   `dotnet test Saturdaze.sln` runs the test assemblies one after another, so
   the suite takes the sum of their run times. Each assembly is its own process
-  and each LocalDB-backed fixture creates a uniquely named database (ADR-001),
-  so the assemblies can run side by side; ADR-002's serialization applies
-  within Saturdaze.Api.Tests and is kept by its xunit.runner.json.
+  and each fixture owns a uniquely named in-memory SQLite database (ADR-020),
+  so the assemblies can run side by side with no database server; ADR-002's
+  serialization applies within Saturdaze.Api.Tests and is kept by its
+  xunit.runner.json.
 #>
 param(
     [string]$Configuration = 'Release'

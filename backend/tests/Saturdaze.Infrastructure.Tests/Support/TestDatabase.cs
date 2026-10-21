@@ -1,64 +1,42 @@
-using Microsoft.Data.SqlClient;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Saturdaze.Infrastructure.Persistence;
 
 namespace Saturdaze.Infrastructure.Tests.Support;
 
 /// <summary>
-/// Owns a per-test-class SQL Server database. Applies migrations on construction
-/// and drops the database on disposal. Disposable so xUnit IClassFixture cleans up.
+/// Owns a per-test-class in-memory SQLite database (ADR-020), with the schema the API
+/// creates on SQLite. The database lives until disposal, which closes its last connection.
 /// </summary>
 public sealed class TestDatabase : IAsyncDisposable
 {
-    public string DatabaseName { get; }
+    private readonly SqliteConnection _keepAlive;
+
     public string ConnectionString { get; }
 
-    private TestDatabase(string databaseName, string connectionString)
+    private TestDatabase(string connectionString)
     {
-        DatabaseName = databaseName;
         ConnectionString = connectionString;
+        _keepAlive = new SqliteConnection(connectionString);
     }
 
     public static async Task<TestDatabase> CreateAsync()
     {
-        var dbName = $"Saturdaze_Test_{Guid.NewGuid():N}";
-        var cs = LocalDbConnection.For(dbName);
-        var db = new TestDatabase(dbName, cs);
+        var db = new TestDatabase($"Data Source=Saturdaze_Test_{Guid.NewGuid():N};Mode=Memory;Cache=Shared");
+        await db._keepAlive.OpenAsync();
 
-        using var ctx = db.CreateContext();
-        await ctx.Database.MigrateAsync();
+        await using var ctx = db.CreateContext();
+        await ctx.EnsureSqliteSchemaAsync();
         return db;
     }
 
     public AppDbContext CreateContext()
     {
         var options = new DbContextOptionsBuilder<AppDbContext>()
-            .UseSqlServer(ConnectionString,
-                sql => sql.MigrationsAssembly(typeof(AppDbContext).Assembly.GetName().Name))
+            .UseSqlite(ConnectionString)
             .Options;
         return new AppDbContext(options);
     }
 
-    public async ValueTask DisposeAsync()
-    {
-        try
-        {
-            await using var conn = new SqlConnection(LocalDbConnection.Master());
-            await conn.OpenAsync();
-            await using var cmd = conn.CreateCommand();
-            cmd.CommandText = $@"
-                IF DB_ID(@db) IS NOT NULL
-                BEGIN
-                    ALTER DATABASE [{DatabaseName}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
-                    DROP DATABASE [{DatabaseName}];
-                END";
-            cmd.Parameters.AddWithValue("@db", DatabaseName);
-            await cmd.ExecuteNonQueryAsync();
-        }
-        catch
-        {
-            // Best-effort cleanup; ignore errors.
-        }
-        SqlConnection.ClearAllPools();
-    }
+    public async ValueTask DisposeAsync() => await _keepAlive.DisposeAsync();
 }

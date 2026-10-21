@@ -24,3 +24,4 @@ This is scoped to API tests only. `Saturdaze.Application.Tests` and `Saturdaze.I
 - API test runtime is longer (each fixture starts/stops a full host in series).
 - Total wall-clock for the test suite is still under a minute, which is acceptable given the plan's "speed of implementation is not a goal" stance.
 - A future refactor to use `IHostApplicationBuilder.Logging` instead of the static `Log.Logger` pattern in `Program.cs` would remove the underlying conflict and re-enable parallelism.
+- **2026-10-20, ADR-020:** the root cause is fixed. `Program.cs` calls `UseSerilog(..., preserveStaticLogger: true)`, so each host owns its logger and no host's shutdown closes another's; this became necessary when SQLite made fixture start-up fast enough for the race to show in a serial run. Serialization is kept because the API suite (55 s locally) no longer dominates CI; it passes with collections in parallel (18 s) whenever that is worth turning on.

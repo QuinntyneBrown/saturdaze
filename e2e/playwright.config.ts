@@ -5,12 +5,14 @@ import { defineConfig, devices } from "@playwright/test";
  *
  *   - The Angular dev server (the implementation under test) runs on
  *     http://localhost:4200. Behaviour specs and visual verification target
- *     it; guarded routes need the API on :5100 with a seeded database
- *      (`eng/Start-FreshStack.ps1`).
+ *     it; guarded routes need the API on :5100 with the seeded accounts:
+ *     `pwsh eng/Start-E2eApi.ps1` starts it on a fresh, seeded SQLite file with
+ *     no database server (ADR-020); `eng/Start-FreshStack.ps1` still runs the
+ *     whole stack on LocalDB.
  *
  *   - Saturdaze Admin (ADR-014) runs on http://localhost:4300 for the `admin`
  *     project. Its upload specs need the API's curated store to sit on an
- *     allow-listed origin: start the API with
+ *     allow-listed origin (`eng/Start-E2eApi.ps1` sets both): start the API with
  *     `Saturdaze__CuratedPhotos__PublicOrigin=https://images.example.com` and
  *     `Saturdaze__Images__AllowedOrigins__0=https://images.example.com`.
  *

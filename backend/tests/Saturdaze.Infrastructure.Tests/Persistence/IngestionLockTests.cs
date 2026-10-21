@@ -8,14 +8,23 @@ using Xunit;
 
 namespace Saturdaze.Infrastructure.Tests.Persistence;
 
+/// <summary>The lock is SQL Server's <c>sp_getapplock</c>; other providers take none (ADR-020).</summary>
+[Trait("Category", "SqlServer")]
 public class IngestionLockTests : IAsyncLifetime
 {
-    private TestDatabase _db = null!;
+    private SqlServerTestDatabase _db = null!;
 
-    public async Task InitializeAsync() => _db = await TestDatabase.CreateAsync();
-    public async Task DisposeAsync() => await _db.DisposeAsync();
+    public async Task InitializeAsync()
+    {
+        if (LocalDbConnection.Enabled) _db = await SqlServerTestDatabase.CreateAsync();
+    }
 
-    [Fact]
+    public async Task DisposeAsync()
+    {
+        if (LocalDbConnection.Enabled) await _db.DisposeAsync();
+    }
+
+    [SqlServerFact]
     public async Task A_second_holder_waits_until_the_first_releases_the_lock()
     {
         await using var first = _db.CreateContext();
@@ -32,7 +41,7 @@ public class IngestionLockTests : IAsyncLifetime
         await acquired.DisposeAsync();
     }
 
-    [Fact]
+    [SqlServerFact]
     public async Task Different_types_do_not_wait_for_each_other()
     {
         await using var first = _db.CreateContext();

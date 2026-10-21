@@ -83,7 +83,8 @@ reference.
 
 - .NET SDK `10.0.101` or a compatible feature-band SDK, as pinned by
   `backend/global.json`
-- SQL Server LocalDB or SQL Server Express
+- SQL Server LocalDB or SQL Server Express, to run the app locally (the
+  tests need no database server, ADR-020)
 - Node.js and npm; the frontend workspace declares `npm@10.9.4`
 - PowerShell for the fresh-stack script
 
@@ -241,7 +242,10 @@ Development conventions:
 | Suite | Command | Purpose |
 | --- | --- | --- |
 | Backend build | `dotnet build .\backend\Saturdaze.sln` | Compile API, application, infrastructure, CLI, and tests |
-| Backend tests | `dotnet test .\backend\Saturdaze.sln` | Unit, integration, API, and CLI tests |
+| Backend tests | `dotnet test .\backend\Saturdaze.sln` | Unit, integration, API, and CLI tests; no database server needed (ADR-020) |
+| Backend tests, as CI | `pwsh .\eng\Test-Backend.ps1` | Builds once, runs the four test assemblies side by side |
+| SQL Server tests (opt-in) | `$env:SATURDAZE_TEST_SQLSERVER = "localdb"`, then `dotnet test .\backend\Saturdaze.sln --filter Category=SqlServer` | Migration upgrade and `sp_getapplock` tests against a real server; skipped otherwise |
+| API for Playwright | `pwsh .\eng\Start-E2eApi.ps1` | The API on :5100 over a fresh, seeded SQLite file; no LocalDB |
 | Angular app build | `npm run build -- saturdaze --configuration development` | Build the runnable frontend |
 | Angular libraries | `npm run build -- components` and `npm run build -- api` | Build shared frontend packages |
 | Frontend unit tests | `npm test` from `frontend/` | Angular/Vitest tests |
@@ -255,6 +259,36 @@ Development conventions:
 | Playwright visual | `npm run test:visual` from `e2e/` | Visual comparisons against baselines |
 | Baseline update | `npm run baseline` from `e2e/` | Refresh visual snapshots from the mock app |
 | Perf test | `npx ng build perf-test` from `frontend/`, then `npm run perf-test` from `e2e/` | Component render cost under the CPU profiler, compared against the base branch on PRs ([guide](frontend/projects/perf-test/README.md), ADR-014) |
+
+### Tests without a database server
+
+The backend tests run on in-memory SQLite (ADR-020): each API test fixture and
+each Infrastructure persistence fixture owns a private database, so
+`dotnet test` works on a clean machine and CI runs on Linux with no LocalDB.
+SQLite enforces the foreign keys, cascades and (filtered) unique indexes the
+tests rely on; on SQLite only, `AppDbContext` stores `DateTimeOffset` sortably
+and compares text case-insensitively, like SQL Server.
+
+Three tests prove SQL Server-only behaviour (the migration upgrade and the
+ingestion lock's `sp_getapplock`) and are skipped unless
+`SATURDAZE_TEST_SQLSERVER` is set: to `localdb` for the LocalDB pipe, or to a
+server connection string without a database (for example a SQL Server
+container). A default test checks without a connection that the committed
+migrations cover the model.
+
+Playwright needs the API on :5100 with the seeded accounts. Start it on SQLite:
+
+```powershell
+pwsh .\eng\Start-E2eApi.ps1        # -Build to build the backend first
+cd e2e
+npm test
+```
+
+The script deletes `.run/e2e/saturdaze-e2e.db`, starts the API with
+`Saturdaze__Database__Provider=Sqlite` (the API creates the schema on
+startup; the setting is refused in Production), seeds it with
+`saturdaze seed --provider Sqlite`, and checks the seeded sign-in. Running
+the API against LocalDB (`eng/Restart-Api.ps1`) still works for e2e.
 
 ## Documentation
 
@@ -273,7 +307,7 @@ Development conventions:
 
 Every push to `main` runs `.github/workflows/deploy.yml` (ADR-017):
 
-1. **Test gates** — the backend suite on LocalDB and the frontend unit tests and
+1. **Test gates** — the backend suite (on SQLite, ADR-020) and the frontend unit tests and
    production builds.
 2. **Provision** — `eng/infra/main.bicep` converges `saturdaze-rg`: a Linux B1
    App Service plan and the API Web App, Azure SQL Basic, four Static Web Apps

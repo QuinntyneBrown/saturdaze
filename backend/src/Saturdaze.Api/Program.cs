@@ -14,6 +14,7 @@ using Saturdaze.Application.Authentication;
 using Saturdaze.Domain.Enums;
 using Saturdaze.Infrastructure;
 using Saturdaze.Infrastructure.Authentication;
+using Saturdaze.Infrastructure.Persistence;
 using Serilog;
 
 Log.Logger = new LoggerConfiguration()
@@ -24,12 +25,16 @@ try
 {
     var builder = WebApplication.CreateBuilder(args);
 
+    // The host owns its logger rather than reconfiguring the static bootstrap one, so a
+    // host shutting down (and the CloseAndFlush below) never closes another host's
+    // logger when the tests start several in one process (ADR-002, ADR-020).
     builder.Host.UseSerilog((ctx, services, cfg) => cfg
         .ReadFrom.Configuration(ctx.Configuration)
         .ReadFrom.Services(services)
         .Enrich.FromLogContext()
         .WriteTo.Console()
-        .WriteTo.File("logs/saturdaze-.log", rollingInterval: RollingInterval.Day));
+        .WriteTo.File("logs/saturdaze-.log", rollingInterval: RollingInterval.Day),
+        preserveStaticLogger: true);
 
     builder.Services.AddApplication();
     builder.Services.AddInfrastructure(builder.Configuration);
@@ -93,6 +98,17 @@ try
     });
 
     var app = builder.Build();
+
+    // SQLite is for the tests and the e2e API only (ADR-020). It has no migrations,
+    // so the schema comes from the model; SQL Server is never migrated on startup.
+    if (Saturdaze.Infrastructure.DependencyInjection.UsesSqlite(app.Configuration))
+    {
+        if (app.Environment.IsProduction())
+            throw new InvalidOperationException(
+                $"{Saturdaze.Infrastructure.DependencyInjection.DatabaseProviderKey}=Sqlite is for tests and e2e runs; Production runs on SQL Server.");
+        await using var scope = app.Services.CreateAsyncScope();
+        await scope.ServiceProvider.GetRequiredService<AppDbContext>().EnsureSqliteSchemaAsync();
+    }
 
     WarnOnMissingProductionConfig(app, corsOrigins);
 
