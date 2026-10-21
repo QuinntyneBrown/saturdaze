@@ -153,19 +153,22 @@ npm start
 
 #### Sign in with Google (optional)
 
-"Continue with Google" needs an OAuth client id from
-[Google Cloud](https://console.cloud.google.com/apis/credentials) (type **Web
-application**, authorised JavaScript origin `http://localhost:4200`; no redirect
-URI and no client secret, ADR-019). Put the same id in two places:
+"Continue with Google" works locally out of the box: the **Saturdaze web**
+OAuth client (Google Cloud project `saturdaze-512302`, type **Web application**,
+authorised JavaScript origins `https://app.saturdaze.ca`, `http://localhost:4200`
+and `http://localhost`; no redirect URI and no client secret, ADR-019) is a
+public id, committed in two places:
 
 - `frontend/projects/saturdaze/src/environments/environment.ts` →
-  `googleClientId` (the dev file ships a placeholder that renders the button but
-  cannot complete a sign-in);
-- the API: `$env:Saturdaze__Google__ClientId = "<id>"` or
-  `Saturdaze:Google:ClientId` in `appsettings.Development.json`.
+  `googleClientId` (and `environment.prod.ts` for the deployed app);
+- the API: `Saturdaze:Google:ClientId` in `appsettings.Development.json`
+  (production reads it from the `GOOGLE_CLIENT_ID` GitHub Actions variable
+  through `eng/infra/main.bicepparam`).
 
-With the API's id empty, `POST /api/auth/google` answers `503
-google_not_configured`; with the app's id empty, the button is not rendered.
+To use a client of your own, override both with the same id
+(`$env:Saturdaze__Google__ClientId = "<id>"` for the API). With the API's id
+empty, `POST /api/auth/google` answers `503 google_not_configured`; with the
+app's id empty, the button is not rendered.
 
 Run the design reference (static mocks):
 
