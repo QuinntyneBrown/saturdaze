@@ -1,0 +1,72 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure - Join from an invitation
+
+class PlatformInvitationResolver {
+  +ResolveAsync(token): Task<PlatformInvitation>
+}
+
+class GetJoinPreviewQuery {
+  +string Token
+}
+
+class JoinPreviewDto {
+  +string Email
+  +string? InvitedByEmail
+  +string? FamilyName
+  +string? Message
+  +SharedWeekendDto? Sample
+}
+
+class AcceptPlatformInvitationCommand {
+  +string Token
+  +string Password
+}
+
+class AcceptPlatformInvitationCommandHandler {
+  +Handle(command): Task<AuthSuccessDto>
+}
+
+class PlatformInvitation {
+  +Guid? ProspectId
+  +DateTimeOffset? AcceptedAtUtc
+  +Guid? AcceptedUserId
+}
+
+class Prospect {
+  +Guid FamilyId
+  +Guid WeekendId
+  +Guid? ClaimedByUserId
+}
+
+class User {
+  +Guid Id
+  +Guid? FamilyId
+  +DateTimeOffset? EmailVerifiedUtc
+}
+
+class Family {
+  +Guid Id
+  +Guid? OwnerUserId
+}
+
+GetJoinPreviewQuery ..> PlatformInvitationResolver : resolved through
+GetJoinPreviewQuery ..> JoinPreviewDto : answers
+AcceptPlatformInvitationCommandHandler ..> AcceptPlatformInvitationCommand : handles
+AcceptPlatformInvitationCommandHandler ..> PlatformInvitationResolver : resolves
+AcceptPlatformInvitationCommandHandler --> User : creates verified
+AcceptPlatformInvitationCommandHandler --> Family : owns (claim) or joins
+AcceptPlatformInvitationCommandHandler --> Prospect : sets ClaimedByUserId
+AcceptPlatformInvitationCommandHandler --> PlatformInvitation : sets AcceptedAtUtc
+PlatformInvitation "0..1" --> "1" Prospect
+Prospect "1" --> "1" Family
+@enduml

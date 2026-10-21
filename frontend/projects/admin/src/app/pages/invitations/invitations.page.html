@@ -1,0 +1,96 @@
+<sd-page-header
+  title="Invitations"
+  subtitle="Who has been invited to Saturdaze, newest first. Plan a sample weekend first so a family sees Saturday and Sunday before they sign up."
+>
+  <sd-button slot="actions" variant="quiet" href="/invitations/samples/new">
+    <sd-icon name="sparkle" />
+    New sample weekend
+  </sd-button>
+  <sd-button slot="primary" variant="primary" (click)="invite()">
+    <sd-icon name="mail" />
+    Invite families
+  </sd-button>
+</sd-page-header>
+
+@if (error()) {
+  <sd-banner class="error" tone="warn" role="alert" icon="alert">{{ error() }}</sd-banner>
+}
+
+@switch (status()) {
+  @case ('loading') {
+    <sd-status-row icon="mail">Fetching the invitations.</sd-status-row>
+  }
+  @case ('ready') {
+    @if (prospects().length) {
+      <sd-section
+        class="samples"
+        title="Sample weekends"
+        subtitle="Families described here are not accounts. Open one to swap or lock blocks, then send the invite."
+      >
+        <sd-list card class="sample-list">
+          @for (row of prospects(); track row.id) {
+            <sd-list-item
+              class="sample-row"
+              [title]="row.familyName"
+              [subtitle]="row.meta"
+              [href]="row.href"
+              chevron
+            >
+              <sd-disc
+                slot="leading"
+                [icon]="row.status.icon ?? 'home'"
+                [tone]="prospectDiscTone(row)"
+              />
+              <sd-chip slot="trailing" [tone]="chipTone(row.status.tone)">
+                @if (row.status.icon) {
+                  <sd-icon [name]="row.status.icon" [size]="13" [stroke]="2" />
+                }
+                {{ row.status.label }}
+              </sd-chip>
+            </sd-list-item>
+          }
+        </sd-list>
+      </sd-section>
+    }
+
+    @if (invitations().length) {
+      <sd-section class="invites" title="Invites" subtitle="Each link works once and for 14 days.">
+        <p class="toolbar__count" role="status">{{ countText() }}</p>
+        <sd-list card class="invite-list">
+          @for (row of invitations(); track row.id) {
+            <sd-list-item class="invite-row" [title]="row.email" [subtitle]="row.sample">
+              <sd-disc slot="leading" [icon]="discIcon(row)" [tone]="discTone(row)" />
+              <span class="list__sub">{{ row.meta }}</span>
+              <span slot="trailing" class="invite-row__trail">
+                <sd-chip [tone]="chipTone(row.status.tone)">
+                  @if (row.status.icon) {
+                    <sd-icon [name]="row.status.icon" [size]="13" [stroke]="2" />
+                  }
+                  {{ row.status.label }}
+                </sd-chip>
+                @if (row.canRevoke) {
+                  <sd-button variant="ghost" size="sm" (click)="revoke(row)">
+                    <sd-icon name="close" />
+                    Revoke
+                  </sd-button>
+                }
+              </span>
+            </sd-list-item>
+          }
+        </sd-list>
+      </sd-section>
+    } @else {
+      <sd-empty
+        icon="mail"
+        tone="primary"
+        title="No invites yet"
+        body="Invite a family by email. Attach a sample weekend and they see Saturday and Sunday before they sign up."
+      >
+        <sd-button slot="cta" variant="primary" size="lg" (click)="invite()">
+          <sd-icon name="mail" />
+          Invite families
+        </sd-button>
+      </sd-empty>
+    }
+  }
+}

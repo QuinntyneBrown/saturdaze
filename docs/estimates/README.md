@@ -1,17 +1,17 @@
 # Estimates
 
-- Overall effort: 161 days
-- Complete: 92%
+- Overall effort: 179 days
+- Complete: 93%
 
 | Subsystem | Effort | Complete |
 |---|---|---|
-| [identity-and-access](identity-and-access.md) | 29 days | 99% |
+| [identity-and-access](identity-and-access.md) | 33 days | 99% |
 | [family-profile](family-profile.md) | 7 days | 100% |
 | [weather](weather.md) | 3 days | 80% |
 | [weekend-planning](weekend-planning.md) | 29 days | 93% |
 | [discovery](discovery.md) | 44 days | 95% |
-| [administration](administration.md) | 21 days | 92% |
-| [operations](operations.md) | 10 days | 59% |
+| [administration](administration.md) | 32 days | 95% |
+| [operations](operations.md) | 13 days | 68% |
 | [web-experience](web-experience.md) | 11 days | 84% |
 | [design-system](design-system.md) | 7 days | 100% |
 

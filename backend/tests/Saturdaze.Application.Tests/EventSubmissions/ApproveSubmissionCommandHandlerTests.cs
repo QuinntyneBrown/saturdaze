@@ -51,7 +51,7 @@ public class ApproveSubmissionCommandHandlerTests
         var submission = SeedPending(app);
         var admin = new StubCurrentUserAccessor { UserId = Guid.NewGuid(), Role = UserRole.Admin };
 
-        var rejectHandler = new RejectSubmissionCommandHandler(app.Db, admin, new StubDateTimeProvider(), new NullOutbox());
+        var rejectHandler = new RejectSubmissionCommandHandler(app.Db, admin, new StubDateTimeProvider(), new NullOutbox(), new Saturdaze.Application.Email.SuggestionEmails(Microsoft.Extensions.Options.Options.Create(new Saturdaze.Application.Email.EmailOptions { AppOrigin = "https://app.example.com" })));
         var rejected = await rejectHandler.Handle(
             new RejectSubmissionCommand(submission.Id, "duplicate of seeded event"), default);
 

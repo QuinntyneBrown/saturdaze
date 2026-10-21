@@ -62,17 +62,28 @@ export interface SeedOptions {
  * change per-user state, such as the profile photo, so the seeded account
  * stays untouched.
  */
-export async function registerUser(request: APIRequestContext, prefix = "e2e"): Promise<Credentials> {
+export async function registerUser(
+  request: APIRequestContext,
+  prefix = "e2e",
+): Promise<Credentials> {
   const creds = {
     email: `${prefix}-${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}@example.com`,
     password: "password123",
   };
-  const res = await request.post(`${API_URL}/api/auth/register`, { data: creds });
-  if (!res.ok()) throw new Error(`POST /api/auth/register failed: ${res.status()} ${await res.text()}`);
+  const res = await request.post(`${API_URL}/api/auth/register`, {
+    data: creds,
+  });
+  if (!res.ok())
+    throw new Error(
+      `POST /api/auth/register failed: ${res.status()} ${await res.text()}`,
+    );
   return creds;
 }
 
-export async function apiLogin(request: APIRequestContext, creds: Credentials): Promise<TestSession> {
+export async function apiLogin(
+  request: APIRequestContext,
+  creds: Credentials,
+): Promise<TestSession> {
   const res = await request.post(`${API_URL}/api/auth/login`, { data: creds });
   if (!res.ok()) {
     throw new Error(
@@ -80,7 +91,11 @@ export async function apiLogin(request: APIRequestContext, creds: Credentials): 
     );
   }
   const body = (await res.json()) as {
-    token: { accessToken: string; refreshToken: string; accessTokenExpiresAtUtc: string };
+    token: {
+      accessToken: string;
+      refreshToken: string;
+      accessTokenExpiresAtUtc: string;
+    };
     user: TestSession["user"];
   };
   return {
@@ -98,7 +113,11 @@ export async function apiLogin(request: APIRequestContext, creds: Credentials): 
  * re-authenticate a tab that signed out or rotated its tokens, while a
  * different session (e.g. switching to the admin) replaces the old one.
  */
-export async function seedSession(page: Page, session: TestSession, opts: SeedOptions = {}): Promise<void> {
+export async function seedSession(
+  page: Page,
+  session: TestSession,
+  opts: SeedOptions = {},
+): Promise<void> {
   const payload = {
     value: opts.accessToken ?? session.accessToken,
     expiresUtc: opts.expiresUtc ?? session.expiresUtc,
@@ -124,7 +143,11 @@ export async function seedSession(page: Page, session: TestSession, opts: SeedOp
  * lives in localStorage, which the tabs share, so a tab opened after another
  * has rotated the pair does not write the spent pair back.
  */
-export async function seedContextSession(context: BrowserContext, session: TestSession, opts: SeedOptions = {}): Promise<void> {
+export async function seedContextSession(
+  context: BrowserContext,
+  session: TestSession,
+  opts: SeedOptions = {},
+): Promise<void> {
   const payload = {
     value: opts.accessToken ?? session.accessToken,
     expiresUtc: opts.expiresUtc ?? session.expiresUtc,
@@ -141,8 +164,18 @@ export async function seedContextSession(context: BrowserContext, session: TestS
 export interface CurrentWeekend {
   readonly id: string;
   readonly weekendOf: string;
-  readonly blocks: ReadonlyArray<{ id: string; day: "Saturday" | "Sunday"; kind: string; title: string; isLocked: boolean }>;
-  readonly errands: ReadonlyArray<{ id: string; description: string; done: boolean }>;
+  readonly blocks: ReadonlyArray<{
+    id: string;
+    day: "Saturday" | "Sunday";
+    kind: string;
+    title: string;
+    isLocked: boolean;
+  }>;
+  readonly errands: ReadonlyArray<{
+    id: string;
+    description: string;
+    done: boolean;
+  }>;
 }
 
 /**
@@ -151,11 +184,17 @@ export interface CurrentWeekend {
  * idempotent afterwards (ADR-003), so specs can rely on saved history,
  * timeline blocks and errand placement having something to work with.
  */
-export async function ensureCurrentWeekend(request: APIRequestContext, session: TestSession): Promise<CurrentWeekend> {
+export async function ensureCurrentWeekend(
+  request: APIRequestContext,
+  session: TestSession,
+): Promise<CurrentWeekend> {
   const res = await request.get(`${API_URL}/api/weekends/current`, {
     headers: { Authorization: `Bearer ${session.accessToken}` },
   });
-  if (!res.ok()) throw new Error(`GET /api/weekends/current failed: ${res.status()} ${await res.text()}`);
+  if (!res.ok())
+    throw new Error(
+      `GET /api/weekends/current failed: ${res.status()} ${await res.text()}`,
+    );
   return (await res.json()) as CurrentWeekend;
 }
 
@@ -178,7 +217,10 @@ export async function shareWeekend(
   const res = await request.post(`${API_URL}/api/weekends/${weekendId}/share`, {
     headers: { Authorization: `Bearer ${session.accessToken}` },
   });
-  if (!res.ok()) throw new Error(`POST /api/weekends/${weekendId}/share failed: ${res.status()} ${await res.text()}`);
+  if (!res.ok())
+    throw new Error(
+      `POST /api/weekends/${weekendId}/share failed: ${res.status()} ${await res.text()}`,
+    );
   return (await res.json()) as ShareLink;
 }
 
@@ -206,7 +248,10 @@ export async function submitEventSubmission(
       ageRange: "All ages",
     },
   });
-  if (!res.ok()) throw new Error(`POST /api/events/submissions failed: ${res.status()} ${await res.text()}`);
+  if (!res.ok())
+    throw new Error(
+      `POST /api/events/submissions failed: ${res.status()} ${await res.text()}`,
+    );
   return (await res.json()) as { id: string };
 }
 
@@ -222,31 +267,55 @@ export async function lockDinnerPick(
   day: "Saturday" | "Sunday" = "Saturday",
 ): Promise<void> {
   const headers = { Authorization: `Bearer ${session.accessToken}` };
-  const date = day === "Saturday" ? upcomingSaturdayIso() : addDaysIso(upcomingSaturdayIso(), 1);
+  const date =
+    day === "Saturday"
+      ? upcomingSaturdayIso()
+      : addDaysIso(upcomingSaturdayIso(), 1);
   const list = await request.get(
     `${API_URL}/api/restaurants?day=${date}&slot=Dinner&wifeApprovedOnly=false&take=10`,
     { headers },
   );
-  if (!list.ok()) throw new Error(`GET /api/restaurants failed: ${list.status()} ${await list.text()}`);
+  if (!list.ok())
+    throw new Error(
+      `GET /api/restaurants failed: ${list.status()} ${await list.text()}`,
+    );
   const picks = (await list.json()) as Array<{ id: string }>;
   if (picks.length === 0) throw new Error(`no dinner picks for ${date}`);
-  const res = await request.post(`${API_URL}/api/restaurants/${picks[0]!.id}/lock`, {
-    headers,
-    data: { day, slot: "Dinner" },
-  });
-  if (!res.ok()) throw new Error(`POST /api/restaurants/{id}/lock failed: ${res.status()} ${await res.text()}`);
+  const res = await request.post(
+    `${API_URL}/api/restaurants/${picks[0]!.id}/lock`,
+    {
+      headers,
+      data: { day, slot: "Dinner" },
+    },
+  );
+  if (!res.ok())
+    throw new Error(
+      `POST /api/restaurants/{id}/lock failed: ${res.status()} ${await res.text()}`,
+    );
 }
 
 /**
  * Registers a throwaway account and returns its credentials. Used by the
  * auth-flow specs so password resets never touch the seeded family account.
  */
-export async function registerThrowaway(request: APIRequestContext, prefix = "e2e"): Promise<Credentials> {
-  const creds = { email: `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}@example.com`, password: "password123" };
+export async function registerThrowaway(
+  request: APIRequestContext,
+  prefix = "e2e",
+): Promise<Credentials> {
+  const creds = {
+    email: `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}@example.com`,
+    password: "password123",
+  };
   const res = await request.post(`${API_URL}/api/auth/register`, {
-    data: { email: creds.email, password: creds.password, familyName: "E2E Family", homeLocation: "Port Credit" },
+    data: {
+      email: creds.email,
+      password: creds.password,
+      familyName: "E2E Family",
+      homeLocation: "Port Credit",
+    },
   });
-  if (!res.ok()) throw new Error(`API register failed: ${res.status()} ${await res.text()}`);
+  if (!res.ok())
+    throw new Error(`API register failed: ${res.status()} ${await res.text()}`);
   return creds;
 }
 
@@ -261,9 +330,13 @@ export async function devToken(
   email: string,
 ): Promise<string> {
   const res = await request.post(`${API_URL}${path}`, { data: { email } });
-  if (!res.ok()) throw new Error(`${path} failed: ${res.status()} ${await res.text()}`);
+  if (!res.ok())
+    throw new Error(`${path} failed: ${res.status()} ${await res.text()}`);
   const body = (await res.json()) as { token?: string | null };
-  if (!body.token) throw new Error(`${path} returned no token — is the API running as Development?`);
+  if (!body.token)
+    throw new Error(
+      `${path} returned no token — is the API running as Development?`,
+    );
   return body.token;
 }
 
@@ -277,7 +350,10 @@ export async function saveFamilyMembers(
     headers: { Authorization: `Bearer ${session.accessToken}` },
     data: { members },
   });
-  if (!res.ok()) throw new Error(`PUT /api/family failed: ${res.status()} ${await res.text()}`);
+  if (!res.ok())
+    throw new Error(
+      `PUT /api/family failed: ${res.status()} ${await res.text()}`,
+    );
 }
 
 /** Rejects a suggestion as the seeded admin (`POST /api/events/submissions/{id}/reject`). */
@@ -287,9 +363,80 @@ export async function rejectEventSubmission(
   reason: string | null,
 ): Promise<void> {
   const admin = await apiLogin(request, SEEDED_ADMIN);
-  const res = await request.post(`${API_URL}/api/events/submissions/${id}/reject`, {
+  const res = await request.post(
+    `${API_URL}/api/events/submissions/${id}/reject`,
+    {
+      headers: { Authorization: `Bearer ${admin.accessToken}` },
+      data: { reason },
+    },
+  );
+  if (!res.ok())
+    throw new Error(`POST reject failed: ${res.status()} ${await res.text()}`);
+}
+
+/* ---------- Platform invitations and prospects (L1-038) ---------- */
+
+/** A fresh address for an invite, so re-runs never collide with an earlier one. */
+export function uniqueEmail(prefix = "invite"): string {
+  return `${prefix}-${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}@example.com`;
+}
+
+export interface SentInvitation {
+  readonly id: string;
+  readonly email: string;
+  readonly status: string;
+  readonly url: string;
+}
+
+/** `POST /api/admin/invitations` as the signed-in administrator (L2-157). */
+export async function sendInvitations(
+  request: APIRequestContext,
+  admin: TestSession,
+  emails: readonly string[],
+  prospectId?: string,
+): Promise<SentInvitation[]> {
+  const res = await request.post(`${API_URL}/api/admin/invitations`, {
     headers: { Authorization: `Bearer ${admin.accessToken}` },
-    data: { reason },
+    data: { emails, prospectId: prospectId ?? null },
   });
-  if (!res.ok()) throw new Error(`POST reject failed: ${res.status()} ${await res.text()}`);
+  if (!res.ok())
+    throw new Error(
+      `POST /api/admin/invitations failed: ${res.status()} ${await res.text()}`,
+    );
+  return ((await res.json()) as { invitations: SentInvitation[] }).invitations;
+}
+
+export interface CreatedProspect {
+  readonly id: string;
+  readonly familyName: string;
+  readonly weekendOf: string;
+  readonly weekend: {
+    id: string;
+    blocks: { id: string; kind: string; title: string; isLocked: boolean }[];
+  };
+}
+
+/** `POST /api/admin/prospects` as the signed-in administrator (L2-159). */
+export async function createProspect(
+  request: APIRequestContext,
+  admin: TestSession,
+  familyName = "The Riveras",
+): Promise<CreatedProspect> {
+  const res = await request.post(`${API_URL}/api/admin/prospects`, {
+    headers: { Authorization: `Bearer ${admin.accessToken}` },
+    data: {
+      familyName,
+      homeLocation: "Lakeview, Mississauga, ON",
+      members: [
+        { name: "Dani", age: 38 },
+        { name: "Mateo", age: 7 },
+      ],
+      likes: ["parks"],
+    },
+  });
+  if (!res.ok())
+    throw new Error(
+      `POST /api/admin/prospects failed: ${res.status()} ${await res.text()}`,
+    );
+  return (await res.json()) as CreatedProspect;
 }

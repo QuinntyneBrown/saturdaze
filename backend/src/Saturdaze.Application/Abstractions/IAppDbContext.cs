@@ -29,6 +29,8 @@ public interface IAppDbContext
     DbSet<PasswordResetToken> PasswordResetTokens { get; }
     DbSet<EmailVerificationToken> EmailVerificationTokens { get; }
     DbSet<WeekendShare> WeekendShares { get; }
+    DbSet<PlatformInvitation> PlatformInvitations { get; }
+    DbSet<Prospect> Prospects { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 

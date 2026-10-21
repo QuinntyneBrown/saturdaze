@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+<head>
+<!-- @shell:head -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sample weekend — Saturdaze Admin</title>
+<link rel="stylesheet" href="../styles/tokens.css">
+<link rel="stylesheet" href="../styles/app.css">
+<!-- @/shell:head -->
+</head>
+<body data-page="admin" data-shell="bare" data-screen="sample">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="admin">
+  <nav class="admin-nav" aria-label="Admin">
+    <a class="admin-nav__brand" href="./admin.html"><span class="brand-mark" aria-hidden="true"></span><span class="admin-nav__brand-text">Saturdaze</span><span class="admin-nav__tag">Admin</span></a>
+    <div class="admin-nav__links">
+      <a class="admin-nav__link" data-nav="health" href="./admin.html"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg>Photo health</a>
+      <a class="admin-nav__link" data-nav="places" href="./admin.places.html"><svg class="icon" aria-hidden="true"><use href="#i-map"/></svg>Places</a>
+      <a class="admin-nav__link" data-nav="reviews" href="./admin.reviews.html"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Review queue</a>
+      <a class="admin-nav__link" data-nav="skips" href="./admin.ingestion-skips.html"><svg class="icon" aria-hidden="true"><use href="#i-refresh"/></svg>Ingestion skips</a>
+      <a class="admin-nav__link" data-nav="activity" href="./admin.activity.html"><svg class="icon" aria-hidden="true"><use href="#i-calendar"/></svg>Activity log</a>
+      <a class="admin-nav__link" data-nav="invitations" href="./admin.invitations.html" aria-current="page"><svg class="icon" aria-hidden="true"><use href="#i-mail"/></svg>Invitations</a>
+    </div>
+    <div class="admin-nav__account">
+      <span class="avatar avatar--sm avatar--q" aria-hidden="true">A</span>
+      <span class="admin-nav__email">admin@saturdaze.ca</span>
+      <a class="btn btn--ghost btn--sm" href="./admin.sign-in.html"><svg class="icon" aria-hidden="true"><use href="#i-sign_out"/></svg>Sign out</a>
+    </div>
+  </nav>
+  <main class="admin-main container" id="main">
+  <header class="page-header">
+    <div class="page-header__text">
+      <h1 class="page-header__title">The Riveras · sample weekend</h1>
+      <p class="page-header__subtitle">Sat 24 – Sun 25 Oct · Dani 38, Mateo 7 · Port Credit · likes parks, short hikes. Swap or lock blocks, then send the invite.</p>
+    </div>
+    <div class="page-header__actions">
+      <a class="btn btn--quiet" href="./admin.sample.html"><svg class="icon" aria-hidden="true"><use href="#i-refresh"/></svg>Regenerate</a>
+      <a class="btn btn--quiet" href="./admin.sample.new.html"><svg class="icon" aria-hidden="true"><use href="#i-edit"/></svg>Edit family</a>
+      <a class="btn btn--primary" href="./dialogs.html#dialog-admin-invite"><svg class="icon" aria-hidden="true"><use href="#i-mail"/></svg>Send invite</a>
+    </div>
+  </header>
+  <div class="sample-meta">
+    <span class="chip chip--sun"><svg class="icon" aria-hidden="true"><use href="#i-mail"/></svg>Invited · 2</span>
+    <span class="chip chip--accent"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg>1 locked</span>
+    <span class="sample-meta__note">Locked blocks stay when the weekend is regenerated.</span>
+  </div>
+  <div class="grid-days sample-days">
+    <section class="day" aria-labelledby="sat-title">
+      <header class="day__header">
+        <span class="weather-disc weather-disc--sun" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-sun"/></svg></span>
+        <div class="day__text">
+          <h2 class="day__title" id="sat-title">Saturday</h2>
+          <p class="day__meta">24 Oct · Sunny · 14° / 6° · 2 stops · 50 min driving</p>
+        </div>
+      </header>
+      <ol class="day__list">
+        <li class="block">
+          <div class="block__time"><span class="block__clock">8:30am</span><span class="block__dur">45m</span></div>
+          <div class="block__rail"><span class="block__disc"><svg class="icon" aria-hidden="true"><use href="#i-home"/></svg></span></div>
+          <div class="block__body"><h3 class="block__title">Breakfast at home</h3><p class="block__sub clamp-1">Slow start</p></div>
+          <div class="block__actions"><button class="btn btn--ghost btn--sm btn--icon" type="button" aria-label="Lock Breakfast at home" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg></button></div>
+        </li>
+        <li class="block block--drive">
+          <div class="block__time"><span class="block__clock">9:30am</span><span class="block__dur">25m</span></div>
+          <div class="block__rail"><span class="block__disc"><svg class="icon" aria-hidden="true"><use href="#i-car"/></svg></span></div>
+          <div class="block__body"><h3 class="block__title">Drive to Riverwood Conservancy</h3></div>
+        </li>
+        <li class="block block--locked">
+          <div class="block__time"><span class="block__clock">10:00am</span><span class="block__dur">2h</span></div>
+          <div class="block__rail"><span class="block__disc block__disc--num"><span class="visually-hidden">Stop </span>1</span></div>
+          <div class="block__body">
+            <h3 class="block__title">Riverwood Conservancy</h3>
+            <p class="block__sub clamp-1">Mississauga · trails along the Credit River</p>
+            <div class="block__chips"><span class="chip chip--primary">Day highlight</span><span class="chip chip--leaf">Outdoor</span><span class="chip chip--accent"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg>Locked</span></div>
+          </div>
+          <div class="block__actions"><button class="btn btn--ghost btn--sm btn--icon" type="button" aria-label="Swap Riverwood Conservancy" disabled><svg class="icon" aria-hidden="true"><use href="#i-swap"/></svg></button><button class="btn btn--ghost btn--sm btn--icon" type="button" aria-label="Lock Riverwood Conservancy" aria-pressed="true"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg></button></div>
+        </li>
+        <li class="block">
+          <div class="block__time"><span class="block__clock">12:15pm</span><span class="block__dur">1h 15m</span></div>
+          <div class="block__rail"><span class="block__disc block__disc--num"><span class="visually-hidden">Stop </span>2</span></div>
+          <div class="block__body"><h3 class="block__title">Lunch at Snug Harbour</h3><p class="block__sub clamp-1">Port Credit · patio over the harbour</p></div>
+          <div class="block__actions"><button class="btn btn--ghost btn--sm btn--icon" type="button" aria-label="Swap Lunch at Snug Harbour" disabled><svg class="icon" aria-hidden="true"><use href="#i-swap"/></svg></button><button class="btn btn--ghost btn--sm btn--icon" type="button" aria-label="Lock Lunch at Snug Harbour" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg></button></div>
+        </li>
+        <li class="block block--drive">
+          <div class="block__time"><span class="block__clock">1:30pm</span><span class="block__dur">25m</span></div>
+          <div class="block__rail"><span class="block__disc"><svg class="icon" aria-hidden="true"><use href="#i-car"/></svg></span></div>
+          <div class="block__body"><h3 class="block__title">Drive home</h3></div>
+        </li>
+        <li class="block">
+          <div class="block__time"><span class="block__clock">2:00pm</span><span class="block__dur">3h</span></div>
+          <div class="block__rail"><span class="block__disc"><svg class="icon" aria-hidden="true"><use href="#i-bed"/></svg></span></div>
+          <div class="block__body"><h3 class="block__title">Downtime</h3><p class="block__sub clamp-1">Nap, garden, nothing planned</p></div>
+          <div class="block__actions"><button class="btn btn--ghost btn--sm btn--icon" type="button" aria-label="Lock Downtime" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg></button></div>
+        </li>
+        <li class="block">
+          <div class="block__time"><span class="block__clock">5:30pm</span><span class="block__dur">1h</span></div>
+          <div class="block__rail"><span class="block__disc"><svg class="icon" aria-hidden="true"><use href="#i-home"/></svg></span></div>
+          <div class="block__body"><h3 class="block__title">Dinner at home</h3><p class="block__sub clamp-1">Early night before Sunday</p></div>
+          <div class="block__actions"><button class="btn btn--ghost btn--sm btn--icon" type="button" aria-label="Lock Dinner at home" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg></button></div>
+        </li>
+      </ol>
+    </section>
+    <section class="day" aria-labelledby="sun-title">
+      <header class="day__header">
+        <span class="weather-disc weather-disc--rain" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-rain"/></svg></span>
+        <div class="day__text">
+          <h2 class="day__title" id="sun-title">Sunday</h2>
+          <p class="day__meta">25 Oct · Showers · 11° / 5° · 2 stops · 1 h 20 min driving</p>
+        </div>
+      </header>
+      <ol class="day__list">
+        <li class="block">
+          <div class="block__time"><span class="block__clock">9:00am</span><span class="block__dur">45m</span></div>
+          <div class="block__rail"><span class="block__disc"><svg class="icon" aria-hidden="true"><use href="#i-home"/></svg></span></div>
+          <div class="block__body"><h3 class="block__title">Breakfast at home</h3><p class="block__sub clamp-1">Pancakes</p></div>
+          <div class="block__actions"><button class="btn btn--ghost btn--sm btn--icon" type="button" aria-label="Lock Sunday breakfast" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg></button></div>
+        </li>
+        <li class="block block--drive">
+          <div class="block__time"><span class="block__clock">10:00am</span><span class="block__dur">40m</span></div>
+          <div class="block__rail"><span class="block__disc"><svg class="icon" aria-hidden="true"><use href="#i-car"/></svg></span></div>
+          <div class="block__body"><h3 class="block__title">Drive to Rec Room Mississauga</h3></div>
+        </li>
+        <li class="block">
+          <div class="block__time"><span class="block__clock">10:40am</span><span class="block__dur">2h</span></div>
+          <div class="block__rail"><span class="block__disc block__disc--num"><span class="visually-hidden">Stop </span>1</span></div>
+          <div class="block__body">
+            <h3 class="block__title">Rec Room Mississauga</h3>
+            <p class="block__sub clamp-1">Arcade and games · rainy-day pick</p>
+            <div class="block__chips"><span class="chip chip--primary">Day highlight</span><span class="chip chip--indoor">Indoor</span></div>
+          </div>
+          <div class="block__actions"><button class="btn btn--ghost btn--sm btn--icon" type="button" aria-label="Swap Rec Room Mississauga"><svg class="icon" aria-hidden="true"><use href="#i-swap"/></svg></button><button class="btn btn--ghost btn--sm btn--icon" type="button" aria-label="Lock Rec Room Mississauga" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg></button></div>
+        </li>
+        <li class="block">
+          <div class="block__time"><span class="block__clock">1:00pm</span><span class="block__dur">1h 15m</span></div>
+          <div class="block__rail"><span class="block__disc block__disc--num"><span class="visually-hidden">Stop </span>2</span></div>
+          <div class="block__body"><h3 class="block__title">Lunch at La Marina</h3><p class="block__sub clamp-1">Port Credit · kids' menu</p></div>
+          <div class="block__actions"><button class="btn btn--ghost btn--sm btn--icon" type="button" aria-label="Swap Lunch at La Marina" disabled><svg class="icon" aria-hidden="true"><use href="#i-swap"/></svg></button><button class="btn btn--ghost btn--sm btn--icon" type="button" aria-label="Lock Lunch at La Marina" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg></button></div>
+        </li>
+        <li class="block block--drive">
+          <div class="block__time"><span class="block__clock">2:15pm</span><span class="block__dur">40m</span></div>
+          <div class="block__rail"><span class="block__disc"><svg class="icon" aria-hidden="true"><use href="#i-car"/></svg></span></div>
+          <div class="block__body"><h3 class="block__title">Drive home</h3></div>
+        </li>
+        <li class="block">
+          <div class="block__time"><span class="block__clock">3:00pm</span><span class="block__dur">2h 30m</span></div>
+          <div class="block__rail"><span class="block__disc"><svg class="icon" aria-hidden="true"><use href="#i-bed"/></svg></span></div>
+          <div class="block__body"><h3 class="block__title">Downtime</h3><p class="block__sub clamp-1">Board games while it rains</p></div>
+          <div class="block__actions"><button class="btn btn--ghost btn--sm btn--icon" type="button" aria-label="Lock Sunday downtime" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg></button></div>
+        </li>
+        <li class="block">
+          <div class="block__time"><span class="block__clock">5:30pm</span><span class="block__dur">1h</span></div>
+          <div class="block__rail"><span class="block__disc"><svg class="icon" aria-hidden="true"><use href="#i-home"/></svg></span></div>
+          <div class="block__body"><h3 class="block__title">Dinner at home</h3><p class="block__sub clamp-1">Ready for Monday</p></div>
+          <div class="block__actions"><button class="btn btn--ghost btn--sm btn--icon" type="button" aria-label="Lock Sunday dinner" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg></button></div>
+        </li>
+      </ol>
+    </section>
+  </div>
+  </main>
+</div>
+<script src="../app.js"></script>
+</body>
+</html>

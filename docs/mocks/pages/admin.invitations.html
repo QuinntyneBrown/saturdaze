@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+<!-- @shell:head -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Invitations — Saturdaze Admin</title>
+<link rel="stylesheet" href="../styles/tokens.css">
+<link rel="stylesheet" href="../styles/app.css">
+<!-- @/shell:head -->
+</head>
+<body data-page="admin" data-shell="bare" data-screen="invitations">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="admin">
+  <nav class="admin-nav" aria-label="Admin">
+    <a class="admin-nav__brand" href="./admin.html"><span class="brand-mark" aria-hidden="true"></span><span class="admin-nav__brand-text">Saturdaze</span><span class="admin-nav__tag">Admin</span></a>
+    <div class="admin-nav__links">
+      <a class="admin-nav__link" data-nav="health" href="./admin.html"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg>Photo health</a>
+      <a class="admin-nav__link" data-nav="places" href="./admin.places.html"><svg class="icon" aria-hidden="true"><use href="#i-map"/></svg>Places</a>
+      <a class="admin-nav__link" data-nav="reviews" href="./admin.reviews.html"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Review queue</a>
+      <a class="admin-nav__link" data-nav="skips" href="./admin.ingestion-skips.html"><svg class="icon" aria-hidden="true"><use href="#i-refresh"/></svg>Ingestion skips</a>
+      <a class="admin-nav__link" data-nav="activity" href="./admin.activity.html"><svg class="icon" aria-hidden="true"><use href="#i-calendar"/></svg>Activity log</a>
+      <a class="admin-nav__link" data-nav="invitations" href="./admin.invitations.html" aria-current="page"><svg class="icon" aria-hidden="true"><use href="#i-mail"/></svg>Invitations</a>
+    </div>
+    <div class="admin-nav__account">
+      <span class="avatar avatar--sm avatar--q" aria-hidden="true">A</span>
+      <span class="admin-nav__email">admin@saturdaze.ca</span>
+      <a class="btn btn--ghost btn--sm" href="./admin.sign-in.html"><svg class="icon" aria-hidden="true"><use href="#i-sign_out"/></svg>Sign out</a>
+    </div>
+  </nav>
+  <main class="admin-main container" id="main">
+  <header class="page-header">
+    <div class="page-header__text">
+      <h1 class="page-header__title">Invitations</h1>
+      <p class="page-header__subtitle">Who has been invited to Saturdaze, newest first. Plan a sample weekend first so a family sees Saturday and Sunday before they sign up.</p>
+    </div>
+    <div class="page-header__actions">
+      <a class="btn btn--quiet" href="./admin.sample.new.html"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg>New sample weekend</a>
+      <a class="btn btn--primary" href="./dialogs.html#dialog-admin-invite"><svg class="icon" aria-hidden="true"><use href="#i-mail"/></svg>Invite families</a>
+    </div>
+  </header>
+
+  <section class="section" aria-labelledby="s-samples">
+    <div class="section-header"><div class="section-header__text"><h2 class="section-header__title" id="s-samples">Sample weekends</h2><p class="section-header__sub">Families described here are not accounts. Open one to swap or lock blocks, then send the invite.</p></div></div>
+    <ul class="list list--card sample-list">
+      <li><a class="list__item list__item--action sample-row" href="./admin.sample.html"><span class="disc disc--primary" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-home"/></svg></span><span class="list__text"><span class="list__title">The Riveras</span><span class="list__sub">Sat 24 – Sun 25 Oct · Dani 38, Mateo 7 · Port Credit</span></span><span class="list__trail"><span class="chip chip--sun">Invited · 2</span><svg class="icon" aria-hidden="true"><use href="#i-chevron_right"/></svg></span></a></li>
+      <li><a class="list__item list__item--action sample-row" href="./admin.sample.html"><span class="disc disc--primary" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-home"/></svg></span><span class="list__text"><span class="list__title">The Nguyens</span><span class="list__sub">Sat 31 Oct – Sun 1 Nov · Linh 41, An 9, Bao 4 · Oakville</span></span><span class="list__trail"><span class="chip">Draft</span><svg class="icon" aria-hidden="true"><use href="#i-chevron_right"/></svg></span></a></li>
+      <li><a class="list__item list__item--action sample-row" href="./admin.sample.html"><span class="disc disc--accent" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg></span><span class="list__text"><span class="list__title">The Okafors</span><span class="list__sub">Sat 17 – Sun 18 Oct · Chidi 36, Ada 6 · Port Credit</span></span><span class="list__trail"><span class="chip chip--accent"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Claimed</span><svg class="icon" aria-hidden="true"><use href="#i-chevron_right"/></svg></span></a></li>
+    </ul>
+  </section>
+
+  <section class="section" aria-labelledby="s-invites">
+    <div class="section-header"><div class="section-header__text"><h2 class="section-header__title" id="s-invites">Invites</h2><p class="section-header__sub">Each link works once and for 14 days.</p></div></div>
+    <p class="toolbar__count" role="status">6 invites</p>
+    <ul class="list list--card invite-list">
+      <li><div class="list__item invite-row"><span class="disc disc--sun" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-mail"/></svg></span><span class="list__text"><span class="list__title">ana@example.com</span><span class="list__sub">Sample weekend · The Riveras · Sat 24 Oct</span><span class="list__sub">Invited by admin@saturdaze.ca · 2 hours ago · Expires in 14 days</span></span><span class="list__trail invite-row__trail"><span class="chip chip--sun">Invite sent</span><a class="btn btn--ghost btn--sm" href="./dialogs.html#dialog-admin-revoke"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg>Revoke</a></span></div></li>
+      <li><div class="list__item invite-row"><span class="disc disc--sun" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-mail"/></svg></span><span class="list__text"><span class="list__title">ben@example.com</span><span class="list__sub">Sample weekend · The Riveras · Sat 24 Oct</span><span class="list__sub">Invited by admin@saturdaze.ca · 2 hours ago · Expires in 14 days</span></span><span class="list__trail invite-row__trail"><span class="chip chip--sun">Invite sent</span><a class="btn btn--ghost btn--sm" href="./dialogs.html#dialog-admin-revoke"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg>Revoke</a></span></div></li>
+      <li><div class="list__item invite-row"><span class="disc disc--sun" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-mail"/></svg></span><span class="list__text"><span class="list__title">priya@example.com</span><span class="list__sub">No sample weekend</span><span class="list__sub">Invited by admin@saturdaze.ca · yesterday · Expires in 13 days</span></span><span class="list__trail invite-row__trail"><span class="chip chip--sun">Invite sent</span><a class="btn btn--ghost btn--sm" href="./dialogs.html#dialog-admin-revoke"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg>Revoke</a></span></div></li>
+      <li><div class="list__item invite-row"><span class="disc disc--accent" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg></span><span class="list__text"><span class="list__title">chidi@example.com</span><span class="list__sub">Sample weekend · The Okafors · Sat 17 Oct</span><span class="list__sub">Invited by admin@saturdaze.ca · 5 days ago · Accepted 3 days ago</span></span><span class="list__trail invite-row__trail"><span class="chip chip--accent"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Accepted</span></span></div></li>
+      <li><div class="list__item invite-row"><span class="disc" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-mail"/></svg></span><span class="list__text"><span class="list__title">sam@example.com</span><span class="list__sub">No sample weekend</span><span class="list__sub">Invited by admin@saturdaze.ca · 9 days ago · Revoked 8 days ago</span></span><span class="list__trail invite-row__trail"><span class="chip">Revoked</span></span></div></li>
+      <li><div class="list__item invite-row"><span class="disc disc--warn" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg></span><span class="list__text"><span class="list__title">lee@example.com</span><span class="list__sub">No sample weekend</span><span class="list__sub">Invited by admin@saturdaze.ca · 3 weeks ago · Expired 7 days ago</span></span><span class="list__trail invite-row__trail"><span class="chip chip--warn">Expired</span></span></div></li>
+    </ul>
+  </section>
+  </main>
+</div>
+<script src="../app.js"></script>
+</body>
+</html>

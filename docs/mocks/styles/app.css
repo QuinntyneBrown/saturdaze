@@ -1092,6 +1092,42 @@
   .upload-drop .field__hint { font-weight: var(--sd-fw-regular); }
   .photo-edit__media { max-width: 240px; }
 
+  /* admin: invitations (A8, L2-157, L2-158) */
+  body[data-page="admin"] .sample-list .disc, body[data-page="admin"] .invite-list .disc { flex: none; }
+  body[data-page="admin"] .invite-row { align-items: flex-start; }
+  body[data-page="admin"] .invite-row .disc { margin-top: 2px; }
+  body[data-page="admin"] .invite-row .list__sub + .list__sub { margin-top: 2px; }
+  body[data-page="admin"] .invite-row__trail { flex-direction: column; align-items: flex-end; gap: 6px; }
+  /* admin: new sample weekend (A9, L2-159) */
+  body[data-page="admin"] .sample-form { display: flex; flex-direction: column; gap: 20px; max-width: 640px; }
+  body[data-page="admin"] .members-field { border: 0; padding: 0; margin: 0; min-width: 0; }
+  body[data-page="admin"] .member-rows { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
+  body[data-page="admin"] .member-row { display: grid; grid-template-columns: minmax(0, 1fr) 96px 44px; gap: 8px; align-items: end; }
+  body[data-page="admin"] .member-row__remove { height: 44px; width: 44px; }
+  body[data-page="admin"] .form-actions { display: flex; justify-content: flex-end; gap: 8px; padding-top: 4px; }
+  /* admin: sample weekend (A10, L2-160): block actions always show; there is no details dialog, so no chevron */
+  body[data-page="admin"] .sample-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 20px; }
+  body[data-page="admin"] .sample-meta__note { font-size: var(--sd-fs-sm); color: var(--sd-ink-soft); }
+  body[data-page="admin"] .sample-days .block__actions { display: inline-flex; opacity: 1; }
+  @media (min-width: 64rem) { body[data-page="admin"] .day__header { top: 0; } }
+  /* admin dialogs AD7 and AD8 */
+  #dialog-admin-invite .chip-input .chip { max-width: 100%; }
+
+  /* join (an admin invite, L2-161): site bar, the sample weekend beside the create-account card */
+  body[data-page="join"] .join { padding-top: 32px; padding-bottom: 80px; }
+  body[data-page="join"] .join__hero { display: grid; grid-template-columns: minmax(0, 1fr); gap: 24px; align-items: start; margin-bottom: 32px; }
+  body[data-page="join"] .join__intro { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+  body[data-page="join"] .join__eyebrow { font-size: var(--sd-fs-sm); font-weight: var(--sd-fw-semibold); text-transform: uppercase; letter-spacing: 0.06em; color: var(--sd-primary-deep); }
+  body[data-page="join"] .join__title { font-size: var(--sd-fs-xxl); font-weight: var(--sd-fw-bold); letter-spacing: -0.02em; line-height: 1.1; }
+  body[data-page="join"] .join__sub { font-size: var(--sd-fs-base); color: var(--sd-ink-soft); max-width: 60ch; }
+  body[data-page="join"] .join__card { width: 100%; max-width: 440px; }
+  body[data-page="join"] .join__days .block { grid-template-columns: 56px 24px minmax(0, 1fr); }
+  body[data-page="join"] .join__narrow { max-width: 440px; margin-inline: auto; }
+  body[data-page="join"] .auth__foot { margin-top: 40px; }
+  @media (min-width: 64rem) {
+    body[data-page="join"] .join__hero { grid-template-columns: minmax(0, 1fr) 440px; gap: 40px; }
+  }
+
   /* legal */
   body[data-page="legal"] .legal { padding-top: 32px; padding-bottom: 80px; }
   body[data-page="legal"] .doc-switch { margin-bottom: 24px; }

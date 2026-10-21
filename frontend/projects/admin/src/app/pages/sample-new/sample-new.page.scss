@@ -1,0 +1,43 @@
+/* New sample weekend (A9): the form card, as in the mock's admin CSS. */
+:host {
+  display: block;
+  max-width: 640px;
+}
+
+.sample-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.members-field {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+
+.member-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.member-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 96px 44px;
+  gap: 8px;
+  align-items: end;
+}
+
+.member-row__remove {
+  height: 44px;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding-top: 4px;
+}

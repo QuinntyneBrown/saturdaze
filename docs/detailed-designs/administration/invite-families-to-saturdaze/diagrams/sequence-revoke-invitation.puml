@@ -1,0 +1,42 @@
+@startuml
+title UML sequence behaviour - Revoke an invitation
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+actor "Administrator" as actor
+box "Frontend - Saturdaze Admin Angular application" #E0F2FE
+  participant "InvitationsPage" as page
+  participant "RevokeInviteDialog (AD8)" as dialog
+  participant "AdminInvitationsService" as service
+end box
+box "Backend - Saturdaze API application" #D1FADF
+  participant "AdminInvitationsController" as controller
+end box
+box "Backend - Saturdaze Application and Domain" #ECFDF3
+  participant "RevokeInvitationCommandHandler" as handler
+end box
+box "Backend - Saturdaze Infrastructure" #FFF4E5
+  database "Saturdaze database" as db
+end box
+actor -> page : Revoke on a pending row
+page -> dialog : open
+actor -> dialog : Revoke
+dialog -> service : revoke(id)
+service -> controller : DELETE /api/admin/invitations/{id}
+controller -> handler : RevokeInvitationCommand
+handler -> db : load invitation
+db --> handler : row
+alt accepted
+  handler --> controller : ConflictException already_accepted (L2-158 AC3)
+  controller --> service : 409
+else pending, expired or already revoked
+  handler -> handler : RevokedAtUtc = now (idempotent)
+  handler -> db : save
+  handler --> controller : done
+  controller --> service : 204
+  service --> page : row status Revoked (L2-158 AC5)
+  note right of handler : POST /api/auth/join with the token now answers token_invalid (L2-158 AC2)
+end
+@enduml

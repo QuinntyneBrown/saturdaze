@@ -7,6 +7,7 @@ import { LogoutRequest } from '../models/logout-request';
 import { RefreshRequest } from '../models/refresh-request';
 import { ResetPasswordRequest } from '../models/reset-password-request';
 import { AcceptInvitationRequest, Invitation } from '../models/invitation';
+import { AcceptJoinRequest, JoinPreview } from '../models/join';
 import { ResendVerificationRequest } from '../models/resend-verification-request';
 import { SignupRequest } from '../models/signup-request';
 import { User } from '../models/user';
@@ -95,6 +96,22 @@ export interface IAuthService {
    * @returns {Promise<} The result of the operation
    */
   acceptInvitation(req: AcceptInvitationRequest): Promise<{ token: AuthToken; user: User }>;
+  /**
+   * Preview Join — `POST /api/auth/join`: what an administrator's invite link is for (L2-161).
+   *
+   * @param {string} token - The join token
+   *
+   * @returns {Promise<JoinPreview>} The invited email, inviter and sample weekend
+   */
+  previewJoin(token: string): Promise<JoinPreview>;
+  /**
+   * Accept Join — `POST /api/auth/join/accept`; creates the account and signs it in (L2-161).
+   *
+   * @param {AcceptJoinRequest} req - The req
+   *
+   * @returns {Promise<} The token pair and user
+   */
+  acceptJoin(req: AcceptJoinRequest): Promise<{ token: AuthToken; user: User }>;
   /**
    * Verify Email.
    *

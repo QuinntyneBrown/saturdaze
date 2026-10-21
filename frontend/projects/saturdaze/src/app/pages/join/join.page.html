@@ -1,0 +1,148 @@
+<ng-template #accountForm>
+  @if (error()) {
+    <sd-banner tone="warn" role="alert" icon="alert">{{ error() }}</sd-banner>
+  }
+  <form class="form" [formGroup]="form" (ngSubmit)="join()">
+    <sd-text-input
+      label="Email"
+      type="email"
+      name="email"
+      readonly
+      [value]="preview()?.email ?? ''"
+    />
+    <div class="password">
+      <sd-text-input
+        label="Password"
+        type="password"
+        name="password"
+        autocomplete="new-password"
+        formControlName="password"
+      />
+      @if (strength().level) {
+        <sd-strength [level]="strength().level" [label]="strength().label" />
+      }
+    </div>
+    <sd-text-input
+      label="Confirm password"
+      type="password"
+      name="confirm"
+      autocomplete="new-password"
+      formControlName="confirm"
+      [invalid]="form.hasError('mismatch') && form.controls.confirm.touched"
+    />
+    <sd-button variant="primary" size="lg" full type="submit" [disabled]="submitting()">
+      @if (state() === 'sample') {
+        <sd-icon name="sparkle" />
+      }
+      {{ submitLabel() }}
+    </sd-button>
+  </form>
+</ng-template>
+
+@switch (state()) {
+  @case ('loading') {
+    <sd-status-row icon="mail">Opening your invite.</sd-status-row>
+    <div class="sd-grid-days" aria-busy="true">
+      @for (day of days; track day) {
+        <sd-day [title]="day" [actions]="false">
+          @for (i of skeleton; track i) {
+            <sd-skeleton-row />
+          }
+        </sd-day>
+      }
+    </div>
+  }
+  @case ('sample') {
+    <div class="join__hero">
+      <div class="join__intro">
+        <p class="join__eyebrow">A weekend planned for you</p>
+        <h1 class="join__title">{{ heroTitle() }}</h1>
+        <p class="join__sub">{{ heroSubtitle() }}</p>
+        @if (preview()?.message; as message) {
+          <sd-well
+            tone="primary"
+            icon="mail"
+            [title]="'From ' + (preview()?.invitedByEmail ?? 'Saturdaze')"
+            >{{ message }}</sd-well
+          >
+        } @else {
+          <sd-well tone="primary" icon="sparkle" title="Every weekend, planned"
+            >Saturdaze drafts Saturday and Sunday around your family, your commitments and the
+            weather. Lock what you love, swap what you don't.</sd-well
+          >
+        }
+      </div>
+      <sd-auth-card
+        class="join__card"
+        title="Create your account"
+        subtitle="Choose a password to sign in with. Your email is already confirmed by this link."
+      >
+        <ng-container *ngTemplateOutlet="accountForm" />
+        <span slot="alt"
+          >Already have a sign-in? <a class="sd-link" routerLink="/sign-in">Sign in</a></span
+        >
+      </sd-auth-card>
+    </div>
+    @if (weekend(); as plan) {
+      <div class="sd-grid-days join__days">
+        @for (day of plan.days; track day.day) {
+          <sd-day
+            [title]="day.day"
+            [meta]="day.meta"
+            [weather]="dayWeather(day)"
+            [locked]="day.locked"
+            [actions]="false"
+          >
+            @for (block of day.blocks; track block.id) {
+              <sd-block
+                [time]="block.time"
+                [duration]="block.duration"
+                [icon]="block.icon"
+                [title]="block.title"
+                [subtitle]="block.subtitle ?? ''"
+                [commitment]="block.commitment"
+                [locked]="block.locked"
+                [drive]="block.drive"
+                [errand]="block.errand"
+                [stopNumber]="block.stopNumber"
+                readonly
+              >
+                @for (chip of block.chips; track chip.label) {
+                  <sd-chip slot="chips" [tone]="chipTone(chip.tone)">
+                    @if (chip.icon) {
+                      <sd-icon [name]="chip.icon" [size]="13" [stroke]="2" />
+                    }
+                    {{ chip.label }}
+                  </sd-chip>
+                }
+              </sd-block>
+            }
+          </sd-day>
+        }
+      </div>
+    }
+  }
+  @case ('plain') {
+    <div class="join__narrow">
+      <sd-auth-card title="Join Saturdaze" [subtitle]="plainSubtitle()" center>
+        <sd-disc slot="disc" icon="sparkle" tone="primary" size="xl" />
+        <ng-container *ngTemplateOutlet="accountForm" />
+        <span slot="alt"
+          >Already have a sign-in? <a class="sd-link" routerLink="/sign-in">Sign in</a></span
+        >
+      </sd-auth-card>
+    </div>
+  }
+  @case ('invalid') {
+    <div class="join__narrow">
+      <sd-auth-card
+        title="This invite no longer works"
+        subtitle="It was used, revoked or is more than 14 days old. Ask whoever invited you for a new link."
+        center
+      >
+        <sd-disc slot="disc" icon="mail" tone="warn" size="xl" />
+        <sd-button variant="quiet" size="lg" full href="/sign-in">Sign in</sd-button>
+      </sd-auth-card>
+    </div>
+  }
+}

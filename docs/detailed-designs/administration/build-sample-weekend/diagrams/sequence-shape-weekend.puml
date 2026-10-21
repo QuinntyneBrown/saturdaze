@@ -1,0 +1,53 @@
+@startuml
+title UML sequence behaviour - Shape the sample weekend
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+actor "Administrator" as actor
+box "Frontend - Saturdaze Admin Angular application" #E0F2FE
+  participant "SamplePage (A10)" as page
+  participant "AdminInvitationsService" as service
+end box
+box "Backend - Saturdaze API application" #D1FADF
+  participant "AdminProspectsController" as controller
+end box
+box "Backend - Saturdaze Application and Domain" #ECFDF3
+  participant "SwapProspectBlockCommandHandler" as swaph
+  participant "LockProspectBlockCommandHandler" as lockh
+  participant "BlockSwapper" as swapper
+end box
+box "Backend - Saturdaze Infrastructure" #FFF4E5
+  database "Saturdaze database" as db
+end box
+actor -> page : Swap on an activity block
+page -> service : swapBlock(prospectId, blockId)
+service -> controller : POST /api/admin/prospects/{id}/blocks/{blockId}/swap
+controller -> swaph : SwapProspectBlockCommand
+swaph -> db : prospect + weekend with blocks
+db --> swaph : rows (404 when the block is not on this weekend: L2-160 AC4)
+alt block locked or not an activity
+  swaph --> controller : ConflictException block_locked / block_not_swappable (L2-160 AC2)
+  controller --> service : 409
+else unlocked activity
+  swaph -> swapper : SwapAsync(weekend, block, familyId, rejected)
+  swapper -> db : planner inputs for the family
+  swapper -> swapper : PickActivityForGap, replace the drives around it
+  swapper -> db : save
+  swapper --> swaph : WeekendDto
+  swaph --> controller : WeekendDto
+  controller --> service : 200
+  service --> page : new title on the row (L2-160 AC5)
+end
+actor -> page : Lock on a block
+page -> service : lockBlock(prospectId, blockId, true)
+service -> controller : PUT /api/admin/prospects/{id}/blocks/{blockId}/lock
+controller -> lockh : LockProspectBlockCommand
+lockh -> db : prospect + weekend with blocks
+lockh -> lockh : block.IsLocked = true (L2-160 AC3)
+lockh -> db : save
+lockh --> controller : WeekendDto
+controller --> service : 200
+service --> page : aria-pressed = true (L2-160 AC5)
+@enduml

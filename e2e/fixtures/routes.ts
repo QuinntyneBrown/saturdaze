@@ -33,6 +33,7 @@ export type PageSlug =
   | "reset-password"
   | "verify-email"
   | "accept-invite"
+  | "join"
   | "marketing"
   | "legal"
   | "shared-weekend"
@@ -48,57 +49,244 @@ interface RouteEntry {
 
 export const ROUTES = {
   // ---- core (app shell: top bar ≥720, bottom nav <720) ----
-  weekend:           { app: "/weekend",                        mock: "/pages/weekend.html",                  guard: "auth",  page: "weekend" },
-  weekendEmpty:      { app: "/weekend?state=empty",            mock: "/pages/weekend.empty.html",            guard: "auth",  page: "weekend" },
-  weekendGenerating: { app: "/weekend?state=generating",       mock: "/pages/weekend.generating.html",       guard: "auth",  page: "weekend" },
-  ideas:             { app: "/ideas",                          mock: "/pages/ideas.html",                    guard: "auth",  page: "ideas" },
-  ideasFood:         { app: "/ideas/food",                     mock: "/pages/ideas.food.html",               guard: "auth",  page: "ideas" },
-  ideasEvents:       { app: "/ideas/events",                   mock: "/pages/ideas.events.html",             guard: "auth",  page: "ideas" },
-  past:              { app: "/past",                           mock: "/pages/past.html",                     guard: "auth",  page: "past" },
-  pastEmpty:         { app: "/past?state=empty",               mock: "/pages/past.empty.html",               guard: "auth",  page: "past" },
-  family:            { app: "/family",                         mock: "/pages/family.html",                   guard: "auth",  page: "family" },
-  reviewSubmissions: { app: "/review-submissions",             mock: "/pages/review-submissions.html",       guard: "admin", page: "review-submissions" },
-  reviewEmpty:       { app: "/review-submissions?state=empty", mock: "/pages/review-submissions.empty.html", guard: "admin", page: "review-submissions" },
+  weekend: {
+    app: "/weekend",
+    mock: "/pages/weekend.html",
+    guard: "auth",
+    page: "weekend",
+  },
+  weekendEmpty: {
+    app: "/weekend?state=empty",
+    mock: "/pages/weekend.empty.html",
+    guard: "auth",
+    page: "weekend",
+  },
+  weekendGenerating: {
+    app: "/weekend?state=generating",
+    mock: "/pages/weekend.generating.html",
+    guard: "auth",
+    page: "weekend",
+  },
+  ideas: {
+    app: "/ideas",
+    mock: "/pages/ideas.html",
+    guard: "auth",
+    page: "ideas",
+  },
+  ideasFood: {
+    app: "/ideas/food",
+    mock: "/pages/ideas.food.html",
+    guard: "auth",
+    page: "ideas",
+  },
+  ideasEvents: {
+    app: "/ideas/events",
+    mock: "/pages/ideas.events.html",
+    guard: "auth",
+    page: "ideas",
+  },
+  past: { app: "/past", mock: "/pages/past.html", guard: "auth", page: "past" },
+  pastEmpty: {
+    app: "/past?state=empty",
+    mock: "/pages/past.empty.html",
+    guard: "auth",
+    page: "past",
+  },
+  family: {
+    app: "/family",
+    mock: "/pages/family.html",
+    guard: "auth",
+    page: "family",
+  },
+  reviewSubmissions: {
+    app: "/review-submissions",
+    mock: "/pages/review-submissions.html",
+    guard: "admin",
+    page: "review-submissions",
+  },
+  reviewEmpty: {
+    app: "/review-submissions?state=empty",
+    mock: "/pages/review-submissions.empty.html",
+    guard: "admin",
+    page: "review-submissions",
+  },
 
   // ---- auth (bare shell; the mocks stack every state on one page) ----
-  signIn:            { app: "/sign-in",                        mock: "/pages/sign-in.html#state-default",        page: "sign-in" },
-  signInError:       { app: "/sign-in?state=error",            mock: "/pages/sign-in.html#state-error",          page: "sign-in" },
-  createAccount:     { app: "/create-account",                 mock: "/pages/create-account.html",               page: "create-account" },
-  resetRequest:      { app: "/reset-password",                 mock: "/pages/reset-password.html#state-request", page: "reset-password" },
-  resetSent:         { app: "/reset-password?state=sent",      mock: "/pages/reset-password.html#state-sent",    page: "reset-password" },
-  resetNew:          { app: "/reset-password?state=new",       mock: "/pages/reset-password.html#state-new",     page: "reset-password" },
-  resetDone:         { app: "/reset-password?state=done",      mock: "/pages/reset-password.html#state-done",    page: "reset-password" },
-  resetExpired:      { app: "/reset-password?state=expired",   mock: "/pages/reset-password.html#state-expired", page: "reset-password" },
-  verifySent:        { app: "/verify-email?state=sent",        mock: "/pages/verify-email.html#state-sent",      page: "verify-email" },
-  verifyVerifying:   { app: "/verify-email?state=verifying",   mock: "/pages/verify-email.html#state-verifying", page: "verify-email" },
-  verifyVerified:    { app: "/verify-email?state=verified",    mock: "/pages/verify-email.html#state-verified",  page: "verify-email" },
-  verifyExpired:     { app: "/verify-email?state=expired",     mock: "/pages/verify-email.html#state-expired",   page: "verify-email" },
-  acceptInviteJoin:  { app: "/accept-invite?state=join",       mock: "/pages/accept-invite.html#state-join",     page: "accept-invite" },
-  acceptInviteInvalid: { app: "/accept-invite?state=invalid",  mock: "/pages/accept-invite.html#state-invalid",  page: "accept-invite" },
+  signIn: {
+    app: "/sign-in",
+    mock: "/pages/sign-in.html#state-default",
+    page: "sign-in",
+  },
+  signInError: {
+    app: "/sign-in?state=error",
+    mock: "/pages/sign-in.html#state-error",
+    page: "sign-in",
+  },
+  createAccount: {
+    app: "/create-account",
+    mock: "/pages/create-account.html",
+    page: "create-account",
+  },
+  resetRequest: {
+    app: "/reset-password",
+    mock: "/pages/reset-password.html#state-request",
+    page: "reset-password",
+  },
+  resetSent: {
+    app: "/reset-password?state=sent",
+    mock: "/pages/reset-password.html#state-sent",
+    page: "reset-password",
+  },
+  resetNew: {
+    app: "/reset-password?state=new",
+    mock: "/pages/reset-password.html#state-new",
+    page: "reset-password",
+  },
+  resetDone: {
+    app: "/reset-password?state=done",
+    mock: "/pages/reset-password.html#state-done",
+    page: "reset-password",
+  },
+  resetExpired: {
+    app: "/reset-password?state=expired",
+    mock: "/pages/reset-password.html#state-expired",
+    page: "reset-password",
+  },
+  verifySent: {
+    app: "/verify-email?state=sent",
+    mock: "/pages/verify-email.html#state-sent",
+    page: "verify-email",
+  },
+  verifyVerifying: {
+    app: "/verify-email?state=verifying",
+    mock: "/pages/verify-email.html#state-verifying",
+    page: "verify-email",
+  },
+  verifyVerified: {
+    app: "/verify-email?state=verified",
+    mock: "/pages/verify-email.html#state-verified",
+    page: "verify-email",
+  },
+  verifyExpired: {
+    app: "/verify-email?state=expired",
+    mock: "/pages/verify-email.html#state-expired",
+    page: "verify-email",
+  },
+  acceptInviteJoin: {
+    app: "/accept-invite?state=join",
+    mock: "/pages/accept-invite.html#state-join",
+    page: "accept-invite",
+  },
+  acceptInviteInvalid: {
+    app: "/accept-invite?state=invalid",
+    mock: "/pages/accept-invite.html#state-invalid",
+    page: "accept-invite",
+  },
+  /** An admin invite (L2-161): the three mock states, and the app-only live link `goto` mints per test. */
+  joinSample: {
+    app: "/join?state=sample",
+    mock: "/pages/join.html#state-sample",
+    page: "join",
+  },
+  joinPlain: {
+    app: "/join?state=plain",
+    mock: "/pages/join.html#state-plain",
+    page: "join",
+  },
+  joinInvalid: {
+    app: "/join?state=invalid",
+    mock: "/pages/join.html#state-invalid",
+    page: "join",
+  },
+  join: { app: "/join?token={token}", page: "join" },
 
   // ---- public (site shell: sitebar at every width) ----
-  legal:             { app: "/legal",                          mock: "/pages/legal.html",            page: "legal" },
-  legalPrivacy:      { app: "/legal#privacy",                  mock: "/pages/legal.html#privacy",    page: "legal" },
+  legal: { app: "/legal", mock: "/pages/legal.html", page: "legal" },
+  legalPrivacy: {
+    app: "/legal#privacy",
+    mock: "/pages/legal.html#privacy",
+    page: "legal",
+  },
   /** App-only. `goto` plans a weekend, mints a share link and substitutes `{token}`. */
-  sharedWeekend:     { app: "/sample-weekend?share={token}",                                         page: "shared-weekend" },
+  sharedWeekend: {
+    app: "/sample-weekend?share={token}",
+    page: "shared-weekend",
+  },
 
   // ---- marketing site (marketing/ on :4500; the `marketing` Playwright project, ADR-018) ----
-  marketing:         { app: "/",                               mock: "/pages/marketing.html",           page: "marketing" },
+  marketing: { app: "/", mock: "/pages/marketing.html", page: "marketing" },
   /** Mock-only state: the site opens its menu with a click, so its spec clicks instead. */
-  marketingMenuOpen: { app: "/",                               mock: "/pages/marketing.menu-open.html", page: "marketing" },
+  marketingMenuOpen: {
+    app: "/",
+    mock: "/pages/marketing.menu-open.html",
+    page: "marketing",
+  },
 
   // ---- dialogs gallery (30 specimens rendered statically inline) ----
-  dialogs:           { app: "/dialogs",                        mock: "/pages/dialogs.html",          page: "dialogs" },
+  dialogs: { app: "/dialogs", mock: "/pages/dialogs.html", page: "dialogs" },
 
   // ---- Saturdaze Admin (its own app on :4300; the `admin` Playwright project) ----
-  adminSignIn:       { app: "/sign-in",                        mock: "/pages/admin.sign-in.html",        page: "admin" },
-  adminHome:         { app: "/",                               mock: "/pages/admin.html",                guard: "admin", page: "admin" },
-  adminPlaces:       { app: "/places",                         mock: "/pages/admin.places.html",         guard: "admin", page: "admin" },
-  adminReviews:      { app: "/reviews",                        mock: "/pages/admin.reviews.html",        guard: "admin", page: "admin" },
-  adminSkips:        { app: "/ingestion-skips",                mock: "/pages/admin.ingestion-skips.html", guard: "admin", page: "admin" },
-  adminActivity:     { app: "/activity",                       mock: "/pages/admin.activity.html",       guard: "admin", page: "admin" },
+  adminSignIn: {
+    app: "/sign-in",
+    mock: "/pages/admin.sign-in.html",
+    page: "admin",
+  },
+  adminHome: {
+    app: "/",
+    mock: "/pages/admin.html",
+    guard: "admin",
+    page: "admin",
+  },
+  adminPlaces: {
+    app: "/places",
+    mock: "/pages/admin.places.html",
+    guard: "admin",
+    page: "admin",
+  },
+  adminReviews: {
+    app: "/reviews",
+    mock: "/pages/admin.reviews.html",
+    guard: "admin",
+    page: "admin",
+  },
+  adminSkips: {
+    app: "/ingestion-skips",
+    mock: "/pages/admin.ingestion-skips.html",
+    guard: "admin",
+    page: "admin",
+  },
+  adminActivity: {
+    app: "/activity",
+    mock: "/pages/admin.activity.html",
+    guard: "admin",
+    page: "admin",
+  },
   /** App-only: the place is picked per test from the Places list. */
-  adminPlace:        { app: "/places/{kind}/{id}",              mock: "/pages/admin.place.html",          guard: "admin", page: "admin" },
+  adminPlace: {
+    app: "/places/{kind}/{id}",
+    mock: "/pages/admin.place.html",
+    guard: "admin",
+    page: "admin",
+  },
+  adminInvitations: {
+    app: "/invitations",
+    mock: "/pages/admin.invitations.html",
+    guard: "admin",
+    page: "admin",
+  },
+  adminSampleNew: {
+    app: "/invitations/samples/new",
+    mock: "/pages/admin.sample.new.html",
+    guard: "admin",
+    page: "admin",
+  },
+  /** App-only: the prospect is created per test through the API. */
+  adminSample: {
+    app: "/invitations/samples/{id}",
+    mock: "/pages/admin.sample.html",
+    guard: "admin",
+    page: "admin",
+  },
 } as const satisfies Record<string, RouteEntry>;
 
 export type RouteKey = keyof typeof ROUTES;

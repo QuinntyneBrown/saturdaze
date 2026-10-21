@@ -1,0 +1,22 @@
+/* Sample weekend (A10): block actions always show, there is no details dialog. */
+.sample-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.sample-meta__note {
+  font-size: var(--fontSizeBase200);
+  color: var(--colorNeutralForeground2);
+}
+
+.sample-days ::ng-deep .block__actions {
+  display: inline-flex;
+  opacity: 1;
+}
+
+.sample-days ::ng-deep .block__chev {
+  display: none;
+}

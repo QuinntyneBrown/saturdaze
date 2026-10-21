@@ -75,7 +75,7 @@ jobs:
 
   test-frontend:
     name: Frontend build and unit tests
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
 
@@ -131,7 +131,7 @@ jobs:
   # back on the next push instead of being skipped.
   infra:
     name: Provision Azure (Bicep)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs: [test-backend, test-frontend]
     outputs:
       api_name: ${{ steps.deploy.outputs.api_name }}
@@ -230,7 +230,7 @@ jobs:
 
   api:
     name: Build & deploy API + ingestion WebJob
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs: [infra]
     steps:
       - uses: actions/checkout@v4
@@ -281,7 +281,7 @@ jobs:
 
   migrate:
     name: Apply EF migrations
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs: [infra, api]
     steps:
       - uses: actions/checkout@v4
@@ -336,7 +336,7 @@ jobs:
 
   web:
     name: Deploy frontend (SWA)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     # Spec order (L2-041): API, then migrations, then the SPA that talks to them.
     needs: [infra, test-frontend, migrate]
     steps:
@@ -374,7 +374,7 @@ jobs:
 
   admin-web:
     name: Deploy admin (SWA)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     # L2-123 AC4: after the migrations, like the family app, on its own host (ADR-014).
     needs: [infra, test-frontend, migrate]
     steps:
@@ -414,7 +414,7 @@ jobs:
   # build. Its staticwebapp.config.json carries the security headers.
   marketing-web:
     name: Deploy marketing site (SWA)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs: [infra]
     steps:
       - uses: actions/checkout@v4
@@ -450,7 +450,7 @@ jobs:
   # its security headers (L2-156).
   smoke:
     name: Smoke test
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs: [infra, web, admin-web, marketing-web]
     steps:
       - name: API answers

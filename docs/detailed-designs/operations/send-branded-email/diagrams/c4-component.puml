@@ -1,0 +1,21 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components - Send branded email
+
+Container_Boundary(api, "Saturdaze API") {
+  Component(handlers, "Register / Forgot / Reject / SendInvitations handlers", "MediatR handlers", "Decide what to say")
+  Component(builders, "AccountEmails, SuggestionEmails, InvitationEmails", "Message builders", "Subject and EmailContent per message")
+  Component(content, "EmailContent", "Record", "Eyebrow, title, paragraphs, CTA, note, sample, small, footer")
+  Component(layout, "EmailLayout", "Renderer", "Render(): branded HTML; Text(): the plain-text twin; encodes every value")
+  Component(outbox, "EmailOutbox / EmailDispatchService", "Outbox", "Delivers after the response")
+  Component(mime, "EmailMime", "MimeKit BodyBuilder", "text/plain then text/html in multipart/alternative")
+  Component(senders, "SmtpEmailSender, PickupDirectoryEmailSender", "IEmailSender", "SMTP or .eml")
+}
+Rel(handlers, builders, "Ask for a message")
+Rel(builders, content, "Build")
+Rel(builders, layout, "Render() and Text()")
+Rel(handlers, outbox, "Enqueue(EmailMessage)")
+Rel(outbox, senders, "SendAsync")
+Rel(senders, mime, "From(from, message)")
+@enduml

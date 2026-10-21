@@ -41,6 +41,7 @@ import { CreateAccountPage } from "../pages/create-account.page.js";
 import { ResetPasswordPage } from "../pages/reset-password.page.js";
 import { VerifyEmailPage } from "../pages/verify-email.page.js";
 import { AcceptInvitePage } from "../pages/accept-invite.page.js";
+import { JoinPage } from "../pages/join.page.js";
 import { LegalPage } from "../pages/legal.page.js";
 import { MarketingPage } from "../pages/marketing.page.js";
 import { DialogsPage } from "../pages/dialogs.page.js";
@@ -52,6 +53,9 @@ import { AdminReviewsPage } from "../pages/admin/admin-reviews.page.js";
 import { AdminHealthPage } from "../pages/admin/admin-health.page.js";
 import { AdminActivityPage } from "../pages/admin/admin-activity.page.js";
 import { AdminSkipsPage } from "../pages/admin/admin-skips.page.js";
+import { AdminInvitationsPage } from "../pages/admin/admin-invitations.page.js";
+import { AdminSampleNewPage } from "../pages/admin/admin-sample-new.page.js";
+import { AdminSamplePage } from "../pages/admin/admin-sample.page.js";
 
 interface Pages {
   weekend: WeekendPage;
@@ -64,6 +68,7 @@ interface Pages {
   resetPassword: ResetPasswordPage;
   verifyEmail: VerifyEmailPage;
   acceptInvite: AcceptInvitePage;
+  join: JoinPage;
   legal: LegalPage;
   marketing: MarketingPage;
   dialogs: DialogsPage;
@@ -75,6 +80,9 @@ interface Pages {
   adminHealth: AdminHealthPage;
   adminActivity: AdminActivityPage;
   adminSkips: AdminSkipsPage;
+  adminInvitations: AdminInvitationsPage;
+  adminSampleNew: AdminSampleNewPage;
+  adminSample: AdminSamplePage;
 }
 
 export interface GotoOptions {
@@ -86,7 +94,10 @@ export interface GotoOptions {
 
 interface SdFixtures {
   goto: (key: RouteKey, opts?: GotoOptions) => Promise<void>;
-  signIn: (creds?: Credentials, seed?: SeedOptions) => Promise<TestSession | null>;
+  signIn: (
+    creds?: Credentials,
+    seed?: SeedOptions,
+  ) => Promise<TestSession | null>;
   signInAsAdmin: () => Promise<TestSession | null>;
   pages: Pages;
   /** Pause until web fonts have loaded and the network is idle so visual diffs are stable. */
@@ -124,13 +135,17 @@ export const test = base.extend<SdFixtures>({
         const link = await shareWeekend(request, owner, weekend.id);
         if (opts.as === "admin") await signInAsAdmin();
         else if (opts.as === "user") await signIn();
-        await page.goto(pathFor(key).replace("{token}", encodeURIComponent(link.token)));
+        await page.goto(
+          pathFor(key).replace("{token}", encodeURIComponent(link.token)),
+        );
         return;
       }
 
       if (!opts.anonymous && !isBaseline()) {
         const guard = guardFor(key);
-        const who = opts.as ?? (guard === "admin" ? "admin" : guard === "auth" ? "user" : undefined);
+        const who =
+          opts.as ??
+          (guard === "admin" ? "admin" : guard === "auth" ? "user" : undefined);
         if (who === "admin") await signInAsAdmin();
         else if (who === "user") await signIn();
       }
@@ -150,6 +165,7 @@ export const test = base.extend<SdFixtures>({
       resetPassword: new ResetPasswordPage(page),
       verifyEmail: new VerifyEmailPage(page),
       acceptInvite: new AcceptInvitePage(page),
+      join: new JoinPage(page),
       legal: new LegalPage(page),
       marketing: new MarketingPage(page),
       dialogs: new DialogsPage(page),
@@ -161,13 +177,18 @@ export const test = base.extend<SdFixtures>({
       adminHealth: new AdminHealthPage(page),
       adminActivity: new AdminActivityPage(page),
       adminSkips: new AdminSkipsPage(page),
+      adminInvitations: new AdminInvitationsPage(page),
+      adminSampleNew: new AdminSampleNewPage(page),
+      adminSample: new AdminSamplePage(page),
     });
   },
 
   settle: async ({ page }, use) => {
     await use(async () => {
       await page.evaluate(async () => {
-        const fonts = (document as Document & { fonts?: { ready: Promise<unknown> } }).fonts;
+        const fonts = (
+          document as Document & { fonts?: { ready: Promise<unknown> } }
+        ).fonts;
         if (fonts?.ready) await fonts.ready;
       });
       await page.waitForLoadState("networkidle");

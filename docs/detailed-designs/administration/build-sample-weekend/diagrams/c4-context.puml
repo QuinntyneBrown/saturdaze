@@ -1,0 +1,12 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context - Build a sample weekend
+
+Person(admin, "Administrator", "Describes a prospective family and shapes its weekend")
+System(saturdaze, "Saturdaze", "Family weekend planner")
+System_Ext(weather, "Open-Meteo", "Forecast for the weekend")
+
+Rel(admin, saturdaze, "Creates a prospect, regenerates, swaps and locks blocks", "HTTPS")
+Rel(saturdaze, weather, "Reads the weekend forecast", "HTTPS")
+@enduml

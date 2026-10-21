@@ -30,6 +30,8 @@ public class AuthController : ControllerBase
     public record LogoutRequest(string RefreshToken);
     public record InvitationRequest(string Token);
     public record AcceptInvitationRequest(string Token, string Password);
+    public record JoinRequest(string Token);
+    public record AcceptJoinRequest(string Token, string Password);
 
     [HttpPost("register")]
     [AllowAnonymous]
@@ -115,6 +117,21 @@ public class AuthController : ControllerBase
     public async Task<ActionResult<AuthSuccessDto>> AcceptInvitation([FromBody] AcceptInvitationRequest req, CancellationToken ct)
     {
         var dto = await _mediator.Send(new AcceptInvitationCommand(req.Token, req.Password), ct);
+        return CreatedAtAction(nameof(Me), null, dto);
+    }
+
+    /// <summary>What a platform invite link is for, with its sample weekend when any (L2-161).</summary>
+    [HttpPost("join")]
+    [AllowAnonymous]
+    public async Task<ActionResult<JoinPreviewDto>> Join([FromBody] JoinRequest req, CancellationToken ct)
+        => Ok(await _mediator.Send(new GetJoinPreviewQuery(req.Token), ct));
+
+    /// <summary>Creates the invited person's account, claims the sample family when there is one, and signs them in (L2-161).</summary>
+    [HttpPost("join/accept")]
+    [AllowAnonymous]
+    public async Task<ActionResult<AuthSuccessDto>> AcceptJoin([FromBody] AcceptJoinRequest req, CancellationToken ct)
+    {
+        var dto = await _mediator.Send(new AcceptPlatformInvitationCommand(req.Token, req.Password), ct);
         return CreatedAtAction(nameof(Me), null, dto);
     }
 

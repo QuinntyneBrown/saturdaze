@@ -1,0 +1,54 @@
+@startuml
+title UML sequence behaviour - Send invitations
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+actor "Administrator" as actor
+box "Frontend - Saturdaze Admin Angular application" #E0F2FE
+  participant "InvitationsPage" as page
+  participant "InviteDialog (AD7)" as dialog
+  participant "AdminInvitationsService" as service
+end box
+box "Backend - Saturdaze API application" #D1FADF
+  participant "AdminInvitationsController" as controller
+end box
+box "Backend - Saturdaze Application and Domain" #ECFDF3
+  participant "SendInvitationsCommandHandler" as handler
+  participant "InvitationEmails" as emails
+end box
+box "Backend - Saturdaze Infrastructure" #FFF4E5
+  database "Saturdaze database" as db
+  participant "EmailOutbox / EmailDispatchService" as outbox
+end box
+actor -> page : Invite families
+page -> dialog : open
+actor -> dialog : addresses, sample weekend, message
+dialog -> service : send({emails, prospectId, message})
+service -> controller : POST /api/admin/invitations (bearer)
+controller -> controller : Admin policy (L2-111)
+controller -> handler : SendInvitationsCommand
+handler -> handler : validate 1..20 distinct addresses (L2-157 AC5)
+handler -> db : any User with these emails?
+db --> handler : none / match
+alt an address already signs in
+  handler --> controller : ConflictException email_in_use (L2-157 AC3)
+  controller --> service : 409 ProblemDetails
+  service --> dialog : error under the field
+else all addresses free
+  handler -> db : pending invitation for any address?
+  db --> handler : none
+  handler -> handler : raw token per address, store hash, ExpiresAtUtc = now + 14 days
+  handler -> db : insert PlatformInvitations, save once
+  db --> handler : committed
+  handler -> emails : one EmailMessage per address with the join link
+  handler -> outbox : Enqueue (after save)
+  handler --> controller : SendInvitationsResultDto with urls
+  controller --> service : 201
+  service --> dialog : rows
+  dialog --> page : close with the new rows
+  page --> actor : rows at the top, "Invite sent", "Expires in 14 days" (L2-157 AC9)
+  outbox -> outbox : deliver after the response (L2-142)
+end
+@enduml

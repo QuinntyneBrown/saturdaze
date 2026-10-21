@@ -1,0 +1,15 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers - Join from an invitation
+
+Person(invitee, "Invited person", "No account yet")
+System_Boundary(saturdaze, "Saturdaze") {
+  Container(web, "Saturdaze app", "Angular", "/join page under the site shell")
+  Container(api, "Saturdaze API", "ASP.NET Core", "Anonymous join routes, token issuing")
+  ContainerDb(db, "Saturdaze database", "SQL Server", "PlatformInvitations, Prospects, Families, Users, RefreshTokens")
+}
+Rel(invitee, web, "Opens /join?token=...", "HTTPS")
+Rel(web, api, "POST /api/auth/join, POST /api/auth/join/accept", "JSON/HTTPS")
+Rel(api, db, "Reads and writes", "EF Core")
+@enduml

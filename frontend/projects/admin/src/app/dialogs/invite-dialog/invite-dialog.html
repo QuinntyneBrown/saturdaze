@@ -1,0 +1,41 @@
+<sd-dialog
+  wide
+  title="Invite families to Saturdaze"
+  subtitle="One address per family. Each gets its own single-use link that works for 14 days."
+>
+  @if (error()) {
+    <sd-banner tone="warn" role="alert" icon="alert">{{ error() }}</sd-banner>
+  }
+  <form class="form" [formGroup]="form" (ngSubmit)="send()">
+    <sd-chip-input
+      label="Emails"
+      tone="sky"
+      placeholder="name@example.com, press Enter"
+      formControlName="emails"
+    />
+    <p class="sd-text-xs sd-text-soft form__hint">
+      Up to 20 at a time. An address that already signs in is refused before anything is sent.
+    </p>
+    <sd-select
+      label="Sample weekend"
+      name="prospectId"
+      [options]="sampleOptions"
+      formControlName="prospectId"
+      hint="The first person to accept owns the family; anyone else invited with it joins as a member."
+    />
+    <sd-text-input
+      label="Message"
+      name="message"
+      formControlName="message"
+      multiline
+      [rows]="3"
+      placeholder="A line from you, included in the email."
+    />
+    <button type="submit" hidden></button>
+  </form>
+  <sd-button slot="actions" variant="quiet" type="button" (click)="cancel()">Cancel</sd-button>
+  <sd-button slot="actions" variant="primary" type="button" [disabled]="sending()" (click)="send()">
+    <sd-icon name="mail" />
+    Send invites
+  </sd-button>
+</sd-dialog>

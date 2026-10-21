@@ -8,6 +8,7 @@ import { ForgotPasswordRequest } from '../models/forgot-password-request';
 import { LoginRequest } from '../models/login-request';
 import { ResetPasswordRequest } from '../models/reset-password-request';
 import { AcceptInvitationRequest, Invitation } from '../models/invitation';
+import { AcceptJoinRequest, JoinPreview } from '../models/join';
 import { ResendVerificationRequest } from '../models/resend-verification-request';
 import { SignupRequest } from '../models/signup-request';
 import { User } from '../models/user';
@@ -334,6 +335,42 @@ export class SessionStore implements ISessionStore {
     this._error.set(null);
     try {
       const { token, user } = await this.auth.acceptInvitation(req);
+      this.persist(token, true);
+      this._token.set(token);
+      this._user.set(user);
+    } catch (e) {
+      const err = asAuthError(e);
+      this._error.set(err);
+      throw err;
+    }
+  }
+
+  /**
+   * Preview Join.
+   *
+   * @param {string} token - The join token
+   *
+   * @returns {Promise<JoinPreview>} The result of the operation
+   */
+  async previewJoin(token: string): Promise<JoinPreview> {
+    try {
+      return await this.auth.previewJoin(token);
+    } catch (e) {
+      throw asAuthError(e, 'token_invalid');
+    }
+  }
+
+  /**
+   * Accept Join — persisted like a sign-up (remembered).
+   *
+   * @param {AcceptJoinRequest} req - The req
+   *
+   * @returns {Promise<void>} The result of the operation
+   */
+  async acceptJoin(req: AcceptJoinRequest): Promise<void> {
+    this._error.set(null);
+    try {
+      const { token, user } = await this.auth.acceptJoin(req);
       this.persist(token, true);
       this._token.set(token);
       this._user.set(user);

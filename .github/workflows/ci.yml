@@ -56,7 +56,7 @@ jobs:
 
   test-frontend:
     name: Frontend build and unit tests
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
 
@@ -111,7 +111,7 @@ jobs:
   storybook:
     # Keep the required branch-protection context while testing its replacement.
     name: Design-system contract + browser tests
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
 
