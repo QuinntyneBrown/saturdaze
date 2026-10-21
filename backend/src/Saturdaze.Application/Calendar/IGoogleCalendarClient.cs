@@ -20,6 +20,13 @@ public interface IGoogleCalendarClient
     /// <summary>Revokes a refresh token at Google.</summary>
     Task RevokeAsync(string refreshToken, CancellationToken ct);
 
+    /// <summary>
+    /// The primary calendar's events between two instants, recurring events expanded
+    /// (L2-169). All-day events come back with <see cref="GoogleCalendarEvent.AllDay"/> set.
+    /// </summary>
+    Task<IReadOnlyList<GoogleCalendarEvent>> ListEventsAsync(
+        string refreshToken, DateTimeOffset from, DateTimeOffset to, CancellationToken ct);
+
     /// <summary>Adds an event to the account's primary calendar; returns the id Google assigned.</summary>
     Task<string> InsertEventAsync(string refreshToken, GoogleCalendarEventWrite write, CancellationToken ct);
 
@@ -63,3 +70,15 @@ public sealed class GoogleCalendarUnavailableException : Exception
 {
     public GoogleCalendarUnavailableException(string message, Exception? inner = null) : base(message, inner) { }
 }
+
+/// <summary>One event as the read direction sees it (L2-169).</summary>
+public sealed record GoogleCalendarEvent(
+    string Id,
+    string? Summary,
+    DateTimeOffset? Start,
+    DateTimeOffset? End,
+    bool AllDay,
+    bool Cancelled,
+    bool Declined,
+    bool Free,
+    bool WrittenBySaturdaze);

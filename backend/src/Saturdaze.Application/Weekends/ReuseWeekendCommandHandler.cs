@@ -89,7 +89,8 @@ public sealed class ReuseWeekendCommandHandler : IRequestHandler<ReuseWeekendCom
         target.Rating = null;
         target.RegenerateCount = request.Remix ? source.RegenerateCount + 1 : source.RegenerateCount;
 
-        foreach (var block in sourceBlocks.Where(b => !keptLocks.Any(k => Overlaps(k, b))))
+        // A past weekend's calendar events are not this weekend's (L2-169).
+        foreach (var block in sourceBlocks.Where(b => !b.FromCalendar && !keptLocks.Any(k => Overlaps(k, b))))
         {
             _db.ItineraryBlocks.Add(new ItineraryBlock
             {

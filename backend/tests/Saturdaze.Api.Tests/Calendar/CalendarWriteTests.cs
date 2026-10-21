@@ -61,7 +61,8 @@ public class CalendarWriteTests : IClassFixture<SaturdazeApiFactory>, IDisposabl
     /// <summary>The blocks of a weekend that become events: everything but drives and downtime (L2-168).</summary>
     private static List<JsonElement> Written(JsonElement weekend) =>
         weekend.GetProperty("blocks").EnumerateArray()
-            .Where(b => b.GetProperty("kind").GetString() is not ("Drive" or "Downtime"))
+            .Where(b => b.GetProperty("kind").GetString() is not ("Drive" or "Downtime")
+                && !b.GetProperty("fromCalendar").GetBoolean())
             .ToList();
 
     private static HashSet<string> Titles(IEnumerable<FakeGoogleCalendarClient.FakeEvent> events)

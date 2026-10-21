@@ -211,7 +211,7 @@ export function toBlockRow(
     timeRange: timeRange(b.startTime, b.endTime),
     duration: formatDuration(durationMinutes),
     durationMinutes,
-    icon: blockIcon(b.kind, b.title),
+    icon: b.fromCalendar ? 'calendar' : blockIcon(b.kind, b.title),
     title: b.title,
     subtitle: blockSubtitle(b, reason),
     reason,
@@ -340,6 +340,7 @@ function activityIcon(lowerTitle: string): string {
 
 function blockSubtitle(b: ItineraryBlockDto, reason: string | null): string | null {
   if (b.kind === 'Drive') return null;
+  if (b.fromCalendar) return 'From your calendar · planned around';
   if (b.kind === 'Commitment') {
     const boilerplate = !reason || reason.toLowerCase() === PLANNER_COMMITMENT_REASON;
     return boilerplate ? `Every ${b.day} · locked in` : reason;
@@ -354,6 +355,7 @@ function blockChips(
   const chips: ChipView[] = [];
   if (b.kind === 'Commitment') {
     chips.push({ tone: 'accent', icon: 'lock', label: 'Commitment' });
+    if (b.fromCalendar) chips.push({ tone: 'default', icon: 'calendar', label: 'Calendar' });
   } else if (b.isLocked) {
     chips.push({ tone: 'accent', icon: 'lock', label: 'Locked' });
   }

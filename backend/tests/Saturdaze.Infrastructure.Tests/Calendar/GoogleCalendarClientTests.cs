@@ -173,6 +173,51 @@ public class GoogleCalendarClientTests
             .Should().ThrowAsync<GoogleCalendarUnavailableException>();
     }
 
+    [Fact]
+    public async Task A_list_reads_every_page_and_marks_all_day_declined_free_cancelled_and_saturdaze_events()
+    {
+        // Traces to: L2-169 AC2
+        _google.Respond(HttpStatusCode.OK, new { access_token = "at", expires_in = 3600 });
+        _google.Respond(HttpStatusCode.OK, new
+        {
+            nextPageToken = "p2",
+            items = new object[]
+            {
+                new { id = "a", summary = "Party", start = new { dateTime = "2026-05-16T15:00:00-04:00" }, end = new { dateTime = "2026-05-16T17:00:00-04:00" } },
+                new { id = "b", summary = "Holiday", start = new { date = "2026-05-16" }, end = new { date = "2026-05-17" } },
+                new { id = "c", summary = "Lunch", start = new { dateTime = "2026-05-16T12:00:00-04:00" }, end = new { dateTime = "2026-05-16T13:00:00-04:00" },
+                    attendees = new object[] { new { self = true, responseStatus = "declined" } } },
+            },
+        });
+        _google.Respond(HttpStatusCode.OK, new
+        {
+            items = new object[]
+            {
+                new { id = "d", summary = "Focus", transparency = "transparent", start = new { dateTime = "2026-05-17T09:00:00-04:00" }, end = new { dateTime = "2026-05-17T10:00:00-04:00" } },
+                new { id = "e", status = "cancelled", start = new { dateTime = "2026-05-17T11:00:00-04:00" }, end = new { dateTime = "2026-05-17T12:00:00-04:00" } },
+                new { id = "f", summary = "Swim", start = new { dateTime = "2026-05-16T09:00:00-04:00" }, end = new { dateTime = "2026-05-16T10:00:00-04:00" },
+                    extendedProperties = new { @private = new { saturdazeBlock = Guid.NewGuid().ToString() } } },
+            },
+        });
+
+        var events = await Client().ListEventsAsync("rt",
+            new DateTimeOffset(2026, 5, 16, 0, 0, 0, TimeSpan.FromHours(-4)), new DateTimeOffset(2026, 5, 18, 0, 0, 0, TimeSpan.FromHours(-4)),
+            CancellationToken.None);
+
+        events.Select(e => e.Id).Should().Equal("a", "b", "c", "d", "e", "f");
+        events.Single(e => e.Id == "a").Should().Be(new GoogleCalendarEvent("a", "Party",
+            new DateTimeOffset(2026, 5, 16, 15, 0, 0, TimeSpan.FromHours(-4)), new DateTimeOffset(2026, 5, 16, 17, 0, 0, TimeSpan.FromHours(-4)),
+            AllDay: false, Cancelled: false, Declined: false, Free: false, WrittenBySaturdaze: false));
+        events.Single(e => e.Id == "b").AllDay.Should().BeTrue();
+        events.Single(e => e.Id == "c").Declined.Should().BeTrue();
+        events.Single(e => e.Id == "d").Free.Should().BeTrue();
+        events.Single(e => e.Id == "e").Cancelled.Should().BeTrue();
+        events.Single(e => e.Id == "f").WrittenBySaturdaze.Should().BeTrue();
+        var firstPage = _google.Requests[1];
+        firstPage.Method.Should().Be("GET");
+        _google.Requests[2].Url.Should().Be("https://www.googleapis.com/calendar/v3/calendars/primary/events");
+    }
+
     internal sealed class SingleClientFactory : IHttpClientFactory
     {
         private readonly HttpMessageHandler _handler;

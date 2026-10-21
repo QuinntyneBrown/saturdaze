@@ -38,6 +38,12 @@ public sealed class FakeGoogleCalendarClient : IGoogleCalendarClient
 
     public sealed record FakeEvent(string Id, GoogleCalendarEventWrite Event, int Version);
 
+    /// <summary>Events the person keeps in their calendar, by refresh token (the read direction, L2-169).</summary>
+    private readonly ConcurrentDictionary<string, ConcurrentQueue<GoogleCalendarEvent>> _ownEvents = new(StringComparer.Ordinal);
+
+    /// <summary>How long a list call takes, to stand in for a slow Google (L2-170 AC2).</summary>
+    public TimeSpan ListDelay { get; set; } = TimeSpan.Zero;
+
     /// <summary>The redirect URIs codes were exchanged with.</summary>
     public ConcurrentQueue<string> ExchangedWith { get; } = new();
 
@@ -129,5 +135,23 @@ public sealed class FakeGoogleCalendarClient : IGoogleCalendarClient
     {
         Calendar(refreshToken, "delete").TryRemove(eventId, out _);
         return Task.CompletedTask;
+    }
+
+    /// <summary>Puts an event in the account's calendar as the person would.</summary>
+    public void AddOwnEvent(string email, GoogleCalendarEvent ev)
+        => _ownEvents.GetOrAdd(_tokensByEmail[email], _ => new ConcurrentQueue<GoogleCalendarEvent>()).Enqueue(ev);
+
+    public async Task<IReadOnlyList<GoogleCalendarEvent>> ListEventsAsync(
+        string refreshToken, DateTimeOffset from, DateTimeOffset to, CancellationToken ct)
+    {
+        if (ListDelay > TimeSpan.Zero) await Task.Delay(ListDelay, ct);
+        var written = Calendar(refreshToken, "list").Values.Select(e => new GoogleCalendarEvent(
+            e.Id, e.Event.Summary,
+            new DateTimeOffset(e.Event.Start, TimeSpan.FromHours(-4)), new DateTimeOffset(e.Event.End, TimeSpan.FromHours(-4)),
+            AllDay: false, Cancelled: false, Declined: false, Free: false, WrittenBySaturdaze: true));
+        var own = _ownEvents.TryGetValue(refreshToken, out var q) ? q.ToArray() : Array.Empty<GoogleCalendarEvent>();
+        return own.Concat(written)
+            .Where(e => e.AllDay || (e.End > from && e.Start < to))
+            .ToList();
     }
 }

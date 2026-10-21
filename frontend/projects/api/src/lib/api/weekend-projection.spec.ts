@@ -141,6 +141,25 @@ describe('weekend-projection', () => {
     const day = projectDay(weekendDto(), 'Saturday');
     const row = (id: string) => day.blocks.find((b) => b.id === id)!;
 
+    it('marks a commitment that came from a connected calendar (L2-169 AC6)', () => {
+      const r = toBlockRow(
+        block({
+          kind: 'Commitment',
+          title: "Ava's birthday party",
+          isLocked: true,
+          reason: 'from your calendar',
+          fromCalendar: true,
+        }),
+        [],
+      );
+      expect(r.icon).toBe('calendar');
+      expect(r.subtitle).toBe('From your calendar · planned around');
+      expect(r.chips.map((c) => c.label)).toEqual(['Commitment', 'Calendar']);
+      expect(r.chips[1]).toEqual({ tone: 'default', icon: 'calendar', label: 'Calendar' });
+      expect(r.commitment).toBe(true);
+      expect(r.lockable).toBe(false);
+    });
+
     it('formats time, range and duration the way the rail shows them', () => {
       expect(row('b1')).toMatchObject({
         time: '11:00am',

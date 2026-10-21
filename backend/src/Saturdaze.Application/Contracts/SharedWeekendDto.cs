@@ -6,7 +6,7 @@ namespace Saturdaze.Application.Contracts;
 /// <summary>
 /// What a share-link viewer sees (L2-086 AC7): the plan, its weather, day totals
 /// and cover. The family's notes, errands, home, rating, favourite flag,
-/// regeneration count and block reasons stay private; errand blocks are left
+/// regeneration count and block reasons stay private, calendar events read "Busy"; errand blocks are left
 /// out and directions links, which start at home, are dropped.
 /// </summary>
 public sealed record SharedWeekendDto(
@@ -25,7 +25,8 @@ public sealed record SharedWeekendDto(
         weekend.Blocks
             .Where(b => b.Kind != BlockKind.Errand)
             .Select(b => new SharedBlockDto(
-                b.Id, b.Day, b.StartTime, b.EndTime, b.Kind, b.Title, b.RefId, b.IsLocked, b.SortOrder,
+                // A personal calendar event's title stays with the family (L2-169 AC7).
+                b.Id, b.Day, b.StartTime, b.EndTime, b.Kind, b.FromCalendar ? "Busy" : b.Title, b.RefId, b.IsLocked, b.SortOrder,
                 b.StopNumber, b.Stop, b.LegBefore is { } leg ? leg with { DirectionsUrl = null } : null, b.Photo))
             .ToList(),
         weekend.Weather,

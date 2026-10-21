@@ -49,6 +49,10 @@ export interface ItineraryBlockDto {
    */
   readonly sortOrder: number;
   /**
+   * From Calendar — a commitment from an event in a connected calendar (L2-169).
+   */
+  readonly fromCalendar?: boolean;
+  /**
    * Stop Number — 1-based among the day's stops away from home (L2-103); null otherwise.
    */
   readonly stopNumber?: number | null;

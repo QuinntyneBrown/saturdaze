@@ -77,6 +77,58 @@ public sealed class GoogleCalendarClient : IGoogleCalendarClient
             throw new GoogleCalendarUnavailableException($"Revocation answered {(int)response.StatusCode}");
     }
 
+    public async Task<IReadOnlyList<GoogleCalendarEvent>> ListEventsAsync(
+        string refreshToken, DateTimeOffset from, DateTimeOffset to, CancellationToken ct)
+    {
+        var events = new List<GoogleCalendarEvent>();
+        string? page = null;
+        do
+        {
+            var url = $"{CalendarApi}?singleEvents=true&orderBy=startTime&maxResults=250"
+                + $"&timeMin={Uri.EscapeDataString(from.ToString("yyyy-MM-dd'T'HH:mm:sszzz"))}"
+                + $"&timeMax={Uri.EscapeDataString(to.ToString("yyyy-MM-dd'T'HH:mm:sszzz"))}"
+                + (page is null ? string.Empty : $"&pageToken={Uri.EscapeDataString(page)}");
+            using var response = await CalendarAsync(refreshToken, HttpMethod.Get, url, null, ct);
+            var body = await ReadJsonAsync(response, ct);
+            if (!response.IsSuccessStatusCode)
+                throw new GoogleCalendarUnavailableException($"List answered {(int)response.StatusCode}");
+            if (body.TryGetProperty("items", out var items) && items.ValueKind == JsonValueKind.Array)
+                events.AddRange(items.EnumerateArray().Select(ReadEvent));
+            page = String(body, "nextPageToken");
+        } while (page is not null);
+        return events;
+    }
+
+    private static GoogleCalendarEvent ReadEvent(JsonElement item)
+    {
+        static (DateTimeOffset? At, bool AllDay) When(JsonElement item, string name)
+        {
+            if (!item.TryGetProperty(name, out var when)) return (null, false);
+            if (String(when, "dateTime") is { } dateTime && DateTimeOffset.TryParse(dateTime, out var at)) return (at, false);
+            return (null, String(when, "date") is not null);
+        }
+
+        var (start, allDay) = When(item, "start");
+        var (end, _) = When(item, "end");
+        var declined = item.TryGetProperty("attendees", out var attendees) && attendees.ValueKind == JsonValueKind.Array
+            && attendees.EnumerateArray().Any(a =>
+                a.TryGetProperty("self", out var self) && self.ValueKind == JsonValueKind.True
+                && String(a, "responseStatus") == "declined");
+        var ours = item.TryGetProperty("extendedProperties", out var ext)
+            && ext.TryGetProperty("private", out var priv)
+            && priv.TryGetProperty(SaturdazeBlockProperty, out _);
+        return new GoogleCalendarEvent(
+            String(item, "id") ?? string.Empty,
+            String(item, "summary"),
+            start,
+            end,
+            allDay,
+            Cancelled: String(item, "status") == "cancelled",
+            Declined: declined,
+            Free: String(item, "transparency") == "transparent",
+            WrittenBySaturdaze: ours);
+    }
+
     public async Task<string> InsertEventAsync(string refreshToken, GoogleCalendarEventWrite write, CancellationToken ct)
     {
         using var response = await CalendarAsync(refreshToken, HttpMethod.Post, CalendarApi, Body(write), ct);

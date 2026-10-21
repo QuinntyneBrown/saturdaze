@@ -18,6 +18,7 @@ internal sealed class PlannerInputsBuilder
     private readonly List<WeatherForecast> _forecast = new();
     private readonly List<HistoricalActivity> _history = new();
     private readonly List<ItineraryBlock> _locked = new();
+    private readonly List<CalendarCommitment> _calendar = new();
     private ShoppingErrand? _errand;
     private bool _tryNew;
     private int _seed = 1;
@@ -78,6 +79,13 @@ internal sealed class PlannerInputsBuilder
     }
 
     public PlannerInputsBuilder LockedBlock(ItineraryBlock block) { _locked.Add(block); return this; }
+
+    /// <summary>A timed event from a connected calendar (L2-169).</summary>
+    public PlannerInputsBuilder CalendarEvent(DayOfWeekend day, TimeOnly start, TimeOnly end, string title)
+    {
+        _calendar.Add(new CalendarCommitment(day, start, end, title));
+        return this;
+    }
     public PlannerInputsBuilder Errand(int estimatedMinutes, string description = "Costco")
     {
         _errand = new ShoppingErrand { Id = Guid.NewGuid(), Description = description, EstimatedMinutes = estimatedMinutes };
@@ -92,5 +100,5 @@ internal sealed class PlannerInputsBuilder
 
     public PlannerInputs Build() => new(
         _familyId, _weekendOf, _members, _commitments, _preferences, _activities, _restaurants, _events,
-        _forecast, _history, _errand, _locked, _tryNew, _seed);
+        _forecast, _history, _errand, _locked, _tryNew, _seed, _calendar);
 }

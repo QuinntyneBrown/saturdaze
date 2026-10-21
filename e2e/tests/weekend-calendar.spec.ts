@@ -1,5 +1,6 @@
 import { test, expect } from "../fixtures/sd-test.js";
 import { stubCalendarApi } from "../fixtures/calendar-api.js";
+import { stubCalendarBlock } from "../fixtures/weekend-data.js";
 
 /**
  * The weekend page with a connected Google Calendar (L2-168 AC7). The
@@ -40,5 +41,19 @@ test.describe("Weekend with a connected calendar", () => {
 
     await expect(w.dialogTitle()).toHaveText("Add to your calendar");
     await expect(w.dialogBanner()).toHaveCount(0);
+  });
+
+  // Traces to: L2-169 AC6
+  test("Given an event from the connected calendar on Saturday, the block shows the Commitment and Calendar chips and where it came from", async ({ page, goto, pages }) => {
+    await stubCalendarApi(page, { google: CONNECTED });
+    await stubCalendarBlock(page, "Saturday", "Ava's birthday party");
+    await goto("weekend");
+    const w = pages.weekend;
+    await w.waitForReady();
+
+    const block = w.block("Ava's birthday party", "Saturday");
+    await expect(block).toBeVisible();
+    await expect(w.blockChips(block)).toHaveText(["Commitment", "Calendar"]);
+    await expect(w.blockSubtitle(block)).toHaveText("From your calendar · planned around");
   });
 });

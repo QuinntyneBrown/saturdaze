@@ -149,11 +149,39 @@ public sealed class WeekendPlanner : IWeekendPlanner
                 RefId = l.RefId,
                 IsLocked = true,
                 Reason = string.IsNullOrEmpty(l.Reason) ? "locked by user" : l.Reason,
-                Stop = l.Stop?.Copy()
+                Stop = l.Stop?.Copy(),
+                FromCalendar = l.FromCalendar
+            });
+        }
+
+        // Calendar events go last, so profile commitments and locked blocks win
+        // and fixed blocks never overlap (L2-169).
+        var calendar = (inputs.CalendarCommitments ?? Array.Empty<CalendarCommitment>())
+            .Where(c => c.Day == day)
+            .Select(c => (c, start: Max(c.Start, PlannerTimes.DayStart), end: Min(c.End, PlannerTimes.DayEnd)))
+            .Where(x => x.start < x.end)
+            .OrderBy(x => x.start);
+        foreach (var (c, start, end) in calendar)
+        {
+            if (list.Any(b => Overlaps(b.StartTime, b.EndTime, start, end))) continue;
+            list.Add(new ItineraryBlock
+            {
+                Id = Guid.NewGuid(),
+                Day = day,
+                StartTime = start,
+                EndTime = end,
+                Kind = BlockKind.Commitment,
+                Title = c.Title,
+                IsLocked = true,
+                Reason = "from your calendar",
+                FromCalendar = true
             });
         }
         return list.OrderBy(b => b.StartTime).ToList();
     }
+
+    private static TimeOnly Max(TimeOnly a, TimeOnly b) => a > b ? a : b;
+    private static TimeOnly Min(TimeOnly a, TimeOnly b) => a < b ? a : b;
 
     private static bool Represents(ItineraryBlock block, Commitment commitment) =>
         string.Equals(block.Title, commitment.Title, StringComparison.OrdinalIgnoreCase)

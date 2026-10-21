@@ -61,7 +61,8 @@ public sealed class WeekendReplanner
                 IsLocked = b.IsLocked,
                 Reason = b.Reason,
                 SortOrder = b.SortOrder,
-                Stop = b.Stop?.Copy()
+                Stop = b.Stop?.Copy(),
+                FromCalendar = b.FromCalendar
             };
             _db.ItineraryBlocks.Add(block);
             weekend.Blocks.Add(block);

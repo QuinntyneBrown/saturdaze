@@ -28,7 +28,8 @@ internal static class WeekendMapper
                         b.Id, b.Day, b.StartTime, b.EndTime, b.Kind, b.Title, b.RefId, b.IsLocked, b.Reason, b.SortOrder,
                         t?.StopNumber,
                         LocationDto.From(b.Stop),
-                        t?.LegBefore is { } leg ? new TravelLegDto(leg.Minutes, leg.DistanceKm, leg.DirectionsUrl) : null);
+                        t?.LegBefore is { } leg ? new TravelLegDto(leg.Minutes, leg.DistanceKm, leg.DirectionsUrl) : null,
+                        FromCalendar: b.FromCalendar);
                 })
                 .ToList(),
             weekend.Errands

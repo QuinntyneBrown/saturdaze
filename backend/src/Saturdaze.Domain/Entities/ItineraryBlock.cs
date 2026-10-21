@@ -18,6 +18,12 @@ public class ItineraryBlock
     public int SortOrder { get; set; }
 
     /// <summary>
+    /// A commitment that came from an event in a connected calendar (L2-169):
+    /// never written back to a calendar, titled "Busy" on a share link.
+    /// </summary>
+    public bool FromCalendar { get; set; }
+
+    /// <summary>
     /// Where the block happens when that is a catalog place (L2-103), copied when the block
     /// is planned so the record survives catalog edits. Null at home or when unknown.
     /// </summary>
