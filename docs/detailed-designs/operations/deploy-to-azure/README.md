@@ -16,6 +16,8 @@ When `api_exists=true`, `api` publishes and deploys the API. `migrate` depends o
 
 A `marketing-web` job uploads the static `marketing/` folder to a fourth Static Web App, `sd-www-<suffix>`, with no build step and no fallback; `smoke` then loads the page and checks its headline and Content-Security-Policy (L2-156, ADR-018, [serve-marketing-site](../../web-experience/serve-marketing-site/README.md)).
 
+The `infra` job also provisions the email domain and relay the API sends account mail through, and prints the domain's DNS records in the run summary (L2-172, ADR-021, [deliver-account-email](../deliver-account-email/README.md)).
+
 When the API Web App is absent, preflight emits a warning and summary, and the API/migration/web chain is skipped. Azure login failures fail preflight. The current probe treats every non-zero `az webapp show` result as an absent resource; authorization and transient probe errors can therefore also skip delivery. This classification is an implementation gap.
 
 `.github/workflows/ci.yml` runs validation on pull requests and non-main pushes. `eng/Start-FreshStack.ps1` is local tooling, not part of this hosted deployment.

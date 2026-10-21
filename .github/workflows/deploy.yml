@@ -173,6 +173,12 @@ jobs:
           MARKETING_SWA_SKU: ${{ vars.MARKETING_SWA_SKU || 'Free' }}
           BUDGET_ALERT_EMAIL: ${{ vars.BUDGET_ALERT_EMAIL }}
           GOOGLE_CLIENT_ID: ${{ vars.GOOGLE_CLIENT_ID }}
+          # Outbound email (ADR-021); eng/Setup-Email.ps1 sets these.
+          EMAIL_DOMAIN: ${{ vars.EMAIL_DOMAIN }}
+          EMAIL_DOMAIN_VERIFIED: ${{ vars.EMAIL_DOMAIN_VERIFIED || 'false' }}
+          EMAIL_SMTP_CLIENT_ID: ${{ vars.EMAIL_SMTP_CLIENT_ID }}
+          EMAIL_SMTP_PRINCIPAL_ID: ${{ vars.EMAIL_SMTP_PRINCIPAL_ID }}
+          EMAIL_SMTP_CLIENT_SECRET: ${{ secrets.EMAIL_SMTP_CLIENT_SECRET }}
         run: |
           for v in SQL_ADMIN_LOGIN SQL_ADMIN_PASSWORD SATURDAZE_JWT_SIGNING_KEY SATURDAZE_PHOTOS_SIGNING_KEY FOUNDRY_ORGANIZATION_NAME; do
             if [ -z "${!v}" ]; then
@@ -219,7 +225,23 @@ jobs:
             echo "| SQL | $(out sqlServerFqdn) / $(out sqlDatabaseName) |"
             echo "| Claude (Foundry) | $(out foundryBaseUrl) → \`$(out claudeDeploymentName)\` |"
             echo "| CORS origins | $(jq -r '.corsOrigins.value | join(", ")' <<<"$outputs") |"
+            if [ -n "$(out emailDomain)" ]; then
+              echo "| Email | no-reply@$(out emailDomain), SMTP $(jq -r '.emailSmtpEnabled.value' <<<"$outputs"), verification $(jq -c '.emailVerificationStatus.value | map_values(.status)' <<<"$outputs") |"
+              echo
+              echo "### DNS records for $(out emailDomain) (ADR-021)"
+              echo
+              echo "| Record | Type | Host | Value |"
+              echo "|---|---|---|---|"
+              jq -r '.emailVerificationRecords.value | to_entries[] | "| \(.key) | \(.value.type) | `\(.value.name)` | `\(.value.value)` |"' <<<"$outputs"
+            fi
           } >> "$GITHUB_STEP_SUMMARY"
+
+          # A verified domain with no relay credentials would deploy an API that
+          # still writes .eml files while everything looks configured (L2-172).
+          if [ "$EMAIL_DOMAIN_VERIFIED" = "true" ] && [ "$(jq -r '.emailSmtpEnabled.value' <<<"$outputs")" != "true" ]; then
+            echo "::error::EMAIL_DOMAIN_VERIFIED is true but the SMTP relay is not configured. Run eng/Setup-Email.ps1 so EMAIL_SMTP_CLIENT_ID, EMAIL_SMTP_PRINCIPAL_ID and EMAIL_SMTP_CLIENT_SECRET are set."
+            exit 1
+          fi
 
   api:
     name: Build & deploy API + ingestion WebJob

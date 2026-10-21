@@ -1,0 +1,47 @@
+@startuml
+title Verify the sending domain, then deliver a message
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+
+actor "Operator" as operator
+box "Backend - delivery tooling" #D1FADF
+ participant "Setup-Email.ps1" as script
+ participant "email.bicep" as bicep
+end box
+box "Backend - Azure" #FFF4E5
+ participant "Email domain\nsaturdaze.ca" as domain
+ participant "Communication\nServices" as comms
+ participant "SMTP relay" as relay
+ participant "Saturdaze API" as api
+end box
+participant "Namecheap zone" as zone
+participant "Receiving server" as inbox
+
+operator -> script : -Domain saturdaze.ca
+script -> bicep : deploy (domainVerified=false)
+bicep -> domain : create, sender no-reply
+bicep -> comms : create, role for SMTP identity
+domain --> script : verification records
+script --> operator : TXT, SPF, DKIM, DKIM2
+operator -> zone : add the records
+operator -> script : -Verify
+script -> domain : initiateVerification
+domain -> zone : look up the records
+alt not yet visible
+domain --> script : Pending
+script --> operator : wait, then re-run -Verify
+else verified
+domain --> script : Verified
+script -> bicep : deploy (domainVerified=true)
+bicep -> comms : link the domain
+script -> api : SmtpHost, username, secret
+api -> relay : STARTTLS, AUTH
+relay -> comms : check identity and role
+relay -> inbox : message from no-reply@saturdaze.ca
+inbox -> zone : SPF and DKIM
+inbox --> operator : the message, in the inbox (L2-172)
+end
+@enduml

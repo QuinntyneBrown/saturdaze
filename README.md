@@ -342,6 +342,30 @@ TXT records Static Web Apps asks for. Set the repository variables
 When the subscription has no Free Static Web App slot left, set
 `MARKETING_SWA_SKU=Standard`.
 
+### Email (ADR-021)
+
+Account mail goes out as `no-reply@saturdaze.ca` through Azure Communication
+Services; the API reaches it over SMTP with settings the template writes.
+Set it up once, then again after the records are in DNS:
+
+```pwsh
+pwsh ./eng/Setup-Email.ps1 -Domain saturdaze.ca
+pwsh ./eng/Setup-Email.ps1 -Domain saturdaze.ca -Verify
+```
+
+The first run creates the resources and the `saturdaze-smtp` identity and
+prints the records Namecheap needs: `TXT @` with the ownership token,
+`include:spf.protection.outlook.com` merged into the existing SPF record,
+`CNAME selector1-azurecomm-prod-net._domainkey` and
+`CNAME selector2-azurecomm-prod-net._domainkey`. Add a `TXT _dmarc` of
+`v=DMARC1; p=none; rua=mailto:<you>` beside them. The second run waits for
+Azure to verify the domain, links it, points the API at the relay and sets
+`EMAIL_DOMAIN_VERIFIED=true` so every later deployment keeps it. Until then the
+API writes `.eml` files under `/home/data/mail` on the App Service.
+
+Inbound mail to any `@saturdaze.ca` address is a Namecheap catch-all forwarder
+to the owner's mailbox; it is separate from sending.
+
 The design system deploys from `deploy-storybook.yml` on changes to the
 components library.
 
@@ -360,13 +384,16 @@ deployment.
 
 GitHub Actions needs these **secrets**: `AZURE_CLIENT_ID`, `AZURE_TENANT_ID`,
 `AZURE_SUBSCRIPTION_ID`, `SQL_ADMIN_LOGIN`, `SQL_ADMIN_PASSWORD`,
-`SATURDAZE_JWT_SIGNING_KEY`, `SATURDAZE_PHOTOS_SIGNING_KEY`; and these
+`SATURDAZE_JWT_SIGNING_KEY`, `SATURDAZE_PHOTOS_SIGNING_KEY`,
+`EMAIL_SMTP_CLIENT_SECRET`; and these
 **variables**: `FOUNDRY_ORGANIZATION_NAME`, `FOUNDRY_COUNTRY_CODE`,
 `APP_CUSTOM_DOMAIN`, `ADMIN_CUSTOM_DOMAIN`, `MARKETING_CUSTOM_DOMAIN`,
 `MARKETING_APEX_DOMAIN`, `MARKETING_SWA_SKU` (optional), `BUDGET_ALERT_EMAIL`, `GOOGLE_CLIENT_ID`
 (optional: the production OAuth client id for "Continue with Google", whose
 authorised origin is `https://app.saturdaze.ca`; set the same id as
-`googleClientId` in `environment.prod.ts`, ADR-019).
+`googleClientId` in `environment.prod.ts`, ADR-019), `EMAIL_DOMAIN`,
+`EMAIL_DOMAIN_VERIFIED`, `EMAIL_SMTP_CLIENT_ID` and `EMAIL_SMTP_PRINCIPAL_ID`
+(set by `eng/Setup-Email.ps1`, ADR-021).
 
 ### Configuration
 
