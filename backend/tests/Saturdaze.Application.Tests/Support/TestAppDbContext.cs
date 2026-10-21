@@ -37,6 +37,7 @@ internal sealed class TestAppDbContext : DbContext, IAppDbContext
     public DbSet<PasswordResetToken> PasswordResetTokens => Set<PasswordResetToken>();
     public DbSet<EmailVerificationToken> EmailVerificationTokens => Set<EmailVerificationToken>();
     public DbSet<WeekendShare> WeekendShares => Set<WeekendShare>();
+    public DbSet<CalendarFeed> CalendarFeeds => Set<CalendarFeed>();
     public DbSet<PlatformInvitation> PlatformInvitations => Set<PlatformInvitation>();
     public DbSet<Prospect> Prospects => Set<Prospect>();
 

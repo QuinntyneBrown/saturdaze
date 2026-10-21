@@ -75,6 +75,34 @@ namespace Saturdaze.Infrastructure.Migrations
                     b.ToTable("Activities", (string)null);
                 });
 
+            modelBuilder.Entity("Saturdaze.Domain.Entities.CalendarFeed", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset>("CreatedUtc")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<Guid>("FamilyId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("TokenHash")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FamilyId")
+                        .IsUnique();
+
+                    b.HasIndex("TokenHash")
+                        .IsUnique();
+
+                    b.ToTable("CalendarFeeds", (string)null);
+                });
+
             modelBuilder.Entity("Saturdaze.Domain.Entities.Commitment", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1175,6 +1203,15 @@ namespace Saturdaze.Infrastructure.Migrations
                         });
 
                     b.Navigation("Geo");
+                });
+
+            modelBuilder.Entity("Saturdaze.Domain.Entities.CalendarFeed", b =>
+                {
+                    b.HasOne("Saturdaze.Domain.Entities.Family", null)
+                        .WithMany()
+                        .HasForeignKey("FamilyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Saturdaze.Domain.Entities.Commitment", b =>
