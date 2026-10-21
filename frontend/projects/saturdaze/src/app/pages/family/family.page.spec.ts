@@ -6,6 +6,7 @@ import { Router, provideRouter } from '@angular/router';
 import { of } from 'rxjs';
 
 import {
+  CALENDAR_SERVICE,
   EVENT_SUBMISSIONS_SERVICE,
   EditableFamilyProfile,
   FAMILY_SERVICE,
@@ -139,6 +140,11 @@ describe('FamilyPage', () => {
   let pending: ReturnType<typeof signal<any[]>>;
   let session: { user: ReturnType<typeof signal<User | null>>; logout: ReturnType<typeof vi.fn> };
   let dialog: { open: ReturnType<typeof vi.fn> };
+  let calendar: {
+    settings: ReturnType<typeof vi.fn>;
+    createFeed: ReturnType<typeof vi.fn>;
+    stopFeed: ReturnType<typeof vi.fn>;
+  };
 
   async function mount(): Promise<void> {
     await TestBed.configureTestingModule({
@@ -147,6 +153,7 @@ describe('FamilyPage', () => {
         provideRouter([{ path: '**', children: [] }]),
         { provide: FAMILY_SERVICE, useValue: familyService },
         { provide: EVENT_SUBMISSIONS_SERVICE, useValue: submissions },
+        { provide: CALENDAR_SERVICE, useValue: calendar },
         { provide: SESSION_STORE, useValue: session },
         { provide: Dialog, useValue: dialog },
       ],
@@ -174,6 +181,18 @@ describe('FamilyPage', () => {
     submissions = { pending: () => pending, loadPending: vi.fn(async () => undefined) };
     session = { user: signal<User | null>(USER), logout: vi.fn(async () => undefined) };
     dialog = { open: vi.fn(() => ({ closed: of(undefined) })) };
+    calendar = {
+      settings: vi.fn(async () => ({
+        googleConfigured: false,
+        feed: { active: false, createdUtc: null },
+      })),
+      createFeed: vi.fn(async () => ({
+        url: 'https://api/x.ics',
+        webcalUrl: 'webcal://api/x.ics',
+        createdUtc: '2026-10-20T00:00:00Z',
+      })),
+      stopFeed: vi.fn(async () => undefined),
+    };
   });
 
   const saved = (): EditableFamilyProfile => familyService.saveProfile.mock.calls.at(-1)![0];

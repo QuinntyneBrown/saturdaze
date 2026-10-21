@@ -50,6 +50,10 @@ param sqlAdminPassword = readEnvironmentVariable('SQL_ADMIN_PASSWORD')
 param jwtSigningKey = readEnvironmentVariable('SATURDAZE_JWT_SIGNING_KEY')
 param photosSigningKey = readEnvironmentVariable('SATURDAZE_PHOTOS_SIGNING_KEY')
 
+// Google Calendar sync (ADR-022): the web OAuth client's secret. Optional — blank
+// keeps calendar sync off while sign-in with Google and the subscription link work.
+param googleClientSecret = readEnvironmentVariable('GOOGLE_CLIENT_SECRET', '')
+
 // Anthropic Marketplace attestation (ADR-011): the real legal name of the
 // organization using Claude.
 param organizationName = readEnvironmentVariable('FOUNDRY_ORGANIZATION_NAME')

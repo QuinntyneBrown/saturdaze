@@ -1,0 +1,73 @@
+@startuml
+title Behaviour - Connect and disconnect Google Calendar (L2-173, L2-174, L2-175)
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+actor "Family member" as actor
+participant "Google OAuth 2.0" as google
+box "Frontend - Saturdaze Angular application" #E0F2FE
+ participant "FamilyPage\nConnectCalendarDialog" as page
+ participant "GoogleCalendarCallbackPage" as callback
+ participant "CalendarService" as svc
+end box
+box "Backend - Saturdaze API" #D1FADF
+ participant "CalendarController" as controller
+end box
+box "Backend - Saturdaze Application and Domain" #ECFDF3
+ participant "Calendar handlers" as handler
+end box
+box "Backend - Saturdaze Infrastructure" #FFF4E5
+ participant "GoogleCalendarClient" as client
+ participant "DataProtectionCalendarTokenProtector" as protector
+ database "AppDbContext\nSQL Server" as db
+end box
+actor -> page : Connect Google Calendar, then Continue to Google (D31)
+page -> svc : authorizeGoogle()
+svc -> controller : POST /api/calendar/google/authorize
+controller -> handler : AuthorizeGoogleCalendarCommand
+alt client id or secret empty
+handler --> controller : 503 google_calendar_not_configured
+controller --> page : D31 error "Google didn't answer"
+else configured
+handler -> protector : CreateState(userId, now + 10 min)
+handler -> client : AuthorizationUrl(state, {AppOrigin}/family/calendar/google)
+handler --> page : L2-173 authorizationUrl
+page -> google : Navigate (scopes openid email calendar.events, offline, consent)
+actor -> google : Allow or cancel
+alt consent denied
+google --> callback : ?error=access_denied
+callback --> page : /family with "Google Calendar wasn't connected. Nothing was shared."
+else allowed
+google --> callback : ?code&state
+callback -> svc : connectGoogle(code, state)
+svc -> controller : POST /api/calendar/google/connect
+controller -> handler : ConnectGoogleCalendarCommand
+handler -> protector : ReadState(state)
+alt state not the caller's, expired or tampered
+handler --> callback : 400 calendar_state_invalid
+else state valid
+handler -> client : ExchangeCodeAsync(code, redirectUri)
+client -> google : POST oauth2.googleapis.com/token (client secret)
+alt refused code / missing calendar scope / outage
+handler --> callback : 400 google_calendar_code_invalid / 400 google_calendar_scope_missing (grant revoked) / 502 google_calendar_unavailable
+else grant
+handler -> client : RevokeAsync(previous token) when reconnecting
+handler -> protector : Protect(refresh token)
+handler -> db : Save CalendarConnection (connected, readCommitments on, sync requested)
+handler --> callback : CalendarSettingsDto
+callback --> page : /family, connected state
+end
+end
+end
+end
+== Disconnect (D32) ==
+actor -> page : Disconnect, then confirm
+page -> svc : disconnectGoogle()
+svc -> controller : DELETE /api/calendar/google
+controller -> handler : DisconnectGoogleCalendarCommand
+handler -> client : RevokeAsync(refresh token); failures ignored
+handler -> db : Delete connection and its CalendarEventLinks (events stay in Google)
+handler --> page : 204, not-connected state
+@enduml

@@ -50,6 +50,13 @@
 .PARAMETER BudgetAlertEmail
     Where the monthly budget alerts go. Blank disables the budget.
 
+.PARAMETER GoogleClientId
+    The web OAuth client id for "Continue with Google" (ADR-019). Public.
+
+.PARAMETER GoogleClientSecret
+    That client's secret, for Google Calendar sync (ADR-022). Blank keeps the
+    secret already deployed, or calendar sync off when there is none.
+
 .PARAMETER Force
     Skip the what-if confirmation.
 
@@ -72,6 +79,7 @@ param(
     [string]$MarketingApexDomain = "",
     [string]$BudgetAlertEmail = "",
     [string]$GoogleClientId = "",
+    [string]$GoogleClientSecret = "",
     [string]$SqlAdminLogin = "saturdaze_admin",
     [switch]$SkipGitHub,
     [switch]$SkipDeploy,
@@ -218,6 +226,8 @@ $secrets = [ordered]@{
     SQL_ADMIN_PASSWORD           = Resolve-Secret 'SQL_ADMIN_PASSWORD' $null { New-SqlPassword }
     SATURDAZE_JWT_SIGNING_KEY    = Resolve-Secret 'SATURDAZE_JWT_SIGNING_KEY' $liveSettings['SATURDAZE_JWT_SIGNING_KEY'] { New-Secret 48 }
     SATURDAZE_PHOTOS_SIGNING_KEY = Resolve-Secret 'SATURDAZE_PHOTOS_SIGNING_KEY' $liveSettings['Saturdaze__Photos__SigningKey'] { New-Secret 48 }
+    # Google Calendar sync (ADR-022): optional; the one already deployed is kept.
+    GOOGLE_CLIENT_SECRET         = if ($GoogleClientSecret) { $GoogleClientSecret } else { "$($liveSettings['Saturdaze__Google__ClientSecret'])" }
 }
 $variables = [ordered]@{
     FOUNDRY_ORGANIZATION_NAME = $OrganizationName
@@ -246,6 +256,8 @@ if ($gh -and -not $SkipGitHub) {
 }
 if ($ghReady) {
     foreach ($k in $secrets.Keys) {
+        # Optional secrets (GOOGLE_CLIENT_SECRET) stay unset until they have a value.
+        if ("$($secrets[$k])" -eq '') { continue }
         & gh secret set $k --repo $GitHubRepo --body "$($secrets[$k])"
         if ($LASTEXITCODE -ne 0) { throw "gh secret set $k failed." }
     }

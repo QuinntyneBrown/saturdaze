@@ -1,0 +1,13 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context - Sync the weekend with a calendar
+
+Person(actor, "Family member", "Plans the weekend; keeps a Google Calendar")
+System(saturdaze, "Saturdaze", "Family weekend planning platform")
+System_Ext(gcal, "Google Calendar API", "The connected account's primary calendar")
+
+Rel(actor, saturdaze, "Generates and changes the weekend in", "HTTPS")
+Rel(saturdaze, gcal, "Writes the weekend's events; reads weekend events", "HTTPS, Calendar API v3")
+Rel(actor, gcal, "Sees the plan and keeps other events in", "Google Calendar")
+@enduml

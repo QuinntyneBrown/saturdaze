@@ -16,6 +16,8 @@ import { EventSubmittedDialog } from '../../dialogs/event-submitted-dialog/event
 import { FamilyMemberDialog } from '../../dialogs/family-member-dialog/family-member-dialog';
 import { HomeLocationDialog } from '../../dialogs/home-location-dialog/home-location-dialog';
 import { InviteLinkDialog } from '../../dialogs/invite-link-dialog/invite-link-dialog';
+import { CalendarFeedDialog } from '../../dialogs/calendar-feed-dialog/calendar-feed-dialog';
+import { ConnectCalendarDialog } from '../../dialogs/connect-calendar-dialog/connect-calendar-dialog';
 import { LikesDialog } from '../../dialogs/likes-dialog/likes-dialog';
 import { LockRestaurantDialog } from '../../dialogs/lock-restaurant-dialog/lock-restaurant-dialog';
 import { MenuDialog } from '../../dialogs/menu-dialog/menu-dialog';
@@ -274,6 +276,45 @@ const SPECIMENS: readonly Specimen[] = [
       name: 'Grandma Jo',
       email: 'jo@example.com',
       url: 'app.saturdaze.ca/accept-invite?token=Q2F0ZXJwaWxsYXI',
+    },
+  },
+  {
+    kind: 'dialog',
+    slug: 'calendar-connect',
+    label: "D31 · Connect Google Calendar (before Google's consent screen)",
+    component: ConnectCalendarDialog,
+    data: { start: () => Promise.resolve() },
+  },
+  {
+    kind: 'dialog',
+    slug: 'calendar-disconnect',
+    label: 'D32 · Disconnect Google Calendar',
+    component: ConfirmDialog,
+    data: FIX.DISCONNECT_GOOGLE_CALENDAR,
+  },
+  {
+    kind: 'dialog',
+    slug: 'calendar-feed',
+    label: 'D33 · Subscription link (shown once, when it is created)',
+    component: CalendarFeedDialog,
+    data: { webcalUrl: 'webcal://api.saturdaze.ca/api/calendar/feed/kX9vQ2mT7pLw4rZb.ics' },
+  },
+  {
+    kind: 'dialog',
+    slug: 'calendar-feed-stop',
+    label: 'D34 · Stop the subscription link',
+    component: ConfirmDialog,
+    data: FIX.STOP_CALENDAR_FEED,
+  },
+  {
+    kind: 'dialog',
+    slug: 'calendar-synced',
+    label: 'D6b · Add to calendar · Google Calendar connected',
+    component: CalendarDialog,
+    data: {
+      calendar: { icsUrl: '#', fileName: 'weekend-17-may.ics', eventCount: 10 },
+      download: () => Promise.resolve(new Blob([], { type: 'text/calendar' })),
+      googleSynced: true,
     },
   },
   {

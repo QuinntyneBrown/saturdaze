@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Saturdaze.Application.Abstractions;
+using Saturdaze.Application.Calendar;
 using Saturdaze.Application.Exceptions;
 using Saturdaze.Application.Weather;
 using Saturdaze.Domain.Entities;
@@ -23,7 +24,8 @@ public sealed record PlannerContext(
     IReadOnlyList<LocalEvent> Events,
     IReadOnlyList<WeatherForecast> Forecast,
     IReadOnlyList<HistoricalActivity> History,
-    GeoLocation Home)
+    GeoLocation Home,
+    IReadOnlyList<CalendarCommitment>? CalendarCommitments = null)
 {
     public PlannerInputs ToInputs(
         IReadOnlyList<ItineraryBlock> lockedBlocks,
@@ -43,7 +45,8 @@ public sealed record PlannerContext(
             errand,
             lockedBlocks,
             TryNew: Family.TryNewEnabled,
-            Seed: seed);
+            Seed: seed,
+            CalendarCommitments: CalendarCommitments);
 
     public WeatherForecast ForecastFor(DayOfWeekend day)
     {
@@ -58,12 +61,18 @@ public sealed class PlannerInputLoader
     private readonly IAppDbContext _db;
     private readonly WeekendForecastService _forecast;
     private readonly HomeLocationOptions _home;
+    private readonly ICalendarCommitmentSource _calendar;
 
-    public PlannerInputLoader(IAppDbContext db, WeekendForecastService forecast, IOptions<HomeLocationOptions> home)
+    public PlannerInputLoader(
+        IAppDbContext db,
+        WeekendForecastService forecast,
+        IOptions<HomeLocationOptions> home,
+        ICalendarCommitmentSource calendar)
     {
         _db = db;
         _forecast = forecast;
         _home = home.Value;
+        _calendar = calendar;
     }
 
     public async Task<PlannerContext> LoadAsync(Guid familyId, DateOnly weekendOf, CancellationToken ct)
@@ -101,6 +110,9 @@ public sealed class PlannerInputLoader
             Address = _home.Name,
         };
 
-        return new PlannerContext(family, weekendOf, activities, restaurants, events, forecast, history, home);
+        // Weekend events from the family's connected calendars join the fixed blocks (L2-177).
+        var calendar = await _calendar.GetAsync(familyId, weekendOf, ct);
+
+        return new PlannerContext(family, weekendOf, activities, restaurants, events, forecast, history, home, calendar);
     }
 }

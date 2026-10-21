@@ -75,6 +75,7 @@ export * from './lib/services/restaurant.service.contract';
 export * from './lib/services/saved.service.contract';
 export * from './lib/services/session-store.contract';
 export * from './lib/services/shared-weekend.service.contract';
+export * from './lib/services/calendar.service.contract';
 export * from './lib/services/weekend-plan.service.contract';
 
 // Concrete implementations (imported only by composition roots)
@@ -91,6 +92,7 @@ export * from './lib/services/restaurant.service';
 export * from './lib/services/saved.service';
 export * from './lib/services/session-store';
 export * from './lib/services/shared-weekend.service';
+export * from './lib/services/calendar.service';
 export * from './lib/services/weekend-plan.service';
 
 // Auth plumbing shared by the family app and Saturdaze Admin (ADR-014)

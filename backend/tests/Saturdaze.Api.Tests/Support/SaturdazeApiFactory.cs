@@ -30,6 +30,7 @@ public sealed class SaturdazeApiFactory : WebApplicationFactory<Program>, IAsync
     public FakeRemoteImageFetcher Images { get; } = new();
     public CapturingEmailSender Mail { get; } = new();
     public FakeGoogleIdTokenVerifier Google { get; } = new();
+    public FakeGoogleCalendarClient GoogleCalendar { get; } = new();
 
     /// <summary>Where uploaded covers go for this fixture (deleted on disposal).</summary>
     public string PhotoDirectory { get; } = Path.Combine(Path.GetTempPath(), "saturdaze-photos-" + Guid.NewGuid().ToString("N"));
@@ -62,6 +63,8 @@ public sealed class SaturdazeApiFactory : WebApplicationFactory<Program>, IAsync
                 ["Saturdaze:CuratedPhotos:Directory"] = CuratedPhotoDirectory,
                 ["Saturdaze:CuratedPhotos:PublicOrigin"] = CuratedPublicOrigin,
                 ["Saturdaze:Share:AppOrigin"] = "https://app.example.com",
+                // The calendar sync service polls every second so retries come due inside a test.
+                ["Saturdaze:Calendar:PollSeconds"] = "1",
             });
         });
         builder.ConfigureTestServices(services =>
@@ -77,6 +80,8 @@ public sealed class SaturdazeApiFactory : WebApplicationFactory<Program>, IAsync
             services.AddSingleton<Saturdaze.Application.Email.IEmailSender>(Mail);
             services.RemoveAll<Saturdaze.Application.Authentication.IGoogleIdTokenVerifier>();
             services.AddSingleton<Saturdaze.Application.Authentication.IGoogleIdTokenVerifier>(Google);
+            services.RemoveAll<Saturdaze.Application.Calendar.IGoogleCalendarClient>();
+            services.AddSingleton<Saturdaze.Application.Calendar.IGoogleCalendarClient>(GoogleCalendar);
         });
     }
 

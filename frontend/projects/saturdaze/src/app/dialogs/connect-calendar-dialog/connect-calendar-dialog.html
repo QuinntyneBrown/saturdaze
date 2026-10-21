@@ -1,0 +1,42 @@
+<sd-dialog
+  title="Connect Google Calendar"
+  subtitle="Google asks you to confirm on the next screen."
+>
+  @if (failed()) {
+    <sd-banner tone="warn" role="alert" icon="alert"
+      >Google didn't answer. Nothing was connected. Try again in a minute.</sd-banner
+    >
+  } @else {
+    <sd-list card>
+      <sd-list-item
+        title="Saturdaze writes this weekend"
+        subtitle="Each stop on Saturday and Sunday becomes an event in your main calendar and follows the plan when it changes."
+      >
+        <sd-disc slot="leading" icon="calendar" tone="primary" />
+      </sd-list-item>
+      <sd-list-item
+        title="Saturdaze reads this weekend"
+        subtitle="Timed events on Saturday and Sunday become commitments the plan goes around. You can turn this off."
+      >
+        <sd-disc slot="leading" icon="lock" tone="accent" />
+      </sd-list-item>
+      <sd-list-item
+        title="Nothing else"
+        subtitle="No other days, no contacts, no email. Disconnect any time."
+      >
+        <sd-disc slot="leading" icon="key" />
+      </sd-list-item>
+    </sd-list>
+  }
+  <sd-button slot="actions" variant="quiet" type="button" (click)="cancel()">Not now</sd-button>
+  <sd-button
+    slot="actions"
+    variant="primary"
+    type="button"
+    [disabled]="starting()"
+    (click)="continue()"
+  >
+    <sd-icon name="external" />
+    {{ failed() ? 'Try again' : 'Continue to Google' }}
+  </sd-button>
+</sd-dialog>

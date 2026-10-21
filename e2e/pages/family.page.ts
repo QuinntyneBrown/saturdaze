@@ -12,11 +12,18 @@ import { PageSlug } from "../fixtures/routes.js";
  *     Home                  [Edit] · li.list__item (home location)
  *     Likes and dislikes    [Edit] · .cluster > .chip--leaf (likes) / .chip--warn (dislikes)
  *     Preferences           li.list__item + label.toggle > input.toggle__input[role=switch]
+ *     Calendar              Google connected: "Google Calendar" (email · synced …) [Disconnect] + switch "Plan around my calendar"; needs reconnect: .banner[role=alert] + [Reconnect];
+ *                           not connected: "Connect Google Calendar" · "Subscribe from another calendar"; link on: "Subscription link is on" [Stop] + ghost "Get a new link" (L2-174, L2-180)
  *     Admin (.admin-only)   "Review submissions" row + count chip — Admin role only
  *     Account               .account-card (avatar · email · "Signed in since …" · [Add photo | Change photo] · [Sign out])
  *
  *   D17b sign-in choice     "Will they sign in?" radios (No sign-in | Invite to sign in) · Email when inviting (L2-125, L2-126)
  *   D30 Invite link dialog  .copy-field__value (the accept-invite link) · [Done]
+ *
+ *   D31 Connect Google      what Saturdaze writes and reads · [Not now] · [Continue to Google] (error state: warn banner)
+ *   D32 Disconnect          [Keep it] · [Disconnect]
+ *   D33 Subscription link   .copy-field__value (webcal URL) · [Copy link] · per-app steps · [Stop the link] · [Done]
+ *   D34 Stop the link       [Keep it] · [Stop the link]
  *
  *   D27 Profile photo dialog  .photo-picker (.photo-picker__preview avatar · input[type=file] · hint / .field__error)
  *                             actions: [Remove photo] (photo set only) · Cancel · Save
@@ -241,6 +248,102 @@ export class FamilyPage extends BasePage {
   /** `role="switch"` input named by its visually-hidden label. */
   toggle(name: "Budget matters" | "Try something new each weekend" | "Friday preview email"): Locator {
     return this.preferencesSection().getByRole("switch", { name, exact: true });
+  }
+
+  /* ---------- Calendar (L2-174, L2-180) ---------- */
+
+  calendarSection(): Locator {
+    return this.section("Calendar");
+  }
+
+  /** A row of the Calendar section by its title ("Subscribe from another calendar", "Google Calendar"…). */
+  calendarRow(title: string): Locator {
+    return this.calendarSection()
+      .locator(".list__item")
+      .filter({ has: this.page.locator(".list__title", { hasText: title }) });
+  }
+
+  calendarRows(): Locator {
+    return this.calendarSection().locator(".list__item");
+  }
+
+  subscribeRow(): Locator {
+    return this.calendarRow("Subscribe from another calendar");
+  }
+
+  connectGoogleRow(): Locator {
+    return this.calendarRow("Connect Google Calendar");
+  }
+
+  /** The connected (or needs-reconnect) Google row: title "Google Calendar", the account's email in its sub. */
+  googleRow(): Locator {
+    return this.calendarSection()
+      .locator(".list__item")
+      .filter({ has: this.page.locator(".list__title", { hasText: /^\s*Google Calendar\s*$/ }) });
+  }
+
+  disconnectGoogleButton(): Locator {
+    return control(this.calendarSection(), "Disconnect");
+  }
+
+  reconnectGoogleButton(): Locator {
+    return control(this.googleRow(), "Reconnect");
+  }
+
+  readCommitmentsToggle(): Locator {
+    return this.calendarSection().getByRole("switch", { name: "Plan around my calendar", exact: true });
+  }
+
+  /** The Calendar section's banner: the needs-reconnect alert or the consent-denied note. */
+  calendarBanner(): Locator {
+    return this.calendarSection().locator(".banner");
+  }
+
+  /** The return route Google sends the browser back to (stood in for by the spec). */
+  async returnFromGoogle(query: string): Promise<void> {
+    await this.page.goto(`/family/calendar/google?${query}`);
+    await this.waitForReady();
+  }
+
+  feedOnRow(): Locator {
+    return this.calendarRow("Subscription link is on");
+  }
+
+  stopFeedButton(): Locator {
+    return control(this.feedOnRow(), "Stop");
+  }
+
+  newFeedLinkRow(): Locator {
+    return control(this.calendarSection(), "Get a new link");
+  }
+
+  /** The subscription URL D33 shows once. */
+  feedUrl(): Locator {
+    return this.dialog().locator(".copy-field__value");
+  }
+
+  copyFeedButton(): Locator {
+    return this.dialog().getByRole("button", { name: /Copy link|Copied/ });
+  }
+
+  /** Opens D33 from a row and waits for the link `POST /api/calendar/feed` minted. */
+  async createFeedFrom(trigger: Locator): Promise<void> {
+    const minted = this.page.waitForResponse(
+      (r) => r.url().endsWith("/api/calendar/feed") && r.request().method() === "POST",
+    );
+    await trigger.click();
+    await minted;
+    await this.feedUrl().waitFor();
+  }
+
+  /** Confirms D34; resolves once `DELETE /api/calendar/feed` has answered. */
+  async confirmStopFeed(): Promise<void> {
+    const stopped = this.page.waitForResponse(
+      (r) => r.url().endsWith("/api/calendar/feed") && r.request().method() === "DELETE",
+    );
+    await this.dialogAction("Stop the link").click();
+    await stopped;
+    await this.dialog().waitFor({ state: "detached" });
   }
 
   /* ---------- Admin ---------- */

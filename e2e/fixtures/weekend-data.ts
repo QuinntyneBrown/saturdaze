@@ -27,3 +27,20 @@ export function drivingLabel(minutes: number): string {
   const m = minutes % 60;
   return h > 0 ? `${h} h ${m} min` : `${m} min`;
 }
+
+/**
+ * Rewrites the weekend responses so the first commitment on `day` reads as an
+ * event from a connected calendar (L2-177): the API can only plan one with a
+ * real Google grant, which no spec holds (ADR-022, decision 7).
+ */
+export async function stubCalendarBlock(page: Page, day: "Saturday" | "Sunday", title: string): Promise<void> {
+  await page.route(/\/api\/weekends\/(current|plan)(\?|$)/, async (route) => {
+    const response = await route.fetch();
+    const weekend = (await response.json()) as {
+      blocks: (Block & { kind: string; title: string; reason: string; fromCalendar?: boolean })[];
+    };
+    const target = weekend.blocks.find((b) => b.day === day && b.kind === "Commitment");
+    if (target) Object.assign(target, { title, reason: "from your calendar", fromCalendar: true });
+    await route.fulfill({ response, json: weekend });
+  });
+}

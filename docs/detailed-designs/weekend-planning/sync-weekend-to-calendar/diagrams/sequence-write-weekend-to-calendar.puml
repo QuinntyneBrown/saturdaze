@@ -1,0 +1,51 @@
+@startuml
+title Behaviour - Write the weekend to Google Calendar (L2-176, L2-178)
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+actor "Family member" as actor
+participant "Google Calendar API" as google
+box "Frontend - Saturdaze Angular application" #E0F2FE
+ participant "WeekendPage\nWeekendPlanService" as page
+end box
+box "Backend - Saturdaze API" #D1FADF
+ participant "WeekendsController\nBlocksController" as controller
+ participant "CalendarSyncService" as service
+end box
+box "Backend - Saturdaze Application and Domain" #ECFDF3
+ participant "Command handler" as handler
+ participant "CalendarSyncBehavior\nCalendarSyncScheduler" as behavior
+ participant "CalendarSyncRunner\nSyncCalendarConnectionCommandHandler" as sync
+end box
+box "Backend - Saturdaze Infrastructure" #FFF4E5
+ participant "GoogleCalendarClient" as client
+ database "AppDbContext\nSQL Server" as db
+end box
+actor -> page : Generate, regenerate, swap, lock, rename, add idea or errand
+page -> controller : POST/PUT (bearer)
+controller -> behavior : Send(IChangesItinerary command)
+behavior -> handler : next()
+handler -> db : Save the plan
+handler --> behavior : Result
+behavior -> db : L2-176 SyncRequestCount++ on the family's connected connections
+behavior -> service : ICalendarSyncSignal.Notify()
+behavior --> controller : Result
+controller --> page : 200 (never waits on Google)
+service -> sync : RunDueAsync() on the signal or every PollSeconds
+sync -> db : Connected, SyncRequestCount > SyncedRequestCount, NextAttemptUtc due
+loop each due connection
+sync -> db : Current weekend's blocks; this weekend's CalendarEventLinks
+sync -> sync : Desired events = CalendarEventSelection; fingerprint each
+sync -> client : Insert new, update changed (insert again on 404/410), delete gone
+client -> google : Calendar API v3 on the primary calendar
+alt success
+sync -> db : Save links; SyncedRequestCount = count at start; LastSyncedUtc = now; FailedAttempts = 0
+else GoogleCalendarUnavailableException
+sync -> db : L2-176 FailedAttempts++; NextAttemptUtc = now + min(2^n, 60) minutes
+else GoogleCalendarGrantRevokedException
+sync -> db : L2-178 Status = NeedsReconnect
+end
+end
+@enduml

@@ -86,6 +86,10 @@ param marketingApexDomain string = ''
 @description('OAuth client id for "Continue with Google" (Saturdaze:Google:ClientId, ADR-019). The same id is compiled into the family app; blank answers 503 google_not_configured.')
 param googleClientId string = ''
 
+@secure()
+@description('OAuth client secret for Google Calendar sync (Saturdaze:Google:ClientSecret, ADR-022). Blank turns calendar sync off: the API answers 503 google_calendar_not_configured and the family app hides the Google row.')
+param googleClientSecret string = ''
+
 @description('Extra browser origins the API should accept, in addition to the three Static Web Apps and the custom domains.')
 param extraCorsOrigins array = []
 
@@ -383,6 +387,11 @@ resource apiSettings 'Microsoft.Web/sites/config@2024-04-01' = {
 
       // Sign in with Google (ADR-019): the ID token's audience; public, not a secret.
       Saturdaze__Google__ClientId: googleClientId
+
+      // Google Calendar sync (ADR-022): the code exchange's secret, and the Data
+      // Protection key ring that encrypts refresh tokens, on the persistent share.
+      Saturdaze__Google__ClientSecret: googleClientSecret
+      Saturdaze__Calendar__KeyDirectory: '/home/data/keys'
 
       // Catalog ingestion through Claude on Foundry (ADR-011). The key comes
       // straight from the account, so a rotation is one re-deploy away.

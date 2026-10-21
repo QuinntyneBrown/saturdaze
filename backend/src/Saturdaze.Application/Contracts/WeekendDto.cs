@@ -32,7 +32,8 @@ public sealed record ItineraryBlockDto(
     int? StopNumber = null,
     LocationDto? Stop = null,
     TravelLegDto? LegBefore = null,
-    PlacePhotoDto? Photo = null);
+    PlacePhotoDto? Photo = null,
+    bool FromCalendar = false);
 
 public sealed record ShoppingErrandDto(
     Guid Id,

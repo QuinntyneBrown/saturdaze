@@ -1,10 +1,13 @@
 import { Dialog } from '@angular/cdk/dialog';
+import { DOCUMENT } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 
 import {
+  CALENDAR_SERVICE,
+  CalendarSettings,
   CommitmentRow,
   EVENT_SUBMISSIONS_SERVICE,
   EditableFamilyProfile,
@@ -32,6 +35,15 @@ import {
   Toggle,
 } from 'components';
 
+import {
+  CalendarFeedDialog,
+  CalendarFeedDialogData,
+  CalendarFeedDialogResult,
+} from '../../dialogs/calendar-feed-dialog/calendar-feed-dialog';
+import {
+  ConnectCalendarDialog,
+  ConnectCalendarDialogData,
+} from '../../dialogs/connect-calendar-dialog/connect-calendar-dialog';
 import {
   CommitmentDialog,
   CommitmentDialogData,
@@ -77,6 +89,16 @@ const MONTHS = [
   'November',
   'December',
 ];
+
+/** "just now" / "4 minutes ago" / "3 hours ago" / "20 October" for the Google row. */
+function syncedAgo(at: Date, now: Date): string {
+  const minutes = Math.floor((now.getTime() - at.getTime()) / 60_000);
+  if (minutes < 1) return 'just now';
+  if (minutes < 60) return minutes === 1 ? '1 minute ago' : `${minutes} minutes ago`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return hours === 1 ? '1 hour ago' : `${hours} hours ago`;
+  return `${at.getDate()} ${MONTHS[at.getMonth()]}`;
+}
 
 function weekendDayOf(day: CommitmentRow['dayOfWeek']): WeekendDay | null {
   return day === 'Saturday' || day === 'Sunday' ? day : null;
@@ -144,6 +166,8 @@ export class FamilyPage {
   private readonly session = inject(SESSION_STORE);
   private readonly dialog = inject(Dialog);
   private readonly router = inject(Router);
+  private readonly calendarService = inject(CALENDAR_SERVICE);
+  private readonly document = inject(DOCUMENT);
 
   protected readonly view = this.familyService.getFamily();
   private readonly editable = this.familyService.getEditableProfile();
@@ -168,8 +192,33 @@ export class FamilyPage {
     return `Signed in since ${MONTHS[d.getMonth()]} ${d.getFullYear()}`;
   });
 
+  /** The Calendar section (L2-174, L2-180); null until `GET /api/calendar` answers. */
+  protected readonly calendar = signal<CalendarSettings | null>(null);
+  protected readonly google = computed(() => this.calendar()?.google ?? null);
+  /** Back from Google without a connection (L2-174 AC5). */
+  protected readonly calendarDenied = signal(
+    inject(ActivatedRoute).snapshot.queryParamMap.get('calendar') === 'denied',
+  );
+  protected readonly googleSubtitle = computed(() => {
+    const google = this.google();
+    if (!google) return '';
+    const synced = google.lastSyncedUtc ? new Date(google.lastSyncedUtc) : null;
+    if (!synced) return `${google.email} · not synced yet`;
+    if (google.status === 'needs_reconnect')
+      return `${google.email} · last synced ${synced.getDate()} ${MONTHS[synced.getMonth()]}`;
+    return `${google.email} · synced ${syncedAgo(synced, new Date())}`;
+  });
+  protected readonly feedActive = computed(() => this.calendar()?.feed.active ?? false);
+  protected readonly feedSubtitle = computed(() => {
+    const created = this.calendar()?.feed.createdUtc;
+    const d = created ? new Date(created) : null;
+    const when = d ? `Created ${d.getDate()} ${MONTHS[d.getMonth()]}. ` : '';
+    return `${when}Calendar apps refresh it on their own.`;
+  });
+
   constructor() {
     void this.run(() => this.familyService.load());
+    void this.loadCalendar();
     if (this.isAdmin()) void this.submissions.loadPending().catch(() => undefined);
   }
 
@@ -331,6 +380,89 @@ export class FamilyPage {
       tryNewEnabled: key === 'tryNew' ? checked : p.tryNewEnabled,
       fridayPreviewEnabled: key === 'fridayPreview' ? checked : p.fridayPreviewEnabled,
     }));
+  }
+
+  // ---- calendar (L2-174, L2-180) ----------------------------------------
+
+  /** D31, then Google's consent screen; Google returns to `/family/calendar/google`. */
+  protected async connectGoogle(): Promise<void> {
+    this.calendarDenied.set(false);
+    const ref = this.dialog.open<void, ConnectCalendarDialogData>(ConnectCalendarDialog, {
+      ...DIALOG_OPTIONS,
+      data: {
+        start: async () => {
+          const url = await this.calendarService.authorizeGoogle();
+          this.document.location.assign(url);
+        },
+      },
+    });
+    await firstValueFrom(ref.closed);
+  }
+
+  /** D32, then `DELETE /api/calendar/google`; written events stay (L2-175). */
+  protected async disconnectGoogle(): Promise<void> {
+    const ok = await confirmWith(this.dialog, {
+      title: 'Disconnect Google Calendar?',
+      body: 'Saturdaze stops writing and reading it. Events already there stay.',
+      cancelLabel: 'Keep it',
+      confirmLabel: 'Disconnect',
+      danger: true,
+      icon: 'close',
+    });
+    if (!ok) return;
+    await this.run(async () => {
+      await this.calendarService.disconnectGoogle();
+      await this.loadCalendar();
+    });
+  }
+
+  protected setReadCommitments(on: boolean): Promise<void> {
+    return this.run(async () => {
+      this.calendar.set(await this.calendarService.updateGoogle(on));
+    });
+  }
+
+  /** Creates (or replaces) the subscription link and shows it once in D33. */
+  protected async subscribe(): Promise<void> {
+    this.error.set('');
+    let webcalUrl: string;
+    try {
+      webcalUrl = (await this.calendarService.createFeed()).webcalUrl;
+    } catch {
+      this.error.set('The link was not created. Try again in a moment.');
+      return;
+    }
+    void this.loadCalendar();
+    const ref = this.dialog.open<CalendarFeedDialogResult, CalendarFeedDialogData>(
+      CalendarFeedDialog,
+      { ...DIALOG_OPTIONS, data: { webcalUrl } },
+    );
+    if ((await firstValueFrom(ref.closed)) === 'stop') await this.stopFeed();
+  }
+
+  /** D34, then `DELETE /api/calendar/feed`. */
+  protected async stopFeed(): Promise<void> {
+    const ok = await confirmWith(this.dialog, {
+      title: 'Stop the subscription link?',
+      body: 'Calendars subscribed to it stop getting this weekend.',
+      cancelLabel: 'Keep it',
+      confirmLabel: 'Stop the link',
+      danger: true,
+      icon: 'close',
+    });
+    if (!ok) return;
+    await this.run(async () => {
+      await this.calendarService.stopFeed();
+      await this.loadCalendar();
+    });
+  }
+
+  private async loadCalendar(): Promise<void> {
+    try {
+      this.calendar.set(await this.calendarService.settings());
+    } catch {
+      // The section keeps its last state; nothing else on the page depends on it.
+    }
   }
 
   // ---- account --------------------------------------------------------

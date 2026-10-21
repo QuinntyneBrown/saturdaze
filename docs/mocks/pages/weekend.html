@@ -41,6 +41,7 @@
   </figure>
 
   <div class="cover-actions">
+    <!-- With Google Calendar connected the label stays; the dialog says it is already synced (D6b, L2-176). -->
     <a class="btn btn--quiet" href="./dialogs.html#dialog-calendar"><svg class="icon" aria-hidden="true"><use href="#i-calendar"/></svg>Add to calendar</a>
     <a class="btn btn--primary" href="./dialogs.html#dialog-share"><svg class="icon" aria-hidden="true"><use href="#i-share"/></svg>Share</a>
     <a class="btn btn--quiet btn--icon" href="./dialogs.html#dialog-more" aria-label="More options"><svg class="icon" aria-hidden="true"><use href="#i-more"/></svg></a>
@@ -145,14 +146,17 @@
           <p class="leg__text"><svg class="icon" aria-hidden="true"><use href="#i-car"/></svg>5 min · 2 km home</p>
         </li>
 
-        <li class="block">
+        <!-- L2-177: an event from the connected Google Calendar, planned around like a commitment.
+             Its title is the calendar's; the second chip names the source. -->
+        <li class="block block--commitment">
           <div class="block__time"><span class="block__clock">3:00pm</span><span class="block__dur">2h</span></div>
-          <div class="block__rail"><span class="block__disc"><svg class="icon" aria-hidden="true"><use href="#i-bed"/></svg></span></div>
+          <div class="block__rail"><span class="block__disc"><svg class="icon" aria-hidden="true"><use href="#i-calendar"/></svg></span></div>
           <div class="block__body">
-            <h3 class="block__title">Quiet time at home</h3>
-            <p class="block__sub clamp-1">Recharge before evening</p>
+            <h3 class="block__title">Ava's birthday party</h3>
+            <p class="block__sub clamp-1">From your calendar · planned around</p>
+            <div class="block__chips"><span class="chip chip--accent"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg>Commitment</span><span class="chip"><svg class="icon" aria-hidden="true"><use href="#i-calendar"/></svg>Calendar</span></div>
           </div>
-          <a class="block__chev" href="./dialogs.html#dialog-block" aria-label="Details for Quiet time at home"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron_right"/></svg></a>
+          <a class="block__chev" href="./dialogs.html#dialog-block-commitment" aria-label="Details for Ava's birthday party"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron_right"/></svg></a>
         </li>
 
         <li class="block">

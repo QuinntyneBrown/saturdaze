@@ -1,0 +1,19 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers - Sync the weekend with a calendar
+
+Person(actor, "Family member", "Changes the plan")
+System_Boundary(saturdaze, "Saturdaze") {
+  Container(web, "Saturdaze web application", "Angular", "Weekend page; calendar blocks carry a Calendar chip")
+  Container(api, "Saturdaze API", "ASP.NET Core", "Plans the weekend; hosts CalendarSyncService beside EmailDispatchService")
+  ContainerDb(db, "Saturdaze database", "SQL Server", "Weekends, blocks, connections, event links")
+}
+System_Ext(oauth, "Google OAuth 2.0", "oauth2.googleapis.com/token")
+System_Ext(gcal, "Google Calendar API", "www.googleapis.com/calendar/v3")
+Rel(actor, web, "Uses", "HTTPS")
+Rel(web, api, "Generate, regenerate, swap, lock, rename, add idea, add errand", "JSON/HTTPS + bearer")
+Rel(api, db, "Marks connections pending; reconciles event links", "EF Core")
+Rel(api, oauth, "Refreshes access tokens", "HTTPS")
+Rel(api, gcal, "Lists weekend events; inserts, updates and deletes events", "HTTPS")
+@enduml

@@ -34,7 +34,7 @@
       <p class="page-header__subtitle">Every sheet and modal in v2, rendered inline. Under 720px each one is a bottom sheet.</p>
     </div>
   </header>
-  <p class="specimen__hint">Danger fill is reserved for Replace draft, Remove, Sign out and Reject. Form dialogs disable the primary until required fields are valid and focus the first field on open.</p>
+  <p class="specimen__hint">Danger fill is reserved for Replace draft, Remove, Sign out, Reject, Disconnect and Stop the link. Form dialogs disable the primary until required fields are valid and focus the first field on open.</p>
 
   <div class="gallery">
 
@@ -917,6 +917,156 @@
           </div>
           <div class="dialog__actions">
             <a class="btn btn--primary" href="./family.members.html">Done</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================== CALENDAR (L2-173 → L2-180) ============================== -->
+
+    <section class="specimen" id="dialog-calendar-connect">
+      <span class="specimen__label">D31 · Connect Google Calendar (before Google's consent screen)</span>
+      <div class="dialog dialog--specimen" role="dialog" aria-modal="true" aria-labelledby="d31-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="d31-title">Connect Google Calendar</h2><p class="dialog__sub">Google asks you to confirm on the next screen.</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="dialog__body">
+            <ul class="list list--card">
+              <li class="list__item">
+                <span class="disc disc--primary"><svg class="icon" aria-hidden="true"><use href="#i-calendar"/></svg></span>
+                <span class="list__text"><span class="list__title">Saturdaze writes this weekend</span><span class="list__sub">Each stop on Saturday and Sunday becomes an event in your main calendar and follows the plan when it changes.</span></span>
+              </li>
+              <li class="list__item">
+                <span class="disc disc--accent"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg></span>
+                <span class="list__text"><span class="list__title">Saturdaze reads this weekend</span><span class="list__sub">Timed events on Saturday and Sunday become commitments the plan goes around. You can turn this off.</span></span>
+              </li>
+              <li class="list__item">
+                <span class="disc"><svg class="icon" aria-hidden="true"><use href="#i-key"/></svg></span>
+                <span class="list__text"><span class="list__title">Nothing else</span><span class="list__sub">No other days, no contacts, no email. Disconnect any time.</span></span>
+              </li>
+            </ul>
+          </div>
+          <div class="dialog__actions">
+            <button class="btn btn--quiet" type="button">Not now</button>
+            <a class="btn btn--primary" href="./family.calendar.html#state-google"><svg class="icon" aria-hidden="true"><use href="#i-external"/></svg>Continue to Google</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="specimen" id="dialog-calendar-connect-error">
+      <span class="specimen__label">D31b · Connect Google Calendar · Google could not be reached</span>
+      <div class="dialog dialog--specimen" role="dialog" aria-modal="true" aria-labelledby="d31b-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="d31b-title">Connect Google Calendar</h2><p class="dialog__sub">Google asks you to confirm on the next screen.</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="dialog__body">
+            <div class="banner banner--warn" role="alert">
+              <svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg>
+              <span>Google didn't answer. Nothing was connected. Try again in a minute.</span>
+            </div>
+          </div>
+          <div class="dialog__actions">
+            <button class="btn btn--quiet" type="button">Not now</button>
+            <a class="btn btn--primary" href="./family.calendar.html#state-google"><svg class="icon" aria-hidden="true"><use href="#i-external"/></svg>Try again</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="specimen" id="dialog-calendar-disconnect">
+      <span class="specimen__label">D32 · Disconnect Google Calendar</span>
+      <div class="dialog dialog--specimen" role="alertdialog" aria-modal="true" aria-labelledby="d32-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="d32-title">Disconnect Google Calendar?</h2><p class="dialog__sub">Saturdaze stops writing and reading it. Events already there stay.</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="dialog__actions">
+            <button class="btn btn--quiet" type="button">Keep it</button>
+            <a class="btn btn--danger" href="./family.calendar.html#state-off"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg>Disconnect</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="specimen" id="dialog-calendar-feed">
+      <span class="specimen__label">D33 · Subscription link (shown once, when it is created)</span>
+      <div class="dialog dialog--specimen" role="dialog" aria-modal="true" aria-labelledby="d33-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="d33-title">Subscribe from another calendar</h2><p class="dialog__sub">Copy it now. For your privacy it is not shown again.</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="dialog__body">
+            <div class="copy-field">
+              <span class="copy-field__value">webcal://api.saturdaze.ca/api/calendar/feed/kX9vQ2mT7pLw4rZb.ics</span>
+              <button class="btn btn--quiet" type="button" aria-pressed="false" aria-label="Copy link"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg>Copy</button>
+            </div>
+            <ul class="list list--card">
+              <li class="list__item">
+                <span class="list__text"><span class="list__title">Apple Calendar</span><span class="list__sub">File, New Calendar Subscription, then paste the link.</span></span>
+              </li>
+              <li class="list__item">
+                <span class="list__text"><span class="list__title">Outlook</span><span class="list__sub">Add calendar, Subscribe from web, then paste the link.</span></span>
+              </li>
+              <li class="list__item">
+                <span class="list__text"><span class="list__title">Google Calendar</span><span class="list__sub">Other calendars, From URL. Use https:// in place of webcal://.</span></span>
+              </li>
+            </ul>
+            <p class="text-xs text-soft">Read-only · this weekend's plan · anyone with the link can see it</p>
+          </div>
+          <div class="dialog__actions">
+            <a class="btn btn--quiet" href="#dialog-calendar-feed-stop">Stop the link</a>
+            <a class="btn btn--primary" href="./family.calendar.html#state-feed">Done</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="specimen" id="dialog-calendar-feed-stop">
+      <span class="specimen__label">D34 · Stop the subscription link</span>
+      <div class="dialog dialog--specimen" role="alertdialog" aria-modal="true" aria-labelledby="d34-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="d34-title">Stop the subscription link?</h2><p class="dialog__sub">Calendars subscribed to it stop getting this weekend.</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="dialog__actions">
+            <button class="btn btn--quiet" type="button">Keep it</button>
+            <a class="btn btn--danger" href="./family.calendar.html#state-off"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg>Stop the link</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="specimen" id="dialog-calendar-synced">
+      <span class="specimen__label">D6b · Add to calendar · Google Calendar connected</span>
+      <div class="dialog dialog--specimen" role="dialog" aria-modal="true" aria-labelledby="d6b-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="d6b-title">Add to your calendar</h2><p class="dialog__sub">One file with both days.</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="dialog__body">
+            <div class="banner banner--success" role="status">
+              <svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>
+              <span>Your Google Calendar already has this weekend and keeps up with changes.</span>
+            </div>
+            <ul class="list list--card">
+              <li class="list__item">
+                <span class="disc disc--primary"><svg class="icon" aria-hidden="true"><use href="#i-calendar"/></svg></span>
+                <span class="list__text"><span class="list__title">weekend-17-may.ics</span><span class="list__sub">10 events · Saturday and Sunday</span></span>
+              </li>
+            </ul>
+          </div>
+          <div class="dialog__actions">
+            <button class="btn btn--quiet" type="button">Cancel</button>
+            <button class="btn btn--primary" type="button"><svg class="icon" aria-hidden="true"><use href="#i-calendar"/></svg>Download .ics</button>
           </div>
         </div>
       </div>

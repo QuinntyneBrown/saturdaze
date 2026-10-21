@@ -9,6 +9,8 @@ export interface CalendarDialogData {
   readonly calendar: CalendarExport;
   /** The signed-in calendar file (L2-086 AC9); a bare link would carry no bearer. */
   readonly download: () => Promise<Blob>;
+  /** The caller's Google Calendar is connected and already has the weekend (D6b, L2-176). */
+  readonly googleSynced?: boolean;
 }
 
 /**
@@ -28,6 +30,7 @@ export class CalendarDialog {
   private readonly data = inject<CalendarDialogData>(DIALOG_DATA);
   private readonly document = inject(DOCUMENT);
   protected readonly calendar = this.data.calendar;
+  protected readonly googleSynced = this.data.googleSynced ?? false;
   protected readonly busy = signal(false);
   protected readonly error = signal('');
 

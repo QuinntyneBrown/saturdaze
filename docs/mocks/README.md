@@ -30,12 +30,12 @@ screenshots/          committed <slug>.<viewport>.png captures (390 / 820 / 1440
 | Weekend (cover photo, one day beside its map) | `weekend.html`, `weekend.empty.html`, `weekend.generating.html` |
 | Ideas (photo-led activities · food · events) | `ideas.html`, `ideas.food.html`, `ideas.events.html` |
 | Past weekends (cover photo per weekend) | `past.html`, `past.empty.html` |
-| Family | `family.html`, `family.members.html` (owner: who signs in), `family.member.html` (member view) |
+| Family | `family.html`, `family.members.html` (owner: who signs in), `family.member.html` (member view), `family.calendar.html` (Calendar section states: not connected, Google not configured, Google connected, subscription link on, sync error, consent denied; L2-173 → L2-180) |
 | Review submissions (admin) | `review-submissions.html`, `review-submissions.empty.html` |
 | Auth | `sign-in.html` (2 states, each with "Continue with Google", L2-164), `create-account.html`, `welcome.html` (the onboarding wizard, 5 states), `reset-password.html` (5 states), `verify-email.html` (3 states), `accept-invite.html` (2 states), `join.html` (3 states: an admin invite with its sample weekend, without one, no longer works) |
 | Public | `marketing.html`, `marketing.menu-open.html` (the static site at www.saturdaze.ca, ADR-018), `legal.html` (Terms + Privacy) |
 | Admin (Saturdaze Admin, ADR-014; bare shell with its own side navigation from 1024px) | `admin.sign-in.html` (2 states), `admin.html` (Photo health), `admin.places.html`, `admin.place.html`, `admin.reviews.html`, `admin.ingestion-skips.html`, `admin.activity.html`, `admin.invitations.html`, `admin.sample.new.html`, `admin.sample.html` (sample weekends and platform invitations, L1-038) |
-| Dialogs gallery | `dialogs.html` (D1–D30 and admin AD1–AD8 rendered inline) |
+| Dialogs gallery | `dialogs.html` (D1–D34 and admin AD1–AD8 rendered inline; D31–D34 and D6b are calendar sync) |
 | Emails (L2-162) | `emails/_layout.html` (the template), `emails/invitation.html`, `emails/invitation-plain.html`, `emails/verify-email.html`, `emails/reset-password.html`, `emails/suggestion-not-added.html` — standalone, table-based, inline styles only (mail clients load no stylesheet); the token values they inline are listed in the template |
 
 ## Photos and maps (Wanderlog layout study)

@@ -20,6 +20,7 @@ Ordered by value added to the product, highest first. Estimates are days for an 
 | Map the itinerary | View numbered stops, travel legs, and per-day map | 5 | 100% |
 | Browse past weekends | Filter, favourite, rate, rename, repeat, or remix past weekends | 5 | 100% |
 | Invite and manage family members | Owner invites, adds, and removes members sharing the family | 5 | 100% |
+| Sync a calendar | Connect Google Calendar or subscribe another calendar to the weekend; calendar events become commitments | 13 | 90% |
 | Share and export a weekend | Share a public link and export to calendar | 3 | 100% |
 | Add a shopping errand | Capture an errand and confirm its suggested slot | 3 | 100% |
 | Suggest an event | Submit a community event and track its pending status | 3 | 100% |

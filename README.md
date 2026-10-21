@@ -56,6 +56,9 @@ reference.
 - Authentication flows for sign-up, login, verification, password reset, and
   sign-out, plus "Continue with Google", which creates the account on first use
   (ADR-019).
+- Optional calendar sync from the Family page: connect Google Calendar to keep
+  the weekend in it and plan around the events already there, or subscribe any
+  other calendar app to a private, read-only link (ADR-022).
 - Family member sign-in: the account that creates a family owns it, invites
   members by a shareable link so each signs in with their own password, adds
   members such as young children who never sign in, and removes members,
@@ -170,6 +173,43 @@ To use a client of your own, override both with the same id
 (`$env:Saturdaze__Google__ClientId = "<id>"` for the API). With the API's id
 empty, `POST /api/auth/google` answers `503 google_not_configured`; with the
 app's id empty, the button is not rendered.
+
+#### Calendar sync (optional)
+
+The Family page's **Calendar** section (L1-040, ADR-022) offers two things:
+
+- **Subscribe from another calendar** works everywhere with no setup: it mints
+  a private `webcal://…/api/calendar/feed/{token}.ics` link that Apple
+  Calendar, Outlook and Google Calendar subscribe to.
+- **Connect Google Calendar** writes the current weekend into the person's
+  Google Calendar, follows every change, and plans around timed weekend events
+  already there. It needs the OAuth client's **secret**, which sign-in does not:
+  until `Saturdaze:Google:ClientSecret` is set, the API answers
+  `503 google_calendar_not_configured` and the app hides the Google row.
+
+One-time Google Cloud setup (project `saturdaze-512302`, done in the Google
+Cloud console, outside this repo):
+
+1. **APIs & Services → Library**: enable the **Google Calendar API**.
+2. **Google Auth Platform → Data access**: add the scopes `openid`, `email`
+   and `https://www.googleapis.com/auth/calendar.events` (a sensitive scope;
+   until the app passes Google's verification, only the listed **test users**
+   can connect, and they see an "unverified app" notice).
+3. **Clients → Saturdaze web**: under **Authorised redirect URIs** add
+   `https://app.saturdaze.ca/family/calendar/google` and
+   `http://localhost:4200/family/calendar/google`. Copy the **client secret**
+   (create one if the client has none).
+4. Store it as the GitHub Actions secret `GOOGLE_CLIENT_SECRET` (or pass
+   `-GoogleClientSecret` to `eng/Bootstrap-Azure.ps1`); `deploy.yml` hands it to
+   `eng/infra/main.bicepparam`, which sets `Saturdaze__Google__ClientSecret` on
+   the API. The deployment keeps the Data Protection keys that encrypt refresh
+   tokens in `/home/data/keys` (`Saturdaze:Calendar:KeyDirectory`).
+5. Locally: `$env:Saturdaze__Google__ClientSecret = "<secret>"`
+   for the API. Never commit the secret.
+
+`Saturdaze:Calendar:TimeZone` (default `America/Toronto`) sets the time zone of
+the events written, and `Saturdaze:Calendar:PollSeconds` (default 60) how often
+the in-process `CalendarSyncService` retries writes that Google refused.
 
 Run the design reference (static mocks):
 

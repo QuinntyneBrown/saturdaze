@@ -1,0 +1,105 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure - Connect a calendar
+
+interface ICalendarService {
+  +settings(): Promise<CalendarSettings>
+  +authorizeGoogle(): Promise<string>
+  +connectGoogle(code: string, state: string): Promise<CalendarSettings>
+  +updateGoogle(readCommitments: boolean): Promise<CalendarSettings>
+  +disconnectGoogle(): Promise<void>
+  +createFeed(): Promise<CalendarFeedLink>
+  +stopFeed(): Promise<void>
+}
+class CalendarService
+class FamilyPage {
+  +connectGoogle(): Promise<void>
+  +disconnectGoogle(): Promise<void>
+  +setReadCommitments(on: boolean): Promise<void>
+  +subscribe(): Promise<void>
+  +stopFeed(): Promise<void>
+}
+class GoogleCalendarCallbackPage
+class CalendarController {
+  +Get(): CalendarSettingsDto
+  +Authorize(): GoogleCalendarAuthorizationDto
+  +Connect(ConnectGoogleCalendarCommand): CalendarSettingsDto
+  +Update(UpdateGoogleCalendarRequest): CalendarSettingsDto
+  +Disconnect(): 204
+  +CreateFeed(): 201 CalendarFeedLinkDto
+  +StopFeed(): 204
+  +Feed(token): text/calendar
+}
+class ConnectGoogleCalendarCommandHandler {
+  +Handle(ConnectGoogleCalendarCommand): Task<CalendarSettingsDto>
+}
+class CreateCalendarFeedCommandHandler {
+  +Handle(CreateCalendarFeedCommand): Task<string>
+}
+interface IGoogleCalendarClient {
+  +IsConfigured: bool
+  +AuthorizationUrl(state: string, redirectUri: string): Uri
+  +ExchangeCodeAsync(code: string, redirectUri: string): Task<GoogleCalendarGrant>
+  +RevokeAsync(refreshToken: string): Task
+  +ListEventsAsync(refreshToken: string, from: DateTimeOffset, to: DateTimeOffset): Task<IReadOnlyList<GoogleCalendarEvent>>
+  +InsertEventAsync(refreshToken: string, event: GoogleCalendarEventWrite): Task<string>
+  +UpdateEventAsync(refreshToken: string, eventId: string, event: GoogleCalendarEventWrite): Task<bool>
+  +DeleteEventAsync(refreshToken: string, eventId: string): Task
+}
+class GoogleCalendarGrant <<record>> {
+  +string Subject
+  +string Email
+  +string RefreshToken
+  +bool HasCalendarScope
+}
+interface ICalendarTokenProtector {
+  +Protect(refreshToken: string): string
+  +Unprotect(protectedToken: string): string?
+  +CreateState(userId: Guid, expiresUtc: DateTimeOffset): string
+  +ReadState(state: string): CalendarState?
+}
+class CalendarConnection {
+  +Guid UserId
+  +string GoogleSubject
+  +string Email
+  +string ProtectedRefreshToken
+  +bool ReadCommitments
+  +CalendarConnectionStatus Status
+  +DateTimeOffset? LastSyncedUtc
+  +DateTimeOffset? SyncRequestedUtc
+  +int SyncRequestCount
+  +int SyncedRequestCount
+  +DateTimeOffset? NextAttemptUtc
+  +int FailedAttempts
+}
+class CalendarFeed {
+  +Guid FamilyId
+  +string TokenHash
+  +DateTimeOffset CreatedUtc
+}
+enum CalendarConnectionStatus {
+  Connected
+  NeedsReconnect
+}
+CalendarService ..|> ICalendarService
+FamilyPage --> ICalendarService : injects CALENDAR_SERVICE
+GoogleCalendarCallbackPage --> ICalendarService : injects CALENDAR_SERVICE
+ICalendarService ..> CalendarController : HTTP
+CalendarController ..> ConnectGoogleCalendarCommandHandler : dispatches
+CalendarController ..> CreateCalendarFeedCommandHandler : dispatches
+ConnectGoogleCalendarCommandHandler --> IGoogleCalendarClient : exchanges through
+ConnectGoogleCalendarCommandHandler --> ICalendarTokenProtector : protects with
+IGoogleCalendarClient ..> GoogleCalendarGrant : returns
+ConnectGoogleCalendarCommandHandler --> CalendarConnection : creates or replaces
+CalendarConnection --> CalendarConnectionStatus
+CreateCalendarFeedCommandHandler --> CalendarFeed : creates or replaces
+@enduml

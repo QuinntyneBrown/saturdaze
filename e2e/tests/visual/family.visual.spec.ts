@@ -1,4 +1,5 @@
 import { test, expect } from "../../fixtures/sd-test.js";
+import { stubCalendarApi } from "../../fixtures/calendar-api.js";
 
 /**
  * Family parity — pages/family.html.
@@ -58,5 +59,18 @@ test.describe("Visual: Family — admin", () => {
     await expect(f.adminSection()).toHaveScreenshot("family.admin.png", {
       mask: [f.rowSubtitle(f.reviewSubmissionsRow()), f.pendingCountChip()],
     });
+  });
+});
+
+test.describe("Visual: Family — calendar", () => {
+  // The mock draws the section not connected, on a deployment with Google
+  // configured (L2-174 AC1); the stub gives the app the same state whatever
+  // the API's configuration. In baseline mode it is never called.
+  test("Calendar section, not connected", async ({ page, goto, pages, settle }) => {
+    await stubCalendarApi(page, { googleConfigured: true });
+    await goto("family");
+    await pages.family.waitForReady();
+    await settle();
+    await expect(pages.family.calendarSection()).toHaveScreenshot("family.calendar.png");
   });
 });
