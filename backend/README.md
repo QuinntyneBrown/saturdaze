@@ -20,8 +20,9 @@ backend/
                                  # MigrationRunner + Seeder consoles)
   tests/
     Saturdaze.Application.Tests/   # pure unit tests (planner, handlers, validators)
-    Saturdaze.Infrastructure.Tests/# real SQL Server: persistence + weather contract
-    Saturdaze.Api.Tests/           # WebApplicationFactory end-to-end
+    Saturdaze.Infrastructure.Tests/# persistence on SQLite (SQL Server opt-in) + weather contract
+    Saturdaze.Api.Tests/           # WebApplicationFactory end-to-end on in-memory SQLite
+    Saturdaze.Cli.Tests/           # migrate / seed / reset commands
 ```
 
 ## Local quickstart
@@ -51,7 +52,7 @@ Account email (verification and reset links, L2-142) is sent after each response
 dotnet test backend/Saturdaze.sln
 ```
 
-Three test projects, three layers, ~95 tests total. Integration and API tests need LocalDB running locally; see ADR-001 for the named-pipe workaround that resolves a SQL Server 2025 LocalDB interop quirk.
+Four test projects, about 590 tests, and no database server (ADR-020): the API and Infrastructure tests run on a per-fixture in-memory SQLite database, the Application and CLI tests on EF Core InMemory. The three tests of SQL Server-only behaviour (migration upgrade, `sp_getapplock`) are skipped unless `SATURDAZE_TEST_SQLSERVER` is `localdb` or a server connection string; run them with `dotnet test backend/Saturdaze.sln --filter Category=SqlServer`. `pwsh eng/Test-Backend.ps1` runs the suite as CI does.
 
 ## API surface
 

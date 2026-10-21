@@ -17,7 +17,10 @@ import { addDaysIso, upcomingSaturdayIso } from "./dates.js";
 
 export const API_URL = process.env.SD_API_URL ?? "http://localhost:5100";
 
-/** Seeded by `saturdaze seed` (Saturdaze.Cli UserSeeder). */
+/**
+ * Seeded by `saturdaze seed` (Saturdaze.Cli UserSeeder): `eng/Start-E2eApi.ps1`
+ * starts the API on a fresh SQLite file and seeds it, no LocalDB (ADR-020).
+ */
 export const SEEDED_USER = {
   email: process.env.SD_E2E_EMAIL ?? "quinntynebrown@gmail.com",
   password: process.env.SD_E2E_PASSWORD ?? "password123",

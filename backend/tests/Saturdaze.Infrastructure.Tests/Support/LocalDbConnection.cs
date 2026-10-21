@@ -3,21 +3,24 @@ using System.Diagnostics;
 namespace Saturdaze.Infrastructure.Tests.Support;
 
 /// <summary>
-/// Resolves a LocalDB connection string via named pipe. Works around a known issue
-/// where the `(localdb)\Instance` shortcut fails to load SqlUserInstance.dll on
-/// LocalDB v17 / SQL Server 2025.
-/// Set <c>SATURDAZE_TEST_SQLSERVER</c> to a connection string without a database
-/// (e.g. a SQL Server container on Linux) to bypass LocalDB entirely.
+/// The server for the opt-in SQL Server tests (ADR-020), named by <c>SATURDAZE_TEST_SQLSERVER</c>:
+/// a connection string without a database (e.g. a SQL Server container), or <c>localdb</c>
+/// for LocalDB, reached through its named pipe because the `(localdb)\Instance` shortcut
+/// fails to load SqlUserInstance.dll on LocalDB v17 / SQL Server 2025 (ADR-001).
 /// </summary>
 public static class LocalDbConnection
 {
     private const string Instance = "MSSQLLocalDB";
+    private const string Variable = "SATURDAZE_TEST_SQLSERVER";
     private static string? _pipe;
+
+    /// <summary>True when the developer opted in to the SQL Server tests.</summary>
+    public static bool Enabled => !string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable(Variable));
 
     public static string For(string database)
     {
-        var server = Environment.GetEnvironmentVariable("SATURDAZE_TEST_SQLSERVER");
-        if (!string.IsNullOrWhiteSpace(server))
+        var server = Environment.GetEnvironmentVariable(Variable);
+        if (!string.IsNullOrWhiteSpace(server) && !server.Equals("localdb", StringComparison.OrdinalIgnoreCase))
             return $"{server.TrimEnd(';')};Database={database}";
 
         var pipe = ResolvePipe();
