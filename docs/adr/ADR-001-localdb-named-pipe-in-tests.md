@@ -1,6 +1,6 @@
 # ADR-001 — LocalDB connection via named pipe in tests
 
-**Status:** Accepted
+**Status:** Superseded by [ADR-020](ADR-020-tests-run-without-a-database-server.md)
 **Date:** 2026-05-16
 
 ## Context
