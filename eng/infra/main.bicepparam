@@ -23,6 +23,10 @@ param marketingSwaSkuName = readEnvironmentVariable('MARKETING_SWA_SKU', 'Free')
 // deployment binds the domain to the family app's Static Web App.
 param appCustomDomain = readEnvironmentVariable('APP_CUSTOM_DOMAIN', '')
 
+// Saturdaze Admin (ADR-014): 'admin.saturdaze.ca' once its TXT validation
+// record is in place.
+param adminCustomDomain = readEnvironmentVariable('ADMIN_CUSTOM_DOMAIN', '')
+
 // The static marketing site (ADR-018): 'www.saturdaze.ca' and the apex
 // 'saturdaze.ca', each once its TXT validation record is in place.
 param marketingCustomDomain = readEnvironmentVariable('MARKETING_CUSTOM_DOMAIN', '')
