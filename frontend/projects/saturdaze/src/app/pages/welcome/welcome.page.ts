@@ -48,7 +48,7 @@ import { environment } from '../../../environments/environment';
 
 /**
  * Welcome — `docs/mocks/pages/welcome.html`, the onboarding wizard a new
- * account lands in (L1-038). One route per step, `/welcome/:step`: home,
+ * account lands in (L1-039). One route per step, `/welcome/:step`: home,
  * family, likes, preferences and done. Every step saves as it is
  * completed through the family profile; Skip moves on without saving.
  */
@@ -154,7 +154,7 @@ export class WelcomePage {
   protected readonly tryNew = signal(false);
   protected readonly fridayPreview = signal(true);
 
-  /** The done step's line: the family, then the verification reminder while unverified (L2-163). */
+  /** The done step's line: the family, then the verification reminder while unverified (L2-171). */
   protected readonly doneSubtitle = computed(() => {
     const view = this.view();
     const named = view.status === 'ready' && view.headline !== 'Your family';
@@ -251,7 +251,7 @@ export class WelcomePage {
     return this.router.navigate(['/welcome', next]);
   }
 
-  // ---- who's in (L2-160) ------------------------------------------------
+  // ---- who's in (L2-168) ------------------------------------------------
 
   protected async addMember(): Promise<void> {
     const result = await this.openMember({ mode: 'add', existingNames: this.memberNames() });

@@ -122,7 +122,7 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/past/past.page').then((m) => m.PastPage),
   },
   {
-    // The onboarding wizard a new account lands in (L2-157, L2-158): one
+    // The onboarding wizard a new account lands in (L2-165, L2-166): one
     // route per step, bare shell, signed-in only. The page itself sends an
     // unknown step back to `home`.
     path: 'welcome',

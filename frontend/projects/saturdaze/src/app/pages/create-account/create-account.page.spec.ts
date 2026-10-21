@@ -106,7 +106,7 @@ describe('CreateAccountPage', () => {
     expect(component['form'].controls.email.touched).toBe(true);
   });
 
-  it('creates the account with trimmed values and opens the onboarding wizard (L2-157)', async () => {
+  it('creates the account with trimmed values and opens the onboarding wizard (L2-165)', async () => {
     component['form'].setValue(VALID);
     await component['submit']();
     expect(session.signUp).toHaveBeenCalledWith({

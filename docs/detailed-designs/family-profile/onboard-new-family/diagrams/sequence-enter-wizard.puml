@@ -27,7 +27,7 @@ db --> controller : Saved
 controller --> session : 201 token pair and user
 session -> session : Persist the pair
 session --> create : Signed in
-create -> router : L2-157 navigate /welcome/home
+create -> router : L2-165 navigate /welcome/home
 router -> router : requireAuth sees the session
 router -> page : Activate with :step = home
 page -> client : load()
@@ -36,7 +36,7 @@ controller -> db : Read the family
 db --> controller : Aggregate
 controller --> client : 200 profile
 client --> page : getFamily(), getEditableProfile()
-page --> actor : L2-158 Step 1 of 4, "Where's home?"
+page --> actor : L2-166 Step 1 of 4, "Where's home?"
 alt signed-out visitor opens /welcome/home
  router --> actor : /sign-in?returnUrl=%2Fwelcome%2Fhome
 end

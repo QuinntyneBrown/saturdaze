@@ -29,7 +29,7 @@ import { environment } from '../../../environments/environment';
  *
  * Family name, email, password (with the strength meter), terms consent
  * (client-side gate; the API has no consent field) and the Friday preview
- * opt-in. Success lands on the onboarding wizard, `/welcome/home` (L2-157);
+ * opt-in. Success lands on the onboarding wizard, `/welcome/home` (L2-165);
  * the verification email is on its way and the wizard's last step says so.
  * Home location is not asked here; it is the wizard's first step.
  */

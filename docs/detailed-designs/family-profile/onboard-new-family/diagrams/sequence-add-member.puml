@@ -38,7 +38,7 @@ alt invited member
  page -> dialog : open D30 with the invite link
  dialog --> page : closed
 end
-page --> actor : L2-160 the member's row shows name, role, age
+page --> actor : L2-168 the member's row shows name, role, age
 alt add refused (owner_only, member_name_in_use, email_in_use, already_invited)
  controller --> client : 403 or 409
  client --> page : Rejected promise

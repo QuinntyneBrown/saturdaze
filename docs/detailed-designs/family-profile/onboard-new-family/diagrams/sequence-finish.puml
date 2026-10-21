@@ -18,7 +18,7 @@ end box
 actor -> page : Reach /welcome/done
 page -> session : user()
 session --> page : email, emailVerifiedUtc
-page --> actor : L2-163 "You're set", masked email when unverified
+page --> actor : L2-171 "You're set", masked email when unverified
 actor -> page : Tap "Plan this weekend"
 page -> router : Navigate /weekend
 router -> weekend : Activate

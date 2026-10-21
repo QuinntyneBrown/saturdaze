@@ -201,7 +201,7 @@ export const ROUTES = {
   },
   join: { app: "/join?token={token}", page: "join" },
 
-  // ---- onboarding wizard (bare shell; one route per step, L2-158) ----
+  // ---- onboarding wizard (bare shell; one route per step, L2-166) ----
   welcomeHome:        { app: "/welcome/home",        mock: "/pages/welcome.html#state-home",        guard: "auth", page: "welcome" },
   welcomeFamily:      { app: "/welcome/family",      mock: "/pages/welcome.html#state-family",      guard: "auth", page: "welcome" },
   welcomeLikes:       { app: "/welcome/likes",       mock: "/pages/welcome.html#state-likes",       guard: "auth", page: "welcome" },

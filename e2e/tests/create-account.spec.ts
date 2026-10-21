@@ -5,7 +5,7 @@ import { SEEDED_USER } from "../fixtures/auth.js";
  * Create account — family name, email, password with a live strength
  * meter, a terms checkbox that gates the primary, and the Friday preview
  * opt-in. Success registers through the API and lands on the first step
- * of the onboarding wizard, /welcome/home (L2-157).
+ * of the onboarding wizard, /welcome/home (L2-165).
  */
 
 const fresh = () => ({
@@ -71,7 +71,7 @@ test.describe("Create account", () => {
     await expect(c.createButton()).toBeDisabled();
   });
 
-  // Traces to: L2-157 AC1
+  // Traces to: L2-165 AC1
   test("a valid form registers and lands on the wizard's home step, signed in", async ({ page, pages }) => {
     const c = pages.createAccount;
     const account = fresh();
@@ -89,7 +89,7 @@ test.describe("Create account", () => {
     expect(await page.evaluate(() => localStorage.getItem("sd.auth.token"))).toBeTruthy();
   });
 
-  // Traces to: L2-157 AC2
+  // Traces to: L2-165 AC2
   test("an email that is already registered shows an error and stays put", async ({ page, pages }) => {
     const c = pages.createAccount;
     await c.fill({ ...fresh(), email: SEEDED_USER.email });
@@ -103,7 +103,7 @@ test.describe("Create account", () => {
     expect(new URL(page.url()).pathname).toBe("/create-account");
   });
 
-  // Traces to: L2-157 AC1, L2-163 AC2, L2-013 AC1 — the current weekend is drafted on first visit.
+  // Traces to: L2-165 AC1, L2-171 AC2, L2-013 AC1 — the current weekend is drafted on first visit.
   test("skipping every wizard step after sign-up opens the newly drafted weekend", async ({ page, pages }) => {
     const c = pages.createAccount;
     await c.fill(fresh());

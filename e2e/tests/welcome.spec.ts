@@ -2,7 +2,7 @@ import { test, expect } from "../fixtures/sd-test.js";
 import { FakeApi, installFakeApi, freshFamily } from "../fixtures/fake-api.js";
 
 /**
- * Welcome — the onboarding wizard a new account lands in (L1-038): one
+ * Welcome — the onboarding wizard a new account lands in (L1-039): one
  * question per step, each saved as it is completed, each skippable.
  *
  * The API is stood in for by `fixtures/fake-api.ts` (an in-memory family
@@ -13,14 +13,14 @@ import { FakeApi, installFakeApi, freshFamily } from "../fixtures/fake-api.js";
 
 const WIDTHS = [320, 390, 820, 1440, 1920] as const;
 
-test.describe("Welcome — one step at a time (L2-158)", () => {
+test.describe("Welcome — one step at a time (L2-166)", () => {
   let api: FakeApi;
 
   test.beforeEach(async ({ page }) => {
     api = await installFakeApi(page);
   });
 
-  // Traces to: L2-158 AC1, AC5, AC6
+  // Traces to: L2-166 AC1, AC5, AC6
   test("step 1 renders in the bare shell under a stepper reading Step 1 of 4", async ({ page, pages }) => {
     const w = pages.welcome;
     await w.open("home");
@@ -39,7 +39,7 @@ test.describe("Welcome — one step at a time (L2-158)", () => {
     }
   });
 
-  // Traces to: L2-158 AC2
+  // Traces to: L2-166 AC2
   test("Continue and Skip for now move on; Back returns", async ({ page, pages }) => {
     const w = pages.welcome;
     await w.open("home");
@@ -59,7 +59,7 @@ test.describe("Welcome — one step at a time (L2-158)", () => {
     await expect(w.stepperLabel()).toHaveText("Step 2 of 4");
   });
 
-  // Traces to: L2-158 AC3
+  // Traces to: L2-166 AC3
   test("/welcome and an unknown step open the home step", async ({ page, pages }) => {
     const w = pages.welcome;
     await page.goto("/welcome");
@@ -72,7 +72,7 @@ test.describe("Welcome — one step at a time (L2-158)", () => {
     await expect(w.stepperLabel()).toHaveText("Step 1 of 4");
   });
 
-  // Traces to: L2-158 AC5
+  // Traces to: L2-166 AC5
   test("the stepper's text is the progress a keyboard user hears, and Continue is reachable by Tab", async ({ page, pages }) => {
     const w = pages.welcome;
     await w.open("home");
@@ -83,7 +83,7 @@ test.describe("Welcome — one step at a time (L2-158)", () => {
   });
 });
 
-// Traces to: L2-158 AC4
+// Traces to: L2-166 AC4
 test("a signed-out visitor is sent to sign in and back to the step", async ({ page, settle }) => {
   await page.goto("/welcome/home");
   await settle();
@@ -92,14 +92,14 @@ test("a signed-out visitor is sent to sign in and back to the step", async ({ pa
   expect(url.searchParams.get("returnUrl")).toBe("/welcome/home");
 });
 
-test.describe("Welcome — where's home (L2-159)", () => {
+test.describe("Welcome — where's home (L2-167)", () => {
   let api: FakeApi;
 
   test.beforeEach(async ({ page }) => {
     api = await installFakeApi(page);
   });
 
-  // Traces to: L2-159 AC1, AC2
+  // Traces to: L2-167 AC1, AC2
   test("Continue waits for an address, then saves it and moves on", async ({ page, pages }) => {
     const w = pages.welcome;
     await w.open("home");
@@ -120,7 +120,7 @@ test.describe("Welcome — where's home (L2-159)", () => {
     expect(api.family.homeLocation).toBe("Port Credit, Mississauga");
   });
 
-  // Traces to: L2-159 AC3
+  // Traces to: L2-167 AC3
   test("a home already set is prefilled", async ({ page, pages }) => {
     await page.unroute("**/api/**");
     await installFakeApi(page, { family: { ...freshFamily(), homeLocation: "Streetsville" } });
@@ -130,7 +130,7 @@ test.describe("Welcome — where's home (L2-159)", () => {
     await expect(w.continueButton()).toBeEnabled();
   });
 
-  // Traces to: L2-159 AC4
+  // Traces to: L2-167 AC4
   test("a failed save keeps the step open with the error banner", async ({ page, pages }) => {
     const w = pages.welcome;
     await w.open("home");
@@ -143,7 +143,7 @@ test.describe("Welcome — where's home (L2-159)", () => {
   });
 });
 
-test.describe("Welcome — who's in (L2-160)", () => {
+test.describe("Welcome — who's in (L2-168)", () => {
   let api: FakeApi;
 
   test.beforeEach(async ({ page, pages }) => {
@@ -151,7 +151,7 @@ test.describe("Welcome — who's in (L2-160)", () => {
     await pages.welcome.open("family");
   });
 
-  // Traces to: L2-160 AC1
+  // Traces to: L2-168 AC1
   test("starts empty with the add row and no members", async ({ pages }) => {
     const w = pages.welcome;
     await expect(w.stepperLabel()).toHaveText("Step 2 of 4");
@@ -162,7 +162,7 @@ test.describe("Welcome — who's in (L2-160)", () => {
     await expect(w.continueButton()).toBeEnabled();
   });
 
-  // Traces to: L2-160 AC2
+  // Traces to: L2-168 AC2
   test("adds a member who will not sign in through D17b", async ({ pages }) => {
     const w = pages.welcome;
     await w.addMemberRow().click();
@@ -178,7 +178,7 @@ test.describe("Welcome — who's in (L2-160)", () => {
     expect(api.family.members.map((m) => m.name)).toEqual(["Mae"]);
   });
 
-  // Traces to: L2-160 AC3
+  // Traces to: L2-168 AC3
   test("invites a member and shows the link in D30", async ({ pages }) => {
     const w = pages.welcome;
     const sent = await w.addMember({ name: "Sara", age: 36, inviteEmail: "sara@example.com" });
@@ -190,7 +190,7 @@ test.describe("Welcome — who's in (L2-160)", () => {
     await expect(w.rowSubtitle(w.memberRow("Sara"))).toHaveText("Parent · 36 · Invite sent to sara@example.com");
   });
 
-  // Traces to: L2-160 AC4
+  // Traces to: L2-168 AC4
   test("a tapped member can be re-aged through D17 or removed through D21", async ({ page, pages }) => {
     const w = pages.welcome;
     await w.addMember({ name: "Eli", age: 9 });
@@ -216,7 +216,7 @@ test.describe("Welcome — who's in (L2-160)", () => {
     expect(api.family.members).toEqual([]);
   });
 
-  // Traces to: L2-160 AC5
+  // Traces to: L2-168 AC5
   test("Continue moves on without another family request", async ({ page, pages }) => {
     const w = pages.welcome;
     await w.addMember({ name: "Mae", age: 5 });
@@ -232,7 +232,7 @@ test.describe("Welcome — who's in (L2-160)", () => {
   });
 });
 
-test.describe("Welcome — likes and dislikes (L2-161)", () => {
+test.describe("Welcome — likes and dislikes (L2-169)", () => {
   let api: FakeApi;
 
   test.beforeEach(async ({ page, pages }) => {
@@ -240,7 +240,7 @@ test.describe("Welcome — likes and dislikes (L2-161)", () => {
     await pages.welcome.open("likes");
   });
 
-  // Traces to: L2-161 AC1
+  // Traces to: L2-169 AC1
   test("offers the two tag editors from D20", async ({ pages }) => {
     const w = pages.welcome;
     await expect(w.stepperLabel()).toHaveText("Step 3 of 4");
@@ -250,7 +250,7 @@ test.describe("Welcome — likes and dislikes (L2-161)", () => {
     await expect(w.chipInput("Dislikes")).toHaveClass(/chip-input__field/);
   });
 
-  // Traces to: L2-161 AC2
+  // Traces to: L2-169 AC2
   test("Continue saves the tags as Like and Dislike preferences", async ({ page, pages }) => {
     const w = pages.welcome;
     await w.addChip("Likes", "Parks");
@@ -267,7 +267,7 @@ test.describe("Welcome — likes and dislikes (L2-161)", () => {
     expect(api.family.preferences.map((p) => `${p.kind}:${p.value}`)).toEqual(["Like:Parks", "Like:Zoo", "Dislike:Camping"]);
   });
 
-  // Traces to: L2-161 AC3
+  // Traces to: L2-169 AC3
   test("a like cannot also be a dislike", async ({ page, pages }) => {
     const w = pages.welcome;
     await w.addChip("Likes", "Parks");
@@ -278,7 +278,7 @@ test.describe("Welcome — likes and dislikes (L2-161)", () => {
     expect(api.family.preferences).toEqual([]);
   });
 
-  // Traces to: L2-161 AC4
+  // Traces to: L2-169 AC4
   test("Continue with nothing added still saves and moves on", async ({ page, pages }) => {
     const w = pages.welcome;
     const saved = w.nextProfileSave();
@@ -305,7 +305,7 @@ test.describe("Welcome — likes and dislikes (L2-161)", () => {
   });
 });
 
-test.describe("Welcome — preferences (L2-162)", () => {
+test.describe("Welcome — preferences (L2-170)", () => {
   let api: FakeApi;
 
   test.beforeEach(async ({ page, pages }) => {
@@ -313,7 +313,7 @@ test.describe("Welcome — preferences (L2-162)", () => {
     await pages.welcome.open("preferences");
   });
 
-  // Traces to: L2-162 AC1
+  // Traces to: L2-170 AC1
   test("shows the three switches at the family's current values", async ({ pages }) => {
     const w = pages.welcome;
     await expect(w.stepperLabel()).toHaveText("Step 4 of 4");
@@ -324,7 +324,7 @@ test.describe("Welcome — preferences (L2-162)", () => {
     await expect(w.toggle("Friday preview email")).toBeChecked();
   });
 
-  // Traces to: L2-162 AC2
+  // Traces to: L2-170 AC2
   test("Continue saves the switches and opens the done step", async ({ page, pages }) => {
     const w = pages.welcome;
     await w.toggle("Budget matters").check();
@@ -340,7 +340,7 @@ test.describe("Welcome — preferences (L2-162)", () => {
     expect(api.family.tryNewEnabled).toBe(true);
   });
 
-  // Traces to: L2-162 AC3
+  // Traces to: L2-170 AC3
   test("Skip for now opens the done step without a request", async ({ page, pages }) => {
     const w = pages.welcome;
     const requests: string[] = [];
@@ -355,8 +355,8 @@ test.describe("Welcome — preferences (L2-162)", () => {
   });
 });
 
-test.describe("Welcome — you're set (L2-163)", () => {
-  // Traces to: L2-163 AC1, AC2
+test.describe("Welcome — you're set (L2-171)", () => {
+  // Traces to: L2-171 AC1, AC2
   test("names the masked email, offers the weekend and the family", async ({ page, pages }) => {
     await installFakeApi(page);
     const w = pages.welcome;
@@ -376,7 +376,7 @@ test.describe("Welcome — you're set (L2-163)", () => {
     await page.waitForURL("**/weekend");
   });
 
-  // Traces to: L2-163 AC3
+  // Traces to: L2-171 AC3
   test("a verified account is not asked to verify", async ({ page, pages }) => {
     await installFakeApi(page, {
       user: { id: "u-new", email: "quinntynebrown@gmail.com", role: "User", emailVerifiedUtc: "2026-10-20T12:00:00Z", avatarUrl: null },

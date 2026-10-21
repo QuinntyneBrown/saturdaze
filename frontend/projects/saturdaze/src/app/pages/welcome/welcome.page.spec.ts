@@ -212,7 +212,7 @@ describe('WelcomePage', () => {
     expect(title()).toBe("You're set");
   });
 
-  describe("who's in (L2-160)", () => {
+  describe("who's in (L2-168)", () => {
     const rows = (): HTMLElement[] => Array.from(host.querySelectorAll('sd-list-item'));
     const dialogData = (type: unknown): any =>
       dialog.open.mock.calls.find((c) => c[0] === type)?.[1].data;
@@ -314,7 +314,7 @@ describe('WelcomePage', () => {
     });
   });
 
-  describe('likes and dislikes (L2-161)', () => {
+  describe('likes and dislikes (L2-169)', () => {
     it('seeds the two editors from the stored preferences', async () => {
       editable.set({
         ...PROFILE,
@@ -353,7 +353,7 @@ describe('WelcomePage', () => {
     });
   });
 
-  describe('preferences (L2-162)', () => {
+  describe('preferences (L2-170)', () => {
     it('seeds the three switches from the stored flags', async () => {
       editable.set({ ...PROFILE, budgetEnabled: true, fridayPreviewEnabled: false });
       await mount('preferences');
@@ -378,7 +378,7 @@ describe('WelcomePage', () => {
     });
   });
 
-  describe("you're set (L2-163)", () => {
+  describe("you're set (L2-171)", () => {
     const subtitle = (): string | undefined =>
       host.querySelector('.auth-card__sub')?.textContent?.trim();
     const hrefs = (): string[] =>

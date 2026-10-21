@@ -6,7 +6,7 @@ import { PageSlug } from "../fixtures/routes.js";
 export type WelcomeStep = "home" | "family" | "likes" | "preferences" | "done";
 
 /**
- * Welcome — pages/welcome.html, the onboarding wizard (L2-158 to L2-163),
+ * Welcome — pages/welcome.html, the onboarding wizard (L2-166 to L2-171),
  * five stacked states in the mock and one route per step in the app:
  *   home         .stepper "Step 1 of 4" · "Where's home?" · Neighbourhood or address · [Continue] · Skip for now
  *   family       "Step 2 of 4" · "Who's in?" · ul.list--card member rows · .ghost-row "Add a family member" · [Continue] · Back · Skip for now
@@ -29,7 +29,7 @@ export class WelcomePage extends AuthCardPage {
     await this.waitForReady();
   }
 
-  /* ---------- Stepper (L2-158) ---------- */
+  /* ---------- Stepper (L2-166) ---------- */
 
   stepper(state?: WelcomeStep): Locator {
     return this.scope(state).locator(".stepper");
@@ -61,14 +61,14 @@ export class WelcomePage extends AuthCardPage {
     return control(this.card(state), "Skip for now");
   }
 
-  /* ---------- Home step (L2-159) ---------- */
+  /* ---------- Home step (L2-167) ---------- */
 
   /** The address field; its label also reads "Required". */
   homeInput(state?: WelcomeStep): Locator {
     return this.card(state).getByLabel(/^\s*Neighbourhood or address(\s+Required)?\s*$/);
   }
 
-  /* ---------- Who's in (L2-160) ---------- */
+  /* ---------- Who's in (L2-168) ---------- */
 
   memberRows(state?: WelcomeStep): Locator {
     return this.card(state).locator(".list__item");
@@ -111,7 +111,7 @@ export class WelcomePage extends AuthCardPage {
     return this.dialog().locator(".copy-field__value");
   }
 
-  /* ---------- Likes (L2-161) ---------- */
+  /* ---------- Likes (L2-169) ---------- */
 
   /** A dialog-free chip input on the likes step, by its label. */
   chipInput(label: "Likes" | "Dislikes", state?: WelcomeStep): Locator {
@@ -132,13 +132,13 @@ export class WelcomePage extends AuthCardPage {
     await input.press("Enter");
   }
 
-  /* ---------- Preferences (L2-162) ---------- */
+  /* ---------- Preferences (L2-170) ---------- */
 
   toggle(name: "Budget matters" | "Try something new each weekend" | "Friday preview email", state?: WelcomeStep): Locator {
     return this.card(state).getByRole("switch", { name, exact: true });
   }
 
-  /* ---------- Done (L2-163) ---------- */
+  /* ---------- Done (L2-171) ---------- */
 
   planWeekendLink(state?: WelcomeStep): Locator {
     return this.action("Plan this weekend", state);

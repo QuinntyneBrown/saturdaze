@@ -26,13 +26,13 @@ alt Continue
  page -> client : saveProfile(profile)
  client -> controller : PUT /api/family
  controller -> handler : SaveFamilyProfileCommand
- handler -> db : L2-159, L2-161, L2-162 replace home, preferences or switches
+ handler -> db : L2-167, L2-169, L2-170 replace home, preferences or switches
  db --> handler : Saved and reread
  handler --> controller : FamilyProfileDto
  controller --> client : 200 profile
  client --> page : Updated signals
  page -> router : Navigate to the next step
- router --> actor : L2-158 next step, stepper advanced
+ router --> actor : L2-166 next step, stepper advanced
 else Save fails
  controller --> client : 4xx or 5xx
  client --> page : Rejected promise

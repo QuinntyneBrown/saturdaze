@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 
 /**
- * Onboarding progress (L2-158). Mirrors `.stepper` in
+ * Onboarding progress (L2-166). Mirrors `.stepper` in
  * `docs/mocks/styles/app.css`: a "Step n of N" label and an `aria-hidden`
  * track of `count` segments, the ones before the current step `--done`
  * and the current one `--current`. The label is the accessible progress;

@@ -38,7 +38,7 @@ describe('app.routes', () => {
     }
   });
 
-  it('serves the onboarding wizard one step per route in the bare shell (L2-158)', () => {
+  it('serves the onboarding wizard one step per route in the bare shell (L2-166)', () => {
     const welcome = find('welcome')!;
     expect(welcome.data).toEqual({ shell: 'bare', page: 'welcome' });
     expect(welcome.children?.map((c) => c.path)).toEqual(['', ':step']);

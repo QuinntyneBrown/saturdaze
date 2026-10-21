@@ -39,7 +39,7 @@ handler --> controller : AuthSuccessDto
 controller --> client : 201 Created
 client -> client : Persist pair in localStorage
 client --> page : Current user
-page --> actor : /welcome/home (L2-157)
+page --> actor : /welcome/home (L2-165)
 mail ->> mail : After the response, send via SMTP or pickup directory
 end
 @enduml
