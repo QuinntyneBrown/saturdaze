@@ -304,6 +304,9 @@ resource apiSettings 'Microsoft.Web/sites/config@2024-04-01' = {
       // A triggered WebJob that prints nothing for two minutes is killed by
       // default. One ingestion pass waits minutes on Claude's web searches.
       WEBJOBS_IDLE_TIMEOUT: '3600'
+      // On Linux the Kudu agent that runs WebJobs is off unless asked for;
+      // without this the job is shipped but never listed, scheduled or run.
+      WEBSITE_SKIP_RUNNING_KUDUAGENT: 'false'
 
       // Codeless Application Insights for .NET on Linux.
       APPLICATIONINSIGHTS_CONNECTION_STRING: appInsights.properties.ConnectionString
