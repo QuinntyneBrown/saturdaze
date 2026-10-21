@@ -1,0 +1,53 @@
+@startuml
+title Behaviour - Weekend events become commitments (L2-169, L2-170)
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+actor "Family member" as actor
+participant "Google Calendar API" as google
+box "Frontend - Saturdaze Angular application" #E0F2FE
+ participant "WeekendPage" as page
+end box
+box "Backend - Saturdaze API" #D1FADF
+ participant "WeekendsController" as controller
+end box
+box "Backend - Saturdaze Application and Domain" #ECFDF3
+ participant "GenerateWeekendCommandHandler\nWeekendReplanner" as handler
+ participant "PlannerInputLoader" as loader
+ participant "GoogleCalendarCommitmentSource" as source
+ participant "WeekendPlanner" as planner
+end box
+box "Backend - Saturdaze Infrastructure" #FFF4E5
+ participant "GoogleCalendarClient" as client
+ database "AppDbContext\nSQL Server" as db
+end box
+actor -> page : Plan or regenerate the weekend
+page -> controller : POST /api/weekends/plan
+controller -> handler : GenerateWeekendCommand
+handler -> loader : LoadAsync(familyId, weekendOf)
+loader -> source : GetAsync(familyId, weekendOf)
+source -> db : Family's connections: connected and ReadCommitments
+loop each connection (5 s budget in total)
+source -> client : ListEventsAsync(Saturday 00:00, Monday 00:00 local)
+client -> google : events.list(primary, singleEvents=true)
+alt events
+source -> source : L2-169 drop all-day, cancelled, declined, free and Saturdaze events
+source -> source : Split by day; clip to 9:00-21:00; title or "Busy"
+else invalid_grant
+source -> db : L2-170 Status = NeedsReconnect
+else outage or timeout
+source -> source : L2-170 contribute nothing
+end
+end
+source --> loader : CalendarCommitment list
+loader --> handler : PlannerContext
+handler -> planner : Plan(inputs with CalendarCommitments)
+planner -> planner : BuildFixedBlocks(): profile commitments, locked blocks
+planner -> planner : Calendar commitments not overlapping a placed block; locked, FromCalendar
+planner --> handler : Blocks
+handler -> db : Save weekend (FromCalendar persisted)
+handler --> page : WeekendDto (block.fromCalendar)
+page -> page : Commitment and Calendar chips; "From your calendar · planned around"
+@enduml

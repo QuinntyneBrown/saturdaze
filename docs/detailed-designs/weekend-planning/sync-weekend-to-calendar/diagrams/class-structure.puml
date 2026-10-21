@@ -1,0 +1,110 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure - Sync the weekend with a calendar
+
+interface IChangesItinerary <<marker>>
+class GenerateWeekendCommand
+class RegenerateWeekendCommand
+class SwapBlockCommand
+class AddShoppingErrandCommand
+class CalendarSyncBehavior<TRequest, TResponse> {
+  +Handle(request, next): Task<TResponse>
+}
+class CalendarSyncScheduler {
+  +RequestAsync(familyId: Guid): Task
+}
+interface ICalendarSyncSignal {
+  +Notify(): void
+  +WaitAsync(timeout: TimeSpan): Task
+}
+class CalendarSyncRunner {
+  +RunDueAsync(): Task
+}
+class SyncCalendarConnectionCommandHandler {
+  +Handle(SyncCalendarConnectionCommand): Task
+  -Fingerprint(write: GoogleCalendarEventWrite): string
+}
+class CalendarEventSelection <<static>> {
+  +Includes(block: ItineraryBlock): bool
+}
+class CalendarEventLink {
+  +Guid ConnectionId
+  +Guid WeekendId
+  +Guid BlockId
+  +string EventId
+  +string Fingerprint
+}
+class GoogleCalendarEventWrite <<record>> {
+  +Guid BlockId
+  +string Summary
+  +string Description
+  +string? Location
+  +DateTime Start
+  +DateTime End
+  +string TimeZone
+}
+interface ICalendarCommitmentSource {
+  +GetAsync(familyId: Guid, weekendOf: DateOnly): Task<IReadOnlyList<CalendarCommitment>>
+}
+class GoogleCalendarCommitmentSource
+class GoogleCalendarEvent <<record>> {
+  +string Id
+  +string? Summary
+  +DateTimeOffset? Start
+  +DateTimeOffset? End
+  +bool AllDay
+  +bool Cancelled
+  +bool Declined
+  +bool Free
+  +bool WrittenBySaturdaze
+}
+class CalendarCommitment <<record>> {
+  +DayOfWeekend Day
+  +TimeOnly Start
+  +TimeOnly End
+  +string Title
+}
+class PlannerInputs {
+  +IReadOnlyList<CalendarCommitment> CalendarCommitments
+}
+class WeekendPlanner {
+  -BuildFixedBlocks(inputs, day): List<ItineraryBlock>
+}
+class ItineraryBlock {
+  +BlockKind Kind
+  +bool IsLocked
+  +bool FromCalendar
+}
+class CalendarOptions {
+  +string TimeZone
+  +int PollSeconds
+  +string? KeyDirectory
+}
+GenerateWeekendCommand ..|> IChangesItinerary
+RegenerateWeekendCommand ..|> IChangesItinerary
+SwapBlockCommand ..|> IChangesItinerary
+AddShoppingErrandCommand ..|> IChangesItinerary
+CalendarSyncBehavior ..> IChangesItinerary : acts on
+CalendarSyncBehavior --> CalendarSyncScheduler
+CalendarSyncScheduler --> ICalendarSyncSignal
+CalendarSyncRunner --> SyncCalendarConnectionCommandHandler : sends command to
+SyncCalendarConnectionCommandHandler --> CalendarEventSelection
+SyncCalendarConnectionCommandHandler --> CalendarEventLink : reconciles
+SyncCalendarConnectionCommandHandler ..> GoogleCalendarEventWrite : builds
+SyncCalendarConnectionCommandHandler --> CalendarOptions : time zone
+GoogleCalendarCommitmentSource ..|> ICalendarCommitmentSource
+GoogleCalendarCommitmentSource ..> GoogleCalendarEvent : filters
+GoogleCalendarCommitmentSource ..> CalendarCommitment : returns
+PlannerInputs o-- CalendarCommitment
+WeekendPlanner ..> PlannerInputs : reads
+WeekendPlanner ..> ItineraryBlock : FromCalendar commitment blocks
+@enduml

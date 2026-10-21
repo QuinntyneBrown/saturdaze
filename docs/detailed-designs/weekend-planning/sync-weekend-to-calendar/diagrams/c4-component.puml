@@ -1,0 +1,32 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components - Sync the weekend with a calendar
+
+Container_Boundary(api, "Saturdaze API") {
+  Component(controllers, "WeekendsController, BlocksController, ErrandsController", "ASP.NET Core", "Endpoints that change the current weekend")
+  Component(behavior, "CalendarSyncBehavior", "MediatR pipeline behavior", "After an IChangesItinerary command succeeds, schedules a sync")
+  Component(scheduler, "CalendarSyncScheduler", "Application service", "Marks the family's connected connections pending; signals")
+  Component(service, "CalendarSyncService", "Infrastructure hosted service", "Wakes on the signal or the poll; runs due syncs")
+  Component(runner, "CalendarSyncRunner", "Application service", "Finds due connections; sends SyncCalendarConnectionCommand")
+  Component(sync, "SyncCalendarConnectionCommandHandler", "Application handler", "Reconciles CalendarEventLinks with the current weekend; back-off; needs_reconnect")
+  Component(loader, "PlannerInputLoader", "Application service", "Loads planner inputs, including calendar commitments")
+  Component(source, "GoogleCalendarCommitmentSource", "Application service", "ICalendarCommitmentSource: reads, filters, splits and clips events; 5 s budget")
+  Component(planner, "WeekendPlanner.BuildFixedBlocks()", "Application planner", "Profile commitments, locked blocks, then calendar commitments")
+  Component(client, "GoogleCalendarClient", "Infrastructure service", "IGoogleCalendarClient")
+  ComponentDb(db, "AppDbContext", "EF Core", "CalendarConnections, CalendarEventLinks, ItineraryBlocks.FromCalendar")
+}
+System_Ext(google, "Google", "OAuth 2.0 and Calendar API")
+Rel(controllers, behavior, "Send(IChangesItinerary command)")
+Rel(behavior, scheduler, "RequestAsync()")
+Rel(scheduler, db, "Sets SyncRequestedUtc")
+Rel(scheduler, service, "ICalendarSyncSignal.Notify()")
+Rel(service, runner, "RunDueAsync()")
+Rel(runner, sync, "Send(SyncCalendarConnectionCommand)")
+Rel(sync, client, "Insert, update, delete events")
+Rel(sync, db, "Reads the weekend; writes links and status")
+Rel(loader, source, "GetAsync(familyId, weekendOf)")
+Rel(source, client, "ListEventsAsync()")
+Rel(loader, planner, "PlannerInputs.CalendarCommitments")
+Rel(client, google, "HTTPS")
+@enduml

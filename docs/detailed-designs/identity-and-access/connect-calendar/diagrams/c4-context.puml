@@ -1,0 +1,15 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context - Connect a calendar
+
+Person(actor, "Family member", "Connects a calendar, or subscribes another calendar app to the family's link")
+System(saturdaze, "Saturdaze", "Family weekend planning platform")
+System_Ext(google, "Google OAuth 2.0", "Consent screen, token and revocation endpoints")
+System_Ext(calapp, "Calendar application", "Apple Calendar, Outlook or Google Calendar subscribed to a URL")
+
+Rel(actor, saturdaze, "Connects, disconnects and creates the subscription link in", "HTTPS")
+Rel(actor, google, "Grants calendar access in", "HTTPS")
+Rel(saturdaze, google, "Exchanges the code for a refresh token; revokes it", "HTTPS")
+Rel(calapp, saturdaze, "Fetches the family's weekend", "HTTPS, text/calendar")
+@enduml

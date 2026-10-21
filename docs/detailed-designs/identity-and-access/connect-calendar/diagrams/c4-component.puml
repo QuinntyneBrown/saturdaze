@@ -1,0 +1,31 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components - Connect a calendar
+
+Container_Boundary(web, "Saturdaze web application") {
+  Component(page, "FamilyPage", "Angular component", "Calendar section in every state of family.calendar.html")
+  Component(callback, "GoogleCalendarCallbackPage", "Angular component", "/family/calendar/google: posts code and state, or reports a denial")
+  Component(dialogs, "ConnectCalendarDialog, CalendarFeedDialog, ConfirmDialog", "CDK dialogs", "D31, D33, D32 and D34")
+  Component(svc, "CalendarService", "Angular service (api library)", "CALENDAR_SERVICE contract over /api/calendar")
+}
+Container_Boundary(api, "Saturdaze API") {
+  Component(controller, "CalendarController", "ASP.NET Core", "/api/calendar endpoints; the feed is anonymous")
+  Component(handlers, "Calendar handlers", "Application handlers", "Get settings, authorize, connect, update, disconnect, create and stop the feed, read the feed")
+  Component(client, "GoogleCalendarClient", "Infrastructure service", "IGoogleCalendarClient over Google's OAuth and Calendar APIs")
+  Component(protector, "DataProtectionCalendarTokenProtector", "Infrastructure service", "ICalendarTokenProtector: refresh tokens and state")
+  Component(entities, "CalendarConnection, CalendarFeed", "Domain state", "Per-account grant; per-family feed hash")
+  ComponentDb(db, "AppDbContext", "EF Core", "CalendarConnections, CalendarEventLinks, CalendarFeeds")
+}
+System_Ext(google, "Google", "OAuth 2.0")
+Rel(page, dialogs, "Opens")
+Rel(page, svc, "settings(), authorize(), updateGoogle(), disconnectGoogle(), createFeed(), stopFeed()")
+Rel(callback, svc, "connectGoogle(code, state)")
+Rel(svc, controller, "/api/calendar", "JSON/HTTPS")
+Rel(controller, handlers, "Dispatches commands and queries")
+Rel(handlers, client, "Authorization URL, exchange, revoke")
+Rel(client, google, "OAuth endpoints", "HTTPS")
+Rel(handlers, protector, "Protect, unprotect, create and read state")
+Rel(handlers, entities, "Creates, replaces, deletes")
+Rel(handlers, db, "Reads and writes", "EF Core")
+@enduml
