@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Data.SqlClient;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,14 +17,22 @@ namespace Saturdaze.Api.Tests.Support;
 /// Boots the API in-process against a per-fixture LocalDB database.
 /// Applies migrations on first construction and drops the database on disposal.
 /// </summary>
-public sealed class SaturdazeApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
+public class SaturdazeApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
 {
     public string DatabaseName { get; } = $"Saturdaze_Api_{Guid.NewGuid():N}";
     public string ConnectionString { get; }
 
-    public SaturdazeApiFactory()
+    private readonly bool _sqlite;
+    private SqliteConnection? _keepAlive;
+
+    public SaturdazeApiFactory() : this(sqlite: false) { }
+
+    protected SaturdazeApiFactory(bool sqlite)
     {
-        ConnectionString = LocalDbConnection.For(DatabaseName);
+        _sqlite = sqlite;
+        ConnectionString = sqlite
+            ? $"Data Source={DatabaseName};Mode=Memory;Cache=Shared"
+            : LocalDbConnection.For(DatabaseName);
     }
 
     public FakeWeatherClient Weather { get; } = new();
@@ -50,6 +59,7 @@ public sealed class SaturdazeApiFactory : WebApplicationFactory<Program>, IAsync
             cfg.AddInMemoryCollection(new Dictionary<string, string?>
             {
                 ["ConnectionStrings:Saturdaze"] = ConnectionString,
+                [Saturdaze.Infrastructure.DependencyInjection.DatabaseProviderKey] = _sqlite ? "Sqlite" : "SqlServer",
                 ["Saturdaze:HomeLocation:Name"] = "Port Credit",
                 ["Saturdaze:HomeLocation:Latitude"] = "43.5547",
                 ["Saturdaze:HomeLocation:Longitude"] = "-79.5816",
@@ -83,6 +93,16 @@ public sealed class SaturdazeApiFactory : WebApplicationFactory<Program>, IAsync
 
     public async Task InitializeAsync()
     {
+        if (_sqlite)
+        {
+            // The in-memory database lives as long as one connection to it is open (ADR-020);
+            // the API creates the schema on startup.
+            _keepAlive = new SqliteConnection(ConnectionString);
+            await _keepAlive.OpenAsync();
+            await using var scope = Services.CreateAsyncScope();
+            await TestSeed.SeedAsync(scope.ServiceProvider.GetRequiredService<AppDbContext>());
+            return;
+        }
         var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>()
             .UseSqlServer(ConnectionString,
                 sql => sql.MigrationsAssembly(typeof(AppDbContext).Assembly.GetName().Name));
@@ -97,6 +117,12 @@ public sealed class SaturdazeApiFactory : WebApplicationFactory<Program>, IAsync
     async Task IAsyncLifetime.DisposeAsync()
     {
         if (Directory.Exists(PhotoDirectory)) Directory.Delete(PhotoDirectory, recursive: true);
+        if (_keepAlive is not null)
+        {
+            await base.DisposeAsync();
+            await _keepAlive.DisposeAsync();
+            return;
+        }
         try
         {
             await using var conn = new SqlConnection(LocalDbConnection.For("master"));
@@ -118,3 +144,6 @@ public sealed class SaturdazeApiFactory : WebApplicationFactory<Program>, IAsync
         await base.DisposeAsync();
     }
 }
+
+/// <summary>Slice 1 of ADR-020: the factory on SQLite, for the classes moved so far.</summary>
+public sealed class SqliteSaturdazeApiFactory() : SaturdazeApiFactory(sqlite: true);

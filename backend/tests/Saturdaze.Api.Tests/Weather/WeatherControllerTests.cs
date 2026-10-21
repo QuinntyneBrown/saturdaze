@@ -7,12 +7,12 @@ using Xunit;
 
 namespace Saturdaze.Api.Tests.Weather;
 
-public class WeatherControllerTests : IClassFixture<SaturdazeApiFactory>
+public class WeatherControllerTests : IClassFixture<SqliteSaturdazeApiFactory>
 {
     private readonly SaturdazeApiFactory _factory;
     private readonly HttpClient _client;
 
-    public WeatherControllerTests(SaturdazeApiFactory factory)
+    public WeatherControllerTests(SqliteSaturdazeApiFactory factory)
     {
         _factory = factory;
         _client = factory.CreateClient();

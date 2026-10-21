@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Saturdaze.Application.Abstractions;
 using Saturdaze.Domain.Entities;
 
@@ -64,8 +65,21 @@ public class AppDbContext : DbContext, IAppDbContext
         public ValueTask DisposeAsync() => ValueTask.CompletedTask;
     }
 
+    protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
+    {
+        // SQLite runs the tests and the e2e API (ADR-020). It cannot compare or sort
+        // DateTimeOffset text, so store the UTC instant as a sortable integer, and it
+        // compares text case-sensitively, so match SQL Server's case-insensitive collation.
+        if (!Database.IsSqlite()) return;
+        configurationBuilder.Properties<DateTimeOffset>().HaveConversion<DateTimeOffsetToBinaryConverter>();
+        configurationBuilder.Properties<string>().UseCollation("NOCASE");
+    }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
+        // SQLite has no identity column outside the key; an insert trigger fills it (EnsureSqliteSchemaAsync, ADR-020).
+        if (Database.IsSqlite())
+            modelBuilder.Entity<PhotoAuditEntry>().Property(x => x.Sequence).HasDefaultValue(0L);
     }
 }
