@@ -75,6 +75,49 @@ namespace Saturdaze.Infrastructure.Migrations
                     b.ToTable("Activities", (string)null);
                 });
 
+            modelBuilder.Entity("Saturdaze.Domain.Entities.CalendarConnection", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset>("CreatedUtc")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(320)
+                        .HasColumnType("nvarchar(320)");
+
+                    b.Property<string>("GoogleSubject")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
+
+                    b.Property<DateTimeOffset?>("LastSyncedUtc")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("ProtectedRefreshToken")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("ReadCommitments")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("CalendarConnections", (string)null);
+                });
+
             modelBuilder.Entity("Saturdaze.Domain.Entities.CalendarFeed", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1203,6 +1246,15 @@ namespace Saturdaze.Infrastructure.Migrations
                         });
 
                     b.Navigation("Geo");
+                });
+
+            modelBuilder.Entity("Saturdaze.Domain.Entities.CalendarConnection", b =>
+                {
+                    b.HasOne("Saturdaze.Domain.Entities.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Saturdaze.Domain.Entities.CalendarFeed", b =>

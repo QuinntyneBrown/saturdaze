@@ -165,6 +165,19 @@ public class CalendarFeedTests : IClassFixture<SaturdazeApiFactory>
     }
 
     [Fact]
+    public async Task Fetching_the_link_never_writes_its_token_to_the_logs()
+    {
+        // Traces to: L2-170 AC5, L2-173
+        var session = await SignedInClient.CreateAsync(_factory, FamilyMode.Own);
+        var feed = await CreateFeedAsync(session.Client);
+
+        (await _factory.CreateClient().GetAsync(PathOf(feed))).StatusCode.Should().Be(HttpStatusCode.OK);
+
+        _factory.Logs.Messages.Should().Contain(m => m.Contains("/api/calendar/feed/"));
+        _factory.Logs.Messages.Should().NotContain(m => m.Contains(TokenOf(feed)));
+    }
+
+    [Fact]
     public async Task An_unknown_token_is_not_found()
     {
         // Traces to: L2-171 AC7

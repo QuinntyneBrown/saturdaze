@@ -34,6 +34,7 @@ public class AppDbContext : DbContext, IAppDbContext
     public DbSet<EmailVerificationToken> EmailVerificationTokens => Set<EmailVerificationToken>();
     public DbSet<WeekendShare> WeekendShares => Set<WeekendShare>();
     public DbSet<CalendarFeed> CalendarFeeds => Set<CalendarFeed>();
+    public DbSet<CalendarConnection> CalendarConnections => Set<CalendarConnection>();
     public DbSet<PlatformInvitation> PlatformInvitations => Set<PlatformInvitation>();
     public DbSet<Prospect> Prospects => Set<Prospect>();
 

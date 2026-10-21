@@ -32,6 +32,7 @@ try
         .ReadFrom.Configuration(ctx.Configuration)
         .ReadFrom.Services(services)
         .Enrich.FromLogContext()
+        .Enrich.With<Saturdaze.Api.Logging.CalendarFeedTokenRedactor>()
         .WriteTo.Console()
         .WriteTo.File("logs/saturdaze-.log", rollingInterval: RollingInterval.Day),
         preserveStaticLogger: true);

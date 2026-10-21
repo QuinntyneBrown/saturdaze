@@ -30,6 +30,7 @@ public interface IAppDbContext
     DbSet<EmailVerificationToken> EmailVerificationTokens { get; }
     DbSet<WeekendShare> WeekendShares { get; }
     DbSet<CalendarFeed> CalendarFeeds { get; }
+    DbSet<CalendarConnection> CalendarConnections { get; }
     DbSet<PlatformInvitation> PlatformInvitations { get; }
     DbSet<Prospect> Prospects { get; }
 

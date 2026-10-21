@@ -1,12 +1,15 @@
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Http.Resilience;
 using Saturdaze.Application.Abstractions;
 using Saturdaze.Application.Authentication;
+using Saturdaze.Application.Calendar;
 using Saturdaze.Application.Email;
 using Saturdaze.Application.Weather;
 using Saturdaze.Infrastructure.Authentication;
+using Saturdaze.Infrastructure.Calendar;
 using Saturdaze.Infrastructure.Email;
 using Saturdaze.Infrastructure.Persistence;
 using Saturdaze.Infrastructure.Weather;
@@ -79,6 +82,24 @@ public static class DependencyInjection
             http.Timeout = TimeSpan.FromSeconds(10);
         });
         services.AddSingleton<IGoogleIdTokenVerifier, GoogleIdTokenVerifier>();
+
+        // Calendar sync (ADR-020): the authorization code grant, refresh tokens
+        // encrypted with Data Protection, and the Calendar API.
+        services.Configure<CalendarOptions>(o =>
+        {
+            configuration.GetSection(CalendarOptions.SectionName).Bind(o);
+            if (string.IsNullOrWhiteSpace(o.AppOrigin)) o.AppOrigin = configuration["Saturdaze:Share:AppOrigin"];
+        });
+        var dataProtection = services.AddDataProtection().SetApplicationName("Saturdaze");
+        var keyDirectory = configuration[$"{CalendarOptions.SectionName}:KeyDirectory"];
+        if (!string.IsNullOrWhiteSpace(keyDirectory))
+            dataProtection.PersistKeysToFileSystem(new DirectoryInfo(keyDirectory));
+        services.AddSingleton<ICalendarTokenProtector, DataProtectionCalendarTokenProtector>();
+        services.AddHttpClient(GoogleCalendarClient.HttpClientName, http =>
+        {
+            http.Timeout = TimeSpan.FromSeconds(10);
+        });
+        services.AddSingleton<IGoogleCalendarClient, GoogleCalendarClient>();
 
         // Account mail (L2-142): handlers enqueue, a hosted dispatcher sends after the
         // response. SMTP when a host is configured, otherwise .eml files on disk.
