@@ -1,0 +1,16 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context - Deliver account email
+
+Person(operator, "Operator", "Runs eng/Setup-Email.ps1 and edits DNS")
+Person(family, "Account holder or invitee", "Reads the message in their mail client")
+System(saturdaze, "Saturdaze", "API and the Azure resources its template declares")
+System_Ext(registrar, "Namecheap", "Holds the saturdaze.ca zone")
+System_Ext(inbox, "Receiving mail server", "Checks SPF and DKIM, delivers to the inbox")
+Rel(operator, saturdaze, "Provisions the email domain and relay identity", "Azure CLI, Bicep")
+Rel(operator, registrar, "Adds the ownership TXT, SPF and DKIM records", "Advanced DNS")
+Rel(saturdaze, inbox, "Sends from no-reply@saturdaze.ca", "SMTP")
+Rel(inbox, registrar, "Looks up SPF and DKIM", "DNS")
+Rel(inbox, family, "Delivers")
+@enduml

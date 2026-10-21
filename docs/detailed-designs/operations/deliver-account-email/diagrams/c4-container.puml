@@ -1,0 +1,24 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers - Deliver account email
+
+Person(family, "Account holder or invitee", "Mail client")
+System_Boundary(saturdaze, "Saturdaze (saturdaze-rg)") {
+  Container(api, "Saturdaze API", "ASP.NET Core on App Service", "SmtpEmailSender with the settings main.bicep writes")
+  Container(comms, "Communication Services", "sd-comms-<suffix>", "Owns the SMTP relay credential; the domain links here")
+  Container(email, "Email Communication Service", "sd-email-<suffix>", "Customer-managed domain saturdaze.ca, sender no-reply")
+  Container(template, "Delivery pipeline", "deploy.yml, main.bicep, email.bicep", "Declares the resources and the API's SMTP settings")
+}
+System_Ext(relay, "SMTP relay", "smtp.azurecomm.net:587")
+System_Ext(zone, "saturdaze.ca zone", "Namecheap: ownership TXT, SPF, DKIM CNAMEs")
+System_Ext(inbox, "Receiving mail server", "SPF and DKIM checks")
+Rel(template, email, "Creates the domain, reads its DNS records", "ARM")
+Rel(template, comms, "Creates; links the verified domain", "ARM")
+Rel(template, api, "Writes SmtpHost, username, secret", "app settings")
+Rel(api, relay, "AUTH LOGIN, STARTTLS", "SMTP")
+Rel(relay, comms, "Authenticates the identity", "Entra")
+Rel(relay, inbox, "Delivers from no-reply@saturdaze.ca", "SMTP")
+Rel(inbox, zone, "Verifies SPF and DKIM", "DNS")
+Rel(inbox, family, "Delivers")
+@enduml

@@ -316,3 +316,4 @@ if (-not $MarketingDomain) {
 if (-not $AdminDomain) {
     Write-Host "  6. When admin.saturdaze.ca's DNS points at the admin Static Web App, re-run with -AdminDomain admin.saturdaze.ca (ADR-014)."
 }
+Write-Host "  7. Outbound email: pwsh ./eng/Setup-Email.ps1 -Domain saturdaze.ca, add its DNS records, then re-run with -Verify (ADR-020)."

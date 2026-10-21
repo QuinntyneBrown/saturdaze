@@ -36,7 +36,15 @@ param marketingApexDomain = readEnvironmentVariable('MARKETING_APEX_DOMAIN', '')
 // Google Cloud with app.saturdaze.ca as an authorised origin.
 param googleClientId = readEnvironmentVariable('GOOGLE_CLIENT_ID', '')
 
+// Outbound email (ADR-020): the sending domain, and 'true' once Azure shows it
+// verified. eng/Setup-Email.ps1 creates the SMTP identity and sets all four.
+param emailDomain = readEnvironmentVariable('EMAIL_DOMAIN', '')
+param emailDomainVerified = bool(readEnvironmentVariable('EMAIL_DOMAIN_VERIFIED', 'false'))
+param smtpClientId = readEnvironmentVariable('EMAIL_SMTP_CLIENT_ID', '')
+param smtpPrincipalId = readEnvironmentVariable('EMAIL_SMTP_PRINCIPAL_ID', '')
+
 // Secrets — never committed.
+param smtpClientSecret = readEnvironmentVariable('EMAIL_SMTP_CLIENT_SECRET', '')
 param sqlAdminLogin = readEnvironmentVariable('SQL_ADMIN_LOGIN')
 param sqlAdminPassword = readEnvironmentVariable('SQL_ADMIN_PASSWORD')
 param jwtSigningKey = readEnvironmentVariable('SATURDAZE_JWT_SIGNING_KEY')

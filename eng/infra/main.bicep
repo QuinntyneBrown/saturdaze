@@ -42,6 +42,8 @@ param marketingSwaName string = 'sd-www-${suffix}'
 param foundryAccountName string = 'sd-ai-${suffix}'
 param logAnalyticsName string = 'sd-logs-${suffix}'
 param appInsightsName string = 'sd-insights-${suffix}'
+param emailServiceName string = 'sd-email-${suffix}'
+param communicationServiceName string = 'sd-comms-${suffix}'
 
 // ───────────────────────────── sizing ─────────────────────────────
 
@@ -86,6 +88,24 @@ param googleClientId string = ''
 
 @description('Extra browser origins the API should accept, in addition to the three Static Web Apps and the custom domains.')
 param extraCorsOrigins array = []
+
+// ───────────────────────────── outbound email (ADR-020) ─────────────────────────────
+
+@description('Domain account mail is sent from, e.g. saturdaze.ca (no-reply@<domain>). Blank skips the email resources and leaves the API writing .eml files.')
+param emailDomain string = ''
+
+@description('True once Azure shows the domain verified. Links it to the Communication Services resource and points the API at the SMTP relay; the registrar must hold the four records first.')
+param emailDomainVerified bool = false
+
+@description('Application (client) id of the Entra app the API presents to the SMTP relay. Created by eng/Bootstrap-Azure.ps1; public, not a secret.')
+param smtpClientId string = ''
+
+@description('Object id of that app\'s service principal. It receives the Communication and Email Service Owner role on the Communication Services resource.')
+param smtpPrincipalId string = ''
+
+@secure()
+@description('Client secret of that app (Saturdaze:Email:SmtpPassword). Blank leaves the API on the pickup directory.')
+param smtpClientSecret string = ''
 
 @secure()
 @description('SQL administrator login. Immutable once the server exists — pass the current one when re-deploying over an existing server.')
@@ -160,6 +180,22 @@ var corsSettings = toObject(
 )
 
 var sqlConnectionString = 'Server=tcp:${sqlServer.properties.fullyQualifiedDomainName},1433;Initial Catalog=${sqlDatabaseName};User ID=${sqlAdminLogin};Password=${sqlAdminPassword};Encrypt=True;TrustServerCertificate=False;MultipleActiveResultSets=False;Connection Timeout=30;'
+
+// The API sends over SMTP only once the domain is verified and the relay
+// credentials exist; otherwise it keeps writing .eml files under /home/data/mail
+// and the switch is a re-deploy, not a code change (ADR-020).
+var smtpEnabled = !empty(emailDomain) && emailDomainVerified && !empty(smtpClientId) && !empty(smtpClientSecret)
+var smtpSettings = smtpEnabled
+  ? {
+      Saturdaze__Email__From: 'Saturdaze <no-reply@${emailDomain}>'
+      Saturdaze__Email__SmtpHost: 'smtp.azurecomm.net'
+      Saturdaze__Email__SmtpPort: '587'
+      Saturdaze__Email__SmtpStartTls: 'true'
+      // The relay's username form: <Communication Services resource>.<Entra app id>.<tenant id>.
+      Saturdaze__Email__SmtpUsername: '${communicationServiceName}.${smtpClientId}.${tenant().tenantId}'
+      Saturdaze__Email__SmtpPassword: smtpClientSecret
+    }
+  : {}
 
 // ───────────────────────────── monitoring ─────────────────────────────
 
@@ -248,6 +284,20 @@ module foundry '../foundry/claude.bicep' = {
     countryCode: countryCode
     industry: industry
     tags: union(tags, { purpose: 'catalog-ingestion' })
+  }
+}
+
+// ───────────────────────────── outbound email (ADR-020) ─────────────────────────────
+
+module email './email.bicep' = if (!empty(emailDomain)) {
+  name: 'email'
+  params: {
+    emailServiceName: emailServiceName
+    communicationServiceName: communicationServiceName
+    domainName: emailDomain
+    domainVerified: emailDomainVerified
+    smtpPrincipalId: smtpPrincipalId
+    tags: union(tags, { purpose: 'account-mail' })
   }
 }
 
@@ -341,7 +391,8 @@ resource apiSettings 'Microsoft.Web/sites/config@2024-04-01' = {
       Saturdaze__Ingestion__Claude__Model: foundry.outputs.deploymentName
       ANTHROPIC_FOUNDRY_API_KEY: foundryAccount.listKeys().key1
     },
-    corsSettings
+    corsSettings,
+    smtpSettings
   )
   // Ordering: `foundry.outputs.deploymentName` above makes this wait for the
   // module, so the account exists before its key is read.
@@ -498,3 +549,9 @@ output foundryBaseUrl string = foundry.outputs.baseUrl
 output claudeDeploymentName string = foundry.outputs.deploymentName
 output appInsightsName string = appInsights.name
 output corsOrigins array = corsOrigins
+output emailDomain string = emailDomain
+output emailSmtpEnabled bool = smtpEnabled
+#disable-next-line BCP318
+output emailVerificationStatus object = empty(emailDomain) ? {} : email.outputs.verificationStatus
+#disable-next-line BCP318
+output emailVerificationRecords object = empty(emailDomain) ? {} : email.outputs.verificationRecords
