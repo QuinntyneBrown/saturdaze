@@ -36,7 +36,7 @@ param marketingApexDomain = readEnvironmentVariable('MARKETING_APEX_DOMAIN', '')
 // Google Cloud with app.saturdaze.ca as an authorised origin.
 param googleClientId = readEnvironmentVariable('GOOGLE_CLIENT_ID', '')
 
-// Outbound email (ADR-020): the sending domain, and 'true' once Azure shows it
+// Outbound email (ADR-021): the sending domain, and 'true' once Azure shows it
 // verified. eng/Setup-Email.ps1 creates the SMTP identity and sets all four.
 param emailDomain = readEnvironmentVariable('EMAIL_DOMAIN', '')
 param emailDomainVerified = bool(readEnvironmentVariable('EMAIL_DOMAIN_VERIFIED', 'false'))

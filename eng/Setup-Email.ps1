@@ -2,7 +2,7 @@
 .SYNOPSIS
     Set up outbound email for the API: Azure Communication Services behind the
     sending domain, the SMTP identity, and the GitHub secrets that wire them in
-    (ADR-020).
+    (ADR-021).
 
 .DESCRIPTION
     Run this once from a machine where `az login` has succeeded, then once more

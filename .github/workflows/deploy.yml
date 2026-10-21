@@ -173,7 +173,7 @@ jobs:
           MARKETING_SWA_SKU: ${{ vars.MARKETING_SWA_SKU || 'Free' }}
           BUDGET_ALERT_EMAIL: ${{ vars.BUDGET_ALERT_EMAIL }}
           GOOGLE_CLIENT_ID: ${{ vars.GOOGLE_CLIENT_ID }}
-          # Outbound email (ADR-020); eng/Setup-Email.ps1 sets these.
+          # Outbound email (ADR-021); eng/Setup-Email.ps1 sets these.
           EMAIL_DOMAIN: ${{ vars.EMAIL_DOMAIN }}
           EMAIL_DOMAIN_VERIFIED: ${{ vars.EMAIL_DOMAIN_VERIFIED || 'false' }}
           EMAIL_SMTP_CLIENT_ID: ${{ vars.EMAIL_SMTP_CLIENT_ID }}
@@ -228,7 +228,7 @@ jobs:
             if [ -n "$(out emailDomain)" ]; then
               echo "| Email | no-reply@$(out emailDomain), SMTP $(jq -r '.emailSmtpEnabled.value' <<<"$outputs"), verification $(jq -c '.emailVerificationStatus.value | map_values(.status)' <<<"$outputs") |"
               echo
-              echo "### DNS records for $(out emailDomain) (ADR-020)"
+              echo "### DNS records for $(out emailDomain) (ADR-021)"
               echo
               echo "| Record | Type | Host | Value |"
               echo "|---|---|---|---|"

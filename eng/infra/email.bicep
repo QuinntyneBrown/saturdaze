@@ -1,4 +1,4 @@
-// Outbound email for the API (ADR-020): an Email Communication Service that
+// Outbound email for the API (ADR-021): an Email Communication Service that
 // owns the sending domain, and the Communication Services resource the API
 // authenticates to over SMTP.
 //
@@ -79,7 +79,7 @@ resource communicationService 'Microsoft.Communication/communicationServices@202
   }
 }
 
-// SMTP authentication (ADR-020): the service principal that presents the
+// SMTP authentication (ADR-021): the service principal that presents the
 // client secret must hold this role on the Communication Services resource.
 var smtpRoleId = subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '09976791-48a7-449e-bb21-39d1a415f350') // Communication and Email Service Owner
 

@@ -89,7 +89,7 @@ param googleClientId string = ''
 @description('Extra browser origins the API should accept, in addition to the three Static Web Apps and the custom domains.')
 param extraCorsOrigins array = []
 
-// ───────────────────────────── outbound email (ADR-020) ─────────────────────────────
+// ───────────────────────────── outbound email (ADR-021) ─────────────────────────────
 
 @description('Domain account mail is sent from, e.g. saturdaze.ca (no-reply@<domain>). Blank skips the email resources and leaves the API writing .eml files.')
 param emailDomain string = ''
@@ -183,7 +183,7 @@ var sqlConnectionString = 'Server=tcp:${sqlServer.properties.fullyQualifiedDomai
 
 // The API sends over SMTP only once the domain is verified and the relay
 // credentials exist; otherwise it keeps writing .eml files under /home/data/mail
-// and the switch is a re-deploy, not a code change (ADR-020).
+// and the switch is a re-deploy, not a code change (ADR-021).
 var smtpEnabled = !empty(emailDomain) && emailDomainVerified && !empty(smtpClientId) && !empty(smtpClientSecret)
 var smtpSettings = smtpEnabled
   ? {
@@ -287,7 +287,7 @@ module foundry '../foundry/claude.bicep' = {
   }
 }
 
-// ───────────────────────────── outbound email (ADR-020) ─────────────────────────────
+// ───────────────────────────── outbound email (ADR-021) ─────────────────────────────
 
 module email './email.bicep' = if (!empty(emailDomain)) {
   name: 'email'

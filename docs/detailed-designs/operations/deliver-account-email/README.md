@@ -10,7 +10,7 @@ Saturdaze is a web application that plans personalized family weekends. It sends
 
 *SMTP identity* — the Entra application the API presents to the relay: its client id in the username, its client secret as the password, and a role on the Communication Services resource
 
-The feature sits in operations because it is hosting plumbing (ADR-020): no application code changes, only the resources the template declares and the settings it writes.
+The feature sits in operations because it is hosting plumbing (ADR-021): no application code changes, only the resources the template declares and the settings it writes.
 
 ## Description
 

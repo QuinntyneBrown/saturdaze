@@ -1,4 +1,4 @@
-# ADR-020 — Outbound email through Azure Communication Services, over SMTP, provisioned by the template
+# ADR-021 — Outbound email through Azure Communication Services, over SMTP, provisioned by the template
 
 **Status:** Accepted
 **Date:** 2026-10-21

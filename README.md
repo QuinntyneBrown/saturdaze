@@ -342,7 +342,7 @@ TXT records Static Web Apps asks for. Set the repository variables
 When the subscription has no Free Static Web App slot left, set
 `MARKETING_SWA_SKU=Standard`.
 
-### Email (ADR-020)
+### Email (ADR-021)
 
 Account mail goes out as `no-reply@saturdaze.ca` through Azure Communication
 Services; the API reaches it over SMTP with settings the template writes.
@@ -393,7 +393,7 @@ GitHub Actions needs these **secrets**: `AZURE_CLIENT_ID`, `AZURE_TENANT_ID`,
 authorised origin is `https://app.saturdaze.ca`; set the same id as
 `googleClientId` in `environment.prod.ts`, ADR-019), `EMAIL_DOMAIN`,
 `EMAIL_DOMAIN_VERIFIED`, `EMAIL_SMTP_CLIENT_ID` and `EMAIL_SMTP_PRINCIPAL_ID`
-(set by `eng/Setup-Email.ps1`, ADR-020).
+(set by `eng/Setup-Email.ps1`, ADR-021).
 
 ### Configuration
 
