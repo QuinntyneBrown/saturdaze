@@ -1,0 +1,84 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure - Onboard a new family
+
+enum WizardStep {
+  home
+  family
+  likes
+  preferences
+  done
+}
+
+class CreateAccountPage {
+  +submit(): Promise<void>
+}
+
+class WelcomePage {
+  +step: Signal<WizardStep>
+  +stepNumber: Signal<number>
+  +view: Signal<FamilyView>
+  +home: WritableSignal<string>
+  +likes: WritableSignal<string[]>
+  +dislikes: WritableSignal<string[]>
+  +switches: WritableSignal<PreferenceFlags>
+  +error: WritableSignal<string>
+  +continueStep(): Promise<void>
+  +skip(): Promise<boolean>
+  +back(): Promise<boolean>
+  +addMember(): Promise<void>
+  +editMember(member: MemberRow): Promise<void>
+}
+
+class Stepper {
+  +step: InputSignal<number>
+  +count: InputSignal<number>
+  +label: Signal<string>
+}
+
+interface IFamilyService {
+  +getFamily(): Signal<FamilyView>
+  +getEditableProfile(): Signal<EditableFamilyProfile | null>
+  +load(): Promise<void>
+  +saveProfile(profile: EditableFamilyProfile): Promise<void>
+  +addMember(member: NewFamilyMember): Promise<FamilyInvite | null>
+  +removeMember(id: string): Promise<void>
+}
+
+class EditableFamilyProfile {
+  +string | null name
+  +string homeLocation
+  +boolean budgetEnabled
+  +boolean tryNewEnabled
+  +boolean fridayPreviewEnabled
+  +EditableFamilyMember[] members
+  +EditableCommitment[] commitments
+  +EditablePreference[] preferences
+}
+
+class FamilyMemberDialog {
+  +submit(): void
+  +remove(): void
+}
+
+class ISessionStore {
+  +user: Signal<User | null>
+}
+
+CreateAccountPage ..> WelcomePage : navigates to /welcome/home
+WelcomePage --> WizardStep : reads :step
+WelcomePage --> Stepper : renders
+WelcomePage --> IFamilyService : loads and saves
+WelcomePage ..> FamilyMemberDialog : opens
+WelcomePage --> ISessionStore : reads user
+IFamilyService ..> EditableFamilyProfile : saves
+@enduml

@@ -123,5 +123,5 @@ export abstract class AuthCardPage extends BasePage {
 
 export type AuthSlug = Extract<
   PageSlug,
-  "sign-in" | "create-account" | "reset-password" | "verify-email" | "accept-invite"
+  "sign-in" | "create-account" | "reset-password" | "verify-email" | "accept-invite" | "welcome"
 >;

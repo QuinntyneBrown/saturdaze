@@ -602,6 +602,14 @@
   /* ---- load-more row under a paged list (L2-025) ---- */
   .more-row { display: flex; justify-content: center; margin-top: 24px; }
 
+  /* ---- stepper (onboarding progress, L2-166) ---- */
+  .stepper { display: flex; flex-direction: column; gap: 8px; }
+  .stepper__label { font-size: var(--sd-fs-xs); font-weight: var(--sd-fw-semibold); letter-spacing: 0.08em; text-transform: uppercase; color: var(--sd-ink-soft); }
+  .stepper__track { display: grid; grid-template-columns: repeat(var(--sd-stepper-count, 4), minmax(0, 1fr)); gap: 6px; }
+  .stepper__seg { height: 6px; border-radius: var(--sd-r-pill); background: var(--sd-line-control); }
+  .stepper__seg--done { background: var(--sd-accent); }
+  .stepper__seg--current { background: var(--sd-primary-fill); }
+
   /* ---- password rules checklist (L2-143) ---- */
   .rules { display: flex; flex-wrap: wrap; gap: 4px 16px; margin: 0; padding: 0; list-style: none; }
   .rules__item { display: inline-flex; align-items: center; gap: 6px; font-size: var(--sd-fs-xs); color: var(--sd-ink-soft); }
@@ -785,6 +793,8 @@
   .auth-card__sub { font-size: var(--sd-fs-ui); color: var(--sd-ink-soft); }
   .auth-card__form { display: flex; flex-direction: column; gap: 16px; }
   .auth-card__row { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+  .auth-card__row--end { justify-content: flex-end; }
+  .auth__col .stepper { margin-bottom: 12px; }
   .auth-card__alt { text-align: center; font-size: var(--sd-fs-ui); color: var(--sd-ink-soft); }
   .auth-card__or { display: flex; align-items: center; gap: 12px; font-size: var(--sd-fs-ui); color: var(--sd-ink-soft); }
   .auth-card__or::before, .auth-card__or::after { content: ""; flex: 1; height: 1px; background: var(--sd-line-strong); }

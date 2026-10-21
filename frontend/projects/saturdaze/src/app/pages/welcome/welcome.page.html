@@ -1,0 +1,158 @@
+<sd-auth-shell [homeHref]="siteUrl">
+  @if (step() !== 'done') {
+    <sd-stepper [step]="stepNumber()" [count]="stepCount" />
+  }
+  @switch (step()) {
+    @case ('home') {
+      <sd-auth-card title="Where's home?" subtitle="Weather and drive times start here.">
+        @if (error()) {
+          <sd-banner tone="warn" role="alert" icon="alert">{{ error() }}</sd-banner>
+        }
+        <form class="form" (submit)="submit($event)">
+          <sd-text-input
+            label="Neighbourhood or address"
+            name="homeLocation"
+            required
+            autocomplete="street-address"
+            placeholder="Port Credit, Mississauga"
+            [ngModel]="home()"
+            (ngModelChange)="home.set($event)"
+          />
+          <ng-container *ngTemplateOutlet="nav; context: { canContinue: canContinueHome() }" />
+        </form>
+      </sd-auth-card>
+    }
+    @case ('family') {
+      <sd-auth-card title="Who's in?" subtitle="Ages shape the picks. Tap a person to edit.">
+        @if (error()) {
+          <sd-banner tone="warn" role="alert" icon="alert">{{ error() }}</sd-banner>
+        }
+        <form class="form" (submit)="submit($event)">
+          @if (view().members.length) {
+            <sd-list card>
+              @for (member of view().members; track member.id) {
+                <sd-list-item
+                  action
+                  chevron
+                  [title]="member.name"
+                  [subtitle]="member.subtitle"
+                  (pressed)="editMember(member)"
+                >
+                  <sd-avatar slot="leading" [name]="member.name" [tone]="member.tone" size="lg" />
+                </sd-list-item>
+              }
+            </sd-list>
+          }
+          <sd-ghost-row icon="plus" (pressed)="addMember()">Add a family member</sd-ghost-row>
+          <ng-container *ngTemplateOutlet="nav; context: { canContinue: true }" />
+        </form>
+      </sd-auth-card>
+    }
+    @case ('likes') {
+      <sd-auth-card
+        title="What does your family like?"
+        subtitle="Liked tags get a boost. Disliked ones are left out."
+      >
+        @if (error()) {
+          <sd-banner tone="warn" role="alert" icon="alert">{{ error() }}</sd-banner>
+        }
+        <form class="form" (submit)="submit($event)">
+          <sd-chip-input
+            label="Likes"
+            name="likes"
+            tone="leaf"
+            [otherValues]="dislikes()"
+            otherLabel="Dislikes"
+            [ngModel]="likes()"
+            (ngModelChange)="likes.set($event)"
+          />
+          <sd-chip-input
+            label="Dislikes"
+            name="dislikes"
+            tone="warn"
+            [otherValues]="likes()"
+            otherLabel="Likes"
+            [ngModel]="dislikes()"
+            (ngModelChange)="dislikes.set($event)"
+          />
+          <ng-container *ngTemplateOutlet="nav; context: { canContinue: true }" />
+        </form>
+      </sd-auth-card>
+    }
+    @case ('preferences') {
+      <sd-auth-card title="A few preferences" subtitle="Change these any time on Family.">
+        @if (error()) {
+          <sd-banner tone="warn" role="alert" icon="alert">{{ error() }}</sd-banner>
+        }
+        <form class="form" (submit)="submit($event)">
+          <sd-list card>
+            <sd-list-item title="Budget matters" subtitle="Prefer free and low-cost picks">
+              <sd-toggle
+                slot="trailing"
+                name="budget"
+                srLabel="Budget matters"
+                [ngModel]="budget()"
+                (ngModelChange)="budget.set($event)"
+              />
+            </sd-list-item>
+            <sd-list-item
+              title="Try something new each weekend"
+              subtitle="One first-time activity per weekend"
+            >
+              <sd-toggle
+                slot="trailing"
+                name="tryNew"
+                srLabel="Try something new each weekend"
+                [ngModel]="tryNew()"
+                (ngModelChange)="tryNew.set($event)"
+              />
+            </sd-list-item>
+            <sd-list-item
+              title="Friday preview email"
+              subtitle="A draft in your inbox at 6pm Friday"
+            >
+              <sd-toggle
+                slot="trailing"
+                name="fridayPreview"
+                srLabel="Friday preview email"
+                [ngModel]="fridayPreview()"
+                (ngModelChange)="fridayPreview.set($event)"
+              />
+            </sd-list-item>
+          </sd-list>
+          <ng-container *ngTemplateOutlet="nav; context: { canContinue: true }" />
+        </form>
+      </sd-auth-card>
+    }
+    @case ('done') {
+      <sd-auth-card title="You're set" [subtitle]="doneSubtitle()" center>
+        <sd-disc slot="disc" icon="check" tone="accent" size="xl" />
+        <sd-button variant="primary" size="lg" full href="/weekend">
+          <sd-icon name="sparkle" />
+          Plan this weekend
+        </sd-button>
+        <sd-button variant="quiet" size="lg" full href="/family">
+          <sd-icon name="user" />
+          Review your family
+        </sd-button>
+      </sd-auth-card>
+    }
+  }
+</sd-auth-shell>
+
+<!-- Continue, then Back (from step 2) and Skip for now on one row. -->
+<ng-template #nav let-canContinue="canContinue">
+  <sd-button variant="primary" size="lg" full type="submit" [disabled]="!canContinue || saving()">
+    Continue
+    <sd-icon name="arrow_right" />
+  </sd-button>
+  <div class="nav" [class.nav--end]="isFirst()">
+    @if (!isFirst()) {
+      <sd-button variant="ghost" type="button" (click)="back()">
+        <sd-icon name="arrow_left" />
+        Back
+      </sd-button>
+    }
+    <sd-button variant="ghost" type="button" (click)="skip()">Skip for now</sd-button>
+  </div>
+</ng-template>

@@ -1,0 +1,35 @@
+// `.stepper` from docs/mocks/styles/app.css — the host is the block.
+
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.stepper__label {
+  font-size: var(--fontSizeBase200);
+  font-weight: var(--fontWeightSemibold);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--colorNeutralForeground2);
+}
+
+.stepper__track {
+  display: grid;
+  grid-template-columns: repeat(var(--sd-stepper-count, 4), minmax(0, 1fr));
+  gap: 6px;
+}
+
+.stepper__seg {
+  height: 6px;
+  border-radius: var(--borderRadiusCircular);
+  background: var(--colorNeutralStrokeAccessible);
+}
+
+.stepper__seg--done {
+  background: var(--colorStatusSuccessBackground3);
+}
+
+.stepper__seg--current {
+  background: var(--colorBrandBackground);
+}

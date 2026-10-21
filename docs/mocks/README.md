@@ -32,7 +32,7 @@ screenshots/          committed <slug>.<viewport>.png captures (390 / 820 / 1440
 | Past weekends (cover photo per weekend) | `past.html`, `past.empty.html` |
 | Family | `family.html`, `family.members.html` (owner: who signs in), `family.member.html` (member view) |
 | Review submissions (admin) | `review-submissions.html`, `review-submissions.empty.html` |
-| Auth | `sign-in.html` (2 states, each with "Continue with Google", L2-164), `create-account.html`, `reset-password.html` (5 states), `verify-email.html` (3 states), `accept-invite.html` (2 states), `join.html` (3 states: an admin invite with its sample weekend, without one, no longer works) |
+| Auth | `sign-in.html` (2 states, each with "Continue with Google", L2-164), `create-account.html`, `welcome.html` (the onboarding wizard, 5 states), `reset-password.html` (5 states), `verify-email.html` (3 states), `accept-invite.html` (2 states), `join.html` (3 states: an admin invite with its sample weekend, without one, no longer works) |
 | Public | `marketing.html`, `marketing.menu-open.html` (the static site at www.saturdaze.ca, ADR-018), `legal.html` (Terms + Privacy) |
 | Admin (Saturdaze Admin, ADR-014; bare shell with its own side navigation from 1024px) | `admin.sign-in.html` (2 states), `admin.html` (Photo health), `admin.places.html`, `admin.place.html`, `admin.reviews.html`, `admin.ingestion-skips.html`, `admin.activity.html`, `admin.invitations.html`, `admin.sample.new.html`, `admin.sample.html` (sample weekends and platform invitations, L1-038) |
 | Dialogs gallery | `dialogs.html` (D1–D30 and admin AD1–AD8 rendered inline) |

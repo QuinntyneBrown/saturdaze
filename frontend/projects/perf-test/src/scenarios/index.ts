@@ -24,6 +24,7 @@ export * as PlaceRow from './PlaceRow';
 export * as SkipLink from './SkipLink';
 export * as Spinner from './Spinner';
 export * as Stars from './Stars';
+export * as Stepper from './Stepper';
 export * as TextInput from './TextInput';
 export * as ThemeProvider from './ThemeProvider';
 export * as Toggle from './Toggle';

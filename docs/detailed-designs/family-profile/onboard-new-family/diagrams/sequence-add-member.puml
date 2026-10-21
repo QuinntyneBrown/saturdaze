@@ -1,0 +1,47 @@
+@startuml
+title UML sequence behaviour - Add a member on the who's-in step
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+actor "User" as actor
+box "Frontend - Saturdaze Angular application" #E0F2FE
+ participant "WelcomePage" as page
+ participant "FamilyMemberDialog (D17b)\nInviteLinkDialog (D30)" as dialog
+ participant "FamilyService" as client
+end box
+box "Backend - Saturdaze API" #D1FADF
+ participant "FamilyController" as controller
+end box
+box "Backend - Saturdaze Application and Domain" #ECFDF3
+ participant "AddFamilyMemberCommandHandler" as handler
+end box
+box "Backend - Saturdaze Infrastructure" #FFF4E5
+ database "AppDbContext\nSQL Server" as db
+end box
+actor -> page : Tap "Add a family member"
+page -> dialog : open D17b
+actor -> dialog : Name, age, sign-in choice
+dialog --> page : { kind: save, name, age, email }
+page -> client : addMember(member)
+client -> controller : POST /api/family/members
+controller -> handler : AddFamilyMemberCommand (owner only)
+handler -> db : L2-125, L2-126 add the member; create an invitation when an email is given
+db --> handler : Saved
+handler --> controller : Member and optional invite
+controller --> client : 201
+client -> controller : GET /api/family
+controller --> client : 200 profile
+client --> page : getFamily() lists the member
+alt invited member
+ page -> dialog : open D30 with the invite link
+ dialog --> page : closed
+end
+page --> actor : L2-168 the member's row shows name, role, age
+alt add refused (owner_only, member_name_in_use, email_in_use, already_invited)
+ controller --> client : 403 or 409
+ client --> page : Rejected promise
+ page --> actor : The reason, in the error banner
+end
+@enduml

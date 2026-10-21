@@ -1,0 +1,15 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers - Onboard a new family
+
+Person(actor, "New family organizer", "Has just created a Saturdaze account")
+System_Boundary(saturdaze, "Saturdaze") {
+  Container(web, "Saturdaze web application", "Angular", "Hosts the onboarding wizard at /welcome/{step}")
+  Container(api, "Saturdaze API", "ASP.NET Core", "Saves the family profile and its members")
+  ContainerDb(db, "Saturdaze database", "SQL Server", "Stores families, members, invitations and preferences")
+}
+Rel(actor, web, "Answers one question per step", "HTTPS")
+Rel(web, api, "Saves each completed step", "JSON/HTTPS")
+Rel(api, db, "Reads and replaces profile state", "EF Core")
+@enduml

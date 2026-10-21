@@ -69,6 +69,7 @@ export const PAGES = [
   // Auth (bare shell, stacked states addressed by id)
   { url: "/pages/sign-in.html",        shell: "bare", expects: { selector: "#state-error .banner", text: "did not match" } },
   { url: "/pages/create-account.html", shell: "bare", expects: { selector: ".auth-card__title", text: "Start planning weekends" } },
+  { url: "/pages/welcome.html",        shell: "bare", expects: { selector: "#state-done .auth-card__title", text: "You're set" } },
   { url: "/pages/reset-password.html", shell: "bare", expects: { selector: "#state-expired .auth-card__title", text: "This link has expired" } },
   { url: "/pages/accept-invite.html",  shell: "bare", expects: { selector: "#state-invalid .auth-card__title", text: "This invite no longer works" } },
   { url: "/pages/join.html",           shell: "bare", expects: { selector: "#state-sample .join__title", text: "A weekend planned for The Riveras" }, cols: { ".join__days": { 390: 1, 820: 1, 1440: 2 }, ".join__hero": { 390: 1, 820: 1, 1440: 2 } } },

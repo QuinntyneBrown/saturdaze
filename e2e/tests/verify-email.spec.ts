@@ -34,6 +34,7 @@ test.describe("Verify email", () => {
     await page.waitForURL(/\/(weekend|sign-in\?returnUrl=%2Fweekend)$/);
   });
 
+  // Traces to: L2-165 AC3
   test("'Set up your family' goes to Family (signing in first when needed)", async ({ page, pages, request }) => {
     const account = await registerThrowaway(request, "verify");
     const token = await devToken(request, "/api/auth/resend-verification", account.email);

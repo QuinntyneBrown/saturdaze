@@ -36,6 +36,7 @@ export * from './lib/seg-radio/seg-radio';
 export * from './lib/chip-input/chip-input';
 export * from './lib/strength/strength';
 export * from './lib/password-rules/password-rules';
+export * from './lib/stepper/stepper';
 export * from './lib/copy-field/copy-field';
 export * from './lib/toggle/toggle';
 export * from './lib/photo-pick/photo-pick';

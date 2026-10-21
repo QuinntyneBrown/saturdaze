@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+<!-- @shell:head -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Welcome — Saturdaze</title>
+<link rel="stylesheet" href="../styles/tokens.css">
+<link rel="stylesheet" href="../styles/app.css">
+<!-- @/shell:head -->
+</head>
+<body data-page="welcome" data-shell="bare">
+<a class="skip-link" href="#main">Skip to content</a>
+<main class="auth auth--stack" id="main">
+  <div class="auth__col">
+    <a class="auth__brand" href="./marketing.html"><span class="brand-mark" aria-hidden="true"></span>Saturdaze</a>
+
+    <!-- 1 · Home -->
+    <section class="specimen" id="state-home" aria-labelledby="wz-title-1">
+      <span class="specimen__label">1 · Where's home?</span>
+      <div class="stepper"><span class="stepper__label">Step 1 of 4</span><span class="stepper__track" aria-hidden="true"><span class="stepper__seg stepper__seg--current"></span><span class="stepper__seg"></span><span class="stepper__seg"></span><span class="stepper__seg"></span></span></div>
+      <div class="auth-card">
+        <div class="auth-card__head">
+          <h1 class="auth-card__title" id="wz-title-1">Where's home?</h1>
+          <p class="auth-card__sub">Weather and drive times start here.</p>
+        </div>
+        <form class="auth-card__form" action="#state-family">
+          <div class="field">
+            <label class="field__label" for="wz-home">Neighbourhood or address</label>
+            <input class="field__input" id="wz-home" type="text" autocomplete="street-address" value="Port Credit, Mississauga">
+          </div>
+          <button class="btn btn--primary btn--lg btn--block" type="submit">Continue<svg class="icon" aria-hidden="true"><use href="#i-arrow_right"/></svg></button>
+          <div class="auth-card__row auth-card__row--end">
+            <a class="btn btn--ghost" href="#state-family">Skip for now</a>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- 2 · Who's in -->
+    <section class="specimen" id="state-family" aria-labelledby="wz-title-2">
+      <span class="specimen__label">2 · Who's in?</span>
+      <div class="stepper"><span class="stepper__label">Step 2 of 4</span><span class="stepper__track" aria-hidden="true"><span class="stepper__seg stepper__seg--done"></span><span class="stepper__seg stepper__seg--current"></span><span class="stepper__seg"></span><span class="stepper__seg"></span></span></div>
+      <div class="auth-card">
+        <div class="auth-card__head">
+          <h2 class="auth-card__title" id="wz-title-2">Who's in?</h2>
+          <p class="auth-card__sub">Ages shape the picks. Tap a person to edit.</p>
+        </div>
+        <ul class="list list--card">
+          <li><a class="list__item list__item--action" href="./dialogs.html#dialog-member">
+            <span class="avatar avatar--lg avatar--q" aria-hidden="true">Q</span>
+            <span class="list__text"><span class="list__title">Quinn</span><span class="list__sub">Parent · 38</span></span>
+            <span class="list__trail"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron_right"/></svg></span>
+          </a></li>
+          <li><a class="list__item list__item--action" href="./dialogs.html#dialog-member">
+            <span class="avatar avatar--lg avatar--s" aria-hidden="true">S</span>
+            <span class="list__text"><span class="list__title">Sara</span><span class="list__sub">Parent · 36 · Invite sent to sara@example.com</span></span>
+            <span class="list__trail"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron_right"/></svg></span>
+          </a></li>
+          <li><a class="list__item list__item--action" href="./dialogs.html#dialog-member">
+            <span class="avatar avatar--lg avatar--m" aria-hidden="true">M</span>
+            <span class="list__text"><span class="list__title">Mae</span><span class="list__sub">Kid · 5</span></span>
+            <span class="list__trail"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron_right"/></svg></span>
+          </a></li>
+        </ul>
+        <a class="ghost-row" href="./dialogs.html#dialog-member-add"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg>Add a family member</a>
+        <a class="btn btn--primary btn--lg btn--block" href="#state-likes">Continue<svg class="icon" aria-hidden="true"><use href="#i-arrow_right"/></svg></a>
+        <div class="auth-card__row">
+          <a class="btn btn--ghost" href="#state-home"><svg class="icon" aria-hidden="true"><use href="#i-arrow_left"/></svg>Back</a>
+          <a class="btn btn--ghost" href="#state-likes">Skip for now</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3 · Likes and dislikes -->
+    <section class="specimen" id="state-likes" aria-labelledby="wz-title-3">
+      <span class="specimen__label">3 · Likes and dislikes</span>
+      <div class="stepper"><span class="stepper__label">Step 3 of 4</span><span class="stepper__track" aria-hidden="true"><span class="stepper__seg stepper__seg--done"></span><span class="stepper__seg stepper__seg--done"></span><span class="stepper__seg stepper__seg--current"></span><span class="stepper__seg"></span></span></div>
+      <div class="auth-card">
+        <div class="auth-card__head">
+          <h2 class="auth-card__title" id="wz-title-3">What does your family like?</h2>
+          <p class="auth-card__sub">Liked tags get a boost. Disliked ones are left out.</p>
+        </div>
+        <form class="auth-card__form" action="#state-preferences">
+          <div class="field">
+            <label class="field__label" for="wz-likes">Likes</label>
+            <div class="chip-input">
+              <span class="chip chip--leaf">Parks<button class="chip__x" type="button" aria-label="Remove Parks"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></span>
+              <span class="chip chip--leaf">Short hikes<button class="chip__x" type="button" aria-label="Remove Short hikes"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></span>
+              <span class="chip chip--leaf">Zoo<button class="chip__x" type="button" aria-label="Remove Zoo"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></span>
+              <input class="chip-input__field" id="wz-likes" type="text" placeholder="Add one, press Enter">
+            </div>
+          </div>
+          <div class="field">
+            <label class="field__label" for="wz-dislikes">Dislikes</label>
+            <div class="chip-input">
+              <span class="chip chip--warn">Camping<button class="chip__x" type="button" aria-label="Remove Camping"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></span>
+              <input class="chip-input__field" id="wz-dislikes" type="text" placeholder="Add one, press Enter">
+            </div>
+          </div>
+          <button class="btn btn--primary btn--lg btn--block" type="submit">Continue<svg class="icon" aria-hidden="true"><use href="#i-arrow_right"/></svg></button>
+          <div class="auth-card__row">
+            <a class="btn btn--ghost" href="#state-family"><svg class="icon" aria-hidden="true"><use href="#i-arrow_left"/></svg>Back</a>
+            <a class="btn btn--ghost" href="#state-preferences">Skip for now</a>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- 4 · Preferences -->
+    <section class="specimen" id="state-preferences" aria-labelledby="wz-title-4">
+      <span class="specimen__label">4 · Preferences</span>
+      <div class="stepper"><span class="stepper__label">Step 4 of 4</span><span class="stepper__track" aria-hidden="true"><span class="stepper__seg stepper__seg--done"></span><span class="stepper__seg stepper__seg--done"></span><span class="stepper__seg stepper__seg--done"></span><span class="stepper__seg stepper__seg--current"></span></span></div>
+      <div class="auth-card">
+        <div class="auth-card__head">
+          <h2 class="auth-card__title" id="wz-title-4">A few preferences</h2>
+          <p class="auth-card__sub">Change these any time on Family.</p>
+        </div>
+        <form class="auth-card__form" action="#state-done">
+          <ul class="list list--card">
+            <li class="list__item">
+              <span class="list__text"><span class="list__title">Budget matters</span><span class="list__sub">Prefer free and low-cost picks</span></span>
+              <label class="toggle"><input class="toggle__input" type="checkbox" role="switch" checked><span class="toggle__track"></span><span class="visually-hidden">Budget matters</span></label>
+            </li>
+            <li class="list__item">
+              <span class="list__text"><span class="list__title">Try something new each weekend</span><span class="list__sub">One first-time activity per weekend</span></span>
+              <label class="toggle"><input class="toggle__input" type="checkbox" role="switch"><span class="toggle__track"></span><span class="visually-hidden">Try something new each weekend</span></label>
+            </li>
+            <li class="list__item">
+              <span class="list__text"><span class="list__title">Friday preview email</span><span class="list__sub">A draft in your inbox at 6pm Friday</span></span>
+              <label class="toggle"><input class="toggle__input" type="checkbox" role="switch" checked><span class="toggle__track"></span><span class="visually-hidden">Friday preview email</span></label>
+            </li>
+          </ul>
+          <button class="btn btn--primary btn--lg btn--block" type="submit">Continue<svg class="icon" aria-hidden="true"><use href="#i-arrow_right"/></svg></button>
+          <div class="auth-card__row">
+            <a class="btn btn--ghost" href="#state-likes"><svg class="icon" aria-hidden="true"><use href="#i-arrow_left"/></svg>Back</a>
+            <a class="btn btn--ghost" href="#state-done">Skip for now</a>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- 5 · Done -->
+    <section class="specimen" id="state-done" aria-labelledby="wz-title-5">
+      <span class="specimen__label">5 · You're set</span>
+      <div class="auth-card">
+        <div class="auth-card__head auth-card__head--center">
+          <span class="disc disc--xl disc--accent auth-card__disc" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg></span>
+          <h2 class="auth-card__title" id="wz-title-5">You're set</h2>
+          <p class="auth-card__sub">Your first weekend is drafted around the Browns. We sent a verification link to q••••••••••••n@gmail.com. It works for 24 hours.</p>
+        </div>
+        <a class="btn btn--primary btn--lg btn--block" href="./weekend.empty.html"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg>Plan this weekend</a>
+        <a class="btn btn--quiet btn--lg btn--block" href="./family.html"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg>Review your family</a>
+      </div>
+    </section>
+
+    <p class="auth__foot"><a class="link--soft" href="./legal.html">Terms</a><span aria-hidden="true">·</span><a class="link--soft" href="./legal.html#privacy">Privacy</a><span aria-hidden="true">·</span><a class="link--soft" href="./marketing.html">Back to Saturdaze</a></p>
+  </div>
+</main>
+<script src="../app.js"></script>
+</body>
+</html>

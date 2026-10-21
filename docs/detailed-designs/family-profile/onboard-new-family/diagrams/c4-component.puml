@@ -1,0 +1,30 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components - Onboard a new family
+
+Container_Boundary(web, "Saturdaze web application") {
+  Component(create, "CreateAccountPage", "Angular component", "Registers the account and opens /welcome/home")
+  Component(page, "WelcomePage", "Angular component", "Renders one step of the wizard from the :step route parameter")
+  Component(stepper, "Stepper", "Angular component (sd-stepper)", "Shows Step n of 4 and the segmented track")
+  Component(memberDialog, "FamilyMemberDialog", "CDK dialog (D17, D17b)", "Adds, renames or removes a member")
+  Component(family, "FamilyService", "Angular service", "Loads and saves the editable profile; adds and removes members")
+  Component(session, "SessionStore", "Angular service", "Holds the signed-in user for the done step")
+}
+Container_Boundary(api, "Saturdaze API") {
+  Component(controller, "FamilyController", "ASP.NET Core", "Exposes GET and PUT /api/family and the member endpoints")
+  Component(save, "SaveFamilyProfileCommandHandler", "Application handler", "Replaces home, preferences, switches and member collections")
+  Component(members, "AddFamilyMemberCommandHandler\nRemoveFamilyMemberCommandHandler", "Application handlers", "Add and remove members for the owner")
+  ComponentDb(db, "AppDbContext", "EF Core", "Stores the family aggregate")
+}
+Rel(create, page, "Navigates to /welcome/home after registration")
+Rel(page, stepper, "Renders with the current step")
+Rel(page, memberDialog, "Opens for the who's-in step")
+Rel(page, family, "load(), saveProfile(), addMember(), removeMember()")
+Rel(page, session, "Reads user() for the done step")
+Rel(family, controller, "GET, PUT /api/family; POST, DELETE /api/family/members", "JSON/HTTPS")
+Rel(controller, save, "Dispatches SaveFamilyProfileCommand")
+Rel(controller, members, "Dispatches member commands")
+Rel(save, db, "Replaces profile state", "EF Core")
+Rel(members, db, "Adds or removes a member", "EF Core")
+@enduml

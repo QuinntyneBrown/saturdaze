@@ -34,6 +34,7 @@ export type PageSlug =
   | "verify-email"
   | "accept-invite"
   | "join"
+  | "welcome"
   | "marketing"
   | "legal"
   | "shared-weekend"
@@ -199,6 +200,13 @@ export const ROUTES = {
     page: "join",
   },
   join: { app: "/join?token={token}", page: "join" },
+
+  // ---- onboarding wizard (bare shell; one route per step, L2-166) ----
+  welcomeHome:        { app: "/welcome/home",        mock: "/pages/welcome.html#state-home",        guard: "auth", page: "welcome" },
+  welcomeFamily:      { app: "/welcome/family",      mock: "/pages/welcome.html#state-family",      guard: "auth", page: "welcome" },
+  welcomeLikes:       { app: "/welcome/likes",       mock: "/pages/welcome.html#state-likes",       guard: "auth", page: "welcome" },
+  welcomePreferences: { app: "/welcome/preferences", mock: "/pages/welcome.html#state-preferences", guard: "auth", page: "welcome" },
+  welcomeDone:        { app: "/welcome/done",        mock: "/pages/welcome.html#state-done",        guard: "auth", page: "welcome" },
 
   // ---- public (site shell: sitebar at every width) ----
   legal: { app: "/legal", mock: "/pages/legal.html", page: "legal" },
