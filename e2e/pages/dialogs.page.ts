@@ -44,7 +44,9 @@ export const DIALOG_SLUGS = [
   "remove-commitment",
   "signout",
   "invite-link",
-  // calendar (L2-172)
+  // calendar (L2-166, L2-167, L2-172)
+  "calendar-connect",
+  "calendar-disconnect",
   "calendar-feed",
   "calendar-feed-stop",
   // admin
@@ -68,6 +70,7 @@ export const ALERT_SLUGS: readonly DialogSlug[] = [
   "remove-account",
   "remove-commitment",
   "signout",
+  "calendar-disconnect",
   "calendar-feed-stop",
 ];
 

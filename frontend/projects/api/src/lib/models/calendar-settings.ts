@@ -14,6 +14,29 @@ export interface CalendarFeedStatus {
 }
 
 /**
+ * Google Calendar Connection — the caller's own connection (L2-165). Never
+ * carries the token.
+ */
+export interface GoogleCalendarConnection {
+  /**
+   * Email — the Google account the calendar belongs to.
+   */
+  readonly email: string;
+  /**
+   * Status — `needs_reconnect` once Google refuses the grant (L2-170).
+   */
+  readonly status: 'connected' | 'needs_reconnect';
+  /**
+   * Read Commitments — "Plan around my calendar".
+   */
+  readonly readCommitments: boolean;
+  /**
+   * Last Synced Utc — ISO timestamp of the last successful write; null before the first.
+   */
+  readonly lastSyncedUtc: string | null;
+}
+
+/**
  * Calendar Settings — `GET /api/calendar`: what the Family page's Calendar
  * section draws (L2-166, L2-172).
  */
@@ -22,6 +45,10 @@ export interface CalendarSettings {
    * Google Configured — false hides the "Connect Google Calendar" row.
    */
   readonly googleConfigured: boolean;
+  /**
+   * Google — the caller's connection, or null when not connected.
+   */
+  readonly google: GoogleCalendarConnection | null;
   /**
    * Feed — the family's subscription link.
    */

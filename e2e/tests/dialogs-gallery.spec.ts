@@ -83,6 +83,8 @@ test.describe("Dialogs gallery", () => {
       ["remove-commitment", "Remove Swim lessons?"],
       ["signout", "Sign out?"],
       ["invite-link", "Invite ready for Grandma Jo"],
+      ["calendar-connect", "Connect Google Calendar"],
+      ["calendar-disconnect", "Disconnect Google Calendar?"],
       ["calendar-feed", "Subscribe from another calendar"],
       ["calendar-feed-stop", "Stop the subscription link?"],
       ["approve", "Approve Port Credit Buskerfest?"],
@@ -94,7 +96,7 @@ test.describe("Dialogs gallery", () => {
     }
   });
 
-  test("danger fill is reserved for Replace draft, Remove, Sign out, Reject and Stop the link", async ({ pages }) => {
+  test("danger fill is reserved for Replace draft, Remove, Sign out, Reject, Disconnect and Stop the link", async ({ pages }) => {
     const d = pages.dialogs;
     await expect(d.action("repeat", "Replace draft")).toHaveClass(/btn--danger/);
     await expect(d.action("remove", "Remove")).toHaveClass(/btn--danger/);
@@ -103,8 +105,9 @@ test.describe("Dialogs gallery", () => {
     await expect(d.action("remove-commitment", "Remove")).toHaveClass(/btn--danger/);
     await expect(d.action("signout", "Sign out")).toHaveClass(/btn--danger/);
     await expect(d.action("reject", "Reject")).toHaveClass(/btn--danger/);
+    await expect(d.action("calendar-disconnect", "Disconnect")).toHaveClass(/btn--danger/);
     await expect(d.action("calendar-feed-stop", "Stop the link")).toHaveClass(/btn--danger/);
-    await expect(d.gallery.locator(".btn--danger")).toHaveCount(8);
+    await expect(d.gallery.locator(".btn--danger")).toHaveCount(9);
   });
 
   test("form dialogs keep the primary enabled and name the action", async ({ pages }) => {

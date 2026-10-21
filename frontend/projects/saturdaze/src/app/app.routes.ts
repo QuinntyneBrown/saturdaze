@@ -137,6 +137,16 @@ export const routes: Routes = [
     ],
   },
   {
+    // Google's consent screen returns here (ADR-020); it finishes and goes to /family.
+    path: 'family/calendar/google',
+    data: { nav: 'family', page: 'family' },
+    canActivate: [requireAuth],
+    loadComponent: () =>
+      import('./pages/google-calendar-callback/google-calendar-callback.page').then(
+        (m) => m.GoogleCalendarCallbackPage,
+      ),
+  },
+  {
     path: 'family',
     data: { nav: 'family', page: 'family' },
     canActivate: [requireAuth],

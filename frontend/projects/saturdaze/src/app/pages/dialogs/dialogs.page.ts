@@ -17,6 +17,7 @@ import { FamilyMemberDialog } from '../../dialogs/family-member-dialog/family-me
 import { HomeLocationDialog } from '../../dialogs/home-location-dialog/home-location-dialog';
 import { InviteLinkDialog } from '../../dialogs/invite-link-dialog/invite-link-dialog';
 import { CalendarFeedDialog } from '../../dialogs/calendar-feed-dialog/calendar-feed-dialog';
+import { ConnectCalendarDialog } from '../../dialogs/connect-calendar-dialog/connect-calendar-dialog';
 import { LikesDialog } from '../../dialogs/likes-dialog/likes-dialog';
 import { LockRestaurantDialog } from '../../dialogs/lock-restaurant-dialog/lock-restaurant-dialog';
 import { MenuDialog } from '../../dialogs/menu-dialog/menu-dialog';
@@ -276,6 +277,20 @@ const SPECIMENS: readonly Specimen[] = [
       email: 'jo@example.com',
       url: 'app.saturdaze.ca/accept-invite?token=Q2F0ZXJwaWxsYXI',
     },
+  },
+  {
+    kind: 'dialog',
+    slug: 'calendar-connect',
+    label: "D31 · Connect Google Calendar (before Google's consent screen)",
+    component: ConnectCalendarDialog,
+    data: { start: () => Promise.resolve() },
+  },
+  {
+    kind: 'dialog',
+    slug: 'calendar-disconnect',
+    label: 'D32 · Disconnect Google Calendar',
+    component: ConfirmDialog,
+    data: FIX.DISCONNECT_GOOGLE_CALENDAR,
   },
   {
     kind: 'dialog',

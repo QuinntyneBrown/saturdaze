@@ -50,4 +50,36 @@ describe('CalendarService', () => {
     del.flush(null, { status: 204, statusText: 'No Content' });
     await stopped;
   });
+
+  it('authorizes, connects, updates and disconnects Google', async () => {
+    const url = service.authorizeGoogle();
+    const authorize = httpMock.expectOne(`${BASE}/api/calendar/google/authorize`);
+    expect(authorize.request.method).toBe('POST');
+    authorize.flush({ authorizationUrl: 'https://accounts.google.com/x' });
+    expect(await url).toBe('https://accounts.google.com/x');
+
+    const settings = {
+      googleConfigured: true,
+      google: null,
+      feed: { active: false, createdUtc: null },
+    };
+    const connected = service.connectGoogle('c', 's');
+    const connect = httpMock.expectOne(`${BASE}/api/calendar/google/connect`);
+    expect(connect.request.body).toEqual({ code: 'c', state: 's' });
+    connect.flush(settings);
+    await connected;
+
+    const updated = service.updateGoogle(false);
+    const put = httpMock.expectOne(`${BASE}/api/calendar/google`);
+    expect(put.request.method).toBe('PUT');
+    expect(put.request.body).toEqual({ readCommitments: false });
+    put.flush(settings);
+    await updated;
+
+    const gone = service.disconnectGoogle();
+    const del = httpMock.expectOne(`${BASE}/api/calendar/google`);
+    expect(del.request.method).toBe('DELETE');
+    del.flush(null, { status: 204, statusText: 'No Content' });
+    await gone;
+  });
 });

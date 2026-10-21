@@ -109,7 +109,62 @@
         title="Calendar"
         subtitle="Keep this weekend in the calendar you already use. Off until you connect one."
       >
+        @if (calendarDenied()) {
+          <sd-banner tone="info" icon="alert"
+            >Google Calendar wasn't connected. Nothing was shared.</sd-banner
+          >
+        }
+        @if (google()?.status === 'needs_reconnect') {
+          <sd-banner tone="warn" role="alert" icon="alert"
+            >Google Calendar stopped accepting updates. Reconnect to keep this weekend in
+            sync.</sd-banner
+          >
+        }
         <sd-list card>
+          @if (google(); as connection) {
+            <sd-list-item title="Google Calendar" [subtitle]="googleSubtitle()">
+              <sd-disc
+                slot="leading"
+                icon="calendar"
+                [tone]="connection.status === 'connected' ? 'primary' : 'warn'"
+              />
+              @if (connection.status === 'connected') {
+                <sd-button
+                  slot="trailing"
+                  variant="quiet"
+                  size="sm"
+                  warnText
+                  (click)="disconnectGoogle()"
+                  >Disconnect</sd-button
+                >
+              } @else {
+                <sd-button slot="trailing" variant="primary" size="sm" (click)="connectGoogle()"
+                  >Reconnect</sd-button
+                >
+              }
+            </sd-list-item>
+            <sd-list-item
+              title="Plan around my calendar"
+              subtitle="Weekend events count as commitments"
+            >
+              <sd-toggle
+                slot="trailing"
+                srLabel="Plan around my calendar"
+                [ngModel]="connection.readCommitments"
+                (ngModelChange)="setReadCommitments($event)"
+              />
+            </sd-list-item>
+          } @else if (calendar()?.googleConfigured) {
+            <sd-list-item
+              action
+              chevron
+              title="Connect Google Calendar"
+              subtitle="The plan goes in. Weekend events come back as commitments."
+              (pressed)="connectGoogle()"
+            >
+              <sd-disc slot="leading" icon="calendar" tone="primary" />
+            </sd-list-item>
+          }
           @if (feedActive()) {
             <sd-list-item title="Subscription link is on" [subtitle]="feedSubtitle()">
               <sd-disc slot="leading" icon="share" tone="accent" />
@@ -131,6 +186,9 @@
         </sd-list>
         @if (feedActive()) {
           <sd-ghost-row icon="refresh" (pressed)="subscribe()">Get a new link</sd-ghost-row>
+        }
+        @if (google()?.status === 'needs_reconnect') {
+          <sd-button variant="quiet" warnText (click)="disconnectGoogle()">Disconnect</sd-button>
         }
       </sd-section>
 

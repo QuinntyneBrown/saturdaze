@@ -12,13 +12,16 @@ import { PageSlug } from "../fixtures/routes.js";
  *     Home                  [Edit] · li.list__item (home location)
  *     Likes and dislikes    [Edit] · .cluster > .chip--leaf (likes) / .chip--warn (dislikes)
  *     Preferences           li.list__item + label.toggle > input.toggle__input[role=switch]
- *     Calendar              not connected: "Connect Google Calendar" · "Subscribe from another calendar"; link on: "Subscription link is on" [Stop] + ghost "Get a new link" (L2-166, L2-172)
+ *     Calendar              Google connected: "Google Calendar" (email · synced …) [Disconnect] + switch "Plan around my calendar"; needs reconnect: .banner[role=alert] + [Reconnect];
+ *                           not connected: "Connect Google Calendar" · "Subscribe from another calendar"; link on: "Subscription link is on" [Stop] + ghost "Get a new link" (L2-166, L2-172)
  *     Admin (.admin-only)   "Review submissions" row + count chip — Admin role only
  *     Account               .account-card (avatar · email · "Signed in since …" · [Add photo | Change photo] · [Sign out])
  *
  *   D17b sign-in choice     "Will they sign in?" radios (No sign-in | Invite to sign in) · Email when inviting (L2-125, L2-126)
  *   D30 Invite link dialog  .copy-field__value (the accept-invite link) · [Done]
  *
+ *   D31 Connect Google      what Saturdaze writes and reads · [Not now] · [Continue to Google] (error state: warn banner)
+ *   D32 Disconnect          [Keep it] · [Disconnect]
  *   D33 Subscription link   .copy-field__value (webcal URL) · [Copy link] · per-app steps · [Stop the link] · [Done]
  *   D34 Stop the link       [Keep it] · [Stop the link]
  *
@@ -266,6 +269,45 @@ export class FamilyPage extends BasePage {
 
   subscribeRow(): Locator {
     return this.calendarRow("Subscribe from another calendar");
+  }
+
+  connectGoogleRow(): Locator {
+    return this.calendarRow("Connect Google Calendar");
+  }
+
+  /** The connected (or needs-reconnect) Google row: title "Google Calendar", the account's email in its sub. */
+  googleRow(): Locator {
+    return this.calendarSection()
+      .locator(".list__item")
+      .filter({ has: this.page.locator(".list__title", { hasText: /^\s*Google Calendar\s*$/ }) });
+  }
+
+  disconnectGoogleButton(): Locator {
+    return control(this.calendarSection(), "Disconnect");
+  }
+
+  reconnectGoogleButton(): Locator {
+    return control(this.googleRow(), "Reconnect");
+  }
+
+  readCommitmentsToggle(): Locator {
+    return this.calendarSection().getByRole("switch", { name: "Plan around my calendar", exact: true });
+  }
+
+  /** The Calendar section's banner: the needs-reconnect alert or the consent-denied note. */
+  calendarBanner(): Locator {
+    return this.calendarSection().locator(".banner");
+  }
+
+  /** The warn banner inside the open connect dialog (D31's error state). */
+  dialogBanner(): Locator {
+    return this.dialog().locator(".banner");
+  }
+
+  /** The return route Google sends the browser back to (stood in for by the spec). */
+  async returnFromGoogle(query: string): Promise<void> {
+    await this.page.goto(`/family/calendar/google?${query}`);
+    await this.waitForReady();
   }
 
   feedOnRow(): Locator {
