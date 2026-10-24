@@ -22,7 +22,7 @@ When the API Web App is absent, preflight emits a warning and summary, and the A
 
 `.github/workflows/ci.yml` runs validation on pull requests and non-main pushes. `eng/Start-FreshStack.ps1` is local tooling, not part of this hosted deployment.
 
-The ingestion worker and WebJob source artifacts are available, but this workflow does not package or deploy them.
+The `api` job packages `Saturdaze.Cli` and the WebJob files into the API zip under `App_Data/jobs/triggered/ingest/`. A separate `webjob` job waits until `az webapp webjob triggered list` shows a job whose ARM name ends in `/ingest`, so a WebJob problem never holds back migrations. `smoke` needs it, then checks the API, the SPA shell on the default hosts, the marketing page and headers, and, when `APP_CUSTOM_DOMAIN` or `ADMIN_CUSTOM_DOMAIN` is set, `/sign-in` on that host (L2-041 AC6).
 
 ## Requirements
 
