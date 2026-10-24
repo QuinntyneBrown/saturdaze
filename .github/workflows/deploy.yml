@@ -298,7 +298,8 @@ jobs:
 
   # L2-041 AC5: the Web App lists the triggered WebJob. On Linux that needs
   # WEBSITE_SKIP_RUNNING_KUDUAGENT=false (main.bicep); Kudu registers the job a
-  # little after the restart, so this waits for it. It is its own job so a
+  # little after the restart, so this waits for it. ARM names the child resource
+  # `<site>/ingest`, so the filter matches the suffix. It is its own job so a
   # WebJob problem fails the deploy without holding back the migrations: the
   # API is already live by now, and new API code on an old schema is an outage.
   webjob:
@@ -319,13 +320,13 @@ jobs:
             if found="$(az webapp webjob triggered list \
               --resource-group "$AZURE_RESOURCE_GROUP" \
               --name "${{ needs.infra.outputs.api_name }}" \
-              --query "[?name=='ingest'] | length(@)" --output tsv 2>az.err)"; then
+              --query "[?ends_with(name, '/ingest')] | length(@)" --output tsv 2>az.err)"; then
               if [ "$found" = "1" ]; then
                 echo "WebJob 'ingest' is registered."
                 az webapp webjob triggered list \
                   --resource-group "$AZURE_RESOURCE_GROUP" \
                   --name "${{ needs.infra.outputs.api_name }}" \
-                  --query "[?name=='ingest'].{schedule:settings.schedule,lastRun:latestRun.status,at:latestRun.startTime}" --output table
+                  --query "[?ends_with(name, '/ingest')].{schedule:settings.schedule,lastRun:latestRun.status,at:latestRun.startTime}" --output table
                 exit 0
               fi
               echo "WebJob 'ingest' not listed yet (attempt $attempt)"
@@ -334,7 +335,7 @@ jobs:
             fi
             sleep 10
           done
-          echo "::error::The API does not list the triggered WebJob 'ingest'. Check WEBSITE_SKIP_RUNNING_KUDUAGENT and App_Data/jobs/triggered/ingest in the zip."
+          echo "::error::The API does not list the triggered WebJob 'ingest'. Check WEBSITE_SKIP_RUNNING_KUDUAGENT=false and App_Data/jobs/triggered/ingest in the zip; ARM lists the job as '<site>/ingest'."
           exit 1
 
   migrate:
@@ -505,7 +506,8 @@ jobs:
 
   # Proves the stack answers after a deploy: the API is up, the SPA shell
   # serves a deep route (L2-042) and the marketing site serves its page with
-  # its security headers (L2-156).
+  # its security headers (L2-156). Custom domains are proven when their
+  # repository variable is set (L2-041).
   smoke:
     name: Smoke test
     runs-on: ubuntu-24.04
@@ -527,6 +529,22 @@ jobs:
             grep -qE '<(app-root|sd-admin-root)' <<<"$body" || { echo "::error::https://$host/sign-in did not serve the SPA shell"; exit 1; }
             echo "https://$host/sign-in → OK"
           done
+
+      - name: App custom domain serves the shell
+        if: ${{ vars.APP_CUSTOM_DOMAIN != '' }}
+        run: |
+          url="https://${{ vars.APP_CUSTOM_DOMAIN }}/sign-in"
+          body="$(curl -fsS --retry 5 --retry-delay 10 --retry-all-errors "$url")"
+          grep -q '<app-root' <<<"$body" || { echo "::error::$url did not serve the app shell"; exit 1; }
+          echo "$url → OK"
+
+      - name: Admin custom domain serves the shell
+        if: ${{ vars.ADMIN_CUSTOM_DOMAIN != '' }}
+        run: |
+          url="https://${{ vars.ADMIN_CUSTOM_DOMAIN }}/sign-in"
+          body="$(curl -fsS --retry 5 --retry-delay 10 --retry-all-errors "$url")"
+          grep -q '<sd-admin-root' <<<"$body" || { echo "::error::$url did not serve the admin shell"; exit 1; }
+          echo "$url → OK"
 
       - name: Marketing site serves its page and headers
         run: |
