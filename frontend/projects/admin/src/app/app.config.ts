@@ -20,6 +20,9 @@ import {
   AdminPhotosService,
   AdminPlacesService,
   AuthService,
+  GOOGLE_CLIENT_ID,
+  GOOGLE_IDENTITY,
+  GoogleIdentityService,
   SESSION_STORE,
   SessionStore,
   authInterceptor,
@@ -48,6 +51,11 @@ export const appConfig: ApplicationConfig = {
     { provide: ADMIN_PHOTOS_SERVICE, useExisting: AdminPhotosService },
     { provide: ADMIN_AUDIT_SERVICE, useExisting: AdminAuditService },
     { provide: ADMIN_INVITATIONS_SERVICE, useExisting: AdminInvitationsService },
+
+    // "Continue with Google" (L2-182): Google's button script, off when the
+    // environment carries no client id.
+    { provide: GOOGLE_CLIENT_ID, useValue: environment.googleClientId },
+    { provide: GOOGLE_IDENTITY, useExisting: GoogleIdentityService },
 
     { provide: AUTH_SERVICE, useExisting: AuthService },
     { provide: SESSION_STORE, useExisting: SessionStore },

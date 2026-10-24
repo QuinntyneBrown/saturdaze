@@ -35,6 +35,29 @@ export class AdminSignInPage extends AuthCardPage {
     return this.card(state).getByRole("button", { name: "Sign in", exact: true });
   }
 
+  /** The "or" rule between the password form and the Google button (L2-182). */
+  orDivider(state?: string): Locator {
+    return this.card(state).getByRole("separator", { name: "or", exact: true });
+  }
+
+  /**
+   * "Continue with Google": the mock's `.btn--google` stand-in, or, in the
+   * app, the button Google Identity Services (or the e2e fake) renders
+   * into the `.google-btn` host.
+   */
+  googleButton(state?: string): Locator {
+    return this.card(state).getByRole("button", { name: "Continue with Google", exact: true });
+  }
+
+  /** The `.google-btn` host element the app reserves for Google's button. */
+  googleHost(state?: string): Locator {
+    return this.card(state).locator(".google-btn");
+  }
+
+  rememberToggle(state?: string): Locator {
+    return this.card(state).getByRole("switch", { name: "Remember me" });
+  }
+
   async signIn(email: string, password: string): Promise<void> {
     await this.emailInput().fill(email);
     await this.passwordInput().fill(password);
