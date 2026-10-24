@@ -296,25 +296,43 @@ jobs:
             --async false \
             --output none
 
-      # L2-041 AC5: the Web App lists the triggered WebJob. On Linux that needs
-      # WEBSITE_SKIP_RUNNING_KUDUAGENT=false (main.bicep); Kudu registers the
-      # job a little after the restart, so this waits for it.
+  # L2-041 AC5: the Web App lists the triggered WebJob. On Linux that needs
+  # WEBSITE_SKIP_RUNNING_KUDUAGENT=false (main.bicep); Kudu registers the job a
+  # little after the restart, so this waits for it. It is its own job so a
+  # WebJob problem fails the deploy without holding back the migrations: the
+  # API is already live by now, and new API code on an old schema is an outage.
+  webjob:
+    name: Ingestion WebJob is registered
+    runs-on: ubuntu-24.04
+    needs: [infra, api]
+    steps:
+      - name: Azure login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
       - name: Ingestion WebJob is registered
         run: |
           for attempt in $(seq 1 12); do
-            found="$(az webapp webjob triggered list \
+            if found="$(az webapp webjob triggered list \
               --resource-group "$AZURE_RESOURCE_GROUP" \
               --name "${{ needs.infra.outputs.api_name }}" \
-              --query "[?name=='ingest'] | length(@)" --output tsv 2>/dev/null || echo 0)"
-            if [ "$found" = "1" ]; then
-              echo "WebJob 'ingest' is registered."
-              az webapp webjob triggered list \
-                --resource-group "$AZURE_RESOURCE_GROUP" \
-                --name "${{ needs.infra.outputs.api_name }}" \
-                --query "[?name=='ingest'].{schedule:settings.schedule,lastRun:latestRun.status,at:latestRun.startTime}" --output table
-              exit 0
+              --query "[?name=='ingest'] | length(@)" --output tsv 2>az.err)"; then
+              if [ "$found" = "1" ]; then
+                echo "WebJob 'ingest' is registered."
+                az webapp webjob triggered list \
+                  --resource-group "$AZURE_RESOURCE_GROUP" \
+                  --name "${{ needs.infra.outputs.api_name }}" \
+                  --query "[?name=='ingest'].{schedule:settings.schedule,lastRun:latestRun.status,at:latestRun.startTime}" --output table
+                exit 0
+              fi
+              echo "WebJob 'ingest' not listed yet (attempt $attempt)"
+            else
+              echo "WebJob list failed (attempt $attempt): $(cat az.err)"
             fi
-            echo "WebJob 'ingest' not listed yet (attempt $attempt)"; sleep 10
+            sleep 10
           done
           echo "::error::The API does not list the triggered WebJob 'ingest'. Check WEBSITE_SKIP_RUNNING_KUDUAGENT and App_Data/jobs/triggered/ingest in the zip."
           exit 1
@@ -491,7 +509,7 @@ jobs:
   smoke:
     name: Smoke test
     runs-on: ubuntu-24.04
-    needs: [infra, web, admin-web, marketing-web]
+    needs: [infra, webjob, web, admin-web, marketing-web]
     steps:
       - name: API answers
         run: |
