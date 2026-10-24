@@ -378,7 +378,8 @@ DNS is at Namecheap: `CNAME app`, `CNAME admin` and `CNAME www` to each app's
 default host, `ALIAS @` to the marketing app's default host, and the `_dnsauth`
 TXT records Static Web Apps asks for. Set the repository variables
 `APP_CUSTOM_DOMAIN`, `ADMIN_CUSTOM_DOMAIN`, `MARKETING_CUSTOM_DOMAIN` and
-`MARKETING_APEX_DOMAIN` once those validate.
+`MARKETING_APEX_DOMAIN` once those validate. The smoke job loads `/sign-in` on
+`APP_CUSTOM_DOMAIN` and `ADMIN_CUSTOM_DOMAIN` whenever they are set.
 When the subscription has no Free Static Web App slot left, set
 `MARKETING_SWA_SKU=Standard`.
 
