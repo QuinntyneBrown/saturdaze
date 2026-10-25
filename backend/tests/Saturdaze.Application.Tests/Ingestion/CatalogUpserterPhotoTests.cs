@@ -19,7 +19,7 @@ public class CatalogUpserterPhotoTests
         [ {"name":"Bronte Creek","category":"Park","photos":[
             {"url":"https://images.example.com/bronte.jpg","width":1600,"height":900,"alt":"Creek","attribution":"Photo · Ana Lee","license":"CC BY 4.0"},
             {"url":"https://images.example.com/bronte-2.jpg","width":1600,"height":900,"alt":"Trail","attribution":"","license":"CC BY 4.0"}
-        ]} ]
+        ],"sourceUrl":"https://example.com/source"} ]
         """;
 
     [Fact]
@@ -83,7 +83,7 @@ public class CatalogUpserterPhotoTests
             [ {"name":"Bronte Creek","category":"Park","photos":[
                 {"url":"https://images.example.com/bronte.jpg","width":1600,"height":900,"alt":"Creek","attribution":"Photo · Ana Lee","license":"CC BY 4.0"},
                 {"url":"https://images.example.com/bronte-3.jpg","width":1600,"height":900,"alt":"Pond","attribution":"Photo · Ana Lee","license":"CC BY 4.0"}
-            ]} ]
+            ],"sourceUrl":"https://example.com/source"} ]
             """;
         var items = new IngestionResultParser().Parse(again, IngestionType.Activities).Items;
 

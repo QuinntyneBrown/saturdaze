@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Saturdaze.Application.Abstractions;
+using Saturdaze.Application.Catalog;
 using Saturdaze.Application.Exceptions;
 using Saturdaze.Application.Families;
 using Saturdaze.Domain.ValueObjects;
@@ -13,7 +14,8 @@ public sealed record ResolvedIdea(
     string Name,
     int DurationMinutes,
     int DriveMinutes,
-    GeoLocation? Geo);
+    GeoLocation? Geo,
+    IReadOnlyList<string>? Themes = null);
 
 /// <summary>
 /// Finds an idea in the shared catalogs (L2-107 AC5). Only activities and published
@@ -45,6 +47,8 @@ public sealed class IdeaResolver
     {
         var idea = await ResolveAsync(kind, id, ct);
         var boundaries = await _boundaries.ReadAsync(familyId, ct);
+        if (boundaries.Excludes(idea.Themes ?? Array.Empty<string>()))
+            throw new ConflictException("excluded_theme", $"{idea.Name} has a theme your family leaves out.");
         var drive = boundaries.DriveMinutes(idea.Geo, idea.DriveMinutes);
         if (drive > boundaries.MaxDriveMinutes)
             throw new ConflictException("beyond_max_drive",
@@ -59,11 +63,11 @@ public sealed class IdeaResolver
             var a = await _db.Activities.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id, ct)
                 ?? throw new NotFoundException("Idea", id);
             var minutes = a.TypicalDurationMinutes > 0 ? a.TypicalDurationMinutes : DefaultActivityMinutes;
-            return new ResolvedIdea(kind, a.Id, a.Name, minutes, a.DriveMinutes, a.Geo);
+            return new ResolvedIdea(kind, a.Id, a.Name, minutes, a.DriveMinutes, a.Geo, ThemeTagger.Of(a));
         }
 
         var e = await _db.LocalEvents.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id, ct)
             ?? throw new NotFoundException("Idea", id);
-        return new ResolvedIdea(kind, e.Id, e.Name, EventMinutes, e.DriveMinutes, e.Geo);
+        return new ResolvedIdea(kind, e.Id, e.Name, EventMinutes, e.DriveMinutes, e.Geo, ThemeTagger.Of(e));
     }
 }

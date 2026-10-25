@@ -1,3 +1,4 @@
+using Saturdaze.Application.Catalog;
 using Saturdaze.Application.Exceptions;
 using Saturdaze.Application.Common;
 using Saturdaze.Application.Travel;
@@ -270,6 +271,7 @@ public sealed class WeekendPlanner : IWeekendPlanner
             if (alreadyPicked.Contains(act.Id)) continue;
             if (skipped.Contains(act.Id)) continue;
             if (act.DriveMinutes > profile.MaxDriveMinutes) continue; // L2-191
+            if (ThemeTagger.Of(act).Any(profile.ExcludedThemes.Contains)) continue; // L2-194
             if (act.TypicalDurationMinutes > minutes) continue;
             // Both drives plus a minimum stay must fit, otherwise the drive-clamp
             // in BuildActivityWithDrives would produce an activity that ends

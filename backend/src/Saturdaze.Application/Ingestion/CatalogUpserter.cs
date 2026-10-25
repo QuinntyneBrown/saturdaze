@@ -1,3 +1,4 @@
+using Saturdaze.Application.Catalog;
 using System.Text.Json.Nodes;
 using Microsoft.EntityFrameworkCore;
 using Saturdaze.Application.Abstractions;
@@ -142,6 +143,15 @@ public sealed class CatalogUpserter
             // A row without the flag keeps what is known (L2-146 AC2).
             if (PayloadReader.TryGetBool(p, "indoor", out var indoor)) entity.Indoor = indoor;
             entity.Geo = GeoLocation.Merge(entity.Geo, PayloadReader.GetGeo(p));
+            // Richer facts (L2-198, L2-199): the parser has already dropped invalid ones.
+            entity.StartTime = CatalogFacts.Time(p, "startTime");
+            entity.EndTime = CatalogFacts.Time(p, "endTime");
+            entity.PriceTier = CatalogFacts.Int(p, "priceTier");
+            entity.MinAge = CatalogFacts.Int(p, "minAge");
+            entity.MaxAge = CatalogFacts.Int(p, "maxAge");
+            entity.Themes = PayloadReader.GetStringList(p, "themes")
+                .Concat(ThemeTagger.Tag(entity.Name, entity.Category, entity.Url))
+                .Select(t => t.ToLowerInvariant()).Distinct().ToList();
             await AddPhotosAsync(PlaceKind.LocalEvent, entity.Id, name, p, ct);
         }
 
@@ -191,6 +201,15 @@ public sealed class CatalogUpserter
             entity.Description = Truncate(PayloadReader.GetStringOrEmpty(p, "description"), 2000);
             entity.MapUrl = Truncate(PayloadReader.GetStringOrEmpty(p, "mapUrl"), 500);
             entity.Geo = GeoLocation.Merge(entity.Geo, PayloadReader.GetGeo(p));
+            entity.OpensAt = CatalogFacts.Time(p, "opensAt");
+            entity.ClosesAt = CatalogFacts.Time(p, "closesAt");
+            entity.SeasonStartMonth = CatalogFacts.Int(p, "seasonStartMonth");
+            entity.SeasonEndMonth = CatalogFacts.Int(p, "seasonEndMonth");
+            entity.PriceTier = CatalogFacts.Int(p, "priceTier");
+            entity.SourceUrl = Truncate(PayloadReader.GetStringOrEmpty(p, "sourceUrl"), 500);
+            entity.Themes = PayloadReader.GetStringList(p, "themes")
+                .Concat(ThemeTagger.Tag(entity.Name, entity.Category, entity.Description, entity.SourceUrl))
+                .Select(t => t.ToLowerInvariant()).Distinct().ToList();
             await AddPhotosAsync(PlaceKind.Activity, entity.Id, name, p, ct);
         }
 

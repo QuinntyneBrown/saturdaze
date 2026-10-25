@@ -90,13 +90,25 @@ public sealed class IngestionResultParser
         return new IngestionParseResult(items, considered, rejected);
     }
 
-    private static IngestionItem? TryBuildItem(JsonObject o, IngestionType type) => type switch
+    private static IngestionItem? TryBuildItem(JsonObject o, IngestionType type)
     {
-        IngestionType.Events => TryBuildEvent(o),
-        IngestionType.Activities => TryBuildActivity(o),
-        IngestionType.Restaurants => TryBuildRestaurant(o),
-        _ => null
-    };
+        // Events and activities need a verified https source (L2-199 AC2); their optional
+        // facts are cleaned rather than allowed to reject the row (AC3).
+        if (type is IngestionType.Events or IngestionType.Activities)
+        {
+            PayloadReader.TryGetString(o, CatalogFacts.SourceKey(type), out var source);
+            if (!CatalogFacts.IsHttpsUrl(source)) return null;
+            CatalogFacts.Sanitize(o, type);
+        }
+
+        return type switch
+        {
+            IngestionType.Events => TryBuildEvent(o),
+            IngestionType.Activities => TryBuildActivity(o),
+            IngestionType.Restaurants => TryBuildRestaurant(o),
+            _ => null
+        };
+    }
 
     private static IngestionItem? TryBuildEvent(JsonObject o)
     {

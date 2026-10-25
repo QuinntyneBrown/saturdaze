@@ -24,6 +24,8 @@ public class ActivityConfiguration : IEntityTypeConfiguration<Activity>
                 (a, b2) => (a ?? new()).SequenceEqual(b2 ?? new()),
                 v => v.Aggregate(0, (h, s) => HashCode.Combine(h, s.GetHashCode())),
                 v => v.ToList()));
+        b.Property(x => x.Themes).HasMaxLength(200).AsDelimited();
+        b.Property(x => x.SourceUrl).HasMaxLength(500);
         b.HasIndex(x => x.Name).IsUnique();
     }
 }

@@ -33,6 +33,9 @@ namespace Saturdaze.Infrastructure.Migrations
                         .HasMaxLength(80)
                         .HasColumnType("nvarchar(80)");
 
+                    b.Property<TimeOnly?>("ClosesAt")
+                        .HasColumnType("time");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(2000)
@@ -59,6 +62,27 @@ namespace Saturdaze.Infrastructure.Migrations
                         .IsRequired()
                         .HasMaxLength(160)
                         .HasColumnType("nvarchar(160)");
+
+                    b.Property<TimeOnly?>("OpensAt")
+                        .HasColumnType("time");
+
+                    b.Property<int?>("PriceTier")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("SeasonEndMonth")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("SeasonStartMonth")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SourceUrl")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("Themes")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<int>("TypicalDurationMinutes")
                         .HasColumnType("int");
@@ -615,6 +639,9 @@ namespace Saturdaze.Infrastructure.Migrations
                     b.Property<int>("DriveMinutes")
                         .HasColumnType("int");
 
+                    b.Property<TimeOnly?>("EndTime")
+                        .HasColumnType("time");
+
                     b.Property<DateOnly>("EndsOn")
                         .HasColumnType("date");
 
@@ -626,13 +653,30 @@ namespace Saturdaze.Infrastructure.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
+                    b.Property<int?>("MaxAge")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("MinAge")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
+                    b.Property<int?>("PriceTier")
+                        .HasColumnType("int");
+
+                    b.Property<TimeOnly?>("StartTime")
+                        .HasColumnType("time");
+
                     b.Property<DateOnly>("StartsOn")
                         .HasColumnType("date");
+
+                    b.Property<string>("Themes")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("Url")
                         .IsRequired()

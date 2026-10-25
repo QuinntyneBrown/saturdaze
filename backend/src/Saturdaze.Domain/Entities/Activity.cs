@@ -16,4 +16,23 @@ public class Activity
     public string MapUrl { get; set; } = string.Empty;
     public GeoLocation? Geo { get; set; }
     public int TypicalDurationMinutes { get; set; }
+
+    /// <summary>Weekend opening hours, local time; both or neither (L2-198).</summary>
+    public TimeOnly? OpensAt { get; set; }
+
+    public TimeOnly? ClosesAt { get; set; }
+
+    /// <summary>The months it is worth going, 1-12; a start after the end wraps the year (L2-198).</summary>
+    public int? SeasonStartMonth { get; set; }
+
+    public int? SeasonEndMonth { get; set; }
+
+    /// <summary>0 free, 1 under $20 a person, 2 $20-50, 3 over $50; null unknown.</summary>
+    public int? PriceTier { get; set; }
+
+    /// <summary>Content themes from <see cref="ValueObjects.ContentThemes"/> (L2-194).</summary>
+    public List<string> Themes { get; set; } = new();
+
+    /// <summary>The https page the facts were verified against (L2-199).</summary>
+    public string? SourceUrl { get; set; }
 }

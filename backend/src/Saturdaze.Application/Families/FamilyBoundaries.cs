@@ -14,6 +14,7 @@ public sealed record FamilyBoundaries(GeoLocation? Home, int MaxDriveMinutes, IR
 {
     public int DriveMinutes(GeoLocation? place, int stored) => FamilyDriveTime.Minutes(Home, place, stored);
 
+    /// <summary>True when the place carries a theme the family leaves out (L2-194).</summary>
     public bool Excludes(IEnumerable<string> themes) => themes.Any(ExcludedThemes.Contains);
 }
 

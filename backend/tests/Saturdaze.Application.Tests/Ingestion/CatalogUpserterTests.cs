@@ -38,9 +38,9 @@ public class CatalogUpserterTests
         var sut = new CatalogUpserter(app.Db);
         var items = Parser.Parse("""
             [
-              {"name":"Kids Concert","startsOn":"2026-05-16","endsOn":"2026-05-16","location":"Living Arts Centre","driveMinutes":5,"category":"Theatre","indoor":true},
-              {"name":"Farmers Market","startsOn":"2026-05-17","endsOn":"2026-05-17","location":"Lakeshore","driveMinutes":2,"category":"Local","indoor":false},
-              {"name":"Street Fair","startsOn":"2026-05-17","endsOn":"2026-05-17","location":"Main St","driveMinutes":4,"category":"Local"}
+              {"name":"Kids Concert","startsOn":"2026-05-16","endsOn":"2026-05-16","location":"Living Arts Centre","driveMinutes":5,"category":"Theatre","indoor":true,"url":"https://example.com/source"},
+              {"name":"Farmers Market","startsOn":"2026-05-17","endsOn":"2026-05-17","location":"Lakeshore","driveMinutes":2,"category":"Local","indoor":false,"url":"https://example.com/source"},
+              {"name":"Street Fair","startsOn":"2026-05-17","endsOn":"2026-05-17","location":"Main St","driveMinutes":4,"category":"Local","url":"https://example.com/source"}
             ]
             """, IngestionType.Events).Items;
 
@@ -59,7 +59,7 @@ public class CatalogUpserterTests
         var items = Parser.Parse("""
             [
               {"name":"Tulip Festival","startsOn":"2026-05-16","endsOn":"2026-05-17","location":"RBG","driveMinutes":35,"url":"https://rbg.ca","category":"Festival"},
-              {"name":"Farmers Market","startsOn":"2026-05-17","endsOn":"2026-05-17","location":"Lakeshore","driveMinutes":2,"category":"Local"}
+              {"name":"Farmers Market","startsOn":"2026-05-17","endsOn":"2026-05-17","location":"Lakeshore","driveMinutes":2,"category":"Local","url":"https://example.com/source"}
             ]
             """, IngestionType.Events).Items;
 
@@ -80,12 +80,12 @@ public class CatalogUpserterTests
         var sut = new CatalogUpserter(app.Db);
 
         await sut.UpsertAsync(Parser.Parse(
-            """[ {"name":"Tulip Festival","startsOn":"2026-05-16","endsOn":"2026-05-16","location":"RBG","category":"Festival"} ]""",
+            """[ {"name":"Tulip Festival","startsOn":"2026-05-16","endsOn":"2026-05-16","location":"RBG","category":"Festival","url":"https://example.com/source"} ]""",
             IngestionType.Events).Items, IngestionType.Events, default);
 
         // Same natural key (name|date|location), new end date + category.
         var result = await sut.UpsertAsync(Parser.Parse(
-            """[ {"name":"Tulip Festival","startsOn":"2026-05-16","endsOn":"2026-05-18","location":"RBG","category":"Seasonal"} ]""",
+            """[ {"name":"Tulip Festival","startsOn":"2026-05-16","endsOn":"2026-05-18","location":"RBG","category":"Seasonal","url":"https://example.com/source"} ]""",
             IngestionType.Events).Items, IngestionType.Events, default);
 
         result.Inserted.Should().Be(0);
@@ -103,10 +103,10 @@ public class CatalogUpserterTests
         var sut = new CatalogUpserter(app.Db);
 
         await sut.UpsertAsync(Parser.Parse(
-            """[ {"name":"Bronte Creek","category":"Park","indoor":false,"minAge":5,"maxAge":99,"weatherTags":["sunny","mild"]} ]""",
+            """[ {"name":"Bronte Creek","category":"Park","indoor":false,"minAge":5,"maxAge":99,"weatherTags":["sunny","mild"],"sourceUrl":"https://example.com/source"} ]""",
             IngestionType.Activities).Items, IngestionType.Activities, default);
         var result = await sut.UpsertAsync(Parser.Parse(
-            """[ {"name":"Bronte Creek","category":"Outdoor","indoor":false,"weatherTags":["warm"]} ]""",
+            """[ {"name":"Bronte Creek","category":"Outdoor","indoor":false,"weatherTags":["warm"],"sourceUrl":"https://example.com/source"} ]""",
             IngestionType.Activities).Items, IngestionType.Activities, default);
 
         result.Updated.Should().Be(1);
@@ -144,7 +144,7 @@ public class CatalogUpserterTests
         var sut = new CatalogUpserter(app.Db);
         var longName = new string('x', 250); // Activity.Name cap is 160
         var items = Parser.Parse(
-            $$"""[ {"name":"{{longName}}","category":"Park"} ]""",
+            $$"""[ {"name":"{{longName}}","category":"Park","sourceUrl":"https://example.com/source"} ]""",
             IngestionType.Activities).Items;
 
         var result = await sut.UpsertAsync(items, IngestionType.Activities, default);
@@ -161,7 +161,7 @@ public class CatalogUpserterTests
         var sut = new CatalogUpserter(app.Db);
         var longDescription = new string('d', 3000); // Activity.Description cap is 2000
         var items = Parser.Parse(
-            $$"""[ {"name":"Trail","category":"Park","description":"{{longDescription}}"} ]""",
+            $$"""[ {"name":"Trail","category":"Park","description":"{{longDescription}}","sourceUrl":"https://example.com/source"} ]""",
             IngestionType.Activities).Items;
 
         var result = await sut.UpsertAsync(items, IngestionType.Activities, default);

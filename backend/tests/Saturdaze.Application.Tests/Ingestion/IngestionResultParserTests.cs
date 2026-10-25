@@ -35,7 +35,7 @@ public class IngestionResultParserTests
             Here are the events I found this weekend:
 
             ```json
-            [ {"name":"Tulip Festival","startsOn":"2026-05-16","endsOn":"2026-05-17","location":"RBG"} ]
+            [ {"name":"Tulip Festival","startsOn":"2026-05-16","endsOn":"2026-05-17","location":"RBG","url":"https://example.com/source"} ]
             ```
 
             Let me know if you'd like more.
@@ -52,10 +52,10 @@ public class IngestionResultParserTests
     {
         const string json = """
             [
-              {"name":"Good","startsOn":"2026-08-15","location":"Here"},
-              {"name":"No date","location":"Here"},
-              {"startsOn":"2026-08-15","location":"No name"},
-              {"name":"No location","startsOn":"2026-08-15"}
+              {"name":"Good","startsOn":"2026-08-15","location":"Here","url":"https://example.com/source"},
+              {"name":"No date","location":"Here","url":"https://example.com/source"},
+              {"startsOn":"2026-08-15","location":"No name","url":"https://example.com/source"},
+              {"name":"No location","startsOn":"2026-08-15","url":"https://example.com/source"}
             ]
             """;
 
@@ -69,7 +69,7 @@ public class IngestionResultParserTests
     [Fact]
     public void Defaults_missing_event_end_date_to_start_date()
     {
-        const string json = """[ {"name":"One Day","startsOn":"2026-08-15","location":"Here"} ]""";
+        const string json = """[ {"name":"One Day","startsOn":"2026-08-15","location":"Here","url":"https://example.com/source"} ]""";
 
         var item = _sut.Parse(json, IngestionType.Events).Items.Single();
 
@@ -82,7 +82,7 @@ public class IngestionResultParserTests
     public void Parses_event_dates_with_common_model_format_variations(string date, string expectedDate)
     {
         var result = _sut.Parse(
-            $$"""[ {"name":"Event","startsOn":"{{date}}","location":"Here"} ]""",
+            $$"""[ {"name":"Event","startsOn":"{{date}}","location":"Here","url":"https://example.com/source"} ]""",
             IngestionType.Events);
 
         result.Items.Should().ContainSingle();
@@ -110,7 +110,7 @@ public class IngestionResultParserTests
     [Fact]
     public void Activity_keys_on_name()
     {
-        const string json = """[ {"name":"Bronte Creek Park","category":"Park","indoor":false} ]""";
+        const string json = """[ {"name":"Bronte Creek Park","category":"Park","indoor":false,"sourceUrl":"https://example.com/source"} ]""";
 
         var item = _sut.Parse(json, IngestionType.Activities).Items.Single();
 
@@ -121,7 +121,7 @@ public class IngestionResultParserTests
     public void Tolerates_numbers_supplied_as_strings()
     {
         const string json = """
-            [ {"name":"X","startsOn":"2026-08-15","location":"Y","driveMinutes":"42"} ]
+            [ {"name":"X","startsOn":"2026-08-15","location":"Y","driveMinutes":"42","url":"https://example.com/source"} ]
             """;
 
         var item = _sut.Parse(json, IngestionType.Events).Items.Single();
@@ -142,7 +142,7 @@ public class IngestionResultParserTests
     [Fact]
     public void Ignores_brackets_inside_strings_when_extracting()
     {
-        const string text = """[ {"name":"Art [installation]","startsOn":"2026-08-15","location":"Gallery"} ]""";
+        const string text = """[ {"name":"Art [installation]","startsOn":"2026-08-15","location":"Gallery","url":"https://example.com/source"} ]""";
         var item = _sut.Parse(text, IngestionType.Events).Items.Single();
         item.DisplayName.Should().Be("Art [installation]");
     }
@@ -154,7 +154,7 @@ public class IngestionResultParserTests
         // objects. Neither must shadow the real array that follows.
         const string text = """
             Events near [Port Credit] for [2026]:
-            [ {"name":"Tulip Festival","startsOn":"2026-05-16","endsOn":"2026-05-17","location":"RBG"} ]
+            [ {"name":"Tulip Festival","startsOn":"2026-05-16","endsOn":"2026-05-17","location":"RBG","url":"https://example.com/source"} ]
             Hope this helps!
             """;
 

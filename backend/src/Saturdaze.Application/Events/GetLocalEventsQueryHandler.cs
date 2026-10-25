@@ -1,6 +1,7 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Saturdaze.Application.Abstractions;
+using Saturdaze.Application.Catalog;
 using Saturdaze.Application.Contracts;
 using Saturdaze.Application.Families;
 using Saturdaze.Application.Photos;
@@ -51,7 +52,7 @@ public sealed class GetLocalEventsQueryHandler
         var limit = Math.Min(request.MaxDriveMinutes ?? boundaries?.MaxDriveMinutes ?? DefaultMaxDriveMinutes,
             boundaries?.MaxDriveMinutes ?? int.MaxValue);
         rows = rows
-            .Where(e => e.DriveMinutes <= limit)
+            .Where(e => e.DriveMinutes <= limit && boundaries?.Excludes(ThemeTagger.Of(e)) != true)
             .OrderBy(e => e.StartsOn).ThenBy(e => e.DriveMinutes).ThenBy(e => e.Name)
             .ToList();
 
@@ -65,7 +66,9 @@ public sealed class GetLocalEventsQueryHandler
                 e.Id, e.Name, e.StartsOn, e.EndsOn, e.Location, e.DriveMinutes, e.Url, e.Category,
                 LocationDto.From(e.Geo),
                 photos.GetValueOrDefault(e.Id),
-                e.Indoor))
+                e.Indoor,
+                e.StartTime, e.EndTime, e.PriceTier, e.MinAge, e.MaxAge,
+                ThemeTagger.Of(e)))
             .ToList();
     }
 }

@@ -13,4 +13,11 @@ public sealed record ActivityDto(
     string Description,
     string MapUrl,
     LocationDto? Location,
-    PlacePhotoDto? Photo = null);
+    PlacePhotoDto? Photo = null,
+    TimeOnly? OpensAt = null,
+    TimeOnly? ClosesAt = null,
+    int? SeasonStartMonth = null,
+    int? SeasonEndMonth = null,
+    int? PriceTier = null,
+    IReadOnlyList<string>? Themes = null,
+    string? SourceUrl = null);

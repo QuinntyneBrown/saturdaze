@@ -2,6 +2,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Saturdaze.Application.Abstractions;
 using Saturdaze.Application.Common;
+using Saturdaze.Application.Catalog;
 using Saturdaze.Application.Contracts;
 using Saturdaze.Application.Families;
 using Saturdaze.Application.Photos;
@@ -70,7 +71,9 @@ public sealed class GetActivitySuggestionsQueryHandler
         if (boundaries is not null)
             foreach (var a in activities) a.DriveMinutes = boundaries.DriveMinutes(a.Geo, a.DriveMinutes);
         var limit = Math.Min(request.MaxDriveMinutes ?? int.MaxValue, boundaries?.MaxDriveMinutes ?? int.MaxValue);
-        activities = activities.Where(a => a.DriveMinutes <= limit).ToList();
+        activities = activities
+            .Where(a => a.DriveMinutes <= limit && boundaries?.Excludes(ThemeTagger.Of(a)) != true)
+            .ToList();
 
         if (request.Weather is { } weather && !string.IsNullOrWhiteSpace(weather))
         {
@@ -111,7 +114,9 @@ public sealed class GetActivitySuggestionsQueryHandler
                 a.Id, a.Name, a.Category, a.Indoor, a.MinAge, a.MaxAge, a.DriveMinutes,
                 a.WeatherTags.ToList(), a.TypicalDurationMinutes, a.Description, a.MapUrl,
                 LocationDto.From(a.Geo),
-                photos.GetValueOrDefault(a.Id)))
+                photos.GetValueOrDefault(a.Id),
+                a.OpensAt, a.ClosesAt, a.SeasonStartMonth, a.SeasonEndMonth, a.PriceTier,
+                ThemeTagger.Of(a), a.SourceUrl))
             .ToList();
     }
 }
