@@ -18,7 +18,7 @@ import { PageSlug } from "../fixtures/routes.js";
  *     Account               .account-card (avatar · email · "Signed in since …" · [Add photo | Change photo] · [Sign out])
  *
  *   D17b sign-in choice     "Will they sign in?" radios (No sign-in | Invite to sign in) · Email when inviting (L2-125, L2-126)
- *   D30 Invite link dialog  .copy-field__value (the accept-invite link) · [Done]
+ *   D30 Invite link dialog  .dialog__sub ("We also emailed this link to {email}. It works once.", L2-183) · .copy-field__value (the accept-invite link) · [Done]
  *
  *   D31 Connect Google      what Saturdaze writes and reads · [Not now] · [Continue to Google] (error state: warn banner)
  *   D32 Disconnect          [Keep it] · [Disconnect]

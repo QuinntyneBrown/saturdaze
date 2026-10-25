@@ -77,20 +77,21 @@ test.describe("Family members who sign in", () => {
   });
 
   test("the owner invites a member and shares the link from D30", async ({ pages }) => {
-    // Traces to: L2-126 #6
+    // Traces to: L2-126 #6, L2-183 #6, L2-134
     const f = pages.family;
     const email = inviteeEmail();
 
     await f.addMemberRow().click();
     await f.signInChoice("Invite to sign in").check();
     await expect(f.dialogField("Email")).toBeVisible();
-    await expect(f.dialogAction("Send invite")).toBeDisabled();
+    await expect(f.dialogAction("Send invite")).toBeEnabled();
     await f.dialogAction("Cancel").click();
 
     const sent = await f.addMember({ name: "Sara", age: 36, inviteEmail: email });
 
     expect(sent).toEqual({ name: "Sara", age: 36, email });
     await expect(f.dialogTitle()).toHaveText("Invite ready for Sara");
+    await expect(f.dialogSubtitle()).toHaveText(`We also emailed this link to ${email}. It works once.`);
     await expect(f.inviteLink()).toContainText("/accept-invite?token=");
     await f.dialogAction("Done").click();
     await expect(f.dialog()).toHaveCount(0);
