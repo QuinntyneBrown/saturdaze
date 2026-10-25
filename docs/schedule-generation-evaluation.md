@@ -214,6 +214,71 @@ venues (verified URLs only; the validator rejects impossible blocks), and
 testability (fake tools and recorded responses in tests, as ADR-020 does for
 the database).
 
+## Resolution — 2026-10-25
+
+The findings above were taken up by L1-041, L2-184 to L2-213 and ADR-023
+(agent-drafted weekends). The deterministic planner stays the authority: the
+agents propose and the validator disposes. Each entry below shows what resolved
+a finding, or that it is still open.
+
+### Planner defects
+
+| # | Resolved by |
+|---|---|
+| 1 One activity per gap | L2-184: meals are reserved first, then two passes fill free gaps up to the family's outings per day (L2-195) |
+| 2 Same activity on both days | L2-185: one visit per place per weekend |
+| 3 Meals placed anywhere | L2-186: lunch starts 11:30–13:30, dinner 17:00–19:00, and a meal is skipped rather than misplaced; a "Lunch at …" commitment counts as the meal |
+| 4 No Sunday dinner | L2-187: Sunday has a dinner, at home by default (`SundayDinnerAtHome`) |
+| 5 Events never planned | L2-201: events are planner candidates with a bonus and their own times |
+| 6 No hours, times, seasons or daylight | L2-198 and L2-200: catalog places carry hours, season, event times and themes; outdoor blocks end by sunset |
+| 7 No travel to commitments | L2-192 and L2-193: commitments have attendees and a place, and the plan drives to and from it; commitment blocks name who goes |
+| 8 Restaurant choice ignores geography | L2-186: the restaurant nearest the previous stop, and its reason names that stop |
+| 9 Regenerate duplicates blocks | L2-188 |
+| 10 Try-new reason unconditional | L2-189 |
+| 11 Low regenerate variety | **Open.** A larger candidate set (events, two passes, interests) changes more picks, but ties still break by name and a seeded pick. |
+
+### Data defects
+
+- Tiny catalog, and drive times relative to one home: L2-190 geocodes each
+  home and computes drive times and the forecast per family. Ingestion asks for
+  the richer fields and verifies each source (L2-199), and the agents' shared
+  regional research brings what's on near each family (L2-207).
+- Stale entries: **open.** The Ontario Science Centre and the re-anchored
+  strawberry event are seed data. Seasons (L2-200) keep out-of-season places
+  away, but stale rows still need a catalog clean-up.
+
+### Configuration gaps
+
+| Need | Resolved by |
+|---|---|
+| Home location | L2-190 (geocoded on save) |
+| Max drive 2 h | L2-191, applied to plans, lists, Ideas and the agents |
+| "Don't celebrate Halloween" | L2-194: themes such as `halloween` are tagged on places and events and hidden everywhere, names or not; the agents are checked against them (L2-206, ASSERT B1) |
+| Faith / Sunday worship | L2-195: "Keep Sunday quiet" (one outing at most) |
+| Who attends a commitment | L2-192: attendees; overlaps are allowed when an adult can take each |
+| Commitment location | L2-192, L2-193 |
+| Kid bedtimes / day window | L2-195: day start, youngest's bedtime, Sunday dinner at home |
+| Budget | **Partly.** Places carry a price tier (L2-198); the budget toggle does not weigh it yet. |
+| Interests | L2-196: per-member interests that can outweigh the weather |
+| Indoor/outdoor preference | L2-196: indoor, either or outdoor |
+| Pace | L2-195: outings per day |
+| Mobility | **Open.** No setting yet; grandparents (run 18) are one of the ASSERT variants. |
+
+### Recommendation 3 — agentic schedule development
+
+This recommendation was built as ADR-023. A shared regional researcher, a
+per-family curator and a drafter run on Claude in Foundry through Microsoft
+Agent Framework. Their picks go through the validator and are applied by the
+planner. Drafts run every Friday (a WebJob) and on demand from the Weekend
+page. Costs are capped per run, per day and per month. Every run is traced to
+Application Insights and listed in Saturdaze Admin. The agents' behaviour is
+evaluated with ASSERT (`evals/assert/`).
+
+Still open in this design: a long outing (4.5 hours or more) cannot cover lunch,
+because lunch is reserved first (`docs/detailed-designs/weekend-planning/
+fit-plans-to-the-family`). Conversational edits (recommendation 3.4) are not
+built.
+
 ## Next steps
 
 Each production change above needs a requirement, a detailed design and a mock
