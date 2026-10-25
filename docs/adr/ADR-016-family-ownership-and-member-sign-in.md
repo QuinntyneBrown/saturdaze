@@ -29,6 +29,8 @@ Owner-only operations throw `ForbiddenException`, which the exception middleware
 
 There is no email provider (the same reason `AuthController.DevDelivery` exists), so the invite response returns the raw token and the full link, built from `Saturdaze:Share:AppOrigin`, to the owner who created it, in every environment. The owner is entitled to add that person to the family, so handing the owner the link adds no capability. Only a SHA-256 hash of the token is stored (the refresh-token hashing in `IJwtTokenService`), so the link cannot be recovered later; the owner removes and re-invites instead. Invitations are single-use and expire after 7 days.
 
+*(Amended 2026-10-25, L2-183: an email provider now exists (ADR-021), so the invitee is also emailed the link through `IEmailOutbox` once the invitation is saved. The response still returns the link to the owner, who keeps it as the fallback when mail is slow or fails; the token is still stored only as a hash.)*
+
 An email that already belongs to an account cannot be invited (`409 email_in_use`). Moving an existing account, with its own family and weekends, into another family is out of scope.
 
 Accepting creates the account with `EmailVerifiedUtc` set (only the invited address could have received the link), links it to the member, marks the invitation accepted and issues tokens through `RefreshTokenIssuer`, exactly as registration does.

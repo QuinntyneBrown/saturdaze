@@ -120,6 +120,7 @@ public static class DependencyInjection
             services.AddSingleton<IEmailSender, SmtpEmailSender>();
         services.AddSingleton<AccountEmails>();
         services.AddSingleton<InvitationEmails>();
+        services.AddSingleton<FamilyInviteEmails>();
         services.AddSingleton<SuggestionEmails>();
 
         var weatherBaseUrl = configuration["Saturdaze:Weather:BaseUrl"]

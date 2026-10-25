@@ -57,6 +57,10 @@ class InvitationEmails {
   +Invitation(to, token, invitedBy, sample, message): EmailMessage
 }
 
+class FamilyInviteEmails {
+  +Invite(to, token, familyName, memberName, invitedBy): EmailMessage
+}
+
 class AccountEmails {
   +Verification(to, token): EmailMessage
   +PasswordReset(to, token): EmailMessage
@@ -77,6 +81,7 @@ EmailLayout ..> EmailContent : renders
 InvitationEmails ..> EmailLayout
 AccountEmails ..> EmailLayout
 SuggestionEmails ..> EmailLayout
+FamilyInviteEmails ..> EmailLayout
 InvitationEmails ..> EmailMessage : returns
 EmailMime ..> EmailMessage : text and html parts
 @enduml

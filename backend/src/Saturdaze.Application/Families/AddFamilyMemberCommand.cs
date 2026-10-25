@@ -5,6 +5,7 @@ using Saturdaze.Application.Abstractions;
 using Saturdaze.Application.Authentication;
 using Saturdaze.Application.Common;
 using Saturdaze.Application.Contracts;
+using Saturdaze.Application.Email;
 using Saturdaze.Application.Exceptions;
 using Saturdaze.Domain.Entities;
 using Saturdaze.Domain.Enums;
@@ -36,19 +37,25 @@ public sealed class AddFamilyMemberCommandHandler : IRequestHandler<AddFamilyMem
     private readonly IJwtTokenService _tokens;
     private readonly ICurrentUserAccessor _user;
     private readonly IDateTimeProvider _clock;
+    private readonly IEmailOutbox _outbox;
+    private readonly FamilyInviteEmails _emails;
 
     public AddFamilyMemberCommandHandler(
         IAppDbContext db,
         FamilyOwnership ownership,
         IJwtTokenService tokens,
         ICurrentUserAccessor user,
-        IDateTimeProvider clock)
+        IDateTimeProvider clock,
+        IEmailOutbox outbox,
+        FamilyInviteEmails emails)
     {
         _db = db;
         _ownership = ownership;
         _tokens = tokens;
         _user = user;
         _clock = clock;
+        _outbox = outbox;
+        _emails = emails;
     }
 
     public async Task<AddFamilyMemberResultDto> Handle(AddFamilyMemberCommand request, CancellationToken ct)
@@ -66,6 +73,14 @@ public sealed class AddFamilyMemberCommandHandler : IRequestHandler<AddFamilyMem
             invite = await InviteAsync(family, member, request.Email.Trim(), ct);
 
         await _db.SaveChangesAsync(ct);
+
+        // Mail leaves after the invitation is committed, off the request path (L2-183, L2-142).
+        if (invite is not null)
+        {
+            var invitedBy = await _db.Users.AsNoTracking()
+                .Where(u => u.Id == _user.UserId).Select(u => u.Email).FirstOrDefaultAsync(ct);
+            _outbox.Enqueue(_emails.Invite(invite.Email, invite.Token, family.Name, member.Name, invitedBy ?? "Saturdaze"));
+        }
 
         var dto = invite is null
             ? new FamilyMemberDto(member.Id, member.Name, member.Age)

@@ -4,7 +4,7 @@
 |---|---|---|
 | connect-calendar | 6 days | 90% |
 | join-from-invitation | 4 days | 100% |
-| manage-family-members | 7 days | 100% |
+| manage-family-members | 8 days | 100% |
 | manage-profile-photo | 4 days | 100% |
 | recover-password | 3 days | 100% |
 | register-family-account | 3 days | 100% |
