@@ -80,3 +80,11 @@ textarea.field__input {
   font-size: var(--fontSizeBase200);
   color: var(--colorStatusDangerForeground1);
 }
+
+// iOS zooms the page into a focused field under 16px and never zooms back
+// (L2-028 AC7); touch devices get 16px, pointer devices keep the type scale.
+@media (pointer: coarse) {
+  .field__input {
+    font-size: max(16px, var(--fontSizeBase400));
+  }
+}
