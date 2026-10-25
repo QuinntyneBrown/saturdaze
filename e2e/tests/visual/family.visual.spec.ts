@@ -1,5 +1,6 @@
 import { test, expect } from "../../fixtures/sd-test.js";
 import { stubCalendarApi } from "../../fixtures/calendar-api.js";
+import { isBaseline } from "../../fixtures/routes.js";
 
 /**
  * Family parity — pages/family.html.
@@ -40,6 +41,22 @@ test.describe("Visual: Family", () => {
 
   test("Preferences toggles", async ({ pages }) => {
     await expect(pages.family.preferencesSection()).toHaveScreenshot("family.preferences.png");
+  });
+
+  test("'How you plan' rows", async ({ page, pages, settle }) => {
+    // The mock draws a family that leaves Halloween out and keeps Sunday quiet (L2-197).
+    if (!isBaseline()) {
+      await page.route(/\/api\/family$/, async (route) => {
+        if (route.request().method() !== "GET") return route.fallback();
+        const response = await route.fetch();
+        const family = { ...(await response.json()), excludedThemes: ["halloween"], quietSunday: true };
+        await route.fulfill({ response, json: family });
+      });
+      await page.reload();
+      await pages.family.waitForReady();
+      await settle();
+    }
+    await expect(pages.family.planSection()).toHaveScreenshot("family.plan.png");
   });
 
   test("Account card", async ({ pages }) => {

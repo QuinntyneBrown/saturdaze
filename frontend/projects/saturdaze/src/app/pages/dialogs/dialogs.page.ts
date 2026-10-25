@@ -16,10 +16,13 @@ import { EventSubmittedDialog } from '../../dialogs/event-submitted-dialog/event
 import { FamilyMemberDialog } from '../../dialogs/family-member-dialog/family-member-dialog';
 import { HomeLocationDialog } from '../../dialogs/home-location-dialog/home-location-dialog';
 import { InviteLinkDialog } from '../../dialogs/invite-link-dialog/invite-link-dialog';
+import { CelebrationsDialog } from '../../dialogs/celebrations-dialog/celebrations-dialog';
+import { DayShapeDialog } from '../../dialogs/day-shape-dialog/day-shape-dialog';
 import { CalendarFeedDialog } from '../../dialogs/calendar-feed-dialog/calendar-feed-dialog';
 import { ConnectCalendarDialog } from '../../dialogs/connect-calendar-dialog/connect-calendar-dialog';
 import { LikesDialog } from '../../dialogs/likes-dialog/likes-dialog';
 import { LockRestaurantDialog } from '../../dialogs/lock-restaurant-dialog/lock-restaurant-dialog';
+import { MaxDriveDialog } from '../../dialogs/max-drive-dialog/max-drive-dialog';
 import { MenuDialog } from '../../dialogs/menu-dialog/menu-dialog';
 import { RatingDialog } from '../../dialogs/rating-dialog/rating-dialog';
 import { RejectSubmissionDialog } from '../../dialogs/reject-submission-dialog/reject-submission-dialog';
@@ -316,6 +319,27 @@ const SPECIMENS: readonly Specimen[] = [
       download: () => Promise.resolve(new Blob([], { type: 'text/calendar' })),
       googleSynced: true,
     },
+  },
+  {
+    kind: 'dialog',
+    slug: 'max-drive',
+    label: 'D35 · Max drive',
+    component: MaxDriveDialog,
+    data: FIX.PLANNING_DIALOG,
+  },
+  {
+    kind: 'dialog',
+    slug: 'observances',
+    label: 'D36 · What you celebrate',
+    component: CelebrationsDialog,
+    data: FIX.PLANNING_DIALOG,
+  },
+  {
+    kind: 'dialog',
+    slug: 'day-shape',
+    label: 'D37 · Day shape',
+    component: DayShapeDialog,
+    data: FIX.PLANNING_DIALOG,
   },
   {
     kind: 'dialog',

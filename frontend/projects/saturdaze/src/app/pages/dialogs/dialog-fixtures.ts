@@ -1,7 +1,9 @@
 import type { BlockRow, EventSubmissionDto, FoodCard, SubmissionCard } from 'api';
+import { DEFAULT_PLANNING } from 'api';
 import type { MenuItem } from 'components';
 
 import type { ConfirmDialogData } from '../../dialogs/confirm-dialog/confirm-dialog';
+import type { PlanningDialogData } from '../../dialogs/max-drive-dialog/max-drive-dialog';
 
 /**
  * Sample data for the dialogs gallery — the same copy as
@@ -236,8 +238,25 @@ export const MORE_ITEMS: readonly MenuItem[] = [
     icon: 'refresh',
     sub: 'Locked blocks stay where they are',
   },
+  {
+    id: 'agents',
+    label: 'Draft with agents',
+    icon: 'sparkle',
+    sub: "Research what's on and fit it to your family. Locks stay.",
+  },
   { id: 'calendar', label: 'Add to calendar', icon: 'calendar', sub: 'One .ics with both days' },
 ];
+
+/** D35–D37 as the mock draws them: Halloween left out, Sunday quiet, bedtime 20:00 (L2-197). */
+export const PLANNING_DIALOG: PlanningDialogData = {
+  initial: {
+    ...DEFAULT_PLANNING,
+    excludedThemes: ['halloween'],
+    quietSunday: true,
+    youngestBedtime: '20:00',
+  },
+  save: () => Promise.resolve(),
+};
 
 export const ACCOUNT_ITEMS: readonly MenuItem[] = [
   { id: 'family', label: 'Family settings', icon: 'user', href: '/family' },

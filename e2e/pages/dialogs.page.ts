@@ -50,6 +50,10 @@ export const DIALOG_SLUGS = [
   "calendar-feed",
   "calendar-feed-stop",
   "calendar-synced",
+  // how you plan (L2-197)
+  "max-drive",
+  "observances",
+  "day-shape",
   // admin
   "approve",
   "reject",
