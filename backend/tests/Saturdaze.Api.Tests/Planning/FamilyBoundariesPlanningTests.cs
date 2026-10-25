@@ -67,6 +67,12 @@ public class FamilyBoundariesPlanningTests : IClassFixture<SaturdazeApiFactory>
         saved.GetProperty("homeCoordinates").GetProperty("latitude").GetDecimal().Should().Be(43.6m);
     }
 
+    private T Db<T>(Func<Saturdaze.Infrastructure.Persistence.AppDbContext, T> read)
+    {
+        using var scope = Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.CreateScope(_factory.Services);
+        return read(Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<Saturdaze.Infrastructure.Persistence.AppDbContext>(scope.ServiceProvider));
+    }
+
     [Fact]
     public async Task Drive_times_start_from_each_familys_own_home()
     {
@@ -81,10 +87,14 @@ public class FamilyBoundariesPlanningTests : IClassFixture<SaturdazeApiFactory>
 
         var park = fromNear.GetProperty("location");
         var place = new GeoLocation { Latitude = park.GetProperty("latitude").GetDecimal(), Longitude = park.GetProperty("longitude").GetDecimal() };
-        fromNear.GetProperty("driveMinutes").GetInt32().Should().Be(
-            TravelEstimator.Minutes(TravelEstimator.DistanceKm(new GeoLocation { Latitude = 43.5547m, Longitude = -79.5816m }, place)));
+        int Estimate(decimal lat, decimal lng) =>
+            TravelEstimator.Minutes(TravelEstimator.DistanceKm(new GeoLocation { Latitude = lat, Longitude = lng }, place));
+        // The stored drive was measured from the catalog's home (Port Credit, as configured for the tests):
+        // a family there keeps it, and another family's differs by the estimated difference.
+        var stored = Db(db => db.Activities.Single(a => a.Name == "Port Credit Memorial Park").DriveMinutes);
+        fromNear.GetProperty("driveMinutes").GetInt32().Should().Be(stored);
         fromFar.GetProperty("driveMinutes").GetInt32().Should().Be(
-            TravelEstimator.Minutes(TravelEstimator.DistanceKm(new GeoLocation { Latitude = 43.5183m, Longitude = -79.8774m }, place)));
+            Math.Max(1, stored + Estimate(43.5183m, -79.8774m) - Estimate(43.5547m, -79.5816m)));
         fromFar.GetProperty("driveMinutes").GetInt32().Should().BeGreaterThan(fromNear.GetProperty("driveMinutes").GetInt32());
     }
 

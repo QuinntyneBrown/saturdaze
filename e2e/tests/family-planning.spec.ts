@@ -127,8 +127,10 @@ test.describe("Family — how you plan", () => {
     await f.addInterest("Animals");
     await f.saveDialog();
 
-    const mia = (await family(request, session)).members.find((m: { name: string }) => m.name === "Mia");
-    expect(mia.interests).toEqual(["Animals"]);
+    // The member dialog closes before the page saves, so wait for the save to land.
+    await expect
+      .poll(async () => (await family(request, session)).members.find((m: { name: string }) => m.name === "Mia").interests)
+      .toEqual(["Animals"]);
   });
 
   test("the section fits the screen and every row is keyboard reachable", async ({ pages }) => {

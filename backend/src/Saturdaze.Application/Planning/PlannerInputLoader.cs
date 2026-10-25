@@ -121,9 +121,10 @@ public sealed class PlannerInputLoader
         // Drives start from this family's own home (L2-190). The rows are untracked copies.
         if (family.HomeCoordinates is { } own)
         {
-            foreach (var a in activities) a.DriveMinutes = FamilyDriveTime.Minutes(own, a.Geo, a.DriveMinutes);
-            foreach (var r in restaurants) r.DriveMinutes = FamilyDriveTime.Minutes(own, r.Geo, r.DriveMinutes);
-            foreach (var e in events) e.DriveMinutes = FamilyDriveTime.Minutes(own, e.Geo, e.DriveMinutes);
+            var catalogHome = CatalogHome(_home);
+            foreach (var a in activities) a.DriveMinutes = FamilyDriveTime.Minutes(own, a.Geo, a.DriveMinutes, catalogHome);
+            foreach (var r in restaurants) r.DriveMinutes = FamilyDriveTime.Minutes(own, r.Geo, r.DriveMinutes, catalogHome);
+            foreach (var e in events) e.DriveMinutes = FamilyDriveTime.Minutes(own, e.Geo, e.DriveMinutes, catalogHome);
         }
 
         var forecast = await _forecast.GetAsync(weekendOf, family.HomeCoordinates, ct);
@@ -150,4 +151,10 @@ public sealed class PlannerInputLoader
 
         return new PlannerContext(family, weekendOf, activities, restaurants, events, forecast, history, home, calendar, profile, sunsets);
     }
+
+    /// <summary>Where the catalog's stored drive times were measured from; null when not configured.</summary>
+    public static GeoLocation? CatalogHome(HomeLocationOptions home) =>
+        home.Latitude == 0 && home.Longitude == 0
+            ? null
+            : new GeoLocation { Latitude = (decimal)home.Latitude, Longitude = (decimal)home.Longitude, Address = home.Name };
 }

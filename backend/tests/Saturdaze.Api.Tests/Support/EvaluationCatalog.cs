@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Saturdaze.Application.Travel;
 using Saturdaze.Domain.Entities;
 using Saturdaze.Domain.ValueObjects;
 using Saturdaze.Infrastructure.Persistence;
@@ -14,11 +15,17 @@ internal static class EvaluationCatalog
     private static GeoLocation At(decimal lat, decimal lng, string address) =>
         new() { Latitude = lat, Longitude = lng, Address = address };
 
+    /// <summary>The catalog's home the tests configure (Port Credit): stored drives are measured from it (L2-190).</summary>
+    private static readonly GeoLocation CatalogHome = new() { Latitude = 43.5547m, Longitude = -79.5816m };
+
+    private static int StoredDrive(decimal lat, decimal lng) =>
+        TravelEstimator.Minutes(TravelEstimator.DistanceKm(CatalogHome, At(lat, lng, string.Empty)));
+
     private static Activity Place(string name, string category, bool indoor, int minutes, decimal lat, decimal lng,
         TimeOnly? opens = null, TimeOnly? closes = null, int minAge = 0, int maxAge = 99, string description = "") => new()
     {
         Id = Guid.NewGuid(), Name = name, Category = category, Indoor = indoor, MinAge = minAge, MaxAge = maxAge,
-        DriveMinutes = 20, TypicalDurationMinutes = minutes, Description = description, MapUrl = $"https://maps.example.com/{Slug(name)}",
+        DriveMinutes = StoredDrive(lat, lng), TypicalDurationMinutes = minutes, Description = description, MapUrl = $"https://maps.example.com/{Slug(name)}",
         OpensAt = opens, ClosesAt = closes, SourceUrl = $"https://{Slug(name)}.example.com", Geo = At(lat, lng, name),
     };
 
@@ -26,7 +33,7 @@ internal static class EvaluationCatalog
         bool indoor, decimal lat, decimal lng, params string[] themes) => new()
     {
         Id = Guid.NewGuid(), Name = name, Category = category, StartsOn = from, EndsOn = to, StartTime = start, EndTime = end,
-        Indoor = indoor, Location = name, DriveMinutes = 25, Url = $"https://{Slug(name)}.example.com", Geo = At(lat, lng, name),
+        Indoor = indoor, Location = name, DriveMinutes = StoredDrive(lat, lng), Url = $"https://{Slug(name)}.example.com", Geo = At(lat, lng, name),
         Themes = themes.ToList(),
     };
 

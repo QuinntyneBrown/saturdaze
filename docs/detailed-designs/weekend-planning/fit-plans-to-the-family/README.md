@@ -24,7 +24,7 @@ Saturdaze is a web application that plans personalized family weekends. `Weekend
 - the sunset per weekend day (`SunCalculator.Sunset(home, date, TimeZoneInfo)` in the time zone `Saturdaze:Calendar:TimeZone`, America/Toronto by default);
 - the catalog as `PlannerCandidate` records.
 
-`PlannerCandidate.FromActivity` and `FromEvent` copy what the planner needs: kind, id, name, category, tags, description, indoor, ages, duration (events 120 minutes), hours, season, event dates and times, themes and coordinates. `DriveMinutes` is `FamilyDriveTime.Minutes(home, place.Geo, place.DriveMinutes)` (L2-190). `PlannerContext.ToInputs` passes all of it to `PlannerInputs`, which keeps its existing fields for the swap, idea and errand paths.
+`PlannerCandidate.FromActivity` and `FromEvent` copy what the planner needs: kind, id, name, category, tags, description, indoor, ages, duration (events 120 minutes), hours, season, event dates and times, themes and coordinates. `DriveMinutes` is `FamilyDriveTime.Minutes(home, place.Geo, place.DriveMinutes, catalogHome)`: the stored time corrected by the estimated difference from the catalog's home (L2-190). `PlannerContext.ToInputs` passes all of it to `PlannerInputs`, which keeps its existing fields for the swap, idea and errand paths.
 
 `PlannerProfile.DayEnd(day)` is the earlier of 21:00 and 30 minutes before `YoungestBedtime` on Saturday. On Sunday it is the earlier of 19:30 and 30 minutes before `YoungestBedtime`. `Outings(day)` is `OutingsPerDay`, except 1 on a quiet Sunday. `PlannerTimes` keeps the defaults; `IdeaPlacementService` and `PlaceErrand` read the day bounds from the profile, so every path agrees on the day.
 
