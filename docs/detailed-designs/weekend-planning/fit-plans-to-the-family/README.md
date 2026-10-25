@@ -38,12 +38,16 @@ Saturdaze is a web application that plans personalized family weekends. `Weekend
 4. **Outings (L2-184, L2-185, L2-201, L2-200, L2-196).** `ComputeGaps` runs over the fixed blocks and reserved meals, from `DayStart` to `DayEnd(day)`. Gaps are filled in two passes in time order: the first places at most one outing per gap with at least 90 minutes free, the second refills what is left of a gap (still at least 90 minutes), and both stop at `Outings(day)` outings.
    - **Eligibility.** For each gap, `CandidateFilter.IsEligible` drops candidates already picked this weekend (a set shared across both days and seeded with locked activities). It also drops those beyond `MaxDriveMinutes`, those with an excluded theme or a matching dislike (an "Indoor" or "Outdoor" dislike reads the indoor flag), those with two or more members outside the ages, those out of season on that date, events that do not run that date, and pending submissions.
    - **Fit.** `FitInGap` places the candidate. The start is the gap's start plus the drive, moved to `OpensAt` or to the event's `StartTime` when later. The end is the earlier of start plus duration, `ClosesAt`, `EndTime`, the start plus 120 minutes for events, and, for an outdoor or unknown candidate, the sunset. The candidate fits when at least 30 minutes remain (60 for an event) and the drive home fits before the gap's end.
-   - **Score.** Today's weather and age terms stay. Leaning matches add 2, each like 3, each member interest 2, and an event 3. Recency and try-new are unchanged. Ties break by name, then by the seeded pick.
+   - **Score.** Today's weather and age terms stay. Leaning matches add 3, each like 3, each member interest 2, and an event 3. Recency and try-new are unchanged. Ties break by name, then by the seeded pick.
    - **Reason.** The winner's reason lists the weather term, "on this weekend only" for events, "first time trying this — variety on" only when the try-new bonus applied (L2-189), "open {opens}–{closes}" when hours shaped it, "back before sunset {time}" when daylight did, and the duration fit.
 5. **Restaurants.** Each reserved restaurant meal gets the eligible restaurant (wife-approved, right slot, within the max drive) nearest the stop before it by `TravelEstimator.DistanceKm`, or nearest home. The reason is "near {stop}" or "near home".
 6. **Errand, downtime and sort order.** These are unchanged, with day bounds from the profile.
 
 `WeekendPlanner.PlanWithPicks(inputs, picks)` runs the same day pipeline. Before step 4, each pick becomes an anchored outing placed by `FitInGap` at the pick's start, or at the earliest fit when it has none. The agent's reason replaces the planner's. Step 4 then fills only what the picks left, up to the pace. `PlanValidator` (`weekend-planning/plan-with-agents`) uses the same eligibility and fit functions, so the agents and the planner agree on every rule.
+
+### Open question
+
+Reserving lunch splits a free day into a morning gap (about 3 hours) and an afternoon gap (about 4.5 hours). An outing that needs more than that with its drives, such as a 5-hour zoo visit, no longer fits a day with lunch reserved. The evaluation's "big day out" plan shape would let such an outing cover lunch ("lunch there"). It is `<TO SUPPLY>` whether that becomes a rule of the planner or stays the agents' choice through a pick. Until then, the drafter can propose it only when the family's day has no lunch window free.
 
 ### Regenerate response
 

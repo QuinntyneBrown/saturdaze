@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Saturdaze.Application.Abstractions;
 using Saturdaze.Application.Common;
 using Saturdaze.Application.Contracts;
+using Saturdaze.Application.Families;
 using Saturdaze.Application.Photos;
 using Saturdaze.Domain.Enums;
 
@@ -20,13 +21,16 @@ public sealed class GetActivitySuggestionsQueryHandler
     private readonly IAppDbContext _db;
     private readonly ICurrentFamilyAccessor _current;
     private readonly IPlacePhotoReader? _photos;
+    private readonly FamilyBoundariesReader? _boundaries;
 
     public GetActivitySuggestionsQueryHandler(
-        IAppDbContext db, ICurrentFamilyAccessor current, IPlacePhotoReader? photos = null)
+        IAppDbContext db, ICurrentFamilyAccessor current, IPlacePhotoReader? photos = null,
+        FamilyBoundariesReader? boundaries = null)
     {
         _db = db;
         _current = current;
         _photos = photos;
+        _boundaries = boundaries;
     }
 
     public async Task<IReadOnlyList<ActivityDto>> Handle(
@@ -36,7 +40,6 @@ public sealed class GetActivitySuggestionsQueryHandler
         var query = _db.Activities.AsNoTracking().AsQueryable();
 
         if (request.Indoor is { } indoor) query = query.Where(a => a.Indoor == indoor);
-        if (request.MaxDriveMinutes is { } maxDrive) query = query.Where(a => a.DriveMinutes <= maxDrive);
 
         // Age window semantics: the activity must welcome everyone in
         // [minAge, maxAge]. With only one bound supplied it still must not top
@@ -61,6 +64,13 @@ public sealed class GetActivitySuggestionsQueryHandler
         }
 
         var activities = await query.ToListAsync(cancellationToken);
+
+        // The family's own drives and limit (L2-190, L2-191): never past the family's max drive.
+        var boundaries = _boundaries is null ? null : await _boundaries.ReadCurrentAsync(cancellationToken);
+        if (boundaries is not null)
+            foreach (var a in activities) a.DriveMinutes = boundaries.DriveMinutes(a.Geo, a.DriveMinutes);
+        var limit = Math.Min(request.MaxDriveMinutes ?? int.MaxValue, boundaries?.MaxDriveMinutes ?? int.MaxValue);
+        activities = activities.Where(a => a.DriveMinutes <= limit).ToList();
 
         if (request.Weather is { } weather && !string.IsNullOrWhiteSpace(weather))
         {

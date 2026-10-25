@@ -72,7 +72,7 @@ public sealed class ProspectReader
             WeekendDto? dto = null;
             if (withWeekend)
             {
-                var forecast = await _forecast.GetAsync(weekend.WeekendOf, ct);
+                var forecast = await _forecast.GetAsync(weekend.WeekendOf, weekend.Home, ct);
                 dto = await _enrichment.EnrichAsync(WeekendMapper.ToDto(weekend, forecast), ct);
             }
             var count = invitationCounts.GetValueOrDefault(prospect.Id);
@@ -101,7 +101,7 @@ public sealed class ProspectReader
     /// <summary>The prospect's weekend after a write, projected like a family's weekend.</summary>
     public async Task<WeekendDto> ToWeekendDtoAsync(Weekend weekend, CancellationToken ct)
     {
-        var forecast = await _forecast.GetAsync(weekend.WeekendOf, ct);
+        var forecast = await _forecast.GetAsync(weekend.WeekendOf, weekend.Home, ct);
         return await _enrichment.EnrichAsync(WeekendMapper.ToDto(weekend, forecast), ct);
     }
 }

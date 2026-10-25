@@ -44,7 +44,7 @@ public sealed class LockBlockCommandHandler : IRequestHandler<LockBlockCommand, 
         block.IsLocked = request.Locked;
         await _db.SaveChangesAsync(cancellationToken);
 
-        var forecast = await _forecast.GetAsync(weekend.WeekendOf, cancellationToken);
+        var forecast = await _forecast.GetAsync(weekend.WeekendOf, weekend.Home, cancellationToken);
         return WeekendMapper.ToDto(weekend, forecast);
     }
 }

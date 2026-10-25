@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Options;
+using Saturdaze.Domain.ValueObjects;
 
 namespace Saturdaze.Application.Weather;
 
@@ -19,6 +20,11 @@ public sealed class WeekendForecastService
     }
 
     public Task<IReadOnlyList<WeatherForecast>> GetAsync(DateOnly weekendOf, CancellationToken ct)
-        => _client.GetForecastAsync(
-            _home.Value.Latitude, _home.Value.Longitude, weekendOf, weekendOf.AddDays(1), ct);
+        => GetAsync(weekendOf, null, ct);
+
+    /// <summary>The forecast at <paramref name="home"/>, or at the configured home when it is null (L2-190).</summary>
+    public Task<IReadOnlyList<WeatherForecast>> GetAsync(DateOnly weekendOf, GeoLocation? home, CancellationToken ct)
+        => home is null
+            ? _client.GetForecastAsync(_home.Value.Latitude, _home.Value.Longitude, weekendOf, weekendOf.AddDays(1), ct)
+            : _client.GetForecastAsync((double)home.Latitude, (double)home.Longitude, weekendOf, weekendOf.AddDays(1), ct);
 }

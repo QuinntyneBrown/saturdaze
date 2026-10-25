@@ -2,6 +2,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Saturdaze.Application.Abstractions;
 using Saturdaze.Application.Contracts;
+using Saturdaze.Application.Families;
 using Saturdaze.Application.Photos;
 using Saturdaze.Domain.Enums;
 
@@ -14,12 +15,17 @@ public sealed class GetLocalEventsQueryHandler
     public const int ComingSoonDays = 14;
 
     private readonly IAppDbContext _db;
-    private readonly IPlacePhotoReader? _photos;
+    /// <summary>The bound when neither the request nor a family gives one (L2-020).</summary>
+    public const int DefaultMaxDriveMinutes = 120;
 
-    public GetLocalEventsQueryHandler(IAppDbContext db, IPlacePhotoReader? photos = null)
+    private readonly IPlacePhotoReader? _photos;
+    private readonly FamilyBoundariesReader? _boundaries;
+
+    public GetLocalEventsQueryHandler(IAppDbContext db, IPlacePhotoReader? photos = null, FamilyBoundariesReader? boundaries = null)
     {
         _db = db;
         _photos = photos;
+        _boundaries = boundaries;
     }
 
     public async Task<IReadOnlyList<LocalEventDto>> Handle(
@@ -31,15 +37,23 @@ public sealed class GetLocalEventsQueryHandler
         var comingSoonUntil = sun.AddDays(ComingSoonDays);
 
         var query = _db.LocalEvents.AsNoTracking()
-            .Where(e => e.DriveMinutes <= request.MaxDriveMinutes
-                        && ((e.StartsOn <= sun && e.EndsOn >= fri)
-                            || (e.StartsOn > sun && e.StartsOn <= comingSoonUntil)));
+            .Where(e => (e.StartsOn <= sun && e.EndsOn >= fri)
+                        || (e.StartsOn > sun && e.StartsOn <= comingSoonUntil));
         // Indoor or outdoor (L2-146); an event whose setting is unknown matches neither.
         if (request.Indoor is { } indoor) query = query.Where(e => e.Indoor == indoor);
 
-        var rows = await query
+        var rows = await query.ToListAsync(cancellationToken);
+
+        // The family's own drives and limit (L2-190, L2-191).
+        var boundaries = _boundaries is null ? null : await _boundaries.ReadCurrentAsync(cancellationToken);
+        if (boundaries is not null)
+            foreach (var e in rows) e.DriveMinutes = boundaries.DriveMinutes(e.Geo, e.DriveMinutes);
+        var limit = Math.Min(request.MaxDriveMinutes ?? boundaries?.MaxDriveMinutes ?? DefaultMaxDriveMinutes,
+            boundaries?.MaxDriveMinutes ?? int.MaxValue);
+        rows = rows
+            .Where(e => e.DriveMinutes <= limit)
             .OrderBy(e => e.StartsOn).ThenBy(e => e.DriveMinutes).ThenBy(e => e.Name)
-            .ToListAsync(cancellationToken);
+            .ToList();
 
         var photos = _photos is null
             ? new Dictionary<Guid, PlacePhotoDto>()

@@ -38,6 +38,7 @@ public static class DependencyInjection
         services.AddScoped<Admin.Photos.PhotoAuditWriter>();
         services.AddScoped<WeekendForecastService>();
         services.AddScoped<PlannerInputLoader>();
+        services.AddScoped<Families.FamilyBoundariesReader>();
         services.AddScoped<IPlacePhotoReader, PlacePhotoReader>();
         services.AddScoped<Ideas.IdeaResolver>();
         services.AddScoped<Covers.WeekendEnrichment>();

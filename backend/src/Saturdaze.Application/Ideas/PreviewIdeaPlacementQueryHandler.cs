@@ -28,7 +28,7 @@ public sealed class PreviewIdeaPlacementQueryHandler : IRequestHandler<PreviewId
             .Include(w => w.Blocks)
             .FirstOrDefaultAsync(w => w.Id == request.WeekendId && w.FamilyId == familyId, ct)
             ?? throw new NotFoundException(nameof(Weekend), request.WeekendId);
-        var idea = await _ideas.ResolveAsync(request.IdeaKind, request.IdeaId, ct);
+        var idea = await _ideas.ResolveForFamilyAsync(request.IdeaKind, request.IdeaId, familyId, ct);
 
         var placement = IdeaPlacementService.Place(
             weekend.Blocks.Where(b => b.Day == request.Day).ToList(), idea, request.Timing);

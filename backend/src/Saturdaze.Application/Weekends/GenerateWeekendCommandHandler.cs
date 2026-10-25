@@ -42,7 +42,7 @@ public sealed class GenerateWeekendCommandHandler : IRequestHandler<GenerateWeek
             .FirstOrDefaultAsync(w => w.FamilyId == familyId && w.WeekendOf == request.WeekendOf, cancellationToken);
         if (existing is not null)
         {
-            var existingForecast = await _forecast.GetAsync(existing.WeekendOf, cancellationToken);
+            var existingForecast = await _forecast.GetAsync(existing.WeekendOf, existing.Home, cancellationToken);
             return WeekendMapper.ToDto(existing, existingForecast);
         }
 

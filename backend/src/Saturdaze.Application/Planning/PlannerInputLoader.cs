@@ -3,6 +3,7 @@ using Microsoft.Extensions.Options;
 using Saturdaze.Application.Abstractions;
 using Saturdaze.Application.Calendar;
 using Saturdaze.Application.Exceptions;
+using Saturdaze.Application.Travel;
 using Saturdaze.Application.Weather;
 using Saturdaze.Domain.Entities;
 using Saturdaze.Domain.Enums;
@@ -25,7 +26,8 @@ public sealed record PlannerContext(
     IReadOnlyList<WeatherForecast> Forecast,
     IReadOnlyList<HistoricalActivity> History,
     GeoLocation Home,
-    IReadOnlyList<CalendarCommitment>? CalendarCommitments = null)
+    IReadOnlyList<CalendarCommitment>? CalendarCommitments = null,
+    PlannerProfile? Profile = null)
 {
     public PlannerInputs ToInputs(
         IReadOnlyList<ItineraryBlock> lockedBlocks,
@@ -47,6 +49,7 @@ public sealed record PlannerContext(
             TryNew: Family.TryNewEnabled,
             Seed: seed,
             CalendarCommitments: CalendarCommitments,
+            Profile: Profile,
             Home: Home);
 
     public WeatherForecast ForecastFor(DayOfWeekend day)
@@ -94,7 +97,6 @@ public sealed class PlannerInputLoader
             .Where(e => e.StartsOn <= weekendEnd && e.EndsOn >= weekendOf)
             .ToListAsync(ct);
 
-        var forecast = await _forecast.GetAsync(weekendOf, ct);
 
         var history = await _db.ItineraryBlocks.AsNoTracking()
             .Where(b => b.RefId != null && b.Kind == BlockKind.Activity)
@@ -111,9 +113,28 @@ public sealed class PlannerInputLoader
             Address = _home.Name,
         };
 
+        // Drives start from this family's own home (L2-190). The rows are untracked copies.
+        if (family.HomeCoordinates is { } own)
+        {
+            foreach (var a in activities) a.DriveMinutes = FamilyDriveTime.Minutes(own, a.Geo, a.DriveMinutes);
+            foreach (var r in restaurants) r.DriveMinutes = FamilyDriveTime.Minutes(own, r.Geo, r.DriveMinutes);
+            foreach (var e in events) e.DriveMinutes = FamilyDriveTime.Minutes(own, e.Geo, e.DriveMinutes);
+        }
+
+        var forecast = await _forecast.GetAsync(weekendOf, family.HomeCoordinates, ct);
+        var profile = new PlannerProfile(
+            family.DayStart,
+            family.YoungestBedtime,
+            family.OutingsPerDay,
+            family.QuietSunday,
+            family.SundayDinnerAtHome,
+            family.Leaning,
+            family.MaxDriveMinutes,
+            family.ExcludedThemes.ToHashSet(StringComparer.OrdinalIgnoreCase));
+
         // Weekend events from the family's connected calendars join the fixed blocks (L2-177).
         var calendar = await _calendar.GetAsync(familyId, weekendOf, ct);
 
-        return new PlannerContext(family, weekendOf, activities, restaurants, events, forecast, history, home, calendar);
+        return new PlannerContext(family, weekendOf, activities, restaurants, events, forecast, history, home, calendar, profile);
     }
 }

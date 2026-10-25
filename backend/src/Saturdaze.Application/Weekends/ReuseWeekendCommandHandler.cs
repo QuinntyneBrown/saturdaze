@@ -128,7 +128,7 @@ public sealed class ReuseWeekendCommandHandler : IRequestHandler<ReuseWeekendCom
         if (request.Remix)
             return await _sender.Send(new RegenerateWeekendCommand(target.Id), cancellationToken);
 
-        var forecast = await _forecast.GetAsync(target.WeekendOf, cancellationToken);
+        var forecast = await _forecast.GetAsync(target.WeekendOf, target.Home, cancellationToken);
         return WeekendMapper.ToDto(target, forecast);
     }
 

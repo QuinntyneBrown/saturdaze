@@ -160,7 +160,9 @@ public class EventSubmissionsControllerTests : IClassFixture<SaturdazeApiFactory
         var approve = await admin.Client.PostAsJsonAsync($"/api/events/submissions/{firstId}/approve", new { DriveMinutes = 25, Latitude = 43.5512m, Longitude = -79.5866m, Address = "Lakeshore Rd E" });
         approve.StatusCode.Should().Be(HttpStatusCode.OK, await approve.Content.ReadAsStringAsync());
 
-        var published = JsonDocument.Parse(await (await submitter.Client.GetAsync("/api/events?weekendOf=2026-08-01")).Content.ReadAsStringAsync())
+        // A family without its own home coordinates sees the stored drive time (L2-190).
+        var reader = await SignedInClient.CreateAsync(_factory, FamilyMode.Own);
+        var published = JsonDocument.Parse(await (await reader.Client.GetAsync("/api/events?weekendOf=2026-08-01")).Content.ReadAsStringAsync())
             .RootElement.EnumerateArray().Single(e => e.GetProperty("name").GetString() == title);
         published.GetProperty("driveMinutes").GetInt32().Should().Be(25);
 

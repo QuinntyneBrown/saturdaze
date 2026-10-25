@@ -34,7 +34,7 @@ public sealed class MarkFavouriteCommandHandler : IRequestHandler<MarkFavouriteC
         weekend.IsFavourite = request.Favourite;
         await _db.SaveChangesAsync(cancellationToken);
 
-        var forecast = await _forecast.GetAsync(weekend.WeekendOf, cancellationToken);
+        var forecast = await _forecast.GetAsync(weekend.WeekendOf, weekend.Home, cancellationToken);
         return WeekendMapper.ToDto(weekend, forecast);
     }
 }

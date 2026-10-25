@@ -263,11 +263,13 @@ public sealed class WeekendPlanner : IWeekendPlanner
             .Select(h => h.ActivityId)
             .ToHashSet();
 
+        var profile = inputs.Boundaries;
         var results = new List<(Activity, int)>();
         foreach (var act in inputs.Activities)
         {
             if (alreadyPicked.Contains(act.Id)) continue;
             if (skipped.Contains(act.Id)) continue;
+            if (act.DriveMinutes > profile.MaxDriveMinutes) continue; // L2-191
             if (act.TypicalDurationMinutes > minutes) continue;
             // Both drives plus a minimum stay must fit, otherwise the drive-clamp
             // in BuildActivityWithDrives would produce an activity that ends
@@ -275,7 +277,7 @@ public sealed class WeekendPlanner : IWeekendPlanner
             if (act.DriveMinutes * 2 + PlannerTimes.ActivityMinMinutes > minutes) continue;
 
             // Disqualifying conditions first.
-            if (dislikedTags.Any(d => MatchesTag(act, d))) continue;
+            if (dislikedTags.Any(d => Disliked(act, d))) continue;
             var ageOutside = inputs.Members.Count(m => m.Age < act.MinAge || m.Age > act.MaxAge);
             if (ageOutside >= 2) continue;
 
@@ -302,8 +304,11 @@ public sealed class WeekendPlanner : IWeekendPlanner
             // Try-new.
             if (inputs.TryNew && inputs.History.All(h => h.ActivityId != act.Id)) score += 3;
 
-            // Preference matches.
-            score += likedTags.Count(t => MatchesTag(act, t));
+            // Leaning (L2-195), likes and interests (L2-196): two matching likes beat the rain bonus.
+            if ((profile.Leaning == PlanLeaning.Indoor && act.Indoor) || (profile.Leaning == PlanLeaning.Outdoor && !act.Indoor))
+                score += LeaningBonus;
+            score += LikeBonus * likedTags.Count(t => MatchesTag(act, t));
+            score += InterestBonus * inputs.Members.Count(m => m.Interests.Any(i => MatchesTag(act, i)));
 
             results.Add((act, score));
         }
@@ -327,6 +332,16 @@ public sealed class WeekendPlanner : IWeekendPlanner
             _ => 0
         };
     }
+
+    private const int LeaningBonus = 3;
+    private const int LikeBonus = 3;
+    private const int InterestBonus = 2;
+
+    /// <summary>A dislike of "Indoor" or "Outdoor" reads the place's flag (L2-194 AC5); others match text.</summary>
+    private static bool Disliked(Activity act, string dislike) =>
+        string.Equals(dislike.Trim(), "Indoor", StringComparison.OrdinalIgnoreCase) ? act.Indoor
+        : string.Equals(dislike.Trim(), "Outdoor", StringComparison.OrdinalIgnoreCase) ? !act.Indoor
+        : MatchesTag(act, dislike);
 
     private static bool MatchesTag(Activity act, string tag) =>
         act.WeatherTags.Any(t => string.Equals(t, tag, StringComparison.OrdinalIgnoreCase))

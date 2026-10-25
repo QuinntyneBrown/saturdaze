@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Saturdaze.Application.Abstractions;
 using Saturdaze.Application.Exceptions;
+using Saturdaze.Application.Families;
 using Saturdaze.Domain.ValueObjects;
 
 namespace Saturdaze.Application.Ideas;
@@ -28,8 +29,28 @@ public sealed class IdeaResolver
     public const int DefaultActivityMinutes = 120;
 
     private readonly IAppDbContext _db;
+    private readonly FamilyBoundariesReader _boundaries;
 
-    public IdeaResolver(IAppDbContext db) => _db = db;
+    public IdeaResolver(IAppDbContext db, FamilyBoundariesReader boundaries)
+    {
+        _db = db;
+        _boundaries = boundaries;
+    }
+
+    /// <summary>
+    /// The idea as this family sees it: its drive from the family's home, refused when it
+    /// is past the family's max drive (L2-190, L2-191).
+    /// </summary>
+    public async Task<ResolvedIdea> ResolveForFamilyAsync(IdeaKind kind, Guid id, Guid familyId, CancellationToken ct)
+    {
+        var idea = await ResolveAsync(kind, id, ct);
+        var boundaries = await _boundaries.ReadAsync(familyId, ct);
+        var drive = boundaries.DriveMinutes(idea.Geo, idea.DriveMinutes);
+        if (drive > boundaries.MaxDriveMinutes)
+            throw new ConflictException("beyond_max_drive",
+                $"{idea.Name} is {drive} minutes away, past your {boundaries.MaxDriveMinutes}-minute max drive.");
+        return idea with { DriveMinutes = drive };
+    }
 
     public async Task<ResolvedIdea> ResolveAsync(IdeaKind kind, Guid id, CancellationToken ct)
     {

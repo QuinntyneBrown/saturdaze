@@ -67,7 +67,7 @@ public sealed class UploadWeekendCoverCommandHandler : IRequestHandler<UploadWee
         // L2-109 AC7: the weekend and the size only — never the file name or content.
         _logger.LogInformation("Cover uploaded for weekend {WeekendId} ({Bytes} bytes)", weekend.Id, image.Content.Length);
 
-        var forecast = await _forecast.GetAsync(weekend.WeekendOf, ct);
+        var forecast = await _forecast.GetAsync(weekend.WeekendOf, weekend.Home, ct);
         return WeekendMapper.ToDto(weekend, forecast);
     }
 }

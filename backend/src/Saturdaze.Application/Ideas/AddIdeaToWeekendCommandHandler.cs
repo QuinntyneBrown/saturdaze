@@ -40,7 +40,7 @@ public sealed class AddIdeaToWeekendCommandHandler : IRequestHandler<AddIdeaToWe
             .Include(w => w.Errands)
             .FirstOrDefaultAsync(w => w.Id == request.WeekendId && w.FamilyId == familyId, ct)
             ?? throw new NotFoundException(nameof(Weekend), request.WeekendId);
-        var idea = await _ideas.ResolveAsync(request.IdeaKind, request.IdeaId, ct);
+        var idea = await _ideas.ResolveForFamilyAsync(request.IdeaKind, request.IdeaId, familyId, ct);
 
         var day = weekend.Blocks.Where(b => b.Day == request.Day).ToList();
         var placement = IdeaPlacementService.Place(day, idea, request.Timing);
@@ -64,7 +64,7 @@ public sealed class AddIdeaToWeekendCommandHandler : IRequestHandler<AddIdeaToWe
             b.SortOrder = ++sort;
 
         await _db.SaveChangesAsync(ct);
-        var forecast = await _forecast.GetAsync(weekend.WeekendOf, ct);
+        var forecast = await _forecast.GetAsync(weekend.WeekendOf, weekend.Home, ct);
         return WeekendMapper.ToDto(weekend, forecast);
     }
 

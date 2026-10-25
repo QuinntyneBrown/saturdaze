@@ -86,7 +86,22 @@ public sealed class SaveFamilyProfileCommandHandler : IRequestHandler<SaveFamily
         }
 
         // Partial profile (L2-010): only what the request carries changes.
+        var homeChanged = request.HomeLocation is not null
+            && !string.Equals(family.HomeLocation, request.HomeLocation.Trim(), StringComparison.OrdinalIgnoreCase);
         if (request.HomeLocation is not null) family.HomeLocation = request.HomeLocation;
+
+        // Home coordinates (L2-190): as sent, else geocoded when the text changed;
+        // a failed lookup keeps what was there.
+        var givenHome = request.HomeCoordinates is { } h
+            ? GeoLocation.From(h.Latitude, h.Longitude, h.Address ?? family.HomeLocation)
+            : null;
+        if (givenHome is not null)
+            family.HomeCoordinates = GeoLocation.Merge(family.HomeCoordinates, givenHome);
+        else if (homeChanged || (request.HomeLocation is not null && family.HomeCoordinates is null))
+        {
+            if (await GeocodeWithinBudgetAsync(family.HomeLocation, cancellationToken) is { } found)
+                family.HomeCoordinates = GeoLocation.Merge(family.HomeCoordinates, found);
+        }
         if (request.BudgetEnabled is { } budget) family.BudgetEnabled = budget;
         if (request.Name is not null) family.Name = string.IsNullOrWhiteSpace(request.Name) ? null : request.Name.Trim();
         if (request.TryNewEnabled is { } tryNew) family.TryNewEnabled = tryNew;
