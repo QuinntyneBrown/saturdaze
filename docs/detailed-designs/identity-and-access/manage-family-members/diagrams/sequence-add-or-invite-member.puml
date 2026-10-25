@@ -14,11 +14,13 @@ box "Backend — Saturdaze API" #D1FADF
  participant "FamilyController" as controller
 end box
 box "Backend — Saturdaze Application and Domain" #ECFDF3
- participant "AddFamilyMemberCommandHandler\nFamilyOwnership" as handler
+ participant "AddFamilyMemberCommandHandler\nFamilyOwnership\nFamilyInviteEmails" as handler
 end box
 box "Backend — Saturdaze Infrastructure" #FFF4E5
  database "AppDbContext\nSQL Server" as db
+ participant "IEmailOutbox\nEmailDispatchService\nIEmailSender" as outbox
 end box
+actor "Invitee" as invitee
 actor -> page : Add a family member; name, age, "Will they sign in?"
 page -> client : addMember({name, age, email?})
 client -> controller : POST /api/family/members (bearer)
@@ -30,15 +32,20 @@ alt caller is not the owner
 else name already used
   controller --> client : 409 member_name_in_use (L2-125 AC3)
 else email given and already an account
-  controller --> client : 409 email_in_use (L2-126 AC3)
+  controller --> client : 409 email_in_use (L2-126 AC3); no email (L2-183 AC4)
+else email has an outstanding invite
+  controller --> client : 409 already_invited (L2-126 AC4); no email (L2-183 AC4)
 else no email (L2-125)
   handler -> db : Insert FamilyMember
-  controller --> client : 201 {member: access None, invite: null}
+  controller --> client : 201 {member: access None, invite: null}; no email (L2-183 AC4)
 else email given (L2-126)
   handler -> db : Insert FamilyMember + FamilyInvitation(TokenHash, expires +7 days)
+  handler -> outbox : Enqueue(FamilyInviteEmails.Invite: "Join {family}", {AppOrigin}/accept-invite?token=…) (L2-183)
   controller --> client : 201 {member: access Invited, invite: {email, token, url, expiresAtUtc}}
   client --> page : FamilyInvite
-  page -> actor : D30 shows the invite link with Copy link
+  page -> actor : D30 "We also emailed this link to {email}." with the link and Copy (L2-183 AC6)
+  outbox -> invitee : After the response: multipart/alternative, text then branded HTML (L2-162)
+  note right of outbox : A delivery failure is logged without the token\nor recipient; the invite and link stay valid (L2-183 AC5)
 end
 client -> controller : GET /api/family
 controller --> client : 200 FamilyProfileDto

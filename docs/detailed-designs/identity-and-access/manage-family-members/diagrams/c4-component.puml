@@ -18,6 +18,8 @@ Container_Boundary(api, "Saturdaze API") {
   Component(owner, "FamilyOwnership", "Application service", "Owner check; 403 owner_only")
   Component(accessor, "CurrentUserFamilyAccessor", "Application service", "Resolves the caller's family from Users.FamilyId")
   Component(issuer, "RefreshTokenIssuer", "Application service", "Issues the token pair")
+  Component(emails, "FamilyInviteEmails", "Message builder", "Subject and EmailContent of the family invite (L2-183)")
+  Component(outbox, "IEmailOutbox / EmailDispatchService", "Outbox", "Delivers after the response; logs failures without the token")
   ComponentDb(db, "AppDbContext", "EF Core", "Families.OwnerUserId, FamilyMembers.UserId, FamilyInvitations, Users")
 }
 Rel(page, dialogs, "Opens", "CDK Dialog")
@@ -31,5 +33,7 @@ Rel(handlers, owner, "Ensures owner")
 Rel(owner, accessor, "Resolves family")
 Rel(invites, issuer, "Signs the new member in")
 Rel(handlers, db, "Reads and writes")
+Rel(handlers, emails, "Invite(to, token, familyName, memberName, invitedBy)")
+Rel(handlers, outbox, "Enqueue after SaveChanges")
 Rel(invites, db, "Reads and writes")
 @enduml

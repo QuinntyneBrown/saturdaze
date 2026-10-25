@@ -6,8 +6,11 @@ title System Context — Manage family members
 Person(owner, "Family owner", "Created the account; decides who is in the family")
 Person(member, "Invited family member", "Signs in with their own email and password")
 System(saturdaze, "Saturdaze", "Family weekend planning platform")
+System_Ext(mail, "Mail server", "SMTP relay for no-reply@saturdaze.ca (ADR-021)")
 
 Rel(owner, saturdaze, "Adds, invites and removes members using", "HTTPS")
-Rel(owner, member, "Shares the invite link with", "Any channel")
+Rel(saturdaze, mail, "Sends the branded invite email through", "SMTP")
+Rel(mail, member, "Delivers the invite link to", "Email")
+Rel(owner, member, "May also share the invite link with", "Any channel")
 Rel(member, saturdaze, "Accepts the invite and signs in to", "HTTPS")
 @enduml

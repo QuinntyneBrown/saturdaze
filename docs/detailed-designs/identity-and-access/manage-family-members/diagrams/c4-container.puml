@@ -10,9 +10,12 @@ System_Boundary(saturdaze, "Saturdaze") {
   Container(api, "Saturdaze API", "ASP.NET Core", "Owner-only member endpoints and anonymous invitation endpoints")
   ContainerDb(db, "Saturdaze database", "SQL Server", "Families, FamilyMembers, FamilyInvitations and Users")
 }
+System_Ext(mail, "Mail server", "SMTP relay for no-reply@saturdaze.ca (ADR-021)")
 Rel(owner, web, "Uses", "HTTPS")
 Rel(member, web, "Opens the invite link in", "HTTPS")
 Rel(web, api, "POST and DELETE /api/family/members; PUT /api/family", "JSON/HTTPS, bearer")
 Rel(web, api, "POST /api/auth/invitation and /api/auth/accept-invitation", "JSON/HTTPS, anonymous")
 Rel(api, db, "Reads and writes", "EF Core")
+Rel(api, mail, "Sends the family invite email after the response", "SMTP")
+Rel(mail, member, "Delivers the invite link to", "Email")
 @enduml
