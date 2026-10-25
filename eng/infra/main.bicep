@@ -137,6 +137,24 @@ param claudeModelVersion string = '2'
 @description('Thousands of tokens per minute. Free to reserve; tokens are billed per use.')
 param claudeCapacity int = 80
 
+// ───────────────────────────── Agent-drafted weekends (ADR-023) ─────────────────────────────
+
+@description('Turns agent-drafted weekends on. Off falls every draft back to the planner with the Disabled notice (L2-205).')
+param agentPlanningEnabled bool = true
+
+@description('Grants the Web App identity Cognitive Services User on the Foundry account. Needs a deploying principal that may write role assignments.')
+param agentPlanningGrantRole bool = true
+
+@description('How the curator and drafter reach Foundry: ManagedIdentity (an Entra token for the Web App identity, no key) or Key.')
+@allowed([ 'ManagedIdentity', 'Key' ])
+param agentPlanningAuth string = 'ManagedIdentity'
+
+@description('Agent spend allowed per calendar month, in US dollars; past it every draft falls back with Budget (L2-207).')
+param agentPlanningMonthlySpendCapUsd int = 25
+
+@description('Agent runs allowed per UTC day across all families (L2-207).')
+param agentPlanningMaxRunsPerDay int = 60
+
 @description('Legal name of the organization using Claude — the Anthropic Marketplace attestation.')
 param organizationName string
 @minLength(2)
@@ -399,6 +417,18 @@ resource apiSettings 'Microsoft.Web/sites/config@2024-04-01' = {
       Saturdaze__Ingestion__Claude__FoundryResource: foundryAccount.name
       Saturdaze__Ingestion__Claude__Model: foundry.outputs.deploymentName
       ANTHROPIC_FOUNDRY_API_KEY: foundryAccount.listKeys().key1
+
+      // Agent-drafted weekends (ADR-023, L2-213). The curator and drafter call
+      // Foundry with the Web App's managed identity (Cognitive Services User,
+      // granted below); the shared researcher reuses ingestion's search client.
+      Saturdaze__AgentPlanning__Enabled: string(agentPlanningEnabled)
+      Saturdaze__AgentPlanning__Auth: agentPlanningAuth
+      Saturdaze__AgentPlanning__FoundryResource: foundryAccount.name
+      Saturdaze__AgentPlanning__ResearcherModel: foundry.outputs.deploymentName
+      Saturdaze__AgentPlanning__CuratorModel: foundry.outputs.deploymentName
+      Saturdaze__AgentPlanning__DrafterModel: foundry.outputs.deploymentName
+      Saturdaze__AgentPlanning__MonthlySpendCapUsd: string(agentPlanningMonthlySpendCapUsd)
+      Saturdaze__AgentPlanning__MaxRunsPerDay: string(agentPlanningMaxRunsPerDay)
     },
     corsSettings,
     smtpSettings
@@ -409,6 +439,21 @@ resource apiSettings 'Microsoft.Web/sites/config@2024-04-01' = {
 
 resource foundryAccount 'Microsoft.CognitiveServices/accounts@2025-10-01-preview' existing = {
   name: foundryAccountName
+}
+
+// The Web App's identity may call the Foundry deployment for the agents
+// (L2-213): Cognitive Services User, scoped to the one account.
+var cognitiveServicesUserRoleId = subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'a97b65f3-24c7-4388-baec-2e87135dc908')
+
+resource apiFoundryRole 'Microsoft.Authorization/roleAssignments@2022-04-01' = if (agentPlanningGrantRole) {
+  name: guid(foundryAccount.id, api.id, cognitiveServicesUserRoleId)
+  scope: foundryAccount
+  properties: {
+    roleDefinitionId: cognitiveServicesUserRoleId
+    principalId: api.identity.principalId
+    principalType: 'ServicePrincipal'
+  }
+  dependsOn: [ foundry ]
 }
 
 resource apiLogs 'Microsoft.Web/sites/config@2024-04-01' = {

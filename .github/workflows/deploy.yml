@@ -29,6 +29,7 @@ env:
   API_PROJECT: backend/src/Saturdaze.Api/Saturdaze.Api.csproj
   CLI_PROJECT: backend/src/Saturdaze.Cli/Saturdaze.Cli.csproj
   WEBJOB_SOURCE: backend/deploy/webjobs/ingest
+  DRAFT_WEBJOB_SOURCE: backend/deploy/webjobs/draft
   ANGULAR_DIST: frontend/dist/saturdaze/browser
   ADMIN_DIST: frontend/dist/admin/browser
   MARKETING_DIR: marketing
@@ -181,6 +182,10 @@ jobs:
           EMAIL_SMTP_CLIENT_SECRET: ${{ secrets.EMAIL_SMTP_CLIENT_SECRET }}
           # Google Calendar sync (ADR-022); optional, blank keeps it off.
           GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+          # Agent-drafted weekends (ADR-023). Both stay off until the role grant
+          # and the ASSERT evaluation have been checked against the deployment.
+          AGENT_PLANNING_GRANT_ROLE: ${{ vars.AGENT_PLANNING_GRANT_ROLE || 'false' }}
+          AGENT_PLANNING_ENABLED: ${{ vars.AGENT_PLANNING_ENABLED || 'false' }}
         run: |
           for v in SQL_ADMIN_LOGIN SQL_ADMIN_PASSWORD SATURDAZE_JWT_SIGNING_KEY SATURDAZE_PHOTOS_SIGNING_KEY FOUNDRY_ORGANIZATION_NAME; do
             if [ -z "${!v}" ]; then
@@ -246,7 +251,7 @@ jobs:
           fi
 
   api:
-    name: Build & deploy API + ingestion WebJob
+    name: Build & deploy API + ingestion and draft WebJobs
     runs-on: ubuntu-24.04
     needs: [infra]
     steps:
@@ -269,6 +274,17 @@ jobs:
           job=./publish/App_Data/jobs/triggered/ingest
           dotnet publish "$CLI_PROJECT" -c Release -o "$job/cli" --nologo
           cp "$WEBJOB_SOURCE/run.sh" "$WEBJOB_SOURCE/settings.job" "$job/"
+          chmod +x "$job/run.sh"
+          ls -la "$job"
+
+      # Agent-drafted weekends (ADR-023, L2-203): `saturdaze draft-weekends`
+      # on Fridays at 12:00 UTC, from the same CLI build.
+      - name: Publish draft WebJob
+        run: |
+          job=./publish/App_Data/jobs/triggered/draft
+          mkdir -p "$job"
+          cp -r ./publish/App_Data/jobs/triggered/ingest/cli "$job/cli"
+          cp "$DRAFT_WEBJOB_SOURCE/run.sh" "$DRAFT_WEBJOB_SOURCE/settings.job" "$job/"
           chmod +x "$job/run.sh"
           ls -la "$job"
 
@@ -303,7 +319,7 @@ jobs:
   # WebJob problem fails the deploy without holding back the migrations: the
   # API is already live by now, and new API code on an old schema is an outage.
   webjob:
-    name: Ingestion WebJob is registered
+    name: Ingestion and draft WebJobs are registered
     runs-on: ubuntu-24.04
     needs: [infra, api]
     steps:
@@ -314,29 +330,35 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      - name: Ingestion WebJob is registered
+      - name: Ingestion and draft WebJobs are registered
         run: |
-          for attempt in $(seq 1 12); do
-            if found="$(az webapp webjob triggered list \
-              --resource-group "$AZURE_RESOURCE_GROUP" \
-              --name "${{ needs.infra.outputs.api_name }}" \
-              --query "[?ends_with(name, '/ingest')] | length(@)" --output tsv 2>az.err)"; then
-              if [ "$found" = "1" ]; then
-                echo "WebJob 'ingest' is registered."
-                az webapp webjob triggered list \
-                  --resource-group "$AZURE_RESOURCE_GROUP" \
-                  --name "${{ needs.infra.outputs.api_name }}" \
-                  --query "[?ends_with(name, '/ingest')].{schedule:settings.schedule,lastRun:latestRun.status,at:latestRun.startTime}" --output table
-                exit 0
+          for job in ingest draft; do
+            registered=false
+            for attempt in $(seq 1 12); do
+              if found="$(az webapp webjob triggered list \
+                --resource-group "$AZURE_RESOURCE_GROUP" \
+                --name "${{ needs.infra.outputs.api_name }}" \
+                --query "[?ends_with(name, '/$job')] | length(@)" --output tsv 2>az.err)"; then
+                if [ "$found" = "1" ]; then
+                  echo "WebJob '$job' is registered."
+                  az webapp webjob triggered list \
+                    --resource-group "$AZURE_RESOURCE_GROUP" \
+                    --name "${{ needs.infra.outputs.api_name }}" \
+                    --query "[?ends_with(name, '/$job')].{schedule:settings.schedule,lastRun:latestRun.status,at:latestRun.startTime}" --output table
+                  registered=true
+                  break
+                fi
+                echo "WebJob '$job' not listed yet (attempt $attempt)"
+              else
+                echo "WebJob list failed (attempt $attempt): $(cat az.err)"
               fi
-              echo "WebJob 'ingest' not listed yet (attempt $attempt)"
-            else
-              echo "WebJob list failed (attempt $attempt): $(cat az.err)"
+              sleep 10
+            done
+            if [ "$registered" != "true" ]; then
+              echo "::error::The API does not list the triggered WebJob '$job'. Check WEBSITE_SKIP_RUNNING_KUDUAGENT=false and App_Data/jobs/triggered/$job in the zip; ARM lists the job as '<site>/$job'."
+              exit 1
             fi
-            sleep 10
           done
-          echo "::error::The API does not list the triggered WebJob 'ingest'. Check WEBSITE_SKIP_RUNNING_KUDUAGENT=false and App_Data/jobs/triggered/ingest in the zip; ARM lists the job as '<site>/ingest'."
-          exit 1
 
   migrate:
     name: Apply EF migrations

@@ -141,7 +141,7 @@ Constraints:
 
 ### Risks
 - Foundry's shared Claude quota (ADR-011). Agent planning falls back cleanly on 429 after the SDK's retries.
-- The role assignment needs `Microsoft.Authorization/roleAssignments/write`. The deploying principal must hold Owner or User Access Administrator on the Foundry account; otherwise the `infra` job fails until it is granted (Part B handoff).
+- The role assignment needs `Microsoft.Authorization/roleAssignments/write`. The deploying principal must hold Owner, User Access Administrator or Role Based Access Control Administrator on the Foundry account. So that a merge cannot fail the `infra` job or turn on agents that cannot authenticate, both are behind repository variables that default to false: `AGENT_PLANNING_GRANT_ROLE` adds the assignment and `AGENT_PLANNING_ENABLED` turns the feature on. They are set once the grant is possible and the ASSERT run against the deployment has passed.
 - Model drift on `claude-sonnet-5` can change behaviour; the ASSERT gate catches regressions only where the secret is configured.
 
 ## Implementation Notes

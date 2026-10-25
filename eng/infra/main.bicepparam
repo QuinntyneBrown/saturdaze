@@ -62,3 +62,8 @@ param countryCode = readEnvironmentVariable('FOUNDRY_COUNTRY_CODE', 'CA')
 // Cost guardrail; blank email disables the budget.
 param budgetAmount = 40
 param alertEmail = readEnvironmentVariable('BUDGET_ALERT_EMAIL', '')
+
+// Agent-drafted weekends (ADR-023, L2-213). The grant needs a deploying principal
+// allowed to write role assignments; agents stay off until it is in place.
+param agentPlanningGrantRole = bool(readEnvironmentVariable('AGENT_PLANNING_GRANT_ROLE', 'false'))
+param agentPlanningEnabled = bool(readEnvironmentVariable('AGENT_PLANNING_ENABLED', 'false'))
