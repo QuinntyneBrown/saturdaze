@@ -122,7 +122,9 @@
   display: none;
   font-size: var(--fontSizeBase300);
   color: var(--colorNeutralForeground2);
-  overflow-wrap: anywhere;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 // Below the tablet breakpoint the links need the room: brand mark + tag only.

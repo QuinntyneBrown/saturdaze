@@ -1057,7 +1057,7 @@ button.stars[disabled] { opacity: 0.5; cursor: not-allowed; }
 .admin-nav__link[aria-current="page"]::after { content: ""; position: absolute; left: var(--spacingHorizontalM); right: var(--spacingHorizontalM); bottom: 0; height: var(--strokeWidthThick); border-radius: var(--borderRadiusCircular); background: var(--colorBrandStroke1); }
 .admin-nav__link .chip--count { margin-left: auto; }
 .admin-nav__account { display: flex; align-items: center; gap: var(--spacingHorizontalS); flex: none; margin-left: auto; }
-.admin-nav__email { display: none; font: var(--typographyBody2); color: var(--colorNeutralForeground2); overflow-wrap: anywhere; }
+.admin-nav__email { display: none; font: var(--typographyBody2); color: var(--colorNeutralForeground2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .admin-main { flex: 1; padding-top: var(--spacingVerticalXXL); padding-bottom: var(--layoutSpacePage); }
 @media (max-width: 44.9375rem) { .admin-nav__brand-text, .admin-nav__account .btn { display: none; } }
 @media (min-width: 64rem) {

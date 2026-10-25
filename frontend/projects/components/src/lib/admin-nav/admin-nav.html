@@ -17,7 +17,7 @@
 </div>
 <div class="admin-nav__account">
   <sd-avatar [name]="email() || '?'" [src]="avatarSrc()" tone="primary" size="sm" />
-  <span class="admin-nav__email">{{ email() }}</span>
+  <span class="admin-nav__email" [attr.title]="email() || null">{{ email() }}</span>
   <sd-button variant="ghost" size="sm" (click)="signOut.emit()">
     <sd-icon name="sign_out" />
     Sign out
