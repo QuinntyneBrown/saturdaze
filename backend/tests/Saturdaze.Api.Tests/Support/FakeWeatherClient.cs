@@ -8,17 +8,23 @@ namespace Saturdaze.Api.Tests.Support;
 public sealed class FakeWeatherClient : IWeatherClient
 {
     public Func<double, double, DateOnly, DateOnly, IReadOnlyList<WeatherForecast>> Producer { get; set; }
-        = DefaultProducer;
+        = Sunny;
 
     public Task<IReadOnlyList<WeatherForecast>> GetForecastAsync(
         double latitude, double longitude, DateOnly from, DateOnly to, CancellationToken cancellationToken = default)
         => Task.FromResult(Producer(latitude, longitude, from, to));
 
-    private static IReadOnlyList<WeatherForecast> DefaultProducer(double _, double __, DateOnly from, DateOnly to)
+    public static IReadOnlyList<WeatherForecast> Sunny(double _, double __, DateOnly from, DateOnly to)
+        => Days(from, to, new[] { "sunny", "warm" }, 24, 16, 0.0);
+
+    public static IReadOnlyList<WeatherForecast> Rainy(double _, double __, DateOnly from, DateOnly to)
+        => Days(from, to, new[] { "rain", "cool" }, 9, 4, 12.0);
+
+    private static IReadOnlyList<WeatherForecast> Days(DateOnly from, DateOnly to, string[] tags, int high, int low, double rain)
     {
         var days = new List<WeatherForecast>();
         for (var d = from; d <= to; d = d.AddDays(1))
-            days.Add(new WeatherForecast(d, new[] { "sunny", "warm" }, 24, 16, 0.0, Unavailable: false));
+            days.Add(new WeatherForecast(d, tags, high, low, rain, Unavailable: false));
         return days;
     }
 }

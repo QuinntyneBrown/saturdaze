@@ -64,8 +64,9 @@ public sealed class WeekendReplanner
                 Stop = b.Stop?.Copy(),
                 FromCalendar = b.FromCalendar
             };
+            // EF's relationship fix-up puts the block in the tracked weekend.Blocks
+            // (WeekendId is set); adding it there too listed it twice (L2-188).
             _db.ItineraryBlocks.Add(block);
-            weekend.Blocks.Add(block);
         }
 
         await _db.SaveChangesAsync(ct);
