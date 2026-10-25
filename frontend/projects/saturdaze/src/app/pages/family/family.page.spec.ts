@@ -40,6 +40,9 @@ const VIEW: FamilyView = {
   home: { location: 'Port Credit, Mississauga', hint: 'Weather and drive times start here' },
   isOwner: true,
   ownerEmail: 'quinn@example.com',
+  ownerName: null,
+  selfMemberId: null,
+  needsSelf: false,
   members: [
     {
       id: 'm-quinn',

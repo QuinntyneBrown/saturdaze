@@ -320,6 +320,8 @@ export async function lockDinnerPick(
 export async function registerThrowaway(
   request: APIRequestContext,
   prefix = "e2e",
+  /** The owner's own first name and age (L2-215); without them the owner is not in Who's in yet. */
+  owner?: { readonly name: string; readonly age: number },
 ): Promise<Credentials> {
   const creds = {
     email: `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}@example.com`,
@@ -331,6 +333,8 @@ export async function registerThrowaway(
       password: creds.password,
       familyName: "E2E Family",
       homeLocation: "Port Credit",
+      ownerName: owner?.name,
+      ownerAge: owner?.age,
     },
   });
   if (!res.ok())

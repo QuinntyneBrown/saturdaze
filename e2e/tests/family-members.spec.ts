@@ -149,3 +149,35 @@ test.describe("Family members who sign in", () => {
     await context.close();
   });
 });
+
+test.describe("The owner in Who's in", () => {
+  test("an invited member sees the owner's row", async ({ request, signIn, goto, pages, browser }) => {
+    // Traces to: L2-214 #4, L2-124 #4
+    const owner = await registerThrowaway(request, "owner", { name: "Quinn", age: 41 });
+    await signIn(owner);
+    await goto("family", { anonymous: true });
+    const f = pages.family;
+    await f.waitForReady();
+    await expect(f.rowSubtitle(f.memberRow("Quinn"))).toHaveText(`Parent · 41 · Signs in as ${owner.email}`);
+    const email = inviteeEmail();
+    await f.addMember({ name: "Vanessa", age: 39, inviteEmail: email });
+    const link = (await f.inviteLink().textContent())!.trim();
+    await f.dialogAction("Done").click();
+
+    const vanessaContext = await browser.newContext();
+    const vanessaPage = await vanessaContext.newPage();
+    const invite = new AcceptInvitePage(vanessaPage);
+    await invite.open(link);
+    await invite.join(PASSWORD);
+    await expect(vanessaPage).toHaveURL(/\/weekend$/);
+
+    const vanessaFamily = new FamilyPage(vanessaPage);
+    await vanessaFamily.open();
+    await expect(vanessaFamily.membersSubtitle()).toHaveText("Ages shape the picks. Only Quinn can change who's in.");
+    await expect(vanessaFamily.rowSubtitle(vanessaFamily.memberRow("Quinn"))).toHaveText(
+      `Parent · 41 · Signs in as ${owner.email}`,
+    );
+    await expect(vanessaFamily.actionableMemberRows()).toHaveCount(0);
+    await vanessaContext.close();
+  });
+});

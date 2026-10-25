@@ -41,6 +41,10 @@ export interface FamilyDto {
    */
   readonly ownerEmail: string | null;
   /**
+   * Self Member Id — the member linked to the caller's own account; `null` when none (L2-214).
+   */
+  readonly selfMemberId?: string | null;
+  /**
    * Members — `email` is the invited or signed-in address, `null` for `None`.
    */
   readonly members: readonly {

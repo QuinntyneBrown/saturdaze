@@ -202,7 +202,8 @@ export class FamilyPage {
   protected readonly membersSubtitle = computed(() => {
     const view = this.view();
     if (view.isOwner) return 'Ages shape the picks. Tap a person to edit.';
-    return `Ages shape the picks. Only ${view.ownerEmail ?? 'the owner'} can change who's in.`;
+    const owner = view.ownerName ?? view.ownerEmail ?? 'the owner';
+    return `Ages shape the picks. Only ${owner} can change who's in.`;
   });
   protected readonly isAdmin = computed(() => this.user()?.role === 'Admin');
   protected readonly pendingCount = computed(() => this.submissions.pending()().length);
