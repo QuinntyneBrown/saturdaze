@@ -2,6 +2,7 @@ import { ChipView } from './chip-view';
 import { CommitmentRow } from './commitment-row';
 import { MemberRow } from './member-row';
 import { PlannedAroundRow } from './planned-around-row';
+import { PlanningRows } from './planning-settings';
 import { PreferenceToggle } from './preference-toggle';
 
 /**
@@ -61,4 +62,8 @@ export interface FamilyView {
    * Planned Around — who, commitments, likes.
    */
   readonly plannedAround: readonly PlannedAroundRow[];
+  /**
+   * Planning — the "How you plan" rows' values (L2-197).
+   */
+  readonly planning: PlanningRows;
 }

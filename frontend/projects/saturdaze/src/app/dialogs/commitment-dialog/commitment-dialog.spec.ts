@@ -1,6 +1,7 @@
 import { vi } from 'vitest';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
+import { HttpErrorResponse } from '@angular/common/http';
 
 import { CommitmentDialog, CommitmentDialogData } from './commitment-dialog';
 
@@ -52,6 +53,8 @@ describe('CommitmentDialog', () => {
       day: 'Saturday',
       startTime: '09:00',
       endTime: '10:00',
+      attendeeMemberIds: [],
+      where: null,
     });
   });
 
@@ -116,6 +119,8 @@ describe('CommitmentDialog', () => {
       day: null,
       startTime: '16:00',
       endTime: '17:00',
+      attendeeMemberIds: [],
+      where: null,
     });
   });
 
@@ -123,5 +128,74 @@ describe('CommitmentDialog', () => {
     await mount({ mode: 'add', siblings: [] });
     component['cancel']();
     expect(dialogRef.close).toHaveBeenCalledWith();
+  });
+
+  describe('who goes and where (L2-192, L2-197)', () => {
+    const members = [
+      { id: 'm-quinn', name: 'Quinn' },
+      { id: 'm-mia', name: 'Mia' },
+    ];
+    const checkboxes = (): string[] =>
+      Array.from(host.querySelectorAll('sd-checkbox')).map((c) => c.textContent?.trim() ?? '');
+
+    it('offers one checkbox per member and saves who goes and where before closing', async () => {
+      const save = vi.fn(async () => undefined);
+      await mount({ mode: 'add', siblings: [], members, save });
+      expect(checkboxes()).toEqual(['Quinn', 'Mia']);
+
+      component['name'].set('Swim');
+      component['setGoes']('m-mia', true);
+      component['where'].set(' 5980 McLaughlin Rd, Mississauga ');
+      await component['submit']();
+
+      const result = expect.objectContaining({
+        kind: 'save',
+        attendeeMemberIds: ['m-mia'],
+        where: '5980 McLaughlin Rd, Mississauga',
+      });
+      expect(save).toHaveBeenCalledWith(result);
+      expect(dialogRef.close).toHaveBeenCalledWith(result);
+    });
+
+    it('stays open with the message under Where when the address cannot be found', async () => {
+      const refusal = new HttpErrorResponse({
+        status: 400,
+        error: { errors: { 'Commitments[0].Location': ["We couldn't find that address."] } },
+      });
+      await mount({
+        mode: 'add',
+        siblings: [],
+        members,
+        save: vi.fn(async () => Promise.reject(refusal)),
+      });
+      component['name'].set('Piano');
+      component['where'].set('Nowhere Lane');
+      await component['submit']();
+      fixture.detectChanges();
+
+      expect(dialogRef.close).not.toHaveBeenCalled();
+      expect(host.querySelector('.field__error')?.textContent).toContain(
+        "We couldn't find that address.",
+      );
+    });
+
+    it('starts from the stored attendees and place when editing', async () => {
+      await mount({
+        mode: 'edit',
+        initial: {
+          title: 'Swim',
+          day: 'Sunday',
+          startTime: '16:20',
+          endTime: '16:50',
+          attendeeMemberIds: ['m-mia'],
+          where: '5980 McLaughlin Rd',
+        },
+        siblings: [],
+        members,
+      });
+      expect(component['goes']('m-mia')).toBe(true);
+      expect(component['goes']('m-quinn')).toBe(false);
+      expect(component['where']()).toBe('5980 McLaughlin Rd');
+    });
   });
 });

@@ -14,6 +14,7 @@ import {
   FAMILY_SERVICE,
   FamilyInvite,
   MemberRow,
+  PlanningSettings,
   PreferenceKey,
   SESSION_STORE,
   WeekendDay,
@@ -44,11 +45,18 @@ import {
   ConnectCalendarDialog,
   ConnectCalendarDialogData,
 } from '../../dialogs/connect-calendar-dialog/connect-calendar-dialog';
+import { CelebrationsDialog } from '../../dialogs/celebrations-dialog/celebrations-dialog';
 import {
   CommitmentDialog,
   CommitmentDialogData,
   CommitmentDialogResult,
+  CommitmentSave,
 } from '../../dialogs/commitment-dialog/commitment-dialog';
+import { DayShapeDialog } from '../../dialogs/day-shape-dialog/day-shape-dialog';
+import {
+  MaxDriveDialog,
+  PlanningDialogData,
+} from '../../dialogs/max-drive-dialog/max-drive-dialog';
 import { DIALOG_OPTIONS, confirmWith } from '../../dialogs/confirm-dialog/confirm-dialog';
 import {
   FamilyMemberDialog,
@@ -105,6 +113,23 @@ function weekendDayOf(day: CommitmentRow['dayOfWeek']): WeekendDay | null {
 }
 
 /** Why adding a member was refused (L2-125 #3, L2-126 #3, #4). */
+/** The editable fields a saved commitment dialog sets (L2-192). */
+function commitmentFields(saved: CommitmentSave): {
+  title: string;
+  startTime: string;
+  endTime: string;
+  attendeeMemberIds: readonly string[];
+  where: string | null;
+} {
+  return {
+    title: saved.title,
+    startTime: saved.startTime,
+    endTime: saved.endTime,
+    attendeeMemberIds: saved.attendeeMemberIds,
+    where: saved.where,
+  };
+}
+
 function addMemberError(err: unknown): string {
   const code = (err as { error?: { code?: string } } | null)?.error?.code;
   switch (code) {
@@ -239,6 +264,14 @@ export class FamilyPage {
       this.error.set(addMemberError(err));
       return;
     }
+    if (result.interests.length) {
+      await this.save((p) => ({
+        ...p,
+        members: p.members.map((m) =>
+          m.name === result.name ? { ...m, interests: result.interests } : m,
+        ),
+      }));
+    }
     if (!invite) return;
     const { email, url } = invite;
     const ref = this.dialog.open<void, InviteLinkDialogData>(InviteLinkDialog, {
@@ -251,7 +284,7 @@ export class FamilyPage {
   protected async editMember(member: MemberRow): Promise<void> {
     const result = await this.openMember({
       mode: 'edit',
-      initial: { name: member.name, age: member.age },
+      initial: { name: member.name, age: member.age, interests: member.interests },
       existingNames: this.memberNames(),
       access: member.access,
       email: member.email,
@@ -272,7 +305,9 @@ export class FamilyPage {
     await this.save((p) => ({
       ...p,
       members: p.members.map((m) =>
-        m.id === member.id ? { ...m, name: result.name, age: result.age } : m,
+        m.id === member.id
+          ? { ...m, name: result.name, age: result.age, interests: result.interests }
+          : m,
       ),
     }));
   }
@@ -280,23 +315,20 @@ export class FamilyPage {
   // ---- commitments ----------------------------------------------------
 
   protected async addCommitment(): Promise<void> {
-    const result = await this.openCommitment({
+    this.error.set('');
+    await this.openCommitment({
       mode: 'add',
       siblings: this.commitmentSiblings(null),
+      members: this.memberChoices(),
+      save: (result) =>
+        this.saveOrThrow((p) => ({
+          ...p,
+          commitments: [
+            ...p.commitments,
+            { ...commitmentFields(result), dayOfWeek: result.day ?? 'Saturday' },
+          ],
+        })),
     });
-    if (result?.kind !== 'save') return;
-    await this.save((p) => ({
-      ...p,
-      commitments: [
-        ...p.commitments,
-        {
-          title: result.title,
-          dayOfWeek: result.day ?? 'Saturday',
-          startTime: result.startTime,
-          endTime: result.endTime,
-        },
-      ],
-    }));
   }
 
   protected async editCommitment(commitment: CommitmentRow): Promise<void> {
@@ -307,8 +339,20 @@ export class FamilyPage {
         day: weekendDayOf(commitment.dayOfWeek),
         startTime: commitment.startTime,
         endTime: commitment.endTime,
+        attendeeMemberIds: commitment.attendeeMemberIds,
+        where: commitment.where,
       },
       siblings: this.commitmentSiblings(commitment.id),
+      members: this.memberChoices(),
+      save: (saved) =>
+        this.saveOrThrow((p) => ({
+          ...p,
+          commitments: p.commitments.map((c) =>
+            c.id === commitment.id
+              ? { ...c, ...commitmentFields(saved), dayOfWeek: saved.day ?? c.dayOfWeek }
+              : c,
+          ),
+        })),
     });
     if (!result) return;
     if (result.kind === 'remove') {
@@ -326,20 +370,36 @@ export class FamilyPage {
       }));
       return;
     }
-    await this.save((p) => ({
-      ...p,
-      commitments: p.commitments.map((c) =>
-        c.id === commitment.id
-          ? {
-              ...c,
-              title: result.title,
-              dayOfWeek: result.day ?? c.dayOfWeek,
-              startTime: result.startTime,
-              endTime: result.endTime,
-            }
-          : c,
-      ),
-    }));
+  }
+
+  // ---- how you plan (L2-197) -----------------------------------------
+
+  protected editMaxDrive(): Promise<void> {
+    return this.openPlanning(MaxDriveDialog);
+  }
+
+  protected editCelebrations(): Promise<void> {
+    return this.openPlanning(CelebrationsDialog);
+  }
+
+  protected editDayShape(): Promise<void> {
+    return this.openPlanning(DayShapeDialog);
+  }
+
+  private async openPlanning(
+    component: typeof MaxDriveDialog | typeof CelebrationsDialog | typeof DayShapeDialog,
+  ): Promise<void> {
+    const current = this.editable();
+    if (!current) return;
+    this.error.set('');
+    const ref = this.dialog.open<boolean, PlanningDialogData>(component, {
+      ...DIALOG_OPTIONS,
+      data: {
+        initial: current.planning,
+        save: (planning: PlanningSettings) => this.saveOrThrow((p) => ({ ...p, planning })),
+      },
+    });
+    await firstValueFrom(ref.closed);
   }
 
   // ---- home, likes, preferences ---------------------------------------
@@ -493,6 +553,10 @@ export class FamilyPage {
 
   // ---- helpers --------------------------------------------------------
 
+  private memberChoices(): { id: string; name: string }[] {
+    return this.view().members.map((m) => ({ id: m.id, name: m.name }));
+  }
+
   private memberNames(): string[] {
     return this.view().members.map((m) => m.name);
   }
@@ -526,6 +590,15 @@ export class FamilyPage {
       data,
     });
     return await firstValueFrom(ref.closed);
+  }
+
+  /** Saves for a dialog that shows its own error: a failure rejects instead of setting the banner. */
+  private async saveOrThrow(
+    mutate: (profile: EditableFamilyProfile) => EditableFamilyProfile,
+  ): Promise<void> {
+    const current = this.editable();
+    if (!current) throw new Error('The family has not loaded yet.');
+    await this.familyService.saveProfile(mutate(current));
   }
 
   private save(mutate: (profile: EditableFamilyProfile) => EditableFamilyProfile): Promise<void> {

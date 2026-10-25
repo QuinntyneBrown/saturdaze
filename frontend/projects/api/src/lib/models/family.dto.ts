@@ -1,4 +1,6 @@
+import { LocationDto } from './location.dto';
 import { MemberAccess } from './member-row';
+import { ContentTheme, PlanLeaning } from './planning-settings';
 
 /**
  * Server-side shape of `GET /api/family`. Mirrors `Saturdaze.Application
@@ -47,6 +49,7 @@ export interface FamilyDto {
     age: number;
     access: MemberAccess;
     email: string | null;
+    interests?: readonly string[];
   }[];
   /**
    * Commitments.
@@ -57,6 +60,8 @@ export interface FamilyDto {
     dayOfWeek: string;
     startTime: string;
     endTime: string;
+    attendeeMemberIds?: readonly string[] | null;
+    location?: LocationDto | null;
   }[];
   /**
    * Preferences.
@@ -66,4 +71,12 @@ export interface FamilyDto {
     kind: 'Like' | 'Dislike';
     value: string;
   }[];
+  readonly maxDriveMinutes?: number;
+  readonly excludedThemes?: readonly ContentTheme[] | null;
+  readonly quietSunday?: boolean;
+  readonly dayStart?: string | null;
+  readonly youngestBedtime?: string | null;
+  readonly sundayDinnerAtHome?: boolean;
+  readonly outingsPerDay?: number;
+  readonly leaning?: PlanLeaning;
 }

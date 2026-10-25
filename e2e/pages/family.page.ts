@@ -170,6 +170,72 @@ export class FamilyPage extends BasePage {
     return control(this.commitmentsSection(), "Add a commitment");
   }
 
+  /** Fills D18b and adds the commitment; `who` ticks members under "Who goes", `where` fills Where. */
+  async addCommitment(c: {
+    title: string;
+    day: "Saturday" | "Sunday";
+    start: string;
+    end: string;
+    who?: string[];
+    where?: string;
+  }): Promise<void> {
+    await this.addCommitmentRow().click();
+    await this.fillCommitment(c);
+    await this.dialogAction("Add commitment").click();
+  }
+
+  async fillCommitment(c: { title: string; day: "Saturday" | "Sunday"; start: string; end: string; who?: string[]; where?: string }): Promise<void> {
+    await this.dialogField("Name").fill(c.title);
+    await this.dialog().getByRole("radio", { name: c.day, exact: true }).check();
+    await this.dialogField("Start").fill(c.start);
+    await this.dialogField("End").fill(c.end);
+    for (const name of c.who ?? []) await this.dialogCheckbox(name).check();
+    if (c.where !== undefined) await this.dialogField("Where").fill(c.where);
+  }
+
+  /* ---------- How you plan (L2-197) ---------- */
+
+  planSection(): Locator {
+    return this.section("How you plan");
+  }
+
+  planRow(title: "Max drive" | "What you celebrate" | "Day shape"): Locator {
+    return this.planSection().locator(".list__item").filter({ has: this.page.locator(".list__title", { hasText: title }) });
+  }
+
+  /** The row's value line: "Up to 2 h each way", "Not Halloween", "Starts 9:00 · 2 outings a day". */
+  planValue(title: "Max drive" | "What you celebrate" | "Day shape"): Locator {
+    return this.rowSubtitle(this.planRow(title));
+  }
+
+  /** A checkbox in the open dialog by its label (D36's themes, D18's "Who goes"). */
+  dialogCheckbox(label: string): Locator {
+    return this.dialog().getByRole("checkbox", { name: label, exact: true });
+  }
+
+  /** A switch in the open dialog by its label ("Keep Sunday quiet", "Sunday dinner at home"). */
+  dialogSwitch(label: string): Locator {
+    return this.dialog().getByRole("switch", { name: label, exact: true });
+  }
+
+  /** One option of a segmented choice in the open dialog ("Outings a day" → "1"). */
+  dialogSegment(group: string, option: string): Locator {
+    return this.dialog().getByRole("radiogroup", { name: group }).getByRole("radio", { name: option, exact: true });
+  }
+
+  /** Saves the open dialog and waits for it to close. */
+  async saveDialog(): Promise<void> {
+    await this.dialogAction("Save").click();
+    await this.dialog().waitFor({ state: "detached" });
+  }
+
+  /** Adds an interest in the member dialog's chip input (D17). */
+  async addInterest(value: string): Promise<void> {
+    const input = this.dialogField("Interests");
+    await input.fill(value);
+    await input.press("Enter");
+  }
+
   /* ---------- Home ---------- */
 
   homeSection(): Locator {

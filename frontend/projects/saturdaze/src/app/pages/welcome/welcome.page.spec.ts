@@ -22,6 +22,7 @@ const MAE = {
   access: 'None' as const,
   email: null,
   subtitle: 'Kid · 5',
+  interests: [],
 };
 
 const VIEW: FamilyView = {
@@ -41,6 +42,11 @@ const VIEW: FamilyView = {
     { key: 'fridayPreview', title: 'Friday preview email', subtitle: 'A draft', checked: true },
   ],
   plannedAround: [],
+  planning: {
+    maxDrive: 'Up to 2 h each way',
+    celebrate: 'Everything',
+    dayShape: 'Starts 9:00 · 2 outings a day',
+  },
 };
 
 const PROFILE: EditableFamilyProfile = {
@@ -52,6 +58,16 @@ const PROFILE: EditableFamilyProfile = {
   members: [],
   commitments: [],
   preferences: [],
+  planning: {
+    maxDriveMinutes: 120,
+    excludedThemes: [],
+    quietSunday: false,
+    dayStart: '09:00',
+    youngestBedtime: null,
+    sundayDinnerAtHome: true,
+    outingsPerDay: 2,
+    leaning: 'Either',
+  },
 };
 
 const USER: User = {

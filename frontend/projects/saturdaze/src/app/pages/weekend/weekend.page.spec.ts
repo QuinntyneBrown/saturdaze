@@ -115,6 +115,11 @@ const FAMILY_LOADING: FamilyView = {
   dislikes: [],
   preferences: [],
   plannedAround: [],
+  planning: {
+    maxDrive: 'Up to 2 h each way',
+    celebrate: 'Everything',
+    dayShape: 'Starts 9:00 · 2 outings a day',
+  },
 };
 
 const FAMILY_READY: FamilyView = {

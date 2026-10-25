@@ -15,7 +15,16 @@ import {
   User,
 } from 'api';
 
-import { CommitmentDialog } from '../../dialogs/commitment-dialog/commitment-dialog';
+import { CelebrationsDialog } from '../../dialogs/celebrations-dialog/celebrations-dialog';
+import {
+  CommitmentDialog,
+  CommitmentDialogData,
+} from '../../dialogs/commitment-dialog/commitment-dialog';
+import { DayShapeDialog } from '../../dialogs/day-shape-dialog/day-shape-dialog';
+import {
+  MaxDriveDialog,
+  PlanningDialogData,
+} from '../../dialogs/max-drive-dialog/max-drive-dialog';
 import { ConfirmDialog } from '../../dialogs/confirm-dialog/confirm-dialog';
 import { FamilyMemberDialog } from '../../dialogs/family-member-dialog/family-member-dialog';
 import { InviteLinkDialog } from '../../dialogs/invite-link-dialog/invite-link-dialog';
@@ -42,6 +51,7 @@ const VIEW: FamilyView = {
       access: 'None',
       email: null,
       subtitle: 'Parent · 38',
+      interests: [],
     },
     {
       id: 'm-mae',
@@ -53,6 +63,7 @@ const VIEW: FamilyView = {
       access: 'None',
       email: null,
       subtitle: 'Kid · 5',
+      interests: [],
     },
   ],
   commitments: [
@@ -65,6 +76,8 @@ const VIEW: FamilyView = {
       endTime: '10:00',
       subtitle: 'Saturdays · 9:00 to 10:00',
       icon: 'bike',
+      attendeeMemberIds: [],
+      where: null,
     },
     {
       id: 'c-piano',
@@ -75,6 +88,8 @@ const VIEW: FamilyView = {
       endTime: '17:00',
       subtitle: 'Wednesdays · 4:00 to 5:00',
       icon: 'sparkle',
+      attendeeMemberIds: [],
+      where: null,
     },
   ],
   likes: [{ tone: 'leaf', icon: 'heart', label: 'Parks' }],
@@ -90,6 +105,11 @@ const VIEW: FamilyView = {
     { key: 'fridayPreview', title: 'Friday preview', subtitle: 'A draft at 6pm.', checked: true },
   ],
   plannedAround: [],
+  planning: {
+    maxDrive: 'Up to 2 h each way',
+    celebrate: 'Everything',
+    dayShape: 'Starts 9:00 · 2 outings a day',
+  },
 };
 
 const PROFILE: EditableFamilyProfile = {
@@ -116,6 +136,16 @@ const PROFILE: EditableFamilyProfile = {
     { kind: 'Like', value: 'Parks' },
     { kind: 'Dislike', value: 'Camping' },
   ],
+  planning: {
+    maxDriveMinutes: 120,
+    excludedThemes: [],
+    quietSunday: false,
+    dayStart: '09:00',
+    youngestBedtime: null,
+    sundayDinnerAtHome: true,
+    outingsPerDay: 2,
+    leaning: 'Either',
+  },
 };
 
 const USER: User = {
@@ -257,7 +287,7 @@ describe('FamilyPage', () => {
   it('adds a member through D17b with one POST, not the whole-profile save (L2-010 #3, L2-125)', async () => {
     await mount();
     dialog.open.mockReturnValueOnce({
-      closed: of({ kind: 'save', name: 'Eli', age: 9, email: null }),
+      closed: of({ kind: 'save', name: 'Eli', age: 9, email: null, interests: [] }),
     });
     (section("Who's in").querySelector('sd-ghost-row button') as HTMLButtonElement).click();
     await settle();
@@ -279,7 +309,13 @@ describe('FamilyPage', () => {
       expiresAtUtc: '2026-10-16T00:00:00Z',
     });
     dialog.open.mockReturnValueOnce({
-      closed: of({ kind: 'save', name: 'Jordan', age: 37, email: 'jordan@example.com' }),
+      closed: of({
+        kind: 'save',
+        name: 'Jordan',
+        age: 37,
+        email: 'jordan@example.com',
+        interests: [],
+      }),
     });
     await component['addMember']();
     expect(familyService.addMember).toHaveBeenCalledWith({
@@ -301,7 +337,9 @@ describe('FamilyPage', () => {
 
   it('edits a member through the profile save, and removes them with DELETE after D21 (L2-128)', async () => {
     await mount();
-    dialog.open.mockReturnValueOnce({ closed: of({ kind: 'save', name: 'Mae', age: 6 }) });
+    dialog.open.mockReturnValueOnce({
+      closed: of({ kind: 'save', name: 'Mae', age: 6, interests: ['Animals'] }),
+    });
     (section("Who's in").querySelectorAll('sd-list-item button')[1] as HTMLButtonElement).click();
     await settle();
     expect(dialog.open).toHaveBeenCalledWith(
@@ -309,7 +347,7 @@ describe('FamilyPage', () => {
       expect.objectContaining({
         data: {
           mode: 'edit',
-          initial: { name: 'Mae', age: 5 },
+          initial: { name: 'Mae', age: 5, interests: [] },
           existingNames: ['Quinn', 'Mae'],
           access: 'None',
           email: null,
@@ -318,7 +356,7 @@ describe('FamilyPage', () => {
     );
     expect(saved().members).toEqual([
       { id: 'm-quinn', name: 'Quinn', age: 38 },
-      { id: 'm-mae', name: 'Mae', age: 6 },
+      { id: 'm-mae', name: 'Mae', age: 6, interests: ['Animals'] },
     ]);
 
     familyService.saveProfile.mockClear();
@@ -373,64 +411,98 @@ describe('FamilyPage', () => {
     expect(members.querySelectorAll('sd-list-item button').length).toBe(0);
   });
 
-  it('adds and edits commitments through D18, passing the siblings for the duplicate check', async () => {
+  it('adds and edits commitments through D18, which saves them itself (L2-197)', async () => {
     await mount();
-    dialog.open.mockReturnValueOnce({
-      closed: of({
-        kind: 'save',
-        title: 'Church',
-        day: 'Sunday',
-        startTime: '10:30',
-        endTime: '11:45',
-      }),
-    });
+    const d18 = (): CommitmentDialogData =>
+      dialog.open.mock.calls.filter((c) => c[0] === CommitmentDialog).at(-1)![1].data;
+
     await component['addCommitment']();
-    expect(dialog.open).toHaveBeenCalledWith(
-      CommitmentDialog,
-      expect.objectContaining({
-        data: {
-          mode: 'add',
-          siblings: [
-            { title: 'Swim lessons', day: 'Saturday' },
-            { title: 'Piano', day: null },
-          ],
-        },
-      }),
-    );
+    expect(d18()).toMatchObject({
+      mode: 'add',
+      siblings: [
+        { title: 'Swim lessons', day: 'Saturday' },
+        { title: 'Piano', day: null },
+      ],
+      members: [
+        { id: 'm-quinn', name: 'Quinn' },
+        { id: 'm-mae', name: 'Mae' },
+      ],
+    });
+    await d18().save!({
+      kind: 'save',
+      title: 'Church',
+      day: 'Sunday',
+      startTime: '10:30',
+      endTime: '11:45',
+      attendeeMemberIds: ['m-mae'],
+      where: '1 Church St',
+    });
     expect(saved().commitments.at(-1)).toEqual({
       title: 'Church',
       dayOfWeek: 'Sunday',
       startTime: '10:30',
       endTime: '11:45',
+      attendeeMemberIds: ['m-mae'],
+      where: '1 Church St',
     });
 
-    dialog.open.mockReturnValueOnce({
-      closed: of({
-        kind: 'save',
-        title: 'Piano practice',
+    await component['editCommitment'](VIEW.commitments[1]!);
+    expect(d18()).toMatchObject({
+      mode: 'edit',
+      initial: {
+        title: 'Piano',
         day: null,
         startTime: '16:00',
-        endTime: '16:45',
-      }),
+        endTime: '17:00',
+        attendeeMemberIds: [],
+        where: null,
+      },
+      siblings: [{ title: 'Swim lessons', day: 'Saturday' }],
     });
-    await component['editCommitment'](VIEW.commitments[1]!);
-    expect(dialog.open).toHaveBeenLastCalledWith(
-      CommitmentDialog,
-      expect.objectContaining({
-        data: {
-          mode: 'edit',
-          initial: { title: 'Piano', day: null, startTime: '16:00', endTime: '17:00' },
-          siblings: [{ title: 'Swim lessons', day: 'Saturday' }],
-        },
-      }),
-    );
+    await d18().save!({
+      kind: 'save',
+      title: 'Piano practice',
+      day: null,
+      startTime: '16:00',
+      endTime: '16:45',
+      attendeeMemberIds: [],
+      where: null,
+    });
     expect(saved().commitments[1]).toEqual({
       id: 'c-piano',
       title: 'Piano practice',
       dayOfWeek: 'Wednesday',
       startTime: '16:00',
       endTime: '16:45',
+      attendeeMemberIds: [],
+      where: null,
     });
+  });
+
+  it('opens each "How you plan" row in its dialog and saves through the profile (L2-197)', async () => {
+    await mount();
+    const planning = (): PlanningDialogData =>
+      dialog.open.mock.calls.at(-1)![1].data as PlanningDialogData;
+    const rows = (): HTMLButtonElement[] =>
+      Array.from(section('How you plan').querySelectorAll('sd-list-item button'));
+    expect(
+      Array.from(section('How you plan').querySelectorAll('.list__sub')).map((s) =>
+        s.textContent?.trim(),
+      ),
+    ).toEqual(['Up to 2 h each way', 'Everything', 'Starts 9:00 · 2 outings a day']);
+
+    rows()[0]!.click();
+    await settle();
+    expect(dialog.open.mock.calls.at(-1)![0]).toBe(MaxDriveDialog);
+    await planning().save({ ...planning().initial, maxDriveMinutes: 60 });
+    expect(saved().planning.maxDriveMinutes).toBe(60);
+
+    rows()[1]!.click();
+    await settle();
+    expect(dialog.open.mock.calls.at(-1)![0]).toBe(CelebrationsDialog);
+    rows()[2]!.click();
+    await settle();
+    expect(dialog.open.mock.calls.at(-1)![0]).toBe(DayShapeDialog);
   });
 
   it('removes a commitment after D21', async () => {

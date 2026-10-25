@@ -37,4 +37,12 @@ export interface CommitmentRow {
    * Icon — an `sd-icon` name picked from the title.
    */
   readonly icon: string;
+  /**
+   * Attendee Member Ids — who goes; empty means everyone (L2-192).
+   */
+  readonly attendeeMemberIds: readonly string[];
+  /**
+   * Where — the commitment's address; null when it has no place.
+   */
+  readonly where: string | null;
 }

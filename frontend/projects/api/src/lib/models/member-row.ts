@@ -46,4 +46,8 @@ export interface MemberRow {
    * Subtitle — "Parent · 38" / "Kid · 9" / "Parent · 36 · Invite sent to sara@example.com".
    */
   readonly subtitle: string;
+  /**
+   * Interests (L2-196).
+   */
+  readonly interests: readonly string[];
 }

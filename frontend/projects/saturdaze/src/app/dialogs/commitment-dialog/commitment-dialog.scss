@@ -8,6 +8,33 @@
   gap: var(--spacingVerticalL);
 }
 
+// "Who goes" — `.field` / `.cluster` in docs/mocks/pages/dialogs.html (D18).
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.field__label {
+  margin-bottom: 4px;
+  font-size: var(--fontSizeBase300);
+  font-weight: var(--fontWeightMedium);
+  color: var(--colorNeutralForeground2);
+}
+
+.field__hint {
+  margin: 0;
+  font-size: var(--fontSizeBase200);
+  color: var(--colorNeutralForeground2);
+}
+
+.cluster {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+}
+
 .row-2 {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));

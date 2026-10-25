@@ -1,0 +1,51 @@
+<sd-dialog
+  title="What you celebrate"
+  subtitle="Themed places and events are left out everywhere, even when the name doesn't say so."
+  wide
+>
+  <div class="form">
+    @if (error()) {
+      <sd-banner tone="warn" role="alert" icon="alert">{{ error() }}</sd-banner>
+    }
+    <fieldset class="field">
+      <legend class="field__label">We don't celebrate</legend>
+      <div class="cluster">
+        @for (o of observances; track o.value) {
+          <sd-checkbox
+            [name]="o.value"
+            [ngModel]="isExcluded(o.value)"
+            (ngModelChange)="setExcluded(o.value, $event)"
+            >{{ o.label }}</sd-checkbox
+          >
+        }
+      </div>
+    </fieldset>
+    <fieldset class="field">
+      <legend class="field__label">Leave out</legend>
+      <div class="cluster">
+        @for (o of leaveOut; track o.value) {
+          <sd-checkbox
+            [name]="o.value"
+            [ngModel]="isExcluded(o.value)"
+            (ngModelChange)="setExcluded(o.value, $event)"
+            >{{ o.label }}</sd-checkbox
+          >
+        }
+      </div>
+    </fieldset>
+    <sd-list card>
+      <sd-list-item title="Keep Sunday quiet" subtitle="Worship and rest, one outing at most">
+        <sd-toggle
+          slot="trailing"
+          srLabel="Keep Sunday quiet"
+          [ngModel]="quietSunday()"
+          (ngModelChange)="quietSunday.set($event)"
+        />
+      </sd-list-item>
+    </sd-list>
+  </div>
+  <sd-button slot="actions" variant="quiet" type="button" (click)="cancel()">Cancel</sd-button>
+  <sd-button slot="actions" variant="primary" type="button" [disabled]="saving()" (click)="save()"
+    >Save</sd-button
+  >
+</sd-dialog>
