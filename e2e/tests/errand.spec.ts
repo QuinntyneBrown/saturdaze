@@ -74,6 +74,8 @@ test.describe("Add an errand", () => {
     const name = errandName();
     await w.addErrandRow("Saturday").click();
     await w.dialogField("What is it").fill(name);
+    // Saturday is planned full (L2-184); a short errand still fits its free half hour.
+    await w.dialogField("Roughly how long").selectOption({ label: "30 min" });
     await w.dialog().getByRole("radio", { name: "Saturday" }).check();
     await w.dialogAction("Add to weekend").click();
     await expect(w.dialogTitle()).toHaveText(/^Added to Saturday/);
