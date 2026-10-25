@@ -202,6 +202,11 @@ namespace Saturdaze.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("AttendeeMemberIds")
+                        .IsRequired()
+                        .HasMaxLength(400)
+                        .HasColumnType("nvarchar(400)");
+
                     b.Property<int>("DayOfWeek")
                         .HasColumnType("int");
 
@@ -346,6 +351,16 @@ namespace Saturdaze.Infrastructure.Migrations
                     b.Property<bool>("BudgetEnabled")
                         .HasColumnType("bit");
 
+                    b.Property<TimeOnly>("DayStart")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("time")
+                        .HasDefaultValue(new TimeOnly(9, 0, 0));
+
+                    b.Property<string>("ExcludedThemes")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
                     b.Property<bool>("FridayPreviewEnabled")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
@@ -356,15 +371,39 @@ namespace Saturdaze.Infrastructure.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
+                    b.Property<int>("Leaning")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MaxDriveMinutes")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(120);
+
                     b.Property<string>("Name")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<int>("OutingsPerDay")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(2);
+
                     b.Property<Guid?>("OwnerUserId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<bool>("QuietSunday")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("SundayDinnerAtHome")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
+
                     b.Property<bool>("TryNewEnabled")
                         .HasColumnType("bit");
+
+                    b.Property<TimeOnly?>("YoungestBedtime")
+                        .HasColumnType("time");
 
                     b.HasKey("Id");
 
@@ -433,6 +472,11 @@ namespace Saturdaze.Infrastructure.Migrations
 
                     b.Property<Guid>("FamilyId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Interests")
+                        .IsRequired()
+                        .HasMaxLength(400)
+                        .HasColumnType("nvarchar(400)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -1335,6 +1379,37 @@ namespace Saturdaze.Infrastructure.Migrations
                         .HasForeignKey("FamilyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.OwnsOne("Saturdaze.Domain.ValueObjects.GeoLocation", "Location", b1 =>
+                        {
+                            b1.Property<Guid>("CommitmentId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<string>("Address")
+                                .IsRequired()
+                                .HasMaxLength(300)
+                                .HasColumnType("nvarchar(300)")
+                                .HasColumnName("LocationAddress");
+
+                            b1.Property<decimal>("Latitude")
+                                .HasPrecision(9, 6)
+                                .HasColumnType("decimal(9,6)")
+                                .HasColumnName("LocationLatitude");
+
+                            b1.Property<decimal>("Longitude")
+                                .HasPrecision(9, 6)
+                                .HasColumnType("decimal(9,6)")
+                                .HasColumnName("LocationLongitude");
+
+                            b1.HasKey("CommitmentId");
+
+                            b1.ToTable("Commitments");
+
+                            b1.WithOwner()
+                                .HasForeignKey("CommitmentId");
+                        });
+
+                    b.Navigation("Location");
                 });
 
             modelBuilder.Entity("Saturdaze.Domain.Entities.EmailVerificationToken", b =>

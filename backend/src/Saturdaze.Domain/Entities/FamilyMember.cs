@@ -9,4 +9,7 @@ public class FamilyMember
 
     /// <summary>The account this member signs in with; null when they don't (L2-124).</summary>
     public Guid? UserId { get; set; }
+
+    /// <summary>What this member is into; matching picks score higher (L2-196).</summary>
+    public List<string> Interests { get; set; } = new();
 }

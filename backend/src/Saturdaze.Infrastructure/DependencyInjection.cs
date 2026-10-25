@@ -134,6 +134,25 @@ public static class DependencyInjection
             })
             .AddStandardResilienceHandler();
 
+        // Geocoding a home or a commitment's place on save (L2-190). On by default;
+        // the e2e API and offline hosts turn it off.
+        if (configuration.GetValue("Saturdaze:Geocoding:Enabled", true))
+        {
+            services.AddHttpClient<Application.Geocoding.IGeocoder, Geocoding.NominatimGeocoder>(
+                Geocoding.NominatimGeocoder.HttpClientName, http =>
+                {
+                    http.BaseAddress = new Uri(
+                        configuration["Saturdaze:Geocoding:BaseUrl"] ?? "https://nominatim.openstreetmap.org/", UriKind.Absolute);
+                    http.Timeout = TimeSpan.FromSeconds(5);
+                    http.DefaultRequestHeaders.UserAgent.ParseAdd(
+                        configuration["Saturdaze:Geocoding:UserAgent"] ?? "Saturdaze/1.0 (+https://www.saturdaze.ca)");
+                });
+        }
+        else
+        {
+            services.AddSingleton<Application.Geocoding.IGeocoder, Geocoding.NullGeocoder>();
+        }
+
         return services;
     }
 

@@ -56,6 +56,8 @@ $env:Saturdaze__Database__Provider = 'Sqlite'
 $env:SATURDAZE_CONNECTION = $connection
 $env:Saturdaze__CuratedPhotos__PublicOrigin = 'https://images.example.com'
 $env:Saturdaze__Images__AllowedOrigins__0 = 'https://images.example.com'
+# Playwright never reaches the internet: no geocoding of saved homes (L2-190).
+$env:Saturdaze__Geocoding__Enabled = 'false'
 
 $out = Join-Path $logDir 'e2e-api.out.log'
 $err = Join-Path $logDir 'e2e-api.err.log'

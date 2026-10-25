@@ -18,10 +18,20 @@ public sealed record SaveFamilyProfileCommand(
     IReadOnlyList<SavePreferenceInput>? Preferences = null,
     string? Name = null,
     bool? TryNewEnabled = null,
-    bool? FridayPreviewEnabled = null) : IRequest<FamilyProfileDto>;
+    bool? FridayPreviewEnabled = null,
+    LocationInput? HomeCoordinates = null,
+    int? MaxDriveMinutes = null,
+    IReadOnlyList<string>? ExcludedThemes = null,
+    bool? QuietSunday = null,
+    TimeOnly? DayStart = null,
+    TimeOnly? YoungestBedtime = null,
+    bool ClearYoungestBedtime = false,
+    bool? SundayDinnerAtHome = null,
+    int? OutingsPerDay = null,
+    PlanLeaning? Leaning = null) : IRequest<FamilyProfileDto>;
 
 /// <summary>Members match by <see cref="Id"/> when supplied (so a rename keeps its row), else by name.</summary>
-public sealed record SaveMemberInput(string Name, int Age, Guid? Id = null);
+public sealed record SaveMemberInput(string Name, int Age, Guid? Id = null, IReadOnlyList<string>? Interests = null);
 
 /// <summary>Commitments match by <see cref="Id"/> when supplied, else by (title, day).</summary>
 public sealed record SaveCommitmentInput(
@@ -29,6 +39,11 @@ public sealed record SaveCommitmentInput(
     DayOfWeek DayOfWeek,
     TimeOnly StartTime,
     TimeOnly EndTime,
-    Guid? Id = null);
+    Guid? Id = null,
+    IReadOnlyList<Guid>? AttendeeMemberIds = null,
+    LocationInput? Location = null);
+
+/// <summary>An address with optional coordinates; without them the address is geocoded on save (L2-190).</summary>
+public sealed record LocationInput(string? Address, decimal? Latitude = null, decimal? Longitude = null);
 
 public sealed record SavePreferenceInput(PreferenceKind Kind, string Value);

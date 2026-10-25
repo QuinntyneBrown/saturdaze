@@ -31,6 +31,7 @@ public sealed class SaturdazeApiFactory : WebApplicationFactory<Program>, IAsync
     public CapturingEmailSender Mail { get; } = new();
     public FakeGoogleIdTokenVerifier Google { get; } = new();
     public FakeGoogleCalendarClient GoogleCalendar { get; } = new();
+    public FakeGeocoder Geocoder { get; } = new();
 
     /// <summary>Where uploaded covers go for this fixture (deleted on disposal).</summary>
     public string PhotoDirectory { get; } = Path.Combine(Path.GetTempPath(), "saturdaze-photos-" + Guid.NewGuid().ToString("N"));
@@ -82,6 +83,8 @@ public sealed class SaturdazeApiFactory : WebApplicationFactory<Program>, IAsync
             services.AddSingleton<Saturdaze.Application.Authentication.IGoogleIdTokenVerifier>(Google);
             services.RemoveAll<Saturdaze.Application.Calendar.IGoogleCalendarClient>();
             services.AddSingleton<Saturdaze.Application.Calendar.IGoogleCalendarClient>(GoogleCalendar);
+            services.RemoveAll<Saturdaze.Application.Geocoding.IGeocoder>();
+            services.AddSingleton<Saturdaze.Application.Geocoding.IGeocoder>(Geocoder);
         });
     }
 
