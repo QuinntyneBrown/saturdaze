@@ -56,6 +56,7 @@ import { AdminReviewsPage } from "../pages/admin/admin-reviews.page.js";
 import { AdminHealthPage } from "../pages/admin/admin-health.page.js";
 import { AdminActivityPage } from "../pages/admin/admin-activity.page.js";
 import { AdminSkipsPage } from "../pages/admin/admin-skips.page.js";
+import { AdminAgentRunsPage } from "../pages/admin/admin-agent-runs.page.js";
 import { AdminInvitationsPage } from "../pages/admin/admin-invitations.page.js";
 import { AdminSampleNewPage } from "../pages/admin/admin-sample-new.page.js";
 import { AdminSamplePage } from "../pages/admin/admin-sample.page.js";
@@ -84,6 +85,7 @@ interface Pages {
   adminHealth: AdminHealthPage;
   adminActivity: AdminActivityPage;
   adminSkips: AdminSkipsPage;
+  adminAgentRuns: AdminAgentRunsPage;
   adminInvitations: AdminInvitationsPage;
   adminSampleNew: AdminSampleNewPage;
   adminSample: AdminSamplePage;
@@ -190,6 +192,7 @@ export const test = base.extend<SdFixtures>({
       adminHealth: new AdminHealthPage(page),
       adminActivity: new AdminActivityPage(page),
       adminSkips: new AdminSkipsPage(page),
+      adminAgentRuns: new AdminAgentRunsPage(page),
       adminInvitations: new AdminInvitationsPage(page),
       adminSampleNew: new AdminSampleNewPage(page),
       adminSample: new AdminSamplePage(page),

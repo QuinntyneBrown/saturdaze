@@ -1,0 +1,104 @@
+@use '../../../../../components/src/lib/styles/breakpoints' as *;
+@use '../../../../../components/src/lib/styles/card-base' as *;
+
+// `.stat-grid--four`, `.stat`, `.queue` and `.run__trace` from
+// docs/mocks/styles/app.css (admin). The totals are plain `sd-card`s: they
+// carry a count and a sentence, not `sd-stat-card`'s "N of total".
+
+:host {
+  display: block;
+}
+
+.error {
+  margin-bottom: 16px;
+}
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.stat__label {
+  margin: 0;
+  font-size: var(--fontSizeBase200);
+  font-weight: var(--fontWeightSemibold);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--colorNeutralForeground2);
+}
+
+.stat__figure {
+  margin: 0;
+  font-size: var(--fontSizeHero800);
+  font-weight: var(--fontWeightBold);
+  letter-spacing: -0.02em;
+  line-height: 1;
+  color: var(--colorNeutralForeground1);
+}
+
+.stat__figure strong {
+  font-weight: inherit;
+}
+
+.stat__sub {
+  margin: 0;
+  font-size: var(--fontSizeBase200);
+  color: var(--colorNeutralForeground2);
+}
+
+.stat__bar {
+  height: 8px;
+  overflow: hidden;
+  border-radius: var(--borderRadiusCircular);
+  background: var(--colorNeutralBackground3);
+}
+
+.stat__fill {
+  display: block;
+  height: 100%;
+  border-radius: var(--borderRadiusCircular);
+  background: var(--colorPaletteLeafForeground1);
+}
+
+.queue {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.run__trace {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+  margin: 8px 0 0;
+}
+
+.run__trace code {
+  min-width: 0;
+  font-family: var(--fontFamilyMonospace);
+  font-size: var(--fontSizeBase200);
+  color: var(--colorNeutralForeground3);
+  overflow-wrap: anywhere;
+}
+
+@include respond-to(desktop) {
+  .stat-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+  }
+}
+
+@media (min-width: 80rem) {
+  .stat-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}

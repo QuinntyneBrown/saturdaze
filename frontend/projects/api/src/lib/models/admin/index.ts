@@ -15,3 +15,4 @@ export * from './place-row';
 export * from './platform-invitation.dto';
 export * from './prospect.dto';
 export * from './review-item-view';
+export * from './agent-runs.dto';

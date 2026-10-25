@@ -1,0 +1,95 @@
+<sd-page-header
+  title="Agent runs"
+  subtitle="Every weekend draft: what it cost, how it ended, and its trace. Read-only."
+/>
+
+@if (error()) {
+  <sd-banner class="error" tone="warn" role="alert" icon="alert">{{ error() }}</sd-banner>
+}
+
+@switch (status()) {
+  @case ('loading') {
+    <sd-status-row icon="sparkle">Fetching the runs.</sd-status-row>
+  }
+  @case ('ready') {
+    @let v = view();
+    @if (v) {
+      <div class="stat-grid">
+        <sd-card class="stat" padding="lg" role="region" aria-labelledby="stat-runs">
+          <h2 class="stat__label" id="stat-runs">Runs today</h2>
+          <p class="stat__figure">
+            <strong>{{ v.runsToday }}</strong>
+          </p>
+          <p class="stat__sub">{{ v.runsCap }}</p>
+        </sd-card>
+        <sd-card class="stat" padding="lg" role="region" aria-labelledby="stat-applied">
+          <h2 class="stat__label" id="stat-applied">Applied today</h2>
+          <p class="stat__figure">
+            <strong>{{ v.appliedToday }}</strong>
+          </p>
+          <p class="stat__sub">drafted weekends families see</p>
+        </sd-card>
+        <sd-card class="stat" padding="lg" role="region" aria-labelledby="stat-fell-back">
+          <h2 class="stat__label" id="stat-fell-back">Fell back today</h2>
+          <p class="stat__figure">
+            <strong>{{ v.fellBackToday }}</strong>
+          </p>
+          <p class="stat__sub">families got the standard plan</p>
+        </sd-card>
+        <sd-card class="stat" padding="lg" role="region" aria-labelledby="stat-spend">
+          <h2 class="stat__label" id="stat-spend">Spend this month</h2>
+          <p class="stat__figure">
+            <strong>{{ v.spend }}</strong>
+          </p>
+          <p class="stat__sub">{{ v.spendCap }}</p>
+          <div
+            class="stat__bar"
+            role="img"
+            [attr.aria-label]="v.spendPercent + '% of the monthly cap'"
+          >
+            <span class="stat__fill" [style.width.%]="v.spendPercent"></span>
+          </div>
+        </sd-card>
+      </div>
+
+      <sd-section title="Latest runs">
+        @if (v.runs.length) {
+          <div class="queue">
+            @for (run of v.runs; track run.id) {
+              <sd-card padding="lg" role="article" [attr.aria-label]="run.label">
+                <div class="card__head">
+                  <div class="card__head-text">
+                    <h2 class="card__title">{{ run.title }}</h2>
+                    <p class="card__meta">{{ run.meta }}</p>
+                  </div>
+                  <sd-chip [tone]="chipTone(run.status.tone)">{{ run.status.label }}</sd-chip>
+                </div>
+                @if (run.traceId) {
+                  <p class="run__trace">
+                    <code>{{ run.traceId }}</code>
+                    <sd-button
+                      variant="ghost"
+                      size="sm"
+                      icon
+                      [label]="'Copy trace id ' + run.traceId"
+                      [tooltip]="copied() === run.traceId ? 'Copied' : 'Copy trace id'"
+                      (click)="copy(run.traceId)"
+                    >
+                      <sd-icon [name]="copied() === run.traceId ? 'check' : 'copy'" />
+                    </sd-button>
+                  </p>
+                }
+              </sd-card>
+            }
+          </div>
+        } @else {
+          <sd-empty
+            icon="sparkle"
+            title="No agent runs yet."
+            body="Runs appear here when the Friday drafts start or a family asks the agents."
+          />
+        }
+      </sd-section>
+    }
+  }
+}
