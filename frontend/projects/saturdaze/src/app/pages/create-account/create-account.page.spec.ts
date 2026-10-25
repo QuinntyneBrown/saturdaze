@@ -17,6 +17,8 @@ describe('CreateAccountPage', () => {
   // carries padding to prove the trim.
   const VALID = {
     familyName: ' The Browns ',
+    ownerName: ' Quinn ',
+    ownerAge: '38',
     email: 'quinn@example.com',
     password: 'Lavender2026!',
     terms: true,
@@ -39,6 +41,9 @@ describe('CreateAccountPage', () => {
     host = fixture.nativeElement as HTMLElement;
   });
 
+  /** sd-text-input order: family name, first name, age, email, password. */
+  const EMAIL = 3;
+  const PASSWORD = 4;
   const submitButton = (): HTMLButtonElement =>
     host.querySelector('button[type="submit"]') as HTMLButtonElement;
   const fieldError = (index: number): string | null =>
@@ -60,6 +65,8 @@ describe('CreateAccountPage', () => {
     const fields = Array.from(host.querySelectorAll('sd-text-input'));
     expect(fields.map((f) => f.querySelector('.field__label')?.textContent?.trim())).toEqual([
       'Family name',
+      'Your first name',
+      'Your age',
       'Email',
       'Password',
     ]);
@@ -115,6 +122,8 @@ describe('CreateAccountPage', () => {
       password: 'Lavender2026!',
       fridayPreview: true,
       homeLocation: null,
+      ownerName: 'Quinn',
+      ownerAge: 38,
     });
     expect(navigate).toHaveBeenCalledWith(['/welcome', 'home']);
     expect(component['submitting']()).toBe(false);
@@ -125,8 +134,8 @@ describe('CreateAccountPage', () => {
     component['form'].setValue(VALID);
     await component['submit']();
     fixture.detectChanges();
-    expect(fieldError(1)).toBe('That email already has an account. Sign in instead.');
-    expect(fieldError(2)).toBeNull();
+    expect(fieldError(EMAIL)).toBe('That email already has an account. Sign in instead.');
+    expect(fieldError(PASSWORD)).toBeNull();
     expect(host.querySelector('sd-banner')).toBeNull();
     expect(navigate).not.toHaveBeenCalled();
   });
@@ -136,8 +145,8 @@ describe('CreateAccountPage', () => {
     session.signUp.mockRejectedValueOnce({ code: 'weak_password', message: '' });
     await component['submit']();
     fixture.detectChanges();
-    expect(fieldError(2)).toBe('Choose a stronger password.');
-    expect(fieldError(1)).toBeNull();
+    expect(fieldError(PASSWORD)).toBe('Choose a stronger password.');
+    expect(fieldError(EMAIL)).toBeNull();
 
     session.signUp.mockRejectedValueOnce({ code: 'rate_limited', message: 'Slow down.' });
     await component['submit']();

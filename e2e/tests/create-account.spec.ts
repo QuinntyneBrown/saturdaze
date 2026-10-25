@@ -10,6 +10,8 @@ import { SEEDED_USER } from "../fixtures/auth.js";
 
 const fresh = () => ({
   familyName: "The E2Es",
+  ownerName: "Quinn",
+  ownerAge: 38,
   email: `e2e-signup-${Date.now()}-${Math.random().toString(36).slice(2, 8)}@example.com`,
   password: "Lavender-17-May",
 });
@@ -20,11 +22,13 @@ test.describe("Create account", () => {
     await pages.createAccount.waitForReady();
   });
 
-  test("renders the card with three fields, two checkboxes and the primary", async ({ pages }) => {
+  test("renders the card with five fields, two checkboxes and the primary", async ({ pages }) => {
     const c = pages.createAccount;
     await expect(c.body).toHaveAttribute("data-page", "create-account");
     await expect(c.cardTitle()).toHaveText("Start planning weekends");
     await expect(c.familyNameInput()).toBeVisible();
+    await expect(c.ownerNameInput()).toBeVisible();
+    await expect(c.ownerAgeInput()).toHaveAttribute("type", "number");
     await expect(c.card().locator(".field__hint").first()).toHaveText("How we greet you.");
     await expect(c.emailInput()).toHaveAttribute("type", "email");
     await expect(c.passwordInput()).toHaveAttribute("autocomplete", "new-password");
@@ -69,6 +73,52 @@ test.describe("Create account", () => {
     await expect(c.createButton()).toBeEnabled();
     await c.termsCheckbox().uncheck();
     await expect(c.createButton()).toBeDisabled();
+  });
+
+  // Traces to: L2-215 AC6
+  test("the owner's first name and age gate the primary", async ({ pages }) => {
+    const c = pages.createAccount;
+    await c.fill(fresh());
+    await c.termsCheckbox().check();
+    await expect(c.createButton()).toBeEnabled();
+
+    await c.ownerNameInput().fill("");
+    await expect(c.createButton()).toBeDisabled();
+    await c.ownerNameInput().fill("Quinn");
+    await c.ownerAgeInput().fill("");
+    await expect(c.createButton()).toBeDisabled();
+
+    await c.ownerAgeInput().fill("121");
+    await c.ownerAgeInput().blur();
+    await expect(c.fieldError()).toHaveText("Enter an age between 0 and 120.");
+    await expect(c.createButton()).toBeDisabled();
+    await c.ownerAgeInput().fill("38");
+    await expect(c.fieldError()).toHaveCount(0);
+    await expect(c.createButton()).toBeEnabled();
+  });
+
+  // Traces to: L2-215 AC6, L2-214 AC4, L2-168 AC1
+  test("the owner who signs up is the first one in Who's in", async ({ page, pages }) => {
+    const c = pages.createAccount;
+    const account = fresh();
+    await c.fill(account);
+    await c.termsCheckbox().check();
+    const registered = page.waitForRequest((r) => r.url().endsWith("/api/auth/register"));
+    await c.createButton().click();
+    expect((await registered).postDataJSON()).toMatchObject({ ownerName: "Quinn", ownerAge: 38 });
+
+    await page.waitForURL("**/welcome/home");
+    const w = pages.welcome;
+    await w.skipButton().click();
+    await page.waitForURL("**/welcome/family");
+    await expect(w.memberRows()).toHaveCount(1);
+    await expect(w.rowSubtitle(w.memberRow("Quinn"))).toHaveText(`Parent · 38 · Signs in as ${account.email}`);
+
+    await page.goto("/family");
+    const f = pages.family;
+    await f.waitForReady();
+    await expect(f.memberRows()).toHaveCount(1);
+    await expect(f.rowSubtitle(f.memberRow("Quinn"))).toHaveText(`Parent · 38 · Signs in as ${account.email}`);
   });
 
   // Traces to: L2-165 AC1

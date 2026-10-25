@@ -13,6 +13,25 @@
         formControlName="familyName"
       />
       <sd-text-input
+        label="Your first name"
+        name="ownerName"
+        autocomplete="given-name"
+        hint="You're the first one in Who's in."
+        placeholder="Quinn"
+        formControlName="ownerName"
+      />
+      <sd-text-input
+        label="Your age"
+        type="number"
+        name="ownerAge"
+        [min]="0"
+        [max]="120"
+        hint="Ages shape the picks."
+        placeholder="38"
+        formControlName="ownerAge"
+        [error]="ageError()"
+      />
+      <sd-text-input
         label="Email"
         type="email"
         name="email"

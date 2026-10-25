@@ -22,4 +22,12 @@ export interface SignupRequest {
    * Friday Preview.
    */
   readonly fridayPreview?: boolean;
+  /**
+   * Owner Name — the owner's first name; with `ownerAge` it puts them in "Who's in" (L2-215).
+   */
+  readonly ownerName?: string;
+  /**
+   * Owner Age — 0 to 120.
+   */
+  readonly ownerAge?: number;
 }
