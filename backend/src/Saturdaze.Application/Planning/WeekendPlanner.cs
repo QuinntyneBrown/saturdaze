@@ -176,6 +176,14 @@ public sealed class WeekendPlanner : IWeekendPlanner
 
     // ─── Fixed blocks (commitments + locked) ──────────────────────────────────
 
+    /// <summary>"Ava, Mia" — who goes, oldest first as Family lists them; null when everyone does (L2-192).</summary>
+    private static string? WhoGoes(Commitment c, IReadOnlyList<FamilyMember> members)
+    {
+        var names = members.Where(m => c.AttendeeMemberIds.Contains(m.Id))
+            .OrderByDescending(m => m.Age).Select(m => m.Name).ToList();
+        return names.Count > 0 ? string.Join(", ", names) : null;
+    }
+
     private static List<ItineraryBlock> BuildFixedBlocks(
         PlannerInputs inputs, DayOfWeekend day, TimeOnly dayStart, TimeOnly dayEnd)
     {
@@ -197,7 +205,7 @@ public sealed class WeekendPlanner : IWeekendPlanner
                 Kind = BlockKind.Commitment,
                 Title = c.Title,
                 IsLocked = true, // L2-011: commitments never move
-                Reason = "fixed commitment",
+                Reason = WhoGoes(c, inputs.Members) ?? "fixed commitment",
                 Stop = c.Location?.Copy()
             });
         }

@@ -1,5 +1,5 @@
 // Acceptance Test
-// Traces to: L2-200 AC1, AC2, AC3, L2-201 AC1, AC2, AC3, AC4, L2-193 AC1, AC2, AC3, L2-192 AC5
+// Traces to: L2-200 AC1, AC2, AC3, L2-201 AC1, AC2, AC3, AC4, L2-193 AC1, AC2, AC3, L2-192 AC5, L2-192
 // Description: The planner honours hours, seasons, daylight and event times, plans events, and drives to located commitments.
 
 using System.Net.Http.Json;
@@ -285,5 +285,27 @@ public class CandidatesAndTravelTests : IClassFixture<SaturdazeApiFactory>, IAsy
             .Where(b => Plans.Kind(b) is "Activity" or "Meal" or "Errand")
             .Should().NotContain(b => Plans.Start(b) < new TimeOnly(17, 0) && new TimeOnly(16, 20) < Plans.End(b));
         Plans.OfKind(weekend, "Commitment", "Sunday").Should().HaveCount(2);
+    }
+
+    [Fact]
+    public async Task A_commitment_block_names_who_goes()
+    {
+        // Traces to: L2-192 ("The weekend page shall show the attendees under a commitment block")
+        var (session, ids) = await PersonaAsync();
+        await FamilyProfiles.SaveAsync(session.Client, new
+        {
+            Commitments = new object[]
+            {
+                new { Title = "Swim", DayOfWeek = "Sunday", StartTime = "16:20", EndTime = "16:50", AttendeeMemberIds = new[] { ids["Mia"], ids["Ava"] } },
+                new { Title = "Church", DayOfWeek = "Sunday", StartTime = "10:00", EndTime = "11:00" },
+            },
+        });
+
+        var weekend = await Plans.PlanAsync(session.Client, "2026-11-21");
+
+        var reasons = Plans.OfKind(weekend, "Commitment", "Sunday")
+            .ToDictionary(b => b.GetProperty("title").GetString()!, b => b.GetProperty("reason").GetString());
+        reasons["Swim"].Should().Be("Ava, Mia");
+        reasons["Church"].Should().Be("fixed commitment");
     }
 }
